@@ -25,11 +25,19 @@ export type NodeCtx = {
 export type NodeInstance = { container: import('pixi.js').Container; teardown: () => void };
 export type CreateNode = (ctx: NodeCtx) => NodeInstance;
 
+// dynamicImport avoids webpack static analysis — Next.js / Turbopack will
+// otherwise try to resolve the blob URL at build time and fail. The Function
+// constructor creates the import expression at runtime.
+const dynamicImport: (url: string) => Promise<Record<string, unknown>> =
+  typeof globalThis.Function === 'function'
+    ? (new Function('u', 'return import(u)') as (u: string) => Promise<Record<string, unknown>>)
+    : ((u: string) => import(/* webpackIgnore: true */ u) as Promise<Record<string, unknown>>);
+
 export async function loadNodeModule(source: string): Promise<{ createNode: CreateNode }> {
   const blob = new Blob([source], { type: 'application/javascript' });
   const url = URL.createObjectURL(blob);
   try {
-    const mod = await import(/* @vite-ignore */ url);
+    const mod = await dynamicImport(url);
     if (typeof mod.createNode !== 'function') {
       throw new Error('node module missing createNode() export');
     }

@@ -46,15 +46,24 @@ Working directory: `kid-kode-landing/` inside the `Design-trials` repo root.
 - [x] **Phase 13 — QA harness** — `scripts/verify-prism.mjs` runs 15 deterministic checks against the .prism artifact + src/. `npm run verify:prism` is the one-shot verification command.
 - [x] **Phase 14 — smoke tests** — `npm run build` passes (route / is 371KB static + 473KB first load JS); `npm run start` boots on a port; `curl /` returns HTTP 200 with two `<canvas>` elements rendered.
 
-## Final artifact fingerprint (stub baseline)
+## Final artifact fingerprint (real FAL assets)
 
-- `public/prism-assets/mock-app.prism` — 317 KB, 36 entries, 40 nodes, 15 edges, 1 hub
-- `artifactHash`: `80c4115f26f39460beb5a00e45081a7c9c4c0380281e2d306e02383a78bfa8f6`
-- `atlas-0.avif` sha256: present in manifest.assets
-- Number of zip entries: 10 files / 36 members
-- Verify result (stub pipeline): `15/15 passed`
+- `public/prism-assets/mock-app.prism` — 442 KB with real FLUX-2 + Ideogram assets
+- `artifactHash`: `d78863abc742157ccee71b5dd087b4c417c427f52ae0a87780b492df561ca11c` (will drift if build-atlas options or source images change)
+- Atlas: 80 regions packed in a single 4096² bin (MAX_REGION_LONG_SIDE=512, AVIF q=75)
+- Frame gen outcome: Kling v2.6 i2v returned HTTP 422 once (`Unprocessable Entity`). Fallback `scripts/synthesize-missing-frames.mjs` synthesized 24 hero-section-bg frames from the FLUX-2 base by modulating hue/brightness/blur so §10.9 Method 1 is still represented visually.
+- FAL run: 56 assets generated, 1 errored → recovered via synthesizer. Cost: roughly $0.50.
+- Verify result: `15/15 passed` (`npm run verify:prism`).
+- Browser smoke: `6/6 passed` (`node scripts/browser-smoke.mjs`). Screenshot: `notes/browser-smoke/home-hub.png`.
 
-When FAL-generated assets replace stubs, the atlas bytes and every asset SHA256 change → `artifactHash` changes. Re-run `npm run verify:prism` to confirm structural invariants still hold.
+## Bug fixes made during end-to-end verification
+
+1. **Dynamic blob-URL import** — Next.js/webpack tried to statically resolve `import(blobUrl)` at build time. Rewrote `module-registry.ts` and `local-backend/index.ts` to use `new Function('u', 'return import(u)')` so the call is opaque to the bundler.
+2. **Alpha-channel mismatch in atlas composite** — FAL PNGs sometimes return 3-channel (no alpha); atlas target is 4-channel RGBA. Added `.ensureAlpha()` in `build-atlas.mjs:processSource`.
+3. **Atlas bin overflow** — at MAX_REGION_LONG_SIDE=640, two FAL images spilled into bin 2 (including `shimmer` overlay required by hero-card-cta). Dropped to 512 — all 80 regions fit in bin 0.
+4. **Sharp `modulate({ hue })` rejects floats** — synthesize-frames passed non-integer hue; fixed with `Math.round()`.
+5. **Atlas-loader convoluted blob→bitmap pipeline** simplified to `createImageBitmap(blob)` directly.
+6. **MSDF static-path load** — Pixi v8's Assets.load can't parse blob-URL .fnt files (no extension). Switched to loading the .fnt from `/prism-assets/font-inter.msdf.fnt` which Next.js serves out of `public/`; the .prism still contains the bytes for artifact self-containedness.
 
 ## 25 success criteria — status
 

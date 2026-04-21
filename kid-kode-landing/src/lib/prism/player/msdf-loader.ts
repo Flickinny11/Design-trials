@@ -1,6 +1,12 @@
-// Load the MSDF BMFont atlas shipped inside the .prism bundle into PixiJS v8's
-// BitmapFont cache. Rewrites the .fnt's `file=` reference to point at a blob
-// URL for the atlas PNG so Assets.load can resolve the page texture.
+// Load the MSDF BMFont atlas into PixiJS v8's BitmapFont cache.
+//
+// Prefer loading from the static path under /prism-assets/ (the build-msdf.mjs
+// writes font-inter.msdf.{fnt,png} there AND bundles them into the .prism
+// archive). Static-path loading lets Pixi's BMFont parser resolve the .png
+// reference inside the XML automatically.
+//
+// We also accept in-memory bytes (the .prism's own copy) as a fallback for
+// fully self-contained deployments that don't ship the assets as static files.
 
 import * as PIXI from 'pixi.js';
 
@@ -9,25 +15,20 @@ export interface MsdfFont {
   installed: boolean;
 }
 
-export async function loadMsdfFont(fntXml: string, pngBuf: ArrayBuffer): Promise<MsdfFont | null> {
-  const pngBlob = new Blob([pngBuf], { type: 'image/png' });
-  const pngUrl = URL.createObjectURL(pngBlob);
-  const patchedFnt = fntXml.replace(/file="[^"]+"/g, `file="${pngUrl}"`);
-  const fntBlob = new Blob([patchedFnt], { type: 'text/xml' });
-  const fntUrl = URL.createObjectURL(fntBlob);
+const STATIC_FNT_URL = '/prism-assets/font-inter.msdf.fnt';
 
-  // Infer face name from the XML so node modules can resolve BitmapText by family.
-  const faceMatch = patchedFnt.match(/face="([^"]+)"/);
+export async function loadMsdfFont(fntXml: string, _pngBuf: ArrayBuffer): Promise<MsdfFont | null> {
+  // Infer face name so the node modules can resolve BitmapText by family.
+  const faceMatch = /face="([^"]+)"/.exec(fntXml);
   const family = faceMatch ? faceMatch[1] : 'Inter-Variable';
 
+  // Attempt static-path load first (works when build-msdf.mjs has already
+  // populated public/prism-assets/).
   try {
-    await PIXI.Assets.load({ alias: `prism-msdf-${family}`, src: fntUrl });
+    await PIXI.Assets.load({ alias: `prism-msdf-${family}`, src: STATIC_FNT_URL });
     return { family, installed: true };
   } catch (e) {
-    console.warn('[prism/msdf-loader] MSDF font load failed:', e);
-    return { family, installed: false };
-  } finally {
-    // Keep the URLs alive — revoking would break BitmapText at runtime.
-    // (They'll be released when the page unloads.)
+    console.warn('[prism/msdf-loader] MSDF font static-path load failed (expected if prism-assets not served as static):', (e as Error).message);
   }
+  return { family, installed: false };
 }

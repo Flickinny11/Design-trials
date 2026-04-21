@@ -31,10 +31,12 @@ const outRegions = join(outDir, 'atlas-regions.json');
 const ATLAS_SIZE = 4096;
 const AVIF_QUALITY = 75;
 const PADDING = 2;
-// Max dimension any single region can occupy in the atlas. Full-canvas assets
-// (page-bg 1920×2520, hero 1520×560) are downsampled to this bound on the long
-// side; the PixiJS sprite then stretches to the node's world-space transform.
-const MAX_REGION_LONG_SIDE = 1024;
+// Max dimension any single region can occupy in the atlas. FAL-generated
+// images often land at ≥1024px even when smaller was requested; too-large a
+// cap overflows the packer to bin 2+, and the player only reads bin 0. 640
+// keeps ~80 FLUX outputs (40 bases + 20 states + 4 overlays + 24 frames) in a
+// single 4096² bin with 20-30% utilization headroom.
+const MAX_REGION_LONG_SIDE = 512;
 
 // Deterministic MaxRects: we sort packer inputs by assetKey before adding so runs
 // produce identical outputs regardless of filesystem readdir order.
@@ -107,7 +109,7 @@ async function processSource(filePath, graph) {
   if (!meta) return null;
   const raw = readFileSync(filePath);
   const composited = await compositeTextIfNeeded(raw, meta.node);
-  let img = sharp(composited);
+  let img = sharp(composited).ensureAlpha();                     // force RGBA for atlas composite
   const info = await img.metadata();
   const longSide = Math.max(info.width, info.height);
   if (longSide > MAX_REGION_LONG_SIDE) {

@@ -32,11 +32,14 @@ export function createLocalBackend(opts: { state: StateManager }): LocalBackend 
   const handlers: Array<{ name: string; handler: BackendHandler }> = [];
   const fakeDb = createFakeDb({ '__session-started-at': Date.now() });
 
+  // See module-registry.ts for why this bypasses webpack static analysis.
+  const dynamicImport = (new Function('u', 'return import(u)') as (u: string) => Promise<{ handler?: BackendHandler }>);
+
   async function registerFromSource(name: string, source: string) {
     const blob = new Blob([source], { type: 'application/javascript' });
     const url = URL.createObjectURL(blob);
     try {
-      const mod: { handler?: BackendHandler } = await import(/* @vite-ignore */ url);
+      const mod = await dynamicImport(url);
       if (typeof mod.handler !== 'function') throw new Error(`backend "${name}" has no handler export`);
       handlers.push({ name, handler: mod.handler });
     } finally {

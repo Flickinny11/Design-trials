@@ -1,0 +1,38 @@
+[
+  {
+    "id": "canvases.present",
+    "desc": "§10.3 — split pane renders both canvases",
+    "pass": true,
+    "detail": "found 3"
+  },
+  {
+    "id": "runtime.mounted",
+    "desc": "§10.4 — PrismHost mount progressed past loading",
+    "pass": true,
+    "detail": "mounted"
+  },
+  {
+    "id": "runtime.no-errors",
+    "desc": "no runtime errors in console / page",
+    "pass": true,
+    "detail": "clean"
+  },
+  {
+    "id": "scroll.wheel.handled",
+    "desc": "§10.12 — wheel scroll consumed by canvas without throwing",
+    "pass": true,
+    "detail": "pageErrors=0"
+  },
+  {
+    "id": "shr.devtool.installed",
+    "desc": "§10.20 — window.__prismBreakNode exists + accepts a nodeId",
+    "pass": true,
+    "detail": "invoked"
+  },
+  {
+    "id": "screenshot.saved",
+    "desc": "homepage screenshot captured",
+    "pass": true,
+    "detail": "notes/browser-smoke/home-hub.png"
+  }
+]
