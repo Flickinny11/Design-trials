@@ -10,3 +10,4 @@ node_modules/
 kid-kode-landing/src/lib/prism/mock-app-source/assets/source-images/
 kid-kode-landing/src/lib/prism/mock-app-source/assets/.provisioning-manifest.json
 kid-kode-landing/public/prism-assets/
+kid-kode-landing/tsconfig.tsbuildinfo
