@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "provision-assets": "node --env-file=.env.local src/lib/prism/mock-app-source/assets/provision-assets.mjs",
+    "build:stubs": "node src/lib/prism/mock-app-source/assets/build-stubs.mjs",
     "build:atlas": "node src/lib/prism/mock-app-source/assets/build-atlas.mjs",
     "build:msdf": "node src/lib/prism/mock-app-source/assets/build-msdf.mjs",
     "build:prism": "npm run build:atlas && npm run build:msdf && node src/lib/prism/mock-app-source/build-prism.mjs",

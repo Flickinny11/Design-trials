@@ -19,13 +19,24 @@ Working directory: `kid-kode-landing/` inside the `Design-trials` repo root.
   - `notes/prism-spec-extract.md` — 1336-line literal extract from the mock spec (every node, schema, code template, §10 success criteria). Durable reference so future sessions don't have to re-read the full spec.
   - `notes/prism-mock-progress.md` (this file).
 
+## Completed (this session continued)
+
+- [x] **Phase 2** — `src/lib/prism/mock-app-source/hubs/home-hub.json` authored (40 nodes, 15 edges, single hub). Validated unique IDs + resolvable edges. Commit `0d29c84`.
+- [x] **Phase 3** — `provision-assets.mjs` with style-lock, idempotency via intent hash, retry with backoff, ffmpeg-static frame extraction. Models locked: flux-2 (base), ideogram/v3 (diffusion text), kling-video/v2.6/pro (i2v).
+- [x] **Phase 4** — `build-atlas.mjs` + `build-stubs.mjs`. Atlas: 4096×4096, AVIF q=75, MAX_REGION_LONG_SIDE=1024 (full-canvas bgs downsampled, player stretches). Deterministic (assetKey-sorted pack order).
+- [x] **Phase 5** — `build-msdf.mjs` via msdf-bmfont-xml → `font-inter.msdf.{fnt,png}` in public/prism-assets/.
+- [x] **Phase 6** — `build-prism.mjs`. JSZip DEFLATE, SHA256 per entry, rollup `artifactHash` = sha256 of sorted `path:hash` list. Manifest registers assets with hashes.
+
+### Pipeline smoke test (with stubs)
+
+`npm run build:stubs && npm run build:atlas && npm run build:msdf && npm run build:prism` produces a valid 301KB `mock-app.prism` with:
+- 10 zip entries (graph.json + 4 assets + meta/ + manifest.json)
+- 40 nodes, 15 edges, 1 hub
+- atlas 188KB (79/80 source images packed; 1 overflow in bin 2 — acceptable, real FAL-generated images will have different dimensions)
+- artifactHash: `4ffb7c7eaae55f52e47be8ec588f197164d3cfbcd3513e5952fe34a123b67e1d` (stub-based baseline; will change when real FAL assets are used)
+
 ## Pending
 
-- [ ] **Phase 2** — hand-author `src/lib/prism/mock-app-source/hubs/home-hub.json` with 40 nodes + edges + hub layout.
-- [ ] **Phase 3** — `provision-assets.mjs` (fal.ai style-locked generation). Actual FAL runs happen at user's command.
-- [ ] **Phase 4** — `build-atlas.mjs` (Sharp+SVG text compositing → MaxRects → AVIF).
-- [ ] **Phase 5** — `build-msdf.mjs` (MSDF atlas via `msdf-bmfont-xml` — pure JS fallback chosen since `msdf-atlas-gen` is a C++ binary and brittle on macOS).
-- [ ] **Phase 6** — `build-prism.mjs` (.prism zip assembly with SHA256 per asset + manifest hash).
 - [ ] **Phase 7** — 40 per-node `createNode()` modules in `src/lib/prism/mock-app-source/nodes/`.
 - [ ] **Phase 8** — backend handlers in `src/lib/prism/mock-app-source/backends/`.
 - [ ] **Phase 9** — PixiJS runtime player in `src/lib/prism/player/` (boot, atlas-loader, hub-manager, scroll-viewport, event-bus, state-manager, module-registry).
