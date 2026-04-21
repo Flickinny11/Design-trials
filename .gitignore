@@ -5,3 +5,8 @@ node_modules/
 .env.local
 *.log
 .DS_Store
+
+# Prism mock app — per mock spec §8.4
+kid-kode-landing/src/lib/prism/mock-app-source/assets/source-images/
+kid-kode-landing/src/lib/prism/mock-app-source/assets/.provisioning-manifest.json
+kid-kode-landing/public/prism-assets/

@@ -3,8 +3,12 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "provision-assets": "node --env-file=.env.local src/lib/prism/mock-app-source/assets/provision-assets.mjs",
+    "build:atlas": "node src/lib/prism/mock-app-source/assets/build-atlas.mjs",
+    "build:msdf": "node src/lib/prism/mock-app-source/assets/build-msdf.mjs",
+    "build:prism": "npm run build:atlas && npm run build:msdf && node src/lib/prism/mock-app-source/build-prism.mjs",
+    "dev": "npm run build:prism && next dev",
+    "build": "npm run build:prism && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -31,8 +35,8 @@
     "@radix-ui/react-slider": "^1.2.3",
     "@radix-ui/react-popover": "^1.1.5",
     "@radix-ui/react-scroll-area": "^1.2.3",
-    "html-to-image": "^1.11.11",
-    "html-to-image": "^1.11.13"
+    "pixi.js": "^8.5.0",
+    "jszip": "^3.10.1"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
@@ -42,6 +46,13 @@
     "autoprefixer": "10.4.20",
     "postcss": "8.4.49",
     "tailwindcss": "3.4.17",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "@fal-ai/client": "^1.4.0",
+    "dotenv": "^16.4.5",
+    "ffmpeg-static": "^5.2.0",
+    "sharp": "^0.33.5",
+    "maxrects-packer": "^2.7.3",
+    "globby": "^14.0.2",
+    "msdf-bmfont-xml": "^2.7.0"
   }
 }
