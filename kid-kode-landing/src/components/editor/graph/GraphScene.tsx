@@ -62,7 +62,7 @@ function Edge({ link }: { link: SimLink }) {
   const opacity = link.type === 'contains' ? 0.28 : 0.62;
 
   return (
-    // @ts-expect-error line is a valid three element
+    
     <line ref={lineRef}>
       <bufferGeometry />
       <lineBasicMaterial
@@ -71,7 +71,7 @@ function Edge({ link }: { link: SimLink }) {
         opacity={opacity}
         toneMapped={false}
       />
-    {/* @ts-expect-error line is a valid three element */}
+    
     </line>
   );
 }
@@ -262,7 +262,7 @@ function GlassNode({
             transmission={0.95}
             thickness={0.35}
             ior={1.35}
-            // @ts-expect-error dispersion supported in three 0.171+
+            
             dispersion={frozen ? 0 : 1.8}
             attenuationDistance={2}
             attenuationColor={new THREE.Color(hubColor)}

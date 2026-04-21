@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import LivePreview from '@/components/editor/preview/LivePreview';
+import PrismHost from '@/components/prism-player/PrismHost';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -74,7 +74,7 @@ export default function Page() {
             className="absolute top-0 bottom-0 left-0 border-r border-white/5"
             style={{ width: `${splitPct}%` }}
           >
-            <LivePreview />
+            <PrismHost />
           </div>
 
           {/* Drag handle */}
@@ -101,7 +101,7 @@ export default function Page() {
         <>
           {/* Mobile: VERTICAL split — preview top 38%, graph bottom 62%. Both always visible. */}
           <div className="absolute inset-x-0 top-0 border-b border-white/5" style={{ height: '38%' }}>
-            <LivePreview />
+            <PrismHost />
           </div>
           <div className="absolute inset-x-0 bottom-0" style={{ height: '62%' }}>
             <GraphScene />
