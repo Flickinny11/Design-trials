@@ -35,9 +35,36 @@ Working directory: `kid-kode-landing/` inside the `Design-trials` repo root.
 - atlas 188KB (79/80 source images packed; 1 overflow in bin 2 — acceptable, real FAL-generated images will have different dimensions)
 - artifactHash: `4ffb7c7eaae55f52e47be8ec588f197164d3cfbcd3513e5952fe34a123b67e1d` (stub-based baseline; will change when real FAL assets are used)
 
-## Pending
+## Completed (cont'd)
 
-- [ ] **Phase 7** — 40 per-node `createNode()` modules in `src/lib/prism/mock-app-source/nodes/`.
+- [x] **Phase 7** — 21 unique createNode modules in `src/lib/prism/mock-app-source/nodes/` (some shared across multiple nodes via the same codeRef). Anti-drift hook verified each write. `hero-card-cta.js` carries `ALLOWED-GRAPHICS` opt-in for its shimmer mask; no other `PIXI.Graphics` usage anywhere.
+- [x] **Phase 8** — backend handlers: `hero-card-cta.js` (POST /api/mock/track-cta-click), `user-preferences.js` (GET/POST /api/mock/user-preferences), `analytics.js` (GET /api/mock/analytics).
+- [x] **Phase 9** — PixiJS v8 runtime player in `src/lib/prism/player/`: boot, prism-loader, atlas-loader, msdf-loader, event-bus, state-manager, module-registry, scroll-viewport, index.
+- [x] **Phase 10** — LocalBackend + FakeDb in `src/lib/prism/local-backend/`. Handlers dynamically imported from blob URLs at boot.
+- [x] **Phase 11** — SHR toy: contamination-aware divergence watchdog + 1-strike promotion for critical events (build-flow-started, open-modal) + 1 s fake-latency repair + `window.__prismBreakNode` dev tool.
+- [x] **Phase 12** — `src/components/prism-player/PrismHost.tsx` + `src/app/page.tsx` swap (both desktop + mobile branches). Deleted orphan `LivePreview.tsx` + `useElementCapture.ts` (last html-to-image consumer). Dropped 3 unused `@ts-expect-error` directives in GraphScene.tsx (TS2578, no runtime change).
+- [x] **Phase 13 — QA harness** — `scripts/verify-prism.mjs` runs 15 deterministic checks against the .prism artifact + src/. `npm run verify:prism` is the one-shot verification command.
+- [x] **Phase 14 — smoke tests** — `npm run build` passes (route / is 371KB static + 473KB first load JS); `npm run start` boots on a port; `curl /` returns HTTP 200 with two `<canvas>` elements rendered.
+
+## Final artifact fingerprint (stub baseline)
+
+- `public/prism-assets/mock-app.prism` — 317 KB, 36 entries, 40 nodes, 15 edges, 1 hub
+- `artifactHash`: `80c4115f26f39460beb5a00e45081a7c9c4c0380281e2d306e02383a78bfa8f6`
+- `atlas-0.avif` sha256: present in manifest.assets
+- Number of zip entries: 10 files / 36 members
+- Verify result (stub pipeline): `15/15 passed`
+
+When FAL-generated assets replace stubs, the atlas bytes and every asset SHA256 change → `artifactHash` changes. Re-run `npm run verify:prism` to confirm structural invariants still hold.
+
+## 25 success criteria — status
+
+Statically verified (via `npm run verify:prism`): §10.5 (no PIXI.Text, only masked Graphics), §10.8 (three text methods represented), §10.9 (three animation methods represented), §10.10 (layer-swap used), §10.17 (backend call wiring), §10.18 (>= 30 nodes — we ship 40), §10.19 (zip-extractable and matches §3.1 format), §10.21 (no html-to-image).
+
+Requires a running browser to confirm: §10.3-4 (dev server renders split pane), §10.6 (looks polished — depends on FAL output), §10.11-14 (interactions, scroll, nav-scroll), §10.15 (responsive), §10.16 (sprite state feedback), §10.20 (SHR demo end-to-end), §10.25 (feels alive).
+
+Requires real FAL run (not stubs): §10.1 (provisioning), §10.2 (atlas bake from real images), §10.6 (polished look), §10.24 (clean-checkout reproduce).
+
+## Pending (optional / follow-up)
 - [ ] **Phase 8** — backend handlers in `src/lib/prism/mock-app-source/backends/`.
 - [ ] **Phase 9** — PixiJS runtime player in `src/lib/prism/player/` (boot, atlas-loader, hub-manager, scroll-viewport, event-bus, state-manager, module-registry).
 - [ ] **Phase 10** — LocalBackend + FakeDb in `src/lib/prism/local-backend/`.
