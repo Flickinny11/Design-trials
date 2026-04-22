@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:35:00Z",
-  "currentIteration": 4,
+  "updatedAt": "2026-04-22T16:35:30Z",
+  "currentIteration": 5,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -64,8 +64,8 @@
       "specRefs": [
         "§10.3"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Add a Playwright test that runs `npm run dev` (or `npm run build && npm run start`), hits `/`, asserts 200 + at least one <canvas> + at least one network request to /prism-assets/mock-app.prism."
