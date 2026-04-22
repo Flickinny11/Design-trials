@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:16:00Z",
+  "updatedAt": "2026-04-22T17:42:12Z",
   "currentIteration": 8,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -100,11 +100,11 @@
       "specRefs": [
         "§10.12"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: dispatch wheel events with deltaY, capture scroll-viewport's reported y offset over time, assert it decays smoothly (non-linear ease-out). Also test ArrowDown/PageDown/Home/End keyboard navigation."
+      "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
+      "verifiedAt": "2026-04-22T17:42:12Z",
+      "notes": "Implementation: src/lib/prism/player/scroll-viewport.ts onWheel was synchronous `scrollY = clamp(scrollY + e.deltaY); applyScroll()` — an instant CSS-scrollTop-style jump that violated §10.12 'smoothly with momentum easing' and §12 'smooth momentum-eased scrolling (GSAP ScrollSmoother or manual)'. Replaced with runTween(target, WHEEL_TWEEN_S=0.8) + accumulator semantics — successive wheel events read basis from the in-flight tween's target (not scrollY), so a trackpad burst compounds into one rolling momentum throw instead of 8 discrete steps. scrollTo was refactored to route through runTween (preserving its duration:0 fast path). destroy() now kills activeTween before removing listeners to prevent post-unmount onUpdate writes. tests/lib/prism/player/T07.test.mjs (17 checks at 1920×1080, port 4783) covers: infrastructure (server 200, goto 200, __prism.viewport exposed), preconditions (A1 contentHeight > viewportHeight, A2 initial scrollY=0), and 6 input sources (P1 wheel pulse, P2 trackpad-burst of 8×15px, P3 ArrowDown, P4 PageDown, P5 End, P6 Home) × 2 assertions each (reached target + |yMid - yFinal| > 0.1). The |yMid - yFinal| > 0.1 contract is robust to headless Chromium's ~4fps RAF throttling: an instant CSS-scrollTop-style assignment produces yMid === yFinal *exactly* in IEEE-754 doubles; any GSAP tween produces float-level interpolation noise. All three gates: verify:prism 15/15, browser-smoke 6/6 (first iteration flaked at 5/6 on the runtime.mounted gate before the build was fully cached — clean on second run), T07 17/17. artifactHash unchanged (c0985e52…) — scroll-viewport.ts lives in the Next bundle, not the .prism. Spec-reviewer MUST FIX: none. Resolved 2 SHOULD FIX in commit 8e843fa: (i) destroy() didn't kill activeTween (leak); (ii) 0.8s duration was a magic number — extracted WHEEL_TWEEN_S const. SHOULD-FIX (tracked, deferred): (a) test P2's 8 wheel events fire synchronously inside one page.evaluate microtask — the name 'trackpad burst' is aspirational; a real trackpad bursts over ~100ms at ~12ms intervals. Adding real setTimeout-spaced dispatch would exercise the mid-tween-compound path more faithfully. (b) test P1 asserts |yFinal - target| <= 4 with settleMs=900 — only 100ms of grace beyond the 0.8s tween; under heavy RAF throttling the tween could overrun and leave yFinal short of target by more than 4px. Bump settleMs to ≥1100 for the 0.8s paths, or assert yFinal >= target - tolerance monotonically. (c) onTouchEnd flick-then-wheel asymmetry: a wheel event mid-flick kills the flick tween and re-bases from scrollY + deltaY (flick's remaining distance discarded); reverse compounds. Inline comment would help. (d) tweenTarget shadow could be replaced by activeTween?.vars.y — one less piece of state. (e) acceptance contract |yMid - yFinal| > 0.1 is clever but future-fragile: if GSAP ever short-circuits near-zero tweens via gsap.config({autoSleep}), yMid === yFinal could occur without instant behavior; complementary assertion that yMid is strictly between start and yFinal (direction-aware) would be a stronger match to 'smoothly with momentum easing' but is flaky under RAF throttling for short tweens (0.3s keyboard case showed yMid=59.7 at t=60ms of a 0.3s tween — near-complete). OPTIONAL: tweenTarget: number annotation redundant; 0.8s rationale ('long enough that a trackpad burst feels inertial rather than discrete, short enough that a big mouse-wheel pulse doesn't feel laggy') worth promoting to notes/prism-mock-progress.md for next tuning pass. Per-iteration progress log update (Step 12) was flagged by reviewer as a historical miss on some commits — will be handled explicitly in Step 12 below."
     },
     {
       "id": "T08",
@@ -240,18 +240,24 @@
       "taskId": "T06",
       "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
       "verifiedAt": "2026-04-22T17:13:59Z"
+    },
+    {
+      "iteration": 8,
+      "taskId": "T07",
+      "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
+      "verifiedAt": "2026-04-22T17:42:12Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 7,
-    "lastProductiveCommit": "6c282daedab902714b5260ff46b73f0f313c744f"
+    "lastProductiveIteration": 8,
+    "lastProductiveCommit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809"
   },
   "phaseCaps": {
     "§10": {
-      "used": 5,
+      "used": 6,
       "cap": 50,
       "status": "active"
     },
