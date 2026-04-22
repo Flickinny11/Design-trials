@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T18:45:00Z",
-  "currentIteration": 11,
+  "updatedAt": "2026-04-22T19:20:00Z",
+  "currentIteration": 12,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -149,8 +149,8 @@
       "specRefs": [
         "§10.6"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Not a subjective test. Playwright: take a fullpage screenshot at 1440×900, compare against a locked baseline in tests/fixtures/home-hub-hero.png. Tolerance: 2% pixel diff. Baseline is committed when this task first runs."
