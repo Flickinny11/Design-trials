@@ -5,6 +5,8 @@
 import * as PIXI from 'pixi.js';
 import { gsap } from 'gsap';
 
+const WHEEL_TWEEN_S = 0.8;
+
 export interface ScrollViewport {
   root: PIXI.Container;         // what the player adds to the stage
   content: PIXI.Container;      // where nodes are parented
@@ -85,7 +87,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
     e.preventDefault();
     const basis = activeTween ? tweenTarget : scrollY;
     const target = clamp(basis + e.deltaY);
-    runTween(target, 0.8);
+    runTween(target, WHEEL_TWEEN_S);
   };
 
   // Touch drag with flick inertia.
@@ -147,6 +149,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
     scrollTo,
     getScrollY() { return scrollY; },
     destroy() {
+      if (activeTween) { activeTween.kill(); activeTween = null; }
       canvas.removeEventListener('wheel', onWheel);
       canvas.removeEventListener('touchstart', onTouchStart);
       canvas.removeEventListener('touchmove', onTouchMove);
