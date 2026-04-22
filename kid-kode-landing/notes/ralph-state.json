@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T20:30:00Z",
-  "currentIteration": 13,
+  "updatedAt": "2026-04-22T20:32:15Z",
+  "currentIteration": 14,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -174,8 +174,8 @@
         "§10.22",
         "§10.23"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Use git log to find the commit immediately before Prism work began (likely before `3f40748 prism-mock: Section 5 setup + Phase 1 scaffolding`). Extract that commit's package.json and components/editor/ tree to tests/baseline/, diff current state, and assert (a) components/editor/ files are byte-identical save for the MockApp→PrismHost relocation, (b) package.json delta matches spec §8."
