@@ -128,3 +128,4 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 
 - iter 1 — T00 — §10.19 — tests/artifact-layout.test.mjs locked (9 checks pass on HEAD; no impl needed per step 6) — 5155ac99
 - iter 2 — T01 — §10.14 — hub-router ts module + window.__prism debug handle + navbar-link active-section latch (8/8 Playwright checks pass) — 32a09e24
+- iter 3 — T02 — §10.15 — breakpoints.mjs helper + boot.ts active-breakpoint filter/transform + home-hub.json overrides on 6 node types (35/35 T02 checks; 6/40 nodes reflow; mobile hides nav-link-editor/docs/pricing/signin-btn) — 2c6badd7
