@@ -1,0 +1,156 @@
+{
+  "schemaVersion": "1.0",
+  "updatedAt": "2026-04-22T14:50:00Z",
+  "currentIteration": 0,
+  "maxIterations": 50,
+  "maxAttemptsPerTask": 3,
+  "status": "running",
+  "tasks": [
+    {
+      "id": "T01",
+      "title": "Wire hub-router nav scroll + active-section indicator",
+      "specRefs": ["§10.14", "§7.4"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Audit gap — navbar-link.js emits 'navigate' but no consumer wires GSAP scroll-to-section or toggles an active-section overlay. Implement a hub-router module in src/lib/prism/player/ that resolves 'navigate' events to section scroll targets, animates via GSAP, and swaps an active-indicator overlay on the hit navbar link."
+    },
+    {
+      "id": "T02",
+      "title": "Add responsive breakpoints to home-hub and boot",
+      "specRefs": ["§10.15", "§14"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Audit gap — no node in home-hub.json declares transformByBreakpoint or visibleAtBreakpoints, and player/boot.ts applies transforms as-is. Add breakpoint declarations on at least every visible node type (navbar, hero, feature-card, settings, stats, footer) covering desktop-wide (>1440), desktop (1024-1440), tablet (768-1024), mobile (<768), and wire responsive rewrite in boot.ts."
+    },
+    {
+      "id": "T03",
+      "title": "Reconcile .prism artifact layout with §3.1",
+      "specRefs": ["§3.1", "§10.19"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Audit gap — MSDF metadata ships as font-inter.msdf.fnt instead of spec's .json; schemas/shared-types.js missing from artifact. Either emit a thin .msdf.json wrapper alongside .fnt (preserving runtime's .fnt loader), or author a Zod schemas/shared-types.js and pick it up in build-prism.mjs. Pick the less-disruptive option and document in progress log."
+    },
+    {
+      "id": "T04",
+      "title": "Verify §10.3 — dev server boots + serves .prism",
+      "specRefs": ["§10.3"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Add a Playwright test that runs `npm run dev` (or `npm run build && npm run start`), hits `/`, asserts 200 + at least one <canvas> + at least one network request to /prism-assets/mock-app.prism."
+    },
+    {
+      "id": "T05",
+      "title": "Verify §10.4 — / route shows split pane (PixiJS left, 3D graph right)",
+      "specRefs": ["§10.4"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: hit `/`, assert two <canvas> elements with non-zero dimensions, left pane carries PrismHost class/data-attr, right pane carries the 3D graph scene."
+    },
+    {
+      "id": "T06",
+      "title": "Verify §10.11 — pointer events fire intent overlays/GSAP, not CSS",
+      "specRefs": ["§10.11"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: hover over the hero CTA sprite, assert DOM does not get new inline `.style.background/border/boxShadow/backgroundImage`. Assert the shimmer overlay alpha changes (read via a window-side hook exposing container state) or a GSAP tween starts (evidence: state-manager emits a 'tween-start' event bus entry)."
+    },
+    {
+      "id": "T07",
+      "title": "Verify §10.12 — wheel/trackpad/keyboard scroll with momentum",
+      "specRefs": ["§10.12"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: dispatch wheel events with deltaY, capture scroll-viewport's reported y offset over time, assert it decays smoothly (non-linear ease-out). Also test ArrowDown/PageDown/Home/End keyboard navigation."
+    },
+    {
+      "id": "T08",
+      "title": "Verify §10.13 — single-finger touch drag with flick momentum",
+      "specRefs": ["§10.13"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: use page.touchscreen to simulate a swipe; assert scroll continues post-release with decaying velocity. Emulate iPhone/Pixel viewport for realism."
+    },
+    {
+      "id": "T09",
+      "title": "Verify §10.16 — pointerover/out/down/up/tap feedback on every interactive sprite",
+      "specRefs": ["§10.16"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: walk the list of interactive nodes from home-hub.json (nodes with non-empty `intent.behavior.interactions`), dispatch pointerover/down on each, assert a visible change (screenshot pixel diff or container property change)."
+    },
+    {
+      "id": "T10",
+      "title": "Verify §10.20 — SHR toy: break → fail → indicator → restore",
+      "specRefs": ["§10.20", "§9"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: call window.__prismBreakNode('hero-card-cta'), click the CTA, assert 1–3 fails within tolerance window, assert indicator appears for ~1s, then click again and assert success. Final state emits 'build-flow-started' on the event bus."
+    },
+    {
+      "id": "T11",
+      "title": "Verify §10.6 — visual polish baseline (pixel-regression vs reference)",
+      "specRefs": ["§10.6"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Not a subjective test. Playwright: take a fullpage screenshot at 1440×900, compare against a locked baseline in tests/fixtures/home-hub-hero.png. Tolerance: 2% pixel diff. Baseline is committed when this task first runs."
+    },
+    {
+      "id": "T12",
+      "title": "Verify §10.25 — smoke: no obvious wireframe artifacts",
+      "specRefs": ["§10.25"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Playwright: screenshot, run a heuristic — fraction of pixels that are pure gray/black/white must be <15% (proxy for 'not wireframey'). Subjective criterion, but this threshold catches the failure modes (unstyled rectangles, missing gradients)."
+    },
+    {
+      "id": "T13",
+      "title": "Reconstruct §10.22–§10.23 baseline + diff",
+      "specRefs": ["§10.22", "§10.23"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Use git log to find the commit immediately before Prism work began (likely before `3f40748 prism-mock: Section 5 setup + Phase 1 scaffolding`). Extract that commit's package.json and components/editor/ tree to tests/baseline/, diff current state, and assert (a) components/editor/ files are byte-identical save for the MockApp→PrismHost relocation, (b) package.json delta matches spec §8."
+    },
+    {
+      "id": "T14",
+      "title": "Verify §10.24 — clean-checkout reproducibility in temp dir",
+      "specRefs": ["§10.24"],
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "Script: clone the current HEAD into a temp dir, run `npm install`, `npm run provision-assets` (with cached FAL responses if possible to avoid re-spending), `npm run build`, `npm run start`, assert HTTP 200 on /. This is expensive (~10min + FAL costs if cache miss); gate behind a flag or skip if RALPH_SKIP_CLEAN_REPRO=1."
+    }
+  ],
+  "invariants": {
+    "verifyPrismPassing": true,
+    "browserSmokePassing": true,
+    "lastArtifactHash": "5ef2cba11e5a884af49d7a19c76aec522fe8d2ceea755ff45b0d0b5ed05fcbeb"
+  },
+  "history": []
+}
