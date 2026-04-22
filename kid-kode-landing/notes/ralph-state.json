@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:10:31Z",
-  "currentIteration": 3,
+  "updatedAt": "2026-04-22T16:12:00Z",
+  "currentIteration": 4,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -52,8 +52,8 @@
         "§3.1",
         "§10.19"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Audit gap — MSDF metadata ships as font-inter.msdf.fnt instead of spec's .json; schemas/shared-types.js missing from artifact. Either emit a thin .msdf.json wrapper alongside .fnt (preserving runtime's .fnt loader), or author a Zod schemas/shared-types.js and pick it up in build-prism.mjs. Pick the less-disruptive option and document in progress log."
