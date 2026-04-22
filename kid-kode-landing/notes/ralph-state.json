@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T20:15:00Z",
-  "currentIteration": 12,
+  "updatedAt": "2026-04-22T20:19:06Z",
+  "currentIteration": 13,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -161,8 +161,8 @@
       "specRefs": [
         "§10.25"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: screenshot, run a heuristic — fraction of pixels that are pure gray/black/white must be <15% (proxy for 'not wireframey'). Subjective criterion, but this threshold catches the failure modes (unstyled rectangles, missing gradients)."
