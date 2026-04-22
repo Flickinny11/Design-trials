@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:35:30Z",
+  "updatedAt": "2026-04-22T16:44:00Z",
   "currentIteration": 5,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -64,11 +64,11 @@
       "specRefs": [
         "§10.3"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Add a Playwright test that runs `npm run dev` (or `npm run build && npm run start`), hits `/`, asserts 200 + at least one <canvas> + at least one network request to /prism-assets/mock-app.prism."
+      "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
+      "verifiedAt": "2026-04-22T16:44:00Z",
+      "notes": "Verified without implementation; pre-existing `dev` npm script (`npm run build:prism && next dev`) satisfies §10.3. tests/lib/prism/player/T04.test.mjs locks the contract — 8 assertions: (1) `npm run dev -- -p 4780` boots the Next dev server and answers HTTP 200 at `/`; (2) `.prism` artifact is present on disk after dev boot; (3) artifact mtime is ≥ pre-spawn mtime (proves build:prism ran as part of dev); (4) artifact body is non-empty (>1KB); (5) `page.goto('/')` returns 200; (6) ≥1 <canvas> in the DOM; (7) Playwright captured ≥1 request to /prism-assets/mock-app.prism during page boot; (8) direct GET /prism-assets/mock-app.prism returns 200 with non-empty body. Ran against artifactHash efd5f0f5… (unchanged; deterministic rebuild during `npm run dev`). Skipped step 8/9 per /ralph-step step 6 directive for already-satisfied tasks. SHOULD-FIX (tracked, deferred): (a) artifact mtime accepts equality — a 1ms re-run could pass with an untouched file; tightening to strict > is safer but fragile. (b) 120s waitForServer ceiling picked to cover cold build:prism + next dev compile; real cold-start ran ~60s in this iteration — ceiling could be halved once the build is optimized. (c) test relies on npm trailing-args forwarding (`npm run dev -- -p 4780` → `next dev -p 4780`) which depends on the `&&` shape of the dev script; if the script is rewritten with an explicit port, the `-- -p` mechanism breaks silently (test fails with a port collision, not a clear message). (d) no assertion that the server is specifically `next dev` and not `next start` — a regression that switches the dev script to `start` would still pass. OPTIONAL: could parse manifest.json inside the artifact and assert manifest.version/artifactHash shape for extra §3.1 cross-lock, though T00's artifact-layout test already owns that."
     },
     {
       "id": "T05",
@@ -222,18 +222,24 @@
       "taskId": "T03",
       "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
       "verifiedAt": "2026-04-22T16:35:00Z"
+    },
+    {
+      "iteration": 5,
+      "taskId": "T04",
+      "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
+      "verifiedAt": "2026-04-22T16:44:00Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb"
   },
   "phaseCaps": {
     "§10": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
