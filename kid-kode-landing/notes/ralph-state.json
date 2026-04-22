@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
-  "updatedAt": "2026-04-22T14:59:03Z",
-  "currentIteration": 1,
+  "updatedAt": "2026-04-22T15:32:24Z",
+  "currentIteration": 2,
   "maxIterations": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -20,8 +20,8 @@
       "id": "T01",
       "title": "Wire hub-router nav scroll + active-section indicator",
       "specRefs": ["§10.14", "§7.4"],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Audit gap — navbar-link.js emits 'navigate' but no consumer wires GSAP scroll-to-section or toggles an active-section overlay. Implement a hub-router module in src/lib/prism/player/ that resolves 'navigate' events to section scroll targets, animates via GSAP, and swaps an active-indicator overlay on the hit navbar link."
