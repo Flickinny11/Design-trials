@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T20:40:06Z",
-  "currentIteration": 14,
+  "updatedAt": "2026-04-22T20:42:30Z",
+  "currentIteration": 15,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -186,8 +186,8 @@
       "specRefs": [
         "§10.24"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Script: clone the current HEAD into a temp dir, run `npm install`, `npm run provision-assets` (with cached FAL responses if possible to avoid re-spending), `npm run build`, `npm run start`, assert HTTP 200 on /. This is expensive (~10min + FAL costs if cache miss); gate behind a flag or skip if RALPH_SKIP_CLEAN_REPRO=1."
