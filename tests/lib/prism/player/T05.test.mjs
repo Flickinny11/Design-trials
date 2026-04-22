@@ -91,14 +91,28 @@ async function main() {
     const page = await context.newPage();
     page.on('pageerror', (e) => console.error('[T05 pageerror]', e.message));
 
-    const response = await page.goto(URL, { waitUntil: 'networkidle' });
+    // Use `load` instead of `networkidle`: the 3D graph scene runs a
+    // continuous animation loop that can hold the network-idle heuristic open.
+    const response = await page.goto(URL, { waitUntil: 'load' });
     check('§10.4 — page.goto(`/`) resolves with HTTP 200',
       !!response && response.status() === 200,
       `status=${response?.status()}`);
 
-    // Give PrismHost and r3f a moment to mount their canvases.
+    // Give PrismHost a moment to mount its canvas.
     await page.waitForSelector('[data-pane="preview"] canvas', { timeout: 20000 }).catch(() => { /* handled below */ });
-    await page.waitForSelector('[data-pane="graph"] canvas',   { timeout: 20000 }).catch(() => { /* handled below */ });
+    // GraphScene is dynamic-imported with ssr:false; wait until the 3D-scene
+    // canvas (≥ 500px on the long edge — excludes the Minimap overlay canvas
+    // at 180×140) actually mounts. Otherwise we'd accidentally validate the
+    // Minimap and miss the main 3D scene.
+    await page.waitForFunction(() => {
+      const pane = document.querySelector('[data-pane="graph"]');
+      if (!pane) return false;
+      const canvases = Array.from(pane.querySelectorAll('canvas'));
+      return canvases.some((c) => {
+        const r = c.getBoundingClientRect();
+        return r.width >= 500 && r.height >= 500;
+      });
+    }, { timeout: 30000 }).catch(() => { /* handled below */ });
 
     // (b) Two distinct <canvas> elements in the DOM.
     const canvasCount = await page.locator('canvas').count();
@@ -123,21 +137,40 @@ async function main() {
     check('§10.4 — right pane contains a 3D-graph <canvas>',
       graphCanvasCount >= 1, `count=${graphCanvasCount}`);
 
+    // Pick the 3D scene canvas (the large one) so later assertions can't be
+    // satisfied by the Minimap overlay alone.
+    const sceneCanvasMetrics = await page.evaluate(() => {
+      const pane = document.querySelector('[data-pane="graph"]');
+      if (!pane) return null;
+      const canvases = Array.from(pane.querySelectorAll('canvas'));
+      let best = null;
+      for (const c of canvases) {
+        const r = c.getBoundingClientRect();
+        const area = r.width * r.height;
+        if (!best || area > best.area) {
+          best = { x: r.x, y: r.y, width: r.width, height: r.height, area };
+        }
+      }
+      return best;
+    });
+    check('§10.4 — right pane renders a 3D-scene canvas ≥ 500×500 (not just the Minimap)',
+      !!sceneCanvasMetrics && sceneCanvasMetrics.width >= 500 && sceneCanvasMetrics.height >= 500,
+      sceneCanvasMetrics ? `${Math.round(sceneCanvasMetrics.width)}×${Math.round(sceneCanvasMetrics.height)}` : 'no canvas');
+
     // (c) Non-zero dimensions on each pane's canvas.
     const previewBox = await page.locator('[data-pane="preview"] canvas').first().boundingBox().catch(() => null);
     check('§10.4 — preview canvas has non-zero width × height',
       !!previewBox && previewBox.width > 0 && previewBox.height > 0,
       previewBox ? `${Math.round(previewBox.width)}×${Math.round(previewBox.height)}` : 'no boundingBox');
 
-    const graphBox = await page.locator('[data-pane="graph"] canvas').first().boundingBox().catch(() => null);
     check('§10.4 — graph canvas has non-zero width × height',
-      !!graphBox && graphBox.width > 0 && graphBox.height > 0,
-      graphBox ? `${Math.round(graphBox.width)}×${Math.round(graphBox.height)}` : 'no boundingBox');
+      !!sceneCanvasMetrics && sceneCanvasMetrics.width > 0 && sceneCanvasMetrics.height > 0,
+      sceneCanvasMetrics ? `${Math.round(sceneCanvasMetrics.width)}×${Math.round(sceneCanvasMetrics.height)}` : 'no metrics');
 
-    // (f) Ordering: preview x-origin strictly less than graph x-origin.
-    check('§10.4 — left pane is LEFT of the right pane (preview.x < graph.x)',
-      !!previewBox && !!graphBox && previewBox.x < graphBox.x,
-      (previewBox && graphBox) ? `preview.x=${Math.round(previewBox.x)} graph.x=${Math.round(graphBox.x)}` : 'missing boundingBox');
+    // (f) Ordering: preview x-origin strictly less than 3D-scene x-origin.
+    check('§10.4 — left pane is LEFT of the right pane (preview.x < scene.x)',
+      !!previewBox && !!sceneCanvasMetrics && previewBox.x < sceneCanvasMetrics.x,
+      (previewBox && sceneCanvasMetrics) ? `preview.x=${Math.round(previewBox.x)} scene.x=${Math.round(sceneCanvasMetrics.x)}` : 'missing metrics');
 
     // (g) Distinct DOM nodes.
     const sameNode = await page.evaluate(() => {

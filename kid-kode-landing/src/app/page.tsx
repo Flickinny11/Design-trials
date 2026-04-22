@@ -71,6 +71,7 @@ export default function Page() {
         <>
           {/* Left: Live Preview — always visible */}
           <div
+            data-pane="preview"
             className="absolute top-0 bottom-0 left-0 border-r border-white/5"
             style={{ width: `${splitPct}%` }}
           >
@@ -88,7 +89,11 @@ export default function Page() {
           </div>
 
           {/* Right: Graph — always visible */}
-          <div className="absolute top-0 bottom-0 right-0" style={{ width: `${100 - splitPct}%` }}>
+          <div
+            data-pane="graph"
+            className="absolute top-0 bottom-0 right-0"
+            style={{ width: `${100 - splitPct}%` }}
+          >
             <GraphScene />
             <TopBar />
             <HubNav />
