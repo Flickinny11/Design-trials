@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:38:02Z",
+  "updatedAt": "2026-04-22T16:56:43Z",
   "currentIteration": 6,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -76,11 +76,11 @@
       "specRefs": [
         "§10.4"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: hit `/`, assert two <canvas> elements with non-zero dimensions, left pane carries PrismHost class/data-attr, right pane carries the 3D graph scene."
+      "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
+      "verifiedAt": "2026-04-22T16:56:43Z",
+      "notes": "Added `data-pane=\"preview\"` / `data-pane=\"graph\"` markers to the desktop split-pane wrappers in src/app/page.tsx (mobile branch intentionally left untagged — §10.4 names the horizontal split; see SHOULD-FIX (a)). Authored tests/lib/prism/player/T05.test.mjs — 12 checks at 1920×1080: `/` HTTP 200, page.goto 200, ≥2 canvases in DOM (count=3 after GraphScene hydrates), left+right pane tagged, left pane has PrismHost canvas, right pane has r3f canvas (≥500×500 — locks out the 180×140 Minimap overlay), distinct DOM nodes, preview.x < scene.x (691 split). Port 4781 chosen to avoid 4777/4778/4779/4780. Three gates: verify:prism 15/15, browser-smoke 6/6 (after pkill of stray next-dev from T04/T05 — CPU-contended; runtime.mounted flaked on first run), T05 12/12. First iteration of T05 found only 1 graph-pane canvas (the Minimap at 180×140) inside 20s because `waitUntil: 'networkidle'` timed out against r3f's animation loop; switched to `waitUntil: 'load'` + a 30s `waitForFunction` that polls until a graph-pane canvas has ≥500×500 bounding rect, then the r3f canvas (1229×1080) showed up reliably. Artifact unchanged — efd5f0f5… (deterministic). SHOULD-FIX (tracked, deferred): (a) mobile branch (<900px) has no data-pane markers — desktop/mobile DOM contract divergence; either add them to the mobile wrappers or comment why the contract is desktop-only (§10.4 doesn't name a mobile layout, so current gap is defensible but asymmetric). (b) T05.test.mjs line ~170 label reads \"graph canvas has non-zero width × height\" while the value is sceneCanvasMetrics — rename to \"3D scene canvas\" for clearer CI failures. (c) T05 mixes `getBoundingClientRect()` in `page.evaluate` with Playwright `locator.boundingBox()`; functionally equivalent today but asymmetric — consolidate on one. (d) port allocation (4777/4778/4779/4780/4781) lives only in comments across 4 test files — one more test and collisions will recur; centralize in tests/lib/prism/player/ports.mjs. (e) `.catch(() => {})` on the two waitForSelector/waitForFunction calls swallows timeout reasons — log to serverLog for easier CI triage. OPTIONAL: extract MIN_SCENE_EDGE_PX=500 constant with rationale (Minimap dims could change); share `DATA_PANE = { preview: 'preview', graph: 'graph' }` constant between page.tsx and the test via src/lib/prism/player/dom-contract.ts so the stringly-typed selector can't drift."
     },
     {
       "id": "T06",
@@ -228,18 +228,24 @@
       "taskId": "T04",
       "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
       "verifiedAt": "2026-04-22T16:44:00Z"
+    },
+    {
+      "iteration": 6,
+      "taskId": "T05",
+      "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
+      "verifiedAt": "2026-04-22T16:56:43Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "1644db5e5738ebb988ae77b2b876d9974dc198e5"
   },
   "phaseCaps": {
     "§10": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
