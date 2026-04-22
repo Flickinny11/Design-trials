@@ -130,3 +130,4 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - iter 2 — T01 — §10.14 — hub-router ts module + window.__prism debug handle + navbar-link active-section latch (8/8 Playwright checks pass) — 32a09e24
 - iter 3 — T02 — §10.15 — breakpoints.mjs helper + boot.ts active-breakpoint filter/transform + home-hub.json overrides on 6 node types (35/35 T02 checks; 6/40 nodes reflow; mobile hides nav-link-editor/docs/pricing/signin-btn) — 2c6badd7
 - iter 4 — T03 — §3.1 — build-msdf emits .msdf.json alongside .fnt; build-prism bundles schemas/shared-types.js (HeroClickCounter/UserPreferences/AnalyticsSummary descriptors); 11/11 T03 checks pass; artifactHash efd5f0f5 — b57fa039
+- iter 5 — T04 — §10.3 — tests/lib/prism/player/T04.test.mjs locks the contract (8/8 checks pass: `npm run dev` boots Next dev, rebuilds .prism during boot, `/` returns 200 w/ ≥1 canvas, browser + direct-fetch both hit /prism-assets/mock-app.prism) — 8da71fde
