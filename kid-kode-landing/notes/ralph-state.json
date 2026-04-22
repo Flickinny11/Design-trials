@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0",
-  "updatedAt": "2026-04-22T15:32:24Z",
+  "updatedAt": "2026-04-22T15:50:11Z",
   "currentIteration": 2,
   "maxIterations": 50,
   "maxAttemptsPerTask": 3,
@@ -20,11 +20,11 @@
       "id": "T01",
       "title": "Wire hub-router nav scroll + active-section indicator",
       "specRefs": ["§10.14", "§7.4"],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Audit gap — navbar-link.js emits 'navigate' but no consumer wires GSAP scroll-to-section or toggles an active-section overlay. Implement a hub-router module in src/lib/prism/player/ that resolves 'navigate' events to section scroll targets, animates via GSAP, and swaps an active-indicator overlay on the hit navbar link."
+      "commit": "32a09e24",
+      "verifiedAt": "2026-04-22T15:50:11Z",
+      "notes": "Implemented src/lib/prism/player/hub-router.ts (virtual routing node) + window.__prism debug handle + navbar-link active-section latch. buildHomeHubRoutes() derives scroll targets from graph section-bg y positions. Playwright test tests/lib/prism/player/T01.test.mjs (8 checks) exercises nav + lock transfer end-to-end; all three gates pass (verify:prism 15/15, browser-smoke 6/6, T01 8/8). SHOULD-FIX (tracked): (a) scrollY targets use raw section-bg y — may hide section headers under navbar; consider header-pad offset. (b) sectionId↔link-label mapping (editor→hero, docs→features, pricing→settings) is confusing; rename one side. (c) routes exposed as live Map rather than ReadonlyMap facade. (d) container.__debug + window.__prism are unconditional in prod — consider a single __PRISM_DEBUG gate covering __prism + __prismBreakNode together. (e) scroll-viewport gsap.to on anonymous target stacks tweens if navigate fires mid-flight — needs gsap.killTweensOf. OPTIONAL: console.debug for unrouted sources; fold navbar-link external subscriptions into a helper. MUST FIX (resolved in this commit): progress log update added per CLAUDE.md rule requiring source-change commits to touch notes/prism-mock-progress.md."
     },
     {
       "id": "T02",
@@ -160,7 +160,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "5ef2cba11e5a884af49d7a19c76aec522fe8d2ceea755ff45b0d0b5ed05fcbeb"
+    "lastArtifactHash": "05d8d1fb89f7d576e24fca63dad90e835933d86c27e56437b90b08d87172e122"
   },
   "history": [
     {
@@ -168,6 +168,12 @@
       "taskId": "T00",
       "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db",
       "verifiedAt": "2026-04-22T14:59:03Z"
+    },
+    {
+      "iteration": 2,
+      "taskId": "T01",
+      "commit": "32a09e24",
+      "verifiedAt": "2026-04-22T15:50:11Z"
     }
   ]
 }
