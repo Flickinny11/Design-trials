@@ -29,6 +29,7 @@ const atlasPath = join(repoRoot, 'public', 'prism-assets', 'atlas-0.avif');
 const regionsPath = join(repoRoot, 'public', 'prism-assets', 'atlas-regions.json');
 const msdfPng = join(repoRoot, 'public', 'prism-assets', 'font-inter.msdf.png');
 const msdfFnt = join(repoRoot, 'public', 'prism-assets', 'font-inter.msdf.fnt');
+const msdfJson = join(repoRoot, 'public', 'prism-assets', 'font-inter.msdf.json');
 const outPrism = join(repoRoot, 'public', 'prism-assets', 'mock-app.prism');
 
 const PRISM_VERSION = '0.1.0';
@@ -143,6 +144,18 @@ async function main() {
     zip.folder('assets').file('font-inter.msdf.png', pngBuf);
     entries.push({ path: 'assets/font-inter.msdf.fnt', sha256: sha256(fntBuf), bytes: fntBuf.length });
     entries.push({ path: 'assets/font-inter.msdf.png', sha256: sha256(pngBuf), bytes: pngBuf.length });
+
+    // §3.1 / §5.4 — the spec names MSDF metadata as `font-inter.msdf.json`.
+    // build-msdf.mjs emits both the pixi-consumable .fnt (XML) and this JSON
+    // copy; the .json ships for layout-contract compliance (msdf-loader.ts
+    // still reads the .fnt).
+    if (existsSync(msdfJson)) {
+      const jsonBuf = readFileSync(msdfJson);
+      zip.folder('assets').file('font-inter.msdf.json', jsonBuf);
+      entries.push({ path: 'assets/font-inter.msdf.json', sha256: sha256(jsonBuf), bytes: jsonBuf.length });
+    } else {
+      console.warn('[build-prism] font-inter.msdf.json missing — rebuild MSDF with `npm run build:msdf` to include the spec-named metadata file.');
+    }
   } else {
     console.warn('[build-prism] MSDF font not found — skipping. Run `npm run build:msdf` to include.');
   }
