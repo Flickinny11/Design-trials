@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
-  "updatedAt": "2026-04-22T14:50:00Z",
-  "currentIteration": 0,
+  "updatedAt": "2026-04-22T14:54:19Z",
+  "currentIteration": 1,
   "maxIterations": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -10,8 +10,8 @@
       "id": "T00",
       "title": "Lock §10.19 artifact-layout assertion as a reusable test",
       "specRefs": ["§10.19", "§3.1"],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Warm-up / loop-mechanics proof. The audit VERIFIED §10.19 (`unzip -l` shows manifest.json, graph.json, nodes/*.js, backends/*.js, assets/*, meta/*). Encode that assertion as tests/artifact-layout.test.mjs — run `unzip -l public/prism-assets/mock-app.prism`, parse entries, assert the required root paths exist. The test must fail if any required entry is absent. Since the criterion is already satisfied, expect the test to pass on first run — per /ralph-step step 6, mark the task done with a note instead of forcing an implementation change. NOTE: this task is permitted to pass-without-implementation per step 6's explicit clause."
