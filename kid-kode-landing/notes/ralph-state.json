@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T15:57:20Z",
+  "updatedAt": "2026-04-22T16:10:31Z",
   "currentIteration": 3,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -39,11 +39,11 @@
         "§10.15",
         "§14"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Audit gap — no node in home-hub.json declares transformByBreakpoint or visibleAtBreakpoints, and player/boot.ts applies transforms as-is. Add breakpoint declarations on at least every visible node type (navbar, hero, feature-card, settings, stats, footer) covering desktop-wide (>1440), desktop (1024-1440), tablet (768-1024), mobile (<768), and wire responsive rewrite in boot.ts."
+      "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
+      "verifiedAt": "2026-04-22T16:10:31Z",
+      "notes": "Implemented src/lib/prism/player/breakpoints.mjs (pure helper: classifyBreakpoint / resolveTransform / isVisibleAtBreakpoint) + .d.ts typings. Boot.ts picks currentBreakpoint from window.innerWidth (falls back to hub.layout.viewportWidth), filters nodes via isVisibleAtBreakpoint, resolves transforms via resolveTransform on both initial mount and SHR rebuildNode, exposes {currentBreakpoint, hiddenNodeIds} on window.__prism. home-hub.json gains transformByBreakpoint on 6 representatives (navbar-bg, hero-card-bg, feature-card-1-bg, settings-section-bg, stats-card-bg, footer-bg) and visibleAtBreakpoints excluding mobile on navbar-link-{editor,docs,pricing}+navbar-signin-btn. tests/lib/prism/player/T02.test.mjs — 35 checks across 5 phases (A helper, B data, C artifact, D boot wiring, E Playwright at 1920+720) all pass; verify:prism 15/15; browser-smoke 6/6. New artifactHash cfef6867f78c…. SHOULD-FIX (tracked): (a) fallback chain makes base transform unreachable at desktop-wide when a desktop override is declared — navbar-bg at 1920 resolves to the 1440 desktop override, not the base 1920; either declare desktop-wide explicitly on reflow nodes or treat base as implicit desktop-wide. (b) desktop-wide is a 4th key beyond schema extract L615-620 (desktop|tablet|mobile) — spec §10.15 names four viewports but schema names three; worth making §3/schema update explicit. (c) live resize not wired; mount-time-only currentBreakpoint. Window resize across 1024 leaves stale transforms. §10.15 admits mount-time reading but follow-up task should hook window.resize → reclassify + diff-rebuild. (d) only 6/40 nodes declare overrides; child elements of reflowed containers (hero-card-cta, headline/subhead, feature card icons/titles, footer links, etc.) will render off-screen at 720-wide. Wiring is proven; production mobile layout is not. (e) MountResult interface does not surface currentBreakpoint/hiddenNodeIds — only __prism debug handle does; non-debug consumers have to go through the global. (f) rebuildNode returns null for both hidden-at-breakpoint and missing-source — SHR repair cannot distinguish. OPTIONAL: breakpoints.d.ts could be breakpoints.d.mts for strict moduleResolution node16; classifyBreakpoint(NaN) defaults to desktop-wide (document); T02 phase-E depends on pre-existing .next build + artifact (brittle for hand runs)."
     },
     {
       "id": "T03",
@@ -196,7 +196,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "05d8d1fb89f7d576e24fca63dad90e835933d86c27e56437b90b08d87172e122"
+    "lastArtifactHash": "cfef6867f78c3d40a95daa8f29c772198e8bb94355278bdce622dbcef079a75f"
   },
   "history": [
     {
@@ -210,6 +210,12 @@
       "taskId": "T01",
       "commit": "32a09e24",
       "verifiedAt": "2026-04-22T15:50:11Z"
+    },
+    {
+      "iteration": 3,
+      "taskId": "T02",
+      "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
+      "verifiedAt": "2026-04-22T16:10:31Z"
     }
   ],
   "maxIterationsPerPhase": 50,
