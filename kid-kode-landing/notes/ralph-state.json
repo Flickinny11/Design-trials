@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T20:32:15Z",
+  "updatedAt": "2026-04-22T20:40:06Z",
   "currentIteration": 14,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -174,11 +174,11 @@
         "§10.22",
         "§10.23"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Use git log to find the commit immediately before Prism work began (likely before `3f40748 prism-mock: Section 5 setup + Phase 1 scaffolding`). Extract that commit's package.json and components/editor/ tree to tests/baseline/, diff current state, and assert (a) components/editor/ files are byte-identical save for the MockApp→PrismHost relocation, (b) package.json delta matches spec §8."
+      "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a",
+      "verifiedAt": "2026-04-22T20:40:06Z",
+      "notes": "Verified without implementation; pre-existing codebase satisfies §10.22 + §10.23. Baseline commit chosen as 9e72d15 'Migrate Prism Editor source from Vercel CLI deployment' — the last commit before the first Prism scaffold (8c58518 / 3f40748). Pre-Prism src/components/editor/ tree had 11 files incl. preview/LivePreview.tsx; current has 10 (LivePreview removed, which is the MockApp→PrismHost relocation in this codebase — spec references MockApp.tsx but the actual replaced file was LivePreview.tsx, and the replacement lives at src/components/prism-player/PrismHost.tsx per CLAUDE.md). tests/lib/prism/T13.test.mjs locks the contract — 24 checks: A1-A2 baseline reachability + 11-file tree, B1-B5 §10.22 (LivePreview removed, PrismHost present, 9 files byte-identical by sha256, GraphScene.tsx delta = exactly 3 @ts-expect-error lines replaced with whitespace-only lines (commit 1e1100f dropped unused TS2578 directives), current tree = baseline minus LivePreview), C1-C7 §10.23 (html-to-image removed, pixi.js+jszip added, 7 prism build devDeps added, 4 new scripts, dev+build prepend build:prism, start+lint unchanged), D1-D2 regression (baseline runtime deps minus html-to-image and baseline devDeps still present at matching version ranges). Test reads baseline via `git show 9e72d15:kid-kode-landing/...` so no baseline fixtures need to be copied into tests/. All 24 checks pass. Three gates: npm run verify:prism → 15/15, node scripts/browser-smoke.mjs → 6/6 (first iter 5/6 on runtime.mounted cold-start flake; retry clean — historically documented at T03/T05/T10/T11), tests/lib/prism/T13.test.mjs → 24/24. artifactHash unchanged (d75e241e8515…) — T13 only adds tests/. Skipped steps 7-10 per /ralph-step step-6 directive for already-satisfied tasks (precedent: T00, T04, T08, T12). SHOULD-FIX (tracked, deferred): (a) Baseline commit 9e72d15 hard-coded in test — if git history is ever rewritten to predate 9e72d15 with a different sha the test breaks silently with 'commit not reachable'; consider capturing the baseline into tests/baseline/ as tracked fixtures so the test is git-independent, but that adds ~120KB of duplicated source and a drift risk in the opposite direction. (b) B4's 'exactly 3 lines' is tightly coupled to commit 1e1100f's cleanup — a future commit that adds a new @ts-expect-error for a legitimate reason and then strips it would show as a 4th diff and fail; if that happens, move the file to UNCHANGED_FILES after a new baseline is negotiated (test message already points at this escape hatch). (c) D1/D2 compare version ranges as strings ('^1.1.5') — a dep bump from ^1.1.5 to ^1.1.7 within the same major would read as 'drift' and fail even though both are semver-compatible; if the landing page needs a security-patch bump on one of these packages, the test will require updating. Strictness is intentional for §10.22/§10.23 but documented here so a future iteration knows the tradeoff. (d) The spec language §10.22 names MockApp.tsx, but the codebase never had that file — the mapping to preview/LivePreview.tsx is load-bearing but lives only in CLAUDE.md + this test's comments; a future contributor unfamiliar with the project could delete the test when they can't find MockApp.tsx. An inline comment at the top of the test flags this explicitly. (e) Test relies on JSON.parse of a duplicate-key package.json (baseline 9e72d15 has 'html-to-image' twice) — JSON.parse picks the last value silently, so basePkg.dependencies['html-to-image'] is '^1.11.13'; C1's raw-string check guards against the duplication vanishing from baseline, but a future Node that rejects duplicate keys would break the test. OPTIONAL: (f) could add a check that src/components/prism-player/ tree contains ONLY PrismHost.tsx (catches accidental additions under prism-player that belong elsewhere) — not currently spec'd but a natural companion. (g) could grep for html-to-image across package-lock.json + src/ + scripts/ as a belt-and-suspenders on §1.4.6 — verify:prism already covers src/ via forbidden:html-to-image."
     },
     {
       "id": "T14",
@@ -276,18 +276,24 @@
       "taskId": "T12",
       "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
       "verifiedAt": "2026-04-22T20:30:00Z"
+    },
+    {
+      "iteration": 14,
+      "taskId": "T13",
+      "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a",
+      "verifiedAt": "2026-04-22T20:40:06Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 13,
-    "lastProductiveCommit": "476ce59bcbcd903eca6a4f75523ad4167d789e86"
+    "lastProductiveIteration": 14,
+    "lastProductiveCommit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a"
   },
   "phaseCaps": {
     "§10": {
-      "used": 11,
+      "used": 12,
       "cap": 50,
       "status": "active"
     },
