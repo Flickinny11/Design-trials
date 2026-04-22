@@ -50,6 +50,7 @@ export interface PrismDebugHandle {
   nodes: Map<string, NodeInstance>;
   currentBreakpoint: BreakpointName;
   hiddenNodeIds: string[];
+  shr: Shr;
 }
 
 declare global {
@@ -175,6 +176,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     if (src) originalSources.set(node.nodeId, src);
   }
 
+  // shr is forward-declared so rebuildNode's closure can consult
+  // shr.brokenNodeIds when deciding whether to install the broken
+  // pointertap shim. Assigned immediately below by createShr().
+  let shr: Shr;
+
   async function rebuildNode(nodeId: string): Promise<NodeInstance | null> {
     const node = graph.nodes.find((n) => n.nodeId === nodeId);
     if (!node) return null;
@@ -201,6 +207,15 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
         msdfFont,
       };
       const instance = createNode(ctx);
+      // §10.20 — if SHR has this node marked broken, swap the pointertap
+      // handler for a no-op that records failures. The visual layers and
+      // non-tap handlers (hover, press) are preserved so the sprite still
+      // looks alive — only the intended downstream event fails to fire.
+      if (shr && shr.brokenNodeIds.has(nodeId)) {
+        const c = instance.container as unknown as { removeAllListeners?: (event: string) => void; on: (event: string, h: () => void) => void };
+        c.removeAllListeners?.('pointertap');
+        c.on('pointertap', () => { void shr.recordFailure(nodeId); });
+      }
       instancesByNode.set(nodeId, instance);
       viewport.content.addChild(instance.container);
       return instance;
@@ -210,8 +225,9 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     }
   }
 
-  const shr = createShr({
+  shr = createShr({
     events, graph, originalSources, rebuildNode,
+    instances: instancesByNode,
     onRepairIndicator: (nodeId, phase) => {
       console.log(`[prism/shr] ${nodeId}: repair ${phase}`);
     },
@@ -241,6 +257,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
       nodes: instancesByNode,
       currentBreakpoint,
       hiddenNodeIds,
+      shr,
     };
   }
 
