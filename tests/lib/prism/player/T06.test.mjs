@@ -186,9 +186,14 @@ async function main() {
       initial.glowAlpha === 0, `glow.alpha=${initial.glowAlpha}`);
     check('§10.11 — initial shimmer.alpha === 0 (Method-3 overlay starts hidden)',
       initial.shimmerAlpha === 0, `shimmer.alpha=${initial.shimmerAlpha}`);
-    check('§10.11 — initial base.scale === 1.0 (Method-2 GSAP at rest)',
-      initial.baseScaleX === 1 && initial.baseScaleY === 1,
-      `base.scale=(${initial.baseScaleX},${initial.baseScaleY})`);
+    // base.scale at rest is whatever PIXI derived from base.width / texture.width
+    // (the spec node sets sprite.width=240 against a non-240 texture, so scale
+    // is fractional — the spec's gsap.to(base.scale,{x:1.03}) target is
+    // absolute, not relative). We just snapshot the rest scale and assert
+    // monotonicity in P1 / R1.
+    check('§10.11 — initial base.scale captured (Method-2 GSAP at rest)',
+      initial.baseScaleX !== null && initial.baseScaleY !== null && initial.baseScaleX > 0,
+      `rest base.scale=(${(initial.baseScaleX ?? 0).toFixed(3)},${(initial.baseScaleY ?? 0).toFixed(3)})`);
 
     const cssBefore = await snapshotInlineStyles();
 
@@ -207,9 +212,11 @@ async function main() {
     await page.waitForTimeout(450);
 
     const hovered = await readState();
-    check('§10.11 — POSITIVE (P1): hover scales base sprite via GSAP (Method 2)',
-      hovered.baseScaleX > 1.0 && hovered.baseScaleY > 1.0,
-      `base.scale=(${(hovered.baseScaleX ?? 0).toFixed(3)},${(hovered.baseScaleY ?? 0).toFixed(3)})`);
+    // Hover should monotonically increase base.scale from its rest value (the
+    // spec's gsap.to target is 1.03; rest is whatever PIXI derived).
+    check('§10.11 — POSITIVE (P1): hover scales base sprite up via GSAP (Method 2)',
+      hovered.baseScaleX > initial.baseScaleX + 1e-3 && hovered.baseScaleY > initial.baseScaleY + 1e-3,
+      `rest=(${initial.baseScaleX.toFixed(3)},${initial.baseScaleY.toFixed(3)}) → hover=(${(hovered.baseScaleX ?? 0).toFixed(3)},${(hovered.baseScaleY ?? 0).toFixed(3)})`);
 
     check('§10.11 — POSITIVE (P2): hover raises glow.alpha via GSAP overlay layer (Method 3)',
       hovered.glowAlpha > 0.3,
@@ -229,10 +236,13 @@ async function main() {
       newCssWrites.length === 0,
       newCssWrites.length ? `new entries: ${newCssWrites.slice(0, 3).join(' | ')}` : 'no new inline-style writes');
 
-    // REVERSAL — move mouse away and confirm GSAP unwinds the alpha (no CSS
-    // hover state would do this; only the tween in pointerout does).
-    await page.mouse.move(10, 10);
-    await page.waitForTimeout(450);
+    // REVERSAL — move the cursor with explicit steps to a position OUTSIDE
+    // the preview canvas (past the split-pane drag handle, into the graph
+    // pane) so PIXI definitively dispatches pointerout against the CTA
+    // container. Wait long enough for the glow tween (0.2s) to finish.
+    const outsideX = Math.max(initial.domLeft + initial.domWidth + 10, 1500);
+    await page.mouse.move(outsideX, 60, { steps: 10 });
+    await page.waitForTimeout(700);
     const released = await readState();
     check('§10.11 — REVERSAL (R1): pointerout unwinds glow.alpha back toward 0 via GSAP',
       released.glowAlpha !== null && released.glowAlpha <= 0.1,

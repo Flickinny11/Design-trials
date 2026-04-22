@@ -10,7 +10,11 @@ export function createNode(ctx) {
   container.cursor = 'pointer';
 
   // Layer 1 (bottom): soft glow, hidden by default.
+  // .label on each sprite is the §10.11 verification contract — the T06 test
+  // addresses layers by label so child-index drift can't make the test pass
+  // silently.
   const glow = new PIXI.Sprite(atlas.getTexture(overlayRegions['glow-pulse']));
+  glow.label = 'glow';
   glow.anchor.set(0.5);
   glow.x = transform.width / 2;
   glow.y = transform.height / 2;
@@ -21,6 +25,7 @@ export function createNode(ctx) {
 
   // Layer 2 (middle): base button.
   const base = new PIXI.Sprite(atlas.getTexture(region));
+  base.label = 'base';
   base.width = transform.width;
   base.height = transform.height;
   base.anchor.set(0.5);
@@ -30,6 +35,7 @@ export function createNode(ctx) {
 
   // Layer 3 (top): shimmer sweep, masked to button shape.
   const shimmer = new PIXI.Sprite(atlas.getTexture(overlayRegions['shimmer']));
+  shimmer.label = 'shimmer';
   shimmer.anchor.set(0.5);
   shimmer.x = -transform.width / 2;
   shimmer.y = transform.height / 2;
