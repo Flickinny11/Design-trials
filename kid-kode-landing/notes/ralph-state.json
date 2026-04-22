@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T18:19:15Z",
-  "currentIteration": 10,
+  "updatedAt": "2026-04-22T18:22:00Z",
+  "currentIteration": 11,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -137,8 +137,8 @@
         "§10.20",
         "§9"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: call window.__prismBreakNode('hero-card-cta'), click the CTA, assert 1–3 fails within tolerance window, assert indicator appears for ~1s, then click again and assert success. Final state emits 'build-flow-started' on the event bus."
