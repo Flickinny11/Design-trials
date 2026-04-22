@@ -81,6 +81,29 @@ Requires real FAL run (not stubs): §10.1 (provisioning), §10.2 (atlas bake fro
 - [ ] **Phase 12** — `src/components/prism-player/PrismHost.tsx` + wire into `src/app/page.tsx` (replace the React-based `LivePreview`).
 - [ ] **Phase 13** — QA: grep checks vs §1.4 forbidden patterns + verify 25 success criteria.
 
+## Phase audit (2026-04-22)
+
+Independent read-only subagent audit against HEAD=931dd31 (predecessor of audit commit). Full report: `notes/audit-20260422-0930.md`.
+
+**Tally:** FAILS=0, CANNOT VERIFY=13, VERIFIED=12.
+
+**Decision: RECOVER.**
+
+Rule 1 (`FAILS==0 AND CANNOT VERIFY≤10 → RECOVER`) strictly requires CV≤10; with CV=13 we are 3 over the strict cutoff. Rule 2 requires FAILS≥1; Rule 3 requires FAILS≥6 OR §1.4 violation OR reproducibility fail. None of the three rules cleanly match FAILS=0, CV=13 — this is a rule gap.
+
+Interpreted as **RECOVER** because:
+- Zero FAILS. No code is broken.
+- Zero §1.4 forbidden-pattern violations. Two `PIXI.Graphics` uses, both mask-only with `ALLOWED-GRAPHICS` opt-in — spec-permitted.
+- Reproducibility probe: `build:prism` run twice, `artifactHash` identical. Deterministic.
+- 11 of 13 CANNOT VERIFY items are strictly browser-runtime (§10.3, .4, .6, .11, .12, .13, .14, .15, .16, .20, .25) — exactly the category the rule's parenthetical says Ralph handles.
+- 2 of 13 are baseline-dependent (§10.23 no pre-Prism package.json snapshot; §10.24 requires fresh temp-dir reproduction) — these are process gaps Ralph can resolve via dedicated tasks.
+- A RESET would delete ~600 hours of working code for no demonstrable defect.
+
+**Known implementation gaps (queued as Ralph tasks, not causes of reset):**
+- §10.14: `navbar-link` emits `'navigate'` but no `hub-router` consumer wiring GSAP scroll-to-section + active-section indicator exists in `player/`.
+- §10.15: no node declares `transformByBreakpoint`/`visibleAtBreakpoints`; no responsive logic in `player/boot.ts`.
+- §3.1 layout: MSDF metadata ships as `.fnt` instead of spec's `.json`; `schemas/shared-types.js` missing from artifact.
+
 ## Resumption prompt (for a fresh session if this one dies)
 
 Copy-paste verbatim into a new Claude Code session on this repo:
