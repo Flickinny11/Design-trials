@@ -47,7 +47,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-bg",
-        "transform": { "x": 0, "y": 0, "width": 1920, "height": 80, "z": 100 }
+        "transform": { "x": 0, "y": 0, "width": 1920, "height": 80, "z": 100 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 0, "y": 0, "width": 1440, "height": 72, "z": 100 },
+          "tablet":  { "x": 0, "y": 0, "width": 1024, "height": 64, "z": 100 },
+          "mobile":  { "x": 0, "y": 0, "width":  768, "height": 56, "z": 100 }
+        }
       },
       "intent": {
         "caption": "Navigation bar background — dark translucent bar spanning the top of the viewport.",
@@ -143,7 +148,8 @@
       "visual": {
         "sourceAsset": "navbar-link-editor",
         "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 612, "y": 20, "width": 80, "height": 40, "z": 101 }
+        "transform": { "x": 612, "y": 20, "width": 80, "height": 40, "z": 101 },
+        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
       },
       "intent": {
         "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
@@ -182,7 +188,8 @@
       "visual": {
         "sourceAsset": "navbar-link-docs",
         "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 712, "y": 20, "width": 72, "height": 40, "z": 101 }
+        "transform": { "x": 712, "y": 20, "width": 72, "height": 40, "z": 101 },
+        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
       },
       "intent": {
         "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
@@ -221,7 +228,8 @@
       "visual": {
         "sourceAsset": "navbar-link-pricing",
         "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 804, "y": 20, "width": 80, "height": 40, "z": 101 }
+        "transform": { "x": 804, "y": 20, "width": 80, "height": 40, "z": 101 },
+        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
       },
       "intent": {
         "caption": "Nav link 'Pricing' — scroll-navigates to the pricing section.",
@@ -260,7 +268,8 @@
       "visual": {
         "sourceAsset": "navbar-signin-btn",
         "overlayRegions": ["glow-pulse", "shimmer"],
-        "transform": { "x": 1760, "y": 20, "width": 120, "height": 40, "z": 101 }
+        "transform": { "x": 1760, "y": 20, "width": 120, "height": 40, "z": 101 },
+        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
       },
       "intent": {
         "caption": "Sign-in button — gradient pill with 'Sign In' baked in, opens the sign-in modal on tap.",
@@ -329,7 +338,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "hero-card-bg",
-        "transform": { "x": 320, "y": 200, "width": 1280, "height": 480, "z": 50 }
+        "transform": { "x": 320, "y": 200, "width": 1280, "height": 480, "z": 50 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 160, "y": 180, "width": 1120, "height": 440, "z": 50 },
+          "tablet":  { "x":  64, "y": 160, "width":  896, "height": 420, "z": 50 },
+          "mobile":  { "x":  32, "y": 140, "width":  704, "height": 420, "z": 50 }
+        }
       },
       "intent": {
         "caption": "Hero card — rounded glass panel containing the headline, subhead, and CTA.",
@@ -499,7 +513,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-1-bg",
-        "transform": { "x": 200, "y": 780, "width": 460, "height": 360, "z": 41 }
+        "transform": { "x": 200, "y": 780, "width": 460, "height": 360, "z": 41 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 120, "y": 780, "width": 400, "height": 340, "z": 41 },
+          "tablet":  { "x":  64, "y": 780, "width": 448, "height": 320, "z": 41 },
+          "mobile":  { "x":  32, "y": 780, "width": 704, "height": 220, "z": 41 }
+        }
       },
       "intent": {
         "caption": "Feature card 1 panel — background for the 'AI-Powered Design' feature.",
@@ -889,7 +908,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "settings-section-bg",
-        "transform": { "x": 200, "y": 1600, "width": 1520, "height": 300, "z": 50 }
+        "transform": { "x": 200, "y": 1600, "width": 1520, "height": 300, "z": 50 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 120, "y": 1600, "width": 1200, "height": 280, "z": 50 },
+          "tablet":  { "x":  48, "y": 1600, "width":  928, "height": 260, "z": 50 },
+          "mobile":  { "x":  24, "y": 1600, "width":  720, "height": 320, "z": 50 }
+        }
       },
       "intent": {
         "caption": "Settings section — container for the notifications toggle and theme selector.",
@@ -998,7 +1022,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "stats-card-bg",
-        "transform": { "x": 600, "y": 1960, "width": 720, "height": 160, "z": 50 }
+        "transform": { "x": 600, "y": 1960, "width": 720, "height": 160, "z": 50 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 420, "y": 1960, "width": 600, "height": 140, "z": 50 },
+          "tablet":  { "x": 192, "y": 1960, "width": 640, "height": 140, "z": 50 },
+          "mobile":  { "x":  24, "y": 1960, "width": 720, "height": 160, "z": 50 }
+        }
       },
       "intent": {
         "caption": "Stats card — panel with 'Total Clicks:' label baked in; houses the MSDF live counter.",
@@ -1075,7 +1104,12 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-bg",
-        "transform": { "x": 0, "y": 2200, "width": 1920, "height": 300, "z": 40 }
+        "transform": { "x": 0, "y": 2200, "width": 1920, "height": 300, "z": 40 },
+        "transformByBreakpoint": {
+          "desktop": { "x": 0, "y": 2200, "width": 1440, "height": 280, "z": 40 },
+          "tablet":  { "x": 0, "y": 2200, "width": 1024, "height": 260, "z": 40 },
+          "mobile":  { "x": 0, "y": 2200, "width":  768, "height": 260, "z": 40 }
+        }
       },
       "intent": {
         "caption": "Footer background.",

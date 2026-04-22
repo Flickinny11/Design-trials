@@ -22,6 +22,13 @@ import { createStateManager } from './state-manager';
 import { createHubRouter, type HubRoute, type HubRouter } from './hub-router';
 import { createLocalBackend } from '../local-backend';
 import { createShr, type Shr } from '../shr';
+import {
+  classifyBreakpoint,
+  resolveTransform,
+  isVisibleAtBreakpoint,
+  type BreakpointName,
+  type ResolvableVisual,
+} from './breakpoints.mjs';
 
 export interface MountResult {
   app: PIXI.Application;
@@ -41,6 +48,8 @@ export interface PrismDebugHandle {
   events: EventBus;
   graph: CompiledGraph;
   nodes: Map<string, NodeInstance>;
+  currentBreakpoint: BreakpointName;
+  hiddenNodeIds: string[];
 }
 
 declare global {
@@ -112,16 +121,31 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
   });
   app.stage.addChild(viewport.root);
 
+  // §10.15 — pick the active breakpoint from window.innerWidth (falling back
+  // to the hub's design width). Applied once at mount; live resize is out of
+  // scope for this iteration.
+  const viewportWidth =
+    typeof window !== 'undefined' && Number.isFinite(window.innerWidth)
+      ? window.innerWidth
+      : hub.layout.viewportWidth;
+  const currentBreakpoint: BreakpointName = classifyBreakpoint(viewportWidth);
+
   // Materialize each node, sorted by intent.visual.transform.z so draw order
   // matches author intent. Scoped backend per-node when backendRef is set.
   const instancesByNode = new Map<string, NodeInstance>();
+  const hiddenNodeIds: string[] = [];
   const nodesSorted = [...graph.nodes].sort((a, b) => a.visual.transform.z - b.visual.transform.z);
 
   for (const node of nodesSorted) {
+    if (!isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)) {
+      hiddenNodeIds.push(node.nodeId);
+      continue;
+    }
     try {
       const source = bundle.nodeModules.get(node.codeRef.replace(/^nodes\//, ''));
       if (!source) throw new Error(`missing node module: ${node.codeRef}`);
       const { createNode } = await loadNodeModule(source);
+      const effectiveTransform = resolveTransform(node.visual as ResolvableVisual, currentBreakpoint);
       const ctx: NodeCtx = {
         PIXI, gsap,
         atlas,
@@ -129,7 +153,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
         regions: node.visual.regions,
         overlayRegions: node.visual.overlayRegions,
         frameRegions: node.visual.frameRegions,
-        transform: node.visual.transform,
+        transform: effectiveTransform,
         events,
         state,
         backend: { call: backend.call },
@@ -154,6 +178,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
   async function rebuildNode(nodeId: string): Promise<NodeInstance | null> {
     const node = graph.nodes.find((n) => n.nodeId === nodeId);
     if (!node) return null;
+    if (!isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)) return null;
     const existing = instancesByNode.get(nodeId);
     if (existing) {
       existing.teardown();
@@ -163,13 +188,14 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     if (!src) return null;
     try {
       const { createNode } = await loadNodeModule(src);
+      const effectiveTransform = resolveTransform(node.visual as ResolvableVisual, currentBreakpoint);
       const ctx: NodeCtx = {
         PIXI, gsap, atlas,
         region: node.visual.region,
         regions: node.visual.regions,
         overlayRegions: node.visual.overlayRegions,
         frameRegions: node.visual.frameRegions,
-        transform: node.visual.transform,
+        transform: effectiveTransform,
         events, state, backend: { call: backend.call },
         intent: { ...node.intent, nodeId: node.nodeId },
         msdfFont,
@@ -213,6 +239,8 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
       events,
       graph,
       nodes: instancesByNode,
+      currentBreakpoint,
+      hiddenNodeIds,
     };
   }
 

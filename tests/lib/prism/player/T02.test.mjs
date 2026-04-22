@@ -133,10 +133,16 @@ async function phaseA() {
     check('A3 — resolveTransform falls back desktop-wide → desktop', r3 === desktopXF || (r3 && r3.width === 1280));
 
     const r4 = rt({ transform: base, transformByBreakpoint: { mobile: mobileXF, desktop: desktopXF } }, 'tablet');
-    // tablet not declared; fallback chain should pick base (neither desktop nor mobile is a tablet-fallback)
-    check('A3 — resolveTransform falls back tablet → base when only mobile/desktop declared',
-          r4 === base || (r4 && r4.width === 1920),
+    // tablet not declared; narrower→wider fallback picks desktop (never mobile).
+    check('A3 — resolveTransform falls back tablet → desktop when no tablet override',
+          r4 === desktopXF || (r4 && r4.width === 1280),
           `got width=${r4 && r4.width}`);
+
+    const r5 = rt({ transform: base, transformByBreakpoint: { mobile: mobileXF } }, 'tablet');
+    // only mobile declared; tablet must NOT fall back to mobile — returns base.
+    check('A3 — resolveTransform does NOT fall tablet → mobile (never narrower)',
+          r5 === base || (r5 && r5.width === 1920),
+          `got width=${r5 && r5.width}`);
   }
 
   if (typeof mod.isVisibleAtBreakpoint === 'function') {
@@ -268,7 +274,7 @@ async function phaseE() {
       const page = await context.newPage();
       page.on('pageerror', (e) => console.error('[T02 pageerror wide]', e.message));
       await page.goto(URL, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(3500);
+      await page.waitForFunction(() => !!globalThis.__prism, null, { timeout: 15000 }).catch(() => {});
 
       const info = await page.evaluate(() => {
         const p = globalThis.__prism;
@@ -296,8 +302,16 @@ async function phaseE() {
       const context = await browser.newContext({ viewport: { width: 720, height: 900 }, deviceScaleFactor: 1 });
       const page = await context.newPage();
       page.on('pageerror', (e) => console.error('[T02 pageerror mobile]', e.message));
+      // Filter: only forward real JS errors; ignore WebGL framebuffer warnings
+      // emitted by the 3D graph pane (unrelated to the PrismHost-under-test).
+      page.on('console', (m) => {
+        if (m.type() === 'error' && !m.text().includes('glBlitFramebuffer')) {
+          console.error(`[T02 mobile console.error]`, m.text());
+        }
+      });
       await page.goto(URL, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(3500);
+      // mobile branch remounts PrismHost after SSR → client flip; wait until it installs __prism.
+      await page.waitForFunction(() => !!globalThis.__prism, null, { timeout: 20000 }).catch(() => {});
 
       const info = await page.evaluate(() => {
         const p = globalThis.__prism;
