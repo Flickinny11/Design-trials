@@ -23,6 +23,8 @@ export function createNode(ctx) {
   };
   container.on('pointerover', () => show('hover'));
   container.on('pointerout',  () => show('default'));
+  container.on('pointerdown', () => gsap.to(container.scale, { x: 0.96, y: 0.96, duration: 0.08 }));
+  container.on('pointerup',   () => gsap.to(container.scale, { x: 1.0,  y: 1.0,  duration: 0.12, ease: 'back.out(2)' }));
   container.on('pointertap',  () => events.emit('navigate', { source: intent.nodeId }));
 
   return { container, teardown: () => container.destroy({ children: true }) };

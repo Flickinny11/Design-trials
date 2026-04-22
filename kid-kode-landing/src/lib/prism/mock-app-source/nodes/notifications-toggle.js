@@ -23,6 +23,10 @@ export function createNode(ctx) {
   offSprite.alpha = isOn ? 0 : 1;
   onSprite.alpha = isOn ? 1 : 0;
 
+  container.on('pointerover', () => gsap.to(container.scale, { x: 1.03, y: 1.03, duration: 0.15 }));
+  container.on('pointerout',  () => gsap.to(container.scale, { x: 1.0,  y: 1.0,  duration: 0.15 }));
+  container.on('pointerdown', () => gsap.to(container.scale, { x: 0.97, y: 0.97, duration: 0.08 }));
+  container.on('pointerup',   () => gsap.to(container.scale, { x: 1.03, y: 1.03, duration: 0.12, ease: 'back.out(2)' }));
   container.on('pointertap', async () => {
     isOn = !isOn;
     state.set?.('notifications-enabled', isOn);

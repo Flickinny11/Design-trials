@@ -37,8 +37,19 @@ export function createNode(ctx) {
     return locked && sprites.active ? 'active' : 'default';
   }
 
-  container.on('pointerover', () => show('hover'));
-  container.on('pointerout',  () => show(resting()));
+  // Baseline container y for the subtle lift-hover (§10.16 — ensures
+  // pointerout always produces a visible unwind even when the link is
+  // latched in its 'active' state, where alpha-swap alone would stay still).
+  const baseY = transform.y;
+
+  container.on('pointerover', () => {
+    show('hover');
+    gsap.to(container.position, { y: baseY - 2, duration: 0.15, ease: 'power2.out' });
+  });
+  container.on('pointerout',  () => {
+    show(resting());
+    gsap.to(container.position, { y: baseY, duration: 0.15 });
+  });
   container.on('pointerdown', () => show('active'));
   container.on('pointerup',   () => show('hover'));
   container.on('pointertap',  () => {
