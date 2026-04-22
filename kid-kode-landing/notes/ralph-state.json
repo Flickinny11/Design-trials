@@ -1,15 +1,18 @@
 {
-  "schemaVersion": "1.0",
-  "updatedAt": "2026-04-22T15:51:17Z",
+  "schemaVersion": "1.1",
+  "updatedAt": "2026-04-22T15:57:20Z",
   "currentIteration": 3,
-  "maxIterations": 50,
+  "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "tasks": [
     {
       "id": "T00",
       "title": "Lock §10.19 artifact-layout assertion as a reusable test",
-      "specRefs": ["§10.19", "§3.1"],
+      "specRefs": [
+        "§10.19",
+        "§3.1"
+      ],
       "status": "done",
       "attemptCount": 1,
       "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db",
@@ -19,7 +22,10 @@
     {
       "id": "T01",
       "title": "Wire hub-router nav scroll + active-section indicator",
-      "specRefs": ["§10.14", "§7.4"],
+      "specRefs": [
+        "§10.14",
+        "§7.4"
+      ],
       "status": "done",
       "attemptCount": 1,
       "commit": "32a09e24",
@@ -29,7 +35,10 @@
     {
       "id": "T02",
       "title": "Add responsive breakpoints to home-hub and boot",
-      "specRefs": ["§10.15", "§14"],
+      "specRefs": [
+        "§10.15",
+        "§14"
+      ],
       "status": "in-progress",
       "attemptCount": 1,
       "commit": null,
@@ -39,7 +48,10 @@
     {
       "id": "T03",
       "title": "Reconcile .prism artifact layout with §3.1",
-      "specRefs": ["§3.1", "§10.19"],
+      "specRefs": [
+        "§3.1",
+        "§10.19"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -49,7 +61,9 @@
     {
       "id": "T04",
       "title": "Verify §10.3 — dev server boots + serves .prism",
-      "specRefs": ["§10.3"],
+      "specRefs": [
+        "§10.3"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -59,7 +73,9 @@
     {
       "id": "T05",
       "title": "Verify §10.4 — / route shows split pane (PixiJS left, 3D graph right)",
-      "specRefs": ["§10.4"],
+      "specRefs": [
+        "§10.4"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -69,7 +85,9 @@
     {
       "id": "T06",
       "title": "Verify §10.11 — pointer events fire intent overlays/GSAP, not CSS",
-      "specRefs": ["§10.11"],
+      "specRefs": [
+        "§10.11"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -79,7 +97,9 @@
     {
       "id": "T07",
       "title": "Verify §10.12 — wheel/trackpad/keyboard scroll with momentum",
-      "specRefs": ["§10.12"],
+      "specRefs": [
+        "§10.12"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -89,7 +109,9 @@
     {
       "id": "T08",
       "title": "Verify §10.13 — single-finger touch drag with flick momentum",
-      "specRefs": ["§10.13"],
+      "specRefs": [
+        "§10.13"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -99,7 +121,9 @@
     {
       "id": "T09",
       "title": "Verify §10.16 — pointerover/out/down/up/tap feedback on every interactive sprite",
-      "specRefs": ["§10.16"],
+      "specRefs": [
+        "§10.16"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -109,7 +133,10 @@
     {
       "id": "T10",
       "title": "Verify §10.20 — SHR toy: break → fail → indicator → restore",
-      "specRefs": ["§10.20", "§9"],
+      "specRefs": [
+        "§10.20",
+        "§9"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -119,7 +146,9 @@
     {
       "id": "T11",
       "title": "Verify §10.6 — visual polish baseline (pixel-regression vs reference)",
-      "specRefs": ["§10.6"],
+      "specRefs": [
+        "§10.6"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -129,7 +158,9 @@
     {
       "id": "T12",
       "title": "Verify §10.25 — smoke: no obvious wireframe artifacts",
-      "specRefs": ["§10.25"],
+      "specRefs": [
+        "§10.25"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -139,7 +170,10 @@
     {
       "id": "T13",
       "title": "Reconstruct §10.22–§10.23 baseline + diff",
-      "specRefs": ["§10.22", "§10.23"],
+      "specRefs": [
+        "§10.22",
+        "§10.23"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -149,7 +183,9 @@
     {
       "id": "T14",
       "title": "Verify §10.24 — clean-checkout reproducibility in temp dir",
-      "specRefs": ["§10.24"],
+      "specRefs": [
+        "§10.24"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "commit": null,
@@ -175,5 +211,28 @@
       "commit": "32a09e24",
       "verifiedAt": "2026-04-22T15:50:11Z"
     }
-  ]
+  ],
+  "maxIterationsPerPhase": 50,
+  "convergence": {
+    "stagnantStreak": 0,
+    "stagnantThreshold": 5,
+    "lastProductiveIteration": 2,
+    "lastProductiveCommit": "32a09e24"
+  },
+  "phaseCaps": {
+    "§10": {
+      "used": 2,
+      "cap": 50,
+      "status": "active"
+    }
+  },
+  "checkpoint": {
+    "iteration": 2,
+    "commit": "32a09e24",
+    "verifiedAt": "2026-04-22T15:50:11Z",
+    "artifactHash": "05d8d1fb89f7d576e24fca63dad90e835933d86c27e56437b90b08d87172e122",
+    "recordedAt": "2026-04-22T15:57:20Z"
+  },
+  "resumeFrom": null,
+  "breakpoints": []
 }
