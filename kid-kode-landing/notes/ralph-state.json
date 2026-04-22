@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:44:00Z",
-  "currentIteration": 5,
+  "updatedAt": "2026-04-22T16:38:02Z",
+  "currentIteration": 6,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -76,8 +76,8 @@
       "specRefs": [
         "§10.4"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: hit `/`, assert two <canvas> elements with non-zero dimensions, left pane carries PrismHost class/data-attr, right pane carries the 3D graph scene."
