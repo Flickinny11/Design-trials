@@ -148,14 +148,15 @@ async function main() {
     // §3.1 / §5.4 — the spec names MSDF metadata as `font-inter.msdf.json`.
     // build-msdf.mjs emits both the pixi-consumable .fnt (XML) and this JSON
     // copy; the .json ships for layout-contract compliance (msdf-loader.ts
-    // still reads the .fnt).
-    if (existsSync(msdfJson)) {
-      const jsonBuf = readFileSync(msdfJson);
-      zip.folder('assets').file('font-inter.msdf.json', jsonBuf);
-      entries.push({ path: 'assets/font-inter.msdf.json', sha256: sha256(jsonBuf), bytes: jsonBuf.length });
-    } else {
-      console.warn('[build-prism] font-inter.msdf.json missing — rebuild MSDF with `npm run build:msdf` to include the spec-named metadata file.');
+    // still reads the .fnt). Hard-fail if it's missing — §10.19 demands the
+    // artifact layout match §3.1 exactly.
+    if (!existsSync(msdfJson)) {
+      console.error('[build-prism] font-inter.msdf.json missing — run `npm run build:msdf` to regenerate the spec-named metadata file. §3.1 requires it.');
+      process.exit(1);
     }
+    const jsonBuf = readFileSync(msdfJson);
+    zip.folder('assets').file('font-inter.msdf.json', jsonBuf);
+    entries.push({ path: 'assets/font-inter.msdf.json', sha256: sha256(jsonBuf), bytes: jsonBuf.length });
   } else {
     console.warn('[build-prism] MSDF font not found — skipping. Run `npm run build:msdf` to include.');
   }

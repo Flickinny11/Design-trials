@@ -13,9 +13,12 @@
 // lives in the graph's `intent.contracts.{inputs,outputs}` map.
 
 // ── Primitive schema helpers (stand in for z.number / z.string / z.boolean) ──
-export const Number$ = Object.freeze({ kind: 'number', ref: 'z.number()' });
-export const String$ = Object.freeze({ kind: 'string', ref: 'z.string()' });
-export const Boolean$ = Object.freeze({ kind: 'boolean', ref: 'z.boolean()' });
+// `specRef` is documentation only — the literal expression a production Prism
+// build would compile into Zod. Consumers should treat these descriptors as
+// shape hints, not as evaluable code.
+export const Number$ = Object.freeze({ kind: 'number', specRef: 'z.number()' });
+export const String$ = Object.freeze({ kind: 'string', specRef: 'z.string()' });
+export const Boolean$ = Object.freeze({ kind: 'boolean', specRef: 'z.boolean()' });
 
 function object(shape) {
   return Object.freeze({ kind: 'object', shape: Object.freeze({ ...shape }) });
@@ -23,22 +26,24 @@ function object(shape) {
 
 // ── Contract schemas referenced by the mock graph ───────────────────────────
 
-// hero-card-cta backend (§3.1 line 475-478) — outputs { clickCount: z.number() }.
+// hero-card-cta — spec §3.1 line 475-478 declares outputs `{ clickCount: z.number() }`.
 // Matches POST /api/mock/track-cta-click response body (§6 / backends/hero-card-cta.js).
 export const HeroClickCounter = object({
   clickCount: Number$,
 });
 
-// user-preferences backend (§6 "Mock Endpoint List") — GET returns, POST accepts.
+// user-preferences backend (§6 line 1000-1002) — GET returns / POST accepts.
 export const UserPreferences = object({
   notificationsEnabled: Boolean$,
   theme: String$,
 });
 
-// analytics backend (§6 Mock Endpoint List) — POST body shape.
-export const AnalyticsEvent = object({
-  event: String$,
-  nodeId: String$,
+// analytics backend (§6 line 1004-1005) — GET returns an aggregated rollup.
+// Shape taken verbatim from backends/analytics.js (the source of truth).
+export const AnalyticsSummary = object({
+  totalClicks: Number$,
+  sessions: Number$,
+  avgSessionTime: Number$,
 });
 
 // Convenience registry — lets tooling introspect the full schema set without
@@ -46,5 +51,5 @@ export const AnalyticsEvent = object({
 export const schemas = Object.freeze({
   HeroClickCounter,
   UserPreferences,
-  AnalyticsEvent,
+  AnalyticsSummary,
 });
