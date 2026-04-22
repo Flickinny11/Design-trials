@@ -2,3 +2,6 @@
 # Only the baseline (home-hub-hero.png) is tracked.
 T11-actual.png
 T11-diff.png
+# T12 debug artifacts — regenerated on every test run when §10.25 heuristic fails.
+T12-actual.png
+T12-mask.png
