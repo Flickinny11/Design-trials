@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
-  "updatedAt": "2026-04-22T15:50:11Z",
-  "currentIteration": 2,
+  "updatedAt": "2026-04-22T15:51:17Z",
+  "currentIteration": 3,
   "maxIterations": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -30,8 +30,8 @@
       "id": "T02",
       "title": "Add responsive breakpoints to home-hub and boot",
       "specRefs": ["§10.15", "§14"],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Audit gap — no node in home-hub.json declares transformByBreakpoint or visibleAtBreakpoints, and player/boot.ts applies transforms as-is. Add breakpoint declarations on at least every visible node type (navbar, hero, feature-card, settings, stats, footer) covering desktop-wide (>1440), desktop (1024-1440), tablet (768-1024), mobile (<768), and wire responsive rewrite in boot.ts."
