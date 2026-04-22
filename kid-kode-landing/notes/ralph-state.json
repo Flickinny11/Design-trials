@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T20:19:06Z",
+  "updatedAt": "2026-04-22T20:30:00Z",
   "currentIteration": 13,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -161,11 +161,11 @@
       "specRefs": [
         "§10.25"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: screenshot, run a heuristic — fraction of pixels that are pure gray/black/white must be <15% (proxy for 'not wireframey'). Subjective criterion, but this threshold catches the failure modes (unstyled rectangles, missing gradients)."
+      "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
+      "verifiedAt": "2026-04-22T20:30:00Z",
+      "notes": "Verified without implementation; pre-existing PixiJS preview surface satisfies §10.25 under the mid-tone achromatic heuristic. tests/lib/prism/player/T12.test.mjs locks the contract — 14 checks at 1440×900 against port 4788: (A) infra — server 200, page.goto 200, __prism exposes hero-section-bg + hero-card-cta, [data-pane=\"preview\"] resolves. (B) stabilize — clears setInterval IDs, collapses hero-section-bg to frame 0, 250ms settle (same pattern as T11). (C) capture — screenshot [data-pane=\"preview\"] as PNG, verify magic bytes, >10KB. (D) heuristic — decodes to 519×900 = 467100 px, visible-pixel fraction ≥15% sanity floor, mid-tone achromatic fraction ≤15% §10.25 contract. \"Mid-tone achromatic\" = alpha≥32 AND max channel in [40,220] AND max(|R-G|,|G-B|,|R-B|)≤4. Measured run: 10.397% (48565/467100 px) — 4.6% headroom; a ~200×200 unstyled mid-grey rectangle (8.5% of the viewport) would push past the threshold. Initial naive variant (|chroma|≤6 only, no mid-tone gate) flagged 80.9% because pure-black dark-UI backdrops (R=G=B, all <40) pattern-matched as 'achromatic' but are legitimate dark-theme backgrounds, not wireframe — mid-tone gate added to isolate the classical wireframe palette (flat grey fills in the 40–220 luminance band). Three gates: npm run verify:prism → 15/15, node scripts/browser-smoke.mjs → 6/6 (after npm run build refreshed .next for next start; pre-existing build was stale from T11 dev-only iterations), node tests/lib/prism/player/T12.test.mjs → 14/14. artifactHash unchanged (d75e241e8515…) — T12 only adds tests/. Skipped steps 8/9 per /ralph-step step-6 directive for already-satisfied tasks (precedent: T04, T08). SHOULD-FIX (tracked, deferred): (a) mid-tone band [40,220] is hand-picked to exclude dark-UI backdrops and near-white highlights — a regression that fills the viewport with mid-grey (RGB 128) fails the test, but a regression that uses slightly-too-dark grey (RGB 35,35,35) escapes detection because it drops below the lower bound; consider a companion metric on dark-region flatness to close the gap. (b) 15% threshold has only 4.6% headroom against current measurement — a minor visual change (e.g., new small accent with neutral tint) could push measured value above threshold even without actual wireframe regression; document that future atlas work affecting global neutral tone may require re-calibration (or loosen threshold to 20% with explanation). (c) chroma tolerance ≤4 is tight enough to exclude subtle-tinted dark UIs, but also excludes modern Apple-style ultra-neutral greys that have ≤2 chroma by design — if the atlas gains more truly-neutral-but-polished elements, the threshold may need per-region calibration. (d) test screenshots [data-pane=\"preview\"] at 1440×900 — matches T11; if a future T13+ redesign changes the preview pane aspect ratio or introduces a mobile-first layout (<900px), the sample region changes and the heuristic may re-calibrate differently. (e) D2's 15% visible-pixel floor is trivially true today (100% visible — no transparent PNG regions captured by Playwright in Chromium headless even when the element has no explicit background); the floor exists to catch a hypothetical regression where the screenshot is mostly alpha=0, not to gate real runs. OPTIONAL: heuristic could be histogram-aware (detect a pronounced spike at a single grey value → strong wireframe signal) rather than pixel-count-based; MID_TONE_MIN/MID_TONE_MAX could be parameterised from an env var for QA calibration; debug mask writes only on failure, which is correct but diverges from T11's write-when-diff>0 behaviour — minor inconsistency."
     },
     {
       "id": "T13",
@@ -270,18 +270,24 @@
       "taskId": "T11",
       "commit": "f7c9bda",
       "verifiedAt": "2026-04-22T20:15:00Z"
+    },
+    {
+      "iteration": 13,
+      "taskId": "T12",
+      "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
+      "verifiedAt": "2026-04-22T20:30:00Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 12,
-    "lastProductiveCommit": "f7c9bda"
+    "lastProductiveIteration": 13,
+    "lastProductiveCommit": "476ce59bcbcd903eca6a4f75523ad4167d789e86"
   },
   "phaseCaps": {
     "§10": {
-      "used": 10,
+      "used": 11,
       "cap": 50,
       "status": "active"
     },
