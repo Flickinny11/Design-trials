@@ -1,0 +1,4 @@
+# T11 debug artifacts — regenerated on every test run when diff > 0.
+# Only the baseline (home-hub-hero.png) is tracked.
+T11-actual.png
+T11-diff.png
