@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:56:43Z",
-  "currentIteration": 6,
+  "updatedAt": "2026-04-22T17:02:16Z",
+  "currentIteration": 7,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -88,8 +88,8 @@
       "specRefs": [
         "§10.11"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: hover over the hero CTA sprite, assert DOM does not get new inline `.style.background/border/boxShadow/backgroundImage`. Assert the shimmer overlay alpha changes (read via a window-side hook exposing container state) or a GSAP tween starts (evidence: state-manager emits a 'tween-start' event bus entry)."
