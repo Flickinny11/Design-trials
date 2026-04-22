@@ -123,3 +123,7 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - **`hub-router`** is a virtual target (not a node). Nav-link triggers emit edges `to: "hub-router"`; the scroll engine resolves them to section-id scroll targets at runtime.
 - **pnpm vs npm.** Spec §8.3 uses `pnpm`. Repo uses npm (has `package-lock.json`). Decision: npm throughout. Already reflected in `package.json`.
 - **`msdf-atlas-gen` vs `msdf-bmfont-xml`.** `msdf-atlas-gen` is a C++ binary flaky on macOS; `msdf-bmfont-xml` is pure JS and outputs PixiJS-v8-compatible data. Decision: `msdf-bmfont-xml` via a `build-msdf.mjs` script (not the CLI invocation in spec §5.3).
+
+## Ralph iterations
+
+- iter 1 — T00 — §10.19 — tests/artifact-layout.test.mjs locked (9 checks pass on HEAD; no impl needed per step 6) — 5155ac99
