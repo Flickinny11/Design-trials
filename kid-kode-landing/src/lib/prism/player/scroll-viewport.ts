@@ -45,24 +45,47 @@ export function createScrollViewport(opts: Options): ScrollViewport {
     content.y = -scrollY;
   }
 
-  function scrollTo(y: number, { duration = 0.3 }: { duration?: number } = {}) {
-    const target = clamp(y);
-    if (duration <= 0) { scrollY = target; applyScroll(); return; }
-    gsap.to({ y: scrollY }, {
+  // Single in-flight tween. Any new scrollTo / wheel input kills the previous
+  // so they don't stack, and accumulates its remaining delta into the next
+  // target (that's what makes a trackpad burst feel like one continuous
+  // momentum throw rather than eight discrete steps).
+  let activeTween: gsap.core.Tween | null = null;
+  let tweenTarget: number = 0;
+
+  function runTween(target: number, duration: number) {
+    if (activeTween) activeTween.kill();
+    tweenTarget = target;
+    activeTween = gsap.to({ y: scrollY }, {
       y: target, duration, ease: 'power2.out',
       onUpdate(this: gsap.core.Tween) {
         const next = (this.targets()[0] as { y: number }).y;
         scrollY = next;
         applyScroll();
       },
+      onComplete() { activeTween = null; },
     });
   }
 
-  // Wheel / trackpad.
+  function scrollTo(y: number, { duration = 0.3 }: { duration?: number } = {}) {
+    const target = clamp(y);
+    if (duration <= 0) {
+      if (activeTween) { activeTween.kill(); activeTween = null; }
+      scrollY = target; applyScroll(); return;
+    }
+    runTween(target, duration);
+  }
+
+  // Wheel / trackpad. Momentum-eased via GSAP (§10.12): each wheel event
+  // accumulates its deltaY into the running target so successive events
+  // compound naturally, and a single ease-out tween carries scrollY to that
+  // target. 0.8s is long enough that a trackpad burst feels inertial rather
+  // than discrete, but short enough that a big mouse-wheel pulse doesn't
+  // feel laggy.
   const onWheel = (e: WheelEvent) => {
     e.preventDefault();
-    scrollY = clamp(scrollY + e.deltaY);
-    applyScroll();
+    const basis = activeTween ? tweenTarget : scrollY;
+    const target = clamp(basis + e.deltaY);
+    runTween(target, 0.8);
   };
 
   // Touch drag with flick inertia.
