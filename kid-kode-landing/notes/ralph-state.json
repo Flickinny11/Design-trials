@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T16:12:00Z",
+  "updatedAt": "2026-04-22T16:35:00Z",
   "currentIteration": 4,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -52,11 +52,11 @@
         "§3.1",
         "§10.19"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Audit gap — MSDF metadata ships as font-inter.msdf.fnt instead of spec's .json; schemas/shared-types.js missing from artifact. Either emit a thin .msdf.json wrapper alongside .fnt (preserving runtime's .fnt loader), or author a Zod schemas/shared-types.js and pick it up in build-prism.mjs. Pick the less-disruptive option and document in progress log."
+      "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
+      "verifiedAt": "2026-04-22T16:35:00Z",
+      "notes": "Chose the additive path — kept both msdf metadata formats in the archive. build-msdf.mjs now runs generateBMFont twice (outputTypes 'xml' + 'json') and writes .fnt (pixi-consumable), .png (same bytes), and .msdf.json (BMFont JSON shape, pages[] normalised to 'font-inter.msdf.png'). build-prism.mjs bundles assets/font-inter.msdf.json alongside the existing .fnt+.png and hard-exits if it is missing (§10.19 demands exact §3.1 layout). Authored src/lib/prism/mock-app-source/schemas/shared-types.js — zero-dep descriptor-style schemas (HeroClickCounter, UserPreferences, AnalyticsSummary) with `specRef` fields that document the corresponding z.<x>() call a production build would compile. addDirIfPresent in build-prism.mjs picks up the new .js automatically. T03 test (tests/lib/prism/mock-app-source/T03.test.mjs) covers 11 checks: archive + manifest.entries presence for both new files, manifest.assets sha256+size entry for the .msdf.json, BMFont JSON shape (info/common/pages/chars) with required glyph fields, scaleW/scaleH↔PNG dim sanity, shared-types.js is valid ESM with ≥1 exported binding (+ dynamic-import smoke), HeroClickCounter+clickCount string presence, and on-disk source-of-truth existence. Spec-reviewer MUST FIX resolved: AnalyticsEvent (bogus {event,nodeId}) → AnalyticsSummary {totalClicks,sessions,avgSessionTime} per §6 line 1004-1005 + backends/analytics.js. Also resolved 2 SHOULD FIX inline: renamed `ref` → `specRef` on primitive descriptors; elevated build-prism missing-msdf.json branch from warn to exit(1). Browser-smoke first-run showed a borderline `runtime.mounted` timeout (still LOADING at 3.5s); second run and every subsequent run passed 6/6 cleanly — attributed to cold Next-start + ~5KB larger artifact; .fnt runtime bytes are identical. SHOULD-FIX (tracked, deferred): (a) build-msdf trust-two-parallel-runs-are-deterministic assumption is asserted in comment but not enforced; safer is to parse XML→JSON in-process or assert `xmlOut.textures[0].texture.equals(jsonOut.textures[0].texture)` after both runs to catch silent packer nondeterminism. (b) shared-types.js symbol naming `Number$/String$/Boolean$` — distinctive but shadow global constructors visually; `zNumber/zString/zBoolean` reads cleaner. (c) home-hub.json contract coverage gap — only hero-card-cta declares contracts; UserPreferences/AnalyticsSummary have no corresponding `contracts.outputs` entry on any node, so the schema module technically ships dead code from the graph's perspective. (d) Promise.all parallel generateBMFont is fine today but if the XML→JSON in-process path is adopted (see a), sequentialise to reduce heap pressure. OPTIONAL: build-prism's citation comment duplicates build-msdf's header."
     },
     {
       "id": "T04",
@@ -196,7 +196,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "cfef6867f78c3d40a95daa8f29c772198e8bb94355278bdce622dbcef079a75f"
+    "lastArtifactHash": "efd5f0f52dedbb76a85e3b32c7e9eaf84dbe6c4034b5328093400e3ddcac9db8"
   },
   "history": [
     {
@@ -216,18 +216,29 @@
       "taskId": "T02",
       "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
       "verifiedAt": "2026-04-22T16:10:31Z"
+    },
+    {
+      "iteration": 4,
+      "taskId": "T03",
+      "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
+      "verifiedAt": "2026-04-22T16:35:00Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 2,
-    "lastProductiveCommit": "32a09e24"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1"
   },
   "phaseCaps": {
     "§10": {
       "used": 2,
+      "cap": 50,
+      "status": "active"
+    },
+    "§3": {
+      "used": 1,
       "cap": 50,
       "status": "active"
     }
