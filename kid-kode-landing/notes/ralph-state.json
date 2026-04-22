@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:02:16Z",
+  "updatedAt": "2026-04-22T17:13:59Z",
   "currentIteration": 7,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -88,11 +88,11 @@
       "specRefs": [
         "§10.11"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: hover over the hero CTA sprite, assert DOM does not get new inline `.style.background/border/boxShadow/backgroundImage`. Assert the shimmer overlay alpha changes (read via a window-side hook exposing container state) or a GSAP tween starts (evidence: state-manager emits a 'tween-start' event bus entry)."
+      "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
+      "verifiedAt": "2026-04-22T17:13:59Z",
+      "notes": "Added .label = 'glow'/'base'/'shimmer' to the three hero-card-cta sprite layers (PIXI v8 metadata only — zero behaviour change) so the §10.11 Playwright test can address layers by name rather than child index. Test (tests/lib/prism/player/T06.test.mjs) — 12 checks at 1920×1080 against port 4782: server boot + page.goto 200, window.__prism exposes hero-card-cta NodeInstance, layers labelled, initial glow.alpha=0 + shimmer.alpha=0 + base.scale snapshot, POSITIVE (P1 base.scale up monotonically via Method-2 GSAP, P2 glow.alpha 0→0.6 via Method-3 overlay, P3 shimmer.alpha 0→~0.78 via Method-3 overlay), NEGATIVE (no new inline style.background/border/boxShadow/backgroundImage in [data-pane=preview]), REVERSAL (pointerout unwinds glow.alpha to 0 via GSAP). All three gates: verify:prism 15/15, browser-smoke 6/6, T06 12/12. artifactHash unchanged — c0985e52955eeaba… (deterministic; .label assignments don't affect manifest entries because hashing is over compiled-bundle bytes which DO include the strings 'glow'|'base'|'shimmer' but are stable). First test run revealed two false-positives: (i) initial base.scale is NOT 1.0 because PIXI computes scale from sprite.width÷textureWidth — the §3.4.1 verbatim spec gsap.to(base.scale,{x:1.03,y:1.03}) is an absolute target so 'rest scale' is fractional (~0.469,0.374) and the spec template has a latent visual bug (pointerout returns base to scale 1.0, NOT to its boot-rest 0.469; the button stays larger than at boot after the first hover); test now snapshots rest baseline and asserts hover>rest monotonically rather than hover>1.0. (ii) page.mouse.move(10,10) was insufficient to fire pointerout — moved to outsideX=max(domLeft+domWidth+10,1500) with steps:10 and 700ms wait and pointerout fired cleanly. SHOULD-FIX (tracked, deferred): (a) hero-card-cta.js header still says '(mock spec §3.4.1 verbatim, ctx-injected)' but file now has 3 .label = '…' assignments not in §3.4.1 (extract L207-239); either drop 'verbatim' from comment or hard-code child indices in T06 test (spec fixes order: glow=0, base=1, shimmerMask=2, shimmer=3) and remove labels — labels add metadata not used by SHR or any other runtime path. (b) snapshotInlineStyles only catches inline writes; §1.4 + §10.11 forbid ALL CSS-driven state effects, so a regression that does el.classList.add('is-hovered') styled via a global stylesheet would pass N1 silently — harden by also snapshotting getComputedStyle(...) for background/border/boxShadow before/after, OR snapshot el.className deltas. (c) outsideX move uses y=60 which is outside the CTA but only because the canvas top is 0; pin the move to y=initial.domTop+initial.pixiCenterY*scaleY (same y as hover) for clarity. (d) latent §3.4.1 bug: pointerout tweens base.scale to absolute 1.0 not to rest scale — the CTA stays visually larger than at boot after first hover; reporting upstream against the spec template, not patching here. OPTIONAL: hard-coded 240/2 + 64/2 for CTA half-extents — read from prism.graph.nodes.find(n=>n.nodeId==='hero-card-cta').visual.transform.{width,height} for self-updating; parent-walk for global PIXI coords skips PIXI v8 pivot/rotation — anchor to container.toGlobal({x:0,y:0}) for robustness; rationale comment for .label only present above glow — hoist above the three label assignments."
     },
     {
       "id": "T07",
@@ -196,7 +196,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "efd5f0f52dedbb76a85e3b32c7e9eaf84dbe6c4034b5328093400e3ddcac9db8"
+    "lastArtifactHash": "c0985e52955eeaba6c89556574067376987993770a93d9ac4ef992ab8669703e"
   },
   "history": [
     {
@@ -234,18 +234,24 @@
       "taskId": "T05",
       "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
       "verifiedAt": "2026-04-22T16:56:43Z"
+    },
+    {
+      "iteration": 7,
+      "taskId": "T06",
+      "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
+      "verifiedAt": "2026-04-22T17:13:59Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 6,
-    "lastProductiveCommit": "1644db5e5738ebb988ae77b2b876d9974dc198e5"
+    "lastProductiveIteration": 7,
+    "lastProductiveCommit": "6c282daedab902714b5260ff46b73f0f313c744f"
   },
   "phaseCaps": {
     "§10": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
