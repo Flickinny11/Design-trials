@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:13:59Z",
-  "currentIteration": 7,
+  "updatedAt": "2026-04-22T17:16:00Z",
+  "currentIteration": 8,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -100,8 +100,8 @@
       "specRefs": [
         "§10.12"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: dispatch wheel events with deltaY, capture scroll-viewport's reported y offset over time, assert it decays smoothly (non-linear ease-out). Also test ArrowDown/PageDown/Home/End keyboard navigation."
