@@ -17,8 +17,9 @@ import { loadAtlas, type Atlas } from './atlas-loader';
 import { loadMsdfFont, type MsdfFont } from './msdf-loader';
 import { loadNodeModule, type NodeCtx, type NodeInstance } from './module-registry';
 import { createScrollViewport, type ScrollViewport } from './scroll-viewport';
-import { createEventBus } from './event-bus';
+import { createEventBus, type EventBus } from './event-bus';
 import { createStateManager } from './state-manager';
+import { createHubRouter, type HubRoute, type HubRouter } from './hub-router';
 import { createLocalBackend } from '../local-backend';
 import { createShr, type Shr } from '../shr';
 
@@ -30,12 +31,50 @@ export interface MountResult {
   atlas: Atlas;
   msdfFont: MsdfFont | null;
   shr: Shr;
+  router: HubRouter;
   unmount: () => void;
+}
+
+export interface PrismDebugHandle {
+  router: HubRouter;
+  viewport: ScrollViewport;
+  events: EventBus;
+  graph: CompiledGraph;
+  nodes: Map<string, NodeInstance>;
 }
 
 declare global {
   // eslint-disable-next-line no-var
   var __prismBreakNode: ((nodeId: string) => void) | undefined;
+  // eslint-disable-next-line no-var
+  var __prism: PrismDebugHandle | undefined;
+}
+
+// Section routing table for the home hub. Each entry says "when node X emits
+// `navigate`, scroll to Y and light up navbar link Z". Scroll targets are
+// resolved from the graph at boot (hero-section-bg, feature-grid-section-bg,
+// settings-section-bg, footer-bg) so they track layout edits.
+function buildHomeHubRoutes(graph: CompiledGraph): HubRoute[] {
+  const yOf = (nodeId: string, fallback: number) => {
+    const node = graph.nodes.find((n) => n.nodeId === nodeId);
+    return node?.visual?.transform?.y ?? fallback;
+  };
+  const heroY     = yOf('hero-section-bg',         160);
+  const featuresY = yOf('feature-grid-section-bg', 760);
+  const settingsY = yOf('settings-section-bg',    1600);
+  const footerY   = yOf('footer-bg',              2200);
+
+  return [
+    { sourceNodeId: 'navbar-link-home',    scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
+    { sourceNodeId: 'navbar-link-editor',  scrollY: heroY,     sectionId: 'hero',     activeNavLinkId: 'navbar-link-editor'  },
+    { sourceNodeId: 'navbar-link-docs',    scrollY: featuresY, sectionId: 'features', activeNavLinkId: 'navbar-link-docs'    },
+    { sourceNodeId: 'navbar-link-pricing', scrollY: settingsY, sectionId: 'settings', activeNavLinkId: 'navbar-link-pricing' },
+    { sourceNodeId: 'navbar-logo',         scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
+    { sourceNodeId: 'footer-logo',         scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
+    { sourceNodeId: 'footer-link-privacy', scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
+    { sourceNodeId: 'footer-link-terms',   scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
+    { sourceNodeId: 'footer-link-contact', scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
+  ];
 }
 
 export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promise<MountResult> {
@@ -153,8 +192,28 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
   });
   shr.attach();
 
+  // Hub-router — resolves navbar/footer `navigate` events into GSAP scrolls
+  // and broadcasts `active-section-changed` for navbar-link nodes to latch
+  // their 'active' overlay. Created AFTER node materialization so each
+  // navbar-link has already registered its `active-section-changed` listener
+  // by the time the router emits its initial state.
+  const router = createHubRouter({
+    events,
+    viewport,
+    routes: buildHomeHubRoutes(graph),
+    initialSectionId: 'home',
+    initialNavLinkId: 'navbar-link-home',
+  });
+
   if (typeof window !== 'undefined') {
     globalThis.__prismBreakNode = (nodeId: string) => shr.breakNode(nodeId);
+    globalThis.__prism = {
+      router,
+      viewport,
+      events,
+      graph,
+      nodes: instancesByNode,
+    };
   }
 
   return {
@@ -165,13 +224,18 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     atlas,
     msdfFont,
     shr,
+    router,
     unmount() {
+      router.destroy();
       shr.detach();
       for (const i of instancesByNode.values()) i.teardown();
       viewport.destroy();
       atlas.destroy();
       app.destroy(true, { children: true });
-      if (typeof window !== 'undefined') delete globalThis.__prismBreakNode;
+      if (typeof window !== 'undefined') {
+        delete globalThis.__prismBreakNode;
+        delete globalThis.__prism;
+      }
     },
   };
 }

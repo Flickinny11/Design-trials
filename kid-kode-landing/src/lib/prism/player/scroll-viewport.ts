@@ -10,6 +10,7 @@ export interface ScrollViewport {
   content: PIXI.Container;      // where nodes are parented
   setContentHeight(h: number): void;
   scrollTo(y: number, opts?: { duration?: number }): void;
+  getScrollY(): number;
   destroy(): void;
 }
 
@@ -121,6 +122,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
     content,
     setContentHeight(h) { contentHeight = h; },
     scrollTo,
+    getScrollY() { return scrollY; },
     destroy() {
       canvas.removeEventListener('wheel', onWheel);
       canvas.removeEventListener('touchstart', onTouchStart);
