@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:57:27Z",
-  "currentIteration": 9,
+  "updatedAt": "2026-04-22T17:59:29Z",
+  "currentIteration": 10,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -124,8 +124,8 @@
       "specRefs": [
         "§10.16"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "Playwright: walk the list of interactive nodes from home-hub.json (nodes with non-empty `intent.behavior.interactions`), dispatch pointerover/down on each, assert a visible change (screenshot pixel diff or container property change)."
