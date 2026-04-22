@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:59:29Z",
+  "updatedAt": "2026-04-22T18:19:15Z",
   "currentIteration": 10,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -124,11 +124,11 @@
       "specRefs": [
         "§10.16"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: walk the list of interactive nodes from home-hub.json (nodes with non-empty `intent.behavior.interactions`), dispatch pointerover/down on each, assert a visible change (screenshot pixel diff or container property change)."
+      "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48",
+      "verifiedAt": "2026-04-22T18:19:15Z",
+      "notes": "Implementation closed 4 §10.16 coverage gaps discovered by T09's failing-first test (29 failing checks before, 99/99 passing after): (1) footer-logo — added pointerdown/pointerup scale-press (sprite.scale 0.96↔1.0, back.out(2) on release) matching navbar-logo pattern. (2) footer-link-{privacy,terms,contact} — added pointerdown/pointerup on container.scale (sprites in footer-link lack anchor so scaling the container produces the delta; visually acceptable for 100×24 labels). (3) footer-social-{twitter,github,discord} — same sprite.scale press pattern as footer-logo. (4) notifications-toggle — added full pointerover/out/down/up set on container.scale (1.0↔1.03 hover, 0.97 press). (5) navbar-link — added lift-hover (container.position.y ±2) on pointerover/out so that pointerout produces a visible unwind even when the link is latched in its §10.14 active state: without the lift, show(resting()='active') after pointertap leaves the alpha-swap target equal to the current state → zero fingerprint delta. The lift keeps §10.16 alive regardless of latch. T09 test (tests/lib/prism/player/T09.test.mjs) fires pointerover→pointerdown→pointerup→pointertap→pointerout in sequence via `container.emit(event)` and asserts fingerprint deltas after each transition (plus listenerCount≥1 for each of 5 events, and bus-emission OR sprite delta for pointertap). Fingerprint walks container subtree collecting (x,y,scaleX,scaleY,alpha,tint) per DisplayObject at 4 decimal places — rejects IEEE-754 float noise while catching GSAP mid-tween progress. 16 interactive nodes × 6 checks + 3 infra = 99 assertions; all pass. Three gates: verify:prism 15/15, browser-smoke 6/6, T09 99/99. New artifactHash d75e241e8515…. Spec-reviewer MUST FIX: none. SHOULD-FIX (tracked, deferred): (a) notifications-toggle pointerup scales to 1.03 (hover size) unconditionally; on a touch tap with no prior pointerover, user sees a brief enlarge-then-shrink-back-to-1.0 wobble — consider tracking a hover flag or scaling pointerup to 1.0 and letting pointerover re-enlarge if still hovered. (b) navbar-link lift-hover reads as test-shaped workaround for the latched-link alpha-swap no-op; the deeper fix is either relaxing T09's C5 for latched links or documenting the lift as intentional §10.14+§10.16 interplay in notes — current inline comment calls it out but is easy to miss. (c) navbar-link.js baseY = transform.y is captured at construction (boot.ts rebuilds on breakpoint change so baseY tracks resolved y correctly) — a one-liner noting the rebuild path would preempt the confusion. OPTIONAL: (d) scale press magic numbers (0.96 / 0.08s / 0.12s / back.out(2)) now appear in 5 node files — worth a shared helper `scalePress(container, { base, press, duration, releaseEase })` or an inline mixin to keep the feedback language consistent. (e) notifications-toggle uses 0.97 press while navbar-logo/footer press at 0.96 — cross-node inconsistency visible on rapid interaction. (f) navbar-link pointerover uses ease:'power2.out' but pointerout has default power1.out — asymmetric return feel."
     },
     {
       "id": "T10",
@@ -196,7 +196,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "c0985e52955eeaba6c89556574067376987993770a93d9ac4ef992ab8669703e"
+    "lastArtifactHash": "d75e241e8515efe98bb1729565114f0e9c607276a9d6aa6e090387607b071361"
   },
   "history": [
     {
@@ -252,18 +252,24 @@
       "taskId": "T08",
       "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
       "verifiedAt": "2026-04-22T17:57:27Z"
+    },
+    {
+      "iteration": 10,
+      "taskId": "T09",
+      "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48",
+      "verifiedAt": "2026-04-22T18:19:15Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 9,
-    "lastProductiveCommit": "ec830b51893f905f47807d2bec5af198bba0620c"
+    "lastProductiveIteration": 10,
+    "lastProductiveCommit": "c72260aa50fa56c215b3a8cca228438d01b67b48"
   },
   "phaseCaps": {
     "§10": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
