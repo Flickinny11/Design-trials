@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-22T17:44:17Z",
+  "updatedAt": "2026-04-22T17:57:27Z",
   "currentIteration": 9,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -112,11 +112,11 @@
       "specRefs": [
         "§10.13"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Playwright: use page.touchscreen to simulate a swipe; assert scroll continues post-release with decaying velocity. Emulate iPhone/Pixel viewport for realism."
+      "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
+      "verifiedAt": "2026-04-22T17:57:27Z",
+      "notes": "Verified without implementation; pre-existing src/lib/prism/player/scroll-viewport.ts satisfies §10.13. tests/lib/prism/player/T08.test.mjs locks the contract — 15 assertions at 1280×900 + hasTouch:true against port 4784: infrastructure (HTTP 200, __prism.viewport.getScrollY exposed), preconditions (A1 contentHeight > viewportHeight, A2 initial scrollY=0), and four gestures: (P1) 10-step up-drag (dy=10 / stepMs=20) → drag-during-gesture + flick continues past release + decays smoothly + total ≈ 275±80 px; (P2) same from y=600 downward → mirror; (P3) slow 8-step drag (dy=2.5 / stepMs=80ms → 31 px/s below the 40 px/s impl threshold) → zero post-release momentum; (P4) two-finger touchstart → scrollY unchanged (single-finger contract). Runs against artifactHash c0985e52… (unchanged — no implementation, no rebuild, 15/15 static-verify + 6/6 browser-smoke untouched). Synthetic-swipe mechanics: TouchEvent + Touch dispatched in-page; performance.now() shimmed during the swipe so the impl's dy/dt math sees stepMs-accurate intervals, then restored before touchend so the scrollTo GSAP tween runs on the real RAF clock (headless Chromium setTimeout throttles to ~4fps → 365ms per setTimeout(r,20), which without the shim collapses dy/dt below the 40 px/s flick threshold and silently makes flicks vanish). Original instinct-test (setTimeout-paced) flaked 5/15; the performance.now shim was the key insight. SHOULD-FIX (tracked, deferred): (a) y_at_release sampled via Playwright is already mid-tween (P1 observed 140-235 rather than the true release y=100 because Playwright RPC round-trips ~50-100ms while GSAP is already ticking) — C1 and C3 remain meaningful (C1: moved materially; C3: strictly monotonic progression toward y_final) but C2's 'continues past release' is really 'continues past mid-tween sample'; a tighter probe would patch scroll-viewport.ts to expose an event hook fired at touchend enter-time. (b) performance.now shim assumes no other code on the page reads performance.now during the 10-20ms synchronous swipe window (safe today: GSAP ticker fires on RAF, no active tween during resetScrollTo(duration:0), PixiJS renderer ticks on RAF) — adding an interval poll or sync logger to boot.ts would silently break this test. (c) C2 threshold of 20px is conservative because headless RAF jitter can make the post-release tween arrive at target within ~40ms of touchend before we re-sample; bumping dyPerStep (→ higher flick velocity → longer tween) would give more headroom but risks maxScroll clamps. (d) Desktop layout forced (1280×900 ≥ 900px breakpoint) because mobile (<900px) has no [data-pane=preview] wrapper in page.tsx — T05's SHOULD-FIX (a) applies; a true mobile-emulation test (iPhone landscape 844×390 or Pixel portrait) would exercise the mobile branch but can't find the canvas via [data-pane]. OPTIONAL: P4 tests two-finger touchstart but doesn't test mid-drag transition from one-finger to two-finger (finger A drags, finger B joins); impl's `if (e.touches.length !== 1) return` on touchstart handles the start-two case but onTouchMove doesn't re-check touches.length so a user who plants a second finger mid-drag keeps scrolling — defensible reading of the spec ('single-finger touch drag'), not tested here. Steps 7-10 (implementation, three-gate verify, spec-reviewer) skipped per /ralph-step step 6 directive for already-satisfied tasks."
     },
     {
       "id": "T09",
@@ -246,18 +246,24 @@
       "taskId": "T07",
       "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
       "verifiedAt": "2026-04-22T17:42:12Z"
+    },
+    {
+      "iteration": 9,
+      "taskId": "T08",
+      "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
+      "verifiedAt": "2026-04-22T17:57:27Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 8,
-    "lastProductiveCommit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809"
+    "lastProductiveIteration": 9,
+    "lastProductiveCommit": "ec830b51893f905f47807d2bec5af198bba0620c"
   },
   "phaseCaps": {
     "§10": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
