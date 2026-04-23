@@ -90,6 +90,51 @@ function classifySource(graph, filePath) {
   return null;
 }
 
+// Phase B: build a white-fill SVG mask in the shape requested by the node
+// (rounded-rect / circle / pill / oval). Composited via sharp with
+// blend='dest-in' to alpha-intersect the source pixels with the shape —
+// corners outside the shape become fully transparent in the atlas region.
+// Build-time sharp compositing only; no runtime masking infrastructure needed
+// since the sprite arrives already shape-clipped.
+function shapeMaskSvg(shape, w, h, radius) {
+  // Clamp radius to the inscribed max for the shape so sharp's SVG parser
+  // doesn't produce degenerate geometry when an author passes too-large r.
+  switch (shape) {
+    case 'rounded': {
+      const r = Math.max(0, Math.min(radius ?? Math.round(Math.min(w, h) * 0.08), Math.min(w, h) / 2));
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect x="0" y="0" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="white"/></svg>`;
+    }
+    case 'pill': {
+      const r = Math.min(w, h) / 2;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect x="0" y="0" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="white"/></svg>`;
+    }
+    case 'circle': {
+      const r = Math.min(w, h) / 2;
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><circle cx="${w / 2}" cy="${h / 2}" r="${r}" fill="white"/></svg>`;
+    }
+    case 'oval':
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><ellipse cx="${w / 2}" cy="${h / 2}" rx="${w / 2}" ry="${h / 2}" fill="white"/></svg>`;
+    default:
+      return null; // 'rect' or unknown — skip masking
+  }
+}
+
+async function applyShapeMaskIfNeeded(img, shape, radius) {
+  if (!shape || shape === 'rect') return img;
+  // Flush the pipeline first so metadata reflects post-resize dimensions,
+  // not the unresized input. Without this the SVG is built at the source
+  // image's native size but composited against the (smaller, resized)
+  // pipeline output and sharp rejects the mismatch.
+  const flushed = await img.png().toBuffer();
+  const reopened = sharp(flushed);
+  const meta = await reopened.metadata();
+  const svg = shapeMaskSvg(shape, meta.width, meta.height, radius);
+  if (!svg) return reopened;
+  // dest-in = alpha intersection: source RGB survives where the mask is
+  // opaque, becomes transparent where the mask is clear.
+  return reopened.composite([{ input: Buffer.from(svg), blend: 'dest-in' }]);
+}
+
 async function compositeTextIfNeeded(imgBuf, node) {
   if (!node?.intent?.visualSpec?.textContent?.length) return imgBuf;
   const sharpSvgEntries = node.intent.visualSpec.textContent.filter((t) => t.renderMethod === 'sharp-svg');
@@ -116,6 +161,15 @@ async function processSource(filePath, graph) {
     const scale = MAX_REGION_LONG_SIDE / longSide;
     img = img.resize(Math.round(info.width * scale), Math.round(info.height * scale), { kernel: 'lanczos3' });
   }
+  // Phase B: alpha-clip to the node's shape after resize (so the mask matches
+  // the final atlas-region dimensions). Overlays, frames, and sourceless
+  // images skip — only bases + states (anchored to a node with a shape hint)
+  // get masked.
+  const shape = meta.node?.visual?.shape;
+  const shapeRadius = meta.node?.visual?.shapeRadius;
+  if (shape && (meta.kind === 'base' || meta.kind === 'state')) {
+    img = await applyShapeMaskIfNeeded(img, shape, shapeRadius);
+  }
   const { data, info: rawInfo } = await img.raw().toBuffer({ resolveWithObject: true });
   return {
     assetKey: meta.assetKey,
@@ -124,7 +178,10 @@ async function processSource(filePath, graph) {
     height: rawInfo.height,
     channels: rawInfo.channels,
     data,
-    hash: createHash('sha256').update(composited).digest('hex').slice(0, 16),
+    hash: createHash('sha256')
+      .update(composited)
+      .update(`|shape=${shape ?? 'rect'}|r=${shapeRadius ?? 0}`)
+      .digest('hex').slice(0, 16),
     nativeWidth: info.width,
     nativeHeight: info.height,
   };

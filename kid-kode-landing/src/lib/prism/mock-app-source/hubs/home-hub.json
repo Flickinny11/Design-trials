@@ -47,7 +47,8 @@
             "height": 2820,
             "z": 0
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Page background — environmental backdrop spanning the full scroll length of the home hub.",
@@ -115,7 +116,8 @@
             "height": 56,
             "z": 100
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Navigation bar background — dark translucent bar spanning the top of the viewport.",
@@ -153,7 +155,8 @@
           "width": 160,
           "height": 48,
           "z": 101
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Kriptik wordmark — brand signet that navigates back to the home hub on tap.",
@@ -217,7 +220,9 @@
           "width": 72,
           "height": 40,
           "z": 101
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Nav link 'Home' — scroll-navigates to the top of the home hub.",
@@ -303,7 +308,9 @@
           "desktop-wide",
           "desktop",
           "tablet"
-        ]
+        ],
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
@@ -389,7 +396,9 @@
           "desktop-wide",
           "desktop",
           "tablet"
-        ]
+        ],
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
@@ -475,7 +484,9 @@
           "desktop-wide",
           "desktop",
           "tablet"
-        ]
+        ],
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Nav link 'Pricing' — scroll-navigates to the pricing section.",
@@ -560,7 +571,8 @@
           "desktop-wide",
           "desktop",
           "tablet"
-        ]
+        ],
+        "shape": "pill"
       },
       "intent": {
         "caption": "Sign-in button — pill-shaped button with 'Sign In' baked into its face, opens the sign-in modal on tap.",
@@ -661,7 +673,8 @@
             "height": 760,
             "z": 49
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Animated hero backdrop — atmospheric environment with drifting fog and dust motes (i2v, 24 fps loop).",
@@ -727,7 +740,9 @@
             "height": 640,
             "z": 50
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 24
       },
       "intent": {
         "caption": "Hero card — central surface containing the headline, subhead, and CTA.",
@@ -790,7 +805,9 @@
             "height": 120,
             "z": 51
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Hero headline — 'Build apps from a prompt' (diffusion-rendered for typographic impact).",
@@ -866,7 +883,9 @@
             "height": 40,
             "z": 51
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Hero subhead — clarifying tagline beneath the headline.",
@@ -948,7 +967,8 @@
             "height": 140,
             "z": 51
           }
-        }
+        },
+        "shape": "pill"
       },
       "intent": {
         "caption": "Primary CTA — 'Get Started'. Fires build-flow-started, tracks click via backend, pulses glow on success.",
@@ -1058,7 +1078,8 @@
             "height": 1600,
             "z": 40
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Feature grid section backdrop.",
@@ -1119,7 +1140,9 @@
             "height": 420,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 20
       },
       "intent": {
         "caption": "Feature card 1 panel — background for the 'AI-Powered Design' feature.",
@@ -1185,7 +1208,8 @@
             "height": 120,
             "z": 42
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "AI-Powered Design icon — sparkle / neural glyph.",
@@ -1246,7 +1270,9 @@
             "height": 56,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 1 title.",
@@ -1324,7 +1350,9 @@
             "height": 240,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 1 description.",
@@ -1402,7 +1430,9 @@
             "height": 420,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 20
       },
       "intent": {
         "caption": "Feature card 2 panel — background for the 'Instant Deploy' feature.",
@@ -1468,7 +1498,8 @@
             "height": 120,
             "z": 42
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Instant Deploy icon — lightning / rocket glyph.",
@@ -1529,7 +1560,9 @@
             "height": 56,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 2 title.",
@@ -1607,7 +1640,9 @@
             "height": 240,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 2 description.",
@@ -1685,7 +1720,9 @@
             "height": 420,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 20
       },
       "intent": {
         "caption": "Feature card 3 panel — background for the 'Self-Healing Runtime' feature.",
@@ -1751,7 +1788,8 @@
             "height": 120,
             "z": 42
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Self-Healing Runtime icon — shield / heart glyph.",
@@ -1812,7 +1850,9 @@
             "height": 56,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 3 title.",
@@ -1890,7 +1930,9 @@
             "height": 240,
             "z": 42
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Feature card 3 description.",
@@ -1968,7 +2010,8 @@
             "height": 320,
             "z": 50
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Settings section — container for the notifications toggle and theme selector.",
@@ -2034,7 +2077,8 @@
             "height": 88,
             "z": 51
           }
-        }
+        },
+        "shape": "pill"
       },
       "intent": {
         "caption": "Notifications toggle — layer-swap between off and on atlas regions (Method 3.4.2).",
@@ -2135,7 +2179,8 @@
             "height": 88,
             "z": 51
           }
-        }
+        },
+        "shape": "pill"
       },
       "intent": {
         "caption": "Theme selector — three-state layer-swap button (default / hover / pressed) that cycles light/dark themes.",
@@ -2259,7 +2304,9 @@
             "height": 160,
             "z": 50
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 20
       },
       "intent": {
         "caption": "Stats card — panel with 'Total Clicks:' label baked in; houses the MSDF live counter.",
@@ -2337,7 +2384,9 @@
             "height": 88,
             "z": 51
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 12
       },
       "intent": {
         "caption": "Live click counter — MSDF BitmapText bound to the heroCtaClicks state key (runtime-dynamic text).",
@@ -2430,7 +2479,8 @@
             "height": 260,
             "z": 40
           }
-        }
+        },
+        "shape": "rect"
       },
       "intent": {
         "caption": "Footer background.",
@@ -2491,7 +2541,8 @@
             "height": 60,
             "z": 41
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Footer Kriptik logo mark.",
@@ -2576,7 +2627,9 @@
             "height": 56,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 6
       },
       "intent": {
         "caption": "Footer link — Privacy.",
@@ -2678,7 +2731,9 @@
             "height": 56,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 6
       },
       "intent": {
         "caption": "Footer link — Terms.",
@@ -2780,7 +2835,9 @@
             "height": 56,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 6
       },
       "intent": {
         "caption": "Footer link — Contact.",
@@ -2878,7 +2935,8 @@
             "height": 72,
             "z": 41
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Social — Twitter / X icon, opens external link.",
@@ -2951,7 +3009,8 @@
             "height": 72,
             "z": 41
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Social — GitHub icon, opens external link.",
@@ -3024,7 +3083,8 @@
             "height": 72,
             "z": 41
           }
-        }
+        },
+        "shape": "circle"
       },
       "intent": {
         "caption": "Social — Discord icon, opens external link.",
@@ -3097,7 +3157,9 @@
             "height": 60,
             "z": 41
           }
-        }
+        },
+        "shape": "rounded",
+        "shapeRadius": 8
       },
       "intent": {
         "caption": "Footer copyright line.",
