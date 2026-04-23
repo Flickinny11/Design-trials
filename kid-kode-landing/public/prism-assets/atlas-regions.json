@@ -3,7 +3,7 @@
   "atlasFile": "atlas-0.avif",
   "atlasWidth": 4096,
   "atlasHeight": 4096,
-  "regionCount": 65,
+  "regionCount": 55,
   "regions": {
     "feature-card-1-bg": {
       "atlasId": "atlas-0",
@@ -16,21 +16,10 @@
       "nativeWidth": 672,
       "nativeHeight": 512
     },
-    "feature-card-1-desc": {
+    "feature-card-1-icon": {
       "atlasId": "atlas-0",
       "x": 0,
       "y": 392,
-      "w": 512,
-      "h": 128,
-      "hash": "b290f9b9a54aedb0",
-      "kind": "base",
-      "nativeWidth": 2048,
-      "nativeHeight": 512
-    },
-    "feature-card-1-icon": {
-      "atlasId": "atlas-0",
-      "x": 514,
-      "y": 0,
       "w": 512,
       "h": 512,
       "hash": "7fbcf5c187c3f025",
@@ -38,21 +27,10 @@
       "nativeWidth": 512,
       "nativeHeight": 512
     },
-    "feature-card-1-title": {
-      "atlasId": "atlas-0",
-      "x": 514,
-      "y": 514,
-      "w": 512,
-      "h": 51,
-      "hash": "e0bc6cc8d48047f9",
-      "kind": "base",
-      "nativeWidth": 2560,
-      "nativeHeight": 256
-    },
     "feature-card-2-bg": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 522,
+      "x": 514,
+      "y": 0,
       "w": 512,
       "h": 390,
       "hash": "4b6767967643b96c",
@@ -60,21 +38,10 @@
       "nativeWidth": 672,
       "nativeHeight": 512
     },
-    "feature-card-2-desc": {
-      "atlasId": "atlas-0",
-      "x": 514,
-      "y": 567,
-      "w": 512,
-      "h": 128,
-      "hash": "ecd6144ac402ce77",
-      "kind": "base",
-      "nativeWidth": 2048,
-      "nativeHeight": 512
-    },
     "feature-card-2-icon": {
       "atlasId": "atlas-0",
       "x": 514,
-      "y": 697,
+      "y": 392,
       "w": 512,
       "h": 512,
       "hash": "9f815b0c701fb56e",
@@ -82,37 +49,15 @@
       "nativeWidth": 512,
       "nativeHeight": 512
     },
-    "feature-card-2-title": {
-      "atlasId": "atlas-0",
-      "x": 0,
-      "y": 914,
-      "w": 512,
-      "h": 51,
-      "hash": "83346c51eca14bb9",
-      "kind": "base",
-      "nativeWidth": 2560,
-      "nativeHeight": 256
-    },
     "feature-card-3-bg": {
       "atlasId": "atlas-0",
       "x": 0,
-      "y": 967,
+      "y": 906,
       "w": 512,
       "h": 390,
       "hash": "5695073fe4137877",
       "kind": "base",
       "nativeWidth": 672,
-      "nativeHeight": 512
-    },
-    "feature-card-3-desc": {
-      "atlasId": "atlas-0",
-      "x": 514,
-      "y": 1211,
-      "w": 512,
-      "h": 128,
-      "hash": "f4f09b2ae30c62d6",
-      "kind": "base",
-      "nativeWidth": 2048,
       "nativeHeight": 512
     },
     "feature-card-3-icon": {
@@ -126,21 +71,10 @@
       "nativeWidth": 512,
       "nativeHeight": 512
     },
-    "feature-card-3-title": {
-      "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 514,
-      "w": 512,
-      "h": 51,
-      "hash": "35b4d6d4351d1b16",
-      "kind": "base",
-      "nativeWidth": 2560,
-      "nativeHeight": 256
-    },
     "feature-grid-section-bg": {
       "atlasId": "atlas-0",
       "x": 1028,
-      "y": 567,
+      "y": 514,
       "w": 512,
       "h": 267,
       "hash": "c4b22e40d4e45486",
@@ -151,7 +85,7 @@
     "footer-bg": {
       "atlasId": "atlas-0",
       "x": 1028,
-      "y": 836,
+      "y": 783,
       "w": 512,
       "h": 83,
       "hash": "62a6f437dd2b23d5",
@@ -159,54 +93,10 @@
       "nativeWidth": 2560,
       "nativeHeight": 416
     },
-    "footer-copyright-text": {
-      "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 921,
-      "w": 512,
-      "h": 19,
-      "hash": "d20c631e41b92c9f",
-      "kind": "base",
-      "nativeWidth": 2560,
-      "nativeHeight": 96
-    },
-    "footer-link-contact": {
-      "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 942,
-      "w": 512,
-      "h": 122,
-      "hash": "6d68d328b5fc4aba",
-      "kind": "base",
-      "nativeWidth": 2144,
-      "nativeHeight": 512
-    },
-    "footer-link-privacy": {
-      "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 1066,
-      "w": 512,
-      "h": 122,
-      "hash": "24bd98a36ecfabd8",
-      "kind": "base",
-      "nativeWidth": 2144,
-      "nativeHeight": 512
-    },
-    "footer-link-terms": {
-      "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 1190,
-      "w": 512,
-      "h": 122,
-      "hash": "18507ef190633289",
-      "kind": "base",
-      "nativeWidth": 2144,
-      "nativeHeight": 512
-    },
     "footer-logo": {
       "atlasId": "atlas-0",
       "x": 1028,
-      "y": 1314,
+      "y": 868,
       "w": 512,
       "h": 171,
       "hash": "aae004217416ecf1",
@@ -216,8 +106,8 @@
     },
     "footer-social-discord": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 0,
+      "x": 514,
+      "y": 906,
       "w": 512,
       "h": 512,
       "hash": "2857ed2e1c7f57d9",
@@ -227,8 +117,8 @@
     },
     "footer-social-github": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 514,
+      "x": 1028,
+      "y": 1041,
       "w": 512,
       "h": 512,
       "hash": "89b321f5d221b10a",
@@ -238,8 +128,8 @@
     },
     "footer-social-twitter": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 1028,
+      "x": 0,
+      "y": 1298,
       "w": 512,
       "h": 512,
       "hash": "e35e1ef06a3695bc",
@@ -249,8 +139,8 @@
     },
     "glow-pulse": {
       "atlasId": "atlas-0",
-      "x": 514,
-      "y": 1341,
+      "x": 1542,
+      "y": 0,
       "w": 512,
       "h": 512,
       "hash": "3c2fa71e2e1269ce",
@@ -260,8 +150,8 @@
     },
     "hero-card-bg": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 1359,
+      "x": 514,
+      "y": 1420,
       "w": 512,
       "h": 191,
       "hash": "76447349c251b131",
@@ -271,8 +161,8 @@
     },
     "hero-card-cta": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 1487,
+      "x": 1542,
+      "y": 514,
       "w": 512,
       "h": 137,
       "hash": "a3dd0aea9e5ac5ab",
@@ -282,8 +172,8 @@
     },
     "hero-section-bg": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 1552,
+      "x": 1542,
+      "y": 653,
       "w": 512,
       "h": 192,
       "hash": "a053b19ef1a4b533",
@@ -294,7 +184,7 @@
     "hero-section-bg/frame-001": {
       "atlasId": "atlas-0",
       "x": 1542,
-      "y": 1542,
+      "y": 847,
       "w": 512,
       "h": 192,
       "hash": "a815b397b93172f4",
@@ -304,8 +194,8 @@
     },
     "hero-section-bg/frame-002": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 1746,
+      "x": 1542,
+      "y": 1041,
       "w": 512,
       "h": 192,
       "hash": "b12a8057ca877a26",
@@ -315,8 +205,8 @@
     },
     "hero-section-bg/frame-003": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 1626,
+      "x": 1542,
+      "y": 1235,
       "w": 512,
       "h": 192,
       "hash": "ac3990e114865609",
@@ -327,7 +217,7 @@
     "hero-section-bg/frame-004": {
       "atlasId": "atlas-0",
       "x": 1542,
-      "y": 1736,
+      "y": 1429,
       "w": 512,
       "h": 192,
       "hash": "655d6aad69735cdf",
@@ -338,7 +228,7 @@
     "hero-section-bg/frame-005": {
       "atlasId": "atlas-0",
       "x": 1028,
-      "y": 1820,
+      "y": 1555,
       "w": 512,
       "h": 192,
       "hash": "767292d3ced3079b",
@@ -348,8 +238,8 @@
     },
     "hero-section-bg/frame-006": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 1930,
+      "x": 514,
+      "y": 1613,
       "w": 512,
       "h": 192,
       "hash": "08498703f7ef9efe",
@@ -359,8 +249,8 @@
     },
     "hero-section-bg/frame-007": {
       "atlasId": "atlas-0",
-      "x": 514,
-      "y": 1855,
+      "x": 1542,
+      "y": 1623,
       "w": 512,
       "h": 192,
       "hash": "93de826b2f24bcb2",
@@ -370,8 +260,8 @@
     },
     "hero-section-bg/frame-008": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 1940,
+      "x": 1028,
+      "y": 1749,
       "w": 512,
       "h": 192,
       "hash": "37bd263dfef68212",
@@ -381,8 +271,8 @@
     },
     "hero-section-bg/frame-009": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 0,
+      "x": 514,
+      "y": 1807,
       "w": 512,
       "h": 192,
       "hash": "55064c6a1eb9cc7b",
@@ -392,8 +282,8 @@
     },
     "hero-section-bg/frame-010": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 194,
+      "x": 0,
+      "y": 1812,
       "w": 512,
       "h": 192,
       "hash": "5a3fa92074183d3e",
@@ -403,8 +293,8 @@
     },
     "hero-section-bg/frame-011": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 388,
+      "x": 1542,
+      "y": 1817,
       "w": 512,
       "h": 192,
       "hash": "a58f9521107288ec",
@@ -414,8 +304,8 @@
     },
     "hero-section-bg/frame-012": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 582,
+      "x": 1028,
+      "y": 1943,
       "w": 512,
       "h": 192,
       "hash": "95a81e4cd29389b0",
@@ -425,8 +315,8 @@
     },
     "hero-section-bg/frame-013": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 776,
+      "x": 514,
+      "y": 2001,
       "w": 512,
       "h": 192,
       "hash": "87565baf0010ff63",
@@ -436,8 +326,8 @@
     },
     "hero-section-bg/frame-014": {
       "atlasId": "atlas-0",
-      "x": 2056,
-      "y": 970,
+      "x": 0,
+      "y": 2006,
       "w": 512,
       "h": 192,
       "hash": "80e9f09fc7d1d747",
@@ -448,7 +338,7 @@
     "hero-section-bg/frame-015": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 1164,
+      "y": 0,
       "w": 512,
       "h": 192,
       "hash": "85b14d336aabf72d",
@@ -459,7 +349,7 @@
     "hero-section-bg/frame-016": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 1358,
+      "y": 194,
       "w": 512,
       "h": 192,
       "hash": "f6f7e59e968cf8da",
@@ -470,7 +360,7 @@
     "hero-section-bg/frame-017": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 1552,
+      "y": 388,
       "w": 512,
       "h": 192,
       "hash": "ae2ab78f2b8ece67",
@@ -481,7 +371,7 @@
     "hero-section-bg/frame-018": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 1746,
+      "y": 582,
       "w": 512,
       "h": 192,
       "hash": "3ac512bbe482560c",
@@ -492,7 +382,7 @@
     "hero-section-bg/frame-019": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 1940,
+      "y": 776,
       "w": 512,
       "h": 192,
       "hash": "295b3dc7ddf56c8f",
@@ -502,8 +392,8 @@
     },
     "hero-section-bg/frame-020": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 2014,
+      "x": 2056,
+      "y": 970,
       "w": 512,
       "h": 192,
       "hash": "5ff9f9bf044ef58a",
@@ -513,8 +403,8 @@
     },
     "hero-section-bg/frame-021": {
       "atlasId": "atlas-0",
-      "x": 514,
-      "y": 2049,
+      "x": 2056,
+      "y": 1164,
       "w": 512,
       "h": 192,
       "hash": "fb9dc855e733576b",
@@ -524,8 +414,8 @@
     },
     "hero-section-bg/frame-022": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 2124,
+      "x": 2056,
+      "y": 1358,
       "w": 512,
       "h": 192,
       "hash": "8cf2e7cebc54dee7",
@@ -535,8 +425,8 @@
     },
     "hero-section-bg/frame-023": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 2134,
+      "x": 2056,
+      "y": 1552,
       "w": 512,
       "h": 192,
       "hash": "6828d2b71b8f5820",
@@ -547,7 +437,7 @@
     "hero-section-bg/frame-024": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 2134,
+      "y": 1746,
       "w": 512,
       "h": 192,
       "hash": "f98287324151d4ad",
@@ -557,8 +447,8 @@
     },
     "navbar-bg": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 2208,
+      "x": 2056,
+      "y": 1940,
       "w": 512,
       "h": 26,
       "hash": "f33d03502b01e8d2",
@@ -568,8 +458,8 @@
     },
     "navbar-link-docs": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 2236,
+      "x": 2056,
+      "y": 1968,
       "w": 512,
       "h": 282,
       "hash": "0ed92b954aaa1ef0",
@@ -579,8 +469,8 @@
     },
     "navbar-link-editor": {
       "atlasId": "atlas-0",
-      "x": 514,
-      "y": 2243,
+      "x": 1542,
+      "y": 2011,
       "w": 512,
       "h": 256,
       "hash": "4eb67362763f2cdf",
@@ -590,8 +480,8 @@
     },
     "navbar-link-home": {
       "atlasId": "atlas-0",
-      "x": 1542,
-      "y": 2318,
+      "x": 1028,
+      "y": 2137,
       "w": 512,
       "h": 282,
       "hash": "a42e808f5dcd9d44",
@@ -601,8 +491,8 @@
     },
     "navbar-link-pricing": {
       "atlasId": "atlas-0",
-      "x": 0,
-      "y": 2328,
+      "x": 514,
+      "y": 2195,
       "w": 512,
       "h": 256,
       "hash": "4a8088a1d2ea7527",
@@ -613,7 +503,7 @@
     "navbar-logo": {
       "atlasId": "atlas-0",
       "x": 2056,
-      "y": 2328,
+      "y": 2252,
       "w": 512,
       "h": 152,
       "hash": "bb9a2619eb138b9e",
@@ -623,8 +513,8 @@
     },
     "navbar-signin-btn": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 0,
+      "x": 0,
+      "y": 2200,
       "w": 512,
       "h": 171,
       "hash": "bb33a18958fd371d",
@@ -634,8 +524,8 @@
     },
     "notifications-toggle-off": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 173,
+      "x": 1542,
+      "y": 2269,
       "w": 512,
       "h": 256,
       "hash": "d252bf7d2019b1e5",
@@ -645,8 +535,8 @@
     },
     "notifications-toggle-on": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 431,
+      "x": 0,
+      "y": 2373,
       "w": 512,
       "h": 256,
       "hash": "41ad84f4af0ce410",
@@ -657,7 +547,7 @@
     "page-background": {
       "atlasId": "atlas-0",
       "x": 2570,
-      "y": 689,
+      "y": 0,
       "w": 389,
       "h": 512,
       "hash": "4cab49491b7efa41",
@@ -667,8 +557,8 @@
     },
     "settings-section-bg": {
       "atlasId": "atlas-0",
-      "x": 514,
-      "y": 2501,
+      "x": 1028,
+      "y": 2421,
       "w": 512,
       "h": 102,
       "hash": "4f58672d19aaadf8",
@@ -678,8 +568,8 @@
     },
     "shimmer": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 1203,
+      "x": 514,
+      "y": 2453,
       "w": 512,
       "h": 512,
       "hash": "44927bcbe1be5de2",
@@ -689,8 +579,8 @@
     },
     "stats-card-bg": {
       "atlasId": "atlas-0",
-      "x": 1028,
-      "y": 2520,
+      "x": 0,
+      "y": 2631,
       "w": 512,
       "h": 114,
       "hash": "8d7fd8fe18c967d4",
@@ -700,8 +590,8 @@
     },
     "stats-live-counter": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 1717,
+      "x": 1028,
+      "y": 2525,
       "w": 512,
       "h": 122,
       "hash": "d5563389eb44b0bd",
@@ -711,8 +601,8 @@
     },
     "theme-selector-button": {
       "atlasId": "atlas-0",
-      "x": 2570,
-      "y": 1841,
+      "x": 0,
+      "y": 2747,
       "w": 512,
       "h": 152,
       "hash": "0662ea43e862da44",

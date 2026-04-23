@@ -1258,7 +1258,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 1 title.",
@@ -1277,7 +1278,7 @@
             {
               "text": "AI-Powered Design",
               "role": "heading",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 20,
@@ -1339,7 +1340,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 8,
-        "alpha": 0.92
+        "alpha": 0.92,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 1 description.",
@@ -1358,7 +1360,7 @@
             {
               "text": "Describe your idea in plain English and watch it compile into a polished interface — no design system wrangling required.",
               "role": "body",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 14,
@@ -1549,7 +1551,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 2 title.",
@@ -1568,7 +1571,7 @@
             {
               "text": "Instant Deploy",
               "role": "heading",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 20,
@@ -1630,7 +1633,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 8,
-        "alpha": 0.92
+        "alpha": 0.92,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 2 description.",
@@ -1649,7 +1653,7 @@
             {
               "text": "One-click publish to a globally-edged runtime. Preview, share, and ship in the same breath.",
               "role": "body",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 14,
@@ -1840,7 +1844,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 3 title.",
@@ -1859,7 +1864,7 @@
             {
               "text": "Self-Healing Runtime",
               "role": "heading",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 20,
@@ -1921,7 +1926,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 8,
-        "alpha": 0.92
+        "alpha": 0.92,
+        "textOnly": true
       },
       "intent": {
         "caption": "Feature card 3 description.",
@@ -1940,7 +1946,7 @@
             {
               "text": "When something breaks, Kriptik notices, patches the divergent node, and restores behavior — usually before you reach for the refresh button.",
               "role": "body",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 14,
@@ -2611,7 +2617,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 6,
-        "alpha": 0.85
+        "alpha": 0.85,
+        "textOnly": true
       },
       "intent": {
         "caption": "Footer link — Privacy.",
@@ -2650,7 +2657,7 @@
             {
               "text": "Privacy",
               "role": "label",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 13,
@@ -2712,7 +2719,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 6,
-        "alpha": 0.85
+        "alpha": 0.85,
+        "textOnly": true
       },
       "intent": {
         "caption": "Footer link — Terms.",
@@ -2751,7 +2759,7 @@
             {
               "text": "Terms",
               "role": "label",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 13,
@@ -2813,7 +2821,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 6,
-        "alpha": 0.85
+        "alpha": 0.85,
+        "textOnly": true
       },
       "intent": {
         "caption": "Footer link — Contact.",
@@ -2852,7 +2861,7 @@
             {
               "text": "Contact",
               "role": "label",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 13,
@@ -3139,7 +3148,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 8,
-        "alpha": 0.65
+        "alpha": 0.65,
+        "textOnly": true
       },
       "intent": {
         "caption": "Footer copyright line.",
@@ -3158,7 +3168,7 @@
             {
               "text": "© 2026 Kriptik. All rights reserved.",
               "role": "caption",
-              "renderMethod": "sharp-svg",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 12,
