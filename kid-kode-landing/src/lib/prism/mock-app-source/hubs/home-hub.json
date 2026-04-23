@@ -4,9 +4,9 @@
     "hubId": "home-hub",
     "title": "Kriptik — Home",
     "layout": {
-      "viewportWidth": 1792,
-      "viewportHeight": 1008,
-      "contentHeight": 2432,
+      "viewportWidth": 1536,
+      "viewportHeight": 864,
+      "contentHeight": 2048,
       "backgroundColor": "#0a0a12"
     }
   },
@@ -21,8 +21,8 @@
         "transform": {
           "x": 0,
           "y": 0,
-          "width": 1792,
-          "height": 2432,
+          "width": 1536,
+          "height": 2048,
           "z": 0
         },
         "shape": "rect"
@@ -67,8 +67,8 @@
         "transform": {
           "x": 0,
           "y": 0,
-          "width": 1792,
-          "height": 130,
+          "width": 1536,
+          "height": 400,
           "z": 100
         },
         "shape": "rect"
@@ -104,10 +104,10 @@
       "visual": {
         "sourceAsset": "navbar-logo",
         "transform": {
-          "x": 65,
-          "y": 38,
-          "width": 220,
-          "height": 54,
+          "x": 75,
+          "y": 61,
+          "width": 270,
+          "height": 325,
           "z": 101
         },
         "shape": "circle"
@@ -164,10 +164,10 @@
       "visual": {
         "sourceAsset": "navbar-link-home",
         "transform": {
-          "x": 708,
-          "y": 48,
-          "width": 82,
-          "height": 44,
+          "x": 417,
+          "y": 55,
+          "width": 142,
+          "height": 306,
           "z": 101
         },
         "shape": "rounded",
@@ -225,10 +225,10 @@
       "visual": {
         "sourceAsset": "navbar-link-editor",
         "transform": {
-          "x": 804,
-          "y": 48,
-          "width": 82,
-          "height": 44,
+          "x": 668,
+          "y": 52,
+          "width": 154,
+          "height": 297,
           "z": 101
         },
         "shape": "rounded",
@@ -287,10 +287,10 @@
       "visual": {
         "sourceAsset": "navbar-link-docs",
         "transform": {
-          "x": 900,
-          "y": 48,
-          "width": 68,
-          "height": 44,
+          "x": 943,
+          "y": 58,
+          "width": 154,
+          "height": 295,
           "z": 101
         },
         "shape": "rounded",
@@ -349,10 +349,10 @@
       "visual": {
         "sourceAsset": "navbar-link-pricing",
         "transform": {
-          "x": 982,
-          "y": 48,
-          "width": 96,
-          "height": 44,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 101
         },
         "shape": "rounded",
@@ -415,10 +415,10 @@
           "shimmer"
         ],
         "transform": {
-          "x": 1522,
-          "y": 30,
-          "width": 172,
-          "height": 76,
+          "x": 1226,
+          "y": 51,
+          "width": 156,
+          "height": 297,
           "z": 101
         },
         "shape": "pill"
@@ -477,10 +477,10 @@
         "sourceAsset": "hero-section-bg",
         "frameCount": 24,
         "transform": {
-          "x": 90,
-          "y": 175,
-          "width": 1612,
-          "height": 720,
+          "x": 0,
+          "y": 380,
+          "width": 1536,
+          "height": 780,
           "z": 49
         },
         "shape": "rect"
@@ -521,10 +521,10 @@
       "visual": {
         "sourceAsset": "hero-card-bg",
         "transform": {
-          "x": 90,
-          "y": 175,
-          "width": 1612,
-          "height": 720,
+          "x": 106,
+          "y": 393,
+          "width": 1328,
+          "height": 742,
           "z": 50
         },
         "shape": "rounded",
@@ -563,10 +563,10 @@
       "visual": {
         "sourceAsset": "hero-card-headline-text",
         "transform": {
-          "x": 550,
-          "y": 320,
-          "width": 692,
-          "height": 220,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "rounded",
@@ -603,10 +603,10 @@
       "visual": {
         "sourceAsset": "hero-card-subhead-text",
         "transform": {
-          "x": 680,
-          "y": 594,
-          "width": 432,
-          "height": 40,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "rounded",
@@ -648,10 +648,10 @@
           "shimmer"
         ],
         "transform": {
-          "x": 790,
-          "y": 680,
-          "width": 212,
-          "height": 76,
+          "x": 686,
+          "y": 893,
+          "width": 142,
+          "height": 144,
           "z": 51
         },
         "shape": "pill"
@@ -719,10 +719,10 @@
       "visual": {
         "sourceAsset": "feature-grid-section-bg",
         "transform": {
-          "x": 90,
-          "y": 1060,
-          "width": 1612,
-          "height": 580,
+          "x": 0,
+          "y": 1070,
+          "width": 1536,
+          "height": 550,
           "z": 40
         },
         "shape": "rect"
@@ -758,10 +758,10 @@
       "visual": {
         "sourceAsset": "feature-card-1-bg",
         "transform": {
-          "x": 110,
-          "y": 1060,
-          "width": 490,
-          "height": 580,
+          "x": 80,
+          "y": 1100,
+          "width": 390,
+          "height": 400,
           "z": 41
         },
         "shape": "rounded",
@@ -803,10 +803,10 @@
       "visual": {
         "sourceAsset": "feature-card-1-icon",
         "transform": {
-          "x": 320,
-          "y": 1136,
-          "width": 76,
-          "height": 76,
+          "x": 130,
+          "y": 1160,
+          "width": 260,
+          "height": 280,
           "z": 42
         },
         "shape": "circle"
@@ -842,10 +842,10 @@
       "visual": {
         "sourceAsset": "feature-card-1-title",
         "transform": {
-          "x": 200,
-          "y": 1270,
-          "width": 290,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -882,10 +882,10 @@
       "visual": {
         "sourceAsset": "feature-card-1-desc",
         "transform": {
-          "x": 170,
-          "y": 1342,
-          "width": 356,
-          "height": 180,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -923,10 +923,10 @@
       "visual": {
         "sourceAsset": "feature-card-2-bg",
         "transform": {
-          "x": 620,
-          "y": 1060,
-          "width": 490,
-          "height": 580,
+          "x": 540,
+          "y": 1100,
+          "width": 400,
+          "height": 400,
           "z": 41
         },
         "shape": "rounded",
@@ -968,10 +968,10 @@
       "visual": {
         "sourceAsset": "feature-card-2-icon",
         "transform": {
-          "x": 830,
-          "y": 1136,
-          "width": 76,
-          "height": 76,
+          "x": 600,
+          "y": 1170,
+          "width": 270,
+          "height": 270,
           "z": 42
         },
         "shape": "circle"
@@ -1007,10 +1007,10 @@
       "visual": {
         "sourceAsset": "feature-card-2-title",
         "transform": {
-          "x": 720,
-          "y": 1270,
-          "width": 290,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -1047,10 +1047,10 @@
       "visual": {
         "sourceAsset": "feature-card-2-desc",
         "transform": {
-          "x": 690,
-          "y": 1342,
-          "width": 360,
-          "height": 180,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -1088,10 +1088,10 @@
       "visual": {
         "sourceAsset": "feature-card-3-bg",
         "transform": {
-          "x": 1130,
-          "y": 1060,
-          "width": 490,
-          "height": 580,
+          "x": 1020,
+          "y": 1100,
+          "width": 400,
+          "height": 400,
           "z": 41
         },
         "shape": "rounded",
@@ -1133,10 +1133,10 @@
       "visual": {
         "sourceAsset": "feature-card-3-icon",
         "transform": {
-          "x": 1340,
-          "y": 1136,
-          "width": 76,
-          "height": 76,
+          "x": 1070,
+          "y": 1160,
+          "width": 300,
+          "height": 300,
           "z": 42
         },
         "shape": "circle"
@@ -1172,10 +1172,10 @@
       "visual": {
         "sourceAsset": "feature-card-3-title",
         "transform": {
-          "x": 1220,
-          "y": 1270,
-          "width": 380,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -1212,10 +1212,10 @@
       "visual": {
         "sourceAsset": "feature-card-3-desc",
         "transform": {
-          "x": 1210,
-          "y": 1342,
-          "width": 360,
-          "height": 180,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "rounded",
@@ -1253,10 +1253,10 @@
       "visual": {
         "sourceAsset": "settings-section-bg",
         "transform": {
-          "x": 660,
-          "y": 1898,
-          "width": 440,
-          "height": 84,
+          "x": 0,
+          "y": 1700,
+          "width": 1536,
+          "height": 348,
           "z": 50
         },
         "shape": "rect"
@@ -1297,10 +1297,10 @@
         ],
         "defaultRegion": "off",
         "transform": {
-          "x": 680,
-          "y": 1905,
-          "width": 150,
-          "height": 68,
+          "x": 400,
+          "y": 1770,
+          "width": 360,
+          "height": 260,
           "z": 51
         },
         "shape": "pill"
@@ -1371,10 +1371,10 @@
         "sourceAsset": "theme-selector-button",
         "defaultRegion": "default",
         "transform": {
-          "x": 940,
-          "y": 1905,
-          "width": 170,
-          "height": 68,
+          "x": 780,
+          "y": 1770,
+          "width": 360,
+          "height": 260,
           "z": 51
         },
         "shape": "pill"
@@ -1456,10 +1456,10 @@
       "visual": {
         "sourceAsset": "stats-card-bg",
         "transform": {
-          "x": 690,
-          "y": 1680,
-          "width": 380,
-          "height": 192,
+          "x": 540,
+          "y": 1570,
+          "width": 450,
+          "height": 250,
           "z": 50
         },
         "shape": "rounded",
@@ -1496,10 +1496,10 @@
       "visual": {
         "sourceAsset": "stats-live-counter",
         "transform": {
-          "x": 790,
-          "y": 1742,
-          "width": 180,
-          "height": 88,
+          "x": 686,
+          "y": 1620,
+          "width": 145,
+          "height": 155,
           "z": 51
         },
         "shape": "rounded",
@@ -1568,10 +1568,10 @@
       "visual": {
         "sourceAsset": "footer-bg",
         "transform": {
-          "x": 0,
-          "y": 2080,
-          "width": 1792,
-          "height": 356,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 40
         },
         "shape": "rect"
@@ -1607,10 +1607,10 @@
       "visual": {
         "sourceAsset": "footer-logo",
         "transform": {
-          "x": 90,
-          "y": 2170,
-          "width": 270,
-          "height": 70,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "circle",
@@ -1667,10 +1667,10 @@
       "visual": {
         "sourceAsset": "footer-link-privacy",
         "transform": {
-          "x": 740,
-          "y": 2210,
-          "width": 72,
-          "height": 40,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -1728,10 +1728,10 @@
       "visual": {
         "sourceAsset": "footer-link-terms",
         "transform": {
-          "x": 838,
-          "y": 2210,
-          "width": 72,
-          "height": 40,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -1789,10 +1789,10 @@
       "visual": {
         "sourceAsset": "footer-link-contact",
         "transform": {
-          "x": 930,
-          "y": 2210,
-          "width": 90,
-          "height": 40,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -1850,10 +1850,10 @@
       "visual": {
         "sourceAsset": "footer-social-twitter",
         "transform": {
-          "x": 1410,
-          "y": 2200,
-          "width": 60,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "circle",
@@ -1902,10 +1902,10 @@
       "visual": {
         "sourceAsset": "footer-social-github",
         "transform": {
-          "x": 1490,
-          "y": 2200,
-          "width": 60,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "circle",
@@ -1954,10 +1954,10 @@
       "visual": {
         "sourceAsset": "footer-social-discord",
         "transform": {
-          "x": 1570,
-          "y": 2200,
-          "width": 60,
-          "height": 60,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "circle",
@@ -2006,10 +2006,10 @@
       "visual": {
         "sourceAsset": "footer-copyright-text",
         "transform": {
-          "x": 60,
-          "y": 2320,
-          "width": 300,
-          "height": 36,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",

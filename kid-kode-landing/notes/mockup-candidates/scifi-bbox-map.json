@@ -1,0 +1,264 @@
+{
+  "mockupWidth": 1536,
+  "mockupHeight": 2048,
+  "bboxes": {
+    "page-background": {
+      "x": 0,
+      "y": 0,
+      "w": 1536,
+      "h": 2048
+    },
+    "navbar-bg": {
+      "x": 0,
+      "y": 0,
+      "w": 1536,
+      "h": 400
+    },
+    "hero-section-bg": {
+      "x": 0,
+      "y": 380,
+      "w": 1536,
+      "h": 780
+    },
+    "feature-grid-section-bg": {
+      "x": 0,
+      "y": 1070,
+      "w": 1536,
+      "h": 550
+    },
+    "settings-section-bg": {
+      "x": 0,
+      "y": 1700,
+      "w": 1536,
+      "h": 348
+    },
+    "footer-bg": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "navbar-logo": {
+      "x": 75,
+      "y": 61,
+      "w": 270,
+      "h": 325
+    },
+    "navbar-link-home": {
+      "x": 417,
+      "y": 55,
+      "w": 142,
+      "h": 306
+    },
+    "navbar-link-editor": {
+      "x": 668,
+      "y": 52,
+      "w": 154,
+      "h": 297
+    },
+    "navbar-link-docs": {
+      "x": 943,
+      "y": 58,
+      "w": 154,
+      "h": 295
+    },
+    "navbar-link-pricing": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "navbar-signin-btn": {
+      "x": 1226,
+      "y": 51,
+      "w": 156,
+      "h": 297
+    },
+    "hero-card-bg": {
+      "x": 106,
+      "y": 393,
+      "w": 1328,
+      "h": 742
+    },
+    "hero-card-cta": {
+      "x": 686,
+      "y": 893,
+      "w": 142,
+      "h": 144
+    },
+    "hero-card-headline-text": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "hero-card-subhead-text": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-1-bg": {
+      "x": 80,
+      "y": 1100,
+      "w": 390,
+      "h": 400
+    },
+    "feature-card-1-icon": {
+      "x": 130,
+      "y": 1160,
+      "w": 260,
+      "h": 280
+    },
+    "feature-card-1-title": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-1-desc": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-2-bg": {
+      "x": 540,
+      "y": 1100,
+      "w": 400,
+      "h": 400
+    },
+    "feature-card-2-icon": {
+      "x": 600,
+      "y": 1170,
+      "w": 270,
+      "h": 270
+    },
+    "feature-card-2-title": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-2-desc": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-3-bg": {
+      "x": 1020,
+      "y": 1100,
+      "w": 400,
+      "h": 400
+    },
+    "feature-card-3-icon": {
+      "x": 1070,
+      "y": 1160,
+      "w": 300,
+      "h": 300
+    },
+    "feature-card-3-title": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "feature-card-3-desc": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "stats-card-bg": {
+      "x": 540,
+      "y": 1570,
+      "w": 450,
+      "h": 250
+    },
+    "stats-live-counter": {
+      "x": 686,
+      "y": 1620,
+      "w": 145,
+      "h": 155
+    },
+    "notifications-toggle": {
+      "x": 400,
+      "y": 1770,
+      "w": 360,
+      "h": 260
+    },
+    "theme-selector-button": {
+      "x": 780,
+      "y": 1770,
+      "w": 360,
+      "h": 260
+    },
+    "footer-logo": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-link-privacy": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-link-terms": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-link-contact": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-copyright-text": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-social-twitter": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-social-github": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    },
+    "footer-social-discord": {
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 2,
+      "invisible": true
+    }
+  }
+}
