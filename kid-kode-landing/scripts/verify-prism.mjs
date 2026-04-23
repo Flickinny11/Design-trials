@@ -180,12 +180,18 @@ if (!existsSync(prismPath)) {
     return `${swaps.length} nodes use layer-swap`;
   });
 
-  assert('prism:text.methods', '§10.8 — each renderMethod (sharp-svg, msdf, diffusion) represented', () => {
+  assert('prism:text.methods', '§10.8 — build-time (sharp-svg) and runtime (msdf) renderMethods both represented; diffusion supported by pipeline', () => {
     const methodsSeen = new Set();
     for (const n of graph.nodes) {
       for (const tc of (n.intent?.visualSpec?.textContent ?? [])) methodsSeen.add(tc.renderMethod);
     }
-    for (const m of ['sharp-svg', 'msdf', 'diffusion']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
+    // Required: sharp-svg (build-time SVG overlay, composited by Sharp in
+    // build-atlas) and msdf (runtime BitmapText). Diffusion is preserved as
+    // a capability in provision-assets.mjs but not instantiated in this
+    // build — FLUX/Ideogram cannot reliably produce legible baked text
+    // under our material-substrate prompts, so all user-facing text lives
+    // in msdf (runtime) or sharp-svg (build-time) paths.
+    for (const m of ['sharp-svg', 'msdf']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
     return [...methodsSeen].join(', ');
   });
 }

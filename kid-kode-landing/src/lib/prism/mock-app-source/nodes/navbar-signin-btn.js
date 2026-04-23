@@ -1,7 +1,8 @@
 // Prism node: navbar-signin-btn — CTA-style button with glow overlay, no shimmer.
-// Tap emits 'open-modal'.
+// Tap emits 'open-modal'. Text is MSDF BitmapText at runtime (not diffusion-
+// baked into the FAL image) so it reads crisply at any size.
 export function createNode(ctx) {
-  const { PIXI, gsap, atlas, region, overlayRegions, transform, events, intent } = ctx;
+  const { PIXI, gsap, atlas, region, overlayRegions, transform, events, intent, msdfFont } = ctx;
   const container = new PIXI.Container();
   container.position.set(transform.x, transform.y);
   container.eventMode = 'static';
@@ -23,6 +24,23 @@ export function createNode(ctx) {
   base.x = transform.width / 2;
   base.y = transform.height / 2;
   container.addChild(base);
+
+  // MSDF label on top of the button surface. Centered.
+  const labelSpec = (intent?.visualSpec?.textContent ?? []).find((t) => t.renderMethod === 'msdf');
+  if (labelSpec) {
+    const pos = labelSpec.position ?? { x: transform.width / 2, y: transform.height / 2, anchor: 'center' };
+    const label = new PIXI.BitmapText({
+      text: labelSpec.text,
+      style: {
+        fontFamily: msdfFont?.family ?? 'Inter-Variable',
+        fontSize: labelSpec.typography?.fontSize ?? 14,
+        fill: labelSpec.typography?.color ?? 0xffffff,
+      },
+    });
+    label.anchor?.set?.(0.5, 0.5);
+    label.position.set(pos.x, pos.y);
+    container.addChild(label);
+  }
 
   container.on('pointerover', () => {
     gsap.to(base.scale, { x: 1.03, y: 1.03, duration: 0.2 });

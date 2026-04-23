@@ -209,11 +209,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-home",
-        "regionKeys": [
-          "default",
-          "hover",
-          "active"
-        ],
         "transform": {
           "x": 520,
           "y": 20,
@@ -292,11 +287,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-editor",
-        "regionKeys": [
-          "default",
-          "hover",
-          "active"
-        ],
         "transform": {
           "x": 612,
           "y": 20,
@@ -381,11 +371,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-docs",
-        "regionKeys": [
-          "default",
-          "hover",
-          "active"
-        ],
         "transform": {
           "x": 712,
           "y": 20,
@@ -470,11 +455,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-pricing",
-        "regionKeys": [
-          "default",
-          "hover",
-          "active"
-        ],
         "transform": {
           "x": 804,
           "y": 20,
@@ -578,7 +558,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Sign-in button — pill-shaped button with 'Sign In' baked into its face, opens the sign-in modal on tap.",
+        "caption": "Small pill-shaped physical button face on the navbar beam. Smooth clean anodized-black aluminum surface with chamfered edges. No writing, no characters, no markings on the surface at all.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -616,7 +596,7 @@
             {
               "text": "Sign In",
               "role": "label",
-              "renderMethod": "diffusion",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 14,
@@ -810,10 +790,11 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "textOnly": true
       },
       "intent": {
-        "caption": "Hero headline — 'Build apps from a prompt' (diffusion-rendered for typographic impact).",
+        "caption": "Horizontal brushed-steel slab embedded in the hero card. Completely smooth, completely clean, completely blank brushed-steel surface. No inscription, no etching, no markings, no writing, no characters, no letters anywhere on the surface. Just the bare metal.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -829,7 +810,7 @@
             {
               "text": "Build apps from a prompt",
               "role": "heading",
-              "renderMethod": "diffusion",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 56,
@@ -889,7 +870,8 @@
         },
         "shape": "rounded",
         "shapeRadius": 8,
-        "alpha": 0.9
+        "alpha": 0.9,
+        "textOnly": true
       },
       "intent": {
         "caption": "Hero subhead — clarifying tagline beneath the headline.",
@@ -975,7 +957,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Primary CTA — 'Get Started'. Fires build-flow-started, tracks click via backend, pulses glow on success.",
+        "caption": "Rectangular pill-shaped machined aluminum button face centered in the hero. Smooth anodized-black surface with subtle chamfer. Completely blank surface with no markings, no inscription, no characters, no letters, no writing whatsoever on the face.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1021,7 +1003,7 @@
             {
               "text": "Get Started",
               "role": "label",
-              "renderMethod": "diffusion",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 18,
@@ -2151,11 +2133,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "theme-selector-button",
-        "regionKeys": [
-          "default",
-          "hover",
-          "pressed"
-        ],
         "defaultRegion": "default",
         "transform": {
           "x": 800,
@@ -2190,7 +2167,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Theme selector — three-state layer-swap button (default / hover / pressed) that cycles light/dark themes.",
+        "caption": "Horizontal pill-shaped machined aluminum toggle on a dark steel substrate. Three states (default / hover / pressed) expressed only through lighting changes. The toggle surface is completely blank with no markings, no inscription, no characters, no letters anywhere.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -2248,7 +2225,7 @@
             {
               "text": "Theme",
               "role": "label",
-              "renderMethod": "diffusion",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 14,
@@ -2316,7 +2293,7 @@
         "shapeRadius": 20
       },
       "intent": {
-        "caption": "Stats card — panel with 'Total Clicks:' label baked in; houses the MSDF live counter.",
+        "caption": "Flat cast-aluminum panel with laser-etched micro-texture. Completely blank surface with no markings, no inscription, no writing, no characters, no letters anywhere on the panel. Just the bare machined metal with subtle grain.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -2332,7 +2309,7 @@
             {
               "text": "Total Clicks:",
               "role": "label",
-              "renderMethod": "diffusion",
+              "renderMethod": "msdf",
               "typography": {
                 "fontFamily": "Inter",
                 "fontSize": 24,
@@ -2602,10 +2579,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-privacy",
-        "regionKeys": [
-          "default",
-          "hover"
-        ],
         "transform": {
           "x": 400,
           "y": 2280,
@@ -2707,10 +2680,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-terms",
-        "regionKeys": [
-          "default",
-          "hover"
-        ],
         "transform": {
           "x": 520,
           "y": 2280,
@@ -2812,10 +2781,6 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-contact",
-        "regionKeys": [
-          "default",
-          "hover"
-        ],
         "transform": {
           "x": 640,
           "y": 2280,

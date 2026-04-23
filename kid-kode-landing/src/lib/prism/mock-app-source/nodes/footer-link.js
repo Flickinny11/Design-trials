@@ -1,30 +1,31 @@
-// Prism node: footer-link-{privacy,terms,contact} — 2-state layer-swap
-// (default/hover) with tap emitting 'navigate'.
+// Prism node: footer-link-{privacy,terms,contact} — single base sprite with
+// runtime GSAP hover/press effects. Previously used 2-state layer-swap from
+// separately-generated FAL images that drifted (default/hover showed different
+// element entirely). Now a single sprite brightens + lifts on hover.
 export function createNode(ctx) {
-  const { PIXI, gsap, atlas, regions, transform, events, intent } = ctx;
+  const { PIXI, gsap, atlas, region, transform, events, intent } = ctx;
   const container = new PIXI.Container();
   container.position.set(transform.x, transform.y);
   container.eventMode = 'static';
   container.cursor = 'pointer';
 
-  const sprites = {};
-  for (const key of ['default', 'hover']) {
-    if (!regions[key]) continue;
-    const s = new PIXI.Sprite(atlas.getTexture(regions[key]));
-    s.width = transform.width;
-    s.height = transform.height;
-    s.alpha = key === 'default' ? 1 : 0;
-    container.addChild(s);
-    sprites[key] = s;
-  }
+  const base = new PIXI.Sprite(atlas.getTexture(region));
+  base.width = transform.width;
+  base.height = transform.height;
+  base.alpha = 0.78;
+  container.addChild(base);
 
-  const show = (key) => {
-    for (const [k, s] of Object.entries(sprites)) gsap.to(s, { alpha: k === key ? 1 : 0, duration: 0.15 });
-  };
-  container.on('pointerover', () => show('hover'));
-  container.on('pointerout',  () => show('default'));
+  const baseY = transform.y;
+  container.on('pointerover', () => {
+    gsap.to(base, { alpha: 1.0, duration: 0.15 });
+    gsap.to(container.position, { y: baseY - 1, duration: 0.12, ease: 'power2.out' });
+  });
+  container.on('pointerout', () => {
+    gsap.to(base, { alpha: 0.78, duration: 0.15 });
+    gsap.to(container.position, { y: baseY, duration: 0.12 });
+  });
   container.on('pointerdown', () => gsap.to(container.scale, { x: 0.96, y: 0.96, duration: 0.08 }));
-  container.on('pointerup',   () => gsap.to(container.scale, { x: 1.0,  y: 1.0,  duration: 0.12, ease: 'back.out(2)' }));
+  container.on('pointerup',   () => gsap.to(container.scale, { x: 1,    y: 1,    duration: 0.12, ease: 'back.out(2)' }));
   container.on('pointertap',  () => events.emit('navigate', { source: intent.nodeId }));
 
   return { container, teardown: () => container.destroy({ children: true }) };

@@ -2,7 +2,7 @@
 // (mock spec §3.4.1 verbatim, ctx-injected). ALLOWED-GRAPHICS: the PIXI.Graphics
 // below is used solely as a clip mask for the shimmer sweep (§1.4 exception).
 export function createNode(ctx) {
-  const { PIXI, gsap, atlas, region, overlayRegions, transform, events, backend, intent } = ctx;
+  const { PIXI, gsap, atlas, region, overlayRegions, transform, events, backend, intent, msdfFont } = ctx;
 
   const container = new PIXI.Container();
   container.position.set(transform.x, transform.y);
@@ -49,6 +49,23 @@ export function createNode(ctx) {
   shimmer.mask = shimmerMask;
   container.addChild(shimmerMask);
   container.addChild(shimmer);
+
+  // MSDF label — "Get Started" at runtime, not baked into the atlas image.
+  const labelSpec = (intent?.visualSpec?.textContent ?? []).find((t) => t.renderMethod === 'msdf');
+  if (labelSpec) {
+    const pos = labelSpec.position ?? { x: transform.width / 2, y: transform.height / 2, anchor: 'center' };
+    const label = new PIXI.BitmapText({
+      text: labelSpec.text,
+      style: {
+        fontFamily: msdfFont?.family ?? 'Inter-Variable',
+        fontSize: labelSpec.typography?.fontSize ?? 18,
+        fill: labelSpec.typography?.color ?? 0xffffff,
+      },
+    });
+    label.anchor?.set?.(0.5, 0.5);
+    label.position.set(pos.x, pos.y);
+    container.addChild(label);
+  }
 
   container.on('pointerover', () => {
     gsap.to(base.scale, { x: 1.03, y: 1.03, duration: 0.2, ease: 'power2.out' });

@@ -241,6 +241,10 @@ function planTasks(graph) {
   const overlaysSeen = new Set();
 
   for (const node of graph.nodes) {
+    // textOnly nodes render MSDF text directly at runtime onto whatever card
+    // sits beneath them; no FAL image is needed (FLUX tends to bake gibberish
+    // text onto sign-shaped surfaces no matter how strictly we say "no text").
+    if (node.visual?.textOnly) continue;
     const baseAsset = node.visual.sourceAsset ?? node.nodeId;
     const { prompt, negative, model } = promptForNode(node);
     const { width, height } = node.visual.transform;
