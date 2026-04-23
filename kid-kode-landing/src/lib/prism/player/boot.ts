@@ -84,11 +84,14 @@ function shouldShadowNode(nodeId: string, breakpoint: BreakpointName): boolean {
 }
 
 function makeCardShadowFilter(): DropShadowFilter {
+  // Softer, more Figma-card-like: lighter alpha, tighter blur, smaller
+  // offset. Cards still feel lifted but no longer "floating dramatically"
+  // which reads as heavy-handed photograph instead of clean UI.
   return new DropShadowFilter({
-    offset:   { x: 0, y: 8 },
+    offset:   { x: 0, y: 3 },
     color:    0x000000,
-    alpha:    0.55,
-    blur:     6,
+    alpha:    0.35,
+    blur:     3,
     quality:  4,
     shadowOnly: false,
   });
