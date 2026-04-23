@@ -23,7 +23,12 @@ export function createNode(ctx) {
     }
   }
 
-  const msdfEntries = (intent?.visualSpec?.textContent ?? []).filter((t) => t.renderMethod === 'msdf');
+  // MSDF text overlay disabled — the crop from the mockup ALREADY contains
+  // the baked text (Recraft V4 pro renders readable typography natively).
+  // Rendering MSDF on top would double the text. Per-element MSDF text
+  // styling is a future iteration once we have cropped substrates without
+  // baked text.
+  const msdfEntries = [];
   for (const t of msdfEntries) {
     const pos = t.position ?? { x: 0, y: 0, anchor: 'left' };
     const typo = t.typography ?? {};

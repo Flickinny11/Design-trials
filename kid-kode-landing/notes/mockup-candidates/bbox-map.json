@@ -1,0 +1,246 @@
+{
+  "mockupWidth": 1792,
+  "mockupHeight": 2432,
+  "bboxes": {
+    "page-background": {
+      "x": 0,
+      "y": 0,
+      "w": 1792,
+      "h": 2432
+    },
+    "navbar-bg": {
+      "x": 0,
+      "y": 0,
+      "w": 1792,
+      "h": 130
+    },
+    "navbar-logo": {
+      "x": 65,
+      "y": 38,
+      "w": 220,
+      "h": 54
+    },
+    "navbar-link-home": {
+      "x": 708,
+      "y": 48,
+      "w": 82,
+      "h": 44
+    },
+    "navbar-link-editor": {
+      "x": 804,
+      "y": 48,
+      "w": 82,
+      "h": 44
+    },
+    "navbar-link-docs": {
+      "x": 900,
+      "y": 48,
+      "w": 68,
+      "h": 44
+    },
+    "navbar-link-pricing": {
+      "x": 982,
+      "y": 48,
+      "w": 96,
+      "h": 44
+    },
+    "navbar-signin-btn": {
+      "x": 1522,
+      "y": 30,
+      "w": 172,
+      "h": 76
+    },
+    "hero-section-bg": {
+      "x": 90,
+      "y": 175,
+      "w": 1612,
+      "h": 720
+    },
+    "hero-card-bg": {
+      "x": 90,
+      "y": 175,
+      "w": 1612,
+      "h": 720
+    },
+    "hero-card-headline-text": {
+      "x": 550,
+      "y": 320,
+      "w": 692,
+      "h": 220
+    },
+    "hero-card-subhead-text": {
+      "x": 680,
+      "y": 594,
+      "w": 432,
+      "h": 40
+    },
+    "hero-card-cta": {
+      "x": 790,
+      "y": 680,
+      "w": 212,
+      "h": 76
+    },
+    "feature-grid-section-bg": {
+      "x": 90,
+      "y": 1060,
+      "w": 1612,
+      "h": 580
+    },
+    "feature-card-1-bg": {
+      "x": 110,
+      "y": 1060,
+      "w": 490,
+      "h": 580
+    },
+    "feature-card-1-icon": {
+      "x": 320,
+      "y": 1136,
+      "w": 76,
+      "h": 76
+    },
+    "feature-card-1-title": {
+      "x": 200,
+      "y": 1270,
+      "w": 290,
+      "h": 60
+    },
+    "feature-card-1-desc": {
+      "x": 170,
+      "y": 1342,
+      "w": 356,
+      "h": 180
+    },
+    "feature-card-2-bg": {
+      "x": 620,
+      "y": 1060,
+      "w": 490,
+      "h": 580
+    },
+    "feature-card-2-icon": {
+      "x": 830,
+      "y": 1136,
+      "w": 76,
+      "h": 76
+    },
+    "feature-card-2-title": {
+      "x": 720,
+      "y": 1270,
+      "w": 290,
+      "h": 60
+    },
+    "feature-card-2-desc": {
+      "x": 690,
+      "y": 1342,
+      "w": 360,
+      "h": 180
+    },
+    "feature-card-3-bg": {
+      "x": 1130,
+      "y": 1060,
+      "w": 490,
+      "h": 580
+    },
+    "feature-card-3-icon": {
+      "x": 1340,
+      "y": 1136,
+      "w": 76,
+      "h": 76
+    },
+    "feature-card-3-title": {
+      "x": 1220,
+      "y": 1270,
+      "w": 380,
+      "h": 60
+    },
+    "feature-card-3-desc": {
+      "x": 1210,
+      "y": 1342,
+      "w": 360,
+      "h": 180
+    },
+    "stats-card-bg": {
+      "x": 690,
+      "y": 1680,
+      "w": 380,
+      "h": 192
+    },
+    "stats-live-counter": {
+      "x": 790,
+      "y": 1742,
+      "w": 180,
+      "h": 88
+    },
+    "settings-section-bg": {
+      "x": 660,
+      "y": 1898,
+      "w": 440,
+      "h": 84
+    },
+    "notifications-toggle": {
+      "x": 680,
+      "y": 1905,
+      "w": 150,
+      "h": 68
+    },
+    "theme-selector-button": {
+      "x": 940,
+      "y": 1905,
+      "w": 170,
+      "h": 68
+    },
+    "footer-bg": {
+      "x": 0,
+      "y": 2080,
+      "w": 1792,
+      "h": 356
+    },
+    "footer-logo": {
+      "x": 90,
+      "y": 2170,
+      "w": 270,
+      "h": 70
+    },
+    "footer-link-privacy": {
+      "x": 740,
+      "y": 2210,
+      "w": 72,
+      "h": 40
+    },
+    "footer-link-terms": {
+      "x": 838,
+      "y": 2210,
+      "w": 72,
+      "h": 40
+    },
+    "footer-link-contact": {
+      "x": 930,
+      "y": 2210,
+      "w": 90,
+      "h": 40
+    },
+    "footer-copyright-text": {
+      "x": 60,
+      "y": 2320,
+      "w": 300,
+      "h": 36
+    },
+    "footer-social-twitter": {
+      "x": 1410,
+      "y": 2200,
+      "w": 60,
+      "h": 60
+    },
+    "footer-social-github": {
+      "x": 1490,
+      "y": 2200,
+      "w": 60,
+      "h": 60
+    },
+    "footer-social-discord": {
+      "x": 1570,
+      "y": 2200,
+      "w": 60,
+      "h": 60
+    }
+  }
+}
