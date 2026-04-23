@@ -6,7 +6,7 @@
     "layout": {
       "viewportWidth": 1920,
       "viewportHeight": 1080,
-      "contentHeight": 2520,
+      "contentHeight": 2880,
       "backgroundColor": "#0a0a12"
     }
   },
@@ -18,16 +18,52 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "page-background",
-        "transform": { "x": 0, "y": 0, "width": 1920, "height": 2520, "z": 0 }
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 2520,
+          "z": 0
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 2520,
+            "z": 0
+          },
+          "tablet": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 2700,
+            "z": 0
+          },
+          "mobile": {
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 2820,
+            "z": 0
+          }
+        }
       },
       "intent": {
         "caption": "Page background — environmental backdrop spanning the full scroll length of the home hub.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
-          "dataBindings": [{ "source": "theme", "target": "visual.tint" }],
+          "dataBindings": [
+            {
+              "source": "theme",
+              "target": "visual.tint"
+            }
+          ],
           "emits": [],
-          "listens": ["theme-changed"],
+          "listens": [
+            "theme-changed"
+          ],
           "triggersDownstream": []
         },
         "stateEffects": [],
@@ -35,7 +71,10 @@
           "sourceAsset": "page-background",
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/page-background.js",
       "backendRef": null
@@ -47,11 +86,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-bg",
-        "transform": { "x": 0, "y": 0, "width": 1920, "height": 80, "z": 100 },
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 80,
+          "z": 100
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 0, "y": 0, "width": 1440, "height": 72, "z": 100 },
-          "tablet":  { "x": 0, "y": 0, "width": 1024, "height": 64, "z": 100 },
-          "mobile":  { "x": 0, "y": 0, "width":  768, "height": 56, "z": 100 }
+          "desktop": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 72,
+            "z": 100
+          },
+          "tablet": {
+            "x": 0,
+            "y": 0,
+            "width": 1024,
+            "height": 64,
+            "z": 100
+          },
+          "mobile": {
+            "x": 0,
+            "y": 0,
+            "width": 768,
+            "height": 56,
+            "z": 100
+          }
         }
       },
       "intent": {
@@ -65,8 +128,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "navbar-bg", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "navbar-bg",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-bg.js",
       "backendRef": null
@@ -78,25 +147,54 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-logo",
-        "transform": { "x": 40, "y": 16, "width": 160, "height": 48, "z": 101 }
+        "transform": {
+          "x": 40,
+          "y": 16,
+          "width": 160,
+          "height": 48,
+          "z": 101
+        }
       },
       "intent": {
         "caption": "Kriptik wordmark — brand signet that navigates back to the home hub on tap.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate-home" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate-home"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["lift-hover", "scale-press"],
+        "stateEffects": [
+          "lift-hover",
+          "scale-press"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-logo",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-logo.js",
       "backendRef": null
@@ -108,34 +206,76 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-home",
-        "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 520, "y": 20, "width": 72, "height": 40, "z": 101 }
+        "regionKeys": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "transform": {
+          "x": 520,
+          "y": 20,
+          "width": 72,
+          "height": 40,
+          "z": 101
+        }
       },
       "intent": {
         "caption": "Nav link 'Home' — scroll-navigates to the top of the home hub.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["border-trace", "color-wash"],
+        "stateEffects": [
+          "border-trace",
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-link-home",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Home",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" },
-              "position": { "x": 36, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 500,
+                "color": "#cbd5ff"
+              },
+              "position": {
+                "x": 36,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -147,35 +287,81 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-editor",
-        "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 612, "y": 20, "width": 80, "height": 40, "z": 101 },
-        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
+        "regionKeys": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "transform": {
+          "x": 612,
+          "y": 20,
+          "width": 80,
+          "height": 40,
+          "z": 101
+        },
+        "visibleAtBreakpoints": [
+          "desktop-wide",
+          "desktop",
+          "tablet"
+        ]
       },
       "intent": {
         "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["border-trace", "color-wash"],
+        "stateEffects": [
+          "border-trace",
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-link-editor",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Editor",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" },
-              "position": { "x": 40, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 500,
+                "color": "#cbd5ff"
+              },
+              "position": {
+                "x": 40,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -187,35 +373,81 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-docs",
-        "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 712, "y": 20, "width": 72, "height": 40, "z": 101 },
-        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
+        "regionKeys": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "transform": {
+          "x": 712,
+          "y": 20,
+          "width": 72,
+          "height": 40,
+          "z": 101
+        },
+        "visibleAtBreakpoints": [
+          "desktop-wide",
+          "desktop",
+          "tablet"
+        ]
       },
       "intent": {
         "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["border-trace", "color-wash"],
+        "stateEffects": [
+          "border-trace",
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-link-docs",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Docs",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" },
-              "position": { "x": 36, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 500,
+                "color": "#cbd5ff"
+              },
+              "position": {
+                "x": 36,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -227,35 +459,81 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-pricing",
-        "regionKeys": ["default", "hover", "active"],
-        "transform": { "x": 804, "y": 20, "width": 80, "height": 40, "z": 101 },
-        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
+        "regionKeys": [
+          "default",
+          "hover",
+          "active"
+        ],
+        "transform": {
+          "x": 804,
+          "y": 20,
+          "width": 80,
+          "height": 40,
+          "z": 101
+        },
+        "visibleAtBreakpoints": [
+          "desktop-wide",
+          "desktop",
+          "tablet"
+        ]
       },
       "intent": {
         "caption": "Nav link 'Pricing' — scroll-navigates to the pricing section.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["border-trace", "color-wash"],
+        "stateEffects": [
+          "border-trace",
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-link-pricing",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Pricing",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" },
-              "position": { "x": 40, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 500,
+                "color": "#cbd5ff"
+              },
+              "position": {
+                "x": 40,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -267,35 +545,81 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-signin-btn",
-        "overlayRegions": ["glow-pulse", "shimmer"],
-        "transform": { "x": 1760, "y": 20, "width": 120, "height": 40, "z": 101 },
-        "visibleAtBreakpoints": ["desktop-wide", "desktop", "tablet"]
+        "overlayRegions": [
+          "glow-pulse",
+          "shimmer"
+        ],
+        "transform": {
+          "x": 1760,
+          "y": 20,
+          "width": 120,
+          "height": 40,
+          "z": 101
+        },
+        "visibleAtBreakpoints": [
+          "desktop-wide",
+          "desktop",
+          "tablet"
+        ]
       },
       "intent": {
         "caption": "Sign-in button — pill-shaped button with 'Sign In' baked into its face, opens the sign-in modal on tap.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "open-signin-modal" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "open-signin-modal"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["open-modal"],
+          "emits": [
+            "open-modal"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "open-modal", "targetNodeIds": ["signin-modal"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "open-modal",
+              "targetNodeIds": [
+                "signin-modal"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["lift-hover", "scale-press", "glow-pulse"],
+        "stateEffects": [
+          "lift-hover",
+          "scale-press",
+          "glow-pulse"
+        ],
         "visualSpec": {
           "sourceAsset": "navbar-signin-btn",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Sign In",
               "role": "label",
               "renderMethod": "diffusion",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 600, "color": "#ffffff" },
-              "position": { "x": 60, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 600,
+                "color": "#ffffff"
+              },
+              "position": {
+                "x": 60,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/navbar-signin-btn.js",
       "backendRef": null
@@ -308,7 +632,36 @@
       "visual": {
         "sourceAsset": "hero-section-bg",
         "frameCount": 24,
-        "transform": { "x": 200, "y": 160, "width": 1520, "height": 560, "z": 49 }
+        "transform": {
+          "x": 200,
+          "y": 160,
+          "width": 1520,
+          "height": 560,
+          "z": 49
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 240,
+            "y": 160,
+            "width": 1440,
+            "height": 560,
+            "z": 49
+          },
+          "tablet": {
+            "x": 320,
+            "y": 160,
+            "width": 1280,
+            "height": 600,
+            "z": 49
+          },
+          "mobile": {
+            "x": 60,
+            "y": 160,
+            "width": 1800,
+            "height": 760,
+            "z": 49
+          }
+        }
       },
       "intent": {
         "caption": "Animated hero backdrop — atmospheric environment with drifting fog and dust motes (i2v, 24 fps loop).",
@@ -323,10 +676,17 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "hero-section-bg",
-          "animationSpec": { "method": 1, "fps": 24, "frameCount": 24 },
+          "animationSpec": {
+            "method": 1,
+            "fps": 24,
+            "frameCount": 24
+          },
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/hero-section-bg.js",
       "backendRef": null
@@ -338,11 +698,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "hero-card-bg",
-        "transform": { "x": 320, "y": 200, "width": 1280, "height": 480, "z": 50 },
+        "transform": {
+          "x": 320,
+          "y": 200,
+          "width": 1280,
+          "height": 480,
+          "z": 50
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 160, "y": 180, "width": 1120, "height": 440, "z": 50 },
-          "tablet":  { "x":  64, "y": 160, "width":  896, "height": 420, "z": 50 },
-          "mobile":  { "x":  32, "y": 140, "width":  704, "height": 420, "z": 50 }
+          "desktop": {
+            "x": 240,
+            "y": 200,
+            "width": 1440,
+            "height": 440,
+            "z": 50
+          },
+          "tablet": {
+            "x": 320,
+            "y": 200,
+            "width": 1280,
+            "height": 480,
+            "z": 50
+          },
+          "mobile": {
+            "x": 60,
+            "y": 200,
+            "width": 1800,
+            "height": 640,
+            "z": 50
+          }
         }
       },
       "intent": {
@@ -352,12 +736,20 @@
           "apiCalls": [],
           "dataBindings": [],
           "emits": [],
-          "listens": ["build-flow-started"],
+          "listens": [
+            "build-flow-started"
+          ],
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "hero-card-bg", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "hero-card-bg",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/hero-card-bg.js",
       "backendRef": null
@@ -369,7 +761,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "hero-card-headline-text",
-        "transform": { "x": 320, "y": 280, "width": 1280, "height": 96, "z": 51 }
+        "transform": {
+          "x": 320,
+          "y": 280,
+          "width": 1280,
+          "height": 96,
+          "z": 51
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 240,
+            "y": 280,
+            "width": 1440,
+            "height": 96,
+            "z": 51
+          },
+          "tablet": {
+            "x": 320,
+            "y": 260,
+            "width": 1280,
+            "height": 88,
+            "z": 51
+          },
+          "mobile": {
+            "x": 60,
+            "y": 240,
+            "width": 1800,
+            "height": 120,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Hero headline — 'Build apps from a prompt' (diffusion-rendered for typographic impact).",
@@ -389,12 +810,24 @@
               "text": "Build apps from a prompt",
               "role": "heading",
               "renderMethod": "diffusion",
-              "typography": { "fontFamily": "Inter", "fontSize": 56, "fontWeight": 700, "color": "#f5e6c8" },
-              "position": { "x": 640, "y": 48, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 56,
+                "fontWeight": 700,
+                "color": "#f5e6c8"
+              },
+              "position": {
+                "x": 640,
+                "y": 48,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -406,7 +839,34 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "hero-card-subhead-text",
-        "transform": { "x": 320, "y": 380, "width": 1280, "height": 40, "z": 51 }
+        "transform": {
+          "x": 320,
+          "y": 380,
+          "width": 1280,
+          "height": 40,
+          "z": 51
+        },
+        "visibleAtBreakpoints": [
+          "desktop-wide",
+          "desktop",
+          "tablet"
+        ],
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 240,
+            "y": 380,
+            "width": 1440,
+            "height": 40,
+            "z": 51
+          },
+          "tablet": {
+            "x": 320,
+            "y": 360,
+            "width": 1280,
+            "height": 40,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Hero subhead — clarifying tagline beneath the headline.",
@@ -426,12 +886,24 @@
               "text": "Kriptik turns natural language into running applications in under 15 seconds.",
               "role": "body",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 18, "fontWeight": 400, "color": "#cccccc" },
-              "position": { "x": 640, "y": 20, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 18,
+                "fontWeight": 400,
+                "color": "#cccccc"
+              },
+              "position": {
+                "x": 640,
+                "y": 20,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -443,38 +915,108 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "hero-card-cta",
-        "overlayRegions": ["glow-pulse", "shimmer"],
-        "transform": { "x": 840, "y": 560, "width": 240, "height": 64, "z": 51 }
+        "overlayRegions": [
+          "glow-pulse",
+          "shimmer"
+        ],
+        "transform": {
+          "x": 840,
+          "y": 560,
+          "width": 240,
+          "height": 64,
+          "z": 51
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 840,
+            "y": 540,
+            "width": 260,
+            "height": 72,
+            "z": 51
+          },
+          "tablet": {
+            "x": 884,
+            "y": 520,
+            "width": 260,
+            "height": 72,
+            "z": 51
+          },
+          "mobile": {
+            "x": 60,
+            "y": 700,
+            "width": 1800,
+            "height": 140,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Primary CTA — 'Get Started'. Fires build-flow-started, tracks click via backend, pulses glow on success.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "start-build-flow" }],
-          "apiCalls": [{ "endpoint": "/api/mock/track-cta-click", "method": "POST" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "start-build-flow"
+            }
+          ],
+          "apiCalls": [
+            {
+              "endpoint": "/api/mock/track-cta-click",
+              "method": "POST"
+            }
+          ],
           "dataBindings": [],
-          "emits": ["build-flow-started"],
+          "emits": [
+            "build-flow-started"
+          ],
           "listens": [],
           "triggersDownstream": [
-            { "eventName": "build-flow-started", "targetNodeIds": ["hero-card-bg", "stats-live-counter", "build-panel"], "toleranceMs": 1000 }
+            {
+              "eventName": "build-flow-started",
+              "targetNodeIds": [
+                "hero-card-bg",
+                "stats-live-counter",
+                "build-panel"
+              ],
+              "toleranceMs": 1000
+            }
           ]
         },
-        "stateEffects": ["lift-hover", "scale-press", "glow-pulse", "shimmer"],
+        "stateEffects": [
+          "lift-hover",
+          "scale-press",
+          "glow-pulse",
+          "shimmer"
+        ],
         "visualSpec": {
           "sourceAsset": "hero-card-cta",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Get Started",
               "role": "label",
               "renderMethod": "diffusion",
-              "typography": { "fontFamily": "Inter", "fontSize": 18, "fontWeight": 600, "color": "#ffffff" },
-              "position": { "x": 120, "y": 32, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 18,
+                "fontWeight": 600,
+                "color": "#ffffff"
+              },
+              "position": {
+                "x": 120,
+                "y": 32,
+                "anchor": "center"
+              }
             }
           ]
         },
         "contracts": {
           "inputs": {},
-          "outputs": { "clickCount": "z.number()" }
+          "outputs": {
+            "clickCount": "z.number()"
+          }
         }
       },
       "codeRef": "nodes/hero-card-cta.js",
@@ -487,7 +1029,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-grid-section-bg",
-        "transform": { "x": 200, "y": 760, "width": 1520, "height": 800, "z": 40 }
+        "transform": {
+          "x": 200,
+          "y": 760,
+          "width": 1520,
+          "height": 800,
+          "z": 40
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 240,
+            "y": 760,
+            "width": 1440,
+            "height": 800,
+            "z": 40
+          },
+          "tablet": {
+            "x": 320,
+            "y": 760,
+            "width": 1280,
+            "height": 1000,
+            "z": 40
+          },
+          "mobile": {
+            "x": 60,
+            "y": 760,
+            "width": 1800,
+            "height": 1600,
+            "z": 40
+          }
+        }
       },
       "intent": {
         "caption": "Feature grid section backdrop.",
@@ -500,8 +1071,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "feature-grid-section-bg", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "feature-grid-section-bg",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-grid-section-bg.js",
       "backendRef": null
@@ -513,11 +1090,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-1-bg",
-        "transform": { "x": 200, "y": 780, "width": 460, "height": 360, "z": 41 },
+        "transform": {
+          "x": 200,
+          "y": 780,
+          "width": 460,
+          "height": 360,
+          "z": 41
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 120, "y": 780, "width": 400, "height": 340, "z": 41 },
-          "tablet":  { "x":  64, "y": 780, "width": 448, "height": 320, "z": 41 },
-          "mobile":  { "x":  32, "y": 780, "width": 704, "height": 220, "z": 41 }
+          "desktop": {
+            "x": 260,
+            "y": 800,
+            "width": 460,
+            "height": 360,
+            "z": 41
+          },
+          "tablet": {
+            "x": 340,
+            "y": 800,
+            "width": 600,
+            "height": 400,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 800,
+            "width": 1800,
+            "height": 420,
+            "z": 41
+          }
         }
       },
       "intent": {
@@ -530,13 +1131,20 @@
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
+        "stateEffects": [
+          "lift-hover"
+        ],
         "visualSpec": {
           "sourceAsset": "feature-card-1-bg",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -548,7 +1156,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-1-icon",
-        "transform": { "x": 240, "y": 820, "width": 80, "height": 80, "z": 42 }
+        "transform": {
+          "x": 240,
+          "y": 820,
+          "width": 80,
+          "height": 80,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 300,
+            "y": 840,
+            "width": 60,
+            "height": 60,
+            "z": 42
+          },
+          "tablet": {
+            "x": 380,
+            "y": 840,
+            "width": 72,
+            "height": 72,
+            "z": 42
+          },
+          "mobile": {
+            "x": 120,
+            "y": 840,
+            "width": 120,
+            "height": 120,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "AI-Powered Design icon — sparkle / neural glyph.",
@@ -561,8 +1198,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "feature-card-1-icon", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "feature-card-1-icon",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -574,7 +1217,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-1-title",
-        "transform": { "x": 240, "y": 940, "width": 400, "height": 40, "z": 42 }
+        "transform": {
+          "x": 240,
+          "y": 940,
+          "width": 400,
+          "height": 40,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 300,
+            "y": 920,
+            "width": 380,
+            "height": 40,
+            "z": 42
+          },
+          "tablet": {
+            "x": 380,
+            "y": 920,
+            "width": 520,
+            "height": 40,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 860,
+            "width": 1540,
+            "height": 56,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 1 title.",
@@ -594,12 +1266,24 @@
               "text": "AI-Powered Design",
               "role": "heading",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 20, "fontWeight": 600, "color": "#ffffff" },
-              "position": { "x": 8, "y": 20, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 20,
+                "fontWeight": 600,
+                "color": "#ffffff"
+              },
+              "position": {
+                "x": 8,
+                "y": 20,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -611,7 +1295,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-1-desc",
-        "transform": { "x": 240, "y": 980, "width": 400, "height": 100, "z": 42 }
+        "transform": {
+          "x": 240,
+          "y": 980,
+          "width": 400,
+          "height": 100,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 300,
+            "y": 980,
+            "width": 380,
+            "height": 140,
+            "z": 42
+          },
+          "tablet": {
+            "x": 380,
+            "y": 980,
+            "width": 520,
+            "height": 180,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 940,
+            "width": 1540,
+            "height": 240,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 1 description.",
@@ -631,12 +1344,24 @@
               "text": "Describe your idea in plain English and watch it compile into a polished interface — no design system wrangling required.",
               "role": "body",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 400, "color": "#aaaaaa" },
-              "position": { "x": 8, "y": 16, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 400,
+                "color": "#aaaaaa"
+              },
+              "position": {
+                "x": 8,
+                "y": 16,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -648,7 +1373,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-2-bg",
-        "transform": { "x": 730, "y": 780, "width": 460, "height": 360, "z": 41 }
+        "transform": {
+          "x": 730,
+          "y": 780,
+          "width": 460,
+          "height": 360,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 740,
+            "y": 800,
+            "width": 460,
+            "height": 360,
+            "z": 41
+          },
+          "tablet": {
+            "x": 980,
+            "y": 800,
+            "width": 600,
+            "height": 400,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 1240,
+            "width": 1800,
+            "height": 420,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 2 panel — background for the 'Instant Deploy' feature.",
@@ -660,13 +1414,20 @@
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
+        "stateEffects": [
+          "lift-hover"
+        ],
         "visualSpec": {
           "sourceAsset": "feature-card-2-bg",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -678,7 +1439,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-2-icon",
-        "transform": { "x": 770, "y": 820, "width": 80, "height": 80, "z": 42 }
+        "transform": {
+          "x": 770,
+          "y": 820,
+          "width": 80,
+          "height": 80,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 780,
+            "y": 840,
+            "width": 60,
+            "height": 60,
+            "z": 42
+          },
+          "tablet": {
+            "x": 1020,
+            "y": 840,
+            "width": 72,
+            "height": 72,
+            "z": 42
+          },
+          "mobile": {
+            "x": 120,
+            "y": 1280,
+            "width": 120,
+            "height": 120,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Instant Deploy icon — lightning / rocket glyph.",
@@ -691,8 +1481,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "feature-card-2-icon", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "feature-card-2-icon",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -704,7 +1500,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-2-title",
-        "transform": { "x": 770, "y": 940, "width": 400, "height": 40, "z": 42 }
+        "transform": {
+          "x": 770,
+          "y": 940,
+          "width": 400,
+          "height": 40,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 780,
+            "y": 920,
+            "width": 380,
+            "height": 40,
+            "z": 42
+          },
+          "tablet": {
+            "x": 1020,
+            "y": 920,
+            "width": 520,
+            "height": 40,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 1300,
+            "width": 1540,
+            "height": 56,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 2 title.",
@@ -724,12 +1549,24 @@
               "text": "Instant Deploy",
               "role": "heading",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 20, "fontWeight": 600, "color": "#ffffff" },
-              "position": { "x": 8, "y": 20, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 20,
+                "fontWeight": 600,
+                "color": "#ffffff"
+              },
+              "position": {
+                "x": 8,
+                "y": 20,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -741,7 +1578,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-2-desc",
-        "transform": { "x": 770, "y": 980, "width": 400, "height": 100, "z": 42 }
+        "transform": {
+          "x": 770,
+          "y": 980,
+          "width": 400,
+          "height": 100,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 780,
+            "y": 980,
+            "width": 380,
+            "height": 140,
+            "z": 42
+          },
+          "tablet": {
+            "x": 1020,
+            "y": 980,
+            "width": 520,
+            "height": 180,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 1380,
+            "width": 1540,
+            "height": 240,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 2 description.",
@@ -761,12 +1627,24 @@
               "text": "One-click publish to a globally-edged runtime. Preview, share, and ship in the same breath.",
               "role": "body",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 400, "color": "#aaaaaa" },
-              "position": { "x": 8, "y": 16, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 400,
+                "color": "#aaaaaa"
+              },
+              "position": {
+                "x": 8,
+                "y": 16,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -778,7 +1656,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-3-bg",
-        "transform": { "x": 1260, "y": 780, "width": 460, "height": 360, "z": 41 }
+        "transform": {
+          "x": 1260,
+          "y": 780,
+          "width": 460,
+          "height": 360,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1220,
+            "y": 800,
+            "width": 460,
+            "height": 360,
+            "z": 41
+          },
+          "tablet": {
+            "x": 660,
+            "y": 1240,
+            "width": 600,
+            "height": 400,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 1680,
+            "width": 1800,
+            "height": 420,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 3 panel — background for the 'Self-Healing Runtime' feature.",
@@ -790,13 +1697,20 @@
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
+        "stateEffects": [
+          "lift-hover"
+        ],
         "visualSpec": {
           "sourceAsset": "feature-card-3-bg",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -808,7 +1722,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-3-icon",
-        "transform": { "x": 1300, "y": 820, "width": 80, "height": 80, "z": 42 }
+        "transform": {
+          "x": 1300,
+          "y": 820,
+          "width": 80,
+          "height": 80,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1260,
+            "y": 840,
+            "width": 60,
+            "height": 60,
+            "z": 42
+          },
+          "tablet": {
+            "x": 700,
+            "y": 1280,
+            "width": 72,
+            "height": 72,
+            "z": 42
+          },
+          "mobile": {
+            "x": 120,
+            "y": 1720,
+            "width": 120,
+            "height": 120,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Self-Healing Runtime icon — shield / heart glyph.",
@@ -821,8 +1764,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "feature-card-3-icon", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "feature-card-3-icon",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -834,7 +1783,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-3-title",
-        "transform": { "x": 1300, "y": 940, "width": 400, "height": 40, "z": 42 }
+        "transform": {
+          "x": 1300,
+          "y": 940,
+          "width": 400,
+          "height": 40,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1260,
+            "y": 920,
+            "width": 380,
+            "height": 40,
+            "z": 42
+          },
+          "tablet": {
+            "x": 700,
+            "y": 1360,
+            "width": 520,
+            "height": 40,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 1740,
+            "width": 1540,
+            "height": 56,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 3 title.",
@@ -854,12 +1832,24 @@
               "text": "Self-Healing Runtime",
               "role": "heading",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 20, "fontWeight": 600, "color": "#ffffff" },
-              "position": { "x": 8, "y": 20, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 20,
+                "fontWeight": 600,
+                "color": "#ffffff"
+              },
+              "position": {
+                "x": 8,
+                "y": 20,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -871,7 +1861,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "feature-card-3-desc",
-        "transform": { "x": 1300, "y": 980, "width": 400, "height": 100, "z": 42 }
+        "transform": {
+          "x": 1300,
+          "y": 980,
+          "width": 400,
+          "height": 100,
+          "z": 42
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1260,
+            "y": 980,
+            "width": 380,
+            "height": 140,
+            "z": 42
+          },
+          "tablet": {
+            "x": 700,
+            "y": 1420,
+            "width": 520,
+            "height": 180,
+            "z": 42
+          },
+          "mobile": {
+            "x": 260,
+            "y": 1820,
+            "width": 1540,
+            "height": 240,
+            "z": 42
+          }
+        }
       },
       "intent": {
         "caption": "Feature card 3 description.",
@@ -891,12 +1910,24 @@
               "text": "When something breaks, Kriptik notices, patches the divergent node, and restores behavior — usually before you reach for the refresh button.",
               "role": "body",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 400, "color": "#aaaaaa" },
-              "position": { "x": 8, "y": 16, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 400,
+                "color": "#aaaaaa"
+              },
+              "position": {
+                "x": 8,
+                "y": 16,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -908,11 +1939,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "settings-section-bg",
-        "transform": { "x": 200, "y": 1600, "width": 1520, "height": 300, "z": 50 },
+        "transform": {
+          "x": 200,
+          "y": 1600,
+          "width": 1520,
+          "height": 300,
+          "z": 50
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 120, "y": 1600, "width": 1200, "height": 280, "z": 50 },
-          "tablet":  { "x":  48, "y": 1600, "width":  928, "height": 260, "z": 50 },
-          "mobile":  { "x":  24, "y": 1600, "width":  720, "height": 320, "z": 50 }
+          "desktop": {
+            "x": 120,
+            "y": 1600,
+            "width": 1200,
+            "height": 280,
+            "z": 50
+          },
+          "tablet": {
+            "x": 48,
+            "y": 1600,
+            "width": 928,
+            "height": 260,
+            "z": 50
+          },
+          "mobile": {
+            "x": 24,
+            "y": 1600,
+            "width": 720,
+            "height": 320,
+            "z": 50
+          }
         }
       },
       "intent": {
@@ -926,8 +1981,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "settings-section-bg", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "settings-section-bg",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/settings-section-bg.js",
       "backendRef": null
@@ -939,29 +2000,94 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "notifications-toggle",
-        "regionKeys": ["off", "on"],
+        "regionKeys": [
+          "off",
+          "on"
+        ],
         "defaultRegion": "off",
-        "transform": { "x": 600, "y": 1700, "width": 96, "height": 48, "z": 51 }
+        "transform": {
+          "x": 600,
+          "y": 1700,
+          "width": 96,
+          "height": 48,
+          "z": 51
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 520,
+            "y": 1700,
+            "width": 96,
+            "height": 48,
+            "z": 51
+          },
+          "tablet": {
+            "x": 220,
+            "y": 1700,
+            "width": 96,
+            "height": 48,
+            "z": 51
+          },
+          "mobile": {
+            "x": 860,
+            "y": 1860,
+            "width": 200,
+            "height": 88,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Notifications toggle — layer-swap between off and on atlas regions (Method 3.4.2).",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "toggle-state" }],
-          "apiCalls": [{ "endpoint": "/api/mock/user-preferences", "method": "POST" }],
-          "dataBindings": [{ "source": "state.notifications-enabled", "target": "visual.activeRegion" }],
-          "emits": ["notifications-toggled"],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "toggle-state"
+            }
+          ],
+          "apiCalls": [
+            {
+              "endpoint": "/api/mock/user-preferences",
+              "method": "POST"
+            }
+          ],
+          "dataBindings": [
+            {
+              "source": "state.notifications-enabled",
+              "target": "visual.activeRegion"
+            }
+          ],
+          "emits": [
+            "notifications-toggled"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "notifications-toggled", "targetNodeIds": ["user-preferences-store"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "notifications-toggled",
+              "targetNodeIds": [
+                "user-preferences-store"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["layer-swap"],
+        "stateEffects": [
+          "layer-swap"
+        ],
         "visualSpec": {
           "sourceAsset": "notifications-toggle",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": []
         },
         "contracts": {
-          "inputs": { "notificationsEnabled": "z.boolean()" },
-          "outputs": { "notificationsEnabled": "z.boolean()" }
+          "inputs": {
+            "notificationsEnabled": "z.boolean()"
+          },
+          "outputs": {
+            "notificationsEnabled": "z.boolean()"
+          }
         }
       },
       "codeRef": "nodes/notifications-toggle.js",
@@ -974,42 +2100,124 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "theme-selector-button",
-        "regionKeys": ["default", "hover", "pressed"],
+        "regionKeys": [
+          "default",
+          "hover",
+          "pressed"
+        ],
         "defaultRegion": "default",
-        "transform": { "x": 800, "y": 1700, "width": 160, "height": 48, "z": 51 }
+        "transform": {
+          "x": 800,
+          "y": 1700,
+          "width": 160,
+          "height": 48,
+          "z": 51
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 700,
+            "y": 1700,
+            "width": 160,
+            "height": 48,
+            "z": 51
+          },
+          "tablet": {
+            "x": 420,
+            "y": 1700,
+            "width": 160,
+            "height": 48,
+            "z": 51
+          },
+          "mobile": {
+            "x": 660,
+            "y": 1760,
+            "width": 600,
+            "height": 88,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Theme selector — three-state layer-swap button (default / hover / pressed) that cycles light/dark themes.",
         "behaviorSpec": {
           "interactions": [
-            { "event": "pointerover", "effect": "swap-to-hover" },
-            { "event": "pointerout", "effect": "swap-to-default" },
-            { "event": "pointerdown", "effect": "swap-to-pressed" },
-            { "event": "pointertap", "effect": "cycle-theme" }
+            {
+              "event": "pointerover",
+              "effect": "swap-to-hover"
+            },
+            {
+              "event": "pointerout",
+              "effect": "swap-to-default"
+            },
+            {
+              "event": "pointerdown",
+              "effect": "swap-to-pressed"
+            },
+            {
+              "event": "pointertap",
+              "effect": "cycle-theme"
+            }
           ],
-          "apiCalls": [{ "endpoint": "/api/mock/user-preferences", "method": "POST" }],
-          "dataBindings": [{ "source": "state.theme", "target": "page-background.tint" }],
-          "emits": ["theme-changed"],
+          "apiCalls": [
+            {
+              "endpoint": "/api/mock/user-preferences",
+              "method": "POST"
+            }
+          ],
+          "dataBindings": [
+            {
+              "source": "state.theme",
+              "target": "page-background.tint"
+            }
+          ],
+          "emits": [
+            "theme-changed"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "theme-changed", "targetNodeIds": ["page-background"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "theme-changed",
+              "targetNodeIds": [
+                "page-background"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["layer-swap"],
+        "stateEffects": [
+          "layer-swap"
+        ],
         "visualSpec": {
           "sourceAsset": "theme-selector-button",
-          "animationSpec": { "method": 2 },
+          "animationSpec": {
+            "method": 2
+          },
           "textContent": [
             {
               "text": "Theme",
               "role": "label",
               "renderMethod": "diffusion",
-              "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#e5eaff" },
-              "position": { "x": 80, "y": 24, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 14,
+                "fontWeight": 500,
+                "color": "#e5eaff"
+              },
+              "position": {
+                "x": 80,
+                "y": 24,
+                "anchor": "center"
+              }
             }
           ]
         },
         "contracts": {
-          "inputs": { "theme": "z.enum(['light', 'dark', 'system'])" },
-          "outputs": { "theme": "z.enum(['light', 'dark', 'system'])" }
+          "inputs": {
+            "theme": "z.enum(['light', 'dark', 'system'])"
+          },
+          "outputs": {
+            "theme": "z.enum(['light', 'dark', 'system'])"
+          }
         }
       },
       "codeRef": "nodes/theme-selector-button.js",
@@ -1022,11 +2230,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "stats-card-bg",
-        "transform": { "x": 600, "y": 1960, "width": 720, "height": 160, "z": 50 },
+        "transform": {
+          "x": 600,
+          "y": 1960,
+          "width": 720,
+          "height": 160,
+          "z": 50
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 420, "y": 1960, "width": 600, "height": 140, "z": 50 },
-          "tablet":  { "x": 192, "y": 1960, "width": 640, "height": 140, "z": 50 },
-          "mobile":  { "x":  24, "y": 1960, "width": 720, "height": 160, "z": 50 }
+          "desktop": {
+            "x": 420,
+            "y": 1960,
+            "width": 600,
+            "height": 140,
+            "z": 50
+          },
+          "tablet": {
+            "x": 192,
+            "y": 1960,
+            "width": 640,
+            "height": 140,
+            "z": 50
+          },
+          "mobile": {
+            "x": 24,
+            "y": 1960,
+            "width": 720,
+            "height": 160,
+            "z": 50
+          }
         }
       },
       "intent": {
@@ -1047,12 +2279,24 @@
               "text": "Total Clicks:",
               "role": "label",
               "renderMethod": "diffusion",
-              "typography": { "fontFamily": "Inter", "fontSize": 24, "fontWeight": 500, "color": "#e5eaff" },
-              "position": { "x": 80, "y": 80, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 24,
+                "fontWeight": 500,
+                "color": "#e5eaff"
+              },
+              "position": {
+                "x": 80,
+                "y": 80,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/stats-card-bg.js",
       "backendRef": null
@@ -1064,16 +2308,58 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "stats-live-counter",
-        "transform": { "x": 900, "y": 2000, "width": 200, "height": 48, "z": 51 }
+        "transform": {
+          "x": 900,
+          "y": 2000,
+          "width": 200,
+          "height": 48,
+          "z": 51
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 780,
+            "y": 2000,
+            "width": 240,
+            "height": 56,
+            "z": 51
+          },
+          "tablet": {
+            "x": 400,
+            "y": 2000,
+            "width": 240,
+            "height": 56,
+            "z": 51
+          },
+          "mobile": {
+            "x": 760,
+            "y": 2020,
+            "width": 400,
+            "height": 88,
+            "z": 51
+          }
+        }
       },
       "intent": {
         "caption": "Live click counter — MSDF BitmapText bound to the heroCtaClicks state key (runtime-dynamic text).",
         "behaviorSpec": {
           "interactions": [],
-          "apiCalls": [{ "endpoint": "/api/mock/analytics", "method": "GET" }],
-          "dataBindings": [{ "source": "state.heroCtaClicks", "target": "text" }],
+          "apiCalls": [
+            {
+              "endpoint": "/api/mock/analytics",
+              "method": "GET"
+            }
+          ],
+          "dataBindings": [
+            {
+              "source": "state.heroCtaClicks",
+              "target": "text"
+            }
+          ],
           "emits": [],
-          "listens": ["build-flow-started", "clicks-updated"],
+          "listens": [
+            "build-flow-started",
+            "clicks-updated"
+          ],
           "triggersDownstream": []
         },
         "stateEffects": [],
@@ -1084,13 +2370,24 @@
               "text": "0",
               "role": "body",
               "renderMethod": "msdf",
-              "typography": { "fontFamily": "Inter", "fontSize": 32, "fontWeight": 600, "color": "#ffb366" },
-              "position": { "x": 12, "y": 20, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 32,
+                "fontWeight": 600,
+                "color": "#ffb366"
+              },
+              "position": {
+                "x": 12,
+                "y": 20,
+                "anchor": "left"
+              }
             }
           ]
         },
         "contracts": {
-          "inputs": { "heroCtaClicks": "z.number()" },
+          "inputs": {
+            "heroCtaClicks": "z.number()"
+          },
           "outputs": {}
         }
       },
@@ -1104,11 +2401,35 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-bg",
-        "transform": { "x": 0, "y": 2200, "width": 1920, "height": 300, "z": 40 },
+        "transform": {
+          "x": 0,
+          "y": 2200,
+          "width": 1920,
+          "height": 300,
+          "z": 40
+        },
         "transformByBreakpoint": {
-          "desktop": { "x": 0, "y": 2200, "width": 1440, "height": 280, "z": 40 },
-          "tablet":  { "x": 0, "y": 2200, "width": 1024, "height": 260, "z": 40 },
-          "mobile":  { "x": 0, "y": 2200, "width":  768, "height": 260, "z": 40 }
+          "desktop": {
+            "x": 0,
+            "y": 2200,
+            "width": 1440,
+            "height": 280,
+            "z": 40
+          },
+          "tablet": {
+            "x": 0,
+            "y": 2200,
+            "width": 1024,
+            "height": 260,
+            "z": 40
+          },
+          "mobile": {
+            "x": 0,
+            "y": 2200,
+            "width": 768,
+            "height": 260,
+            "z": 40
+          }
         }
       },
       "intent": {
@@ -1122,8 +2443,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "sourceAsset": "footer-bg", "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "sourceAsset": "footer-bg",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-bg.js",
       "backendRef": null
@@ -1135,21 +2462,76 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-logo",
-        "transform": { "x": 40, "y": 2240, "width": 120, "height": 40, "z": 41 }
+        "transform": {
+          "x": 40,
+          "y": 2240,
+          "width": 120,
+          "height": 40,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 40,
+            "y": 2240,
+            "width": 120,
+            "height": 40,
+            "z": 41
+          },
+          "tablet": {
+            "x": 40,
+            "y": 2240,
+            "width": 120,
+            "height": 40,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 2240,
+            "width": 200,
+            "height": 60,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Footer Kriptik logo mark.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate-home" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate-home"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["lift-hover"],
-        "visualSpec": { "sourceAsset": "footer-logo", "animationSpec": { "method": 2 }, "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "footer-logo",
+          "animationSpec": {
+            "method": 2
+          },
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-logo.js",
       "backendRef": null
@@ -1161,34 +2543,97 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-privacy",
-        "regionKeys": ["default", "hover"],
-        "transform": { "x": 400, "y": 2280, "width": 100, "height": 24, "z": 41 }
+        "regionKeys": [
+          "default",
+          "hover"
+        ],
+        "transform": {
+          "x": 400,
+          "y": 2280,
+          "width": 100,
+          "height": 24,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 320,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "tablet": {
+            "x": 220,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 2320,
+            "width": 1800,
+            "height": 56,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Footer link — Privacy.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["color-wash"],
+        "stateEffects": [
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "footer-link-privacy",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Privacy",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 13, "fontWeight": 400, "color": "#8892b5" },
-              "position": { "x": 50, "y": 12, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 13,
+                "fontWeight": 400,
+                "color": "#8892b5"
+              },
+              "position": {
+                "x": 50,
+                "y": 12,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1200,34 +2645,97 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-terms",
-        "regionKeys": ["default", "hover"],
-        "transform": { "x": 520, "y": 2280, "width": 100, "height": 24, "z": 41 }
+        "regionKeys": [
+          "default",
+          "hover"
+        ],
+        "transform": {
+          "x": 520,
+          "y": 2280,
+          "width": 100,
+          "height": 24,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 440,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "tablet": {
+            "x": 340,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 2380,
+            "width": 1800,
+            "height": 56,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Footer link — Terms.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["color-wash"],
+        "stateEffects": [
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "footer-link-terms",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Terms",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 13, "fontWeight": 400, "color": "#8892b5" },
-              "position": { "x": 50, "y": 12, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 13,
+                "fontWeight": 400,
+                "color": "#8892b5"
+              },
+              "position": {
+                "x": 50,
+                "y": 12,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1239,34 +2747,97 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-link-contact",
-        "regionKeys": ["default", "hover"],
-        "transform": { "x": 640, "y": 2280, "width": 100, "height": 24, "z": 41 }
+        "regionKeys": [
+          "default",
+          "hover"
+        ],
+        "transform": {
+          "x": 640,
+          "y": 2280,
+          "width": 100,
+          "height": 24,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 560,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "tablet": {
+            "x": 460,
+            "y": 2280,
+            "width": 100,
+            "height": 24,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 2440,
+            "width": 1800,
+            "height": 56,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Footer link — Contact.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "navigate" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "navigate"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["navigate"],
+          "emits": [
+            "navigate"
+          ],
           "listens": [],
-          "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }]
+          "triggersDownstream": [
+            {
+              "eventName": "navigate",
+              "targetNodeIds": [
+                "hub-router"
+              ],
+              "toleranceMs": 500
+            }
+          ]
         },
-        "stateEffects": ["color-wash"],
+        "stateEffects": [
+          "color-wash"
+        ],
         "visualSpec": {
           "sourceAsset": "footer-link-contact",
-          "animationSpec": { "method": 3 },
+          "animationSpec": {
+            "method": 3
+          },
           "textContent": [
             {
               "text": "Contact",
               "role": "label",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 13, "fontWeight": 400, "color": "#8892b5" },
-              "position": { "x": 50, "y": 12, "anchor": "center" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 13,
+                "fontWeight": 400,
+                "color": "#8892b5"
+              },
+              "position": {
+                "x": 50,
+                "y": 12,
+                "anchor": "center"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1278,21 +2849,68 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-social-twitter",
-        "transform": { "x": 1500, "y": 2280, "width": 32, "height": 32, "z": 41 }
+        "transform": {
+          "x": 1500,
+          "y": 2280,
+          "width": 32,
+          "height": 32,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1300,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "tablet": {
+            "x": 880,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "mobile": {
+            "x": 740,
+            "y": 2700,
+            "width": 72,
+            "height": 72,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Social — Twitter / X icon, opens external link.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "open-external" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "open-external"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["external-navigate"],
+          "emits": [
+            "external-navigate"
+          ],
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
-        "visualSpec": { "sourceAsset": "footer-social-twitter", "animationSpec": { "method": 2 }, "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "footer-social-twitter",
+          "animationSpec": {
+            "method": 2
+          },
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -1304,21 +2922,68 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-social-github",
-        "transform": { "x": 1560, "y": 2280, "width": 32, "height": 32, "z": 41 }
+        "transform": {
+          "x": 1560,
+          "y": 2280,
+          "width": 32,
+          "height": 32,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1360,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "tablet": {
+            "x": 940,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "mobile": {
+            "x": 860,
+            "y": 2700,
+            "width": 72,
+            "height": 72,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Social — GitHub icon, opens external link.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "open-external" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "open-external"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["external-navigate"],
+          "emits": [
+            "external-navigate"
+          ],
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
-        "visualSpec": { "sourceAsset": "footer-social-github", "animationSpec": { "method": 2 }, "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "footer-social-github",
+          "animationSpec": {
+            "method": 2
+          },
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -1330,21 +2995,68 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-social-discord",
-        "transform": { "x": 1620, "y": 2280, "width": 32, "height": 32, "z": 41 }
+        "transform": {
+          "x": 1620,
+          "y": 2280,
+          "width": 32,
+          "height": 32,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 1420,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "tablet": {
+            "x": 1000,
+            "y": 2280,
+            "width": 32,
+            "height": 32,
+            "z": 41
+          },
+          "mobile": {
+            "x": 980,
+            "y": 2700,
+            "width": 72,
+            "height": 72,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Social — Discord icon, opens external link.",
         "behaviorSpec": {
-          "interactions": [{ "event": "pointertap", "effect": "open-external" }],
+          "interactions": [
+            {
+              "event": "pointertap",
+              "effect": "open-external"
+            }
+          ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["external-navigate"],
+          "emits": [
+            "external-navigate"
+          ],
           "listens": [],
           "triggersDownstream": []
         },
-        "stateEffects": ["lift-hover"],
-        "visualSpec": { "sourceAsset": "footer-social-discord", "animationSpec": { "method": 2 }, "textContent": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "footer-social-discord",
+          "animationSpec": {
+            "method": 2
+          },
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -1356,7 +3068,36 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "footer-copyright-text",
-        "transform": { "x": 40, "y": 2440, "width": 800, "height": 24, "z": 41 }
+        "transform": {
+          "x": 40,
+          "y": 2440,
+          "width": 800,
+          "height": 24,
+          "z": 41
+        },
+        "transformByBreakpoint": {
+          "desktop": {
+            "x": 40,
+            "y": 2440,
+            "width": 800,
+            "height": 24,
+            "z": 41
+          },
+          "tablet": {
+            "x": 40,
+            "y": 2440,
+            "width": 600,
+            "height": 24,
+            "z": 41
+          },
+          "mobile": {
+            "x": 60,
+            "y": 2600,
+            "width": 1800,
+            "height": 60,
+            "z": 41
+          }
+        }
       },
       "intent": {
         "caption": "Footer copyright line.",
@@ -1376,32 +3117,119 @@
               "text": "© 2026 Kriptik. All rights reserved.",
               "role": "caption",
               "renderMethod": "sharp-svg",
-              "typography": { "fontFamily": "Inter", "fontSize": 12, "fontWeight": 400, "color": "#666666" },
-              "position": { "x": 0, "y": 12, "anchor": "left" }
+              "typography": {
+                "fontFamily": "Inter",
+                "fontSize": 12,
+                "fontWeight": 400,
+                "color": "#666666"
+              },
+              "position": {
+                "x": 0,
+                "y": 12,
+                "anchor": "left"
+              }
             }
           ]
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
     }
   ],
   "edges": [
-    { "from": "navbar-logo", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "navbar-link-home", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "navbar-link-editor", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "navbar-link-docs", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "navbar-link-pricing", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "navbar-signin-btn", "to": "signin-modal", "type": "triggers", "event": "open-modal" },
-    { "from": "hero-card-cta", "to": "hero-card-bg", "type": "triggers", "event": "build-flow-started" },
-    { "from": "hero-card-cta", "to": "stats-live-counter", "type": "state-update", "event": "heroCtaClicks" },
-    { "from": "hero-card-cta", "to": "build-panel", "type": "triggers", "event": "build-flow-started" },
-    { "from": "notifications-toggle", "to": "user-preferences-store", "type": "state-update", "event": "notifications-enabled" },
-    { "from": "theme-selector-button", "to": "page-background", "type": "state-update", "event": "theme" },
-    { "from": "footer-logo", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "footer-link-privacy", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "footer-link-terms", "to": "hub-router", "type": "triggers", "event": "navigate" },
-    { "from": "footer-link-contact", "to": "hub-router", "type": "triggers", "event": "navigate" }
+    {
+      "from": "navbar-logo",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "navbar-link-home",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "navbar-link-editor",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "navbar-link-docs",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "navbar-link-pricing",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "navbar-signin-btn",
+      "to": "signin-modal",
+      "type": "triggers",
+      "event": "open-modal"
+    },
+    {
+      "from": "hero-card-cta",
+      "to": "hero-card-bg",
+      "type": "triggers",
+      "event": "build-flow-started"
+    },
+    {
+      "from": "hero-card-cta",
+      "to": "stats-live-counter",
+      "type": "state-update",
+      "event": "heroCtaClicks"
+    },
+    {
+      "from": "hero-card-cta",
+      "to": "build-panel",
+      "type": "triggers",
+      "event": "build-flow-started"
+    },
+    {
+      "from": "notifications-toggle",
+      "to": "user-preferences-store",
+      "type": "state-update",
+      "event": "notifications-enabled"
+    },
+    {
+      "from": "theme-selector-button",
+      "to": "page-background",
+      "type": "state-update",
+      "event": "theme"
+    },
+    {
+      "from": "footer-logo",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "footer-link-privacy",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "footer-link-terms",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    },
+    {
+      "from": "footer-link-contact",
+      "to": "hub-router",
+      "type": "triggers",
+      "event": "navigate"
+    }
   ]
 }

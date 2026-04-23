@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import PrismHost from '@/components/prism-player/PrismHost';
+import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -36,6 +36,7 @@ export default function Page() {
   const [dragging, setDragging] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('split');
+  const [previewPreset, setPreviewPreset] = useState<ViewportPreset>('desktop');
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 900);
@@ -118,7 +119,11 @@ export default function Page() {
               className={`absolute top-0 bottom-0 left-0 ${viewMode === 'split' ? 'border-r border-white/5' : ''}`}
               style={{ width: viewMode === 'split' ? `${splitPct}%` : '100%' }}
             >
-              <PrismHost />
+              <PrismHost
+                viewportPreset={viewMode === 'preview' ? previewPreset : 'fit'}
+                showViewportControls={viewMode === 'preview'}
+                onPresetChange={setPreviewPreset}
+              />
             </div>
           )}
 

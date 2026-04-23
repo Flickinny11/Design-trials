@@ -141,6 +141,10 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   });
   // Uniform scale so the 1920-wide authored design fits into the container.
   viewport.content.scale.set(currentScale);
+  // zIndex on each node container survives re-instantiation order, so live
+  // breakpoint reflow (applyLayout, below) can destroy + recreate nodes in
+  // any order without scrambling draw order.
+  viewport.content.sortableChildren = true;
   app.stage.addChild(viewport.root);
 
   // §10.15 — classify breakpoint from the CONTAINER width, not the window.
@@ -179,6 +183,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
         msdfFont,
       };
       const instance = createNode(ctx);
+      instance.container.zIndex = node.visual.transform.z;
       instancesByNode.set(node.nodeId, instance);
       viewport.content.addChild(instance.container);
     } catch (e) {
@@ -224,6 +229,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
         msdfFont,
       };
       const instance = createNode(ctx);
+      instance.container.zIndex = node.visual.transform.z;
       // §10.20 — if SHR has this node marked broken, swap the pointertap
       // handler for a no-op that records failures. The visual layers and
       // non-tap handlers (hover, press) are preserved so the sprite still
@@ -278,12 +284,42 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     };
   }
 
+  // Live breakpoint reflow. When the container crosses a breakpoint band
+  // (mobile ↔ tablet ↔ desktop ↔ desktop-wide), re-resolve every node's
+  // transform + visibility and rebuild instances so the layout actually
+  // reflows — single column on mobile, multi-column on tablet/desktop —
+  // instead of just uniformly shrinking the desktop layout. SHR break
+  // state is preserved by rebuildNode's internal brokenNodeIds check.
+  async function applyLayout(breakpoint: BreakpointName) {
+    currentBreakpoint = breakpoint;
+    if (typeof window !== 'undefined' && globalThis.__prism) {
+      globalThis.__prism.currentBreakpoint = breakpoint;
+    }
+    const nextHidden: string[] = [];
+    for (const node of graph.nodes) {
+      const shouldBeVisible = isVisibleAtBreakpoint(node.visual as ResolvableVisual, breakpoint);
+      const existing = instancesByNode.get(node.nodeId);
+      if (!shouldBeVisible) {
+        if (existing) {
+          existing.teardown();
+          instancesByNode.delete(node.nodeId);
+        }
+        nextHidden.push(node.nodeId);
+      } else {
+        // rebuildNode tears down the existing instance (if any) and materializes
+        // a fresh one at the current breakpoint, re-applying SHR state if broken.
+        await rebuildNode(node.nodeId);
+      }
+    }
+    hiddenNodeIds.splice(0, hiddenNodeIds.length, ...nextHidden);
+    if (typeof window !== 'undefined' && globalThis.__prism) {
+      globalThis.__prism.hiddenNodeIds = hiddenNodeIds;
+    }
+  }
+
   // Resize handler — keeps the renderer, scroll mask, and uniform content
-  // scale in sync with the container. `currentBreakpoint` is updated so future
-  // calls to `resolveTransform` (and anything that reads __prism.currentBreakpoint)
-  // see the new band, though already-mounted nodes keep their materialized
-  // positions unless explicitly rebuilt. For the prototype-in-preview-pane case
-  // this is sufficient: the layout scales uniformly and reads correctly.
+  // scale in sync with the container; on breakpoint crossings also triggers
+  // applyLayout() so the mock app reflows (not just rescales).
   const resize = (w: number, h: number) => {
     const nextW = Math.max(1, w);
     const nextH = Math.max(1, h);
@@ -293,10 +329,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     viewport.content.scale.set(currentScale);
     const nextBreakpoint = classifyBreakpoint(nextW);
     if (nextBreakpoint !== currentBreakpoint) {
-      currentBreakpoint = nextBreakpoint;
-      if (typeof window !== 'undefined' && globalThis.__prism) {
-        globalThis.__prism.currentBreakpoint = nextBreakpoint;
-      }
+      void applyLayout(nextBreakpoint);
     }
   };
 

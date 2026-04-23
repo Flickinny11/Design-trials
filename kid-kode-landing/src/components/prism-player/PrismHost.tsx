@@ -3,12 +3,34 @@
 import { useEffect, useRef, useState } from 'react';
 import { mount, type MountResult } from '@/lib/prism/player';
 
+export type ViewportPreset = 'mobile' | 'tablet' | 'desktop' | 'fit';
+
+// Canonical device dimensions for preview framing. iPhone 13, iPad, standard
+// desktop. Matches how V0 / Bolt / Lovable present their preview.
+const PRESETS: Record<Exclude<ViewportPreset, 'fit'>, { w: number; h: number; label: string }> = {
+  mobile:  { w: 390,  h: 844,  label: 'iPhone 13 · 390 × 844' },
+  tablet:  { w: 768,  h: 1024, label: 'iPad · 768 × 1024' },
+  desktop: { w: 1440, h: 900,  label: 'Desktop · 1440 × 900' },
+};
+
 interface Props {
   prismUrl?: string;
   onMounted?: (result: MountResult) => void;
+  /** Force the mock app to render at a specific device size. 'fit' = fill container. */
+  viewportPreset?: ViewportPreset;
+  /** Show the [Mobile|Tablet|Desktop|Fit] segmented buttons above the canvas. */
+  showViewportControls?: boolean;
+  /** Called when the user clicks a preset button (parent owns the state). */
+  onPresetChange?: (preset: ViewportPreset) => void;
 }
 
-export default function PrismHost({ prismUrl = '/prism-assets/mock-app.prism', onMounted }: Props) {
+export default function PrismHost({
+  prismUrl = '/prism-assets/mock-app.prism',
+  onMounted,
+  viewportPreset = 'fit',
+  showViewportControls = false,
+  onPresetChange,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -61,13 +83,82 @@ export default function PrismHost({ prismUrl = '/prism-assets/mock-app.prism', o
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prismUrl]);
 
+  const isFit = viewportPreset === 'fit';
+  const preset = isFit ? null : PRESETS[viewportPreset];
+
   return (
-    <div ref={containerRef} className="relative w-full h-full overflow-hidden bg-[#04050a]">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block focus:outline-none"
-        style={{ display: 'block' }}
-      />
+    <div className="relative w-full h-full overflow-hidden bg-[#04050a]">
+      {/* Viewport-preset toolbar — segmented buttons at the top of the preview.
+          Visible only in modes where the parent opts in (Preview mode, not Visual Editor). */}
+      {showViewportControls && (
+        <div
+          className="absolute top-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
+          data-component="viewport-preset-toolbar"
+        >
+          <div
+            className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
+            style={{
+              background: 'rgba(8,10,26,0.78)',
+              backdropFilter: 'blur(20px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
+            }}
+          >
+            {(['mobile', 'tablet', 'desktop', 'fit'] as const).map((p) => {
+              const active = viewportPreset === p;
+              return (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => onPresetChange?.(p)}
+                  className={`px-2.5 h-6 rounded-full text-[10px] font-mono tracking-wide transition-all ${
+                    active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
+                  }`}
+                  data-preset={p}
+                >
+                  {p === 'fit' ? 'Fit' : p.charAt(0).toUpperCase() + p.slice(1)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Layout frame — conditionally-styled wrappers around a SINGLE canvas
+          that never remounts. When a preset is active, the wrapper is
+          constrained to the preset's pixel dimensions and centered (with a
+          dark bezel and device label). When `fit`, the wrapper fills the
+          pane. ResizeObserver on containerRef tracks the actual rendered
+          size either way and routes it into result.resize() so PIXI stays
+          in sync with whatever the wrapper is now. */}
+      <div
+        className={isFit
+          ? 'absolute inset-0'
+          : 'absolute inset-0 flex flex-col items-center justify-center gap-2 pt-12 pb-4 overflow-auto'}
+      >
+        {preset && (
+          <div className="text-[9px] font-mono tracking-widest text-white/40 select-none">{preset.label}</div>
+        )}
+        <div
+          ref={containerRef}
+          className={isFit ? 'w-full h-full' : 'relative rounded-xl overflow-hidden'}
+          style={isFit ? undefined : {
+            width: preset!.w,
+            height: preset!.h,
+            maxWidth: 'calc(100% - 32px)',
+            maxHeight: 'calc(100% - 80px)',
+            background: '#04050a',
+            border: '1px solid rgba(255,255,255,0.08)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 8px rgba(0,0,0,0.5)',
+          }}
+        >
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full block focus:outline-none"
+            style={{ display: 'block' }}
+          />
+        </div>
+      </div>
       {status === 'loading' && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <div className="flex flex-col items-center gap-3">
