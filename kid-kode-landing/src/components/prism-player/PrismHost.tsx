@@ -10,19 +10,40 @@ interface Props {
 
 export default function PrismHost({ prismUrl = '/prism-assets/mock-app.prism', onMounted }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
     let result: MountResult | null = null;
     let cancelled = false;
+    let pendingSize: { w: number; h: number } | null = null;
+
+    // Observe the container so the renderer tracks whatever the parent gives
+    // us — split-pane drag, future iframe embed, future expand-to-full button,
+    // mode toggle. Buffers size updates that arrive before mount() resolves
+    // and replays the latest one as soon as the result is ready.
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const { width, height } = entry.contentRect;
+      if (width <= 0 || height <= 0) return;
+      if (result) result.resize(width, height);
+      else pendingSize = { w: width, h: height };
+    });
+    observer.observe(container);
 
     (async () => {
       try {
-        result = await mount(canvas, prismUrl);
+        const rect = container.getBoundingClientRect();
+        const initialW = rect.width > 0 ? rect.width : undefined;
+        const initialH = rect.height > 0 ? rect.height : undefined;
+        result = await mount(canvas, prismUrl, { width: initialW, height: initialH });
         if (cancelled) { result.unmount(); return; }
+        if (pendingSize) result.resize(pendingSize.w, pendingSize.h);
         setStatus('ready');
         onMounted?.(result);
       } catch (e) {
@@ -34,13 +55,14 @@ export default function PrismHost({ prismUrl = '/prism-assets/mock-app.prism', o
 
     return () => {
       cancelled = true;
+      observer.disconnect();
       result?.unmount();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prismUrl]);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-[#04050a]">
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden bg-[#04050a]">
       <canvas
         ref={canvasRef}
         className="w-full h-full block focus:outline-none"

@@ -29,10 +29,13 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
   ),
 });
 
+type ViewMode = 'preview' | 'editor' | 'split';
+
 export default function Page() {
   const [splitPct, setSplitPct] = useState(36);
   const [dragging, setDragging] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
+  const [viewMode, setViewMode] = useState<ViewMode>('split');
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 900);
@@ -69,38 +72,81 @@ export default function Page() {
 
       {isDesktop ? (
         <>
-          {/* Left: Live Preview — always visible */}
+          {/* View-mode toggle — controls which panes render.
+              preview: mock app only (100% width) — what users will see in the
+                       main app's preview window once integrated.
+              editor:  3D knowledge-graph editor only (100% width).
+              split:   both panes, user-draggable divider (what this was before). */}
           <div
-            data-pane="preview"
-            className="absolute top-0 bottom-0 left-0 border-r border-white/5"
-            style={{ width: `${splitPct}%` }}
+            className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+            data-component="view-mode-toggle"
           >
-            <PrismHost />
+            <div
+              className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
+              style={{
+                background: 'rgba(8,10,26,0.78)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
+              }}
+            >
+              {([
+                { id: 'preview', label: 'Preview' },
+                { id: 'split',   label: 'Visual Editor' },
+                { id: 'editor',  label: 'Editor' },
+              ] as const).map((m) => {
+                const active = viewMode === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setViewMode(m.id)}
+                    className={`px-3 h-7 rounded-full text-[11px] font-mono transition-all ${
+                      active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Drag handle */}
-          <div
-            onMouseDown={() => setDragging(true)}
-            className="absolute top-0 bottom-0 w-1 cursor-col-resize z-20 group"
-            style={{ left: `calc(${splitPct}% - 2px)` }}
-          >
-            <div className="absolute inset-0 group-hover:bg-[#5d8bff]/30 transition-colors" />
-            <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-1 h-12 rounded-full bg-white/10 group-hover:bg-[#5d8bff] transition-colors" />
-          </div>
+          {viewMode !== 'editor' && (
+            <div
+              data-pane="preview"
+              className={`absolute top-0 bottom-0 left-0 ${viewMode === 'split' ? 'border-r border-white/5' : ''}`}
+              style={{ width: viewMode === 'split' ? `${splitPct}%` : '100%' }}
+            >
+              <PrismHost />
+            </div>
+          )}
 
-          {/* Right: Graph — always visible */}
-          <div
-            data-pane="graph"
-            className="absolute top-0 bottom-0 right-0"
-            style={{ width: `${100 - splitPct}%` }}
-          >
-            <GraphScene />
-            <TopBar />
-            <HubNav />
-            <Minimap />
-            <DetailCard />
-            <Inspector />
-          </div>
+          {viewMode === 'split' && (
+            <div
+              onMouseDown={() => setDragging(true)}
+              className="absolute top-0 bottom-0 w-1 cursor-col-resize z-20 group"
+              style={{ left: `calc(${splitPct}% - 2px)` }}
+            >
+              <div className="absolute inset-0 group-hover:bg-[#5d8bff]/30 transition-colors" />
+              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-1 h-12 rounded-full bg-white/10 group-hover:bg-[#5d8bff] transition-colors" />
+            </div>
+          )}
+
+          {viewMode !== 'preview' && (
+            <div
+              data-pane="graph"
+              className="absolute top-0 bottom-0 right-0"
+              style={{ width: viewMode === 'split' ? `${100 - splitPct}%` : '100%' }}
+            >
+              <GraphScene />
+              <TopBar />
+              <HubNav />
+              <Minimap />
+              <DetailCard />
+              <Inspector />
+            </div>
+          )}
         </>
       ) : (
         <>

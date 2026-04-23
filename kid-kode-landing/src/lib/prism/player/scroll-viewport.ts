@@ -13,6 +13,7 @@ export interface ScrollViewport {
   setContentHeight(h: number): void;
   scrollTo(y: number, opts?: { duration?: number }): void;
   getScrollY(): number;
+  resize(width: number, height: number, contentHeight: number): void;
   destroy(): void;
 }
 
@@ -30,8 +31,11 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   const content = new PIXI.Container();
   root.addChild(content);
 
+  let viewportWidth = opts.viewportWidth;
+  let viewportHeight = opts.viewportHeight;
+
   // Clip content to the viewport using a mask graphic. ALLOWED-GRAPHICS: mask only.
-  const mask = new PIXI.Graphics().rect(0, 0, opts.viewportWidth, opts.viewportHeight).fill(0xffffff);
+  const mask = new PIXI.Graphics().rect(0, 0, viewportWidth, viewportHeight).fill(0xffffff);
   root.addChild(mask);
   content.mask = mask;
 
@@ -39,7 +43,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   let scrollY = 0;
 
   function clamp(y: number) {
-    const max = Math.max(0, contentHeight - opts.viewportHeight);
+    const max = Math.max(0, contentHeight - viewportHeight);
     return Math.min(Math.max(y, 0), max);
   }
 
@@ -122,7 +126,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
 
   // Keyboard.
   const onKey = (e: KeyboardEvent) => {
-    const step = opts.viewportHeight * 0.85;
+    const step = viewportHeight * 0.85;
     switch (e.key) {
       case 'ArrowDown': scrollTo(scrollY + 60); break;
       case 'ArrowUp':   scrollTo(scrollY - 60); break;
@@ -142,12 +146,24 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   canvas.addEventListener('keydown', onKey);
   canvas.tabIndex = 0;                                     // so it can receive key events
 
+  function resize(w: number, h: number, contentH: number) {
+    viewportWidth = w;
+    viewportHeight = h;
+    contentHeight = contentH;
+    // Rebuild the clip mask at the new dimensions. ALLOWED-GRAPHICS: mask only.
+    mask.clear();
+    mask.rect(0, 0, w, h).fill(0xffffff);
+    scrollY = clamp(scrollY);
+    applyScroll();
+  }
+
   return {
     root,
     content,
     setContentHeight(h) { contentHeight = h; },
     scrollTo,
     getScrollY() { return scrollY; },
+    resize,
     destroy() {
       if (activeTween) { activeTween.kill(); activeTween = null; }
       canvas.removeEventListener('wheel', onWheel);

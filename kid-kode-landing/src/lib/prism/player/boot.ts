@@ -30,6 +30,13 @@ import {
   type ResolvableVisual,
 } from './breakpoints.mjs';
 
+export interface MountOpts {
+  /** Preferred renderer width. If omitted, falls back to hub.layout.viewportWidth. */
+  width?: number;
+  /** Preferred renderer height. If omitted, falls back to hub.layout.viewportHeight. */
+  height?: number;
+}
+
 export interface MountResult {
   app: PIXI.Application;
   graph: CompiledGraph;
@@ -39,6 +46,8 @@ export interface MountResult {
   msdfFont: MsdfFont | null;
   shr: Shr;
   router: HubRouter;
+  /** Resize the renderer + rescale the 1920-design to fit the new container. */
+  resize: (width: number, height: number) => void;
   unmount: () => void;
 }
 
@@ -87,16 +96,26 @@ function buildHomeHubRoutes(graph: CompiledGraph): HubRoute[] {
   ];
 }
 
-export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promise<MountResult> {
+export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: MountOpts = {}): Promise<MountResult> {
   const bundle = await loadPrism(prismUrl);
   const { graph } = bundle;
   const hub = graph.hubs.find((h) => h.hubId === bundle.manifest.entryHub) ?? graph.hubs[0];
 
+  // Container-aware sizing. The mock app is authored at hub.layout.viewportWidth
+  // (1920) but is rendered into whatever pane PrismHost gives us. We scale the
+  // content uniformly to fit the container width, then let scroll handle the
+  // vertical overflow. Falls back to design size if no opts are provided.
+  const designW = hub.layout.viewportWidth;
+  const designContentH = hub.layout.contentHeight;
+  const initialW = Math.max(1, opts.width ?? designW);
+  const initialH = Math.max(1, opts.height ?? hub.layout.viewportHeight);
+  let currentScale = initialW / designW;
+
   const app = new PIXI.Application();
   await app.init({
     canvas,
-    width:  hub.layout.viewportWidth,
-    height: hub.layout.viewportHeight,
+    width:  initialW,
+    height: initialH,
     backgroundColor: hub.layout.backgroundColor,
     antialias: true,
     resolution: Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2),
@@ -116,20 +135,18 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
 
   const viewport = createScrollViewport({
     canvas,
-    viewportWidth:  hub.layout.viewportWidth,
-    viewportHeight: hub.layout.viewportHeight,
-    contentHeight:  hub.layout.contentHeight,
+    viewportWidth:  initialW,
+    viewportHeight: initialH,
+    contentHeight:  designContentH * currentScale,
   });
+  // Uniform scale so the 1920-wide authored design fits into the container.
+  viewport.content.scale.set(currentScale);
   app.stage.addChild(viewport.root);
 
-  // §10.15 — pick the active breakpoint from window.innerWidth (falling back
-  // to the hub's design width). Applied once at mount; live resize is out of
-  // scope for this iteration.
-  const viewportWidth =
-    typeof window !== 'undefined' && Number.isFinite(window.innerWidth)
-      ? window.innerWidth
-      : hub.layout.viewportWidth;
-  const currentBreakpoint: BreakpointName = classifyBreakpoint(viewportWidth);
+  // §10.15 — classify breakpoint from the CONTAINER width, not the window.
+  // When the preview pane is 691px inside a 1920px window, the mock app is
+  // effectively at a narrow breakpoint and its layout should reflect that.
+  let currentBreakpoint: BreakpointName = classifyBreakpoint(initialW);
 
   // Materialize each node, sorted by intent.visual.transform.z so draw order
   // matches author intent. Scoped backend per-node when backendRef is set.
@@ -261,6 +278,28 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     };
   }
 
+  // Resize handler — keeps the renderer, scroll mask, and uniform content
+  // scale in sync with the container. `currentBreakpoint` is updated so future
+  // calls to `resolveTransform` (and anything that reads __prism.currentBreakpoint)
+  // see the new band, though already-mounted nodes keep their materialized
+  // positions unless explicitly rebuilt. For the prototype-in-preview-pane case
+  // this is sufficient: the layout scales uniformly and reads correctly.
+  const resize = (w: number, h: number) => {
+    const nextW = Math.max(1, w);
+    const nextH = Math.max(1, h);
+    currentScale = nextW / designW;
+    app.renderer.resize(nextW, nextH);
+    viewport.resize(nextW, nextH, designContentH * currentScale);
+    viewport.content.scale.set(currentScale);
+    const nextBreakpoint = classifyBreakpoint(nextW);
+    if (nextBreakpoint !== currentBreakpoint) {
+      currentBreakpoint = nextBreakpoint;
+      if (typeof window !== 'undefined' && globalThis.__prism) {
+        globalThis.__prism.currentBreakpoint = nextBreakpoint;
+      }
+    }
+  };
+
   return {
     app,
     graph,
@@ -270,6 +309,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string): Promis
     msdfFont,
     shr,
     router,
+    resize,
     unmount() {
       router.destroy();
       shr.detach();
