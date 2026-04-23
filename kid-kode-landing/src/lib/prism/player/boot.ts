@@ -11,6 +11,7 @@
 //   8. return { app, graph, unmount }
 
 import * as PIXI from 'pixi.js';
+import { DropShadowFilter } from 'pixi-filters';
 import { gsap } from 'gsap';
 import { loadPrism, type CompiledGraph, type PrismBundle } from './prism-loader';
 import { loadAtlas, type Atlas } from './atlas-loader';
@@ -67,6 +68,30 @@ declare global {
   var __prismBreakNode: ((nodeId: string) => void) | undefined;
   // eslint-disable-next-line no-var
   var __prism: PrismDebugHandle | undefined;
+}
+
+// Phase D: cards get a soft drop-shadow + alpha overrides to establish visual
+// hierarchy. Applied post-createNode so each node module stays portable (no
+// filter import inside the blob-loaded module source). Card detection is by
+// nodeId suffix so the same rule fires for future cards without graph edits.
+// Opt out on mobile — the filter is cheap in isolation but every card × every
+// frame multiplies, so narrow viewports skip it for headroom.
+const CARD_SUFFIXES = ['-card-bg', '-card-cta'];
+
+function shouldShadowNode(nodeId: string, breakpoint: BreakpointName): boolean {
+  if (breakpoint === 'mobile') return false;
+  return CARD_SUFFIXES.some((suffix) => nodeId.endsWith(suffix));
+}
+
+function makeCardShadowFilter(): DropShadowFilter {
+  return new DropShadowFilter({
+    offset:   { x: 0, y: 8 },
+    color:    0x000000,
+    alpha:    0.55,
+    blur:     6,
+    quality:  4,
+    shadowOnly: false,
+  });
 }
 
 // Section routing table for the home hub. Each entry says "when node X emits
@@ -184,6 +209,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       };
       const instance = createNode(ctx);
       instance.container.zIndex = node.visual.transform.z;
+      if (shouldShadowNode(node.nodeId, currentBreakpoint)) {
+        instance.container.filters = [makeCardShadowFilter()];
+      }
+      const alpha = (node.visual as { alpha?: number }).alpha;
+      if (typeof alpha === 'number') instance.container.alpha = alpha;
       instancesByNode.set(node.nodeId, instance);
       viewport.content.addChild(instance.container);
     } catch (e) {
@@ -230,6 +260,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       };
       const instance = createNode(ctx);
       instance.container.zIndex = node.visual.transform.z;
+      if (shouldShadowNode(nodeId, currentBreakpoint)) {
+        instance.container.filters = [makeCardShadowFilter()];
+      }
+      const alpha = (node.visual as { alpha?: number }).alpha;
+      if (typeof alpha === 'number') instance.container.alpha = alpha;
       // §10.20 — if SHR has this node marked broken, swap the pointertap
       // handler for a no-op that records failures. The visual layers and
       // non-tap handlers (hover, press) are preserved so the sprite still

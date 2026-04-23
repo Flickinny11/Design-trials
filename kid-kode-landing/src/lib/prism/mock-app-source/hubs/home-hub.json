@@ -310,7 +310,8 @@
           "tablet"
         ],
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.9
       },
       "intent": {
         "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
@@ -398,7 +399,8 @@
           "tablet"
         ],
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.9
       },
       "intent": {
         "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
@@ -486,7 +488,8 @@
           "tablet"
         ],
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.9
       },
       "intent": {
         "caption": "Nav link 'Pricing' — scroll-navigates to the pricing section.",
@@ -885,7 +888,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.9
       },
       "intent": {
         "caption": "Hero subhead — clarifying tagline beneath the headline.",
@@ -1352,7 +1356,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.92
       },
       "intent": {
         "caption": "Feature card 1 description.",
@@ -1642,7 +1647,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.92
       },
       "intent": {
         "caption": "Feature card 2 description.",
@@ -1932,7 +1938,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.92
       },
       "intent": {
         "caption": "Feature card 3 description.",
@@ -2542,7 +2549,8 @@
             "z": 41
           }
         },
-        "shape": "circle"
+        "shape": "circle",
+        "alpha": 0.85
       },
       "intent": {
         "caption": "Footer Kriptik logo mark.",
@@ -2629,7 +2637,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 6
+        "shapeRadius": 6,
+        "alpha": 0.85
       },
       "intent": {
         "caption": "Footer link — Privacy.",
@@ -2733,7 +2742,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 6
+        "shapeRadius": 6,
+        "alpha": 0.85
       },
       "intent": {
         "caption": "Footer link — Terms.",
@@ -2837,7 +2847,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 6
+        "shapeRadius": 6,
+        "alpha": 0.85
       },
       "intent": {
         "caption": "Footer link — Contact.",
@@ -2936,7 +2947,8 @@
             "z": 41
           }
         },
-        "shape": "circle"
+        "shape": "circle",
+        "alpha": 0.75
       },
       "intent": {
         "caption": "Social — Twitter / X icon, opens external link.",
@@ -3010,7 +3022,8 @@
             "z": 41
           }
         },
-        "shape": "circle"
+        "shape": "circle",
+        "alpha": 0.75
       },
       "intent": {
         "caption": "Social — GitHub icon, opens external link.",
@@ -3084,7 +3097,8 @@
             "z": 41
           }
         },
-        "shape": "circle"
+        "shape": "circle",
+        "alpha": 0.75
       },
       "intent": {
         "caption": "Social — Discord icon, opens external link.",
@@ -3159,7 +3173,8 @@
           }
         },
         "shape": "rounded",
-        "shapeRadius": 8
+        "shapeRadius": 8,
+        "alpha": 0.65
       },
       "intent": {
         "caption": "Footer copyright line.",
