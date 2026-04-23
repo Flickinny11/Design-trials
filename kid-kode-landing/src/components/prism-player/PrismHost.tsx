@@ -92,7 +92,7 @@ export default function PrismHost({
           Visible only in modes where the parent opts in (Preview mode, not Visual Editor). */}
       {showViewportControls && (
         <div
-          className="absolute top-2 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
+          className="absolute top-12 left-1/2 -translate-x-1/2 z-30 pointer-events-auto"
           data-component="viewport-preset-toolbar"
         >
           <div
@@ -134,7 +134,7 @@ export default function PrismHost({
       <div
         className={isFit
           ? 'absolute inset-0'
-          : 'absolute inset-0 flex flex-col items-center justify-center gap-2 pt-12 pb-4 overflow-auto'}
+          : 'absolute inset-0 flex flex-col items-center justify-center gap-2 pt-24 pb-4 overflow-auto'}
       >
         {preset && (
           <div className="text-[9px] font-mono tracking-widest text-white/40 select-none">{preset.label}</div>
