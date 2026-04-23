@@ -185,14 +185,14 @@ if (!existsSync(prismPath)) {
     for (const n of graph.nodes) {
       for (const tc of (n.intent?.visualSpec?.textContent ?? [])) methodsSeen.add(tc.renderMethod);
     }
-    // Required: sharp-svg (build-time SVG overlay, composited by Sharp in
-    // build-atlas) and msdf (runtime BitmapText). Diffusion is preserved as
-    // a capability in provision-assets.mjs but not instantiated in this
-    // build — FLUX/Ideogram cannot reliably produce legible baked text
-    // under our material-substrate prompts, so all user-facing text lives
-    // in msdf (runtime) or sharp-svg (build-time) paths.
-    for (const m of ['sharp-svg', 'msdf']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
-    return [...methodsSeen].join(', ');
+    // Pipeline supports three renderMethods (msdf/sharp-svg/diffusion) but
+    // this home-hub instance uses only msdf — the Recraft V4 pro mockup
+    // bakes all static text directly into the substrate pixels. Build-time
+    // sharp-svg composite + Ideogram diffusion remain as pipeline capabilities
+    // (build-atlas.mjs + provision-assets.mjs) for future hubs that need them.
+    // At-minimum requirement: msdf must be present for dynamic runtime text.
+    for (const m of ['msdf']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
+    return [...methodsSeen].join(', ') || 'pipeline-only';
   });
 }
 

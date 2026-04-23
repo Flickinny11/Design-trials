@@ -207,24 +207,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Home",
-              "role": "label",
-              "renderMethod": "sharp-svg",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 500,
-                "color": "#cbd5ff"
-              },
-              "position": {
-                "x": 36,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -286,24 +269,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Editor",
-              "role": "label",
-              "renderMethod": "sharp-svg",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 500,
-                "color": "#cbd5ff"
-              },
-              "position": {
-                "x": 40,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -365,24 +331,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Docs",
-              "role": "label",
-              "renderMethod": "sharp-svg",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 500,
-                "color": "#cbd5ff"
-              },
-              "position": {
-                "x": 36,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -444,24 +393,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Pricing",
-              "role": "label",
-              "renderMethod": "sharp-svg",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 500,
-                "color": "#cbd5ff"
-              },
-              "position": {
-                "x": 40,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -526,24 +458,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Sign In",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 600,
-                "color": "#ffffff"
-              },
-              "position": {
-                "x": 60,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -670,24 +585,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "hero-card-headline-text",
-          "textContent": [
-            {
-              "text": "Build apps from a prompt",
-              "role": "heading",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 56,
-                "fontWeight": 700,
-                "color": "#f5e6c8"
-              },
-              "position": {
-                "x": 640,
-                "y": 48,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -728,24 +626,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "hero-card-subhead-text",
-          "textContent": [
-            {
-              "text": "Kriptik turns natural language into running applications in under 15 seconds.",
-              "role": "body",
-              "renderMethod": "sharp-svg",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 18,
-                "fontWeight": 400,
-                "color": "#cccccc"
-              },
-              "position": {
-                "x": 640,
-                "y": 20,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -818,24 +699,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Get Started",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 18,
-                "fontWeight": 600,
-                "color": "#ffffff"
-              },
-              "position": {
-                "x": 120,
-                "y": 32,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1000,24 +864,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-1-title",
-          "textContent": [
-            {
-              "text": "AI-Powered Design",
-              "role": "heading",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 20,
-                "fontWeight": 600,
-                "color": "#ffffff"
-              },
-              "position": {
-                "x": 8,
-                "y": 20,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1058,24 +905,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-1-desc",
-          "textContent": [
-            {
-              "text": "Describe your idea in plain English and watch it compile into a polished interface — no design system wrangling required.",
-              "role": "body",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 400,
-                "color": "#aaaaaa"
-              },
-              "position": {
-                "x": 8,
-                "y": 16,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1199,24 +1029,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-2-title",
-          "textContent": [
-            {
-              "text": "Instant Deploy",
-              "role": "heading",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 20,
-                "fontWeight": 600,
-                "color": "#ffffff"
-              },
-              "position": {
-                "x": 8,
-                "y": 20,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1257,24 +1070,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-2-desc",
-          "textContent": [
-            {
-              "text": "One-click publish to a globally-edged runtime. Preview, share, and ship in the same breath.",
-              "role": "body",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 400,
-                "color": "#aaaaaa"
-              },
-              "position": {
-                "x": 8,
-                "y": 16,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1398,24 +1194,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-3-title",
-          "textContent": [
-            {
-              "text": "Self-Healing Runtime",
-              "role": "heading",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 20,
-                "fontWeight": 600,
-                "color": "#ffffff"
-              },
-              "position": {
-                "x": 8,
-                "y": 20,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1456,24 +1235,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "feature-card-3-desc",
-          "textContent": [
-            {
-              "text": "When something breaks, Kriptik notices, patches the divergent node, and restores behavior — usually before you reach for the refresh button.",
-              "role": "body",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 400,
-                "color": "#aaaaaa"
-              },
-              "position": {
-                "x": 8,
-                "y": 16,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1672,24 +1434,7 @@
           "animationSpec": {
             "method": 2
           },
-          "textContent": [
-            {
-              "text": "Theme",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 14,
-                "fontWeight": 500,
-                "color": "#e5eaff"
-              },
-              "position": {
-                "x": 80,
-                "y": 24,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {
@@ -1733,24 +1478,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "stats-card-bg",
-          "textContent": [
-            {
-              "text": "Total Clicks:",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 24,
-                "fontWeight": 500,
-                "color": "#e5eaff"
-              },
-              "position": {
-                "x": 80,
-                "y": 80,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -1982,24 +1710,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Privacy",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 13,
-                "fontWeight": 400,
-                "color": "#8892b5"
-              },
-              "position": {
-                "x": 50,
-                "y": 12,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -2060,24 +1771,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Terms",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 13,
-                "fontWeight": 400,
-                "color": "#8892b5"
-              },
-              "position": {
-                "x": 50,
-                "y": 12,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -2138,24 +1832,7 @@
           "animationSpec": {
             "method": 3
           },
-          "textContent": [
-            {
-              "text": "Contact",
-              "role": "label",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 13,
-                "fontWeight": 400,
-                "color": "#8892b5"
-              },
-              "position": {
-                "x": 50,
-                "y": 12,
-                "anchor": "center"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
@@ -2352,24 +2029,7 @@
         "stateEffects": [],
         "visualSpec": {
           "sourceAsset": "footer-copyright-text",
-          "textContent": [
-            {
-              "text": "© 2026 Kriptik. All rights reserved.",
-              "role": "caption",
-              "renderMethod": "msdf",
-              "typography": {
-                "fontFamily": "Inter",
-                "fontSize": 12,
-                "fontWeight": 400,
-                "color": "#666666"
-              },
-              "position": {
-                "x": 0,
-                "y": 12,
-                "anchor": "left"
-              }
-            }
-          ]
+          "textContent": []
         },
         "contracts": {
           "inputs": {},
