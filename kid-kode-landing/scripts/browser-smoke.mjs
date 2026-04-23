@@ -65,8 +65,10 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
 
-    // Give the client-side Prism runtime time to boot.
-    await page.waitForTimeout(3500);
+    // Give the client-side Prism runtime time to boot. Atlas + .prism grew to ~955KB combined
+    // after the Spatial/3D asset regeneration; cold boot in headless Chromium needs a touch
+    // more runway before the loading spinner is expected to have been swapped out.
+    await page.waitForTimeout(6000);
 
     // ─── §10.3 dev/prod serves split pane ───────────────────────────────────
     const canvases = await page.locator('canvas').count();

@@ -6,8 +6,13 @@ node_modules/
 *.log
 .DS_Store
 
-# Prism mock app — per mock spec §8.4
+# Prism mock app — per mock spec §8.4 (source inputs stay out of git)
 kid-kode-landing/src/lib/prism/mock-app-source/assets/source-images/
 kid-kode-landing/src/lib/prism/mock-app-source/assets/.provisioning-manifest.json
-kid-kode-landing/public/prism-assets/
+# Local provisioning backup dirs (created by the asset-regeneration workflow)
+kid-kode-landing/.slop-backup-*/
 kid-kode-landing/tsconfig.tsbuildinfo
+# NOTE: public/prism-assets/ is intentionally NOT ignored. Vercel runs `next build`
+# (not `npm run build`), so build:prism is skipped in production. The built .prism
+# artifact must ship in git so the live site can serve /prism-assets/mock-app.prism.
+# Regenerate via: npm run provision-assets && npm run build:prism, then commit.
