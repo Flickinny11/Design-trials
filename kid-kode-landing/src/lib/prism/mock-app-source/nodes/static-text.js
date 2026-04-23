@@ -27,12 +27,16 @@ export function createNode(ctx) {
   for (const t of msdfEntries) {
     const pos = t.position ?? { x: 0, y: 0, anchor: 'left' };
     const typo = t.typography ?? {};
-    // The design coord-space assumes the base image is at its design width
-    // (e.g. 1280×96 for hero-card-headline-text). Our sprite IS scaled to
-    // transform.width × transform.height which equals design size. The
-    // BitmapText renders at its natural glyph size from the atlas MSDF
-    // font, so position + size numbers are in design-space and land on
-    // the sprite correctly.
+    // Text positions in the graph are authored against each node's base
+    // `transform` (e.g. 1280-wide hero-card-headline-text). When the active
+    // breakpoint's transform widens (mobile = 1800), a center-anchored text
+    // authored at x=640 sits 35% from left instead of dead-center. Remap
+    // center-anchored text to transform.width/2 so "centered" always means
+    // centered against the currently-active container width.
+    const anchorX = pos.anchor === 'center' ? transform.width / 2
+                  : pos.anchor === 'right'  ? transform.width - (pos.x ?? 0)
+                                            : (pos.x ?? 0);
+    const anchorY = pos.y ?? transform.height / 2;
     const txt = new PIXI.BitmapText({
       text: t.text,
       style: {
@@ -46,7 +50,7 @@ export function createNode(ctx) {
     if (pos.anchor === 'center') txt.anchor?.set?.(0.5, 0.5);
     else if (pos.anchor === 'right') txt.anchor?.set?.(1, 0.5);
     else txt.anchor?.set?.(0, 0.5);
-    txt.position.set(pos.x, pos.y);
+    txt.position.set(anchorX, anchorY);
     container.addChild(txt);
   }
 
