@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:13:06Z",
-  "currentIteration": 8,
+  "updatedAt": "2026-04-24T17:18:13Z",
+  "currentIteration": 9,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -111,8 +111,8 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Each of video-slot-1..4 in home-hub.json gets intent.behaviorSpec.interactions = [{ trigger: 'pointertap', effect: 'playVideo', src: '<sourceAsset>.mp4' }]. This is the explicit hook the runtime reads to know this is a playable video, not a static image."
     },
     {
@@ -393,7 +393,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 8,
-    "lastProductiveCommit": "13ac859c85ba29eac6f800a92872ba2e0746741e"
+    "lastProductiveCommit": "dc38fb705522cba1c3cd95dadfade208eecec5d6"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -415,14 +415,19 @@
       "used": 1,
       "cap": 30,
       "status": "active"
+    },
+    "§10": {
+      "used": 1,
+      "cap": 30,
+      "status": "active"
     }
   },
   "checkpoint": {
     "iteration": 8,
-    "commit": "13ac859c85ba29eac6f800a92872ba2e0746741e",
-    "verifiedAt": "2026-04-24T17:13:06Z",
+    "commit": "dc38fb705522cba1c3cd95dadfade208eecec5d6",
+    "verifiedAt": "2026-04-24T17:16:29Z",
     "artifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6",
-    "recordedAt": "2026-04-24T17:13:06Z"
+    "recordedAt": "2026-04-24T17:16:29Z"
   },
   "invariants": {
     "lastArtifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6"
