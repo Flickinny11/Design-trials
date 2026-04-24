@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:14:17Z",
-  "currentIteration": 4,
+  "updatedAt": "2026-04-24T16:18:45Z",
+  "currentIteration": 5,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -62,8 +62,8 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "scripts/alpha-cutout.mjs already exists with LOW=18, HIGH=55 luminance thresholds. The Gemini image may have a different dark-tone baseline — add a per-image threshold override (LOW_OVERRIDE / HIGH_OVERRIDE env vars). Run against every cropped <nodeId>.png so backgrounds turn transparent. Skip the full-mockup page-background image (it keeps opaque slate)."
     },
     {
@@ -361,7 +361,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 4,
-    "lastProductiveCommit": "d930e47c219bc41528e88790f5e851ca31fad11a"
+    "lastProductiveCommit": "fcd8966dbc84c19f1a16323d8cfb404034840bc0"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -382,10 +382,10 @@
   },
   "checkpoint": {
     "iteration": 4,
-    "commit": "d930e47c219bc41528e88790f5e851ca31fad11a",
-    "verifiedAt": "2026-04-24T16:14:17Z",
-    "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T16:14:17Z"
+    "commit": "fcd8966dbc84c19f1a16323d8cfb404034840bc0",
+    "verifiedAt": "2026-04-24T16:17:22Z",
+    "artifactHash": null,
+    "recordedAt": "2026-04-24T16:17:22Z"
   },
   "resumeFrom": null,
   "breakpoints": []
