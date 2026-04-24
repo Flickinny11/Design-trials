@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:28:17Z",
-  "currentIteration": 5,
+  "updatedAt": "2026-04-24T16:31:30Z",
+  "currentIteration": 6,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -74,8 +74,8 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Update hub.layout { viewportWidth, contentHeight } to the Gemini image dimensions. For each node: visual.sourceAsset = cropped/<nodeId>.png, visual.x/y/width/height set from the BBOX map, remove stale Phase-F state-variant regionKeys (except notifications-toggle). Nodes absent from the mockup get the invisible placeholder pattern: 2×2 transparent PNG at (−1,−1)."
     },
     {
@@ -369,7 +369,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 5,
-    "lastProductiveCommit": "dd56dca6c586f300cb491ab20a1c7024190b79ef"
+    "lastProductiveCommit": "021f1ab72e13f9b9021bc0a6aaba1d4b0eb1515e"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -390,10 +390,10 @@
   },
   "checkpoint": {
     "iteration": 5,
-    "commit": "dd56dca6c586f300cb491ab20a1c7024190b79ef",
-    "verifiedAt": "2026-04-24T16:28:17Z",
+    "commit": "021f1ab72e13f9b9021bc0a6aaba1d4b0eb1515e",
+    "verifiedAt": "2026-04-24T16:30:43Z",
     "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T16:28:17Z"
+    "recordedAt": "2026-04-24T16:30:43Z"
   },
   "invariants": {
     "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
