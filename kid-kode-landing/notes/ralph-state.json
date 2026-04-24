@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:00:00Z",
-  "currentIteration": 0,
+  "updatedAt": "2026-04-24T15:13:29Z",
+  "currentIteration": 1,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -12,8 +12,8 @@
       "id": "T-SWAP-01",
       "title": "Relocate Gemini mockup + visually inspect layout",
       "specRefs": ["§-IMAGE-TO-UI"],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Move Gemini_Generated_Image_2w5g832w5g832w5g.png (repo root or Downloads) to notes/mockup-candidates/ai-video-mockup.png. Read with Read tool to confirm sections: nav chrome, hero prompt area with 4 play-button video tiles, side-panel controls. Write a 1-paragraph summary of the visible regions into notes/prism-mock-progress.md under Phase G."
     },
     {
