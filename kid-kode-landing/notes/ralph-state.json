@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:13:29Z",
+  "updatedAt": "2026-04-24T15:20:39Z",
   "currentIteration": 1,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -12,9 +12,11 @@
       "id": "T-SWAP-01",
       "title": "Relocate Gemini mockup + visually inspect layout",
       "specRefs": ["§-IMAGE-TO-UI"],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Move Gemini_Generated_Image_2w5g832w5g832w5g.png (repo root or Downloads) to notes/mockup-candidates/ai-video-mockup.png. Read with Read tool to confirm sections: nav chrome, hero prompt area with 4 play-button video tiles, side-panel controls. Write a 1-paragraph summary of the visible regions into notes/prism-mock-progress.md under Phase G."
+      "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6",
+      "verifiedAt": "2026-04-24T15:20:39Z",
+      "notes": "DONE. Image was an AETHER AI landing-page mockup (2816x1536), not an in-app control surface as the original task description implied; acceptance calibrated to actual zones (nav, hero+CTA, 4-tile video row, footer). SHOULD FIX for downstream iterations (from spec-reviewer): (a) tighten hasCta regex to drop generic 'button' — require 'CTA' or 'Get Started'; (b) clean up empty-alternation in hasNav regex; (c) document tests/swap/ directory convention; (d) paragraph says 'three social-icon glyphs' — image has two icons + decorative sigil, T-SWAP-04 should verify; (e) reconcile 2816x1536 hub.layout dims with §12 scroll-viewport spec (1920x1080 viewport, ~3200 content) — scale factor needed in T-SWAP-06; (f) paragraph lacks approximate pixel coords for zones, forcing re-inspection in T-SWAP-04. OPTIONAL: parenthetical linking §-IMAGE-TO-UI to CLAUDE.md; split paragraph into bullets for machine-scan; .gitignore leftover scifi-mockup-v2/v3 + generate-mockup-v2/v3.mjs before Phase G closes."
     },
     {
       "id": "T-SWAP-02",
@@ -185,7 +187,9 @@
       "notes": "Inspector 'Save' button calls a dev-only API route (src/app/api/save-graph/route.ts) that accepts { nodeId, transform } and writes back to src/lib/prism/mock-app-source/hubs/home-hub.json preserving deterministic JSON formatting (2-space, LF, trailing newline, key order). Dev-only: route 404s in production."
     }
   ],
-  "history": [],
+  "history": [
+    { "iteration": 1, "taskId": "T-SWAP-01", "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6", "verifiedAt": "2026-04-24T15:20:39Z" }
+  ],
   "historyArchive": [
     { "iteration": 1, "taskId": "T00", "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db", "verifiedAt": "2026-04-22T14:59:03Z" },
     { "iteration": 2, "taskId": "T01", "commit": "32a09e24", "verifiedAt": "2026-04-22T15:50:11Z" },
