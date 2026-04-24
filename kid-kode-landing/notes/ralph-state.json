@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:42:05Z",
-  "currentIteration": 3,
+  "updatedAt": "2026-04-24T15:44:50Z",
+  "currentIteration": 4,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -50,8 +50,8 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Each text block = own node. Each of the 4 play-button video tiles = own node (nodeId pattern: video-slot-1..4). Write scripts/extract-video.mjs that reads the BBOX map and writes source-images/cropped/<nodeId>.png for each. Document the BBOX map inline as a `const BBOX = {...}` so it's reviewable."
     },
     {
