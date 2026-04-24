@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:03:36Z",
+  "updatedAt": "2026-04-24T17:13:06Z",
   "currentIteration": 8,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -99,9 +99,11 @@
       "specRefs": [
         "§10.24"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "git commit + push prism-main, wait for Vercel deploy, then node scripts/live-modes-smoke.mjs against the production URL — all 8 checks must pass. If the deploy 500s transiently, empty-commit retrigger."
+      "commit": "13ac859c85ba29eac6f800a92872ba2e0746741e",
+      "verifiedAt": "2026-04-24T17:13:06Z",
+      "notes": "DONE (already-satisfied branch of /ralph-step step 6). Iter-7's push of commit d6ef8d7 to origin/prism-main already triggered a Vercel deploy that reflects the cropped/ source-images swap; live-modes-smoke.mjs against https://kid-kode-ai-landing.vercel.app/ returns 8/8 green — split.both-panes, preview.only, preset.mobile/tablet/desktop.canvas-dims, preset.fit.fills-pane, editor.only, split.restored — against 1920x1080 viewport. No runtime code changed. tests/swap/T-SWAP-08.test.mjs commit 13ac859 encodes the §10.24 acceptance contract in two layers: (A) static gate — 5 literal check IDs + 3 preset names + template form `preset.${p.name}.canvas-dims` + PRISM_LIVE_URL read + playwright import present in scripts/live-modes-smoke.mjs; (B) runtime gate — spawns live-modes-smoke against PRISM_LIVE_URL (default prod), requires exit 0, `8/8 passed` summary in stdout, per-check `[PASS]` line match. (B) correctly fails against a bogus URL (demonstrated with PRISM_LIVE_URL=.../does-not-exist-404-page-T-SWAP-08 → exit 1). SKIP_LIVE_SMOKE=1 collapses the test to (A) only for offline debugging. Three gates: verify:prism 15/15, browser-smoke 6/6, T-SWAP-08 OK. artifactHash 8d5b6752f650…f5ffcf6 unchanged (no rebuild this iter). Spec-reviewer: no MUST FIX. SHOULD FIX carried forward for downstream: (a) the SKIP_LIVE_SMOKE=1 bypass contradicts the test's own comment claiming the gate is not opt-in — a stray env var in CI silently weakens the §10.24 gate to 5 string matches; either remove the bypass or rename to OFFLINE_DEBUG_ONLY + assert at the three-gate runner layer that SKIP_LIVE_SMOKE !== '1'; (b) the canonical prod URL `https://kid-kode-ai-landing.vercel.app/` is hardcoded in 3 places (scripts/live-modes-smoke.mjs:13, scripts/live-vercel-smoke.mjs:15, tests/swap/T-SWAP-08.test.mjs:45) — a Vercel project rename silently hits the wrong URL; lift into scripts/lib/prod-url.mjs and import; (c) the playwright-import regex `/await\\s+import\\s*\\(\\s*['\"]playwright['\"]\\s*\\)/` only matches the dynamic `await import('playwright')` form used today — a refactor to static ESM `import { chromium } from 'playwright'` would silently pass the gate; broaden to also match `chromium.launch(` as evidence the runner wires Playwright; (d) REQUIRED_CHECKS and STATIC_LITERAL_CHECKS are siblings without a cross-check — an accidental edit that drops `split.restored` from one but not both silently weakens the gate; add `assert.equal(new Set([...REQUIRED_CHECKS]).size, 8)` + assert `STATIC_LITERAL_CHECKS ∪ {preset.{mobile,tablet,desktop}.canvas-dims} === REQUIRED_CHECKS`; (e) phaseCaps.§1 entry in state-claim commit b6d280f doesn't match the existing §-IMAGE-TO-UI / §-SPEC-ENRICH / §-HOUSEKEEPING convention and T-SWAP-08's specRef is §10.24 not §1 — likely absorbed tail bookkeeping; revert or rename to §-SHIP/§10; (f) state-claim commit b6d280f also absorbed iter-7's checkpoint.commit/verifiedAt/recordedAt + convergence.lastProductiveCommit updates that should have landed in iter-7-done commit a48bc87 — muddles the audit trail of which iteration wrote which field, no value impact. OPTIONAL: (g) spawnSync 240s timeout has no r.signal==='SIGTERM' handling — on timeout the status check fires a generic 'status=null' message instead of 'timed out after 240s'; (h) ANSI-strip regex could lift into scripts/lib/strip-ansi.mjs (dedupe with any future live-vercel-smoke.mjs color handling); (i) `[PASS]\\s+${id}\\b` per-check assertion still matches if the runner prints garbage in the detail tail — tighten to `\\[PASS\\]\\s+${id}\\s+(?:—|$)`; (j) existing live-vercel-smoke.mjs now overlaps with the new T-SWAP-08 test surface — consider a README note or script header clarifying live-vercel-smoke is the quick-poke / 4-check lite version, live-modes-smoke is the 8-check ship gate. Phase-G housekeeping note (carried from T-SWAP-01..07): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-VID-01",
@@ -286,6 +288,12 @@
       "taskId": "T-SWAP-07",
       "commit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4",
       "verifiedAt": "2026-04-24T16:58:27Z"
+    },
+    {
+      "iteration": 8,
+      "taskId": "T-SWAP-08",
+      "commit": "13ac859c85ba29eac6f800a92872ba2e0746741e",
+      "verifiedAt": "2026-04-24T17:13:06Z"
     }
   ],
   "historyArchive": [
@@ -384,12 +392,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 7,
-    "lastProductiveCommit": "b915e744585c42716d7ffbb8e01111f28e2aee4a"
+    "lastProductiveIteration": 8,
+    "lastProductiveCommit": "13ac859c85ba29eac6f800a92872ba2e0746741e"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 7,
+      "used": 8,
       "cap": 30,
       "status": "active"
     },
@@ -410,11 +418,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 7,
-    "commit": "b915e744585c42716d7ffbb8e01111f28e2aee4a",
-    "verifiedAt": "2026-04-24T17:00:42Z",
+    "iteration": 8,
+    "commit": "13ac859c85ba29eac6f800a92872ba2e0746741e",
+    "verifiedAt": "2026-04-24T17:13:06Z",
     "artifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6",
-    "recordedAt": "2026-04-24T17:00:42Z"
+    "recordedAt": "2026-04-24T17:13:06Z"
   },
   "invariants": {
     "lastArtifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6"
