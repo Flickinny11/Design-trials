@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:42:37Z",
-  "currentIteration": 6,
+  "updatedAt": "2026-04-24T16:46:07Z",
+  "currentIteration": 7,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -87,8 +87,8 @@
         "§1.4",
         "§10.19"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "npm run build:prism → npm run verify:prism (15/15) → node scripts/browser-smoke.mjs (6/6). Fix any drift before proceeding. artifactHash must be reproducible across two consecutive builds."
     },
     {
@@ -377,7 +377,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 6,
-    "lastProductiveCommit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f"
+    "lastProductiveCommit": "db45f2e95ff0380cf04b9f259fc968e249730165"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -398,10 +398,10 @@
   },
   "checkpoint": {
     "iteration": 6,
-    "commit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f",
-    "verifiedAt": "2026-04-24T16:42:37Z",
+    "commit": "db45f2e95ff0380cf04b9f259fc968e249730165",
+    "verifiedAt": "2026-04-24T16:45:40Z",
     "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T16:42:37Z"
+    "recordedAt": "2026-04-24T16:45:40Z"
   },
   "invariants": {
     "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
