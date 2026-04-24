@@ -6,8 +6,13 @@
 //   2. the file is a valid PNG (magic bytes) at least 1 MB in size (Gemini-export sanity floor),
 //   3. the source Gemini_Generated_Image_*.png no longer sits at the repo root (move, not copy),
 //   4. notes/prism-mock-progress.md's "## Phase G" section contains a one-paragraph
-//      visible-regions summary naming nav chrome, prompt/hero, video tiles (play buttons),
-//      and side-panel controls, plus the mockup's pixel dimensions.
+//      visible-regions summary, calibrated to the actual Gemini mockup (an AETHER AI
+//      landing page, not an in-app control panel). Required zones:
+//        - top nav bar
+//        - hero section with headline + CTA
+//        - a row of 4 video tiles
+//        - footer
+//      plus the mockup's pixel dimensions.
 //
 // Run with: node kid-kode-landing/tests/swap/T-SWAP-01.test.mjs
 // (cwd may be repo-root or kid-kode-landing/ — paths resolve off import.meta.url.)
@@ -52,14 +57,16 @@ const phaseGBody = nextSection === -1 ? afterPhaseG : afterPhaseG.slice(0, nextS
 // required zones. We match the zones on the body as a whole.
 const body = phaseGBody.toLowerCase();
 const hasNav = /\bnav(?:bar|igation| chrome| rail| bar|)\b/.test(body);
-const hasPrompt = /\b(?:prompt|hero)\b/.test(body);
-const hasVideo = /\b(?:video tile|video|play[- ]?button|play icon)\b/.test(body);
-const hasSidePanel = /\b(?:side[- ]?panel|side bar|right panel|controls panel|control panel)\b/.test(body);
+const hasHero = /\bhero\b/.test(body);
+const hasCta = /\b(?:cta|get started|call[- ]to[- ]action|button)\b/.test(body);
+const hasFourTiles = /\b(?:four|4)\b[^.\n]{0,40}\b(?:video tile|tile|card|thumbnail)s?\b/.test(body);
+const hasFooter = /\bfooter\b/.test(body);
 
 assert.ok(hasNav, 'Phase G summary does not mention nav / nav chrome');
-assert.ok(hasPrompt, 'Phase G summary does not mention prompt or hero area');
-assert.ok(hasVideo, 'Phase G summary does not mention video tiles / play buttons');
-assert.ok(hasSidePanel, 'Phase G summary does not mention side panel / controls');
+assert.ok(hasHero, 'Phase G summary does not mention a hero section');
+assert.ok(hasCta, 'Phase G summary does not mention a CTA / get-started button');
+assert.ok(hasFourTiles, 'Phase G summary does not mention the row of 4 video tiles');
+assert.ok(hasFooter, 'Phase G summary does not mention the footer region');
 
 // Dimensions reference — must mention the mockup's pixel size so downstream tasks
 // (hub.layout.viewportWidth / contentHeight in T-SWAP-06) have a single source of truth.
