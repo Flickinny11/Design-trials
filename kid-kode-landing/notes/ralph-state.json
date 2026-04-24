@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T18:07:39Z",
+  "updatedAt": "2026-04-24T18:15:37Z",
   "currentIteration": 13,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -159,9 +159,11 @@
       "specRefs": [
         "§7"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "In boot.ts, for every node container registered, attach a pointerdown listener that fires window.__prism.events.emit('node-selected', { nodeId }). Add ALLOWED-GRAPHICS marker on any new hit-area if needed. Generic: no hardcoded nodeIds — iterate graph.nodes."
+      "commit": "8744b961088e69a48e77a3cbb81857eddbffcd47",
+      "verifiedAt": "2026-04-24T18:15:37Z",
+      "notes": "DONE. New `attachSelectEmitter(container, nodeId, events)` helper at src/lib/prism/player/boot.ts:86-98 sets `container.eventMode = 'static'` + `container.on('pointerdown', () => events.emit('node-selected', { nodeId: nodeId }))`. Called after createNode() in BOTH the initial materialization loop (boot.ts:238) AND rebuildNode() (boot.ts:299) — the latter covers breakpoint reflow and SHR repair rebuilds so click-to-select survives layout changes and node repair. nodeId is sourced generically from the iteration variable (`node.nodeId` in the outer loop; `nodeId` function param in rebuildNode) — zero hardcoded mock-app literals per editor-genericity rule. Payload key is `nodeId` (NOT `source` — asymmetry with other bus events is intentional and documented in editor-bridge.md:108). editor-bridge.md Known events table now includes the `'node-selected'` row with `{ nodeId: string }` payload; Gaps section no longer flags it as unwired (still lists breakpoint-change, manifest hubs surface, persistent write-back, drag commit semantics, editor-genericity audit). Test tests/editor/T-ED-02.test.mjs (180 lines) locks the 6-band contract: (A) emit call with nodeId in payload, (B) pointerdown listener attached, (B') nodeId sourced from .nodeId variable access (not a string literal), (C) eventMode='static' literal present, (D) payload key is `nodeId` not `source` (negative regex against bad copy-paste from navigate pattern), (E) editor-bridge.md Known events table row present with nodeId payload + Gaps section no longer claims 'not yet wired', (F) no hardcoded mock-app nodeId literals within ±200 chars of the emit call (forbids hero-*, navbar-*, feature-*, footer-*, stats-*, settings-section, notifications-toggle, theme-selector, page-background, video-slot-N). Three gates: verify:prism 15/15, browser-smoke 6/6, T-ED-02 PASS. artifactHash unchanged (no rebuild — pure runtime wiring + doc touch): 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Spec-reviewer: 'No deviations found.' SHOULD FIX carried forward for T-ED-03/downstream: (a) attachSelectEmitter does NOT call stopPropagation — if nested interactive containers ever appear (a node container parented inside another node container, vs. today's flat structure where every node is a direct child of viewport.content), pointerdown would bubble and fire multiple node-selected events in one click; today the flat hierarchy + PIXI's topmost-hit-test makes this a non-issue, but add `e.stopPropagation()` inside the handler if/when nesting is introduced; (b) the emit runs on EVERY pointerdown including those that are part of a drag-scroll gesture on the scroll viewport — T-ED-10 (drag-on-preview) needs to reconcile click vs drag semantics (typical guard: only emit select on pointerup if pointer didn't move > threshold, or emit immediately on down and cancel selection on drag-start); the current pointerdown-first wiring is the simplest that satisfies T-ED-02's literal contract, but Inspector (T-ED-03) will probably want a click-not-drag signal; (c) test (B) `nodeIdExpr === 'nodeId'` alternate is not reachable today because my impl uses `nodeId: nodeId` (colon form) and satisfies the `.nodeId` branch instead — the alternate path is dead for this iter but defensive for future refactors; (d) editor-bridge.md table row uses a parenthetical note that wraps across markdown table columns — rendered markdown is fine (pipe-table rows ignore wrapping), but some editors/lints misalign columns visually; consider a <br> or move the rationale out of the table body; (e) the `{ nodeId: nodeId }` explicit form (vs idiomatic `{ nodeId }` shorthand) was chosen to satisfy the test's `nodeId\\s*:\\s*<var>` regex — could be tightened in the test to also accept shorthand, then impl could use the shorter form; (f) editor-bridge.md mentions 'SearchPalette' as a future consumer (T-ED-05) alongside Inspector (T-ED-03) + Minimap (T-ED-08) — the existing phrasing only named Inspector+Minimap; if SearchPalette's selection flow should also fire node-selected, keep the triple-consumer phrasing consistent across doc and test. OPTIONAL: (g) helper comment block could cite the anti-drift hook editor-genericity rule by file path (CLAUDE.md §Architecture) so future readers see the non-hardcoded contract; (h) the helper could accept an optional `debug: boolean` pass-through to log selections during dev; (i) test's `emitBlocks.length >= 1` assertion should probably be `=== 1` until a second emit site is a deliberate decision — today only the helper emits, but nothing prevents a stray emit from satisfying the loose bound. Phase-G housekeeping note (carried from T-SWAP-01..08, T-VID-01..03, T-ED-01): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one); browser-smoke screenshots drifting modified across iterations without commit (this iter modified 7 screenshots, none staged)."
     },
     {
       "id": "T-ED-03",
@@ -326,6 +328,12 @@
       "taskId": "T-ED-01",
       "commit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387",
       "verifiedAt": "2026-04-24T18:03:00Z"
+    },
+    {
+      "iteration": 13,
+      "taskId": "T-ED-02",
+      "commit": "8744b961088e69a48e77a3cbb81857eddbffcd47",
+      "verifiedAt": "2026-04-24T18:15:37Z"
     }
   ],
   "historyArchive": [
@@ -424,8 +432,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 12,
-    "lastProductiveCommit": "e969ad862c261e00108ac44a4b02b2894a90bc7f"
+    "lastProductiveIteration": 13,
+    "lastProductiveCommit": "8744b961088e69a48e77a3cbb81857eddbffcd47"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -439,7 +447,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 2,
+      "used": 3,
       "cap": 30,
       "status": "active"
     },
@@ -460,11 +468,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 12,
-    "commit": "e969ad862c261e00108ac44a4b02b2894a90bc7f",
-    "verifiedAt": "2026-04-24T18:06:27Z",
+    "iteration": 13,
+    "commit": "8744b961088e69a48e77a3cbb81857eddbffcd47",
+    "verifiedAt": "2026-04-24T18:15:37Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T18:06:27Z"
+    "recordedAt": "2026-04-24T18:15:37Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
