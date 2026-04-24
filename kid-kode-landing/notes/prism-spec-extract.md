@@ -1309,6 +1309,56 @@ Every visible thing in the mock app is an image from the atlas:
 
 ---
 
+## §-SPEC-ENRICH — INTERACTIVE-ELEMENT CLASSIFIER PASS (Design Note)
+
+*This is a Phase-G enrichment note, not a verbatim extract from the original spec. It documents the decision recorded during T-VID-01/T-VID-02 planning (2026-04-24) about how interactive elements — starting with playable video regions — get their `intent.behaviorSpec.interactions[]` hooks. T-VID-03 wires the generation half of the flow that this note describes.*
+
+**Pipeline position (post-segmentation).** The classifier pass runs AFTER SAM returns bboxes for the mockup and BEFORE `patch-home-hub-for-mockup.mjs` writes transforms into `home-hub.json`. In the existing flow —
+
+```
+provision-assets → mockup candidate → segment-video.mjs (SAM bboxes)
+  → [§-SPEC-ENRICH classifier pass]          ← this note
+  → debug-video-boxes.mjs (QA overlay)
+  → extract-video.mjs (hand-tuned BBOX map)
+  → patch-home-hub-for-mockup.mjs (transforms + sourceAsset)
+  → build-atlas + build-prism
+```
+
+— the classifier inserts between SAM and the hand-tuned BBOX pass. Its input is the set of bounding boxes + the mockup PNG; its output is a set of suggested `interactions[]` entries keyed by bbox index (or nodeId, once BBOX is bound).
+
+**Classifier shape (vision model, not hand-coded rules).** Detection of play-button-like regions goes through a vision-model prompt (a VLM — for example `fal-ai/florence-2-large/caption-to-phrase-grounding` used as a hint-only phrase grounder, or a general vision LM queried per-crop). It is **not** hand-coded pixel rules, **not** hardcoded heuristics on aspect ratio or dark-center detection, and **not** a nodeId-name match against a hardcoded list. The rationale recorded in T-VID-01 planning: pixel rules are brittle across mockup palettes (the AETHER swap already invalidated the earlier scifi palette thresholds — see `alpha-cutout.mjs` threshold overrides), and hardcoded nodeId matches would violate the `src/components/editor/**` genericity rule by the time the classifier output reaches the editor bridge.
+
+The classifier's prompt names the category being identified: **play-button-like regions**, **playable regions**, or **video-like regions** inside the mockup. The prompt asks the VLM to return bbox indices whose content reads as a playable video surface (poster frame + play glyph, video-like aspect, etc.) rather than a static image tile.
+
+**User-vs-auto branch.** Once the classifier has emitted a candidate list, the flow prompts the user with a choice *per detected region*:
+
+1. **user-supplied content** — the user drops MP4 files into `source-videos/<nodeId>.mp4` and re-runs the atlas + prism build. The classifier's work is over for that region; no generation call is made.
+2. **auto-generated content** — the classifier wires a call through to `fal-ai/wan/v2.7/image-to-video` (see §5 model IDs in CLAUDE.md) using the region's own crop as the image conditioning. This is the branch T-VID-03 wires.
+
+Both branches must be named in the prompt; neither is assumed. The default is user-supplied (the cheaper, zero-cost branch), and auto-generation requires explicit user approval because of the per-clip $0.50 fal.ai charge (see T-VID-03 cost ceiling).
+
+**Emission shape (`{event, effect, src}`).** For every region the user accepts — on either branch — the classifier emits one entry into `intent.behaviorSpec.interactions[]` on the matching graph node. The entry shape is:
+
+```ts
+{
+  event: 'pointertap',    // canonical spec field, line 626
+  effect: 'playVideo',    // effect name read by the runtime node module
+  src:    string,         // path to the .mp4 (user-supplied or generated)
+}
+```
+
+**Status of `src`.** The canonical interaction tuple at line 626 defines `{ event: string; effect: string }`. This note ratifies **`src` as a permitted extension** to that tuple for effects that need a content pointer (playback being the first example). It is not a rename of an existing field and does not replace `effect`; it sits alongside. Future effects that need additional content pointers (poster, autoplay, mute) may add further optional extension fields under the same rule — extensions add keys, they never drop or rename the canonical pair.
+
+**Why this is a design note, not code.** The classifier itself is not yet written. T-VID-01 hand-wrote the 4 `video-slot-*` entries to unblock the runtime module. T-VID-02 (this note) locks the decisions so that whichever iteration writes the classifier — a standalone `scripts/classify-interactive-regions.mjs`, or a new stage inside `segment-video.mjs` — follows the same shape. T-VID-03 then wires the auto-generated branch using `fal-ai/wan/v2.7/image-to-video`.
+
+**Downstream invariants locked by this note:**
+
+- Any runtime node module that reads `intent.behaviorSpec.interactions[]` MUST tolerate extension fields it does not understand (silent skip, per `video-slot.js` dispatch loop). It MUST NOT crash, warn-and-fail, or strip the entry during a round-trip edit.
+- The atlas build pipeline treats `src` as data, not as a reference that must resolve to a packed region — the `src` path lives outside `public/prism-assets/` (today: `source-videos/`), and the atlas pipeline does not copy, hash, or validate it.
+- The editor bridge (`window.__prism`) surfaces `interactions[]` verbatim — no canonicalization, no field pruning. Inspector/DetailCard code that displays interactions must render unknown keys generically.
+
+---
+
 ## SPECIFICATION AMBIGUITIES (None Identified)
 
 All specifications from PRISM-MOCK-APP-BUILD-SPEC.md and PRISM-ENGINE-SPEC-V3.md are unambiguous for implementation purposes. The document is exceptionally detailed and precise.
