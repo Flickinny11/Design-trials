@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:31:18Z",
-  "currentIteration": 2,
+  "updatedAt": "2026-04-24T15:34:00Z",
+  "currentIteration": 3,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -11,7 +11,9 @@
     {
       "id": "T-SWAP-01",
       "title": "Relocate Gemini mockup + visually inspect layout",
-      "specRefs": ["§-IMAGE-TO-UI"],
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
       "status": "done",
       "attemptCount": 1,
       "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6",
@@ -21,7 +23,9 @@
     {
       "id": "T-SWAP-02",
       "title": "Write segment-video.mjs (SAM 3 w/ concrete-noun prompts, save RLE)",
-      "specRefs": ["§-IMAGE-TO-UI"],
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
       "status": "done",
       "attemptCount": 1,
       "commit": "479546be04740f437c80f8adbb4e021e382eb822",
@@ -31,15 +35,19 @@
     {
       "id": "T-SWAP-03",
       "title": "Debug overlay script (SAM bboxes rendered on mockup)",
-      "specRefs": ["§-IMAGE-TO-UI"],
-      "status": "pending",
-      "attemptCount": 0,
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Pattern from scripts/debug-scifi-boxes.mjs. Emit notes/mockup-candidates/ai-video-mockup.overlay.svg with colored rectangles for each SAM bbox + label. Gives visual QA before committing to a per-node crop map."
     },
     {
       "id": "T-SWAP-04",
       "title": "Hand-tune BBOX map for every visible node in home-hub.json",
-      "specRefs": ["§-IMAGE-TO-UI"],
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Each text block = own node. Each of the 4 play-button video tiles = own node (nodeId pattern: video-slot-1..4). Write scripts/extract-video.mjs that reads the BBOX map and writes source-images/cropped/<nodeId>.png for each. Document the BBOX map inline as a `const BBOX = {...}` so it's reviewable."
@@ -47,7 +55,9 @@
     {
       "id": "T-SWAP-05",
       "title": "Apply alpha-cutout (per-image threshold override for this palette)",
-      "specRefs": ["§-IMAGE-TO-UI"],
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "scripts/alpha-cutout.mjs already exists with LOW=18, HIGH=55 luminance thresholds. The Gemini image may have a different dark-tone baseline — add a per-image threshold override (LOW_OVERRIDE / HIGH_OVERRIDE env vars). Run against every cropped <nodeId>.png so backgrounds turn transparent. Skip the full-mockup page-background image (it keeps opaque slate)."
@@ -55,7 +65,9 @@
     {
       "id": "T-SWAP-06",
       "title": "Patch home-hub.json: per-node transforms, hub.layout, strip stale fields",
-      "specRefs": ["§-IMAGE-TO-UI"],
+      "specRefs": [
+        "§-IMAGE-TO-UI"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Update hub.layout { viewportWidth, contentHeight } to the Gemini image dimensions. For each node: visual.sourceAsset = cropped/<nodeId>.png, visual.x/y/width/height set from the BBOX map, remove stale Phase-F state-variant regionKeys (except notifications-toggle). Nodes absent from the mockup get the invisible placeholder pattern: 2×2 transparent PNG at (−1,−1)."
@@ -63,7 +75,10 @@
     {
       "id": "T-SWAP-07",
       "title": "Rebuild .prism + three-gate verify",
-      "specRefs": ["§1.4", "§10.19"],
+      "specRefs": [
+        "§1.4",
+        "§10.19"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "npm run build:prism → npm run verify:prism (15/15) → node scripts/browser-smoke.mjs (6/6). Fix any drift before proceeding. artifactHash must be reproducible across two consecutive builds."
@@ -71,7 +86,9 @@
     {
       "id": "T-SWAP-08",
       "title": "Ship + live-modes-smoke 8/8 on Vercel",
-      "specRefs": ["§10.24"],
+      "specRefs": [
+        "§10.24"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "git commit + push prism-main, wait for Vercel deploy, then node scripts/live-modes-smoke.mjs against the production URL — all 8 checks must pass. If the deploy 500s transiently, empty-commit retrigger."
@@ -79,7 +96,9 @@
     {
       "id": "T-VID-01",
       "title": "Mark the 4 video-slot nodes with intent.behaviorSpec.interactions[playback]",
-      "specRefs": ["§-SPEC-ENRICH"],
+      "specRefs": [
+        "§-SPEC-ENRICH"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Each of video-slot-1..4 in home-hub.json gets intent.behaviorSpec.interactions = [{ trigger: 'pointertap', effect: 'playVideo', src: '<sourceAsset>.mp4' }]. This is the explicit hook the runtime reads to know this is a playable video, not a static image."
@@ -87,7 +106,9 @@
     {
       "id": "T-VID-02",
       "title": "Add interactive-element classifier note to prism-spec-extract.md",
-      "specRefs": ["§-SPEC-ENRICH"],
+      "specRefs": [
+        "§-SPEC-ENRICH"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Append new section §-SPEC-ENRICH describing the post-segmentation classifier pass: after SAM returns bboxes, a classifier prompt (to a vision model, not hand-coded rules) identifies play-button-like regions, prompts the user for 'user-supplied content vs auto-generated', and emits the interactions[] entry automatically. For now this is a design note — T-VID-03 wires the generation half."
@@ -95,7 +116,9 @@
     {
       "id": "T-VID-03",
       "title": "WAN 2.7 i2v placeholder video generation (SKIP if user provides content)",
-      "specRefs": ["§-SPEC-ENRICH"],
+      "specRefs": [
+        "§-SPEC-ENRICH"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "PROMPT USER FIRST via a status commit: 'Supplying your own video files for video-slot-1..4? If yes, drop them into source-videos/ and re-run T-SWAP-07. If no, I will generate 4 placeholder clips at 4×$0.50 via fal-ai/wan/v2.7/image-to-video.' Only proceed to generation on explicit confirmation. Cost ceiling: $2.00."
@@ -103,7 +126,9 @@
     {
       "id": "T-ED-01",
       "title": "Audit window.__prism API surface + document in notes/editor-bridge.md",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Read src/lib/prism/player/boot.ts, identify every property hung off window.__prism. Document the shape: graph, nodes (Map), events (EventEmitter), viewport, currentBreakpoint, hiddenNodeIds, hubRouter. Write the shape as a TypeScript interface block into notes/editor-bridge.md. Flag anything the editor needs but isn't exposed yet."
@@ -111,7 +136,9 @@
     {
       "id": "T-ED-02",
       "title": "Click-to-select: pointerdown on each node container emits node-selected event",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "In boot.ts, for every node container registered, attach a pointerdown listener that fires window.__prism.events.emit('node-selected', { nodeId }). Add ALLOWED-GRAPHICS marker on any new hit-area if needed. Generic: no hardcoded nodeIds — iterate graph.nodes."
@@ -119,7 +146,9 @@
     {
       "id": "T-ED-03",
       "title": "Inspector panel reads selected nodeId → shows intent.caption + transform + stateEffects",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "src/components/editor/panels/Inspector.tsx subscribes to window.__prism.events.on('node-selected', ...). Reads graph.nodes.get(id) and renders intent.caption, transform.{x,y,z,scale}, stateEffects. Purely generic — no hardcoded nodeIds (anti-drift hook blocks them)."
@@ -127,7 +156,9 @@
     {
       "id": "T-ED-04",
       "title": "Inspector edits → mutate graph + re-apply on preview pane",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Inspector transform.x/y/z fields become controlled inputs. On change, write through to window.__prism.nodes.get(id).container position/scale AND mutate graph.nodes[id].transform. No persistence yet (T-ED-11 owns that)."
@@ -135,7 +166,9 @@
     {
       "id": "T-ED-05",
       "title": "SearchPalette ⌘K → fuzzy-search graph.nodes by nodeId + caption",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "src/components/editor/SearchPalette.tsx binds ⌘K. Reads window.__prism.graph.nodes, fuzzy-matches input against nodeId + intent.caption. Selecting a result fires node-selected event — Inspector reacts automatically. Zero hardcoded IDs."
@@ -143,7 +176,9 @@
     {
       "id": "T-ED-06",
       "title": "DetailCard shows sourceAsset preview + metadata for selected node",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "src/components/editor/panels/DetailCard.tsx renders an <img> of visual.sourceAsset (resolved from .prism/assets/) plus serviceTag, parentHubId, codeRef, backendRef. Generic — reads whatever the selected node has."
@@ -151,7 +186,9 @@
     {
       "id": "T-ED-07",
       "title": "HubNav tabs route to hubs present in loaded .prism",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "src/components/editor/HubNav.tsx reads manifest.hubs (array of hubIds). Renders a tab per hub; tabs for hubs not in the current manifest are disabled+greyed. Current .prism ships only home-hub, so Galaxy/Dashboard/etc. should render disabled."
@@ -159,7 +196,9 @@
     {
       "id": "T-ED-08",
       "title": "Minimap renders actual graph.nodes count + active-node highlight",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "src/components/editor/Minimap.tsx reads window.__prism.graph.nodes and draws a scaled-down rect per node using its transform. On node-selected, highlight the active rect. Reacts to currentBreakpoint changes."
@@ -167,7 +206,9 @@
     {
       "id": "T-ED-09",
       "title": "Generic-editor audit: grep editor code for hardcoded mock-app node IDs",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Add a CI-style script scripts/audit-editor-genericity.mjs: greps src/components/editor/** for string literals matching the hardcoded-nodeId regex from anti-drift-check.sh. Zero matches required unless ALLOWED-HARDCODED-ID marker is present. Add to verify:prism as a 16th check."
@@ -175,7 +216,9 @@
     {
       "id": "T-ED-10",
       "title": "Drag-on-preview: pointermove updates transform.x/y live",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Optional nice-to-have. Add a toggle in Inspector: 'Drag mode: off | on'. When on, pointerdown+move on a selected container updates container.position AND mirrors into graph.nodes[id].transform live. pointerup commits. No persistence (T-ED-11)."
@@ -183,39 +226,126 @@
     {
       "id": "T-ED-11",
       "title": "Save-to-home-hub.json: Inspector 'Save' button writes live transforms back",
-      "specRefs": ["§7"],
+      "specRefs": [
+        "§7"
+      ],
       "status": "pending",
       "attemptCount": 0,
       "notes": "Inspector 'Save' button calls a dev-only API route (src/app/api/save-graph/route.ts) that accepts { nodeId, transform } and writes back to src/lib/prism/mock-app-source/hubs/home-hub.json preserving deterministic JSON formatting (2-space, LF, trailing newline, key order). Dev-only: route 404s in production."
     }
   ],
   "history": [
-    { "iteration": 1, "taskId": "T-SWAP-01", "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6", "verifiedAt": "2026-04-24T15:20:39Z" },
-    { "iteration": 2, "taskId": "T-SWAP-02", "commit": "479546be04740f437c80f8adbb4e021e382eb822", "verifiedAt": "2026-04-24T15:31:18Z" }
+    {
+      "iteration": 1,
+      "taskId": "T-SWAP-01",
+      "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6",
+      "verifiedAt": "2026-04-24T15:20:39Z"
+    },
+    {
+      "iteration": 2,
+      "taskId": "T-SWAP-02",
+      "commit": "479546be04740f437c80f8adbb4e021e382eb822",
+      "verifiedAt": "2026-04-24T15:31:18Z"
+    }
   ],
   "historyArchive": [
-    { "iteration": 1, "taskId": "T00", "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db", "verifiedAt": "2026-04-22T14:59:03Z" },
-    { "iteration": 2, "taskId": "T01", "commit": "32a09e24", "verifiedAt": "2026-04-22T15:50:11Z" },
-    { "iteration": 3, "taskId": "T02", "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa", "verifiedAt": "2026-04-22T16:10:31Z" },
-    { "iteration": 4, "taskId": "T03", "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1", "verifiedAt": "2026-04-22T16:35:00Z" },
-    { "iteration": 5, "taskId": "T04", "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb", "verifiedAt": "2026-04-22T16:44:00Z" },
-    { "iteration": 6, "taskId": "T05", "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5", "verifiedAt": "2026-04-22T16:56:43Z" },
-    { "iteration": 7, "taskId": "T06", "commit": "6c282daedab902714b5260ff46b73f0f313c744f", "verifiedAt": "2026-04-22T17:13:59Z" },
-    { "iteration": 8, "taskId": "T07", "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809", "verifiedAt": "2026-04-22T17:42:12Z" },
-    { "iteration": 9, "taskId": "T08", "commit": "ec830b51893f905f47807d2bec5af198bba0620c", "verifiedAt": "2026-04-22T17:57:27Z" },
-    { "iteration": 10, "taskId": "T09", "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48", "verifiedAt": "2026-04-22T18:19:15Z" },
-    { "iteration": 11, "taskId": "T10", "commit": "dad31726f2369ddda0a340b5817562d6ad9bc7c6", "verifiedAt": "2026-04-22T18:45:00Z" },
-    { "iteration": 12, "taskId": "T11", "commit": "f7c9bda", "verifiedAt": "2026-04-22T20:15:00Z" },
-    { "iteration": 13, "taskId": "T12", "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86", "verifiedAt": "2026-04-22T20:30:00Z" },
-    { "iteration": 14, "taskId": "T13", "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a", "verifiedAt": "2026-04-22T20:40:06Z" },
-    { "iteration": 15, "taskId": "T14", "commit": "a629a9b647be3e3b047a6596663eab85e5b62daf", "verifiedAt": "2026-04-22T20:51:44Z" }
+    {
+      "iteration": 1,
+      "taskId": "T00",
+      "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db",
+      "verifiedAt": "2026-04-22T14:59:03Z"
+    },
+    {
+      "iteration": 2,
+      "taskId": "T01",
+      "commit": "32a09e24",
+      "verifiedAt": "2026-04-22T15:50:11Z"
+    },
+    {
+      "iteration": 3,
+      "taskId": "T02",
+      "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
+      "verifiedAt": "2026-04-22T16:10:31Z"
+    },
+    {
+      "iteration": 4,
+      "taskId": "T03",
+      "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
+      "verifiedAt": "2026-04-22T16:35:00Z"
+    },
+    {
+      "iteration": 5,
+      "taskId": "T04",
+      "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
+      "verifiedAt": "2026-04-22T16:44:00Z"
+    },
+    {
+      "iteration": 6,
+      "taskId": "T05",
+      "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
+      "verifiedAt": "2026-04-22T16:56:43Z"
+    },
+    {
+      "iteration": 7,
+      "taskId": "T06",
+      "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
+      "verifiedAt": "2026-04-22T17:13:59Z"
+    },
+    {
+      "iteration": 8,
+      "taskId": "T07",
+      "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
+      "verifiedAt": "2026-04-22T17:42:12Z"
+    },
+    {
+      "iteration": 9,
+      "taskId": "T08",
+      "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
+      "verifiedAt": "2026-04-22T17:57:27Z"
+    },
+    {
+      "iteration": 10,
+      "taskId": "T09",
+      "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48",
+      "verifiedAt": "2026-04-22T18:19:15Z"
+    },
+    {
+      "iteration": 11,
+      "taskId": "T10",
+      "commit": "dad31726f2369ddda0a340b5817562d6ad9bc7c6",
+      "verifiedAt": "2026-04-22T18:45:00Z"
+    },
+    {
+      "iteration": 12,
+      "taskId": "T11",
+      "commit": "f7c9bda",
+      "verifiedAt": "2026-04-22T20:15:00Z"
+    },
+    {
+      "iteration": 13,
+      "taskId": "T12",
+      "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
+      "verifiedAt": "2026-04-22T20:30:00Z"
+    },
+    {
+      "iteration": 14,
+      "taskId": "T13",
+      "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a",
+      "verifiedAt": "2026-04-22T20:40:06Z"
+    },
+    {
+      "iteration": 15,
+      "taskId": "T14",
+      "commit": "a629a9b647be3e3b047a6596663eab85e5b62daf",
+      "verifiedAt": "2026-04-22T20:51:44Z"
+    }
   ],
   "maxIterationsPerPhase": 30,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 0,
-    "lastProductiveCommit": null
+    "lastProductiveIteration": 2,
+    "lastProductiveCommit": "aced8de3a6adda576e6eb4df4f460bed07a8236a"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -234,7 +364,13 @@
       "status": "active"
     }
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "iteration": 2,
+    "commit": "aced8de3a6adda576e6eb4df4f460bed07a8236a",
+    "verifiedAt": "2026-04-24T15:33:02Z",
+    "artifactHash": null,
+    "recordedAt": "2026-04-24T15:33:02Z"
+  },
   "resumeFrom": null,
   "breakpoints": []
 }
