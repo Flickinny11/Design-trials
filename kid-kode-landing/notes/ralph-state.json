@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:20:39Z",
-  "currentIteration": 1,
+  "updatedAt": "2026-04-24T15:26:30Z",
+  "currentIteration": 2,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -22,8 +22,8 @@
       "id": "T-SWAP-02",
       "title": "Write segment-video.mjs (SAM 3 w/ concrete-noun prompts, save RLE)",
       "specRefs": ["§-IMAGE-TO-UI"],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Pattern from scripts/segment-scifi.mjs. Use fal-ai/sam-3/image-rle with include_boxes:true and concrete nouns ONLY (button, card, icon, input, video tile, bar, panel). Save RLE masks to notes/mockup-candidates/ai-video-mockup.sam.json. Do NOT try abstract terms (text, heading, link) — they fail. Cost: ~$0.005 per call."
     },
     {
