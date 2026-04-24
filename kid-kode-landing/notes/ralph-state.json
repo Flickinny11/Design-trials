@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T18:20:00Z",
+  "updatedAt": "2026-04-24T18:29:51Z",
   "currentIteration": 14,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -171,9 +171,11 @@
       "specRefs": [
         "§7"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "src/components/editor/panels/Inspector.tsx subscribes to window.__prism.events.on('node-selected', ...). Reads graph.nodes.get(id) and renders intent.caption, transform.{x,y,z,scale}, stateEffects. Purely generic — no hardcoded nodeIds (anti-drift hook blocks them)."
+      "commit": "c80511819e1b8782171abc3f1b5daa9a907e80d1",
+      "verifiedAt": "2026-04-24T18:29:51Z",
+      "notes": "DONE. src/components/editor/panels/Inspector.tsx rewritten from 785-line 3D-graph-editor Inspector (driven by @/data/mockGraph + useGraphEditorStore) down to 163 lines driven by the window.__prism bridge. useEffect polls for bridge presence via requestAnimationFrame, captures the `off` unsubscribe returned by `bridge.events.on('node-selected', handler)`, and tears it down on unmount. Handler destructures `{ nodeId }` (NOT `source`), looks up the node via `bridge.graph.nodes.find((n) => n.nodeId === nodeId)` — generic per editor-bridge.md:52 contract — and stores both selectedId + node in local state. Render path: nodeId headline, optional subtype subtitle, CAPTION block (intent.caption or '(no intent.caption)' italic fallback), TRANSFORM 4-col grid (x/y/z/scale via fmt helper — scale is '—' for home-hub nodes since on-disk schema carries only x/y/z/width/height), optional WIDTH/HEIGHT row when present, STATE EFFECTS list (intent.stateEffects) with '(none)' italic fallback. Zero hardcoded mock-app nodeIds; no imports from @/data/mockGraph or useGraphEditorStore (anti-drift hook + test assertion both enforce). Three gates: verify:prism 15/15, browser-smoke 6/6, T-ED-03 test PASS. artifactHash unchanged (no rebuild — pure editor-surface change): 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Spec-reviewer: no MUST FIX. SHOULD FIX carried forward for T-ED-04/downstream: (a) the `nodeId` extraction on Inspector.tsx:82-85 uses a truthy-always-left-side-of-`&&` ternary guard that casts `payload` three times; collapse to a single typeof guard `const nodeId = typeof (payload as { nodeId?: unknown })?.nodeId === 'string' ? (payload as { nodeId: string }).nodeId : '';` for readability; (b) Inspector has no explicit close/dismiss affordance — selectedId clears only when a new node is clicked; either add a header close button that clears local state, or define a `'node-deselected'` event in editor-bridge.md so users can collapse the panel without re-clicking; (c) the 4-col TRANSFORM grid renders `scale` as `—` for every real home-hub node because the on-disk schema carries x/y/z/width/height only; either hide the scale cell when unset (mirror the width/height conditional on ~line 160) or confirm T-ED-04 will make scale editable; (d) src/components/editor/overlays/DetailCard.tsx still gates on useGraphEditorStore.inspectorOpen which the new Inspector never sets — DetailCard + Inspector will now double-render whenever the 3D graph has a selected node; coordinate the two selection sources before T-ED-06 ships its DetailCard rewrite; (e) the useEffect captures `bridge` once via attach(); if the runtime ever rebuilds window.__prism (T-ED-07 hub swap), the handler subscribes on a stale events bus — a future `prism-mounted` event or re-poll on hub change would be more robust per editor-bridge.md's 'bridge appears asynchronously' note; (f) CLAUDE.md says 'All commits that change source must also touch notes/prism-mock-progress.md' but this impl commit did not; the Phase-G convention across iters 1-13 lands the progress log in a follow-up commit (step 12) — either tighten CLAUDE.md or fold the progress log update into impl commits. OPTIONAL (from reviewer): (g) Inspector.tsx:18-50 duplicates EventBusShape/NodeShape/GraphShape/BridgeShape local types that are already authoritatively typed in src/lib/prism/player/prism-loader.ts (CompiledGraph) and event-bus.ts (EventBus) — importing via TS path aliases as editor-bridge.md:30-36 suggests would make field renames surface as TS errors; (h) `data-component=\"prism-inspector\"` on line 111 is a nice browser-smoke hook — add a matching assertion in scripts/browser-smoke.mjs to gate runtime presence at CI; (i) `fmt` helper at line 58-62 is module-scope — if T-ED-04/T-ED-06 need identical number formatting, extract to src/components/editor/panels/format.ts before the pattern duplicates; (j) header prints selectedId as headline with intent.caption as body — swap so intent.caption leads, per §7 operator-hierarchy intent, or document the choice in editor-bridge.md. USER-NOTE: Inspector now renders in the right pane (graph pane) and reacts to pointerdown selection emitted from the LEFT (prism preview) pane; clicking 3D spheres in GraphScene no longer drives it (useGraphEditorStore.selectedNodeId is still updated by spheres but nothing reads it). This is a deliberate consolidation around the window.__prism bridge consistent with T-ED-01 audit + T-ED-09 genericity goal. Phase-G housekeeping note (carried from T-SWAP-01..08, T-VID-01..03, T-ED-01..02): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one); browser-smoke screenshots drifting modified across iterations without commit (this iter modified 7 screenshots, none staged)."
     },
     {
       "id": "T-ED-04",
@@ -334,6 +336,12 @@
       "taskId": "T-ED-02",
       "commit": "8744b961088e69a48e77a3cbb81857eddbffcd47",
       "verifiedAt": "2026-04-24T18:15:37Z"
+    },
+    {
+      "iteration": 14,
+      "taskId": "T-ED-03",
+      "commit": "c80511819e1b8782171abc3f1b5daa9a907e80d1",
+      "verifiedAt": "2026-04-24T18:29:51Z"
     }
   ],
   "historyArchive": [
@@ -432,8 +440,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 13,
-    "lastProductiveCommit": "7fa8b86f55780c3ae3deb23510ef8a71d6396c74"
+    "lastProductiveIteration": 14,
+    "lastProductiveCommit": "c80511819e1b8782171abc3f1b5daa9a907e80d1"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -447,7 +455,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 4,
+      "used": 5,
       "cap": 30,
       "status": "active"
     },
@@ -468,11 +476,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 13,
-    "commit": "7fa8b86f55780c3ae3deb23510ef8a71d6396c74",
-    "verifiedAt": "2026-04-24T18:17:33Z",
+    "iteration": 14,
+    "commit": "c80511819e1b8782171abc3f1b5daa9a907e80d1",
+    "verifiedAt": "2026-04-24T18:29:51Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T18:17:33Z"
+    "recordedAt": "2026-04-24T18:29:51Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
