@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:18:13Z",
+  "updatedAt": "2026-04-24T17:30:15Z",
   "currentIteration": 9,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -111,9 +111,11 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Each of video-slot-1..4 in home-hub.json gets intent.behaviorSpec.interactions = [{ trigger: 'pointertap', effect: 'playVideo', src: '<sourceAsset>.mp4' }]. This is the explicit hook the runtime reads to know this is a playable video, not a static image."
+      "commit": "88cbda193bcaeb48378af660ebacb89b75024ff2",
+      "verifiedAt": "2026-04-24T17:30:15Z",
+      "notes": "DONE. Added 4 new graph nodes (video-slot-1..4) to home-hub.json with transforms copied from notes/mockup-candidates/ai-video-bbox-map.json (x=520/975/1430/1885, y=1020, w=430/425/425/425, h=260, z=41, shape=rounded r=16), each carrying intent.behaviorSpec.interactions = [{ event: 'pointertap', effect: 'playVideo', src: 'source-videos/video-slot-N.mp4' }]. Task description wrote `trigger` but spec-reviewer round-1 flagged as MUST FIX — prism-spec-extract.md:626 is canonical (`event`) and every other interactions[] entry in home-hub.json already used `event`. Renamed trigger→event across home-hub.json (4 sites), video-slot.js guard, T-VID-01 test (assertion + docstring + success log). Round-2 reviewer: 'No deviations found.' Shared node module src/lib/prism/mock-app-source/nodes/video-slot.js renders atlas sprite with lift-hover (matches feature-card-bg idiom) + generic dispatch loop over intent.behaviorSpec.interactions that emits 'video:play' on events bus for every {event:'pointertap', effect:'playVideo', src:string}. No DOM/HTMLVideoElement mount — playback itself is T-VID-03. atlas-regions.json rebuilt (4 new real crops cropped/video-slot-{1,2,3,4}.png already existed from T-SWAP-04's extract-video.mjs, so no synth placeholder created for them); synth still produces 30 placeholders (unchanged). artifactHash → 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Three gates: verify:prism 15/15, browser-smoke 6/6, T-VID-01 test PASS. SHOULD FIX carried forward for T-VID-02/downstream: (a) the `src` field is a bespoke extension beyond the spec's {event,effect} tuple — consider moving mp4 path under a sibling effectArgs.src / intent.behaviorSpec.playback.src so the canonical interaction tuple stays pure; T-VID-02's §-SPEC-ENRICH section should formalize whichever shape wins; (b) video-slot.js dispatch loop silently drops non-matching entries — a console.warn in the else-branch (or explicit comment noting silent-skip-is-intentional-pending-classifier) would save a debug cycle later; (c) T-VID-01.test.mjs is happy-path only — a counter-test with event='pointerdown' or effect='noop' that must NOT be accepted would strengthen the locked shape; (d) lift-hover tween in video-slot.js:26-27 duplicates feature-card-bg.js:14-15 verbatim; extracting a shared liftHover helper into nodes/_util.js would DRY once a third consumer appears; (e) video-slot.js hardcodes effect='playVideo' despite comment claiming portability — an effect registry `{ playVideo: (ix, ctx) => … }` would match the stated intent more honestly OR the comment overstates what the module does; (f) event name 'video:play' uses colon while existing bus events use hyphen-form ('navigate', 'theme-changed', 'notifications-toggled', etc.) — consider 'video-play' or 'video-play-requested' for consistency; (g) 4 video-slot-*-label sibling nodes from the BBOX map are NOT wired by this task (decoration, not interactive) — if later visual QA shows baked captions drift from tile content, T-VID-02/03 should add them; (h) home-hub.json:1256-1263,1302,1348,1394 duplicate the same transform/shape/shapeRadius/z=41 pattern with only x varying (stride 455/455/455); a comment referencing ai-video-bbox-map.json as the declared transform source at the first video-slot would save future readers a dig; (i) atlas-regions.json 4 new hashes plus 30 placeholder hashes still share 1 content-hash each — per-region hash no longer uniquely identifies content for synth placeholders (carry-forward from T-SWAP-07 (a)); (j) prism-spec-extract.md:626 still defines interactions as `{event,effect}` only — T-VID-02 must extend the type OR the ix.src convention should be documented as a permitted extension. Phase-G housekeeping note (carried from T-SWAP-01..08): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-VID-02",
@@ -294,6 +296,12 @@
       "taskId": "T-SWAP-08",
       "commit": "13ac859c85ba29eac6f800a92872ba2e0746741e",
       "verifiedAt": "2026-04-24T17:13:06Z"
+    },
+    {
+      "iteration": 9,
+      "taskId": "T-VID-01",
+      "commit": "88cbda193bcaeb48378af660ebacb89b75024ff2",
+      "verifiedAt": "2026-04-24T17:30:15Z"
     }
   ],
   "historyArchive": [
@@ -407,7 +415,7 @@
       "status": "active"
     },
     "§-SPEC-ENRICH": {
-      "used": 0,
+      "used": 1,
       "cap": 30,
       "status": "active"
     },
@@ -430,7 +438,7 @@
     "recordedAt": "2026-04-24T17:16:29Z"
   },
   "invariants": {
-    "lastArtifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6"
+    "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
   },
   "resumeFrom": null,
   "breakpoints": []
