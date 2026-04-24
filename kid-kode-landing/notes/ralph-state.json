@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:33:05Z",
+  "updatedAt": "2026-04-24T17:39:20Z",
   "currentIteration": 10,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -123,9 +123,11 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Append new section §-SPEC-ENRICH describing the post-segmentation classifier pass: after SAM returns bboxes, a classifier prompt (to a vision model, not hand-coded rules) identifies play-button-like regions, prompts the user for 'user-supplied content vs auto-generated', and emits the interactions[] entry automatically. For now this is a design note — T-VID-03 wires the generation half."
+      "commit": "a4782ba4565f7caeedb25f93d80b619bb14d2415",
+      "verifiedAt": "2026-04-24T17:39:20Z",
+      "notes": "DONE. Appended new `## §-SPEC-ENRICH — INTERACTIVE-ELEMENT CLASSIFIER PASS (Design Note)` section to prism-spec-extract.md (before SPECIFICATION AMBIGUITIES, ~50 lines). Section covers: (A) heading presence; (B) post-segmentation pipeline position with ASCII diagram showing segment-video.mjs → [classifier] → debug-video-boxes.mjs → extract-video.mjs → patch-home-hub-for-mockup.mjs; (C) vision-model (VLM) classifier shape — explicit rejection of hand-coded pixel rules, hardcoded heuristics, and hardcoded nodeId allowlists (rationale: T-VID-01 debate + editor-genericity rule); (D) user-supplied vs auto-generated branch, default user-supplied, auto requires explicit user approval (T-VID-03 cost gate); (E) `{event, effect, src}` emission shape with `src` explicitly ratified as a *permitted extension* to the canonical {event, effect} tuple at line 626 — additive, not rename; (F) forward reference to T-VID-03 as the task that wires the generation half. Plus 3 downstream invariants (runtime tolerates unknown interaction keys, atlas treats `src` as data not a packed-region ref, editor surfaces interactions verbatim). Test tests/enrich/T-VID-02.test.mjs commits the schema-of-text contract: 1 heading match + body ≥200 chars + (B)-(F) regex assertions covering SAM/bboxes, VLM/not-hand-coded, play-button/playable, user-supplied, auto-generated, prompts-user, interactions[], playVideo, pointertap, src, extension-language, T-VID-03. Three gates: verify:prism 15/15, browser-smoke 6/6, T-VID-02 PASS. artifactHash unchanged (no rebuild — pure doc change): 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Spec-reviewer: no MUST FIX. SHOULD FIX carried forward: (a) §-SPEC-ENRICH text says 'see §5 model IDs in CLAUDE.md' — the spec extract is supposed to be self-contained; either inline the model IDs or label as 'project CLAUDE.md (not the extract)' so a reader does not grep §5 in this file and come up empty; (b) two `line 626` hard-coded references inside the same document will desync if §4 gets re-paginated — prefer a quoted-snippet anchor or 'the canonical interaction tuple in the Element Node Schema / §4'; (c) downstream invariants lock only the runtime side — consider a parallel build-time invariant ('no classifier impl may ship with a hand-coded bbox→nodeId allowlist, even as a fallback') so T-VID-03 cannot slip a stub in; (d) classifier output-path question is left open ('standalone scripts/classify-interactive-regions.mjs, or a new stage inside segment-video.mjs') — one sentence on output artifact (notes/mockup-candidates/*.classify.json vs inline into *.sam.json) would remove drift risk; (e) progress log touch lands in step-12 commit per Ralph convention, but reviewer flagged the pattern for visibility (graduates to MUST FIX if step-12 ever skipped). OPTIONAL: (f) 'poster, autoplay, mute' listed as content pointers — autoplay/mute are booleans; better examples: poster, captions, loopTo; (g) §-SPEC-ENRICH references `alpha-cutout.mjs` by filename — ties canonical spec to a specific build artifact; quote the threshold-override idea generically instead; (h) Florence is named as the example VLM but CLAUDE.md marks its boxes 'often wildly wrong' — soften to 'a general-purpose vision LM queried per-crop; Florence's phrase-grounding endpoint is a hint source only'; (i) '(see T-VID-03 cost ceiling)' forward-points to a task ID that only lives in ralph-state.json — inline the $2.00 ceiling (4×$0.50) to keep extract self-sufficient. Phase-G housekeeping note (carried from T-SWAP-01..08, T-VID-01): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one); browser-smoke screenshots also drifting modified across iterations without commit."
     },
     {
       "id": "T-VID-03",
@@ -302,6 +304,12 @@
       "taskId": "T-VID-01",
       "commit": "88cbda193bcaeb48378af660ebacb89b75024ff2",
       "verifiedAt": "2026-04-24T17:30:15Z"
+    },
+    {
+      "iteration": 10,
+      "taskId": "T-VID-02",
+      "commit": "a4782ba4565f7caeedb25f93d80b619bb14d2415",
+      "verifiedAt": "2026-04-24T17:39:20Z"
     }
   ],
   "historyArchive": [
@@ -400,8 +408,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 9,
-    "lastProductiveCommit": "b28a673191600ec961a633ebea6a3984f4858031"
+    "lastProductiveIteration": 10,
+    "lastProductiveCommit": "a4782ba4565f7caeedb25f93d80b619bb14d2415"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -415,7 +423,7 @@
       "status": "active"
     },
     "§-SPEC-ENRICH": {
-      "used": 1,
+      "used": 2,
       "cap": 30,
       "status": "active"
     },
@@ -431,11 +439,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 9,
-    "commit": "b28a673191600ec961a633ebea6a3984f4858031",
-    "verifiedAt": "2026-04-24T17:32:32Z",
+    "iteration": 10,
+    "commit": "a4782ba4565f7caeedb25f93d80b619bb14d2415",
+    "verifiedAt": "2026-04-24T17:39:20Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T17:32:32Z"
+    "recordedAt": "2026-04-24T17:39:20Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
