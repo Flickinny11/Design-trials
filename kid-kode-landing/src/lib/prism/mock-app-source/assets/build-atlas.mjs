@@ -61,13 +61,27 @@ function textOverlaySvg(text, typography, position, w, h) {
 }
 
 // Map a source-image file path → { assetKey, node | null }.
-// assetKey is the packer region id, e.g. "hero-card-cta" (base), "notifications-toggle-on"
-// (state), "glow-pulse" (overlay), "hero-section-bg/frame-001" (frame).
+// assetKey is the packer region id — its shape depends on the source dir:
+//   - cropped/<id>.png  → "cropped/<id>.png"  (matches home-hub.json's
+//                         visual.sourceAsset literal since T-SWAP-06)
+//   - base/<id>.png     → "<id>"              (legacy; post-T-SWAP-06 no node
+//                         references these, but we still pack for any hub that
+//                         hasn't migrated)
+//   - states/<id>-<k>.png → "<id>-<k>"        (layer-swap variants)
+//   - overlays/<id>.png → "<id>"              (shared overlay sprites)
+//   - frames/<id>/frame-NNN.png → "<id>/frame-NNN"  (i2v sequences)
 function classifySource(graph, filePath) {
   const rel = relative(sourceRoot, filePath).replace(/\\/g, '/');
   const parts = rel.split('/');
   const nodesByAsset = new Map();
   for (const n of graph.nodes) nodesByAsset.set(n.visual.sourceAsset ?? n.nodeId, n);
+  if (parts[0] === 'cropped') {
+    // Literal key: "cropped/<basename>.png" — exactly what home-hub.json
+    // nodes set as visual.sourceAsset post T-SWAP-06.
+    const baseName = basename(parts[parts.length - 1], '.png');
+    const assetKey = `cropped/${baseName}.png`;
+    return { assetKey, node: nodesByAsset.get(assetKey) ?? null, kind: 'cropped' };
+  }
   if (parts[0] === 'base') {
     const name = basename(parts[parts.length - 1], '.png');
     return { assetKey: name, node: nodesByAsset.get(name) ?? null, kind: 'base' };
@@ -196,6 +210,7 @@ async function main() {
   const graph = JSON.parse(readFileSync(graphPath, 'utf-8'));
   const sources = (await globby([
     'base/*.png',
+    'cropped/*.png',
     'states/*.png',
     'overlays/*.png',
     'frames/**/*.png',
@@ -212,6 +227,43 @@ async function main() {
     const img = await processSource(src, graph);
     if (img) images.push(img);
   }
+
+  // Invisible-placeholder synthesis (CLAUDE.md §-IMAGE-TO-UI): any node whose
+  // visual.sourceAsset is "cropped/<id>.png" but the file doesn't exist on
+  // disk gets a 2×2 transparent region injected into the atlas so that
+  // atlas-regions.json has a key for every node. The node's transform is
+  // (-1, -1, 2, 2) per T-SWAP-06, so nothing renders at runtime — but the
+  // zero-orphans invariant holds and downstream runtime lookups never miss.
+  const packed = new Set(images.map((im) => im.assetKey));
+  const placeholderKeys = [];
+  for (const n of graph.nodes) {
+    const asset = n.visual?.sourceAsset ?? n.nodeId;
+    if (typeof asset !== 'string' || !asset.startsWith('cropped/')) continue;
+    if (packed.has(asset)) continue;
+    placeholderKeys.push(asset);
+  }
+  if (placeholderKeys.length > 0) {
+    const transparentPngBuf = await sharp({
+      create: { width: 2, height: 2, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    }).png().toBuffer();
+    const { data, info: rawInfo } = await sharp(transparentPngBuf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    const placeholderHash = createHash('sha256').update(transparentPngBuf).update('|placeholder').digest('hex').slice(0, 16);
+    for (const assetKey of placeholderKeys.sort()) {
+      images.push({
+        assetKey,
+        kind: 'cropped',
+        width: rawInfo.width,
+        height: rawInfo.height,
+        channels: rawInfo.channels,
+        data,
+        hash: placeholderHash,
+        nativeWidth: 2,
+        nativeHeight: 2,
+      });
+    }
+    console.log(`[build-atlas] synthesized ${placeholderKeys.length} invisible 2×2 placeholders for graph nodes absent from cropped/.`);
+  }
+
   images.sort((a, b) => a.assetKey.localeCompare(b.assetKey));    // determinism
 
   // Pack.

@@ -50,10 +50,14 @@ function buildCompiledGraph(source, regionsWrapper) {
     }
 
     // Per-state regions: notifications-toggle-{off,on} etc.
+    // State PNGs live in source-images/states/ and are packed under basename
+    // keys (e.g. "notifications-toggle-off"), so strip any "cropped/" prefix
+    // and ".png" suffix from the asset path before forming the state key.
     if (n.visual.regionKeys) {
+      const assetBase = asset.replace(/^cropped\//, '').replace(/\.png$/, '');
       compiled.visual.regions = {};
       for (const k of n.visual.regionKeys) {
-        const stateKey = `${asset}-${k}`;
+        const stateKey = `${assetBase}-${k}`;
         if (regions[stateKey]) compiled.visual.regions[k] = pickRegion(regions[stateKey]);
       }
     }
