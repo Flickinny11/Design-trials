@@ -83,6 +83,24 @@ function shouldShadowNode(nodeId: string, breakpoint: BreakpointName): boolean {
   return CARD_SUFFIXES.some((suffix) => nodeId.endsWith(suffix));
 }
 
+// T-ED-02 — Click-to-select. Every node container emits `node-selected`
+// on pointerdown so the editor (Inspector/Minimap/SearchPalette) can
+// react without polling. Generic by construction: the nodeId comes from
+// the iteration variable, not a hardcoded literal. Setting eventMode
+// 'static' on the outer container is required for PIXI to actually
+// route pointerdown — node modules set it on their own inner sprites
+// but not reliably on the top-level container we parent to the viewport.
+function attachSelectEmitter(
+  container: PIXI.Container,
+  nodeId: string,
+  events: EventBus,
+): void {
+  container.eventMode = 'static';
+  container.on('pointerdown', () => {
+    events.emit('node-selected', { nodeId: nodeId });
+  });
+}
+
 function makeCardShadowFilter(): DropShadowFilter {
   // Softer, more Figma-card-like: lighter alpha, tighter blur, smaller
   // offset. Cards still feel lifted but no longer "floating dramatically"
@@ -217,6 +235,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       }
       const alpha = (node.visual as { alpha?: number }).alpha;
       if (typeof alpha === 'number') instance.container.alpha = alpha;
+      attachSelectEmitter(instance.container, node.nodeId, events);
       instancesByNode.set(node.nodeId, instance);
       viewport.content.addChild(instance.container);
     } catch (e) {
@@ -277,6 +296,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
         c.removeAllListeners?.('pointertap');
         c.on('pointertap', () => { void shr.recordFailure(nodeId); });
       }
+      attachSelectEmitter(instance.container, nodeId, events);
       instancesByNode.set(nodeId, instance);
       viewport.content.addChild(instance.container);
       return instance;

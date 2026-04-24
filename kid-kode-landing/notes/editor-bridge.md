@@ -105,6 +105,7 @@ with the returned function.
 | `'theme-changed'`         | theme-selector-button                | `{ source: nodeId, theme: string }`                    |
 | `'notifications-toggled'` | notifications-toggle                 | `{ source: nodeId, isOn: boolean }`                    |
 | `'build-flow-started'`    | hero-card-cta                        | `{ source: nodeId }`                                   |
+| `'node-selected'`         | `player/boot.ts` (T-ED-02)           | `{ nodeId: string }` *(emits on pointerdown for every node container — payload key is `nodeId`, NOT `source`, because the Inspector/Minimap/SearchPalette destructure `nodeId` directly and the field doubles as the graph-lookup key)* |
 | `'node-click-failed'`     | `shr/index.ts`                       | `{ source: nodeId, attemptCount: number }`             |
 | `'repair-started'`        | `shr/index.ts`                       | `{ source: nodeId }`                                   |
 | `'repair-completed'`      | `shr/index.ts`                       | `{ source: nodeId }`                                   |
@@ -120,9 +121,6 @@ without subscribing retroactively.
 The audit deliberately distinguishes "in the surface today" (above)
 from "needed by upcoming T-ED-* tasks but missing":
 
-- **`'node-selected'` event** — T-ED-02 wires `pointerdown` on every
-  node container to `events.emit('node-selected', { nodeId })`. The
-  Inspector (T-ED-03) and Minimap (T-ED-08) both subscribe.
 - **`'breakpoint-change'` event** — boot.ts mutates
   `__prism.currentBreakpoint` on reflow but does not announce it on
   the bus. Editor panels currently must poll. Add an emit inside
