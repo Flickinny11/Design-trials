@@ -1,0 +1,199 @@
+{
+  "mockup": "/var/folders/ml/3bg2bnbn0plcnlkjyztfb0tm0000gn/T/T-SWAP-04-c6HFu1/fixture-mockup.png",
+  "mockupWidth": 2816,
+  "mockupHeight": 1536,
+  "bboxes": {
+    "page-background": {
+      "x": 0,
+      "y": 0,
+      "w": 2816,
+      "h": 1536
+    },
+    "navbar-bg": {
+      "x": 530,
+      "y": 120,
+      "w": 1990,
+      "h": 115
+    },
+    "navbar-logo": {
+      "x": 570,
+      "y": 135,
+      "w": 470,
+      "h": 90
+    },
+    "navbar-link-features": {
+      "x": 1380,
+      "y": 140,
+      "w": 200,
+      "h": 55
+    },
+    "navbar-link-showcase": {
+      "x": 1615,
+      "y": 140,
+      "w": 240,
+      "h": 55
+    },
+    "navbar-link-pricing": {
+      "x": 1885,
+      "y": 140,
+      "w": 180,
+      "h": 55
+    },
+    "navbar-link-about": {
+      "x": 2100,
+      "y": 140,
+      "w": 140,
+      "h": 55
+    },
+    "navbar-link-login": {
+      "x": 2260,
+      "y": 140,
+      "w": 135,
+      "h": 55
+    },
+    "hero-video-frame": {
+      "x": 150,
+      "y": 315,
+      "w": 1285,
+      "h": 630
+    },
+    "hero-eyebrow-text": {
+      "x": 1440,
+      "y": 325,
+      "w": 560,
+      "h": 50
+    },
+    "hero-headline-text": {
+      "x": 1440,
+      "y": 380,
+      "w": 1050,
+      "h": 200
+    },
+    "hero-subhead-text": {
+      "x": 1440,
+      "y": 595,
+      "w": 960,
+      "h": 80
+    },
+    "hero-cta-primary": {
+      "x": 1490,
+      "y": 710,
+      "w": 345,
+      "h": 95
+    },
+    "hero-cta-secondary": {
+      "x": 1875,
+      "y": 710,
+      "w": 270,
+      "h": 95
+    },
+    "video-slot-1": {
+      "x": 520,
+      "y": 1020,
+      "w": 430,
+      "h": 260
+    },
+    "video-slot-1-label": {
+      "x": 560,
+      "y": 1205,
+      "w": 300,
+      "h": 45
+    },
+    "video-slot-2": {
+      "x": 975,
+      "y": 1020,
+      "w": 425,
+      "h": 260
+    },
+    "video-slot-2-label": {
+      "x": 1020,
+      "y": 1205,
+      "w": 290,
+      "h": 45
+    },
+    "video-slot-3": {
+      "x": 1430,
+      "y": 1020,
+      "w": 425,
+      "h": 260
+    },
+    "video-slot-3-label": {
+      "x": 1500,
+      "y": 1205,
+      "w": 240,
+      "h": 45
+    },
+    "video-slot-4": {
+      "x": 1885,
+      "y": 1020,
+      "w": 425,
+      "h": 260
+    },
+    "video-slot-4-label": {
+      "x": 1960,
+      "y": 1205,
+      "w": 260,
+      "h": 45
+    },
+    "footer-link-privacy": {
+      "x": 420,
+      "y": 1390,
+      "w": 130,
+      "h": 40
+    },
+    "footer-link-terms": {
+      "x": 560,
+      "y": 1390,
+      "w": 100,
+      "h": 40
+    },
+    "footer-link-faq": {
+      "x": 670,
+      "y": 1390,
+      "w": 70,
+      "h": 40
+    },
+    "footer-link-contact": {
+      "x": 750,
+      "y": 1390,
+      "w": 130,
+      "h": 40
+    },
+    "footer-link-careers": {
+      "x": 890,
+      "y": 1390,
+      "w": 140,
+      "h": 40
+    },
+    "footer-copyright-text": {
+      "x": 415,
+      "y": 1455,
+      "w": 545,
+      "h": 35
+    },
+    "footer-tagline-text": {
+      "x": 1760,
+      "y": 1455,
+      "w": 530,
+      "h": 35
+    },
+    "footer-social-discord": {
+      "x": 1955,
+      "y": 1385,
+      "w": 70,
+      "h": 55
+    },
+    "footer-social-twitter": {
+      "x": 2040,
+      "y": 1385,
+      "w": 70,
+      "h": 55
+    },
+    "footer-sigil": {
+      "x": 2700,
+      "y": 1370,
+      "w": 90,
+      "h": 110
+    }
+  }
+}
