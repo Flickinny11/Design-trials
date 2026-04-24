@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:44:50Z",
+  "updatedAt": "2026-04-24T16:14:17Z",
   "currentIteration": 4,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -50,9 +50,11 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Each text block = own node. Each of the 4 play-button video tiles = own node (nodeId pattern: video-slot-1..4). Write scripts/extract-video.mjs that reads the BBOX map and writes source-images/cropped/<nodeId>.png for each. Document the BBOX map inline as a `const BBOX = {...}` so it's reviewable."
+      "commit": "d930e47c219bc41528e88790f5e851ca31fad11a",
+      "verifiedAt": "2026-04-24T16:14:17Z",
+      "notes": "DONE. scripts/extract-video.mjs — hand-tuned `const BBOX = {...}` with 32 entries covering page-background, navbar container + logo + 5 nav links (features/showcase/pricing/about/login), hero video frame + eyebrow/headline/subhead + 2 CTAs, video-slot-1..4 (each with a sibling -label node because baked captions are structurally independent), footer 5 text links + copyright + tagline + 2 social icons + decorative sigil. Coordinates calibrated against zoom crops + per-row luminance scans of the 2816×1536 AETHER mockup. Env-var overrides (MOCKUP_PNG/OUT_DIR/BBOX_JSON) so the acceptance test runs against a synthetic fixture without clobbering the canonical artifact. Persists notes/mockup-candidates/ai-video-bbox-map.json (repo-relative mockup field, matches sibling extract-from-mockup.mjs convention). verify:prism 15/15, browser-smoke 6/6, T-SWAP-04 test OK. Spec-reviewer cycle: initial review found 1 MUST FIX (stale /tmp mockup path in committed JSON — the test overrode MOCKUP_PNG but not BBOX_JSON, clobbering the canonical artifact on every run); resolved via (a) test passes BBOX_JSON to tmp, (b) extract-video.mjs writes `mockup` repo-relative via path.relative w/ startsWith('..') escape. Round-2 reviewer returned 'no remaining MUST FIX'. SHOULD FIX carried forward for downstream iterations: (a) path.relative does not force POSIX separators — Windows host would emit backslashes into committed JSON, breaks T-SWAP-06 greps; (b) TINY invisible-placeholder branch exists (`if (b.invisible) write TRANSPARENT_PNG`) but no explicit `const TINY = {...}` literal like sibling extract-scifi-elements.mjs exposes — T-SWAP-06 should add it when reconciling legacy home-hub.json nodes that aren't in this mockup; (c) MW/MH failure message doesn't point at extract-video.mjs:25 where the 2816×1536 contract is documented; (d) TRANSPARENT_PNG buffer allocated at module scope even when no BBOX entry is invisible (cosmetic); (e) sharp().metadata() not wrapped in friendly-error try/catch; (f) tile-vs-label overlap-by-design comment in .mjs is not mirrored into the JSON (T-SWAP-06 tooling reading only JSON misses the context); (g) test subhead matcher allows 'body' which is dangerously broad (hero-body-bg would satisfy). OPTIONAL: (h) mockupPath hint in MW/MH assert; (i) grouping comments on hero-right text entries; (j) padEnd column tuning. Also SHOULD FIX for T-SWAP-05/06: BBOX coordinates are hand-tuned approximations — visual spot checks show navbar-logo, hero-video-frame, video-slot-1..4, hero-cta-primary all capture recognizable content, but nav-link Y may need +10 shift and hero-cta Y may need small nudge; precise pixel bounds are expected to be tuned again in T-SWAP-06 during home-hub.json wiring. Phase-G housekeeping note (carried from T-SWAP-01/02/03): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-SWAP-05",
@@ -254,6 +256,12 @@
       "taskId": "T-SWAP-03",
       "commit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb",
       "verifiedAt": "2026-04-24T15:42:05Z"
+    },
+    {
+      "iteration": 4,
+      "taskId": "T-SWAP-04",
+      "commit": "d930e47c219bc41528e88790f5e851ca31fad11a",
+      "verifiedAt": "2026-04-24T16:14:17Z"
     }
   ],
   "historyArchive": [
@@ -352,12 +360,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 3,
-    "lastProductiveCommit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "d930e47c219bc41528e88790f5e851ca31fad11a"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 3,
+      "used": 4,
       "cap": 30,
       "status": "active"
     },
@@ -373,11 +381,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 3,
-    "commit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb",
-    "verifiedAt": "2026-04-24T15:42:05Z",
+    "iteration": 4,
+    "commit": "d930e47c219bc41528e88790f5e851ca31fad11a",
+    "verifiedAt": "2026-04-24T16:14:17Z",
     "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T15:42:05Z"
+    "recordedAt": "2026-04-24T16:14:17Z"
   },
   "resumeFrom": null,
   "breakpoints": []
