@@ -160,15 +160,24 @@ for (const w of NAV_LINK_WORDS) {
   );
 }
 
-// Hero coverage: a frame/video/image-frame entry, a headline text entry,
-// a primary CTA, and a secondary CTA.
+// Hero coverage: a frame/video/image-frame entry, eyebrow + headline + subhead
+// text blocks (per task contract "Each text block = own node"), a primary CTA,
+// and a secondary CTA.
 assert.ok(
   keyPresent((k) => /hero/.test(k) && /(video|frame|image|thumbnail)/.test(k)),
   `BBOX must declare a hero video/frame entry; declared keys: ${JSON.stringify(keys)}`,
 );
 assert.ok(
+  keyPresent((k) => /hero/.test(k) && /(eyebrow|kicker)/.test(k)),
+  `BBOX must declare a hero eyebrow text entry; declared keys: ${JSON.stringify(keys)}`,
+);
+assert.ok(
   keyPresent((k) => /hero/.test(k) && /(headline|heading)/.test(k)),
   `BBOX must declare a hero headline text entry; declared keys: ${JSON.stringify(keys)}`,
+);
+assert.ok(
+  keyPresent((k) => /hero/.test(k) && /(subhead|subtitle|body)/.test(k)),
+  `BBOX must declare a hero subhead text entry; declared keys: ${JSON.stringify(keys)}`,
 );
 assert.ok(
   keyPresent(
@@ -207,6 +216,19 @@ assert.ok(
   `missing canonical mockup PNG at ${canonicalMockup} — required for sharp metadata read`,
 );
 
+// Canonical mockup must match the resolution the hand-tuned coords assume.
+const canonicalMeta = await sharp(canonicalMockup).metadata();
+assert.equal(
+  canonicalMeta.width,
+  2816,
+  `canonical mockup width must be 2816 (hand-tuned coords assume this); got ${canonicalMeta.width}`,
+);
+assert.equal(
+  canonicalMeta.height,
+  1536,
+  `canonical mockup height must be 1536 (hand-tuned coords assume this); got ${canonicalMeta.height}`,
+);
+
 const tmp = mkdtempSync(join(tmpdir(), 'T-SWAP-04-'));
 // Make a small synthetic mockup that matches the real aspect ratio so coord
 // math is valid under env-var overrides.
@@ -223,6 +245,9 @@ await sharp({
   .toFile(fixtureMockup);
 
 const fixtureOutDir = join(tmp, 'cropped');
+// Redirect the bbox-map write to tmp as well so the test never clobbers the
+// committed notes/mockup-candidates/ai-video-bbox-map.json with a tmp path.
+const fixtureBboxJson = join(tmp, 'bbox-map.json');
 
 try {
   const run = spawnSync('node', [scriptPath], {
@@ -231,6 +256,7 @@ try {
       ...process.env,
       MOCKUP_PNG: fixtureMockup,
       OUT_DIR: fixtureOutDir,
+      BBOX_JSON: fixtureBboxJson,
     },
     encoding: 'utf8',
   });

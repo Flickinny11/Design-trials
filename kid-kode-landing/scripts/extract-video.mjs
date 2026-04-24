@@ -28,8 +28,8 @@
 //
 // Run: node scripts/extract-video.mjs
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { dirname, resolve, join } from 'node:path';
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { dirname, resolve, relative, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
@@ -90,7 +90,10 @@ const BBOX = {
   // Video tile row — 4 evenly-spaced rounded-rectangle thumbnails; each tile's
   // baked caption is its own node so T-SWAP-06 can treat them as hit regions.
   // Coords calibrated against per-row luminance scans at source y=1050 and
-  // y=1200 (tile borders + label baselines).
+  // y=1200 (tile borders + label baselines). NOTE: each `-label` bbox
+  // intentionally overlaps the bottom strip of its parent `video-slot-N` so
+  // the label crop contains baked text only; both crops layer in the scene
+  // per the image-to-UI layering model (CLAUDE.md §-IMAGE-TO-UI).
   'video-slot-1':                { x: 520,  y: 1020, w: 430,  h: 260 },
   'video-slot-1-label':          { x: 560,  y: 1205, w: 300,  h: 45  },
   'video-slot-2':                { x: 975,  y: 1020, w: 425,  h: 260 },
@@ -118,12 +121,26 @@ const BBOX = {
 
 mkdirSync(outDir, { recursive: true });
 
+// Tiny 2×2 transparent PNG for the "Invisible-placeholder pattern" (CLAUDE.md):
+// a node declared in the graph but NOT present in this mockup gets the TINY
+// crop so the graph schema stays stable across mockup swaps. Today every key
+// in BBOX is visible, so TINY is unused — but T-SWAP-06 is likely to want it
+// when reconciling home-hub.json's legacy node set.
+const TRANSPARENT_PNG = await sharp({
+  create: { width: 2, height: 2, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+}).png().toBuffer();
+
 for (const [nodeId, b] of Object.entries(BBOX)) {
+  const out = join(outDir, `${nodeId}.png`);
+  if (b.invisible) {
+    writeFileSync(out, TRANSPARENT_PNG);
+    console.log(`[extract-video] ${nodeId.padEnd(28)} TINY (invisible)`);
+    continue;
+  }
   const left = Math.max(0, Math.round(b.x));
   const top = Math.max(0, Math.round(b.y));
   const width = Math.min(MW - left, Math.max(1, Math.round(b.w)));
   const height = Math.min(MH - top, Math.max(1, Math.round(b.h)));
-  const out = join(outDir, `${nodeId}.png`);
   await sharp(mockupPath)
     .extract({ left, top, width, height })
     .toFile(out);
@@ -131,13 +148,17 @@ for (const [nodeId, b] of Object.entries(BBOX)) {
 }
 
 // Persist the bbox map for downstream T-SWAP-06 and audit tooling. Written
-// after crops so a partial-crop failure above doesn't leave a stale map.
+// after crops so a partial-crop failure above doesn't leave a stale map. The
+// `mockup` field is serialized repo-relative when possible (matches sibling
+// extract-from-mockup.mjs's bbox-map.json convention) so the artifact stays
+// portable across machines and isn't clobbered by test-run overrides.
+const mockupRel = relative(repoRoot, mockupPath);
 mkdirSync(dirname(bboxJsonPath), { recursive: true });
 writeFileSync(
   bboxJsonPath,
   JSON.stringify(
     {
-      mockup: mockupPath,
+      mockup: mockupRel.startsWith('..') ? mockupPath : mockupRel,
       mockupWidth: MW,
       mockupHeight: MH,
       bboxes: BBOX,
