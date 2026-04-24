@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:30:15Z",
-  "currentIteration": 9,
+  "updatedAt": "2026-04-24T17:33:05Z",
+  "currentIteration": 10,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -123,8 +123,8 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "Append new section §-SPEC-ENRICH describing the post-segmentation classifier pass: after SAM returns bboxes, a classifier prompt (to a vision model, not hand-coded rules) identifies play-button-like regions, prompts the user for 'user-supplied content vs auto-generated', and emits the interactions[] entry automatically. For now this is a design note — T-VID-03 wires the generation half."
     },
     {
@@ -400,8 +400,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 8,
-    "lastProductiveCommit": "dc38fb705522cba1c3cd95dadfade208eecec5d6"
+    "lastProductiveIteration": 9,
+    "lastProductiveCommit": "b28a673191600ec961a633ebea6a3984f4858031"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -431,11 +431,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 8,
-    "commit": "dc38fb705522cba1c3cd95dadfade208eecec5d6",
-    "verifiedAt": "2026-04-24T17:16:29Z",
-    "artifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6",
-    "recordedAt": "2026-04-24T17:16:29Z"
+    "iteration": 9,
+    "commit": "b28a673191600ec961a633ebea6a3984f4858031",
+    "verifiedAt": "2026-04-24T17:32:32Z",
+    "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
+    "recordedAt": "2026-04-24T17:32:32Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
