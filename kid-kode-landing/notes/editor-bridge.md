@@ -35,6 +35,8 @@ import type { HubRouter }      from '@/lib/prism/player/hub-router';
 import type { BreakpointName } from '@/lib/prism/player/breakpoints';
 import type { Shr }            from '@/lib/prism/shr';
 
+// boot.ts exports this as `PrismDebugHandle`; we re-name it here to
+// `PrismBridge` for editor-side ergonomics. The two are the same type.
 export interface PrismBridge {
   /** Hub-scoped scroll/section router. Same instance returned by mount(). */
   router: HubRouter;
@@ -106,11 +108,12 @@ with the returned function.
 | `'node-click-failed'`     | `shr/index.ts`                       | `{ source: nodeId, attemptCount: number }`             |
 | `'repair-started'`        | `shr/index.ts`                       | `{ source: nodeId }`                                   |
 | `'repair-completed'`      | `shr/index.ts`                       | `{ source: nodeId }`                                   |
-| `'video:play'`            | video-slot (T-VID-01)                | `{ source: nodeId, src: string }`                      |
+| `'video:play'`            | video-slot (T-VID-01)                | `{ nodeId: string, src: string }` *(payload key differs from the `{ source, ... }` convention used by every other event in this table — see `nodes/video-slot.js:38`)* |
 
 The event bus also exposes `_recentEmissions` (ReadonlyArray, ring of
-256) — useful for an editor "event log" panel without subscribing
-retroactively.
+256, entry shape `{ event: string, payload: unknown, at: number }`) —
+useful for an editor "event log" panel that needs to sort by `at`
+without subscribing retroactively.
 
 ## Gaps — needed by editor, not yet exposed
 
@@ -128,10 +131,11 @@ from "needed by upcoming T-ED-* tasks but missing":
   transforms live (T-ED-04), but no API exists to save them back to
   `src/lib/prism/mock-app-source/hubs/home-hub.json`. T-ED-11 owns
   the dev-only `/api/save-graph` route + the Inspector "Save" button.
-- **Manifest hubs surface (T-ED-07)** — `bundle.manifest.hubs` is held
-  on the `MountResult` returned by `mount()` but is **not** mirrored
-  onto `window.__prism`. PrismHost must expose it (e.g. as
-  `__prism.manifest`) before HubNav can render disabled tabs for hubs
+- **Manifest hubs surface (T-ED-07)** — `bundle.manifest.hubs` is
+  reachable as `MountResult.bundle.manifest.hubs` from the `mount()`
+  return value, but it is **not** mirrored onto `window.__prism`.
+  PrismHost must expose it (proposed: `__prism.manifest =
+  bundle.manifest`) before HubNav can render disabled tabs for hubs
   not in the current `.prism`.
 - **Drag-on-preview commit semantics (T-ED-10)** — pointermove on a
   selected container should mirror `container.position` into
