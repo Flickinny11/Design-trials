@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:52:30Z",
+  "updatedAt": "2026-04-24T18:03:00Z",
   "currentIteration": 12,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -147,9 +147,11 @@
       "specRefs": [
         "§7"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Read src/lib/prism/player/boot.ts, identify every property hung off window.__prism. Document the shape: graph, nodes (Map), events (EventEmitter), viewport, currentBreakpoint, hiddenNodeIds, hubRouter. Write the shape as a TypeScript interface block into notes/editor-bridge.md. Flag anything the editor needs but isn't exposed yet."
+      "commit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387",
+      "verifiedAt": "2026-04-24T18:03:00Z",
+      "notes": "DONE. notes/editor-bridge.md is now the canonical contract for the editor↔runtime bridge: PrismBridge interface (alias for boot.ts's PrismDebugHandle) declares all 8 fields actually hung off window.__prism (router, viewport, events, graph, nodes, currentBreakpoint, hiddenNodeIds, shr) with types matching the source modules — fixed 4 prior drifts from the stub: (i) `hubRouter` → `router`, (ii) `hiddenNodeIds: Set<string>` → `string[]` (boot.ts mutates via .splice), (iii) `graph` was a hand-rolled inline shape → typed as CompiledGraph, (iv) `shr` was missing entirely. __prismBreakNode documented as a sibling on globalThis (NOT on __prism); editor-side path is __prism.shr.breakNode(nodeId). Known events table covers all 11 events emitted across player/* + shr/* + nodes/*. Gaps section names node-selected (T-ED-02 owns), breakpoint-change (boot.ts mutates currentBreakpoint silently), persistent write-back API (T-ED-11), manifest hubs (T-ED-07), drag commit semantics (T-ED-10), genericity audit (T-ED-09). withBridge polling helper included for editor consumers since the bridge appears asynchronously. Test tests/editor/T-ED-01.test.mjs (227 lines) locks the contract: 7 acceptance bands (A) stub disclaimer removed, (B) all 8 fields in fenced ts/typescript interface ending in Bridge|Handle, (C) field shapes (Map<string,NodeInstance>, string[] not Set, BreakpointName union, CompiledGraph), (D) __prismBreakNode separate-from-__prism distinction, (E) cites src/lib/prism/player/boot.ts, (F) 5 known events present, (G) gaps section names node-selected + T-ED-11. Three gates: verify:prism 15/15, browser-smoke 6/6, T-ED-01 PASS. artifactHash unchanged (pure doc): 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Spec-reviewer round-1 MUST FIX: video:play payload doc said {source, src} but nodes/video-slot.js:38 emits {nodeId, src} — fixed in commit 3f80bae with parenthetical noting the convention divergence so future drift is loud. Round-1 SHOULD FIXes also folded into 3f80bae: (a) added comment that PrismBridge is an editor-side alias for boot.ts's exported PrismDebugHandle; (b) Manifest hubs gap entry corrected — reachable as MountResult.bundle.manifest.hubs (NOT MountResult.manifest), proposed exposure path __prism.manifest = bundle.manifest; (c) _recentEmissions entry shape spelled out as {event, payload, at}. Round-2 reviewer: 'No deviations found.' SHOULD FIX deferred to downstream: (d) sample imports use `@/lib/prism/player/breakpoints` (no extension); the runtime file is breakpoints.mjs with a sibling .d.ts — works for editor authors using TS path aliases but a path-resolution note would save a debug cycle if the alias breaks; (e) withBridge polling helper has no timeout/rejection — copy-paste hang risk in tests, an editor-harness comment about adding a timeout would be defensive; (f) _recentEmissions ring-buffer is read-only on the API surface but boot.ts/event-bus.ts could grow event-replay (subscribe-with-history) for editor panels that mount after emissions. OPTIONAL: (g) Phase-G housekeeping note (carried from T-SWAP-01..08, T-VID-01..03): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one); browser-smoke screenshots also drifting modified across iterations without commit (this iter's smoke modified 7 screenshots, none staged)."
     },
     {
       "id": "T-ED-02",
@@ -318,6 +320,12 @@
       "taskId": "T-VID-03",
       "commit": "6269587dce8da59fc878cda3b4f00fed248283a7",
       "verifiedAt": "2026-04-24T17:50:30Z"
+    },
+    {
+      "iteration": 12,
+      "taskId": "T-ED-01",
+      "commit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387",
+      "verifiedAt": "2026-04-24T18:03:00Z"
     }
   ],
   "historyArchive": [
@@ -416,8 +424,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 11,
-    "lastProductiveCommit": "890b386c3489de7ec802e8c25bc6e4694a75223e"
+    "lastProductiveIteration": 12,
+    "lastProductiveCommit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -427,6 +435,11 @@
     },
     "§-EDITOR": {
       "used": 0,
+      "cap": 30,
+      "status": "active"
+    },
+    "§7": {
+      "used": 1,
       "cap": 30,
       "status": "active"
     },
@@ -447,11 +460,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 11,
-    "commit": "890b386c3489de7ec802e8c25bc6e4694a75223e",
-    "verifiedAt": "2026-04-24T17:51:47Z",
+    "iteration": 12,
+    "commit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387",
+    "verifiedAt": "2026-04-24T18:03:00Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T17:51:47Z"
+    "recordedAt": "2026-04-24T18:03:00Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
