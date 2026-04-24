@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:43:15Z",
+  "updatedAt": "2026-04-24T17:50:30Z",
   "currentIteration": 11,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -135,9 +135,11 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "PROMPT USER FIRST via a status commit: 'Supplying your own video files for video-slot-1..4? If yes, drop them into source-videos/ and re-run T-SWAP-07. If no, I will generate 4 placeholder clips at 4×$0.50 via fal-ai/wan/v2.7/image-to-video.' Only proceed to generation on explicit confirmation. Cost ceiling: $2.00."
+      "commit": "6269587dce8da59fc878cda3b4f00fed248283a7",
+      "verifiedAt": "2026-04-24T17:50:30Z",
+      "notes": "DONE (infrastructure-only — no FAL call fired). Deliverables: (1) scripts/generate-placeholder-videos.mjs — gated auto-generation script that calls fal-ai/wan/v2.7/image-to-video on the 4 video-slot-{1..4} nodes, conditioned on src/lib/prism/mock-app-source/assets/source-images/cropped/video-slot-{N}.png. Three gates in the script itself: (a) PRISM_CONFIRM_VIDEO_GENERATION=1 required before any @fal-ai/client import (dynamic import sits behind the gate); (b) early-exit if all 4 source-videos/video-slot-{N}.mp4 already exist on disk (user-supplied branch is the zero-cost default); (c) FAL_KEY + crop-present checks before fal.config. Cost literals named in source: PER_CLIP_USD=0.50, CEILING_USD=2.00. Model literal: fal-ai/wan/v2.7/image-to-video. i2v prompt follows CLAUDE.md FAL prompt rules (shape+material+motion only, no function nouns — 'Polished obsidian slab, slow dark metal sheen drift, subtle parallax loop, ambient violet highlight wash'). Per-slot generation loop also honors partial-supply (individual existsSync short-circuit) so a mix of user-supplied + auto-generated is supported. (2) source-videos/README.md — the 'prompt the user first via status commit' artifact the ralph-state notes required: documents both paths (drop-in user MP4s vs PRISM_CONFIRM_VIDEO_GENERATION=1 opt-in), names $0.50/clip + $2.00 ceiling, references §-SPEC-ENRICH:1312 classifier note, links home-hub.json video-slot entries + video-slot.js runtime module. (3) tests/vid/T-VID-03.test.mjs — 11-check acceptance contract: (A) script presence, (B) fal-ai/wan/v2.7/image-to-video model ID, (C) PRISM_CONFIRM_VIDEO_GENERATION gate literal, (D) $2.00 ceiling literal, (E) $0.50 per-clip literal, (F) all 4 video-slot-{1..4} names, (G) cropped/video-slot-*.png conditioning reference, (H) source-videos/ output-path reference, (I) existsSync early-exit path + skip keyword, (J) source-videos/README.md with both-branch instructions + cost, (K) runtime gate test — spawns the script with empty env, asserts status!=0 + gate-refusal output + zero evidence of fal.* calls attempted. Three gates: verify:prism 15/15, browser-smoke 6/6, T-VID-03 PASS. artifactHash unchanged (no rebuild — pure script+doc addition): 90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c. Spec-reviewer round-1 MUST FIX: FAL i2v prompt was function-language ('video thumbnail') — rewrote to shape+material+motion only per CLAUDE.md §5 rules + §-SPEC-ENRICH:1329; round-2 'No deviations found.' SHOULD FIX carried forward for downstream: (a) fal video-url fetch at line 170 has no res.ok/content-type check — a 5xx HTML error body would be written to .mp4, silently corrupting placeholder while still charging $0.50; add response validation before writeFileSync; (b) spend-tally abort is not wired: loop currently trusts SLOTS.length=4 + per-iter existsSync-skip; a future SLOTS enlargement or loop-bug could exceed $2.00 ceiling without machine enforcement; add `if (generatedCount * PER_CLIP_USD > CEILING_USD) abort(...)` guard inside the loop; (c) outDir is not mkdirSync({recursive:true})'d before the first writeFileSync — if user deletes source-videos/ after reading README, first write throws ENOENT AFTER FAL call fired (user charged, file lost); (d) test's runtime-gate (K) uses the real source-videos/ dir — once user drops all 4 MP4s, (K) passes via Gate 2 (allPresent→exit 0) instead of Gate 1 (refusal), silently weakening the confirmation-gate contract; add OUT_DIR env override to script and pass /tmp dir in test; (e) CLAUDE.md negative-prompt discipline ('text, letters, words, numbers, typography, wordmarks, icons, glyphs, characters, writing, labels, captions, symbols') not wired into the i2v prompt — spec calls that a FLUX image-gen rule not strictly required for i2v (crop conditioning locks palette), but adding a negative_prompt field is cheap insurance; (f) progress-log touch belongs in step-12 commit per Ralph convention (handled below). OPTIONAL (from reviewer): (g) `results` accumulated but not persisted — a notes/mockup-candidates/video-generation-log.json side-write would durable-log paid runs for audit; (h) per-slot prompts are identical modulo commented nodeId — the 4 crops differ in content so a single shared prompt is fine; (i) README section anchor uses line-number link (1312) that rots under re-pagination (same pattern flagged in T-VID-02); prefer section-header quote. USER-ACTION PENDING: T-VID-03 is done as infrastructure, but the placeholder MP4s are not yet on disk. The user must either (A) drop their own video-slot-{1..4}.mp4 into source-videos/, or (B) explicitly run `PRISM_CONFIRM_VIDEO_GENERATION=1 node --env-file=.env.local scripts/generate-placeholder-videos.mjs` to spend up to $2.00. Until one of those happens, the 4 video-slot tiles will render their static crops with playback wired but no content — visual-only regression. Phase-G housekeeping note (carried from T-SWAP-01..08, T-VID-01..02): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one); browser-smoke screenshots also drifting modified across iterations without commit."
     },
     {
       "id": "T-ED-01",
@@ -310,6 +312,12 @@
       "taskId": "T-VID-02",
       "commit": "a4782ba4565f7caeedb25f93d80b619bb14d2415",
       "verifiedAt": "2026-04-24T17:39:20Z"
+    },
+    {
+      "iteration": 11,
+      "taskId": "T-VID-03",
+      "commit": "6269587dce8da59fc878cda3b4f00fed248283a7",
+      "verifiedAt": "2026-04-24T17:50:30Z"
     }
   ],
   "historyArchive": [
@@ -408,8 +416,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 10,
-    "lastProductiveCommit": "2363f169f6aaf3d4c42481c576d600127d161895"
+    "lastProductiveIteration": 11,
+    "lastProductiveCommit": "6269587dce8da59fc878cda3b4f00fed248283a7"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -423,7 +431,7 @@
       "status": "active"
     },
     "§-SPEC-ENRICH": {
-      "used": 2,
+      "used": 3,
       "cap": 30,
       "status": "active"
     },
@@ -439,11 +447,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 10,
-    "commit": "2363f169f6aaf3d4c42481c576d600127d161895",
-    "verifiedAt": "2026-04-24T17:42:02Z",
+    "iteration": 11,
+    "commit": "6269587dce8da59fc878cda3b4f00fed248283a7",
+    "verifiedAt": "2026-04-24T17:50:30Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T17:42:02Z"
+    "recordedAt": "2026-04-24T17:50:30Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
