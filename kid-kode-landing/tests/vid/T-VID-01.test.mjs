@@ -19,7 +19,7 @@
 //
 //   (B) Interaction shape. For each of the 4 nodes, exactly one entry
 //       in intent.behaviorSpec.interactions with the fields:
-//         - trigger === 'pointertap'
+//         - event   === 'pointertap'   (canonical spec field, line 626)
 //         - effect  === 'playVideo'
 //         - src     string ending in '.mp4' that references the nodeId
 //       A missing entry, a second entry, a renamed field, or a `.mp4`
@@ -84,9 +84,9 @@ for (const id of REQUIRED_VIDEO_NODE_IDS) {
     `${id}: interaction[0] must be a plain object (got ${Array.isArray(entry) ? 'array' : typeof entry})`,
   );
   assert.equal(
-    entry.trigger,
+    entry.event,
     'pointertap',
-    `${id}: interaction[0].trigger must be 'pointertap' (got ${JSON.stringify(entry.trigger)})`,
+    `${id}: interaction[0].event must be 'pointertap' (got ${JSON.stringify(entry.event)}) — canonical field per prism-spec-extract.md:626`,
   );
   assert.equal(
     entry.effect,
@@ -108,4 +108,4 @@ for (const id of REQUIRED_VIDEO_NODE_IDS) {
   );
 }
 
-console.log(`[T-VID-01] PASS — 4 video-slot nodes each carry { trigger: 'pointertap', effect: 'playVideo', src: '*.mp4' } playback hook`);
+console.log(`[T-VID-01] PASS — 4 video-slot nodes each carry { event: 'pointertap', effect: 'playVideo', src: '*.mp4' } playback hook`);

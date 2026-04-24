@@ -33,7 +33,7 @@ export function createNode(ctx) {
   // across all 4 video-slot-N nodes.
   const interactions = intent?.behaviorSpec?.interactions ?? [];
   for (const ix of interactions) {
-    if (ix && ix.trigger === 'pointertap' && ix.effect === 'playVideo' && typeof ix.src === 'string') {
+    if (ix && ix.event === 'pointertap' && ix.effect === 'playVideo' && typeof ix.src === 'string') {
       container.on('pointertap', () => {
         events?.emit?.('video:play', { nodeId: intent.nodeId, src: ix.src });
       });
