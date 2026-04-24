@@ -145,19 +145,17 @@ try {
   assert.ok(svg.includes('tile'), 'output SVG should contain the "tile" key label');
 
   // Per-key palette: pill and tile strokes must differ.
-  const pillRectMatch = rects.find(r => /pill/i.test(r)) ?? null;
-  // The rect tag itself may not carry the key name — fall back to pairing rect/text by order.
-  // Build (rect, text) pairs by document order.
-  const nodes = [...svg.matchAll(/<(rect|text)\b[^>]*>([^<]*)<?/g)].map(m => ({
-    tag: m[1], attrs: m[0], inner: m[2],
-  }));
-  // Pair: rects are emitted before their label text in the source.
-  const rectNodes = nodes.filter(n => n.tag === 'rect');
-  const textNodes = nodes.filter(n => n.tag === 'text');
-  assert.equal(rectNodes.length, textNodes.length, 'rect/text count mismatch for pairing');
-  const strokes = rectNodes.map((r, i) => {
-    const strokeMatch = r.attrs.match(/stroke="(#[0-9a-fA-F]{3,6})"/);
-    return { stroke: strokeMatch?.[1] ?? null, label: textNodes[i].inner };
+  // Pair rects and text labels by document order (script emits rect directly before label).
+  const rectAttrs = [...svg.matchAll(/<rect\b[^>]*\/>/g)].map(m => m[0]);
+  const textInners = [...svg.matchAll(/<text\b[^>]*>([^<]*)<\/text>/g)].map(m => m[1]);
+  assert.equal(
+    rectAttrs.length,
+    textInners.length,
+    `rect/text count mismatch for pairing (rect=${rectAttrs.length}, text=${textInners.length})`
+  );
+  const strokes = rectAttrs.map((r, i) => {
+    const strokeMatch = r.match(/stroke="(#[0-9a-fA-F]{3,6})"/);
+    return { stroke: strokeMatch?.[1] ?? null, label: textInners[i] };
   });
   const pillStroke = strokes.find(s => /pill/.test(s.label))?.stroke;
   const tileStroke = strokes.find(s => /tile/.test(s.label))?.stroke;
