@@ -1246,6 +1246,198 @@
       "backendRef": null
     },
     {
+      "nodeId": "video-slot-1",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "cropped/video-slot-1.png",
+        "transform": {
+          "x": 520,
+          "y": 1020,
+          "width": 430,
+          "height": 260,
+          "z": 41
+        },
+        "shape": "rounded",
+        "shapeRadius": 16
+      },
+      "intent": {
+        "caption": "Video slot 1 — playable hero tile. Tapping plays the bound mp4.",
+        "behaviorSpec": {
+          "interactions": [
+            {
+              "trigger": "pointertap",
+              "effect": "playVideo",
+              "src": "source-videos/video-slot-1.mp4"
+            }
+          ],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "video-slot-1",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "nodes/video-slot.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "video-slot-2",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "cropped/video-slot-2.png",
+        "transform": {
+          "x": 975,
+          "y": 1020,
+          "width": 425,
+          "height": 260,
+          "z": 41
+        },
+        "shape": "rounded",
+        "shapeRadius": 16
+      },
+      "intent": {
+        "caption": "Video slot 2 — playable hero tile. Tapping plays the bound mp4.",
+        "behaviorSpec": {
+          "interactions": [
+            {
+              "trigger": "pointertap",
+              "effect": "playVideo",
+              "src": "source-videos/video-slot-2.mp4"
+            }
+          ],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "video-slot-2",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "nodes/video-slot.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "video-slot-3",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "cropped/video-slot-3.png",
+        "transform": {
+          "x": 1430,
+          "y": 1020,
+          "width": 425,
+          "height": 260,
+          "z": 41
+        },
+        "shape": "rounded",
+        "shapeRadius": 16
+      },
+      "intent": {
+        "caption": "Video slot 3 — playable hero tile. Tapping plays the bound mp4.",
+        "behaviorSpec": {
+          "interactions": [
+            {
+              "trigger": "pointertap",
+              "effect": "playVideo",
+              "src": "source-videos/video-slot-3.mp4"
+            }
+          ],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "video-slot-3",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "nodes/video-slot.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "video-slot-4",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "cropped/video-slot-4.png",
+        "transform": {
+          "x": 1885,
+          "y": 1020,
+          "width": 425,
+          "height": 260,
+          "z": 41
+        },
+        "shape": "rounded",
+        "shapeRadius": 16
+      },
+      "intent": {
+        "caption": "Video slot 4 — playable hero tile. Tapping plays the bound mp4.",
+        "behaviorSpec": {
+          "interactions": [
+            {
+              "trigger": "pointertap",
+              "effect": "playVideo",
+              "src": "source-videos/video-slot-4.mp4"
+            }
+          ],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [
+          "lift-hover"
+        ],
+        "visualSpec": {
+          "sourceAsset": "video-slot-4",
+          "textContent": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "nodes/video-slot.js",
+      "backendRef": null
+    },
+    {
       "nodeId": "settings-section-bg",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
