@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:34:00Z",
+  "updatedAt": "2026-04-24T15:42:05Z",
   "currentIteration": 3,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -38,9 +38,11 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Pattern from scripts/debug-scifi-boxes.mjs. Emit notes/mockup-candidates/ai-video-mockup.overlay.svg with colored rectangles for each SAM bbox + label. Gives visual QA before committing to a per-node crop map."
+      "commit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb",
+      "verifiedAt": "2026-04-24T15:42:05Z",
+      "notes": "DONE. scripts/debug-video-boxes.mjs — pure-local transform over ai-video-mockup.sam.json, emits ai-video-mockup.overlay.svg with per-key colored outline rects + labels (idx:key WxH score). Env-var overrides (SAM_JSON/MOCKUP_PNG/OVERLAY_SVG) so the acceptance test runs against a synthetic fixture. Embeds mockup as a data: URI backdrop so the overlay is self-contained. Pattern adapted from scripts/debug-scifi-boxes.mjs (sibling emits PNG; this emits SVG per task contract). verify:prism 15/15, browser-smoke 6/6, T-SWAP-03 test OK. Test-regex note: original test used a combined regex whose trailing `<?` consumed the next `<text>` opener (masked a false negative). Fix uses two separate regexes; contract coverage unchanged. SHOULD FIX (from spec-reviewer, for downstream): (a) rect objects carry an unused `i` field post-sort — drop it since `.map((r, idx) => ...)` shadows with a fresh post-sort index, avoid source-of-truth ambiguity in T-SWAP-04's BBOX hand-tune; (b) progress-log touch happens in step-12 commit (per repo pattern aced8de/dff44ce), not in this impl commit — if Ralph wrapper skips it, graduates to MUST FIX. OPTIONAL (from spec-reviewer): (c) COLOR_BY_KEY `?? '#ff0000'` fallback is unreachable today but silently paints all drift-keys red; a console.warn would fail loud on future PROMPTS edits; (d) SVG `<text>` inner does not XML-escape r.key — safe under the closed 11-noun allowlist from segment-video.mjs, but `.replace(/[&<>]/g, ...)` would future-proof if the key source ever broadens; (e) data-URI backdrop inflates overlay SVG to ~1.3× mockup PNG size (~8–9 MB for the 2816×1536 AETHER source) — `href=\"ai-video-mockup.png\"` relative ref would keep SVG ~10 KB and still render from the mockup-candidates/ dir; (f) paired-rect regex in test only matches self-closing `<rect .../>`; `<rect ...></rect>` form would silently degrade pairing to zero — `<rect\\b[^>]*(?:\\/>|><\\/rect>)` more robust. Note: script has NOT yet been run against a real sam.json — ai-video-mockup.sam.json does not exist on disk (segment-video.mjs from T-SWAP-02 was written but not executed). T-SWAP-04 should either run segment-video.mjs or skip to hand-tuned BBOX, then run debug-video-boxes.mjs for QA."
     },
     {
       "id": "T-SWAP-04",
@@ -246,6 +248,12 @@
       "taskId": "T-SWAP-02",
       "commit": "479546be04740f437c80f8adbb4e021e382eb822",
       "verifiedAt": "2026-04-24T15:31:18Z"
+    },
+    {
+      "iteration": 3,
+      "taskId": "T-SWAP-03",
+      "commit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb",
+      "verifiedAt": "2026-04-24T15:42:05Z"
     }
   ],
   "historyArchive": [
@@ -344,12 +352,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 2,
-    "lastProductiveCommit": "aced8de3a6adda576e6eb4df4f460bed07a8236a"
+    "lastProductiveIteration": 3,
+    "lastProductiveCommit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 2,
+      "used": 3,
       "cap": 30,
       "status": "active"
     },
@@ -365,11 +373,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 2,
-    "commit": "aced8de3a6adda576e6eb4df4f460bed07a8236a",
-    "verifiedAt": "2026-04-24T15:33:02Z",
-    "artifactHash": null,
-    "recordedAt": "2026-04-24T15:33:02Z"
+    "iteration": 3,
+    "commit": "a0424f2ab78cfeeb1a8d454a5cfaf754f445cecb",
+    "verifiedAt": "2026-04-24T15:42:05Z",
+    "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
+    "recordedAt": "2026-04-24T15:42:05Z"
   },
   "resumeFrom": null,
   "breakpoints": []
