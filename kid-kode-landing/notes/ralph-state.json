@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T17:39:20Z",
-  "currentIteration": 10,
+  "updatedAt": "2026-04-24T17:43:15Z",
+  "currentIteration": 11,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -135,8 +135,8 @@
       "specRefs": [
         "§-SPEC-ENRICH"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "PROMPT USER FIRST via a status commit: 'Supplying your own video files for video-slot-1..4? If yes, drop them into source-videos/ and re-run T-SWAP-07. If no, I will generate 4 placeholder clips at 4×$0.50 via fal-ai/wan/v2.7/image-to-video.' Only proceed to generation on explicit confirmation. Cost ceiling: $2.00."
     },
     {
@@ -409,7 +409,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 10,
-    "lastProductiveCommit": "a4782ba4565f7caeedb25f93d80b619bb14d2415"
+    "lastProductiveCommit": "2363f169f6aaf3d4c42481c576d600127d161895"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -440,10 +440,10 @@
   },
   "checkpoint": {
     "iteration": 10,
-    "commit": "a4782ba4565f7caeedb25f93d80b619bb14d2415",
-    "verifiedAt": "2026-04-24T17:39:20Z",
+    "commit": "2363f169f6aaf3d4c42481c576d600127d161895",
+    "verifiedAt": "2026-04-24T17:42:02Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T17:39:20Z"
+    "recordedAt": "2026-04-24T17:42:02Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
