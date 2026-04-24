@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:18:45Z",
+  "updatedAt": "2026-04-24T16:28:17Z",
   "currentIteration": 5,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -62,9 +62,11 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "scripts/alpha-cutout.mjs already exists with LOW=18, HIGH=55 luminance thresholds. The Gemini image may have a different dark-tone baseline — add a per-image threshold override (LOW_OVERRIDE / HIGH_OVERRIDE env vars). Run against every cropped <nodeId>.png so backgrounds turn transparent. Skip the full-mockup page-background image (it keeps opaque slate)."
+      "commit": "dd56dca6c586f300cb491ab20a1c7024190b79ef",
+      "verifiedAt": "2026-04-24T16:28:17Z",
+      "notes": "DONE. scripts/alpha-cutout.mjs — added CUTOUT_DIR / LOW_OVERRIDE / HIGH_OVERRIDE env-var overrides. Default target dir swapped from legacy base/ to the new canonical source-images/cropped/ (the per-node crops from extract-video.mjs). SKIP set now split: ALWAYS_SKIP={page-background} (opaque slate backdrop per CLAUDE.md §-IMAGE-TO-UI), LEGACY_BASE_SKIP={navbar-bg, hero-section-bg, feature-grid-section-bg, settings-section-bg, footer-bg, hero-card-bg} applied only when baseDir basename matches /base$/. Threshold parser (parseThreshold helper) rejects empty-string, non-finite, and out-of-range values instead of silently coercing — mirrors scifi-era discipline. Added deterministic sort() on readdirSync + split counters (skippedBackdrop vs skippedTiny) so log line distinguishes 'backdrop preserved' from 'tiny placeholder'. verify:prism 15/15, browser-smoke 6/6, T-SWAP-05 test OK. Spec-reviewer cycle: initial review (ba0ff11) flagged 1 MUST FIX — navbar-bg was in the unconditional SKIP set and would have been silently skipped under the new default cropped/ dir, leaving the AETHER nav-pill halo uncut. Resolved via split-set + baseDir basename gate; test fixture now writes a navbar-bg.png and asserts dark corners → alpha 0 (locks in that the new cropped/ default cuts the pill halo). Round-2 reviewer: 'no remaining MUST FIX.' SHOULD FIX carried forward for downstream: (a) isLegacyBaseDir regex fails on trailing-slash form (e.g. CUTOUT_DIR=.../base/) — path.basename() normalization is safer (today resolve() strips trailing slash for the default path, so only affects callers passing raw strings); (b) T-SWAP-06 downstream: home-hub.json node entries absent from the AETHER mockup need the TINY invisible-placeholder; alpha-cutout's 'tiny placeholder' width<3 guard already skips them, but extract-video.mjs does not yet emit them (TRANSPARENT_PNG branch unused). OPTIONAL: (c) localeCompare-based sort for mixed-case nodeId determinism; (d) log line could include legacy=${isLegacyBaseDir} so operator can tell which SKIP set applied from the log alone; (e) test could also run once with CUTOUT_DIR=.../base and positively assert navbar-bg preserved byte-for-byte (currently only tests the cropped/-side half of the contract). Phase-G housekeeping note (carried from T-SWAP-01..04): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-SWAP-06",
@@ -262,6 +264,12 @@
       "taskId": "T-SWAP-04",
       "commit": "d930e47c219bc41528e88790f5e851ca31fad11a",
       "verifiedAt": "2026-04-24T16:14:17Z"
+    },
+    {
+      "iteration": 5,
+      "taskId": "T-SWAP-05",
+      "commit": "dd56dca6c586f300cb491ab20a1c7024190b79ef",
+      "verifiedAt": "2026-04-24T16:28:17Z"
     }
   ],
   "historyArchive": [
@@ -360,12 +368,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "fcd8966dbc84c19f1a16323d8cfb404034840bc0"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "dd56dca6c586f300cb491ab20a1c7024190b79ef"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 4,
+      "used": 5,
       "cap": 30,
       "status": "active"
     },
@@ -381,11 +389,14 @@
     }
   },
   "checkpoint": {
-    "iteration": 4,
-    "commit": "fcd8966dbc84c19f1a16323d8cfb404034840bc0",
-    "verifiedAt": "2026-04-24T16:17:22Z",
-    "artifactHash": null,
-    "recordedAt": "2026-04-24T16:17:22Z"
+    "iteration": 5,
+    "commit": "dd56dca6c586f300cb491ab20a1c7024190b79ef",
+    "verifiedAt": "2026-04-24T16:28:17Z",
+    "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
+    "recordedAt": "2026-04-24T16:28:17Z"
+  },
+  "invariants": {
+    "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
   },
   "resumeFrom": null,
   "breakpoints": []
