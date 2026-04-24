@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T18:15:37Z",
-  "currentIteration": 13,
+  "updatedAt": "2026-04-24T18:20:00Z",
+  "currentIteration": 14,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -171,8 +171,8 @@
       "specRefs": [
         "§7"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "src/components/editor/panels/Inspector.tsx subscribes to window.__prism.events.on('node-selected', ...). Reads graph.nodes.get(id) and renders intent.caption, transform.{x,y,z,scale}, stateEffects. Purely generic — no hardcoded nodeIds (anti-drift hook blocks them)."
     },
     {
@@ -433,7 +433,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 13,
-    "lastProductiveCommit": "8744b961088e69a48e77a3cbb81857eddbffcd47"
+    "lastProductiveCommit": "7fa8b86f55780c3ae3deb23510ef8a71d6396c74"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -447,7 +447,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 3,
+      "used": 4,
       "cap": 30,
       "status": "active"
     },
@@ -469,10 +469,10 @@
   },
   "checkpoint": {
     "iteration": 13,
-    "commit": "8744b961088e69a48e77a3cbb81857eddbffcd47",
-    "verifiedAt": "2026-04-24T18:15:37Z",
+    "commit": "7fa8b86f55780c3ae3deb23510ef8a71d6396c74",
+    "verifiedAt": "2026-04-24T18:17:33Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T18:15:37Z"
+    "recordedAt": "2026-04-24T18:17:33Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
