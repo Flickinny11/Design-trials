@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T18:03:00Z",
-  "currentIteration": 12,
+  "updatedAt": "2026-04-24T18:07:39Z",
+  "currentIteration": 13,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -159,8 +159,8 @@
       "specRefs": [
         "§7"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "In boot.ts, for every node container registered, attach a pointerdown listener that fires window.__prism.events.emit('node-selected', { nodeId }). Add ALLOWED-GRAPHICS marker on any new hit-area if needed. Generic: no hardcoded nodeIds — iterate graph.nodes."
     },
     {
@@ -425,7 +425,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 12,
-    "lastProductiveCommit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387"
+    "lastProductiveCommit": "e969ad862c261e00108ac44a4b02b2894a90bc7f"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -439,7 +439,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 1,
+      "used": 2,
       "cap": 30,
       "status": "active"
     },
@@ -461,10 +461,10 @@
   },
   "checkpoint": {
     "iteration": 12,
-    "commit": "3f80bae7799df2c5261ec8b1e34d627afb1a8387",
-    "verifiedAt": "2026-04-24T18:03:00Z",
+    "commit": "e969ad862c261e00108ac44a4b02b2894a90bc7f",
+    "verifiedAt": "2026-04-24T18:06:27Z",
     "artifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c",
-    "recordedAt": "2026-04-24T18:03:00Z"
+    "recordedAt": "2026-04-24T18:06:27Z"
   },
   "invariants": {
     "lastArtifactHash": "90978ba03df9ee184d598fadf8c2944215f6b23eaaee554bb3f6fd1df8e0e30c"
