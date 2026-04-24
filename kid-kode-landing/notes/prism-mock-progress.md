@@ -166,3 +166,22 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - Cost: ~$0.50 FAL spend for the 57-task regeneration + WAN 2.7 i2v + overlay re-pass
 
 **Gates that still hold.** Editor pane untouched (all `src/components/editor/**` byte-identical). Spec §1.4 forbidden-pattern audit clean. Deterministic build — `npm run build:prism` run twice produces identical artifactHash.
+
+## Phase G — Mockup swap + editor wiring + spec enrichment (begin 2026-04-24)
+
+**Goal.** Replace the current generated mockup with `Gemini_Generated_Image_2w5g832w5g832w5g.png` (AI video generator UI — 4 play-button video tiles + prompt area + side panel), then wire the existing 3D node editor to edit the preview pane's graph without any hardcoded mock-app nodeIds, then enrich the spec with an interactive-element classifier note so future mockups auto-recognize playable regions.
+
+**Why this matters.** Phase F confirmed the image-to-UI architecture works end-to-end. Three things are still ahead of us:
+1. A real input image (the Gemini mockup) that's representative of an actual target app — video gen UI — not a stylized showcase. Proves the pipeline handles production-shaped content.
+2. An editor that's actually generic — no hardcoded nodeIds, drives off `window.__prism.graph.nodes`. Anti-drift hook now blocks the pattern (`anti-drift-check.sh` editor-genericity block).
+3. Spec language for the moment-of-recognition when segmentation identifies a play-button region — today it's hand-coded; we're documenting the classifier prompt pattern so the next mockup swap is 10× faster.
+
+**Loop framing.** 22 tasks across 3 phases (§-IMAGE-TO-UI, §-SPEC-ENRICH, §-EDITOR), each capped at 30 iterations (90 max; global ceiling 150). `notes/ralph-state.json` seeded; prior history archived under `historyArchive[]`. Kickoff phrase at `notes/ralph-kickoff-v2.md` — paste into fresh session.
+
+**Hooks tightened.**
+- `anti-drift-check.sh` gains an editor-genericity block: Write/Edit targeting `src/components/editor/**/*.{ts,tsx}` is blocked if it contains hardcoded mock-app nodeId literals (`hero-card-`, `navbar-{logo,link,signin,bg}`, `feature-card-`, `footer-*`, `stats-*`, `settings-section`, `notifications-toggle`, `theme-selector`, `hero-section`, `feature-grid`, `page-background`). Opt-out via `// ALLOWED-HARDCODED-ID: <reason>`.
+- `spec-presence-check.sh` gains non-fatal Phase G warnings: flags if `notes/session-handoff-2026-04-24.md`, `notes/ralph-kickoff-v2.md`, the Gemini input image (at repo root or moved into `notes/mockup-candidates/`), or `FAL_KEY=` in `.env.local` are missing.
+
+**CLAUDE.md additions.** "Architecture (confirmed this session — 2026-04-24)" section documents: image-to-UI architecture, invisible-placeholder pattern, alpha-cutout discipline + per-image thresholds, FAL prompt rules (shape+material, never function), current model IDs (April 2026), editor-genericity hard rule, single-base+GSAP for state effects, and the two-method text-rendering contract.
+
+**Task iterations will be logged below as they complete.**

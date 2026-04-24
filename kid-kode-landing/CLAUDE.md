@@ -64,3 +64,55 @@ Prototype for Kriptik's Prism diffusion-based app builder. The left pane of the 
 - `public/prism-assets/` — baked `.prism` artifact + atlas + MSDF. Output of build scripts; do not hand-edit.
 - `public/fonts/Inter-Variable.ttf` — build-time input for MSDF.
 - `notes/` — progress log, spec extract, audit reports, ralph state/logs. All commits that change source must also touch `notes/prism-mock-progress.md`.
+
+## Architecture (confirmed this session — 2026-04-24)
+
+These are the load-bearing facts the prior Ralph iterations validated the hard way. Do not re-derive them; do not drift from them.
+
+### Image-to-UI (not image-to-code)
+
+- The mockup IS the UI. A single AI-generated image is the canonical visual source of truth. The full mockup renders as the page-background sprite. Per-node crops layer on top in exact alignment.
+- Nodes carry semantic handles (nodeId, intent, behaviorSpec) but reuse the mockup's pixels. There is no code-generated chrome.
+- **Do not describe function in FAL prompts** ("button for signup", "nav bar", "feature card"). Describe **shape + material** only ("pill shape", "rounded rectangle slab", "polished obsidian"). Function naming makes FLUX try to bake text and UI tropes.
+
+### Invisible-placeholder pattern
+
+- Nodes declared in the graph but not present in the current mockup get a 2×2 transparent PNG as `visual.sourceAsset` with `transform.x = -1`, `transform.y = -1`. This keeps the graph schema stable across mockup swaps without polluting the rendered scene.
+
+### Alpha-cutout discipline (per-node crops only)
+
+- After SAM/Florence produces per-node crops, run `scripts/alpha-cutout.mjs` to turn dark-rectangle halos into true alpha-transparent pixels. Default luminance thresholds: `LOW=18`, `HIGH=55`. A new mockup with a different palette may need per-image overrides — add env vars, do not hardcode.
+- **Do not** alpha-cutout the full-mockup page-background image. It stays opaque slate so the per-node crops have something to composite against.
+
+### FAL prompt rules (negatives are as important as positives)
+
+- Positive: shape + material + lighting. Never function.
+- Negative: `"text, letters, words, numbers, typography, wordmarks, icons, glyphs, characters, writing, labels, captions, symbols"`. FLUX will bake pseudo-text into every surface if you don't aggressively negate.
+- Style-lock via `image_url` to `source-images/_style-reference.png` on every subsequent call. Without it, ~50 element images drift into a Frankenstein collage.
+
+### Model IDs (verified April 2026; reconfirm via docs.fal.ai before use)
+
+- **Image gen:** `fal-ai/flux-2-pro` ($0.06/call, studio-grade). `fal-ai/flux-2` ($0.012/MP) acceptable for bulk base images with style-lock.
+- **Image edit (style transfer / i2i):** `fal-ai/flux-2-pro/edit`.
+- **Segmentation:** `fal-ai/sam-3/image-rle` ($0.005/call) with `include_boxes: true`. Concrete nouns only — abstract terms (text, heading, link) fail. Use hand-tuned BBOX + debug-overlay SVG for visual QA.
+- **Phrase grounding:** `fal-ai/florence-2-large/caption-to-phrase-grounding`. Use as hint-only; bboxes are often wildly wrong.
+- **Image-to-video:** `fal-ai/wan/v2.7/image-to-video` (~$0.50/clip). Confirm cost + pause for user approval before multi-clip runs.
+- **Avoid:** `fal-ai/recraft/v4/pro/text-to-image` — output is too flat for the Prism aesthetic.
+
+### Editor genericity (hard rule)
+
+- Every component in `src/components/editor/**` must drive off `window.__prism.graph.nodes` generically. Zero string literals matching the hardcoded-nodeId regex (enforced by `anti-drift-check.sh` PreToolUse hook).
+- If a legitimate exception exists (e.g., testing against a specific fixture node), add `// ALLOWED-HARDCODED-ID: <reason>` adjacent to the literal.
+- `notes/editor-bridge.md` documents the `window.__prism` API surface. Read before writing editor code.
+
+### State effects: single base + GSAP, not per-state image variants
+
+- A node's `visual.sourceAsset` is ONE image (the base state). Hover/active/pressed are GSAP tweens on the runtime sprite (scale, tint, filter alpha). Do NOT generate separate state PNGs per node — they drift in composition and readability.
+- The **only** exception: `notifications-toggle` keeps structural on/off `regionKeys` because the on/off shape differs, not just its effect.
+
+### Text rendering — two methods only
+
+- **Build-time (static text):** composited into the AVIF atlas via Sharp+SVG in `build-atlas.mjs`. Use for labels/headings that never change.
+- **Runtime (dynamic text):** `PIXI.BitmapText` with MSDF font atlas. Use for anything that reads from state or user input.
+- `PIXI.Text` is forbidden everywhere (§1.4). Canvas 2D `fillText`/`strokeText` forbidden. Inline CSS for visible chrome forbidden.
+- Crops that already carry baked mockup text must NOT also have an MSDF overlay — causes double-text ghosting. Disable the runtime overlay when `visual.textOnly !== true`.

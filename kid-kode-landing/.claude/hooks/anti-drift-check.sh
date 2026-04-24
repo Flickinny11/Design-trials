@@ -12,6 +12,22 @@ input=$(cat)
 file_path=$(printf '%s' "$input" | /usr/bin/python3 -c 'import sys,json; d=json.load(sys.stdin); print((d.get("tool_input") or {}).get("file_path") or "")')
 content=$(printf '%s' "$input" | /usr/bin/python3 -c 'import sys,json; d=json.load(sys.stdin); ti=d.get("tool_input") or {}; print(ti.get("content") or ti.get("new_string") or "")')
 
+# Editor-genericity check: writes to src/components/editor/** must NOT hardcode
+# mock-app-specific nodeIds. Keeps the editor reusable across hubs/apps.
+case "$file_path" in
+  */src/components/editor/*.ts|*/src/components/editor/*.tsx|*/src/components/editor/**/*.ts|*/src/components/editor/**/*.tsx)
+    if printf '%s' "$content" | grep -qE '"(hero-card-|navbar-(logo|link|signin|bg)|feature-card-|footer-(bg|logo|link|social|copyright)|stats-(card|live)|settings-section|notifications-toggle|theme-selector|hero-section|feature-grid|page-background)' ; then
+      if ! printf '%s' "$content" | grep -q 'ALLOWED-HARDCODED-ID'; then
+        printf '\n=== ANTI-DRIFT BLOCK — editor genericity ===\n' >&2
+        printf 'File: %s\n' "$file_path" >&2
+        printf '  - FORBIDDEN: hardcoded mock-app nodeId string literal in editor code. Editor must drive off window.__prism.graph.nodes generically. Add // ALLOWED-HARDCODED-ID: <reason> if intentional.\n' >&2
+        exit 2
+      fi
+    fi
+    exit 0
+    ;;
+esac
+
 # Only scan prism runtime/build code. Mock app source JSON + notes + docs allowed unrestricted.
 case "$file_path" in
   */src/lib/prism/player/*|*/src/lib/prism/artifact/*|*/src/lib/prism/local-backend/*|*/src/lib/prism/shr/*|*/src/components/prism-player/*|*/src/lib/prism/mock-app-source/nodes/*|*/src/lib/prism/mock-app-source/backends/*|*/src/lib/prism/mock-app-source/assets/*.mjs|*/src/lib/prism/mock-app-source/build-prism.mjs)
