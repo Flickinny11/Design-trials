@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T15:26:30Z",
+  "updatedAt": "2026-04-24T15:31:18Z",
   "currentIteration": 2,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -22,9 +22,11 @@
       "id": "T-SWAP-02",
       "title": "Write segment-video.mjs (SAM 3 w/ concrete-noun prompts, save RLE)",
       "specRefs": ["§-IMAGE-TO-UI"],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Pattern from scripts/segment-scifi.mjs. Use fal-ai/sam-3/image-rle with include_boxes:true and concrete nouns ONLY (button, card, icon, input, video tile, bar, panel). Save RLE masks to notes/mockup-candidates/ai-video-mockup.sam.json. Do NOT try abstract terms (text, heading, link) — they fail. Cost: ~$0.005 per call."
+      "commit": "479546be04740f437c80f8adbb4e021e382eb822",
+      "verifiedAt": "2026-04-24T15:31:18Z",
+      "notes": "DONE. Script at scripts/segment-video.mjs uses fal-ai/sam-3/image-rle with 11 concrete-noun prompts (bar, pill, button, tile, card, frame, panel, icon, input, thumbnail, logo) covering nav/hero-CTA/4-tile row/footer/social-icons. Reads notes/mockup-candidates/ai-video-mockup.png; writes notes/mockup-candidates/ai-video-mockup.sam.json. Include_boxes+scores+rle captured. verify:prism 15/15, browser-smoke 6/6, T-SWAP-02 test OK. SHOULD FIX for downstream iterations (from spec-reviewer): (a) output JSON's `mockup` field stores ABSOLUTE local path — sibling segment-scifi.mjs uses repo-relative; makes sam.json non-portable across machines; T-SWAP-03/04 readers should tolerate or T-SWAP-06 normalize; (b) `input` prompt is speculative — AETHER mockup has no form inputs; likely drops junk boxes into the overlay (T-SWAP-03); consider dropping or keep and document; (c) `logo` borderline functional — CLAUDE.md FAL prompt rules warn against functional nouns (wordmark is in the test's forbidden list); shape-noun `emblem` would be safer; (d) no throttling/retry between 11 sequential fal.subscribe calls — transient 429 silently drops a mask (console.error, no non-zero exit); add sleep(250ms) or 1-retry wrapper; (e) `rle: Array.isArray(rle) ? rle[i] : (i === 0 ? rle : null)` silently loses rle past index 0 when API returns single-rle payload; prefer explicit guard + console.warn; (f) test's prompt-extraction regex is file-wide (could match `prompt:` in comments); scope to PROMPTS array via AST-lite walk; (g) FORBIDDEN_ABSTRACT list in test omits 'cta' while CTA-zone check permits it — reconcile; (h) log padEnd(10) hardcoded; use Math.max of keys. OPTIONAL: elevate coverage-intent comment to ZONE_MAP const for T-SWAP-04 reuse; align env loading with provision-assets. Note: scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked from T-SWAP-01 — belong in Phase G cleanup task."
     },
     {
       "id": "T-SWAP-03",
@@ -188,7 +190,8 @@
     }
   ],
   "history": [
-    { "iteration": 1, "taskId": "T-SWAP-01", "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6", "verifiedAt": "2026-04-24T15:20:39Z" }
+    { "iteration": 1, "taskId": "T-SWAP-01", "commit": "f4efc95ba475fd70347970937c862e1e3ea53fa6", "verifiedAt": "2026-04-24T15:20:39Z" },
+    { "iteration": 2, "taskId": "T-SWAP-02", "commit": "479546be04740f437c80f8adbb4e021e382eb822", "verifiedAt": "2026-04-24T15:31:18Z" }
   ],
   "historyArchive": [
     { "iteration": 1, "taskId": "T00", "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db", "verifiedAt": "2026-04-22T14:59:03Z" },
@@ -216,7 +219,7 @@
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 0,
+      "used": 2,
       "cap": 30,
       "status": "active"
     },
