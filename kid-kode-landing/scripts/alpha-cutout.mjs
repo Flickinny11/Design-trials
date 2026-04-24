@@ -32,12 +32,15 @@ const repoRoot = resolve(__dirname, '..');
 const baseDir = process.env.CUTOUT_DIR
   ?? resolve(repoRoot, 'src/lib/prism/mock-app-source/assets/source-images/cropped');
 
-// Skip — node IDs whose crops must stay opaque (they're backdrops, not
-// silhouette elements). Only 'page-background' is load-bearing here; the
-// legacy section-bg names are kept so re-running against the older base/
-// dir (`CUTOUT_DIR=...base`) doesn't eat those atmospheric backdrops.
-const SKIP = new Set([
-  'page-background',
+// page-background (opaque slate backdrop) is ALWAYS skipped per CLAUDE.md
+// §-IMAGE-TO-UI "Alpha-cutout discipline": per-node crops composite on top.
+const ALWAYS_SKIP = new Set(['page-background']);
+
+// Legacy section-bg IDs — atmospheric backdrops specific to the older
+// base/-dir sci-fi mockup. Only skipped when the target dir is the legacy
+// base/ layout; under the new AETHER cropped/ default, `navbar-bg` is the
+// nav PILL crop and MUST have its slate halo cut (not skipped).
+const LEGACY_BASE_SKIP = new Set([
   'navbar-bg',
   'hero-section-bg',
   'feature-grid-section-bg',
@@ -45,30 +48,39 @@ const SKIP = new Set([
   'footer-bg',
   'hero-card-bg',
 ]);
+const isLegacyBaseDir = /(^|[\\/])base$/.test(baseDir);
+const SKIP = isLegacyBaseDir
+  ? new Set([...ALWAYS_SKIP, ...LEGACY_BASE_SKIP])
+  : ALWAYS_SKIP;
 
-// Default luminance thresholds. Per-run overrides via LOW_OVERRIDE / HIGH_OVERRIDE.
-const LOW = process.env.LOW_OVERRIDE !== undefined
-  ? Number(process.env.LOW_OVERRIDE)
-  : 18;
-const HIGH = process.env.HIGH_OVERRIDE !== undefined
-  ? Number(process.env.HIGH_OVERRIDE)
-  : 55;
-
-if (!Number.isFinite(LOW) || !Number.isFinite(HIGH) || LOW > HIGH) {
-  throw new Error(
-    `[cutout] invalid LOW/HIGH thresholds: LOW=${LOW} HIGH=${HIGH} (expect 0..255, LOW <= HIGH)`,
-  );
+// Per-run threshold overrides (LOW_OVERRIDE / HIGH_OVERRIDE). Empty-string or
+// unset → fallback. Non-numeric / out-of-range values fail loud rather than
+// silently coercing to 0 or NaN.
+function parseThreshold(envVal, fallback, name) {
+  if (envVal === undefined || envVal.trim() === '') return fallback;
+  const n = Number(envVal);
+  if (!Number.isFinite(n) || n < 0 || n > 255) {
+    throw new Error(
+      `[cutout] invalid ${name}="${envVal}" — expect numeric 0..255`,
+    );
+  }
+  return n;
+}
+const LOW = parseThreshold(process.env.LOW_OVERRIDE, 18, 'LOW_OVERRIDE');
+const HIGH = parseThreshold(process.env.HIGH_OVERRIDE, 55, 'HIGH_OVERRIDE');
+if (LOW > HIGH) {
+  throw new Error(`[cutout] LOW (${LOW}) must be <= HIGH (${HIGH})`);
 }
 
-const files = readdirSync(baseDir).filter((f) => f.endsWith('.png'));
-let processed = 0, skipped = 0;
+const files = readdirSync(baseDir).filter((f) => f.endsWith('.png')).sort();
+let processed = 0, skippedBackdrop = 0, skippedTiny = 0;
 for (const f of files) {
   const nodeId = f.replace(/\.png$/, '');
-  if (SKIP.has(nodeId)) { skipped++; continue; }
+  if (SKIP.has(nodeId)) { skippedBackdrop++; continue; }
   const path = join(baseDir, f);
 
   const { data, info } = await sharp(path).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  if (info.width < 3 || info.height < 3) { skipped++; continue; }  // tiny placeholder
+  if (info.width < 3 || info.height < 3) { skippedTiny++; continue; }  // tiny placeholder
 
   const px = info.width * info.height;
   const out = Buffer.alloc(px * 4);
@@ -85,6 +97,6 @@ for (const f of files) {
   processed++;
 }
 console.log(
-  `[cutout] processed ${processed} crops, skipped ${skipped} (backgrounds/tiny) — ` +
+  `[cutout] processed ${processed}, skipped ${skippedBackdrop} backdrop + ${skippedTiny} tiny — ` +
   `LOW=${LOW} HIGH=${HIGH} dir=${baseDir}`,
 );

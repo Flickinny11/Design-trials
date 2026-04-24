@@ -111,7 +111,10 @@ try {
   const origPageBg = readFileSync(pageBgPath);
 
   // mixed-lum fixture: dark surround (lum ~5) + bright center (lum ~200).
-  const mixedPath = join(fixtureDir, 'some-node.png');
+  // Replicated under two nodeIds so we can lock in that navbar-bg — which
+  // WAS silently skipped pre-MUST-FIX — is now treated as a per-node crop
+  // under the new cropped/ default (legacy section-bg skips only apply to
+  // the legacy base/ dir).
   const W = 32,
     H = 32;
   const raw = Buffer.alloc(W * H * 4);
@@ -126,9 +129,14 @@ try {
       raw[i + 3] = 255;
     }
   }
+  const mixedPath = join(fixtureDir, 'some-node.png');
+  const navbarBgPath = join(fixtureDir, 'navbar-bg.png');
   await sharp(raw, { raw: { width: W, height: H, channels: 4 } })
     .png()
     .toFile(mixedPath);
+  await sharp(raw, { raw: { width: W, height: H, channels: 4 } })
+    .png()
+    .toFile(navbarBgPath);
 
   // Run default thresholds.
   const run = spawnSync('node', [scriptPath], {
@@ -161,6 +169,16 @@ try {
     mixedOut[centerIdx],
     255,
     `bright center of mixed-lum crop should be alpha 255 under defaults (was ${mixedOut[centerIdx]})`,
+  );
+
+  // navbar-bg must NOT be silently skipped against a non-legacy target dir
+  // (the AETHER cropped/ default). Pre-MUST-FIX this key lived in SKIP and
+  // left the nav-pill slate halo uncut.
+  const navbarOut = await sharp(navbarBgPath).ensureAlpha().raw().toBuffer();
+  assert.equal(
+    navbarOut[cornerAlphaIdx],
+    0,
+    `navbar-bg.png must be processed (alpha cutout) under the default cropped/ dir, not silently skipped — was alpha ${navbarOut[cornerAlphaIdx]}`,
   );
 
   // 8. Re-create the mixed fixture and run with extreme overrides —
