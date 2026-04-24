@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:46:07Z",
+  "updatedAt": "2026-04-24T16:58:27Z",
   "currentIteration": 7,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -87,9 +87,11 @@
         "§1.4",
         "§10.19"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "npm run build:prism → npm run verify:prism (15/15) → node scripts/browser-smoke.mjs (6/6). Fix any drift before proceeding. artifactHash must be reproducible across two consecutive builds."
+      "commit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4",
+      "verifiedAt": "2026-04-24T16:58:27Z",
+      "notes": "DONE. build-atlas.mjs now globs cropped/*.png and classifies them with literal 'cropped/<basename>.png' assetKeys matching the home-hub.json visual.sourceAsset strings post T-SWAP-06; a synthesizer at the end of main() appends 2×2 transparent in-memory regions for every graph node whose sourceAsset starts with 'cropped/' but has no matching file on disk (the 30 invisible-placeholder nodes from T-SWAP-06, all with transform (-1,-1,2,2) per CLAUDE.md §-IMAGE-TO-UI). build-prism.mjs strips the 'cropped/' prefix + '.png' suffix from `asset` before forming per-state lookup keys so `notifications-toggle`'s regionKeys resolve against states/ (`notifications-toggle-off`, `notifications-toggle-on`) unchanged. Atlas region count 68→130 (32 real cropped + 30 synth placeholders + 24 frames + 2 states + 2 overlays + 40 legacy base retained for back-compat; legacy base regions are orphans today but not referenced by the hub). Rebuilt artifacts: atlas-0.avif 987748 B, bin utilization 37.3%, artifactHash 8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6 reproducible across two consecutive builds. verify:prism 15/15, browser-smoke 6/6, T-SWAP-07 test OK (includes zero-orphans + §3.1/§10.19 layout + determinism under VERIFY_BUILD_REPRODUCIBILITY=1). Spec-reviewer: no deviations found. SHOULD FIX carried forward to downstream: (a) all 30 synthesized placeholders share one identical hash in atlas-regions.json — per-region `hash` no longer uniquely identifies content; hash `assetKey` into the placeholder hash for uniqueness; (b) build-atlas synthesizer runs two sequential sharp pipelines (PNG → raw) for a 2×2 buffer — single `sharp({create:...}).raw().ensureAlpha().toBuffer({resolveWithObject:true})` avoids the PNG round-trip; (c) the `cropped/`-strip transform is duplicated in build-atlas classifySource + build-prism stateKey — lift into scripts/lib/asset-key.mjs before the next source-dir addition drifts the two sites apart; (d) CLAUDE.md `All commits that change source must also touch notes/prism-mock-progress.md` — this impl commit did not; the progress-log touch lands in step-12's separate commit per Ralph convention, but enforcement could graduate to MUST FIX if that step is ever skipped; (e) manifest.createdAt and meta/generator.json.builtAt both embed fresh timestamps per build — `artifactHash` excludes them (neither is in entries[]) so the contracted reproducibility holds, but full-zip byte-determinism is blocked by these two fields if §10.19 ever demands that stricter invariant. OPTIONAL (from spec-reviewer): (f) log-line punctuation style inconsistency in build-atlas; (g) mirror the per-dir assetKey-shape comment block from build-atlas into build-prism so state-key strip logic is navigable without round-tripping files; (h) `n.visual?.sourceAsset ?? n.nodeId` fallback in the synthesizer's loop is dead code given the `cropped/` prefix guard rejects nodeId-only values — drop the ?? branch. Phase-G housekeeping note (carried from T-SWAP-01..06): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-SWAP-08",
@@ -278,6 +280,12 @@
       "taskId": "T-SWAP-06",
       "commit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f",
       "verifiedAt": "2026-04-24T16:42:37Z"
+    },
+    {
+      "iteration": 7,
+      "taskId": "T-SWAP-07",
+      "commit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4",
+      "verifiedAt": "2026-04-24T16:58:27Z"
     }
   ],
   "historyArchive": [
@@ -376,12 +384,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 6,
-    "lastProductiveCommit": "db45f2e95ff0380cf04b9f259fc968e249730165"
+    "lastProductiveIteration": 7,
+    "lastProductiveCommit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 6,
+      "used": 7,
       "cap": 30,
       "status": "active"
     },
@@ -397,14 +405,14 @@
     }
   },
   "checkpoint": {
-    "iteration": 6,
-    "commit": "db45f2e95ff0380cf04b9f259fc968e249730165",
-    "verifiedAt": "2026-04-24T16:45:40Z",
-    "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T16:45:40Z"
+    "iteration": 7,
+    "commit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4",
+    "verifiedAt": "2026-04-24T16:58:27Z",
+    "artifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6",
+    "recordedAt": "2026-04-24T16:58:27Z"
   },
   "invariants": {
-    "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
+    "lastArtifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6"
   },
   "resumeFrom": null,
   "breakpoints": []
