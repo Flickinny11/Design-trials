@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:31:30Z",
+  "updatedAt": "2026-04-24T16:42:37Z",
   "currentIteration": 6,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
@@ -74,9 +74,11 @@
       "specRefs": [
         "§-IMAGE-TO-UI"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "Update hub.layout { viewportWidth, contentHeight } to the Gemini image dimensions. For each node: visual.sourceAsset = cropped/<nodeId>.png, visual.x/y/width/height set from the BBOX map, remove stale Phase-F state-variant regionKeys (except notifications-toggle). Nodes absent from the mockup get the invisible placeholder pattern: 2×2 transparent PNG at (−1,−1)."
+      "commit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f",
+      "verifiedAt": "2026-04-24T16:42:37Z",
+      "notes": "DONE. scripts/patch-home-hub-for-mockup.mjs — surgical, idempotent, env-overridable (HOME_HUB_JSON / BBOX_JSON) migration that (a) sets hub.layout.viewportWidth=2816 + contentHeight=1536 from notes/mockup-candidates/ai-video-bbox-map.json (viewportHeight + backgroundColor preserved); (b) rewrites every node's visual.sourceAsset to literal 'cropped/<nodeId>.png'; (c) for 10 BBOX-matched nodeIds (page-background, navbar-bg, navbar-logo, navbar-link-pricing, footer-link-{privacy,terms,contact}, footer-social-{twitter,discord}, footer-copyright-text) sets transform.x/y/width/height from BBOX while preserving transform.z; (d) for the other 30 nodes sets transform={x:-1,y:-1,width:2,height:2,z:preserved} — the invisible-placeholder pattern from CLAUDE.md; (e) strips visual.regionKeys on every node except notifications-toggle (0 stripped today — already clean from Phase-F; code retained for idempotency). Output is deterministic 2-space JSON + LF trailing newline. verify:prism 15/15, browser-smoke 6/6, T-SWAP-06 test OK. Spec-reviewer: no MUST FIX. SHOULD FIX carried forward to T-SWAP-07/downstream: (a) build-atlas.mjs classifySource currently keys on base/ states/ overlays/ frames/ dirs and looks up node.visual.sourceAsset verbatim — 'cropped/<id>.png' literals need either a new cropped/ branch in classifySource OR build-atlas should strip the 'cropped/' prefix + '.png' suffix when building nodesByAsset (build-atlas.mjs:70 + build-prism.mjs:44 both read sourceAsset flatly); (b) 30 placeholder-node sourceAssets reference cropped/<id>.png files that do not exist on disk (only the 32 BBOX-keyed PNGs are in source-images/cropped/, 22 of those BBOX PNGs still unused by any node); consider a shared cropped/_placeholder.png (real 2×2 transparent PNG) matched by placeholders, matches CLAUDE.md wording more literally; T-SWAP-07 can either synthesize the 30 placeholder PNGs OR switch placeholder sourceAsset to a shared path; (c) intent.visualSpec.sourceAsset retained the bare-id form (e.g. 'page-background') while visual.sourceAsset moved to 'cropped/page-background.png' — asymmetry is harmless today (grep confirms no consumer reads intent.visualSpec.sourceAsset) but should be reconciled or documented; (d) theme-selector-button retains orphan defaultRegion='default' with no regionKeys — strip symmetrically when cleaning Phase-F state-variant fields; (e) acceptance test asserts transform.z is present+non-negative but not that it equals the pre-patch value — a regression that clobbered z to 0 would still pass; tighten with a pre-patch z snapshot or spot-check layers {0,40,49,50,51,100,101}; (f) acceptance test REQUIRED_NODE_FIELDS omits backendRef and visual.shape/overlayRegions/frameCount — a regression stripping visual.overlayRegions from hero-card-cta or navbar-signin-btn would pass today; tighten preservation assertions; (g) acceptance test could also assert the exact 10/30 matched/placeholder partition to lock the mockup↔graph mapping. OPTIONAL: (h) PLACEHOLDER literal {-1,-1,2,2} could share with TINY in extract-video.mjs via scripts/lib/placeholder.mjs; (i) writeFileSync UTF-8 encoding + LF lock-in for Windows autocrlf defense; (j) console.log leading tag to match sibling script style. Phase-G housekeeping note (carried from T-SWAP-01..05): scifi-mockup-v2/v3.png + generate-mockup-v2/v3.mjs still untracked in working tree — belong in Phase-G cleanup task (not this one)."
     },
     {
       "id": "T-SWAP-07",
@@ -270,6 +272,12 @@
       "taskId": "T-SWAP-05",
       "commit": "dd56dca6c586f300cb491ab20a1c7024190b79ef",
       "verifiedAt": "2026-04-24T16:28:17Z"
+    },
+    {
+      "iteration": 6,
+      "taskId": "T-SWAP-06",
+      "commit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f",
+      "verifiedAt": "2026-04-24T16:42:37Z"
     }
   ],
   "historyArchive": [
@@ -368,12 +376,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "021f1ab72e13f9b9021bc0a6aaba1d4b0eb1515e"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
-      "used": 5,
+      "used": 6,
       "cap": 30,
       "status": "active"
     },
@@ -389,11 +397,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 5,
-    "commit": "021f1ab72e13f9b9021bc0a6aaba1d4b0eb1515e",
-    "verifiedAt": "2026-04-24T16:30:43Z",
+    "iteration": 6,
+    "commit": "2dbf2b3fda086917c38df1d5c40cc96cff0d7f9f",
+    "verifiedAt": "2026-04-24T16:42:37Z",
     "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-24T16:30:43Z"
+    "recordedAt": "2026-04-24T16:42:37Z"
   },
   "invariants": {
     "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
