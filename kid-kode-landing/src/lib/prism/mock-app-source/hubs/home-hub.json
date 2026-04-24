@@ -4,9 +4,9 @@
     "hubId": "home-hub",
     "title": "Kriptik — Home",
     "layout": {
-      "viewportWidth": 1536,
+      "viewportWidth": 2816,
       "viewportHeight": 864,
-      "contentHeight": 2048,
+      "contentHeight": 1536,
       "backgroundColor": "#0a0a12"
     }
   },
@@ -17,12 +17,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "page-background",
+        "sourceAsset": "cropped/page-background.png",
         "transform": {
           "x": 0,
           "y": 0,
-          "width": 1536,
-          "height": 2048,
+          "width": 2816,
+          "height": 1536,
           "z": 0
         },
         "shape": "rect"
@@ -63,12 +63,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-bg",
+        "sourceAsset": "cropped/navbar-bg.png",
         "transform": {
-          "x": 0,
-          "y": 0,
-          "width": 1536,
-          "height": 400,
+          "x": 530,
+          "y": 120,
+          "width": 1990,
+          "height": 115,
           "z": 100
         },
         "shape": "rect"
@@ -102,12 +102,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-logo",
+        "sourceAsset": "cropped/navbar-logo.png",
         "transform": {
-          "x": 75,
-          "y": 61,
-          "width": 270,
-          "height": 325,
+          "x": 570,
+          "y": 135,
+          "width": 470,
+          "height": 90,
           "z": 101
         },
         "shape": "circle"
@@ -162,12 +162,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-home",
+        "sourceAsset": "cropped/navbar-link-home.png",
         "transform": {
-          "x": 417,
-          "y": 55,
-          "width": 142,
-          "height": 306,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 101
         },
         "shape": "rounded",
@@ -223,12 +223,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-editor",
+        "sourceAsset": "cropped/navbar-link-editor.png",
         "transform": {
-          "x": 668,
-          "y": 52,
-          "width": 154,
-          "height": 297,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 101
         },
         "shape": "rounded",
@@ -285,12 +285,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-docs",
+        "sourceAsset": "cropped/navbar-link-docs.png",
         "transform": {
-          "x": 943,
-          "y": 58,
-          "width": 154,
-          "height": 295,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 101
         },
         "shape": "rounded",
@@ -347,12 +347,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-pricing",
+        "sourceAsset": "cropped/navbar-link-pricing.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 1885,
+          "y": 140,
+          "width": 180,
+          "height": 55,
           "z": 101
         },
         "shape": "rounded",
@@ -409,16 +409,16 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-signin-btn",
+        "sourceAsset": "cropped/navbar-signin-btn.png",
         "overlayRegions": [
           "glow-pulse",
           "shimmer"
         ],
         "transform": {
-          "x": 1226,
-          "y": 51,
-          "width": 156,
-          "height": 297,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 101
         },
         "shape": "pill"
@@ -474,13 +474,13 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-section-bg",
+        "sourceAsset": "cropped/hero-section-bg.png",
         "frameCount": 24,
         "transform": {
-          "x": 0,
-          "y": 380,
-          "width": 1536,
-          "height": 780,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 49
         },
         "shape": "rect"
@@ -519,12 +519,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-card-bg",
+        "sourceAsset": "cropped/hero-card-bg.png",
         "transform": {
-          "x": 106,
-          "y": 393,
-          "width": 1328,
-          "height": 742,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 50
         },
         "shape": "rounded",
@@ -561,7 +561,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-card-headline-text",
+        "sourceAsset": "cropped/hero-card-headline-text.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -601,7 +601,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-card-subhead-text",
+        "sourceAsset": "cropped/hero-card-subhead-text.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -642,16 +642,16 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-card-cta",
+        "sourceAsset": "cropped/hero-card-cta.png",
         "overlayRegions": [
           "glow-pulse",
           "shimmer"
         ],
         "transform": {
-          "x": 686,
-          "y": 893,
-          "width": 142,
-          "height": 144,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "pill"
@@ -717,12 +717,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-grid-section-bg",
+        "sourceAsset": "cropped/feature-grid-section-bg.png",
         "transform": {
-          "x": 0,
-          "y": 1070,
-          "width": 1536,
-          "height": 550,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 40
         },
         "shape": "rect"
@@ -756,12 +756,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-1-bg",
+        "sourceAsset": "cropped/feature-card-1-bg.png",
         "transform": {
-          "x": 80,
-          "y": 1100,
-          "width": 390,
-          "height": 400,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -801,12 +801,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-1-icon",
+        "sourceAsset": "cropped/feature-card-1-icon.png",
         "transform": {
-          "x": 130,
-          "y": 1160,
-          "width": 260,
-          "height": 280,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "circle"
@@ -840,7 +840,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-1-title",
+        "sourceAsset": "cropped/feature-card-1-title.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -880,7 +880,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-1-desc",
+        "sourceAsset": "cropped/feature-card-1-desc.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -921,12 +921,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-2-bg",
+        "sourceAsset": "cropped/feature-card-2-bg.png",
         "transform": {
-          "x": 540,
-          "y": 1100,
-          "width": 400,
-          "height": 400,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -966,12 +966,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-2-icon",
+        "sourceAsset": "cropped/feature-card-2-icon.png",
         "transform": {
-          "x": 600,
-          "y": 1170,
-          "width": 270,
-          "height": 270,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "circle"
@@ -1005,7 +1005,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-2-title",
+        "sourceAsset": "cropped/feature-card-2-title.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1045,7 +1045,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-2-desc",
+        "sourceAsset": "cropped/feature-card-2-desc.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1086,12 +1086,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-3-bg",
+        "sourceAsset": "cropped/feature-card-3-bg.png",
         "transform": {
-          "x": 1020,
-          "y": 1100,
-          "width": 400,
-          "height": 400,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 41
         },
         "shape": "rounded",
@@ -1131,12 +1131,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-3-icon",
+        "sourceAsset": "cropped/feature-card-3-icon.png",
         "transform": {
-          "x": 1070,
-          "y": 1160,
-          "width": 300,
-          "height": 300,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 42
         },
         "shape": "circle"
@@ -1170,7 +1170,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-3-title",
+        "sourceAsset": "cropped/feature-card-3-title.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1210,7 +1210,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "feature-card-3-desc",
+        "sourceAsset": "cropped/feature-card-3-desc.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1251,12 +1251,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "settings-section-bg",
+        "sourceAsset": "cropped/settings-section-bg.png",
         "transform": {
-          "x": 0,
-          "y": 1700,
-          "width": 1536,
-          "height": 348,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 50
         },
         "shape": "rect"
@@ -1290,17 +1290,17 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "notifications-toggle",
+        "sourceAsset": "cropped/notifications-toggle.png",
         "regionKeys": [
           "off",
           "on"
         ],
         "defaultRegion": "off",
         "transform": {
-          "x": 400,
-          "y": 1770,
-          "width": 360,
-          "height": 260,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "pill"
@@ -1368,13 +1368,13 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "theme-selector-button",
+        "sourceAsset": "cropped/theme-selector-button.png",
         "defaultRegion": "default",
         "transform": {
-          "x": 780,
-          "y": 1770,
-          "width": 360,
-          "height": 260,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "pill"
@@ -1454,12 +1454,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "stats-card-bg",
+        "sourceAsset": "cropped/stats-card-bg.png",
         "transform": {
-          "x": 540,
-          "y": 1570,
-          "width": 450,
-          "height": 250,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 50
         },
         "shape": "rounded",
@@ -1494,12 +1494,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "stats-live-counter",
+        "sourceAsset": "cropped/stats-live-counter.png",
         "transform": {
-          "x": 686,
-          "y": 1620,
-          "width": 145,
-          "height": 155,
+          "x": -1,
+          "y": -1,
+          "width": 2,
+          "height": 2,
           "z": 51
         },
         "shape": "rounded",
@@ -1566,7 +1566,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-bg",
+        "sourceAsset": "cropped/footer-bg.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1605,7 +1605,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-logo",
+        "sourceAsset": "cropped/footer-logo.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1665,12 +1665,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-link-privacy",
+        "sourceAsset": "cropped/footer-link-privacy.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 420,
+          "y": 1390,
+          "width": 130,
+          "height": 40,
           "z": 41
         },
         "shape": "rounded",
@@ -1726,12 +1726,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-link-terms",
+        "sourceAsset": "cropped/footer-link-terms.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 560,
+          "y": 1390,
+          "width": 100,
+          "height": 40,
           "z": 41
         },
         "shape": "rounded",
@@ -1787,12 +1787,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-link-contact",
+        "sourceAsset": "cropped/footer-link-contact.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 750,
+          "y": 1390,
+          "width": 130,
+          "height": 40,
           "z": 41
         },
         "shape": "rounded",
@@ -1848,12 +1848,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-social-twitter",
+        "sourceAsset": "cropped/footer-social-twitter.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 2040,
+          "y": 1385,
+          "width": 70,
+          "height": 55,
           "z": 41
         },
         "shape": "circle",
@@ -1900,7 +1900,7 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-social-github",
+        "sourceAsset": "cropped/footer-social-github.png",
         "transform": {
           "x": -1,
           "y": -1,
@@ -1952,12 +1952,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-social-discord",
+        "sourceAsset": "cropped/footer-social-discord.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 1955,
+          "y": 1385,
+          "width": 70,
+          "height": 55,
           "z": 41
         },
         "shape": "circle",
@@ -2004,12 +2004,12 @@
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "footer-copyright-text",
+        "sourceAsset": "cropped/footer-copyright-text.png",
         "transform": {
-          "x": -1,
-          "y": -1,
-          "width": 2,
-          "height": 2,
+          "x": 415,
+          "y": 1455,
+          "width": 545,
+          "height": 35,
           "z": 41
         },
         "shape": "rounded",
