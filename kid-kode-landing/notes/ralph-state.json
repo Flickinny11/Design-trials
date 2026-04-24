@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-24T16:58:27Z",
-  "currentIteration": 7,
+  "updatedAt": "2026-04-24T17:03:36Z",
+  "currentIteration": 8,
   "maxIterations": 150,
   "maxAttemptsPerTask": 3,
   "status": "running",
@@ -99,8 +99,8 @@
       "specRefs": [
         "§10.24"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": "git commit + push prism-main, wait for Vercel deploy, then node scripts/live-modes-smoke.mjs against the production URL — all 8 checks must pass. If the deploy 500s transiently, empty-commit retrigger."
     },
     {
@@ -385,7 +385,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 7,
-    "lastProductiveCommit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4"
+    "lastProductiveCommit": "b915e744585c42716d7ffbb8e01111f28e2aee4a"
   },
   "phaseCaps": {
     "§-IMAGE-TO-UI": {
@@ -402,14 +402,19 @@
       "used": 0,
       "cap": 30,
       "status": "active"
+    },
+    "§1": {
+      "used": 1,
+      "cap": 30,
+      "status": "active"
     }
   },
   "checkpoint": {
     "iteration": 7,
-    "commit": "d6ef8d7d31523ef261e17cab2917bf40d35d36b4",
-    "verifiedAt": "2026-04-24T16:58:27Z",
+    "commit": "b915e744585c42716d7ffbb8e01111f28e2aee4a",
+    "verifiedAt": "2026-04-24T17:00:42Z",
     "artifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6",
-    "recordedAt": "2026-04-24T16:58:27Z"
+    "recordedAt": "2026-04-24T17:00:42Z"
   },
   "invariants": {
     "lastArtifactHash": "8d5b6752f650df5f34325071d589bfb5b43c3112808912f1baf51c234c5ffcf6"
