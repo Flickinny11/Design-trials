@@ -12,13 +12,13 @@
 // The routing table is passed in rather than derived — boot.ts owns the
 // mapping from source node → section (since it knows the current hub graph).
 
-import type { EventBus } from './event-bus';
-import type { ScrollViewport } from './scroll-viewport';
+import type { EventBus } from "./event-bus";
+import type { ScrollViewport } from "./scroll-viewport";
 
 export interface HubRoute {
-  sourceNodeId: string;        // e.g. 'navbar-link-editor'
-  scrollY: number;             // content-space y to scroll to
-  sectionId: string;           // logical section id ('home', 'hero', ...)
+  sourceNodeId: string; // e.g. 'navbar-link-editor'
+  scrollY: number; // content-space y to scroll to
+  sectionId: string; // logical section id ('home', 'hero', ...)
   activeNavLinkId: string | null; // which navbar-link to light up (null = none)
 }
 
@@ -46,14 +46,19 @@ export interface HubRouterOptions {
 }
 
 export function createHubRouter(opts: HubRouterOptions): HubRouter {
-  const routes = new Map<string, HubRoute>(opts.routes.map((r) => [r.sourceNodeId, r]));
+  const routes = new Map<string, HubRoute>(
+    opts.routes.map((r) => [r.sourceNodeId, r]),
+  );
   const duration = opts.duration ?? 0.8;
   let activeSectionId: string | null = opts.initialSectionId ?? null;
   let activeNavLinkId: string | null = opts.initialNavLinkId ?? null;
 
   function broadcastActive() {
-    const payload: ActiveSectionPayload = { sectionId: activeSectionId ?? '', activeNavLinkId };
-    opts.events.emit('active-section-changed', payload);
+    const payload: ActiveSectionPayload = {
+      sectionId: activeSectionId ?? "",
+      activeNavLinkId,
+    };
+    opts.events.emit("active-section-changed", payload);
   }
 
   function setActive(sectionId: string, navLinkId: string | null) {
@@ -66,7 +71,10 @@ export function createHubRouter(opts: HubRouterOptions): HubRouter {
     const route = routes.get(sourceNodeId);
     if (!route) return false;
     opts.viewport.scrollTo(route.scrollY, { duration });
-    if (activeSectionId !== route.sectionId || activeNavLinkId !== route.activeNavLinkId) {
+    if (
+      activeSectionId !== route.sectionId ||
+      activeNavLinkId !== route.activeNavLinkId
+    ) {
       activeSectionId = route.sectionId;
       activeNavLinkId = route.activeNavLinkId;
       broadcastActive();
@@ -74,9 +82,9 @@ export function createHubRouter(opts: HubRouterOptions): HubRouter {
     return true;
   }
 
-  const offNavigate = opts.events.on('navigate', (payload) => {
+  const offNavigate = opts.events.on("navigate", (payload) => {
     const source = (payload as { source?: unknown })?.source;
-    if (typeof source !== 'string') return;
+    if (typeof source !== "string") return;
     navigate(source);
   });
 
@@ -84,10 +92,16 @@ export function createHubRouter(opts: HubRouterOptions): HubRouter {
 
   return {
     routes,
-    get activeSectionId() { return activeSectionId; },
-    get activeNavLinkId() { return activeNavLinkId; },
+    get activeSectionId() {
+      return activeSectionId;
+    },
+    get activeNavLinkId() {
+      return activeNavLinkId;
+    },
     navigate,
     setActive,
-    destroy() { offNavigate(); },
+    destroy() {
+      offNavigate();
+    },
   };
 }

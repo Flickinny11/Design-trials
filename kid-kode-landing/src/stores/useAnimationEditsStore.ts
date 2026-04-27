@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 export interface FrameProps {
   scale: number;
@@ -21,7 +21,7 @@ export const defaultFrame = (i: number, total: number): FrameProps => {
     rotation: 0,
     x: 0,
     y: 0,
-    color: '#5d8bff',
+    color: "#5d8bff",
   };
 };
 
@@ -39,7 +39,11 @@ export interface NodeEdits {
 interface EditState {
   edits: Record<string, NodeEdits>;
   ensureNode: (nodeId: string, initialFrameCount: number) => void;
-  setFrame: (nodeId: string, frameIdx: number, patch: Partial<FrameProps>) => void;
+  setFrame: (
+    nodeId: string,
+    frameIdx: number,
+    patch: Partial<FrameProps>,
+  ) => void;
   setPrimary: (nodeId: string, color: string) => void;
   setSecondary: (nodeId: string, color: string) => void;
   reorderFrames: (nodeId: string, fromIdx: number, toIdx: number) => void;
@@ -56,7 +60,9 @@ export const useAnimationEditsStore = create<EditState>((set, get) => ({
         ...s.edits,
         [nodeId]: {
           nodeId,
-          frames: Array.from({ length: initialFrameCount }, (_, i) => defaultFrame(i, initialFrameCount)),
+          frames: Array.from({ length: initialFrameCount }, (_, i) =>
+            defaultFrame(i, initialFrameCount),
+          ),
           dirty: false,
         },
       },
@@ -75,12 +81,22 @@ export const useAnimationEditsStore = create<EditState>((set, get) => ({
   setPrimary: (nodeId, color) =>
     set((s) => {
       const existing = s.edits[nodeId] || { nodeId, frames: [], dirty: false };
-      return { edits: { ...s.edits, [nodeId]: { ...existing, primaryColor: color, dirty: true } } };
+      return {
+        edits: {
+          ...s.edits,
+          [nodeId]: { ...existing, primaryColor: color, dirty: true },
+        },
+      };
     }),
   setSecondary: (nodeId, color) =>
     set((s) => {
       const existing = s.edits[nodeId] || { nodeId, frames: [], dirty: false };
-      return { edits: { ...s.edits, [nodeId]: { ...existing, secondaryColor: color, dirty: true } } };
+      return {
+        edits: {
+          ...s.edits,
+          [nodeId]: { ...existing, secondaryColor: color, dirty: true },
+        },
+      };
     }),
   reorderFrames: (nodeId, fromIdx, toIdx) =>
     set((s) => {
@@ -89,7 +105,9 @@ export const useAnimationEditsStore = create<EditState>((set, get) => ({
       const frames = existing.frames.slice();
       const [moved] = frames.splice(fromIdx, 1);
       frames.splice(toIdx, 0, moved);
-      return { edits: { ...s.edits, [nodeId]: { ...existing, frames, dirty: true } } };
+      return {
+        edits: { ...s.edits, [nodeId]: { ...existing, frames, dirty: true } },
+      };
     }),
   reset: (nodeId) =>
     set((s) => {
@@ -100,7 +118,9 @@ export const useAnimationEditsStore = create<EditState>((set, get) => ({
           ...s.edits,
           [nodeId]: {
             ...existing,
-            frames: existing.frames.map((_, i) => defaultFrame(i, existing.frames.length)),
+            frames: existing.frames.map((_, i) =>
+              defaultFrame(i, existing.frames.length),
+            ),
             primaryColor: undefined,
             secondaryColor: undefined,
             dirty: false,

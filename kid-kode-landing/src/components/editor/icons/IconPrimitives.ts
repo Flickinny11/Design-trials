@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import * as THREE from 'three';
+import * as THREE from "three";
 
 // Custom 3D icon system using ExtrudeGeometry from SVG-like shapes.
 // All icons are 24-unit base size, authored to look good at tiny sizes too.
@@ -43,13 +43,16 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
   },
   user: (s) => {
     // head (circle)
-    const cx = 12, cy = 8, r = 4;
+    const cx = 12,
+      cy = 8,
+      r = 4;
     const segs = 32;
     for (let i = 0; i <= segs; i++) {
       const a = (i / segs) * Math.PI * 2;
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
-      if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+      if (i === 0) s.moveTo(x, y);
+      else s.lineTo(x, y);
     }
     // shoulders arc
     s.moveTo(4, 21);
@@ -85,12 +88,15 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
     s.bezierCurveTo(19, 18, 15, 20, 12, 20);
     s.bezierCurveTo(9, 20, 5, 18, 2, 12);
     // pupil circle
-    const cx = 12, cy = 12, r = 3;
+    const cx = 12,
+      cy = 12,
+      r = 3;
     for (let i = 0; i <= 32; i++) {
       const a = (i / 32) * Math.PI * 2;
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
-      if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+      if (i === 0) s.moveTo(x, y);
+      else s.lineTo(x, y);
     }
   },
   code: (s) => {
@@ -132,12 +138,15 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
   },
   search: (s) => {
     // magnifier circle
-    const cx = 10, cy = 10, r = 6;
+    const cx = 10,
+      cy = 10,
+      r = 6;
     for (let i = 0; i <= 32; i++) {
       const a = (i / 32) * Math.PI * 2;
       const x = cx + Math.cos(a) * r;
       const y = cy + Math.sin(a) * r;
-      if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+      if (i === 0) s.moveTo(x, y);
+      else s.lineTo(x, y);
     }
     // inner circle (cutout not supported here; skip)
     // handle
@@ -149,13 +158,17 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
   },
   snow: (s) => {
     // 6-point star
-    const cx = 12, cy = 12, R = 9, r = 3.4;
+    const cx = 12,
+      cy = 12,
+      R = 9,
+      r = 3.4;
     for (let i = 0; i <= 12; i++) {
       const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
       const rad = i % 2 === 0 ? R : r;
       const x = cx + Math.cos(a) * rad;
       const y = cy + Math.sin(a) * rad;
-      if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+      if (i === 0) s.moveTo(x, y);
+      else s.lineTo(x, y);
     }
   },
   close: (s) => {
@@ -197,12 +210,15 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
   },
   refresh: (s) => {
     // arc arrow
-    const cx = 12, cy = 12, R = 8;
+    const cx = 12,
+      cy = 12,
+      R = 8;
     for (let i = 0; i <= 28; i++) {
       const a = (i / 28) * Math.PI * 1.6 - Math.PI / 2;
       const x = cx + Math.cos(a) * R;
       const y = cy + Math.sin(a) * R;
-      if (i === 0) s.moveTo(x, y); else s.lineTo(x, y);
+      if (i === 0) s.moveTo(x, y);
+      else s.lineTo(x, y);
     }
     // inner
     for (let i = 28; i >= 0; i--) {
@@ -251,15 +267,27 @@ const ICONS: Record<string, (s: THREE.Shape) => void> = {
     s.lineTo(19, 15);
   },
   server: (s) => {
-    s.moveTo(3, 4); s.lineTo(21, 4); s.lineTo(21, 10); s.lineTo(3, 10); s.lineTo(3, 4);
-    s.moveTo(3, 12); s.lineTo(21, 12); s.lineTo(21, 18); s.lineTo(3, 18); s.lineTo(3, 12);
+    s.moveTo(3, 4);
+    s.lineTo(21, 4);
+    s.lineTo(21, 10);
+    s.lineTo(3, 10);
+    s.lineTo(3, 4);
+    s.moveTo(3, 12);
+    s.lineTo(21, 12);
+    s.lineTo(21, 18);
+    s.lineTo(3, 18);
+    s.lineTo(3, 12);
   },
 };
 
 export type IconName = keyof typeof ICONS;
 
 // Build an extruded 3D geometry from an icon shape.
-export function makeIconGeometry(name: string, depth = 3, bevel = 0.6): THREE.ExtrudeGeometry {
+export function makeIconGeometry(
+  name: string,
+  depth = 3,
+  bevel = 0.6,
+): THREE.ExtrudeGeometry {
   const shape = new THREE.Shape();
   const builder = ICONS[name] || ICONS.sparkle;
   builder(shape);
@@ -283,8 +311,8 @@ export function iconPath(name: string): string {
   const builder = ICONS[name] || ICONS.sparkle;
   builder(shape);
   const pts = shape.getPoints(64);
-  if (!pts.length) return '';
+  if (!pts.length) return "";
   let d = `M ${pts[0].x} ${pts[0].y}`;
   for (let i = 1; i < pts.length; i++) d += ` L ${pts[i].x} ${pts[i].y}`;
-  return d + ' Z';
+  return d + " Z";
 }

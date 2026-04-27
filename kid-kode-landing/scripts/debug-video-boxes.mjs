@@ -21,36 +21,43 @@
 //
 // Run: node scripts/debug-video-boxes.mjs
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import sharp from 'sharp';
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(__dirname, '..');
+const repoRoot = resolve(__dirname, "..");
 
-const samPath    = process.env.SAM_JSON    ?? resolve(repoRoot, 'notes/mockup-candidates/ai-video-mockup.sam.json');
-const mockupPath = process.env.MOCKUP_PNG  ?? resolve(repoRoot, 'notes/mockup-candidates/ai-video-mockup.png');
-const svgPath    = process.env.OVERLAY_SVG ?? resolve(repoRoot, 'notes/mockup-candidates/ai-video-mockup.overlay.svg');
+const samPath =
+  process.env.SAM_JSON ??
+  resolve(repoRoot, "notes/mockup-candidates/ai-video-mockup.sam.json");
+const mockupPath =
+  process.env.MOCKUP_PNG ??
+  resolve(repoRoot, "notes/mockup-candidates/ai-video-mockup.png");
+const svgPath =
+  process.env.OVERLAY_SVG ??
+  resolve(repoRoot, "notes/mockup-candidates/ai-video-mockup.overlay.svg");
 
-const sam = JSON.parse(readFileSync(samPath, 'utf8'));
+const sam = JSON.parse(readFileSync(samPath, "utf8"));
 const meta = await sharp(mockupPath).metadata();
-const MW = meta.width, MH = meta.height;
+const MW = meta.width,
+  MH = meta.height;
 
 // Per-key stroke palette — distinct, high-contrast hues so overlapping SAM keys stay
 // disambiguated in QA. Keys mirror PROMPTS in scripts/segment-video.mjs.
 const COLOR_BY_KEY = {
-  bar:       '#00ffff',
-  pill:      '#ff00ff',
-  button:    '#ffff00',
-  tile:      '#ff8800',
-  card:      '#ff0088',
-  frame:     '#00ff88',
-  panel:     '#8800ff',
-  icon:      '#ffffff',
-  input:     '#88ffff',
-  thumbnail: '#ff88ff',
-  logo:      '#88ff88',
+  bar: "#00ffff",
+  pill: "#ff00ff",
+  button: "#ffff00",
+  tile: "#ff8800",
+  card: "#ff0088",
+  frame: "#00ff88",
+  panel: "#8800ff",
+  icon: "#ffffff",
+  input: "#88ffff",
+  thumbnail: "#ff88ff",
+  logo: "#88ff88",
 };
 
 const rects = (sam.results ?? [])
@@ -68,19 +75,20 @@ const rects = (sam.results ?? [])
   })
   .sort((a, b) => (a.y === b.y ? a.x - b.x : a.y - b.y));
 
-const mockupDataUri = `data:image/png;base64,${readFileSync(mockupPath).toString('base64')}`;
+const mockupDataUri = `data:image/png;base64,${readFileSync(mockupPath).toString("base64")}`;
 
 const body = rects
   .map((r, idx) => {
-    const color = COLOR_BY_KEY[r.key] ?? '#ff0000';
-    const scoreStr = typeof r.score === 'number' ? ` ${r.score.toFixed(2)}` : '';
+    const color = COLOR_BY_KEY[r.key] ?? "#ff0000";
+    const scoreStr =
+      typeof r.score === "number" ? ` ${r.score.toFixed(2)}` : "";
     const label = `${idx}: ${r.key} ${Math.round(r.w)}x${Math.round(r.h)}${scoreStr}`;
     return [
       `  <rect x="${r.x.toFixed(2)}" y="${r.y.toFixed(2)}" width="${r.w.toFixed(2)}" height="${r.h.toFixed(2)}" fill="none" stroke="${color}" stroke-width="4"/>`,
       `  <text x="${(r.x + 6).toFixed(2)}" y="${(r.y + 22).toFixed(2)}" font-family="Arial" font-size="20" fill="${color}">${label}</text>`,
-    ].join('\n');
+    ].join("\n");
   })
-  .join('\n');
+  .join("\n");
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${MW}" height="${MH}" viewBox="0 0 ${MW} ${MH}">
   <image href="${mockupDataUri}" x="0" y="0" width="${MW}" height="${MH}" preserveAspectRatio="none"/>
@@ -91,5 +99,5 @@ ${body}
 writeFileSync(svgPath, svg);
 
 console.log(
-  `[debug-overlay] wrote ${svgPath} — ${rects.length} rects (from ${sam.totalMasks ?? rects.length} masks, mockup ${MW}x${MH})`
+  `[debug-overlay] wrote ${svgPath} — ${rects.length} rects (from ${sam.totalMasks ?? rects.length} masks, mockup ${MW}x${MH})`,
 );

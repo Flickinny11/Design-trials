@@ -8,7 +8,11 @@ export interface EventBus {
   emit(event: string, payload?: unknown): void;
   on(event: string, handler: EventHandler): () => void;
   once(event: string, handler: EventHandler): () => void;
-  _recentEmissions: ReadonlyArray<{ event: string; payload: unknown; at: number }>;
+  _recentEmissions: ReadonlyArray<{
+    event: string;
+    payload: unknown;
+    at: number;
+  }>;
 }
 
 export function createEventBus(): EventBus {
@@ -23,20 +27,36 @@ export function createEventBus(): EventBus {
       const set = listeners.get(event);
       if (!set) return;
       for (const h of Array.from(set)) {
-        try { h(payload); } catch (e) { console.error(`[event-bus] handler for "${event}" threw:`, e); }
+        try {
+          h(payload);
+        } catch (e) {
+          console.error(`[event-bus] handler for "${event}" threw:`, e);
+        }
       }
     },
     on(event, handler) {
       let set = listeners.get(event);
-      if (!set) { set = new Set(); listeners.set(event, set); }
+      if (!set) {
+        set = new Set();
+        listeners.set(event, set);
+      }
       set.add(handler);
       return () => set!.delete(handler);
     },
     once(event, handler) {
-      const off = bus.on(event, (p) => { off(); handler(p); });
+      const off = bus.on(event, (p) => {
+        off();
+        handler(p);
+      });
       return off;
     },
-    get _recentEmissions() { return recent as ReadonlyArray<{ event: string; payload: unknown; at: number }>; },
+    get _recentEmissions() {
+      return recent as ReadonlyArray<{
+        event: string;
+        payload: unknown;
+        at: number;
+      }>;
+    },
   };
   return bus;
 }

@@ -25,9 +25,9 @@
 //    §10.20 can exercise break → fail → indicator → restore without a
 //    real fault.
 
-import type { EventBus } from '../player/event-bus';
-import type { NodeDef } from '../player/prism-loader';
-import type { NodeInstance } from '../player/module-registry';
+import type { EventBus } from "../player/event-bus";
+import type { NodeDef } from "../player/prism-loader";
+import type { NodeInstance } from "../player/module-registry";
 
 type RebuildNode = (nodeId: string) => Promise<NodeInstance | null>;
 
@@ -53,12 +53,12 @@ export interface Suspect {
 interface Options {
   events: EventBus;
   graph: { nodes: NodeDef[] };
-  originalSources: Map<string, string>;            // nodeId → original createNode source
+  originalSources: Map<string, string>; // nodeId → original createNode source
   rebuildNode: RebuildNode;
-  instances: Map<string, NodeInstance>;            // live nodeId → instance map from boot
-  onRepairIndicator?: (nodeId: string, phase: 'start' | 'end') => void;
-  failThreshold?: number;                          // defaults to 3 per §10.20
-  repairLatencyMs?: number;                        // defaults to 1000 per §9.3
+  instances: Map<string, NodeInstance>; // live nodeId → instance map from boot
+  onRepairIndicator?: (nodeId: string, phase: "start" | "end") => void;
+  failThreshold?: number; // defaults to 3 per §10.20
+  repairLatencyMs?: number; // defaults to 1000 per §9.3
 }
 
 // Minimal EventEmitter surface we rely on (PIXI v8 Container inherits from
@@ -70,7 +70,12 @@ interface ListenableContainer {
 
 export function createShr(opts: Options): Shr {
   const {
-    events, graph, originalSources, rebuildNode, instances, onRepairIndicator,
+    events,
+    graph,
+    originalSources,
+    rebuildNode,
+    instances,
+    onRepairIndicator,
     failThreshold = 3,
     // Repair latency is "~1s" per §9.3 / §10.20. We pick 1200 ms so that a
     // downstream caller (e.g. the T10 acceptance probe) that samples the
@@ -89,27 +94,55 @@ export function createShr(opts: Options): Shr {
   function attach() {
     // Wrap every emit call so we can enqueue expected-downstream checks.
     const origEmit = events.emit.bind(events);
-    (events as unknown as { emit: EventBus['emit'] }).emit = (event: string, payload?: unknown) => {
+    (events as unknown as { emit: EventBus["emit"] }).emit = (
+      event: string,
+      payload?: unknown,
+    ) => {
       origEmit(event, payload);
       const src = (payload as { source?: string } | undefined)?.source;
       if (!src) return;
       const node = graph.nodes.find((n) => n.nodeId === src);
       if (!node) return;
-      const triggers = ((node.intent?.behaviorSpec as { triggersDownstream?: { eventName: string; targetNodeIds: string[]; toleranceMs: number }[] } | undefined)?.triggersDownstream) ?? [];
+      const triggers =
+        (
+          node.intent?.behaviorSpec as
+            | {
+                triggersDownstream?: {
+                  eventName: string;
+                  targetNodeIds: string[];
+                  toleranceMs: number;
+                }[];
+              }
+            | undefined
+        )?.triggersDownstream ?? [];
       for (const t of triggers) {
         if (t.eventName !== event) continue;
         for (const targetId of t.targetNodeIds) {
           const deadline = Date.now() + t.toleranceMs;
           setTimeout(() => {
-            const saw = events._recentEmissions.some((e) => e.at >= (deadline - t.toleranceMs) && e.at <= deadline && (e.payload as { source?: string } | undefined)?.source === targetId);
+            const saw = events._recentEmissions.some(
+              (e) =>
+                e.at >= deadline - t.toleranceMs &&
+                e.at <= deadline &&
+                (e.payload as { source?: string } | undefined)?.source ===
+                  targetId,
+            );
             if (!saw && !suspects.has(src) && !brokenNodeIds.has(src)) {
-              suspects.set(src, { nodeId: src, reason: `no ${event} → ${targetId} within ${t.toleranceMs}ms`, detectedAt: Date.now(), promoted: false });
+              suspects.set(src, {
+                nodeId: src,
+                reason: `no ${event} → ${targetId} within ${t.toleranceMs}ms`,
+                detectedAt: Date.now(),
+                promoted: false,
+              });
               // Promote critical-user-action suspects immediately (1-strike rule).
               // This path stays for the production watchdog; the §10.20 toy
               // demo exercises recordFailure() instead (break installs a
               // silent pointertap so the downstream event never fires and
               // this watchdog path never schedules a check).
-              const criticalEvents = new Set(['build-flow-started', 'open-modal']);
+              const criticalEvents = new Set([
+                "build-flow-started",
+                "open-modal",
+              ]);
               if (criticalEvents.has(event)) {
                 void repairNode(src);
               }
@@ -118,7 +151,9 @@ export function createShr(opts: Options): Shr {
         }
       }
     };
-    offEmit = () => { (events as unknown as { emit: EventBus['emit'] }).emit = origEmit; };
+    offEmit = () => {
+      (events as unknown as { emit: EventBus["emit"] }).emit = origEmit;
+    };
   }
 
   function detach() {
@@ -135,8 +170,10 @@ export function createShr(opts: Options): Shr {
     // build-flow-started). Preserve hover/press handlers so the user
     // still sees the button "respond" visually; only the tap outcome is
     // missing, which matches §10.20 ("user click fails").
-    c.removeAllListeners?.('pointertap');
-    c.on('pointertap', () => { void recordFailure(nodeId); });
+    c.removeAllListeners?.("pointertap");
+    c.on("pointertap", () => {
+      void recordFailure(nodeId);
+    });
   }
 
   function breakNode(nodeId: string) {
@@ -144,7 +181,7 @@ export function createShr(opts: Options): Shr {
     failureCountByNode.set(nodeId, 0);
     suspects.set(nodeId, {
       nodeId,
-      reason: 'manual break via __prismBreakNode',
+      reason: "manual break via __prismBreakNode",
       detectedAt: Date.now(),
       promoted: true,
     });
@@ -158,7 +195,7 @@ export function createShr(opts: Options): Shr {
   async function recordFailure(nodeId: string) {
     const next = (failureCountByNode.get(nodeId) ?? 0) + 1;
     failureCountByNode.set(nodeId, next);
-    events.emit('node-click-failed', { source: nodeId, attemptCount: next });
+    events.emit("node-click-failed", { source: nodeId, attemptCount: next });
     if (next >= failThreshold && !repairingNodeIds.has(nodeId)) {
       await repairNode(nodeId);
     }
@@ -167,8 +204,8 @@ export function createShr(opts: Options): Shr {
   async function repairNode(nodeId: string) {
     if (repairingNodeIds.has(nodeId)) return;
     repairingNodeIds.add(nodeId);
-    events.emit('repair-started', { source: nodeId });
-    onRepairIndicator?.(nodeId, 'start');
+    events.emit("repair-started", { source: nodeId });
+    onRepairIndicator?.(nodeId, "start");
     await new Promise((r) => setTimeout(r, repairLatencyMs));
     brokenNodeIds.delete(nodeId);
     failureCountByNode.delete(nodeId);
@@ -176,9 +213,9 @@ export function createShr(opts: Options): Shr {
       await rebuildNode(nodeId);
     }
     suspects.delete(nodeId);
-    onRepairIndicator?.(nodeId, 'end');
+    onRepairIndicator?.(nodeId, "end");
     repairingNodeIds.delete(nodeId);
-    events.emit('repair-completed', { source: nodeId });
+    events.emit("repair-completed", { source: nodeId });
   }
 
   return {
@@ -187,9 +224,17 @@ export function createShr(opts: Options): Shr {
     breakNode,
     repairNode,
     recordFailure,
-    get suspects() { return suspects as ReadonlyMap<string, Suspect>; },
-    get brokenNodeIds() { return brokenNodeIds as ReadonlySet<string>; },
-    get repairingNodeIds() { return repairingNodeIds as ReadonlySet<string>; },
-    get failureCountByNode() { return failureCountByNode as ReadonlyMap<string, number>; },
+    get suspects() {
+      return suspects as ReadonlyMap<string, Suspect>;
+    },
+    get brokenNodeIds() {
+      return brokenNodeIds as ReadonlySet<string>;
+    },
+    get repairingNodeIds() {
+      return repairingNodeIds as ReadonlySet<string>;
+    },
+    get failureCountByNode() {
+      return failureCountByNode as ReadonlyMap<string, number>;
+    },
   };
 }

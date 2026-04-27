@@ -10,23 +10,23 @@
 //
 // Run: npm run build:atlas
 
-import sharp from 'sharp';
-import { MaxRectsPacker } from 'maxrects-packer';
-import { globby } from 'globby';
-import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { dirname, join, resolve, basename, relative } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import sharp from "sharp";
+import { MaxRectsPacker } from "maxrects-packer";
+import { globby } from "globby";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { dirname, join, resolve, basename, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const assetRoot = __dirname;                                      // .../mock-app-source/assets
-const sourceRoot = join(assetRoot, 'source-images');
-const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.json');
-const repoRoot = resolve(__dirname, '..', '..', '..', '..', '..'); // .../kid-kode-landing
-const fontPath = join(repoRoot, 'public', 'fonts', 'Inter-Variable.ttf');
-const outDir = join(repoRoot, 'public', 'prism-assets');
-const outAtlas = join(outDir, 'atlas-0.avif');
-const outRegions = join(outDir, 'atlas-regions.json');
+const assetRoot = __dirname; // .../mock-app-source/assets
+const sourceRoot = join(assetRoot, "source-images");
+const graphPath = resolve(__dirname, "..", "hubs", "home-hub.json");
+const repoRoot = resolve(__dirname, "..", "..", "..", "..", ".."); // .../kid-kode-landing
+const fontPath = join(repoRoot, "public", "fonts", "Inter-Variable.ttf");
+const outDir = join(repoRoot, "public", "prism-assets");
+const outAtlas = join(outDir, "atlas-0.avif");
+const outRegions = join(outDir, "atlas-regions.json");
 
 const ATLAS_SIZE = 4096;
 const AVIF_QUALITY = 75;
@@ -41,16 +41,29 @@ const MAX_REGION_LONG_SIDE = 512;
 // Deterministic MaxRects: we sort packer inputs by assetKey before adding so runs
 // produce identical outputs regardless of filesystem readdir order.
 
-function ensureDir(p) { mkdirSync(p, { recursive: true }); }
+function ensureDir(p) {
+  mkdirSync(p, { recursive: true });
+}
 
 function escapeXml(s) {
-  return String(s).replace(/[<>&'"]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;' }[c]));
+  return String(s).replace(
+    /[<>&'"]/g,
+    (c) =>
+      ({
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        "'": "&apos;",
+        '"': "&quot;",
+      })[c],
+  );
 }
 
 function textOverlaySvg(text, typography, position, w, h) {
   const { fontFamily, fontSize, fontWeight, color } = typography;
-  const anchor = position.anchor ?? 'left';
-  const textAnchor = anchor === 'center' ? 'middle' : anchor === 'right' ? 'end' : 'start';
+  const anchor = position.anchor ?? "left";
+  const textAnchor =
+    anchor === "center" ? "middle" : anchor === "right" ? "end" : "start";
   const fontHref = `file://${fontPath}`;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">
   <defs>
@@ -71,35 +84,54 @@ function textOverlaySvg(text, typography, position, w, h) {
 //   - overlays/<id>.png → "<id>"              (shared overlay sprites)
 //   - frames/<id>/frame-NNN.png → "<id>/frame-NNN"  (i2v sequences)
 function classifySource(graph, filePath) {
-  const rel = relative(sourceRoot, filePath).replace(/\\/g, '/');
-  const parts = rel.split('/');
+  const rel = relative(sourceRoot, filePath).replace(/\\/g, "/");
+  const parts = rel.split("/");
   const nodesByAsset = new Map();
-  for (const n of graph.nodes) nodesByAsset.set(n.visual.sourceAsset ?? n.nodeId, n);
-  if (parts[0] === 'cropped') {
+  for (const n of graph.nodes)
+    nodesByAsset.set(n.visual.sourceAsset ?? n.nodeId, n);
+  if (parts[0] === "cropped") {
     // Literal key: "cropped/<basename>.png" — exactly what home-hub.json
     // nodes set as visual.sourceAsset post T-SWAP-06.
-    const baseName = basename(parts[parts.length - 1], '.png');
+    const baseName = basename(parts[parts.length - 1], ".png");
     const assetKey = `cropped/${baseName}.png`;
-    return { assetKey, node: nodesByAsset.get(assetKey) ?? null, kind: 'cropped' };
+    return {
+      assetKey,
+      node: nodesByAsset.get(assetKey) ?? null,
+      kind: "cropped",
+    };
   }
-  if (parts[0] === 'base') {
-    const name = basename(parts[parts.length - 1], '.png');
-    return { assetKey: name, node: nodesByAsset.get(name) ?? null, kind: 'base' };
+  if (parts[0] === "base") {
+    const name = basename(parts[parts.length - 1], ".png");
+    return {
+      assetKey: name,
+      node: nodesByAsset.get(name) ?? null,
+      kind: "base",
+    };
   }
-  if (parts[0] === 'states') {
-    const name = basename(parts[parts.length - 1], '.png'); // e.g. "notifications-toggle-on"
-    const match = [...nodesByAsset.keys()].filter((k) => name.startsWith(`${k}-`)).sort((a, b) => b.length - a.length)[0];
-    return { assetKey: name, node: match ? nodesByAsset.get(match) : null, kind: 'state' };
+  if (parts[0] === "states") {
+    const name = basename(parts[parts.length - 1], ".png"); // e.g. "notifications-toggle-on"
+    const match = [...nodesByAsset.keys()]
+      .filter((k) => name.startsWith(`${k}-`))
+      .sort((a, b) => b.length - a.length)[0];
+    return {
+      assetKey: name,
+      node: match ? nodesByAsset.get(match) : null,
+      kind: "state",
+    };
   }
-  if (parts[0] === 'overlays') {
-    const name = basename(parts[parts.length - 1], '.png');
-    return { assetKey: name, node: null, kind: 'overlay' };
+  if (parts[0] === "overlays") {
+    const name = basename(parts[parts.length - 1], ".png");
+    return { assetKey: name, node: null, kind: "overlay" };
   }
-  if (parts[0] === 'frames') {
+  if (parts[0] === "frames") {
     const nodeId = parts[1];
-    const frameName = basename(parts[parts.length - 1], '.png'); // frame-001
-    if (frameName.startsWith('_')) return null;                   // skip _base.png, _source.mp4
-    return { assetKey: `${nodeId}/${frameName}`, node: nodesByAsset.get(nodeId) ?? null, kind: 'frame' };
+    const frameName = basename(parts[parts.length - 1], ".png"); // frame-001
+    if (frameName.startsWith("_")) return null; // skip _base.png, _source.mp4
+    return {
+      assetKey: `${nodeId}/${frameName}`,
+      node: nodesByAsset.get(nodeId) ?? null,
+      kind: "frame",
+    };
   }
   return null;
 }
@@ -114,19 +146,25 @@ function shapeMaskSvg(shape, w, h, radius) {
   // Clamp radius to the inscribed max for the shape so sharp's SVG parser
   // doesn't produce degenerate geometry when an author passes too-large r.
   switch (shape) {
-    case 'rounded': {
-      const r = Math.max(0, Math.min(radius ?? Math.round(Math.min(w, h) * 0.08), Math.min(w, h) / 2));
+    case "rounded": {
+      const r = Math.max(
+        0,
+        Math.min(
+          radius ?? Math.round(Math.min(w, h) * 0.08),
+          Math.min(w, h) / 2,
+        ),
+      );
       return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect x="0" y="0" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="white"/></svg>`;
     }
-    case 'pill': {
+    case "pill": {
       const r = Math.min(w, h) / 2;
       return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect x="0" y="0" width="${w}" height="${h}" rx="${r}" ry="${r}" fill="white"/></svg>`;
     }
-    case 'circle': {
+    case "circle": {
       const r = Math.min(w, h) / 2;
       return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><circle cx="${w / 2}" cy="${h / 2}" r="${r}" fill="white"/></svg>`;
     }
-    case 'oval':
+    case "oval":
       return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><ellipse cx="${w / 2}" cy="${h / 2}" rx="${w / 2}" ry="${h / 2}" fill="white"/></svg>`;
     default:
       return null; // 'rect' or unknown — skip masking
@@ -134,7 +172,7 @@ function shapeMaskSvg(shape, w, h, radius) {
 }
 
 async function applyShapeMaskIfNeeded(img, shape, radius) {
-  if (!shape || shape === 'rect') return img;
+  if (!shape || shape === "rect") return img;
   // Flush the pipeline first so metadata reflects post-resize dimensions,
   // not the unresized input. Without this the SVG is built at the source
   // image's native size but composited against the (smaller, resized)
@@ -146,17 +184,21 @@ async function applyShapeMaskIfNeeded(img, shape, radius) {
   if (!svg) return reopened;
   // dest-in = alpha intersection: source RGB survives where the mask is
   // opaque, becomes transparent where the mask is clear.
-  return reopened.composite([{ input: Buffer.from(svg), blend: 'dest-in' }]);
+  return reopened.composite([{ input: Buffer.from(svg), blend: "dest-in" }]);
 }
 
 async function compositeTextIfNeeded(imgBuf, node) {
   if (!node?.intent?.visualSpec?.textContent?.length) return imgBuf;
-  const sharpSvgEntries = node.intent.visualSpec.textContent.filter((t) => t.renderMethod === 'sharp-svg');
+  const sharpSvgEntries = node.intent.visualSpec.textContent.filter(
+    (t) => t.renderMethod === "sharp-svg",
+  );
   if (sharpSvgEntries.length === 0) return imgBuf;
   let img = sharp(imgBuf);
   const meta = await img.metadata();
   const overlays = sharpSvgEntries.map((t) => ({
-    input: Buffer.from(textOverlaySvg(t.text, t.typography, t.position, meta.width, meta.height)),
+    input: Buffer.from(
+      textOverlaySvg(t.text, t.typography, t.position, meta.width, meta.height),
+    ),
     top: 0,
     left: 0,
   }));
@@ -168,12 +210,16 @@ async function processSource(filePath, graph) {
   if (!meta) return null;
   const raw = readFileSync(filePath);
   const composited = await compositeTextIfNeeded(raw, meta.node);
-  let img = sharp(composited).ensureAlpha();                     // force RGBA for atlas composite
+  let img = sharp(composited).ensureAlpha(); // force RGBA for atlas composite
   const info = await img.metadata();
   const longSide = Math.max(info.width, info.height);
   if (longSide > MAX_REGION_LONG_SIDE) {
     const scale = MAX_REGION_LONG_SIDE / longSide;
-    img = img.resize(Math.round(info.width * scale), Math.round(info.height * scale), { kernel: 'lanczos3' });
+    img = img.resize(
+      Math.round(info.width * scale),
+      Math.round(info.height * scale),
+      { kernel: "lanczos3" },
+    );
   }
   // Phase B: alpha-clip to the node's shape after resize (so the mask matches
   // the final atlas-region dimensions). Overlays, frames, and sourceless
@@ -181,10 +227,12 @@ async function processSource(filePath, graph) {
   // get masked.
   const shape = meta.node?.visual?.shape;
   const shapeRadius = meta.node?.visual?.shapeRadius;
-  if (shape && (meta.kind === 'base' || meta.kind === 'state')) {
+  if (shape && (meta.kind === "base" || meta.kind === "state")) {
     img = await applyShapeMaskIfNeeded(img, shape, shapeRadius);
   }
-  const { data, info: rawInfo } = await img.raw().toBuffer({ resolveWithObject: true });
+  const { data, info: rawInfo } = await img
+    .raw()
+    .toBuffer({ resolveWithObject: true });
   return {
     assetKey: meta.assetKey,
     kind: meta.kind,
@@ -192,10 +240,11 @@ async function processSource(filePath, graph) {
     height: rawInfo.height,
     channels: rawInfo.channels,
     data,
-    hash: createHash('sha256')
+    hash: createHash("sha256")
       .update(composited)
-      .update(`|shape=${shape ?? 'rect'}|r=${shapeRadius ?? 0}`)
-      .digest('hex').slice(0, 16),
+      .update(`|shape=${shape ?? "rect"}|r=${shapeRadius ?? 0}`)
+      .digest("hex")
+      .slice(0, 16),
     nativeWidth: info.width,
     nativeHeight: info.height,
   };
@@ -204,23 +253,32 @@ async function processSource(filePath, graph) {
 async function main() {
   ensureDir(outDir);
   if (!existsSync(sourceRoot)) {
-    console.error(`[build-atlas] source-images/ not found. Run \`npm run provision-assets\` first, or \`npm run build:stubs\` to scaffold placeholder images.`);
+    console.error(
+      `[build-atlas] source-images/ not found. Run \`npm run provision-assets\` first, or \`npm run build:stubs\` to scaffold placeholder images.`,
+    );
     process.exit(1);
   }
-  const graph = JSON.parse(readFileSync(graphPath, 'utf-8'));
-  const sources = (await globby([
-    'base/*.png',
-    'cropped/*.png',
-    'states/*.png',
-    'overlays/*.png',
-    'frames/**/*.png',
-  ], { cwd: sourceRoot, absolute: true })).sort();                // determinism: sort before process
+  const graph = JSON.parse(readFileSync(graphPath, "utf-8"));
+  const sources = (
+    await globby(
+      [
+        "base/*.png",
+        "cropped/*.png",
+        "states/*.png",
+        "overlays/*.png",
+        "frames/**/*.png",
+      ],
+      { cwd: sourceRoot, absolute: true },
+    )
+  ).sort(); // determinism: sort before process
 
   if (sources.length === 0) {
-    console.error('[build-atlas] no source images found under source-images/.');
+    console.error("[build-atlas] no source images found under source-images/.");
     process.exit(1);
   }
-  console.log(`[build-atlas] ${sources.length} source images; compositing text + packing...`);
+  console.log(
+    `[build-atlas] ${sources.length} source images; compositing text + packing...`,
+  );
 
   const images = [];
   for (const src of sources) {
@@ -238,20 +296,34 @@ async function main() {
   const placeholderKeys = [];
   for (const n of graph.nodes) {
     const asset = n.visual?.sourceAsset ?? n.nodeId;
-    if (typeof asset !== 'string' || !asset.startsWith('cropped/')) continue;
+    if (typeof asset !== "string" || !asset.startsWith("cropped/")) continue;
     if (packed.has(asset)) continue;
     placeholderKeys.push(asset);
   }
   if (placeholderKeys.length > 0) {
     const transparentPngBuf = await sharp({
-      create: { width: 2, height: 2, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
-    }).png().toBuffer();
-    const { data, info: rawInfo } = await sharp(transparentPngBuf).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-    const placeholderHash = createHash('sha256').update(transparentPngBuf).update('|placeholder').digest('hex').slice(0, 16);
+      create: {
+        width: 2,
+        height: 2,
+        channels: 4,
+        background: { r: 0, g: 0, b: 0, alpha: 0 },
+      },
+    })
+      .png()
+      .toBuffer();
+    const { data, info: rawInfo } = await sharp(transparentPngBuf)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const placeholderHash = createHash("sha256")
+      .update(transparentPngBuf)
+      .update("|placeholder")
+      .digest("hex")
+      .slice(0, 16);
     for (const assetKey of placeholderKeys.sort()) {
       images.push({
         assetKey,
-        kind: 'cropped',
+        kind: "cropped",
         width: rawInfo.width,
         height: rawInfo.height,
         channels: rawInfo.channels,
@@ -261,21 +333,32 @@ async function main() {
         nativeHeight: 2,
       });
     }
-    console.log(`[build-atlas] synthesized ${placeholderKeys.length} invisible 2×2 placeholders for graph nodes absent from cropped/.`);
+    console.log(
+      `[build-atlas] synthesized ${placeholderKeys.length} invisible 2×2 placeholders for graph nodes absent from cropped/.`,
+    );
   }
 
-  images.sort((a, b) => a.assetKey.localeCompare(b.assetKey));    // determinism
+  images.sort((a, b) => a.assetKey.localeCompare(b.assetKey)); // determinism
 
   // Pack.
-  const packer = new MaxRectsPacker(ATLAS_SIZE, ATLAS_SIZE, PADDING, { smart: true, pot: false, square: false, allowRotation: false });
+  const packer = new MaxRectsPacker(ATLAS_SIZE, ATLAS_SIZE, PADDING, {
+    smart: true,
+    pot: false,
+    square: false,
+    allowRotation: false,
+  });
   for (const im of images) {
     packer.add(im.width, im.height, im);
   }
   if (packer.bins.length > 1) {
-    console.warn(`[build-atlas] packed into ${packer.bins.length} bins — mock expects 1. Consider bumping ATLAS_SIZE or reducing source image sizes.`);
+    console.warn(
+      `[build-atlas] packed into ${packer.bins.length} bins — mock expects 1. Consider bumping ATLAS_SIZE or reducing source image sizes.`,
+    );
   }
   const bin = packer.bins[0];
-  console.log(`[build-atlas] bin utilization: ${(100 * bin.rects.reduce((a, r) => a + r.width * r.height, 0) / (ATLAS_SIZE * ATLAS_SIZE)).toFixed(1)}%`);
+  console.log(
+    `[build-atlas] bin utilization: ${((100 * bin.rects.reduce((a, r) => a + r.width * r.height, 0)) / (ATLAS_SIZE * ATLAS_SIZE)).toFixed(1)}%`,
+  );
 
   // Compose atlas.
   const composites = bin.rects.map((r) => ({
@@ -285,7 +368,12 @@ async function main() {
     left: r.x,
   }));
   const avifBuf = await sharp({
-    create: { width: ATLAS_SIZE, height: ATLAS_SIZE, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    create: {
+      width: ATLAS_SIZE,
+      height: ATLAS_SIZE,
+      channels: 4,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    },
   })
     .composite(composites)
     .avif({ quality: AVIF_QUALITY, effort: 6 })
@@ -294,10 +382,15 @@ async function main() {
   writeFileSync(outAtlas, avifBuf);
 
   const regions = {};
-  for (const r of [...bin.rects].sort((a, b) => a.data.assetKey.localeCompare(b.data.assetKey))) {
+  for (const r of [...bin.rects].sort((a, b) =>
+    a.data.assetKey.localeCompare(b.data.assetKey),
+  )) {
     regions[r.data.assetKey] = {
-      atlasId: 'atlas-0',
-      x: r.x, y: r.y, w: r.width, h: r.height,
+      atlasId: "atlas-0",
+      x: r.x,
+      y: r.y,
+      w: r.width,
+      h: r.height,
       hash: r.data.hash,
       kind: r.data.kind,
       nativeWidth: r.data.nativeWidth,
@@ -305,19 +398,26 @@ async function main() {
     };
   }
   const regionsWrapper = {
-    schemaVersion: '0.1.0',
-    atlasFile: 'atlas-0.avif',
+    schemaVersion: "0.1.0",
+    atlasFile: "atlas-0.avif",
     atlasWidth: ATLAS_SIZE,
     atlasHeight: ATLAS_SIZE,
     regionCount: Object.keys(regions).length,
     regions,
   };
-  writeFileSync(outRegions, JSON.stringify(regionsWrapper, null, 2) + '\n');
+  writeFileSync(outRegions, JSON.stringify(regionsWrapper, null, 2) + "\n");
 
-  const atlasHash = createHash('sha256').update(avifBuf).digest('hex');
-  console.log(`[build-atlas] wrote ${relative(repoRoot, outAtlas)} (${avifBuf.length} B)`);
-  console.log(`[build-atlas] wrote ${relative(repoRoot, outRegions)} (${Object.keys(regions).length} regions)`);
+  const atlasHash = createHash("sha256").update(avifBuf).digest("hex");
+  console.log(
+    `[build-atlas] wrote ${relative(repoRoot, outAtlas)} (${avifBuf.length} B)`,
+  );
+  console.log(
+    `[build-atlas] wrote ${relative(repoRoot, outRegions)} (${Object.keys(regions).length} regions)`,
+  );
   console.log(`[build-atlas] atlas sha256: ${atlasHash}`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

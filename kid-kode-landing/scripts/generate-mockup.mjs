@@ -7,17 +7,19 @@
 // Run: npm run -- node scripts/generate-mockup.mjs
 //   or: node --env-file=.env.local scripts/generate-mockup.mjs
 
-import { fal } from '@fal-ai/client';
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { resolve, dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fal } from "@fal-ai/client";
+import { writeFileSync, mkdirSync } from "node:fs";
+import { resolve, dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const outDir = resolve(__dirname, '..', 'notes', 'mockup-candidates');
+const outDir = resolve(__dirname, "..", "notes", "mockup-candidates");
 mkdirSync(outDir, { recursive: true });
 
 if (!process.env.FAL_KEY) {
-  console.error('FAL_KEY not set. Run via: node --env-file=.env.local scripts/generate-mockup.mjs');
+  console.error(
+    "FAL_KEY not set. Run via: node --env-file=.env.local scripts/generate-mockup.mjs",
+  );
   process.exit(1);
 }
 fal.config({ credentials: process.env.FAL_KEY });
@@ -38,7 +40,8 @@ Footer at the bottom: a dark horizontal band. On the left, the same gradient log
 
 Overall aesthetic: premium modern SaaS dashboard UI, Figma-fidelity render, clean geometric edges, soft subtle drop shadows, glass-morphism translucent panels, vibrant electric-blue to violet gradient accents reserved for primary interactive elements, dark charcoal background throughout, clean Inter-style sans-serif typography. This is a flat modern UI design mockup — a user interface, not a photograph of physical objects.`;
 
-const NEGATIVE = 'photograph, photo, real world scene, architectural, industrial, grainy, weathered, physical objects, warehouse, bunker, concrete, brushed metal, wood grain, material texture, industrial photography, stone, oxidized, rust';
+const NEGATIVE =
+  "photograph, photo, real world scene, architectural, industrial, grainy, weathered, physical objects, warehouse, bunker, concrete, brushed metal, wood grain, material texture, industrial photography, stone, oxidized, rust";
 
 async function runModel(name, model, input) {
   console.log(`[gen] starting ${name} (${model})...`);
@@ -47,10 +50,15 @@ async function runModel(name, model, input) {
     const result = await fal.subscribe(model, { input, logs: false });
     const url = result?.data?.images?.[0]?.url || result?.data?.image?.url;
     if (!url) {
-      console.error(`[gen] ${name} — no URL:`, JSON.stringify(result?.data).slice(0, 300));
+      console.error(
+        `[gen] ${name} — no URL:`,
+        JSON.stringify(result?.data).slice(0, 300),
+      );
       return null;
     }
-    console.log(`[gen] ${name} completed in ${((Date.now() - t0) / 1000).toFixed(1)}s: ${url}`);
+    console.log(
+      `[gen] ${name} completed in ${((Date.now() - t0) / 1000).toFixed(1)}s: ${url}`,
+    );
     // Download
     const res = await fetch(url);
     const buf = Buffer.from(await res.arrayBuffer());
@@ -65,14 +73,14 @@ async function runModel(name, model, input) {
 }
 
 const jobs = [
-  runModel('recraft-v3', 'fal-ai/recraft/v3/text-to-image', {
+  runModel("recraft-v3", "fal-ai/recraft/v3/text-to-image", {
     prompt: PROMPT,
-    style: 'digital_illustration',
-    image_size: 'portrait_4_3',
+    style: "digital_illustration",
+    image_size: "portrait_4_3",
   }),
-  runModel('recraft-v4-pro', 'fal-ai/recraft/v4/pro/text-to-image', {
+  runModel("recraft-v4-pro", "fal-ai/recraft/v4/pro/text-to-image", {
     prompt: PROMPT,
-    image_size: 'portrait_4_3',
+    image_size: "portrait_4_3",
   }),
 ];
 

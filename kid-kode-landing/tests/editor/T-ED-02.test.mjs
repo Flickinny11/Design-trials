@@ -49,21 +49,24 @@
 //
 // Run with: node tests/editor/T-ED-02.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const bootPath  = resolve(kidKodeRoot, 'src/lib/prism/player/boot.ts');
-const bridgePath = resolve(kidKodeRoot, 'notes/editor-bridge.md');
+const kidKodeRoot = resolve(here, "..", "..");
+const bootPath = resolve(kidKodeRoot, "src/lib/prism/player/boot.ts");
+const bridgePath = resolve(kidKodeRoot, "notes/editor-bridge.md");
 
 assert.ok(existsSync(bootPath), `boot.ts not found at ${bootPath}`);
-assert.ok(existsSync(bridgePath), `editor-bridge.md not found at ${bridgePath}`);
+assert.ok(
+  existsSync(bridgePath),
+  `editor-bridge.md not found at ${bridgePath}`,
+);
 
-const boot   = readFileSync(bootPath,   'utf8');
-const bridge = readFileSync(bridgePath, 'utf8');
+const boot = readFileSync(bootPath, "utf8");
+const bridge = readFileSync(bridgePath, "utf8");
 
 // ─── (A) pointerdown listener + node-selected emit present ───────────
 // The emit call can be either:
@@ -71,7 +74,8 @@ const bridge = readFileSync(bridgePath, 'utf8');
 //   ctx.events.emit('node-selected', ...)
 // We require the event name and a nodeId key in the payload literal
 // within a reasonable window of the emit call.
-const EMIT_RE = /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{[\s\S]{0,120}?\bnodeId\b[\s\S]{0,120}?\}\s*\)/;
+const EMIT_RE =
+  /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{[\s\S]{0,120}?\bnodeId\b[\s\S]{0,120}?\}\s*\)/;
 assert.ok(
   EMIT_RE.test(boot),
   "boot.ts: expected `events.emit('node-selected', { nodeId: ... })` — the pointerdown wiring for T-ED-02 is missing",
@@ -88,7 +92,8 @@ assert.ok(
 // (B) nodeId sourced from iteration variable, not a string literal.
 // Find the emit call and check its payload references `node.nodeId`
 // (the loop variable name in boot.ts:189 & rebuildNode).
-const EMIT_WITH_VAR_RE = /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{\s*nodeId\s*:\s*([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*[,}]/;
+const EMIT_WITH_VAR_RE =
+  /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{\s*nodeId\s*:\s*([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)\s*[,}]/;
 const emitMatch = boot.match(EMIT_WITH_VAR_RE);
 assert.ok(
   emitMatch,
@@ -105,7 +110,7 @@ assert.ok(
 // Positive shape: must contain `.nodeId` OR be a bare `nodeId` identifier
 // (the enclosing for-of in boot.ts destructures as `const node of ...`).
 assert.ok(
-  /\.nodeId$/.test(nodeIdExpr) || nodeIdExpr === 'nodeId',
+  /\.nodeId$/.test(nodeIdExpr) || nodeIdExpr === "nodeId",
   `boot.ts: node-selected payload nodeId source is \`${nodeIdExpr}\` — expected a .nodeId access from the loop variable (generic, not hardcoded)`,
 );
 
@@ -123,7 +128,8 @@ assert.ok(
 // Negative — `source` is the convention for OTHER events but NOT for
 // node-selected. Catching the regression where someone copy-pastes
 // from the 'navigate' pattern.
-const BAD_PAYLOAD_RE = /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{[^}]*\bsource\s*:/;
+const BAD_PAYLOAD_RE =
+  /events\.emit\s*\(\s*['"`]node-selected['"`]\s*,\s*\{[^}]*\bsource\s*:/;
 assert.ok(
   !BAD_PAYLOAD_RE.test(boot),
   "boot.ts: node-selected payload must use `nodeId`, not `source` (editor-bridge.md Known events table pins the key)",
@@ -132,7 +138,8 @@ assert.ok(
 // ─── (E) editor-bridge.md Known events table now lists node-selected ─
 // Look for a row in a markdown table that mentions node-selected and
 // the payload shape.
-const BRIDGE_KNOWN_ROW_RE = /\|[^\n|]*['"`]node-selected['"`][^\n|]*\|[\s\S]{0,200}?\{[\s\S]{0,120}?\bnodeId\b[\s\S]{0,120}?\}/;
+const BRIDGE_KNOWN_ROW_RE =
+  /\|[^\n|]*['"`]node-selected['"`][^\n|]*\|[\s\S]{0,200}?\{[\s\S]{0,120}?\bnodeId\b[\s\S]{0,120}?\}/;
 assert.ok(
   BRIDGE_KNOWN_ROW_RE.test(bridge),
   "editor-bridge.md: Known events table must now include a row for `'node-selected'` with payload `{ nodeId: string }` — T-ED-02 promotes it from Gaps to Known events",
@@ -141,13 +148,15 @@ assert.ok(
 // Gaps section must no longer list node-selected as unwired. We scan
 // the Gaps heading onward and assert no "not yet" / "T-ED-02 owns" /
 // "not yet wired" line mentions node-selected anymore.
-const GAPS_SECTION_RE = /##+\s+(?:Gaps?|Not\s+yet\s+exposed|Missing|Open\s+gaps?)[\s\S]*?(?=\n##+\s|$)/i;
+const GAPS_SECTION_RE =
+  /##+\s+(?:Gaps?|Not\s+yet\s+exposed|Missing|Open\s+gaps?)[\s\S]*?(?=\n##+\s|$)/i;
 const gapsMatch = bridge.match(GAPS_SECTION_RE);
 if (gapsMatch) {
   const gapsBody = gapsMatch[0];
   // The word "node-selected" may still appear historically in prose,
   // but not flagged as "not yet wired" / "T-ED-02 owns" / "needed by".
-  const STILL_UNWIRED_RE = /node-selected[\s\S]{0,200}?(?:not\s+yet|T-ED-02\s+(?:owns|wires)|pending|needed\s+but\s+not\s+yet)/i;
+  const STILL_UNWIRED_RE =
+    /node-selected[\s\S]{0,200}?(?:not\s+yet|T-ED-02\s+(?:owns|wires)|pending|needed\s+but\s+not\s+yet)/i;
   assert.ok(
     !STILL_UNWIRED_RE.test(gapsBody),
     "editor-bridge.md: Gaps section still flags `node-selected` as unwired — T-ED-02 is wiring it; remove the unwired marker and reference the Known events row instead",
@@ -163,13 +172,15 @@ if (gapsMatch) {
 // occurrences of each known id and assert T-ED-02 didn't increase
 // any. We do this by asserting the emit block (the T-ED-02 wiring)
 // contains no such literal.
-const BOOT_EMIT_BLOCK_RE = /events\.emit\s*\(\s*['"`]node-selected['"`][\s\S]{0,200}?\)/g;
+const BOOT_EMIT_BLOCK_RE =
+  /events\.emit\s*\(\s*['"`]node-selected['"`][\s\S]{0,200}?\)/g;
 const emitBlocks = boot.match(BOOT_EMIT_BLOCK_RE) ?? [];
 assert.ok(
   emitBlocks.length >= 1,
   "boot.ts: expected at least 1 node-selected emit block",
 );
-const FORBIDDEN_ID_RE = /['"`](?:hero-(?:card|section)|navbar-(?:logo|link|signin|bg)|feature-(?:card|grid)|footer-(?:logo|link|social|bg|copyright)|stats-|settings-section|notifications-toggle|theme-selector|page-background|video-slot-\d)/;
+const FORBIDDEN_ID_RE =
+  /['"`](?:hero-(?:card|section)|navbar-(?:logo|link|signin|bg)|feature-(?:card|grid)|footer-(?:logo|link|social|bg|copyright)|stats-|settings-section|notifications-toggle|theme-selector|page-background|video-slot-\d)/;
 for (const block of emitBlocks) {
   assert.ok(
     !FORBIDDEN_ID_RE.test(block),
@@ -177,4 +188,6 @@ for (const block of emitBlocks) {
   );
 }
 
-console.log('[T-ED-02] PASS — pointerdown→node-selected wiring: boot.ts emit (A,B,C,D,F), editor-bridge.md Known events row (E)');
+console.log(
+  "[T-ED-02] PASS — pointerdown→node-selected wiring: boot.ts emit (A,B,C,D,F), editor-bridge.md Known events row (E)",
+);

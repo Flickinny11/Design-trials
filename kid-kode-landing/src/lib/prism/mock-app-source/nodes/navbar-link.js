@@ -10,11 +10,12 @@
 // on the base sprite when activeNavLinkId matches. The tint + subtle scale
 // lift are the latched state; pointer events layer their own effects on top.
 export function createNode(ctx) {
-  const { PIXI, gsap, atlas, region, transform, events, intent, msdfFont } = ctx;
+  const { PIXI, gsap, atlas, region, transform, events, intent, msdfFont } =
+    ctx;
   const container = new PIXI.Container();
   container.position.set(transform.x, transform.y);
-  container.eventMode = 'static';
-  container.cursor = 'pointer';
+  container.eventMode = "static";
+  container.cursor = "pointer";
 
   // Single base sprite. Brightness + y-offset + tint animate per state.
   const base = new PIXI.Sprite(atlas.getTexture(region));
@@ -25,13 +26,19 @@ export function createNode(ctx) {
   // MSDF label (sharp-svg text on the atlas handles the build-time label if
   // present; msdf handles runtime-rendered text. navbar-links use sharp-svg
   // per the graph; this is a no-op unless the graph declares msdf entries).
-  const msdfEntries = (intent?.visualSpec?.textContent ?? []).filter((t) => t.renderMethod === 'msdf');
+  const msdfEntries = (intent?.visualSpec?.textContent ?? []).filter(
+    (t) => t.renderMethod === "msdf",
+  );
   for (const t of msdfEntries) {
-    const pos = t.position ?? { x: transform.width / 2, y: transform.height / 2, anchor: 'center' };
+    const pos = t.position ?? {
+      x: transform.width / 2,
+      y: transform.height / 2,
+      anchor: "center",
+    };
     const txt = new PIXI.BitmapText({
       text: t.text,
       style: {
-        fontFamily: msdfFont?.family ?? 'Inter-Variable',
+        fontFamily: msdfFont?.family ?? "Inter-Variable",
         fontSize: t.typography?.fontSize ?? 14,
         fill: t.typography?.color ?? 0xcbd5ff,
       },
@@ -43,7 +50,7 @@ export function createNode(ctx) {
 
   let locked = false;
   const baseY = transform.y;
-  const ACTIVE_TINT = 0xffd089;  // warm amber for latched
+  const ACTIVE_TINT = 0xffd089; // warm amber for latched
   const IDLE_TINT = 0xffffff;
 
   function paintLocked() {
@@ -56,33 +63,42 @@ export function createNode(ctx) {
     gsap.to(container.position, { y: baseY, duration: 0.2 });
   }
 
-  container.on('pointerover', () => {
+  container.on("pointerover", () => {
     gsap.to(base, { alpha: 1.0, duration: 0.15 });
-    gsap.to(container.position, { y: baseY - 3, duration: 0.15, ease: 'power2.out' });
+    gsap.to(container.position, {
+      y: baseY - 3,
+      duration: 0.15,
+      ease: "power2.out",
+    });
   });
-  container.on('pointerout', () => {
+  container.on("pointerout", () => {
     if (locked) paintLocked();
     else {
       gsap.to(base, { alpha: 0.88, duration: 0.15 });
       gsap.to(container.position, { y: baseY, duration: 0.15 });
     }
   });
-  container.on('pointerdown', () => {
+  container.on("pointerdown", () => {
     gsap.to(base, { alpha: 0.92, duration: 0.08 });
     gsap.to(container.scale, { x: 0.97, y: 0.97, duration: 0.08 });
   });
-  container.on('pointerup', () => {
+  container.on("pointerup", () => {
     gsap.to(base, { alpha: 1.0, duration: 0.12 });
-    gsap.to(container.scale, { x: 1.0, y: 1.0, duration: 0.12, ease: 'back.out(2)' });
+    gsap.to(container.scale, {
+      x: 1.0,
+      y: 1.0,
+      duration: 0.12,
+      ease: "back.out(2)",
+    });
   });
-  container.on('pointertap', () => {
-    events.emit('navigate', { source: intent.nodeId });
+  container.on("pointertap", () => {
+    events.emit("navigate", { source: intent.nodeId });
   });
 
   // Resting alpha
   base.alpha = 0.88;
 
-  const offActive = events.on('active-section-changed', (payload) => {
+  const offActive = events.on("active-section-changed", (payload) => {
     const next = !!payload && payload.activeNavLinkId === intent.nodeId;
     if (next === locked) return;
     locked = next;
@@ -93,7 +109,7 @@ export function createNode(ctx) {
   // Debug handle used by tests (T01 / §10.14) and manual devtools inspection.
   container.__debug = {
     getLocked: () => locked,
-    getResting: () => (locked ? 'active' : 'default'),
+    getResting: () => (locked ? "active" : "default"),
   };
 
   return {

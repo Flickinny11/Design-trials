@@ -1,4 +1,4 @@
-export type BreakpointName = 'desktop-wide' | 'desktop' | 'tablet' | 'mobile';
+export type BreakpointName = "desktop-wide" | "desktop" | "tablet" | "mobile";
 
 export const BREAKPOINT_ORDER: ReadonlyArray<BreakpointName>;
 
@@ -18,6 +18,12 @@ export interface ResolvableVisual {
   visibleAtBreakpoints?: ReadonlyArray<BreakpointName>;
 }
 
-export function resolveTransform(visual: ResolvableVisual, active: BreakpointName): VisualTransform;
+export function resolveTransform(
+  visual: ResolvableVisual,
+  active: BreakpointName,
+): VisualTransform;
 
-export function isVisibleAtBreakpoint(visual: Pick<ResolvableVisual, 'visibleAtBreakpoints'>, active: BreakpointName): boolean;
+export function isVisibleAtBreakpoint(
+  visual: Pick<ResolvableVisual, "visibleAtBreakpoints">,
+  active: BreakpointName,
+): boolean;

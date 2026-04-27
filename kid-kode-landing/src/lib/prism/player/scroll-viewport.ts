@@ -2,14 +2,14 @@
 // all feed into the same velocity integrator. GSAP handles the decay so the
 // release feels natural on trackpads and touch.
 
-import * as PIXI from 'pixi.js';
-import { gsap } from 'gsap';
+import * as PIXI from "pixi.js";
+import { gsap } from "gsap";
 
 const WHEEL_TWEEN_S = 0.8;
 
 export interface ScrollViewport {
-  root: PIXI.Container;         // what the player adds to the stage
-  content: PIXI.Container;      // where nodes are parented
+  root: PIXI.Container; // what the player adds to the stage
+  content: PIXI.Container; // where nodes are parented
   setContentHeight(h: number): void;
   scrollTo(y: number, opts?: { duration?: number }): void;
   getScrollY(): number;
@@ -35,7 +35,9 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   let viewportHeight = opts.viewportHeight;
 
   // Clip content to the viewport using a mask graphic. ALLOWED-GRAPHICS: mask only.
-  const mask = new PIXI.Graphics().rect(0, 0, viewportWidth, viewportHeight).fill(0xffffff);
+  const mask = new PIXI.Graphics()
+    .rect(0, 0, viewportWidth, viewportHeight)
+    .fill(0xffffff);
   root.addChild(mask);
   content.mask = mask;
 
@@ -61,22 +63,34 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   function runTween(target: number, duration: number) {
     if (activeTween) activeTween.kill();
     tweenTarget = target;
-    activeTween = gsap.to({ y: scrollY }, {
-      y: target, duration, ease: 'power2.out',
-      onUpdate(this: gsap.core.Tween) {
-        const next = (this.targets()[0] as { y: number }).y;
-        scrollY = next;
-        applyScroll();
+    activeTween = gsap.to(
+      { y: scrollY },
+      {
+        y: target,
+        duration,
+        ease: "power2.out",
+        onUpdate(this: gsap.core.Tween) {
+          const next = (this.targets()[0] as { y: number }).y;
+          scrollY = next;
+          applyScroll();
+        },
+        onComplete() {
+          activeTween = null;
+        },
       },
-      onComplete() { activeTween = null; },
-    });
+    );
   }
 
   function scrollTo(y: number, { duration = 0.3 }: { duration?: number } = {}) {
     const target = clamp(y);
     if (duration <= 0) {
-      if (activeTween) { activeTween.kill(); activeTween = null; }
-      scrollY = target; applyScroll(); return;
+      if (activeTween) {
+        activeTween.kill();
+        activeTween = null;
+      }
+      scrollY = target;
+      applyScroll();
+      return;
     }
     runTween(target, duration);
   }
@@ -95,7 +109,11 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   };
 
   // Touch drag with flick inertia.
-  let touchStartY = 0, touchLastY = 0, touchLastT = 0, touchVelocity = 0, dragging = false;
+  let touchStartY = 0,
+    touchLastY = 0,
+    touchLastT = 0,
+    touchVelocity = 0,
+    dragging = false;
   const onTouchStart = (e: TouchEvent) => {
     if (e.touches.length !== 1) return;
     dragging = true;
@@ -110,7 +128,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
     scrollY = clamp(scrollY + dy);
     const now = performance.now();
     const dt = Math.max(1, now - touchLastT);
-    touchVelocity = dy / dt;                              // px/ms
+    touchVelocity = dy / dt; // px/ms
     touchLastY = y;
     touchLastT = now;
     applyScroll();
@@ -118,7 +136,7 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   const onTouchEnd = () => {
     if (!dragging) return;
     dragging = false;
-    const flick = touchVelocity * 1000;                   // px/s
+    const flick = touchVelocity * 1000; // px/s
     if (Math.abs(flick) < 40) return;
     const duration = Math.max(0.5, Math.abs(flick) / 1000);
     scrollTo(scrollY + flick * 0.35, { duration });
@@ -128,23 +146,36 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   const onKey = (e: KeyboardEvent) => {
     const step = viewportHeight * 0.85;
     switch (e.key) {
-      case 'ArrowDown': scrollTo(scrollY + 60); break;
-      case 'ArrowUp':   scrollTo(scrollY - 60); break;
-      case 'PageDown':  scrollTo(scrollY + step); break;
-      case 'PageUp':    scrollTo(scrollY - step); break;
-      case 'Home':      scrollTo(0); break;
-      case 'End':       scrollTo(contentHeight); break;
-      default: return;
+      case "ArrowDown":
+        scrollTo(scrollY + 60);
+        break;
+      case "ArrowUp":
+        scrollTo(scrollY - 60);
+        break;
+      case "PageDown":
+        scrollTo(scrollY + step);
+        break;
+      case "PageUp":
+        scrollTo(scrollY - step);
+        break;
+      case "Home":
+        scrollTo(0);
+        break;
+      case "End":
+        scrollTo(contentHeight);
+        break;
+      default:
+        return;
     }
     e.preventDefault();
   };
 
-  canvas.addEventListener('wheel', onWheel, { passive: false });
-  canvas.addEventListener('touchstart', onTouchStart, { passive: true });
-  canvas.addEventListener('touchmove', onTouchMove, { passive: true });
-  canvas.addEventListener('touchend', onTouchEnd, { passive: true });
-  canvas.addEventListener('keydown', onKey);
-  canvas.tabIndex = 0;                                     // so it can receive key events
+  canvas.addEventListener("wheel", onWheel, { passive: false });
+  canvas.addEventListener("touchstart", onTouchStart, { passive: true });
+  canvas.addEventListener("touchmove", onTouchMove, { passive: true });
+  canvas.addEventListener("touchend", onTouchEnd, { passive: true });
+  canvas.addEventListener("keydown", onKey);
+  canvas.tabIndex = 0; // so it can receive key events
 
   function resize(w: number, h: number, contentH: number) {
     viewportWidth = w;
@@ -160,17 +191,24 @@ export function createScrollViewport(opts: Options): ScrollViewport {
   return {
     root,
     content,
-    setContentHeight(h) { contentHeight = h; },
+    setContentHeight(h) {
+      contentHeight = h;
+    },
     scrollTo,
-    getScrollY() { return scrollY; },
+    getScrollY() {
+      return scrollY;
+    },
     resize,
     destroy() {
-      if (activeTween) { activeTween.kill(); activeTween = null; }
-      canvas.removeEventListener('wheel', onWheel);
-      canvas.removeEventListener('touchstart', onTouchStart);
-      canvas.removeEventListener('touchmove', onTouchMove);
-      canvas.removeEventListener('touchend', onTouchEnd);
-      canvas.removeEventListener('keydown', onKey);
+      if (activeTween) {
+        activeTween.kill();
+        activeTween = null;
+      }
+      canvas.removeEventListener("wheel", onWheel);
+      canvas.removeEventListener("touchstart", onTouchStart);
+      canvas.removeEventListener("touchmove", onTouchMove);
+      canvas.removeEventListener("touchend", onTouchEnd);
+      canvas.removeEventListener("keydown", onKey);
       root.destroy({ children: true });
     },
   };

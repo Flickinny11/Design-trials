@@ -42,22 +42,34 @@
 //
 // Run with: VERIFY_BUILD_REPRODUCIBILITY=1 node tests/swap/T-SWAP-07.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
-import JSZip from 'jszip';
-import { createHash } from 'node:crypto';
+import { strict as assert } from "node:assert";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+import { spawnSync } from "node:child_process";
+import JSZip from "jszip";
+import { createHash } from "node:crypto";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const prismPath = resolve(kidKodeRoot, 'public/prism-assets/mock-app.prism');
-const regionsPath = resolve(kidKodeRoot, 'public/prism-assets/atlas-regions.json');
-const hubPath = resolve(kidKodeRoot, 'src/lib/prism/mock-app-source/hubs/home-hub.json');
+const kidKodeRoot = resolve(here, "..", "..");
+const prismPath = resolve(kidKodeRoot, "public/prism-assets/mock-app.prism");
+const regionsPath = resolve(
+  kidKodeRoot,
+  "public/prism-assets/atlas-regions.json",
+);
+const hubPath = resolve(
+  kidKodeRoot,
+  "src/lib/prism/mock-app-source/hubs/home-hub.json",
+);
 
-assert.ok(existsSync(prismPath), `missing mock-app.prism: ${prismPath} — run \`npm run build:prism\``);
-assert.ok(existsSync(regionsPath), `missing atlas-regions.json: ${regionsPath}`);
+assert.ok(
+  existsSync(prismPath),
+  `missing mock-app.prism: ${prismPath} — run \`npm run build:prism\``,
+);
+assert.ok(
+  existsSync(regionsPath),
+  `missing atlas-regions.json: ${regionsPath}`,
+);
 assert.ok(existsSync(hubPath), `missing home-hub.json: ${hubPath}`);
 
 const prismBuf = readFileSync(prismPath);
@@ -65,52 +77,78 @@ const zip = await JSZip.loadAsync(prismBuf);
 
 // ─── (A1) §3.1 required top-level entries ───────────────────────────────────
 const REQUIRED_ENTRIES = [
-  'manifest.json',
-  'graph.json',
-  'assets/atlas-0.avif',
-  'assets/atlas-regions.json',
-  'assets/font-inter.msdf.fnt',
-  'assets/font-inter.msdf.png',
-  'assets/font-inter.msdf.json',
-  'meta/version.txt',
-  'meta/generator.json',
+  "manifest.json",
+  "graph.json",
+  "assets/atlas-0.avif",
+  "assets/atlas-regions.json",
+  "assets/font-inter.msdf.fnt",
+  "assets/font-inter.msdf.png",
+  "assets/font-inter.msdf.json",
+  "meta/version.txt",
+  "meta/generator.json",
 ];
 for (const e of REQUIRED_ENTRIES) {
   assert.ok(zip.file(e), `§3.1 required entry missing from .prism: ${e}`);
 }
 
-const manifest = JSON.parse(await zip.file('manifest.json').async('string'));
-const graph = JSON.parse(await zip.file('graph.json').async('string'));
+const manifest = JSON.parse(await zip.file("manifest.json").async("string"));
+const graph = JSON.parse(await zip.file("graph.json").async("string"));
 
 // ─── (A2) manifest structure ─────────────────────────────────────────────────
-assert.equal(manifest.prismVersion, '0.1.0', `prismVersion must be 0.1.0, got ${manifest.prismVersion}`);
-assert.equal(manifest.entryHub, 'home-hub', `entryHub must be 'home-hub', got ${manifest.entryHub}`);
-assert.ok(Array.isArray(manifest.entries), 'manifest.entries must be an array');
-assert.ok(manifest.entries.length > 0, 'manifest.entries must be non-empty');
-assert.ok(manifest.nodeCount >= 30, `§10.18 realistic home hub: nodeCount ≥ 30, got ${manifest.nodeCount}`);
+assert.equal(
+  manifest.prismVersion,
+  "0.1.0",
+  `prismVersion must be 0.1.0, got ${manifest.prismVersion}`,
+);
+assert.equal(
+  manifest.entryHub,
+  "home-hub",
+  `entryHub must be 'home-hub', got ${manifest.entryHub}`,
+);
+assert.ok(Array.isArray(manifest.entries), "manifest.entries must be an array");
+assert.ok(manifest.entries.length > 0, "manifest.entries must be non-empty");
+assert.ok(
+  manifest.nodeCount >= 30,
+  `§10.18 realistic home hub: nodeCount ≥ 30, got ${manifest.nodeCount}`,
+);
 
 // ─── (A3) artifactHash format + internal consistency ────────────────────────
-assert.ok(/^[a-f0-9]{64}$/.test(manifest.artifactHash), `artifactHash must be 64 hex chars, got ${manifest.artifactHash}`);
-const sortedEntries = [...manifest.entries].sort((a, b) => a.path.localeCompare(b.path));
-const rollup = createHash('sha256')
-  .update(sortedEntries.map((e) => `${e.path}:${e.sha256}`).join('\n'))
-  .digest('hex');
-assert.equal(rollup, manifest.artifactHash, `artifactHash self-consistency: recomputed ${rollup} !== manifest ${manifest.artifactHash}`);
+assert.ok(
+  /^[a-f0-9]{64}$/.test(manifest.artifactHash),
+  `artifactHash must be 64 hex chars, got ${manifest.artifactHash}`,
+);
+const sortedEntries = [...manifest.entries].sort((a, b) =>
+  a.path.localeCompare(b.path),
+);
+const rollup = createHash("sha256")
+  .update(sortedEntries.map((e) => `${e.path}:${e.sha256}`).join("\n"))
+  .digest("hex");
+assert.equal(
+  rollup,
+  manifest.artifactHash,
+  `artifactHash self-consistency: recomputed ${rollup} !== manifest ${manifest.artifactHash}`,
+);
 
 // ─── (A4) per-node module + backend presence ────────────────────────────────
 for (const n of graph.nodes) {
-  const codeFile = n.codeRef?.replace(/^nodes\//, '');
+  const codeFile = n.codeRef?.replace(/^nodes\//, "");
   assert.ok(codeFile, `node ${n.nodeId}: missing codeRef`);
-  assert.ok(zip.file(`nodes/${codeFile}`), `node ${n.nodeId}: missing module nodes/${codeFile}`);
+  assert.ok(
+    zip.file(`nodes/${codeFile}`),
+    `node ${n.nodeId}: missing module nodes/${codeFile}`,
+  );
   if (n.backendRef) {
-    const beFile = n.backendRef.replace(/^backends\//, '');
-    assert.ok(zip.file(`backends/${beFile}`), `node ${n.nodeId}: missing backend backends/${beFile}`);
+    const beFile = n.backendRef.replace(/^backends\//, "");
+    assert.ok(
+      zip.file(`backends/${beFile}`),
+      `node ${n.nodeId}: missing backend backends/${beFile}`,
+    );
   }
 }
 
 // ─── (B) Zero-orphans: every sourceAsset resolves to an atlas region ────────
-const hub = JSON.parse(readFileSync(hubPath, 'utf8'));
-const regionsWrapper = JSON.parse(readFileSync(regionsPath, 'utf8'));
+const hub = JSON.parse(readFileSync(hubPath, "utf8"));
+const regionsWrapper = JSON.parse(readFileSync(regionsPath, "utf8"));
 const regionKeys = new Set(Object.keys(regionsWrapper.regions));
 const orphans = [];
 for (const n of hub.nodes) {
@@ -123,23 +161,25 @@ assert.equal(
   orphans.length,
   0,
   `[zero-orphans] ${orphans.length}/${hub.nodes.length} home-hub.json nodes reference a sourceAsset not present in atlas-regions.json.\n` +
-    `  first 5: ${orphans.slice(0, 5).join(', ')}\n` +
+    `  first 5: ${orphans.slice(0, 5).join(", ")}\n` +
     `  atlas-regions.json has ${regionKeys.size} region keys. Fix: extend build-atlas.mjs to pack the cropped/ PNGs\n` +
     `  (assetKey = "cropped/<basename>.png") OR synthesize the missing per-node crops via scripts/extract-video.mjs.`,
 );
 
 // ─── (C) Reproducibility — two consecutive builds produce identical hash ────
 // Gated: set VERIFY_BUILD_REPRODUCIBILITY=1 to enable. Ralph always does.
-if (process.env.VERIFY_BUILD_REPRODUCIBILITY === '1') {
-  console.log('[T-SWAP-07] running two consecutive `npm run build:prism` invocations for determinism check…');
+if (process.env.VERIFY_BUILD_REPRODUCIBILITY === "1") {
+  console.log(
+    "[T-SWAP-07] running two consecutive `npm run build:prism` invocations for determinism check…",
+  );
   const baseline = manifest.artifactHash;
 
   for (let i = 1; i <= 2; i++) {
-    const r = spawnSync('npm', ['run', 'build:prism'], {
+    const r = spawnSync("npm", ["run", "build:prism"], {
       cwd: kidKodeRoot,
-      stdio: ['ignore', 'pipe', 'pipe'],
-      encoding: 'utf8',
-      env: { ...process.env, CI: '1' },
+      stdio: ["ignore", "pipe", "pipe"],
+      encoding: "utf8",
+      env: { ...process.env, CI: "1" },
     });
     assert.equal(
       r.status,
@@ -148,7 +188,9 @@ if (process.env.VERIFY_BUILD_REPRODUCIBILITY === '1') {
     );
     const reBuf = readFileSync(prismPath);
     const reZip = await JSZip.loadAsync(reBuf);
-    const reManifest = JSON.parse(await reZip.file('manifest.json').async('string'));
+    const reManifest = JSON.parse(
+      await reZip.file("manifest.json").async("string"),
+    );
     assert.equal(
       reManifest.artifactHash,
       baseline,
@@ -162,8 +204,14 @@ if (process.env.VERIFY_BUILD_REPRODUCIBILITY === '1') {
 }
 
 // ─── summary ─────────────────────────────────────────────────────────────────
-console.log(`[T-SWAP-07] §3.1 layout + zero-orphans + self-consistent rollup OK.`);
-console.log(`  .prism entries: ${Object.keys(zip.files).filter((k) => !zip.files[k].dir).length}`);
+console.log(
+  `[T-SWAP-07] §3.1 layout + zero-orphans + self-consistent rollup OK.`,
+);
+console.log(
+  `  .prism entries: ${Object.keys(zip.files).filter((k) => !zip.files[k].dir).length}`,
+);
 console.log(`  atlas regions: ${regionKeys.size}`);
-console.log(`  home-hub nodes: ${hub.nodes.length} (all resolve to atlas regions)`);
+console.log(
+  `  home-hub nodes: ${hub.nodes.length} (all resolve to atlas regions)`,
+);
 console.log(`  artifactHash: ${manifest.artifactHash}`);

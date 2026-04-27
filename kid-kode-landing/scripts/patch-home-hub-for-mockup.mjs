@@ -47,26 +47,31 @@
 // same inputs yields the same file contents, so it is safe to invoke
 // from the acceptance test harness.
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(__dirname, '..');
+const repoRoot = resolve(__dirname, "..");
 
-const hubPath = process.env.HOME_HUB_JSON
-  ?? resolve(repoRoot, 'src/lib/prism/mock-app-source/hubs/home-hub.json');
-const bboxPath = process.env.BBOX_JSON
-  ?? resolve(repoRoot, 'notes/mockup-candidates/ai-video-bbox-map.json');
+const hubPath =
+  process.env.HOME_HUB_JSON ??
+  resolve(repoRoot, "src/lib/prism/mock-app-source/hubs/home-hub.json");
+const bboxPath =
+  process.env.BBOX_JSON ??
+  resolve(repoRoot, "notes/mockup-candidates/ai-video-bbox-map.json");
 
-const hub = JSON.parse(readFileSync(hubPath, 'utf8'));
-const bboxMap = JSON.parse(readFileSync(bboxPath, 'utf8'));
+const hub = JSON.parse(readFileSync(hubPath, "utf8"));
+const bboxMap = JSON.parse(readFileSync(bboxPath, "utf8"));
 
 // Guard against a drifted BBOX map.
-if (typeof bboxMap.mockupWidth !== 'number' || typeof bboxMap.mockupHeight !== 'number') {
+if (
+  typeof bboxMap.mockupWidth !== "number" ||
+  typeof bboxMap.mockupHeight !== "number"
+) {
   throw new Error(`bbox-map is missing mockupWidth/mockupHeight: ${bboxPath}`);
 }
-if (!bboxMap.bboxes || typeof bboxMap.bboxes !== 'object') {
+if (!bboxMap.bboxes || typeof bboxMap.bboxes !== "object") {
   throw new Error(`bbox-map.bboxes missing or non-object: ${bboxPath}`);
 }
 
@@ -84,7 +89,8 @@ let regionKeysStripped = 0;
 for (const node of hub.nodes) {
   const { nodeId, visual } = node;
   if (!visual) throw new Error(`node ${nodeId}: missing visual`);
-  if (!visual.transform) throw new Error(`node ${nodeId}: missing visual.transform`);
+  if (!visual.transform)
+    throw new Error(`node ${nodeId}: missing visual.transform`);
 
   // 3. sourceAsset swap — always cropped/<nodeId>.png.
   visual.sourceAsset = `cropped/${nodeId}.png`;
@@ -107,14 +113,14 @@ for (const node of hub.nodes) {
   }
 
   // 4. Strip stale regionKeys except notifications-toggle.
-  if (nodeId !== 'notifications-toggle' && 'regionKeys' in visual) {
+  if (nodeId !== "notifications-toggle" && "regionKeys" in visual) {
     delete visual.regionKeys;
     regionKeysStripped++;
   }
 }
 
 // ─── write back ─────────────────────────────────────────────────────────────
-const out = JSON.stringify(hub, null, 2) + '\n';
+const out = JSON.stringify(hub, null, 2) + "\n";
 writeFileSync(hubPath, out);
 
 console.log(

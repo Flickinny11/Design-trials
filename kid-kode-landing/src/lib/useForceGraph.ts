@@ -1,13 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useRef, useState } from 'react';
-import * as d3 from 'd3-force-3d';
-import type { PrismNode, PrismEdge, PrismHub } from '@/data/mockGraph';
+import { useEffect, useMemo, useRef, useState } from "react";
+import * as d3 from "d3-force-3d";
+import type { PrismNode, PrismEdge, PrismHub } from "@/data/mockGraph";
 
 export interface SimNode extends PrismNode {
-  x: number; y: number; z: number;
-  vx?: number; vy?: number; vz?: number;
-  fx?: number | null; fy?: number | null; fz?: number | null;
+  x: number;
+  y: number;
+  z: number;
+  vx?: number;
+  vy?: number;
+  vz?: number;
+  fx?: number | null;
+  fy?: number | null;
+  fz?: number | null;
   hubCenter: { x: number; y: number; z: number };
 }
 
@@ -19,7 +25,9 @@ export interface SimLink {
 }
 
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
-function computeHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
+function computeHubCenters(
+  hubs: PrismHub[],
+): Record<string, { x: number; y: number; z: number }> {
   const centers: Record<string, { x: number; y: number; z: number }> = {};
   const R = 180;
   hubs.forEach((hub, i) => {
@@ -39,7 +47,7 @@ export function useForceGraph(
   edges: PrismEdge[],
   hubs: PrismHub[],
   pinnedPositions: Map<string, { x: number; y: number; z: number }>,
-  resetSignal: number
+  resetSignal: number,
 ) {
   const hubCenters = useMemo(() => computeHubCenters(hubs), [hubs]);
   const [, tick] = useState(0);
@@ -60,7 +68,12 @@ export function useForceGraph(
   }, [nodes, hubs, hubCenters, resetSignal]);
 
   const simLinks = useMemo<SimLink[]>(() => {
-    return edges.map((e) => ({ source: e.source, target: e.target, type: e.type, id: e.id }));
+    return edges.map((e) => ({
+      source: e.source,
+      target: e.target,
+      type: e.type,
+      id: e.id,
+    }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [edges, resetSignal]);
 
@@ -69,35 +82,50 @@ export function useForceGraph(
   useEffect(() => {
     simNodes.forEach((n) => {
       const pin = pinnedPositions.get(n.id);
-      if (pin) { n.fx = pin.x; n.fy = pin.y; n.fz = pin.z; }
-      else { n.fx = null; n.fy = null; n.fz = null; }
+      if (pin) {
+        n.fx = pin.x;
+        n.fy = pin.y;
+        n.fz = pin.z;
+      } else {
+        n.fx = null;
+        n.fy = null;
+        n.fz = null;
+      }
     });
 
     const sim = d3
       .forceSimulation(simNodes as any, 3)
       .force(
-        'link',
+        "link",
         d3
           .forceLink(simLinks as any)
           .id((d: any) => d.id)
           .distance((l: any) =>
-            l.type === 'contains' ? 26 :
-            l.type === 'shares-state' ? 62 :
-            l.type === 'data-flow' ? 44 :
-            l.type === 'navigates-to' ? 70 : 50
+            l.type === "contains"
+              ? 26
+              : l.type === "shares-state"
+                ? 62
+                : l.type === "data-flow"
+                  ? 44
+                  : l.type === "navigates-to"
+                    ? 70
+                    : 50,
           )
-          .strength(0.42)
+          .strength(0.42),
       )
-      .force('charge', d3.forceManyBody().strength(-110).distanceMax(220).theta(0.88))
-      .force('center', d3.forceCenter(0, 0, 0).strength(0.015))
-      .force('hubGravity', forceHubGravity(simNodes, 0.14))
-      .force('collision', d3.forceCollide(7.2).strength(0.92).iterations(2))
+      .force(
+        "charge",
+        d3.forceManyBody().strength(-110).distanceMax(220).theta(0.88),
+      )
+      .force("center", d3.forceCenter(0, 0, 0).strength(0.015))
+      .force("hubGravity", forceHubGravity(simNodes, 0.14))
+      .force("collision", d3.forceCollide(7.2).strength(0.92).iterations(2))
       .alphaDecay(0.014)
       .velocityDecay(0.34);
 
     simRef.current = sim;
 
-    sim.on('tick', () => tick((t) => (t + 1) % 1000000));
+    sim.on("tick", () => tick((t) => (t + 1) % 1000000));
 
     // Converge upfront for a stable entry view
     for (let i = 0; i < 180; i++) sim.tick();
@@ -111,8 +139,15 @@ export function useForceGraph(
     if (!simRef.current) return;
     simNodes.forEach((n) => {
       const pin = pinnedPositions.get(n.id);
-      if (pin) { n.fx = pin.x; n.fy = pin.y; n.fz = pin.z; }
-      else { n.fx = null; n.fy = null; n.fz = null; }
+      if (pin) {
+        n.fx = pin.x;
+        n.fy = pin.y;
+        n.fz = pin.z;
+      } else {
+        n.fx = null;
+        n.fy = null;
+        n.fz = null;
+      }
     });
     simRef.current.alpha(0.3).restart();
   }, [pinnedPositions, simNodes]);

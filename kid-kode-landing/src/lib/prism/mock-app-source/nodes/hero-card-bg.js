@@ -8,8 +8,12 @@ export function createNode(ctx) {
   sprite.height = transform.height;
   container.addChild(sprite);
 
-  const off = events.on?.('build-flow-started', () => {
-    gsap.fromTo(sprite, { alpha: 0.6 }, { alpha: 1.0, duration: 0.35, ease: 'power2.out' });
+  const off = events.on?.("build-flow-started", () => {
+    gsap.fromTo(
+      sprite,
+      { alpha: 0.6 },
+      { alpha: 1.0, duration: 0.35, ease: "power2.out" },
+    );
   });
 
   return {

@@ -16,25 +16,27 @@
 // Run: node --env-file=.env.local scripts/segment-video.mjs
 // Writes: notes/mockup-candidates/ai-video-mockup.sam.json
 
-import { fal } from '@fal-ai/client';
-import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, resolve, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fal } from "@fal-ai/client";
+import { readFileSync, writeFileSync } from "node:fs";
+import { dirname, resolve, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const mockupDir = resolve(__dirname, '..', 'notes', 'mockup-candidates');
-const mockupPath = join(mockupDir, 'ai-video-mockup.png');
-const outPath = join(mockupDir, 'ai-video-mockup.sam.json');
+const mockupDir = resolve(__dirname, "..", "notes", "mockup-candidates");
+const mockupPath = join(mockupDir, "ai-video-mockup.png");
+const outPath = join(mockupDir, "ai-video-mockup.sam.json");
 
 if (!process.env.FAL_KEY) {
-  console.error('FAL_KEY not set — add it to .env.local and rerun with --env-file=.env.local');
+  console.error(
+    "FAL_KEY not set — add it to .env.local and rerun with --env-file=.env.local",
+  );
   process.exit(1);
 }
 fal.config({ credentials: process.env.FAL_KEY });
 
-console.log('[sam] uploading mockup to FAL storage...');
+console.log("[sam] uploading mockup to FAL storage...");
 const buf = readFileSync(mockupPath);
-const blob = new Blob([buf], { type: 'image/png' });
+const blob = new Blob([buf], { type: "image/png" });
 const imageUrl = await fal.storage.upload(blob);
 console.log(`[sam] uploaded: ${imageUrl}`);
 
@@ -46,28 +48,30 @@ console.log(`[sam] uploaded: ${imageUrl}`);
 //   - footer: 'icon' (social glyphs), 'bar' (footer rail)
 //   - misc:   'panel' (side/background containers)
 const PROMPTS = [
-  { key: 'bar',    prompt: 'bar',    max: 4 },
-  { key: 'pill',   prompt: 'pill',   max: 12 },
-  { key: 'button', prompt: 'button', max: 8 },
-  { key: 'tile',   prompt: 'tile',   max: 8 },
-  { key: 'card',   prompt: 'card',   max: 8 },
-  { key: 'frame',  prompt: 'frame',  max: 8 },
-  { key: 'panel',  prompt: 'panel',  max: 8 },
-  { key: 'icon',   prompt: 'icon',   max: 12 },
-  { key: 'input',  prompt: 'input',  max: 4 },
-  { key: 'thumbnail', prompt: 'thumbnail', max: 8 },
-  { key: 'logo',   prompt: 'logo',   max: 4 },
+  { key: "bar", prompt: "bar", max: 4 },
+  { key: "pill", prompt: "pill", max: 12 },
+  { key: "button", prompt: "button", max: 8 },
+  { key: "tile", prompt: "tile", max: 8 },
+  { key: "card", prompt: "card", max: 8 },
+  { key: "frame", prompt: "frame", max: 8 },
+  { key: "panel", prompt: "panel", max: 8 },
+  { key: "icon", prompt: "icon", max: 12 },
+  { key: "input", prompt: "input", max: 4 },
+  { key: "thumbnail", prompt: "thumbnail", max: 8 },
+  { key: "logo", prompt: "logo", max: 4 },
 ];
 
 const COST_PER = 0.005;
-console.log(`[sam] running ${PROMPTS.length} prompts × $${COST_PER} = $${(PROMPTS.length * COST_PER).toFixed(3)} total`);
+console.log(
+  `[sam] running ${PROMPTS.length} prompts × $${COST_PER} = $${(PROMPTS.length * COST_PER).toFixed(3)} total`,
+);
 
 const results = [];
 
 for (const p of PROMPTS) {
   const t0 = Date.now();
   try {
-    const r = await fal.subscribe('fal-ai/sam-3/image-rle', {
+    const r = await fal.subscribe("fal-ai/sam-3/image-rle", {
       input: {
         image_url: imageUrl,
         prompt: p.prompt,
@@ -86,23 +90,34 @@ for (const p of PROMPTS) {
     const recs = boxes.map((box, i) => ({
       key: p.key,
       prompt: p.prompt,
-      box,                      // [cx, cy, w, h] normalized 0..1
+      box, // [cx, cy, w, h] normalized 0..1
       score: scores[i] ?? null,
-      rle: Array.isArray(rle) ? rle[i] : (i === 0 ? rle : null),
+      rle: Array.isArray(rle) ? rle[i] : i === 0 ? rle : null,
     }));
     results.push(...recs);
-    console.log(`[sam] ${p.key.padEnd(10)} → ${recs.length} masks (${((Date.now() - t0) / 1000).toFixed(1)}s)`);
+    console.log(
+      `[sam] ${p.key.padEnd(10)} → ${recs.length} masks (${((Date.now() - t0) / 1000).toFixed(1)}s)`,
+    );
   } catch (e) {
     console.error(`[sam] ${p.key}: ${e.message}`);
   }
 }
 
-writeFileSync(outPath, JSON.stringify({
-  mockup: mockupPath,
-  imageUrl,
-  promptCount: PROMPTS.length,
-  totalMasks: results.length,
-  results,
-}, null, 2) + '\n');
+writeFileSync(
+  outPath,
+  JSON.stringify(
+    {
+      mockup: mockupPath,
+      imageUrl,
+      promptCount: PROMPTS.length,
+      totalMasks: results.length,
+      results,
+    },
+    null,
+    2,
+  ) + "\n",
+);
 
-console.log(`\n[sam] wrote ${outPath} — ${results.length} masks across ${PROMPTS.length} prompts`);
+console.log(
+  `\n[sam] wrote ${outPath} — ${results.length} masks across ${PROMPTS.length} prompts`,
+);

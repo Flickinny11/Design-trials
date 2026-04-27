@@ -16,12 +16,15 @@
 // `specRef` is documentation only — the literal expression a production Prism
 // build would compile into Zod. Consumers should treat these descriptors as
 // shape hints, not as evaluable code.
-export const Number$ = Object.freeze({ kind: 'number', specRef: 'z.number()' });
-export const String$ = Object.freeze({ kind: 'string', specRef: 'z.string()' });
-export const Boolean$ = Object.freeze({ kind: 'boolean', specRef: 'z.boolean()' });
+export const Number$ = Object.freeze({ kind: "number", specRef: "z.number()" });
+export const String$ = Object.freeze({ kind: "string", specRef: "z.string()" });
+export const Boolean$ = Object.freeze({
+  kind: "boolean",
+  specRef: "z.boolean()",
+});
 
 function object(shape) {
-  return Object.freeze({ kind: 'object', shape: Object.freeze({ ...shape }) });
+  return Object.freeze({ kind: "object", shape: Object.freeze({ ...shape }) });
 }
 
 // ── Contract schemas referenced by the mock graph ───────────────────────────

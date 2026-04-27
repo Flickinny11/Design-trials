@@ -1,5 +1,5 @@
-import { fal } from '@fal-ai/client';
-import { writeFileSync } from 'node:fs';
+import { fal } from "@fal-ai/client";
+import { writeFileSync } from "node:fs";
 fal.config({ credentials: process.env.FAL_KEY });
 
 const prompt = `A stunning sci-fi futuristic 3D interface composition, portrait vertical scroll layout, rendered as photorealistic cinematic concept art. Deep-space cosmic environment with volumetric nebulae, distant galaxies, iridescent aurora, bioluminescent accents, dramatic god-ray lighting, hyperreal depth of field.
@@ -20,10 +20,11 @@ Bottom band — a cosmic horizon of distant stars, three circular constellation 
 
 Style: photorealistic 3D cinematic render, Moebius meets Blame! meets Unreal Engine 5, iridescent refraction, volumetric atmosphere, hand-rendered texture, organic material imperfections, painterly bloom, editorial concept art quality. Absolutely NO text, NO letters, NO numbers, NO words, NO wordmarks, NO typography anywhere. Absolutely NO flat UI chrome, NO rounded rectangles that look like CSS, NO glass-morphism clichés, NO gradient buttons. Every element is a physical sculpted object with material, mass, depth, light interaction. Scale is vast and cinematic. Color palette: deep cosmic navy-black background punctuated by cobalt, violet, rose-amber, teal bioluminescent accents. Pure visual composition. High dynamic range, hyperreal.`;
 
-const negative = 'text, letters, words, numbers, typography, wordmark, label, caption, logo text, CSS, gradient button, rounded rectangle, glass morphism, flat UI, dashboard, figma, mockup chrome, ui screenshot, code rendering, flat design, minimalist UI';
+const negative =
+  "text, letters, words, numbers, typography, wordmark, label, caption, logo text, CSS, gradient button, rounded rectangle, glass morphism, flat UI, dashboard, figma, mockup chrome, ui screenshot, code rendering, flat design, minimalist UI";
 
 const t0 = Date.now();
-const result = await fal.subscribe('fal-ai/flux-2-pro', {
+const result = await fal.subscribe("fal-ai/flux-2-pro", {
   input: {
     prompt,
     negative_prompt: negative,
@@ -34,8 +35,10 @@ const result = await fal.subscribe('fal-ai/flux-2-pro', {
   logs: false,
 });
 const url = result?.data?.images?.[0]?.url;
-console.log(`[gen] done in ${((Date.now()-t0)/1000).toFixed(1)}s → ${url}`);
+console.log(`[gen] done in ${((Date.now() - t0) / 1000).toFixed(1)}s → ${url}`);
 const res = await fetch(url);
 const buf = Buffer.from(await res.arrayBuffer());
-writeFileSync('notes/mockup-candidates/scifi-mockup-v1.png', buf);
-console.log(`[gen] saved notes/mockup-candidates/scifi-mockup-v1.png (${buf.length} bytes)`);
+writeFileSync("notes/mockup-candidates/scifi-mockup-v1.png", buf);
+console.log(
+  `[gen] saved notes/mockup-candidates/scifi-mockup-v1.png (${buf.length} bytes)`,
+);

@@ -38,29 +38,43 @@
 //
 // Run with: node kid-kode-landing/tests/swap/T-SWAP-06.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const hubPath = resolve(kidKodeRoot, 'src/lib/prism/mock-app-source/hubs/home-hub.json');
-const bboxPath = resolve(kidKodeRoot, 'notes/mockup-candidates/ai-video-bbox-map.json');
+const kidKodeRoot = resolve(here, "..", "..");
+const hubPath = resolve(
+  kidKodeRoot,
+  "src/lib/prism/mock-app-source/hubs/home-hub.json",
+);
+const bboxPath = resolve(
+  kidKodeRoot,
+  "notes/mockup-candidates/ai-video-bbox-map.json",
+);
 
 // ─── preconditions ──────────────────────────────────────────────────────────
 assert.ok(existsSync(hubPath), `missing home-hub.json: ${hubPath}`);
 assert.ok(existsSync(bboxPath), `missing ai-video-bbox-map.json: ${bboxPath}`);
 
-const hub = JSON.parse(readFileSync(hubPath, 'utf8'));
-const bboxMap = JSON.parse(readFileSync(bboxPath, 'utf8'));
+const hub = JSON.parse(readFileSync(hubPath, "utf8"));
+const bboxMap = JSON.parse(readFileSync(bboxPath, "utf8"));
 
 // Snapshot of expected mockup dimensions; T-SWAP-04 pinned these.
-assert.equal(bboxMap.mockupWidth, 2816, 'ai-video-bbox-map.mockupWidth must be 2816');
-assert.equal(bboxMap.mockupHeight, 1536, 'ai-video-bbox-map.mockupHeight must be 1536');
+assert.equal(
+  bboxMap.mockupWidth,
+  2816,
+  "ai-video-bbox-map.mockupWidth must be 2816",
+);
+assert.equal(
+  bboxMap.mockupHeight,
+  1536,
+  "ai-video-bbox-map.mockupHeight must be 1536",
+);
 
 // ─── 1 + 2. hub.layout ──────────────────────────────────────────────────────
-assert.ok(hub.hub && hub.hub.layout, 'hub.layout missing');
+assert.ok(hub.hub && hub.hub.layout, "hub.layout missing");
 const layout = hub.hub.layout;
 assert.equal(
   layout.viewportWidth,
@@ -73,16 +87,17 @@ assert.equal(
   `hub.layout.contentHeight must be 1536 (AETHER mockup height); got ${layout.contentHeight}`,
 );
 assert.ok(
-  typeof layout.viewportHeight === 'number' && layout.viewportHeight > 0,
-  'hub.layout.viewportHeight must be preserved (positive number)',
+  typeof layout.viewportHeight === "number" && layout.viewportHeight > 0,
+  "hub.layout.viewportHeight must be preserved (positive number)",
 );
 assert.ok(
-  typeof layout.backgroundColor === 'string' && /^#[0-9a-fA-F]{6,8}$/.test(layout.backgroundColor),
-  'hub.layout.backgroundColor must be preserved (hex color string)',
+  typeof layout.backgroundColor === "string" &&
+    /^#[0-9a-fA-F]{6,8}$/.test(layout.backgroundColor),
+  "hub.layout.backgroundColor must be preserved (hex color string)",
 );
 
 // ─── 4. Node count ──────────────────────────────────────────────────────────
-assert.ok(Array.isArray(hub.nodes), 'hub.nodes must be an array');
+assert.ok(Array.isArray(hub.nodes), "hub.nodes must be an array");
 assert.equal(
   hub.nodes.length,
   40,
@@ -92,7 +107,15 @@ assert.equal(
 // ─── 3 + 5 + 6 + 7 + 8 + 9 + 10. Per-node invariants ────────────────────────
 const bboxKeys = new Set(Object.keys(bboxMap.bboxes));
 
-const REQUIRED_NODE_FIELDS = ['nodeId', 'subtype', 'parentHubId', 'serviceTag', 'visual', 'intent', 'codeRef'];
+const REQUIRED_NODE_FIELDS = [
+  "nodeId",
+  "subtype",
+  "parentHubId",
+  "serviceTag",
+  "visual",
+  "intent",
+  "codeRef",
+];
 
 let matchedCount = 0;
 let placeholderCount = 0;
@@ -102,11 +125,17 @@ for (const node of hub.nodes) {
   for (const f of REQUIRED_NODE_FIELDS) {
     assert.ok(
       Object.prototype.hasOwnProperty.call(node, f),
-      `node ${node.nodeId ?? '<unknown>'} missing required field: ${f}`,
+      `node ${node.nodeId ?? "<unknown>"} missing required field: ${f}`,
     );
   }
-  assert.ok(node.visual && typeof node.visual === 'object', `node ${node.nodeId} missing visual`);
-  assert.ok(node.visual.transform, `node ${node.nodeId} missing visual.transform`);
+  assert.ok(
+    node.visual && typeof node.visual === "object",
+    `node ${node.nodeId} missing visual`,
+  );
+  assert.ok(
+    node.visual.transform,
+    `node ${node.nodeId} missing visual.transform`,
+  );
 
   const t = node.visual.transform;
 
@@ -120,20 +149,20 @@ for (const node of hub.nodes) {
 
   // 7. z preserved (present as number, non-negative).
   assert.ok(
-    typeof t.z === 'number' && t.z >= 0,
+    typeof t.z === "number" && t.z >= 0,
     `node ${node.nodeId}: transform.z must be preserved as a non-negative number; got ${t.z}`,
   );
 
   // 8 + 9. regionKeys handling.
-  if (node.nodeId === 'notifications-toggle') {
+  if (node.nodeId === "notifications-toggle") {
     assert.deepEqual(
       node.visual.regionKeys,
-      ['off', 'on'],
+      ["off", "on"],
       `notifications-toggle: regionKeys must stay ['off','on']`,
     );
   } else {
     assert.ok(
-      !('regionKeys' in node.visual),
+      !("regionKeys" in node.visual),
       `node ${node.nodeId}: stale regionKeys must be stripped (only notifications-toggle retains them)`,
     );
   }
@@ -142,23 +171,58 @@ for (const node of hub.nodes) {
   if (bboxKeys.has(node.nodeId)) {
     matchedCount++;
     const b = bboxMap.bboxes[node.nodeId];
-    assert.equal(t.x, b.x, `node ${node.nodeId}: transform.x must be ${b.x} (BBOX); got ${t.x}`);
-    assert.equal(t.y, b.y, `node ${node.nodeId}: transform.y must be ${b.y} (BBOX); got ${t.y}`);
-    assert.equal(t.width, b.w, `node ${node.nodeId}: transform.width must be ${b.w} (BBOX); got ${t.width}`);
-    assert.equal(t.height, b.h, `node ${node.nodeId}: transform.height must be ${b.h} (BBOX); got ${t.height}`);
+    assert.equal(
+      t.x,
+      b.x,
+      `node ${node.nodeId}: transform.x must be ${b.x} (BBOX); got ${t.x}`,
+    );
+    assert.equal(
+      t.y,
+      b.y,
+      `node ${node.nodeId}: transform.y must be ${b.y} (BBOX); got ${t.y}`,
+    );
+    assert.equal(
+      t.width,
+      b.w,
+      `node ${node.nodeId}: transform.width must be ${b.w} (BBOX); got ${t.width}`,
+    );
+    assert.equal(
+      t.height,
+      b.h,
+      `node ${node.nodeId}: transform.height must be ${b.h} (BBOX); got ${t.height}`,
+    );
   } else {
     placeholderCount++;
-    assert.equal(t.x, -1, `node ${node.nodeId} (absent from mockup): transform.x must be -1; got ${t.x}`);
-    assert.equal(t.y, -1, `node ${node.nodeId} (absent from mockup): transform.y must be -1; got ${t.y}`);
-    assert.equal(t.width, 2, `node ${node.nodeId} (absent from mockup): transform.width must be 2; got ${t.width}`);
-    assert.equal(t.height, 2, `node ${node.nodeId} (absent from mockup): transform.height must be 2; got ${t.height}`);
+    assert.equal(
+      t.x,
+      -1,
+      `node ${node.nodeId} (absent from mockup): transform.x must be -1; got ${t.x}`,
+    );
+    assert.equal(
+      t.y,
+      -1,
+      `node ${node.nodeId} (absent from mockup): transform.y must be -1; got ${t.y}`,
+    );
+    assert.equal(
+      t.width,
+      2,
+      `node ${node.nodeId} (absent from mockup): transform.width must be 2; got ${t.width}`,
+    );
+    assert.equal(
+      t.height,
+      2,
+      `node ${node.nodeId} (absent from mockup): transform.height must be 2; got ${t.height}`,
+    );
   }
 }
 
 // Sanity: we expect a non-trivial split — at least one BBOX match, at least
 // one placeholder. If either bucket is zero the BBOX map or the graph drifted.
-assert.ok(matchedCount >= 1, 'expected ≥1 node mapped to a BBOX entry');
-assert.ok(placeholderCount >= 1, 'expected ≥1 placeholder node (absent from mockup)');
+assert.ok(matchedCount >= 1, "expected ≥1 node mapped to a BBOX entry");
+assert.ok(
+  placeholderCount >= 1,
+  "expected ≥1 placeholder node (absent from mockup)",
+);
 
 console.log(
   `[T-SWAP-06] OK — hub.layout ${layout.viewportWidth}x${layout.contentHeight}, ` +

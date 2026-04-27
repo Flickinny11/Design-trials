@@ -37,23 +37,29 @@
 //
 // Run with: node tests/vid/T-VID-01.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const hubPath = resolve(kidKodeRoot, 'src/lib/prism/mock-app-source/hubs/home-hub.json');
+const kidKodeRoot = resolve(here, "..", "..");
+const hubPath = resolve(
+  kidKodeRoot,
+  "src/lib/prism/mock-app-source/hubs/home-hub.json",
+);
 
-const hub = JSON.parse(readFileSync(hubPath, 'utf8'));
-assert.ok(Array.isArray(hub.nodes), `home-hub.json: nodes[] must exist (got ${typeof hub.nodes})`);
+const hub = JSON.parse(readFileSync(hubPath, "utf8"));
+assert.ok(
+  Array.isArray(hub.nodes),
+  `home-hub.json: nodes[] must exist (got ${typeof hub.nodes})`,
+);
 
 const REQUIRED_VIDEO_NODE_IDS = [
-  'video-slot-1',
-  'video-slot-2',
-  'video-slot-3',
-  'video-slot-4',
+  "video-slot-1",
+  "video-slot-2",
+  "video-slot-3",
+  "video-slot-4",
 ];
 
 // ─── (A) Node presence ────────────────────────────────────────────────
@@ -80,26 +86,26 @@ for (const id of REQUIRED_VIDEO_NODE_IDS) {
   );
   const [entry] = interactions;
   assert.ok(
-    entry && typeof entry === 'object' && !Array.isArray(entry),
-    `${id}: interaction[0] must be a plain object (got ${Array.isArray(entry) ? 'array' : typeof entry})`,
+    entry && typeof entry === "object" && !Array.isArray(entry),
+    `${id}: interaction[0] must be a plain object (got ${Array.isArray(entry) ? "array" : typeof entry})`,
   );
   assert.equal(
     entry.event,
-    'pointertap',
+    "pointertap",
     `${id}: interaction[0].event must be 'pointertap' (got ${JSON.stringify(entry.event)}) — canonical field per prism-spec-extract.md:626`,
   );
   assert.equal(
     entry.effect,
-    'playVideo',
+    "playVideo",
     `${id}: interaction[0].effect must be 'playVideo' (got ${JSON.stringify(entry.effect)})`,
   );
   assert.equal(
     typeof entry.src,
-    'string',
+    "string",
     `${id}: interaction[0].src must be a string (got ${typeof entry.src})`,
   );
   assert.ok(
-    entry.src.endsWith('.mp4'),
+    entry.src.endsWith(".mp4"),
     `${id}: interaction[0].src must end with '.mp4' (got ${JSON.stringify(entry.src)})`,
   );
   assert.ok(
@@ -108,4 +114,6 @@ for (const id of REQUIRED_VIDEO_NODE_IDS) {
   );
 }
 
-console.log(`[T-VID-01] PASS — 4 video-slot nodes each carry { event: 'pointertap', effect: 'playVideo', src: '*.mp4' } playback hook`);
+console.log(
+  `[T-VID-01] PASS — 4 video-slot nodes each carry { event: 'pointertap', effect: 'playVideo', src: '*.mp4' } playback hook`,
+);

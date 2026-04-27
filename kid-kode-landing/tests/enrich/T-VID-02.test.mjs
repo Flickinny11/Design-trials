@@ -49,16 +49,16 @@
 //
 // Run with: node tests/enrich/T-VID-02.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const specPath = resolve(kidKodeRoot, 'notes/prism-spec-extract.md');
+const kidKodeRoot = resolve(here, "..", "..");
+const specPath = resolve(kidKodeRoot, "notes/prism-spec-extract.md");
 
-const spec = readFileSync(specPath, 'utf8');
+const spec = readFileSync(specPath, "utf8");
 
 // ─── (A) Section presence ─────────────────────────────────────────────
 const HEADING_RE = /^##\s+§-SPEC-ENRICH\b/gm;
@@ -75,36 +75,46 @@ assert.equal(
 // for simpler regex work; this is intentional.
 const sectionRe = /^##\s+§-SPEC-ENRICH\b[^\n]*\n([\s\S]*?)(?=^##\s|\Z)/m;
 const sectionMatch = spec.match(sectionRe);
-assert.ok(sectionMatch, 'prism-spec-extract.md: could not extract §-SPEC-ENRICH section body');
+assert.ok(
+  sectionMatch,
+  "prism-spec-extract.md: could not extract §-SPEC-ENRICH section body",
+);
 const body = sectionMatch[1];
-assert.ok(body.trim().length > 200, `§-SPEC-ENRICH body is too short (${body.trim().length} chars) — a design note needs more substance`);
+assert.ok(
+  body.trim().length > 200,
+  `§-SPEC-ENRICH body is too short (${body.trim().length} chars) — a design note needs more substance`,
+);
 
 // ─── (B) Pipeline position: post-segmentation, names SAM ──────────────
 assert.ok(
   /post-segmentation|after\s+SAM|after\s+the\s+segmentation/i.test(body),
-  '§-SPEC-ENRICH: must describe the classifier as post-segmentation (runs AFTER SAM returns bboxes)',
+  "§-SPEC-ENRICH: must describe the classifier as post-segmentation (runs AFTER SAM returns bboxes)",
 );
 assert.ok(
   /\bSAM\b/.test(body),
-  '§-SPEC-ENRICH: must name SAM explicitly so pipeline ordering is unambiguous',
+  "§-SPEC-ENRICH: must name SAM explicitly so pipeline ordering is unambiguous",
 );
 assert.ok(
   /\bbbox(es)?\b|\bbounding\s+box(es)?\b/i.test(body),
-  '§-SPEC-ENRICH: must mention bboxes (the SAM output that the classifier consumes)',
+  "§-SPEC-ENRICH: must mention bboxes (the SAM output that the classifier consumes)",
 );
 
 // ─── (C) Classifier shape: vision-model prompt, NOT hand-coded rules ──
 assert.ok(
   /vision[-\s]?model|vision\s+LM|VLM/i.test(body),
-  '§-SPEC-ENRICH: must specify a vision model does the classification',
+  "§-SPEC-ENRICH: must specify a vision model does the classification",
 );
 assert.ok(
-  /not\s+hand-coded|not\s+hardcoded|not\s+(?:hand-?tuned\s+)?(?:pixel\s+)?rules|no\s+hand-coded\s+rules/i.test(body),
+  /not\s+hand-coded|not\s+hardcoded|not\s+(?:hand-?tuned\s+)?(?:pixel\s+)?rules|no\s+hand-coded\s+rules/i.test(
+    body,
+  ),
   "§-SPEC-ENRICH: must explicitly reject hand-coded pixel rules (they were debated in T-VID-01 planning; lock the decision)",
 );
 assert.ok(
-  /play[-\s]?button|playable\s+region|video[-\s]?like|video\s+region/i.test(body),
-  '§-SPEC-ENRICH: must name the category being classified (play-button-like / playable / video-like regions)',
+  /play[-\s]?button|playable\s+region|video[-\s]?like|video\s+region/i.test(
+    body,
+  ),
+  "§-SPEC-ENRICH: must name the category being classified (play-button-like / playable / video-like regions)",
 );
 
 // ─── (D) User-vs-auto branch ──────────────────────────────────────────
@@ -118,38 +128,37 @@ assert.ok(
 );
 assert.ok(
   /prompt(s)?\s+(?:the\s+)?user|ask(s)?\s+(?:the\s+)?user/i.test(body),
-  '§-SPEC-ENRICH: must describe the classifier prompting the user for a choice',
+  "§-SPEC-ENRICH: must describe the classifier prompting the user for a choice",
 );
 
 // ─── (E) Emission shape: interactions[] with {event, effect, src} ─────
 assert.ok(
   /interactions\[\]/.test(body),
-  '§-SPEC-ENRICH: must document the interactions[] emission',
+  "§-SPEC-ENRICH: must document the interactions[] emission",
 );
 assert.ok(
   /playVideo/.test(body),
-  '§-SPEC-ENRICH: must name the `playVideo` effect emitted for playable regions',
+  "§-SPEC-ENRICH: must name the `playVideo` effect emitted for playable regions",
 );
 assert.ok(
   /\bpointertap\b/.test(body),
-  '§-SPEC-ENRICH: must name `pointertap` as the event (mirrors home-hub.json video-slot entries)',
+  "§-SPEC-ENRICH: must name `pointertap` as the event (mirrors home-hub.json video-slot entries)",
 );
 // The central contribution: `src` is ratified as a permitted extension
 // to {event, effect}. Require the section to name the field AND mark it
 // explicitly as an extension (not a rename).
+assert.ok(/\bsrc\b/.test(body), "§-SPEC-ENRICH: must name the `src` field");
 assert.ok(
-  /\bsrc\b/.test(body),
-  '§-SPEC-ENRICH: must name the `src` field',
-);
-assert.ok(
-  /permitted\s+extension|optional\s+extension|extension\s+to|extends?\s+the\s+canonical/i.test(body),
-  '§-SPEC-ENRICH: must flag `src` as an extension to the canonical {event, effect} tuple (line 626), not a replacement',
+  /permitted\s+extension|optional\s+extension|extension\s+to|extends?\s+the\s+canonical/i.test(
+    body,
+  ),
+  "§-SPEC-ENRICH: must flag `src` as an extension to the canonical {event, effect} tuple (line 626), not a replacement",
 );
 
 // ─── (F) Forward reference to T-VID-03 ────────────────────────────────
 assert.ok(
   /T-VID-03/.test(body),
-  '§-SPEC-ENRICH: must name T-VID-03 as the task that wires the generation half',
+  "§-SPEC-ENRICH: must name T-VID-03 as the task that wires the generation half",
 );
 
-console.log('[T-VID-02] PASS — §-SPEC-ENRICH section present and covers (A–F)');
+console.log("[T-VID-02] PASS — §-SPEC-ENRICH section present and covers (A–F)");

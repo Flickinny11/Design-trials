@@ -8,19 +8,44 @@
 // Run automatically inside `npm run provision-assets` OR manually:
 //   node scripts/synthesize-missing-frames.mjs
 
-import sharp from 'sharp';
-import { readFileSync, existsSync, mkdirSync, writeFileSync, readdirSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import sharp from "sharp";
+import {
+  readFileSync,
+  existsSync,
+  mkdirSync,
+  writeFileSync,
+  readdirSync,
+} from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(__dirname, '..');
-const graphPath = join(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.json');
-const framesRoot = join(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'assets', 'source-images', 'frames');
+const repoRoot = resolve(__dirname, "..");
+const graphPath = join(
+  repoRoot,
+  "src",
+  "lib",
+  "prism",
+  "mock-app-source",
+  "hubs",
+  "home-hub.json",
+);
+const framesRoot = join(
+  repoRoot,
+  "src",
+  "lib",
+  "prism",
+  "mock-app-source",
+  "assets",
+  "source-images",
+  "frames",
+);
 
 function hasSufficientFrames(dir, want) {
   if (!existsSync(dir)) return false;
-  const have = readdirSync(dir).filter((f) => /^frame-\d{3}\.png$/.test(f)).length;
+  const have = readdirSync(dir).filter((f) =>
+    /^frame-\d{3}\.png$/.test(f),
+  ).length;
   return have >= want;
 }
 
@@ -29,7 +54,11 @@ async function synthesizeFrame(basePath, outPath, t) {
   const hueRotate = Math.round(Math.sin(t * Math.PI * 2) * 12); // ±12 deg (sharp requires integer)
   const brightness = 1 + 0.06 * Math.sin(t * Math.PI * 2);
   const saturation = 1 + 0.15 * Math.sin(t * Math.PI * 2 + Math.PI / 3);
-  let img = sharp(basePath).modulate({ brightness, saturation, hue: hueRotate });
+  let img = sharp(basePath).modulate({
+    brightness,
+    saturation,
+    hue: hueRotate,
+  });
   // Tiny blur cycle for a soft-light pulse feel.
   const blurSigma = 0.4 + 0.4 * Math.abs(Math.sin(t * Math.PI * 2));
   img = img.blur(blurSigma);
@@ -37,20 +66,32 @@ async function synthesizeFrame(basePath, outPath, t) {
 }
 
 async function main() {
-  const graph = JSON.parse(readFileSync(graphPath, 'utf-8'));
-  let made = 0, skipped = 0;
+  const graph = JSON.parse(readFileSync(graphPath, "utf-8"));
+  let made = 0,
+    skipped = 0;
   for (const node of graph.nodes) {
     const count = node.visual?.frameCount;
-    if (!count || node.intent?.visualSpec?.animationSpec?.method !== 1) continue;
+    if (!count || node.intent?.visualSpec?.animationSpec?.method !== 1)
+      continue;
     const dir = join(framesRoot, node.nodeId);
-    if (hasSufficientFrames(dir, count)) { skipped++; continue; }
+    if (hasSufficientFrames(dir, count)) {
+      skipped++;
+      continue;
+    }
 
-    const basePath = join(dir, '_base.png');
+    const basePath = join(dir, "_base.png");
     if (!existsSync(basePath)) {
       // Fall back to a matching base image.
-      const fallbackBase = join(framesRoot, '..', 'base', `${node.visual.sourceAsset ?? node.nodeId}.png`);
+      const fallbackBase = join(
+        framesRoot,
+        "..",
+        "base",
+        `${node.visual.sourceAsset ?? node.nodeId}.png`,
+      );
       if (!existsSync(fallbackBase)) {
-        console.warn(`[synthesize-frames] ${node.nodeId}: no base image available, skipping`);
+        console.warn(
+          `[synthesize-frames] ${node.nodeId}: no base image available, skipping`,
+        );
         continue;
       }
       mkdirSync(dir, { recursive: true });
@@ -59,14 +100,19 @@ async function main() {
 
     for (let i = 1; i <= count; i++) {
       const t = (i - 1) / count;
-      const out = join(dir, `frame-${String(i).padStart(3, '0')}.png`);
+      const out = join(dir, `frame-${String(i).padStart(3, "0")}.png`);
       if (existsSync(out)) continue;
       await synthesizeFrame(basePath, out, t);
       made++;
     }
-    console.log(`[synthesize-frames] ${node.nodeId}: synthesized ${count} frames`);
+    console.log(
+      `[synthesize-frames] ${node.nodeId}: synthesized ${count} frames`,
+    );
   }
   console.log(`[synthesize-frames] done — made=${made}, skipped=${skipped}`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
