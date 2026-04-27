@@ -34,3 +34,14 @@ source-videos
 # them re-formatted, but be aware they're checked into the build pipeline.
 src/lib/prism/mock-app-source/hubs
 src/lib/prism/mock-app-source/atlas-regions.json
+
+# Notes directory — markdown specs and ralph state.
+# notes/prism-spec-extract.md and friends are referenced by line number
+# across CLAUDE.md, code comments, and tests; reformatting silently
+# invalidates those quotes.
+notes
+docs
+
+# Skill markdown files — reformatting changes table layouts that other
+# tooling diffs against.
+.claude/skills
