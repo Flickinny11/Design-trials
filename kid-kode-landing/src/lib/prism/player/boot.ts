@@ -10,26 +10,34 @@
 //   7. attach SHR watchdog + expose window.__prismBreakNode
 //   8. return { app, graph, unmount }
 
-import * as PIXI from 'pixi.js';
-import { DropShadowFilter } from 'pixi-filters';
-import { gsap } from 'gsap';
-import { loadPrism, type CompiledGraph, type PrismBundle } from './prism-loader';
-import { loadAtlas, type Atlas } from './atlas-loader';
-import { loadMsdfFont, type MsdfFont } from './msdf-loader';
-import { loadNodeModule, type NodeCtx, type NodeInstance } from './module-registry';
-import { createScrollViewport, type ScrollViewport } from './scroll-viewport';
-import { createEventBus, type EventBus } from './event-bus';
-import { createStateManager } from './state-manager';
-import { createHubRouter, type HubRoute, type HubRouter } from './hub-router';
-import { createLocalBackend } from '../local-backend';
-import { createShr, type Shr } from '../shr';
+import * as PIXI from "pixi.js";
+import { DropShadowFilter } from "pixi-filters";
+import { gsap } from "gsap";
+import {
+  loadPrism,
+  type CompiledGraph,
+  type PrismBundle,
+} from "./prism-loader";
+import { loadAtlas, type Atlas } from "./atlas-loader";
+import { loadMsdfFont, type MsdfFont } from "./msdf-loader";
+import {
+  loadNodeModule,
+  type NodeCtx,
+  type NodeInstance,
+} from "./module-registry";
+import { createScrollViewport, type ScrollViewport } from "./scroll-viewport";
+import { createEventBus, type EventBus } from "./event-bus";
+import { createStateManager } from "./state-manager";
+import { createHubRouter, type HubRoute, type HubRouter } from "./hub-router";
+import { createLocalBackend } from "../local-backend";
+import { createShr, type Shr } from "../shr";
 import {
   classifyBreakpoint,
   resolveTransform,
   isVisibleAtBreakpoint,
   type BreakpointName,
   type ResolvableVisual,
-} from './breakpoints.mjs';
+} from "./breakpoints.mjs";
 
 export interface MountOpts {
   /** Preferred renderer width. If omitted, falls back to hub.layout.viewportWidth. */
@@ -76,10 +84,10 @@ declare global {
 // nodeId suffix so the same rule fires for future cards without graph edits.
 // Opt out on mobile — the filter is cheap in isolation but every card × every
 // frame multiplies, so narrow viewports skip it for headroom.
-const CARD_SUFFIXES = ['-card-bg', '-card-cta'];
+const CARD_SUFFIXES = ["-card-bg", "-card-cta"];
 
 function shouldShadowNode(nodeId: string, breakpoint: BreakpointName): boolean {
-  if (breakpoint === 'mobile') return false;
+  if (breakpoint === "mobile") return false;
   return CARD_SUFFIXES.some((suffix) => nodeId.endsWith(suffix));
 }
 
@@ -95,9 +103,9 @@ function attachSelectEmitter(
   nodeId: string,
   events: EventBus,
 ): void {
-  container.eventMode = 'static';
-  container.on('pointerdown', () => {
-    events.emit('node-selected', { nodeId: nodeId });
+  container.eventMode = "static";
+  container.on("pointerdown", () => {
+    events.emit("node-selected", { nodeId: nodeId });
   });
 }
 
@@ -106,11 +114,11 @@ function makeCardShadowFilter(): DropShadowFilter {
   // offset. Cards still feel lifted but no longer "floating dramatically"
   // which reads as heavy-handed photograph instead of clean UI.
   return new DropShadowFilter({
-    offset:   { x: 0, y: 3 },
-    color:    0x000000,
-    alpha:    0.35,
-    blur:     3,
-    quality:  4,
+    offset: { x: 0, y: 3 },
+    color: 0x000000,
+    alpha: 0.35,
+    blur: 3,
+    quality: 4,
     shadowOnly: false,
   });
 }
@@ -124,28 +132,79 @@ function buildHomeHubRoutes(graph: CompiledGraph): HubRoute[] {
     const node = graph.nodes.find((n) => n.nodeId === nodeId);
     return node?.visual?.transform?.y ?? fallback;
   };
-  const heroY     = yOf('hero-section-bg',         160);
-  const featuresY = yOf('feature-grid-section-bg', 760);
-  const settingsY = yOf('settings-section-bg',    1600);
-  const footerY   = yOf('footer-bg',              2200);
+  const heroY = yOf("hero-section-bg", 160);
+  const featuresY = yOf("feature-grid-section-bg", 760);
+  const settingsY = yOf("settings-section-bg", 1600);
+  const footerY = yOf("footer-bg", 2200);
 
   return [
-    { sourceNodeId: 'navbar-link-home',    scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
-    { sourceNodeId: 'navbar-link-editor',  scrollY: heroY,     sectionId: 'hero',     activeNavLinkId: 'navbar-link-editor'  },
-    { sourceNodeId: 'navbar-link-docs',    scrollY: featuresY, sectionId: 'features', activeNavLinkId: 'navbar-link-docs'    },
-    { sourceNodeId: 'navbar-link-pricing', scrollY: settingsY, sectionId: 'settings', activeNavLinkId: 'navbar-link-pricing' },
-    { sourceNodeId: 'navbar-logo',         scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
-    { sourceNodeId: 'footer-logo',         scrollY: 0,         sectionId: 'home',     activeNavLinkId: 'navbar-link-home'    },
-    { sourceNodeId: 'footer-link-privacy', scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
-    { sourceNodeId: 'footer-link-terms',   scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
-    { sourceNodeId: 'footer-link-contact', scrollY: footerY,   sectionId: 'footer',   activeNavLinkId: null                  },
+    {
+      sourceNodeId: "navbar-link-home",
+      scrollY: 0,
+      sectionId: "home",
+      activeNavLinkId: "navbar-link-home",
+    },
+    {
+      sourceNodeId: "navbar-link-editor",
+      scrollY: heroY,
+      sectionId: "hero",
+      activeNavLinkId: "navbar-link-editor",
+    },
+    {
+      sourceNodeId: "navbar-link-docs",
+      scrollY: featuresY,
+      sectionId: "features",
+      activeNavLinkId: "navbar-link-docs",
+    },
+    {
+      sourceNodeId: "navbar-link-pricing",
+      scrollY: settingsY,
+      sectionId: "settings",
+      activeNavLinkId: "navbar-link-pricing",
+    },
+    {
+      sourceNodeId: "navbar-logo",
+      scrollY: 0,
+      sectionId: "home",
+      activeNavLinkId: "navbar-link-home",
+    },
+    {
+      sourceNodeId: "footer-logo",
+      scrollY: 0,
+      sectionId: "home",
+      activeNavLinkId: "navbar-link-home",
+    },
+    {
+      sourceNodeId: "footer-link-privacy",
+      scrollY: footerY,
+      sectionId: "footer",
+      activeNavLinkId: null,
+    },
+    {
+      sourceNodeId: "footer-link-terms",
+      scrollY: footerY,
+      sectionId: "footer",
+      activeNavLinkId: null,
+    },
+    {
+      sourceNodeId: "footer-link-contact",
+      scrollY: footerY,
+      sectionId: "footer",
+      activeNavLinkId: null,
+    },
   ];
 }
 
-export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: MountOpts = {}): Promise<MountResult> {
+export async function mount(
+  canvas: HTMLCanvasElement,
+  prismUrl: string,
+  opts: MountOpts = {},
+): Promise<MountResult> {
   const bundle = await loadPrism(prismUrl);
   const { graph } = bundle;
-  const hub = graph.hubs.find((h) => h.hubId === bundle.manifest.entryHub) ?? graph.hubs[0];
+  const hub =
+    graph.hubs.find((h) => h.hubId === bundle.manifest.entryHub) ??
+    graph.hubs[0];
 
   // Container-aware sizing. The mock app is authored at hub.layout.viewportWidth
   // (1920) but is rendered into whatever pane PrismHost gives us. We scale the
@@ -160,19 +219,29 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   const app = new PIXI.Application();
   await app.init({
     canvas,
-    width:  initialW,
+    width: initialW,
     height: initialH,
     backgroundColor: hub.layout.backgroundColor,
     antialias: true,
-    resolution: Math.min(typeof window !== 'undefined' ? window.devicePixelRatio : 1, 2),
+    resolution: Math.min(
+      typeof window !== "undefined" ? window.devicePixelRatio : 1,
+      2,
+    ),
     autoDensity: true,
   });
 
   const atlas = await loadAtlas(bundle.atlasAvif, bundle.atlasRegions);
-  const msdfFont = bundle.msdfFnt && bundle.msdfPng ? await loadMsdfFont(bundle.msdfFnt, bundle.msdfPng) : null;
+  const msdfFont =
+    bundle.msdfFnt && bundle.msdfPng
+      ? await loadMsdfFont(bundle.msdfFnt, bundle.msdfPng)
+      : null;
 
   const events = createEventBus();
-  const state = createStateManager({ heroCtaClicks: 0, 'notifications-enabled': false, theme: 'dark' });
+  const state = createStateManager({
+    heroCtaClicks: 0,
+    "notifications-enabled": false,
+    theme: "dark",
+  });
   const backend = createLocalBackend({ state });
 
   for (const [name, source] of bundle.backendModules) {
@@ -181,9 +250,9 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
 
   const viewport = createScrollViewport({
     canvas,
-    viewportWidth:  initialW,
+    viewportWidth: initialW,
     viewportHeight: initialH,
-    contentHeight:  designContentH * currentScale,
+    contentHeight: designContentH * currentScale,
   });
   // Uniform scale so the 1920-wide authored design fits into the container.
   viewport.content.scale.set(currentScale);
@@ -202,20 +271,30 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   // matches author intent. Scoped backend per-node when backendRef is set.
   const instancesByNode = new Map<string, NodeInstance>();
   const hiddenNodeIds: string[] = [];
-  const nodesSorted = [...graph.nodes].sort((a, b) => a.visual.transform.z - b.visual.transform.z);
+  const nodesSorted = [...graph.nodes].sort(
+    (a, b) => a.visual.transform.z - b.visual.transform.z,
+  );
 
   for (const node of nodesSorted) {
-    if (!isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)) {
+    if (
+      !isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)
+    ) {
       hiddenNodeIds.push(node.nodeId);
       continue;
     }
     try {
-      const source = bundle.nodeModules.get(node.codeRef.replace(/^nodes\//, ''));
+      const source = bundle.nodeModules.get(
+        node.codeRef.replace(/^nodes\//, ""),
+      );
       if (!source) throw new Error(`missing node module: ${node.codeRef}`);
       const { createNode } = await loadNodeModule(source);
-      const effectiveTransform = resolveTransform(node.visual as ResolvableVisual, currentBreakpoint);
+      const effectiveTransform = resolveTransform(
+        node.visual as ResolvableVisual,
+        currentBreakpoint,
+      );
       const ctx: NodeCtx = {
-        PIXI, gsap,
+        PIXI,
+        gsap,
         atlas,
         region: node.visual.region,
         regions: node.visual.regions,
@@ -234,7 +313,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
         instance.container.filters = [makeCardShadowFilter()];
       }
       const alpha = (node.visual as { alpha?: number }).alpha;
-      if (typeof alpha === 'number') instance.container.alpha = alpha;
+      if (typeof alpha === "number") instance.container.alpha = alpha;
       attachSelectEmitter(instance.container, node.nodeId, events);
       instancesByNode.set(node.nodeId, instance);
       viewport.content.addChild(instance.container);
@@ -246,7 +325,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   // SHR: capture original sources, wire rebuildNode callback.
   const originalSources = new Map<string, string>();
   for (const node of graph.nodes) {
-    const src = bundle.nodeModules.get(node.codeRef.replace(/^nodes\//, ''));
+    const src = bundle.nodeModules.get(node.codeRef.replace(/^nodes\//, ""));
     if (src) originalSources.set(node.nodeId, src);
   }
 
@@ -258,7 +337,10 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   async function rebuildNode(nodeId: string): Promise<NodeInstance | null> {
     const node = graph.nodes.find((n) => n.nodeId === nodeId);
     if (!node) return null;
-    if (!isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)) return null;
+    if (
+      !isVisibleAtBreakpoint(node.visual as ResolvableVisual, currentBreakpoint)
+    )
+      return null;
     const existing = instancesByNode.get(nodeId);
     if (existing) {
       existing.teardown();
@@ -268,15 +350,22 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     if (!src) return null;
     try {
       const { createNode } = await loadNodeModule(src);
-      const effectiveTransform = resolveTransform(node.visual as ResolvableVisual, currentBreakpoint);
+      const effectiveTransform = resolveTransform(
+        node.visual as ResolvableVisual,
+        currentBreakpoint,
+      );
       const ctx: NodeCtx = {
-        PIXI, gsap, atlas,
+        PIXI,
+        gsap,
+        atlas,
         region: node.visual.region,
         regions: node.visual.regions,
         overlayRegions: node.visual.overlayRegions,
         frameRegions: node.visual.frameRegions,
         transform: effectiveTransform,
-        events, state, backend: { call: backend.call },
+        events,
+        state,
+        backend: { call: backend.call },
         intent: { ...node.intent, nodeId: node.nodeId },
         msdfFont,
       };
@@ -286,15 +375,20 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
         instance.container.filters = [makeCardShadowFilter()];
       }
       const alpha = (node.visual as { alpha?: number }).alpha;
-      if (typeof alpha === 'number') instance.container.alpha = alpha;
+      if (typeof alpha === "number") instance.container.alpha = alpha;
       // §10.20 — if SHR has this node marked broken, swap the pointertap
       // handler for a no-op that records failures. The visual layers and
       // non-tap handlers (hover, press) are preserved so the sprite still
       // looks alive — only the intended downstream event fails to fire.
       if (shr && shr.brokenNodeIds.has(nodeId)) {
-        const c = instance.container as unknown as { removeAllListeners?: (event: string) => void; on: (event: string, h: () => void) => void };
-        c.removeAllListeners?.('pointertap');
-        c.on('pointertap', () => { void shr.recordFailure(nodeId); });
+        const c = instance.container as unknown as {
+          removeAllListeners?: (event: string) => void;
+          on: (event: string, h: () => void) => void;
+        };
+        c.removeAllListeners?.("pointertap");
+        c.on("pointertap", () => {
+          void shr.recordFailure(nodeId);
+        });
       }
       attachSelectEmitter(instance.container, nodeId, events);
       instancesByNode.set(nodeId, instance);
@@ -307,7 +401,10 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   }
 
   shr = createShr({
-    events, graph, originalSources, rebuildNode,
+    events,
+    graph,
+    originalSources,
+    rebuildNode,
     instances: instancesByNode,
     onRepairIndicator: (nodeId, phase) => {
       console.log(`[prism/shr] ${nodeId}: repair ${phase}`);
@@ -324,11 +421,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     events,
     viewport,
     routes: buildHomeHubRoutes(graph),
-    initialSectionId: 'home',
-    initialNavLinkId: 'navbar-link-home',
+    initialSectionId: "home",
+    initialNavLinkId: "navbar-link-home",
   });
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     globalThis.__prismBreakNode = (nodeId: string) => shr.breakNode(nodeId);
     globalThis.__prism = {
       router,
@@ -350,12 +447,15 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   // state is preserved by rebuildNode's internal brokenNodeIds check.
   async function applyLayout(breakpoint: BreakpointName) {
     currentBreakpoint = breakpoint;
-    if (typeof window !== 'undefined' && globalThis.__prism) {
+    if (typeof window !== "undefined" && globalThis.__prism) {
       globalThis.__prism.currentBreakpoint = breakpoint;
     }
     const nextHidden: string[] = [];
     for (const node of graph.nodes) {
-      const shouldBeVisible = isVisibleAtBreakpoint(node.visual as ResolvableVisual, breakpoint);
+      const shouldBeVisible = isVisibleAtBreakpoint(
+        node.visual as ResolvableVisual,
+        breakpoint,
+      );
       const existing = instancesByNode.get(node.nodeId);
       if (!shouldBeVisible) {
         if (existing) {
@@ -370,7 +470,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       }
     }
     hiddenNodeIds.splice(0, hiddenNodeIds.length, ...nextHidden);
-    if (typeof window !== 'undefined' && globalThis.__prism) {
+    if (typeof window !== "undefined" && globalThis.__prism) {
       globalThis.__prism.hiddenNodeIds = hiddenNodeIds;
     }
   }
@@ -408,7 +508,7 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       viewport.destroy();
       atlas.destroy();
       app.destroy(true, { children: true });
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         delete globalThis.__prismBreakNode;
         delete globalThis.__prism;
       }

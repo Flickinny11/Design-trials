@@ -1,0 +1,36 @@
+node_modules
+.next
+out
+dist
+build
+
+# Generated build artifacts
+public/prism-assets
+.prism
+
+# Lockfiles
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs and logs
+*.log
+*.tsbuildinfo
+
+# Source images / binary assets the formatter shouldn't touch
+source-images
+source-videos
+*.avif
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.mp4
+*.fnt
+*.ttf
+
+# JSON we hand-tune (graphs, atlas regions). Comment these out if you want
+# them re-formatted, but be aware they're checked into the build pipeline.
+src/lib/prism/mock-app-source/hubs
+src/lib/prism/mock-app-source/atlas-regions.json

@@ -67,18 +67,24 @@
 //
 // Run with: node tests/editor/T-ED-03.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const inspectorPath = resolve(kidKodeRoot, 'src/components/editor/panels/Inspector.tsx');
+const kidKodeRoot = resolve(here, "..", "..");
+const inspectorPath = resolve(
+  kidKodeRoot,
+  "src/components/editor/panels/Inspector.tsx",
+);
 
-assert.ok(existsSync(inspectorPath), `Inspector.tsx not found at ${inspectorPath}`);
+assert.ok(
+  existsSync(inspectorPath),
+  `Inspector.tsx not found at ${inspectorPath}`,
+);
 
-const src = readFileSync(inspectorPath, 'utf8');
+const src = readFileSync(inspectorPath, "utf8");
 
 // ─── (A) 'use client' pragma + default export ──────────────────────────
 assert.ok(
@@ -86,8 +92,9 @@ assert.ok(
   "Inspector.tsx: missing `'use client'` pragma — required for client-side event bus subscription",
 );
 assert.ok(
-  /export\s+default\s+(?:function|async\s+function|class)\s+Inspector\b/.test(src) ||
-  /export\s+default\s+Inspector\b/.test(src),
+  /export\s+default\s+(?:function|async\s+function|class)\s+Inspector\b/.test(
+    src,
+  ) || /export\s+default\s+Inspector\b/.test(src),
   "Inspector.tsx: must `export default` a component named `Inspector`",
 );
 
@@ -114,10 +121,13 @@ assert.ok(
 // or the more literal `return unsubscribe` / `.off(` / the handler being
 // stored and invoked in a cleanup. The minimum shape: the result of
 // `.events.on(...)` is assigned/returned (i.e. NOT discarded).
-const DISCARD_RE = /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,[\s\S]*?\)\s*;?\s*\n/;
-const STORE_RE   = /(?:const|let|var)\s+\w+\s*=\s*\w+\.events\.on\s*\(\s*['"`]node-selected['"`]/;
-const RETURN_RE  = /return\s+\w+\.events\.on\s*\(\s*['"`]node-selected['"`]/;
-const INLINE_RETURN_RE = /return\s*\(\s*\)\s*=>\s*\{?[\s\S]{0,200}?\.events\.on\s*\(/;
+const DISCARD_RE =
+  /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,[\s\S]*?\)\s*;?\s*\n/;
+const STORE_RE =
+  /(?:const|let|var)\s+\w+\s*=\s*\w+\.events\.on\s*\(\s*['"`]node-selected['"`]/;
+const RETURN_RE = /return\s+\w+\.events\.on\s*\(\s*['"`]node-selected['"`]/;
+const INLINE_RETURN_RE =
+  /return\s*\(\s*\)\s*=>\s*\{?[\s\S]{0,200}?\.events\.on\s*\(/;
 assert.ok(
   STORE_RE.test(src) || RETURN_RE.test(src) || INLINE_RETURN_RE.test(src),
   "Inspector.tsx: the value returned by `events.on('node-selected', ...)` must be captured or returned so React can call it on unmount (otherwise remounts leak listeners)",
@@ -132,12 +142,17 @@ assert.ok(
 // The handler must destructure or read `nodeId` from the payload. We
 // accept either `({ nodeId }) => ...`, `(payload) => payload.nodeId`,
 // or any reference to `.nodeId` within 200 chars of the subscription.
-const HANDLER_NEAR_SUB_RE = /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,\s*(?:\([^)]*nodeId[^)]*\)|[^,)]*)\s*=>[\s\S]{0,200}/;
+const HANDLER_NEAR_SUB_RE =
+  /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,\s*(?:\([^)]*nodeId[^)]*\)|[^,)]*)\s*=>[\s\S]{0,200}/;
 const USES_NODEID_KEY = /\bnodeId\b/.test(src);
-assert.ok(USES_NODEID_KEY, "Inspector.tsx: must reference `nodeId` — the payload key for 'node-selected'");
+assert.ok(
+  USES_NODEID_KEY,
+  "Inspector.tsx: must reference `nodeId` — the payload key for 'node-selected'",
+);
 // Negative: the handler must not read `.source` from the node-selected
 // payload (that's the wrong convention for this event).
-const BAD_PAYLOAD_RE = /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,\s*\([^)]*\bsource\b[^)]*\)\s*=>/;
+const BAD_PAYLOAD_RE =
+  /\.events\.on\s*\(\s*['"`]node-selected['"`]\s*,\s*\([^)]*\bsource\b[^)]*\)\s*=>/;
 assert.ok(
   !BAD_PAYLOAD_RE.test(src),
   "Inspector.tsx: the 'node-selected' handler must destructure `nodeId`, NOT `source` — editor-bridge.md pins the payload shape",
@@ -147,8 +162,10 @@ assert.ok(
 // graph.nodes is a flat array on the bridge; the lookup must iterate
 // it (.find / .filter / for-of) keyed on `nodeId`. We accept any of
 // those patterns.
-const GRAPH_LOOKUP_RE = /\bgraph\.nodes\s*(?:\.find\s*\(|\.filter\s*\(|\[|\s*\)\s*\{|\.forEach\s*\()/;
-const GRAPH_LOOKUP_ALT_RE = /\bgraph\b[\s\S]{0,200}?\bnodes\b[\s\S]{0,400}?\bnodeId\b/;
+const GRAPH_LOOKUP_RE =
+  /\bgraph\.nodes\s*(?:\.find\s*\(|\.filter\s*\(|\[|\s*\)\s*\{|\.forEach\s*\()/;
+const GRAPH_LOOKUP_ALT_RE =
+  /\bgraph\b[\s\S]{0,200}?\bnodes\b[\s\S]{0,400}?\bnodeId\b/;
 assert.ok(
   GRAPH_LOOKUP_RE.test(src) || GRAPH_LOOKUP_ALT_RE.test(src),
   "Inspector.tsx: must look up the selected node from the bridge's `graph.nodes` (a flat array) keyed on `nodeId` — e.g. `graph.nodes.find(n => n.nodeId === id)`",
@@ -162,8 +179,10 @@ assert.ok(
 );
 
 // ─── (F) renders transform.x, .y, .z ───────────────────────────────────
-for (const axis of ['x', 'y', 'z']) {
-  const AXIS_RE = new RegExp(`\\btransform\\??\\.${axis}\\b|\\btransform\\[['"\`]${axis}['"\`]\\]`);
+for (const axis of ["x", "y", "z"]) {
+  const AXIS_RE = new RegExp(
+    `\\btransform\\??\\.${axis}\\b|\\btransform\\[['"\`]${axis}['"\`]\\]`,
+  );
   assert.ok(
     AXIS_RE.test(src),
     `Inspector.tsx: must render \`transform.${axis}\` from the selected node's visual.transform`,
@@ -181,7 +200,8 @@ assert.ok(
 // Mirrors the anti-drift PreToolUse hook's pattern plus T-ED-02's
 // explicit check, extended to nodeId string literals that might sneak
 // in as dropdown options, fallback labels, etc.
-const FORBIDDEN_ID_RE = /['"`](?:hero-(?:card|section)|navbar-(?:logo|link|signin|bg)|feature-(?:card|grid)|footer-(?:logo|link|social|bg|copyright)|stats-|settings-section|notifications-toggle|theme-selector|page-background|video-slot-\d)/;
+const FORBIDDEN_ID_RE =
+  /['"`](?:hero-(?:card|section)|navbar-(?:logo|link|signin|bg)|feature-(?:card|grid)|footer-(?:logo|link|social|bg|copyright)|stats-|settings-section|notifications-toggle|theme-selector|page-background|video-slot-\d)/;
 assert.ok(
   !FORBIDDEN_ID_RE.test(src),
   "Inspector.tsx: contains a hardcoded mock-app nodeId string literal — editor code must be generic (read from window.__prism.graph.nodes). If this is a deliberate exception, add an `// ALLOWED-HARDCODED-ID: <reason>` marker — this test does NOT honor that marker; if you need one, narrow the pattern here",
@@ -200,4 +220,6 @@ assert.ok(
   "Inspector.tsx: must NOT import `useGraphEditorStore` — selection now flows from the 'node-selected' event on the shared bus, not a local store",
 );
 
-console.log('[T-ED-03] PASS — Inspector reads window.__prism bridge (A,B,C,D), renders intent.caption + transform.x/y/z + stateEffects (E,F,G), no hardcoded nodeIds or mock-graph imports (H,I)');
+console.log(
+  "[T-ED-03] PASS — Inspector reads window.__prism bridge (A,B,C,D), renders intent.caption + transform.x/y/z + stateEffects (E,F,G), no hardcoded nodeIds or mock-graph imports (H,I)",
+);

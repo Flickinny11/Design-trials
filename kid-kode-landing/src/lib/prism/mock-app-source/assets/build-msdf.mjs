@@ -9,23 +9,26 @@
 //
 // Run: npm run build:msdf
 
-import generateBMFont from 'msdf-bmfont-xml';
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import generateBMFont from "msdf-bmfont-xml";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(__dirname, '..', '..', '..', '..', '..');
-const fontPath = join(repoRoot, 'public', 'fonts', 'Inter-Variable.ttf');
-const outDir = join(repoRoot, 'public', 'prism-assets');
-const outPng = join(outDir, 'font-inter.msdf.png');
-const outFnt = join(outDir, 'font-inter.msdf.fnt');
-const outJson = join(outDir, 'font-inter.msdf.json');
+const repoRoot = resolve(__dirname, "..", "..", "..", "..", "..");
+const fontPath = join(repoRoot, "public", "fonts", "Inter-Variable.ttf");
+const outDir = join(repoRoot, "public", "prism-assets");
+const outPng = join(outDir, "font-inter.msdf.png");
+const outFnt = join(outDir, "font-inter.msdf.fnt");
+const outJson = join(outDir, "font-inter.msdf.json");
 
-const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©';
+const CHARSET =
+  Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join(
+    "",
+  ) + "—©";
 
 const BASE_OPTIONS = {
-  fieldType: 'msdf',
+  fieldType: "msdf",
   fontSize: 48,
   charset: CHARSET,
   textureSize: [2048, 2048],
@@ -42,10 +45,14 @@ mkdirSync(outDir, { recursive: true });
 
 function run(outputType) {
   return new Promise((resolvePromise, rejectPromise) => {
-    generateBMFont(fontPath, { ...BASE_OPTIONS, outputType }, (err, textures, font) => {
-      if (err) return rejectPromise(err);
-      resolvePromise({ textures, font });
-    });
+    generateBMFont(
+      fontPath,
+      { ...BASE_OPTIONS, outputType },
+      (err, textures, font) => {
+        if (err) return rejectPromise(err);
+        resolvePromise({ textures, font });
+      },
+    );
   });
 }
 
@@ -53,17 +60,22 @@ function run(outputType) {
 // input (font + charset + seed-free maxrects), so two invocations produce
 // identical textures and identical glyph layouts. We pay for the second run
 // once at build time to keep the on-disk artifact shape spec-compliant.
-const [xmlOut, jsonOut] = await Promise.all([run('xml'), run('json')]);
+const [xmlOut, jsonOut] = await Promise.all([run("xml"), run("json")]);
 
 if (xmlOut.textures.length !== 1) {
-  console.warn(`[build-msdf] got ${xmlOut.textures.length} textures — mock expects 1. Consider raising textureSize or trimming CHARSET.`);
+  console.warn(
+    `[build-msdf] got ${xmlOut.textures.length} textures — mock expects 1. Consider raising textureSize or trimming CHARSET.`,
+  );
 }
 
 // PNG atlas — same bytes regardless of metadata format.
 writeFileSync(outPng, xmlOut.textures[0].texture);
 
 // .fnt (BMFont XML) — rewrite the <page file="..."> to match the atlas filename.
-const fntXml = String(xmlOut.font.data).replace(/file="[^"]+"/, `file="font-inter.msdf.png"`);
+const fntXml = String(xmlOut.font.data).replace(
+  /file="[^"]+"/,
+  `file="font-inter.msdf.png"`,
+);
 writeFileSync(outFnt, fntXml);
 
 // .msdf.json (BMFont JSON) — rewrite the single `pages` entry to point at the
@@ -72,9 +84,9 @@ writeFileSync(outFnt, fntXml);
 // the .fnt's <page file=""> and the manifest's assets registry.
 const jsonData = JSON.parse(String(jsonOut.font.data));
 if (Array.isArray(jsonData.pages)) {
-  jsonData.pages = jsonData.pages.map(() => 'font-inter.msdf.png');
+  jsonData.pages = jsonData.pages.map(() => "font-inter.msdf.png");
 }
-writeFileSync(outJson, JSON.stringify(jsonData, null, 2) + '\n');
+writeFileSync(outJson, JSON.stringify(jsonData, null, 2) + "\n");
 
 console.log(`[build-msdf] wrote ${outPng}`);
 console.log(`[build-msdf] wrote ${outFnt}`);

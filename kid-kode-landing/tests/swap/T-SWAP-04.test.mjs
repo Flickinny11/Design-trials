@@ -37,7 +37,7 @@
 //
 // Run with: node kid-kode-landing/tests/swap/T-SWAP-04.test.mjs
 
-import { strict as assert } from 'node:assert';
+import { strict as assert } from "node:assert";
 import {
   readFileSync,
   readdirSync,
@@ -45,77 +45,77 @@ import {
   mkdtempSync,
   rmSync,
   statSync,
-} from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve, join } from 'node:path';
-import { tmpdir } from 'node:os';
-import sharp from 'sharp';
+} from "node:fs";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve, join } from "node:path";
+import { tmpdir } from "node:os";
+import sharp from "sharp";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
+const kidKodeRoot = resolve(here, "..", "..");
 
-const scriptPath = resolve(kidKodeRoot, 'scripts/extract-video.mjs');
+const scriptPath = resolve(kidKodeRoot, "scripts/extract-video.mjs");
 const canonicalMockup = resolve(
   kidKodeRoot,
-  'notes/mockup-candidates/ai-video-mockup.png',
+  "notes/mockup-candidates/ai-video-mockup.png",
 );
 
 // 1. Script exists.
 assert.ok(existsSync(scriptPath), `missing script: ${scriptPath}`);
-const src = readFileSync(scriptPath, 'utf8');
+const src = readFileSync(scriptPath, "utf8");
 
 // 2. Pure local — no FAL / network imports.
 assert.ok(
   !/@fal-ai\/client/.test(src),
-  'extract-video.mjs must not import @fal-ai/client — BBOX is hand-tuned',
+  "extract-video.mjs must not import @fal-ai/client — BBOX is hand-tuned",
 );
 assert.ok(
   !/\bfetch\s*\(/.test(src),
-  'extract-video.mjs must not call fetch() — pure local crop extraction',
+  "extract-video.mjs must not call fetch() — pure local crop extraction",
 );
 
 // 3. Imports sharp.
 assert.match(
   src,
   /from\s+['"]sharp['"]/,
-  'extract-video.mjs must import sharp (for crop extraction)',
+  "extract-video.mjs must import sharp (for crop extraction)",
 );
 
 // 4. Canonical paths.
 assert.match(
   src,
   /notes\/mockup-candidates\/ai-video-mockup\.png/,
-  'script must reference notes/mockup-candidates/ai-video-mockup.png as input',
+  "script must reference notes/mockup-candidates/ai-video-mockup.png as input",
 );
 assert.match(
   src,
   /source-images\/cropped/,
-  'script must write into src/lib/prism/mock-app-source/assets/source-images/cropped/',
+  "script must write into src/lib/prism/mock-app-source/assets/source-images/cropped/",
 );
 
 // 5. BBOX declared as a literal const.
 assert.match(
   src,
   /const\s+BBOX\s*=\s*\{/,
-  'script must declare `const BBOX = {...}` so the hand-tuned map is reviewable',
+  "script must declare `const BBOX = {...}` so the hand-tuned map is reviewable",
 );
 
 // 6. Extract every BBOX key by string-scanning between `const BBOX = {` and its
 //    matching closing brace. Entries are of the form "'<key>':" or '"<key>":'.
 const bboxOpen = src.search(/const\s+BBOX\s*=\s*\{/);
-assert.ok(bboxOpen !== -1, 'could not locate `const BBOX = {` in script');
+assert.ok(bboxOpen !== -1, "could not locate `const BBOX = {` in script");
 // Walk forward to balance braces so nested shorthand (e.g. { ...TINY }) doesn't
 // terminate the scan early.
-const afterBrace = src.indexOf('{', bboxOpen);
+const afterBrace = src.indexOf("{", bboxOpen);
 let depth = 1;
 let end = afterBrace + 1;
 for (; end < src.length && depth > 0; end++) {
   const ch = src[end];
-  if (ch === '{') depth += 1;
-  else if (ch === '}') depth -= 1;
+  if (ch === "{") depth += 1;
+  else if (ch === "}") depth -= 1;
 }
-assert.equal(depth, 0, 'BBOX literal block is not brace-balanced');
+assert.equal(depth, 0, "BBOX literal block is not brace-balanced");
 const bboxBlock = src.slice(afterBrace, end);
 
 const declaredKeys = [
@@ -137,7 +137,7 @@ function keyPresent(pred) {
 }
 
 assert.ok(
-  keys.includes('page-background'),
+  keys.includes("page-background"),
   `BBOX must declare a page-background entry; declared keys: ${JSON.stringify(keys)}`,
 );
 
@@ -145,14 +145,14 @@ assert.ok(
 // covering features, showcase, pricing, about, login (T-SWAP-01 paragraph).
 assert.ok(
   keyPresent((k) => /^navbar(-|$)/.test(k) && /(bar|pill|container)/.test(k)) ||
-    keys.includes('navbar-bg'),
+    keys.includes("navbar-bg"),
   `BBOX must declare a navbar container entry; declared keys: ${JSON.stringify(keys)}`,
 );
 assert.ok(
   keyPresent((k) => /^navbar-logo$/.test(k) || /logo/.test(k)),
   `BBOX must declare a logo entry; declared keys: ${JSON.stringify(keys)}`,
 );
-const NAV_LINK_WORDS = ['features', 'showcase', 'pricing', 'about', 'login'];
+const NAV_LINK_WORDS = ["features", "showcase", "pricing", "about", "login"];
 for (const w of NAV_LINK_WORDS) {
   assert.ok(
     keyPresent((k) => k.includes(w)),
@@ -229,10 +229,10 @@ assert.equal(
   `canonical mockup height must be 1536 (hand-tuned coords assume this); got ${canonicalMeta.height}`,
 );
 
-const tmp = mkdtempSync(join(tmpdir(), 'T-SWAP-04-'));
+const tmp = mkdtempSync(join(tmpdir(), "T-SWAP-04-"));
 // Make a small synthetic mockup that matches the real aspect ratio so coord
 // math is valid under env-var overrides.
-const fixtureMockup = join(tmp, 'fixture-mockup.png');
+const fixtureMockup = join(tmp, "fixture-mockup.png");
 await sharp({
   create: {
     width: 2816,
@@ -244,13 +244,13 @@ await sharp({
   .png()
   .toFile(fixtureMockup);
 
-const fixtureOutDir = join(tmp, 'cropped');
+const fixtureOutDir = join(tmp, "cropped");
 // Redirect the bbox-map write to tmp as well so the test never clobbers the
 // committed notes/mockup-candidates/ai-video-bbox-map.json with a tmp path.
-const fixtureBboxJson = join(tmp, 'bbox-map.json');
+const fixtureBboxJson = join(tmp, "bbox-map.json");
 
 try {
-  const run = spawnSync('node', [scriptPath], {
+  const run = spawnSync("node", [scriptPath], {
     cwd: kidKodeRoot,
     env: {
       ...process.env,
@@ -258,11 +258,11 @@ try {
       OUT_DIR: fixtureOutDir,
       BBOX_JSON: fixtureBboxJson,
     },
-    encoding: 'utf8',
+    encoding: "utf8",
   });
 
   if (run.status !== 0) {
-    const errSnippet = (run.stderr || run.stdout || '').trim().slice(0, 800);
+    const errSnippet = (run.stderr || run.stdout || "").trim().slice(0, 800);
     assert.fail(`extract-video.mjs exited ${run.status}: ${errSnippet}`);
   }
 
@@ -271,7 +271,7 @@ try {
     `script did not create output dir at ${fixtureOutDir}`,
   );
 
-  const produced = readdirSync(fixtureOutDir).filter((f) => f.endsWith('.png'));
+  const produced = readdirSync(fixtureOutDir).filter((f) => f.endsWith(".png"));
   // Every declared BBOX key should produce a <key>.png.
   for (const k of keys) {
     const p = join(fixtureOutDir, `${k}.png`);

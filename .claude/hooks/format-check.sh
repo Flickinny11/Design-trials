@@ -46,9 +46,12 @@ if [[ $STATUS -eq 2 ]]; then
   exit 2
 fi
 
-# Exit 1 = style drift. Warn, do not block.
+# Exit 1 = style drift. Block — drift gates exist to catch it now, not later.
 if [[ $STATUS -ne 0 ]]; then
-  echo "format-check: formatting drift in $FILE_PATH (non-blocking). Run: $PRETTIER_BIN --write $FILE_PATH" >&2
+  echo "format-check BLOCKED: formatting drift in $FILE_PATH" >&2
+  echo "$OUTPUT" >&2
+  echo "Fix with: $PRETTIER_BIN --write $FILE_PATH" >&2
+  exit 2
 fi
 
 exit 0

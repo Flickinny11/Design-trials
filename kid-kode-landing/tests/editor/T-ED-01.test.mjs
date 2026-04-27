@@ -67,20 +67,26 @@
 //
 // Run with: node tests/editor/T-ED-01.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { readFileSync, existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
+import { strict as assert } from "node:assert";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const docPath = resolve(kidKodeRoot, 'notes/editor-bridge.md');
-const bootPath = resolve(kidKodeRoot, 'src/lib/prism/player/boot.ts');
+const kidKodeRoot = resolve(here, "..", "..");
+const docPath = resolve(kidKodeRoot, "notes/editor-bridge.md");
+const bootPath = resolve(kidKodeRoot, "src/lib/prism/player/boot.ts");
 
-assert.ok(existsSync(docPath), `notes/editor-bridge.md not found at ${docPath}`);
-assert.ok(existsSync(bootPath), `src/lib/prism/player/boot.ts not found at ${bootPath}`);
+assert.ok(
+  existsSync(docPath),
+  `notes/editor-bridge.md not found at ${docPath}`,
+);
+assert.ok(
+  existsSync(bootPath),
+  `src/lib/prism/player/boot.ts not found at ${bootPath}`,
+);
 
-const doc = readFileSync(docPath, 'utf8');
+const doc = readFileSync(docPath, "utf8");
 
 // ─── (A) Stub disclaimer removed ─────────────────────────────────────
 const STUB_TELLS = [
@@ -100,30 +106,34 @@ for (const re of STUB_TELLS) {
 // ─── Extract the canonical interface block ───────────────────────────
 // Must be inside a fenced ts / typescript code block, and must declare
 // an interface whose name ends with Bridge or Handle.
-const INTERFACE_BLOCK_RE = /```(?:ts|typescript)\b[\s\S]*?\binterface\s+([A-Za-z_][\w]*?(?:Bridge|Handle))\b[\s\S]*?\{([\s\S]*?)\}\s*[\s\S]*?```/;
+const INTERFACE_BLOCK_RE =
+  /```(?:ts|typescript)\b[\s\S]*?\binterface\s+([A-Za-z_][\w]*?(?:Bridge|Handle))\b[\s\S]*?\{([\s\S]*?)\}\s*[\s\S]*?```/;
 const blockMatch = doc.match(INTERFACE_BLOCK_RE);
 assert.ok(
   blockMatch,
-  'editor-bridge.md must contain a fenced ```ts (or ```typescript) block declaring an interface whose name ends with Bridge or Handle',
+  "editor-bridge.md must contain a fenced ```ts (or ```typescript) block declaring an interface whose name ends with Bridge or Handle",
 );
 const interfaceName = blockMatch[1];
 const interfaceBody = blockMatch[2];
-assert.ok(interfaceBody.trim().length > 0, `interface ${interfaceName} body is empty`);
+assert.ok(
+  interfaceBody.trim().length > 0,
+  `interface ${interfaceName} body is empty`,
+);
 
 // ─── (B) All 8 actual fields are present in the interface block ──────
 const REQUIRED_FIELDS = [
-  'router',
-  'viewport',
-  'events',
-  'graph',
-  'nodes',
-  'currentBreakpoint',
-  'hiddenNodeIds',
-  'shr',
+  "router",
+  "viewport",
+  "events",
+  "graph",
+  "nodes",
+  "currentBreakpoint",
+  "hiddenNodeIds",
+  "shr",
 ];
 for (const field of REQUIRED_FIELDS) {
   // Field declaration: optional whitespace, field name, optional ?, colon.
-  const fieldRe = new RegExp(`(^|[\\n;{,])\\s*${field}\\s*\\??\\s*:`, 'm');
+  const fieldRe = new RegExp(`(^|[\\n;{,])\\s*${field}\\s*\\??\\s*:`, "m");
   assert.ok(
     fieldRe.test(interfaceBody),
     `interface ${interfaceName}: missing field declaration for "${field}" (boot.ts:313 hangs it off window.__prism)`,
@@ -140,12 +150,16 @@ assert.ok(
 // ─── (C) Field shapes line up with exported code types ───────────────
 // nodes is a Map<string, NodeInstance>
 assert.ok(
-  /\bnodes\s*\??\s*:\s*Map\s*<\s*string\s*,\s*NodeInstance\b/.test(interfaceBody),
+  /\bnodes\s*\??\s*:\s*Map\s*<\s*string\s*,\s*NodeInstance\b/.test(
+    interfaceBody,
+  ),
   `interface ${interfaceName}: nodes must be typed Map<string, NodeInstance> (live runtime instances, not graph defs)`,
 );
 // hiddenNodeIds is string[] (Array — boot.ts mutates via .splice).
 assert.ok(
-  /\bhiddenNodeIds\s*\??\s*:\s*(?:string\s*\[\]|Array\s*<\s*string\s*>|ReadonlyArray\s*<\s*string\s*>)/.test(interfaceBody),
+  /\bhiddenNodeIds\s*\??\s*:\s*(?:string\s*\[\]|Array\s*<\s*string\s*>|ReadonlyArray\s*<\s*string\s*>)/.test(
+    interfaceBody,
+  ),
   `interface ${interfaceName}: hiddenNodeIds must be string[] / Array<string> (boot.ts uses .splice — NOT a Set)`,
 );
 // Negative — Set<string> is a regression (the stub had it).
@@ -155,7 +169,9 @@ assert.ok(
 );
 // currentBreakpoint is the literal union.
 assert.ok(
-  /\bcurrentBreakpoint\s*\??\s*:\s*(?:BreakpointName\b|(?:'(?:desktop-wide|desktop|tablet|mobile)'\s*\|\s*){3}'(?:desktop-wide|desktop|tablet|mobile)')/.test(interfaceBody),
+  /\bcurrentBreakpoint\s*\??\s*:\s*(?:BreakpointName\b|(?:'(?:desktop-wide|desktop|tablet|mobile)'\s*\|\s*){3}'(?:desktop-wide|desktop|tablet|mobile)')/.test(
+    interfaceBody,
+  ),
   `interface ${interfaceName}: currentBreakpoint must be BreakpointName or the literal union 'desktop-wide' | 'desktop' | 'tablet' | 'mobile'`,
 );
 // graph is CompiledGraph (the type exported from prism-loader.ts).
@@ -167,37 +183,39 @@ assert.ok(
 // ─── (D) __prismBreakNode is documented separately ───────────────────
 assert.ok(
   /__prismBreakNode\b/.test(doc),
-  'editor-bridge.md: must document __prismBreakNode (the SHR demo dev-tool from §9)',
+  "editor-bridge.md: must document __prismBreakNode (the SHR demo dev-tool from §9)",
 );
 // Distinction: __prismBreakNode is hung off globalThis, not off window.__prism.
 assert.ok(
   /__prismBreakNode[\s\S]{0,400}\b(globalThis|window)\b/.test(doc) ||
-  /\b(globalThis|window)\b[\s\S]{0,400}__prismBreakNode/.test(doc),
-  'editor-bridge.md: __prismBreakNode is hung off globalThis/window directly — must be documented as separate from __prism (not __prism.__prismBreakNode)',
+    /\b(globalThis|window)\b[\s\S]{0,400}__prismBreakNode/.test(doc),
+  "editor-bridge.md: __prismBreakNode is hung off globalThis/window directly — must be documented as separate from __prism (not __prism.__prismBreakNode)",
 );
 // Editor code path through __prism: shr.breakNode(...).
 assert.ok(
   /shr\.breakNode\b/.test(doc),
-  'editor-bridge.md: must surface the editor-side path `__prism.shr.breakNode(nodeId)` — symmetric to the global __prismBreakNode',
+  "editor-bridge.md: must surface the editor-side path `__prism.shr.breakNode(nodeId)` — symmetric to the global __prismBreakNode",
 );
 
 // ─── (E) Cites canonical boot.ts source ──────────────────────────────
 assert.ok(
   /src\/lib\/prism\/player\/boot\.ts\b/.test(doc),
-  'editor-bridge.md: must cite src/lib/prism/player/boot.ts as the canonical source of truth',
+  "editor-bridge.md: must cite src/lib/prism/player/boot.ts as the canonical source of truth",
 );
 
 // ─── (F) Known events list — at least the bus events emitted today ───
 const KNOWN_EVENTS = [
-  'active-section-changed',
-  'navigate',
-  'node-click-failed',
-  'repair-started',
-  'repair-completed',
+  "active-section-changed",
+  "navigate",
+  "node-click-failed",
+  "repair-started",
+  "repair-completed",
 ];
 for (const ev of KNOWN_EVENTS) {
   // Event names use hyphens / colons; allow them inside backticks or quotes.
-  const evRe = new RegExp(`['\`"]${ev.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}['\`"]`);
+  const evRe = new RegExp(
+    `['\`"]${ev.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&")}['\`"]`,
+  );
   assert.ok(
     evRe.test(doc),
     `editor-bridge.md: must list bus event '${ev}' in the Known events section`,
@@ -206,22 +224,25 @@ for (const ev of KNOWN_EVENTS) {
 
 // ─── (G) Gaps section names node-selected + persistent write-back ────
 // Find a Gaps / Missing / Not-yet-exposed section.
-const GAPS_HEADING_RE = /^##+\s+(?:Gaps?|Not\s+yet\s+exposed|Missing|Open\s+gaps?)\b/im;
+const GAPS_HEADING_RE =
+  /^##+\s+(?:Gaps?|Not\s+yet\s+exposed|Missing|Open\s+gaps?)\b/im;
 assert.ok(
   GAPS_HEADING_RE.test(doc),
-  'editor-bridge.md: must contain a Gaps / Not-yet-exposed section (audit deliverable per task description)',
+  "editor-bridge.md: must contain a Gaps / Not-yet-exposed section (audit deliverable per task description)",
 );
 // node-selected is the T-ED-02 dependency.
 assert.ok(
   /\bnode-selected\b/.test(doc),
-  'editor-bridge.md: must flag `node-selected` as a needed-but-not-yet-wired event (T-ED-02 owns)',
+  "editor-bridge.md: must flag `node-selected` as a needed-but-not-yet-wired event (T-ED-02 owns)",
 );
 // Write-back / persistence path is the T-ED-11 dependency.
 assert.ok(
   /\bT-ED-11\b/.test(doc) ||
-  /write[-\s]?back\b/i.test(doc) ||
-  /persist(?:ence)?\s+API\b/i.test(doc),
-  'editor-bridge.md: must flag the persistent write-back API as a gap (T-ED-11 owns)',
+    /write[-\s]?back\b/i.test(doc) ||
+    /persist(?:ence)?\s+API\b/i.test(doc),
+  "editor-bridge.md: must flag the persistent write-back API as a gap (T-ED-11 owns)",
 );
 
-console.log('[T-ED-01] PASS — editor-bridge.md audit complete: interface (A-C), __prismBreakNode (D), boot.ts cite (E), known events (F), gaps (G)');
+console.log(
+  "[T-ED-01] PASS — editor-bridge.md audit complete: interface (A-C), __prismBreakNode (D), boot.ts cite (E), known events (F), gaps (G)",
+);

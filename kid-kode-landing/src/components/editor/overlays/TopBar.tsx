@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { GRAPH } from '@/data/mockGraph';
-import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
-import { Icon } from '@/components/editor/icons/Icon';
+import { GRAPH } from "@/data/mockGraph";
+import { useGraphEditorStore } from "@/stores/useGraphEditorStore";
+import { Icon } from "@/components/editor/icons/Icon";
 
 export default function TopBar() {
   const zoomLevel = useGraphEditorStore((s) => s.zoomLevel);
@@ -15,23 +15,26 @@ export default function TopBar() {
   const selected = GRAPH.nodes.find((n) => n.id === selectedId);
 
   const total = GRAPH.nodes.length;
-  const verified = GRAPH.nodes.filter((n) => n.status === 'verified').length;
-  const failed = GRAPH.nodes.filter((n) => n.status === 'failed').length;
+  const verified = GRAPH.nodes.filter((n) => n.status === "verified").length;
+  const failed = GRAPH.nodes.filter((n) => n.status === "failed").length;
   const pending = total - verified - failed;
   const health = Math.round((verified / total) * 100);
 
   const zoomDesc: Record<string, string> = {
-    L0: 'Galaxy · All hubs visible',
-    L1: 'Cluster · Single hub',
-    L2: 'Orbit · Element detail',
-    L3: 'Surface · Anatomy',
-    L4: 'Interior · Deep inspection',
+    L0: "Galaxy · All hubs visible",
+    L1: "Cluster · Single hub",
+    L2: "Orbit · Element detail",
+    L3: "Surface · Anatomy",
+    L4: "Interior · Deep inspection",
   };
 
   return (
     <div
       className="absolute z-30 top-0 left-0 right-0 h-14 flex items-center justify-between px-4 pointer-events-none"
-      style={{ background: 'linear-gradient(180deg, rgba(4,5,10,0.88) 0%, rgba(4,5,10,0) 100%)' }}
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(4,5,10,0.88) 0%, rgba(4,5,10,0) 100%)",
+      }}
     >
       <div className="flex items-center gap-3 pointer-events-auto">
         <div className="flex items-center gap-2">
@@ -39,8 +42,12 @@ export default function TopBar() {
             <Icon name="sparkle" size={14} color="#fff" />
           </div>
           <div>
-            <div className="text-[13px] font-display font-bold text-white tracking-tight leading-none">Prism</div>
-            <div className="text-[8px] font-mono text-white/40 tracking-widest leading-none mt-0.5">KRIPTIK EDITOR</div>
+            <div className="text-[13px] font-display font-bold text-white tracking-tight leading-none">
+              Prism
+            </div>
+            <div className="text-[8px] font-mono text-white/40 tracking-widest leading-none mt-0.5">
+              KRIPTIK EDITOR
+            </div>
           </div>
         </div>
 
@@ -66,7 +73,9 @@ export default function TopBar() {
           {selected && (
             <>
               <span className="text-white/25">/</span>
-              <span className="px-2 py-1 rounded-md bg-white/5 text-white font-semibold">{selected.name}</span>
+              <span className="px-2 py-1 rounded-md bg-white/5 text-white font-semibold">
+                {selected.name}
+              </span>
             </>
           )}
         </div>
@@ -74,11 +83,13 @@ export default function TopBar() {
 
       <div className="hidden lg:flex items-center gap-2 pointer-events-auto">
         <div className="flex gap-1">
-          {(['L0', 'L1', 'L2', 'L3', 'L4'] as const).map((lvl) => (
+          {(["L0", "L1", "L2", "L3", "L4"] as const).map((lvl) => (
             <div
               key={lvl}
               className={`w-6 h-1.5 rounded-full transition-all ${
-                zoomLevel === lvl ? 'bg-[#5d8bff] shadow-[0_0_10px_#5d8bff]' : 'bg-white/10'
+                zoomLevel === lvl
+                  ? "bg-[#5d8bff] shadow-[0_0_10px_#5d8bff]"
+                  : "bg-white/10"
               }`}
             />
           ))}
@@ -96,11 +107,22 @@ export default function TopBar() {
           <Icon name="check" size={11} color="#55e6a5" />
           <div className="flex items-center gap-1.5">
             <div className="flex h-1 w-24 rounded-full overflow-hidden bg-white/10">
-              <div className="bg-[#55e6a5]" style={{ width: `${(verified / total) * 100}%` }} />
-              <div className="bg-[#f5a524]" style={{ width: `${(pending / total) * 100}%` }} />
-              <div className="bg-[#ef4466]" style={{ width: `${(failed / total) * 100}%` }} />
+              <div
+                className="bg-[#55e6a5]"
+                style={{ width: `${(verified / total) * 100}%` }}
+              />
+              <div
+                className="bg-[#f5a524]"
+                style={{ width: `${(pending / total) * 100}%` }}
+              />
+              <div
+                className="bg-[#ef4466]"
+                style={{ width: `${(failed / total) * 100}%` }}
+              />
             </div>
-            <span className="text-[10px] font-mono font-semibold text-white/80">{health}%</span>
+            <span className="text-[10px] font-mono font-semibold text-white/80">
+              {health}%
+            </span>
           </div>
         </div>
 
@@ -118,8 +140,12 @@ export default function TopBar() {
           title="Search (⌘K)"
         >
           <Icon name="search" size={11} color="#b5bddf" />
-          <span className="hidden md:inline text-[10px] font-mono text-white/60">Search</span>
-          <span className="hidden md:inline text-[9px] font-mono text-white/30">⌘K</span>
+          <span className="hidden md:inline text-[10px] font-mono text-white/60">
+            Search
+          </span>
+          <span className="hidden md:inline text-[9px] font-mono text-white/30">
+            ⌘K
+          </span>
         </button>
       </div>
     </div>

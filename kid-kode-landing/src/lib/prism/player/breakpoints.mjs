@@ -11,7 +11,7 @@
 /** @typedef {'desktop-wide' | 'desktop' | 'tablet' | 'mobile'} BreakpointName */
 
 /** @type {ReadonlyArray<BreakpointName>} */
-export const BREAKPOINT_ORDER = ['desktop-wide', 'desktop', 'tablet', 'mobile'];
+export const BREAKPOINT_ORDER = ["desktop-wide", "desktop", "tablet", "mobile"];
 
 /**
  * Classify a viewport width into a §10.15 breakpoint.
@@ -19,11 +19,11 @@ export const BREAKPOINT_ORDER = ['desktop-wide', 'desktop', 'tablet', 'mobile'];
  * @returns {BreakpointName}
  */
 export function classifyBreakpoint(width) {
-  if (!Number.isFinite(width)) return 'desktop-wide';
-  if (width > 1440) return 'desktop-wide';
-  if (width >= 1024) return 'desktop';
-  if (width >= 768) return 'tablet';
-  return 'mobile';
+  if (!Number.isFinite(width)) return "desktop-wide";
+  if (width > 1440) return "desktop-wide";
+  if (width >= 1024) return "desktop";
+  if (width >= 768) return "tablet";
+  return "mobile";
 }
 
 /**
@@ -34,11 +34,16 @@ export function classifyBreakpoint(width) {
  */
 function fallbackChain(active) {
   switch (active) {
-    case 'mobile':       return ['mobile', 'tablet', 'desktop', 'desktop-wide'];
-    case 'tablet':       return ['tablet', 'desktop', 'desktop-wide'];
-    case 'desktop':      return ['desktop', 'desktop-wide'];
-    case 'desktop-wide': return ['desktop-wide', 'desktop'];
-    default:             return [active];
+    case "mobile":
+      return ["mobile", "tablet", "desktop", "desktop-wide"];
+    case "tablet":
+      return ["tablet", "desktop", "desktop-wide"];
+    case "desktop":
+      return ["desktop", "desktop-wide"];
+    case "desktop-wide":
+      return ["desktop-wide", "desktop"];
+    default:
+      return [active];
   }
 }
 

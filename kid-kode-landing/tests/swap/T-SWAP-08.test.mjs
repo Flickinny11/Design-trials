@@ -33,36 +33,37 @@
 //
 // Run with: node tests/swap/T-SWAP-08.test.mjs
 
-import { strict as assert } from 'node:assert';
-import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, resolve } from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { strict as assert } from "node:assert";
+import { existsSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+import { spawnSync } from "node:child_process";
 
 const here = dirname(fileURLToPath(import.meta.url));
-const kidKodeRoot = resolve(here, '..', '..');
-const smokePath = resolve(kidKodeRoot, 'scripts/live-modes-smoke.mjs');
-const URL = process.env.PRISM_LIVE_URL || 'https://kid-kode-ai-landing.vercel.app/';
+const kidKodeRoot = resolve(here, "..", "..");
+const smokePath = resolve(kidKodeRoot, "scripts/live-modes-smoke.mjs");
+const URL =
+  process.env.PRISM_LIVE_URL || "https://kid-kode-ai-landing.vercel.app/";
 
 // ─── (A) Script presence + required 8 check IDs declared ─────────────
 assert.ok(
   existsSync(smokePath),
   `missing scripts/live-modes-smoke.mjs at ${smokePath} — T-SWAP-08 requires this runner to exist`,
 );
-const smokeSrc = readFileSync(smokePath, 'utf8');
+const smokeSrc = readFileSync(smokePath, "utf8");
 
 // The 8 canonical check IDs that make §10.24's runtime-behaviour gate.
 // Order matches live-modes-smoke.mjs's execution order; assertions are
 // order-independent (presence, not sequence).
 const REQUIRED_CHECKS = [
-  'split.both-panes',
-  'preview.only',
-  'preset.mobile.canvas-dims',
-  'preset.tablet.canvas-dims',
-  'preset.desktop.canvas-dims',
-  'preset.fit.fills-pane',
-  'editor.only',
-  'split.restored',
+  "split.both-panes",
+  "preview.only",
+  "preset.mobile.canvas-dims",
+  "preset.tablet.canvas-dims",
+  "preset.desktop.canvas-dims",
+  "preset.fit.fills-pane",
+  "editor.only",
+  "split.restored",
 ];
 
 // Five of the IDs are emitted as literal strings in the runner; the three
@@ -70,11 +71,11 @@ const REQUIRED_CHECKS = [
 // `preset.${p.name}.canvas-dims`, so we assert the static literals
 // verbatim and assert the three dynamic names + the template form.
 const STATIC_LITERAL_CHECKS = [
-  'split.both-panes',
-  'preview.only',
-  'preset.fit.fills-pane',
-  'editor.only',
-  'split.restored',
+  "split.both-panes",
+  "preview.only",
+  "preset.fit.fills-pane",
+  "editor.only",
+  "split.restored",
 ];
 for (const c of STATIC_LITERAL_CHECKS) {
   assert.ok(
@@ -82,44 +83,48 @@ for (const c of STATIC_LITERAL_CHECKS) {
     `live-modes-smoke.mjs must declare check id '${c}' as a literal string; a rename silently weakens the §10.24 gate`,
   );
 }
-for (const presetName of ['mobile', 'tablet', 'desktop']) {
+for (const presetName of ["mobile", "tablet", "desktop"]) {
   assert.ok(
     smokeSrc.includes(`name: '${presetName}'`),
     `live-modes-smoke.mjs must enumerate viewport preset '${presetName}' (expected "name: '${presetName}'" in presetExpectations)`,
   );
 }
 assert.ok(
-  smokeSrc.includes('preset.${p.name}.canvas-dims'),
+  smokeSrc.includes("preset.${p.name}.canvas-dims"),
   "live-modes-smoke.mjs must emit 'preset.${p.name}.canvas-dims' via template to build mobile/tablet/desktop check IDs",
 );
 // Runner must actually drive Playwright against the production URL.
 assert.ok(
-  smokeSrc.includes('PRISM_LIVE_URL'),
-  'live-modes-smoke.mjs must read PRISM_LIVE_URL so the prod URL is overridable',
+  smokeSrc.includes("PRISM_LIVE_URL"),
+  "live-modes-smoke.mjs must read PRISM_LIVE_URL so the prod URL is overridable",
 );
 assert.ok(
   /await\s+import\s*\(\s*['"]playwright['"]\s*\)/.test(smokeSrc),
-  'live-modes-smoke.mjs must import playwright (runtime browser driver)',
+  "live-modes-smoke.mjs must import playwright (runtime browser driver)",
 );
 
 // ─── (B) Runtime behaviour: live-modes-smoke against production ──────
-if (process.env.SKIP_LIVE_SMOKE === '1') {
-  console.log('[T-SWAP-08] SKIP_LIVE_SMOKE=1 — (A) static gate passed; skipping (B) live network run.');
+if (process.env.SKIP_LIVE_SMOKE === "1") {
+  console.log(
+    "[T-SWAP-08] SKIP_LIVE_SMOKE=1 — (A) static gate passed; skipping (B) live network run.",
+  );
   process.exit(0);
 }
 
-console.log(`[T-SWAP-08] running live-modes-smoke against ${URL} (this takes ~30-60s)…`);
-const r = spawnSync('node', ['scripts/live-modes-smoke.mjs'], {
+console.log(
+  `[T-SWAP-08] running live-modes-smoke against ${URL} (this takes ~30-60s)…`,
+);
+const r = spawnSync("node", ["scripts/live-modes-smoke.mjs"], {
   cwd: kidKodeRoot,
-  stdio: ['ignore', 'pipe', 'pipe'],
-  encoding: 'utf8',
+  stdio: ["ignore", "pipe", "pipe"],
+  encoding: "utf8",
   env: { ...process.env, PRISM_LIVE_URL: URL },
   timeout: 240_000,
 });
 
 // Strip ANSI colour codes so assertions don't depend on terminal escape
 // sequences (live-modes-smoke uses \x1b[32m / \x1b[31m).
-const stripAnsi = (s) => (s || '').replace(/\x1b\[[0-9;]*m/g, '');
+const stripAnsi = (s) => (s || "").replace(/\x1b\[[0-9;]*m/g, "");
 const stdout = stripAnsi(r.stdout);
 const stderr = stripAnsi(r.stderr);
 
@@ -140,7 +145,7 @@ assert.match(
 );
 
 for (const c of REQUIRED_CHECKS) {
-  const escaped = c.replace(/\./g, '\\.');
+  const escaped = c.replace(/\./g, "\\.");
   assert.match(
     stdout,
     new RegExp(`\\[PASS\\]\\s+${escaped}\\b`),

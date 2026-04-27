@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface ElementImageState {
   // dataURL per node id; missing = fall back to procedural texture

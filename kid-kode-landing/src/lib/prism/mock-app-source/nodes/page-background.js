@@ -10,8 +10,8 @@ export function createNode(ctx) {
   sprite.height = transform.height;
   container.addChild(sprite);
 
-  const off = events.on?.('theme-changed', ({ theme }) => {
-    sprite.tint = theme === 'light' ? 0xf5f7ff : 0xffffff;
+  const off = events.on?.("theme-changed", ({ theme }) => {
+    sprite.tint = theme === "light" ? 0xf5f7ff : 0xffffff;
   });
 
   return {

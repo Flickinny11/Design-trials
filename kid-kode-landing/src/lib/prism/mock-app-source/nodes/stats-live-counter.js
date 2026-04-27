@@ -14,11 +14,11 @@ export function createNode(ctx) {
   }
 
   const pos = intent.visualSpec?.textContent?.[0]?.position ?? { x: 12, y: 20 };
-  const initial = String(state.get?.('heroCtaClicks') ?? 0);
+  const initial = String(state.get?.("heroCtaClicks") ?? 0);
   const countText = new PIXI.BitmapText({
     text: initial,
     style: {
-      fontFamily: msdfFont?.family ?? 'Inter-Variable',
+      fontFamily: msdfFont?.family ?? "Inter-Variable",
       fontSize: intent.visualSpec?.textContent?.[0]?.typography?.fontSize ?? 32,
       fill: 0x4da6ff,
     },
@@ -26,7 +26,7 @@ export function createNode(ctx) {
   countText.position.set(pos.x, pos.y);
   container.addChild(countText);
 
-  const off = state.subscribe?.('heroCtaClicks', (count) => {
+  const off = state.subscribe?.("heroCtaClicks", (count) => {
     countText.text = String(count);
   });
 
