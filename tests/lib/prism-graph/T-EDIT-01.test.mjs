@@ -52,9 +52,10 @@
 //
 //   F. TypeScript compile is clean (npx tsc --noEmit).
 //
-//   G. No runtime behavior change — Inspector + GraphScene still import GRAPH
-//      from mockGraph at this phase. Verified by string match on Inspector
-//      source and GraphScene source.
+//   G. (REMOVED post-Phase-2) — the original Phase-1 forward-guard asserted
+//      Inspector + GraphScene STILL imported GRAPH from mockGraph. After
+//      T-EDIT-02 swaps them, the post-swap regression assertion is owned by
+//      tests/lib/prism-graph/T-EDIT-02.test.mjs §A.
 //
 // Run: node tests/lib/prism-graph/T-EDIT-01.test.mjs
 
@@ -291,21 +292,12 @@ check('F1 — npx tsc --noEmit exits 0',
   tsc.status === 0,
   tsc.status === 0 ? '' : (tsc.stdout || '') + (tsc.stderr || '').slice(0, 800));
 
-// ── Phase G: editor reads through the loader-backed store ───────────────────
-// Phase 2 (T-EDIT-02) inverted these checks — Inspector + GraphScene now
-// read from the live home-hub.json via useGraphSourceStore, not the mockGraph
-// fixture. Keeping the guards prevents future regressions.
-
-const inspectorPath = join(APP_ROOT, 'src', 'components', 'editor', 'panels', 'Inspector.tsx');
-const graphScenePath = join(APP_ROOT, 'src', 'components', 'editor', 'graph', 'GraphScene.tsx');
-const inspectorSrc = readFileSync(inspectorPath, 'utf8');
-const graphSceneSrc = readFileSync(graphScenePath, 'utf8');
-check('G1 — Inspector reads through useGraphSourceStore (post-Phase-2)',
-  !/from\s+['"]@\/data\/mockGraph['"]/.test(inspectorSrc) &&
-  /from\s+['"]@\/stores\/useGraphSourceStore['"]/.test(inspectorSrc));
-check('G2 — GraphScene reads through useGraphSourceStore (post-Phase-2)',
-  !/from\s+['"]@\/data\/mockGraph['"]/.test(graphSceneSrc) &&
-  /from\s+['"]@\/stores\/useGraphSourceStore['"]/.test(graphSceneSrc));
+// ── Phase G: REMOVED ───────────────────────────────────────────────────────
+// T-EDIT-01 originally guarded that Inspector + GraphScene STILL read from
+// `@/data/mockGraph` (Phase-1 forward-guard ensuring T-EDIT-01 didn't
+// accidentally do Phase 2's work). After Phase 2 (T-EDIT-02) inverts that
+// state, the post-swap regression assertion lives in
+// tests/lib/prism-graph/T-EDIT-02.test.mjs §A. No assertion belongs here.
 
 // ──────────────────────────────────────────────────────────────────────────
 

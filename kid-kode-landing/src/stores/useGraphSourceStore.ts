@@ -55,7 +55,12 @@ export const useGraphSourceStore = create<GraphSourceState>()((set) => ({
 }));
 
 // Eagerly initialize from the bundled home-hub.json so consumers see a ready
-// store on first render. The `load` action is sync and idempotent; running it
-// at module scope means the editor never has to wait for an async fetch
-// before mounting Inspector or GraphScene.
-useGraphSourceStore.getState().load(homeHubJson as unknown as HomeHubJson);
+// store on first render. Sync + idempotent. Bundled into the client chunk —
+// during SSR the same module graph evaluates on the server and would
+// duplicate the load; the `'use client'` directive at the top of the file
+// keeps the module out of server bundles, but we still gate on `window` to
+// avoid hydration mismatches if the file is imported transitively from
+// server code in the future.
+if (typeof window !== 'undefined') {
+  useGraphSourceStore.getState().load(homeHubJson as unknown as HomeHubJson);
+}

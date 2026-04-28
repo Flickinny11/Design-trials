@@ -23,6 +23,7 @@ import type {
   PrismAlphaCutout,
   PrismAnimationSpec,
   PrismEdge,
+  PrismHub,
   PrismInteractionNeighbors,
   PrismLayer,
   PrismNode,
@@ -226,8 +227,6 @@ export function getHubIds(node: PrismNode): string[] {
 // in those components, this adapter projects the canonical shape onto the
 // legacy editor-node shape. New consumers should prefer the per-field
 // accessors above; only Inspector + GraphScene round-trip through these.
-
-import type { PrismHub } from './types.ts';
 
 export type EditorNodeStatus = 'verified' | 'code_generated' | 'image_ready' | 'pending' | 'failed';
 
