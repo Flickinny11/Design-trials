@@ -676,10 +676,11 @@ function ControlsBridge({
     setCameraDistance(c.distance);
   });
 
-  // Scale camera bounds with the largest hub. Floor / ceiling keep the
-  // controls reasonable when the graph is empty or, conversely, very large.
+  // minDistance stays a small constant so close-zoom on individual nodes
+  // works even when the largest hub is wide. maxDistance scales up with
+  // the biggest hub so the full constellation stays in frame.
   const maxHubRadius = Math.max(90, ...Object.values(hubRadii));
-  const minDist = Math.max(5, maxHubRadius * 0.09);
+  const minDist = 8;
   const maxDist = Math.max(600, maxHubRadius * 6.5);
 
   return (
@@ -720,11 +721,12 @@ function SceneContent({
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
-  // Element-only nodes feed the force-graph; full-section/card backgrounds
-  // (editorRole === 'background') stay part of the hub's outer mockup shell
-  // and never get nav-able element-spheres.
+  // Element-only nodes feed the force-graph. `background` (full-section /
+  // card fills) and `embedded` (text labels + per-card sub-elements like
+  // titles, descriptions, icons that the user perceives as part of a card,
+  // not as standalone elements) both stay off the nav-able sphere set.
   const elementNodes = useMemo(
-    () => editorGraph.nodes.filter((n) => n.editorRole !== 'background'),
+    () => editorGraph.nodes.filter((n) => n.editorRole === 'element'),
     [editorGraph.nodes]
   );
 

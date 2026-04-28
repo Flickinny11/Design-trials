@@ -612,7 +612,7 @@
           "outputs": {}
         },
         "section": "hero",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -655,7 +655,7 @@
           "outputs": {}
         },
         "section": "hero",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -861,7 +861,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -903,7 +903,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -946,7 +946,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1034,7 +1034,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -1076,7 +1076,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1119,7 +1119,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1207,7 +1207,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -1249,7 +1249,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1292,7 +1292,7 @@
           "outputs": {}
         },
         "section": "feature-grid",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1617,7 +1617,7 @@
           "outputs": {}
         },
         "section": "settings",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/stats-live-counter.js",
       "backendRef": null
@@ -2114,7 +2114,7 @@
           "outputs": {}
         },
         "section": "footer",
-        "editorRole": "element"
+        "editorRole": "embedded"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null

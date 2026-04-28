@@ -184,7 +184,7 @@ export interface PrismVisibility {
   [k: string]: unknown;
 }
 
-export type PrismEditorRole = 'element' | 'background';
+export type PrismEditorRole = 'element' | 'background' | 'embedded';
 
 export interface PrismIntent {
   caption: string;

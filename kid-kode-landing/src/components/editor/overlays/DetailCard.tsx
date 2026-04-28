@@ -23,9 +23,9 @@ export default function DetailCard() {
   );
 
   if (!selectedId || inspectorOpen) return null;
-  // Restrict the popover to discrete elements; backgrounds are part of the
-  // hub shell and don't get their own detail card.
-  const node = graph.nodes.find((n) => n.id === selectedId && n.editorRole !== 'background');
+  // Restrict the popover to discrete elements; backgrounds and embedded
+  // text/sub-elements aren't standalone nav targets.
+  const node = graph.nodes.find((n) => n.id === selectedId && n.editorRole === 'element');
   if (!node) return null;
 
   const frozen = frozenIds.has(node.id);

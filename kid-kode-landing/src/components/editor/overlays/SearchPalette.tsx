@@ -26,7 +26,7 @@ export default function SearchPalette() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
   const elementNodes = useMemo(
-    () => graph.nodes.filter((n) => n.editorRole !== 'background'),
+    () => graph.nodes.filter((n) => n.editorRole === 'element'),
     [graph.nodes]
   );
 
