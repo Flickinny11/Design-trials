@@ -200,8 +200,16 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   // Attached to each node container after creation; emits `node-selected`
   // on pointerdown. Hoisted as a function so the rebuildNode path can
   // re-attach the listener after applyLayout tears down the old instance.
+  // PIXI v8 default eventMode is 'auto', which only delivers events to a
+  // container when it has interactive children — non-interactive nodes
+  // (page-background, hero-section-bg, *-card-bg, footer-bg, etc.) would
+  // silently swallow the click. Promote to 'static' so pointerdown fires
+  // on the container itself; child sprites keep their own modes.
+  const SELECTABLE_MODES = new Set(['static', 'dynamic']);
   const attachSelectionBridge = (container: PIXI.Container, nodeId: string) => {
-    container.eventMode = container.eventMode === 'none' ? 'static' : container.eventMode;
+    if (!SELECTABLE_MODES.has(container.eventMode as string)) {
+      container.eventMode = 'static';
+    }
     container.on('pointerdown', () => {
       events.emit('node-selected', { nodeId });
     });
@@ -431,6 +439,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     if (typeof window !== 'undefined' && globalThis.__prism) {
       globalThis.__prism.hiddenNodeIds = hiddenNodeIds;
     }
+    // T-EDIT-05 — re-resolve the selection ring at the new breakpoint.
+    // drawHighlight reads `currentBreakpoint` + `node.visual`, so without
+    // this call a live reflow would leave the ring drawn at the prior
+    // breakpoint's transform until the editor re-toggled selection.
+    drawHighlight();
   }
 
   // Resize handler — keeps the renderer, scroll mask, and uniform content
