@@ -342,6 +342,8 @@ function HubHulls({
   simNodes: SimNode[];
 }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
+  const selectHub = useGraphEditorStore((s) => s.selectHub);
 
   return (
     <>
@@ -360,10 +362,24 @@ function HubHulls({
           if (d > maxDist) maxDist = d;
         });
         const radius = maxDist + 10;
-        const isActive = activeHubId === hub.id;
+        const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
         return (
-          <group key={hub.id} position={[center.x, center.y, center.z]}>
+          <group
+            key={hub.id}
+            position={[center.x, center.y, center.z]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              document.body.style.cursor = 'pointer';
+            }}
+            onPointerOut={() => {
+              document.body.style.cursor = 'default';
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              selectHub(hub.id);
+            }}
+          >
             <mesh>
               <sphereGeometry args={[radius, 32, 32]} />
               <meshBasicMaterial

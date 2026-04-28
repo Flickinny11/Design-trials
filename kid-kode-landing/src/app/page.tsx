@@ -6,7 +6,7 @@ import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismH
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
-import Inspector from '@/components/editor/panels/Inspector';
+import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -149,7 +149,7 @@ export default function Page() {
               <HubNav />
               <Minimap />
               <DetailCard />
-              <Inspector />
+              <RightPane />
             </div>
           )}
         </>
@@ -164,7 +164,7 @@ export default function Page() {
             <TopBar />
             <HubNav />
             <DetailCard />
-            <Inspector />
+            <RightPane />
           </div>
         </>
       )}

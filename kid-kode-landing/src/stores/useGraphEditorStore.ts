@@ -12,8 +12,9 @@ interface GraphEditorState {
   cameraDistance: number;
   activeHubId: string | null;
 
-  // Selection
+  // Selection — node and hub selection are mutually exclusive
   selectedNodeId: string | null;
+  selectedHubId: string | null;
   hoveredNodeId: string | null;
 
   // Inspector
@@ -45,6 +46,7 @@ interface GraphEditorState {
   setZoomLevel: (l: ZoomLevel) => void;
   setCameraDistance: (d: number) => void;
   selectNode: (id: string | null) => void;
+  selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
   openInspector: (tab?: InspectorTab) => void;
   closeInspector: () => void;
@@ -68,6 +70,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     cameraDistance: 320,
     activeHubId: null,
     selectedNodeId: null,
+    selectedHubId: null,
     hoveredNodeId: null,
     inspectorOpen: false,
     inspectorTab: 'visual',
@@ -87,7 +90,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';
       set({ cameraDistance: d, zoomLevel: level });
     },
-    selectNode: (id) => set({ selectedNodeId: id }),
+    selectNode: (id) => set({ selectedNodeId: id, selectedHubId: null }),
+    selectHub: (id) => set({ selectedHubId: id, selectedNodeId: null, inspectorOpen: true }),
     hoverNode: (id) => set({ hoveredNodeId: id }),
     openInspector: (tab) =>
       set((s) => ({ inspectorOpen: true, inspectorTab: tab ?? s.inspectorTab })),
@@ -102,7 +106,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         return { frozenNodeIds: next };
       }),
     setLivePreviewHover: (id) => set({ livePreviewHoverId: id }),
-    flyToNode: (id) => set({ flyToNodeId: id, selectedNodeId: id }),
+    flyToNode: (id) => set({ flyToNodeId: id, selectedNodeId: id, selectedHubId: null }),
     flyToHub: (hubId) => set({ flyToHubId: hubId, activeHubId: hubId }),
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),
     resetCamera: () =>
