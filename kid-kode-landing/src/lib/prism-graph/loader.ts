@@ -31,11 +31,12 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
 }
 
 /**
- * Async path: fetch home-hub.json over HTTP. The editor calls this at boot.
- * In Node test runners that don't have `fetch` to a relative path, callers
- * should pass an absolute URL or use {@link loadFromHomeHub} directly.
+ * Async path: fetch home-hub.json over HTTP. The editor's Phase 2 wiring
+ * supplies a concrete URL (dev-server route or packaged static asset). In
+ * Node test runners that don't have `fetch`, callers should use
+ * {@link loadFromHomeHub} on a pre-parsed object instead.
  */
-export async function loadFromHomeHubFile(url = '/api/mock/home-hub.json'): Promise<GraphSource> {
+export async function loadFromHomeHubFile(url: string): Promise<GraphSource> {
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`loadFromHomeHubFile: fetch ${url} failed: ${res.status}`);

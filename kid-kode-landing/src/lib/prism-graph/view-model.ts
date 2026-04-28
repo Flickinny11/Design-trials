@@ -7,7 +7,7 @@
 //   Visual      ← intent.caption, samHints, alphaCutout, visualSpec.layers,
 //                  visualSpec.textContent, visual.frameCount
 //   Behavior    ← intent.behaviorSpec.interactions (event/effect),
-//                  triggersDownstream[].targetNodeIds, contracts.inputs
+//                  triggersDownstream[].targetNodeIds, intent.stateEffects
 //   Code        ← codeRef (file path; loaded by Phase 2 wiring)
 //   Animation   ← intent.animationSpec, intent.visualSpec.animationSpec,
 //                  visual.frameCount
@@ -65,36 +65,51 @@ export interface EditorInteraction {
 
 /**
  * Map JSON's behaviorSpec.interactions (event/effect) onto the editor's
- * expected (event/action/target) triple. Target is derived from the matching
- * triggersDownstream entry when one exists; otherwise the action name doubles
- * as the target.
+ * expected (event/action/target) triple. Target rule (in order):
+ *   1. exact match — a triggersDownstream entry whose `eventName` equals
+ *      this interaction's `effect`; use its first targetNodeIds entry.
+ *   2. 1-to-1 fallback — node has exactly one interaction and one
+ *      downstream trigger; assume they pair.
+ *   3. otherwise 'self' — local state effect with no cross-node consequence
+ *      (swap-to-hover, scale-press, etc.).
+ *
+ * Avoids indiscriminately assigning the first trigger's target to every
+ * interaction (which produced false cross-node edges for nodes like
+ * theme-selector-button with many local interactions + a single trigger).
  */
 export function getInteractions(node: PrismNode): EditorInteraction[] {
   const behavior = node?.intent?.behaviorSpec;
   if (!behavior || !Array.isArray(behavior.interactions)) return [];
   const triggers = Array.isArray(behavior.triggersDownstream) ? behavior.triggersDownstream : [];
   return behavior.interactions.map((i) => {
-    // Pick the first trigger whose name relates to the effect, else fall back
-    // to the first listed downstream target, else self.
-    const trigger = triggers[0];
-    const target = trigger?.targetNodeIds?.[0] ?? 'self';
-    return {
-      event: i.event,
-      action: i.effect,
-      target,
-    };
+    const exact = triggers.find((t) => t.eventName === i.effect);
+    if (exact?.targetNodeIds?.[0]) {
+      return { event: i.event, action: i.effect, target: exact.targetNodeIds[0] };
+    }
+    if (behavior.interactions.length === 1 && triggers.length === 1) {
+      const target = triggers[0].targetNodeIds?.[0];
+      if (target) return { event: i.event, action: i.effect, target };
+    }
+    return { event: i.event, action: i.effect, target: 'self' };
   });
 }
 
 export function getStateCount(node: PrismNode): number {
-  const inputs = node?.intent?.contracts?.inputs;
-  if (!inputs || typeof inputs !== 'object') return 0;
-  return Object.keys(inputs).length;
+  // Inspector "state count" reflects the number of named state effects this
+  // node carries (lift-hover, scale-press, glow-pulse, …) rather than the
+  // size of the Zod input contract. Both fields exist; stateEffects is the
+  // closer match to the Inspector concept.
+  const effects = node?.intent?.stateEffects;
+  return Array.isArray(effects) ? effects.length : 0;
 }
 
+// Editor-runtime metadata not stored in JSON. Phase 2 will surface this
+// through the editor's verification subsystem; until then a neutral default
+// keeps the Inspector tab populated without lying about node health.
+const DEFAULT_VERIFICATION_SCORE = 0.85;
+
 export function getVerificationScore(_node: PrismNode): number {
-  // Editor-runtime metadata; not stored in JSON. Default per plan §Phase 2.
-  return 0.85;
+  return DEFAULT_VERIFICATION_SCORE;
 }
 
 // ── Animation tab ──────────────────────────────────────────────────────────

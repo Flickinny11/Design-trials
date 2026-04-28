@@ -8,7 +8,7 @@
 
 import { create } from 'zustand';
 import type { GraphSource, HomeHubJson, PrismEdge, PrismHub, PrismNode } from '@/lib/prism-graph/types';
-import { loadFromHomeHub } from '@/lib/prism-graph/loader';
+import { loadFromHomeHub, loadFromHomeHubFile } from '@/lib/prism-graph/loader';
 
 interface GraphSourceState {
   hubs: PrismHub[];
@@ -17,13 +17,13 @@ interface GraphSourceState {
   ready: boolean;
   error: string | null;
   load: (json: HomeHubJson) => void;
-  loadFromUrl: (url?: string) => Promise<void>;
+  loadFromUrl: (url: string) => Promise<void>;
   reset: () => void;
 }
 
 const EMPTY: GraphSource = { hubs: [], nodes: [], edges: [] };
 
-export const useGraphSourceStore = create<GraphSourceState>((set) => ({
+export const useGraphSourceStore = create<GraphSourceState>()((set) => ({
   hubs: EMPTY.hubs,
   nodes: EMPTY.nodes,
   edges: EMPTY.edges,
@@ -40,12 +40,9 @@ export const useGraphSourceStore = create<GraphSourceState>((set) => ({
     }
   },
 
-  loadFromUrl: async (url = '/api/mock/home-hub.json') => {
+  loadFromUrl: async (url) => {
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`fetch ${url} failed: ${res.status}`);
-      const json = (await res.json()) as HomeHubJson;
-      const graph = loadFromHomeHub(json);
+      const graph = await loadFromHomeHubFile(url);
       set({ hubs: graph.hubs, nodes: graph.nodes, edges: graph.edges, ready: true, error: null });
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
