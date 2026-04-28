@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T17:23:10Z",
+  "updatedAt": "2026-04-28T17:49:13Z",
   "currentIteration": 18,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -284,14 +284,18 @@
         "plan:Phase 3"
       ],
       "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
+      "commit": "7bc2c195865af60eda928a592c54364b431262a3",
+      "verifiedAt": "2026-04-28T17:49:13Z",
       "filesNew": [
         "kid-kode-landing/src/components/editor/panels/HubInspector.tsx",
         "kid-kode-landing/src/components/editor/panels/RightPane.tsx"
       ],
       "filesEdited": [
+        "kid-kode-landing/src/app/page.tsx",
         "kid-kode-landing/src/components/editor/graph/GraphScene.tsx",
+        "kid-kode-landing/src/lib/useForceGraph.ts",
         "kid-kode-landing/src/stores/useGraphEditorStore.ts"
       ],
       "verificationGates": [
@@ -301,7 +305,7 @@
         "node scripts/browser-smoke.mjs (6/6)",
         "manual: click hub in 3D scene → HubInspector opens with hub-specific tabs; visual treatment identical to Inspector"
       ],
-      "notes": "GraphScene's HubHulls gains pointer-down handler → selectHub(hubId). New selectedHubId in useGraphEditorStore (mutually exclusive with selectedNodeId). HubInspector reuses Inspector's panel chrome / tab strip / typography exactly; tab content is hub-specific (Visual=layout/responsiveBreakpoints/mockup-image; Behavior=global theme bindings; Code=manifest/artifactHash; Animation=hub-level i2v frame loop; Connections=attached node IDs; Backend=empty). RightPane.tsx selects between Inspector and HubInspector based on selection state."
+      "notes": "Implemented per plan §Phase 3. useGraphEditorStore gains selectedHubId + selectHub action (mutually exclusive with selectedNodeId; selectNode and flyToNode now clear selectedHubId). HubInspector.tsx mirrors Inspector chrome (gradient bg, blur, INSPECTOR tag, six-tab strip, slide-in animation); tab content is hub-specific — Visual: hub.caption + layout (viewport/contentHeight/bg) + responsiveBreakpoints, Behavior: global state/theme/hub-scoped dataBindings (filter is source-based), Code: manifest snippet (prismVersion, entryHub, nodeCount, artifactHash pointer) + build commands, Animation: read-only summary of hub-level animated nodes, Connections: nodes whose parentHubId matches (clickable to select+fly), Backend: empty state. RightPane.tsx routes between Inspector/HubInspector based on selection. page.tsx mounts <RightPane/> in both desktop and mobile splits. GraphScene HubHulls is pointer-interactive: onClick → selectHub(hub.id), pointerOver/Out toggle cursor:pointer, isActive tracks selectedHubId. T-EDIT-03 test (tests/lib/editor/T-EDIT-03.test.mjs) covers 21 checks (store fields/actions, HubInspector exports + tab IDs + chrome markers + tab content references, RightPane mount + selection logic, HubHulls click handler, tsc clean). Spec-reviewer MUST FIX resolved: HubBehaviorTab filter switched from target-regex to source-based ('theme' | 'state.*' | 'hub.*'), now surfaces all four bindings in home-hub.json. Force-graph hardening (useForceGraph.ts): drops simLinks whose endpoints are not in the editor's node set — home-hub.json edges target four virtual runtime nodes (hub-router, build-panel, signin-modal, user-preferences-store) that have no graph-node entry, and d3-force-3d's forceLink threw 'node not found: X'; the issue surfaced after `npm run build` regenerated `.next/`. Inspector's Connections tab still sees the full edge list through the view-model. SHOULD-FIX (tracked, deferred): (a) Code tab missing edgeCount + atlas dimensions per plan §Phase 3 wording; (b) artifactHash is a placeholder pointer — could be wired through the loader; (c) HubHulls outer wireframe sphere defaults to FrontSide and may intercept clicks intended for inner nodes — consider BackSide or pointer-events=none on visual meshes plus an explicit hit-mesh; (d) flyToHub() not updated for the mutual-exclusion contract (only sets activeHubId); (e) HubInspector → Inspector swap on Connections-tab pick doesn't explicitly closeInspector first, so slide-in animation may not retrigger; (f) project rule 'all source commits must touch notes/prism-mock-progress.md' is honored by the iter-N progress-log commit (Ralph pattern, matches T-EDIT-02); (g) HubBehaviorTab comment block still describes the old target-based logic — should be updated to match the source-based filter to prevent reader drift. OPTIONAL: prismVersion hardcoded; AnimationSpec fps cast pattern; HubAnimationTab only counts visual.frameCount > 1 (intent.animationSpec.onAppear/onThemeChange ignored); HubBackendTab empty-state could be a shared constant."
     },
     {
       "id": "T-EDIT-04",
@@ -377,7 +381,7 @@
   "invariants": {
     "verifyPrismPassing": true,
     "browserSmokePassing": true,
-    "lastArtifactHash": "c9067695627585706006cdbb8c2fe04c3cd2d55286a3627e5350816daeade8f6"
+    "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
   },
   "history": [
     {
@@ -481,14 +485,20 @@
       "taskId": "T-EDIT-02",
       "commit": "7f349b6d59adc299eae260366c7c7bc3e063096f",
       "verifiedAt": "2026-04-28T17:21:25Z"
+    },
+    {
+      "iteration": 18,
+      "taskId": "T-EDIT-03",
+      "commit": "7bc2c195865af60eda928a592c54364b431262a3",
+      "verifiedAt": "2026-04-28T17:49:13Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 17,
-    "lastProductiveCommit": "1d2710e39067682510e90b8ba4b753693e7e9c41"
+    "lastProductiveIteration": 18,
+    "lastProductiveCommit": "7bc2c195865af60eda928a592c54364b431262a3"
   },
   "phaseCaps": {
     "§10": {
