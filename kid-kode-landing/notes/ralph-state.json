@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T17:08:03Z",
+  "updatedAt": "2026-04-28T17:21:25Z",
   "currentIteration": 17,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -255,11 +255,16 @@
         "plan:Phase 2"
       ],
       "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
       "filesEdited": [
         "kid-kode-landing/src/components/editor/panels/Inspector.tsx",
-        "kid-kode-landing/src/components/editor/graph/GraphScene.tsx"
+        "kid-kode-landing/src/components/editor/graph/GraphScene.tsx",
+        "kid-kode-landing/src/lib/prism-graph/view-model.ts",
+        "kid-kode-landing/src/lib/useForceGraph.ts",
+        "kid-kode-landing/src/lib/nodeTexture.ts",
+        "kid-kode-landing/src/stores/useGraphSourceStore.ts",
+        "tests/lib/prism-graph/T-EDIT-01.test.mjs"
       ],
       "verificationGates": [
         "npx tsc --noEmit (clean)",
@@ -268,7 +273,9 @@
         "node scripts/browser-smoke.mjs (6/6)",
         "manual: open /, click any node, all six tabs render correct data sourced from home-hub.json"
       ],
-      "notes": "Inspector.tsx and GraphScene.tsx replace `import { GRAPH } from '@/data/mockGraph'` with the new loader-backed store. NO visual changes to Inspector. Field reconciliation per plan §Phase 2 (id↔nodeId, hubIds[]↔[parentHubId], interactions(event/action/target)↔behaviorSpec.interactions(event/effect)+triggersDownstream, code-string↔file-load-via-codeRef, etc.). mockGraph.ts kept on disk as fallback for editor-only demos."
+      "notes": "Inspector.tsx and GraphScene.tsx replace `import { GRAPH } from '@/data/mockGraph'` with the new loader-backed store. NO visual changes to Inspector. Field reconciliation per plan §Phase 2 (id↔nodeId, hubIds[]↔[parentHubId], interactions(event/action/target)↔behaviorSpec.interactions(event/effect)+triggersDownstream, code-string↔file-load-via-codeRef, etc.). mockGraph.ts kept on disk as fallback for editor-only demos.",
+      "commit": "7f349b6d59adc299eae260366c7c7bc3e063096f",
+      "verifiedAt": "2026-04-28T17:21:25Z"
     },
     {
       "id": "T-EDIT-03",
@@ -468,6 +475,12 @@
       "taskId": "T-EDIT-01",
       "commit": "13fccb788c554ffd3127f898d22c64a193bac827",
       "verifiedAt": "2026-04-28T17:30:00Z"
+    },
+    {
+      "iteration": 17,
+      "taskId": "T-EDIT-02",
+      "commit": "7f349b6d59adc299eae260366c7c7bc3e063096f",
+      "verifiedAt": "2026-04-28T17:21:25Z"
     }
   ],
   "maxIterationsPerPhase": 50,
