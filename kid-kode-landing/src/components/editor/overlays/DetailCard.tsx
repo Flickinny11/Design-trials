@@ -23,9 +23,7 @@ export default function DetailCard() {
   );
 
   if (!selectedId || inspectorOpen) return null;
-  // Restrict the popover to discrete elements; backgrounds and embedded
-  // text/sub-elements aren't standalone nav targets.
-  const node = graph.nodes.find((n) => n.id === selectedId && n.editorRole === 'element');
+  const node = graph.nodes.find((n) => n.id === selectedId);
   if (!node) return null;
 
   const frozen = frozenIds.has(node.id);

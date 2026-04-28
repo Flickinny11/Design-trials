@@ -18,14 +18,6 @@ export default function Minimap() {
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
-  const elementNodes = useMemo(
-    () => graph.nodes.filter((n) => n.editorRole === 'element'),
-    [graph.nodes]
-  );
-  const elementEdges = useMemo(() => {
-    const ids = new Set(elementNodes.map((n) => n.id));
-    return graph.edges.filter((e) => ids.has(e.source) && ids.has(e.target));
-  }, [graph.edges, elementNodes]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -46,7 +38,7 @@ export default function Minimap() {
     });
 
     const nodePositions: Record<string, { x: number; y: number }> = {};
-    elementNodes.forEach((n, i) => {
+    graph.nodes.forEach((n, i) => {
       const hub = hubPositions[n.hubIds[0]] || { x: cx, y: cy };
       const seed = (i * 2654435761) % 1000;
       const angle = (seed / 1000) * Math.PI * 2;
@@ -71,7 +63,7 @@ export default function Minimap() {
 
     ctx.strokeStyle = 'rgba(255,255,255,0.08)';
     ctx.lineWidth = 0.5;
-    elementEdges.forEach((e) => {
+    graph.edges.forEach((e) => {
       const s = nodePositions[e.source], t = nodePositions[e.target];
       if (!s || !t) return;
       ctx.beginPath();
@@ -80,7 +72,7 @@ export default function Minimap() {
       ctx.stroke();
     });
 
-    elementNodes.forEach((n) => {
+    graph.nodes.forEach((n) => {
       const p = nodePositions[n.id];
       if (!p) return;
       const isSelected = selectedId === n.id;
@@ -103,7 +95,7 @@ export default function Minimap() {
         ctx.stroke();
       }
     });
-  }, [selectedId, hoveredId, activeHubId, graph.hubs, elementNodes, elementEdges]);
+  }, [selectedId, hoveredId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
 
   return (
     <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
@@ -118,7 +110,7 @@ export default function Minimap() {
       >
         <div className="px-2.5 py-1 border-b border-white/5 text-[9px] font-mono tracking-widest text-white/40 flex items-center justify-between">
           <span>MINIMAP</span>
-          <span>{elementNodes.length} nodes</span>
+          <span>{graph.nodes.length} nodes</span>
         </div>
         <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
       </div>

@@ -18,10 +18,6 @@ export default function HubNav() {
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
-  const elementNodes = useMemo(
-    () => graph.nodes.filter((n) => n.editorRole === 'element'),
-    [graph.nodes]
-  );
 
   return (
     <div className="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
@@ -48,7 +44,7 @@ export default function HubNav() {
 
         {graph.hubs.map((hub) => {
           const active = activeHubId === hub.id;
-          const nodeCount = elementNodes.filter((n) => n.hubIds.includes(hub.id)).length;
+          const nodeCount = graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
           return (
             <button
               key={hub.id}

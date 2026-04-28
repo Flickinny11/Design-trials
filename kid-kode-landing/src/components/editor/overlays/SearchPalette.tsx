@@ -15,19 +15,15 @@ export default function SearchPalette() {
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
 
-  // Editor parity: read from the same store the 3D scene reads from, and
-  // exclude full-section/card backgrounds so search results match the
-  // ~29-element nav-able set rather than the legacy 52-node fixture.
+  // Editor parity: read from the same store the 3D scene reads from. No
+  // filter — every node in the knowledge graph is a real element of the
+  // app and must be searchable.
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
   const graph = useMemo(
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
-  );
-  const elementNodes = useMemo(
-    () => graph.nodes.filter((n) => n.editorRole === 'element'),
-    [graph.nodes]
   );
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,7 +49,7 @@ export default function SearchPalette() {
 
   const q = query.toLowerCase().trim();
   const hubMatches = graph.hubs.filter((h) => !q || h.name.toLowerCase().includes(q) || h.route.toLowerCase().includes(q));
-  const nodeMatches = elementNodes.filter((n) =>
+  const nodeMatches = graph.nodes.filter((n) =>
     !q || n.name.toLowerCase().includes(q) || n.elementType.toLowerCase().includes(q) || n.caption.toLowerCase().includes(q)
   ).slice(0, 12);
 

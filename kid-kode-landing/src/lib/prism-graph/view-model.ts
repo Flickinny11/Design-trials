@@ -23,7 +23,6 @@ import type {
   PrismAlphaCutout,
   PrismAnimationSpec,
   PrismEdge,
-  PrismEditorRole,
   PrismHub,
   PrismInteractionNeighbors,
   PrismLayer,
@@ -205,17 +204,6 @@ export function getVisibility(node: PrismNode): PrismVisibility | null {
   return node?.intent?.visibility ?? null;
 }
 
-// ── Editor parity (post-Ralph fix-up) ──────────────────────────────────────
-
-export function getSection(node: PrismNode): string {
-  const s = node?.intent?.section;
-  return typeof s === 'string' && s.length > 0 ? s : 'unknown';
-}
-
-export function getEditorRole(node: PrismNode): PrismEditorRole {
-  return node?.intent?.editorRole === 'background' ? 'background' : 'element';
-}
-
 // ── Editor-side identity helpers ───────────────────────────────────────────
 
 export function getNodeName(node: PrismNode): string {
@@ -230,14 +218,15 @@ export function getHubIds(node: PrismNode): string[] {
   return node?.parentHubId ? [node.parentHubId] : [];
 }
 
-// ── Editor-view adapter ────────────────────────────────────────────────────
+// ── Phase 2 editor-view adapter ────────────────────────────────────────────
 //
-// Projects the canonical PrismNode shape onto the editor's expected fields
-// (node.id, node.hubIds, node.visualSpec, node.interactions[].{event,action,
-// target}, node.section, node.editorRole). The 3D scene + every overlay
-// (search, hub-nav, minimap, top-bar, detail-card) round-trips through this.
-// New consumers should prefer the per-field accessors above when they only
-// need a single value.
+// Phase 2 (plan §Phase 2) replaces the legacy `@/data/mockGraph` import with
+// a live read of `home-hub.json`. The Inspector and GraphScene already have
+// stable field expectations (e.g. node.id, node.hubIds, node.visualSpec,
+// node.interactions[].{event,action,target}) — to keep "zero visual changes"
+// in those components, this adapter projects the canonical shape onto the
+// legacy editor-node shape. New consumers should prefer the per-field
+// accessors above; only Inspector + GraphScene round-trip through these.
 
 export type EditorNodeStatus = 'verified' | 'code_generated' | 'image_ready' | 'pending' | 'failed';
 
@@ -272,8 +261,6 @@ export interface EditorNode {
   textContent: EditorTextItem[];
   interactions: EditorInteraction[];
   backendContract?: EditorBackendContract;
-  section: string;
-  editorRole: PrismEditorRole;
 }
 
 export interface EditorHubView {
@@ -342,8 +329,6 @@ export function toEditorNode(node: PrismNode): EditorNode {
     textContent: deriveTextContent(node),
     interactions: getInteractions(node),
     backendContract: backendContract ?? undefined,
-    section: getSection(node),
-    editorRole: getEditorRole(node),
   };
 }
 

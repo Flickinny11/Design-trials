@@ -20,17 +20,12 @@ export default function TopBar() {
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
-  const elementNodes = useMemo(
-    () => graph.nodes.filter((n) => n.editorRole === 'element'),
-    [graph.nodes]
-  );
-
   const hub = graph.hubs.find((h) => h.id === activeHubId);
-  const selected = elementNodes.find((n) => n.id === selectedId);
+  const selected = graph.nodes.find((n) => n.id === selectedId);
 
-  const total = elementNodes.length || 1;
-  const verified = elementNodes.filter((n) => n.status === 'verified').length;
-  const failed = elementNodes.filter((n) => n.status === 'failed').length;
+  const total = graph.nodes.length || 1;
+  const verified = graph.nodes.filter((n) => n.status === 'verified').length;
+  const failed = graph.nodes.filter((n) => n.status === 'failed').length;
   const pending = total - verified - failed;
   const health = Math.round((verified / total) * 100);
 

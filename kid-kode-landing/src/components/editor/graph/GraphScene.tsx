@@ -410,7 +410,11 @@ function HubHulls({
           if (d > maxDist) maxDist = d;
         });
         const radius = maxDist + 10;
-        const innerRadius = radius * 0.85;
+        // Inner mockup-textured sphere is capped well below the node cloud's
+        // outer reach so element-spheres orbit *outside* the opaque hub
+        // surface and stay visible. The outer translucent hull (`radius`)
+        // still wraps the full constellation.
+        const innerRadius = Math.min(radius * 0.45, 32);
         const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
         return (
@@ -613,11 +617,9 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
 function ControlsBridge({
   simNodes,
   hubCenters,
-  hubRadii,
 }: {
   simNodes: SimNode[];
   hubCenters: Record<string, any>;
-  hubRadii: Record<string, number>;
 }) {
   const controlsRef = useRef<CameraControls>(null);
   const setCameraDistance = useGraphEditorStore((s) => s.setCameraDistance);
@@ -635,34 +637,33 @@ function ControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetSignal]);
 
-  // Fly to node — offset distance scales with the host hub's radius
+  // Fly to node
   useEffect(() => {
     if (!flyToNodeId) return;
     const node = simNodes.find((n) => n.id === flyToNodeId);
     const c = controlsRef.current;
     if (!node || !c) return;
 
-    const r = hubRadii[node.hubIds[0]] ?? 90;
-    const offset = new THREE.Vector3(node.x, node.y, node.z).normalize().multiplyScalar(r * 0.2);
-    const camX = node.x + offset.x + r * 0.09;
-    const camY = node.y + offset.y + r * 0.045;
-    const camZ = node.z + offset.z + r * 0.09;
+    // Position camera at a comfortable distance from node, looking at it
+    const offset = new THREE.Vector3(node.x, node.y, node.z).normalize().multiplyScalar(18);
+    const camX = node.x + offset.x + 8;
+    const camY = node.y + offset.y + 4;
+    const camZ = node.z + offset.z + 8;
     c.setLookAt(camX, camY, camZ, node.x, node.y, node.z, true).then(() => {
       clearFlyTarget();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flyToNodeId]);
 
-  // Fly to hub — framing distance scales with that hub's radius
+  // Fly to hub
   useEffect(() => {
     if (!flyToHubId) return;
     const center = hubCenters[flyToHubId];
     const c = controlsRef.current;
     if (!center || !c) return;
-    const r = hubRadii[flyToHubId] ?? 90;
-    const camX = center.x + r * 0.55;
-    const camY = center.y + r * 0.33;
-    const camZ = center.z + r;
+    const camX = center.x + 50;
+    const camY = center.y + 30;
+    const camZ = center.z + 90;
     c.setLookAt(camX, camY, camZ, center.x, center.y, center.z, true).then(() => {
       clearFlyTarget();
     });
@@ -676,18 +677,11 @@ function ControlsBridge({
     setCameraDistance(c.distance);
   });
 
-  // minDistance stays a small constant so close-zoom on individual nodes
-  // works even when the largest hub is wide. maxDistance scales up with
-  // the biggest hub so the full constellation stays in frame.
-  const maxHubRadius = Math.max(90, ...Object.values(hubRadii));
-  const minDist = 8;
-  const maxDist = Math.max(600, maxHubRadius * 6.5);
-
   return (
     <CameraControls
       ref={controlsRef}
-      minDistance={minDist}
-      maxDistance={maxDist}
+      minDistance={8}
+      maxDistance={600}
       smoothTime={0.28}
       draggingSmoothTime={0.14}
       dollyToCursor
@@ -721,17 +715,8 @@ function SceneContent({
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
-  // Element-only nodes feed the force-graph. `background` (full-section /
-  // card fills) and `embedded` (text labels + per-card sub-elements like
-  // titles, descriptions, icons that the user perceives as part of a card,
-  // not as standalone elements) both stay off the nav-able sphere set.
-  const elementNodes = useMemo(
-    () => editorGraph.nodes.filter((n) => n.editorRole === 'element'),
-    [editorGraph.nodes]
-  );
-
-  const { simNodes, simLinks, hubCenters, hubRadii } = useForceGraph(
-    elementNodes,
+  const { simNodes, simLinks, hubCenters } = useForceGraph(
+    editorGraph.nodes,
     editorGraph.edges,
     editorGraph.hubs,
     pinnedPositions,
@@ -772,7 +757,7 @@ function SceneContent({
 
       <NodeLabels simNodes={simNodes} />
       <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
-      <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} hubRadii={hubRadii} />
+      <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} />
 
       {usePost && (
         <EffectComposer multisampling={0} stencilBuffer={false}>
