@@ -184,6 +184,8 @@ export interface PrismVisibility {
   [k: string]: unknown;
 }
 
+export type PrismEditorRole = 'element' | 'background';
+
 export interface PrismIntent {
   caption: string;
   behaviorSpec: PrismBehaviorSpec;
@@ -197,6 +199,13 @@ export interface PrismIntent {
   interactionNeighbors?: PrismInteractionNeighbors;
   responsiveSizing?: PrismResponsiveSizing;
   visibility?: PrismVisibility;
+  // Editor parity layer (post-Ralph fix-up). `section` clusters nodes by
+  // visual section in the 3D editor; `editorRole` flags full-section/card
+  // background fills so the editor renders them as part of the hub shell
+  // rather than as nav-able element-spheres. Both are optional for graceful
+  // degradation against older home-hub.json revisions.
+  section?: string;
+  editorRole?: PrismEditorRole;
   [k: string]: unknown;
 }
 
