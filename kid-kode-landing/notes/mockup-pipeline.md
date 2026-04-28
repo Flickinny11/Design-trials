@@ -360,3 +360,41 @@ The selection ring is the only `PIXI.Graphics` use the editor adds to the runtim
 - **Does not derive palette colors from the JSON.** `home-hub.json` does not store palette swatches (atlas crops carry their own pixels); the view-model supplies neutral defaults so the picker has something to display.
 
 The complete plan that produced this mapping layer (Phases 0–6, 7 Ralph iterations) lives at `/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md`.
+
+### 12.6 Editor parity layer (post-Ralph fix-up)
+
+Two structural fields on every node, set in `home-hub.json` and surfaced through the editor view-model:
+
+- `intent.section: string` — visual section the node belongs to (`navbar`, `hero`, `feature-grid`, `settings`, `footer`, `page`). Drives sub-centroid clustering inside a hub: each section gets its own anchor point on a ring at `hubRadius × 0.55` from hub center, and a `forceSectionCohesion` custom force pulls nodes toward their section anchor. Result: zooming into a hub shows visually distinct section clusters rather than one undifferentiated cloud.
+- `intent.editorRole: 'element' | 'background'` — flags full-section / card background fills. The 3D editor, search palette, hub-nav, minimap, and detail-card all filter on `editorRole === 'element'`, so backgrounds (page, navbar, hero-section, hero-card, feature-grid-section, feature-card-{1,2,3}, settings-section, stats-card, footer — 11 of 40 nodes for the home hub) appear as part of the hub's outer mockup shell rather than as nav-able element-spheres. The runtime player still renders all 40 sprites — this is purely an editor-side filter.
+
+Captions are the human-readable artifact: each is prefixed with its section label (`"Navbar — Kriptik wordmark — …"`, `"Hero — pill-shaped CTA button face …"`) so a person reading the JSON can see the section without consulting the structured field.
+
+#### Ratio-based hub sizing in `useForceGraph.ts`
+
+A hub is virtually limitlessly large — its radius is computed dynamically from element count:
+
+```
+hubRadius = BASE_HUB_RADIUS × (1 + (elementCount / NODES_PER_BASE_HUB) × HUB_GROWTH_RATIO)
+```
+
+with `BASE_HUB_RADIUS=90`, `NODES_PER_BASE_HUB=30`, `HUB_GROWTH_RATIO=0.7`. So a 30-element hub renders at the historical 90-unit radius, a 60-element hub grows to ≈153 units, etc. Every other distance — section sub-centroid radius, intra-section scatter, collision radius, link distances — is expressed as a fraction of `hubRadius`:
+
+| Constant | Ratio | Use |
+|---|---|---|
+| `SECTION_RADIUS_RATIO` | 0.55 | sub-centroid distance from hub center |
+| `NODE_CLUSTER_RATIO` | 0.18 | intra-section scatter |
+| `COLLISION_RATIO` | 0.04 | per-node collide radius |
+| `LINK_CONTAINS_RATIO` | 0.10 | edge type `contains` |
+| `LINK_SHARES_RATIO` | 0.30 | edge type `shares-state` |
+| `LINK_DATAFLOW_RATIO` | 0.20 | edge type `data-flow` |
+| `LINK_NAV_RATIO` | 0.35 | edge type `navigates-to` |
+| `LINK_DEFAULT_RATIO` | 0.25 | other edges |
+
+Camera bounds in `GraphScene.tsx` derive from the largest hub's radius (`minDistance ≈ hubRadius × 0.09`, `maxDistance ≈ hubRadius × 6.5`, with floors of 5/600 to keep small / empty graphs sane), and fly-to offsets scale with the destination hub's specific radius. Adjust ratios here, never hardcode pixel values downstream.
+
+#### Overlay parity
+
+The 5 editor overlays (`SearchPalette`, `HubNav`, `Minimap`, `TopBar`, `DetailCard`) all read from `useGraphSourceStore` via `toEditorView` — the same source the 3D scene reads from. They each apply the `editorRole === 'element'` filter so search results, hub-nav counts, minimap dots, and detail-card lookups match the 3D scene's nav-able set. The legacy `src/data/mockGraph.ts` fixture has been deleted; nothing in `src/` references it.
+
+The plan that produced this fix-up lives at `/Users/loganbaird/.claude/plans/no-its-ok-lets-synthetic-quasar.md`.

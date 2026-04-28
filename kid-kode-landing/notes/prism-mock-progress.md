@@ -273,3 +273,29 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - ✅ No changes to `src/lib/prism/**` runtime / build pipeline (only `.claude/` hooks + `notes/ralph-state.json` + this progress entry).
 - ✅ All four hook layers (anti-drift / dep-allowlist / spec-infrastructure / verify-on-stop) compose; none replaces another.
 - ✅ Mock app continues to run on the .prism runtime exactly as spec mandates; the hook layer mechanically prevents drift during the Ralph Loop.
+
+---
+
+## Post-Ralph fix-up — Editor parity + inner-hub spacing (2026-04-28)
+
+After the 6-phase Ralph loop landed, two visible defects remained: (a) the 3D editor showed nodes for full-section / card backgrounds the user perceives as "the page," producing a count mismatch with the preview, plus 5 overlay components were still reading the legacy 52-node `src/data/mockGraph.ts` fixture; (b) inside-hub layout was a single tight cluster around the hub centroid, hard to navigate. Plan: `/Users/loganbaird/.claude/plans/no-its-ok-lets-synthetic-quasar.md`.
+
+**Eight phases shipped:**
+
+1. **Data** — every node in [src/lib/prism/mock-app-source/hubs/home-hub.json](../src/lib/prism/mock-app-source/hubs/home-hub.json) gained `intent.section` (one of `page` / `navbar` / `hero` / `feature-grid` / `settings` / `footer`) and `intent.editorRole` (`element` or `background`). 11 nodes are backgrounds, 29 are discrete elements. Captions were prefixed with their section label so the JSON reads naturally without consulting the structured field.
+2. **Schema + view-model** — `PrismIntent` in [src/lib/prism-graph/types.ts](../src/lib/prism-graph/types.ts) now optionally carries `section` and `editorRole`; new accessors `getSection` / `getEditorRole` in [src/lib/prism-graph/view-model.ts](../src/lib/prism-graph/view-model.ts), with both fields surfaced on the `EditorNode` shape.
+3. **3D scene filter** — [src/components/editor/graph/GraphScene.tsx](../src/components/editor/graph/GraphScene.tsx) splits incoming nodes by `editorRole` and passes only `element` nodes to the force simulation; backgrounds stay part of the hub's outer mockup shell.
+4. **Section cohesion + ratio spacing** — [src/lib/useForceGraph.ts](../src/lib/useForceGraph.ts) rewritten: each hub computes a dynamic `hubRadius` from its element count, sections place sub-centroids on a ring at `hubRadius × 0.55`, a new `forceSectionCohesion` force pulls each node toward its section anchor, and every collide / link distance is now a fraction of `hubRadius` (collision 0.04, contains 0.10, shares-state 0.30, data-flow 0.20, navigates-to 0.35, default 0.25). Hubs grow to fit their contents — ratios, no fixed pixel values.
+5. **Camera scaling** — `ControlsBridge` in GraphScene reads `hubRadii` and derives `minDistance ≈ hubRadius × 0.09`, `maxDistance ≈ hubRadius × 6.5` (with safe floors), and per-hub fly-to offsets that scale with the destination hub's radius.
+6. **Overlay parity** — `SearchPalette`, `HubNav`, `Minimap`, `TopBar`, `DetailCard` all read from `useGraphSourceStore` via `toEditorView`, with the `editorRole === 'element'` filter applied so search results, hub-nav counts, minimap dots, and detail-card lookups match the 3D scene's nav-able set.
+7. **Cleanup** — `src/data/mockGraph.ts` deleted (zero references in `src/`); legacy comments referencing it removed.
+8. **Docs + verify + push** — see [notes/mockup-pipeline.md §12.6](mockup-pipeline.md#126-editor-parity-layer-post-ralph-fix-up). Artifact rebuilt; new `artifactHash`: `8bc2b0b5f15d6cbf23d75e44fc4bb3b83f9f0e9bce1236467d31be8786c44e48`.
+
+**Verification — both gates green:**
+
+- `npm run verify:prism` → 15/15 (artifact reproducible after rebuild).
+- `node scripts/browser-smoke.mjs` → 6/6 (canvases.present, runtime.mounted, runtime.no-errors, scroll.wheel.handled, shr.devtool.installed, screenshot.saved).
+- `grep -r "mockGraph" src/` → zero hits.
+- Live screenshot in [notes/browser-smoke/home-hub.png](browser-smoke/home-hub.png) shows ~29 element-spheres scattered across the hub instead of the prior tight cluster of 40 + backgrounds.
+
+**Outcome:** the 3D editor reflects what the user perceives as "discrete elements that the preview shows," sections are visually clustered, hubs scale to fit their contents.
