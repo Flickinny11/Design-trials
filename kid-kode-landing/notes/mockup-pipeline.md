@@ -307,7 +307,7 @@ The Inspector renders six tabs. Each tab pulls only from the accessors listed be
 | **Code** (`code`) | `node.code` (read-only source string loaded from `codeRef`) | `codeRef` (path under `src/lib/prism/mock-app-source/nodes/*.js`) |
 | **Animation** (`animation`) | `getHasAnimation(node)`, `getAnimationFrames(node)`, `getAnimationSpec(node)` | `intent.animationSpec.{onHover,onPress,onRelease,onToggleOn,onToggleOff,…}`, `visual.frameCount` |
 | **Connections** (Links, `connections`) | `getEdges(graph, nodeId)`, plus the spatial / interaction neighbors via `getVisualNeighbors(node)` and `getInteractionNeighbors(node)` | `edges[].{from,to,event,type}`, `intent.visualNeighbors`, `intent.interactionNeighbors` |
-| **Backend** (`backend`) | `getBackendContract(node)` | `backendRef`, `intent.behaviorSpec.apiCalls[0].{method,route}`, `intent.contracts.{inputs,outputs}` |
+| **Backend** (`backend`) | `getBackendContract(node)` | `backendRef`, `intent.behaviorSpec.apiCalls[0].{method,endpoint}` (the editor's `route` is `apiCalls[0].endpoint`), `intent.contracts.{inputs,outputs}` |
 
 All six accessors are pure functions — input is the canonical `PrismNode` (or `GraphSource` for `getEdges`), output is the editor's expected shape. They live in `view-model.ts` and never reach for React, fetch, or any I/O.
 
@@ -317,7 +317,7 @@ Hubs expose the same six tabs, but each tab is hub-flavored. The hub view-model 
 
 | Tab | Hub source |
 |---|---|
-| **Visual** | `hub.caption`, `hub.layout.{viewport,contentHeight,backgroundColor}`, `hub.responsiveBreakpoints` (mobile/tablet/desktop scale factors) — plus the mockup PNG referenced in the plan (loaded from `public/prism-assets/scifi-mockup-v1.png`) |
+| **Visual** | `hub.caption`, `hub.layout.{viewport,contentHeight,backgroundColor}`, `hub.responsiveBreakpoints` (per breakpoint: `{maxWidth, scale}`). The mockup PNG (`public/prism-assets/scifi-mockup-v1.png`) is rendered by [GraphScene.tsx](../src/components/editor/graph/GraphScene.tsx)'s `HubHulls` inner sphere, not by HubInspector |
 | **Behavior** | global event bindings filtered by `source` prefix (`theme`, `state.*`, `hub.*`) — surfaces `theme→visual.tint` and the three `state.*` bindings on `home-hub` |
 | **Code** | manifest summary (`prismVersion`, `entryHub`, `nodeCount`, `artifactHash` pointer) plus build-command reference text |
 | **Animation** | read-only summary of nodes whose `intent.animationSpec` is non-empty or whose `visual.frameCount > 1` (today: `hero-section-bg`'s 24-frame i2v loop) |
