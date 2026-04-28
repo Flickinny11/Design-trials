@@ -28,7 +28,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Page background — environmental backdrop spanning the full scroll length of the home hub.",
+        "caption": "Page — Page background — environmental backdrop spanning the full scroll length of the home hub.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -52,7 +52,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "page",
+        "editorRole": "background"
       },
       "codeRef": "nodes/page-background.js",
       "backendRef": null
@@ -74,7 +76,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Navigation bar background — dark translucent bar spanning the top of the viewport.",
+        "caption": "Navbar — Navigation bar background — dark translucent bar spanning the top of the viewport.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -91,7 +93,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "background"
       },
       "codeRef": "nodes/navbar-bg.js",
       "backendRef": null
@@ -113,7 +117,7 @@
         "shape": "circle"
       },
       "intent": {
-        "caption": "Kriptik wordmark — brand signet that navigates back to the home hub on tap.",
+        "caption": "Navbar — Kriptik wordmark — brand signet that navigates back to the home hub on tap.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -151,7 +155,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-logo.js",
       "backendRef": null
@@ -174,7 +180,7 @@
         "shapeRadius": 8
       },
       "intent": {
-        "caption": "Nav link 'Home' — scroll-navigates to the top of the home hub.",
+        "caption": "Navbar — Nav link 'Home' — scroll-navigates to the top of the home hub.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -212,7 +218,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -236,7 +244,7 @@
         "alpha": 0.9
       },
       "intent": {
-        "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
+        "caption": "Navbar — Nav link 'Editor' — scroll-navigates to the editor section.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -274,7 +282,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -298,7 +308,7 @@
         "alpha": 0.9
       },
       "intent": {
-        "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
+        "caption": "Navbar — Nav link 'Docs' — scroll-navigates to the docs section.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -336,7 +346,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -360,7 +372,7 @@
         "alpha": 0.9
       },
       "intent": {
-        "caption": "Nav link 'Pricing' — scroll-navigates to the pricing section.",
+        "caption": "Navbar — Nav link 'Pricing' — scroll-navigates to the pricing section.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -398,7 +410,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
@@ -424,7 +438,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Small pill-shaped physical button face on the navbar beam. Smooth clean anodized-black aluminum surface with chamfered edges. No writing, no characters, no markings on the surface at all.",
+        "caption": "Navbar — Small pill-shaped physical button face on the navbar beam. Smooth clean anodized-black aluminum surface with chamfered edges. No writing, no characters, no markings on the surface at all.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -463,7 +477,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "navbar",
+        "editorRole": "element"
       },
       "codeRef": "nodes/navbar-signin-btn.js",
       "backendRef": null
@@ -486,7 +502,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Animated hero backdrop — atmospheric environment with drifting fog and dust motes (i2v, 24 fps loop).",
+        "caption": "Hero — Animated hero backdrop — atmospheric environment with drifting fog and dust motes (i2v, 24 fps loop).",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -508,7 +524,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "hero",
+        "editorRole": "background"
       },
       "codeRef": "nodes/hero-section-bg.js",
       "backendRef": null
@@ -531,7 +549,7 @@
         "shapeRadius": 24
       },
       "intent": {
-        "caption": "Hero card — central surface containing the headline, subhead, and CTA.",
+        "caption": "Hero — Hero card — central surface containing the headline, subhead, and CTA.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -550,7 +568,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "hero",
+        "editorRole": "background"
       },
       "codeRef": "nodes/hero-card-bg.js",
       "backendRef": null
@@ -573,7 +593,7 @@
         "shapeRadius": 8
       },
       "intent": {
-        "caption": "Horizontal brushed-steel slab embedded in the hero card. Completely smooth, completely clean, completely blank brushed-steel surface. No inscription, no etching, no markings, no writing, no characters, no letters anywhere on the surface. Just the bare metal.",
+        "caption": "Hero — Horizontal brushed-steel slab embedded in the hero card. Completely smooth, completely clean, completely blank brushed-steel surface. No inscription, no etching, no markings, no writing, no characters, no letters anywhere on the surface. Just the bare metal.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -590,7 +610,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "hero",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -614,7 +636,7 @@
         "alpha": 0.9
       },
       "intent": {
-        "caption": "Hero subhead — clarifying tagline beneath the headline.",
+        "caption": "Hero — Hero subhead — clarifying tagline beneath the headline.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -631,7 +653,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "hero",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -657,7 +681,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Rectangular pill-shaped machined aluminum button face centered in the hero. Smooth anodized-black surface with subtle chamfer. Completely blank surface with no markings, no inscription, no characters, no letters, no writing whatsoever on the face.",
+        "caption": "Hero — Rectangular pill-shaped machined aluminum button face centered in the hero. Smooth anodized-black surface with subtle chamfer. Completely blank surface with no markings, no inscription, no characters, no letters, no writing whatsoever on the face.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -706,7 +730,9 @@
           "outputs": {
             "clickCount": "z.number()"
           }
-        }
+        },
+        "section": "hero",
+        "editorRole": "element"
       },
       "codeRef": "nodes/hero-card-cta.js",
       "backendRef": "backends/hero-card-cta.js"
@@ -728,7 +754,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Feature grid section backdrop.",
+        "caption": "Feature grid — Feature grid section backdrop.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -745,7 +771,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "background"
       },
       "codeRef": "nodes/feature-grid-section-bg.js",
       "backendRef": null
@@ -768,7 +796,7 @@
         "shapeRadius": 20
       },
       "intent": {
-        "caption": "Feature card 1 panel — background for the 'AI-Powered Design' feature.",
+        "caption": "Feature grid — Feature card 1 panel — background for the 'AI-Powered Design' feature.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -790,7 +818,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "background"
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -812,7 +842,7 @@
         "shape": "circle"
       },
       "intent": {
-        "caption": "AI-Powered Design icon — sparkle / neural glyph.",
+        "caption": "Feature grid — AI-Powered Design icon — sparkle / neural glyph.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -829,7 +859,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -852,7 +884,7 @@
         "shapeRadius": 8
       },
       "intent": {
-        "caption": "Feature card 1 title.",
+        "caption": "Feature grid — Feature card 1 title.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -869,7 +901,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -893,7 +927,7 @@
         "alpha": 0.92
       },
       "intent": {
-        "caption": "Feature card 1 description.",
+        "caption": "Feature grid — Feature card 1 description.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -910,7 +944,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -933,7 +969,7 @@
         "shapeRadius": 20
       },
       "intent": {
-        "caption": "Feature card 2 panel — background for the 'Instant Deploy' feature.",
+        "caption": "Feature grid — Feature card 2 panel — background for the 'Instant Deploy' feature.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -955,7 +991,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "background"
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -977,7 +1015,7 @@
         "shape": "circle"
       },
       "intent": {
-        "caption": "Instant Deploy icon — lightning / rocket glyph.",
+        "caption": "Feature grid — Instant Deploy icon — lightning / rocket glyph.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -994,7 +1032,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -1017,7 +1057,7 @@
         "shapeRadius": 8
       },
       "intent": {
-        "caption": "Feature card 2 title.",
+        "caption": "Feature grid — Feature card 2 title.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1034,7 +1074,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1058,7 +1100,7 @@
         "alpha": 0.92
       },
       "intent": {
-        "caption": "Feature card 2 description.",
+        "caption": "Feature grid — Feature card 2 description.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1075,7 +1117,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1098,7 +1142,7 @@
         "shapeRadius": 20
       },
       "intent": {
-        "caption": "Feature card 3 panel — background for the 'Self-Healing Runtime' feature.",
+        "caption": "Feature grid — Feature card 3 panel — background for the 'Self-Healing Runtime' feature.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1120,7 +1164,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "background"
       },
       "codeRef": "nodes/feature-card-bg.js",
       "backendRef": null
@@ -1142,7 +1188,7 @@
         "shape": "circle"
       },
       "intent": {
-        "caption": "Self-Healing Runtime icon — shield / heart glyph.",
+        "caption": "Feature grid — Self-Healing Runtime icon — shield / heart glyph.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1159,7 +1205,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/feature-card-icon.js",
       "backendRef": null
@@ -1182,7 +1230,7 @@
         "shapeRadius": 8
       },
       "intent": {
-        "caption": "Feature card 3 title.",
+        "caption": "Feature grid — Feature card 3 title.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1199,7 +1247,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1223,7 +1273,7 @@
         "alpha": 0.92
       },
       "intent": {
-        "caption": "Feature card 3 description.",
+        "caption": "Feature grid — Feature card 3 description.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1240,7 +1290,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "feature-grid",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
@@ -1262,7 +1314,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Settings section — container for the notifications toggle and theme selector.",
+        "caption": "Settings — Settings section — container for the notifications toggle and theme selector.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1279,7 +1331,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "settings",
+        "editorRole": "background"
       },
       "codeRef": "nodes/settings-section-bg.js",
       "backendRef": null
@@ -1306,7 +1360,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Notifications toggle — layer-swap between off and on atlas regions (Method 3.4.2).",
+        "caption": "Settings — Notifications toggle — layer-swap between off and on atlas regions (Method 3.4.2).",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1357,7 +1411,9 @@
           "outputs": {
             "notificationsEnabled": "z.boolean()"
           }
-        }
+        },
+        "section": "settings",
+        "editorRole": "element"
       },
       "codeRef": "nodes/notifications-toggle.js",
       "backendRef": "backends/user-preferences.js"
@@ -1380,7 +1436,7 @@
         "shape": "pill"
       },
       "intent": {
-        "caption": "Horizontal pill-shaped machined aluminum toggle on a dark steel substrate. Three states (default / hover / pressed) expressed only through lighting changes. The toggle surface is completely blank with no markings, no inscription, no characters, no letters anywhere.",
+        "caption": "Settings — Horizontal pill-shaped machined aluminum toggle on a dark steel substrate. Three states (default / hover / pressed) expressed only through lighting changes. The toggle surface is completely blank with no markings, no inscription, no characters, no letters anywhere.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1443,7 +1499,9 @@
           "outputs": {
             "theme": "z.enum(['light', 'dark', 'system'])"
           }
-        }
+        },
+        "section": "settings",
+        "editorRole": "element"
       },
       "codeRef": "nodes/theme-selector-button.js",
       "backendRef": "backends/user-preferences.js"
@@ -1466,7 +1524,7 @@
         "shapeRadius": 20
       },
       "intent": {
-        "caption": "Flat cast-aluminum panel with laser-etched micro-texture. Completely blank surface with no markings, no inscription, no writing, no characters, no letters anywhere on the panel. Just the bare machined metal with subtle grain.",
+        "caption": "Settings — Flat cast-aluminum panel with laser-etched micro-texture. Completely blank surface with no markings, no inscription, no writing, no characters, no letters anywhere on the panel. Just the bare machined metal with subtle grain.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1483,7 +1541,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "settings",
+        "editorRole": "background"
       },
       "codeRef": "nodes/stats-card-bg.js",
       "backendRef": null
@@ -1506,7 +1566,7 @@
         "shapeRadius": 12
       },
       "intent": {
-        "caption": "Live click counter — MSDF BitmapText bound to the heroCtaClicks state key (runtime-dynamic text).",
+        "caption": "Settings — Live click counter — MSDF BitmapText bound to the heroCtaClicks state key (runtime-dynamic text).",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [
@@ -1555,7 +1615,9 @@
             "heroCtaClicks": "z.number()"
           },
           "outputs": {}
-        }
+        },
+        "section": "settings",
+        "editorRole": "element"
       },
       "codeRef": "nodes/stats-live-counter.js",
       "backendRef": null
@@ -1577,7 +1639,7 @@
         "shape": "rect"
       },
       "intent": {
-        "caption": "Footer background.",
+        "caption": "Footer — Footer background.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -1594,7 +1656,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "background"
       },
       "codeRef": "nodes/footer-bg.js",
       "backendRef": null
@@ -1617,7 +1681,7 @@
         "alpha": 0.85
       },
       "intent": {
-        "caption": "Footer Kriptik logo mark.",
+        "caption": "Footer — Footer Kriptik logo mark.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1654,7 +1718,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-logo.js",
       "backendRef": null
@@ -1678,7 +1744,7 @@
         "alpha": 0.85
       },
       "intent": {
-        "caption": "Footer link — Privacy.",
+        "caption": "Footer — Footer link — Privacy.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1715,7 +1781,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1739,7 +1807,7 @@
         "alpha": 0.85
       },
       "intent": {
-        "caption": "Footer link — Terms.",
+        "caption": "Footer — Footer link — Terms.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1776,7 +1844,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1800,7 +1870,7 @@
         "alpha": 0.85
       },
       "intent": {
-        "caption": "Footer link — Contact.",
+        "caption": "Footer — Footer link — Contact.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1837,7 +1907,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-link.js",
       "backendRef": null
@@ -1860,7 +1932,7 @@
         "alpha": 0.75
       },
       "intent": {
-        "caption": "Social — Twitter / X icon, opens external link.",
+        "caption": "Footer — Social — Twitter / X icon, opens external link.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1889,7 +1961,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -1912,7 +1986,7 @@
         "alpha": 0.75
       },
       "intent": {
-        "caption": "Social — GitHub icon, opens external link.",
+        "caption": "Footer — Social — GitHub icon, opens external link.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1941,7 +2015,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -1964,7 +2040,7 @@
         "alpha": 0.75
       },
       "intent": {
-        "caption": "Social — Discord icon, opens external link.",
+        "caption": "Footer — Social — Discord icon, opens external link.",
         "behaviorSpec": {
           "interactions": [
             {
@@ -1993,7 +2069,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/footer-social.js",
       "backendRef": null
@@ -2017,7 +2095,7 @@
         "alpha": 0.65
       },
       "intent": {
-        "caption": "Footer copyright line.",
+        "caption": "Footer — Footer copyright line.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -2034,7 +2112,9 @@
         "contracts": {
           "inputs": {},
           "outputs": {}
-        }
+        },
+        "section": "footer",
+        "editorRole": "element"
       },
       "codeRef": "nodes/static-text.js",
       "backendRef": null
