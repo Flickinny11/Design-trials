@@ -68,9 +68,19 @@ export function useForceGraph(
   }, [nodes, hubs, hubCenters, resetSignal]);
 
   const simLinks = useMemo<SimLink[]>(() => {
-    return edges.map((e) => ({ source: e.source, target: e.target, type: e.type, id: e.id }));
+    // home-hub.json edges can target *virtual* nodes (hub-router, build-panel,
+    // signin-modal, user-preferences-store) that exist as runtime concepts but
+    // are not in `nodes`. d3-force-3d's forceLink throws "node not found: X"
+    // when an unresolved id appears in either source or target, which crashes
+    // the editor pane. Drop unresolvable links from the simulation while
+    // leaving the canonical edges intact in the source store (Inspector's
+    // Connections tab still sees them through the view-model).
+    const ids = new Set(nodes.map((n) => n.id));
+    return edges
+      .filter((e) => ids.has(e.source) && ids.has(e.target))
+      .map((e) => ({ source: e.source, target: e.target, type: e.type, id: e.id }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [edges, resetSignal]);
+  }, [edges, nodes, resetSignal]);
 
   const simRef = useRef<any>(null);
 

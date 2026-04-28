@@ -165,10 +165,18 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
 //   whose dataBindings.target starts with `state.` or `theme.`.
 // ═══════════════════════════════════════════════════════════════════
 function HubBehaviorTab({ nodes }: { nodes: PrismNode[] }) {
+  // Surface bindings whose *source* is a hub-global concern: the page theme,
+  // any `state.*` store key, or a `hub.*`-scoped value. Matching on source
+  // (rather than target) catches the canonical `{source: "theme", target:
+  // "visual.tint"}` page-background binding plus every `state.*` binding,
+  // while excluding purely-local visual ties.
   const bindings = nodes.flatMap((n) => {
     const list = n.intent?.behaviorSpec?.dataBindings ?? [];
     return list
-      .filter((b) => typeof b.target === 'string' && /^(state|theme|hub)\./.test(b.target))
+      .filter((b) => {
+        if (typeof b.source !== 'string') return false;
+        return b.source === 'theme' || b.source.startsWith('state.') || b.source.startsWith('hub.');
+      })
       .map((b) => ({ nodeId: n.nodeId, source: b.source, target: b.target }));
   });
   return (
