@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { mount, type MountResult } from '@/lib/prism/player';
+// T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
+// editor-side consumers. boot.ts owns the runtime contract; PrismHost is
+// the React boundary, so re-exporting keeps the import surface clean.
+//   - selectNode(nodeId | null)      — editor → preview (programmatic select)
+//   - highlightNode(nodeId | null)   — editor → preview (visual ring only)
+//   - onNodeSelected(cb)             — preview → editor (user-driven click)
+export type { PrismDebugHandle } from '@/lib/prism/player';
 
 export type ViewportPreset = 'mobile' | 'tablet' | 'desktop' | 'fit';
 

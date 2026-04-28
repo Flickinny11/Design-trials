@@ -35,6 +35,45 @@ export default function Inspector() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // T-EDIT-05 — bidirectional editor↔preview live binding (plan §Phase 5).
+  // Editor → preview: when the editor's selection changes, push a visual
+  // highlight ring onto the matching preview node. window.__prism may be
+  // undefined briefly during PrismHost mount, so guard each call.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.__prism?.highlightNode(selectedId ?? null);
+  }, [selectedId]);
+
+  // Preview → editor: subscribe to user-driven node clicks in the preview
+  // pane. Mounted once at component creation (Inspector is always rendered
+  // by RightPane) so the subscription stays live regardless of inspector
+  // open/close state. The callback opens the inspector on first click so
+  // the user immediately sees the data for the node they tapped.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    let off: (() => void) | undefined;
+    let cancelled = false;
+    const tryAttach = () => {
+      const handle = window.__prism;
+      if (!handle) return false;
+      off = handle.onNodeSelected((nodeId) => {
+        const store = useGraphEditorStore.getState();
+        store.selectNode(nodeId);
+        store.openInspector();
+      });
+      return true;
+    };
+    if (!tryAttach()) {
+      // PrismHost mounts asynchronously — poll briefly until __prism appears.
+      const timer = setInterval(() => {
+        if (cancelled) return;
+        if (tryAttach()) clearInterval(timer);
+      }, 200);
+      return () => { cancelled = true; clearInterval(timer); off?.(); };
+    }
+    return () => { off?.(); };
+  }, []);
+
   if (!open || !selectedId) return null;
   const node = editorGraph.nodes.find((n) => n.id === selectedId);
   if (!node) return null;

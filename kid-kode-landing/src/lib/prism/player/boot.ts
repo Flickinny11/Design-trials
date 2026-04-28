@@ -61,6 +61,14 @@ export interface PrismDebugHandle {
   currentBreakpoint: BreakpointName;
   hiddenNodeIds: string[];
   shr: Shr;
+  /** Programmatic selection from the editor. Updates the visual highlight ring;
+   *  does NOT emit `node-selected` (so the editor doesn't echo back into a loop). */
+  selectNode: (nodeId: string | null) => void;
+  /** Visual-only highlight ring (no selection-state mutation). Pass null to clear. */
+  highlightNode: (nodeId: string | null) => void;
+  /** Subscribe to user-driven node selection in the preview pane (per-node pointerdown
+   *  emits `node-selected`). Returns an unsubscribe handle. */
+  onNodeSelected: (cb: (nodeId: string) => void) => () => void;
 }
 
 declare global {
@@ -180,6 +188,25 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
   // effectively at a narrow breakpoint and its layout should reflect that.
   let currentBreakpoint: BreakpointName = classifyBreakpoint(initialW);
 
+  // T-EDIT-05 — bidirectional editor↔preview selection bridge.
+  // The ring is a direct child of viewport.content so it scrolls + scales
+  // with the mock app; zIndex pinned high so it draws above all node containers.
+  // ALLOWED-GRAPHICS: selection-ring (§1.4 exception — overlay rectangle, not visible UI chrome)
+  const selectionRing = new PIXI.Graphics();
+  selectionRing.zIndex = 100_000;
+  selectionRing.eventMode = 'none';
+  let highlightedNodeId: string | null = null;
+
+  // Attached to each node container after creation; emits `node-selected`
+  // on pointerdown. Hoisted as a function so the rebuildNode path can
+  // re-attach the listener after applyLayout tears down the old instance.
+  const attachSelectionBridge = (container: PIXI.Container, nodeId: string) => {
+    container.eventMode = container.eventMode === 'none' ? 'static' : container.eventMode;
+    container.on('pointerdown', () => {
+      events.emit('node-selected', { nodeId });
+    });
+  };
+
   // Materialize each node, sorted by intent.visual.transform.z so draw order
   // matches author intent. Scoped backend per-node when backendRef is set.
   const instancesByNode = new Map<string, NodeInstance>();
@@ -219,6 +246,11 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       if (typeof alpha === 'number') instance.container.alpha = alpha;
       instancesByNode.set(node.nodeId, instance);
       viewport.content.addChild(instance.container);
+      // T-EDIT-05 — preview→editor selection bridge. Per-node pointerdown
+      // emits `node-selected` so the editor's onNodeSelected subscriber can
+      // mirror the click into useGraphEditorStore.selectNode. Scoped: only
+      // selection, not the full graph-mutation path that was reverted.
+      attachSelectionBridge(instance.container, node.nodeId);
     } catch (e) {
       console.error(`[prism/boot] node ${node.nodeId} failed:`, e);
     }
@@ -279,6 +311,9 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       }
       instancesByNode.set(nodeId, instance);
       viewport.content.addChild(instance.container);
+      // Re-attach the selection bridge — applyLayout teardown blew away
+      // the previous instance's listeners along with its container.
+      attachSelectionBridge(instance.container, nodeId);
       return instance;
     } catch (e) {
       console.error(`[prism/boot] rebuild ${nodeId} failed:`, e);
@@ -308,6 +343,46 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
     initialNavLinkId: 'navbar-link-home',
   });
 
+  // T-EDIT-05 — wire the selection ring + bridge handle methods. Done after
+  // node materialization so highlightNode can resolve nodeId → instance via
+  // instancesByNode. The ring is parented to viewport.content (so it
+  // scrolls + scales with the mock-app design grid).
+  viewport.content.addChild(selectionRing);
+
+  const drawHighlight = () => {
+    selectionRing.clear();
+    if (!highlightedNodeId) return;
+    const node = graph.nodes.find((n) => n.nodeId === highlightedNodeId);
+    if (!node) return;
+    const inst = instancesByNode.get(highlightedNodeId);
+    if (!inst) return;
+    const t = resolveTransform(node.visual as ResolvableVisual, currentBreakpoint);
+    const PAD = 6;
+    selectionRing
+      .rect(t.x - PAD, t.y - PAD, t.width + PAD * 2, t.height + PAD * 2)
+      .stroke({ color: 0x5d8bff, width: 3, alpha: 0.9 });
+  };
+
+  const highlightNode = (nodeId: string | null) => {
+    highlightedNodeId = nodeId;
+    drawHighlight();
+  };
+
+  const selectNode = (nodeId: string | null) => {
+    // Programmatic select from the editor — visual only. We deliberately do
+    // NOT emit `node-selected` here because that channel is reserved for
+    // user-driven preview clicks; emitting from the editor side would
+    // bounce back into the editor's own onNodeSelected subscriber.
+    highlightNode(nodeId);
+  };
+
+  const onNodeSelected = (cb: (nodeId: string) => void): (() => void) => {
+    return events.on('node-selected', (payload) => {
+      const id = (payload as { nodeId?: string } | null)?.nodeId;
+      if (typeof id === 'string') cb(id);
+    });
+  };
+
   if (typeof window !== 'undefined') {
     globalThis.__prismBreakNode = (nodeId: string) => shr.breakNode(nodeId);
     globalThis.__prism = {
@@ -319,6 +394,9 @@ export async function mount(canvas: HTMLCanvasElement, prismUrl: string, opts: M
       currentBreakpoint,
       hiddenNodeIds,
       shr,
+      selectNode,
+      highlightNode,
+      onNodeSelected,
     };
   }
 
