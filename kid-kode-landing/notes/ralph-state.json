@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T18:21:05Z",
+  "updatedAt": "2026-04-28T18:33:04Z",
   "currentIteration": 21,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -369,7 +369,7 @@
         "plan:Phase 6"
       ],
       "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
       "filesEdited": [
         "kid-kode-landing/notes/mockup-pipeline.md",
@@ -380,7 +380,9 @@
         "new §'Editor view-model mapping' section appended to mockup-pipeline.md",
         "progress entry appended to prism-mock-progress.md"
       ],
-      "notes": "Append Editor view-model mapping subsection to mockup-pipeline.md describing how Inspector tabs map to JSON fields (the 6-row tab × accessor table from plan Phase 1). Append progress entry summarizing the 7-phase Ralph run."
+      "notes": "Append Editor view-model mapping subsection to mockup-pipeline.md describing how Inspector tabs map to JSON fields (the 6-row tab × accessor table from plan Phase 1). Append progress entry summarizing the 7-phase Ralph run.\\n\\n[iter 21 spec-reviewer SHOULD FIX (deferred — non-blocking)]:\\n- §1 hub.responsiveBreakpoints described as \"scale factors\" — actual shape per breakpoint is {maxWidth, scale} (HubInspector.tsx:146-156).\\n- §12.1 Code row says \"loaded from codeRef\" — actually view-model.ts:305-308 synthesizes a stub (\"// Source: <codeRef>\") rather than loading the .js source. Phase 3 / future work to round-trip.\\n- §12.1 Behavior row mentions triggersDownstream[].targetNodeIds but elides the eventName join key (view-model.ts:81-96 uses exact eventName↔effect match).\\n- §12.4 selectNode signature should show  per boot.ts:379.\\n- §12 lead overclaims \"canonical schema IS the editor's data source\" — neutral palette defaults (#5d8bff/#a978ff/Inter) are editor-only chrome, not schema-derived.\\n- §12.1 Backend row should note JSON.stringify on intent.contracts.{inputs,outputs} into the editor's schema string (view-model.ts:156).\\n\\n[iter 21 spec-reviewer OPTIONAL (deferred — non-blocking)]:\\n- §12 closing line points to plan path under ~/.claude/plans/ which won'\\''t follow checkouts; consider in-repo summary.\\n- §12.3 wording \"older readers ignore them\" implies tabs auto-pick-up; in practice each tab opts in by calling the accessor.\\n- iter-21 progress-log entry is ~3.5 KB; a closing sentence summarizing artifactHash unchanged + final 7-phase state would help future grep readers.\\n",
+      "commit": "2b55918357dc99fee6e0e79a80fb0010f71d0a92",
+      "verifiedAt": "2026-04-28T18:33:04Z"
     }
   ],
   "invariants": {
@@ -508,6 +510,12 @@
       "taskId": "T-EDIT-05",
       "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
       "verifiedAt": "2026-04-28T18:18:48Z"
+    },
+    {
+      "iteration": 21,
+      "taskId": "T-EDIT-06",
+      "commit": "2b55918357dc99fee6e0e79a80fb0010f71d0a92",
+      "verifiedAt": "2026-04-28T18:33:04Z"
     }
   ],
   "maxIterationsPerPhase": 50,
