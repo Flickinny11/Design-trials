@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T17:52:32Z",
+  "updatedAt": "2026-04-28T18:02:24Z",
   "currentIteration": 19,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -314,7 +314,7 @@
         "plan:Phase 4"
       ],
       "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
       "filesNew": [
         "kid-kode-landing/src/components/editor/graph/HubLabels.tsx",
@@ -331,7 +331,9 @@
         "manual: zoom into a node → element image visible on node geometry",
         "manual: hub sphere wraps mockup image; hub label visible; subtle glow at hub center"
       ],
-      "notes": "populate-element-images.ts loads atlas-0.avif + atlas-regions.json at editor boot, extracts each region as a canvas → dataURL, dispatches useElementImageStore.setImages(). GlassNode's already-wired inner-sphere texture path lights up. HubHulls inner sphere wraps notes/mockup-candidates/scifi-mockup-v1.png as CanvasTexture; material upgrades to MeshPhysicalMaterial (transmission 0.4, clearcoat 0.6, IOR 1.6, light emissive at hub.color). HubLabels renders hub.title as Three.Sprite. Hub-center pointLight intensity bumped slightly. NO node geometry / shader changes."
+      "notes": "populate-element-images.ts loads atlas-0.avif + atlas-regions.json at editor boot, extracts each region as a canvas → dataURL, dispatches useElementImageStore.setImages(). GlassNode's already-wired inner-sphere texture path lights up. HubHulls inner sphere wraps notes/mockup-candidates/scifi-mockup-v1.png as CanvasTexture; material upgrades to MeshPhysicalMaterial (transmission 0.4, clearcoat 0.6, IOR 1.6, light emissive at hub.color). HubLabels renders hub.title as Three.Sprite. Hub-center pointLight intensity bumped slightly. NO node geometry / shader changes.",
+      "commit": "b65d14e8dd8ed8f9260bb62935cb6a2e4cd4d4c1",
+      "verifiedAt": "2026-04-28T18:02:24Z"
     },
     {
       "id": "T-EDIT-05",
@@ -491,6 +493,12 @@
       "taskId": "T-EDIT-03",
       "commit": "7bc2c195865af60eda928a592c54364b431262a3",
       "verifiedAt": "2026-04-28T17:49:13Z"
+    },
+    {
+      "iteration": 19,
+      "taskId": "T-EDIT-04",
+      "commit": "b65d14e8dd8ed8f9260bb62935cb6a2e4cd4d4c1",
+      "verifiedAt": "2026-04-28T18:02:24Z"
     }
   ],
   "maxIterationsPerPhase": 50,
