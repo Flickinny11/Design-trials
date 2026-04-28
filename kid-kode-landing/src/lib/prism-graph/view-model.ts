@@ -216,3 +216,149 @@ export function getNodeName(node: PrismNode): string {
 export function getHubIds(node: PrismNode): string[] {
   return node?.parentHubId ? [node.parentHubId] : [];
 }
+
+// ── Phase 2 editor-view adapter ────────────────────────────────────────────
+//
+// Phase 2 (plan §Phase 2) replaces the legacy `@/data/mockGraph` import with
+// a live read of `home-hub.json`. The Inspector and GraphScene already have
+// stable field expectations (e.g. node.id, node.hubIds, node.visualSpec,
+// node.interactions[].{event,action,target}) — to keep "zero visual changes"
+// in those components, this adapter projects the canonical shape onto the
+// legacy editor-node shape. New consumers should prefer the per-field
+// accessors above; only Inspector + GraphScene round-trip through these.
+
+import type { PrismHub } from './types.ts';
+
+export type EditorNodeStatus = 'verified' | 'code_generated' | 'image_ready' | 'pending' | 'failed';
+
+export interface EditorNodeVisualSpec {
+  primaryColor: string;
+  secondaryColor?: string;
+  font: string;
+  radius: number;
+  shadow: string;
+}
+
+export interface EditorTextItem {
+  text: string;
+  role: string;
+  renderMethod: string;
+}
+
+export interface EditorNode {
+  id: string;
+  name: string;
+  elementType: string;
+  hubIds: string[];
+  caption: string;
+  status: EditorNodeStatus;
+  verificationScore: number;
+  hasBackend: boolean;
+  hasAnimation: boolean;
+  animationFrames?: number;
+  stateCount: number;
+  code: string;
+  visualSpec: EditorNodeVisualSpec;
+  textContent: EditorTextItem[];
+  interactions: EditorInteraction[];
+  backendContract?: EditorBackendContract;
+}
+
+export interface EditorHubView {
+  id: string;
+  name: string;
+  route: string;
+  glyph: string;
+  color: string;
+  accentColor: string;
+}
+
+export interface EditorEdgeView {
+  id: string;
+  source: string;
+  target: string;
+  type: string;
+  label?: string;
+}
+
+export interface EditorGraph {
+  hubs: EditorHubView[];
+  nodes: EditorNode[];
+  edges: EditorEdgeView[];
+}
+
+const NEUTRAL_PRIMARY = '#5d8bff';
+const NEUTRAL_SECONDARY = '#a978ff';
+const NEUTRAL_FONT = 'Inter';
+
+function deriveTextContent(node: PrismNode): EditorTextItem[] {
+  const tc = getTextContent(node);
+  return tc.map((t) => ({
+    text: typeof t.text === 'string' ? t.text : '',
+    role: typeof t.role === 'string' ? t.role : 'body',
+    renderMethod: typeof t.renderMethod === 'string' ? t.renderMethod : 'msdf',
+  }));
+}
+
+export function toEditorNode(node: PrismNode): EditorNode {
+  const radius = typeof node?.visual?.shapeRadius === 'number' ? node.visual.shapeRadius : 0;
+  const backendContract = getBackendContract(node);
+  const codeRef = typeof node?.codeRef === 'string' ? node.codeRef : '';
+  const code = codeRef
+    ? `// Source: ${codeRef}\n// Loaded from the .prism artifact's runtime modules.`
+    : '// (no code module bound)';
+  return {
+    id: node.nodeId,
+    name: getNodeName(node),
+    elementType: getElementType(node),
+    hubIds: getHubIds(node),
+    caption: getCaption(node),
+    status: 'verified',
+    verificationScore: getVerificationScore(node),
+    hasBackend: !!node?.backendRef,
+    hasAnimation: getHasAnimation(node),
+    animationFrames: getAnimationFrames(node),
+    stateCount: getStateCount(node),
+    code,
+    visualSpec: {
+      primaryColor: NEUTRAL_PRIMARY,
+      secondaryColor: NEUTRAL_SECONDARY,
+      font: NEUTRAL_FONT,
+      radius,
+      shadow: 'none',
+    },
+    textContent: deriveTextContent(node),
+    interactions: getInteractions(node),
+    backendContract: backendContract ?? undefined,
+  };
+}
+
+export function toEditorHub(hub: PrismHub): EditorHubView {
+  return {
+    id: hub.hubId,
+    name: hub.title,
+    route: '/',
+    glyph: 'home',
+    color: NEUTRAL_PRIMARY,
+    accentColor: NEUTRAL_SECONDARY,
+  };
+}
+
+export function toEditorEdge(edge: PrismEdge): EditorEdgeView {
+  return {
+    id: `${edge.from}-${edge.to}-${edge.type}`,
+    source: edge.from,
+    target: edge.to,
+    type: edge.type,
+    label: edge.event,
+  };
+}
+
+export function toEditorView(graph: GraphSource): EditorGraph {
+  if (!graph) return { hubs: [], nodes: [], edges: [] };
+  return {
+    hubs: (graph.hubs ?? []).map(toEditorHub),
+    nodes: (graph.nodes ?? []).map(toEditorNode),
+    edges: (graph.edges ?? []).map(toEditorEdge),
+  };
+}

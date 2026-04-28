@@ -1,7 +1,7 @@
 'use client';
 
 import * as THREE from 'three';
-import type { PrismNode } from '@/data/mockGraph';
+import type { EditorNode as PrismNode } from '@/lib/prism-graph/view-model';
 
 const W = 2048;
 const H = 1024;

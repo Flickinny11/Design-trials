@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { GRAPH } from '@/data/mockGraph';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView, type EditorGraph, type EditorNode } from '@/lib/prism-graph/view-model';
 import { useGraphEditorStore, type InspectorTab } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
@@ -26,8 +27,16 @@ export default function Inspector() {
   const frozen = useGraphEditorStore((s) => (selectedId ? s.frozenNodeIds.has(selectedId) : false));
   const flyToNode = useGraphEditorStore((s) => s.flyToNode);
 
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const editorGraph = useMemo<EditorGraph>(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+
   if (!open || !selectedId) return null;
-  const node = GRAPH.nodes.find((n) => n.id === selectedId);
+  const node = editorGraph.nodes.find((n) => n.id === selectedId);
   if (!node) return null;
 
   return (
@@ -90,7 +99,7 @@ export default function Inspector() {
         {tab === 'behavior' && <BehaviorTab node={node} />}
         {tab === 'code' && <CodeTab node={node} frozen={frozen} />}
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
-        {tab === 'connections' && <ConnectionsTab node={node} flyToNode={flyToNode} />}
+        {tab === 'connections' && <ConnectionsTab node={node} graph={editorGraph} flyToNode={flyToNode} />}
         {tab === 'backend' && <BackendTab node={node} />}
       </div>
     </div>
@@ -652,10 +661,10 @@ function interpolateFrames(frames: FrameProps[], t: number): FrameProps {
 // ═══════════════════════════════════════════════════════════════════
 // CONNECTIONS TAB
 // ═══════════════════════════════════════════════════════════════════
-function ConnectionsTab({ node, flyToNode }: { node: any; flyToNode: (id: string) => void }) {
-  const incoming = GRAPH.edges.filter((e) => e.target === node.id);
-  const outgoing = GRAPH.edges.filter((e) => e.source === node.id);
-  const other = (id: string) => GRAPH.nodes.find((n) => n.id === id);
+function ConnectionsTab({ node, graph, flyToNode }: { node: any; graph: EditorGraph; flyToNode: (id: string) => void }) {
+  const incoming = graph.edges.filter((e) => e.target === node.id);
+  const outgoing = graph.edges.filter((e) => e.source === node.id);
+  const other = (id: string): EditorNode | undefined => graph.nodes.find((n) => n.id === id);
   const edgeColor = (t: string) =>
     ({ contains: '#b5bddf', 'navigates-to': '#5ee0ff', triggers: '#ff9a44', 'data-flow': '#55e6a5', 'shares-state': '#a978ff', 'depends-on': '#6b7694' }[t] || '#b5bddf');
 

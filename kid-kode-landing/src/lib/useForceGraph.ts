@@ -2,7 +2,15 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3-force-3d';
-import type { PrismNode, PrismEdge, PrismHub } from '@/data/mockGraph';
+import type { EditorEdgeView, EditorHubView, EditorNode } from '@/lib/prism-graph/view-model';
+
+// Phase 2 (plan §Phase 2) reroutes the editor's force-graph types to the
+// editor-view shape produced from home-hub.json by `toEditorView`. The
+// legacy `@/data/mockGraph` module stays on disk as a fallback fixture but
+// is no longer the simulation's input source.
+type PrismNode = EditorNode;
+type PrismEdge = EditorEdgeView;
+type PrismHub = EditorHubView;
 
 export interface SimNode extends PrismNode {
   x: number; y: number; z: number;

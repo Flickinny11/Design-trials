@@ -22,7 +22,8 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 
-import { GRAPH } from '@/data/mockGraph';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useForceGraph, type SimNode, type SimLink } from '@/lib/useForceGraph';
@@ -115,9 +116,11 @@ function EdgeParticle({ link }: { link: SimLink }) {
 function GlassNode({
   node,
   hero,
+  hubs,
 }: {
   node: SimNode;
   hero: boolean; // use expensive MeshTransmissionMaterial for 1-2 heroes
+  hubs: EditorHubView[];
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const innerRef = useRef<THREE.Mesh>(null);
@@ -157,9 +160,9 @@ function GlassNode({
 
   // Hub color
   const hubColor = useMemo(() => {
-    const h = GRAPH.hubs.find((hub) => hub.id === node.hubIds[0]);
+    const h = hubs.find((hub) => hub.id === node.hubIds[0]);
     return h?.color || '#5d8bff';
-  }, [node.hubIds]);
+  }, [hubs, node.hubIds]);
 
   const statusColor =
     node.status === 'verified' ? '#22c55e' :
@@ -330,9 +333,11 @@ function GlassNode({
 // Hub hulls — translucent colored volumes
 // ═══════════════════════════════════════════════════════════════════
 function HubHulls({
+  hubs,
   hubCenters,
   simNodes,
 }: {
+  hubs: EditorHubView[];
   hubCenters: Record<string, any>;
   simNodes: SimNode[];
 }) {
@@ -340,7 +345,7 @@ function HubHulls({
 
   return (
     <>
-      {GRAPH.hubs.map((hub) => {
+      {hubs.map((hub) => {
         const center = hubCenters[hub.id];
         if (!center) return null;
 
@@ -598,10 +603,18 @@ function SceneContent({
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const qualityMode = useGraphEditorStore((s) => s.qualityMode);
 
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const editorGraph = useMemo<EditorGraph>(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+
   const { simNodes, simLinks, hubCenters } = useForceGraph(
-    GRAPH.nodes,
-    GRAPH.edges,
-    GRAPH.hubs,
+    editorGraph.nodes,
+    editorGraph.edges,
+    editorGraph.hubs,
     pinnedPositions,
     resetSignal
   );
@@ -625,7 +638,7 @@ function SceneContent({
       <directionalLight position={[-100, -60, -100]} intensity={0.25} color="#ffdbb8" />
       <Environment preset="night" environmentIntensity={0.55} />
 
-      <HubHulls hubCenters={hubCenters} simNodes={simNodes} />
+      <HubHulls hubs={editorGraph.hubs} hubCenters={hubCenters} simNodes={simNodes} />
 
       {simLinks.map((link) => (
         <Edge key={link.id} link={link} />
@@ -635,7 +648,7 @@ function SceneContent({
       ))}
 
       {simNodes.map((node) => (
-        <GlassNode key={node.id} node={node} hero={heroIds.has(node.id)} />
+        <GlassNode key={node.id} node={node} hero={heroIds.has(node.id)} hubs={editorGraph.hubs} />
       ))}
 
       <NodeLabels simNodes={simNodes} />

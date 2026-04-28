@@ -291,16 +291,21 @@ check('F1 — npx tsc --noEmit exits 0',
   tsc.status === 0,
   tsc.status === 0 ? '' : (tsc.stdout || '') + (tsc.stderr || '').slice(0, 800));
 
-// ── Phase G: no runtime behavior change ─────────────────────────────────────
+// ── Phase G: editor reads through the loader-backed store ───────────────────
+// Phase 2 (T-EDIT-02) inverted these checks — Inspector + GraphScene now
+// read from the live home-hub.json via useGraphSourceStore, not the mockGraph
+// fixture. Keeping the guards prevents future regressions.
 
 const inspectorPath = join(APP_ROOT, 'src', 'components', 'editor', 'panels', 'Inspector.tsx');
 const graphScenePath = join(APP_ROOT, 'src', 'components', 'editor', 'graph', 'GraphScene.tsx');
 const inspectorSrc = readFileSync(inspectorPath, 'utf8');
 const graphSceneSrc = readFileSync(graphScenePath, 'utf8');
-check('G1 — Inspector still imports GRAPH (Phase 2 will swap)',
-  /from\s+['"]@\/data\/mockGraph['"]/.test(inspectorSrc));
-check('G2 — GraphScene still imports GRAPH (Phase 2 will swap)',
-  /from\s+['"]@\/data\/mockGraph['"]/.test(graphSceneSrc));
+check('G1 — Inspector reads through useGraphSourceStore (post-Phase-2)',
+  !/from\s+['"]@\/data\/mockGraph['"]/.test(inspectorSrc) &&
+  /from\s+['"]@\/stores\/useGraphSourceStore['"]/.test(inspectorSrc));
+check('G2 — GraphScene reads through useGraphSourceStore (post-Phase-2)',
+  !/from\s+['"]@\/data\/mockGraph['"]/.test(graphSceneSrc) &&
+  /from\s+['"]@\/stores\/useGraphSourceStore['"]/.test(graphSceneSrc));
 
 // ──────────────────────────────────────────────────────────────────────────
 

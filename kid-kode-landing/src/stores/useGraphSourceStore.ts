@@ -1,14 +1,15 @@
 'use client';
 
 // Zustand store that holds the canonical mock-app graph the editor reads
-// through. Phase 1 introduces the surface; Phase 2 wires Inspector +
-// GraphScene to read from it.
+// through. Phase 1 introduced the surface; Phase 2 wires Inspector +
+// GraphScene to read from it and eagerly initializes from home-hub.json.
 //
-// Plan ref: /Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md §Phase 1.
+// Plan ref: /Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md §Phase 2.
 
 import { create } from 'zustand';
 import type { GraphSource, HomeHubJson, PrismEdge, PrismHub, PrismNode } from '@/lib/prism-graph/types';
 import { loadFromHomeHub, loadFromHomeHubFile } from '@/lib/prism-graph/loader';
+import homeHubJson from '@/lib/prism/mock-app-source/hubs/home-hub.json';
 
 interface GraphSourceState {
   hubs: PrismHub[];
@@ -52,3 +53,9 @@ export const useGraphSourceStore = create<GraphSourceState>()((set) => ({
 
   reset: () => set({ hubs: [], nodes: [], edges: [], ready: false, error: null }),
 }));
+
+// Eagerly initialize from the bundled home-hub.json so consumers see a ready
+// store on first render. The `load` action is sync and idempotent; running it
+// at module scope means the editor never has to wait for an async fetch
+// before mounting Inspector or GraphScene.
+useGraphSourceStore.getState().load(homeHubJson as unknown as HomeHubJson);
