@@ -55,7 +55,7 @@ Prototype for Kriptik's Prism diffusion-based app builder. The left pane of the 
 
 ## Directory scope
 
-- `src/components/editor/graph/` and `src/components/editor/overlays/` — 3D graph editor. DO NOT MODIFY.
+- `src/components/editor/graph/` and `src/components/editor/overlays/` — 3D graph editor. **Frozen by default.** The 2026-04-28 editor-integration plan (`/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md`) carves out specific edits in T-EDIT-02..T-EDIT-05 (GraphScene.tsx data-source swap, HubHulls clickability + mockup material, new HubLabels.tsx). Outside that plan's scope, do not modify.
 - `src/components/editor/preview/` — replaced by `src/components/prism-player/PrismHost.tsx`.
 - `src/components/prism-player/` — Next.js/React wrapper around the Prism runtime. Mostly static.
 - `src/lib/prism/` — Prism runtime player + mock app source + build scripts. Most new code lives here.

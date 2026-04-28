@@ -28,6 +28,41 @@ import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useForceGraph, type SimNode, type SimLink } from '@/lib/useForceGraph';
 import { generateNodeTexture } from '@/lib/nodeTexture';
+import HubLabels from '@/components/editor/graph/HubLabels';
+
+// Hub mockup texture cache — fetched once on demand, reused across hubs.
+let HUB_MOCKUP_TEXTURE_PROMISE: Promise<THREE.CanvasTexture> | null = null;
+function loadHubMockupTexture(): Promise<THREE.CanvasTexture> {
+  if (HUB_MOCKUP_TEXTURE_PROMISE) return HUB_MOCKUP_TEXTURE_PROMISE;
+  HUB_MOCKUP_TEXTURE_PROMISE = new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') {
+      reject(new Error('window is undefined'));
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = Math.min(1024, Math.max(img.width, img.height));
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = '#0a0d18';
+      ctx.fillRect(0, 0, size, size);
+      const scale = Math.min(size / img.width, size / img.height);
+      const w = img.width * scale;
+      const h = img.height * scale;
+      ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      tex.needsUpdate = true;
+      resolve(tex);
+    };
+    img.onerror = () => reject(new Error('failed to load scifi-mockup-v1.png'));
+    img.src = '/prism-assets/scifi-mockup-v1.png';
+  });
+  return HUB_MOCKUP_TEXTURE_PROMISE;
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // Edge colors by type
@@ -345,6 +380,19 @@ function HubHulls({
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
   const selectHub = useGraphEditorStore((s) => s.selectHub);
 
+  // Hub mockup texture (CanvasTexture from /prism-assets/scifi-mockup-v1.png)
+  // — wrapped onto the inner sphere of every hub.
+  const [mockupTexture, setMockupTexture] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    loadHubMockupTexture().then((tex) => {
+      if (!cancelled) setMockupTexture(tex);
+    }).catch(() => {
+      // Texture optional — hub renders without if asset missing.
+    });
+    return () => { cancelled = true; };
+  }, []);
+
   return (
     <>
       {hubs.map((hub) => {
@@ -362,6 +410,7 @@ function HubHulls({
           if (d > maxDist) maxDist = d;
         });
         const radius = maxDist + 10;
+        const innerRadius = radius * 0.85;
         const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
         return (
@@ -380,6 +429,29 @@ function HubHulls({
               selectHub(hub.id);
             }}
           >
+            {/* Inner mockup sphere — wraps scifi-mockup-v1.png as CanvasTexture
+                with MeshPhysicalMaterial (transmission/clearcoat/ior layered
+                vocabulary). */}
+            {mockupTexture && (
+              <mesh>
+                <sphereGeometry args={[innerRadius, 64, 64]} />
+                <meshPhysicalMaterial
+                  map={mockupTexture}
+                  emissiveMap={mockupTexture}
+                  emissive={new THREE.Color(hub.color)}
+                  emissiveIntensity={isActive ? 0.32 : 0.18}
+                  metalness={0.1}
+                  roughness={0.3}
+                  clearcoat={0.6}
+                  clearcoatRoughness={0.1}
+                  transmission={0.4}
+                  thickness={0.5}
+                  ior={1.6}
+                  transparent
+                  opacity={0.85}
+                />
+              </mesh>
+            )}
             <mesh>
               <sphereGeometry args={[radius, 32, 32]} />
               <meshBasicMaterial
@@ -400,10 +472,22 @@ function HubHulls({
                 toneMapped={false}
               />
             </mesh>
-            {/* Hub-center soft light */}
+            {/* Subtle equator glow ring */}
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
+              <meshBasicMaterial
+                color={hub.color}
+                transparent
+                opacity={isActive ? 0.32 : 0.18}
+                side={THREE.DoubleSide}
+                toneMapped={false}
+              />
+            </mesh>
+            {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
+                give the mockup sphere a noticeable glow. */}
             <pointLight
               color={hub.color}
-              intensity={isActive ? 1.6 : 0.6}
+              intensity={isActive ? 2.4 : 1.0}
               distance={radius * 3}
               decay={1.6}
             />
@@ -668,6 +752,7 @@ function SceneContent({
       ))}
 
       <NodeLabels simNodes={simNodes} />
+      <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
       <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} />
 
       {usePost && (

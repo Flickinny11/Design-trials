@@ -10,6 +10,7 @@ import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import { Icon } from '@/components/editor/icons/Icon';
+import { populateElementImages } from '@/lib/editor/populate-element-images';
 
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
@@ -43,6 +44,13 @@ export default function Page() {
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    populateElementImages().catch(() => {
+      // Best-effort: GlassNode falls back to its procedural texture if the
+      // atlas can't be read. Don't surface — boot continues regardless.
+    });
   }, []);
 
   useEffect(() => {
