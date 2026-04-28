@@ -141,6 +141,7 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - iter 13 — T12 — §10.25 — reframed subjective "nothing looks like a wireframe" as an objective pixel heuristic. tests/lib/prism/player/T12.test.mjs (port 4788, 14 checks) screenshots [data-pane="preview"] at 1440×900 and counts "mid-tone achromatic" pixels: alpha≥32 AND max channel in [40,220] AND max(|R-G|,|G-B|,|R-B|)≤4. The mid-tone gate is the key calibration — a naive |chroma|≤6 variant flagged 80.9% of the mock app because pure-black dark-UI backdrops (R=G=B, all <40) matched as "achromatic" despite being legitimate dark-theme background, not wireframe. Band [40,220] isolates the classical wireframe palette (flat mid-grey fills). Measured 10.397% (48565/467100 px) against the task.notes threshold of ≤15%; 4.6% headroom catches a ~200×200 unstyled mid-grey rectangle regression. Stabilization reused from T11 (clear intervals + collapse hero-section-bg to frame 0). tests/fixtures/.gitignore extended for T12-actual.png / T12-mask.png debug artifacts. Three gates: verify:prism 15/15, browser-smoke 6/6 (after npm run build refreshed .next for next start — prior dev-only iters left stale), T12 14/14. artifactHash unchanged (d75e241e — T12 adds tests/ only). Skipped steps 8/9 per /ralph-step step-6 directive for already-satisfied tasks — 476ce59b
 - iter 14 — T13 — §10.22+§10.23 — tests/lib/prism/T13.test.mjs locks the pre-Prism baseline contract (24 checks pass on HEAD; no impl needed per step 6). Baseline commit = 9e72d15 "Migrate Prism Editor source from Vercel CLI deployment" (last commit before the first Prism scaffold 8c58518/3f40748). Pre-Prism src/components/editor/ had 11 files incl. preview/LivePreview.tsx; current has 10 (LivePreview removed = MockApp→PrismHost relocation in this codebase — spec names MockApp.tsx but the actual replaced file was LivePreview.tsx; replacement lives at src/components/prism-player/PrismHost.tsx per CLAUDE.md). A1-A2 baseline reachability + 11-file tree via `git show 9e72d15:...`. B1-B5 §10.22: LivePreview removed, PrismHost present, 9 files byte-identical by sha256, GraphScene.tsx delta = exactly 3 @ts-expect-error lines replaced with whitespace-only (commit 1e1100f dropped unused TS2578 directives), current tree = baseline minus LivePreview. C1-C7 §10.23: html-to-image removed (baseline had it duplicated; neither entry remains), pixi.js+jszip added to deps, 7 prism build tools added to devDeps (@fal-ai/client, dotenv, ffmpeg-static, sharp, maxrects-packer, globby, msdf-bmfont-xml), 4 new scripts (provision-assets, build:atlas, build:msdf, build:prism), dev+build prepend build:prism, start+lint byte-identical. D1-D2 regression: every baseline dep/devDep (minus html-to-image) still present at matching version range. verify:prism 15/15, browser-smoke 6/6 (first iter 5/6 on runtime.mounted cold-start flake; retry clean — historically documented T03/T05/T10/T11), T13 24/24. artifactHash unchanged (d75e241e — T13 adds tests/ only) — 211a94f6
 - iter 15 — T14 — §10.24 — tests/lib/prism/T14.test.mjs locks clean-checkout reproducibility (Phase A always: 12 structural checks on recipe scripts + .gitignore + provision-assets FAL_KEY wiring + @fal-ai/client devDep + HEAD reachability; Phase B opt-in via RUN_CLEAN_REPRO=1: 10 end-to-end checks = git clone --single-branch prism-main into temp, verify clean state (no source-images/prism-assets/manifest), copy upstream source-images as FAL surrogate, npm install, npm run build, mock-app.prism present, npm run start boots on ephemeral port, HTTP 200 on /, body contains <canvas>, cleanup). Committed default is Phase A only (13/13 incl skip sentinel). Inline RUN_CLEAN_REPRO=1 run this iteration completed in 31.5s wall (22/22) — much faster than the notes' feared ~10min because local npm cache + no FAL spend. FAL surrogate rationale: §10.24 recipe's most expensive leg (npm run provision-assets) costs ~$0.50 + ~5min of fal.ai calls; copying upstream source-images/ skips the spend while exercising the full build→start→HTTP 200 chain (the part most likely to regress). Three gates: verify:prism 15/15, browser-smoke 6/6 (first try 5/6 on runtime.mounted cold-start — documented precedent T03/T05/T10/T11; retry clean), T14 13/13 default mode. artifactHash unchanged (d75e241e — T14 adds tests/ only). Skipped steps 7-10 per /ralph-step step-6 directive for already-satisfied tasks (precedent T00/T04/T08/T12/T13) — a629a9b6
+- iter 16 — T-EDIT-01 — plan:Phase 1 — canonical types + loader + view-model + zustand store landed (foundation; no runtime change yet). New: src/lib/prism-graph/{types,loader,view-model}.ts + src/stores/useGraphSourceStore.ts. types.ts mirrors home-hub.json (PrismHub/PrismNode/PrismEdge/GraphSource + the 8 2026-04-27 intent fields: samHints, alphaCutout, animationSpec, visualNeighbors, interactionNeighbors, responsiveSizing, visibility, visualSpec.layers). loader.ts: loadFromHomeHub (sync mapper for parsed JSON), loadFromHomeHubFile (async fetch), loadFromPrismArtifact (lazy-imported JSZip). view-model.ts: 20 pure accessors covering all six Inspector tabs + first-class accessors for the 8 enrichment fields. useGraphSourceStore: zustand v5 curried form, exposes {hubs, nodes, edges, ready, error} + load(json)/loadFromUrl(url)/reset(). Surgical fix: renamed src/lib/prism/player/breakpoints.d.ts → .d.mts so TS resolves the declarations against boot.ts's `from './breakpoints.mjs'` import (was a pre-existing TS2305 from the T02 era — T02 hadn't included tsc in its verify gates). Test tests/lib/prism-graph/T-EDIT-01.test.mjs — ~75 assertions across 7 phases (file existence, type declarations, loader maps 40 nodes / 15 edges, hub.responsiveBreakpoints + 8 enrichment fields preserved, 20 view-model accessors functional checks against hero-card-cta + navbar-link-home + page-background, store shape, tsc clean, no runtime change). Three gates: verify:prism 15/15, browser-smoke 6/6, T-EDIT-01 75/75. artifactHash c9067695627585706006cdbb8c2fe04c3cd2d55286a3627e5350816daeade8f6 (no rebuild this iteration). Spec-reviewer MUST FIX (resolved): getInteractions target rule rewritten — exact eventName↔effect match wins, 1-to-1 fallback, else 'self' (prior code indiscriminately assigned triggers[0].targetNodeIds[0] to every interaction, producing false cross-node edges on nodes like theme-selector-button with 4 local interactions + 1 downstream trigger). Spec-reviewer SHOULD FIX (resolved): getStateCount counts intent.stateEffects.length not contracts.inputs cardinality; DEFAULT_VERIFICATION_SCORE extracted as named const; store.loadFromUrl delegates to loader.loadFromHomeHubFile (DRY); zustand v5 curried form. SHOULD-FIX (deferred to ralph-state notes): import-extension consistency (`./types.ts` vs extensionless via @/), prism-loader.ts pattern parity (lazy vs static JSZip), `| string` union widening, getNodeName acronym handling, getBackendContract structured shape, hub-level responsiveBreakpoints accessor for Phase 3. — 13fccb78
 
 ## Post-Ralph — Vercel deploy fix + asset re-pass (2026-04-23)
 
@@ -166,3 +167,104 @@ Copy-paste verbatim into a new Claude Code session on this repo:
 - Cost: ~$0.50 FAL spend for the 57-task regeneration + WAN 2.7 i2v + overlay re-pass
 
 **Gates that still hold.** Editor pane untouched (all `src/components/editor/**` byte-identical). Spec §1.4 forbidden-pattern audit clean. Deterministic build — `npm run build:prism` run twice produces identical artifactHash.
+
+## Caption-rich graph + documentation + drift-prevention restoration (2026-04-27)
+
+**Context.** After reverting the local prism-main branch back to commit `1564852` (the post-Ralph "alpha-cutout via luminance threshold" snapshot — see prior section for the 22-commit journey from `e2ff5e8` to `1564852`), formalized the lessons from that journey so future automation (Claude Code today, the Prism engine tomorrow) can mechanically reproduce the result rather than re-discovering it from commit history. The graph IS the plan: rich captions on hub + every node drive SAM segmentation prompts, alpha-cutout decisions, shape/mask choices, layer composition, animation parameters, and separate text-layer specs.
+
+**1. Schema convention layer (additive, no spec edit).** Added optional fields to `home-hub.json` that layer on top of the existing schema in `notes/prism-spec-extract.md`:
+- `hub.caption` (NEW) — top-level "what's on this page" describing the 5 sections, aesthetic, primary affordances, scroll structure.
+- `hub.responsiveBreakpoints` (NEW) — mobile/tablet/desktop scale factors.
+- Per-node `intent.caption` enriched from 1-fragment to 2–4 sentence captions covering: (a) what the element is visually, (b) function, (c) neighbors, (d) per-element pipeline hints.
+- Per-node `intent.samHints` (NEW) — `{ elementType, visualNouns[], material?, finish?, textureProfile? }` to drive SAM-3.1 prompt construction (replaces hardcoded PROMPTS list in segment-scifi.mjs going forward).
+- Per-node `intent.alphaCutout` (NEW) — `{ necessity, backgroundAffinity, luminanceLow?, luminanceHigh?, antialiasHint? }` to drive per-element cutout (replaces hardcoded LOW=18/HIGH=55 + SKIP set in alpha-cutout.mjs).
+- Per-node `intent.visualSpec.layers[]` (NEW) — declarative layer composition (overlay regions, blend modes, masks, default alphas, triggers) that mirrors the imperative layer-stack in node `.js` modules.
+- Per-node `intent.animationSpec` (NEW) — declarative animation parameters (`onHover`, `onPress`, `onRelease`, etc. each with target/property/from/to/duration/ease) that mirror hardcoded GSAP tweens in `.js` modules.
+- Per-node `intent.visualNeighbors` + `intent.interactionNeighbors` (NEW) — explicit spatial / interaction adjacency (parentSection, overlappingLayers, spatialAdjacency, triggers, listensTo).
+- Per-node `intent.responsiveSizing?` (NEW, optional) — per-breakpoint transform overrides.
+- Per-node `intent.visibility?` (NEW, optional) — for nodes held as TINY 2x2 placeholders (e.g. `navbar-link-pricing`, `hero-card-headline-text`, all 8 footer nodes — not rendered in scifi-mockup-v1 but kept in graph for completeness).
+
+**2. Edited home-hub.json end-to-end.** All 40 nodes enriched. JSON valid (`jq . > /dev/null`). Build chain unchanged (`build-atlas.mjs`, `build-prism.mjs`, `verify-prism.mjs`, runtime player ignore unknown fields). Atlas hash unchanged (no source-image changes); `artifactHash` changed from `7310c04872ba…` → `c906769562758…` since graph.json content changed (expected). 40 nodes, 15 edges, 31 atlas entries.
+
+**3. Two new doc files.**
+- [notes/post-ralph-tweaks.md](./post-ralph-tweaks.md) — chronological ledger of the 22 commits `e2ff5e8` → `1564852`, each tagged with one of four lesson buckets (A: universal pipeline, B: caption-driven parameters, C: graph-as-plan structural shifts, D: tried-abandoned). Closing 22-row matrix.
+- [notes/mockup-pipeline.md](./mockup-pipeline.md) — forward-looking "given a mockup, what does the pipeline do" doc. The caption contract; two entry paths (uploaded mockup vs. engine-generated); 8 stages each described as "what the caption tells the stage"; universal techniques table; swap-in-a-new-mockup procedure; honest gap list (today vs. caption-driven target); §10 dependency / forbidden-pattern constraints; §11 end-to-end verification recipe.
+
+**4. Drift-prevention hook restored.** Existing PreToolUse `anti-drift-check.sh` covers §1.4 forbidden visual patterns (PIXI.Text, PIXI.Graphics-without-`ALLOWED-GRAPHICS`, innerHTML/outerHTML) — kept unchanged. Added new PostToolUse `dependency-allowlist-check.sh` (`kid-kode-landing/.claude/hooks/`, registered in both repo-root and kid-kode-landing settings.json):
+- Blocks (exit 2) on any non-allowlisted dependency added to package.json or any non-allowlisted import in `.ts`/`.tsx`/`.js`/`.mjs`/`.cjs` under `src/lib/prism/**`, `src/components/prism-player/**`, `scripts/**`.
+- Hard-fails on `html-to-image` (per spec line 1251).
+- Allowlists hardcoded in the script: 41 runtime packages (pixi.js, pixi-filters, gsap, react, react-dom, next, jszip, zustand, three, @react-three/*, @radix-ui/*, lenis, simplex-noise, d3-force-3d, camera-controls, postprocessing, clsx, tailwind-merge), 8 build packages (sharp, maxrects-packer, globby, msdf-bmfont-xml, ffmpeg-static, @fal-ai/client, dotenv, playwright), 8 devDeps (@types/*, autoprefixer, postcss, tailwindcss, typescript). `node:*` builtins always allowed.
+- Smoke-tested 5/5 cases: allowed sharp import passes; forbidden html-to-image blocks; unapproved lodash blocks; package.json with html-to-image blocks; out-of-scope markdown passes through.
+
+**5. Verification.** Three gates green:
+- `jq . src/lib/prism/mock-app-source/hubs/home-hub.json > /dev/null` — JSON valid.
+- `npm run build:prism` — succeeds, 40 nodes / 15 edges / 1 hub, 31 entries.
+- `npm run verify:prism` — 15/15 pass; `artifactHash: c9067695627585706006cdbb8c2fe04c3cd2d55286a3627e5350816daeade8f6`; nodeCount=40; methods 1+2+3 all present; layer-swap + msdf text both represented; forbidden patterns clean.
+
+**Constraints honored.**
+- ✅ `notes/prism-spec-extract.md` not modified.
+- ✅ No new dependencies added to `package.json`.
+- ✅ All schema additions to `home-hub.json` are additive + optional; existing readers unaffected.
+- ✅ Phase G (`enrich-elements.mjs`) NOT revived — recorded as Bucket D in [post-ralph-tweaks.md](./post-ralph-tweaks.md).
+- ✅ `.js` node modules unchanged — animation params live in code AND in `intent.animationSpec` JSON as a parallel declarative description (a future migration can have `.js` consume the JSON).
+
+**What's next (not in this pass).** UI tweaks for additional visual polish; node editor integration so editing the graph (captions / layers / etc.) updates the running preview. The doc + caption infrastructure laid here is the contract those next phases will use.
+
+## Spec-infrastructure lock-down + Ralph Loop kickoff for editor integration (2026-04-28)
+
+**Context.** Continuing the work from 2026-04-27, prepared for the node-editor ↔ mock-app integration phase. The integration plan lives at `/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md`. The mock app must continue to run on the .prism runtime exactly as the spec mandates — no dependency switching, no runtime substitution, no pipeline simplification. Strengthened drift prevention to four layers and seeded the existing Ralph Loop with seven new tasks (T-EDIT-00 through T-EDIT-06) for the integration.
+
+**1. Two new hook scripts, both in `kid-kode-landing/.claude/hooks/`:**
+
+- [spec-infrastructure-check.sh](.claude/hooks/spec-infrastructure-check.sh) (PostToolUse Write|Edit + SessionStart, 8.7 KB, executable). Blocks (exit 2):
+  - Removing required deps from `package.json`: `pixi.js`, `pixi-filters`, `gsap`, `sharp`, `maxrects-packer`, `globby`, `msdf-bmfont-xml`, `jszip`, `@fal-ai/client`, `playwright`, `three`, `@react-three/fiber`, `@react-three/drei`.
+  - Removing `package.json` scripts `build:atlas` / `build:msdf` / `build:prism` / `verify:prism` / `dev` / `build` / `start`.
+  - Writing to `build-atlas.mjs` / `build-msdf.mjs` / `build-prism.mjs` / `verify-prism.mjs` / `boot.ts` / `index.ts` in a way that drops their spec-required markers (sharp+MaxRectsPacker+dest-in+.avif+atlas-regions / msdf-bmfont-xml+font-inter.msdf / JSZip+manifest+mock-app.prism+artifactHash / forbidden:PIXI.Text+prism:nodeCount+artifactHash+three.methods / pixi.js+BitmapText).
+  - Hand-editing build outputs (`atlas-0.avif`, `atlas-regions.json`, `mock-app.prism`, `font-inter.msdf.*`).
+  - Introducing DOM rendering for visible chrome in player code (without `// ALLOWED-DOM-DEBUG:` marker).
+- [verify-on-stop.sh](.claude/hooks/verify-on-stop.sh) (Stop, 3.0 KB, executable). On every turn end:
+  - Warns loudly to stderr if any spec-required infrastructure file is missing on disk.
+  - Runs `npm run verify:prism` if any `kid-kode-landing/(src/lib/prism/|src/components/prism-player/|src/components/editor/|scripts/|notes/|public/prism-assets/)` file changed in the turn — surfaces failures with the relevant FAIL/PASS lines from the verifier output.
+
+**2. Both hooks registered in BOTH settings.json files (full hook stack at parity):**
+
+- [kid-kode-landing/.claude/settings.json](.claude/settings.json) and [Design-trials/.claude/settings.json](../../.claude/settings.json) now register the same seven hooks each (relative paths in kid-kode-landing settings; `$CLAUDE_PROJECT_DIR/...` in repo-root settings):
+  - PreToolUse Write|Edit → `anti-drift-check.sh` (forbidden visual patterns; existing since 2026-04-22).
+  - PostToolUse Write|Edit → `dependency-allowlist-check.sh` (dep + import drift; added 2026-04-27).
+  - **PostToolUse Write|Edit → `spec-infrastructure-check.sh` (NEW 2026-04-28).**
+  - PostToolUse Write|Edit → `format-check.sh` (prettier; existing).
+  - PostToolUse Write|Edit → `todo-scanner.sh` (TODO/HACK markers; existing).
+  - SessionStart → `spec-presence-check.sh` (top-level spec presence; existing).
+  - SessionStart → `spec-infrastructure-check.sh` (warn on missing infra; same script, presence-mode).
+  - **Stop → `verify-on-stop.sh` (NEW 2026-04-28).**
+  - Stop → `progress-reminder.sh` (progress-log touch reminder; existing).
+- The kid-kode-landing settings references the existing repo-root hooks (format-check, todo-scanner, progress-reminder) via `../.claude/hooks/...` relative paths — no script duplication.
+
+**3. Hook smoke + regression tests, 7/7 pass:**
+
+| Test | Hook | Expected | Actual |
+|---|---|---|---|
+| T1: write `build-atlas.mjs` missing all spec markers | spec-infrastructure | exit 2 (block) | exit 2 ✓ |
+| T2: write `package.json` removing `pixi.js` dep | spec-infrastructure | exit 2 | exit 2 ✓ |
+| T3: write `package.json` removing `verify:prism` script | spec-infrastructure | exit 2 | exit 2 ✓ |
+| T4: write a normal player file (no spec change) | spec-infrastructure | exit 0 | exit 0 ✓ |
+| T5: hand-edit `mock-app.prism` | spec-infrastructure | exit 2 | exit 2 ✓ |
+| T6 regression: import `'html-to-image'` in prism code | dep-allowlist | exit 2 | exit 2 ✓ |
+| T7 regression: add `lodash` to package.json | dep-allowlist | exit 2 | exit 2 ✓ |
+
+**4. Ralph state seeded with 7 editor-integration tasks.** [notes/ralph-state.json](ralph-state.json) status flipped from `complete` → `running`. New tasks `T-EDIT-00` through `T-EDIT-06` mirror the 7 phases of the integration plan. `T-EDIT-00` (Phase 0 = these hooks) is marked `done` since it just landed in this main session. The remaining 6 tasks are `pending` and ready for the Ralph Loop to pick up. Each task carries `specRefs: ["plan:Phase N"]`, `planFile` pointing at the plan file, full `verificationGates`, and rich `notes` describing the work to perform.
+
+**5. Verification — baseline still green after the hook stack changes:**
+- `verify:prism` 15/15.
+- `browser-smoke` 6/6.
+- Both `settings.json` files parse cleanly; jq-validated.
+- Hook stack registered: 1 PreToolUse + 4 PostToolUse + 2 SessionStart + 2 Stop = 9 hook entries per settings file.
+
+**Bootstrap for the Ralph Loop.** The integration work runs autonomously via the existing `kid-kode-landing/scripts/ralph.sh` outer loop. Each iteration spawns a fresh Claude Code session running `/ralph-step` against the next pending task. The four-layer drift floor is active in every iteration. When all 7 tasks are `done`, the loop terminates with `ralph: loop complete — all tasks done`. The starting prompt to paste in a fresh Claude Code session is documented in the plan file under §"Bootstrap prompt" (within "Ralph Loop Driver").
+
+**Constraints honored.**
+- ✅ `notes/prism-spec-extract.md` not modified.
+- ✅ No new dependencies added to `package.json`.
+- ✅ No changes to `src/lib/prism/**` runtime / build pipeline (only `.claude/` hooks + `notes/ralph-state.json` + this progress entry).
+- ✅ All four hook layers (anti-drift / dep-allowlist / spec-infrastructure / verify-on-stop) compose; none replaces another.
+- ✅ Mock app continues to run on the .prism runtime exactly as spec mandates; the hook layer mechanically prevents drift during the Ralph Loop.
