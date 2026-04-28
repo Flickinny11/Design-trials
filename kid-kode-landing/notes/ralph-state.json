@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T18:04:24Z",
+  "updatedAt": "2026-04-28T18:18:48Z",
   "currentIteration": 20,
   "maxIterations": 500,
   "maxAttemptsPerTask": 3,
@@ -342,11 +342,14 @@
         "plan:Phase 5"
       ],
       "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
+      "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
+      "verifiedAt": "2026-04-28T18:18:48Z",
       "filesEdited": [
         "kid-kode-landing/src/components/prism-player/PrismHost.tsx",
         "kid-kode-landing/src/lib/prism/player/boot.ts",
+        "kid-kode-landing/src/lib/prism/player/index.ts",
         "kid-kode-landing/src/components/editor/panels/Inspector.tsx"
       ],
       "verificationGates": [
@@ -357,7 +360,7 @@
         "manual: click node in editor → preview shows highlight ring",
         "manual: click node in preview → editor selects same node"
       ],
-      "notes": "boot.ts gains per-node pointerdown handler that emits node-selected event (scoped — selection only, NOT the full T-ED-04 graph-mutation path that was reverted). PrismHost exposes window.__prism.selectNode / highlightNode / onNodeSelected. Selection ring uses PIXI.Graphics with `// ALLOWED-GRAPHICS: selection-ring` marker per §1.4 exception. Editor side: useEffect to highlight in preview on selectedNodeId change; useEffect to subscribe to onNodeSelected and call store.selectNode(id)."
+      "notes": "boot.ts: PrismDebugHandle gains selectNode/highlightNode/onNodeSelected; per-node `pointerdown` emits `node-selected` on the event bus; selection ring is a single PIXI.Graphics overlay (`// ALLOWED-GRAPHICS: selection-ring`, §1.4 exception) parented to viewport.content with zIndex 100_000; `attachSelectionBridge` promotes `container.eventMode` to `'static'` unless already `'static'`/`'dynamic'` so non-interactive containers (page-background, *-section-bg, *-card-bg, footer-bg) actually receive pointerdown; rebuildNode re-attaches the listener; applyLayout calls drawHighlight() at the end so the ring re-resolves at the new breakpoint. selectNode is intentionally a visual-only alias for highlightNode — it does NOT emit `node-selected` (avoids editor→preview→editor feedback loop). PrismHost.tsx re-exports `PrismDebugHandle` (and player/index.ts adds it to the public surface) so editor-side TS sees the typed window. Inspector.tsx adds two useEffects before the early-return: (1) on selectedId change → `window.__prism?.highlightNode(id ?? null)`; (2) once-on-mount subscribe to `window.__prism.onNodeSelected` → `useGraphEditorStore.getState().selectNode(id) + openInspector()`, with a 200 ms poll fallback for the brief window where Inspector mounts before PrismHost finishes booting. Spec-reviewer MUST FIX (resolved): progress log touched (project CLAUDE.md gate). Spec-reviewer SHOULD FIX (resolved as part of this iteration): eventMode promotion now covers PIXI v8 `'auto'` default not just `'none'`; applyLayout drawHighlight refresh wired so live breakpoint reflow keeps the ring on the rebuilt node. SHOULD FIX (tracked, deferred): (a) Inspector's once-on-mount subscription captures the first __prism.events bus closure; if PrismHost ever remounts (preset toggle, prismUrl bump) the subscription stays bound to the old bus until Inspector itself remounts — should listen for an `__prism`-installed signal (or watch window.__prism identity) to re-subscribe; (b) the 200 ms poll fallback is functional but smelly — PrismHost already takes `onMounted` and is the React boundary, so a shared store / custom event would let Inspector subscribe deterministically; (c) selectNode's type doc says \"programmatic selection from the editor\" but observable behavior is identical to highlightNode — name and behavior could be reconciled (drop the alias or persist a separate selectedNodeId on the handle); (d) attachSelectionBridge has no symmetric detach (today leak-free because rebuildNode teardown destroys the container with its listeners — a future refactor that retains containers across rebuilds would silently leak); (e) ring stroke color (0x5d8bff) + 3 px width hardcoded — would be cleaner as a top-of-file constant alongside CARD_SUFFIXES; (f) `onNodeSelected` payload type-guards `unknown` at runtime — a typed `NodeSelectedPayload` interface + emit-wrapper would self-document the contract; (g) test gates remain pure substring/regex matches — a Node harness that asserts `selectNode('x')` emits zero `node-selected` events would catch a regression that `/selectNode/.test(bootSrc)` cannot (the explicit anti-loop invariant); (h) PrismHost comment block names the three bridge methods but the file itself doesn't invoke them — a one-liner pointing at `Inspector.tsx` as the consumer would help future grep readers. Three gates: verify:prism 15/15, browser-smoke 6/6, T-EDIT-05 14/14. artifactHash unchanged (7310c04872ba… — runtime-bundle change only; no graph mutation). Five commits: e0b66bb (claim) → d1f808c (failing test) → 559ab47 (impl) → 9ee18a3 (spec-reviewer fixes + progress log) → state."
     },
     {
       "id": "T-EDIT-06",
@@ -499,14 +502,20 @@
       "taskId": "T-EDIT-04",
       "commit": "b65d14e8dd8ed8f9260bb62935cb6a2e4cd4d4c1",
       "verifiedAt": "2026-04-28T18:02:24Z"
+    },
+    {
+      "iteration": 20,
+      "taskId": "T-EDIT-05",
+      "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
+      "verifiedAt": "2026-04-28T18:18:48Z"
     }
   ],
   "maxIterationsPerPhase": 50,
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 19,
-    "lastProductiveCommit": "52c4b0b49ca14eba1874859e74ccfb24a503a70e"
+    "lastProductiveIteration": 20,
+    "lastProductiveCommit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f"
   },
   "phaseCaps": {
     "§10": {
@@ -521,11 +530,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 19,
-    "commit": "52c4b0b49ca14eba1874859e74ccfb24a503a70e",
-    "verifiedAt": "2026-04-28T18:03:00Z",
+    "iteration": 20,
+    "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
+    "verifiedAt": "2026-04-28T18:18:48Z",
     "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-28T18:03:00Z"
+    "recordedAt": "2026-04-28T18:18:48Z"
   },
   "resumeFrom": null,
   "breakpoints": []
