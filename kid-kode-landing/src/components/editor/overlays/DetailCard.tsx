@@ -1,7 +1,9 @@
 'use client';
 
-import { GRAPH } from '@/data/mockGraph';
+import { useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
 
 export default function DetailCard() {
@@ -12,12 +14,22 @@ export default function DetailCard() {
   const toggleFreeze = useGraphEditorStore((s) => s.toggleFreeze);
   const frozenIds = useGraphEditorStore((s) => s.frozenNodeIds);
 
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const graph = useMemo(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+
   if (!selectedId || inspectorOpen) return null;
-  const node = GRAPH.nodes.find((n) => n.id === selectedId);
+  // Restrict the popover to discrete elements; backgrounds are part of the
+  // hub shell and don't get their own detail card.
+  const node = graph.nodes.find((n) => n.id === selectedId && n.editorRole !== 'background');
   if (!node) return null;
 
   const frozen = frozenIds.has(node.id);
-  const hub = GRAPH.hubs.find((h) => node.hubIds[0] === h.id);
+  const hub = graph.hubs.find((h) => node.hubIds[0] === h.id);
 
   const statusColor =
     node.status === 'verified' ? '#22c55e' :

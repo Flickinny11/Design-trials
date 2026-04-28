@@ -1,7 +1,9 @@
 'use client';
 
-import { GRAPH } from '@/data/mockGraph';
+import { useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
 
 export default function TopBar() {
@@ -11,12 +13,24 @@ export default function TopBar() {
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
   const toggleSearch = useGraphEditorStore((s) => s.toggleSearch);
 
-  const hub = GRAPH.hubs.find((h) => h.id === activeHubId);
-  const selected = GRAPH.nodes.find((n) => n.id === selectedId);
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const graph = useMemo(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+  const elementNodes = useMemo(
+    () => graph.nodes.filter((n) => n.editorRole !== 'background'),
+    [graph.nodes]
+  );
 
-  const total = GRAPH.nodes.length;
-  const verified = GRAPH.nodes.filter((n) => n.status === 'verified').length;
-  const failed = GRAPH.nodes.filter((n) => n.status === 'failed').length;
+  const hub = graph.hubs.find((h) => h.id === activeHubId);
+  const selected = elementNodes.find((n) => n.id === selectedId);
+
+  const total = elementNodes.length || 1;
+  const verified = elementNodes.filter((n) => n.status === 'verified').length;
+  const failed = elementNodes.filter((n) => n.status === 'failed').length;
   const pending = total - verified - failed;
   const health = Math.round((verified / total) * 100);
 

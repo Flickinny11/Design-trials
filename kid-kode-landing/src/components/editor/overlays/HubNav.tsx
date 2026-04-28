@@ -1,13 +1,27 @@
 'use client';
 
-import { GRAPH } from '@/data/mockGraph';
+import { useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
 
 export default function HubNav() {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
+
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const graph = useMemo(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+  const elementNodes = useMemo(
+    () => graph.nodes.filter((n) => n.editorRole !== 'background'),
+    [graph.nodes]
+  );
 
   return (
     <div className="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
@@ -32,9 +46,9 @@ export default function HubNav() {
 
         <div className="w-px h-5 bg-white/10" />
 
-        {GRAPH.hubs.map((hub) => {
+        {graph.hubs.map((hub) => {
           const active = activeHubId === hub.id;
-          const nodeCount = GRAPH.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
+          const nodeCount = elementNodes.filter((n) => n.hubIds.includes(hub.id)).length;
           return (
             <button
               key={hub.id}

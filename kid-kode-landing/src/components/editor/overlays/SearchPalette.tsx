@@ -1,8 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { GRAPH } from '@/data/mockGraph';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
 
 export default function SearchPalette() {
@@ -13,6 +14,21 @@ export default function SearchPalette() {
   const flyToNode = useGraphEditorStore((s) => s.flyToNode);
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
+
+  // Editor parity: read from the same store the 3D scene reads from, and
+  // exclude full-section/card backgrounds so search results match the
+  // ~29-element nav-able set rather than the legacy 52-node fixture.
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const graph = useMemo(
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    [sourceHubs, sourceNodes, sourceEdges]
+  );
+  const elementNodes = useMemo(
+    () => graph.nodes.filter((n) => n.editorRole !== 'background'),
+    [graph.nodes]
+  );
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedIdx, setSelectedIdx] = useState(0);
@@ -36,8 +52,8 @@ export default function SearchPalette() {
   if (!open) return null;
 
   const q = query.toLowerCase().trim();
-  const hubMatches = GRAPH.hubs.filter((h) => !q || h.name.toLowerCase().includes(q) || h.route.toLowerCase().includes(q));
-  const nodeMatches = GRAPH.nodes.filter((n) =>
+  const hubMatches = graph.hubs.filter((h) => !q || h.name.toLowerCase().includes(q) || h.route.toLowerCase().includes(q));
+  const nodeMatches = elementNodes.filter((n) =>
     !q || n.name.toLowerCase().includes(q) || n.elementType.toLowerCase().includes(q) || n.caption.toLowerCase().includes(q)
   ).slice(0, 12);
 
