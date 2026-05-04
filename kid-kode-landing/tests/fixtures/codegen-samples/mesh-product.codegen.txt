@@ -1,0 +1,41 @@
+import { Group } from 'three/webgpu';
+
+// Sample: mesh-mode product showcase loaded from a Hunyuan3D / Trellis-2 GLB.
+// renderMode='mesh'. Generated per spec §9.C L347-L353 mesh sub-prompt:
+// load GLB via ctx.glbLoader, do NOT override its textures with imageUrl.
+
+export default function createNode(config, ctx) {
+  const group = new Group();
+  group.name = 'node:' + config.nodeId;
+  group.userData.handlers = {};
+
+  let loadedScene = null;
+  ctx.glbLoader.load(config.meshUrl, (gltf) => {
+    loadedScene = gltf.scene;
+    group.add(loadedScene);
+  });
+
+  for (const primitive of config.cinematicPrimitives ?? []) {
+    ctx.primitives[primitive.name](group, primitive.params);
+  }
+
+  for (const text of config.textContent ?? []) {
+    if (!text || !text.text) continue;
+    const t = ctx.fontAtlas.createText({
+      text: text.text,
+      size: text.typography?.fontSize ?? 20,
+    });
+    group.add(t);
+  }
+
+  group.userData.cleanup = () => {
+    if (loadedScene) {
+      loadedScene.traverse((obj) => {
+        if (obj.geometry && obj.geometry.dispose) obj.geometry.dispose();
+        if (obj.material && obj.material.dispose) obj.material.dispose();
+      });
+    }
+  };
+
+  return group;
+}

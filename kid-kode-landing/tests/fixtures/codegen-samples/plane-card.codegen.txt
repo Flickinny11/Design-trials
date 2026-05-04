@@ -1,0 +1,43 @@
+import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';
+import gsap from 'gsap';
+
+// Sample: plane-mode card with explicit pose. renderMode='plane'.
+// Generated per spec §9.C L334-L337 plane sub-prompt.
+
+export default function createNode(config, ctx) {
+  const group = new Group();
+  group.name = 'node:' + config.nodeId;
+  group.userData.handlers = {};
+
+  const geo = new PlaneGeometry(2, 1.2);
+  const mat = new MeshBasicNodeMaterial();
+  mat.map = ctx.textureLoader.loadTexture(config.imageUrl);
+  const mesh = new Mesh(geo, mat);
+  group.add(mesh);
+
+  for (const primitive of config.cinematicPrimitives ?? []) {
+    ctx.primitives[primitive.name](group, primitive.params);
+  }
+
+  for (const text of config.textContent ?? []) {
+    if (!text || !text.text) continue;
+    const t = ctx.fontAtlas.createText({
+      text: text.text,
+      size: text.typography?.fontSize ?? 24,
+    });
+    group.add(t);
+  }
+
+  const tl = gsap.timeline({ paused: true });
+  group.userData.handlers.onPointerOver = () => tl.play();
+  group.userData.handlers.onPointerOut = () => tl.reverse();
+
+  group.userData.cleanup = () => {
+    tl.kill();
+    geo.dispose();
+    mat.dispose();
+    if (mat.map && mat.map.dispose) mat.map.dispose();
+  };
+
+  return group;
+}

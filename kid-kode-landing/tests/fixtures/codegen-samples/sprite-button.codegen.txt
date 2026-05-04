@@ -1,0 +1,40 @@
+import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';
+
+// Sample: sprite-mode billboard button. renderMode='sprite'.
+// Generated per spec §9.C L326-L331 sprite sub-prompt.
+
+export default function createNode(config, ctx) {
+  const group = new Group();
+  group.name = 'node:' + config.nodeId;
+  group.userData.handlers = {};
+
+  const ar = config.atlasRegion ?? { width: 256, height: 64 };
+  const aspect = (ar.width || 1) / (ar.height || 1);
+  const geo = new PlaneGeometry(aspect, 1);
+  const mat = new MeshBasicNodeMaterial();
+  mat.map = ctx.textureLoader.loadTexture(config.imageUrl);
+  const mesh = new Mesh(geo, mat);
+  mesh.userData.billboard = true;
+  group.add(mesh);
+
+  for (const primitive of config.cinematicPrimitives ?? []) {
+    ctx.primitives[primitive.name](group, primitive.params);
+  }
+
+  for (const text of config.textContent ?? []) {
+    if (!text || !text.text) continue;
+    const t = ctx.fontAtlas.createText({
+      text: text.text,
+      size: text.typography?.fontSize ?? 16,
+    });
+    group.add(t);
+  }
+
+  group.userData.cleanup = () => {
+    geo.dispose();
+    mat.dispose();
+    if (mat.map && mat.map.dispose) mat.map.dispose();
+  };
+
+  return group;
+}
