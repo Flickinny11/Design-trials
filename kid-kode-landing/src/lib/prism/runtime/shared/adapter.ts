@@ -22,12 +22,20 @@ import type { FontAtlasHandle } from './text';
 
 /** Per-node creation context passed to user-supplied `createNode` functions.
  *  Mirrors the spec §8 NodeContext interface; concrete instances are built
- *  by SceneRoot.bootstrap and assembled in T03+. */
+ *  by SceneRoot.bootstrap and assembled in T03+.
+ *
+ *  Spec §8 names these as `THREE.TextureLoader` and `GLTFLoader`; we narrow
+ *  to the operations the createNode contract actually exercises (`loadTexture`
+ *  / `loadGLB`) so a single underlying `LoaderCacheHandle` instance can back
+ *  both fields without leaking the cache surface into nodes. */
+export type NodeTextureLoader = Pick<LoaderCacheHandle, 'loadTexture'>;
+export type NodeGLBLoader = Pick<LoaderCacheHandle, 'loadGLB'>;
+
 export interface NodeContext {
-  /** Loader cache keyed by URL. Same URL yields the same Promise<Texture>. */
-  textureLoader: LoaderCacheHandle;
-  /** Loader cache keyed by URL. Same URL yields the same Promise<GLTF>. */
-  glbLoader: LoaderCacheHandle;
+  /** Texture loader keyed by URL. Same URL yields the same `Promise<Texture>`. */
+  textureLoader: NodeTextureLoader;
+  /** GLB loader keyed by URL. Same URL yields the same `Promise<GLTF>`. */
+  glbLoader: NodeGLBLoader;
   /** MSDF font atlas. Throws on createText() until ready. */
   fontAtlas: FontAtlasHandle;
   /** Cinematic primitives library lookup. Filled in T03; placeholder
@@ -77,10 +85,15 @@ export function applyScenePosition(
 }
 
 /** Default factory: returns a labelled empty Group. Useful for tests and as
- *  the bootstrap path before codegen-emitted modules land in T03+. */
+ *  the bootstrap path before codegen-emitted modules land in T03+. The
+ *  returned object satisfies the spec §8 cleanup contract surface (no-op
+ *  cleanup) so anything that walks `userData.cleanup()` (HubManager,
+ *  disposeHubGroup) sees a callable, not undefined. */
 const defaultCreateNode: CreateNodeFn = (config) => {
   const g = new Group();
   g.name = `node:${config.nodeId}`;
+  g.userData.cleanup = () => {};
+  g.userData.handlers = {};
   return g;
 };
 

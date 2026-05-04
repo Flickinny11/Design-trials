@@ -44,8 +44,14 @@ export interface FontAtlasHandle {
    *  the same URLs resolves immediately. */
   load(atlasUrl: string, fontJsonUrl: string): Promise<void>;
   /** Build a `THREE.Mesh<MSDFTextGeometry, MSDFTextNodeMaterial>` for the
-   *  given content. Throws if not yet ready. */
+   *  given content. Throws if not yet ready (or if the default factory
+   *  has not been warmed via `warmupDefaultFactory`). */
   createText(content: string, opts?: TextOpts): Object3D;
+  /** Pre-load the default `three-msdf-text-webgpu` factory so the next
+   *  `createText()` call can resolve synchronously. Skip when an
+   *  explicit `msdfTextFactory` was injected. Optional on the interface
+   *  so test stubs aren't forced to expose it. */
+  warmupDefaultFactory?(): Promise<void>;
   /** Dispose of the atlas texture and any cached materials. */
   dispose(): void;
 }
@@ -124,15 +130,25 @@ export function createFontAtlas(
       throw new Error('createText: font atlas not loaded — call load() first or supply preloaded option');
     }
     if (textFactory) return textFactory(content, opts, atlas, data);
-    // Lazy-init the default MSDF factory. Until it's ready synchronously,
-    // we return an empty placeholder Group; T03+ uses the editor's async
-    // bootstrap path so this only matters for tests / the very first frame.
+    // The default MSDF factory is async-loaded. Production bootstrap MUST
+    // call warmupDefaultFactory() before any node createNode() runs;
+    // otherwise the first frame returns a placeholder Group while the
+    // dynamic import resolves. Subsequent frames pick up the real factory
+    // automatically.
     void defaultMSDFTextFactoryAsync().then((fac) => {
       textFactory = fac;
     });
     const placeholder = new Group();
     placeholder.name = `text:${content}`;
     return placeholder;
+  }
+
+  /** Pre-load the default `three-msdf-text-webgpu`-backed factory. Call once
+   *  during runtime bootstrap (after `load()` resolves) before any node
+   *  createNode() runs. Idempotent. */
+  async function warmupDefaultFactory(): Promise<void> {
+    if (textFactory) return;
+    textFactory = await defaultMSDFTextFactoryAsync();
   }
 
   function dispose(): void {
@@ -156,6 +172,7 @@ export function createFontAtlas(
     },
     load,
     createText,
+    warmupDefaultFactory,
     dispose,
   };
 }

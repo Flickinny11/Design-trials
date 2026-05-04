@@ -150,6 +150,7 @@ export async function createSceneRoot(
   }
 
   let running = false;
+  let rafId: number | null = null;
 
   async function tick(): Promise<void> {
     if (!renderer) return;
@@ -157,6 +158,21 @@ export async function createSceneRoot(
       await renderer.renderAsync(scene, camera);
     } else if (renderer.render) {
       renderer.render(scene, camera);
+    }
+  }
+
+  /** Best-effort `requestAnimationFrame` shim. Used when the injected
+   *  renderer does not expose `setAnimationLoop` (e.g. test stubs in
+   *  non-browser environments where `globalThis.requestAnimationFrame`
+   *  may also be missing — falls back to `setTimeout(16ms)`). */
+  function rafLoop(): void {
+    if (!running) return;
+    void tick();
+    const w = (globalThis as { requestAnimationFrame?: (cb: () => void) => number }).requestAnimationFrame;
+    if (typeof w === 'function') {
+      rafId = w(rafLoop);
+    } else {
+      rafId = setTimeout(rafLoop, 16) as unknown as number;
     }
   }
 
@@ -169,12 +185,20 @@ export async function createSceneRoot(
         // unhandled-rejection, matching three/webgpu's documented behavior.
         void tick();
       });
+    } else {
+      rafLoop();
     }
   }
 
   function stop(): void {
     running = false;
     if (renderer?.setAnimationLoop) renderer.setAnimationLoop(null);
+    if (rafId !== null) {
+      const cancel = (globalThis as { cancelAnimationFrame?: (id: number) => void }).cancelAnimationFrame;
+      if (typeof cancel === 'function') cancel(rafId);
+      else clearTimeout(rafId as unknown as ReturnType<typeof setTimeout>);
+      rafId = null;
+    }
   }
 
   function addHub(hubGroup: Object3D): void {
