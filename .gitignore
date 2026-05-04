@@ -6,6 +6,28 @@ node_modules/
 *.log
 .DS_Store
 
+# Claude Code auto-memory (claude-mem-context stubs scattered across subdirs).
+# Canonical project instructions live in kid-kode-landing/CLAUDE.md; everything
+# else with that filename is auto-generated.
+**/CLAUDE.md
+!/kid-kode-landing/CLAUDE.md
+
+# Local backup files (e.g., home-hub.json.bak-20260428-150111).
+*.bak-*
+
+# Claude Code plan files (per-session; not source of truth).
+.claude/plans/
+**/.claude/plans/
+
+# Auto-generated empty subdirectory (root-level "Design-trials/" claude-mem).
+/Design-trials/
+
+# Duplicate working-tree artifact from prior session — same .git as parent.
+kid-kode-landing/kid-kode-landing/
+
+# Empty placeholder from prior tooling.
+kid-kode-landing/data/
+
 # Prism mock app — per mock spec §8.4 (source inputs stay out of git)
 kid-kode-landing/src/lib/prism/mock-app-source/assets/source-images/
 kid-kode-landing/src/lib/prism/mock-app-source/assets/.provisioning-manifest.json

@@ -2,15 +2,45 @@
   "schemaVersion": "0.1.0",
   "hub": {
     "hubId": "home-hub",
-    "title": "Kriptik — Home",
+    "title": "Voltus — Home",
+    "caption": "Voltus AI Video Generator — landing page on the home hub. Sci-fi 3D aesthetic: photorealistic dark cosmic environment, volumetric fog, cool turquoise key light from upper-left + warm amber practical at mid-depth. Materials throughout: brushed titanium, polished obsidian with natural veining, cast bronze, frosted acrylic, oxidized copper. Portrait canvas 1536×2048. Sections top-down: navbar (brand sigil + 4 hex nav pills + sign-in CTA), left side rail (3 utility sigils), hero (massive central holographic portal frame + primary CTA pill + scroll-down chevron), feature row (3 floating sci-fi cards: AI orb / 3D bronze polyhedron / cinematic film-reel), showcase grid (4 holographic mini-scene tiles), live-counter ticker, footer (brand sigil + 3 link pills + newsletter pill + 3 social sigils), 4 decorative cosmic orbs at the corners. The page-backdrop is the duplicated full mockup; segmented foregrounds composite on top.",
     "layout": {
       "viewportWidth": 1536,
       "viewportHeight": 864,
       "contentHeight": 2048,
-      "backgroundColor": "#0a0a12"
+      "backgroundColor": "#050810"
+    },
+    "responsiveBreakpoints": {
+      "mobile":  { "maxWidth": 640,  "scale": 0.5 },
+      "tablet":  { "maxWidth": 1024, "scale": 0.75 },
+      "desktop": { "maxWidth": 1920, "scale": 1.0 }
     }
   },
   "nodes": [
+    {
+      "nodeId": "page-backdrop",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "page-backdrop",
+        "transform": { "x": 0, "y": 0, "width": 1536, "height": 2048, "z": 0 },
+        "shape": "rect",
+        "alpha": 1.0
+      },
+      "intent": {
+        "caption": "Page backdrop — duplicated full mockup image rendered as a single backdrop layer at z=0. Carries the entire scene's atmospheric tone: deep cosmic navy-black, volumetric fog, distant nebulae, scattered starfield, faint architectural silhouettes out of focus. Every foreground node composites on top of this backdrop. Material: cinematic-render of a deep-space architectural environment, photographed-feel.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [{ "source": "theme", "target": "visual.tint" }], "emits": [], "listens": ["theme-changed"], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "sourceAsset": "page-backdrop", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "page-backdrop", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "background", "visualNouns": ["mockup", "scene", "backdrop"], "material": "cinematic-render", "finish": "atmospheric", "textureProfile": "volumetric" },
+        "alphaCutout": { "necessity": "none", "backgroundAffinity": "n/a", "antialiasHint": "n/a" },
+        "visibility": { "renderInCurrentMockup": true, "reason": "always-on backdrop layer" }
+      },
+      "codeRef": "nodes/page-background.js",
+      "backendRef": null
+    },
     {
       "nodeId": "navbar-logo",
       "subtype": "frontend-element",
@@ -18,55 +48,19 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-logo",
-        "transform": {
-          "x": 75,
-          "y": 61,
-          "width": 270,
-          "height": 325,
-          "z": 101
-        },
-        "shape": "circle"
+        "transform": { "x": 80, "y": 60, "width": 200, "height": 80, "z": 10 },
+        "shape": "rounded",
+        "shapeRadius": 16
       },
       "intent": {
-        "caption": "Kriptik wordmark — brand signet that navigates back to the home hub on tap.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "navigate-home"
-            }
-          ],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [
-            "navigate"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "navigate",
-              "targetNodeIds": [
-                "hub-router"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "lift-hover",
-          "scale-press"
-        ],
-        "visualSpec": {
-          "sourceAsset": "navbar-logo",
-          "animationSpec": {
-            "method": 2
-          },
-          "textContent": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
+        "caption": "Voltus brand sigil — anchors the top-left of the navbar. A faceted obsidian-and-cast-bronze gem cluster, three crystals fused at irregular angles, with thin turquoise bioluminescent veins glowing along every facet edge. Floats slightly off the navbar plane casting a soft cool shadow. Material: polished obsidian core, cast-bronze inlays, micro-imperfections from forge work. Tap navigates back to home hub. Lift-hover micro-animation. No text inside the sigil.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate-home" }, { "event": "pointerover", "effect": "lift-hover" }, { "event": "pointerdown", "effect": "scale-press" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "navbar-logo", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "navbar-logo", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "logo", "visualNouns": ["sigil", "gem cluster", "crystal", "brand mark"], "material": "polished obsidian + cast bronze", "finish": "faceted with luminescent veins", "textureProfile": "high-contrast" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered-edge" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/navbar-logo.js",
       "backendRef": null
@@ -78,531 +72,860 @@
       "serviceTag": "main",
       "visual": {
         "sourceAsset": "navbar-link-home",
-        "transform": {
-          "x": 417,
-          "y": 55,
-          "width": 142,
-          "height": 306,
-          "z": 101
-        },
-        "shape": "rounded",
-        "shapeRadius": 8
+        "transform": { "x": 380, "y": 80, "width": 140, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
       },
       "intent": {
-        "caption": "Nav link 'Home' — scroll-navigates to the top of the home hub.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "navigate"
-            }
-          ],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [
-            "navigate"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "navigate",
-              "targetNodeIds": [
-                "hub-router"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "border-trace",
-          "color-wash"
-        ],
+        "caption": "Navbar pill — Home. Hexagonal-pill artifact carved from frosted acrylic, embedded with a small turquoise-glowing house glyph (no text in the image). Resting at idle alpha 0.88; lifts and brightens on hover; latches with a warm amber tint when active per §10.14 hub-router announcement. MSDF runtime label 'HOME' renders centered on the pill.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": ["active-section-changed"], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "tint-active"],
         "visualSpec": {
           "sourceAsset": "navbar-link-home",
-          "animationSpec": {
-            "method": 3
-          },
-          "textContent": []
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "HOME", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 30, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "navbar-link-home", "defaultAlpha": 0.88 }]
         },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "nav-link", "visualNouns": ["hexagonal pill", "frosted acrylic", "glyph"], "material": "frosted acrylic + turquoise glow", "finish": "matte", "textureProfile": "translucent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
     },
     {
-      "nodeId": "navbar-link-editor",
+      "nodeId": "navbar-link-generate",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-editor",
-        "transform": {
-          "x": 668,
-          "y": 52,
-          "width": 154,
-          "height": 297,
-          "z": 101
-        },
-        "shape": "rounded",
-        "shapeRadius": 8,
-        "alpha": 0.9
+        "sourceAsset": "navbar-link-generate",
+        "transform": { "x": 540, "y": 80, "width": 160, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
       },
       "intent": {
-        "caption": "Nav link 'Editor' — scroll-navigates to the editor section.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "navigate"
-            }
-          ],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [
-            "navigate"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "navigate",
-              "targetNodeIds": [
-                "hub-router"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "border-trace",
-          "color-wash"
-        ],
+        "caption": "Navbar pill — Generate. Hex-pill twin to the home pill but embedded with a turquoise-glowing spark/flame glyph. Idle alpha 0.88; lifts on hover; latches amber when active. MSDF label 'GENERATE'.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": ["active-section-changed"], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "tint-active"],
         "visualSpec": {
-          "sourceAsset": "navbar-link-editor",
-          "animationSpec": {
-            "method": 3
-          },
-          "textContent": []
+          "sourceAsset": "navbar-link-generate",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "GENERATE", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 80, "y": 30, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "navbar-link-generate", "defaultAlpha": 0.88 }]
         },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "nav-link", "visualNouns": ["hexagonal pill", "frosted acrylic", "spark glyph", "flame"], "material": "frosted acrylic + turquoise glow", "finish": "matte", "textureProfile": "translucent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
     },
     {
-      "nodeId": "navbar-link-docs",
+      "nodeId": "navbar-link-gallery",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-link-docs",
-        "transform": {
-          "x": 943,
-          "y": 58,
-          "width": 154,
-          "height": 295,
-          "z": 101
-        },
-        "shape": "rounded",
-        "shapeRadius": 8,
-        "alpha": 0.9
+        "sourceAsset": "navbar-link-gallery",
+        "transform": { "x": 720, "y": 80, "width": 140, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
       },
       "intent": {
-        "caption": "Nav link 'Docs' — scroll-navigates to the docs section.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "navigate"
-            }
-          ],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [
-            "navigate"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "navigate",
-              "targetNodeIds": [
-                "hub-router"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "border-trace",
-          "color-wash"
-        ],
+        "caption": "Navbar pill — Gallery. Hex-pill embedded with a turquoise-glowing 3D-grid glyph (small isometric cubes). MSDF label 'GALLERY'.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": ["active-section-changed"], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "tint-active"],
         "visualSpec": {
-          "sourceAsset": "navbar-link-docs",
-          "animationSpec": {
-            "method": 3
-          },
-          "textContent": []
+          "sourceAsset": "navbar-link-gallery",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "GALLERY", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 30, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "navbar-link-gallery", "defaultAlpha": 0.88 }]
         },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "nav-link", "visualNouns": ["hexagonal pill", "frosted acrylic", "isometric grid glyph", "cubes"], "material": "frosted acrylic + turquoise glow", "finish": "matte", "textureProfile": "translucent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/navbar-link.js",
       "backendRef": null
     },
     {
-      "nodeId": "navbar-signin-btn",
+      "nodeId": "navbar-link-pricing",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "navbar-signin-btn",
-        "overlayRegions": [
-          "glow-pulse",
-          "shimmer"
-        ],
-        "transform": {
-          "x": 1226,
-          "y": 51,
-          "width": 156,
-          "height": 297,
-          "z": 101
-        },
-        "shape": "pill"
+        "sourceAsset": "navbar-link-pricing",
+        "transform": { "x": 880, "y": 80, "width": 140, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
       },
       "intent": {
-        "caption": "Small pill-shaped physical button face on the navbar beam. Smooth clean anodized-black aluminum surface with chamfered edges. No writing, no characters, no markings on the surface at all.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "open-signin-modal"
-            }
-          ],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [
-            "open-modal"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "open-modal",
-              "targetNodeIds": [
-                "signin-modal"
-              ],
-              "toleranceMs": 500
-            }
+        "caption": "Navbar pill — Pricing. Hex-pill embedded with a turquoise-glowing orbital-coin glyph (a sphere with a thin ring around it). MSDF label 'PRICING'.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": ["active-section-changed"], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "tint-active"],
+        "visualSpec": {
+          "sourceAsset": "navbar-link-pricing",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "PRICING", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 30, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "navbar-link-pricing", "defaultAlpha": 0.88 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "nav-link", "visualNouns": ["hexagonal pill", "frosted acrylic", "orbital coin glyph", "ringed sphere"], "material": "frosted acrylic + turquoise glow", "finish": "matte", "textureProfile": "translucent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/navbar-link.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "navbar-cta-signin",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "navbar-cta-signin",
+        "transform": { "x": 1300, "y": 70, "width": 180, "height": 80, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 40,
+        "overlayRegions": ["glow-pulse"],
+        "regions": { "default": "navbar-cta-signin", "hover": "navbar-cta-signin" }
+      },
+      "intent": {
+        "caption": "Navbar Sign-In CTA pill — large turquoise-edged frosted acrylic pill, the warmest accent in the navbar with internal soft turquoise plasma glow, anchors the top-right. Carries a glow-pulse overlay region that fades up on hover and full-flashes on tap (§10.10 layer-swap region keys default + glow-pulse). MSDF label 'SIGN IN' centered on the pill. Tap opens the sign-in modal.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "open-modal" }, { "event": "pointerover", "effect": "lift-hover" }, { "event": "pointerdown", "effect": "scale-press" }], "apiCalls": [], "dataBindings": [], "emits": ["open-modal"], "listens": [], "triggersDownstream": [{ "eventName": "open-modal", "targetNodeIds": ["signin-modal"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "glow-pulse"],
+        "visualSpec": {
+          "sourceAsset": "navbar-cta-signin",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "SIGN IN", "role": "cta", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 18, "fontWeight": 600, "color": "#ffffff" }, "position": { "x": 90, "y": 40, "anchor": "center" } }],
+          "layers": [
+            { "id": "base", "type": "sprite", "z": 0, "region": "navbar-cta-signin", "defaultAlpha": 1.0 },
+            { "id": "glow-pulse", "type": "overlay", "z": 1, "overlayRegion": "glow-pulse", "blendMode": "add", "defaultAlpha": 0 }
           ]
         },
-        "stateEffects": [
-          "lift-hover",
-          "scale-press",
-          "glow-pulse"
-        ],
-        "visualSpec": {
-          "sourceAsset": "navbar-signin-btn",
-          "animationSpec": {
-            "method": 3
-          },
-          "textContent": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "cta-button", "visualNouns": ["turquoise pill", "plasma core", "frosted acrylic", "glowing pill"], "material": "frosted acrylic + plasma glow", "finish": "high-gloss with internal light", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/navbar-signin-btn.js",
       "backendRef": null
     },
     {
-      "nodeId": "hero-card-cta",
+      "nodeId": "side-rail-settings",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "hero-card-cta",
-        "overlayRegions": [
-          "glow-pulse",
-          "shimmer"
-        ],
-        "transform": {
-          "x": 686,
-          "y": 893,
-          "width": 142,
-          "height": 144,
-          "z": 51
-        },
-        "shape": "pill"
+        "sourceAsset": "side-rail-settings",
+        "transform": { "x": 20, "y": 300, "width": 64, "height": 64, "z": 10 },
+        "shape": "circle"
       },
       "intent": {
-        "caption": "Rectangular pill-shaped machined aluminum button face centered in the hero. Smooth anodized-black surface with subtle chamfer. Completely blank surface with no markings, no inscription, no characters, no letters, no writing whatsoever on the face.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "start-build-flow"
-            }
-          ],
-          "apiCalls": [
-            {
-              "endpoint": "/api/mock/track-cta-click",
-              "method": "POST"
-            }
-          ],
-          "dataBindings": [],
-          "emits": [
-            "build-flow-started"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "build-flow-started",
-              "targetNodeIds": [
-                "hero-card-bg",
-                "stats-live-counter",
-                "build-panel"
-              ],
-              "toleranceMs": 1000
-            }
+        "caption": "Side-rail utility sigil — Settings. Small cogwheel relic carved from brushed titanium, mounted on the left edge of the page below the navbar. Lift-hover on pointerover; tap opens the settings panel.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "open-panel" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["open-panel"], "listens": [], "triggersDownstream": [{ "eventName": "open-panel", "targetNodeIds": ["settings-panel"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "side-rail-settings", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "side-rail-settings", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "icon", "visualNouns": ["cogwheel", "brushed titanium", "relic"], "material": "brushed titanium", "finish": "matte", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/side-rail-icon.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "side-rail-notifications",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "side-rail-notifications",
+        "transform": { "x": 20, "y": 380, "width": 64, "height": 64, "z": 10 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Side-rail utility sigil — Notifications. Small bell relic carved from cast bronze with turquoise glow under the bell mouth. Idle pulse animation (method 1). Tap opens the notifications drawer.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "open-panel" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [{ "source": "notifications.unread", "target": "visual.glow" }], "emits": ["open-panel"], "listens": ["notification-received"], "triggersDownstream": [{ "eventName": "open-panel", "targetNodeIds": ["notifications-drawer"], "toleranceMs": 500 }] },
+        "stateEffects": ["idle-pulse", "lift-hover"],
+        "visualSpec": { "sourceAsset": "side-rail-notifications", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "side-rail-notifications", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "icon", "visualNouns": ["bell", "cast bronze", "relic"], "material": "cast bronze", "finish": "patina", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/side-rail-icon.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "side-rail-profile",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "side-rail-profile",
+        "transform": { "x": 20, "y": 460, "width": 64, "height": 64, "z": 10 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Side-rail utility sigil — Profile. Small frosted-acrylic orb with a faint silhouette inside, lit from within by a cool blue point light. Lift-hover on pointerover; tap opens the user profile menu.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "open-panel" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [{ "endpoint": "/api/mock/user-preferences", "method": "GET" }], "dataBindings": [{ "source": "user.avatar", "target": "visual.tint" }], "emits": ["open-panel"], "listens": [], "triggersDownstream": [{ "eventName": "open-panel", "targetNodeIds": ["profile-menu"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "side-rail-profile", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "side-rail-profile", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": { "userId": "z.string()" } },
+        "samHints": { "elementType": "icon", "visualNouns": ["frosted orb", "silhouette", "user avatar"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/side-rail-icon.js",
+      "backendRef": "backends/user-preferences.js"
+    },
+    {
+      "nodeId": "hero-portal-frame",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "hero-portal-frame",
+        "transform": { "x": 350, "y": 300, "width": 836, "height": 440, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 24,
+        "frameCount": 30
+      },
+      "intent": {
+        "caption": "Hero centerpiece — massive holographic portal frame, the visual anchor of the hero section. Ornate cast-bronze ring etched with deep ancient runes, turquoise plasma flowing along the rune channels. The interior of the frame shows a swirling cosmic nebula running as an i2v keyframe loop (method 3, 30 frames @ 30fps): purple-and-magenta gas clouds, distant stars rotating slowly, occasional bright pulse from within. Idle pulse + i2v loop. The single most ornate object in the composition.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": {
+          "sourceAsset": "hero-portal-frame",
+          "animationSpec": { "method": 3, "fps": 30, "frameCount": 30 },
+          "textContent": [],
+          "layers": [
+            { "id": "base", "type": "sprite", "z": 0, "region": "hero-portal-frame", "defaultAlpha": 1.0 }
           ]
         },
-        "stateEffects": [
-          "lift-hover",
-          "scale-press",
-          "glow-pulse",
-          "shimmer"
-        ],
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "frame", "visualNouns": ["portal", "ornate ring", "rune-etched bronze", "nebula interior", "cosmic frame"], "material": "cast bronze with rune channels + plasma core", "finish": "weathered with luminescent etchings", "textureProfile": "high-detail metalwork + volumetric interior" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/hero-portal-frame.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "hero-cta-primary",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "hero-cta-primary",
+        "transform": { "x": 600, "y": 820, "width": 336, "height": 80, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 40,
+        "overlayRegions": ["glow-pulse"]
+      },
+      "intent": {
+        "caption": "Hero primary CTA pill — long turquoise-edged frosted acrylic pill below the portal frame, with a small flame glyph on its left and an arrow glyph on its right (no text in the image). Internal plasma glow pulses softly at idle, brightens fully on tap. MSDF label 'GENERATE A VIDEO' centered on the pill. Tap increments heroCtaClicks via the analytics backend.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "track-cta-click" }, { "event": "pointerover", "effect": "lift-hover" }, { "event": "pointerdown", "effect": "scale-press" }], "apiCalls": [{ "endpoint": "/api/mock/track-cta-click", "method": "POST" }], "dataBindings": [{ "source": "state.heroCtaClicks", "target": "stats-counter" }], "emits": ["cta-clicked"], "listens": [], "triggersDownstream": [{ "eventName": "cta-clicked", "targetNodeIds": ["stats-counter"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press", "glow-pulse"],
         "visualSpec": {
-          "sourceAsset": "hero-card-cta",
-          "animationSpec": {
-            "method": 3
-          },
-          "textContent": []
+          "sourceAsset": "hero-cta-primary",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "GENERATE A VIDEO", "role": "cta", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 22, "fontWeight": 600, "color": "#ffffff" }, "position": { "x": 168, "y": 40, "anchor": "center" } }],
+          "layers": [
+            { "id": "base", "type": "sprite", "z": 0, "region": "hero-cta-primary", "defaultAlpha": 1.0 },
+            { "id": "glow-pulse", "type": "overlay", "z": 1, "overlayRegion": "glow-pulse", "blendMode": "add", "defaultAlpha": 0.2 }
+          ]
         },
-        "contracts": {
-          "inputs": {},
-          "outputs": {
-            "clickCount": "z.number()"
-          }
-        }
+        "contracts": { "inputs": {}, "outputs": { "clickCount": "z.number()" } },
+        "samHints": { "elementType": "cta-button", "visualNouns": ["turquoise pill", "plasma button", "long pill", "flame glyph", "arrow glyph"], "material": "frosted acrylic + plasma core", "finish": "high-gloss with internal light", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
       },
       "codeRef": "nodes/hero-card-cta.js",
       "backendRef": "backends/hero-card-cta.js"
     },
     {
-      "nodeId": "notifications-toggle",
+      "nodeId": "hero-scroll-indicator",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "notifications-toggle",
-        "regionKeys": [
-          "off",
-          "on"
-        ],
-        "defaultRegion": "off",
-        "transform": {
-          "x": 400,
-          "y": 1770,
-          "width": 360,
-          "height": 260,
-          "z": 51
-        },
-        "shape": "pill"
+        "sourceAsset": "hero-scroll-indicator",
+        "transform": { "x": 728, "y": 870, "width": 80, "height": 32, "z": 10 }
       },
       "intent": {
-        "caption": "Notifications toggle — layer-swap between off and on atlas regions (Method 3.4.2).",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointertap",
-              "effect": "toggle-state"
-            }
-          ],
-          "apiCalls": [
-            {
-              "endpoint": "/api/mock/user-preferences",
-              "method": "POST"
-            }
-          ],
-          "dataBindings": [
-            {
-              "source": "state.notifications-enabled",
-              "target": "visual.activeRegion"
-            }
-          ],
-          "emits": [
-            "notifications-toggled"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "notifications-toggled",
-              "targetNodeIds": [
-                "user-preferences-store"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "layer-swap"
-        ],
-        "visualSpec": {
-          "sourceAsset": "notifications-toggle",
-          "animationSpec": {
-            "method": 2
-          },
-          "textContent": []
-        },
-        "contracts": {
-          "inputs": {
-            "notificationsEnabled": "z.boolean()"
-          },
-          "outputs": {
-            "notificationsEnabled": "z.boolean()"
-          }
-        }
+        "caption": "Hero scroll-down indicator — small turquoise downward chevron carved from frosted acrylic, sitting just below the primary CTA. Continuous gentle bounce animation (method 1 idle pulse) suggesting users to scroll. Tap scrolls to features section.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "scroll-to" }], "apiCalls": [], "dataBindings": [], "emits": ["scroll-to"], "listens": [], "triggersDownstream": [{ "eventName": "scroll-to", "targetNodeIds": ["feature-card-ai"], "toleranceMs": 500 }] },
+        "stateEffects": ["idle-bounce"],
+        "visualSpec": { "sourceAsset": "hero-scroll-indicator", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "hero-scroll-indicator", "defaultAlpha": 0.7 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "indicator", "visualNouns": ["chevron", "downward arrow", "frosted acrylic"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
       },
-      "codeRef": "nodes/notifications-toggle.js",
-      "backendRef": "backends/user-preferences.js"
+      "codeRef": "nodes/hero-scroll-indicator.js",
+      "backendRef": null
     },
     {
-      "nodeId": "theme-selector-button",
+      "nodeId": "feature-card-ai",
       "subtype": "frontend-element",
       "parentHubId": "home-hub",
       "serviceTag": "main",
       "visual": {
-        "sourceAsset": "theme-selector-button",
-        "defaultRegion": "default",
-        "transform": {
-          "x": 780,
-          "y": 1770,
-          "width": 360,
-          "height": 260,
-          "z": 51
-        },
-        "shape": "pill"
+        "sourceAsset": "feature-card-ai",
+        "transform": { "x": 80, "y": 940, "width": 420, "height": 420, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 24,
+        "frameCount": 24
       },
       "intent": {
-        "caption": "Horizontal pill-shaped machined aluminum toggle on a dark steel substrate. Three states (default / hover / pressed) expressed only through lighting changes. The toggle surface is completely blank with no markings, no inscription, no characters, no letters anywhere.",
-        "behaviorSpec": {
-          "interactions": [
-            {
-              "event": "pointerover",
-              "effect": "swap-to-hover"
-            },
-            {
-              "event": "pointerout",
-              "effect": "swap-to-default"
-            },
-            {
-              "event": "pointerdown",
-              "effect": "swap-to-pressed"
-            },
-            {
-              "event": "pointertap",
-              "effect": "cycle-theme"
-            }
-          ],
-          "apiCalls": [
-            {
-              "endpoint": "/api/mock/user-preferences",
-              "method": "POST"
-            }
-          ],
-          "dataBindings": [
-            {
-              "source": "state.theme",
-              "target": "page-background.tint"
-            }
-          ],
-          "emits": [
-            "theme-changed"
-          ],
-          "listens": [],
-          "triggersDownstream": [
-            {
-              "eventName": "theme-changed",
-              "targetNodeIds": [
-                "page-background"
-              ],
-              "toleranceMs": 500
-            }
-          ]
-        },
-        "stateEffects": [
-          "layer-swap"
-        ],
+        "caption": "Feature card 1 — AI-Powered. Floating sci-fi card-relic; central element is a glassy fiber-optic orb (the AI signifier): a polished obsidian sphere with intricate turquoise glowing fiber strands looping around its surface, suggesting neural pathways. The orb slowly rotates as an i2v keyframe loop (method 3, 24 frames). The card silhouette is a subtle frosted-acrylic plinth around the orb. MSDF labels rendered at runtime: title 'AI-POWERED' + body 'Generate cinematic video from a single prompt.'",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "idle-rotate"],
         "visualSpec": {
-          "sourceAsset": "theme-selector-button",
-          "animationSpec": {
-            "method": 2
-          },
-          "textContent": []
+          "sourceAsset": "feature-card-ai",
+          "animationSpec": { "method": 3, "fps": 24, "frameCount": 24 },
+          "textContent": [
+            { "text": "AI-POWERED", "role": "title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 28, "fontWeight": 700, "color": "#ffffff" }, "position": { "x": 210, "y": 320, "anchor": "center" } },
+            { "text": "Generate cinematic video from a single prompt.", "role": "body", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 400, "color": "#cbd5ff" }, "position": { "x": 210, "y": 370, "anchor": "center" } }
+          ],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "feature-card-ai", "defaultAlpha": 1.0 }]
         },
-        "contracts": {
-          "inputs": {
-            "theme": "z.enum(['light', 'dark', 'system'])"
-          },
-          "outputs": {
-            "theme": "z.enum(['light', 'dark', 'system'])"
-          }
-        }
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "card", "visualNouns": ["obsidian orb", "neural fibers", "fiber-optic", "polished sphere", "feature card"], "material": "polished obsidian + turquoise fiber-optic glow", "finish": "high-gloss", "textureProfile": "luminescent veins" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
       },
-      "codeRef": "nodes/theme-selector-button.js",
-      "backendRef": "backends/user-preferences.js"
+      "codeRef": "nodes/feature-card-bg.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "feature-card-3d",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "feature-card-3d",
+        "transform": { "x": 560, "y": 940, "width": 420, "height": 420, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 24
+      },
+      "intent": {
+        "caption": "Feature card 2 — 3D-Native. Floating sci-fi card-relic; central element is a brushed-bronze 3D wireframe polyhedron (an icosahedron carved from cast bronze with thin turquoise rune-channels along its edges). Lift-hover on pointerover. MSDF labels: title '3D-NATIVE' + body 'Renders volumetric scenes natively.'",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover"],
+        "visualSpec": {
+          "sourceAsset": "feature-card-3d",
+          "animationSpec": { "method": 2 },
+          "textContent": [
+            { "text": "3D-NATIVE", "role": "title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 28, "fontWeight": 700, "color": "#ffffff" }, "position": { "x": 210, "y": 320, "anchor": "center" } },
+            { "text": "Renders volumetric scenes natively.", "role": "body", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 400, "color": "#cbd5ff" }, "position": { "x": 210, "y": 370, "anchor": "center" } }
+          ],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "feature-card-3d", "defaultAlpha": 1.0 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "card", "visualNouns": ["icosahedron", "wireframe", "brushed bronze", "polyhedron", "feature card"], "material": "brushed cast bronze + turquoise rune channels", "finish": "patina", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/feature-card-bg.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "feature-card-cinematic",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "feature-card-cinematic",
+        "transform": { "x": 1040, "y": 940, "width": 420, "height": 420, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 24
+      },
+      "intent": {
+        "caption": "Feature card 3 — Cinematic. Floating sci-fi card-relic; central element is an ornate brushed-titanium film-reel artifact embedded with a single luminescent turquoise gem at its hub, suggesting cinematic quality. Lift-hover on pointerover. MSDF labels: title 'CINEMATIC' + body 'Studio-grade output, ready to share.'",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover"],
+        "visualSpec": {
+          "sourceAsset": "feature-card-cinematic",
+          "animationSpec": { "method": 2 },
+          "textContent": [
+            { "text": "CINEMATIC", "role": "title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 28, "fontWeight": 700, "color": "#ffffff" }, "position": { "x": 210, "y": 320, "anchor": "center" } },
+            { "text": "Studio-grade output, ready to share.", "role": "body", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 16, "fontWeight": 400, "color": "#cbd5ff" }, "position": { "x": 210, "y": 370, "anchor": "center" } }
+          ],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "feature-card-cinematic", "defaultAlpha": 1.0 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "card", "visualNouns": ["film reel", "brushed titanium", "turquoise gem", "cinematic artifact", "feature card"], "material": "brushed titanium + turquoise gem", "finish": "polished", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/feature-card-bg.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "showcase-tile-1",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "showcase-tile-1",
+        "transform": { "x": 80, "y": 1440, "width": 320, "height": 320, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 16,
+        "frameCount": 24
+      },
+      "intent": {
+        "caption": "Showcase tile 1 — sample output: a stylized cosmic nebula scene framed inside a holographic tile with thin oxidized-copper borders. Interior content runs as an i2v keyframe loop (method 3, 24 frames): purple-magenta gas clouds, scattered stars, slow rotating motion. Tap plays an expanded preview.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "play-preview" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["play-preview"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "i2v-loop"],
+        "visualSpec": { "sourceAsset": "showcase-tile-1", "animationSpec": { "method": 3, "fps": 24, "frameCount": 24 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "showcase-tile-1", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "tile", "visualNouns": ["nebula", "cosmic clouds", "holographic frame", "oxidized copper border", "showcase tile"], "material": "oxidized copper border + volumetric interior", "finish": "patina + glow", "textureProfile": "atmospheric" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/showcase-tile.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "showcase-tile-2",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "showcase-tile-2",
+        "transform": { "x": 420, "y": 1440, "width": 320, "height": 320, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 16,
+        "frameCount": 24
+      },
+      "intent": {
+        "caption": "Showcase tile 2 — sample output: a stylized cyberpunk cityscape (silhouette skyscrapers under a sodium-lit sky) framed inside a holographic tile with thin oxidized-copper borders. Interior runs as an i2v keyframe loop (method 3, 24 frames). Tap plays an expanded preview.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "play-preview" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["play-preview"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "i2v-loop"],
+        "visualSpec": { "sourceAsset": "showcase-tile-2", "animationSpec": { "method": 3, "fps": 24, "frameCount": 24 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "showcase-tile-2", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "tile", "visualNouns": ["cyberpunk city", "skyscrapers", "sodium sky", "holographic frame", "showcase tile"], "material": "oxidized copper border + cinematic interior", "finish": "patina + glow", "textureProfile": "atmospheric" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/showcase-tile.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "showcase-tile-3",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "showcase-tile-3",
+        "transform": { "x": 760, "y": 1440, "width": 320, "height": 320, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 16,
+        "frameCount": 24
+      },
+      "intent": {
+        "caption": "Showcase tile 3 — sample output: a stylized organic alien creature silhouette (bioluminescent jellyfish-like form) framed inside a holographic tile with thin oxidized-copper borders. Interior runs as an i2v keyframe loop (method 3, 24 frames). Tap plays an expanded preview.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "play-preview" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["play-preview"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "i2v-loop"],
+        "visualSpec": { "sourceAsset": "showcase-tile-3", "animationSpec": { "method": 3, "fps": 24, "frameCount": 24 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "showcase-tile-3", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "tile", "visualNouns": ["alien creature", "bioluminescent jellyfish", "organic form", "holographic frame", "showcase tile"], "material": "oxidized copper border + organic interior", "finish": "patina + glow", "textureProfile": "atmospheric" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/showcase-tile.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "showcase-tile-4",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "showcase-tile-4",
+        "transform": { "x": 1100, "y": 1440, "width": 320, "height": 320, "z": 5 },
+        "shape": "rounded",
+        "shapeRadius": 16,
+        "frameCount": 24
+      },
+      "intent": {
+        "caption": "Showcase tile 4 — sample output: a stylized abstract liquid-metal scene (silver chrome forming and reforming) framed inside a holographic tile with thin oxidized-copper borders. Interior runs as an i2v keyframe loop (method 3, 24 frames). Tap plays an expanded preview.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "play-preview" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["play-preview"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "i2v-loop"],
+        "visualSpec": { "sourceAsset": "showcase-tile-4", "animationSpec": { "method": 3, "fps": 24, "frameCount": 24 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "showcase-tile-4", "defaultAlpha": 1.0 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "tile", "visualNouns": ["liquid metal", "chrome", "abstract form", "holographic frame", "showcase tile"], "material": "oxidized copper border + chrome interior", "finish": "patina + reflective", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/showcase-tile.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "stats-counter",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "stats-counter",
+        "transform": { "x": 400, "y": 1820, "width": 736, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
+      },
+      "intent": {
+        "caption": "Live ticker ribbon — long thin frosted-acrylic pill spanning the lower-mid region. Internal soft turquoise glow. Carries a live MSDF counter that increments on every hero CTA click (bound to state.heroCtaClicks via the analytics backend). MSDF text shows the running tally and a label like 'videos generated'.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [{ "endpoint": "/api/mock/analytics", "method": "GET" }], "dataBindings": [{ "source": "state.heroCtaClicks", "target": "visual.text" }], "emits": [], "listens": ["cta-clicked"], "triggersDownstream": [] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": {
+          "sourceAsset": "stats-counter",
+          "animationSpec": { "method": 1 },
+          "textContent": [
+            { "text": "0", "role": "counter", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 32, "fontWeight": 700, "color": "#4da6ff" }, "position": { "x": 250, "y": 30, "anchor": "center" } },
+            { "text": "VIDEOS GENERATED", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 480, "y": 30, "anchor": "center" } }
+          ],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "stats-counter", "defaultAlpha": 1.0 }]
+        },
+        "contracts": { "inputs": {}, "outputs": { "totalClicks": "z.number()", "sessions": "z.number()", "avgSessionTime": "z.number()" } },
+        "samHints": { "elementType": "ticker", "visualNouns": ["thin pill", "ribbon", "frosted acrylic", "live counter"], "material": "frosted acrylic + turquoise glow", "finish": "translucent", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/stats-live-counter.js",
+      "backendRef": "backends/analytics.js"
+    },
+    {
+      "nodeId": "footer-logo",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-logo",
+        "transform": { "x": 80, "y": 1940, "width": 160, "height": 80, "z": 10 },
+        "shape": "rounded",
+        "shapeRadius": 12
+      },
+      "intent": {
+        "caption": "Footer brand sigil — smaller variant of the navbar logo (same gem cluster motif, downscaled and slightly dimmed). Tap navigates home.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate-home" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [{ "eventName": "navigate", "targetNodeIds": ["hub-router"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "footer-logo", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-logo", "defaultAlpha": 0.8 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "logo", "visualNouns": ["sigil", "gem cluster", "footer mark"], "material": "polished obsidian + cast bronze", "finish": "matte", "textureProfile": "high-contrast" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered-edge" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-logo.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-link-privacy",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-link-privacy",
+        "transform": { "x": 320, "y": 1960, "width": 140, "height": 40, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 20
+      },
+      "intent": {
+        "caption": "Footer link pill — Privacy. Small frosted-acrylic pill with a thin etched glyph (lock or shield, faint turquoise glow). MSDF label 'PRIVACY' centered.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": {
+          "sourceAsset": "footer-link-privacy",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "PRIVACY", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 20, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-link-privacy", "defaultAlpha": 0.78 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "footer-link", "visualNouns": ["thin pill", "footer link", "frosted acrylic"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "muted" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-link.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-link-terms",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-link-terms",
+        "transform": { "x": 480, "y": 1960, "width": 140, "height": 40, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 20
+      },
+      "intent": {
+        "caption": "Footer link pill — Terms. Small frosted-acrylic pill with a thin etched glyph (scroll or paper). MSDF label 'TERMS' centered.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": {
+          "sourceAsset": "footer-link-terms",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "TERMS", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 20, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-link-terms", "defaultAlpha": 0.78 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "footer-link", "visualNouns": ["thin pill", "footer link", "frosted acrylic"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "muted" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-link.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-link-careers",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-link-careers",
+        "transform": { "x": 640, "y": 1960, "width": 140, "height": 40, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 20
+      },
+      "intent": {
+        "caption": "Footer link pill — Careers. Small frosted-acrylic pill with a thin etched glyph (briefcase or constellation). MSDF label 'CAREERS' centered.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": {
+          "sourceAsset": "footer-link-careers",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "CAREERS", "role": "label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 14, "fontWeight": 500, "color": "#cbd5ff" }, "position": { "x": 70, "y": 20, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-link-careers", "defaultAlpha": 0.78 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "footer-link", "visualNouns": ["thin pill", "footer link", "frosted acrylic"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "muted" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-link.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-newsletter-pill",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-newsletter-pill",
+        "transform": { "x": 820, "y": 1950, "width": 200, "height": 60, "z": 10 },
+        "shape": "pill",
+        "shapeRadius": 30
+      },
+      "intent": {
+        "caption": "Footer newsletter input pill — slightly larger frosted-acrylic pill with a small turquoise envelope glyph at the left and a soft inner glow suggesting input affordance. MSDF placeholder 'subscribe@voltus' centered. Tap opens the newsletter modal.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "open-modal" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [{ "endpoint": "/api/mock/newsletter-subscribe", "method": "POST" }], "dataBindings": [], "emits": ["open-modal"], "listens": [], "triggersDownstream": [{ "eventName": "open-modal", "targetNodeIds": ["newsletter-modal"], "toleranceMs": 500 }] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": {
+          "sourceAsset": "footer-newsletter-pill",
+          "animationSpec": { "method": 2 },
+          "textContent": [{ "text": "subscribe@voltus", "role": "placeholder", "renderMethod": "msdf", "typography": { "fontFamily": "Inter-Variable", "fontSize": 14, "fontWeight": 400, "color": "#9ca3af" }, "position": { "x": 100, "y": 30, "anchor": "center" } }],
+          "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-newsletter-pill", "defaultAlpha": 0.85 }]
+        },
+        "contracts": { "inputs": { "email": "z.string()" }, "outputs": {} },
+        "samHints": { "elementType": "input", "visualNouns": ["pill", "envelope glyph", "frosted acrylic", "newsletter input"], "material": "frosted acrylic", "finish": "translucent", "textureProfile": "muted" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "feathered" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-newsletter-pill.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-social-twitter",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-social-twitter",
+        "transform": { "x": 1100, "y": 1960, "width": 80, "height": 80, "z": 10 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Footer social sigil — X/Twitter. Small ornate sci-fi mark in the spirit of an X-glyph engraved into oxidized copper. Lift-hover; tap opens external X profile.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "external-navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["external-navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "footer-social-twitter", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-social-twitter", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "social-icon", "visualNouns": ["X glyph", "oxidized copper", "engraved sigil"], "material": "oxidized copper", "finish": "patina", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered-edge" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-social.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-social-github",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-social-github",
+        "transform": { "x": 1200, "y": 1960, "width": 80, "height": 80, "z": 10 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Footer social sigil — GitHub. Small ornate sci-fi mark in the spirit of a tentacled-cat-glyph engraved into oxidized copper. Lift-hover; tap opens external GitHub.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "external-navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["external-navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "footer-social-github", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-social-github", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "social-icon", "visualNouns": ["GitHub glyph", "oxidized copper", "engraved sigil"], "material": "oxidized copper", "finish": "patina", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered-edge" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-social.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "footer-social-discord",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "footer-social-discord",
+        "transform": { "x": 1300, "y": 1960, "width": 80, "height": 80, "z": 10 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Footer social sigil — Discord. Small ornate sci-fi mark in the spirit of a Discord controller-glyph engraved into oxidized copper. Lift-hover; tap opens external Discord server.",
+        "behaviorSpec": { "interactions": [{ "event": "pointertap", "effect": "external-navigate" }, { "event": "pointerover", "effect": "lift-hover" }], "apiCalls": [], "dataBindings": [], "emits": ["external-navigate"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["lift-hover", "scale-press"],
+        "visualSpec": { "sourceAsset": "footer-social-discord", "animationSpec": { "method": 2 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "footer-social-discord", "defaultAlpha": 0.85 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "social-icon", "visualNouns": ["Discord glyph", "oxidized copper", "engraved sigil"], "material": "oxidized copper", "finish": "patina", "textureProfile": "metallic" },
+        "alphaCutout": { "necessity": "hard", "backgroundAffinity": "dark", "antialiasHint": "feathered-edge" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/footer-social.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "decorative-orb-tl",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "decorative-orb-tl",
+        "transform": { "x": 120, "y": 420, "width": 80, "height": 80, "z": 2 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Decorative cosmic orb — top-left. A floating bioluminescent sphere, glassy obsidian core wrapped in a thin oxidized-copper meridian band, soft turquoise inner glow. Idle pulse animation only; non-interactive ambient decoration. Cast a soft cool point light.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": { "sourceAsset": "decorative-orb-tl", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "decorative-orb-tl", "defaultAlpha": 0.7 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "decoration", "visualNouns": ["orb", "sphere", "obsidian", "copper meridian", "cosmic"], "material": "obsidian core + oxidized copper band", "finish": "polished", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/decorative-orb.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "decorative-orb-tr",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "decorative-orb-tr",
+        "transform": { "x": 1336, "y": 420, "width": 80, "height": 80, "z": 2 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Decorative cosmic orb — top-right. Mirror of decorative-orb-tl, slightly different micro-detail (different rune-pattern on its meridian). Idle pulse only.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": { "sourceAsset": "decorative-orb-tr", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "decorative-orb-tr", "defaultAlpha": 0.7 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "decoration", "visualNouns": ["orb", "sphere", "obsidian", "copper meridian", "cosmic"], "material": "obsidian core + oxidized copper band", "finish": "polished", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/decorative-orb.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "decorative-orb-bl",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "decorative-orb-bl",
+        "transform": { "x": 120, "y": 1180, "width": 80, "height": 80, "z": 2 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Decorative cosmic orb — bottom-left. Mirror of decorative-orb-tl with warmer amber inner glow rather than turquoise. Idle pulse only.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": { "sourceAsset": "decorative-orb-bl", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "decorative-orb-bl", "defaultAlpha": 0.7 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "decoration", "visualNouns": ["orb", "sphere", "obsidian", "copper meridian", "amber glow"], "material": "obsidian core + oxidized copper band", "finish": "polished", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/decorative-orb.js",
+      "backendRef": null
+    },
+    {
+      "nodeId": "decorative-orb-br",
+      "subtype": "frontend-element",
+      "parentHubId": "home-hub",
+      "serviceTag": "main",
+      "visual": {
+        "sourceAsset": "decorative-orb-br",
+        "transform": { "x": 1336, "y": 1180, "width": 80, "height": 80, "z": 2 },
+        "shape": "circle"
+      },
+      "intent": {
+        "caption": "Decorative cosmic orb — bottom-right. Mirror of decorative-orb-tr with warmer amber inner glow. Idle pulse only.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["idle-pulse"],
+        "visualSpec": { "sourceAsset": "decorative-orb-br", "animationSpec": { "method": 1 }, "textContent": [], "layers": [{ "id": "base", "type": "sprite", "z": 0, "region": "decorative-orb-br", "defaultAlpha": 0.7 }] },
+        "contracts": { "inputs": {}, "outputs": {} },
+        "samHints": { "elementType": "decoration", "visualNouns": ["orb", "sphere", "obsidian", "copper meridian", "amber glow"], "material": "obsidian core + oxidized copper band", "finish": "polished", "textureProfile": "luminescent" },
+        "alphaCutout": { "necessity": "soft", "backgroundAffinity": "dark", "antialiasHint": "preserve-glow-halo" },
+        "visibility": { "renderInCurrentMockup": true }
+      },
+      "codeRef": "nodes/decorative-orb.js",
+      "backendRef": null
     }
   ],
   "edges": [
-    {
-      "from": "navbar-logo",
-      "to": "hub-router",
-      "type": "triggers",
-      "event": "navigate"
-    },
-    {
-      "from": "navbar-link-home",
-      "to": "hub-router",
-      "type": "triggers",
-      "event": "navigate"
-    },
-    {
-      "from": "navbar-link-editor",
-      "to": "hub-router",
-      "type": "triggers",
-      "event": "navigate"
-    },
-    {
-      "from": "navbar-link-docs",
-      "to": "hub-router",
-      "type": "triggers",
-      "event": "navigate"
-    },
-    {
-      "from": "navbar-signin-btn",
-      "to": "signin-modal",
-      "type": "triggers",
-      "event": "open-modal"
-    },
-    {
-      "from": "hero-card-cta",
-      "to": "build-panel",
-      "type": "triggers",
-      "event": "build-flow-started"
-    },
-    {
-      "from": "notifications-toggle",
-      "to": "user-preferences-store",
-      "type": "state-update",
-      "event": "notifications-enabled"
-    }
+    { "from": "navbar-logo", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "navbar-link-home", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "navbar-link-generate", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "navbar-link-gallery", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "navbar-link-pricing", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "navbar-cta-signin", "to": "signin-modal", "type": "triggers", "event": "open-modal" },
+    { "from": "side-rail-settings", "to": "settings-panel", "type": "triggers", "event": "open-panel" },
+    { "from": "side-rail-notifications", "to": "notifications-drawer", "type": "triggers", "event": "open-panel" },
+    { "from": "side-rail-profile", "to": "profile-menu", "type": "triggers", "event": "open-panel" },
+    { "from": "hero-portal-frame", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "hero-cta-primary", "to": "stats-counter", "type": "data-flow", "event": "cta-clicked" },
+    { "from": "hero-scroll-indicator", "to": "feature-card-ai", "type": "navigates-to", "event": "scroll-to" },
+    { "from": "feature-card-ai", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "feature-card-3d", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "feature-card-cinematic", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "showcase-tile-1", "to": "preview-modal", "type": "triggers", "event": "play-preview" },
+    { "from": "showcase-tile-2", "to": "preview-modal", "type": "triggers", "event": "play-preview" },
+    { "from": "showcase-tile-3", "to": "preview-modal", "type": "triggers", "event": "play-preview" },
+    { "from": "showcase-tile-4", "to": "preview-modal", "type": "triggers", "event": "play-preview" },
+    { "from": "footer-logo", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "footer-link-privacy", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "footer-link-terms", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "footer-link-careers", "to": "hub-router", "type": "triggers", "event": "navigate" },
+    { "from": "footer-newsletter-pill", "to": "newsletter-modal", "type": "triggers", "event": "open-modal" }
   ]
 }

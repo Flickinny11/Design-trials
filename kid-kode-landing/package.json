@@ -12,7 +12,9 @@
     "build": "npm run build:prism && next build",
     "start": "next start",
     "lint": "next lint",
-    "verify:prism": "node scripts/verify-prism.mjs"
+    "verify:prism": "node scripts/verify-prism.mjs",
+    "verify:repair-loop": "node scripts/verify-repair-loop.mjs",
+    "verify": "npm run verify:prism && npm run verify:repair-loop"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.5",
