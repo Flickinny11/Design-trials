@@ -51,3 +51,5 @@ Phase 2.0.
 ## Ralph iterations
 
 (populated by /ralph-step on each iteration)
+
+- iter 1 - T01 phase 1 - foundation deps (three@^0.184, three-msdf-text-webgpu@^2.1, PrismNode 5 fields, runtime/shared/* stubs) - 2fdb4b4
