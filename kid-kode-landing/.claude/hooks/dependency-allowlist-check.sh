@@ -67,7 +67,10 @@ RUNTIME_ALLOW=(
   "simplex-noise"
   "tailwind-merge"
   "three"
+  "three-msdf-text-webgpu"
   "three/examples/jsm/controls/OrbitControls"
+  "three/tsl"
+  "three/webgpu"
   "zustand"
   "zustand/middleware"
 )
