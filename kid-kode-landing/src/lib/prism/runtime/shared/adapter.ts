@@ -16,9 +16,9 @@ import type {
   PrismNode,
   ScenePosition,
 } from '@/lib/prism-graph/types';
-import type { CinematicPrimitiveRef } from '@/lib/prism-graph/cinematic-primitives';
 import type { LoaderCacheHandle } from './loaders';
 import type { FontAtlasHandle } from './text';
+import type { CinematicPrimitivesAPI } from './primitives/types';
 
 /** Per-node creation context passed to user-supplied `createNode` functions.
  *  Mirrors the spec §8 NodeContext interface; concrete instances are built
@@ -38,12 +38,12 @@ export interface NodeContext {
   glbLoader: NodeGLBLoader;
   /** MSDF font atlas. Throws on createText() until ready. */
   fontAtlas: FontAtlasHandle;
-  /** Cinematic primitives library lookup. Filled in T03; placeholder
-   *  shape here keeps the adapter independent of T03 progress. */
-  primitives: Record<
-    CinematicPrimitiveRef['name'],
-    (target: Object3D, params: CinematicPrimitiveRef['params']) => unknown
-  >;
+  /** Cinematic primitives library, curried with the runtime
+   *  `PrimitiveContext`. Node code calls
+   *  `ctx.primitives[name](target, params)`; the runtime supplies the
+   *  third `PrimitiveContext` argument behind the scenes. See
+   *  `./primitives/index.ts::makePrimitivesAPI`. */
+  primitives: CinematicPrimitivesAPI;
   /** Event bus for navigation / state transitions. */
   emit: (event: string, payload: unknown) => void;
 }
