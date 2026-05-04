@@ -1,549 +1,234 @@
 {
   "schemaVersion": "1.1",
-  "updatedAt": "2026-04-28T18:35:34Z",
-  "currentIteration": 21,
-  "maxIterations": 500,
+  "createdAt": "2026-05-04T21:49:00Z",
+  "updatedAt": "2026-05-04T21:49:00Z",
+  "currentIteration": 0,
+  "maxIterations": 50,
+  "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
-  "status": "complete",
+  "status": "running",
+  "branch": "prism-renderer-ralph",
+  "project": "Prism Renderer Migration (PixiJS -> Three.js WebGPU)",
+  "spec": {
+    "primary": "kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md",
+    "primitives": "kid-kode-landing/docs/prism/CINEMATIC-PRIMITIVES-LIBRARY.md",
+    "extract": "kid-kode-landing/notes/prism-renderer-spec-extract.md",
+    "rules": ".claude/rules/prism-renderer-migration.md"
+  },
   "tasks": [
     {
-      "id": "T00",
-      "title": "Lock §10.19 artifact-layout assertion as a reusable test",
-      "specRefs": [
-        "§10.19",
-        "§3.1"
-      ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db",
-      "verifiedAt": "2026-04-22T14:59:03Z",
-      "notes": "Verified without implementation; pre-existing .prism artifact satisfies §10.19. tests/artifact-layout.test.mjs locks the contract — 9 assertions against `unzip -l` output cover manifest.json, graph.json, nodes/*.js, backends/*.js, assets/atlas-0.avif, MSDF metadata+png, meta/version.txt, and no-unexpected-top-level. Test passed on first run against artifactHash 5ef2cba1 (36-entry archive). SHOULD-FIX (tracked by T03): current archive uses font-inter.msdf.fnt; §5.4 emits .msdf.json — test accepts either for T00 since the audit verified both §10.19 and the current layout; T03 reconciles with §3.1."
-    },
-    {
       "id": "T01",
-      "title": "Wire hub-router nav scroll + active-section indicator",
+      "title": "Foundation - deps, PrismNode schema additions, stub files",
+      "phase": 1,
       "specRefs": [
-        "§10.14",
-        "§7.4"
+        "§1 - PRISM-RENDERER-MIGRATION-SPEC.md §3 (Tech Stack) + §4 (GraphNode Schema)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "32a09e24",
-      "verifiedAt": "2026-04-22T15:50:11Z",
-      "notes": "Implemented src/lib/prism/player/hub-router.ts (virtual routing node) + window.__prism debug handle + navbar-link active-section latch. buildHomeHubRoutes() derives scroll targets from graph section-bg y positions. Playwright test tests/lib/prism/player/T01.test.mjs (8 checks) exercises nav + lock transfer end-to-end; all three gates pass (verify:prism 15/15, browser-smoke 6/6, T01 8/8). SHOULD-FIX (tracked): (a) scrollY targets use raw section-bg y — may hide section headers under navbar; consider header-pad offset. (b) sectionId↔link-label mapping (editor→hero, docs→features, pricing→settings) is confusing; rename one side. (c) routes exposed as live Map rather than ReadonlyMap facade. (d) container.__debug + window.__prism are unconditional in prod — consider a single __PRISM_DEBUG gate covering __prism + __prismBreakNode together. (e) scroll-viewport gsap.to on anonymous target stacks tweens if navigate fires mid-flight — needs gsap.killTweensOf. OPTIONAL: console.debug for unrouted sources; fold navbar-link external subscriptions into a helper. MUST FIX (resolved in this commit): progress log update added per CLAUDE.md rule requiring source-change commits to touch notes/prism-mock-progress.md."
+      "haltCheck": "three-msdf-text-webgpu added to package.json. PrismNode interface in src/lib/prism-graph/types.ts gains renderMode/depthMapUrl/meshUrl/cinematicPrimitives/scenePosition (all additive, defaults applied). cinematic-primitives.ts shared type exists. Stub files at src/lib/prism/runtime/shared/{scene-root,loaders,text}.ts. npx tsc --noEmit clean.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -f kid-kode-landing/src/lib/prism-graph/cinematic-primitives.ts || test -f kid-kode-landing/src/lib/prism/runtime/shared/cinematic-primitives.ts",
+        "grep -q renderMode kid-kode-landing/src/lib/prism-graph/types.ts",
+        "grep -q cinematicPrimitives kid-kode-landing/src/lib/prism-graph/types.ts",
+        "grep -q scenePosition kid-kode-landing/src/lib/prism-graph/types.ts"
+      ],
+      "tddRequired": false,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T02",
-      "title": "Add responsive breakpoints to home-hub and boot",
+      "title": "Renderer infrastructure - SceneRoot, LoaderCache, MSDF, hub manager, adapter",
+      "phase": 2,
       "specRefs": [
-        "§10.15",
-        "§14"
+        "§2 - PRISM-RENDERER-MIGRATION-SPEC.md §11 (Bundle Assembly) + §12 (Hub Manager)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
-      "verifiedAt": "2026-04-22T16:10:31Z",
-      "notes": "Implemented src/lib/prism/player/breakpoints.mjs (pure helper: classifyBreakpoint / resolveTransform / isVisibleAtBreakpoint) + .d.ts typings. Boot.ts picks currentBreakpoint from window.innerWidth (falls back to hub.layout.viewportWidth), filters nodes via isVisibleAtBreakpoint, resolves transforms via resolveTransform on both initial mount and SHR rebuildNode, exposes {currentBreakpoint, hiddenNodeIds} on window.__prism. home-hub.json gains transformByBreakpoint on 6 representatives (navbar-bg, hero-card-bg, feature-card-1-bg, settings-section-bg, stats-card-bg, footer-bg) and visibleAtBreakpoints excluding mobile on navbar-link-{editor,docs,pricing}+navbar-signin-btn. tests/lib/prism/player/T02.test.mjs — 35 checks across 5 phases (A helper, B data, C artifact, D boot wiring, E Playwright at 1920+720) all pass; verify:prism 15/15; browser-smoke 6/6. New artifactHash cfef6867f78c…. SHOULD-FIX (tracked): (a) fallback chain makes base transform unreachable at desktop-wide when a desktop override is declared — navbar-bg at 1920 resolves to the 1440 desktop override, not the base 1920; either declare desktop-wide explicitly on reflow nodes or treat base as implicit desktop-wide. (b) desktop-wide is a 4th key beyond schema extract L615-620 (desktop|tablet|mobile) — spec §10.15 names four viewports but schema names three; worth making §3/schema update explicit. (c) live resize not wired; mount-time-only currentBreakpoint. Window resize across 1024 leaves stale transforms. §10.15 admits mount-time reading but follow-up task should hook window.resize → reclassify + diff-rebuild. (d) only 6/40 nodes declare overrides; child elements of reflowed containers (hero-card-cta, headline/subhead, feature card icons/titles, footer links, etc.) will render off-screen at 720-wide. Wiring is proven; production mobile layout is not. (e) MountResult interface does not surface currentBreakpoint/hiddenNodeIds — only __prism debug handle does; non-debug consumers have to go through the global. (f) rebuildNode returns null for both hidden-at-breakpoint and missing-source — SHR repair cannot distinguish. OPTIONAL: breakpoints.d.ts could be breakpoints.d.mts for strict moduleResolution node16; classifyBreakpoint(NaN) defaults to desktop-wide (document); T02 phase-E depends on pre-existing .next build + artifact (brittle for hand runs)."
+      "haltCheck": "SceneRoot mounts a WebGPU/WebGL2 renderer + camera + lights + render loop. LoaderCache wraps TextureLoader + GLTFLoader. MSDF font atlas loader works. Hub manager activate/deactivate cycles work with THREE.Group. Adapter maps PrismGraph -> scene tree. Test harness renders a sample scene at 60 fps WebGPU / >=45 fps WebGL2.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T03",
-      "title": "Reconcile .prism artifact layout with §3.1",
+      "title": "Cinematic primitives library - 9 primitives + 6 TSL shaders",
+      "phase": 3,
       "specRefs": [
-        "§3.1",
-        "§10.19"
+        "§3 - CINEMATIC-PRIMITIVES-LIBRARY.md (all 9 primitives + 6 TSL shaders)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
-      "verifiedAt": "2026-04-22T16:35:00Z",
-      "notes": "Chose the additive path — kept both msdf metadata formats in the archive. build-msdf.mjs now runs generateBMFont twice (outputTypes 'xml' + 'json') and writes .fnt (pixi-consumable), .png (same bytes), and .msdf.json (BMFont JSON shape, pages[] normalised to 'font-inter.msdf.png'). build-prism.mjs bundles assets/font-inter.msdf.json alongside the existing .fnt+.png and hard-exits if it is missing (§10.19 demands exact §3.1 layout). Authored src/lib/prism/mock-app-source/schemas/shared-types.js — zero-dep descriptor-style schemas (HeroClickCounter, UserPreferences, AnalyticsSummary) with `specRef` fields that document the corresponding z.<x>() call a production build would compile. addDirIfPresent in build-prism.mjs picks up the new .js automatically. T03 test (tests/lib/prism/mock-app-source/T03.test.mjs) covers 11 checks: archive + manifest.entries presence for both new files, manifest.assets sha256+size entry for the .msdf.json, BMFont JSON shape (info/common/pages/chars) with required glyph fields, scaleW/scaleH↔PNG dim sanity, shared-types.js is valid ESM with ≥1 exported binding (+ dynamic-import smoke), HeroClickCounter+clickCount string presence, and on-disk source-of-truth existence. Spec-reviewer MUST FIX resolved: AnalyticsEvent (bogus {event,nodeId}) → AnalyticsSummary {totalClicks,sessions,avgSessionTime} per §6 line 1004-1005 + backends/analytics.js. Also resolved 2 SHOULD FIX inline: renamed `ref` → `specRef` on primitive descriptors; elevated build-prism missing-msdf.json branch from warn to exit(1). Browser-smoke first-run showed a borderline `runtime.mounted` timeout (still LOADING at 3.5s); second run and every subsequent run passed 6/6 cleanly — attributed to cold Next-start + ~5KB larger artifact; .fnt runtime bytes are identical. SHOULD-FIX (tracked, deferred): (a) build-msdf trust-two-parallel-runs-are-deterministic assumption is asserted in comment but not enforced; safer is to parse XML→JSON in-process or assert `xmlOut.textures[0].texture.equals(jsonOut.textures[0].texture)` after both runs to catch silent packer nondeterminism. (b) shared-types.js symbol naming `Number$/String$/Boolean$` — distinctive but shadow global constructors visually; `zNumber/zString/zBoolean` reads cleaner. (c) home-hub.json contract coverage gap — only hero-card-cta declares contracts; UserPreferences/AnalyticsSummary have no corresponding `contracts.outputs` entry on any node, so the schema module technically ships dead code from the graph's perspective. (d) Promise.all parallel generateBMFont is fine today but if the XML→JSON in-process path is adopted (see a), sequentialise to reduce heap pressure. OPTIONAL: build-prism's citation comment duplicates build-msdf's header."
+      "haltCheck": "All 9 primitives implemented under src/lib/prism/runtime/shared/primitives/. All 6 TSL shaders implemented under src/lib/prism/runtime/shared/shaders/. Each primitive has a demo scene + visual regression test. 60 fps WebGPU / >=45 fps WebGL2.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run tests/shaders --reporter=basic",
+        "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T04",
-      "title": "Verify §10.3 — dev server boots + serves .prism",
+      "title": "Codegen prompts and verification rules",
+      "phase": 4,
       "specRefs": [
-        "§10.3"
+        "§4 - PRISM-RENDERER-MIGRATION-SPEC.md §9 (Codegen Prompts) + §10 (Verifier Rules)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
-      "verifiedAt": "2026-04-22T16:44:00Z",
-      "notes": "Verified without implementation; pre-existing `dev` npm script (`npm run build:prism && next dev`) satisfies §10.3. tests/lib/prism/player/T04.test.mjs locks the contract — 8 assertions: (1) `npm run dev -- -p 4780` boots the Next dev server and answers HTTP 200 at `/`; (2) `.prism` artifact is present on disk after dev boot; (3) artifact mtime is ≥ pre-spawn mtime (proves build:prism ran as part of dev); (4) artifact body is non-empty (>1KB); (5) `page.goto('/')` returns 200; (6) ≥1 <canvas> in the DOM; (7) Playwright captured ≥1 request to /prism-assets/mock-app.prism during page boot; (8) direct GET /prism-assets/mock-app.prism returns 200 with non-empty body. Ran against artifactHash efd5f0f5… (unchanged; deterministic rebuild during `npm run dev`). Skipped step 8/9 per /ralph-step step 6 directive for already-satisfied tasks. SHOULD-FIX (tracked, deferred): (a) artifact mtime accepts equality — a 1ms re-run could pass with an untouched file; tightening to strict > is safer but fragile. (b) 120s waitForServer ceiling picked to cover cold build:prism + next dev compile; real cold-start ran ~60s in this iteration — ceiling could be halved once the build is optimized. (c) test relies on npm trailing-args forwarding (`npm run dev -- -p 4780` → `next dev -p 4780`) which depends on the `&&` shape of the dev script; if the script is rewritten with an explicit port, the `-- -p` mechanism breaks silently (test fails with a port collision, not a clear message). (d) no assertion that the server is specifically `next dev` and not `next start` — a regression that switches the dev script to `start` would still pass. OPTIONAL: could parse manifest.json inside the artifact and assert manifest.version/artifactHash shape for extra §3.1 cross-lock, though T00's artifact-layout test already owns that."
+      "haltCheck": "5 sample node modules generated correctly. Verifier ruleset accepts spec-compliant code and rejects deviations (TextGeometry, async createNode, document.*, window.* except devicePixelRatio). Plan-output hook populates renderMode + cinematicPrimitives. PixiJS imports flagged.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run tests/unit --reporter=basic"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T05",
-      "title": "Verify §10.4 — / route shows split pane (PixiJS left, 3D graph right)",
+      "title": "Bundle assembly + runtime integration + PixiJS removal",
+      "phase": 5,
       "specRefs": [
-        "§10.4"
+        "§5 - PRISM-RENDERER-MIGRATION-SPEC.md §11 (Bundle Assembly) + §15 (Removed)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
-      "verifiedAt": "2026-04-22T16:56:43Z",
-      "notes": "Added `data-pane=\"preview\"` / `data-pane=\"graph\"` markers to the desktop split-pane wrappers in src/app/page.tsx (mobile branch intentionally left untagged — §10.4 names the horizontal split; see SHOULD-FIX (a)). Authored tests/lib/prism/player/T05.test.mjs — 12 checks at 1920×1080: `/` HTTP 200, page.goto 200, ≥2 canvases in DOM (count=3 after GraphScene hydrates), left+right pane tagged, left pane has PrismHost canvas, right pane has r3f canvas (≥500×500 — locks out the 180×140 Minimap overlay), distinct DOM nodes, preview.x < scene.x (691 split). Port 4781 chosen to avoid 4777/4778/4779/4780. Three gates: verify:prism 15/15, browser-smoke 6/6 (after pkill of stray next-dev from T04/T05 — CPU-contended; runtime.mounted flaked on first run), T05 12/12. First iteration of T05 found only 1 graph-pane canvas (the Minimap at 180×140) inside 20s because `waitUntil: 'networkidle'` timed out against r3f's animation loop; switched to `waitUntil: 'load'` + a 30s `waitForFunction` that polls until a graph-pane canvas has ≥500×500 bounding rect, then the r3f canvas (1229×1080) showed up reliably. Artifact unchanged — efd5f0f5… (deterministic). SHOULD-FIX (tracked, deferred): (a) mobile branch (<900px) has no data-pane markers — desktop/mobile DOM contract divergence; either add them to the mobile wrappers or comment why the contract is desktop-only (§10.4 doesn't name a mobile layout, so current gap is defensible but asymmetric). (b) T05.test.mjs line ~170 label reads \"graph canvas has non-zero width × height\" while the value is sceneCanvasMetrics — rename to \"3D scene canvas\" for clearer CI failures. (c) T05 mixes `getBoundingClientRect()` in `page.evaluate` with Playwright `locator.boundingBox()`; functionally equivalent today but asymmetric — consolidate on one. (d) port allocation (4777/4778/4779/4780/4781) lives only in comments across 4 test files — one more test and collisions will recur; centralize in tests/lib/prism/player/ports.mjs. (e) `.catch(() => {})` on the two waitForSelector/waitForFunction calls swallows timeout reasons — log to serverLog for easier CI triage. OPTIONAL: extract MIN_SCENE_EDGE_PX=500 constant with rationale (Minimap dims could change); share `DATA_PANE = { preview: 'preview', graph: 'graph' }` constant between page.tsx and the test via src/lib/prism/player/dom-contract.ts so the stringly-typed selector can't drift."
+      "haltCheck": "End-to-end build produces working Three.js bundle. grep -rn 'from .pixi' returns zero in kid-kode-landing/src/. pixi.js + pixi-filters removed from package.json. .ralph-phase5-pixi-removed marker file touched at repo root. All existing tests pass. Bundle build under 40s.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "bash -c '! grep -rnE \"from\\\\s+[\\\"\\x27]pixi(\\\\.js|-filters)?[\\\"\\x27]\" kid-kode-landing/src/'",
+        "test -f .ralph-phase5-pixi-removed",
+        "cd kid-kode-landing && npx vitest run --reporter=basic"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T06",
-      "title": "Verify §10.11 — pointer events fire intent overlays/GSAP, not CSS",
+      "title": "Depth map and 3D mesh pipeline stages",
+      "phase": 6,
       "specRefs": [
-        "§10.11"
+        "§6 - PRISM-RENDERER-MIGRATION-SPEC.md §6 (Pipeline Modifications: 9.5 + 9.6)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
-      "verifiedAt": "2026-04-22T17:13:59Z",
-      "notes": "Added .label = 'glow'/'base'/'shimmer' to the three hero-card-cta sprite layers (PIXI v8 metadata only — zero behaviour change) so the §10.11 Playwright test can address layers by name rather than child index. Test (tests/lib/prism/player/T06.test.mjs) — 12 checks at 1920×1080 against port 4782: server boot + page.goto 200, window.__prism exposes hero-card-cta NodeInstance, layers labelled, initial glow.alpha=0 + shimmer.alpha=0 + base.scale snapshot, POSITIVE (P1 base.scale up monotonically via Method-2 GSAP, P2 glow.alpha 0→0.6 via Method-3 overlay, P3 shimmer.alpha 0→~0.78 via Method-3 overlay), NEGATIVE (no new inline style.background/border/boxShadow/backgroundImage in [data-pane=preview]), REVERSAL (pointerout unwinds glow.alpha to 0 via GSAP). All three gates: verify:prism 15/15, browser-smoke 6/6, T06 12/12. artifactHash unchanged — c0985e52955eeaba… (deterministic; .label assignments don't affect manifest entries because hashing is over compiled-bundle bytes which DO include the strings 'glow'|'base'|'shimmer' but are stable). First test run revealed two false-positives: (i) initial base.scale is NOT 1.0 because PIXI computes scale from sprite.width÷textureWidth — the §3.4.1 verbatim spec gsap.to(base.scale,{x:1.03,y:1.03}) is an absolute target so 'rest scale' is fractional (~0.469,0.374) and the spec template has a latent visual bug (pointerout returns base to scale 1.0, NOT to its boot-rest 0.469; the button stays larger than at boot after the first hover); test now snapshots rest baseline and asserts hover>rest monotonically rather than hover>1.0. (ii) page.mouse.move(10,10) was insufficient to fire pointerout — moved to outsideX=max(domLeft+domWidth+10,1500) with steps:10 and 700ms wait and pointerout fired cleanly. SHOULD-FIX (tracked, deferred): (a) hero-card-cta.js header still says '(mock spec §3.4.1 verbatim, ctx-injected)' but file now has 3 .label = '…' assignments not in §3.4.1 (extract L207-239); either drop 'verbatim' from comment or hard-code child indices in T06 test (spec fixes order: glow=0, base=1, shimmerMask=2, shimmer=3) and remove labels — labels add metadata not used by SHR or any other runtime path. (b) snapshotInlineStyles only catches inline writes; §1.4 + §10.11 forbid ALL CSS-driven state effects, so a regression that does el.classList.add('is-hovered') styled via a global stylesheet would pass N1 silently — harden by also snapshotting getComputedStyle(...) for background/border/boxShadow before/after, OR snapshot el.className deltas. (c) outsideX move uses y=60 which is outside the CTA but only because the canvas top is 0; pin the move to y=initial.domTop+initial.pixiCenterY*scaleY (same y as hover) for clarity. (d) latent §3.4.1 bug: pointerout tweens base.scale to absolute 1.0 not to rest scale — the CTA stays visually larger than at boot after first hover; reporting upstream against the spec template, not patching here. OPTIONAL: hard-coded 240/2 + 64/2 for CTA half-extents — read from prism.graph.nodes.find(n=>n.nodeId==='hero-card-cta').visual.transform.{width,height} for self-updating; parent-walk for global PIXI coords skips PIXI v8 pivot/rotation — anchor to container.toGlobal({x:0,y:0}) for robustness; rationale comment for .label only present above glow — hoist above the three label assignments."
+      "haltCheck": "Depth map generated via Depth Anything v2 for parallax-plane nodes. GLB generated via Hunyuan3D Rapid for mesh nodes. Mesh-failure fallback to parallax-plane works. Pipeline timing within +7-15s budget. Trellis-2 fast alternative wired as fallback.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T07",
-      "title": "Verify §10.12 — wheel/trackpad/keyboard scroll with momentum",
+      "title": "Editor Visual tab - live Three.js preview",
+      "phase": 7,
       "specRefs": [
-        "§10.12"
+        "§7 - PRISM-RENDERER-MIGRATION-SPEC.md §13 (Editor Visual tab)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
-      "verifiedAt": "2026-04-22T17:42:12Z",
-      "notes": "Implementation: src/lib/prism/player/scroll-viewport.ts onWheel was synchronous `scrollY = clamp(scrollY + e.deltaY); applyScroll()` — an instant CSS-scrollTop-style jump that violated §10.12 'smoothly with momentum easing' and §12 'smooth momentum-eased scrolling (GSAP ScrollSmoother or manual)'. Replaced with runTween(target, WHEEL_TWEEN_S=0.8) + accumulator semantics — successive wheel events read basis from the in-flight tween's target (not scrollY), so a trackpad burst compounds into one rolling momentum throw instead of 8 discrete steps. scrollTo was refactored to route through runTween (preserving its duration:0 fast path). destroy() now kills activeTween before removing listeners to prevent post-unmount onUpdate writes. tests/lib/prism/player/T07.test.mjs (17 checks at 1920×1080, port 4783) covers: infrastructure (server 200, goto 200, __prism.viewport exposed), preconditions (A1 contentHeight > viewportHeight, A2 initial scrollY=0), and 6 input sources (P1 wheel pulse, P2 trackpad-burst of 8×15px, P3 ArrowDown, P4 PageDown, P5 End, P6 Home) × 2 assertions each (reached target + |yMid - yFinal| > 0.1). The |yMid - yFinal| > 0.1 contract is robust to headless Chromium's ~4fps RAF throttling: an instant CSS-scrollTop-style assignment produces yMid === yFinal *exactly* in IEEE-754 doubles; any GSAP tween produces float-level interpolation noise. All three gates: verify:prism 15/15, browser-smoke 6/6 (first iteration flaked at 5/6 on the runtime.mounted gate before the build was fully cached — clean on second run), T07 17/17. artifactHash unchanged (c0985e52…) — scroll-viewport.ts lives in the Next bundle, not the .prism. Spec-reviewer MUST FIX: none. Resolved 2 SHOULD FIX in commit 8e843fa: (i) destroy() didn't kill activeTween (leak); (ii) 0.8s duration was a magic number — extracted WHEEL_TWEEN_S const. SHOULD-FIX (tracked, deferred): (a) test P2's 8 wheel events fire synchronously inside one page.evaluate microtask — the name 'trackpad burst' is aspirational; a real trackpad bursts over ~100ms at ~12ms intervals. Adding real setTimeout-spaced dispatch would exercise the mid-tween-compound path more faithfully. (b) test P1 asserts |yFinal - target| <= 4 with settleMs=900 — only 100ms of grace beyond the 0.8s tween; under heavy RAF throttling the tween could overrun and leave yFinal short of target by more than 4px. Bump settleMs to ≥1100 for the 0.8s paths, or assert yFinal >= target - tolerance monotonically. (c) onTouchEnd flick-then-wheel asymmetry: a wheel event mid-flick kills the flick tween and re-bases from scrollY + deltaY (flick's remaining distance discarded); reverse compounds. Inline comment would help. (d) tweenTarget shadow could be replaced by activeTween?.vars.y — one less piece of state. (e) acceptance contract |yMid - yFinal| > 0.1 is clever but future-fragile: if GSAP ever short-circuits near-zero tweens via gsap.config({autoSleep}), yMid === yFinal could occur without instant behavior; complementary assertion that yMid is strictly between start and yFinal (direction-aware) would be a stronger match to 'smoothly with momentum easing' but is flaky under RAF throttling for short tweens (0.3s keyboard case showed yMid=59.7 at t=60ms of a 0.3s tween — near-complete). OPTIONAL: tweenTarget: number annotation redundant; 0.8s rationale ('long enough that a trackpad burst feels inertial rather than discrete, short enough that a big mouse-wheel pulse doesn't feel laggy') worth promoting to notes/prism-mock-progress.md for next tuning pass. Per-iteration progress log update (Step 12) was flagged by reviewer as a historical miss on some commits — will be handled explicitly in Step 12 below."
+      "haltCheck": "Visual tab renders 5+ node types live via R3F sub-canvas. Slider feedback under 100ms. Save & Verify integrates with regen API. WebGPU active in editor.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx playwright test tests/browser/T07.editor-visual-tab.spec.ts"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T08",
-      "title": "Verify §10.13 — single-finger touch drag with flick momentum",
+      "title": "Editor Animation tab + image-edit tools",
+      "phase": 8,
       "specRefs": [
-        "§10.13"
+        "§8 - PRISM-RENDERER-MIGRATION-SPEC.md §13 (Animation tab + Image-edit)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
-      "verifiedAt": "2026-04-22T17:57:27Z",
-      "notes": "Verified without implementation; pre-existing src/lib/prism/player/scroll-viewport.ts satisfies §10.13. tests/lib/prism/player/T08.test.mjs locks the contract — 15 assertions at 1280×900 + hasTouch:true against port 4784: infrastructure (HTTP 200, __prism.viewport.getScrollY exposed), preconditions (A1 contentHeight > viewportHeight, A2 initial scrollY=0), and four gestures: (P1) 10-step up-drag (dy=10 / stepMs=20) → drag-during-gesture + flick continues past release + decays smoothly + total ≈ 275±80 px; (P2) same from y=600 downward → mirror; (P3) slow 8-step drag (dy=2.5 / stepMs=80ms → 31 px/s below the 40 px/s impl threshold) → zero post-release momentum; (P4) two-finger touchstart → scrollY unchanged (single-finger contract). Runs against artifactHash c0985e52… (unchanged — no implementation, no rebuild, 15/15 static-verify + 6/6 browser-smoke untouched). Synthetic-swipe mechanics: TouchEvent + Touch dispatched in-page; performance.now() shimmed during the swipe so the impl's dy/dt math sees stepMs-accurate intervals, then restored before touchend so the scrollTo GSAP tween runs on the real RAF clock (headless Chromium setTimeout throttles to ~4fps → 365ms per setTimeout(r,20), which without the shim collapses dy/dt below the 40 px/s flick threshold and silently makes flicks vanish). Original instinct-test (setTimeout-paced) flaked 5/15; the performance.now shim was the key insight. SHOULD-FIX (tracked, deferred): (a) y_at_release sampled via Playwright is already mid-tween (P1 observed 140-235 rather than the true release y=100 because Playwright RPC round-trips ~50-100ms while GSAP is already ticking) — C1 and C3 remain meaningful (C1: moved materially; C3: strictly monotonic progression toward y_final) but C2's 'continues past release' is really 'continues past mid-tween sample'; a tighter probe would patch scroll-viewport.ts to expose an event hook fired at touchend enter-time. (b) performance.now shim assumes no other code on the page reads performance.now during the 10-20ms synchronous swipe window (safe today: GSAP ticker fires on RAF, no active tween during resetScrollTo(duration:0), PixiJS renderer ticks on RAF) — adding an interval poll or sync logger to boot.ts would silently break this test. (c) C2 threshold of 20px is conservative because headless RAF jitter can make the post-release tween arrive at target within ~40ms of touchend before we re-sample; bumping dyPerStep (→ higher flick velocity → longer tween) would give more headroom but risks maxScroll clamps. (d) Desktop layout forced (1280×900 ≥ 900px breakpoint) because mobile (<900px) has no [data-pane=preview] wrapper in page.tsx — T05's SHOULD-FIX (a) applies; a true mobile-emulation test (iPhone landscape 844×390 or Pixel portrait) would exercise the mobile branch but can't find the canvas via [data-pane]. OPTIONAL: P4 tests two-finger touchstart but doesn't test mid-drag transition from one-finger to two-finger (finger A drags, finger B joins); impl's `if (e.touches.length !== 1) return` on touchstart handles the start-two case but onTouchMove doesn't re-check touches.length so a user who plants a second finger mid-drag keeps scrolling — defensible reading of the spec ('single-finger touch drag'), not tested here. Steps 7-10 (implementation, three-gate verify, spec-reviewer) skipped per /ralph-step step 6 directive for already-satisfied tasks."
+      "haltCheck": "Animation tab supports both i2v frame-scrub and timeline-keyframe modes. Timeline keyframes render. PowerPoint presets map to cinematic primitives. Image swap-in preserves behavior. Mask refinement works.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx playwright test tests/browser/T08.editor-animation-tab.spec.ts",
+        "cd kid-kode-landing && npx playwright test tests/browser/T08.editor-image-edit.spec.ts"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T09",
-      "title": "Verify §10.16 — pointerover/out/down/up/tap feedback on every interactive sprite",
+      "title": "Mock app reconstruction - 5 hubs, all primitives, all render modes",
+      "phase": 9,
       "specRefs": [
-        "§10.16"
+        "§9 - PRISM-RENDERER-MIGRATION-SPEC.md §14 (Mock App Reconstruction)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48",
-      "verifiedAt": "2026-04-22T18:19:15Z",
-      "notes": "Implementation closed 4 §10.16 coverage gaps discovered by T09's failing-first test (29 failing checks before, 99/99 passing after): (1) footer-logo — added pointerdown/pointerup scale-press (sprite.scale 0.96↔1.0, back.out(2) on release) matching navbar-logo pattern. (2) footer-link-{privacy,terms,contact} — added pointerdown/pointerup on container.scale (sprites in footer-link lack anchor so scaling the container produces the delta; visually acceptable for 100×24 labels). (3) footer-social-{twitter,github,discord} — same sprite.scale press pattern as footer-logo. (4) notifications-toggle — added full pointerover/out/down/up set on container.scale (1.0↔1.03 hover, 0.97 press). (5) navbar-link — added lift-hover (container.position.y ±2) on pointerover/out so that pointerout produces a visible unwind even when the link is latched in its §10.14 active state: without the lift, show(resting()='active') after pointertap leaves the alpha-swap target equal to the current state → zero fingerprint delta. The lift keeps §10.16 alive regardless of latch. T09 test (tests/lib/prism/player/T09.test.mjs) fires pointerover→pointerdown→pointerup→pointertap→pointerout in sequence via `container.emit(event)` and asserts fingerprint deltas after each transition (plus listenerCount≥1 for each of 5 events, and bus-emission OR sprite delta for pointertap). Fingerprint walks container subtree collecting (x,y,scaleX,scaleY,alpha,tint) per DisplayObject at 4 decimal places — rejects IEEE-754 float noise while catching GSAP mid-tween progress. 16 interactive nodes × 6 checks + 3 infra = 99 assertions; all pass. Three gates: verify:prism 15/15, browser-smoke 6/6, T09 99/99. New artifactHash d75e241e8515…. Spec-reviewer MUST FIX: none. SHOULD-FIX (tracked, deferred): (a) notifications-toggle pointerup scales to 1.03 (hover size) unconditionally; on a touch tap with no prior pointerover, user sees a brief enlarge-then-shrink-back-to-1.0 wobble — consider tracking a hover flag or scaling pointerup to 1.0 and letting pointerover re-enlarge if still hovered. (b) navbar-link lift-hover reads as test-shaped workaround for the latched-link alpha-swap no-op; the deeper fix is either relaxing T09's C5 for latched links or documenting the lift as intentional §10.14+§10.16 interplay in notes — current inline comment calls it out but is easy to miss. (c) navbar-link.js baseY = transform.y is captured at construction (boot.ts rebuilds on breakpoint change so baseY tracks resolved y correctly) — a one-liner noting the rebuild path would preempt the confusion. OPTIONAL: (d) scale press magic numbers (0.96 / 0.08s / 0.12s / back.out(2)) now appear in 5 node files — worth a shared helper `scalePress(container, { base, press, duration, releaseEase })` or an inline mixin to keep the feedback language consistent. (e) notifications-toggle uses 0.97 press while navbar-logo/footer press at 0.96 — cross-node inconsistency visible on rapid interaction. (f) navbar-link pointerover uses ease:'power2.out' but pointerout has default power1.out — asymmetric return feel."
+      "haltCheck": "5-hub mock builds in <=35s. >=3 mesh nodes. >=1 parallax-plane per hub. All 9 primitives represented. All text via MSDF. Inter-hub fly-through nav at least once. Visual quality bar passes. WebGPU + WebGL2 fallback both work.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && timeout 45 node scripts/build-mock-app.mjs",
+        "cd kid-kode-landing && npx playwright test tests/browser/T09.mock-app-quality.spec.ts"
+      ],
+      "tddRequired": true,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     },
     {
       "id": "T10",
-      "title": "Verify §10.20 — SHR toy: break → fail → indicator → restore",
+      "title": "Integration test, polish, Definition of Done",
+      "phase": 10,
       "specRefs": [
-        "§10.20",
-        "§9"
+        "§10 - PRISM-RENDERER-MIGRATION-SPEC.md §17 (Definition of Done)"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "dad31726f2369ddda0a340b5817562d6ad9bc7c6",
-      "verifiedAt": "2026-04-22T18:45:00Z",
-      "notes": "Implementation closed the §10.20 gap — the pre-T10 shr/index.ts had a `breakNode` that only mutated a shadow `_broken` set and suspects map, but rebuildNode never consulted either, so the dev tool was wired but structurally inert. Redesigned as: breakNode → sync `removeAllListeners('pointertap')` + install a `recordFailure` shim on the live container (visual + hover/press preserved); `recordFailure` increments a per-node counter, emits `node-click-failed`, and triggers `repairNode` at failThreshold=3; `repairNode` emits `repair-started`, awaits toy latency (1200 ms so the T10 +700 ms sampling probe sits inside the indicator window under cold-boot jitter — within §9.3's '~1 s' tolerance), clears broken/failure/suspect state, rebuildNode from original source (because broken is cleared first), emits `repair-completed`. New bus events: node-click-failed, repair-started, repair-completed. `__prism.shr` now exposes readonly views: brokenNodeIds / repairingNodeIds / failureCountByNode. boot.ts forward-declares `shr` so rebuildNode can install the shim post-loadNodeModule for the repair→rebuild path, and passes instancesByNode into createShr so the live handler swap has something to target. Existing watchdog emit-wrap was updated to skip re-adding a suspect when `brokenNodeIds.has(src)` so the toy flow owns suspect state cleanly. T10 test (tests/lib/prism/player/T10.test.mjs) covers 22 assertions across 7 phases (A infra/exposure, B pre-break, C break, D 3-click fail cycle with repair-started observed by 3rd click, E ≥700ms indicator persistence, F repair-completed within 1500ms + broken/repairing cleared, G next click emits build-flow-started + counter cleared); all 22 pass. Three gates: verify:prism 15/15, browser-smoke 6/6 (first cold run flaked on runtime.mounted at 3.5s as historically documented; warm retry clean), T10 22/22. artifactHash unchanged (d75e241e8515…) — the change is runtime-bundle only, the .prism archive isn't touched. First T10 run with repairLatencyMs=1000 flaked E1 on cold boot because repair-completed fired within ~700 ms of repair-started; bumping to 1200 ms and re-running confirmed 1069 ms actual setTimeout elapsed and stable E1 pass. Spec-reviewer MUST FIX: none. SHOULD-FIX (tracked, deferred): (a) 1200 ms is tuned to the test's +700 ms sample rather than the spec-literal 1000 ms — couples production timing to a probe race; cleaner path is spec-literal 1000 ms + test sampling at +500 ms (requires test change; test is contract-frozen). (b) `recordFailure` exposed on the public Shr interface but is internal (only the pointertap shim calls it); privatise via a closure-captured hook or document it as 'SHR-internal, do not call from app code'. (c) broken-pointertap shim install is duplicated between boot.ts (rebuild path, inline cast) and shr/index.ts:installBrokenShim (live break path) — consolidate in SHR (expose installBrokenShim) or in rebuildNode (drop from SHR) to avoid drift. (d) breakNode unconditionally resets failureCountByNode to 0 and re-adds suspect; if called while already repairing, corrupts the in-flight repair's state view — guard with early-return when already broken or repairing. (e) CLAUDE.md 'every source-changing commit must touch progress log' violated in this HEAD commit (established ralph pattern handles it via the following progress-log commit). (f) shr/index.ts docstring still reads 'wait ~1s' but default is now 1200 ms — drift if kept. OPTIONAL: (g) emit-wrapper re-assigns events.emit through a cast; add a note that detach() reverts it via offEmit closure. (h) ListenableContainer interface duplicated between shr/index.ts and boot.ts inline cast — hoist to shared types. (i) watchdog still schedules setTimeout per emit even for broken nodes (no-op branch); guard at schedule site. (j) T10 only covers happy path; add a concurrent-repair regression (re-break mid-repair, rapid triple-tap past threshold) to lock the re-entry guard. (k) `let shr: Shr` forward-declared then assigned after createShr is a TS strictness amber; refactor rebuildNode as a factory receiving shr by argument to remove the mutable forward-decl."
-    },
-    {
-      "id": "T11",
-      "title": "Verify §10.6 — visual polish baseline (pixel-regression vs reference)",
-      "specRefs": [
-        "§10.6"
+      "haltCheck": "All 13 DoD items checked off. Stress test (200 nodes, 10 hubs) passes. No memory leaks over 30min navigation. Browser compat: Chrome, Safari 26+, Firefox, Edge - both WebGPU and WebGL2.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run --reporter=basic",
+        "cd kid-kode-landing && npx playwright test tests/browser/T10.cross-browser.spec.ts"
       ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "f7c9bda",
-      "verifiedAt": "2026-04-22T20:15:00Z",
-      "notes": "Reframed the subjective §10.6 criterion (L1176 — \"The PixiJS render looks like a REAL product — polished gradients, composited typography, visual depth\") as an objective pixel-regression gate. Runner: tests/lib/prism/player/T11.test.mjs (port 4787, 14 checks across A infra, B stabilize, C capture, D diff / E update). Baseline: tests/fixtures/home-hub-hero.png (519×900 PNG, 119924 bytes) — a screenshot of [data-pane=\"preview\"] at viewport 1440×900 (scope narrowed from \"fullpage\" per task.notes to \"PixiJS-render only\" because §10.6 names the PixiJS surface (L1176) and §10.4 (L1172) separates it from the 3D graph pane; the graph pane has nondeterministic WebGL). Determinism plumbing: an addInitScript() wraps window.setInterval/clearInterval to track ids + expose window.__clearAllIntervals (pauses hero-section-bg's 24fps i2v cycle — §10.9 method-1; captured 3 live intervals across runs 2-3 and dropped); after the pause, hero-section-bg's 24 child sprites are collapsed to frame 0 only (1 visible, 23 hidden). Screenshot is taken 250ms after pause to let the PIXI ticker render one post-pause settle frame. Diff algorithm: sharp .ensureAlpha().raw() on both PNGs, per-pixel |dR|>16 ∨ |dG|>16 ∨ |dB|>16 counts as drift. Tolerance: diffFraction ≤ 0.02 (2% of 467100 px = ≤9342 drifted px). Measured run: 41/467100 = 0.009%, well under tolerance. Baseline-refresh path: UPDATE_BASELINE=1 node tests/lib/prism/player/T11.test.mjs writes the screenshot to the baseline path (E1/E2 checks). Cleanup hardening: detached:true on the dev-server spawn + process.kill(-server.pid,'SIGKILL') tears down npm+next+next-server as one process group (direct server.kill left next-server orphaned and stalled node's event loop); browser.close() Promise.raced with a 3s timeout; 10s force-exit watchdog armed at start of finally (unref'd). tests/fixtures/.gitignore excludes T11-actual.png and T11-diff.png (regenerated whenever diff>0). Three gates: npm run verify:prism → 15/15, node scripts/browser-smoke.mjs → 6/6, node tests/lib/prism/player/T11.test.mjs → 14/14. artifactHash unchanged (d75e241e8515…) — T11 touches only tests/ + tests/fixtures/. Spec-reviewer MUST FIX: none. SHOULD-FIX (tracked, deferred): (a) B3 asserts true unconditionally — it's a sleep, not a check; demote from assertion or replace with a ticker-frame-count compare via window.__prism (currently inflates reported pass count from 13→14). (b) A3 readiness only gates on hero-section-bg + hero-card-cta; if hero-card-bg / hero-card-headline-text / hero-card-subhead-text (extract L132-172) fail to mount, the test still passes because the baseline was captured with the same partial state — expand to a representative Hero Section set. (c) UPDATE_BASELINE=1 is a one-env-var escape hatch without attestation; tighten with either a progress-log citation requirement or a baseline-sha256 field in ralph-state.json so regeneration is a visible diff. (d) 2% global + 16/channel threshold can mask localized breakage in a critical region (e.g. CTA glow); bucket the check — global ≤2% OR per-region ≤tighter bar over the CTA rect — so small-but-critical visual regressions are still caught. (e) Baseline has large transparent/checkerboard swaths between the Kriptik logo, device image, and bottom gradient card — visually defensible on the elements present (§10.6 polish holds), but the sparse coverage raises a separate §10.25 concern (\"Nothing looks like a wireframe\"); not a T11 bug, but worth re-evaluating before T12 locks in §10.25. (f) Debug PNGs (T11-actual.png / T11-diff.png) are written whenever diff>0 even on passing runs (0.009% produced ~218 KB of debug output); gate writes on failures.length>0 or an explicit --emit-debug flag. (g) Element-screenshot depends on implicit scrollTop=0; a future change that shifts the preview pane's scroll could capture a different slice — assert/force scrollTop=0 before screenshot. OPTIONAL: CHANNEL_THRESHOLD=16 lacks inline spec-ref justification; custom Buffer-walk pixel diff could swap to pixelmatch (already npm-resolvable via sharp's peer tree) for a well-understood AA-aware metric; tests/fixtures/.gitignore entries would scale better as glob patterns (T[0-9]*-actual.png / T[0-9]*-diff.png); dev-server spawn assumes `npm run dev -- -p <N>` forwards port to next — a regression that drops the -- silently falls back to 3000; force-exit watchdog exit code doesn't distinguish cleanup-stall from test-pass — worth logging the stall reason separately. MUST FIX (resolved during this iter): process-group kill (pre-fix: stale next-server on 4790 from T04 was still alive at 131.9% CPU and contended with every new dev-server spawn; pre-fix: direct server.kill('SIGTERM')→npm-only left orphaned next-server holding pipe fds alive, stalled node's event loop; pre-fix: a 15s top-level force-exit timer fired mid-test at 15s and killed the A2-A3 run). Resolution: detached:true spawn + process.kill(-pgid,SIGKILL) + browser.close() Promise.race with 3s timeout + force-exit timer moved into finally with 10s grace. T11 now exits cleanly at t≈25s on a cold run."
-    },
-    {
-      "id": "T12",
-      "title": "Verify §10.25 — smoke: no obvious wireframe artifacts",
-      "specRefs": [
-        "§10.25"
-      ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
-      "verifiedAt": "2026-04-22T20:30:00Z",
-      "notes": "Verified without implementation; pre-existing PixiJS preview surface satisfies §10.25 under the mid-tone achromatic heuristic. tests/lib/prism/player/T12.test.mjs locks the contract — 14 checks at 1440×900 against port 4788: (A) infra — server 200, page.goto 200, __prism exposes hero-section-bg + hero-card-cta, [data-pane=\"preview\"] resolves. (B) stabilize — clears setInterval IDs, collapses hero-section-bg to frame 0, 250ms settle (same pattern as T11). (C) capture — screenshot [data-pane=\"preview\"] as PNG, verify magic bytes, >10KB. (D) heuristic — decodes to 519×900 = 467100 px, visible-pixel fraction ≥15% sanity floor, mid-tone achromatic fraction ≤15% §10.25 contract. \"Mid-tone achromatic\" = alpha≥32 AND max channel in [40,220] AND max(|R-G|,|G-B|,|R-B|)≤4. Measured run: 10.397% (48565/467100 px) — 4.6% headroom; a ~200×200 unstyled mid-grey rectangle (8.5% of the viewport) would push past the threshold. Initial naive variant (|chroma|≤6 only, no mid-tone gate) flagged 80.9% because pure-black dark-UI backdrops (R=G=B, all <40) pattern-matched as 'achromatic' but are legitimate dark-theme backgrounds, not wireframe — mid-tone gate added to isolate the classical wireframe palette (flat grey fills in the 40–220 luminance band). Three gates: npm run verify:prism → 15/15, node scripts/browser-smoke.mjs → 6/6 (after npm run build refreshed .next for next start; pre-existing build was stale from T11 dev-only iterations), node tests/lib/prism/player/T12.test.mjs → 14/14. artifactHash unchanged (d75e241e8515…) — T12 only adds tests/. Skipped steps 8/9 per /ralph-step step-6 directive for already-satisfied tasks (precedent: T04, T08). SHOULD-FIX (tracked, deferred): (a) mid-tone band [40,220] is hand-picked to exclude dark-UI backdrops and near-white highlights — a regression that fills the viewport with mid-grey (RGB 128) fails the test, but a regression that uses slightly-too-dark grey (RGB 35,35,35) escapes detection because it drops below the lower bound; consider a companion metric on dark-region flatness to close the gap. (b) 15% threshold has only 4.6% headroom against current measurement — a minor visual change (e.g., new small accent with neutral tint) could push measured value above threshold even without actual wireframe regression; document that future atlas work affecting global neutral tone may require re-calibration (or loosen threshold to 20% with explanation). (c) chroma tolerance ≤4 is tight enough to exclude subtle-tinted dark UIs, but also excludes modern Apple-style ultra-neutral greys that have ≤2 chroma by design — if the atlas gains more truly-neutral-but-polished elements, the threshold may need per-region calibration. (d) test screenshots [data-pane=\"preview\"] at 1440×900 — matches T11; if a future T13+ redesign changes the preview pane aspect ratio or introduces a mobile-first layout (<900px), the sample region changes and the heuristic may re-calibrate differently. (e) D2's 15% visible-pixel floor is trivially true today (100% visible — no transparent PNG regions captured by Playwright in Chromium headless even when the element has no explicit background); the floor exists to catch a hypothetical regression where the screenshot is mostly alpha=0, not to gate real runs. OPTIONAL: heuristic could be histogram-aware (detect a pronounced spike at a single grey value → strong wireframe signal) rather than pixel-count-based; MID_TONE_MIN/MID_TONE_MAX could be parameterised from an env var for QA calibration; debug mask writes only on failure, which is correct but diverges from T11's write-when-diff>0 behaviour — minor inconsistency."
-    },
-    {
-      "id": "T13",
-      "title": "Reconstruct §10.22–§10.23 baseline + diff",
-      "specRefs": [
-        "§10.22",
-        "§10.23"
-      ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a",
-      "verifiedAt": "2026-04-22T20:40:06Z",
-      "notes": "Verified without implementation; pre-existing codebase satisfies §10.22 + §10.23. Baseline commit chosen as 9e72d15 'Migrate Prism Editor source from Vercel CLI deployment' — the last commit before the first Prism scaffold (8c58518 / 3f40748). Pre-Prism src/components/editor/ tree had 11 files incl. preview/LivePreview.tsx; current has 10 (LivePreview removed, which is the MockApp→PrismHost relocation in this codebase — spec references MockApp.tsx but the actual replaced file was LivePreview.tsx, and the replacement lives at src/components/prism-player/PrismHost.tsx per CLAUDE.md). tests/lib/prism/T13.test.mjs locks the contract — 24 checks: A1-A2 baseline reachability + 11-file tree, B1-B5 §10.22 (LivePreview removed, PrismHost present, 9 files byte-identical by sha256, GraphScene.tsx delta = exactly 3 @ts-expect-error lines replaced with whitespace-only lines (commit 1e1100f dropped unused TS2578 directives), current tree = baseline minus LivePreview), C1-C7 §10.23 (html-to-image removed, pixi.js+jszip added, 7 prism build devDeps added, 4 new scripts, dev+build prepend build:prism, start+lint unchanged), D1-D2 regression (baseline runtime deps minus html-to-image and baseline devDeps still present at matching version ranges). Test reads baseline via `git show 9e72d15:kid-kode-landing/...` so no baseline fixtures need to be copied into tests/. All 24 checks pass. Three gates: npm run verify:prism → 15/15, node scripts/browser-smoke.mjs → 6/6 (first iter 5/6 on runtime.mounted cold-start flake; retry clean — historically documented at T03/T05/T10/T11), tests/lib/prism/T13.test.mjs → 24/24. artifactHash unchanged (d75e241e8515…) — T13 only adds tests/. Skipped steps 7-10 per /ralph-step step-6 directive for already-satisfied tasks (precedent: T00, T04, T08, T12). SHOULD-FIX (tracked, deferred): (a) Baseline commit 9e72d15 hard-coded in test — if git history is ever rewritten to predate 9e72d15 with a different sha the test breaks silently with 'commit not reachable'; consider capturing the baseline into tests/baseline/ as tracked fixtures so the test is git-independent, but that adds ~120KB of duplicated source and a drift risk in the opposite direction. (b) B4's 'exactly 3 lines' is tightly coupled to commit 1e1100f's cleanup — a future commit that adds a new @ts-expect-error for a legitimate reason and then strips it would show as a 4th diff and fail; if that happens, move the file to UNCHANGED_FILES after a new baseline is negotiated (test message already points at this escape hatch). (c) D1/D2 compare version ranges as strings ('^1.1.5') — a dep bump from ^1.1.5 to ^1.1.7 within the same major would read as 'drift' and fail even though both are semver-compatible; if the landing page needs a security-patch bump on one of these packages, the test will require updating. Strictness is intentional for §10.22/§10.23 but documented here so a future iteration knows the tradeoff. (d) The spec language §10.22 names MockApp.tsx, but the codebase never had that file — the mapping to preview/LivePreview.tsx is load-bearing but lives only in CLAUDE.md + this test's comments; a future contributor unfamiliar with the project could delete the test when they can't find MockApp.tsx. An inline comment at the top of the test flags this explicitly. (e) Test relies on JSON.parse of a duplicate-key package.json (baseline 9e72d15 has 'html-to-image' twice) — JSON.parse picks the last value silently, so basePkg.dependencies['html-to-image'] is '^1.11.13'; C1's raw-string check guards against the duplication vanishing from baseline, but a future Node that rejects duplicate keys would break the test. OPTIONAL: (f) could add a check that src/components/prism-player/ tree contains ONLY PrismHost.tsx (catches accidental additions under prism-player that belong elsewhere) — not currently spec'd but a natural companion. (g) could grep for html-to-image across package-lock.json + src/ + scripts/ as a belt-and-suspenders on §1.4.6 — verify:prism already covers src/ via forbidden:html-to-image."
-    },
-    {
-      "id": "T14",
-      "title": "Verify §10.24 — clean-checkout reproducibility in temp dir",
-      "specRefs": [
-        "§10.24"
-      ],
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "a629a9b647be3e3b047a6596663eab85e5b62daf",
-      "verifiedAt": "2026-04-22T20:51:44Z",
-      "notes": "Verified without implementation; pre-existing recipe (npm in place of spec's pnpm; CLAUDE.md documents this) satisfies §10.24. tests/lib/prism/T14.test.mjs locks the contract — 22 assertions total across two phases: PHASE A (always runs, 12 checks) proves the recipe is structurally valid — A1 all 5 scripts present (provision-assets, dev, build, start, build:prism); A2 dev chains build:prism→next dev; A3 build chains build:prism→next build; A4 start===\"next start\"; A5 provision-assets uses --env-file=.env.local; A6 provision-assets.mjs reads FAL_KEY; A7 @fal-ai/client in devDeps; A8-A10 .gitignore excludes source-images/, public/prism-assets/, .provisioning-manifest.json (clean-checkout precondition); A11 build-prism.mjs writes mock-app.prism; A12 HEAD is a reachable commit. PHASE B (opt-in via RUN_CLEAN_REPRO=1, skippable via RALPH_SKIP_CLEAN_REPRO=1) — 10 checks: temp dir, git clone --branch prism-main --single-branch, clean-state verify (no source-images/prism-assets/manifest), copy upstream source-images + manifest as FAL surrogate, npm install, npm run build, mock-app.prism exists, npm run start boots on ephemeral port, HTTP 200 on /, body contains <canvas>, cleanup temp dir. Committed mode defaults to SKIP (Phase A only → 13/13 incl skip sentinel). Inline RUN_CLEAN_REPRO=1 run this iteration completed in 31.5s wall (22/22; much faster than feared ~10min because local npm cache + no FAL spend). Three gates: verify:prism 15/15, browser-smoke 6/6 (first run flaked at 5/6 on runtime.mounted cold-start gate — same precedent as T03/T05/T10/T11; retry clean), T14 13/13 default mode. artifactHash unchanged (d75e241e8515…) — T14 only adds tests/. Skipped steps 7-10 per /ralph-step step-6 directive for already-satisfied tasks (precedent: T00, T04, T08, T12, T13). SHOULD-FIX (tracked, deferred): (a) A5 asserts --env-file=.env.local, but §10.24 L1219 literally describes `FAL_KEY=… pnpm run provision-assets` — inline env injection. On a fresh machine without a .env.local, node --env-file fails hard; either the test should permit inline injection as an alternative or the documented recipe should grow a `cp .env.local.example .env.local` step. Minor spec-literal gap. (b) Phase B bypasses `npm run provision-assets` entirely by copying upstream source-images/ as a FAL surrogate — the single most expensive AND most likely-to-regress leg of §10.24 is untested in CI. FORCE_FAL=1 is noted as a follow-up in the test header but not implemented; at minimum B0's skip log should name this gap. (c) Phase B uses `npm run start -- -p <port>` which relies on Next.js flag forwarding through npm; cleaner for Next 15 is `PORT=<port> npm run start` and avoids the extra-arg escape hatch some npm configs strip. (d) serverProc.stdout/stderr are attached to no-op listeners — on B8 failure there is no diagnostic. Buffer stderr and dump on failure. (e) `npm install --prefer-offline` in Phase B may mask 'fresh machine' regressions (missing peer deps, registry-only packages) because it prefers the local cache; §10.24's 'fresh machine' qualifier argues against --prefer-offline for fidelity. (f) Header comment describes the spec recipe as `pnpm install + pnpm run provision-assets + pnpm run dev`; §10.24 actually says `pnpm install` + `FAL_KEY=... pnpm run provision-assets && pnpm run dev` (a single chained command). Minor but the test is the canonical record of the recipe. (g) Phase B `git rev-parse --abbrev-ref HEAD` returns 'HEAD' on detached-HEAD checkouts (e.g., mid-rebase), which is not a valid `--branch` target; guard against detached HEAD before clone. OPTIONAL: (h) `const RUN_PHASE_B = RUN && !SKIP;` — if both are set, SKIP silently masks RUN; log a precedence warning. (i) B7 floor of 10_000 bytes for mock-app.prism is arbitrary; actual artifact is much larger — raise floor with margin or cite rationale. (j) findFreePort races — port returned after srv.close() can be grabbed by another process before Next binds. Low probability locally. (k) A8 matches gitignore via substring regex; a negated line `!kid-kode-landing/.../source-images/` would spuriously pass. Tighten to unnegated line anchor. (l) Shebang #!/usr/bin/env node is harmless but file is not executable; drop shebang or chmod +x to match sibling tests."
-    },
-    {
-      "id": "T-EDIT-00",
-      "title": "Spec-infrastructure lock-down hooks (Phase 0 of editor-integration plan)",
-      "specRefs": [
-        "plan:Phase 0"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "verifiedAt": "2026-04-28T16:34:41Z",
-      "filesNew": [
-        "kid-kode-landing/.claude/hooks/spec-infrastructure-check.sh",
-        "kid-kode-landing/.claude/hooks/verify-on-stop.sh"
-      ],
-      "filesEdited": [
-        "kid-kode-landing/.claude/settings.json",
-        ".claude/settings.json"
-      ],
-      "verificationGates": [
-        "5 hook smoke tests pass (build-atlas missing markers, pkg.json dep removal, pkg.json script removal, normal edit, hand-edit build output)",
-        "2 regression tests pass (html-to-image import, lodash dep)",
-        "npm run verify:prism (15/15)",
-        "node scripts/browser-smoke.mjs (6/6)"
-      ],
-      "notes": "Phase 0 implemented in main session 2026-04-28. Two new hooks: spec-infrastructure-check.sh (PostToolUse Write|Edit + SessionStart, blocks dep removal / build-script removal / runtime simplification / hand-edits to build outputs) and verify-on-stop.sh (Stop, runs verify:prism if any prism/editor/scripts/notes file changed in turn, warns loudly on failure). Both registered in repo-root .claude/settings.json AND kid-kode-landing/.claude/settings.json. Existing hooks (anti-drift PreToolUse, dep-allowlist PostToolUse, format-check PostToolUse, todo-scanner PostToolUse, spec-presence SessionStart, progress-reminder Stop) ALL kept active — full hook stack is the four-layer drift floor: PreToolUse anti-drift + PostToolUse dep-allowlist + PostToolUse spec-infrastructure + Stop verify-on-stop. 7/7 smoke + regression scenarios pass."
-    },
-    {
-      "id": "T-EDIT-01",
-      "title": "Canonical types + loader + view-model (read home-hub.json into editor)",
-      "specRefs": [
-        "plan:Phase 1"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "filesNew": [
-        "kid-kode-landing/src/lib/prism-graph/types.ts",
-        "kid-kode-landing/src/lib/prism-graph/loader.ts",
-        "kid-kode-landing/src/lib/prism-graph/view-model.ts",
-        "kid-kode-landing/src/stores/useGraphSourceStore.ts",
-        "tests/lib/prism-graph/T-EDIT-01.test.mjs"
-      ],
-      "filesEdited": [
-        "kid-kode-landing/src/lib/prism/player/breakpoints.d.{ts->mts}"
-      ],
-      "verificationGates": [
-        "npx tsc --noEmit -p tsconfig.json (clean)",
-        "loader unit-test (parse home-hub.json → expected shape)",
-        "npm run verify:prism (15/15)",
-        "node scripts/browser-smoke.mjs (6/6)",
-        "no runtime behavior change (Inspector + GraphScene still use mockGraph at this phase)"
-      ],
-      "notes": "Foundation phase landed. Files: types.ts (PrismHub, PrismNode, PrismEdge, GraphSource + 8 2026-04-27 intent fields: samHints, alphaCutout, animationSpec, visualNeighbors, interactionNeighbors, responsiveSizing, visibility, visualSpec.layers); loader.ts (loadFromHomeHub sync mapper, loadFromHomeHubFile async fetch, loadFromPrismArtifact with lazy JSZip import); view-model.ts (20 pure accessors covering all six Inspector tabs + first-class accessors for the 8 enrichment fields, getInteractions target-mapping rule rewritten per spec-reviewer MUST FIX); useGraphSourceStore.ts (zustand v5 curried form, exposes {hubs, nodes, edges, ready, error} + load(json)/loadFromUrl(url)/reset()). Surgical fix to pre-existing TS2305: renamed src/lib/prism/player/breakpoints.d.ts → .d.mts so TS resolves the declarations against boot.ts's `from './breakpoints.mjs'` import (was blocking Phase 1's tsc gate; T02 author hadn't included tsc in T02's verify list). Test tests/lib/prism-graph/T-EDIT-01.test.mjs locks the contract — ~75 assertions across 7 phases (A files exist, B types declarations, C loader maps 40 nodes / 15 edges / hub.responsiveBreakpoints / 8 enrichment fields preserved, D 20 view-model accessors with functional checks against hero-card-cta + navbar-link-home + page-background, E store shape, F tsc clean, G no runtime change). Three gates: verify:prism 15/15, browser-smoke 6/6, T-EDIT-01 75/75. New artifactHash c9067695627585706006cdbb8c2fe04c3cd2d55286a3627e5350816daeade8f6 (no rebuild this iteration; reflects pre-session uncommitted .prism artifact). Spec-reviewer MUST FIX: getInteractions target rule indiscriminately assigned triggers[0].targetNodeIds[0] to every interaction — resolved in commit 13fccb7 with exact-match (eventName ↔ effect) primary, 1-to-1 fallback, else 'self'. Spec-reviewer SHOULD FIX (resolved): (1) getStateCount switched from contracts.inputs cardinality to intent.stateEffects.length (closer to Inspector \"state count\" concept); (2) DEFAULT_VERIFICATION_SCORE extracted as a named const; (3) store loadFromUrl delegates to loader.loadFromHomeHubFile (DRY) and the bogus '/api/mock/home-hub.json' default URL dropped — Phase 2 wiring supplies a concrete URL; (4) zustand v5 curried form. SHOULD-FIX (tracked, deferred): (a) loader.ts and view-model.ts use './types.ts' extension on internal imports while consumers via @/ alias use extensionless — the .ts extension is required by Node 22 strip-types when importing TS from a .mjs test runner without --experimental-specifier-resolution, but inconsistent with the bundler-resolution convention used elsewhere in src/; consider documenting the dual-resolution constraint inline or moving test runner to a TS-aware runner. (b) loader.loadFromPrismArtifact uses lazy `await import('jszip')` whereas existing src/lib/prism/player/prism-loader.ts uses static `import JSZip from 'jszip'` — lazy is defensible for tree-shaking but breaks pattern parity; either align or document. (c) types.ts shape/layer.type/PrismEdgeType union with `| string` widens to plain string and loses the literal-completion benefit — either drop the union members or drop `| string`. (d) getNodeName titlecases via split('-'); future ids with acronyms (cta-api-link → 'Cta Api Link') will read awkwardly — acceptable for Phase 1, may need an exception list. (e) getBackendContract serializes contracts to a string blob; structured field would be friendlier but Phase 2 will reveal the right shape. (f) hub-level responsiveBreakpoints has no first-class view-model accessor today — plan §Phase 3 (HubInspector) will need one. OPTIONAL: types.ts could add a getHubResponsiveBreakpoints accessor; the Behavior-tab field-mapping comment was updated to cite stateEffects.",
-      "commit": "13fccb788c554ffd3127f898d22c64a193bac827",
-      "verifiedAt": "2026-04-28T17:30:00Z"
-    },
-    {
-      "id": "T-EDIT-02",
-      "title": "Replace mockGraph data source with live loader (Inspector + GraphScene)",
-      "specRefs": [
-        "plan:Phase 2"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "filesEdited": [
-        "kid-kode-landing/src/components/editor/panels/Inspector.tsx",
-        "kid-kode-landing/src/components/editor/graph/GraphScene.tsx",
-        "kid-kode-landing/src/lib/prism-graph/view-model.ts",
-        "kid-kode-landing/src/lib/useForceGraph.ts",
-        "kid-kode-landing/src/lib/nodeTexture.ts",
-        "kid-kode-landing/src/stores/useGraphSourceStore.ts",
-        "tests/lib/prism-graph/T-EDIT-01.test.mjs"
-      ],
-      "verificationGates": [
-        "npx tsc --noEmit (clean)",
-        "npm run verify:prism (15/15)",
-        "npm run build (success)",
-        "node scripts/browser-smoke.mjs (6/6)",
-        "manual: open /, click any node, all six tabs render correct data sourced from home-hub.json"
-      ],
-      "notes": "Inspector.tsx and GraphScene.tsx replace `import { GRAPH } from '@/data/mockGraph'` with the new loader-backed store. NO visual changes to Inspector. Field reconciliation per plan §Phase 2 (id↔nodeId, hubIds[]↔[parentHubId], interactions(event/action/target)↔behaviorSpec.interactions(event/effect)+triggersDownstream, code-string↔file-load-via-codeRef, etc.). mockGraph.ts kept on disk as fallback for editor-only demos.",
-      "commit": "7f349b6d59adc299eae260366c7c7bc3e063096f",
-      "verifiedAt": "2026-04-28T17:21:25Z"
-    },
-    {
-      "id": "T-EDIT-03",
-      "title": "Hub clickability + HubInspector panel",
-      "specRefs": [
-        "plan:Phase 3"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "7bc2c195865af60eda928a592c54364b431262a3",
-      "verifiedAt": "2026-04-28T17:49:13Z",
-      "filesNew": [
-        "kid-kode-landing/src/components/editor/panels/HubInspector.tsx",
-        "kid-kode-landing/src/components/editor/panels/RightPane.tsx"
-      ],
-      "filesEdited": [
-        "kid-kode-landing/src/app/page.tsx",
-        "kid-kode-landing/src/components/editor/graph/GraphScene.tsx",
-        "kid-kode-landing/src/lib/useForceGraph.ts",
-        "kid-kode-landing/src/stores/useGraphEditorStore.ts"
-      ],
-      "verificationGates": [
-        "npx tsc --noEmit (clean)",
-        "npm run verify:prism (15/15)",
-        "npm run build (success)",
-        "node scripts/browser-smoke.mjs (6/6)",
-        "manual: click hub in 3D scene → HubInspector opens with hub-specific tabs; visual treatment identical to Inspector"
-      ],
-      "notes": "Implemented per plan §Phase 3. useGraphEditorStore gains selectedHubId + selectHub action (mutually exclusive with selectedNodeId; selectNode and flyToNode now clear selectedHubId). HubInspector.tsx mirrors Inspector chrome (gradient bg, blur, INSPECTOR tag, six-tab strip, slide-in animation); tab content is hub-specific — Visual: hub.caption + layout (viewport/contentHeight/bg) + responsiveBreakpoints, Behavior: global state/theme/hub-scoped dataBindings (filter is source-based), Code: manifest snippet (prismVersion, entryHub, nodeCount, artifactHash pointer) + build commands, Animation: read-only summary of hub-level animated nodes, Connections: nodes whose parentHubId matches (clickable to select+fly), Backend: empty state. RightPane.tsx routes between Inspector/HubInspector based on selection. page.tsx mounts <RightPane/> in both desktop and mobile splits. GraphScene HubHulls is pointer-interactive: onClick → selectHub(hub.id), pointerOver/Out toggle cursor:pointer, isActive tracks selectedHubId. T-EDIT-03 test (tests/lib/editor/T-EDIT-03.test.mjs) covers 21 checks (store fields/actions, HubInspector exports + tab IDs + chrome markers + tab content references, RightPane mount + selection logic, HubHulls click handler, tsc clean). Spec-reviewer MUST FIX resolved: HubBehaviorTab filter switched from target-regex to source-based ('theme' | 'state.*' | 'hub.*'), now surfaces all four bindings in home-hub.json. Force-graph hardening (useForceGraph.ts): drops simLinks whose endpoints are not in the editor's node set — home-hub.json edges target four virtual runtime nodes (hub-router, build-panel, signin-modal, user-preferences-store) that have no graph-node entry, and d3-force-3d's forceLink threw 'node not found: X'; the issue surfaced after `npm run build` regenerated `.next/`. Inspector's Connections tab still sees the full edge list through the view-model. SHOULD-FIX (tracked, deferred): (a) Code tab missing edgeCount + atlas dimensions per plan §Phase 3 wording; (b) artifactHash is a placeholder pointer — could be wired through the loader; (c) HubHulls outer wireframe sphere defaults to FrontSide and may intercept clicks intended for inner nodes — consider BackSide or pointer-events=none on visual meshes plus an explicit hit-mesh; (d) flyToHub() not updated for the mutual-exclusion contract (only sets activeHubId); (e) HubInspector → Inspector swap on Connections-tab pick doesn't explicitly closeInspector first, so slide-in animation may not retrigger; (f) project rule 'all source commits must touch notes/prism-mock-progress.md' is honored by the iter-N progress-log commit (Ralph pattern, matches T-EDIT-02); (g) HubBehaviorTab comment block still describes the old target-based logic — should be updated to match the source-based filter to prevent reader drift. OPTIONAL: prismVersion hardcoded; AnimationSpec fps cast pattern; HubAnimationTab only counts visual.frameCount > 1 (intent.animationSpec.onAppear/onThemeChange ignored); HubBackendTab empty-state could be a shared constant."
-    },
-    {
-      "id": "T-EDIT-04",
-      "title": "3D textures + hub material/label/glow",
-      "specRefs": [
-        "plan:Phase 4"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "filesNew": [
-        "kid-kode-landing/src/components/editor/graph/HubLabels.tsx",
-        "kid-kode-landing/src/lib/editor/populate-element-images.ts"
-      ],
-      "filesEdited": [
-        "kid-kode-landing/src/components/editor/graph/GraphScene.tsx"
-      ],
-      "verificationGates": [
-        "npx tsc --noEmit (clean)",
-        "npm run verify:prism (15/15)",
-        "npm run build (success)",
-        "node scripts/browser-smoke.mjs (6/6)",
-        "manual: zoom into a node → element image visible on node geometry",
-        "manual: hub sphere wraps mockup image; hub label visible; subtle glow at hub center"
-      ],
-      "notes": "populate-element-images.ts loads atlas-0.avif + atlas-regions.json at editor boot, extracts each region as a canvas → dataURL, dispatches useElementImageStore.setImages(). GlassNode's already-wired inner-sphere texture path lights up. HubHulls inner sphere wraps notes/mockup-candidates/scifi-mockup-v1.png as CanvasTexture; material upgrades to MeshPhysicalMaterial (transmission 0.4, clearcoat 0.6, IOR 1.6, light emissive at hub.color). HubLabels renders hub.title as Three.Sprite. Hub-center pointLight intensity bumped slightly. NO node geometry / shader changes.",
-      "commit": "b65d14e8dd8ed8f9260bb62935cb6a2e4cd4d4c1",
-      "verifiedAt": "2026-04-28T18:02:24Z"
-    },
-    {
-      "id": "T-EDIT-05",
-      "title": "Bidirectional Editor↔Preview live binding",
-      "specRefs": [
-        "plan:Phase 5"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
-      "verifiedAt": "2026-04-28T18:18:48Z",
-      "filesEdited": [
-        "kid-kode-landing/src/components/prism-player/PrismHost.tsx",
-        "kid-kode-landing/src/lib/prism/player/boot.ts",
-        "kid-kode-landing/src/lib/prism/player/index.ts",
-        "kid-kode-landing/src/components/editor/panels/Inspector.tsx"
-      ],
-      "verificationGates": [
-        "npx tsc --noEmit (clean)",
-        "npm run verify:prism (15/15)",
-        "npm run build (success)",
-        "node scripts/browser-smoke.mjs (6/6)",
-        "manual: click node in editor → preview shows highlight ring",
-        "manual: click node in preview → editor selects same node"
-      ],
-      "notes": "boot.ts: PrismDebugHandle gains selectNode/highlightNode/onNodeSelected; per-node `pointerdown` emits `node-selected` on the event bus; selection ring is a single PIXI.Graphics overlay (`// ALLOWED-GRAPHICS: selection-ring`, §1.4 exception) parented to viewport.content with zIndex 100_000; `attachSelectionBridge` promotes `container.eventMode` to `'static'` unless already `'static'`/`'dynamic'` so non-interactive containers (page-background, *-section-bg, *-card-bg, footer-bg) actually receive pointerdown; rebuildNode re-attaches the listener; applyLayout calls drawHighlight() at the end so the ring re-resolves at the new breakpoint. selectNode is intentionally a visual-only alias for highlightNode — it does NOT emit `node-selected` (avoids editor→preview→editor feedback loop). PrismHost.tsx re-exports `PrismDebugHandle` (and player/index.ts adds it to the public surface) so editor-side TS sees the typed window. Inspector.tsx adds two useEffects before the early-return: (1) on selectedId change → `window.__prism?.highlightNode(id ?? null)`; (2) once-on-mount subscribe to `window.__prism.onNodeSelected` → `useGraphEditorStore.getState().selectNode(id) + openInspector()`, with a 200 ms poll fallback for the brief window where Inspector mounts before PrismHost finishes booting. Spec-reviewer MUST FIX (resolved): progress log touched (project CLAUDE.md gate). Spec-reviewer SHOULD FIX (resolved as part of this iteration): eventMode promotion now covers PIXI v8 `'auto'` default not just `'none'`; applyLayout drawHighlight refresh wired so live breakpoint reflow keeps the ring on the rebuilt node. SHOULD FIX (tracked, deferred): (a) Inspector's once-on-mount subscription captures the first __prism.events bus closure; if PrismHost ever remounts (preset toggle, prismUrl bump) the subscription stays bound to the old bus until Inspector itself remounts — should listen for an `__prism`-installed signal (or watch window.__prism identity) to re-subscribe; (b) the 200 ms poll fallback is functional but smelly — PrismHost already takes `onMounted` and is the React boundary, so a shared store / custom event would let Inspector subscribe deterministically; (c) selectNode's type doc says \"programmatic selection from the editor\" but observable behavior is identical to highlightNode — name and behavior could be reconciled (drop the alias or persist a separate selectedNodeId on the handle); (d) attachSelectionBridge has no symmetric detach (today leak-free because rebuildNode teardown destroys the container with its listeners — a future refactor that retains containers across rebuilds would silently leak); (e) ring stroke color (0x5d8bff) + 3 px width hardcoded — would be cleaner as a top-of-file constant alongside CARD_SUFFIXES; (f) `onNodeSelected` payload type-guards `unknown` at runtime — a typed `NodeSelectedPayload` interface + emit-wrapper would self-document the contract; (g) test gates remain pure substring/regex matches — a Node harness that asserts `selectNode('x')` emits zero `node-selected` events would catch a regression that `/selectNode/.test(bootSrc)` cannot (the explicit anti-loop invariant); (h) PrismHost comment block names the three bridge methods but the file itself doesn't invoke them — a one-liner pointing at `Inspector.tsx` as the consumer would help future grep readers. Three gates: verify:prism 15/15, browser-smoke 6/6, T-EDIT-05 14/14. artifactHash unchanged (7310c04872ba… — runtime-bundle change only; no graph mutation). Five commits: e0b66bb (claim) → d1f808c (failing test) → 559ab47 (impl) → 9ee18a3 (spec-reviewer fixes + progress log) → state."
-    },
-    {
-      "id": "T-EDIT-06",
-      "title": "Documentation update",
-      "specRefs": [
-        "plan:Phase 6"
-      ],
-      "planFile": "/Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md",
-      "status": "done",
-      "attemptCount": 1,
-      "filesEdited": [
-        "kid-kode-landing/notes/mockup-pipeline.md",
-        "kid-kode-landing/notes/prism-mock-progress.md"
-      ],
-      "verificationGates": [
-        "cross-links resolve",
-        "new §'Editor view-model mapping' section appended to mockup-pipeline.md",
-        "progress entry appended to prism-mock-progress.md"
-      ],
-      "notes": "Append Editor view-model mapping subsection to mockup-pipeline.md describing how Inspector tabs map to JSON fields (the 6-row tab × accessor table from plan Phase 1). Append progress entry summarizing the 7-phase Ralph run.\\n\\n[iter 21 spec-reviewer SHOULD FIX (deferred — non-blocking)]:\\n- §1 hub.responsiveBreakpoints described as \"scale factors\" — actual shape per breakpoint is {maxWidth, scale} (HubInspector.tsx:146-156).\\n- §12.1 Code row says \"loaded from codeRef\" — actually view-model.ts:305-308 synthesizes a stub (\"// Source: <codeRef>\") rather than loading the .js source. Phase 3 / future work to round-trip.\\n- §12.1 Behavior row mentions triggersDownstream[].targetNodeIds but elides the eventName join key (view-model.ts:81-96 uses exact eventName↔effect match).\\n- §12.4 selectNode signature should show  per boot.ts:379.\\n- §12 lead overclaims \"canonical schema IS the editor's data source\" — neutral palette defaults (#5d8bff/#a978ff/Inter) are editor-only chrome, not schema-derived.\\n- §12.1 Backend row should note JSON.stringify on intent.contracts.{inputs,outputs} into the editor's schema string (view-model.ts:156).\\n\\n[iter 21 spec-reviewer OPTIONAL (deferred — non-blocking)]:\\n- §12 closing line points to plan path under ~/.claude/plans/ which won'\\''t follow checkouts; consider in-repo summary.\\n- §12.3 wording \"older readers ignore them\" implies tabs auto-pick-up; in practice each tab opts in by calling the accessor.\\n- iter-21 progress-log entry is ~3.5 KB; a closing sentence summarizing artifactHash unchanged + final 7-phase state would help future grep readers.\\n",
-      "commit": "2b55918357dc99fee6e0e79a80fb0010f71d0a92",
-      "verifiedAt": "2026-04-28T18:33:04Z"
+      "tddRequired": false,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
     }
   ],
   "invariants": {
-    "verifyPrismPassing": true,
-    "browserSmokePassing": true,
-    "lastArtifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48"
+    "typecheckPassing": true,
+    "lastBundleHash": ""
   },
-  "history": [
-    {
-      "iteration": 1,
-      "taskId": "T00",
-      "commit": "5155ac99d52ac6173f461ddc7f3e92c8bcd965db",
-      "verifiedAt": "2026-04-22T14:59:03Z"
-    },
-    {
-      "iteration": 2,
-      "taskId": "T01",
-      "commit": "32a09e24",
-      "verifiedAt": "2026-04-22T15:50:11Z"
-    },
-    {
-      "iteration": 3,
-      "taskId": "T02",
-      "commit": "2c6badd772d746549c6db5ee8801ce01ca42d1fa",
-      "verifiedAt": "2026-04-22T16:10:31Z"
-    },
-    {
-      "iteration": 4,
-      "taskId": "T03",
-      "commit": "b57fa0393a8bbaf859101ca8609bfd06f5e159d1",
-      "verifiedAt": "2026-04-22T16:35:00Z"
-    },
-    {
-      "iteration": 5,
-      "taskId": "T04",
-      "commit": "8da71fde52be74e9a821e76f7250cc4a7f1e68eb",
-      "verifiedAt": "2026-04-22T16:44:00Z"
-    },
-    {
-      "iteration": 6,
-      "taskId": "T05",
-      "commit": "1644db5e5738ebb988ae77b2b876d9974dc198e5",
-      "verifiedAt": "2026-04-22T16:56:43Z"
-    },
-    {
-      "iteration": 7,
-      "taskId": "T06",
-      "commit": "6c282daedab902714b5260ff46b73f0f313c744f",
-      "verifiedAt": "2026-04-22T17:13:59Z"
-    },
-    {
-      "iteration": 8,
-      "taskId": "T07",
-      "commit": "8e843fa7ab6ece1fa578c82d7e65fc5f22f40809",
-      "verifiedAt": "2026-04-22T17:42:12Z"
-    },
-    {
-      "iteration": 9,
-      "taskId": "T08",
-      "commit": "ec830b51893f905f47807d2bec5af198bba0620c",
-      "verifiedAt": "2026-04-22T17:57:27Z"
-    },
-    {
-      "iteration": 10,
-      "taskId": "T09",
-      "commit": "c72260aa50fa56c215b3a8cca228438d01b67b48",
-      "verifiedAt": "2026-04-22T18:19:15Z"
-    },
-    {
-      "iteration": 11,
-      "taskId": "T10",
-      "commit": "dad31726f2369ddda0a340b5817562d6ad9bc7c6",
-      "verifiedAt": "2026-04-22T18:45:00Z"
-    },
-    {
-      "iteration": 12,
-      "taskId": "T11",
-      "commit": "f7c9bda",
-      "verifiedAt": "2026-04-22T20:15:00Z"
-    },
-    {
-      "iteration": 13,
-      "taskId": "T12",
-      "commit": "476ce59bcbcd903eca6a4f75523ad4167d789e86",
-      "verifiedAt": "2026-04-22T20:30:00Z"
-    },
-    {
-      "iteration": 14,
-      "taskId": "T13",
-      "commit": "211a94f6aff4f952ddf362a2cdc1be584ffc167a",
-      "verifiedAt": "2026-04-22T20:40:06Z"
-    },
-    {
-      "iteration": 15,
-      "taskId": "T14",
-      "commit": "a629a9b647be3e3b047a6596663eab85e5b62daf",
-      "verifiedAt": "2026-04-22T20:51:44Z"
-    },
-    {
-      "iteration": 16,
-      "taskId": "T-EDIT-01",
-      "commit": "13fccb788c554ffd3127f898d22c64a193bac827",
-      "verifiedAt": "2026-04-28T17:30:00Z"
-    },
-    {
-      "iteration": 17,
-      "taskId": "T-EDIT-02",
-      "commit": "7f349b6d59adc299eae260366c7c7bc3e063096f",
-      "verifiedAt": "2026-04-28T17:21:25Z"
-    },
-    {
-      "iteration": 18,
-      "taskId": "T-EDIT-03",
-      "commit": "7bc2c195865af60eda928a592c54364b431262a3",
-      "verifiedAt": "2026-04-28T17:49:13Z"
-    },
-    {
-      "iteration": 19,
-      "taskId": "T-EDIT-04",
-      "commit": "b65d14e8dd8ed8f9260bb62935cb6a2e4cd4d4c1",
-      "verifiedAt": "2026-04-28T18:02:24Z"
-    },
-    {
-      "iteration": 20,
-      "taskId": "T-EDIT-05",
-      "commit": "9ee18a32b522edea37edf81e80fad1eb5f1a630f",
-      "verifiedAt": "2026-04-28T18:18:48Z"
-    },
-    {
-      "iteration": 21,
-      "taskId": "T-EDIT-06",
-      "commit": "2b55918357dc99fee6e0e79a80fb0010f71d0a92",
-      "verifiedAt": "2026-04-28T18:33:04Z"
-    }
-  ],
-  "maxIterationsPerPhase": 50,
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 21,
-    "lastProductiveCommit": "ca9dd3be2a15c737df0a655ad35e48d8e0c5af40"
+    "lastProductiveIteration": 0,
+    "lastProductiveCommit": null
   },
-  "phaseCaps": {
-    "§10": {
-      "used": 13,
-      "cap": 50,
-      "status": "active"
-    },
-    "§3": {
-      "used": 1,
-      "cap": 50,
-      "status": "active"
-    }
-  },
-  "checkpoint": {
-    "iteration": 21,
-    "commit": "ca9dd3be2a15c737df0a655ad35e48d8e0c5af40",
-    "verifiedAt": "2026-04-28T18:34:42Z",
-    "artifactHash": "7310c04872bacf9b6a19fcba08de7e9d96bd8798d712e2804617958cb7106f48",
-    "recordedAt": "2026-04-28T18:34:42Z"
-  },
+  "phaseCaps": {},
+  "checkpoint": null,
   "resumeFrom": null,
-  "breakpoints": []
+  "breakpoints": [],
+  "history": []
 }
