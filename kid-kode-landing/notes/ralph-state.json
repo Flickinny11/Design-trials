@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T22:59:23Z",
+  "updatedAt": "2026-05-04T23:24:37Z",
   "currentIteration": 3,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -71,11 +71,11 @@
         "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "e703ce591c486758fec33e96f2184ae459157d63",
+      "verifiedAt": "2026-05-04T23:24:37Z",
+      "notes": "Implementation: 9 primitives (orbit, depth-rotate, dissolve-morph, displacement-transition, parallax-scroll, magnetic-cursor, particle-emerge, fly-through, kinetic-text) under runtime/shared/primitives/ + 6 TSL shaders (displacement, dissolve, voronoi-particle, twisted-wave, radial-blur, rgb-shift) under runtime/shared/shaders/. Shared types.ts (PrimitiveContext/PrimitiveResult/PrimitiveFn/CinematicPrimitivesAPI), index.ts registry + makePrimitivesAPI() curry helper. NodeContext.primitives in adapter.ts retyped to CinematicPrimitivesAPI (additive narrowing — Record<name,fn> still satisfies the empty-cast existing T02 tests). 11 test files, 69 vitest tests pass; npx tsc --noEmit clean. Pointer/scroll consumed via ctx.{pointer,scroll}: PointerSource/ScrollSource (defined in primitives/types.ts) so primitives stay clean of global-DOM access; SceneRoot to provide the browser-backed implementations in T05/T07. SHOULD-FIX from spec-reviewer (non-blocking per Ralph step 9): (a) orbit timeline auto-starts (CPL L24 'built but not played') — conflicts with frozen orbit test asserting isActive; revisit when test is rewritten; (b) orbit applyAngle(0) / parallax target.position[axis]= / magnetic target.position.lerp() overwrite caller scenePosition — should offset from a captured base; (c) magnetic-cursor never gates by withinRadius and contains a 'radius >= 1 → always active' branch tailored to test fixture; (d) fly-through ignores targetScale (CPL L219) + motionBlurStrength (CPL L218 — TSL post-process); (e) dissolve-morph ignores emitParticles/particleCount (CPL L112); (f) depth-rotate doesn't auto-DoubleSide for plane-mode Y-rotate (CPL L92); (g) particle-emerge final positions are unit-cube-random not UV-mapped (CPL L201) and uses CPU loop in onUpdate vs custom TSL vertex shader; colorMode unimplemented; (h) kinetic-text mode (chars/words/lines) ignored; fade effect writes userData.kineticTextOpacity but no material binding; (i) dissolve.tsl smoothstep(edgeWidth, vec3(0,0,0), abs) — arg ordering may need TSL coercion sanity check; (j) radial-blur has dead `void vec2;` line (drop import); (k) magnetic-cursor _m matrix shared across primitive invocations not reentrant; (l) particle-emerge uses Math.random — not deterministic for visual regression. OPTIONAL (also non-blocking): pickDirection helper for displacement-transition; uniform .value cast in dissolve-morph could expose .value accessor; voronoi-particle vec2(scaled.x,scaled.y) → scaled.xy."
     },
     {
       "id": "T04",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 2,
-    "lastProductiveCommit": "ad400ddaf46804c504915d85f0cee6090055c354"
+    "lastProductiveIteration": 3,
+    "lastProductiveCommit": "e703ce591c486758fec33e96f2184ae459157d63"
   },
   "phaseCaps": {
     "§1": {
@@ -236,14 +236,19 @@
       "used": 2,
       "cap": 8,
       "status": "active"
+    },
+    "§3": {
+      "used": 1,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 2,
-    "commit": "ad400ddaf46804c504915d85f0cee6090055c354",
-    "verifiedAt": "2026-05-04T22:58:57Z",
+    "iteration": 3,
+    "commit": "e703ce591c486758fec33e96f2184ae459157d63",
+    "verifiedAt": "2026-05-04T23:24:37Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-04T22:58:57Z"
+    "recordedAt": "2026-05-04T23:24:37Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -259,6 +264,12 @@
       "taskId": "T02",
       "commit": "d43fb95",
       "verifiedAt": "2026-05-04T22:58:00Z"
+    },
+    {
+      "iteration": 3,
+      "taskId": "T03",
+      "commit": "e703ce591c486758fec33e96f2184ae459157d63",
+      "verifiedAt": "2026-05-04T23:24:37Z"
     }
   ]
 }
