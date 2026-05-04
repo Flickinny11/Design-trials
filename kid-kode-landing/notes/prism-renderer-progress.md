@@ -53,3 +53,4 @@ Phase 2.0.
 (populated by /ralph-step on each iteration)
 
 - iter 1 - T01 phase 1 - foundation deps (three@^0.184, three-msdf-text-webgpu@^2.1, PrismNode 5 fields, runtime/shared/* stubs) - 2fdb4b4
+- iter 2 - T02 phase 2 - SceneRoot + LoaderCache + FontAtlas + HubManager + Adapter (25 vitest integration tests, vitest@^2.1 + msdf alias) - d43fb95
