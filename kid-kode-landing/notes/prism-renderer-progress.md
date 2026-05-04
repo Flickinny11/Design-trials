@@ -54,3 +54,4 @@ Phase 2.0.
 
 - iter 1 - T01 phase 1 - foundation deps (three@^0.184, three-msdf-text-webgpu@^2.1, PrismNode 5 fields, runtime/shared/* stubs) - 2fdb4b4
 - iter 2 - T02 phase 2 - SceneRoot + LoaderCache + FontAtlas + HubManager + Adapter (25 vitest integration tests, vitest@^2.1 + msdf alias) - d43fb95
+- iter 3 - T03 phase 3 - 9 cinematic primitives + 6 TSL shaders (PrimitiveContext/Result/Fn types, makePrimitivesAPI curry, NodeContext.primitives → CinematicPrimitivesAPI, 11 new test files / 69 vitest tests) - e703ce5
