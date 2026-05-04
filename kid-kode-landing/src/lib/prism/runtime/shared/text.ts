@@ -4,16 +4,42 @@
 //
 // Spec: PRISM-RENDERER-MIGRATION-SPEC.md §3 (Tech Stack) and §13 (Editor —
 // Text rendering). Forbidden alternatives: THREE.TextGeometry, DOM text
-// overlays, troika-three-text. Implemented in T02.
+// overlays, troika-three-text.
 
-export interface FontAtlasHandle {
-  // Anticipated surface (T02):
-  //   load(atlasUrl: string, fontJsonUrl: string): Promise<void>
-  //   createText(content: string, opts?: TextOpts): Object3D
-  //   dispose(): void
-  readonly __t01Stub: true;
+import type { Object3D, ColorRepresentation } from 'three';
+import type { BMFontJSON } from 'three-msdf-text-webgpu';
+
+export interface TextOpts {
+  fontSize?: number;
+  color?: ColorRepresentation;
+  align?: 'left' | 'center' | 'right';
+  maxWidthPx?: number;
+  letterSpacingPx?: number;
 }
 
-export function createFontAtlas(): FontAtlasHandle {
+export interface CreateFontAtlasOptions {
+  /** Inject already-loaded atlas + font JSON (used for tests + offline builds). */
+  preloaded?: {
+    atlas: import('three').Texture;
+    data: BMFontJSON;
+  };
+}
+
+export interface FontAtlasHandle {
+  /** True once `load()` resolves (or `preloaded` was provided). */
+  readonly ready: boolean;
+  /** Load the MSDF atlas PNG + BMFont JSON. Idempotent: a second call with
+   *  the same URLs resolves immediately. */
+  load(atlasUrl: string, fontJsonUrl: string): Promise<void>;
+  /** Build a `THREE.Mesh<MSDFTextGeometry, MSDFTextNodeMaterial>` for the
+   *  given content. Throws if not yet ready. */
+  createText(content: string, opts?: TextOpts): Object3D;
+  /** Dispose of the atlas texture and any cached materials. */
+  dispose(): void;
+}
+
+export function createFontAtlas(
+  _options?: CreateFontAtlasOptions,
+): FontAtlasHandle {
   throw new Error('createFontAtlas: not implemented (T02)');
 }
