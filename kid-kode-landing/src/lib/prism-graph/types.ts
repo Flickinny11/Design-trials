@@ -8,6 +8,43 @@
 // alphaCutout, animationSpec, visualNeighbors, interactionNeighbors,
 // responsiveSizing, visibility, and visualSpec.layers. Hub-level: hub.caption
 // and hub.responsiveBreakpoints.
+//
+// Renderer-migration additions (PRISM-RENDERER-MIGRATION-SPEC.md §4): five
+// fields on PrismNode — renderMode, depthMapUrl, meshUrl, cinematicPrimitives,
+// scenePosition — are additive and optional. Legacy graphs without them
+// render in 'sprite' mode at the identity pose with no primitives applied.
+
+import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+
+export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+
+export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
+
+export interface ScenePosition {
+  x: number;
+  y: number;
+  z: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  scaleX: number;
+  scaleY: number;
+  scaleZ: number;
+}
+
+export const RENDER_MODE_DEFAULT: RenderMode = 'sprite';
+
+export const SCENE_POSITION_DEFAULT: ScenePosition = {
+  x: 0,
+  y: 0,
+  z: 0,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1,
+};
 
 export interface PrismHubLayout {
   viewportWidth: number;
@@ -209,6 +246,13 @@ export interface PrismNode {
   intent: PrismIntent;
   codeRef: string;
   backendRef: string | null;
+  // Renderer-migration additions (spec §4). Optional for backward compat with
+  // legacy graphs; defaults: 'sprite' / null / null / [] / identity pose.
+  renderMode?: RenderMode;
+  depthMapUrl?: string | null;
+  meshUrl?: string | null;
+  cinematicPrimitives?: CinematicPrimitiveRef[];
+  scenePosition?: ScenePosition;
 }
 
 export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
