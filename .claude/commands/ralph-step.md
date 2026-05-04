@@ -1,31 +1,44 @@
 ---
-description: Execute one Ralph iteration — pick next pending task, do it TDD-style, verify, review, commit, update state, exit. Follow steps exactly; do not improvise.
+description: Execute one Ralph iteration of the Prism Renderer Migration — pick next pending task, do it TDD-style, verify, review, commit, update state, exit. Follow steps exactly; do not improvise.
 argument-hint: (none)
 ---
 
-# Ralph step — one task per session
+# Ralph step — one task per session, prism renderer migration
 
-You are the Ralph loop worker. You execute exactly one iteration and exit. A fresh Claude process will run the next iteration. Do not pick up a second task in this session. Do not skip steps. Do not improvise the order.
+You are the Ralph loop worker. You execute exactly one iteration and exit. A
+fresh Claude process will run the next iteration. Do not pick up a second
+task in this session. Do not skip steps. Do not improvise the order.
 
-All paths below are relative to the repo root `/Users/loganbaird/Prototype_Prism/Design-trials/`. The Ralph state file lives at `kid-kode-landing/notes/ralph-state.json`. Canonical spec: `kid-kode-landing/notes/prism-spec-extract.md`.
+All paths below are relative to the repo root
+`/Users/loganbaird/Prototype_Prism/Design-trials/`. The Ralph state file
+lives at `kid-kode-landing/notes/ralph-state.json`. Active branch is
+`prism-renderer-ralph`. The condensed spec is
+`kid-kode-landing/notes/prism-renderer-spec-extract.md`; the canonical specs
+are `kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` and
+`kid-kode-landing/docs/prism/CINEMATIC-PRIMITIVES-LIBRARY.md`.
 
 ## Step 1 — read state; terminal checks
 
-Read `kid-kode-landing/notes/ralph-state.json`. If `status != "running"` OR `currentIteration >= maxIterations`, print `Ralph terminal: <status>, iteration <currentIteration>/<maxIterations>` and exit 0 cleanly without further work.
+Read `kid-kode-landing/notes/ralph-state.json`. If `status != "running"` OR
+`currentIteration >= maxIterations`, print
+`Ralph terminal: <status>, iteration <currentIteration>/<maxIterations>` and
+exit 0 cleanly without further work.
 
 ## Step 2 — pick next task
 
-Find the first task with `status == "pending"` in the `tasks` array. If none exists:
+Find the first task with `status == "pending"` in the `tasks` array. If none
+exists:
 - Flip `status` to `"complete"`.
-- Bump `updatedAt`.
-- Write back, commit as `ralph: loop complete — all tasks done`, push, exit 0.
+- Bump `updatedAt` (ISO 8601 UTC).
+- Write back, commit as `ralph: loop complete - all tasks done`, push, exit 0.
 
 ## Step 3 — attempt ceiling
 
 If the selected task's `attemptCount >= maxAttemptsPerTask` (default 3):
 - Set `task.status = "failed"`, log the reason in `task.notes`.
 - Flip loop `status = "failed"`, bump `updatedAt`.
-- Write back, commit as `ralph: loop failed — <task-id> exceeded attempts`, push, exit 0.
+- Write back, commit as `ralph: loop failed - <task-id> exceeded attempts`,
+  push, exit 0.
 
 ## Step 4 — claim the task
 
@@ -33,87 +46,128 @@ Mutate in memory:
 - `task.status = "in-progress"`
 - `task.attemptCount += 1`
 - `currentIteration += 1`
-- `updatedAt = now` (ISO 8601, UTC)
+- `updatedAt = now`
 
-Write back to `ralph-state.json`. Commit as `ralph: iter <N> start — <task-id> <title>`. Do NOT push yet (push happens at step 13).
+Write back to `ralph-state.json`. Commit as `ralph: iter <N> start - <task-id> <title>`. Do NOT push yet (push happens at step 13).
 
-## Step 5 — read spec refs
+## Step 5 — read context
 
-For each string in `task.specRefs`, locate it in `kid-kode-landing/notes/prism-spec-extract.md`. Read the relevant section(s) into your working memory. Do not try to open `docs/prism/*.md` — those files are not on disk.
+Always re-read these every iteration (you are a fresh process — do not rely
+on memory):
+- `kid-kode-landing/notes/prism-renderer-spec-extract.md`
+- `.claude/rules/prism-renderer-migration.md`
+- `kid-kode-landing/CLAUDE.md` (the "Active Migration" section)
+- The specific spec sections in `task.specRefs[]` (use the `spec-researcher`
+  subagent to extract just those sections from
+  `kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` and
+  `CINEMATIC-PRIMITIVES-LIBRARY.md` — keeps main context lean)
+- `kid-kode-landing/notes/prism-renderer-progress.md`
 
-## Step 6 — write a failing test FIRST
+## Step 6 — failing test FIRST (only when `task.tddRequired === true`)
 
-Create a test under `tests/<mirrored-path>/<task-id>.test.mjs` (or `.test.ts` if a TS runner is available) that captures the exact acceptance behavior for this task's spec ref. The test should fail today (if the implementation were partial or absent, the test would catch it). If the spec criterion is satisfied in the current codebase, the test should still encode the acceptance contract in a way that verifies it.
+Create test(s) under `kid-kode-landing/tests/<area>/<task-id>.<scenario>.test.<ext>`
+that capture the acceptance behavior for this task's spec ref. Run them and
+confirm they FAIL.
 
-Run the test. Confirm it FAILS. If it passes immediately, either:
-- The task is already satisfied — mark it `"done"` with a note like `"verified without implementation; pre-existing code satisfies §X"`, skip to step 11.
-- The test is not strict enough — tighten it and re-run.
+If they pass immediately, either:
+- The task is already satisfied — mark it `done` with note
+  `verified without implementation; pre-existing code satisfies §X`, skip to
+  step 11.
+- The test isn't strict enough — tighten it and re-run.
 
-Commit the failing test as `test: <task-id> — failing test for <§ref>`. The test file must NOT be modified during steps 7–8.
+Commit the failing test as
+`test: <task-id> - failing tests for spec sections <refs>`.
+**The test files MUST NOT be modified during steps 7-8.**
 
 ## Step 7 — implement
 
-Write the minimum code to make the test pass. The anti-drift PreToolUse hook will block §1.4 forbidden patterns — respect them. For legitimate masks/hit-areas, include an `ALLOWED-GRAPHICS:` comment within 3 lines of the `PIXI.Graphics` call.
+Write the minimum code to make the failing tests pass and satisfy
+`task.haltCheck`. Respect the migration-active hooks (they block forbidden
+patterns per `.claude/rules/prism-renderer-migration.md`).
 
-Do not batch scope creep. If you notice adjacent polish opportunities, write them as `SHOULD FIX` items in `task.notes` and move on.
+Do not work on any other task. Do not edit the failing tests from step 6.
 
-## Step 8 — verify (three gates)
+## Step 8 — verify (gates)
 
-Run all three from `kid-kode-landing/`:
-1. `npm run verify:prism` — the static harness.
-2. `node scripts/browser-smoke.mjs` — the runtime smoke.
-3. The new test from step 6.
-
-All three must pass. If any fails:
-- If `attemptCount < maxAttemptsPerTask`: fix the code and re-run. Do not commit broken state.
-- If `attemptCount >= maxAttemptsPerTask`: update state to failed (per step 3's pattern), exit 0.
-
-If a verify failure is caused by a flaky browser-smoke, investigate before retrying — do not paper over with retries.
+Run every command in `task.verificationCommands` in order. ALL must pass
+with exit 0. If any fails:
+- Read the failure, fix the implementation (NOT the tests).
+- Re-run from the failed command.
+- Up to 3 internal fix attempts. If still failing, leave the task in
+  `in-progress` with `attemptCount` unchanged (the outer Ralph shell will
+  retry the task in a new session up to `maxAttemptsPerTask` total).
 
 ## Step 9 — spec-reviewer
 
 Spawn the `spec-reviewer` subagent on HEAD. Parse its output:
-- `MUST FIX` items: address each, re-run step 8, re-invoke reviewer.
-- `SHOULD FIX` and `OPTIONAL` items: append to `task.notes`. Do not block.
+- `MUST FIX` items: address each, re-run step 8, re-invoke reviewer. Up to
+  2 review-fix cycles per iteration. If still has MUST FIX after 2 cycles,
+  leave task `in-progress` with `attemptCount` unchanged, exit (will retry
+  in fresh session).
+- `SHOULD FIX` and `OPTIONAL`: append to `task.notes` for visibility, do not
+  block.
 - `No deviations found.`: proceed.
 
 ## Step 10 — commit implementation
 
-Stage the implementation files and progress-log touch (step 12 will update progress-log; optionally stage it now). Commit as:
+Stage the implementation files. Commit as:
 
 ```
-prism-mock: <task-id> — <one-line description that cites the §ref satisfied>
+prism-renderer: <task-id> phase <N> - <title>
 ```
 
-Example: `prism-mock: T01 — hub-router scroll + active-section indicator (§10.14)`.
+Example: `prism-renderer: T01 phase 1 - foundation deps + PrismNode schema additions`.
 
 ## Step 11 — update state
 
-Re-read `ralph-state.json` (in case something else touched it), then update:
+Re-read `ralph-state.json` (something else may have touched it), then update:
 - `task.status = "done"`
 - `task.commit = <new HEAD sha>`
 - `task.verifiedAt = now`
-- Append to `history`: `{ iteration: currentIteration, taskId, commit, verifiedAt }`
-- Re-read `artifactHash` from `manifest.json` inside the rebuilt `public/prism-assets/mock-app.prism` and set `invariants.lastArtifactHash`.
+- Append to `history[]`:
+  `{ iteration: currentIteration, taskId, commit, verifiedAt }`
+- Update `invariants.lastBundleHash` if a build artifact was produced.
 
-Write, commit as `ralph: iter <N> done — <task-id>`.
+Write, commit as `ralph: iter <N> done - <task-id>`.
 
 ## Step 12 — update progress log
 
-Append one line to `kid-kode-landing/notes/prism-mock-progress.md` under a `## Ralph iterations` section (create the section if it doesn't exist):
+Append one line to `kid-kode-landing/notes/prism-renderer-progress.md` under
+the existing `## Ralph iterations` section:
 
 ```
-- iter <N> — <task-id> — §<ref> — <one-phrase outcome> — <commit-sha>
+- iter <N> - <task-id> phase <P> - <one-phrase outcome> - <commit-sha>
 ```
 
-Commit as `prism-mock: progress log — iter <N> <task-id>`.
+Stage and commit as `prism-renderer: progress log - iter <N> <task-id>`.
 
 ## Step 13 — push
 
-`git push origin prism-main`. If the push is rejected (upstream has newer commits), stop immediately and flag — do not force-push. Human judgment required.
+`git push origin prism-renderer-ralph`. If the push is rejected (upstream has
+newer commits), stop immediately and flag — do NOT force-push. Human
+judgment required.
 
 ## Step 14 — exit
 
-Exit this session. Do NOT pick up the next task. The outer `scripts/ralph.sh` will launch a fresh Claude process for the next iteration.
+Exit this session. Do NOT pick up the next task. The outer
+`scripts/ralph.sh` will launch a fresh Claude process for the next
+iteration.
 
-Final stdout line should be `Ralph iter <N> <task-id> → <done|failed>`. The shell parses this for logging.
+Final stdout line: `Ralph iter <N> <task-id> -> <done|failed|in-progress>`.
+The shell parses this for logging.
+
+## Notes specific to this repo
+
+- The schema interface is `PrismNode` (in
+  `kid-kode-landing/src/lib/prism-graph/types.ts`), not `GraphNode` as the
+  spec writes. Treat them as synonymous when reading the spec.
+- The project uses `npm`, not `pnpm`. Use `npx tsc --noEmit` for the
+  typecheck (no `npm run typecheck` script yet — T01 may add one).
+- The active branch is `prism-renderer-ralph`. Do not push to `prism-main`
+  during the migration.
+- The pre-existing `verify:prism` and `browser-smoke.mjs` checks enforce
+  PixiJS-era criteria and are gated off via the `.ralph-migration-active`
+  marker. Use `task.verificationCommands` instead.
+- The pre-existing `kid-kode-landing/notes/prism-spec-extract.md`
+  (1349 lines) is the OLD mock-app spec. Use the new
+  `kid-kode-landing/notes/prism-renderer-spec-extract.md` for renderer work.
