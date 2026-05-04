@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T22:36:00Z",
+  "updatedAt": "2026-05-04T22:58:00Z",
   "currentIteration": 2,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -51,11 +51,11 @@
         "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "d43fb95",
+      "verifiedAt": "2026-05-04T22:58:00Z",
+      "notes": "Implementation: createSceneRoot (Scene+PerspectiveCamera+lights+rAF/setAnimationLoop loop, WebGPU via lazy three/webgpu import, noRenderer/rendererFactory test seam), createLoaderCache (URL-keyed memoized textures+GLBs, sync resolvedTextures map for dispose), createFontAtlas (preloaded option + MSDFText factory injection + warmupDefaultFactory helper), createHubManager (register/activate/deactivate, reparent-on-navigate, descendant userData.cleanup walk via disposeHubGroup), adaptGraphToScene (Group per hub, scenePosition applied, default factory sets userData.cleanup no-op + handlers={}). 25 integration tests across 5 files; npx tsc --noEmit + npx vitest run tests/integration --reporter=basic both clean. SHOULD-FIX from spec-reviewer cycle 1 (commit 7cbc452): #2 defaultCreateNode missing userData.cleanup — FIXED in d43fb95; #3 NodeContext loader fields typed as union — FIXED, narrowed to Pick<LoaderCacheHandle,'loadTexture'>/'loadGLB'; #4 start() no-op without setAnimationLoop — FIXED, rAF/setTimeout fallback added; #1 createText silent placeholder Group when factory unwarmed — NOT FIXED (committed test asserts Object3D when ready; per Ralph step 6 tests are immutable in step 7-8; warmupDefaultFactory() is the production path); #5 TextureLoader from 'three' vs 'three/webgpu' — DEFERRED to T03 when shaders force the surface. Cycle 2 (commit d43fb95) confirmed no new MUST FIX; new SHOULD FIX: rAF/setTimeout cancellation pairing tag (low risk; cancellation no-op falls through to running=false self-termination), console.warn on placeholder text path (deferred), assert/log fallback path (deferred). OPTIONAL: doc the no-op-cleanup intent inline; non-optional warmupDefaultFactory; co-locate NodeTextureLoader/NodeGLBLoader exports with §8 quote. vitest msdf alias documented in vitest.config.mjs comment — package.json has only 'module'+'types' (no exports map), Vite needs the alias to resolve."
     },
     {
       "id": "T03",
@@ -223,22 +223,27 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 1,
-    "lastProductiveCommit": "3af49deaaea75f84265c515920413e0451c770fa"
+    "lastProductiveIteration": 2,
+    "lastProductiveCommit": "d43fb95"
   },
   "phaseCaps": {
     "§1": {
       "used": 2,
       "cap": 8,
       "status": "active"
+    },
+    "§2": {
+      "used": 1,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 1,
-    "commit": "3af49deaaea75f84265c515920413e0451c770fa",
-    "verifiedAt": "2026-05-04T22:17:31Z",
+    "iteration": 2,
+    "commit": "d43fb95",
+    "verifiedAt": "2026-05-04T22:58:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-04T22:17:31Z"
+    "recordedAt": "2026-05-04T22:58:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -248,6 +253,12 @@
       "taskId": "T01",
       "commit": "df900b8d535cd118620540d05f6e717a6182e1b0",
       "verifiedAt": "2026-05-04T22:16:40Z"
+    },
+    {
+      "iteration": 2,
+      "taskId": "T02",
+      "commit": "d43fb95",
+      "verifiedAt": "2026-05-04T22:58:00Z"
     }
   ]
 }
