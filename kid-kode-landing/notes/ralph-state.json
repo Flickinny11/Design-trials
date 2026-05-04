@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T23:26:05Z",
+  "updatedAt": "2026-05-04T23:41:01Z",
   "currentIteration": 4,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -90,11 +90,11 @@
         "cd kid-kode-landing && npx vitest run tests/unit --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "e6a8cc8502f0b5b9d68a643ed44aa5f3e0909e3f",
+      "verifiedAt": "2026-05-04T23:41:01Z",
+      "notes": "Implementation: SHARED_SYSTEM_PROMPT (§9.A L250-L276 verbatim, byte-stable for RadixAttention prefix-cache hit), buildPerNodePrompt (§9.B L278-L322 — ELEMENT SPECIFICATION/RENDER MODE/ASSETS/VISUAL/TEXT CONTENT/BEHAVIOR/SCENE PLACEMENT/CINEMATIC PRIMITIVES TO APPLY/NEIGHBORS/ATLAS REGION blocks), buildRenderModeSubPrompt (§9.C L324-L354 — sprite/plane/parallax-plane/mesh sub-prompts verbatim), buildCodegenPrompt returning {system, user}; verifier with ALLOWED_THREE_IMPORTS (19 names §10.A L362-L367), ALLOWED_IMPORT_SOURCES (5 specifiers §9.A L257-L258), DISALLOWED_PATTERNS (7 §10.B regex rules: PIXI_IMPORT widened additively to also catch pixi-filters/@pixi/* per migration rules; DOCUMENT_ACCESS, WINDOW_ACCESS, INNER_HTML, TEXT_GEOMETRY, ADD_EVENT_LISTENER, ASYNC_CREATE_NODE), §10.C structural checks (MISSING_DISPLACEMENT for parallax-plane, MISSING_GLB_LOADER for mesh, MISSING_PRIMITIVES_LOOP for all modes, MISSING_TEXT_CONTENT gated by hasTextContent, MISSING_CLEANUP); plan-output hook applyPlanRendererDefaults (sprite/null/null/[]/identity defaults, preserves explicit empty cinematicPrimitives per §7 L203, non-mutating) + validatePlanRendererFields (PARALLAX_REQUIRES_DEPTH_MAP, MESH_REQUIRES_MESH_URL, UNKNOWN_PRIMITIVE); 5 sample fixtures under tests/fixtures/codegen-samples/ covering all 4 render modes plus a text-heavy sprite variant. 4 test files / 66 vitest tests pass; full suite 135/135. SHOULD FIX from spec-reviewer (non-blocking per Ralph step 9): (a) DOCUMENT_ACCESS/WINDOW_ACCESS regexes add trailing \\\\w+ not in spec literal — behaviorally near-equivalent but should match spec exactly; (b) MISSING_DISPLACEMENT third branch hasTSLImport passes for any 'three/tsl' import even without displacement node — tighten to require displacement-related identifier alongside; (c) MISSING_CLEANUP comment claims method-shorthand support but regex only matches assignment form — widen regex or remove comment; (d) prompts.ts:89-91 redundant typography type assertion — typography is on PrismTextContent already; (e) getImageUrl falls back to node.visual.sourceAsset because spec uses node.imageUrl which doesn't exist on PrismNode — document mapping or add accessor; (f) primitives empty fallback prints '(none — node ships without primitive)' instead of spec literal which would map to empty string — match spec template; (g) phase5Strict flag declared but unused. OPTIONAL (non-blocking): (h) assertNever helper for RenderMode exhaustiveness; (i) KNOWN_PRIMITIVE_NAMES could import from @/lib/prism-graph/cinematic-primitives canonical list; (j) '--- RENDER MODE GUIDANCE ---' separator is an addition beyond spec template — keep stable for prompt-cache key consistency."
     },
     {
       "id": "T05",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 3,
-    "lastProductiveCommit": "455927b568a501aa00818d66f7479544dc3e519d"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "e6a8cc8502f0b5b9d68a643ed44aa5f3e0909e3f"
   },
   "phaseCaps": {
     "§1": {
@@ -241,14 +241,19 @@
       "used": 2,
       "cap": 8,
       "status": "active"
+    },
+    "§4": {
+      "used": 2,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 3,
-    "commit": "455927b568a501aa00818d66f7479544dc3e519d",
-    "verifiedAt": "2026-05-04T23:25:43Z",
+    "iteration": 4,
+    "commit": "e6a8cc8502f0b5b9d68a643ed44aa5f3e0909e3f",
+    "verifiedAt": "2026-05-04T23:41:01Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-04T23:25:43Z"
+    "recordedAt": "2026-05-04T23:41:01Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -270,6 +275,12 @@
       "taskId": "T03",
       "commit": "e703ce591c486758fec33e96f2184ae459157d63",
       "verifiedAt": "2026-05-04T23:24:37Z"
+    },
+    {
+      "iteration": 4,
+      "taskId": "T04",
+      "commit": "e6a8cc8502f0b5b9d68a643ed44aa5f3e0909e3f",
+      "verifiedAt": "2026-05-04T23:41:01Z"
     }
   ]
 }
