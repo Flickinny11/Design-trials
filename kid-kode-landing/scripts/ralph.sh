@@ -175,10 +175,13 @@ for i in $(seq 1 "$MAX_ITER"); do
 
   # Fresh Claude process. --dangerously-skip-permissions assumes the user has
   # pre-authorized the session per CLAUDE.md autonomous-operation block.
-  if ! claude \
+  # IMPORTANT: claude must be invoked from $REPO_ROOT so it finds the project
+  # slash commands at $REPO_ROOT/.claude/commands/ (Claude Code resolves
+  # commands relative to cwd — no walk-up).
+  if ! ( cd "$REPO_ROOT" && claude \
       --print \
       --dangerously-skip-permissions \
-      "/ralph-step" \
+      "/ralph-step" ) \
       > "$LOGFILE" 2>&1
   then
     echo "ralph.sh: claude exited non-zero on iter $((CUR_ITER + 1)) — see $LOGFILE"

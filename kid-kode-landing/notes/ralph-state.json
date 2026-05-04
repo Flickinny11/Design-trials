@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T22:16:40Z",
+  "updatedAt": "2026-05-04T22:18:00Z",
   "currentIteration": 1,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -224,16 +224,22 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 1,
-    "lastProductiveCommit": "df900b8d535cd118620540d05f6e717a6182e1b0"
+    "lastProductiveCommit": "3af49deaaea75f84265c515920413e0451c770fa"
   },
   "phaseCaps": {
     "§1": {
-      "used": 1,
+      "used": 2,
       "cap": 8,
       "status": "active"
     }
   },
-  "checkpoint": null,
+  "checkpoint": {
+    "iteration": 1,
+    "commit": "3af49deaaea75f84265c515920413e0451c770fa",
+    "verifiedAt": "2026-05-04T22:17:31Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-04T22:17:31Z"
+  },
   "resumeFrom": null,
   "breakpoints": [],
   "history": [
