@@ -37,25 +37,27 @@ export default function Inspector() {
 
   // T-EDIT-05 — bidirectional editor↔preview live binding (plan §Phase 5).
   // Editor → preview: when the editor's selection changes, push a visual
-  // highlight ring onto the matching preview node. window.__prism may be
-  // undefined briefly during PrismHost mount, so guard each call.
+  // highlight ring onto the matching preview node. The PixiJS-era
+  // `window.__prism` debug surface was retired in Phase 5 (spec §15);
+  // T07 will re-implement highlight + selection on the Three.js mount.
+  // Until then, the editor still drives `selectedId` locally — only the
+  // cross-pane visual ring is dormant.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    window.__prism?.highlightNode(selectedId ?? null);
+    const handle = (window as { __prism?: { highlightNode?: (id: string | null) => void } }).__prism;
+    handle?.highlightNode?.(selectedId ?? null);
   }, [selectedId]);
 
   // Preview → editor: subscribe to user-driven node clicks in the preview
-  // pane. Mounted once at component creation (Inspector is always rendered
-  // by RightPane) so the subscription stays live regardless of inspector
-  // open/close state. The callback opens the inspector on first click so
-  // the user immediately sees the data for the node they tapped.
+  // pane. Same Phase 5 caveat — `__prism.onNodeSelected` is not on the
+  // Three.js debug handle yet; the polling guard now no-ops cleanly.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let off: (() => void) | undefined;
     let cancelled = false;
     const tryAttach = () => {
-      const handle = window.__prism;
-      if (!handle) return false;
+      const handle = (window as { __prism?: { onNodeSelected?: (cb: (nodeId: string) => void) => () => void } }).__prism;
+      if (!handle?.onNodeSelected) return false;
       off = handle.onNodeSelected((nodeId) => {
         const store = useGraphEditorStore.getState();
         store.selectNode(nodeId);
@@ -64,7 +66,6 @@ export default function Inspector() {
       return true;
     };
     if (!tryAttach()) {
-      // PrismHost mounts asynchronously — poll briefly until __prism appears.
       const timer = setInterval(() => {
         if (cancelled) return;
         if (tryAttach()) clearInterval(timer);

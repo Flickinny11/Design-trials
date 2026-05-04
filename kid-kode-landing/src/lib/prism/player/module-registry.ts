@@ -1,29 +1,30 @@
 // Dynamically import node createNode() modules from in-memory source strings.
 // Each module is materialized as a blob URL and imported.
 //
-// The import map for the module (PIXI, gsap, atlas, …) is NOT resolved by the
-// module itself — node modules follow the ctx-injection pattern and receive
-// dependencies via the ctx argument to createNode(ctx). That lets us keep the
-// node modules as pure ES modules with zero external import statements.
+// The import map for the module (THREE, gsap, atlas, …) is NOT resolved by
+// the module itself — node modules follow the ctx-injection pattern and
+// receive dependencies via the `ctx` argument to `createNode(config, ctx)`.
+// That keeps the node modules as pure ES modules with zero external import
+// statements.
+//
+// Phase 5: PIXI no longer exists in the bundle (spec §15 L504-L509). The
+// authoritative `NodeContext` lives at
+// `src/lib/prism/runtime/shared/adapter.ts` and is what generated nodes
+// receive at runtime. This file provides only the dynamic-import surface.
 
-export type NodeCtx = {
-  PIXI: typeof import('pixi.js');
-  gsap: typeof import('gsap').gsap;
-  atlas: import('./atlas-loader').Atlas;
-  region?: unknown;
-  regions?: Record<string, unknown>;
-  overlayRegions?: Record<string, unknown>;
-  frameRegions?: unknown[];
-  transform: { x: number; y: number; width: number; height: number; z: number };
-  events: import('./event-bus').EventBus;
-  state: import('./state-manager').StateManager;
-  backend: { call: (path: string, opts?: { method?: string; body?: unknown; headers?: Record<string, string> }) => Promise<{ status: number; body: unknown }> };
-  intent: Record<string, unknown> & { nodeId: string };
-  msdfFont: import('./msdf-loader').MsdfFont | null;
-};
+import type { Object3D } from 'three';
 
-export type NodeInstance = { container: import('pixi.js').Container; teardown: () => void };
-export type CreateNode = (ctx: NodeCtx) => NodeInstance;
+/** Result of invoking a generated `createNode(config, ctx)`. */
+export interface NodeInstance {
+  /** Returned `THREE.Object3D` (typically a `THREE.Group`). */
+  object: Object3D;
+  /** Composed cleanup: dispose geometries/materials/textures, kill timelines. */
+  teardown: () => void;
+}
+
+/** Spec §8 createNode shape. The first argument is the node config; the
+ *  second is the ctx supplied by the runtime. */
+export type CreateNode = (config: unknown, ctx: unknown) => Object3D;
 
 // dynamicImport avoids webpack static analysis — Next.js / Turbopack will
 // otherwise try to resolve the blob URL at build time and fail. The Function
@@ -38,10 +39,11 @@ export async function loadNodeModule(source: string): Promise<{ createNode: Crea
   const url = URL.createObjectURL(blob);
   try {
     const mod = await dynamicImport(url);
-    if (typeof mod.createNode !== 'function') {
-      throw new Error('node module missing createNode() export');
+    const createNode = (mod.createNode ?? mod.default) as unknown;
+    if (typeof createNode !== 'function') {
+      throw new Error('node module missing createNode() / default export');
     }
-    return { createNode: mod.createNode as CreateNode };
+    return { createNode: createNode as CreateNode };
   } finally {
     URL.revokeObjectURL(url);
   }

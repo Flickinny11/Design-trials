@@ -11,7 +11,8 @@
 //
 // Spec §9.A L257-L258 lists 5 ALLOWED_IMPORT_SOURCES that the system prompt
 // constrains the LLM to. We surface them here for editor/inspector tooling
-// even though §10 itself only enforces "from 'pixi.js'" rejection.
+// even though §10 itself only enforces the legacy-renderer import rejection
+// (see PIXI_IMPORT below).
 
 import type { RenderMode } from '@/lib/prism-graph/types';
 
