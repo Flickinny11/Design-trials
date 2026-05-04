@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T22:08:49Z",
+  "updatedAt": "2026-05-04T22:16:40Z",
   "currentIteration": 1,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -32,11 +32,11 @@
         "grep -q scenePosition kid-kode-landing/src/lib/prism-graph/types.ts"
       ],
       "tddRequired": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "df900b8d535cd118620540d05f6e717a6182e1b0",
+      "verifiedAt": "2026-05-04T22:16:40Z",
+      "notes": "SHOULD-FIX from review: CinematicPrimitiveParams Record<string,number|string|boolean> is faithful to spec §4 L124 but may need widening for vec3 params (revisit in T03). Stub files throw at runtime — wire up only after T02. peer dep three-msdf-text-webgpu wants ^0.181 but we use ^0.184 (--legacy-peer-deps). @react-three/drei is at ^10.0.0 in package.json; spec §3 says v9 — flag for T07. OPTIONAL: consider re-exporting full surface from cinematic-primitives.ts; consider withDefaults() helper alongside SCENE_POSITION_DEFAULT; add line refs to CINEMATIC-PRIMITIVES-LIBRARY.md."
     },
     {
       "id": "T02",
@@ -221,10 +221,10 @@
     "lastBundleHash": ""
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 0,
-    "lastProductiveCommit": null
+    "lastProductiveIteration": 1,
+    "lastProductiveCommit": "df900b8d535cd118620540d05f6e717a6182e1b0"
   },
   "phaseCaps": {
     "§1": {
@@ -236,5 +236,12 @@
   "checkpoint": null,
   "resumeFrom": null,
   "breakpoints": [],
-  "history": []
+  "history": [
+    {
+      "iteration": 1,
+      "taskId": "T01",
+      "commit": "df900b8d535cd118620540d05f6e717a6182e1b0",
+      "verifiedAt": "2026-05-04T22:16:40Z"
+    }
+  ]
 }
