@@ -55,3 +55,4 @@ Phase 2.0.
 - iter 1 - T01 phase 1 - foundation deps (three@^0.184, three-msdf-text-webgpu@^2.1, PrismNode 5 fields, runtime/shared/* stubs) - 2fdb4b4
 - iter 2 - T02 phase 2 - SceneRoot + LoaderCache + FontAtlas + HubManager + Adapter (25 vitest integration tests, vitest@^2.1 + msdf alias) - d43fb95
 - iter 3 - T03 phase 3 - 9 cinematic primitives + 6 TSL shaders (PrimitiveContext/Result/Fn types, makePrimitivesAPI curry, NodeContext.primitives → CinematicPrimitivesAPI, 11 new test files / 69 vitest tests) - e703ce5
+- iter 4 - T04 phase 4 - codegen prompts (§9.A SHARED_SYSTEM_PROMPT byte-stable, §9.B per-node template, §9.C 4 sub-prompts) + verifier (§10.A 19 ALLOWED_THREE_IMPORTS / §9.A 5 ALLOWED_IMPORT_SOURCES / §10.B 7 disallowed regexes / §10.C 5 structural checks) + plan-output hook (defaults + validation) + 5 sample fixtures, 4 test files / 66 vitest tests pass - e6a8cc8
