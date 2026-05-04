@@ -9,7 +9,7 @@
 // The adapter does NOT mount anything on the SceneRoot — it returns hub
 // groups and a node lookup. The HubManager activates/deactivates hubs.
 
-import type { Group, Object3D } from 'three';
+import { Group, Object3D } from 'three';
 import type {
   GraphSource,
   PrismHub,
@@ -17,18 +17,19 @@ import type {
   ScenePosition,
 } from '@/lib/prism-graph/types';
 import type { CinematicPrimitiveRef } from '@/lib/prism-graph/cinematic-primitives';
+import type { LoaderCacheHandle } from './loaders';
+import type { FontAtlasHandle } from './text';
 
 /** Per-node creation context passed to user-supplied `createNode` functions.
  *  Mirrors the spec §8 NodeContext interface; concrete instances are built
  *  by SceneRoot.bootstrap and assembled in T03+. */
 export interface NodeContext {
-  textureLoader: import('./loaders').LoaderCacheHandle['loadTexture'] extends (
-    url: string,
-  ) => Promise<infer _T>
-    ? import('./loaders').LoaderCacheHandle
-    : import('./loaders').LoaderCacheHandle;
-  glbLoader: import('./loaders').LoaderCacheHandle;
-  fontAtlas: import('./text').FontAtlasHandle;
+  /** Loader cache keyed by URL. Same URL yields the same Promise<Texture>. */
+  textureLoader: LoaderCacheHandle;
+  /** Loader cache keyed by URL. Same URL yields the same Promise<GLTF>. */
+  glbLoader: LoaderCacheHandle;
+  /** MSDF font atlas. Throws on createText() until ready. */
+  fontAtlas: FontAtlasHandle;
   /** Cinematic primitives library lookup. Filled in T03; placeholder
    *  shape here keeps the adapter independent of T03 progress. */
   primitives: Record<
@@ -75,10 +76,42 @@ export function applyScenePosition(
   obj.scale.set(pos.scaleX, pos.scaleY, pos.scaleZ);
 }
 
+/** Default factory: returns a labelled empty Group. Useful for tests and as
+ *  the bootstrap path before codegen-emitted modules land in T03+. */
+const defaultCreateNode: CreateNodeFn = (config) => {
+  const g = new Group();
+  g.name = `node:${config.nodeId}`;
+  return g;
+};
+
 export function adaptGraphToScene(
-  _graph: GraphSource,
-  _ctx: NodeContext,
-  _options?: AdapterOptions,
+  graph: GraphSource,
+  ctx: NodeContext,
+  options: AdapterOptions = {},
 ): AdapterResult {
-  throw new Error('adaptGraphToScene: not implemented (T02)');
+  const factory = options.createNode ?? defaultCreateNode;
+
+  const hubs = new Map<string, Group>();
+  const nodes = new Map<string, Object3D>();
+
+  for (const hub of graph.hubs) {
+    const g = new Group();
+    g.name = `hub:${hub.hubId}`;
+    hubs.set(hub.hubId, g);
+  }
+
+  for (const node of graph.nodes) {
+    const hubGroup = hubs.get(node.parentHubId);
+    if (!hubGroup) {
+      // Spec §11 maps nodes via parent hub; orphans are skipped (an upstream
+      // verifier flags this as a graph-validity issue).
+      continue;
+    }
+    const obj = factory(node, ctx);
+    applyScenePosition(obj, node.scenePosition);
+    hubGroup.add(obj);
+    nodes.set(node.nodeId, obj);
+  }
+
+  return { hubs, nodes, hubOrder: [...graph.hubs] };
 }

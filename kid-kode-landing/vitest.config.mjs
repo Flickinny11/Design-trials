@@ -8,6 +8,9 @@
 // Browser tests (tests/browser) use Playwright, not vitest, and are excluded.
 
 import { defineConfig } from 'vitest/config';
+import { fileURLToPath } from 'node:url';
+
+const here = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 
 export default defineConfig({
   test: {
@@ -18,7 +21,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': new URL('./src', import.meta.url).pathname,
+      '@': here('./src'),
+      // three-msdf-text-webgpu's package.json only declares "module" + "types"
+      // (no "main" / "exports" map), which Vite's resolver can't pick up.
+      // Point directly at the built ESM entry.
+      'three-msdf-text-webgpu': here(
+        './node_modules/three-msdf-text-webgpu/dist/index.js',
+      ),
     },
   },
 });

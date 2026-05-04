@@ -70,8 +70,71 @@ export function disposeHubGroup(group: Object3D): void {
 }
 
 export function createHubManager(
-  _sceneRoot: HubManagerScene,
-  _options?: CreateHubManagerOptions,
+  sceneRoot: HubManagerScene,
+  options: CreateHubManagerOptions = {},
 ): HubManagerHandle {
-  throw new Error('createHubManager: not implemented (T02)');
+  // Insertion-ordered map preserves registration order for `list()`.
+  const hubs = new Map<string, Group>();
+  let activeId: string | null = null;
+
+  function deactivateInternal(hubId: string, fireHook: boolean): void {
+    const group = hubs.get(hubId);
+    if (!group) return;
+    if (fireHook) options.onDeactivate?.(hubId, group);
+    if (group.parent) group.parent.remove(group);
+    disposeHubGroup(group);
+    if (activeId === hubId) activeId = null;
+  }
+
+  function register(hubId: string, group: Group): void {
+    const prior = hubs.get(hubId);
+    if (prior && prior !== group) {
+      // If the prior group was never activated (no parent), dispose it; if it
+      // was the active hub, deactivate first.
+      if (activeId === hubId) {
+        deactivateInternal(hubId, true);
+      } else {
+        disposeHubGroup(prior);
+      }
+    }
+    hubs.set(hubId, group);
+  }
+
+  function activate(hubId: string): void {
+    const group = hubs.get(hubId);
+    if (!group) {
+      throw new Error(`HubManager.activate: unknown hubId "${hubId}"`);
+    }
+    if (activeId && activeId !== hubId) {
+      // Detach the prior hub (no cleanup — reparenting is non-destructive
+      // per §12). Cleanup happens on explicit deactivate.
+      const prior = hubs.get(activeId);
+      if (prior?.parent) prior.parent.remove(prior);
+    }
+    sceneRoot.scene.add(group);
+    activeId = hubId;
+    options.onActivate?.(hubId, group);
+  }
+
+  function deactivate(hubId: string): void {
+    deactivateInternal(hubId, true);
+  }
+
+  function getActive(): string | null {
+    return activeId;
+  }
+
+  function list(): string[] {
+    return Array.from(hubs.keys());
+  }
+
+  function dispose(): void {
+    for (const id of Array.from(hubs.keys())) {
+      deactivateInternal(id, false);
+    }
+    hubs.clear();
+    activeId = null;
+  }
+
+  return { register, activate, deactivate, getActive, list, dispose };
 }
