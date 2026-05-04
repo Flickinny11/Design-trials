@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T21:49:00Z",
-  "currentIteration": 0,
+  "updatedAt": "2026-05-04T22:08:49Z",
+  "currentIteration": 1,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
@@ -32,8 +32,8 @@
         "grep -q scenePosition kid-kode-landing/src/lib/prism-graph/types.ts"
       ],
       "tddRequired": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
@@ -221,12 +221,18 @@
     "lastBundleHash": ""
   },
   "convergence": {
-    "stagnantStreak": 0,
+    "stagnantStreak": 1,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 0,
     "lastProductiveCommit": null
   },
-  "phaseCaps": {},
+  "phaseCaps": {
+    "§1": {
+      "used": 1,
+      "cap": 8,
+      "status": "active"
+    }
+  },
   "checkpoint": null,
   "resumeFrom": null,
   "breakpoints": [],
