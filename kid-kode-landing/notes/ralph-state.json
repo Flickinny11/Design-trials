@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T01:00:00Z",
+  "updatedAt": "2026-05-05T01:05:00Z",
   "currentIteration": 8,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -169,11 +169,11 @@
         "cd kid-kode-landing && npx playwright test tests/browser/T08.editor-image-edit.spec.ts"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "f0af766a567215fa364769c25da006922a52fba1",
+      "verifiedAt": "2026-05-05T01:05:00Z",
+      "notes": "Implementation: src/lib/prism-graph/animation-presets.ts (ANIMATION_PRESET_LIBRARY = 4 PowerPoint categories: entrance/emphasis/exit/motion-path; 12 presets total mapping to canonical 9-primitive library per CINEMATIC-PRIMITIVES-LIBRARY.md — entrance: dissolve-morph/particle-emerge/kinetic-text/displacement-transition; emphasis: orbit/depth-rotate/parallax-scroll/magnetic-cursor; exit: dissolve-morph/displacement-transition; motion-path: orbit/fly-through; presetsForCategory() defensive read; applyAnimationPreset() merges defaultParams with override, non-mutating, emits CinematicPrimitiveRef per spec §4 L124), src/lib/prism-graph/animation-keyframes.ts (ANIMATION_TAB_MODES tuple ['i2v-frame-scrub','timeline-keyframe'] per §13 L479; createKeyframeTimeline default 1500ms; captureKeyframe non-mutating, deep-clones params, clamps t to [0,1], maintains sort order; replayKeyframeTimeline interpolates with bracketing keyframes, returns identity defaults on empty timeline, clamps t — DoD §17 L539 round-trip verified by tests/unit/T08.animation-keyframes.test.ts:152), src/lib/prism-graph/image-edit-tools.ts (swapMeshForImage preserves all behaviorSpec/stateEffects/contracts/cinematicPrimitives/codeRef/backendRef per §13 L483 'preserves all behavior code'; renderMode→'sprite' fallback (or 'plane' via fallbackRenderMode option); meshUrl cleared; applyCrop writes crop rect to visual.transform.{x,y,width,height} preserving z, rejects negative dims; applyMaskRefinement writes MaskSpec onto targeted PrismLayer.mask, no-op for unknown layerId; all operations clone via JSON.parse(JSON.stringify) — non-mutating). Test infrastructure: 3 vitest unit files (T08.animation-presets.test.ts 14 tests, T08.animation-keyframes.test.ts 16 tests, T08.image-edit-tools.test.ts 18 tests = 48 total) + 2 Playwright browser specs (T08.editor-animation-tab.spec.ts 7 tests covering hybrid mode toggle/timeline-keyframe pane/i2v frame-scrub/4 PowerPoint categories/preset→primitive mapping/preset→cinematicPrimitives append/capture+replay round-trip; T08.editor-image-edit.spec.ts 5 tests covering tools render/swap-mesh-for-image preserves behavior/crop writes transform/mask writes layer.mask/swap idempotent on non-mesh). Harness: tests/browser/_harness/{animation-main.ts,animation.html,image-edit-main.ts,image-edit.html} added; build.mjs extended to bundle all 3 entrypoints (main + animation-main + image-edit-main). Verification: full vitest 258/258 pass, 7/7 animation Playwright + 5/5 image-edit Playwright pass, npx tsc --noEmit clean. SHOULD FIX from spec-reviewer (non-blocking per Ralph step 9): (a) animation-main.ts:104 onCapture hard-codes t=0 — re-captures collide; production editor needs a playhead-driven t; (b) animation-keyframes.ts captureKeyframe doesn't de-duplicate at identical t — silently keeps first inserted; spec-permissible but surprising for a 'save as keyframe' UX; (c) animation-presets.ts applyAnimationPreset has no triggerOverride — editor will likely want to override 'inview' → 'click'; (d) progress log iter 8 line — addressed by Ralph step 12. OPTIONAL: structuredClone over JSON.parse(JSON.stringify) in image-edit-tools.ts cloneNode; bound-check zero-width/zero-height crop; Object.freeze ANIMATION_PRESET_LIBRARY arrays; harness setMode could use data-attributes vs style.display; export DEFAULT_DURATION_MS for editor-side timeline ruler. Spec deviations (§13 L477 references docs/spec-deviations-prism.md from T07 - unchanged): T08 chose harness-fixture-based Playwright tests (separate /animation.html and /image-edit.html pages bundled by esbuild) over full editor-Inspector mount because the editor's Animation tab in Inspector.tsx is React-based and would require a Next.js dev server in CI; the contract tested is the pure-logic surface (animation-presets + animation-keyframes + image-edit-tools) which the existing Inspector AnimationTab can compose with."
     },
     {
       "id": "T09",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 7,
-    "lastProductiveCommit": "e8b264e5247f4e2207545102da4f1923bd5ccf6d"
+    "lastProductiveIteration": 8,
+    "lastProductiveCommit": "f0af766a567215fa364769c25da006922a52fba1"
   },
   "phaseCaps": {
     "§1": {
@@ -261,14 +261,19 @@
       "used": 4,
       "cap": 8,
       "status": "active"
+    },
+    "§8": {
+      "used": 2,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 7,
-    "commit": "e8b264e5247f4e2207545102da4f1923bd5ccf6d",
-    "verifiedAt": "2026-05-05T00:50:56Z",
+    "iteration": 8,
+    "commit": "f0af766a567215fa364769c25da006922a52fba1",
+    "verifiedAt": "2026-05-05T01:05:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T00:50:56Z"
+    "recordedAt": "2026-05-05T01:05:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -314,6 +319,12 @@
       "taskId": "T07",
       "commit": "1199efc35313902475c77812869d083f53b99bd1",
       "verifiedAt": "2026-05-05T00:51:00Z"
+    },
+    {
+      "iteration": 8,
+      "taskId": "T08",
+      "commit": "f0af766a567215fa364769c25da006922a52fba1",
+      "verifiedAt": "2026-05-05T01:05:00Z"
     }
   ]
 }
