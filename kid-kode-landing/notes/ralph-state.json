@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T00:00:57Z",
-  "currentIteration": 5,
+  "updatedAt": "2026-05-05T00:02:54Z",
+  "currentIteration": 6,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
@@ -130,8 +130,8 @@
         "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
@@ -224,7 +224,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 5,
-    "lastProductiveCommit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862"
+    "lastProductiveCommit": "34fd2bb4ba0b6d772fcc5b113f3c777b18e99ad3"
   },
   "phaseCaps": {
     "§1": {
@@ -248,17 +248,17 @@
       "status": "active"
     },
     "§5": {
-      "used": 1,
+      "used": 2,
       "cap": 8,
       "status": "active"
     }
   },
   "checkpoint": {
     "iteration": 5,
-    "commit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862",
-    "verifiedAt": "2026-05-05T00:00:57Z",
+    "commit": "34fd2bb4ba0b6d772fcc5b113f3c777b18e99ad3",
+    "verifiedAt": "2026-05-05T00:02:30Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T00:00:57Z"
+    "recordedAt": "2026-05-05T00:02:30Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
