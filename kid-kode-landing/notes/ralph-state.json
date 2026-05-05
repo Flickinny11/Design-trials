@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T01:05:00Z",
-  "currentIteration": 8,
+  "updatedAt": "2026-05-05T01:08:41Z",
+  "currentIteration": 9,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
@@ -189,8 +189,8 @@
         "cd kid-kode-landing && npx playwright test tests/browser/T09.mock-app-quality.spec.ts"
       ],
       "tddRequired": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
@@ -224,9 +224,14 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 8,
-    "lastProductiveCommit": "f0af766a567215fa364769c25da006922a52fba1"
+    "lastProductiveCommit": "62d3d7c300ffc9e2df9e0951d1b594f9946a7357"
   },
   "phaseCaps": {
+    "§9": {
+      "used": 1,
+      "cap": 8,
+      "status": "active"
+    },
     "§1": {
       "used": 2,
       "cap": 8,
@@ -263,17 +268,17 @@
       "status": "active"
     },
     "§8": {
-      "used": 2,
+      "used": 3,
       "cap": 8,
       "status": "active"
     }
   },
   "checkpoint": {
     "iteration": 8,
-    "commit": "f0af766a567215fa364769c25da006922a52fba1",
-    "verifiedAt": "2026-05-05T01:05:00Z",
+    "commit": "62d3d7c300ffc9e2df9e0951d1b594f9946a7357",
+    "verifiedAt": "2026-05-05T01:08:20Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T01:05:00Z"
+    "recordedAt": "2026-05-05T01:08:20Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
