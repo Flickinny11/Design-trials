@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T01:08:41Z",
+  "updatedAt": "2026-05-05T01:25:38Z",
   "currentIteration": 9,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -189,11 +189,11 @@
         "cd kid-kode-landing && npx playwright test tests/browser/T09.mock-app-quality.spec.ts"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "976c19e13c01516f83a2c30cfdc28280c0f5d167",
+      "verifiedAt": "2026-05-05T01:25:38Z",
+      "notes": "Implementation: src/lib/prism/mock-app-renderer/{graph.json,index.ts} hand-authored 5-hub PrismGraph (Landing/Features/Gallery/Pricing/Contact, 16 nodes, 5 edges) covering §14.1-§14.7: 3 mesh nodes (landing-hero/features-product/contact-callout per §14.2 spec L492 'hero objects on Landing, featured product on Features, contact-callout on Contact'), 5 parallax-plane (one per hub per §14.3), all 9 primitives represented across the app (orbit/depth-rotate/dissolve-morph/displacement-transition/parallax-scroll/magnetic-cursor/particle-emerge/kinetic-text in node cinematicPrimitives + fly-through on 4 inter-hub edges via transitionPrimitive field per §14.7), all text uses renderMethod='msdf' (§14.6); pre-baked depthMapUrl/meshUrl values so the build is deterministic and runs without fal.ai network (T06 pipeline orchestrator handles live generation end-to-end). scripts/build-mock-app.mjs esbuild-bundles src/lib/prism/runtime/bundle.ts (no tsx/ts-node in repo; bundle.ts is the source of truth so we avoid duplicating its inline ES-module templates) and dynamically imports it to call assembleBundle(); projects PrismGraph→CompiledGraph preserving all renderer-era additive fields and edges' transitionPrimitive; writes 40-file bundle (app.js + graph.json + 6 shared infra + 9 primitives + 6 TSL shaders + 16 per-node stubs + importmap.json + source-graph.json) plus build-manifest.json (timing+filenames) to public/prism-mock-app-renderer/; build clocks 12-15ms (well under spec §14 L498 35s budget). tests/browser/T09.mock-app-quality.spec.ts 11 Playwright tests (§14.1 5 hubs / §14.2 ≥3 mesh / §14.3 ≥1 parallax/hub / §14.4 only allowed render modes / §14.5 9 primitives / §14.6 all MSDF / §14.7 ≥1 inter-hub fly-through / §14.8 + §17 DoD#10 build ≤35s / halt-check bundle file map / §17 DoD#1 zero pixi imports / halt-check browser smoke loads bundle without errors). tests/browser/_harness/serve.mjs extended with /shims/* and /mock-app/* routes (mock-app served from public/prism-mock-app-renderer/); _harness/mock-app-load.html browser smoke imports app.js + each primitive + each shader to verify the module graph parses without unresolved specifiers; _harness/shims/three-msdf-text-webgpu.js no-op shim resolves the bare specifier (T05 review note: §11 L444-L445 says it's bundled in production; the smoke runs without bundling so the shim resolves the importmap entry). _harness/.gitignore extended to exclude regenerated animation-main.js + image-edit-main.js. Verification: full vitest 258/258 + Playwright 31/31 + npx tsc --noEmit clean. SHOULD FIX from spec-reviewer (non-blocking per Ralph step 9): (a) build-mock-app.mjs:101 transitionPrimitive only spread when truthy — pass through uniformly with `?? null` so compiled graph carries the field; (b) features-product mesh ships only depth-rotate primitive — could add a second per landing-hero precedent (visual quality bar, no spec violation); (c) mock-app-load.html importmap pins jsdelivr CDN — CDN outage would flake T09 in CI, mirror to _harness/vendor/ for hermetic CI; (d) mock-app-renderer/index.ts:31 `as unknown as MockAppRendererGraph` cast — add runtime validateGraph guard at build start to catch shape drift. OPTIONAL: (e) build-mock-app.mjs:60 dynamic-import cache-bust ?t=Date.now() needs comment so it doesn't look like accidental thrash; (f) .bundle-runtime.mjs writes to outDir then rms — write to os.tmpdir() so a failed run doesn't leave stale .mjs in published bundle dir; (g) shim doesn't expose BMFontJSON used elsewhere as type import — surprise for vitest reuse; (h) only 1 intra-hub edge (landing-cta→features-product), 4 hub-level fly-through; add intra-hub triggers edges for richer pitch reference; (i) public/prism-mock-app-renderer/source-graph.json + build-manifest.json are committed build artifacts duplicating src/lib/prism/mock-app-renderer/graph.json — gitignore them and regenerate in CI."
     },
     {
       "id": "T10",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 8,
-    "lastProductiveCommit": "62d3d7c300ffc9e2df9e0951d1b594f9946a7357"
+    "lastProductiveIteration": 9,
+    "lastProductiveCommit": "976c19e13c01516f83a2c30cfdc28280c0f5d167"
   },
   "phaseCaps": {
     "§9": {
@@ -274,11 +274,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 8,
-    "commit": "62d3d7c300ffc9e2df9e0951d1b594f9946a7357",
-    "verifiedAt": "2026-05-05T01:08:20Z",
+    "iteration": 9,
+    "commit": "976c19e13c01516f83a2c30cfdc28280c0f5d167",
+    "verifiedAt": "2026-05-05T01:25:38Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T01:08:20Z"
+    "recordedAt": "2026-05-05T01:25:38Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -330,6 +330,12 @@
       "taskId": "T08",
       "commit": "f0af766a567215fa364769c25da006922a52fba1",
       "verifiedAt": "2026-05-05T01:05:00Z"
+    },
+    {
+      "iteration": 9,
+      "taskId": "T09",
+      "commit": "976c19e13c01516f83a2c30cfdc28280c0f5d167",
+      "verifiedAt": "2026-05-05T01:25:38Z"
     }
   ]
 }
