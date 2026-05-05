@@ -8,6 +8,8 @@ import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
+import VisualPreview from './visual-preview/VisualPreview';
+import type { PrismNode } from '@/lib/prism-graph/types';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -75,6 +77,13 @@ export default function Inspector() {
     return () => { off?.(); };
   }, []);
 
+  // Memoize the source-node lookup; consumed by the Visual tab's live R3F
+  // sub-canvas (T07).
+  const sourceNodeById = useMemo<PrismNode | null>(
+    () => sourceNodes.find((s) => s.nodeId === selectedId) ?? null,
+    [sourceNodes, selectedId],
+  );
+
   if (!open || !selectedId) return null;
   const node = editorGraph.nodes.find((n) => n.id === selectedId);
   if (!node) return null;
@@ -135,7 +144,7 @@ export default function Inspector() {
       )}
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
-        {tab === 'visual' && <VisualTab node={node} frozen={frozen} />}
+        {tab === 'visual' && <VisualTab node={node} frozen={frozen} sourceNode={sourceNodeById} />}
         {tab === 'behavior' && <BehaviorTab node={node} />}
         {tab === 'code' && <CodeTab node={node} frozen={frozen} />}
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
@@ -147,9 +156,10 @@ export default function Inspector() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// VISUAL TAB — real captured image + editable color pickers
+// VISUAL TAB — live R3F sub-canvas (T07) + editable color pickers
+// Spec ref: PRISM-RENDERER-MIGRATION-SPEC.md §13 L477.
 // ═══════════════════════════════════════════════════════════════════
-function VisualTab({ node, frozen }: { node: any; frozen: boolean }) {
+function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; sourceNode: PrismNode | null }) {
   const [frame, setFrame] = useState(0);
   const total = node.animationFrames || 1;
   const capturedImage = useElementImageStore((s) => s.images[node.id]);
@@ -163,7 +173,17 @@ function VisualTab({ node, frozen }: { node: any; frozen: boolean }) {
 
   return (
     <div className="p-5 space-y-4">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">ELEMENT IMAGE</div>
+      <div className="text-[9px] font-mono tracking-widest text-white/40">LIVE PREVIEW</div>
+
+      {sourceNode ? (
+        <VisualPreview node={sourceNode} frozen={frozen} />
+      ) : (
+        <div className="rounded-xl border border-white/10 p-4 text-[11px] text-white/50">
+          No source node available for this selection.
+        </div>
+      )}
+
+      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-2">ELEMENT IMAGE</div>
 
       <div
         className="relative aspect-[16/10] rounded-xl overflow-hidden border border-white/10"
