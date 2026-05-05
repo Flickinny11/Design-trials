@@ -12,7 +12,9 @@
     "build": "npm run build:prism && next build",
     "start": "next start",
     "lint": "next lint",
-    "verify:prism": "node scripts/verify-prism.mjs"
+    "verify:prism": "node scripts/verify-prism.mjs",
+    "verify:repair-loop": "node scripts/verify-repair-loop.mjs",
+    "verify": "npm run verify:prism && npm run verify:repair-loop"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.5",
@@ -31,14 +33,13 @@
     "jszip": "^3.10.1",
     "lenis": "^1.3.0",
     "next": "^15.2.3",
-    "pixi-filters": "^6.1.5",
-    "pixi.js": "^8.5.0",
     "postprocessing": "^6.37.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "simplex-noise": "4.0.3",
     "tailwind-merge": "^2.5.5",
-    "three": "0.171.0",
+    "three": "^0.184.0",
+    "three-msdf-text-webgpu": "^2.1.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {
@@ -46,7 +47,7 @@
     "@types/node": "22.10.2",
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
-    "@types/three": "0.171.0",
+    "@types/three": "^0.184.0",
     "autoprefixer": "10.4.20",
     "dotenv": "^16.4.5",
     "ffmpeg-static": "^5.2.0",
@@ -57,6 +58,7 @@
     "postcss": "8.4.49",
     "sharp": "^0.33.5",
     "tailwindcss": "3.4.17",
-    "typescript": "5.7.2"
+    "typescript": "5.7.2",
+    "vitest": "^2.1.9"
   }
 }

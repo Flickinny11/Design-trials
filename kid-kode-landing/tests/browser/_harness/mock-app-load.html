@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>T09 mock-app load smoke</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js",
+          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.webgpu.js",
+          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.tsl.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/",
+          "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js",
+          "three-msdf-text-webgpu": "/shims/three-msdf-text-webgpu.js"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>T09 mock-app load smoke</h1>
+    <p>
+      This page imports the mock-app bundle's <code>app.js</code> and the
+      9 cinematic primitive modules + 6 TSL shader modules to verify the
+      module graph parses without unresolved specifiers. It does not call
+      <code>boot()</code> — that requires WebGPU init which the editor
+      Visual tab spec (T07) and the §17 DoD cross-browser spec (T10)
+      cover separately.
+    </p>
+    <script type="module">
+      const errors = [];
+      window.addEventListener('error', (e) => errors.push(`window.error: ${e.message}`));
+
+      try {
+        // app.js parses + transitively imports all shared/* modules and
+        // pulls graph.json. We do NOT call boot() (that needs a canvas).
+        const mod = await import('/mock-app/app.js');
+        if (typeof mod.boot !== 'function') {
+          throw new Error('app.js did not export boot()');
+        }
+
+        // Each cinematic primitive + TSL shader module is also a static
+        // sub-import of shared/primitives/index.js (which app.js pulls in
+        // via makePrimitivesAPI). Re-importing them explicitly verifies
+        // they are reachable as standalone ES modules — the §11 L389-L445
+        // bundle file map invariant.
+        const primitives = [
+          'orbit', 'depth-rotate', 'dissolve-morph', 'displacement-transition',
+          'parallax-scroll', 'magnetic-cursor', 'particle-emerge', 'fly-through', 'kinetic-text',
+        ];
+        for (const p of primitives) {
+          await import(`/mock-app/shared/primitives/${p}.js`);
+        }
+        const shaders = [
+          'displacement', 'dissolve', 'voronoi-particle',
+          'twisted-wave', 'radial-blur', 'rgb-shift',
+        ];
+        for (const s of shaders) {
+          await import(`/mock-app/shared/shaders/${s}.tsl.js`);
+        }
+
+        window.__mockAppLoaded = true;
+      } catch (err) {
+        document.body.appendChild(Object.assign(document.createElement('pre'), {
+          textContent: `import failed: ${err.message}\n${err.stack || ''}`,
+        }));
+        window.__mockAppError = String(err.message);
+        // Leave __mockAppLoaded unset so the Playwright waitForFunction times out.
+      }
+    </script>
+  </body>
+</html>

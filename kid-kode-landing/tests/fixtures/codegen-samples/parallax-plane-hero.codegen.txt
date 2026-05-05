@@ -1,0 +1,41 @@
+import { Group, Mesh, PlaneGeometry, MeshStandardNodeMaterial } from 'three/webgpu';
+
+// Sample: parallax-plane hero with depth displacement. renderMode='parallax-plane'.
+// Generated per spec §9.C L340-L344 parallax-plane sub-prompt:
+// tessellated 64x64 PlaneGeometry + TSL displacement node from depthMapUrl.
+
+export default function createNode(config, ctx) {
+  const group = new Group();
+  group.name = 'node:' + config.nodeId;
+  group.userData.handlers = {};
+
+  const geo = new PlaneGeometry(3.2, 1.8, 64, 64);
+  const mat = new MeshStandardNodeMaterial();
+  mat.map = ctx.textureLoader.loadTexture(config.imageUrl);
+  mat.displacementMap = ctx.textureLoader.loadTexture(config.depthMapUrl);
+  mat.displacementScale = 0.25;
+  const mesh = new Mesh(geo, mat);
+  group.add(mesh);
+
+  for (const primitive of config.cinematicPrimitives ?? []) {
+    ctx.primitives[primitive.name](group, primitive.params);
+  }
+
+  for (const text of config.textContent ?? []) {
+    if (!text || !text.text) continue;
+    const t = ctx.fontAtlas.createText({
+      text: text.text,
+      size: text.typography?.fontSize ?? 48,
+    });
+    group.add(t);
+  }
+
+  group.userData.cleanup = () => {
+    geo.dispose();
+    mat.dispose();
+    if (mat.map && mat.map.dispose) mat.map.dispose();
+    if (mat.displacementMap && mat.displacementMap.dispose) mat.displacementMap.dispose();
+  };
+
+  return group;
+}

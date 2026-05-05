@@ -694,6 +694,12 @@ interface Edge {
 
 **Provisioning script**: `lib/prism/mock-app-source/assets/provision-assets.mjs`
 
+The provisioning step generates the hub mockup. The mockup is then validated
+and repaired via the **mask-based repair loop (§5.5)** before extraction
+proceeds. SAM-based segmentation throughout this section uses **SAM 3.1
+(Object Multiplex)** checkpoints (released 2026-03-27); all prior references
+to "SAM 3" are superseded.
+
 **Responsibilities**:
 1. Check for existing source images on disk (idempotent)
 2. Generate style reference image (FLUX.2 with style-lock prompt)
@@ -712,6 +718,11 @@ interface Edge {
 |----------|--------|-------|
 | Style reference | fal FLUX.2 | Generated first, establishes visual consistency |
 | Base element images | fal FLUX.2 (no-text) | Inputs to sharp-svg text compositing |
+| Hub mockup validator | fal SAM 3.1 (Object Multiplex) | Multi-concept detection in single pass; drives §5.5 repair classifications |
+| Surgical repair (primary) | fal GPT Image 2 edit | Mask-based add/remove; quality ladder low→medium→regen; high gated behind REPAIR_QUALITY_HIGH=1; replaces GPT Image 1.5 |
+| Backdrop reseal | fal FLUX.2 Klein edit | Cheaper plain-background inpainting after foreground extraction |
+| Repair fallback (text-heavy) | fal Nano Banana Pro Edit (Gemini 3 Pro Image) | LMArena #1 for text rendering; gated behind REPAIR_FALLBACK=1 |
+| Repair fallback (batch) | fal Seedream 5.0 brush | Up to 14 reference images per call; gated behind REPAIR_FALLBACK=1 |
 | Decorative text images | fal Ideogram v3 | Text baked in (diffusion renderMethod) |
 | State variant images | fal FLUX.2 with style ref | Each variant separately with prompt diffs |
 | i2v frame sequences | fal image-to-video (Kling, WAN, etc.) | Extract frames via ffmpeg-wasm |
@@ -1161,7 +1172,7 @@ window.__prismBreakNode(nodeId: string)
 
 ---
 
-## 10. SUCCESS CRITERIA (25 Verbatim from Section 10)
+## 10. SUCCESS CRITERIA (25 Verbatim from Section 10 + 1 from Spec Amendment 0001 = 26 total)
 
 1. Running `pnpm run provision-assets` (reads `FAL_KEY` from `.env.local`) generates all base element images, state variants, overlay layers, and i2v frame sequences via fal.ai, caches them in `source-images/`, and writes `.provisioning-manifest.json` with request IDs and costs
 
@@ -1190,35 +1201,37 @@ window.__prismBreakNode(nodeId: string)
 
 10. At least one node uses layer-swap state transitions (toggle with distinct toggle-off and toggle-on atlas regions, or button with default/hover/pressed variants)
 
-11. Hovering, clicking, and interacting with elements fires the declared events from their NodeIntent and applies the declared state effects using overlay layers (method 3) and/or GSAP transforms (method 2), never CSS
+11. **repair-loop:bounded** — `verify-repair-loop` (a sibling script to `verify:prism`, per §5.5.10) asserts the per-hub repair-loop telemetry artifact (`public/prism-assets/<hub>-repair-telemetry.json`) is present and that `repairAttempts ≤ 8` (cumulative across the hub's repair passes, including those after each full regen) and `fullRegens ≤ 2`. A breach is a build failure. Output: `${repairAttempts} repair attempts, ${fullRegens} regens — bounded`. `verify:prism` itself is unmodified — the new check lives in `scripts/verify-repair-loop.mjs` and is wired via a new `"verify": "npm run verify:prism && npm run verify:repair-loop"` target in `package.json`. *(Added by Spec Amendment 0001 §5.5; criteria 11–25 below renumbered to 12–26.)*
 
-12. The hub's content exceeds the viewport height; mouse wheel scroll, trackpad scroll, and keyboard arrow/page keys all scroll the content smoothly with momentum easing
+12. Hovering, clicking, and interacting with elements fires the declared events from their NodeIntent and applies the declared state effects using overlay layers (method 3) and/or GSAP transforms (method 2), never CSS
 
-13. Single-finger touch drag scrolls on mobile/tablet with natural momentum and flick physics — feels like a real native app scroll, not a basic DOM scroll
+13. The hub's content exceeds the viewport height; mouse wheel scroll, trackpad scroll, and keyboard arrow/page keys all scroll the content smoothly with momentum easing
 
-14. Nav link clicks (e.g., "Features") scroll-animate to the corresponding section using GSAP, with the active section indicated in the navbar via overlay state
+14. Single-finger touch drag scrolls on mobile/tablet with natural momentum and flick physics — feels like a real native app scroll, not a basic DOM scroll
 
-15. The layout is responsive: viewing at desktop wide (>1440px), desktop (1024-1440), tablet (768-1024), and mobile (<768) each shows an appropriately laid-out version. Node `transformByBreakpoint` entries are respected; nodes with `visibleAtBreakpoints` restrictions hide/show correctly
+15. Nav link clicks (e.g., "Features") scroll-animate to the corresponding section using GSAP, with the active section indicated in the navbar via overlay state
 
-16. Every interactive sprite responds to pointerover/pointerout/pointerdown/pointerup/pointertap with visible state feedback — the app feels alive, not like a static image with click regions
+16. The layout is responsive: viewing at desktop wide (>1440px), desktop (1024-1440), tablet (768-1024), and mobile (<768) each shows an appropriately laid-out version. Node `transformByBreakpoint` entries are respected; nodes with `visibleAtBreakpoints` restrictions hide/show correctly
 
-17. Backend calls from nodes (e.g., `hero-card-cta` → `/api/mock/track-cta-click`) execute via the local backend runtime and return successfully
+17. Every interactive sprite responds to pointerover/pointerout/pointerdown/pointerup/pointertap with visible state feedback — the app feels alive, not like a static image with click regions
 
-18. The 3D graph pane on the right shows ALL nodes from the `.prism` graph.json (~30-60 for a realistic home hub with all required visual elements), with captions as labels
+18. Backend calls from nodes (e.g., `hero-card-cta` → `/api/mock/track-cta-click`) execute via the local backend runtime and return successfully
 
-19. The `.prism` file can be extracted with any zip tool (`unzip mock-app.prism -d extracted/`) and its contents match the format in Section 3.1
+19. The 3D graph pane on the right shows ALL nodes from the `.prism` graph.json (~30-60 for a realistic home hub with all required visual elements), with captions as labels
 
-20. The toy SHR demo works end-to-end: hidden dev tool breaks a node → user click fails → after 3 attempts the repair indicator appears for ~1 second → module is restored → next click works
+20. The `.prism` file can be extracted with any zip tool (`unzip mock-app.prism -d extracted/`) and its contents match the format in Section 3.1
 
-21. No references to `html-to-image` remain in the codebase
+21. The toy SHR demo works end-to-end: hidden dev tool breaks a node → user click fails → after 3 attempts the repair indicator appears for ~1 second → module is restored → next click works
 
-22. All files in `components/editor/` except the replaced `MockApp.tsx` → `PrismHost.tsx` swap are byte-identical to before
+22. No references to `html-to-image` remain in the codebase
 
-23. `package.json` shows the new dependencies added, old ones removed
+23. All files in `components/editor/` except the replaced `MockApp.tsx` → `PrismHost.tsx` swap are byte-identical to before
 
-24. A clean checkout + `pnpm install` + `FAL_KEY=... pnpm run provision-assets && pnpm run dev` on a fresh machine reproduces the working prototype
+24. `package.json` shows the new dependencies added, old ones removed
 
-25. Showing the running app to someone unfamiliar with the project, they should say it looks like a real product. Scrolling feels smooth. Hovering and clicking feel alive. Nothing looks like a wireframe or a design mockup.
+25. A clean checkout + `pnpm install` + `FAL_KEY=... pnpm run provision-assets && pnpm run dev` on a fresh machine reproduces the working prototype
+
+26. Showing the running app to someone unfamiliar with the project, they should say it looks like a real product. Scrolling feels smooth. Hovering and clicking feel alive. Nothing looks like a wireframe or a design mockup.
 
 ---
 

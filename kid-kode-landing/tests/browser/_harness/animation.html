@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>T08 Editor Animation tab harness</title>
+<style>
+  body { font: 12px/1.4 ui-monospace, monospace; background: #0a0b1c; color: #e6e8ff; margin: 0; padding: 16px; }
+  #app { display: grid; gap: 16px; }
+  [data-role=animation-mode-toggle] { display: flex; gap: 8px; }
+  [data-role=animation-mode-option] { background: #1f2247; color: #c5cdee; border: 0; padding: 6px 12px; border-radius: 4px; cursor: pointer; font: inherit; }
+  [data-role=animation-mode-active] { color: #5d8bff; font-weight: 700; }
+  [data-role=preset-group] { background: #11132a; border: 1px solid #1f2247; border-radius: 6px; padding: 10px; }
+  [data-role=preset-group] h3 { margin: 0 0 6px 0; font-size: 11px; text-transform: uppercase; color: #7a85b4; }
+  [data-role=preset-button] { background: #5d8bff; color: white; border: 0; padding: 4px 8px; border-radius: 3px; margin-right: 6px; margin-bottom: 4px; cursor: pointer; font: inherit; }
+  [data-role=keyframe-track] { min-height: 20px; background: #11132a; border-radius: 4px; padding: 4px; display: flex; gap: 4px; }
+  [data-role=keyframe-marker] { width: 8px; height: 12px; background: #76e3a8; border-radius: 2px; }
+  [data-role=cinematic-primitive-list] { list-style: none; padding: 0; margin: 0; }
+  [data-role=cinematic-primitive-entry] { color: #c5cdee; }
+  input[type=number] { width: 80px; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script type="module" src="./animation-main.js"></script>
+</body>
+</html>

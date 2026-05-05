@@ -1,0 +1,42 @@
+import { Group, Mesh, PlaneGeometry, MeshBasicNodeMaterial } from 'three/webgpu';
+
+// Sample: sprite-mode node whose primary content is MSDF text (kinetic-text).
+// renderMode='sprite'. Demonstrates the text + primitive iteration pattern
+// without an imageUrl backing texture (image is the typography).
+
+export default function createNode(config, ctx) {
+  const group = new Group();
+  group.name = 'node:' + config.nodeId;
+  group.userData.handlers = {};
+
+  const geo = new PlaneGeometry(1, 1);
+  const mat = new MeshBasicNodeMaterial();
+  if (config.imageUrl) {
+    mat.map = ctx.textureLoader.loadTexture(config.imageUrl);
+  }
+  const mesh = new Mesh(geo, mat);
+  mesh.userData.billboard = true;
+  group.add(mesh);
+
+  for (const primitive of config.cinematicPrimitives ?? []) {
+    ctx.primitives[primitive.name](group, primitive.params);
+  }
+
+  for (const text of config.textContent ?? []) {
+    if (!text || !text.text) continue;
+    const t = ctx.fontAtlas.createText({
+      text: text.text,
+      size: text.typography?.fontSize ?? 64,
+      weight: text.typography?.fontWeight ?? 700,
+    });
+    group.add(t);
+  }
+
+  group.userData.cleanup = () => {
+    geo.dispose();
+    mat.dispose();
+    if (mat.map && mat.map.dispose) mat.map.dispose();
+  };
+
+  return group;
+}

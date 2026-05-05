@@ -8,6 +8,8 @@ import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
+import VisualPreview from './visual-preview/VisualPreview';
+import type { PrismNode } from '@/lib/prism-graph/types';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -37,25 +39,27 @@ export default function Inspector() {
 
   // T-EDIT-05 — bidirectional editor↔preview live binding (plan §Phase 5).
   // Editor → preview: when the editor's selection changes, push a visual
-  // highlight ring onto the matching preview node. window.__prism may be
-  // undefined briefly during PrismHost mount, so guard each call.
+  // highlight ring onto the matching preview node. The PixiJS-era
+  // `window.__prism` debug surface was retired in Phase 5 (spec §15);
+  // T07 will re-implement highlight + selection on the Three.js mount.
+  // Until then, the editor still drives `selectedId` locally — only the
+  // cross-pane visual ring is dormant.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    window.__prism?.highlightNode(selectedId ?? null);
+    const handle = (window as { __prism?: { highlightNode?: (id: string | null) => void } }).__prism;
+    handle?.highlightNode?.(selectedId ?? null);
   }, [selectedId]);
 
   // Preview → editor: subscribe to user-driven node clicks in the preview
-  // pane. Mounted once at component creation (Inspector is always rendered
-  // by RightPane) so the subscription stays live regardless of inspector
-  // open/close state. The callback opens the inspector on first click so
-  // the user immediately sees the data for the node they tapped.
+  // pane. Same Phase 5 caveat — `__prism.onNodeSelected` is not on the
+  // Three.js debug handle yet; the polling guard now no-ops cleanly.
   useEffect(() => {
     if (typeof window === 'undefined') return;
     let off: (() => void) | undefined;
     let cancelled = false;
     const tryAttach = () => {
-      const handle = window.__prism;
-      if (!handle) return false;
+      const handle = (window as { __prism?: { onNodeSelected?: (cb: (nodeId: string) => void) => () => void } }).__prism;
+      if (!handle?.onNodeSelected) return false;
       off = handle.onNodeSelected((nodeId) => {
         const store = useGraphEditorStore.getState();
         store.selectNode(nodeId);
@@ -64,7 +68,6 @@ export default function Inspector() {
       return true;
     };
     if (!tryAttach()) {
-      // PrismHost mounts asynchronously — poll briefly until __prism appears.
       const timer = setInterval(() => {
         if (cancelled) return;
         if (tryAttach()) clearInterval(timer);
@@ -73,6 +76,13 @@ export default function Inspector() {
     }
     return () => { off?.(); };
   }, []);
+
+  // Memoize the source-node lookup; consumed by the Visual tab's live R3F
+  // sub-canvas (T07).
+  const sourceNodeById = useMemo<PrismNode | null>(
+    () => sourceNodes.find((s) => s.nodeId === selectedId) ?? null,
+    [sourceNodes, selectedId],
+  );
 
   if (!open || !selectedId) return null;
   const node = editorGraph.nodes.find((n) => n.id === selectedId);
@@ -134,7 +144,7 @@ export default function Inspector() {
       )}
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
-        {tab === 'visual' && <VisualTab node={node} frozen={frozen} />}
+        {tab === 'visual' && <VisualTab node={node} frozen={frozen} sourceNode={sourceNodeById} />}
         {tab === 'behavior' && <BehaviorTab node={node} />}
         {tab === 'code' && <CodeTab node={node} frozen={frozen} />}
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
@@ -146,9 +156,10 @@ export default function Inspector() {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// VISUAL TAB — real captured image + editable color pickers
+// VISUAL TAB — live R3F sub-canvas (T07) + editable color pickers
+// Spec ref: PRISM-RENDERER-MIGRATION-SPEC.md §13 L477.
 // ═══════════════════════════════════════════════════════════════════
-function VisualTab({ node, frozen }: { node: any; frozen: boolean }) {
+function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; sourceNode: PrismNode | null }) {
   const [frame, setFrame] = useState(0);
   const total = node.animationFrames || 1;
   const capturedImage = useElementImageStore((s) => s.images[node.id]);
@@ -162,7 +173,17 @@ function VisualTab({ node, frozen }: { node: any; frozen: boolean }) {
 
   return (
     <div className="p-5 space-y-4">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">ELEMENT IMAGE</div>
+      <div className="text-[9px] font-mono tracking-widest text-white/40">LIVE PREVIEW</div>
+
+      {sourceNode ? (
+        <VisualPreview node={sourceNode} frozen={frozen} />
+      ) : (
+        <div className="rounded-xl border border-white/10 p-4 text-[11px] text-white/50">
+          No source node available for this selection.
+        </div>
+      )}
+
+      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-2">ELEMENT IMAGE</div>
 
       <div
         className="relative aspect-[16/10] rounded-xl overflow-hidden border border-white/10"

@@ -61,12 +61,12 @@ interface Options {
   repairLatencyMs?: number;                        // defaults to 1000 per §9.3
 }
 
-// Minimal EventEmitter surface we rely on (PIXI v8 Container inherits from
-// eventemitter3, which ships these methods).
-interface ListenableContainer {
-  removeAllListeners?: (event: string) => void;
-  on: (event: string, handler: () => void) => void;
-}
+// Phase 5: post-PixiJS removal, "broken handler" installation is a
+// userData.handlers swap on the THREE.Object3D returned by createNode.
+// Spec §8: `userData.handlers.{onPointerOver,onClick,…}` is the canonical
+// event surface; the runtime hub manager consults it to wire DOM-side
+// listeners. Replacing `onClick` with a record-failure shim implements the
+// §10.20 "user click fails" behavior without needing eventemitter3.
 
 export function createShr(opts: Options): Shr {
   const {
@@ -129,14 +129,15 @@ export function createShr(opts: Options): Shr {
   function installBrokenShim(nodeId: string) {
     const instance = instances.get(nodeId);
     if (!instance) return;
-    const c = instance.container as unknown as ListenableContainer;
-    // Remove every pointertap listener — including the original handler
-    // that would emit the intended downstream event (e.g.
-    // build-flow-started). Preserve hover/press handlers so the user
-    // still sees the button "respond" visually; only the tap outcome is
-    // missing, which matches §10.20 ("user click fails").
-    c.removeAllListeners?.('pointertap');
-    c.on('pointertap', () => { void recordFailure(nodeId); });
+    // Replace the onClick handler — including the original that would emit
+    // the intended downstream event (e.g. build-flow-started). Preserve
+    // hover/press handlers so the user still sees the button "respond"
+    // visually; only the tap outcome is missing, which matches §10.20
+    // ("user click fails"). The hub manager consults
+    // `userData.handlers.onClick` when wiring DOM listeners (spec §8).
+    const handlers = (instance.object.userData.handlers ?? {}) as Record<string, () => void>;
+    handlers.onClick = () => { void recordFailure(nodeId); };
+    instance.object.userData.handlers = handlers;
   }
 
   function breakNode(nodeId: string) {

@@ -2,6 +2,27 @@
 
 Prototype for Kriptik's Prism diffusion-based app builder. The left pane of the editor at `/` renders a PixiJS-based mock app built from a `.prism` artifact; the right pane is the untouched 3D knowledge-graph viewer.
 
+## Active Migration: Prism Renderer (PixiJS → Three.js WebGPU)
+
+Status: IN PROGRESS via Ralph loop on branch `prism-renderer-ralph`.
+Spec: `docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` (554 lines, 17 sections)
+Primitives: `docs/prism/CINEMATIC-PRIMITIVES-LIBRARY.md` (9 + 6 TSL shaders)
+Migration rules: `../.claude/rules/prism-renderer-migration.md`
+Task ledger: `notes/ralph-state.json` (T01–T10)
+Per-task entrypoint: `/ralph-step`
+Outer loop: `./scripts/ralph.sh`
+
+While migration is active:
+- Renderer is Three.js WebGPU with WebGL2 fallback (import from `three/webgpu`).
+- Adding `three-msdf-text-webgpu` is required (`three`, `gsap`, `@react-three/*` already present).
+- Removing `pixi.js` + `pixi-filters` is required (Phase 5).
+- The schema interface in this repo is `PrismNode` (`src/lib/prism-graph/types.ts`), NOT `GraphNode` as named in the spec. The 5 new fields (`renderMode`, `depthMapUrl`, `meshUrl`, `cinematicPrimitives`, `scenePosition`) are additive only.
+- Cortex code paths and `modal/app.py` are off-limits.
+- One task per Claude session. Do not run multiple Ralph tasks in one session.
+- Failing tests committed before implementation. Tests never edited during implementation.
+
+When migration completes (all 10 phases status=done in ralph-state.json), the override clauses in `.claude/rules/prism-renderer-migration.md` become inert (the file is retained). Update this section to "Status: COMPLETE."
+
 ## Canonical spec
 
 `notes/prism-spec-extract.md` (1336 lines) is the single source of truth. It is a faithful extract of `PRISM-MOCK-APP-BUILD-SPEC.md` and `PRISM-ENGINE-SPEC-V3.md`. The original `docs/prism/*.md` files are NOT on disk — do not reference them as authoritative. Quote sections from the extract by line number.
