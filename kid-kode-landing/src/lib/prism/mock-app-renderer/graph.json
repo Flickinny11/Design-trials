@@ -1,0 +1,426 @@
+{
+  "schemaVersion": "1.0.0-renderer",
+  "version": "0.1.0",
+  "hubs": [
+    {
+      "hubId": "landing",
+      "title": "Landing",
+      "caption": "Hero hub — first impression with depth-rotating mesh and parallax headline.",
+      "layout": { "viewportWidth": 1920, "viewportHeight": 1080, "contentHeight": 1080, "backgroundColor": "#050513" }
+    },
+    {
+      "hubId": "features",
+      "title": "Features",
+      "caption": "Featured product showcase with parallax grid and animated cards.",
+      "layout": { "viewportWidth": 1920, "viewportHeight": 1080, "contentHeight": 1600, "backgroundColor": "#070716" }
+    },
+    {
+      "hubId": "gallery",
+      "title": "Gallery",
+      "caption": "Showcase wall — orbiting camera over a parallax canvas.",
+      "layout": { "viewportWidth": 1920, "viewportHeight": 1080, "contentHeight": 1400, "backgroundColor": "#04040c" }
+    },
+    {
+      "hubId": "pricing",
+      "title": "Pricing",
+      "caption": "Tier cards with magnetic-cursor and particle-emerge accents.",
+      "layout": { "viewportWidth": 1920, "viewportHeight": 1080, "contentHeight": 1200, "backgroundColor": "#080819" }
+    },
+    {
+      "hubId": "contact",
+      "title": "Contact",
+      "caption": "Final hub — kinetic-text callout with displacement-transition form.",
+      "layout": { "viewportWidth": 1920, "viewportHeight": 1080, "contentHeight": 900, "backgroundColor": "#020208" }
+    }
+  ],
+  "nodes": [
+    {
+      "nodeId": "landing-hero",
+      "subtype": "hero-mesh",
+      "parentHubId": "landing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "landing-hero-glb", "transform": { "x": 960, "y": 540, "width": 800, "height": 800, "z": 0 } },
+      "intent": {
+        "caption": "Centerpiece 3D mesh that orbits and depth-rotates as the user scrolls past the hero.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [{ "id": "primary", "type": "sprite", "z": 0 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/landing-hero.js",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": "https://r2.example.com/prism/mock/landing-hero.glb",
+      "cinematicPrimitives": [
+        { "name": "orbit", "params": { "speed": 0.4, "axis": "y", "radius": 0 }, "trigger": "load" },
+        { "name": "depth-rotate", "params": { "axis": "x", "amplitudeDeg": 6, "speed": 0.5 }, "trigger": "scroll" }
+      ],
+      "scenePosition": { "x": 0, "y": 0, "z": 0, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "landing-headline",
+      "subtype": "headline-parallax",
+      "parentHubId": "landing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "landing-headline-bg", "transform": { "x": 480, "y": 220, "width": 960, "height": 160, "z": 1 } },
+      "intent": {
+        "caption": "Primary kinetic headline with parallax depth and dissolve-in entrance.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            { "text": "Build apps the way you imagine them.", "role": "headline", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 72, "fontWeight": 700, "color": "#f5f5ff" } }
+          ],
+          "layers": [{ "id": "background", "type": "sprite", "z": 0 }, { "id": "headline", "type": "text", "z": 1 }]
+        },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/landing-headline.js",
+      "backendRef": null,
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "https://r2.example.com/prism/mock/landing-headline-depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "kinetic-text", "params": { "stagger": 0.04, "duration": 0.8, "from": "below" }, "trigger": "load" },
+        { "name": "dissolve-morph", "params": { "duration": 0.6, "edgeWidth": 0.04 }, "trigger": "inview" },
+        { "name": "parallax-scroll", "params": { "axis": "y", "amplitude": 40, "speed": 0.6 }, "trigger": "scroll" }
+      ],
+      "scenePosition": { "x": -2.5, "y": 1.8, "z": 0.5, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "landing-cta",
+      "subtype": "cta-sprite",
+      "parentHubId": "landing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "landing-cta-pill", "transform": { "x": 860, "y": 760, "width": 200, "height": 56, "z": 2 } },
+      "intent": {
+        "caption": "Magnetic primary call-to-action that pulls toward the cursor on hover.",
+        "behaviorSpec": { "interactions": [{ "event": "click", "effect": "navigate(features)" }], "apiCalls": [], "dataBindings": [], "emits": ["nav:features"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            { "text": "Get started", "role": "button", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 18, "fontWeight": 600, "color": "#ffffff" } }
+          ],
+          "layers": [{ "id": "pill", "type": "sprite", "z": 0 }, { "id": "label", "type": "text", "z": 1 }]
+        },
+        "contracts": { "inputs": {}, "outputs": { "nav:features": "void" } }
+      },
+      "codeRef": "nodes/landing-cta.js",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "magnetic-cursor", "params": { "radius": 220, "strength": 0.45 }, "trigger": "hover" }
+      ],
+      "scenePosition": { "x": 0, "y": -2.4, "z": 0.8, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "features-product",
+      "subtype": "product-mesh",
+      "parentHubId": "features",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "features-product-glb", "transform": { "x": 960, "y": 480, "width": 720, "height": 720, "z": 0 } },
+      "intent": {
+        "caption": "Featured product 3D mesh — depth-rotates on hover.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [{ "id": "primary", "type": "sprite", "z": 0 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/features-product.js",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": "https://r2.example.com/prism/mock/features-product.glb",
+      "cinematicPrimitives": [
+        { "name": "depth-rotate", "params": { "axis": "y", "amplitudeDeg": 12, "speed": 0.3 }, "trigger": "hover" }
+      ],
+      "scenePosition": { "x": 0, "y": 0, "z": 0, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "features-grid",
+      "subtype": "grid-parallax",
+      "parentHubId": "features",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "features-grid-bg", "transform": { "x": 0, "y": 240, "width": 1920, "height": 720, "z": 0 } },
+      "intent": {
+        "caption": "Parallax grid backdrop — scroll-driven depth layering behind the product.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Built for ambition.", "role": "section-title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 48, "fontWeight": 600, "color": "#e8e8ff" } }], "layers": [{ "id": "grid", "type": "sprite", "z": 0 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/features-grid.js",
+      "backendRef": null,
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "https://r2.example.com/prism/mock/features-grid-depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "parallax-scroll", "params": { "axis": "y", "amplitude": 80, "speed": 0.5 }, "trigger": "scroll" }
+      ],
+      "scenePosition": { "x": 0, "y": 0, "z": -1.2, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "features-card-1",
+      "subtype": "card-plane",
+      "parentHubId": "features",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "features-card-1", "transform": { "x": 220, "y": 760, "width": 320, "height": 200, "z": 1 } },
+      "intent": {
+        "caption": "Feature card with particle-emerge entrance animation.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Realtime collaboration.", "role": "card-title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 22, "fontWeight": 600, "color": "#ffffff" } }], "layers": [{ "id": "card-bg", "type": "sprite", "z": 0 }, { "id": "title", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/features-card-1.js",
+      "backendRef": null,
+      "renderMode": "plane",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "particle-emerge", "params": { "count": 80, "duration": 1.0, "spread": 1.6 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": -3.0, "y": -1.6, "z": 0.6, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "features-card-2",
+      "subtype": "card-sprite",
+      "parentHubId": "features",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "features-card-2", "transform": { "x": 720, "y": 760, "width": 320, "height": 200, "z": 1 } },
+      "intent": {
+        "caption": "Feature card with displacement-transition swap on hover.",
+        "behaviorSpec": { "interactions": [{ "event": "hover", "effect": "displacement-transition" }], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Deploy in seconds.", "role": "card-title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 22, "fontWeight": 600, "color": "#ffffff" } }], "layers": [{ "id": "card-bg", "type": "sprite", "z": 0 }, { "id": "title", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/features-card-2.js",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "displacement-transition", "params": { "duration": 0.5, "strength": 0.18 }, "trigger": "hover" }
+      ],
+      "scenePosition": { "x": 0, "y": -1.6, "z": 0.6, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "gallery-showcase",
+      "subtype": "showcase-parallax",
+      "parentHubId": "gallery",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "gallery-showcase-bg", "transform": { "x": 0, "y": 0, "width": 1920, "height": 1080, "z": 0 } },
+      "intent": {
+        "caption": "Orbiting camera over a parallax-plane backdrop.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Gallery", "role": "section-label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 36, "fontWeight": 500, "color": "#dadafd" } }], "layers": [{ "id": "backdrop", "type": "sprite", "z": 0 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/gallery-showcase.js",
+      "backendRef": null,
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "https://r2.example.com/prism/mock/gallery-showcase-depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "orbit", "params": { "speed": 0.2, "axis": "y", "radius": 6 }, "trigger": "load" }
+      ],
+      "scenePosition": { "x": 0, "y": 0, "z": -2.0, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "gallery-thumb-1",
+      "subtype": "thumbnail-plane",
+      "parentHubId": "gallery",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "gallery-thumb-1", "transform": { "x": 240, "y": 600, "width": 280, "height": 160, "z": 1 } },
+      "intent": {
+        "caption": "Showcase thumbnail with dissolve-morph on click.",
+        "behaviorSpec": { "interactions": [{ "event": "click", "effect": "dissolve-morph" }], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Project Aurora", "role": "thumb-caption", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 16, "fontWeight": 500, "color": "#dddde9" } }], "layers": [{ "id": "thumb", "type": "sprite", "z": 0 }, { "id": "caption", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/gallery-thumb-1.js",
+      "backendRef": null,
+      "renderMode": "plane",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "dissolve-morph", "params": { "duration": 0.8, "edgeWidth": 0.06 }, "trigger": "click" }
+      ],
+      "scenePosition": { "x": -3.0, "y": -1.0, "z": 0.4, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "gallery-thumb-2",
+      "subtype": "thumbnail-sprite",
+      "parentHubId": "gallery",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "gallery-thumb-2", "transform": { "x": 700, "y": 600, "width": 280, "height": 160, "z": 1 } },
+      "intent": {
+        "caption": "Thumbnail with kinetic-text caption that animates in.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Studio Helios", "role": "thumb-caption", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 16, "fontWeight": 500, "color": "#eeeeee" } }], "layers": [{ "id": "thumb", "type": "sprite", "z": 0 }, { "id": "caption", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/gallery-thumb-2.js",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "kinetic-text", "params": { "stagger": 0.05, "duration": 0.6, "from": "right" }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": 0, "y": -1.0, "z": 0.4, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "pricing-hero",
+      "subtype": "hero-parallax",
+      "parentHubId": "pricing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "pricing-hero-bg", "transform": { "x": 0, "y": 80, "width": 1920, "height": 360, "z": 0 } },
+      "intent": {
+        "caption": "Pricing hub hero — parallax-plane backdrop driven by scroll.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Plans that scale with you.", "role": "hero-title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 56, "fontWeight": 700, "color": "#fafaff" } }], "layers": [{ "id": "backdrop", "type": "sprite", "z": 0 }, { "id": "title", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/pricing-hero.js",
+      "backendRef": null,
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "https://r2.example.com/prism/mock/pricing-hero-depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "parallax-scroll", "params": { "axis": "y", "amplitude": 60, "speed": 0.55 }, "trigger": "scroll" }
+      ],
+      "scenePosition": { "x": 0, "y": 1.5, "z": -0.5, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "pricing-tier-1",
+      "subtype": "tier-plane",
+      "parentHubId": "pricing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "pricing-tier-1", "transform": { "x": 320, "y": 540, "width": 320, "height": 480, "z": 1 } },
+      "intent": {
+        "caption": "Starter tier card with magnetic-cursor pull on hover.",
+        "behaviorSpec": { "interactions": [{ "event": "hover", "effect": "magnetic-cursor" }], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Starter", "role": "tier-name", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 28, "fontWeight": 600, "color": "#ffffff" } }], "layers": [{ "id": "card", "type": "sprite", "z": 0 }, { "id": "name", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/pricing-tier-1.js",
+      "backendRef": null,
+      "renderMode": "plane",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "magnetic-cursor", "params": { "radius": 200, "strength": 0.35 }, "trigger": "hover" }
+      ],
+      "scenePosition": { "x": -2.5, "y": -1.0, "z": 0.6, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "pricing-tier-2",
+      "subtype": "tier-sprite",
+      "parentHubId": "pricing",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "pricing-tier-2", "transform": { "x": 800, "y": 540, "width": 320, "height": 480, "z": 1 } },
+      "intent": {
+        "caption": "Pro tier card with particle-emerge entrance.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Pro", "role": "tier-name", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 28, "fontWeight": 600, "color": "#ffffff" } }], "layers": [{ "id": "card", "type": "sprite", "z": 0 }, { "id": "name", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/pricing-tier-2.js",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "particle-emerge", "params": { "count": 60, "duration": 0.9, "spread": 1.4 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": 0, "y": -1.0, "z": 0.6, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "contact-callout",
+      "subtype": "callout-mesh",
+      "parentHubId": "contact",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "contact-callout-glb", "transform": { "x": 960, "y": 360, "width": 600, "height": 600, "z": 0 } },
+      "intent": {
+        "caption": "3D callout mesh with kinetic-text headline.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Let's talk.", "role": "callout-title", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 64, "fontWeight": 700, "color": "#fefeff" } }], "layers": [{ "id": "mesh", "type": "sprite", "z": 0 }, { "id": "title", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/contact-callout.js",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": "https://r2.example.com/prism/mock/contact-callout.glb",
+      "cinematicPrimitives": [
+        { "name": "kinetic-text", "params": { "stagger": 0.06, "duration": 0.9, "from": "below" }, "trigger": "load" }
+      ],
+      "scenePosition": { "x": 0, "y": 0.6, "z": 0, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "contact-form",
+      "subtype": "form-parallax",
+      "parentHubId": "contact",
+      "serviceTag": "interactive",
+      "visual": { "sourceAsset": "contact-form-bg", "transform": { "x": 480, "y": 600, "width": 960, "height": 240, "z": 1 } },
+      "intent": {
+        "caption": "Contact form with displacement-transition state swap on submit.",
+        "behaviorSpec": { "interactions": [{ "event": "click", "effect": "submit-form" }], "apiCalls": [{ "endpoint": "/api/contact", "method": "POST" }], "dataBindings": [], "emits": ["contact:submitted"], "listens": [], "triggersDownstream": [] },
+        "stateEffects": ["form.submitted = true"],
+        "visualSpec": { "textContent": [{ "text": "Email us", "role": "form-label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 20, "fontWeight": 500, "color": "#dadaef" } }], "layers": [{ "id": "form-bg", "type": "sprite", "z": 0 }, { "id": "label", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": { "email": "string" }, "outputs": { "contact:submitted": "void" } }
+      },
+      "codeRef": "nodes/contact-form.js",
+      "backendRef": "backends/contact.js",
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "https://r2.example.com/prism/mock/contact-form-depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "displacement-transition", "params": { "duration": 0.7, "strength": 0.22 }, "trigger": "click" }
+      ],
+      "scenePosition": { "x": 0, "y": -1.4, "z": 0.3, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "contact-social",
+      "subtype": "social-sprite",
+      "parentHubId": "contact",
+      "serviceTag": "static",
+      "visual": { "sourceAsset": "contact-social", "transform": { "x": 760, "y": 880, "width": 400, "height": 64, "z": 2 } },
+      "intent": {
+        "caption": "Social link strip with dissolve-morph entrance.",
+        "behaviorSpec": { "interactions": [], "apiCalls": [], "dataBindings": [], "emits": [], "listens": [], "triggersDownstream": [] },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [{ "text": "Follow us", "role": "section-label", "renderMethod": "msdf", "typography": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 500, "color": "#bcbcd0" } }], "layers": [{ "id": "social", "type": "sprite", "z": 0 }, { "id": "label", "type": "text", "z": 1 }] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "nodes/contact-social.js",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "dissolve-morph", "params": { "duration": 0.5, "edgeWidth": 0.05 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": 0, "y": -2.6, "z": 0.4, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    }
+  ],
+  "edges": [
+    { "from": "landing-cta", "to": "features-product", "type": "triggers", "event": "nav:features" },
+    { "from": "landing", "to": "features", "type": "triggers", "event": "hub:fly-through", "transitionPrimitive": "fly-through" },
+    { "from": "features", "to": "gallery", "type": "triggers", "event": "hub:fly-through", "transitionPrimitive": "fly-through" },
+    { "from": "gallery", "to": "pricing", "type": "triggers", "event": "hub:fly-through", "transitionPrimitive": "fly-through" },
+    { "from": "pricing", "to": "contact", "type": "triggers", "event": "hub:fly-through", "transitionPrimitive": "fly-through" }
+  ]
+}

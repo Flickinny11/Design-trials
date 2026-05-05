@@ -17,6 +17,11 @@ import { dirname, resolve, extname } from 'node:path';
 import { buildHarness } from './build.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
+// Mock-app artifact root for T09 (`scripts/build-mock-app.mjs` writes here).
+// Served at the `/mock-app/` URL prefix so the T09 Playwright spec can
+// import the bundle's `app.js` from a real http origin.
+const repoRoot = resolve(here, '..', '..', '..');
+const mockAppRoot = resolve(repoRoot, 'public', 'prism-mock-app-renderer');
 const PORT = process.env.PRISM_T07_HARNESS_PORT
   ? Number(process.env.PRISM_T07_HARNESS_PORT)
   : 4567;
@@ -62,6 +67,54 @@ const server = http.createServer(async (req, res) => {
   if (url.pathname === '/__regen_log') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     return res.end(JSON.stringify({ count: regenCallCount, log: regenCallLog }));
+  }
+
+  // T09 — serve smoke-test shims under `/shims/` (resolves bare specifiers
+  // like `three-msdf-text-webgpu` for the mock-app-load page; the runtime
+  // bundle expects these to be bundled per spec §11 L444-L445).
+  if (url.pathname.startsWith('/shims/')) {
+    const rel = url.pathname.slice('/shims/'.length).replace(/^\/+/, '');
+    if (rel.includes('..')) {
+      res.writeHead(403);
+      return res.end('forbidden');
+    }
+    const target = resolve(here, 'shims', rel);
+    if (!target.startsWith(resolve(here, 'shims'))) {
+      res.writeHead(403);
+      return res.end('forbidden');
+    }
+    try {
+      const buf = await readFile(target);
+      const mime = MIME[extname(target)] ?? 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'no-store' });
+      return res.end(buf);
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end(`shim not found: ${rel}`);
+    }
+  }
+
+  // T09 — serve mock-app build artifacts under `/mock-app/`.
+  if (url.pathname.startsWith('/mock-app/')) {
+    const rel = url.pathname.slice('/mock-app/'.length).replace(/^\/+/, '');
+    if (rel.includes('..')) {
+      res.writeHead(403);
+      return res.end('forbidden');
+    }
+    const target = resolve(mockAppRoot, rel || 'app.js');
+    if (!target.startsWith(mockAppRoot)) {
+      res.writeHead(403);
+      return res.end('forbidden');
+    }
+    try {
+      const buf = await readFile(target);
+      const mime = MIME[extname(target)] ?? 'application/octet-stream';
+      res.writeHead(200, { 'Content-Type': mime, 'Cache-Control': 'no-store' });
+      return res.end(buf);
+    } catch {
+      res.writeHead(404, { 'Content-Type': 'text/plain' });
+      return res.end(`mock-app artifact not found: ${rel}`);
+    }
   }
 
   let path = url.pathname;
