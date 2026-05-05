@@ -1,186 +1,81 @@
 ---
-description: Start the autonomous Prism Harness Lock-In Ralph loop in the background and stream iteration-by-iteration progress into this chat. Runs until all 15 HL tasks complete, a task fails 3×, or you stop it. One task per child Claude process. KripVerify auto-runs at every Stop event for visual + console + network verification.
+description: Kick off the autonomous Prism Harness Lock-In chain. Preflight checks, then launches a new Terminal window with the first /harness-step session. Each session does ONE task, KripVerify-verifies it, commits/pushes, and auto-launches the next Terminal window. Chain runs until all 15 HL tasks done.
 argument-hint: (none)
 ---
 
-# Kickoff: Prism Harness Lock-In
+# Kickoff: Prism Harness Lock-In chain
 
-You are the operator of the harness lock-in run. The user typed
-`/kickoff-harness-lockin` in this chat. Your job:
-
-1. Verify the harness is ready (preflight checks).
-2. Launch the autonomous loop in the background.
-3. Stream iteration progress into this chat as it happens.
-4. Stay reachable so the user can ask questions or stop the loop.
-5. When the loop terminates, produce a final summary.
-
-Do **not** run `/ralph-step` yourself in this session. The outer loop spawns
-fresh `claude --print` processes for that. Your role here is operator and
-narrator, not worker.
+You are the operator. The user typed `/kickoff-harness-lockin` in this
+chat. Your job is to preflight, then launch the first Terminal window. From
+there the chain runs autonomously — each `/harness-step` session does one
+task and launches the next Terminal window itself.
 
 The plan: `/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md`.
-The state: `kid-kode-landing/notes/ralph-state.json` (symlinked to
-`ralph-state.harness-lockin.json` — 15 HL tasks, status `running`).
+The chain worker: `.claude/commands/harness-step.md` (`/harness-step`).
+State: `kid-kode-landing/notes/ralph-state.json` (15 HL tasks, status `running`).
 
-## Step 1 — preflight (do this synchronously before launching)
+You are NOT the chain worker. You launch it. After launch, your turn ends.
+
+## Step 1 — preflight
 
 Run these checks in parallel via Bash:
 
 - `git -C /Users/loganbaird/Prototype_Prism/Design-trials rev-parse --abbrev-ref HEAD` → must equal `prism-main`
-- `jq -r '.status, .project, (.tasks | map(select(.status != "done")) | length), (.tasks | map(select(.status == "done")) | length)' /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json` → status must be `running` or `paused-*`; project must contain "Harness Lock-In"; report `done` and `pending` counts
-- `command -v claude && command -v jq` → both must resolve
-- `test -x /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/scripts/ralph.sh` → must succeed
-- `test -f /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json && jq -e '.mcpServers.kv' /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json` → KripVerify MCP must be registered (so child Ralph sessions inherit kv_* tools)
+- `jq -r '.status, .project, (.tasks | map(select(.status != "done")) | length)' /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json` → status must be `running`; project must contain "Harness Lock-In"; pending count > 0
+- `command -v claude && command -v osascript` → both must resolve
+- `test -f /Users/loganbaird/Prototype_Prism/Design-trials/.claude/commands/harness-step.md` → must succeed
+- `test -f /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json && jq -e '.mcpServers.kv' /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json` → KripVerify MCP registered
 
-If any check fails, **stop**. Tell the user exactly what's wrong and how to
-fix it. Do not proceed.
+If any fails: stop, tell the user exactly what's wrong, do not launch.
 
-If status is `complete`, tell the user the lock-in is already done and ask
-if they want to (a) review the final summary, (b) reset state for another
-run, or (c) start a follow-up phase. Do not relaunch.
+If status is `complete`: tell the user the chain is already done. Recommend
+viewing the production deploy at https://kid-kode-ai-landing-git-prism-main-logans-projects-e51c822e.vercel.app/.
 
-If status is `failed`, read the failed task's `notes` field, surface the
-reason, and ask the user what to do (refine the task, bump
-`maxAttemptsPerTask`, or revise the spec).
+If status is `failed`: read the failed task's notes, surface the reason,
+recommend resuming after fixing — `osascript -e 'tell app "Terminal" to do
+script "cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print
+/harness-step"'`.
 
-If branch is not `prism-main`, refuse to launch. The harness lock-in writes
-straight to `prism-main` so Vercel auto-deploys each iter and KripVerify can
-verify against the dev server in lockstep with commits.
+## Step 2 — tell the user, then launch
 
-## Step 2 — tell the user what's about to happen
+In one short message: how many tasks pending, that you're opening Terminal
+now to start the chain, and that subsequent windows will auto-spawn as each
+task completes its KripVerify-gated verification.
 
-In one short message:
-- The done/pending task counts (HL01–HL15).
-- That you'll launch `scripts/ralph.sh` in the background.
-- That iteration updates will appear in this chat.
-- That KripVerify auto-runs after every iter and findings will inject into
-  the next iter's first prompt.
-- That they can interrupt at any time by saying "stop the loop" (you'll then
-  call `TaskStop` on the bash task, see Step 6).
-
-Don't be verbose. Two or three sentences.
-
-## Step 3 — launch the outer loop in the background
-
-Use the **Bash** tool with `run_in_background: true`:
-
-```
-cd /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing && ./scripts/ralph.sh
-```
-
-The Bash tool returns a task id and an output file path. Save both — you
-need them for monitoring (Step 4) and stopping (Step 6).
-
-Do **not** set a timeout; the loop may run for hours. `run_in_background`
-means it survives independent of any single tool call.
-
-## Step 4 — set up the iteration-progress monitor
-
-Use the **Monitor** tool with `persistent: true` and a command that polls
-both the script's output file and `ralph-state.json` for boundary events,
-emitting one line per event. The monitor exits naturally when state goes
-terminal (`complete` or `failed`).
-
-Use this exact monitor command, with `<OUTPUT_PATH>` replaced by the output
-file path you got from Step 3:
+Then run via the **Bash** tool (foreground, fast — just opens a window):
 
 ```bash
-STATE=/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json
-LOG=<OUTPUT_PATH>
-last_size=0
-last_done=$(jq -r '[.tasks[] | select(.status=="done") | .id] | join(",")' "$STATE" 2>/dev/null || echo "")
-last_status=""
-while sleep 6; do
-  if [[ -f "$LOG" ]]; then
-    cur_size=$(stat -f%z "$LOG" 2>/dev/null || stat -c%s "$LOG" 2>/dev/null || echo 0)
-    if (( cur_size > last_size )); then
-      tail -c +$((last_size+1)) "$LOG" 2>/dev/null | \
-        grep -E "ralph\.sh: iter|Ralph iter|loop complete|loop failed|breakpoint|claude exited non-zero" | \
-        head -20
-      last_size=$cur_size
-    fi
-  fi
-  cur_done=$(jq -r '[.tasks[] | select(.status=="done") | .id] | join(",")' "$STATE" 2>/dev/null || echo "")
-  cur_status=$(jq -r '.status' "$STATE" 2>/dev/null || echo "")
-  if [[ "$cur_done" != "$last_done" ]]; then
-    new=$(comm -23 <(tr ',' '\n' <<<"$cur_done" | sort) <(tr ',' '\n' <<<"$last_done" | sort) | tr '\n' ' ')
-    echo "✅ task(s) done: $new"
-    last_done=$cur_done
-  fi
-  if [[ "$cur_status" != "$last_status" && -n "$cur_status" ]]; then
-    echo "📊 status: $cur_status"
-    last_status=$cur_status
-  fi
-  case "$cur_status" in
-    complete) echo "🏁 Ralph loop COMPLETE — all 15 HL tasks done."; exit 0 ;;
-    failed)   failed_id=$(jq -r '[.tasks[] | select(.status=="failed") | .id] | join(",")' "$STATE" 2>/dev/null)
-              echo "❌ Ralph loop FAILED at task: $failed_id"; exit 0 ;;
-  esac
-done
+osascript -e 'tell application "Terminal" to do script "cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print /harness-step"'
 ```
 
-Set the Monitor's `description` to `Ralph harness-lockin loop progress`.
+That opens a new Terminal window where session 1 begins. After it commits
+and pushes its task, step 14 of `/harness-step` launches another Terminal
+window for the next task. Chain continues until status flips to `complete`
+or `failed`.
 
-## Step 5 — converse while the loop runs
+## Step 3 — your turn ends here
 
-After Step 4, your turn ends. Monitor events arrive as their own messages.
-KripVerify findings arrive as `[KripVerify findings — ...]` injections on
-each user prompt. The user can ask questions; you're free to:
-- Tail recent iteration logs from `kid-kode-landing/notes/ralph-logs/` if
-  they ask "what's happening in HL0X right now?"
-- Read `git log --oneline -20` to show recent commits.
-- Read `jq` excerpts from `notes/ralph-state.json` to show task statuses
-  and KripVerify-flagged tasks (those with `kvVerify: true`).
-- Read the latest spec-reviewer output if they ask about a specific iter.
-- Read `.kripverify/findings/latest.json` if they ask about the most
-  recent verification run.
+You don't need to monitor — the chain runs autonomously across Terminal
+windows. The user can ask questions during the chain, and you can:
+- Read `kid-kode-landing/notes/ralph-state.json` for live status.
+- Read `git log --oneline -20` for recent commits.
+- Read `.kripverify/findings/latest.json` for the most recent KripVerify run.
+- Tail `kid-kode-landing/notes/ralph-logs/` for per-iter logs (if the chain
+  writes them — currently /harness-step doesn't, but iter commit messages
+  in `git log` serve the same purpose).
 
-Do **not** run `/ralph-step` yourself. Do not edit code. Do not commit.
-The autonomous loop is doing the work; you are the narrator and concierge.
+Do NOT run `/harness-step` in this chat session. The chain is in Terminal
+windows.
 
-## Step 6 — handle stop requests
-
-If the user says "stop the loop" or similar:
-1. Call `TaskStop` on the Bash background task id from Step 3.
-2. Verify by reading the script's output file — last line should show the
-   loop interrupted.
-3. The state file will retain whatever in-progress task was active. Tell the
-   user how to resume (just `/kickoff-harness-lockin` again, or run
-   `./scripts/ralph.sh` from a terminal).
-
-## Step 7 — terminal handling
-
-When the Monitor exits (loop reached terminal state):
-
-- If `status: complete`: read final state, summarize: total iterations,
-  per-task commit shas, total runtime, any non-trivial SHOULD-FIX notes,
-  the latest KripVerify run summary from `.kripverify/findings/latest.json`,
-  and the production deploy URL (https://kid-kode-ai-landing-git-prism-main-logans-projects-e51c822e.vercel.app/).
-  Recommend opening the live URL to confirm visually.
-- If `status: failed`: read the failed task's `notes` and the last 50 lines
-  of its iter log. Surface the failure and recommend a recovery path
-  (refine task, bump attempts, or revise spec).
-- If `status: paused-*`: that's a non-terminal breakpoint. Quote the
-  relevant `breakpoints[]` entry. Recommend `scripts/ralph-resume.sh`
-  if it exists, or in-place edit of the state file to clear the block.
+If the user says "stop the chain": instruct them to close any open Terminal
+windows running `claude --print /harness-step`. The chain stops naturally
+because no new windows spawn from a closed session. State persists; resume
+by running `/kickoff-harness-lockin` again or pasting the shell command above
+in Terminal.
 
 ## Behavior rules
 
-- Be concise in your narration. Two-line updates are better than ten-line
-  recaps.
-- The Monitor emits boundary events; don't echo them — they arrive on
-  their own. Only respond when the user asks something or when the
-  monitor terminates.
-- KripVerify findings inject automatically as `[KripVerify findings — ...]`
-  blocks. Don't fetch them yourself unless the user asks for the full
-  payload.
-- If the user asks for details about a specific iteration, read the
-  relevant log file and quote the relevant lines (file:line pattern).
-- The lock-in takes hours, not minutes. Don't be alarmed if there's a long
-  gap between updates.
-- If you see `claude exited non-zero` events, that's the script reporting
-  that a child Claude process errored — but `/ralph-step` may still have
-  flipped state.status on its own (e.g., to "failed" after maxAttempts).
-  Read state.json before concluding the loop is broken.
-- After every successful HL iter, the corresponding commit hits `prism-main`
-  and Vercel auto-deploys. Production progress is observable on the live URL.
+- Be concise. 2-3 lines maximum.
+- Don't echo Terminal output here — it's in the spawned window, not this chat.
+- After launching, exit your turn. Wait for user questions, don't poll.
+- The chain takes hours. Don't be alarmed by long gaps.
