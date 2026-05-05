@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>T08 Editor Image-edit tools harness</title>
+<style>
+  body { font: 12px/1.4 ui-monospace, monospace; background: #0a0b1c; color: #e6e8ff; margin: 0; padding: 16px; }
+  #app { display: grid; gap: 16px; }
+  [data-role=image-edit-tool] { background: #11132a; border: 1px solid #1f2247; border-radius: 6px; padding: 10px; display: flex; gap: 8px; align-items: center; }
+  button { background: #5d8bff; color: white; border: 0; padding: 6px 12px; border-radius: 4px; cursor: pointer; font: inherit; }
+  input[type=number] { width: 80px; }
+  [data-role=node-readout] pre { background: #11132a; padding: 8px; border-radius: 4px; max-width: 600px; overflow: auto; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script type="module" src="./image-edit-main.js"></script>
+</body>
+</html>

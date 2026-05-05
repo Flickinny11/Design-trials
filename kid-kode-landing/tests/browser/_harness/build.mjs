@@ -19,21 +19,32 @@ import { dirname, resolve } from 'node:path';
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '..', '..', '..');
 
+const ENTRYPOINTS = [
+  // T07 — Visual tab harness (existing).
+  { input: 'main.ts', output: 'main.js' },
+  // T08 — Animation tab harness.
+  { input: 'animation-main.ts', output: 'animation-main.js' },
+  // T08 — Image-edit tools harness.
+  { input: 'image-edit-main.ts', output: 'image-edit-main.js' },
+];
+
 export async function buildHarness() {
-  await build({
-    entryPoints: [resolve(here, 'main.ts')],
-    bundle: true,
-    format: 'esm',
-    outfile: resolve(here, 'main.js'),
-    platform: 'browser',
-    target: 'es2022',
-    sourcemap: 'inline',
-    logLevel: 'info',
-    alias: {
-      '@': resolve(repoRoot, 'src'),
-    },
-    external: [],
-  });
+  for (const e of ENTRYPOINTS) {
+    await build({
+      entryPoints: [resolve(here, e.input)],
+      bundle: true,
+      format: 'esm',
+      outfile: resolve(here, e.output),
+      platform: 'browser',
+      target: 'es2022',
+      sourcemap: 'inline',
+      logLevel: 'info',
+      alias: {
+        '@': resolve(repoRoot, 'src'),
+      },
+      external: [],
+    });
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
