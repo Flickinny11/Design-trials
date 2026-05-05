@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-04T23:42:55Z",
+  "updatedAt": "2026-05-05T00:00:57Z",
   "currentIteration": 5,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -111,11 +111,11 @@
         "cd kid-kode-landing && npx vitest run --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862",
+      "verifiedAt": "2026-05-05T00:00:57Z",
+      "notes": "Implementation: assembleBundle(graph) emits §11 L389-L445 file map (app.js + graph.json + 6 shared infra files {manager,adapter,state,scene-root,loaders,text}.js + shared/primitives/index.js + 9 primitive stubs + 6 TSL shader stubs + per-node nodes/<id>.js stubs); buildImportMap() emits §11 L431-L443 (three / three/webgpu / three/tsl / three/addons/ / gsap from CDN). New runtime/mount.ts replaces player/boot.ts: wires SceneRoot+LoaderCache+FontAtlas+HubManager+Adapter from T01-T04 via createSceneRoot({size:{w,h}}), makePrimitivesAPI({scene,camera,renderer}), compiledToGraphSource lifts CompiledGraph onto GraphSource with the 5 additive PrismNode fields defaulted. Deleted: player/{boot,atlas-loader,msdf-loader,scroll-viewport,hub-router}.ts. Rewrote: player/module-registry.ts (no PIXI typeof import), player/index.ts (re-exports new mount), shr/index.ts installBrokenShim (Object3D userData.handlers.onClick swap, no eventemitter3). Removed pixi.js+pixi-filters from package.json deps. Marker .ralph-phase5-pixi-removed at repo root. Verifier comment line 14 reworded (no longer trips §17 DoD #1 grep). 41 new tests (33 bundle-assembly + 8 pixi-removal); full vitest 176/176, npx tsc --noEmit clean, grep zero pixi imports in src/. SHOULD FIX from spec-reviewer (non-blocking per Ralph step 9): (a) bundle.ts shared/text.js template imports 'three-msdf-text-webgpu' as a bare specifier but importmap doesn't expose it — §11 L444-L445 says it's bundled, so either inline source or add importmap entry; (b) bundle.ts shared/manager.js template's deactivate() doesn't walk userData.cleanup() on descendants — mirror disposeHubGroup; (c) primitiveTemplate/shaderTemplate emit identical paused-timeline / vec3(uv,0) stubs across all 9 primitives + 6 shaders — comment promises 'lifted from runtime/shared at bundle time' but lift is deferred (T07?); (d) perNodeStub never iterates cinematicPrimitives/textContent — would fail §10.C MISSING_PRIMITIVES_LOOP if run through verifier (T07 codegen replaces); (e) dependency-allowlist-check.sh still has pixi.js+pixi-filters in RUNTIME_ALLOW (file flagged sensitive, not edited this iter — drift weakening, future-drift guard); (f) Inspector.tsx Code-tab IMPORTS card has hardcoded 'pixi.js, gsap' label — stale; (g) mock-app-source/nodes/*.js still use ctx.PIXI runtime destructure (no 'from pixi' import, so §17 DoD grep clean) — track in T09 mock-app reconstruction; (h) mount.ts NodeContext shape diverges from app.js bundle ctx (no scene/camera/state on adapter ctx) — unify in T07 to avoid editor-host vs browser-host divergence. OPTIONAL: APP_JS_TEMPLATE composability, camelCase regex defensiveness, __prismRenderer transitional debug global, hardcoded THREE/GSAP versions could read from package.json, scene-root template's 'three' vs 'three/webgpu' import split."
     },
     {
       "id": "T06",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "5de1eef5f8891099854a6453fbe4dd909aab8b40"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862"
   },
   "phaseCaps": {
     "§1": {
@@ -246,14 +246,19 @@
       "used": 3,
       "cap": 8,
       "status": "active"
+    },
+    "§5": {
+      "used": 1,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 4,
-    "commit": "5de1eef5f8891099854a6453fbe4dd909aab8b40",
-    "verifiedAt": "2026-05-04T23:42:23Z",
+    "iteration": 5,
+    "commit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862",
+    "verifiedAt": "2026-05-05T00:00:57Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-04T23:42:23Z"
+    "recordedAt": "2026-05-05T00:00:57Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -281,6 +286,12 @@
       "taskId": "T04",
       "commit": "e6a8cc8502f0b5b9d68a643ed44aa5f3e0909e3f",
       "verifiedAt": "2026-05-04T23:41:01Z"
+    },
+    {
+      "iteration": 5,
+      "taskId": "T05",
+      "commit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862",
+      "verifiedAt": "2026-05-05T00:00:57Z"
     }
   ]
 }
