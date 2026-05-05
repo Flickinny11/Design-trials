@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>T07 Editor Visual tab harness</title>
+<style>
+  body { font: 12px/1.4 ui-monospace, monospace; background: #0a0b1c; color: #e6e8ff; margin: 0; padding: 16px; }
+  #app { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; }
+  .node-card { background: #11132a; border: 1px solid #1f2247; border-radius: 8px; padding: 12px; }
+  .node-card header { font-weight: 700; margin-bottom: 8px; }
+  .node-card canvas { display: block; background: #000; border-radius: 4px; margin-bottom: 8px; image-rendering: pixelated; }
+  .status { color: #9aa3d4; margin-bottom: 8px; min-height: 14px; }
+  .sliders { display: grid; gap: 6px; margin-bottom: 8px; }
+  .slider-row { display: grid; grid-template-columns: 100px 1fr 50px; gap: 8px; align-items: center; }
+  .slider-row label { color: #c5cdee; }
+  .slider-row span[data-role=slider-readout] { color: #5d8bff; text-align: right; }
+  button { background: #5d8bff; color: white; border: 0; padding: 6px 12px; border-radius: 4px; cursor: pointer; font: inherit; }
+  [data-role=save-status] { color: #76e3a8; margin-top: 6px; min-height: 14px; }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script type="module" src="./main.js"></script>
+</body>
+</html>
