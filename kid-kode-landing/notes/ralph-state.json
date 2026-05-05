@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T00:25:00Z",
+  "updatedAt": "2026-05-05T00:51:00Z",
   "currentIteration": 7,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -149,11 +149,11 @@
         "cd kid-kode-landing && npx playwright test tests/browser/T07.editor-visual-tab.spec.ts"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "1199efc35313902475c77812869d083f53b99bd1",
+      "verifiedAt": "2026-05-05T00:51:00Z",
+      "notes": "Implementation: src/lib/prism-graph/visual-spec-sliders.ts (buildVisualSpecSliders + applyVisualSpecSlider, 6 sliders for sprite/plane, 7 for parallax-plane (depth.scale) and mesh (mesh.rotationSpeed); read-write symmetric on intent.visualSpec[key] for render-mode keys), src/components/editor/panels/visual-preview/regen-api.ts (saveAndVerify POST /api/prism/regen with injected fetch + endpoint override; HTTP / network / JSON error paths all return ok:false + error string), src/components/editor/panels/visual-preview/VisualPreview.tsx (R3F sub-canvas with async WebGPU gl factory + WebGL2 fallback per spec §3 L65; SceneContent mounts createNode() once per node identity and applies slider values via Object3D.position/rotation/scale refs - direct mutation rather than spec §13 L477 literal 'createNode re-execution on debounced slider input' to honour §17 L538 <100ms latency budget; RendererProbe via useThree+useEffect; Inspector.tsx VisualTab wired with memoized sourceNode lookup). Test infrastructure: playwright.config.ts (chromium with --enable-unsafe-webgpu / --use-vulkan=swiftshader / --ignore-gpu-blocklist; webServer launches tests/browser/_harness/serve.mjs; reuseExistingServer in non-CI), tests/browser/_harness/{build,serve,main,index}.mjs|ts|html (esbuild bundles main.ts → main.js for the harness; serve.mjs serves _harness/ + provides POST /api/prism/regen mock + GET /__regen_log; harness emulates the contract surface in vanilla DOM with real <canvas> + WebGPU/WebGL2 detection so the latency assertion is end-to-end). 8 Playwright tests + 15 vitest unit tests (T07.visual-spec-sliders 9, T07.regen-api 6) all pass; npx tsc --noEmit clean; full vitest suite 210/210. SHOULD FIX from spec-reviewer cycle 2 (non-blocking per Ralph step 9): (a) VisualPreview.tsx:24 comment cites docs/spec-deviations-prism.md which doesn't exist; per spec §16 success #13 the deviations doc must be created — defer to T10 (DoD); (b) previewDefaultCreateNode duplicates adapter's module-private defaultCreateNode — export from adapter or rename here, will drift; (c) RendererProbe onProbe arrow allocates new each render → effect retriggers (reportedRef guards) — wrap in useCallback; (d) mount effect dep [node, createNode, ctx] — caller-passed inline ctx remounts on every parent render losing pending slider state, document or compare-by-identity; (e) onCreated AND RendererProbe both setRenderer state, two paths same outcome with different timings — pick one (RendererProbe is cleaner); (f) values re-seed effect on [sliders] snaps mid-drag user input back when regen-driven node updates land — flag TODO; (g) JSON.parse(JSON.stringify(node)) deep-clone is fine for current node shape, swap to structured-clone if node grows; (h) VisualTab typed as { node: any } — tighten to PrismNode now that the import is in scope. OPTIONAL: clamp NaN→min vs natural neutral 0; regen-api error body slice indicator '…'; inline style={{...}} mid-component (Inspector uses Tailwind throughout); previewDefaultCreateNode userData.handlers={} interpretation comment. From cycle 1 (already addressed): conditional useMemo (Rules of Hooks) → fixed via fallbackCtx unconditional + ?? collapse; Probe ref-mutation+Promise-in-render → fixed via useThree+useEffect; globalThis.__r3fLastRoot stash removed; misleading createNode-on-save comment rewritten; visual-spec-sliders depth.scale/mesh.rotationSpeed read symmetric with write via readVisualSpec; SCENE_POSITION_DEFAULT reused; sourceNodeById memoized in Inspector. Spec deviation: spec §13 L477 literal says createNode re-execution on slider input; implementation chose direct transform mutation per §17 L538 100ms budget — flagged for docs/spec-deviations-prism.md."
     },
     {
       "id": "T08",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 6,
-    "lastProductiveCommit": "e931cbb8f9ba5d219e4ad3ffb141547e4ef28ecf"
+    "lastProductiveIteration": 7,
+    "lastProductiveCommit": "1199efc35313902475c77812869d083f53b99bd1"
   },
   "phaseCaps": {
     "§1": {
@@ -256,14 +256,19 @@
       "used": 3,
       "cap": 8,
       "status": "active"
+    },
+    "§7": {
+      "used": 3,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 6,
-    "commit": "e931cbb8f9ba5d219e4ad3ffb141547e4ef28ecf",
-    "verifiedAt": "2026-05-05T00:21:34Z",
+    "iteration": 7,
+    "commit": "1199efc35313902475c77812869d083f53b99bd1",
+    "verifiedAt": "2026-05-05T00:51:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T00:21:34Z"
+    "recordedAt": "2026-05-05T00:51:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -303,6 +308,12 @@
       "taskId": "T06",
       "commit": "2666073d7c4c84ce232124cc826464c7bf8fc03e",
       "verifiedAt": "2026-05-05T00:20:11Z"
+    },
+    {
+      "iteration": 7,
+      "taskId": "T07",
+      "commit": "1199efc35313902475c77812869d083f53b99bd1",
+      "verifiedAt": "2026-05-05T00:51:00Z"
     }
   ]
 }
