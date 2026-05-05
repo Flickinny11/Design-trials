@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-05T20:11:56Z",
-  "currentIteration": 1,
+  "updatedAt": "2026-05-05T20:55:00Z",
+  "currentIteration": 0,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
@@ -22,6 +22,28 @@
   "tasks": [
     {
       "id": "HL01",
+      "title": "Spec-compliance hooks (verify-coderef-modules.sh + validate-live-graph.sh)",
+      "phase": 2,
+      "specRefs": [
+        "Plan §P5.5 (drift-protection hooks)",
+        "Spec §9.A + §10 (ALLOWED_IMPORT_SOURCES + verifier)"
+      ],
+      "haltCheck": "kid-kode-landing/.claude/hooks/verify-coderef-modules.sh runs verifyNodeModule on .js files written under public/prism-mock/**/nodes/ or src/lib/prism/mock-app-source/**/, exit 1 on any error severity violation. kid-kode-landing/.claude/hooks/validate-live-graph.sh runs applyPlanRendererDefaults + validatePlanRendererFields on live-graph.json writes, exit 1 on any plan-output violation. Both wired in .claude/settings.json PostToolUse hooks block matching Write|Edit. Smoke: synthesize known-bad codeRef + known-bad live-graph fragment → assert hook exits non-zero.",
+      "verificationCommands": [
+        "test -x kid-kode-landing/.claude/hooks/verify-coderef-modules.sh",
+        "test -x kid-kode-landing/.claude/hooks/validate-live-graph.sh",
+        "grep -q verify-coderef-modules .claude/settings.json",
+        "grep -q validate-live-graph .claude/settings.json",
+        "bash kid-kode-landing/.claude/hooks/test-hook-smoke.sh"
+      ],
+      "tddRequired": false,
+      "kvVerify": false,
+      "status": "pending",
+      "attemptCount": 0,
+      "notes": ""
+    },
+    {
+      "id": "HL02",
       "title": "Course correction - cta-hero.code.js spec imports + layout.tsx importmap + finalize live-graph.json",
       "phase": 1,
       "specRefs": [
@@ -45,7 +67,7 @@
       "notes": ""
     },
     {
-      "id": "HL02",
+      "id": "HL03",
       "title": "Archive home-hub.json + swap eager-init to live-graph.json",
       "phase": 2,
       "specRefs": [
@@ -68,7 +90,7 @@
       "notes": ""
     },
     {
-      "id": "HL03",
+      "id": "HL04",
       "title": "Store mutators (addNode/updateNode/removeNode/addEdge/removeEdge/addHub/setScenePosition/markDirty/saveToServer)",
       "phase": 2,
       "specRefs": [
@@ -81,28 +103,6 @@
         "cd kid-kode-landing && npx vitest run --reporter=basic tests/unit/store-mutators"
       ],
       "tddRequired": true,
-      "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
-      "notes": ""
-    },
-    {
-      "id": "HL04",
-      "title": "Spec-compliance hooks (verify-coderef-modules.sh + validate-live-graph.sh)",
-      "phase": 2,
-      "specRefs": [
-        "Plan §P5.5 (drift-protection hooks)",
-        "Spec §9.A + §10 (ALLOWED_IMPORT_SOURCES + verifier)"
-      ],
-      "haltCheck": "kid-kode-landing/.claude/hooks/verify-coderef-modules.sh runs verifyNodeModule on .js files written under public/prism-mock/**/nodes/ or src/lib/prism/mock-app-source/**/, exit 1 on any error severity violation. kid-kode-landing/.claude/hooks/validate-live-graph.sh runs applyPlanRendererDefaults + validatePlanRendererFields on live-graph.json writes, exit 1 on any plan-output violation. Both wired in .claude/settings.json PostToolUse hooks block matching Write|Edit. Smoke: synthesize known-bad codeRef + known-bad live-graph fragment → assert hook exits non-zero.",
-      "verificationCommands": [
-        "test -x kid-kode-landing/.claude/hooks/verify-coderef-modules.sh",
-        "test -x kid-kode-landing/.claude/hooks/validate-live-graph.sh",
-        "grep -q verify-coderef-modules .claude/settings.json",
-        "grep -q validate-live-graph .claude/settings.json",
-        "bash kid-kode-landing/.claude/hooks/test-hook-smoke.sh"
-      ],
-      "tddRequired": false,
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,

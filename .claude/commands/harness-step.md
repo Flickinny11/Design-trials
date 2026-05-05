@@ -193,37 +193,38 @@ commits), stop immediately and flag — do NOT force-push. Print
 `Harness iter <N> <task-id> -> push-rejected` and exit. Human judgment
 required.
 
-## Step 14 — launch next window
+## Step 14 — return JSON report to orchestrator
 
-Re-read `ralph-state.json`. If any task with `status == "pending"` remains:
+When invoked by the orchestrator (the typical case), your final output MUST
+be a single JSON object — nothing else, no markdown fences, no commentary.
+Format:
 
-Print `Harness iter <N> <task-id> -> done. Launching next window...`
-
-Then run this Bash command (do NOT modify it; copy verbatim):
-
-```bash
-osascript -e 'tell application "Terminal" to do script "cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print /harness-step"' >/dev/null 2>&1
+```json
+{"task":"<TASK_ID>","status":"done"|"in-progress"|"failed","commit":"<sha or null>","kvVerifierStatus":"clean"|"warning"|"error"|"n/a","attemptCount":<n>,"summary":"<2–3 sentence outcome>","blockers":"<empty string if done, else short reason>"}
 ```
 
-If `osascript` fails (e.g., Terminal not available), fall back to:
+Field semantics:
+- `task` — the HL ID you executed (HL01, HL02, ...).
+- `status`:
+  - `"done"` — all gates passed, state.json updated, commit on HEAD, push succeeded.
+  - `"in-progress"` — gates failed after up to 3 internal fix attempts. State should reflect attemptCount bump (orchestrator will re-spawn or escalate per maxAttemptsPerTask).
+  - `"failed"` — unrecoverable: hooks blocked, push rejected, attempt ceiling hit. State should reflect failed.
+- `commit` — short or full SHA of the impl commit if status is `done`, else `null`.
+- `kvVerifierStatus` — for tasks with `kvVerify: true`: `clean`, `warning`, or `error` per the KripVerify findings. For tasks with `kvVerify: false`: `n/a`.
+- `attemptCount` — current attempt count after this run.
+- `summary` — 2–3 sentences describing what changed, what verifications passed/failed.
+- `blockers` — empty string when done; otherwise the specific reason the gates failed.
 
-```bash
-nohup claude --print /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 &
-```
+The orchestrator parses this report, validates against state.json + git log,
+and decides whether to spawn the next worker or escalate to the user.
 
-Either way, the chain continues without you. After launching, exit this
-session.
-
-If NO pending tasks remain (the loop just hit `complete` in step 11's
-re-read), do NOT launch — the chain is done. Print
-`Harness chain COMPLETE — all 15 HL tasks done.` and exit.
+DO NOT launch a Terminal window. DO NOT spawn another `/harness-step`
+session. DO NOT continue working on a different task. The orchestrator
+drives the chain.
 
 ## Step 15 — exit
 
-Final stdout line: `Harness iter <N> <task-id> -> done` (success) or
-`Harness iter <N> <task-id> -> in-progress (<reason>)` (verification failed
-mid-iter) or `Harness chain COMPLETE` (no more pending). The chain is
-already armed in step 14; just exit cleanly.
+After returning the JSON report, exit cleanly. Your turn is done.
 
 ## Behavior rules
 
