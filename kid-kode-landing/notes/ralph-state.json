@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-04T21:49:00Z",
-  "updatedAt": "2026-05-05T00:02:54Z",
+  "updatedAt": "2026-05-05T00:20:11Z",
   "currentIteration": 6,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -130,11 +130,11 @@
         "cd kid-kode-landing && npx vitest run tests/integration --reporter=basic"
       ],
       "tddRequired": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "2666073d7c4c84ce232124cc826464c7bf8fc03e",
+      "verifiedAt": "2026-05-05T00:20:11Z",
+      "notes": "Implementation: src/lib/prism/pipeline/{types,depth-map-stage,mesh-stage,orchestrator,index}.ts. types.ts exports DEPTH_ANYTHING_V2_MODEL_ID='fal-ai/image-preprocessors/depth-anything/v2' (§3 L80), HUNYUAN3D_RAPID_MODEL_ID='fal-ai/hunyuan-3d/v3.1/rapid/image-to-3d' (§3 L82), TRELLIS_2_MODEL_ID='fal-ai/trellis-2' (§3 L83), MESH_STAGE_TIMEOUT_MS_DEFAULT=180_000ms (§6 L180 hard timeout, value unspecified — picked 3min upper edge of Hunyuan3D Rapid p95 §3 L82). Stage 9.5 runDepthMapStage: tag/skip parallax-plane subset → Promise.all per-node generate calls with depthRetries=1; preserves existing depthMapUrl. Stage 9.6 runMeshStage: 5-step ladder (skip non-mesh / preserve existing meshUrl / Hunyuan3D in parallel with withTimeout / Trellis-2 fallback for failures / depth-map demote-to-parallax-plane / final demote-to-plane on depth-map failure). Orchestrator runAssetPipeline runs both stages in parallel; merge by original renderMode preserves input order. 19 vitest integration tests across 3 files; full suite 195/195 pass; npx tsc --noEmit clean. Spec-reviewer cycle 1 MUST FIX (impl uncommitted at HEAD — review preceded step 10 commit per Ralph step ordering): addressed by step 10 commit. SHOULD FIX cycle 1 partially addressed in commit 2666073: (a) up-front skip for mesh nodes with no visual.sourceAsset (mesh-stage.ts L97-L110), (b) dropped unused 'let trellisOutcomes' binding (mesh-stage.ts L127), (c) replaced unreachable fallback branch with internal-error throw (mesh-stage.ts L243-L249). Remaining SHOULD FIX (deferred): (d) withTimeout doesn't AbortSignal-cancel underlying client promise — leaks pending fal HTTP connection on timeout (real-fal-client concern; tests unaffected); (e) trellisQueue.find linear-scan on candidate count — pre-emptive cleanup, swap to Map<number,string> if hub size grows; (f) DEPTH_RETRIES_DEFAULT=1 in depth-map-stage.ts is undocumented relative to spec §6 (silent on retries) — engine invariant 5 (builds must never fail) is the implicit rationale; consider co-locating in types.ts. OPTIONAL: orchestrator merge-by-original-renderMode contract should be documented as a comment block; index.ts re-exports per-stage functions alongside orchestrator (callers should default to runAssetPipeline); never-resolving promise in T06.mesh-stage.test.ts:142 leaks at test end (vitest tolerates)."
     },
     {
       "id": "T07",
@@ -223,8 +223,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "34fd2bb4ba0b6d772fcc5b113f3c777b18e99ad3"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "2666073d7c4c84ce232124cc826464c7bf8fc03e"
   },
   "phaseCaps": {
     "§1": {
@@ -251,14 +251,19 @@
       "used": 2,
       "cap": 8,
       "status": "active"
+    },
+    "§6": {
+      "used": 2,
+      "cap": 8,
+      "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 5,
-    "commit": "34fd2bb4ba0b6d772fcc5b113f3c777b18e99ad3",
-    "verifiedAt": "2026-05-05T00:02:30Z",
+    "iteration": 6,
+    "commit": "2666073d7c4c84ce232124cc826464c7bf8fc03e",
+    "verifiedAt": "2026-05-05T00:20:11Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T00:02:30Z"
+    "recordedAt": "2026-05-05T00:20:11Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -292,6 +297,12 @@
       "taskId": "T05",
       "commit": "1365ef9bca286ad1c9f2f8a5ccff1c41b1af7862",
       "verifiedAt": "2026-05-05T00:00:57Z"
+    },
+    {
+      "iteration": 6,
+      "taskId": "T06",
+      "commit": "2666073d7c4c84ce232124cc826464c7bf8fc03e",
+      "verifiedAt": "2026-05-05T00:20:11Z"
     }
   ]
 }
