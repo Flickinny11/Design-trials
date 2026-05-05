@@ -88,6 +88,8 @@ function compiledToGraphSource(graph: CompiledGraph): GraphSource {
       viewportHeight: h.layout.viewportHeight,
       contentHeight: h.layout.contentHeight,
       backgroundColor: h.layout.backgroundColor,
+      // Spec amendment 0002 — legacy CompiledGraph carries no hub mockup URL.
+      mockupUrl: null,
     },
   }));
   const nodes: PrismNode[] = graph.nodes.map((n) => ({

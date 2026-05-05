@@ -299,3 +299,13 @@ After the 6-phase Ralph loop landed, two visible defects remained: (a) the 3D ed
 - Live screenshot in [notes/browser-smoke/home-hub.png](browser-smoke/home-hub.png) shows ~29 element-spheres scattered across the hub instead of the prior tight cluster of 40 + backgrounds.
 
 **Outcome:** the 3D editor reflects what the user perceives as "discrete elements that the preview shows," sections are visually clustered, hubs scale to fit their contents.
+
+---
+
+## Post-renderer-migration: harness lock-in (2026-05-05)
+
+Plan: [/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md](../../../../.claude/plans/1-sounds-good-lets-jolly-frog.md). 14 phases (P0–P14) lock the prototype's harness — schema, store, persistence, live-bind, factory contract, Save & Verify boundary — so the future Prism engine has a complete contract to satisfy. Hand-author one beautiful "home" hub to prove every surface works before the engine is built.
+
+### P0 (2026-05-05) · 404 debt noted
+
+[src/components/editor/panels/visual-preview/regen-api.ts](../src/components/editor/panels/visual-preview/regen-api.ts) has been POSTing to `/api/prism/regen` since T07 of the renderer migration; the corresponding Next.js App Router route (`src/app/api/prism/regen/route.ts`) was never created. The user observed this manually as a 404 with the Next.js catch-all HTML in the response body. The deploy at `kid-kode-ai-landing.vercel.app` exhibits the same. Fix lands in P6 of the harness lock-in plan.

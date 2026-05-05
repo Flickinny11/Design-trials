@@ -51,6 +51,10 @@ export interface PrismHubLayout {
   viewportHeight: number;
   contentHeight: number;
   backgroundColor: string;
+  // Spec amendment 0002 — URL of the rendered hub mockup image; runtime
+  // composes it as a backdrop plane behind nodes; editor textures the
+  // hub-hull sphere with the same image. null = no mockup yet (Stage 0).
+  mockupUrl?: string | null;
 }
 
 export interface PrismHubResponsiveBreakpoint {
