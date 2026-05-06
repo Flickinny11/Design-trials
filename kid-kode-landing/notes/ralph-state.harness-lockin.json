@@ -40,7 +40,7 @@
       "kvVerify": false,
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "notes": "iter 1 (2026-05-06T01:55Z): blocked at step 7 — Write permission for kid-kode-landing/.claude/hooks/lib/verifier-runner.mjs declined 3x by harness sensitive-file gate. HL01 requires creating hook scripts under kid-kode-landing/.claude/hooks/, which the prompt-deny shield is rejecting. To unblock: pre-allow Write/Edit on kid-kode-landing/.claude/hooks/** in .claude/settings.local.json (or accept the prompts when they appear), then re-run /harness-step. Chain not relaunched."
     },
     {
       "id": "HL02",
