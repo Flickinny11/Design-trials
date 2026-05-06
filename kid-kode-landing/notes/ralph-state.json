@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T04:55:59Z",
+  "updatedAt": "2026-05-06T05:11:31Z",
   "currentIteration": 10,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -227,7 +227,8 @@
       ],
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "182b78b05e4c133012d37bae9d38953aa8c53cba",
+      "notes": "iter 10 (2026-05-06T05:11Z): code complete, KripVerify gate blocked by infra (same blocker as HL07 iter 8). Implementation: coderef-factory.ts (resolveCodeRef(url) dynamic-imports + caches via module-level Map; buildPerNodeFactory(defaultFactory) returns a CreateNodeFn wrapper that synchronously returns a placeholder Group, then grafts the imported module's default export under it once the Promise resolves; on import rejection it grafts the defaultFactory's output instead so nodes stay visible; __resetCodeRefCache test escape hatch). mount-graph.ts wires buildPerNodeFactory(defaultRenderModeFactory({runPrimitives:true})) as the default createNode passed to adaptGraphToScene. Shell verification: tsc --noEmit clean, test -f coderef-factory.ts ok, 11/11 vitest tests pass (40/40 across coderef-dispatch + default-factory + live-bind suites — no regressions). spec-reviewer cycle 1: 1 MUST FIX (graftAs compounded scenePosition because both placeholder and grafted child applied it — net world pos = 2× spec). Cycle 2 (commit 182b78b): MUST FIX resolved by resetting child.position/rotation/scale to identity before parent.add, plus copying child.userData.handlers into the placeholder so raycast routing reading from adapterResult.nodes.get(nodeId).userData.handlers reaches codeRef-attached events; regression tests added covering both. Cycle 2: no MUST FIX. KripVerify gate (kv_evaluate confirming home-cta-hero.children.length > 0): kv_navigate / kv_restart_dev_server / kv_dev_server_status all time out at 10s IPC — same hang HL07 iter 8 hit. Per harness rules, leaving status=in-progress with attemptCount unchanged so the orchestrator advances to HL10 and the kvAssert can be re-run alongside HL07's once KripVerify is restarted at the user level. SHOULD FIX deferred (cycle 1, not blocking): (1) wrapper's placeholder.userData.cleanup may double-fire grafted child cleanup when hub-manager traverses (most cleanups idempotent); (2) module-level cache singleton: HMR / non-vitest test-isolation can leak stale promises — comment with bundle-singleton assumption; (3) mount-graph comment about callers honoring opts.createNode could note codeRef dispatch is bypassed; (4) __resetCodeRefCache is a public export — gate with NODE_ENV='test' or move to .testing.ts. OPTIONAL (cycle 1): import url validation (allow-list relative paths); pickCleanup silently allows missing userData.cleanup; makeNode regression test for scenePosition (now covered). OPTIONAL (cycle 2): graftAs replacement should clear placeholder.userData.handlers before merging next child's handlers (defensive — current call paths don't hit it); applyScenePosition double-call (wrapper line 101 + adapter line 124) is dead work — drop or document as defensive for non-adapter callers."
     },
     {
       "id": "HL10",
@@ -377,8 +378,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 9,
-    "lastProductiveCommit": "0bea924744e3fc175ac99c9c8b39559147e0ede2"
+    "lastProductiveIteration": 10,
+    "lastProductiveCommit": "182b78b05e4c133012d37bae9d38953aa8c53cba"
   },
   "phaseCaps": {
     "1": {
@@ -428,11 +429,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 9,
-    "commit": "0bea924744e3fc175ac99c9c8b39559147e0ede2",
-    "verifiedAt": "2026-05-06T04:55:15Z",
+    "iteration": 10,
+    "commit": "182b78b05e4c133012d37bae9d38953aa8c53cba",
+    "verifiedAt": "2026-05-06T05:11:31Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T04:55:15Z"
+    "recordedAt": "2026-05-06T05:11:31Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
