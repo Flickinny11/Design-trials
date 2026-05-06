@@ -38,3 +38,7 @@ kid-kode-landing/tsconfig.tsbuildinfo
 # (not `npm run build`), so build:prism is skipped in production. The built .prism
 # artifact must ship in git so the live site can serve /prism-assets/mock-app.prism.
 # Regenerate via: npm run provision-assets && npm run build:prism, then commit.
+
+# harness-lockin chain: per-kickoff model contract (UI-selected model captured here)
+.claude/.harness-model
+.claude/.ralph-model

@@ -18,6 +18,30 @@ Do **not** run `/ralph-step` yourself in this session. The outer loop spawns
 fresh `claude --print` processes for that. Your role here is operator and
 narrator, not worker.
 
+## Step 0 — capture your model (CRITICAL)
+
+You currently know which model you are because it's stated in your system
+prompt (e.g. "powered by the model named Opus 4.7", "the exact model ID is
+'claude-opus-4-7'"). The user explicitly wants the chain to run on the
+model THEY selected in the Claude Code UI dropdown — which is the model
+running THIS kickoff session.
+
+Write your full model ID to `.claude/.ralph-model` using the **Bash** tool.
+The ID must be the full canonical form (e.g. `claude-opus-4-7`,
+`claude-sonnet-4-6`, `claude-haiku-4-5-20251001`), never a short alias.
+`scripts/ralph.sh` reads this file at startup and refuses to launch without
+it (so older sonnet 4.5 defaults can never silently win).
+
+```bash
+echo 'claude-opus-4-7' > /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
+```
+
+Verify by `cat .claude/.ralph-model` matches the model ID you intended. If
+you cannot determine your own model ID with certainty, STOP — do not
+guess. Ask the user to confirm and abort the kickoff.
+
+The file is git-ignored.
+
 ## Step 1 — preflight (do this synchronously before launching)
 
 Run these checks in parallel via Bash:
@@ -26,6 +50,7 @@ Run these checks in parallel via Bash:
 - `jq -r '.status, (.tasks | map(select(.status != "done")) | length), (.tasks | map(select(.status == "done")) | length)' /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json` → status must be `running` or `paused-*`; report `done` and `pending` counts
 - `command -v claude && command -v jq` → both must resolve
 - `test -x /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/scripts/ralph.sh` → must succeed
+- `test -s /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model` → step 0 captured a non-empty model ID
 
 If any check fails, **stop**. Tell the user exactly what's wrong and how to
 fix it. Do not proceed.

@@ -42,6 +42,23 @@ command -v jq >/dev/null 2>&1 || { echo "ralph.sh: jq is required" >&2; exit 1; 
 command -v claude >/dev/null 2>&1 || { echo "ralph.sh: claude CLI not on PATH" >&2; exit 1; }
 
 # ------------------------------------------------------------------
+# Model contract — every iteration's claude subprocess MUST run on the
+# UI-selected model captured by /kickoff-renderer-migration into
+# .claude/.ralph-model. No fallback default — refuse to launch without it.
+# ------------------------------------------------------------------
+RALPH_MODEL_FILE="$REPO_ROOT/.claude/.ralph-model"
+if [[ ! -s "$RALPH_MODEL_FILE" ]]; then
+  echo "ralph.sh: $RALPH_MODEL_FILE missing or empty — re-run /kickoff-renderer-migration in a fresh chat to capture your UI-selected model. Refusing to launch (would silently default to sonnet 4.5)." >&2
+  exit 1
+fi
+RALPH_MODEL=$(tr -d '[:space:]' < "$RALPH_MODEL_FILE")
+if [[ -z "$RALPH_MODEL" ]]; then
+  echo "ralph.sh: $RALPH_MODEL_FILE is empty after trim — refusing to launch." >&2
+  exit 1
+fi
+echo "ralph.sh: chain model = $RALPH_MODEL"
+
+# ------------------------------------------------------------------
 # Config
 # ------------------------------------------------------------------
 MAX_ITER="${MAX_ITER:-500}"
@@ -175,11 +192,14 @@ for i in $(seq 1 "$MAX_ITER"); do
 
   # Fresh Claude process. --dangerously-skip-permissions assumes the user has
   # pre-authorized the session per CLAUDE.md autonomous-operation block.
+  # --model is REQUIRED (no fallback) so the chain runs on the UI-selected
+  # model the user captured at kickoff. Never let claude default to sonnet 4.5.
   # IMPORTANT: claude must be invoked from $REPO_ROOT so it finds the project
   # slash commands at $REPO_ROOT/.claude/commands/ (Claude Code resolves
   # commands relative to cwd — no walk-up).
   if ! ( cd "$REPO_ROOT" && claude \
       --print \
+      --model "$RALPH_MODEL" \
       --dangerously-skip-permissions \
       "/ralph-step" ) \
       > "$LOGFILE" 2>&1

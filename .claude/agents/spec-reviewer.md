@@ -2,7 +2,6 @@
 name: spec-reviewer
 description: Staff-engineer review of the latest commit's diff against the Prism Renderer Migration spec. MUST be invoked at the end of every Ralph iteration (step 9 of /ralph-step). Returns a structured report; never modifies files.
 tools: Read, Grep, Glob, Bash
-model: opus
 ---
 
 # spec-reviewer — end-of-iteration review (renderer migration)

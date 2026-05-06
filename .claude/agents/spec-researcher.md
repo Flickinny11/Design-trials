@@ -2,7 +2,6 @@
 name: spec-researcher
 description: Read-only verifier for the Prism Renderer Migration spec. Used by Ralph tasks that need to quote spec language, verify a claim against source documents, or extract a specific section without bloating the main context.
 tools: Read, Grep, Glob, Bash
-model: opus
 ---
 
 # spec-researcher — read-only audit agent (renderer migration)

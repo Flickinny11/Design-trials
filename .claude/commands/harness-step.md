@@ -1,5 +1,5 @@
 ---
-description: Execute one task of the Prism Harness Lock-In, verify (including KripVerify), commit, push, and autonomously launch a fresh Claude Code window for the next task. One task per session. Chain runs until all 15 HL tasks complete.
+description: Execute one task of the Prism Harness Lock-In, verify (including KripVerify), commit, push, and autonomously launch a fresh Claude Code window for the next task using the same model captured by /kickoff-harness-lockin. One task per session. Chain runs until all 15 HL tasks complete.
 argument-hint: (none)
 ---
 
@@ -18,12 +18,23 @@ The plan: `/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md`.
 Spec: `kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` +
 `CINEMATIC-PRIMITIVES-LIBRARY.md` + amendment 0002.
 
+The model contract file `.claude/.harness-model` was written by
+`/kickoff-harness-lockin` and pins the entire chain to the model the user
+had selected in their Cursor / Claude Code UI dropdown when they kicked off.
+You inherit that model because the Terminal that launched you used
+`claude --print --model "$(cat .claude/.harness-model)"`. Step 14 below uses
+the same file when launching the next window.
+
 ## Step 1 — read state; terminal checks
 
 Read `kid-kode-landing/notes/ralph-state.json`. If `status != "running"` OR
 `currentIteration >= maxIterations`, print
 `Harness terminal: <status>, iteration <currentIteration>/<maxIterations>` and
 exit 0 cleanly. Do NOT launch a next window.
+
+Also verify `.claude/.harness-model` exists and is non-empty. If missing,
+print `Harness terminal: .claude/.harness-model missing — re-run /kickoff-harness-lockin to recapture model.`
+and exit 0. Do NOT launch a next window without a model contract.
 
 ## Step 2 — pick next task
 
@@ -63,6 +74,8 @@ Always re-read every iteration (you are a fresh process):
 - `kid-kode-landing/CLAUDE.md`
 - The specific spec sections in `task.specRefs[]`. Use the `spec-researcher`
   subagent if available to extract just those sections (keeps context lean).
+  spec-researcher runs on a cheaper model (sonnet 4.6) by design — it
+  extracts text, doesn't make complex judgments.
 - `kid-kode-landing/notes/prism-mock-progress.md` (last entry)
 - `.claude/rules/` if any harness-specific rules exist
 - `.kripverify/findings/latest.json` if it exists (most recent KripVerify run)
@@ -87,7 +100,7 @@ Commit the failing test as
 Write the minimum code to make the failing tests pass and satisfy
 `task.haltCheck`. Respect every active hook (anti-drift, dependency
 allowlist, migration forbidden patterns, post-edit typecheck, plus the
-spec-compliance hooks added in HL04 once they exist:
+spec-compliance hooks added in HL01 once they exist:
 verify-coderef-modules.sh and validate-live-graph.sh).
 
 If a hook blocks an edit, FIX THE EDIT — do not bypass the hook.
@@ -133,7 +146,10 @@ a next window, exit 0.
 
 ## Step 9 — spec-reviewer
 
-Spawn the `spec-reviewer` subagent on HEAD. Parse its output:
+Spawn the `spec-reviewer` subagent on HEAD. The reviewer has no model
+override in its frontmatter, so it inherits YOUR model (the chain model from
+`.harness-model`) — staff-engineer review at the same quality the user is
+paying for elsewhere. Parse its output:
 - `MUST FIX` items: address each, re-run steps 8 + 8.5, re-invoke reviewer.
   Up to 2 review-fix cycles per iteration. If still has MUST FIX after 2
   cycles, leave task `in-progress` with `attemptCount` unchanged, do NOT
@@ -151,11 +167,11 @@ committed in step 6). Commit as:
 harness: <task-id> - <title>
 ```
 
-Example: `harness: HL01 - course correction (cta-hero spec imports + importmap + live-graph validation)`.
+Example: `harness: HL01 - spec-compliance hooks (verify-coderef-modules + validate-live-graph)`.
 
 ## Step 11 — update state
 
-Re-read `ralph-state.json` (HL04 hooks may have written intermediate state),
+Re-read `ralph-state.json` (HL01 hooks may have written intermediate state),
 then update:
 - `task.status = "done"`
 - `task.commit = <new HEAD sha>`
@@ -193,38 +209,44 @@ commits), stop immediately and flag — do NOT force-push. Print
 `Harness iter <N> <task-id> -> push-rejected` and exit. Human judgment
 required.
 
-## Step 14 — return JSON report to orchestrator
+## Step 14 — launch next window (with model passthrough)
 
-When invoked by the orchestrator (the typical case), your final output MUST
-be a single JSON object — nothing else, no markdown fences, no commentary.
-Format:
+Re-read `ralph-state.json`. If any task with `status == "pending"` remains:
 
-```json
-{"task":"<TASK_ID>","status":"done"|"in-progress"|"failed","commit":"<sha or null>","kvVerifierStatus":"clean"|"warning"|"error"|"n/a","attemptCount":<n>,"summary":"<2–3 sentence outcome>","blockers":"<empty string if done, else short reason>"}
+Print `Harness iter <N> <task-id> -> done. Launching next window with model from .harness-model...`
+
+Then run this Bash command (do NOT modify it; copy verbatim):
+
+```bash
+MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
+osascript -e "tell application \"Terminal\" to do script \"cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print --model $MODEL /harness-step\"" >/dev/null 2>&1
 ```
 
-Field semantics:
-- `task` — the HL ID you executed (HL01, HL02, ...).
-- `status`:
-  - `"done"` — all gates passed, state.json updated, commit on HEAD, push succeeded.
-  - `"in-progress"` — gates failed after up to 3 internal fix attempts. State should reflect attemptCount bump (orchestrator will re-spawn or escalate per maxAttemptsPerTask).
-  - `"failed"` — unrecoverable: hooks blocked, push rejected, attempt ceiling hit. State should reflect failed.
-- `commit` — short or full SHA of the impl commit if status is `done`, else `null`.
-- `kvVerifierStatus` — for tasks with `kvVerify: true`: `clean`, `warning`, or `error` per the KripVerify findings. For tasks with `kvVerify: false`: `n/a`.
-- `attemptCount` — current attempt count after this run.
-- `summary` — 2–3 sentences describing what changed, what verifications passed/failed.
-- `blockers` — empty string when done; otherwise the specific reason the gates failed.
+If `osascript` fails (e.g., Terminal not available), fall back to:
 
-The orchestrator parses this report, validates against state.json + git log,
-and decides whether to spawn the next worker or escalate to the user.
+```bash
+MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
+nohup claude --print --model "$MODEL" /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 &
+```
 
-DO NOT launch a Terminal window. DO NOT spawn another `/harness-step`
-session. DO NOT continue working on a different task. The orchestrator
-drives the chain.
+Either way, the chain continues without you, on the same model the user
+selected at kickoff. After launching, exit this session.
+
+If `.claude/.harness-model` is missing or empty: do NOT launch with a
+guessed model. Print
+`Harness iter <N> <task-id> -> done but cannot relaunch chain: .harness-model missing. Re-run /kickoff-harness-lockin in a fresh chat with the desired model selected.`
+and exit 0.
+
+If NO pending tasks remain (the loop just hit `complete` in step 11's
+re-read), do NOT launch — the chain is done. Print
+`Harness chain COMPLETE — all 15 HL tasks done.` and exit.
 
 ## Step 15 — exit
 
-After returning the JSON report, exit cleanly. Your turn is done.
+Final stdout line: `Harness iter <N> <task-id> -> done` (success) or
+`Harness iter <N> <task-id> -> in-progress (<reason>)` (verification failed
+mid-iter) or `Harness chain COMPLETE` (no more pending). The chain is
+already armed in step 14; just exit cleanly.
 
 ## Behavior rules
 
@@ -241,7 +263,9 @@ After returning the JSON report, exit cleanly. Your turn is done.
   appears at the production URL within ~60s.
 - The chain self-terminates on `status: complete` or `status: failed` (no
   next window launched). The user can resume manually by running
-  `claude --print /harness-step` in the repo directory.
+  `claude --print --model "$(cat .claude/.harness-model)" /harness-step` in
+  the repo directory, or by re-running `/kickoff-harness-lockin` in a fresh
+  chat.
 
 ## Notes specific to this run
 
@@ -254,3 +278,7 @@ After returning the JSON report, exit cleanly. Your turn is done.
 - The chain runs in `claude --print` mode for sessions 2+; output streams to
   the Terminal window. Session 1 may be interactive (user-launched) or
   --print depending on how the user kicked off.
+- spec-researcher subagent: hardcoded to claude-sonnet-4-6 (cheap, simple
+  extraction). spec-reviewer subagent: inherits chain model (complex, needs
+  the full model). ANTHROPIC_SMALL_FAST_MODEL=haiku 4.5 (auxiliary tasks
+  like compaction). All other coding work: chain model from .harness-model.
