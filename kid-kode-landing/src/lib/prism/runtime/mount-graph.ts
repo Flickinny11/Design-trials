@@ -93,18 +93,17 @@ export interface MountGraphResult {
 }
 
 const BACKDROP_Z = -2;
-const BACKDROP_W = 16;
-const BACKDROP_H = 9;
 
-function buildBackdropMesh(): Mesh {
-  const geo = new PlaneGeometry(BACKDROP_W, BACKDROP_H);
+function buildBackdropMesh(width: number, height: number): Mesh {
+  const geo = new PlaneGeometry(width, height);
   const mat = new MeshBasicMaterial({ transparent: true, opacity: 1 });
   const mesh = new Mesh(geo, mat);
   mesh.position.set(0, 0, BACKDROP_Z);
   mesh.userData.role = 'hub-backdrop';
+  // Amendment 0002 §A.2: cleanup disposes geometry and unparents only —
+  // texture is owned by the loader cache and outlives this mesh.
   mesh.userData.cleanup = () => {
     geo.dispose();
-    mat.map?.dispose?.();
     mat.dispose();
   };
   return mesh;
@@ -160,7 +159,10 @@ export async function mountFromGraphSource(
     if (!hubGroup) continue;
     const mockupUrl = hub.layout.mockupUrl ?? null;
     if (!mockupUrl) continue;
-    const backdrop = buildBackdropMesh();
+    const backdrop = buildBackdropMesh(
+      hub.layout.viewportWidth,
+      hub.layout.viewportHeight,
+    );
     hubGroup.add(backdrop);
     hubBackdrops.set(hub.hubId, backdrop);
     void applyMockupTexture(backdrop, mockupUrl, ctx);
@@ -239,13 +241,17 @@ export async function mountFromGraphSource(
   async function setHubMockup(hubId: string, mockupUrl: string | null): Promise<void> {
     const hubGroup = adapterResult.hubs.get(hubId);
     if (!hubGroup) return;
+    const hub = source.hubs.find((h) => h.hubId === hubId);
     const existing = hubBackdrops.get(hubId);
     if (existing) {
       disposeNode(existing);
       hubBackdrops.delete(hubId);
     }
-    if (mockupUrl) {
-      const backdrop = buildBackdropMesh();
+    if (mockupUrl && hub) {
+      const backdrop = buildBackdropMesh(
+        hub.layout.viewportWidth,
+        hub.layout.viewportHeight,
+      );
       hubGroup.add(backdrop);
       hubBackdrops.set(hubId, backdrop);
       await applyMockupTexture(backdrop, mockupUrl, ctx);
