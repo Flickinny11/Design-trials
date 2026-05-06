@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T02:49:34Z",
+  "updatedAt": "2026-05-06T03:00:27Z",
   "currentIteration": 4,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -87,9 +87,11 @@
       ],
       "tddRequired": true,
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "f4a22f40eee3a86fd4d5647ed80ed772ecbe16a1",
+      "verifiedAt": "2026-05-06T03:00:27Z",
+      "notes": "iter 4 (2026-05-06T03:00Z): done. spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (1) eager-init body duplicates loadFromUrl — collapse to `void useGraphSourceStore.getState().loadFromUrl('/prism-mock/home/live-graph.json')` (verificationCommands' grep would still match since the URL literal stays). (2) .then(onFulfilled,onRejected) silently swallows throws inside onFulfilled — convert to .then().catch() or async IIFE w/ try/catch. (3) Stale file-header doc comments in build-prism.mjs / build-atlas.mjs / provision-assets.mjs still say 'Reads home-hub.json' — update to home-hub.legacy.json. OPTIONAL: __forceEagerInit() helper to remove 20×5ms polling in the test; loader.ts JSDoc says 'fetch home-hub.json' (now drift); HL02's `_comment` schema-validator question now applies to live-graph.json as the production path. HL01 still in-progress (sensitive-file gate on kid-kode-landing/.claude/hooks/** — manual user unblock required per HL01 notes)."
     },
     {
       "id": "HL04",
@@ -366,8 +368,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 3,
-    "lastProductiveCommit": "fd32614a1f2c8d18e2d33a84113e521c7d3ce14f"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "f4a22f40eee3a86fd4d5647ed80ed772ecbe16a1"
   },
   "phaseCaps": {
     "1": {
@@ -417,11 +419,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 3,
-    "commit": "fd32614a1f2c8d18e2d33a84113e521c7d3ce14f",
-    "verifiedAt": "2026-05-06T02:49:00Z",
+    "iteration": 4,
+    "commit": "f4a22f40eee3a86fd4d5647ed80ed772ecbe16a1",
+    "verifiedAt": "2026-05-06T03:00:27Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T02:49:00Z"
+    "recordedAt": "2026-05-06T03:00:27Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -431,6 +433,12 @@
       "taskId": "HL02",
       "commit": "8afb8cc0fb42be61b3092608816df63028f75231",
       "verifiedAt": "2026-05-06T02:37:48Z"
+    },
+    {
+      "iteration": 4,
+      "taskId": "HL03",
+      "commit": "f4a22f40eee3a86fd4d5647ed80ed772ecbe16a1",
+      "verifiedAt": "2026-05-06T03:00:27Z"
     }
   ]
 }
