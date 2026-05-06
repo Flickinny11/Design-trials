@@ -234,22 +234,28 @@ Re-read `ralph-state.json`. If any task with `status == "pending"` remains:
 
 Print `Harness iter <N> <task-id> -> done. Launching next window with model from .harness-model...`
 
-Then run this Bash command (do NOT modify it; copy verbatim). The opus-only
-check guards the launch — if the model file ever drifts to sonnet/haiku,
-the next window won't fire:
+Then run this Bash command (do NOT modify it; copy verbatim). The launcher
+script does an opus-only check and refuses to exec if the model file has
+drifted, so the next window won't fire on Sonnet/Haiku:
 
 ```bash
-MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
-[[ "$MODEL" =~ ^claude-opus- ]] || { echo "REFUSING TO LAUNCH: model='$MODEL' is not opus"; exit 0; } && \
-osascript -e "tell application \"Terminal\" to do script \"cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print --model $MODEL /harness-step\"" >/dev/null 2>&1
+osascript -e 'tell application "Terminal" to do script "/Users/loganbaird/Prototype_Prism/Design-trials/.claude/scripts/launch-harness-step.sh"' >/dev/null 2>&1
 ```
+
+The launcher (`.claude/scripts/launch-harness-step.sh`) handles cd-to-
+project, re-reading `.harness-model`, opus-only enforcement, and exec'ing
+`claude --print --model <opus> /harness-step`. The script form is used
+because chaining `cd && claude` directly inside an osascript `do script`
+string has historically dropped the `cd` portion under some quoting
+conditions, leaving claude invoked from `~` and unable to find the
+project's `.claude/commands/harness-step.md`.
 
 If `osascript` fails (e.g., Terminal not available), fall back to:
 
 ```bash
 MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
 [[ "$MODEL" =~ ^claude-opus- ]] || { echo "REFUSING TO LAUNCH: model='$MODEL' is not opus"; exit 0; } && \
-nohup claude --print --model "$MODEL" /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 &
+( cd /Users/loganbaird/Prototype_Prism/Design-trials && nohup claude --print --model "$MODEL" /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 & )
 ```
 
 Either way, the chain continues without you, on the same model the user

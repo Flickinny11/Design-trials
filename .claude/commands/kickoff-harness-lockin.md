@@ -87,15 +87,23 @@ that you're opening Terminal now to start the chain.
 Then run via the **Bash** tool (foreground, fast — just opens a window):
 
 ```bash
-MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
-osascript -e "tell application \"Terminal\" to do script \"cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print --model $MODEL /harness-step\""
+osascript -e 'tell application "Terminal" to do script "/Users/loganbaird/Prototype_Prism/Design-trials/.claude/scripts/launch-harness-step.sh"'
 ```
+
+The launcher script (`.claude/scripts/launch-harness-step.sh`) cd's to the
+project root, re-reads `.harness-model`, re-verifies it's an Opus variant,
+then `exec`s `claude --print --model <opus> /harness-step`. We use the
+script (not an inline `cd && claude` chain in the do-script string) because
+Terminal.app spawns the new shell in `$HOME` and `osascript`/AppleScript
+quoting around chained `&&` in `do script` has historically dropped the
+`cd` portion — invoking claude from `~` causes it to miss the project's
+`.claude/commands/harness-step.md` and exit with `Unknown command`.
 
 That opens a new Terminal window where session 1 begins, running on the
 model you captured in step 0. After it commits and pushes its task, step 14
 of `/harness-step` reads `.harness-model` and launches another Terminal
-window for the next task with the same model. Chain continues until status
-flips to `complete` or `failed`.
+window for the next task with the same model (via the same launcher
+script). Chain continues until status flips to `complete` or `failed`.
 
 ## Step 3 — your turn ends here
 
