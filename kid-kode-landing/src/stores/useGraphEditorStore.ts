@@ -27,6 +27,9 @@ interface GraphEditorState {
   searchOpen: boolean;
   searchQuery: string;
 
+  // Add-node dialog (HL13 / Plan §P13)
+  addNodeDialogOpen: boolean;
+
   // Freeze
   frozenNodeIds: Set<string>;
 
@@ -56,6 +59,8 @@ interface GraphEditorState {
   setInspectorTab: (t: InspectorTab) => void;
   toggleSearch: () => void;
   setSearchQuery: (q: string) => void;
+  openAddNodeDialog: () => void;
+  closeAddNodeDialog: () => void;
   toggleFreeze: (id: string) => void;
   setLivePreviewHover: (id: string | null) => void;
   flyToNode: (id: string) => void;
@@ -80,6 +85,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     inspectorTab: 'visual',
     searchOpen: false,
     searchQuery: '',
+    addNodeDialogOpen: false,
     frozenNodeIds: new Set<string>(),
     livePreviewHoverId: null,
     flyToNodeId: null,
@@ -104,6 +110,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     setInspectorTab: (t) => set({ inspectorTab: t }),
     toggleSearch: () => set((s) => ({ searchOpen: !s.searchOpen, searchQuery: '' })),
     setSearchQuery: (q) => set({ searchQuery: q }),
+    openAddNodeDialog: () => set({ addNodeDialogOpen: true }),
+    closeAddNodeDialog: () => set({ addNodeDialogOpen: false }),
     toggleFreeze: (id) =>
       set((s) => {
         const next = new Set(s.frozenNodeIds);

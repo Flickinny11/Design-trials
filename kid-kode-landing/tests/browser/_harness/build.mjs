@@ -28,6 +28,8 @@ const ENTRYPOINTS = [
   { input: 'image-edit-main.ts', output: 'image-edit-main.js' },
   // HL10 — editor-artifacts (ArtifactNode + GlassNode delegation) harness.
   { input: 'editor-artifacts-main.ts', output: 'editor-artifacts-main.js' },
+  // HL13 — Add Node UI harness (React + ReactDOM bundled).
+  { input: 'add-node-main.tsx', output: 'add-node-main.js' },
 ];
 
 export async function buildHarness() {
@@ -41,6 +43,8 @@ export async function buildHarness() {
       target: 'es2022',
       sourcemap: 'inline',
       logLevel: 'info',
+      jsx: 'automatic',
+      loader: { '.json': 'json' },
       alias: {
         '@': resolve(repoRoot, 'src'),
       },

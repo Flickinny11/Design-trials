@@ -12,6 +12,7 @@ export default function TopBar() {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
   const toggleSearch = useGraphEditorStore((s) => s.toggleSearch);
+  const openAddNodeDialog = useGraphEditorStore((s) => s.openAddNodeDialog);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -112,6 +113,16 @@ export default function TopBar() {
             <span className="text-[10px] font-mono font-semibold text-white/80">{health}%</span>
           </div>
         </div>
+
+        <button
+          data-component="add-node-button"
+          onClick={openAddNodeDialog}
+          className="flex items-center gap-1.5 px-3 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+          title="Add node"
+        >
+          <span className="text-[11px] font-mono text-white/80 leading-none">+</span>
+          <span className="hidden md:inline text-[10px] font-mono text-white/70">Add Node</span>
+        </button>
 
         <button
           onClick={resetCamera}

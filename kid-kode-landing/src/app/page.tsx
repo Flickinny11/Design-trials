@@ -10,6 +10,7 @@ import DetailCard from '@/components/editor/overlays/DetailCard';
 import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
+import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 
@@ -180,6 +181,7 @@ export default function Page() {
       )}
 
       <SearchPalette />
+      <AddNodeDialog />
     </main>
   );
 }
