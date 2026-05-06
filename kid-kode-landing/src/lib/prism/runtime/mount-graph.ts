@@ -38,6 +38,8 @@ import {
 } from './shared/adapter';
 import { createHubManager, type HubManagerHandle } from './shared/hub-manager';
 import { createSceneRoot, type SceneRootHandle } from './shared/scene-root';
+import { defaultRenderModeFactory } from './factories/default-factory';
+import { buildPerNodeFactory } from './factories/coderef-factory';
 import type {
   GraphSource,
   PrismHub,
@@ -142,8 +144,15 @@ export async function mountFromGraphSource(
         : undefined,
   });
 
+  // §P9 — codeRef dispatch wraps the default render-mode factory. Caller
+  // overrides (tests, editor previews) are honored as-is.
+  const factory: CreateNodeFn =
+    opts.createNode ?? buildPerNodeFactory(
+      (node, factoryCtx) => defaultRenderModeFactory(node, factoryCtx, { runPrimitives: true }),
+    );
+
   const adapterResult = adaptGraphToScene(source, ctx, {
-    createNode: opts.createNode,
+    createNode: factory,
   });
 
   // Tag every node Object3D with its nodeId so backdrop / surgical-helper
@@ -190,14 +199,7 @@ export async function mountFromGraphSource(
   }
 
   function getDefaultFactory(): CreateNodeFn {
-    return opts.createNode ?? ((config: PrismNode) => {
-      const g = new Group();
-      g.name = `node:${config.nodeId}`;
-      g.userData.nodeId = config.nodeId;
-      g.userData.cleanup = () => {};
-      g.userData.handlers = {};
-      return g;
-    });
+    return factory;
   }
 
   function disposeNode(obj: Object3D): void {
