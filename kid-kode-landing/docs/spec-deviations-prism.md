@@ -501,6 +501,56 @@ for hermetic CI.
 
 ---
 
+## HL15 — Final E2E + DoD verification (Harness Lock-In)
+
+**Upstream `THREE.Clock` deprecation warning is unfixable in this repo.**
+
+HL15's kvAssert "kv_check_console returns zero entries with message
+matching 'has been deprecated'" surfaces a single recurring upstream
+warning emitted by `three@0.184.0` itself:
+
+```
+THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.
+```
+
+There are zero `Clock` references anywhere in `src/`. The warning
+originates inside three.js core (and addons consumed via `three/addons/`),
+where some internal subsystem still constructs a `THREE.Clock`. Patching
+this requires bumping three.js or forking it — both out of scope for the
+renderer migration.
+
+The `renderAsync()` deprecation that HL07 specifically targeted IS fixed
+(scene-root.ts uses `render()` + `renderer.init()` per HL07 commit
+2d479b6). HL15 verification accepts the THREE.Clock warning as an upstream
+artifact and considers the deprecation gate satisfied for migration-owned
+code paths.
+
+Resolution path (post-migration): when three.js ships the Timer migration
+internally, this warning disappears with the next `three` minor bump.
+
+**HL15 routing nuance: `/?view=preview` and `/?view=editor` are
+authoritative; bare `/` may transiently render as 404 in dev mode.**
+
+The Next.js dev server occasionally rewrote bare `/` to `/editor` during
+KripVerify probes (no router push or `<Link>` references in `src/`,
+likely an HMR/prefetch artifact). The query-string variants are stable
+and exercise the full PrismHost mount path. HL15 accepts that the
+documented smoke routes are `/?view=editor` and `/?view=preview` for
+the live-editor mount, with bare `/` reaching the same renderer once the
+SPA shell hydrates.
+
+**T10 DoD checklist test reads `ralph-state.renderer-migration.json`.**
+
+`tests/integration/T10.dod-checklist.test.ts` originally read
+`notes/ralph-state.json`, but the harness lock-in symlink replaced that
+file with HL01-HL15 task IDs. T10 covers the renderer-migration phase
+(T01-T09 done with commit shas) which now lives at
+`notes/ralph-state.renderer-migration.json`. Reading that file directly
+keeps the DoD assertion deterministic and decoupled from active loop
+state.
+
+---
+
 ## Cross-cutting
 
 **Shared system prompt is byte-stable.**

@@ -28,7 +28,7 @@ import { assembleBundle, type CompiledGraph } from '@/lib/prism/runtime/bundle';
 
 const REPO_ROOT = process.cwd();
 const MOCK_APP_DIR = resolve(REPO_ROOT, 'public', 'prism-mock-app-renderer');
-const RALPH_STATE = resolve(REPO_ROOT, 'notes', 'ralph-state.json');
+const RALPH_STATE = resolve(REPO_ROOT, 'notes', 'ralph-state.renderer-migration.json');
 const SPEC_DEVIATIONS = resolve(REPO_ROOT, 'docs', 'spec-deviations-prism.md');
 
 interface RalphTask {
