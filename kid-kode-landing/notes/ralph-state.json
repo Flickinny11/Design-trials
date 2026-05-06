@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T06:51:53Z",
-  "currentIteration": 12,
+  "updatedAt": "2026-05-06T07:46:19Z",
+  "currentIteration": 13,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
@@ -296,8 +296,8 @@
       "kvAsserts": [
         "after kv_click('[data-role=\"save\"]'): kv_check_network with status 200 includes POST /api/prism/regen"
       ],
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "notes": ""
     },
     {
@@ -378,7 +378,7 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 0,
+    "stagnantStreak": 1,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 12,
     "lastProductiveCommit": "c525d830b818c1754dff4aab7ca9a4564174aeee"
