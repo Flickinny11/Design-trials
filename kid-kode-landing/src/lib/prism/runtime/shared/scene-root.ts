@@ -145,6 +145,15 @@ export async function createSceneRoot(
   if (!options.noRenderer) {
     const factory = options.rendererFactory ?? defaultRendererFactory;
     renderer = await factory(options.canvas);
+    // Always await init() if the renderer exposes it. The default factory
+    // already does this; awaiting it again here is idempotent for Three's
+    // WebGPURenderer and keeps injected factories (R3F's async `gl`,
+    // tests) on the same lifecycle. Calling render() before init() is what
+    // historically forced renderAsync() — once init() has resolved we can
+    // use the (non-deprecated) synchronous render() path in tick().
+    if (typeof renderer.init === 'function') {
+      await renderer.init();
+    }
     if (renderer.setPixelRatio) renderer.setPixelRatio(pickPixelRatio(options.pixelRatio));
     if (renderer.setSize) renderer.setSize(size.width, size.height);
   }
@@ -154,10 +163,15 @@ export async function createSceneRoot(
 
   async function tick(): Promise<void> {
     if (!renderer) return;
-    if (renderer.renderAsync) {
-      await renderer.renderAsync(scene, camera);
-    } else if (renderer.render) {
+    // After `renderer.init()` the WebGPURenderer has been awaited at
+    // construction (see `defaultRendererFactory`). Three deprecates
+    // `renderAsync()` in favor of `render()` once init has resolved —
+    // calling `renderAsync()` emits a console warning ("renderAsync() has
+    // been deprecated") which the harness asserts against.
+    if (renderer.render) {
       renderer.render(scene, camera);
+    } else if (renderer.renderAsync) {
+      await renderer.renderAsync(scene, camera);
     }
   }
 

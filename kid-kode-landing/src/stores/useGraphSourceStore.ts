@@ -13,6 +13,7 @@
 // /api/prism/regen and clears the flag once the server confirms persist.
 
 import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 import type {
   GraphSource,
   HomeHubJson,
@@ -65,7 +66,7 @@ function generateNodeId(): string {
   return `${rnd()}${rnd()}-${rnd()}-${rnd()}-${rnd()}-${rnd()}${rnd()}${rnd()}`;
 }
 
-export const useGraphSourceStore = create<GraphSourceState>()((set, get) => ({
+export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelector((set, get) => ({
   hubs: EMPTY.hubs,
   nodes: EMPTY.nodes,
   edges: EMPTY.edges,
@@ -213,7 +214,7 @@ export const useGraphSourceStore = create<GraphSourceState>()((set, get) => ({
     set({ isDirty: false, savedAt });
     return { ok: true, regeneratedAt: savedAt };
   },
-}));
+})));
 
 // Eager init: fetch the canonical live graph (the file /api/prism/regen
 // writes back to). The `'use client'` directive at the top of the file
