@@ -309,3 +309,11 @@ Plan: [/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md](../../.
 ### P0 (2026-05-05) · 404 debt noted
 
 [src/components/editor/panels/visual-preview/regen-api.ts](../src/components/editor/panels/visual-preview/regen-api.ts) has been POSTing to `/api/prism/regen` since T07 of the renderer migration; the corresponding Next.js App Router route (`src/app/api/prism/regen/route.ts`) was never created. The user observed this manually as a 404 with the Next.js catch-all HTML in the response body. The deploy at `kid-kode-ai-landing.vercel.app` exhibits the same. Fix lands in P6 of the harness lock-in plan.
+
+### iter 2 · HL01 — blocked again by sensitive-file shield
+
+- Implementation: none — second iteration hit the same harness sensitive-file gate that blocked iter 1. Write/Edit on `kid-kode-landing/.claude/hooks/**` is rejected, and `.claude/settings.local.json` (the file that would unblock it) is itself sensitive, so self-bootstrap is impossible.
+- Verification: not reached — task never advanced past step 7.
+- Commit: state-only (notes/ralph-state.json) — no source code changed.
+- Production: no deploy (no source change).
+- Unblock: user must manually edit `.claude/settings.local.json` and add `"Write(kid-kode-landing/.claude/hooks/**)"` + `"Edit(kid-kode-landing/.claude/hooks/**)"` to `permissions.allow`, then `/kickoff-harness-lockin` in a fresh chat. attemptCount now 2/3 — one attempt remains before HL01 auto-fails the chain at iter 3.
