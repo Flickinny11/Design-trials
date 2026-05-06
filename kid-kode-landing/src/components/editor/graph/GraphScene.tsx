@@ -82,10 +82,10 @@ export function __resetHubMockupTextureCache(): void {
 // Edge colors by type
 // ═══════════════════════════════════════════════════════════════════
 const EDGE_COLORS: Record<string, string> = {
-  contains: '#b5bddf',
+  contains: 'rgba(93, 139, 255, 0.45)',
   'navigates-to': '#5ee0ff',
-  triggers: '#ff9a44',
-  'data-flow': '#55e6a5',
+  triggers: 'rgba(85, 230, 165, 0.45)',
+  'data-flow': 'rgba(85, 230, 165, 0.45)',
   'shares-state': '#a978ff',
   'depends-on': '#6b7694',
 };
