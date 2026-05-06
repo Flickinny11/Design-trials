@@ -41,16 +41,14 @@ type EditorStore = {
 
 const minimalHub: PrismHub = {
   hubId: 'home',
-  type: 'application',
-  intent: { caption: 'home' } as PrismIntent,
+  title: 'home',
+  caption: 'home',
   layout: {
-    viewport: 'desktop',
-    grid: { columns: 12, gutter: 24 },
-    arrangement: 'home-grid',
     viewportWidth: 1280,
     viewportHeight: 720,
-  } as PrismHub['layout'],
-  flowOrder: [],
+    contentHeight: 720,
+    backgroundColor: '#04050a',
+  },
 };
 
 const minimalNode = (id: string): PrismNode =>

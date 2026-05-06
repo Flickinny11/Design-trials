@@ -28,10 +28,34 @@ export default function Inspector() {
   const setTab = useGraphEditorStore((s) => s.setInspectorTab);
   const frozen = useGraphEditorStore((s) => (selectedId ? s.frozenNodeIds.has(selectedId) : false));
   const flyToNode = useGraphEditorStore((s) => s.flyToNode);
+  const flyToHub = useGraphEditorStore((s) => s.flyToHub);
+  const setViewMode = useGraphEditorStore((s) => s.setViewMode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const isDirty = useGraphSourceStore((s) => s.isDirty);
+  const savedAt = useGraphSourceStore((s) => s.savedAt);
+  const saveToServer = useGraphSourceStore((s) => s.saveToServer);
+
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    setSaveError(null);
+    const r = await saveToServer();
+    setSaving(false);
+    if (!r.ok) setSaveError(r.error ?? 'save failed');
+  };
+
+  const handlePreviewInAppUi = () => {
+    setViewMode('preview');
+    if (!selectedId) return;
+    const node = useGraphSourceStore.getState().nodes.find((n) => n.nodeId === selectedId);
+    if (node?.parentHubId) flyToHub(node.parentHubId);
+  };
   const editorGraph = useMemo<EditorGraph>(
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
@@ -110,13 +134,49 @@ export default function Inspector() {
             {frozen && <Icon name="snow" size={13} color="#c5d8ff" glow />}
           </div>
         </div>
-        <button
-          onClick={close}
-          className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
-        >
-          <Icon name="close" size={12} color="#c5ccea" />
-        </button>
+        <div className="flex items-center gap-1.5 ml-2">
+          <button
+            type="button"
+            data-role="save"
+            disabled={saving}
+            onClick={handleSave}
+            title={isDirty ? 'Save graph to server' : 'No unsaved changes'}
+            className={`px-2.5 h-7 rounded-md text-[10px] font-mono border transition-colors ${
+              isDirty
+                ? 'bg-[#5d8bff]/20 hover:bg-[#5d8bff]/30 border-[#5d8bff]/40 text-[#c5d8ff]'
+                : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/55'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+          >
+            {saving ? 'Saving…' : isDirty ? 'Save' : 'Saved'}
+          </button>
+          <button
+            type="button"
+            data-role="preview-in-app-ui"
+            onClick={handlePreviewInAppUi}
+            title="Preview in App UI"
+            className="px-2.5 h-7 rounded-md text-[10px] font-mono bg-white/5 hover:bg-white/10 border border-white/10 text-white/75 transition-colors"
+          >
+            Preview in App UI
+          </button>
+          <button
+            onClick={close}
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+            title="Close inspector"
+          >
+            <Icon name="close" size={12} color="#c5ccea" />
+          </button>
+        </div>
       </div>
+      {(saveError || (savedAt && !isDirty)) && (
+        <div
+          data-role="save-status"
+          className={`mx-5 mt-2 px-2.5 py-1 rounded-md text-[10px] font-mono ${
+            saveError ? 'bg-[#ef4466]/15 border border-[#ef4466]/30 text-[#ffb1c0]' : 'bg-[#55e6a5]/10 border border-[#55e6a5]/25 text-[#a8efce]'
+          }`}
+        >
+          {saveError ? `save failed: ${saveError}` : `saved · ${new Date(savedAt!).toLocaleTimeString()}`}
+        </div>
+      )}
 
       <div className="flex border-b border-white/5 overflow-x-auto scrollbar-hide">
         {TABS.map((t) => {

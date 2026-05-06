@@ -233,7 +233,18 @@ export default function VisualPreview({
       const v = values[s.key];
       if (typeof v === 'number') applyVisualSpecSlider(next, s.key, v);
     }
-    const r = await saveAndVerify(next, { fetch: fetchOverride });
+    // HL12 / Plan §P12 — Save & Verify body widened to carry codeModule when
+    // the node has a codeRef. Server-side route runs the §10 verifier against
+    // the fetched module text in addition to the plan-level checks.
+    let codeModule: string | undefined;
+    if (typeof next.codeRef === 'string' && next.codeRef.length > 0 && typeof fetch !== 'undefined') {
+      const fetchFn = fetchOverride ?? fetch;
+      try {
+        const resp = await fetchFn(next.codeRef);
+        if (resp.ok) codeModule = await resp.text();
+      } catch { /* network error → omit codeModule, server runs plan-only checks */ }
+    }
+    const r = await saveAndVerify(next, { fetch: fetchOverride, codeModule });
     setSaveStatus(r);
     setSaving(false);
     if (r.ok) onSaved?.(r);

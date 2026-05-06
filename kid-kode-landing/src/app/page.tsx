@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
+import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -30,13 +31,14 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
   ),
 });
 
-type ViewMode = 'preview' | 'editor' | 'split';
-
 export default function Page() {
   const [splitPct, setSplitPct] = useState(36);
   const [dragging, setDragging] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
-  const [viewMode, setViewMode] = useState<ViewMode>('split');
+  // viewMode lives on useGraphEditorStore (HL12 / Plan §P12) so Inspector's
+  // "Preview in App UI" button can swap panes without prop-drilling.
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const setViewMode = useGraphEditorStore((s) => s.setViewMode);
   const [previewPreset, setPreviewPreset] = useState<ViewportPreset>('desktop');
 
   useEffect(() => {
