@@ -270,6 +270,7 @@ export interface EditorHubView {
   glyph: string;
   color: string;
   accentColor: string;
+  mockupUrl: string | null;
 }
 
 export interface EditorEdgeView {
@@ -340,6 +341,7 @@ export function toEditorHub(hub: PrismHub): EditorHubView {
     glyph: 'home',
     color: NEUTRAL_PRIMARY,
     accentColor: NEUTRAL_SECONDARY,
+    mockupUrl: hub.layout?.mockupUrl ?? null,
   };
 }
 

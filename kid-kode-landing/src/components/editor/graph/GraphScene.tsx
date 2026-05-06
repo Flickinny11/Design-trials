@@ -32,11 +32,17 @@ import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
 import type { PrismNode } from '@/lib/prism-graph/types';
 
-// Hub mockup texture cache — fetched once on demand, reused across hubs.
-let HUB_MOCKUP_TEXTURE_PROMISE: Promise<THREE.CanvasTexture> | null = null;
-function loadHubMockupTexture(): Promise<THREE.CanvasTexture> {
-  if (HUB_MOCKUP_TEXTURE_PROMISE) return HUB_MOCKUP_TEXTURE_PROMISE;
-  HUB_MOCKUP_TEXTURE_PROMISE = new Promise((resolve, reject) => {
+// Per-hub mockup texture cache — keyed by hubId so each hub textures its
+// hull from its own `hub.layout.mockupUrl` (Plan §P11 / Amendment 0002 §A.3).
+// The shared singleton this replaced violated one-graph-two-views: every hub
+// shared the same hardcoded `/prism-assets/scifi-mockup-v1.png` regardless of
+// its own backdrop URL. Now: cache miss → resolves to a CanvasTexture for the
+// hub's mockupUrl; cache hit → reuses the same in-flight or settled promise.
+const HUB_MOCKUP_TEXTURES = new Map<string, Promise<THREE.CanvasTexture>>();
+function loadHubMockupTexture(hubId: string, mockupUrl: string): Promise<THREE.CanvasTexture> {
+  const cached = HUB_MOCKUP_TEXTURES.get(hubId);
+  if (cached) return cached;
+  const promise = new Promise<THREE.CanvasTexture>((resolve, reject) => {
     if (typeof window === 'undefined') {
       reject(new Error('window is undefined'));
       return;
@@ -60,10 +66,16 @@ function loadHubMockupTexture(): Promise<THREE.CanvasTexture> {
       tex.needsUpdate = true;
       resolve(tex);
     };
-    img.onerror = () => reject(new Error('failed to load scifi-mockup-v1.png'));
-    img.src = '/prism-assets/scifi-mockup-v1.png';
+    img.onerror = () => reject(new Error(`failed to load hub mockup ${mockupUrl}`));
+    img.src = mockupUrl;
   });
-  return HUB_MOCKUP_TEXTURE_PROMISE;
+  HUB_MOCKUP_TEXTURES.set(hubId, promise);
+  return promise;
+}
+
+/** Test-only escape hatch — clears the per-hub texture cache between specs. */
+export function __resetHubMockupTextureCache(): void {
+  HUB_MOCKUP_TEXTURES.clear();
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -383,6 +395,118 @@ function GlassNode({
 // ═══════════════════════════════════════════════════════════════════
 // Hub hulls — translucent colored volumes
 // ═══════════════════════════════════════════════════════════════════
+function HubHull({
+  hub,
+  center,
+  radius,
+  innerRadius,
+  isActive,
+  onSelect,
+}: {
+  hub: EditorHubView;
+  center: { x: number; y: number; z: number };
+  radius: number;
+  innerRadius: number;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  // Per-hub mockup texture, loaded lazily from `hub.mockupUrl`. When the URL
+  // is null/empty (Stage 0 pre-mockup), the inner sphere is skipped and the
+  // hull renders with the procedural translucent fallback only.
+  const [mockupTexture, setMockupTexture] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    setMockupTexture(null);
+    if (!hub.mockupUrl) return;
+    let cancelled = false;
+    loadHubMockupTexture(hub.id, hub.mockupUrl).then((tex) => {
+      if (!cancelled) setMockupTexture(tex);
+    }).catch(() => {
+      // Texture optional — hub renders without if asset missing.
+    });
+    return () => { cancelled = true; };
+  }, [hub.id, hub.mockupUrl]);
+
+  return (
+    <group
+      position={[center.x, center.y, center.z]}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        document.body.style.cursor = 'pointer';
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'default';
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect();
+      }}
+    >
+      {/* Inner mockup sphere — textures the hub's hull with `hub.mockupUrl`
+          via MeshPhysicalMaterial (transmission/clearcoat/ior layered
+          vocabulary). Skipped entirely when the hub has no mockupUrl. */}
+      {mockupTexture && (
+        <mesh>
+          <sphereGeometry args={[innerRadius, 64, 64]} />
+          <meshPhysicalMaterial
+            map={mockupTexture}
+            emissiveMap={mockupTexture}
+            emissive={new THREE.Color(hub.color)}
+            emissiveIntensity={isActive ? 0.32 : 0.18}
+            metalness={0.1}
+            roughness={0.3}
+            clearcoat={0.6}
+            clearcoatRoughness={0.1}
+            transmission={0.4}
+            thickness={0.5}
+            ior={1.6}
+            transparent
+            opacity={0.85}
+          />
+        </mesh>
+      )}
+      <mesh>
+        <sphereGeometry args={[radius, 32, 32]} />
+        <meshBasicMaterial
+          color={hub.color}
+          transparent
+          opacity={isActive ? 0.085 : 0.035}
+          side={THREE.BackSide}
+          toneMapped={false}
+        />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[radius, 24, 24]} />
+        <meshBasicMaterial
+          color={hub.color}
+          transparent
+          opacity={isActive ? 0.05 : 0.022}
+          wireframe
+          toneMapped={false}
+        />
+      </mesh>
+      {/* Subtle equator glow ring */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
+        <meshBasicMaterial
+          color={hub.color}
+          transparent
+          opacity={isActive ? 0.32 : 0.18}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+        />
+      </mesh>
+      {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
+          give the mockup sphere a noticeable glow. */}
+      <pointLight
+        color={hub.color}
+        intensity={isActive ? 2.4 : 1.0}
+        distance={radius * 3}
+        decay={1.6}
+      />
+    </group>
+  );
+}
+
 function HubHulls({
   hubs,
   hubCenters,
@@ -395,19 +519,6 @@ function HubHulls({
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
   const selectHub = useGraphEditorStore((s) => s.selectHub);
-
-  // Hub mockup texture (CanvasTexture from /prism-assets/scifi-mockup-v1.png)
-  // — wrapped onto the inner sphere of every hub.
-  const [mockupTexture, setMockupTexture] = useState<THREE.CanvasTexture | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    loadHubMockupTexture().then((tex) => {
-      if (!cancelled) setMockupTexture(tex);
-    }).catch(() => {
-      // Texture optional — hub renders without if asset missing.
-    });
-    return () => { cancelled = true; };
-  }, []);
 
   return (
     <>
@@ -434,84 +545,15 @@ function HubHulls({
         const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
         return (
-          <group
+          <HubHull
             key={hub.id}
-            position={[center.x, center.y, center.z]}
-            onPointerOver={(e) => {
-              e.stopPropagation();
-              document.body.style.cursor = 'pointer';
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = 'default';
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              selectHub(hub.id);
-            }}
-          >
-            {/* Inner mockup sphere — wraps scifi-mockup-v1.png as CanvasTexture
-                with MeshPhysicalMaterial (transmission/clearcoat/ior layered
-                vocabulary). */}
-            {mockupTexture && (
-              <mesh>
-                <sphereGeometry args={[innerRadius, 64, 64]} />
-                <meshPhysicalMaterial
-                  map={mockupTexture}
-                  emissiveMap={mockupTexture}
-                  emissive={new THREE.Color(hub.color)}
-                  emissiveIntensity={isActive ? 0.32 : 0.18}
-                  metalness={0.1}
-                  roughness={0.3}
-                  clearcoat={0.6}
-                  clearcoatRoughness={0.1}
-                  transmission={0.4}
-                  thickness={0.5}
-                  ior={1.6}
-                  transparent
-                  opacity={0.85}
-                />
-              </mesh>
-            )}
-            <mesh>
-              <sphereGeometry args={[radius, 32, 32]} />
-              <meshBasicMaterial
-                color={hub.color}
-                transparent
-                opacity={isActive ? 0.085 : 0.035}
-                side={THREE.BackSide}
-                toneMapped={false}
-              />
-            </mesh>
-            <mesh>
-              <sphereGeometry args={[radius, 24, 24]} />
-              <meshBasicMaterial
-                color={hub.color}
-                transparent
-                opacity={isActive ? 0.05 : 0.022}
-                wireframe
-                toneMapped={false}
-              />
-            </mesh>
-            {/* Subtle equator glow ring */}
-            <mesh rotation={[Math.PI / 2, 0, 0]}>
-              <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
-              <meshBasicMaterial
-                color={hub.color}
-                transparent
-                opacity={isActive ? 0.32 : 0.18}
-                side={THREE.DoubleSide}
-                toneMapped={false}
-              />
-            </mesh>
-            {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
-                give the mockup sphere a noticeable glow. */}
-            <pointLight
-              color={hub.color}
-              intensity={isActive ? 2.4 : 1.0}
-              distance={radius * 3}
-              decay={1.6}
-            />
-          </group>
+            hub={hub}
+            center={center}
+            radius={radius}
+            innerRadius={innerRadius}
+            isActive={isActive}
+            onSelect={() => selectHub(hub.id)}
+          />
         );
       })}
     </>
