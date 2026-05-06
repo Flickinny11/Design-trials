@@ -382,7 +382,7 @@ describe('HL04 — useGraphSourceStore mutators (Plan §P5)', () => {
       expect(result.ok).toBe(true);
 
       expect(fetchSpy).toHaveBeenCalledTimes(1);
-      const [url, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
+      const [url, init] = fetchSpy.mock.calls[0] as unknown as [string, RequestInit];
       expect(url).toBe('/api/prism/regen');
       expect(init.method).toBe('POST');
       const body = JSON.parse(String(init.body));
