@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T17:21:39Z",
+  "updatedAt": "2026-05-06T17:32:47Z",
   "currentIteration": 14,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -322,9 +322,11 @@
       "kvAsserts": [
         "after kv_click + kv_type + submit: window.__prismRenderer?.adapterResult?.nodes?.size === 7"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "eb5da09f41546a4c0147024ed17e56524ce69e3e",
+      "verifiedAt": "2026-05-06T17:32:47Z",
+      "notes": "iter 14 (2026-05-06T17:32Z): done — KripVerify infra recovered between iter 13 and iter 14, so HL13's kvAssert ran live. Implementation: src/components/editor/overlays/AddNodeDialog.tsx (modal with hub dropdown + caption textarea + subtype text; submit calls useGraphSourceStore.addNode with {parentHubId, intent:{caption}, subtype}; closes itself via useGraphEditorStore.closeAddNodeDialog; data-component=\"add-node-dialog\" + data-role=\"add-node-{hub,caption,subtype,submit,cancel}\" carry the contract surface); src/components/editor/overlays/TopBar.tsx (\"+ Add Node\" button with data-component=\"add-node-button\" → openAddNodeDialog); src/stores/useGraphEditorStore.ts (new addNodeDialogOpen state + openAddNodeDialog/closeAddNodeDialog actions); src/app/page.tsx (mounts <AddNodeDialog/> globally so it overlays both desktop and mobile layouts); tests/browser/_harness/{add-node-main.tsx, add-node.html, build.mjs+jsx:'automatic'} (React+ReactDOM bundled harness that seeds useGraphSourceStore from public/prism-mock/home/live-graph.json so the hub dropdown renders the real 'home' option, exposes a #readout pre with nodesCount + last-added node's parentHubId/caption/subtype, body data-hl13-ready=1 when ready); tests/browser/add-node.spec.ts (5 specs covering button visibility, dialog open + 3 inputs visible, submit creates node with correct fields, cancel closes without adding, submit disabled on empty caption). Shell verification: npx tsc --noEmit clean; test -f AddNodeDialog.tsx ok; grep -q 'data-component=\"add-node-button\"' TopBar.tsx ok; 5/5 Playwright pass. KripVerify gate (kvAssert nodes.size === 7 after click+type+submit): kv_dev_server_status returned ready (port 49448), kv_navigate ok, kv_click + DOM-driven dispatchEvent fill + submit click → before:6, after:7, dialogClosed:true. kv_screenshot saved to .kripverify findings store. KripVerify console buffered Next.js Fast Refresh \"Critical dependency: the request of a dependency is an expression\" warnings on coderef-factory.ts dynamic import (pre-existing from HL09 commit 182b78b — by-design dynamic-import behavior, not a regression introduced this iter) plus pre-existing THREE.Clock deprecation warnings (out-of-scope until upstream three patches Timer); zero error-level entries. spec-reviewer cycle 1 (commit eb5da09): no MUST FIX. SHOULD FIX (deferred): (1) AddNodeDialog second cancel button uses data-role=\"add-node-cancel-2\" — non-numbered semantic name preferable. (2) addNode call casts to Parameters<typeof addNode>[0] to bypass the missing-PrismIntent-fields type error; widen useGraphSourceStore.addNode input to accept Partial<PrismIntent> OR construct a defaulted PrismIntent shell so the cast becomes unnecessary. (3) useEffect deps [open, fallbackHubId] on the reset block resets the dialog's parentHubId whenever activeHubId changes (e.g. flyToHub side-effects) — gate the reset on the open-transition only. (4) (no hubs) option + parentHubId.length > 0 submit guard combine to leave the user with a non-actionable form when hubs is empty — disable open or surface a notice. (5) Playwright harness duplicates the production '+ Add Node' button instead of mounting TopBar.tsx itself, so the spec exercises a hand-rolled trigger; production TopBar selector is regression-guarded only via KripVerify, not the Playwright suite. OPTIONAL: (a) z-40 may sit below other overlays — confirm modal stacks above Inspector. (b) close-X has aria-label='Cancel' while dialog has aria-label='Add node' — consider 'Close add node dialog' for SR. (c) no Escape-key dismiss handler. (d) caption textarea has no maxLength — soft hint or hard cap to enforce '1-2 sentences' per Plan §P13. (e) checked-in *-main.js bundles are large diff noise — gitignore + CI build step would shrink reviews. (f) jsx:'automatic' + json loader applied globally in build.mjs — fine here but per-entry override would isolate future conflicts."
     },
     {
       "id": "HL14",
@@ -381,10 +383,10 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 13,
-    "lastProductiveCommit": "047f76171d202d5cc0838db4998aa693a917b741"
+    "lastProductiveIteration": 14,
+    "lastProductiveCommit": "eb5da09f41546a4c0147024ed17e56524ce69e3e"
   },
   "phaseCaps": {
     "1": {
@@ -434,11 +436,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 13,
-    "commit": "047f76171d202d5cc0838db4998aa693a917b741",
-    "verifiedAt": "2026-05-06T09:21:40Z",
+    "iteration": 14,
+    "commit": "eb5da09f41546a4c0147024ed17e56524ce69e3e",
+    "verifiedAt": "2026-05-06T17:32:47Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T09:21:40Z"
+    "recordedAt": "2026-05-06T17:32:47Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -478,6 +480,12 @@
       "taskId": "HL08",
       "commit": "9d2cf075111757df823e9439648f5de435a89929",
       "verifiedAt": "2026-05-06T04:53:00Z"
+    },
+    {
+      "iteration": 14,
+      "taskId": "HL13",
+      "commit": "eb5da09f41546a4c0147024ed17e56524ce69e3e",
+      "verifiedAt": "2026-05-06T17:32:47Z"
     }
   ]
 }
