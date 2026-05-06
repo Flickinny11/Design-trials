@@ -41,6 +41,7 @@ import {
   type CreateNodeFn,
   type NodeContext,
 } from '@/lib/prism/runtime/shared/adapter';
+import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { saveAndVerify, type RegenApiResult } from './regen-api';
 
 // Local fallback createNode factory: returns an empty Group that satisfies
@@ -187,26 +188,6 @@ function RendererProbe({ onProbe }: { onProbe: (kind: 'webgpu' | 'webgl2') => vo
   return null;
 }
 
-// Trivial stub NodeContext for the editor preview. The runtime mount path
-// (`src/lib/prism/runtime/mount.ts`) supplies a richer one in the deployed
-// player; the preview only needs enough surface for `defaultCreateNode`
-// (which builds an empty Group). When codegen-emitted modules land in T09,
-// the editor will pass a real ctx threaded from a sibling SceneRoot.
-function previewNodeContext(): NodeContext {
-  const noop = () => Promise.reject(new Error('preview ctx: loaders unavailable'));
-  return {
-    textureLoader: { loadTexture: noop as NodeContext['textureLoader']['loadTexture'] },
-    glbLoader: { loadGLB: noop as NodeContext['glbLoader']['loadGLB'] },
-    fontAtlas: {
-      isReady: () => false,
-      createText: () => { throw new Error('preview ctx: font atlas unavailable'); },
-      readyPromise: Promise.reject(new Error('preview ctx: font atlas unavailable')),
-    } as unknown as NodeContext['fontAtlas'],
-    primitives: {} as NodeContext['primitives'],
-    emit: () => {},
-  };
-}
-
 export default function VisualPreview({
   node,
   createNode,
@@ -234,7 +215,10 @@ export default function VisualPreview({
   const [saveStatus, setSaveStatus] = useState<RegenApiResult | null>(null);
 
   const factory = createNode ?? previewDefaultCreateNode;
-  const fallbackCtx = useMemo(() => previewNodeContext(), []);
+  const fallbackCtx = useMemo(
+    () => getSharedNodeContext({ runPrimitives: false }),
+    [],
+  );
   const previewCtx = ctx ?? fallbackCtx;
 
   const onSliderInput = (key: string, value: number) => {
