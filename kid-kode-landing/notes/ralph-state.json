@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T05:30:00Z",
+  "updatedAt": "2026-05-06T05:45:00Z",
   "currentIteration": 11,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -251,7 +251,8 @@
       ],
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "a702cd36fccc2fd1adb2b7e6f6d9845c7cefa53b",
+      "notes": "iter 11 (2026-05-06T05:45Z): code complete, KripVerify gate blocked by infra (same blocker as HL07 iter 8 / HL09 iter 10). Implementation: src/components/editor/graph/ArtifactNode.tsx (hasArtifactData predicate; resolveArtifactObject calls buildPerNodeFactory(defaultRenderModeFactory({runPrimitives:false})) once per nodeId+codeRef, caches; resets Object3D local position/rotation/scale to identity per Plan §P10 line 233; default export wraps the cached object in <group scale=[0.06,0.06,0.06]><primitive object={obj}/></group>; __resetArtifactNodeCache test escape hatch); GraphScene.tsx GlassNode delegates to ArtifactNode when sourceNode satisfies hasArtifactData (sourceAsset OR meshUrl OR codeRef), else renders existing sphere fallback. Shell verification: tsc --noEmit clean, test -f ArtifactNode.tsx ok, 11/11 vitest unit tests pass, 3/3 Playwright tests pass against the new tests/browser/_harness/editor-artifacts.html bundle. spec-reviewer cycle 1: 1 MUST FIX (scenePosition compounding — defaultRenderModeFactory and buildPerNodeFactory placeholder both call applyScenePosition; ArtifactNode must reset to identity since editor positions via parent <group position=[node.x,node.y,node.z]>). Cycle 2 (commit a702cd3): MUST FIX resolved by resetting child.position/rotation/scale to identity post-factory + console.warn on factory throw + regression test pinning identity transform on home-feature-card / home-parallax-stack / home-cta-hero. Cycle 2: no MUST FIX. KripVerify gate (kv_evaluate confirming Array.from(adapterResult.nodes.values()).filter(n => n.children?.length > 0).length >= 3): kv_dev_server_status / kv_evaluate / kv_screenshot all time out at 10s IPC — same hang HL07 iter 8 + HL09 iter 10 hit. Per harness rules, leaving status=in-progress with attemptCount unchanged so the orchestrator advances to HL11 and the kvAssert can be re-run alongside HL07 + HL09's once KripVerify is restarted at the user level. SHOULD FIX deferred (cycle 1, not blocking): (1) header comment claims ArtifactNode 'reads useGraphSourceStore + useForceGraph' but the component subscribes to neither directly — both reach it via parent GlassNode props; rephrase comment or hoist subscription. (2) no new prism-mock-progress.md section appended for HL10 — added in step 12 of this iter. (3) GraphScene's sourceNodes.find((sn) => sn.nodeId === node.id) is O(n²) per render; useMemo a Map<nodeId, PrismNode> for HL11+. (4) useMemo deps [nodeId, codeRef] don't invalidate on meshUrl/sourceAsset change — Save & Verify regen path may serve stale assets; document or extend deps. SHOULD FIX (cycle 2): (5) identity reset is no-op on fallback Group path — guard for clarity. (6) console.warn could route through useGraphEditorStore.logError if/when that surface lands. (7) regression test should pre-assert non-zero scenePosition on chosen nodes so the test actually proves the reset is doing work. OPTIONAL (cycle 1): hasArtifactData accepts any non-empty codeRef including malformed URLs; cache + cachedFactory could be colocated in single state object; GlassNode innerRef sphere-rotation + failure-pulse become dead code when delegating to ArtifactNode (cheap null-guard refactor when HL11 lands). OPTIONAL (cycle 2): block-comment dup against file header; assert obj.updateMatrix() yields identity matrix to lock down quaternion-vs-euler regressions. UNBLOCK PROCEDURE (same as HL07 + HL09): KripVerify Chrome instance is hung — restart KV MCP server (or whole .mcp.json reload) so kv_navigate / kv_evaluate respond, then re-run iter 12+ to complete kvAsserts: artifact-bearing nodes >= 3 with children > 0 in editor view."
     },
     {
       "id": "HL11",
@@ -376,10 +377,10 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 10,
-    "lastProductiveCommit": "182b78b05e4c133012d37bae9d38953aa8c53cba"
+    "lastProductiveIteration": 11,
+    "lastProductiveCommit": "a702cd36fccc2fd1adb2b7e6f6d9845c7cefa53b"
   },
   "phaseCaps": {
     "1": {
@@ -429,11 +430,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 10,
-    "commit": "182b78b05e4c133012d37bae9d38953aa8c53cba",
-    "verifiedAt": "2026-05-06T05:11:31Z",
+    "iteration": 11,
+    "commit": "a702cd36fccc2fd1adb2b7e6f6d9845c7cefa53b",
+    "verifiedAt": "2026-05-06T05:45:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T05:11:31Z"
+    "recordedAt": "2026-05-06T05:45:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
