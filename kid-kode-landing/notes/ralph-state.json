@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T03:30:22Z",
+  "updatedAt": "2026-05-06T03:40:57Z",
   "currentIteration": 6,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -130,9 +130,11 @@
       ],
       "tddRequired": true,
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "4cd78b8200a0c15f6ddd77b79449d593685cd645",
+      "verifiedAt": "2026-05-06T03:40:57Z",
+      "notes": "iter 6 (2026-05-06T03:40Z): done. spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (1) when runPrimitives:true is requested before any scene root has been resolved, primitivesReal is permanently bound to a throwaway new Scene() + new PerspectiveCamera() — a subsequent getSharedSceneRoot() does NOT retroactively rebind, so primitives may run against an orphan scene; either eagerly await getSharedSceneRoot() before first primitive construction, expose a rebindPrimitives() helper, or refuse runPrimitives:true until scene root is ready. (2) no-op primitive's timeline: { kill: () => {} } as Timeline satisfies only the cleanup walker — any caller that chains .play()/.pause()/.duration() will fail silently; build a real gsap.timeline({ paused: true }) or document partial-surface contract on PrimitiveResult. (3) mount.ts (PrismHost runtime path) still calls createSceneRoot/createLoaderCache/createFontAtlas directly — bypasses the new shared registry; HL07 (live-bind refactor) needs to wire it through to fully realize the disposal-ownership invariant. (4) getSharedSceneRoot() returns Promise<SceneRootHandle> vs plan's sync (lazy) annotation — justified (WebGPU init is async) but should land in docs/spec-deviations-prism.md. (5) shared fontAtlas constructed without preloaded assets — createText() will throw until someone calls fontAtlas.load(); no documented owner. OPTIONAL: __resetSharedContext is a public export — gate with NODE_ENV='test' or move to sibling .testing.ts; getSharedSceneRoot reset race (in-flight .then can re-populate after reset); PerspectiveCamera/Scene placeholder imported eagerly even on runPrimitives:false path; useMemo(() => getSharedNodeContext, []) could be module-scope const since singleton is stable. HL01 still in-progress; sensitive-file gate on kid-kode-landing/.claude/hooks/** — manual user unblock required."
     },
     {
       "id": "HL06",
@@ -370,8 +372,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "bdee1b130649f08e45132845c7f54ddf8b15be09"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "4cd78b8200a0c15f6ddd77b79449d593685cd645"
   },
   "phaseCaps": {
     "1": {
@@ -421,11 +423,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 5,
-    "commit": "bdee1b130649f08e45132845c7f54ddf8b15be09",
-    "verifiedAt": "2026-05-06T03:29:43Z",
+    "iteration": 6,
+    "commit": "4cd78b8200a0c15f6ddd77b79449d593685cd645",
+    "verifiedAt": "2026-05-06T03:40:57Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T03:29:43Z"
+    "recordedAt": "2026-05-06T03:40:57Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -447,6 +449,12 @@
       "taskId": "HL04",
       "commit": "177e33d91b0295d7dd03c31fd258d4a849dc0642",
       "verifiedAt": "2026-05-06T03:35:00Z"
+    },
+    {
+      "iteration": 6,
+      "taskId": "HL05",
+      "commit": "4cd78b8200a0c15f6ddd77b79449d593685cd645",
+      "verifiedAt": "2026-05-06T03:40:57Z"
     }
   ]
 }
