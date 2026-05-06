@@ -29,6 +29,8 @@ import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useForceGraph, type SimNode, type SimLink } from '@/lib/useForceGraph';
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
+import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
+import type { PrismNode } from '@/lib/prism-graph/types';
 
 // Hub mockup texture cache — fetched once on demand, reused across hubs.
 let HUB_MOCKUP_TEXTURE_PROMISE: Promise<THREE.CanvasTexture> | null = null;
@@ -152,10 +154,12 @@ function GlassNode({
   node,
   hero,
   hubs,
+  sourceNode,
 }: {
   node: SimNode;
   hero: boolean; // use expensive MeshTransmissionMaterial for 1-2 heroes
   hubs: EditorHubView[];
+  sourceNode: PrismNode | undefined;
 }) {
   const groupRef = useRef<THREE.Group>(null);
   const innerRef = useRef<THREE.Mesh>(null);
@@ -172,6 +176,12 @@ function GlassNode({
 
   const isSelected = selectedId === node.id;
   const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
+
+  // Plan §P10: when the underlying PrismNode carries artifact data
+  // (sourceAsset URL OR meshUrl OR codeRef) the editor renders the real
+  // factory output via ArtifactNode. Stage-0 / intent-only nodes still
+  // render as the existing glass sphere so they remain selectable.
+  const renderArtifact = sourceNode ? hasArtifactData(sourceNode) : false;
 
   const capturedImage = useElementImageStore((s) => s.images[node.id]);
   const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
@@ -253,20 +263,26 @@ function GlassNode({
         openInspector();
       }}
     >
-      {/* INNER: textured element sphere */}
-      <mesh ref={innerRef} castShadow receiveShadow>
-        <sphereGeometry args={[radius, 72, 72]} />
-        <meshPhysicalMaterial
-          map={texture}
-          metalness={0.35}
-          roughness={0.28}
-          clearcoat={0.65}
-          clearcoatRoughness={0.18}
-          emissive={frozen ? new THREE.Color('#8bb4ff') : new THREE.Color(hubColor)}
-          emissiveIntensity={frozen ? 0.22 : node.status === 'failed' ? 0.4 : 0.08}
-          emissiveMap={texture}
-        />
-      </mesh>
+      {/* INNER: artifact (real factory output) when the PrismNode carries
+          sourceAsset / meshUrl / codeRef; otherwise the textured element
+          sphere fallback for intent-only Stage-0 nodes. */}
+      {renderArtifact && sourceNode ? (
+        <ArtifactNode node={sourceNode} />
+      ) : (
+        <mesh ref={innerRef} castShadow receiveShadow>
+          <sphereGeometry args={[radius, 72, 72]} />
+          <meshPhysicalMaterial
+            map={texture}
+            metalness={0.35}
+            roughness={0.28}
+            clearcoat={0.65}
+            clearcoatRoughness={0.18}
+            emissive={frozen ? new THREE.Color('#8bb4ff') : new THREE.Color(hubColor)}
+            emissiveIntensity={frozen ? 0.22 : node.status === 'failed' ? 0.4 : 0.08}
+            emissiveMap={texture}
+          />
+        </mesh>
+      )}
 
       {/* OUTER GLASS SHELL — photoreal refraction. Heros use expensive transmission material, rest use native dispersion */}
       {hero ? (
@@ -751,9 +767,18 @@ function SceneContent({
         <EdgeParticle key={'p-' + link.id} link={link} />
       ))}
 
-      {simNodes.map((node) => (
-        <GlassNode key={node.id} node={node} hero={heroIds.has(node.id)} hubs={editorGraph.hubs} />
-      ))}
+      {simNodes.map((node) => {
+        const sourceNode = sourceNodes.find((sn) => sn.nodeId === node.id);
+        return (
+          <GlassNode
+            key={node.id}
+            node={node}
+            hero={heroIds.has(node.id)}
+            hubs={editorGraph.hubs}
+            sourceNode={sourceNode}
+          />
+        );
+      })}
 
       <NodeLabels simNodes={simNodes} />
       <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
