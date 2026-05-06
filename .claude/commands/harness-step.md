@@ -1,15 +1,17 @@
 ---
-description: Execute one task of the Prism Harness Lock-In, verify (including KripVerify), commit, push, and autonomously launch a fresh Claude Code window for the next task using the same model captured by /kickoff-harness-lockin. One task per session. Chain runs until all 15 HL tasks complete.
+description: Execute one task of the Prism Harness Lock-In — verify (including KripVerify), commit, push, exit. The orchestrator (kid-kode-landing/scripts/harness.sh) spawns the next iteration. One task per process. Chain runs until all 15 HL tasks complete.
 argument-hint: (none)
 ---
 
-# Harness step — one task per session, chain-launched
+# Harness step — one task per process, orchestrator-driven
 
 You are a single Ralph-style worker for the Prism Harness Lock-In. You
-execute exactly **one** task and then launch a fresh Claude Code window in a
-new Terminal for the next task before exiting. You do not pick up a second
-task in this session. The chain continues across visible windows until all
-15 HL tasks are done.
+execute exactly **one** task and then **exit cleanly with no spawn**. The
+outer orchestrator `kid-kode-landing/scripts/harness.sh` reads
+`ralph-state.json` after you exit and decides whether to launch the next
+iteration or terminate. Do not pick up a second task in this session. Do
+not spawn anything yourself — no `osascript`, no `nohup claude`, no
+`Terminal.app`.
 
 All paths are relative to `/Users/loganbaird/Prototype_Prism/Design-trials/`.
 The state file is `kid-kode-landing/notes/ralph-state.json` (symlink to
@@ -21,9 +23,10 @@ Spec: `kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` +
 The model contract file `.claude/.harness-model` was written by
 `/kickoff-harness-lockin` and pins the entire chain to the model the user
 had selected in their Cursor / Claude Code UI dropdown when they kicked off.
-You inherit that model because the Terminal that launched you used
-`claude --print --model "$(cat .claude/.harness-model)"`. Step 14 below uses
-the same file when launching the next window.
+You inherit that model because the orchestrator (`harness.sh`) invoked you
+with `claude --print --model "$(cat .claude/.harness-model)"`. The next
+iteration uses the same file via the same orchestrator — you do not
+launch it.
 
 ## Step 1 — read state; terminal checks; model proof
 
@@ -228,54 +231,26 @@ commits), stop immediately and flag — do NOT force-push. Print
 `Harness iter <N> <task-id> -> push-rejected` and exit. Human judgment
 required.
 
-## Step 14 — launch next window (with model passthrough)
+## Step 14 — exit cleanly
 
-Re-read `ralph-state.json`. If any task with `status == "pending"` remains:
+Do NOT spawn another `claude` process. Do NOT open a Terminal window.
+Do NOT chain to anything. The outer orchestrator
+(`kid-kode-landing/scripts/harness.sh`) launched you as a child process,
+reads `ralph-state.json` after you exit, and spawns the next iteration
+itself with the same `.harness-model` it already validated at startup.
 
-Print `Harness iter <N> <task-id> -> done. Launching next window with model from .harness-model...`
+Re-read `ralph-state.json` one more time so the final stdout line
+reflects accurate state.
 
-Then run this Bash command (do NOT modify it; copy verbatim). The launcher
-script does an opus-only check and refuses to exec if the model file has
-drifted, so the next window won't fire on Sonnet/Haiku:
+Final stdout line:
+- success →            `Harness iter <N> <task-id> -> done`
+- verification stalled → `Harness iter <N> <task-id> -> in-progress (<reason>)`
+- last pending done →   `Harness chain COMPLETE — all 15 HL tasks done.`
+                        (the orchestrator will see `status: complete` on
+                        its next state read and exit on its own).
 
-```bash
-osascript -e 'tell application "Terminal" to do script "/Users/loganbaird/Prototype_Prism/Design-trials/.claude/scripts/launch-harness-step.sh"' >/dev/null 2>&1
-```
-
-The launcher (`.claude/scripts/launch-harness-step.sh`) handles cd-to-
-project, re-reading `.harness-model`, opus-only enforcement, and exec'ing
-`claude --print --model <opus> /harness-step`. The script form is used
-because chaining `cd && claude` directly inside an osascript `do script`
-string has historically dropped the `cd` portion under some quoting
-conditions, leaving claude invoked from `~` and unable to find the
-project's `.claude/commands/harness-step.md`.
-
-If `osascript` fails (e.g., Terminal not available), fall back to:
-
-```bash
-MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
-[[ "$MODEL" =~ ^claude-opus- ]] || { echo "REFUSING TO LAUNCH: model='$MODEL' is not opus"; exit 0; } && \
-( cd /Users/loganbaird/Prototype_Prism/Design-trials && nohup claude --print --model "$MODEL" /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 & )
-```
-
-Either way, the chain continues without you, on the same model the user
-selected at kickoff. After launching, exit this session.
-
-If `.claude/.harness-model` is missing or empty: do NOT launch with a
-guessed model. Print
-`Harness iter <N> <task-id> -> done but cannot relaunch chain: .harness-model missing. Re-run /kickoff-harness-lockin in a fresh chat with the desired model selected.`
-and exit 0.
-
-If NO pending tasks remain (the loop just hit `complete` in step 11's
-re-read), do NOT launch — the chain is done. Print
-`Harness chain COMPLETE — all 15 HL tasks done.` and exit.
-
-## Step 15 — exit
-
-Final stdout line: `Harness iter <N> <task-id> -> done` (success) or
-`Harness iter <N> <task-id> -> in-progress (<reason>)` (verification failed
-mid-iter) or `Harness chain COMPLETE` (no more pending). The chain is
-already armed in step 14; just exit cleanly.
+Then exit 0. The orchestrator polls `ralph-state.json` after every child
+exit and decides whether to spawn another iteration, pause, or terminate.
 
 ## Behavior rules
 
@@ -290,11 +265,10 @@ already armed in step 14; just exit cleanly.
   commit, progress commit). Do not squash.
 - Push to `prism-main`. Vercel auto-deploys each commit. Each iter's commit
   appears at the production URL within ~60s.
-- The chain self-terminates on `status: complete` or `status: failed` (no
-  next window launched). The user can resume manually by running
-  `claude --print --model "$(cat .claude/.harness-model)" /harness-step` in
-  the repo directory, or by re-running `/kickoff-harness-lockin` in a fresh
-  chat.
+- The chain self-terminates on `status: complete` or `status: failed`.
+  The orchestrator (`harness.sh`) reads state after each child exit and
+  exits its own loop on terminal status. The user can resume by re-running
+  `/kickoff-harness-lockin` in a fresh chat (which relaunches `harness.sh`).
 
 ## Notes specific to this run
 
@@ -304,9 +278,10 @@ already armed in step 14; just exit cleanly.
 - KripVerify dev server config lives at `.kripverify.json` in repo root.
   KripVerify MCP server is registered in `.mcp.json` — `kv_*` tools are
   available natively in this session.
-- The chain runs in `claude --print` mode for sessions 2+; output streams to
-  the Terminal window. Session 1 may be interactive (user-launched) or
-  --print depending on how the user kicked off.
+- The chain runs in `claude --print` mode driven by
+  `kid-kode-landing/scripts/harness.sh`. Each iteration's stdout/stderr
+  goes to `kid-kode-landing/notes/ralph-logs/harness-iter-<N>-<ts>.log`.
+  The kickoff chat's Monitor tool tails state + log for boundary events.
 - spec-researcher subagent: hardcoded to claude-sonnet-4-6 (cheap, simple
   extraction). spec-reviewer subagent: inherits chain model (complex, needs
   the full model). ANTHROPIC_SMALL_FAST_MODEL=haiku 4.5 (auxiliary tasks
