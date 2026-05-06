@@ -173,9 +173,10 @@ test.describe('T07 — Editor Visual tab', () => {
     const afterJson = await after.json();
     expect(afterJson.count).toBe(beforeCount + 1);
 
-    // Payload contains the nodeId from the first card.
+    // Payload uses the §P6 action discriminator and carries the node payload.
     const lastEntry = afterJson.log[afterJson.log.length - 1];
-    expect(lastEntry).toHaveProperty('nodeId');
-    expect(typeof lastEntry.nodeId).toBe('string');
+    expect(lastEntry).toHaveProperty('action', 'verify-node');
+    expect(lastEntry).toHaveProperty('node');
+    expect(typeof lastEntry.node.nodeId).toBe('string');
   });
 });

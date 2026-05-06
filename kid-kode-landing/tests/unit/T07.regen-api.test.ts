@@ -47,13 +47,34 @@ describe('T07 saveAndVerify', () => {
     expect(init.headers).toMatchObject({ 'Content-Type': 'application/json' });
   });
 
-  it('serializes the node into the request body', async () => {
+  it('wraps the node under action=verify-node per plan §P6', async () => {
     const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
     await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
     const init = fetchSpy.mock.calls[0]![1] as RequestInit;
     const body = JSON.parse(init.body as string);
-    expect(body.nodeId).toBe('n1');
-    expect(body.renderMode).toBe('sprite');
+    expect(body.action).toBe('verify-node');
+    expect(body.node.nodeId).toBe('n1');
+    expect(body.node.renderMode).toBe('sprite');
+  });
+
+  it('forwards opts.codeModule when provided', async () => {
+    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
+    await saveAndVerify(makeNode(), {
+      fetch: fetchSpy as unknown as typeof fetch,
+      codeModule: 'export default function createNode() {}',
+    });
+    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
+    const body = JSON.parse(init.body as string);
+    expect(typeof body.codeModule).toBe('string');
+    expect(body.codeModule).toContain('createNode');
+  });
+
+  it('omits codeModule when not provided', async () => {
+    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
+    await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
+    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
+    const body = JSON.parse(init.body as string);
+    expect('codeModule' in body).toBe(false);
   });
 
   it('returns ok: true and verifierStatus on success', async () => {
