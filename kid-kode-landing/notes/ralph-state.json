@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T04:06:08Z",
+  "updatedAt": "2026-05-06T04:22:39Z",
   "currentIteration": 8,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -181,7 +181,8 @@
       ],
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "2d479b6",
+      "notes": "iter 8 (2026-05-06T04:22Z): code complete, KripVerify gate blocked by infra. Implementation: mount-graph.ts (mountFromGraphSource + diffGraphSource + 4 surgical helpers + per-hub backdrop at z=-2 sized to hub.viewportWidth×viewportHeight); scene-root.ts (render() preferred over renderAsync() + always await renderer.init()); PrismHost.tsx (useLiveGraph?:boolean default true, snapshot+subscribe via useGraphSourceStore.subscribe with diff dispatcher); useGraphSourceStore.ts (subscribeWithSelector middleware). Shell verification: tsc --noEmit clean, test -f mount-graph.ts ok, 11/11 vitest pass. KripVerify gate: kv_dev_server_status returns ready (port 49328) and dev server serves / with HTTP 200, but every browser-side kv operation (kv_navigate, kv_evaluate, kv_check_console, kv_screenshot, kv_verify) times out at 10s IPC. kv_findings_path (pure path computation, no browser) works — confirms the hang is in the Chrome instance, not the MCP IPC bus. After 5+ retries leaving HL07 in-progress per spec. spec-reviewer ran on a20264b: 2 MUST FIX both addressed in 2d479b6 (backdrop hardcoded 16x9 -> viewportWidth×viewportHeight per Amendment 0002 §A.2; cleanup no longer disposes the loader-cache-owned texture). SHOULD FIX deferred for next iter or HL10/HL11 follow-up: (1) PrismHost subscribes via .subscribe() not .subscribe(selector,listener,opts) — does diff on every store flip including isDirty/savedAt; (2) nodesEqualExceptTransform uses JSON.stringify which is fragile + slow; (3) upsertNode rebuilds local default factory rather than threading adapter's; (4) setHubMockup rebuilds full mesh on URL change instead of swapping material.map (identity loss); (5) onMounted is fired only on bundle path; (6) double await renderer.init() in defaultRendererFactory + scene-root. UNBLOCK PROCEDURE: KripVerify Chrome instance is hung — restart KV MCP server (or whole .mcp.json reload) so kv_navigate/kv_evaluate respond, then re-run iter 9 to complete kvAsserts: nodes.size === 6 and zero 'has been deprecated' console messages."
     },
     {
       "id": "HL08",
