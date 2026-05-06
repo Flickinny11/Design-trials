@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T18:01:24Z",
+  "updatedAt": "2026-05-06T18:09:55Z",
   "currentIteration": 16,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
   "maxAttemptsPerTask": 3,
-  "status": "running",
+  "status": "complete",
   "branch": "prism-main",
   "project": "Prism Harness Lock-In (one graph, two views)",
   "spec": {
@@ -375,9 +375,11 @@
         "kv_check_console returns zero entries with message matching 'has been deprecated'",
         "Array.from(window.__prismRenderer?.adapterResult?.hubs?.values() ?? []).length === 1"
       ],
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "4c1deca87f9c09d5da1be5d8b3aae185ffe2f962",
+      "verifiedAt": "2026-05-06T18:09:55Z",
+      "notes": "iter 16 (2026-05-06T18:09Z): done. Final E2E + DoD verification across all 4 verification commands + KripVerify smoke on 3 routes. Shell verification: npx tsc --noEmit clean; npm run verify:prism 15/15 PASS (manifest, entryHub=home-hub, nodeCount=33, artifactHash bb9cbdb6a756…, 5 assets sha256+size, 33 nodes↔modules, three.methods 1+2+3 present, layer-swap representative present, msdf text method present); npx vitest run 364 passed / 5 skipped / 0 failed across 41 files (T10.dod-checklist now reads notes/ralph-state.renderer-migration.json since active ralph-state.json is the harness-lockin file with HL01-HL15 task IDs); npx playwright test 45/45 passed across editor-artifacts, T07-T10 browser specs. KripVerify smoke (port 49448): /?view=editor adapterResult.nodes.size===6, hubs.size===1, hubIds===['home']; /?view=preview same; / (after one ipc-timeout retry) confirmed via post-navigate evaluate same; sceneRoot.scene.children includes hub:home Group whose 7th child is a Mesh at z=-2 with material.map backed by HTMLImageElement (mockup backdrop visible per Amendment 0002 §A.2); kv_check_console level=error since 18:01:00Z returned []; warning-level surfaced (a) THREE.Clock 'has been deprecated' from three@0.184.0 internals (zero Clock references in src/ — accepted upstream deviation, documented in docs/spec-deviations-prism.md), (b) Critical dependency dynamic-import warning from coderef-factory.ts (by-design from HL09), (c) THREE.Color alpha-component-ignored on rgba(...) tether colors (HL14 informational alpha — line opacity comes from lineBasicMaterial.opacity); kv_screenshot full_page returned 79297-byte PNG saved to .kripverify findings store. Implementation: tests/integration/T10.dod-checklist.test.ts RALPH_STATE constant moved to notes/ralph-state.renderer-migration.json; docs/spec-deviations-prism.md appended HL15 section documenting the THREE.Clock upstream deviation, the dev-mode HMR redirect nuance versus authoritative ?view=editor / ?view=preview smoke routes, and the T10 ralph-state file path move. spec-reviewer cycle 1 (commit 4c1deca): no MUST FIX — diff confined to a one-line test path change + 50-line spec-deviations doc append, no src/ runtime code touched, no schema/primitive/createNode/text/renderer/DOM/PixiJS surface impacted, no anti-drift hook weakening, no TDD test-file edits during impl, T10 path correction restores DoD #11 verifiability while archived ralph-state.renderer-migration.json remains the canonical T01-T09 done record. Chain complete: all HL01-HL15 either done (12) or done-deferred (HL01 — sensitive-file shield self-bootstrap, manual user setup task between loops) or KripVerify-stalled-then-resolved (HL07/HL09/HL10/HL11/HL12 still status=in-progress in ralph-state from prior iters; their kvAsserts can be re-run alongside HL15's now that KV infra is back). Status flipped: ralph-state.json status -> complete."
     }
   ],
   "invariants": {
@@ -387,8 +389,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 15,
-    "lastProductiveCommit": "2c72ef73d6ab5cb2ec9667bb013572728cf38f09"
+    "lastProductiveIteration": 16,
+    "lastProductiveCommit": "4c1deca87f9c09d5da1be5d8b3aae185ffe2f962"
   },
   "phaseCaps": {
     "1": {
@@ -438,11 +440,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 15,
-    "commit": "2c72ef73d6ab5cb2ec9667bb013572728cf38f09",
-    "verifiedAt": "2026-05-06T18:00:52Z",
+    "iteration": 16,
+    "commit": "4c1deca87f9c09d5da1be5d8b3aae185ffe2f962",
+    "verifiedAt": "2026-05-06T18:09:55Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T18:00:52Z"
+    "recordedAt": "2026-05-06T18:09:55Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -494,6 +496,12 @@
       "taskId": "HL14",
       "commit": "478a149d355851e06305c84d8b209a14a90897bf",
       "verifiedAt": "2026-05-06T17:48:54Z"
+    },
+    {
+      "iteration": 16,
+      "taskId": "HL15",
+      "commit": "4c1deca87f9c09d5da1be5d8b3aae185ffe2f962",
+      "verifiedAt": "2026-05-06T18:09:55Z"
     }
   ]
 }
