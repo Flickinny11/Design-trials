@@ -20,7 +20,7 @@
 //     mounted with the default visual.
 
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { Group, Mesh, PlaneGeometry, type Object3D } from 'three';
+import { Group, Mesh, PlaneGeometry, Vector3, type Object3D } from 'three';
 import {
   buildPerNodeFactory,
   resolveCodeRef,
@@ -94,12 +94,17 @@ describe('coderef-factory (HL09)', () => {
       const a = resolveCodeRef(url);
       const b = resolveCodeRef(url);
       expect(a).toBe(b);
+      // Suppress: the URL won't resolve in node test env; we only care
+      // about reference equality.
+      a.catch(() => {});
     });
 
     it('returns different promises for different urls', () => {
       const a = resolveCodeRef('/prism-mock/home/nodes/x.code.js');
       const b = resolveCodeRef('/prism-mock/home/nodes/y.code.js');
       expect(a).not.toBe(b);
+      a.catch(() => {});
+      b.catch(() => {});
     });
   });
 
@@ -194,6 +199,75 @@ describe('coderef-factory (HL09)', () => {
       expect(defaultFactory).toHaveBeenCalledTimes(1);
       const grafted = findChildByName(out, 'default-fallback-sentinel');
       expect(grafted).toBeDefined();
+    });
+
+    it('does not compound scenePosition when grafting (world pos === spec, not 2×)', async () => {
+      // Regression: both the wrapper placeholder and the codeRef module
+      // root apply scenePosition. Without resetting the grafted child to
+      // identity, world position would compound (parent.pos + child.pos).
+      const importedFactory: CreateNodeFn = (cfg) => {
+        const g = new Group();
+        g.name = `imported:${cfg.nodeId}`;
+        // codeRef modules typically apply scenePosition to the returned
+        // root themselves (cta-hero.code.js does exactly this).
+        const sp = cfg.scenePosition;
+        if (sp) {
+          g.position.set(sp.x, sp.y, sp.z);
+          g.rotation.set(sp.rotationX, sp.rotationY, sp.rotationZ);
+          g.scale.set(sp.scaleX, sp.scaleY, sp.scaleZ);
+        }
+        return g;
+      };
+      __resetCodeRefCache({ '/positioned.code.js': importedFactory });
+
+      const defaultFactory: CreateNodeFn = () => new Group();
+      const wrapper = buildPerNodeFactory(defaultFactory);
+
+      const node = makeNode({
+        nodeId: 'home-cta',
+        codeRef: '/positioned.code.js',
+        scenePosition: {
+          x: 5, y: 0, z: 0,
+          rotationX: 0, rotationY: 0, rotationZ: 0,
+          scaleX: 1, scaleY: 1, scaleZ: 1,
+        },
+      });
+      const placeholder = wrapper(node, makeCtx());
+
+      await Promise.resolve();
+      await Promise.resolve();
+
+      // Spec §8: returned Object3D's world position must match scenePosition.
+      placeholder.updateMatrixWorld(true);
+      const grafted = findChildByName(placeholder, 'imported:home-cta')!;
+      const worldPos = new Vector3();
+      grafted.getWorldPosition(worldPos);
+      expect(worldPos.x).toBeCloseTo(5, 5);
+      expect(worldPos.y).toBeCloseTo(0, 5);
+      expect(worldPos.z).toBeCloseTo(0, 5);
+    });
+
+    it('copies handlers from grafted codeRef module to placeholder userData', async () => {
+      const onClick = vi.fn();
+      const importedFactory: CreateNodeFn = () => {
+        const g = new Group();
+        g.name = 'imported-with-handlers';
+        g.userData.handlers = { onClick };
+        return g;
+      };
+      __resetCodeRefCache({ '/handlers.code.js': importedFactory });
+
+      const defaultFactory: CreateNodeFn = () => new Group();
+      const wrapper = buildPerNodeFactory(defaultFactory);
+      const node = makeNode({ nodeId: 'home-handlers', codeRef: '/handlers.code.js' });
+      const placeholder = wrapper(node, makeCtx());
+
+      await Promise.resolve();
+      await Promise.resolve();
+
+      const handlers = (placeholder.userData as { handlers?: Record<string, unknown> }).handlers;
+      expect(handlers).toBeDefined();
+      expect(handlers!.onClick).toBe(onClick);
     });
 
     it('caches resolved modules across multiple node invocations', async () => {

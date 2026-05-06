@@ -125,25 +125,37 @@ export function buildPerNodeFactory(defaultFactory: CreateNodeFn): CreateNodeFn 
 }
 
 function graftAs(parent: Group, child: Object3D): void {
-  // The codeRef module typically returns a Group already named
-  // `node:<nodeId>`. We graft as a child so the placeholder retains the
-  // top-level identity the live-bind layer holds in `adapterResult.nodes`.
-  // Reset child transform — the placeholder already carries the
-  // scenePosition. (codeRef modules also apply it internally; double-apply
-  // would compound. Authored modules use their own transform on the inner
-  // mesh, not the returned root.)
+  // The placeholder already carries `node.scenePosition`. codeRef modules
+  // (and the default factory) ALSO apply scenePosition to the returned
+  // root, so without resetting we'd compound transforms (world pos = 2×
+  // spec). Reset the child's local transform to identity so the parent's
+  // scenePosition is the single source of truth.
+  child.position.set(0, 0, 0);
+  child.rotation.set(0, 0, 0);
+  child.scale.set(1, 1, 1);
+
+  // Copy any event handlers the resolved factory attached so raycast
+  // routing reading from `adapterResult.nodes.get(nodeId).userData.handlers`
+  // can still reach them through the placeholder.
+  const childHandlers = (child.userData as { handlers?: Record<string, unknown> }).handlers;
+  if (childHandlers && typeof childHandlers === 'object') {
+    const placeholderHandlers = (parent.userData as { handlers?: Record<string, unknown> }).handlers ?? {};
+    Object.assign(placeholderHandlers, childHandlers);
+    (parent.userData as { handlers?: Record<string, unknown> }).handlers = placeholderHandlers;
+  }
+
   if (parent.children.length === 0) {
     parent.add(child);
-  } else {
-    // Replace any prior grafted child (e.g., previous failed graft).
-    const prior = parent.children[0];
-    parent.remove(prior);
-    const cleanup = (prior.userData as { cleanup?: () => void }).cleanup;
-    if (typeof cleanup === 'function') {
-      try { cleanup(); } catch { /* ignore */ }
-    }
-    parent.add(child);
+    return;
   }
+  // Replace any prior grafted child (e.g., previous failed graft).
+  const prior = parent.children[0];
+  parent.remove(prior);
+  const cleanup = (prior.userData as { cleanup?: () => void }).cleanup;
+  if (typeof cleanup === 'function') {
+    try { cleanup(); } catch { /* ignore */ }
+  }
+  parent.add(child);
 }
 
 function pickCleanup(obj: Object3D): (() => void) | null {
