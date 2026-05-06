@@ -317,3 +317,12 @@ Plan: [/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md](../../.
 - Commit: state-only (notes/ralph-state.json) — no source code changed.
 - Production: no deploy (no source change).
 - Unblock: user must manually edit `.claude/settings.local.json` and add `"Write(kid-kode-landing/.claude/hooks/**)"` + `"Edit(kid-kode-landing/.claude/hooks/**)"` to `permissions.allow`, then `/kickoff-harness-lockin` in a fresh chat. attemptCount now 2/3 — one attempt remains before HL01 auto-fails the chain at iter 3.
+
+### iter 3 · HL02 — cta-hero spec imports + layout importmap + finalize live-graph.json
+
+- Implementation: (1) `public/prism-mock/home/nodes/cta-hero.code.js` switched from `ctx.three` destructuring to `import { Box3, Group, Vector3 } from 'three/webgpu'` per spec §9.A L257-L258 ALLOWED_IMPORT_SOURCES + §10.A L362-L367 ALLOWED_THREE_IMPORTS. createNode contract preserved (sync, returns Object3D, userData.cleanup + userData.handlers). (2) `src/app/layout.tsx` adds `<head>` containing `<script type="importmap">` with the §11 L431-L443 verbatim mapping (three@0.184.0 + three/webgpu + three/tsl + three/addons/ + gsap@3.13.0). (3) `public/prism-mock/home/live-graph.json` finalized — 6 nodes covering all 4 renderModes (sprite/plane/parallax-plane/mesh) and 7 of 9 cinematic primitives, every node carries renderMode/cinematicPrimitives/scenePosition.
+- Verification: tsc --noEmit clean, grep gates for `three/webgpu` import + importmap tag + three@0.184.0 all pass, live-graph.json shape valid (6 nodes), T04 vitest 66/66 pass (codegen-prompts + plan-output-hook + samples + verifier).
+- spec-reviewer: no MUST FIX. SHOULD FIX deferred to follow-up: kinetic-text primitive registration inside createText try/catch should move to its own guarded block; late-arriving depth-rotate cleanup needs immediate-call guard when `cleaned` is true; live-graph.json's `_comment` field needs schema-validator confirmation.
+- Commit: 8afb8cc0fb42be61b3092608816df63028f75231
+- Note: HL01 still in-progress. The harness sensitive-file gate on `kid-kode-landing/.claude/hooks/**` remains active; manual user unblock required before HL01 can proceed. Step 2 (first PENDING task) was followed strictly this iter — HL01's "in-progress" status is not eligible for re-claim.
+- Production: deploys to https://kid-kode-ai-landing-git-prism-main-logans-projects-e51c822e.vercel.app/ via Vercel auto-deploy.
