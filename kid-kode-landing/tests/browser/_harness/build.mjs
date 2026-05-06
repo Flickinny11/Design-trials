@@ -26,6 +26,8 @@ const ENTRYPOINTS = [
   { input: 'animation-main.ts', output: 'animation-main.js' },
   // T08 — Image-edit tools harness.
   { input: 'image-edit-main.ts', output: 'image-edit-main.js' },
+  // HL10 — editor-artifacts (ArtifactNode + GlassNode delegation) harness.
+  { input: 'editor-artifacts-main.ts', output: 'editor-artifacts-main.js' },
 ];
 
 export async function buildHarness() {
