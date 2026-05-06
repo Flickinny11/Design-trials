@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T02:34:19Z",
+  "updatedAt": "2026-05-06T02:37:48Z",
   "currentIteration": 3,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -62,9 +62,11 @@
       ],
       "tddRequired": false,
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": "reset 2026-05-05: prior attempt used wrong default model; architecture reverted to v1 with .harness-model passthrough. iter 3 (2026-05-06T02:34Z): claimed — HL01 left in-progress (sensitive-file gate still active, manual user unblock required); HL02 first PENDING task per step 2 ordering."
+      "commit": "8afb8cc0fb42be61b3092608816df63028f75231",
+      "verifiedAt": "2026-05-06T02:37:48Z",
+      "notes": "iter 3 (2026-05-06T02:37Z): done. HL01 left in-progress (sensitive-file gate on kid-kode-landing/.claude/hooks/** still active; manual user unblock required per prior notes). spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (1) cta-hero.code.js: kinetic-text primitive registration is inside the createText try/catch — wrap in its own guarded block so primitive errors don't get masked. (2) cta-hero.code.js: late-arriving depth-rotate cleanup (after glbLoader.loadGLB resolves post-teardown) is appended to a drained cleanups array — guard with re-check of `cleaned` and call immediately if true. (3) live-graph.json: `_comment` is non-standard property — confirm schema validator allows additionalProperties or move to a sibling notes file."
     },
     {
       "id": "HL03",
@@ -362,10 +364,10 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 0,
-    "lastProductiveCommit": "ff476b7"
+    "lastProductiveIteration": 3,
+    "lastProductiveCommit": "8afb8cc0fb42be61b3092608816df63028f75231"
   },
   "phaseCaps": {
     "1": {
@@ -415,13 +417,20 @@
     }
   },
   "checkpoint": {
-    "iteration": 0,
-    "commit": "ff476b7",
-    "verifiedAt": "2026-05-05T19:50:00Z",
+    "iteration": 3,
+    "commit": "8afb8cc0fb42be61b3092608816df63028f75231",
+    "verifiedAt": "2026-05-06T02:37:48Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-05T19:50:00Z"
+    "recordedAt": "2026-05-06T02:37:48Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
-  "history": []
+  "history": [
+    {
+      "iteration": 3,
+      "taskId": "HL02",
+      "commit": "8afb8cc0fb42be61b3092608816df63028f75231",
+      "verifiedAt": "2026-05-06T02:37:48Z"
+    }
+  ]
 }
