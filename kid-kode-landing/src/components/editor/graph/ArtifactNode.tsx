@@ -91,14 +91,25 @@ export function resolveArtifactObject(node: PrismNode): Object3D {
   let object: Object3D;
   try {
     object = factory(node, ctx);
-  } catch {
+  } catch (err) {
     // Factory blew up — keep the editor running with an empty Group rather
-    // than throwing through React's render path.
+    // than throwing through React's render path. Surface the cause so the
+    // user can act on it (broken codeRef module, missing asset, etc).
+    console.warn(`[ArtifactNode] factory failed for ${node.nodeId}:`, err);
     object = new Group();
     object.name = `node:${node.nodeId}:fallback`;
     object.userData.nodeId = node.nodeId;
     object.userData.cleanup = () => {};
   }
+  // Plan §P10 (line 233): "scenePosition is IGNORED in editor view —
+  // <primitive> is positioned by the parent <group position={[node.x,
+  // node.y, node.z]}>". Both `defaultRenderModeFactory` and
+  // `buildPerNodeFactory` (placeholder) apply scenePosition to the returned
+  // root; reset to identity so the parent force-graph position is the
+  // single source of truth in the editor.
+  object.position.set(0, 0, 0);
+  object.rotation.set(0, 0, 0);
+  object.scale.set(1, 1, 1);
   cache.set(key, { object, codeRef });
   return object;
 }

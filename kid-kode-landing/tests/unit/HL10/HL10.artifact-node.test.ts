@@ -146,4 +146,28 @@ describe('HL10 — resolveArtifactObject (factory pipeline)', () => {
     const obj = resolveArtifactObject(node);
     expect(obj).toBeInstanceOf(Group);
   });
+
+  it('resets the Object3D local transform to identity (scenePosition ignored in editor view per Plan §P10)', () => {
+    // The fixture's nodes carry non-trivial scenePosition values
+    // (home-feature-card at x=2.6, y=0.2; home-parallax-stack at
+    // x=-2.8, y=-0.5; home-cta-hero at z=1). Both the default factory
+    // and the codeRef placeholder apply scenePosition to the returned
+    // root. ArtifactNode MUST reset that local transform to identity so
+    // the parent force-graph <group position={[x,y,z]}> is the single
+    // source of truth — otherwise editor positions compound.
+    const ids = ['home-feature-card', 'home-parallax-stack', 'home-cta-hero'];
+    for (const id of ids) {
+      const node = liveGraph.nodes.find((n) => n.nodeId === id)!;
+      const obj = resolveArtifactObject(node);
+      expect(obj.position.x, `${id} pos.x`).toBe(0);
+      expect(obj.position.y, `${id} pos.y`).toBe(0);
+      expect(obj.position.z, `${id} pos.z`).toBe(0);
+      expect(obj.rotation.x, `${id} rot.x`).toBe(0);
+      expect(obj.rotation.y, `${id} rot.y`).toBe(0);
+      expect(obj.rotation.z, `${id} rot.z`).toBe(0);
+      expect(obj.scale.x, `${id} scale.x`).toBe(1);
+      expect(obj.scale.y, `${id} scale.y`).toBe(1);
+      expect(obj.scale.z, `${id} scale.z`).toBe(1);
+    }
+  });
 });
