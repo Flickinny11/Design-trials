@@ -33,6 +33,10 @@
           {
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/anti-drift-check.sh",
             "type": "command"
+          },
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/model-guardrail.sh",
+            "type": "command"
           }
         ],
         "matcher": "Write|Edit"

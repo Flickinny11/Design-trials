@@ -18,27 +18,40 @@ Do **not** run `/ralph-step` yourself in this session. The outer loop spawns
 fresh `claude --print` processes for that. Your role here is operator and
 narrator, not worker.
 
-## Step 0 — capture your model (CRITICAL)
+## Step 0 — capture your model (CRITICAL — must be Opus, no exceptions)
 
-You currently know which model you are because it's stated in your system
-prompt (e.g. "powered by the model named Opus 4.7", "the exact model ID is
-'claude-opus-4-7'"). The user explicitly wants the chain to run on the
-model THEY selected in the Claude Code UI dropdown — which is the model
-running THIS kickoff session.
+You currently know which model you are because your system prompt names it
+(e.g. "powered by the model named Opus 4.7", "the exact model ID is
+'claude-opus-4-7'"). The user has set a hard rule: **the ralph loop runs
+on Opus only.** Sonnet and Haiku are explicitly forbidden for ralph coding
+work — `scripts/ralph.sh` will refuse to launch on anything that doesn't
+start with `claude-opus-`.
 
-Write your full model ID to `.claude/.ralph-model` using the **Bash** tool.
-The ID must be the full canonical form (e.g. `claude-opus-4-7`,
-`claude-sonnet-4-6`, `claude-haiku-4-5-20251001`), never a short alias.
-`scripts/ralph.sh` reads this file at startup and refuses to launch without
-it (so older sonnet 4.5 defaults can never silently win).
+Write your full model ID to `.claude/.ralph-model`. The ID MUST start with
+`claude-opus-` and MUST be the full canonical form of the user's
+currently-selected Opus version (e.g. `claude-opus-4-7`).
 
 ```bash
 echo 'claude-opus-4-7' > /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
 ```
 
-Verify by `cat .claude/.ralph-model` matches the model ID you intended. If
-you cannot determine your own model ID with certainty, STOP — do not
-guess. Ask the user to confirm and abort the kickoff.
+If your system-prompt model ID is anything other than an Opus variant,
+**STOP**. Tell the user their UI dropdown is set to a forbidden model
+(Sonnet/Haiku) and abort the kickoff.
+
+After writing, prove the model is real by running ALL of the following
+and showing each output to the user:
+
+```bash
+echo "=== MODEL PROOF ==="
+echo "1. Wrote to .claude/.ralph-model:"; cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
+echo ""; echo "2. Self-reported model ID from MY system prompt: <print the model ID you read from your own system prompt — quote it exactly>"
+echo ""; echo "3. SHA256 of model-file (tamper check):"; shasum -a 256 /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
+echo ""; echo "4. Starts-with-claude-opus check:"; grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model && echo PASS || echo FAIL
+```
+
+Show the user the literal output. Do not paraphrase. The user wants
+runtime proof, not assurances.
 
 The file is git-ignored.
 
@@ -51,6 +64,7 @@ Run these checks in parallel via Bash:
 - `command -v claude && command -v jq` → both must resolve
 - `test -x /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/scripts/ralph.sh` → must succeed
 - `test -s /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model` → step 0 captured a non-empty model ID
+- `grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model` → captured model is an Opus variant (Sonnet/Haiku rejected here)
 
 If any check fails, **stop**. Tell the user exactly what's wrong and how to
 fix it. Do not proceed.

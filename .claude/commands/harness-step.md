@@ -25,16 +25,35 @@ You inherit that model because the Terminal that launched you used
 `claude --print --model "$(cat .claude/.harness-model)"`. Step 14 below uses
 the same file when launching the next window.
 
-## Step 1 — read state; terminal checks
+## Step 1 — read state; terminal checks; model proof
 
 Read `kid-kode-landing/notes/ralph-state.json`. If `status != "running"` OR
 `currentIteration >= maxIterations`, print
 `Harness terminal: <status>, iteration <currentIteration>/<maxIterations>` and
 exit 0 cleanly. Do NOT launch a next window.
 
-Also verify `.claude/.harness-model` exists and is non-empty. If missing,
-print `Harness terminal: .claude/.harness-model missing — re-run /kickoff-harness-lockin to recapture model.`
-and exit 0. Do NOT launch a next window without a model contract.
+Verify `.claude/.harness-model` exists, is non-empty, AND starts with
+`claude-opus-`. Sonnet and Haiku are forbidden by user policy. Run this
+proof block at the top of EVERY iteration and show its output:
+
+```bash
+echo "=========================================="
+echo "harness-step iter MODEL PROOF:"
+MODEL_FILE=/Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model
+if [[ ! -s "$MODEL_FILE" ]]; then echo "  FAIL: $MODEL_FILE missing"; exit 0; fi
+MODEL=$(cat "$MODEL_FILE")
+echo "  contract file:    $MODEL_FILE"
+echo "  contract content: $MODEL"
+echo "  contract sha256:  $(shasum -a 256 "$MODEL_FILE" | awk '{print $1}')"
+if [[ "$MODEL" =~ ^claude-opus- ]]; then echo "  opus-only check:  PASS"; else echo "  opus-only check:  FAIL — refusing to proceed"; exit 0; fi
+echo "  self-reported model: <print the model ID from your own system prompt — quote it exactly>"
+echo "=========================================="
+```
+
+Also assert the model the user-passed via `--model` (which is what THIS
+worker is running on) matches the contract file. If they diverge, print
+`harness-step: --model arg differs from .harness-model contract file — STOP, do NOT continue. Re-run /kickoff-harness-lockin.`
+and exit 0.
 
 ## Step 2 — pick next task
 
@@ -215,10 +234,13 @@ Re-read `ralph-state.json`. If any task with `status == "pending"` remains:
 
 Print `Harness iter <N> <task-id> -> done. Launching next window with model from .harness-model...`
 
-Then run this Bash command (do NOT modify it; copy verbatim):
+Then run this Bash command (do NOT modify it; copy verbatim). The opus-only
+check guards the launch — if the model file ever drifts to sonnet/haiku,
+the next window won't fire:
 
 ```bash
 MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
+[[ "$MODEL" =~ ^claude-opus- ]] || { echo "REFUSING TO LAUNCH: model='$MODEL' is not opus"; exit 0; } && \
 osascript -e "tell application \"Terminal\" to do script \"cd /Users/loganbaird/Prototype_Prism/Design-trials && claude --print --model $MODEL /harness-step\"" >/dev/null 2>&1
 ```
 
@@ -226,6 +248,7 @@ If `osascript` fails (e.g., Terminal not available), fall back to:
 
 ```bash
 MODEL=$(cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model) && \
+[[ "$MODEL" =~ ^claude-opus- ]] || { echo "REFUSING TO LAUNCH: model='$MODEL' is not opus"; exit 0; } && \
 nohup claude --print --model "$MODEL" /harness-step >/tmp/harness-chain-$(date +%s).log 2>&1 &
 ```
 

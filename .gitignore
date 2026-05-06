@@ -42,3 +42,4 @@ kid-kode-landing/tsconfig.tsbuildinfo
 # harness-lockin chain: per-kickoff model contract (UI-selected model captured here)
 .claude/.harness-model
 .claude/.ralph-model
+.claude/my-secrets.md

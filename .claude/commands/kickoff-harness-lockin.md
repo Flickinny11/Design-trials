@@ -19,31 +19,43 @@ by every worker in step 14 of `/harness-step`).
 
 You are NOT the chain worker. You launch it. After launch, your turn ends.
 
-## Step 0 — capture your model (CRITICAL)
+## Step 0 — capture your model (CRITICAL — must be Opus, no exceptions)
 
-You currently know which model you are because it's stated in your system
-prompt (e.g. "powered by the model named Opus 4.7", "the exact model ID is
-'claude-opus-4-7'", or similar for sonnet/haiku). The user explicitly wants
-the chain to run on the model THEY selected in the Cursor / Claude Code UI
-dropdown — which is the model running THIS kickoff session.
+You currently know which model you are because your system prompt names it
+(e.g. "powered by the model named Opus 4.7", "the exact model ID is
+'claude-opus-4-7'"). The user has set a hard rule: **the chain runs on
+Opus only.** Sonnet and Haiku are explicitly forbidden for chain coding
+work — they will not be accepted.
 
 Write your full model ID to `.claude/.harness-model` using the **Bash** tool.
-The ID must be one of: `claude-opus-4-7`, `claude-sonnet-4-6`,
-`claude-haiku-4-5-20251001`, or whatever newer ID is current at runtime. Use
-the full canonical ID, never a short alias. Example:
+The ID MUST start with `claude-opus-` and MUST be the full canonical form
+of the user's currently-selected Opus version (e.g. `claude-opus-4-7`).
+Step 1 preflight will reject anything else.
 
 ```bash
 echo 'claude-opus-4-7' > /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model
 ```
 
-Verify by running `cat .claude/.harness-model` and confirming the output is
-the model ID you intended. If you cannot determine your own model ID with
-certainty, STOP — do not guess. Ask the user to confirm and abort the
-kickoff. (This is the single point that protects against silent sonnet 4.5
-defaults; getting it wrong here defeats the whole point.)
+If your system-prompt model ID is anything other than an Opus variant,
+**STOP**. Tell the user their UI dropdown is set to a forbidden model
+(e.g. Sonnet) and abort the kickoff. They must switch to Opus before
+re-running.
 
-The file is git-ignored (`.gitignore` includes `.claude/.harness-model`). It
-is session-state, not tracked.
+After writing, prove the model is real by running ALL of the following
+and showing each output to the user:
+
+```bash
+echo "=== MODEL PROOF ==="
+echo "1. Wrote to .claude/.harness-model:"; cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model
+echo ""; echo "2. Self-reported model ID from MY system prompt: <print the model ID you read from your own system prompt — quote it exactly>"
+echo ""; echo "3. SHA256 of model-file (tamper check):"; shasum -a 256 /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model
+echo ""; echo "4. Starts-with-claude-opus check:"; grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model && echo PASS || echo FAIL
+```
+
+Show the user the literal output. Do not paraphrase. The user wants
+runtime proof, not assurances.
+
+The file is git-ignored. It is session-state, not tracked.
 
 ## Step 1 — preflight
 
@@ -55,6 +67,7 @@ Run these checks in parallel via Bash:
 - `test -f /Users/loganbaird/Prototype_Prism/Design-trials/.claude/commands/harness-step.md` → must succeed
 - `test -f /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json && jq -e '.mcpServers.kv' /Users/loganbaird/Prototype_Prism/Design-trials/.mcp.json` → KripVerify MCP registered
 - `test -s /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model` → step 0 captured a non-empty model ID
+- `grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model` → captured model is an Opus variant (Sonnet/Haiku rejected here)
 
 If any fails: stop, tell the user exactly what's wrong, do not launch.
 

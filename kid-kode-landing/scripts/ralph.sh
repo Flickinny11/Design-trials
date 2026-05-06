@@ -42,13 +42,14 @@ command -v jq >/dev/null 2>&1 || { echo "ralph.sh: jq is required" >&2; exit 1; 
 command -v claude >/dev/null 2>&1 || { echo "ralph.sh: claude CLI not on PATH" >&2; exit 1; }
 
 # ------------------------------------------------------------------
-# Model contract — every iteration's claude subprocess MUST run on the
-# UI-selected model captured by /kickoff-renderer-migration into
-# .claude/.ralph-model. No fallback default — refuse to launch without it.
+# Model contract — every iteration's claude subprocess MUST run on Opus.
+# Sonnet and Haiku are explicitly forbidden by user policy; the file
+# .claude/.ralph-model is written by /kickoff-renderer-migration and must
+# contain a claude-opus-* model ID. No fallback, no default, no exceptions.
 # ------------------------------------------------------------------
 RALPH_MODEL_FILE="$REPO_ROOT/.claude/.ralph-model"
 if [[ ! -s "$RALPH_MODEL_FILE" ]]; then
-  echo "ralph.sh: $RALPH_MODEL_FILE missing or empty — re-run /kickoff-renderer-migration in a fresh chat to capture your UI-selected model. Refusing to launch (would silently default to sonnet 4.5)." >&2
+  echo "ralph.sh: $RALPH_MODEL_FILE missing or empty — re-run /kickoff-renderer-migration in a fresh chat with Opus selected. Refusing to launch." >&2
   exit 1
 fi
 RALPH_MODEL=$(tr -d '[:space:]' < "$RALPH_MODEL_FILE")
@@ -56,7 +57,21 @@ if [[ -z "$RALPH_MODEL" ]]; then
   echo "ralph.sh: $RALPH_MODEL_FILE is empty after trim — refusing to launch." >&2
   exit 1
 fi
-echo "ralph.sh: chain model = $RALPH_MODEL"
+if [[ ! "$RALPH_MODEL" =~ ^claude-opus- ]]; then
+  echo "ralph.sh: model='$RALPH_MODEL' is FORBIDDEN by user policy. Only claude-opus-* models may run the ralph loop. Sonnet and Haiku are explicitly disallowed for this complex coding work. Refusing to launch." >&2
+  exit 1
+fi
+
+# Proof banner — print three independent lines of evidence so the user can
+# visually confirm the model BEFORE any claude subprocess fires.
+echo "=========================================="
+echo "ralph.sh MODEL PROOF (visible to operator):"
+echo "  contract file:    $RALPH_MODEL_FILE"
+echo "  contract content: $RALPH_MODEL"
+echo "  contract sha256:  $(shasum -a 256 "$RALPH_MODEL_FILE" | awk '{print $1}')"
+echo "  opus-only check:  PASS (regex ^claude-opus- matched)"
+echo "  CLI invocation will be: claude --print --model $RALPH_MODEL --dangerously-skip-permissions /ralph-step"
+echo "=========================================="
 
 # ------------------------------------------------------------------
 # Config
