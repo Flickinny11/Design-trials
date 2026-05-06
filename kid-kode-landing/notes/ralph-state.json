@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T07:46:19Z",
+  "updatedAt": "2026-05-06T09:21:40Z",
   "currentIteration": 13,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -298,7 +298,8 @@
       ],
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "047f76171d202d5cc0838db4998aa693a917b741",
+      "notes": "iter 13 (2026-05-06T09:21Z): code complete, KripVerify gate blocked by infra (same blocker as HL07 iter 8 / HL09 iter 10 / HL10 iter 11 / HL11 iter 12). Implementation: useGraphEditorStore.ts adds ViewMode export ('preview'|'editor'|'split'), viewMode state (default 'split'), setViewMode action; src/app/page.tsx migrates viewMode from local useState to store subscription so the Inspector button can drive a top-level pane swap; src/components/editor/panels/Inspector.tsx adds two header buttons — data-role=\"save\" (calls useGraphSourceStore.saveToServer; visual state cycles through Save/Saving…/Saved) and data-role=\"preview-in-app-ui\" (calls setViewMode('preview') + flyToHub(node.parentHubId) reading the live source-store row by selectedId at click time so the handler doesn't depend on render-order useMemo) plus an inline save-status banner (data-role=\"save-status\") that surfaces save failures or the last regeneratedAt timestamp; src/components/editor/panels/visual-preview/VisualPreview.tsx onSave widened to fetch node.codeRef as text and forward it as codeModule to saveAndVerify so the server route runs the §10 verifier against the actual module bytes; tests/unit/save-to-server/HL12.save-to-server.test.ts covers (a) saveToServer happy + 500 paths, (b) setViewMode + flyToHub Preview-in-App-UI driver shape, (c) saveAndVerify wire shape forwards codeModule into verify-node body. Shell verification: tsc --noEmit clean; grep -q 'data-role=\"save\"' Inspector.tsx PASS; grep -q 'data-role=\"preview-in-app-ui\"' Inspector.tsx PASS; 5/5 vitest pass; 363/369 across full suite (1 pre-existing T10.dod-checklist failure unchanged from HL11 — that test expects T01-T09 in ralph-state.json but harness-lockin symlink puts HL01-HL15 there). KripVerify gate (kvAssert: after kv_click('[data-role=\"save\"]') kv_check_network status 200 includes POST /api/prism/regen): kv_dev_server_status timed out at 10s IPC — same hang HL07/HL09/HL10/HL11 hit. Per harness rules, leaving status=in-progress with attemptCount unchanged (still 1) so the orchestrator advances to HL13 and the kvAssert can be re-run alongside HL07+HL09+HL10+HL11 once KripVerify is restarted at the user level. spec-reviewer cycle 1 (commit 047f761): no MUST FIX. SHOULD FIX (deferred): (1) failing-test commit a3a2f8e contained a malformed PrismHub fixture (extra fields, missing contentHeight/backgroundColor, layout cast); typecheck-only fixture fix landed in this impl commit instead of a separate test:- commit — discipline note for future TDD iters, not a spec violation. (2) Inspector save-status banner persists 'saved · …' indefinitely until the next dirty edit; mirror CodeTab's setTimeout(()=>setSaved(false),1600) pattern. (3) handleSave swallows verifier violations beyond r.error; surface via console.warn or future useGraphEditorStore.logError. (4) VisualPreview.onSave fetches node.codeRef on every Save & Verify click — reuse coderef-factory's module-level cache (resolveCodeRef) so the verifier sees the exact bytes the runtime ran and skips the network round-trip. (5) VisualPreview.onSave fetch-guard checks `typeof fetch !== 'undefined'` before consulting fetchOverride; reorder to `const fetchFn = fetchOverride ?? (typeof fetch !== 'undefined' ? fetch : undefined)` so test overrides are honored uniformly with regen-api.ts:40. (6) Inspector.handlePreviewInAppUi flips viewMode to 'preview' before guarding selectedId/parentHubId; if the inspector ever surfaces without a selection (future refactor), user lands in preview with no flyToHub follow-up — move setViewMode after guards. OPTIONAL: (a) ViewMode type is exported from the store but page.tsx no longer declares its own; consider documenting as the canonical type surface. (b) three new buttons in inspector header may overflow on mobile (panel is w-full md:w-[460px]); icon-only under md: would harden layout. (c) silent network-error catch in onSave could route through console.warn for opt-in observability. (d) new Date(savedAt!).toLocaleTimeString() is locale-dependent in render; extract a stable formatter for snapshot tests. UNBLOCK PROCEDURE (same as HL07+HL09+HL10+HL11): KripVerify Chrome instance is hung — restart KV MCP server (or whole .mcp.json reload) so kv_navigate / kv_click / kv_check_network respond, then re-run iter 14+ to complete HL12 + backlog kvAsserts."
     },
     {
       "id": "HL13",
@@ -378,10 +379,10 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 12,
-    "lastProductiveCommit": "c525d830b818c1754dff4aab7ca9a4564174aeee"
+    "lastProductiveIteration": 13,
+    "lastProductiveCommit": "047f76171d202d5cc0838db4998aa693a917b741"
   },
   "phaseCaps": {
     "1": {
@@ -431,11 +432,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 12,
-    "commit": "c525d830b818c1754dff4aab7ca9a4564174aeee",
-    "verifiedAt": "2026-05-06T06:51:53Z",
+    "iteration": 13,
+    "commit": "047f76171d202d5cc0838db4998aa693a917b741",
+    "verifiedAt": "2026-05-06T09:21:40Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T06:51:53Z"
+    "recordedAt": "2026-05-06T09:21:40Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
