@@ -250,6 +250,46 @@ describe('defaultRenderModeFactory (HL08)', () => {
       expect(obj).toBeInstanceOf(Group);
       expect(glbLoadCalls).toEqual([]);
     });
+
+    it('clones the cached GLB scene per node (loader cache hands out the same Object3D)', async () => {
+      // Loader cache returns the same scene reference to every caller; without
+      // a per-node clone, Group A's .add(scene) unparents it from Group B
+      // (Three.js silently re-parents).
+      const sharedScene = new Group();
+      sharedScene.name = 'shared-glb-scene';
+      const innerMesh = new Mesh(new PlaneGeometry(1, 1), new MeshBasicNodeMaterial());
+      sharedScene.add(innerMesh);
+
+      const aliasingCtx: NodeContext = {
+        textureLoader: { loadTexture: async () => new Texture() } as unknown as NodeContext['textureLoader'],
+        glbLoader: {
+          loadGLB: async () => ({ scene: sharedScene }),
+        } as unknown as NodeContext['glbLoader'],
+        fontAtlas: {
+          ready: true,
+          load: async () => {},
+          createText: () => new Group(),
+          dispose: () => {},
+        } as unknown as NodeContext['fontAtlas'],
+        primitives: {} as NodeContext['primitives'],
+        emit: () => {},
+      };
+
+      const a = defaultRenderModeFactory(makeNode({ nodeId: 'a', renderMode: 'mesh', meshUrl: '/glb/x.glb' }), aliasingCtx);
+      const b = defaultRenderModeFactory(makeNode({ nodeId: 'b', renderMode: 'mesh', meshUrl: '/glb/x.glb' }), aliasingCtx);
+
+      await new Promise((r) => setImmediate(r));
+      await new Promise((r) => setImmediate(r));
+
+      // Both groups must end up with their own GLB-derived child.
+      expect(a.children.length).toBeGreaterThan(0);
+      expect(b.children.length).toBeGreaterThan(0);
+      // The cached scene itself must not have been re-parented (each node
+      // got a clone, not the original).
+      expect(a.children[0]).not.toBe(sharedScene);
+      expect(b.children[0]).not.toBe(sharedScene);
+      expect(a.children[0]).not.toBe(b.children[0]);
+    });
   });
 
   describe('scenePosition', () => {

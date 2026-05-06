@@ -140,7 +140,10 @@ export function defaultRenderModeFactory(
         .loadGLB(node.meshUrl)
         .then((gltf) => {
           if (!gltf?.scene) return;
-          group.add(gltf.scene);
+          // Loader cache hands the same Object3D to every caller; clone so
+          // each node owns its own subtree (THREE.add() unparents otherwise).
+          const cloned = gltf.scene.clone(true);
+          group.add(cloned);
         })
         .catch(() => { /* swallow */ });
     }
