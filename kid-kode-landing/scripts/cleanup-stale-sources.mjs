@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
-const graphPath = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.json');
+const graphPath = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.legacy.json');
 const baseDir = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'assets', 'source-images', 'base');
 const DRY = process.env.DRY === '1';
 

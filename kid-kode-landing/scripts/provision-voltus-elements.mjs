@@ -27,7 +27,7 @@ fal.config({ credentials: process.env.FAL_KEY });
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
 const backdropPath = resolve(repoRoot, 'notes', 'mockup-candidates', 'voltus-backdrop.png');
-const graphPath = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.json');
+const graphPath = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.legacy.json');
 const baseDir = resolve(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'assets', 'source-images', 'base');
 mkdirSync(baseDir, { recursive: true });
 

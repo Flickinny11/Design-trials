@@ -69,7 +69,7 @@ async function upload(path) {
   return fal.storage.upload(blob);
 }
 
-const graphPath = join(root, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.json');
+const graphPath = join(root, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.legacy.json');
 const graph = JSON.parse(readFileSync(graphPath, 'utf-8'));
 
 let totalMP = 0, enriched = 0, skipped = 0, failed = 0;

@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const assetRoot = __dirname;                                      // .../mock-app-source/assets
 const sourceRoot = join(assetRoot, 'source-images');
-const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.json');
+const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.legacy.json');
 const repoRoot = resolve(__dirname, '..', '..', '..', '..', '..'); // .../kid-kode-landing
 const fontPath = join(repoRoot, 'public', 'fonts', 'Inter-Variable.ttf');
 const outDir = join(repoRoot, 'public', 'prism-assets');

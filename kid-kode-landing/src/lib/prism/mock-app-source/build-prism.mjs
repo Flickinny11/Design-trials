@@ -21,7 +21,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const sourceRoot = __dirname;                                     // .../mock-app-source
 const repoRoot = resolve(__dirname, '..', '..', '..', '..');     // kid-kode-landing
-const graphPath = join(sourceRoot, 'hubs', 'home-hub.json');
+const graphPath = join(sourceRoot, 'hubs', 'home-hub.legacy.json');
 const nodesDir = join(sourceRoot, 'nodes');
 const backendsDir = join(sourceRoot, 'backends');
 const schemasDir = join(sourceRoot, 'schemas');

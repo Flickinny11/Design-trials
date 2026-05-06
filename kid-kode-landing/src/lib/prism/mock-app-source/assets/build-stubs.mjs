@@ -20,7 +20,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const assetRoot = __dirname;
 const sourceRoot = join(assetRoot, 'source-images');
-const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.json');
+const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.legacy.json');
 const repoRoot = resolve(__dirname, '..', '..', '..', '..', '..');
 const fontPath = join(repoRoot, 'public', 'fonts', 'Inter-Variable.ttf');
 

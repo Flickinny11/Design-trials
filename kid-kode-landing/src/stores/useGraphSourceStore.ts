@@ -1,15 +1,15 @@
 'use client';
 
 // Zustand store that holds the canonical mock-app graph the editor reads
-// through. Phase 1 introduced the surface; Phase 2 wires Inspector +
-// GraphScene to read from it and eagerly initializes from home-hub.json.
-//
-// Plan ref: /Users/loganbaird/.claude/plans/i-recently-made-changes-effervescent-church.md §Phase 2.
+// through. Phase 2 of the editor-integration plan introduced eager init
+// from a bundled JSON; HL03 of the harness lock-in (Plan §P4) swapped the
+// source to /prism-mock/home/live-graph.json — the file the editor writes
+// back to via /api/prism/regen. The bundled fixture survives at
+// hubs/home-hub.legacy.json for one-off provisioning scripts.
 
 import { create } from 'zustand';
 import type { GraphSource, HomeHubJson, PrismEdge, PrismHub, PrismNode } from '@/lib/prism-graph/types';
 import { loadFromHomeHub, loadFromHomeHubFile } from '@/lib/prism-graph/loader';
-import homeHubJson from '@/lib/prism/mock-app-source/hubs/home-hub.json';
 
 interface GraphSourceState {
   hubs: PrismHub[];
@@ -54,13 +54,25 @@ export const useGraphSourceStore = create<GraphSourceState>()((set) => ({
   reset: () => set({ hubs: [], nodes: [], edges: [], ready: false, error: null }),
 }));
 
-// Eagerly initialize from the bundled home-hub.json so consumers see a ready
-// store on first render. Sync + idempotent. Bundled into the client chunk —
-// during SSR the same module graph evaluates on the server and would
-// duplicate the load; the `'use client'` directive at the top of the file
-// keeps the module out of server bundles, but we still gate on `window` to
-// avoid hydration mismatches if the file is imported transitively from
-// server code in the future.
+// Eager init: fetch the canonical live graph (the file /api/prism/regen
+// writes back to). The `'use client'` directive at the top of the file
+// keeps the module out of server bundles, but we still gate on `window`
+// to avoid SSR fetches and to stay safe if the file is imported
+// transitively from server code in the future.
 if (typeof window !== 'undefined') {
-  useGraphSourceStore.getState().load(homeHubJson as unknown as HomeHubJson);
+  void loadFromHomeHubFile('/prism-mock/home/live-graph.json').then(
+    (graph) => {
+      useGraphSourceStore.setState({
+        hubs: graph.hubs,
+        nodes: graph.nodes,
+        edges: graph.edges,
+        ready: true,
+        error: null,
+      });
+    },
+    (e: unknown) => {
+      const message = e instanceof Error ? e.message : String(e);
+      useGraphSourceStore.setState({ ready: false, error: message });
+    },
+  );
 }

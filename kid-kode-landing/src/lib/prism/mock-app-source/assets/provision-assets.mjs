@@ -24,7 +24,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const assetRoot = __dirname;                                            // .../mock-app-source/assets
 const sourceRoot = join(assetRoot, 'source-images');
 const manifestPath = join(assetRoot, '.provisioning-manifest.json');
-const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.json');
+const graphPath = resolve(__dirname, '..', 'hubs', 'home-hub.legacy.json');
 
 // ─── model IDs — locked-in per skills/prism-fal/SKILL.md (April 2026) ────────
 // If fal deprecates any of these, update here and re-run.

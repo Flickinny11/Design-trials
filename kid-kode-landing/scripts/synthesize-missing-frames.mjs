@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
-const graphPath = join(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.json');
+const graphPath = join(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'hubs', 'home-hub.legacy.json');
 const framesRoot = join(repoRoot, 'src', 'lib', 'prism', 'mock-app-source', 'assets', 'source-images', 'frames');
 
 function hasSufficientFrames(dir, want) {
