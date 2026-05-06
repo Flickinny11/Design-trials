@@ -108,9 +108,11 @@
       ],
       "tddRequired": true,
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "177e33d91b0295d7dd03c31fd258d4a849dc0642",
+      "verifiedAt": "2026-05-06T03:35:00Z",
+      "notes": "iter 5 (2026-05-06T03:35Z): done. spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (1) test type-cast bundled into impl commit instead of test commit — convention nit; future iters should land such fixes in the original test commit or a dedicated `test:` follow-up. (2) addNode casts seeded as PrismNode but only fills renderer-migration defaults — if caller omits subtype/serviceTag/visual/intent/codeRef/backendRef the store stores a malformed node; consider seeding legacy required fields too or narrowing the input type. (3) saveToServer hard-codes schemaVersion '0.1.0' — pull from loaded source so future bumps don't silently downgrade. (4) saveToServer only persists hubs[0] and nodes filtered by parentHubId === hubs[0].hubId — silently discards extra hubs/orphan nodes; warn when hubs.length>1 so HL11 multi-hub regressions surface. (5) addEdge does not validate from/to reference existing nodes — combined with removeNode cascade, a buggy caller can re-introduce dangling edges; add a dev-mode console.warn guard. OPTIONAL: UUID fallback dead in every supported runtime; markClean() helper paired with markDirty(); savedAt should fall back to null (not Date.now) when server omits regeneratedAt. HL01 still in-progress (sensitive-file gate on kid-kode-landing/.claude/hooks/** — manual user unblock required per HL01 notes)."
     },
     {
       "id": "HL05",
@@ -368,8 +370,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "51ed51dd537edb90922148800b8a8244cbbd6bf5"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "177e33d91b0295d7dd03c31fd258d4a849dc0642"
   },
   "phaseCaps": {
     "1": {
@@ -419,11 +421,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 4,
-    "commit": "51ed51dd537edb90922148800b8a8244cbbd6bf5",
-    "verifiedAt": "2026-05-06T03:12:14Z",
+    "iteration": 5,
+    "commit": "177e33d91b0295d7dd03c31fd258d4a849dc0642",
+    "verifiedAt": "2026-05-06T03:35:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T03:12:14Z"
+    "recordedAt": "2026-05-06T03:35:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -439,6 +441,12 @@
       "taskId": "HL03",
       "commit": "f4a22f40eee3a86fd4d5647ed80ed772ecbe16a1",
       "verifiedAt": "2026-05-06T03:00:27Z"
+    },
+    {
+      "iteration": 5,
+      "taskId": "HL04",
+      "commit": "177e33d91b0295d7dd03c31fd258d4a849dc0642",
+      "verifiedAt": "2026-05-06T03:35:00Z"
     }
   ]
 }
