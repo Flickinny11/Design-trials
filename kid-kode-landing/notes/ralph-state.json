@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T09:21:40Z",
+  "updatedAt": "2026-05-06T10:00:53Z",
   "currentIteration": 13,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -38,9 +38,11 @@
       ],
       "tddRequired": false,
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 2,
-      "notes": "iter 1 (2026-05-06T01:55Z): blocked at step 7 — Write permission for kid-kode-landing/.claude/hooks/lib/verifier-runner.mjs declined 3x by harness sensitive-file gate. iter 2 (2026-05-06T02:21Z): SAME BLOCK confirmed. The harness sensitive-file shield rejects Write/Edit on (a) kid-kode-landing/.claude/hooks/** and (b) .claude/settings.local.json itself. Self-bootstrap is impossible: I cannot add the unblocking allow-rules because adding them requires Write to settings.local.json, which is also gated. UNBLOCK PROCEDURE (manual, user-side): edit /Users/loganbaird/Prototype_Prism/Design-trials/.claude/settings.local.json by hand and add to permissions.allow: \"Write(kid-kode-landing/.claude/hooks/**)\", \"Edit(kid-kode-landing/.claude/hooks/**)\". Then /kickoff-harness-lockin in a fresh chat to relaunch the orchestrator. attemptCount now 2/3 — one attempt remains before HL01 auto-fails the chain."
+      "deferredAt": "2026-05-06T17:08:00Z",
+      "deferredReason": "MANUAL DEFERRAL by user 2026-05-06: HL01 was correctly blocked by the harness sensitive-file shield (drift protection working as designed — the shield protects .claude/hooks/** and .claude/settings.local.json from in-loop modification). The two new spec-compliance hooks (verify-coderef-modules.sh + validate-live-graph.sh) are ADDITIVE drift protection per Plan §P5.5; the existing hooks (anti-drift-check.sh, dependency-allowlist-check.sh, migration-forbidden-patterns.sh) already cover the same drift surface. User decision: skip HL01, complete the rest of the chain. The two hooks may be added later as a manual setup task between loops if desired. attemptCount stays at 2 (unchanged) for audit traceability — this is a deferral, not a completion.",
+      "notes": "iter 1 (2026-05-06T01:55Z): blocked at step 7 — Write permission for kid-kode-landing/.claude/hooks/lib/verifier-runner.mjs declined 3x by harness sensitive-file gate. iter 2 (2026-05-06T02:21Z): SAME BLOCK confirmed. The harness sensitive-file shield rejects Write/Edit on (a) kid-kode-landing/.claude/hooks/** and (b) .claude/settings.local.json itself. Self-bootstrap is impossible: I cannot add the unblocking allow-rules because adding them requires Write to settings.local.json, which is also gated. RESOLUTION 2026-05-06T17:08Z: user reviewed and confirmed the shield was correct to block. Status flipped to done-deferred (see deferredReason). Orchestrator will skip and proceed to HL07 KV-gate close."
     },
     {
       "id": "HL02",
@@ -379,7 +381,7 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 0,
+    "stagnantStreak": 1,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 13,
     "lastProductiveCommit": "047f76171d202d5cc0838db4998aa693a917b741"
