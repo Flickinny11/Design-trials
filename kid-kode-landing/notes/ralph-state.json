@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.1",
   "createdAt": "2026-05-05T19:50:00Z",
-  "updatedAt": "2026-05-06T06:00:30Z",
+  "updatedAt": "2026-05-06T06:51:53Z",
   "currentIteration": 12,
   "maxIterations": 50,
   "maxIterationsPerPhase": 8,
@@ -274,7 +274,8 @@
       ],
       "status": "in-progress",
       "attemptCount": 1,
-      "notes": ""
+      "commit": "c525d830b818c1754dff4aab7ca9a4564174aeee",
+      "notes": "iter 12 (2026-05-06T06:51Z): code complete, KripVerify gate blocked by infra (same blocker as HL07 iter 8 / HL09 iter 10 / HL10 iter 11). Implementation: GraphScene.tsx replaced singleton HUB_MOCKUP_TEXTURE_PROMISE with HUB_MOCKUP_TEXTURES Map<hubId, Promise<CanvasTexture>>; loadHubMockupTexture(hubId, mockupUrl) caches per-hub; refactored HubHulls into outer mapper + inner HubHull sub-component so each hub owns its own useEffect texture-load with deps [hub.id, hub.mockupUrl] and skips the inner mockup sphere when hub.mockupUrl is null (Stage 0 pre-mockup state per Amendment 0002 §A.3); __resetHubMockupTextureCache exported as test escape hatch. view-model.ts EditorHubView gains mockupUrl: string | null; toEditorHub passes hub.layout?.mockupUrl ?? null. HubLabels.tsx audit: no shared-texture references — clean (per-hub canvas labels via useMemo over hubs, no mockup texture coupling). Shell verification: tsc --noEmit clean; ! grep -q 'HUB_MOCKUP_TEXTURE_PROMISE' src/components/editor/graph/GraphScene.tsx PASS (0 occurrences); 348 vitest tests pass across 39 files (1 pre-existing T10.dod-checklist failure unrelated to HL11 — that test expects T01-T09 in ralph-state.json but harness lock-in symlinked the file to ralph-state.harness-lockin.json with HL01-HL15 ids; failure also reproduces on HEAD before HL11 changes). KripVerify gate (kvAssert: document.querySelector('canvas') !== null): kv_dev_server_status / kv_navigate / kv_findings_path all time out at 10s IPC — same hang HL07 iter 8 / HL09 iter 10 / HL10 iter 11 hit. Per harness rules, leaving status=in-progress with attemptCount unchanged so the orchestrator advances to HL12 and the kvAssert can be re-run alongside HL07 + HL09 + HL10's once KripVerify is restarted at the user level. spec-reviewer cycle 1 (commit c525d83): no MUST FIX. SHOULD FIX (deferred): (1) cache key is hubId only — if hub.layout.mockupUrl ever mutates (e.g. Save & Verify regenerates the FLUX.2 mockup per Amendment 0002 §A.6), loadHubMockupTexture(hubId, newUrl) returns the cached promise resolved against the old URL and silently ignores the new URL; composite key `${hubId}|${mockupUrl}` (or eviction-on-URL-change) would honor both Amendment §A.3's hubId-keying intent and Plan §P11's URL-keying wording without conflict. (2) prism-renderer-progress.md HL11 line not yet appended in this commit — lands in step 12 of this iter (consistent with HL07/HL09/HL10 deferred-log pattern while KripVerify infra is hung). (3) loadHubMockupTexture stores rejected promises permanently in HUB_MOCKUP_TEXTURES (cache miss → set(hubId, promise) before settlement), so a transient img.onerror permanently caches the rejection for that hub for the lifetime of the page; pre-existing behavior, but the per-hub split is a natural moment to fix it (delete the entry on rejection, or only cache on resolve). OPTIONAL: (a) document.body.style.cursor = 'pointer'/'default' carried verbatim from previous <group> — R3F idiomatic alternative is useThree(({gl}) => gl.domElement.style.cursor) or a useCursor helper. (b) __resetHubMockupTextureCache exported but no test consumes it (HL11 has tddRequired: false); either drop the export or add a vitest spec exercising per-hub cache-miss/hit/reset paths. (c) header comment line 35 still says \"shared the same hardcoded `/prism-assets/scifi-mockup-v1.png`\" but that asset URL no longer appears in GraphScene.tsx post-edit; reads as dangling reference (intentional traceability for the migration, fine to keep). (d) ralph-state.json HL11 halt-check string says \"keyed on hub.layout.mockupUrl\" but implementation correctly per Amendment 0002 §A.3 keys on hubId; Plan §P11 line 242 has same imprecise wording — tightening to \"Map<hubId, ...>` keyed by hub id, value is the promise for that hub's mockupUrl\" would prevent future regression confusion. UNBLOCK PROCEDURE (same as HL07 + HL09 + HL10): KripVerify Chrome instance is hung — restart KV MCP server (or whole .mcp.json reload) so kv_navigate / kv_evaluate respond, then re-run iter 13+ to complete HL11 + backlog kvAsserts."
     },
     {
       "id": "HL12",
@@ -377,10 +378,10 @@
     "lastBundleHash": null
   },
   "convergence": {
-    "stagnantStreak": 1,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 11,
-    "lastProductiveCommit": "a702cd36fccc2fd1adb2b7e6f6d9845c7cefa53b"
+    "lastProductiveIteration": 12,
+    "lastProductiveCommit": "c525d830b818c1754dff4aab7ca9a4564174aeee"
   },
   "phaseCaps": {
     "1": {
@@ -430,11 +431,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 11,
-    "commit": "a702cd36fccc2fd1adb2b7e6f6d9845c7cefa53b",
-    "verifiedAt": "2026-05-06T05:45:00Z",
+    "iteration": 12,
+    "commit": "c525d830b818c1754dff4aab7ca9a4564174aeee",
+    "verifiedAt": "2026-05-06T06:51:53Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-06T05:45:00Z"
+    "recordedAt": "2026-05-06T06:51:53Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
