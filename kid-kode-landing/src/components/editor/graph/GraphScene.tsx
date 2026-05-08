@@ -668,6 +668,34 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
   );
 }
 
+function EditorDiagnostics({ simNodes }: { simNodes: SimNode[] }) {
+  const { camera, gl } = useThree();
+
+  useFrame(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const rect = gl.domElement.getBoundingClientRect();
+    let visibleHomeNodeCount = 0;
+    const visibleHomeNodeIds: string[] = [];
+    simNodes.forEach((node) => {
+      if (!node.hubIds.includes('home')) return;
+      const projected = new THREE.Vector3(node.x, node.y, node.z).project(camera);
+      const x = rect.left + ((projected.x + 1) / 2) * rect.width;
+      const y = rect.top + ((1 - projected.y) / 2) * rect.height;
+      if (projected.z <= 1 && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        visibleHomeNodeCount += 1;
+        visibleHomeNodeIds.push(node.id);
+      }
+    });
+    (window as any).__prismEditorDebug = {
+      visibleHomeNodeCount,
+      visibleHomeNodeIds,
+      totalHomeNodeCount: simNodes.filter((node) => node.hubIds.includes('home')).length,
+    };
+  });
+
+  return null;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Camera controller — uses drei's CameraControls (yomotsu/camera-controls)
 // Smooth damped flights, fitToSphere, setLookAt with promises
@@ -719,9 +747,10 @@ function ControlsBridge({
     const center = hubCenters[flyToHubId];
     const c = controlsRef.current;
     if (!center || !c) return;
-    const camX = center.x + 50;
-    const camY = center.y + 30;
-    const camZ = center.z + 90;
+    const singleHub = Object.keys(hubCenters).length === 1;
+    const camX = singleHub ? center.x : center.x + 50;
+    const camY = singleHub ? center.y : center.y + 30;
+    const camZ = singleHub ? center.z + 320 : center.z + 90;
     c.setLookAt(camX, camY, camZ, center.x, center.y, center.z, true).then(() => {
       clearFlyTarget();
     });
@@ -824,6 +853,7 @@ function SceneContent({
 
       <NodeLabels simNodes={simNodes} />
       <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
+      <EditorDiagnostics simNodes={simNodes} />
       <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} />
 
       {usePost && (

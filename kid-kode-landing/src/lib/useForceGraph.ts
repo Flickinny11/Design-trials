@@ -27,8 +27,14 @@ export interface SimLink {
 }
 
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
-function computeHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
+// A single-hub artifact stays at the origin so the default editor camera
+// frames it on first load without requiring a Home/Galaxy click.
+export function computeHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
   const centers: Record<string, { x: number; y: number; z: number }> = {};
+  if (hubs.length === 1) {
+    centers[hubs[0].id] = { x: 0, y: 0, z: 0 };
+    return centers;
+  }
   const R = 180;
   hubs.forEach((hub, i) => {
     const a = (i / hubs.length) * Math.PI * 2;
