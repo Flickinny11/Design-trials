@@ -191,10 +191,18 @@ export async function mountFromGraphSource(
   }
 
   if (typeof globalThis !== 'undefined') {
-    (globalThis as { __prismRenderer?: unknown }).__prismRenderer = {
+    (globalThis as { __prismRenderer?: unknown; __prismBreakNode?: unknown }).__prismRenderer = {
       sceneRoot,
       hubManager,
       adapterResult,
+    };
+    (globalThis as { __prismBreakNode?: unknown }).__prismBreakNode = (nodeId: string) => {
+      const obj = adapterResult.nodes.get(nodeId);
+      if (!obj) return;
+      obj.userData.prismBroken = true;
+      const handlers = (obj.userData.handlers ?? {}) as Record<string, unknown>;
+      handlers.onClick = () => {};
+      obj.userData.handlers = handlers;
     };
   }
 
@@ -281,6 +289,7 @@ export async function mountFromGraphSource(
     }
     if (typeof globalThis !== 'undefined') {
       delete (globalThis as { __prismRenderer?: unknown }).__prismRenderer;
+      delete (globalThis as { __prismBreakNode?: unknown }).__prismBreakNode;
     }
   }
 

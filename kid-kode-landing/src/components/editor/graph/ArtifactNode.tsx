@@ -58,7 +58,7 @@ function buildEditorFactory(): CreateNodeFn {
   // Editor surfaces never run cinematic primitives — animations would fight
   // the force-graph simulation and confuse authoring.
   const base: CreateNodeFn = (node, ctx) =>
-    defaultRenderModeFactory(node, ctx, { runPrimitives: false });
+    defaultRenderModeFactory(node, ctx, { runPrimitives: false, nodeMaterials: false });
   return buildPerNodeFactory(base);
 }
 

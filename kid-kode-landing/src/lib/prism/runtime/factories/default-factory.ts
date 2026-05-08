@@ -31,6 +31,8 @@
 import {
   Group,
   Mesh,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
   PlaneGeometry,
   type BufferGeometry,
   type Object3D,
@@ -55,6 +57,8 @@ export interface DefaultFactoryOpts {
    *  Editor-side ArtifactNode passes `false` so authoring previews stay
    *  static; the live runtime passes `true`. */
   runPrimitives?: boolean;
+  /** Runtime uses WebGPU NodeMaterials; editor R3F canvases use WebGL. */
+  nodeMaterials?: boolean;
 }
 
 interface DisposableMaterial {
@@ -83,10 +87,13 @@ export function defaultRenderModeFactory(
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
+  const useNodeMaterials = opts.nodeMaterials !== false;
 
   if (renderMode === 'sprite' || renderMode === 'plane') {
     const geo = new PlaneGeometry(1, 1);
-    const mat = new MeshBasicNodeMaterial({ transparent: true });
+    const mat = useNodeMaterials
+      ? new MeshBasicNodeMaterial({ transparent: true })
+      : new MeshBasicMaterial({ transparent: true });
     if (sourceAsset) {
       void ctx.textureLoader
         .loadTexture(sourceAsset)
@@ -112,7 +119,9 @@ export function defaultRenderModeFactory(
   } else if (renderMode === 'parallax-plane') {
     // §9.C — tessellated 64x64 plane + TSL displacement node.
     const geo = new PlaneGeometry(1, 1, 64, 64);
-    const mat = new MeshStandardNodeMaterial({ transparent: true });
+    const mat = useNodeMaterials
+      ? new MeshStandardNodeMaterial({ transparent: true })
+      : new MeshStandardMaterial({ transparent: true });
     if (sourceAsset && node.depthMapUrl) {
       const baseP = ctx.textureLoader.loadTexture(sourceAsset);
       const depthP = ctx.textureLoader.loadTexture(node.depthMapUrl);
@@ -121,11 +130,13 @@ export function defaultRenderModeFactory(
           const m = mat as unknown as DisposableMaterial;
           m.map = baseTex;
           m.displacementMap = depthTex;
-          m.colorNode = displacementShader({
-            baseTexture: baseTex,
-            displacementMap: depthTex,
-            intensity: 0.05,
-          });
+          if (useNodeMaterials) {
+            m.colorNode = displacementShader({
+              baseTexture: baseTex,
+              displacementMap: depthTex,
+              intensity: 0.05,
+            });
+          }
           m.needsUpdate = true;
         })
         .catch(() => { /* swallow */ });
