@@ -55,6 +55,49 @@ interface GraphSourceState {
 }
 
 const EMPTY: GraphSource = { hubs: [], nodes: [], edges: [] };
+const AUTOSAVE_DELAY_MS = 1000;
+
+let autosaveTimer: ReturnType<typeof setTimeout> | null = null;
+let autosaveInFlight = false;
+let autosaveQueued = false;
+let dirtyVersion = 0;
+
+function clearAutosaveTimer(): void {
+  if (autosaveTimer !== null) {
+    clearTimeout(autosaveTimer);
+    autosaveTimer = null;
+  }
+}
+
+function scheduleAutosave(get: () => GraphSourceState): void {
+  clearAutosaveTimer();
+  autosaveTimer = setTimeout(() => {
+    autosaveTimer = null;
+    void runAutosave(get);
+  }, AUTOSAVE_DELAY_MS);
+}
+
+async function runAutosave(get: () => GraphSourceState): Promise<void> {
+  if (autosaveInFlight) {
+    autosaveQueued = true;
+    return;
+  }
+  if (!get().isDirty) return;
+
+  autosaveInFlight = true;
+  const result = await get().saveToServer();
+  autosaveInFlight = false;
+
+  if (autosaveQueued || (!result.ok && get().isDirty)) {
+    autosaveQueued = false;
+    scheduleAutosave(get);
+  }
+}
+
+function markGraphDirty(get: () => GraphSourceState): void {
+  dirtyVersion += 1;
+  scheduleAutosave(get);
+}
 
 function generateNodeId(): string {
   // crypto.randomUUID is available in modern browsers + Node ≥19 + jsdom.
@@ -86,6 +129,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         error: null,
         isDirty: false,
       });
+      clearAutosaveTimer();
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
       set({ ready: false, error: message });
@@ -103,13 +147,14 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         error: null,
         isDirty: false,
       });
+      clearAutosaveTimer();
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
       set({ ready: false, error: message });
     }
   },
 
-  reset: () =>
+  reset: () => {
     set({
       hubs: [],
       nodes: [],
@@ -118,17 +163,21 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
       error: null,
       isDirty: false,
       savedAt: null,
-    }),
+    });
+    clearAutosaveTimer();
+  },
 
   addNode: (input) => {
     const nodeId = input.nodeId ?? generateNodeId();
     const seeded = applyPlanRendererDefaults({ ...input, nodeId });
     const created = seeded as PrismNode;
+    markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, created], isDirty: true }));
     return nodeId;
   },
 
   updateNode: (nodeId, patch) => {
+    markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, ...patch } : n)),
       isDirty: true,
@@ -136,6 +185,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   removeNode: (nodeId) => {
+    markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.filter((n) => n.nodeId !== nodeId),
       edges: s.edges.filter((e) => e.from !== nodeId && e.to !== nodeId),
@@ -144,18 +194,22 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   addEdge: (edge) => {
+    markGraphDirty(get);
     set((s) => ({ edges: [...s.edges, edge], isDirty: true }));
   },
 
   removeEdge: (predicate) => {
+    markGraphDirty(get);
     set((s) => ({ edges: s.edges.filter((e) => !predicate(e)), isDirty: true }));
   },
 
   addHub: (hub) => {
+    markGraphDirty(get);
     set((s) => ({ hubs: [...s.hubs, hub], isDirty: true }));
   },
 
   setScenePosition: (nodeId, patch) => {
+    markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => {
         if (n.nodeId !== nodeId) return n;
@@ -170,16 +224,25 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     }));
   },
 
-  markDirty: (dirty = true) => set({ isDirty: dirty }),
+  markDirty: (dirty = true) => {
+    if (dirty) {
+      markGraphDirty(get);
+    } else {
+      clearAutosaveTimer();
+    }
+    set({ isDirty: dirty });
+  },
 
   saveToServer: async () => {
     const s = get();
+    const saveVersion = dirtyVersion;
     // The server expects HomeHubJson shape: { schemaVersion, hub, nodes, edges }.
     // The store carries an array of hubs (the editor will eventually author
     // multi-hub graphs); persist the FIRST hub plus its nodes/edges. Legal
     // because the live-graph.json contract is single-hub today.
     const hub = s.hubs[0];
     if (!hub) {
+      set({ isDirty: true });
       return { ok: false, error: 'no hub to persist' };
     }
     const graph: HomeHubJson = {
@@ -196,22 +259,26 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         body: JSON.stringify({ action: 'persist', graph }),
       });
     } catch (err) {
+      set({ isDirty: true });
       return { ok: false, error: (err as Error).message };
     }
     if (!res.ok) {
       let body = '';
       try { body = await res.text(); } catch { /* ignore */ }
+      set({ isDirty: true });
       return { ok: false, error: `HTTP ${res.status}${body ? `: ${body.slice(0, 200)}` : ''}` };
     }
     let json: { ok?: boolean; regeneratedAt?: string; error?: string } = {};
     try { json = (await res.json()) as typeof json; } catch (err) {
+      set({ isDirty: true });
       return { ok: false, error: `invalid JSON: ${(err as Error).message}` };
     }
     if (json.ok !== true) {
+      set({ isDirty: true });
       return { ok: false, error: json.error ?? 'regen returned ok=false' };
     }
     const savedAt = json.regeneratedAt ?? new Date().toISOString();
-    set({ isDirty: false, savedAt });
+    set({ isDirty: dirtyVersion !== saveVersion, savedAt });
     return { ok: true, regeneratedAt: savedAt };
   },
 })));
