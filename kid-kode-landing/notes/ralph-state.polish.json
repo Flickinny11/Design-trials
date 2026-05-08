@@ -1,0 +1,133 @@
+{
+  "schemaVersion": "1.1",
+  "createdAt": "2026-05-06T20:55:00Z",
+  "updatedAt": "2026-05-06T20:55:00Z",
+  "currentIteration": 0,
+  "maxIterations": 30,
+  "maxIterationsPerPhase": 8,
+  "maxAttemptsPerTask": 3,
+  "status": "running",
+  "branch": "prism-main",
+  "project": "Prism Polish — Persistence + Camera + Flagship Hub",
+  "spec": {
+    "primary": "kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md",
+    "primitives": "kid-kode-landing/docs/prism/CINEMATIC-PRIMITIVES-LIBRARY.md",
+    "extract": "kid-kode-landing/notes/prism-renderer-spec-extract.md",
+    "amendments": [
+      "kid-kode-landing/notes/spec-amendments/0001-mask-based-repair-loop.md",
+      "kid-kode-landing/notes/spec-amendments/0002-hub-mockup-background.md"
+    ],
+    "plan": "/Users/loganbaird/.claude/plans/prism-polish-plan.md",
+    "vision": "kid-kode-landing/notes/prism-vision-context.md"
+  },
+  "convergence": {
+    "stagnantStreak": 0,
+    "lastProductiveIteration": 0,
+    "lastProductiveCommit": null,
+    "stagnantCeiling": 6
+  },
+  "phaseCaps": {
+    "§POL01": { "used": 0, "cap": 6, "status": "pending" },
+    "§POL02": { "used": 0, "cap": 6, "status": "pending" },
+    "§POL03": { "used": 0, "cap": 8, "status": "pending" }
+  },
+  "checkpoint": null,
+  "history": [],
+  "breakpoints": [],
+  "invariants": {
+    "lastBundleHash": null
+  },
+  "tasks": [
+    {
+      "id": "POL01",
+      "title": "Debounced auto-save: store mutations persist to .prism within 1s of last edit",
+      "phase": 1,
+      "specRefs": [
+        "Plan §POL01 — Persistence",
+        "Migration spec invariant 1 (the graph IS the app)"
+      ],
+      "haltCheck": "useGraphSourceStore.ts addNode/updateNode/removeNode/addEdge/removeEdge/setScenePosition all flip isDirty=true. A debounced (inline timer, no new dep) saveToServer fires ~1000ms after last mutation; rapid mutations coalesce. saveToServer failure leaves isDirty=true. KV: add a node via the editor's TopBar AddNode button; wait 2s; navigate away and back to the same URL; nodes.size is still elevated by 1. No new package in package.json.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npx vitest run --reporter=basic tests/unit/POL01",
+        "cd kid-kode-landing && npx playwright test tests/browser/add-node.spec.ts --reporter=list",
+        "cd kid-kode-landing && diff <(jq -r '.dependencies | keys[]' package.json | sort) <(git show HEAD~1:kid-kode-landing/package.json 2>/dev/null | jq -r '.dependencies | keys[]' 2>/dev/null | sort) || true",
+        "cd kid-kode-landing && grep -E 'addNode|updateNode|removeNode|setScenePosition' src/stores/useGraphSourceStore.ts | grep -E 'isDirty|markDirty' >/dev/null"
+      ],
+      "tddRequired": true,
+      "kvVerify": true,
+      "kvAsserts": [
+        "kv_navigate http://127.0.0.1:<port>/?view=editor",
+        "kv_wait_for canvas timeout 8000",
+        "kv_evaluate get window.__prismRenderer.adapterResult.nodes.size as before",
+        "kv_click [data-component=\"add-node-button\"]",
+        "kv_evaluate fill add-node-caption + add-node-subtype via React-friendly setter",
+        "kv_click [data-role=\"add-node-submit\"]",
+        "wait 2000ms",
+        "kv_navigate http://127.0.0.1:<port>/?view=editor (forces full reload)",
+        "kv_wait_for canvas timeout 8000",
+        "kv_evaluate get window.__prismRenderer.adapterResult.nodes.size === before + 1"
+      ],
+      "status": "pending",
+      "attemptCount": 0,
+      "notes": ""
+    },
+    {
+      "id": "POL02",
+      "title": "Editor camera framing: fresh /?view=editor shows home-hub nodes without clicking Galaxy/Home",
+      "phase": 2,
+      "specRefs": [
+        "Plan §POL02 — Camera regression"
+      ],
+      "haltCheck": "On first load of /?view=editor (KV navigate, sleep 3s, no clicks): at least 4 of the 6 home-hub node Groups have screen-space projections that intersect the editor canvas rectangle. HubNav.tsx Galaxy/Home buttons remain functional and unchanged. Bisect-first: identify the regressing commit by walking git log on useGraphEditorStore.ts, GraphScene.tsx, HubNav.tsx, mount-graph.ts before fixing.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && grep -q 'Galaxy' src/components/editor/overlays/HubNav.tsx",
+        "cd kid-kode-landing && grep -q 'Home' src/components/editor/overlays/HubNav.tsx",
+        "cd kid-kode-landing && npx vitest run --reporter=basic tests/unit"
+      ],
+      "tddRequired": false,
+      "kvVerify": true,
+      "kvAsserts": [
+        "kv_navigate http://127.0.0.1:<port>/?view=editor",
+        "kv_wait_for canvas timeout 8000",
+        "wait 3000ms (no interaction)",
+        "kv_evaluate: count node Groups whose world-position projects inside the editor canvas viewport rect; expect >= 4 of 6",
+        "kv_check_console level=error returns []",
+        "kv_screenshot full_page"
+      ],
+      "status": "pending",
+      "attemptCount": 0,
+      "notes": ""
+    },
+    {
+      "id": "POL03",
+      "title": "Flagship home-hub: ≥6 nodes exercising ≥5 cinematic primitives at production polish",
+      "phase": 3,
+      "specRefs": [
+        "CINEMATIC-PRIMITIVES-LIBRARY.md",
+        "Plan §POL03 — Flagship hub"
+      ],
+      "haltCheck": "public/prism-mock/home/live-graph.json: nodes parented to 'home' >= 6. Across all home-hub nodes, distinct cinematicPrimitives[].name values >= 5, drawn only from {parallax-scroll, depth-rotate, kinetic-text, magnetic-cursor, particle-emerge, dissolve-morph, orbit, fly-through, displacement-transition}. verify:prism 15/15. browser-smoke 6/6. KV /?view=preview: zero console errors, hub:home group has >= 7 children, screenshot >= 60 KB. Existing assets reused unless they visibly fail the polish bar; provision-assets re-run only with a recorded justification in task.notes.",
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run verify:prism",
+        "cd kid-kode-landing && node scripts/browser-smoke.mjs",
+        "cd kid-kode-landing && node --input-type=module -e \"import { readFileSync } from 'node:fs'; const j=JSON.parse(readFileSync('public/prism-mock/home/live-graph.json','utf8')); const home=j.nodes.filter(n=>n.parentHubId==='home'); if(home.length<6){console.error('home nodes='+home.length);process.exit(1)} const prims=new Set(); home.forEach(n=>(n.cinematicPrimitives||[]).forEach(p=>prims.add(p.name))); if(prims.size<5){console.error('distinct primitives='+prims.size+' set='+JSON.stringify([...prims]));process.exit(1)} console.log('home nodes='+home.length+' distinct primitives='+prims.size+' '+JSON.stringify([...prims]));\""
+      ],
+      "tddRequired": false,
+      "kvVerify": true,
+      "kvAsserts": [
+        "kv_navigate http://127.0.0.1:<port>/?view=preview",
+        "kv_wait_for canvas timeout 8000",
+        "wait 3000ms",
+        "kv_evaluate window.__prismRenderer.sceneRoot.scene.children.find(c=>c.name==='hub:home').children.length >= 7",
+        "kv_check_console level=error returns []",
+        "kv_screenshot full_page (saved bytes >= 60000)"
+      ],
+      "status": "pending",
+      "attemptCount": 0,
+      "notes": ""
+    }
+  ]
+}
