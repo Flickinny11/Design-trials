@@ -148,7 +148,7 @@ export async function mountFromGraphSource(
   // overrides (tests, editor previews) are honored as-is.
   const factory: CreateNodeFn =
     opts.createNode ?? buildPerNodeFactory(
-      (node, factoryCtx) => defaultRenderModeFactory(node, factoryCtx, { runPrimitives: true }),
+      (node, factoryCtx) => defaultRenderModeFactory(node, factoryCtx, { runPrimitives: true, nodeMaterials: false }),
     );
 
   const adapterResult = adaptGraphToScene(source, ctx, {
