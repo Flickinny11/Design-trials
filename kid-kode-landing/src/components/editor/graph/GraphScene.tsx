@@ -1050,7 +1050,6 @@ function AssembledSceneContent({
     const ctx = getSharedNodeContext({ runPrimitives: false });
     ctx.fontAtlas
       .load('/prism-assets/font-inter.msdf.png', '/prism-assets/font-inter.msdf.json')
-      .then(() => ctx.fontAtlas.warmupDefaultFactory?.())
       .catch((err) => {
         console.warn('[GraphScene] MSDF font atlas warmup failed:', (err as Error).message);
       })

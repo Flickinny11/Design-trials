@@ -115,7 +115,6 @@ export default function PrismHost({
           const ctx = getSharedNodeContext({ runPrimitives: true });
           try {
             await ctx.fontAtlas.load('/prism-assets/font-inter.msdf.png', '/prism-assets/font-inter.msdf.json');
-            await ctx.fontAtlas.warmupDefaultFactory?.();
           } catch (e) {
             console.warn('[PrismHost] MSDF font atlas warmup failed:', (e as Error).message);
           }

@@ -130,14 +130,10 @@ export function createFontAtlas(
       throw new Error('createText: font atlas not loaded — call load() first or supply preloaded option');
     }
     if (textFactory) return textFactory(content, opts, atlas, data);
-    // The default MSDF factory is async-loaded. Production bootstrap MUST
-    // call warmupDefaultFactory() before any node createNode() runs;
-    // otherwise the first frame returns a placeholder Group while the
-    // dynamic import resolves. Subsequent frames pick up the real factory
-    // automatically.
-    void defaultMSDFTextFactoryAsync().then((fac) => {
-      textFactory = fac;
-    });
+    // WebGL fallback canvases cannot compile the package's WebGPU
+    // NodeMaterial. Call warmupDefaultFactory() only from a WebGPU-capable
+    // bootstrap path; otherwise return a stable placeholder instead of
+    // asynchronously switching future calls onto an incompatible material.
     const placeholder = new Group();
     placeholder.name = `text:${content}`;
     return placeholder;
