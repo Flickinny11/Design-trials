@@ -112,8 +112,15 @@ export default function PrismHost({
           if (!ready) {
             throw new Error(useGraphSourceStore.getState().error ?? 'graph source failed to load');
           }
-          let prevSource = snapshotSource();
           const ctx = getSharedNodeContext({ runPrimitives: true });
+          try {
+            await ctx.fontAtlas.load('/prism-assets/font-inter.msdf.png', '/prism-assets/font-inter.msdf.json');
+            await ctx.fontAtlas.warmupDefaultFactory?.();
+          } catch (e) {
+            console.warn('[PrismHost] MSDF font atlas warmup failed:', (e as Error).message);
+          }
+          if (cancelled) return;
+          let prevSource = snapshotSource();
           liveResult = await mountFromGraphSource(canvas, prevSource, ctx, {
             width: initialW,
             height: initialH,

@@ -73,12 +73,9 @@ declare global {
   var __prismRenderer: PrismDebugHandle | undefined;
 }
 
-/** Lift a `CompiledGraph` (PixiJS-era manifest shape) onto the renderer-era
- *  `GraphSource`. Each node gains the 5 additive PrismNode fields with
- *  defaults; intent/visualSpec are passed through structurally. The compiled
- *  graph carries no scene data, so legacy graphs render in `sprite` mode at
- *  identity scenePosition. T07-T09 will source PrismNode directly from the
- *  graph editor (post-bundle reform). */
+/** Lift a bundled `CompiledGraph` onto the renderer-era `GraphSource`.
+ *  Renderer-era artifacts preserve renderMode / scenePosition / primitive
+ *  metadata directly; older artifacts still receive conservative defaults. */
 function compiledToGraphSource(graph: CompiledGraph): GraphSource {
   const hubs: PrismHub[] = graph.hubs.map((h) => ({
     hubId: h.hubId,
@@ -88,25 +85,29 @@ function compiledToGraphSource(graph: CompiledGraph): GraphSource {
       viewportHeight: h.layout.viewportHeight,
       contentHeight: h.layout.contentHeight,
       backgroundColor: h.layout.backgroundColor,
-      // Spec amendment 0002 — legacy CompiledGraph carries no hub mockup URL.
-      mockupUrl: null,
+      mockupUrl: (h as unknown as PrismHub).layout?.mockupUrl ?? null,
     },
   }));
-  const nodes: PrismNode[] = graph.nodes.map((n) => ({
-    nodeId: n.nodeId,
-    subtype: n.subtype,
-    parentHubId: n.parentHubId,
-    serviceTag: n.serviceTag,
-    visual: n.visual as unknown as PrismVisual,
-    intent: n.intent as unknown as PrismIntent,
-    codeRef: n.codeRef,
-    backendRef: n.backendRef ?? null,
-    renderMode: RENDER_MODE_DEFAULT,
-    depthMapUrl: null,
-    meshUrl: null,
-    cinematicPrimitives: [],
-    scenePosition: { ...SCENE_POSITION_DEFAULT },
-  }));
+  const nodes: PrismNode[] = graph.nodes.map((n) => {
+    const raw = n as unknown as Partial<PrismNode> & typeof n;
+    return {
+      nodeId: n.nodeId,
+      subtype: n.subtype,
+      parentHubId: n.parentHubId,
+      serviceTag: n.serviceTag,
+      visual: n.visual as unknown as PrismVisual,
+      intent: n.intent as unknown as PrismIntent,
+      codeRef: n.codeRef,
+      backendRef: n.backendRef ?? null,
+      renderMode: raw.renderMode ?? RENDER_MODE_DEFAULT,
+      depthMapUrl: raw.depthMapUrl ?? null,
+      meshUrl: raw.meshUrl ?? null,
+      cinematicPrimitives: raw.cinematicPrimitives ?? [],
+      scenePosition: raw.scenePosition
+        ? { ...SCENE_POSITION_DEFAULT, ...raw.scenePosition }
+        : { ...SCENE_POSITION_DEFAULT },
+    };
+  });
   const edges: PrismEdge[] = graph.edges.map((e) => ({
     from: e.from,
     to: e.to,

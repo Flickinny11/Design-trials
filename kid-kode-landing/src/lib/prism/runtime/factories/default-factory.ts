@@ -69,6 +69,15 @@ interface DisposableMaterial {
   colorNode?: unknown;
 }
 
+function visualPlaneSize(node: PrismNode): { width: number; height: number } {
+  const width = node.visual?.transform?.width;
+  const height = node.visual?.transform?.height;
+  return {
+    width: typeof width === 'number' && Number.isFinite(width) && width > 0 ? width : 1,
+    height: typeof height === 'number' && Number.isFinite(height) && height > 0 ? height : 1,
+  };
+}
+
 /** Spec §8: createNode is synchronous and returns Object3D. Async asset
  *  loads are kicked off here and assigned when they resolve. */
 export function defaultRenderModeFactory(
@@ -88,9 +97,10 @@ export function defaultRenderModeFactory(
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
   const useNodeMaterials = opts.nodeMaterials !== false;
+  const { width, height } = visualPlaneSize(node);
 
   if (renderMode === 'sprite' || renderMode === 'plane') {
-    const geo = new PlaneGeometry(1, 1);
+    const geo = new PlaneGeometry(width, height);
     const mat = useNodeMaterials
       ? new MeshBasicNodeMaterial({ transparent: true })
       : new MeshBasicMaterial({ transparent: true });
@@ -100,15 +110,6 @@ export function defaultRenderModeFactory(
         .then((tex) => {
           mat.map = tex;
           mat.needsUpdate = true;
-          if (renderMode === 'plane') {
-            // §6: plane sized to texture aspect ratio. Read the loaded
-            // image's natural dimensions when available.
-            const img = (tex as Texture & { image?: { width?: number; height?: number } }).image;
-            if (img && img.width && img.height && img.width > 0 && img.height > 0) {
-              const aspect = img.width / img.height;
-              group.scale.set(aspect * group.scale.x, group.scale.y, group.scale.z);
-            }
-          }
         })
         .catch(() => { /* swallow — decorative */ });
     }
@@ -118,7 +119,7 @@ export function defaultRenderModeFactory(
     materialsToDispose.push(mat as unknown as DisposableMaterial);
   } else if (renderMode === 'parallax-plane') {
     // §9.C — tessellated 64x64 plane + TSL displacement node.
-    const geo = new PlaneGeometry(1, 1, 64, 64);
+    const geo = new PlaneGeometry(width, height, 64, 64);
     const mat = useNodeMaterials
       ? new MeshStandardNodeMaterial({ transparent: true })
       : new MeshStandardMaterial({ transparent: true });
