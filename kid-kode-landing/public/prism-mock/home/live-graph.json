@@ -157,7 +157,7 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "orbit", "params": { "centerX": 0, "centerY": -1.6, "centerZ": 0, "radius": 1.4, "axisX": 0, "axisY": 0, "axisZ": 1, "period": 8, "faceCenter": true, "clockwise": true }, "trigger": "always" },
+        { "name": "orbit", "params": { "centerX": 0, "centerY": -1.6, "centerZ": 0, "radius": 1.4, "axisX": 0, "axisY": 0, "axisZ": 1, "period": 8, "faceCenter": true, "clockwise": true }, "trigger": "load" },
         { "name": "particle-emerge", "params": { "duration": 0.8, "particleCount": 60, "spread": 0.4 }, "trigger": "inview" }
       ],
       "scenePosition": { "x": -1.4, "y": -1.6, "z": 0.2, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }

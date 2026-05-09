@@ -412,7 +412,7 @@ function CodeTab({ node, frozen }: { node: any; frozen: boolean }) {
       <div className="grid grid-cols-2 gap-2 text-[10px] font-mono">
         <div className="px-2.5 py-2 rounded-lg bg-white/[0.025] border border-white/5">
           <div className="text-white/40 text-[9px] tracking-widest">IMPORTS</div>
-          <div className="text-white/75 mt-0.5">pixi.js, gsap</div>
+          <div className="text-white/75 mt-0.5">three/webgpu, gsap</div>
         </div>
         <div className="px-2.5 py-2 rounded-lg bg-white/[0.025] border border-white/5">
           <div className="text-white/40 text-[9px] tracking-widest">EXPORTS</div>
