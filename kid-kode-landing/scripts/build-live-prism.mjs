@@ -19,13 +19,15 @@ const msdfFnt = join(repoRoot, 'public', 'prism-assets', 'font-inter.msdf.fnt');
 const msdfJson = join(repoRoot, 'public', 'prism-assets', 'font-inter.msdf.json');
 
 const PRISM_VERSION = '0.1.0';
+const ZIP_DATE = new Date('2000-01-01T00:00:00.000Z');
+const DETERMINISTIC_CREATED_AT = '2000-01-01T00:00:00.000Z';
 
 function sha256(buf) {
   return createHash('sha256').update(buf).digest('hex');
 }
 
 function addBuffer(zip, entries, path, buf) {
-  zip.file(path, buf);
+  zip.file(path, buf, { date: ZIP_DATE, createFolders: false });
   entries.push({ path, sha256: sha256(buf), bytes: buf.length });
 }
 
@@ -101,7 +103,6 @@ async function main() {
       .map((e) => [e.path, { sha256: e.sha256, size: e.bytes }]),
   );
 
-  const builtAt = new Date().toISOString();
   const manifest = {
     prismVersion: PRISM_VERSION,
     playerVersionRequired: '>=0.1.0 <0.2.0',
@@ -121,17 +122,17 @@ async function main() {
     assets: assetsRegistry,
     entries,
     artifactHash,
-    createdAt: builtAt,
+    createdAt: DETERMINISTIC_CREATED_AT,
     generator: { engine: 'live-graph-renderer', version: '1.0' },
   };
   addBuffer(zip, entries, 'manifest.json', Buffer.from(JSON.stringify(manifest, null, 2) + '\n'));
-  zip.folder('meta').file('version.txt', PRISM_VERSION);
-  zip.folder('meta').file('generator.json', JSON.stringify({
+  addBuffer(zip, entries, 'meta/version.txt', Buffer.from(PRISM_VERSION));
+  addBuffer(zip, entries, 'meta/generator.json', Buffer.from(JSON.stringify({
     generator: 'live-graph-renderer',
     version: '1.0',
-    builtAt,
+    builtAt: DETERMINISTIC_CREATED_AT,
     nodeVersion: process.version,
-  }, null, 2) + '\n');
+  }, null, 2) + '\n'));
 
   const buf = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE', compressionOptions: { level: 9 } });
   writeFileSync(outPrism, buf);
