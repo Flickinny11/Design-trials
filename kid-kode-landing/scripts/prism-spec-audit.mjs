@@ -307,6 +307,7 @@ function scanActiveSources() {
   const nextDir = join(repoRoot, '.next');
   if (scanBundle && existsSync(nextDir)) {
     for (const file of walk(nextDir)) {
+      if (file.includes(`${join('.next', 'server', 'app', 'api')}`)) continue;
       if (file.endsWith('.js') || file.endsWith('.mjs')) {
         scanText(rel(file), readText(file));
       }
