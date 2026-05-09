@@ -30,7 +30,8 @@ import { useForceGraph, type SimNode, type SimLink } from '@/lib/useForceGraph';
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
-import type { PrismNode } from '@/lib/prism-graph/types';
+import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
+import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
 // Per-hub mockup texture cache — keyed by hubId so each hub textures its
 // hull from its own `hub.layout.mockupUrl` (Plan §P11 / Amendment 0002 §A.3).
@@ -781,10 +782,159 @@ function ControlsBridge({
   );
 }
 
+function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
+  const controlsRef = useRef<CameraControls>(null);
+  const setCameraDistance = useGraphEditorStore((s) => s.setCameraDistance);
+  const flyToNodeId = useGraphEditorStore((s) => s.flyToNodeId);
+  const resetSignal = useGraphEditorStore((s) => s.resetCameraSignal);
+  const clearFlyTarget = useGraphEditorStore((s) => s.clearFlyTarget);
+
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c) return;
+    c.setLookAt(0, 0, 10, 0, 0, 0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetSignal]);
+
+  useEffect(() => {
+    if (!flyToNodeId) return;
+    const node = nodes.find((n) => n.nodeId === flyToNodeId);
+    const c = controlsRef.current;
+    const sp = node?.scenePosition;
+    if (!node || !sp || !c) return;
+    c.setLookAt(sp.x, sp.y, sp.z + 5.5, sp.x, sp.y, sp.z, true).then(() => {
+      clearFlyTarget();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flyToNodeId, nodes]);
+
+  useFrame(() => {
+    const c = controlsRef.current;
+    if (!c) return;
+    setCameraDistance(c.distance);
+  });
+
+  return (
+    <CameraControls
+      ref={controlsRef}
+      minDistance={3}
+      maxDistance={80}
+      smoothTime={0.24}
+      draggingSmoothTime={0.12}
+      dollyToCursor
+      truckSpeed={1.1}
+      azimuthRotateSpeed={0.7}
+      polarRotateSpeed={0.7}
+      dollySpeed={0.75}
+      infinityDolly={false}
+    />
+  );
+}
+
+function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const mockupUrl = hub?.layout?.mockupUrl ?? null;
+
+  useEffect(() => {
+    if (!mockupUrl) {
+      setTexture(null);
+      return;
+    }
+    let cancelled = false;
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      mockupUrl,
+      (tex) => {
+        if (cancelled) {
+          tex.dispose();
+          return;
+        }
+        tex.colorSpace = THREE.SRGBColorSpace;
+        setTexture((prev) => {
+          prev?.dispose();
+          return tex;
+        });
+      },
+      undefined,
+      () => {
+        if (!cancelled) setTexture(null);
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [mockupUrl]);
+
+  useEffect(() => () => texture?.dispose(), [texture]);
+
+  const aspect = hub?.layout?.viewportWidth && hub?.layout?.viewportHeight
+    ? hub.layout.viewportWidth / hub.layout.viewportHeight
+    : 16 / 9;
+  const width = 10;
+  const height = width / aspect;
+
+  return (
+    <mesh position={[0, 0, -2]} name="hub:scene-backdrop">
+      <planeGeometry args={[width, height]} />
+      <meshBasicMaterial map={texture ?? undefined} color={texture ? '#ffffff' : '#07101f'} transparent opacity={1} toneMapped={false} />
+    </mesh>
+  );
+}
+
+function AssembledSceneNode({ node }: { node: PrismNode }) {
+  const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
+  const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
+  const selectNode = useGraphEditorStore((s) => s.selectNode);
+  const hoverNode = useGraphEditorStore((s) => s.hoverNode);
+  const openInspector = useGraphEditorStore((s) => s.openInspector);
+  const isSelected = selectedId === node.nodeId;
+  const isHovered = hoveredId === node.nodeId;
+  const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
+  const w = node.visual?.transform?.width ?? 0.35;
+  const h = node.visual?.transform?.height ?? 0.35;
+  const ringSize = Math.max(w, h, 0.25) * 0.62;
+
+  return (
+    <group
+      onClick={(e) => {
+        e.stopPropagation();
+        selectNode(node.nodeId);
+        openInspector();
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation();
+        hoverNode(node.nodeId);
+      }}
+      onPointerOut={() => hoverNode(null)}
+    >
+      <ArtifactNode node={node} layout="scene" />
+      {(isSelected || isHovered) && (
+        <mesh position={[sp.x, sp.y, sp.z + 0.08]}>
+          <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
+          <meshBasicMaterial color={isSelected ? '#8bb4ff' : '#55e6a5'} transparent opacity={0.85} toneMapped={false} />
+        </mesh>
+      )}
+    </group>
+  );
+}
+
+function AssembledSceneDiagnostics({ nodes }: { nodes: PrismNode[] }) {
+  useFrame(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    (window as any).__prismEditorDebug = {
+      mode: 'scene',
+      visibleHomeNodeCount: nodes.filter((node) => node.parentHubId === 'home').length,
+      visibleHomeNodeIds: nodes.filter((node) => node.parentHubId === 'home').map((node) => node.nodeId),
+      totalHomeNodeCount: nodes.filter((node) => node.parentHubId === 'home').length,
+    };
+  });
+  return null;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Scene content
 // ═══════════════════════════════════════════════════════════════════
-function SceneContent({
+function TopologySceneContent({
   onPerf,
 }: {
   onPerf: (factor: number) => void;
@@ -881,11 +1031,94 @@ function SceneContent({
   );
 }
 
+function AssembledSceneContent({
+  onPerf,
+}: {
+  onPerf: (factor: number) => void;
+}) {
+  const [fontReady, setFontReady] = useState(false);
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const qualityMode = useGraphEditorStore((s) => s.qualityMode);
+  const hub = sourceHubs.find((h) => h.hubId === activeHubId) ?? sourceHubs[0];
+  const nodes = sourceNodes.filter((node) => !hub || node.parentHubId === hub.hubId);
+  const usePost = qualityMode !== 'low';
+
+  useEffect(() => {
+    let cancelled = false;
+    const ctx = getSharedNodeContext({ runPrimitives: false });
+    ctx.fontAtlas
+      .load('/prism-assets/font-inter.msdf.png', '/prism-assets/font-inter.msdf.json')
+      .then(() => ctx.fontAtlas.warmupDefaultFactory?.())
+      .catch((err) => {
+        console.warn('[GraphScene] MSDF font atlas warmup failed:', (err as Error).message);
+      })
+      .finally(() => {
+        if (!cancelled) setFontReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <>
+      <ambientLight intensity={0.45} />
+      <directionalLight position={[4, 6, 8]} intensity={0.8} color="#e0edff" castShadow={false} />
+      <directionalLight position={[-4, -2, 5]} intensity={0.25} color="#ffdbb8" />
+      <SceneBackdrop hub={hub} />
+
+      {fontReady ? (
+        nodes.map((node) => <AssembledSceneNode key={node.nodeId} node={node} />)
+      ) : (
+        <Html center>
+          <div className="px-3 py-2 rounded-md border border-white/10 bg-black/60 text-[10px] font-mono text-white/65">
+            Warming renderer fonts
+          </div>
+        </Html>
+      )}
+
+      <AssembledSceneDiagnostics nodes={nodes} />
+      <SceneControlsBridge nodes={nodes} />
+
+      {usePost && (
+        <EffectComposer multisampling={0} stencilBuffer={false}>
+          <Bloom intensity={0.35} luminanceThreshold={0.55} luminanceSmoothing={0.9} mipmapBlur />
+          <SMAA />
+        </EffectComposer>
+      )}
+
+      <AdaptiveDpr pixelated={false} />
+      <PerformanceMonitor
+        onIncline={() => onPerf(2)}
+        onDecline={() => onPerf(1)}
+        bounds={(refreshrate) => (refreshrate > 90 ? [60, 90] : [45, 60])}
+      />
+    </>
+  );
+}
+
+function SceneContent({
+  onPerf,
+}: {
+  onPerf: (factor: number) => void;
+}) {
+  const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
+  return editorRenderMode === 'scene'
+    ? <AssembledSceneContent onPerf={onPerf} />
+    : <TopologySceneContent onPerf={onPerf} />;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Canvas wrapper
 // ═══════════════════════════════════════════════════════════════════
 export default function GraphScene() {
   const [dpr, setDpr] = useState<[number, number]>([1, 2]);
+  const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
+  const camera = editorRenderMode === 'scene'
+    ? { position: [0, 0, 10] as [number, number, number], fov: 45, near: 0.1, far: 2000 }
+    : { position: [0, 0, 320] as [number, number, number], fov: 50, near: 0.1, far: 2000 };
 
   return (
     <div className="absolute inset-0 overflow-hidden">
@@ -898,6 +1131,7 @@ export default function GraphScene() {
         }}
       />
       <Canvas
+        key={editorRenderMode}
         dpr={dpr}
         gl={{
           antialias: false,
@@ -905,7 +1139,7 @@ export default function GraphScene() {
           alpha: true,
           toneMapping: THREE.ACESFilmicToneMapping,
         }}
-        camera={{ position: [0, 0, 320], fov: 50, near: 0.1, far: 2000 }}
+        camera={camera}
       >
         <fog attach="fog" args={['#05060a', 300, 900]} />
         <Suspense fallback={null}>

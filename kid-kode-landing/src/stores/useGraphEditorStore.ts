@@ -6,6 +6,7 @@ import { subscribeWithSelector } from 'zustand/middleware';
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history';
 export type ViewMode = 'preview' | 'editor' | 'split';
+export type EditorRenderMode = 'scene' | 'topology';
 
 interface GraphEditorState {
   // View
@@ -13,6 +14,7 @@ interface GraphEditorState {
   cameraDistance: number;
   activeHubId: string | null;
   viewMode: ViewMode;
+  editorRenderMode: EditorRenderMode;
 
   // Selection — node and hub selection are mutually exclusive
   selectedNodeId: string | null;
@@ -51,6 +53,7 @@ interface GraphEditorState {
   setZoomLevel: (l: ZoomLevel) => void;
   setCameraDistance: (d: number) => void;
   setViewMode: (m: ViewMode) => void;
+  setEditorRenderMode: (m: EditorRenderMode) => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
@@ -78,6 +81,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     cameraDistance: 320,
     activeHubId: null,
     viewMode: 'split',
+    editorRenderMode: 'scene',
     selectedNodeId: null,
     selectedHubId: null,
     hoveredNodeId: null,
@@ -96,6 +100,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
     setViewMode: (m) => set({ viewMode: m }),
+    setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';

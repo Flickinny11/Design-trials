@@ -13,11 +13,10 @@
 //     that PrismHost uses in preview is reused here so authoring and runtime
 //     stay aligned.
 //
-// Two-coordinate-system reconciliation: editor uses force-graph positions
-// (from `useForceGraph`); preview uses `scenePosition`. In the editor view,
-// `scenePosition` is IGNORED — the parent React tree positions the
-// <primitive> via the surrounding <group position={[node.x, node.y, node.z]}>.
-// Documented in `docs/spec-deviations-prism.md`.
+// Two-coordinate-system reconciliation: topology mode uses force-graph
+// positions (from `useForceGraph`) and resets factory scenePosition on the
+// child. Scene mode preserves scenePosition so the editor can render the
+// assembled app view.
 //
 // Editor scaling: each ArtifactNode's <primitive> is wrapped in
 // `<group scale={[0.06, 0.06, 0.06]}>` so artifacts render small enough for
@@ -56,7 +55,7 @@ export function hasArtifactData(node: PrismNode): boolean {
 
 function buildEditorFactory(): CreateNodeFn {
   // Editor surfaces never run cinematic primitives — animations would fight
-  // the force-graph simulation and confuse authoring.
+  // the force-graph simulation and confuse topology authoring.
   const base: CreateNodeFn = (node, ctx) =>
     defaultRenderModeFactory(node, ctx, { runPrimitives: false, nodeMaterials: false });
   return buildPerNodeFactory(base);
@@ -72,8 +71,10 @@ function getEditorFactory(): CreateNodeFn {
  *  given PrismNode. Identity is keyed on `nodeId + codeRef` per Plan §P10:
  *  re-renders with an unchanged codeRef reuse the same Object3D so editor
  *  hot reloads don't tear and rebuild meshes. */
-export function resolveArtifactObject(node: PrismNode): Object3D {
-  const key = node.nodeId;
+export type ArtifactNodeLayout = 'topology' | 'scene';
+
+export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayout = 'topology'): Object3D {
+  const key = `${node.nodeId}|${layout}`;
   const codeRef = node.codeRef ?? '';
   const cached = cache.get(key);
   if (cached && cached.codeRef === codeRef) {
@@ -101,15 +102,13 @@ export function resolveArtifactObject(node: PrismNode): Object3D {
     object.userData.nodeId = node.nodeId;
     object.userData.cleanup = () => {};
   }
-  // Plan §P10 (line 233): "scenePosition is IGNORED in editor view —
-  // <primitive> is positioned by the parent <group position={[node.x,
-  // node.y, node.z]}>". Both `defaultRenderModeFactory` and
-  // `buildPerNodeFactory` (placeholder) apply scenePosition to the returned
-  // root; reset to identity so the parent force-graph position is the
-  // single source of truth in the editor.
-  object.position.set(0, 0, 0);
-  object.rotation.set(0, 0, 0);
-  object.scale.set(1, 1, 1);
+  if (layout === 'topology') {
+    // Topology view positions the artifact by the surrounding force-graph
+    // group. Reset the factory root so scenePosition does not compound.
+    object.position.set(0, 0, 0);
+    object.rotation.set(0, 0, 0);
+    object.scale.set(1, 1, 1);
+  }
   cache.set(key, { object, codeRef });
   return object;
 }
@@ -130,12 +129,14 @@ export function __resetArtifactNodeCache(): void {
 
 interface ArtifactNodeProps {
   node: PrismNode;
+  layout?: ArtifactNodeLayout;
 }
 
-export default function ArtifactNode({ node }: ArtifactNodeProps) {
-  const object = useMemo(() => resolveArtifactObject(node), [node.nodeId, node.codeRef]);
+export default function ArtifactNode({ node, layout = 'topology' }: ArtifactNodeProps) {
+  const object = useMemo(() => resolveArtifactObject(node, layout), [node.nodeId, node.codeRef, layout]);
+  const scale = layout === 'topology' ? 0.06 : 1;
   return (
-    <group scale={[0.06, 0.06, 0.06]}>
+    <group scale={[scale, scale, scale]}>
       <primitive object={object} />
     </group>
   );
