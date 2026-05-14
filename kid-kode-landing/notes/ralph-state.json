@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:57:25Z",
+  "updatedAt": "2026-05-14T23:05:10Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 7,
-    "lastProductiveCommit": "32c854bcd8eb76b2610a071dd1dcff540eb6154f"
+    "lastProductiveIteration": 8,
+    "lastProductiveCommit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 7,
-    "commit": "32c854bcd8eb76b2610a071dd1dcff540eb6154f",
-    "verifiedAt": "2026-05-14T22:55:05Z",
+    "iteration": 8,
+    "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
+    "verifiedAt": "2026-05-14T23:05:10Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:55:05Z"
+    "recordedAt": "2026-05-14T23:05:10Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -147,6 +147,14 @@
       "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
       "verifiedAt": "2026-05-14T22:43:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-03/"
+    },
+    {
+      "iteration": 8,
+      "taskId": "EB-02-04",
+      "phase": 2,
+      "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
+      "verifiedAt": "2026-05-14T23:05:10Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-04/"
     }
   ],
   "tasks": [
@@ -328,11 +336,11 @@
       ],
       "haltCheck": "When App_Name_World is selected, the Inspector renders a dedicated 'World' tab with read/write surfaces for spec/designSpec/buildPlan/memoryLog/hubRegistry/nodeRegistry/globalDependencies/validationRules/aiRoutingRules; existing tabs still visible.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
+      "verifiedAt": "2026-05-14T23:05:10Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) Inspector.tsx auto-route useEffect includes `tab` in deps — clicking a non-World tab while App_Name_World is selected snaps back to 'world' because the effect re-fires. Comment claims user can switch; implementation contradicts. Drop `tab` from deps or gate on a first-open ref. (2) WorldTab useEffect [root]-keyed re-sync wipes in-flight drafts on other fields after any one Save (every updateRootNode produces a new root object reference via rootNodes.map). Re-key on root.appNameWorldId or merge non-destructively. (3) Persistence gap: updateRootNode flips isDirty + schedules autosave, but saveToServer payload is { schemaVersion, hub, nodes, edges } only — rootNodes never threaded to /api/prism/regen, so World-tab edits are lost on reload. Either extend HomeHubJson additively (INV-18) or document the deferred persistence path. (4) SC-020 enumerates 7 tabs including 'history'; shipping TABS const carries only 6 — pre-existing gap, surfaces here because WORLD_TABS = ['world', ...TABS] inherits it. OPTIONAL: hoist D1_FIELD_KEYS to module scope; memoize per-field initial JSON.stringify if memoryLog/nodeRegistry grow; consider disabling rather than redirect-noting non-applicable tabs while App_Name_World is selected. Verification: 9/9 EB-02-04 vitest assertions pass; 55/56 across editor-build suite (the one remaining was the snapshot-dir gate, satisfied after verify-editor-runtimes wrote the dir); tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-05",
