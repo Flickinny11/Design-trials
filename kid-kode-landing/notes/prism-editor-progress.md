@@ -11,3 +11,4 @@ Rich detail (snapshots, state.json, verify.log) lives in
 - iter 3 - EB-01-03 phase 1 - store narrowed to ViewMode at field+setter; FP-12 confirmed armed; preview-hub baseline snapshot captured - 02039e7
 - iter 4 - EB-01-04 phase 1 - TopBar gates editorRenderMode scene|topology toggle behind viewMode === 'hub-world' (SC-004 / RA-06) - e52882b
 - iter 5 - EB-02-01 phase 2 - PrismRootNode interface (11 D1 fields) + validateRootNode + serializeRootNode/deserializeRootNode; GraphSource.rootNodes? additive (RA-07 / SC-005 / SC-006 / INV-18) - c6b134b
+- iter 6 - EB-02-02 phase 2 - seeded App_Name_World rootNode in home-hub.legacy.json + live-graph.json; HomeHubJson.rootNodes? + loader threading + build-prism artifact passthrough (SC-005 / SC-006 / INV-18 / RA-07) - 79b59b7
