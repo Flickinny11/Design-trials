@@ -7,3 +7,4 @@ Rich detail (snapshots, state.json, verify.log) lives in
 ## Ralph iterations
 
 - iter 1 - EB-01-01 phase 1 - canonical 5-mode ViewMode + LegacyViewMode alias + normalizeViewMode helper - 6718c43
+- iter 2 - EB-01-02 phase 1 - page+inspector migrated to canonical viewMode; 5-button toggle - 02d266c
