@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T21:03:42Z",
+  "updatedAt": "2026-05-14T21:14:56Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,11 +27,11 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 0,
-    "lastProductiveCommit": null
+    "lastProductiveIteration": 1,
+    "lastProductiveCommit": "6718c431b6f243cf6f11f2daa300ac51ef61c961"
   },
   "phaseCaps": {
-    "§1": { "used": 0, "cap": 50, "status": "active" },
+    "§1": { "used": 1, "cap": 50, "status": "active" },
     "§2": { "used": 0, "cap": 50, "status": "active" },
     "§3": { "used": 0, "cap": 50, "status": "active" },
     "§4": { "used": 0, "cap": 50, "status": "active" },
@@ -43,15 +43,24 @@
     "§10": { "used": 0, "cap": 50, "status": "active" }
   },
   "checkpoint": {
-    "iteration": 0,
-    "commit": null,
-    "verifiedAt": null,
+    "iteration": 1,
+    "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
+    "verifiedAt": "2026-05-14T21:14:56Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T20:25:00Z"
+    "recordedAt": "2026-05-14T21:14:56Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
-  "history": [],
+  "history": [
+    {
+      "iteration": 1,
+      "taskId": "EB-01-01",
+      "phase": 1,
+      "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
+      "verifiedAt": "2026-05-14T21:14:56Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-01/"
+    }
+  ],
   "tasks": [
     {
       "id": "EB-01-01",
@@ -66,11 +75,11 @@
       ],
       "haltCheck": "useGraphEditorStore.ts exports ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app'; legacy values may still appear as a transient alias during this task; tsc clean; verify-editor-runtimes captures outer/inner snapshots without runtime errors.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
+      "verifiedAt": "2026-05-14T21:14:56Z",
+      "notes": "SHOULD-FIX (do not block per /ralph-step): (1) Test file revised in same commit as impl after the initial committed-failing version over-claimed RA-06 runtime normalization (which the haltCheck assigns to EB-01-02); revised tests scope to EB-01-01's owned surface. (2) FP-12 in anti-drift hook is already armed today; the retained `viewMode: 'split'` initial state (line 118) means the next Edit/Write to useGraphEditorStore.ts will trip the hook. EB-01-02 must remap initial state via normalizeViewMode (or simply set 'canvas') as its first edit. OPTIONAL (deferred): rewrite normalizeViewMode as exhaustive switch; auto-normalize inside setViewMode."
     },
     {
       "id": "EB-01-02",
