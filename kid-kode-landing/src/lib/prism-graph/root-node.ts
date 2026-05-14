@@ -134,21 +134,113 @@ export interface RootNodeValidationResult {
 }
 
 /**
- * STUB — real implementation lands in Step 7. Throws so the failing-test
- * step (Step 6) records a runtime failure for every validator assertion.
+ * Validate that the GraphSource carries exactly one PrismRootNode (SC-006,
+ * RA-07). Returns a non-throwing result; callers decide whether the failure
+ * should be fatal at their layer. Loader/serializer paths surface the
+ * reason; runtime tooling treats `ok === false` as a hard invariant break.
  */
 export function validateRootNode(
-  _graph: GraphSource & { rootNodes?: PrismRootNode[] },
+  graph: GraphSource & { rootNodes?: PrismRootNode[] },
 ): RootNodeValidationResult {
-  throw new Error('validateRootNode: not implemented (EB-02-01 stub)');
+  const roots = graph?.rootNodes;
+  if (!Array.isArray(roots) || roots.length === 0) {
+    return {
+      ok: false,
+      root: null,
+      reason:
+        'GraphSource is missing rootNodes — exactly one PrismRootNode is required (SC-006).',
+    };
+  }
+  if (roots.length > 1) {
+    return {
+      ok: false,
+      root: null,
+      reason: `GraphSource carries ${roots.length} PrismRootNode instances — exactly one is required (SC-006).`,
+    };
+  }
+  const [root] = roots;
+  if (
+    !root ||
+    typeof root !== 'object' ||
+    typeof (root as PrismRootNode).appNameWorldId !== 'string' ||
+    (root as PrismRootNode).appNameWorldId.length === 0
+  ) {
+    return {
+      ok: false,
+      root: null,
+      reason: 'PrismRootNode is missing or has no appNameWorldId.',
+    };
+  }
+  return { ok: true, root: root as PrismRootNode, reason: null };
 }
 
-/** STUB — real implementation lands in Step 7. */
-export function serializeRootNode(_root: PrismRootNode): string {
-  throw new Error('serializeRootNode: not implemented (EB-02-01 stub)');
+/**
+ * Serialize a PrismRootNode to canonical JSON. Field order is fixed so that
+ * round-trips through deserializeRootNode → serializeRootNode produce a
+ * byte-identical string (test in EB-02-01 asserts this). Stable ordering
+ * matters once we hash compiled views (Phase 6) and graph snapshots
+ * (Phase 10).
+ */
+export function serializeRootNode(root: PrismRootNode): string {
+  const canonical: PrismRootNode = {
+    appNameWorldId: root.appNameWorldId,
+    spec: root.spec,
+    designSpec: root.designSpec,
+    buildPlan: root.buildPlan,
+    memoryLog: root.memoryLog,
+    hubRegistry: root.hubRegistry,
+    nodeRegistry: root.nodeRegistry,
+    globalDependencies: root.globalDependencies,
+    validationRules: root.validationRules,
+    aiRoutingRules: root.aiRoutingRules,
+    capabilityRefs: root.capabilityRefs,
+  };
+  return JSON.stringify(canonical);
 }
 
-/** STUB — real implementation lands in Step 7. */
-export function deserializeRootNode(_json: string): PrismRootNode {
-  throw new Error('deserializeRootNode: not implemented (EB-02-01 stub)');
+/**
+ * Inverse of serializeRootNode. Throws on malformed JSON or on a payload
+ * that doesn't have the 11 D1 fields. The shape check is shallow on
+ * purpose — the field-value types are tightened by later Phase 2 tasks.
+ */
+export function deserializeRootNode(json: string): PrismRootNode {
+  const raw = JSON.parse(json) as unknown;
+  if (!raw || typeof raw !== 'object') {
+    throw new Error('deserializeRootNode: payload is not an object.');
+  }
+  const r = raw as Record<string, unknown>;
+  if (typeof r.appNameWorldId !== 'string' || r.appNameWorldId.length === 0) {
+    throw new Error('deserializeRootNode: missing appNameWorldId.');
+  }
+  for (const arrField of [
+    'memoryLog',
+    'hubRegistry',
+    'nodeRegistry',
+    'globalDependencies',
+    'validationRules',
+    'aiRoutingRules',
+    'capabilityRefs',
+  ] as const) {
+    if (!Array.isArray(r[arrField])) {
+      throw new Error(`deserializeRootNode: ${arrField} must be an array.`);
+    }
+  }
+  for (const objField of ['spec', 'designSpec', 'buildPlan'] as const) {
+    if (!r[objField] || typeof r[objField] !== 'object') {
+      throw new Error(`deserializeRootNode: ${objField} must be an object.`);
+    }
+  }
+  return {
+    appNameWorldId: r.appNameWorldId,
+    spec: r.spec as AppSpec,
+    designSpec: r.designSpec as DesignSpec,
+    buildPlan: r.buildPlan as BuildPlan,
+    memoryLog: r.memoryLog as MemoryLogEntry[],
+    hubRegistry: r.hubRegistry as HubRegistryEntry[],
+    nodeRegistry: r.nodeRegistry as NodeRegistryEntry[],
+    globalDependencies: r.globalDependencies as GlobalDependency[],
+    validationRules: r.validationRules as ValidationRule[],
+    aiRoutingRules: r.aiRoutingRules as AiRoutingRule[],
+    capabilityRefs: r.capabilityRefs as CapabilityRef[],
+  };
 }
