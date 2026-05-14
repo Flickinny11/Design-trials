@@ -10,6 +10,7 @@ export default function TopBar() {
   const zoomLevel = useGraphEditorStore((s) => s.zoomLevel);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
   const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
   const setEditorRenderMode = useGraphEditorStore((s) => s.setEditorRenderMode);
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
@@ -58,28 +59,31 @@ export default function TopBar() {
 
         <div className="w-px h-6 bg-white/10" />
 
-        <div className="flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.035] p-0.5">
-          {([
-            { id: 'scene', icon: 'grid', label: 'Scene' },
-            { id: 'topology', icon: 'flow', label: 'Topology' },
-          ] as const).map((mode) => {
-            const active = editorRenderMode === mode.id;
-            return (
-              <button
-                key={mode.id}
-                type="button"
-                onClick={() => setEditorRenderMode(mode.id)}
-                className={`h-7 px-2 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
-                  active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white hover:bg-white/5'
-                }`}
-                title={mode.label}
-              >
-                <Icon name={mode.icon} size={10} color={active ? '#8bb4ff' : '#b5bddf'} />
-                <span className="hidden xl:inline">{mode.label}</span>
-              </button>
-            );
-          })}
-        </div>
+        {/* SC-004 / RA-06: editorRenderMode is a hub-world sub-toggle. */}
+        {viewMode === 'hub-world' && (
+          <div className="flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.035] p-0.5">
+            {([
+              { id: 'scene', icon: 'grid', label: 'Scene' },
+              { id: 'topology', icon: 'flow', label: 'Topology' },
+            ] as const).map((mode) => {
+              const active = editorRenderMode === mode.id;
+              return (
+                <button
+                  key={mode.id}
+                  type="button"
+                  onClick={() => setEditorRenderMode(mode.id)}
+                  className={`h-7 px-2 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+                    active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white hover:bg-white/5'
+                  }`}
+                  title={mode.label}
+                >
+                  <Icon name={mode.icon} size={10} color={active ? '#8bb4ff' : '#b5bddf'} />
+                  <span className="hidden xl:inline">{mode.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="flex items-center gap-1.5 text-[11px] font-mono">
           <button
