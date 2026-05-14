@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:25:00Z",
+  "updatedAt": "2026-05-14T22:24:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "9b0ac887cf909d405b80ac019b4e0553d1c8952a"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "79b59b7feffab1080b76ad0514672b3ecfc09e01"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 5,
-    "commit": "9b0ac887cf909d405b80ac019b4e0553d1c8952a",
-    "verifiedAt": "2026-05-14T22:12:37Z",
+    "iteration": 6,
+    "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
+    "verifiedAt": "2026-05-14T22:24:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:12:37Z"
+    "recordedAt": "2026-05-14T22:24:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -131,6 +131,14 @@
       "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
       "verifiedAt": "2026-05-14T22:13:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-01/"
+    },
+    {
+      "iteration": 6,
+      "taskId": "EB-02-02",
+      "phase": 2,
+      "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
+      "verifiedAt": "2026-05-14T22:24:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-02/"
     }
   ],
   "tasks": [
@@ -268,11 +276,11 @@
       ],
       "haltCheck": "home-hub.legacy.json (the build-time fixture; renamed from home-hub.json by HL03 / Plan §P4) contains exactly one rootNodes entry of type App_Name_World; the live-graph fixture under public/prism-mock/home/live-graph.json carries the same entry so the runtime store sees rootNodes after fetch; loader threads rootNodes through to GraphSource; validateRootNode returns ok=true on the loaded graph.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
+      "verifiedAt": "2026-05-14T22:24:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) loader.ts duplicates the rootNodes-threading pattern across loadFromHomeHub + loadFromPrismArtifact; a small pickRootNodes(json) helper would prevent future divergence. (2) The two seed fixtures intentionally use different spec.name values (legacy: 'Voltus' build-time mock; live: 'PrismLive' harness lock-in seed) but share appNameWorldId='app-name-world-home' — divergence is by design (each fixture seeds its own app's content) but worth a comment. (3) hubRegistry hubId values differ ('home-hub' in legacy matches its hub.hubId; 'home' in live matches its hub.hubId) — both correct, just verified. OPTIONAL: (a) trim the build-prism.mjs JSDoc to one line; (b) inline the loader rootNodes assignment as a single ternary on the object literal. Verification: 7/7 EB-02-02 vitest assertions pass; 42/42 across editor-build + HL03 store-init suites; tsc clean; both legacy and live fixture root-count probes return 1; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-03",
