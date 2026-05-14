@@ -20,6 +20,7 @@ import type {
   PrismEdge,
   PrismHub,
   PrismNode,
+  PrismRootNode,
   ScenePosition,
 } from '@/lib/prism-graph/types';
 import { loadFromHomeHub, loadFromHomeHubFile } from '@/lib/prism-graph/loader';
@@ -35,6 +36,12 @@ interface GraphSourceState {
   hubs: PrismHub[];
   nodes: PrismNode[];
   edges: PrismEdge[];
+  // Editor-build §6 / RA-07: App_Name_World instances co-exist with PrismNode
+  // in GraphSource. SC-006 constrains this to exactly one entry; validation
+  // lives in validateRootNode (src/lib/prism-graph/root-node.ts). Surfaced on
+  // the store so GraphScene's galaxy mode can render the central "sun"
+  // without re-parsing JSON.
+  rootNodes: PrismRootNode[];
   ready: boolean;
   error: string | null;
   isDirty: boolean;
@@ -113,6 +120,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   hubs: EMPTY.hubs,
   nodes: EMPTY.nodes,
   edges: EMPTY.edges,
+  rootNodes: [],
   ready: false,
   error: null,
   isDirty: false,
@@ -125,6 +133,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         hubs: graph.hubs,
         nodes: graph.nodes,
         edges: graph.edges,
+        rootNodes: graph.rootNodes ?? [],
         ready: true,
         error: null,
         isDirty: false,
@@ -143,6 +152,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         hubs: graph.hubs,
         nodes: graph.nodes,
         edges: graph.edges,
+        rootNodes: graph.rootNodes ?? [],
         ready: true,
         error: null,
         isDirty: false,
@@ -159,6 +169,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
       hubs: [],
       nodes: [],
       edges: [],
+      rootNodes: [],
       ready: false,
       error: null,
       isDirty: false,

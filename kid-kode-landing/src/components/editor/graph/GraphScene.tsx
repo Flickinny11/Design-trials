@@ -508,6 +508,82 @@ function HubHull({
   );
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// WorldSun — the App_Name_World central object in galaxy mode (SC-012).
+// Renders only when viewMode === 'galaxy'. Clicking sets selectedNodeId to
+// the PrismRootNode.appNameWorldId and opens the inspector (per haltCheck).
+// Hub orbit positions around this sun are owned by EB-03-01; this task ships
+// the central object + click target only.
+// ═══════════════════════════════════════════════════════════════════
+function WorldSun() {
+  const groupRef = useRef<THREE.Group>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+  const haloRef = useRef<THREE.Mesh>(null);
+  const rootNodes = useGraphSourceStore((s) => s.rootNodes);
+  const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
+  const selectNode = useGraphEditorStore((s) => s.selectNode);
+  const openInspector = useGraphEditorStore((s) => s.openInspector);
+
+  const root = rootNodes[0];
+
+  useFrame((state, delta) => {
+    if (coreRef.current) {
+      coreRef.current.rotation.y += delta * 0.12;
+      const mat = coreRef.current.material as THREE.MeshStandardMaterial;
+      const pulse = (Math.sin(state.clock.elapsedTime * 0.7) + 1) * 0.5;
+      mat.emissiveIntensity = 1.6 + pulse * 0.4;
+    }
+    if (haloRef.current) {
+      haloRef.current.rotation.z += delta * 0.18;
+    }
+  });
+
+  if (!root) return null;
+  const isSelected = selectedId === root.appNameWorldId;
+  const radius = 14;
+
+  return (
+    <group
+      ref={groupRef}
+      position={[0, 0, 0]}
+      onPointerOver={() => {
+        document.body.style.cursor = 'pointer';
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'default';
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        selectNode(root.appNameWorldId);
+        openInspector();
+      }}
+    >
+      <mesh ref={coreRef}>
+        <sphereGeometry args={[radius, 96, 96]} />
+        <meshStandardMaterial
+          color="#ffd966"
+          emissive={new THREE.Color('#ffb24a')}
+          emissiveIntensity={1.6}
+          roughness={0.32}
+          metalness={0.0}
+          toneMapped={false}
+        />
+      </mesh>
+      <mesh ref={haloRef} rotation={[Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[radius * 1.18, radius * 1.32, 96]} />
+        <meshBasicMaterial
+          color={isSelected ? '#fff1a8' : '#ffd966'}
+          transparent
+          opacity={isSelected ? 0.85 : 0.55}
+          side={THREE.DoubleSide}
+          toneMapped={false}
+        />
+      </mesh>
+      <pointLight color="#ffd966" intensity={3.2} distance={260} decay={1.8} />
+    </group>
+  );
+}
+
 function HubHulls({
   hubs,
   hubCenters,
@@ -943,6 +1019,7 @@ function TopologySceneContent({
   const resetSignal = useGraphEditorStore((s) => s.resetCameraSignal);
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const qualityMode = useGraphEditorStore((s) => s.qualityMode);
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -978,6 +1055,12 @@ function TopologySceneContent({
       <directionalLight position={[120, 120, 100]} intensity={0.5} color="#e0edff" castShadow={false} />
       <directionalLight position={[-100, -60, -100]} intensity={0.25} color="#ffdbb8" />
       <Environment preset="night" environmentIntensity={0.55} />
+
+      {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
+          EB-03-01 will orbit the existing hub hulls around this sun; for now
+          the hulls keep their current positions and the sun is added on top
+          as a click target. */}
+      {viewMode === 'galaxy' && <WorldSun />}
 
       <HubHulls hubs={editorGraph.hubs} hubCenters={hubCenters} simNodes={simNodes} />
 
