@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 1,
+  "currentIteration": 2,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T21:14:56Z",
+  "updatedAt": "2026-05-14T21:30:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,26 +28,66 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 1,
-    "lastProductiveCommit": "6718c431b6f243cf6f11f2daa300ac51ef61c961"
+    "lastProductiveCommit": "4398da773ee1fcaa7a61154d4f47123130a7a3d4"
   },
   "phaseCaps": {
-    "§1": { "used": 1, "cap": 50, "status": "active" },
-    "§2": { "used": 0, "cap": 50, "status": "active" },
-    "§3": { "used": 0, "cap": 50, "status": "active" },
-    "§4": { "used": 0, "cap": 50, "status": "active" },
-    "§5": { "used": 0, "cap": 50, "status": "active" },
-    "§6": { "used": 0, "cap": 50, "status": "active" },
-    "§7": { "used": 0, "cap": 50, "status": "active" },
-    "§8": { "used": 0, "cap": 50, "status": "active" },
-    "§9": { "used": 0, "cap": 50, "status": "active" },
-    "§10": { "used": 0, "cap": 50, "status": "active" }
+    "§1": {
+      "used": 2,
+      "cap": 50,
+      "status": "active"
+    },
+    "§2": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§3": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§4": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§5": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§6": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§7": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§8": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§9": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§10": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    }
   },
   "checkpoint": {
     "iteration": 1,
-    "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
-    "verifiedAt": "2026-05-14T21:14:56Z",
+    "commit": "4398da773ee1fcaa7a61154d4f47123130a7a3d4",
+    "verifiedAt": "2026-05-14T21:26:25Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T21:14:56Z"
+    "recordedAt": "2026-05-14T21:26:25Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -66,7 +106,11 @@
       "id": "EB-01-01",
       "title": "Add canonical 5-mode ViewMode type (additive)",
       "phase": 1,
-      "specRefs": ["§1 SC-001", "§1 INV-20", "§1 RA-06"],
+      "specRefs": [
+        "§1 SC-001",
+        "§1 INV-20",
+        "§1 RA-06"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -85,7 +129,12 @@
       "id": "EB-01-02",
       "title": "Migrate page.tsx + TopBar + HubNav to canonical viewMode + RA-06 mapping",
       "phase": 1,
-      "specRefs": ["§1 SC-001", "§1 SC-002", "§1 INV-20", "§1 RA-06"],
+      "specRefs": [
+        "§1 SC-001",
+        "§1 SC-002",
+        "§1 INV-20",
+        "§1 RA-06"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -94,8 +143,8 @@
       ],
       "haltCheck": "Toggling all 5 modes via the UI preserves selectedNodeId, selectedHubId; snapshot state.json at EB-01-02 records the mode round-trip. Legacy 'preview'|'editor'|'split' strings still allowed as aliases this task; FP-12 not yet armed against them.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
@@ -104,7 +153,12 @@
       "id": "EB-01-03",
       "title": "Remove legacy viewMode literals; arm FP-12; baseline preview-hub snapshot",
       "phase": 1,
-      "specRefs": ["§1 SC-002", "§1 SC-003", "§1 FP-12", "§1 INV-20"],
+      "specRefs": [
+        "§1 SC-002",
+        "§1 SC-003",
+        "§1 FP-12",
+        "§1 INV-20"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -125,7 +179,10 @@
       "id": "EB-01-04",
       "title": "Wire editorRenderMode (scene|topology) as sub-toggle within hub-world",
       "phase": 1,
-      "specRefs": ["§1 SC-004", "§1 RA-06"],
+      "specRefs": [
+        "§1 SC-004",
+        "§1 RA-06"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -144,7 +201,11 @@
       "id": "EB-02-01",
       "title": "Define PrismRootNode interface + serializer + validator (additive)",
       "phase": 2,
-      "specRefs": ["§2 SC-005", "§2 INV-18", "§2 RA-07"],
+      "specRefs": [
+        "§2 SC-005",
+        "§2 INV-18",
+        "§2 RA-07"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -162,7 +223,10 @@
       "id": "EB-02-02",
       "title": "Insert App_Name_World instance in home-hub fixture; uniqueness assertion",
       "phase": 2,
-      "specRefs": ["§2 SC-005", "§2 SC-006"],
+      "specRefs": [
+        "§2 SC-005",
+        "§2 SC-006"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -180,7 +244,10 @@
       "id": "EB-02-03",
       "title": "Render App_Name_World in galaxy mode (basic geometry + click target)",
       "phase": 2,
-      "specRefs": ["§2 SC-005", "§3 SC-012"],
+      "specRefs": [
+        "§2 SC-005",
+        "§3 SC-012"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -199,7 +266,10 @@
       "id": "EB-02-04",
       "title": "App_Name_World inspector tab — surfaces D1 fields; existing tabs preserved",
       "phase": 2,
-      "specRefs": ["§2 SC-007", "§4 SC-020"],
+      "specRefs": [
+        "§2 SC-007",
+        "§4 SC-020"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -218,7 +288,12 @@
       "id": "EB-02-05",
       "title": "Server-only secrets vault (store + resolve + audit log)",
       "phase": 2,
-      "specRefs": ["§2 SC-008", "§2 INV-19", "§2 FP-06", "§2 FP-07"],
+      "specRefs": [
+        "§2 SC-008",
+        "§2 INV-19",
+        "§2 FP-06",
+        "§2 FP-07"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -237,7 +312,10 @@
       "id": "EB-02-06",
       "title": "capabilityRefs field on PrismRootNode + PrismNode; inspector capability picker",
       "phase": 2,
-      "specRefs": ["§2 SC-009", "§2 INV-18"],
+      "specRefs": [
+        "§2 SC-009",
+        "§2 INV-18"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -256,7 +334,12 @@
       "id": "EB-02-07",
       "title": "Client-bundle secret-leak integration test",
       "phase": 2,
-      "specRefs": ["§2 SC-010", "§2 SC-011", "§2 INV-19", "§2 FP-06"],
+      "specRefs": [
+        "§2 SC-010",
+        "§2 SC-011",
+        "§2 INV-19",
+        "§2 FP-06"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npm run build",
@@ -275,7 +358,9 @@
       "id": "EB-03-01",
       "title": "Galaxy mode — deterministic hub orbit around App_Name_World",
       "phase": 3,
-      "specRefs": ["§3 SC-012"],
+      "specRefs": [
+        "§3 SC-012"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -294,7 +379,9 @@
       "id": "EB-03-02",
       "title": "Galaxy mode — size-by-complexity rule",
       "phase": 3,
-      "specRefs": ["§3 SC-013"],
+      "specRefs": [
+        "§3 SC-013"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -312,7 +399,9 @@
       "id": "EB-03-03",
       "title": "Galaxy mode — zoom-based label LOD",
       "phase": 3,
-      "specRefs": ["§3 SC-014"],
+      "specRefs": [
+        "§3 SC-014"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -330,7 +419,10 @@
       "id": "EB-03-04",
       "title": "Galaxy mode — reason-colored animated tether lines",
       "phase": 3,
-      "specRefs": ["§3 SC-015", "§3 RA-15"],
+      "specRefs": [
+        "§3 SC-015",
+        "§3 RA-15"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -349,7 +441,9 @@
       "id": "EB-03-05",
       "title": "Galaxy mode — global filter overlay + greyed non-matches",
       "phase": 3,
-      "specRefs": ["§3 SC-016"],
+      "specRefs": [
+        "§3 SC-016"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -368,7 +462,9 @@
       "id": "EB-03-06",
       "title": "Galaxy mode — multi-select (shift-click) + group inspector",
       "phase": 3,
-      "specRefs": ["§3 SC-017"],
+      "specRefs": [
+        "§3 SC-017"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -387,7 +483,10 @@
       "id": "EB-04-01",
       "title": "Drill-in: flyToHub + content reveal animation sequence",
       "phase": 4,
-      "specRefs": ["§4 SC-018", "§4 SC-019"],
+      "specRefs": [
+        "§4 SC-018",
+        "§4 SC-019"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -406,7 +505,9 @@
       "id": "EB-04-02",
       "title": "Node-click → inspector with all tabs preserved across modes",
       "phase": 4,
-      "specRefs": ["§4 SC-020"],
+      "specRefs": [
+        "§4 SC-020"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -424,7 +525,9 @@
       "id": "EB-04-03",
       "title": "Intra-hub zoom-based label LOD",
       "phase": 4,
-      "specRefs": ["§4 SC-021"],
+      "specRefs": [
+        "§4 SC-021"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -442,7 +545,11 @@
       "id": "EB-04-04",
       "title": "Selection + camera-pose 5-mode round-trip regression",
       "phase": 4,
-      "specRefs": ["§4 SC-018", "§1 SC-002", "§1 INV-20"],
+      "specRefs": [
+        "§4 SC-018",
+        "§1 SC-002",
+        "§1 INV-20"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -460,7 +567,10 @@
       "id": "EB-05-01",
       "title": "Canvas mode — deterministic center/face camera pose",
       "phase": 5,
-      "specRefs": ["§5 SC-022", "§5 SC-024"],
+      "specRefs": [
+        "§5 SC-022",
+        "§5 SC-024"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -478,7 +588,9 @@
       "id": "EB-05-02",
       "title": "Canvas mode — viewport frame overlay + safe-area bounds",
       "phase": 5,
-      "specRefs": ["§5 SC-023"],
+      "specRefs": [
+        "§5 SC-023"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -496,7 +608,10 @@
       "id": "EB-05-03",
       "title": "Per-node transform handles (translate/rotate/scale) in canvas mode",
       "phase": 5,
-      "specRefs": ["§5 SC-025", "§8 SC-042"],
+      "specRefs": [
+        "§5 SC-025",
+        "§8 SC-042"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -514,7 +629,9 @@
       "id": "EB-05-04",
       "title": "Inspector + keyframe tools reachable from canvas mode",
       "phase": 5,
-      "specRefs": ["§5 SC-026"],
+      "specRefs": [
+        "§5 SC-026"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -532,7 +649,10 @@
       "id": "EB-05-05",
       "title": "Canvas ↔ hub-world round-trip — selection + camera-pose persistence",
       "phase": 5,
-      "specRefs": ["§5 SC-027", "§1 INV-20"],
+      "specRefs": [
+        "§5 SC-027",
+        "§1 INV-20"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -550,7 +670,10 @@
       "id": "EB-06-01",
       "title": "CompiledHubView type + compileHubToPreview skeleton",
       "phase": 6,
-      "specRefs": ["§6 SC-028", "§6 INV-17"],
+      "specRefs": [
+        "§6 SC-028",
+        "§6 INV-17"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -569,7 +692,9 @@
       "id": "EB-06-02",
       "title": "Anchor rule table (compile-anchors.ts)",
       "phase": 6,
-      "specRefs": ["§6 SC-031"],
+      "specRefs": [
+        "§6 SC-031"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -587,7 +712,11 @@
       "id": "EB-06-03",
       "title": "compileHubToPreview pure deterministic implementation",
       "phase": 6,
-      "specRefs": ["§6 SC-029", "§6 INV-17", "§6 FP-04"],
+      "specRefs": [
+        "§6 SC-029",
+        "§6 INV-17",
+        "§6 FP-04"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -605,7 +734,10 @@
       "id": "EB-06-04",
       "title": "Source-graph immutability proof through compile",
       "phase": 6,
-      "specRefs": ["§6 SC-030", "§6 INV-17"],
+      "specRefs": [
+        "§6 SC-030",
+        "§6 INV-17"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit"
@@ -622,7 +754,10 @@
       "id": "EB-06-05",
       "title": "Cinematic camera rail (CompiledHubView.cameraRail)",
       "phase": 6,
-      "specRefs": ["§6 SC-032", "§5 INV-23"],
+      "specRefs": [
+        "§6 SC-032",
+        "§5 INV-23"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -640,7 +775,9 @@
       "id": "EB-06-06",
       "title": "Viewport-relative background in preview-hub",
       "phase": 6,
-      "specRefs": ["§6 SC-033"],
+      "specRefs": [
+        "§6 SC-033"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -658,7 +795,9 @@
       "id": "EB-06-07",
       "title": "Editor-clutter hide layer in preview-hub mode",
       "phase": 6,
-      "specRefs": ["§6 SC-034"],
+      "specRefs": [
+        "§6 SC-034"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -676,7 +815,11 @@
       "id": "EB-07-01",
       "title": "PrismHubBackgroundLayer type + PrismHub.background field (additive)",
       "phase": 7,
-      "specRefs": ["§7 SC-036", "§7 SC-037", "§7 INV-18"],
+      "specRefs": [
+        "§7 SC-036",
+        "§7 SC-037",
+        "§7 INV-18"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -694,7 +837,9 @@
       "id": "EB-07-02",
       "title": "Renderer composes background layer stack per attachment mode",
       "phase": 7,
-      "specRefs": ["§7 SC-036"],
+      "specRefs": [
+        "§7 SC-036"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -712,7 +857,10 @@
       "id": "EB-07-03",
       "title": "Scale-to-cover + env-fog edge fill (no blank scene edges)",
       "phase": 7,
-      "specRefs": ["§7 SC-038", "§5 INV-23"],
+      "specRefs": [
+        "§7 SC-038",
+        "§5 INV-23"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -730,7 +878,10 @@
       "id": "EB-07-04",
       "title": "useScrollTimeline + scrollBinding consumer",
       "phase": 7,
-      "specRefs": ["§7 SC-039", "§7 SC-040"],
+      "specRefs": [
+        "§7 SC-039",
+        "§7 SC-040"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -748,7 +899,10 @@
       "id": "EB-08-01",
       "title": "Additive transform fields (editorTransform, canvasTransform, etc.) on PrismNode",
       "phase": 8,
-      "specRefs": ["§8 SC-041", "§8 INV-18"],
+      "specRefs": [
+        "§8 SC-041",
+        "§8 INV-18"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -767,7 +921,11 @@
       "id": "EB-08-02",
       "title": "PrismKeyframe type with required coordinateSpace discriminator",
       "phase": 8,
-      "specRefs": ["§8 SC-043", "§8 INV-21", "§8 FP-08"],
+      "specRefs": [
+        "§8 SC-043",
+        "§8 INV-21",
+        "§8 FP-08"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -785,7 +943,10 @@
       "id": "EB-08-03",
       "title": "Typed trigger enum + animation tab pickers",
       "phase": 8,
-      "specRefs": ["§8 SC-044", "§8 SC-045"],
+      "specRefs": [
+        "§8 SC-044",
+        "§8 SC-045"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -803,7 +964,9 @@
       "id": "EB-08-04",
       "title": "Three baseline keyframe primitives (load fade-in, in-view slide, hover lift)",
       "phase": 8,
-      "specRefs": ["§8 SC-046"],
+      "specRefs": [
+        "§8 SC-046"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -821,7 +984,10 @@
       "id": "EB-08-05",
       "title": "Transform-edit ↔ keyframe-capture integration in canvas mode",
       "phase": 8,
-      "specRefs": ["§8 SC-042", "§8 SC-045"],
+      "specRefs": [
+        "§8 SC-042",
+        "§8 SC-045"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -839,7 +1005,10 @@
       "id": "EB-09-01",
       "title": "Animation library catalog UI — 3 methodologies preserved",
       "phase": 9,
-      "specRefs": ["§9 SC-047", "§9 INV-12"],
+      "specRefs": [
+        "§9 SC-047",
+        "§9 INV-12"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -857,7 +1026,10 @@
       "id": "EB-09-02",
       "title": "Library entries reference the 9 fixed cinematic primitives only",
       "phase": 9,
-      "specRefs": ["§9 SC-048", "§9 INV-12"],
+      "specRefs": [
+        "§9 SC-048",
+        "§9 INV-12"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit"
@@ -874,7 +1046,9 @@
       "id": "EB-09-03",
       "title": "Tether-driven interaction on 'triggers' edges",
       "phase": 9,
-      "specRefs": ["§9 SC-049"],
+      "specRefs": [
+        "§9 SC-049"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -892,7 +1066,10 @@
       "id": "EB-09-04",
       "title": "Cross-space tether resolution via transform pipeline",
       "phase": 9,
-      "specRefs": ["§9 SC-050", "§9 INV-22"],
+      "specRefs": [
+        "§9 SC-050",
+        "§9 INV-22"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -910,7 +1087,10 @@
       "id": "EB-09-05",
       "title": "Physics/shader integration on tether fire (where declared)",
       "phase": 9,
-      "specRefs": ["§9 SC-051", "§9 INV-12"],
+      "specRefs": [
+        "§9 SC-051",
+        "§9 INV-12"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -928,7 +1108,10 @@
       "id": "EB-09-06",
       "title": "Two-runtime snapshot proving tether-fire propagation",
       "phase": 9,
-      "specRefs": ["§9 SC-052", "§1 INV-16"],
+      "specRefs": [
+        "§9 SC-052",
+        "§1 INV-16"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-06",
@@ -947,7 +1130,9 @@
       "id": "EB-10-01",
       "title": "CompiledAppView + compileAppToPreview aggregator",
       "phase": 10,
-      "specRefs": ["§10 SC-053"],
+      "specRefs": [
+        "§10 SC-053"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -965,7 +1150,9 @@
       "id": "EB-10-02",
       "title": "preview-app renderer + route-like navigation",
       "phase": 10,
-      "specRefs": ["§10 SC-054"],
+      "specRefs": [
+        "§10 SC-054"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -984,7 +1171,10 @@
       "id": "EB-10-03",
       "title": "Hub transitions — damped cinematic transit between hub rails",
       "phase": 10,
-      "specRefs": ["§10 SC-055", "§5 INV-23"],
+      "specRefs": [
+        "§10 SC-055",
+        "§5 INV-23"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -1002,7 +1192,9 @@
       "id": "EB-10-04",
       "title": "Cross-hub tether rendering in preview-app",
       "phase": 10,
-      "specRefs": ["§10 SC-056"],
+      "specRefs": [
+        "§10 SC-056"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -1020,7 +1212,11 @@
       "id": "EB-10-05",
       "title": "App_Name_World context + full-compile immutability proof",
       "phase": 10,
-      "specRefs": ["§10 SC-057", "§10 SC-058", "§6 INV-17"],
+      "specRefs": [
+        "§10 SC-057",
+        "§10 SC-058",
+        "§6 INV-17"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
