@@ -29,6 +29,11 @@ export default defineConfig({
       'three-msdf-text-webgpu': here(
         './node_modules/three-msdf-text-webgpu/dist/index.js',
       ),
+      // The `server-only` package throws when imported outside a Next.js
+      // server context. Under vitest (node env) we treat it as a no-op so
+      // server modules under src/server/** can be unit-tested directly.
+      // FP-07 still enforces the gate at build time via grep.
+      'server-only': here('./node_modules/server-only/empty.js'),
     },
   },
 });
