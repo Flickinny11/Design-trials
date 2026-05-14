@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 7,
+  "currentIteration": 8,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:43:00Z",
+  "updatedAt": "2026-05-14T22:57:25Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 7,
-    "lastProductiveCommit": "5885854343d7a536e39ba6d92bc9c7f6c0111785"
+    "lastProductiveCommit": "32c854bcd8eb76b2610a071dd1dcff540eb6154f"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 5,
+      "used": 6,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 7,
-    "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
-    "verifiedAt": "2026-05-14T22:43:00Z",
+    "commit": "32c854bcd8eb76b2610a071dd1dcff540eb6154f",
+    "verifiedAt": "2026-05-14T22:55:05Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:43:00Z"
+    "recordedAt": "2026-05-14T22:55:05Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -328,8 +328,8 @@
       ],
       "haltCheck": "When App_Name_World is selected, the Inspector renders a dedicated 'World' tab with read/write surfaces for spec/designSpec/buildPlan/memoryLog/hubRegistry/nodeRegistry/globalDependencies/validationRules/aiRoutingRules; existing tabs still visible.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
