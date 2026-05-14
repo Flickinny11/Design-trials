@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T21:50:00Z",
+  "updatedAt": "2026-05-14T21:43:30Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,12 +27,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 2,
-    "lastProductiveCommit": "48a4d208b947c1f7d3bfdb195e32a1e616aef068"
+    "lastProductiveIteration": 3,
+    "lastProductiveCommit": "02039e7b481fbe6d24411a6354612313d4fa1091"
   },
   "phaseCaps": {
     "§1": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 2,
-    "commit": "48a4d208b947c1f7d3bfdb195e32a1e616aef068",
-    "verifiedAt": "2026-05-14T21:35:54Z",
+    "iteration": 3,
+    "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
+    "verifiedAt": "2026-05-14T21:43:30Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T21:35:54Z"
+    "recordedAt": "2026-05-14T21:43:30Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -107,6 +107,14 @@
       "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
       "verifiedAt": "2026-05-14T21:35:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-02/"
+    },
+    {
+      "iteration": 3,
+      "taskId": "EB-01-03",
+      "phase": 1,
+      "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
+      "verifiedAt": "2026-05-14T21:43:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-03/"
     }
   ],
   "tasks": [
@@ -177,11 +185,11 @@
       ],
       "haltCheck": "Zero hits for legacy viewMode literals under kid-kode-landing/src/. PrismHost preview path still mounts in preview-hub. EB-01-03/inner.png captured.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
+      "verifiedAt": "2026-05-14T21:43:30Z",
+      "notes": "spec-reviewer: No deviations found (no MUST-FIX). Store narrowed: viewMode: ViewMode + setViewMode: (m: ViewMode) => void; LegacyViewMode/AnyViewMode/normalizeViewMode retained as load-time coercion helpers. FP-12 was already armed in anti-drift-check.sh. Legacy literal grep over src/ returns zero hits. verify-editor-runtimes EB-01-03 passed 7/7 (outer.png, inner.png mounted PrismHost behind preview-hub, state.json, verify.log). HL12.save-to-server.test.ts local EditorStore mirror updated to canonical 5-mode union (its 'split' initial assertion was already runtime-broken after EB-01-02). SHOULD-FIX (do not block): (1) EB-01-03 test's SC-003 PrismHost-mount regex only matches viewMode === 'preview-hub'; SC-003 covers preview-app too — tighten in a follow-up that touches this file. (2) LegacyViewMode/AnyViewMode could be downgraded to module-private once load-time coercion path matures (deferred to EB-02-01)."
     },
     {
       "id": "EB-01-04",
