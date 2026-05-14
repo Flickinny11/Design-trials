@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T21:30:00Z",
+  "updatedAt": "2026-05-14T21:35:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,12 +27,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 1,
-    "lastProductiveCommit": "4398da773ee1fcaa7a61154d4f47123130a7a3d4"
+    "lastProductiveIteration": 2,
+    "lastProductiveCommit": "02d266cff63aea4431033ac136cdb4da077d9e4c"
   },
   "phaseCaps": {
     "§1": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 1,
-    "commit": "4398da773ee1fcaa7a61154d4f47123130a7a3d4",
-    "verifiedAt": "2026-05-14T21:26:25Z",
+    "iteration": 2,
+    "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
+    "verifiedAt": "2026-05-14T21:35:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T21:26:25Z"
+    "recordedAt": "2026-05-14T21:35:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -99,6 +99,14 @@
       "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
       "verifiedAt": "2026-05-14T21:14:56Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-01/"
+    },
+    {
+      "iteration": 2,
+      "taskId": "EB-01-02",
+      "phase": 1,
+      "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
+      "verifiedAt": "2026-05-14T21:35:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-02/"
     }
   ],
   "tasks": [
@@ -143,11 +151,11 @@
       ],
       "haltCheck": "Toggling all 5 modes via the UI preserves selectedNodeId, selectedHubId; snapshot state.json at EB-01-02 records the mode round-trip. Legacy 'preview'|'editor'|'split' strings still allowed as aliases this task; FP-12 not yet armed against them.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
+      "verifiedAt": "2026-05-14T21:35:00Z",
+      "notes": "spec-reviewer: No deviations found. Initial viewMode remapped 'split' → 'canvas' (RA-06). 5-button canonical toggle ships in page.tsx; Inspector.tsx setViewMode call now uses 'preview-hub'. Pane visibility driven by derived booleans (isPreviewMode/showsSplit/showsPreview/showsGraph). Mobile branch (non-desktop) carries no viewMode literals — untouched. 7/7 two-runtime snapshot checks passed; 6/6 vitest assertions passed."
     },
     {
       "id": "EB-01-03",
