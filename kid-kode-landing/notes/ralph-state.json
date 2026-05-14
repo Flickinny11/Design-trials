@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 4,
+  "currentIteration": 5,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:02:00Z",
+  "updatedAt": "2026-05-14T22:10:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,11 +28,11 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 4,
-    "lastProductiveCommit": "e52882b5a671391df4f098978900d71d06e87d84"
+    "lastProductiveCommit": "c4375d125ddf74c2851b187df01700cdb6c29c70"
   },
   "phaseCaps": {
     "§1": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 4,
-    "commit": "e52882b5a671391df4f098978900d71d06e87d84",
-    "verifiedAt": "2026-05-14T22:02:00Z",
+    "commit": "c4375d125ddf74c2851b187df01700cdb6c29c70",
+    "verifiedAt": "2026-05-14T22:03:39Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:02:00Z"
+    "recordedAt": "2026-05-14T22:03:39Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -237,8 +237,8 @@
       ],
       "haltCheck": "PrismRootNode type exists in src/lib/prism-graph/root-node.ts with all D1 fields; validateRootNode rejects graphs without exactly one root node; tsc clean; tests for serializer + validator pass.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
