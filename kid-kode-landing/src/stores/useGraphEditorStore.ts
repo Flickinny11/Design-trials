@@ -5,15 +5,50 @@ import { subscribeWithSelector } from 'zustand/middleware';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history';
-export type ViewMode = 'preview' | 'editor' | 'split';
+export type ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app';
+/**
+ * Transient alias for the pre-EB-01 toggle. Removed by EB-01-03; FP-12 then
+ * blocks any further use. Per §9 RA-06: editor→hub-world, split→canvas,
+ * preview→preview-hub. Kept here so `page.tsx` and `Inspector.tsx` typecheck
+ * during the EB-01-02 migration window.
+ */
+export type LegacyViewMode = 'preview' | 'editor' | 'split';
+export type AnyViewMode = ViewMode | LegacyViewMode;
 export type EditorRenderMode = 'scene' | 'topology';
+
+const LEGACY_VIEW_MODE_TO_CANONICAL: Readonly<Record<LegacyViewMode, ViewMode>> = {
+  editor: 'hub-world',
+  split: 'canvas',
+  preview: 'preview-hub',
+};
+
+const CANONICAL_VIEW_MODES: ReadonlySet<ViewMode> = new Set([
+  'galaxy',
+  'hub-world',
+  'canvas',
+  'preview-hub',
+  'preview-app',
+]);
+
+export function normalizeViewMode(m: AnyViewMode): ViewMode {
+  return CANONICAL_VIEW_MODES.has(m as ViewMode)
+    ? (m as ViewMode)
+    : LEGACY_VIEW_MODE_TO_CANONICAL[m as LegacyViewMode];
+}
 
 interface GraphEditorState {
   // View
   zoomLevel: ZoomLevel;
   cameraDistance: number;
   activeHubId: string | null;
-  viewMode: ViewMode;
+  /**
+   * Stored as `AnyViewMode` (canonical ∪ legacy) only for the EB-01-01..02
+   * window: existing UI code in `page.tsx`/`Inspector.tsx` still compares
+   * against `'preview' | 'editor' | 'split'`. EB-01-02 migrates those call
+   * sites to canonical strings; EB-01-03 narrows this back to `ViewMode` and
+   * arms FP-12 against off-canon literals.
+   */
+  viewMode: AnyViewMode;
   editorRenderMode: EditorRenderMode;
 
   // Selection — node and hub selection are mutually exclusive
@@ -52,7 +87,7 @@ interface GraphEditorState {
   // Actions
   setZoomLevel: (l: ZoomLevel) => void;
   setCameraDistance: (d: number) => void;
-  setViewMode: (m: ViewMode) => void;
+  setViewMode: (m: AnyViewMode) => void;
   setEditorRenderMode: (m: EditorRenderMode) => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
