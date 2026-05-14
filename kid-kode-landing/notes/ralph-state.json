@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 9,
+  "currentIteration": 10,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T23:23:00Z",
+  "updatedAt": "2026-05-14T23:45:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 9,
-    "lastProductiveCommit": "677a0e4508a4de17d1f3d97984770a242a008411"
+    "lastProductiveCommit": "c036156d6aea87dbc2e7b96ed9d83fda9e7de89b"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 9,
+      "used": 10,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 9,
-    "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
-    "verifiedAt": "2026-05-14T23:23:00Z",
+    "commit": "c036156d6aea87dbc2e7b96ed9d83fda9e7de89b",
+    "verifiedAt": "2026-05-14T23:36:04Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T23:23:00Z"
+    "recordedAt": "2026-05-14T23:36:04Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -390,8 +390,8 @@
       ],
       "haltCheck": "PrismNode and PrismRootNode expose optional capabilityRefs?: CapabilityRef[]; inspector renders a 'Capabilities' surface listing refs by display label; clicking a ref triggers a vault.resolve in the dev preview and shows redacted resolution metadata only.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
