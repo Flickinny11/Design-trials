@@ -43,3 +43,10 @@ kid-kode-landing/tsconfig.tsbuildinfo
 .claude/.harness-model
 .claude/.ralph-model
 .claude/my-secrets.md
+
+# KripVerify runtime state (findings, sessions, hook logs)
+.kripverify/
+kid-kode-landing/.kripverify/
+
+# Verification harness output (regenerated per run)
+artifacts/

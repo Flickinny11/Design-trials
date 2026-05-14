@@ -9,9 +9,9 @@ You are the Ralph loop worker. You execute exactly one iteration and exit. A
 fresh Claude process will run the next iteration. Do not pick up a second
 task in this session. Do not skip steps. Do not improvise the order.
 
-All paths below are relative to the repo root
-`/Users/loganbaird/Prototype_Prism/Design-trials/`. The Ralph state file
-lives at `kid-kode-landing/notes/ralph-state.json`. Active branch is
+All paths below are relative to the repo root. Resolve it with
+`REPO_ROOT="$(git rev-parse --show-toplevel)"`. The Ralph state file lives at
+`kid-kode-landing/notes/ralph-state.json`. Active branch is
 `prism-renderer-ralph`. The condensed spec is
 `kid-kode-landing/notes/prism-renderer-spec-extract.md`; the canonical specs
 are `kid-kode-landing/docs/prism/PRISM-RENDERER-MIGRATION-SPEC.md` and

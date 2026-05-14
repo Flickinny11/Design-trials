@@ -1,0 +1,232 @@
+#!/usr/bin/env node
+// Two-runtime verification for the Prism Editor Build.
+// Captures deterministic snapshots of BOTH runtimes per task:
+//   1. Outer Next.js editor runtime — captures outer.png + state.json from the editor routes.
+//   2. Inner Prism runtime — drives the editor into preview-hub mode against the mock .prism
+//      artifact and captures inner.png.
+//
+// Snapshot location:
+//   kid-kode-landing/notes/ralph-snapshots/<task-id>/{outer.png, inner.png, state.json, verify.log}
+// KripVerify mirror:
+//   .kripverify/findings/screenshots/<task-id>/{outer.png, inner.png, state.json, verify.log}
+//
+// Usage:
+//   node scripts/verify-editor-runtimes.mjs --task-id=EB-01-01 [--route="/"]
+//   node scripts/verify-editor-runtimes.mjs --on-stop          # quick Stop-hook sanity check
+//
+// Exit 0 if all checks pass. Exit 1 otherwise. The Stop-hook wrapper treats non-zero as a
+// non-blocking warning (matches the original verify-on-stop.sh semantics).
+
+import { spawn } from 'node:child_process';
+import { existsSync, mkdirSync, writeFileSync, copyFileSync, readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const repoRoot = resolve(__dirname, '..');         // kid-kode-landing/
+const topRoot = resolve(repoRoot, '..');           // Design-trials/
+
+const args = parseArgs(process.argv.slice(2));
+const ON_STOP = args['on-stop'] === true;
+const TASK_ID = args['task-id'] || (ON_STOP ? `on-stop-${Date.now()}` : null);
+const ROUTE = args['route'] || '/';
+const PORT = Number(args['port'] || 4791);
+const PREVIEW_FIXTURE = args['fixture'] || 'mock-app';
+const URL = `http://localhost:${PORT}${ROUTE}`;
+
+if (!TASK_ID) {
+  console.error('verify-editor-runtimes: missing --task-id (or pass --on-stop).');
+  process.exit(2);
+}
+
+const snapDir = join(repoRoot, 'notes', 'ralph-snapshots', TASK_ID);
+const kvDir = join(topRoot, '.kripverify', 'findings', 'screenshots', TASK_ID);
+mkdirSync(snapDir, { recursive: true });
+mkdirSync(kvDir, { recursive: true });
+
+const logLines = [];
+function log(line) {
+  const stamped = `[${new Date().toISOString()}] ${line}`;
+  logLines.push(stamped);
+  console.log(stamped);
+}
+
+const results = [];
+function check(id, desc, pass, detail = '') {
+  results.push({ id, desc, pass, detail });
+  log(`${pass ? 'PASS' : 'FAIL'}  ${id.padEnd(28)} ${desc}${detail ? ` — ${detail}` : ''}`);
+}
+
+function parseArgs(argv) {
+  const out = {};
+  for (const a of argv) {
+    const m = a.match(/^--([^=]+)(?:=(.*))?$/);
+    if (m) out[m[1]] = m[2] === undefined ? true : m[2];
+  }
+  return out;
+}
+
+async function waitForServer(url, timeoutMs = 30000) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    try {
+      const res = await fetch(url);
+      if (res.ok) return true;
+    } catch (_) { /* booting */ }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  return false;
+}
+
+async function main() {
+  log(`verify-editor-runtimes — task ${TASK_ID} on ${URL}`);
+
+  // Preflight: mock .prism artifact must exist for the inner runtime to boot.
+  const prismArtifact = join(repoRoot, 'public', 'prism-assets', 'mock-app.prism');
+  if (!existsSync(prismArtifact)) {
+    check('preflight.prism-artifact', '.prism artifact present', false,
+      `missing ${prismArtifact} — run npm run build:prism`);
+    return finalize(1);
+  }
+  check('preflight.prism-artifact', '.prism artifact present', true);
+
+  // Start next.
+  log(`starting next start on :${PORT}…`);
+  const server = spawn('npx', ['next', 'start', '-p', String(PORT)], {
+    cwd: repoRoot, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  server.stdout.on('data', () => {});
+  server.stderr.on('data', (b) => process.stderr.write(b));
+
+  let exitCode = 0;
+  try {
+    const ok = await waitForServer(URL);
+    if (!ok) {
+      check('preflight.server-up', 'next start reachable', false, `did not come up in 30s on :${PORT}`);
+      return finalize(1);
+    }
+    check('preflight.server-up', 'next start reachable', true);
+
+    const { chromium } = await import('playwright');
+    const browser = await chromium.launch();
+    const context = await browser.newContext({
+      viewport: { width: 1440, height: 900 },
+      deviceScaleFactor: 1,
+    });
+    const page = await context.newPage();
+
+    const consoleLogs = [];
+    const pageErrors = [];
+    page.on('console', (m) => consoleLogs.push({ type: m.type(), text: m.text() }));
+    page.on('pageerror', (e) => pageErrors.push(e.message));
+
+    await page.goto(URL, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(2500);
+
+    // === OUTER RUNTIME — capture outer.png + record state =========================
+    const outerPng = join(snapDir, 'outer.png');
+    await page.screenshot({ path: outerPng, fullPage: false });
+    check('outer.screenshot', 'outer.png captured', existsSync(outerPng));
+
+    const outerState = await page.evaluate(() => {
+      // Best-effort read of useGraphEditorStore state if exposed; otherwise null.
+      const store = window.__PRISM_EDITOR_STATE__ || null;
+      return {
+        url: location.href,
+        title: document.title,
+        editorStore: store,
+        canvasCount: document.querySelectorAll('canvas').length,
+      };
+    }).catch(() => null);
+
+    // === INNER RUNTIME — switch to preview-hub mode and capture inner.png ========
+    // Strategy: programmatically set viewMode='preview-hub' via the dev hook if exposed;
+    // otherwise click the preview-hub toggle in the UI; otherwise just wait for the
+    // PrismHost mount to settle.
+    await page.evaluate(() => {
+      try {
+        const setter = window.__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') {
+          setter('preview-hub');
+          return 'via-hook';
+        }
+      } catch (_) {}
+      return 'no-hook';
+    });
+    await page.waitForTimeout(3500); // let runtime boot + fonts warm
+
+    const loadingVisible = await page.locator('text=LOADING PRISM').isVisible().catch(() => false);
+    const failVisible = await page.locator('text=PRISM BOOT FAILED').isVisible().catch(() => false);
+    check('inner.mounted', 'inner Prism runtime mounted in preview-hub',
+      !loadingVisible && !failVisible,
+      failVisible ? 'PRISM BOOT FAILED visible' : loadingVisible ? 'still loading after 3.5s' : 'mounted');
+
+    const innerPng = join(snapDir, 'inner.png');
+    await page.screenshot({ path: innerPng, fullPage: false });
+    check('inner.screenshot', 'inner.png captured', existsSync(innerPng));
+
+    const criticalErrors = [...pageErrors, ...consoleLogs
+      .filter((l) => l.type === 'error')
+      .map((l) => l.text)]
+      .filter((e) => !/Download the React DevTools/.test(e) && !/Warning:/.test(e));
+    check('inner.no-errors', 'no runtime errors in console / page',
+      criticalErrors.length === 0,
+      criticalErrors.length ? criticalErrors.slice(0, 2).join(' | ') : 'clean');
+
+    // === Persist state.json ======================================================
+    const state = {
+      taskId: TASK_ID,
+      capturedAt: new Date().toISOString(),
+      url: URL,
+      fixture: PREVIEW_FIXTURE,
+      viewport: { width: 1440, height: 900 },
+      outerState,
+      summary: {
+        outerScreenshot: 'outer.png',
+        innerScreenshot: 'inner.png',
+        checks: results,
+        consoleLogCount: consoleLogs.length,
+        pageErrorCount: pageErrors.length,
+        criticalErrorCount: criticalErrors.length,
+      },
+    };
+    writeFileSync(join(snapDir, 'state.json'), JSON.stringify(state, null, 2) + '\n');
+    check('state.persisted', 'state.json written', true);
+
+    await browser.close();
+  } catch (e) {
+    check('runtime.exception', 'unexpected exception during verification', false, String(e?.message || e));
+    exitCode = 1;
+  } finally {
+    server.kill('SIGTERM');
+    await new Promise((r) => setTimeout(r, 500));
+  }
+
+  return finalize(exitCode);
+
+  function finalize(code) {
+    const failed = results.filter((r) => !r.pass).length;
+    const final = code !== 0 ? code : (failed === 0 ? 0 : 1);
+
+    // Write verify.log
+    writeFileSync(join(snapDir, 'verify.log'), logLines.join('\n') + '\n');
+
+    // Mirror to KripVerify findings dir (best-effort; do not fail run if mirror fails).
+    try {
+      for (const name of ['outer.png', 'inner.png', 'state.json', 'verify.log']) {
+        const src = join(snapDir, name);
+        if (existsSync(src)) copyFileSync(src, join(kvDir, name));
+      }
+    } catch (e) {
+      log(`mirror-warn: could not copy to .kripverify/findings: ${e?.message || e}`);
+    }
+
+    log(`done — ${results.length - failed}/${results.length} checks passed (exit ${final})`);
+    process.exit(final);
+  }
+}
+
+main().catch((e) => {
+  console.error('verify-editor-runtimes: unhandled:', e);
+  process.exit(1);
+});

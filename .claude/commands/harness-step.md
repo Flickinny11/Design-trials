@@ -13,7 +13,8 @@ iteration or terminate. Do not pick up a second task in this session. Do
 not spawn anything yourself — no `osascript`, no `nohup claude`, no
 `Terminal.app`.
 
-All paths are relative to `/Users/loganbaird/Prototype_Prism/Design-trials/`.
+All paths below are relative to the repo root; resolve it with
+`REPO_ROOT="$(git rev-parse --show-toplevel)"`.
 The state file is `kid-kode-landing/notes/ralph-state.json` (symlink to
 `ralph-state.harness-lockin.json`). Active branch is `prism-main`.
 The plan: `/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md`.
@@ -40,9 +41,10 @@ Verify `.claude/.harness-model` exists, is non-empty, AND starts with
 proof block at the top of EVERY iteration and show its output:
 
 ```bash
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 echo "=========================================="
 echo "harness-step iter MODEL PROOF:"
-MODEL_FILE=/Users/loganbaird/Prototype_Prism/Design-trials/.claude/.harness-model
+MODEL_FILE="$REPO_ROOT/.claude/.harness-model"
 if [[ ! -s "$MODEL_FILE" ]]; then echo "  FAIL: $MODEL_FILE missing"; exit 0; fi
 MODEL=$(cat "$MODEL_FILE")
 echo "  contract file:    $MODEL_FILE"
@@ -147,7 +149,7 @@ necessary but not sufficient. Use the `kv_*` MCP tools to confirm runtime
 correctness:
 
 1. `kv_dev_server_status()` — if status is not `ready`, call
-   `kv_restart_dev_server({ project_root: '/Users/loganbaird/Prototype_Prism/Design-trials', config: {} })`.
+   `kv_restart_dev_server({ project_root: <result of `git rev-parse --show-toplevel`>, config: {} })`.
    Wait for ready (poll up to 60s).
 2. `kv_navigate({ url: 'http://127.0.0.1:<port>/' })` using port from status.
 3. `kv_wait_for({ selector: 'canvas', timeout_ms: 30000 })` — confirm the app mounts.

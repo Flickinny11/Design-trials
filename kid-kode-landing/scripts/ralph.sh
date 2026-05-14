@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Ralph outer loop — drives the autonomous Prism mock-app build.
-# Each iteration spawns a fresh `claude --print` process to run /ralph-step.
+# Ralph outer loop — drives the autonomous Prism Editor Build.
+# Each iteration spawns a fresh `claude --print` process to run /ralph-step-editor.
+# (Previously drove the prism-mock-app build via /ralph-step; that chain is complete.)
 #
 # Exits with:
 #   status=complete       — all tasks done (terminal)
@@ -26,7 +27,7 @@ ENV_FILE="$KIDDIR/.env.local"
 mkdir -p "$LOGDIR"
 
 # ------------------------------------------------------------------
-# Env — pull FAL_KEY and friends into this shell so /ralph-step sees them
+# Env — pull FAL_KEY and friends into this shell so /ralph-step-editor sees them
 # ------------------------------------------------------------------
 if [[ -f "$ENV_FILE" ]]; then
   set -a
@@ -70,7 +71,7 @@ echo "  contract file:    $RALPH_MODEL_FILE"
 echo "  contract content: $RALPH_MODEL"
 echo "  contract sha256:  $(shasum -a 256 "$RALPH_MODEL_FILE" | awk '{print $1}')"
 echo "  opus-only check:  PASS (regex ^claude-opus- matched)"
-echo "  CLI invocation will be: claude --print --model $RALPH_MODEL --dangerously-skip-permissions /ralph-step"
+echo "  CLI invocation will be: claude --print --model $RALPH_MODEL --dangerously-skip-permissions /ralph-step-editor"
 echo "=========================================="
 
 # ------------------------------------------------------------------
@@ -216,11 +217,11 @@ for i in $(seq 1 "$MAX_ITER"); do
       --print \
       --model "$RALPH_MODEL" \
       --dangerously-skip-permissions \
-      "/ralph-step" ) \
+      "/ralph-step-editor" ) \
       > "$LOGFILE" 2>&1
   then
     echo "ralph.sh: claude exited non-zero on iter $((CUR_ITER + 1)) — see $LOGFILE"
-    # Don't bail — /ralph-step may have flipped state.status on its own.
+    # Don't bail — /ralph-step-editor may have flipped state.status on its own.
   fi
 
   tail -n 3 "$LOGFILE" | sed 's/^/  /'

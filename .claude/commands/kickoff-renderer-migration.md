@@ -32,7 +32,8 @@ Write your full model ID to `.claude/.ralph-model`. The ID MUST start with
 currently-selected Opus version (e.g. `claude-opus-4-7`).
 
 ```bash
-echo 'claude-opus-4-7' > /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+echo 'claude-opus-4-7' > "$REPO_ROOT/.claude/.ralph-model"
 ```
 
 If your system-prompt model ID is anything other than an Opus variant,
@@ -44,10 +45,10 @@ and showing each output to the user:
 
 ```bash
 echo "=== MODEL PROOF ==="
-echo "1. Wrote to .claude/.ralph-model:"; cat /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
+echo "1. Wrote to .claude/.ralph-model:"; cat $REPO_ROOT/.claude/.ralph-model
 echo ""; echo "2. Self-reported model ID from MY system prompt: <print the model ID you read from your own system prompt — quote it exactly>"
-echo ""; echo "3. SHA256 of model-file (tamper check):"; shasum -a 256 /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model
-echo ""; echo "4. Starts-with-claude-opus check:"; grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model && echo PASS || echo FAIL
+echo ""; echo "3. SHA256 of model-file (tamper check):"; shasum -a 256 $REPO_ROOT/.claude/.ralph-model
+echo ""; echo "4. Starts-with-claude-opus check:"; grep -q '^claude-opus-' $REPO_ROOT/.claude/.ralph-model && echo PASS || echo FAIL
 ```
 
 Show the user the literal output. Do not paraphrase. The user wants
@@ -59,12 +60,12 @@ The file is git-ignored.
 
 Run these checks in parallel via Bash:
 
-- `git -C /Users/loganbaird/Prototype_Prism/Design-trials rev-parse --abbrev-ref HEAD` → must equal `prism-renderer-ralph`
-- `jq -r '.status, (.tasks | map(select(.status != "done")) | length), (.tasks | map(select(.status == "done")) | length)' /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json` → status must be `running` or `paused-*`; report `done` and `pending` counts
+- `git -C $REPO_ROOT rev-parse --abbrev-ref HEAD` → must equal `prism-renderer-ralph`
+- `jq -r '.status, (.tasks | map(select(.status != "done")) | length), (.tasks | map(select(.status == "done")) | length)' $REPO_ROOT/kid-kode-landing/notes/ralph-state.json` → status must be `running` or `paused-*`; report `done` and `pending` counts
 - `command -v claude && command -v jq` → both must resolve
-- `test -x /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/scripts/ralph.sh` → must succeed
-- `test -s /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model` → step 0 captured a non-empty model ID
-- `grep -q '^claude-opus-' /Users/loganbaird/Prototype_Prism/Design-trials/.claude/.ralph-model` → captured model is an Opus variant (Sonnet/Haiku rejected here)
+- `test -x $REPO_ROOT/kid-kode-landing/scripts/ralph.sh` → must succeed
+- `test -s $REPO_ROOT/.claude/.ralph-model` → step 0 captured a non-empty model ID
+- `grep -q '^claude-opus-' $REPO_ROOT/.claude/.ralph-model` → captured model is an Opus variant (Sonnet/Haiku rejected here)
 
 If any check fails, **stop**. Tell the user exactly what's wrong and how to
 fix it. Do not proceed.
@@ -93,7 +94,7 @@ Don't be verbose. Two or three sentences.
 Use the **Bash** tool with `run_in_background: true`:
 
 ```
-cd /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing && ./scripts/ralph.sh
+cd $REPO_ROOT/kid-kode-landing && ./scripts/ralph.sh
 ```
 
 The Bash tool returns a task id and an output file path. Save both — you
@@ -113,7 +114,8 @@ Use this exact monitor command, with `<OUTPUT_PATH>` replaced by the output
 file path you got from Step 3:
 
 ```bash
-STATE=/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/ralph-state.json
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+STATE=$REPO_ROOT/kid-kode-landing/notes/ralph-state.json
 LOG=<OUTPUT_PATH>
 last_size=0
 last_done=$(jq -r '[.tasks[] | select(.status=="done") | .id] | join(",")' "$STATE" 2>/dev/null || echo "")
