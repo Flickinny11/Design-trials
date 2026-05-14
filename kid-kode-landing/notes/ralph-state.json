@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T23:25:00Z",
+  "updatedAt": "2026-05-14T23:23:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 8,
-    "lastProductiveCommit": "3e250e5ba8672f03ae1d43a732cca96cf0ffd5be"
+    "lastProductiveIteration": 9,
+    "lastProductiveCommit": "677a0e4508a4de17d1f3d97984770a242a008411"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 8,
+      "used": 9,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 8,
-    "commit": "3e250e5ba8672f03ae1d43a732cca96cf0ffd5be",
-    "verifiedAt": "2026-05-14T23:17:10Z",
+    "iteration": 9,
+    "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
+    "verifiedAt": "2026-05-14T23:23:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T23:17:10Z"
+    "recordedAt": "2026-05-14T23:23:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -155,6 +155,14 @@
       "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
       "verifiedAt": "2026-05-14T23:05:10Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-04/"
+    },
+    {
+      "iteration": 9,
+      "taskId": "EB-02-05",
+      "phase": 2,
+      "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
+      "verifiedAt": "2026-05-14T23:23:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-05/"
     }
   ],
   "tasks": [
@@ -360,11 +368,11 @@
       ],
       "haltCheck": "kid-kode-landing/src/server/secrets/vault.ts exports store/resolve/audit; first 3 lines import 'server-only'; unit tests cover happy path + scope mismatch + audit-log write; no raw secret bytes appear in the next/server bundle.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
+      "verifiedAt": "2026-05-14T23:23:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) store() is keyed by ref alone so a second store(scopeB, refA, ...) silently clobbers a prior store(scopeA, refA, ...); SC-008 only specifies scope-gating on resolve, but the clobber weakens the scope semantics SC-011 audits. Consider keying entries by (scope, ref) or rejecting cross-scope same-ref writes. (2) reset() is exported without a test-only marker — a production caller in src/server/** could wipe the live audit history. Rename to __resetForTests or guard with NODE_ENV !== 'production'. OPTIONAL: (a) module-level mutable singletons (entries, auditLog) make the comment about KV/Postgres/KMS swap require touching every export — a createVault() factory would isolate the surface without changing the public API. (b) nowIso() is one-use and three lines — inline new Date().toISOString() at the call site. (c) reset() not documented in the contract comment (lines 5-13); if it stays exported, add to the block. Verification: 12/12 EB-02-05 vitest assertions pass; 68/68 across editor-build suite; tsc clean; vault.ts exports store/resolve/audit; first line is `import 'server-only';`; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-06",
