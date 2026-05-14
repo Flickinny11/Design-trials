@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:00:00Z",
+  "updatedAt": "2026-05-14T22:02:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,12 +27,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 3,
-    "lastProductiveCommit": "2ffc97ca0526dcf36e4d69bd387e372087c119a5"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "e52882b5a671391df4f098978900d71d06e87d84"
   },
   "phaseCaps": {
     "§1": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 3,
-    "commit": "2ffc97ca0526dcf36e4d69bd387e372087c119a5",
-    "verifiedAt": "2026-05-14T21:56:58Z",
+    "iteration": 4,
+    "commit": "e52882b5a671391df4f098978900d71d06e87d84",
+    "verifiedAt": "2026-05-14T22:02:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T21:56:58Z"
+    "recordedAt": "2026-05-14T22:02:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -115,6 +115,14 @@
       "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
       "verifiedAt": "2026-05-14T21:43:30Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-03/"
+    },
+    {
+      "iteration": 4,
+      "taskId": "EB-01-04",
+      "phase": 1,
+      "commit": "e52882b5a671391df4f098978900d71d06e87d84",
+      "verifiedAt": "2026-05-14T22:02:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-04/"
     }
   ],
   "tasks": [
@@ -207,11 +215,11 @@
       ],
       "haltCheck": "EditorRenderMode toggle is only visible in the UI when viewMode === 'hub-world'; scene-mode renderer (AssembledSceneContent) still mounts; topology-mode renderer unchanged; snapshot proves toggle behavior.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "e52882b5a671391df4f098978900d71d06e87d84",
+      "verifiedAt": "2026-05-14T22:02:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block): (1) source-shape regex tests are brittle vs a render-time React Testing Library check; (2) state.json summary.checks lists 6 entries while verify.log shows 7 lines (the post-write state.persisted line isn't in the checks array). OPTIONAL: tighten regex window in AssembledSceneContent assertion; gate the abutting vertical divider on the same hub-world predicate to avoid an orphan separator in non-hub-world modes. Toggle now renders only when viewMode === 'hub-world'; editorRenderMode field/setter preserved (SC-004 \"not deleted\"); GraphScene SceneContent still routes 'scene' → AssembledSceneContent. Snapshot 7/7 (outer.png, inner.png from PrismHost in preview-hub baseline carries over per EB-01-03; verify-editor-runtimes mounts preview-hub for the inner runtime regardless of which mode this task gates in the outer chrome). 5/5 vitest assertions passed; tsc clean; next build clean."
     },
     {
       "id": "EB-02-01",
