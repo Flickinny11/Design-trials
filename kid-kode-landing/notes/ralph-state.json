@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:42:00Z",
+  "updatedAt": "2026-05-14T22:43:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 6,
-    "lastProductiveCommit": "b3df77c4cbfe3e3a460912b471c9a9ba74b460da"
+    "lastProductiveIteration": 7,
+    "lastProductiveCommit": "5885854343d7a536e39ba6d92bc9c7f6c0111785"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 6,
-    "commit": "b3df77c4cbfe3e3a460912b471c9a9ba74b460da",
-    "verifiedAt": "2026-05-14T22:35:38Z",
+    "iteration": 7,
+    "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
+    "verifiedAt": "2026-05-14T22:43:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:35:38Z"
+    "recordedAt": "2026-05-14T22:43:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -139,6 +139,14 @@
       "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
       "verifiedAt": "2026-05-14T22:24:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-02/"
+    },
+    {
+      "iteration": 7,
+      "taskId": "EB-02-03",
+      "phase": 2,
+      "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
+      "verifiedAt": "2026-05-14T22:43:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-03/"
     }
   ],
   "tasks": [
@@ -298,11 +306,11 @@
       ],
       "haltCheck": "In viewMode='galaxy', App_Name_World renders as a distinct central object (the sun); clicking it sets selectedNodeId to the root node id and inspectorOpen=true; outer.png shows the central object.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
+      "verifiedAt": "2026-05-14T22:43:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) WorldSun's onPointerOver writes document.body.style.cursor='pointer' but does not restore on unmount — if user hovers WorldSun and switches viewMode away from 'galaxy', cursor sticks. Pattern precedent at GraphScene.tsx:263-267 (GlassNode) and :435-438 (HubHull) has the same latent bug, but a new component should not propagate it; add useEffect(()=>()=>{document.body.style.cursor='default'},[]) in a follow-up. (2) useFrame body doesn't early-return when root=null; mounting always paints, but a defensive `if (!root) return` inside the frame callback would avoid the material cast cost when nothing is rendered. (3) Source-shape regex tests in EB-02-03 pass even if click handler were wired to the wrong action; the runtime gate is the snapshot outer.png. RTL/jsdom test with Canvas mock would tighten — deferred. OPTIONAL: (a) groupRef declared but never read; (b) new THREE.Color('#ffb24a') allocated per render — hoist to module const; (c) magic radius=14 should be APP_NAME_WORLD_SUN_RADIUS module const to make EB-03-01's hub-orbit-scale work easier. Verification: 9/9 EB-02-03 vitest assertions pass; 47/47 across editor-build suite; tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). SC-007 dedicated 'World' inspector tab correctly deferred to EB-02-04; SC-012 hub-orbit-around-sun positions correctly deferred to EB-03-01."
     },
     {
       "id": "EB-02-04",
