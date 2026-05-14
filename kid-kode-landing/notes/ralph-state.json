@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 3,
+  "currentIteration": 4,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T21:43:30Z",
+  "updatedAt": "2026-05-14T22:00:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,11 +28,11 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 3,
-    "lastProductiveCommit": "02039e7b481fbe6d24411a6354612313d4fa1091"
+    "lastProductiveCommit": "2ffc97ca0526dcf36e4d69bd387e372087c119a5"
   },
   "phaseCaps": {
     "§1": {
-      "used": 5,
+      "used": 6,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 3,
-    "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
-    "verifiedAt": "2026-05-14T21:43:30Z",
+    "commit": "2ffc97ca0526dcf36e4d69bd387e372087c119a5",
+    "verifiedAt": "2026-05-14T21:56:58Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T21:43:30Z"
+    "recordedAt": "2026-05-14T21:56:58Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -207,8 +207,8 @@
       ],
       "haltCheck": "EditorRenderMode toggle is only visible in the UI when viewMode === 'hub-world'; scene-mode renderer (AssembledSceneContent) still mounts; topology-mode renderer unchanged; snapshot proves toggle behavior.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
