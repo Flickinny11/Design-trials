@@ -71,6 +71,16 @@ export default function Page() {
     };
   }, [dragging]);
 
+  // Pane visibility derived from the canonical viewMode (RA-06):
+  //   - preview-hub / preview-app mount PrismHost full-width.
+  //   - galaxy / hub-world mount the graph editor full-width.
+  //   - canvas keeps the legacy split-pane authoring surface until EB-05-*
+  //     replaces it with the dedicated single-canvas + viewport-frame view.
+  const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
+  const showsSplit = viewMode === 'canvas';
+  const showsPreview = isPreviewMode || showsSplit;
+  const showsGraph = viewMode === 'galaxy' || viewMode === 'hub-world' || showsSplit;
+
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#04050a]">
       {/* Ambient nebula backdrop */}
@@ -84,11 +94,19 @@ export default function Page() {
 
       {isDesktop ? (
         <>
-          {/* View-mode toggle — controls which panes render.
-              preview: mock app only (100% width) — what users will see in the
-                       main app's preview window once integrated.
-              editor:  3D knowledge-graph editor only (100% width).
-              split:   both panes, user-draggable divider (what this was before). */}
+          {/* View-mode toggle — canonical 5 modes (RA-06 / SC-001).
+              galaxy:      stub of the App_Name_World galaxy view; renders the
+                           graph for now (EB-03 wires real galaxy layout).
+              hub-world:   3D knowledge-graph editor for the active hub
+                           (replaces the legacy `editor` mode; default after
+                           EB-01-04 wires the scene/topology sub-toggle).
+              canvas:      single-canvas authoring surface; transitionally
+                           shown as the legacy split-pane view so the
+                           preview is reachable during migration (EB-05-*
+                           introduces the dedicated viewport-frame canvas).
+              preview-hub: mock app only, fixed viewport preset.
+              preview-app: mock app only, preview-app route navigation
+                           (EB-10 introduces multi-hub transitions). */}
           <div
             className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
             data-component="view-mode-toggle"
@@ -103,9 +121,11 @@ export default function Page() {
               }}
             >
               {([
-                { id: 'preview', label: 'Preview' },
-                { id: 'split',   label: 'Visual Editor' },
-                { id: 'editor',  label: 'Editor' },
+                { id: 'galaxy',      label: 'Galaxy' },
+                { id: 'hub-world',   label: 'Hub World' },
+                { id: 'canvas',      label: 'Canvas' },
+                { id: 'preview-hub', label: 'Preview Hub' },
+                { id: 'preview-app', label: 'Preview App' },
               ] as const).map((m) => {
                 const active = viewMode === m.id;
                 return (
@@ -124,21 +144,21 @@ export default function Page() {
             </div>
           </div>
 
-          {viewMode !== 'editor' && (
+          {showsPreview && (
             <div
               data-pane="preview"
-              className={`absolute top-0 bottom-0 left-0 ${viewMode === 'split' ? 'border-r border-white/5' : ''}`}
-              style={{ width: viewMode === 'split' ? `${splitPct}%` : '100%' }}
+              className={`absolute top-0 bottom-0 left-0 ${showsSplit ? 'border-r border-white/5' : ''}`}
+              style={{ width: showsSplit ? `${splitPct}%` : '100%' }}
             >
               <PrismHost
-                viewportPreset={viewMode === 'preview' ? previewPreset : 'fit'}
-                showViewportControls={viewMode === 'preview'}
+                viewportPreset={isPreviewMode ? previewPreset : 'fit'}
+                showViewportControls={isPreviewMode}
                 onPresetChange={setPreviewPreset}
               />
             </div>
           )}
 
-          {viewMode === 'split' && (
+          {showsSplit && (
             <div
               onMouseDown={() => setDragging(true)}
               className="absolute top-0 bottom-0 w-1 cursor-col-resize z-20 group"
@@ -149,11 +169,11 @@ export default function Page() {
             </div>
           )}
 
-          {viewMode !== 'preview' && (
+          {showsGraph && (
             <div
               data-pane="graph"
               className="absolute top-0 bottom-0 right-0"
-              style={{ width: viewMode === 'split' ? `${100 - splitPct}%` : '100%' }}
+              style={{ width: showsSplit ? `${100 - splitPct}%` : '100%' }}
             >
               <GraphScene />
               <TopBar />

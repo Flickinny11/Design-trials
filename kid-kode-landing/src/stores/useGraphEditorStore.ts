@@ -115,7 +115,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     zoomLevel: 'L0',
     cameraDistance: 320,
     activeHubId: null,
-    viewMode: 'split',
+    // RA-06: legacy 'split' maps to canonical 'canvas'. EB-01-03 narrows the
+    // `viewMode` field's type back to `ViewMode` and arms FP-12 against any
+    // future legacy literal.
+    viewMode: 'canvas',
     editorRenderMode: 'scene',
     selectedNodeId: null,
     selectedHubId: null,

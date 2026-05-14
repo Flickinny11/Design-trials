@@ -51,7 +51,11 @@ export default function Inspector() {
   };
 
   const handlePreviewInAppUi = () => {
-    setViewMode('preview');
+    // RA-06: legacy 'preview' maps to canonical 'preview-hub'. The
+    // Inspector's "Preview in App UI" button drops into the hub-scoped
+    // preview, not the whole-app preview (preview-app is reserved for
+    // route-style nav added in EB-10).
+    setViewMode('preview-hub');
     if (!selectedId) return;
     const node = useGraphSourceStore.getState().nodes.find((n) => n.nodeId === selectedId);
     if (node?.parentHubId) flyToHub(node.parentHubId);
