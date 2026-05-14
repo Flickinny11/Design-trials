@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 5,
+  "currentIteration": 6,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:13:00Z",
+  "updatedAt": "2026-05-14T22:25:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 5,
-    "lastProductiveCommit": "c6b134b8dd93a41694df958fd66f2ee610099a35"
+    "lastProductiveCommit": "9b0ac887cf909d405b80ac019b4e0553d1c8952a"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 5,
-    "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
-    "verifiedAt": "2026-05-14T22:13:00Z",
+    "commit": "9b0ac887cf909d405b80ac019b4e0553d1c8952a",
+    "verifiedAt": "2026-05-14T22:12:37Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:13:00Z"
+    "recordedAt": "2026-05-14T22:12:37Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -262,12 +262,14 @@
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
-        "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('src/lib/prism/mock-app-source/hubs/home-hub.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\""
+        "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('src/lib/prism/mock-app-source/hubs/home-hub.legacy.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\"",
+        "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('public/prism-mock/home/live-graph.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\"",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EB-02-02.app-name-world-instance.test.ts"
       ],
-      "haltCheck": "home-hub.json contains exactly one rootNodes entry of type App_Name_World; build:prism re-emits the .prism artifact; runtime uniqueness assertion passes (or already enforced by validateRootNode).",
+      "haltCheck": "home-hub.legacy.json (the build-time fixture; renamed from home-hub.json by HL03 / Plan §P4) contains exactly one rootNodes entry of type App_Name_World; the live-graph fixture under public/prism-mock/home/live-graph.json carries the same entry so the runtime store sees rootNodes after fetch; loader threads rootNodes through to GraphSource; validateRootNode returns ok=true on the loaded graph.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
