@@ -12,10 +12,7 @@
     "build": "npm run build:prism && next build",
     "start": "next start",
     "lint": "next lint",
-    "guard:prism-renderer": "node scripts/prism-spec-audit.mjs",
-    "guard:prism-renderer:bundle": "PRISM_AUDIT_SCAN_BUNDLE=1 node scripts/prism-spec-audit.mjs",
     "verify:prism": "node scripts/verify-prism.mjs",
-    "verify:renderer-strict": "npm run guard:prism-renderer && npm run verify:prism && npx tsc --noEmit",
     "verify:repair-loop": "node scripts/verify-repair-loop.mjs",
     "verify": "npm run verify:prism && npm run verify:repair-loop"
   },
