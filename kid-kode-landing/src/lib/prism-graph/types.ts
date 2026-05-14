@@ -15,8 +15,10 @@
 // render in 'sprite' mode at the identity pose with no primitives applied.
 
 import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+import type { PrismRootNode } from './root-node.ts';
 
 export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+export type { PrismRootNode } from './root-node.ts';
 
 export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
 
@@ -273,6 +275,10 @@ export interface GraphSource {
   hubs: PrismHub[];
   nodes: PrismNode[];
   edges: PrismEdge[];
+  // Editor-build §2 / RA-07: dedicated PrismRootNode co-exists with PrismNode
+  // inside the GraphSource. Optional for legacy graphs (INV-18); validated to
+  // contain exactly one entry by validateRootNode (SC-006).
+  rootNodes?: PrismRootNode[];
 }
 
 export interface HomeHubJson {
