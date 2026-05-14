@@ -118,7 +118,10 @@ export interface PrismRootNode {
   globalDependencies: GlobalDependency[];
   validationRules: ValidationRule[];
   aiRoutingRules: AiRoutingRule[];
-  capabilityRefs: CapabilityRef[];
+  // EB-02-06: loosened from required to optional. Pre-EB-02-06 graphs
+  // serialized with `capabilityRefs: []`; new instances may omit the field
+  // entirely. INV-18-safe: no rename, no delete, no required-field addition.
+  capabilityRefs?: CapabilityRef[];
 }
 
 /**
@@ -219,11 +222,13 @@ export function deserializeRootNode(json: string): PrismRootNode {
     'globalDependencies',
     'validationRules',
     'aiRoutingRules',
-    'capabilityRefs',
   ] as const) {
     if (!Array.isArray(r[arrField])) {
       throw new Error(`deserializeRootNode: ${arrField} must be an array.`);
     }
+  }
+  if (r.capabilityRefs !== undefined && !Array.isArray(r.capabilityRefs)) {
+    throw new Error('deserializeRootNode: capabilityRefs must be an array when present.');
   }
   for (const objField of ['spec', 'designSpec', 'buildPlan'] as const) {
     if (!r[objField] || typeof r[objField] !== 'object') {
@@ -241,6 +246,6 @@ export function deserializeRootNode(json: string): PrismRootNode {
     globalDependencies: r.globalDependencies as GlobalDependency[],
     validationRules: r.validationRules as ValidationRule[],
     aiRoutingRules: r.aiRoutingRules as AiRoutingRule[],
-    capabilityRefs: r.capabilityRefs as CapabilityRef[],
+    capabilityRefs: r.capabilityRefs as CapabilityRef[] | undefined,
   };
 }

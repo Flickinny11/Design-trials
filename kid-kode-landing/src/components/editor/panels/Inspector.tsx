@@ -9,7 +9,7 @@ import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
 import VisualPreview from './visual-preview/VisualPreview';
-import type { PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
+import type { CapabilityRef, PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -1158,9 +1158,134 @@ function WorldTab({
         );
       })}
 
-      <div className="text-[10px] text-white/40 leading-relaxed italic pt-1">
-        capabilityRefs are scoped to a dedicated picker in EB-02-06 (vault binding, INV-19).
+      <CapabilitiesPanel
+        refs={root.capabilityRefs}
+        scopeHint={root.appNameWorldId}
+        callerNodeId={root.appNameWorldId}
+      />
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CAPABILITIES PANEL (EB-02-06 / SC-009)
+//
+// Lists capabilityRefs by display label (ref.label || ref.refId) and
+// renders a 'Resolve' affordance that POSTs to /api/prism/vault/resolve.
+// The server returns REDACTED metadata only — { ok, scope, ref, at, status }
+// — never the raw secret value (INV-19).
+//
+// The picker reuses ref.scope as the resolution scope; the inspector
+// passes the App_Name_World id as callerNodeId so SC-011's audit entry
+// carries the originator. The redacted response is rendered verbatim — the
+// raw secret payload is never read from the response in this component.
+// ═══════════════════════════════════════════════════════════════════
+interface ResolutionMeta {
+  ok: boolean;
+  scope: string;
+  ref: string;
+  at: string;
+  status: 'resolved' | 'not-found' | 'scope-mismatch';
+}
+
+function CapabilitiesPanel({
+  refs,
+  scopeHint,
+  callerNodeId,
+}: {
+  refs?: CapabilityRef[];
+  scopeHint?: string;
+  callerNodeId: string;
+}) {
+  const [results, setResults] = useState<Record<string, ResolutionMeta | { error: string }>>({});
+  const [pending, setPending] = useState<Record<string, boolean>>({});
+
+  const handleResolve = async (ref: CapabilityRef) => {
+    if (pending[ref.refId]) return;
+    setPending((p) => ({ ...p, [ref.refId]: true }));
+    try {
+      const res = await fetch('/api/prism/vault/resolve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scope: ref.scope || scopeHint,
+          ref: ref.refId,
+          callerNodeId,
+        }),
+      });
+      const body = (await res.json()) as ResolutionMeta | { ok: false; error: string };
+      if ('error' in body) {
+        setResults((r) => ({ ...r, [ref.refId]: { error: body.error } }));
+      } else {
+        setResults((r) => ({ ...r, [ref.refId]: body }));
+      }
+    } catch (e) {
+      setResults((r) => ({ ...r, [ref.refId]: { error: (e as Error).message } }));
+    } finally {
+      setPending((p) => ({ ...p, [ref.refId]: false }));
+    }
+  };
+
+  const list = refs ?? [];
+
+  return (
+    <div data-role="capabilities-panel" className="space-y-2 pt-3 border-t border-white/5">
+      <div className="text-[9px] font-mono tracking-widest text-white/40">CAPABILITIES</div>
+      <div className="text-[10px] text-white/45 leading-relaxed italic">
+        Capability refs bind to vault entries. Resolve is server-only; the response is redacted (INV-19).
       </div>
+      {list.length === 0 ? (
+        <div className="text-[11px] text-white/40 italic">No capabilityRefs configured.</div>
+      ) : (
+        <div className="space-y-1.5">
+          {list.map((ref) => {
+            const label = ref.label || ref.refId;
+            const result = results[ref.refId];
+            const isPending = pending[ref.refId] === true;
+            return (
+              <div
+                key={ref.refId}
+                data-role="capability-ref"
+                className="px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5"
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[11px] font-semibold text-white/85 truncate">{label}</div>
+                    <div className="text-[9px] font-mono text-white/45 truncate">
+                      scope: {ref.scope || scopeHint || '(none)'}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    data-role="capability-resolve"
+                    onClick={() => handleResolve(ref)}
+                    disabled={isPending}
+                    className="px-2 h-6 rounded-md text-[10px] font-mono bg-[#5d8bff]/15 hover:bg-[#5d8bff]/25 border border-[#5d8bff]/30 text-[#5d8bff] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    {isPending ? 'Resolving…' : 'Resolve'}
+                  </button>
+                </div>
+                {result && 'error' in result && (
+                  <div className="mt-1.5 text-[10px] font-mono text-[#ffb1c0]">
+                    error: {result.error}
+                  </div>
+                )}
+                {result && !('error' in result) && (
+                  <div
+                    data-role="capability-resolution"
+                    className={`mt-1.5 text-[10px] font-mono ${
+                      result.ok ? 'text-[#a8efce]' : 'text-[#ffb1c0]'
+                    }`}
+                  >
+                    <span className="opacity-70">status:</span> {result.status}{' '}
+                    <span className="opacity-70">at</span> {result.at}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

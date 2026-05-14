@@ -15,10 +15,10 @@
 // render in 'sprite' mode at the identity pose with no primitives applied.
 
 import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
-import type { PrismRootNode } from './root-node.ts';
+import type { CapabilityRef, PrismRootNode } from './root-node.ts';
 
 export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
-export type { PrismRootNode } from './root-node.ts';
+export type { CapabilityRef, PrismRootNode } from './root-node.ts';
 
 export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
 
@@ -259,6 +259,9 @@ export interface PrismNode {
   meshUrl?: string | null;
   cinematicPrimitives?: CinematicPrimitiveRef[];
   scenePosition?: ScenePosition;
+  // EB-02-06 / SC-009: optional capability references on the node. The vault
+  // resolves these server-side; raw secret values never appear here (INV-19).
+  capabilityRefs?: CapabilityRef[];
 }
 
 export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
