@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T23:45:00Z",
+  "updatedAt": "2026-05-14T23:43:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 9,
-    "lastProductiveCommit": "c036156d6aea87dbc2e7b96ed9d83fda9e7de89b"
+    "lastProductiveIteration": 10,
+    "lastProductiveCommit": "201578a0cc32730a6308109fb56ff17cec2e5a24"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 10,
+      "used": 11,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 9,
-    "commit": "c036156d6aea87dbc2e7b96ed9d83fda9e7de89b",
-    "verifiedAt": "2026-05-14T23:36:04Z",
+    "iteration": 10,
+    "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
+    "verifiedAt": "2026-05-14T23:43:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T23:36:04Z"
+    "recordedAt": "2026-05-14T23:43:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -163,6 +163,14 @@
       "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
       "verifiedAt": "2026-05-14T23:23:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-05/"
+    },
+    {
+      "iteration": 10,
+      "taskId": "EB-02-06",
+      "phase": 2,
+      "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
+      "verifiedAt": "2026-05-14T23:43:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-06/"
     }
   ],
   "tasks": [
@@ -390,11 +398,11 @@
       ],
       "haltCheck": "PrismNode and PrismRootNode expose optional capabilityRefs?: CapabilityRef[]; inspector renders a 'Capabilities' surface listing refs by display label; clicking a ref triggers a vault.resolve in the dev preview and shows redacted resolution metadata only.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
+      "verifiedAt": "2026-05-14T23:43:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) /api/prism/vault/resolve reads log[log.length-1].at after vaultResolve to surface the call timestamp — racy under concurrent requests; preferable to have vaultResolve return the timestamp directly. (2) The `(result as { ok: false; reason: ... })` cast in redact() papers over discriminated-union narrowing (strict:false project setting). (3) serializeRootNode still lists capabilityRefs in the canonical key order; JSON.stringify drops undefined so legacy round-trip still byte-matches, but a one-line comment noting that intent would help. OPTIONAL: (a) handleResolve rebuilds pending/results state objects with spread per click — fine at <20 refs, switch to Map-keyed state or per-ref child if it grows; (b) ref.scope || scopeHint fallback silently masks an upstream invariant violation when ref.scope is empty; (c) add `export const dynamic = 'force-dynamic'` on the vault route so no future caching layer memoizes a redacted response; (d) helper text 'INV-19' leaks a spec marker into a user-facing string. Verification: 14/14 EB-02-06 vitest assertions pass; 82/82 across editor-build suite; tsc clean; next build clean (vault/resolve route shows as ƒ dynamic / server-rendered); two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). PrismRootNode.capabilityRefs loosened required→optional (INV-18-safe); PrismNode.capabilityRefs?: CapabilityRef[] added (additive); CapabilityRef re-exported from types.ts; CapabilitiesPanel renders inside WorldTab listing refs by label || refId with Resolve button posting to /api/prism/vault/resolve; response payload carries only { ok, scope, ref, at, status } — never value (INV-19)."
     },
     {
       "id": "EB-02-07",
