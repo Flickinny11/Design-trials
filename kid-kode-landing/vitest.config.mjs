@@ -1,9 +1,10 @@
 // Vitest config for the Prism Renderer Migration test suite.
 //
 // Per tests/README.md:
-//   - tests/unit       — pure logic, node env
-//   - tests/integration — scene-tree shape tests, node env (no WebGPU)
-//   - tests/shaders    — TSL-output regression, node env (offscreen / hashes)
+//   - tests/unit         — pure logic, node env
+//   - tests/integration  — scene-tree shape tests, node env (no WebGPU)
+//   - tests/shaders      — TSL-output regression, node env (offscreen / hashes)
+//   - tests/editor-build — Prism Editor Build per-task acceptance tests
 //
 // Browser tests (tests/browser) use Playwright, not vitest, and are excluded.
 
@@ -15,7 +16,7 @@ const here = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 export default defineConfig({
   test: {
     environment: 'node',
-    include: ['tests/{unit,integration,shaders}/**/*.test.{ts,tsx,mjs}'],
+    include: ['tests/{unit,integration,shaders,editor-build}/**/*.test.{ts,tsx,mjs}'],
     exclude: ['tests/browser/**', 'node_modules/**', '.next/**'],
     testTimeout: 15000,
   },
