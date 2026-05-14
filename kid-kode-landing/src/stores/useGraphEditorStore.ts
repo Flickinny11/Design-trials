@@ -7,10 +7,11 @@ export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history';
 export type ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app';
 /**
- * Transient alias for the pre-EB-01 toggle. Removed by EB-01-03; FP-12 then
- * blocks any further use. Per §9 RA-06: editor→hub-world, split→canvas,
- * preview→preview-hub. Kept here so `page.tsx` and `Inspector.tsx` typecheck
- * during the EB-01-02 migration window.
+ * Legacy mapping kept ONLY for `normalizeViewMode`, which exists so persisted
+ * graphs that still carry pre-EB-01 toggle strings can be coerced on load. No
+ * runtime code path may assign these literals via `setViewMode` (FP-12 blocks
+ * value-site uses, and `setViewMode` is typed `ViewMode` to enforce at the
+ * type layer).
  */
 export type LegacyViewMode = 'preview' | 'editor' | 'split';
 export type AnyViewMode = ViewMode | LegacyViewMode;
@@ -42,13 +43,12 @@ interface GraphEditorState {
   cameraDistance: number;
   activeHubId: string | null;
   /**
-   * Stored as `AnyViewMode` (canonical ∪ legacy) only for the EB-01-01..02
-   * window: existing UI code in `page.tsx`/`Inspector.tsx` still compares
-   * against `'preview' | 'editor' | 'split'`. EB-01-02 migrates those call
-   * sites to canonical strings; EB-01-03 narrows this back to `ViewMode` and
-   * arms FP-12 against off-canon literals.
+   * Canonical 5-mode set only (RA-06). Off-canon literals are blocked at the
+   * type layer (this field) and at the source layer (FP-12 in the anti-drift
+   * hook). Persisted graphs that still carry pre-EB-01 toggle strings must
+   * pass through `normalizeViewMode` at load time.
    */
-  viewMode: AnyViewMode;
+  viewMode: ViewMode;
   editorRenderMode: EditorRenderMode;
 
   // Selection — node and hub selection are mutually exclusive
@@ -87,7 +87,7 @@ interface GraphEditorState {
   // Actions
   setZoomLevel: (l: ZoomLevel) => void;
   setCameraDistance: (d: number) => void;
-  setViewMode: (m: AnyViewMode) => void;
+  setViewMode: (m: ViewMode) => void;
   setEditorRenderMode: (m: EditorRenderMode) => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;

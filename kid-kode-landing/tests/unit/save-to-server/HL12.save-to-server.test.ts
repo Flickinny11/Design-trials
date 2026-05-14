@@ -2,9 +2,18 @@
 //
 // Spec ref: Plan §P12 — Inspector gains:
 //   - "Save"            (data-role="save")            → saveToServer()
-//   - "Preview in App UI" (data-role="preview-in-app-ui") → setViewMode('preview') + flyToHub
+//   - "Preview in App UI" (data-role="preview-in-app-ui") → setViewMode('preview-hub')
+//     + flyToHub
 // useGraphEditorStore gains a setViewMode action; viewMode lives on the store
 // so the Inspector button can drive a top-level pane swap.
+//
+// EB-01 (Phase 1 of the editor build) migrated the viewMode union from the
+// pre-EB legacy `'preview' | 'editor' | 'split'` to the canonical 5-mode
+// `'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app'` per
+// RA-06. EB-01-02 remapped initial state from 'split' → 'canvas' and
+// Inspector's Preview-in-App-UI button now drives 'preview-hub'. EB-01-03
+// narrowed the store's setter and state field to ViewMode, which forced this
+// suite's local EditorStore mirror to track the canonical union.
 //
 // Save & Verify (existing on VisualPreview) is widened to include `codeModule`
 // in the regen body — already implemented in regen-api.ts; this suite pins
@@ -30,12 +39,20 @@ type SourceStore = {
   saveToServer: () => Promise<{ ok: boolean; error?: string; regeneratedAt?: string }>;
 };
 
-// Mirror of the editor-store surface this task adds.
+// Mirror of the editor-store surface this task uses. EB-01-03 narrowed the
+// store to the canonical 5-mode ViewMode (RA-06); this mirror tracks the same
+// shape so the cast at line 153/164 stays well-typed.
+type EditorViewMode =
+  | 'galaxy'
+  | 'hub-world'
+  | 'canvas'
+  | 'preview-hub'
+  | 'preview-app';
 type EditorStore = {
-  viewMode: 'preview' | 'editor' | 'split';
+  viewMode: EditorViewMode;
   flyToHubId: string | null;
   activeHubId: string | null;
-  setViewMode: (m: 'preview' | 'editor' | 'split') => void;
+  setViewMode: (m: EditorViewMode) => void;
   flyToHub: (hubId: string) => void;
 };
 
@@ -140,26 +157,26 @@ describe('HL12 — useGraphSourceStore.saveToServer (Inspector Save button)', ()
 });
 
 describe('HL12 — useGraphEditorStore.setViewMode (Preview in App UI button)', () => {
-  it('exposes viewMode + setViewMode (default split)', async () => {
+  it('exposes viewMode + setViewMode (default canvas after EB-01-02 RA-06 remap)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
-    expect(useGraphEditorStore.getState().viewMode).toBe('split');
-    useGraphEditorStore.getState().setViewMode('preview');
-    expect(useGraphEditorStore.getState().viewMode).toBe('preview');
-    useGraphEditorStore.getState().setViewMode('editor');
-    expect(useGraphEditorStore.getState().viewMode).toBe('editor');
+    expect(useGraphEditorStore.getState().viewMode).toBe('canvas');
+    useGraphEditorStore.getState().setViewMode('preview-hub');
+    expect(useGraphEditorStore.getState().viewMode).toBe('preview-hub');
+    useGraphEditorStore.getState().setViewMode('hub-world');
+    expect(useGraphEditorStore.getState().viewMode).toBe('hub-world');
   });
 
-  it('Preview-in-App-UI driver: setViewMode("preview") + flyToHub(hubId)', async () => {
+  it('Preview-in-App-UI driver: setViewMode("preview-hub") + flyToHub(hubId)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
     const s = useGraphEditorStore.getState();
-    s.setViewMode('preview');
+    s.setViewMode('preview-hub');
     s.flyToHub('home');
     const after = useGraphEditorStore.getState();
-    expect(after.viewMode).toBe('preview');
+    expect(after.viewMode).toBe('preview-hub');
     expect(after.flyToHubId).toBe('home');
     expect(after.activeHubId).toBe('home');
   });
