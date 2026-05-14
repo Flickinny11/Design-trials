@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 6,
+  "currentIteration": 7,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:24:00Z",
+  "updatedAt": "2026-05-14T22:42:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 6,
-    "lastProductiveCommit": "79b59b7feffab1080b76ad0514672b3ecfc09e01"
+    "lastProductiveCommit": "b3df77c4cbfe3e3a460912b471c9a9ba74b460da"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 6,
-    "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
-    "verifiedAt": "2026-05-14T22:24:00Z",
+    "commit": "b3df77c4cbfe3e3a460912b471c9a9ba74b460da",
+    "verifiedAt": "2026-05-14T22:35:38Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:24:00Z"
+    "recordedAt": "2026-05-14T22:35:38Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -298,8 +298,8 @@
       ],
       "haltCheck": "In viewMode='galaxy', App_Name_World renders as a distinct central object (the sun); clicking it sets selectedNodeId to the root node id and inspectorOpen=true; outer.png shows the central object.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
