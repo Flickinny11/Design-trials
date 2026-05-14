@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 8,
+  "currentIteration": 9,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T23:05:10Z",
+  "updatedAt": "2026-05-14T23:25:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 8,
-    "lastProductiveCommit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e"
+    "lastProductiveCommit": "3e250e5ba8672f03ae1d43a732cca96cf0ffd5be"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 8,
-    "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
-    "verifiedAt": "2026-05-14T23:05:10Z",
+    "commit": "3e250e5ba8672f03ae1d43a732cca96cf0ffd5be",
+    "verifiedAt": "2026-05-14T23:17:10Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T23:05:10Z"
+    "recordedAt": "2026-05-14T23:17:10Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -360,8 +360,8 @@
       ],
       "haltCheck": "kid-kode-landing/src/server/secrets/vault.ts exports store/resolve/audit; first 3 lines import 'server-only'; unit tests cover happy path + scope mismatch + audit-log write; no raw secret bytes appear in the next/server bundle.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
