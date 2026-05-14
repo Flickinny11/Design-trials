@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T23:48:48Z",
+  "updatedAt": "2026-05-14T23:53:18Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 10,
-    "lastProductiveCommit": "50f46068f208397fed165953887ae89265194146"
+    "lastProductiveIteration": 11,
+    "lastProductiveCommit": "2b1876f16170bc3296217a8c263100f620f5b127"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "\u00a72": {
-      "used": 12,
+      "used": 13,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,12 @@
     }
   },
   "checkpoint": {
-    "iteration": 10,
-    "commit": "50f46068f208397fed165953887ae89265194146",
-    "verifiedAt": "2026-05-14T23:46:26Z",
+    "iteration": 11,
+    "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
+    "verifiedAt": "2026-05-14T23:53:18Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T23:46:26Z"
+    "recordedAt": "2026-05-14T23:46:26Z",
+    "taskId": "EB-02-07"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -171,6 +172,14 @@
       "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
       "verifiedAt": "2026-05-14T23:43:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-06/"
+    },
+    {
+      "iteration": 11,
+      "taskId": "EB-02-07",
+      "phase": 2,
+      "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
+      "verifiedAt": "2026-05-14T23:53:18Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-07/"
     }
   ],
   "tasks": [
@@ -422,11 +431,11 @@
       ],
       "haltCheck": "next build emits .next/static; grep over static bundles finds zero raw secret strings; vault audit-log integration test asserts an entry per resolve call.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
+      "verifiedAt": "2026-05-14T23:53:18Z",
+      "notes": "verified without new implementation: pre-existing EB-02-05 (vault) and EB-02-06 (capabilityRefs) already satisfy SC-008/SC-009/INV-19; this iteration adds the lock-in integration test. spec-reviewer: no MUST FIX. SHOULD FIX (non-blocking): (1) prefix sentinel values with TEST_FIXTURE_NOT_A_SECRET_ tag in future; (2) collectBundleFiles uses sync readFile (acceptable for current bundle size); (3) document why audit `at` regex tolerates both `Z` and `.fffZ` shapes. OPTIONAL: fold dir-exists test into bundle-scan; use global regex for multi-hit FP-07; extend FP-06 spot-check to all of src/server/**."
     },
     {
       "id": "EB-03-01",
