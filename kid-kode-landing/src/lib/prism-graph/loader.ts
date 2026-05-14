@@ -6,12 +6,23 @@
 // Phase 1 contract: pure data path. No DOM, no React. The Inspector and
 // GraphScene wiring lives in Phase 2.
 
-import type { GraphSource, HomeHubJson, PrismEdge, PrismHub, PrismNode } from './types.ts';
+import type {
+  GraphSource,
+  HomeHubJson,
+  PrismEdge,
+  PrismHub,
+  PrismNode,
+  PrismRootNode,
+} from './types.ts';
 
 /**
  * Map a parsed `home-hub.json` document to the canonical GraphSource shape the
  * editor reads through. The JSON is single-hub today; the result is a
  * one-entry `hubs` array so the multi-hub future is naturally extensible.
+ *
+ * Editor-build §5 / SC-006: rootNodes is threaded through when present so the
+ * editor sees the App_Name_World instance after the initial fetch. Legacy
+ * fixtures that omit the field still parse (INV-18 — additive).
  */
 export function loadFromHomeHub(json: HomeHubJson): GraphSource {
   if (!json || typeof json !== 'object') {
@@ -23,11 +34,16 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
   }
   const nodes = Array.isArray(json.nodes) ? (json.nodes as PrismNode[]) : [];
   const edges = Array.isArray(json.edges) ? (json.edges as PrismEdge[]) : [];
-  return {
+  const rootNodes = Array.isArray(json.rootNodes)
+    ? (json.rootNodes as PrismRootNode[])
+    : undefined;
+  const out: GraphSource = {
     hubs: [hub],
     nodes,
     edges,
   };
+  if (rootNodes !== undefined) out.rootNodes = rootNodes;
+  return out;
 }
 
 /**
@@ -67,10 +83,13 @@ export async function loadFromPrismArtifact(prismUrl: string): Promise<GraphSour
     hubs?: PrismHub[];
     nodes?: PrismNode[];
     edges?: PrismEdge[];
+    rootNodes?: PrismRootNode[];
   };
-  return {
+  const out: GraphSource = {
     hubs: Array.isArray(graphJson.hubs) ? graphJson.hubs : [],
     nodes: Array.isArray(graphJson.nodes) ? graphJson.nodes : [],
     edges: Array.isArray(graphJson.edges) ? graphJson.edges : [],
   };
+  if (Array.isArray(graphJson.rootNodes)) out.rootNodes = graphJson.rootNodes;
+  return out;
 }

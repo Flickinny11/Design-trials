@@ -927,5 +927,39 @@
     { "from": "footer-link-terms", "to": "hub-router", "type": "triggers", "event": "navigate" },
     { "from": "footer-link-careers", "to": "hub-router", "type": "triggers", "event": "navigate" },
     { "from": "footer-newsletter-pill", "to": "newsletter-modal", "type": "triggers", "event": "open-modal" }
+  ],
+  "rootNodes": [
+    {
+      "appNameWorldId": "app-name-world-home",
+      "spec": {
+        "name": "Voltus",
+        "summary": "AI Video Generator landing page — single-hub Prism mock app showcasing the cinematic atlas runtime.",
+        "goals": [
+          "Demonstrate Prism's renderer surface end-to-end on a single-hub graph",
+          "Anchor the build-time canonical seed for atlas + MSDF + .prism artifact assembly"
+        ]
+      },
+      "designSpec": {
+        "themeId": "voltus-cosmic",
+        "palette": {
+          "background": "#04050a",
+          "primary": "#6CD8FF",
+          "accent": "#F4A300"
+        }
+      },
+      "buildPlan": {
+        "strategy": "single-hub-mock",
+        "stages": ["provision-assets", "build-atlas", "build-msdf", "build-prism"]
+      },
+      "memoryLog": [],
+      "hubRegistry": [
+        { "hubId": "home-hub", "role": "landing" }
+      ],
+      "nodeRegistry": [],
+      "globalDependencies": [],
+      "validationRules": [],
+      "aiRoutingRules": [],
+      "capabilityRefs": []
+    }
   ]
 }

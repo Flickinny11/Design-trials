@@ -286,4 +286,7 @@ export interface HomeHubJson {
   hub: PrismHub;
   nodes: PrismNode[];
   edges: PrismEdge[];
+  // Editor-build §5 / SC-006: optional carrier for the App_Name_World root.
+  // Additive (INV-18); fixtures pre-EB-02-02 omit the field and still parse.
+  rootNodes?: PrismRootNode[];
 }

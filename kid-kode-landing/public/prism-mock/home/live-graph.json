@@ -244,5 +244,38 @@
   "edges": [
     { "from": "home-headline", "to": "home-cta-hero", "type": "contains", "event": "" },
     { "from": "home-cta-hero", "to": "home-feature-card", "type": "triggers", "event": "cta-clicked" }
+  ],
+  "rootNodes": [
+    {
+      "appNameWorldId": "app-name-world-home",
+      "spec": {
+        "name": "PrismLive",
+        "summary": "Harness lock-in canonical seed — cinematic landing page hub showcasing the renderer's surface (HL03 / Plan §P4).",
+        "goals": [
+          "Cover all four renderModes (sprite, plane, parallax-plane, mesh)",
+          "Cover seven of nine cinematic primitives in a single hub",
+          "Persist edits live via /api/prism/regen"
+        ]
+      },
+      "designSpec": {
+        "themeId": "prism-cosmic",
+        "palette": {
+          "background": "#04050a"
+        }
+      },
+      "buildPlan": {
+        "strategy": "harness-lockin-seed",
+        "stages": ["seed", "edit-via-editor", "regenerate"]
+      },
+      "memoryLog": [],
+      "hubRegistry": [
+        { "hubId": "home", "role": "landing" }
+      ],
+      "nodeRegistry": [],
+      "globalDependencies": [],
+      "validationRules": [],
+      "aiRoutingRules": [],
+      "capabilityRefs": []
+    }
   ]
 }
