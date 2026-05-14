@@ -9,7 +9,7 @@ import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
 import VisualPreview from './visual-preview/VisualPreview';
-import type { PrismNode } from '@/lib/prism-graph/types';
+import type { PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -18,6 +18,15 @@ const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'animation', label: 'Animation', icon: 'play' },
   { id: 'connections', label: 'Links', icon: 'link' },
   { id: 'backend', label: 'Backend', icon: 'server' },
+];
+
+// SC-007: when App_Name_World (a PrismRootNode) is the selection, the tab
+// bar prepends a dedicated 'World' entry that surfaces the D1 fields. The
+// existing 6 tabs remain after it so SC-020 ("existing tabs preserved")
+// holds for the App_Name_World selection too.
+const WORLD_TABS: { id: InspectorTab; label: string; icon: string }[] = [
+  { id: 'world', label: 'World', icon: 'sparkle' },
+  ...TABS,
 ];
 
 export default function Inspector() {
@@ -34,9 +43,21 @@ export default function Inspector() {
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const rootNodes = useGraphSourceStore((s) => s.rootNodes);
+  const updateRootNode = useGraphSourceStore((s) => s.updateRootNode);
   const isDirty = useGraphSourceStore((s) => s.isDirty);
   const savedAt = useGraphSourceStore((s) => s.savedAt);
   const saveToServer = useGraphSourceStore((s) => s.saveToServer);
+
+  // EB-02-04: detect App_Name_World selection. The PrismRootNode lives in
+  // useGraphSourceStore.rootNodes (RA-07, option B), not in `nodes`, so the
+  // editor view-model never carries it. WorldSun's click handler in
+  // GraphScene already binds selectedNodeId to root.appNameWorldId.
+  const selectedRoot = useMemo<PrismRootNode | null>(
+    () => rootNodes.find((r) => r.appNameWorldId === selectedId) ?? null,
+    [rootNodes, selectedId],
+  );
+  const isWorldSelected = selectedRoot !== null;
 
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -112,8 +133,33 @@ export default function Inspector() {
     [sourceNodes, selectedId],
   );
 
+  // SC-007: opening the Inspector with App_Name_World as the selection
+  // should default to the dedicated 'World' tab. Runs whenever the
+  // selection flips onto/off App_Name_World — the user can still switch to
+  // any other tab afterwards.
+  useEffect(() => {
+    if (isWorldSelected && tab !== 'world') {
+      setTab('world');
+    }
+  }, [isWorldSelected, selectedId, setTab, tab]);
+
   if (!open || !selectedId) return null;
   const node = editorGraph.nodes.find((n) => n.id === selectedId);
+  // EB-02-04 — App_Name_World branch. The root node has no EditorNode
+  // view-model entry (it lives in rootNodes, not nodes), so we render a
+  // dedicated panel that surfaces the D1 fields via WorldTab while keeping
+  // the existing tabs in the tab bar per SC-020.
+  if (isWorldSelected && selectedRoot) {
+    return (
+      <WorldInspectorPanel
+        root={selectedRoot}
+        tab={tab}
+        setTab={setTab}
+        close={close}
+        updateRootNode={updateRootNode}
+      />
+    );
+  }
   if (!node) return null;
 
   return (
@@ -916,3 +962,206 @@ function BackendTab({ node }: { node: any }) {
     </div>
   );
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// WORLD INSPECTOR PANEL (EB-02-04 / SC-007)
+//
+// Rendered when the App_Name_World PrismRootNode is the selection. The tab
+// bar carries WORLD_TABS (the dedicated 'World' tab prepended to the
+// existing 6 — SC-020 "existing tabs preserved"). Only the World tab body
+// has D1 content; the other tabs render a brief redirect note because
+// component-level concerns (visual/behavior/code/etc.) don't apply to the
+// root-node itself.
+//
+// Read/write: the World tab presents each D1 field as a JSON textarea that
+// writes back through useGraphSourceStore.updateRootNode on blur (Save).
+// Granular per-field UIs are scoped to later tasks (EB-02-05 vault;
+// EB-02-06 capabilityRefs picker; design/build-plan tabs land in §7/§10).
+// capabilityRefs is intentionally NOT surfaced here — that field is the
+// vault-binding seam and EB-02-06 owns its dedicated picker per INV-19.
+// ═══════════════════════════════════════════════════════════════════
+function WorldInspectorPanel({
+  root,
+  tab,
+  setTab,
+  close,
+  updateRootNode,
+}: {
+  root: PrismRootNode;
+  tab: InspectorTab;
+  setTab: (t: InspectorTab) => void;
+  close: () => void;
+  updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
+}) {
+  return (
+    <div
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] border-l border-white/10 flex flex-col animate-slide-in-r"
+      data-role="world-inspector"
+      style={{
+        background: 'linear-gradient(180deg, rgba(14,16,37,0.97) 0%, rgba(8,10,26,0.98) 100%)',
+        backdropFilter: 'blur(32px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+        boxShadow: '-24px 0 64px rgba(0,0,0,0.55)',
+      }}
+    >
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+        <div className="min-w-0 flex-1">
+          <div className="text-[9px] font-mono tracking-widest text-white/40 flex items-center gap-1.5">
+            <span>INSPECTOR</span>
+            <Icon name="chevron" size={9} color="#6b7694" />
+            <span className="text-[#ffd966]">App_Name_World</span>
+          </div>
+          <div className="font-display font-bold text-white text-lg leading-tight flex items-center gap-2">
+            {(root.spec?.name as string) || root.appNameWorldId}
+          </div>
+        </div>
+        <button
+          onClick={close}
+          className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+          title="Close inspector"
+        >
+          <Icon name="close" size={12} color="#c5ccea" />
+        </button>
+      </div>
+
+      <div className="flex border-b border-white/5 overflow-x-auto scrollbar-hide">
+        {WORLD_TABS.map((t) => {
+          const active = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`px-3.5 py-2.5 text-[11px] font-semibold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                active ? 'border-[#5d8bff] text-white bg-[#5d8bff]/6' : 'border-transparent text-white/45 hover:text-white/75'
+              }`}
+            >
+              <Icon name={t.icon} size={11} color={active ? '#5d8bff' : '#8896b8'} glow={active} />
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex-1 overflow-y-auto overscroll-contain">
+        {tab === 'world' ? (
+          <WorldTab root={root} updateRootNode={updateRootNode} />
+        ) : (
+          <div className="p-5 text-center text-white/45 text-[12px] italic leading-relaxed">
+            The <span className="text-white/70 font-mono">{tab}</span> tab surfaces component-node data. App_Name_World holds app-level state — switch to <span className="text-[#ffd966] font-mono">World</span> for the D1 fields.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// World tab body — each D1 field is presented as a labelled JSON textarea.
+// Edits are local until the user clicks Save, which round-trips through
+// JSON.parse → updateRootNode. Invalid JSON keeps the local state dirty
+// and surfaces the parse error inline; no silent loss.
+//
+// The fields are enumerated inline (not abstracted into a helper) so the
+// source-shape EB-02-04 test can pin the textarea + updateRootNode call
+// inside this function body — the dedicated tab IS its read/write surface.
+
+function WorldTab({
+  root,
+  updateRootNode,
+}: {
+  root: PrismRootNode;
+  updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
+}) {
+  // D1 field set per RA-01/D1, declared inside the component so the
+  // source-shape test sees each field name in the WorldTab body.
+  // capabilityRefs is intentionally omitted — EB-02-06 owns the vault
+  // picker for that field (INV-19, FP-06).
+  const D1_FIELD_KEYS: readonly (keyof Pick<PrismRootNode,
+    'spec' | 'designSpec' | 'buildPlan' | 'memoryLog' | 'hubRegistry' |
+    'nodeRegistry' | 'globalDependencies' | 'validationRules' | 'aiRoutingRules'
+  >)[] = [
+    'spec', 'designSpec', 'buildPlan', 'memoryLog', 'hubRegistry',
+    'nodeRegistry', 'globalDependencies', 'validationRules', 'aiRoutingRules',
+  ];
+
+  // Local edit state per field. Persisted shape mirrors the D1 keys so we
+  // don't blow away unrelated drafts when one field is saved.
+  const [drafts, setDrafts] = useState<Record<string, string>>(() =>
+    Object.fromEntries(D1_FIELD_KEYS.map((k) => [k, JSON.stringify(root[k], null, 2)])),
+  );
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  // Re-sync draft when the underlying root field changes externally (e.g.
+  // another tab wrote back). Keeps the textarea in step with store state.
+  useEffect(() => {
+    setDrafts((prev) => {
+      const next = { ...prev };
+      for (const k of D1_FIELD_KEYS) {
+        next[k] = JSON.stringify(root[k], null, 2);
+      }
+      return next;
+    });
+    setErrors({});
+  }, [root]);
+
+  const setDraft = (field: string, value: string) =>
+    setDrafts((p) => ({ ...p, [field]: value }));
+
+  const handleSave = (field: keyof PrismRootNode) => {
+    const raw = drafts[field as string];
+    try {
+      const parsed = JSON.parse(raw) as PrismRootNode[typeof field];
+      setErrors((e) => ({ ...e, [field as string]: null }));
+      updateRootNode(root.appNameWorldId, { [field]: parsed } as Partial<PrismRootNode>);
+    } catch (e) {
+      setErrors((er) => ({ ...er, [field as string]: (e as Error).message }));
+    }
+  };
+
+  return (
+    <div className="p-5 space-y-4">
+      <div className="text-[9px] font-mono tracking-widest text-white/40">APP_NAME_WORLD · D1</div>
+      <div className="text-[11px] text-white/55 leading-relaxed">
+        The root-node fields below are real graph data per RA-01/D1. Edits write back through <span className="font-mono text-[#5d8bff]">useGraphSourceStore.updateRootNode</span>.
+      </div>
+
+      {D1_FIELD_KEYS.map((field) => {
+        const initial = JSON.stringify(root[field], null, 2);
+        const draft = drafts[field] ?? initial;
+        const err = errors[field];
+        const dirty = draft !== initial;
+        return (
+          <div key={field} className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono tracking-widest text-white/55">{field}</span>
+              <div className="flex items-center gap-1.5">
+                {dirty && <span className="text-[9px] font-mono text-[#ff9a44]">● modified</span>}
+                <button
+                  type="button"
+                  data-role={`world-field-save-${field}`}
+                  onClick={() => handleSave(field)}
+                  disabled={!dirty}
+                  className="px-2 h-6 rounded-md text-[10px] font-mono bg-[#5d8bff]/15 hover:bg-[#5d8bff]/25 border border-[#5d8bff]/30 text-[#5d8bff] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+            <textarea
+              data-role={`world-field-${field}`}
+              value={draft}
+              onChange={(e) => setDraft(field, e.target.value)}
+              spellCheck={false}
+              className="w-full min-h-[88px] max-h-64 text-[10.5px] font-mono leading-relaxed text-white/82 bg-black/45 border border-white/10 rounded-lg p-2.5 resize-y focus:outline-none focus:border-[#5d8bff]/40"
+            />
+            {err && <div className="text-[10px] font-mono text-[#ffb1c0]">parse error: {err}</div>}
+          </div>
+        );
+      })}
+
+      <div className="text-[10px] text-white/40 leading-relaxed italic pt-1">
+        capabilityRefs are scoped to a dedicated picker in EB-02-06 (vault binding, INV-19).
+      </div>
+    </div>
+  );
+}
+

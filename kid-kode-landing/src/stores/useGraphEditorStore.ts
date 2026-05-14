@@ -4,7 +4,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
-export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history';
+export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
 export type ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app';
 /**
  * Legacy mapping kept ONLY for `normalizeViewMode`, which exists so persisted

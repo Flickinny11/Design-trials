@@ -52,6 +52,7 @@ interface GraphSourceState {
   // HL04 mutators (Plan §P5)
   addNode: (input: Partial<PrismNode> & { parentHubId: string }) => string;
   updateNode: (nodeId: string, patch: Partial<PrismNode>) => void;
+  updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
   removeNode: (nodeId: string) => void;
   addEdge: (edge: PrismEdge) => void;
   removeEdge: (predicate: (e: PrismEdge) => boolean) => void;
@@ -191,6 +192,16 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, ...patch } : n)),
+      isDirty: true,
+    }));
+  },
+
+  updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => {
+    markGraphDirty(get);
+    set((s) => ({
+      rootNodes: s.rootNodes.map((r) =>
+        r.appNameWorldId === appNameWorldId ? { ...r, ...patch } : r,
+      ),
       isDirty: true,
     }));
   },
