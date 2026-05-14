@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-14T22:10:00Z",
+  "updatedAt": "2026-05-14T22:13:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "c4375d125ddf74c2851b187df01700cdb6c29c70"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "c6b134b8dd93a41694df958fd66f2ee610099a35"
   },
   "phaseCaps": {
     "§1": {
@@ -37,7 +37,7 @@
       "status": "active"
     },
     "§2": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 4,
-    "commit": "c4375d125ddf74c2851b187df01700cdb6c29c70",
-    "verifiedAt": "2026-05-14T22:03:39Z",
+    "iteration": 5,
+    "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
+    "verifiedAt": "2026-05-14T22:13:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-14T22:03:39Z"
+    "recordedAt": "2026-05-14T22:13:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -123,6 +123,14 @@
       "commit": "e52882b5a671391df4f098978900d71d06e87d84",
       "verifiedAt": "2026-05-14T22:02:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-04/"
+    },
+    {
+      "iteration": 5,
+      "taskId": "EB-02-01",
+      "phase": 2,
+      "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
+      "verifiedAt": "2026-05-14T22:13:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-01/"
     }
   ],
   "tasks": [
@@ -237,11 +245,11 @@
       ],
       "haltCheck": "PrismRootNode type exists in src/lib/prism-graph/root-node.ts with all D1 fields; validateRootNode rejects graphs without exactly one root node; tsc clean; tests for serializer + validator pass.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
+      "verifiedAt": "2026-05-14T22:13:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) placeholder interfaces (AppSpec, DesignSpec, BuildPlan, MemoryLogEntry, HubRegistryEntry, NodeRegistryEntry, GlobalDependency, ValidationRule, AiRoutingRule, CapabilityRef) use open `[k: string]: unknown` index signatures — to be tightened by EB-02-05/EB-02-06; consider dropping the index signature on CapabilityRef so the vault contract stays strict. (2) RootNodeValidationResult uses ok+root+reason record form (with null sentinels) instead of a discriminated union because tsconfig has strict: false; revisit when/if strict is flipped on. (3) Test for the 11 D1 fields is a source-shape regex grep — a satisfies PrismRootNode literal would catch renames more reliably. OPTIONAL: (a) circular type import between root-node.ts and types.ts (works under TS); (b) serializeRootNode relies on V8/SpiderMonkey object-literal key ordering — switch to an explicit canonical key array if byte-identical hashing becomes load-bearing in Phase 6/10. 9/9 vitest assertions passed; 7/7 two-runtime snapshot checks passed; tsc clean; root-node.ts exists."
     },
     {
       "id": "EB-02-02",
