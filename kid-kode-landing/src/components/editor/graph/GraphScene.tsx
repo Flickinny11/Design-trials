@@ -24,9 +24,14 @@ import * as THREE from 'three';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
-import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphEditorStore, type ViewMode } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
-import { useForceGraph, type SimNode, type SimLink } from '@/lib/useForceGraph';
+import {
+  useForceGraph,
+  computeGalaxyHubDiameters,
+  type SimNode,
+  type SimLink,
+} from '@/lib/useForceGraph';
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
@@ -588,10 +593,14 @@ function HubHulls({
   hubs,
   hubCenters,
   simNodes,
+  hubDiameters,
+  viewMode,
 }: {
   hubs: EditorHubView[];
   hubCenters: Record<string, any>;
   simNodes: SimNode[];
+  hubDiameters: Record<string, number>;
+  viewMode: ViewMode;
 }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
@@ -606,14 +615,25 @@ function HubHulls({
         const hubNodes = simNodes.filter((n) => n.hubIds.includes(hub.id));
         if (!hubNodes.length) return null;
 
-        let maxDist = 20;
-        hubNodes.forEach((n) => {
-          const d = Math.sqrt(
-            (n.x - center.x) ** 2 + (n.y - center.y) ** 2 + (n.z - center.z) ** 2
-          );
-          if (d > maxDist) maxDist = d;
-        });
-        const radius = maxDist + 10;
+        // EB-03-02: galaxy mode swaps the topology-only `maxDist + 10`
+        // heuristic for a deterministic per-hub diameter computed from
+        // (nodeCount, depth) via computeGalaxyHubDiameters (SC-013). The
+        // diameter is the full size; radius is half. Non-galaxy modes keep
+        // the existing sim-based radius so hub-world / canvas don't
+        // visually regress.
+        let radius: number;
+        if (viewMode === 'galaxy' && hubDiameters[hub.id] != null) {
+          radius = hubDiameters[hub.id] / 2;
+        } else {
+          let maxDist = 20;
+          hubNodes.forEach((n) => {
+            const d = Math.sqrt(
+              (n.x - center.x) ** 2 + (n.y - center.y) ** 2 + (n.z - center.z) ** 2
+            );
+            if (d > maxDist) maxDist = d;
+          });
+          radius = maxDist + 10;
+        }
         // Inner mockup-textured sphere is capped well below the node cloud's
         // outer reach so element-spheres orbit *outside* the opaque hub
         // surface and stay visible. The outer translucent hull (`radius`)
@@ -1029,7 +1049,7 @@ function TopologySceneContent({
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
-  const { simNodes, simLinks, hubCenters } = useForceGraph(
+  const { simNodes, simLinks, hubCenters, hubDiameters } = useForceGraph(
     editorGraph.nodes,
     editorGraph.edges,
     editorGraph.hubs,
@@ -1063,7 +1083,13 @@ function TopologySceneContent({
           as a click target. */}
       {viewMode === 'galaxy' && <WorldSun />}
 
-      <HubHulls hubs={editorGraph.hubs} hubCenters={hubCenters} simNodes={simNodes} />
+      <HubHulls
+        hubs={editorGraph.hubs}
+        hubCenters={hubCenters}
+        simNodes={simNodes}
+        hubDiameters={hubDiameters}
+        viewMode={viewMode}
+      />
 
       {simLinks.map((link) => (
         <Edge key={link.id} link={link} />

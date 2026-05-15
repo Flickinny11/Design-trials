@@ -81,19 +81,110 @@ export function computeGalaxyHubCenters(hubs: PrismHub[]): Record<string, { x: n
 }
 
 // EB-03-02 — Galaxy hub size-by-complexity (SC-013).
-// Stubs only at this point in the TDD cycle; the real formula + orchestrator
-// land in the implementation phase. Throwing from the stubs keeps the tests
-// failing at runtime while satisfying the `--noEmit` typecheck so the
-// failing-test commit can be recorded.
-export function computeGalaxyHubDiameter(_nodeCount: number, _depth: number): number {
-  throw new Error('EB-03-02: computeGalaxyHubDiameter not implemented');
+//
+// SC-013 ("Hub diameter scales with content complexity (f(node count, depth));
+// deterministic") is implemented as a pure formula of two scalar inputs:
+//   - `nodeCount`: the number of editor nodes whose `hubIds` include this hub.
+//   - `depth`:     the length of the longest `contains`-edge chain among the
+//                  hub's nodes (a hub with no `contains` edges has depth = 1;
+//                  a chain n1→n2→n3 of `contains` edges has depth = 3).
+//
+// Formula:
+//   diameter = GALAXY_HUB_BASE_DIAMETER
+//            + GALAXY_HUB_COUNT_COEF * sqrt(max(0, nodeCount))
+//            + GALAXY_HUB_DEPTH_COEF * max(0, depth - 1)
+//
+// Choice notes:
+//   - The base constant guarantees a positive finite diameter for empty hubs
+//     so the test "returns a positive finite diameter even for nodeCount=0" is
+//     satisfied without a special case.
+//   - sqrt() growth in nodeCount keeps very large hubs from ballooning past
+//     the galaxy ring radii (GALAXY_RING_RADII = [90, 150, 210]); even at 200
+//     nodes the diameter contribution stays ≈ 14 * COUNT_COEF.
+//   - Depth is linear because in practice contains-chain depth rarely exceeds
+//     5–6 in real apps; a linear term gives observable, monotone variation.
+//   - Both coefficients are positive, so the formula is strictly monotone
+//     non-decreasing in both inputs (and strictly increasing when either
+//     input grows past the sqrt floor).
+//   - No RNG, no clock, no global state — same args → same output every call.
+export const GALAXY_HUB_BASE_DIAMETER = 24;
+export const GALAXY_HUB_COUNT_COEF = 3.2;
+export const GALAXY_HUB_DEPTH_COEF = 6;
+
+export function computeGalaxyHubDiameter(nodeCount: number, depth: number): number {
+  const n = Math.max(0, nodeCount);
+  const d = Math.max(0, depth - 1);
+  return GALAXY_HUB_BASE_DIAMETER
+    + GALAXY_HUB_COUNT_COEF * Math.sqrt(n)
+    + GALAXY_HUB_DEPTH_COEF * d;
 }
+
+// Per-hub depth from `contains` edges scoped to the hub's own nodes. Edges
+// whose `type !== 'contains'` are peer relationships (triggers, data-flow,
+// navigates-to, shares-state, depends-on) and do not contribute to depth.
+// Cross-hub edges are ignored — depth is a containment metric local to each
+// hub. Cycle-safe: an iteration cap of (in-hub node count + 1) bounds the
+// longest-simple-path search regardless of graph shape.
+function computeHubContainsDepth(
+  hubNodeIds: Set<string>,
+  containsAdj: Map<string, Set<string>>,
+): number {
+  if (hubNodeIds.size === 0) return 0;
+  // Restrict the adjacency to in-hub edges only and compute longest path
+  // length (in hops). Memoize on the visited set to terminate on cycles.
+  const memo = new Map<string, number>();
+  const inProgress = new Set<string>();
+  function longest(id: string): number {
+    if (memo.has(id)) return memo.get(id)!;
+    if (inProgress.has(id)) return 0; // cycle break
+    inProgress.add(id);
+    let best = 0;
+    const outs = containsAdj.get(id);
+    if (outs) {
+      for (const next of outs) {
+        if (!hubNodeIds.has(next)) continue;
+        const subPath = 1 + longest(next);
+        if (subPath > best) best = subPath;
+      }
+    }
+    inProgress.delete(id);
+    memo.set(id, best);
+    return best;
+  }
+  let maxHops = 0;
+  for (const id of hubNodeIds) {
+    const hops = longest(id);
+    if (hops > maxHops) maxHops = hops;
+  }
+  // depth = node count along the longest chain = hops + 1.
+  return maxHops + 1;
+}
+
 export function computeGalaxyHubDiameters(
-  _hubs: PrismHub[],
-  _nodes: PrismNode[],
-  _edges: PrismEdge[],
+  hubs: PrismHub[],
+  nodes: PrismNode[],
+  edges: PrismEdge[],
 ): Record<string, number> {
-  throw new Error('EB-03-02: computeGalaxyHubDiameters not implemented');
+  const out: Record<string, number> = {};
+  // Index hub membership and contains-edge adjacency once, then derive each
+  // hub's (nodeCount, depth) and run the formula. O(N + E) overall.
+  const containsAdj = new Map<string, Set<string>>();
+  for (const e of edges) {
+    if (e.type !== 'contains') continue;
+    let set = containsAdj.get(e.source);
+    if (!set) { set = new Set(); containsAdj.set(e.source, set); }
+    set.add(e.target);
+  }
+  for (const hub of hubs) {
+    const hubNodeIds = new Set<string>();
+    for (const n of nodes) {
+      if (n.hubIds.includes(hub.id)) hubNodeIds.add(n.id);
+    }
+    const nodeCount = hubNodeIds.size;
+    const depth = nodeCount === 0 ? 0 : computeHubContainsDepth(hubNodeIds, containsAdj);
+    out[hub.id] = computeGalaxyHubDiameter(nodeCount, depth);
+  }
+  return out;
 }
 
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
@@ -136,6 +227,15 @@ export function useForceGraph(
   const hubCenters = useMemo(
     () => (viewMode === 'galaxy' ? computeGalaxyHubCenters(hubs) : computeHubCenters(hubs)),
     [hubs, viewMode]
+  );
+
+  // EB-03-02: in galaxy mode, hub size derives from content complexity
+  // (SC-013) instead of the topology-mode `maxDist + 10` heuristic. Other
+  // modes get an empty map so the renderer falls through to its existing
+  // sim-based radius. Recomputes only when galaxy inputs change.
+  const hubDiameters = useMemo<Record<string, number>>(
+    () => (viewMode === 'galaxy' ? computeGalaxyHubDiameters(hubs, nodes, edges) : {}),
+    [hubs, nodes, edges, viewMode]
   );
   const [, tick] = useState(0);
 
@@ -222,7 +322,7 @@ export function useForceGraph(
     simRef.current.alpha(0.3).restart();
   }, [pinnedPositions, simNodes]);
 
-  return { simNodes, simLinks, hubCenters, simulation: simRef };
+  return { simNodes, simLinks, hubCenters, hubDiameters, simulation: simRef };
 }
 
 function forceHubGravity(nodes: SimNode[], strength: number) {
