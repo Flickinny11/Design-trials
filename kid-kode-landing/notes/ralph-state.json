@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T21:23:06.438Z",
+  "updatedAt": "2026-05-15T22:03:12Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 31,
-    "lastProductiveCommit": "debfad804451afa644c135e4b4c228fb15cd60d2"
+    "lastProductiveIteration": 32,
+    "lastProductiveCommit": "407ffb29ed82abcc83c982d64f1175d73a90602b"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 10,
+      "used": 11,
       "cap": 50,
       "status": "active"
     },
@@ -87,7 +87,11 @@
     "commit": "debfad804451afa644c135e4b4c228fb15cd60d2",
     "verifiedAt": "2026-05-15T21:02:32Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T21:02:32Z"
+    "recordedAt": "2026-05-15T21:02:32Z",
+    "lastProductiveIteration": 32,
+    "lastProductiveTask": "EB-06-06",
+    "lastProductiveCommit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
+    "updatedAt": "2026-05-15T22:03:12Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -339,6 +343,14 @@
       "commit": "b83515791b1d15c190688e4c3269b2348023fa0d",
       "verifiedAt": "2026-05-15T20:44:09Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-05/"
+    },
+    {
+      "iteration": 32,
+      "taskId": "EB-06-06",
+      "phase": 6,
+      "commit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
+      "verifiedAt": "2026-05-15T22:03:12Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-06/"
     }
   ],
   "tasks": [
@@ -1027,11 +1039,11 @@
       ],
       "haltCheck": "First background layer with attachment 'viewport-fixed' renders fixed to the viewport during scroll in preview-hub; other layers respect their attachment mode; snapshot shows fixed backdrop.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
+      "verifiedAt": "2026-05-15T22:03:12Z",
+      "notes": "spec-reviewer SHOULD-FIX (cleanup reads mesh.geometry at call time) applied; PrismHost duplicates compileBackground inline — Phase 7 (SC-036/SC-037) extends source schema with PrismHubBackgroundLayer[] and will collapse the duplication when this branch reads hub.background instead of layout.mockupUrl."
     },
     {
       "id": "EB-06-07",
