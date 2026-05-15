@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 28,
+  "currentIteration": 29,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T16:38:30Z",
+  "updatedAt": "2026-05-15T17:19:31Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 28,
-    "lastProductiveCommit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78"
+    "lastProductiveCommit": "83c7a01ce59138266cbdf3b8029d2d8019c55973"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 28,
-    "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
-    "verifiedAt": "2026-05-15T16:38:30Z",
+    "commit": "83c7a01ce59138266cbdf3b8029d2d8019c55973",
+    "verifiedAt": "2026-05-15T17:06:24Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T16:38:30Z"
+    "recordedAt": "2026-05-15T17:06:24Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -942,8 +942,8 @@
       ],
       "haltCheck": "compileHubToPreview run twice on the same input produces hash-identical CompiledHubView output; no mutation of source graph (positions byte-identical before/after); FP-04 hook passes against this file's content.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
