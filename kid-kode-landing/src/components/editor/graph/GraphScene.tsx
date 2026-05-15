@@ -35,6 +35,7 @@ import {
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
+import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
@@ -669,6 +670,17 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const livePreviewHoverId = useGraphEditorStore((s) => s.livePreviewHoverId);
   const frozenIds = useGraphEditorStore((s) => s.frozenNodeIds);
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const zoomLevel = useGraphEditorStore((s) => s.zoomLevel);
+  const cameraDistance = useGraphEditorStore((s) => s.cameraDistance);
+
+  // SC-014 — Galaxy mode zoom-based label LOD. At L0/L1 node-cluster labels
+  // are hidden; at L2+ they render. `nodeLabelOpacity` is forwarded to the
+  // rendered `<Html>` so any future renderer that lifts the L1 early-return
+  // can drive a cross-fade without re-deriving opacity here.
+  const lod = computeGalaxyLabelVisibility(viewMode, zoomLevel, cameraDistance);
+  if (!lod.showNodeLabels) return null;
+  const lodOpacity = lod.nodeLabelOpacity;
 
   return (
     <>
@@ -706,7 +718,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
             position={[node.x, node.y + 5.8, node.z]}
             center
             zIndexRange={[100, 0]}
-            style={{ pointerEvents: 'none' }}
+            style={{ pointerEvents: 'none', opacity: lodOpacity }}
           >
             <div className="select-none">
               {tier >= 1 && (
