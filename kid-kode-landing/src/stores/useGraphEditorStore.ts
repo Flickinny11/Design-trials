@@ -64,6 +64,11 @@ interface GraphEditorState {
   searchOpen: boolean;
   searchQuery: string;
 
+  // Galaxy-mode global filter (EB-03-05 / SC-016). Independent of `search*`:
+  // search is for fly-to navigation, filter dims non-matching hubs+nodes.
+  filterOpen: boolean;
+  filterQuery: string;
+
   // Add-node dialog (HL13 / Plan §P13)
   addNodeDialogOpen: boolean;
 
@@ -97,6 +102,9 @@ interface GraphEditorState {
   setInspectorTab: (t: InspectorTab) => void;
   toggleSearch: () => void;
   setSearchQuery: (q: string) => void;
+  toggleFilter: () => void;
+  setFilterQuery: (q: string) => void;
+  clearFilter: () => void;
   openAddNodeDialog: () => void;
   closeAddNodeDialog: () => void;
   toggleFreeze: (id: string) => void;
@@ -127,6 +135,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     inspectorTab: 'visual',
     searchOpen: false,
     searchQuery: '',
+    filterOpen: false,
+    filterQuery: '',
     addNodeDialogOpen: false,
     frozenNodeIds: new Set<string>(),
     livePreviewHoverId: null,
@@ -153,6 +163,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     setInspectorTab: (t) => set({ inspectorTab: t }),
     toggleSearch: () => set((s) => ({ searchOpen: !s.searchOpen, searchQuery: '' })),
     setSearchQuery: (q) => set({ searchQuery: q }),
+    toggleFilter: () => set((s) => ({ filterOpen: !s.filterOpen })),
+    setFilterQuery: (q) => set({ filterQuery: q }),
+    clearFilter: () => set({ filterQuery: '' }),
     openAddNodeDialog: () => set({ addNodeDialogOpen: true }),
     closeAddNodeDialog: () => set({ addNodeDialogOpen: false }),
     toggleFreeze: (id) =>

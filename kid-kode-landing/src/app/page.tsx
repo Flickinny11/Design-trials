@@ -11,6 +11,7 @@ import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
+import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 
@@ -181,6 +182,7 @@ export default function Page() {
               <Minimap />
               <DetailCard />
               <RightPane />
+              <GalaxyFilterOverlay />
             </div>
           )}
         </>
@@ -196,6 +198,7 @@ export default function Page() {
             <HubNav />
             <DetailCard />
             <RightPane />
+            <GalaxyFilterOverlay />
           </div>
         </>
       )}

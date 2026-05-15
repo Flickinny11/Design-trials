@@ -37,6 +37,11 @@ import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
 import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
 import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
+import {
+  computeGalaxyFilterMatches,
+  GALAXY_FILTER_DIM_OPACITY,
+  type GalaxyFilterMatches,
+} from '@/lib/galaxy-filter';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
@@ -477,6 +482,7 @@ function HubHull({
   innerRadius,
   isActive,
   onSelect,
+  dim,
 }: {
   hub: EditorHubView;
   center: { x: number; y: number; z: number };
@@ -484,7 +490,13 @@ function HubHull({
   innerRadius: number;
   isActive: boolean;
   onSelect: () => void;
+  // EB-03-05 / SC-016: when true, the hub is a non-match against the active
+  // galaxy filter. Its opacity is scaled by GALAXY_FILTER_DIM_OPACITY and
+  // pointer events are suppressed so dimmed hubs aren't clickable. Matches
+  // (dim=false) keep their normal appearance and remain interactive.
+  dim?: boolean;
 }) {
+  const dimFactor = dim ? GALAXY_FILTER_DIM_OPACITY : 1;
   // Per-hub mockup texture, loaded lazily from `hub.mockupUrl`. When the URL
   // is null/empty (Stage 0 pre-mockup), the inner sphere is skipped and the
   // hull renders with the procedural translucent fallback only.
@@ -504,14 +516,14 @@ function HubHull({
   return (
     <group
       position={[center.x, center.y, center.z]}
-      onPointerOver={(e) => {
+      onPointerOver={dim ? undefined : (e) => {
         e.stopPropagation();
         document.body.style.cursor = 'pointer';
       }}
-      onPointerOut={() => {
+      onPointerOut={dim ? undefined : () => {
         document.body.style.cursor = 'default';
       }}
-      onClick={(e) => {
+      onClick={dim ? undefined : (e) => {
         e.stopPropagation();
         onSelect();
       }}
@@ -526,7 +538,7 @@ function HubHull({
             map={mockupTexture}
             emissiveMap={mockupTexture}
             emissive={new THREE.Color(hub.color)}
-            emissiveIntensity={isActive ? 0.32 : 0.18}
+            emissiveIntensity={(isActive ? 0.32 : 0.18) * dimFactor}
             metalness={0.1}
             roughness={0.3}
             clearcoat={0.6}
@@ -535,7 +547,7 @@ function HubHull({
             thickness={0.5}
             ior={1.6}
             transparent
-            opacity={0.85}
+            opacity={0.85 * dimFactor}
           />
         </mesh>
       )}
@@ -544,7 +556,7 @@ function HubHull({
         <meshBasicMaterial
           color={hub.color}
           transparent
-          opacity={isActive ? 0.085 : 0.035}
+          opacity={(isActive ? 0.085 : 0.035) * dimFactor}
           side={THREE.BackSide}
           toneMapped={false}
         />
@@ -554,7 +566,7 @@ function HubHull({
         <meshBasicMaterial
           color={hub.color}
           transparent
-          opacity={isActive ? 0.05 : 0.022}
+          opacity={(isActive ? 0.05 : 0.022) * dimFactor}
           wireframe
           toneMapped={false}
         />
@@ -565,7 +577,7 @@ function HubHull({
         <meshBasicMaterial
           color={hub.color}
           transparent
-          opacity={isActive ? 0.32 : 0.18}
+          opacity={(isActive ? 0.32 : 0.18) * dimFactor}
           side={THREE.DoubleSide}
           toneMapped={false}
         />
@@ -574,7 +586,7 @@ function HubHull({
           give the mockup sphere a noticeable glow. */}
       <pointLight
         color={hub.color}
-        intensity={isActive ? 2.4 : 1.0}
+        intensity={(isActive ? 2.4 : 1.0) * dimFactor}
         distance={radius * 3}
         decay={1.6}
       />
@@ -664,12 +676,16 @@ function HubHulls({
   simNodes,
   hubDiameters,
   viewMode,
+  filterMatches,
 }: {
   hubs: EditorHubView[];
   hubCenters: Record<string, any>;
   simNodes: SimNode[];
   hubDiameters: Record<string, number>;
   viewMode: ViewMode;
+  // EB-03-05 / SC-016: when active, hubs whose id is NOT in
+  // matchedHubIds receive the dim treatment in galaxy mode.
+  filterMatches: GalaxyFilterMatches;
 }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
@@ -710,6 +726,11 @@ function HubHulls({
         const innerRadius = Math.min(radius * 0.45, 32);
         const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
+        const dim =
+          viewMode === 'galaxy' &&
+          filterMatches.active &&
+          !filterMatches.matchedHubIds.has(hub.id);
+
         return (
           <HubHull
             key={hub.id}
@@ -719,6 +740,7 @@ function HubHulls({
             innerRadius={innerRadius}
             isActive={isActive}
             onSelect={() => selectHub(hub.id)}
+            dim={dim}
           />
         );
       })}
@@ -1120,6 +1142,8 @@ function TopologySceneContent({
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const qualityMode = useGraphEditorStore((s) => s.qualityMode);
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  // EB-03-05 / SC-016: galaxy filter query drives non-match dimming.
+  const filterQuery = useGraphEditorStore((s) => s.filterQuery);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -1137,6 +1161,16 @@ function TopologySceneContent({
     resetSignal,
     viewMode
   );
+
+  // Galaxy-only filter match set (EB-03-05 / SC-016). Dim treatment applies
+  // only when viewMode === 'galaxy'; hub-world / canvas / preview-* never
+  // inherit the effect, so we short-circuit to the inactive sentinel in
+  // every other mode.
+  const filterMatches = useMemo<GalaxyFilterMatches>(() => {
+    return viewMode === 'galaxy'
+      ? computeGalaxyFilterMatches(filterQuery, editorGraph.hubs, editorGraph.nodes)
+      : { active: false, matchedHubIds: new Set<string>(), matchedNodeIds: new Set<string>() };
+  }, [viewMode, filterQuery, editorGraph.hubs, editorGraph.nodes]);
 
   // Heroes: the selected node + at most 1 other get the expensive transmission material
   const heroIds = useMemo(() => {
@@ -1176,6 +1210,7 @@ function TopologySceneContent({
         simNodes={simNodes}
         hubDiameters={hubDiameters}
         viewMode={viewMode}
+        filterMatches={filterMatches}
       />
 
       {simLinks.map((link) => (
