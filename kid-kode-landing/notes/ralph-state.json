@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 29,
+  "currentIteration": 30,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T17:53:10Z",
+  "updatedAt": "2026-05-15T18:20:52Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 29,
-    "lastProductiveCommit": "e14486c46466f92872df53a6fe25dd7e6b330237"
+    "lastProductiveCommit": "5df41d6eded634ed902496d8ec554750e50e2b82"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 5,
+      "used": 6,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 29,
-    "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
-    "verifiedAt": "2026-05-15T17:53:10Z",
+    "commit": "5df41d6eded634ed902496d8ec554750e50e2b82",
+    "verifiedAt": "2026-05-15T18:07:36Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T17:53:10Z"
+    "recordedAt": "2026-05-15T18:07:36Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -970,8 +970,8 @@
       ],
       "haltCheck": "Test computes sha256 of JSON.stringify(GraphSource) before and after compileHubToPreview; sha is byte-identical. No hub.layout or node position field is touched by the compile.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
