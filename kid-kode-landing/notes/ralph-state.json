@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 15,
+  "currentIteration": 16,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T03:17:58Z",
+  "updatedAt": "2026-05-15T03:37:56Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 15,
-    "lastProductiveCommit": "716c32adf39b5e97e5d17007ac736bacac728900"
+    "lastProductiveCommit": "e3fb11be468d5556846d559cea5dffcc7cfdce01"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 12,
+      "used": 13,
       "cap": 50,
       "status": "active"
     },
@@ -84,9 +84,10 @@
   },
   "checkpoint": {
     "iteration": 15,
-    "taskId": "EB-03-04",
-    "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
-    "verifiedAt": "2026-05-15T03:17:58Z"
+    "commit": "e3fb11be468d5556846d559cea5dffcc7cfdce01",
+    "verifiedAt": "2026-05-15T03:31:08Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-15T03:31:08Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -565,8 +566,8 @@
       ],
       "haltCheck": "Filter overlay UI ships; applying a filter greys/dims non-matching hubs+nodes; matching items remain interactive; clearing the filter restores original appearance.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
