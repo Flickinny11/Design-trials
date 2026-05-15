@@ -1,0 +1,9 @@
+[2026-05-15T00:35:08.266Z] verify-editor-runtimes — task EB-03-01 on http://localhost:4791/
+[2026-05-15T00:35:08.285Z] PASS  preflight.prism-artifact     .prism artifact present
+[2026-05-15T00:35:08.285Z] starting next start on :4791…
+[2026-05-15T00:35:10.796Z] PASS  preflight.server-up          next start reachable
+[2026-05-15T00:35:22.046Z] PASS  outer.screenshot             outer.png captured
+[2026-05-15T00:35:27.379Z] PASS  inner.mounted                inner Prism runtime mounted in preview-hub — mounted
+[2026-05-15T00:35:28.847Z] PASS  inner.screenshot             inner.png captured
+[2026-05-15T00:35:28.847Z] PASS  inner.no-errors              no runtime errors in console / page — clean
+[2026-05-15T00:35:28.849Z] PASS  state.persisted              state.json written
