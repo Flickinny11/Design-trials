@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T07:30:00Z",
+  "updatedAt": "2026-05-15T07:55:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 18,
-    "lastProductiveCommit": "c7a1bbd6810acc66fa7b9d4a6e0a7e37f68da9bd"
+    "lastProductiveIteration": 19,
+    "lastProductiveCommit": "6e280c16618030d0b0880360b2a7b79a29989582"
   },
   "phaseCaps": {
     "§1": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§4": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 18,
-    "commit": "c7a1bbd6810acc66fa7b9d4a6e0a7e37f68da9bd",
-    "verifiedAt": "2026-05-15T07:24:35Z",
+    "iteration": 19,
+    "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
+    "verifiedAt": "2026-05-15T07:55:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T07:24:35Z"
+    "recordedAt": "2026-05-15T07:55:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -235,6 +235,14 @@
       "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
       "verifiedAt": "2026-05-15T07:09:13Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-01/"
+    },
+    {
+      "iteration": 19,
+      "taskId": "EB-04-02",
+      "phase": 4,
+      "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
+      "verifiedAt": "2026-05-15T07:55:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-02/"
     }
   ],
   "tasks": [
@@ -653,11 +661,11 @@
       ],
       "haltCheck": "Clicking a node in hub-world opens inspector; all current tabs (visual/behavior/code/animation/connections/backend/history) remain reachable; tab state persists across mode switches.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
+      "verifiedAt": "2026-05-15T07:55:00Z",
+      "notes": "kv daemon down at verification time; tsc + two-runtime snapshot passed; spec-reviewer SHOULD-FIX (typing + drop useMemo) addressed in same commit"
     },
     {
       "id": "EB-04-03",
