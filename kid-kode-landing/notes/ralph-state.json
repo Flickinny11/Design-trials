@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 31,
+  "currentIteration": 32,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T20:44:09Z",
+  "updatedAt": "2026-05-15T21:23:06.438Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 31,
-    "lastProductiveCommit": "b83515791b1d15c190688e4c3269b2348023fa0d"
+    "lastProductiveCommit": "debfad804451afa644c135e4b4c228fb15cd60d2"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 9,
+      "used": 10,
       "cap": 50,
       "status": "active"
     },
@@ -83,9 +83,11 @@
     }
   },
   "checkpoint": {
-    "lastProductiveIteration": 31,
-    "lastProductiveCommit": "b83515791b1d15c190688e4c3269b2348023fa0d",
-    "verifiedAt": "2026-05-15T20:44:09Z"
+    "iteration": 31,
+    "commit": "debfad804451afa644c135e4b4c228fb15cd60d2",
+    "verifiedAt": "2026-05-15T21:02:32Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-15T21:02:32Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1025,8 +1027,8 @@
       ],
       "haltCheck": "First background layer with attachment 'viewport-fixed' renders fixed to the viewport during scroll in preview-hub; other layers respect their attachment mode; snapshot shows fixed backdrop.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
