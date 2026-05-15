@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 16,
+  "currentIteration": 17,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T04:33:59Z",
+  "updatedAt": "2026-05-15T04:56:21Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 16,
-    "lastProductiveCommit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701"
+    "lastProductiveCommit": "e31d5874e0aa4354677350e7b38e158189264708"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 14,
+      "used": 15,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 16,
-    "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
-    "verifiedAt": "2026-05-15T04:33:59Z",
+    "commit": "e31d5874e0aa4354677350e7b38e158189264708",
+    "verifiedAt": "2026-05-15T04:51:16Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T04:33:59Z"
+    "recordedAt": "2026-05-15T04:51:16Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -595,8 +595,8 @@
       ],
       "haltCheck": "Shift-click adds nodes/hubs to a multi-selection set; inspector renders a group view summarizing the selection; clicking without shift collapses to a single selection.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
