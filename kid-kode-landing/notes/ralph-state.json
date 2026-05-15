@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T03:37:56Z",
+  "updatedAt": "2026-05-15T04:33:59Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 15,
-    "lastProductiveCommit": "e3fb11be468d5556846d559cea5dffcc7cfdce01"
+    "lastProductiveIteration": 16,
+    "lastProductiveCommit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 13,
+      "used": 14,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 15,
-    "commit": "e3fb11be468d5556846d559cea5dffcc7cfdce01",
-    "verifiedAt": "2026-05-15T03:31:08Z",
+    "iteration": 16,
+    "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
+    "verifiedAt": "2026-05-15T04:33:59Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T03:31:08Z"
+    "recordedAt": "2026-05-15T04:33:59Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -211,6 +211,14 @@
       "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
       "verifiedAt": "2026-05-15T03:17:58Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-04/"
+    },
+    {
+      "iteration": 16,
+      "taskId": "EB-03-05",
+      "phase": 3,
+      "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
+      "verifiedAt": "2026-05-15T04:33:59Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-05/"
     }
   ],
   "tasks": [
@@ -566,11 +574,11 @@
       ],
       "haltCheck": "Filter overlay UI ships; applying a filter greys/dims non-matching hubs+nodes; matching items remain interactive; clearing the filter restores original appearance.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
+      "verifiedAt": "2026-05-15T04:33:59Z",
+      "notes": "SHOULD FIX (non-blocking): inner-sphere transparent flag flips with dim — consider always-transparent + opacity. Hero vs non-hero dim parity. Filter overlay polish (ellipsis, toggle clearing). OPTIONAL: refactor pointer handler ternaries."
     },
     {
       "id": "EB-03-06",
