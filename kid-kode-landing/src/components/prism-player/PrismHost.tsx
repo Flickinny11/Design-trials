@@ -11,6 +11,7 @@ import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { deriveCompiledCameraRail } from '@/lib/prism-graph/camera-rail';
+import type { CompiledHubBackgroundLayer } from '@/lib/prism-graph/compiled-view';
 import type { GraphSource } from '@/lib/prism-graph/types';
 // T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
 // editor-side consumers. boot.ts owns the runtime contract; PrismHost is
@@ -198,6 +199,7 @@ export default function PrismHost({
 
     if (viewMode !== 'preview-hub') {
       live.setCameraRail(null);
+      live.setBackgroundLayers(null);
       return;
     }
 
@@ -207,6 +209,7 @@ export default function PrismHost({
       source.hubs[0];
     if (!hub) {
       live.setCameraRail(null);
+      live.setBackgroundLayers(null);
       return;
     }
     const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
@@ -222,6 +225,27 @@ export default function PrismHost({
       nodes: hubNodes,
     });
     live.setCameraRail(cameraRail);
+
+    // EB-06-06 / §6 SC-033 — build the compiled background layer stack and
+    // install it on the runtime. Mirrors `compileBackground` in
+    // compiled-view.ts: the hub's legacy `layout.mockupUrl` maps to a single
+    // viewport-fixed layer at index 0. Phase 7 (SC-036/SC-037) extends the
+    // source schema with PrismHubBackgroundLayer[]; when that lands this
+    // branch reads from `hub.background` instead of `layout.mockupUrl` and
+    // forwards the same shape to the runtime without churn.
+    const mockupUrl = hub.layout?.mockupUrl ?? null;
+    const background: CompiledHubBackgroundLayer[] = mockupUrl
+      ? [
+          {
+            id: `${hub.hubId}/background-0`,
+            attachment: 'viewport-fixed',
+            sourceUrl: mockupUrl,
+            z: 0,
+            opacity: 1,
+          },
+        ]
+      : [];
+    live.setBackgroundLayers(background);
   }, [viewMode, activeHubId, status]);
 
   const isFit = viewportPreset === 'fit';

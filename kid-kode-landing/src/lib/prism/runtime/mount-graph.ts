@@ -126,6 +126,22 @@ export interface MountGraphResult {
 
 const BACKDROP_Z = -2;
 
+// EB-06-06 / §6 SC-033 — viewport-fixed background sizing.
+//
+// The plane is parented to `sceneRoot.camera` so it stays glued to the
+// viewport during scroll/orbit. We pick a fixed local-z just in front of the
+// far plane so it falls behind every node, then size the plane to cover the
+// camera's frustum at that depth (`2 * z * tan(fov/2)` for height, scaled by
+// aspect for width). When the canvas resizes the camera's aspect updates;
+// the plane is resized via the existing `resize()` path below.
+//
+// `VIEWPORT_FIXED_LOCAL_Z` is negative (in front of the camera in local
+// space) and large enough to sit behind every node, well before the camera's
+// far plane (5000 in scene-root.ts).
+const VIEWPORT_FIXED_LOCAL_Z = -1500;
+const VIEWPORT_FIXED_OVERSCAN = 1.05; // small overscan so rotation never
+                                       // exposes an edge.
+
 function buildBackdropMesh(width: number, height: number): Mesh {
   const geo = new PlaneGeometry(width, height);
   const mat = new MeshBasicMaterial({ transparent: true, opacity: 1 });
@@ -156,6 +172,42 @@ async function applyMockupTexture(
     // with the default material. The backdrop is decorative; failing to
     // load it must not break the hub mount.
   }
+}
+
+// EB-06-06 — size a plane to cover the camera frustum at `localZ`.
+function sizeViewportFixedPlane(
+  camera: { fov: number; aspect: number },
+  localZ: number,
+): { width: number; height: number } {
+  const halfFovRad = (camera.fov * Math.PI) / 360;
+  const dist = Math.abs(localZ);
+  const height = 2 * dist * Math.tan(halfFovRad) * VIEWPORT_FIXED_OVERSCAN;
+  const width = height * camera.aspect;
+  return { width, height };
+}
+
+function buildViewportFixedMesh(
+  layer: CompiledHubBackgroundLayer,
+  camera: { fov: number; aspect: number },
+): Mesh {
+  const { width, height } = sizeViewportFixedPlane(camera, VIEWPORT_FIXED_LOCAL_Z);
+  const geo = new PlaneGeometry(width, height);
+  const mat = new MeshBasicMaterial({
+    transparent: layer.opacity < 1,
+    opacity: layer.opacity,
+    depthWrite: false,
+  });
+  const mesh = new Mesh(geo, mat);
+  mesh.position.set(0, 0, VIEWPORT_FIXED_LOCAL_Z);
+  // Render before everything else so node geometry composites on top.
+  mesh.renderOrder = -1000;
+  mesh.userData.role = 'viewport-fixed-background';
+  mesh.userData.layerId = layer.id;
+  mesh.userData.cleanup = () => {
+    geo.dispose();
+    mat.dispose();
+  };
+  return mesh;
 }
 
 export async function mountFromGraphSource(
@@ -319,15 +371,66 @@ export async function mountFromGraphSource(
     renderer?.setSize?.(ww, hh);
     sceneRoot.camera.aspect = ww / hh;
     sceneRoot.camera.updateProjectionMatrix();
+    // EB-06-06 — rebuild viewport-fixed plane geometry against the new
+    // aspect so it continues to cover the full viewport.
+    if (viewportFixedMesh) {
+      const { width, height } = sizeViewportFixedPlane(
+        { fov: sceneRoot.camera.fov, aspect: sceneRoot.camera.aspect },
+        VIEWPORT_FIXED_LOCAL_Z,
+      );
+      const oldGeo = viewportFixedMesh.geometry;
+      viewportFixedMesh.geometry = new PlaneGeometry(width, height);
+      oldGeo.dispose();
+    }
   }
 
-  // EB-06-06 STEP-6 STUB — interface satisfied so the failing test compiles.
-  // STEP-7 will replace this body with the camera-attached plane behavior
-  // required by SC-033.
+  // EB-06-06 (SC-033) — install the compiled background layer stack on the
+  // live mount. The first `viewport-fixed` layer is parented to
+  // sceneRoot.camera so it stays fixed to the viewport while the camera
+  // moves (scroll, rail damping, mode switches). Camera is added to the
+  // scene graph so the renderer traverses through it and draws the plane.
+  // Non-viewport-fixed layers are no-ops at this phase; Phase 7 (SC-036)
+  // expands the renderer's attachment vocabulary.
+  let viewportFixedMesh: Mesh | null = null;
+
+  function clearViewportFixedMesh(): void {
+    if (!viewportFixedMesh) return;
+    const mesh = viewportFixedMesh;
+    viewportFixedMesh = null;
+    if (mesh.parent) mesh.parent.remove(mesh);
+    const cleanup = (mesh.userData as { cleanup?: () => void }).cleanup;
+    if (typeof cleanup === 'function') {
+      try { cleanup(); } catch { /* ignore */ }
+    }
+  }
+
+  function ensureCameraInScene(): void {
+    let node: Object3D | null = sceneRoot.camera;
+    while (node) {
+      if (node === sceneRoot.scene) return;
+      node = node.parent;
+    }
+    sceneRoot.scene.add(sceneRoot.camera);
+  }
+
   function setBackgroundLayers(
-    _layers: readonly CompiledHubBackgroundLayer[] | null,
+    layers: readonly CompiledHubBackgroundLayer[] | null,
   ): void {
-    // intentionally empty — tests must fail until STEP-7 implements
+    clearViewportFixedMesh();
+    if (!layers || layers.length === 0) return;
+    const fixed = layers.find((l) => l.attachment === 'viewport-fixed');
+    if (!fixed) return;
+
+    ensureCameraInScene();
+    const mesh = buildViewportFixedMesh(fixed, {
+      fov: sceneRoot.camera.fov,
+      aspect: sceneRoot.camera.aspect,
+    });
+    sceneRoot.camera.add(mesh);
+    viewportFixedMesh = mesh;
+    if (fixed.sourceUrl) {
+      void applyMockupTexture(mesh, fixed.sourceUrl, ctx);
+    }
   }
 
   function setCameraRail(rail: CompiledCameraRail | null): void {
@@ -357,6 +460,7 @@ export async function mountFromGraphSource(
       cameraRailDriver.dispose();
       cameraRailDriver = null;
     }
+    clearViewportFixedMesh();
     for (const backdrop of hubBackdrops.values()) {
       disposeNode(backdrop);
     }
