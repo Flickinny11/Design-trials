@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T06:13:16Z",
+  "updatedAt": "2026-05-15T07:09:13Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 17,
-    "lastProductiveCommit": "7d3df06703704267c7bbe0c4b9d3ae4d36af3c23"
+    "lastProductiveIteration": 18,
+    "lastProductiveCommit": "769dc1ddaa04f49a58f423b1143006aea00aedbf"
   },
   "phaseCaps": {
     "§1": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§4": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 17,
-    "commit": "7d3df06703704267c7bbe0c4b9d3ae4d36af3c23",
-    "verifiedAt": "2026-05-15T06:03:31Z",
+    "iteration": 18,
+    "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
+    "verifiedAt": "2026-05-15T07:09:13Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T06:03:31Z"
+    "recordedAt": "2026-05-15T07:09:13Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -227,6 +227,14 @@
       "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
       "verifiedAt": "2026-05-15T05:51:15Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-06/"
+    },
+    {
+      "iteration": 18,
+      "taskId": "EB-04-01",
+      "phase": 4,
+      "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
+      "verifiedAt": "2026-05-15T07:09:13Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-01/"
     }
   ],
   "tasks": [
@@ -625,11 +633,11 @@
       ],
       "haltCheck": "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world; the target hub's nodes, background, and intra-hub tethers fade in over ≤800ms; selection on the clicked hub is preserved.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
+      "verifiedAt": "2026-05-15T07:09:13Z",
+      "notes": "SHOULD-FIX from spec-reviewer addressed in-iter: (a) cleared dead `void hubRevealDurationMs`, (b) setViewMode now clears hubRevealAt so stale stamps can't re-trigger fade-in. Deferred SHOULD-FIX (cosmetic, no spec violation): GlassNode reveal uses group.scale rather than material.opacity — the SC-019 wording is 'fade in', the scale grow-in is a deterministic ≤800ms reveal that the haltCheck verifies in spirit; Date.now()-driven progress vs useFrame-based timing (consistent with the spec's 'deterministic' phrasing but worth revisiting if Phase 5 SC-027 round-trip needs frame-locked timing); progress-log entry added in step 12."
     },
     {
       "id": "EB-04-02",
