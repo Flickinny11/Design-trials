@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T04:56:21Z",
+  "updatedAt": "2026-05-15T05:51:15Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 16,
-    "lastProductiveCommit": "e31d5874e0aa4354677350e7b38e158189264708"
+    "lastProductiveIteration": 17,
+    "lastProductiveCommit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 15,
+      "used": 16,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 16,
-    "commit": "e31d5874e0aa4354677350e7b38e158189264708",
-    "verifiedAt": "2026-05-15T04:51:16Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-15T04:51:16Z"
+    "iteration": 17,
+    "taskId": "EB-03-06",
+    "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
+    "at": "2026-05-15T05:51:15Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -219,6 +218,14 @@
       "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
       "verifiedAt": "2026-05-15T04:33:59Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-05/"
+    },
+    {
+      "iteration": 17,
+      "taskId": "EB-03-06",
+      "phase": 3,
+      "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
+      "verifiedAt": "2026-05-15T05:51:15Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-06/"
     }
   ],
   "tasks": [
@@ -595,11 +602,11 @@
       ],
       "haltCheck": "Shift-click adds nodes/hubs to a multi-selection set; inspector renders a group view summarizing the selection; clicking without shift collapses to a single selection.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
+      "verifiedAt": "2026-05-15T05:51:15Z",
+      "notes": "SHOULD-FIX from spec-reviewer: cross-type seeding when shift-clicking node-after-hub-selection or vice versa is not symmetric (deferred — outside SC-017 wording); world-tab effect could be gated on !isGroup (deferred — cosmetic)."
     },
     {
       "id": "EB-04-01",
