@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T12:55:00Z",
+  "updatedAt": "2026-05-15T13:20:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 24,
-    "lastProductiveCommit": "75439571b28b0b6f04b3aeea81ead5e2a20ea9f3"
+    "lastProductiveIteration": 25,
+    "lastProductiveCommit": "34b841d33328089756a669add3136fdd7b3257d2"
   },
   "phaseCaps": {
     "§1": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§5": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 24,
-    "commit": "75439571b28b0b6f04b3aeea81ead5e2a20ea9f3",
-    "verifiedAt": "2026-05-15T12:53:48Z",
+    "iteration": 25,
+    "commit": "34b841d33328089756a669add3136fdd7b3257d2",
+    "verifiedAt": "2026-05-15T13:20:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T12:53:48Z"
+    "recordedAt": "2026-05-15T13:20:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -283,6 +283,14 @@
       "commit": "e704af2bf76be34479535084d05644d5294bc971",
       "verifiedAt": "2026-05-15T12:40:25Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-03/"
+    },
+    {
+      "iteration": 25,
+      "taskId": "EB-05-04",
+      "phase": 5,
+      "commit": "34b841d33328089756a669add3136fdd7b3257d2",
+      "verifiedAt": "2026-05-15T13:20:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-04/"
     }
   ],
   "tasks": [
@@ -825,11 +833,11 @@
       ],
       "haltCheck": "From canvas mode, opening a node's inspector preserves all tabs; animation tab's keyframe UI is reachable without changing viewMode.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "34b841d33328089756a669add3136fdd7b3257d2",
+      "verifiedAt": "2026-05-15T13:20:00Z",
+      "notes": "haltCheck already satisfied at audit; no implementation needed. SC-026 contract pre-existed in src/app/page.tsx (showsGraph branch mounts <RightPane /> when viewMode === 'canvas' via showsSplit) and src/components/editor/panels/Inspector.tsx (all 7 canonical tabs render unconditionally; AnimationTab in Inspector.tsx:575 renders the full keyframe editor with setActiveFrame state + per-frame property editors; no setViewMode call inside AnimationTab). Added regression-safety test tests/editor-build/EB-05-04.inspector-canvas-reachable.test.ts (10 assertions, all passing) locking the four SC-026 source-level guarantees: (1) showsSplit derives from viewMode === 'canvas', (2) showsGraph includes showsSplit, (3) <RightPane /> mounts inside {showsGraph && (...)}, (4) Inspector tab bar has no viewMode gating around TABS.map, (5) AnimationTab body contains keyframe-editor surface, (6) AnimationTab never calls setViewMode, (7) Inspector's single setViewMode call belongs only to the explicit Preview-in-App-UI handler. Verification: tsc --noEmit clean; two-runtime snapshot 7/7 PASS (outer.png, inner.png, state.json, verify.log captured at notes/ralph-snapshots/EB-05-04/). Spec-reviewer: 0 MUST FIX, 0 SHOULD FIX, 3 OPTIONAL (cosmetic test-strictness suggestions only)."
     },
     {
       "id": "EB-05-05",
