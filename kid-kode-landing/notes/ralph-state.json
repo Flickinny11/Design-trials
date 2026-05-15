@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 27,
+  "currentIteration": 28,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T15:39:21Z",
+  "updatedAt": "2026-05-15T16:05:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 27,
-    "lastProductiveCommit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3"
+    "lastProductiveCommit": "37797710ab77ace3e602395931ffd27552df2ba4"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 27,
-    "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
-    "verifiedAt": "2026-05-15T15:39:21Z",
+    "commit": "37797710ab77ace3e602395931ffd27552df2ba4",
+    "verifiedAt": "2026-05-15T15:58:08Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T15:39:21Z"
+    "recordedAt": "2026-05-15T15:58:08Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -912,8 +912,8 @@
       ],
       "haltCheck": "compile-anchors.ts exports a deterministic rule fn (subtype, intent, serviceTag) → uiAnchor; unit tests cover at least 6 subtypes; ambiguous cases fall through to a documented default.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
