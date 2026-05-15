@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T22:21:42Z",
+  "updatedAt": "2026-05-15T23:36:31Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 32,
-    "lastProductiveCommit": "62b7b0b559205a9b9263144c4885215ec2c86293"
+    "lastProductiveIteration": 33,
+    "lastProductiveCommit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "\u00a76": {
-      "used": 12,
+      "used": 13,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 32,
-    "commit": "62b7b0b559205a9b9263144c4885215ec2c86293",
-    "verifiedAt": "2026-05-15T22:05:48Z",
+    "iteration": 33,
+    "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
+    "verifiedAt": "2026-05-15T23:36:31Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T22:05:48Z"
+    "recordedAt": "2026-05-15T23:36:31Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -347,6 +347,14 @@
       "commit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
       "verifiedAt": "2026-05-15T22:03:12Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-06/"
+    },
+    {
+      "iteration": 33,
+      "taskId": "EB-06-07",
+      "phase": 6,
+      "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
+      "verifiedAt": "2026-05-15T23:36:31Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-07/"
     }
   ],
   "tasks": [
@@ -1055,11 +1063,11 @@
       ],
       "haltCheck": "In preview-hub mode, transform handles/gizmos, viewport frame, and overlays are hidden; a minimal 'back' affordance remains; snapshot diff against EB-05-02 confirms clean preview chrome.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
+      "verifiedAt": "2026-05-15T23:36:31Z",
+      "notes": "SHOULD FIX (deferred): (1) replace `as AuthoringViewMode` cast with a type guard; (2) gate window.__PRISM_EDITOR_SET_VIEW_MODE__ on NODE_ENV !== 'production'; (3) hoist the (window as unknown as {...}) double-cast to a named local; (4) extract the shared pill chrome style for the back affordance; (5) drillIntoHub pins previousAuthoringMode to 'hub-world' rather than s.viewMode \u2014 intentional per SC-034 minimal-back wording, but document explicitly. OPTIONAL: use Icon for the chevron; consider inlining showsModeBar; export AuthoringViewMode if a sibling needs it."
     },
     {
       "id": "EB-07-01",
