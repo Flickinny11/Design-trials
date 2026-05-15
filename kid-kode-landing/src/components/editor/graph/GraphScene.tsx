@@ -44,7 +44,10 @@ import {
   GALAXY_FILTER_DIM_OPACITY,
   type GalaxyFilterMatches,
 } from '@/lib/galaxy-filter';
-import { computeCanvasCameraPose } from '@/lib/editor/canvas-camera';
+import {
+  computeCanvasCameraPose,
+  resolveCanvasCameraPose,
+} from '@/lib/editor/canvas-camera';
 import {
   computeCanvasViewportFrame,
   CANVAS_VIEWPORT_FRAME_DEFAULTS,
@@ -1045,6 +1048,11 @@ function ControlsBridge({
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
+  // EB-05-05 / §5 SC-027 — previousViewMode tracks the last-seen mode so the
+  // canvas-entry effect can snapshot the *outgoing* mode's live pose into
+  // cameraPoseByMode before installing the incoming pose. INV-20: camera
+  // pose is mode-specific but checkpointed and restorable.
+  const previousViewMode = useRef<typeof viewMode | null>(null);
 
   // Reset camera
   useEffect(() => {
@@ -1094,13 +1102,38 @@ function ControlsBridge({
   // scene retains its `scenePosition.z` depth instead of collapsing to a
   // flat 2D projection. The pose is then handed to checkpointCameraPose so
   // canvas → hub-world → canvas (SC-027) restores exactly.
+  //
+  // EB-05-05 / §5 SC-027 — on every viewMode change, first snapshot the
+  // *outgoing* mode's live pose into cameraPoseByMode[previousViewMode] so
+  // a later re-entry restores exactly what the user left. On canvas entry,
+  // prefer the stored canvas pose over re-deriving the deterministic one
+  // (resolveCanvasCameraPose) — that is what makes "restores ... exactly"
+  // hold when the user moved the camera inside canvas before leaving.
   useEffect(() => {
-    if (viewMode !== 'canvas') return;
     const c = controlsRef.current;
     if (!c) return;
+
+    // 1. Capture the live pose of the prior mode (SC-027 round-trip leg).
+    const prev = previousViewMode.current;
+    if (prev && prev !== viewMode) {
+      const pos = new THREE.Vector3();
+      const tgt = new THREE.Vector3();
+      c.getPosition(pos);
+      c.getTarget(tgt);
+      checkpointCameraPose(prev, {
+        position: { x: pos.x, y: pos.y, z: pos.z },
+        target: { x: tgt.x, y: tgt.y, z: tgt.z },
+      });
+    }
+    previousViewMode.current = viewMode;
+
+    // 2. On canvas entry, restore the checkpointed canvas pose if present;
+    //    otherwise fall back to the SC-022 deterministic pose.
+    if (viewMode !== 'canvas') return;
+    const stored = useGraphEditorStore.getState().cameraPoseByMode.canvas;
     const center =
       (activeHubId && hubCenters[activeHubId]) ?? { x: 0, y: 0, z: 0 };
-    const pose = computeCanvasCameraPose({
+    const pose = resolveCanvasCameraPose(stored, {
       x: center.x,
       y: center.y,
       z: center.z,
@@ -1154,6 +1187,10 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
+  // EB-05-05 / §5 SC-027 — previousViewMode for canvas↔hub-world round-trip
+  // pose snapshotting in this scene-mode bridge (see ControlsBridge for the
+  // matching block in topology mode).
+  const previousViewMode = useRef<typeof viewMode | null>(null);
 
   useEffect(() => {
     const c = controlsRef.current;
@@ -1168,11 +1205,29 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
   // center is (0, 0, 0) here. computeCanvasCameraPose offsets along +Z so
   // node `scenePosition.z` depth is preserved (SC-024 — never a flat 2D
   // projection). Pose is checkpointed for SC-027 round-trip restoration.
+  //
+  // EB-05-05 / §5 SC-027 — snapshot the outgoing mode's pose on every change
+  // and restore the stored canvas pose on canvas entry (INV-20).
   useEffect(() => {
-    if (viewMode !== 'canvas') return;
     const c = controlsRef.current;
     if (!c) return;
-    const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+
+    const prev = previousViewMode.current;
+    if (prev && prev !== viewMode) {
+      const pos = new THREE.Vector3();
+      const tgt = new THREE.Vector3();
+      c.getPosition(pos);
+      c.getTarget(tgt);
+      checkpointCameraPose(prev, {
+        position: { x: pos.x, y: pos.y, z: pos.z },
+        target: { x: tgt.x, y: tgt.y, z: tgt.z },
+      });
+    }
+    previousViewMode.current = viewMode;
+
+    if (viewMode !== 'canvas') return;
+    const stored = useGraphEditorStore.getState().cameraPoseByMode.canvas;
+    const pose = resolveCanvasCameraPose(stored, { x: 0, y: 0, z: 0 });
     c.setLookAt(
       pose.position.x,
       pose.position.y,

@@ -36,13 +36,20 @@ export function computeCanvasCameraPose(hubCenter: HubCenter): CameraPose {
 }
 
 // EB-05-05 / §5 SC-027 — canvas ↔ hub-world round-trip pose restoration.
-// STUB ENTRY (failing-test scaffolding): the real implementation lands in
-// step 7 and prefers `stored` when defined. This stub always recomputes
-// from the hub center so the EB-05-05 contract tests FAIL on assertions
-// (not on a missing import).
+// When a checkpointed pose exists for `canvas`, return a structural copy of
+// it (exact restoration; INV-20). When no checkpoint exists yet, fall back
+// to the deterministic SC-022 pose so first-time entry still centers on the
+// active hub. The copy is defensive — callers (the controls bridge) feed
+// the result to camera-controls without owning the store object.
 export function resolveCanvasCameraPose(
-  _stored: CameraPose | undefined,
+  stored: CameraPose | undefined,
   hubCenter: HubCenter,
 ): CameraPose {
+  if (stored) {
+    return {
+      position: { x: stored.position.x, y: stored.position.y, z: stored.position.z },
+      target: { x: stored.target.x, y: stored.target.y, z: stored.target.z },
+    };
+  }
   return computeCanvasCameraPose(hubCenter);
 }
