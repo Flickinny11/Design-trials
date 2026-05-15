@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 30,
+  "currentIteration": 31,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T18:51:16Z",
+  "updatedAt": "2026-05-15T19:30:53Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 30,
-    "lastProductiveCommit": "d1e649350b6283e123791af01f30699536e20663"
+    "lastProductiveCommit": "25a7057c6514d12767afda15e9f0b294dfe8155f"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 30,
-    "commit": "d1e649350b6283e123791af01f30699536e20663",
-    "verifiedAt": "2026-05-15T18:51:16Z",
+    "commit": "25a7057c6514d12767afda15e9f0b294dfe8155f",
+    "verifiedAt": "2026-05-15T19:10:21Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T18:51:16Z"
+    "recordedAt": "2026-05-15T19:10:21Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -999,8 +999,8 @@
       ],
       "haltCheck": "preview-hub camera is constrained to a damped rail computed from CompiledHubView.cameraRail; no orbit/drag in preview-hub; snapshot proves the camera never exposes scene edges.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
