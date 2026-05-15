@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T01:02:05Z",
+  "updatedAt": "2026-05-15T01:20:23Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 12,
-    "lastProductiveCommit": "3dec6ca21905d4263d416f85bbb2ef90eb6345ab"
+    "lastProductiveIteration": 13,
+    "lastProductiveCommit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "\u00a73": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 12,
-    "commit": "3dec6ca21905d4263d416f85bbb2ef90eb6345ab",
-    "verifiedAt": "2026-05-15T00:56:01Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-15T00:56:01Z"
+    "iteration": 13,
+    "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
+    "verifiedAt": "2026-05-15T01:20:23Z",
+    "artifactHash": null
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -187,6 +186,14 @@
       "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
       "verifiedAt": "2026-05-15T00:45:16Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-01/"
+    },
+    {
+      "iteration": 13,
+      "taskId": "EB-03-02",
+      "phase": 3,
+      "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
+      "verifiedAt": "2026-05-15T01:20:23Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-02/"
     }
   ],
   "tasks": [
@@ -479,11 +486,11 @@
       ],
       "haltCheck": "Hub diameter = f(nodeCount, depth) with documented formula; unit test verifies monotonic growth; snapshot diff against EB-03-01 shows size variation between hubs.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
+      "verifiedAt": "2026-05-15T01:20:23Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX (progress-log line) handled in Step 12. OPTIONAL noted: (a) computeGalaxyHubDiameters could index hubId\u2192nodeIds once for O(N+E+H); (b) computeHubContainsDepth memo is a lower-bound approximation in the cyclic case (acceptable per haltCheck); (c) coefficient constants currently exported; (d) defensive hubDiameters[hub.id] != null guard could carry a clarifying comment."
     },
     {
       "id": "EB-03-03",
