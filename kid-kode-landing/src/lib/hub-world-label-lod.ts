@@ -53,6 +53,12 @@ function clamp01(x: number): number {
   return x;
 }
 
+// Sentinel returned when this predicate is disabled (viewMode !== 'hub-world').
+// All flags `true` and all opacities `1` so callers that AND this predicate
+// with another (e.g. galaxy-label-lod) get a transparent pass-through. A
+// caller that consults `showSubNodeDetail` outside hub-world is, by
+// construction, not using this predicate's authority — the field is `true`
+// to mean "no intra-hub gate applied," not "we decided detail is visible."
 const ALL_ON: HubWorldLabelVisibility = {
   showHubLabel: true,
   showNodeLabels: true,

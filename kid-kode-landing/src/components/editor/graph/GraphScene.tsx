@@ -955,18 +955,18 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                   {frozen && <span style={{ color: '#8bb4ff' }}>❄</span>}
                 </div>
               )}
-              {tier >= 3 && (
+              {tier >= 3 && showSubNodeDetail && (
                 <div
                   className="font-mono mt-0.5 text-center"
-                  style={{ fontSize: 9, color: statusColor }}
+                  style={{ fontSize: 9, color: statusColor, opacity: subNodeDetailOpacity }}
                 >
                   score {node.verificationScore.toFixed(2)}
                 </div>
               )}
-              {tier >= 4 && (
+              {tier >= 4 && showSubNodeDetail && (
                 <div
                   className="mt-1 max-w-[200px] mx-auto text-[10px] text-center leading-snug"
-                  style={{ color: '#c5ccea', textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
+                  style={{ color: '#c5ccea', textShadow: '0 1px 3px rgba(0,0,0,0.9)', opacity: subNodeDetailOpacity }}
                 >
                   {node.caption.slice(0, 90)}…
                 </div>
