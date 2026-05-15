@@ -36,6 +36,7 @@ import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
 import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
+import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
@@ -160,6 +161,73 @@ function EdgeParticle({ link }: { link: SimLink }) {
       <sphereGeometry args={[0.42, 8, 8]} />
       <meshBasicMaterial color={color} toneMapped={false} />
     </mesh>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GalaxyHubTethers — inter-hub reason-colored animated lines (EB-03-04).
+// Mounts only when viewMode === 'galaxy'. Color comes from EDGE_COLORS
+// keyed by edge type (RA-15). Material is translucent; useFrame drives a
+// subtle opacity pulse (SC-015).
+// ═══════════════════════════════════════════════════════════════════
+function GalaxyHubTethers({
+  nodes,
+  edges,
+  hubCenters,
+}: {
+  nodes: ReadonlyArray<{ id: string; hubIds: string[] }>;
+  edges: ReadonlyArray<{ id: string; source: string; target: string; type: string }>;
+  hubCenters: Record<string, { x: number; y: number; z: number }>;
+}) {
+  const tethers = useMemo(
+    () => computeGalaxyHubTethers(nodes, edges),
+    [nodes, edges]
+  );
+
+  const materialsRef = useRef<THREE.LineBasicMaterial[]>([]);
+  materialsRef.current = [];
+
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    for (let i = 0; i < materialsRef.current.length; i++) {
+      const mat = materialsRef.current[i];
+      if (!mat) continue;
+      // Subtle pulse: opacity oscillates around 0.45 with ±0.15, phase per index.
+      mat.opacity = 0.45 + 0.15 * Math.sin(t * 1.4 + i * 0.6);
+    }
+  });
+
+  return (
+    <group>
+      {tethers.map((tether, i) => {
+        const a = hubCenters[tether.hubA];
+        const b = hubCenters[tether.hubB];
+        if (!a || !b) return null;
+        const color = EDGE_COLORS[tether.type] || '#ffffff';
+        const positions = new Float32Array([a.x, a.y, a.z, b.x, b.y, b.z]);
+        return (
+
+          <line key={tether.id}>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                args={[positions, 3]}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial
+              ref={(m) => {
+                if (m) materialsRef.current[i] = m;
+              }}
+              color={color}
+              transparent
+              opacity={0.45}
+              toneMapped={false}
+            />
+
+          </line>
+        );
+      })}
+    </group>
   );
 }
 
@@ -1094,6 +1162,13 @@ function TopologySceneContent({
           the hulls keep their current positions and the sun is added on top
           as a click target. */}
       {viewMode === 'galaxy' && <WorldSun />}
+      {viewMode === 'galaxy' && (
+        <GalaxyHubTethers
+          nodes={editorGraph.nodes}
+          edges={editorGraph.edges}
+          hubCenters={hubCenters}
+        />
+      )}
 
       <HubHulls
         hubs={editorGraph.hubs}
