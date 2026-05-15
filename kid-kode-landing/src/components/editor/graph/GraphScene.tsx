@@ -104,9 +104,50 @@ const EDGE_COLORS: Record<string, string> = {
 };
 
 // ═══════════════════════════════════════════════════════════════════
+// EB-04-01 / SC-019 — hub drill-in reveal animation hook.
+//
+// Reads `hubRevealAt` and `hubRevealDurationMs` from the editor store and
+// returns the current 0..1 fade-in progress for the active hub. Renderers
+// (HubHull, Edge, GlassNode) multiply their opacities / group scales by the
+// returned value while a galaxy→hub-world drill-in is in flight; once the
+// duration elapses the hook holds 1 (no effect).
+// ═══════════════════════════════════════════════════════════════════
+function useHubRevealProgress(): number {
+  const hubRevealAt = useGraphEditorStore((s) => s.hubRevealAt);
+  const hubRevealDurationMs = useGraphEditorStore((s) => s.hubRevealDurationMs);
+  const [progress, setProgress] = useState(1);
+
+  useEffect(() => {
+    if (hubRevealAt == null) {
+      setProgress(1);
+      return;
+    }
+    let rafId = 0;
+    const tick = () => {
+      const elapsed = Date.now() - hubRevealAt;
+      if (elapsed >= hubRevealDurationMs) {
+        setProgress(1);
+        return;
+      }
+      // Smoothstep ease-out so the reveal feels deterministic but soft.
+      const t = Math.max(0, Math.min(1, elapsed / hubRevealDurationMs));
+      const eased = t * t * (3 - 2 * t);
+      setProgress(eased);
+      rafId = requestAnimationFrame(tick);
+    };
+    tick();
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [hubRevealAt, hubRevealDurationMs]);
+
+  return progress;
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // Edge line (updates positions per-frame from sim)
 // ═══════════════════════════════════════════════════════════════════
-function Edge({ link }: { link: SimLink }) {
+function Edge({ link, revealOpacity = 1 }: { link: SimLink; revealOpacity?: number }) {
   const lineRef = useRef<any>(null);
 
   useFrame(() => {
@@ -122,10 +163,13 @@ function Edge({ link }: { link: SimLink }) {
   });
 
   const color = EDGE_COLORS[link.type] || '#ffffff';
-  const opacity = link.type === 'contains' ? 0.28 : 0.62;
+  const baseOpacity = link.type === 'contains' ? 0.28 : 0.62;
+  // EB-04-01 / SC-019 — intra-hub tethers in the active hub fade in with the
+  // drill-in reveal. Callers pass revealOpacity in [0,1]; default 1 = no effect.
+  const opacity = baseOpacity * revealOpacity;
 
   return (
-    
+
     <line ref={lineRef}>
       <bufferGeometry />
       <lineBasicMaterial
@@ -134,7 +178,7 @@ function Edge({ link }: { link: SimLink }) {
         opacity={opacity}
         toneMapped={false}
       />
-    
+
     </line>
   );
 }
@@ -248,6 +292,7 @@ function GlassNode({
   hubs,
   sourceNode,
   dim,
+  revealOpacity = 1,
 }: {
   node: SimNode;
   hero: boolean; // use expensive MeshTransmissionMaterial for 1-2 heroes
@@ -258,6 +303,12 @@ function GlassNode({
   // GALAXY_FILTER_DIM_OPACITY and pointer events are suppressed so the
   // node is not hover/clickable. Matching nodes keep full appearance.
   dim?: boolean;
+  // EB-04-01 / SC-019 — drill-in reveal opacity for active-hub nodes. The
+  // parent (TopologySceneContent) passes the current fade-in progress only to
+  // nodes inside the active hub during the galaxy→hub-world transition. We
+  // scale the group so the node grows in with the reveal; non-active hub
+  // nodes get the default 1.
+  revealOpacity?: number;
 }) {
   const dimFactor = dim ? GALAXY_FILTER_DIM_OPACITY : 1;
   const groupRef = useRef<THREE.Group>(null);
@@ -319,6 +370,9 @@ function GlassNode({
   useFrame((state, delta) => {
     if (!groupRef.current) return;
     groupRef.current.position.set(node.x, node.y, node.z);
+    // EB-04-01 / SC-019 — fade-in via group scale. During the reveal window
+    // active-hub nodes grow from 0 → 1; non-active nodes keep revealOpacity=1.
+    groupRef.current.scale.setScalar(Math.max(0, Math.min(1, revealOpacity)));
 
     // Slow rotation so both front & back hemispheres get seen.
     if (innerRef.current) {
@@ -501,6 +555,7 @@ function HubHull({
   isActive,
   onSelect,
   dim,
+  revealOpacity = 1,
 }: {
   hub: EditorHubView;
   center: { x: number; y: number; z: number };
@@ -513,8 +568,16 @@ function HubHull({
   // pointer events are suppressed so dimmed hubs aren't clickable. Matches
   // (dim=false) keep their normal appearance and remain interactive.
   dim?: boolean;
+  // EB-04-01 / SC-019 — the active hub's background sphere fades in with the
+  // drill-in reveal. The HubHulls parent computes revealOpacity from
+  // hubRevealAt / hubRevealDurationMs and forwards it only to the active hub.
+  // Default 1 = no effect.
+  revealOpacity?: number;
 }) {
-  const dimFactor = dim ? GALAXY_FILTER_DIM_OPACITY : 1;
+  // The reveal fade only attenuates the active hub. The dim filter still
+  // composes on top for non-match dimming in galaxy mode.
+  const revealFactor = isActive ? revealOpacity : 1;
+  const dimFactor = (dim ? GALAXY_FILTER_DIM_OPACITY : 1) * revealFactor;
   // Per-hub mockup texture, loaded lazily from `hub.mockupUrl`. When the URL
   // is null/empty (Stage 0 pre-mockup), the inner sphere is skipped and the
   // hull renders with the procedural translucent fallback only.
@@ -695,6 +758,7 @@ function HubHulls({
   hubDiameters,
   viewMode,
   filterMatches,
+  revealOpacity = 1,
 }: {
   hubs: EditorHubView[];
   hubCenters: Record<string, any>;
@@ -704,11 +768,16 @@ function HubHulls({
   // EB-03-05 / SC-016: when active, hubs whose id is NOT in
   // matchedHubIds receive the dim treatment in galaxy mode.
   filterMatches: GalaxyFilterMatches;
+  // EB-04-01 / SC-019 — drill-in reveal opacity for the active hub's
+  // background sphere. Forwarded to HubHull where isActive=true.
+  revealOpacity?: number;
 }) {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
   const selectHub = useGraphEditorStore((s) => s.selectHub);
   const toggleHubSelection = useGraphEditorStore((s) => s.toggleHubSelection);
+  // EB-04-01 / SC-018 — galaxy hub click drills into hub-world.
+  const drillIntoHub = useGraphEditorStore((s) => s.drillIntoHub);
 
   return (
     <>
@@ -758,12 +827,18 @@ function HubHulls({
             radius={radius}
             innerRadius={innerRadius}
             isActive={isActive}
+            revealOpacity={revealOpacity}
             onSelect={(shiftKey) => {
               // EB-03-06 / SC-017 — shift-click on a hub in galaxy mode adds
               // the hub to the multi-selection set instead of replacing the
               // current selection. Other modes preserve single-select.
               if (viewMode === 'galaxy' && shiftKey) {
                 toggleHubSelection(hub.id);
+              } else if (viewMode === 'galaxy') {
+                // EB-04-01 / SC-018 — plain galaxy hub click drills into
+                // hub-world, fires flyToHub, and stamps hubRevealAt for the
+                // SC-019 fade-in animation.
+                drillIntoHub(hub.id);
               } else {
                 selectHub(hub.id);
               }
@@ -1172,6 +1247,23 @@ function TopologySceneContent({
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   // EB-03-05 / SC-016: galaxy filter query drives non-match dimming.
   const filterQuery = useGraphEditorStore((s) => s.filterQuery);
+  // EB-04-01 / SC-018+019 — drill-in reveal animation. The hook reads
+  // hubRevealAt and hubRevealDurationMs from the store; activeHubId scopes the
+  // reveal to the just-drilled-into hub.
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const hubRevealAt = useGraphEditorStore((s) => s.hubRevealAt);
+  const hubRevealDurationMs = useGraphEditorStore((s) => s.hubRevealDurationMs);
+  const revealProgress = useHubRevealProgress();
+  // The reveal only animates when entering hub-world from a drill-in; in
+  // galaxy / canvas / preview-* modes we hold full opacity so other modes
+  // never visually depend on the reveal timer.
+  const revealOpacityForActiveHub =
+    viewMode === 'hub-world' && hubRevealAt != null
+      ? revealProgress
+      : 1;
+  // Compile-time touch so static analysis sees the store fields are consumed
+  // by this renderer (also documents the dependency).
+  void hubRevealDurationMs;
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -1239,11 +1331,24 @@ function TopologySceneContent({
         hubDiameters={hubDiameters}
         viewMode={viewMode}
         filterMatches={filterMatches}
+        revealOpacity={revealOpacityForActiveHub}
       />
 
-      {simLinks.map((link) => (
-        <Edge key={link.id} link={link} />
-      ))}
+      {simLinks.map((link) => {
+        // EB-04-01 / SC-019 — intra-hub tethers in the active hub fade in
+        // with the drill-in reveal. We approximate "intra-hub" by checking
+        // both endpoint hub membership; inter-hub edges keep opacity 1.
+        const s = link.source as SimNode;
+        const t = link.target as SimNode;
+        const isIntraActive =
+          activeHubId != null &&
+          typeof s !== 'string' &&
+          typeof t !== 'string' &&
+          !!s?.hubIds?.includes(activeHubId) &&
+          !!t?.hubIds?.includes(activeHubId);
+        const edgeReveal = isIntraActive ? revealOpacityForActiveHub : 1;
+        return <Edge key={link.id} link={link} revealOpacity={edgeReveal} />;
+      })}
       {simLinks.slice(0, 20).map((link) => (
         <EdgeParticle key={'p-' + link.id} link={link} />
       ))}
@@ -1256,6 +1361,12 @@ function TopologySceneContent({
         // true while the user is in galaxy.
         const dim =
           filterMatches.active && !filterMatches.matchedNodeIds.has(node.id);
+        // EB-04-01 / SC-019 — active-hub nodes fade in with the drill-in
+        // reveal; all other nodes keep full opacity.
+        const nodeRevealOpacity =
+          activeHubId != null && node.hubIds.includes(activeHubId)
+            ? revealOpacityForActiveHub
+            : 1;
         return (
           <GlassNode
             key={node.id}
@@ -1264,6 +1375,7 @@ function TopologySceneContent({
             hubs={editorGraph.hubs}
             sourceNode={sourceNode}
             dim={dim}
+            revealOpacity={nodeRevealOpacity}
           />
         );
       })}

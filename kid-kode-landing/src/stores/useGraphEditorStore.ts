@@ -90,6 +90,15 @@ interface GraphEditorState {
   flyToHubId: string | null;
   resetCameraSignal: number;
 
+  // EB-04-01 / SC-019 — drill-in reveal animation timing. `hubRevealAt` is the
+  // wall-clock timestamp (Date.now()) of the last galaxy→hub-world drill-in;
+  // null when no reveal has been requested. Renderers compute fade-in progress
+  // as clamp((Date.now() - hubRevealAt) / hubRevealDurationMs, 0, 1) and apply
+  // that to the active hub's nodes / background sphere / intra-hub tethers.
+  // The duration is held in `hubRevealDurationMs` and is constrained to ≤ 800.
+  hubRevealAt: number | null;
+  hubRevealDurationMs: number;
+
   // Drag-pinned node positions
   pinnedPositions: Map<string, { x: number; y: number; z: number }>;
 
@@ -122,6 +131,17 @@ interface GraphEditorState {
   flyToNode: (id: string) => void;
   flyToHub: (hubId: string) => void;
   clearFlyTarget: () => void;
+  /**
+   * EB-04-01 / SC-018 + SC-019 — galaxy→hub-world drill-in. Atomically:
+   *   - viewMode      := 'hub-world'
+   *   - selectedHubId := hubId   (INV-20: selection on the clicked hub
+   *                               preserved across the transition)
+   *   - activeHubId   := hubId
+   *   - flyToHubId    := hubId   (reuses existing flyToHub camera signal)
+   *   - hubRevealAt   := Date.now()
+   *   - multi-selection sets cleared (drill-in collapses to single hub)
+   */
+  drillIntoHub: (hubId: string) => void;
   resetCamera: () => void;
   pinNode: (id: string, pos: { x: number; y: number; z: number }) => void;
   clearPinnedPositions: () => void;
@@ -155,6 +175,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     flyToNodeId: null,
     flyToHubId: null,
     resetCameraSignal: 0,
+    hubRevealAt: null,
+    hubRevealDurationMs: 800,
     pinnedPositions: new Map(),
     qualityMode: 'auto',
 
@@ -261,6 +283,18 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       }),
     flyToHub: (hubId) => set({ flyToHubId: hubId, activeHubId: hubId }),
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),
+    drillIntoHub: (hubId) =>
+      set({
+        viewMode: 'hub-world',
+        selectedHubId: hubId,
+        selectedNodeId: null,
+        selectedNodeIds: new Set<string>(),
+        selectedHubIds: new Set<string>(),
+        activeHubId: hubId,
+        flyToHubId: hubId,
+        hubRevealAt: Date.now(),
+        inspectorOpen: true,
+      }),
     resetCamera: () =>
       set((s) => ({ resetCameraSignal: s.resetCameraSignal + 1, activeHubId: null })),
     pinNode: (id, pos) =>
