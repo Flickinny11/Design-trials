@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 25,
+  "currentIteration": 26,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T13:20:00Z",
+  "updatedAt": "2026-05-15T13:50:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 25,
-    "lastProductiveCommit": "34b841d33328089756a669add3136fdd7b3257d2"
+    "lastProductiveCommit": "42bb6d96f3062e559186a4708b1d72f7dcd0f3b8"
   },
   "phaseCaps": {
     "§1": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§5": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 25,
-    "commit": "34b841d33328089756a669add3136fdd7b3257d2",
-    "verifiedAt": "2026-05-15T13:20:00Z",
+    "commit": "42bb6d96f3062e559186a4708b1d72f7dcd0f3b8",
+    "verifiedAt": "2026-05-15T13:45:24Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T13:20:00Z"
+    "recordedAt": "2026-05-15T13:45:24Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -854,8 +854,8 @@
       ],
       "haltCheck": "Test: enter canvas, select node, switch to hub-world, switch back to canvas. selectedNodeId is preserved; camera pose for canvas mode is restored exactly.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
