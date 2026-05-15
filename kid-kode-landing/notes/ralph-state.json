@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T17:19:31Z",
+  "updatedAt": "2026-05-15T17:53:10Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 28,
-    "lastProductiveCommit": "83c7a01ce59138266cbdf3b8029d2d8019c55973"
+    "lastProductiveIteration": 29,
+    "lastProductiveCommit": "e14486c46466f92872df53a6fe25dd7e6b330237"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 28,
-    "commit": "83c7a01ce59138266cbdf3b8029d2d8019c55973",
-    "verifiedAt": "2026-05-15T17:06:24Z",
+    "iteration": 29,
+    "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
+    "verifiedAt": "2026-05-15T17:53:10Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T17:06:24Z"
+    "recordedAt": "2026-05-15T17:53:10Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -315,6 +315,14 @@
       "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
       "verifiedAt": "2026-05-15T16:38:30Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-02/"
+    },
+    {
+      "iteration": 29,
+      "taskId": "EB-06-03",
+      "phase": 6,
+      "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
+      "verifiedAt": "2026-05-15T17:53:10Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-03/"
     }
   ],
   "tasks": [
@@ -942,11 +950,11 @@
       ],
       "haltCheck": "compileHubToPreview run twice on the same input produces hash-identical CompiledHubView output; no mutation of source graph (positions byte-identical before/after); FP-04 hook passes against this file's content.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
+      "verifiedAt": "2026-05-15T17:53:10Z",
+      "notes": "SHOULD FIX (non-blocking): consider documenting scroll-timeline distinction via Phase 7 scrollBinding pointer; import style mixed in repo. OPTIONAL: __dirname in EB-06-03 test file is acceptable under vitest."
     },
     {
       "id": "EB-06-04",
