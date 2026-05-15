@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 19,
+  "currentIteration": 20,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T07:55:00Z",
+  "updatedAt": "2026-05-15T08:05:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 19,
-    "lastProductiveCommit": "6e280c16618030d0b0880360b2a7b79a29989582"
+    "lastProductiveCommit": "ede3db102c1724cc043a165777e913f408d4b51b"
   },
   "phaseCaps": {
     "§1": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§4": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 19,
-    "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
-    "verifiedAt": "2026-05-15T07:55:00Z",
+    "commit": "ede3db102c1724cc043a165777e913f408d4b51b",
+    "verifiedAt": "2026-05-15T07:59:51Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T07:55:00Z"
+    "recordedAt": "2026-05-15T07:59:51Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -681,8 +681,8 @@
       ],
       "haltCheck": "Inside hub-world, zoomLevel L1 shows hub label only; L3+ shows node labels; L4 reveals sub-node detail; LOD transitions tested per level.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
