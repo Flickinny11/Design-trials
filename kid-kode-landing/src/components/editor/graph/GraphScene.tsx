@@ -247,12 +247,19 @@ function GlassNode({
   hero,
   hubs,
   sourceNode,
+  dim,
 }: {
   node: SimNode;
   hero: boolean; // use expensive MeshTransmissionMaterial for 1-2 heroes
   hubs: EditorHubView[];
   sourceNode: PrismNode | undefined;
+  // EB-03-05 / SC-016: galaxy-mode filter dim. When true, the node is a
+  // non-match against the active filter — its shell opacity is scaled by
+  // GALAXY_FILTER_DIM_OPACITY and pointer events are suppressed so the
+  // node is not hover/clickable. Matching nodes keep full appearance.
+  dim?: boolean;
 }) {
+  const dimFactor = dim ? GALAXY_FILTER_DIM_OPACITY : 1;
   const groupRef = useRef<THREE.Group>(null);
   const innerRef = useRef<THREE.Mesh>(null);
   const shellRef = useRef<THREE.Mesh>(null);
@@ -336,20 +343,20 @@ function GlassNode({
   return (
     <group
       ref={groupRef}
-      onPointerOver={(e) => {
+      onPointerOver={dim ? undefined : (e) => {
         e.stopPropagation();
         hoverNode(node.id);
         document.body.style.cursor = 'pointer';
       }}
-      onPointerOut={() => {
+      onPointerOut={dim ? undefined : () => {
         hoverNode(null);
         document.body.style.cursor = 'default';
       }}
-      onClick={(e) => {
+      onClick={dim ? undefined : (e) => {
         e.stopPropagation();
         selectNode(node.id);
       }}
-      onDoubleClick={(e) => {
+      onDoubleClick={dim ? undefined : (e) => {
         e.stopPropagation();
         selectNode(node.id);
         openInspector();
@@ -365,12 +372,14 @@ function GlassNode({
           <sphereGeometry args={[radius, 72, 72]} />
           <meshPhysicalMaterial
             map={texture}
+            transparent={dim ? true : undefined}
+            opacity={dim ? dimFactor : 1}
             metalness={0.35}
             roughness={0.28}
             clearcoat={0.65}
             clearcoatRoughness={0.18}
             emissive={frozen ? new THREE.Color('#8bb4ff') : new THREE.Color(hubColor)}
-            emissiveIntensity={frozen ? 0.22 : node.status === 'failed' ? 0.4 : 0.08}
+            emissiveIntensity={(frozen ? 0.22 : node.status === 'failed' ? 0.4 : 0.08) * dimFactor}
             emissiveMap={texture}
           />
         </mesh>
@@ -390,7 +399,7 @@ function GlassNode({
             temporalDistortion={0.08}
             ior={1.33}
             roughness={frozen ? 0.3 : 0.08}
-            transmission={0.95}
+            transmission={0.95 * dimFactor}
             color={frozen ? '#a5c8ff' : '#ffffff'}
             attenuationDistance={2}
             attenuationColor={hubColor as any}
@@ -402,13 +411,13 @@ function GlassNode({
           <sphereGeometry args={[radius, 48, 48]} />
           <meshPhysicalMaterial
             transparent
-            opacity={0.52}
+            opacity={0.52 * dimFactor}
             metalness={0}
             roughness={frozen ? 0.3 : 0.04}
             transmission={0.95}
             thickness={0.35}
             ior={1.35}
-            
+
             dispersion={frozen ? 0 : 1.8}
             attenuationDistance={2}
             attenuationColor={new THREE.Color(hubColor)}
@@ -1222,6 +1231,12 @@ function TopologySceneContent({
 
       {simNodes.map((node) => {
         const sourceNode = sourceNodes.find((sn) => sn.nodeId === node.id);
+        // EB-03-05 / SC-016: dim non-matching nodes in galaxy mode. The
+        // `filterMatches` memo is already gated on viewMode === 'galaxy'
+        // (returns inactive for other modes), so `dim` only ever flips
+        // true while the user is in galaxy.
+        const dim =
+          filterMatches.active && !filterMatches.matchedNodeIds.has(node.id);
         return (
           <GlassNode
             key={node.id}
@@ -1229,6 +1244,7 @@ function TopologySceneContent({
             hero={heroIds.has(node.id)}
             hubs={editorGraph.hubs}
             sourceNode={sourceNode}
+            dim={dim}
           />
         );
       })}
