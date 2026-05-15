@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T16:05:00Z",
+  "updatedAt": "2026-05-15T16:38:30Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 27,
-    "lastProductiveCommit": "37797710ab77ace3e602395931ffd27552df2ba4"
+    "lastProductiveIteration": 28,
+    "lastProductiveCommit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 27,
-    "commit": "37797710ab77ace3e602395931ffd27552df2ba4",
-    "verifiedAt": "2026-05-15T15:58:08Z",
+    "iteration": 28,
+    "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
+    "verifiedAt": "2026-05-15T16:38:30Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T15:58:08Z"
+    "recordedAt": "2026-05-15T16:38:30Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -307,6 +307,14 @@
       "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
       "verifiedAt": "2026-05-15T15:39:21Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-01/"
+    },
+    {
+      "iteration": 28,
+      "taskId": "EB-06-02",
+      "phase": 6,
+      "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
+      "verifiedAt": "2026-05-15T16:38:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-02/"
     }
   ],
   "tasks": [
@@ -912,11 +920,11 @@
       ],
       "haltCheck": "compile-anchors.ts exports a deterministic rule fn (subtype, intent, serviceTag) → uiAnchor; unit tests cover at least 6 subtypes; ambiguous cases fall through to a documented default.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
+      "verifiedAt": "2026-05-15T16:38:30Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX: (1) intent.visualSpec.cameraLocked is read via the [k: string]: unknown index signature; consider promoting to a declared optional field on PrismVisualSpec for type safety; (2) 'hybrid' UiAnchor value is exported but never reachable from pickUiAnchor — reserved for direct callers when EB-08 adds uiAnchor? to PrismNode; (3) test asserts on cameraLocked which isn't formally declared yet — pair with the typing cleanup. OPTIONAL: subtype dispatch uses substring includes() in ordered branches; rule order is implicit. Consider a structured token-based classifier and a data table mapping subtype-suffix→anchor for auditability. Two-runtime snapshot 7/7 PASS even though kvVerify=false."
     },
     {
       "id": "EB-06-03",
