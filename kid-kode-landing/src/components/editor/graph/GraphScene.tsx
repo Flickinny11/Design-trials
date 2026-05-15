@@ -1034,7 +1034,8 @@ function TopologySceneContent({
     editorGraph.edges,
     editorGraph.hubs,
     pinnedPositions,
-    resetSignal
+    resetSignal,
+    viewMode
   );
 
   // Heroes: the selected node + at most 1 other get the expensive transmission material

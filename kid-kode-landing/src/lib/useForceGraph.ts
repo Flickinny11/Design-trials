@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3-force-3d';
 import type { EditorEdgeView, EditorHubView, EditorNode } from '@/lib/prism-graph/view-model';
+import type { ViewMode } from '@/stores/useGraphEditorStore';
 
 // Phase 2 (plan §Phase 2) reroutes the editor's force-graph types to the
 // editor-view shape produced from home-hub.json by `toEditorView`. The
@@ -26,14 +27,55 @@ export interface SimLink {
   id: string;
 }
 
-// EB-03-01 stub. Real implementation is committed after the failing test.
-// Returns origin positions so SC-012 assertions (distance > 30, distinct
-// positions, ring index ≥ 2 radii) fail at runtime — the TDD contract — while
-// satisfying the TypeScript compiler so the test file can compile alongside.
+// Deterministic FNV-1a 32-bit hash. Pure, branch-light, no RNG/clock. Same
+// `hubId` → same hash on every call across every runtime. The 32-bit unsigned
+// space is comfortably wider than the number of hubs we'll ever orbit, so
+// collisions in the bucketing step below are vanishingly unlikely; even if
+// they occur, the angle modulation step (different hash bits feed angle vs
+// ring) keeps them visually distinguishable.
+function fnv1a32(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    // 32-bit FNV prime multiplication, kept inside the 32-bit range with the
+    // standard >>> 0 trick.
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h >>> 0;
+}
+
+// Galaxy-mode orbital layout (SC-012). Position is a deterministic function
+// of `hubId hash + ring index`:
+//   - ring index = high-byte of the hash modulo GALAXY_RING_RADII.length
+//   - angle      = low-24-bits of the hash mapped uniformly to [0, 2π)
+//   - tilt       = small per-ring Y offset so rings don't co-plane onto a
+//                  single disc — the App_Name_World sun reads as the
+//                  center of a 3D shell, not a 2D dartboard.
+//
+// The sun (WorldSun in GraphScene) sits at universe origin [0, 0, 0] per
+// EB-02-03; every orbit radius below clears the sun's core (radius 14) with
+// breathing room. INV-22: positions are expressed entirely in universe space.
+// INV-20: this fn is render-only — it doesn't touch selection state.
+const GALAXY_RING_RADII = [90, 150, 210] as const;
+const GALAXY_RING_TILT = [0.04, -0.18, 0.22] as const;
+
 export function computeGalaxyHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
   const out: Record<string, { x: number; y: number; z: number }> = {};
   hubs.forEach((h) => {
-    out[h.id] = { x: 0, y: 0, z: 0 };
+    const hash = fnv1a32(h.id);
+    const ringIdx = (hash >>> 24) % GALAXY_RING_RADII.length;
+    const angle = ((hash & 0x00ffffff) / 0x01000000) * Math.PI * 2;
+    const radius = GALAXY_RING_RADII[ringIdx];
+    const tilt = GALAXY_RING_TILT[ringIdx];
+    // Y carries the tilt component so the rings stratify vertically; the
+    // hash also lightly modulates Y inside the ring (top-byte XOR low-byte)
+    // so two hubs on the same ring aren't co-planar.
+    const yJitter = (((hash >>> 16) & 0xff) / 0xff - 0.5) * radius * 0.18;
+    out[h.id] = {
+      x: Math.cos(angle) * radius,
+      y: Math.sin(tilt) * radius + yJitter,
+      z: Math.sin(angle) * radius * Math.cos(tilt),
+    };
   });
   return out;
 }
@@ -65,9 +107,20 @@ export function useForceGraph(
   edges: PrismEdge[],
   hubs: PrismHub[],
   pinnedPositions: Map<string, { x: number; y: number; z: number }>,
-  resetSignal: number
+  resetSignal: number,
+  // EB-03-01: optional viewMode selector. When viewMode === 'galaxy' the
+  // hub centers are positioned via computeGalaxyHubCenters (deterministic
+  // orbit around App_Name_World, SC-012). Any other value (or omission)
+  // keeps the legacy index-based petal layout so non-galaxy modes are
+  // unchanged. Typed to the canonical 5-mode union so FP-12 (no new
+  // viewMode strings outside the canonical set) is enforced at the call
+  // boundary.
+  viewMode?: ViewMode
 ) {
-  const hubCenters = useMemo(() => computeHubCenters(hubs), [hubs]);
+  const hubCenters = useMemo(
+    () => (viewMode === 'galaxy' ? computeGalaxyHubCenters(hubs) : computeHubCenters(hubs)),
+    [hubs, viewMode]
+  );
   const [, tick] = useState(0);
 
   const simNodes = useMemo<SimNode[]>(() => {
