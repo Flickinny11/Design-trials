@@ -44,6 +44,10 @@ import {
   type GalaxyFilterMatches,
 } from '@/lib/galaxy-filter';
 import { computeCanvasCameraPose } from '@/lib/editor/canvas-camera';
+import {
+  computeCanvasViewportFrame,
+  CANVAS_VIEWPORT_FRAME_DEFAULTS,
+} from '@/lib/editor/canvas-viewport-frame';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
@@ -1256,6 +1260,114 @@ function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
   );
 }
 
+// EB-05-02 / §5 SC-023 — Canvas mode viewport frame + safe-area bounds.
+// Outer frame is the default 1440×900 desktop viewport (multiplied by the
+// active responsive breakpoint scale if one is set on the hub); inner
+// dashed frame is a 24-px safe-area inset. World scale maps 1440 design-px
+// to the SceneBackdrop's 10-unit width so the overlay sits flush with the
+// hub mockup plane.
+const CANVAS_VIEWPORT_FRAME_WORLD_WIDTH = 10;
+const CANVAS_VIEWPORT_FRAME_WORLD_UNITS_PER_PX =
+  CANVAS_VIEWPORT_FRAME_WORLD_WIDTH / CANVAS_VIEWPORT_FRAME_DEFAULTS.width;
+
+function rectLinePositions(width: number, height: number): Float32Array {
+  const hw = width / 2;
+  const hh = height / 2;
+  return new Float32Array([
+    -hw, -hh, 0,  hw, -hh, 0,
+     hw, -hh, 0,  hw,  hh, 0,
+     hw,  hh, 0, -hw,  hh, 0,
+    -hw,  hh, 0, -hw, -hh, 0,
+  ]);
+}
+
+function CanvasViewportFrame({
+  breakpoint,
+}: {
+  breakpoint?: { scale?: number } | null;
+}) {
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+
+  const frame = useMemo(
+    () => computeCanvasViewportFrame({ breakpoint }),
+    [breakpoint],
+  );
+
+  const { outerGeom, safeGeom } = useMemo(() => {
+    const px = CANVAS_VIEWPORT_FRAME_WORLD_UNITS_PER_PX;
+    const og = new THREE.BufferGeometry();
+    og.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        rectLinePositions(frame.width * px, frame.height * px),
+        3,
+      ),
+    );
+    const sg = new THREE.BufferGeometry();
+    sg.setAttribute(
+      'position',
+      new THREE.BufferAttribute(
+        rectLinePositions(frame.safe.width * px, frame.safe.height * px),
+        3,
+      ),
+    );
+    return { outerGeom: og, safeGeom: sg };
+  }, [frame]);
+
+  const safeMat = useMemo(
+    () =>
+      new THREE.LineDashedMaterial({
+        color: '#8bb4ff',
+        dashSize: 0.18,
+        gapSize: 0.12,
+        transparent: true,
+        opacity: 0.7,
+        depthTest: false,
+        toneMapped: false,
+      }),
+    [],
+  );
+  const outerMat = useMemo(
+    () =>
+      new THREE.LineBasicMaterial({
+        color: '#a9c4ff',
+        transparent: true,
+        opacity: 0.9,
+        depthTest: false,
+        toneMapped: false,
+      }),
+    [],
+  );
+  const safeRef = useRef<THREE.LineSegments>(null);
+
+  useEffect(() => {
+    safeRef.current?.computeLineDistances();
+  }, [safeGeom]);
+
+  useEffect(
+    () => () => {
+      outerGeom.dispose();
+      safeGeom.dispose();
+    },
+    [outerGeom, safeGeom],
+  );
+
+  useEffect(
+    () => () => {
+      outerMat.dispose();
+      safeMat.dispose();
+    },
+    [outerMat, safeMat],
+  );
+
+  return viewMode === 'canvas' ? (
+    <group name="canvas:viewport-frame" position={[0, 0, -1.2]} renderOrder={10}>
+      <lineSegments geometry={outerGeom} material={outerMat} renderOrder={10} />
+      <lineSegments ref={safeRef} geometry={safeGeom} material={safeMat} renderOrder={11} />
+    </group>
+  ) : null;
+}
+
 function AssembledSceneNode({ node }: { node: PrismNode }) {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
@@ -1516,6 +1628,7 @@ function AssembledSceneContent({
       <directionalLight position={[4, 6, 8]} intensity={0.8} color="#e0edff" castShadow={false} />
       <directionalLight position={[-4, -2, 5]} intensity={0.25} color="#ffdbb8" />
       <SceneBackdrop hub={hub} />
+      <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
 
       {fontReady ? (
         nodes.map((node) => <AssembledSceneNode key={node.nodeId} node={node} />)
