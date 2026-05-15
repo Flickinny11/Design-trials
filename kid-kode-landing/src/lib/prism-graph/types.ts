@@ -48,6 +48,23 @@ export const SCENE_POSITION_DEFAULT: ScenePosition = {
   scaleZ: 1,
 };
 
+// EB-05-03 / §6 Phase 5 SC-025, Phase 8 SC-041, SC-042 (INV-18 additive).
+// Shape mirrors ScenePosition so the canvas-mode gizmo can drive every axis
+// (translate/rotate/scale) without colliding with the renderer-migration
+// `scenePosition` runtime field. The canvas-transform-gizmo helper owns the
+// math + cancel-restore semantics; this type is the persisted record.
+export interface CanvasTransform {
+  x: number;
+  y: number;
+  z: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  scaleX: number;
+  scaleY: number;
+  scaleZ: number;
+}
+
 export interface PrismHubLayout {
   viewportWidth: number;
   viewportHeight: number;
@@ -259,6 +276,13 @@ export interface PrismNode {
   meshUrl?: string | null;
   cinematicPrimitives?: CinematicPrimitiveRef[];
   scenePosition?: ScenePosition;
+  // EB-05-03 / §6 Phase 5 SC-025, Phase 8 SC-041, SC-042 (INV-18 additive).
+  // Per-node transform written by the canvas-mode gizmo. Never mutated by
+  // compile/organize/preview functions (INV-17 / FP-04). When absent, the
+  // canvas gizmo treats the node as identity (CANVAS_TRANSFORM_IDENTITY).
+  // scenePosition is the renderer-migration runtime field and stays
+  // untouched by canvas-mode edits (SC-042).
+  canvasTransform?: CanvasTransform;
   // EB-02-06 / SC-009: optional capability references on the node. The vault
   // resolves these server-side; raw secret values never appear here (INV-19).
   capabilityRefs?: CapabilityRef[];
