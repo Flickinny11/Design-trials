@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T10:03:02Z",
+  "updatedAt": "2026-05-15T10:28:15Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 21,
-    "lastProductiveCommit": "32ebfb5e7d49b23e6e83749758738263cb1ec877"
+    "lastProductiveIteration": 22,
+    "lastProductiveCommit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "\u00a75": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 21,
-    "commit": "32ebfb5e7d49b23e6e83749758738263cb1ec877",
-    "verifiedAt": "2026-05-15T09:51:04Z",
+    "iteration": 22,
+    "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
+    "verifiedAt": "2026-05-15T10:28:15Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T09:51:04Z"
+    "recordedAt": "2026-05-15T10:28:15Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -259,6 +259,14 @@
       "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
       "verifiedAt": "2026-05-15T09:38:05Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-04/"
+    },
+    {
+      "iteration": 22,
+      "taskId": "EB-05-01",
+      "phase": 5,
+      "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
+      "verifiedAt": "2026-05-15T10:28:15Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-01/"
     }
   ],
   "tasks": [
@@ -740,11 +748,11 @@
       ],
       "haltCheck": "Entering canvas mode positions camera at a deterministic pose centered on active hub; pose is checkpointed in useGraphEditorStore; 3D depth preserved (z values not flattened).",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
+      "verifiedAt": "2026-05-15T10:28:15Z",
+      "notes": "Canvas mode entry now positions the camera deterministically on the active hub and checkpoints the pose. Pure helper computeCanvasCameraPose(hubCenter) returns {position: hub+CANVAS_CAMERA_STANDOFF (0,0,18), target: hub}; 3D depth preserved (position.z > target.z, never a flat top-down). Wired in both ControlsBridge (topology coords use hubCenters[activeHubId]) and SceneControlsBridge (scene coords use 0,0,0 since AssembledSceneContent renders the active hub at local origin). spec-reviewer: No MUST FIX. SHOULD FIX (do not block): (a) the eslint-disable comment in ControlsBridge misattributes hubCenters volatility (it is useMemo'd, not per-frame); (b) deps array consistency between the two effects (scene includes checkpointCameraPose, topology omits it); (c) SceneControlsBridge comment overstates that hub center is literally (0,0,0) \u2014 it's effectively the centroid of filtered nodes. OPTIONAL: extract a shared useCanvasModePoseEntry hook; derive standoff.z from hub diameter; split source grep into per-bridge assertions."
     },
     {
       "id": "EB-05-02",
