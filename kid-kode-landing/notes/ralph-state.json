@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 21,
+  "currentIteration": 22,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T09:38:05Z",
+  "updatedAt": "2026-05-15T10:03:02Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 21,
-    "lastProductiveCommit": "df4a2d964115f192b4d83af84b2648e407694c6b"
+    "lastProductiveCommit": "32ebfb5e7d49b23e6e83749758738263cb1ec877"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "\u00a74": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 21,
-    "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
-    "verifiedAt": "2026-05-15T09:38:05Z",
+    "commit": "32ebfb5e7d49b23e6e83749758738263cb1ec877",
+    "verifiedAt": "2026-05-15T09:51:04Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T09:38:05Z"
+    "recordedAt": "2026-05-15T09:51:04Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -740,8 +740,8 @@
       ],
       "haltCheck": "Entering canvas mode positions camera at a deterministic pose centered on active hub; pose is checkpointed in useGraphEditorStore; 3D depth preserved (z values not flattened).",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
