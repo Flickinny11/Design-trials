@@ -7,6 +7,12 @@ export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
 export type ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app';
 /**
+ * EB-06-07 / §6 SC-034 — non-preview subset of the canonical 5. The minimal
+ * back affordance in `preview-hub` returns the user to whichever authoring
+ * mode they were last in (tracked via `previousAuthoringMode`).
+ */
+export type AuthoringViewMode = Exclude<ViewMode, 'preview-hub' | 'preview-app'>;
+/**
  * Legacy mapping kept ONLY for `normalizeViewMode`, which exists so persisted
  * graphs that still carry pre-EB-01 toggle strings can be coerced on load. No
  * runtime code path may assign these literals via `setViewMode` (FP-12 blocks
@@ -60,6 +66,14 @@ interface GraphEditorState {
    * pass through `normalizeViewMode` at load time.
    */
   viewMode: ViewMode;
+  /**
+   * EB-06-07 / §6 SC-034 — last non-preview view mode the user authored in.
+   * Updated whenever `setViewMode` is called with a non-preview mode so the
+   * minimal back affordance rendered in `preview-hub` can return the user
+   * to wherever they came from. Defaults to the same value as the initial
+   * `viewMode` so the back affordance is meaningful even before any toggle.
+   */
+  previousAuthoringMode: AuthoringViewMode;
   editorRenderMode: EditorRenderMode;
 
   // Selection — node and hub selection are mutually exclusive
@@ -177,6 +191,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // `viewMode` field's type back to `ViewMode` and arms FP-12 against any
     // future legacy literal.
     viewMode: 'canvas',
+    previousAuthoringMode: 'canvas',
     editorRenderMode: 'scene',
     selectedNodeId: null,
     selectedHubId: null,
@@ -208,7 +223,17 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       // can't re-trigger the fade-in when the user returns to hub-world via
       // a different path (toolbar toggle, preview→hub-world, etc.).
       // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
-      set({ viewMode: m, hubRevealAt: null }),
+      // EB-06-07 / SC-034 — additionally record the last non-preview mode
+      // so the minimal back affordance in preview-hub knows where to
+      // return the user.
+      set((s) => ({
+        viewMode: m,
+        hubRevealAt: null,
+        previousAuthoringMode:
+          m === 'preview-hub' || m === 'preview-app'
+            ? s.previousAuthoringMode
+            : (m as AuthoringViewMode),
+      })),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
@@ -315,6 +340,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     drillIntoHub: (hubId) =>
       set({
         viewMode: 'hub-world',
+        // EB-06-07 / SC-034 — drilling lands on an authoring mode, so the
+        // back affordance should remember this entry path.
+        previousAuthoringMode: 'hub-world',
         selectedHubId: hubId,
         selectedNodeId: null,
         selectedNodeIds: new Set<string>(),
