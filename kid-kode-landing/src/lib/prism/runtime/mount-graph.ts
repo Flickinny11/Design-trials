@@ -40,6 +40,11 @@ import { createHubManager, type HubManagerHandle } from './shared/hub-manager';
 import { createSceneRoot, type SceneRootHandle } from './shared/scene-root';
 import { defaultRenderModeFactory } from './factories/default-factory';
 import { buildPerNodeFactory } from './factories/coderef-factory';
+import {
+  createCameraRailDriver,
+  type CameraRailDriverHandle,
+} from './camera-rail-driver';
+import type { CompiledCameraRail } from '@/lib/prism-graph/compiled-view';
 import type {
   GraphSource,
   PrismHub,
@@ -67,6 +72,13 @@ export interface MountGraphOpts {
    *  with editor surfaces via shared-context). When omitted, mountFromGraphSource
    *  constructs a fresh one. */
   sceneRoot?: SceneRootHandle;
+  /** EB-06-05 (SC-032 / INV-23): when provided, install the camera-rail
+   *  driver on the scene root so the inner runtime camera is constrained to
+   *  the damped cinematic rail every frame. PrismHost passes this from a
+   *  fresh `compileHubToPreview` of the active hub when viewMode ===
+   *  'preview-hub'. Omitted → camera retains its default unconstrained pose
+   *  (used by hub-world / canvas editor surfaces that need free orbiting). */
+  cameraRail?: CompiledCameraRail;
 }
 
 export interface MountGraphResult {
@@ -92,6 +104,11 @@ export interface MountGraphResult {
 
   resize(width: number, height: number): void;
   unmount(): void;
+
+  /** Hot-swap the cinematic rail (e.g. hub change in preview-hub). Pass
+   *  `null` to detach the driver entirely. No-op if a rail was never
+   *  installed and `null` is passed. */
+  setCameraRail(rail: CompiledCameraRail | null): void;
 }
 
 const BACKDROP_Z = -2;
@@ -186,6 +203,20 @@ export async function mountFromGraphSource(
     hubManager.activate(entryHubId);
   }
 
+  // EB-06-05 (SC-032 / INV-23): install the cinematic camera-rail driver on
+  // the scene root's beforeRender hook when the caller has compiled a rail.
+  // The driver writes a damped pose onto sceneRoot.camera every frame; no
+  // orbit/drag controls are wired in this path so the rail is the sole
+  // camera authority.
+  let cameraRailDriver: CameraRailDriverHandle | null = null;
+  if (opts.cameraRail) {
+    cameraRailDriver = createCameraRailDriver({
+      camera: sceneRoot.camera,
+      rail: opts.cameraRail,
+    });
+    sceneRoot.setBeforeRender(() => cameraRailDriver?.tick());
+  }
+
   if (!opts.noRenderer && opts.sceneRoot == null) {
     sceneRoot.start();
   }
@@ -277,8 +308,33 @@ export async function mountFromGraphSource(
     sceneRoot.camera.updateProjectionMatrix();
   }
 
+  function setCameraRail(rail: CompiledCameraRail | null): void {
+    if (rail == null) {
+      if (cameraRailDriver) {
+        cameraRailDriver.dispose();
+        cameraRailDriver = null;
+        sceneRoot.setBeforeRender(null);
+      }
+      return;
+    }
+    if (cameraRailDriver) {
+      cameraRailDriver.setRail(rail);
+      return;
+    }
+    cameraRailDriver = createCameraRailDriver({
+      camera: sceneRoot.camera,
+      rail,
+    });
+    sceneRoot.setBeforeRender(() => cameraRailDriver?.tick());
+  }
+
   function unmount(): void {
     try { sceneRoot.stop(); } catch { /* ignore */ }
+    if (cameraRailDriver) {
+      sceneRoot.setBeforeRender(null);
+      cameraRailDriver.dispose();
+      cameraRailDriver = null;
+    }
     for (const backdrop of hubBackdrops.values()) {
       disposeNode(backdrop);
     }
@@ -302,6 +358,7 @@ export async function mountFromGraphSource(
     removeNode,
     updateNodeTransform,
     setHubMockup,
+    setCameraRail,
     resize,
     unmount,
   };

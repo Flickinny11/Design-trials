@@ -76,6 +76,12 @@ export interface SceneRootHandle {
   /** Dispose renderer + clear scene + drop references. */
   dispose(): void;
 
+  /** Register a callback invoked once per frame BEFORE the renderer draws.
+   *  Used by the EB-06-05 camera-rail driver (SC-032 / INV-23) to apply
+   *  the damped pose to the camera before each render. Pass `null` to
+   *  clear. Only one callback at a time — replaces any prior. */
+  setBeforeRender(cb: (() => void) | null): void;
+
   /** 'webgpu' | 'webgl2' | 'stub' | null. Read after construction. */
   getRendererBackend(): RendererBackend;
 }
@@ -160,9 +166,16 @@ export async function createSceneRoot(
 
   let running = false;
   let rafId: number | null = null;
+  let beforeRender: (() => void) | null = null;
 
   async function tick(): Promise<void> {
     if (!renderer) return;
+    // Run the per-frame hook (EB-06-05 camera-rail driver lives here).
+    // Errors are swallowed so a broken driver can't bring down the render
+    // loop; the driver itself logs.
+    if (beforeRender) {
+      try { beforeRender(); } catch { /* ignore */ }
+    }
     // After `renderer.init()` the WebGPURenderer has been awaited at
     // construction (see `defaultRendererFactory`). Three deprecates
     // `renderAsync()` in favor of `render()` once init has resolved —
@@ -173,6 +186,10 @@ export async function createSceneRoot(
     } else if (renderer.renderAsync) {
       await renderer.renderAsync(scene, camera);
     }
+  }
+
+  function setBeforeRender(cb: (() => void) | null): void {
+    beforeRender = cb;
   }
 
   /** Best-effort `requestAnimationFrame` shim. Used when the injected
@@ -254,6 +271,7 @@ export async function createSceneRoot(
     stop,
     tick,
     dispose,
+    setBeforeRender,
     getRendererBackend,
   };
 }

@@ -26,6 +26,7 @@
 import type { PrismHub, PrismNode } from './types.ts';
 import type { PrismRootNode } from './root-node.ts';
 import { pickUiAnchor, type UiAnchor } from './compile-anchors';
+import { deriveCompiledCameraRail } from './camera-rail';
 
 // --- Attachment vocabulary (mirrors SC-036). ----------------------------
 
@@ -194,25 +195,19 @@ function compileBackground(hub: PrismHub): readonly CompiledHubBackgroundLayer[]
   ]);
 }
 
-function compileCameraRail(hub: PrismHub): CompiledCameraRail {
-  // Placeholder bounded rail: start at viewport center, end slightly
-  // pushed-in. SC-032 will replace this with the real damped rig.
-  const w = hub.layout?.viewportWidth ?? 1440;
-  const h = hub.layout?.viewportHeight ?? 900;
-  const cx = w / 2;
-  const cy = h / 2;
-  return Object.freeze({
-    mode: 'damped-cinematic' as const,
-    start: Object.freeze({
-      position: Object.freeze([cx, cy, 1200] as const) as readonly [number, number, number],
-      target: Object.freeze([cx, cy, 0] as const) as readonly [number, number, number],
-      fov: DEFAULT_FOV,
-    }),
-    end: Object.freeze({
-      position: Object.freeze([cx, cy, 900] as const) as readonly [number, number, number],
-      target: Object.freeze([cx, cy, 0] as const) as readonly [number, number, number],
-      fov: DEFAULT_FOV,
-    }),
+function compileCameraRail(
+  hub: PrismHub,
+  nodes: readonly PrismNode[],
+): CompiledCameraRail {
+  // SC-032 / INV-23: bounded damped-cinematic rail. `deriveCompiledCameraRail`
+  // computes camera distance from FOV + scene bounds (hub viewport ∪ node
+  // extents) plus a fixed margin, so neither end-pose nor start-pose ever
+  // frames the scene edges. Pure — never mutates inputs.
+  return deriveCompiledCameraRail({
+    viewportWidth: hub.layout?.viewportWidth ?? 1440,
+    viewportHeight: hub.layout?.viewportHeight ?? 900,
+    nodes,
+    fovDeg: DEFAULT_FOV,
     damping: DEFAULT_DAMPING,
   });
 }
@@ -274,7 +269,7 @@ export function compileHubToPreview(
   world: PrismRootNode,
 ): CompiledHubView {
   const compiledBackground = compileBackground(hub);
-  const compiledCameraRail = compileCameraRail(hub);
+  const compiledCameraRail = compileCameraRail(hub, nodes);
   const compiledNodes = compileNodes(nodes);
   const compiledWorld: CompiledWorldRef = Object.freeze({
     appNameWorldId: world.appNameWorldId,

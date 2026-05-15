@@ -9,6 +9,8 @@ import {
 } from '@/lib/prism/runtime/mount-graph';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { deriveCompiledCameraRail } from '@/lib/prism-graph/camera-rail';
 import type { GraphSource } from '@/lib/prism-graph/types';
 // T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
 // editor-side consumers. boot.ts owns the runtime contract; PrismHost is
@@ -56,6 +58,18 @@ export default function PrismHost({
   const containerRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [error, setError] = useState<string | null>(null);
+  // EB-06-05 (SC-032 / INV-23): read the canonical viewMode so the live-mount
+  // path can install the camera-rail driver only in `preview-hub`. Reading the
+  // mode (and the active hub id) outside the mount effect keeps the mount
+  // identity stable across mode toggles — the rail is hot-swapped via
+  // setCameraRail rather than triggering a remount.
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+
+  // EB-06-05: keep the latest live mount reachable from the rail effect
+  // below without re-running the mount effect when viewMode flips. The mount
+  // effect writes into this ref; the rail effect reads from it.
+  const liveResultRef = useRef<MountGraphResult | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -126,6 +140,7 @@ export default function PrismHost({
           });
           if (cancelled) { liveResult.unmount(); return; }
           if (pendingSize) liveResult.resize(pendingSize.w, pendingSize.h);
+          liveResultRef.current = liveResult;
 
           // Subscribe to the store. Diff prev→next on each emission and
           // dispatch the surgical helpers; never re-mount.
@@ -165,9 +180,49 @@ export default function PrismHost({
       unsubscribeStore?.();
       bundleResult?.unmount();
       liveResult?.unmount();
+      liveResultRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prismUrl, useLiveGraph]);
+
+  // EB-06-05 (SC-032 / INV-23): in `preview-hub` mode, compile the active hub
+  // to a CompiledHubView and install the bounded damped-cinematic cameraRail
+  // on the live mount. In every other mode (galaxy / hub-world / canvas /
+  // preview-app), detach the driver so the camera is unconstrained for free
+  // orbit/topology authoring. This effect runs on mode/hub change but never
+  // remounts the runtime — setCameraRail hot-swaps inside the existing scene.
+  useEffect(() => {
+    if (status !== 'ready') return;
+    const live = liveResultRef.current;
+    if (!live) return;
+
+    if (viewMode !== 'preview-hub') {
+      live.setCameraRail(null);
+      return;
+    }
+
+    const source = useGraphSourceStore.getState();
+    const hub =
+      (activeHubId && source.hubs.find((h) => h.hubId === activeHubId)) ||
+      source.hubs[0];
+    if (!hub) {
+      live.setCameraRail(null);
+      return;
+    }
+    const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
+
+    // INV-23: derive a bounded damped-cinematic cameraRail directly. The full
+    // compileHubToPreview also returns a hash + per-node anchors which the
+    // runtime camera-rail driver doesn't consume; calling derive directly
+    // keeps the host free of a fake PrismRootNode when the source store has
+    // no rootNodes seeded yet (legacy fixtures).
+    const cameraRail = deriveCompiledCameraRail({
+      viewportWidth: hub.layout.viewportWidth,
+      viewportHeight: hub.layout.viewportHeight,
+      nodes: hubNodes,
+    });
+    live.setCameraRail(cameraRail);
+  }, [viewMode, activeHubId, status]);
 
   const isFit = viewportPreset === 'fit';
   const preset = isFit ? null : PRESETS[viewportPreset];
