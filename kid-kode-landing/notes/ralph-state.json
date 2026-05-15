@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T01:41:20.223Z",
+  "updatedAt": "2026-05-15T01:59:46.939Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 13,
-    "lastProductiveCommit": "ac2144ad7e72af4d0c40401b9d958e92962c2648"
+    "lastProductiveIteration": 14,
+    "lastProductiveCommit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 8,
+      "used": 9,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 13,
-    "commit": "ac2144ad7e72af4d0c40401b9d958e92962c2648",
-    "verifiedAt": "2026-05-15T01:31:18Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-15T01:31:18Z"
+    "iteration": 14,
+    "taskId": "EB-03-03",
+    "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
+    "verifiedAt": "2026-05-15T01:59:46.939Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -195,6 +194,14 @@
       "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
       "verifiedAt": "2026-05-15T01:20:23Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-02/"
+    },
+    {
+      "iteration": 14,
+      "taskId": "EB-03-03",
+      "phase": 3,
+      "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
+      "verifiedAt": "2026-05-15T01:59:46.939Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-03/"
     }
   ],
   "tasks": [
@@ -507,10 +514,10 @@
       ],
       "haltCheck": "At zoomLevel L0 only App_Name_World + hub names render; L2+ exposes node-cluster labels; LOD transitions are smooth; test asserts label visibility per zoom level.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
+      "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
+      "verifiedAt": "2026-05-15T01:59:46.939Z",
       "notes": ""
     },
     {
