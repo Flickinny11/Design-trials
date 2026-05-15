@@ -34,3 +34,15 @@ export function computeCanvasCameraPose(hubCenter: HubCenter): CameraPose {
     },
   };
 }
+
+// EB-05-05 / §5 SC-027 — canvas ↔ hub-world round-trip pose restoration.
+// STUB ENTRY (failing-test scaffolding): the real implementation lands in
+// step 7 and prefers `stored` when defined. This stub always recomputes
+// from the hub center so the EB-05-05 contract tests FAIL on assertions
+// (not on a missing import).
+export function resolveCanvasCameraPose(
+  _stored: CameraPose | undefined,
+  hubCenter: HubCenter,
+): CameraPose {
+  return computeCanvasCameraPose(hubCenter);
+}
