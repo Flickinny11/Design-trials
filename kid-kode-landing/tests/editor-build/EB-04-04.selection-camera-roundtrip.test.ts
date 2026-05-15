@@ -106,9 +106,14 @@ function resetStore() {
   s.selectHub(null);
   s.clearMultiSelection?.();
   s.setViewMode('galaxy');
-  // Clear any previously checkpointed poses by overwriting each mode with
-  // an explicit identity pose for test isolation. Tests that need the
-  // initial empty state assert on store source instead of runtime.
+  // cameraPoseByMode is module-scoped state that persists across tests in
+  // this file; clear it via zustand's setState so each test starts at the
+  // same empty-poses baseline. Not part of the production contract — just
+  // test isolation. SC-027 round-trip persistence is verified by the
+  // dedicated test that explicitly checkpoints and re-enters.
+  (useGraphEditorStore as unknown as {
+    setState: (partial: { cameraPoseByMode: Partial<Record<ViewMode, CameraPose>> }) => void;
+  }).setState({ cameraPoseByMode: {} });
 }
 
 describe('EB-04-04 — useGraphEditorStore camera-pose checkpoint contract', () => {
