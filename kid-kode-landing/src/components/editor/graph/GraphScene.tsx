@@ -1392,8 +1392,12 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
   const updateNode = useGraphSourceStore((s) => s.updateNode);
-  const proxyRef = useRef<THREE.Group>(null);
+  // State-backed ref so <TransformControls> attaches deterministically on
+  // first render (a plain useRef holds null on the initial render and would
+  // skip the gizmo mount until some unrelated state change re-rendered).
+  const [proxy, setProxy] = useState<THREE.Group | null>(null);
   const priorCanvasTransform = useRef<CanvasTransform | null>(null);
+  const isDraggingRef = useRef(false);
   const [mode, setMode] = useState<GizmoMode>('translate');
 
   // SC-025 — the three gizmo modes rendered on selection. Listed inline so
@@ -1408,48 +1412,62 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
     () => nodes.find((n) => n.nodeId === selectedNodeId) ?? null,
     [nodes, selectedNodeId],
   );
+  const nodeId = node?.nodeId ?? null;
+  const persistedCT = node?.canvasTransform;
 
   // Sync the proxy's local pose to the node's current canvasTransform every
   // time the selection or the persisted transform changes. Drags during this
   // session write through `updateNode` so this effect re-runs and the proxy
   // tracks the source of truth.
   useEffect(() => {
-    const proxy = proxyRef.current;
     if (!proxy || !node) return;
     const ct = readCanvasTransform(node);
     proxy.position.set(ct.x, ct.y, ct.z);
     proxy.rotation.set(ct.rotationX, ct.rotationY, ct.rotationZ);
     proxy.scale.set(ct.scaleX, ct.scaleY, ct.scaleZ);
-  }, [node?.nodeId, node?.canvasTransform]);
+  }, [proxy, nodeId, persistedCT, node]);
 
   // Capture the prior snapshot on selection so Escape can roll back. Reset
   // when the selection clears or the user switches out of canvas mode.
   useEffect(() => {
-    if (viewMode !== 'canvas' || !node) {
+    if (!isCanvasMode || !node) {
       priorCanvasTransform.current = null;
       return;
     }
     priorCanvasTransform.current = readCanvasTransform(node);
-  }, [node?.nodeId, viewMode]);
+  }, [nodeId, isCanvasMode, node]);
 
-  // Keyboard mode switch (g/r/s) + Escape cancel-restore.
+  // Keyboard mode switch (g/r/s) + Escape cancel-restore (only during a
+  // drag, so deliberate edits aren't silently reverted afterwards). Mode
+  // keys are skipped when focus is in a text input / textarea / contenteditable
+  // so typing into the Inspector doesn't hijack the gizmo.
   useEffect(() => {
-    if (viewMode !== 'canvas' || !node) return;
+    if (!isCanvasMode || !node) return;
+    const captured = node;
+    function isEditableTarget(t: EventTarget | null): boolean {
+      if (!(t instanceof HTMLElement)) return false;
+      const tag = t.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
+      if (t.isContentEditable) return true;
+      return false;
+    }
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') {
+        if (!isDraggingRef.current) return;
         const prior = priorCanvasTransform.current;
-        if (prior && node) {
+        if (prior) {
           const restored = restorePriorCanvasTransform(prior);
-          updateNode(node.nodeId, { canvasTransform: restored });
+          updateNode(captured.nodeId, { canvasTransform: restored });
         }
         return;
       }
+      if (isEditableTarget(e.target)) return;
       const next = gizmoModeForKey(e.key);
       if (next) setMode(next);
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [viewMode, node?.nodeId, updateNode]);
+  }, [isCanvasMode, nodeId, updateNode, node]);
 
   if (!isCanvasMode || !node) return null;
 
@@ -1457,20 +1475,23 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
 
   return (
     <group name={`canvas:gizmo-anchor:${node.nodeId}`} position={[sp.x, sp.y, sp.z]}>
-      <group ref={proxyRef} name={`canvas:gizmo-proxy:${node.nodeId}`}>
-        {/* invisible hit/anchor target — gizmo attaches to the proxy group */}
-        <mesh visible={false}>
-          <boxGeometry args={[0.001, 0.001, 0.001]} />
-          <meshBasicMaterial transparent opacity={0} depthTest={false} />
-        </mesh>
-      </group>
-      {proxyRef.current ? (
+      <group
+        ref={(g) => {
+          setProxy(g);
+        }}
+        name={`canvas:gizmo-proxy:${node.nodeId}`}
+      />
+      {proxy ? (
         <TransformControls
-          object={proxyRef.current}
+          object={proxy}
           mode={mode}
+          onMouseDown={() => {
+            isDraggingRef.current = true;
+          }}
+          onMouseUp={() => {
+            isDraggingRef.current = false;
+          }}
           onObjectChange={() => {
-            const proxy = proxyRef.current;
-            if (!proxy) return;
             const next = buildCanvasTransformFromPose({
               position: { x: proxy.position.x, y: proxy.position.y, z: proxy.position.z },
               rotation: { x: proxy.rotation.x, y: proxy.rotation.y, z: proxy.rotation.z },
