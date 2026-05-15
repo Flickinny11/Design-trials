@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T08:05:00Z",
+  "updatedAt": "2026-05-15T08:42:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 19,
-    "lastProductiveCommit": "ede3db102c1724cc043a165777e913f408d4b51b"
+    "lastProductiveIteration": 20,
+    "lastProductiveCommit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee"
   },
   "phaseCaps": {
     "§1": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§4": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 19,
-    "commit": "ede3db102c1724cc043a165777e913f408d4b51b",
-    "verifiedAt": "2026-05-15T07:59:51Z",
+    "iteration": 20,
+    "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
+    "verifiedAt": "2026-05-15T08:42:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T07:59:51Z"
+    "recordedAt": "2026-05-15T08:42:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -243,6 +243,14 @@
       "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
       "verifiedAt": "2026-05-15T07:55:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-02/"
+    },
+    {
+      "iteration": 20,
+      "taskId": "EB-04-03",
+      "phase": 4,
+      "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
+      "verifiedAt": "2026-05-15T08:42:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-03/"
     }
   ],
   "tasks": [
@@ -681,11 +689,11 @@
       ],
       "haltCheck": "Inside hub-world, zoomLevel L1 shows hub label only; L3+ shows node labels; L4 reveals sub-node detail; LOD transitions tested per level.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
+      "verifiedAt": "2026-05-15T08:42:00Z",
+      "notes": "tsc + 20/20 vitest tests + two-runtime snapshot (7/7) pass; spec-reviewer no MUST FIX; SHOULD FIX #1 (gate tier 3/4 rows) + #2 (document ALL_ON sentinel) addressed in 238fac4; SHOULD FIX #3 (shared ZOOM_BANDS constant between galaxy + hub-world LODs) deferred — out of EB-04-03 scope."
     },
     {
       "id": "EB-04-04",
