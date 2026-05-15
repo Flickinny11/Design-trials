@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T09:07:24Z",
+  "updatedAt": "2026-05-15T09:38:05Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 20,
-    "lastProductiveCommit": "71885644ce9945acbc82e96c8727f6bf9dc53127"
+    "lastProductiveIteration": 21,
+    "lastProductiveCommit": "df4a2d964115f192b4d83af84b2648e407694c6b"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "\u00a74": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 20,
-    "commit": "71885644ce9945acbc82e96c8727f6bf9dc53127",
-    "verifiedAt": "2026-05-15T08:58:11Z",
+    "iteration": 21,
+    "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
+    "verifiedAt": "2026-05-15T09:38:05Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T08:58:11Z"
+    "recordedAt": "2026-05-15T09:38:05Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -251,6 +251,14 @@
       "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
       "verifiedAt": "2026-05-15T08:42:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-03/"
+    },
+    {
+      "iteration": 21,
+      "taskId": "EB-04-04",
+      "phase": 4,
+      "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
+      "verifiedAt": "2026-05-15T09:38:05Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-04/"
     }
   ],
   "tasks": [
@@ -711,11 +719,11 @@
       ],
       "haltCheck": "Automated test cycles selectedNodeId through galaxy \u2192 hub-world \u2192 canvas \u2192 preview-hub \u2192 preview-app \u2192 galaxy; assertion at every step that selectedNodeId+selectedHubId survive; camera pose is mode-specific but checkpointed and restorable.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
+      "verifiedAt": "2026-05-15T09:38:05Z",
+      "notes": "5-mode round-trip regression in place. Store now carries cameraPoseByMode: Partial<Record<ViewMode, CameraPose>> + checkpointCameraPose(mode, pose) action. setViewMode is untouched (selection + cameraPoseByMode both survive transitions). Phase 5 ControlsBridge will be the caller per SC-022/SC-027. SHOULD FIX (deferred, non-blocking): clearCameraPoses() action could replace zustand setState backdoor in test resetStore; CameraPose may need rotation/zoom fields if Phase 5 controls expose roll; defensive clone in checkpointCameraPose against external mutation."
     },
     {
       "id": "EB-05-01",
