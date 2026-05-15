@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T10:54:49Z",
+  "updatedAt": "2026-05-15T11:22:18Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 22,
-    "lastProductiveCommit": "61dad2a931e3e104fb58726c594aeff5105f7a0d"
+    "lastProductiveIteration": 23,
+    "lastProductiveCommit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08"
   },
   "phaseCaps": {
     "§1": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§5": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,13 @@
     }
   },
   "checkpoint": {
-    "iteration": 22,
-    "commit": "61dad2a931e3e104fb58726c594aeff5105f7a0d",
+    "iteration": 23,
+    "commit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08",
     "verifiedAt": "2026-05-15T10:41:19Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T10:41:19Z"
+    "recordedAt": "2026-05-15T10:41:19Z",
+    "taskId": "EB-05-02",
+    "timestamp": "2026-05-15T11:22:18Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -267,6 +269,14 @@
       "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
       "verifiedAt": "2026-05-15T10:28:15Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-01/"
+    },
+    {
+      "iteration": 23,
+      "taskId": "EB-05-02",
+      "phase": 5,
+      "commit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08",
+      "verifiedAt": "2026-05-15T11:22:18Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-02/"
     }
   ],
   "tasks": [
@@ -768,11 +778,11 @@
       ],
       "haltCheck": "Canvas mode renders a viewport frame overlay (default 1440x900 desktop with 24px safe-area inset); frame respects the active responsive breakpoint when set.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08",
+      "verifiedAt": "2026-05-15T11:22:18Z",
+      "notes": "SHOULD-FIX (non-blocking, follow-up): (1) once an 'active breakpoint' editor-store field exists, switch from hard-coded hub.responsiveBreakpoints.desktop to the active key; (2) extract SCENE_BACKDROP_WORLD_WIDTH so SceneBackdrop and CanvasViewportFrame share one constant (INV-22 spirit); (3) optionally clamp breakpoint scale to a positive minimum."
     },
     {
       "id": "EB-05-03",
