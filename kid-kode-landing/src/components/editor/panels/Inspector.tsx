@@ -16,6 +16,9 @@ import { ColorPicker } from './ColorPicker';
 import VisualPreview from './visual-preview/VisualPreview';
 import type { CapabilityRef, PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
 
+// SC-020: the canonical 7-tab set for a node selection. The 'history' tab
+// surfaces the per-node edit/regeneration log; SC-020 explicitly names it as
+// part of the preserved set, so it must remain reachable in every view mode.
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
   { id: 'behavior', label: 'Behavior', icon: 'flow' },
@@ -23,6 +26,7 @@ const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'animation', label: 'Animation', icon: 'play' },
   { id: 'connections', label: 'Links', icon: 'link' },
   { id: 'backend', label: 'Backend', icon: 'server' },
+  { id: 'history', label: 'History', icon: 'refresh' },
 ];
 
 // SC-007: when App_Name_World (a PrismRootNode) is the selection, the tab
@@ -287,6 +291,7 @@ export default function Inspector() {
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
         {tab === 'connections' && <ConnectionsTab node={node} graph={editorGraph} flyToNode={flyToNode} />}
         {tab === 'backend' && <BackendTab node={node} />}
+        {tab === 'history' && <HistoryTab node={node} />}
       </div>
     </div>
   );
@@ -1313,6 +1318,49 @@ function CapabilitiesPanel({
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// HISTORY TAB — SC-020 7th tab. Surfaces the per-node edit log so users
+// can review color edits, animation-frame changes, and (later) AI
+// regeneration events. Reads from the existing useAnimationEditsStore;
+// when nothing has been edited yet, renders an empty-state placeholder
+// so the tab is still reachable from every view mode (haltCheck).
+// ═══════════════════════════════════════════════════════════════════
+function HistoryTab({ node }: { node: EditorNode }) {
+  const edits = useAnimationEditsStore((s) => s.edits[node.id]);
+  const events: { kind: string; detail: string }[] = [];
+  if (edits?.primaryColor) events.push({ kind: 'color', detail: `primary → ${edits.primaryColor}` });
+  if (edits?.secondaryColor) events.push({ kind: 'color', detail: `accent → ${edits.secondaryColor}` });
+  if (edits?.frames?.length) {
+    events.push({ kind: 'animation', detail: `${edits.frames.length} keyframe edit${edits.frames.length === 1 ? '' : 's'}` });
+  }
+
+  return (
+    <div className="p-5 space-y-4">
+      <div className="text-[9px] font-mono tracking-widest text-white/40">EDIT HISTORY</div>
+      {events.length === 0 ? (
+        <div className="px-3 py-2.5 rounded-lg bg-white/[0.025] border border-white/5 text-[11px] text-white/55 italic">
+          No edits recorded for this node yet.
+        </div>
+      ) : (
+        <ul data-role="history-events" className="space-y-1.5">
+          {events.map((e, i) => (
+            <li
+              key={i}
+              className="px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5 flex items-center gap-2 text-[11px]"
+            >
+              <span className="px-1.5 py-0.5 rounded bg-[#5d8bff]/15 text-[#5d8bff] font-mono text-[10px]">{e.kind}</span>
+              <span className="text-white/80 font-mono truncate">{e.detail}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="text-[9px] font-mono text-white/35 pt-1">
+        AI regeneration events will appear here once the codegen pipeline lands.
+      </div>
     </div>
   );
 }
