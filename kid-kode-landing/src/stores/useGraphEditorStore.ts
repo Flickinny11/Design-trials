@@ -181,7 +181,13 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     qualityMode: 'auto',
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
-    setViewMode: (m) => set({ viewMode: m }),
+    setViewMode: (m) =>
+      // EB-04-01 / SC-019 — clear the drill-in reveal stamp on any non-drill
+      // mode change so a stale hubRevealAt from a prior galaxy→hub-world
+      // can't re-trigger the fade-in when the user returns to hub-world via
+      // a different path (toolbar toggle, preview→hub-world, etc.).
+      // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
+      set({ viewMode: m, hubRevealAt: null }),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =

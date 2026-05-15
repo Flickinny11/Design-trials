@@ -1252,7 +1252,6 @@ function TopologySceneContent({
   // reveal to the just-drilled-into hub.
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const hubRevealAt = useGraphEditorStore((s) => s.hubRevealAt);
-  const hubRevealDurationMs = useGraphEditorStore((s) => s.hubRevealDurationMs);
   const revealProgress = useHubRevealProgress();
   // The reveal only animates when entering hub-world from a drill-in; in
   // galaxy / canvas / preview-* modes we hold full opacity so other modes
@@ -1261,9 +1260,6 @@ function TopologySceneContent({
     viewMode === 'hub-world' && hubRevealAt != null
       ? revealProgress
       : 1;
-  // Compile-time touch so static analysis sees the store fields are consumed
-  // by this renderer (also documents the dependency).
-  void hubRevealDurationMs;
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
