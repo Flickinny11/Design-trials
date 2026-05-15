@@ -80,6 +80,22 @@ export function computeGalaxyHubCenters(hubs: PrismHub[]): Record<string, { x: n
   return out;
 }
 
+// EB-03-02 — Galaxy hub size-by-complexity (SC-013).
+// Stubs only at this point in the TDD cycle; the real formula + orchestrator
+// land in the implementation phase. Throwing from the stubs keeps the tests
+// failing at runtime while satisfying the `--noEmit` typecheck so the
+// failing-test commit can be recorded.
+export function computeGalaxyHubDiameter(_nodeCount: number, _depth: number): number {
+  throw new Error('EB-03-02: computeGalaxyHubDiameter not implemented');
+}
+export function computeGalaxyHubDiameters(
+  _hubs: PrismHub[],
+  _nodes: PrismNode[],
+  _edges: PrismEdge[],
+): Record<string, number> {
+  throw new Error('EB-03-02: computeGalaxyHubDiameters not implemented');
+}
+
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
 // A single-hub artifact stays at the origin so the default editor camera
 // frames it on first load without requiring a Home/Galaxy click.
