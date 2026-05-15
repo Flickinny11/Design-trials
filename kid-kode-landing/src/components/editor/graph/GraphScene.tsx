@@ -36,6 +36,7 @@ import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
 import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
+import { computeHubWorldLabelVisibility } from '@/lib/hub-world-label-lod';
 import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
 import {
   computeGalaxyFilterMatches,
@@ -872,8 +873,16 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
   // rendered `<Html>` so any future renderer that lifts the L1 early-return
   // can drive a cross-fade without re-deriving opacity here.
   const lod = computeGalaxyLabelVisibility(viewMode, zoomLevel, cameraDistance);
+  // SC-021 — Hub-world intra-hub LOD. At L1 hub label only; L3+ node labels
+  // appear; L4 reveals sub-node detail (elementType + status dot row).
+  // Predicate is a no-op outside hub-world, so it composes safely with the
+  // galaxy gate above.
+  const hubWorldLod = computeHubWorldLabelVisibility(viewMode, zoomLevel, cameraDistance);
   if (!lod.showNodeLabels) return null;
-  const lodOpacity = lod.nodeLabelOpacity;
+  if (!hubWorldLod.showNodeLabels) return null;
+  const lodOpacity = lod.nodeLabelOpacity * hubWorldLod.nodeLabelOpacity;
+  const showSubNodeDetail = hubWorldLod.showSubNodeDetail;
+  const subNodeDetailOpacity = hubWorldLod.subNodeDetailOpacity;
 
   return (
     <>
@@ -927,10 +936,10 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                   {node.name}
                 </div>
               )}
-              {tier >= 2 && (
+              {tier >= 2 && showSubNodeDetail && (
                 <div
                   className="flex items-center gap-1.5 justify-center font-mono mt-0.5"
-                  style={{ fontSize: 9, color: '#b5bddf' }}
+                  style={{ fontSize: 9, color: '#b5bddf', opacity: subNodeDetailOpacity }}
                 >
                   <span>{node.elementType}</span>
                   <span
