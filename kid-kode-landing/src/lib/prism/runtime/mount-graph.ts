@@ -203,8 +203,11 @@ function buildViewportFixedMesh(
   mesh.renderOrder = -1000;
   mesh.userData.role = 'viewport-fixed-background';
   mesh.userData.layerId = layer.id;
+  // Read `mesh.geometry` at cleanup time so a post-resize geometry swap
+  // (see `resize()`) doesn't strand the live PlaneGeometry. The material is
+  // not swapped on resize, so closing over `mat` is safe.
   mesh.userData.cleanup = () => {
-    geo.dispose();
+    mesh.geometry.dispose();
     mat.dispose();
   };
   return mesh;
