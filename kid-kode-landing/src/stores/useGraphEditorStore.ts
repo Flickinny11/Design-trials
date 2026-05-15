@@ -204,7 +204,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
           const only = next.values().next().value as string;
           return { selectedNodeIds: next, selectedNodeId: only };
         }
-        return { selectedNodeIds: next };
+        // Mirror toggleHubSelection: when the multi-set crosses to >=2, open
+        // the inspector so the group view becomes visible without requiring
+        // the user to open the panel separately.
+        return { selectedNodeIds: next, inspectorOpen: true };
       }),
     toggleHubSelection: (id) =>
       set((s) => {
