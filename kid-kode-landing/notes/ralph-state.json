@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T00:07:40Z",
+  "updatedAt": "2026-05-15T00:45:16Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,67 +27,67 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 11,
-    "lastProductiveCommit": "4e1b4aa05934cbdf88b804baab853e323e913988"
+    "lastProductiveIteration": 12,
+    "lastProductiveCommit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284"
   },
   "phaseCaps": {
-    "\u00a71": {
+    "§1": {
       "used": 8,
       "cap": 50,
       "status": "active"
     },
-    "\u00a72": {
+    "§2": {
       "used": 14,
       "cap": 50,
       "status": "active"
     },
-    "\u00a73": {
+    "§3": {
+      "used": 5,
+      "cap": 50,
+      "status": "active"
+    },
+    "§4": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a74": {
+    "§5": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a75": {
+    "§6": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a76": {
+    "§7": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a77": {
+    "§8": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a78": {
+    "§9": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a79": {
-      "used": 0,
-      "cap": 50,
-      "status": "active"
-    },
-    "\u00a710": {
+    "§10": {
       "used": 0,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 11,
-    "commit": "4e1b4aa05934cbdf88b804baab853e323e913988",
-    "verifiedAt": "2026-05-15T00:04:13Z",
+    "iteration": 12,
+    "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
+    "verifiedAt": "2026-05-15T00:45:16Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T00:04:13Z"
+    "recordedAt": "2026-05-15T00:45:16Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -179,6 +179,14 @@
       "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
       "verifiedAt": "2026-05-14T23:53:18Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-07/"
+    },
+    {
+      "iteration": 12,
+      "taskId": "EB-03-01",
+      "phase": 3,
+      "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
+      "verifiedAt": "2026-05-15T00:45:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-01/"
     }
   ],
   "tasks": [
@@ -187,9 +195,9 @@
       "title": "Add canonical 5-mode ViewMode type (additive)",
       "phase": 1,
       "specRefs": [
-        "\u00a71 SC-001",
-        "\u00a71 INV-20",
-        "\u00a71 RA-06"
+        "§1 SC-001",
+        "§1 INV-20",
+        "§1 RA-06"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -210,10 +218,10 @@
       "title": "Migrate page.tsx + TopBar + HubNav to canonical viewMode + RA-06 mapping",
       "phase": 1,
       "specRefs": [
-        "\u00a71 SC-001",
-        "\u00a71 SC-002",
-        "\u00a71 INV-20",
-        "\u00a71 RA-06"
+        "§1 SC-001",
+        "§1 SC-002",
+        "§1 INV-20",
+        "§1 RA-06"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -227,17 +235,17 @@
       "attemptCount": 1,
       "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
       "verifiedAt": "2026-05-14T21:35:00Z",
-      "notes": "spec-reviewer: No deviations found. Initial viewMode remapped 'split' \u2192 'canvas' (RA-06). 5-button canonical toggle ships in page.tsx; Inspector.tsx setViewMode call now uses 'preview-hub'. Pane visibility driven by derived booleans (isPreviewMode/showsSplit/showsPreview/showsGraph). Mobile branch (non-desktop) carries no viewMode literals \u2014 untouched. 7/7 two-runtime snapshot checks passed; 6/6 vitest assertions passed."
+      "notes": "spec-reviewer: No deviations found. Initial viewMode remapped 'split' → 'canvas' (RA-06). 5-button canonical toggle ships in page.tsx; Inspector.tsx setViewMode call now uses 'preview-hub'. Pane visibility driven by derived booleans (isPreviewMode/showsSplit/showsPreview/showsGraph). Mobile branch (non-desktop) carries no viewMode literals — untouched. 7/7 two-runtime snapshot checks passed; 6/6 vitest assertions passed."
     },
     {
       "id": "EB-01-03",
       "title": "Remove legacy viewMode literals; arm FP-12; baseline preview-hub snapshot",
       "phase": 1,
       "specRefs": [
-        "\u00a71 SC-002",
-        "\u00a71 SC-003",
-        "\u00a71 FP-12",
-        "\u00a71 INV-20"
+        "§1 SC-002",
+        "§1 SC-003",
+        "§1 FP-12",
+        "§1 INV-20"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -253,15 +261,15 @@
       "attemptCount": 1,
       "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
       "verifiedAt": "2026-05-14T21:43:30Z",
-      "notes": "spec-reviewer: No deviations found (no MUST-FIX). Store narrowed: viewMode: ViewMode + setViewMode: (m: ViewMode) => void; LegacyViewMode/AnyViewMode/normalizeViewMode retained as load-time coercion helpers. FP-12 was already armed in anti-drift-check.sh. Legacy literal grep over src/ returns zero hits. verify-editor-runtimes EB-01-03 passed 7/7 (outer.png, inner.png mounted PrismHost behind preview-hub, state.json, verify.log). HL12.save-to-server.test.ts local EditorStore mirror updated to canonical 5-mode union (its 'split' initial assertion was already runtime-broken after EB-01-02). SHOULD-FIX (do not block): (1) EB-01-03 test's SC-003 PrismHost-mount regex only matches viewMode === 'preview-hub'; SC-003 covers preview-app too \u2014 tighten in a follow-up that touches this file. (2) LegacyViewMode/AnyViewMode could be downgraded to module-private once load-time coercion path matures (deferred to EB-02-01)."
+      "notes": "spec-reviewer: No deviations found (no MUST-FIX). Store narrowed: viewMode: ViewMode + setViewMode: (m: ViewMode) => void; LegacyViewMode/AnyViewMode/normalizeViewMode retained as load-time coercion helpers. FP-12 was already armed in anti-drift-check.sh. Legacy literal grep over src/ returns zero hits. verify-editor-runtimes EB-01-03 passed 7/7 (outer.png, inner.png mounted PrismHost behind preview-hub, state.json, verify.log). HL12.save-to-server.test.ts local EditorStore mirror updated to canonical 5-mode union (its 'split' initial assertion was already runtime-broken after EB-01-02). SHOULD-FIX (do not block): (1) EB-01-03 test's SC-003 PrismHost-mount regex only matches viewMode === 'preview-hub'; SC-003 covers preview-app too — tighten in a follow-up that touches this file. (2) LegacyViewMode/AnyViewMode could be downgraded to module-private once load-time coercion path matures (deferred to EB-02-01)."
     },
     {
       "id": "EB-01-04",
       "title": "Wire editorRenderMode (scene|topology) as sub-toggle within hub-world",
       "phase": 1,
       "specRefs": [
-        "\u00a71 SC-004",
-        "\u00a71 RA-06"
+        "§1 SC-004",
+        "§1 RA-06"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -275,16 +283,16 @@
       "attemptCount": 1,
       "commit": "e52882b5a671391df4f098978900d71d06e87d84",
       "verifiedAt": "2026-05-14T22:02:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block): (1) source-shape regex tests are brittle vs a render-time React Testing Library check; (2) state.json summary.checks lists 6 entries while verify.log shows 7 lines (the post-write state.persisted line isn't in the checks array). OPTIONAL: tighten regex window in AssembledSceneContent assertion; gate the abutting vertical divider on the same hub-world predicate to avoid an orphan separator in non-hub-world modes. Toggle now renders only when viewMode === 'hub-world'; editorRenderMode field/setter preserved (SC-004 \"not deleted\"); GraphScene SceneContent still routes 'scene' \u2192 AssembledSceneContent. Snapshot 7/7 (outer.png, inner.png from PrismHost in preview-hub baseline carries over per EB-01-03; verify-editor-runtimes mounts preview-hub for the inner runtime regardless of which mode this task gates in the outer chrome). 5/5 vitest assertions passed; tsc clean; next build clean."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block): (1) source-shape regex tests are brittle vs a render-time React Testing Library check; (2) state.json summary.checks lists 6 entries while verify.log shows 7 lines (the post-write state.persisted line isn't in the checks array). OPTIONAL: tighten regex window in AssembledSceneContent assertion; gate the abutting vertical divider on the same hub-world predicate to avoid an orphan separator in non-hub-world modes. Toggle now renders only when viewMode === 'hub-world'; editorRenderMode field/setter preserved (SC-004 \"not deleted\"); GraphScene SceneContent still routes 'scene' → AssembledSceneContent. Snapshot 7/7 (outer.png, inner.png from PrismHost in preview-hub baseline carries over per EB-01-03; verify-editor-runtimes mounts preview-hub for the inner runtime regardless of which mode this task gates in the outer chrome). 5/5 vitest assertions passed; tsc clean; next build clean."
     },
     {
       "id": "EB-02-01",
       "title": "Define PrismRootNode interface + serializer + validator (additive)",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-005",
-        "\u00a72 INV-18",
-        "\u00a72 RA-07"
+        "§2 SC-005",
+        "§2 INV-18",
+        "§2 RA-07"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -297,15 +305,15 @@
       "attemptCount": 1,
       "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
       "verifiedAt": "2026-05-14T22:13:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) placeholder interfaces (AppSpec, DesignSpec, BuildPlan, MemoryLogEntry, HubRegistryEntry, NodeRegistryEntry, GlobalDependency, ValidationRule, AiRoutingRule, CapabilityRef) use open `[k: string]: unknown` index signatures \u2014 to be tightened by EB-02-05/EB-02-06; consider dropping the index signature on CapabilityRef so the vault contract stays strict. (2) RootNodeValidationResult uses ok+root+reason record form (with null sentinels) instead of a discriminated union because tsconfig has strict: false; revisit when/if strict is flipped on. (3) Test for the 11 D1 fields is a source-shape regex grep \u2014 a satisfies PrismRootNode literal would catch renames more reliably. OPTIONAL: (a) circular type import between root-node.ts and types.ts (works under TS); (b) serializeRootNode relies on V8/SpiderMonkey object-literal key ordering \u2014 switch to an explicit canonical key array if byte-identical hashing becomes load-bearing in Phase 6/10. 9/9 vitest assertions passed; 7/7 two-runtime snapshot checks passed; tsc clean; root-node.ts exists."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) placeholder interfaces (AppSpec, DesignSpec, BuildPlan, MemoryLogEntry, HubRegistryEntry, NodeRegistryEntry, GlobalDependency, ValidationRule, AiRoutingRule, CapabilityRef) use open `[k: string]: unknown` index signatures — to be tightened by EB-02-05/EB-02-06; consider dropping the index signature on CapabilityRef so the vault contract stays strict. (2) RootNodeValidationResult uses ok+root+reason record form (with null sentinels) instead of a discriminated union because tsconfig has strict: false; revisit when/if strict is flipped on. (3) Test for the 11 D1 fields is a source-shape regex grep — a satisfies PrismRootNode literal would catch renames more reliably. OPTIONAL: (a) circular type import between root-node.ts and types.ts (works under TS); (b) serializeRootNode relies on V8/SpiderMonkey object-literal key ordering — switch to an explicit canonical key array if byte-identical hashing becomes load-bearing in Phase 6/10. 9/9 vitest assertions passed; 7/7 two-runtime snapshot checks passed; tsc clean; root-node.ts exists."
     },
     {
       "id": "EB-02-02",
       "title": "Insert App_Name_World instance in home-hub fixture; uniqueness assertion",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-005",
-        "\u00a72 SC-006"
+        "§2 SC-005",
+        "§2 SC-006"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -314,21 +322,21 @@
         "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('public/prism-mock/home/live-graph.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\"",
         "cd kid-kode-landing && npx vitest run tests/editor-build/EB-02-02.app-name-world-instance.test.ts"
       ],
-      "haltCheck": "home-hub.legacy.json (the build-time fixture; renamed from home-hub.json by HL03 / Plan \u00a7P4) contains exactly one rootNodes entry of type App_Name_World; the live-graph fixture under public/prism-mock/home/live-graph.json carries the same entry so the runtime store sees rootNodes after fetch; loader threads rootNodes through to GraphSource; validateRootNode returns ok=true on the loaded graph.",
+      "haltCheck": "home-hub.legacy.json (the build-time fixture; renamed from home-hub.json by HL03 / Plan §P4) contains exactly one rootNodes entry of type App_Name_World; the live-graph fixture under public/prism-mock/home/live-graph.json carries the same entry so the runtime store sees rootNodes after fetch; loader threads rootNodes through to GraphSource; validateRootNode returns ok=true on the loaded graph.",
       "kvVerify": false,
       "status": "done",
       "attemptCount": 1,
       "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
       "verifiedAt": "2026-05-14T22:24:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) loader.ts duplicates the rootNodes-threading pattern across loadFromHomeHub + loadFromPrismArtifact; a small pickRootNodes(json) helper would prevent future divergence. (2) The two seed fixtures intentionally use different spec.name values (legacy: 'Voltus' build-time mock; live: 'PrismLive' harness lock-in seed) but share appNameWorldId='app-name-world-home' \u2014 divergence is by design (each fixture seeds its own app's content) but worth a comment. (3) hubRegistry hubId values differ ('home-hub' in legacy matches its hub.hubId; 'home' in live matches its hub.hubId) \u2014 both correct, just verified. OPTIONAL: (a) trim the build-prism.mjs JSDoc to one line; (b) inline the loader rootNodes assignment as a single ternary on the object literal. Verification: 7/7 EB-02-02 vitest assertions pass; 42/42 across editor-build + HL03 store-init suites; tsc clean; both legacy and live fixture root-count probes return 1; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) loader.ts duplicates the rootNodes-threading pattern across loadFromHomeHub + loadFromPrismArtifact; a small pickRootNodes(json) helper would prevent future divergence. (2) The two seed fixtures intentionally use different spec.name values (legacy: 'Voltus' build-time mock; live: 'PrismLive' harness lock-in seed) but share appNameWorldId='app-name-world-home' — divergence is by design (each fixture seeds its own app's content) but worth a comment. (3) hubRegistry hubId values differ ('home-hub' in legacy matches its hub.hubId; 'home' in live matches its hub.hubId) — both correct, just verified. OPTIONAL: (a) trim the build-prism.mjs JSDoc to one line; (b) inline the loader rootNodes assignment as a single ternary on the object literal. Verification: 7/7 EB-02-02 vitest assertions pass; 42/42 across editor-build + HL03 store-init suites; tsc clean; both legacy and live fixture root-count probes return 1; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-03",
       "title": "Render App_Name_World in galaxy mode (basic geometry + click target)",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-005",
-        "\u00a73 SC-012"
+        "§2 SC-005",
+        "§3 SC-012"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -342,15 +350,15 @@
       "attemptCount": 1,
       "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
       "verifiedAt": "2026-05-14T22:43:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) WorldSun's onPointerOver writes document.body.style.cursor='pointer' but does not restore on unmount \u2014 if user hovers WorldSun and switches viewMode away from 'galaxy', cursor sticks. Pattern precedent at GraphScene.tsx:263-267 (GlassNode) and :435-438 (HubHull) has the same latent bug, but a new component should not propagate it; add useEffect(()=>()=>{document.body.style.cursor='default'},[]) in a follow-up. (2) useFrame body doesn't early-return when root=null; mounting always paints, but a defensive `if (!root) return` inside the frame callback would avoid the material cast cost when nothing is rendered. (3) Source-shape regex tests in EB-02-03 pass even if click handler were wired to the wrong action; the runtime gate is the snapshot outer.png. RTL/jsdom test with Canvas mock would tighten \u2014 deferred. OPTIONAL: (a) groupRef declared but never read; (b) new THREE.Color('#ffb24a') allocated per render \u2014 hoist to module const; (c) magic radius=14 should be APP_NAME_WORLD_SUN_RADIUS module const to make EB-03-01's hub-orbit-scale work easier. Verification: 9/9 EB-02-03 vitest assertions pass; 47/47 across editor-build suite; tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). SC-007 dedicated 'World' inspector tab correctly deferred to EB-02-04; SC-012 hub-orbit-around-sun positions correctly deferred to EB-03-01."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) WorldSun's onPointerOver writes document.body.style.cursor='pointer' but does not restore on unmount — if user hovers WorldSun and switches viewMode away from 'galaxy', cursor sticks. Pattern precedent at GraphScene.tsx:263-267 (GlassNode) and :435-438 (HubHull) has the same latent bug, but a new component should not propagate it; add useEffect(()=>()=>{document.body.style.cursor='default'},[]) in a follow-up. (2) useFrame body doesn't early-return when root=null; mounting always paints, but a defensive `if (!root) return` inside the frame callback would avoid the material cast cost when nothing is rendered. (3) Source-shape regex tests in EB-02-03 pass even if click handler were wired to the wrong action; the runtime gate is the snapshot outer.png. RTL/jsdom test with Canvas mock would tighten — deferred. OPTIONAL: (a) groupRef declared but never read; (b) new THREE.Color('#ffb24a') allocated per render — hoist to module const; (c) magic radius=14 should be APP_NAME_WORLD_SUN_RADIUS module const to make EB-03-01's hub-orbit-scale work easier. Verification: 9/9 EB-02-03 vitest assertions pass; 47/47 across editor-build suite; tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). SC-007 dedicated 'World' inspector tab correctly deferred to EB-02-04; SC-012 hub-orbit-around-sun positions correctly deferred to EB-03-01."
     },
     {
       "id": "EB-02-04",
-      "title": "App_Name_World inspector tab \u2014 surfaces D1 fields; existing tabs preserved",
+      "title": "App_Name_World inspector tab — surfaces D1 fields; existing tabs preserved",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-007",
-        "\u00a74 SC-020"
+        "§2 SC-007",
+        "§4 SC-020"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -364,17 +372,17 @@
       "attemptCount": 1,
       "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
       "verifiedAt": "2026-05-14T23:05:10Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) Inspector.tsx auto-route useEffect includes `tab` in deps \u2014 clicking a non-World tab while App_Name_World is selected snaps back to 'world' because the effect re-fires. Comment claims user can switch; implementation contradicts. Drop `tab` from deps or gate on a first-open ref. (2) WorldTab useEffect [root]-keyed re-sync wipes in-flight drafts on other fields after any one Save (every updateRootNode produces a new root object reference via rootNodes.map). Re-key on root.appNameWorldId or merge non-destructively. (3) Persistence gap: updateRootNode flips isDirty + schedules autosave, but saveToServer payload is { schemaVersion, hub, nodes, edges } only \u2014 rootNodes never threaded to /api/prism/regen, so World-tab edits are lost on reload. Either extend HomeHubJson additively (INV-18) or document the deferred persistence path. (4) SC-020 enumerates 7 tabs including 'history'; shipping TABS const carries only 6 \u2014 pre-existing gap, surfaces here because WORLD_TABS = ['world', ...TABS] inherits it. OPTIONAL: hoist D1_FIELD_KEYS to module scope; memoize per-field initial JSON.stringify if memoryLog/nodeRegistry grow; consider disabling rather than redirect-noting non-applicable tabs while App_Name_World is selected. Verification: 9/9 EB-02-04 vitest assertions pass; 55/56 across editor-build suite (the one remaining was the snapshot-dir gate, satisfied after verify-editor-runtimes wrote the dir); tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) Inspector.tsx auto-route useEffect includes `tab` in deps — clicking a non-World tab while App_Name_World is selected snaps back to 'world' because the effect re-fires. Comment claims user can switch; implementation contradicts. Drop `tab` from deps or gate on a first-open ref. (2) WorldTab useEffect [root]-keyed re-sync wipes in-flight drafts on other fields after any one Save (every updateRootNode produces a new root object reference via rootNodes.map). Re-key on root.appNameWorldId or merge non-destructively. (3) Persistence gap: updateRootNode flips isDirty + schedules autosave, but saveToServer payload is { schemaVersion, hub, nodes, edges } only — rootNodes never threaded to /api/prism/regen, so World-tab edits are lost on reload. Either extend HomeHubJson additively (INV-18) or document the deferred persistence path. (4) SC-020 enumerates 7 tabs including 'history'; shipping TABS const carries only 6 — pre-existing gap, surfaces here because WORLD_TABS = ['world', ...TABS] inherits it. OPTIONAL: hoist D1_FIELD_KEYS to module scope; memoize per-field initial JSON.stringify if memoryLog/nodeRegistry grow; consider disabling rather than redirect-noting non-applicable tabs while App_Name_World is selected. Verification: 9/9 EB-02-04 vitest assertions pass; 55/56 across editor-build suite (the one remaining was the snapshot-dir gate, satisfied after verify-editor-runtimes wrote the dir); tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-05",
       "title": "Server-only secrets vault (store + resolve + audit log)",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-008",
-        "\u00a72 INV-19",
-        "\u00a72 FP-06",
-        "\u00a72 FP-07"
+        "§2 SC-008",
+        "§2 INV-19",
+        "§2 FP-06",
+        "§2 FP-07"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -388,15 +396,15 @@
       "attemptCount": 1,
       "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
       "verifiedAt": "2026-05-14T23:23:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) store() is keyed by ref alone so a second store(scopeB, refA, ...) silently clobbers a prior store(scopeA, refA, ...); SC-008 only specifies scope-gating on resolve, but the clobber weakens the scope semantics SC-011 audits. Consider keying entries by (scope, ref) or rejecting cross-scope same-ref writes. (2) reset() is exported without a test-only marker \u2014 a production caller in src/server/** could wipe the live audit history. Rename to __resetForTests or guard with NODE_ENV !== 'production'. OPTIONAL: (a) module-level mutable singletons (entries, auditLog) make the comment about KV/Postgres/KMS swap require touching every export \u2014 a createVault() factory would isolate the surface without changing the public API. (b) nowIso() is one-use and three lines \u2014 inline new Date().toISOString() at the call site. (c) reset() not documented in the contract comment (lines 5-13); if it stays exported, add to the block. Verification: 12/12 EB-02-05 vitest assertions pass; 68/68 across editor-build suite; tsc clean; vault.ts exports store/resolve/audit; first line is `import 'server-only';`; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) store() is keyed by ref alone so a second store(scopeB, refA, ...) silently clobbers a prior store(scopeA, refA, ...); SC-008 only specifies scope-gating on resolve, but the clobber weakens the scope semantics SC-011 audits. Consider keying entries by (scope, ref) or rejecting cross-scope same-ref writes. (2) reset() is exported without a test-only marker — a production caller in src/server/** could wipe the live audit history. Rename to __resetForTests or guard with NODE_ENV !== 'production'. OPTIONAL: (a) module-level mutable singletons (entries, auditLog) make the comment about KV/Postgres/KMS swap require touching every export — a createVault() factory would isolate the surface without changing the public API. (b) nowIso() is one-use and three lines — inline new Date().toISOString() at the call site. (c) reset() not documented in the contract comment (lines 5-13); if it stays exported, add to the block. Verification: 12/12 EB-02-05 vitest assertions pass; 68/68 across editor-build suite; tsc clean; vault.ts exports store/resolve/audit; first line is `import 'server-only';`; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
     },
     {
       "id": "EB-02-06",
       "title": "capabilityRefs field on PrismRootNode + PrismNode; inspector capability picker",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-009",
-        "\u00a72 INV-18"
+        "§2 SC-009",
+        "§2 INV-18"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -410,17 +418,17 @@
       "attemptCount": 1,
       "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
       "verifiedAt": "2026-05-14T23:43:00Z",
-      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) /api/prism/vault/resolve reads log[log.length-1].at after vaultResolve to surface the call timestamp \u2014 racy under concurrent requests; preferable to have vaultResolve return the timestamp directly. (2) The `(result as { ok: false; reason: ... })` cast in redact() papers over discriminated-union narrowing (strict:false project setting). (3) serializeRootNode still lists capabilityRefs in the canonical key order; JSON.stringify drops undefined so legacy round-trip still byte-matches, but a one-line comment noting that intent would help. OPTIONAL: (a) handleResolve rebuilds pending/results state objects with spread per click \u2014 fine at <20 refs, switch to Map-keyed state or per-ref child if it grows; (b) ref.scope || scopeHint fallback silently masks an upstream invariant violation when ref.scope is empty; (c) add `export const dynamic = 'force-dynamic'` on the vault route so no future caching layer memoizes a redacted response; (d) helper text 'INV-19' leaks a spec marker into a user-facing string. Verification: 14/14 EB-02-06 vitest assertions pass; 82/82 across editor-build suite; tsc clean; next build clean (vault/resolve route shows as \u0192 dynamic / server-rendered); two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). PrismRootNode.capabilityRefs loosened required\u2192optional (INV-18-safe); PrismNode.capabilityRefs?: CapabilityRef[] added (additive); CapabilityRef re-exported from types.ts; CapabilitiesPanel renders inside WorldTab listing refs by label || refId with Resolve button posting to /api/prism/vault/resolve; response payload carries only { ok, scope, ref, at, status } \u2014 never value (INV-19)."
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) /api/prism/vault/resolve reads log[log.length-1].at after vaultResolve to surface the call timestamp — racy under concurrent requests; preferable to have vaultResolve return the timestamp directly. (2) The `(result as { ok: false; reason: ... })` cast in redact() papers over discriminated-union narrowing (strict:false project setting). (3) serializeRootNode still lists capabilityRefs in the canonical key order; JSON.stringify drops undefined so legacy round-trip still byte-matches, but a one-line comment noting that intent would help. OPTIONAL: (a) handleResolve rebuilds pending/results state objects with spread per click — fine at <20 refs, switch to Map-keyed state or per-ref child if it grows; (b) ref.scope || scopeHint fallback silently masks an upstream invariant violation when ref.scope is empty; (c) add `export const dynamic = 'force-dynamic'` on the vault route so no future caching layer memoizes a redacted response; (d) helper text 'INV-19' leaks a spec marker into a user-facing string. Verification: 14/14 EB-02-06 vitest assertions pass; 82/82 across editor-build suite; tsc clean; next build clean (vault/resolve route shows as ƒ dynamic / server-rendered); two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). PrismRootNode.capabilityRefs loosened required→optional (INV-18-safe); PrismNode.capabilityRefs?: CapabilityRef[] added (additive); CapabilityRef re-exported from types.ts; CapabilitiesPanel renders inside WorldTab listing refs by label || refId with Resolve button posting to /api/prism/vault/resolve; response payload carries only { ok, scope, ref, at, status } — never value (INV-19)."
     },
     {
       "id": "EB-02-07",
       "title": "Client-bundle secret-leak integration test",
       "phase": 2,
       "specRefs": [
-        "\u00a72 SC-010",
-        "\u00a72 SC-011",
-        "\u00a72 INV-19",
-        "\u00a72 FP-06"
+        "§2 SC-010",
+        "§2 SC-011",
+        "§2 INV-19",
+        "§2 FP-06"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -438,10 +446,10 @@
     },
     {
       "id": "EB-03-01",
-      "title": "Galaxy mode \u2014 deterministic hub orbit around App_Name_World",
+      "title": "Galaxy mode — deterministic hub orbit around App_Name_World",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-012"
+        "§3 SC-012"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -451,18 +459,18 @@
       ],
       "haltCheck": "In viewMode='galaxy', hubs render in deterministic orbital positions (fn of hubId hash + ring index); two consecutive renders produce identical positions; snapshot outer.png shows ringed layout.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
+      "verifiedAt": "2026-05-15T00:45:16Z",
+      "notes": "Implemented FNV-1a hash + 3-ring orbit (radii 90/150/210) keyed by hubId. Threaded ViewMode through useForceGraph; GraphScene passes viewMode. spec-reviewer: no MUST FIX; SHOULD FIX (typed viewMode as ViewMode union, FP-12 boundary-enforced) addressed in same commit. OPTIONAL items deferred (orthogonal y-jitter entropy, extract galaxy-layout module for SC-013, FNV prime comment) — non-blocking."
     },
     {
       "id": "EB-03-02",
-      "title": "Galaxy mode \u2014 size-by-complexity rule",
+      "title": "Galaxy mode — size-by-complexity rule",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-013"
+        "§3 SC-013"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -479,10 +487,10 @@
     },
     {
       "id": "EB-03-03",
-      "title": "Galaxy mode \u2014 zoom-based label LOD",
+      "title": "Galaxy mode — zoom-based label LOD",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-014"
+        "§3 SC-014"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -499,11 +507,11 @@
     },
     {
       "id": "EB-03-04",
-      "title": "Galaxy mode \u2014 reason-colored animated tether lines",
+      "title": "Galaxy mode — reason-colored animated tether lines",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-015",
-        "\u00a73 RA-15"
+        "§3 SC-015",
+        "§3 RA-15"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -521,10 +529,10 @@
     },
     {
       "id": "EB-03-05",
-      "title": "Galaxy mode \u2014 global filter overlay + greyed non-matches",
+      "title": "Galaxy mode — global filter overlay + greyed non-matches",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-016"
+        "§3 SC-016"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -542,10 +550,10 @@
     },
     {
       "id": "EB-03-06",
-      "title": "Galaxy mode \u2014 multi-select (shift-click) + group inspector",
+      "title": "Galaxy mode — multi-select (shift-click) + group inspector",
       "phase": 3,
       "specRefs": [
-        "\u00a73 SC-017"
+        "§3 SC-017"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -566,8 +574,8 @@
       "title": "Drill-in: flyToHub + content reveal animation sequence",
       "phase": 4,
       "specRefs": [
-        "\u00a74 SC-018",
-        "\u00a74 SC-019"
+        "§4 SC-018",
+        "§4 SC-019"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -575,7 +583,7 @@
         "cd kid-kode-landing && npm run build",
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-01"
       ],
-      "haltCheck": "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world; the target hub's nodes, background, and intra-hub tethers fade in over \u2264800ms; selection on the clicked hub is preserved.",
+      "haltCheck": "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world; the target hub's nodes, background, and intra-hub tethers fade in over ≤800ms; selection on the clicked hub is preserved.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -585,10 +593,10 @@
     },
     {
       "id": "EB-04-02",
-      "title": "Node-click \u2192 inspector with all tabs preserved across modes",
+      "title": "Node-click → inspector with all tabs preserved across modes",
       "phase": 4,
       "specRefs": [
-        "\u00a74 SC-020"
+        "§4 SC-020"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -608,7 +616,7 @@
       "title": "Intra-hub zoom-based label LOD",
       "phase": 4,
       "specRefs": [
-        "\u00a74 SC-021"
+        "§4 SC-021"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -628,16 +636,16 @@
       "title": "Selection + camera-pose 5-mode round-trip regression",
       "phase": 4,
       "specRefs": [
-        "\u00a74 SC-018",
-        "\u00a71 SC-002",
-        "\u00a71 INV-20"
+        "§4 SC-018",
+        "§1 SC-002",
+        "§1 INV-20"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-04"
       ],
-      "haltCheck": "Automated test cycles selectedNodeId through galaxy \u2192 hub-world \u2192 canvas \u2192 preview-hub \u2192 preview-app \u2192 galaxy; assertion at every step that selectedNodeId+selectedHubId survive; camera pose is mode-specific but checkpointed and restorable.",
+      "haltCheck": "Automated test cycles selectedNodeId through galaxy → hub-world → canvas → preview-hub → preview-app → galaxy; assertion at every step that selectedNodeId+selectedHubId survive; camera pose is mode-specific but checkpointed and restorable.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -647,11 +655,11 @@
     },
     {
       "id": "EB-05-01",
-      "title": "Canvas mode \u2014 deterministic center/face camera pose",
+      "title": "Canvas mode — deterministic center/face camera pose",
       "phase": 5,
       "specRefs": [
-        "\u00a75 SC-022",
-        "\u00a75 SC-024"
+        "§5 SC-022",
+        "§5 SC-024"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -668,10 +676,10 @@
     },
     {
       "id": "EB-05-02",
-      "title": "Canvas mode \u2014 viewport frame overlay + safe-area bounds",
+      "title": "Canvas mode — viewport frame overlay + safe-area bounds",
       "phase": 5,
       "specRefs": [
-        "\u00a75 SC-023"
+        "§5 SC-023"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -691,8 +699,8 @@
       "title": "Per-node transform handles (translate/rotate/scale) in canvas mode",
       "phase": 5,
       "specRefs": [
-        "\u00a75 SC-025",
-        "\u00a78 SC-042"
+        "§5 SC-025",
+        "§8 SC-042"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -712,7 +720,7 @@
       "title": "Inspector + keyframe tools reachable from canvas mode",
       "phase": 5,
       "specRefs": [
-        "\u00a75 SC-026"
+        "§5 SC-026"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -729,11 +737,11 @@
     },
     {
       "id": "EB-05-05",
-      "title": "Canvas \u2194 hub-world round-trip \u2014 selection + camera-pose persistence",
+      "title": "Canvas ↔ hub-world round-trip — selection + camera-pose persistence",
       "phase": 5,
       "specRefs": [
-        "\u00a75 SC-027",
-        "\u00a71 INV-20"
+        "§5 SC-027",
+        "§1 INV-20"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -753,8 +761,8 @@
       "title": "CompiledHubView type + compileHubToPreview skeleton",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-028",
-        "\u00a76 INV-17"
+        "§6 SC-028",
+        "§6 INV-17"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -775,14 +783,14 @@
       "title": "Anchor rule table (compile-anchors.ts)",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-031"
+        "§6 SC-031"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "test -f kid-kode-landing/src/lib/prism-graph/compile-anchors.ts"
       ],
-      "haltCheck": "compile-anchors.ts exports a deterministic rule fn (subtype, intent, serviceTag) \u2192 uiAnchor; unit tests cover at least 6 subtypes; ambiguous cases fall through to a documented default.",
+      "haltCheck": "compile-anchors.ts exports a deterministic rule fn (subtype, intent, serviceTag) → uiAnchor; unit tests cover at least 6 subtypes; ambiguous cases fall through to a documented default.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -795,9 +803,9 @@
       "title": "compileHubToPreview pure deterministic implementation",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-029",
-        "\u00a76 INV-17",
-        "\u00a76 FP-04"
+        "§6 SC-029",
+        "§6 INV-17",
+        "§6 FP-04"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -817,8 +825,8 @@
       "title": "Source-graph immutability proof through compile",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-030",
-        "\u00a76 INV-17"
+        "§6 SC-030",
+        "§6 INV-17"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -837,8 +845,8 @@
       "title": "Cinematic camera rail (CompiledHubView.cameraRail)",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-032",
-        "\u00a75 INV-23"
+        "§6 SC-032",
+        "§5 INV-23"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -858,7 +866,7 @@
       "title": "Viewport-relative background in preview-hub",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-033"
+        "§6 SC-033"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -878,7 +886,7 @@
       "title": "Editor-clutter hide layer in preview-hub mode",
       "phase": 6,
       "specRefs": [
-        "\u00a76 SC-034"
+        "§6 SC-034"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -898,16 +906,16 @@
       "title": "PrismHubBackgroundLayer type + PrismHub.background field (additive)",
       "phase": 7,
       "specRefs": [
-        "\u00a77 SC-036",
-        "\u00a77 SC-037",
-        "\u00a77 INV-18"
+        "§7 SC-036",
+        "§7 SC-037",
+        "§7 INV-18"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "grep -q 'PrismHubBackgroundLayer' kid-kode-landing/src/lib/prism-graph/types.ts"
       ],
-      "haltCheck": "types.ts exports PrismHubBackgroundLayer with attachment \u2208 {viewport-fixed, camera-locked, parallax, world, infinite-environment}; PrismHub.background?: PrismHubBackgroundLayer[]; layout.mockupUrl retained; tsc clean.",
+      "haltCheck": "types.ts exports PrismHubBackgroundLayer with attachment ∈ {viewport-fixed, camera-locked, parallax, world, infinite-environment}; PrismHub.background?: PrismHubBackgroundLayer[]; layout.mockupUrl retained; tsc clean.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -920,14 +928,14 @@
       "title": "Renderer composes background layer stack per attachment mode",
       "phase": 7,
       "specRefs": [
-        "\u00a77 SC-036"
+        "§7 SC-036"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-07-02"
       ],
-      "haltCheck": "Per attachment mode: viewport-fixed \u2192 camera-aligned plane; camera-locked \u2192 attached to camera node; parallax \u2192 reduced-rate translation; world \u2192 static world geometry; infinite-environment \u2192 cubemap/skybox. Snapshot shows multi-layer composition.",
+      "haltCheck": "Per attachment mode: viewport-fixed → camera-aligned plane; camera-locked → attached to camera node; parallax → reduced-rate translation; world → static world geometry; infinite-environment → cubemap/skybox. Snapshot shows multi-layer composition.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -940,8 +948,8 @@
       "title": "Scale-to-cover + env-fog edge fill (no blank scene edges)",
       "phase": 7,
       "specRefs": [
-        "\u00a77 SC-038",
-        "\u00a75 INV-23"
+        "§7 SC-038",
+        "§5 INV-23"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -961,8 +969,8 @@
       "title": "useScrollTimeline + scrollBinding consumer",
       "phase": 7,
       "specRefs": [
-        "\u00a77 SC-039",
-        "\u00a77 SC-040"
+        "§7 SC-039",
+        "§7 SC-040"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -982,8 +990,8 @@
       "title": "Additive transform fields (editorTransform, canvasTransform, etc.) on PrismNode",
       "phase": 8,
       "specRefs": [
-        "\u00a78 SC-041",
-        "\u00a78 INV-18"
+        "§8 SC-041",
+        "§8 INV-18"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1004,16 +1012,16 @@
       "title": "PrismKeyframe type with required coordinateSpace discriminator",
       "phase": 8,
       "specRefs": [
-        "\u00a78 SC-043",
-        "\u00a78 INV-21",
-        "\u00a78 FP-08"
+        "§8 SC-043",
+        "§8 INV-21",
+        "§8 FP-08"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "grep -q 'coordinateSpace' kid-kode-landing/src/lib/prism-graph/types.ts"
       ],
-      "haltCheck": "PrismKeyframe has required coordinateSpace \u2208 {universe, hub-scene, viewport-composition, scroll-timeline, camera}; tsc fails on any keyframe literal missing the discriminator. Hook FP-08 also fires for runtime-authored cases.",
+      "haltCheck": "PrismKeyframe has required coordinateSpace ∈ {universe, hub-scene, viewport-composition, scroll-timeline, camera}; tsc fails on any keyframe literal missing the discriminator. Hook FP-08 also fires for runtime-authored cases.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -1026,8 +1034,8 @@
       "title": "Typed trigger enum + animation tab pickers",
       "phase": 8,
       "specRefs": [
-        "\u00a78 SC-044",
-        "\u00a78 SC-045"
+        "§8 SC-044",
+        "§8 SC-045"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1047,7 +1055,7 @@
       "title": "Three baseline keyframe primitives (load fade-in, in-view slide, hover lift)",
       "phase": 8,
       "specRefs": [
-        "\u00a78 SC-046"
+        "§8 SC-046"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1064,11 +1072,11 @@
     },
     {
       "id": "EB-08-05",
-      "title": "Transform-edit \u2194 keyframe-capture integration in canvas mode",
+      "title": "Transform-edit ↔ keyframe-capture integration in canvas mode",
       "phase": 8,
       "specRefs": [
-        "\u00a78 SC-042",
-        "\u00a78 SC-045"
+        "§8 SC-042",
+        "§8 SC-045"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1085,11 +1093,11 @@
     },
     {
       "id": "EB-09-01",
-      "title": "Animation library catalog UI \u2014 3 methodologies preserved",
+      "title": "Animation library catalog UI — 3 methodologies preserved",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-047",
-        "\u00a79 INV-12"
+        "§9 SC-047",
+        "§9 INV-12"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1109,8 +1117,8 @@
       "title": "Library entries reference the 9 fixed cinematic primitives only",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-048",
-        "\u00a79 INV-12"
+        "§9 SC-048",
+        "§9 INV-12"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1129,7 +1137,7 @@
       "title": "Tether-driven interaction on 'triggers' edges",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-049"
+        "§9 SC-049"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1149,8 +1157,8 @@
       "title": "Cross-space tether resolution via transform pipeline",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-050",
-        "\u00a79 INV-22"
+        "§9 SC-050",
+        "§9 INV-22"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1170,8 +1178,8 @@
       "title": "Physics/shader integration on tether fire (where declared)",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-051",
-        "\u00a79 INV-12"
+        "§9 SC-051",
+        "§9 INV-12"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1191,8 +1199,8 @@
       "title": "Two-runtime snapshot proving tether-fire propagation",
       "phase": 9,
       "specRefs": [
-        "\u00a79 SC-052",
-        "\u00a71 INV-16"
+        "§9 SC-052",
+        "§1 INV-16"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -1213,7 +1221,7 @@
       "title": "CompiledAppView + compileAppToPreview aggregator",
       "phase": 10,
       "specRefs": [
-        "\u00a710 SC-053"
+        "§10 SC-053"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1233,7 +1241,7 @@
       "title": "preview-app renderer + route-like navigation",
       "phase": 10,
       "specRefs": [
-        "\u00a710 SC-054"
+        "§10 SC-054"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1251,11 +1259,11 @@
     },
     {
       "id": "EB-10-03",
-      "title": "Hub transitions \u2014 damped cinematic transit between hub rails",
+      "title": "Hub transitions — damped cinematic transit between hub rails",
       "phase": 10,
       "specRefs": [
-        "\u00a710 SC-055",
-        "\u00a75 INV-23"
+        "§10 SC-055",
+        "§5 INV-23"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1275,7 +1283,7 @@
       "title": "Cross-hub tether rendering in preview-app",
       "phase": 10,
       "specRefs": [
-        "\u00a710 SC-056"
+        "§10 SC-056"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -1295,9 +1303,9 @@
       "title": "App_Name_World context + full-compile immutability proof",
       "phase": 10,
       "specRefs": [
-        "\u00a710 SC-057",
-        "\u00a710 SC-058",
-        "\u00a76 INV-17"
+        "§10 SC-057",
+        "§10 SC-058",
+        "§6 INV-17"
       ],
       "tddRequired": true,
       "verificationCommands": [
