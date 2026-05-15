@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
-import { toEditorView, type EditorGraph, type EditorNode } from '@/lib/prism-graph/view-model';
+import {
+  toEditorView,
+  type EditorGraph,
+  type EditorHubView,
+  type EditorNode,
+} from '@/lib/prism-graph/view-model';
 import { useGraphEditorStore, type InspectorTab } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
@@ -33,6 +38,9 @@ export default function Inspector() {
   const open = useGraphEditorStore((s) => s.inspectorOpen);
   const close = useGraphEditorStore((s) => s.closeInspector);
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
+  const selectedNodeIds = useGraphEditorStore((s) => s.selectedNodeIds);
+  const selectedHubIds = useGraphEditorStore((s) => s.selectedHubIds);
+  const clearMultiSelection = useGraphEditorStore((s) => s.clearMultiSelection);
   const tab = useGraphEditorStore((s) => s.inspectorTab);
   const setTab = useGraphEditorStore((s) => s.setInspectorTab);
   const frozen = useGraphEditorStore((s) => (selectedId ? s.frozenNodeIds.has(selectedId) : false));
@@ -142,6 +150,25 @@ export default function Inspector() {
       setTab('world');
     }
   }, [isWorldSelected, selectedId, setTab, tab]);
+
+  // EB-03-06 / SC-017 — when the user shift-clicks across multiple items in
+  // galaxy mode, render the group view in place of the single-node tabs. The
+  // group view is gated on (nodes + hubs > 1) so a 1-member multi-set falls
+  // through to the existing single-select Inspector (parity with no-shift).
+  const groupSize = selectedNodeIds.size + selectedHubIds.size;
+  const isGroup = groupSize > 1;
+  if (open && isGroup) {
+    return (
+      <GroupInspector
+        selectedNodeIds={selectedNodeIds}
+        selectedHubIds={selectedHubIds}
+        editorNodes={editorGraph.nodes}
+        editorHubs={editorGraph.hubs}
+        close={close}
+        clearMultiSelection={clearMultiSelection}
+      />
+    );
+  }
 
   if (!open || !selectedId) return null;
   const node = editorGraph.nodes.find((n) => n.id === selectedId);
@@ -1286,6 +1313,112 @@ function CapabilitiesPanel({
           })}
         </div>
       )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EB-03-06 / SC-017 — Group inspector
+// Rendered in place of the single-node tabs whenever shift-click has
+// promoted the selection into a multi-set (selectedNodeIds + selectedHubIds
+// > 1). Surfaces a count, the type breakdown, and the list of selected
+// names so the user can confirm which items are in the group. Clearing the
+// group falls back to the single-select Inspector (or to nothing if the
+// underlying singular selection was already nulled).
+// ═══════════════════════════════════════════════════════════════════
+function GroupInspector({
+  selectedNodeIds,
+  selectedHubIds,
+  editorNodes,
+  editorHubs,
+  close,
+  clearMultiSelection,
+}: {
+  selectedNodeIds: ReadonlySet<string>;
+  selectedHubIds: ReadonlySet<string>;
+  editorNodes: EditorNode[];
+  editorHubs: EditorHubView[];
+  close: () => void;
+  clearMultiSelection: () => void;
+}) {
+  const groupNodes = editorNodes.filter((n) => selectedNodeIds.has(n.id));
+  const groupHubs = editorHubs.filter((h) => selectedHubIds.has(h.id));
+  const total = groupNodes.length + groupHubs.length;
+  return (
+    <div
+      data-role="group-inspector"
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] border-l border-white/10 flex flex-col animate-slide-in-r"
+      style={{
+        background: 'linear-gradient(180deg, rgba(14,16,37,0.97) 0%, rgba(8,10,26,0.98) 100%)',
+        backdropFilter: 'blur(32px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
+        boxShadow: '-24px 0 64px rgba(0,0,0,0.55)',
+      }}
+    >
+      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+        <div className="min-w-0 flex-1">
+          <div className="text-[9px] font-mono tracking-widest text-white/40">INSPECTOR · GROUP</div>
+          <div className="font-display font-bold text-white text-lg leading-tight">
+            {total} items selected
+          </div>
+          <div className="text-[10px] font-mono text-white/55 mt-0.5">
+            {groupNodes.length} nodes · {groupHubs.length} hubs
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 ml-2">
+          <button
+            type="button"
+            data-role="group-clear"
+            onClick={() => clearMultiSelection()}
+            title="Clear multi-selection"
+            className="px-2.5 h-7 rounded-md text-[10px] font-mono bg-white/5 hover:bg-white/10 border border-white/10 text-white/75 transition-colors"
+          >
+            Clear
+          </button>
+          <button
+            onClick={close}
+            className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+            title="Close inspector"
+          >
+            <Icon name="close" size={12} color="#c5ccea" />
+          </button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto overscroll-contain p-5 space-y-4">
+        {groupHubs.length > 0 && (
+          <div>
+            <div className="text-[9px] font-mono tracking-widest text-white/40 mb-2">HUBS</div>
+            <ul data-role="group-hub-list" className="space-y-1">
+              {groupHubs.map((h) => (
+                <li
+                  key={h.id}
+                  className="px-3 py-2 rounded-md bg-white/5 border border-white/10 text-[11px] text-white/85 font-mono"
+                >
+                  {h.name}
+                  <span className="text-white/40"> · {h.route}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {groupNodes.length > 0 && (
+          <div>
+            <div className="text-[9px] font-mono tracking-widest text-white/40 mb-2">NODES</div>
+            <ul data-role="group-node-list" className="space-y-1">
+              {groupNodes.map((n) => (
+                <li
+                  key={n.id}
+                  className="px-3 py-2 rounded-md bg-white/5 border border-white/10 text-[11px] text-white/85 font-mono"
+                >
+                  {n.name}
+                  <span className="text-white/40"> · {n.elementType}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

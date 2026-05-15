@@ -270,8 +270,10 @@ function GlassNode({
   const livePreviewHoverId = useGraphEditorStore((s) => s.livePreviewHoverId);
   const frozen = useGraphEditorStore((s) => s.frozenNodeIds.has(node.id));
   const selectNode = useGraphEditorStore((s) => s.selectNode);
+  const toggleNodeSelection = useGraphEditorStore((s) => s.toggleNodeSelection);
   const hoverNode = useGraphEditorStore((s) => s.hoverNode);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
 
   const isSelected = selectedId === node.id;
   const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
@@ -354,7 +356,14 @@ function GlassNode({
       }}
       onClick={dim ? undefined : (e) => {
         e.stopPropagation();
-        selectNode(node.id);
+        // EB-03-06 / SC-017 — galaxy-mode shift-click promotes the click into
+        // toggleNodeSelection so the group grows; plain clicks fall through
+        // to selectNode which also collapses any prior group back to a single.
+        if (viewMode === 'galaxy' && e.nativeEvent.shiftKey) {
+          toggleNodeSelection(node.id);
+        } else {
+          selectNode(node.id);
+        }
       }}
       onDoubleClick={dim ? undefined : (e) => {
         e.stopPropagation();
@@ -498,7 +507,7 @@ function HubHull({
   radius: number;
   innerRadius: number;
   isActive: boolean;
-  onSelect: () => void;
+  onSelect: (shiftKey: boolean) => void;
   // EB-03-05 / SC-016: when true, the hub is a non-match against the active
   // galaxy filter. Its opacity is scaled by GALAXY_FILTER_DIM_OPACITY and
   // pointer events are suppressed so dimmed hubs aren't clickable. Matches
@@ -534,7 +543,7 @@ function HubHull({
       }}
       onClick={dim ? undefined : (e) => {
         e.stopPropagation();
-        onSelect();
+        onSelect(e.nativeEvent.shiftKey);
       }}
     >
       {/* Inner mockup sphere — textures the hub's hull with `hub.mockupUrl`
@@ -699,6 +708,7 @@ function HubHulls({
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
   const selectHub = useGraphEditorStore((s) => s.selectHub);
+  const toggleHubSelection = useGraphEditorStore((s) => s.toggleHubSelection);
 
   return (
     <>
@@ -748,7 +758,16 @@ function HubHulls({
             radius={radius}
             innerRadius={innerRadius}
             isActive={isActive}
-            onSelect={() => selectHub(hub.id)}
+            onSelect={(shiftKey) => {
+              // EB-03-06 / SC-017 — shift-click on a hub in galaxy mode adds
+              // the hub to the multi-selection set instead of replacing the
+              // current selection. Other modes preserve single-select.
+              if (viewMode === 'galaxy' && shiftKey) {
+                toggleHubSelection(hub.id);
+              } else {
+                selectHub(hub.id);
+              }
+            }}
             dim={dim}
           />
         );

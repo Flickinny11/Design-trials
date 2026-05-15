@@ -56,6 +56,13 @@ interface GraphEditorState {
   selectedHubId: string | null;
   hoveredNodeId: string | null;
 
+  // EB-03-06 / SC-017 — galaxy-mode multi-selection via shift-click. These
+  // sets live alongside the singular fields above so the existing
+  // single-select Inspector path keeps working unchanged. Both empty until
+  // a shift-click promotes a single selection into a group.
+  selectedNodeIds: Set<string>;
+  selectedHubIds: Set<string>;
+
   // Inspector
   inspectorOpen: boolean;
   inspectorTab: InspectorTab;
@@ -97,6 +104,9 @@ interface GraphEditorState {
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
+  toggleNodeSelection: (id: string) => void;
+  toggleHubSelection: (id: string) => void;
+  clearMultiSelection: () => void;
   openInspector: (tab?: InspectorTab) => void;
   closeInspector: () => void;
   setInspectorTab: (t: InspectorTab) => void;
@@ -131,6 +141,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     selectedNodeId: null,
     selectedHubId: null,
     hoveredNodeId: null,
+    selectedNodeIds: new Set<string>(),
+    selectedHubIds: new Set<string>(),
     inspectorOpen: false,
     inspectorTab: 'visual',
     searchOpen: false,
@@ -154,9 +166,70 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';
       set({ cameraDistance: d, zoomLevel: level });
     },
-    selectNode: (id) => set({ selectedNodeId: id, selectedHubId: null }),
-    selectHub: (id) => set({ selectedHubId: id, selectedNodeId: null, inspectorOpen: true }),
+    selectNode: (id) =>
+      set({
+        selectedNodeId: id,
+        selectedHubId: null,
+        selectedNodeIds: new Set<string>(),
+        selectedHubIds: new Set<string>(),
+      }),
+    selectHub: (id) =>
+      set({
+        selectedHubId: id,
+        selectedNodeId: null,
+        inspectorOpen: true,
+        selectedNodeIds: new Set<string>(),
+        selectedHubIds: new Set<string>(),
+      }),
     hoverNode: (id) => set({ hoveredNodeId: id }),
+    // EB-03-06 / SC-017 — shift-click pathway. The first toggle seeds the
+    // multi-set with the prior singular `selectedNodeId` so the resulting
+    // group has [prev, id]; subsequent toggles add or remove. The singular
+    // `selectedNodeId` is kept in sync with the multi-set's "anchor" so a
+    // 0-or-1-member set still renders the single-node Inspector: size==0 →
+    // clear the singular; size==1 → singular reflects the lone member;
+    // size>=2 → leave the singular alone and let the group view supersede.
+    toggleNodeSelection: (id) =>
+      set((s) => {
+        const next = new Set<string>(s.selectedNodeIds);
+        if (next.size === 0 && s.selectedNodeId) {
+          next.add(s.selectedNodeId);
+        }
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        if (next.size === 0) {
+          return { selectedNodeIds: next, selectedNodeId: null };
+        }
+        if (next.size === 1) {
+          const only = next.values().next().value as string;
+          return { selectedNodeIds: next, selectedNodeId: only };
+        }
+        return { selectedNodeIds: next };
+      }),
+    toggleHubSelection: (id) =>
+      set((s) => {
+        const next = new Set<string>(s.selectedHubIds);
+        if (next.size === 0 && s.selectedHubId) {
+          next.add(s.selectedHubId);
+        }
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        // Mirror selectHub's inspector-open side-effect so shift-clicking a
+        // hub for the first time still surfaces the panel.
+        if (next.size === 0) {
+          return { selectedHubIds: next, selectedHubId: null };
+        }
+        if (next.size === 1) {
+          const only = next.values().next().value as string;
+          return { selectedHubIds: next, selectedHubId: only, inspectorOpen: true };
+        }
+        return { selectedHubIds: next, inspectorOpen: true };
+      }),
+    clearMultiSelection: () =>
+      set({
+        selectedNodeIds: new Set<string>(),
+        selectedHubIds: new Set<string>(),
+      }),
     openInspector: (tab) =>
       set((s) => ({ inspectorOpen: true, inspectorTab: tab ?? s.inspectorTab })),
     closeInspector: () => set({ inspectorOpen: false }),
@@ -175,7 +248,14 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         return { frozenNodeIds: next };
       }),
     setLivePreviewHover: (id) => set({ livePreviewHoverId: id }),
-    flyToNode: (id) => set({ flyToNodeId: id, selectedNodeId: id, selectedHubId: null }),
+    flyToNode: (id) =>
+      set({
+        flyToNodeId: id,
+        selectedNodeId: id,
+        selectedHubId: null,
+        selectedNodeIds: new Set<string>(),
+        selectedHubIds: new Set<string>(),
+      }),
     flyToHub: (hubId) => set({ flyToHubId: hubId, activeHubId: hubId }),
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),
     resetCamera: () =>
