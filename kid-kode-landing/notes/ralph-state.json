@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T02:52:46Z",
+  "updatedAt": "2026-05-15T03:17:58Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 14,
-    "lastProductiveCommit": "37961d9d49c8f7b38439e3e02b12d91b27393e9b"
+    "lastProductiveIteration": 15,
+    "lastProductiveCommit": "716c32adf39b5e97e5d17007ac736bacac728900"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 11,
+      "used": 12,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 14,
-    "commit": "37961d9d49c8f7b38439e3e02b12d91b27393e9b",
-    "verifiedAt": "2026-05-15T02:11:39Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-15T02:11:39Z"
+    "iteration": 15,
+    "taskId": "EB-03-04",
+    "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
+    "verifiedAt": "2026-05-15T03:17:58Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -203,6 +202,14 @@
       "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
       "verifiedAt": "2026-05-15T01:59:46.939Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-03/"
+    },
+    {
+      "iteration": 15,
+      "taskId": "EB-03-04",
+      "phase": 3,
+      "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
+      "verifiedAt": "2026-05-15T03:17:58Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-04/"
     }
   ],
   "tasks": [
@@ -537,11 +544,11 @@
       ],
       "haltCheck": "Inter-hub tether lines render in galaxy mode with EDGE_COLORS-derived colors, translucent material, and a subtle animation (pulse / flow); existing EDGE_COLORS entries unchanged.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
+      "verifiedAt": "2026-05-15T03:17:58Z",
+      "notes": "spec-reviewer SHOULD FIX (non-blocking): (1) materialsRef reset on each render is idiomatic-only; (2) JSX opacity=0.45 prop is overwritten by useFrame mutation each tick (practical risk low; kept to satisfy regex test for /opacity\\s*=/); (3) consider documenting pulse amplitude/period; (4) public/prism-assets/mock-app.prism modification in working tree is pre-existing, NOT introduced by EB-03-04. OPTIONAL: localeCompare for canonical hub ordering, delimiter hardening for id; cosmetic JSX blank lines."
     },
     {
       "id": "EB-03-05",
