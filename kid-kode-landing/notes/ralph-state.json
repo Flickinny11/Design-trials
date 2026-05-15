@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T19:30:53Z",
+  "updatedAt": "2026-05-15T20:44:09Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 30,
-    "lastProductiveCommit": "25a7057c6514d12767afda15e9f0b294dfe8155f"
+    "lastProductiveIteration": 31,
+    "lastProductiveCommit": "b83515791b1d15c190688e4c3269b2348023fa0d"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 8,
+      "used": 9,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,9 @@
     }
   },
   "checkpoint": {
-    "iteration": 30,
-    "commit": "25a7057c6514d12767afda15e9f0b294dfe8155f",
-    "verifiedAt": "2026-05-15T19:10:21Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-15T19:10:21Z"
+    "lastProductiveIteration": 31,
+    "lastProductiveCommit": "b83515791b1d15c190688e4c3269b2348023fa0d",
+    "verifiedAt": "2026-05-15T20:44:09Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -331,6 +329,14 @@
       "commit": "d1e649350b6283e123791af01f30699536e20663",
       "verifiedAt": "2026-05-15T18:51:16Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-04/"
+    },
+    {
+      "iteration": 31,
+      "taskId": "EB-06-05",
+      "phase": 6,
+      "commit": "b83515791b1d15c190688e4c3269b2348023fa0d",
+      "verifiedAt": "2026-05-15T20:44:09Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-05/"
     }
   ],
   "tasks": [
@@ -999,11 +1005,11 @@
       ],
       "haltCheck": "preview-hub camera is constrained to a damped rail computed from CompiledHubView.cameraRail; no orbit/drag in preview-hub; snapshot proves the camera never exposes scene edges.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "b83515791b1d15c190688e4c3269b2348023fa0d",
+      "verifiedAt": "2026-05-15T20:44:09Z",
+      "notes": "spec-reviewer: 0 MUST FIX. SHOULD FIX deferred: (1) rail effect dep array does not re-derive on hub viewport/node edits — sketchier than ideal but acceptable for SC-032 baseline (recomputes on viewMode/activeHubId/status; future task subscribe to useGraphSourceStore slice). (2) computeSceneBoundsForCamera assumes viewport-pixel coord space (§4); document/transform-through coord pipeline if fixtures shift to scene-units (INV-22). (3) setBeforeRender closure captures cameraRailDriver via let — fragile; pass explicit driver ref. (4) failing-test commit fb9eed5 also includes pure module sources (camera-rail.ts + camera-rail-driver.ts); the source-grep tests in HEAD still failed pre-impl so partial-TDD not clean violation. (5) useLiveGraph=false legacy bundle path is silently exempt from SC-032 — document or wire. OPTIONAL: beforeRender hook silently swallows errors (log on first throw); driver.dispose is a no-op (assert disposed post-dispose); cameraRail mount-opt JSDoc mis-states viewMode contract; bounds.maxZ comment direction may be inverted vs Three.js +Z convention."
     },
     {
       "id": "EB-06-06",
