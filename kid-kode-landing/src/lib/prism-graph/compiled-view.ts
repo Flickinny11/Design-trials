@@ -25,6 +25,7 @@
 
 import type { PrismHub, PrismNode } from './types.ts';
 import type { PrismRootNode } from './root-node.ts';
+import { pickUiAnchor, type UiAnchor } from './compile-anchors';
 
 // --- Attachment vocabulary (mirrors SC-036). ----------------------------
 
@@ -129,14 +130,43 @@ export interface CompiledHubView {
 const DEFAULT_FOV = 50;
 const DEFAULT_DAMPING = 0.12;
 
-function defaultAnchorFromVisual(node: PrismNode): CompiledAnchor {
+// SC-031 source vocabulary → compiled vocabulary. The source rule table
+// (compile-anchors.ts) classifies into seven `UiAnchor` values; the
+// compiled view only carries the four spaces the renderer adapter
+// dispatches on. This map is the only place the two vocabularies meet,
+// and it is a pure pre-computed lookup so the resulting compile path
+// stays deterministic + free of branches at hot loops.
+//
+//   world         → 'world'             (3D hub-scene world space, depth-aware)
+//   parallax      → 'hub-scene'         (scene-space with depth, scroll-driven)
+//   hybrid        → 'hub-scene'         (scene-space; viewport-aware via renderer)
+//   viewport      → 'viewport-relative' (2D viewport composition space)
+//   scroll        → 'viewport-relative' (viewport with scroll-timeline binding)
+//   sticky        → 'viewport-relative' (viewport with sticky pinning)
+//   camera-locked → 'camera'            (camera-local space; HUD welds)
+//
+// Spec refs: §6 SC-031 (rule table), §6 SC-028 (CompiledAnchorKind), and
+// the compiled-view CompiledAnchorKind union definition above.
+const UI_ANCHOR_TO_COMPILED_KIND: Readonly<Record<UiAnchor, CompiledAnchorKind>> =
+  Object.freeze({
+    world: 'world',
+    parallax: 'hub-scene',
+    hybrid: 'hub-scene',
+    viewport: 'viewport-relative',
+    scroll: 'viewport-relative',
+    sticky: 'viewport-relative',
+    'camera-locked': 'camera',
+  });
+
+function compileAnchorForNode(node: PrismNode): CompiledAnchor {
+  // SC-031: dispatch on (subtype, intent, serviceTag) via the rule table.
+  // Coordinates are derived purely from `node.visual.transform` (read-only;
+  // INV-17 forbids writes here). No React / Three.js types involved.
+  const uiAnchor = pickUiAnchor(node.subtype, node.intent, node.serviceTag);
+  const kind = UI_ANCHOR_TO_COMPILED_KIND[uiAnchor];
   const t = node.visual?.transform;
-  // Phase 6 skeleton: anchor stays in `viewport-relative` space. SC-031
-  // anchor rules (compile-anchors.ts) will dispatch on subtype / intent /
-  // serviceTag in a follow-up task. Coordinates here are deterministic
-  // derivatives of the source visual transform — no React/Three involved.
   return Object.freeze({
-    kind: 'viewport-relative' as const,
+    kind,
     x: typeof t?.x === 'number' ? t.x : 0,
     y: typeof t?.y === 'number' ? t.y : 0,
     z: typeof t?.z === 'number' ? t.z : 0,
@@ -202,7 +232,7 @@ function compileNodes(nodes: readonly PrismNode[]): readonly CompiledNodeEntry[]
         nodeId: node.nodeId,
         subtype: node.subtype,
         serviceTag: node.serviceTag,
-        anchor: defaultAnchorFromVisual(node),
+        anchor: compileAnchorForNode(node),
         z: typeof node.visual?.transform?.z === 'number' ? node.visual.transform.z : 0,
         visible: node.intent?.visibility?.renderInCurrentMockup !== false,
       }),
