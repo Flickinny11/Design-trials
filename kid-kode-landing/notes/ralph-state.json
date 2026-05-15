@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T14:53:26Z",
+  "updatedAt": "2026-05-15T15:39:21Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 26,
-    "lastProductiveCommit": "5a444bd5cc494f21eb3256f11b9d5cbe7ad14fda"
+    "lastProductiveIteration": 27,
+    "lastProductiveCommit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 26,
-    "commit": "5a444bd5cc494f21eb3256f11b9d5cbe7ad14fda",
-    "verifiedAt": "2026-05-15T14:43:01Z",
+    "iteration": 27,
+    "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
+    "verifiedAt": "2026-05-15T15:39:21Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T14:43:01Z"
+    "recordedAt": "2026-05-15T15:39:21Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -299,6 +299,14 @@
       "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
       "verifiedAt": "2026-05-15T14:25:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-05/"
+    },
+    {
+      "iteration": 27,
+      "taskId": "EB-06-01",
+      "phase": 6,
+      "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
+      "verifiedAt": "2026-05-15T15:39:21Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-01/"
     }
   ],
   "tasks": [
@@ -884,11 +892,11 @@
       ],
       "haltCheck": "CompiledHubView interface is deeply readonly + pure data (no React/Three.js types); compileHubToPreview signature accepts (hub, nodes, world) and returns CompiledHubView; tsc clean.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
+      "verifiedAt": "2026-05-15T15:39:21Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX (deferred follow-ups): (1) compile-background mockupUrl→viewport-fixed coercion needs Phase-7 reconciliation comment for semantic risk; (2) sort uses < / > string compare — locale-stable for ASCII nodeIds but consider Intl.Collator; (3) canonicalStringify silently drops undefined leaf values — normalize to null when index-signature fields are filled. OPTIONAL: FNV-1a → SHA-256 via crypto.subtle when Phase 6 fills out anchor/camera/background; inline compile-hub.ts impl; pose(x,y,z,fov) helper for cameraRail."
     },
     {
       "id": "EB-06-02",
