@@ -17,6 +17,17 @@ export type LegacyViewMode = 'preview' | 'editor' | 'split';
 export type AnyViewMode = ViewMode | LegacyViewMode;
 export type EditorRenderMode = 'scene' | 'topology';
 
+// EB-04-04 / §1 INV-20 / §5 SC-022, SC-027 — per-mode camera pose checkpoint.
+// Selection survives every mode transition (already invariant), but camera
+// pose is mode-specific: each mode keeps its own pose so that re-entering a
+// previously-visited mode restores the camera exactly as the user left it.
+// Pure data shape; the ControlsBridge in GraphScene reads/writes this in
+// Phase 5 (SC-022 wires canvas, SC-027 wires the canvas↔hub-world round-trip).
+export type CameraPose = {
+  position: { x: number; y: number; z: number };
+  target: { x: number; y: number; z: number };
+};
+
 const LEGACY_VIEW_MODE_TO_CANONICAL: Readonly<Record<LegacyViewMode, ViewMode>> = {
   editor: 'hub-world',
   split: 'canvas',
@@ -102,6 +113,12 @@ interface GraphEditorState {
   // Drag-pinned node positions
   pinnedPositions: Map<string, { x: number; y: number; z: number }>;
 
+  // EB-04-04 / §1 INV-20 — per-mode camera-pose checkpoints. Empty until a
+  // mode's controls write its current pose via `checkpointCameraPose`. The
+  // entries are partial because not every mode has been visited (or
+  // wired through Phase 5 controls) at any given moment.
+  cameraPoseByMode: Partial<Record<ViewMode, CameraPose>>;
+
   // Performance
   qualityMode: 'auto' | 'high' | 'medium' | 'low';
 
@@ -119,6 +136,9 @@ interface GraphEditorState {
   openInspector: (tab?: InspectorTab) => void;
   closeInspector: () => void;
   setInspectorTab: (t: InspectorTab) => void;
+  // EB-04-04 — record the current camera pose for `mode`. Pure store
+  // mutation; the GraphScene ControlsBridge becomes the caller in Phase 5.
+  checkpointCameraPose: (mode: ViewMode, pose: CameraPose) => void;
   toggleSearch: () => void;
   setSearchQuery: (q: string) => void;
   toggleFilter: () => void;
@@ -178,6 +198,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     hubRevealAt: null,
     hubRevealDurationMs: 800,
     pinnedPositions: new Map(),
+    cameraPoseByMode: {},
     qualityMode: 'auto',
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
@@ -265,6 +286,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       set((s) => ({ inspectorOpen: true, inspectorTab: tab ?? s.inspectorTab })),
     closeInspector: () => set({ inspectorOpen: false }),
     setInspectorTab: (t) => set({ inspectorTab: t }),
+    checkpointCameraPose: (mode, pose) =>
+      set((s) => ({ cameraPoseByMode: { ...s.cameraPoseByMode, [mode]: pose } })),
     toggleSearch: () => set((s) => ({ searchOpen: !s.searchOpen, searchQuery: '' })),
     setSearchQuery: (q) => set({ searchQuery: q }),
     toggleFilter: () => set((s) => ({ filterOpen: !s.filterOpen })),
