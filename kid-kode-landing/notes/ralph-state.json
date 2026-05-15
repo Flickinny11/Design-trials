@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T13:50:00Z",
+  "updatedAt": "2026-05-15T14:25:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 25,
-    "lastProductiveCommit": "42bb6d96f3062e559186a4708b1d72f7dcd0f3b8"
+    "lastProductiveIteration": 26,
+    "lastProductiveCommit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c"
   },
   "phaseCaps": {
     "§1": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§5": {
-      "used": 8,
+      "used": 9,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 25,
-    "commit": "42bb6d96f3062e559186a4708b1d72f7dcd0f3b8",
-    "verifiedAt": "2026-05-15T13:45:24Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T13:45:24Z"
+    "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
+    "iteration": 26,
+    "recordedAt": "2026-05-15T14:25:00Z",
+    "verifiedAt": "2026-05-15T14:25:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -291,6 +291,14 @@
       "commit": "34b841d33328089756a669add3136fdd7b3257d2",
       "verifiedAt": "2026-05-15T13:20:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-04/"
+    },
+    {
+      "iteration": 26,
+      "taskId": "EB-05-05",
+      "phase": 5,
+      "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
+      "verifiedAt": "2026-05-15T14:25:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-05/"
     }
   ],
   "tasks": [
@@ -854,11 +862,11 @@
       ],
       "haltCheck": "Test: enter canvas, select node, switch to hub-world, switch back to canvas. selectedNodeId is preserved; camera pose for canvas mode is restored exactly.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
+      "verifiedAt": "2026-05-15T14:25:00Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): (1) harmonize canvas-entry effect dep arrays across ControlsBridge ([viewMode, activeHubId]) and SceneControlsBridge ([viewMode, activeHubId, checkpointCameraPose]); Zustand action ref is stable so behavior is unchanged. (2) setLookAt(..., true) is animated; mid-flight pose capture on a second rapid mode toggle may snapshot an interpolated camera. Consider awaiting setLookAt promise or short-circuiting capture during transitions."
     },
     {
       "id": "EB-06-01",
