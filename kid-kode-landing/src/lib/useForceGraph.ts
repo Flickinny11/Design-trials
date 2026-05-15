@@ -26,6 +26,18 @@ export interface SimLink {
   id: string;
 }
 
+// EB-03-01 stub. Real implementation is committed after the failing test.
+// Returns origin positions so SC-012 assertions (distance > 30, distinct
+// positions, ring index ≥ 2 radii) fail at runtime — the TDD contract — while
+// satisfying the TypeScript compiler so the test file can compile alongside.
+export function computeGalaxyHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
+  const out: Record<string, { x: number; y: number; z: number }> = {};
+  hubs.forEach((h) => {
+    out[h.id] = { x: 0, y: 0, z: 0 };
+  });
+  return out;
+}
+
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
 // A single-hub artifact stays at the origin so the default editor camera
 // frames it on first load without requiring a Home/Galaxy click.
