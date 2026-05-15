@@ -44,7 +44,10 @@ import {
   createCameraRailDriver,
   type CameraRailDriverHandle,
 } from './camera-rail-driver';
-import type { CompiledCameraRail } from '@/lib/prism-graph/compiled-view';
+import type {
+  CompiledCameraRail,
+  CompiledHubBackgroundLayer,
+} from '@/lib/prism-graph/compiled-view';
 import type {
   GraphSource,
   PrismHub,
@@ -109,6 +112,16 @@ export interface MountGraphResult {
    *  `null` to detach the driver entirely. No-op if a rail was never
    *  installed and `null` is passed. */
   setCameraRail(rail: CompiledCameraRail | null): void;
+
+  /** EB-06-06 / §6 SC-033 — install the compiled background layer stack.
+   *  The first layer with `attachment: 'viewport-fixed'` is parented to
+   *  `sceneRoot.camera` so it stays fixed to the viewport during scroll.
+   *  Non-`viewport-fixed` layers are respected per attachment mode (Phase 7
+   *  SC-036 expands the renderer's vocabulary; for now only viewport-fixed
+   *  is rendered through this surface). Pass `null` or `[]` to remove. */
+  setBackgroundLayers(
+    layers: readonly CompiledHubBackgroundLayer[] | null,
+  ): void;
 }
 
 const BACKDROP_Z = -2;
@@ -308,6 +321,15 @@ export async function mountFromGraphSource(
     sceneRoot.camera.updateProjectionMatrix();
   }
 
+  // EB-06-06 STEP-6 STUB — interface satisfied so the failing test compiles.
+  // STEP-7 will replace this body with the camera-attached plane behavior
+  // required by SC-033.
+  function setBackgroundLayers(
+    _layers: readonly CompiledHubBackgroundLayer[] | null,
+  ): void {
+    // intentionally empty — tests must fail until STEP-7 implements
+  }
+
   function setCameraRail(rail: CompiledCameraRail | null): void {
     if (rail == null) {
       if (cameraRailDriver) {
@@ -359,6 +381,7 @@ export async function mountFromGraphSource(
     updateNodeTransform,
     setHubMockup,
     setCameraRail,
+    setBackgroundLayers,
     resize,
     unmount,
   };
