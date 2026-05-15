@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T18:20:52Z",
+  "updatedAt": "2026-05-15T18:51:16Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 29,
-    "lastProductiveCommit": "5df41d6eded634ed902496d8ec554750e50e2b82"
+    "lastProductiveIteration": 30,
+    "lastProductiveCommit": "d1e649350b6283e123791af01f30699536e20663"
   },
   "phaseCaps": {
     "§1": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§6": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 29,
-    "commit": "5df41d6eded634ed902496d8ec554750e50e2b82",
-    "verifiedAt": "2026-05-15T18:07:36Z",
+    "iteration": 30,
+    "commit": "d1e649350b6283e123791af01f30699536e20663",
+    "verifiedAt": "2026-05-15T18:51:16Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T18:07:36Z"
+    "recordedAt": "2026-05-15T18:51:16Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -323,6 +323,14 @@
       "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
       "verifiedAt": "2026-05-15T17:53:10Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-03/"
+    },
+    {
+      "iteration": 30,
+      "taskId": "EB-06-04",
+      "phase": 6,
+      "commit": "d1e649350b6283e123791af01f30699536e20663",
+      "verifiedAt": "2026-05-15T18:51:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-04/"
     }
   ],
   "tasks": [
@@ -970,11 +978,11 @@
       ],
       "haltCheck": "Test computes sha256 of JSON.stringify(GraphSource) before and after compileHubToPreview; sha is byte-identical. No hub.layout or node position field is touched by the compile.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "d1e649350b6283e123791af01f30699536e20663",
+      "verifiedAt": "2026-05-15T18:51:16Z",
+      "notes": "verified without implementation; pre-existing compileHubToPreview (EB-06-03) satisfies §6 SC-030 / §8 INV-17. Test (5 cases incl. sha256 byte-identity, 16x repeated-compile leakage check, hub.layout pin, per-node scenePosition/editorTransform/canvasTransform pin, empty-nodes edge case) passes against current implementation. Reviewer SHOULD-FIX (deferred): (a) add docblock noting JS insertion-order stability underpins the sha256 proof; (b) remove LegacyNode cast once editorTransform field lands on PrismNode; (c) optional rootNodes-targeted pin; (d) optional Object.freeze input variant to surface attempted writes."
     },
     {
       "id": "EB-06-05",
