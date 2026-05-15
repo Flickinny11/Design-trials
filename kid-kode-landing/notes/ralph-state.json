@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 17,
+  "currentIteration": 18,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T05:51:15Z",
+  "updatedAt": "2026-05-15T06:13:16Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 17,
-    "lastProductiveCommit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f"
+    "lastProductiveCommit": "7d3df06703704267c7bbe0c4b9d3ae4d36af3c23"
   },
   "phaseCaps": {
     "§1": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§3": {
-      "used": 16,
+      "used": 17,
       "cap": 50,
       "status": "active"
     },
@@ -84,9 +84,10 @@
   },
   "checkpoint": {
     "iteration": 17,
-    "taskId": "EB-03-06",
-    "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
-    "at": "2026-05-15T05:51:15Z"
+    "commit": "7d3df06703704267c7bbe0c4b9d3ae4d36af3c23",
+    "verifiedAt": "2026-05-15T06:03:31Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-15T06:03:31Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -624,8 +625,8 @@
       ],
       "haltCheck": "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world; the target hub's nodes, background, and intra-hub tethers fade in over ≤800ms; selection on the clicked hub is preserved.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
