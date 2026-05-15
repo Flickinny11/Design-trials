@@ -114,20 +114,156 @@ export interface CompiledHubView {
 
 // --- Compile entrypoint (SC-029 signature; skeleton body). -------------
 //
-// The skeleton body is intentionally pure and deterministic — it builds a
-// fully-typed CompiledHubView from the source inputs without touching any
-// field listed in INV-17. A future Phase 6/7 task swaps the placeholder
-// anchor/camera/background math for the real anchor-rule table
-// (compile-anchors.ts) and damped-camera rig (SC-032) and the viewport-fixed
-// background-layer pinning (SC-033). Until then the deterministic skeleton
-// keeps the type contract honest and the hash stable.
+// The skeleton body is pure and deterministic. It builds a fully-typed
+// CompiledHubView from the source inputs without touching any field listed
+// in INV-17 (hub.layout, node.scenePosition, node.editorTransform,
+// node.canvasTransform). A future Phase 6/7 task swaps the placeholder
+// anchor/camera/background math for:
+//   - the real anchor-rule table (compile-anchors.ts, SC-031),
+//   - the damped cinematic camera rig (SC-032), and
+//   - viewport-fixed background-layer pinning over PrismHubBackgroundLayer
+//     (SC-033 / SC-036).
+// Until then the deterministic skeleton keeps the type contract honest and
+// the hash stable.
+
+const DEFAULT_FOV = 50;
+const DEFAULT_DAMPING = 0.12;
+
+function defaultAnchorFromVisual(node: PrismNode): CompiledAnchor {
+  const t = node.visual?.transform;
+  // Phase 6 skeleton: anchor stays in `viewport-relative` space. SC-031
+  // anchor rules (compile-anchors.ts) will dispatch on subtype / intent /
+  // serviceTag in a follow-up task. Coordinates here are deterministic
+  // derivatives of the source visual transform — no React/Three involved.
+  return Object.freeze({
+    kind: 'viewport-relative' as const,
+    x: typeof t?.x === 'number' ? t.x : 0,
+    y: typeof t?.y === 'number' ? t.y : 0,
+    z: typeof t?.z === 'number' ? t.z : 0,
+  });
+}
+
+function compileBackground(hub: PrismHub): readonly CompiledHubBackgroundLayer[] {
+  // Phase 6 honors the legacy single-layer reader: layout.mockupUrl maps to
+  // a single `viewport-fixed` layer (SC-033). Phase 7 (SC-036/SC-037)
+  // extends the source schema with PrismHubBackgroundLayer[]; the compile
+  // entrypoint can swap to multi-layer iteration without changing the
+  // CompiledHubView shape.
+  const mockup = hub.layout?.mockupUrl ?? null;
+  if (!mockup) {
+    return Object.freeze([] as readonly CompiledHubBackgroundLayer[]);
+  }
+  return Object.freeze([
+    Object.freeze({
+      id: `${hub.hubId}/background-0`,
+      attachment: 'viewport-fixed' as const,
+      sourceUrl: mockup,
+      z: 0,
+      opacity: 1,
+    }),
+  ]);
+}
+
+function compileCameraRail(hub: PrismHub): CompiledCameraRail {
+  // Placeholder bounded rail: start at viewport center, end slightly
+  // pushed-in. SC-032 will replace this with the real damped rig.
+  const w = hub.layout?.viewportWidth ?? 1440;
+  const h = hub.layout?.viewportHeight ?? 900;
+  const cx = w / 2;
+  const cy = h / 2;
+  return Object.freeze({
+    mode: 'damped-cinematic' as const,
+    start: Object.freeze({
+      position: Object.freeze([cx, cy, 1200] as const) as readonly [number, number, number],
+      target: Object.freeze([cx, cy, 0] as const) as readonly [number, number, number],
+      fov: DEFAULT_FOV,
+    }),
+    end: Object.freeze({
+      position: Object.freeze([cx, cy, 900] as const) as readonly [number, number, number],
+      target: Object.freeze([cx, cy, 0] as const) as readonly [number, number, number],
+      fov: DEFAULT_FOV,
+    }),
+    damping: DEFAULT_DAMPING,
+  });
+}
+
+function compileNodes(nodes: readonly PrismNode[]): readonly CompiledNodeEntry[] {
+  // Stable, deterministic ordering by parentHubId then nodeId. Source array
+  // is never mutated (the spread + sort applies to a fresh copy).
+  const sorted = [...nodes].sort((a, b) => {
+    if (a.parentHubId !== b.parentHubId) {
+      return a.parentHubId < b.parentHubId ? -1 : 1;
+    }
+    return a.nodeId < b.nodeId ? -1 : a.nodeId > b.nodeId ? 1 : 0;
+  });
+  return Object.freeze(
+    sorted.map((node) =>
+      Object.freeze({
+        nodeId: node.nodeId,
+        subtype: node.subtype,
+        serviceTag: node.serviceTag,
+        anchor: defaultAnchorFromVisual(node),
+        z: typeof node.visual?.transform?.z === 'number' ? node.visual.transform.z : 0,
+        visible: node.intent?.visibility?.renderInCurrentMockup !== false,
+      }),
+    ),
+  );
+}
+
+function canonicalStringify(value: unknown): string {
+  // Deterministic JSON: object keys sorted recursively. Arrays preserve
+  // insertion order (we already sort the meaningful arrays upstream).
+  if (value === null || typeof value !== 'object') {
+    return JSON.stringify(value);
+  }
+  if (Array.isArray(value)) {
+    return `[${value.map(canonicalStringify).join(',')}]`;
+  }
+  const keys = Object.keys(value as Record<string, unknown>).sort();
+  const parts = keys.map(
+    (k) =>
+      `${JSON.stringify(k)}:${canonicalStringify((value as Record<string, unknown>)[k])}`,
+  );
+  return `{${parts.join(',')}}`;
+}
+
+function fnv1a(input: string): string {
+  // FNV-1a 32-bit, hex. Small, deterministic, dependency-free — enough for
+  // SC-029 hash-comparability (we never use this for crypto).
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < input.length; i += 1) {
+    hash ^= input.charCodeAt(i);
+    hash = (hash + ((hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24))) >>> 0;
+  }
+  return hash.toString(16).padStart(8, '0');
+}
 
 export function compileHubToPreview(
   hub: PrismHub,
   nodes: readonly PrismNode[],
   world: PrismRootNode,
 ): CompiledHubView {
-  throw new Error(
-    'compileHubToPreview: skeleton body not implemented; EB-06-01 step 7 fills this in.',
-  );
+  const compiledBackground = compileBackground(hub);
+  const compiledCameraRail = compileCameraRail(hub);
+  const compiledNodes = compileNodes(nodes);
+  const compiledWorld: CompiledWorldRef = Object.freeze({
+    appNameWorldId: world.appNameWorldId,
+  });
+
+  // Build the payload first WITHOUT the hash, then hash a canonical
+  // serialization of it. The serialization is deterministic across runs.
+  const payload = {
+    schemaVersion: 1 as const,
+    hubId: hub.hubId,
+    world: compiledWorld,
+    background: compiledBackground,
+    cameraRail: compiledCameraRail,
+    nodes: compiledNodes,
+  };
+  const hash = fnv1a(canonicalStringify(payload));
+
+  return Object.freeze({
+    ...payload,
+    hash,
+  });
 }
