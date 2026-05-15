@@ -43,6 +43,7 @@ import {
   GALAXY_FILTER_DIM_OPACITY,
   type GalaxyFilterMatches,
 } from '@/lib/galaxy-filter';
+import { computeCanvasCameraPose } from '@/lib/editor/canvas-camera';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 
@@ -1025,6 +1026,11 @@ function ControlsBridge({
   const flyToHubId = useGraphEditorStore((s) => s.flyToHubId);
   const resetSignal = useGraphEditorStore((s) => s.resetCameraSignal);
   const clearFlyTarget = useGraphEditorStore((s) => s.clearFlyTarget);
+  // EB-05-01 / §5 SC-022, SC-024 — canvas-mode pose entry. Read once per
+  // mount; subscriptions fire the effect below on changes.
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
 
   // Reset camera
   useEffect(() => {
@@ -1068,6 +1074,37 @@ function ControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flyToHubId]);
 
+  // EB-05-01 / §5 SC-022, SC-024 — Canvas mode entry: position the camera at
+  // a deterministic pose centered on the active hub and checkpoint it. SC-024
+  // is preserved by computeCanvasCameraPose, which offsets along +Z so the
+  // scene retains its `scenePosition.z` depth instead of collapsing to a
+  // flat 2D projection. The pose is then handed to checkpointCameraPose so
+  // canvas → hub-world → canvas (SC-027) restores exactly.
+  useEffect(() => {
+    if (viewMode !== 'canvas') return;
+    const c = controlsRef.current;
+    if (!c) return;
+    const center =
+      (activeHubId && hubCenters[activeHubId]) ?? { x: 0, y: 0, z: 0 };
+    const pose = computeCanvasCameraPose({
+      x: center.x,
+      y: center.y,
+      z: center.z,
+    });
+    c.setLookAt(
+      pose.position.x,
+      pose.position.y,
+      pose.position.z,
+      pose.target.x,
+      pose.target.y,
+      pose.target.z,
+      true,
+    );
+    checkpointCameraPose('canvas', pose);
+    // hubCenters is a fresh object each frame; depending on it would loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode, activeHubId]);
+
   // Track camera distance for zoom-level state
   useFrame(() => {
     const c = controlsRef.current;
@@ -1098,6 +1135,11 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
   const flyToNodeId = useGraphEditorStore((s) => s.flyToNodeId);
   const resetSignal = useGraphEditorStore((s) => s.resetCameraSignal);
   const clearFlyTarget = useGraphEditorStore((s) => s.clearFlyTarget);
+  // EB-05-01 / §5 SC-022, SC-024 — canvas-mode pose entry (scene-mode coords:
+  // active hub renders at local origin so center == 0,0,0).
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
 
   useEffect(() => {
     const c = controlsRef.current;
@@ -1105,6 +1147,29 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
     c.setLookAt(0, 0, 10, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetSignal]);
+
+  // EB-05-01 / §5 SC-022, SC-024 — Canvas mode entry: deterministic
+  // center/face pose on the active hub. AssembledSceneContent filters to a
+  // single hub whose nodes live in their local frame, so the active hub
+  // center is (0, 0, 0) here. computeCanvasCameraPose offsets along +Z so
+  // node `scenePosition.z` depth is preserved (SC-024 — never a flat 2D
+  // projection). Pose is checkpointed for SC-027 round-trip restoration.
+  useEffect(() => {
+    if (viewMode !== 'canvas') return;
+    const c = controlsRef.current;
+    if (!c) return;
+    const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+    c.setLookAt(
+      pose.position.x,
+      pose.position.y,
+      pose.position.z,
+      pose.target.x,
+      pose.target.y,
+      pose.target.z,
+      true,
+    );
+    checkpointCameraPose('canvas', pose);
+  }, [viewMode, activeHubId, checkpointCameraPose]);
 
   useEffect(() => {
     if (!flyToNodeId) return;
