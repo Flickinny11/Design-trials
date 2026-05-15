@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 26,
+  "currentIteration": 27,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-15T14:25:00Z",
+  "updatedAt": "2026-05-15T14:53:26Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 26,
-    "lastProductiveCommit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c"
+    "lastProductiveCommit": "5a444bd5cc494f21eb3256f11b9d5cbe7ad14fda"
   },
   "phaseCaps": {
     "§1": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§5": {
-      "used": 9,
+      "used": 10,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "artifactHash": null,
-    "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
     "iteration": 26,
-    "recordedAt": "2026-05-15T14:25:00Z",
-    "verifiedAt": "2026-05-15T14:25:00Z"
+    "commit": "5a444bd5cc494f21eb3256f11b9d5cbe7ad14fda",
+    "verifiedAt": "2026-05-15T14:43:01Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-15T14:43:01Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -884,8 +884,8 @@
       ],
       "haltCheck": "CompiledHubView interface is deeply readonly + pure data (no React/Three.js types); compileHubToPreview signature accepts (hub, nodes, world) and returns CompiledHubView; tsc clean.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
