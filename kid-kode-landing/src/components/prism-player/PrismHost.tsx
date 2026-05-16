@@ -189,18 +189,24 @@ export default function PrismHost({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prismUrl, useLiveGraph]);
 
-  // EB-06-05 (SC-032 / INV-23): in `preview-hub` mode, compile the active hub
-  // to a CompiledHubView and install the bounded damped-cinematic cameraRail
-  // on the live mount. In every other mode (galaxy / hub-world / canvas /
-  // preview-app), detach the driver so the camera is unconstrained for free
-  // orbit/topology authoring. This effect runs on mode/hub change but never
-  // remounts the runtime — setCameraRail hot-swaps inside the existing scene.
+  // EB-06-05 (SC-032 / INV-23) + EB-10-02 (SC-054): in `preview-hub` AND
+  // `preview-app` modes, compile the active hub to a CompiledHubView and
+  // install the bounded damped-cinematic cameraRail on the live mount.
+  // `preview-app` reuses the per-hub rail because hub-to-hub navigation is
+  // realized as activeHubId swaps (driven by the URL-hash router in page.tsx);
+  // INV-23 still binds — every hub gets a constrained, damped camera. In
+  // every authoring mode (galaxy / hub-world / canvas), detach the driver so
+  // the camera is unconstrained for free orbit/topology authoring. This
+  // effect never remounts the runtime — setCameraRail hot-swaps inside the
+  // existing scene, which is also what makes preview-app hub transitions
+  // smooth (only the rail target changes, not the renderer identity).
   useEffect(() => {
     if (status !== 'ready') return;
     const live = liveResultRef.current;
     if (!live) return;
 
-    if (viewMode !== 'preview-hub') {
+    const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
+    if (!isPreviewMode) {
       live.setCameraRail(null);
       live.setBackgroundLayers(null);
       live.setEnvironmentFog(null);

@@ -194,6 +194,108 @@ async function main() {
       criticalErrors.length === 0,
       criticalErrors.length ? criticalErrors.slice(0, 2).join(' | ') : 'clean');
 
+    // === EB-10-02 — Preview-app route-like navigation capture ====================
+    // SC-054 demands that hub-to-hub navigation reflect in the URL hash and
+    // survive browser back/forward. The editor-shell installs the
+    // `__PRISM_EDITOR_PREVIEW_APP_NAV__` dev hook (see src/app/page.tsx) while
+    // viewMode === 'preview-app'. This block flips to preview-app, walks
+    // next() twice + back() once, and records the hash trail + activeHubId
+    // for the snapshot reviewer to verify SC-054's three predicates.
+    let previewAppNav = null;
+    if (TASK_ID === 'EB-10-02') {
+      // The live-graph fixture has a single hub; SC-054 is about multi-hub
+      // navigation, so seed a synthetic second hub into useGraphSourceStore
+      // BEFORE switching to preview-app so the compileAppToPreview snapshot
+      // (read by the routing effect on entry) sees two hubs and the
+      // next/prev/back trail has somewhere to go.
+      await page.evaluate(() => {
+        try {
+          const mod = (window).__PRISM_DEBUG_STORES__;
+          // Fallback: try the well-known zustand getState through a probe.
+          const store = mod && mod.graphSource;
+          if (store && typeof store.setState === 'function') {
+            const state = store.getState();
+            if (state.hubs && state.hubs.length === 1) {
+              const seed = JSON.parse(JSON.stringify(state.hubs[0]));
+              seed.hubId = 'preview-app-test-hub';
+              seed.title = 'Preview App Test Hub';
+              store.setState({ hubs: [...state.hubs, seed] });
+            }
+          }
+        } catch (_) { /* tolerated; the assertion below catches it */ }
+      });
+      // Switch to preview-app via the dev hook so the routing useEffect arms.
+      await page.evaluate(() => {
+        const setter = (window).__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') setter('preview-app');
+      });
+      await page.waitForTimeout(1200);
+
+      previewAppNav = await page.evaluate(async () => {
+        const trail = [];
+        function snapshot(label) {
+          trail.push({
+            label,
+            hash: window.location.hash,
+            activeHubId:
+              (window).__PRISM_EDITOR_PREVIEW_APP_NAV__?.activeHubId ?? null,
+          });
+        }
+        const nav = (window).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+        if (!nav) return { error: 'nav-hook-not-installed' };
+
+        snapshot('entry');
+        const after1 = nav.next();
+        snapshot('after-next-1');
+        const after2 = nav.next();
+        snapshot('after-next-2');
+
+        // Browser back/forward — the popstate listener parses the hash and
+        // restores activeHubId. Two awaited microtasks let popstate fire +
+        // React re-render before snapshotting.
+        window.history.back();
+        await new Promise((r) => setTimeout(r, 250));
+        snapshot('after-back');
+        window.history.forward();
+        await new Promise((r) => setTimeout(r, 250));
+        snapshot('after-forward');
+
+        return {
+          hubIds: nav.hubIds,
+          afterNext1: after1,
+          afterNext2: after2,
+          trail,
+        };
+      }).catch((err) => ({
+        error: String(err && err.message ? err.message : err),
+      }));
+
+      const trailOk = !!(
+        previewAppNav &&
+        Array.isArray(previewAppNav.trail) &&
+        previewAppNav.trail.length === 5 &&
+        previewAppNav.trail[0].hash.startsWith('#hub=') &&
+        previewAppNav.trail[1].activeHubId !== previewAppNav.trail[0].activeHubId &&
+        previewAppNav.trail[3].activeHubId === previewAppNav.trail[1].activeHubId &&
+        previewAppNav.trail[4].activeHubId === previewAppNav.trail[2].activeHubId
+      );
+      check(
+        'preview-app.routing',
+        'preview-app navigates between hubs via URL hash + back/forward',
+        trailOk,
+        trailOk
+          ? `${previewAppNav.trail.map((t) => t.activeHubId).join(' -> ')}`
+          : previewAppNav && previewAppNav.error
+            ? previewAppNav.error
+            : `trail: ${JSON.stringify(previewAppNav?.trail ?? null)}`,
+      );
+
+      // Capture a screenshot in preview-app mode so the snapshot reviewer
+      // can eyeball the nav affordance + the rendered hub.
+      const innerAppPng = join(snapDir, 'inner.png');
+      await page.screenshot({ path: innerAppPng, fullPage: false });
+    }
+
     // === EB-09-06 — Tether-fire propagation capture ==============================
     // SC-052 demands that the snapshot prove tether-fire propagation. The
     // editor-shell installs `window.__PRISM_EDITOR_FIRE_TETHER__` (see
@@ -239,6 +341,7 @@ async function main() {
       viewport: { width: 1440, height: 900 },
       outerState,
       ...(tetherFireEvent ? { tetherFireEvent } : {}),
+      ...(previewAppNav ? { previewAppNav } : {}),
       summary: {
         outerScreenshot: 'outer.png',
         innerScreenshot: 'inner.png',

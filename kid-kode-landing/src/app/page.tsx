@@ -6,6 +6,14 @@ import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismH
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
+import { compileAppToPreview } from '@/lib/prism-graph/compile-app';
+import {
+  getNextHubId,
+  getPrevHubId,
+  resolveActiveHubId,
+  serializePreviewAppHash,
+} from '@/lib/prism-graph/preview-app-routing';
+import type { PrismRootNode } from '@/lib/prism-graph/root-node';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -43,6 +51,9 @@ export default function Page() {
   // "Preview in App UI" button can swap panes without prop-drilling.
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
+  // EB-10-02 / §10 SC-054 — preview-app routing reads the active hub from
+  // the store and writes back via setState (no dedicated action needed).
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   // EB-06-07 / §6 SC-034 — preview-hub hides editor clutter (mode bar
   // included) and exposes only a minimal "back" affordance. The store
   // tracks the last non-preview view mode so the back button returns the
@@ -161,6 +172,153 @@ export default function Page() {
     };
   }, []);
 
+  // EB-10-02 — debug-only handle to the source store so verify scripts can
+  // seed test fixtures (e.g. a second synthetic hub for multi-hub routing
+  // verification). Editor-shell code; not subject to INV-13.
+  useEffect(() => {
+    (window as unknown as {
+      __PRISM_DEBUG_STORES__?: { graphSource: typeof useGraphSourceStore };
+    }).__PRISM_DEBUG_STORES__ = { graphSource: useGraphSourceStore };
+    return () => {
+      delete (window as unknown as {
+        __PRISM_DEBUG_STORES__?: unknown;
+      }).__PRISM_DEBUG_STORES__;
+    };
+  }, []);
+
+  // EB-10-02 / §10 SC-054 — preview-app route-like navigation. While the
+  // user is in `preview-app`, the URL hash (`#hub=<hubId>`) is the source of
+  // truth for which compiled hub is active. Three wires:
+  //   1. Entering preview-app (or popstate while there): parse location.hash,
+  //      resolve through the live CompiledAppView, write activeHubId.
+  //   2. Hub switch in the store: push a new history entry so browser
+  //      back/forward steps through hub history.
+  //   3. Dev hook `__PRISM_EDITOR_PREVIEW_APP_NAV__` exposes a programmatic
+  //      next/prev/go-to-hub API for the verify-editor-runtimes snapshot.
+  // INV-17: the compile is read-only; no source-graph fields are written.
+  // INV-20: only `activeHubId` is mutated — selection survives the transition.
+  useEffect(() => {
+    if (viewMode !== 'preview-app') return;
+    if (typeof window === 'undefined') return;
+
+    function compileLiveApp() {
+      const source = useGraphSourceStore.getState();
+      // The legacy fixture has no rootNodes seeded; synthesize a minimal
+      // PrismRootNode whose appNameWorldId derives from the active world id
+      // (falls back to a stable literal so the compile remains deterministic).
+      const root: PrismRootNode =
+        source.rootNodes[0] ??
+        ({
+          appNameWorldId: 'app-name-world-default',
+          spec: {},
+          designSpec: {},
+          buildPlan: {},
+          memoryLog: [],
+          hubRegistry: source.hubs.map((h) => ({ hubId: h.hubId })),
+          nodeRegistry: [],
+          globalDependencies: [],
+          validationRules: [],
+          aiRoutingRules: [],
+        } as unknown as PrismRootNode);
+      return compileAppToPreview(root, source.hubs, source.nodes);
+    }
+
+    function applyHash(): void {
+      const compiled = compileLiveApp();
+      const nextHubId = resolveActiveHubId(window.location.hash, compiled);
+      if (nextHubId && nextHubId !== useGraphEditorStore.getState().activeHubId) {
+        useGraphEditorStore.setState({ activeHubId: nextHubId });
+      }
+    }
+
+    // Entry: resolve current hash against the compiled view. If the hash is
+    // missing or invalid, replace (not push) so back-navigation lands the
+    // user wherever they came from, not at a phantom hash.
+    const compiledAtEntry = compileLiveApp();
+    const resolvedAtEntry = resolveActiveHubId(window.location.hash, compiledAtEntry);
+    if (resolvedAtEntry) {
+      const desiredHash = serializePreviewAppHash(resolvedAtEntry);
+      if (window.location.hash !== desiredHash) {
+        window.history.replaceState(null, '', desiredHash);
+      }
+      if (resolvedAtEntry !== useGraphEditorStore.getState().activeHubId) {
+        useGraphEditorStore.setState({ activeHubId: resolvedAtEntry });
+      }
+    }
+
+    const onPopState = () => { applyHash(); };
+    window.addEventListener('popstate', onPopState);
+
+    type PreviewAppNav = {
+      activeHubId: string | null;
+      hubIds: readonly string[];
+      next(): string | null;
+      prev(): string | null;
+      goTo(hubId: string): string | null;
+    };
+    (window as unknown as {
+      __PRISM_EDITOR_PREVIEW_APP_NAV__?: PreviewAppNav;
+    }).__PRISM_EDITOR_PREVIEW_APP_NAV__ = {
+      get activeHubId() {
+        return useGraphEditorStore.getState().activeHubId;
+      },
+      get hubIds() {
+        return compileLiveApp().hubs.map((h) => h.hubId);
+      },
+      next() {
+        const compiled = compileLiveApp();
+        const current = useGraphEditorStore.getState().activeHubId
+          ?? resolveActiveHubId(window.location.hash, compiled);
+        if (!current) return null;
+        const target = getNextHubId(compiled, current);
+        if (!target) return null;
+        window.history.pushState(null, '', serializePreviewAppHash(target));
+        useGraphEditorStore.setState({ activeHubId: target });
+        return target;
+      },
+      prev() {
+        const compiled = compileLiveApp();
+        const current = useGraphEditorStore.getState().activeHubId
+          ?? resolveActiveHubId(window.location.hash, compiled);
+        if (!current) return null;
+        const target = getPrevHubId(compiled, current);
+        if (!target) return null;
+        window.history.pushState(null, '', serializePreviewAppHash(target));
+        useGraphEditorStore.setState({ activeHubId: target });
+        return target;
+      },
+      goTo(hubId: string) {
+        const compiled = compileLiveApp();
+        const exists = compiled.hubs.some((h) => h.hubId === hubId);
+        if (!exists) return null;
+        window.history.pushState(null, '', serializePreviewAppHash(hubId));
+        useGraphEditorStore.setState({ activeHubId: hubId });
+        return hubId;
+      },
+    };
+
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+      delete (window as unknown as {
+        __PRISM_EDITOR_PREVIEW_APP_NAV__?: PreviewAppNav;
+      }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+    };
+  }, [viewMode]);
+
+  // EB-10-02 — when the store's activeHubId changes while in preview-app
+  // (e.g. via the Prev/Next buttons below or programmatic setState), keep
+  // the URL hash in sync. Push a history entry so browser back/forward
+  // walks the user's navigation trail. Skip when the hash already matches
+  // (avoids a redundant pushState during the entry-resolve effect above).
+  useEffect(() => {
+    if (viewMode !== 'preview-app') return;
+    if (typeof window === 'undefined') return;
+    if (!activeHubId) return;
+    const desired = serializePreviewAppHash(activeHubId);
+    if (window.location.hash === desired) return;
+    window.history.pushState(null, '', desired);
+  }, [viewMode, activeHubId]);
+
   useEffect(() => {
     if (!dragging) return;
     const onMove = (e: MouseEvent) => {
@@ -183,6 +341,7 @@ export default function Page() {
   //     replaces it with the dedicated single-canvas + viewport-frame view.
   const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
   const isPreviewHub = viewMode === 'preview-hub';
+  const isPreviewApp = viewMode === 'preview-app';
   const showsSplit = viewMode === 'canvas';
   const showsPreview = isPreviewMode || showsSplit;
   const showsGraph = viewMode === 'galaxy' || viewMode === 'hub-world' || showsSplit;
@@ -281,6 +440,56 @@ export default function Page() {
               <span aria-hidden="true">‹</span>
               Back
             </button>
+          )}
+
+          {/* EB-10-02 / §10 SC-054 — minimal hub-to-hub navigation affordance,
+              visible only in `preview-app`. Each click pushes a history entry
+              via the dev hook so browser back/forward walks the hub trail.
+              The hash route (`#hub=<hubId>`) drives the active hub regardless
+              of how the user navigates (button, popstate, direct URL). */}
+          {isPreviewApp && (
+            <div
+              data-component="preview-app-nav"
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10"
+              style={{
+                background: 'rgba(8,10,26,0.78)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
+              }}
+            >
+              <button
+                type="button"
+                data-component="preview-app-prev"
+                aria-label="Previous hub"
+                onClick={() => {
+                  const nav = (window as unknown as {
+                    __PRISM_EDITOR_PREVIEW_APP_NAV__?: { prev(): string | null };
+                  }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+                  nav?.prev();
+                }}
+                className="h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                ‹ Prev
+              </button>
+              <span className="text-[10px] font-mono tracking-widest text-white/45 select-none">
+                {activeHubId ?? '—'}
+              </span>
+              <button
+                type="button"
+                data-component="preview-app-next"
+                aria-label="Next hub"
+                onClick={() => {
+                  const nav = (window as unknown as {
+                    __PRISM_EDITOR_PREVIEW_APP_NAV__?: { next(): string | null };
+                  }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+                  nav?.next();
+                }}
+                className="h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                Next ›
+              </button>
+            </div>
           )}
 
           {showsPreview && (
