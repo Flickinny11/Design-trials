@@ -11,10 +11,12 @@ import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { deriveCompiledCameraRail } from '@/lib/prism-graph/camera-rail';
+import { deriveHubTransitRail } from '@/lib/prism-graph/hub-transit';
 import {
   deriveCompiledEnvironmentFog,
   type CompiledHubBackgroundLayer,
 } from '@/lib/prism-graph/compiled-view';
+import type { CompiledCameraRail } from '@/lib/prism-graph/compiled-view';
 import type { GraphSource } from '@/lib/prism-graph/types';
 // T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
 // editor-side consumers. boot.ts owns the runtime contract; PrismHost is
@@ -74,6 +76,16 @@ export default function PrismHost({
   // below without re-running the mount effect when viewMode flips. The mount
   // effect writes into this ref; the rail effect reads from it.
   const liveResultRef = useRef<MountGraphResult | null>(null);
+
+  // EB-10-03 / §10 SC-055 — remember the per-hub rail of the previously
+  // active hub in `preview-app` so the next hub change composes an explicit
+  // damped-cinematic transit rail (anchor → anchor) via deriveHubTransitRail.
+  // The runtime camera-rail driver's setRail() keeps the current eased pose,
+  // so installing a transit rail produces a smooth, deterministic transit
+  // between hub-rail anchors. Reset to null whenever preview-app is exited
+  // so re-entering does not stitch a stale prior anchor into the first
+  // transit.
+  const previousHubRailRef = useRef<CompiledCameraRail | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -210,6 +222,10 @@ export default function PrismHost({
       live.setCameraRail(null);
       live.setBackgroundLayers(null);
       live.setEnvironmentFog(null);
+      // EB-10-03 — leaving preview-app/preview-hub drops the stitched
+      // transit chain. Re-entering recomputes the per-hub rail from
+      // scratch so the camera does not jump from a stale prior anchor.
+      previousHubRailRef.current = null;
       return;
     }
 
@@ -221,6 +237,7 @@ export default function PrismHost({
       live.setCameraRail(null);
       live.setBackgroundLayers(null);
       live.setEnvironmentFog(null);
+      previousHubRailRef.current = null;
       return;
     }
     const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
@@ -235,7 +252,25 @@ export default function PrismHost({
       viewportHeight: hub.layout.viewportHeight,
       nodes: hubNodes,
     });
-    live.setCameraRail(cameraRail);
+    // EB-10-03 / §10 SC-055 / INV-23 — in `preview-app`, when a previous
+    // hub rail exists in this mount lifetime, install a transit rail
+    // (fromAnchor → toAnchor) so the damped step in the runtime driver
+    // produces a deterministic cinematic transit between hub-rail anchors.
+    // `preview-hub` is single-hub by construction (no inter-hub navigation)
+    // so it always installs `cameraRail` directly.
+    const prevRail = previousHubRailRef.current;
+    const railToInstall: CompiledCameraRail =
+      viewMode === 'preview-app' && prevRail !== null && prevRail !== cameraRail
+        ? deriveHubTransitRail(prevRail, cameraRail)
+        : cameraRail;
+    live.setCameraRail(railToInstall);
+    // The "previous" we remember for the NEXT transit is always the
+    // destination hub's rest rail — that is the anchor a subsequent
+    // hub-change starts from, regardless of whether this install was a
+    // transit or a direct rail. This keeps the anchor chain explicit and
+    // matches the runtime driver's convergence target (rail.end ===
+    // toAnchor).
+    previousHubRailRef.current = cameraRail;
 
     // EB-07-03 / §7 SC-038 — env-fog edge fill. Same shortcut as the rail:
     // derive directly from (hub, rail) without round-tripping through

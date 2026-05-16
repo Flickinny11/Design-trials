@@ -296,6 +296,82 @@ async function main() {
       await page.screenshot({ path: innerAppPng, fullPage: false });
     }
 
+    // === EB-10-03 — Hub-transit mid-frame capture (SC-055 / INV-23) ============
+    // SC-055 demands a damped cinematic transit between hub-rail anchors when
+    // activeHubId changes in preview-app. PrismHost composes a transit rail
+    // via deriveHubTransitRail(prev, next) on each activeHubId swap; the
+    // runtime camera-rail driver damps the current pose toward the new
+    // anchor over the next few frames. This block fires nav.next() and
+    // captures inner.png while the damping is still in flight, so the
+    // snapshot reviewer can confirm a non-resting mid-transit pose. The
+    // pure-data SC-055 contract is pinned by tests/editor-build/EB-10-03.*;
+    // this snapshot is the live-runtime witness.
+    let hubTransit = null;
+    if (TASK_ID === 'EB-10-03') {
+      // Seed a synthetic second hub so the transit has somewhere to go.
+      await page.evaluate(() => {
+        try {
+          const mod = (window).__PRISM_DEBUG_STORES__;
+          const store = mod && mod.graphSource;
+          if (store && typeof store.setState === 'function') {
+            const state = store.getState();
+            if (state.hubs && state.hubs.length === 1) {
+              const seed = JSON.parse(JSON.stringify(state.hubs[0]));
+              seed.hubId = 'hub-transit-test-hub';
+              seed.title = 'Hub Transit Test Hub';
+              store.setState({ hubs: [...state.hubs, seed] });
+            }
+          }
+        } catch (_) { /* tolerated */ }
+      });
+      // Switch to preview-app and let the first hub's rail settle.
+      await page.evaluate(() => {
+        const setter = (window).__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') setter('preview-app');
+      });
+      await page.waitForTimeout(1200);
+
+      // Read the entry activeHubId, then fire nav.next() and immediately
+      // snapshot — the camera-rail driver damps over the next ~8-10 frames
+      // (damping=0.12), so the page screenshot taken ~90ms after the swap
+      // captures the mid-transit pose.
+      hubTransit = await page.evaluate(async () => {
+        const nav = (window).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+        if (!nav) return { error: 'nav-hook-not-installed' };
+        const entryHubId = nav.activeHubId;
+        const afterNext = nav.next();
+        // Hand a microtask off so React commits the new activeHubId and the
+        // rail-effect runs setCameraRail(transit) before we screenshot.
+        await new Promise((r) => setTimeout(r, 90));
+        const midHubId = nav.activeHubId;
+        return { entryHubId, afterNext, midHubId };
+      }).catch((err) => ({ error: String(err && err.message ? err.message : err) }));
+
+      const transitOk = !!(
+        hubTransit
+        && !hubTransit.error
+        && hubTransit.entryHubId
+        && hubTransit.afterNext
+        && hubTransit.afterNext !== hubTransit.entryHubId
+        && hubTransit.midHubId === hubTransit.afterNext
+      );
+      check(
+        'preview-app.hub-transit',
+        'preview-app fires a damped cinematic transit between hub-rail anchors',
+        transitOk,
+        transitOk
+          ? `${hubTransit.entryHubId} -> ${hubTransit.afterNext}`
+          : hubTransit && hubTransit.error
+            ? hubTransit.error
+            : `transit: ${JSON.stringify(hubTransit)}`,
+      );
+
+      // inner.png — captured mid-damping so the reviewer sees the cinematic
+      // transit rather than the post-settle resting pose.
+      const innerAppPng = join(snapDir, 'inner.png');
+      await page.screenshot({ path: innerAppPng, fullPage: false });
+    }
+
     // === EB-09-06 — Tether-fire propagation capture ==============================
     // SC-052 demands that the snapshot prove tether-fire propagation. The
     // editor-shell installs `window.__PRISM_EDITOR_FIRE_TETHER__` (see
@@ -342,6 +418,7 @@ async function main() {
       outerState,
       ...(tetherFireEvent ? { tetherFireEvent } : {}),
       ...(previewAppNav ? { previewAppNav } : {}),
+      ...(hubTransit ? { hubTransit } : {}),
       summary: {
         outerScreenshot: 'outer.png',
         innerScreenshot: 'inner.png',
