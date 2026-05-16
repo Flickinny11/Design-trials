@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 35,
+  "currentIteration": 36,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T02:29:28Z",
+  "updatedAt": "2026-05-16T03:05:52Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 35,
-    "lastProductiveCommit": "5b4d085cf88e4c149237d308abe1d41aa8d36858"
+    "lastProductiveCommit": "388aaa7ccf7c371b002e3f8497e9f9e46c688703"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "\u00a77": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -83,14 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 34,
-    "commit": "c92ac5ec8e864927e23cddf6898712b379a61b97",
-    "verifiedAt": "2026-05-16T01:00:51Z",
+    "iteration": 35,
+    "commit": "388aaa7ccf7c371b002e3f8497e9f9e46c688703",
+    "verifiedAt": "2026-05-16T02:46:06Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T01:00:51Z",
-    "lastIteration": 35,
-    "lastTaskId": "EB-07-02",
-    "lastCommit": "5b4d085cf88e4c149237d308abe1d41aa8d36858"
+    "recordedAt": "2026-05-16T02:46:06Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1145,8 +1142,8 @@
       ],
       "haltCheck": "In preview-hub, panning the camera (within rail constraints) never reveals scene edges; environment/fog fill the gap; snapshot at extreme camera positions shows no blank.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
