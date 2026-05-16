@@ -58,6 +58,7 @@ import type {
   PrismNode,
   ScenePosition,
 } from '@/lib/prism-graph/types';
+import { applyScrollBindings } from '@/lib/prism-graph/scroll-timeline';
 
 export interface MountGraphOpts {
   width?: number;
@@ -360,9 +361,17 @@ export async function mountFromGraphSource(
   });
 
   // Tag every node Object3D with its nodeId so backdrop / surgical-helper
-  // diffs can identify nodes vs ornamentation.
+  // diffs can identify nodes vs ornamentation. EB-07-04: also attach the
+  // node's scrollBinding[] (if any) onto userData so setScrollProgress can
+  // walk adapterResult.nodes without re-resolving against the source map.
+  const sourceById = new Map<string, PrismNode>();
+  for (const node of source.nodes) sourceById.set(node.nodeId, node);
   for (const [nodeId, obj] of adapterResult.nodes) {
     obj.userData.nodeId = nodeId;
+    const node = sourceById.get(nodeId);
+    if (node?.scrollBinding && node.scrollBinding.length > 0) {
+      obj.userData.scrollBinding = node.scrollBinding;
+    }
   }
 
   // Per-hub backdrop plane (Amendment 0002).
@@ -451,6 +460,14 @@ export async function mountFromGraphSource(
     }
     const obj = factory(node, ctx);
     obj.userData.nodeId = node.nodeId;
+    // EB-07-04 — propagate the new node's scrollBinding[] onto userData so
+    // setScrollProgress picks up the latest binding immediately. An empty /
+    // missing binding clears the slot.
+    if (node.scrollBinding && node.scrollBinding.length > 0) {
+      obj.userData.scrollBinding = node.scrollBinding;
+    } else {
+      delete obj.userData.scrollBinding;
+    }
     applyScenePosition(obj, node.scenePosition);
     hubGroup.add(obj);
     adapterResult.nodes.set(node.nodeId, obj);
@@ -788,14 +805,20 @@ export async function mountFromGraphSource(
     sceneRoot.scene.fog = new Fog(new Color(fog.color), fog.near, fog.far);
   }
 
-  // EB-07-04 / §7 SC-039 / SC-040 — stub. Step 7 will replace this with the
-  // real per-node consumer that walks adapterResult.nodes, finds those with
-  // a `scrollBinding[]` declaration, and applies the binding via
-  // `applyScrollBindings(obj, bindings, progress)`. The contract MUST never
-  // touch sceneRoot.camera or sceneRoot.scene (whole-scene movement is
-  // forbidden per SC-040).
-  function setScrollProgress(_progress: number): void {
-    /* stub */
+  // EB-07-04 / §7 SC-039 / SC-040 — per-node scrollBinding consumer.
+  //
+  // Walks adapterResult.nodes, picks out those with a `scrollBinding[]`
+  // attached at mount/upsert time, and applies the binding via the pure
+  // `applyScrollBindings(obj, bindings, progress)`. Never touches
+  // sceneRoot.camera or sceneRoot.scene (SC-040 — scrolling is per-element
+  // app UI, not whole-scene movement).
+  function setScrollProgress(progress: number): void {
+    for (const obj of adapterResult.nodes.values()) {
+      const bindings = (obj.userData as { scrollBinding?: PrismNode['scrollBinding'] })
+        .scrollBinding;
+      if (!bindings || bindings.length === 0) continue;
+      applyScrollBindings(obj, bindings, progress);
+    }
   }
 
   return {
