@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T05:00:00Z",
+  "updatedAt": "2026-05-16T05:50:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 36,
-    "lastProductiveCommit": "fd98900b11be549c6af92ff38f2a4af57ec1198e"
+    "lastProductiveIteration": 37,
+    "lastProductiveCommit": "2dffefc584bd47b018f1de9bf422f973064e7031"
   },
   "phaseCaps": {
     "§1": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 36,
-    "commit": "fd98900b11be549c6af92ff38f2a4af57ec1198e",
-    "verifiedAt": "2026-05-16T04:15:32Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T04:15:32Z"
+    "iteration": 37,
+    "taskId": "EB-07-04",
+    "phase": 7,
+    "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
+    "verifiedAt": "2026-05-16T05:50:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -379,6 +379,14 @@
       "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
       "verifiedAt": "2026-05-16T04:08:21Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-03/"
+    },
+    {
+      "iteration": 37,
+      "taskId": "EB-07-04",
+      "phase": 7,
+      "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
+      "verifiedAt": "2026-05-16T05:50:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-04/"
     }
   ],
   "tasks": [
@@ -1171,11 +1179,11 @@
       ],
       "haltCheck": "useScrollTimeline returns deterministic scrollProgress over the hub's content length; nodes with scrollBinding consume it; scrolling in preview-hub reads as app UI, not whole-scene movement.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
+      "verifiedAt": "2026-05-16T05:50:00Z",
+      "notes": "SHOULD-FIXes accepted: scrollBinding folded into nodesEqualExceptTransform diff; opacity transparent flag only when <1. Optional fixes (RefObject typing, exhaustiveness guard, ease extraction) deferred to future tasks."
     },
     {
       "id": "EB-08-01",
