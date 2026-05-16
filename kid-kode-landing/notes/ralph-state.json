@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T07:25:49Z",
+  "updatedAt": "2026-05-16T08:00:26Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 38,
-    "lastProductiveCommit": "94fc52728a5d3109528ecfcea7fcbee8164be2a7"
+    "lastProductiveIteration": 39,
+    "lastProductiveCommit": "98621f6095b8651f4602d90ccd6509b81b2b32bf"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 38,
-    "commit": "94fc52728a5d3109528ecfcea7fcbee8164be2a7",
-    "verifiedAt": "2026-05-16T07:09:48Z",
+    "iteration": 39,
+    "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
+    "verifiedAt": "2026-05-16T08:00:26Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T07:09:48Z"
+    "recordedAt": "2026-05-16T08:00:26Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -395,6 +395,14 @@
       "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
       "verifiedAt": "2026-05-16T06:52:56.000Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-01/"
+    },
+    {
+      "iteration": 39,
+      "taskId": "EB-08-02",
+      "phase": 8,
+      "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
+      "verifiedAt": "2026-05-16T08:00:26Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-02/"
     }
   ],
   "tasks": [
@@ -1231,11 +1239,11 @@
       ],
       "haltCheck": "PrismKeyframe has required coordinateSpace ∈ {universe, hub-scene, viewport-composition, scroll-timeline, camera}; tsc fails on any keyframe literal missing the discriminator. Hook FP-08 also fires for runtime-authored cases.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
+      "verifiedAt": "2026-05-16T08:00:26Z",
+      "notes": "SHOULD-FIX (non-blocking): consider tightening ease typing on PrismKeyframe (currently ScrollBindingEase|string); consider modeling params vs values as a union to enforce alternates per FP-08; consider narrowing t? by coordinateSpace. OPTIONAL: split KEYFRAME_* constants into a separate enums module; add JSDoc @see §4 / SC-043 link block above PrismKeyframe."
     },
     {
       "id": "EB-08-03",
