@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T06:05:52.000Z",
+  "updatedAt": "2026-05-16T06:52:56.000Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 37,
-    "lastProductiveCommit": "e92ed19bb0a46d17aee5f1e31cfac6723877ffe8"
+    "lastProductiveIteration": 38,
+    "lastProductiveCommit": "848c0c2fe0123146082900edf40d0630a6a12f0f"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "\u00a78": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 37,
-    "commit": "e92ed19bb0a46d17aee5f1e31cfac6723877ffe8",
-    "verifiedAt": "2026-05-16T05:51:39Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T05:51:39Z"
+    "iteration": 38,
+    "taskId": "EB-08-01",
+    "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
+    "verifiedAt": "2026-05-16T06:52:56.000Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -387,6 +386,14 @@
       "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
       "verifiedAt": "2026-05-16T05:50:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-04/"
+    },
+    {
+      "iteration": 38,
+      "taskId": "EB-08-01",
+      "phase": 8,
+      "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
+      "verifiedAt": "2026-05-16T06:52:56.000Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-01/"
     }
   ],
   "tasks": [
@@ -1201,10 +1208,10 @@
       ],
       "haltCheck": "PrismNode adds optional editorTransform?, canvasTransform?, compiledTransform?, uiAnchor?, scrollBinding?, depthLayer? fields; tsc clean; existing graphs serialize without these fields.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
+      "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
+      "verifiedAt": "2026-05-16T06:52:56.000Z",
       "notes": ""
     },
     {
