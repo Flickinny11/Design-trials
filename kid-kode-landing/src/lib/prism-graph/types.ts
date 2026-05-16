@@ -406,6 +406,12 @@ export interface PrismNode {
   // (SC-040). Additive only (INV-18); legacy graphs without the field
   // continue to render at their authored pose.
   scrollBinding?: ScrollBinding[];
+  // EB-08-02 / §8 SC-043 (INV-18 additive, INV-21). Per-node keyframe list.
+  // Each `PrismKeyframe` carries a required `coordinateSpace` discriminator
+  // from the canonical 5 (§4). Absent on legacy graphs; non-empty arrays
+  // drive the Phase 8 animation primitives (`load` fade, `in-view` slide,
+  // `hover` lift; SC-046).
+  keyframes?: PrismKeyframe[];
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the
@@ -435,6 +441,62 @@ export interface ScrollBinding {
   from: number;
   to: number;
   ease?: ScrollBindingEase;
+}
+
+// EB-08-02 / §8 SC-043, INV-21 — canonical 5 coordinate spaces (§4). The set
+// is fixed by the camera + composition systems (RA-03, D3). Every
+// `PrismKeyframe` MUST declare which space its parameters live in; collapsing
+// the five into a single matrix is forbidden (INV-22). Tuple order mirrors
+// the spec table at §4.
+export const KEYFRAME_COORDINATE_SPACES = [
+  'universe',
+  'hub-scene',
+  'viewport-composition',
+  'scroll-timeline',
+  'camera',
+] as const;
+
+export type PrismKeyframeCoordinateSpace =
+  (typeof KEYFRAME_COORDINATE_SPACES)[number];
+
+// EB-08-02 / §8 SC-044 — the canonical keyframe trigger enum. Used by the
+// Phase 8 Animation Inspector tab (SC-045) and the three baseline primitives
+// (`load` fade-in, `in-view` slide, `hover` lift; SC-046).
+export const KEYFRAME_TRIGGERS = [
+  'load',
+  'scroll',
+  'hover',
+  'click',
+  'in-view',
+] as const;
+
+export type PrismKeyframeTrigger = (typeof KEYFRAME_TRIGGERS)[number];
+
+// EB-08-02 / §8 SC-043, INV-21 — `coordinateSpace` is REQUIRED on every
+// keyframe (no `?`). tsc fails on any keyframe literal missing the
+// discriminator; the FP-08 hook fires for runtime-authored cases that slip
+// past the type system.
+//
+// FP-08 inspects literals shaped `{ t: <num>, (params|values): {...} }` for a
+// missing `coordinateSpace:` key, so the field names here align with that
+// regex. `trigger?` is optional because not every keyframe is event-driven
+// (timeline / scroll-bound waypoints don't need one).
+export interface PrismKeyframe {
+  // Required discriminator — INV-21. The canonical 5 spaces from §4.
+  coordinateSpace: PrismKeyframeCoordinateSpace;
+  // Time / scroll-progress / event-progress for this waypoint. `t ∈ [0..1]`
+  // when normalized; absolute seconds when timeline-driven. The FP-08 regex
+  // probes for `t:` to detect keyframe literals.
+  t?: number;
+  // Animated values at this waypoint. Either `params` or `values` is
+  // conventionally populated; the FP-08 regex accepts either.
+  params?: Record<string, unknown>;
+  values?: Record<string, unknown>;
+  // Easing label between this waypoint and the next.
+  ease?: ScrollBindingEase | string;
+  // Optional trigger from the SC-044 enum. Absent for time/scroll-driven
+  // keyframes; present for event-driven ones (`hover`, `click`, …).
+  trigger?: PrismKeyframeTrigger;
 }
 
 export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
