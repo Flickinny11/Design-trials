@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T22:51:06Z",
+  "updatedAt": "2026-05-16T22:57:30Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 48,
-    "lastProductiveCommit": "7bb478de5218b4dc2370d35a22edc8e84e157ed9"
+    "lastProductiveIteration": 49,
+    "lastProductiveCommit": "77f26ffd3de07dc95dedb4743c42f865854160f4"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -77,17 +77,19 @@
       "status": "active"
     },
     "\u00a710": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 48,
-    "commit": "7bb478de5218b4dc2370d35a22edc8e84e157ed9",
+    "iteration": 49,
+    "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
     "verifiedAt": "2026-05-16T22:49:21Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T22:49:21Z"
+    "recordedAt": "2026-05-16T22:49:21Z",
+    "taskId": "EB-10-01",
+    "at": "2026-05-16T22:57:30Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -476,6 +478,14 @@
       "commit": "73f8bc046ef13d643123c3d587919dee54bfcf9e",
       "verifiedAt": "2026-05-16T22:37:30Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-06/"
+    },
+    {
+      "iteration": 49,
+      "taskId": "EB-10-01",
+      "phase": 10,
+      "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
+      "verifiedAt": "2026-05-16T22:57:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-01/"
     }
   ],
   "tasks": [
@@ -1519,11 +1529,11 @@
       ],
       "haltCheck": "compile-app.ts exports compileAppToPreview(world, hubs, nodes) returning CompiledAppView; implementation aggregates per-hub compileHubToPreview results; type CompiledAppView is deeply readonly pure data.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
+      "verifiedAt": "2026-05-16T22:57:30Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX: (1) aggregator hash only covers world.appNameWorldId, not full world context \u2014 will widen in EB-10-05 (SC-057); (2) nodes whose parentHubId is not in hubs are silently dropped \u2014 no current SC mandates behavior, consider warn in dev; (3) canonicalStringify/fnv1a duplicated from compiled-view.ts \u2014 candidate for shared canonical-hash module. OPTIONAL items deferred."
     },
     {
       "id": "EB-10-02",
