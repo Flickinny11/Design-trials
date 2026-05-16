@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T22:10:05Z",
+  "updatedAt": "2026-05-16T22:16:36Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 46,
-    "lastProductiveCommit": "319bc5fe59e98cea5523054a4a1f633982170685"
+    "lastProductiveIteration": 47,
+    "lastProductiveCommit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 11,
+      "used": 12,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 46,
-    "commit": "319bc5fe59e98cea5523054a4a1f633982170685",
-    "verifiedAt": "2026-05-16T22:06:45Z",
+    "iteration": 47,
+    "commit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d",
+    "verifiedAt": "2026-05-16T22:16:36Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T22:06:45Z"
+    "recordedAt": "2026-05-16T22:16:36Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -460,6 +460,14 @@
       "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
       "verifiedAt": "2026-05-16T22:00:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-04/"
+    },
+    {
+      "iteration": 47,
+      "taskId": "EB-09-05",
+      "phase": 9,
+      "commit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d",
+      "verifiedAt": "2026-05-16T22:16:36Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-05/"
     }
   ],
   "tasks": [
@@ -1461,11 +1469,11 @@
       ],
       "haltCheck": "Target nodes with displacement-transition (or similar primitive) declared apply the shader on tether fire; baseline implementation uses TSL only (INV-11); snapshot shows shader visible during fire.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d",
+      "verifiedAt": "2026-05-16T22:16:36Z",
+      "notes": "spec-reviewer: 0 MUST FIX. SHOULD FIX (deferred to EB-09-06): (1) no production caller yet wires SHADER_PRIMITIVES into hub-manager — EB-09-06 snapshot will wire it; (2) align TetherFirePrimitiveResult/PrimitivesAPI shape with runtime PrimitiveResult/CinematicPrimitivesAPI (gsap.core.Timeline + Record<string,unknown>) at the EB-09-06 wiring step; (3) cross-reference CINEMATIC-PRIMITIVES-LIBRARY.md primitives 3/4/7 in SHADER_PRIMITIVES doc-block; (4) adapter takes curried 2-arg fn — accept CinematicPrimitivesAPI (already curried via makePrimitivesAPI) at wiring. OPTIONAL: hoist mid-file imports, document silent-skip on missing primitive fn, flatMap style."
     },
     {
       "id": "EB-09-06",
