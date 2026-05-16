@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 41,
+  "currentIteration": 42,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T11:46:23Z",
+  "updatedAt": "2026-05-16T12:37:20Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 41,
-    "lastProductiveCommit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49"
+    "lastProductiveCommit": "90a718e8a71e152291ef1186a72a9715eabf68b7"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     },
@@ -84,9 +84,10 @@
   },
   "checkpoint": {
     "iteration": 41,
-    "taskId": "EB-08-04",
-    "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
-    "at": "2026-05-16T11:46:23Z"
+    "commit": "90a718e8a71e152291ef1186a72a9715eabf68b7",
+    "verifiedAt": "2026-05-16T12:07:42Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-16T12:07:42Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1316,8 +1317,8 @@
       ],
       "haltCheck": "Editing canvasTransform via gizmos and clicking 'save as keyframe' creates a PrismKeyframe with coordinateSpace='hub-scene' (or canvas-mode default); keyframe appears in animation timeline.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
