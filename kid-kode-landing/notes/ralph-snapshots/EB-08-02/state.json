@@ -1,0 +1,61 @@
+{
+  "taskId": "EB-08-02",
+  "capturedAt": "2026-05-16T07:54:50.598Z",
+  "url": "http://localhost:4791/",
+  "fixture": "mock-app",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "outerState": {
+    "url": "http://localhost:4791/",
+    "title": "Prism Editor — Kriptik",
+    "editorStore": null,
+    "canvasCount": 3
+  },
+  "summary": {
+    "outerScreenshot": "outer.png",
+    "innerScreenshot": "inner.png",
+    "checks": [
+      {
+        "id": "preflight.prism-artifact",
+        "desc": ".prism artifact present",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "preflight.server-up",
+        "desc": "next start reachable",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "outer.screenshot",
+        "desc": "outer.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.mounted",
+        "desc": "inner Prism runtime mounted in preview-hub",
+        "pass": true,
+        "detail": "mounted"
+      },
+      {
+        "id": "inner.screenshot",
+        "desc": "inner.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.no-errors",
+        "desc": "no runtime errors in console / page",
+        "pass": true,
+        "detail": "clean"
+      }
+    ],
+    "consoleLogCount": 8,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0
+  }
+}
