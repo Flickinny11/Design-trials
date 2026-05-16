@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T23:11:25Z",
+  "updatedAt": "2026-05-16T23:24:06Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 49,
-    "lastProductiveCommit": "ac4daac4e3546d895d130eedb7ef1aa75a07cf3b"
+    "lastProductiveIteration": 50,
+    "lastProductiveCommit": "935e6c134b0779170aea0348c47b83b5d6e00e67"
   },
   "phaseCaps": {
     "§1": {
@@ -77,17 +77,16 @@
       "status": "active"
     },
     "§10": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 49,
-    "commit": "ac4daac4e3546d895d130eedb7ef1aa75a07cf3b",
-    "verifiedAt": "2026-05-16T23:08:23Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T23:08:23Z"
+    "iteration": 50,
+    "taskId": "EB-10-02",
+    "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
+    "at": "2026-05-16T23:24:06Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -484,6 +483,14 @@
       "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
       "verifiedAt": "2026-05-16T22:57:30Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-01/"
+    },
+    {
+      "iteration": 50,
+      "taskId": "EB-10-02",
+      "phase": 10,
+      "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
+      "verifiedAt": "2026-05-16T23:24:06Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-02/"
     }
   ],
   "tasks": [
@@ -1548,11 +1555,11 @@
       ],
       "haltCheck": "viewMode='preview-app' renders the compiled app; navigation between hubs reflects in URL hash or pathname; back/forward browser-like nav works within the preview surface.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
+      "verifiedAt": "2026-05-16T23:24:06Z",
+      "notes": "spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (a) cache compileLiveApp() so dev-hook getters don't re-FNV per call; (b) centralize legacy-root fallback so PrismHost/page.tsx don't both reinvent it; (c) tighten pushState guard against non-routing activeHubId mutations; (d) snapshot seeds via store.setState({hubs:..}) — use addHub when invariants tighten; (e) snapshot overwrites inner.png with the preview-app capture — consider inner-preview-app.png; (f) get hubIds() returns fresh arrays. OPTIONAL: dedupe getNext/getPrev via walk(); page-local Prev/Next can call routing helpers directly; PrismHost rail-effect TODO for SC-055/SC-056; narrow __PRISM_DEBUG_STORES__ to {getState,setState} or gate on NODE_ENV !== 'production'."
     },
     {
       "id": "EB-10-03",
