@@ -25,10 +25,10 @@
     "rendererMigrationActive": true
   },
   "convergence": {
-    "stagnantStreak": 3,
+    "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 45,
-    "lastProductiveCommit": "31f2e3b6825ac37a5efc2cb2b603320aea8c7730"
+    "lastProductiveIteration": 46,
+    "lastProductiveCommit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 9,
+      "used": 10,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 45,
-    "commit": "31f2e3b6825ac37a5efc2cb2b603320aea8c7730",
-    "verifiedAt": "2026-05-16T18:04:21Z",
+    "iteration": 46,
+    "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
+    "verifiedAt": "2026-05-16T22:00:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T18:04:21Z"
+    "recordedAt": "2026-05-16T22:00:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -452,6 +452,14 @@
       "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
       "verifiedAt": "2026-05-16T17:47:19Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-03/"
+    },
+    {
+      "iteration": 46,
+      "taskId": "EB-09-04",
+      "phase": 9,
+      "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
+      "verifiedAt": "2026-05-16T22:00:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-04/"
     }
   ],
   "tasks": [
@@ -1432,11 +1440,11 @@
       ],
       "haltCheck": "Tether between source in hub-scene and target in viewport-composition resolves correctly; transform pipeline (src/lib/prism-graph/transforms.ts) is the only path used; coordinate systems remain uncollapsed.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
+      "verifiedAt": "2026-05-16T22:00:00Z",
+      "notes": "SHOULD-FIX (from spec-reviewer): per-keyframe space iteration in resolveCrossSpaceTetherFire (currently first-space-wins), DEFAULT_TARGET_SPACE=hub-scene is invented (consider null bridge for zero-keyframe targets), identity hop phase tags are arbitrary, error message could list registered hops. OPTIONAL: doc/test tolerance mismatch (1e-9 vs 1e-6), 'composition' kind unused (Phase 10), 'composition' switch case should assertNever-throw, re-export TransformContext from tether-fire."
     },
     {
       "id": "EB-09-05",
