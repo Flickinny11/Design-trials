@@ -874,6 +874,7 @@ function nodesEqualExceptTransform(a: PrismNode, b: PrismNode): boolean {
     a.depthMapUrl === b.depthMapUrl &&
     a.meshUrl === b.meshUrl &&
     JSON.stringify(a.cinematicPrimitives ?? []) === JSON.stringify(b.cinematicPrimitives ?? []) &&
+    JSON.stringify(a.scrollBinding ?? []) === JSON.stringify(b.scrollBinding ?? []) &&
     JSON.stringify(a.visual ?? null) === JSON.stringify(b.visual ?? null) &&
     JSON.stringify(a.intent ?? null) === JSON.stringify(b.intent ?? null)
   );

@@ -127,14 +127,19 @@ function asMaterialOwner(obj: Object3D): MaterialOwner | null {
 }
 
 function setMaterialOpacity(owner: MaterialOwner, opacity: number): void {
+  // Only force `transparent = true` when opacity < 1, so a binding that
+  // returns to fully-opaque doesn't permanently leave the material in the
+  // transparent (slower) blend path. Three.js requires `transparent = true`
+  // for partial alpha to render; opaque materials don't need it.
+  const needsBlend = opacity < 1;
   const m = owner.material;
   if (Array.isArray(m)) {
     for (const mat of m) {
-      mat.transparent = true;
+      if (needsBlend) mat.transparent = true;
       mat.opacity = opacity;
     }
   } else {
-    m.transparent = true;
+    if (needsBlend) m.transparent = true;
     m.opacity = opacity;
   }
 }
