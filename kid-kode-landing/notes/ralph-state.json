@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 40,
+  "currentIteration": 41,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T09:19:16Z",
+  "updatedAt": "2026-05-16T09:56:50Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 40,
-    "lastProductiveCommit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6"
+    "lastProductiveCommit": "3881eb7865bd4b392a1d588bb52986f2005a2fd4"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 40,
-    "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
-    "verifiedAt": "2026-05-16T09:19:16Z",
+    "commit": "3881eb7865bd4b392a1d588bb52986f2005a2fd4",
+    "verifiedAt": "2026-05-16T09:35:02Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T09:19:16Z"
+    "recordedAt": "2026-05-16T09:35:02Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1288,8 +1288,8 @@
       ],
       "haltCheck": "Three primitives ship as composable keyframe sets; each declares its coordinateSpace; demo node in canvas mode visibly runs each on its trigger; snapshot captures the in-view-slide state.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
