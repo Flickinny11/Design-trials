@@ -15,6 +15,10 @@ import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
 import VisualPreview from './visual-preview/VisualPreview';
 import type { CapabilityRef, PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
+import {
+  KEYFRAME_COORDINATE_SPACES,
+  KEYFRAME_TRIGGERS,
+} from '@/lib/prism-graph/types';
 
 // SC-020: the canonical 7-tab set for a node selection. The 'history' tab
 // surfaces the per-node edit/regeneration log; SC-020 explicitly names it as
@@ -580,6 +584,8 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
   const setFrame = useAnimationEditsStore((s) => s.setFrame);
   const reset = useAnimationEditsStore((s) => s.reset);
   const markSaved = useAnimationEditsStore((s) => s.markSaved);
+  const setCoordinateSpace = useAnimationEditsStore((s) => s.setCoordinateSpace);
+  const setTrigger = useAnimationEditsStore((s) => s.setTrigger);
   const edits = useAnimationEditsStore((s) => s.edits[node.id]);
 
   useEffect(() => {
@@ -777,6 +783,74 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
             label="Keyframe glow"
             disabled={frozen}
           />
+        </div>
+      </div>
+
+      {/* EB-08-03 — Coordinate-space + trigger pickers (SC-045). The picker
+          options are sourced from the canonical exported constants so RA-03
+          invariance is enforced at the type level — adding a space/trigger
+          in types.ts automatically surfaces it here. */}
+      <div className="p-4 rounded-xl bg-white/[0.025] border border-white/5 space-y-3">
+        <div>
+          <div className="text-[9px] font-mono tracking-widest text-white/40 mb-1.5">COORDINATE SPACE</div>
+          <div
+            data-testid="kf-coordinate-space-picker"
+            role="radiogroup"
+            aria-label="Keyframe coordinate space"
+            className="flex flex-wrap gap-1.5"
+          >
+            {KEYFRAME_COORDINATE_SPACES.map((space) => {
+              const active = (edits.coordinateSpace ?? 'hub-scene') === space;
+              return (
+                <button
+                  key={space}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  disabled={frozen}
+                  onClick={() => setCoordinateSpace(node.id, space)}
+                  className={`px-2 py-1 rounded-md border text-[10px] font-mono tracking-wider transition-colors disabled:opacity-40 ${
+                    active
+                      ? 'border-[#5d8bff] bg-[#5d8bff]/15 text-[#5d8bff]'
+                      : 'border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20'
+                  }`}
+                >
+                  {space}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div>
+          <div className="text-[9px] font-mono tracking-widest text-white/40 mb-1.5">TRIGGER</div>
+          <div
+            data-testid="kf-trigger-picker"
+            role="radiogroup"
+            aria-label="Keyframe trigger"
+            className="flex flex-wrap gap-1.5"
+          >
+            {KEYFRAME_TRIGGERS.map((trigger) => {
+              const active = edits.trigger === trigger;
+              return (
+                <button
+                  key={trigger}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  disabled={frozen}
+                  onClick={() => setTrigger(node.id, trigger)}
+                  className={`px-2 py-1 rounded-md border text-[10px] font-mono tracking-wider transition-colors disabled:opacity-40 ${
+                    active
+                      ? 'border-[#55e6a5] bg-[#55e6a5]/15 text-[#55e6a5]'
+                      : 'border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20'
+                  }`}
+                >
+                  {trigger}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
