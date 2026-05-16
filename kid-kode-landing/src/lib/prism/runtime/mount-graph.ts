@@ -139,6 +139,13 @@ export interface MountGraphResult {
    *  object's color/near/far in place rather than allocating a new one, so
    *  callers can re-invoke per hub/preview rebuild without leaking. */
   setEnvironmentFog(fog: CompiledEnvironmentFog | null): void;
+
+  /** EB-07-04 / §7 SC-039 / SC-040 — drive scrollProgress (0..1) into the
+   *  per-node scrollBinding consumer. Only nodes that declare a non-empty
+   *  `scrollBinding[]` are touched; nodes without a binding never move. The
+   *  camera and scene root are never modified by this call (SC-040: scrolling
+   *  reads as app UI / per-element response, not whole-scene movement). */
+  setScrollProgress(progress: number): void;
 }
 
 const BACKDROP_Z = -2;
@@ -781,6 +788,16 @@ export async function mountFromGraphSource(
     sceneRoot.scene.fog = new Fog(new Color(fog.color), fog.near, fog.far);
   }
 
+  // EB-07-04 / §7 SC-039 / SC-040 — stub. Step 7 will replace this with the
+  // real per-node consumer that walks adapterResult.nodes, finds those with
+  // a `scrollBinding[]` declaration, and applies the binding via
+  // `applyScrollBindings(obj, bindings, progress)`. The contract MUST never
+  // touch sceneRoot.camera or sceneRoot.scene (whole-scene movement is
+  // forbidden per SC-040).
+  function setScrollProgress(_progress: number): void {
+    /* stub */
+  }
+
   return {
     sceneRoot,
     hubManager,
@@ -794,6 +811,7 @@ export async function mountFromGraphSource(
     setBackgroundLayers,
     tickBackgroundDrivers,
     setEnvironmentFog,
+    setScrollProgress,
     resize,
     unmount,
   };

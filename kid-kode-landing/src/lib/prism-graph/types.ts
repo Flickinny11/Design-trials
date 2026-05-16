@@ -318,6 +318,43 @@ export interface PrismNode {
   // EB-02-06 / SC-009: optional capability references on the node. The vault
   // resolves these server-side; raw secret values never appear here (INV-19).
   capabilityRefs?: CapabilityRef[];
+  // EB-07-04 / §7 SC-039: optional per-node scroll bindings. Each entry maps
+  // `scrollProgress: 0→1` (the `scroll-timeline` coordinate space from §4)
+  // onto a single transform/material property via `from→to`. The runtime
+  // `applyScrollBindings(obj, bindings, progress)` consumer drives the node
+  // per-element so scrolling reads as app UI, not whole-scene movement
+  // (SC-040). Additive only (INV-18); legacy graphs without the field
+  // continue to render at their authored pose.
+  scrollBinding?: ScrollBinding[];
+}
+
+// EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the
+// `scroll-timeline` coordinate space (§4). The full ease taxonomy is the
+// small set the runtime consumer supports; `from`/`to` are interpreted in
+// scene units (translate*, scale) or radians (rotate*) or 0..1 (opacity).
+// `coordinateSpace` is implicit (`scroll-timeline`); ScrollBindings are not
+// keyframes, so FP-08 doesn't apply.
+export type ScrollBindingProperty =
+  | 'translateX'
+  | 'translateY'
+  | 'translateZ'
+  | 'rotateX'
+  | 'rotateY'
+  | 'rotateZ'
+  | 'scale'
+  | 'opacity';
+
+export type ScrollBindingEase =
+  | 'linear'
+  | 'easeIn'
+  | 'easeOut'
+  | 'easeInOut';
+
+export interface ScrollBinding {
+  property: ScrollBindingProperty;
+  from: number;
+  to: number;
+  ease?: ScrollBindingEase;
 }
 
 export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
