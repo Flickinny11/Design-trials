@@ -27,6 +27,7 @@ import {
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
+  Texture,
   type Object3D,
 } from 'three';
 import {
@@ -219,6 +220,76 @@ function buildViewportFixedMesh(
   return mesh;
 }
 
+// EB-07-02 / §7 SC-036 — per-attachment-mode mesh builders.
+//
+// `camera-locked` is parented to the camera (like viewport-fixed) but is sized
+// in world units around the layer's z and is intended for HUD-style backdrops
+// that follow the camera rigidly. `world` is a fixed-size plane in scene-world
+// space at the layer's z. `parallax` is a world-space plane that the per-frame
+// driver translates at (1 - parallaxDepth) of camera Y. `infinite-environment`
+// is rendered as `scene.background` (Three handles the projection — equirect
+// or cubemap depending on the texture's mapping).
+
+const SCENE_PLANE_SIZE = 2048; // World-space plane size for world/parallax
+                                // backdrops; large enough to cover the
+                                // editor's typical viewport at z=0.
+
+function buildSceneSpaceMesh(
+  layer: CompiledHubBackgroundLayer,
+  role: 'world-background' | 'parallax-background',
+): Mesh {
+  const geo = new PlaneGeometry(SCENE_PLANE_SIZE, SCENE_PLANE_SIZE);
+  const mat = new MeshBasicMaterial({
+    transparent: layer.opacity < 1,
+    opacity: layer.opacity,
+    depthWrite: false,
+  });
+  const mesh = new Mesh(geo, mat);
+  mesh.position.set(0, 0, layer.z);
+  // Render before nodes so node geometry composites on top.
+  mesh.renderOrder = -1000 + layer.z * 0.001;
+  mesh.userData.role = role;
+  mesh.userData.layerId = layer.id;
+  if (role === 'parallax-background') {
+    mesh.userData.parallaxDepth = typeof layer.parallaxDepth === 'number'
+      ? layer.parallaxDepth
+      : 0.5;
+  }
+  mesh.userData.cleanup = () => {
+    mesh.geometry.dispose();
+    mat.dispose();
+  };
+  return mesh;
+}
+
+const CAMERA_LOCKED_LOCAL_Z = -800;
+const CAMERA_LOCKED_SIZE = 2048;
+
+function buildCameraLockedMesh(layer: CompiledHubBackgroundLayer): Mesh {
+  // `layer.z` is the compiled value (defaults to 0 when the source omits it).
+  // A user-set z=0 is a legitimate camera-local position; only treat a
+  // missing default-z as "unspecified". The compile path normalizes the
+  // distinction by leaving `z` strictly numeric, so we accept any finite
+  // value here — including 0.
+  const localZ = Number.isFinite(layer.z) ? layer.z : CAMERA_LOCKED_LOCAL_Z;
+  const geo = new PlaneGeometry(CAMERA_LOCKED_SIZE, CAMERA_LOCKED_SIZE);
+  const mat = new MeshBasicMaterial({
+    transparent: layer.opacity < 1,
+    opacity: layer.opacity,
+    depthWrite: false,
+  });
+  const mesh = new Mesh(geo, mat);
+  mesh.position.set(0, 0, localZ);
+  mesh.renderOrder = -900;
+  mesh.userData.role = 'camera-locked-background';
+  mesh.userData.layerId = layer.id;
+  mesh.userData.cleanup = () => {
+    mesh.geometry.dispose();
+    mat.dispose();
+  };
+  return mesh;
+}
+
 export async function mountFromGraphSource(
   canvas: HTMLCanvasElement | undefined,
   source: GraphSource,
@@ -288,7 +359,10 @@ export async function mountFromGraphSource(
       camera: sceneRoot.camera,
       rail: opts.cameraRail,
     });
-    sceneRoot.setBeforeRender(() => cameraRailDriver?.tick());
+    // beforeRender hook is composed by composeBeforeRender() so the
+    // camera rail and background drivers (parallax) coexist on the single
+    // hook slot SceneRoot exposes.
+    composeBeforeRender();
   }
 
   if (!opts.noRenderer && opts.sceneRoot == null) {
@@ -393,24 +467,67 @@ export async function mountFromGraphSource(
     }
   }
 
-  // EB-06-06 (SC-033) — install the compiled background layer stack on the
-  // live mount. The first `viewport-fixed` layer is parented to
-  // sceneRoot.camera so it stays fixed to the viewport while the camera
-  // moves (scroll, rail damping, mode switches). Camera is added to the
-  // scene graph so the renderer traverses through it and draws the plane.
-  // Non-viewport-fixed layers are no-ops at this phase; Phase 7 (SC-036)
-  // expands the renderer's attachment vocabulary.
+  // EB-06-06 / EB-07-02 (§6 SC-033 + §7 SC-036) — install the compiled
+  // background layer stack on the live mount. Each attachment mode mounts
+  // to a different host:
+  //   - viewport-fixed       → camera child, sized to the camera frustum
+  //   - camera-locked        → camera child, fixed local-z (HUD)
+  //   - parallax             → scene child, ticked per-frame at reduced rate
+  //   - world                → scene child, static
+  //   - infinite-environment → scene.background texture (Three projects it)
+  // Multiple non-fixed layers are all rendered; only the FIRST viewport-fixed
+  // layer is honored (SC-033 first-layer semantics).
   let viewportFixedMesh: Mesh | null = null;
+  let cameraLockedMesh: Mesh | null = null;
+  const parallaxMeshes: Mesh[] = [];
+  const worldMeshes: Mesh[] = [];
+  let environmentApplied = false;
+  // EB-07-02: bumped on every setBackgroundLayers() and on unmount() so a
+  // stale `infinite-environment` texture load can't overwrite a newer stack.
+  let backgroundGeneration = 0;
 
-  function clearViewportFixedMesh(): void {
-    if (!viewportFixedMesh) return;
-    const mesh = viewportFixedMesh;
-    viewportFixedMesh = null;
+  function disposeBackgroundMesh(mesh: Mesh): void {
     if (mesh.parent) mesh.parent.remove(mesh);
     const cleanup = (mesh.userData as { cleanup?: () => void }).cleanup;
     if (typeof cleanup === 'function') {
       try { cleanup(); } catch { /* ignore */ }
     }
+  }
+
+  function clearViewportFixedMesh(): void {
+    if (!viewportFixedMesh) return;
+    const mesh = viewportFixedMesh;
+    viewportFixedMesh = null;
+    disposeBackgroundMesh(mesh);
+  }
+
+  function clearCameraLockedMesh(): void {
+    if (!cameraLockedMesh) return;
+    const mesh = cameraLockedMesh;
+    cameraLockedMesh = null;
+    disposeBackgroundMesh(mesh);
+  }
+
+  function clearParallaxMeshes(): void {
+    while (parallaxMeshes.length > 0) {
+      const m = parallaxMeshes.pop()!;
+      disposeBackgroundMesh(m);
+    }
+  }
+
+  function clearWorldMeshes(): void {
+    while (worldMeshes.length > 0) {
+      const m = worldMeshes.pop()!;
+      disposeBackgroundMesh(m);
+    }
+  }
+
+  function clearEnvironment(): void {
+    if (!environmentApplied) return;
+    // The texture is loader-cached; only drop the scene's reference. The
+    // loader owns disposal.
+    sceneRoot.scene.background = null;
+    environmentApplied = false;
   }
 
   function ensureCameraInScene(): void {
@@ -426,27 +543,120 @@ export async function mountFromGraphSource(
     layers: readonly CompiledHubBackgroundLayer[] | null,
   ): void {
     clearViewportFixedMesh();
-    if (!layers || layers.length === 0) return;
-    const fixed = layers.find((l) => l.attachment === 'viewport-fixed');
-    if (!fixed) return;
-
+    clearCameraLockedMesh();
+    clearParallaxMeshes();
+    clearWorldMeshes();
+    clearEnvironment();
+    backgroundGeneration += 1;
+    const gen = backgroundGeneration;
+    if (!layers || layers.length === 0) {
+      composeBeforeRender();
+      return;
+    }
     ensureCameraInScene();
-    const mesh = buildViewportFixedMesh(fixed, {
-      fov: sceneRoot.camera.fov,
-      aspect: sceneRoot.camera.aspect,
-    });
-    sceneRoot.camera.add(mesh);
-    viewportFixedMesh = mesh;
-    if (fixed.sourceUrl) {
-      void applyMockupTexture(mesh, fixed.sourceUrl, ctx);
+
+    // Per-mode multiplicity convention (not pinned by SC-036, derived here):
+    //   viewport-fixed       — FIRST layer wins (SC-033 explicit).
+    //   camera-locked        — FIRST layer wins (HUD-style; only one HUD slot).
+    //   parallax             — ALL layers mount (each at its own depth).
+    //   world                — ALL layers mount (each at its own z).
+    //   infinite-environment — LAST layer wins (scene.background is a single
+    //                          slot; later layers logically composite over).
+    // Subsequent fixed/camera-locked layers are intentionally dropped at this
+    // phase; future SC-036 extensions can lift the cap by stacking planes.
+
+    // viewport-fixed — first-layer semantics per SC-033.
+    const fixed = layers.find((l) => l.attachment === 'viewport-fixed');
+    if (fixed) {
+      const mesh = buildViewportFixedMesh(fixed, {
+        fov: sceneRoot.camera.fov,
+        aspect: sceneRoot.camera.aspect,
+      });
+      sceneRoot.camera.add(mesh);
+      viewportFixedMesh = mesh;
+      if (fixed.sourceUrl) {
+        void applyMockupTexture(mesh, fixed.sourceUrl, ctx);
+      }
+    }
+
+    // camera-locked — first-layer semantics; HUD-style backdrop.
+    const cameraLocked = layers.find((l) => l.attachment === 'camera-locked');
+    if (cameraLocked) {
+      const mesh = buildCameraLockedMesh(cameraLocked);
+      sceneRoot.camera.add(mesh);
+      cameraLockedMesh = mesh;
+      if (cameraLocked.sourceUrl) {
+        void applyMockupTexture(mesh, cameraLocked.sourceUrl, ctx);
+      }
+    }
+
+    // parallax / world — all layers mount; each gets its own scene child.
+    for (const layer of layers) {
+      if (layer.attachment === 'parallax') {
+        const mesh = buildSceneSpaceMesh(layer, 'parallax-background');
+        sceneRoot.scene.add(mesh);
+        parallaxMeshes.push(mesh);
+        if (layer.sourceUrl) {
+          void applyMockupTexture(mesh, layer.sourceUrl, ctx);
+        }
+      } else if (layer.attachment === 'world') {
+        const mesh = buildSceneSpaceMesh(layer, 'world-background');
+        sceneRoot.scene.add(mesh);
+        worldMeshes.push(mesh);
+        if (layer.sourceUrl) {
+          void applyMockupTexture(mesh, layer.sourceUrl, ctx);
+        }
+      }
+    }
+
+    // infinite-environment — last one wins; installs scene.background.
+    // The generation token gates the async assignment so a stale load can't
+    // overwrite a newer setBackgroundLayers() / unmount().
+    const env = [...layers].reverse().find((l) => l.attachment === 'infinite-environment');
+    if (env && env.sourceUrl) {
+      const url = env.sourceUrl;
+      void (async () => {
+        try {
+          const tex = await ctx.textureLoader.loadTexture(url);
+          if (gen !== backgroundGeneration) return;
+          sceneRoot.scene.background = tex as Texture;
+          environmentApplied = true;
+        } catch { /* best-effort; leave background null */ }
+      })();
+    }
+
+    composeBeforeRender();
+  }
+
+  function tickBackgroundDrivers(): void {
+    if (parallaxMeshes.length === 0) return;
+    const cam = sceneRoot.camera;
+    // World-space delta. Parallax mirrors the camera's Y at `(1 - depth)`:
+    // depth=0 follows camera 1:1 (foreground), depth=1 stays still (infinite).
+    for (const mesh of parallaxMeshes) {
+      const depth = typeof (mesh.userData as { parallaxDepth?: number }).parallaxDepth === 'number'
+        ? (mesh.userData as { parallaxDepth: number }).parallaxDepth
+        : 0.5;
+      const baseZ = mesh.position.z; // built-in z preserved
+      const rate = 1 - depth;
+      mesh.position.set(cam.position.x * rate, cam.position.y * rate, baseZ);
     }
   }
 
-  // EB-07-02 stub — real per-frame parallax drivers land in the
-  // implementation step. Wiring is in place so MountGraphResult fulfills
-  // the interface at the type level.
-  function tickBackgroundDrivers(): void {
-    // no-op stub; replaced in EB-07-02 implementation
+  // Compose the cameraRail driver tick + tickBackgroundDrivers into a single
+  // beforeRender callback. SceneRoot's setBeforeRender takes one callback;
+  // we replace it whenever either driver set changes.
+  function composeBeforeRender(): void {
+    const hasRail = cameraRailDriver != null;
+    const hasParallax = parallaxMeshes.length > 0;
+    if (!hasRail && !hasParallax) {
+      sceneRoot.setBeforeRender(null);
+      return;
+    }
+    sceneRoot.setBeforeRender(() => {
+      if (cameraRailDriver) cameraRailDriver.tick();
+      if (parallaxMeshes.length > 0) tickBackgroundDrivers();
+    });
   }
 
   function setCameraRail(rail: CompiledCameraRail | null): void {
@@ -454,8 +664,8 @@ export async function mountFromGraphSource(
       if (cameraRailDriver) {
         cameraRailDriver.dispose();
         cameraRailDriver = null;
-        sceneRoot.setBeforeRender(null);
       }
+      composeBeforeRender();
       return;
     }
     if (cameraRailDriver) {
@@ -466,17 +676,27 @@ export async function mountFromGraphSource(
       camera: sceneRoot.camera,
       rail,
     });
-    sceneRoot.setBeforeRender(() => cameraRailDriver?.tick());
+    composeBeforeRender();
   }
 
   function unmount(): void {
     try { sceneRoot.stop(); } catch { /* ignore */ }
     if (cameraRailDriver) {
-      sceneRoot.setBeforeRender(null);
       cameraRailDriver.dispose();
       cameraRailDriver = null;
     }
+    sceneRoot.setBeforeRender(null);
+    // EB-07-02: tear down every background-layer mount type, not just the
+    // viewport-fixed slot. When PrismHost owns the SceneRoot we never call
+    // sceneRoot.dispose() (line below), so leaks here cross remounts. Bump
+    // generation so a still-in-flight env texture load can't overwrite the
+    // scene background after we're gone.
+    backgroundGeneration += 1;
     clearViewportFixedMesh();
+    clearCameraLockedMesh();
+    clearParallaxMeshes();
+    clearWorldMeshes();
+    clearEnvironment();
     for (const backdrop of hubBackdrops.values()) {
       disposeNode(backdrop);
     }

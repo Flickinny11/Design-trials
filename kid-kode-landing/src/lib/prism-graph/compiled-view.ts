@@ -179,11 +179,29 @@ function compileAnchorForNode(node: PrismNode): CompiledAnchor {
 }
 
 function compileBackground(hub: PrismHub): readonly CompiledHubBackgroundLayer[] {
-  // Phase 6 honors the legacy single-layer reader: layout.mockupUrl maps to
-  // a single `viewport-fixed` layer (SC-033). Phase 7 (SC-036/SC-037)
-  // extends the source schema with PrismHubBackgroundLayer[]; the compile
-  // entrypoint can swap to multi-layer iteration without changing the
-  // CompiledHubView shape.
+  // Phase 7 (SC-037): when `hub.background` is present and non-empty it is
+  // the source of truth. Each source layer is normalized to the compiled
+  // shape with defaults applied (sourceUrl?? null, z?? 0, opacity?? 1).
+  // `parallaxDepth` is carried through only for `parallax` layers.
+  // When absent or empty, fall back to the legacy single-layer reader
+  // (`layout.mockupUrl` → one viewport-fixed layer; SC-033).
+  if (hub.background && hub.background.length > 0) {
+    return Object.freeze(
+      hub.background.map((src) => {
+        const compiled: CompiledHubBackgroundLayer = {
+          id: src.id,
+          attachment: src.attachment,
+          sourceUrl: src.sourceUrl ?? null,
+          z: typeof src.z === 'number' ? src.z : 0,
+          opacity: typeof src.opacity === 'number' ? src.opacity : 1,
+          ...(src.attachment === 'parallax' && typeof src.parallaxDepth === 'number'
+            ? { parallaxDepth: src.parallaxDepth }
+            : {}),
+        };
+        return Object.freeze(compiled);
+      }),
+    );
+  }
   const mockup = hub.layout?.mockupUrl ?? null;
   if (!mockup) {
     return Object.freeze([] as readonly CompiledHubBackgroundLayer[]);

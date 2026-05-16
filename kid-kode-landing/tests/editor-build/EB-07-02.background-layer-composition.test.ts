@@ -313,11 +313,13 @@ describe('EB-07-02 — renderer composes parallax layer (reduced-rate translatio
     result.tickBackgroundDrivers();
     const y1 = mesh.position.y;
 
-    // Plane must follow at the configured reduced rate (depth 0.6 → 60% of camera movement).
+    // depth=0.6 → rate = 1 - 0.6 = 0.4 of camera movement. Reduced rate
+    // (strictly less than full camera Y delta). The exact value pins the
+    // convention agreed in test below: depth=1 static / depth=0 1:1.
     const delta = y1 - y0;
     expect(delta).toBeGreaterThan(0);
     expect(delta).toBeLessThan(100);
-    expect(Math.abs(delta - 60)).toBeLessThan(0.1);
+    expect(Math.abs(delta - 40)).toBeLessThan(0.1);
     result.unmount();
   });
 
