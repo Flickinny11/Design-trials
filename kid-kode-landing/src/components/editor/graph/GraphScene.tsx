@@ -68,7 +68,6 @@ import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 // consumes the registry directly so any future addition to the baselines
 // appears in the demo without source edits here.
 import {
-  BASELINE_KEYFRAME_PRIMITIVES,
   LOAD_FADE_IN,
   IN_VIEW_SLIDE,
   HOVER_LIFT,
@@ -1459,26 +1458,28 @@ function KeyframeDemo() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const meshRef = useRef<THREE.Mesh>(null);
   const materialRef = useRef<THREE.MeshBasicMaterial>(null);
-  const [mounted, setMounted] = useState(0); // ms since mount, advanced by useFrame
-  const [hoverProgress, setHoverProgress] = useState(0);
+  // Refs (not state) — useFrame mutates them every tick without re-rendering
+  // the subtree. Matches the existing pattern in this file (hoverTargetRef,
+  // camera pose refs).
+  const mountedMsRef = useRef(0);
+  const hoverProgressRef = useRef(0);
   const hoverTargetRef = useRef(0);
 
-  // load (1s) + in-view (1s, starts 0.4s after load completes) total animation
-  // window so the snapshot — captured ~2.5s after page goto — sees both fully
-  // settled and the hover primitive at its rest pose (progress = 0).
+  // load + in-view animation window so the snapshot — captured ~2.5s after the
+  // mode switch — sees both fully settled and the hover primitive at its rest
+  // pose (progress = 0).
   const LOAD_DURATION_MS = 800;
   const IN_VIEW_DELAY_MS = 600;
   const IN_VIEW_DURATION_MS = 900;
 
   useFrame((_, delta) => {
     if (viewMode !== 'canvas') return;
-    setMounted((m) => m + delta * 1000);
+    mountedMsRef.current += delta * 1000;
+    const mounted = mountedMsRef.current;
     // Critically-damped hover progress toward target.
-    setHoverProgress((p) => {
-      const target = hoverTargetRef.current;
-      const next = p + (target - p) * Math.min(1, delta * 8);
-      return next;
-    });
+    hoverProgressRef.current +=
+      (hoverTargetRef.current - hoverProgressRef.current) * Math.min(1, delta * 8);
+
     // Compose the three primitives into a single transform / opacity.
     const tLoad = Math.min(1, mounted / LOAD_DURATION_MS);
     const tInView = Math.min(
@@ -1487,7 +1488,7 @@ function KeyframeDemo() {
     );
     const loadVals = interpolateKeyframePrimitive(LOAD_FADE_IN, tLoad);
     const slideVals = interpolateKeyframePrimitive(IN_VIEW_SLIDE, tInView);
-    const liftVals = interpolateKeyframePrimitive(HOVER_LIFT, hoverProgress);
+    const liftVals = interpolateKeyframePrimitive(HOVER_LIFT, hoverProgressRef.current);
 
     const mesh = meshRef.current;
     const mat = materialRef.current;
@@ -1499,18 +1500,9 @@ function KeyframeDemo() {
     }
     if (mat) {
       // Multiply: load opacity * in-view opacity for a clean compose.
-      const o = (loadVals.opacity ?? 1) * (slideVals.opacity ?? 1);
-      mat.opacity = o;
+      mat.opacity = (loadVals.opacity ?? 1) * (slideVals.opacity ?? 1);
     }
   });
-
-  // Cheap geometry / material disposal on unmount.
-  useEffect(() => {
-    return () => {
-      meshRef.current?.geometry?.dispose();
-      materialRef.current?.dispose();
-    };
-  }, []);
 
   if (viewMode !== 'canvas') return null;
 
@@ -1537,10 +1529,6 @@ function KeyframeDemo() {
   );
 }
 
-// EB-08-04 — registry consumer (referenced so the import isn't tree-shaken
-// to nothing; lets EB-09-* iterate the full baseline set in the animation
-// catalog).
-void BASELINE_KEYFRAME_PRIMITIVES;
 
 // EB-05-03 / §6 Phase 5 SC-025 + Phase 8 SC-042 — Per-node transform gizmo.
 //

@@ -121,6 +121,15 @@ export const BASELINE_KEYFRAME_PRIMITIVES: readonly KeyframePrimitive[] = [
 // finds the bracketing pair for `t ∈ [0..1]`, and linearly interpolates each
 // numeric param. Keys present on either endpoint surface in the output; keys
 // absent from both fall through as `undefined`.
+//
+// The per-keyframe `ease` label is currently decorative: this interpolator
+// always lerps. EB-08-05 (Transform-edit ↔ keyframe-capture integration) is
+// where the runtime applier wires the ease curves through; declaring them on
+// the baseline primitives now keeps the data shape stable.
+//
+// `params` is the canonical numeric-value bag for new keyframe primitives;
+// the `values` fallback in `readNumeric` is kept only for compatibility with
+// keyframes authored upstream of this module.
 export function interpolateKeyframePrimitive(
   primitive: KeyframePrimitive,
   t: number,
