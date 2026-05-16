@@ -1,0 +1,102 @@
+{
+  "taskId": "EB-10-02",
+  "capturedAt": "2026-05-16T23:19:41.950Z",
+  "url": "http://localhost:4791/",
+  "fixture": "mock-app",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "outerState": {
+    "url": "http://localhost:4791/",
+    "title": "Prism Editor — Kriptik",
+    "editorStore": null,
+    "canvasCount": 3
+  },
+  "previewAppNav": {
+    "hubIds": [
+      "home",
+      "preview-app-test-hub"
+    ],
+    "afterNext1": "preview-app-test-hub",
+    "afterNext2": "home",
+    "trail": [
+      {
+        "label": "entry",
+        "hash": "#hub=home",
+        "activeHubId": "home"
+      },
+      {
+        "label": "after-next-1",
+        "hash": "#hub=preview-app-test-hub",
+        "activeHubId": "preview-app-test-hub"
+      },
+      {
+        "label": "after-next-2",
+        "hash": "#hub=home",
+        "activeHubId": "home"
+      },
+      {
+        "label": "after-back",
+        "hash": "#hub=preview-app-test-hub",
+        "activeHubId": "preview-app-test-hub"
+      },
+      {
+        "label": "after-forward",
+        "hash": "#hub=home",
+        "activeHubId": "home"
+      }
+    ]
+  },
+  "summary": {
+    "outerScreenshot": "outer.png",
+    "innerScreenshot": "inner.png",
+    "checks": [
+      {
+        "id": "preflight.prism-artifact",
+        "desc": ".prism artifact present",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "preflight.server-up",
+        "desc": "next start reachable",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "outer.screenshot",
+        "desc": "outer.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.mounted",
+        "desc": "inner Prism runtime mounted in preview-hub",
+        "pass": true,
+        "detail": "mounted"
+      },
+      {
+        "id": "inner.screenshot",
+        "desc": "inner.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.no-errors",
+        "desc": "no runtime errors in console / page",
+        "pass": true,
+        "detail": "clean"
+      },
+      {
+        "id": "preview-app.routing",
+        "desc": "preview-app navigates between hubs via URL hash + back/forward",
+        "pass": true,
+        "detail": "home -> preview-app-test-hub -> home -> preview-app-test-hub -> home"
+      }
+    ],
+    "consoleLogCount": 8,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0
+  }
+}
