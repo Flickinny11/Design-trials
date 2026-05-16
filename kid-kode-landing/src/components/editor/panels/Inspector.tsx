@@ -14,11 +14,18 @@ import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
 import VisualPreview from './visual-preview/VisualPreview';
-import type { CapabilityRef, PrismNode, PrismRootNode } from '@/lib/prism-graph/types';
+import type {
+  CapabilityRef,
+  PrismKeyframe,
+  PrismNode,
+  PrismRootNode,
+} from '@/lib/prism-graph/types';
 import {
   KEYFRAME_COORDINATE_SPACES,
   KEYFRAME_TRIGGERS,
 } from '@/lib/prism-graph/types';
+import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
+import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
 
 // SC-020: the canonical 7-tab set for a node selection. The 'history' tab
 // surfaces the per-node edit/regeneration log; SC-020 explicitly names it as
@@ -588,6 +595,16 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
   const setTrigger = useAnimationEditsStore((s) => s.setTrigger);
   const edits = useAnimationEditsStore((s) => s.edits[node.id]);
 
+  // EB-08-05 / §6 SC-042 + SC-045 — Transform-edit ↔ keyframe-capture.
+  // The graph-source store carries the canonical PrismNode (incl. the new
+  // optional `canvasTransform` + `keyframes` fields); we read & write through
+  // it so the captured keyframe persists into the live graph and autosaves.
+  const sourceNode = useGraphSourceStore((s) =>
+    s.nodes.find((n) => n.nodeId === node.id),
+  );
+  const updateNode = useGraphSourceStore((s) => s.updateNode);
+  const persistedKeyframes: PrismKeyframe[] = sourceNode?.keyframes ?? [];
+
   useEffect(() => {
     if (total > 0) ensureNode(node.id, total);
   }, [node.id, total, ensureNode]);
@@ -641,6 +658,25 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
     markSaved(node.id);
     setSaved(true);
     setTimeout(() => setSaved(false), 1600);
+  };
+
+  // EB-08-05 / §6 SC-042 + SC-045 + INV-21 — "Save as keyframe" snapshots
+  // the active PrismNode's canvasTransform (or identity, on a fresh node)
+  // into a PrismKeyframe and persists it onto `node.keyframes` through
+  // useGraphSourceStore.updateNode. The coordinate-space + trigger pickers
+  // already drive `edits.coordinateSpace` / `edits.trigger`; both flow into
+  // the captured keyframe so SC-045's picker state is durable. The default
+  // coordinate space is 'hub-scene' (canvas-mode default per haltCheck);
+  // any of the canonical 5 (INV-21) can be picked.
+  const handleSaveAsKeyframe = () => {
+    if (frozen || !sourceNode) return;
+    const transform = readCanvasTransform(sourceNode);
+    const captured = captureCanvasTransformAsKeyframe(transform, {
+      coordinateSpace: edits.coordinateSpace ?? 'hub-scene',
+      trigger: edits.trigger,
+    });
+    const existing = sourceNode.keyframes ?? [];
+    updateNode(sourceNode.nodeId, { keyframes: [...existing, captured] });
   };
 
   const primary = edits.primaryColor || node.visualSpec.primaryColor;
@@ -854,6 +890,42 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
         </div>
       </div>
 
+      {/* EB-08-05 — Captured PrismKeyframe timeline. Each click of "save as
+          keyframe" below appends a PrismKeyframe to node.keyframes; the
+          chips here are how it "appears in animation timeline" per the
+          EB-08-05 haltCheck. Empty state nudges the user toward the CTA. */}
+      <div
+        data-testid="kf-captured-timeline"
+        className="p-3 rounded-xl bg-white/[0.025] border border-white/5 space-y-2"
+      >
+        <div className="flex items-center justify-between text-[9px] font-mono tracking-widest text-white/40">
+          <span>CAPTURED KEYFRAMES</span>
+          <span>{persistedKeyframes.length}</span>
+        </div>
+        {persistedKeyframes.length === 0 ? (
+          <div className="text-[10px] italic text-white/40">
+            No keyframes captured yet. Drag the canvas-mode gizmo, then click
+            “save as keyframe”.
+          </div>
+        ) : (
+          <div className="flex flex-wrap gap-1.5">
+            {persistedKeyframes.map((kf, i) => (
+              <div
+                key={i}
+                className="px-2 py-1 rounded-md border border-[#5d8bff]/30 bg-[#5d8bff]/10 text-[9px] font-mono text-[#c5ccea] flex items-center gap-1.5"
+                title={`coordinateSpace=${kf.coordinateSpace}${kf.trigger ? `, trigger=${kf.trigger}` : ''}`}
+              >
+                <span className="text-[#5d8bff]">#{i + 1}</span>
+                <span>{kf.coordinateSpace}</span>
+                {kf.trigger && (
+                  <span className="text-[#55e6a5]">· {kf.trigger}</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Actions */}
       <div className="flex gap-2">
         <button
@@ -863,6 +935,20 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
         >
           <Icon name="play" size={11} color="#5d8bff" />
           Preview
+        </button>
+        {/* EB-08-05 — "Save as keyframe": snapshots the active node's
+            canvasTransform (read from useGraphSourceStore) into a
+            PrismKeyframe with coordinateSpace='hub-scene' (or picker override)
+            and persists it via updateNode. The CTA literal is greppable for
+            the EB-08-05 source-shape test. */}
+        <button
+          data-testid="kf-save-as-keyframe"
+          onClick={handleSaveAsKeyframe}
+          disabled={frozen || !sourceNode}
+          className="flex-1 h-9 rounded-lg bg-[#5d8bff]/10 hover:bg-[#5d8bff]/20 border border-[#5d8bff]/30 text-[11px] font-semibold text-[#5d8bff] transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-1.5"
+        >
+          <Icon name="save" size={11} color="#5d8bff" />
+          Save as keyframe
         </button>
         <button
           onClick={handleSave}
