@@ -47,6 +47,7 @@ import {
 } from './camera-rail-driver';
 import type {
   CompiledCameraRail,
+  CompiledEnvironmentFog,
   CompiledHubBackgroundLayer,
 } from '@/lib/prism-graph/compiled-view';
 import type {
@@ -129,6 +130,13 @@ export interface MountGraphResult {
    *  this every frame; tests and editor surfaces that drive their own loop
    *  can invoke it directly. No-op when no drivers are registered. */
   tickBackgroundDrivers(): void;
+
+  /** EB-07-03 / §7 SC-038 / INV-23 — install/clear scene-wide linear fog
+   *  used to fill blank scene edges as the camera pans within the rail. Pass
+   *  `null` to clear. Idempotent: a follow-up call mutates the live `Fog`
+   *  object's color/near/far in place rather than allocating a new one, so
+   *  callers can re-invoke per hub/preview rebuild without leaking. */
+  setEnvironmentFog(fog: CompiledEnvironmentFog | null): void;
 }
 
 const BACKDROP_Z = -2;
@@ -711,6 +719,11 @@ export async function mountFromGraphSource(
     }
   }
 
+  // EB-07-03 — stub; real impl in next commit (TDD red).
+  function setEnvironmentFog(_fog: CompiledEnvironmentFog | null): void {
+    void _fog;
+  }
+
   return {
     sceneRoot,
     hubManager,
@@ -723,6 +736,7 @@ export async function mountFromGraphSource(
     setCameraRail,
     setBackgroundLayers,
     tickBackgroundDrivers,
+    setEnvironmentFog,
     resize,
     unmount,
   };

@@ -104,6 +104,18 @@ export interface CompiledWorldRef {
   readonly appNameWorldId: string;
 }
 
+// --- Environment fog (SC-038 / INV-23). --------------------------------
+//
+// Pure data describing a linear fog band the renderer applies to
+// `scene.fog` so blank scene edges are filled in at extreme camera positions.
+// Color is a numeric THREE-compatible hex (0xRRGGBB) so the consumer can
+// instantiate `new THREE.Fog(color, near, far)` without a string parse.
+export interface CompiledEnvironmentFog {
+  readonly color: number;
+  readonly near: number;
+  readonly far: number;
+}
+
 // --- Top-level compiled hub view. --------------------------------------
 
 export interface CompiledHubView {
@@ -113,6 +125,10 @@ export interface CompiledHubView {
   readonly background: readonly CompiledHubBackgroundLayer[];
   readonly cameraRail: CompiledCameraRail;
   readonly nodes: readonly CompiledNodeEntry[];
+  // §7 SC-038 / INV-23 — env-fog edge fill so the rail can move freely
+  // without ever revealing blank scene edges. Optional only because legacy
+  // callers may not synthesize one yet; new compiles always emit it.
+  readonly environmentFog?: CompiledEnvironmentFog;
   // Stable hash of the canonical payload. Identical (hub, nodes, world) →
   // identical hash. Hash-comparability is the SC-029 verifier.
   readonly hash: string;
