@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T08:36:47Z",
+  "updatedAt": "2026-05-16T09:19:16Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 39,
-    "lastProductiveCommit": "98621f6095b8651f4602d90ccd6509b81b2b32bf"
+    "lastProductiveIteration": 40,
+    "lastProductiveCommit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 39,
-    "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
-    "verifiedAt": "2026-05-16T08:00:26Z",
+    "iteration": 40,
+    "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
+    "verifiedAt": "2026-05-16T09:19:16Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T08:00:26Z"
+    "recordedAt": "2026-05-16T09:19:16Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -403,6 +403,14 @@
       "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
       "verifiedAt": "2026-05-16T08:00:26Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-02/"
+    },
+    {
+      "iteration": 40,
+      "taskId": "EB-08-03",
+      "phase": 8,
+      "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
+      "verifiedAt": "2026-05-16T09:19:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-03/"
     }
   ],
   "tasks": [
@@ -1260,11 +1268,11 @@
       ],
       "haltCheck": "PrismKeyframeTrigger = 'load'|'scroll'|'hover'|'click'|'in-view'; Animation tab exposes coordinate-space + trigger pickers; existing animation-keyframes.ts logic preserved.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
+      "verifiedAt": "2026-05-16T09:19:16Z",
+      "notes": "SHOULD FIX (deferred): (1) picker visually highlights hub-scene as active when store value is undefined — initialize default in ensureNode or render no-active state; (2) coordinateSpace/trigger persist per-node, not per-keyframe — wire to frames[activeFrame] in a Phase 8 follow-on; (3) setCoordinateSpace/setTrigger mint orphan NodeEdits rows when no row exists — consider ensureNode guard."
     },
     {
       "id": "EB-08-04",
