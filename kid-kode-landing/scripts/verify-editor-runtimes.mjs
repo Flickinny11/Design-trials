@@ -32,6 +32,12 @@ const TASK_ID = args['task-id'] || (ON_STOP ? `on-stop-${Date.now()}` : null);
 const ROUTE = args['route'] || '/';
 const PORT = Number(args['port'] || 4791);
 const PREVIEW_FIXTURE = args['fixture'] || 'mock-app';
+// EB-08-04 — optional outer view mode override. When passed, the script
+// switches to this canonical view mode (RA-06) BEFORE capturing outer.png so
+// per-task demos that live in a non-default mode (e.g. canvas keyframe demo)
+// are visible in the snapshot. Defaults to no-op (uses whatever mode the
+// editor boots into).
+const OUTER_MODE = args['mode'] || null;
 const URL = `http://localhost:${PORT}${ROUTE}`;
 
 if (!TASK_ID) {
@@ -122,6 +128,21 @@ async function main() {
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(2500);
+
+    // EB-08-04 — if --mode was passed, switch to that canonical view mode
+    // before capturing outer.png so per-task canvas/galaxy/etc. demos are
+    // visible in the snapshot. Per-task scripts (currently only EB-08-04)
+    // pass `--mode=canvas` to capture the keyframe demo in its post-load +
+    // post-in-view-slide state.
+    if (OUTER_MODE) {
+      await page.evaluate((mode) => {
+        try {
+          const setter = window.__PRISM_EDITOR_SET_VIEW_MODE__;
+          if (typeof setter === 'function') setter(mode);
+        } catch (_) { /* best-effort */ }
+      }, OUTER_MODE);
+      await page.waitForTimeout(2500); // let mode-switch + animations settle
+    }
 
     // === OUTER RUNTIME — capture outer.png + record state =========================
     const outerPng = join(snapDir, 'outer.png');

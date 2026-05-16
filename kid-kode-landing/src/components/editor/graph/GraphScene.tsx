@@ -63,6 +63,17 @@ import {
 } from '@/lib/editor/canvas-transform-gizmo';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
+// EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
+// in-view slide, hover lift). The canvas-mode KeyframeDemo block below
+// consumes the registry directly so any future addition to the baselines
+// appears in the demo without source edits here.
+import {
+  BASELINE_KEYFRAME_PRIMITIVES,
+  LOAD_FADE_IN,
+  IN_VIEW_SLIDE,
+  HOVER_LIFT,
+  interpolateKeyframePrimitive,
+} from '@/lib/prism-graph/keyframe-primitives';
 
 // Per-hub mockup texture cache — keyed by hubId so each hub textures its
 // hull from its own `hub.layout.mockupUrl` (Plan §P11 / Amendment 0002 §A.3).
@@ -1433,6 +1444,104 @@ function CanvasViewportFrame({
   ) : null;
 }
 
+// EB-08-04 / §6 SC-046 — Canvas-mode keyframe demo node.
+//
+// Mounts only in `canvas` viewMode (FP-12 canonical literal). Drives a small
+// quad through all three baseline keyframe primitives (LOAD_FADE_IN, IN_VIEW_SLIDE,
+// HOVER_LIFT) so the two-runtime snapshot captures the post-load + post-in-view
+// state (haltCheck: "snapshot captures the in-view-slide state").
+//
+// Each primitive is consumed via `interpolateKeyframePrimitive`; no per-frame
+// values are inlined — they all come from the keyframe-primitives module.
+// Hover lift runs on pointer events. Opacity / Z come from the same pure
+// interpolator the Phase 8 runtime will consume in EB-08-05.
+function KeyframeDemo() {
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const [mounted, setMounted] = useState(0); // ms since mount, advanced by useFrame
+  const [hoverProgress, setHoverProgress] = useState(0);
+  const hoverTargetRef = useRef(0);
+
+  // load (1s) + in-view (1s, starts 0.4s after load completes) total animation
+  // window so the snapshot — captured ~2.5s after page goto — sees both fully
+  // settled and the hover primitive at its rest pose (progress = 0).
+  const LOAD_DURATION_MS = 800;
+  const IN_VIEW_DELAY_MS = 600;
+  const IN_VIEW_DURATION_MS = 900;
+
+  useFrame((_, delta) => {
+    if (viewMode !== 'canvas') return;
+    setMounted((m) => m + delta * 1000);
+    // Critically-damped hover progress toward target.
+    setHoverProgress((p) => {
+      const target = hoverTargetRef.current;
+      const next = p + (target - p) * Math.min(1, delta * 8);
+      return next;
+    });
+    // Compose the three primitives into a single transform / opacity.
+    const tLoad = Math.min(1, mounted / LOAD_DURATION_MS);
+    const tInView = Math.min(
+      1,
+      Math.max(0, (mounted - LOAD_DURATION_MS - IN_VIEW_DELAY_MS) / IN_VIEW_DURATION_MS),
+    );
+    const loadVals = interpolateKeyframePrimitive(LOAD_FADE_IN, tLoad);
+    const slideVals = interpolateKeyframePrimitive(IN_VIEW_SLIDE, tInView);
+    const liftVals = interpolateKeyframePrimitive(HOVER_LIFT, hoverProgress);
+
+    const mesh = meshRef.current;
+    const mat = materialRef.current;
+    if (mesh) {
+      mesh.position.y = (slideVals.translateY ?? 0) * 0.6; // scaled into scene units
+      mesh.position.z = (liftVals.translateZ ?? 0);
+      const s = liftVals.scale ?? 1;
+      mesh.scale.set(s, s, s);
+    }
+    if (mat) {
+      // Multiply: load opacity * in-view opacity for a clean compose.
+      const o = (loadVals.opacity ?? 1) * (slideVals.opacity ?? 1);
+      mat.opacity = o;
+    }
+  });
+
+  // Cheap geometry / material disposal on unmount.
+  useEffect(() => {
+    return () => {
+      meshRef.current?.geometry?.dispose();
+      materialRef.current?.dispose();
+    };
+  }, []);
+
+  if (viewMode !== 'canvas') return null;
+
+  // Anchor on the right side of the viewport frame so it doesn't collide
+  // with the CanvasTransformGizmo proxy at origin.
+  return (
+    <group name="canvas:keyframe-demo" position={[1.6, 0, -0.6]} renderOrder={9}>
+      <mesh
+        ref={meshRef}
+        onPointerOver={() => { hoverTargetRef.current = 1; }}
+        onPointerOut={() => { hoverTargetRef.current = 0; }}
+      >
+        <planeGeometry args={[0.6, 0.6]} />
+        <meshBasicMaterial
+          ref={materialRef}
+          color="#5d8bff"
+          transparent
+          opacity={0}
+          toneMapped={false}
+          depthWrite={false}
+        />
+      </mesh>
+    </group>
+  );
+}
+
+// EB-08-04 — registry consumer (referenced so the import isn't tree-shaken
+// to nothing; lets EB-09-* iterate the full baseline set in the animation
+// catalog).
+void BASELINE_KEYFRAME_PRIMITIVES;
+
 // EB-05-03 / §6 Phase 5 SC-025 + Phase 8 SC-042 — Per-node transform gizmo.
 //
 // When viewMode === 'canvas' AND a node is selected, mounts a drei
@@ -1822,6 +1931,7 @@ function AssembledSceneContent({
       <SceneBackdrop hub={hub} />
       <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
       <CanvasTransformGizmo nodes={nodes} />
+      <KeyframeDemo />
 
       {fontReady ? (
         nodes.map((node) => <AssembledSceneNode key={node.nodeId} node={node} />)
