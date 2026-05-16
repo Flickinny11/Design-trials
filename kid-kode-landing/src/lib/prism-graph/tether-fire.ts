@@ -24,11 +24,12 @@
 
 import type { PrismEdge, PrismKeyframe, PrismNode } from './types';
 import type { CinematicPrimitiveRef } from './cinematic-primitives';
-import type {
-  CoordinateSpace,
+import {
   EXERCISED_TRANSFORM_PIPELINE,
-  TransformBridge,
-  TransformContext,
+  getTransformBridge,
+  type CoordinateSpace,
+  type TransformBridge,
+  type TransformContext,
 } from './transforms';
 
 const TRIGGERS_EDGE_TYPE = 'triggers' as const;
@@ -161,16 +162,52 @@ export interface CrossSpaceTetherFireResolvedTarget
   readonly exercisedPipeline: typeof EXERCISED_TRANSFORM_PIPELINE;
 }
 
+// Default target keyframe space when a target has no keyframes. Documented
+// in resolveCrossSpaceTetherFire's comment; matches the spec's §4 'hub-scene'
+// being the default authoring space for nodes inside a hub.
+const DEFAULT_TARGET_SPACE: CoordinateSpace = 'hub-scene';
+
+// SC-050: walks the SC-049 propagation and decorates each resolved target
+// with the cross-space bridge required to project the source's animation
+// space onto the target's keyframe space. The `transforms.ts` registry is
+// the only path that produces a bridge — `_ctx` is taken so callers that
+// later need numeric projection use the same descriptor.
+//
+// `_ctx` is currently consumed only by `transformVector`; tether-fire does
+// not project numeric values today (the renderer applies the bridge at
+// draw time). Keeping the parameter pins the call signature and lets the
+// renderer-side EB-09-05 / EB-09-06 work share a single TransformContext.
 export function resolveCrossSpaceTetherFire(
-  _nodes: ReadonlyArray<PrismNode>,
-  _edges: ReadonlyArray<PrismEdge>,
-  _fire: TetherFireEvent,
-  _sourceSpace: CoordinateSpace,
+  nodes: ReadonlyArray<PrismNode>,
+  edges: ReadonlyArray<PrismEdge>,
+  fire: TetherFireEvent,
+  sourceSpace: CoordinateSpace,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _ctx: TransformContext,
 ): CrossSpaceTetherFireResolvedTarget[] {
-  throw new Error(
-    'EB-09-04 stub: resolveCrossSpaceTetherFire not yet implemented',
-  );
+  const baseTargets = resolveTetherFireTargets(nodes, edges, fire);
+  const out: CrossSpaceTetherFireResolvedTarget[] = [];
+
+  for (const base of baseTargets) {
+    const targetKeyframeSpace: CoordinateSpace =
+      base.boundKeyframes.length > 0
+        ? base.boundKeyframes[0].coordinateSpace
+        : DEFAULT_TARGET_SPACE;
+
+    const crossSpaceBridge: TransformBridge | null = getTransformBridge(
+      sourceSpace,
+      targetKeyframeSpace,
+    );
+
+    out.push({
+      ...base,
+      targetKeyframeSpace,
+      crossSpaceBridge,
+      exercisedPipeline: EXERCISED_TRANSFORM_PIPELINE,
+    });
+  }
+
+  return out;
 }
 
 // A fire is active during [startedAt, startedAt + durationMs]. The window is
