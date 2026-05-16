@@ -300,8 +300,10 @@ function buildCameraLockedMesh(
   // A user-set z=0 is a legitimate camera-local position; only treat a
   // missing default-z as "unspecified". The compile path normalizes the
   // distinction by leaving `z` strictly numeric, so we accept any finite
-  // value here — including 0.
-  const localZ = Number.isFinite(layer.z) && layer.z !== 0 ? layer.z : CAMERA_LOCKED_LOCAL_Z;
+  // value here — including 0. `sizeCameraLockedPlane()` guards the
+  // dist=|z|=0 degenerate case via `Math.max(1, ...)` so the plane still
+  // gets a finite size.
+  const localZ = Number.isFinite(layer.z) ? layer.z : CAMERA_LOCKED_LOCAL_Z;
   const { width, height } = sizeCameraLockedPlane(camera, localZ);
   const geo = new PlaneGeometry(width, height);
   const mat = new MeshBasicMaterial({
