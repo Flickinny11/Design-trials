@@ -194,6 +194,42 @@ async function main() {
       criticalErrors.length === 0,
       criticalErrors.length ? criticalErrors.slice(0, 2).join(' | ') : 'clean');
 
+    // === EB-09-06 — Tether-fire propagation capture ==============================
+    // SC-052 demands that the snapshot prove tether-fire propagation. The
+    // editor-shell installs `window.__PRISM_EDITOR_FIRE_TETHER__` (see
+    // src/app/page.tsx) which walks the live useGraphSourceStore via the
+    // pure resolveTetherFireTargets (the same path the inner runtime would
+    // traverse under SC-049). The live-graph fixture
+    // (kid-kode-landing/public/prism-mock/home/live-graph.json) carries the
+    // `home-cta-hero` -> `home-feature-card` `'triggers'` edge (event
+    // `cta-clicked`) as its sole node-to-node tether. The recorded event
+    // lives at state.tetherFireEvent so the haltCheck can assert
+    // source+target ids.
+    let tetherFireEvent = null;
+    if (TASK_ID === 'EB-09-06') {
+      tetherFireEvent = await page.evaluate(() => {
+        const fire = (window).__PRISM_EDITOR_FIRE_TETHER__;
+        if (typeof fire !== 'function') return { error: 'hook-not-installed' };
+        try {
+          return fire('home-cta-hero');
+        } catch (err) {
+          return { error: String(err && err.message ? err.message : err) };
+        }
+      }).catch((err) => ({ error: String(err && err.message ? err.message : err) }));
+      const hasTarget = !!(tetherFireEvent
+        && Array.isArray(tetherFireEvent.targets)
+        && tetherFireEvent.targets.length > 0
+        && tetherFireEvent.targets[0].targetNodeId);
+      check('tether.fire.propagated',
+        'tether-fire propagates from source to at least one target',
+        hasTarget,
+        hasTarget
+          ? `${tetherFireEvent.sourceNodeId} -> ${tetherFireEvent.targets[0].targetNodeId}`
+          : (tetherFireEvent && tetherFireEvent.error)
+            ? tetherFireEvent.error
+            : 'no targets resolved');
+    }
+
     // === Persist state.json ======================================================
     const state = {
       taskId: TASK_ID,
@@ -202,6 +238,7 @@ async function main() {
       fixture: PREVIEW_FIXTURE,
       viewport: { width: 1440, height: 900 },
       outerState,
+      ...(tetherFireEvent ? { tetherFireEvent } : {}),
       summary: {
         outerScreenshot: 'outer.png',
         innerScreenshot: 'inner.png',

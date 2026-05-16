@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -89,6 +91,75 @@ export default function Page() {
       }).__PRISM_EDITOR_SET_VIEW_MODE__;
     };
   }, [setViewMode]);
+
+  // EB-09-06 / §9 SC-052 — Expose a typed dev hook the verify-editor-runtimes
+  // script uses to fire a tether from a known source against the live graph
+  // store and read back the resolved targets. The hook reads nodes+edges
+  // from useGraphSourceStore (the same store PrismHost mounts from) and
+  // invokes the pure resolveTetherFireTargets from tether-fire.ts, so what
+  // is recorded mirrors exactly what the inner runtime would propagate
+  // through SC-049. The result is also pushed into a small ring buffer on
+  // window so the snapshot script can read recent fires deterministically.
+  // Editor-shell code (not subject to INV-15 / FP-05, which scope to runtime
+  // and node modules).
+  useEffect(() => {
+    type TetherFireRecord = {
+      sourceNodeId: string;
+      event: string | null;
+      firedAt: number;
+      targets: Array<{
+        targetNodeId: string;
+        edge: { from: string; to: string; type: string; event?: string };
+        boundPrimitiveNames: string[];
+        boundKeyframeCount: number;
+      }>;
+    };
+    const fires: TetherFireRecord[] = [];
+    (window as unknown as {
+      __PRISM_EDITOR_FIRE_TETHER__?: (sourceNodeId: string, event?: string) => TetherFireRecord;
+      __PRISM_EDITOR_TETHER_FIRES__?: ReadonlyArray<TetherFireRecord>;
+    }).__PRISM_EDITOR_FIRE_TETHER__ = (sourceNodeId, event) => {
+      const { nodes, edges } = useGraphSourceStore.getState();
+      const firedAt = Date.now();
+      const resolved = resolveTetherFireTargets(nodes, edges, {
+        sourceNodeId,
+        event,
+        firedAt,
+      });
+      const record: TetherFireRecord = {
+        sourceNodeId,
+        event: event ?? null,
+        firedAt,
+        targets: resolved.map((r) => ({
+          targetNodeId: r.targetNodeId,
+          edge: {
+            from: r.edge.from,
+            to: r.edge.to,
+            type: r.edge.type,
+            event: r.edge.event,
+          },
+          boundPrimitiveNames: r.boundPrimitives.map((p) => p.name),
+          boundKeyframeCount: r.boundKeyframes.length,
+        })),
+      };
+      fires.push(record);
+      (window as unknown as {
+        __PRISM_EDITOR_TETHER_FIRES__?: ReadonlyArray<TetherFireRecord>;
+      }).__PRISM_EDITOR_TETHER_FIRES__ = [...fires];
+      return record;
+    };
+    (window as unknown as {
+      __PRISM_EDITOR_TETHER_FIRES__?: ReadonlyArray<TetherFireRecord>;
+    }).__PRISM_EDITOR_TETHER_FIRES__ = [];
+    return () => {
+      const w = window as unknown as {
+        __PRISM_EDITOR_FIRE_TETHER__?: unknown;
+        __PRISM_EDITOR_TETHER_FIRES__?: unknown;
+      };
+      delete w.__PRISM_EDITOR_FIRE_TETHER__;
+      delete w.__PRISM_EDITOR_TETHER_FIRES__;
+    };
+  }, []);
 
   useEffect(() => {
     if (!dragging) return;
