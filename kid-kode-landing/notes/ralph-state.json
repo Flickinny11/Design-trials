@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T23:40:35Z",
+  "updatedAt": "2026-05-16T23:48:03Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 50,
-    "lastProductiveCommit": "13ff5fe4a38ed5ce3aeacf8ad0691601a5e2fcef"
+    "lastProductiveIteration": 51,
+    "lastProductiveCommit": "11d187041b3fe63551179ba30360af30bebcb618"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -77,17 +77,15 @@
       "status": "active"
     },
     "\u00a710": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 50,
-    "commit": "13ff5fe4a38ed5ce3aeacf8ad0691601a5e2fcef",
-    "verifiedAt": "2026-05-16T23:35:20Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T23:35:20Z"
+    "iteration": 51,
+    "taskId": "EB-10-03",
+    "commit": "11d187041b3fe63551179ba30360af30bebcb618"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -492,6 +490,14 @@
       "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
       "verifiedAt": "2026-05-16T23:24:06Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-02/"
+    },
+    {
+      "iteration": 51,
+      "taskId": "EB-10-03",
+      "phase": 10,
+      "commit": "11d187041b3fe63551179ba30360af30bebcb618",
+      "verifiedAt": "2026-05-16T23:48:03Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-03/"
     }
   ],
   "tasks": [
@@ -1577,11 +1583,11 @@
       ],
       "haltCheck": "Navigating from hub A to hub B in preview-app smoothly transits the camera between hub-rail anchors; no scene-edge exposure during transit; snapshot captures mid-transit frame.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "11d187041b3fe63551179ba30360af30bebcb618",
+      "verifiedAt": "2026-05-16T23:48:03Z",
+      "notes": "SHOULD FIX (carry-forward): (1) PrismHost rail-install guard uses object-identity (prevRail !== cameraRail) \u2014 always true on effect re-run because deriveCompiledCameraRail returns a fresh frozen object; switch to a previous-activeHubId ref so same-hub re-renders skip the transit. (2) Mount-effect cleanup should reset previousHubRailRef.current = null alongside liveResultRef.current to prevent a stale anchor stitching into the next mount's first transit. (3) hub-transit's .start pose is unused by the runtime driver (default getProgress=() => 1), so SC-055's 'between anchors' contract is satisfied by the driver's preserved current pose + .end; document this in the hub-transit.ts header or wire a per-transit getProgress ramp 0\u21921. (4) verify-editor-runtimes 90ms wait is not a deterministic mid-transit guarantee; consider exposing camera pose via dev hook and asserting damping progress in state.json. (5) Synthetic seed-hub clones original hub geometry \u2014 mid-transit pose is barely distinguishable; offset the clone's layout/positions for a visible transit. (6) inner.png is overwritten by the mid-transit capture, losing the entry preview-app frame; save as inner-mid-transit.png and keep the entry inner.png. OPTIONAL: extract freezeVec3 + math helpers shared with camera-rail.ts; promote selectTransitDamping to exported so its symmetry contract is pinned directly."
     },
     {
       "id": "EB-10-04",
