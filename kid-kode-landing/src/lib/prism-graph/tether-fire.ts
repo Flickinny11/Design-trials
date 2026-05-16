@@ -212,8 +212,33 @@ export function resolveCrossSpaceTetherFire(
 
 // ---------------------------------------------------------------------------
 // EB-09-05 — Physics/shader integration on tether fire (SC-051, INV-12).
-// Stubs only: signatures pinned so the failing-test commit compiles. The
-// implementation step replaces these with real logic.
+//
+// `SHADER_PRIMITIVES` is the subset of the 9 fixed cinematic primitives
+// (INV-12) that carry shader / physics integration at runtime. SC-051's
+// worked example — `displacement-transition` — anchors the list; the other
+// entries are the primitives whose runtime modules under
+// `src/lib/prism/runtime/shared/primitives/` apply a TSL shader, GPU
+// displacement, or visual GPU effect to their target object. Scene-graph-only
+// primitives (orbit, depth-rotate, fly-through, parallax-scroll,
+// magnetic-cursor, kinetic-text) are intentionally absent: they animate
+// transforms but do not change the target's surface shader, and SC-051
+// scopes the surface to "physics/shader integration".
+//
+// The set is frozen so a caller cannot widen the shader-fire set at runtime
+// (a fresh primitive belongs in INV-12 first, then here).
+//
+// `resolveTetherFirePrimitiveActivations` is pure: given a SC-049 resolved
+// target and the originating fire, it returns one activation per
+// shader-capable primitive declared on that target. The activation carries
+// the originating edge + `firedAt` timestamp so downstream renderers can
+// sequence multiple simultaneous fires deterministically.
+//
+// `applyTetherFirePrimitives` is the runtime adapter: it resolves each
+// activation's `targetNodeId` to a `THREE.Object3D` via the supplied lookup
+// and invokes the corresponding primitive on the runtime API. Activations
+// whose target is not currently mounted (lookup returns null) are silently
+// skipped — the source node may have fired before the target's hub becomes
+// active; the renderer recovers by re-issuing the fire on hub activation.
 // ---------------------------------------------------------------------------
 
 import type { Object3D } from 'three';
@@ -237,26 +262,47 @@ export type TetherFirePrimitivesAPI = Record<
 >;
 
 export const SHADER_PRIMITIVES: ReadonlyArray<CinematicPrimitiveName> =
-  Object.freeze([] as CinematicPrimitiveName[]);
+  Object.freeze([
+    'displacement-transition',
+    'dissolve-morph',
+    'particle-emerge',
+  ] as CinematicPrimitiveName[]);
+
+const SHADER_PRIMITIVE_SET: ReadonlySet<CinematicPrimitiveName> = new Set(
+  SHADER_PRIMITIVES,
+);
 
 export function resolveTetherFirePrimitiveActivations(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _resolved: TetherFireResolvedTarget,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _fire: TetherFireEvent,
+  resolved: TetherFireResolvedTarget,
+  fire: TetherFireEvent,
 ): TetherFirePrimitiveActivation[] {
-  throw new Error('EB-09-05: resolveTetherFirePrimitiveActivations not implemented');
+  const out: TetherFirePrimitiveActivation[] = [];
+  for (const primitive of resolved.boundPrimitives) {
+    if (!SHADER_PRIMITIVE_SET.has(primitive.name)) continue;
+    out.push({
+      targetNodeId: resolved.targetNodeId,
+      edge: resolved.edge,
+      primitive,
+      firedAt: fire.firedAt,
+    });
+  }
+  return out;
 }
 
 export function applyTetherFirePrimitives(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _activations: ReadonlyArray<TetherFirePrimitiveActivation>,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _primitivesAPI: TetherFirePrimitivesAPI,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _lookupObject3D: (nodeId: string) => Object3D | null,
+  activations: ReadonlyArray<TetherFirePrimitiveActivation>,
+  primitivesAPI: TetherFirePrimitivesAPI,
+  lookupObject3D: (nodeId: string) => Object3D | null,
 ): TetherFirePrimitiveResult[] {
-  throw new Error('EB-09-05: applyTetherFirePrimitives not implemented');
+  const out: TetherFirePrimitiveResult[] = [];
+  for (const activation of activations) {
+    const target = lookupObject3D(activation.targetNodeId);
+    if (!target) continue;
+    const fn = primitivesAPI[activation.primitive.name];
+    if (typeof fn !== 'function') continue;
+    out.push(fn(target, activation.primitive.params));
+  }
+  return out;
 }
 
 // A fire is active during [startedAt, startedAt + durationMs]. The window is
