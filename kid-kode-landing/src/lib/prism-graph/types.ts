@@ -16,9 +16,11 @@
 
 import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
 import type { CapabilityRef, PrismRootNode } from './root-node.ts';
+import type { UiAnchor } from './compile-anchors.ts';
 
 export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
 export type { CapabilityRef, PrismRootNode } from './root-node.ts';
+export type { UiAnchor } from './compile-anchors.ts';
 
 export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
 
@@ -64,6 +66,67 @@ export interface CanvasTransform {
   scaleY: number;
   scaleZ: number;
 }
+
+// EB-08-01 / §8 SC-041 (INV-18 additive). The hub-world-mode per-node pose
+// the Inspector + selection-driven gizmos write to. Shape mirrors
+// ScenePosition so the Phase 8 transform editor can drive every axis without
+// disturbing the renderer-migration `scenePosition` runtime field (SC-042).
+export type EditorTransform = ScenePosition;
+
+export const EDITOR_TRANSFORM_DEFAULT: EditorTransform = {
+  x: 0,
+  y: 0,
+  z: 0,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1,
+};
+
+// EB-08-01 / §8 (INV-18 additive). The resolved final pose written by
+// non-destructive compile passes (compile-anchors / compile-hub / preview*).
+// Cached, non-canonical: source-of-truth remains `editorTransform` +
+// `canvasTransform` + the anchor rule table. Consumers MAY re-derive at any
+// time; compile functions read source fields and write only here (INV-17 /
+// FP-04 still forbid writes to scenePosition/editorTransform/canvasTransform).
+export type CompiledTransform = ScenePosition;
+
+export const COMPILED_TRANSFORM_DEFAULT: CompiledTransform = {
+  x: 0,
+  y: 0,
+  z: 0,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1,
+};
+
+// EB-08-01 / §8 (INV-18 additive). The layered scene-graph layer assignment
+// for a node. Mirrors the editor-build gap-analysis §3 schema delta. The
+// runtime layer compositor (Phase 7) groups nodes into these six z-buckets;
+// `content` is the default for legacy graphs that pre-date this field.
+export type DepthLayer =
+  | 'environment'
+  | 'background'
+  | 'midground'
+  | 'content'
+  | 'foreground-FX'
+  | 'overlay';
+
+export const DEPTH_LAYER_VALUES: readonly DepthLayer[] = Object.freeze([
+  'environment',
+  'background',
+  'midground',
+  'content',
+  'foreground-FX',
+  'overlay',
+] as const);
+
+export const DEPTH_LAYER_DEFAULT: DepthLayer = 'content';
 
 export interface PrismHubLayout {
   viewportWidth: number;
@@ -315,6 +378,23 @@ export interface PrismNode {
   // scenePosition is the renderer-migration runtime field and stays
   // untouched by canvas-mode edits (SC-042).
   canvasTransform?: CanvasTransform;
+  // EB-08-01 / §8 SC-041 (INV-18 additive). The hub-world-mode per-node pose
+  // written by the Inspector + selection gizmos. Default: identity
+  // (EDITOR_TRANSFORM_DEFAULT). See `EditorTransform` for shape semantics.
+  editorTransform?: EditorTransform;
+  // EB-08-01 / §8 (INV-18 additive). Cached resolved pose produced by the
+  // non-destructive compile path. Not canonical: compile functions may
+  // overwrite this freely; the source-of-truth is editorTransform +
+  // canvasTransform + the anchor rule table.
+  compiledTransform?: CompiledTransform;
+  // EB-08-01 / §6 SC-031 (INV-18 additive). Source-side anchor abstraction.
+  // When absent, callers pick via `pickUiAnchor(subtype, intent, serviceTag)`
+  // in `compile-anchors.ts`; explicit value here overrides the rule table.
+  uiAnchor?: UiAnchor;
+  // EB-08-01 / §8 (INV-18 additive). Layered scene-graph layer assignment.
+  // When absent, the Phase 7 layer compositor treats the node as `content`
+  // (DEPTH_LAYER_DEFAULT).
+  depthLayer?: DepthLayer;
   // EB-02-06 / SC-009: optional capability references on the node. The vault
   // resolves these server-side; raw secret values never appear here (INV-19).
   capabilityRefs?: CapabilityRef[];

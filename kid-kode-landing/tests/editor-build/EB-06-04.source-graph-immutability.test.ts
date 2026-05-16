@@ -77,14 +77,13 @@ function makeNode(
   intentOverrides: Partial<PrismIntent> = {},
   z = 0,
 ): PrismNode {
-  // INV-17 / SC-030 target fields (scenePosition + canvasTransform) populated
-  // with non-default values so that an accidental write to them by compile
-  // would be visible in the byte-identical comparison. `editorTransform` is
-  // declared as an additive editor-build field (see gap-analysis §3 schema
-  // delta) but isn't yet on the PrismNode type; we attach it via an
-  // intersection cast and assert against it through a `LegacyNode` cast in
-  // the tests below.
-  const node: PrismNode & { editorTransform?: { x: number; y: number; z: number } } = {
+  // INV-17 / SC-030 target fields (scenePosition + canvasTransform +
+  // editorTransform) populated with non-default values so that an accidental
+  // write to them by compile would be visible in the byte-identical
+  // comparison. As of EB-08-01, `editorTransform?` is a first-class optional
+  // field on PrismNode (additive per INV-18), so we no longer need the
+  // intersection-cast stub.
+  const node: PrismNode = {
     nodeId: id,
     subtype,
     parentHubId: 'hub-immut',
@@ -117,7 +116,17 @@ function makeNode(
       scaleY: 1,
       scaleZ: 1,
     },
-    editorTransform: { x: 4, y: 5, z: 6 },
+    editorTransform: {
+      x: 4,
+      y: 5,
+      z: 6,
+      rotationX: 0,
+      rotationY: 0,
+      rotationZ: 0,
+      scaleX: 1,
+      scaleY: 1,
+      scaleZ: 1,
+    },
   };
   return node;
 }
