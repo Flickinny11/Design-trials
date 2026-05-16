@@ -26,6 +26,11 @@ import {
 } from '@/lib/prism-graph/types';
 import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
 import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
+import {
+  ANIMATION_METHODOLOGIES,
+  getLibraryByMethodology,
+  type AnimationMethodology,
+} from '@/lib/prism-graph/animation-library';
 
 // SC-020: the canonical 7-tab set for a node selection. The 'history' tab
 // surfaces the per-node edit/regeneration log; SC-020 explicitly names it as
@@ -637,7 +642,12 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
 
   if (!node.hasAnimation) {
     return (
-      <div className="p-5 text-center text-white/40 text-[12px] italic">This node has no animations.</div>
+      <div className="p-5 space-y-4">
+        <div className="text-center text-white/40 text-[12px] italic">
+          This node has no animations. Pick a primitive from the library to add one.
+        </div>
+        <AnimationLibrarySection />
+      </div>
     );
   }
 
@@ -974,6 +984,94 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
       <div className="text-[10px] text-white/40 leading-relaxed italic pt-1">
         Drag any slider to modify that keyframe. Tap Preview to play the full animation. The Code tab shows the generated GSAP code updating in real time.
       </div>
+
+      {/* EB-09-01 — Animation library catalog. The three category tabs are
+          driven from the canonical ANIMATION_METHODOLOGIES tuple (SC-047) and
+          each entry references one of the 9 cinematic primitives (SC-048 +
+          INV-12). Methodologies are surfaced as distinct categories — never
+          collapsed into a single list. */}
+      <AnimationLibrarySection />
+    </div>
+  );
+}
+
+// EB-09-01 — Animation library catalog UI (SC-047). Three category tabs in
+// the canonical methodology order; entries reference the 9 cinematic
+// primitives (SC-048 + INV-12) via the shared animation-library module.
+function AnimationLibrarySection() {
+  const [methodology, setMethodology] = useState<AnimationMethodology>(
+    ANIMATION_METHODOLOGIES[0],
+  );
+  const entries = getLibraryByMethodology(methodology);
+  return (
+    <div
+      data-testid="animation-library"
+      className="p-4 rounded-xl bg-white/[0.025] border border-white/5 space-y-3"
+    >
+      <div className="flex items-center justify-between">
+        <div className="text-[9px] font-mono tracking-widest text-white/40">
+          ANIMATION LIBRARY
+        </div>
+        <div className="text-[9px] font-mono text-white/30">
+          {entries.length} entr{entries.length === 1 ? 'y' : 'ies'}
+        </div>
+      </div>
+      <div
+        data-testid="animation-library-tabs"
+        role="tablist"
+        aria-label="Animation methodology"
+        className="flex gap-1.5"
+      >
+        {ANIMATION_METHODOLOGIES.map((m) => {
+          const active = m === methodology;
+          return (
+            <button
+              key={m}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              data-methodology={m}
+              onClick={() => setMethodology(m)}
+              className={`flex-1 px-2 py-1.5 rounded-md border text-[10px] font-mono tracking-wider transition-colors ${
+                active
+                  ? 'border-[#5d8bff] bg-[#5d8bff]/15 text-[#5d8bff]'
+                  : 'border-white/10 bg-white/[0.02] text-white/60 hover:border-white/20'
+              }`}
+            >
+              {m}
+            </button>
+          );
+        })}
+      </div>
+      <ul
+        data-testid="animation-library-entries"
+        role="list"
+        aria-label={`${methodology} entries`}
+        className="space-y-1.5"
+      >
+        {entries.map((e) => (
+          <li
+            key={e.id}
+            data-entry-id={e.id}
+            data-primitive={e.primitive}
+            className="px-3 py-2 rounded-md bg-white/[0.02] border border-white/5"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-semibold text-white/85">
+                {e.label}
+              </span>
+              <span className="text-[9px] font-mono text-[#5d8bff]/80">
+                {e.primitive}
+              </span>
+            </div>
+            {e.description && (
+              <div className="text-[10px] text-white/45 mt-1 leading-snug">
+                {e.description}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
