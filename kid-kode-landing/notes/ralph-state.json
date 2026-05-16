@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T15:30:00Z",
+  "updatedAt": "2026-05-16T15:35:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 43,
-    "lastProductiveCommit": "72d151bebd93c27c1247d2c4216e75e3d864eb55"
+    "lastProductiveIteration": 44,
+    "lastProductiveCommit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 43,
-    "commit": "72d151bebd93c27c1247d2c4216e75e3d864eb55",
-    "verifiedAt": "2026-05-16T15:17:59Z",
+    "iteration": 44,
+    "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
+    "verifiedAt": "2026-05-16T15:35:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T15:17:59Z"
+    "recordedAt": "2026-05-16T15:35:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -435,6 +435,15 @@
       "commit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
       "verifiedAt": "2026-05-16T15:01:35Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-01/"
+    },
+    {
+      "iteration": 44,
+      "taskId": "EB-09-02",
+      "phase": 9,
+      "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
+      "verifiedAt": "2026-05-16T15:35:00Z",
+      "snapshotDir": null,
+      "note": "no snapshot — verificationCommands only typecheck; haltCheck data-contract only"
     }
   ],
   "tasks": [
@@ -1374,11 +1383,11 @@
       ],
       "haltCheck": "animation-library catalog references exactly the 9 cinematic primitives from CINEMATIC-PRIMITIVES-LIBRARY.md; no entry invents a new primitive; test enumerates entries and confirms.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
+      "verifiedAt": "2026-05-16T15:35:00Z",
+      "notes": "haltCheck already satisfied at audit; pre-existing code (EB-09-01) satisfies §9 SC-048 + §7 INV-12 via the typed catalog in src/lib/prism-graph/animation-library.ts (CinematicPrimitiveName union enforces no-invent at compile time; catalog has 9 entries mapping to the 9 doc primitives 1:1). Shipped strict EB-09-02 test deriving the canonical set from three sources (doc registration block + type union + catalog) with pairwise set-equality. spec-reviewer 0 MUST FIX. SHOULD FIX (deferred — test resilience nits, non-blocking): make trailing-semicolon in doc-block regex optional; tighten entry regex to a single fenced block to avoid future cross-block collisions; minor test-block duplication between \"catalog references at least one entry per primitive\" and \"catalog set equals the doc set\". OPTIONAL: comment about repoRoot layout assumption; drop tautological enumerated-count assertion; switch CinematicPrimitiveName import to `import type`."
     },
     {
       "id": "EB-09-03",
