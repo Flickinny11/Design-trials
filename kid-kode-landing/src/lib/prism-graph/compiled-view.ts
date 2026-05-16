@@ -81,6 +81,10 @@ export interface CompiledHubBackgroundLayer {
   readonly sourceUrl: string | null;
   readonly z: number;
   readonly opacity: number;
+  // §7 SC-036 — depth-derived translation rate for `parallax` layers.
+  // 0 = move 1:1 with the camera (foreground); 1 = static (infinite distance).
+  // Undefined for non-parallax attachments.
+  readonly parallaxDepth?: number;
 }
 
 // --- Per-node compiled entry. ------------------------------------------

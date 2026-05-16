@@ -122,6 +122,12 @@ export interface MountGraphResult {
   setBackgroundLayers(
     layers: readonly CompiledHubBackgroundLayer[] | null,
   ): void;
+
+  /** EB-07-02 / §7 SC-036 — step the per-frame background drivers (currently
+   *  just parallax). The composite beforeRender hook on `sceneRoot` calls
+   *  this every frame; tests and editor surfaces that drive their own loop
+   *  can invoke it directly. No-op when no drivers are registered. */
+  tickBackgroundDrivers(): void;
 }
 
 const BACKDROP_Z = -2;
@@ -436,6 +442,13 @@ export async function mountFromGraphSource(
     }
   }
 
+  // EB-07-02 stub — real per-frame parallax drivers land in the
+  // implementation step. Wiring is in place so MountGraphResult fulfills
+  // the interface at the type level.
+  function tickBackgroundDrivers(): void {
+    // no-op stub; replaced in EB-07-02 implementation
+  }
+
   function setCameraRail(rail: CompiledCameraRail | null): void {
     if (rail == null) {
       if (cameraRailDriver) {
@@ -489,6 +502,7 @@ export async function mountFromGraphSource(
     setHubMockup,
     setCameraRail,
     setBackgroundLayers,
+    tickBackgroundDrivers,
     resize,
     unmount,
   };
