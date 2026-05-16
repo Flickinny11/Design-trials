@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T12:37:20Z",
+  "updatedAt": "2026-05-16T13:22:26Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 41,
-    "lastProductiveCommit": "90a718e8a71e152291ef1186a72a9715eabf68b7"
+    "lastProductiveIteration": 42,
+    "lastProductiveCommit": "bad44ba71743252f8c356492b7eabe0f383f180e"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 41,
-    "commit": "90a718e8a71e152291ef1186a72a9715eabf68b7",
-    "verifiedAt": "2026-05-16T12:07:42Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T12:07:42Z"
+    "lastIteration": 42,
+    "lastTaskId": "EB-08-05",
+    "lastCommit": "bad44ba71743252f8c356492b7eabe0f383f180e",
+    "lastVerifiedAt": "2026-05-16T13:22:26Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -419,6 +418,14 @@
       "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
       "verifiedAt": "2026-05-16T11:46:23Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-04/"
+    },
+    {
+      "iteration": 42,
+      "taskId": "EB-08-05",
+      "phase": 8,
+      "commit": "bad44ba71743252f8c356492b7eabe0f383f180e",
+      "verifiedAt": "2026-05-16T13:22:26Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-05/"
     }
   ],
   "tasks": [
@@ -1317,11 +1324,11 @@
       ],
       "haltCheck": "Editing canvasTransform via gizmos and clicking 'save as keyframe' creates a PrismKeyframe with coordinateSpace='hub-scene' (or canvas-mode default); keyframe appears in animation timeline.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "bad44ba71743252f8c356492b7eabe0f383f180e",
+      "verifiedAt": "2026-05-16T13:22:26Z",
+      "notes": "spec-reviewer SHOULD FIX (deferred to later phases): unreachable when !node.hasAnimation; chip key={i} mis-keys on delete/reorder; duplicate hub-scene default literal at call site; non-uniform scale emits both scale+scaleX/Y/Z; persistedKeyframes empty-array reallocates each render. OPTIONAL: extract CapturedKeyframeTimeline component; export DEFAULT_CANVAS_COORDINATE_SPACE; add t/ease defaults."
     },
     {
       "id": "EB-09-01",
