@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T03:05:52Z",
+  "updatedAt": "2026-05-16T04:08:21Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 35,
-    "lastProductiveCommit": "388aaa7ccf7c371b002e3f8497e9f9e46c688703"
+    "lastProductiveIteration": 36,
+    "lastProductiveCommit": "a43d670a239de68046caadc502a1cb8e131d5cd2"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "\u00a77": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 35,
-    "commit": "388aaa7ccf7c371b002e3f8497e9f9e46c688703",
-    "verifiedAt": "2026-05-16T02:46:06Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T02:46:06Z"
+    "iteration": 36,
+    "taskId": "EB-07-03",
+    "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
+    "at": "2026-05-16T04:08:21Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -371,6 +370,14 @@
       "commit": "5b4d085cf88e4c149237d308abe1d41aa8d36858",
       "verifiedAt": "2026-05-16T02:29:28Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-02/"
+    },
+    {
+      "iteration": 36,
+      "taskId": "EB-07-03",
+      "phase": "\u00a77",
+      "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
+      "verifiedAt": "2026-05-16T04:08:21Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-03/"
     }
   ],
   "tasks": [
@@ -1142,11 +1149,11 @@
       ],
       "haltCheck": "In preview-hub, panning the camera (within rail constraints) never reveals scene edges; environment/fog fill the gap; snapshot at extreme camera positions shows no blank.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
+      "verifiedAt": "2026-05-16T04:08:21Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): compileEnvironmentFog wrapper duplication; rebuildCoverPlane helper to dedupe resize() blocks; parseHexColor only accepts #RGB/#RRGGBB; document FOG_FAR_FACTOR=1.6 rationale; comment INV-23/SC-038 gating in PrismHost setEnvironmentFog branches."
     },
     {
       "id": "EB-07-04",
