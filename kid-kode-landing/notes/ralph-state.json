@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T13:57:09Z",
+  "updatedAt": "2026-05-16T15:01:35Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 42,
-    "lastProductiveCommit": "52c8dcbbe74178edf470056389079da680aa11d9"
+    "lastProductiveIteration": 43,
+    "lastProductiveCommit": "a4b31633686aa79423e82dc9053d5cd9c1064af6"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "\u00a79": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 42,
-    "commit": "52c8dcbbe74178edf470056389079da680aa11d9",
-    "verifiedAt": "2026-05-16T13:38:24Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T13:38:24Z"
+    "lastDoneTask": "EB-09-01",
+    "lastDoneIteration": 43,
+    "lastDoneCommit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
+    "lastDoneAt": "2026-05-16T15:01:35Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -427,6 +426,14 @@
       "commit": "bad44ba71743252f8c356492b7eabe0f383f180e",
       "verifiedAt": "2026-05-16T13:22:26Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-05/"
+    },
+    {
+      "iteration": 43,
+      "taskId": "EB-09-01",
+      "phase": 9,
+      "commit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
+      "verifiedAt": "2026-05-16T15:01:35Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-01/"
     }
   ],
   "tasks": [
@@ -1346,11 +1353,11 @@
       ],
       "haltCheck": "Inspector's Animation tab shows a Library section with three category tabs: 'i2v Frame-based', 'Code-based', 'Hybrid Overlay'. Each category lists at least one entry. Methodologies are never collapsed into a single list.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
+      "verifiedAt": "2026-05-16T15:01:35Z",
+      "notes": "SHOULD FIX (deferred \u2014 non-blocking per reviewer):\n  - WAI-ARIA: complete role=tab/tabpanel binding (add aria-controls + ids; currently role=tablist + role=tab without aria-controls).\n  - Snapshot does not show Inspector\u2192Animation tab in-frame; consider verifier flag to open Inspector for haltCheck visual proof.\n  - Methodology bucketing: 'Hybrid Overlay' has 1/9 entries (particle-emerge). Reasonable but thin; revisit if Phase 9 follow-ups extend the categorization.\n  - AnimationLibrarySection state lifts: methodology resets on hasAnimation transition (re-mount). Lift to AnimationTab or editor store to persist selection.\nOPTIONAL: per-methodology description map; lazy 'no entries' fallback; precomputed methodology Map."
     },
     {
       "id": "EB-09-02",
