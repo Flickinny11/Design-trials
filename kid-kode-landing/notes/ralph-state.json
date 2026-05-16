@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T16:46:19Z",
+  "updatedAt": "2026-05-16T17:47:19Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 44,
-    "lastProductiveCommit": "81813576a4c48632f5b97b73d6e9cdeabda027b8"
+    "lastProductiveIteration": 45,
+    "lastProductiveCommit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 44,
-    "commit": "81813576a4c48632f5b97b73d6e9cdeabda027b8",
-    "verifiedAt": "2026-05-16T16:22:41Z",
+    "iteration": 45,
+    "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
+    "verifiedAt": "2026-05-16T17:47:19Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T16:22:41Z"
+    "recordedAt": "2026-05-16T17:47:19Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -444,6 +444,14 @@
       "verifiedAt": "2026-05-16T15:35:00Z",
       "snapshotDir": null,
       "note": "no snapshot — verificationCommands only typecheck; haltCheck data-contract only"
+    },
+    {
+      "iteration": 45,
+      "taskId": "EB-09-03",
+      "phase": 9,
+      "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
+      "verifiedAt": "2026-05-16T17:47:19Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-03/"
     }
   ],
   "tasks": [
@@ -1403,11 +1411,11 @@
       ],
       "haltCheck": "When an edge of type 'triggers' fires from source node, target node's bound animations run; tether-fire visualization renders during firing; snapshot proves propagation across at least one pair.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
+      "verifiedAt": "2026-05-16T17:47:19Z",
+      "notes": "SHOULD FIX (spec-reviewer): (1) Test fixture rename happened in implementation commit (id→nodeId, hubIds→parentHubId, elementType→subtype) — needed to align with PrismNode shape; logged. (2) Module has no runtime consumer yet; wiring is EB-09-04..EB-09-06. (3) Add boundary test at exact t0+dur; consider per-call object literal in createTetherFireState."
     },
     {
       "id": "EB-09-04",
