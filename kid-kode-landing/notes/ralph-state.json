@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 44,
+  "currentIteration": 45,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T15:35:00Z",
+  "updatedAt": "2026-05-16T16:46:19Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 44,
-    "lastProductiveCommit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae"
+    "lastProductiveCommit": "81813576a4c48632f5b97b73d6e9cdeabda027b8"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 44,
-    "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
-    "verifiedAt": "2026-05-16T15:35:00Z",
+    "commit": "81813576a4c48632f5b97b73d6e9cdeabda027b8",
+    "verifiedAt": "2026-05-16T16:22:41Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T15:35:00Z"
+    "recordedAt": "2026-05-16T16:22:41Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1403,8 +1403,8 @@
       ],
       "haltCheck": "When an edge of type 'triggers' fires from source node, target node's bound animations run; tether-fire visualization renders during firing; snapshot proves propagation across at least one pair.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
