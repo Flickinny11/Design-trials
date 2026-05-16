@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T09:56:50Z",
+  "updatedAt": "2026-05-16T11:46:23Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 40,
-    "lastProductiveCommit": "3881eb7865bd4b392a1d588bb52986f2005a2fd4"
+    "lastProductiveIteration": 41,
+    "lastProductiveCommit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49"
   },
   "phaseCaps": {
     "§1": {
@@ -67,7 +67,7 @@
       "status": "active"
     },
     "§8": {
-      "used": 5,
+      "used": 6,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 40,
-    "commit": "3881eb7865bd4b392a1d588bb52986f2005a2fd4",
-    "verifiedAt": "2026-05-16T09:35:02Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-16T09:35:02Z"
+    "iteration": 41,
+    "taskId": "EB-08-04",
+    "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
+    "at": "2026-05-16T11:46:23Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -411,6 +410,14 @@
       "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
       "verifiedAt": "2026-05-16T09:19:16Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-03/"
+    },
+    {
+      "iteration": 41,
+      "taskId": "EB-08-04",
+      "phase": 8,
+      "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
+      "verifiedAt": "2026-05-16T11:46:23Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-04/"
     }
   ],
   "tasks": [
@@ -1284,15 +1291,15 @@
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
-        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-08-04"
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-08-04 --mode=canvas"
       ],
       "haltCheck": "Three primitives ship as composable keyframe sets; each declares its coordinateSpace; demo node in canvas mode visibly runs each on its trigger; snapshot captures the in-view-slide state.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
+      "verifiedAt": "2026-05-16T11:46:23Z",
+      "notes": "SC-046 baseline keyframe primitives shipped (LOAD_FADE_IN, IN_VIEW_SLIDE, HOVER_LIFT) as composable PrismKeyframe[] sets; each declares coordinateSpace; canvas-mode KeyframeDemo visibly runs all three; outer snapshot captures the post-in-view-slide state. Review SHOULD-FIX: ease curves on baseline keyframes are decorative until EB-08-05 wires the runtime applier (per-keyframe ease label declared on data); InterpolatedKeyframeValues only carries rotateZ — extend to rotateX/Y when EB-09 needs them."
     },
     {
       "id": "EB-08-05",
