@@ -88,12 +88,44 @@ export interface PrismHubResponsiveBreakpoints {
   [key: string]: PrismHubResponsiveBreakpoint | undefined;
 }
 
+// Phase 7 / §7 SC-036 — attachment vocabulary for a hub's background layer
+// stack. The five members are the canonical set; mirrored by
+// `CompiledHubAttachment` in `compiled-view.ts` so the compile path consumes
+// source layers without rename. `'viewport-fixed'` pins the layer to the
+// viewport during scroll (SC-033). `'camera-locked'` welds it to the camera
+// (HUD-style backdrops). `'parallax'` scrolls at a depth-derived rate.
+// `'world'` anchors in hub-scene world space. `'infinite-environment'`
+// reserves for skybox-style infinite-distance environments.
+export type PrismHubBackgroundAttachment =
+  | 'viewport-fixed'
+  | 'camera-locked'
+  | 'parallax'
+  | 'world'
+  | 'infinite-environment';
+
+// §7 SC-036 — source-graph background layer. `id` and `attachment` are
+// required; `sourceUrl`, `z`, `opacity`, and `parallaxDepth` are optional and
+// default at compile time. Additive only (INV-18).
+export interface PrismHubBackgroundLayer {
+  id: string;
+  attachment: PrismHubBackgroundAttachment;
+  sourceUrl?: string | null;
+  z?: number;
+  opacity?: number;
+  parallaxDepth?: number;
+}
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
   layout: PrismHubLayout;
   responsiveBreakpoints?: PrismHubResponsiveBreakpoints;
+  // §7 SC-037 — optional multi-layer background stack. Legacy
+  // `layout.mockupUrl` is retained as the single-layer reader; when
+  // `background` is present the compile path may prefer it. Optional per
+  // INV-18 (additive schema growth).
+  background?: PrismHubBackgroundLayer[];
 }
 
 export interface PrismVisualTransform {
