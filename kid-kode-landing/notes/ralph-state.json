@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T01:21:42Z",
+  "updatedAt": "2026-05-16T02:29:28Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 34,
-    "lastProductiveCommit": "c92ac5ec8e864927e23cddf6898712b379a61b97"
+    "lastProductiveIteration": 35,
+    "lastProductiveCommit": "5b4d085cf88e4c149237d308abe1d41aa8d36858"
   },
   "phaseCaps": {
     "\u00a71": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "\u00a77": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -87,7 +87,10 @@
     "commit": "c92ac5ec8e864927e23cddf6898712b379a61b97",
     "verifiedAt": "2026-05-16T01:00:51Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T01:00:51Z"
+    "recordedAt": "2026-05-16T01:00:51Z",
+    "lastIteration": 35,
+    "lastTaskId": "EB-07-02",
+    "lastCommit": "5b4d085cf88e4c149237d308abe1d41aa8d36858"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -363,6 +366,14 @@
       "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
       "verifiedAt": "2026-05-16T00:51:46Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-01/"
+    },
+    {
+      "iteration": 35,
+      "taskId": "EB-07-02",
+      "phase": 7,
+      "commit": "5b4d085cf88e4c149237d308abe1d41aa8d36858",
+      "verifiedAt": "2026-05-16T02:29:28Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-02/"
     }
   ],
   "tasks": [
@@ -1113,11 +1124,11 @@
       ],
       "haltCheck": "Per attachment mode: viewport-fixed \u2192 camera-aligned plane; camera-locked \u2192 attached to camera node; parallax \u2192 reduced-rate translation; world \u2192 static world geometry; infinite-environment \u2192 cubemap/skybox. Snapshot shows multi-layer composition.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "5b4d085cf88e4c149237d308abe1d41aa8d36858",
+      "verifiedAt": "2026-05-16T02:29:28Z",
+      "notes": "Composes all 5 SC-036 attachment modes (viewport-fixed/camera-locked/parallax/world/infinite-environment); compileBackground reads hub.background per SC-037 with mockupUrl fallback; parallax tick coexists with EB-06-05 camera rail via composite beforeRender; unmount tears down every mount type."
     },
     {
       "id": "EB-07-03",
