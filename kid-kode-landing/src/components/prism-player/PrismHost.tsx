@@ -11,7 +11,10 @@ import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { deriveCompiledCameraRail } from '@/lib/prism-graph/camera-rail';
-import type { CompiledHubBackgroundLayer } from '@/lib/prism-graph/compiled-view';
+import {
+  deriveCompiledEnvironmentFog,
+  type CompiledHubBackgroundLayer,
+} from '@/lib/prism-graph/compiled-view';
 import type { GraphSource } from '@/lib/prism-graph/types';
 // T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
 // editor-side consumers. boot.ts owns the runtime contract; PrismHost is
@@ -200,6 +203,7 @@ export default function PrismHost({
     if (viewMode !== 'preview-hub') {
       live.setCameraRail(null);
       live.setBackgroundLayers(null);
+      live.setEnvironmentFog(null);
       return;
     }
 
@@ -210,6 +214,7 @@ export default function PrismHost({
     if (!hub) {
       live.setCameraRail(null);
       live.setBackgroundLayers(null);
+      live.setEnvironmentFog(null);
       return;
     }
     const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
@@ -225,6 +230,12 @@ export default function PrismHost({
       nodes: hubNodes,
     });
     live.setCameraRail(cameraRail);
+
+    // EB-07-03 / §7 SC-038 — env-fog edge fill. Same shortcut as the rail:
+    // derive directly from (hub, rail) without round-tripping through
+    // compileHubToPreview so legacy fixtures lacking a PrismRootNode still
+    // get the fog band.
+    live.setEnvironmentFog(deriveCompiledEnvironmentFog(hub, cameraRail));
 
     // EB-06-06 / §6 SC-033 — build the compiled background layer stack and
     // install it on the runtime. Mirrors `compileBackground` in

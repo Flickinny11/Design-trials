@@ -150,6 +150,14 @@ export interface CompiledHubView {
 
 const DEFAULT_FOV = 50;
 const DEFAULT_DAMPING = 0.12;
+// SC-038 / INV-23 fog defaults. Color is the deep-navy used by the editor's
+// chrome so missing-backgroundColor hubs still match the surrounding UI; near
+// is small enough to leave hub geometry untouched, far overshoots the
+// rail-end framing distance by a multiplier so geometry at the framing
+// distance is still visible (only past it does the scene fade to fog color).
+const DEFAULT_FOG_COLOR = 0x04050a;
+const FOG_NEAR_FACTOR = 0.05; // near = end-distance * 0.05
+const FOG_FAR_FACTOR = 1.6;   // far  = end-distance * 1.6  (≥ end-distance)
 
 // SC-031 source vocabulary → compiled vocabulary. The source rule table
 // (compile-anchors.ts) classifies into seven `UiAnchor` values; the
@@ -250,6 +258,47 @@ function compileCameraRail(
   });
 }
 
+// §7 SC-038 — derive the fog band from the hub's background color and the
+// camera rail's end-pose distance. Pure: no THREE / DOM access. Color is a
+// numeric hex (0xRRGGBB) so the renderer can pass it straight to `new
+// THREE.Fog(color, near, far)`.
+function parseHexColor(input: string | undefined | null): number {
+  if (typeof input !== 'string') return DEFAULT_FOG_COLOR;
+  const m = input.trim().match(/^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/);
+  if (!m) return DEFAULT_FOG_COLOR;
+  const hex = m[1];
+  // Expand short form (#abc → #aabbcc).
+  const full = hex.length === 3
+    ? hex.split('').map((c) => c + c).join('')
+    : hex;
+  const n = parseInt(full, 16);
+  return Number.isFinite(n) ? n : DEFAULT_FOG_COLOR;
+}
+
+function compileEnvironmentFog(
+  hub: PrismHub,
+  rail: CompiledCameraRail,
+): CompiledEnvironmentFog {
+  return deriveCompiledEnvironmentFog(hub, rail);
+}
+
+/** Derive a CompiledEnvironmentFog from a hub + camera rail. Exported so
+ *  PrismHost (which avoids `compileHubToPreview` to skip faking a
+ *  PrismRootNode for legacy fixtures, mirroring `deriveCompiledCameraRail`)
+ *  can install fog without a full compile. Pure — no THREE / DOM access. */
+export function deriveCompiledEnvironmentFog(
+  hub: PrismHub,
+  rail: CompiledCameraRail,
+): CompiledEnvironmentFog {
+  const color = parseHexColor(hub.layout?.backgroundColor);
+  const endZ = rail.end.position[2];
+  const targetZ = rail.end.target[2];
+  const endDist = Math.max(1, Math.abs(endZ - targetZ));
+  const near = endDist * FOG_NEAR_FACTOR;
+  const far = endDist * FOG_FAR_FACTOR;
+  return Object.freeze({ color, near, far });
+}
+
 function compileNodes(nodes: readonly PrismNode[]): readonly CompiledNodeEntry[] {
   // Stable, deterministic ordering by parentHubId then nodeId. Source array
   // is never mutated (the spread + sort applies to a fresh copy).
@@ -309,6 +358,7 @@ export function compileHubToPreview(
   const compiledBackground = compileBackground(hub);
   const compiledCameraRail = compileCameraRail(hub, nodes);
   const compiledNodes = compileNodes(nodes);
+  const compiledFog = compileEnvironmentFog(hub, compiledCameraRail);
   const compiledWorld: CompiledWorldRef = Object.freeze({
     appNameWorldId: world.appNameWorldId,
   });
@@ -322,6 +372,7 @@ export function compileHubToPreview(
     background: compiledBackground,
     cameraRail: compiledCameraRail,
     nodes: compiledNodes,
+    environmentFog: compiledFog,
   };
   const hash = fnv1a(canonicalStringify(payload));
 

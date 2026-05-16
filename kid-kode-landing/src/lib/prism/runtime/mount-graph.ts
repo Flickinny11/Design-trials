@@ -23,6 +23,8 @@
 //   - setHubMockup(hubId, mockupUrl) — rebuild the backdrop plane.
 
 import {
+  Color,
+  Fog,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -271,16 +273,37 @@ function buildSceneSpaceMesh(
 }
 
 const CAMERA_LOCKED_LOCAL_Z = -800;
-const CAMERA_LOCKED_SIZE = 2048;
+// EB-07-03 — overscan multiplier for camera-locked planes; matches the
+// viewport-fixed overscan so a small camera roll never reveals an edge.
+const CAMERA_LOCKED_OVERSCAN = 1.05;
 
-function buildCameraLockedMesh(layer: CompiledHubBackgroundLayer): Mesh {
+// EB-07-03 / §7 SC-038 — size a camera-locked plane to cover the camera
+// frustum at its local-z. Same math as `sizeViewportFixedPlane` but parametric
+// over the layer's z so HUDs that sit closer or farther than the
+// viewport-fixed slot still scale-to-cover.
+function sizeCameraLockedPlane(
+  camera: { fov: number; aspect: number },
+  localZ: number,
+): { width: number; height: number } {
+  const halfFovRad = (camera.fov * Math.PI) / 360;
+  const dist = Math.max(1, Math.abs(localZ));
+  const height = 2 * dist * Math.tan(halfFovRad) * CAMERA_LOCKED_OVERSCAN;
+  const width = height * camera.aspect;
+  return { width, height };
+}
+
+function buildCameraLockedMesh(
+  layer: CompiledHubBackgroundLayer,
+  camera: { fov: number; aspect: number },
+): Mesh {
   // `layer.z` is the compiled value (defaults to 0 when the source omits it).
   // A user-set z=0 is a legitimate camera-local position; only treat a
   // missing default-z as "unspecified". The compile path normalizes the
   // distinction by leaving `z` strictly numeric, so we accept any finite
   // value here — including 0.
-  const localZ = Number.isFinite(layer.z) ? layer.z : CAMERA_LOCKED_LOCAL_Z;
-  const geo = new PlaneGeometry(CAMERA_LOCKED_SIZE, CAMERA_LOCKED_SIZE);
+  const localZ = Number.isFinite(layer.z) && layer.z !== 0 ? layer.z : CAMERA_LOCKED_LOCAL_Z;
+  const { width, height } = sizeCameraLockedPlane(camera, localZ);
+  const geo = new PlaneGeometry(width, height);
   const mat = new MeshBasicMaterial({
     transparent: layer.opacity < 1,
     opacity: layer.opacity,
@@ -291,6 +314,8 @@ function buildCameraLockedMesh(layer: CompiledHubBackgroundLayer): Mesh {
   mesh.renderOrder = -900;
   mesh.userData.role = 'camera-locked-background';
   mesh.userData.layerId = layer.id;
+  // EB-07-03: read `mesh.geometry` at cleanup time so a post-resize geometry
+  // swap doesn't strand the live PlaneGeometry.
   mesh.userData.cleanup = () => {
     mesh.geometry.dispose();
     mat.dispose();
@@ -473,6 +498,17 @@ export async function mountFromGraphSource(
       viewportFixedMesh.geometry = new PlaneGeometry(width, height);
       oldGeo.dispose();
     }
+    // EB-07-03 — same scale-to-cover treatment for camera-locked HUD planes.
+    if (cameraLockedMesh) {
+      const localZ = cameraLockedMesh.position.z;
+      const { width, height } = sizeCameraLockedPlane(
+        { fov: sceneRoot.camera.fov, aspect: sceneRoot.camera.aspect },
+        localZ,
+      );
+      const oldGeo = cameraLockedMesh.geometry;
+      cameraLockedMesh.geometry = new PlaneGeometry(width, height);
+      oldGeo.dispose();
+    }
   }
 
   // EB-06-06 / EB-07-02 (§6 SC-033 + §7 SC-036) — install the compiled
@@ -590,7 +626,10 @@ export async function mountFromGraphSource(
     // camera-locked — first-layer semantics; HUD-style backdrop.
     const cameraLocked = layers.find((l) => l.attachment === 'camera-locked');
     if (cameraLocked) {
-      const mesh = buildCameraLockedMesh(cameraLocked);
+      const mesh = buildCameraLockedMesh(cameraLocked, {
+        fov: sceneRoot.camera.fov,
+        aspect: sceneRoot.camera.aspect,
+      });
       sceneRoot.camera.add(mesh);
       cameraLockedMesh = mesh;
       if (cameraLocked.sourceUrl) {
@@ -705,6 +744,8 @@ export async function mountFromGraphSource(
     clearParallaxMeshes();
     clearWorldMeshes();
     clearEnvironment();
+    // EB-07-03 — drop scene.fog so a remount doesn't inherit a stale band.
+    sceneRoot.scene.fog = null;
     for (const backdrop of hubBackdrops.values()) {
       disposeNode(backdrop);
     }
@@ -719,9 +760,23 @@ export async function mountFromGraphSource(
     }
   }
 
-  // EB-07-03 — stub; real impl in next commit (TDD red).
-  function setEnvironmentFog(_fog: CompiledEnvironmentFog | null): void {
-    void _fog;
+  // EB-07-03 / §7 SC-038 / INV-23 — install/clear scene-wide linear fog.
+  // Mutates an existing Fog object in place when present so a per-hub re-
+  // wire doesn't allocate every frame; `null` clears `scene.fog`.
+  function setEnvironmentFog(fog: CompiledEnvironmentFog | null): void {
+    if (fog == null) {
+      sceneRoot.scene.fog = null;
+      return;
+    }
+    const existing = sceneRoot.scene.fog;
+    if (existing && (existing as Fog).isFog) {
+      const f = existing as Fog;
+      f.color.setHex(fog.color);
+      f.near = fog.near;
+      f.far = fog.far;
+      return;
+    }
+    sceneRoot.scene.fog = new Fog(new Color(fog.color), fog.near, fog.far);
   }
 
   return {
