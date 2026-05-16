@@ -44,15 +44,15 @@ import {
 // ----- fixtures ---------------------------------------------------------
 
 function mkNode(
-  id: string,
+  nodeId: string,
   overrides: Partial<PrismNode> = {},
 ): PrismNode {
   // Minimal PrismNode shell; only the fields the tether-fire resolver reads
   // need to be meaningful. Cast through unknown to skip the full shape.
   return {
-    id,
-    hubIds: ['hub-a'],
-    elementType: 'generic',
+    nodeId,
+    parentHubId: 'hub-a',
+    subtype: 'generic',
     ...(overrides as object),
   } as unknown as PrismNode;
 }
