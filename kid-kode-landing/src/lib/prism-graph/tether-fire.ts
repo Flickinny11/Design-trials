@@ -24,6 +24,12 @@
 
 import type { PrismEdge, PrismKeyframe, PrismNode } from './types';
 import type { CinematicPrimitiveRef } from './cinematic-primitives';
+import type {
+  CoordinateSpace,
+  EXERCISED_TRANSFORM_PIPELINE,
+  TransformBridge,
+  TransformContext,
+} from './transforms';
 
 const TRIGGERS_EDGE_TYPE = 'triggers' as const;
 
@@ -132,6 +138,39 @@ export function fireTether(
     durationMs,
   };
   return { fires: [...state.fires, next] };
+}
+
+// ---------------------------------------------------------------------------
+// EB-09-04 — Cross-space tether resolution (SC-050, INV-22). Stub: real
+// implementation arrives after the failing test commit. Carries the same
+// public surface as the eventual implementation so the test compiles.
+// ---------------------------------------------------------------------------
+
+export interface CrossSpaceTetherFireResolvedTarget
+  extends TetherFireResolvedTarget {
+  // The coordinate space of the target's first declared keyframe, or
+  // 'hub-scene' when the target has no keyframes (the documented default
+  // for nodes that animate against their hub).
+  readonly targetKeyframeSpace: CoordinateSpace;
+  // The transform-pipeline bridge from `sourceSpace` to the target's
+  // keyframe space. `null` when the hop is unregistered (INV-22: callers
+  // surface the gap rather than collapse silently).
+  readonly crossSpaceBridge: TransformBridge | null;
+  // Audit token from `transforms.ts`. Presence proves the documented
+  // pipeline was the path that produced this resolution.
+  readonly exercisedPipeline: typeof EXERCISED_TRANSFORM_PIPELINE;
+}
+
+export function resolveCrossSpaceTetherFire(
+  _nodes: ReadonlyArray<PrismNode>,
+  _edges: ReadonlyArray<PrismEdge>,
+  _fire: TetherFireEvent,
+  _sourceSpace: CoordinateSpace,
+  _ctx: TransformContext,
+): CrossSpaceTetherFireResolvedTarget[] {
+  throw new Error(
+    'EB-09-04 stub: resolveCrossSpaceTetherFire not yet implemented',
+  );
 }
 
 // A fire is active during [startedAt, startedAt + durationMs]. The window is
