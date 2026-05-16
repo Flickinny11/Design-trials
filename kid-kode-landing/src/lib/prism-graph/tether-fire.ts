@@ -210,6 +210,55 @@ export function resolveCrossSpaceTetherFire(
   return out;
 }
 
+// ---------------------------------------------------------------------------
+// EB-09-05 — Physics/shader integration on tether fire (SC-051, INV-12).
+// Stubs only: signatures pinned so the failing-test commit compiles. The
+// implementation step replaces these with real logic.
+// ---------------------------------------------------------------------------
+
+import type { Object3D } from 'three';
+import type { CinematicPrimitiveName } from './cinematic-primitives';
+
+export interface TetherFirePrimitiveActivation {
+  readonly targetNodeId: string;
+  readonly edge: PrismEdge;
+  readonly primitive: CinematicPrimitiveRef;
+  readonly firedAt: number;
+}
+
+export interface TetherFirePrimitiveResult {
+  readonly timeline: unknown;
+  readonly cleanup: () => void;
+}
+
+export type TetherFirePrimitivesAPI = Record<
+  CinematicPrimitiveName,
+  (target: Object3D, params: unknown) => TetherFirePrimitiveResult
+>;
+
+export const SHADER_PRIMITIVES: ReadonlyArray<CinematicPrimitiveName> =
+  Object.freeze([] as CinematicPrimitiveName[]);
+
+export function resolveTetherFirePrimitiveActivations(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _resolved: TetherFireResolvedTarget,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _fire: TetherFireEvent,
+): TetherFirePrimitiveActivation[] {
+  throw new Error('EB-09-05: resolveTetherFirePrimitiveActivations not implemented');
+}
+
+export function applyTetherFirePrimitives(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _activations: ReadonlyArray<TetherFirePrimitiveActivation>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _primitivesAPI: TetherFirePrimitivesAPI,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _lookupObject3D: (nodeId: string) => Object3D | null,
+): TetherFirePrimitiveResult[] {
+  throw new Error('EB-09-05: applyTetherFirePrimitives not implemented');
+}
+
 // A fire is active during [startedAt, startedAt + durationMs]. The window is
 // inclusive at the boundaries; tests confirm "strictly past duration" is
 // inactive (now > startedAt + durationMs). progress is clamped to [0, 1].
