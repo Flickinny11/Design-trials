@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T00:12:08Z",
+  "updatedAt": "2026-05-16T00:51:46Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 33,
-    "lastProductiveCommit": "92aa9c855e7b3e609a744fa0c03e77ff3e3e476b"
+    "lastProductiveIteration": 34,
+    "lastProductiveCommit": "0403cda7fe341b60f223e9a4be9cf57190886796"
   },
   "phaseCaps": {
     "§1": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "§7": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -83,11 +83,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 33,
-    "commit": "92aa9c855e7b3e609a744fa0c03e77ff3e3e476b",
-    "verifiedAt": "2026-05-15T23:54:08Z",
+    "iteration": 34,
+    "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
+    "verifiedAt": "2026-05-16T00:51:46Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-15T23:54:08Z"
+    "recordedAt": "2026-05-16T00:51:46Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -355,6 +355,14 @@
       "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
       "verifiedAt": "2026-05-15T23:36:31Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-07/"
+    },
+    {
+      "iteration": 34,
+      "taskId": "EB-07-01",
+      "phase": 7,
+      "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
+      "verifiedAt": "2026-05-16T00:51:46Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-01/"
     }
   ],
   "tasks": [
@@ -1085,11 +1093,11 @@
       ],
       "haltCheck": "types.ts exports PrismHubBackgroundLayer with attachment ∈ {viewport-fixed, camera-locked, parallax, world, infinite-environment}; PrismHub.background?: PrismHubBackgroundLayer[]; layout.mockupUrl retained; tsc clean.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
+      "verifiedAt": "2026-05-16T00:51:46Z",
+      "notes": "spec-reviewer: No deviations found."
     },
     {
       "id": "EB-07-02",
