@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 45,
+  "currentIteration": 46,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-16T17:47:19Z",
+  "updatedAt": "2026-05-16T22:00:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -25,10 +25,10 @@
     "rendererMigrationActive": true
   },
   "convergence": {
-    "stagnantStreak": 0,
+    "stagnantStreak": 3,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 45,
-    "lastProductiveCommit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b"
+    "lastProductiveCommit": "31f2e3b6825ac37a5efc2cb2b603320aea8c7730"
   },
   "phaseCaps": {
     "§1": {
@@ -72,7 +72,7 @@
       "status": "active"
     },
     "§9": {
-      "used": 5,
+      "used": 9,
       "cap": 50,
       "status": "active"
     },
@@ -84,10 +84,10 @@
   },
   "checkpoint": {
     "iteration": 45,
-    "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
-    "verifiedAt": "2026-05-16T17:47:19Z",
+    "commit": "31f2e3b6825ac37a5efc2cb2b603320aea8c7730",
+    "verifiedAt": "2026-05-16T18:04:21Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T17:47:19Z"
+    "recordedAt": "2026-05-16T18:04:21Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1432,8 +1432,8 @@
       ],
       "haltCheck": "Tether between source in hub-scene and target in viewport-composition resolves correctly; transform pipeline (src/lib/prism-graph/transforms.ts) is the only path used; coordinate systems remain uncollapsed.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
