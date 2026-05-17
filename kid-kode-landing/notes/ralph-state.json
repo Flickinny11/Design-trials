@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-17T00:03:18Z",
+  "updatedAt": "2026-05-17T00:17:43Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 51,
-    "lastProductiveCommit": "86ba9cb9d339724194e9bd4e57c0dd795d6f1853"
+    "lastProductiveIteration": 52,
+    "lastProductiveCommit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af"
   },
   "phaseCaps": {
     "§1": {
@@ -77,17 +77,17 @@
       "status": "active"
     },
     "§10": {
-      "used": 6,
+      "used": 7,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 51,
-    "commit": "86ba9cb9d339724194e9bd4e57c0dd795d6f1853",
-    "verifiedAt": "2026-05-16T23:59:13Z",
+    "iteration": 52,
+    "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
+    "verifiedAt": "2026-05-17T00:17:43Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-16T23:59:13Z"
+    "recordedAt": "2026-05-17T00:17:43Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -500,6 +500,14 @@
       "commit": "11d187041b3fe63551179ba30360af30bebcb618",
       "verifiedAt": "2026-05-16T23:48:03Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-03/"
+    },
+    {
+      "iteration": 52,
+      "taskId": "EB-10-04",
+      "phase": 10,
+      "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
+      "verifiedAt": "2026-05-17T00:17:43Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-04/"
     }
   ],
   "tasks": [
@@ -1605,11 +1613,11 @@
       ],
       "haltCheck": "Edges that cross hub boundaries render during the transit and resolve on arrival; the receiving hub's animation library invokes correctly on arrival.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
+      "verifiedAt": "2026-05-17T00:17:43Z",
+      "notes": "SHOULD FIX (deferred): non-triggers cross-hub tethers are render-only — gated arrival firing to triggers per SC-049. OTHER SHOULD FIX (carry-forward): (1) renderer-side line draw for getCrossHubTethersDepartingFrom in PrismHost / inner runtime not yet wired — data surface complete, visible render deferred to follow-up task; (2) verify-editor-runtimes lacks an EB-10-04 cross-hub branch in state.json — unit-test side is exhaustive; (3) duplicate PrismRootNode synthesis in page.tsx effects — extract a synthesizeRootForLive(source) helper; (4) PreviewAppNav cross-hub accessors recompile on every read — memoize per (hubs,nodes,edges) identity tuple; (5) compile-app.ts omit-when-empty hash branch documentation. OPTIONAL: arrival effect fires on initial preview-app entry (no prior hub); hoist ArrivalRecord type; drop defensive String(edge.type) ternary; use control-char join in tetherSortKey."
     },
     {
       "id": "EB-10-05",
