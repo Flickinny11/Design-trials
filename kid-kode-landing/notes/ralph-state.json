@@ -16,7 +16,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-17T00:33:02.214Z",
+  "updatedAt": "2026-05-17T00:41:46.018Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -27,8 +27,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 52,
-    "lastProductiveCommit": "574175563186138643c4b45f235282d57feb2407"
+    "lastProductiveIteration": 53,
+    "lastProductiveCommit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7"
   },
   "phaseCaps": {
     "§1": {
@@ -77,17 +77,16 @@
       "status": "active"
     },
     "§10": {
-      "used": 8,
+      "used": 9,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 52,
-    "commit": "574175563186138643c4b45f235282d57feb2407",
-    "verifiedAt": "2026-05-17T00:30:00Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-17T00:30:00Z"
+    "iteration": 53,
+    "taskId": "EB-10-05",
+    "commit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7",
+    "verifiedAt": "2026-05-17T00:41:46.018Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -508,6 +507,14 @@
       "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
       "verifiedAt": "2026-05-17T00:17:43Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-04/"
+    },
+    {
+      "iteration": 53,
+      "taskId": "EB-10-05",
+      "phase": 10,
+      "commit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7",
+      "verifiedAt": "2026-05-17T00:41:46.018Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-05/"
     }
   ],
   "tasks": [
@@ -1635,11 +1642,11 @@
       ],
       "haltCheck": "CompiledAppView.world surfaces App_Name_World context at the top level; full-compile test computes sha256 of GraphSource before/after compileAppToPreview and confirms byte-identical; snapshot shows preview-app boot with world-context binding rendered.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7",
+      "verifiedAt": "2026-05-17T00:41:46.018Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): polling getter rebuilds full compile every 500ms (Zustand subscribe would be event-driven); verify-script sha256 bracket covers a fresh-getter pair but live fixture has no real PrismRootNode so the surface is the synthesized default; worldEchoMatches compares appNameWorldId only (deep stringify would be stronger); deepFreezeClone uses JSON round-trip — fine for current JSON-only schemas but loses Map/Set/Date if any future widening adds them; hash payload now includes the full compiledWorld so pre-EB-10-05 hashes shift even when world is empty. OPTIONAL: freeze-before-recurse in deepFreezeClone; shallow-compare guard in PreviewAppWorldBadge to avoid wasted renders; consolidate inline glass-style overlays."
     }
   ]
 }
