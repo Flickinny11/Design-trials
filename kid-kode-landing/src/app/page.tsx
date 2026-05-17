@@ -398,7 +398,15 @@ export default function Page() {
     };
 
     const arrivedAt = Date.now();
-    const records = arriving.map((t) => {
+    // SC-049 contract: the tether-fire surface only propagates `'triggers'`
+    // edges. Non-`triggers` cross-hub tethers (`data-flow`, `event-bubble`,
+    // `state-update`, …) carry render-only semantics for SC-056 — they exist
+    // on the data surface (so the transit-side `departingFrom` accessor can
+    // draw them) but they do not invoke the receiving hub's animation
+    // library on arrival. Filtering here avoids silently recording empty
+    // arrival records for those — the absence is the truthful signal.
+    const arrivingTriggers = arriving.filter((t) => t.type === 'triggers');
+    const records = arrivingTriggers.map((t) => {
       // Run the SC-049 propagation against the live (nodes, edges) using the
       // arriving edge's source node as the firing source. The receiving hub's
       // bound animations + cinematic primitives surface as the resolved
@@ -419,6 +427,7 @@ export default function Page() {
           target?.boundPrimitives.map((p) => p.name) ?? [],
       };
     });
+    if (records.length === 0) return;
 
     const arrivalsKey = '__PRISM_EDITOR_CROSS_HUB_ARRIVALS__';
     const w = window as unknown as {
