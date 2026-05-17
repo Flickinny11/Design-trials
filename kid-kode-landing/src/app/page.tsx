@@ -8,6 +8,11 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
 import { compileAppToPreview } from '@/lib/prism-graph/compile-app';
 import {
+  getCrossHubTethersArrivingAt,
+  getCrossHubTethersDepartingFrom,
+  type CompiledCrossHubTether,
+} from '@/lib/prism-graph/cross-hub-tethers';
+import {
   getNextHubId,
   getPrevHubId,
   resolveActiveHubId,
@@ -220,7 +225,9 @@ export default function Page() {
           validationRules: [],
           aiRoutingRules: [],
         } as unknown as PrismRootNode);
-      return compileAppToPreview(root, source.hubs, source.nodes);
+      // EB-10-04 / SC-056. Pass `edges` so the compiled view carries the
+      // cross-hub tether surface preview-app reads on every hub change.
+      return compileAppToPreview(root, source.hubs, source.nodes, source.edges);
     }
 
     function applyHash(): void {
@@ -249,12 +256,22 @@ export default function Page() {
     const onPopState = () => { applyHash(); };
     window.addEventListener('popstate', onPopState);
 
+    // EB-10-04 / SC-056. The PreviewAppNav surface gains two cross-hub
+    // tether helpers. `crossHubTethers` is the deterministic full set; the
+    // arriving/departing methods are the runtime's "render during transition"
+    // (departing — sweeps along the EB-10-03 camera transit) and "resolve on
+    // arrival" (arriving — feeds the SC-049 animation-library invocation)
+    // accessors. All three are getters/methods so they read the live compile
+    // — never a stale snapshot — even after a graph edit during preview-app.
     type PreviewAppNav = {
       activeHubId: string | null;
       hubIds: readonly string[];
       next(): string | null;
       prev(): string | null;
       goTo(hubId: string): string | null;
+      readonly crossHubTethers: readonly CompiledCrossHubTether[];
+      arrivingAt(hubId: string): readonly CompiledCrossHubTether[];
+      departingFrom(hubId: string): readonly CompiledCrossHubTether[];
     };
     (window as unknown as {
       __PRISM_EDITOR_PREVIEW_APP_NAV__?: PreviewAppNav;
@@ -295,6 +312,15 @@ export default function Page() {
         useGraphEditorStore.setState({ activeHubId: hubId });
         return hubId;
       },
+      get crossHubTethers() {
+        return compileLiveApp().crossHubTethers;
+      },
+      arrivingAt(hubId: string) {
+        return getCrossHubTethersArrivingAt(compileLiveApp(), hubId);
+      },
+      departingFrom(hubId: string) {
+        return getCrossHubTethersDepartingFrom(compileLiveApp(), hubId);
+      },
     };
 
     return () => {
@@ -317,6 +343,94 @@ export default function Page() {
     const desired = serializePreviewAppHash(activeHubId);
     if (window.location.hash === desired) return;
     window.history.pushState(null, '', desired);
+  }, [viewMode, activeHubId]);
+
+  // EB-10-04 / §10 SC-056. On every hub arrival in preview-app, fire the
+  // receiving hub's animation library for each cross-hub tether ending at
+  // the new active hub. Drives the SC-049 tether-fire path on the same
+  // (nodes, edges) the renderer mounted from, so the resolved targets are
+  // identical to what an in-hub fire from the source node would have
+  // propagated — the "receiving hub's animation library invokes correctly
+  // on arrival" haltCheck.
+  //
+  // INV-17: read-only against the source store. INV-20: only the existing
+  // tether-fire surfaces are touched; selection state is not mutated.
+  useEffect(() => {
+    if (viewMode !== 'preview-app') return;
+    if (typeof window === 'undefined') return;
+    if (!activeHubId) return;
+
+    const source = useGraphSourceStore.getState();
+    const root: PrismRootNode =
+      source.rootNodes[0] ??
+      ({
+        appNameWorldId: 'app-name-world-default',
+        spec: {},
+        designSpec: {},
+        buildPlan: {},
+        memoryLog: [],
+        hubRegistry: source.hubs.map((h) => ({ hubId: h.hubId })),
+        nodeRegistry: [],
+        globalDependencies: [],
+        validationRules: [],
+        aiRoutingRules: [],
+      } as unknown as PrismRootNode);
+    const view = compileAppToPreview(
+      root,
+      source.hubs,
+      source.nodes,
+      source.edges,
+    );
+    const arriving = getCrossHubTethersArrivingAt(view, activeHubId);
+    if (arriving.length === 0) return;
+
+    type ArrivalRecord = {
+      arrivedHubId: string;
+      arrivedAt: number;
+      tethers: Array<{
+        from: { hubId: string; nodeId: string };
+        to: { hubId: string; nodeId: string };
+        type: string;
+        event?: string;
+        boundKeyframeCount: number;
+        boundPrimitiveNames: string[];
+      }>;
+    };
+
+    const arrivedAt = Date.now();
+    const records = arriving.map((t) => {
+      // Run the SC-049 propagation against the live (nodes, edges) using the
+      // arriving edge's source node as the firing source. The receiving hub's
+      // bound animations + cinematic primitives surface as the resolved
+      // targets — that is the "animation library invocation" surface.
+      const resolved = resolveTetherFireTargets(source.nodes, source.edges, {
+        sourceNodeId: t.from.nodeId,
+        event: t.event,
+        firedAt: arrivedAt,
+      });
+      const target = resolved.find((r) => r.targetNodeId === t.to.nodeId);
+      return {
+        from: { hubId: t.from.hubId, nodeId: t.from.nodeId },
+        to: { hubId: t.to.hubId, nodeId: t.to.nodeId },
+        type: t.type,
+        ...(t.event !== undefined ? { event: t.event } : {}),
+        boundKeyframeCount: target?.boundKeyframes.length ?? 0,
+        boundPrimitiveNames:
+          target?.boundPrimitives.map((p) => p.name) ?? [],
+      };
+    });
+
+    const arrivalsKey = '__PRISM_EDITOR_CROSS_HUB_ARRIVALS__';
+    const w = window as unknown as {
+      __PRISM_EDITOR_CROSS_HUB_ARRIVALS__?: ArrivalRecord[];
+    };
+    const prior = Array.isArray(w[arrivalsKey]) ? w[arrivalsKey]! : [];
+    const record: ArrivalRecord = {
+      arrivedHubId: activeHubId,
+      arrivedAt,
+      tethers: records,
+    };
+    w[arrivalsKey] = [...prior, record];
   }, [viewMode, activeHubId]);
 
   useEffect(() => {

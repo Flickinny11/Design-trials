@@ -14,8 +14,12 @@
 // world-context shape exposed here is additive-only per INV-18.
 
 import { compileHubToPreview, type CompiledHubView } from './compile-hub';
-import type { PrismHub, PrismNode } from './types.ts';
+import type { PrismEdge, PrismHub, PrismNode } from './types.ts';
 import type { PrismRootNode } from './root-node.ts';
+import {
+  deriveCrossHubTethers,
+  type CompiledCrossHubTether,
+} from './cross-hub-tethers';
 
 /**
  * Compiled top-level view of an entire app — many hubs aggregated through
@@ -37,8 +41,16 @@ export interface CompiledAppView {
   /** Per-hub compiled views, stably ordered by `hubId` so the aggregator
    *  hash is deterministic regardless of source-array order. */
   readonly hubs: readonly CompiledHubView[];
+  /** EB-10-04 / SC-056. Cross-hub edges (from.parentHubId !==
+   *  to.parentHubId), in deterministic order. Always present — empty when no
+   *  edges were supplied or none cross hub boundaries — so the runtime never
+   *  has to nil-check before iterating. Intra-hub edges are not part of the
+   *  AppView surface (they belong to per-hub compile / tether-fire). */
+  readonly crossHubTethers: readonly CompiledCrossHubTether[];
   /** Stable hash of the canonical aggregator payload — identical
-   *  (world, hubs, nodes) inputs produce identical hashes. */
+   *  (world, hubs, nodes, edges) inputs produce identical hashes.
+   *  Empty `edges` (or the legacy 3-arg call) yields the same hash a
+   *  pre-EB-10-04 aggregator would have produced for (world, hubs, nodes). */
   readonly hash: string;
 }
 
@@ -77,12 +89,19 @@ function fnv1a(input: string): string {
  * Pure + deterministic: input order is normalized by hubId, per-hub
  * compiles use the existing Phase 6 entrypoint, and the aggregator hash
  * is computed over the per-hub hashes plus world identity. Never mutates
- * `world`, `hubs`, or `nodes`.
+ * `world`, `hubs`, `nodes`, or `edges`.
+ *
+ * `edges` is optional (INV-18) — pre-EB-10-04 callers (EB-10-01 / EB-10-02
+ * tests + src/app/page.tsx) keep working as 3-arg invocations. When omitted
+ * or empty, the result's `crossHubTethers` is the frozen empty array and
+ * `hash` matches the pre-EB-10-04 aggregator hash for the same (world,
+ * hubs, nodes), so 3-arg call sites observe no behavioral drift.
  */
 export function compileAppToPreview(
   world: PrismRootNode,
   hubs: readonly PrismHub[],
   nodes: readonly PrismNode[],
+  edges: readonly PrismEdge[] = [],
 ): CompiledAppView {
   // Group source nodes by parentHubId in one pass. Buckets are local to
   // this function; the source `nodes` array is never reordered.
@@ -110,21 +129,38 @@ export function compileAppToPreview(
     }),
   );
 
-  // Hash over per-hub hashes + world identity. Per-hub hashes are
-  // already canonical (SC-029), so this keeps the aggregator hash cheap
-  // and composable: one hub changes → exactly one component of the
-  // payload changes → aggregator hash changes.
-  const payload = {
+  // EB-10-04 / SC-056. Pure cross-hub edge identification. Returns a
+  // deeply-frozen, deterministically-ordered array; intra-hub edges are
+  // dropped here so they never enter the aggregator hash (and so the
+  // per-hub compile remains the sole owner of intra-hub edge effects).
+  const crossHubTethers = deriveCrossHubTethers(hubs, nodes, edges);
+
+  // Hash over per-hub hashes + world identity + cross-hub tethers. Per-hub
+  // hashes are already canonical (SC-029); cross-hub tethers are already in
+  // deterministic order (deriveCrossHubTethers sorts before freezing). When
+  // `crossHubTethers` is empty the array serializes to "[]" — and the
+  // pre-EB-10-04 hash never carried a `crossHubTethers` key at all, so to
+  // keep 3-arg callers' hashes byte-identical we OMIT the key when empty.
+  const payload: Record<string, unknown> = {
     schemaVersion: 1 as const,
     appNameWorldId: world.appNameWorldId,
     hubHashes: compiledHubs.map((h) => h.hash),
   };
+  if (crossHubTethers.length > 0) {
+    payload.crossHubTethers = crossHubTethers.map((t) => ({
+      from: { hubId: t.from.hubId, nodeId: t.from.nodeId },
+      to: { hubId: t.to.hubId, nodeId: t.to.nodeId },
+      type: t.type,
+      ...(t.event !== undefined ? { event: t.event } : {}),
+    }));
+  }
   const hash = fnv1a(canonicalStringify(payload));
 
   return Object.freeze({
     schemaVersion: 1 as const,
     appNameWorldId: world.appNameWorldId,
     hubs: compiledHubs,
+    crossHubTethers,
     hash,
   });
 }
