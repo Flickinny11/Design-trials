@@ -10,13 +10,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 52,
+  "currentIteration": 53,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-14T20:25:00Z",
-  "updatedAt": "2026-05-17T00:17:43Z",
+  "updatedAt": "2026-05-17T00:33:02.214Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -28,7 +28,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 52,
-    "lastProductiveCommit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af"
+    "lastProductiveCommit": "574175563186138643c4b45f235282d57feb2407"
   },
   "phaseCaps": {
     "§1": {
@@ -77,17 +77,17 @@
       "status": "active"
     },
     "§10": {
-      "used": 7,
+      "used": 8,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
     "iteration": 52,
-    "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
-    "verifiedAt": "2026-05-17T00:17:43Z",
+    "commit": "574175563186138643c4b45f235282d57feb2407",
+    "verifiedAt": "2026-05-17T00:30:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-17T00:17:43Z"
+    "recordedAt": "2026-05-17T00:30:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -1635,8 +1635,8 @@
       ],
       "haltCheck": "CompiledAppView.world surfaces App_Name_World context at the top level; full-compile test computes sha256 of GraphSource before/after compileAppToPreview and confirms byte-identical; snapshot shows preview-app boot with world-context binding rendered.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
