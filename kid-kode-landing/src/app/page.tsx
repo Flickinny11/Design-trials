@@ -6,7 +6,10 @@ import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismH
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
-import { compileAppToPreview } from '@/lib/prism-graph/compile-app';
+import {
+  compileAppToPreview,
+  type CompiledWorldContext,
+} from '@/lib/prism-graph/compile-app';
 import {
   getCrossHubTethersArrivingAt,
   getCrossHubTethersDepartingFrom,
@@ -272,6 +275,10 @@ export default function Page() {
       readonly crossHubTethers: readonly CompiledCrossHubTether[];
       arrivingAt(hubId: string): readonly CompiledCrossHubTether[];
       departingFrom(hubId: string): readonly CompiledCrossHubTether[];
+      // EB-10-05 / SC-057. Live read of the CompiledAppView.world surface
+      // (App_Name_World context) so the verify-editor-runtimes snapshot can
+      // capture the world-context binding alongside the rendered preview-app.
+      readonly world: CompiledWorldContext;
     };
     (window as unknown as {
       __PRISM_EDITOR_PREVIEW_APP_NAV__?: PreviewAppNav;
@@ -320,6 +327,9 @@ export default function Page() {
       },
       departingFrom(hubId: string) {
         return getCrossHubTethersDepartingFrom(compileLiveApp(), hubId);
+      },
+      get world() {
+        return compileLiveApp().world;
       },
     };
 
@@ -570,6 +580,13 @@ export default function Page() {
               via the dev hook so browser back/forward walks the hub trail.
               The hash route (`#hub=<hubId>`) drives the active hub regardless
               of how the user navigates (button, popstate, direct URL). */}
+          {/* EB-10-05 / §6 SC-057 — App_Name_World context binding rendered
+              in preview-app. Reads CompiledAppView.world via the dev hook
+              installed by the routing effect above so the displayed name
+              tracks the live compile (no stale snapshot). Visible chrome so
+              the verify-editor-runtimes inner.png captures the binding. */}
+          {isPreviewApp && <PreviewAppWorldBadge />}
+
           {isPreviewApp && (
             <div
               data-component="preview-app-nav"
@@ -676,5 +693,63 @@ export default function Page() {
       <SearchPalette />
       <AddNodeDialog />
     </main>
+  );
+}
+
+// EB-10-05 / §6 SC-057. Visible preview-app chrome that renders the
+// App_Name_World context from the live CompiledAppView surface. Polls the
+// `__PRISM_EDITOR_PREVIEW_APP_NAV__.world` getter installed by the routing
+// effect — pull-based so a graph edit (which re-runs compileAppToPreview
+// inside the getter) is reflected without an explicit subscription. The
+// badge mounts only inside preview-app (parent gate is `isPreviewApp`).
+function PreviewAppWorldBadge() {
+  const [worldLabel, setWorldLabel] = useState<{
+    appNameWorldId: string;
+    name: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    function read() {
+      const nav = (window as unknown as {
+        __PRISM_EDITOR_PREVIEW_APP_NAV__?: {
+          world?: CompiledWorldContext;
+        };
+      }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+      const w = nav?.world;
+      if (!w) {
+        setWorldLabel(null);
+        return;
+      }
+      const specName =
+        typeof w.spec?.name === 'string' ? (w.spec.name as string) : null;
+      setWorldLabel({ appNameWorldId: w.appNameWorldId, name: specName });
+    }
+    read();
+    const handle = window.setInterval(read, 500);
+    return () => window.clearInterval(handle);
+  }, []);
+
+  if (!worldLabel) return null;
+
+  return (
+    <div
+      data-component="preview-app-world-badge"
+      data-app-name-world-id={worldLabel.appNameWorldId}
+      className="absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10"
+      style={{
+        background: 'rgba(8,10,26,0.78)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
+      }}
+    >
+      <span className="text-[9px] font-mono tracking-widest text-white/45 uppercase">
+        World
+      </span>
+      <span className="text-[11px] font-mono text-white/85">
+        {worldLabel.name ?? worldLabel.appNameWorldId}
+      </span>
+    </div>
   );
 }

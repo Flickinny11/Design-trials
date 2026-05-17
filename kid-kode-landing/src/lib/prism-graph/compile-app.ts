@@ -15,11 +15,45 @@
 
 import { compileHubToPreview, type CompiledHubView } from './compile-hub';
 import type { PrismEdge, PrismHub, PrismNode } from './types.ts';
-import type { PrismRootNode } from './root-node.ts';
+import type {
+  AiRoutingRule,
+  AppSpec,
+  BuildPlan,
+  CapabilityRef,
+  DesignSpec,
+  GlobalDependency,
+  HubRegistryEntry,
+  MemoryLogEntry,
+  NodeRegistryEntry,
+  PrismRootNode,
+  ValidationRule,
+} from './root-node.ts';
 import {
   deriveCrossHubTethers,
   type CompiledCrossHubTether,
 } from './cross-hub-tethers';
+
+/**
+ * EB-10-05 / SC-057 — App_Name_World context at the CompiledAppView top
+ * level for app-wide state simulation. Deeply readonly snapshot of the D1
+ * fields a downstream consumer reads when simulating cross-hub state.
+ * `appNameWorldId` mirrors the legacy top-level field (preserved per
+ * INV-18). Per RA-01, every field is real graph data — not an external ref —
+ * so the snapshot is the authoritative app-wide-state surface, not a pointer.
+ */
+export interface CompiledWorldContext {
+  readonly appNameWorldId: string;
+  readonly spec: Readonly<AppSpec>;
+  readonly designSpec: Readonly<DesignSpec>;
+  readonly buildPlan: Readonly<BuildPlan>;
+  readonly memoryLog: readonly Readonly<MemoryLogEntry>[];
+  readonly hubRegistry: readonly Readonly<HubRegistryEntry>[];
+  readonly nodeRegistry: readonly Readonly<NodeRegistryEntry>[];
+  readonly globalDependencies: readonly Readonly<GlobalDependency>[];
+  readonly validationRules: readonly Readonly<ValidationRule>[];
+  readonly aiRoutingRules: readonly Readonly<AiRoutingRule>[];
+  readonly capabilityRefs: readonly Readonly<CapabilityRef>[];
+}
 
 /**
  * Compiled top-level view of an entire app — many hubs aggregated through
@@ -38,6 +72,11 @@ export interface CompiledAppView {
    *  navigation, app-wide state simulation, and cross-hub queries can read
    *  the world context without re-traversing per-hub `world` refs. */
   readonly appNameWorldId: string;
+  /** EB-10-05 / SC-057. Full App_Name_World context snapshot at the
+   *  CompiledAppView top level. Drives app-wide state simulation without
+   *  re-reading the source PrismRootNode; deeply readonly so consumers can
+   *  share the reference without defensive copies. */
+  readonly world: CompiledWorldContext;
   /** Per-hub compiled views, stably ordered by `hubId` so the aggregator
    *  hash is deterministic regardless of source-array order. */
   readonly hubs: readonly CompiledHubView[];
@@ -97,6 +136,44 @@ function fnv1a(input: string): string {
  * `hash` matches the pre-EB-10-04 aggregator hash for the same (world,
  * hubs, nodes), so 3-arg call sites observe no behavioral drift.
  */
+// Deep-freeze a JSON-clone of an unknown value. Used to snapshot world
+// fields into CompiledWorldContext so post-compile mutation of the source
+// PrismRootNode cannot leak into the compiled surface (SC-058 / INV-17).
+// Pure — no I/O, no DOM, no React/Three.
+function deepFreezeClone<T>(value: T): T {
+  const cloned = JSON.parse(JSON.stringify(value)) as T;
+  const visit = (v: unknown): void => {
+    if (v && typeof v === 'object') {
+      Object.freeze(v);
+      for (const k of Object.keys(v as Record<string, unknown>)) {
+        visit((v as Record<string, unknown>)[k]);
+      }
+    }
+  };
+  visit(cloned);
+  return cloned;
+}
+
+// SC-057. Compile the App_Name_World context snapshot. Every D1 field on
+// PrismRootNode is JSON-cloned + deep-frozen so the surface is pure data
+// the consumer can share by reference. capabilityRefs is optional on the
+// source (loosened in EB-02-06) — default to [] in the compiled snapshot.
+function compileWorldContext(world: PrismRootNode): CompiledWorldContext {
+  return Object.freeze({
+    appNameWorldId: world.appNameWorldId,
+    spec: deepFreezeClone(world.spec),
+    designSpec: deepFreezeClone(world.designSpec),
+    buildPlan: deepFreezeClone(world.buildPlan),
+    memoryLog: deepFreezeClone(world.memoryLog ?? []),
+    hubRegistry: deepFreezeClone(world.hubRegistry ?? []),
+    nodeRegistry: deepFreezeClone(world.nodeRegistry ?? []),
+    globalDependencies: deepFreezeClone(world.globalDependencies ?? []),
+    validationRules: deepFreezeClone(world.validationRules ?? []),
+    aiRoutingRules: deepFreezeClone(world.aiRoutingRules ?? []),
+    capabilityRefs: deepFreezeClone(world.capabilityRefs ?? []),
+  }) as CompiledWorldContext;
+}
+
 export function compileAppToPreview(
   world: PrismRootNode,
   hubs: readonly PrismHub[],
@@ -135,16 +212,25 @@ export function compileAppToPreview(
   // per-hub compile remains the sole owner of intra-hub edge effects).
   const crossHubTethers = deriveCrossHubTethers(hubs, nodes, edges);
 
-  // Hash over per-hub hashes + world identity + cross-hub tethers. Per-hub
-  // hashes are already canonical (SC-029); cross-hub tethers are already in
-  // deterministic order (deriveCrossHubTethers sorts before freezing). When
-  // `crossHubTethers` is empty the array serializes to "[]" — and the
-  // pre-EB-10-04 hash never carried a `crossHubTethers` key at all, so to
-  // keep 3-arg callers' hashes byte-identical we OMIT the key when empty.
+  // EB-10-05 / SC-057. Compile the App_Name_World context snapshot.
+  const compiledWorld = compileWorldContext(world);
+
+  // Hash over per-hub hashes + world identity + cross-hub tethers + the
+  // world-context payload. Per-hub hashes are already canonical (SC-029);
+  // cross-hub tethers are already in deterministic order
+  // (deriveCrossHubTethers sorts before freezing); the world snapshot is
+  // canonicalStringified so key order is stable across runs. EB-10-05
+  // promotes the world surface from "id-only" to "full D1 context" — the
+  // hash now changes when world fields change (verified by the world-hash
+  // test), so callers comparing across edits see the world surface as part
+  // of the aggregator identity. `crossHubTethers` is still OMITTED from
+  // the payload when empty so the pre-EB-10-04 (legacy 3-arg) callers
+  // observe no drift on that axis; the world key is always present.
   const payload: Record<string, unknown> = {
     schemaVersion: 1 as const,
     appNameWorldId: world.appNameWorldId,
     hubHashes: compiledHubs.map((h) => h.hash),
+    world: compiledWorld,
   };
   if (crossHubTethers.length > 0) {
     payload.crossHubTethers = crossHubTethers.map((t) => ({
@@ -159,6 +245,7 @@ export function compileAppToPreview(
   return Object.freeze({
     schemaVersion: 1 as const,
     appNameWorldId: world.appNameWorldId,
+    world: compiledWorld,
     hubs: compiledHubs,
     crossHubTethers,
     hash,

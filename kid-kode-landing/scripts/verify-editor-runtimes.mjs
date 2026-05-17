@@ -372,6 +372,104 @@ async function main() {
       await page.screenshot({ path: innerAppPng, fullPage: false });
     }
 
+    // === EB-10-05 — App_Name_World context + full-compile immutability ==========
+    // SC-057 demands that App_Name_World context surface at the
+    // CompiledAppView top level. SC-058 demands a byte-identical graph
+    // snapshot before/after compileAppToPreview. This block flips to
+    // preview-app, reads the live `__PRISM_EDITOR_PREVIEW_APP_NAV__.world`
+    // binding (the SC-057 surface), then computes sha256 of the live
+    // GraphSource before + after re-reading the world hook (which re-runs
+    // compileAppToPreview internally). The world badge
+    // (`data-component="preview-app-world-badge"`) is rendered into the
+    // editor chrome by EB-10-05 / src/app/page.tsx so inner.png captures it.
+    let previewAppWorld = null;
+    if (TASK_ID === 'EB-10-05') {
+      await page.evaluate(() => {
+        const setter = (window).__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') setter('preview-app');
+      });
+      await page.waitForTimeout(1500);
+
+      previewAppWorld = await page.evaluate(async () => {
+        async function sha256(input) {
+          const enc = new TextEncoder().encode(input);
+          const buf = await crypto.subtle.digest('SHA-256', enc);
+          return Array.from(new Uint8Array(buf))
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('');
+        }
+        function canonical(value) {
+          if (value === null || typeof value !== 'object') return JSON.stringify(value);
+          if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
+          const keys = Object.keys(value).sort();
+          return `{${keys.map((k) => `${JSON.stringify(k)}:${canonical(value[k])}`).join(',')}}`;
+        }
+        const nav = (window).__PRISM_EDITOR_PREVIEW_APP_NAV__;
+        if (!nav) return { error: 'nav-hook-not-installed' };
+        const stores = (window).__PRISM_DEBUG_STORES__;
+        if (!stores?.graphSource) return { error: 'graph-source-store-not-exposed' };
+        const src = stores.graphSource.getState();
+        const graph = {
+          hubs: src.hubs ?? [],
+          nodes: src.nodes ?? [],
+          edges: src.edges ?? [],
+          rootNodes: src.rootNodes ?? [],
+        };
+        const beforeHash = await sha256(canonical(graph));
+        const world = nav.world ?? null;
+        const worldEcho = nav.world ?? null;
+        const afterHash = await sha256(canonical(graph));
+        const badge = document.querySelector('[data-component="preview-app-world-badge"]');
+        return {
+          beforeHash,
+          afterHash,
+          byteIdentical: beforeHash === afterHash,
+          world,
+          worldEchoMatches: !!world
+            && !!worldEcho
+            && world.appNameWorldId === worldEcho.appNameWorldId,
+          badgeRendered: !!badge,
+          badgeAppNameWorldId: badge?.getAttribute('data-app-name-world-id') ?? null,
+        };
+      }).catch((err) => ({ error: String(err && err.message ? err.message : err) }));
+
+      const sc057Ok = !!(previewAppWorld
+        && !previewAppWorld.error
+        && previewAppWorld.world
+        && typeof previewAppWorld.world.appNameWorldId === 'string'
+        && previewAppWorld.world.spec
+        && previewAppWorld.worldEchoMatches);
+      check('preview-app.world-context-surface',
+        'SC-057 — CompiledAppView.world surfaces App_Name_World context (stable across re-reads)',
+        sc057Ok,
+        sc057Ok
+          ? `${previewAppWorld.world.appNameWorldId}`
+          : previewAppWorld?.error || 'world surface missing');
+
+      const sc058Ok = !!(previewAppWorld && previewAppWorld.byteIdentical === true);
+      check('preview-app.full-compile-immutability',
+        'SC-058 — sha256(GraphSource) is byte-identical before and after compileAppToPreview',
+        sc058Ok,
+        sc058Ok
+          ? `${previewAppWorld.beforeHash.slice(0, 12)}…`
+          : `before=${previewAppWorld?.beforeHash?.slice(0,12)} after=${previewAppWorld?.afterHash?.slice(0,12)}`);
+
+      const badgeOk = !!(previewAppWorld
+        && previewAppWorld.badgeRendered
+        && previewAppWorld.badgeAppNameWorldId
+        && previewAppWorld.world
+        && previewAppWorld.badgeAppNameWorldId === previewAppWorld.world.appNameWorldId);
+      check('preview-app.world-badge-rendered',
+        'world-context binding is rendered (preview-app overlay shows appNameWorldId)',
+        badgeOk,
+        badgeOk
+          ? previewAppWorld.badgeAppNameWorldId
+          : `badge=${previewAppWorld?.badgeRendered} attr=${previewAppWorld?.badgeAppNameWorldId}`);
+
+      const innerAppPng = join(snapDir, 'inner.png');
+      await page.screenshot({ path: innerAppPng, fullPage: false });
+    }
+
     // === EB-09-06 — Tether-fire propagation capture ==============================
     // SC-052 demands that the snapshot prove tether-fire propagation. The
     // editor-shell installs `window.__PRISM_EDITOR_FIRE_TETHER__` (see
@@ -419,6 +517,7 @@ async function main() {
       ...(tetherFireEvent ? { tetherFireEvent } : {}),
       ...(previewAppNav ? { previewAppNav } : {}),
       ...(hubTransit ? { hubTransit } : {}),
+      ...(previewAppWorld ? { previewAppWorld } : {}),
       summary: {
         outerScreenshot: 'outer.png',
         innerScreenshot: 'inner.png',
