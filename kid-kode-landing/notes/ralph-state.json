@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T20:55:00Z",
+  "updatedAt": "2026-05-18T21:25:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 5,
-    "lastProductiveCommit": "2844f8e593380a86b7dcee26698211fe3f114bd9"
+    "lastProductiveIteration": 6,
+    "lastProductiveCommit": "90a4b2464b39f7be2adc5b3e3bf49037851c0d38"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§R2-B": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 5,
-    "commit": "2844f8e593380a86b7dcee26698211fe3f114bd9",
-    "verifiedAt": "2026-05-18T20:42:54Z",
+    "iteration": 6,
+    "commit": "90a4b2464b39f7be2adc5b3e3bf49037851c0d38",
+    "verifiedAt": "2026-05-18T21:25:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T20:42:54Z"
+    "recordedAt": "2026-05-18T21:25:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -121,6 +121,14 @@
       "commit": "b76393b54d33fb613d9bcba389f537fd5408b901",
       "verifiedAt": "2026-05-18T20:18:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-02/"
+    },
+    {
+      "iteration": 6,
+      "taskId": "EBR2-B-03",
+      "phase": "§R2-B",
+      "commit": "90a4b2464b39f7be2adc5b3e3bf49037851c0d38",
+      "verifiedAt": "2026-05-18T21:25:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-03/"
     }
   ],
   "tasks": [
@@ -263,11 +271,11 @@
       ],
       "haltCheck": "PrismHost has a node-layout useEffect that walks CompiledHubView.nodes[], resolves anchors via resolveAnchorToScenePosition, calls liveResult.updateNodeTransform(nodeId, position). Visible flag respected (hidden nodes skipped or unmounted). Source graph untouched (INV-17 preserved).",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "90a4b2464b39f7be2adc5b3e3bf49037851c0d38",
+      "verifiedAt": "2026-05-18T21:25:00Z",
+      "notes": "PrismHost gains a second useEffect (mirrors camera-rail effect shape) gated on status==='ready' && viewMode==='preview-app' && compiledHubView!=null. The loop walks compiledHubView.nodes, skips entries with visible===false (SC-066 haltCheck explicitly permits 'skipped or unmounted'), calls resolveAnchorToScenePosition(entry.anchor, hub) per visible entry, composes a full ScenePosition preserving rotation/scale from PrismNode.scenePosition via a sourceById Map, and dispatches liveResult.updateNodeTransform(entry.nodeId, next). Dep array: [viewMode, activeHubId, status, compiledHubView]. Imports added: resolveAnchorToScenePosition, ScenePosition, SCENE_POSITION_DEFAULT. INV-17 preserved — no writes to PrismNode.scenePosition / editorTransform / canvasTransform / hub.layout; updateNodeTransform writes only to the mounted THREE.Object3D via applyScenePosition (mount-graph.ts:483-487). Failing test 6aeae7f committed before impl 90a4b24 (TDD ordering preserved; test file untouched during impl). All 8 EBR2-B-03 tests pass; regression suites (EBR2-A-02 7/7, EBR2-B-01 21/21, EBR2-B-02 12/12) pass. tsc clean; build clean; verify-editor-runtimes 7/7 PASS with 0 console errors and preview-app mount confirmed. KripVerify-local: kv_dev_server_status ready, kv_navigate IPC-timed-out at 10s (consistent with EBR2-A-02/A-03/B-02 notes) — fell back to verify-editor-runtimes' Playwright surface per the documented pattern; kripverify.{png,json} captured. spec-reviewer: 0 MUST FIX (No deviations found.), 3 SHOULD FIX (1: spec's stricter 'do not mount' for hidden entries — current impl skips anchor write but leaves source-scene-position mount visible; haltCheck permits 'skipped'; promote to obj.visible=false in a follow-up; 2: getState() inside effect is untracked — relies on compiledHubView re-memo for re-runs; rotation/scale changes propagate via the upstream sourceNodes-keyed memo so currently fine; 3: dead falsy guard on compiledHubView.hubId in the fallback cascade — strongly-typed required field, drop guard once EBR2-B-04 makes prop mandatory), 3 OPTIONAL (memoize sourceById Map upstream; collapse the duplicated hub-resolution cascade that also lives in the camera-rail effect; spread SCENE_POSITION_DEFAULT instead of nine ?? fallbacks). All SHOULD/OPTIONAL deferred — task contract satisfied; the spec's stricter 'do not mount' clean-up is a natural fit for EBR2-B-04 (which proves preview-app assembly end-to-end and will make the prop mandatory)."
     },
     {
       "id": "EBR2-B-04",
