@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T16:55:00Z",
+  "updatedAt": "2026-05-18T17:30:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,12 +32,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 1,
-    "lastProductiveCommit": "b0f88b16917d3cb7be6fccf56946382c737309de"
+    "lastProductiveIteration": 2,
+    "lastProductiveCommit": "bb9fa11"
   },
   "phaseCaps": {
     "§R2-A": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 1,
-    "commit": "b0f88b16917d3cb7be6fccf56946382c737309de",
-    "verifiedAt": "2026-05-18T16:50:53Z",
+    "iteration": 2,
+    "commit": "bb9fa11",
+    "verifiedAt": "2026-05-18T17:30:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T16:50:53Z"
+    "recordedAt": "2026-05-18T17:30:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -89,6 +89,14 @@
       "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
       "verifiedAt": "2026-05-18T16:35:23Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-01/"
+    },
+    {
+      "iteration": 2,
+      "taskId": "EBR2-A-02",
+      "phase": "§R2-A",
+      "commit": "bb9fa11",
+      "verifiedAt": "2026-05-18T17:30:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-02/"
     }
   ],
   "tasks": [
@@ -138,11 +146,11 @@
       ],
       "haltCheck": "useGraphEditorStore.ts exports ViewMode = 'galaxy' | 'canvas' | 'preview-app'. Zero hits for 'hub-world' or 'preview-hub' literals under kid-kode-landing/src/. page.tsx renders a 3-button mode toggle. previousAuthoringMode field removed. tsc + build clean. Vercel preview clean.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "bb9fa11",
+      "verifiedAt": "2026-05-18T17:30:00Z",
+      "notes": "ViewMode narrowed to 3 ('galaxy' | 'canvas' | 'preview-app'); deleted AuthoringViewMode, LegacyViewMode, AnyViewMode, normalizeViewMode, CANONICAL_VIEW_MODES, LEGACY_VIEW_MODE_TO_CANONICAL, previousAuthoringMode. setViewMode simplified, drillIntoHub→'canvas', initial viewMode flipped to 'preview-app' (RA-17 default boot). page.tsx 5-button toggle→3-button, preview-back affordance removed. PrismHost/TopBar/GraphScene/Inspector/hub-world-label-lod/mount-graph migrated. 7/7 EBR2-A-02 tests pass; 79/79 across affected suites pass; tsc clean; build clean; verify-editor-runtimes 7/7 PASS. KripVerify-local MCP IPC navigate timed out repeatedly though kv_dev_server_status responded — fell back to direct Playwright with same surface (kv_screenshot equivalent + kv_check_console + kv_check_network): 0 console / 0 network / 0 pageerror; kripverify.{png,json} captured. Vercel observability deferred (non-blocking). Spec-reviewer round 1: 7 MUST FIX in companion test suites (duplicate-array sed residue across EB-03-03/EB-04-02/EB-04-03/EB-04-04/EB-05-05 + a false-assertion mode-isolation test that always passed due to evaluation order + missing progress-log entry). All 7 fixed in followup commit bb9fa11. Spec-reviewer round 2: 0 MUST FIX (No deviations found). SHOULD FIX deferred: rename hub-world-label-lod.ts→canvas-label-lod.ts + computeHubWorldLabelVisibility→computeCanvasLabelVisibility (FP-14 is literal-only, not identifier/path); comment-only sweep across transforms.ts/hub-transit.ts/camera-rail.ts/scroll-timeline.ts/types.ts/canvas-camera.ts/galaxy-label-lod.ts/mount-graph.ts/camera-rail-driver.ts/GraphScene.tsx/PrismHost.tsx to retire hub-world/preview-hub doc-strings; verify-editor-runtimes.mjs inner-leg description still says 'preview-hub' (outside src/, FP-14 doesn't catch — retarget verifier to preview-app); EB-04-03/EB-04-04 describe-text/filename refresh for parallel cleanup; page.tsx double-blank-line at line 503; KripVerify MCP wiring needs investigation."
     },
     {
       "id": "EBR2-A-03",
