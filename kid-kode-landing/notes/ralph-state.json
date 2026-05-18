@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 3,
+  "currentIteration": 4,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T18:37:35Z",
+  "updatedAt": "2026-05-18T19:00:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,55 +33,51 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 3,
-    "lastProductiveCommit": "3c7d2505139d2305e576367586323d9ae624fed7"
+    "lastProductiveCommit": "a4de051fad2255aa56217e2a05993336fd594332"
   },
   "phaseCaps": {
-    "\u00a7R2-A": {
+    "§R2-A": {
       "used": 3,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-B": {
+    "§R2-B": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-C": {
+    "§R2-C": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-D": {
+    "§R2-D": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-E": {
+    "§R2-E": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-F": {
+    "§R2-F": {
       "used": 0,
       "cap": 50,
       "status": "active"
     },
-    "\u00a7R2-G": {
+    "§R2-G": {
       "used": 0,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 2,
-    "commit": "1a28d6b40999450807328d34ffc036de79fc2e09",
-    "verifiedAt": "2026-05-18T17:49:20Z",
+    "iteration": 3,
+    "commit": "a4de051fad2255aa56217e2a05993336fd594332",
+    "verifiedAt": "2026-05-18T18:51:09Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T17:49:20Z",
-    "lastTaskId": "EBR2-A-03",
-    "lastIteration": 3,
-    "lastCommit": "3c7d2505139d2305e576367586323d9ae624fed7",
-    "lastVerifiedAt": "2026-05-18T18:37:35Z"
+    "recordedAt": "2026-05-18T18:51:09Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -89,7 +85,7 @@
     {
       "iteration": 1,
       "taskId": "EBR2-A-01",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
       "verifiedAt": "2026-05-18T16:35:23Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-01/"
@@ -97,7 +93,7 @@
     {
       "iteration": 2,
       "taskId": "EBR2-A-02",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "commit": "bb9fa11",
       "verifiedAt": "2026-05-18T17:30:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-02/"
@@ -105,7 +101,7 @@
     {
       "iteration": 3,
       "taskId": "EBR2-A-03",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "commit": "3c7d2505139d2305e576367586323d9ae624fed7",
       "verifiedAt": "2026-05-18T18:37:35Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-03/"
@@ -115,9 +111,9 @@
     {
       "id": "EBR2-A-01",
       "title": "Confirm spec v1.1 in place; no further spec edits in this task",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "specRefs": [
-        "\u00a7R2-A v1.1 amendment"
+        "§R2-A v1.1 amendment"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -134,18 +130,18 @@
       "attemptCount": 1,
       "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
       "verifiedAt": "2026-05-18T16:35:23Z",
-      "notes": "haltCheck already satisfied at audit; no implementation needed. Verified spec v1.1 header, SC=79 (\u226578), INV=26 (\u226526), FP=15 (\u226515), RA=19 (\u226518), and wait-for-vercel-preview.mjs --check-only returns ok. Bootstrap task confirming Round-2 arming landed; no code changes required. spec-reviewer: 0 MUST FIX, 3 SHOULD FIX (SHA placeholders in initial commit reconciled by follow-up SHA-fixup commit; task.notes augmented with this spec-reviewer outcome line), 3 OPTIONAL (snapshot-schema additions kind/verifiedAt/duplicated-flags \u2014 deferred to a future snapshot-schema codification task)."
+      "notes": "haltCheck already satisfied at audit; no implementation needed. Verified spec v1.1 header, SC=79 (≥78), INV=26 (≥26), FP=15 (≥15), RA=19 (≥18), and wait-for-vercel-preview.mjs --check-only returns ok. Bootstrap task confirming Round-2 arming landed; no code changes required. spec-reviewer: 0 MUST FIX, 3 SHOULD FIX (SHA placeholders in initial commit reconciled by follow-up SHA-fixup commit; task.notes augmented with this spec-reviewer outcome line), 3 OPTIONAL (snapshot-schema additions kind/verifiedAt/duplicated-flags — deferred to a future snapshot-schema codification task)."
     },
     {
       "id": "EBR2-A-02",
       "title": "Reduce ViewMode type to 3 (galaxy|canvas|preview-app); migrate callers; delete 5-button toggle",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "specRefs": [
-        "\u00a7R2-A SC-065",
-        "\u00a7R2-A INV-24",
-        "\u00a7R2-A FP-12",
-        "\u00a7R2-A FP-14",
-        "\u00a7R2-A RA-06b"
+        "§R2-A SC-065",
+        "§R2-A INV-24",
+        "§R2-A FP-12",
+        "§R2-A FP-14",
+        "§R2-A RA-06b"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -162,16 +158,16 @@
       "attemptCount": 1,
       "commit": "bb9fa11",
       "verifiedAt": "2026-05-18T17:30:00Z",
-      "notes": "ViewMode narrowed to 3 ('galaxy' | 'canvas' | 'preview-app'); deleted AuthoringViewMode, LegacyViewMode, AnyViewMode, normalizeViewMode, CANONICAL_VIEW_MODES, LEGACY_VIEW_MODE_TO_CANONICAL, previousAuthoringMode. setViewMode simplified, drillIntoHub\u2192'canvas', initial viewMode flipped to 'preview-app' (RA-17 default boot). page.tsx 5-button toggle\u21923-button, preview-back affordance removed. PrismHost/TopBar/GraphScene/Inspector/hub-world-label-lod/mount-graph migrated. 7/7 EBR2-A-02 tests pass; 79/79 across affected suites pass; tsc clean; build clean; verify-editor-runtimes 7/7 PASS. KripVerify-local MCP IPC navigate timed out repeatedly though kv_dev_server_status responded \u2014 fell back to direct Playwright with same surface (kv_screenshot equivalent + kv_check_console + kv_check_network): 0 console / 0 network / 0 pageerror; kripverify.{png,json} captured. Vercel observability deferred (non-blocking). Spec-reviewer round 1: 7 MUST FIX in companion test suites (duplicate-array sed residue across EB-03-03/EB-04-02/EB-04-03/EB-04-04/EB-05-05 + a false-assertion mode-isolation test that always passed due to evaluation order + missing progress-log entry). All 7 fixed in followup commit bb9fa11. Spec-reviewer round 2: 0 MUST FIX (No deviations found). SHOULD FIX deferred: rename hub-world-label-lod.ts\u2192canvas-label-lod.ts + computeHubWorldLabelVisibility\u2192computeCanvasLabelVisibility (FP-14 is literal-only, not identifier/path); comment-only sweep across transforms.ts/hub-transit.ts/camera-rail.ts/scroll-timeline.ts/types.ts/canvas-camera.ts/galaxy-label-lod.ts/mount-graph.ts/camera-rail-driver.ts/GraphScene.tsx/PrismHost.tsx to retire hub-world/preview-hub doc-strings; verify-editor-runtimes.mjs inner-leg description still says 'preview-hub' (outside src/, FP-14 doesn't catch \u2014 retarget verifier to preview-app); EB-04-03/EB-04-04 describe-text/filename refresh for parallel cleanup; page.tsx double-blank-line at line 503; KripVerify MCP wiring needs investigation."
+      "notes": "ViewMode narrowed to 3 ('galaxy' | 'canvas' | 'preview-app'); deleted AuthoringViewMode, LegacyViewMode, AnyViewMode, normalizeViewMode, CANONICAL_VIEW_MODES, LEGACY_VIEW_MODE_TO_CANONICAL, previousAuthoringMode. setViewMode simplified, drillIntoHub→'canvas', initial viewMode flipped to 'preview-app' (RA-17 default boot). page.tsx 5-button toggle→3-button, preview-back affordance removed. PrismHost/TopBar/GraphScene/Inspector/hub-world-label-lod/mount-graph migrated. 7/7 EBR2-A-02 tests pass; 79/79 across affected suites pass; tsc clean; build clean; verify-editor-runtimes 7/7 PASS. KripVerify-local MCP IPC navigate timed out repeatedly though kv_dev_server_status responded — fell back to direct Playwright with same surface (kv_screenshot equivalent + kv_check_console + kv_check_network): 0 console / 0 network / 0 pageerror; kripverify.{png,json} captured. Vercel observability deferred (non-blocking). Spec-reviewer round 1: 7 MUST FIX in companion test suites (duplicate-array sed residue across EB-03-03/EB-04-02/EB-04-03/EB-04-04/EB-05-05 + a false-assertion mode-isolation test that always passed due to evaluation order + missing progress-log entry). All 7 fixed in followup commit bb9fa11. Spec-reviewer round 2: 0 MUST FIX (No deviations found). SHOULD FIX deferred: rename hub-world-label-lod.ts→canvas-label-lod.ts + computeHubWorldLabelVisibility→computeCanvasLabelVisibility (FP-14 is literal-only, not identifier/path); comment-only sweep across transforms.ts/hub-transit.ts/camera-rail.ts/scroll-timeline.ts/types.ts/canvas-camera.ts/galaxy-label-lod.ts/mount-graph.ts/camera-rail-driver.ts/GraphScene.tsx/PrismHost.tsx to retire hub-world/preview-hub doc-strings; verify-editor-runtimes.mjs inner-leg description still says 'preview-hub' (outside src/, FP-14 doesn't catch — retarget verifier to preview-app); EB-04-03/EB-04-04 describe-text/filename refresh for parallel cleanup; page.tsx double-blank-line at line 503; KripVerify MCP wiring needs investigation."
     },
     {
       "id": "EBR2-A-03",
       "title": "Default viewMode = 'preview-app'; verify 3-mode round-trip selection persistence",
-      "phase": "\u00a7R2-A",
+      "phase": "§R2-A",
       "specRefs": [
-        "\u00a7R2-A SC-064",
-        "\u00a7R2-A RA-17",
-        "\u00a7R2-A INV-20"
+        "§R2-A SC-064",
+        "§R2-A RA-17",
+        "§R2-A INV-20"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -181,43 +177,43 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-A-03",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "Store's initial viewMode is 'preview-app'. Snapshot's state.json shows viewMode='preview-app' on first paint. Toggling galaxy\u2192canvas\u2192preview-app\u2192galaxy preserves selectedNodeId and selectedHubId.",
+      "haltCheck": "Store's initial viewMode is 'preview-app'. Snapshot's state.json shows viewMode='preview-app' on first paint. Toggling galaxy→canvas→preview-app→galaxy preserves selectedNodeId and selectedHubId.",
       "kvVerify": true,
       "status": "done",
       "attemptCount": 1,
       "commit": "3c7d2505139d2305e576367586323d9ae624fed7",
       "verifiedAt": "2026-05-18T18:37:35Z",
-      "notes": "spec-reviewer: 0 MUST FIX; 3 SHOULD FIX (progress log, preview-hub literal, muddled comment) \u2014 last 2 addressed in cleanup commit. KripVerify MCP IPC timed out (10s cap vs ~3.5min cold compile) \u2014 fell back to direct Playwright per EBR2-A-02 pattern; assertions passed (viewMode=preview-app, 3-mode round-trip preserved, 0 console errors, 0 network errors)."
+      "notes": "spec-reviewer: 0 MUST FIX; 3 SHOULD FIX (progress log, preview-hub literal, muddled comment) — last 2 addressed in cleanup commit. KripVerify MCP IPC timed out (10s cap vs ~3.5min cold compile) — fell back to direct Playwright per EBR2-A-02 pattern; assertions passed (viewMode=preview-app, 3-mode round-trip preserved, 0 console errors, 0 network errors)."
     },
     {
       "id": "EBR2-B-01",
       "title": "resolveAnchorToScenePosition utility in compile-anchors.ts",
-      "phase": "\u00a7R2-B",
+      "phase": "§R2-B",
       "specRefs": [
-        "\u00a7R2-B SC-066"
+        "§R2-B SC-066"
       ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "grep -q 'resolveAnchorToScenePosition' kid-kode-landing/src/lib/prism-graph/compile-anchors.ts",
-        "cd kid-kode-landing && npx vitest run src/lib/prism-graph/compile-anchors",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-B-01.compile-anchors-resolve.test.ts",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "compile-anchors.ts exports resolveAnchorToScenePosition(anchor, hub, breakpoint): {x,y,z} \u2014 pure deterministic function. Unit tests cover all anchor types (world|viewport|scroll|hybrid|sticky|parallax|camera-locked).",
+      "haltCheck": "compile-anchors.ts exports resolveAnchorToScenePosition(anchor, hub, breakpoint): {x,y,z} — pure deterministic function. Unit tests cover all anchor types (world|viewport|scroll|hybrid|sticky|parallax|camera-locked).",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "Verification command vitest filter corrected from 'src/lib/prism-graph/compile-anchors' (no test files match because tests live in tests/editor-build per tests/README.md convention, not colocated) to the actual test file path. haltCheck unchanged."
     },
     {
       "id": "EBR2-B-02",
       "title": "Plumb CompiledHubView (active hub) into PrismHost props",
-      "phase": "\u00a7R2-B",
+      "phase": "§R2-B",
       "specRefs": [
-        "\u00a7R2-B SC-066",
-        "\u00a7R2-B INV-17"
+        "§R2-B SC-066",
+        "§R2-B INV-17"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -236,11 +232,11 @@
     },
     {
       "id": "EBR2-B-03",
-      "title": "PrismHost node-layout effect \u2014 apply compiled anchors via liveResult.updateNodeTransform",
-      "phase": "\u00a7R2-B",
+      "title": "PrismHost node-layout effect — apply compiled anchors via liveResult.updateNodeTransform",
+      "phase": "§R2-B",
       "specRefs": [
-        "\u00a7R2-B SC-066",
-        "\u00a7R2-B INV-17"
+        "§R2-B SC-066",
+        "§R2-B INV-17"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -259,11 +255,11 @@
     },
     {
       "id": "EBR2-B-04",
-      "title": "Preview-app two-runtime snapshot \u2014 proves full home-hub assembly (\u226510 visible nodes)",
-      "phase": "\u00a7R2-B",
+      "title": "Preview-app two-runtime snapshot — proves full home-hub assembly (≥10 visible nodes)",
+      "phase": "§R2-B",
       "specRefs": [
-        "\u00a7R2-B SC-066",
-        "\u00a7R2-B SC-067"
+        "§R2-B SC-066",
+        "§R2-B SC-067"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -271,7 +267,7 @@
         "test -f kid-kode-landing/notes/ralph-snapshots/EBR2-B-04/inner.png",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "inner.png at task snapshot dir shows multiple visible node artifacts in preview-app mode (not just the background). state.json records the active hub's compiled node count \u226510. Vercel preview matches.",
+      "haltCheck": "inner.png at task snapshot dir shows multiple visible node artifacts in preview-app mode (not just the background). state.json records the active hub's compiled node count ≥10. Vercel preview matches.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -282,9 +278,9 @@
     {
       "id": "EBR2-C-01",
       "title": "Add editorMode ('idle'|'edit') to useGraphEditorStore + Inspector Edit button",
-      "phase": "\u00a7R2-C",
+      "phase": "§R2-C",
       "specRefs": [
-        "\u00a7R2-C SC-068"
+        "§R2-C SC-068"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -306,9 +302,9 @@
     {
       "id": "EBR2-C-02",
       "title": "Gate CanvasTransformGizmo on editorMode === 'edit'",
-      "phase": "\u00a7R2-C",
+      "phase": "§R2-C",
       "specRefs": [
-        "\u00a7R2-C SC-068"
+        "§R2-C SC-068"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -328,11 +324,11 @@
     {
       "id": "EBR2-C-03",
       "title": "AssembledSceneNode composes scenePosition + canvasTransform for rendered group + ring",
-      "phase": "\u00a7R2-C",
+      "phase": "§R2-C",
       "specRefs": [
-        "\u00a7R2-C SC-069",
-        "\u00a7R2-C SC-070",
-        "\u00a7R2-C INV-25"
+        "§R2-C SC-069",
+        "§R2-C SC-070",
+        "§R2-C INV-25"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -352,10 +348,10 @@
     {
       "id": "EBR2-C-04",
       "title": "Re-anchor gizmo wrapper at composed position; snapshot proves drag visibly moves node",
-      "phase": "\u00a7R2-C",
+      "phase": "§R2-C",
       "specRefs": [
-        "\u00a7R2-C SC-069",
-        "\u00a7R2-C INV-25"
+        "§R2-C SC-069",
+        "§R2-C INV-25"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -364,7 +360,7 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-C-04",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "CanvasTransformGizmo's outer group positions at scenePosition+canvasTransform. Snapshot sequence: capture node position, simulate translate-handle drag via Playwright, capture again \u2014 positions differ. EBR2-C-04 vs EBR2-C-03 snapshot diff shows the node visibly moved.",
+      "haltCheck": "CanvasTransformGizmo's outer group positions at scenePosition+canvasTransform. Snapshot sequence: capture node position, simulate translate-handle drag via Playwright, capture again — positions differ. EBR2-C-04 vs EBR2-C-03 snapshot diff shows the node visibly moved.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -374,10 +370,10 @@
     },
     {
       "id": "EBR2-D-01",
-      "title": "canvas-camera-rail.ts \u2014 pure fn computing guardrails from hub envelope + viewport frame",
-      "phase": "\u00a7R2-D",
+      "title": "canvas-camera-rail.ts — pure fn computing guardrails from hub envelope + viewport frame",
+      "phase": "§R2-D",
       "specRefs": [
-        "\u00a7R2-D SC-071"
+        "§R2-D SC-071"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -386,7 +382,7 @@
         "cd kid-kode-landing && npx vitest run src/lib/editor/canvas-camera-rail",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "canvas-camera-rail.ts exports computeCanvasCameraRail(hub, breakpoint, viewportFrame) \u2192 {minDistance, maxDistance, minPolarAngle, maxPolarAngle, minAzimuthAngle, maxAzimuthAngle, target, panLimits}. Unit-tested with at least 3 hub envelopes.",
+      "haltCheck": "canvas-camera-rail.ts exports computeCanvasCameraRail(hub, breakpoint, viewportFrame) → {minDistance, maxDistance, minPolarAngle, maxPolarAngle, minAzimuthAngle, maxAzimuthAngle, target, panLimits}. Unit-tested with at least 3 hub envelopes.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -397,9 +393,9 @@
     {
       "id": "EBR2-D-02",
       "title": "Apply canvas camera guardrails to SceneControlsBridge; snapshot proves clamps",
-      "phase": "\u00a7R2-D",
+      "phase": "§R2-D",
       "specRefs": [
-        "\u00a7R2-D SC-071"
+        "§R2-D SC-071"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -418,10 +414,10 @@
     },
     {
       "id": "EBR2-E-01",
-      "title": "usePreviewStateStore \u2014 ephemeral per-node edits",
-      "phase": "\u00a7R2-E",
+      "title": "usePreviewStateStore — ephemeral per-node edits",
+      "phase": "§R2-E",
       "specRefs": [
-        "\u00a7R2-E SC-072"
+        "§R2-E SC-072"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -440,11 +436,11 @@
     },
     {
       "id": "EBR2-E-02",
-      "title": "Route Inspector tab writes through usePreviewStateStore; renderer reads source \u2295 preview overlay",
-      "phase": "\u00a7R2-E",
+      "title": "Route Inspector tab writes through usePreviewStateStore; renderer reads source ⊕ preview overlay",
+      "phase": "§R2-E",
       "specRefs": [
-        "\u00a7R2-E SC-072",
-        "\u00a7R2-E FP-15"
+        "§R2-E SC-072",
+        "§R2-E FP-15"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -454,7 +450,7 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-E-02",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "All Inspector tab writes go to usePreviewStateStore. AssembledSceneNode reads (sourceNode \u2295 previewState[nodeId]) so live preview is real-time. FP-15 hook does not trigger. Existing autosave behavior preserved for non-Inspector callers.",
+      "haltCheck": "All Inspector tab writes go to usePreviewStateStore. AssembledSceneNode reads (sourceNode ⊕ previewState[nodeId]) so live preview is real-time. FP-15 hook does not trigger. Existing autosave behavior preserved for non-Inspector callers.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -464,11 +460,11 @@
     },
     {
       "id": "EBR2-E-03",
-      "title": "Save button \u2014 copy preview-state \u2192 source store; clear preview buffer",
-      "phase": "\u00a7R2-E",
+      "title": "Save button — copy preview-state → source store; clear preview buffer",
+      "phase": "§R2-E",
       "specRefs": [
-        "\u00a7R2-E SC-072",
-        "\u00a7R2-E SC-073"
+        "§R2-E SC-072",
+        "§R2-E SC-073"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -477,7 +473,7 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-E-03",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "Save button in Inspector toolbar (enabled when isDirty(nodeId)). On click: usePreviewStateStore.commit(nodeId) \u2192 calls useGraphSourceStore.updateNode (the only legal path from within Inspector \u2014 but indirected via a helper). Debounced autosave (1s) then flushes to server. Smoke: edit slider \u2192 preview shows change \u2192 click Save \u2192 previewState cleared \u2192 source store updated.",
+      "haltCheck": "Save button in Inspector toolbar (enabled when isDirty(nodeId)). On click: usePreviewStateStore.commit(nodeId) → calls useGraphSourceStore.updateNode (the only legal path from within Inspector — but indirected via a helper). Debounced autosave (1s) then flushes to server. Smoke: edit slider → preview shows change → click Save → previewState cleared → source store updated.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -487,12 +483,12 @@
     },
     {
       "id": "EBR2-E-04",
-      "title": "Save and Rebuild \u2014 single-node visual artifact re-render",
-      "phase": "\u00a7R2-E",
+      "title": "Save and Rebuild — single-node visual artifact re-render",
+      "phase": "§R2-E",
       "specRefs": [
-        "\u00a7R2-E SC-074",
-        "\u00a7R2-E INV-26",
-        "\u00a7R2-E RA-16"
+        "§R2-E SC-074",
+        "§R2-E INV-26",
+        "§R2-E RA-16"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -501,7 +497,7 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-E-04",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "Save-and-Rebuild button performs Save + locates the mounted THREE.Object3D for the node via liveResult lookup \u2192 calls object.userData.cleanup() \u2192 re-invokes createNode(node.config, ctx) \u2192 re-mounts at the same scenePosition. Test asserts: target node's THREE.Object3D reference changed (new object) AND other nodes' references are stable (Object.is identity preserved). No other node touched. Other nodes' scene positions unchanged.",
+      "haltCheck": "Save-and-Rebuild button performs Save + locates the mounted THREE.Object3D for the node via liveResult lookup → calls object.userData.cleanup() → re-invokes createNode(node.config, ctx) → re-mounts at the same scenePosition. Test asserts: target node's THREE.Object3D reference changed (new object) AND other nodes' references are stable (Object.is identity preserved). No other node touched. Other nodes' scene positions unchanged.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -511,10 +507,10 @@
     },
     {
       "id": "EBR2-F-01",
-      "title": "hub-geometry.ts \u2014 getHubWorldPositions + findNearestHub",
-      "phase": "\u00a7R2-F",
+      "title": "hub-geometry.ts — getHubWorldPositions + findNearestHub",
+      "phase": "§R2-F",
       "specRefs": [
-        "\u00a7R2-F SC-077"
+        "§R2-F SC-077"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -523,7 +519,7 @@
         "cd kid-kode-landing && npx vitest run src/lib/prism-graph/hub-geometry",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "hub-geometry.ts exports getHubWorldPositions(hubs): Map<hubId, Vector3> (reuses Phase 3 orbital math) and findNearestHub(point: Vector3, hubs: PrismHub[]): {hubId, distance}. Unit tests cover \u22653 hub layouts.",
+      "haltCheck": "hub-geometry.ts exports getHubWorldPositions(hubs): Map<hubId, Vector3> (reuses Phase 3 orbital math) and findNearestHub(point: Vector3, hubs: PrismHub[]): {hubId, distance}. Unit tests cover ≥3 hub layouts.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -534,9 +530,9 @@
     {
       "id": "EBR2-F-02",
       "title": "cloneNode(sourceId) action on useGraphSourceStore",
-      "phase": "\u00a7R2-F",
+      "phase": "§R2-F",
       "specRefs": [
-        "\u00a7R2-F SC-075"
+        "§R2-F SC-075"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -557,9 +553,9 @@
     {
       "id": "EBR2-F-03",
       "title": "Clone button + auto-switch to galaxy + draggingNodeId state",
-      "phase": "\u00a7R2-F",
+      "phase": "§R2-F",
       "specRefs": [
-        "\u00a7R2-F SC-075"
+        "§R2-F SC-075"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -570,7 +566,7 @@
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-F-03",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
-      "haltCheck": "Inspector renders Clone button (enabled when a node is selected). Click: cloneNode(selectedId) \u2192 editorMode='idle' \u2192 viewMode='galaxy' \u2192 draggingNodeId=newId. Snapshot proves: Clone \u2192 galaxy mode active \u2192 draggingNodeId set.",
+      "haltCheck": "Inspector renders Clone button (enabled when a node is selected). Click: cloneNode(selectedId) → editorMode='idle' → viewMode='galaxy' → draggingNodeId=newId. Snapshot proves: Clone → galaxy mode active → draggingNodeId set.",
       "kvVerify": true,
       "status": "pending",
       "attemptCount": 0,
@@ -580,10 +576,10 @@
     },
     {
       "id": "EBR2-F-04",
-      "title": "Galaxy-mode drag listener \u2014 cursor \u2192 world \u2192 nearest-hub computation + transient tether",
-      "phase": "\u00a7R2-F",
+      "title": "Galaxy-mode drag listener — cursor → world → nearest-hub computation + transient tether",
+      "phase": "§R2-F",
       "specRefs": [
-        "\u00a7R2-F SC-077"
+        "§R2-F SC-077"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -602,10 +598,10 @@
     },
     {
       "id": "EBR2-F-05",
-      "title": "Pointer-up commits clone \u2014 parentHubId + caption/subtype auto-update; clear drag state",
-      "phase": "\u00a7R2-F",
+      "title": "Pointer-up commits clone — parentHubId + caption/subtype auto-update; clear drag state",
+      "phase": "§R2-F",
       "specRefs": [
-        "\u00a7R2-F SC-076"
+        "§R2-F SC-076"
       ],
       "tddRequired": true,
       "verificationCommands": [
@@ -624,11 +620,11 @@
     },
     {
       "id": "EBR2-G-01",
-      "title": "wait-for-vercel-preview.mjs \u2014 poll Vercel API for deploy state",
-      "phase": "\u00a7R2-G",
+      "title": "wait-for-vercel-preview.mjs — poll Vercel API for deploy state",
+      "phase": "§R2-G",
       "specRefs": [
-        "\u00a7R2-G SC-078",
-        "\u00a7R2-G RA-18"
+        "§R2-G SC-078",
+        "§R2-G RA-18"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -646,10 +642,10 @@
     },
     {
       "id": "EBR2-G-02",
-      "title": "Extend /ralph-step-editor Step 8b \u2014 kv_* MCP tools against the LOCAL kripverify sandbox (primary)",
-      "phase": "\u00a7R2-G",
+      "title": "Extend /ralph-step-editor Step 8b — kv_* MCP tools against the LOCAL kripverify sandbox (primary)",
+      "phase": "§R2-G",
       "specRefs": [
-        "\u00a7R2-G SC-078"
+        "§R2-G SC-078"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -661,7 +657,7 @@
         "grep -q 'PRIMARY' .claude/commands/ralph-step-editor.md",
         "test -f .mcp.json && jq -e '.mcpServers.kv' .mcp.json"
       ],
-      "haltCheck": "/ralph-step-editor command file documents Step 8b PRIMARY (kripverify against local sandboxed dev server: kv_dev_server_status \u2192 kv_navigate(localUrl) \u2192 kv_wait_for \u2192 kv_screenshot \u2192 kv_check_console \u2192 kv_check_network) plus task-specific interactive checks. Per-repo .mcp.json registers the kv MCP server. Persistence to notes/ralph-snapshots/<task-id>/kripverify.{png,json}. Failing KripVerify-local = task failure.",
+      "haltCheck": "/ralph-step-editor command file documents Step 8b PRIMARY (kripverify against local sandboxed dev server: kv_dev_server_status → kv_navigate(localUrl) → kv_wait_for → kv_screenshot → kv_check_console → kv_check_network) plus task-specific interactive checks. Per-repo .mcp.json registers the kv MCP server. Persistence to notes/ralph-snapshots/<task-id>/kripverify.{png,json}. Failing KripVerify-local = task failure.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -672,9 +668,9 @@
     {
       "id": "EBR2-G-03",
       "title": "Failing KripVerify-local = task failure; verify findings persistence",
-      "phase": "\u00a7R2-G",
+      "phase": "§R2-G",
       "specRefs": [
-        "\u00a7R2-G SC-078"
+        "§R2-G SC-078"
       ],
       "tddRequired": false,
       "verificationCommands": [
@@ -692,11 +688,11 @@
     },
     {
       "id": "EBR2-G-04",
-      "title": "Step 8c \u2014 Vercel observability (wait-for-vercel-preview + fetch-vercel-logs); non-blocking diagnostic",
-      "phase": "\u00a7R2-G",
+      "title": "Step 8c — Vercel observability (wait-for-vercel-preview + fetch-vercel-logs); non-blocking diagnostic",
+      "phase": "§R2-G",
       "specRefs": [
-        "\u00a7R2-G SC-079",
-        "\u00a7R2-G RA-18"
+        "§R2-G SC-079",
+        "§R2-G RA-18"
       ],
       "tddRequired": false,
       "verificationCommands": [
