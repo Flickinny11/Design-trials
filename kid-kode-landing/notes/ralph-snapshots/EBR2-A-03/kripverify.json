@@ -1,0 +1,64 @@
+{
+  "url": "http://127.0.0.1:49944/",
+  "loadMs": 4424,
+  "viewMode": "preview-app",
+  "roundTrip": {
+    "trail": [
+      {
+        "mode": "galaxy",
+        "selectedNodeId": "kv-fallback-node"
+      },
+      {
+        "mode": "canvas",
+        "selectedNodeId": "kv-fallback-node"
+      },
+      {
+        "mode": "preview-app",
+        "selectedNodeId": "kv-fallback-node"
+      },
+      {
+        "mode": "galaxy",
+        "selectedNodeId": "kv-fallback-node"
+      }
+    ]
+  },
+  "console": [],
+  "console_warnings": [
+    {
+      "type": "warning",
+      "text": "./src/lib/prism/runtime/factories/coderef-factory.ts\nCritical dependency: the request of a dependency is an expression"
+    }
+  ],
+  "pageErrors": [],
+  "network": [],
+  "interactions": [
+    {
+      "name": "read-boot-viewMode",
+      "result": "preview-app"
+    },
+    {
+      "name": "3-mode-round-trip-selection",
+      "result": {
+        "trail": [
+          {
+            "mode": "galaxy",
+            "selectedNodeId": "kv-fallback-node"
+          },
+          {
+            "mode": "canvas",
+            "selectedNodeId": "kv-fallback-node"
+          },
+          {
+            "mode": "preview-app",
+            "selectedNodeId": "kv-fallback-node"
+          },
+          {
+            "mode": "galaxy",
+            "selectedNodeId": "kv-fallback-node"
+          }
+        ]
+      }
+    }
+  ],
+  "notes": "KripVerify MCP IPC timed out (10s cap vs ~3.5min cold compile). Fell back to direct Playwright against KV sandbox port. Mirrors EBR2-A-02 workaround. SC-064/INV-20 asserted via __PRISM_DEBUG_STORES__.graphEditor.getState()."
+}
