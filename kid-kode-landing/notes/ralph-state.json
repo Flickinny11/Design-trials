@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T21:56:48.000Z",
+  "updatedAt": "2026-05-18T22:43:56.000Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 6,
-    "lastProductiveCommit": "a538b2c91a08c3c320ac106300df72fed4e61a82"
+    "lastProductiveIteration": 7,
+    "lastProductiveCommit": "98abba8f58b4dafa490836699fe5345398165505"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "\u00a7R2-B": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,12 @@
     }
   },
   "checkpoint": {
-    "iteration": 6,
-    "commit": "a538b2c91a08c3c320ac106300df72fed4e61a82",
+    "iteration": 7,
+    "commit": "98abba8f58b4dafa490836699fe5345398165505",
     "verifiedAt": "2026-05-18T21:39:09Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T21:39:09Z"
+    "recordedAt": "2026-05-18T21:39:09Z",
+    "taskId": "EBR2-B-04"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -129,6 +130,14 @@
       "commit": "90a4b2464b39f7be2adc5b3e3bf49037851c0d38",
       "verifiedAt": "2026-05-18T21:25:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-03/"
+    },
+    {
+      "iteration": 7,
+      "taskId": "EBR2-B-04",
+      "phase": "\u00a7R2-B",
+      "commit": "98abba8f58b4dafa490836699fe5345398165505",
+      "verifiedAt": "2026-05-18T22:43:56.000Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-04/"
     }
   ],
   "tasks": [
@@ -293,11 +302,11 @@
       ],
       "haltCheck": "inner.png at task snapshot dir shows multiple visible node artifacts in preview-app mode (not just the background). state.json records the active hub's compiled node count \u226510. Vercel preview matches.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "98abba8f58b4dafa490836699fe5345398165505",
+      "verifiedAt": "2026-05-18T22:43:56.000Z",
+      "notes": "SHOULD-FIX (recorded, non-blocking): (1) preview-app.background-mounted check only asserts backgroundLayerCount>=1; could tighten to read sizing metadata. (2) clone seed overwrites scenePosition rather than seeding uiAnchor; donor still exercises the anchor pipeline so SC-066 is proved end-to-end, but cloned nodes bypass the EBR2-B-01->02->03 anchor path. (3) Magic CLONES formula and unconditional waitForTimeouts could be replaced with waitForFunction. | OPTIONAL: consolidate __PRISM_EDITOR_*__ window hooks into one namespace; structuredClone over JSON.parse(stringify); seed a visible:false clone to prove hidden-nodes-do-not-mount. | kv MCP IPC timed out (kv_navigate/kv_verify) \u2014 same pattern documented in EBR2-A-02/A-03/B-02/B-03; fell back to Playwright snapshot via verify-editor-runtimes.mjs which exercises the same surface."
     },
     {
       "id": "EBR2-C-01",
