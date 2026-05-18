@@ -149,10 +149,26 @@ if [[ $EDITOR_BUILD_ACTIVE -eq 1 ]]; then
     violations+=("FP-11: direct mutation of useGraphEditorStore state forbidden (INV-20) — use store actions.")
   fi
 
-  # FP-12: viewMode literal outside canonical 5.
-  if echo "$CONTENT" | grep -E "viewMode[[:space:]]*[:=][[:space:]]*['\"](preview|editor|split)['\"]" > /dev/null; then
-    violations+=("FP-12: legacy viewMode literal ('preview'|'editor'|'split') — canonical set is 'galaxy'|'hub-world'|'canvas'|'preview-hub'|'preview-app' (RA-06).")
+  # FP-12 (v1.1): viewMode literal outside canonical 3. Reject Round-1 5-mode legacy AND
+  # pre-Round-1 split/editor/preview legacy. Canonical set per RA-06b: galaxy|canvas|preview-app.
+  if echo "$CONTENT" | grep -E "viewMode[[:space:]]*[:=][[:space:]]*['\"](preview|editor|split|hub-world|preview-hub)['\"]" > /dev/null; then
+    violations+=("FP-12: legacy viewMode literal — canonical set (v1.1) is 'galaxy'|'canvas'|'preview-app' (RA-06b). 'preview-hub' and 'hub-world' are superseded.")
   fi
+
+  # FP-14 (v1.1, INV-24): direct literal mentions of superseded modes anywhere under src.
+  if echo "$CONTENT" | grep -E "['\"](hub-world|preview-hub)['\"]" > /dev/null; then
+    violations+=("FP-14: 'hub-world'/'preview-hub' literal forbidden (INV-24) — Round-2 reduced view modes to 'galaxy'|'canvas'|'preview-app'.")
+  fi
+
+  # FP-15 (v1.1, Phase R2-E): Inspector tabs MUST NOT call useGraphSourceStore.getState().updateNode directly.
+  # They must route through usePreviewStateStore.
+  case "$FILE_PATH" in
+    */Inspector*.tsx|*/panels/*Tab.tsx)
+      if echo "$CONTENT" | grep -E "useGraphSourceStore\.getState\(\)\.updateNode\b" > /dev/null; then
+        violations+=("FP-15: Inspector tabs must route writes through usePreviewStateStore, not useGraphSourceStore.getState().updateNode directly (Phase R2-E, SC-072).")
+      fi
+      ;;
+  esac
 
   # FP-13: FLUX/diffusion call without negative-text discipline (limited to asset pipeline files).
   case "$FILE_PATH" in

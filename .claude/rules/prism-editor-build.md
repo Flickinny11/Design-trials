@@ -129,3 +129,53 @@ node-repair, image / 3D asset generation pipelines, and the backend template eng
 scope for this loop. The secrets vault IS in scope (Phase 2). Structural seams for out-of-scope
 systems may be added **only if** they are real, typed, used, and necessary — never as
 placeholders.
+
+---
+
+## Round 2 (v1.1) — preview-app assembly + canvas editing + clone
+
+Round 1 (53 tasks) shipped. Round 2 (~24 tasks across 7 groups A–G) is armed against spec
+v1.1. Same branch, same `/ralph-step-editor` worker, same drift hooks — additive
+amendments only.
+
+**Canonical view modes (RA-06b, INV-24):** exactly `galaxy | canvas | preview-app`. **Default
+on app boot: `preview-app`** (RA-17). `hub-world` and `preview-hub` are superseded — never
+introduce those literals (FP-14 blocks them at write time).
+
+**Canvas mode (RA-06b, INV-25, SC-068..SC-071):**
+- Select a node → click **Edit** in Inspector → handles render. Without Edit toggle on, no
+  handles. (`editorMode: 'idle' | 'edit'` on `useGraphEditorStore`.)
+- Drag handles to translate/rotate/scale — the rendered artifact visibly moves in real-time.
+  `AssembledSceneNode` composes `scenePosition + canvasTransform` for the rendered group,
+  selection ring, and gizmo anchor.
+- Camera has heavy guardrails: bounded distance / polar / azimuth / pan-target around the
+  active hub. Cannot drift past viewport-frame envelope.
+
+**Galaxy mode:** unconstrained navigation. The only mode where the camera is truly free.
+
+**Save vs Save-and-Rebuild (RA-16, INV-26, SC-072..SC-074):**
+- Inspector tab fader/knob writes route through `usePreviewStateStore` (FP-15 enforces this).
+  The renderer reads source ⊕ preview overlay → visual change is real-time.
+- **Save** copies preview-state → source store via `updateNode`; debounced autosave then
+  flushes to server. Preview-state buffer clears.
+- **Save and Rebuild** = Save + locate the mounted `THREE.Object3D` for that node, call
+  `userData.cleanup()`, re-invoke `createNode(config, ctx)`, re-mount at the same
+  `scenePosition`. **Other nodes' `THREE.Object3D` references stay stable** (reference
+  identity verified). No full `.prism` artifact build, no codegen, no AI-builder pipeline.
+
+**Clone + auto-snap (SC-075..SC-077):**
+- Inspector "Clone" → source-store gains a deep clone (new id, suffixed caption); view auto-
+  switches to galaxy; clone attaches to `draggingNodeId` slot.
+- Galaxy-mode drag listener computes nearest-hub via `hub-geometry.findNearestHub` and
+  renders a transient tether line.
+- Pointer-up commits `parentHubId` to nearest hub; caption/subtype auto-update.
+
+**Verification (RA-18, SC-078):** Every Ralph task adds a KripVerify pass against the live
+Vercel preview URL for the pushed commit. Worker invokes `kv_navigate` → `kv_wait_for(canvas)`
+→ `kv_screenshot(full_page=true)` → `kv_check_console(level='error')` →
+`kv_check_network(status_min=400)`. Failing KripVerify = task failure.
+
+**Hook updates active in Round 2:**
+- **FP-12** (regex updated): rejects 5-mode legacy + Round-0 legacy. Only 3 modes legal.
+- **FP-14** (new): direct `'hub-world'`/`'preview-hub'` literal anywhere under src/.
+- **FP-15** (new): Inspector tab files cannot call `useGraphSourceStore.getState().updateNode`.

@@ -1,8 +1,10 @@
-# Prism Editor Build Specification v1.0
+# Prism Editor Build Specification v1.1
 
-**Status:** Authoritative for the Prism editor build (10-phase Ralph loop on branch `prism-editor-build`).
+**Status:** Authoritative for the Prism editor build. Round 1 (53 tasks, 10 phases) shipped; Round 2 (~24 tasks, 7 task groups A–G) is armed against this v1.1 amendment.
 **Activation marker:** `.prism-editor-build-active` at repo root.
 **Supersedes:** Nothing. **Extends:** the four canonical specs below (every invariant of which remains binding).
+
+**v1.1 amendment (Round 2):** Reduces canonical view modes from 5 → **3** (`galaxy | canvas | preview-app`); makes `preview-app` the default mode on app boot; specifies real transform editing in canvas mode (Edit toggle + visible drag); specifies Save / Save-and-Rebuild semantics (single-node visual artifact re-render); specifies Clone-with-auto-snap-to-nearest-hub; extends verification with a per-task KripVerify pass against the live Vercel preview URL. All v1.0 invariants preserved; superseded items marked in place.
 
 ---
 
@@ -65,11 +67,17 @@ intent, and memory live as real node data in a single knowledge graph (INV-01, p
 - **Nodes** — UI/runtime elements inside each hub. Also backend capabilities, integrations,
   functions, data bindings, animation links. Edges between nodes carry typed reasons.
 
-**View modes (single canvas, deterministic pivot):**
+**View modes (single canvas, deterministic pivot — v1.1 reduced):**
 
-`galaxy | hub-world | canvas | preview-hub | preview-app`. The current 3-way pane toggle in
-`useGraphEditorStore` is mapped per RA-06 in §9. The canvas is single; the modes change what is
-rendered and how the camera is constrained.
+`galaxy | canvas | preview-app`. **Default on app boot: `preview-app`** (RA-17). The two
+former modes `hub-world` and `preview-hub` are superseded by `canvas` and `preview-app`
+respectively (RA-06b supersedes RA-06). Do NOT introduce any of those legacy strings. The
+canvas is single; the modes change what is rendered and how the camera is constrained.
+
+**Why preview-app is the default:** this prototype IS the preview window of a future AI app
+builder. When integrated, a streaming chat panel sits to the left and this exact pane sits
+to the right. The first thing a user cares about is *what their app looks like / whether it
+works*. Editing (galaxy / canvas) is the secondary surface, reached by toggle.
 
 **Preview is compile, not render-of-source.** Preview Hub and Preview App are *non-destructive
 compiles* (INV-17). They emit `CompiledHubView` and `CompiledAppView` data objects without ever
@@ -96,18 +104,28 @@ the above five and is fixed by this build's camera + composition systems.
 
 ---
 
-## 5. Camera modes
+## 5. Camera modes (v1.1)
 
-**Editor / universe camera (galaxy, hub-world, canvas).** Open-world navigation:
-orbit / drag / zoom / fly-to. The existing `flyToNode` / `flyToHub` queue
-(`useGraphEditorStore.ts:127`, `GraphScene.tsx:714-809`) is reused.
+**Galaxy** — **full open-world navigation, no guardrails.** Orbit / drag / zoom / fly-to.
+The `flyToNode` / `flyToHub` queue (`useGraphEditorStore.ts`, `GraphScene.tsx`) drives
+deterministic navigation. The user can take the camera anywhere in galaxy space.
 
-**Compiled preview camera (preview-hub, preview-app).** Constrained cinematic rails. Damped.
-Bounded. Never exposes scene edges; never shows a blank background (INV-23). Phase 5 + Phase 7
-fix the rig so this holds across all hubs and breakpoints.
+**Canvas** — **heavy guardrails.** Bounded around the active hub: minimum / maximum distance,
+polar/azimuth limits, pan-target clamped to the viewport-frame envelope. The user cannot
+drift away from the hub they are editing. Constraints are computed deterministically from
+the active hub's content envelope + viewport-frame dimensions (Round-2 Phase D produces
+`canvas-camera-rail.ts`).
+
+**Preview-app** — constrained cinematic rail. Damped. Bounded. Never exposes scene edges;
+never shows a blank background (INV-23). Builds on Round-1 Phase 6/EB-06-05's
+`CompiledHubView.cameraRail`, but now drives the *default* boot view (RA-17).
 
 Camera state is a property of `useGraphEditorStore` consumed by the canvas root; it is not
 threaded through node modules (INV-14 — `createNode` stays synchronous and ctx-only).
+
+**Carry-forward note:** The Round-1 line "editor/universe camera (galaxy, hub-world, canvas):
+open-world navigation" is **superseded by RA-06b**. Only galaxy is now unconstrained; canvas
+gained heavy guardrails. `hub-world` is gone (folded into canvas).
 
 ---
 
@@ -203,6 +221,26 @@ Each SC is independently verifiable via the verification protocol in §11. Phase
 - **SC-057** [Phase 10] `App_Name_World` context is exposed at the `CompiledAppView` top level for app-wide state simulation.
 - **SC-058** [Phase 10] Full `preview-app` compile does not mutate any hub or node source data (INV-17). **Verify:** byte-identical graph snapshot before/after compile.
 
+### Round 2 — preview-app assembly + canvas editing + clone (v1.1)
+
+These criteria are atomic for the EBR2 task list (groups A–G).
+
+- **SC-064** [Phase R2-A] Default `viewMode` on app boot is `'preview-app'`. **Verify:** grep + Playwright snapshot.
+- **SC-065** [Phase R2-A] `useGraphEditorStore.ViewMode` type contains exactly `'galaxy' | 'canvas' | 'preview-app'`. No other strings appear in the type or in setter call sites.
+- **SC-066** [Phase R2-B] In `preview-app`, every node in the active hub renders at its compiled-anchor position via `CompiledHubView.nodes[]` → `liveResult.updateNodeTransform()`. The `visible` flag is respected (hidden nodes do not mount).
+- **SC-067** [Phase R2-B] Preview-app background mounts at the correct size for the active responsive breakpoint and viewport-fixed attachment. No blank scene edges.
+- **SC-068** [Phase R2-C] Inspector exposes an "Edit" button. Transform handles (`CanvasTransformGizmo`) render only when `editorMode === 'edit'` AND `viewMode === 'canvas'` AND a node is selected.
+- **SC-069** [Phase R2-C] Dragging a transform handle in canvas mode visibly moves the node's rendered artifact in real-time (`AssembledSceneNode` composes `scenePosition + canvasTransform` for the rendered group, selection ring, and gizmo anchor).
+- **SC-070** [Phase R2-C] Drei `TransformControls` scale mode (keyboard `s`) visibly resizes the node's rendered artifact via `canvasTransform.scaleX/Y/Z`.
+- **SC-071** [Phase R2-D] In canvas mode, OrbitControls is constrained: `minPolarAngle`/`maxPolarAngle`/`minAzimuthAngle`/`maxAzimuthAngle`/`minDistance`/`maxDistance` are set from the active hub's content envelope + viewport-frame, and pan-target clamps prevent drift past the frame.
+- **SC-072** [Phase R2-E] Inspector exposes "Save" and "Save and Rebuild" buttons. Inspector tab fader/knob writes route through `usePreviewStateStore` (not the source store directly); the renderer reads source ⊕ preview overlay so changes appear real-time.
+- **SC-073** [Phase R2-E] "Save" copies preview-state → source store via `updateNode`, clears the preview-state buffer for that node, and lets the existing 1s debounced autosave flush to server.
+- **SC-074** [Phase R2-E] "Save and Rebuild" performs Save + locates the mounted `THREE.Object3D` for the node, calls `object.userData.cleanup()`, re-invokes `createNode(config, ctx)`, and re-mounts at the same `scenePosition`. **Other nodes' `THREE.Object3D` references are stable** (verified by reference identity).
+- **SC-075** [Phase R2-F] Inspector exposes a "Clone" button. Click: source-store gains a deep-cloned node (new id, suffixed caption); view auto-switches to `galaxy`; the clone is attached to a `draggingNodeId` slot on `useGraphEditorStore`.
+- **SC-076** [Phase R2-F] On pointer-up after Clone-drag, the clone is committed: `parentHubId` updates to the nearest hub; caption/subtype reflect the new parent context; `draggingNodeId` clears.
+- **SC-077** [Phase R2-F] During Clone-drag, a transient tether line renders from the cursor's world position to the nearest hub center (Euclidean distance via `hub-geometry.findNearestHub`). The tether snaps as the cursor crosses hub-bisecting planes.
+- **SC-078** [Phase R2-G] Every Ralph task's verification includes a KripVerify pass against the live Vercel preview URL for the pushed commit. The pass: HTTP 200, no console errors, no failing network requests (4xx/5xx), captured `kv_screenshot` at `notes/ralph-snapshots/<task-id>/vercel-preview.png`.
+
 ### Universal SCs (every Ralph task)
 
 - **SC-059** [All] Every task's commit passes `npm run typecheck` from `kid-kode-landing/` (zero errors).
@@ -248,6 +286,12 @@ Each SC is independently verifiable via the verification protocol in §11. Phase
 
 ---
 
+### Round-2 invariants (v1.1)
+
+- **INV-24** — Exactly 3 canonical view modes exist: `galaxy | canvas | preview-app`. New code referencing `'hub-world'` or `'preview-hub'` is rejected (FP-14).
+- **INV-25** — The renderer is the **only** consumer of `canvasTransform` / `editorTransform` / `scenePosition` for visible node placement. Gizmo writes feed the source/preview stores; store reads drive the visual; no other coupling. Concretely: `AssembledSceneNode` (and any node renderer) MUST compose `scenePosition + canvasTransform` for its rendered group, ring, and gizmo anchor. Round-1 SC-042 (edits write only to `canvasTransform`, never `scenePosition`) remains; this invariant adds the read-path obligation.
+- **INV-26** — Single-node rebuild is the only rebuild kind supported in-app. "Save and Rebuild" disposes (`userData.cleanup`) and re-invokes `createNode` for **exactly one** node, re-mounting at the same `scenePosition`. Full `.prism` artifact rebuilds remain a build-time operation (`npm run build:prism`) and are not invoked from inside the app.
+
 ## 8. Forbidden Patterns
 
 Each is grep-testable. The patterns are enforced by `.claude/hooks/anti-drift-check.sh` (and its
@@ -264,7 +308,9 @@ mirror in `kid-kode-landing/.claude/hooks/`) when `.prism-editor-build-active` i
 - **FP-09** — `\basync\s+(?:function\s+)?createNode\b|\bcreateNode\s*=\s*async\b` — `createNode` must be synchronous. (INV-14)
 - **FP-10** — `\.style\.(background|border|boxShadow|backgroundImage)\s*=` — inline chrome writes forbidden. (Existing renderer-era; preserved.)
 - **FP-11** — `useGraphEditorStore\.getState\(\)\.(selectedNodeId|selectedHubId|viewMode)\s*=` — selection state must mutate through actions. (INV-20)
-- **FP-12** — ViewMode literal strings outside the canonical 5: `viewMode\s*[:=]\s*['"](?!galaxy['"]|hub-world['"]|canvas['"]|preview-hub['"]|preview-app['"])['"][a-zA-Z\-]+['"]` in `kid-kode-landing/src/**`. (RA-06)
+- **FP-12** (v1.1 update — supersedes Round-1 form) — ViewMode literal strings outside the canonical **3**: `viewMode\s*[:=]\s*['"](?!galaxy['"]|canvas['"]|preview-app['"])[a-zA-Z\-]+['"]` in `kid-kode-landing/src/**`. (RA-06b) Legacy `'preview'|'editor'|'split'` AND `'hub-world'|'preview-hub'` are all rejected. The pre-v1.1 form is preserved as a historical note; the active hook regex is v1.1.
+- **FP-14** (new in v1.1) — `\b(?:'|")(?:hub-world|preview-hub)(?:'|")` under `kid-kode-landing/src/**`. (INV-24) Direct literal mentions of the superseded modes are blocked at write time.
+- **FP-15** (new in v1.1) — `useGraphSourceStore\.getState\(\)\.updateNode\b` in any file path matching `**/Inspector*.tsx` or `**/panels/*Tab.tsx`. (Phase R2-E) Inspector tab edits MUST route through `usePreviewStateStore` first.
 - **FP-13** — FLUX/diffusion prompt without negative-text discipline. In any file matching `**/asset-pipeline/**` or `**/provision-*.mjs` or `**/generate-*.mjs`, calls to fal.ai / FLUX must include `"no text"` or `"no letters"` in the negative prompt within 20 lines. (INV-13)
 
 ---
@@ -290,6 +336,13 @@ Each assumption is settled. Loop tasks must not re-derive these.
 - **RA-15.** **Edge type colors.** The existing `EDGE_COLORS` table in `GraphScene.tsx` is the deterministic source of tether colors. Phase 3 extends it only by adding category-specific entries for galaxy-mode hub-to-hub reasons; existing entries are not changed.
 
 ---
+
+### Round-2 Resolved Assumptions (v1.1)
+
+- **RA-06b (supersedes RA-06).** Canonical view modes reduced to `galaxy | canvas | preview-app`. Pre-existing `hub-world` callers fold into `canvas`; `preview-hub` callers fold into `preview-app`. `editorRenderMode = 'scene' | 'topology'` (Codex's Round-1 sub-toggle, EB-01-04) becomes a sub-toggle within canvas. `previousAuthoringMode` field on `useGraphEditorStore` is deleted — Round-2's preview-app default makes its sole consumer (preview-hub back button) obsolete.
+- **RA-16.** "Save and Rebuild" = single-node visual artifact re-render only. Save persists; Save-and-Rebuild persists + `userData.cleanup()` + re-invoke `createNode(config, ctx)` for *exactly one* node, re-mounting at the same `scenePosition`. **Other nodes are not touched.** Full `.prism` artifact rebuilds remain a build-time operation (`npm run build:prism`) and are NOT invoked from inside the app.
+- **RA-17.** Default `viewMode` on app boot is `'preview-app'`. The prototype IS the preview window of a future AI app builder; users care first about what the app looks like, then optionally toggle to `galaxy` or `canvas` to edit. When integrated into the AI builder, a streaming chat panel sits to the left of this pane.
+- **RA-18.** Per-task verification gains a KripVerify pass against the live Vercel preview deployment URL for the pushed commit. The pass invokes `kv_navigate` → `kv_wait_for(canvas)` → `kv_screenshot(full_page=true)` → `kv_check_console(level='error')` → `kv_check_network(status_min=400)`. Artifacts persist to `kid-kode-landing/notes/ralph-snapshots/<task-id>/vercel-preview.{png,json}`. Failing KripVerify = task failure (worker stays `in-progress`; outer loop retries up to `maxAttemptsPerTask`).
 
 ## 10. Phased implementation plan
 
@@ -358,6 +411,49 @@ targets per phase. Atomic task ids use the form `EB-<phase>-<n>`.
 
 ---
 
+### Round 2 — task groups A through G (v1.1, ~24 tasks on `prism-editor-build`)
+
+EBR2-* ids; same branch, same `/ralph-step-editor` worker (Phase R2-G adds the KripVerify sub-step to the command itself).
+
+- **Phase R2-A — view-mode reduction + default-mode flip (3 tasks; SC-064, SC-065)**
+  - EBR2-A-01 Spec → v1.1 (this file).
+  - EBR2-A-02 Reduce `ViewMode` type to 3; migrate callers; delete 5-button toggle; update FP-12 + add FP-14.
+  - EBR2-A-03 Default `viewMode = 'preview-app'`; 3-mode round-trip selection/state preservation snapshot.
+
+- **Phase R2-B — preview-app node assembly (4 tasks; SC-066, SC-067)**
+  - EBR2-B-01 `resolveAnchorToScenePosition(anchor, hub, breakpoint)` in `compile-anchors.ts`.
+  - EBR2-B-02 Plumb `CompiledHubView` (active hub) into `PrismHost` props.
+  - EBR2-B-03 Node-layout effect in `PrismHost` mirroring camera-rail effect; calls `liveResult.updateNodeTransform`.
+  - EBR2-B-04 Two-runtime snapshot proves full home-hub assembly (≥10 visible nodes) at preview-app boot.
+
+- **Phase R2-C — canvas edit mode + transform-read fix (4 tasks; SC-068, SC-069, SC-070)**
+  - EBR2-C-01 `editorMode: 'idle' | 'edit'` on store; "Edit" button in Inspector.
+  - EBR2-C-02 Gate `CanvasTransformGizmo` on `editorMode === 'edit'`.
+  - EBR2-C-03 `AssembledSceneNode` composes `scenePosition + canvasTransform` for rendered group + ring; scale/rotation applied.
+  - EBR2-C-04 Re-anchor gizmo wrapper at composed position; snapshot proves node visibly moves on drag.
+
+- **Phase R2-D — canvas camera guardrails (2 tasks; SC-071)**
+  - EBR2-D-01 `canvas-camera-rail.ts` pure fn computing bounds from hub envelope + viewport-frame.
+  - EBR2-D-02 Apply bounds to `SceneControlsBridge` for canvas mode; snapshot proves camera clamps.
+
+- **Phase R2-E — Save / Save-and-Rebuild (4 tasks; SC-072, SC-073, SC-074)**
+  - EBR2-E-01 `usePreviewStateStore` (new file).
+  - EBR2-E-02 Inspector tabs write via preview store (FP-15 enforced); renderer reads source ⊕ preview overlay.
+  - EBR2-E-03 "Save" button: preview → source via `updateNode`; debounced autosave flushes.
+  - EBR2-E-04 "Save and Rebuild": Save + `userData.cleanup` + `createNode` re-invoke + re-mount at same `scenePosition`. Other nodes' `THREE.Object3D` refs stable.
+
+- **Phase R2-F — Clone + nearest-hub snap (5 tasks; SC-075, SC-076, SC-077)**
+  - EBR2-F-01 `hub-geometry.ts`: `getHubWorldPositions()` + `findNearestHub()`.
+  - EBR2-F-02 `cloneNode(sourceId): newNodeId` action on `useGraphSourceStore`.
+  - EBR2-F-03 "Clone" button in Inspector; auto-switch to galaxy; attach to `draggingNodeId` slot.
+  - EBR2-F-04 Galaxy-mode drag listener: cursor → world position → nearest-hub computation; transient drag-tether render.
+  - EBR2-F-05 Pointer-up: commit `parentHubId` + caption/subtype auto-update; clear `draggingNodeId`.
+
+- **Phase R2-G — Vercel preview + KripVerify visual analysis (3 tasks; SC-078)**
+  - EBR2-G-01 `kid-kode-landing/scripts/wait-for-vercel-preview.mjs` (poll Vercel API for deploy state).
+  - EBR2-G-02 Extend `/ralph-step-editor` Step 8: invoke `kv_navigate` + `kv_wait_for` + `kv_screenshot` + `kv_check_console` + `kv_check_network`.
+  - EBR2-G-03 Failing KripVerify = task failure; persist findings to `notes/ralph-snapshots/<task-id>/vercel-preview.{png,json}`.
+
 ## 11. Verification protocol
 
 Every Ralph task must produce, in order:
@@ -367,12 +463,17 @@ Every Ralph task must produce, in order:
 3. `npm run verify:prism` — the migration-aware verifier (15 static + artifact checks; editor-build path added).
 4. **Two-runtime snapshot** — Playwright drives the dev server through:
    - Outer route(s) named in `task.kvVerify.routes`. Capture `outer.png`.
-   - Inner runtime in `preview-hub` mode against the mock `.prism` artifact. Capture `inner.png`.
+   - Inner runtime in `preview-app` mode (v1.1; was `preview-hub` pre-v1.1) against the mock `.prism` artifact. Capture `inner.png`.
    - Write `state.json` recording `viewMode`, `selectedHubId`, `selectedNodeId`, camera pose.
    - Write `verify.log` recording per-step outcomes.
    - Artifact path: `kid-kode-landing/notes/ralph-snapshots/<task-id>/`.
    - Mirror: `.kripverify/findings/screenshots/<task-id>/`.
-5. **spec-reviewer subagent** invoked on HEAD; MUST-FIX items block the commit.
+5. **Vercel preview KripVerify pass** (new in v1.1, RA-18). After Step 13 push, worker runs:
+   - `node scripts/wait-for-vercel-preview.mjs --commit=<sha>` to resolve the live preview URL.
+   - `kv_navigate({url})` → `kv_wait_for({selector: 'canvas', timeout_ms: 30000})` → `kv_screenshot({full_page: true})` → `kv_check_console({level: 'error'})` (must be empty) → `kv_check_network({status_min: 400})` (must be empty).
+   - Persist `vercel-preview.png` + findings JSON to `notes/ralph-snapshots/<task-id>/`.
+   - Failing KripVerify = task failure (worker stays `in-progress`; outer loop retries up to `maxAttemptsPerTask`).
+6. **spec-reviewer subagent** invoked on HEAD; MUST-FIX items block the commit.
 
 A failing screenshot is a task failure, never a warning. The snapshot's `state.json` is
 compared against `task.kvVerify.compareTo` (a prior task-id) when set; otherwise the snapshot is

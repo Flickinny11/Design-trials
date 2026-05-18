@@ -98,23 +98,63 @@ Commit the failing test as `test: <task-id> - failing tests for <specRefs>`.
 Write the minimum code to make the failing tests pass and satisfy `task.haltCheck`. Respect
 the active hooks:
 
-- The anti-drift hook blocks FP-01..FP-13 on Write/Edit under
+- The anti-drift hook blocks FP-01..FP-15 on Write/Edit under
   `kid-kode-landing/src/**` when `.prism-editor-build-active` exists. Read
   `.claude/rules/prism-editor-build.md` and `PRISM-EDITOR-BUILD-SPEC.md` §8 (forbidden
-  patterns) before writing.
+  patterns) before writing. Round-2 FPs added: FP-12 updated (3 canonical view-mode literals
+  only), FP-14 ('hub-world'/'preview-hub' literals forbidden), FP-15 (Inspector tabs must
+  route through usePreviewStateStore, not useGraphSourceStore.updateNode directly).
 - The renderer-migration hooks remain active under `.ralph-migration-active`: no PixiJS, no
   `THREE.TextGeometry`, synchronous `createNode`, no DOM access (except
   `window.devicePixelRatio`).
 
 Do not work on any other task. Do not edit the failing tests from Step 6.
 
-## Step 8 — verify (gates)
+## Step 8 — verify (gates) — **Round 2 adds Vercel-preview KripVerify pass**
 
 Run every command in `task.verificationCommands[]` in order. ALL must pass with exit 0. The
 two-runtime snapshot (`scripts/verify-editor-runtimes.mjs --task-id=<task-id>`) is always one
 of these commands and MUST produce non-empty `outer.png`, `inner.png`, and `state.json` at
 `kid-kode-landing/notes/ralph-snapshots/<task-id>/`. **A failing screenshot is a task
 failure, never a warning.**
+
+### Step 8b — Vercel-preview KripVerify pass (Round-2 RA-18, SC-078)
+
+After local snapshot + `verify:prism` pass AND after Step 13's push, you run the live-preview
+visual analysis using the KripVerify MCP tools. The `kv_*` toolset is registered via
+`.mcp.json` and available in every worker session.
+
+Procedure:
+
+1. Get the Vercel preview URL for the just-pushed commit:
+   ```bash
+   cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=<HEAD-sha>
+   ```
+   This polls the Vercel API (auth via `VERCEL_TOKEN`) and emits
+   `{url, deployState, deploymentId, ...}` JSON on stdout when state=READY (exit 0).
+   Failures (ERROR / CANCELED / timeout) exit non-zero — that's a task failure.
+2. Parse the URL from the JSON. Then invoke the `kv_*` tools in this order:
+   - `kv_navigate({url})` — navigate the verifier browser to the live preview.
+   - `kv_wait_for({selector: 'canvas', timeout_ms: 30000})` — confirm the runtime mounted.
+   - `kv_screenshot({full_page: true})` — capture the full page; save the returned image to
+     `kid-kode-landing/notes/ralph-snapshots/<task-id>/vercel-preview.png`.
+   - `kv_check_console({level: 'error'})` — **must return an empty array.** Any console
+     error = task failure.
+   - `kv_check_network({status_min: 400})` — **must return an empty array.** Any 4xx/5xx
+     network response = task failure.
+3. Write a `vercel-preview.json` summary alongside the screenshot containing:
+   `{url, deploymentId, deployState, console: [...], network: [...]}`.
+
+**Treat the Vercel-preview pass as equally blocking as the local snapshot.** A failure here
+is not a warning. If KripVerify finds errors:
+- Read the captured findings, fix the implementation (not the tests).
+- Push the fix (Step 10 + 13). Re-run the Vercel-preview pass.
+- Up to 3 internal fix attempts per session — same limit as Step 8's local gates.
+- If still failing after 3 attempts, leave the task `in-progress` and exit. The outer loop
+  retries the task next iteration (counted against `maxAttemptsPerTask`).
+
+Stage the `vercel-preview.{png,json}` files in Step 12 so they commit alongside the local
+snapshot. **A failing KripVerify pass is a task failure.**
 
 If any command fails:
 - Read the failure, fix the implementation (NOT the tests).
