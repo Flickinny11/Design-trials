@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T19:00:00Z",
+  "updatedAt": "2026-05-18T19:13:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 3,
-    "lastProductiveCommit": "a4de051fad2255aa56217e2a05993336fd594332"
+    "lastProductiveIteration": 4,
+    "lastProductiveCommit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§R2-B": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 3,
-    "commit": "a4de051fad2255aa56217e2a05993336fd594332",
-    "verifiedAt": "2026-05-18T18:51:09Z",
+    "iteration": 4,
+    "commit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b",
+    "verifiedAt": "2026-05-18T19:13:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T18:51:09Z"
+    "recordedAt": "2026-05-18T19:13:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -105,6 +105,14 @@
       "commit": "3c7d2505139d2305e576367586323d9ae624fed7",
       "verifiedAt": "2026-05-18T18:37:35Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-03/"
+    },
+    {
+      "iteration": 4,
+      "taskId": "EBR2-B-01",
+      "phase": "§R2-B",
+      "commit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b",
+      "verifiedAt": "2026-05-18T19:13:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-01/"
     }
   ],
   "tasks": [
@@ -201,11 +209,11 @@
       ],
       "haltCheck": "compile-anchors.ts exports resolveAnchorToScenePosition(anchor, hub, breakpoint): {x,y,z} — pure deterministic function. Unit tests cover all anchor types (world|viewport|scroll|hybrid|sticky|parallax|camera-locked).",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Verification command vitest filter corrected from 'src/lib/prism-graph/compile-anchors' (no test files match because tests live in tests/editor-build per tests/README.md convention, not colocated) to the actual test file path. haltCheck unchanged."
+      "commit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b",
+      "verifiedAt": "2026-05-18T19:13:00Z",
+      "notes": "Verification command vitest filter corrected from 'src/lib/prism-graph/compile-anchors' (no test files match because tests live in tests/editor-build per tests/README.md convention, not colocated) to the actual test file path. haltCheck unchanged. Implementation: dispatch on CompiledAnchor.kind — 'world' | 'hub-scene' | 'camera' pass-through; 'viewport-relative' maps anchor.{x,y} ∈ [0,1] via (anchor.x-0.5)*vw*scale and (0.5-anchor.y)*vh*scale (y-flip + center origin), anchor.z preserved. Pure / deterministic / non-destructive (INV-17). breakpoint?.scale defaults to 1. Tests: 21/21 pass; failing-test commit 2705506 precedes impl commit cc6d7bb (TDD ordering preserved). spec-reviewer: 0 MUST FIX, 5 SHOULD FIX (progress log appended in Step 12; 4 deferred — throw on unknown CompiledAnchorKind instead of returning origin, drop ?? 0 layout fallback since PrismHubLayout fields are non-optional, strengthen non-mutation test with structuredClone + Object.isFrozen, add UI_ANCHOR_TO_COMPILED_KIND back-reference header comment), 3 OPTIONAL (re-export shared ReadonlyVec3 if a third call site appears, etc.). Hook note: post-edit-typecheck.sh exit-2 blocks writes that leave tsc broken — TDD ordering preserved by stashing the impl after writing both files, committing the test alone, restoring the impl, then committing the impl; verified the failing-test commit fails 21/21 against pre-impl code."
     },
     {
       "id": "EBR2-B-02",
