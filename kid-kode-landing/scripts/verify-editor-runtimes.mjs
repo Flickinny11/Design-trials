@@ -2,7 +2,7 @@
 // Two-runtime verification for the Prism Editor Build.
 // Captures deterministic snapshots of BOTH runtimes per task:
 //   1. Outer Next.js editor runtime — captures outer.png + state.json from the editor routes.
-//   2. Inner Prism runtime — drives the editor into preview-hub mode against the mock .prism
+//   2. Inner Prism runtime — drives the editor into preview-app mode (RA-06b: was preview-hub) against the mock .prism
 //      artifact and captures inner.png.
 //
 // Snapshot location:
@@ -150,11 +150,10 @@ async function main() {
     check('outer.screenshot', 'outer.png captured', existsSync(outerPng));
 
     const outerState = await page.evaluate(() => {
-      // Best-effort read of useGraphEditorStore state if exposed; otherwise null.
-      // EBR2-A-03 / SC-064 — also read viewMode directly from the live zustand
-      // store via the __PRISM_DEBUG_STORES__ handle, since the legacy
-      // __PRISM_EDITOR_STATE__ value is not currently populated.
-      const legacyStore = window.__PRISM_EDITOR_STATE__ || null;
+      // EBR2-A-03 / SC-064 — read viewMode + a small subset of editor state
+      // directly from the live zustand store via the __PRISM_DEBUG_STORES__
+      // handle. This is the canonical source; the legacy
+      // __PRISM_EDITOR_STATE__ value is no longer populated anywhere.
       const debug = window.__PRISM_DEBUG_STORES__;
       let liveEditor = null;
       let liveViewMode = null;
@@ -176,21 +175,23 @@ async function main() {
       return {
         url: location.href,
         title: document.title,
-        editorStore: legacyStore || liveEditor,
+        editorStore: liveEditor,
         viewMode: liveViewMode,
         canvasCount: document.querySelectorAll('canvas').length,
       };
     }).catch(() => null);
 
-    // === INNER RUNTIME — switch to preview-hub mode and capture inner.png ========
-    // Strategy: programmatically set viewMode='preview-hub' via the dev hook if exposed;
-    // otherwise click the preview-hub toggle in the UI; otherwise just wait for the
-    // PrismHost mount to settle.
+    // === INNER RUNTIME — switch to preview-app mode and capture inner.png ========
+    // RA-06b collapsed the Round-1 'preview-hub' mode into 'preview-app'.
+    // Strategy: programmatically set viewMode='preview-app' via the dev hook
+    // if exposed; otherwise just wait for the PrismHost mount to settle. The
+    // setter rejects off-canon strings silently — only the 3 canonical
+    // modes (galaxy | canvas | preview-app) are accepted.
     await page.evaluate(() => {
       try {
         const setter = window.__PRISM_EDITOR_SET_VIEW_MODE__;
         if (typeof setter === 'function') {
-          setter('preview-hub');
+          setter('preview-app');
           return 'via-hook';
         }
       } catch (_) {}
@@ -200,7 +201,7 @@ async function main() {
 
     const loadingVisible = await page.locator('text=LOADING PRISM').isVisible().catch(() => false);
     const failVisible = await page.locator('text=PRISM BOOT FAILED').isVisible().catch(() => false);
-    check('inner.mounted', 'inner Prism runtime mounted in preview-hub',
+    check('inner.mounted', 'inner Prism runtime mounted in preview-app',
       !loadingVisible && !failVisible,
       failVisible ? 'PRISM BOOT FAILED visible' : loadingVisible ? 'still loading after 3.5s' : 'mounted');
 
