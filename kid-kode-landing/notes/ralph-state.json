@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 1,
+  "currentIteration": 2,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T16:35:23Z",
+  "updatedAt": "2026-05-18T16:55:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,23 +33,51 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 1,
-    "lastProductiveCommit": "6deff84d7c38ff14d381440ab372f2129dd538f7"
+    "lastProductiveCommit": "b0f88b16917d3cb7be6fccf56946382c737309de"
   },
   "phaseCaps": {
-    "§R2-A": { "used": 1, "cap": 50, "status": "active" },
-    "§R2-B": { "used": 0, "cap": 50, "status": "active" },
-    "§R2-C": { "used": 0, "cap": 50, "status": "active" },
-    "§R2-D": { "used": 0, "cap": 50, "status": "active" },
-    "§R2-E": { "used": 0, "cap": 50, "status": "active" },
-    "§R2-F": { "used": 0, "cap": 50, "status": "active" },
-    "§R2-G": { "used": 0, "cap": 50, "status": "active" }
+    "§R2-A": {
+      "used": 1,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-B": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-C": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-D": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-E": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-F": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    },
+    "§R2-G": {
+      "used": 0,
+      "cap": 50,
+      "status": "active"
+    }
   },
   "checkpoint": {
     "iteration": 1,
-    "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
-    "verifiedAt": "2026-05-18T16:35:23Z",
+    "commit": "b0f88b16917d3cb7be6fccf56946382c737309de",
+    "verifiedAt": "2026-05-18T16:50:53Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T16:35:23Z"
+    "recordedAt": "2026-05-18T16:50:53Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -68,7 +96,9 @@
       "id": "EBR2-A-01",
       "title": "Confirm spec v1.1 in place; no further spec edits in this task",
       "phase": "§R2-A",
-      "specRefs": ["§R2-A v1.1 amendment"],
+      "specRefs": [
+        "§R2-A v1.1 amendment"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "grep -q '^# Prism Editor Build Specification v1.1' kid-kode-landing/docs/prism/PRISM-EDITOR-BUILD-SPEC.md",
@@ -90,7 +120,13 @@
       "id": "EBR2-A-02",
       "title": "Reduce ViewMode type to 3 (galaxy|canvas|preview-app); migrate callers; delete 5-button toggle",
       "phase": "§R2-A",
-      "specRefs": ["§R2-A SC-065", "§R2-A INV-24", "§R2-A FP-12", "§R2-A FP-14", "§R2-A RA-06b"],
+      "specRefs": [
+        "§R2-A SC-065",
+        "§R2-A INV-24",
+        "§R2-A FP-12",
+        "§R2-A FP-14",
+        "§R2-A RA-06b"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -102,8 +138,8 @@
       ],
       "haltCheck": "useGraphEditorStore.ts exports ViewMode = 'galaxy' | 'canvas' | 'preview-app'. Zero hits for 'hub-world' or 'preview-hub' literals under kid-kode-landing/src/. page.tsx renders a 3-button mode toggle. previousAuthoringMode field removed. tsc + build clean. Vercel preview clean.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
@@ -112,7 +148,11 @@
       "id": "EBR2-A-03",
       "title": "Default viewMode = 'preview-app'; verify 3-mode round-trip selection persistence",
       "phase": "§R2-A",
-      "specRefs": ["§R2-A SC-064", "§R2-A RA-17", "§R2-A INV-20"],
+      "specRefs": [
+        "§R2-A SC-064",
+        "§R2-A RA-17",
+        "§R2-A INV-20"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -133,7 +173,9 @@
       "id": "EBR2-B-01",
       "title": "resolveAnchorToScenePosition utility in compile-anchors.ts",
       "phase": "§R2-B",
-      "specRefs": ["§R2-B SC-066"],
+      "specRefs": [
+        "§R2-B SC-066"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -153,7 +195,10 @@
       "id": "EBR2-B-02",
       "title": "Plumb CompiledHubView (active hub) into PrismHost props",
       "phase": "§R2-B",
-      "specRefs": ["§R2-B SC-066", "§R2-B INV-17"],
+      "specRefs": [
+        "§R2-B SC-066",
+        "§R2-B INV-17"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -173,7 +218,10 @@
       "id": "EBR2-B-03",
       "title": "PrismHost node-layout effect — apply compiled anchors via liveResult.updateNodeTransform",
       "phase": "§R2-B",
-      "specRefs": ["§R2-B SC-066", "§R2-B INV-17"],
+      "specRefs": [
+        "§R2-B SC-066",
+        "§R2-B INV-17"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -193,7 +241,10 @@
       "id": "EBR2-B-04",
       "title": "Preview-app two-runtime snapshot — proves full home-hub assembly (≥10 visible nodes)",
       "phase": "§R2-B",
-      "specRefs": ["§R2-B SC-066", "§R2-B SC-067"],
+      "specRefs": [
+        "§R2-B SC-066",
+        "§R2-B SC-067"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EBR2-B-04",
@@ -212,7 +263,9 @@
       "id": "EBR2-C-01",
       "title": "Add editorMode ('idle'|'edit') to useGraphEditorStore + Inspector Edit button",
       "phase": "§R2-C",
-      "specRefs": ["§R2-C SC-068"],
+      "specRefs": [
+        "§R2-C SC-068"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -234,7 +287,9 @@
       "id": "EBR2-C-02",
       "title": "Gate CanvasTransformGizmo on editorMode === 'edit'",
       "phase": "§R2-C",
-      "specRefs": ["§R2-C SC-068"],
+      "specRefs": [
+        "§R2-C SC-068"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -254,7 +309,11 @@
       "id": "EBR2-C-03",
       "title": "AssembledSceneNode composes scenePosition + canvasTransform for rendered group + ring",
       "phase": "§R2-C",
-      "specRefs": ["§R2-C SC-069", "§R2-C SC-070", "§R2-C INV-25"],
+      "specRefs": [
+        "§R2-C SC-069",
+        "§R2-C SC-070",
+        "§R2-C INV-25"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -274,7 +333,10 @@
       "id": "EBR2-C-04",
       "title": "Re-anchor gizmo wrapper at composed position; snapshot proves drag visibly moves node",
       "phase": "§R2-C",
-      "specRefs": ["§R2-C SC-069", "§R2-C INV-25"],
+      "specRefs": [
+        "§R2-C SC-069",
+        "§R2-C INV-25"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -294,7 +356,9 @@
       "id": "EBR2-D-01",
       "title": "canvas-camera-rail.ts — pure fn computing guardrails from hub envelope + viewport frame",
       "phase": "§R2-D",
-      "specRefs": ["§R2-D SC-071"],
+      "specRefs": [
+        "§R2-D SC-071"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -314,7 +378,9 @@
       "id": "EBR2-D-02",
       "title": "Apply canvas camera guardrails to SceneControlsBridge; snapshot proves clamps",
       "phase": "§R2-D",
-      "specRefs": ["§R2-D SC-071"],
+      "specRefs": [
+        "§R2-D SC-071"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -334,7 +400,9 @@
       "id": "EBR2-E-01",
       "title": "usePreviewStateStore — ephemeral per-node edits",
       "phase": "§R2-E",
-      "specRefs": ["§R2-E SC-072"],
+      "specRefs": [
+        "§R2-E SC-072"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -354,7 +422,10 @@
       "id": "EBR2-E-02",
       "title": "Route Inspector tab writes through usePreviewStateStore; renderer reads source ⊕ preview overlay",
       "phase": "§R2-E",
-      "specRefs": ["§R2-E SC-072", "§R2-E FP-15"],
+      "specRefs": [
+        "§R2-E SC-072",
+        "§R2-E FP-15"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -375,7 +446,10 @@
       "id": "EBR2-E-03",
       "title": "Save button — copy preview-state → source store; clear preview buffer",
       "phase": "§R2-E",
-      "specRefs": ["§R2-E SC-072", "§R2-E SC-073"],
+      "specRefs": [
+        "§R2-E SC-072",
+        "§R2-E SC-073"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -395,7 +469,11 @@
       "id": "EBR2-E-04",
       "title": "Save and Rebuild — single-node visual artifact re-render",
       "phase": "§R2-E",
-      "specRefs": ["§R2-E SC-074", "§R2-E INV-26", "§R2-E RA-16"],
+      "specRefs": [
+        "§R2-E SC-074",
+        "§R2-E INV-26",
+        "§R2-E RA-16"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -415,7 +493,9 @@
       "id": "EBR2-F-01",
       "title": "hub-geometry.ts — getHubWorldPositions + findNearestHub",
       "phase": "§R2-F",
-      "specRefs": ["§R2-F SC-077"],
+      "specRefs": [
+        "§R2-F SC-077"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -435,7 +515,9 @@
       "id": "EBR2-F-02",
       "title": "cloneNode(sourceId) action on useGraphSourceStore",
       "phase": "§R2-F",
-      "specRefs": ["§R2-F SC-075"],
+      "specRefs": [
+        "§R2-F SC-075"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -456,7 +538,9 @@
       "id": "EBR2-F-03",
       "title": "Clone button + auto-switch to galaxy + draggingNodeId state",
       "phase": "§R2-F",
-      "specRefs": ["§R2-F SC-075"],
+      "specRefs": [
+        "§R2-F SC-075"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -478,7 +562,9 @@
       "id": "EBR2-F-04",
       "title": "Galaxy-mode drag listener — cursor → world → nearest-hub computation + transient tether",
       "phase": "§R2-F",
-      "specRefs": ["§R2-F SC-077"],
+      "specRefs": [
+        "§R2-F SC-077"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -498,7 +584,9 @@
       "id": "EBR2-F-05",
       "title": "Pointer-up commits clone — parentHubId + caption/subtype auto-update; clear drag state",
       "phase": "§R2-F",
-      "specRefs": ["§R2-F SC-076"],
+      "specRefs": [
+        "§R2-F SC-076"
+      ],
       "tddRequired": true,
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
@@ -518,7 +606,10 @@
       "id": "EBR2-G-01",
       "title": "wait-for-vercel-preview.mjs — poll Vercel API for deploy state",
       "phase": "§R2-G",
-      "specRefs": ["§R2-G SC-078", "§R2-G RA-18"],
+      "specRefs": [
+        "§R2-G SC-078",
+        "§R2-G RA-18"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "test -f kid-kode-landing/scripts/wait-for-vercel-preview.mjs",
@@ -537,7 +628,9 @@
       "id": "EBR2-G-02",
       "title": "Extend /ralph-step-editor Step 8b — kv_* MCP tools against the LOCAL kripverify sandbox (primary)",
       "phase": "§R2-G",
-      "specRefs": ["§R2-G SC-078"],
+      "specRefs": [
+        "§R2-G SC-078"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "grep -q 'wait-for-vercel-preview' .claude/commands/ralph-step-editor.md",
@@ -560,7 +653,9 @@
       "id": "EBR2-G-03",
       "title": "Failing KripVerify-local = task failure; verify findings persistence",
       "phase": "§R2-G",
-      "specRefs": ["§R2-G SC-078"],
+      "specRefs": [
+        "§R2-G SC-078"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "grep -q 'failure' .claude/commands/ralph-step-editor.md",
@@ -579,7 +674,10 @@
       "id": "EBR2-G-04",
       "title": "Step 8c — Vercel observability (wait-for-vercel-preview + fetch-vercel-logs); non-blocking diagnostic",
       "phase": "§R2-G",
-      "specRefs": ["§R2-G SC-079", "§R2-G RA-18"],
+      "specRefs": [
+        "§R2-G SC-079",
+        "§R2-G RA-18"
+      ],
       "tddRequired": false,
       "verificationCommands": [
         "test -x kid-kode-landing/scripts/wait-for-vercel-preview.mjs",
