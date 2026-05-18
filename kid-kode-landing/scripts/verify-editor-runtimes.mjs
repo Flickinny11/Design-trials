@@ -217,6 +217,115 @@ async function main() {
       criticalErrors.length === 0,
       criticalErrors.length ? criticalErrors.slice(0, 2).join(' | ') : 'clean');
 
+    // === EBR2-B-04 — Preview-app full-hub assembly capture =====================
+    // SC-066 demands every node in the active hub render at its compiled-anchor
+    // position via `liveResult.updateNodeTransform`. SC-067 demands the
+    // preview-app background mounts at the correct size with no blank edges.
+    // The live-graph fixture seeds 6 nodes for the `home` hub; this branch
+    // clones 5 additional synthetic nodes into useGraphSourceStore at runtime
+    // (mirroring EB-10-02/EB-10-03's seed pattern) so the assembly pipeline
+    // is exercised against the spec's ≥10 visible-nodes threshold. The
+    // `__PRISM_EDITOR_COMPILED_HUB_VIEW__` dev hook (installed in
+    // src/app/page.tsx) exposes the active CompiledHubView's counts so the
+    // snapshot's state.json records the proof.
+    let assembledHubView = null;
+    if (TASK_ID === 'EBR2-B-04') {
+      // Switch into preview-app first so the runtime is already mounted and
+      // the compiled-view memo is computing. Then seed clones into the source
+      // store; the runtime subscription diffs upserts and re-mounts, and the
+      // node-layout effect re-runs on the recomputed compiledHubView.
+      await page.evaluate(() => {
+        const setter = (window).__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') setter('preview-app');
+      });
+      await page.waitForTimeout(1200);
+
+      const seedSummary = await page.evaluate(() => {
+        const stores = (window).__PRISM_DEBUG_STORES__;
+        if (!stores?.graphSource) return { error: 'graph-source-store-not-exposed' };
+        const state = stores.graphSource.getState();
+        const sourceNodes = state.nodes ?? [];
+        const homeNodes = sourceNodes.filter((n) => n.parentHubId === 'home');
+        // Pick a sprite donor that already mounts cleanly; clone with new
+        // ids and slight x offsets so the snapshot reviewer sees distinct
+        // node artifacts arrayed across the hub canvas.
+        const donor = homeNodes.find((n) => n.subtype === 'feature-card')
+          ?? homeNodes.find((n) => (n.renderMode ?? 'sprite') === 'sprite')
+          ?? homeNodes[0];
+        if (!donor) return { error: 'no-donor-node' };
+
+        const cloneCount = Math.max(0, 10 - homeNodes.length + 2); // 10 - 6 + 2 = 6 clones
+        const clones = [];
+        for (let i = 0; i < cloneCount; i += 1) {
+          const cloneId = `home-assembly-clone-${i + 1}`;
+          if (sourceNodes.some((n) => n.nodeId === cloneId)) continue;
+          const cloned = JSON.parse(JSON.stringify(donor));
+          cloned.nodeId = cloneId;
+          cloned.parentHubId = 'home';
+          // Spread the clones along a horizontal arc so SC-066 visibility is
+          // legible in inner.png; offsets resolve through the same anchor
+          // pipeline as the donor (compileAppToPreview is pure, INV-17).
+          const offsetX = -2.4 + 0.8 * i;
+          const offsetY = -1.5 + 0.4 * (i % 2);
+          const sp = cloned.scenePosition ?? { x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1, scaleZ: 1 };
+          cloned.scenePosition = { ...sp, x: offsetX, y: offsetY, z: sp.z ?? 0 };
+          clones.push(cloned);
+        }
+        stores.graphSource.setState({ nodes: [...sourceNodes, ...clones] });
+        return {
+          baselineHomeNodeCount: homeNodes.length,
+          clonesAdded: clones.length,
+          donorNodeId: donor.nodeId,
+          donorRenderMode: donor.renderMode ?? 'sprite',
+        };
+      });
+
+      // Allow the compileAppToPreview memo + node-layout effect to settle
+      // and any newly-mounted Object3Ds to warm up before screenshotting.
+      await page.waitForTimeout(2500);
+
+      const compiledView = await page.evaluate(() => {
+        const getter = (window).__PRISM_EDITOR_COMPILED_HUB_VIEW__;
+        if (typeof getter !== 'function') return { error: 'compiled-view-hook-not-installed' };
+        return getter();
+      });
+
+      assembledHubView = { seedSummary, compiledView };
+
+      const compiledOk = !!(compiledView
+        && !compiledView.error
+        && typeof compiledView.nodeCount === 'number'
+        && compiledView.nodeCount >= 10
+        && compiledView.visibleNodeCount >= 10);
+      check(
+        'preview-app.assembled-nodes',
+        'preview-app compiled hub view assembles ≥10 visible nodes (SC-066)',
+        compiledOk,
+        compiledOk
+          ? `hubId=${compiledView.hubId} nodes=${compiledView.nodeCount} visible=${compiledView.visibleNodeCount} bg=${compiledView.backgroundLayerCount}`
+          : (compiledView && compiledView.error)
+            ? compiledView.error
+            : `count=${compiledView?.nodeCount} visible=${compiledView?.visibleNodeCount}`,
+      );
+
+      const backgroundOk = !!(compiledView
+        && !compiledView.error
+        && compiledView.backgroundLayerCount >= 1);
+      check(
+        'preview-app.background-mounted',
+        'preview-app background mounts at active breakpoint (SC-067)',
+        backgroundOk,
+        backgroundOk
+          ? `layers=${compiledView.backgroundLayerCount}`
+          : `layers=${compiledView?.backgroundLayerCount ?? 'n/a'}`,
+      );
+
+      // Re-screenshot now that the seeded nodes have been compiled +
+      // mounted so inner.png witnesses the full-hub assembly.
+      const innerAppPng = join(snapDir, 'inner.png');
+      await page.screenshot({ path: innerAppPng, fullPage: false });
+    }
+
     // === EB-10-02 — Preview-app route-like navigation capture ====================
     // SC-054 demands that hub-to-hub navigation reflect in the URL hash and
     // survive browser back/forward. The editor-shell installs the
@@ -546,6 +655,14 @@ async function main() {
       ...(previewAppNav ? { previewAppNav } : {}),
       ...(hubTransit ? { hubTransit } : {}),
       ...(previewAppWorld ? { previewAppWorld } : {}),
+      ...(assembledHubView
+        ? {
+            assembledHubView,
+            compiledNodeCount: assembledHubView?.compiledView?.nodeCount ?? null,
+            compiledVisibleNodeCount:
+              assembledHubView?.compiledView?.visibleNodeCount ?? null,
+          }
+        : {}),
       summary: {
         outerScreenshot: 'outer.png',
         innerScreenshot: 'inner.png',

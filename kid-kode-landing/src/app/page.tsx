@@ -246,6 +246,36 @@ export default function Page() {
     };
   }, []);
 
+  // EBR2-B-04 / §R2-B SC-066 — debug getter for the active CompiledHubView so
+  // verify-editor-runtimes can record `compiledNodeCount` (the assembly
+  // proof) in state.json without re-implementing compileAppToPreview in the
+  // script. Returns a structural read-only snapshot of the in-scope memo
+  // (`activeCompiledHubView`); never mutates the source graph (INV-17).
+  useEffect(() => {
+    (window as unknown as {
+      __PRISM_EDITOR_COMPILED_HUB_VIEW__?: () => {
+        hubId: string;
+        nodeCount: number;
+        visibleNodeCount: number;
+        backgroundLayerCount: number;
+      } | null;
+    }).__PRISM_EDITOR_COMPILED_HUB_VIEW__ = () => {
+      const v = activeCompiledHubView;
+      if (!v) return null;
+      return {
+        hubId: v.hubId,
+        nodeCount: v.nodes.length,
+        visibleNodeCount: v.nodes.filter((n) => n.visible !== false).length,
+        backgroundLayerCount: v.background.length,
+      };
+    };
+    return () => {
+      delete (window as unknown as {
+        __PRISM_EDITOR_COMPILED_HUB_VIEW__?: unknown;
+      }).__PRISM_EDITOR_COMPILED_HUB_VIEW__;
+    };
+  }, [activeCompiledHubView]);
+
   // EB-10-02 / §10 SC-054 — preview-app route-like navigation. While the
   // user is in `preview-app`, the URL hash (`#hub=<hubId>`) is the source of
   // truth for which compiled hub is active. Three wires:
