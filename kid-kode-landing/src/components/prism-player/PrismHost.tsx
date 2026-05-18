@@ -15,6 +15,7 @@ import { deriveHubTransitRail } from '@/lib/prism-graph/hub-transit';
 import {
   deriveCompiledEnvironmentFog,
   type CompiledHubBackgroundLayer,
+  type CompiledHubView,
 } from '@/lib/prism-graph/compiled-view';
 import type { CompiledCameraRail } from '@/lib/prism-graph/compiled-view';
 import type { GraphSource } from '@/lib/prism-graph/types';
@@ -50,6 +51,15 @@ interface Props {
    *  changes. When false, fall back to the legacy bundle-loading `mount()`
    *  path that consumes a baked .prism artifact. */
   useLiveGraph?: boolean;
+  /** EBR2-B-02 / §R2-B SC-066 — active hub's CompiledHubView (computed
+   *  once per render in page.tsx via a memoized app-level compile →
+   *  pick by activeHubId). When supplied, PrismHost reads cameraRail,
+   *  background, and environmentFog directly from this prop instead of
+   *  deriving them internally — keeping the pure-data prop boundary the
+   *  spec mandates (§3 "Preview is compile, not render-of-source").
+   *  Optional + `null`-tolerant so legacy callers (useLiveGraph=false,
+   *  pre-EBR2-B-02 callsites) keep working without churn. */
+  compiledHubView?: CompiledHubView | null;
 }
 
 export default function PrismHost({
@@ -59,6 +69,7 @@ export default function PrismHost({
   showViewportControls = false,
   onPresetChange,
   useLiveGraph = true,
+  compiledHubView = null,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -229,6 +240,12 @@ export default function PrismHost({
       return;
     }
 
+    // EBR2-B-02 / §R2-B SC-066 + §3 "Preview is compile, not render-of-source"
+    // — when the page-level memoized CompiledHubView is supplied, read the
+    // rail/background/fog straight off it; the compile happened upstream in
+    // page.tsx. Falling back to the in-host derive only when the prop is
+    // absent keeps legacy callers (useLiveGraph=false, pre-EBR2-B-02
+    // callsites) working.
     const source = useGraphSourceStore.getState();
     const hub =
       (activeHubId && source.hubs.find((h) => h.hubId === activeHubId)) ||
@@ -242,16 +259,16 @@ export default function PrismHost({
     }
     const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
 
-    // INV-23: derive a bounded damped-cinematic cameraRail directly. The full
-    // compileHubToPreview also returns a hash + per-node anchors which the
-    // runtime camera-rail driver doesn't consume; calling derive directly
-    // keeps the host free of a fake PrismRootNode when the source store has
-    // no rootNodes seeded yet (legacy fixtures).
-    const cameraRail = deriveCompiledCameraRail({
-      viewportWidth: hub.layout.viewportWidth,
-      viewportHeight: hub.layout.viewportHeight,
-      nodes: hubNodes,
-    });
+    // INV-23: bounded damped-cinematic cameraRail. Prop-supplied when the
+    // page-level compile is available; otherwise derive in-host so the
+    // legacy mount paths still get a constrained, damped camera.
+    const cameraRail: CompiledCameraRail =
+      compiledHubView?.cameraRail ??
+      deriveCompiledCameraRail({
+        viewportWidth: hub.layout.viewportWidth,
+        viewportHeight: hub.layout.viewportHeight,
+        nodes: hubNodes,
+      });
     // EB-10-03 / §10 SC-055 / INV-23 — in `preview-app`, when a previous
     // hub rail exists in this mount lifetime, install a transit rail
     // (fromAnchor → toAnchor) so the damped step in the runtime driver
@@ -272,33 +289,40 @@ export default function PrismHost({
     // toAnchor).
     previousHubRailRef.current = cameraRail;
 
-    // EB-07-03 / §7 SC-038 — env-fog edge fill. Same shortcut as the rail:
-    // derive directly from (hub, rail) without round-tripping through
-    // compileHubToPreview so legacy fixtures lacking a PrismRootNode still
-    // get the fog band.
-    live.setEnvironmentFog(deriveCompiledEnvironmentFog(hub, cameraRail));
+    // EB-07-03 / §7 SC-038 — env-fog edge fill. Prefer the prop-supplied
+    // value (computed upstream in page.tsx) when present; fall back to the
+    // in-host derive for legacy fixtures lacking a CompiledHubView prop.
+    const environmentFog =
+      compiledHubView?.environmentFog ??
+      deriveCompiledEnvironmentFog(hub, cameraRail);
+    live.setEnvironmentFog(environmentFog);
 
-    // EB-06-06 / §6 SC-033 — build the compiled background layer stack and
-    // install it on the runtime. Mirrors `compileBackground` in
-    // compiled-view.ts: the hub's legacy `layout.mockupUrl` maps to a single
-    // viewport-fixed layer at index 0. Phase 7 (SC-036/SC-037) extends the
-    // source schema with PrismHubBackgroundLayer[]; when that lands this
-    // branch reads from `hub.background` instead of `layout.mockupUrl` and
-    // forwards the same shape to the runtime without churn.
-    const mockupUrl = hub.layout?.mockupUrl ?? null;
-    const background: CompiledHubBackgroundLayer[] = mockupUrl
-      ? [
-          {
-            id: `${hub.hubId}/background-0`,
-            attachment: 'viewport-fixed',
-            sourceUrl: mockupUrl,
-            z: 0,
-            opacity: 1,
-          },
-        ]
-      : [];
+    // EB-06-06 / §6 SC-033 — compiled background layer stack. When the
+    // page-level CompiledHubView prop is supplied, use its `background`
+    // directly (a deeply-readonly normalized stack produced by
+    // `compileBackground` in compiled-view.ts that already handles both
+    // PrismHubBackgroundLayer[] and the legacy `layout.mockupUrl`).
+    // Otherwise replicate `compileBackground`'s legacy single-layer fallback
+    // in-host so non-prop callsites still get the viewport-fixed mockup.
+    let background: readonly CompiledHubBackgroundLayer[];
+    if (compiledHubView) {
+      background = compiledHubView.background;
+    } else {
+      const mockupUrl = hub.layout?.mockupUrl ?? null;
+      background = mockupUrl
+        ? [
+            {
+              id: `${hub.hubId}/background-0`,
+              attachment: 'viewport-fixed',
+              sourceUrl: mockupUrl,
+              z: 0,
+              opacity: 1,
+            },
+          ]
+        : [];
+    }
     live.setBackgroundLayers(background);
-  }, [viewMode, activeHubId, status]);
+  }, [viewMode, activeHubId, status, compiledHubView]);
 
   const isFit = viewportPreset === 'fit';
   const preset = isFit ? null : PRESETS[viewportPreset];

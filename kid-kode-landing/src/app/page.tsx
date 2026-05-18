@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
@@ -10,6 +10,7 @@ import {
   compileAppToPreview,
   type CompiledWorldContext,
 } from '@/lib/prism-graph/compile-app';
+import type { CompiledHubView } from '@/lib/prism-graph/compiled-view';
 import {
   getCrossHubTethersArrivingAt,
   getCrossHubTethersDepartingFrom,
@@ -61,6 +62,64 @@ export default function Page() {
   // the store and writes back via setState (no dedicated action needed).
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const [previewPreset, setPreviewPreset] = useState<ViewportPreset>('desktop');
+
+  // EBR2-B-02 / §R2-B SC-066 — reactive selectors over the source-graph
+  // store slices that feed compileAppToPreview. Subscribing here (rather
+  // than reading inside an effect with getState()) makes the page-level
+  // compile reactive to graph edits: a slider drag, a node upsert, or a
+  // mockup swap re-runs the useMemo below and PrismHost receives a fresh
+  // CompiledHubView prop without remounting. INV-17 is satisfied trivially
+  // because compileAppToPreview is pure (SC-029) and never writes back.
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const sourceNodes = useGraphSourceStore((s) => s.nodes);
+  const sourceEdges = useGraphSourceStore((s) => s.edges);
+  const sourceRootNodes = useGraphSourceStore((s) => s.rootNodes);
+
+  // EBR2-B-02 / §R2-B SC-066 — resolve a PrismRootNode for the live source
+  // graph. The fake-root fallback mirrors the one used by the preview-app
+  // routing effect below for legacy fixtures that ship with no PrismRootNode
+  // seeded. Memoized so the root identity is stable when the source slices
+  // are stable, keeping the downstream compile memo from invalidating.
+  const liveRoot = useMemo<PrismRootNode>(
+    () =>
+      sourceRootNodes[0] ??
+      ({
+        appNameWorldId: 'app-name-world-default',
+        spec: {},
+        designSpec: {},
+        buildPlan: {},
+        memoryLog: [],
+        hubRegistry: sourceHubs.map((h) => ({ hubId: h.hubId })),
+        nodeRegistry: [],
+        globalDependencies: [],
+        validationRules: [],
+        aiRoutingRules: [],
+      } as unknown as PrismRootNode),
+    [sourceRootNodes, sourceHubs],
+  );
+
+  // EBR2-B-02 / §R2-B SC-066 — compute CompiledAppView once per render
+  // (memoized). The compile is pure + deterministic (SC-029), so identical
+  // (root, hubs, nodes, edges) → identical hash → React skips the prop
+  // diff for PrismHost.
+  const compiledAppView = useMemo(
+    () => compileAppToPreview(liveRoot, sourceHubs, sourceNodes, sourceEdges),
+    [liveRoot, sourceHubs, sourceNodes, sourceEdges],
+  );
+
+  // EBR2-B-02 / §R2-B SC-066 — derive the active hub's CompiledHubView
+  // by picking from CompiledAppView.hubs. Falling back to hubs[0] mirrors
+  // PrismHost's existing "first hub when activeHubId is unset" semantics
+  // so the boot frame still gets a valid CompiledHubView before the
+  // routing effect resolves the URL hash.
+  const activeCompiledHubView: CompiledHubView | null = useMemo(() => {
+    if (compiledAppView.hubs.length === 0) return null;
+    if (activeHubId) {
+      const found = compiledAppView.hubs.find((h) => h.hubId === activeHubId);
+      if (found) return found;
+    }
+    return compiledAppView.hubs[0] ?? null;
+  }, [compiledAppView, activeHubId]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 900);
@@ -572,6 +631,7 @@ export default function Page() {
                 viewportPreset={previewPreset}
                 showViewportControls
                 onPresetChange={setPreviewPreset}
+                compiledHubView={activeCompiledHubView}
               />
             </div>
           )}
@@ -594,7 +654,7 @@ export default function Page() {
               mount PrismHost full-screen; everything else mounts the editor. */}
           {showsPreview && (
             <div data-pane="preview" className="absolute inset-0">
-              <PrismHost />
+              <PrismHost compiledHubView={activeCompiledHubView} />
             </div>
           )}
           {showsGraph && (
