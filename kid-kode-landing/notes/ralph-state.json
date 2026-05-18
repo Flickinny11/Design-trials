@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 0,
+  "currentIteration": 1,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T15:00:00Z",
+  "updatedAt": "2026-05-18T16:35:23Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,11 +32,11 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 0,
-    "lastProductiveCommit": null
+    "lastProductiveIteration": 1,
+    "lastProductiveCommit": "PENDING_SHA"
   },
   "phaseCaps": {
-    "§R2-A": { "used": 0, "cap": 50, "status": "active" },
+    "§R2-A": { "used": 1, "cap": 50, "status": "active" },
     "§R2-B": { "used": 0, "cap": 50, "status": "active" },
     "§R2-C": { "used": 0, "cap": 50, "status": "active" },
     "§R2-D": { "used": 0, "cap": 50, "status": "active" },
@@ -45,15 +45,24 @@
     "§R2-G": { "used": 0, "cap": 50, "status": "active" }
   },
   "checkpoint": {
-    "iteration": 0,
-    "commit": null,
-    "verifiedAt": null,
+    "iteration": 1,
+    "commit": "PENDING_SHA",
+    "verifiedAt": "2026-05-18T16:35:23Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T15:00:00Z"
+    "recordedAt": "2026-05-18T16:35:23Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
-  "history": [],
+  "history": [
+    {
+      "iteration": 1,
+      "taskId": "EBR2-A-01",
+      "phase": "§R2-A",
+      "commit": "PENDING_SHA",
+      "verifiedAt": "2026-05-18T16:35:23Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-01/"
+    }
+  ],
   "tasks": [
     {
       "id": "EBR2-A-01",
@@ -71,11 +80,11 @@
       ],
       "haltCheck": "Spec is at v1.1, contains all Round-2 SC/INV/FP/RA additions, and the wait-for-vercel-preview script exists at the expected path. This task is the loop's first iteration; subsequent tasks do real work.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "Bootstrap task confirming arming landed; no code changes required."
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "PENDING_SHA",
+      "verifiedAt": "2026-05-18T16:35:23Z",
+      "notes": "haltCheck already satisfied at audit; no implementation needed. Verified spec v1.1 header, SC=79 (≥78), INV=26 (≥26), FP=15 (≥15), RA=19 (≥18), and wait-for-vercel-preview.mjs --check-only returns ok. Bootstrap task confirming Round-2 arming landed; no code changes required."
     },
     {
       "id": "EBR2-A-02",
