@@ -166,13 +166,20 @@ export default function Page() {
     };
   }, []);
 
-  // EB-10-02 — debug-only handle to the source store so verify scripts can
-  // seed test fixtures (e.g. a second synthetic hub for multi-hub routing
-  // verification). Editor-shell code; not subject to INV-13.
+  // EB-10-02 / EBR2-A-03 — debug-only handle to the live zustand stores so
+  // verify scripts can seed test fixtures (graphSource) and read snapshot
+  // state (graphEditor, for SC-064's boot-default viewMode capture). Editor-
+  // shell code; not subject to INV-13.
   useEffect(() => {
     (window as unknown as {
-      __PRISM_DEBUG_STORES__?: { graphSource: typeof useGraphSourceStore };
-    }).__PRISM_DEBUG_STORES__ = { graphSource: useGraphSourceStore };
+      __PRISM_DEBUG_STORES__?: {
+        graphSource: typeof useGraphSourceStore;
+        graphEditor: typeof useGraphEditorStore;
+      };
+    }).__PRISM_DEBUG_STORES__ = {
+      graphSource: useGraphSourceStore,
+      graphEditor: useGraphEditorStore,
+    };
     return () => {
       delete (window as unknown as {
         __PRISM_DEBUG_STORES__?: unknown;

@@ -151,11 +151,33 @@ async function main() {
 
     const outerState = await page.evaluate(() => {
       // Best-effort read of useGraphEditorStore state if exposed; otherwise null.
-      const store = window.__PRISM_EDITOR_STATE__ || null;
+      // EBR2-A-03 / SC-064 — also read viewMode directly from the live zustand
+      // store via the __PRISM_DEBUG_STORES__ handle, since the legacy
+      // __PRISM_EDITOR_STATE__ value is not currently populated.
+      const legacyStore = window.__PRISM_EDITOR_STATE__ || null;
+      const debug = window.__PRISM_DEBUG_STORES__;
+      let liveEditor = null;
+      let liveViewMode = null;
+      try {
+        if (debug && debug.graphEditor && typeof debug.graphEditor.getState === 'function') {
+          const s = debug.graphEditor.getState();
+          liveViewMode = s ? s.viewMode : null;
+          liveEditor = s
+            ? {
+                viewMode: s.viewMode,
+                editorRenderMode: s.editorRenderMode,
+                selectedNodeId: s.selectedNodeId,
+                selectedHubId: s.selectedHubId,
+                activeHubId: s.activeHubId,
+              }
+            : null;
+        }
+      } catch (_) { /* best-effort */ }
       return {
         url: location.href,
         title: document.title,
-        editorStore: store,
+        editorStore: legacyStore || liveEditor,
+        viewMode: liveViewMode,
         canvasCount: document.querySelectorAll('canvas').length,
       };
     }).catch(() => null);
@@ -507,12 +529,17 @@ async function main() {
     }
 
     // === Persist state.json ======================================================
+    // EBR2-A-03 / SC-064 — surface the live viewMode at the top of state.json
+    // so the haltCheck and downstream snapshot consumers can assert against
+    // it without walking into outerState. Falls back to null when the dev
+    // hook isn't installed (e.g. older snapshots).
     const state = {
       taskId: TASK_ID,
       capturedAt: new Date().toISOString(),
       url: URL,
       fixture: PREVIEW_FIXTURE,
       viewport: { width: 1440, height: 900 },
+      viewMode: outerState && outerState.viewMode ? outerState.viewMode : null,
       outerState,
       ...(tetherFireEvent ? { tetherFireEvent } : {}),
       ...(previewAppNav ? { previewAppNav } : {}),
