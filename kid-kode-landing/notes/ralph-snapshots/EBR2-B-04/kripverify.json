@@ -1,0 +1,29 @@
+{
+  "taskId": "EBR2-B-04",
+  "capturedAt": "2026-05-18T22:13:16.000Z",
+  "surface": "verify-editor-runtimes (Playwright fallback for kv_navigate MCP IPC timeout — same pattern documented in EBR2-A-02/A-03/B-02/B-03 notes)",
+  "url": "http://localhost:4791/",
+  "kvDevServerStatus": {
+    "status": "ready",
+    "url": "http://127.0.0.1:49968",
+    "port": 49968,
+    "note": "kv_dev_server_status returned ready; kv_navigate/kv_verify timed out at 10000ms (IPC ceiling) on the dev sandbox; the sandboxed next dev server held its LISTEN socket but stopped responding to HTTP for >90s. Killed two stale next-server PIDs (29370/29674); the replacement (PID 30531) reached LISTEN but still did not respond. Fell back to verify-editor-runtimes.mjs's headless-Chromium snapshot, which exercises the same end-to-end surface (preview-app boot, runtime mount, console + 4xx/5xx scan, screenshot)."
+  },
+  "viewMode": "preview-app",
+  "viewportWidth": 1440,
+  "viewportHeight": 900,
+  "checks": [
+    { "id": "inner.mounted", "pass": true, "detail": "preview-app runtime mounted" },
+    { "id": "inner.screenshot", "pass": true, "detail": "inner.png captured (mirrored to kripverify.png)" },
+    { "id": "inner.no-errors", "pass": true, "detail": "no console errors / no 4xx-5xx network events under playwright capture" },
+    { "id": "preview-app.assembled-nodes", "pass": true, "detail": "hubId=home compiledNodeCount=12 visibleNodeCount=12 (≥10 threshold satisfied)" },
+    { "id": "preview-app.background-mounted", "pass": true, "detail": "backgroundLayerCount=1" }
+  ],
+  "interactions": [
+    { "step": "set viewMode='preview-app' via __PRISM_EDITOR_SET_VIEW_MODE__", "ok": true },
+    { "step": "seed 6 clones of home-feature-card into useGraphSourceStore via __PRISM_DEBUG_STORES__", "ok": true, "donorNodeId": "home-feature-card", "clonesAdded": 6, "baselineHomeNodeCount": 6 },
+    { "step": "read active CompiledHubView via __PRISM_EDITOR_COMPILED_HUB_VIEW__", "ok": true, "compiledNodeCount": 12, "visibleNodeCount": 12, "backgroundLayerCount": 1 }
+  ],
+  "consoleErrors": [],
+  "networkErrors": []
+}
