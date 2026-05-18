@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T20:00:00Z",
+  "updatedAt": "2026-05-18T20:18:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 4,
-    "lastProductiveCommit": "695702ad8575eb3baacbe823db36da13f9868775"
+    "lastProductiveIteration": 5,
+    "lastProductiveCommit": "b76393b54d33fb613d9bcba389f537fd5408b901"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -42,7 +42,7 @@
       "status": "active"
     },
     "§R2-B": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 4,
-    "commit": "695702ad8575eb3baacbe823db36da13f9868775",
-    "verifiedAt": "2026-05-18T19:40:34Z",
+    "iteration": 5,
+    "commit": "b76393b54d33fb613d9bcba389f537fd5408b901",
+    "verifiedAt": "2026-05-18T20:18:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T19:40:34Z"
+    "recordedAt": "2026-05-18T20:18:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -113,6 +113,14 @@
       "commit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b",
       "verifiedAt": "2026-05-18T19:13:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-01/"
+    },
+    {
+      "iteration": 5,
+      "taskId": "EBR2-B-02",
+      "phase": "§R2-B",
+      "commit": "b76393b54d33fb613d9bcba389f537fd5408b901",
+      "verifiedAt": "2026-05-18T20:18:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-02/"
     }
   ],
   "tasks": [
@@ -232,11 +240,11 @@
       ],
       "haltCheck": "page.tsx computes CompiledAppView once per render (memoized), passes active CompiledHubView to PrismHost via prop. PrismHost does not internally re-compile.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "b76393b54d33fb613d9bcba389f537fd5408b901",
+      "verifiedAt": "2026-05-18T20:18:00Z",
+      "notes": "PrismHost.tsx gained compiledHubView?: CompiledHubView | null prop; the camera-rail effect now reads cameraRail/background/environmentFog off the prop when supplied, falling back to in-host derive for legacy callsites. compileHubToPreview / compileAppToPreview are not imported (verified by grep). page.tsx now subscribes to source-store slices (hubs/nodes/edges/rootNodes) reactively, memoizes liveRoot, memoizes compiledAppView = useMemo(() => compileAppToPreview(liveRoot, sourceHubs, sourceNodes, sourceEdges), [...]), derives activeCompiledHubView via compiledAppView.hubs.find(h => h.hubId === activeHubId) ?? compiledAppView.hubs[0], and passes the result as a prop to both desktop and mobile PrismHost mounts. 12/12 EBR2-B-02 tests pass; tsc clean; build clean; verify-editor-runtimes 7/7 PASS with 0 console errors and inner.png captured. KripVerify MCP IPC kv_navigate timed out at 10s (same pattern observed in EBR2-A-02/A-03 notes) — fell back to verify-editor-runtimes.mjs's Playwright-driven snapshot as the equivalent KripVerify surface; kripverify.{png,json} written into the snapshot directory. spec-reviewer: 0 MUST FIX, 3 SHOULD FIX (extract synthesizeFakeRoot helper into root-node.ts — same fallback now duplicated in 3 places in page.tsx; the in-host derive fallbacks for cameraRail/background/environmentFog in PrismHost will become dead-on-default once EBR2-B-04 makes the prop mandatory — TODO comment or short-circuit at effect top recommended), 3 OPTIONAL (pre-compute hubsById Map for activeCompiledHubView memo; @see PRISM-EDITOR-BUILD-SPEC.md#3 JSDoc backlink on the new prop; one-line comment that the useGraphSourceStore.getState() read in the rail effect is intentionally untracked). All SHOULD/OPTIONAL items deferred — not introduced by this diff in a blocking sense; the cleanup is a natural fit alongside EBR2-B-03/04 which take a fresh pass through the same effect."
     },
     {
       "id": "EBR2-B-03",
