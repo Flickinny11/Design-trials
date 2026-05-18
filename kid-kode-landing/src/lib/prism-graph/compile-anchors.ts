@@ -18,7 +18,12 @@
 // pass the source fields explicitly via `pickUiAnchor(subtype, intent,
 // serviceTag)`.
 
-import type { PrismIntent } from './types.ts';
+import type {
+  PrismHub,
+  PrismHubResponsiveBreakpoint,
+  PrismIntent,
+} from './types.ts';
+import type { CompiledAnchor } from './compiled-view.ts';
 
 export type UiAnchor =
   | 'world'
@@ -130,4 +135,78 @@ export function pickUiAnchor(
 
   // 4. Documented fallback.
   return UI_ANCHOR_DEFAULT;
+}
+
+// --- Phase R2-B / SC-066 — anchor → scene-position resolver. -------------
+//
+// `resolveAnchorToScenePosition` is the connector between `CompiledHubView`
+// and `PrismHost`'s node-layout effect (EBR2-B-03). For each entry in
+// `CompiledHubView.nodes[]`, the host walks the compiled anchor and calls
+// `liveResult.updateNodeTransform(nodeId, position)` with the result of this
+// function. The function is pure / deterministic (INV-17) — it never mutates
+// the input anchor, hub, or breakpoint, and never reads anything outside
+// those three arguments.
+//
+// The four `CompiledAnchorKind` spaces resolve as follows (the seven source
+// `UiAnchor` values collapse into these four via the
+// `UI_ANCHOR_TO_COMPILED_KIND` map in `compiled-view.ts`):
+//
+//   'world'             → pass-through  (already in 3D hub-scene world space)
+//   'hub-scene'         → pass-through  (parallax + hybrid; scene-space coords)
+//   'camera'            → pass-through  (camera-local offsets; caller composes
+//                                        with the camera pose)
+//   'viewport-relative' → mapped        (anchor.x, anchor.y ∈ [0,1] normalized
+//                                        in viewport composition space; scaled
+//                                        to scene-space using hub.layout
+//                                        viewport dimensions and breakpoint
+//                                        scale; anchor.z preserved for
+//                                        depth-stack ordering)
+//
+// Viewport-relative mapping: anchor (0,0) is top-left, (1,1) is bottom-right,
+// (0.5, 0.5) is the center. The compiled scene-space origin is the hub center
+// with y-up; viewport-y must therefore be flipped. The mapping is
+//
+//   scene.x = (anchor.x - 0.5) * viewportWidth  * scale
+//   scene.y = (0.5 - anchor.y) * viewportHeight * scale
+//   scene.z =  anchor.z
+//
+// `breakpoint` is the active responsive breakpoint (e.g. `'desktop' | 'tablet'
+// | 'mobile'` resolved from the viewport's current width). When omitted,
+// scale defaults to 1.0 (desktop / unscaled). Only `viewport-relative`
+// anchors consult the breakpoint; the other three spaces are already
+// scene-space and ignore it.
+
+export interface ResolvedScenePosition {
+  readonly x: number;
+  readonly y: number;
+  readonly z: number;
+}
+
+export function resolveAnchorToScenePosition(
+  anchor: CompiledAnchor,
+  hub: PrismHub,
+  breakpoint?: PrismHubResponsiveBreakpoint,
+): ResolvedScenePosition {
+  switch (anchor.kind) {
+    case 'world':
+    case 'hub-scene':
+    case 'camera':
+      return Object.freeze({ x: anchor.x, y: anchor.y, z: anchor.z });
+    case 'viewport-relative': {
+      const scale = breakpoint?.scale ?? 1;
+      const vw = hub.layout?.viewportWidth ?? 0;
+      const vh = hub.layout?.viewportHeight ?? 0;
+      return Object.freeze({
+        x: (anchor.x - 0.5) * vw * scale,
+        y: (0.5 - anchor.y) * vh * scale,
+        z: anchor.z,
+      });
+    }
+    default: {
+      // Exhaustiveness — if CompiledAnchorKind ever grows, the compiler
+      // forces a new case via this `never` guard.
+      const _exhaustive: never = anchor.kind;
+      return Object.freeze({ x: 0, y: 0, z: 0 });
+    }
+  }
 }
