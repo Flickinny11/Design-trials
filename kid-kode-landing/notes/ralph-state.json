@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 5,
+  "currentIteration": 6,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T20:18:00Z",
+  "updatedAt": "2026-05-18T20:55:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 5,
-    "lastProductiveCommit": "b76393b54d33fb613d9bcba389f537fd5408b901"
+    "lastProductiveCommit": "2844f8e593380a86b7dcee26698211fe3f114bd9"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -74,10 +74,10 @@
   },
   "checkpoint": {
     "iteration": 5,
-    "commit": "b76393b54d33fb613d9bcba389f537fd5408b901",
-    "verifiedAt": "2026-05-18T20:18:00Z",
+    "commit": "2844f8e593380a86b7dcee26698211fe3f114bd9",
+    "verifiedAt": "2026-05-18T20:42:54Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T20:18:00Z"
+    "recordedAt": "2026-05-18T20:42:54Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -263,8 +263,8 @@
       ],
       "haltCheck": "PrismHost has a node-layout useEffect that walks CompiledHubView.nodes[], resolves anchors via resolveAnchorToScenePosition, calls liveResult.updateNodeTransform(nodeId, position). Visible flag respected (hidden nodes skipped or unmounted). Source graph untouched (INV-17 preserved).",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
