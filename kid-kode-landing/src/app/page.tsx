@@ -52,8 +52,6 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
 });
 
 export default function Page() {
-  const [splitPct, setSplitPct] = useState(36);
-  const [dragging, setDragging] = useState(false);
   const [isDesktop, setIsDesktop] = useState(true);
   // viewMode lives on useGraphEditorStore (HL12 / Plan §P12) so Inspector's
   // "Preview in App UI" button can swap panes without prop-drilling.
@@ -452,32 +450,21 @@ export default function Page() {
     w[arrivalsKey] = [...prior, record];
   }, [viewMode, activeHubId]);
 
-  useEffect(() => {
-    if (!dragging) return;
-    const onMove = (e: MouseEvent) => {
-      const pct = (e.clientX / window.innerWidth) * 100;
-      setSplitPct(Math.max(20, Math.min(65, pct)));
-    };
-    const onUp = () => setDragging(false);
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-    return () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
-    };
-  }, [dragging]);
-
-  // Pane visibility derived from the canonical viewMode (RA-06):
-  //   - preview-hub / preview-app mount PrismHost full-width.
-  //   - galaxy / hub-world mount the graph editor full-width.
-  //   - canvas keeps the legacy split-pane authoring surface until EB-05-*
-  //     replaces it with the dedicated single-canvas + viewport-frame view.
+  // Pane visibility derived from the canonical viewMode (RA-06 / spec §3
+  // "single canvas; five view modes"). One pane fills the viewport; the
+  // mode decides what renders inside it.
+  //   - galaxy / hub-world / canvas mount the graph editor (GraphScene + overlays).
+  //   - preview-hub / preview-app mount the Prism runtime (PrismHost).
+  // Legacy split-pane behavior (PrismHost left + GraphScene right) was retired
+  // post-Ralph-loop: it predated Phase 5's viewport-frame canvas and was kept
+  // transitionally during the build. Phase 5's frame + safe-area + transform
+  // handles live inside GraphScene, so canvas mode now shows the single
+  // editor canvas full-width and PrismHost mounts only inside preview modes.
   const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
   const isPreviewHub = viewMode === 'preview-hub';
   const isPreviewApp = viewMode === 'preview-app';
-  const showsSplit = viewMode === 'canvas';
-  const showsPreview = isPreviewMode || showsSplit;
-  const showsGraph = viewMode === 'galaxy' || viewMode === 'hub-world' || showsSplit;
+  const showsPreview = isPreviewMode;
+  const showsGraph = !isPreviewMode;
   // EB-06-07 / §6 SC-034 — the full 5-button mode bar is editor clutter and
   // must be hidden in preview-hub. It remains visible everywhere else,
   // including preview-app (a future EB-10 task will revisit that mode).
@@ -633,36 +620,17 @@ export default function Page() {
           )}
 
           {showsPreview && (
-            <div
-              data-pane="preview"
-              className={`absolute top-0 bottom-0 left-0 ${showsSplit ? 'border-r border-white/5' : ''}`}
-              style={{ width: showsSplit ? `${splitPct}%` : '100%' }}
-            >
+            <div data-pane="preview" className="absolute inset-0">
               <PrismHost
-                viewportPreset={isPreviewMode ? previewPreset : 'fit'}
-                showViewportControls={isPreviewMode}
+                viewportPreset={previewPreset}
+                showViewportControls
                 onPresetChange={setPreviewPreset}
               />
             </div>
           )}
 
-          {showsSplit && (
-            <div
-              onMouseDown={() => setDragging(true)}
-              className="absolute top-0 bottom-0 w-1 cursor-col-resize z-20 group"
-              style={{ left: `calc(${splitPct}% - 2px)` }}
-            >
-              <div className="absolute inset-0 group-hover:bg-[#5d8bff]/30 transition-colors" />
-              <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-1 h-12 rounded-full bg-white/10 group-hover:bg-[#5d8bff] transition-colors" />
-            </div>
-          )}
-
           {showsGraph && (
-            <div
-              data-pane="graph"
-              className="absolute top-0 bottom-0 right-0"
-              style={{ width: showsSplit ? `${100 - splitPct}%` : '100%' }}
-            >
+            <div data-pane="graph" className="absolute inset-0">
               <GraphScene />
               <TopBar />
               <HubNav />
@@ -675,18 +643,23 @@ export default function Page() {
         </>
       ) : (
         <>
-          {/* Mobile: VERTICAL split — preview top 38%, graph bottom 62%. Both always visible. */}
-          <div className="absolute inset-x-0 top-0 border-b border-white/5" style={{ height: '38%' }}>
-            <PrismHost />
-          </div>
-          <div className="absolute inset-x-0 bottom-0" style={{ height: '62%' }}>
-            <GraphScene />
-            <TopBar />
-            <HubNav />
-            <DetailCard />
-            <RightPane />
-            <GalaxyFilterOverlay />
-          </div>
+          {/* Mobile: same single-pane discipline as desktop — preview modes
+              mount PrismHost full-screen; everything else mounts the editor. */}
+          {showsPreview && (
+            <div data-pane="preview" className="absolute inset-0">
+              <PrismHost />
+            </div>
+          )}
+          {showsGraph && (
+            <div data-pane="graph" className="absolute inset-0">
+              <GraphScene />
+              <TopBar />
+              <HubNav />
+              <DetailCard />
+              <RightPane />
+              <GalaxyFilterOverlay />
+            </div>
+          )}
         </>
       )}
 
