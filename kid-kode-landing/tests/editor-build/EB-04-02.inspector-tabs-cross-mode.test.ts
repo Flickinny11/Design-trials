@@ -58,13 +58,7 @@ const CANONICAL_TABS: InspectorTab[] = [
   'history',
 ];
 
-const CANONICAL_VIEW_MODES: ViewMode[] = [
-  'galaxy',
-  'canvas',
-  'canvas',
-  'preview-app',
-  'preview-app',
-];
+const CANONICAL_VIEW_MODES: ViewMode[] = ['galaxy', 'canvas', 'preview-app'];
 
 describe('EB-04-02 — InspectorTab type covers all 7 canonical tabs (SC-020)', () => {
   it('includes every canonical tab id in the InspectorTab union', () => {

@@ -163,34 +163,37 @@ describe('EB-05-05 — GraphScene wires resolve helper + previous-mode capture (
   });
 });
 
-describe('EB-05-05 — canvas ↔ hub-world round-trip preserves selection + checkpointed pose (SC-027, INV-20)', () => {
+describe('EB-05-05 — canvas ↔ galaxy round-trip preserves selection + checkpointed pose (SC-027, INV-20, RA-06b)', () => {
+  // RA-06b folded hub-world into canvas; the SC-027 round-trip is now exercised
+  // canvas ↔ galaxy (the only remaining sibling that's not preview-app and
+  // therefore has a free / unconstrained camera).
   beforeEach(() => {
     resetStore();
   });
 
-  it('selectedNodeId survives canvas → hub-world → canvas', () => {
+  it('selectedNodeId survives canvas → galaxy → canvas', () => {
     const s = getStore();
     s.setViewMode('canvas');
     s.selectNode('node-delta');
     expect(getStore().selectedNodeId).toBe('node-delta');
     expect(getStore().viewMode).toBe('canvas');
 
-    s.setViewMode('canvas');
+    s.setViewMode('galaxy');
     expect(getStore().selectedNodeId).toBe('node-delta');
-    expect(getStore().viewMode).toBe('canvas');
+    expect(getStore().viewMode).toBe('galaxy');
 
     s.setViewMode('canvas');
     expect(getStore().selectedNodeId).toBe('node-delta');
     expect(getStore().viewMode).toBe('canvas');
   });
 
-  it('selectedHubId survives canvas → hub-world → canvas', () => {
+  it('selectedHubId survives canvas → galaxy → canvas', () => {
     const s = getStore();
     s.setViewMode('canvas');
     s.selectHub('hub-home');
     expect(getStore().selectedHubId).toBe('hub-home');
 
-    s.setViewMode('canvas');
+    s.setViewMode('galaxy');
     expect(getStore().selectedHubId).toBe('hub-home');
 
     s.setViewMode('canvas');
@@ -206,7 +209,7 @@ describe('EB-05-05 — canvas ↔ hub-world round-trip preserves selection + che
     s.setViewMode('canvas');
     s.checkpointCameraPose('canvas', canvasPose);
 
-    s.setViewMode('canvas');
+    s.setViewMode('galaxy');
     expect(getStore().cameraPoseByMode.canvas).toEqual(canvasPose);
 
     s.setViewMode('canvas');

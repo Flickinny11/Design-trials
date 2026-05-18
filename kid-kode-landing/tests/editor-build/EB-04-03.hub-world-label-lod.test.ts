@@ -41,13 +41,7 @@ const lodSrc = readFileSync(
   'utf8',
 );
 
-const ALL_VIEW_MODES: ViewMode[] = [
-  'galaxy',
-  'canvas',
-  'canvas',
-  'preview-app',
-  'preview-app',
-];
+const ALL_VIEW_MODES: ViewMode[] = ['galaxy', 'canvas', 'preview-app'];
 const ALL_ZOOM_LEVELS: ZoomLevel[] = ['L0', 'L1', 'L2', 'L3', 'L4'];
 
 describe('EB-04-03 — computeHubWorldLabelVisibility purity + shape', () => {
@@ -180,9 +174,9 @@ describe('EB-04-03 — hub-world mode: smooth LOD transitions per level', () => 
   });
 });
 
-describe('EB-04-03 — non-hub-world modes leave intra-hub LOD off (predicate no-op)', () => {
-  it('galaxy / canvas / preview-hub / preview-app: hub + node labels + sub-node detail always reported visible', () => {
-    for (const vm of ['galaxy', 'canvas', 'preview-app', 'preview-app'] as ViewMode[]) {
+describe('EB-04-03 — non-canvas modes leave intra-hub LOD off (predicate no-op, RA-06b)', () => {
+  it('galaxy / preview-app: hub + node labels + sub-node detail always reported visible', () => {
+    for (const vm of ['galaxy', 'preview-app'] as ViewMode[]) {
       for (const z of ALL_ZOOM_LEVELS) {
         const out = computeHubWorldLabelVisibility(vm, z, 100);
         expect(out.showHubLabel).toBe(true);

@@ -43,13 +43,7 @@ const lodSrc = readFileSync(
   'utf8',
 );
 
-const ALL_VIEW_MODES: ViewMode[] = [
-  'galaxy',
-  'canvas',
-  'canvas',
-  'preview-app',
-  'preview-app',
-];
+const ALL_VIEW_MODES: ViewMode[] = ['galaxy', 'canvas', 'preview-app'];
 const ALL_ZOOM_LEVELS: ZoomLevel[] = ['L0', 'L1', 'L2', 'L3', 'L4'];
 
 describe('EB-03-03 — computeGalaxyLabelVisibility purity + shape', () => {
@@ -165,11 +159,11 @@ describe('EB-03-03 — galaxy mode: smooth LOD transitions', () => {
 });
 
 describe('EB-03-03 — non-galaxy modes leave node-label visibility unchanged', () => {
-  it('hub-world, canvas, preview-hub, preview-app: node labels always visible (showNodeLabels=true) at every zoom', () => {
-    // Phase-4 SC-021 will later carve out intra-hub LOD for hub-world, but
-    // until that task lands, the predicate must report node labels visible
-    // outside galaxy so this task does not regress hub-world / canvas.
-    for (const vm of ['canvas', 'canvas', 'preview-app', 'preview-app'] as ViewMode[]) {
+  it('canvas, preview-app: node labels always visible (showNodeLabels=true) at every zoom', () => {
+    // Phase-4 SC-021 carves out intra-hub LOD for canvas (RA-06b folds hub-world
+    // into canvas); the predicate here still reports node labels visible
+    // outside galaxy so the galaxy-only gate does not regress sibling modes.
+    for (const vm of ['canvas', 'preview-app'] as ViewMode[]) {
       for (const z of ALL_ZOOM_LEVELS) {
         const out = computeGalaxyLabelVisibility(vm, z, 100);
         expect(out.showNodeLabels).toBe(true);

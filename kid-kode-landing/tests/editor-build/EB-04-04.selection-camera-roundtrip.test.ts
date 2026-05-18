@@ -86,14 +86,9 @@ type RoundTripShape = {
 const getStore = () =>
   useGraphEditorStore.getState() as unknown as RoundTripShape;
 
-const CYCLE: ViewMode[] = [
-  'galaxy',
-  'canvas',
-  'canvas',
-  'preview-app',
-  'preview-app',
-  'galaxy',
-];
+// Round-2 (RA-06b) collapsed the 5-mode set to 3. The cycle keeps its
+// "return-to-start" narrative: galaxy → canvas → preview-app → galaxy.
+const CYCLE: ViewMode[] = ['galaxy', 'canvas', 'preview-app', 'galaxy'];
 
 const POSE = (seed: number): CameraPose => ({
   position: { x: seed * 10, y: seed * 20, z: seed * 30 },
@@ -145,7 +140,7 @@ describe('EB-04-04 — selection survives the full 5-mode cycle (INV-20, SC-002)
     resetStore();
   });
 
-  it('preserves selectedNodeId across galaxy → hub-world → canvas → preview-hub → preview-app → galaxy', () => {
+  it('preserves selectedNodeId across galaxy → canvas → preview-app → galaxy (RA-06b 3-mode cycle)', () => {
     const s = getStore();
     s.selectNode('node-alpha');
     expect(getStore().selectedNodeId).toBe('node-alpha');
@@ -158,7 +153,7 @@ describe('EB-04-04 — selection survives the full 5-mode cycle (INV-20, SC-002)
     }
   });
 
-  it('preserves selectedHubId across the full 5-mode cycle', () => {
+  it('preserves selectedHubId across the full 3-mode cycle (RA-06b)', () => {
     const s = getStore();
     s.selectHub('hub-home');
     expect(getStore().selectedHubId).toBe('hub-home');
@@ -219,13 +214,11 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     const after = getStore();
     expect(after.cameraPoseByMode['galaxy']).toEqual(galaxyPose);
     expect(after.cameraPoseByMode['canvas']).toEqual(canvasPose);
-    // The two other canonical modes never received a checkpoint here.
-    expect(after.cameraPoseByMode['canvas']).toBeUndefined();
-    expect(after.cameraPoseByMode['preview-app']).toBeUndefined();
+    // The remaining canonical mode never received a checkpoint here.
     expect(after.cameraPoseByMode['preview-app']).toBeUndefined();
   });
 
-  it('round-trips per-mode poses through the full 5-mode cycle (galaxy → … → galaxy)', () => {
+  it('round-trips per-mode poses through the full 3-mode cycle (galaxy → … → galaxy, RA-06b)', () => {
     const s = getStore();
     // Seed a distinct pose at each mode.
     const seeds: Partial<Record<ViewMode, CameraPose>> = {
@@ -257,19 +250,24 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     expect(afterRef).toEqual(beforeRef);
   });
 
-  it('exercises canvas → hub-world → canvas pose restoration (SC-027)', () => {
+  it('exercises canvas → galaxy → canvas pose restoration (SC-027, RA-06b)', () => {
+    // Round-2 (RA-06b) collapsed hub-world into canvas. The SC-027 round-trip
+    // is now expressed canvas ↔ another canonical mode (galaxy) to keep two
+    // distinct mode keys in cameraPoseByMode and prove pose isolation across
+    // a real mode transition.
     const s = getStore();
     s.setViewMode('canvas');
     const canvasPose = POSE(99);
     s.checkpointCameraPose('canvas', canvasPose);
 
-    s.setViewMode('canvas');
-    const hubPose = POSE(101);
-    s.checkpointCameraPose('canvas', hubPose);
+    s.setViewMode('galaxy');
+    const galaxyPose = POSE(101);
+    s.checkpointCameraPose('galaxy', galaxyPose);
 
     s.setViewMode('canvas');
     const restored = getStore().cameraPoseByMode['canvas'];
     expect(restored).toEqual(canvasPose);
+    expect(getStore().cameraPoseByMode['galaxy']).toEqual(galaxyPose);
   });
 });
 
