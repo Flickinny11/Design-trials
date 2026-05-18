@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 1,
-    "lastProductiveCommit": "PENDING_SHA"
+    "lastProductiveCommit": "6deff84d7c38ff14d381440ab372f2129dd538f7"
   },
   "phaseCaps": {
     "§R2-A": { "used": 1, "cap": 50, "status": "active" },
@@ -46,7 +46,7 @@
   },
   "checkpoint": {
     "iteration": 1,
-    "commit": "PENDING_SHA",
+    "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
     "verifiedAt": "2026-05-18T16:35:23Z",
     "artifactHash": null,
     "recordedAt": "2026-05-18T16:35:23Z"
@@ -58,7 +58,7 @@
       "iteration": 1,
       "taskId": "EBR2-A-01",
       "phase": "§R2-A",
-      "commit": "PENDING_SHA",
+      "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
       "verifiedAt": "2026-05-18T16:35:23Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-01/"
     }
@@ -82,9 +82,9 @@
       "kvVerify": false,
       "status": "done",
       "attemptCount": 1,
-      "commit": "PENDING_SHA",
+      "commit": "6deff84d7c38ff14d381440ab372f2129dd538f7",
       "verifiedAt": "2026-05-18T16:35:23Z",
-      "notes": "haltCheck already satisfied at audit; no implementation needed. Verified spec v1.1 header, SC=79 (≥78), INV=26 (≥26), FP=15 (≥15), RA=19 (≥18), and wait-for-vercel-preview.mjs --check-only returns ok. Bootstrap task confirming Round-2 arming landed; no code changes required."
+      "notes": "haltCheck already satisfied at audit; no implementation needed. Verified spec v1.1 header, SC=79 (≥78), INV=26 (≥26), FP=15 (≥15), RA=19 (≥18), and wait-for-vercel-preview.mjs --check-only returns ok. Bootstrap task confirming Round-2 arming landed; no code changes required. spec-reviewer: 0 MUST FIX, 3 SHOULD FIX (SHA placeholders in initial commit reconciled by follow-up SHA-fixup commit; task.notes augmented with this spec-reviewer outcome line), 3 OPTIONAL (snapshot-schema additions kind/verifiedAt/duplicated-flags — deferred to a future snapshot-schema codification task)."
     },
     {
       "id": "EBR2-A-02",
