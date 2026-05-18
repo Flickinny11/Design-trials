@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T17:53:38Z",
+  "updatedAt": "2026-05-18T18:37:35Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,12 +32,12 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 2,
-    "lastProductiveCommit": "1a28d6b40999450807328d34ffc036de79fc2e09"
+    "lastProductiveIteration": 3,
+    "lastProductiveCommit": "3c7d2505139d2305e576367586323d9ae624fed7"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -77,7 +77,11 @@
     "commit": "1a28d6b40999450807328d34ffc036de79fc2e09",
     "verifiedAt": "2026-05-18T17:49:20Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T17:49:20Z"
+    "recordedAt": "2026-05-18T17:49:20Z",
+    "lastTaskId": "EBR2-A-03",
+    "lastIteration": 3,
+    "lastCommit": "3c7d2505139d2305e576367586323d9ae624fed7",
+    "lastVerifiedAt": "2026-05-18T18:37:35Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -97,6 +101,14 @@
       "commit": "bb9fa11",
       "verifiedAt": "2026-05-18T17:30:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-02/"
+    },
+    {
+      "iteration": 3,
+      "taskId": "EBR2-A-03",
+      "phase": "\u00a7R2-A",
+      "commit": "3c7d2505139d2305e576367586323d9ae624fed7",
+      "verifiedAt": "2026-05-18T18:37:35Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-A-03/"
     }
   ],
   "tasks": [
@@ -171,11 +183,11 @@
       ],
       "haltCheck": "Store's initial viewMode is 'preview-app'. Snapshot's state.json shows viewMode='preview-app' on first paint. Toggling galaxy\u2192canvas\u2192preview-app\u2192galaxy preserves selectedNodeId and selectedHubId.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "3c7d2505139d2305e576367586323d9ae624fed7",
+      "verifiedAt": "2026-05-18T18:37:35Z",
+      "notes": "spec-reviewer: 0 MUST FIX; 3 SHOULD FIX (progress log, preview-hub literal, muddled comment) \u2014 last 2 addressed in cleanup commit. KripVerify MCP IPC timed out (10s cap vs ~3.5min cold compile) \u2014 fell back to direct Playwright per EBR2-A-02 pattern; assertions passed (viewMode=preview-app, 3-mode round-trip preserved, 0 console errors, 0 network errors)."
     },
     {
       "id": "EBR2-B-01",
