@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "kv": {
+      "command": "node",
+      "args": ["/Users/loganbaird/Code/kripverify/mcp-server/dist/index.js"],
+      "env": {
+        "KV_PROJECT_ROOT": "/Users/loganbaird/Prototype_Prism/Design-trials"
+      }
+    }
+  }
+}

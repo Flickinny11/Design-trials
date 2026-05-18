@@ -118,43 +118,66 @@ of these commands and MUST produce non-empty `outer.png`, `inner.png`, and `stat
 `kid-kode-landing/notes/ralph-snapshots/<task-id>/`. **A failing screenshot is a task
 failure, never a warning.**
 
-### Step 8b — Vercel-preview KripVerify pass (Round-2 RA-18, SC-078)
+### Step 8b — KripVerify (local sandbox) — PRIMARY visual gate (Round 2.5, RA-18, SC-078)
 
-After local snapshot + `verify:prism` pass AND after Step 13's push, you run the live-preview
-visual analysis using the KripVerify MCP tools. The `kv_*` toolset is registered via
-`.mcp.json` and available in every worker session.
+KripVerify runs a local sandboxed dev server (`next dev` under the hood) plus a Chrome for
+Testing instance controlled over CDP. You drive it via the `kv_*` MCP tools registered via
+`.mcp.json`. **This is the primary visual gate** — it verifies WIP code on the worker's
+machine, no push/build/deploy cycle.
 
-Procedure:
+Procedure (BEFORE Step 10's commit, so the worker can iterate on failures):
 
-1. Get the Vercel preview URL for the just-pushed commit:
-   ```bash
-   cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=<HEAD-sha>
-   ```
-   This polls the Vercel API (auth via `VERCEL_TOKEN`) and emits
-   `{url, deployState, deploymentId, ...}` JSON on stdout when state=READY (exit 0).
-   Failures (ERROR / CANCELED / timeout) exit non-zero — that's a task failure.
-2. Parse the URL from the JSON. Then invoke the `kv_*` tools in this order:
-   - `kv_navigate({url})` — navigate the verifier browser to the live preview.
-   - `kv_wait_for({selector: 'canvas', timeout_ms: 30000})` — confirm the runtime mounted.
-   - `kv_screenshot({full_page: true})` — capture the full page; save the returned image to
-     `kid-kode-landing/notes/ralph-snapshots/<task-id>/vercel-preview.png`.
-   - `kv_check_console({level: 'error'})` — **must return an empty array.** Any console
-     error = task failure.
-   - `kv_check_network({status_min: 400})` — **must return an empty array.** Any 4xx/5xx
-     network response = task failure.
-3. Write a `vercel-preview.json` summary alongside the screenshot containing:
-   `{url, deploymentId, deployState, console: [...], network: [...]}`.
+1. `kv_dev_server_status()` — if `status !== 'ready'`, call `kv_restart_dev_server()` and
+   poll status until ready (up to 60s).
+2. `kv_navigate({url: <url from dev_server_status>})` — navigate to the local sandbox URL.
+3. `kv_wait_for({selector: 'canvas', timeout_ms: 30000})` — confirm the runtime mounted.
+4. `kv_screenshot({full_page: true})` — save to
+   `kid-kode-landing/notes/ralph-snapshots/<task-id>/kripverify.png`.
+5. `kv_check_console({level: 'error'})` — **must return an empty array.** Any console
+   error = task failure.
+6. `kv_check_network({status_min: 400})` — **must return an empty array.** Any 4xx/5xx
+   network response = task failure.
+7. For tasks whose `haltCheck` requires interactive verification (e.g., clicking the Edit
+   button, dragging a handle, scrolling), also use `kv_click`, `kv_type`, `kv_evaluate` to
+   exercise the UI before screenshotting.
+8. Write a `kripverify.json` summary alongside `kripverify.png` containing:
+   `{url, console: [...], network: [...], interactions: [...]}`.
 
-**Treat the Vercel-preview pass as equally blocking as the local snapshot.** A failure here
-is not a warning. If KripVerify finds errors:
-- Read the captured findings, fix the implementation (not the tests).
-- Push the fix (Step 10 + 13). Re-run the Vercel-preview pass.
-- Up to 3 internal fix attempts per session — same limit as Step 8's local gates.
-- If still failing after 3 attempts, leave the task `in-progress` and exit. The outer loop
-  retries the task next iteration (counted against `maxAttemptsPerTask`).
+**Treat the KripVerify pass as equally blocking as the local Playwright snapshot.** A
+failure here is not a warning. Internal fix cycle: re-run from the failing step, up to 3
+attempts. If still failing, leave the task `in-progress` and exit.
 
-Stage the `vercel-preview.{png,json}` files in Step 12 so they commit alongside the local
-snapshot. **A failing KripVerify pass is a task failure.**
+### Step 8c — Vercel observability — SECONDARY diagnostic (Round 2.5, SC-079)
+
+After Step 13's push (i.e., after the commit lands on `origin/prism-editor-build` and
+Vercel begins deploying), run the Vercel diagnostic. **Non-blocking** — these checks
+provide observability into build/runtime errors on the deployed preview, but do NOT block
+the commit (Step 8b already blocked it on KripVerify-local).
+
+1. `cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=<sha>` — poll
+   Vercel API for the deploy state. Emits `{url, deployState, deploymentId}` JSON on stdout
+   when state=READY. On ERROR/CANCELED/timeout: persist the error JSON to
+   `notes/ralph-snapshots/<task-id>/vercel-preview-fail.json` and flag in `task.notes` —
+   but do NOT mark the task failed (KripVerify-local already passed; deploy issues are
+   observability).
+2. If deploy went READY, run `cd kid-kode-landing && node scripts/fetch-vercel-logs.mjs
+   --commit=<sha> --task-id=<task-id>` to pull build + runtime logs. The script emits a
+   JSON blob and persists `vercel-logs.{json,txt}` to the snapshot directory.
+3. Stage `kripverify.{png,json}` and `vercel-{preview,logs}.{json,txt}` files in Step 12
+   so they commit alongside the local snapshot.
+
+**Why non-blocking:** Vercel deploys can lag, fail for transient reasons (rate limits,
+Vercel-side incidents), or surface unrelated issues. The Ralph loop must keep moving when
+the local-verified change is correct. If a real production-only bug appears (e.g., it
+works locally but breaks on Vercel), the captured logs go into the snapshot and the
+operator session (the monitor) can surface them. The next iteration's task will see them
+in the committed snapshot history.
+
+**KripVerify-primary, Vercel-secondary rationale.** KripVerify is faster (no
+push→build→deploy cycle), WIP-aware (verifies code at HEAD locally), and exposes a rich
+toolkit (click, type, inspect DOM, check console + network, manipulate the page). Vercel
+only sees pushed code and only emits logs + HTTP responses — useful for diagnostics, not
+for interactive verification.
 
 If any command fails:
 - Read the failure, fix the implementation (NOT the tests).

@@ -170,10 +170,22 @@ introduce those literals (FP-14 blocks them at write time).
   renders a transient tether line.
 - Pointer-up commits `parentHubId` to nearest hub; caption/subtype auto-update.
 
-**Verification (RA-18, SC-078):** Every Ralph task adds a KripVerify pass against the live
-Vercel preview URL for the pushed commit. Worker invokes `kv_navigate` → `kv_wait_for(canvas)`
-→ `kv_screenshot(full_page=true)` → `kv_check_console(level='error')` →
-`kv_check_network(status_min=400)`. Failing KripVerify = task failure.
+**Verification (RA-18, SC-078/SC-079, Round 2.5):** Every Ralph task gets two verification
+surfaces:
+
+- **PRIMARY — KripVerify-local (blocking).** Worker invokes `kv_dev_server_status` →
+  `kv_navigate(localUrl)` → `kv_wait_for(canvas)` → `kv_screenshot(full_page=true)` →
+  `kv_check_console(level='error')` → `kv_check_network(status_min=400)` plus any
+  task-specific interactive checks (`kv_click`, `kv_type`, `kv_evaluate`). Runs against
+  the local sandboxed `next dev` server kripverify manages. Failing KripVerify = task
+  failure (same blocking semantics as the local Playwright snapshot). Artifacts:
+  `notes/ralph-snapshots/<task-id>/kripverify.{png,json}`.
+- **SECONDARY — Vercel observability (non-blocking).** After Step 13 push,
+  `wait-for-vercel-preview.mjs` polls Vercel's REST API for the deploy state;
+  `fetch-vercel-logs.mjs` pulls build + runtime logs. These are captured into
+  `notes/ralph-snapshots/<task-id>/vercel-{preview,logs}.{json,txt}` for diagnostics. A
+  Vercel failure does NOT block a task that passed KripVerify-local — the loop keeps
+  moving and the operator/monitor session can surface real anomalies.
 
 **Hook updates active in Round 2:**
 - **FP-12** (regex updated): rejects 5-mode legacy + Round-0 legacy. Only 3 modes legal.

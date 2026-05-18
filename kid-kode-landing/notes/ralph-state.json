@@ -526,17 +526,20 @@
     },
     {
       "id": "EBR2-G-02",
-      "title": "Extend /ralph-step-editor Step 8 — invoke kv_* MCP tools against Vercel preview URL",
+      "title": "Extend /ralph-step-editor Step 8b — kv_* MCP tools against the LOCAL kripverify sandbox (primary)",
       "phase": "§R2-G",
       "specRefs": ["§R2-G SC-078"],
       "tddRequired": false,
       "verificationCommands": [
         "grep -q 'wait-for-vercel-preview' .claude/commands/ralph-step-editor.md",
+        "grep -q 'kv_dev_server_status' .claude/commands/ralph-step-editor.md",
         "grep -q 'kv_navigate' .claude/commands/ralph-step-editor.md",
         "grep -q 'kv_screenshot' .claude/commands/ralph-step-editor.md",
-        "grep -q 'kv_check_console' .claude/commands/ralph-step-editor.md"
+        "grep -q 'kv_check_console' .claude/commands/ralph-step-editor.md",
+        "grep -q 'PRIMARY' .claude/commands/ralph-step-editor.md",
+        "test -f .mcp.json && jq -e '.mcpServers.kv' .mcp.json"
       ],
-      "haltCheck": "/ralph-step-editor command file documents the Step 8 sub-flow: after local snapshot + verify:prism + after push, run wait-for-vercel-preview → invoke kv_navigate(url) → kv_wait_for(canvas) → kv_screenshot → kv_check_console → kv_check_network → persist findings to notes/ralph-snapshots/<task-id>/vercel-preview.{png,json}.",
+      "haltCheck": "/ralph-step-editor command file documents Step 8b PRIMARY (kripverify against local sandboxed dev server: kv_dev_server_status → kv_navigate(localUrl) → kv_wait_for → kv_screenshot → kv_check_console → kv_check_network) plus task-specific interactive checks. Per-repo .mcp.json registers the kv MCP server. Persistence to notes/ralph-snapshots/<task-id>/kripverify.{png,json}. Failing KripVerify-local = task failure.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
@@ -546,15 +549,39 @@
     },
     {
       "id": "EBR2-G-03",
-      "title": "Failing KripVerify = task failure; verify findings persistence",
+      "title": "Failing KripVerify-local = task failure; verify findings persistence",
       "phase": "§R2-G",
       "specRefs": ["§R2-G SC-078"],
       "tddRequired": false,
       "verificationCommands": [
-        "grep -q 'failing KripVerify' .claude/commands/ralph-step-editor.md || grep -q 'KripVerify.*fail' .claude/commands/ralph-step-editor.md",
+        "grep -q 'failure' .claude/commands/ralph-step-editor.md",
+        "grep -q 'kripverify.png' .claude/commands/ralph-step-editor.md",
         "test -d kid-kode-landing/notes/ralph-snapshots"
       ],
-      "haltCheck": "/ralph-step-editor documents that any console error, 4xx/5xx network response, or failed kv_navigate is a task failure (worker stays in-progress, outer loop retries). Snapshot directory includes vercel-preview.png + vercel-preview.json for each completed task. This task is the loop's final iteration; on completion, Round 2 closes.",
+      "haltCheck": "/ralph-step-editor documents that any console error, 4xx/5xx network response, or failed kv_navigate against the local sandbox = task failure (worker stays in-progress, outer loop retries up to maxAttemptsPerTask). Snapshot directory includes kripverify.png + kripverify.json for each completed task.",
+      "kvVerify": false,
+      "status": "pending",
+      "attemptCount": 0,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": ""
+    },
+    {
+      "id": "EBR2-G-04",
+      "title": "Step 8c — Vercel observability (wait-for-vercel-preview + fetch-vercel-logs); non-blocking diagnostic",
+      "phase": "§R2-G",
+      "specRefs": ["§R2-G SC-079", "§R2-G RA-18"],
+      "tddRequired": false,
+      "verificationCommands": [
+        "test -x kid-kode-landing/scripts/wait-for-vercel-preview.mjs",
+        "test -x kid-kode-landing/scripts/fetch-vercel-logs.mjs",
+        "grep -q 'fetch-vercel-logs' .claude/commands/ralph-step-editor.md",
+        "grep -q 'non-blocking' .claude/commands/ralph-step-editor.md",
+        "grep -q 'SECONDARY' .claude/commands/ralph-step-editor.md",
+        "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --check-only",
+        "test -f kid-kode-landing/.vercel/project.json && jq -e '.projectId' kid-kode-landing/.vercel/project.json"
+      ],
+      "haltCheck": "Both Vercel scripts (wait-for-vercel-preview, fetch-vercel-logs) exist and are executable. /ralph-step-editor documents Step 8c as SECONDARY/non-blocking. .vercel/project.json exists and points at kid-kode-ai-landing. wait-for-vercel-preview --check-only returns ok. This task is Round-2's final iteration.",
       "kvVerify": false,
       "status": "pending",
       "attemptCount": 0,
