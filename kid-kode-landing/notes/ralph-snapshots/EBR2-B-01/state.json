@@ -1,0 +1,27 @@
+{
+  "taskId": "EBR2-B-01",
+  "iteration": 4,
+  "phase": "§R2-B",
+  "commit": "cc6d7bb51571d3d1a090ee9df1f776a0839c557b",
+  "kind": "pure-data-utility",
+  "kvVerify": false,
+  "verifiedAt": "2026-05-18T19:13:00Z",
+  "verificationResults": {
+    "tsc": "clean (no output)",
+    "grep_resolveAnchorToScenePosition": "OK (found in src/lib/prism-graph/compile-anchors.ts)",
+    "vitest": "21/21 passed (tests/editor-build/EBR2-B-01.compile-anchors-resolve.test.ts)",
+    "waitForVercelPreview_checkOnly": "ok"
+  },
+  "twoRuntimeSnapshot": "skipped — pure-data utility (no runtime surface; SC-066 wiring happens in EBR2-B-02/03/04)",
+  "specReviewer": {
+    "mustFix": 0,
+    "shouldFix": 5,
+    "optional": 3,
+    "deferred": [
+      "compile-anchors.ts default branch returning (0,0,0) instead of throwing — defensive against future CompiledAnchorKind growth.",
+      "Drop ?? 0 fallback on hub.layout.viewportWidth/Height — PrismHubLayout fields are non-optional in types.ts.",
+      "Strengthen non-mutation test with structuredClone deep-compare + Object.isFrozen.",
+      "Add UI_ANCHOR_TO_COMPILED_KIND back-reference comment in compile-anchors.ts header."
+    ]
+  }
+}
