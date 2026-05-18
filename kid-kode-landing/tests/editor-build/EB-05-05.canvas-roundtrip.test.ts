@@ -89,7 +89,7 @@ function resetStore() {
   s.selectNode(null);
   s.selectHub(null);
   s.clearMultiSelection?.();
-  s.setViewMode('hub-world');
+  s.setViewMode('canvas');
   (useGraphEditorStore as unknown as {
     setState: (partial: { cameraPoseByMode: Partial<Record<ViewMode, CameraPose>> }) => void;
   }).setState({ cameraPoseByMode: {} });
@@ -175,9 +175,9 @@ describe('EB-05-05 — canvas ↔ hub-world round-trip preserves selection + che
     expect(getStore().selectedNodeId).toBe('node-delta');
     expect(getStore().viewMode).toBe('canvas');
 
-    s.setViewMode('hub-world');
+    s.setViewMode('canvas');
     expect(getStore().selectedNodeId).toBe('node-delta');
-    expect(getStore().viewMode).toBe('hub-world');
+    expect(getStore().viewMode).toBe('canvas');
 
     s.setViewMode('canvas');
     expect(getStore().selectedNodeId).toBe('node-delta');
@@ -190,7 +190,7 @@ describe('EB-05-05 — canvas ↔ hub-world round-trip preserves selection + che
     s.selectHub('hub-home');
     expect(getStore().selectedHubId).toBe('hub-home');
 
-    s.setViewMode('hub-world');
+    s.setViewMode('canvas');
     expect(getStore().selectedHubId).toBe('hub-home');
 
     s.setViewMode('canvas');
@@ -206,7 +206,7 @@ describe('EB-05-05 — canvas ↔ hub-world round-trip preserves selection + che
     s.setViewMode('canvas');
     s.checkpointCameraPose('canvas', canvasPose);
 
-    s.setViewMode('hub-world');
+    s.setViewMode('canvas');
     expect(getStore().cameraPoseByMode.canvas).toEqual(canvasPose);
 
     s.setViewMode('canvas');

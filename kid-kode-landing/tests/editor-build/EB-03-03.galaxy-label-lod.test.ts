@@ -45,9 +45,9 @@ const lodSrc = readFileSync(
 
 const ALL_VIEW_MODES: ViewMode[] = [
   'galaxy',
-  'hub-world',
   'canvas',
-  'preview-hub',
+  'canvas',
+  'preview-app',
   'preview-app',
 ];
 const ALL_ZOOM_LEVELS: ZoomLevel[] = ['L0', 'L1', 'L2', 'L3', 'L4'];
@@ -169,7 +169,7 @@ describe('EB-03-03 — non-galaxy modes leave node-label visibility unchanged', 
     // Phase-4 SC-021 will later carve out intra-hub LOD for hub-world, but
     // until that task lands, the predicate must report node labels visible
     // outside galaxy so this task does not regress hub-world / canvas.
-    for (const vm of ['hub-world', 'canvas', 'preview-hub', 'preview-app'] as ViewMode[]) {
+    for (const vm of ['canvas', 'canvas', 'preview-app', 'preview-app'] as ViewMode[]) {
       for (const z of ALL_ZOOM_LEVELS) {
         const out = computeGalaxyLabelVisibility(vm, z, 100);
         expect(out.showNodeLabels).toBe(true);

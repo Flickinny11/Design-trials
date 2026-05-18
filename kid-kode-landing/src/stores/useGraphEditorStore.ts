@@ -5,54 +5,24 @@ import { subscribeWithSelector } from 'zustand/middleware';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
-export type ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app';
 /**
- * EB-06-07 / §6 SC-034 — non-preview subset of the canonical 5. The minimal
- * back affordance in `preview-hub` returns the user to whichever authoring
- * mode they were last in (tracked via `previousAuthoringMode`).
+ * EBR2-A-02 / §R2-A SC-065 / INV-24 / RA-06b — canonical 3-mode set.
+ * Round-1's `hub-world` folds into `canvas`; `preview-hub` folds into
+ * `preview-app`. No off-canon literal is permitted at the type layer
+ * (this field), the value layer (FP-12 v1.1), or the literal layer
+ * anywhere under `src/` (FP-14).
  */
-export type AuthoringViewMode = Exclude<ViewMode, 'preview-hub' | 'preview-app'>;
-/**
- * Legacy mapping kept ONLY for `normalizeViewMode`, which exists so persisted
- * graphs that still carry pre-EB-01 toggle strings can be coerced on load. No
- * runtime code path may assign these literals via `setViewMode` (FP-12 blocks
- * value-site uses, and `setViewMode` is typed `ViewMode` to enforce at the
- * type layer).
- */
-export type LegacyViewMode = 'preview' | 'editor' | 'split';
-export type AnyViewMode = ViewMode | LegacyViewMode;
+export type ViewMode = 'galaxy' | 'canvas' | 'preview-app';
 export type EditorRenderMode = 'scene' | 'topology';
 
 // EB-04-04 / §1 INV-20 / §5 SC-022, SC-027 — per-mode camera pose checkpoint.
 // Selection survives every mode transition (already invariant), but camera
 // pose is mode-specific: each mode keeps its own pose so that re-entering a
 // previously-visited mode restores the camera exactly as the user left it.
-// Pure data shape; the ControlsBridge in GraphScene reads/writes this in
-// Phase 5 (SC-022 wires canvas, SC-027 wires the canvas↔hub-world round-trip).
 export type CameraPose = {
   position: { x: number; y: number; z: number };
   target: { x: number; y: number; z: number };
 };
-
-const LEGACY_VIEW_MODE_TO_CANONICAL: Readonly<Record<LegacyViewMode, ViewMode>> = {
-  editor: 'hub-world',
-  split: 'canvas',
-  preview: 'preview-hub',
-};
-
-const CANONICAL_VIEW_MODES: ReadonlySet<ViewMode> = new Set([
-  'galaxy',
-  'hub-world',
-  'canvas',
-  'preview-hub',
-  'preview-app',
-]);
-
-export function normalizeViewMode(m: AnyViewMode): ViewMode {
-  return CANONICAL_VIEW_MODES.has(m as ViewMode)
-    ? (m as ViewMode)
-    : LEGACY_VIEW_MODE_TO_CANONICAL[m as LegacyViewMode];
-}
 
 interface GraphEditorState {
   // View
@@ -60,20 +30,11 @@ interface GraphEditorState {
   cameraDistance: number;
   activeHubId: string | null;
   /**
-   * Canonical 5-mode set only (RA-06). Off-canon literals are blocked at the
-   * type layer (this field) and at the source layer (FP-12 in the anti-drift
-   * hook). Persisted graphs that still carry pre-EB-01 toggle strings must
-   * pass through `normalizeViewMode` at load time.
+   * Canonical 3-mode set only (RA-06b). Off-canon literals are blocked at
+   * the type layer (this field), at the source layer (FP-12 v1.1 in the
+   * anti-drift hook), and at the literal layer (FP-14).
    */
   viewMode: ViewMode;
-  /**
-   * EB-06-07 / §6 SC-034 — last non-preview view mode the user authored in.
-   * Updated whenever `setViewMode` is called with a non-preview mode so the
-   * minimal back affordance rendered in `preview-hub` can return the user
-   * to wherever they came from. Defaults to the same value as the initial
-   * `viewMode` so the back affordance is meaningful even before any toggle.
-   */
-  previousAuthoringMode: AuthoringViewMode;
   editorRenderMode: EditorRenderMode;
 
   // Selection — node and hub selection are mutually exclusive
@@ -116,7 +77,7 @@ interface GraphEditorState {
   resetCameraSignal: number;
 
   // EB-04-01 / SC-019 — drill-in reveal animation timing. `hubRevealAt` is the
-  // wall-clock timestamp (Date.now()) of the last galaxy→hub-world drill-in;
+  // wall-clock timestamp (Date.now()) of the last galaxy→canvas drill-in;
   // null when no reveal has been requested. Renderers compute fade-in progress
   // as clamp((Date.now() - hubRevealAt) / hubRevealDurationMs, 0, 1) and apply
   // that to the active hub's nodes / background sphere / intra-hub tethers.
@@ -128,9 +89,7 @@ interface GraphEditorState {
   pinnedPositions: Map<string, { x: number; y: number; z: number }>;
 
   // EB-04-04 / §1 INV-20 — per-mode camera-pose checkpoints. Empty until a
-  // mode's controls write its current pose via `checkpointCameraPose`. The
-  // entries are partial because not every mode has been visited (or
-  // wired through Phase 5 controls) at any given moment.
+  // mode's controls write its current pose via `checkpointCameraPose`.
   cameraPoseByMode: Partial<Record<ViewMode, CameraPose>>;
 
   // Performance
@@ -166,8 +125,9 @@ interface GraphEditorState {
   flyToHub: (hubId: string) => void;
   clearFlyTarget: () => void;
   /**
-   * EB-04-01 / SC-018 + SC-019 — galaxy→hub-world drill-in. Atomically:
-   *   - viewMode      := 'hub-world'
+   * EB-04-01 / SC-018 + SC-019 — galaxy→canvas drill-in (RA-06b: the
+   * intra-hub authoring mode is now `canvas`). Atomically:
+   *   - viewMode      := 'canvas'
    *   - selectedHubId := hubId   (INV-20: selection on the clicked hub
    *                               preserved across the transition)
    *   - activeHubId   := hubId
@@ -187,11 +147,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     zoomLevel: 'L0',
     cameraDistance: 320,
     activeHubId: null,
-    // RA-06: legacy 'split' maps to canonical 'canvas'. EB-01-03 narrows the
-    // `viewMode` field's type back to `ViewMode` and arms FP-12 against any
-    // future legacy literal.
-    viewMode: 'canvas',
-    previousAuthoringMode: 'canvas',
+    // RA-06b / RA-17 — default boot mode is `preview-app` (the prototype is,
+    // first and foremost, a runtime preview surface). EBR2-A-03 verifies the
+    // boot-state round-trip; this field sets the default value.
+    viewMode: 'preview-app',
     editorRenderMode: 'scene',
     selectedNodeId: null,
     selectedHubId: null,
@@ -219,21 +178,11 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     setZoomLevel: (l) => set({ zoomLevel: l }),
     setViewMode: (m) =>
       // EB-04-01 / SC-019 — clear the drill-in reveal stamp on any non-drill
-      // mode change so a stale hubRevealAt from a prior galaxy→hub-world
-      // can't re-trigger the fade-in when the user returns to hub-world via
-      // a different path (toolbar toggle, preview→hub-world, etc.).
+      // mode change so a stale hubRevealAt from a prior galaxy→canvas
+      // can't re-trigger the fade-in when the user returns to canvas via
+      // a different path (toolbar toggle, preview→canvas, etc.).
       // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
-      // EB-06-07 / SC-034 — additionally record the last non-preview mode
-      // so the minimal back affordance in preview-hub knows where to
-      // return the user.
-      set((s) => ({
-        viewMode: m,
-        hubRevealAt: null,
-        previousAuthoringMode:
-          m === 'preview-hub' || m === 'preview-app'
-            ? s.previousAuthoringMode
-            : (m as AuthoringViewMode),
-      })),
+      set({ viewMode: m, hubRevealAt: null }),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
@@ -278,9 +227,6 @@ export const useGraphEditorStore = create<GraphEditorState>()(
           const only = next.values().next().value as string;
           return { selectedNodeIds: next, selectedNodeId: only };
         }
-        // Mirror toggleHubSelection: when the multi-set crosses to >=2, open
-        // the inspector so the group view becomes visible without requiring
-        // the user to open the panel separately.
         return { selectedNodeIds: next, inspectorOpen: true };
       }),
     toggleHubSelection: (id) =>
@@ -291,8 +237,6 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         }
         if (next.has(id)) next.delete(id);
         else next.add(id);
-        // Mirror selectHub's inspector-open side-effect so shift-clicking a
-        // hub for the first time still surfaces the panel.
         if (next.size === 0) {
           return { selectedHubIds: next, selectedHubId: null };
         }
@@ -339,10 +283,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),
     drillIntoHub: (hubId) =>
       set({
-        viewMode: 'hub-world',
-        // EB-06-07 / SC-034 — drilling lands on an authoring mode, so the
-        // back affordance should remember this entry path.
-        previousAuthoringMode: 'hub-world',
+        viewMode: 'canvas',
         selectedHubId: hubId,
         selectedNodeId: null,
         selectedNodeIds: new Set<string>(),

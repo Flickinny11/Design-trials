@@ -84,8 +84,8 @@ export interface MountGraphOpts {
    *  driver on the scene root so the inner runtime camera is constrained to
    *  the damped cinematic rail every frame. PrismHost passes this from a
    *  fresh `compileHubToPreview` of the active hub when viewMode ===
-   *  'preview-hub'. Omitted → camera retains its default unconstrained pose
-   *  (used by hub-world / canvas editor surfaces that need free orbiting). */
+   *  'preview-app'. Omitted → camera retains its default unconstrained pose
+   *  (used by canvas editor surface that needs free orbiting). */
   cameraRail?: CompiledCameraRail;
 }
 

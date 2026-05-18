@@ -60,9 +60,9 @@ const CANONICAL_TABS: InspectorTab[] = [
 
 const CANONICAL_VIEW_MODES: ViewMode[] = [
   'galaxy',
-  'hub-world',
   'canvas',
-  'preview-hub',
+  'canvas',
+  'preview-app',
   'preview-app',
 ];
 

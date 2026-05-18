@@ -53,7 +53,7 @@ function clamp01(x: number): number {
   return x;
 }
 
-// Sentinel returned when this predicate is disabled (viewMode !== 'hub-world').
+// Sentinel returned when this predicate is disabled (viewMode !== 'canvas').
 // All flags `true` and all opacities `1` so callers that AND this predicate
 // with another (e.g. galaxy-label-lod) get a transparent pass-through. A
 // caller that consults `showSubNodeDetail` outside hub-world is, by
@@ -73,11 +73,12 @@ export function computeHubWorldLabelVisibility(
   zoomLevel: ZoomLevel,
   cameraDistance: number,
 ): HubWorldLabelVisibility {
-  // Non-hub-world modes: leave intra-hub LOD inactive. Galaxy mode has its
-  // own LOD predicate (`computeGalaxyLabelVisibility`, SC-014); the other
-  // three modes (canvas, preview-hub, preview-app) do not gate node labels
-  // on zoom in this spec.
-  if (viewMode !== 'hub-world') {
+  // Non-canvas modes: leave intra-hub LOD inactive. Galaxy mode has its
+  // own LOD predicate (`computeGalaxyLabelVisibility`, SC-014); preview-app
+  // does not gate node labels on zoom. (RA-06b folds hub-world into canvas,
+  // so the LOD predicate that was scoped to hub-world is now scoped to
+  // canvas.)
+  if (viewMode !== 'canvas') {
     return { ...ALL_ON };
   }
 

@@ -59,8 +59,8 @@ export default function TopBar() {
 
         <div className="w-px h-6 bg-white/10" />
 
-        {/* SC-004 / RA-06: editorRenderMode is a hub-world sub-toggle. */}
-        {viewMode === 'hub-world' && (
+        {/* SC-004 / RA-06b: editorRenderMode is a canvas-mode sub-toggle. */}
+        {viewMode === 'canvas' && (
           <div className="flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.035] p-0.5">
             {([
               { id: 'scene', icon: 'grid', label: 'Scene' },

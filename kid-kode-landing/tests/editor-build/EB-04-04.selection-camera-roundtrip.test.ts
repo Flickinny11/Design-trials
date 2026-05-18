@@ -88,9 +88,9 @@ const getStore = () =>
 
 const CYCLE: ViewMode[] = [
   'galaxy',
-  'hub-world',
   'canvas',
-  'preview-hub',
+  'canvas',
+  'preview-app',
   'preview-app',
   'galaxy',
 ];
@@ -194,9 +194,9 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
   it('records a pose under the mode key when checkpointCameraPose is called', () => {
     const s = getStore();
     const pose = POSE(1);
-    s.checkpointCameraPose('hub-world', pose);
+    s.checkpointCameraPose('canvas', pose);
     const after = getStore();
-    expect(after.cameraPoseByMode['hub-world']).toEqual(pose);
+    expect(after.cameraPoseByMode['canvas']).toEqual(pose);
   });
 
   it('overwrites a prior pose for the same mode on re-checkpoint', () => {
@@ -220,8 +220,8 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     expect(after.cameraPoseByMode['galaxy']).toEqual(galaxyPose);
     expect(after.cameraPoseByMode['canvas']).toEqual(canvasPose);
     // The two other canonical modes never received a checkpoint here.
-    expect(after.cameraPoseByMode['hub-world']).toBeUndefined();
-    expect(after.cameraPoseByMode['preview-hub']).toBeUndefined();
+    expect(after.cameraPoseByMode['canvas']).toBeUndefined();
+    expect(after.cameraPoseByMode['preview-app']).toBeUndefined();
     expect(after.cameraPoseByMode['preview-app']).toBeUndefined();
   });
 
@@ -230,9 +230,7 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     // Seed a distinct pose at each mode.
     const seeds: Partial<Record<ViewMode, CameraPose>> = {
       galaxy: POSE(10),
-      'hub-world': POSE(20),
       canvas: POSE(30),
-      'preview-hub': POSE(40),
       'preview-app': POSE(50),
     };
     (Object.keys(seeds) as ViewMode[]).forEach((m) => {
@@ -254,7 +252,7 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     const pose = POSE(7);
     s.checkpointCameraPose('canvas', pose);
     const beforeRef = getStore().cameraPoseByMode['canvas'];
-    s.setViewMode('hub-world');
+    s.setViewMode('canvas');
     const afterRef = getStore().cameraPoseByMode['canvas'];
     expect(afterRef).toEqual(beforeRef);
   });
@@ -265,9 +263,9 @@ describe('EB-04-04 — camera pose is mode-specific, checkpointed, restorable (I
     const canvasPose = POSE(99);
     s.checkpointCameraPose('canvas', canvasPose);
 
-    s.setViewMode('hub-world');
+    s.setViewMode('canvas');
     const hubPose = POSE(101);
-    s.checkpointCameraPose('hub-world', hubPose);
+    s.checkpointCameraPose('canvas', hubPose);
 
     s.setViewMode('canvas');
     const restored = getStore().cameraPoseByMode['canvas'];
@@ -285,9 +283,7 @@ describe('EB-04-04 — combined: selection + pose survive simultaneously', () =>
     s.selectNode('node-gamma');
     const poses: Partial<Record<ViewMode, CameraPose>> = {
       galaxy: POSE(1),
-      'hub-world': POSE(2),
       canvas: POSE(3),
-      'preview-hub': POSE(4),
       'preview-app': POSE(5),
     };
 

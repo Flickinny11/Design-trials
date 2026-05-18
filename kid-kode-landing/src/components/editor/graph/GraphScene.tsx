@@ -1728,11 +1728,12 @@ function TopologySceneContent({
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const hubRevealAt = useGraphEditorStore((s) => s.hubRevealAt);
   const revealProgress = useHubRevealProgress();
-  // The reveal only animates when entering hub-world from a drill-in; in
-  // galaxy / canvas / preview-* modes we hold full opacity so other modes
-  // never visually depend on the reveal timer.
+  // The reveal only animates when entering canvas (the intra-hub authoring
+  // mode after RA-06b) from a drill-in; in galaxy / preview-app modes we
+  // hold full opacity so other modes never visually depend on the reveal
+  // timer.
   const revealOpacityForActiveHub =
-    viewMode === 'hub-world' && hubRevealAt != null
+    viewMode === 'canvas' && hubRevealAt != null
       ? revealProgress
       : 1;
 

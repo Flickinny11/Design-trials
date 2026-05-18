@@ -60,11 +60,6 @@ export default function Page() {
   // EB-10-02 / §10 SC-054 — preview-app routing reads the active hub from
   // the store and writes back via setState (no dedicated action needed).
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
-  // EB-06-07 / §6 SC-034 — preview-hub hides editor clutter (mode bar
-  // included) and exposes only a minimal "back" affordance. The store
-  // tracks the last non-preview view mode so the back button returns the
-  // user to wherever they came from.
-  const previousAuthoringMode = useGraphEditorStore((s) => s.previousAuthoringMode);
   const [previewPreset, setPreviewPreset] = useState<ViewportPreset>('desktop');
 
   useEffect(() => {
@@ -81,24 +76,17 @@ export default function Page() {
     });
   }, []);
 
-  // EB-06-07 — Expose a typed dev hook the verify-editor-runtimes script
-  // uses to programmatically switch to preview-hub for the inner-runtime
+  // EB-06-07 / EBR2-A-02 — Expose a typed dev hook the verify-editor-runtimes
+  // script uses to programmatically switch view mode for the inner-runtime
   // snapshot. Without this hook the script falls back to "no-hook" and
-  // captures whatever mode the editor happened to be in (typically the
-  // default `canvas`), which makes SC-034's preview-chrome diff impossible
-  // to visually verify. Lives on `window` (editor-shell code; not subject
-  // to INV-13 which scopes to runtime / node modules).
+  // captures whatever mode the editor happened to be in. Lives on `window`
+  // (editor-shell code; not subject to INV-13 which scopes to runtime /
+  // node modules). Only the canonical 3 modes (RA-06b) are accepted.
   useEffect(() => {
     (window as unknown as {
       __PRISM_EDITOR_SET_VIEW_MODE__?: (m: string) => void;
     }).__PRISM_EDITOR_SET_VIEW_MODE__ = (m) => {
-      if (
-        m === 'galaxy' ||
-        m === 'hub-world' ||
-        m === 'canvas' ||
-        m === 'preview-hub' ||
-        m === 'preview-app'
-      ) {
+      if (m === 'galaxy' || m === 'canvas' || m === 'preview-app') {
         setViewMode(m);
       }
     };
@@ -450,25 +438,15 @@ export default function Page() {
     w[arrivalsKey] = [...prior, record];
   }, [viewMode, activeHubId]);
 
-  // Pane visibility derived from the canonical viewMode (RA-06 / spec §3
-  // "single canvas; five view modes"). One pane fills the viewport; the
+  // Pane visibility derived from the canonical viewMode (RA-06b / spec §3
+  // "single canvas; three view modes"). One pane fills the viewport; the
   // mode decides what renders inside it.
-  //   - galaxy / hub-world / canvas mount the graph editor (GraphScene + overlays).
-  //   - preview-hub / preview-app mount the Prism runtime (PrismHost).
-  // Legacy split-pane behavior (PrismHost left + GraphScene right) was retired
-  // post-Ralph-loop: it predated Phase 5's viewport-frame canvas and was kept
-  // transitionally during the build. Phase 5's frame + safe-area + transform
-  // handles live inside GraphScene, so canvas mode now shows the single
-  // editor canvas full-width and PrismHost mounts only inside preview modes.
-  const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
-  const isPreviewHub = viewMode === 'preview-hub';
+  //   - galaxy / canvas mount the graph editor (GraphScene + overlays).
+  //   - preview-app mounts the Prism runtime (PrismHost).
+  const isPreviewMode = viewMode === 'preview-app';
   const isPreviewApp = viewMode === 'preview-app';
   const showsPreview = isPreviewMode;
   const showsGraph = !isPreviewMode;
-  // EB-06-07 / §6 SC-034 — the full 5-button mode bar is editor clutter and
-  // must be hidden in preview-hub. It remains visible everywhere else,
-  // including preview-app (a future EB-10 task will revisit that mode).
-  const showsModeBar = !isPreviewHub;
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#04050a]">
@@ -483,73 +461,17 @@ export default function Page() {
 
       {isDesktop ? (
         <>
-          {/* View-mode toggle — canonical 5 modes (RA-06 / SC-001).
-              galaxy:      stub of the App_Name_World galaxy view; renders the
-                           graph for now (EB-03 wires real galaxy layout).
-              hub-world:   3D knowledge-graph editor for the active hub
-                           (replaces the legacy `editor` mode; default after
-                           EB-01-04 wires the scene/topology sub-toggle).
-              canvas:      single-canvas authoring surface; transitionally
-                           shown as the legacy split-pane view so the
-                           preview is reachable during migration (EB-05-*
-                           introduces the dedicated viewport-frame canvas).
-              preview-hub: mock app only, fixed viewport preset.
-              preview-app: mock app only, preview-app route navigation
-                           (EB-10 introduces multi-hub transitions).
-
-              EB-06-07 / SC-034 — the full bar is hidden in preview-hub
-              (showsModeBar === false there) and replaced with the minimal
-              back affordance rendered below. */}
-          {showsModeBar && (
+          {/* View-mode toggle — canonical 3 modes (RA-06b / SC-065).
+              galaxy:      free-camera view of every hub in the universe.
+              canvas:      single-canvas authoring surface for the active hub
+                           (hub-world's intra-hub authoring folds in here).
+              preview-app: the running app; default on boot (RA-17). */}
+          <div
+            className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+            data-component="view-mode-toggle"
+          >
             <div
-              className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
-              data-component="view-mode-toggle"
-            >
-              <div
-                className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
-                style={{
-                  background: 'rgba(8,10,26,0.78)',
-                  backdropFilter: 'blur(20px) saturate(180%)',
-                  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-                }}
-              >
-                {([
-                  { id: 'galaxy',      label: 'Galaxy' },
-                  { id: 'hub-world',   label: 'Hub World' },
-                  { id: 'canvas',      label: 'Canvas' },
-                  { id: 'preview-hub', label: 'Preview Hub' },
-                  { id: 'preview-app', label: 'Preview App' },
-                ] as const).map((m) => {
-                  const active = viewMode === m.id;
-                  return (
-                    <button
-                      key={m.id}
-                      type="button"
-                      onClick={() => setViewMode(m.id)}
-                      className={`px-3 h-7 rounded-full text-[11px] font-mono transition-all ${
-                        active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
-                      }`}
-                    >
-                      {m.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* EB-06-07 / §6 SC-034 — minimal "back" affordance, the sole
-              piece of editor chrome that survives into preview-hub. Returns
-              the user to their last authoring mode (tracked via the store's
-              previousAuthoringMode field). */}
-          {isPreviewHub && (
-            <button
-              type="button"
-              data-component="preview-back"
-              aria-label="Back to editor"
-              onClick={() => setViewMode(previousAuthoringMode)}
-              className="absolute top-2 left-3 z-40 pointer-events-auto flex items-center gap-1.5 h-7 px-3 rounded-full border border-white/10 text-[11px] font-mono text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+              className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
               style={{
                 background: 'rgba(8,10,26,0.78)',
                 backdropFilter: 'blur(20px) saturate(180%)',
@@ -557,10 +479,28 @@ export default function Page() {
                 boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
               }}
             >
-              <span aria-hidden="true">‹</span>
-              Back
-            </button>
-          )}
+              {([
+                { id: 'galaxy',      label: 'Galaxy' },
+                { id: 'canvas',      label: 'Canvas' },
+                { id: 'preview-app', label: 'Preview App' },
+              ] as const).map((m) => {
+                const active = viewMode === m.id;
+                return (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setViewMode(m.id)}
+                    className={`px-3 h-7 rounded-full text-[11px] font-mono transition-all ${
+                      active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
+                    }`}
+                  >
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
 
           {/* EB-10-02 / §10 SC-054 — minimal hub-to-hub navigation affordance,
               visible only in `preview-app`. Each click pushes a history entry

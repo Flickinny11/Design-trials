@@ -217,7 +217,7 @@ export default function PrismHost({
     const live = liveResultRef.current;
     if (!live) return;
 
-    const isPreviewMode = viewMode === 'preview-hub' || viewMode === 'preview-app';
+    const isPreviewMode = viewMode === 'preview-app';
     if (!isPreviewMode) {
       live.setCameraRail(null);
       live.setBackgroundLayers(null);

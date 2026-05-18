@@ -43,9 +43,9 @@ const lodSrc = readFileSync(
 
 const ALL_VIEW_MODES: ViewMode[] = [
   'galaxy',
-  'hub-world',
   'canvas',
-  'preview-hub',
+  'canvas',
+  'preview-app',
   'preview-app',
 ];
 const ALL_ZOOM_LEVELS: ZoomLevel[] = ['L0', 'L1', 'L2', 'L3', 'L4'];
@@ -56,8 +56,8 @@ describe('EB-04-03 — computeHubWorldLabelVisibility purity + shape', () => {
   });
 
   it('returns identical output on two consecutive calls (determinism)', () => {
-    const a = computeHubWorldLabelVisibility('hub-world', 'L1', 200);
-    const b = computeHubWorldLabelVisibility('hub-world', 'L1', 200);
+    const a = computeHubWorldLabelVisibility('canvas', 'L1', 200);
+    const b = computeHubWorldLabelVisibility('canvas', 'L1', 200);
     expect(a).toEqual(b);
   });
 
@@ -94,35 +94,35 @@ describe('EB-04-03 — computeHubWorldLabelVisibility purity + shape', () => {
 
 describe('EB-04-03 — hub-world mode: SC-021 visibility per zoom level', () => {
   it('L1: hub label only — no node labels, no sub-node detail', () => {
-    const out = computeHubWorldLabelVisibility('hub-world', 'L1', 200);
+    const out = computeHubWorldLabelVisibility('canvas', 'L1', 200);
     expect(out.showHubLabel).toBe(true);
     expect(out.showNodeLabels).toBe(false);
     expect(out.showSubNodeDetail).toBe(false);
   });
 
   it('L3: node labels appear (sub-node detail still hidden)', () => {
-    const out = computeHubWorldLabelVisibility('hub-world', 'L3', 40);
+    const out = computeHubWorldLabelVisibility('canvas', 'L3', 40);
     expect(out.showHubLabel).toBe(true);
     expect(out.showNodeLabels).toBe(true);
     expect(out.showSubNodeDetail).toBe(false);
   });
 
   it('L4: sub-node detail revealed (node + hub labels remain visible)', () => {
-    const out = computeHubWorldLabelVisibility('hub-world', 'L4', 10);
+    const out = computeHubWorldLabelVisibility('canvas', 'L4', 10);
     expect(out.showHubLabel).toBe(true);
     expect(out.showNodeLabels).toBe(true);
     expect(out.showSubNodeDetail).toBe(true);
   });
 
   it('L0: continuation of L1 — hub label only (spec silent on intra-hub L0)', () => {
-    const out = computeHubWorldLabelVisibility('hub-world', 'L0', 320);
+    const out = computeHubWorldLabelVisibility('canvas', 'L0', 320);
     expect(out.showHubLabel).toBe(true);
     expect(out.showNodeLabels).toBe(false);
     expect(out.showSubNodeDetail).toBe(false);
   });
 
   it('L2: transition band — node labels still hidden (no early reveal before L3)', () => {
-    const out = computeHubWorldLabelVisibility('hub-world', 'L2', 100);
+    const out = computeHubWorldLabelVisibility('canvas', 'L2', 100);
     expect(out.showHubLabel).toBe(true);
     expect(out.showNodeLabels).toBe(false);
     expect(out.showSubNodeDetail).toBe(false);
@@ -130,7 +130,7 @@ describe('EB-04-03 — hub-world mode: SC-021 visibility per zoom level', () => 
 
   it('hub label is visible at every zoom level in hub-world mode', () => {
     for (const z of ALL_ZOOM_LEVELS) {
-      const out = computeHubWorldLabelVisibility('hub-world', z, 100);
+      const out = computeHubWorldLabelVisibility('canvas', z, 100);
       expect(out.showHubLabel).toBe(true);
       expect(out.hubLabelOpacity).toBe(1);
     }
@@ -139,14 +139,14 @@ describe('EB-04-03 — hub-world mode: SC-021 visibility per zoom level', () => 
 
 describe('EB-04-03 — hub-world mode: smooth LOD transitions per level', () => {
   it('node-label opacity is 0 at L1 and 1 at L3+ (SC-021 endpoints)', () => {
-    expect(computeHubWorldLabelVisibility('hub-world', 'L1', 200).nodeLabelOpacity).toBe(0);
-    expect(computeHubWorldLabelVisibility('hub-world', 'L3', 40).nodeLabelOpacity).toBe(1);
-    expect(computeHubWorldLabelVisibility('hub-world', 'L4', 10).nodeLabelOpacity).toBe(1);
+    expect(computeHubWorldLabelVisibility('canvas', 'L1', 200).nodeLabelOpacity).toBe(0);
+    expect(computeHubWorldLabelVisibility('canvas', 'L3', 40).nodeLabelOpacity).toBe(1);
+    expect(computeHubWorldLabelVisibility('canvas', 'L4', 10).nodeLabelOpacity).toBe(1);
   });
 
   it('sub-node-detail opacity is 0 at L3 and 1 at L4 (SC-021 endpoints)', () => {
-    expect(computeHubWorldLabelVisibility('hub-world', 'L3', 40).subNodeDetailOpacity).toBe(0);
-    expect(computeHubWorldLabelVisibility('hub-world', 'L4', 10).subNodeDetailOpacity).toBe(1);
+    expect(computeHubWorldLabelVisibility('canvas', 'L3', 40).subNodeDetailOpacity).toBe(0);
+    expect(computeHubWorldLabelVisibility('canvas', 'L4', 10).subNodeDetailOpacity).toBe(1);
   });
 
   it('node-label opacity ramps monotonically across L2 by cameraDistance (closer → more opaque)', () => {
@@ -156,7 +156,7 @@ describe('EB-04-03 — hub-world mode: smooth LOD transitions per level', () => 
     // smooth rather than a hard pop.
     const distances = [140, 120, 100, 80, 60];
     const opacities = distances.map(
-      (d) => computeHubWorldLabelVisibility('hub-world', 'L2', d).nodeLabelOpacity,
+      (d) => computeHubWorldLabelVisibility('canvas', 'L2', d).nodeLabelOpacity,
     );
     for (let i = 1; i < opacities.length; i++) {
       expect(opacities[i]).toBeGreaterThanOrEqual(opacities[i - 1]);
@@ -171,7 +171,7 @@ describe('EB-04-03 — hub-world mode: smooth LOD transitions per level', () => 
     // transition "tested per level" smooth.
     const distances = [60, 50, 40, 30, 22];
     const opacities = distances.map(
-      (d) => computeHubWorldLabelVisibility('hub-world', 'L3', d).subNodeDetailOpacity,
+      (d) => computeHubWorldLabelVisibility('canvas', 'L3', d).subNodeDetailOpacity,
     );
     for (let i = 1; i < opacities.length; i++) {
       expect(opacities[i]).toBeGreaterThanOrEqual(opacities[i - 1]);
@@ -182,7 +182,7 @@ describe('EB-04-03 — hub-world mode: smooth LOD transitions per level', () => 
 
 describe('EB-04-03 — non-hub-world modes leave intra-hub LOD off (predicate no-op)', () => {
   it('galaxy / canvas / preview-hub / preview-app: hub + node labels + sub-node detail always reported visible', () => {
-    for (const vm of ['galaxy', 'canvas', 'preview-hub', 'preview-app'] as ViewMode[]) {
+    for (const vm of ['galaxy', 'canvas', 'preview-app', 'preview-app'] as ViewMode[]) {
       for (const z of ALL_ZOOM_LEVELS) {
         const out = computeHubWorldLabelVisibility(vm, z, 100);
         expect(out.showHubLabel).toBe(true);
@@ -204,7 +204,7 @@ describe('EB-04-03 — GraphScene wires the hub-world LOD predicate', () => {
   it('NodeLabels render path consults showNodeLabels from the hub-world predicate', () => {
     // Source-shape link: somewhere in the NodeLabels render path the
     // hub-world predicate's result is consulted to gate node-label render
-    // when viewMode === 'hub-world'.
+    // when viewMode === 'canvas'.
     expect(graphSceneSrc).toMatch(
       /computeHubWorldLabelVisibility[\s\S]{0,800}?(showNodeLabels|hubWorldLod)/,
     );
