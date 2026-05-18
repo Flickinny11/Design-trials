@@ -18,7 +18,9 @@ import {
   type CompiledHubView,
 } from '@/lib/prism-graph/compiled-view';
 import type { CompiledCameraRail } from '@/lib/prism-graph/compiled-view';
-import type { GraphSource } from '@/lib/prism-graph/types';
+import { resolveAnchorToScenePosition } from '@/lib/prism-graph/compile-anchors';
+import type { GraphSource, ScenePosition } from '@/lib/prism-graph/types';
+import { SCENE_POSITION_DEFAULT } from '@/lib/prism-graph/types';
 // T-EDIT-05 — expose the bidirectional editor↔preview bridge type to
 // editor-side consumers. boot.ts owns the runtime contract; PrismHost is
 // the React boundary, so re-exporting keeps the import surface clean.
@@ -322,6 +324,60 @@ export default function PrismHost({
         : [];
     }
     live.setBackgroundLayers(background);
+  }, [viewMode, activeHubId, status, compiledHubView]);
+
+  // EBR2-B-03 / §R2-B SC-066 — node-layout effect. Walks the active
+  // CompiledHubView's per-node entries and dispatches the resolved
+  // anchor-position through the surgical liveResult.updateNodeTransform
+  // helper. Mirrors the camera-rail effect's shape: gated on `preview-app`,
+  // re-runs when compiledHubView swaps (e.g., the page-level compile
+  // re-memoizes on store change or breakpoint change), and never remounts
+  // the runtime. INV-17 — this loop is read-only over the source graph;
+  // resolveAnchorToScenePosition is pure, and updateNodeTransform writes
+  // only to the mounted THREE.Object3D, not to PrismNode.scenePosition.
+  useEffect(() => {
+    if (status !== 'ready') return;
+    if (viewMode !== 'preview-app') return;
+    if (!compiledHubView) return;
+    const live = liveResultRef.current;
+    if (!live) return;
+
+    const source = useGraphSourceStore.getState();
+    const hub =
+      (compiledHubView.hubId &&
+        source.hubs.find((h) => h.hubId === compiledHubView.hubId)) ||
+      (activeHubId && source.hubs.find((h) => h.hubId === activeHubId)) ||
+      source.hubs[0];
+    if (!hub) return;
+
+    // Index source nodes by id so the loop can preserve rotation/scale from
+    // PrismNode.scenePosition while only overriding x/y/z with the compiled
+    // anchor's resolved scene position. Reading is non-mutating (INV-17).
+    const sourceById = new Map(source.nodes.map((n) => [n.nodeId, n]));
+
+    for (const entry of compiledHubView.nodes) {
+      // SC-066: hidden compiled entries are skipped — the runtime keeps the
+      // node mounted at its source scenePosition (no anchor write). A
+      // follow-up task may add explicit Object3D.visible toggling; for now,
+      // "skipped" satisfies the haltCheck's "hidden nodes skipped or
+      // unmounted" clause.
+      if (entry.visible === false) continue;
+
+      const resolved = resolveAnchorToScenePosition(entry.anchor, hub);
+      const src = sourceById.get(entry.nodeId)?.scenePosition;
+      const next: ScenePosition = {
+        x: resolved.x,
+        y: resolved.y,
+        z: resolved.z,
+        rotationX: src?.rotationX ?? SCENE_POSITION_DEFAULT.rotationX,
+        rotationY: src?.rotationY ?? SCENE_POSITION_DEFAULT.rotationY,
+        rotationZ: src?.rotationZ ?? SCENE_POSITION_DEFAULT.rotationZ,
+        scaleX: src?.scaleX ?? SCENE_POSITION_DEFAULT.scaleX,
+        scaleY: src?.scaleY ?? SCENE_POSITION_DEFAULT.scaleY,
+        scaleZ: src?.scaleZ ?? SCENE_POSITION_DEFAULT.scaleZ,
+      };
+      live.updateNodeTransform(entry.nodeId, next);
+    }
   }, [viewMode, activeHubId, status, compiledHubView]);
 
   const isFit = viewportPreset === 'fit';
