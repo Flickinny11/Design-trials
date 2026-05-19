@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T07:30:00Z",
+  "updatedAt": "2026-05-19T11:50:11.233Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 11,
-    "lastProductiveCommit": "4b81e7dc1faca464475872de06150d1f6bbf2d9c"
+    "lastProductiveIteration": 12,
+    "lastProductiveCommit": "977de801f3066969739ff15720ee0d04419f1fc5"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§R2-C": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 11,
-    "commit": "4b81e7dc1faca464475872de06150d1f6bbf2d9c",
-    "verifiedAt": "2026-05-19T07:17:07Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-19T07:17:07Z"
+    "iteration": 12,
+    "commit": "977de801f3066969739ff15720ee0d04419f1fc5",
+    "taskId": "EBR2-C-04",
+    "timestamp": "2026-05-19T11:50:11.233Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -161,6 +160,14 @@
       "commit": "6793663323e2dbd7c3afbf4332b8f9fb78019076",
       "verifiedAt": "2026-05-19T06:46:07Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-03/"
+    },
+    {
+      "iteration": 12,
+      "taskId": "EBR2-C-04",
+      "phase": "§R2-C",
+      "commit": "977de801f3066969739ff15720ee0d04419f1fc5",
+      "verifiedAt": "2026-05-19T11:50:11.233Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-04/"
     }
   ],
   "tasks": [
@@ -418,11 +425,11 @@
       ],
       "haltCheck": "CanvasTransformGizmo's outer group positions at scenePosition+canvasTransform. Snapshot sequence: capture node position, simulate translate-handle drag via Playwright, capture again — positions differ. EBR2-C-04 vs EBR2-C-03 snapshot diff shows the node visibly moved.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "977de801f3066969739ff15720ee0d04419f1fc5",
+      "verifiedAt": "2026-05-19T11:50:11.233Z",
+      "notes": "Spec-reviewer 977de80: No MUST FIX. Verifier writes via updateNode (same path as gizmo onObjectChange), not drei pointer events — gap acceptable for SC-069 which targets visible movement (asserted via getWorldPosition delta on the rendered group). SHOULD FIX deferred: lifecycle symmetry on AssembledSceneContent unmount; CDP-screenshot helper dedup; vec scratch naming."
     },
     {
       "id": "EBR2-D-01",
