@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T17:14:39Z",
+  "updatedAt": "2026-05-19T17:25:27Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 12,
-    "lastProductiveCommit": "977de801f3066969739ff15720ee0d04419f1fc5"
+    "lastProductiveIteration": 13,
+    "lastProductiveCommit": "abe90c27df3533530c2772626ed2dfa2f939ea2b"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "\u00a7R2-D": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -73,10 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 12,
-    "commit": "977de801f3066969739ff15720ee0d04419f1fc5",
-    "taskId": "EBR2-C-04",
-    "timestamp": "2026-05-19T11:50:11.233Z"
+    "iteration": 13,
+    "taskId": "EBR2-D-01",
+    "commit": "abe90c27df3533530c2772626ed2dfa2f939ea2b",
+    "verifiedAt": "2026-05-19T17:25:27Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -168,6 +168,14 @@
       "commit": "977de801f3066969739ff15720ee0d04419f1fc5",
       "verifiedAt": "2026-05-19T11:50:11.233Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-04/"
+    },
+    {
+      "iteration": 13,
+      "taskId": "EBR2-D-01",
+      "phase": "\u00a7R2-D",
+      "commit": "abe90c27df3533530c2772626ed2dfa2f939ea2b",
+      "verifiedAt": "2026-05-19T17:25:27Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-D-01/"
     }
   ],
   "tasks": [
@@ -447,11 +455,11 @@
       ],
       "haltCheck": "canvas-camera-rail.ts exports computeCanvasCameraRail(hub, breakpoint, viewportFrame) \u2192 {minDistance, maxDistance, minPolarAngle, maxPolarAngle, minAzimuthAngle, maxAzimuthAngle, target, panLimits}. Unit-tested with at least 3 hub envelopes.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "abe90c27df3533530c2772626ed2dfa2f939ea2b",
+      "verifiedAt": "2026-05-19T17:25:27Z",
+      "notes": "Spec-reviewer SHOULD FIX items: (1) FOV mismatch with GraphScene scene-mode camera resolved in follow-up commit (45\u00b0 aligned). (2) Polar/azimuth windows are bounding constants rather than envelope-derived; reviewer downgraded \u2014 spec ambiguous, INV-23 satisfied. (3) panLimits assumes envelope centered on origin; EBR2-D-02 snapshot is the natural place to surface any off-center misalignment.",
       "interactionScript": null
     },
     {
