@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 14,
+  "currentIteration": 15,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T17:38:00Z",
+  "updatedAt": "2026-05-19T17:58:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 14,
-    "lastProductiveCommit": "477197065f664925ed2e63148f35730582f83869"
+    "lastProductiveCommit": "3f3a117a741de5cd88f243a475ad4e2da60e3e36"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -74,10 +74,10 @@
   },
   "checkpoint": {
     "iteration": 14,
-    "commit": "477197065f664925ed2e63148f35730582f83869",
-    "verifiedAt": "2026-05-19T17:38:00Z",
+    "commit": "3f3a117a741de5cd88f243a475ad4e2da60e3e36",
+    "verifiedAt": "2026-05-19T17:56:24Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-19T17:38:00Z"
+    "recordedAt": "2026-05-19T17:56:24Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -510,8 +510,8 @@
       ],
       "haltCheck": "usePreviewStateStore exports set(nodeId,patch), commit(nodeId), discard(nodeId), peek(nodeId), and isDirty(nodeId). Pure in-memory state; no persistence. Unit tests cover all four ops.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "",
