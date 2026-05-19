@@ -43,6 +43,27 @@ function isEmptyPatch(patch: PreviewNodePatch): boolean {
   return Object.keys(patch).length === 0;
 }
 
+/**
+ * EBR2-E-02 / §R2-E SC-072 — Pure helper: compose a source PrismNode with
+ * its preview-state patch (if any) so the renderer reads
+ * `sourceNode ⊕ previewState[nodeId]` in a single value. Returns the source
+ * node unchanged when `patch` is null/empty; otherwise returns a shallow
+ * merge of `node` and `patch`. Never mutates `node`.
+ *
+ * Intentionally a shallow merge: the preview patch is whole-field replacement
+ * (e.g. `canvasTransform`, `caption`); deeper structural merges would mask
+ * intent at the call site. Inspector tabs that want to update one sub-field
+ * (e.g. just `canvasTransform.x`) construct the full sub-object before
+ * calling `set()`.
+ */
+export function composeNodeWithPreview(
+  node: PrismNode,
+  patch: PreviewNodePatch | null,
+): PrismNode {
+  if (patch === null || isEmptyPatch(patch)) return node;
+  return { ...node, ...patch };
+}
+
 export const usePreviewStateStore = create<PreviewStateStore>()(
   subscribeWithSelector((zSet, get) => ({
     patches: {},
