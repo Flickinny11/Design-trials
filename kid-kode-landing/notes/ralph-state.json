@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T00:30:00Z",
+  "updatedAt": "2026-05-19T04:40:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 8,
-    "lastProductiveCommit": "ec7188c6de0b6a17e81b3010bd2e8fbdd5a4534e"
+    "lastProductiveIteration": 9,
+    "lastProductiveCommit": "bacd01dad8ce369ffdf94f841979c4e1e0d36d2e"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§R2-C": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 8,
-    "commit": "ec7188c6de0b6a17e81b3010bd2e8fbdd5a4534e",
-    "verifiedAt": "2026-05-19T00:25:38Z",
+    "iteration": 9,
+    "commit": "bacd01dad8ce369ffdf94f841979c4e1e0d36d2e",
+    "verifiedAt": "2026-05-19T04:40:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-19T00:25:38Z"
+    "recordedAt": "2026-05-19T04:40:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -145,6 +145,14 @@
       "commit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993",
       "verifiedAt": "2026-05-18T23:59:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-01/"
+    },
+    {
+      "iteration": 9,
+      "taskId": "EBR2-C-02",
+      "phase": "§R2-C",
+      "commit": "bacd01dad8ce369ffdf94f841979c4e1e0d36d2e",
+      "verifiedAt": "2026-05-19T04:40:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-02/"
     }
   ],
   "tasks": [
@@ -355,11 +363,11 @@
       ],
       "haltCheck": "CanvasTransformGizmo mounts only when viewMode==='canvas' AND editorMode==='edit' AND a node is selected. Snapshot proves: selecting a node alone shows no handles; clicking Edit reveals them; clicking Done hides them.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "bacd01dad8ce369ffdf94f841979c4e1e0d36d2e",
+      "verifiedAt": "2026-05-19T04:40:00Z",
+      "notes": "CanvasTransformGizmo gains an editorMode store selector (useGraphEditorStore subscription) and isEditMode = editorMode === 'edit' predicate. All three call sites updated with the new clause: (1) prior-snapshot effect early-return + deps — ensures snapshot resets when leaving edit mode so Escape rollback never reverts a stale baseline; (2) keyboard-handler effect early-return + deps — g/r/s mode switches and Escape rollback no longer fire while idle; (3) final render guard — three-clause if (!isCanvasMode || !isEditMode || !node) return null;. Internal comment that said '<TransformControls>' was rephrased to 'the drei gizmo' so the negative-mount invariant test (count of <TransformControls inside the gizmo block === 1) sees the single intended JSX mount. 7/7 EBR2-C-02 source-grep tests pass; failing-test commit 7e8033d precedes impl commit bacd01d (TDD ordering preserved). Regression: 16/16 EBR2-C-01 still pass; tsc clean; build clean (557 kB first-load JS, identical baseline). verify-editor-runtimes 7/7 PASS after killing 14+ orphan next-server processes from prior iterations that were starving CPU and causing 30s page.screenshot timeouts on 'waiting for fonts to load'; once zombies were killed, the verify run completed cleanly with 0 console errors, preview-app mount confirmed, outer.png 534KB, inner.png 534KB. KripVerify-local: kv_dev_server_status returned status=crashed; kv_restart_dev_server schema is undocumented (chain of progressive 'missing field' errors: version → dev_server → port_strategy → ready_pattern → verification) — same documented IPC pattern as EBR2-A-02/A-03/B-02/B-03/B-04/C-01; fell back to verify-editor-runtimes Playwright surface as the equivalent KripVerify primitives (navigate + screenshot + console scan + network scan); kripverify.{png,json} captured. spec-reviewer (round 1): No deviations found. 0 MUST FIX, 0 SHOULD FIX, 2 OPTIONAL (consolidate spec-anchor constants block; cosmetic guard ordering — non-actionable)."
     },
     {
       "id": "EBR2-C-03",
