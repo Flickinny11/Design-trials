@@ -993,11 +993,13 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
           <Icon name="play" size={11} color="#5d8bff" />
           Preview
         </button>
-        {/* EB-08-05 — "Save as keyframe": snapshots the active node's
-            canvasTransform (read from useGraphSourceStore) into a
-            PrismKeyframe with coordinateSpace='hub-scene' (or picker override)
-            and persists it via updateNode. The CTA literal is greppable for
-            the EB-08-05 source-shape test. */}
+        {/* EB-08-05 + EBR2-E-02 — "Save as keyframe": snapshots the active
+            node's canvasTransform into a PrismKeyframe with
+            coordinateSpace='hub-scene' (or picker override) and routes the
+            write through usePreviewStateStore (§R2-E SC-072 + FP-15). Save
+            (EBR2-E-03) is what later commits the buffer → useGraphSourceStore
+            and lets the debounced autosave flush. The CTA literal is
+            greppable for the EB-08-05 source-shape test. */}
         <button
           data-testid="kf-save-as-keyframe"
           onClick={handleSaveAsKeyframe}
