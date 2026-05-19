@@ -53,6 +53,10 @@ import {
   CANVAS_VIEWPORT_FRAME_DEFAULTS,
 } from '@/lib/editor/canvas-viewport-frame';
 import {
+  computeCanvasCameraRail,
+  type CanvasCameraRail,
+} from '@/lib/editor/canvas-camera-rail';
+import {
   gizmoModeForKey,
   readCanvasTransform,
   restorePriorCanvasTransform,
@@ -1184,7 +1188,13 @@ function ControlsBridge({
   );
 }
 
-function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
+function SceneControlsBridge({
+  nodes,
+  hub,
+}: {
+  nodes: PrismNode[];
+  hub?: PrismHub | null;
+}) {
   const controlsRef = useRef<CameraControls>(null);
   const setCameraDistance = useGraphEditorStore((s) => s.setCameraDistance);
   const flyToNodeId = useGraphEditorStore((s) => s.flyToNodeId);
@@ -1195,6 +1205,19 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
+
+  // EBR2-D-02 / §R2-D SC-071 — derive canvas-mode camera rail (6 angular
+  // bounds + pan limits) from the active hub envelope + viewport frame.
+  // Non-canvas modes hand `null` so the rail stays inert and the
+  // CameraControls fall back to the default (preview-app) constraints.
+  const rail = useMemo<CanvasCameraRail | null>(() => {
+    if (viewMode === 'canvas' && hub) {
+      const breakpoint = hub.responsiveBreakpoints?.desktop ?? null;
+      const viewportFrame = computeCanvasViewportFrame({ breakpoint });
+      return computeCanvasCameraRail(hub, breakpoint, viewportFrame);
+    }
+    return null;
+  }, [viewMode, hub]);
   // EB-05-05 / §5 SC-027 — previousViewMode for canvas↔hub-world round-trip
   // pose snapshotting in this scene-mode bridge (see ControlsBridge for the
   // matching block in topology mode).
@@ -1266,11 +1289,76 @@ function SceneControlsBridge({ nodes }: { nodes: PrismNode[] }) {
     setCameraDistance(c.distance);
   });
 
+  // EBR2-D-02 / §R2-D SC-071 — apply pan-target clamps via camera-controls
+  // setBoundary. The rail expresses panLimits as half-extents around the
+  // hub origin in scene units; we lift those into a Box3 with a deliberately
+  // generous Z window so dolly movement is not double-clamped (minDistance/
+  // maxDistance already constrain Z). Non-canvas modes reset the boundary
+  // so preview-app can pan freely.
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c) return;
+    if (rail) {
+      const { panLimits } = rail;
+      const box = new THREE.Box3(
+        new THREE.Vector3(panLimits.minX, panLimits.minY, -1000),
+        new THREE.Vector3(panLimits.maxX, panLimits.maxY, 1000),
+      );
+      c.setBoundary(box);
+    } else {
+      c.setBoundary(undefined);
+    }
+  }, [rail]);
+
+  // EBR2-D-02 / §R2-D SC-071 — dev hooks consumed by verify-editor-runtimes
+  // (notes/ralph-interactions/EBR2-D-02.json):
+  //   __PRISM_EDITOR_GET_CANVAS_CAMERA__  → live {position, target,
+  //                                         polarAngle, azimuthAngle}
+  //   __PRISM_EDITOR_GET_CANVAS_RAIL__    → current CanvasCameraRail or null
+  // The interaction script asserts the live camera stays inside the rail
+  // after a wheel-zoom barrage; both hooks must therefore reflect the same
+  // controls instance (no stale snapshots).
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_EDITOR_GET_CANVAS_CAMERA__?: () => {
+        position: { x: number; y: number; z: number };
+        target: { x: number; y: number; z: number };
+        polarAngle: number;
+        azimuthAngle: number;
+      } | null;
+      __PRISM_EDITOR_GET_CANVAS_RAIL__?: () => CanvasCameraRail | null;
+    };
+    const pos = new THREE.Vector3();
+    const tgt = new THREE.Vector3();
+    w.__PRISM_EDITOR_GET_CANVAS_CAMERA__ = () => {
+      const c = controlsRef.current;
+      if (!c) return null;
+      c.getPosition(pos);
+      c.getTarget(tgt);
+      return {
+        position: { x: pos.x, y: pos.y, z: pos.z },
+        target: { x: tgt.x, y: tgt.y, z: tgt.z },
+        polarAngle: c.polarAngle,
+        azimuthAngle: c.azimuthAngle,
+      };
+    };
+    w.__PRISM_EDITOR_GET_CANVAS_RAIL__ = () => rail;
+    return () => {
+      delete w.__PRISM_EDITOR_GET_CANVAS_CAMERA__;
+      delete w.__PRISM_EDITOR_GET_CANVAS_RAIL__;
+    };
+  }, [rail]);
+
   return (
     <CameraControls
       ref={controlsRef}
-      minDistance={3}
-      maxDistance={80}
+      minDistance={rail ? rail.minDistance : 3}
+      maxDistance={rail ? rail.maxDistance : 80}
+      minPolarAngle={rail ? rail.minPolarAngle : 0}
+      maxPolarAngle={rail ? rail.maxPolarAngle : Math.PI}
+      minAzimuthAngle={rail ? rail.minAzimuthAngle : -Infinity}
+      maxAzimuthAngle={rail ? rail.maxAzimuthAngle : Infinity}
       smoothTime={0.24}
       draggingSmoothTime={0.12}
       dollyToCursor
@@ -2024,7 +2112,7 @@ function AssembledSceneContent({
       )}
 
       <AssembledSceneDiagnostics nodes={nodes} />
-      <SceneControlsBridge nodes={nodes} />
+      <SceneControlsBridge nodes={nodes} hub={hub ?? null} />
 
       {usePost && (
         <EffectComposer multisampling={0} stencilBuffer={false}>
