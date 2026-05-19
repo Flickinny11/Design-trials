@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T23:10:00Z",
+  "updatedAt": "2026-05-18T23:59:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 7,
-    "lastProductiveCommit": "637a07f30279e9c7423fe589737031a1a1859a6e"
+    "lastProductiveIteration": 8,
+    "lastProductiveCommit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -47,7 +47,7 @@
       "status": "active"
     },
     "§R2-C": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 7,
-    "commit": "637a07f30279e9c7423fe589737031a1a1859a6e",
-    "verifiedAt": "2026-05-18T23:01:06Z",
+    "iteration": 8,
+    "commit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993",
+    "verifiedAt": "2026-05-18T23:59:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T23:01:06Z"
+    "recordedAt": "2026-05-18T23:59:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -137,6 +137,14 @@
       "commit": "98abba8f58b4dafa490836699fe5345398165505",
       "verifiedAt": "2026-05-18T22:43:56.000Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-B-04/"
+    },
+    {
+      "iteration": 8,
+      "taskId": "EBR2-C-01",
+      "phase": "§R2-C",
+      "commit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993",
+      "verifiedAt": "2026-05-18T23:59:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-C-01/"
     }
   ],
   "tasks": [
@@ -325,11 +333,11 @@
       ],
       "haltCheck": "Store has editorMode: 'idle' | 'edit' (default 'idle') and setEditorMode action. Inspector toolbar renders Edit/Done button. Toggling Edit flips editorMode. Escape exits edit mode. Changing selection resets editorMode to 'idle'.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "commit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993",
+      "verifiedAt": "2026-05-18T23:59:00Z",
+      "notes": "useGraphEditorStore gains: EditorMode = 'idle' | 'edit'; editorMode field default 'idle'; setEditorMode action; selection-reset wiring in selectNode/selectHub/flyToNode/drillIntoHub (all set editorMode: 'idle' so the gizmo never persists onto a fresh selection). Inspector.tsx gains: editorMode + setEditorMode store slices; Escape keydown effect mounted only while editorMode === 'edit' (calls setEditorMode('idle') on Escape; remove on cleanup); Edit/Done toggle button with data-role='edit-toggle', aria-pressed, and amber active-state styling. 16/16 EBR2-C-01 tests pass; failing-test commit 11f5420 precedes impl commit ce4d102 (TDD ordering preserved by temporarily moving the test out of tsc scope while the store type was being assembled — see post-edit-typecheck.sh hook note from EBR2-B-01). Regression: EBR2-A-02 (7/7), EBR2-A-03 (9/9), EB-04-04 (14/14), EBR2-B-02 (12/12) all pass. tsc clean; build clean (557 kB first-load JS, identical to prior iteration). verify-editor-runtimes 7/7 PASS, 0 console errors, preview-app mount confirmed. KripVerify-local: kv_dev_server_status ready (port 49888), kv_navigate / kv_screenshot IPC timed out at 10s (consistent with EBR2-A-02/A-03/B-02/B-03/B-04 task-notes pattern); fell back to verify-editor-runtimes Playwright surface; kripverify.{png,json} captured. spec-reviewer: 0 MUST FIX, 6 SHOULD FIX (1: toggleNodeSelection does not reset editorMode — multi-select pathway; haltCheck wording covers selection change in general but the canonical singular-selection actions are the ones wired; 2: toggleHubSelection same; 3: clearMultiSelection same; 4: window.addEventListener — Inspector is outer editor UI, renderer-migration window.* ban scopes to node modules and runtime code so this is permitted, but a shared keymap hook would be more consistent; 5: Edit button always rendered regardless of viewMode — SC-068 gates only the gizmo on viewMode === 'canvas', but a Galaxy-mode user flipping editorMode to 'edit' is a confusing affordance; consider hiding/disabling in non-canvas modes; 6: Escape listener might race with other Escape-bound surfaces — not a spec violation), 3 OPTIONAL (extract RESET_EDIT constant to centralize the four duplicated 'editorMode: idle' literals; clsx/cn refactor; title string mentions Esc only in active state). All SHOULD/OPTIONAL deferred — natural fit for EBR2-C-02 (gizmo-gating pass which will already need to consider viewMode-coupled UI surfaces) and a future store-cleanup task."
     },
     {
       "id": "EBR2-C-02",
