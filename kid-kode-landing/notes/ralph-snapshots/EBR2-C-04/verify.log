@@ -1,0 +1,10 @@
+[2026-05-19T11:19:26.949Z] verify-editor-runtimes — task EBR2-C-04 on http://localhost:4791/
+[2026-05-19T11:19:27.007Z] PASS  preflight.prism-artifact     .prism artifact present
+[2026-05-19T11:19:27.007Z] starting next start on :4791…
+[2026-05-19T11:19:47.427Z] PASS  preflight.server-up          next start reachable
+[2026-05-19T11:20:35.055Z] PASS  outer.screenshot             outer.png captured
+[2026-05-19T11:22:49.206Z] PASS  inner.mounted                inner Prism runtime mounted in preview-app — mounted
+[2026-05-19T11:23:06.964Z] PASS  inner.screenshot             inner.png captured
+[2026-05-19T11:23:06.971Z] PASS  inner.no-errors              no runtime errors in console / page — clean
+[2026-05-19T11:25:58.302Z] PASS  canvas.gizmo-drag-moves-node writing canvasTransform via store visibly shifts rendered group by ct delta (SC-069 / INV-25) — node=home-headline Δx=0.750 (expected 0.750)
+[2026-05-19T11:26:59.971Z] PASS  state.persisted              state.json written
