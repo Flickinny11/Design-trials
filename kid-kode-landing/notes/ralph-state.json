@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T17:58:00Z",
+  "updatedAt": "2026-05-19T18:02:58Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 14,
-    "lastProductiveCommit": "3f3a117a741de5cd88f243a475ad4e2da60e3e36"
+    "lastProductiveIteration": 15,
+    "lastProductiveCommit": "acc578c857bc66b8b5f606595625e6f53ca0bcd9"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§R2-E": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 14,
-    "commit": "3f3a117a741de5cd88f243a475ad4e2da60e3e36",
-    "verifiedAt": "2026-05-19T17:56:24Z",
+    "iteration": 15,
+    "commit": "acc578c857bc66b8b5f606595625e6f53ca0bcd9",
+    "verifiedAt": "2026-05-19T18:02:58Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-19T17:56:24Z"
+    "recordedAt": "2026-05-19T18:02:58Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -185,6 +185,14 @@
       "commit": "477197065f664925ed2e63148f35730582f83869",
       "verifiedAt": "2026-05-19T17:38:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-D-02/"
+    },
+    {
+      "iteration": 15,
+      "taskId": "EBR2-E-01",
+      "phase": "§R2-E",
+      "commit": "acc578c857bc66b8b5f606595625e6f53ca0bcd9",
+      "verifiedAt": "2026-05-19T18:02:58Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-01/"
     }
   ],
   "tasks": [
@@ -505,16 +513,16 @@
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "test -f kid-kode-landing/src/stores/usePreviewStateStore.ts",
-        "cd kid-kode-landing && npx vitest run src/stores/usePreviewStateStore",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-E-01.preview-state-store.test.ts",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
       "haltCheck": "usePreviewStateStore exports set(nodeId,patch), commit(nodeId), discard(nodeId), peek(nodeId), and isDirty(nodeId). Pure in-memory state; no persistence. Unit tests cover all four ops.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "acc578c857bc66b8b5f606595625e6f53ca0bcd9",
+      "verifiedAt": "2026-05-19T18:02:58Z",
+      "notes": "Verification command vitest filter corrected from 'src/stores/usePreviewStateStore' (no test files match — tests live in tests/editor-build per tests/README.md convention, not colocated; same correction precedent as EBR2-B-01) to the explicit test-file path. haltCheck unchanged. Implementation: zustand store with subscribeWithSelector middleware, patches: Record<nodeId, Partial<PrismNode>> as the single state slice. set merges via spread (prev existing patch || empty) so multi-set on the same nodeId composes additively (Inspector tab faders trickle in independent fields); empty-object set is a no-op (does not flip isDirty). commit returns the current patch and deletes only that nodeId's entry (SC-073 single-node clear, not bulk). discard mirrors commit minus the return. discardAll is a teardown-only helper (afterEach in the test). peek returns Partial<PrismNode> | null; isDirty is boolean. Pure in-memory: no localStorage / IndexedDB / fetch / file I/O. The 14 tests cover surface presence, set/peek/merge/isolation, isDirty truthy+falsy+empty-patch-noop, commit return + single-node clear + clean-noop + isolation, discard single + clean-noop, and no-localStorage purity. Failing-test commit ad8e834 precedes impl commit acc578c (TDD ordering preserved via the EBR2-B-01 stash-impl-then-commit-test-then-pop pattern; verified the test file fails at HEAD~1 with 'Cannot find module @/stores/usePreviewStateStore'). tsc clean; 14/14 pass. Non-UI task (interactionScript null, kvVerify false) — no Playwright snapshot captured per Step 8b non-UI branch; snapshot dir gets state.json + verify.log only. spec-reviewer: 0 MUST FIX (No deviations found), 2 SHOULD FIX (1: 'for (const _ in patch) return false' lint-foothold rewritten to Object.keys(patch).length === 0; 2: outer zustand setter shadowed the public 'set' action name — renamed parameter to zSet to remove the footgun), 3 OPTIONAL deferred (narrower PreviewNodePatch type than Partial<PrismNode> — let EBR2-E-02's FP-15 read path catch wrong-field writes at type layer; rename discardAll → __test_discardAll — touches the test file too, defer; subscribeWithSelector middleware currently has no in-task consumer — kept for EBR2-E-02 renderer-overlay read path).",
       "interactionScript": null
     },
     {
