@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 8,
+  "currentIteration": 9,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-18T23:59:00Z",
+  "updatedAt": "2026-05-19T00:30:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 8,
-    "lastProductiveCommit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993"
+    "lastProductiveCommit": "ec7188c6de0b6a17e81b3010bd2e8fbdd5a4534e"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -74,10 +74,10 @@
   },
   "checkpoint": {
     "iteration": 8,
-    "commit": "ce4d102a37e5f53bdd48055d7e94e7c94214b993",
-    "verifiedAt": "2026-05-18T23:59:00Z",
+    "commit": "ec7188c6de0b6a17e81b3010bd2e8fbdd5a4534e",
+    "verifiedAt": "2026-05-19T00:25:38Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-18T23:59:00Z"
+    "recordedAt": "2026-05-19T00:25:38Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -355,8 +355,8 @@
       ],
       "haltCheck": "CanvasTransformGizmo mounts only when viewMode==='canvas' AND editorMode==='edit' AND a node is selected. Snapshot proves: selecting a node alone shows no handles; clicking Edit reveals them; clicking Done hides them.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
