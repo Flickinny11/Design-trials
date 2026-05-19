@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 11,
+  "currentIteration": 12,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T06:46:07Z",
+  "updatedAt": "2026-05-19T07:30:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 11,
-    "lastProductiveCommit": "6793663323e2dbd7c3afbf4332b8f9fb78019076"
+    "lastProductiveCommit": "4b81e7dc1faca464475872de06150d1f6bbf2d9c"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -74,10 +74,10 @@
   },
   "checkpoint": {
     "iteration": 11,
-    "commit": "6793663323e2dbd7c3afbf4332b8f9fb78019076",
-    "verifiedAt": "2026-05-19T06:46:07Z",
+    "commit": "4b81e7dc1faca464475872de06150d1f6bbf2d9c",
+    "verifiedAt": "2026-05-19T07:17:07Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-19T06:46:07Z"
+    "recordedAt": "2026-05-19T07:17:07Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -418,8 +418,8 @@
       ],
       "haltCheck": "CanvasTransformGizmo's outer group positions at scenePosition+canvasTransform. Snapshot sequence: capture node position, simulate translate-handle drag via Playwright, capture again — positions differ. EBR2-C-04 vs EBR2-C-03 snapshot diff shows the node visibly moved.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": ""
