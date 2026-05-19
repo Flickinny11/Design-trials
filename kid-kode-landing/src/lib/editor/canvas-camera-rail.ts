@@ -46,9 +46,11 @@ export interface CanvasCameraRail {
 // 1440 design-px → 18 scene units (matches CANVAS_CAMERA_STANDOFF.z = 18).
 export const CANVAS_DESIGN_PX_TO_SCENE_UNIT = 18 / 1440;
 
-// Field-of-view used to derive framing distance. Mirrors the editor's default
-// canvas FOV (50°). Encoded here so EBR2-D-02's bridge can stay declarative.
-export const CANVAS_RAIL_FOV_DEG = 50;
+// Field-of-view used to derive framing distance. Mirrors GraphScene.tsx's
+// scene-mode camera (45°) — canvas mode renders inside scene mode via
+// AssembledSceneContent, so the FOV must match for the framing distance to
+// reflect what the user actually sees.
+export const CANVAS_RAIL_FOV_DEG = 45;
 
 // Distance window — fractions of the framing-fit distance.
 const CANVAS_RAIL_MIN_DISTANCE_FRACTION = 0.4;
