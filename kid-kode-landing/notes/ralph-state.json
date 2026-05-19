@@ -442,7 +442,7 @@
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "test -f kid-kode-landing/src/lib/editor/canvas-camera-rail.ts",
-        "cd kid-kode-landing && npx vitest run src/lib/editor/canvas-camera-rail",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-D-01.canvas-camera-rail.test.ts",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
       "haltCheck": "canvas-camera-rail.ts exports computeCanvasCameraRail(hub, breakpoint, viewportFrame) \u2192 {minDistance, maxDistance, minPolarAngle, maxPolarAngle, minAzimuthAngle, maxAzimuthAngle, target, panLimits}. Unit-tested with at least 3 hub envelopes.",
