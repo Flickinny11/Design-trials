@@ -1716,6 +1716,23 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
 
   return (
     <group
+      ref={(g) => {
+        // EBR2-C-04 / §R2-C SC-069 — register the composed-pose wrapper group
+        // in a window-side map so verify-editor-runtimes can read its world
+        // position before/after a synthetic canvasTransform write and prove
+        // the renderer is the only consumer of sp+ct (INV-25): a ct write
+        // through useGraphSourceStore.updateNode shifts the rendered
+        // artifact by exactly the ct delta, end-to-end. Editor-shell scope
+        // (FP-05 scopes window.* forbid to runtime + prism-player); the
+        // map is purely diagnostic and runtime-inert.
+        if (typeof window === 'undefined') return;
+        const w = window as unknown as {
+          __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+        };
+        const map = (w.__PRISM_EDITOR_NODE_GROUPS__ ??= new Map());
+        if (g) map.set(node.nodeId, g);
+        else map.delete(node.nodeId);
+      }}
       position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
       rotation={[ct.rotationX, ct.rotationY, ct.rotationZ]}
       scale={[ct.scaleX, ct.scaleY, ct.scaleZ]}
@@ -1956,6 +1973,33 @@ function AssembledSceneContent({
       });
     return () => {
       cancelled = true;
+    };
+  }, []);
+
+  // EBR2-C-04 / §R2-C SC-069 — install the world-pos lookup on mount (once),
+  // not inside useFrame, so verify-editor-runtimes can find it as soon as
+  // AssembledSceneContent has mounted under canvas viewMode (the useFrame
+  // path inside AssembledSceneDiagnostics can lag by several frames during
+  // WebGPU init on a cold fetch). Reads the per-node map populated by the
+  // AssembledSceneNode ref callback. Editor-shell scope; mirrors the
+  // __PRISM_EDITOR_SET_VIEW_MODE__ hook installed unconditionally in
+  // src/app/page.tsx for the same verifier.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+      __PRISM_EDITOR_GET_NODE_WORLD_POS__?: (nodeId: string) => { x: number; y: number; z: number } | null;
+    };
+    const vec = new THREE.Vector3();
+    w.__PRISM_EDITOR_GET_NODE_WORLD_POS__ = (nodeId: string) => {
+      const group = w.__PRISM_EDITOR_NODE_GROUPS__?.get(nodeId);
+      if (!group) return null;
+      group.updateWorldMatrix(true, false);
+      group.getWorldPosition(vec);
+      return { x: vec.x, y: vec.y, z: vec.z };
+    };
+    return () => {
+      delete w.__PRISM_EDITOR_GET_NODE_WORLD_POS__;
     };
   }, []);
 

@@ -145,9 +145,22 @@ async function main() {
     }
 
     // === OUTER RUNTIME — capture outer.png + record state =========================
+    // Use CDP directly to bypass Playwright's page.screenshot() internal
+    // wait-for-fonts step, which hangs intermittently on cold WebGPU init
+    // even after document.fonts.ready resolves. CDP's Page.captureScreenshot
+    // returns base64 PNG data of the current viewport, no font/animation wait.
     const outerPng = join(snapDir, 'outer.png');
-    await page.screenshot({ path: outerPng, fullPage: false });
-    check('outer.screenshot', 'outer.png captured', existsSync(outerPng));
+    let outerShot = false;
+    try {
+      const cdp = await page.context().newCDPSession(page);
+      const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      writeFileSync(outerPng, Buffer.from(data, 'base64'));
+      outerShot = true;
+    } catch (e) {
+      log(`outer.png CDP capture failed (${(e && e.message) || e})`);
+    }
+    check('outer.screenshot', 'outer.png captured', outerShot && existsSync(outerPng),
+      outerShot ? '' : 'CDP capture failed');
 
     const outerState = await page.evaluate(() => {
       // EBR2-A-03 / SC-064 — read viewMode + a small subset of editor state
@@ -206,8 +219,17 @@ async function main() {
       failVisible ? 'PRISM BOOT FAILED visible' : loadingVisible ? 'still loading after 3.5s' : 'mounted');
 
     const innerPng = join(snapDir, 'inner.png');
-    await page.screenshot({ path: innerPng, fullPage: false });
-    check('inner.screenshot', 'inner.png captured', existsSync(innerPng));
+    let innerShot = false;
+    try {
+      const cdp = await page.context().newCDPSession(page);
+      const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+      writeFileSync(innerPng, Buffer.from(data, 'base64'));
+      innerShot = true;
+    } catch (e) {
+      log(`inner.png CDP capture failed (${(e && e.message) || e})`);
+    }
+    check('inner.screenshot', 'inner.png captured', innerShot && existsSync(innerPng),
+      innerShot ? '' : 'CDP capture failed');
 
     const criticalErrors = [...pageErrors, ...consoleLogs
       .filter((l) => l.type === 'error')
@@ -602,6 +624,188 @@ async function main() {
       await page.screenshot({ path: innerAppPng, fullPage: false });
     }
 
+    // === EBR2-C-04 — Gizmo drag visibly moves rendered node ====================
+    // SC-069 / INV-25 require that writing a non-identity canvasTransform via
+    // the source store visibly shifts the rendered group by the same delta.
+    // This block proves it end-to-end against the live runtime without
+    // simulating drei TransformControls' HTML overlay (which would be flaky
+    // under headless Chromium): it switches to canvas mode, selects a node,
+    // enters edit mode, reads the rendered group's world position via the
+    // __PRISM_EDITOR_GET_NODE_WORLD_POS__ dev hook, writes a synthetic ct via
+    // useGraphSourceStore.updateNode (same write-path as the gizmo's
+    // onObjectChange), re-reads the world position, and records the delta.
+    let gizmoDragProof = null;
+    if (TASK_ID === 'EBR2-C-04') {
+      await page.evaluate(() => {
+        const setter = (window).__PRISM_EDITOR_SET_VIEW_MODE__;
+        if (typeof setter === 'function') setter('canvas');
+      });
+      // Switching from preview-app → canvas tears down the PrismHost canvas
+      // and mounts the editor GraphScene (dynamically imported, ssr:false).
+      // First wait for the graph pane DOM, then the canvas element, then the
+      // dev hook. Each stage logs on timeout so failures point at the right
+      // layer (page render vs. dynamic-import vs. Three useEffect).
+      await page.waitForSelector('[data-pane="graph"]', { timeout: 20000 }).catch(() => null);
+      await page.waitForSelector('[data-pane="graph"] canvas', { timeout: 30000 }).catch(() => null);
+      const waitOk = await page.waitForFunction(() => {
+        const w = window;
+        return typeof w.__PRISM_EDITOR_GET_NODE_WORLD_POS__ === 'function'
+          && w.__PRISM_EDITOR_NODE_GROUPS__
+          && w.__PRISM_EDITOR_NODE_GROUPS__.size > 0;
+      }, { timeout: 45000 }).then(() => true).catch(() => false);
+      if (!waitOk) {
+        const diag = await page.evaluate(() => {
+          const w = window;
+          const stores = w.__PRISM_DEBUG_STORES__;
+          const ed = stores?.graphEditor?.getState?.();
+          return {
+            graphPaneCount: document.querySelectorAll('[data-pane="graph"]').length,
+            previewPaneCount: document.querySelectorAll('[data-pane="preview"]').length,
+            canvasCount: document.querySelectorAll('canvas').length,
+            hookInstalled: typeof w.__PRISM_EDITOR_GET_NODE_WORLD_POS__ === 'function',
+            groupsMapExists: !!w.__PRISM_EDITOR_NODE_GROUPS__,
+            groupsSize: w.__PRISM_EDITOR_NODE_GROUPS__?.size ?? null,
+            viewMode: ed?.viewMode ?? null,
+            editorRenderMode: ed?.editorRenderMode ?? null,
+            editorMode: ed?.editorMode ?? null,
+          };
+        });
+        console.warn('[EBR2-C-04] hook wait timed out:', JSON.stringify(diag));
+      }
+
+      gizmoDragProof = await page.evaluate(async () => {
+        const stores = (window).__PRISM_DEBUG_STORES__;
+        const editor = stores?.graphEditor;
+        const source = stores?.graphSource;
+        const getPos = (window).__PRISM_EDITOR_GET_NODE_WORLD_POS__;
+        if (!editor || !source) return { error: 'stores-not-exposed' };
+        if (typeof getPos !== 'function') return { error: 'world-pos-hook-missing' };
+
+        // Pick the first node whose AssembledSceneNode group has registered
+        // itself in __PRISM_EDITOR_NODE_GROUPS__. Falls back to the first
+        // home-hub node if no registered group exists yet (in which case the
+        // outer assertion catches the unmounted-renderer condition).
+        const sourceState = source.getState();
+        const nodes = sourceState.nodes ?? [];
+        const registered = (window).__PRISM_EDITOR_NODE_GROUPS__;
+        const registeredIds = registered ? Array.from(registered.keys()) : [];
+        const target = nodes.find((n) => registeredIds.includes(n.nodeId))
+          ?? nodes.find((n) => n.parentHubId === 'home')
+          ?? nodes[0];
+        if (!target) return { error: 'no-target-node', registeredCount: registeredIds.length };
+
+        // Select + enter edit mode (matches the EBR2-C-02 gating predicate
+        // viewMode === 'canvas' && editorMode === 'edit' under which the gizmo
+        // mounts; the AssembledSceneNode ref-registration is independent of
+        // edit mode, but we drive the full select→edit flow so the snapshot
+        // also visually witnesses the gizmo present at the composed pose).
+        editor.getState().selectNode(target.nodeId);
+        editor.getState().setEditorMode('edit');
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+        await new Promise((r) => setTimeout(r, 200));
+
+        const before = getPos(target.nodeId);
+        if (!before) return { error: 'before-pos-null', nodeId: target.nodeId, registeredCount: registeredIds.length };
+
+        // Synthetic translate-handle drag: same writeback shape as
+        // CanvasTransformGizmo.onObjectChange (start.x + proxy.position.x).
+        // Read current ct, add a known delta, write back via updateNode.
+        function readCT(node) {
+          const ct = node.canvasTransform ?? null;
+          return {
+            x: ct?.x ?? 0, y: ct?.y ?? 0, z: ct?.z ?? 0,
+            rotationX: ct?.rotationX ?? 0, rotationY: ct?.rotationY ?? 0, rotationZ: ct?.rotationZ ?? 0,
+            scaleX: ct?.scaleX ?? 1, scaleY: ct?.scaleY ?? 1, scaleZ: ct?.scaleZ ?? 1,
+          };
+        }
+        const fresh = source.getState().nodes.find((n) => n.nodeId === target.nodeId);
+        const startCT = readCT(fresh);
+        const ctDelta = { x: 0.75, y: 0, z: 0 };
+        const nextCT = { ...startCT, x: startCT.x + ctDelta.x, y: startCT.y + ctDelta.y, z: startCT.z + ctDelta.z };
+        source.getState().updateNode(target.nodeId, { canvasTransform: nextCT });
+
+        // Wait two frames for React commit + Three.js scene update.
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+        await new Promise((r) => requestAnimationFrame(() => r(undefined)));
+        await new Promise((r) => setTimeout(r, 200));
+
+        const after = getPos(target.nodeId);
+        if (!after) return { error: 'after-pos-null', nodeId: target.nodeId, before };
+
+        const deltaX = after.x - before.x;
+        const deltaY = after.y - before.y;
+        const deltaZ = after.z - before.z;
+        const tolerance = 0.01;
+        const visiblyMoved =
+          Math.abs(deltaX - ctDelta.x) < tolerance
+          && Math.abs(deltaY - ctDelta.y) < tolerance
+          && Math.abs(deltaZ - ctDelta.z) < tolerance;
+
+        return {
+          nodeId: target.nodeId,
+          startCT,
+          nextCT,
+          ctDelta,
+          before,
+          after,
+          deltaX,
+          deltaY,
+          deltaZ,
+          visiblyMoved,
+          registeredCount: registeredIds.length,
+        };
+      }).catch((err) => ({ error: String(err && err.message ? err.message : err) }));
+
+      const proofOk = !!(
+        gizmoDragProof
+        && !gizmoDragProof.error
+        && gizmoDragProof.visiblyMoved === true
+      );
+      check(
+        'canvas.gizmo-drag-moves-node',
+        'writing canvasTransform via store visibly shifts rendered group by ct delta (SC-069 / INV-25)',
+        proofOk,
+        proofOk
+          ? `node=${gizmoDragProof.nodeId} Δx=${gizmoDragProof.deltaX.toFixed(3)} (expected ${gizmoDragProof.ctDelta.x.toFixed(3)})`
+          : gizmoDragProof && gizmoDragProof.error
+            ? gizmoDragProof.error
+            : `delta mismatch — actual=${JSON.stringify({ x: gizmoDragProof?.deltaX, y: gizmoDragProof?.deltaY, z: gizmoDragProof?.deltaZ })} expected=${JSON.stringify(gizmoDragProof?.ctDelta)}`,
+      );
+
+      // Re-screenshot now that the synthetic ct is applied so inner.png
+      // captures the gizmo + the displaced node artifact. CDP-direct path
+      // (same as the standard screenshots) to avoid Playwright's font-wait
+      // hang on cold WebGPU init.
+      const innerAppPng = join(snapDir, 'inner.png');
+      try {
+        const cdp = await page.context().newCDPSession(page);
+        const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+        writeFileSync(innerAppPng, Buffer.from(data, 'base64'));
+      } catch (e) {
+        log(`inner.png (EBR2-C-04) CDP capture failed (${(e && e.message) || e})`);
+      }
+
+      // Restore the source-store canvasTransform to the pre-test value so the
+      // debounced autosave (which fires ~1.5s after the last mutation) writes
+      // back the original ct rather than persisting our synthetic 0.75 delta
+      // into kid-kode-landing/public/prism-mock/home/live-graph.json. Then
+      // wait long enough for the autosave timer to elapse on the restored
+      // value before the page closes — otherwise the next git diff catches
+      // the mutated fixture.
+      if (gizmoDragProof && !gizmoDragProof.error && gizmoDragProof.nodeId) {
+        await page.evaluate(async ({ nodeId, startCT }) => {
+          const stores = (window).__PRISM_DEBUG_STORES__;
+          const source = stores?.graphSource;
+          if (!source) return;
+          source.getState().updateNode(nodeId, { canvasTransform: startCT });
+          // Bypass the 1s autosave debounce — flush directly so the fixture
+          // file is restored synchronously before this evaluate returns.
+          try { await source.getState().saveToServer?.(); } catch (_) { /* best-effort */ }
+        }, { nodeId: gizmoDragProof.nodeId, startCT: gizmoDragProof.startCT });
+        await page.waitForTimeout(800);
+      }
+    }
+
     // === EB-09-06 — Tether-fire propagation capture ==============================
     // SC-052 demands that the snapshot prove tether-fire propagation. The
     // editor-shell installs `window.__PRISM_EDITOR_FIRE_TETHER__` (see
@@ -655,6 +859,7 @@ async function main() {
       ...(previewAppNav ? { previewAppNav } : {}),
       ...(hubTransit ? { hubTransit } : {}),
       ...(previewAppWorld ? { previewAppWorld } : {}),
+      ...(gizmoDragProof ? { gizmoDragProof } : {}),
       ...(assembledHubView
         ? {
             assembledHubView,
