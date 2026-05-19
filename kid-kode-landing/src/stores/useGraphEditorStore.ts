@@ -14,6 +14,14 @@ export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'conne
  */
 export type ViewMode = 'galaxy' | 'canvas' | 'preview-app';
 export type EditorRenderMode = 'scene' | 'topology';
+/**
+ * EBR2-C-01 / §R2-C SC-068 — two-step authoring contract for canvas mode.
+ * Selecting a node alone does not surface transform handles; the Inspector
+ * Edit button must explicitly flip `editorMode` to `'edit'` first. Any
+ * selection change (selectNode, selectHub, flyToNode, drillIntoHub) resets
+ * to `'idle'` so the gizmo never lingers on a stale selection.
+ */
+export type EditorMode = 'idle' | 'edit';
 
 // EB-04-04 / §1 INV-20 / §5 SC-022, SC-027 — per-mode camera pose checkpoint.
 // Selection survives every mode transition (already invariant), but camera
@@ -36,6 +44,13 @@ interface GraphEditorState {
    */
   viewMode: ViewMode;
   editorRenderMode: EditorRenderMode;
+  /**
+   * EBR2-C-01 / §R2-C SC-068 — gates the CanvasTransformGizmo. `'idle'` is
+   * the default; the Inspector Edit button flips it to `'edit'`. Any
+   * selection-change action resets it back to `'idle'` so the gizmo never
+   * persists across a fresh selection.
+   */
+  editorMode: EditorMode;
 
   // Selection — node and hub selection are mutually exclusive
   selectedNodeId: string | null;
@@ -100,6 +115,12 @@ interface GraphEditorState {
   setCameraDistance: (d: number) => void;
   setViewMode: (m: ViewMode) => void;
   setEditorRenderMode: (m: EditorRenderMode) => void;
+  /**
+   * EBR2-C-01 / §R2-C SC-068 — Inspector Edit button flips this. Selection
+   * changes call this implicitly via the actions below, never directly from
+   * the click handler.
+   */
+  setEditorMode: (m: EditorMode) => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
@@ -152,6 +173,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // boot-state round-trip; this field sets the default value.
     viewMode: 'preview-app',
     editorRenderMode: 'scene',
+    // EBR2-C-01 / §R2-C SC-068 — handles never render on selection alone;
+    // the Inspector Edit button must flip this to 'edit' first.
+    editorMode: 'idle',
     selectedNodeId: null,
     selectedHubId: null,
     hoveredNodeId: null,
@@ -184,25 +208,34 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
       set({ viewMode: m, hubRevealAt: null }),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
+    // EBR2-C-01 / §R2-C SC-068 — Inspector Edit toggle. Selection-reset is
+    // handled inside the selection actions (selectNode/selectHub/flyToNode/
+    // drillIntoHub), not here.
+    setEditorMode: (m) => set({ editorMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';
       set({ cameraDistance: d, zoomLevel: level });
     },
     selectNode: (id) =>
+      // EBR2-C-01 / §R2-C SC-068 — selection change resets editorMode so the
+      // gizmo never persists onto a fresh selection.
       set({
         selectedNodeId: id,
         selectedHubId: null,
         selectedNodeIds: new Set<string>(),
         selectedHubIds: new Set<string>(),
+        editorMode: 'idle',
       }),
     selectHub: (id) =>
+      // EBR2-C-01 — selection change resets editorMode (see selectNode).
       set({
         selectedHubId: id,
         selectedNodeId: null,
         inspectorOpen: true,
         selectedNodeIds: new Set<string>(),
         selectedHubIds: new Set<string>(),
+        editorMode: 'idle',
       }),
     hoverNode: (id) => set({ hoveredNodeId: id }),
     // EB-03-06 / SC-017 — shift-click pathway. The first toggle seeds the
@@ -272,16 +305,19 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       }),
     setLivePreviewHover: (id) => set({ livePreviewHoverId: id }),
     flyToNode: (id) =>
+      // EBR2-C-01 — selection change resets editorMode.
       set({
         flyToNodeId: id,
         selectedNodeId: id,
         selectedHubId: null,
         selectedNodeIds: new Set<string>(),
         selectedHubIds: new Set<string>(),
+        editorMode: 'idle',
       }),
     flyToHub: (hubId) => set({ flyToHubId: hubId, activeHubId: hubId }),
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),
     drillIntoHub: (hubId) =>
+      // EBR2-C-01 — drill-in is a selection change; reset editorMode.
       set({
         viewMode: 'canvas',
         selectedHubId: hubId,
@@ -292,6 +328,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         flyToHubId: hubId,
         hubRevealAt: Date.now(),
         inspectorOpen: true,
+        editorMode: 'idle',
       }),
     resetCamera: () =>
       set((s) => ({ resetCameraSignal: s.resetCameraSignal + 1, activeHubId: null })),

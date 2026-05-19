@@ -67,6 +67,11 @@ export default function Inspector() {
   const flyToNode = useGraphEditorStore((s) => s.flyToNode);
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
+  // EBR2-C-01 / §R2-C SC-068 — two-step authoring: select → click Edit →
+  // CanvasTransformGizmo mounts (EBR2-C-02). Selection-reset happens at the
+  // store layer so we only need the slice + setter here.
+  const editorMode = useGraphEditorStore((s) => s.editorMode);
+  const setEditorMode = useGraphEditorStore((s) => s.setEditorMode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -170,6 +175,18 @@ export default function Inspector() {
     }
   }, [isWorldSelected, selectedId, setTab, tab]);
 
+  // EBR2-C-01 / §R2-C SC-068 — Escape exits edit mode. Mount only while
+  // editorMode === 'edit' so the listener doesn't compete with other
+  // escape-bound surfaces (search, filter, group inspector) when idle.
+  useEffect(() => {
+    if (editorMode !== 'edit') return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setEditorMode('idle');
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [editorMode, setEditorMode]);
+
   // EB-03-06 / SC-017 — when the user shift-clicks across multiple items in
   // galaxy mode, render the group view in place of the single-node tabs. The
   // group view is gated on (nodes + hubs > 1) so a 1-member multi-set falls
@@ -231,6 +248,24 @@ export default function Inspector() {
           </div>
         </div>
         <div className="flex items-center gap-1.5 ml-2">
+          {/* EBR2-C-01 / §R2-C SC-068 — Edit/Done toggle. Selecting a node
+              alone never reveals the CanvasTransformGizmo; the user must
+              click Edit first. EBR2-C-02 will gate the gizmo on
+              editorMode === 'edit' AND viewMode === 'canvas'. */}
+          <button
+            type="button"
+            data-role="edit-toggle"
+            aria-pressed={editorMode === 'edit'}
+            onClick={() => setEditorMode(editorMode === 'edit' ? 'idle' : 'edit')}
+            title={editorMode === 'edit' ? 'Exit edit mode (Esc)' : 'Edit transform handles'}
+            className={`px-2.5 h-7 rounded-md text-[10px] font-mono border transition-colors ${
+              editorMode === 'edit'
+                ? 'bg-[#ffd166]/25 hover:bg-[#ffd166]/35 border-[#ffd166]/55 text-[#ffe2a5]'
+                : 'bg-white/5 hover:bg-white/10 border-white/10 text-white/75'
+            }`}
+          >
+            {editorMode === 'edit' ? 'Done' : 'Edit'}
+          </button>
           <button
             type="button"
             data-role="save"
