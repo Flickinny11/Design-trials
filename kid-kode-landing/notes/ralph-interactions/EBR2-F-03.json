@@ -1,0 +1,30 @@
+{
+  "task_id": "EBR2-F-03",
+  "url_path": "/",
+  "_comment": "SC-075..SC-077 — Inspector 'Clone' button: deep-clones the selected node into source store, switches view to galaxy, attaches to draggingNodeId. Implementer adds data-testid='inspector-clone' on the button + draggingNodeId field + setDraggingNode action on useGraphEditorStore.",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); window.__EBR2_F_03_BEFORE__ = { nodeCount: src.nodes.length, selectedId: node.nodeId }; return node.nodeId; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    { "action": "wait_for", "selector": "[data-testid='inspector-clone']", "timeout_ms": 5000 },
+    { "action": "screenshot", "name": "before.png" },
+    { "action": "click", "selector": "[data-testid='inspector-clone']" },
+    { "action": "wait_ms", "duration_ms": 1200 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const before = window.__EBR2_F_03_BEFORE__; if (!before) return false; return ed.viewMode === 'galaxy' && src.nodes.length === before.nodeCount + 1 && typeof ed.draggingNodeId === 'string' && ed.draggingNodeId.length > 0; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

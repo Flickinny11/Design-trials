@@ -1,0 +1,37 @@
+{
+  "task_id": "EBR2-E-02",
+  "url_path": "/",
+  "_comment": "RA-16 / FP-15 — Inspector tab writes route through usePreviewStateStore. AssembledSceneNode reads (sourceNode ⊕ previewState[nodeId]) so live preview is real-time. The implementer must expose the preview store via window.__PRISM_DEBUG_STORES__.previewState (set + peek + isDirty). Without that, the assertions fail and flag the missing surface.",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores?.graphEditor?.getState?.(); const src = stores?.graphSource?.getState?.(); const node = src?.nodes?.[0]; if (!node) return null; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); return node.nodeId; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    { "action": "screenshot", "name": "before.png" },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "!!(window.__PRISM_DEBUG_STORES__?.previewState?.getState)"
+    },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const src = stores.graphSource.getState(); const node = src.nodes[0]; const beforeSource = JSON.parse(JSON.stringify(node)); const previewApi = stores.previewState.getState(); previewApi.set(node.nodeId, { caption: 'PREVIEW-OVERLAY-TEST' }); return { nodeId: node.nodeId, beforeCaption: beforeSource.caption }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const src = stores.graphSource.getState(); const node = src.nodes[0]; const overlay = stores.previewState.getState().peek(node.nodeId); return overlay && overlay.caption === 'PREVIEW-OVERLAY-TEST' && node.caption !== 'PREVIEW-OVERLAY-TEST'; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

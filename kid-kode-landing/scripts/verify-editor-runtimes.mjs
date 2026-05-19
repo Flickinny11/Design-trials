@@ -39,6 +39,12 @@ const PREVIEW_FIXTURE = args['fixture'] || 'mock-app';
 // editor boots into).
 const OUTER_MODE = args['mode'] || null;
 const URL = `http://localhost:${PORT}${ROUTE}`;
+// Round-2.5 recovery: when --interaction-script is set, the worker has already
+// started an external dev server (npm run dev:fast) on --port. The script
+// skips its own `next start` spawn and runs the JSON-defined interaction
+// sequence against the externally-managed server.
+const INTERACTION_SCRIPT_PATH = args['interaction-script'] || null;
+const EXTERNAL_SERVER = INTERACTION_SCRIPT_PATH !== null;
 
 if (!TASK_ID) {
   console.error('verify-editor-runtimes: missing --task-id (or pass --on-stop).');
@@ -96,13 +102,19 @@ async function main() {
   }
   check('preflight.prism-artifact', '.prism artifact present', true);
 
-  // Start next.
-  log(`starting next start on :${PORT}…`);
-  const server = spawn('npx', ['next', 'start', '-p', String(PORT)], {
-    cwd: repoRoot, stdio: ['ignore', 'pipe', 'pipe'],
-  });
-  server.stdout.on('data', () => {});
-  server.stderr.on('data', (b) => process.stderr.write(b));
+  // Start next (skipped when the worker has pre-started an external dev server
+  // and is driving us via --interaction-script).
+  let server = null;
+  if (!EXTERNAL_SERVER) {
+    log(`starting next start on :${PORT}…`);
+    server = spawn('npx', ['next', 'start', '-p', String(PORT)], {
+      cwd: repoRoot, stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    server.stdout.on('data', () => {});
+    server.stderr.on('data', (b) => process.stderr.write(b));
+  } else {
+    log(`external dev server expected on :${PORT} (worker-managed; interaction script ${INTERACTION_SCRIPT_PATH})`);
+  }
 
   let exitCode = 0;
   try {
@@ -123,8 +135,14 @@ async function main() {
 
     const consoleLogs = [];
     const pageErrors = [];
+    const networkResponses = [];
     page.on('console', (m) => consoleLogs.push({ type: m.type(), text: m.text() }));
     page.on('pageerror', (e) => pageErrors.push(e.message));
+    page.on('response', (r) => {
+      try {
+        networkResponses.push({ url: r.url(), status: r.status() });
+      } catch (_) { /* best-effort */ }
+    });
 
     await page.goto(URL, { waitUntil: 'networkidle' });
     await page.waitForTimeout(2500);
@@ -842,6 +860,128 @@ async function main() {
             : 'no targets resolved');
     }
 
+    // === Round-2.5 interaction script (data-driven) =============================
+    // When --interaction-script is set, load a JSON file defining a sequence of
+    // browser actions + assertions and execute them in order. Each step is
+    // wrapped in try/catch so partial traces persist even on the first failure.
+    // Records the trace to notes/ralph-snapshots/<task-id>/interaction-trace.json
+    // and adds checks for any selector_visible / no_console_errors /
+    // no_network_4xx_5xx assertions.
+    let interactionTrace = null;
+    if (INTERACTION_SCRIPT_PATH) {
+      const scriptPath = resolve(repoRoot, INTERACTION_SCRIPT_PATH);
+      let script = null;
+      try {
+        script = JSON.parse(readFileSync(scriptPath, 'utf8'));
+      } catch (e) {
+        check('interaction.script-load', `load ${INTERACTION_SCRIPT_PATH}`, false, String(e?.message || e));
+      }
+      if (script && Array.isArray(script.steps)) {
+        if (script.url_path && script.url_path !== ROUTE) {
+          try {
+            await page.goto(`http://localhost:${PORT}${script.url_path}`, { waitUntil: 'networkidle' });
+            await page.waitForTimeout(800);
+          } catch (e) { /* tracked per-step */ }
+        }
+        const trail = [];
+        let aborted = false;
+        for (let i = 0; i < script.steps.length; i += 1) {
+          const step = script.steps[i];
+          const started = Date.now();
+          if (aborted) {
+            trail.push({ index: i, step, status: 'skipped', durationMs: 0, error: 'previous-step-failed' });
+            continue;
+          }
+          try {
+            switch (step.action) {
+              case 'wait_for': {
+                await page.waitForSelector(step.selector, { timeout: step.timeout_ms ?? 30000 });
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                break;
+              }
+              case 'click': {
+                await page.click(step.selector, { timeout: step.timeout_ms ?? 10000 });
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                break;
+              }
+              case 'type': {
+                await page.fill(step.selector, step.text);
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                break;
+              }
+              case 'screenshot': {
+                const out = join(snapDir, step.name || `step-${i}.png`);
+                const cdp = await page.context().newCDPSession(page);
+                const { data } = await cdp.send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+                writeFileSync(out, Buffer.from(data, 'base64'));
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started, file: step.name || `step-${i}.png` });
+                break;
+              }
+              case 'evaluate': {
+                const value = await page.evaluate(step.js);
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started, value });
+                break;
+              }
+              case 'wait_ms': {
+                await page.waitForTimeout(step.duration_ms ?? 500);
+                trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                break;
+              }
+              case 'assert': {
+                const t = step.type;
+                if (t === 'selector_visible') {
+                  const visible = await page.locator(step.selector).isVisible();
+                  if (!visible) throw new Error(`selector not visible: ${step.selector}`);
+                  trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                  check(`interaction.assert.selector_visible[${i}]`, `selector visible: ${step.selector}`, true);
+                } else if (t === 'no_console_errors') {
+                  const errs = consoleLogs.filter((l) => l.type === 'error')
+                    .map((l) => l.text)
+                    .filter((e) => !/Download the React DevTools/.test(e) && !/Warning:/.test(e));
+                  if (errs.length) throw new Error(`console errors: ${errs.slice(0, 2).join(' | ')}`);
+                  trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                  check(`interaction.assert.no_console_errors[${i}]`, 'no console errors', true);
+                } else if (t === 'no_network_4xx_5xx') {
+                  const bad = networkResponses.filter((r) => r.status >= 400);
+                  if (bad.length) throw new Error(`network failures: ${bad.slice(0, 2).map((b) => `${b.status} ${b.url}`).join(' | ')}`);
+                  trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started });
+                  check(`interaction.assert.no_network_4xx_5xx[${i}]`, 'no 4xx/5xx network responses', true);
+                } else if (t === 'evaluate_truthy') {
+                  const value = await page.evaluate(step.js);
+                  if (!value) throw new Error(`evaluate returned falsy: ${JSON.stringify(value)}`);
+                  trail.push({ index: i, step, status: 'pass', durationMs: Date.now() - started, value });
+                  check(`interaction.assert.evaluate_truthy[${i}]`, 'evaluate returned truthy', true);
+                } else {
+                  throw new Error(`unknown assert type: ${t}`);
+                }
+                break;
+              }
+              default:
+                throw new Error(`unknown action: ${step.action}`);
+            }
+          } catch (e) {
+            const errMsg = String(e?.message || e);
+            trail.push({ index: i, step, status: 'fail', durationMs: Date.now() - started, error: errMsg });
+            check(`interaction.step[${i}].${step.action}${step.type ? `.${step.type}` : ''}`, JSON.stringify(step), false, errMsg);
+            aborted = true;
+          }
+        }
+        interactionTrace = {
+          task_id: script.task_id || TASK_ID,
+          scriptPath: INTERACTION_SCRIPT_PATH,
+          steps: trail,
+          consoleErrorCount: consoleLogs.filter((l) => l.type === 'error').length,
+          networkFailureCount: networkResponses.filter((r) => r.status >= 400).length,
+          aborted,
+        };
+        writeFileSync(
+          join(snapDir, 'interaction-trace.json'),
+          JSON.stringify(interactionTrace, null, 2) + '\n',
+        );
+        check('interaction.trace-persisted', 'interaction-trace.json written', true);
+      }
+    }
+
     // === Persist state.json ======================================================
     // EBR2-A-03 / SC-064 — surface the live viewMode at the top of state.json
     // so the haltCheck and downstream snapshot consumers can assert against
@@ -860,6 +1000,7 @@ async function main() {
       ...(hubTransit ? { hubTransit } : {}),
       ...(previewAppWorld ? { previewAppWorld } : {}),
       ...(gizmoDragProof ? { gizmoDragProof } : {}),
+      ...(interactionTrace ? { interactionTrace } : {}),
       ...(assembledHubView
         ? {
             assembledHubView,
@@ -875,6 +1016,8 @@ async function main() {
         consoleLogCount: consoleLogs.length,
         pageErrorCount: pageErrors.length,
         criticalErrorCount: criticalErrors.length,
+        networkResponseCount: networkResponses.length,
+        networkFailureCount: networkResponses.filter((r) => r.status >= 400).length,
       },
     };
     writeFileSync(join(snapDir, 'state.json'), JSON.stringify(state, null, 2) + '\n');
@@ -885,8 +1028,10 @@ async function main() {
     check('runtime.exception', 'unexpected exception during verification', false, String(e?.message || e));
     exitCode = 1;
   } finally {
-    server.kill('SIGTERM');
-    await new Promise((r) => setTimeout(r, 500));
+    if (server) {
+      server.kill('SIGTERM');
+      await new Promise((r) => setTimeout(r, 500));
+    }
   }
 
   return finalize(exitCode);

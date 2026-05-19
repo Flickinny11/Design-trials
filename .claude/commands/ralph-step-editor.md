@@ -3,6 +3,11 @@ description: Execute one Ralph iteration of the Prism Editor Build — audit fir
 argument-hint: (none)
 ---
 
+**Round 2.5 recovery (May 2026)**: Step 8b was migrated from KripVerify (kv_* MCP tools)
+to Playwright via `verify-editor-runtimes.mjs --interaction-script`. The KripVerify path
+is dead; do not call any `kv_*` tools. The `kv` MCP server registration in
+`.mcp.json` is harmless — just don't invoke its tools.
+
 # Ralph step — Prism Editor Build (one task per session)
 
 You are the Ralph loop worker for the Prism Editor Build. You execute exactly one iteration
@@ -118,34 +123,52 @@ of these commands and MUST produce non-empty `outer.png`, `inner.png`, and `stat
 `kid-kode-landing/notes/ralph-snapshots/<task-id>/`. **A failing screenshot is a task
 failure, never a warning.**
 
-### Step 8b — KripVerify (local sandbox) — PRIMARY visual gate (Round 2.5, RA-18, SC-078)
+### Step 8b — Browser verification (Playwright + spec-reviewer visual check) — PRIMARY visual gate
 
-KripVerify runs a local sandboxed dev server (`next dev` under the hood) plus a Chrome for
-Testing instance controlled over CDP. You drive it via the `kv_*` MCP tools registered via
-`.mcp.json`. **This is the primary visual gate** — it verifies WIP code on the worker's
-machine, no push/build/deploy cycle.
+The worker runs `scripts/verify-editor-runtimes.mjs` (Playwright-based) in *interactive
+mode* when `task.interactionScript` is set. This replaces the previous KripVerify path
+(disabled because the MCP IPC was unreliable; the loop was silently falling back to this
+script anyway with `--on-stop` semantics).
 
-Procedure (BEFORE Step 10's commit, so the worker can iterate on failures):
+Procedure (BEFORE Step 10's commit):
 
-1. `kv_dev_server_status()` — if `status !== 'ready'`, call `kv_restart_dev_server()` and
-   poll status until ready (up to 60s).
-2. `kv_navigate({url: <url from dev_server_status>})` — navigate to the local sandbox URL.
-3. `kv_wait_for({selector: 'canvas', timeout_ms: 30000})` — confirm the runtime mounted.
-4. `kv_screenshot({full_page: true})` — save to
-   `kid-kode-landing/notes/ralph-snapshots/<task-id>/kripverify.png`.
-5. `kv_check_console({level: 'error'})` — **must return an empty array.** Any console
-   error = task failure.
-6. `kv_check_network({status_min: 400})` — **must return an empty array.** Any 4xx/5xx
-   network response = task failure.
-7. For tasks whose `haltCheck` requires interactive verification (e.g., clicking the Edit
-   button, dragging a handle, scrolling), also use `kv_click`, `kv_type`, `kv_evaluate` to
-   exercise the UI before screenshotting.
-8. Write a `kripverify.json` summary alongside `kripverify.png` containing:
-   `{url, console: [...], network: [...], interactions: [...]}`.
+1. Determine whether interaction is required: read `task.interactionScript` from
+   `kid-kode-landing/notes/ralph-state.json`. If null/missing, this is a non-UI task (e.g.
+   pure function with unit tests) — skip to step 5.
 
-**Treat the KripVerify pass as equally blocking as the local Playwright snapshot.** A
-failure here is not a warning. Internal fix cycle: re-run from the failing step, up to 3
-attempts. If still failing, leave the task `in-progress` and exit.
+2. Start the dev server in fast mode (no build:prism preamble; artifacts cached from
+   prior run):
+   `cd kid-kode-landing && npm run dev:fast`
+   Wait for `Local:` line in stdout, parse the port.
+
+3. Run interactive verification:
+   `cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs \
+      --task-id=<task-id> \
+      --port=<port> \
+      --interaction-script=notes/ralph-interactions/<task-id>.json`
+
+   The script will:
+   - Launch Playwright Chromium headless
+   - Navigate to http://localhost:<port>/
+   - Execute the per-task interaction sequence (click, type, wait, evaluate, assert)
+   - Capture console messages (any error level = task FAILURE)
+   - Capture network responses (any 4xx/5xx = task FAILURE)
+   - Save `outer.png`, `inner.png`, `interaction-trace.json` to
+     `notes/ralph-snapshots/<task-id>/`
+   - Exit 0 on full pass; exit 1 on any failure
+
+4. If exit non-zero: read `interaction-trace.json`, identify the failed step, fix the
+   implementation, re-run. Up to 3 internal fix attempts per session before leaving the
+   task in-progress and exiting.
+
+5. Spec-reviewer visual pass (always runs, even for non-UI tasks):
+   Spawn the `spec-reviewer` subagent with the task spec refs PLUS the snapshot directory
+   path. The subagent reads `outer.png` and `inner.png` and answers: "Does the screenshot
+   visually demonstrate the haltCheck behavior?" Any "no" answer with a concrete
+   visual-mismatch reason = task FAILURE (treated as MUST FIX).
+
+**Treat all of Step 8b as blocking.** No fallbacks. No "warning" downgrades. A failing
+visual check is a task failure.
 
 ### Step 8c — Vercel observability — SECONDARY diagnostic (Round 2.5, SC-079)
 

@@ -1,0 +1,37 @@
+{
+  "task_id": "EBR2-F-05",
+  "url_path": "/",
+  "_comment": "Pointer-up commits clone — sets parentHubId on the clone to draggingNearestHubId, updates caption/subtype, clears drag state. Depends on EBR2-F-03 (cloneNode + draggingNodeId) and EBR2-F-04 (drag listener computes nearestHubId).",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); src.cloneNode(node.nodeId); window.__EBR2_F_05_CLONE_ID__ = ed.draggingNodeId; return ed.draggingNodeId; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const canvas = document.querySelector('canvas'); const rect = canvas.getBoundingClientRect(); const tx = rect.left + rect.width * 0.7; const ty = rect.top + rect.height * 0.5; canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: tx, clientY: ty, bubbles: true, pointerId: 1 })); return { tx, ty }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 500 },
+    { "action": "screenshot", "name": "before-pointerup.png" },
+    {
+      "action": "evaluate",
+      "js": "(() => { const canvas = document.querySelector('canvas'); const rect = canvas.getBoundingClientRect(); const tx = rect.left + rect.width * 0.7; const ty = rect.top + rect.height * 0.5; canvas.dispatchEvent(new PointerEvent('pointerup', { clientX: tx, clientY: ty, bubbles: true, pointerId: 1 })); return true; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1200 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const cloneId = window.__EBR2_F_05_CLONE_ID__; if (!cloneId) return false; const clone = src.nodes.find((n) => n.nodeId === cloneId); return ed.draggingNodeId === null && !!clone && typeof clone.parentHubId === 'string' && clone.parentHubId.length > 0; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

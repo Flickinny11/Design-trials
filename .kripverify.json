@@ -13,7 +13,7 @@
     "ready_pattern": "Local:"
   },
   "verification": {
-    "auto_run_on_stop": true,
+    "auto_run_on_stop": false,
     "console_severity_threshold": "warning",
     "default_url": "http://localhost:{port}",
     "smoke_routes": [

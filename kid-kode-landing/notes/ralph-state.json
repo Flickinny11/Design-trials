@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T11:50:11.233Z",
+  "updatedAt": "2026-05-19T16:47:38Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -451,7 +451,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     },
     {
       "id": "EBR2-D-02",
@@ -473,7 +474,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-D-02.json"
     },
     {
       "id": "EBR2-E-01",
@@ -495,7 +497,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     },
     {
       "id": "EBR2-E-02",
@@ -519,7 +522,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-E-02.json"
     },
     {
       "id": "EBR2-E-03",
@@ -542,7 +546,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-E-03.json"
     },
     {
       "id": "EBR2-E-04",
@@ -566,7 +571,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-E-04.json"
     },
     {
       "id": "EBR2-F-01",
@@ -588,7 +594,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     },
     {
       "id": "EBR2-F-02",
@@ -611,7 +618,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     },
     {
       "id": "EBR2-F-03",
@@ -635,7 +643,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-F-03.json"
     },
     {
       "id": "EBR2-F-04",
@@ -657,7 +666,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-F-04.json"
     },
     {
       "id": "EBR2-F-05",
@@ -679,7 +689,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": "notes/ralph-interactions/EBR2-F-05.json"
     },
     {
       "id": "EBR2-G-01",
@@ -701,7 +712,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     },
     {
       "id": "EBR2-G-02",
@@ -722,11 +734,12 @@
       ],
       "haltCheck": "/ralph-step-editor command file documents Step 8b PRIMARY (kripverify against local sandboxed dev server: kv_dev_server_status → kv_navigate(localUrl) → kv_wait_for → kv_screenshot → kv_check_console → kv_check_network) plus task-specific interactive checks. Per-repo .mcp.json registers the kv MCP server. Persistence to notes/ralph-snapshots/<task-id>/kripverify.{png,json}. Failing KripVerify-local = task failure.",
       "kvVerify": false,
-      "status": "pending",
+      "status": "done",
       "attemptCount": 0,
       "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "verifiedAt": "2026-05-19T16:46:53Z",
+      "notes": "Superseded by Round-2.5 recovery session 2026-05-19; Step 8b now uses Playwright via verify-editor-runtimes.mjs --interaction-script. KripVerify kv_* MCP path is dead (IPC unreliable).",
+      "interactionScript": null
     },
     {
       "id": "EBR2-G-03",
@@ -743,11 +756,12 @@
       ],
       "haltCheck": "/ralph-step-editor documents that any console error, 4xx/5xx network response, or failed kv_navigate against the local sandbox = task failure (worker stays in-progress, outer loop retries up to maxAttemptsPerTask). Snapshot directory includes kripverify.png + kripverify.json for each completed task.",
       "kvVerify": false,
-      "status": "pending",
+      "status": "done",
       "attemptCount": 0,
       "commit": null,
-      "verifiedAt": null,
-      "notes": ""
+      "verifiedAt": "2026-05-19T16:46:53Z",
+      "notes": "Superseded by Round-2.5 recovery session 2026-05-19; failure semantics for the Playwright path are documented inside the rewritten Step 8b (no fallbacks; failing visual check = task failure).",
+      "interactionScript": null
     },
     {
       "id": "EBR2-G-04",
@@ -773,7 +787,8 @@
       "attemptCount": 0,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "",
+      "interactionScript": null
     }
   ]
 }

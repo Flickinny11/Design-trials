@@ -1,0 +1,37 @@
+{
+  "task_id": "EBR2-D-02",
+  "url_path": "/",
+  "_comment": "SC-072 / RA-06b — canvas mode camera obeys all 6 bounds from computeCanvasCameraRail. The implementer must expose window.__PRISM_EDITOR_GET_CANVAS_CAMERA__ returning {position:{x,y,z}, target:{x,y,z}, polarAngle, azimuthAngle} for this interaction. Without it the 'has-camera-hook' assertion fails, flagging the missing surface to the worker.",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'requested-canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; return stores?.graphEditor?.getState?.()?.viewMode === 'canvas'; })()"
+    },
+    { "action": "screenshot", "name": "before.png" },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "typeof window.__PRISM_EDITOR_GET_CANVAS_CAMERA__ === 'function'"
+    },
+    {
+      "action": "evaluate",
+      "js": "(() => { const get = window.__PRISM_EDITOR_GET_CANVAS_CAMERA__; const before = get(); for (let i = 0; i < 30; i += 1) { window.dispatchEvent(new WheelEvent('wheel', { deltaY: 1000, bubbles: true })); } return before; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 800 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const get = window.__PRISM_EDITOR_GET_CANVAS_CAMERA__; const rail = window.__PRISM_EDITOR_GET_CANVAS_RAIL__?.(); const cam = get(); if (!rail || !cam) return false; const distance = Math.hypot(cam.position.x - cam.target.x, cam.position.y - cam.target.y, cam.position.z - cam.target.z); return distance >= rail.minDistance - 0.01 && distance <= rail.maxDistance + 0.01 && cam.polarAngle >= rail.minPolarAngle - 0.01 && cam.polarAngle <= rail.maxPolarAngle + 0.01 && cam.azimuthAngle >= rail.minAzimuthAngle - 0.01 && cam.azimuthAngle <= rail.maxAzimuthAngle + 0.01; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

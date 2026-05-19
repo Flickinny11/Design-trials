@@ -9,6 +9,7 @@
     "build:msdf": "node src/lib/prism/mock-app-source/assets/build-msdf.mjs",
     "build:prism": "npm run build:msdf && node scripts/build-live-prism.mjs",
     "dev": "npm run build:prism && next dev",
+    "dev:fast": "next dev",
     "build": "npm run build:prism && next build",
     "start": "next start",
     "lint": "next lint",
