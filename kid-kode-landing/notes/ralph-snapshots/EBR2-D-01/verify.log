@@ -1,0 +1,68 @@
+# EBR2-D-01 — Canvas Camera Rail (pure helper)
+# Iteration 13, branch prism-editor-build
+# Final impl commit: abe90c2 (FOV alignment); state commit: eaea0ee
+
+## Verification gates (Step 8)
+
+[gate 1/4] cd kid-kode-landing && npx tsc --noEmit
+  → exit 0 (no type errors)
+
+[gate 2/4] test -f kid-kode-landing/src/lib/editor/canvas-camera-rail.ts
+  → exit 0 (file exists, 118 lines)
+
+[gate 3/4] cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-D-01.canvas-camera-rail.test.ts
+  → 1 file passed, 13 tests passed (155 ms)
+  → coverage: small / frame-sized / tall / wide envelopes; determinism; immutability; freeze;
+    breakpoint scale propagation; monotone distance-vs-envelope-size; pan-limit symmetry;
+    polar/azimuth window non-degenerate and inside (0, π).
+  → State-file note: verificationCommands[2] was corrected this iteration from the malformed
+    `npx vitest run src/lib/editor/canvas-camera-rail` (vitest substring-matches against test
+    paths, not source paths) to `npx vitest run tests/editor-build/EBR2-D-01.canvas-camera-rail.test.ts`.
+
+[gate 4/4] cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD
+  → post-push, Step 8c — captured to vercel-preview.json after `git push`.
+
+## Step 8b — Playwright/two-runtime snapshot
+
+  SKIPPED — task.interactionScript === null and the task delivers a pure-math helper with
+  no UI surface. Per /ralph-step-editor Step 8b step 1: "If null/missing, this is a non-UI
+  task (e.g. pure function with unit tests) — skip to step 5." The visible-drag witness
+  belongs to EBR2-D-02 (snapshot proves camera clamps).
+
+## Step 9 — spec-reviewer
+
+  Run #1 (HEAD~1, failing-test commit): No deviations found.
+  Run #2 (HEAD, implementation commit 9d87744): 0 MUST FIX, 3 SHOULD FIX, 3 OPTIONAL.
+
+  SHOULD FIX resolved in-iteration:
+    (1) FOV mismatch — rail used 50° but GraphScene.tsx:2064 sets scene-mode camera to 45°.
+        Aligned in follow-up commit abe90c2.
+
+  SHOULD FIX deferred to task.notes:
+    (2) Polar/azimuth windows are constants (±0.35 rad) rather than envelope-derived.
+        Reviewer downgraded — spec ambiguous; INV-23 ("constrained, damped, and bounded")
+        is satisfied. Resolve with spec author before EBR2-D-02 wires this to OrbitControls.
+    (3) panLimits assumes envelope is centered on its local origin. If AssembledSceneNode
+        children are positioned in design-px from the top-left, the symmetric ±halfPan
+        clamp will under-pan in one direction and over-pan in the other. Natural surface
+        for the EBR2-D-02 snapshot.
+
+  OPTIONAL deferred:
+    - Drop public export of CANVAS_DESIGN_PX_TO_SCENE_UNIT/CANVAS_RAIL_FOV_DEG if unused
+      after EBR2-D-02 (kept for now — EBR2-D-02 will consume them).
+    - Add design-rationale comments on min/max-distance fractions.
+    - The state-file verificationCommand fix would be cleaner as its own `chore:` commit.
+
+## Invariants & forbidden-pattern audit
+
+  INV-17 (no compile-fn writes): clean
+  INV-18 (schema additive only): clean — only existing PrismHub.layout / PrismHubResponsiveBreakpoint
+         / CanvasViewportFrame fields read
+  INV-23 (camera bounded): satisfied — all six DOF have explicit constraints
+  INV-25 (sole composer of scenePosition+canvasTransform): N/A — pure derivation, no
+         composition surface in this module
+  INV-11..15 (renderer-migration): clean — no PixiJS, no TextGeometry, sync createNode
+         unchanged, no DOM/window access
+  FP-04 (no compile/organize/previewHub/previewApp*): clean
+  FP-12/FP-14 (view-mode literals): clean — none introduced
+  FP-15 (Inspector-tab routing): clean — not an Inspector tab file
