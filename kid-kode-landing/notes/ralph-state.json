@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T04:47:14Z",
+  "updatedAt": "2026-05-19T05:47:19Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -391,7 +391,7 @@
       "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
-      "notes": ""
+      "notes": "iter 10 impl complete (commit 6793663): AssembledSceneNode wraps artifact + ring in composed group at sp+ct with ct.rotation/scale; CanvasTransformGizmo anchor moved to sp+ct with proxy at identity and drag-start-ct capture for writeback; ArtifactNode scene layout resets factory scenePosition so renderer is sole composer (INV-25). Production gates passed: tsc clean, npm run build clean, verify-editor-runtimes 7/7 (kid-kode-landing/notes/ralph-snapshots/EBR2-C-03/outer.png + inner.png + state.json). KripVerify-local sandbox dev server hung in initial compile (>25 min, IPC timeouts) across multiple attempts + restart; persisted to kripverify.json. Spec-reviewer: No MUST FIX. SHOULD FIX (non-blocking): rotation composition is Euler-additive (drift on multi-axis combined drags); gizmo anchor composes position only (not rotation/scale); ring thickness scales with ct.scale; proxy-reset effect could short-circuit during active drag; ArtifactNode topology/scene branches duplicate reset (collapse OPTIONAL)."
     },
     {
       "id": "EBR2-C-04",
