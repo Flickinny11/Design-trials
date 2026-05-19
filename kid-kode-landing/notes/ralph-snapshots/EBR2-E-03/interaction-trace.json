@@ -1,0 +1,134 @@
+{
+  "task_id": "EBR2-E-03",
+  "scriptPath": "notes/ralph-interactions/EBR2-E-03.json",
+  "steps": [
+    {
+      "index": 0,
+      "step": {
+        "action": "wait_for",
+        "selector": "canvas",
+        "timeout_ms": 30000
+      },
+      "status": "pass",
+      "durationMs": 170
+    },
+    {
+      "index": 1,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+      },
+      "status": "pass",
+      "durationMs": 51,
+      "value": "canvas"
+    },
+    {
+      "index": 2,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1500
+      },
+      "status": "pass",
+      "durationMs": 1502
+    },
+    {
+      "index": 3,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.openInspector(); ed.setEditorMode('edit'); stores.previewState.getState().set(node.nodeId, { caption: 'SAVE-COMMIT-TEST' }); return node.nodeId; })()"
+      },
+      "status": "pass",
+      "durationMs": 128,
+      "value": "home-headline"
+    },
+    {
+      "index": 4,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 600
+      },
+      "status": "pass",
+      "durationMs": 603
+    },
+    {
+      "index": 5,
+      "step": {
+        "action": "wait_for",
+        "selector": "[data-testid='inspector-save']",
+        "timeout_ms": 5000
+      },
+      "status": "pass",
+      "durationMs": 267
+    },
+    {
+      "index": 6,
+      "step": {
+        "action": "screenshot",
+        "name": "before.png"
+      },
+      "status": "pass",
+      "durationMs": 197,
+      "file": "before.png"
+    },
+    {
+      "index": 7,
+      "step": {
+        "action": "click",
+        "selector": "[data-testid='inspector-save']"
+      },
+      "status": "pass",
+      "durationMs": 674
+    },
+    {
+      "index": 8,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1200
+      },
+      "status": "pass",
+      "durationMs": 1201
+    },
+    {
+      "index": 9,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const previewApi = stores.previewState.getState(); const nodeId = ed.selectedNodeId; const node = src.nodes.find((n) => n.nodeId === nodeId); return node && node.caption === 'SAVE-COMMIT-TEST' && previewApi.isDirty(nodeId) === false; })()"
+      },
+      "status": "pass",
+      "durationMs": 25,
+      "value": true
+    },
+    {
+      "index": 10,
+      "step": {
+        "action": "screenshot",
+        "name": "after.png"
+      },
+      "status": "pass",
+      "durationMs": 196,
+      "file": "after.png"
+    },
+    {
+      "index": 11,
+      "step": {
+        "action": "assert",
+        "type": "no_console_errors"
+      },
+      "status": "pass",
+      "durationMs": 0
+    },
+    {
+      "index": 12,
+      "step": {
+        "action": "assert",
+        "type": "no_network_4xx_5xx"
+      },
+      "status": "pass",
+      "durationMs": 0
+    }
+  ],
+  "consoleErrorCount": 0,
+  "networkFailureCount": 0,
+  "aborted": false
+}
