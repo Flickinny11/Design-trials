@@ -15,8 +15,11 @@
 //
 // Two-coordinate-system reconciliation: topology mode uses force-graph
 // positions (from `useForceGraph`) and resets factory scenePosition on the
-// child. Scene mode preserves scenePosition so the editor can render the
-// assembled app view.
+// child. Scene mode also resets factory scenePosition on the child — the
+// renderer-level wrapper (AssembledSceneNode in GraphScene.tsx) is the sole
+// consumer of scenePosition + canvasTransform for visible placement
+// (EBR2-C-03 / §R2-C INV-25); the factory output stays at local identity so
+// the wrapper's `position={[sp+ct]}` composition doesn't double-apply.
 //
 // Editor scaling: each ArtifactNode's <primitive> is wrapped in
 // `<group scale={[0.06, 0.06, 0.06]}>` so artifacts render small enough for
@@ -105,6 +108,14 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
   if (layout === 'topology') {
     // Topology view positions the artifact by the surrounding force-graph
     // group. Reset the factory root so scenePosition does not compound.
+    object.position.set(0, 0, 0);
+    object.rotation.set(0, 0, 0);
+    object.scale.set(1, 1, 1);
+  } else if (layout === 'scene') {
+    // EBR2-C-03 / §R2-C INV-25 — scene-layout placement is owned by the
+    // renderer wrapper (AssembledSceneNode), which composes scenePosition +
+    // canvasTransform on its <group>. Reset the factory root here so the
+    // composed wrapper isn't fighting the factory's own scenePosition write.
     object.position.set(0, 0, 0);
     object.rotation.set(0, 0, 0);
     object.scale.set(1, 1, 1);

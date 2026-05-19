@@ -53,8 +53,6 @@ import {
   CANVAS_VIEWPORT_FRAME_DEFAULTS,
 } from '@/lib/editor/canvas-viewport-frame';
 import {
-  CANVAS_TRANSFORM_IDENTITY,
-  buildCanvasTransformFromPose,
   gizmoModeForKey,
   readCanvasTransform,
   restorePriorCanvasTransform,
@@ -1550,6 +1548,12 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   // skip the gizmo mount until some unrelated state change re-rendered).
   const [proxy, setProxy] = useState<THREE.Group | null>(null);
   const priorCanvasTransform = useRef<CanvasTransform | null>(null);
+  // EBR2-C-03 / §R2-C INV-25 — the anchor group is positioned at the
+  // composed sp+ct world, and the proxy sits at identity local so
+  // TransformControls computes drag deltas from a stable origin. We capture
+  // the drag-start ct on onMouseDown so onObjectChange can write back
+  // `new ct = start + proxy delta` without growing cumulative offset.
+  const dragStartCT = useRef<CanvasTransform | null>(null);
   const isDraggingRef = useRef(false);
   const [mode, setMode] = useState<GizmoMode>('translate');
 
@@ -1572,16 +1576,17 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const nodeId = node?.nodeId ?? null;
   const persistedCT = node?.canvasTransform;
 
-  // Sync the proxy's local pose to the node's current canvasTransform every
-  // time the selection or the persisted transform changes. Drags during this
-  // session write through `updateNode` so this effect re-runs and the proxy
-  // tracks the source of truth.
+  // EBR2-C-03 / §R2-C INV-25 — the parent anchor group already composes
+  // scenePosition + canvasTransform into its world position (see return
+  // below). The proxy stays at its parent's local origin so TransformControls
+  // attaches at the composed sp+ct world. Each store update re-renders the
+  // anchor at the new sp+ct and we reset the proxy back to identity so the
+  // next drag frame computes deltas from a stable baseline.
   useEffect(() => {
     if (!proxy || !node) return;
-    const ct = readCanvasTransform(node);
-    proxy.position.set(ct.x, ct.y, ct.z);
-    proxy.rotation.set(ct.rotationX, ct.rotationY, ct.rotationZ);
-    proxy.scale.set(ct.scaleX, ct.scaleY, ct.scaleZ);
+    proxy.position.set(0, 0, 0);
+    proxy.rotation.set(0, 0, 0);
+    proxy.scale.set(1, 1, 1);
   }, [proxy, nodeId, persistedCT, node]);
 
   // Capture the prior snapshot on selection so Escape can roll back. Reset
@@ -1633,9 +1638,13 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   if (!isCanvasMode || !isEditMode || !node) return null;
 
   const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
+  const ct = readCanvasTransform(node);
 
   return (
-    <group name={`canvas:gizmo-anchor:${node.nodeId}`} position={[sp.x, sp.y, sp.z]}>
+    <group
+      name={`canvas:gizmo-anchor:${node.nodeId}`}
+      position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
+    >
       <group
         ref={(g) => {
           setProxy(g);
@@ -1648,16 +1657,34 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
           mode={mode}
           onMouseDown={() => {
             isDraggingRef.current = true;
+            // EBR2-C-03 — capture ct at drag start so onObjectChange can
+            // write back start + delta. Cleared on mouseUp.
+            dragStartCT.current = readCanvasTransform(node);
           }}
           onMouseUp={() => {
             isDraggingRef.current = false;
+            dragStartCT.current = null;
           }}
           onObjectChange={() => {
-            const next = buildCanvasTransformFromPose({
-              position: { x: proxy.position.x, y: proxy.position.y, z: proxy.position.z },
-              rotation: { x: proxy.rotation.x, y: proxy.rotation.y, z: proxy.rotation.z },
-              scale: { x: proxy.scale.x, y: proxy.scale.y, z: proxy.scale.z },
-            });
+            // EBR2-C-03 — proxy local pose is the drag delta from its
+            // anchor origin (identity at drag start). The new ct is the
+            // captured drag-start ct composed with the proxy delta:
+            // position is additive (drag offset adds to ct), rotation is
+            // Euler-additive (TransformControls writes incremental rotation
+            // from identity), scale is multiplicative (TransformControls
+            // writes proxy.scale = startScale(=1) * factor so we multiply).
+            const start = dragStartCT.current ?? readCanvasTransform(node);
+            const next: CanvasTransform = {
+              x: start.x + proxy.position.x,
+              y: start.y + proxy.position.y,
+              z: start.z + proxy.position.z,
+              rotationX: start.rotationX + proxy.rotation.x,
+              rotationY: start.rotationY + proxy.rotation.y,
+              rotationZ: start.rotationZ + proxy.rotation.z,
+              scaleX: start.scaleX * proxy.scale.x,
+              scaleY: start.scaleY * proxy.scale.y,
+              scaleZ: start.scaleZ * proxy.scale.z,
+            };
             updateNode(node.nodeId, { canvasTransform: next });
           }}
         />
@@ -1675,12 +1702,23 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
   const isSelected = selectedId === node.nodeId;
   const isHovered = hoveredId === node.nodeId;
   const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
+  // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
+  // consumer of scenePosition + canvasTransform for visible node placement.
+  // Compose them here so the artifact, selection ring, and the gizmo anchor
+  // (CanvasTransformGizmo, rendered as a sibling) all land at the same
+  // world pose. Dragging a transform handle in canvas mode writes through
+  // updateNode({ canvasTransform }); this read picks the new ct up on the
+  // next render frame and the artifact visibly follows.
+  const ct = readCanvasTransform(node);
   const w = node.visual?.transform?.width ?? 0.35;
   const h = node.visual?.transform?.height ?? 0.35;
   const ringSize = Math.max(w, h, 0.25) * 0.62;
 
   return (
     <group
+      position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
+      rotation={[ct.rotationX, ct.rotationY, ct.rotationZ]}
+      scale={[ct.scaleX, ct.scaleY, ct.scaleZ]}
       onClick={(e) => {
         e.stopPropagation();
         selectNode(node.nodeId);
@@ -1694,7 +1732,7 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
     >
       <ArtifactNode node={node} layout="scene" />
       {(isSelected || isHovered) && (
-        <mesh position={[sp.x, sp.y, sp.z + 0.08]}>
+        <mesh position={[0, 0, 0.08]}>
           <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
           <meshBasicMaterial color={isSelected ? '#8bb4ff' : '#55e6a5'} transparent opacity={0.85} toneMapped={false} />
         </mesh>
