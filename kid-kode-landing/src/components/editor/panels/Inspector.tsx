@@ -27,6 +27,7 @@ import {
 import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
 import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
+import { commitPreviewToSource } from '@/lib/editor/preview-commit';
 import {
   ANIMATION_METHODOLOGIES,
   getLibraryByMethodology,
@@ -79,9 +80,18 @@ export default function Inspector() {
   const sourceEdges = useGraphSourceStore((s) => s.edges);
   const rootNodes = useGraphSourceStore((s) => s.rootNodes);
   const updateRootNode = useGraphSourceStore((s) => s.updateRootNode);
-  const isDirty = useGraphSourceStore((s) => s.isDirty);
+  const sourceDirty = useGraphSourceStore((s) => s.isDirty);
   const savedAt = useGraphSourceStore((s) => s.savedAt);
   const saveToServer = useGraphSourceStore((s) => s.saveToServer);
+  // EBR2-E-03 / §R2-E SC-072 — Save lights up when the preview-state buffer
+  // for the selected node is dirty too, not just when the source store is
+  // dirty. Track the bag identity so React re-evaluates when any node's
+  // buffer toggles between empty/non-empty.
+  const previewPatches = usePreviewStateStore((s) => s.patches);
+  const previewDirtyForSelected = selectedId
+    ? previewPatches[selectedId] !== undefined && Object.keys(previewPatches[selectedId]).length > 0
+    : false;
+  const isDirty = sourceDirty || previewDirtyForSelected;
 
   // EB-02-04: detect App_Name_World selection. The PrismRootNode lives in
   // useGraphSourceStore.rootNodes (RA-07, option B), not in `nodes`, so the
@@ -100,6 +110,14 @@ export default function Inspector() {
     if (saving) return;
     setSaving(true);
     setSaveError(null);
+    // EBR2-E-03 / §R2-E SC-073 — flush any per-node preview-state buffer
+    // for the current selection through the legal helper indirection
+    // before persisting. The helper calls useGraphSourceStore.updateNode
+    // (FP-15 forbids Inspector*.tsx from doing so directly); updateNode
+    // schedules the existing 1s debounced autosave, and the immediate
+    // saveToServer() below preserves the prior UX (explicit "Save" flushes
+    // right away rather than waiting on the debounce).
+    if (selectedId) commitPreviewToSource(selectedId);
     const r = await saveToServer();
     setSaving(false);
     if (!r.ok) setSaveError(r.error ?? 'save failed');
@@ -270,6 +288,7 @@ export default function Inspector() {
           <button
             type="button"
             data-role="save"
+            data-testid="inspector-save"
             disabled={saving}
             onClick={handleSave}
             title={isDirty ? 'Save graph to server' : 'No unsaved changes'}
