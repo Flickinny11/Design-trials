@@ -28,6 +28,10 @@ import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-
 import { useGraphEditorStore, type ViewMode } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import {
+  usePreviewStateStore,
+  composeNodeWithPreview,
+} from '@/stores/usePreviewStateStore';
+import {
   useForceGraph,
   computeGalaxyHubDiameters,
   type SimNode,
@@ -1789,7 +1793,13 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
   const openInspector = useGraphEditorStore((s) => s.openInspector);
   const isSelected = selectedId === node.nodeId;
   const isHovered = hoveredId === node.nodeId;
-  const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
+  // EBR2-E-02 / §R2-E SC-072 — renderer reads source ⊕ preview overlay so
+  // Inspector tab edits show up live before "Save" commits to source. The
+  // selector returns the patch for this specific node (or null), so the
+  // component re-renders only when this node's preview buffer changes.
+  const previewPatch = usePreviewStateStore((s) => s.patches[node.nodeId] ?? null);
+  const composedNode = composeNodeWithPreview(node, previewPatch);
+  const sp = composedNode.scenePosition ?? { x: 0, y: 0, z: 0 };
   // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
   // consumer of scenePosition + canvasTransform for visible node placement.
   // Compose them here so the artifact, selection ring, and the gizmo anchor
@@ -1797,9 +1807,9 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
   // world pose. Dragging a transform handle in canvas mode writes through
   // updateNode({ canvasTransform }); this read picks the new ct up on the
   // next render frame and the artifact visibly follows.
-  const ct = readCanvasTransform(node);
-  const w = node.visual?.transform?.width ?? 0.35;
-  const h = node.visual?.transform?.height ?? 0.35;
+  const ct = readCanvasTransform(composedNode);
+  const w = composedNode.visual?.transform?.width ?? 0.35;
+  const h = composedNode.visual?.transform?.height ?? 0.35;
   const ringSize = Math.max(w, h, 0.25) * 0.62;
 
   return (

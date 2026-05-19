@@ -26,6 +26,7 @@ import {
 } from '@/lib/prism-graph/types';
 import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
 import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
+import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import {
   ANIMATION_METHODOLOGIES,
   getLibraryByMethodology,
@@ -636,13 +637,20 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
 
   // EB-08-05 / §6 SC-042 + SC-045 — Transform-edit ↔ keyframe-capture.
   // The graph-source store carries the canonical PrismNode (incl. the new
-  // optional `canvasTransform` + `keyframes` fields); we read & write through
-  // it so the captured keyframe persists into the live graph and autosaves.
+  // optional `canvasTransform` + `keyframes` fields). EBR2-E-02 / §R2-E
+  // SC-072 + FP-15 routes Inspector tab writes through usePreviewStateStore
+  // (the ephemeral per-node edit buffer) — Save (EBR2-E-03) is what later
+  // commits the buffer → useGraphSourceStore.updateNode.
   const sourceNode = useGraphSourceStore((s) =>
     s.nodes.find((n) => n.nodeId === node.id),
   );
-  const updateNode = useGraphSourceStore((s) => s.updateNode);
-  const persistedKeyframes: PrismKeyframe[] = sourceNode?.keyframes ?? [];
+  const previewPatch = usePreviewStateStore((s) => s.patches[node.id] ?? null);
+  // The persisted keyframe list the user sees is source ⊕ preview-overlay so
+  // the just-captured keyframe shows up immediately, before Save flushes.
+  const persistedKeyframes: PrismKeyframe[] =
+    (previewPatch?.keyframes as PrismKeyframe[] | undefined) ??
+    sourceNode?.keyframes ??
+    [];
 
   useEffect(() => {
     if (total > 0) ensureNode(node.id, total);
@@ -706,12 +714,15 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
 
   // EB-08-05 / §6 SC-042 + SC-045 + INV-21 — "Save as keyframe" snapshots
   // the active PrismNode's canvasTransform (or identity, on a fresh node)
-  // into a PrismKeyframe and persists it onto `node.keyframes` through
-  // useGraphSourceStore.updateNode. The coordinate-space + trigger pickers
-  // already drive `edits.coordinateSpace` / `edits.trigger`; both flow into
-  // the captured keyframe so SC-045's picker state is durable. The default
-  // coordinate space is 'hub-scene' (canvas-mode default per haltCheck);
-  // any of the canonical 5 (INV-21) can be picked.
+  // into a PrismKeyframe. EBR2-E-02 / §R2-E SC-072 + FP-15: the write goes
+  // to usePreviewStateStore (not useGraphSourceStore.updateNode); the
+  // EBR2-E-03 Save button is what later commits the buffer through
+  // useGraphSourceStore.updateNode and lets the existing 1s debounced
+  // autosave flush. The coordinate-space + trigger pickers already drive
+  // `edits.coordinateSpace` / `edits.trigger`; both flow into the captured
+  // keyframe so SC-045's picker state is durable. The default coordinate
+  // space is 'hub-scene' (canvas-mode default per haltCheck); any of the
+  // canonical 5 (INV-21) can be picked.
   const handleSaveAsKeyframe = () => {
     if (frozen || !sourceNode) return;
     const transform = readCanvasTransform(sourceNode);
@@ -719,8 +730,10 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
       coordinateSpace: edits.coordinateSpace ?? 'hub-scene',
       trigger: edits.trigger,
     });
-    const existing = sourceNode.keyframes ?? [];
-    updateNode(sourceNode.nodeId, { keyframes: [...existing, captured] });
+    const existing = persistedKeyframes;
+    usePreviewStateStore.getState().set(sourceNode.nodeId, {
+      keyframes: [...existing, captured],
+    });
   };
 
   const primary = edits.primaryColor || node.visualSpec.primaryColor;

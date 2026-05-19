@@ -5,6 +5,7 @@ import { useState, useEffect, useMemo } from 'react';
 import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
 import {
   compileAppToPreview,
@@ -227,17 +228,21 @@ export default function Page() {
 
   // EB-10-02 / EBR2-A-03 — debug-only handle to the live zustand stores so
   // verify scripts can seed test fixtures (graphSource) and read snapshot
-  // state (graphEditor, for SC-064's boot-default viewMode capture). Editor-
-  // shell code; not subject to INV-13.
+  // state (graphEditor, for SC-064's boot-default viewMode capture). EBR2-E-02
+  // adds `previewState` so the Inspector preview-overlay path is observable
+  // from `verify-editor-runtimes.mjs` (notes/ralph-interactions/EBR2-E-02.json).
+  // Editor-shell code; not subject to INV-13.
   useEffect(() => {
     (window as unknown as {
       __PRISM_DEBUG_STORES__?: {
         graphSource: typeof useGraphSourceStore;
         graphEditor: typeof useGraphEditorStore;
+        previewState: typeof usePreviewStateStore;
       };
     }).__PRISM_DEBUG_STORES__ = {
       graphSource: useGraphSourceStore,
       graphEditor: useGraphEditorStore,
+      previewState: usePreviewStateStore,
     };
     return () => {
       delete (window as unknown as {
