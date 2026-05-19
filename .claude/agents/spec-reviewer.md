@@ -33,6 +33,16 @@ Review ONE commit: `HEAD`. Read the full diff with `git show HEAD` and
 compare every change against the specs above. Do not review older commits.
 Do not review uncommitted changes (Ralph commits before invoking you).
 
+## Visual verification (added by recovery amendment)
+
+When the Ralph loop invokes you and a snapshot directory exists at kid-kode-landing/notes/ralph-snapshots/<task-id>/, you must additionally:
+
+Use the Read tool to open outer.png and (if present) inner.png from that directory.
+Read task.haltCheck and task.title from kid-kode-landing/notes/ralph-state.json for the task that just completed.
+Inspect the screenshots and answer this concrete question: does the visible UI in these screenshots demonstrate the behavior described in task.haltCheck? Look for: missing elements that should be present, wrong colors/sizes/positions, layout breakage, visual glitches (e.g., a node rendered at scale 0, a tether line that's a stray pixel, overlapping panels), placeholder text where real content should be.
+If the screenshots show a visual mismatch with the haltCheck, add a line under ### MUST FIX of the form: notes/ralph-snapshots/<task-id>/<file>.png — visual — <one-sentence concrete mismatch>. If they look right (or if no screenshots exist because the task is pure-function), say nothing about visuals.
+Do not produce vague visual feedback ("looks rough", "could be cleaner"). Only flag concrete observable mismatches against the haltCheck.
+
 ## Output format
 
 Return exactly three sections, in this order:
