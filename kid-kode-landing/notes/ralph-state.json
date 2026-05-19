@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T18:23:57Z",
+  "updatedAt": "2026-05-19T18:33:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 16,
-    "lastProductiveCommit": "b01090a4f2183dd9db3449cea4ffdd6d8ce31d3a"
+    "lastProductiveIteration": 17,
+    "lastProductiveCommit": "741403d96f2d1b2dccf37262b59b664f307bfdd6"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§R2-E": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 16,
-    "commit": "b01090a4f2183dd9db3449cea4ffdd6d8ce31d3a",
-    "verifiedAt": "2026-05-19T18:20:13Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-19T18:20:13Z"
+    "iteration": 17,
+    "commit": "741403d96f2d1b2dccf37262b59b664f307bfdd6",
+    "taskId": "EBR2-E-03",
+    "verifiedAt": "2026-05-19T18:33:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -201,6 +200,14 @@
       "commit": "495e9edfbba176a3441a25c144123241c0ed9f43",
       "verifiedAt": "2026-05-19T18:19:50Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-02/"
+    },
+    {
+      "iteration": 17,
+      "taskId": "EBR2-E-03",
+      "phase": "§R2-E",
+      "commit": "741403d96f2d1b2dccf37262b59b664f307bfdd6",
+      "verifiedAt": "2026-05-19T18:33:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-03/"
     }
   ],
   "tasks": [
@@ -575,11 +582,11 @@
       ],
       "haltCheck": "Save button in Inspector toolbar (enabled when isDirty(nodeId)). On click: usePreviewStateStore.commit(nodeId) → calls useGraphSourceStore.updateNode (the only legal path from within Inspector — but indirected via a helper). Debounced autosave (1s) then flushes to server. Smoke: edit slider → preview shows change → click Save → previewState cleared → source store updated.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "741403d96f2d1b2dccf37262b59b664f307bfdd6",
+      "verifiedAt": "2026-05-19T18:33:00Z",
+      "notes": "spec-reviewer SHOULD-FIX (button disabled state, broader selector subscription) + OPTIONAL items (guard unknown nodeId, extract selectAndOpenInspector helper, drop use-client directive) left for future polish.",
       "interactionScript": "notes/ralph-interactions/EBR2-E-03.json"
     },
     {
