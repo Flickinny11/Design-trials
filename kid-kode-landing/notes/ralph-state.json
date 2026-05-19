@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-19T17:30:00Z",
+  "updatedAt": "2026-05-19T17:38:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 13,
-    "lastProductiveCommit": "f3b0867b8790be38b7633acfb4929a9677b2b247"
+    "lastProductiveIteration": 14,
+    "lastProductiveCommit": "477197065f664925ed2e63148f35730582f83869"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -52,7 +52,7 @@
       "status": "active"
     },
     "§R2-D": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 13,
-    "commit": "f3b0867b8790be38b7633acfb4929a9677b2b247",
-    "verifiedAt": "2026-05-19T17:28:09Z",
+    "iteration": 14,
+    "commit": "477197065f664925ed2e63148f35730582f83869",
+    "verifiedAt": "2026-05-19T17:38:00Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-19T17:28:09Z"
+    "recordedAt": "2026-05-19T17:38:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -177,6 +177,14 @@
       "commit": "abe90c27df3533530c2772626ed2dfa2f939ea2b",
       "verifiedAt": "2026-05-19T17:25:27Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-D-01/"
+    },
+    {
+      "iteration": 14,
+      "taskId": "EBR2-D-02",
+      "phase": "§R2-D",
+      "commit": "477197065f664925ed2e63148f35730582f83869",
+      "verifiedAt": "2026-05-19T17:38:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-D-02/"
     }
   ],
   "tasks": [
@@ -479,11 +487,11 @@
       ],
       "haltCheck": "SceneControlsBridge for canvas mode applies all 6 bounds from computeCanvasCameraRail. Playwright sequence attempts to pan/zoom past limits and asserts pose clamps (camera position stays within bounds). Galaxy mode bounds unchanged (still unconstrained).",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "477197065f664925ed2e63148f35730582f83869",
+      "verifiedAt": "2026-05-19T17:38:00Z",
+      "notes": "SceneControlsBridge now takes hub?: PrismHub | null and derives a CanvasCameraRail | null via useMemo gated on viewMode === 'canvas' && hub (computeCanvasCameraRail(hub, desktop breakpoint, computeCanvasViewportFrame)). All 6 bounds (minDistance/maxDistance/minPolarAngle/maxPolarAngle/minAzimuthAngle/maxAzimuthAngle) bind to rail.* in canvas mode; default fallbacks (3/80/0/π/±Infinity) when rail null (preview-app). setBoundary(Box3) effect lifts rail.panLimits into a pan envelope (Z window ±1000 to leave dolly to minDistance/maxDistance) and clears the boundary outside canvas. Dev hooks __PRISM_EDITOR_GET_CANVAS_CAMERA__ + __PRISM_EDITOR_GET_CANVAS_RAIL__ installed/torn-down with rail dep; consumed by notes/ralph-interactions/EBR2-D-02.json. Call site at AssembledSceneContent passes hub={hub ?? null}. 10/10 EBR2-D-02 source-grep tests pass; regression EBR2-A-02 (7/7), EBR2-C-02 (7/7), EBR2-C-04 (9/9), EBR2-D-01 (13/13) all pass; tsc clean; build clean (558 kB / 661 kB First Load JS, +1KB vs baseline). verify-editor-runtimes 13/13 PASS on a fresh next-dev run; before.png/after.png/interaction-trace.json captured; the post-wheel-zoom-barrage assertion confirms distance/polarAngle/azimuthAngle all inside rail bounds. spec-reviewer: 0 MUST FIX, 3 SHOULD FIX (1: ±1000 Z magic in setBoundary box could derive from rail.maxDistance or be named; 2: mock-app.prism 1-byte working-tree drift excluded from commit; 3: test narrative says 'galaxy bridge' but the only sibling bridge in-file is ControlsBridge i.e. topology bridge — assertion still holds, comment-only refresh), 3 OPTIONAL (re-bind hooks via ref instead of [rail] dep; cross-reference notes/ralph-interactions/EBR2-D-02.json in comment; destructure-with-defaults to dedupe the 6 inline ternaries). All SHOULD/OPTIONAL deferred — natural fit for a future rail-cleanup task or EBR2-E rolls.",
       "interactionScript": "notes/ralph-interactions/EBR2-D-02.json"
     },
     {
