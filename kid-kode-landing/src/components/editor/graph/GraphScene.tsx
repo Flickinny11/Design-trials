@@ -1542,9 +1542,10 @@ function KeyframeDemo() {
 // translate, rotate, and scale gizmo modes (Blender-style).
 function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const editorMode = useGraphEditorStore((s) => s.editorMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
   const updateNode = useGraphSourceStore((s) => s.updateNode);
-  // State-backed ref so <TransformControls> attaches deterministically on
+  // State-backed ref so the drei gizmo attaches deterministically on the
   // first render (a plain useRef holds null on the initial render and would
   // skip the gizmo mount until some unrelated state change re-rendered).
   const [proxy, setProxy] = useState<THREE.Group | null>(null);
@@ -1559,6 +1560,10 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
 
   // SC-025 — gizmos render only in canvas mode (FP-12 canonical literal).
   const isCanvasMode = viewMode === 'canvas';
+  // EBR2-C-02 / §R2-C SC-068 — gizmo handles render only while the user has
+  // explicitly entered edit mode via the Inspector's Edit toggle. Selecting a
+  // node alone (editorMode === 'idle') keeps the canvas in pure-view state.
+  const isEditMode = editorMode === 'edit';
 
   const node = useMemo(
     () => nodes.find((n) => n.nodeId === selectedNodeId) ?? null,
@@ -1580,21 +1585,25 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   }, [proxy, nodeId, persistedCT, node]);
 
   // Capture the prior snapshot on selection so Escape can roll back. Reset
-  // when the selection clears or the user switches out of canvas mode.
+  // when the selection clears, the user switches out of canvas mode, or the
+  // user leaves edit mode (EBR2-C-02 / SC-068 — the snapshot should not
+  // outlive an edit session).
   useEffect(() => {
-    if (!isCanvasMode || !node) {
+    if (!isCanvasMode || !isEditMode || !node) {
       priorCanvasTransform.current = null;
       return;
     }
     priorCanvasTransform.current = readCanvasTransform(node);
-  }, [nodeId, isCanvasMode, node]);
+  }, [nodeId, isCanvasMode, isEditMode, node]);
 
   // Keyboard mode switch (g/r/s) + Escape cancel-restore (only during a
   // drag, so deliberate edits aren't silently reverted afterwards). Mode
   // keys are skipped when focus is in a text input / textarea / contenteditable
-  // so typing into the Inspector doesn't hijack the gizmo.
+  // so typing into the Inspector doesn't hijack the gizmo. Gated on
+  // isEditMode (EBR2-C-02 / SC-068) — idle-mode users shouldn't see g/r/s
+  // mode switches or Escape rollback as the gizmo is not mounted.
   useEffect(() => {
-    if (!isCanvasMode || !node) return;
+    if (!isCanvasMode || !isEditMode || !node) return;
     const captured = node;
     function isEditableTarget(t: EventTarget | null): boolean {
       if (!(t instanceof HTMLElement)) return false;
@@ -1619,9 +1628,9 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isCanvasMode, nodeId, updateNode, node]);
+  }, [isCanvasMode, isEditMode, nodeId, updateNode, node]);
 
-  if (!isCanvasMode || !node) return null;
+  if (!isCanvasMode || !isEditMode || !node) return null;
 
   const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
 
