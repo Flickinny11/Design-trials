@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T18:15:00Z",
+  "updatedAt": "2026-05-20T18:20:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 18,
-    "lastProductiveCommit": "bd3a3da854cc9ab6cecb99f6294cb523982f2bdc"
+    "lastProductiveIteration": 19,
+    "lastProductiveCommit": "4d8ef0f6066f80597664fe11eec0347baa03f119"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "§R2-F": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 18,
-    "commit": "bd3a3da854cc9ab6cecb99f6294cb523982f2bdc",
-    "verifiedAt": "2026-05-20T18:08:44Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-20T18:08:44Z"
+    "iteration": 19,
+    "taskId": "EBR2-F-01",
+    "commit": "4d8ef0f6066f80597664fe11eec0347baa03f119",
+    "verifiedAt": "2026-05-20T18:20:00Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -217,6 +216,14 @@
       "commit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2",
       "verifiedAt": "2026-05-20T17:59:08.848Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-04/"
+    },
+    {
+      "iteration": 19,
+      "taskId": "EBR2-F-01",
+      "phase": "§R2-F",
+      "commit": "4d8ef0f6066f80597664fe11eec0347baa03f119",
+      "verifiedAt": "2026-05-20T18:20:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-01/"
     }
   ],
   "tasks": [
@@ -639,11 +646,11 @@
       ],
       "haltCheck": "hub-geometry.ts exports getHubWorldPositions(hubs): Map<hubId, Vector3> (reuses Phase 3 orbital math) and findNearestHub(point: Vector3, hubs: PrismHub[]): {hubId, distance}. Unit tests cover ≥3 hub layouts.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "4d8ef0f6066f80597664fe11eec0347baa03f119",
+      "verifiedAt": "2026-05-20T18:20:00Z",
+      "notes": "Pure-data utility (no UI; runtime snapshot skipped per EBR2-B-01 precedent). 14/14 vitest tests pass; tsc clean. Spec-reviewer: 0 MUST FIX, 3 SHOULD FIX, 3 OPTIONAL. SHOULD FIX deferred (constant duplication: GALAXY_RING_RADII/TILT + fnv1a32 mirrored from useForceGraph.ts; cross-check test guards drift) — extract to shared galaxy-layout-constants.ts if a later task touches either module.",
       "interactionScript": null
     },
     {

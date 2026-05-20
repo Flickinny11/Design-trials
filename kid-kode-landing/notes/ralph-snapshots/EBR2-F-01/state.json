@@ -1,0 +1,25 @@
+{
+  "taskId": "EBR2-F-01",
+  "iteration": 19,
+  "phase": "§R2-F",
+  "commit": "4d8ef0f6066f80597664fe11eec0347baa03f119",
+  "kind": "pure-data-utility",
+  "kvVerify": false,
+  "verifiedAt": "2026-05-20T18:20:00Z",
+  "verificationResults": {
+    "tsc": "clean (no output)",
+    "fileExists": "OK (kid-kode-landing/src/lib/prism-graph/hub-geometry.ts)",
+    "vitest": "14/14 passed (tests/editor-build/EBR2-F-01.hub-geometry.test.ts)",
+    "waitForVercelPreview": "pending — runs at Step 8c after push (non-blocking)"
+  },
+  "twoRuntimeSnapshot": "skipped — pure-data utility (callers land in EBR2-F-04/05; no runtime surface to capture here)",
+  "specReviewer": {
+    "mustFix": 0,
+    "shouldFix": 2,
+    "optional": 3,
+    "deferred": [
+      "Extract GALAXY_RING_RADII / GALAXY_RING_TILT to shared non-client galaxy-layout-constants.ts (currently mirrored from useForceGraph.ts; cross-check test guards drift).",
+      "Extract fnv1a32 to the same shared module."
+    ]
+  }
+}
