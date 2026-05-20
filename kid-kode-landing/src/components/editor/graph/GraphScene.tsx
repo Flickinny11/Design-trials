@@ -44,6 +44,11 @@ import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
 import { computeHubWorldLabelVisibility } from '@/lib/hub-world-label-lod';
 import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
 import {
+  findNearestHub,
+  getHubWorldPositions,
+} from '@/lib/prism-graph/hub-geometry';
+import { computeCloneDragTether } from '@/lib/editor/clone-drag-tether';
+import {
   computeGalaxyFilterMatches,
   GALAXY_FILTER_DIM_OPACITY,
   type GalaxyFilterMatches,
@@ -312,6 +317,130 @@ function GalaxyHubTethers({
         );
       })}
     </group>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// GalaxyCloneDragLayer — EBR2-F-04 / §R2-F SC-077.
+//
+// Mounted by SceneContent when `viewMode === 'galaxy'` AND
+// `draggingNodeId != null` (the Inspector Clone path of EBR2-F-03 sets
+// both atomically). Living at the SceneContent layer keeps the listener
+// reachable regardless of `editorRenderMode` ('scene' or 'topology').
+// Owns three responsibilities:
+//
+//   1. Attach a `pointermove` listener to the WebGL canvas, raycast the
+//      cursor into world space (sample at a fixed forward distance from
+//      camera so the cursor follows pointer motion through the galaxy
+//      rings).
+//   2. Push the unprojected world point + the resolved nearest hub id
+//      through the editor-store action setters (FP-11: never direct-
+//      mutate).
+//   3. Render a transient `<line>` from cursor-world to nearest hub
+//      center. Color picks the cyan `'navigates-to'` entry from EDGE_COLORS
+//      so the visual matches the existing hub-tether palette (SC-077
+//      reuse-EDGE_COLORS clause).
+//
+// Pointer-up commit (parentHubId rewrite + clear) belongs to EBR2-F-05.
+// ═══════════════════════════════════════════════════════════════════
+function GalaxyCloneDragLayer({
+  hubs,
+}: {
+  hubs: ReadonlyArray<PrismHub>;
+}) {
+  const { camera, gl } = useThree();
+  const setDraggingPointerWorld = useGraphEditorStore(
+    (s) => s.setDraggingPointerWorld,
+  );
+  const setDraggingNearestHub = useGraphEditorStore(
+    (s) => s.setDraggingNearestHub,
+  );
+  const draggingPointerWorld = useGraphEditorStore(
+    (s) => s.draggingPointerWorld,
+  );
+  const draggingNearestHubId = useGraphEditorStore(
+    (s) => s.draggingNearestHubId,
+  );
+
+  // Reusable buffers so pointermove allocates nothing per-frame.
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const ndcRef = useRef(new THREE.Vector2());
+  const pointRef = useRef(new THREE.Vector3());
+  const lineRef = useRef<THREE.Line | null>(null);
+
+  // Sample the cursor at a fixed forward distance from the camera so the
+  // unprojected point lives near the galaxy ring radii (~150 units) and
+  // moves continuously with pointer drift across hub-bisecting planes.
+  const SAMPLE_DISTANCE = 150;
+
+  useEffect(() => {
+    const el = gl.domElement;
+    if (!el) return;
+
+    const handleMove = (e: PointerEvent) => {
+      if (hubs.length === 0) return;
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+      ndcRef.current.set(x, y);
+      raycasterRef.current.setFromCamera(ndcRef.current, camera);
+      raycasterRef.current.ray.at(SAMPLE_DISTANCE, pointRef.current);
+
+      const tether = computeCloneDragTether(
+        pointRef.current,
+        hubs as PrismHub[],
+      );
+      setDraggingPointerWorld(tether.tetherStart);
+      setDraggingNearestHub(tether.nearestHubId);
+    };
+
+    el.addEventListener('pointermove', handleMove);
+    return () => {
+      el.removeEventListener('pointermove', handleMove);
+    };
+  }, [gl, camera, hubs, setDraggingPointerWorld, setDraggingNearestHub]);
+
+  // Drive the line geometry from store state. The line endpoints are kept
+  // in sync via useFrame so the visual updates smoothly even between
+  // pointermove ticks (e.g. during camera-controls inertia).
+  const hubPositions = useMemo(
+    () => getHubWorldPositions(hubs as PrismHub[]),
+    [hubs],
+  );
+
+  useFrame(() => {
+    if (!lineRef.current) return;
+    if (!draggingPointerWorld || !draggingNearestHubId) return;
+    const end = hubPositions.get(draggingNearestHubId);
+    if (!end) return;
+    const geom = lineRef.current.geometry as THREE.BufferGeometry;
+    const positions = new Float32Array([
+      draggingPointerWorld.x,
+      draggingPointerWorld.y,
+      draggingPointerWorld.z,
+      end.x,
+      end.y,
+      end.z,
+    ]);
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.attributes.position.needsUpdate = true;
+    geom.computeBoundingSphere();
+  });
+
+  // No line until the first pointermove has populated the slots.
+  if (!draggingPointerWorld || !draggingNearestHubId) return null;
+  const color = EDGE_COLORS['navigates-to'];
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    <line ref={lineRef as any}>
+      <bufferGeometry />
+      <lineBasicMaterial
+        color={color}
+        transparent
+        opacity={0.85}
+        toneMapped={false}
+      />
+    </line>
   );
 }
 
@@ -1957,6 +2086,9 @@ function TopologySceneContent({
           hubCenters={hubCenters}
         />
       )}
+      {/* GalaxyCloneDragLayer (EBR2-F-04 / §R2-F SC-077) is mounted by
+          SceneContent so the pointermove listener attaches in galaxy mode
+          regardless of editorRenderMode. */}
 
       <HubHulls
         hubs={editorGraph.hubs}
@@ -2158,9 +2290,23 @@ function SceneContent({
   onPerf: (factor: number) => void;
 }) {
   const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
-  return editorRenderMode === 'scene'
-    ? <AssembledSceneContent onPerf={onPerf} />
-    : <TopologySceneContent onPerf={onPerf} />;
+  // EBR2-F-04 / §R2-F SC-077 — the Clone-drag listener must mount whenever
+  // viewMode === 'galaxy' and a clone is attached to the cursor, regardless
+  // of whether the user is on the scene or topology render path. We host the
+  // overlay at the SceneContent layer (sibling to the two sub-trees) so it
+  // is reachable in both editorRenderMode branches.
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const draggingNodeId = useGraphEditorStore((s) => s.draggingNodeId);
+  const sourceHubs = useGraphSourceStore((s) => s.hubs);
+  const cloneDragActive = viewMode === 'galaxy' && draggingNodeId != null;
+  return (
+    <>
+      {editorRenderMode === 'scene'
+        ? <AssembledSceneContent onPerf={onPerf} />
+        : <TopologySceneContent onPerf={onPerf} />}
+      {cloneDragActive && <GalaxyCloneDragLayer hubs={sourceHubs} />}
+    </>
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2169,12 +2315,33 @@ function SceneContent({
 export default function GraphScene() {
   const [dpr, setDpr] = useState<[number, number]>([1, 2]);
   const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
+  // EBR2-F-04 / §R2-F SC-077 — DOM-side marker the interaction script
+  // queries via `[data-component="galaxy-drag-tether"]` to confirm the
+  // Clone-drag overlay is mounted. The visible tether is the 3D line
+  // emitted by GalaxyCloneDragLayer inside the Canvas; this hidden div
+  // exists purely as a presence sentinel for test discoverability.
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const draggingNodeId = useGraphEditorStore((s) => s.draggingNodeId);
+  const cloneDragActive = viewMode === 'galaxy' && draggingNodeId != null;
   const camera = editorRenderMode === 'scene'
     ? { position: [0, 0, 10] as [number, number, number], fov: 45, near: 0.1, far: 2000 }
     : { position: [0, 0, 320] as [number, number, number], fov: 50, near: 0.1, far: 2000 };
 
   return (
     <div className="absolute inset-0 overflow-hidden">
+      {cloneDragActive && (
+        <div
+          data-component="galaxy-drag-tether"
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            opacity: 0,
+            pointerEvents: 'none',
+          }}
+        />
+      )}
       {/* Ambient nebula backdrop */}
       <div
         className="absolute inset-0 pointer-events-none"

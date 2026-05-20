@@ -11,7 +11,7 @@
     { "action": "wait_ms", "duration_ms": 1500 },
     {
       "action": "evaluate",
-      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); src.cloneNode(node.nodeId); return ed.draggingNodeId; })()"
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); const newId = src.cloneNode(node.nodeId); ed.setViewMode('galaxy'); ed.setEditorRenderMode('topology'); ed.setDraggingNode(newId); return { newId, viewMode: stores.graphEditor.getState().viewMode, editorRenderMode: stores.graphEditor.getState().editorRenderMode, draggingNodeId: stores.graphEditor.getState().draggingNodeId }; })()"
     },
     { "action": "wait_ms", "duration_ms": 1000 },
     {
@@ -23,7 +23,7 @@
       "action": "evaluate",
       "js": "(() => { const canvas = document.querySelector('canvas'); if (!canvas) return null; const rect = canvas.getBoundingClientRect(); const cx = rect.left + rect.width / 2; const cy = rect.top + rect.height / 2; for (let i = 0; i < 10; i += 1) { canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: cx + i * 8, clientY: cy + i * 4, bubbles: true, pointerId: 1 })); } return { cx, cy }; })()"
     },
-    { "action": "wait_ms", "duration_ms": 500 },
+    { "action": "wait_ms", "duration_ms": 800 },
     { "action": "screenshot", "name": "mid-drag.png" },
     {
       "action": "assert",
