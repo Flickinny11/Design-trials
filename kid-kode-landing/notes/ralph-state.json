@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 22,
+  "currentIteration": 23,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T19:25:43.966Z",
+  "updatedAt": "2026-05-20T19:29:38.107Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 22,
-    "lastProductiveCommit": "7fbaedad414f37ab9332bf3741daaabee8bca168"
+    "lastProductiveCommit": "6bd22b6309a9e82787cdc80b32512a2537ae2f91"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -73,13 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 21,
-    "commit": "5f13d53bb3f5cde5d6f529911fa8d6f3abf6921f",
-    "verifiedAt": "2026-05-20T18:51:25Z",
+    "iteration": 22,
+    "commit": "6bd22b6309a9e82787cdc80b32512a2537ae2f91",
+    "verifiedAt": "2026-05-20T19:25:57Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T18:51:25Z",
-    "lastProductiveIteration": 22,
-    "lastProductiveCommit": "7fbaedad414f37ab9332bf3741daaabee8bca168"
+    "recordedAt": "2026-05-20T19:25:57Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -768,8 +766,8 @@
       ],
       "haltCheck": "PointerUp during clone-drag: nearest-hub at release becomes the clone's parentHubId; caption updates to reflect new parent context (e.g. inherit hub-name prefix); subtype carries over from source. draggingNodeId clears. Inspector returns to the cloned node selected at its new parent. Source-store snapshot before/after asserts the new entry.",
       "kvVerify": true,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "",
