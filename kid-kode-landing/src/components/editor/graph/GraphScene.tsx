@@ -2054,6 +2054,12 @@ function AssembledSceneContent({
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const qualityMode = useGraphEditorStore((s) => s.qualityMode);
+  // EBR2-E-04 / §R2-E SC-074 — read the per-node rebuild-version map. The
+  // AssembledSceneNode children are keyed by `nodeId + ':' + version` so a
+  // Save-and-Rebuild bump remounts *exactly one* wrapper group, producing
+  // the wrapper-ref change the interaction script asserts (target ref
+  // changes; siblings stay stable per RA-16).
+  const nodeRebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion);
   const hub = sourceHubs.find((h) => h.hubId === activeHubId) ?? sourceHubs[0];
   const nodes = sourceNodes.filter((node) => !hub || node.parentHubId === hub.hubId);
   const usePost = qualityMode !== 'low';
@@ -2112,7 +2118,12 @@ function AssembledSceneContent({
       <KeyframeDemo />
 
       {fontReady ? (
-        nodes.map((node) => <AssembledSceneNode key={node.nodeId} node={node} />)
+        nodes.map((node) => (
+          <AssembledSceneNode
+            key={node.nodeId + ':' + (nodeRebuildVersion[node.nodeId] ?? 0)}
+            node={node}
+          />
+        ))
       ) : (
         <Html center>
           <div className="px-3 py-2 rounded-md border border-white/10 bg-black/60 text-[10px] font-mono text-white/65">

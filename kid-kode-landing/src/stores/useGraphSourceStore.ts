@@ -272,6 +272,12 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
       hub,
       nodes: s.nodes.filter((n) => n.parentHubId === hub.hubId),
       edges: s.edges,
+      // EBR2-E-04 fix — SC-006: the GraphSource invariant ("exactly one
+      // PrismRootNode") survives a Save-and-Rebuild round-trip only if the
+      // wire payload carries `rootNodes`. Prior persist dropped this field
+      // and the server overwrote the canonical seed without it, silently
+      // violating SC-006 on every save.
+      rootNodes: s.rootNodes,
     };
     let res: Response;
     try {
@@ -317,6 +323,11 @@ if (typeof window !== 'undefined') {
         hubs: graph.hubs,
         nodes: graph.nodes,
         edges: graph.edges,
+        // EBR2-E-04 fix — without threading rootNodes here, the eager init
+        // left the store at `rootNodes: []` even when the loaded graph
+        // carries App_Name_World. saveToServer then echoed `[]` back to
+        // disk and quietly violated SC-006 on every Save round-trip.
+        rootNodes: graph.rootNodes ?? [],
         ready: true,
         error: null,
       });

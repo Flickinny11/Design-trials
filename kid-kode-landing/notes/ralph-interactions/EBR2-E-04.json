@@ -11,7 +11,7 @@
     { "action": "wait_ms", "duration_ms": 1500 },
     {
       "action": "evaluate",
-      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const src = stores.graphSource.getState(); const ed = stores.graphEditor.getState(); if (!groups || groups.size < 2) return null; const targetId = Array.from(groups.keys())[0]; ed.selectNode(targetId); ed.setEditorMode('edit'); stores.previewState.getState().set(targetId, { caption: 'REBUILD-TEST' }); const siblingId = Array.from(groups.keys())[1]; window.__EBR2_E_04_TARGET__ = { targetId, siblingId, targetRefBefore: groups.get(targetId), siblingRefBefore: groups.get(siblingId) }; return { targetId, siblingId }; })()"
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const src = stores.graphSource.getState(); const ed = stores.graphEditor.getState(); if (!groups || groups.size < 2) return null; const targetId = Array.from(groups.keys())[0]; ed.selectNode(targetId); ed.openInspector(); ed.setEditorMode('edit'); stores.previewState.getState().set(targetId, { caption: 'REBUILD-TEST' }); const siblingId = Array.from(groups.keys())[1]; window.__EBR2_E_04_TARGET__ = { targetId, siblingId, targetRefBefore: groups.get(targetId), siblingRefBefore: groups.get(siblingId) }; return { targetId, siblingId }; })()"
     },
     { "action": "wait_ms", "duration_ms": 600 },
     { "action": "wait_for", "selector": "[data-testid='inspector-save-and-rebuild']", "timeout_ms": 5000 },

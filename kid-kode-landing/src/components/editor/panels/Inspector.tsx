@@ -28,6 +28,7 @@ import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-cap
 import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
+import { rebuildNode } from '@/lib/editor/rebuild-node';
 import {
   ANIMATION_METHODOLOGIES,
   getLibraryByMethodology,
@@ -119,6 +120,32 @@ export default function Inspector() {
     // right away rather than waiting on the debounce).
     if (selectedId) commitPreviewToSource(selectedId);
     const r = await saveToServer();
+    setSaving(false);
+    if (!r.ok) setSaveError(r.error ?? 'save failed');
+  };
+
+  // EBR2-E-04 / §R2-E SC-074 + INV-26 + RA-16 — Save and Rebuild = Save +
+  // single-node visual artifact re-render. The helper (`rebuild-node.ts`)
+  // owns the orchestration: it routes through `commitPreviewToSource` to
+  // honor FP-15, evicts the cached artifact Object3D (running
+  // `userData.cleanup()` per INV-14), then bumps the per-node
+  // rebuild-version counter in useGraphEditorStore so the keyed
+  // AssembledSceneNode wrapper remounts *exactly one* node. The factory
+  // re-invokes `createNode` synchronously; the new Object3D lands at the
+  // same `scenePosition`; sibling Object3D references stay stable.
+  const handleSaveAndRebuild = async () => {
+    if (saving) return;
+    if (!selectedId) return;
+    setSaving(true);
+    setSaveError(null);
+    // SC-074 ordering: "Save + locates the mounted THREE.Object3D … re-invokes
+    // createNode … re-mounts at same scenePosition." Flush the preview buffer
+    // and await the server round-trip *first*, then trigger the single-node
+    // rebuild. Reversing the order would race the autosave dirty-flag flip
+    // and the explicit saveToServer call (review MUST-FIX #2).
+    if (selectedId) commitPreviewToSource(selectedId);
+    const r = await saveToServer();
+    if (r.ok) rebuildNode(selectedId);
     setSaving(false);
     if (!r.ok) setSaveError(r.error ?? 'save failed');
   };
@@ -299,6 +326,21 @@ export default function Inspector() {
             } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {saving ? 'Saving…' : isDirty ? 'Save' : 'Saved'}
+          </button>
+          {/* EBR2-E-04 / §R2-E SC-074 + INV-26 + RA-16 — Save and Rebuild:
+              persists the preview overlay then re-invokes createNode for
+              this one node (userData.cleanup + cache evict + per-node
+              rebuild-version bump). Other nodes are untouched. */}
+          <button
+            type="button"
+            data-role="save-and-rebuild"
+            data-testid="inspector-save-and-rebuild"
+            disabled={saving || !selectedId}
+            onClick={handleSaveAndRebuild}
+            title="Save and re-render this node's artifact"
+            className="px-2.5 h-7 rounded-md text-[10px] font-mono bg-[#a978ff]/20 hover:bg-[#a978ff]/30 border border-[#a978ff]/40 text-[#e1cfff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {saving ? 'Saving…' : 'Save & Rebuild'}
           </button>
           <button
             type="button"

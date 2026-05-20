@@ -12,7 +12,7 @@
 //   - useGraphSourceStore.saveToServer()        (persist)
 //   - regen-api.saveAndVerify(node, codeModule) (verify-node)
 
-import { writeFile, rename } from 'node:fs/promises';
+import { readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import {
@@ -94,12 +94,26 @@ async function handlePersist(body: PersistBody): Promise<Response> {
     });
   }
 
+  // EBR2-E-04 fix — preserve top-level fields the wire payload doesn't carry
+  // (e.g. `_comment`, future canonical-seed metadata). The persist contract
+  // is "graph merge over existing on-disk file", not "wire payload replaces
+  // the file". Without this, every save dropped the hand-authored seed
+  // documentation and any field added server-side after the client loaded.
+  const target = join(process.cwd(), ...LIVE_GRAPH_REL);
+  let existing: Record<string, unknown> = {};
+  try {
+    const raw = await readFile(target, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (isPlainObject(parsed)) existing = parsed;
+  } catch {
+    // Missing/unreadable existing file — fall back to wire-only payload.
+  }
   const finalGraph = {
+    ...existing,
     ...(body.graph as Record<string, unknown>),
     nodes: normalizedNodes,
   };
   const json = JSON.stringify(finalGraph, null, 2);
-  const target = join(process.cwd(), ...LIVE_GRAPH_REL);
   const tmp = `${target}.tmp`;
 
   try {
