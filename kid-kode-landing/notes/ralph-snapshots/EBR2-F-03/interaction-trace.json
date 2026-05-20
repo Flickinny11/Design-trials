@@ -1,0 +1,134 @@
+{
+  "task_id": "EBR2-F-03",
+  "scriptPath": "notes/ralph-interactions/EBR2-F-03.json",
+  "steps": [
+    {
+      "index": 0,
+      "step": {
+        "action": "wait_for",
+        "selector": "canvas",
+        "timeout_ms": 30000
+      },
+      "status": "pass",
+      "durationMs": 60
+    },
+    {
+      "index": 1,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+      },
+      "status": "pass",
+      "durationMs": 17,
+      "value": "canvas"
+    },
+    {
+      "index": 2,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1500
+      },
+      "status": "pass",
+      "durationMs": 1502
+    },
+    {
+      "index": 3,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.openInspector(); ed.setEditorMode('edit'); window.__EBR2_F_03_BEFORE__ = { nodeCount: src.nodes.length, selectedId: node.nodeId }; return node.nodeId; })()"
+      },
+      "status": "pass",
+      "durationMs": 31,
+      "value": "home-headline"
+    },
+    {
+      "index": 4,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 600
+      },
+      "status": "pass",
+      "durationMs": 601
+    },
+    {
+      "index": 5,
+      "step": {
+        "action": "wait_for",
+        "selector": "[data-testid='inspector-clone']",
+        "timeout_ms": 5000
+      },
+      "status": "pass",
+      "durationMs": 234
+    },
+    {
+      "index": 6,
+      "step": {
+        "action": "screenshot",
+        "name": "before.png"
+      },
+      "status": "pass",
+      "durationMs": 191,
+      "file": "before.png"
+    },
+    {
+      "index": 7,
+      "step": {
+        "action": "click",
+        "selector": "[data-testid='inspector-clone']"
+      },
+      "status": "pass",
+      "durationMs": 704
+    },
+    {
+      "index": 8,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1200
+      },
+      "status": "pass",
+      "durationMs": 1201
+    },
+    {
+      "index": 9,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const before = window.__EBR2_F_03_BEFORE__; if (!before) return false; return ed.viewMode === 'galaxy' && src.nodes.length === before.nodeCount + 1 && typeof ed.draggingNodeId === 'string' && ed.draggingNodeId.length > 0; })()"
+      },
+      "status": "pass",
+      "durationMs": 6,
+      "value": true
+    },
+    {
+      "index": 10,
+      "step": {
+        "action": "screenshot",
+        "name": "after.png"
+      },
+      "status": "pass",
+      "durationMs": 193,
+      "file": "after.png"
+    },
+    {
+      "index": 11,
+      "step": {
+        "action": "assert",
+        "type": "no_console_errors"
+      },
+      "status": "pass",
+      "durationMs": 0
+    },
+    {
+      "index": 12,
+      "step": {
+        "action": "assert",
+        "type": "no_network_4xx_5xx"
+      },
+      "status": "pass",
+      "durationMs": 0
+    }
+  ],
+  "consoleErrorCount": 0,
+  "networkFailureCount": 0,
+  "aborted": false
+}
