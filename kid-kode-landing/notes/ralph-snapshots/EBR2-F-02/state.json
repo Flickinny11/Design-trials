@@ -1,0 +1,32 @@
+{
+  "taskId": "EBR2-F-02",
+  "phase": "§R2-F",
+  "specRefs": ["§R2-F SC-075"],
+  "iteration": 20,
+  "commit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca",
+  "verifiedAt": "2026-05-20T18:23:00Z",
+  "kind": "non-ui",
+  "interactionScript": null,
+  "kvVerify": false,
+  "haltCheckSatisfied": true,
+  "verificationResults": {
+    "tsc": "clean",
+    "npmBuild": "clean (560 kB / 662 kB First Load JS, identical baseline to EBR2-E-04)",
+    "grepCloneNode": "matched in src/stores/useGraphSourceStore.ts",
+    "vitest": {
+      "file": "tests/editor-build/EBR2-F-02.clone-node-action.test.ts",
+      "passed": 5,
+      "failed": 0
+    },
+    "waitForVercelPreview": "deferred to Step 8c diagnostic after push (non-blocking per RA-18)"
+  },
+  "specReviewer": {
+    "round1": "MUST FIX: implementation commit missing at the time of review (sequencing artifact; impl committed before re-review)",
+    "round2": "No deviations found.",
+    "mustFix": 0,
+    "shouldFix": 0,
+    "optional": 0
+  },
+  "snapshotKind": "non-ui-state-only",
+  "notes": "Pure store-mutator task; no UI surface yet (Inspector Clone button + galaxy auto-switch land in EBR2-F-03). Follows EBR2-E-01 precedent for non-UI snapshots."
+}
