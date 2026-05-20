@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T18:55:53Z",
+  "updatedAt": "2026-05-20T19:15:05.766Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 21,
-    "lastProductiveCommit": "5f13d53bb3f5cde5d6f529911fa8d6f3abf6921f"
+    "lastProductiveIteration": 22,
+    "lastProductiveCommit": "7fbaedad414f37ab9332bf3741daaabee8bca168"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "§R2-F": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -77,7 +77,9 @@
     "commit": "5f13d53bb3f5cde5d6f529911fa8d6f3abf6921f",
     "verifiedAt": "2026-05-20T18:51:25Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T18:51:25Z"
+    "recordedAt": "2026-05-20T18:51:25Z",
+    "lastProductiveIteration": 22,
+    "lastProductiveCommit": "7fbaedad414f37ab9332bf3741daaabee8bca168"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -241,6 +243,14 @@
       "commit": "25fd28310f531f9085c19769a10c2394e05bc9d0",
       "verifiedAt": "2026-05-20T18:49:20Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-03/"
+    },
+    {
+      "iteration": 22,
+      "taskId": "EBR2-F-04",
+      "phase": "§R2-F",
+      "commit": "7fbaedad414f37ab9332bf3741daaabee8bca168",
+      "verifiedAt": "2026-05-20T19:15:05.766Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-04/"
     }
   ],
   "tasks": [
@@ -735,11 +745,11 @@
       ],
       "haltCheck": "Galaxy mode mounts a drag listener when draggingNodeId is set. PointerMove unprojects cursor to world position, calls findNearestHub, renders a transient line (reuses EDGE_COLORS style from EB-03-04) from cursor-pos to nearest-hub-center. As cursor crosses bisecting planes between hubs, the tether snaps. Smoke: simulate pointermove across galaxy, assert tether endpoint changes hubs.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "7fbaedad414f37ab9332bf3741daaabee8bca168",
+      "verifiedAt": "2026-05-20T19:15:05.766Z",
+      "notes": "Verified via verify-editor-runtimes.mjs (12/12 PASS) + 12-test vitest suite. spec-reviewer cleared after re-capture with editorRenderMode=topology so mid-drag.png frames the galaxy view.",
       "interactionScript": "notes/ralph-interactions/EBR2-F-04.json"
     },
     {
