@@ -51,6 +51,7 @@ interface GraphSourceState {
   reset: () => void;
   // HL04 mutators (Plan §P5)
   addNode: (input: Partial<PrismNode> & { parentHubId: string }) => string;
+  cloneNode: (sourceId: string) => string;
   updateNode: (nodeId: string, patch: Partial<PrismNode>) => void;
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
   removeNode: (nodeId: string) => void;
@@ -186,6 +187,22 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, created], isDirty: true }));
     return nodeId;
+  },
+
+  // EBR2-F-02 / §R2-F SC-075 — Inspector "Clone" entry point on the source
+  // store. Deep-clones the source node, mints a fresh nodeId, suffixes
+  // intent.caption with ' (clone)', and parents the clone to the source's
+  // current parentHubId. The nearest-hub re-parent on drag-drop is the
+  // pointer-up commit's job (EBR2-F-05 / SC-076), not this action's.
+  cloneNode: (sourceId) => {
+    const source = get().nodes.find((n) => n.nodeId === sourceId);
+    if (!source) return '';
+    const cloned = JSON.parse(JSON.stringify(source)) as PrismNode;
+    cloned.nodeId = generateNodeId();
+    cloned.intent = { ...cloned.intent, caption: `${source.intent.caption} (clone)` };
+    markGraphDirty(get);
+    set((s) => ({ nodes: [...s.nodes, cloned], isDirty: true }));
+    return cloned.nodeId;
   },
 
   updateNode: (nodeId, patch) => {
