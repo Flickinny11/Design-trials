@@ -25,6 +25,10 @@ import type {
 } from '@/lib/prism-graph/types';
 import { loadFromHomeHub, loadFromHomeHubFile } from '@/lib/prism-graph/loader';
 import { applyPlanRendererDefaults } from '@/lib/prism/codegen/plan-output-hook';
+import {
+  composeCloneCommitCaption,
+  hubTitleFor,
+} from '@/lib/editor/clone-commit';
 
 export interface SaveToServerResult {
   ok: boolean;
@@ -52,6 +56,10 @@ interface GraphSourceState {
   // HL04 mutators (Plan §P5)
   addNode: (input: Partial<PrismNode> & { parentHubId: string }) => string;
   cloneNode: (sourceId: string) => string;
+  // EBR2-F-05 / §R2-F SC-076 — Pointer-up commit of a Clone-drag. Re-parents
+  // `cloneId` to `hubId` and rewrites the caption to advertise the new hub.
+  // Returns true on success, false if either id does not resolve.
+  commitClone: (cloneId: string, hubId: string) => boolean;
   updateNode: (nodeId: string, patch: Partial<PrismNode>) => void;
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
   removeNode: (nodeId: string) => void;
@@ -203,6 +211,39 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, cloned], isDirty: true }));
     return cloned.nodeId;
+  },
+
+  // EBR2-F-05 / §R2-F SC-076 — Pointer-up commit of a Clone-drag. The
+  // GalaxyCloneDragLayer pointerup handler resolves the nearest hub via
+  // findNearestHub (EBR2-F-04) and calls this action with the resolved
+  // (cloneId, hubId) pair. The action:
+  //   - re-parents the clone (parentHubId := hubId)
+  //   - rewrites intent.caption via composeCloneCommitCaption so the
+  //     Inspector reflects the new parent (subtype is intentionally
+  //     untouched — it carries over from source per SC-076)
+  // Returns false if either id fails to resolve; no mutation occurs in that
+  // case so the operator can retry the drop without corrupting state.
+  commitClone: (cloneId, hubId) => {
+    const state = get();
+    const clone = state.nodes.find((n) => n.nodeId === cloneId);
+    const hub = state.hubs.find((h) => h.hubId === hubId);
+    if (!clone || !hub) return false;
+    const title = hubTitleFor(hub);
+    const newCaption = composeCloneCommitCaption(clone.intent.caption, title);
+    markGraphDirty(get);
+    set((s) => ({
+      nodes: s.nodes.map((n) =>
+        n.nodeId === cloneId
+          ? {
+              ...n,
+              parentHubId: hubId,
+              intent: { ...n.intent, caption: newCaption },
+            }
+          : n,
+      ),
+      isDirty: true,
+    }));
+    return true;
   },
 
   updateNode: (nodeId, patch) => {

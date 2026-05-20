@@ -361,6 +361,12 @@ function GalaxyCloneDragLayer({
   const draggingNearestHubId = useGraphEditorStore(
     (s) => s.draggingNearestHubId,
   );
+  // EBR2-F-05 / §R2-F SC-076 — pointerup commits the clone to the nearest
+  // hub via the source-store action, then clears the three drag slots in
+  // lockstep. clearDraggingClone leaves selectedNodeId untouched (INV-20).
+  const clearDraggingClone = useGraphEditorStore(
+    (s) => s.clearDraggingClone,
+  );
 
   // Reusable buffers so pointermove allocates nothing per-frame.
   const raycasterRef = useRef(new THREE.Raycaster());
@@ -394,11 +400,35 @@ function GalaxyCloneDragLayer({
       setDraggingNearestHub(tether.nearestHubId);
     };
 
+    // EBR2-F-05 / §R2-F SC-076 — Pointer-up commits the clone. We read the
+    // editor store imperatively here (rather than capturing via closure)
+    // because the listener runs from a fresh event tick after the
+    // pointermove handler last wrote `draggingNearestHubId`; the store-state
+    // snapshot inside the listener is the source-of-truth at release time.
+    const handleUp = () => {
+      const ed = useGraphEditorStore.getState();
+      const cloneId = ed.draggingNodeId;
+      const hubId = ed.draggingNearestHubId;
+      if (cloneId && hubId) {
+        useGraphSourceStore.getState().commitClone(cloneId, hubId);
+      }
+      clearDraggingClone();
+    };
+
     el.addEventListener('pointermove', handleMove);
+    el.addEventListener('pointerup', handleUp);
     return () => {
       el.removeEventListener('pointermove', handleMove);
+      el.removeEventListener('pointerup', handleUp);
     };
-  }, [gl, camera, hubs, setDraggingPointerWorld, setDraggingNearestHub]);
+  }, [
+    gl,
+    camera,
+    hubs,
+    setDraggingPointerWorld,
+    setDraggingNearestHub,
+    clearDraggingClone,
+  ]);
 
   // Drive the line geometry from store state. The line endpoints are kept
   // in sync via useFrame so the visual updates smoothly even between

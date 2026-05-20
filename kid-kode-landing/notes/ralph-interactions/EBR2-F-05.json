@@ -1,7 +1,7 @@
 {
   "task_id": "EBR2-F-05",
   "url_path": "/",
-  "_comment": "Pointer-up commits clone — sets parentHubId on the clone to draggingNearestHubId, updates caption/subtype, clears drag state. Depends on EBR2-F-03 (cloneNode + draggingNodeId) and EBR2-F-04 (drag listener computes nearestHubId).",
+  "_comment": "Pointer-up commits clone (§R2-F SC-076). Simulates the Inspector Clone flow (cloneNode → setViewMode('galaxy') → setDraggingNode(newId)), drives pointermove so the GalaxyCloneDragLayer resolves nearestHubId, then dispatches pointerup. After pointer-up: clone.parentHubId is set to the resolved hub; intent.caption carries the new hub-title prefix; draggingNodeId/draggingNearestHubId/draggingPointerWorld all clear.",
   "steps": [
     { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
     {
@@ -11,24 +11,34 @@
     { "action": "wait_ms", "duration_ms": 1500 },
     {
       "action": "evaluate",
-      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); src.cloneNode(node.nodeId); window.__EBR2_F_05_CLONE_ID__ = ed.draggingNodeId; return ed.draggingNodeId; })()"
-    },
-    { "action": "wait_ms", "duration_ms": 1000 },
-    {
-      "action": "evaluate",
-      "js": "(() => { const canvas = document.querySelector('canvas'); const rect = canvas.getBoundingClientRect(); const tx = rect.left + rect.width * 0.7; const ty = rect.top + rect.height * 0.5; canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: tx, clientY: ty, bubbles: true, pointerId: 1 })); return { tx, ty }; })()"
-    },
-    { "action": "wait_ms", "duration_ms": 500 },
-    { "action": "screenshot", "name": "before-pointerup.png" },
-    {
-      "action": "evaluate",
-      "js": "(() => { const canvas = document.querySelector('canvas'); const rect = canvas.getBoundingClientRect(); const tx = rect.left + rect.width * 0.7; const ty = rect.top + rect.height * 0.5; canvas.dispatchEvent(new PointerEvent('pointerup', { clientX: tx, clientY: ty, bubbles: true, pointerId: 1 })); return true; })()"
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; const sourceParent = node.parentHubId; const newId = src.cloneNode(node.nodeId); ed.setViewMode('galaxy'); ed.setEditorRenderMode('topology'); ed.setDraggingNode(newId); ed.selectNode(newId); window.__EBR2_F_05_CLONE_ID__ = newId; window.__EBR2_F_05_SOURCE_PARENT__ = sourceParent; return { newId, sourceParent }; })()"
     },
     { "action": "wait_ms", "duration_ms": 1200 },
     {
       "action": "assert",
       "type": "evaluate_truthy",
-      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const cloneId = window.__EBR2_F_05_CLONE_ID__; if (!cloneId) return false; const clone = src.nodes.find((n) => n.nodeId === cloneId); return ed.draggingNodeId === null && !!clone && typeof clone.parentHubId === 'string' && clone.parentHubId.length > 0; })()"
+      "js": "(() => { const ed = window.__PRISM_DEBUG_STORES__.graphEditor.getState(); return ed.viewMode === 'galaxy' && typeof ed.draggingNodeId === 'string' && ed.draggingNodeId === window.__EBR2_F_05_CLONE_ID__; })()"
+    },
+    {
+      "action": "evaluate",
+      "js": "(() => { const canvas = document.querySelector('canvas'); if (!canvas) return null; const rect = canvas.getBoundingClientRect(); const cx = rect.left + rect.width * 0.7; const cy = rect.top + rect.height * 0.5; for (let i = 0; i < 10; i += 1) { canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: cx + i, clientY: cy + i, bubbles: true, pointerId: 1 })); } return { cx, cy }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const ed = window.__PRISM_DEBUG_STORES__.graphEditor.getState(); return typeof ed.draggingNearestHubId === 'string' && ed.draggingNearestHubId.length > 0; })()"
+    },
+    { "action": "screenshot", "name": "before-pointerup.png" },
+    {
+      "action": "evaluate",
+      "js": "(() => { const canvas = document.querySelector('canvas'); const rect = canvas.getBoundingClientRect(); const cx = rect.left + rect.width * 0.7; const cy = rect.top + rect.height * 0.5; window.__EBR2_F_05_RESOLVED_HUB__ = window.__PRISM_DEBUG_STORES__.graphEditor.getState().draggingNearestHubId; canvas.dispatchEvent(new PointerEvent('pointerup', { clientX: cx, clientY: cy, bubbles: true, pointerId: 1 })); return window.__EBR2_F_05_RESOLVED_HUB__; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1200 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const cloneId = window.__EBR2_F_05_CLONE_ID__; const hubId = window.__EBR2_F_05_RESOLVED_HUB__; if (!cloneId || !hubId) return false; const clone = src.nodes.find((n) => n.nodeId === cloneId); if (!clone) return false; return ed.draggingNodeId === null && ed.draggingNearestHubId === null && ed.draggingPointerWorld === null && clone.parentHubId === hubId && typeof clone.intent.caption === 'string' && /\\(clone\\)$/.test(clone.intent.caption); })()"
     },
     { "action": "screenshot", "name": "after.png" },
     { "action": "assert", "type": "no_console_errors" },

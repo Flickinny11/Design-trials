@@ -210,6 +210,14 @@ interface GraphEditorState {
    */
   setDraggingPointerWorld: (p: { x: number; y: number; z: number } | null) => void;
   setDraggingNearestHub: (hubId: string | null) => void;
+
+  /**
+   * EBR2-F-05 / §R2-F SC-076 — Pointer-up commit clears all three drag
+   * slots in lockstep. Selection (selectedNodeId) is intentionally NOT
+   * touched: per INV-20 the clone stays selected at its new parent so the
+   * Inspector follows the committed entry.
+   */
+  clearDraggingClone: () => void;
 }
 
 export const useGraphEditorStore = create<GraphEditorState>()(
@@ -417,5 +425,13 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // commit clears them in lockstep with `draggingNodeId`.
     setDraggingPointerWorld: (p) => set({ draggingPointerWorld: p }),
     setDraggingNearestHub: (hubId) => set({ draggingNearestHubId: hubId }),
+    // EBR2-F-05 / §R2-F SC-076 — Lockstep clear of the three Clone-drag
+    // slots on pointer-up. selectedNodeId is preserved (INV-20).
+    clearDraggingClone: () =>
+      set({
+        draggingNodeId: null,
+        draggingNearestHubId: null,
+        draggingPointerWorld: null,
+      }),
   }))
 );
