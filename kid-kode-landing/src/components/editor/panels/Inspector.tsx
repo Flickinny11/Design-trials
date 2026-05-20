@@ -75,6 +75,13 @@ export default function Inspector() {
   // store layer so we only need the slice + setter here.
   const editorMode = useGraphEditorStore((s) => s.editorMode);
   const setEditorMode = useGraphEditorStore((s) => s.setEditorMode);
+  // EBR2-F-03 / §R2-F SC-075 — Clone-drag handoff: the Inspector "Clone"
+  // button parks the freshly-cloned node id on `draggingNodeId` and auto-
+  // switches the view to galaxy so the user can drop the clone onto its
+  // nearest hub. EBR2-F-04 will attach the cursor→nearest-hub listener;
+  // EBR2-F-05 will commit on pointer-up.
+  const setDraggingNode = useGraphEditorStore((s) => s.setDraggingNode);
+  const selectNode = useGraphEditorStore((s) => s.selectNode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -148,6 +155,27 @@ export default function Inspector() {
     if (r.ok) rebuildNode(selectedId);
     setSaving(false);
     if (!r.ok) setSaveError(r.error ?? 'save failed');
+  };
+
+  // EBR2-F-03 / §R2-F SC-075 — Clone button handler. Sequence:
+  //   1. Invoke source-store cloneNode(sourceId) → deep clone + new id.
+  //   2. Exit edit mode (canvas-mode gizmo never persists into galaxy).
+  //   3. Auto-switch viewMode → 'galaxy' so the user can re-parent.
+  //   4. Park the new id on `draggingNodeId` for the EBR2-F-04 listener.
+  //   5. Move selection to the clone so the Inspector follows.
+  //
+  // FP-11 — all editor-store mutations route through actions; no direct
+  // `getState().X = …` writes. Source-store mutation uses the dedicated
+  // cloneNode action (FP-15 does not apply: cloneNode is the legal entry
+  // point for clone, not an updateNode bypass).
+  const handleClone = () => {
+    if (!selectedId) return;
+    const newId = useGraphSourceStore.getState().cloneNode(selectedId);
+    if (!newId) return;
+    setEditorMode('idle');
+    setViewMode('galaxy');
+    setDraggingNode(newId);
+    selectNode(newId);
   };
 
   const handlePreviewInAppUi = () => {
@@ -341,6 +369,22 @@ export default function Inspector() {
             className="px-2.5 h-7 rounded-md text-[10px] font-mono bg-[#a978ff]/20 hover:bg-[#a978ff]/30 border border-[#a978ff]/40 text-[#e1cfff] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? 'Saving…' : 'Save & Rebuild'}
+          </button>
+          {/* EBR2-F-03 / §R2-F SC-075 — Clone: deep-clones the selected node
+              via useGraphSourceStore.cloneNode, switches viewMode to galaxy,
+              and parks the new id on draggingNodeId for the nearest-hub
+              drag-snap flow (EBR2-F-04..F-05). Disabled until a node is
+              selected. */}
+          <button
+            type="button"
+            data-role="clone"
+            data-testid="inspector-clone"
+            disabled={!selectedId}
+            onClick={handleClone}
+            title="Clone node and drop into galaxy"
+            className="px-2.5 h-7 rounded-md text-[10px] font-mono bg-[#55e6a5]/15 hover:bg-[#55e6a5]/25 border border-[#55e6a5]/40 text-[#a8efce] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Clone
           </button>
           <button
             type="button"

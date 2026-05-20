@@ -115,6 +115,13 @@ interface GraphEditorState {
   // identity for the rebuilt node changes; siblings' identities stay stable.
   nodeRebuildVersion: Record<string, number>;
 
+  // EBR2-F-03 / §R2-F SC-075 — the id of the node currently attached to the
+  // cursor for the Clone-drag flow. Set by the Inspector "Clone" button to
+  // the freshly-cloned node id; cleared on pointer-up by EBR2-F-05 once the
+  // clone commits to its nearest hub. Selection state is independent: per
+  // INV-20, `selectedNodeId` survives the auto-switch into galaxy.
+  draggingNodeId: string | null;
+
   // Performance
   qualityMode: 'auto' | 'high' | 'medium' | 'low';
 
@@ -176,6 +183,15 @@ interface GraphEditorState {
    * target node's wrapper group on the next render frame.
    */
   bumpNodeRebuildVersion: (nodeId: string) => void;
+
+  /**
+   * EBR2-F-03 / §R2-F SC-075 / FP-11 — action setter for the Clone-drag
+   * slot. The Inspector Clone button calls this with the freshly-cloned
+   * node id after `cloneNode`; EBR2-F-05 will clear it on pointer-up
+   * commit. Direct mutation (`useGraphEditorStore.getState().draggingNodeId
+   * = …`) is forbidden by FP-11; consumers must route through this action.
+   */
+  setDraggingNode: (id: string | null) => void;
 }
 
 export const useGraphEditorStore = create<GraphEditorState>()(
@@ -213,6 +229,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     pinnedPositions: new Map(),
     cameraPoseByMode: {},
     nodeRebuildVersion: {},
+    // EBR2-F-03 / §R2-F SC-075 — null until the Inspector Clone button
+    // fires; EBR2-F-05's pointer-up commit clears it back to null.
+    draggingNodeId: null,
     qualityMode: 'auto',
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
@@ -366,5 +385,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
           [nodeId]: (s.nodeRebuildVersion[nodeId] ?? 0) + 1,
         },
       })),
+    // EBR2-F-03 / §R2-F SC-075 / FP-11 — only legal mutator for the Clone-
+    // drag slot. Does NOT touch selectedNodeId (INV-20: selection survives).
+    setDraggingNode: (id) => set({ draggingNodeId: id }),
   }))
 );

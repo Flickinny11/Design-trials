@@ -11,7 +11,7 @@
     { "action": "wait_ms", "duration_ms": 1500 },
     {
       "action": "evaluate",
-      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); window.__EBR2_F_03_BEFORE__ = { nodeCount: src.nodes.length, selectedId: node.nodeId }; return node.nodeId; })()"
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.openInspector(); ed.setEditorMode('edit'); window.__EBR2_F_03_BEFORE__ = { nodeCount: src.nodes.length, selectedId: node.nodeId }; return node.nodeId; })()"
     },
     { "action": "wait_ms", "duration_ms": 600 },
     { "action": "wait_for", "selector": "[data-testid='inspector-clone']", "timeout_ms": 5000 },
