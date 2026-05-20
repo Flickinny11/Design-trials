@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T18:20:43Z",
+  "updatedAt": "2026-05-20T18:29:46Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 19,
-    "lastProductiveCommit": "ffa259653383bf5cac50dcb751f22fc9dba9d638"
+    "lastProductiveIteration": 20,
+    "lastProductiveCommit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "\u00a7R2-F": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 19,
-    "commit": "ffa259653383bf5cac50dcb751f22fc9dba9d638",
-    "verifiedAt": "2026-05-20T18:18:45Z",
-    "artifactHash": null,
-    "recordedAt": "2026-05-20T18:18:45Z"
+    "iteration": 20,
+    "taskId": "EBR2-F-02",
+    "commit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca",
+    "verifiedAt": "2026-05-20T18:29:46Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -225,6 +224,14 @@
       "commit": "4d8ef0f6066f80597664fe11eec0347baa03f119",
       "verifiedAt": "2026-05-20T18:20:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-01/"
+    },
+    {
+      "iteration": 20,
+      "taskId": "EBR2-F-02",
+      "phase": "\u00a7R2-F",
+      "commit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca",
+      "verifiedAt": "2026-05-20T18:29:46Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-02/"
     }
   ],
   "tasks": [
@@ -666,16 +673,16 @@
         "cd kid-kode-landing && npx tsc --noEmit",
         "cd kid-kode-landing && npm run build",
         "grep -q 'cloneNode' kid-kode-landing/src/stores/useGraphSourceStore.ts",
-        "cd kid-kode-landing && npx vitest run src/stores/useGraphSourceStore",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-F-02.clone-node-action.test.ts",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
       "haltCheck": "cloneNode(sourceId): newNodeId action exists. Deep-clones the source node, generates new id (UUID or hash-based), suffixes caption with ' (clone)', initially parents to source's parent hub. Returns new id. Unit test: clone shares no object refs with source.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca",
+      "verifiedAt": "2026-05-20T18:29:46Z",
+      "notes": "Implemented cloneNode(sourceId) on useGraphSourceStore: JSON-roundtrip deep clone, new UUID, caption + ' (clone)', source parentHubId preserved. 5/5 unit tests pass. Spec-reviewer pass 2: 'No deviations found.' Verification commands updated to point at the actual test file path (previous state pointed at src/ which vitest cannot resolve to test files).",
       "interactionScript": null
     },
     {
