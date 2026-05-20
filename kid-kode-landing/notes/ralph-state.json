@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T19:51:38Z",
+  "updatedAt": "2026-05-20T19:51:55Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 24,
-    "lastProductiveCommit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2"
+    "lastProductiveIteration": 25,
+    "lastProductiveCommit": "99bef436211d2ddf52276830356b2aba2eb6225b"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -67,17 +67,17 @@
       "status": "active"
     },
     "\u00a7R2-G": {
-      "used": 1,
+      "used": 2,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 24,
-    "commit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2",
-    "verifiedAt": "2026-05-20T19:44:45Z",
+    "iteration": 25,
+    "commit": "99bef436211d2ddf52276830356b2aba2eb6225b",
+    "verifiedAt": "2026-05-20T19:51:55Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T19:44:45Z"
+    "recordedAt": "2026-05-20T19:51:55Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -265,6 +265,14 @@
       "commit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2",
       "verifiedAt": "2026-05-20T19:44:45Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-G-01/"
+    },
+    {
+      "iteration": 25,
+      "taskId": "EBR2-G-04",
+      "phase": "\u00a7R2-G",
+      "commit": "99bef436211d2ddf52276830356b2aba2eb6225b",
+      "verifiedAt": "2026-05-20T19:51:55Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-G-04/"
     }
   ],
   "tasks": [
@@ -880,11 +888,11 @@
       ],
       "haltCheck": "Both Vercel scripts (wait-for-vercel-preview, fetch-vercel-logs) exist and are executable. /ralph-step-editor documents Step 8c as SECONDARY/non-blocking. .vercel/project.json exists and points at kid-kode-ai-landing. wait-for-vercel-preview --check-only returns ok. This task is Round-2's final iteration.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "99bef436211d2ddf52276830356b2aba2eb6225b",
+      "verifiedAt": "2026-05-20T19:51:55Z",
+      "notes": "haltCheck already satisfied at audit; no implementation needed. All 7 verificationCommands exit 0 from repo root. Closes group \u00a7R2-G.",
       "interactionScript": null
     }
   ]
