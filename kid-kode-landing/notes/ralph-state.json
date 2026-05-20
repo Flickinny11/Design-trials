@@ -11,13 +11,13 @@
   "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
   "marker": ".prism-editor-build-active",
   "modelContract": ".claude/.ralph-model",
-  "currentIteration": 18,
+  "currentIteration": 19,
   "maxIterations": 500,
   "maxIterationsPerPhase": 50,
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T17:59:08.848Z",
+  "updatedAt": "2026-05-20T18:15:00Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -33,7 +33,7 @@
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
     "lastProductiveIteration": 18,
-    "lastProductiveCommit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2"
+    "lastProductiveCommit": "bd3a3da854cc9ab6cecb99f6294cb523982f2bdc"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -74,9 +74,10 @@
   },
   "checkpoint": {
     "iteration": 18,
-    "commit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2",
-    "taskId": "EBR2-E-04",
-    "verifiedAt": "2026-05-20T17:59:08.848Z"
+    "commit": "bd3a3da854cc9ab6cecb99f6294cb523982f2bdc",
+    "verifiedAt": "2026-05-20T18:08:44Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-20T18:08:44Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -638,8 +639,8 @@
       ],
       "haltCheck": "hub-geometry.ts exports getHubWorldPositions(hubs): Map<hubId, Vector3> (reuses Phase 3 orbital math) and findNearestHub(point: Vector3, hubs: PrismHub[]): {hubId, distance}. Unit tests cover ≥3 hub layouts.",
       "kvVerify": false,
-      "status": "pending",
-      "attemptCount": 0,
+      "status": "in-progress",
+      "attemptCount": 1,
       "commit": null,
       "verifiedAt": null,
       "notes": "",
