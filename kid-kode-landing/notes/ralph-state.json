@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T18:36:09Z",
+  "updatedAt": "2026-05-20T18:49:20Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 20,
-    "lastProductiveCommit": "e464a4bca922304d23645ad3d7869a7114de67cd"
+    "lastProductiveIteration": 21,
+    "lastProductiveCommit": "25fd28310f531f9085c19769a10c2394e05bc9d0"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "\u00a7R2-F": {
-      "used": 2,
+      "used": 3,
       "cap": 50,
       "status": "active"
     },
@@ -77,7 +77,9 @@
     "commit": "e464a4bca922304d23645ad3d7869a7114de67cd",
     "verifiedAt": "2026-05-20T18:34:03Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T18:34:03Z"
+    "recordedAt": "2026-05-20T18:34:03Z",
+    "lastProductiveIteration": 21,
+    "lastProductiveCommit": "25fd28310f531f9085c19769a10c2394e05bc9d0"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -233,6 +235,14 @@
       "commit": "0f7025638467f5ecfc90e68c9e13e190c03ae8ca",
       "verifiedAt": "2026-05-20T18:29:46Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-02/"
+    },
+    {
+      "iteration": 21,
+      "taskId": "EBR2-F-03",
+      "phase": "\u00a7R2-F",
+      "commit": "25fd28310f531f9085c19769a10c2394e05bc9d0",
+      "verifiedAt": "2026-05-20T18:49:20Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-03/"
     }
   ],
   "tasks": [
@@ -704,11 +714,11 @@
       ],
       "haltCheck": "Inspector renders Clone button (enabled when a node is selected). Click: cloneNode(selectedId) \u2192 editorMode='idle' \u2192 viewMode='galaxy' \u2192 draggingNodeId=newId. Snapshot proves: Clone \u2192 galaxy mode active \u2192 draggingNodeId set.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "25fd28310f531f9085c19769a10c2394e05bc9d0",
+      "verifiedAt": "2026-05-20T18:49:20Z",
+      "notes": "SHOULD FIX (spec-reviewer): setEditorMode('idle') in handleClone is redundant since selectNode also resets editorMode (useGraphEditorStore.ts:263). Defer to later cleanup task. | SHOULD FIX (spec-reviewer): useGraphSourceStore.cloneNode return type should be 'string | null' to distinguish miss path from empty-id; defer.",
       "interactionScript": "notes/ralph-interactions/EBR2-F-03.json"
     },
     {
