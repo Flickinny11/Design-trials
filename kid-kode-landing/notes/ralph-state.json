@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T17:40:36Z",
+  "updatedAt": "2026-05-20T17:59:08.848Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 17,
-    "lastProductiveCommit": "741403d96f2d1b2dccf37262b59b664f307bfdd6"
+    "lastProductiveIteration": 18,
+    "lastProductiveCommit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -57,7 +57,7 @@
       "status": "active"
     },
     "§R2-E": {
-      "used": 3,
+      "used": 4,
       "cap": 50,
       "status": "active"
     },
@@ -73,10 +73,10 @@
     }
   },
   "checkpoint": {
-    "iteration": 17,
-    "commit": "741403d96f2d1b2dccf37262b59b664f307bfdd6",
-    "taskId": "EBR2-E-03",
-    "verifiedAt": "2026-05-19T18:33:00Z"
+    "iteration": 18,
+    "commit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2",
+    "taskId": "EBR2-E-04",
+    "verifiedAt": "2026-05-20T17:59:08.848Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -208,6 +208,14 @@
       "commit": "741403d96f2d1b2dccf37262b59b664f307bfdd6",
       "verifiedAt": "2026-05-19T18:33:00Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-03/"
+    },
+    {
+      "iteration": 18,
+      "taskId": "EBR2-E-04",
+      "phase": "§R2-E",
+      "commit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2",
+      "verifiedAt": "2026-05-20T17:59:08.848Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-E-04/"
     }
   ],
   "tasks": [
@@ -607,10 +615,10 @@
       ],
       "haltCheck": "Save-and-Rebuild button performs Save + locates the mounted THREE.Object3D for the node via liveResult lookup → calls object.userData.cleanup() → re-invokes createNode(node.config, ctx) → re-mounts at the same scenePosition. Test asserts: target node's THREE.Object3D reference changed (new object) AND other nodes' references are stable (Object.is identity preserved). No other node touched. Other nodes' scene positions unchanged.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
+      "commit": "d260d52bc821c424b4e3b1976df2d3b32e070fd2",
+      "verifiedAt": "2026-05-20T17:59:08.848Z",
       "notes": "",
       "interactionScript": "notes/ralph-interactions/EBR2-E-04.json"
     },
