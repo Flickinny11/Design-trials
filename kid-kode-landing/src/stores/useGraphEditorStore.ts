@@ -122,6 +122,15 @@ interface GraphEditorState {
   // INV-20, `selectedNodeId` survives the auto-switch into galaxy.
   draggingNodeId: string | null;
 
+  // EBR2-F-04 / §R2-F SC-077 — Clone-drag listener output. While
+  // `draggingNodeId != null` in galaxy mode, the pointermove handler
+  // unprojects the cursor to a world point and resolves the nearest hub via
+  // `hub-geometry.findNearestHub`. Both slots are independent of
+  // `draggingNodeId`; EBR2-F-05's pointer-up commit is responsible for
+  // clearing all three together.
+  draggingPointerWorld: { x: number; y: number; z: number } | null;
+  draggingNearestHubId: string | null;
+
   // Performance
   qualityMode: 'auto' | 'high' | 'medium' | 'low';
 
@@ -192,6 +201,15 @@ interface GraphEditorState {
    * = …`) is forbidden by FP-11; consumers must route through this action.
    */
   setDraggingNode: (id: string | null) => void;
+
+  /**
+   * EBR2-F-04 / §R2-F SC-077 — pointermove handler routes the unprojected
+   * cursor-world position through this setter. The galaxy-drag overlay
+   * reads `draggingPointerWorld` for the tether-start endpoint, and the
+   * resolved `draggingNearestHubId` for the snap target.
+   */
+  setDraggingPointerWorld: (p: { x: number; y: number; z: number } | null) => void;
+  setDraggingNearestHub: (hubId: string | null) => void;
 }
 
 export const useGraphEditorStore = create<GraphEditorState>()(
@@ -232,6 +250,11 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // EBR2-F-03 / §R2-F SC-075 — null until the Inspector Clone button
     // fires; EBR2-F-05's pointer-up commit clears it back to null.
     draggingNodeId: null,
+    // EBR2-F-04 / §R2-F SC-077 — null until the galaxy-mode drag listener
+    // first fires pointermove with `draggingNodeId` set. EBR2-F-05 clears
+    // all three drag slots together on the pointer-up commit.
+    draggingPointerWorld: null,
+    draggingNearestHubId: null,
     qualityMode: 'auto',
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
@@ -388,5 +411,11 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // EBR2-F-03 / §R2-F SC-075 / FP-11 — only legal mutator for the Clone-
     // drag slot. Does NOT touch selectedNodeId (INV-20: selection survives).
     setDraggingNode: (id) => set({ draggingNodeId: id }),
+    // EBR2-F-04 / §R2-F SC-077 — galaxy-drag pointermove writes the
+    // unprojected cursor world position and the resolved nearest-hub id
+    // through these setters. Both default to null; EBR2-F-05's pointer-up
+    // commit clears them in lockstep with `draggingNodeId`.
+    setDraggingPointerWorld: (p) => set({ draggingPointerWorld: p }),
+    setDraggingNearestHub: (hubId) => set({ draggingNearestHubId: hubId }),
   }))
 );
