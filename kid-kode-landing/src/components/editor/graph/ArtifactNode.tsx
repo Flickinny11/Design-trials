@@ -138,6 +138,33 @@ export function __resetArtifactNodeCache(): void {
   cachedFactory = null;
 }
 
+/** EBR2-E-04 / §R2-E SC-074 — single-node cache eviction with userData.cleanup.
+ *  Drops every cached Object3D produced for `nodeId` across all layouts
+ *  ('topology' + 'scene'), running each entry's userData.cleanup() to release
+ *  GPU resources and kill GSAP timelines (INV-14). Other nodes' cached
+ *  entries are not touched. Returns true iff at least one entry was evicted. */
+export function evictArtifactCacheEntry(nodeId: string): boolean {
+  const layouts: ArtifactNodeLayout[] = ['topology', 'scene'];
+  let evicted = false;
+  for (const layout of layouts) {
+    const key = `${nodeId}|${layout}`;
+    const entry = cache.get(key);
+    if (!entry) continue;
+    const cleanup = (entry.object.userData as { cleanup?: () => void }).cleanup;
+    if (typeof cleanup === 'function') {
+      try { cleanup(); } catch { /* ignore */ }
+    }
+    cache.delete(key);
+    evicted = true;
+  }
+  return evicted;
+}
+
+/** Test diagnostic — current size of the artifact cache. */
+export function getArtifactCacheSize(): number {
+  return cache.size;
+}
+
 interface ArtifactNodeProps {
   node: PrismNode;
   layout?: ArtifactNodeLayout;

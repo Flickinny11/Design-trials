@@ -107,6 +107,14 @@ interface GraphEditorState {
   // mode's controls write its current pose via `checkpointCameraPose`.
   cameraPoseByMode: Partial<Record<ViewMode, CameraPose>>;
 
+  // EBR2-E-04 / §R2-E SC-074 + INV-26 + RA-16 — per-node rebuild-version
+  // counter. Incremented by `bumpNodeRebuildVersion(nodeId)` from the
+  // Save-and-Rebuild orchestrator (`src/lib/editor/rebuild-node.ts`). The
+  // `AssembledSceneNode` parent keys its child by `nodeId + ':' + version`,
+  // so a bump remounts *exactly one* wrapper group — the THREE.Object3D
+  // identity for the rebuilt node changes; siblings' identities stay stable.
+  nodeRebuildVersion: Record<string, number>;
+
   // Performance
   qualityMode: 'auto' | 'high' | 'medium' | 'low';
 
@@ -161,6 +169,13 @@ interface GraphEditorState {
   pinNode: (id: string, pos: { x: number; y: number; z: number }) => void;
   clearPinnedPositions: () => void;
   setQualityMode: (m: 'auto' | 'high' | 'medium' | 'low') => void;
+  /**
+   * EBR2-E-04 / §R2-E SC-074 — increment the per-node rebuild-version
+   * counter. Other nodes' versions are untouched (RA-16: "other nodes are
+   * not touched"). The keyed `AssembledSceneNode` then remounts only the
+   * target node's wrapper group on the next render frame.
+   */
+  bumpNodeRebuildVersion: (nodeId: string) => void;
 }
 
 export const useGraphEditorStore = create<GraphEditorState>()(
@@ -197,6 +212,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     hubRevealDurationMs: 800,
     pinnedPositions: new Map(),
     cameraPoseByMode: {},
+    nodeRebuildVersion: {},
     qualityMode: 'auto',
 
     setZoomLevel: (l) => set({ zoomLevel: l }),
@@ -340,5 +356,15 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       }),
     clearPinnedPositions: () => set({ pinnedPositions: new Map() }),
     setQualityMode: (m) => set({ qualityMode: m }),
+    // EBR2-E-04 / §R2-E SC-074 — single-node rebuild trigger. Increments only
+    // the target node's version; absent entries default to 0. Other nodes'
+    // counters are not touched (RA-16).
+    bumpNodeRebuildVersion: (nodeId) =>
+      set((s) => ({
+        nodeRebuildVersion: {
+          ...s.nodeRebuildVersion,
+          [nodeId]: (s.nodeRebuildVersion[nodeId] ?? 0) + 1,
+        },
+      })),
   }))
 );
