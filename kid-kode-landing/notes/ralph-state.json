@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T19:44:26Z",
+  "updatedAt": "2026-05-20T19:44:45Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 23,
-    "lastProductiveCommit": "b689e9199be3c9af9e2a5e527e67c53466e35f2b"
+    "lastProductiveIteration": 24,
+    "lastProductiveCommit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2"
   },
   "phaseCaps": {
     "\u00a7R2-A": {
@@ -67,17 +67,17 @@
       "status": "active"
     },
     "\u00a7R2-G": {
-      "used": 0,
+      "used": 1,
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
-    "iteration": 23,
-    "commit": "b689e9199be3c9af9e2a5e527e67c53466e35f2b",
-    "verifiedAt": "2026-05-20T19:42:36Z",
+    "iteration": 24,
+    "commit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2",
+    "verifiedAt": "2026-05-20T19:44:45Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T19:42:36Z"
+    "recordedAt": "2026-05-20T19:44:45Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -257,6 +257,14 @@
       "commit": "0e3ccf3a2616e785e2155443c15c817c940fbe7f",
       "verifiedAt": "2026-05-20T19:40:16.732Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-05/"
+    },
+    {
+      "iteration": 24,
+      "taskId": "EBR2-G-01",
+      "phase": "\u00a7R2-G",
+      "commit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2",
+      "verifiedAt": "2026-05-20T19:44:45Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-G-01/"
     }
   ],
   "tasks": [
@@ -797,11 +805,11 @@
       ],
       "haltCheck": "wait-for-vercel-preview.mjs exists, is executable, accepts --commit=<sha>, --check-only flag, --timeout-ms, --token-env (default VERCEL_TOKEN). Returns JSON {url, deployState, durationMs} on stdout when state==READY; exits 0. Exits non-zero on ERROR or timeout. --check-only returns immediately reporting script presence without polling.",
       "kvVerify": false,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "cb67e9a86922bcc73c3bd4779459e06b8f58bdb2",
+      "verifiedAt": "2026-05-20T19:44:45Z",
+      "notes": "haltCheck already satisfied at audit; no implementation needed. Script authored 2026-05-18; verify commands all exit 0.",
       "interactionScript": null
     },
     {
