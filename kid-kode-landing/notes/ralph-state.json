@@ -17,7 +17,7 @@
   "maxAttemptsPerTask": 3,
   "status": "running",
   "createdAt": "2026-05-18T15:00:00Z",
-  "updatedAt": "2026-05-20T19:29:38.107Z",
+  "updatedAt": "2026-05-20T19:40:16.732Z",
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +32,8 @@
   "convergence": {
     "stagnantStreak": 0,
     "stagnantThreshold": 5,
-    "lastProductiveIteration": 22,
-    "lastProductiveCommit": "6bd22b6309a9e82787cdc80b32512a2537ae2f91"
+    "lastProductiveIteration": 23,
+    "lastProductiveCommit": "0e3ccf3a2616e785e2155443c15c817c940fbe7f"
   },
   "phaseCaps": {
     "§R2-A": {
@@ -62,7 +62,7 @@
       "status": "active"
     },
     "§R2-F": {
-      "used": 4,
+      "used": 5,
       "cap": 50,
       "status": "active"
     },
@@ -73,11 +73,11 @@
     }
   },
   "checkpoint": {
-    "iteration": 22,
-    "commit": "6bd22b6309a9e82787cdc80b32512a2537ae2f91",
-    "verifiedAt": "2026-05-20T19:25:57Z",
+    "iteration": 23,
+    "commit": "0e3ccf3a2616e785e2155443c15c817c940fbe7f",
+    "verifiedAt": "2026-05-20T19:40:16.732Z",
     "artifactHash": null,
-    "recordedAt": "2026-05-20T19:25:57Z"
+    "recordedAt": "2026-05-20T19:40:16.732Z"
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -249,6 +249,14 @@
       "commit": "7fbaedad414f37ab9332bf3741daaabee8bca168",
       "verifiedAt": "2026-05-20T19:15:05.766Z",
       "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-04/"
+    },
+    {
+      "iteration": 23,
+      "taskId": "EBR2-F-05",
+      "phase": "§R2-F",
+      "commit": "0e3ccf3a2616e785e2155443c15c817c940fbe7f",
+      "verifiedAt": "2026-05-20T19:40:16.732Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EBR2-F-05/"
     }
   ],
   "tasks": [
@@ -766,11 +774,11 @@
       ],
       "haltCheck": "PointerUp during clone-drag: nearest-hub at release becomes the clone's parentHubId; caption updates to reflect new parent context (e.g. inherit hub-name prefix); subtype carries over from source. draggingNodeId clears. Inspector returns to the cloned node selected at its new parent. Source-store snapshot before/after asserts the new entry.",
       "kvVerify": true,
-      "status": "in-progress",
+      "status": "done",
       "attemptCount": 1,
-      "commit": null,
-      "verifiedAt": null,
-      "notes": "",
+      "commit": "0e3ccf3a2616e785e2155443c15c817c940fbe7f",
+      "verifiedAt": "2026-05-20T19:40:16.732Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX (non-blocking): (1) composeCloneCommitCaption em-dash prefix-strip regex is brittle for user captions containing \" — \"; consider hub-title-list-aware strip. (2) handleUp clears drag state on commit-fail; docstring says source-store retry path exists — true for source store, not editor drag slots. OPTIONAL: hubTitleFor fallback to hubId yields ugly captions; commitClone has no clone-only guard (functionally generic reparent). Visual snapshots match haltCheck.",
       "interactionScript": "notes/ralph-interactions/EBR2-F-05.json"
     },
     {
