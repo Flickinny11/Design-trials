@@ -634,7 +634,7 @@
       "verificationCommands": [
         "cd kid-kode-landing && npx tsc --noEmit",
         "test -f kid-kode-landing/src/lib/prism-graph/hub-geometry.ts",
-        "cd kid-kode-landing && npx vitest run src/lib/prism-graph/hub-geometry",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EBR2-F-01.hub-geometry.test.ts",
         "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD"
       ],
       "haltCheck": "hub-geometry.ts exports getHubWorldPositions(hubs): Map<hubId, Vector3> (reuses Phase 3 orbital math) and findNearestHub(point: Vector3, hubs: PrismHub[]): {hubId, distance}. Unit tests cover ≥3 hub layouts.",
