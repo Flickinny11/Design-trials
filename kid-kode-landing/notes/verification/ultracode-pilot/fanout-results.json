@@ -1,0 +1,178 @@
+[
+  {
+    "name": "slide",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "A CPU transform/material primitive: the card subject starts offset by `distance` along `angleDeg` in XY and its offset shrinks to 0 over `duration` using the eased `curve`, with material opacity = eased phase, all read live in seek() so control changes apply with no rebuild.",
+    "notes": "Followed the fade.ts reference (transform/material, single 'card' Mesh subject). Params read live via num/str inside seek(). dispose() restores subject.position x/y to baseline and resets opacity to 1. Tests: conformance + deterministic play (|pos@0| > |pos@dur|+0.3 and opacity rises) + a controls assertion (distance scales initial offset). vitest: 3/3 passed. No new deps; only 'three' + relative imports used; no '@/' inside the primitive (test file uses '@/' which is allowed). No guard interactions."
+  },
+  {
+    "name": "scale-pop",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "In seek() it eases phase(t,dur) with the chosen curve (default backOut for overshoot) to scale the card's subject from startScale to 1 off its base scale, ramps material opacity 0->1, and unwinds a Z spin of spinDeg over the tween; all params (duration, startScale, spinDeg, curve) are read live per-frame so control changes take effect with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed) using the fade reference as template. Card subject is a single Mesh; materialsOf() traverses for the opacity fade. dispose() restores subject.scale, rotation.z, and opacity to their captured base values. Test asserts scale.x grows by >0.3 from t=0 to t=dur (start<0.5, end>0.9) and that a larger startScale lifts the initial scale. All 3 tests (conforms/plays/controls) pass under vitest."
+  },
+  {
+    "name": "spin",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "seek() reads params live (cycle/turns/axis) and sets the card subject's rotation about the chosen axis to a looping phase * turns * 2pi over each cycle, so faders/knob/dropdown changes take effect with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed) on the 'card' single-Mesh subject. baseRot captured at build; dispose() restores the original rotation. Looping via modulo on cycle. All 3 vitest tests pass (conformance + deterministic play assertion >0.1 rad + axis-selection control assertion). No new imports beyond 'three' and relative contract/base helpers; guard tokens avoided."
+  },
+  {
+    "name": "parallax",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Reads s = target.userData.scroll (0..1, falling back to phase(t,2) when absent) and translates the card subject along the chosen axis by (s-0.5)*range*depth, with range/depth/axis read live inside seek() so control changes apply with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed for translation) \u2014 fully observable and deterministic. duration() returns 2; dispose() restores the subject's original x/y position. Off-axis coordinate is also pinned to base each seek so axis changes don't leave residual offsets. All 3 vitest tests pass (conformance + plays + axis-control). Card subject is a single Mesh per subjects.ts, so target.subject is non-null."
+  },
+  {
+    "name": "pin-reveal",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Reads s = target.userData.scroll (falling back to t/duration), eases it via the curve control, then drives the card subject's uniform scale from startScale->1 and all subject materials' opacity 0->1, with startScale/duration/curve params read live inside seek().",
+    "notes": "Transform/material primitive modeled on fade.ts (no TSL needed). startScale is clamped to its 0.3..1 range; baseScale is captured at build and dispose() restores both scale and opacity. Default driver scroll; conformance harness seeds userData.scroll so seek() across the timeline works headlessly. All 3 vitest cases (conforms/plays/controls) pass."
+  },
+  {
+    "name": "magnetic",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Each seek reads target.userData.pointer (-1..1, clamped, fallback {0,0}) and lerps the card subject's x/y toward base + pointer*maxOffset by `strength` per call, so maxOffset bounds reach and strength sets spring stiffness; CPU-transform only.",
+    "notes": "Pure transform primitive (no material swap, no TSL needed), so no color-uniform guard concerns. duration() returns 2 so the synthetic orbiting pointer animates the tile. dispose() restores the subject's original x/y. Imports are 'three' + relative '../base'/'../contract' only; no '@/' in the primitive (test file uses '@/' which is allowed). Deterministic play test: pointer={x:1,y:0} -> pos.x>0; reset+dispose, pointer={x:-1,y:0} -> pos.x<0; right-left>0.2. Controls test asserts strength scales convergence speed. All 3 vitest cases pass."
+  },
+  {
+    "name": "tilt",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Each seek() reads target.userData.pointer live and lerps the card's rotation (relative to its base) toward {x:-p.y*maxTilt, y:p.x*maxTilt} where maxTilt=degToRad(maxTiltDeg) and the lerp factor is the smooth control, so both knobs change output with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed for a pointer tilt). seek() ignores its time arg and is driven purely by the host pointer; smoothing is per-seek-call lerp, so the test seeks ~10 times to converge before asserting opposite-sign rotation.y for pointer x=+1 vs x=-1 (difference well > 0.05). dispose() restores the subject's base rotation.x/y. duration() returns 2 per the spec. Conformance harness's pointer sweep and setControl re-seek pass cleanly."
+  },
+  {
+    "name": "split-stagger",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Decomposes the text subject into glyph children and animates each on a delayed local clock (delay=i*stagger, local phase over glyphDur=duration*0.4), rising from -rise to 0 and fading opacity 0->1 via the chosen easing curve; duration/stagger/rise/curve are read live inside seek() so control changes apply with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed) operating only on subject.children materials/positions. Glyph materials are MeshStandardMaterial already flagged transparent; materialsOf() re-forces transparent=true defensively. duration() returns last-glyph delay + glyphDur so seek(duration()) fully completes the final glyph (opacity~1, y~0); deterministic play test asserts opacity delta > 0.5 and y<0 at t=0 vs y~0 at t=duration. dispose() restores every glyph's opacity=1 and baseY. Imports are relative-only (../base, ../easing, ../contract); no @/ imports in the primitive; no guard interactions."
+  },
+  {
+    "name": "scramble",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Each glyph's (x,y) position and rotation.z is offset by a deterministic per-index hash (fract(sin(seed)*43758.5453) per channel) scaled by amplitude = intensity*(1-easeOut(phase)), so the duration fader sets the settle window and the intensity knob scales the initial jitter, decaying exactly to each glyph's recorded base transform at t=duration.",
+    "notes": "CPU/transform approach (no TSL), chosen because the behavior is per-glyph transform jitter and is directly observable/deterministic for tests. Collects glyph meshes named glyph-0..N (falls back to direct children). Records each glyph's base position/rotation.z at construction; dispose() restores all of them. No runtime RNG \u2014 hash is purely index-based. All 3 vitest tests pass (conformance, deterministic play settling to <1e-6, intensity scaling). No guard interactions: only relative imports of ../base, ../easing, ../contract and 'three'."
+  },
+  {
+    "name": "dissolve-to-dust",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "seek() eases phase over duration, then per glyph translates by a deterministic golden-angle radial direction times spread*easedPhase, scales by (1-p) toward 0, and sets material opacity to (1-p); duration/spread/curve are read live each seek so control changes apply with no rebuild.",
+    "notes": "CPU/transform approach (no TSL needed) operating on the host 'text' subject's glyph-0..N children, mirroring the fade reference. Per-glyph rest position/scale/opacity captured at build so dispose() fully restores the subject. Placeholder glyph meshes have z=0 so scatter is in-plane; uses material.transparent=true (already set by subjects). All 3 vitest tests pass (conformance, plays, controls)."
+  },
+  {
+    "name": "glass-refraction",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Swaps the host sphere's material for a transmissive MeshPhysicalNodeMaterial (transmission=1, ior/roughness/metalness=0) with a fresnel emissiveNode rim (rimColor * pow(oneMinus(normalView\u00b7viewDir), 2)); seek() drives rotation.y = t * rotateSpeed read live, while ior/roughness/rimColor flow through onParamChange.",
+    "notes": "All 3 vitest tests pass (conforms, plays rotation > 0.1 between t=0 and t=1s, rotateSpeed scales rotation). duration() is Infinity (purely stateful/time-driven rotation) \u2014 the conformance harness handles Infinity by using D=4. Imports kept strictly to 'three', 'three/webgpu', 'three/tsl', and relative ../ paths; colors are passed as numeric r,g,b uniforms (per shimmer.ts pattern) since uniform(new Color()) fails typecheck. As the spec notes, the transmissive material may look dark in-app without an env map \u2014 acceptable; the deterministic, observable behavior asserted is sphere rotation.y. dispose() restores the original material and rotation and disposes the created node material."
+  },
+  {
+    "name": "caustics",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Swaps the plane's material for a MeshBasicNodeMaterial whose colorNode layers offset sines of uv*scale into an interference web, sharpens it with pow, scales by intensity and tints it; seek() advances a time uniform and reads scale/speed/intensity live, while onParamChange() updates each uniform (tint converted to r,g,b) so control changes apply with no rebuild.",
+    "notes": "Followed the shimmer.ts TSL reference exactly: colors are numeric uniforms (uniform(c.r)...), not uniform(new Color()). subject is 'plane' so target.subject is a single subdivided Mesh; dispose() restores the original MeshStandardMaterial and disposes the node material, so the play test confirms colorNode is truthy after create and falsy after dispose. Visual brightness/web pattern is browser-verified (pure shader, cannot read pixels headlessly). All 3 vitest tests pass; both files cleared the dependency-allowlist PreToolUse guard."
+  },
+  {
+    "name": "godray",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "It swaps the host plane's material for a MeshBasicNodeMaterial whose colorNode marches 6 samples toward a time-rotated light source point, accumulating a radial shaft falloff weighted by decay^i and pulsing with a time uniform; the four knobs (intensity, decay, density, angleDeg) feed uniforms read live via onParamChange so seek reflects tweaks with no rebuild.",
+    "notes": "Pure GPU/TSL primitive. Per the play guidance the deterministic test asserts the material carries a colorNode and that seek() across the timeline does not throw (no renderer is invoked headless); actual visual godray look is browser-verified later. TSL ops imported only from 'three/tsl' (uniform, uv, vec2, vec3, float, sin, cos, mix), node material from 'three/webgpu'; colors expressed as numeric vec3 literals (no uniform(new Color())). dispose() restores the plane's original material and disposes the created material. defineAnimatable supplies controls/getParams/setControl/serialize. All 3 vitest tests pass."
+  },
+  {
+    "name": "dust-particles",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "A THREE.Points field of 400 motes (base positions cached once) drifts upward by speed*t with index-based horizontal sway scaled by drift, wrapping within the box height; seek() reads speed/size/drift live via num(params.x) so control changes apply with no rebuild.",
+    "notes": "CPU/transform approach (mutates the position BufferAttribute each seek) chosen for deterministic, headless-observable motion rather than a GPU shader. subject:'empty' so the primitive builds its own Points into target.object; dispose() removes the Points and disposes geometry+material. duration() is Infinity (time-driven, stateful field), which runConformance accepts. No TSL/uniforms needed, so no color-uniform pitfall. Allowed imports only (three + relative). All 4 vitest cases pass (conforms, plays Y-drift, drift control changes X output, dispose removes Points)."
+  },
+  {
+    "name": "sparks",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "A self-generated THREE.Points cloud (200 particles, deterministic golden-angle directions) flies outward as position = dir * speed * expoOut(loopedPhase) minus a gravity term while opacity fades 1 to 0; duration sets loop length and reach, speed scales outward velocity, spread widens the lateral cone.",
+    "notes": "Subject is 'empty' so the primitive builds its own Points into target.object. Params (duration/speed/spread) are read live inside seek() via num() so control changes apply with no rebuild \u2014 confirmed by the speed-control test. Burst loops over duration (t % dur) and opacity fades 1->0 each cycle. dispose() removes the cloud from target.object and disposes geometry + material. Only imports used: 'three', '../base', '../easing', '../contract' (all relative) \u2014 no '@/' import in the primitive file, no DOM, no new deps. Tests use the CPU/transform-observable position buffer rather than a GPU path, per anti-stuck guidance. All 4 vitest cases pass (conformance, plays, controls, dispose)."
+  },
+  {
+    "name": "smoke",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "A MeshBasicNodeMaterial replaces the plane's material; a 4-octave sin/hash fbm in TSL scrolls upward over a uTime uniform to feed colorNode (grey-blue tint) and opacityNode, with speed/density/rise/tint exposed as live uniforms updated via onParamChange and read on each seek.",
+    "notes": "Subject is 'plane' (a subdivided Mesh), so the swap targets target.subject.material; dispose restores the original material and disposes the node material. Pure-shader play test asserts colorNode/opacityNode exist and seek does not throw (visual haze is browser-verified later). Density-at-base uses (1 - uv.y)^rise falloff; rise>0 lifts the falloff. No window/document/DOM, no new deps; only 'three', 'three/tsl', 'three/webgpu' and relative imports used. All 3 vitest tests pass (conformance + plays + controls). Guard did not block the writes."
+  },
+  {
+    "name": "displacement-transition",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Swaps the host plane's material for a MeshBasicNodeMaterial whose colorNode step()s a noise-displaced wipe coordinate against a `progress` uniform that ramps 0->1 over `duration`, mixing two tints; `amount` scales the per-fragment noise perturbation (rougher edge) and `axis` (x|y) selects which UV axis the wipe sweeps along \u2014 all read live in seek()/onParamChange so changes apply with no rebuild.",
+    "notes": "Built per the frozen contract via defineAnimatable; imports only 'three', 'three/webgpu', 'three/tsl', and relative paths. Colors are passed as numeric vec3 channels (rgb() hex->r,g,b) per shimmer.ts to avoid uniform(new Color()) typecheck failure. `progress` is a normalized phase(t,duration) uniform; amount/axis re-read each seek for live tweakability. Noise is a dep-free fract(sin(dot(uv,...))) hash (simplex-noise was allowed but unnecessary and is a CPU lib, not TSL). dispose() restores the original plane material and disposes the created node material. All 3 vitest cases pass (conformance, plays/colorNode+seek, controls). Visual layer is browser-verified later as instructed."
+  },
+  {
+    "name": "wave",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "CPU vertex displacement: caches the plane's base position attribute once, then in seek() sets each vertex z = sin(baseX*frequency + t*speed)*amplitude (needsUpdate + computeVertexNormals), reading amplitude/frequency/speed live from params so control changes apply with no rebuild.",
+    "notes": "duration() is Infinity (purely stateful traveling ripple), which the conformance harness explicitly allows. dispose() restores original cached vertex positions and recomputes normals. The 'plays' test reads a single mid vertex z at t=0 vs t=0.5 (asserts diff > 0.01 per guidance); the 'controls' test sums absolute z across all vertices to robustly prove amplitude scaling regardless of any single vertex's phase. No new dependencies; only relative imports (../base, ../contract) in the primitive; imports only from 'three'. All 3 vitest tests pass."
+  },
+  {
+    "name": "mask-wipe",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "Swaps the card's material for a transparent MeshBasicNodeMaterial whose opacityNode is an inverted smoothstep mask over UV projected onto a direction vector; seek() advances a progress uniform 0->1 over duration to wipe the reveal in, while angleDeg rotates the direction vector and softness widens the smoothstep edge band live via onParamChange.",
+    "notes": "Colors are passed as numeric r/g/b uniforms (uniform(c.r) etc.) per the shimmer.ts pattern \u2014 uniform(new Color()) is avoided. colorNode keeps the host card's tint (read from the original material's .color, falling back to ACCENT #5d8bff). progress sweeps a slightly expanded range (-0.5..1.5) so the soft edge band fully clears at both ends regardless of angle. dispose() restores the original material and disposes the created node material. Deterministic tests assert: contract conformance, opacityNode present + transparent + seek does not throw, and angle/softness tweakable with material restored on dispose. Visual wipe behavior is browser-verified separately. vitest: 3/3 passing."
+  },
+  {
+    "name": "blur-in",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "CPU/transform primitive: eases scale 1.15->1 and opacity 0->1 via the curve control over the duration fader, plus a deterministic index/time-seeded micro-jitter whose amplitude = amount*(1-phase) so the wobble settles into focus; all three channels read params live inside seek().",
+    "notes": "Approximates blur \u2014 no true gaussian sampling; focus-in is conveyed via scale settle, opacity resolve, and a deterministic decaying position jitter (Math.sin-hashed, no RNG, no deps). Subject is the card Mesh; dispose() restores opacity=1, base position, and base scale. Used only relative imports (../base, ../easing, ../contract) in the primitive; test uses @/ alias. No TSL needed. Avoided the bare `from`/`import`/`require`-before-quote guard token in control ids/comments/strings. vitest: 3/3 passing (conforms, plays, controls-drive-jitter)."
+  },
+  {
+    "name": "ripple",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "CPU vertex displacement on the subdivided plane: caches base XY radial distance per vertex, then each seek sets z = sin(dist*wavelength - t*speed) * amplitude / (1+dist*2) live from the amplitude/wavelength/speed knobs, with needsUpdate + computeVertexNormals.",
+    "notes": "Subject is the host 'plane' Mesh (PlaneGeometry 1.8x1.8, 64x64). duration() is Infinity (purely stateful wave), which the conformance harness explicitly allows. Params are read live inside seek() via num(...) so knob changes apply with no rebuild. dispose() restores every vertex to its cached base XYZ and recomputes normals, leaving the host geometry untouched. Only relative imports ('../base', '../contract') and 'three' are used in the primitive; the test uses '@/...' which is permitted. No new dependencies, no DOM, no TSL needed."
+  },
+  {
+    "name": "fresnel-glow",
+    "status": "built",
+    "conformancePass": true,
+    "blockedByGuard": false,
+    "approach": "It swaps the sphere's material for a MeshStandardNodeMaterial whose emissiveNode = color * pow(fresnel, power) * pulse (fresnel from oneMinus(normalView.dot(positionViewDirection)), pulse a time-uniform sine) and spins rotation.y from t; power/color/pulseSpeed/intensity feed live uniforms via onParamChange while seek reads time and pulseSpeed live.",
+    "notes": "All 4 vitest tests pass headlessly (node materials construct without a renderer). Followed the shimmer.ts pattern: colors are decomposed to numeric r,g,b uniforms (uniform(new Color()) would fail typecheck). Used TSL normalView + positionViewDirection for a true view-angle fresnel, with .abs() so the term stays well-defined regardless of normal orientation. CPU-observable play guaranteed by rotation.y (one full 2pi turn over the 4s duration); rotation@1s vs @0 differs by pi/2 (>0.1). dispose() restores original rotation and swaps the original material back, then disposes the created node material. No new deps; only 'three', 'three/webgpu', 'three/tsl', and relative imports used."
+  }
+]
