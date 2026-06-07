@@ -69,20 +69,42 @@ interface IconProps {
   strokeWidth?: number;
 }
 
+// ── Unified key-light (shared by EVERY icon in the editor) ───────────────────
+// One light, top-left, ~129° — so the whole set reads as a single milled,
+// premium family. The extrusion recedes *away* from the light (down-right);
+// the lit bevel, specular hotspot, and contact shadow all derive from this
+// same vector. All overlays are white/black alpha → color-agnostic: any tint
+// (currentColor or a hex accent) extrudes and lights correctly.
+const LIGHT = { dx: 0.6, dy: 0.8 }; // extrusion / shadow direction, down-right (unit-ish)
+
+// Wall tones for the extruded body, deepest → just-behind-face. Kept darker
+// than the cosmic glass chrome so the solid side reads as a real shadowed
+// flank instead of vanishing into the panel.
+const WALL_DEEP = [1, 2, 9]; // #010209 — base / ambient-occlusion
+const WALL_NEAR = [13, 19, 44]; // #0d132c — lit-side bounce just under the face
+const lerp = (a: number[], b: number[], t: number) =>
+  `rgb(${Math.round(a[0] + (b[0] - a[0]) * t)},${Math.round(
+    a[1] + (b[1] - a[1]) * t,
+  )},${Math.round(a[2] + (b[2] - a[2]) * t)})`;
+
 /**
- * Prism 3D-premium icon. Each glyph is composited from stacked, same-path layers
- * to read as an extruded, lit solid — never a flat line icon:
+ * Prism 3D-premium icon. Each glyph is composited from same-path layers so it
+ * reads as an extruded, milled solid lit by ONE shared key-light — never a flat
+ * line icon. Back-to-front:
  *
- *   1. two offset "side wall" copies (down + right) → extruded depth in shadow,
- *      lit from the top-left (matches the editor's cosmic key-light);
- *   2. the colored face;
- *   3. a diagonal directional-light overlay (lit top-left → shaded bottom-right);
- *   4. a soft top specular sheen → the bevel/gloss highlight;
- *   5. a hairline top rim-light for crisp edge definition at toolbar sizes.
+ *   1. a soft contact shadow (CSS drop-shadow, cast down-right) grounds the chip;
+ *   2. a stepped extruded body — N offset copies stepping down-right, graded
+ *      from a near-black base (ambient occlusion) up to a lit bounce under the
+ *      face → a smooth, visible solid flank;
+ *   3. the colored face;
+ *   4. a directional light wash (bright top-left → shaded bottom-right);
+ *   5. a tight specular hotspot near the top-left (glossy enamel sheen);
+ *   6. a directional bevel stroke — bright on the top-left edge, dark on the
+ *      bottom-right edge → a rounded, catch-the-light bevel;
+ *   7. a hairline rim-light keeps edges crisp at toolbar sizes.
  *
- * Color-agnostic: the shadow/light overlays are white/black alpha, so any tint
- * (currentColor or hex) extrudes correctly. API is unchanged from the flat
- * version so every call site upgrades at once.
+ * API is unchanged from the flat version, so every call site (toolbar rail,
+ * flyouts, TopBar, Inspector, mode toggle, Minimap, HubNav) upgrades at once.
  */
 export function Icon({
   name,
@@ -95,15 +117,41 @@ export function Icon({
 }: IconProps) {
   const path = PATHS[name] || PATHS.sparkle;
   const primary = color || 'currentColor';
-  const sheen = accent || 'rgba(255,255,255,0.9)';
+  const sheen = accent || 'rgba(255,255,255,0.95)';
   const uid = React.useId();
 
-  // Depth scales gently with render size so big icons feel chunkier, small ones stay crisp.
+  // Depth, step count, and bevel scale with render size: big icons feel chunkier
+  // and more sculptural; small toolbar glyphs stay crisp and legible.
   const px = typeof size === 'number' ? size : 16;
-  const d1 = px >= 28 ? 1.5 : px >= 18 ? 1.0 : 0.7; // primary extrude offset (viewBox units)
+  const steps = px >= 30 ? 8 : px >= 20 ? 6 : px >= 14 ? 5 : 4;
+  const spread = px >= 30 ? 3.4 : px >= 20 ? 2.7 : px >= 14 ? 2.1 : 1.6; // deepest-wall offset (viewBox units)
+  const bevelW = px >= 30 ? 1.0 : px >= 18 ? 0.8 : 0.62; // bevel stroke width (viewBox units)
+  const rimW = px >= 28 ? 0.5 : 0.38;
 
-  // Base seating shadow always present; glow adds the accent halo on top.
-  const seat = 'drop-shadow(0 0.5px 1px rgba(2,4,14,0.55))';
+  // Build the stepped extruded body, deepest first so nearer (lighter) walls
+  // paint over it.
+  const walls: React.ReactElement[] = [];
+  for (let i = steps; i >= 1; i--) {
+    const t = i / steps; // 1 = deepest, →0 = nearest the face
+    const off = t * spread;
+    walls.push(
+      <path
+        key={i}
+        d={path}
+        transform={`translate(${off * LIGHT.dx} ${off * LIGHT.dy})`}
+        fill={lerp(WALL_NEAR, WALL_DEEP, t)}
+        fillRule="evenodd"
+        opacity={0.95 - 0.12 * t}
+      />,
+    );
+  }
+
+  // Soft contact shadow cast down-right (opposite the key-light), grounding the
+  // chip; scales gently with size. Glow prepends the accent halo.
+  const sh = px >= 28 ? 1 : 0.7;
+  const seat =
+    `drop-shadow(${0.8 * sh}px ${1.5 * sh}px ${1.6 * sh}px rgba(0,1,8,0.55)) ` +
+    `drop-shadow(${0.3 * sh}px ${0.5 * sh}px ${0.6 * sh}px rgba(0,1,6,0.5))`;
 
   return (
     <svg
@@ -120,46 +168,56 @@ export function Icon({
       aria-hidden
     >
       <defs>
-        {/* Directional light across the face: lit top-left, shaded bottom-right. */}
-        <linearGradient id={`if-${uid}`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
-          <stop offset="0.4" stopColor="#ffffff" stopOpacity="0" />
-          <stop offset="0.62" stopColor="#000000" stopOpacity="0" />
-          <stop offset="1" stopColor="#000208" stopOpacity="0.42" />
+        {/* Directional light wash across the face: lit top-left → shaded
+            bottom-right, in viewBox space so the angle is identical on every
+            glyph regardless of its silhouette. */}
+        <linearGradient id={`if-${uid}`} gradientUnits="userSpaceOnUse" x1="4" y1="3" x2="20" y2="21">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.5" />
+          <stop offset="0.34" stopColor="#ffffff" stopOpacity="0" />
+          <stop offset="0.62" stopColor="#000308" stopOpacity="0" />
+          <stop offset="1" stopColor="#000308" stopOpacity="0.5" />
         </linearGradient>
-        {/* Top specular sheen → bevel gloss. */}
-        <linearGradient id={`is-${uid}`} x1="0" y1="0" x2="0.15" y2="1">
-          <stop offset="0" stopColor={sheen} stopOpacity="0.85" />
-          <stop offset="0.3" stopColor={sheen} stopOpacity="0" />
-        </linearGradient>
-        {/* Side-wall tone for the extruded depth. */}
-        <linearGradient id={`iw-${uid}`} x1="0" y1="0" x2="0.4" y2="1">
-          <stop offset="0" stopColor="#0a0e22" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#01030a" stopOpacity="0.7" />
+        {/* Tight specular hotspot near the top-left → glossy enamel sheen. */}
+        <radialGradient id={`sp-${uid}`} gradientUnits="userSpaceOnUse" cx="7.5" cy="6" r="13">
+          <stop offset="0" stopColor={sheen} stopOpacity="0.8" />
+          <stop offset="0.45" stopColor={sheen} stopOpacity="0.14" />
+          <stop offset="1" stopColor={sheen} stopOpacity="0" />
+        </radialGradient>
+        {/* Directional bevel: bright lit edge top-left, dark edge bottom-right
+            — one stroke gives a rounded, milled bevel. */}
+        <linearGradient id={`bv-${uid}`} gradientUnits="userSpaceOnUse" x1="3" y1="3" x2="21" y2="21">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.92" />
+          <stop offset="0.4" stopColor="#ffffff" stopOpacity="0.04" />
+          <stop offset="0.6" stopColor="#000000" stopOpacity="0.04" />
+          <stop offset="1" stopColor="#000208" stopOpacity="0.62" />
         </linearGradient>
       </defs>
 
-      {/* 1 — extruded side walls (two offset copies for graduated depth) */}
-      <g transform={`translate(${d1 * 1.6} ${d1 * 1.9})`}>
-        <path d={path} fill={`url(#iw-${uid})`} fillRule="evenodd" opacity="0.6" />
-      </g>
-      <g transform={`translate(${d1 * 0.8} ${d1 * 0.95})`}>
-        <path d={path} fill={`url(#iw-${uid})`} fillRule="evenodd" opacity="0.85" />
-      </g>
+      {/* 1 — stepped extruded body (deepest → nearest the face) */}
+      {walls}
 
       {/* 2 — colored face */}
       <path d={path} fill={primary} fillRule="evenodd" />
-      {/* 3 — directional light */}
+      {/* 3 — directional light wash */}
       <path d={path} fill={`url(#if-${uid})`} fillRule="evenodd" />
-      {/* 4 — specular sheen */}
-      <path d={path} fill={`url(#is-${uid})`} fillRule="evenodd" opacity="0.6" />
-      {/* 5 — hairline rim-light for crisp edges */}
+      {/* 4 — specular hotspot (gloss) */}
+      <path d={path} fill={`url(#sp-${uid})`} fillRule="evenodd" />
+      {/* 5 — directional bevel: lit top-left / dark bottom-right edge */}
+      <path
+        d={path}
+        fill="none"
+        stroke={`url(#bv-${uid})`}
+        strokeWidth={bevelW}
+        strokeLinejoin="round"
+        fillRule="evenodd"
+      />
+      {/* 6 — hairline rim-light keeps edges crisp at toolbar sizes */}
       <path
         d={path}
         fill="none"
         stroke="#ffffff"
-        strokeOpacity="0.18"
-        strokeWidth={px >= 28 ? 0.5 : 0.4}
+        strokeOpacity="0.16"
+        strokeWidth={rimW}
         strokeLinejoin="round"
         fillRule="evenodd"
       />

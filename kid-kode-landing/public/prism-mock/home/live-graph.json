@@ -20,7 +20,13 @@
       "parentHubId": "home",
       "serviceTag": "ui-text",
       "visual": {
-        "transform": { "x": 0, "y": 1.5, "z": 0, "width": 5.5, "height": 0.6 },
+        "transform": {
+          "x": 0,
+          "y": 1.5,
+          "z": 0,
+          "width": 5.5,
+          "height": 0.6
+        },
         "alpha": 1
       },
       "intent": {
@@ -40,13 +46,22 @@
               "text": "Build worlds in seconds.",
               "role": "headline",
               "renderMethod": "msdf",
-              "typography": { "fontSize": 72, "fontWeight": 600, "color": "#e8eaf3" },
-              "position": { "anchor": "center" }
+              "typography": {
+                "fontSize": 72,
+                "fontWeight": 600,
+                "color": "#e8eaf3"
+              },
+              "position": {
+                "anchor": "center"
+              }
             }
           ],
           "layers": []
         },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "",
       "backendRef": null,
@@ -54,10 +69,38 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "kinetic-text", "params": { "stagger": 0.04, "duration": 0.7, "effect": "wave", "easing": "power2.out" }, "trigger": "inview" },
-        { "name": "parallax-scroll", "params": { "axis": "y", "intensity": 0.15, "triggerStart": 0, "triggerEnd": 1 }, "trigger": "inview" }
+        {
+          "name": "kinetic-text",
+          "params": {
+            "stagger": 0.04,
+            "duration": 0.7,
+            "effect": "wave",
+            "easing": "power2.out"
+          },
+          "trigger": "inview"
+        },
+        {
+          "name": "parallax-scroll",
+          "params": {
+            "axis": "y",
+            "intensity": 0.15,
+            "triggerStart": 0,
+            "triggerEnd": 1
+          },
+          "trigger": "inview"
+        }
       ],
-      "scenePosition": { "x": 0, "y": 1.5, "z": 0.1, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": 0.18,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     },
     {
       "nodeId": "home-feature-card",
@@ -66,7 +109,13 @@
       "serviceTag": "ui-card",
       "visual": {
         "sourceAsset": "/prism-mock/home/nodes/feature-card.png",
-        "transform": { "x": 2.6, "y": 0.2, "z": 0, "width": 1.6, "height": 1 },
+        "transform": {
+          "x": 2.6,
+          "y": 0.2,
+          "z": 0,
+          "width": 1.6,
+          "height": 1
+        },
         "alpha": 1
       },
       "intent": {
@@ -80,8 +129,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "textContent": [], "layers": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "",
       "backendRef": null,
@@ -89,9 +144,29 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "magnetic-cursor", "params": { "radius": 2.0, "intensity": 0.3, "damping": 0.18, "affectScale": true, "scaleAmount": 0.06 }, "trigger": "hover" }
+        {
+          "name": "magnetic-cursor",
+          "params": {
+            "radius": 2,
+            "intensity": 0.3,
+            "damping": 0.18,
+            "affectScale": true,
+            "scaleAmount": 0.06
+          },
+          "trigger": "hover"
+        }
       ],
-      "scenePosition": { "x": 2.6, "y": 0.2, "z": 0, "rotationX": 0, "rotationY": -0.08, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": 2.6,
+        "y": 0.2,
+        "z": 0,
+        "rotationX": 0,
+        "rotationY": -0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     },
     {
       "nodeId": "home-parallax-stack",
@@ -100,7 +175,13 @@
       "serviceTag": "ui-decor",
       "visual": {
         "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png",
-        "transform": { "x": -2.8, "y": -0.5, "z": 0, "width": 2, "height": 1.4 },
+        "transform": {
+          "x": -2.8,
+          "y": -0.5,
+          "z": 0,
+          "width": 2,
+          "height": 1.4
+        },
         "alpha": 0.85
       },
       "intent": {
@@ -114,8 +195,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "textContent": [], "layers": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "",
       "backendRef": null,
@@ -123,9 +210,27 @@
       "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "displacement-transition", "params": { "intensity": 0.05, "duration": 1.4, "easing": "sine.inOut" }, "trigger": "inview" }
+        {
+          "name": "displacement-transition",
+          "params": {
+            "intensity": 0.05,
+            "duration": 1.4,
+            "easing": "sine.inOut"
+          },
+          "trigger": "inview"
+        }
       ],
-      "scenePosition": { "x": -2.8, "y": -0.5, "z": -1, "rotationX": 0, "rotationY": 0.08, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": -2.8,
+        "y": -0.5,
+        "z": -1,
+        "rotationX": 0,
+        "rotationY": 0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     },
     {
       "nodeId": "home-orbit-decor",
@@ -134,7 +239,13 @@
       "serviceTag": "ui-decor",
       "visual": {
         "sourceAsset": "/prism-mock/home/nodes/orb-decor.png",
-        "transform": { "x": -1.4, "y": -1.6, "z": 0, "width": 0.6, "height": 0.6 },
+        "transform": {
+          "x": -1.4,
+          "y": -1.6,
+          "z": 0,
+          "width": 0.6,
+          "height": 0.6
+        },
         "alpha": 1
       },
       "intent": {
@@ -148,8 +259,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "textContent": [], "layers": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "",
       "backendRef": null,
@@ -157,10 +274,43 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "orbit", "params": { "centerX": 0, "centerY": -1.6, "centerZ": 0, "radius": 1.4, "axisX": 0, "axisY": 0, "axisZ": 1, "period": 8, "faceCenter": true, "clockwise": true }, "trigger": "load" },
-        { "name": "particle-emerge", "params": { "duration": 0.8, "particleCount": 60, "spread": 0.4 }, "trigger": "inview" }
+        {
+          "name": "orbit",
+          "params": {
+            "centerX": 0,
+            "centerY": -1.6,
+            "centerZ": 0,
+            "radius": 1.4,
+            "axisX": 0,
+            "axisY": 0,
+            "axisZ": 1,
+            "period": 8,
+            "faceCenter": true,
+            "clockwise": true
+          },
+          "trigger": "load"
+        },
+        {
+          "name": "particle-emerge",
+          "params": {
+            "duration": 0.8,
+            "particleCount": 60,
+            "spread": 0.4
+          },
+          "trigger": "inview"
+        }
       ],
-      "scenePosition": { "x": -1.4, "y": -1.6, "z": 0.2, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": -1.4,
+        "y": -1.6,
+        "z": 0.2,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     },
     {
       "nodeId": "home-floating-accent",
@@ -169,7 +319,13 @@
       "serviceTag": "ui-decor",
       "visual": {
         "sourceAsset": "/prism-mock/home/nodes/floating-accent.png",
-        "transform": { "x": 1.8, "y": -1.4, "z": 0, "width": 0.5, "height": 0.5 },
+        "transform": {
+          "x": 1.8,
+          "y": -1.4,
+          "z": 0,
+          "width": 0.5,
+          "height": 0.5
+        },
         "alpha": 0.9
       },
       "intent": {
@@ -183,8 +339,14 @@
           "triggersDownstream": []
         },
         "stateEffects": [],
-        "visualSpec": { "textContent": [], "layers": [] },
-        "contracts": { "inputs": {}, "outputs": {} }
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
       },
       "codeRef": "",
       "backendRef": null,
@@ -192,9 +354,27 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "cinematicPrimitives": [
-        { "name": "particle-emerge", "params": { "duration": 1.0, "particleCount": 40, "spread": 0.3 }, "trigger": "inview" }
+        {
+          "name": "particle-emerge",
+          "params": {
+            "duration": 1,
+            "particleCount": 40,
+            "spread": 0.3
+          },
+          "trigger": "inview"
+        }
       ],
-      "scenePosition": { "x": 1.8, "y": -1.4, "z": 0.15, "rotationX": 0, "rotationY": 0, "rotationZ": 0.4, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": 1.8,
+        "y": -1.4,
+        "z": 0.15,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.4,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     },
     {
       "nodeId": "home-cta-hero",
@@ -202,18 +382,29 @@
       "parentHubId": "home",
       "serviceTag": "ui-cta",
       "visual": {
-        "transform": { "x": 0, "y": -0.2, "z": 0, "width": 1.6, "height": 1.4 },
+        "transform": {
+          "x": 0,
+          "y": -0.2,
+          "z": 0,
+          "width": 1.6,
+          "height": 1.4
+        },
         "alpha": 1
       },
       "intent": {
         "caption": "3D mesh CTA hero — a stylized smartwatch product on a hover platform with a kinetic-text label below. Idles with depth-rotate (slow Y-axis rotation responding to camera depth). On click, emits 'cta-clicked' event for downstream listeners. The hero focal point of the hub.",
         "behaviorSpec": {
           "interactions": [
-            { "event": "click", "effect": "emit:cta-clicked" }
+            {
+              "event": "click",
+              "effect": "emit:cta-clicked"
+            }
           ],
           "apiCalls": [],
           "dataBindings": [],
-          "emits": ["cta-clicked"],
+          "emits": [
+            "cta-clicked"
+          ],
           "listens": [],
           "triggersDownstream": []
         },
@@ -224,13 +415,25 @@
               "text": "Try it now",
               "role": "cta-label",
               "renderMethod": "msdf",
-              "typography": { "fontSize": 28, "fontWeight": 500, "color": "#9bd4ff" },
-              "position": { "anchor": "center", "y": -1 }
+              "typography": {
+                "fontSize": 28,
+                "fontWeight": 500,
+                "color": "#9bd4ff"
+              },
+              "position": {
+                "anchor": "center",
+                "y": -1
+              }
             }
           ],
           "layers": []
         },
-        "contracts": { "inputs": {}, "outputs": { "cta-clicked": "ButtonClickEvent" } }
+        "contracts": {
+          "inputs": {},
+          "outputs": {
+            "cta-clicked": "ButtonClickEvent"
+          }
+        }
       },
       "codeRef": "/prism-mock/home/nodes/cta-hero.code.js",
       "backendRef": null,
@@ -238,12 +441,32 @@
       "depthMapUrl": null,
       "meshUrl": "/prism-mock/home/nodes/cta-hero.glb",
       "cinematicPrimitives": [],
-      "scenePosition": { "x": 0, "y": -0.2, "z": 1, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+      "scenePosition": {
+        "x": 0,
+        "y": -0.2,
+        "z": 1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
     }
   ],
   "edges": [
-    { "from": "home-headline", "to": "home-cta-hero", "type": "contains", "event": "" },
-    { "from": "home-cta-hero", "to": "home-feature-card", "type": "triggers", "event": "cta-clicked" }
+    {
+      "from": "home-headline",
+      "to": "home-cta-hero",
+      "type": "contains",
+      "event": ""
+    },
+    {
+      "from": "home-cta-hero",
+      "to": "home-feature-card",
+      "type": "triggers",
+      "event": "cta-clicked"
+    }
   ],
   "rootNodes": [
     {
@@ -265,11 +488,18 @@
       },
       "buildPlan": {
         "strategy": "harness-lockin-seed",
-        "stages": ["seed", "edit-via-editor", "regenerate"]
+        "stages": [
+          "seed",
+          "edit-via-editor",
+          "regenerate"
+        ]
       },
       "memoryLog": [],
       "hubRegistry": [
-        { "hubId": "home", "role": "landing" }
+        {
+          "hubId": "home",
+          "role": "landing"
+        }
       ],
       "nodeRegistry": [],
       "globalDependencies": [],
