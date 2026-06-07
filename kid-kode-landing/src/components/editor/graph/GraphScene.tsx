@@ -74,7 +74,7 @@ import {
   type CanvasTransform,
   type GizmoMode,
 } from '@/lib/editor/canvas-transform-gizmo';
-import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
+import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 // EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
 // in-view slide, hover lift). The canvas-mode KeyframeDemo block below
@@ -2057,14 +2057,26 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       scale={[ct.scaleX, ct.scaleY, ct.scaleZ]}
       onClick={(e) => {
         e.stopPropagation();
+        // STEP7 — EventDriver input: a click on the built artifact fires a
+        // node-addressed 'click' event so any click-triggered animation the
+        // node declares plays. This drives ANIMATION only; the existing
+        // selection / inspector behavior is unchanged (that is the node
+        // editor's job, not the driver's).
+        getSharedDriverHub().events.fire('click', { nodeId: node.nodeId });
         selectNode(node.nodeId);
         openInspector();
       }}
       onPointerOver={(e) => {
         e.stopPropagation();
+        // STEP7 — StateDriver input: hover-in sets the node's `hover` state so
+        // a hover-triggered animation plays forward (un-hover reverses it).
+        getSharedDriverHub().state.set(`hover:${node.nodeId}`, true);
         hoverNode(node.nodeId);
       }}
-      onPointerOut={() => hoverNode(null)}
+      onPointerOut={() => {
+        getSharedDriverHub().state.set(`hover:${node.nodeId}`, false);
+        hoverNode(null);
+      }}
     >
       <group ref={popRef} scale={alreadyPopped ? 1 : BUILD_POP_START}>
         <ArtifactNode node={node} layout="scene" />
@@ -2282,6 +2294,146 @@ function TopologySceneContent({
   );
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// SceneDriverHost — STEP7. The runtime side of the Canvas-spec Driver model
+// (§8.2 / §16) for the built scene. Mounts inside AssembledSceneContent
+// (canvas + preview-app) so live drivers respond to REAL input there.
+//
+//   1. Per-frame tick → drives every primitive's `onTick` (e.g. magnetic-
+//      cursor's pointer lerp) via the shared DriverHub frame ticker.
+//   2. PointerDriver input — pointermove on the WebGL canvas → pointer NDC.
+//   3. ScrollDriver input — wheel on the WebGL canvas → scroll progress 0..1.
+//   4. Debug handle `window.__prismDrivers` — deterministic verification +
+//      a surface to fire State/Event drivers (programmatic "custom" triggers).
+//
+// THE RULE: this host only supplies INPUT and ticks the clock. It never
+// positions a node or authors motion — primitives realize the node's own
+// declared animation; drivers play it. Editor-shell scope (not runtime/), so
+// canvas listeners + a `window` debug handle are permitted here.
+// ═══════════════════════════════════════════════════════════════════
+const SCROLL_WHEEL_RANGE = 1400; // px of wheel travel = a full 0→1 scroll sweep.
+
+function SceneDriverHost() {
+  const { gl } = useThree();
+  const scrollProgressRef = useRef(0);
+
+  // 1. Per-frame tick — drive onTick for every primitive that needs it. R3F's
+  // delta is in seconds; the frame driver normalizes to ms for onTick.
+  useFrame((_, delta) => {
+    getSharedDriverHub().frame.tick(delta * 1000);
+  });
+
+  // 2 + 3. Real pointer + scroll input from the WebGL canvas.
+  useEffect(() => {
+    const el = gl.domElement;
+    if (!el) return;
+    const hub = getSharedDriverHub();
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+      hub.pointer.set({ x, y }, true);
+    };
+    const handlePointerLeave = () => {
+      hub.pointer.set(hub.pointer.ndc, false);
+    };
+    const handleWheel = (e: WheelEvent) => {
+      const next = scrollProgressRef.current + e.deltaY / SCROLL_WHEEL_RANGE;
+      const clamped = next < 0 ? 0 : next > 1 ? 1 : next;
+      scrollProgressRef.current = clamped;
+      hub.scroll.set(clamped);
+    };
+
+    el.addEventListener('pointermove', handlePointerMove);
+    el.addEventListener('pointerleave', handlePointerLeave);
+    // Passive: we only READ deltaY to advance scroll-driven animation; we never
+    // preventDefault, so the camera's own wheel handling stays intact.
+    el.addEventListener('wheel', handleWheel, { passive: true });
+    return () => {
+      el.removeEventListener('pointermove', handlePointerMove);
+      el.removeEventListener('pointerleave', handlePointerLeave);
+      el.removeEventListener('wheel', handleWheel);
+    };
+  }, [gl]);
+
+  // 4. Debug / verification handle. Lets the verifier drive scroll/pointer
+  // deterministically and fire State/Event drivers as "custom" triggers.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const hub = getSharedDriverHub();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__prismDrivers = {
+      hub,
+      setScroll: (p: number) => hub.scroll.set(p),
+      setPointer: (x: number, y: number) => hub.pointer.set({ x, y }, true),
+      // StateDriver: e.g. setState('home-feature-card','hover',true) sets the
+      // `hover:home-feature-card` state the dispatch listens on.
+      setState: (nodeId: string, name: string, value: boolean | number | string) =>
+        hub.state.set(`${name}:${nodeId}`, value),
+      // EventDriver: fire('click','home-parallax-stack') replays a click-
+      // triggered animation on that node.
+      fireEvent: (eventName: string, nodeId: string) =>
+        hub.events.fire(eventName, { nodeId }),
+      frameSize: () => hub.frame.size(),
+      nodeResultCount: (nodeId: string) => hub.getNodeResults(nodeId).length,
+      // Verification probe: gsap timeline playback state per attached primitive.
+      // Lets the verifier prove an inview/load/event-triggered animation
+      // actually PLAYED (progress advanced past 0) vs. sat paused.
+      timelineState: (nodeId: string) =>
+        hub.getNodeResults(nodeId).map((r) => {
+          const tl = r.timeline as unknown as {
+            duration?: () => number;
+            progress?: () => number;
+            totalTime?: () => number;
+            paused?: () => boolean;
+          };
+          return {
+            duration: typeof tl.duration === 'function' ? tl.duration() : 0,
+            progress: typeof tl.progress === 'function' ? tl.progress() : null,
+            totalTime: typeof tl.totalTime === 'function' ? tl.totalTime() : null,
+            paused: typeof tl.paused === 'function' ? tl.paused() : null,
+          };
+        }),
+      // Verification probe: the LOCAL position/scale of a node's built artifact
+      // object — the thing the scroll/pointer drivers actually move. Reads the
+      // factory Object3D (userData.nodeId === nodeId) nested under the
+      // AssembledSceneNode wrapper registered in __PRISM_EDITOR_NODE_GROUPS__.
+      // Returns null when the node is not currently built.
+      localPos: (nodeId: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const map = (window as any).__PRISM_EDITOR_NODE_GROUPS__ as
+          | Map<string, THREE.Object3D>
+          | undefined;
+        const wrapper = map?.get(nodeId);
+        if (!wrapper) return null;
+        let target: THREE.Object3D | null = null;
+        wrapper.traverse((o) => {
+          if (
+            o !== wrapper &&
+            (o.userData as { nodeId?: string }).nodeId === nodeId &&
+            !target
+          ) {
+            target = o;
+          }
+        });
+        const obj = (target ?? wrapper) as THREE.Object3D;
+        return {
+          position: { x: obj.position.x, y: obj.position.y, z: obj.position.z },
+          scale: { x: obj.scale.x, y: obj.scale.y, z: obj.scale.z },
+        };
+      },
+    };
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).__prismDrivers;
+    };
+  }, []);
+
+  return null;
+}
+
 function AssembledSceneContent({
   onPerf,
   previewMode = false,
@@ -2389,6 +2541,10 @@ function AssembledSceneContent({
       )}
 
       <AssembledSceneDiagnostics nodes={nodes} />
+      {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
+          built scene. Runs in canvas + preview-app; in preview-app the drivers
+          respond to the user's real input (§16). */}
+      <SceneDriverHost />
       <SceneControlsBridge nodes={nodes} hub={hub ?? null} />
 
       {usePost && (

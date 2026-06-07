@@ -19,6 +19,7 @@ import type {
 import type { LoaderCacheHandle } from './loaders';
 import type { FontAtlasHandle } from './text';
 import type { CinematicPrimitivesAPI } from './primitives/types';
+import type { NodeDrivers } from './driver-dispatch';
 
 /** Per-node creation context passed to user-supplied `createNode` functions.
  *  Mirrors the spec §8 NodeContext interface; concrete instances are built
@@ -54,6 +55,13 @@ export interface NodeContext {
   primitives: CinematicPrimitivesAPI;
   /** Event bus for navigation / state transitions. */
   emit: (event: string, payload: unknown) => void;
+  /** STEP7 — driver wiring surface. Present only when the context runs
+   *  primitives (the built-state surface). The factory calls
+   *  `drivers.attach(result, ref.trigger, { nodeId })` per cinematic primitive
+   *  so each node-declared animation plays under its declared driver
+   *  (ScrollDriver / PointerDriver / StateDriver / EventDriver). Absent on the
+   *  no-op editor context (runPrimitives:false) and the legacy bundle path. */
+  drivers?: NodeDrivers;
 }
 
 /** A `createNode` factory satisfying the spec §8 contract. The adapter

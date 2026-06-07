@@ -93,6 +93,11 @@ export function defaultRenderModeFactory(
   const disposables: BufferGeometry[] = [];
   const materialsToDispose: DisposableMaterial[] = [];
   const primitiveResults: PrimitiveResult[] = [];
+  // STEP7 — detachers returned by the driver dispatch (one per attached
+  // primitive). Run on cleanup to unsubscribe scroll/pointer/state/event
+  // wiring + unregister the per-frame onTick, WITHOUT killing the timeline
+  // (the primitiveResults loop below owns kill()).
+  const driverDetachers: Array<() => void> = [];
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
@@ -180,6 +185,11 @@ export function defaultRenderModeFactory(
   }
 
   // §7 — apply cinematic primitives via ctx.primitives, never inline.
+  // STEP7 — and wire each one to its declared DRIVER via ctx.drivers so the
+  // node's own animation PLAYS under its own trigger (ScrollDriver /
+  // PointerDriver / StateDriver / EventDriver). The driver only plays what the
+  // primitive already built; it never authors motion or edits keyframes
+  // (INV-6).
   if (opts.runPrimitives) {
     const primitives: CinematicPrimitiveRef[] = node.cinematicPrimitives ?? [];
     for (const ref of primitives) {
@@ -187,7 +197,16 @@ export function defaultRenderModeFactory(
       if (typeof fn !== 'function') continue;
       try {
         const result = fn(group, ref.params);
-        if (result) primitiveResults.push(result);
+        if (result) {
+          primitiveResults.push(result);
+          if (ctx.drivers) {
+            ctx.drivers.hub.registerNodeResult(node.nodeId, result);
+            const detach = ctx.drivers.attach(result, ref.trigger, {
+              nodeId: node.nodeId,
+            });
+            driverDetachers.push(detach);
+          }
+        }
       } catch {
         /* primitive registration error — keep node mounted */
       }
@@ -197,6 +216,15 @@ export function defaultRenderModeFactory(
   // §8 — userData.cleanup. Per Amendment 0002 §A.2, do NOT dispose loader-
   // cache textures; they outlive the Object3D.
   group.userData.cleanup = () => {
+    // STEP7 — detach driver wiring first (unsubscribe scroll/pointer/state/
+    // event + unregister onTick) so a killed timeline can't be re-driven.
+    for (const detach of driverDetachers) {
+      try { detach(); } catch { /* ignore */ }
+    }
+    driverDetachers.length = 0;
+    if (opts.runPrimitives && ctx.drivers) {
+      try { ctx.drivers.hub.clearNodeResults(node.nodeId); } catch { /* ignore */ }
+    }
     for (const result of primitiveResults) {
       try {
         const tl = result.timeline as gsap.core.Timeline | { kill?: () => void };

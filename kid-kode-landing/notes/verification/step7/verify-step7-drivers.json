@@ -1,0 +1,109 @@
+{
+  "results": [
+    {
+      "id": "handle.ready",
+      "desc": "window.__prismDrivers installed + nodes built",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "scroll.parallax",
+      "desc": "home-headline (parallax-scroll) Y responds to scroll 0→1",
+      "pass": true,
+      "detail": "Δy = 0.1500 (p0.y=0.0000, p1.y=0.1500)"
+    },
+    {
+      "id": "pointer.magnetic",
+      "desc": "home-feature-card (magnetic-cursor) drifts toward pointer",
+      "pass": true,
+      "detail": "Δx = 0.2420, Δy = 0.1851 (toward +x,+y pointer)"
+    },
+    {
+      "id": "inview.displacement",
+      "desc": "home-parallax-stack (displacement-transition) played on inview",
+      "pass": true,
+      "detail": "[{\"duration\":1.4,\"progress\":1,\"totalTime\":1.4,\"paused\":false}]"
+    },
+    {
+      "id": "state-event.wired",
+      "desc": "StateDriver/EventDriver inputs reach dispatch without error",
+      "pass": true,
+      "detail": "frameSize=1, magneticResults=1"
+    },
+    {
+      "id": "inv6.keyframes",
+      "desc": "INV-6: timeline keyframe duration unchanged across driver inputs",
+      "pass": true,
+      "detail": "before=[1.4] after=[1.4]"
+    },
+    {
+      "id": "toggle.norebuild",
+      "desc": "canvas↔preview-app toggle issues 0 artifact rebuilds",
+      "pass": true,
+      "detail": "Δbuilds=0"
+    },
+    {
+      "id": "console.clean",
+      "desc": "zero new console / page errors in preview-app",
+      "pass": true,
+      "detail": "clean"
+    }
+  ],
+  "evidence": {
+    "rendererBackend": "webgpu",
+    "scroll": {
+      "at0": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "atHalf": {
+        "x": 0,
+        "y": 0.075,
+        "z": 0
+      },
+      "at1": {
+        "x": 0,
+        "y": 0.15,
+        "z": 0
+      }
+    },
+    "pointer": {
+      "centered": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "pulled": {
+        "x": 0.2420058472956611,
+        "y": 0.18506329499079968,
+        "z": 0
+      }
+    },
+    "displacement": [
+      {
+        "duration": 1.4,
+        "progress": 1,
+        "totalTime": 1.4,
+        "paused": false
+      }
+    ],
+    "inputWiring": {
+      "threw": null,
+      "frameSize": 1,
+      "magneticResults": 1,
+      "headlineResults": 2
+    },
+    "inv6": {
+      "before": "[1.4]",
+      "after": "[1.4]"
+    },
+    "toggleRebuild": {
+      "supported": true,
+      "before": 6,
+      "after": 6,
+      "delta": 0
+    },
+    "consoleErrors": []
+  }
+}
