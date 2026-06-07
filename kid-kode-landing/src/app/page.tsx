@@ -29,6 +29,7 @@ import DetailCard from '@/components/editor/overlays/DetailCard';
 import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
+import CanvasToolbar from '@/components/editor/overlays/CanvasToolbar';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -671,6 +672,8 @@ export default function Page() {
                 <DetailCard />
                 <RightPane />
                 <GalaxyFilterOverlay />
+                {/* STEP8 — Canvas authoring suite. Self-gates to viewMode==='canvas'. */}
+                <CanvasToolbar />
               </>
             )}
           </div>
@@ -687,6 +690,7 @@ export default function Page() {
                 <DetailCard />
                 <RightPane />
                 <GalaxyFilterOverlay />
+                <CanvasToolbar />
               </>
             )}
           </div>

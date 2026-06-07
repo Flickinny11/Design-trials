@@ -64,9 +64,45 @@ ALL_ALLOW = RUNTIME_ALLOW | BUILD_ALLOW | DEVDEP_ALLOW
 FORBIDDEN_EXACT = {"html-to-image", "pixi.js", "pixi-filters"}
 FORBIDDEN_PREFIX = ("@pixi/",)
 
+# ---------------------------------------------------------------------------
+# Stock / third-party ICON libraries — PERMANENTLY FORBIDDEN (Logan, design rule,
+# 2026-06-07). Every icon in this app must be CUSTOM, with a 3D / dimensional
+# premium feel in the Prism visual language (rendered via
+# src/components/editor/icons/Icon.tsx + IconPrimitives.ts). No flat generic
+# line-icon set may EVER be (re)introduced — toolbar, TopBar, Inspector, mode
+# toggle, Minimap, HubNav, anywhere. This applies to BOTH package.json deps AND
+# any import under src/** (not just the prism runtime/build scope).
+# To extend: add the package here; do NOT add an exception.
+# ---------------------------------------------------------------------------
+FORBIDDEN_ICON_EXACT = {
+    "lucide-react", "lucide",
+    "react-icons",
+    "react-feather", "feather-icons",
+    "phosphor-react",
+    "heroicons", "@heroicons/react", "@heroicons/vue",
+    "@iconify/react", "@iconify-icons/react", "@iconify/icons",
+    "boxicons", "react-bootstrap-icons", "@radix-ui/react-icons",
+    "ionicons", "@ionic/react",
+    "@ant-design/icons", "@mui/icons-material",
+    "@primer/octicons-react", "octicons",
+    "css.gg", "grommet-icons", "@expo/vector-icons",
+}
+FORBIDDEN_ICON_PREFIX = (
+    "@fortawesome/", "react-icons/", "@heroicons/", "@tabler/icons",
+    "@phosphor-icons/", "@iconify/", "@iconify-icons/", "@mui/icons-material/",
+)
+
+
+def is_forbidden_icon_pkg(pkg: str) -> bool:
+    return pkg in FORBIDDEN_ICON_EXACT or any(pkg.startswith(p) for p in FORBIDDEN_ICON_PREFIX)
+
 
 def is_forbidden_pkg(pkg: str) -> bool:
-    return pkg in FORBIDDEN_EXACT or any(pkg.startswith(p) for p in FORBIDDEN_PREFIX)
+    return (
+        pkg in FORBIDDEN_EXACT
+        or any(pkg.startswith(p) for p in FORBIDDEN_PREFIX)
+        or is_forbidden_icon_pkg(pkg)
+    )
 
 
 def is_allowed_import(pkg: str) -> bool:
@@ -161,6 +197,14 @@ def main() -> int:
                         pending[name] = ver
         disk = disk_pkg_versions(file_path)
         for name, ver in pending.items():
+            if is_forbidden_icon_pkg(name):
+                violations.append(
+                    f'FORBIDDEN icon-library dep in package.json: "{name}" — stock/third-party '
+                    f"icon sets are PERMANENTLY banned (Logan design rule). Every icon must be "
+                    f"custom + 3D-premium via src/components/editor/icons/Icon.tsx. Add a glyph "
+                    f"there instead of a dependency."
+                )
+                continue
             if is_forbidden_pkg(name):
                 violations.append(
                     f'FORBIDDEN dep in package.json: "{name}" — PixiJS/html-to-image are '
@@ -202,6 +246,26 @@ def main() -> int:
                 violations.append(
                     f"UNAPPROVED import in {base}: '{pkg}' — not on the allowlist. If intentional, "
                     f"add it to dependency-allowlist-check.py and document the rationale."
+                )
+
+    # ---- Surface 2b: stock ICON libraries anywhere under src/** ------------
+    # Design-system rule (Logan): icons are ALWAYS custom + 3D-premium. This
+    # scope is wider than Surface 2 (whole src tree, not just the prism runtime)
+    # because the rule covers the entire editor — toolbar, TopBar, Inspector,
+    # mode toggle, Minimap, HubNav, everywhere.
+    if in_src_or_scripts and is_code and not is_pkg_json and not is_lockfile:
+        icon_imports = set()
+        for m in re.finditer(r"""(?:from|import|require)\s*\(?\s*['"]([^'"]+)['"]""", content):
+            icon_imports.add(m.group(1))
+        for m in re.finditer(r"""import\s+['"]([^'"]+)['"]""", content):
+            icon_imports.add(m.group(1))
+        for pkg in sorted(icon_imports):
+            if is_forbidden_icon_pkg(pkg):
+                violations.append(
+                    f"FORBIDDEN icon-library import in {base}: '{pkg}' — stock/third-party icon "
+                    f"sets are PERMANENTLY banned (Logan design rule). Use the custom 3D-premium "
+                    f"set: import {{ Icon }} from '@/components/editor/icons/Icon' (add a glyph to "
+                    f"PATHS / IconPrimitives.ts if one is missing)."
                 )
 
     # ---- Surface 3: canonical-3 forbidden patterns -------------------------

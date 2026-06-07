@@ -51,6 +51,28 @@ export function readCanvasTransform(
   return cloneCanvasTransform(node.canvasTransform);
 }
 
+// STEP8 canvas-spec SC-9 — read a node's authored `scenePosition` as a full
+// transform (legacy graphs carry only x/y/z or nothing). Returns a fresh
+// CanvasTransform-shaped record (structurally identical to ScenePosition) so
+// the gizmo's add/multiply math is shared with the canvasTransform path.
+export function readSceneTransform(
+  node: { scenePosition?: Partial<CanvasTransform> },
+): CanvasTransform {
+  const s = node.scenePosition;
+  if (!s) return cloneCanvasTransform(CANVAS_TRANSFORM_IDENTITY);
+  return {
+    x: s.x ?? 0,
+    y: s.y ?? 0,
+    z: s.z ?? 0,
+    rotationX: s.rotationX ?? 0,
+    rotationY: s.rotationY ?? 0,
+    rotationZ: s.rotationZ ?? 0,
+    scaleX: s.scaleX ?? 1,
+    scaleY: s.scaleY ?? 1,
+    scaleZ: s.scaleZ ?? 1,
+  };
+}
+
 export function buildCanvasTransformFromPose(pose: {
   position: { x: number; y: number; z: number };
   rotation: { x: number; y: number; z: number };

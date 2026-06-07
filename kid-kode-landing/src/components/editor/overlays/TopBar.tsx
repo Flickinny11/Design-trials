@@ -43,6 +43,7 @@ export default function TopBar() {
 
   return (
     <div
+      data-component="top-bar"
       className="absolute z-30 top-0 left-0 right-0 h-14 flex items-center justify-between px-4 pointer-events-none"
       style={{ background: 'linear-gradient(180deg, rgba(4,5,10,0.88) 0%, rgba(4,5,10,0) 100%)' }}
     >

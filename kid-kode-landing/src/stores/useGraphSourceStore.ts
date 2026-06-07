@@ -73,6 +73,18 @@ interface GraphSourceState {
   removeEdge: (predicate: (e: PrismEdge) => boolean) => void;
   addHub: (hub: PrismHub) => void;
   setScenePosition: (nodeId: string, patch: Partial<ScenePosition>) => void;
+  // STEP8 canvas-toolbar Selection group (canvas-spec §14, SC-22). Stamp a
+  // single fresh `groupId` onto every listed node so their transforms cascade
+  // as a unit. Additive (INV-18) + non-topological (INV-1): no edge is created.
+  // Returns the minted groupId, or '' when fewer than 2 valid nodes are given.
+  groupNodes: (nodeIds: string[]) => string;
+  // STEP8 — dissolve a group by clearing `groupId` from every member. Each
+  // node keeps its own `scenePosition`, so world transforms are preserved
+  // (canvas-spec §14 "Ungroup preserves children + world transforms").
+  ungroupNodes: (groupId: string) => void;
+  // STEP8 — toolbar Selection "Lock". Toggles the per-node `locked` guard that
+  // removes the node from transform authoring (gizmo + Transform tools skip it).
+  setNodeLocked: (nodeId: string, locked: boolean) => void;
   markDirty: (dirty?: boolean) => void;
   saveToServer: () => Promise<SaveToServerResult>;
 }
@@ -319,6 +331,51 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
         };
         return { ...n, scenePosition: { ...base, ...patch } };
       }),
+      isDirty: true,
+    }));
+  },
+
+  // STEP8 canvas-toolbar Selection group (canvas-spec §14). Mint one groupId
+  // and stamp it on each listed node. Modeled as a shared `groupId` marker (a
+  // contains-subtree), never an edge — graph topology rules are untouched
+  // (INV-1). No-op (returns '') for <2 resolvable nodes.
+  groupNodes: (nodeIds) => {
+    const resolvable = nodeIds.filter((id) =>
+      get().nodes.some((n) => n.nodeId === id),
+    );
+    if (resolvable.length < 2) return '';
+    const groupId = `grp-${generateNodeId()}`;
+    const idSet = new Set(resolvable);
+    markGraphDirty(get);
+    set((s) => ({
+      nodes: s.nodes.map((n) => (idSet.has(n.nodeId) ? { ...n, groupId } : n)),
+      isDirty: true,
+    }));
+    return groupId;
+  },
+
+  // STEP8 — Ungroup. Clear `groupId` on every member; each node retains its own
+  // scenePosition so its world transform survives (canvas-spec §14).
+  ungroupNodes: (groupId) => {
+    if (!groupId) return;
+    const hasMembers = get().nodes.some((n) => n.groupId === groupId);
+    if (!hasMembers) return;
+    markGraphDirty(get);
+    set((s) => ({
+      nodes: s.nodes.map((n) =>
+        n.groupId === groupId ? { ...n, groupId: undefined } : n,
+      ),
+      isDirty: true,
+    }));
+  },
+
+  // STEP8 — toolbar Selection "Lock"/"Unlock".
+  setNodeLocked: (nodeId, locked) => {
+    const node = get().nodes.find((n) => n.nodeId === nodeId);
+    if (!node || (node.locked ?? false) === locked) return;
+    markGraphDirty(get);
+    set((s) => ({
+      nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, locked } : n)),
       isDirty: true,
     }));
   },

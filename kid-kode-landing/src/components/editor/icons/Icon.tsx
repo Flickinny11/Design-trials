@@ -34,6 +34,26 @@ const PATHS: Record<string, string> = {
   arrowRight: 'M4 12 L16 12 L12 7 L14 5 L22 12 L14 19 L12 17 L16 12 Z',
   menu: 'M3 5 L21 5 L21 7 L3 7 Z M3 11 L21 11 L21 13 L3 13 Z M3 17 L21 17 L21 19 L3 19 Z',
   compass: 'M12 2 A10 10 0 1 1 12 22 A10 10 0 1 1 12 2 Z M12 6 L14 12 L20 12 L14 14 L12 20 L10 14 L4 12 L10 12 Z',
+  // STEP8 canvas-toolbar glyphs — premium tool icons (24x24, y-down, filled).
+  move: 'M11 2 L13 2 L13 11 L11 11 Z M11 13 L13 13 L13 22 L11 22 Z M2 11 L11 11 L11 13 L2 13 Z M13 11 L22 11 L22 13 L13 13 Z M12 0.5 L15.5 4 L8.5 4 Z M12 23.5 L8.5 20 L15.5 20 Z M0.5 12 L4 8.5 L4 15.5 Z M23.5 12 L20 15.5 L20 8.5 Z',
+  rotate: 'M12 5 L12 1.5 L17.5 6 L12 10.5 L12 7 A5 5 0 1 0 17 12 L19.5 12 A7.5 7.5 0 1 1 12 5 Z',
+  scale: 'M3 3 L21 3 L21 21 L3 21 Z M3 3 L3 9 L5 9 L5 5 L9 5 L9 3 Z M21 21 L15 21 L15 19 L19 19 L19 15 L21 15 Z M9 9 L15 9 L15 15 L9 15 Z',
+  image: 'M3 5 L21 5 L21 19 L3 19 Z M3 19 L9 11 L13 15 L16 12 L21 17 L21 19 Z M8 10 A2 2 0 1 1 8 9.99 Z',
+  cube: 'M12 2 L21 7 L12 12 L3 7 Z M3 8.5 L11 13 L11 22 L3 17.5 Z M13 13 L21 8.5 L21 17.5 L13 22 Z',
+  text: 'M4 4 L20 4 L20 8 L17.5 8 L17.5 6.2 L13.2 6.2 L13.2 17.8 L15.5 17.8 L15.5 20 L8.5 20 L8.5 17.8 L10.8 17.8 L10.8 6.2 L6.5 6.2 L6.5 8 L4 8 Z',
+  bulb: 'M12 2 A7 7 0 0 1 16 14.5 L15 16 L9 16 L8 14.5 A7 7 0 0 1 12 2 Z M9 17.5 L15 17.5 L15 19 L9 19 Z M10 20 L14 20 L13 22 L11 22 Z',
+  group: 'M3 4 L13 4 L13 14 L3 14 Z M5 6 L11 6 L11 12 L5 12 Z M11 11 L21 11 L21 21 L11 21 Z M13 13 L19 13 L19 19 L13 19 Z',
+  ungroup: 'M3 3 L11 3 L11 11 L3 11 Z M14 13 L22 13 L22 21 L14 21 Z',
+  wand: 'M4 18 L14 8 L16 10 L6 20 Z M17 3 L18.2 5.8 L21 7 L18.2 8.2 L17 11 L15.8 8.2 L13 7 L15.8 5.8 Z M19 13 L19.8 14.8 L21.6 15.6 L19.8 16.4 L19 18.2 L18.2 16.4 L16.4 15.6 L18.2 14.8 Z',
+  diamond: 'M12 2.5 L20 12 L12 21.5 L4 12 Z',
+  timeline: 'M2 11 L22 11 L22 13 L2 13 Z M12 5.5 L17 12 L12 18.5 L7 12 Z',
+  lockOpen: 'M7 10 L7 7 C7 4 9 2 12 2 C14.4 2 16.4 3.6 17 6 L15 6.5 C14.6 5.1 13.4 4 12 4 C10.5 4 9 5.5 9 7 L9 10 L19 10 L19 21 L5 21 L5 10 Z',
+  align: 'M3 2 L5 2 L5 22 L3 22 Z M8 5 L20 5 L20 9 L8 9 Z M8 13 L16 13 L16 17 L8 17 Z',
+  palette: 'M12 3 A9 9 0 1 0 12 21 C13.5 21 13.5 19.5 12.6 18.7 C11.5 17.7 12.2 16 13.7 16 L16 16 A5 5 0 0 0 21 11 C21 6.6 17 3 12 3 Z M7 10 A1.5 1.5 0 1 1 7 9.99 Z M11 7 A1.5 1.5 0 1 1 11 6.99 Z M16 8 A1.5 1.5 0 1 1 16 7.99 Z',
+  hammer: 'M13.5 3 L21 10.5 L18.5 13 L16 10.5 L6 20.5 L3.5 18 L13.5 8 L11 5.5 Z',
+  crop: 'M6 2 L8 2 L8 16 L22 16 L22 18 L8 18 L6 18 Z M2 6 L4 6 L16 6 L16 8 L6 8 L6 22 L4 22 L4 8 L2 8 Z',
+  sliders: 'M4 5 L20 5 L20 7 L4 7 Z M4 11 L20 11 L20 13 L4 13 Z M4 17 L20 17 L20 19 L4 19 Z M7 3 L9 3 L9 9 L7 9 Z M14 9 L16 9 L16 15 L14 15 Z M8 15 L10 15 L10 21 L8 21 Z',
+  cursor: 'M5 3 L19 11 L12 12 L16 19 L13.5 20.5 L9.5 13.5 L5 17 Z',
 };
 
 export type IconName = keyof typeof PATHS;
@@ -49,7 +69,21 @@ interface IconProps {
   strokeWidth?: number;
 }
 
-// 3D-styled icon: fills with a soft vertical gradient + subtle highlight to suggest extruded depth.
+/**
+ * Prism 3D-premium icon. Each glyph is composited from stacked, same-path layers
+ * to read as an extruded, lit solid — never a flat line icon:
+ *
+ *   1. two offset "side wall" copies (down + right) → extruded depth in shadow,
+ *      lit from the top-left (matches the editor's cosmic key-light);
+ *   2. the colored face;
+ *   3. a diagonal directional-light overlay (lit top-left → shaded bottom-right);
+ *   4. a soft top specular sheen → the bevel/gloss highlight;
+ *   5. a hairline top rim-light for crisp edge definition at toolbar sizes.
+ *
+ * Color-agnostic: the shadow/light overlays are white/black alpha, so any tint
+ * (currentColor or hex) extrudes correctly. API is unchanged from the flat
+ * version so every call site upgrades at once.
+ */
 export function Icon({
   name,
   size = 16,
@@ -61,8 +95,15 @@ export function Icon({
 }: IconProps) {
   const path = PATHS[name] || PATHS.sparkle;
   const primary = color || 'currentColor';
-  const hi = accent || 'rgba(255,255,255,0.35)';
+  const sheen = accent || 'rgba(255,255,255,0.9)';
   const uid = React.useId();
+
+  // Depth scales gently with render size so big icons feel chunkier, small ones stay crisp.
+  const px = typeof size === 'number' ? size : 16;
+  const d1 = px >= 28 ? 1.5 : px >= 18 ? 1.0 : 0.7; // primary extrude offset (viewBox units)
+
+  // Base seating shadow always present; glow adds the accent halo on top.
+  const seat = 'drop-shadow(0 0.5px 1px rgba(2,4,14,0.55))';
 
   return (
     <svg
@@ -72,24 +113,56 @@ export function Icon({
       fill="none"
       className={className}
       style={{
-        filter: glow ? `drop-shadow(0 0 6px ${primary})` : undefined,
+        filter: glow ? `drop-shadow(0 0 6px ${primary}) ${seat}` : seat,
+        overflow: 'visible',
         ...style,
       }}
       aria-hidden
     >
       <defs>
-        <linearGradient id={`ig-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={hi} stopOpacity="0.85" />
-          <stop offset="0.45" stopColor={primary} stopOpacity="1" />
-          <stop offset="1" stopColor={primary} stopOpacity="0.85" />
+        {/* Directional light across the face: lit top-left, shaded bottom-right. */}
+        <linearGradient id={`if-${uid}`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
+          <stop offset="0.4" stopColor="#ffffff" stopOpacity="0" />
+          <stop offset="0.62" stopColor="#000000" stopOpacity="0" />
+          <stop offset="1" stopColor="#000208" stopOpacity="0.42" />
         </linearGradient>
-        <linearGradient id={`il-${uid}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="rgba(255,255,255,0.5)" />
-          <stop offset="0.2" stopColor="rgba(255,255,255,0)" />
+        {/* Top specular sheen → bevel gloss. */}
+        <linearGradient id={`is-${uid}`} x1="0" y1="0" x2="0.15" y2="1">
+          <stop offset="0" stopColor={sheen} stopOpacity="0.85" />
+          <stop offset="0.3" stopColor={sheen} stopOpacity="0" />
+        </linearGradient>
+        {/* Side-wall tone for the extruded depth. */}
+        <linearGradient id={`iw-${uid}`} x1="0" y1="0" x2="0.4" y2="1">
+          <stop offset="0" stopColor="#0a0e22" stopOpacity="0.5" />
+          <stop offset="1" stopColor="#01030a" stopOpacity="0.7" />
         </linearGradient>
       </defs>
-      <path d={path} fill={`url(#ig-${uid})`} fillRule="evenodd" />
-      <path d={path} fill={`url(#il-${uid})`} fillRule="evenodd" opacity="0.5" />
+
+      {/* 1 — extruded side walls (two offset copies for graduated depth) */}
+      <g transform={`translate(${d1 * 1.6} ${d1 * 1.9})`}>
+        <path d={path} fill={`url(#iw-${uid})`} fillRule="evenodd" opacity="0.6" />
+      </g>
+      <g transform={`translate(${d1 * 0.8} ${d1 * 0.95})`}>
+        <path d={path} fill={`url(#iw-${uid})`} fillRule="evenodd" opacity="0.85" />
+      </g>
+
+      {/* 2 — colored face */}
+      <path d={path} fill={primary} fillRule="evenodd" />
+      {/* 3 — directional light */}
+      <path d={path} fill={`url(#if-${uid})`} fillRule="evenodd" />
+      {/* 4 — specular sheen */}
+      <path d={path} fill={`url(#is-${uid})`} fillRule="evenodd" opacity="0.6" />
+      {/* 5 — hairline rim-light for crisp edges */}
+      <path
+        d={path}
+        fill="none"
+        stroke="#ffffff"
+        strokeOpacity="0.18"
+        strokeWidth={px >= 28 ? 0.5 : 0.4}
+        strokeLinejoin="round"
+        fillRule="evenodd"
+      />
     </svg>
   );
 }

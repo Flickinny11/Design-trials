@@ -1,0 +1,92 @@
+{
+  "when": "2026-06-07T15:58:20.253Z",
+  "passed": 17,
+  "total": 17,
+  "results": [
+    {
+      "id": "screenshot.transform",
+      "pass": true,
+      "detail": "01-toolbar-transform.png"
+    },
+    {
+      "id": "screenshot.selection",
+      "pass": true,
+      "detail": "02-toolbar-selection.png"
+    },
+    {
+      "id": "screenshot.build",
+      "pass": true,
+      "detail": "03-toolbar-build.png"
+    },
+    {
+      "id": "keyframe.slides-out",
+      "pass": true,
+      "detail": "keyframe editor visible after toggle"
+    },
+    {
+      "id": "placeholder.coming-state",
+      "pass": true,
+      "detail": "Add Element shows \"Coming with\" — no fake output"
+    },
+    {
+      "id": "transform.writes-scenePosition.x",
+      "pass": true,
+      "detail": "x 0 → 0.18 (Δ0.180)"
+    },
+    {
+      "id": "transform.writes-scenePosition.scale",
+      "pass": true,
+      "detail": "scaleX 1 → 1.1664"
+    },
+    {
+      "id": "transform.only-target-changed",
+      "pass": true,
+      "detail": "changed: home-headline"
+    },
+    {
+      "id": "transform.persists-reload",
+      "pass": true,
+      "detail": "x after reload = 0.18"
+    },
+    {
+      "id": "selection.group",
+      "pass": true,
+      "detail": "groupId B=grp-395e2603-3020-4dfd-9376-bba39aa0579a C=grp-395e2603-3020-4dfd-9376-bba39aa0579a"
+    },
+    {
+      "id": "selection.group-cascade",
+      "pass": true,
+      "detail": "B.y 0.2→0.32  C.y -0.5→-0.38"
+    },
+    {
+      "id": "selection.ungroup-clears",
+      "pass": true,
+      "detail": "groupId after ungroup = null"
+    },
+    {
+      "id": "selection.ungroup-preserves-world",
+      "pass": true,
+      "detail": "scenePosition unchanged by ungroup"
+    },
+    {
+      "id": "build.add-to-system.recaption",
+      "pass": true,
+      "detail": "caption → \"Headline text at [0.18, 1.5, 0.1] scaled\""
+    },
+    {
+      "id": "build.add-to-system.clears-dirty",
+      "pass": true,
+      "detail": "dirty=false"
+    },
+    {
+      "id": "modetoggle.no-rebuild",
+      "pass": true,
+      "detail": "builds 6 → 6"
+    },
+    {
+      "id": "console.clean",
+      "pass": true,
+      "detail": "no new errors"
+    }
+  ]
+}

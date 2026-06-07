@@ -1,0 +1,281 @@
+{
+  "schemaVersion": "0.1.0",
+  "_comment": "Hand-authored canonical seed for the harness lock-in (P3). One hub, 6 nodes covering 7 of 9 cinematic primitives plus all 4 renderModes (sprite, plane, parallax-plane, mesh). Edited live by the editor; persisted via /api/prism/regen. dissolve-morph + fly-through deferred to a second hub. Coordinate system: scene world units; camera at z=10 FOV 45 → visible window roughly ±5x × ±2.8y at z=0. Backdrop plane mounts at z=-2 sized to fill camera view. Background nodes z<-1, sprites z=0, mesh z=1.",
+  "hub": {
+    "hubId": "home",
+    "title": "Home",
+    "caption": "Cinematic landing page hub showcasing the renderer's full surface — MSDF text, parallax-plane depth, mesh hero, magnetic-cursor, orbit, particle entrance, and kinetic-text — over a generated mockup backdrop.",
+    "layout": {
+      "viewportWidth": 1280,
+      "viewportHeight": 720,
+      "contentHeight": 720,
+      "backgroundColor": "#04050a",
+      "mockupUrl": "/prism-mock/home/mockup.png"
+    }
+  },
+  "nodes": [
+    {
+      "nodeId": "home-headline",
+      "subtype": "headline-text",
+      "parentHubId": "home",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": { "x": 0, "y": 1.5, "z": 0, "width": 5.5, "height": 0.6 },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Primary headline rendered as MSDF text — the hero copy users read first. Animates in via kinetic-text wave on hub mount, then drifts subtly with scroll via parallax-scroll. Communicates the product's headline in one sentence.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            {
+              "text": "Build worlds in seconds.",
+              "role": "headline",
+              "renderMethod": "msdf",
+              "typography": { "fontSize": 72, "fontWeight": 600, "color": "#e8eaf3" },
+              "position": { "anchor": "center" }
+            }
+          ],
+          "layers": []
+        },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "kinetic-text", "params": { "stagger": 0.04, "duration": 0.7, "effect": "wave", "easing": "power2.out" }, "trigger": "inview" },
+        { "name": "parallax-scroll", "params": { "axis": "y", "intensity": 0.15, "triggerStart": 0, "triggerEnd": 1 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": 0, "y": 1.5, "z": 0.1, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "home-feature-card",
+      "subtype": "feature-card",
+      "parentHubId": "home",
+      "serviceTag": "ui-card",
+      "visual": {
+        "sourceAsset": "/prism-mock/home/nodes/feature-card.png",
+        "transform": { "x": 2.6, "y": 0.2, "z": 0, "width": 1.6, "height": 1 },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Glass feature card on the right side of the hero. Reacts to cursor proximity via magnetic-cursor — drifts toward the pointer within a 200-unit radius and scales subtly. Communicates a single feature in one tight glance.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "plane",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "magnetic-cursor", "params": { "radius": 2.0, "intensity": 0.3, "damping": 0.18, "affectScale": true, "scaleAmount": 0.06 }, "trigger": "hover" }
+      ],
+      "scenePosition": { "x": 2.6, "y": 0.2, "z": 0, "rotationX": 0, "rotationY": -0.08, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "home-parallax-stack",
+      "subtype": "parallax-decor",
+      "parentHubId": "home",
+      "serviceTag": "ui-decor",
+      "visual": {
+        "sourceAsset": "/prism-mock/home/nodes/parallax-stack.png",
+        "transform": { "x": -2.8, "y": -0.5, "z": 0, "width": 2, "height": 1.4 },
+        "alpha": 0.85
+      },
+      "intent": {
+        "caption": "Stacked translucent panels on the left side rendered as a parallax-plane via TSL displacement shader sampling a depth map. Subtle UV distortion conveys depth and motion, evoking layered glass. Decorative — no behavior.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "parallax-plane",
+      "depthMapUrl": "/prism-mock/home/nodes/parallax-stack.depth.png",
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "displacement-transition", "params": { "intensity": 0.05, "duration": 1.4, "easing": "sine.inOut" }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": -2.8, "y": -0.5, "z": -1, "rotationX": 0, "rotationY": 0.08, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "home-orbit-decor",
+      "subtype": "orbital-decor",
+      "parentHubId": "home",
+      "serviceTag": "ui-decor",
+      "visual": {
+        "sourceAsset": "/prism-mock/home/nodes/orb-decor.png",
+        "transform": { "x": -1.4, "y": -1.6, "z": 0, "width": 0.6, "height": 0.6 },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Glowing energy orb that orbits a fixed center beneath the hero. Idles in continuous orbital motion. Particle-emerge plays once on hub mount as it appears. Decorative atmospheric element.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "orbit", "params": { "centerX": 0, "centerY": -1.6, "centerZ": 0, "radius": 1.4, "axisX": 0, "axisY": 0, "axisZ": 1, "period": 8, "faceCenter": true, "clockwise": true }, "trigger": "load" },
+        { "name": "particle-emerge", "params": { "duration": 0.8, "particleCount": 60, "spread": 0.4 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": -1.4, "y": -1.6, "z": 0.2, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "home-floating-accent",
+      "subtype": "atmospheric-accent",
+      "parentHubId": "home",
+      "serviceTag": "ui-decor",
+      "visual": {
+        "sourceAsset": "/prism-mock/home/nodes/floating-accent.png",
+        "transform": { "x": 1.8, "y": -1.4, "z": 0, "width": 0.5, "height": 0.5 },
+        "alpha": 0.9
+      },
+      "intent": {
+        "caption": "Holographic crystalline accent shape in the lower-right. Plays a particle-emerge entrance on hub mount. Decorative — adds atmospheric depth and reinforces the iridescent palette.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": { "textContent": [], "layers": [] },
+        "contracts": { "inputs": {}, "outputs": {} }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "sprite",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [
+        { "name": "particle-emerge", "params": { "duration": 1.0, "particleCount": 40, "spread": 0.3 }, "trigger": "inview" }
+      ],
+      "scenePosition": { "x": 1.8, "y": -1.4, "z": 0.15, "rotationX": 0, "rotationY": 0, "rotationZ": 0.4, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    },
+    {
+      "nodeId": "home-cta-hero",
+      "subtype": "hero-cta",
+      "parentHubId": "home",
+      "serviceTag": "ui-cta",
+      "visual": {
+        "transform": { "x": 0, "y": -0.2, "z": 0, "width": 1.6, "height": 1.4 },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "3D mesh CTA hero — a stylized smartwatch product on a hover platform with a kinetic-text label below. Idles with depth-rotate (slow Y-axis rotation responding to camera depth). On click, emits 'cta-clicked' event for downstream listeners. The hero focal point of the hub.",
+        "behaviorSpec": {
+          "interactions": [
+            { "event": "click", "effect": "emit:cta-clicked" }
+          ],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": ["cta-clicked"],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            {
+              "text": "Try it now",
+              "role": "cta-label",
+              "renderMethod": "msdf",
+              "typography": { "fontSize": 28, "fontWeight": 500, "color": "#9bd4ff" },
+              "position": { "anchor": "center", "y": -1 }
+            }
+          ],
+          "layers": []
+        },
+        "contracts": { "inputs": {}, "outputs": { "cta-clicked": "ButtonClickEvent" } }
+      },
+      "codeRef": "/prism-mock/home/nodes/cta-hero.code.js",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": "/prism-mock/home/nodes/cta-hero.glb",
+      "cinematicPrimitives": [],
+      "scenePosition": { "x": 0, "y": -0.2, "z": 1, "rotationX": 0, "rotationY": 0, "rotationZ": 0, "scaleX": 1, "scaleY": 1, "scaleZ": 1 }
+    }
+  ],
+  "edges": [
+    { "from": "home-headline", "to": "home-cta-hero", "type": "contains", "event": "" },
+    { "from": "home-cta-hero", "to": "home-feature-card", "type": "triggers", "event": "cta-clicked" }
+  ],
+  "rootNodes": [
+    {
+      "appNameWorldId": "app-name-world-home",
+      "spec": {
+        "name": "PrismLive",
+        "summary": "Harness lock-in canonical seed — cinematic landing page hub showcasing the renderer's surface (HL03 / Plan §P4).",
+        "goals": [
+          "Cover all four renderModes (sprite, plane, parallax-plane, mesh)",
+          "Cover seven of nine cinematic primitives in a single hub",
+          "Persist edits live via /api/prism/regen"
+        ]
+      },
+      "designSpec": {
+        "themeId": "prism-cosmic",
+        "palette": {
+          "background": "#04050a"
+        }
+      },
+      "buildPlan": {
+        "strategy": "harness-lockin-seed",
+        "stages": ["seed", "edit-via-editor", "regenerate"]
+      },
+      "memoryLog": [],
+      "hubRegistry": [
+        { "hubId": "home", "role": "landing" }
+      ],
+      "nodeRegistry": [],
+      "globalDependencies": [],
+      "validationRules": [],
+      "aiRoutingRules": [],
+      "capabilityRefs": []
+    }
+  ]
+}

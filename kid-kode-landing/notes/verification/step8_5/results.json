@@ -1,0 +1,76 @@
+{
+  "when": "2026-06-07T16:57:31.454Z",
+  "passed": 13,
+  "total": 13,
+  "results": [
+    {
+      "id": "static.no-stock-icon-imports",
+      "pass": true,
+      "detail": "163 files scanned, 0 stock-icon imports"
+    },
+    {
+      "id": "static.no-stock-icon-deps",
+      "pass": true,
+      "detail": "package.json has no icon-library deps"
+    },
+    {
+      "id": "static.icon-3d-layered",
+      "pass": true,
+      "detail": "Icon.tsx composites extrude + face + directional-light + sheen + rim"
+    },
+    {
+      "id": "screenshot.topbar",
+      "pass": true,
+      "detail": "01-topbar-default.png"
+    },
+    {
+      "id": "screenshot.canvas-toolbar-inspector",
+      "pass": true,
+      "detail": "02-canvas-toolbar-inspector.png"
+    },
+    {
+      "id": "screenshot.toolbar-rail",
+      "pass": true,
+      "detail": "03-toolbar-rail-closeup.png"
+    },
+    {
+      "id": "keyframe.visible",
+      "pass": true,
+      "detail": "keyframe editor visible after toggle"
+    },
+    {
+      "id": "keyframe.full-width",
+      "pass": true,
+      "detail": "editor width 100% of viewport (left-0 right-0)"
+    },
+    {
+      "id": "function.move-writes-scenePosition",
+      "pass": true,
+      "detail": "x 0 → 0.18 (Δ0.180)"
+    },
+    {
+      "id": "function.only-target-changed",
+      "pass": true,
+      "detail": "changed: home-headline"
+    },
+    {
+      "id": "function.build-add-to-system",
+      "pass": true,
+      "detail": "caption → \"Headline text at [0.18, 1.5, 0.1]\""
+    },
+    {
+      "id": "function.modetoggle-no-rebuild",
+      "pass": true,
+      "detail": "builds 6 → 6"
+    },
+    {
+      "id": "console.clean",
+      "pass": true,
+      "detail": "no new errors"
+    }
+  ],
+  "staticAudit": {
+    "scanned": 163,
+    "offenders": []
+  }
+}

@@ -70,6 +70,7 @@ import {
 import {
   gizmoModeForKey,
   readCanvasTransform,
+  readSceneTransform,
   restorePriorCanvasTransform,
   type CanvasTransform,
   type GizmoMode,
@@ -1804,20 +1805,27 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const editorMode = useGraphEditorStore((s) => s.editorMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  // STEP8 canvas-spec SC-9 — Transform tools author the node's OWN schema
+  // (scenePosition), the legitimate way a node's position/scale is set. (The
+  // archived editor-build SC-042 routed this to `canvasTransform`; that is
+  // superseded by the canonical canvas spec — SPEC-INDEX S6.)
   const updateNode = useGraphSourceStore((s) => s.updateNode);
+  // STEP8 — gizmo axis set is lifted to the store so the toolbar Move/Rotate/
+  // Scale buttons and the g/r/s shortcuts drive the same value.
+  const mode = useGraphEditorStore((s) => s.canvasGizmoMode);
+  const setMode = useGraphEditorStore((s) => s.setCanvasGizmoMode);
   // State-backed ref so the drei gizmo attaches deterministically on the
   // first render (a plain useRef holds null on the initial render and would
   // skip the gizmo mount until some unrelated state change re-rendered).
   const [proxy, setProxy] = useState<THREE.Group | null>(null);
-  const priorCanvasTransform = useRef<CanvasTransform | null>(null);
+  const priorSceneTransform = useRef<CanvasTransform | null>(null);
   // EBR2-C-03 / §R2-C INV-25 — the anchor group is positioned at the
   // composed sp+ct world, and the proxy sits at identity local so
   // TransformControls computes drag deltas from a stable origin. We capture
-  // the drag-start ct on onMouseDown so onObjectChange can write back
-  // `new ct = start + proxy delta` without growing cumulative offset.
-  const dragStartCT = useRef<CanvasTransform | null>(null);
+  // the drag-start scenePosition on onMouseDown so onObjectChange can write
+  // back `new sp = start + proxy delta` without growing cumulative offset.
+  const dragStartSP = useRef<CanvasTransform | null>(null);
   const isDraggingRef = useRef(false);
-  const [mode, setMode] = useState<GizmoMode>('translate');
 
   // SC-025 — the three gizmo modes rendered on selection. Listed inline so
   // they remain greppable in this file for the source-level regression test.
@@ -1836,20 +1844,22 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
     [nodes, selectedNodeId],
   );
   const nodeId = node?.nodeId ?? null;
-  const persistedCT = node?.canvasTransform;
+  const persistedSP = node?.scenePosition;
+  // STEP8 canvas-spec §5 — a locked node is removed from transform authoring.
+  const isLocked = node?.locked === true;
 
   // EBR2-C-03 / §R2-C INV-25 — the parent anchor group already composes
   // scenePosition + canvasTransform into its world position (see return
   // below). The proxy stays at its parent's local origin so TransformControls
   // attaches at the composed sp+ct world. Each store update re-renders the
-  // anchor at the new sp+ct and we reset the proxy back to identity so the
+  // anchor at the new sp and we reset the proxy back to identity so the
   // next drag frame computes deltas from a stable baseline.
   useEffect(() => {
     if (!proxy || !node) return;
     proxy.position.set(0, 0, 0);
     proxy.rotation.set(0, 0, 0);
     proxy.scale.set(1, 1, 1);
-  }, [proxy, nodeId, persistedCT, node]);
+  }, [proxy, nodeId, persistedSP, node]);
 
   // Capture the prior snapshot on selection so Escape can roll back. Reset
   // when the selection clears, the user switches out of canvas mode, or the
@@ -1857,10 +1867,10 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   // outlive an edit session).
   useEffect(() => {
     if (!isCanvasMode || !isEditMode || !node) {
-      priorCanvasTransform.current = null;
+      priorSceneTransform.current = null;
       return;
     }
-    priorCanvasTransform.current = readCanvasTransform(node);
+    priorSceneTransform.current = readSceneTransform(node);
   }, [nodeId, isCanvasMode, isEditMode, node]);
 
   // Keyboard mode switch (g/r/s) + Escape cancel-restore (only during a
@@ -1882,10 +1892,10 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         if (!isDraggingRef.current) return;
-        const prior = priorCanvasTransform.current;
+        const prior = priorSceneTransform.current;
         if (prior) {
           const restored = restorePriorCanvasTransform(prior);
-          updateNode(captured.nodeId, { canvasTransform: restored });
+          updateNode(captured.nodeId, { scenePosition: restored });
         }
         return;
       }
@@ -1895,11 +1905,12 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isCanvasMode, isEditMode, nodeId, updateNode, node]);
+  }, [isCanvasMode, isEditMode, nodeId, updateNode, setMode, node]);
 
-  if (!isCanvasMode || !isEditMode || !node) return null;
+  // STEP8 — never mount handles on a locked node (canvas-spec §5 lock/unlock).
+  if (!isCanvasMode || !isEditMode || !node || isLocked) return null;
 
-  const sp = node.scenePosition ?? { x: 0, y: 0, z: 0 };
+  const sp = readSceneTransform(node);
   const ct = readCanvasTransform(node);
 
   return (
@@ -1919,23 +1930,23 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
           mode={mode}
           onMouseDown={() => {
             isDraggingRef.current = true;
-            // EBR2-C-03 — capture ct at drag start so onObjectChange can
-            // write back start + delta. Cleared on mouseUp.
-            dragStartCT.current = readCanvasTransform(node);
+            // EBR2-C-03 — capture scenePosition at drag start so
+            // onObjectChange can write back start + delta. Cleared on mouseUp.
+            dragStartSP.current = readSceneTransform(node);
           }}
           onMouseUp={() => {
             isDraggingRef.current = false;
-            dragStartCT.current = null;
+            dragStartSP.current = null;
           }}
           onObjectChange={() => {
-            // EBR2-C-03 — proxy local pose is the drag delta from its
-            // anchor origin (identity at drag start). The new ct is the
-            // captured drag-start ct composed with the proxy delta:
-            // position is additive (drag offset adds to ct), rotation is
-            // Euler-additive (TransformControls writes incremental rotation
-            // from identity), scale is multiplicative (TransformControls
-            // writes proxy.scale = startScale(=1) * factor so we multiply).
-            const start = dragStartCT.current ?? readCanvasTransform(node);
+            // STEP8 canvas-spec SC-9 — proxy local pose is the drag delta from
+            // its anchor origin (identity at drag start). The new scenePosition
+            // is the captured drag-start sp composed with the proxy delta:
+            // translate is additive, rotation is Euler-additive (incremental
+            // from identity), scale is multiplicative (proxy.scale = 1 * factor).
+            // We write the node's OWN schema field — authoring, the legitimate
+            // way a node's position/scale is set (CORRECTED CONCEPT / SC-9).
+            const start = dragStartSP.current ?? readSceneTransform(node);
             const next: CanvasTransform = {
               x: start.x + proxy.position.x,
               y: start.y + proxy.position.y,
@@ -1947,7 +1958,7 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
               scaleY: start.scaleY * proxy.scale.y,
               scaleZ: start.scaleZ * proxy.scale.z,
             };
-            updateNode(node.nodeId, { canvasTransform: next });
+            updateNode(node.nodeId, { scenePosition: next });
           }}
         />
       ) : null}
@@ -1976,22 +1987,43 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   const selectNode = useGraphEditorStore((s) => s.selectNode);
   const hoverNode = useGraphEditorStore((s) => s.hoverNode);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
+  // STEP8 — multi/group selection rings (canvas-spec §14). A node in the
+  // multi-selection set gets the group accent ring so a Group reads as a unit.
+  const multiSelectedIds = useGraphEditorStore((s) => s.selectedNodeIds);
   const isSelected = selectedId === node.nodeId;
+  const isMultiSelected = multiSelectedIds.has(node.nodeId);
   const isHovered = hoveredId === node.nodeId;
+  const isLocked = node.locked === true;
   // EBR2-E-02 / §R2-E SC-072 — renderer reads source ⊕ preview overlay so
   // Inspector tab edits show up live before "Save" commits to source. The
   // selector returns the patch for this specific node (or null), so the
   // component re-renders only when this node's preview buffer changes.
   const previewPatch = usePreviewStateStore((s) => s.patches[node.nodeId] ?? null);
   const composedNode = composeNodeWithPreview(node, previewPatch);
-  const sp = composedNode.scenePosition ?? { x: 0, y: 0, z: 0 };
+  // STEP8 canvas-spec SC-9 — scenePosition is the authored transform the
+  // Transform tools write (gizmo + toolbar). Read it with full defaults
+  // (legacy nodes carry only x/y/z, or nothing) so rotation/scale compose
+  // cleanly below.
+  const spRaw = composedNode.scenePosition;
+  const sp = {
+    x: spRaw?.x ?? 0,
+    y: spRaw?.y ?? 0,
+    z: spRaw?.z ?? 0,
+    rotationX: spRaw?.rotationX ?? 0,
+    rotationY: spRaw?.rotationY ?? 0,
+    rotationZ: spRaw?.rotationZ ?? 0,
+    scaleX: spRaw?.scaleX ?? 1,
+    scaleY: spRaw?.scaleY ?? 1,
+    scaleZ: spRaw?.scaleZ ?? 1,
+  };
   // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
   // consumer of scenePosition + canvasTransform for visible node placement.
   // Compose them here so the artifact, selection ring, and the gizmo anchor
   // (CanvasTransformGizmo, rendered as a sibling) all land at the same
-  // world pose. Dragging a transform handle in canvas mode writes through
-  // updateNode({ canvasTransform }); this read picks the new ct up on the
-  // next render frame and the artifact visibly follows.
+  // world pose. The Transform tools write through scenePosition (canvas-spec
+  // SC-9); `canvasTransform` remains a composable overlay (identity unless a
+  // legacy ct-authored node carries one). Translate adds; rotation adds;
+  // scale multiplies — so identity in either field is a no-op.
   const ct = readCanvasTransform(composedNode);
   const w = composedNode.visual?.transform?.width ?? 0.35;
   const h = composedNode.visual?.transform?.height ?? 0.35;
@@ -2053,8 +2085,12 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
         else map.delete(node.nodeId);
       }}
       position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
-      rotation={[ct.rotationX, ct.rotationY, ct.rotationZ]}
-      scale={[ct.scaleX, ct.scaleY, ct.scaleZ]}
+      rotation={[
+        sp.rotationX + ct.rotationX,
+        sp.rotationY + ct.rotationY,
+        sp.rotationZ + ct.rotationZ,
+      ]}
+      scale={[sp.scaleX * ct.scaleX, sp.scaleY * ct.scaleY, sp.scaleZ * ct.scaleZ]}
       onClick={(e) => {
         e.stopPropagation();
         // STEP7 — EventDriver input: a click on the built artifact fires a
@@ -2081,10 +2117,24 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       <group ref={popRef} scale={alreadyPopped ? 1 : BUILD_POP_START}>
         <ArtifactNode node={node} layout="scene" />
       </group>
-      {!previewMode && (isSelected || isHovered) && (
+      {!previewMode && (isSelected || isMultiSelected || isHovered) && (
         <mesh position={[0, 0, 0.08]}>
           <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
-          <meshBasicMaterial color={isSelected ? '#8bb4ff' : '#55e6a5'} transparent opacity={0.85} toneMapped={false} />
+          <meshBasicMaterial
+            color={
+              isSelected ? '#8bb4ff' : isMultiSelected ? '#a978ff' : '#55e6a5'
+            }
+            transparent
+            opacity={0.85}
+            toneMapped={false}
+          />
+        </mesh>
+      )}
+      {/* STEP8 — a thin amber ring marks a locked node (canvas-spec §5). */}
+      {!previewMode && isLocked && (
+        <mesh position={[0, 0, 0.07]}>
+          <ringGeometry args={[ringSize + 0.04, ringSize + 0.06, 64]} />
+          <meshBasicMaterial color="#f5a524" transparent opacity={0.7} toneMapped={false} />
         </mesh>
       )}
     </group>
@@ -2434,6 +2484,51 @@ function SceneDriverHost() {
   return null;
 }
 
+// STEP8 canvas-spec §5 Selection / §14 — marquee hit-test bridge. The DOM
+// marquee overlay (CanvasToolbar) draws the rubber-band in canvas-client px;
+// it cannot raycast the WebGPU scene, so this in-scene component (which has the
+// camera + canvas size) exposes a pure hit-test: given a client-px rect, return
+// the ids of every built node whose projected centre falls inside it. Selection
+// state is then set by the overlay through store actions (FP-11 safe).
+// Editor-shell scope (FP-05 window.* restriction is runtime/prism-player only).
+function MarqueeSelectBridge() {
+  const { camera, gl } = useThree();
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+      __PRISM_EDITOR_MARQUEE_HIT__?: (rect: { x: number; y: number; w: number; h: number }) => string[];
+    };
+    const v = new THREE.Vector3();
+    w.__PRISM_EDITOR_MARQUEE_HIT__ = (rect) => {
+      const groups = w.__PRISM_EDITOR_NODE_GROUPS__;
+      if (!groups) return [];
+      const el = gl.domElement;
+      const cw = el.clientWidth || 1;
+      const ch = el.clientHeight || 1;
+      const x0 = Math.min(rect.x, rect.x + rect.w);
+      const x1 = Math.max(rect.x, rect.x + rect.w);
+      const y0 = Math.min(rect.y, rect.y + rect.h);
+      const y1 = Math.max(rect.y, rect.y + rect.h);
+      const hits: string[] = [];
+      groups.forEach((group, nodeId) => {
+        group.updateWorldMatrix(true, false);
+        group.getWorldPosition(v);
+        v.project(camera);
+        if (v.z > 1) return; // behind the camera / beyond the far plane
+        const sx = (v.x * 0.5 + 0.5) * cw;
+        const sy = (-v.y * 0.5 + 0.5) * ch;
+        if (sx >= x0 && sx <= x1 && sy >= y0 && sy <= y1) hits.push(nodeId);
+      });
+      return hits;
+    };
+    return () => {
+      delete w.__PRISM_EDITOR_MARQUEE_HIT__;
+    };
+  }, [camera, gl]);
+  return null;
+}
+
 function AssembledSceneContent({
   onPerf,
   previewMode = false,
@@ -2520,6 +2615,7 @@ function AssembledSceneContent({
         <>
           <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
           <CanvasTransformGizmo nodes={nodes} />
+          <MarqueeSelectBridge />
           <KeyframeDemo />
         </>
       )}

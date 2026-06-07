@@ -419,6 +419,20 @@ export interface PrismNode {
   // commit (`preview-commit.ts`); cleared by the surgical Save-and-Rebuild
   // (`rebuild-node.ts`). Absent / false on legacy graphs (no built-state drift).
   dirty?: boolean;
+  // STEP8 canvas-toolbar Selection group (canvas-spec §14, SC-22; INV-18
+  // additive, INV-1 frozen-graph: this is a contains-subtree marker, NOT a new
+  // edge type or topology change). Nodes sharing a `groupId` form a Group whose
+  // transform cascades (the Selection group's Group button mints a fresh id and
+  // stamps it onto every selected node; Ungroup clears it, leaving each node's
+  // own `scenePosition` — and therefore its world transform — intact). Absent on
+  // ungrouped / legacy nodes.
+  groupId?: string;
+  // STEP8 canvas-toolbar Selection group (canvas-spec §5 "lock/unlock"; INV-18
+  // additive). `locked === true` removes the node from transform authoring: the
+  // CanvasTransformGizmo skips it and the toolbar Transform tools refuse to
+  // write its `scenePosition`. Distinct from `frozenNodeIds` (AI-off-limits) —
+  // lock is a manual-edit guard. Absent / false on legacy nodes.
+  locked?: boolean;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the

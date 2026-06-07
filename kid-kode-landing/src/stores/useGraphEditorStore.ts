@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
@@ -51,6 +52,13 @@ interface GraphEditorState {
    * persists across a fresh selection.
    */
   editorMode: EditorMode;
+  /**
+   * STEP8 canvas-toolbar Transform group (canvas-spec §5) — the active gizmo
+   * axis-set the CanvasTransformGizmo renders while in edit mode. Lifted to the
+   * store so the toolbar's Move / Rotate / Scale buttons and the Blender-style
+   * g/r/s keyboard shortcuts drive the same value. Defaults to 'translate'.
+   */
+  canvasGizmoMode: GizmoMode;
 
   // Selection — node and hub selection are mutually exclusive
   selectedNodeId: string | null;
@@ -145,11 +153,24 @@ interface GraphEditorState {
    * the click handler.
    */
   setEditorMode: (m: EditorMode) => void;
+  /**
+   * STEP8 — set the active transform-gizmo axis set (translate/rotate/scale).
+   * Called by the toolbar Transform buttons and the g/r/s shortcuts.
+   */
+  setCanvasGizmoMode: (m: GizmoMode) => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
   toggleNodeSelection: (id: string) => void;
   toggleHubSelection: (id: string) => void;
+  /**
+   * STEP8 canvas-toolbar Selection group (canvas-spec §14) — set the multi-
+   * selection set wholesale (used by the marquee tool and Group operations).
+   * Mirrors toggleNodeSelection's anchor semantics: size 0 → clear singular;
+   * size 1 → singular reflects the lone member; size ≥2 → group view. Resets
+   * editorMode so the gizmo never lingers on a stale selection.
+   */
+  setMultiSelection: (ids: string[]) => void;
   clearMultiSelection: () => void;
   openInspector: (tab?: InspectorTab) => void;
   closeInspector: () => void;
@@ -233,6 +254,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // EBR2-C-01 / §R2-C SC-068 — handles never render on selection alone;
     // the Inspector Edit button must flip this to 'edit' first.
     editorMode: 'idle',
+    // STEP8 — default transform gizmo axis set.
+    canvasGizmoMode: 'translate',
     selectedNodeId: null,
     selectedHubId: null,
     hoveredNodeId: null,
@@ -278,6 +301,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // handled inside the selection actions (selectNode/selectHub/flyToNode/
     // drillIntoHub), not here.
     setEditorMode: (m) => set({ editorMode: m }),
+    // STEP8 — toolbar Transform buttons + g/r/s shortcuts converge here.
+    setCanvasGizmoMode: (m) => set({ canvasGizmoMode: m }),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';
@@ -344,6 +369,29 @@ export const useGraphEditorStore = create<GraphEditorState>()(
           return { selectedHubIds: next, selectedHubId: only, inspectorOpen: true };
         }
         return { selectedHubIds: next, inspectorOpen: true };
+      }),
+    setMultiSelection: (ids) =>
+      set(() => {
+        const next = new Set<string>(ids);
+        if (next.size === 0) {
+          return { selectedNodeIds: next, selectedNodeId: null, editorMode: 'idle' as EditorMode };
+        }
+        if (next.size === 1) {
+          const only = next.values().next().value as string;
+          return {
+            selectedNodeIds: next,
+            selectedNodeId: only,
+            selectedHubId: null,
+            inspectorOpen: true,
+            editorMode: 'idle' as EditorMode,
+          };
+        }
+        return {
+          selectedNodeIds: next,
+          selectedHubId: null,
+          inspectorOpen: true,
+          editorMode: 'idle' as EditorMode,
+        };
       }),
     clearMultiSelection: () =>
       set({
