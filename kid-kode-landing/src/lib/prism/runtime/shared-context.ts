@@ -27,6 +27,7 @@
 // returned handles directly — call `__resetSharedContext()` (tests only)
 // or rely on process exit.
 
+import * as THREE from 'three';
 import { PerspectiveCamera, Scene } from 'three';
 import {
   createLoaderCache,
@@ -170,6 +171,10 @@ export function getSharedNodeContext(opts: {
   }
 
   return {
+    // RT-SC-02 / INV-R1 — the single bundled `three`. codeRef modules read
+    // their THREE classes from here so a native import() of a codeRef module
+    // can never pull a second `three` from a CDN import-map.
+    THREE,
     textureLoader: { loadTexture: loaders.loadTexture },
     glbLoader: { loadGLB: loaders.loadGLB },
     fontAtlas,

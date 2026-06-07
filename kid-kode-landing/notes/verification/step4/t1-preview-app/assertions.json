@@ -1,0 +1,19 @@
+{
+  "mode": "preview-app",
+  "stubWebgpu": false,
+  "assertions": {
+    "canvasCount": 1,
+    "panes": {
+      "preview": 1,
+      "graph": 0
+    },
+    "cdnThreeResources": [],
+    "hasImportMap": false,
+    "importMapText": null,
+    "rendererBackend": null,
+    "webgpuAvailable": true,
+    "viewMode": "preview-app",
+    "editorDebug": null
+  },
+  "toggleReport": []
+}

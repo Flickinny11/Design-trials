@@ -32,6 +32,14 @@ export type NodeTextureLoader = Pick<LoaderCacheHandle, 'loadTexture'>;
 export type NodeGLBLoader = Pick<LoaderCacheHandle, 'loadGLB'>;
 
 export interface NodeContext {
+  /** The single, bundled `three` module namespace (RT-SC-02 / INV-R1).
+   *  codeRef modules MUST read THREE classes from here (e.g.
+   *  `const { Group, Vector3 } = ctx.THREE`) instead of `import … from 'three'`
+   *  / `'three/webgpu'`. A native `import(url)` of a codeRef module would
+   *  otherwise resolve its bare `three` specifier through the browser
+   *  import-map → a SECOND `three` instance from a CDN, which is the
+   *  multiple-instances crash this field exists to prevent. */
+  THREE: typeof import('three');
   /** Texture loader keyed by URL. Same URL yields the same `Promise<Texture>`. */
   textureLoader: NodeTextureLoader;
   /** GLB loader keyed by URL. Same URL yields the same `Promise<GLTF>`. */

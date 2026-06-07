@@ -92,6 +92,13 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
   }
   const ctx = getSharedNodeContext({ runPrimitives: false });
   const factory = getEditorFactory();
+  // RT-SC-08 diagnostic — count actual artifact builds (cache MISSES). A pure
+  // mode toggle (galaxy↔canvas↔preview-app) on already-built nodes must add 0
+  // here. Editor-shell scope; guarded so it never runs in a non-browser env.
+  if (typeof window !== 'undefined') {
+    const w = window as unknown as { __artifactBuildCount?: number };
+    w.__artifactBuildCount = (w.__artifactBuildCount ?? 0) + 1;
+  }
   let object: Object3D;
   try {
     object = factory(node, ctx);

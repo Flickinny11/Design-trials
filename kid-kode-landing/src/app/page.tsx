@@ -2,7 +2,6 @@
 
 import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo } from 'react';
-import PrismHost, { type ViewportPreset } from '@/components/prism-player/PrismHost';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
@@ -62,7 +61,6 @@ export default function Page() {
   // EB-10-02 / §10 SC-054 — preview-app routing reads the active hub from
   // the store and writes back via setState (no dedicated action needed).
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
-  const [previewPreset, setPreviewPreset] = useState<ViewportPreset>('desktop');
 
   // EBR2-B-02 / §R2-B SC-066 — reactive selectors over the source-graph
   // store slices that feed compileAppToPreview. Subscribing here (rather
@@ -539,15 +537,11 @@ export default function Page() {
     w[arrivalsKey] = [...prior, record];
   }, [viewMode, activeHubId]);
 
-  // Pane visibility derived from the canonical viewMode (RA-06b / spec §3
-  // "single canvas; three view modes"). One pane fills the viewport; the
-  // mode decides what renders inside it.
-  //   - galaxy / canvas mount the graph editor (GraphScene + overlays).
-  //   - preview-app mounts the Prism runtime (PrismHost).
-  const isPreviewMode = viewMode === 'preview-app';
+  // RT-SC-03 / INV-R3 — ONE unified scene (GraphScene) for all three modes.
+  // The mode is a STATE of that scene, not a choice of which mount to render.
+  // preview-app hides editor chrome so the same built scene reads as the running
+  // app (it is NOT a separate PrismHost/compiled mount — FP-R5).
   const isPreviewApp = viewMode === 'preview-app';
-  const showsPreview = isPreviewMode;
-  const showsGraph = !isPreviewMode;
 
   return (
     <main className="relative w-screen h-screen overflow-hidden bg-[#04050a]">
@@ -660,48 +654,42 @@ export default function Page() {
             </div>
           )}
 
-          {showsPreview && (
-            <div data-pane="preview" className="absolute inset-0">
-              <PrismHost
-                viewportPreset={previewPreset}
-                showViewportControls
-                onPresetChange={setPreviewPreset}
-                compiledHubView={activeCompiledHubView}
-              />
-            </div>
-          )}
-
-          {showsGraph && (
-            <div data-pane="graph" className="absolute inset-0">
-              <GraphScene />
-              <TopBar />
-              <HubNav />
-              <Minimap />
-              <DetailCard />
-              <RightPane />
-              <GalaxyFilterOverlay />
-            </div>
-          )}
+          {/* RT-SC-03 / INV-R3 / FP-R5 — ONE unified scene for all three
+              modes. preview-app is a STATE of this same scene (built artifacts
+              from the cache, handles hidden, drivers running), NOT a separate
+              compiled PrismHost mount. GraphScene always mounts; the mode drives
+              what renders inside it (galaxy=spheres, canvas/preview-app=built).
+              Editor chrome is hidden in preview-app so it reads as the running
+              app rather than an editor. */}
+          <div data-pane="graph" className="absolute inset-0">
+            <GraphScene />
+            {!isPreviewApp && (
+              <>
+                <TopBar />
+                <HubNav />
+                <Minimap />
+                <DetailCard />
+                <RightPane />
+                <GalaxyFilterOverlay />
+              </>
+            )}
+          </div>
         </>
       ) : (
         <>
-          {/* Mobile: same single-pane discipline as desktop — preview modes
-              mount PrismHost full-screen; everything else mounts the editor. */}
-          {showsPreview && (
-            <div data-pane="preview" className="absolute inset-0">
-              <PrismHost compiledHubView={activeCompiledHubView} />
-            </div>
-          )}
-          {showsGraph && (
-            <div data-pane="graph" className="absolute inset-0">
-              <GraphScene />
-              <TopBar />
-              <HubNav />
-              <DetailCard />
-              <RightPane />
-              <GalaxyFilterOverlay />
-            </div>
-          )}
+          {/* Mobile: same single-scene discipline as desktop. */}
+          <div data-pane="graph" className="absolute inset-0">
+            <GraphScene />
+            {!isPreviewApp && (
+              <>
+                <TopBar />
+                <HubNav />
+                <DetailCard />
+                <RightPane />
+                <GalaxyFilterOverlay />
+              </>
+            )}
+          </div>
         </>
       )}
 

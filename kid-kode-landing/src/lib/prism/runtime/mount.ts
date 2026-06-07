@@ -13,6 +13,7 @@
 // editor / integration-host entry point. T07-T09 layer in editor sliders,
 // mock-app reconstruction, and per-node code resolution.
 
+import * as THREE from 'three';
 import { createSceneRoot, type SceneRootHandle } from './shared/scene-root';
 import { createLoaderCache, type LoaderCacheHandle } from './shared/loaders';
 import { createFontAtlas, type FontAtlasHandle } from './shared/text';
@@ -148,6 +149,8 @@ export async function mount(
   // factories land in T07-T09 with the codegen-emitted modules.
   const events = new Map<string, ((p: unknown) => void)[]>();
   const ctx: NodeContext = {
+    // RT-SC-02 / INV-R1 — single bundled `three` injected for codeRef modules.
+    THREE,
     textureLoader: { loadTexture: loaders.loadTexture },
     glbLoader: { loadGLB: loaders.loadGLB },
     fontAtlas,

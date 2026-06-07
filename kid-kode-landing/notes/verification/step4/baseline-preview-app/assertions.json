@@ -1,0 +1,19 @@
+{
+  "mode": null,
+  "stubWebgpu": false,
+  "assertions": {
+    "canvasCount": 1,
+    "panes": {
+      "preview": 1,
+      "graph": 0
+    },
+    "cdnThreeResources": [],
+    "hasImportMap": true,
+    "importMapText": "{\"imports\":{\"three\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js\",\"three/webgpu\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.webgpu.js\",\"three/tsl\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.tsl.js\",\"three/addons/\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/\",\"gsap\":\"https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js\"}}",
+    "rendererBackend": null,
+    "webgpuAvailable": true,
+    "viewMode": "preview-app",
+    "editorDebug": null
+  },
+  "toggleReport": []
+}

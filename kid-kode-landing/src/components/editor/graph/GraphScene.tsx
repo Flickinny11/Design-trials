@@ -22,10 +22,11 @@ import {
 } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
+import { WebGPURenderer } from 'three/webgpu';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
-import { useGraphEditorStore, type ViewMode } from '@/stores/useGraphEditorStore';
+import { useGraphEditorStore, type ViewMode, type EditorRenderMode } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import {
   usePreviewStateStore,
@@ -519,15 +520,22 @@ function GlassNode({
   const hoverNode = useGraphEditorStore((s) => s.hoverNode);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  // drei's MeshTransmissionMaterial (hero shells) is a raw-shader material that
+  // WebGPU's NodeBuilder rejects; fall back to the node-compatible
+  // meshPhysicalMaterial shell under WebGPU (INV-R14 capability tiering).
+  const isWebGPU = useIsWebGPU();
 
   const isSelected = selectedId === node.id;
   const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
 
-  // Plan §P10: when the underlying PrismNode carries artifact data
-  // (sourceAsset URL OR meshUrl OR codeRef) the editor renders the real
-  // factory output via ArtifactNode. Stage-0 / intent-only nodes still
-  // render as the existing glass sphere so they remain selectable.
-  const renderArtifact = sourceNode ? hasArtifactData(sourceNode) : false;
+  // RT-SC-04 / INV-R2 (anchor §2, §3a) — in GALAXY mode every node renders in
+  // node-state: a dormant glass sphere, NEVER its built artifact. Built
+  // artifacts appear only in canvas/preview-app (AssembledSceneContent). So the
+  // ArtifactNode delegation below is disabled in galaxy; it remains available in
+  // the canvas-topology authoring view (viewMode === 'canvas') where seeing the
+  // real factory output aids structural authoring.
+  const renderArtifact =
+    viewMode !== 'galaxy' && sourceNode ? hasArtifactData(sourceNode) : false;
 
   const capturedImage = useElementImageStore((s) => s.images[node.id]);
   const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
@@ -642,8 +650,10 @@ function GlassNode({
         </mesh>
       )}
 
-      {/* OUTER GLASS SHELL — photoreal refraction. Heros use expensive transmission material, rest use native dispersion */}
-      {hero ? (
+      {/* OUTER GLASS SHELL — photoreal refraction. Heros use expensive transmission
+          material on WebGL; under WebGPU they use the node-compatible physical
+          shell (MeshTransmissionMaterial is WebGL-only). */}
+      {hero && !isWebGPU ? (
         <mesh ref={shellRef} scale={1.085}>
           <sphereGeometry args={[radius, 48, 48]} />
           <MeshTransmissionMaterial
@@ -1944,7 +1954,7 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   );
 }
 
-function AssembledSceneNode({ node }: { node: PrismNode }) {
+function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; previewMode?: boolean }) {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
   const selectNode = useGraphEditorStore((s) => s.selectNode);
@@ -2005,7 +2015,7 @@ function AssembledSceneNode({ node }: { node: PrismNode }) {
       onPointerOut={() => hoverNode(null)}
     >
       <ArtifactNode node={node} layout="scene" />
-      {(isSelected || isHovered) && (
+      {!previewMode && (isSelected || isHovered) && (
         <mesh position={[0, 0, 0.08]}>
           <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
           <meshBasicMaterial color={isSelected ? '#8bb4ff' : '#55e6a5'} transparent opacity={0.85} toneMapped={false} />
@@ -2092,11 +2102,23 @@ function TopologySceneContent({
     return set;
   }, [selectedId]);
 
-  const usePost = qualityMode !== 'low';
+  // INV-R14 — postprocessing (legacy @react-three/postprocessing EffectComposer)
+  // is WebGL-only and cannot run under WebGPU. Capability-tier it: on the WebGL2
+  // fallback it runs; on WebGPU it is skipped (TSL PostProcessing is the
+  // canvas-spec/Step-5 follow-up).
+  const isWebGPU = useIsWebGPU();
+  const usePost = qualityMode !== 'low' && !isWebGPU;
 
   return (
     <>
-      <Stars radius={800} depth={500} count={5000} factor={4} saturation={0.5} fade speed={0.3} />
+      {/* drei <Stars> uses a raw GLSL THREE.ShaderMaterial which WebGPU's
+          NodeBuilder rejects ("Material ShaderMaterial is not compatible").
+          Capability-tier it: render on the WebGL2 fallback only. The nebula
+          backdrop + WorldSun still carry galaxy depth under WebGPU. (A
+          node-material starfield is a later polish item.) */}
+      {!isWebGPU && (
+        <Stars radius={800} depth={500} count={5000} factor={4} saturation={0.5} fade speed={0.3} />
+      )}
 
       {/* Lighting — photoreal with environment IBL + fills */}
       <ambientLight intensity={0.06} />
@@ -2208,8 +2230,14 @@ function TopologySceneContent({
 
 function AssembledSceneContent({
   onPerf,
+  previewMode = false,
 }: {
   onPerf: (factor: number) => void;
+  // RT-SC-10 / INV-R4 — preview-app renders the SAME built artifacts as canvas
+  // but with authoring chrome (viewport frame, transform gizmo, keyframe demo,
+  // selection rings) hidden and live drivers running. The artifact objects are
+  // identical across the toggle (no remount, no rebuild).
+  previewMode?: boolean;
 }) {
   const [fontReady, setFontReady] = useState(false);
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
@@ -2224,7 +2252,12 @@ function AssembledSceneContent({
   const nodeRebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion);
   const hub = sourceHubs.find((h) => h.hubId === activeHubId) ?? sourceHubs[0];
   const nodes = sourceNodes.filter((node) => !hub || node.parentHubId === hub.hubId);
-  const usePost = qualityMode !== 'low';
+  // INV-R14 — postprocessing (legacy @react-three/postprocessing EffectComposer)
+  // is WebGL-only and cannot run under WebGPU. Capability-tier it: on the WebGL2
+  // fallback it runs; on WebGPU it is skipped (TSL PostProcessing is the
+  // canvas-spec/Step-5 follow-up).
+  const isWebGPU = useIsWebGPU();
+  const usePost = qualityMode !== 'low' && !isWebGPU;
 
   useEffect(() => {
     let cancelled = false;
@@ -2275,15 +2308,22 @@ function AssembledSceneContent({
       <directionalLight position={[4, 6, 8]} intensity={0.8} color="#e0edff" castShadow={false} />
       <directionalLight position={[-4, -2, 5]} intensity={0.25} color="#ffdbb8" />
       <SceneBackdrop hub={hub} />
-      <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
-      <CanvasTransformGizmo nodes={nodes} />
-      <KeyframeDemo />
+      {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is
+          the running app (no frame, no gizmo, no demo). */}
+      {!previewMode && (
+        <>
+          <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
+          <CanvasTransformGizmo nodes={nodes} />
+          <KeyframeDemo />
+        </>
+      )}
 
       {fontReady ? (
         nodes.map((node) => (
           <AssembledSceneNode
             key={node.nodeId + ':' + (nodeRebuildVersion[node.nodeId] ?? 0)}
             node={node}
+            previewMode={previewMode}
           />
         ))
       ) : (
@@ -2314,6 +2354,25 @@ function AssembledSceneContent({
   );
 }
 
+/** RT-SC-03/04/10 + INV-R3 — content is a function of `viewMode` (the three
+ *  modes are states of this one scene), with `editorRenderMode` retained as a
+ *  canvas-only sub-toggle (scene = assembled artifacts, topology = force-graph):
+ *    - galaxy        → TopologySceneContent  (dormant spheres; RT-SC-04)
+ *    - canvas        → editorRenderMode 'scene' = AssembledSceneContent (built
+ *                      + handles), 'topology' = TopologySceneContent
+ *    - preview-app   → AssembledSceneContent (built, handles hidden, drivers
+ *                      running) — the SAME cached artifacts as canvas (RT-SC-10)
+ *  Built-state is served from ArtifactNode's content cache, so toggling
+ *  canvas↔preview-app issues no rebuild (RT-SC-08). */
+export function showsAssembledFor(
+  viewMode: ViewMode,
+  editorRenderMode: EditorRenderMode,
+): boolean {
+  if (viewMode === 'preview-app') return true;
+  if (viewMode === 'canvas') return editorRenderMode === 'scene';
+  return false; // galaxy → spheres
+}
+
 function SceneContent({
   onPerf,
 }: {
@@ -2329,10 +2388,14 @@ function SceneContent({
   const draggingNodeId = useGraphEditorStore((s) => s.draggingNodeId);
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const cloneDragActive = viewMode === 'galaxy' && draggingNodeId != null;
+  const showsAssembled = showsAssembledFor(viewMode, editorRenderMode);
+  // preview-app hides authoring handles/gizmos/frames so the built scene reads
+  // as the running app (INV-R4). canvas keeps them.
+  const previewMode = viewMode === 'preview-app';
   return (
     <>
-      {editorRenderMode === 'scene'
-        ? <AssembledSceneContent onPerf={onPerf} />
+      {showsAssembled
+        ? <AssembledSceneContent onPerf={onPerf} previewMode={previewMode} />
         : <TopologySceneContent onPerf={onPerf} />}
       {cloneDragActive && <GalaxyCloneDragLayer hubs={sourceHubs} />}
     </>
@@ -2342,6 +2405,48 @@ function SceneContent({
 // ═══════════════════════════════════════════════════════════════════
 // Canvas wrapper
 // ═══════════════════════════════════════════════════════════════════
+
+/** RT-SC-01 / INV-R1 — the one unified scene renders via `WebGPURenderer`
+ *  (three/webgpu), which since three r171 AUTOMATICALLY falls back to WebGL2
+ *  when `navigator.gpu` is absent (no separate code path). R3F v9 supports an
+ *  async `gl` factory that returns a Promise; it awaits `init()` before the
+ *  first frame, avoiding the "render() before backend initialized" warning.
+ *  The single bundled `three`/`three/webgpu` (RT-SC-02) backs this — no CDN. */
+async function createUnifiedRenderer(props: { canvas?: HTMLCanvasElement } & Record<string, unknown>) {
+  const renderer = new WebGPURenderer({
+    canvas: props?.canvas as HTMLCanvasElement | undefined,
+    antialias: true,
+    alpha: true,
+    powerPreference: 'high-performance',
+  });
+  (renderer as unknown as { toneMapping: THREE.ToneMapping }).toneMapping =
+    THREE.ACESFilmicToneMapping;
+  await renderer.init();
+  // Editor-shell backend probe (RT-SC-01 verification). GraphScene is not a
+  // runtime/prism-player module, so window.* is permitted (FP-R11 scope).
+  if (typeof window !== 'undefined') {
+    const backend = (renderer as unknown as {
+      backend?: { isWebGPUBackend?: boolean; isWebGLBackend?: boolean };
+    }).backend;
+    (window as unknown as { __PRISM_RENDERER_BACKEND__?: string }).__PRISM_RENDERER_BACKEND__ =
+      backend?.isWebGPUBackend ? 'webgpu' : backend?.isWebGLBackend ? 'webgl2' : 'unknown';
+  }
+  return renderer as unknown as THREE.WebGLRenderer;
+}
+
+/** True when the live R3F renderer is a WebGPU backend. The legacy
+ *  @react-three/postprocessing EffectComposer targets WebGLRenderer only and
+ *  cannot run under WebGPU, so postprocessing is capability-tiered (INV-R14):
+ *  it runs on the WebGL2 fallback and is skipped on WebGPU. (TSL-based
+ *  PostProcessing is the canvas-spec/Step-5 follow-up.) */
+function useIsWebGPU(): boolean {
+  const gl = useThree((s) => s.gl) as unknown as {
+    isWebGPURenderer?: boolean;
+    backend?: { isWebGPUBackend?: boolean };
+  };
+  return !!(gl?.isWebGPURenderer || gl?.backend?.isWebGPUBackend);
+}
+
 export default function GraphScene() {
   const [dpr, setDpr] = useState<[number, number]>([1, 2]);
   const editorRenderMode = useGraphEditorStore((s) => s.editorRenderMode);
@@ -2353,7 +2458,14 @@ export default function GraphScene() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const draggingNodeId = useGraphEditorStore((s) => s.draggingNodeId);
   const cloneDragActive = viewMode === 'galaxy' && draggingNodeId != null;
-  const camera = editorRenderMode === 'scene'
+  // RT-SC-10 — key the Canvas by CONTENT TYPE, not viewMode, so that
+  // canvas↔preview-app (both 'assembled') do NOT remount: the same React tree
+  // and the same cached THREE.Object3D artifacts are reused across the toggle
+  // (object identity preserved; no rebuild). galaxy / canvas-topology share the
+  // 'topology' content key + the far camera.
+  const showsAssembled = showsAssembledFor(viewMode, editorRenderMode);
+  const contentKey = showsAssembled ? 'assembled' : 'topology';
+  const camera = showsAssembled
     ? { position: [0, 0, 10] as [number, number, number], fov: 45, near: 0.1, far: 2000 }
     : { position: [0, 0, 320] as [number, number, number], fov: 50, near: 0.1, far: 2000 };
 
@@ -2381,14 +2493,9 @@ export default function GraphScene() {
         }}
       />
       <Canvas
-        key={editorRenderMode}
+        key={contentKey}
         dpr={dpr}
-        gl={{
-          antialias: false,
-          powerPreference: 'high-performance',
-          alpha: true,
-          toneMapping: THREE.ACESFilmicToneMapping,
-        }}
+        gl={createUnifiedRenderer}
         camera={camera}
       >
         <fog attach="fog" args={['#05060a', 300, 900]} />
