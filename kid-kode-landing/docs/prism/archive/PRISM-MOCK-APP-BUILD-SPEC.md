@@ -1,3 +1,6 @@
+> **⚠️ SUPERSEDED BY the canonical-3 (`PRISM-RUNTIME-SPEC.md`, `PRISM-NODE-EDITOR-SPEC.md`, `PRISM-CANVAS-EDITOR-SPEC.md`) — archived 2026-06-05.**
+> This is the PixiJS-era mock-app build spec. The renderer is now three/webgpu (migration done). It is **not build-truth**. It explicitly encodes the **split-pane dual-state (F1)** pattern (left mock / right 3D graph, `:260`, `:1941`, `:1996`) which the anchor forbids and the runtime spec replaces (one unified scene, modes are states not panes — `PRISM-RUNTIME-SPEC.md` INV-R3, FP-R6). **Retained for future-source value** as an app-architecture reference for the eventual engine, NOT as current build truth. See `SPEC-INDEX.md`.
+
 # Prism Mock App Build Specification v1.0
 
 **Status:** Implementation-ready spec for converting the prototype’s mock app to real `.prism` architecture

@@ -1,3 +1,6 @@
+> **ℹ️ RECLASSIFIED FUTURE-SOURCE — 2026-06-05.**
+> This is **not** current build-truth for the prototype. Per `PRISM-INTENT-ANCHOR.md` §0, the engine / harness / diffusion / caption layer is **later work**, to be delivered as one unified Engine+Harness+Runtime spec. This document is the seed material for that future spec. The build-truth for the current prototype is the **canonical-3** (`PRISM-RUNTIME-SPEC.md`, `PRISM-NODE-EDITOR-SPEC.md`, `PRISM-CANVAS-EDITOR-SPEC.md`), ranked above this in `SPEC-INDEX.md`. Its self-claim "canonical source of truth for all Prism diffusion engine" is scoped to that *future* engine layer, not the prototype.
+
 # Kriptik Diffusion Engine — Production Build Specification v3.0
 
 **Status:** Canonical source of truth for all Prism diffusion engine implementation

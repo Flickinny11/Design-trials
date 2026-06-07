@@ -21,6 +21,15 @@
             "command": ".claude/hooks/anti-drift-check.sh"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/dependency-allowlist-check.sh"
+          }
+        ]
       }
     ]
   }

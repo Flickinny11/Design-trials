@@ -35,7 +35,6 @@ export const SHARED_SYSTEM_PROMPT: string = [
   '- The returned object MUST have userData.cleanup() that disposes resources and kills',
   '  GSAP timelines.',
   '- DO NOT use HTML, CSS, the DOM, document.*, or window.* — except window.devicePixelRatio.',
-  '- DO NOT author bespoke shader code — use TSL through ctx.primitives or three/tsl built-ins.',
   '',
   'OUTPUT: Only the JavaScript code. No explanation. No markdown fences.',
 ].join('\n');

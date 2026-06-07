@@ -1,3 +1,6 @@
+> **⚠️ SUPERSEDED BY the canonical-3 (`PRISM-RUNTIME-SPEC.md`, `PRISM-NODE-EDITOR-SPEC.md`, `PRISM-CANVAS-EDITOR-SPEC.md`) — archived 2026-06-05.**
+> This spec is retained for traceability only. It is **not build-truth**. Its *preview-as-compile* model (§3 `:82`–`:84`, SC-053/054 `:217`–`:218`) is rescinded by `PRISM-RUNTIME-SPEC.md` §6.3/INV-R3/R4/FP-R5 (preview-app is the same built scene in place, not a compiled mount). Its 5-mode / `hub-world` / `preview-hub` text is rescinded (canonical 3 only). Its `App_Name_World`/vault/coordinate-space material is **carried forward** into `PRISM-RUNTIME-SPEC.md` §8 and its galaxy/node-editor material into `PRISM-NODE-EDITOR-SPEC.md`. Its INV-12 "no scene-level animation from scratch" is **rescinded** (canvas-spec §2 decision 6). See `SPEC-INDEX.md` for the full supersession table.
+
 # Prism Editor Build Specification v1.1
 
 **Status:** Authoritative for the Prism editor build. Round 1 (53 tasks, 10 phases) shipped; Round 2 (~24 tasks, 7 task groups A–G) is armed against this v1.1 amendment.

@@ -40,6 +40,15 @@
           }
         ],
         "matcher": "Write|Edit"
+      },
+      {
+        "hooks": [
+          {
+            "command": "$CLAUDE_PROJECT_DIR/kid-kode-landing/.claude/hooks/dependency-allowlist-check.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit"
       }
     ],
     "SessionStart": [
@@ -58,23 +67,19 @@
           {
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/progress-reminder.sh",
             "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
+          },
           {
-            "command": "$HOME/.claude/hooks/kripverify-stop.sh",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spec-criteria-stop.sh",
             "type": "command"
           }
         ]
       }
     ],
-    "UserPromptSubmit": [
+    "SubagentStop": [
       {
         "hooks": [
           {
-            "command": "$HOME/.claude/hooks/kripverify-userprompt.sh",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spec-criteria-stop.sh",
             "type": "command"
           }
         ]

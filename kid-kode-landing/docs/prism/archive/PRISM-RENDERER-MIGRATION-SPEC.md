@@ -1,3 +1,6 @@
+> **⚠️ SUPERSEDED BY `PRISM-RUNTIME-SPEC.md` — archived 2026-06-05.**
+> The renderer migration (PixiJS → three/webgpu) is **DONE**. This spec is retained for traceability only and is **not build-truth**. Its renderer foundations (three/webgpu + WebGL2 fallback, TSL-only, MSDF text, the synchronous `createNode` contract) are **carried forward unchanged** into `PRISM-RUNTIME-SPEC.md` §9 + INV-R9/R11. Its CDN import-map for `three`/`three/webgpu`/`three/tsl` (§11 `:429`–`:444`) is **rescinded** — `PRISM-RUNTIME-SPEC.md` §2 decision 1 / INV-R1 mandate ONE bundled `three` instance. Its Invariant 12 "no scene-level animation authored from scratch" (`:36`, `:201`) is **rescinded** by `PRISM-CANVAS-EDITOR-SPEC.md` §2 decision 6. `CINEMATIC-PRIMITIVES-LIBRARY.md` (companion) is retained as a *supporting* doc (the 9 primitives are the shipped seed of the canvas 300+ catalog). See `SPEC-INDEX.md`.
+
 # Prism Renderer Migration Specification
 
 **Status:** Canonical source of truth for the PixiJS-to-Three.js renderer migration

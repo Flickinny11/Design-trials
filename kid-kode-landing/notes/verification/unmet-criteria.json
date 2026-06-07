@@ -1,0 +1,15 @@
+{
+  "_comment": "Canonical-3 success criteria still UNMET, fed to the non-blocking spec-criteria-stop hook. Maintained by the operator / /prism-verify. When a criterion is closed WITH EVIDENCE, remove it. Empty `unmet` => hook is silent. These are STEP-4 (app-feature) work, deliberately NOT done in STEP-3.",
+  "updated": "2026-06-05",
+  "unmet": [
+    { "id": "RT-SC-02", "spec": "PRISM-RUNTIME-SPEC", "note": "Single bundled `three`; runtime player still loads three/three-webgpu/three-tsl via a CDN import-map (INV-R1). Remove the split." },
+    { "id": "RT-SC-03", "spec": "PRISM-RUNTIME-SPEC", "note": "galaxy<->canvas<->preview-app must mount no second scene/canvas and never split-pane; selection survives every transition." },
+    { "id": "RT-SC-06", "spec": "PRISM-RUNTIME-SPEC", "note": "Build pop-transition (sphere -> coded position -> artifact runs) not verified." },
+    { "id": "RT-SC-10", "spec": "PRISM-RUNTIME-SPEC", "note": "preview-app must reuse canvas's mounted objects in place (INV-R4); page.tsx currently mounts PrismHost (a separate compiled player) XOR GraphScene. Preview-as-compile must become an in-place state transition." },
+    { "id": "RT-SC-11", "spec": "PRISM-RUNTIME-SPEC", "note": "Default viewMode on boot == preview-app; confirm in running app." },
+    { "id": "NE-SC-01", "spec": "PRISM-NODE-EDITOR-SPEC", "note": "Galaxy free mouse/scroll nav + click-to-zoom-and-lock to target." },
+    { "id": "NE-SC-03", "spec": "PRISM-NODE-EDITOR-SPEC", "note": "Deep zoom must reach any single node (current zoom is too shallow)." },
+    { "id": "NE-SC-13", "spec": "PRISM-NODE-EDITOR-SPEC", "note": "edit->save->build->verify->preview must be a single VERIFYING path; a failing edit is not previewable and dispatches caption-driven repair." },
+    { "id": "NE-SC-14", "spec": "PRISM-NODE-EDITOR-SPEC", "note": "Exactly one edit/save/build path; retire the legacy VisualPreview regen-API second path (FP-NE-5)." }
+  ]
+}
