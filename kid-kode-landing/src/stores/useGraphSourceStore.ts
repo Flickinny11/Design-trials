@@ -61,6 +61,12 @@ interface GraphSourceState {
   // Returns true on success, false if either id does not resolve.
   commitClone: (cloneId: string, hubId: string) => boolean;
   updateNode: (nodeId: string, patch: Partial<PrismNode>) => void;
+  // STEP5 edit-path (NE-SC-11; canvas-spec §6 Built→Dirty). Toggles the
+  // per-node `dirty` flag on the source record. Used by the edit→save commit
+  // (set true: built-state is now stale) and the surgical Save-and-Rebuild
+  // (set false: the artifact was just rebuilt). Distinct from the graph-level
+  // `isDirty` (which gates server autosave): this is the node's BUILD freshness.
+  markNodeDirty: (nodeId: string, dirty: boolean) => void;
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
   removeNode: (nodeId: string) => void;
   addEdge: (edge: PrismEdge) => void;
@@ -254,6 +260,19 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     }));
   },
 
+  markNodeDirty: (nodeId, dirty) => {
+    const node = get().nodes.find((n) => n.nodeId === nodeId);
+    if (!node || (node.dirty ?? false) === dirty) return;
+    // Editor-transient build-freshness flag ONLY. It does NOT schedule the
+    // durable server autosave or flip the graph-level `isDirty` — the edit that
+    // triggered this already did that via `updateNode`. `dirty` is stripped from
+    // the persisted payload (`saveToServer`), so a node never boots dirty
+    // without a pending edit (NE-SC-11 is about live build state, not storage).
+    set((s) => ({
+      nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, dirty } : n)),
+    }));
+  },
+
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => {
     markGraphDirty(get);
     set((s) => ({
@@ -328,7 +347,12 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     const graph: HomeHubJson = {
       schemaVersion: '0.1.0',
       hub,
-      nodes: s.nodes.filter((n) => n.parentHubId === hub.hubId),
+      // STEP5 — strip the editor-transient `dirty` build-freshness flag from the
+      // persisted payload so a node never boots dirty on reload without a real
+      // pending edit. `dirty` is live build state, not durable graph data.
+      nodes: s.nodes
+        .filter((n) => n.parentHubId === hub.hubId)
+        .map(({ dirty: _dirty, ...n }) => n as PrismNode),
       edges: s.edges,
       // EBR2-E-04 fix — SC-006: the GraphSource invariant ("exactly one
       // PrismRootNode") survives a Save-and-Rebuild round-trip only if the

@@ -37,5 +37,11 @@ export function commitPreviewToSource(nodeId: string): CommitPreviewResult {
   const patch = usePreviewStateStore.getState().commit(nodeId);
   if (patch === null) return { committed: false, patch: null };
   useGraphSourceStore.getState().updateNode(nodeId, patch);
+  // STEP5 edit-path (NE-SC-11, canvas-spec §6 Built→Dirty): the edit is now
+  // recorded on the node, so its built-state artifact + builtSnapshot are stale.
+  // Mark the node dirty; the surgical Save-and-Rebuild clears it (rebuild-node).
+  // (lib/editor is NOT an Inspector*/panels file, so FP-15 does not apply here —
+  // this is the legal indirection the Inspector routes through.)
+  useGraphSourceStore.getState().markNodeDirty(nodeId, true);
   return { committed: true, patch };
 }

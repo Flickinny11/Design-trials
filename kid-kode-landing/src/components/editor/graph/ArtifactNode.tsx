@@ -36,13 +36,45 @@ import { buildPerNodeFactory } from '@/lib/prism/runtime/factories/coderef-facto
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import type { PrismNode } from '@/lib/prism-graph/types';
 import type { CreateNodeFn } from '@/lib/prism/runtime/shared/adapter';
+// STEP5 edit-path — verify-in-path + caption-driven repair + builtSnapshot.
+import { verifyBuiltNode } from '@/lib/editor/verify-built-node';
+import { repairNode } from '@/lib/editor/caption-repair';
+import { computeNodeContentHash } from '@/lib/editor/node-content-hash';
+import {
+  useBuiltSnapshotStore,
+  installBuiltSnapshotBridge,
+  type BuiltSnapshotStatus,
+} from '@/stores/useBuiltSnapshotStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 
 interface CachedEntry {
   object: Object3D;
-  codeRef: string;
+  /** Content hash over the node's build-relevant inputs (INV-R7). The cache is
+   *  a genuine content-hash cache: a hit reuses the Object3D, a miss/mismatch
+   *  rebuilds — so the artifact rebuilds IFF the hash changes (RT-SC-09). */
+  hash: string;
 }
 
 const cache = new Map<string, CachedEntry>();
+
+/** The tagged empty-Group stand-in used when a factory throws. `verifyBuiltNode`
+ *  detects the `:fallback` suffix as a hard build failure (FP-R3). */
+function makeFallback(node: PrismNode): Object3D {
+  const object = new Group();
+  object.name = `node:${node.nodeId}:fallback`;
+  object.userData.nodeId = node.nodeId;
+  object.userData.cleanup = () => {};
+  return object;
+}
+
+/** Run an Object3D's userData.cleanup() if present (dispose GPU resources +
+ *  kill timelines) before discarding it during repair. */
+function runCleanup(object: Object3D): void {
+  const cleanup = (object.userData as { cleanup?: () => void }).cleanup;
+  if (typeof cleanup === 'function') {
+    try { cleanup(); } catch { /* ignore */ }
+  }
+}
 
 /** Predicate that drives GlassNode's editor delegation: when a node carries
  *  artifact data (a renderable image asset, a 3D mesh, or a codeRef module),
@@ -71,24 +103,24 @@ function getEditorFactory(): CreateNodeFn {
 }
 
 /** Resolve (and cache) the Object3D produced by the factory pipeline for a
- *  given PrismNode. Identity is keyed on `nodeId + codeRef` per Plan §P10:
- *  re-renders with an unchanged codeRef reuse the same Object3D so editor
- *  hot reloads don't tear and rebuild meshes. */
+ *  given PrismNode. The cache is keyed by a **content hash** over the node's
+ *  build-relevant inputs (INV-R7 / RT-SC-09): a hash hit reuses the cached
+ *  Object3D (so a pure mode toggle issues zero `createNode` calls, RT-SC-08),
+ *  and the artifact rebuilds IFF the hash changes. Because the hash includes
+ *  `codeRef`, this subsumes the prior `nodeId + codeRef` identity rule. */
 export type ArtifactNodeLayout = 'topology' | 'scene';
 
 export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayout = 'topology'): Object3D {
   const key = `${node.nodeId}|${layout}`;
-  const codeRef = node.codeRef ?? '';
+  const hash = computeNodeContentHash(node);
   const cached = cache.get(key);
-  if (cached && cached.codeRef === codeRef) {
+  if (cached && cached.hash === hash) {
+    // Content hash unchanged — reuse the built artifact (no rebuild, INV-R7).
     return cached.object;
   }
   if (cached) {
-    // codeRef changed — dispose prior object before rebuilding.
-    const prevCleanup = (cached.object.userData as { cleanup?: () => void }).cleanup;
-    if (typeof prevCleanup === 'function') {
-      try { prevCleanup(); } catch { /* ignore */ }
-    }
+    // Hash changed — dispose the stale object before rebuilding this one node.
+    runCleanup(cached.object);
   }
   const ctx = getSharedNodeContext({ runPrimitives: false });
   const factory = getEditorFactory();
@@ -107,11 +139,62 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
     // than throwing through React's render path. Surface the cause so the
     // user can act on it (broken codeRef module, missing asset, etc).
     console.warn(`[ArtifactNode] factory failed for ${node.nodeId}:`, err);
-    object = new Group();
-    object.name = `node:${node.nodeId}:fallback`;
-    object.userData.nodeId = node.nodeId;
-    object.userData.cleanup = () => {};
+    object = makeFallback(node);
   }
+
+  // STEP5 edit-path (anchor §8, NE-SC-13, runtime RT-SC-06/07/09) — verify the
+  // freshly-built artifact, run caption-driven repair on failure, and record
+  // the node's builtSnapshot. Only the 'scene' layout is the built-state
+  // surface shown in canvas/preview-app; 'topology' is the galaxy authoring map
+  // (dormant spheres / force-graph), which is not a build-verified surface.
+  if (layout === 'scene') {
+    const verify = verifyBuiltNode(object, node);
+    let status: BuiltSnapshotStatus = verify.ok ? 'built' : 'failed';
+    let reason = verify.reason;
+    let repairStrategy: string | undefined;
+
+    if (!verify.ok) {
+      // detect → flag → repair-attempt → re-verify. The repair reads ONLY the
+      // node caption, the hub caption, and the node's stored contents (cold
+      // context); it never reaches back into the prior/broken artifact.
+      const hub =
+        useGraphSourceStore.getState().hubs.find((h) => h.hubId === node.parentHubId) ?? null;
+      try {
+        const repair = repairNode(node, hub);
+        runCleanup(object);
+        const repairedObj = factory(repair.node, ctx);
+        const reverify = verifyBuiltNode(repairedObj, repair.node);
+        if (reverify.ok) {
+          object = repairedObj;
+          status = 'repaired';
+          reason = verify.reason; // preserve the ORIGINAL failure reason
+          repairStrategy = repair.strategy;
+          console.info(
+            `[ArtifactNode] caption-driven repair recovered ${node.nodeId} ` +
+              `(was '${verify.reason}'): ${repair.strategy}`,
+          );
+        } else {
+          runCleanup(repairedObj);
+          status = 'failed';
+        }
+      } catch (e) {
+        console.warn(`[ArtifactNode] caption-driven repair failed for ${node.nodeId}:`, e);
+        status = 'failed';
+      }
+    }
+
+    // Refresh ONLY this node's builtSnapshot entry, keyed by the SOURCE node's
+    // content hash (the same hash that gates the cache above). The snapshot
+    // therefore tracks the user-edited source state; `status` records whether
+    // that state built cleanly or was recovered by repair. Deferred out of
+    // React's render phase so the zustand write never fires mid-render.
+    const snap = { nodeId: node.nodeId, hash, layout, status, reason, repairStrategy };
+    queueMicrotask(() => {
+      useBuiltSnapshotStore.getState().record(snap);
+      installBuiltSnapshotBridge();
+    });
+  }
+
   if (layout === 'topology') {
     // Topology view positions the artifact by the surrounding force-graph
     // group. Reset the factory root so scenePosition does not compound.
@@ -127,7 +210,7 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
     object.rotation.set(0, 0, 0);
     object.scale.set(1, 1, 1);
   }
-  cache.set(key, { object, codeRef });
+  cache.set(key, { object, hash });
   return object;
 }
 

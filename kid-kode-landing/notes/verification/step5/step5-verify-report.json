@@ -1,0 +1,266 @@
+{
+  "url": "http://localhost:3000/",
+  "when": "step5",
+  "results": [
+    {
+      "id": "boot.built",
+      "desc": "scene nodes built + builtSnapshots recorded in canvas",
+      "pass": true,
+      "detail": "12 snapshots"
+    },
+    {
+      "id": "toggle.no-rebuild",
+      "desc": "RT-SC-08 — canvas↔preview-app toggle issues 0 artifact rebuilds",
+      "pass": true,
+      "detail": "Δ__artifactBuildCount = 0"
+    },
+    {
+      "id": "feature.badge.built",
+      "desc": "feature-card badge shows a clean built state pre-edit",
+      "pass": true,
+      "detail": "badge=built"
+    },
+    {
+      "id": "edit.registers.dirty",
+      "desc": "NE-SC-11 — edit commits to source + marks node dirty",
+      "pass": true,
+      "detail": "node.dirty=true badge=dirty"
+    },
+    {
+      "id": "rebuild.surgical",
+      "desc": "RT-SC-09/INV-R8 — only feature-card snapshot changed (siblings stable)",
+      "pass": true,
+      "detail": "changedNodes=[\"home-feature-card\"] featureRebuilt=true siblingsUntouched=true"
+    },
+    {
+      "id": "snapshot.append-only",
+      "desc": "INV-R7 — prior builtSnapshot retained in append-only history",
+      "pass": true,
+      "detail": "feature-card history entries=2 hashes=[\"94d4b23e\",\"20fb8cb5\"]"
+    },
+    {
+      "id": "rebuild.clears.dirty",
+      "desc": "NE-SC-11 — Save&Rebuild clears dirty + badge returns to built",
+      "pass": true,
+      "detail": "node.dirty=false badge=built"
+    },
+    {
+      "id": "visible.preview-app",
+      "desc": "scope 4 — rebuilt artifact shown in preview-app (served from cache)",
+      "pass": true,
+      "detail": "screenshot captured in preview-app after rebuild"
+    },
+    {
+      "id": "repair.detect-and-recover",
+      "desc": "NE-SC-13 — broken build detected + caption-driven repair recovered it",
+      "pass": true,
+      "detail": "status=repaired reason=empty-group strategy=\"empty build repaired by synthesizing an MSDF text artifact (\"3D mesh CTA hero\") from the node caption\""
+    },
+    {
+      "id": "repair.console-evidence",
+      "desc": "repair fired with caption inputs (console log present)",
+      "pass": true,
+      "detail": "[ArtifactNode] caption-driven repair recovered home-cta-hero (was 'empty-group'): empty build repaired by synthesizing an MSDF text artifact (\"3D mesh CTA hero\") from the node caption"
+    },
+    {
+      "id": "console.clean",
+      "desc": "zero new runtime errors during the edit/rebuild/repair path",
+      "pass": true,
+      "detail": "clean"
+    }
+  ],
+  "evidence": {
+    "bootSnapshots": {
+      "home-headline": {
+        "nodeId": "home-headline",
+        "hash": "a1d23565",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 1,
+        "buildCount": 1
+      },
+      "home-feature-card": {
+        "nodeId": "home-feature-card",
+        "hash": "94d4b23e",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 2,
+        "buildCount": 1
+      },
+      "home-parallax-stack": {
+        "nodeId": "home-parallax-stack",
+        "hash": "575f5624",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 3,
+        "buildCount": 1
+      },
+      "home-orbit-decor": {
+        "nodeId": "home-orbit-decor",
+        "hash": "bfb5e2c1",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 4,
+        "buildCount": 1
+      },
+      "home-floating-accent": {
+        "nodeId": "home-floating-accent",
+        "hash": "e64efe2f",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 5,
+        "buildCount": 1
+      },
+      "home-cta-hero": {
+        "nodeId": "home-cta-hero",
+        "hash": "367310a3",
+        "layout": "scene",
+        "status": "built",
+        "reason": "async-pending",
+        "builtAt": 6,
+        "buildCount": 1
+      },
+      "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f": {
+        "nodeId": "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f",
+        "hash": "bb5d7ae5",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 7,
+        "buildCount": 1
+      },
+      "e3634d7e-2a96-4725-95df-1c9a68b60f1b": {
+        "nodeId": "e3634d7e-2a96-4725-95df-1c9a68b60f1b",
+        "hash": "bb5d7ae5",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 8,
+        "buildCount": 1
+      },
+      "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee": {
+        "nodeId": "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee",
+        "hash": "bb5d7ae5",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 9,
+        "buildCount": 1
+      },
+      "0913311b-d83d-4663-9e25-0cabf9b5f603": {
+        "nodeId": "0913311b-d83d-4663-9e25-0cabf9b5f603",
+        "hash": "bb5d7ae5",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 10,
+        "buildCount": 1
+      },
+      "daf9ec09-f82a-4fac-a2e2-5ba364661182": {
+        "nodeId": "daf9ec09-f82a-4fac-a2e2-5ba364661182",
+        "hash": "bb5d7ae5",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 11,
+        "buildCount": 1
+      },
+      "744a0f31-0951-4746-a4e8-8e262ce78183": {
+        "nodeId": "744a0f31-0951-4746-a4e8-8e262ce78183",
+        "hash": "0cd1db62",
+        "layout": "scene",
+        "status": "built",
+        "builtAt": 12,
+        "buildCount": 1
+      }
+    },
+    "toggleRebuilds": 0,
+    "featureBadgeBefore": "built",
+    "featureScreenBefore": "notes/verification/step5/01-feature-before.png",
+    "baselineHashes": {
+      "home-headline": "a1d23565",
+      "home-feature-card": "94d4b23e",
+      "home-parallax-stack": "575f5624",
+      "home-orbit-decor": "bfb5e2c1",
+      "home-floating-accent": "e64efe2f",
+      "home-cta-hero": "367310a3",
+      "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f": "bb5d7ae5",
+      "e3634d7e-2a96-4725-95df-1c9a68b60f1b": "bb5d7ae5",
+      "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee": "bb5d7ae5",
+      "0913311b-d83d-4663-9e25-0cabf9b5f603": "bb5d7ae5",
+      "daf9ec09-f82a-4fac-a2e2-5ba364661182": "bb5d7ae5",
+      "744a0f31-0951-4746-a4e8-8e262ce78183": "0cd1db62"
+    },
+    "baselineCounts": {
+      "home-headline": 1,
+      "home-feature-card": 1,
+      "home-parallax-stack": 1,
+      "home-orbit-decor": 1,
+      "home-floating-accent": 1,
+      "home-cta-hero": 1,
+      "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f": 1,
+      "e3634d7e-2a96-4725-95df-1c9a68b60f1b": 1,
+      "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee": 1,
+      "0913311b-d83d-4663-9e25-0cabf9b5f603": 1,
+      "daf9ec09-f82a-4fac-a2e2-5ba364661182": 1,
+      "744a0f31-0951-4746-a4e8-8e262ce78183": 1
+    },
+    "featureDirtyAfterSave": true,
+    "featureBadgeDirty": "dirty",
+    "featureScreenDirty": "notes/verification/step5/02-feature-dirty.png",
+    "afterHashes": {
+      "home-headline": "a1d23565",
+      "home-feature-card": "20fb8cb5",
+      "home-parallax-stack": "575f5624",
+      "home-orbit-decor": "bfb5e2c1",
+      "home-floating-accent": "e64efe2f",
+      "home-cta-hero": "367310a3",
+      "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f": "bb5d7ae5",
+      "e3634d7e-2a96-4725-95df-1c9a68b60f1b": "bb5d7ae5",
+      "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee": "bb5d7ae5",
+      "0913311b-d83d-4663-9e25-0cabf9b5f603": "bb5d7ae5",
+      "daf9ec09-f82a-4fac-a2e2-5ba364661182": "bb5d7ae5",
+      "744a0f31-0951-4746-a4e8-8e262ce78183": "0cd1db62"
+    },
+    "afterCounts": {
+      "home-headline": 1,
+      "home-feature-card": 2,
+      "home-parallax-stack": 1,
+      "home-orbit-decor": 1,
+      "home-floating-accent": 1,
+      "home-cta-hero": 1,
+      "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f": 1,
+      "e3634d7e-2a96-4725-95df-1c9a68b60f1b": 1,
+      "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee": 1,
+      "0913311b-d83d-4663-9e25-0cabf9b5f603": 1,
+      "daf9ec09-f82a-4fac-a2e2-5ba364661182": 1,
+      "744a0f31-0951-4746-a4e8-8e262ce78183": 1
+    },
+    "siblingsUntouched": true,
+    "changedNodes": [
+      "home-feature-card"
+    ],
+    "featureScreenAfter": "notes/verification/step5/03-feature-after-canvas.png",
+    "featureHistoryLen": 2,
+    "featureHistoryHashes": [
+      "94d4b23e",
+      "20fb8cb5"
+    ],
+    "featureBadgeAfter": "built",
+    "featureDirtyAfterRebuild": false,
+    "featureScreenPreview": "notes/verification/step5/04-feature-after-preview-app.png",
+    "ctaScreenBefore": "notes/verification/step5/05-cta-before.png",
+    "ctaSnapshot": {
+      "nodeId": "home-cta-hero",
+      "hash": "0910b2d3",
+      "layout": "scene",
+      "status": "repaired",
+      "reason": "empty-group",
+      "repairStrategy": "empty build repaired by synthesizing an MSDF text artifact (\"3D mesh CTA hero\") from the node caption",
+      "builtAt": 14,
+      "buildCount": 2
+    },
+    "ctaBadge": "dirty",
+    "repairConsole": [
+      "[ArtifactNode] caption-driven repair recovered home-cta-hero (was 'empty-group'): empty build repaired by synthesizing an MSDF text artifact (\"3D mesh CTA hero\") from the node caption"
+    ],
+    "ctaScreenAfter": "notes/verification/step5/06-cta-repaired.png",
+    "consoleErrors": [],
+    "netErrors": []
+  }
+}

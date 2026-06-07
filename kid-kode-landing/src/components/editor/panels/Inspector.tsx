@@ -29,6 +29,7 @@ import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
 import { rebuildNode } from '@/lib/editor/rebuild-node';
+import { useBuiltSnapshotStore } from '@/stores/useBuiltSnapshotStore';
 import {
   ANIMATION_METHODOLOGIES,
   getLibraryByMethodology,
@@ -239,6 +240,14 @@ export default function Inspector() {
     [sourceNodes, selectedId],
   );
 
+  // STEP5 edit-path — build-state badge inputs. `nodeDirty` is the node's
+  // Built→Dirty flag (set on Save, cleared on Save-and-Rebuild); `builtSnap` is
+  // this node's content-hash builtSnapshot (status: built | repaired | failed),
+  // recorded by the artifact factory's verify-in-path. Together they surface the
+  // dirty / built / repaired / failed lifecycle (NE-SC-11, NE-SC-13, canvas §6).
+  const nodeDirty = sourceNodeById?.dirty === true;
+  const builtSnap = useBuiltSnapshotStore((s) => (selectedId ? s.snapshots[selectedId] : undefined));
+
   // SC-007: opening the Inspector with App_Name_World as the selection
   // should default to the dedicated 'World' tab. Runs whenever the
   // selection flips onto/off App_Name_World — the user can still switch to
@@ -322,6 +331,38 @@ export default function Inspector() {
           </div>
         </div>
         <div className="flex items-center gap-1.5 ml-2">
+          {/* STEP5 edit-path — build-state badge (NE-SC-11 dirty, NE-SC-13
+              verify/repair). Observable surface for the Built→Dirty→Built
+              lifecycle and the verify-in-path outcome. */}
+          {(() => {
+            const status: 'failed' | 'repaired' | 'dirty' | 'built' | null = builtSnap?.status === 'failed'
+              ? 'failed'
+              : nodeDirty
+                ? 'dirty'
+                : builtSnap?.status === 'repaired'
+                  ? 'repaired'
+                  : builtSnap?.status === 'built'
+                    ? 'built'
+                    : null;
+            if (!status) return null;
+            const cfg = {
+              failed: { label: 'Build failed', cls: 'bg-[#ff5d6c]/20 border-[#ff5d6c]/50 text-[#ffc2c8]', title: builtSnap?.reason ? `Build failed: ${builtSnap.reason}` : 'Artifact failed to build' },
+              dirty: { label: 'Dirty — rebuild', cls: 'bg-[#ffae57]/20 border-[#ffae57]/50 text-[#ffd9ab]', title: 'Edited since last build — Save & Rebuild to refresh the artifact' },
+              repaired: { label: 'Repaired', cls: 'bg-[#ffd166]/20 border-[#ffd166]/55 text-[#ffe2a5]', title: builtSnap?.repairStrategy ? `Caption-driven repair: ${builtSnap.repairStrategy}` : 'Recovered by caption-driven repair' },
+              built: { label: 'Built', cls: 'bg-[#55e6a5]/15 border-[#55e6a5]/45 text-[#a8efce]', title: builtSnap?.hash ? `Built · snapshot ${builtSnap.hash}` : 'Artifact built and verified' },
+            }[status];
+            return (
+              <span
+                data-role="build-state"
+                data-build-status={status}
+                data-build-hash={builtSnap?.hash ?? ''}
+                title={cfg.title}
+                className={`px-2 h-7 inline-flex items-center rounded-md text-[10px] font-mono border ${cfg.cls}`}
+              >
+                {cfg.label}
+              </span>
+            );
+          })()}
           {/* EBR2-C-01 / §R2-C SC-068 — Edit/Done toggle. Selecting a node
               alone never reveals the CanvasTransformGizmo; the user must
               click Edit first. EBR2-C-02 will gate the gizmo on

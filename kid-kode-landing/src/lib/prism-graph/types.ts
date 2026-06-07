@@ -412,6 +412,13 @@ export interface PrismNode {
   // drive the Phase 8 animation primitives (`load` fade, `in-view` slide,
   // `hover` lift; SC-046).
   keyframes?: PrismKeyframe[];
+  // STEP5 edit-path (NE-SC-11; canvas-spec §6 lifecycle Built→Dirty; INV-18
+  // additive). `dirty === true` means a purpose/visual edit has been committed
+  // to the source graph but the built-state artifact has NOT been rebuilt yet,
+  // so the cached artifact + builtSnapshot are stale. Set by the edit→save
+  // commit (`preview-commit.ts`); cleared by the surgical Save-and-Rebuild
+  // (`rebuild-node.ts`). Absent / false on legacy graphs (no built-state drift).
+  dirty?: boolean;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the
