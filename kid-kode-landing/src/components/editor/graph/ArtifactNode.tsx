@@ -88,18 +88,31 @@ export function hasArtifactData(node: PrismNode): boolean {
   return false;
 }
 
-function buildEditorFactory(): CreateNodeFn {
-  // Editor surfaces never run cinematic primitives — animations would fight
-  // the force-graph simulation and confuse topology authoring.
+function buildEditorFactory(runPrimitives: boolean): CreateNodeFn {
+  // STEP6 faithful-build (scope item 2 / RT-SC-10) — the built-state surface
+  // (scene layout, served to canvas + preview-app) RUNS the node's OWN
+  // `cinematicPrimitives` so the artifact does what its schema specifies:
+  // building a node executes the node's coded motion (anchor §2/§4, runtime
+  // §9 "the runtime executes whatever animations a node declares"). The
+  // galaxy authoring map (topology layout) stays static — there cinematic
+  // motion would fight the force-graph simulation and confuse topology
+  // authoring, so primitives are NOT run.
   const base: CreateNodeFn = (node, ctx) =>
-    defaultRenderModeFactory(node, ctx, { runPrimitives: false, nodeMaterials: false });
+    defaultRenderModeFactory(node, ctx, { runPrimitives, nodeMaterials: false });
   return buildPerNodeFactory(base);
 }
 
-let cachedFactory: CreateNodeFn | null = null;
-function getEditorFactory(): CreateNodeFn {
-  if (!cachedFactory) cachedFactory = buildEditorFactory();
-  return cachedFactory;
+// One cached factory per layout: topology = static (no motion), scene = the
+// node's coded primitives run (faithful built-state).
+let cachedTopologyFactory: CreateNodeFn | null = null;
+let cachedSceneFactory: CreateNodeFn | null = null;
+function getEditorFactory(runPrimitives: boolean): CreateNodeFn {
+  if (runPrimitives) {
+    if (!cachedSceneFactory) cachedSceneFactory = buildEditorFactory(true);
+    return cachedSceneFactory;
+  }
+  if (!cachedTopologyFactory) cachedTopologyFactory = buildEditorFactory(false);
+  return cachedTopologyFactory;
 }
 
 /** Resolve (and cache) the Object3D produced by the factory pipeline for a
@@ -122,8 +135,12 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
     // Hash changed — dispose the stale object before rebuilding this one node.
     runCleanup(cached.object);
   }
-  const ctx = getSharedNodeContext({ runPrimitives: false });
-  const factory = getEditorFactory();
+  // STEP6 — scene layout is the built-state surface (canvas + preview-app):
+  // bind the REAL primitives API and run the node's coded motion. Topology
+  // (galaxy map) keeps the no-op primitives + static factory.
+  const runPrimitives = layout === 'scene';
+  const ctx = getSharedNodeContext({ runPrimitives });
+  const factory = getEditorFactory(runPrimitives);
   // RT-SC-08 diagnostic — count actual artifact builds (cache MISSES). A pure
   // mode toggle (galaxy↔canvas↔preview-app) on already-built nodes must add 0
   // here. Editor-shell scope; guarded so it never runs in a non-browser env.
@@ -225,7 +242,8 @@ export function __resetArtifactNodeCache(): void {
     }
   }
   cache.clear();
-  cachedFactory = null;
+  cachedTopologyFactory = null;
+  cachedSceneFactory = null;
 }
 
 /** EBR2-E-04 / §R2-E SC-074 — single-node cache eviction with userData.cleanup.

@@ -23,6 +23,7 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
+import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
@@ -1954,6 +1955,21 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   );
 }
 
+// STEP6 faithful-build (scope item 3 / RT-SC-06) — the node→built REALIZATION
+// "pop". When a node is built (first realized into the scene, or rebuilt after
+// an edit), its artifact pops into being at its schema position. We realize
+// this as a scale-pop on an inner group so it is visually distinct from the
+// dormant galaxy sphere, WITHOUT ever fully hiding the artifact (min scale
+// stays > 0 so a dropped frame can never leave a node invisible).
+//
+// Build identity = `${nodeId}:${rebuildVersion}` — the SAME key the build
+// model uses. The pop plays exactly once per build: re-entering canvas or
+// toggling canvas↔preview-app does NOT replay it (that is a mode change, not a
+// build — anchor §4 / INV-R6 / FP-R4). A Save-and-Rebuild bumps the version →
+// a new key → the pop plays again, exactly as a fresh realization should.
+const poppedBuilds = new Set<string>();
+const BUILD_POP_START = 0.6;
+
 function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; previewMode?: boolean }) {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
@@ -1980,6 +1996,42 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   const w = composedNode.visual?.transform?.width ?? 0.35;
   const h = composedNode.visual?.transform?.height ?? 0.35;
   const ringSize = Math.max(w, h, 0.25) * 0.62;
+
+  // STEP6 scope item 3 — once-per-build realization pop (see poppedBuilds note).
+  const rebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion[node.nodeId] ?? 0);
+  const buildKey = node.nodeId + ':' + rebuildVersion;
+  const popRef = useRef<THREE.Group | null>(null);
+  const alreadyPopped = poppedBuilds.has(buildKey);
+  useEffect(() => {
+    const g = popRef.current;
+    if (!g) return;
+    if (poppedBuilds.has(buildKey)) {
+      g.scale.setScalar(1);
+      return;
+    }
+    // Bound the set to ≤ one entry per node: drop this node's stale build
+    // keys (prior rebuildVersions) so a long session of Save-and-Rebuilds
+    // cannot leak. The ':' delimiter keeps the prefix match exact.
+    const prefix = node.nodeId + ':';
+    for (const k of poppedBuilds) {
+      if (k !== buildKey && k.startsWith(prefix)) poppedBuilds.delete(k);
+    }
+    poppedBuilds.add(buildKey);
+    g.scale.setScalar(BUILD_POP_START);
+    const tween = gsap.to(g.scale, {
+      x: 1,
+      y: 1,
+      z: 1,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+      onComplete: () => g.scale.setScalar(1),
+    });
+    return () => {
+      tween.kill();
+      // Safety: a built artifact must never be left below full scale.
+      g.scale.setScalar(1);
+    };
+  }, [buildKey]);
 
   return (
     <group
@@ -2014,7 +2066,9 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       }}
       onPointerOut={() => hoverNode(null)}
     >
-      <ArtifactNode node={node} layout="scene" />
+      <group ref={popRef} scale={alreadyPopped ? 1 : BUILD_POP_START}>
+        <ArtifactNode node={node} layout="scene" />
+      </group>
       {!previewMode && (isSelected || isHovered) && (
         <mesh position={[0, 0, 0.08]}>
           <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
