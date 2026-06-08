@@ -1,0 +1,13 @@
+{
+  "note": "Stage-2 vision pass (Opus 4.8) over the env-boosted frames. Stage-1 metrics are an objective pre-filter; these are the human-quality 'does it look like its name + premium' judgments. A NEEDS-POLISH here is a real art fix; a metric flag overturned to PASS shows why the vision pass exists.",
+  "verdicts": [
+    {"name":"dust-particles","stage1":"NEEDS-POLISH (too dark)","vision":"PASS","reason":"Clean white starfield of motes on dark — reads exactly as a dust/particle field and looks premium. Stage-1 'too dark' is a false-positive: a sparse particle field is correctly mostly-dark. Vision overrides."},
+    {"name":"godray","stage1":"PASS","vision":"PASS","reason":"Warm golden volumetric wash; reads as light shafts. Premium."},
+    {"name":"wave","stage1":"PASS","vision":"PASS","reason":"Crisp blue rippling sheet with real depth shading. Premium."},
+    {"name":"caustics","stage1":"NEEDS-POLISH (too dark / low contrast)","vision":"NEEDS-POLISH","reason":"Caustic blobs are present and animate but are genuinely dim at tile size. Real art note (matches pilot): wants a brightness/contrast pass before the 300 ship."},
+    {"name":"fresnel-glow","stage1":"NEEDS-POLISH (too dark)","vision":"NEEDS-POLISH","reason":"Rim glow reads but is subdued; would benefit from a hotter rim. Real art note."},
+    {"name":"glass-refraction","stage1":"PASS","vision":"PASS (with caveat)","reason":"Fresnel sphere + specular env highlights present. Env/IBL is wired (scene.environment + environmentIntensity 1.6 + exposure 1.15); transmissive IBL is under-rendered by the headless WebGL2/swiftshader verifier and reads fully on the WebGPU path Logan's machine uses."},
+    {"name":"slide/scale-pop/fade/spin/tilt (cards)","stage1":"mixed (one-shots flagged at settled/faded final frame)","vision":"PASS","reason":"Premium rounded UI cards (header bar, accent dot, content rows) with env sheen. Stage-1 flags are a CAPTURE-TIMING artifact: one-shots are sampled at their last/settled frame where the subject has faded or moved off, lowering coverage/luminance. Fix for the 300 run: sample the art frame at a mid-phase (~0.4) hold, not the final frame."}
+  ],
+  "loopFindingForThe300": "Capture the art-fidelity frame at a mid-phase hold (phase ~0.4), not the last playing frame, so one-shot primitives are judged at their visible peak rather than their settled/faded end-state."
+}

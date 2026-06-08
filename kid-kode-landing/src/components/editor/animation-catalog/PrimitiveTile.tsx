@@ -1,11 +1,13 @@
 'use client';
 
-// PrimitiveTile — a picker tile that plays its primitive on hover (spec §8.3:
-// "a preview tile that plays on hover"). The mini WebGPU canvas mounts only
-// while hovered, so at most ~1–2 GPU contexts are live at once.
+// PrimitiveTile — a picker tile whose preview is a transparent "window" into the
+// shared rig canvas (spec §8.3: "a preview tile that plays on hover"). All tiles
+// draw through the ONE shared WebGPU context, so a 300-tile grid never exhausts
+// GL contexts. A tile freezes at a representative mid-frame until hovered/selected,
+// then plays.
 
 import { useState } from 'react';
-import AnimatableStage from './AnimatableStage';
+import SharedViewport from './SharedViewport';
 import type { PrimitiveDefinition } from '@/lib/prism/animatable/contract';
 
 const DIFFICULTY_COLOR: Record<string, string> = {
@@ -30,7 +32,7 @@ export default function PrimitiveTile({
       data-tile
       data-primitive={def.name}
       data-category={def.category}
-      data-playing={hovered ? 'true' : 'false'}
+      data-playing={hovered || selected ? 'true' : 'false'}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setHovered(true)}
@@ -38,20 +40,21 @@ export default function PrimitiveTile({
       onClick={() => onSelect(def)}
       className="group relative flex flex-col text-left rounded-xl overflow-hidden border transition-colors"
       style={{
-        background: '#0a0c16',
+        background: 'transparent',
         borderColor: selected ? '#5d8bff' : 'rgba(255,255,255,0.08)',
       }}
     >
-      <div className="relative aspect-[4/3] w-full" style={{ background: 'radial-gradient(ellipse at 50% 40%, #11162a 0%, #05060c 100%)' }}>
-        {hovered ? (
-          <AnimatableStage def={def} playing />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-white/25 text-[10px] uppercase tracking-wider">
-            hover to play
-          </div>
-        )}
-      </div>
-      <div className="flex flex-col gap-0.5 px-2.5 py-2">
+      {/* Transparent window: the shared rig renders this primitive here. */}
+      <SharedViewport
+        def={def}
+        playing={hovered || selected}
+        frozenPhase={0.45}
+        className="relative aspect-[4/3] w-full"
+      />
+      <div
+        className="flex flex-col gap-0.5 px-2.5 py-2"
+        style={{ background: 'rgba(10,12,22,0.72)' }}
+      >
         <span className="flex items-center justify-between">
           <span className="text-[12px] font-medium text-white/90">{def.label}</span>
           <span

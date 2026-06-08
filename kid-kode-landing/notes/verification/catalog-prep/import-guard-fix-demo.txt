@@ -1,0 +1,14 @@
+### Import-guard false-positive permanent fix — demonstration (Sun Jun  7 17:56:50 CDT 2026)
+Guard: .claude/hooks/dependency-allowlist-check.py (PreToolUse). Fix: IMPORT_RE requires whitespace-or-paren between keyword and quote + word-boundary lookbehind, so bare from/import/require in string values or comments no longer false-block.
+
+TEST 1 — prism-scope file with control id 'from', a comment containing 'import', dynamic import(), and require() — must be ALLOWED (exit 0):
+  exit=0 (expect 0)
+
+TEST 2 — real pixi.js import in prism scope — must BLOCK (exit 2):
+[dependency-allowlist-check] BLOCK — drift detected in /x/kid-kode-landing/src/lib/prism/animatable/p.ts:
+  - FORBIDDEN import in p.ts: 'pixi.js' — PixiJS/html-to-image are disallowed (runtime INV-R1 / spec line 1251).
+  - FORBIDDEN: PixiJS in the visible path (runtime INV-R1 / FP-R1) — one three/webgpu scene only.
+
+Guard: .claude/hooks/dependency-allowlist-check.py (wired via dependency-allowlist-check.sh, PreToolUse).
+Canonical specs: docs/prism/PRISM-RUNTIME-SPEC.md §12, PRISM-NODE-EDITOR-SPEC.md §11, PRISM-CANVAS-EDITOR-SPEC.md §19.
+  exit=2 (expect 2)

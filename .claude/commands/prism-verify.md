@@ -52,6 +52,16 @@ assertion) and a fresh-context reviewer signs off.
      just the paint.
    - `kv_verify` for an end-to-end assertion when a single check captures the
      criterion.
+   - **Art-fidelity (look-only) reviewer — for visual/animation surfaces.**
+     Rendering ≠ looking premium. Run the objective pre-filter
+     (`node scripts/art-fidelity-review.mjs`, nvm node) over the captured frames:
+     it grades luminance / contrast / saturation / coverage against the Prism
+     quality bar and flags `NEEDS-POLISH` (too dark, washed out, broken/empty
+     material) with reasons. Then do the **vision pass**: look at every flagged
+     frame plus a sample of `PASS` frames and judge "does it look like its name
+     and is it premium?" A `NEEDS-POLISH` verdict is a FIX (an art issue),
+     tracked separately from the functional pass — it does not, by itself, mean
+     the primitive is broken.
 
 5. **Grade against the criteria WITH EVIDENCE.** For each id in scope: pass /
    partial / fail, each backed by a screenshot path or console/assertion output.
@@ -71,7 +81,25 @@ assertion) and a fresh-context reviewer signs off.
    `notes/verification/unmet-criteria.json`; leave the rest. The non-blocking
    `spec-criteria-stop.sh` hook surfaces whatever remains.
 
+## Mandatory gates (must pass before ANY criterion is "done")
+
+These run regardless of surface and block grading if they fail:
+
+1. **`tsc` typecheck gate (baseline-diff).** `node scripts/typecheck-gate.mjs`
+   (run with the **nvm node** — the script forces its own node onto the child's
+   PATH). vitest/esbuild does NOT catch what `tsc` enforces (e.g. strict TSL
+   fluent-node typing on shader primitives passed vitest but failed `tsc`), so a
+   green vitest is necessary but **not sufficient**. The gate runs `tsc --noEmit`
+   and passes iff it introduces **zero new errors** beyond the recorded baseline
+   (`notes/verification/tsc-baseline.json` — the repo carries pre-existing errors
+   in frozen files; regenerate the baseline only intentionally, with
+   `--update-baseline`). Any NEW type error blocks "done". Fix it — never
+   downgrade a dependency to silence it (ANTI-STUCK).
+
+2. **Art-fidelity reviewer** (step 4 above) for any visual/animation change.
+
 ## Done means
-Every in-scope criterion passes with attached evidence **and** the reviewer
-returns `pass`. Anything less stays `unmet`. Do not commit a criterion as met on
-assertion alone.
+Every in-scope criterion passes with attached evidence, **the `tsc` gate is
+green (no new errors)**, the art-fidelity reviewer found no unaddressed look
+regressions, **and** the `prism-criteria-reviewer` returns `pass`. Anything less
+stays `unmet`. Do not commit a criterion as met on assertion alone.

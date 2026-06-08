@@ -15,7 +15,11 @@
     "lint": "next lint",
     "verify:prism": "node scripts/verify-prism.mjs",
     "verify:repair-loop": "node scripts/verify-repair-loop.mjs",
-    "verify": "npm run verify:prism && npm run verify:repair-loop"
+    "verify": "npm run verify:prism && npm run verify:repair-loop",
+    "typecheck": "tsc --noEmit",
+    "typecheck:gate": "node scripts/typecheck-gate.mjs",
+    "verify:catalog": "node scripts/verify-catalog.mjs",
+    "art-review": "node scripts/art-fidelity-review.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.5",

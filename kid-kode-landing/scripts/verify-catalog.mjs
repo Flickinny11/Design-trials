@@ -1,27 +1,33 @@
 #!/usr/bin/env node
-// Serialized browser verification for the Animation Primitive Catalog pilot.
+// Serialized browser verification for the Animation Primitive Catalog, run
+// against the SHARED PREVIEW RIG (catalog-prep, 2026-06-07).
 //
-// Starts `next dev`, opens /animation-catalog in ONE headless Chromium, and for
-// each registered primitive tile, SERIALLY (never parallel browsers):
-//   (b) RENDERS  — a <canvas> mounts on hover, no create() console error.
-//   (c) PLAYS    — two frames 400ms apart differ (real motion over the timeline).
-//   (d) CONTROLS — focus the tile, tweak a [data-control], canvas pixels change.
-//   (e) PICKER   — the tile exists in the picker with its name/category.
+// Every preview — all tiles + the detail — draws through ONE persistent WebGPU
+// context (SharedCanvas + SharedTileRenderer). This harness:
+//   • waits for window.__catalogRig.ready;
+//   • screenshots the full picker (viewport) showing many tiles animating at once
+//     through the one shared canvas;
+//   • proves a tile PLAYS ON HOVER (frozen frame ≠ hovered frame), no per-tile canvas;
+//   • for each registered primitive, focuses it into the ONE detail viewport and:
+//       (b) RENDERS  — the detail region paints,
+//       (c) PLAYS    — sampled frames differ over the timeline,
+//       (d) CONTROLS — paused, driving every range control changes the frozen frame;
+//   • asserts window.__catalogRig.deviceLostCount === 0 across ALL of the above.
 // (a) contract conformance is covered headlessly by the vitest suite.
 //
-// Artifacts: notes/verification/ultracode-pilot/{gallery,tiles,controls}/*.png
-//            notes/verification/ultracode-pilot/verify-catalog-report.json
+// Artifacts: notes/verification/catalog-prep/{gallery,tiles,controls}/*.png
+//            notes/verification/catalog-prep/verify-catalog-report.json
 //
-// Usage: node scripts/verify-catalog.mjs [--port 4787] [--only name1,name2]
+// Usage: node scripts/verify-catalog.mjs [--port 4788] [--only name1,name2]
 
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
-const outDir = join(repoRoot, 'notes', 'verification', 'ultracode-pilot');
+const outDir = join(repoRoot, 'notes', 'verification', 'catalog-prep');
 for (const d of ['gallery', 'tiles', 'controls']) mkdirSync(join(outDir, d), { recursive: true });
 
 const args = process.argv.slice(2);
@@ -29,7 +35,7 @@ const getArg = (k, d) => {
   const i = args.indexOf(`--${k}`);
   return i >= 0 && args[i + 1] ? args[i + 1] : d;
 };
-const PORT = parseInt(getArg('port', '4787'), 10);
+const PORT = parseInt(getArg('port', '4788'), 10);
 const ONLY = getArg('only', '').split(',').map((s) => s.trim()).filter(Boolean);
 const BASE = `http://localhost:${PORT}`;
 const URL = `${BASE}/animation-catalog`;
@@ -60,7 +66,7 @@ async function main() {
   server.stdout.on('data', (b) => { serverLog += b.toString(); });
   server.stderr.on('data', (b) => { serverLog += b.toString(); });
 
-  const report = { url: URL, startedAt: new Date().toISOString(), primitives: [], globalConsoleErrors: [], summary: {} };
+  const report = { url: URL, startedAt: new Date().toISOString(), rig: {}, primitives: [], globalConsoleErrors: [], summary: {} };
 
   try {
     if (!(await waitForServer(BASE))) throw new Error('dev server did not come up in 90s\n' + serverLog.slice(-1500));
@@ -69,20 +75,50 @@ async function main() {
     const browser = await chromium.launch({
       args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
     });
-    const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1 });
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1600 }, deviceScaleFactor: 1 });
     const page = await context.newPage();
     const consoleErrors = [];
     page.on('console', (m) => { if (m.type() === 'error') consoleErrors.push(m.text()); });
     page.on('pageerror', (e) => consoleErrors.push('pageerror: ' + e.message));
 
+    // Each preview is a TRANSPARENT DOM window over the one fixed rig canvas.
+    // Playwright's element.screenshot() does NOT composite a fixed underlay
+    // behind a transparent element, so we capture a clipped PAGE screenshot
+    // (which composites the whole page, canvas included) at the element's rect.
+    const shotRegion = async (locator) => {
+      const box = await locator.boundingBox().catch(() => null);
+      if (!box) return null;
+      const clip = {
+        x: Math.max(0, box.x),
+        y: Math.max(0, box.y),
+        width: Math.max(1, Math.min(box.width, 1440 - Math.max(0, box.x))),
+        height: Math.max(1, Math.min(box.height, 1600 - Math.max(0, box.y))),
+      };
+      return page.screenshot({ clip }).catch(() => null);
+    };
+
     log(`${Y}[catalog-verify]${X} navigating ${URL} (first compile can take ~20s)…`);
     await page.goto(URL, { waitUntil: 'domcontentloaded', timeout: 120000 });
     await page.waitForSelector('[data-component="animation-picker"]', { timeout: 120000 });
+    await page.waitForSelector('[data-component="shared-rig-canvas"]', { timeout: 60000 });
     await page.waitForSelector('[data-tile]', { timeout: 60000 });
-    await page.waitForTimeout(1500);
+    // The whole point: one shared context must come up ready.
+    await page.waitForFunction(() => window.__catalogRig && window.__catalogRig.ready === true, { timeout: 60000 });
+    await page.waitForTimeout(2000);
 
-    // Full gallery screenshot.
-    await page.screenshot({ path: join(outDir, 'gallery', 'catalog-full.png'), fullPage: true });
+    const rigInfo = await page.evaluate(() => ({
+      ready: window.__catalogRig?.ready,
+      backend: window.__catalogRig?.backend,
+      tileCount: window.__catalogRig?.tileCount,
+      deviceLostCount: window.__catalogRig?.deviceLostCount,
+    }));
+    report.rig.atStart = rigInfo;
+    log(`${Y}[catalog-verify]${X} rig: backend=${rigInfo.backend} tiles=${rigInfo.tileCount} deviceLost=${rigInfo.deviceLostCount}`);
+
+    // Full picker screenshot (viewport, NOT fullPage — the rig canvas is fixed,
+    // so a viewport shot composites the live tiles; fullPage would tile a fixed
+    // canvas). Shows many tiles rendering through the one shared context.
+    await page.screenshot({ path: join(outDir, 'gallery', 'catalog-full.png') });
 
     const count = await page.locator('[data-component="primitive-count"]').textContent().catch(() => '?');
     log(`${Y}[catalog-verify]${X} picker reports: ${count}`);
@@ -93,36 +129,34 @@ async function main() {
     if (ONLY.length) tiles = tiles.filter((t) => ONLY.includes(t.name));
     log(`${Y}[catalog-verify]${X} verifying ${tiles.length} tile(s) serially…`);
 
-    // (e) HOVER-TILE PROOF (once): hovering a tile mounts a live mini canvas.
-    // Done a single time to avoid GL-context churn (headless swiftshader drops
-    // contexts when many canvases mount/unmount). All per-primitive render/play/
-    // controls checks then run on the ONE persistent detail canvas via the
-    // window.__catalogFocus hook — no further tile hovering.
+    // (e) HOVER PLAYS: a tile freezes mid-frame, then plays on hover. With the
+    // shared rig there is no per-tile canvas — the tile region is a transparent
+    // window into the shared canvas — so we prove "plays on hover" by pixel diff.
     try {
-      const el0 = page.locator(`[data-tile][data-primitive="${tiles[0].name}"]`).first();
-      await el0.scrollIntoViewIfNeeded();
-      const b0 = await el0.boundingBox();
-      await page.mouse.move(b0.x + b0.width / 2, b0.y + b0.height * 0.35);
-      await page.waitForTimeout(1000);
-      report.hoverTileProof = (await el0.locator('canvas').count()) >= 1;
-      const proof = await el0.screenshot().catch(() => null);
-      if (proof) writeFileSync(join(outDir, 'gallery', 'hover-tile-proof.png'), proof);
+      const region = page.locator(`[data-tile][data-primitive="${tiles[0].name}"] [data-shared-viewport]`).first();
+      await page.waitForTimeout(400);
+      const frozen = await shotRegion(region);
+      const box = await region.boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.waitForTimeout(1100);
+      const hovered = await shotRegion(region);
+      report.hoverPlaysProof = !!(frozen && hovered && Buffer.compare(frozen, hovered) !== 0);
+      if (hovered) writeFileSync(join(outDir, 'gallery', 'hover-plays-proof.png'), hovered);
       await page.mouse.move(4, 4);
-      await page.waitForTimeout(500);
+      await page.waitForTimeout(400);
     } catch (e) {
-      report.hoverTileProof = false;
+      report.hoverPlaysProof = false;
       report.notes = 'hover proof error: ' + e.message;
     }
-    log(`${Y}[catalog-verify]${X} hover-tile mounts a live canvas: ${report.hoverTileProof}`);
+    log(`${Y}[catalog-verify]${X} tile plays on hover: ${report.hoverPlaysProof}`);
 
     const detail = page.locator('[data-component="primitive-detail"]');
-    const detailCanvas = detail.locator('canvas').first();
+    const detailPreview = page.locator('[data-component="detail-preview"]');
 
     for (const tile of tiles) {
       const entry = { name: tile.name, category: tile.category, renders: false, plays: false, controls: false, picker: true, notes: [], consoleErrors: [] };
       const errBefore = consoleErrors.length;
       try {
-        // Focus via the hook (no tile hover → no context churn).
         await page.evaluate((n) => window.__catalogFocus && window.__catalogFocus(n), tile.name);
         await page
           .waitForFunction(
@@ -132,21 +166,18 @@ async function main() {
           )
           .catch(() => entry.notes.push('focus attr not confirmed'));
         await page.waitForTimeout(900);
-        entry.renders = (await detailCanvas.count()) >= 1;
 
-        // (c) PLAYS — ensure playing; two detail frames 450ms apart must differ.
+        // (c) PLAYS — ensure playing; sample 3 frames over ~1s; motion = ANY pair differs.
         await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(true));
         await page.waitForTimeout(300);
-        // Sample 3 frames over ~1s; motion = ANY pair differs (robust to slow
-        // or near-symmetric primitives whose two adjacent frames can coincide).
         const frames = [];
         for (let k = 0; k < 3; k++) {
-          frames.push(await detailCanvas.screenshot().catch(() => null));
+          frames.push(await shotRegion(detailPreview));
           if (k < 2) await page.waitForTimeout(420);
         }
-        entry.plays =
-          frames.some((a, i) => frames.slice(i + 1).some((b) => a && b && Buffer.compare(a, b) !== 0));
         const last = frames[frames.length - 1];
+        entry.renders = !!last;
+        entry.plays = frames.some((a, i) => frames.slice(i + 1).some((b) => a && b && Buffer.compare(a, b) !== 0));
         if (last) writeFileSync(join(outDir, 'tiles', `${tile.name}.png`), last);
 
         // (d) CONTROLS — PAUSE (freeze a visible mid-frame), drive every range
@@ -156,7 +187,7 @@ async function main() {
         const ranges = detail.locator('input[type="range"][data-control]');
         const nRanges = await ranges.count();
         if (nRanges > 0) {
-          const c1 = await detailCanvas.screenshot().catch(() => null);
+          const c1 = await shotRegion(detailPreview);
           for (let i = 0; i < nRanges; i++) {
             const ctrl = ranges.nth(i);
             const max = await ctrl.getAttribute('max');
@@ -168,7 +199,7 @@ async function main() {
             await ctrl.dispatchEvent('change');
           }
           await page.waitForTimeout(700);
-          const c2 = await detailCanvas.screenshot().catch(() => null);
+          const c2 = await shotRegion(detailPreview);
           entry.controls = !!(c1 && c2 && Buffer.compare(c1, c2) !== 0);
           if (c2) writeFileSync(join(outDir, 'controls', `${tile.name}-controls.png`), c2);
         } else {
@@ -177,18 +208,26 @@ async function main() {
       } catch (e) {
         entry.notes.push('error: ' + e.message);
       }
-      entry.consoleErrors = consoleErrors.slice(errBefore).filter((t) => t.includes(tile.name) || /animatable/i.test(t));
+      entry.consoleErrors = consoleErrors.slice(errBefore).filter((t) => t.includes(tile.name) || /animatable|catalog-rig/i.test(t));
       const ok = entry.renders && entry.plays && entry.controls;
       log(`  [${ok ? G + 'OK' : R + '!!'}${X}] ${tile.name.padEnd(22)} render=${entry.renders} play=${entry.plays} controls=${entry.controls} ${entry.notes.join('; ')}`);
       report.primitives.push(entry);
     }
 
-    // "WebGL Device Lost" is a headless-swiftshader artifact from GL-context
-    // churn (not a primitive defect); classify it separately from real errors.
-    const isEnvNoise = (t) =>
-      /Download the React DevTools/.test(t) || /Device Lost/i.test(t) || /context lost/i.test(t);
-    report.globalConsoleErrors = consoleErrors.filter((t) => !isEnvNoise(t));
-    report.envNoiseCount = consoleErrors.filter(isEnvNoise).length;
+    // Final rig state — the headline assertion for the shared rig.
+    report.rig.atEnd = await page.evaluate(() => ({
+      ready: window.__catalogRig?.ready,
+      backend: window.__catalogRig?.backend,
+      tileCount: window.__catalogRig?.tileCount,
+      deviceLostCount: window.__catalogRig?.deviceLostCount,
+    }));
+    report.deviceLostTotal = report.rig.atEnd?.deviceLostCount ?? -1;
+
+    // Console "device lost"/"context lost" noise should now be ZERO too.
+    const isEnvNoise = (t) => /Download the React DevTools/.test(t);
+    const ctxLost = (t) => /Device Lost/i.test(t) || /context lost/i.test(t);
+    report.globalConsoleErrors = consoleErrors.filter((t) => !isEnvNoise(t) && !ctxLost(t));
+    report.contextLostConsoleCount = consoleErrors.filter(ctxLost).length;
     await browser.close();
   } catch (e) {
     report.fatal = e.message;
@@ -205,11 +244,16 @@ async function main() {
     controls: p.filter((x) => x.controls).length,
     fullyVerified: p.filter((x) => x.renders && x.plays && x.controls).length,
     realConsoleErrorCount: report.globalConsoleErrors.length,
-    envNoiseCount: report.envNoiseCount || 0,
+    deviceLostTotal: report.deviceLostTotal,
+    contextLostConsoleCount: report.contextLostConsoleCount || 0,
+    hoverPlaysProof: report.hoverPlaysProof === true,
+    backend: report.rig?.atEnd?.backend,
   };
   writeFileSync(join(outDir, 'verify-catalog-report.json'), JSON.stringify(report, null, 2) + '\n');
   log(`\n${Y}[catalog-verify]${X} ${JSON.stringify(report.summary)}`);
-  log(`${D}report: notes/verification/ultracode-pilot/verify-catalog-report.json${X}`);
+  const deviceLostOk = report.deviceLostTotal === 0;
+  log(`${deviceLostOk ? G : R}[catalog-verify] device-lost across all tiles = ${report.deviceLostTotal} ${deviceLostOk ? '(zero ✓)' : '(NONZERO ✗)'}${X}`);
+  log(`${D}report: notes/verification/catalog-prep/verify-catalog-report.json${X}`);
   process.exit(report.fatal ? 1 : 0);
 }
 

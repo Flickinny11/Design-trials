@@ -92,6 +92,35 @@ FORBIDDEN_ICON_PREFIX = (
     "@phosphor-icons/", "@iconify/", "@iconify-icons/", "@mui/icons-material/",
 )
 
+# ---------------------------------------------------------------------------
+# Import-detection regex (Surfaces 2 + 2b).
+#
+# IMPORTANT — false-positive fix (permanent; 2026-06-07, Logan/catalog-prep).
+# The old pattern `(?:from|import|require)\s*\(?\s*['"]...` allowed ZERO
+# whitespace between the keyword and the opening quote, so any *string value or
+# comment* containing the bare token `from`/`import`/`require` immediately
+# before a quote — e.g. a ControlSchema control with `id: 'from'`, or a comment
+# ending in the word "import" right before a quoted word — was misread as an
+# unapproved import and BLOCKED the write (the ULTRACODE pilot tripped on a
+# control id of 'from'). That is a guard defect, not real drift.
+#
+# Real module syntax is unambiguous and is the ONLY thing matched now:
+#   * `from 'x'` / `import 'x'`         → keyword + >=1 whitespace + quote
+#   * `import('x')` / `require('x')`    → keyword + '(' + quote (dynamic/CJS)
+# A negative lookbehind `(?<![\w$])` keeps it from matching inside identifiers
+# (e.g. a var literally named `importmap`). Minified `}from'x'` (no space, no
+# paren) is intentionally NOT matched — source in this repo is never minified,
+# and missing a rare edge is far better than false-blocking valid code.
+# ---------------------------------------------------------------------------
+IMPORT_RE = re.compile(
+    r"""(?<![\w$])(?:(?:from|import)\s+|(?:import|require)\s*\(\s*)['"]([^'"]+)['"]"""
+)
+
+
+def imported_specifiers(content: str) -> set:
+    """All module specifiers a chunk of code imports (ESM + dynamic + CJS)."""
+    return {m.group(1) for m in IMPORT_RE.finditer(content)}
+
 
 def is_forbidden_icon_pkg(pkg: str) -> bool:
     return pkg in FORBIDDEN_ICON_EXACT or any(pkg.startswith(p) for p in FORBIDDEN_ICON_PREFIX)
@@ -229,13 +258,7 @@ def main() -> int:
 
     # ---- Surface 2: imports under prism runtime/build scope ----------------
     if in_prism_scope and is_code and not is_pkg_json and not is_lockfile:
-        imports = set()
-        for m in re.finditer(
-            r"""(?:from|import|require)\s*\(?\s*['"]([^'"]+)['"]""", content
-        ):
-            imports.add(m.group(1))
-        for m in re.finditer(r"""import\s+['"]([^'"]+)['"]""", content):
-            imports.add(m.group(1))
+        imports = imported_specifiers(content)
         for pkg in sorted(imports):
             if is_forbidden_pkg(pkg):
                 violations.append(
@@ -254,11 +277,7 @@ def main() -> int:
     # because the rule covers the entire editor — toolbar, TopBar, Inspector,
     # mode toggle, Minimap, HubNav, everywhere.
     if in_src_or_scripts and is_code and not is_pkg_json and not is_lockfile:
-        icon_imports = set()
-        for m in re.finditer(r"""(?:from|import|require)\s*\(?\s*['"]([^'"]+)['"]""", content):
-            icon_imports.add(m.group(1))
-        for m in re.finditer(r"""import\s+['"]([^'"]+)['"]""", content):
-            icon_imports.add(m.group(1))
+        icon_imports = imported_specifiers(content)
         for pkg in sorted(icon_imports):
             if is_forbidden_icon_pkg(pkg):
                 violations.append(
