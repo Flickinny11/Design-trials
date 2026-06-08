@@ -6,41 +6,68 @@
 import { registerPrimitive } from '../registry';
 import type { PrimitiveDefinition } from '../contract';
 
+import { accordionYPrimitive } from './accordion-y';
 import { bouncePrimitive } from './bounce';
 import { cardFoldPrimitive } from './card-fold';
+import { cornerPeelPrimitive } from './corner-peel';
 import { cubeRotatePrimitive } from './cube-rotate';
 import { depthPopPrimitive } from './depth-pop';
 import { doorOpenPrimitive } from './door-open';
+import { dropBouncePrimitive } from './drop-bounce';
 import { elasticPrimitive } from './elastic';
 import { flipPrimitive } from './flip';
 import { flip3dPrimitive } from './flip-3d';
+import { flipBoardPrimitive } from './flip-board';
 import { floatPrimitive } from './float';
+import { hingeFallPrimitive } from './hinge-fall';
 import { jellyPrimitive } from './jelly';
 import { overshootPrimitive } from './overshoot';
+import { pendulumSettlePrimitive } from './pendulum-settle';
+import { perspectiveTiltInPrimitive } from './perspective-tilt-in';
+import { pivotDropPrimitive } from './pivot-drop';
+import { rollInPrimitive } from './roll-in';
 import { rotateInPrimitive } from './rotate-in';
 import { scalePopPrimitive } from './scale-pop';
+import { skewInPrimitive } from './skew-in';
 import { slidePrimitive } from './slide';
 import { spinPrimitive } from './spin';
+import { spiralInPrimitive } from './spiral-in';
+import { squashStretchInPrimitive } from './squash-stretch-in';
 import { swingPrimitive } from './swing';
 import { tumblePrimitive } from './tumble';
 import { unfoldPrimitive } from './unfold';
+import { zoomOutInPrimitive } from './zoom-out-in';
 import { zoomRotateInPrimitive } from './zoom-rotate-in';
 import { blinkPrimitive } from './blink';
 import { crossDissolvePrimitive } from './cross-dissolve';
 import { dissolveNoisePrimitive } from './dissolve-noise';
 import { fadePrimitive } from './fade';
+import { fadeCheckerPrimitive } from './fade-checker';
+import { fadeDownPrimitive } from './fade-down';
+import { fadeFlickerInPrimitive } from './fade-flicker-in';
+import { fadeInOutPrimitive } from './fade-in-out';
+import { fadePulsePrimitive } from './fade-pulse';
+import { fadeRotatePrimitive } from './fade-rotate';
 import { fadeScalePrimitive } from './fade-scale';
 import { fadeThroughBlackPrimitive } from './fade-through-black';
 import { fadeUpPrimitive } from './fade-up';
+import { fadeVignettePrimitive } from './fade-vignette';
 import { flashPrimitive } from './flash';
 import { horizontalScrollPrimitive } from './horizontal-scroll';
 import { parallaxPrimitive } from './parallax';
 import { pinRevealPrimitive } from './pin-reveal';
 import { revealMaskScrollPrimitive } from './reveal-mask-scroll';
+import { scrollBlurPrimitive } from './scroll-blur';
 import { scrollColorShiftPrimitive } from './scroll-color-shift';
+import { scrollDepthDollyPrimitive } from './scroll-depth-dolly';
 import { scrollFadeStackPrimitive } from './scroll-fade-stack';
+import { scrollFlipPrimitive } from './scroll-flip';
+import { scrollProgressFillPrimitive } from './scroll-progress-fill';
 import { scrollRotate3dPrimitive } from './scroll-rotate-3d';
+import { scrollShrinkAwayPrimitive } from './scroll-shrink-away';
 import { scrollSkewPrimitive } from './scroll-skew';
+import { scrollStaggerRisePrimitive } from './scroll-stagger-rise';
+import { scrollTiltPrimitive } from './scroll-tilt';
 import { scrollZoomPrimitive } from './scroll-zoom';
 import { scrubMorphPrimitive } from './scrub-morph';
 import { stickyPinPrimitive } from './sticky-pin';
@@ -48,6 +75,13 @@ import { cursorTrailPrimitive } from './cursor-trail';
 import { hoverLiftPrimitive } from './hover-lift';
 import { magneticPrimitive } from './magnetic';
 import { parallaxLayersPrimitive } from './parallax-layers';
+import { pointerAttractScalePrimitive } from './pointer-attract-scale';
+import { pointerDisplacePrimitive } from './pointer-displace';
+import { pointerHueShiftPrimitive } from './pointer-hue-shift';
+import { pointerOrbitPrimitive } from './pointer-orbit';
+import { pointerPressPrimitive } from './pointer-press';
+import { pointerRipplePrimitive } from './pointer-ripple';
+import { pointerShinePrimitive } from './pointer-shine';
 import { pointerTilt3dPrimitive } from './pointer-tilt-3d';
 import { repelPrimitive } from './repel';
 import { spotlightFollowPrimitive } from './spotlight-follow';
@@ -63,139 +97,291 @@ import { splitStaggerPrimitive } from './split-stagger';
 import { stretchTextPrimitive } from './stretch-text';
 import { textBlurInPrimitive } from './text-blur-in';
 import { textCascadePrimitive } from './text-cascade';
+import { textCounterRollPrimitive } from './text-counter-roll';
+import { textDrawOnPrimitive } from './text-draw-on';
+import { textElasticInPrimitive } from './text-elastic-in';
 import { textExtrudePrimitive } from './text-extrude';
+import { textExtrudeRotatePrimitive } from './text-extrude-rotate';
+import { textFadeUpEachPrimitive } from './text-fade-up-each';
+import { textFlipEachPrimitive } from './text-flip-each';
+import { textGlowPulsePrimitive } from './text-glow-pulse';
+import { textGradientSweepPrimitive } from './text-gradient-sweep';
+import { textJumpPrimitive } from './text-jump';
+import { textMagneticInPrimitive } from './text-magnetic-in';
+import { textMaskRevealPrimitive } from './text-mask-reveal';
+import { textPerspectiveInPrimitive } from './text-perspective-in';
 import { textPopEachPrimitive } from './text-pop-each';
+import { textRotateEachPrimitive } from './text-rotate-each';
+import { textScaleWavePrimitive } from './text-scale-wave';
+import { textShakePrimitive } from './text-shake';
 import { textSpotlightPrimitive } from './text-spotlight';
+import { textSquashEachPrimitive } from './text-squash-each';
+import { textSwingInPrimitive } from './text-swing-in';
+import { textTypewriterCursorPrimitive } from './text-typewriter-cursor';
+import { textWave3dPrimitive } from './text-wave-3d';
+import { textWaveColorPrimitive } from './text-wave-color';
 import { typewriterPrimitive } from './typewriter';
 import { waveTextPrimitive } from './wave-text';
 import { bannerFlutterPrimitive } from './banner-flutter';
 import { clothSwayPrimitive } from './cloth-sway';
+import { curtainWavePrimitive } from './curtain-wave';
+import { drapeFoldPrimitive } from './drape-fold';
 import { flagWavePrimitive } from './flag-wave';
 import { foamPrimitive } from './foam';
+import { gelWobblePrimitive } from './gel-wobble';
 import { hairSwayPrimitive } from './hair-sway';
+import { heatHazeWarpPrimitive } from './heat-haze-warp';
 import { inkSpreadPrimitive } from './ink-spread';
 import { jellySurfacePrimitive } from './jelly-surface';
 import { oceanFftPrimitive } from './ocean-fft';
 import { ripplePrimitive } from './ripple';
+import { rippleConcentricPrimitive } from './ripple-concentric';
+import { rippleInterferencePrimitive } from './ripple-interference';
 import { ripplePoolPrimitive } from './ripple-pool';
+import { sailBulgePrimitive } from './sail-bulge';
+import { seaweedSwayPrimitive } from './seaweed-sway';
+import { trampolinePrimitive } from './trampoline';
 import { waterSurfacePrimitive } from './water-surface';
 import { wavePrimitive } from './wave';
+import { waveCrossPrimitive } from './wave-cross';
+import { wheatFieldPrimitive } from './wheat-field';
 import { windRipplePrimitive } from './wind-ripple';
 import { crumblePrimitive } from './crumble';
+import { crumbleToParticlesPrimitive } from './crumble-to-particles';
+import { datamoshPrimitive } from './datamosh';
 import { displacementTransitionPrimitive } from './displacement-transition';
 import { dissolveBurnPrimitive } from './dissolve-burn';
 import { glitchDisplacePrimitive } from './glitch-displace';
+import { liquefyRevealPrimitive } from './liquefy-reveal';
 import { meltPrimitive } from './melt';
+import { origamiFoldPrimitive } from './origami-fold';
 import { paintSpreadPrimitive } from './paint-spread';
 import { pixelDissolvePrimitive } from './pixel-dissolve';
+import { rippleDisplacePrimitive } from './ripple-displace';
 import { shatterPrimitive } from './shatter';
+import { shatterAssemblePrimitive } from './shatter-assemble';
+import { sliceStripsPrimitive } from './slice-strips';
 import { splatRevealPrimitive } from './splat-reveal';
+import { swirlWarpPrimitive } from './swirl-warp';
+import { tearRevealPrimitive } from './tear-reveal';
+import { tilesAssemblePrimitive } from './tiles-assemble';
 import { voxelizePrimitive } from './voxelize';
+import { waveDistortInPrimitive } from './wave-distort-in';
+import { barsWipePrimitive } from './bars-wipe';
 import { blindsWipePrimitive } from './blinds-wipe';
+import { checkerWipePrimitive } from './checker-wipe';
 import { clockWipePrimitive } from './clock-wipe';
+import { crossWipePrimitive } from './cross-wipe';
 import { diamondWipePrimitive } from './diamond-wipe';
 import { irisWipePrimitive } from './iris-wipe';
 import { maskWipePrimitive } from './mask-wipe';
+import { noiseWipePrimitive } from './noise-wipe';
+import { ringWipePrimitive } from './ring-wipe';
+import { spiralWipePrimitive } from './spiral-wipe';
+import { waveWipePrimitive } from './wave-wipe';
+import { wedgeWipePrimitive } from './wedge-wipe';
 import { wipeLinearPrimitive } from './wipe-linear';
+import { zigzagWipePrimitive } from './zigzag-wipe';
+import { blurDissolveOutPrimitive } from './blur-dissolve-out';
 import { blurInPrimitive } from './blur-in';
+import { blurSlideInPrimitive } from './blur-slide-in';
+import { blurSpinPrimitive } from './blur-spin';
+import { chromaticBlurPrimitive } from './chromatic-blur';
 import { defocusPulsePrimitive } from './defocus-pulse';
+import { focusRackPrimitive } from './focus-rack';
 import { motionBlurStreakPrimitive } from './motion-blur-streak';
+import { tiltShiftPulsePrimitive } from './tilt-shift-pulse';
 import { zoomBlurPrimitive } from './zoom-blur';
+import { brushedMetalPrimitive } from './brushed-metal';
 import { causticShimmerPrimitive } from './caustic-shimmer';
+import { diamondSparklePrimitive } from './diamond-sparkle';
+import { glimmerDustPrimitive } from './glimmer-dust';
 import { glintStreakPrimitive } from './glint-streak';
+import { goldGlintPrimitive } from './gold-glint';
 import { holographicPrimitive } from './holographic';
 import { iridescencePrimitive } from './iridescence';
 import { lightSweepPrimitive } from './light-sweep';
+import { liquidMetalFlowPrimitive } from './liquid-metal-flow';
 import { metallicSheenPrimitive } from './metallic-sheen';
+import { moonstoneSheenPrimitive } from './moonstone-sheen';
+import { neonEdgePulsePrimitive } from './neon-edge-pulse';
 import { pearlescentPrimitive } from './pearlescent';
 import { prismSpectrumPrimitive } from './prism-spectrum';
+import { rainbowFresnelEdgePrimitive } from './rainbow-fresnel-edge';
+import { satinBandPrimitive } from './satin-band';
 import { shimmerPrimitive } from './shimmer';
 import { sparkleGlintsPrimitive } from './sparkle-glints';
+import { starfieldTwinklePrimitive } from './starfield-twinkle';
+import { velvetSheenPrimitive } from './velvet-sheen';
+import { acrylicEdgePrimitive } from './acrylic-edge';
+import { aerogelHazePrimitive } from './aerogel-haze';
 import { bevelGlassPrimitive } from './bevel-glass';
 import { chromaticAberrationPrimitive } from './chromatic-aberration';
+import { crystalBallPrimitive } from './crystal-ball';
 import { crystalFacetPrimitive } from './crystal-facet';
 import { dispersionPrimitive } from './dispersion';
+import { flutedGlassPrimitive } from './fluted-glass';
 import { fresnelGlowPrimitive } from './fresnel-glow';
 import { frostedGlassPrimitive } from './frosted-glass';
+import { gemstoneCutPrimitive } from './gemstone-cut';
 import { glassRefractionPrimitive } from './glass-refraction';
+import { holoGlassPrimitive } from './holo-glass';
 import { iceGlassPrimitive } from './ice-glass';
 import { iridescentGlassPrimitive } from './iridescent-glass';
+import { liquidFillGlassPrimitive } from './liquid-fill-glass';
 import { liquidGlassPrimitive } from './liquid-glass';
 import { refractionWarpPrimitive } from './refraction-warp';
+import { smokedGlassPrimitive } from './smoked-glass';
+import { soapBubblePrimitive } from './soap-bubble';
 import { waterDropletPrimitive } from './water-droplet';
 import { causticNetPrimitive } from './caustic-net';
+import { causticRingsPrimitive } from './caustic-rings';
+import { causticSpotsPrimitive } from './caustic-spots';
 import { causticsPrimitive } from './caustics';
 import { causticsRipplePrimitive } from './caustics-ripple';
+import { dappledLightPrimitive } from './dappled-light';
+import { edgeCausticsPrimitive } from './edge-caustics';
+import { flowingCausticsPrimitive } from './flowing-caustics';
+import { gemCausticsPrimitive } from './gem-caustics';
+import { lavaCausticsPrimitive } from './lava-caustics';
 import { poolCausticsPrimitive } from './pool-caustics';
 import { underwaterCausticsPrimitive } from './underwater-caustics';
 import { auroraPrimitive } from './aurora';
 import { campfirePrimitive } from './campfire';
+import { candleFlamePrimitive } from './candle-flame';
 import { cloudsPrimitive } from './clouds';
+import { cosmicDustPrimitive } from './cosmic-dust';
 import { fireFlamePrimitive } from './fire-flame';
+import { fireballBurstPrimitive } from './fireball-burst';
 import { fogPrimitive } from './fog';
+import { galaxySpiralPrimitive } from './galaxy-spiral';
+import { gasFlamePrimitive } from './gas-flame';
 import { godrayPrimitive } from './godray';
+import { heatColumnPrimitive } from './heat-column';
 import { lightShaftsPrimitive } from './light-shafts';
+import { lightningBoltPrimitive } from './lightning-bolt';
+import { magmaCracksPrimitive } from './magma-cracks';
 import { nebulaPrimitive } from './nebula';
 import { plasmaPrimitive } from './plasma';
+import { smokyFirePrimitive } from './smoky-fire';
+import { supernovaPrimitive } from './supernova';
+import { torchFlamePrimitive } from './torch-flame';
+import { volumetricConePrimitive } from './volumetric-cone';
+import { willOWispPrimitive } from './will-o-wisp';
 import { dustCloudPrimitive } from './dust-cloud';
+import { dustPoofPrimitive } from './dust-poof';
+import { fogRollPrimitive } from './fog-roll';
+import { genieColumnPrimitive } from './genie-column';
 import { inkBloomPrimitive } from './ink-bloom';
+import { inkDripPrimitive } from './ink-drip';
+import { inkSwirlPrimitive } from './ink-swirl';
+import { mistDriftPrimitive } from './mist-drift';
 import { smokePrimitive } from './smoke';
+import { smokeBurstPrimitive } from './smoke-burst';
 import { smokePlumePrimitive } from './smoke-plume';
+import { smokeRingPrimitive } from './smoke-ring';
+import { smokeTrailPrimitive } from './smoke-trail';
 import { steamPrimitive } from './steam';
 import { wispySmokePrimitive } from './wispy-smoke';
 import { attractorPrimitive } from './attractor';
 import { bubblesPrimitive } from './bubbles';
+import { collisionBallsPrimitive } from './collision-balls';
 import { confettiPrimitive } from './confetti';
+import { debrisTornadoPrimitive } from './debris-tornado';
+import { dnaHelixPrimitive } from './dna-helix';
 import { dustParticlesPrimitive } from './dust-particles';
 import { embersPrimitive } from './embers';
 import { explosionPrimitive } from './explosion';
 import { firefliesPrimitive } from './fireflies';
+import { fireworksPrimitive } from './fireworks';
 import { flockingPrimitive } from './flocking';
+import { fluidSphPrimitive } from './fluid-sph';
 import { fountainPrimitive } from './fountain';
+import { galaxyParticlesPrimitive } from './galaxy-particles';
 import { gravityDropPrimitive } from './gravity-drop';
+import { magneticFieldPrimitive } from './magnetic-field';
+import { meteorShowerPrimitive } from './meteor-shower';
 import { morphCloudPrimitive } from './morph-cloud';
+import { murmurationPrimitive } from './murmuration';
+import { orbitRingsPrimitive } from './orbit-rings';
+import { particleAssemblePrimitive } from './particle-assemble';
+import { pendulumWavePrimitive } from './pendulum-wave';
+import { petalFallPrimitive } from './petal-fall';
 import { rainPrimitive } from './rain';
+import { rainSplashPrimitive } from './rain-splash';
 import { snowPrimitive } from './snow';
+import { snowGlobePrimitive } from './snow-globe';
+import { sparkShowerPrimitive } from './spark-shower';
 import { sparksPrimitive } from './sparks';
+import { springLatticePrimitive } from './spring-lattice';
 import { swarmPrimitive } from './swarm';
+import { tickerTapePrimitive } from './ticker-tape';
 import { vortexPrimitive } from './vortex';
+import { waveGridPrimitive } from './wave-grid';
 
 export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
+  accordionYPrimitive,
   bouncePrimitive,
   cardFoldPrimitive,
+  cornerPeelPrimitive,
   cubeRotatePrimitive,
   depthPopPrimitive,
   doorOpenPrimitive,
+  dropBouncePrimitive,
   elasticPrimitive,
   flipPrimitive,
   flip3dPrimitive,
+  flipBoardPrimitive,
   floatPrimitive,
+  hingeFallPrimitive,
   jellyPrimitive,
   overshootPrimitive,
+  pendulumSettlePrimitive,
+  perspectiveTiltInPrimitive,
+  pivotDropPrimitive,
+  rollInPrimitive,
   rotateInPrimitive,
   scalePopPrimitive,
+  skewInPrimitive,
   slidePrimitive,
   spinPrimitive,
+  spiralInPrimitive,
+  squashStretchInPrimitive,
   swingPrimitive,
   tumblePrimitive,
   unfoldPrimitive,
+  zoomOutInPrimitive,
   zoomRotateInPrimitive,
   blinkPrimitive,
   crossDissolvePrimitive,
   dissolveNoisePrimitive,
   fadePrimitive,
+  fadeCheckerPrimitive,
+  fadeDownPrimitive,
+  fadeFlickerInPrimitive,
+  fadeInOutPrimitive,
+  fadePulsePrimitive,
+  fadeRotatePrimitive,
   fadeScalePrimitive,
   fadeThroughBlackPrimitive,
   fadeUpPrimitive,
+  fadeVignettePrimitive,
   flashPrimitive,
   horizontalScrollPrimitive,
   parallaxPrimitive,
   pinRevealPrimitive,
   revealMaskScrollPrimitive,
+  scrollBlurPrimitive,
   scrollColorShiftPrimitive,
+  scrollDepthDollyPrimitive,
   scrollFadeStackPrimitive,
+  scrollFlipPrimitive,
+  scrollProgressFillPrimitive,
   scrollRotate3dPrimitive,
+  scrollShrinkAwayPrimitive,
   scrollSkewPrimitive,
+  scrollStaggerRisePrimitive,
+  scrollTiltPrimitive,
   scrollZoomPrimitive,
   scrubMorphPrimitive,
   stickyPinPrimitive,
@@ -203,6 +389,13 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   hoverLiftPrimitive,
   magneticPrimitive,
   parallaxLayersPrimitive,
+  pointerAttractScalePrimitive,
+  pointerDisplacePrimitive,
+  pointerHueShiftPrimitive,
+  pointerOrbitPrimitive,
+  pointerPressPrimitive,
+  pointerRipplePrimitive,
+  pointerShinePrimitive,
   pointerTilt3dPrimitive,
   repelPrimitive,
   spotlightFollowPrimitive,
@@ -218,102 +411,227 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   stretchTextPrimitive,
   textBlurInPrimitive,
   textCascadePrimitive,
+  textCounterRollPrimitive,
+  textDrawOnPrimitive,
+  textElasticInPrimitive,
   textExtrudePrimitive,
+  textExtrudeRotatePrimitive,
+  textFadeUpEachPrimitive,
+  textFlipEachPrimitive,
+  textGlowPulsePrimitive,
+  textGradientSweepPrimitive,
+  textJumpPrimitive,
+  textMagneticInPrimitive,
+  textMaskRevealPrimitive,
+  textPerspectiveInPrimitive,
   textPopEachPrimitive,
+  textRotateEachPrimitive,
+  textScaleWavePrimitive,
+  textShakePrimitive,
   textSpotlightPrimitive,
+  textSquashEachPrimitive,
+  textSwingInPrimitive,
+  textTypewriterCursorPrimitive,
+  textWave3dPrimitive,
+  textWaveColorPrimitive,
   typewriterPrimitive,
   waveTextPrimitive,
   bannerFlutterPrimitive,
   clothSwayPrimitive,
+  curtainWavePrimitive,
+  drapeFoldPrimitive,
   flagWavePrimitive,
   foamPrimitive,
+  gelWobblePrimitive,
   hairSwayPrimitive,
+  heatHazeWarpPrimitive,
   inkSpreadPrimitive,
   jellySurfacePrimitive,
   oceanFftPrimitive,
   ripplePrimitive,
+  rippleConcentricPrimitive,
+  rippleInterferencePrimitive,
   ripplePoolPrimitive,
+  sailBulgePrimitive,
+  seaweedSwayPrimitive,
+  trampolinePrimitive,
   waterSurfacePrimitive,
   wavePrimitive,
+  waveCrossPrimitive,
+  wheatFieldPrimitive,
   windRipplePrimitive,
   crumblePrimitive,
+  crumbleToParticlesPrimitive,
+  datamoshPrimitive,
   displacementTransitionPrimitive,
   dissolveBurnPrimitive,
   glitchDisplacePrimitive,
+  liquefyRevealPrimitive,
   meltPrimitive,
+  origamiFoldPrimitive,
   paintSpreadPrimitive,
   pixelDissolvePrimitive,
+  rippleDisplacePrimitive,
   shatterPrimitive,
+  shatterAssemblePrimitive,
+  sliceStripsPrimitive,
   splatRevealPrimitive,
+  swirlWarpPrimitive,
+  tearRevealPrimitive,
+  tilesAssemblePrimitive,
   voxelizePrimitive,
+  waveDistortInPrimitive,
+  barsWipePrimitive,
   blindsWipePrimitive,
+  checkerWipePrimitive,
   clockWipePrimitive,
+  crossWipePrimitive,
   diamondWipePrimitive,
   irisWipePrimitive,
   maskWipePrimitive,
+  noiseWipePrimitive,
+  ringWipePrimitive,
+  spiralWipePrimitive,
+  waveWipePrimitive,
+  wedgeWipePrimitive,
   wipeLinearPrimitive,
+  zigzagWipePrimitive,
+  blurDissolveOutPrimitive,
   blurInPrimitive,
+  blurSlideInPrimitive,
+  blurSpinPrimitive,
+  chromaticBlurPrimitive,
   defocusPulsePrimitive,
+  focusRackPrimitive,
   motionBlurStreakPrimitive,
+  tiltShiftPulsePrimitive,
   zoomBlurPrimitive,
+  brushedMetalPrimitive,
   causticShimmerPrimitive,
+  diamondSparklePrimitive,
+  glimmerDustPrimitive,
   glintStreakPrimitive,
+  goldGlintPrimitive,
   holographicPrimitive,
   iridescencePrimitive,
   lightSweepPrimitive,
+  liquidMetalFlowPrimitive,
   metallicSheenPrimitive,
+  moonstoneSheenPrimitive,
+  neonEdgePulsePrimitive,
   pearlescentPrimitive,
   prismSpectrumPrimitive,
+  rainbowFresnelEdgePrimitive,
+  satinBandPrimitive,
   shimmerPrimitive,
   sparkleGlintsPrimitive,
+  starfieldTwinklePrimitive,
+  velvetSheenPrimitive,
+  acrylicEdgePrimitive,
+  aerogelHazePrimitive,
   bevelGlassPrimitive,
   chromaticAberrationPrimitive,
+  crystalBallPrimitive,
   crystalFacetPrimitive,
   dispersionPrimitive,
+  flutedGlassPrimitive,
   fresnelGlowPrimitive,
   frostedGlassPrimitive,
+  gemstoneCutPrimitive,
   glassRefractionPrimitive,
+  holoGlassPrimitive,
   iceGlassPrimitive,
   iridescentGlassPrimitive,
+  liquidFillGlassPrimitive,
   liquidGlassPrimitive,
   refractionWarpPrimitive,
+  smokedGlassPrimitive,
+  soapBubblePrimitive,
   waterDropletPrimitive,
   causticNetPrimitive,
+  causticRingsPrimitive,
+  causticSpotsPrimitive,
   causticsPrimitive,
   causticsRipplePrimitive,
+  dappledLightPrimitive,
+  edgeCausticsPrimitive,
+  flowingCausticsPrimitive,
+  gemCausticsPrimitive,
+  lavaCausticsPrimitive,
   poolCausticsPrimitive,
   underwaterCausticsPrimitive,
   auroraPrimitive,
   campfirePrimitive,
+  candleFlamePrimitive,
   cloudsPrimitive,
+  cosmicDustPrimitive,
   fireFlamePrimitive,
+  fireballBurstPrimitive,
   fogPrimitive,
+  galaxySpiralPrimitive,
+  gasFlamePrimitive,
   godrayPrimitive,
+  heatColumnPrimitive,
   lightShaftsPrimitive,
+  lightningBoltPrimitive,
+  magmaCracksPrimitive,
   nebulaPrimitive,
   plasmaPrimitive,
+  smokyFirePrimitive,
+  supernovaPrimitive,
+  torchFlamePrimitive,
+  volumetricConePrimitive,
+  willOWispPrimitive,
   dustCloudPrimitive,
+  dustPoofPrimitive,
+  fogRollPrimitive,
+  genieColumnPrimitive,
   inkBloomPrimitive,
+  inkDripPrimitive,
+  inkSwirlPrimitive,
+  mistDriftPrimitive,
   smokePrimitive,
+  smokeBurstPrimitive,
   smokePlumePrimitive,
+  smokeRingPrimitive,
+  smokeTrailPrimitive,
   steamPrimitive,
   wispySmokePrimitive,
   attractorPrimitive,
   bubblesPrimitive,
+  collisionBallsPrimitive,
   confettiPrimitive,
+  debrisTornadoPrimitive,
+  dnaHelixPrimitive,
   dustParticlesPrimitive,
   embersPrimitive,
   explosionPrimitive,
   firefliesPrimitive,
+  fireworksPrimitive,
   flockingPrimitive,
+  fluidSphPrimitive,
   fountainPrimitive,
+  galaxyParticlesPrimitive,
   gravityDropPrimitive,
+  magneticFieldPrimitive,
+  meteorShowerPrimitive,
   morphCloudPrimitive,
+  murmurationPrimitive,
+  orbitRingsPrimitive,
+  particleAssemblePrimitive,
+  pendulumWavePrimitive,
+  petalFallPrimitive,
   rainPrimitive,
+  rainSplashPrimitive,
   snowPrimitive,
+  snowGlobePrimitive,
+  sparkShowerPrimitive,
   sparksPrimitive,
+  springLatticePrimitive,
   swarmPrimitive,
+  tickerTapePrimitive,
   vortexPrimitive,
+  waveGridPrimitive,
 ];
 
 let registered = false;

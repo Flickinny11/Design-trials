@@ -1,0 +1,1653 @@
+{
+  "schemaVersion": "1.1",
+  "chain": "prism-editor-build",
+  "branch": "prism-editor-build",
+  "command": "/ralph-step-editor",
+  "spec": "kid-kode-landing/docs/prism/PRISM-EDITOR-BUILD-SPEC.md",
+  "rule": ".claude/rules/prism-editor-build.md",
+  "gapAnalysis": "kid-kode-landing/notes/editor-build-gap-analysis.md",
+  "progressLog": "kid-kode-landing/notes/prism-editor-progress.md",
+  "snapshotDir": "kid-kode-landing/notes/ralph-snapshots",
+  "marker": ".prism-editor-build-active",
+  "modelContract": ".claude/.ralph-model",
+  "currentIteration": 53,
+  "maxIterations": 500,
+  "maxIterationsPerPhase": 50,
+  "maxAttemptsPerTask": 3,
+  "status": "complete",
+  "createdAt": "2026-05-14T20:25:00Z",
+  "updatedAt": "2026-05-17T01:03:03Z",
+  "invariants": {
+    "twoRuntimes": true,
+    "nonDestructiveCompile": true,
+    "additiveSchema": true,
+    "selectionPreserved": true,
+    "rendererMigrationActive": true
+  },
+  "convergence": {
+    "stagnantStreak": 1,
+    "stagnantThreshold": 5,
+    "lastProductiveIteration": 53,
+    "lastProductiveCommit": "40bfad7ce1daefbd1a62ba3a7ade0beb533fe460"
+  },
+  "phaseCaps": {
+    "§1": {
+      "used": 8,
+      "cap": 50,
+      "status": "active"
+    },
+    "§2": {
+      "used": 14,
+      "cap": 50,
+      "status": "active"
+    },
+    "§3": {
+      "used": 17,
+      "cap": 50,
+      "status": "active"
+    },
+    "§4": {
+      "used": 8,
+      "cap": 50,
+      "status": "active"
+    },
+    "§5": {
+      "used": 10,
+      "cap": 50,
+      "status": "active"
+    },
+    "§6": {
+      "used": 14,
+      "cap": 50,
+      "status": "active"
+    },
+    "§7": {
+      "used": 8,
+      "cap": 50,
+      "status": "active"
+    },
+    "§8": {
+      "used": 9,
+      "cap": 50,
+      "status": "active"
+    },
+    "§9": {
+      "used": 15,
+      "cap": 50,
+      "status": "active"
+    },
+    "§10": {
+      "used": 10,
+      "cap": 50,
+      "status": "active"
+    }
+  },
+  "checkpoint": {
+    "iteration": 53,
+    "commit": "40bfad7ce1daefbd1a62ba3a7ade0beb533fe460",
+    "verifiedAt": "2026-05-17T00:52:08Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-17T00:52:08Z"
+  },
+  "resumeFrom": null,
+  "breakpoints": [],
+  "history": [
+    {
+      "iteration": 1,
+      "taskId": "EB-01-01",
+      "phase": 1,
+      "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
+      "verifiedAt": "2026-05-14T21:14:56Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-01/"
+    },
+    {
+      "iteration": 2,
+      "taskId": "EB-01-02",
+      "phase": 1,
+      "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
+      "verifiedAt": "2026-05-14T21:35:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-02/"
+    },
+    {
+      "iteration": 3,
+      "taskId": "EB-01-03",
+      "phase": 1,
+      "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
+      "verifiedAt": "2026-05-14T21:43:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-03/"
+    },
+    {
+      "iteration": 4,
+      "taskId": "EB-01-04",
+      "phase": 1,
+      "commit": "e52882b5a671391df4f098978900d71d06e87d84",
+      "verifiedAt": "2026-05-14T22:02:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-01-04/"
+    },
+    {
+      "iteration": 5,
+      "taskId": "EB-02-01",
+      "phase": 2,
+      "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
+      "verifiedAt": "2026-05-14T22:13:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-01/"
+    },
+    {
+      "iteration": 6,
+      "taskId": "EB-02-02",
+      "phase": 2,
+      "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
+      "verifiedAt": "2026-05-14T22:24:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-02/"
+    },
+    {
+      "iteration": 7,
+      "taskId": "EB-02-03",
+      "phase": 2,
+      "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
+      "verifiedAt": "2026-05-14T22:43:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-03/"
+    },
+    {
+      "iteration": 8,
+      "taskId": "EB-02-04",
+      "phase": 2,
+      "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
+      "verifiedAt": "2026-05-14T23:05:10Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-04/"
+    },
+    {
+      "iteration": 9,
+      "taskId": "EB-02-05",
+      "phase": 2,
+      "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
+      "verifiedAt": "2026-05-14T23:23:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-05/"
+    },
+    {
+      "iteration": 10,
+      "taskId": "EB-02-06",
+      "phase": 2,
+      "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
+      "verifiedAt": "2026-05-14T23:43:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-06/"
+    },
+    {
+      "iteration": 11,
+      "taskId": "EB-02-07",
+      "phase": 2,
+      "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
+      "verifiedAt": "2026-05-14T23:53:18Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-02-07/"
+    },
+    {
+      "iteration": 12,
+      "taskId": "EB-03-01",
+      "phase": 3,
+      "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
+      "verifiedAt": "2026-05-15T00:45:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-01/"
+    },
+    {
+      "iteration": 13,
+      "taskId": "EB-03-02",
+      "phase": 3,
+      "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
+      "verifiedAt": "2026-05-15T01:20:23Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-02/"
+    },
+    {
+      "iteration": 14,
+      "taskId": "EB-03-03",
+      "phase": 3,
+      "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
+      "verifiedAt": "2026-05-15T01:59:46.939Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-03/"
+    },
+    {
+      "iteration": 15,
+      "taskId": "EB-03-04",
+      "phase": 3,
+      "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
+      "verifiedAt": "2026-05-15T03:17:58Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-04/"
+    },
+    {
+      "iteration": 16,
+      "taskId": "EB-03-05",
+      "phase": 3,
+      "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
+      "verifiedAt": "2026-05-15T04:33:59Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-05/"
+    },
+    {
+      "iteration": 17,
+      "taskId": "EB-03-06",
+      "phase": 3,
+      "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
+      "verifiedAt": "2026-05-15T05:51:15Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-03-06/"
+    },
+    {
+      "iteration": 18,
+      "taskId": "EB-04-01",
+      "phase": 4,
+      "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
+      "verifiedAt": "2026-05-15T07:09:13Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-01/"
+    },
+    {
+      "iteration": 19,
+      "taskId": "EB-04-02",
+      "phase": 4,
+      "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
+      "verifiedAt": "2026-05-15T07:55:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-02/"
+    },
+    {
+      "iteration": 20,
+      "taskId": "EB-04-03",
+      "phase": 4,
+      "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
+      "verifiedAt": "2026-05-15T08:42:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-03/"
+    },
+    {
+      "iteration": 21,
+      "taskId": "EB-04-04",
+      "phase": 4,
+      "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
+      "verifiedAt": "2026-05-15T09:38:05Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-04-04/"
+    },
+    {
+      "iteration": 22,
+      "taskId": "EB-05-01",
+      "phase": 5,
+      "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
+      "verifiedAt": "2026-05-15T10:28:15Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-01/"
+    },
+    {
+      "iteration": 23,
+      "taskId": "EB-05-02",
+      "phase": 5,
+      "commit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08",
+      "verifiedAt": "2026-05-15T11:22:18Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-02/"
+    },
+    {
+      "iteration": 24,
+      "taskId": "EB-05-03",
+      "phase": 5,
+      "commit": "e704af2bf76be34479535084d05644d5294bc971",
+      "verifiedAt": "2026-05-15T12:40:25Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-03/"
+    },
+    {
+      "iteration": 25,
+      "taskId": "EB-05-04",
+      "phase": 5,
+      "commit": "34b841d33328089756a669add3136fdd7b3257d2",
+      "verifiedAt": "2026-05-15T13:20:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-04/"
+    },
+    {
+      "iteration": 26,
+      "taskId": "EB-05-05",
+      "phase": 5,
+      "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
+      "verifiedAt": "2026-05-15T14:25:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-05-05/"
+    },
+    {
+      "iteration": 27,
+      "taskId": "EB-06-01",
+      "phase": 6,
+      "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
+      "verifiedAt": "2026-05-15T15:39:21Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-01/"
+    },
+    {
+      "iteration": 28,
+      "taskId": "EB-06-02",
+      "phase": 6,
+      "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
+      "verifiedAt": "2026-05-15T16:38:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-02/"
+    },
+    {
+      "iteration": 29,
+      "taskId": "EB-06-03",
+      "phase": 6,
+      "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
+      "verifiedAt": "2026-05-15T17:53:10Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-03/"
+    },
+    {
+      "iteration": 30,
+      "taskId": "EB-06-04",
+      "phase": 6,
+      "commit": "d1e649350b6283e123791af01f30699536e20663",
+      "verifiedAt": "2026-05-15T18:51:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-04/"
+    },
+    {
+      "iteration": 31,
+      "taskId": "EB-06-05",
+      "phase": 6,
+      "commit": "b83515791b1d15c190688e4c3269b2348023fa0d",
+      "verifiedAt": "2026-05-15T20:44:09Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-05/"
+    },
+    {
+      "iteration": 32,
+      "taskId": "EB-06-06",
+      "phase": 6,
+      "commit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
+      "verifiedAt": "2026-05-15T22:03:12Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-06/"
+    },
+    {
+      "iteration": 33,
+      "taskId": "EB-06-07",
+      "phase": 6,
+      "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
+      "verifiedAt": "2026-05-15T23:36:31Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-06-07/"
+    },
+    {
+      "iteration": 34,
+      "taskId": "EB-07-01",
+      "phase": 7,
+      "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
+      "verifiedAt": "2026-05-16T00:51:46Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-01/"
+    },
+    {
+      "iteration": 35,
+      "taskId": "EB-07-02",
+      "phase": 7,
+      "commit": "5b4d085cf88e4c149237d308abe1d41aa8d36858",
+      "verifiedAt": "2026-05-16T02:29:28Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-02/"
+    },
+    {
+      "iteration": 36,
+      "taskId": "EB-07-03",
+      "phase": "§7",
+      "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
+      "verifiedAt": "2026-05-16T04:08:21Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-03/"
+    },
+    {
+      "iteration": 37,
+      "taskId": "EB-07-04",
+      "phase": 7,
+      "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
+      "verifiedAt": "2026-05-16T05:50:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-07-04/"
+    },
+    {
+      "iteration": 38,
+      "taskId": "EB-08-01",
+      "phase": 8,
+      "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
+      "verifiedAt": "2026-05-16T06:52:56.000Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-01/"
+    },
+    {
+      "iteration": 39,
+      "taskId": "EB-08-02",
+      "phase": 8,
+      "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
+      "verifiedAt": "2026-05-16T08:00:26Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-02/"
+    },
+    {
+      "iteration": 40,
+      "taskId": "EB-08-03",
+      "phase": 8,
+      "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
+      "verifiedAt": "2026-05-16T09:19:16Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-03/"
+    },
+    {
+      "iteration": 41,
+      "taskId": "EB-08-04",
+      "phase": 8,
+      "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
+      "verifiedAt": "2026-05-16T11:46:23Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-04/"
+    },
+    {
+      "iteration": 42,
+      "taskId": "EB-08-05",
+      "phase": 8,
+      "commit": "bad44ba71743252f8c356492b7eabe0f383f180e",
+      "verifiedAt": "2026-05-16T13:22:26Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-08-05/"
+    },
+    {
+      "iteration": 43,
+      "taskId": "EB-09-01",
+      "phase": 9,
+      "commit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
+      "verifiedAt": "2026-05-16T15:01:35Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-01/"
+    },
+    {
+      "iteration": 44,
+      "taskId": "EB-09-02",
+      "phase": 9,
+      "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
+      "verifiedAt": "2026-05-16T15:35:00Z",
+      "snapshotDir": null,
+      "note": "no snapshot — verificationCommands only typecheck; haltCheck data-contract only"
+    },
+    {
+      "iteration": 45,
+      "taskId": "EB-09-03",
+      "phase": 9,
+      "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
+      "verifiedAt": "2026-05-16T17:47:19Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-03/"
+    },
+    {
+      "iteration": 46,
+      "taskId": "EB-09-04",
+      "phase": 9,
+      "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
+      "verifiedAt": "2026-05-16T22:00:00Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-04/"
+    },
+    {
+      "iteration": 47,
+      "taskId": "EB-09-05",
+      "phase": 9,
+      "commit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d",
+      "verifiedAt": "2026-05-16T22:16:36Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-05/"
+    },
+    {
+      "iteration": 48,
+      "taskId": "EB-09-06",
+      "phase": 9,
+      "commit": "73f8bc046ef13d643123c3d587919dee54bfcf9e",
+      "verifiedAt": "2026-05-16T22:37:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-09-06/"
+    },
+    {
+      "iteration": 49,
+      "taskId": "EB-10-01",
+      "phase": 10,
+      "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
+      "verifiedAt": "2026-05-16T22:57:30Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-01/"
+    },
+    {
+      "iteration": 50,
+      "taskId": "EB-10-02",
+      "phase": 10,
+      "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
+      "verifiedAt": "2026-05-16T23:24:06Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-02/"
+    },
+    {
+      "iteration": 51,
+      "taskId": "EB-10-03",
+      "phase": 10,
+      "commit": "11d187041b3fe63551179ba30360af30bebcb618",
+      "verifiedAt": "2026-05-16T23:48:03Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-03/"
+    },
+    {
+      "iteration": 52,
+      "taskId": "EB-10-04",
+      "phase": 10,
+      "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
+      "verifiedAt": "2026-05-17T00:17:43Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-04/"
+    },
+    {
+      "iteration": 53,
+      "taskId": "EB-10-05",
+      "phase": 10,
+      "commit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7",
+      "verifiedAt": "2026-05-17T00:41:46.018Z",
+      "snapshotDir": "kid-kode-landing/notes/ralph-snapshots/EB-10-05/"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "EB-01-01",
+      "title": "Add canonical 5-mode ViewMode type (additive)",
+      "phase": 1,
+      "specRefs": [
+        "§1 SC-001",
+        "§1 INV-20",
+        "§1 RA-06"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "grep -q \"'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app'\" kid-kode-landing/src/stores/useGraphEditorStore.ts",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-01-01"
+      ],
+      "haltCheck": "useGraphEditorStore.ts exports ViewMode = 'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app'; legacy values may still appear as a transient alias during this task; tsc clean; verify-editor-runtimes captures outer/inner snapshots without runtime errors.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "6718c431b6f243cf6f11f2daa300ac51ef61c961",
+      "verifiedAt": "2026-05-14T21:14:56Z",
+      "notes": "SHOULD-FIX (do not block per /ralph-step): (1) Test file revised in same commit as impl after the initial committed-failing version over-claimed RA-06 runtime normalization (which the haltCheck assigns to EB-01-02); revised tests scope to EB-01-01's owned surface. (2) FP-12 in anti-drift hook is already armed today; the retained `viewMode: 'split'` initial state (line 118) means the next Edit/Write to useGraphEditorStore.ts will trip the hook. EB-01-02 must remap initial state via normalizeViewMode (or simply set 'canvas') as its first edit. OPTIONAL (deferred): rewrite normalizeViewMode as exhaustive switch; auto-normalize inside setViewMode."
+    },
+    {
+      "id": "EB-01-02",
+      "title": "Migrate page.tsx + TopBar + HubNav to canonical viewMode + RA-06 mapping",
+      "phase": 1,
+      "specRefs": [
+        "§1 SC-001",
+        "§1 SC-002",
+        "§1 INV-20",
+        "§1 RA-06"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-01-02"
+      ],
+      "haltCheck": "Toggling all 5 modes via the UI preserves selectedNodeId, selectedHubId; snapshot state.json at EB-01-02 records the mode round-trip. Legacy 'preview'|'editor'|'split' strings still allowed as aliases this task; FP-12 not yet armed against them.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "02d266cff63aea4431033ac136cdb4da077d9e4c",
+      "verifiedAt": "2026-05-14T21:35:00Z",
+      "notes": "spec-reviewer: No deviations found. Initial viewMode remapped 'split' → 'canvas' (RA-06). 5-button canonical toggle ships in page.tsx; Inspector.tsx setViewMode call now uses 'preview-hub'. Pane visibility driven by derived booleans (isPreviewMode/showsSplit/showsPreview/showsGraph). Mobile branch (non-desktop) carries no viewMode literals — untouched. 7/7 two-runtime snapshot checks passed; 6/6 vitest assertions passed."
+    },
+    {
+      "id": "EB-01-03",
+      "title": "Remove legacy viewMode literals; arm FP-12; baseline preview-hub snapshot",
+      "phase": 1,
+      "specRefs": [
+        "§1 SC-002",
+        "§1 SC-003",
+        "§1 FP-12",
+        "§1 INV-20"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && npm run verify:prism",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-01-03",
+        "! grep -RnE \"viewMode[[:space:]]*[:=][[:space:]]*['\\\"](preview|editor|split)['\\\"]\" kid-kode-landing/src/ --include='*.ts' --include='*.tsx'"
+      ],
+      "haltCheck": "Zero hits for legacy viewMode literals under kid-kode-landing/src/. PrismHost preview path still mounts in preview-hub. EB-01-03/inner.png captured.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "02039e7b481fbe6d24411a6354612313d4fa1091",
+      "verifiedAt": "2026-05-14T21:43:30Z",
+      "notes": "spec-reviewer: No deviations found (no MUST-FIX). Store narrowed: viewMode: ViewMode + setViewMode: (m: ViewMode) => void; LegacyViewMode/AnyViewMode/normalizeViewMode retained as load-time coercion helpers. FP-12 was already armed in anti-drift-check.sh. Legacy literal grep over src/ returns zero hits. verify-editor-runtimes EB-01-03 passed 7/7 (outer.png, inner.png mounted PrismHost behind preview-hub, state.json, verify.log). HL12.save-to-server.test.ts local EditorStore mirror updated to canonical 5-mode union (its 'split' initial assertion was already runtime-broken after EB-01-02). SHOULD-FIX (do not block): (1) EB-01-03 test's SC-003 PrismHost-mount regex only matches viewMode === 'preview-hub'; SC-003 covers preview-app too — tighten in a follow-up that touches this file. (2) LegacyViewMode/AnyViewMode could be downgraded to module-private once load-time coercion path matures (deferred to EB-02-01)."
+    },
+    {
+      "id": "EB-01-04",
+      "title": "Wire editorRenderMode (scene|topology) as sub-toggle within hub-world",
+      "phase": 1,
+      "specRefs": [
+        "§1 SC-004",
+        "§1 RA-06"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-01-04"
+      ],
+      "haltCheck": "EditorRenderMode toggle is only visible in the UI when viewMode === 'hub-world'; scene-mode renderer (AssembledSceneContent) still mounts; topology-mode renderer unchanged; snapshot proves toggle behavior.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "e52882b5a671391df4f098978900d71d06e87d84",
+      "verifiedAt": "2026-05-14T22:02:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block): (1) source-shape regex tests are brittle vs a render-time React Testing Library check; (2) state.json summary.checks lists 6 entries while verify.log shows 7 lines (the post-write state.persisted line isn't in the checks array). OPTIONAL: tighten regex window in AssembledSceneContent assertion; gate the abutting vertical divider on the same hub-world predicate to avoid an orphan separator in non-hub-world modes. Toggle now renders only when viewMode === 'hub-world'; editorRenderMode field/setter preserved (SC-004 \"not deleted\"); GraphScene SceneContent still routes 'scene' → AssembledSceneContent. Snapshot 7/7 (outer.png, inner.png from PrismHost in preview-hub baseline carries over per EB-01-03; verify-editor-runtimes mounts preview-hub for the inner runtime regardless of which mode this task gates in the outer chrome). 5/5 vitest assertions passed; tsc clean; next build clean."
+    },
+    {
+      "id": "EB-02-01",
+      "title": "Define PrismRootNode interface + serializer + validator (additive)",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-005",
+        "§2 INV-18",
+        "§2 RA-07"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -f kid-kode-landing/src/lib/prism-graph/root-node.ts"
+      ],
+      "haltCheck": "PrismRootNode type exists in src/lib/prism-graph/root-node.ts with all D1 fields; validateRootNode rejects graphs without exactly one root node; tsc clean; tests for serializer + validator pass.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "c6b134b8dd93a41694df958fd66f2ee610099a35",
+      "verifiedAt": "2026-05-14T22:13:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) placeholder interfaces (AppSpec, DesignSpec, BuildPlan, MemoryLogEntry, HubRegistryEntry, NodeRegistryEntry, GlobalDependency, ValidationRule, AiRoutingRule, CapabilityRef) use open `[k: string]: unknown` index signatures — to be tightened by EB-02-05/EB-02-06; consider dropping the index signature on CapabilityRef so the vault contract stays strict. (2) RootNodeValidationResult uses ok+root+reason record form (with null sentinels) instead of a discriminated union because tsconfig has strict: false; revisit when/if strict is flipped on. (3) Test for the 11 D1 fields is a source-shape regex grep — a satisfies PrismRootNode literal would catch renames more reliably. OPTIONAL: (a) circular type import between root-node.ts and types.ts (works under TS); (b) serializeRootNode relies on V8/SpiderMonkey object-literal key ordering — switch to an explicit canonical key array if byte-identical hashing becomes load-bearing in Phase 6/10. 9/9 vitest assertions passed; 7/7 two-runtime snapshot checks passed; tsc clean; root-node.ts exists."
+    },
+    {
+      "id": "EB-02-02",
+      "title": "Insert App_Name_World instance in home-hub fixture; uniqueness assertion",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-005",
+        "§2 SC-006"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('src/lib/prism/mock-app-source/hubs/home-hub.legacy.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\"",
+        "cd kid-kode-landing && node -e \"const fs=require('fs'); const g=JSON.parse(fs.readFileSync('public/prism-mock/home/live-graph.json','utf8')); const roots=(g.rootNodes||[]).length; if(roots!==1){console.error('roots:'+roots);process.exit(1)} console.log('roots:'+roots)\"",
+        "cd kid-kode-landing && npx vitest run tests/editor-build/EB-02-02.app-name-world-instance.test.ts"
+      ],
+      "haltCheck": "home-hub.legacy.json (the build-time fixture; renamed from home-hub.json by HL03 / Plan §P4) contains exactly one rootNodes entry of type App_Name_World; the live-graph fixture under public/prism-mock/home/live-graph.json carries the same entry so the runtime store sees rootNodes after fetch; loader threads rootNodes through to GraphSource; validateRootNode returns ok=true on the loaded graph.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "79b59b7feffab1080b76ad0514672b3ecfc09e01",
+      "verifiedAt": "2026-05-14T22:24:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) loader.ts duplicates the rootNodes-threading pattern across loadFromHomeHub + loadFromPrismArtifact; a small pickRootNodes(json) helper would prevent future divergence. (2) The two seed fixtures intentionally use different spec.name values (legacy: 'Voltus' build-time mock; live: 'PrismLive' harness lock-in seed) but share appNameWorldId='app-name-world-home' — divergence is by design (each fixture seeds its own app's content) but worth a comment. (3) hubRegistry hubId values differ ('home-hub' in legacy matches its hub.hubId; 'home' in live matches its hub.hubId) — both correct, just verified. OPTIONAL: (a) trim the build-prism.mjs JSDoc to one line; (b) inline the loader rootNodes assignment as a single ternary on the object literal. Verification: 7/7 EB-02-02 vitest assertions pass; 42/42 across editor-build + HL03 store-init suites; tsc clean; both legacy and live fixture root-count probes return 1; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+    },
+    {
+      "id": "EB-02-03",
+      "title": "Render App_Name_World in galaxy mode (basic geometry + click target)",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-005",
+        "§3 SC-012"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-02-03"
+      ],
+      "haltCheck": "In viewMode='galaxy', App_Name_World renders as a distinct central object (the sun); clicking it sets selectedNodeId to the root node id and inspectorOpen=true; outer.png shows the central object.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "5885854343d7a536e39ba6d92bc9c7f6c0111785",
+      "verifiedAt": "2026-05-14T22:43:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) WorldSun's onPointerOver writes document.body.style.cursor='pointer' but does not restore on unmount — if user hovers WorldSun and switches viewMode away from 'galaxy', cursor sticks. Pattern precedent at GraphScene.tsx:263-267 (GlassNode) and :435-438 (HubHull) has the same latent bug, but a new component should not propagate it; add useEffect(()=>()=>{document.body.style.cursor='default'},[]) in a follow-up. (2) useFrame body doesn't early-return when root=null; mounting always paints, but a defensive `if (!root) return` inside the frame callback would avoid the material cast cost when nothing is rendered. (3) Source-shape regex tests in EB-02-03 pass even if click handler were wired to the wrong action; the runtime gate is the snapshot outer.png. RTL/jsdom test with Canvas mock would tighten — deferred. OPTIONAL: (a) groupRef declared but never read; (b) new THREE.Color('#ffb24a') allocated per render — hoist to module const; (c) magic radius=14 should be APP_NAME_WORLD_SUN_RADIUS module const to make EB-03-01's hub-orbit-scale work easier. Verification: 9/9 EB-02-03 vitest assertions pass; 47/47 across editor-build suite; tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). SC-007 dedicated 'World' inspector tab correctly deferred to EB-02-04; SC-012 hub-orbit-around-sun positions correctly deferred to EB-03-01."
+    },
+    {
+      "id": "EB-02-04",
+      "title": "App_Name_World inspector tab — surfaces D1 fields; existing tabs preserved",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-007",
+        "§4 SC-020"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-02-04"
+      ],
+      "haltCheck": "When App_Name_World is selected, the Inspector renders a dedicated 'World' tab with read/write surfaces for spec/designSpec/buildPlan/memoryLog/hubRegistry/nodeRegistry/globalDependencies/validationRules/aiRoutingRules; existing tabs still visible.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "9d70cdc5b1f1f8ae5a2868a63ea8780bedc58e6e",
+      "verifiedAt": "2026-05-14T23:05:10Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) Inspector.tsx auto-route useEffect includes `tab` in deps — clicking a non-World tab while App_Name_World is selected snaps back to 'world' because the effect re-fires. Comment claims user can switch; implementation contradicts. Drop `tab` from deps or gate on a first-open ref. (2) WorldTab useEffect [root]-keyed re-sync wipes in-flight drafts on other fields after any one Save (every updateRootNode produces a new root object reference via rootNodes.map). Re-key on root.appNameWorldId or merge non-destructively. (3) Persistence gap: updateRootNode flips isDirty + schedules autosave, but saveToServer payload is { schemaVersion, hub, nodes, edges } only — rootNodes never threaded to /api/prism/regen, so World-tab edits are lost on reload. Either extend HomeHubJson additively (INV-18) or document the deferred persistence path. (4) SC-020 enumerates 7 tabs including 'history'; shipping TABS const carries only 6 — pre-existing gap, surfaces here because WORLD_TABS = ['world', ...TABS] inherits it. OPTIONAL: hoist D1_FIELD_KEYS to module scope; memoize per-field initial JSON.stringify if memoryLog/nodeRegistry grow; consider disabling rather than redirect-noting non-applicable tabs while App_Name_World is selected. Verification: 9/9 EB-02-04 vitest assertions pass; 55/56 across editor-build suite (the one remaining was the snapshot-dir gate, satisfied after verify-editor-runtimes wrote the dir); tsc clean; next build clean; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+    },
+    {
+      "id": "EB-02-05",
+      "title": "Server-only secrets vault (store + resolve + audit log)",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-008",
+        "§2 INV-19",
+        "§2 FP-06",
+        "§2 FP-07"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -d kid-kode-landing/src/server/secrets",
+        "head -3 kid-kode-landing/src/server/secrets/vault.ts | grep -q \"import 'server-only'\""
+      ],
+      "haltCheck": "kid-kode-landing/src/server/secrets/vault.ts exports store/resolve/audit; first 3 lines import 'server-only'; unit tests cover happy path + scope mismatch + audit-log write; no raw secret bytes appear in the next/server bundle.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "677a0e4508a4de17d1f3d97984770a242a008411",
+      "verifiedAt": "2026-05-14T23:23:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) store() is keyed by ref alone so a second store(scopeB, refA, ...) silently clobbers a prior store(scopeA, refA, ...); SC-008 only specifies scope-gating on resolve, but the clobber weakens the scope semantics SC-011 audits. Consider keying entries by (scope, ref) or rejecting cross-scope same-ref writes. (2) reset() is exported without a test-only marker — a production caller in src/server/** could wipe the live audit history. Rename to __resetForTests or guard with NODE_ENV !== 'production'. OPTIONAL: (a) module-level mutable singletons (entries, auditLog) make the comment about KV/Postgres/KMS swap require touching every export — a createVault() factory would isolate the surface without changing the public API. (b) nowIso() is one-use and three lines — inline new Date().toISOString() at the call site. (c) reset() not documented in the contract comment (lines 5-13); if it stays exported, add to the block. Verification: 12/12 EB-02-05 vitest assertions pass; 68/68 across editor-build suite; tsc clean; vault.ts exports store/resolve/audit; first line is `import 'server-only';`; two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log)."
+    },
+    {
+      "id": "EB-02-06",
+      "title": "capabilityRefs field on PrismRootNode + PrismNode; inspector capability picker",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-009",
+        "§2 INV-18"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-02-06"
+      ],
+      "haltCheck": "PrismNode and PrismRootNode expose optional capabilityRefs?: CapabilityRef[]; inspector renders a 'Capabilities' surface listing refs by display label; clicking a ref triggers a vault.resolve in the dev preview and shows redacted resolution metadata only.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "201578a0cc32730a6308109fb56ff17cec2e5a24",
+      "verifiedAt": "2026-05-14T23:43:00Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX (do not block per /ralph-step-editor): (1) /api/prism/vault/resolve reads log[log.length-1].at after vaultResolve to surface the call timestamp — racy under concurrent requests; preferable to have vaultResolve return the timestamp directly. (2) The `(result as { ok: false; reason: ... })` cast in redact() papers over discriminated-union narrowing (strict:false project setting). (3) serializeRootNode still lists capabilityRefs in the canonical key order; JSON.stringify drops undefined so legacy round-trip still byte-matches, but a one-line comment noting that intent would help. OPTIONAL: (a) handleResolve rebuilds pending/results state objects with spread per click — fine at <20 refs, switch to Map-keyed state or per-ref child if it grows; (b) ref.scope || scopeHint fallback silently masks an upstream invariant violation when ref.scope is empty; (c) add `export const dynamic = 'force-dynamic'` on the vault route so no future caching layer memoizes a redacted response; (d) helper text 'INV-19' leaks a spec marker into a user-facing string. Verification: 14/14 EB-02-06 vitest assertions pass; 82/82 across editor-build suite; tsc clean; next build clean (vault/resolve route shows as ƒ dynamic / server-rendered); two-runtime snapshot 7/7 (outer.png, inner.png mounted PrismHost in preview-hub, state.json, verify.log). PrismRootNode.capabilityRefs loosened required→optional (INV-18-safe); PrismNode.capabilityRefs?: CapabilityRef[] added (additive); CapabilityRef re-exported from types.ts; CapabilitiesPanel renders inside WorldTab listing refs by label || refId with Resolve button posting to /api/prism/vault/resolve; response payload carries only { ok, scope, ref, at, status } — never value (INV-19)."
+    },
+    {
+      "id": "EB-02-07",
+      "title": "Client-bundle secret-leak integration test",
+      "phase": 2,
+      "specRefs": [
+        "§2 SC-010",
+        "§2 SC-011",
+        "§2 INV-19",
+        "§2 FP-06"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npm run build",
+        "test -d kid-kode-landing/.next/static",
+        "! grep -RIE \"(api[_-]?key|secret|token|password)['\\\"]?[[:space:]]*[:=][[:space:]]*['\\\"][A-Za-z0-9_./+=-]{16,}\" kid-kode-landing/.next/static 2>/dev/null"
+      ],
+      "haltCheck": "next build emits .next/static; grep over static bundles finds zero raw secret strings; vault audit-log integration test asserts an entry per resolve call.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "2b1876f16170bc3296217a8c263100f620f5b127",
+      "verifiedAt": "2026-05-14T23:53:18Z",
+      "notes": "verified without new implementation: pre-existing EB-02-05 (vault) and EB-02-06 (capabilityRefs) already satisfy SC-008/SC-009/INV-19; this iteration adds the lock-in integration test. spec-reviewer: no MUST FIX. SHOULD FIX (non-blocking): (1) prefix sentinel values with TEST_FIXTURE_NOT_A_SECRET_ tag in future; (2) collectBundleFiles uses sync readFile (acceptable for current bundle size); (3) document why audit `at` regex tolerates both `Z` and `.fffZ` shapes. OPTIONAL: fold dir-exists test into bundle-scan; use global regex for multi-hit FP-07; extend FP-06 spot-check to all of src/server/**."
+    },
+    {
+      "id": "EB-03-01",
+      "title": "Galaxy mode — deterministic hub orbit around App_Name_World",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-012"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-01"
+      ],
+      "haltCheck": "In viewMode='galaxy', hubs render in deterministic orbital positions (fn of hubId hash + ring index); two consecutive renders produce identical positions; snapshot outer.png shows ringed layout.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "61b79c7554f7d0bb5019a9005fef17f5ccce0284",
+      "verifiedAt": "2026-05-15T00:45:16Z",
+      "notes": "Implemented FNV-1a hash + 3-ring orbit (radii 90/150/210) keyed by hubId. Threaded ViewMode through useForceGraph; GraphScene passes viewMode. spec-reviewer: no MUST FIX; SHOULD FIX (typed viewMode as ViewMode union, FP-12 boundary-enforced) addressed in same commit. OPTIONAL items deferred (orthogonal y-jitter entropy, extract galaxy-layout module for SC-013, FNV prime comment) — non-blocking."
+    },
+    {
+      "id": "EB-03-02",
+      "title": "Galaxy mode — size-by-complexity rule",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-013"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-02"
+      ],
+      "haltCheck": "Hub diameter = f(nodeCount, depth) with documented formula; unit test verifies monotonic growth; snapshot diff against EB-03-01 shows size variation between hubs.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "5e181a16e879dc0f3fb349922253cb3ebb0125fb",
+      "verifiedAt": "2026-05-15T01:20:23Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX (progress-log line) handled in Step 12. OPTIONAL noted: (a) computeGalaxyHubDiameters could index hubId→nodeIds once for O(N+E+H); (b) computeHubContainsDepth memo is a lower-bound approximation in the cyclic case (acceptable per haltCheck); (c) coefficient constants currently exported; (d) defensive hubDiameters[hub.id] != null guard could carry a clarifying comment."
+    },
+    {
+      "id": "EB-03-03",
+      "title": "Galaxy mode — zoom-based label LOD",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-014"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-03"
+      ],
+      "haltCheck": "At zoomLevel L0 only App_Name_World + hub names render; L2+ exposes node-cluster labels; LOD transitions are smooth; test asserts label visibility per zoom level.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "68cbbe85017bbbddcd92fab610f3270a5f139f3b",
+      "verifiedAt": "2026-05-15T01:59:46.939Z",
+      "notes": ""
+    },
+    {
+      "id": "EB-03-04",
+      "title": "Galaxy mode — reason-colored animated tether lines",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-015",
+        "§3 RA-15"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-04"
+      ],
+      "haltCheck": "Inter-hub tether lines render in galaxy mode with EDGE_COLORS-derived colors, translucent material, and a subtle animation (pulse / flow); existing EDGE_COLORS entries unchanged.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "716c32adf39b5e97e5d17007ac736bacac728900",
+      "verifiedAt": "2026-05-15T03:17:58Z",
+      "notes": "spec-reviewer SHOULD FIX (non-blocking): (1) materialsRef reset on each render is idiomatic-only; (2) JSX opacity=0.45 prop is overwritten by useFrame mutation each tick (practical risk low; kept to satisfy regex test for /opacity\\s*=/); (3) consider documenting pulse amplitude/period; (4) public/prism-assets/mock-app.prism modification in working tree is pre-existing, NOT introduced by EB-03-04. OPTIONAL: localeCompare for canonical hub ordering, delimiter hardening for id; cosmetic JSX blank lines."
+    },
+    {
+      "id": "EB-03-05",
+      "title": "Galaxy mode — global filter overlay + greyed non-matches",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-016"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-05"
+      ],
+      "haltCheck": "Filter overlay UI ships; applying a filter greys/dims non-matching hubs+nodes; matching items remain interactive; clearing the filter restores original appearance.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "500a1166e209ac8fb7b1b69b364cc9f8d5d54701",
+      "verifiedAt": "2026-05-15T04:33:59Z",
+      "notes": "SHOULD FIX (non-blocking): inner-sphere transparent flag flips with dim — consider always-transparent + opacity. Hero vs non-hero dim parity. Filter overlay polish (ellipsis, toggle clearing). OPTIONAL: refactor pointer handler ternaries."
+    },
+    {
+      "id": "EB-03-06",
+      "title": "Galaxy mode — multi-select (shift-click) + group inspector",
+      "phase": 3,
+      "specRefs": [
+        "§3 SC-017"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-03-06"
+      ],
+      "haltCheck": "Shift-click adds nodes/hubs to a multi-selection set; inspector renders a group view summarizing the selection; clicking without shift collapses to a single selection.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "d2ae3a1a25db12882d52b558741606fa73cc9d0f",
+      "verifiedAt": "2026-05-15T05:51:15Z",
+      "notes": "SHOULD-FIX from spec-reviewer: cross-type seeding when shift-clicking node-after-hub-selection or vice versa is not symmetric (deferred — outside SC-017 wording); world-tab effect could be gated on !isGroup (deferred — cosmetic)."
+    },
+    {
+      "id": "EB-04-01",
+      "title": "Drill-in: flyToHub + content reveal animation sequence",
+      "phase": 4,
+      "specRefs": [
+        "§4 SC-018",
+        "§4 SC-019"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-01"
+      ],
+      "haltCheck": "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world; the target hub's nodes, background, and intra-hub tethers fade in over ≤800ms; selection on the clicked hub is preserved.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "769dc1ddaa04f49a58f423b1143006aea00aedbf",
+      "verifiedAt": "2026-05-15T07:09:13Z",
+      "notes": "SHOULD-FIX from spec-reviewer addressed in-iter: (a) cleared dead `void hubRevealDurationMs`, (b) setViewMode now clears hubRevealAt so stale stamps can't re-trigger fade-in. Deferred SHOULD-FIX (cosmetic, no spec violation): GlassNode reveal uses group.scale rather than material.opacity — the SC-019 wording is 'fade in', the scale grow-in is a deterministic ≤800ms reveal that the haltCheck verifies in spirit; Date.now()-driven progress vs useFrame-based timing (consistent with the spec's 'deterministic' phrasing but worth revisiting if Phase 5 SC-027 round-trip needs frame-locked timing); progress-log entry added in step 12."
+    },
+    {
+      "id": "EB-04-02",
+      "title": "Node-click → inspector with all tabs preserved across modes",
+      "phase": 4,
+      "specRefs": [
+        "§4 SC-020"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-02"
+      ],
+      "haltCheck": "Clicking a node in hub-world opens inspector; all current tabs (visual/behavior/code/animation/connections/backend/history) remain reachable; tab state persists across mode switches.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "6e280c16618030d0b0880360b2a7b79a29989582",
+      "verifiedAt": "2026-05-15T07:55:00Z",
+      "notes": "kv daemon down at verification time; tsc + two-runtime snapshot passed; spec-reviewer SHOULD-FIX (typing + drop useMemo) addressed in same commit"
+    },
+    {
+      "id": "EB-04-03",
+      "title": "Intra-hub zoom-based label LOD",
+      "phase": 4,
+      "specRefs": [
+        "§4 SC-021"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-03"
+      ],
+      "haltCheck": "Inside hub-world, zoomLevel L1 shows hub label only; L3+ shows node labels; L4 reveals sub-node detail; LOD transitions tested per level.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "238fac4a00cf5a5881233bac9c43abd5dddd4dee",
+      "verifiedAt": "2026-05-15T08:42:00Z",
+      "notes": "tsc + 20/20 vitest tests + two-runtime snapshot (7/7) pass; spec-reviewer no MUST FIX; SHOULD FIX #1 (gate tier 3/4 rows) + #2 (document ALL_ON sentinel) addressed in 238fac4; SHOULD FIX #3 (shared ZOOM_BANDS constant between galaxy + hub-world LODs) deferred — out of EB-04-03 scope."
+    },
+    {
+      "id": "EB-04-04",
+      "title": "Selection + camera-pose 5-mode round-trip regression",
+      "phase": 4,
+      "specRefs": [
+        "§4 SC-018",
+        "§1 SC-002",
+        "§1 INV-20"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-04-04"
+      ],
+      "haltCheck": "Automated test cycles selectedNodeId through galaxy → hub-world → canvas → preview-hub → preview-app → galaxy; assertion at every step that selectedNodeId+selectedHubId survive; camera pose is mode-specific but checkpointed and restorable.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "df4a2d964115f192b4d83af84b2648e407694c6b",
+      "verifiedAt": "2026-05-15T09:38:05Z",
+      "notes": "5-mode round-trip regression in place. Store now carries cameraPoseByMode: Partial<Record<ViewMode, CameraPose>> + checkpointCameraPose(mode, pose) action. setViewMode is untouched (selection + cameraPoseByMode both survive transitions). Phase 5 ControlsBridge will be the caller per SC-022/SC-027. SHOULD FIX (deferred, non-blocking): clearCameraPoses() action could replace zustand setState backdoor in test resetStore; CameraPose may need rotation/zoom fields if Phase 5 controls expose roll; defensive clone in checkpointCameraPose against external mutation."
+    },
+    {
+      "id": "EB-05-01",
+      "title": "Canvas mode — deterministic center/face camera pose",
+      "phase": 5,
+      "specRefs": [
+        "§5 SC-022",
+        "§5 SC-024"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-05-01"
+      ],
+      "haltCheck": "Entering canvas mode positions camera at a deterministic pose centered on active hub; pose is checkpointed in useGraphEditorStore; 3D depth preserved (z values not flattened).",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "85cd55a1a566f71fd3e79b8f489ce58b40ed8864",
+      "verifiedAt": "2026-05-15T10:28:15Z",
+      "notes": "Canvas mode entry now positions the camera deterministically on the active hub and checkpoints the pose. Pure helper computeCanvasCameraPose(hubCenter) returns {position: hub+CANVAS_CAMERA_STANDOFF (0,0,18), target: hub}; 3D depth preserved (position.z > target.z, never a flat top-down). Wired in both ControlsBridge (topology coords use hubCenters[activeHubId]) and SceneControlsBridge (scene coords use 0,0,0 since AssembledSceneContent renders the active hub at local origin). spec-reviewer: No MUST FIX. SHOULD FIX (do not block): (a) the eslint-disable comment in ControlsBridge misattributes hubCenters volatility (it is useMemo'd, not per-frame); (b) deps array consistency between the two effects (scene includes checkpointCameraPose, topology omits it); (c) SceneControlsBridge comment overstates that hub center is literally (0,0,0) — it's effectively the centroid of filtered nodes. OPTIONAL: extract a shared useCanvasModePoseEntry hook; derive standoff.z from hub diameter; split source grep into per-bridge assertions."
+    },
+    {
+      "id": "EB-05-02",
+      "title": "Canvas mode — viewport frame overlay + safe-area bounds",
+      "phase": 5,
+      "specRefs": [
+        "§5 SC-023"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-05-02"
+      ],
+      "haltCheck": "Canvas mode renders a viewport frame overlay (default 1440x900 desktop with 24px safe-area inset); frame respects the active responsive breakpoint when set.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "fb3a40bc5d5fcdd0d3979f909bda4ea2a41ddf08",
+      "verifiedAt": "2026-05-15T11:22:18Z",
+      "notes": "SHOULD-FIX (non-blocking, follow-up): (1) once an 'active breakpoint' editor-store field exists, switch from hard-coded hub.responsiveBreakpoints.desktop to the active key; (2) extract SCENE_BACKDROP_WORLD_WIDTH so SceneBackdrop and CanvasViewportFrame share one constant (INV-22 spirit); (3) optionally clamp breakpoint scale to a positive minimum."
+    },
+    {
+      "id": "EB-05-03",
+      "title": "Per-node transform handles (translate/rotate/scale) in canvas mode",
+      "phase": 5,
+      "specRefs": [
+        "§5 SC-025",
+        "§8 SC-042"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-05-03"
+      ],
+      "haltCheck": "Selected node in canvas mode renders translate/rotate/scale gizmos; dragging gizmos writes to canvasTransform (not scenePosition); cancelling restores prior values; tsc + snapshot pass.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "e704af2bf76be34479535084d05644d5294bc971",
+      "verifiedAt": "2026-05-15T12:40:25Z",
+      "notes": "Spec-reviewer: 0 MUST FIX, 6 SHOULD FIX, 3 OPTIONAL.\nAddressed in commit e704af2: deterministic gizmo mount (state-backed callback ref), drag-gated Escape (isDraggingRef), input-safe g/r/s keys, tightened useEffect deps.\nDeferred SHOULD FIX: (1) AssembledSceneNode does not yet visually compose canvasTransform on top of scenePosition — gizmo persists the data per SC-042 but rendered node mesh still uses scenePosition only; designated for EB-05-04 or Phase 8 EB-08-* visual-application task. (2) ALLOWED_MODES const remains as a greppable source-level anchor for the SC-025 mode-listing test; revisit if/when the test is rewritten to read modes from the helper.\nDeferred OPTIONAL: invisible-proxy hit-target was already eliminated in the review-fix commit; remaining optional items (subscribe-by-id, SCENE_POSITION_DEFAULT fallback) are cosmetic."
+    },
+    {
+      "id": "EB-05-04",
+      "title": "Inspector + keyframe tools reachable from canvas mode",
+      "phase": 5,
+      "specRefs": [
+        "§5 SC-026"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-05-04"
+      ],
+      "haltCheck": "From canvas mode, opening a node's inspector preserves all tabs; animation tab's keyframe UI is reachable without changing viewMode.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "34b841d33328089756a669add3136fdd7b3257d2",
+      "verifiedAt": "2026-05-15T13:20:00Z",
+      "notes": "haltCheck already satisfied at audit; no implementation needed. SC-026 contract pre-existed in src/app/page.tsx (showsGraph branch mounts <RightPane /> when viewMode === 'canvas' via showsSplit) and src/components/editor/panels/Inspector.tsx (all 7 canonical tabs render unconditionally; AnimationTab in Inspector.tsx:575 renders the full keyframe editor with setActiveFrame state + per-frame property editors; no setViewMode call inside AnimationTab). Added regression-safety test tests/editor-build/EB-05-04.inspector-canvas-reachable.test.ts (10 assertions, all passing) locking the four SC-026 source-level guarantees: (1) showsSplit derives from viewMode === 'canvas', (2) showsGraph includes showsSplit, (3) <RightPane /> mounts inside {showsGraph && (...)}, (4) Inspector tab bar has no viewMode gating around TABS.map, (5) AnimationTab body contains keyframe-editor surface, (6) AnimationTab never calls setViewMode, (7) Inspector's single setViewMode call belongs only to the explicit Preview-in-App-UI handler. Verification: tsc --noEmit clean; two-runtime snapshot 7/7 PASS (outer.png, inner.png, state.json, verify.log captured at notes/ralph-snapshots/EB-05-04/). Spec-reviewer: 0 MUST FIX, 0 SHOULD FIX, 3 OPTIONAL (cosmetic test-strictness suggestions only)."
+    },
+    {
+      "id": "EB-05-05",
+      "title": "Canvas ↔ hub-world round-trip — selection + camera-pose persistence",
+      "phase": 5,
+      "specRefs": [
+        "§5 SC-027",
+        "§1 INV-20"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-05-05"
+      ],
+      "haltCheck": "Test: enter canvas, select node, switch to hub-world, switch back to canvas. selectedNodeId is preserved; camera pose for canvas mode is restored exactly.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "a2704842f41d88e5d384cb8ffe4c97587bb05c8c",
+      "verifiedAt": "2026-05-15T14:25:00Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): (1) harmonize canvas-entry effect dep arrays across ControlsBridge ([viewMode, activeHubId]) and SceneControlsBridge ([viewMode, activeHubId, checkpointCameraPose]); Zustand action ref is stable so behavior is unchanged. (2) setLookAt(..., true) is animated; mid-flight pose capture on a second rapid mode toggle may snapshot an interpolated camera. Consider awaiting setLookAt promise or short-circuiting capture during transitions."
+    },
+    {
+      "id": "EB-06-01",
+      "title": "CompiledHubView type + compileHubToPreview skeleton",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-028",
+        "§6 INV-17"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -f kid-kode-landing/src/lib/prism-graph/compiled-view.ts",
+        "test -f kid-kode-landing/src/lib/prism-graph/compile-hub.ts"
+      ],
+      "haltCheck": "CompiledHubView interface is deeply readonly + pure data (no React/Three.js types); compileHubToPreview signature accepts (hub, nodes, world) and returns CompiledHubView; tsc clean.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "edd296e8c21e35c8e9defa2136aa9f5cf2eabca3",
+      "verifiedAt": "2026-05-15T15:39:21Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX (deferred follow-ups): (1) compile-background mockupUrl→viewport-fixed coercion needs Phase-7 reconciliation comment for semantic risk; (2) sort uses < / > string compare — locale-stable for ASCII nodeIds but consider Intl.Collator; (3) canonicalStringify silently drops undefined leaf values — normalize to null when index-signature fields are filled. OPTIONAL: FNV-1a → SHA-256 via crypto.subtle when Phase 6 fills out anchor/camera/background; inline compile-hub.ts impl; pose(x,y,z,fov) helper for cameraRail."
+    },
+    {
+      "id": "EB-06-02",
+      "title": "Anchor rule table (compile-anchors.ts)",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-031"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -f kid-kode-landing/src/lib/prism-graph/compile-anchors.ts"
+      ],
+      "haltCheck": "compile-anchors.ts exports a deterministic rule fn (subtype, intent, serviceTag) → uiAnchor; unit tests cover at least 6 subtypes; ambiguous cases fall through to a documented default.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "806e1e6c7fed27915dfd8ce7db9c0ff33eae8b78",
+      "verifiedAt": "2026-05-15T16:38:30Z",
+      "notes": "spec-reviewer: No MUST FIX. SHOULD FIX: (1) intent.visualSpec.cameraLocked is read via the [k: string]: unknown index signature; consider promoting to a declared optional field on PrismVisualSpec for type safety; (2) 'hybrid' UiAnchor value is exported but never reachable from pickUiAnchor — reserved for direct callers when EB-08 adds uiAnchor? to PrismNode; (3) test asserts on cameraLocked which isn't formally declared yet — pair with the typing cleanup. OPTIONAL: subtype dispatch uses substring includes() in ordered branches; rule order is implicit. Consider a structured token-based classifier and a data table mapping subtype-suffix→anchor for auditability. Two-runtime snapshot 7/7 PASS even though kvVerify=false."
+    },
+    {
+      "id": "EB-06-03",
+      "title": "compileHubToPreview pure deterministic implementation",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-029",
+        "§6 INV-17",
+        "§6 FP-04"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-06-03"
+      ],
+      "haltCheck": "compileHubToPreview run twice on the same input produces hash-identical CompiledHubView output; no mutation of source graph (positions byte-identical before/after); FP-04 hook passes against this file's content.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "e14486c46466f92872df53a6fe25dd7e6b330237",
+      "verifiedAt": "2026-05-15T17:53:10Z",
+      "notes": "SHOULD FIX (non-blocking): consider documenting scroll-timeline distinction via Phase 7 scrollBinding pointer; import style mixed in repo. OPTIONAL: __dirname in EB-06-03 test file is acceptable under vitest."
+    },
+    {
+      "id": "EB-06-04",
+      "title": "Source-graph immutability proof through compile",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-030",
+        "§6 INV-17"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit"
+      ],
+      "haltCheck": "Test computes sha256 of JSON.stringify(GraphSource) before and after compileHubToPreview; sha is byte-identical. No hub.layout or node position field is touched by the compile.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "d1e649350b6283e123791af01f30699536e20663",
+      "verifiedAt": "2026-05-15T18:51:16Z",
+      "notes": "verified without implementation; pre-existing compileHubToPreview (EB-06-03) satisfies §6 SC-030 / §8 INV-17. Test (5 cases incl. sha256 byte-identity, 16x repeated-compile leakage check, hub.layout pin, per-node scenePosition/editorTransform/canvasTransform pin, empty-nodes edge case) passes against current implementation. Reviewer SHOULD-FIX (deferred): (a) add docblock noting JS insertion-order stability underpins the sha256 proof; (b) remove LegacyNode cast once editorTransform field lands on PrismNode; (c) optional rootNodes-targeted pin; (d) optional Object.freeze input variant to surface attempted writes."
+    },
+    {
+      "id": "EB-06-05",
+      "title": "Cinematic camera rail (CompiledHubView.cameraRail)",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-032",
+        "§5 INV-23"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-06-05"
+      ],
+      "haltCheck": "preview-hub camera is constrained to a damped rail computed from CompiledHubView.cameraRail; no orbit/drag in preview-hub; snapshot proves the camera never exposes scene edges.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "b83515791b1d15c190688e4c3269b2348023fa0d",
+      "verifiedAt": "2026-05-15T20:44:09Z",
+      "notes": "spec-reviewer: 0 MUST FIX. SHOULD FIX deferred: (1) rail effect dep array does not re-derive on hub viewport/node edits — sketchier than ideal but acceptable for SC-032 baseline (recomputes on viewMode/activeHubId/status; future task subscribe to useGraphSourceStore slice). (2) computeSceneBoundsForCamera assumes viewport-pixel coord space (§4); document/transform-through coord pipeline if fixtures shift to scene-units (INV-22). (3) setBeforeRender closure captures cameraRailDriver via let — fragile; pass explicit driver ref. (4) failing-test commit fb9eed5 also includes pure module sources (camera-rail.ts + camera-rail-driver.ts); the source-grep tests in HEAD still failed pre-impl so partial-TDD not clean violation. (5) useLiveGraph=false legacy bundle path is silently exempt from SC-032 — document or wire. OPTIONAL: beforeRender hook silently swallows errors (log on first throw); driver.dispose is a no-op (assert disposed post-dispose); cameraRail mount-opt JSDoc mis-states viewMode contract; bounds.maxZ comment direction may be inverted vs Three.js +Z convention."
+    },
+    {
+      "id": "EB-06-06",
+      "title": "Viewport-relative background in preview-hub",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-033"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-06-06"
+      ],
+      "haltCheck": "First background layer with attachment 'viewport-fixed' renders fixed to the viewport during scroll in preview-hub; other layers respect their attachment mode; snapshot shows fixed backdrop.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "407ffb29ed82abcc83c982d64f1175d73a90602b",
+      "verifiedAt": "2026-05-15T22:03:12Z",
+      "notes": "spec-reviewer SHOULD-FIX (cleanup reads mesh.geometry at call time) applied; PrismHost duplicates compileBackground inline — Phase 7 (SC-036/SC-037) extends source schema with PrismHubBackgroundLayer[] and will collapse the duplication when this branch reads hub.background instead of layout.mockupUrl."
+    },
+    {
+      "id": "EB-06-07",
+      "title": "Editor-clutter hide layer in preview-hub mode",
+      "phase": 6,
+      "specRefs": [
+        "§6 SC-034"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-06-07"
+      ],
+      "haltCheck": "In preview-hub mode, transform handles/gizmos, viewport frame, and overlays are hidden; a minimal 'back' affordance remains; snapshot diff against EB-05-02 confirms clean preview chrome.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "11f174e34b27537d6f61f5cd7c7e5736e556ad81",
+      "verifiedAt": "2026-05-15T23:36:31Z",
+      "notes": "SHOULD FIX (deferred): (1) replace `as AuthoringViewMode` cast with a type guard; (2) gate window.__PRISM_EDITOR_SET_VIEW_MODE__ on NODE_ENV !== 'production'; (3) hoist the (window as unknown as {...}) double-cast to a named local; (4) extract the shared pill chrome style for the back affordance; (5) drillIntoHub pins previousAuthoringMode to 'hub-world' rather than s.viewMode — intentional per SC-034 minimal-back wording, but document explicitly. OPTIONAL: use Icon for the chevron; consider inlining showsModeBar; export AuthoringViewMode if a sibling needs it."
+    },
+    {
+      "id": "EB-07-01",
+      "title": "PrismHubBackgroundLayer type + PrismHub.background field (additive)",
+      "phase": 7,
+      "specRefs": [
+        "§7 SC-036",
+        "§7 SC-037",
+        "§7 INV-18"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "grep -q 'PrismHubBackgroundLayer' kid-kode-landing/src/lib/prism-graph/types.ts"
+      ],
+      "haltCheck": "types.ts exports PrismHubBackgroundLayer with attachment ∈ {viewport-fixed, camera-locked, parallax, world, infinite-environment}; PrismHub.background?: PrismHubBackgroundLayer[]; layout.mockupUrl retained; tsc clean.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "0403cda7fe341b60f223e9a4be9cf57190886796",
+      "verifiedAt": "2026-05-16T00:51:46Z",
+      "notes": "spec-reviewer: No deviations found."
+    },
+    {
+      "id": "EB-07-02",
+      "title": "Renderer composes background layer stack per attachment mode",
+      "phase": 7,
+      "specRefs": [
+        "§7 SC-036"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-07-02"
+      ],
+      "haltCheck": "Per attachment mode: viewport-fixed → camera-aligned plane; camera-locked → attached to camera node; parallax → reduced-rate translation; world → static world geometry; infinite-environment → cubemap/skybox. Snapshot shows multi-layer composition.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "5b4d085cf88e4c149237d308abe1d41aa8d36858",
+      "verifiedAt": "2026-05-16T02:29:28Z",
+      "notes": "Composes all 5 SC-036 attachment modes (viewport-fixed/camera-locked/parallax/world/infinite-environment); compileBackground reads hub.background per SC-037 with mockupUrl fallback; parallax tick coexists with EB-06-05 camera rail via composite beforeRender; unmount tears down every mount type."
+    },
+    {
+      "id": "EB-07-03",
+      "title": "Scale-to-cover + env-fog edge fill (no blank scene edges)",
+      "phase": 7,
+      "specRefs": [
+        "§7 SC-038",
+        "§5 INV-23"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-07-03"
+      ],
+      "haltCheck": "In preview-hub, panning the camera (within rail constraints) never reveals scene edges; environment/fog fill the gap; snapshot at extreme camera positions shows no blank.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "a43d670a239de68046caadc502a1cb8e131d5cd2",
+      "verifiedAt": "2026-05-16T04:08:21Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): compileEnvironmentFog wrapper duplication; rebuildCoverPlane helper to dedupe resize() blocks; parseHexColor only accepts #RGB/#RRGGBB; document FOG_FAR_FACTOR=1.6 rationale; comment INV-23/SC-038 gating in PrismHost setEnvironmentFog branches."
+    },
+    {
+      "id": "EB-07-04",
+      "title": "useScrollTimeline + scrollBinding consumer",
+      "phase": 7,
+      "specRefs": [
+        "§7 SC-039",
+        "§7 SC-040"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-07-04"
+      ],
+      "haltCheck": "useScrollTimeline returns deterministic scrollProgress over the hub's content length; nodes with scrollBinding consume it; scrolling in preview-hub reads as app UI, not whole-scene movement.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "2dffefc584bd47b018f1de9bf422f973064e7031",
+      "verifiedAt": "2026-05-16T05:50:00Z",
+      "notes": "SHOULD-FIXes accepted: scrollBinding folded into nodesEqualExceptTransform diff; opacity transparent flag only when <1. Optional fixes (RefObject typing, exhaustiveness guard, ease extraction) deferred to future tasks."
+    },
+    {
+      "id": "EB-08-01",
+      "title": "Additive transform fields (editorTransform, canvasTransform, etc.) on PrismNode",
+      "phase": 8,
+      "specRefs": [
+        "§8 SC-041",
+        "§8 INV-18"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "grep -q 'editorTransform' kid-kode-landing/src/lib/prism-graph/types.ts",
+        "grep -q 'canvasTransform' kid-kode-landing/src/lib/prism-graph/types.ts"
+      ],
+      "haltCheck": "PrismNode adds optional editorTransform?, canvasTransform?, compiledTransform?, uiAnchor?, scrollBinding?, depthLayer? fields; tsc clean; existing graphs serialize without these fields.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "848c0c2fe0123146082900edf40d0630a6a12f0f",
+      "verifiedAt": "2026-05-16T06:52:56.000Z",
+      "notes": ""
+    },
+    {
+      "id": "EB-08-02",
+      "title": "PrismKeyframe type with required coordinateSpace discriminator",
+      "phase": 8,
+      "specRefs": [
+        "§8 SC-043",
+        "§8 INV-21",
+        "§8 FP-08"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "grep -q 'coordinateSpace' kid-kode-landing/src/lib/prism-graph/types.ts"
+      ],
+      "haltCheck": "PrismKeyframe has required coordinateSpace ∈ {universe, hub-scene, viewport-composition, scroll-timeline, camera}; tsc fails on any keyframe literal missing the discriminator. Hook FP-08 also fires for runtime-authored cases.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "98621f6095b8651f4602d90ccd6509b81b2b32bf",
+      "verifiedAt": "2026-05-16T08:00:26Z",
+      "notes": "SHOULD-FIX (non-blocking): consider tightening ease typing on PrismKeyframe (currently ScrollBindingEase|string); consider modeling params vs values as a union to enforce alternates per FP-08; consider narrowing t? by coordinateSpace. OPTIONAL: split KEYFRAME_* constants into a separate enums module; add JSDoc @see §4 / SC-043 link block above PrismKeyframe."
+    },
+    {
+      "id": "EB-08-03",
+      "title": "Typed trigger enum + animation tab pickers",
+      "phase": 8,
+      "specRefs": [
+        "§8 SC-044",
+        "§8 SC-045"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-08-03"
+      ],
+      "haltCheck": "PrismKeyframeTrigger = 'load'|'scroll'|'hover'|'click'|'in-view'; Animation tab exposes coordinate-space + trigger pickers; existing animation-keyframes.ts logic preserved.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "8140a9e343c582624d8bfc9a6bd60cf31befdba6",
+      "verifiedAt": "2026-05-16T09:19:16Z",
+      "notes": "SHOULD FIX (deferred): (1) picker visually highlights hub-scene as active when store value is undefined — initialize default in ensureNode or render no-active state; (2) coordinateSpace/trigger persist per-node, not per-keyframe — wire to frames[activeFrame] in a Phase 8 follow-on; (3) setCoordinateSpace/setTrigger mint orphan NodeEdits rows when no row exists — consider ensureNode guard."
+    },
+    {
+      "id": "EB-08-04",
+      "title": "Three baseline keyframe primitives (load fade-in, in-view slide, hover lift)",
+      "phase": 8,
+      "specRefs": [
+        "§8 SC-046"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-08-04 --mode=canvas"
+      ],
+      "haltCheck": "Three primitives ship as composable keyframe sets; each declares its coordinateSpace; demo node in canvas mode visibly runs each on its trigger; snapshot captures the in-view-slide state.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "c7268fd867cd1ad2d8c555b982a65c3b7baa3f49",
+      "verifiedAt": "2026-05-16T11:46:23Z",
+      "notes": "SC-046 baseline keyframe primitives shipped (LOAD_FADE_IN, IN_VIEW_SLIDE, HOVER_LIFT) as composable PrismKeyframe[] sets; each declares coordinateSpace; canvas-mode KeyframeDemo visibly runs all three; outer snapshot captures the post-in-view-slide state. Review SHOULD-FIX: ease curves on baseline keyframes are decorative until EB-08-05 wires the runtime applier (per-keyframe ease label declared on data); InterpolatedKeyframeValues only carries rotateZ — extend to rotateX/Y when EB-09 needs them."
+    },
+    {
+      "id": "EB-08-05",
+      "title": "Transform-edit ↔ keyframe-capture integration in canvas mode",
+      "phase": 8,
+      "specRefs": [
+        "§8 SC-042",
+        "§8 SC-045"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-08-05"
+      ],
+      "haltCheck": "Editing canvasTransform via gizmos and clicking 'save as keyframe' creates a PrismKeyframe with coordinateSpace='hub-scene' (or canvas-mode default); keyframe appears in animation timeline.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "bad44ba71743252f8c356492b7eabe0f383f180e",
+      "verifiedAt": "2026-05-16T13:22:26Z",
+      "notes": "spec-reviewer SHOULD FIX (deferred to later phases): unreachable when !node.hasAnimation; chip key={i} mis-keys on delete/reorder; duplicate hub-scene default literal at call site; non-uniform scale emits both scale+scaleX/Y/Z; persistedKeyframes empty-array reallocates each render. OPTIONAL: extract CapturedKeyframeTimeline component; export DEFAULT_CANVAS_COORDINATE_SPACE; add t/ease defaults."
+    },
+    {
+      "id": "EB-09-01",
+      "title": "Animation library catalog UI — 3 methodologies preserved",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-047",
+        "§9 INV-12"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-01"
+      ],
+      "haltCheck": "Inspector's Animation tab shows a Library section with three category tabs: 'i2v Frame-based', 'Code-based', 'Hybrid Overlay'. Each category lists at least one entry. Methodologies are never collapsed into a single list.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "a4b31633686aa79423e82dc9053d5cd9c1064af6",
+      "verifiedAt": "2026-05-16T15:01:35Z",
+      "notes": "SHOULD FIX (deferred — non-blocking per reviewer):\n  - WAI-ARIA: complete role=tab/tabpanel binding (add aria-controls + ids; currently role=tablist + role=tab without aria-controls).\n  - Snapshot does not show Inspector→Animation tab in-frame; consider verifier flag to open Inspector for haltCheck visual proof.\n  - Methodology bucketing: 'Hybrid Overlay' has 1/9 entries (particle-emerge). Reasonable but thin; revisit if Phase 9 follow-ups extend the categorization.\n  - AnimationLibrarySection state lifts: methodology resets on hasAnimation transition (re-mount). Lift to AnimationTab or editor store to persist selection.\nOPTIONAL: per-methodology description map; lazy 'no entries' fallback; precomputed methodology Map."
+    },
+    {
+      "id": "EB-09-02",
+      "title": "Library entries reference the 9 fixed cinematic primitives only",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-048",
+        "§9 INV-12"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit"
+      ],
+      "haltCheck": "animation-library catalog references exactly the 9 cinematic primitives from CINEMATIC-PRIMITIVES-LIBRARY.md; no entry invents a new primitive; test enumerates entries and confirms.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "5153d11a6a43ae78cd32d0e5ea1f2306fd0f8cae",
+      "verifiedAt": "2026-05-16T15:35:00Z",
+      "notes": "haltCheck already satisfied at audit; pre-existing code (EB-09-01) satisfies §9 SC-048 + §7 INV-12 via the typed catalog in src/lib/prism-graph/animation-library.ts (CinematicPrimitiveName union enforces no-invent at compile time; catalog has 9 entries mapping to the 9 doc primitives 1:1). Shipped strict EB-09-02 test deriving the canonical set from three sources (doc registration block + type union + catalog) with pairwise set-equality. spec-reviewer 0 MUST FIX. SHOULD FIX (deferred — test resilience nits, non-blocking): make trailing-semicolon in doc-block regex optional; tighten entry regex to a single fenced block to avoid future cross-block collisions; minor test-block duplication between \"catalog references at least one entry per primitive\" and \"catalog set equals the doc set\". OPTIONAL: comment about repoRoot layout assumption; drop tautological enumerated-count assertion; switch CinematicPrimitiveName import to `import type`."
+    },
+    {
+      "id": "EB-09-03",
+      "title": "Tether-driven interaction on 'triggers' edges",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-049"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-03"
+      ],
+      "haltCheck": "When an edge of type 'triggers' fires from source node, target node's bound animations run; tether-fire visualization renders during firing; snapshot proves propagation across at least one pair.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "6b8867cef5bab37433bd9ad54bdbd353ddf1fb8b",
+      "verifiedAt": "2026-05-16T17:47:19Z",
+      "notes": "SHOULD FIX (spec-reviewer): (1) Test fixture rename happened in implementation commit (id→nodeId, hubIds→parentHubId, elementType→subtype) — needed to align with PrismNode shape; logged. (2) Module has no runtime consumer yet; wiring is EB-09-04..EB-09-06. (3) Add boundary test at exact t0+dur; consider per-call object literal in createTetherFireState."
+    },
+    {
+      "id": "EB-09-04",
+      "title": "Cross-space tether resolution via transform pipeline",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-050",
+        "§9 INV-22"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-04"
+      ],
+      "haltCheck": "Tether between source in hub-scene and target in viewport-composition resolves correctly; transform pipeline (src/lib/prism-graph/transforms.ts) is the only path used; coordinate systems remain uncollapsed.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "c09ead8ae0ce03e5eb886f2c1edae152fb3ca6ef",
+      "verifiedAt": "2026-05-16T22:00:00Z",
+      "notes": "SHOULD-FIX (from spec-reviewer): per-keyframe space iteration in resolveCrossSpaceTetherFire (currently first-space-wins), DEFAULT_TARGET_SPACE=hub-scene is invented (consider null bridge for zero-keyframe targets), identity hop phase tags are arbitrary, error message could list registered hops. OPTIONAL: doc/test tolerance mismatch (1e-9 vs 1e-6), 'composition' kind unused (Phase 10), 'composition' switch case should assertNever-throw, re-export TransformContext from tether-fire."
+    },
+    {
+      "id": "EB-09-05",
+      "title": "Physics/shader integration on tether fire (where declared)",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-051",
+        "§9 INV-12"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-05"
+      ],
+      "haltCheck": "Target nodes with displacement-transition (or similar primitive) declared apply the shader on tether fire; baseline implementation uses TSL only (INV-11); snapshot shows shader visible during fire.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "b27afc2141a917a898a4bab58ee87b2b99cfde0d",
+      "verifiedAt": "2026-05-16T22:16:36Z",
+      "notes": "spec-reviewer: 0 MUST FIX. SHOULD FIX (deferred to EB-09-06): (1) no production caller yet wires SHADER_PRIMITIVES into hub-manager — EB-09-06 snapshot will wire it; (2) align TetherFirePrimitiveResult/PrimitivesAPI shape with runtime PrimitiveResult/CinematicPrimitivesAPI (gsap.core.Timeline + Record<string,unknown>) at the EB-09-06 wiring step; (3) cross-reference CINEMATIC-PRIMITIVES-LIBRARY.md primitives 3/4/7 in SHADER_PRIMITIVES doc-block; (4) adapter takes curried 2-arg fn — accept CinematicPrimitivesAPI (already curried via makePrimitivesAPI) at wiring. OPTIONAL: hoist mid-file imports, document silent-skip on missing primitive fn, flatMap style."
+    },
+    {
+      "id": "EB-09-06",
+      "title": "Two-runtime snapshot proving tether-fire propagation",
+      "phase": 9,
+      "specRefs": [
+        "§9 SC-052",
+        "§1 INV-16"
+      ],
+      "tddRequired": false,
+      "verificationCommands": [
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-09-06",
+        "test -f kid-kode-landing/notes/ralph-snapshots/EB-09-06/inner.png",
+        "test -f kid-kode-landing/notes/ralph-snapshots/EB-09-06/outer.png"
+      ],
+      "haltCheck": "EB-09-06 snapshot directory contains outer.png, inner.png, state.json; state.json records a tether-fire event between source and target node ids.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "73f8bc046ef13d643123c3d587919dee54bfcf9e",
+      "verifiedAt": "2026-05-16T22:37:30Z",
+      "notes": "spec-reviewer: 0 MUST FIX. SHOULD FIX (carry forward): (1) scope-of-proof — propagation is computed in editor-shell via the pure resolveTetherFireTargets, not invoked from inner-runtime hub-manager; consider wiring applyTetherFirePrimitives + a __PRISM_RUNTIME_FIRE_TETHER__ runtime-side hook in a follow-up Phase-9 closer; (2) fixture home-cta-hero -> home-feature-card target declares only magnetic-cursor (not in SHADER_PRIMITIVES) so EB-09-05 shader-fire hand-off is not exercised — extend live-graph fixture with a target carrying displacement-transition/dissolve-morph/particle-emerge; (3) drop (window) cast parens for symmetry with __PRISM_EDITOR_SET_VIEW_MODE__ call site; (4) extract __PRISM_EDITOR_SET_VIEW_MODE__ + __PRISM_EDITOR_FIRE_TETHER__ into useDevSnapshotHooks(); (5) export TetherFireSnapshotRecord + mapper from tether-fire.ts to dedupe inline shape. OPTIONAL: cap fires ring buffer at 32 with FIFO; gate tether capture in verify script on --capture-tether-fire=<sourceId> arg; gate dev hooks behind NODE_ENV/NEXT_PUBLIC flag; add second live-graph tether to exercise shader path."
+    },
+    {
+      "id": "EB-10-01",
+      "title": "CompiledAppView + compileAppToPreview aggregator",
+      "phase": 10,
+      "specRefs": [
+        "§10 SC-053"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "test -f kid-kode-landing/src/lib/prism-graph/compile-app.ts"
+      ],
+      "haltCheck": "compile-app.ts exports compileAppToPreview(world, hubs, nodes) returning CompiledAppView; implementation aggregates per-hub compileHubToPreview results; type CompiledAppView is deeply readonly pure data.",
+      "kvVerify": false,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "77f26ffd3de07dc95dedb4743c42f865854160f4",
+      "verifiedAt": "2026-05-16T22:57:30Z",
+      "notes": "spec-reviewer: No MUST-FIX. SHOULD-FIX: (1) aggregator hash only covers world.appNameWorldId, not full world context — will widen in EB-10-05 (SC-057); (2) nodes whose parentHubId is not in hubs are silently dropped — no current SC mandates behavior, consider warn in dev; (3) canonicalStringify/fnv1a duplicated from compiled-view.ts — candidate for shared canonical-hash module. OPTIONAL items deferred."
+    },
+    {
+      "id": "EB-10-02",
+      "title": "preview-app renderer + route-like navigation",
+      "phase": 10,
+      "specRefs": [
+        "§10 SC-054"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && npm run build",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-10-02"
+      ],
+      "haltCheck": "viewMode='preview-app' renders the compiled app; navigation between hubs reflects in URL hash or pathname; back/forward browser-like nav works within the preview surface.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "935e6c134b0779170aea0348c47b83b5d6e00e67",
+      "verifiedAt": "2026-05-16T23:24:06Z",
+      "notes": "spec-reviewer: no MUST FIX. SHOULD FIX (deferred): (a) cache compileLiveApp() so dev-hook getters don't re-FNV per call; (b) centralize legacy-root fallback so PrismHost/page.tsx don't both reinvent it; (c) tighten pushState guard against non-routing activeHubId mutations; (d) snapshot seeds via store.setState({hubs:..}) — use addHub when invariants tighten; (e) snapshot overwrites inner.png with the preview-app capture — consider inner-preview-app.png; (f) get hubIds() returns fresh arrays. OPTIONAL: dedupe getNext/getPrev via walk(); page-local Prev/Next can call routing helpers directly; PrismHost rail-effect TODO for SC-055/SC-056; narrow __PRISM_DEBUG_STORES__ to {getState,setState} or gate on NODE_ENV !== 'production'."
+    },
+    {
+      "id": "EB-10-03",
+      "title": "Hub transitions — damped cinematic transit between hub rails",
+      "phase": 10,
+      "specRefs": [
+        "§10 SC-055",
+        "§5 INV-23"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-10-03"
+      ],
+      "haltCheck": "Navigating from hub A to hub B in preview-app smoothly transits the camera between hub-rail anchors; no scene-edge exposure during transit; snapshot captures mid-transit frame.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "11d187041b3fe63551179ba30360af30bebcb618",
+      "verifiedAt": "2026-05-16T23:48:03Z",
+      "notes": "SHOULD FIX (carry-forward): (1) PrismHost rail-install guard uses object-identity (prevRail !== cameraRail) — always true on effect re-run because deriveCompiledCameraRail returns a fresh frozen object; switch to a previous-activeHubId ref so same-hub re-renders skip the transit. (2) Mount-effect cleanup should reset previousHubRailRef.current = null alongside liveResultRef.current to prevent a stale anchor stitching into the next mount's first transit. (3) hub-transit's .start pose is unused by the runtime driver (default getProgress=() => 1), so SC-055's 'between anchors' contract is satisfied by the driver's preserved current pose + .end; document this in the hub-transit.ts header or wire a per-transit getProgress ramp 0→1. (4) verify-editor-runtimes 90ms wait is not a deterministic mid-transit guarantee; consider exposing camera pose via dev hook and asserting damping progress in state.json. (5) Synthetic seed-hub clones original hub geometry — mid-transit pose is barely distinguishable; offset the clone's layout/positions for a visible transit. (6) inner.png is overwritten by the mid-transit capture, losing the entry preview-app frame; save as inner-mid-transit.png and keep the entry inner.png. OPTIONAL: extract freezeVec3 + math helpers shared with camera-rail.ts; promote selectTransitDamping to exported so its symmetry contract is pinned directly."
+    },
+    {
+      "id": "EB-10-04",
+      "title": "Cross-hub tether rendering in preview-app",
+      "phase": 10,
+      "specRefs": [
+        "§10 SC-056"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-10-04"
+      ],
+      "haltCheck": "Edges that cross hub boundaries render during the transit and resolve on arrival; the receiving hub's animation library invokes correctly on arrival.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "70435f502cf9cdc1e0ccc5f820c86ef28f8a37af",
+      "verifiedAt": "2026-05-17T00:17:43Z",
+      "notes": "SHOULD FIX (deferred): non-triggers cross-hub tethers are render-only — gated arrival firing to triggers per SC-049. OTHER SHOULD FIX (carry-forward): (1) renderer-side line draw for getCrossHubTethersDepartingFrom in PrismHost / inner runtime not yet wired — data surface complete, visible render deferred to follow-up task; (2) verify-editor-runtimes lacks an EB-10-04 cross-hub branch in state.json — unit-test side is exhaustive; (3) duplicate PrismRootNode synthesis in page.tsx effects — extract a synthesizeRootForLive(source) helper; (4) PreviewAppNav cross-hub accessors recompile on every read — memoize per (hubs,nodes,edges) identity tuple; (5) compile-app.ts omit-when-empty hash branch documentation. OPTIONAL: arrival effect fires on initial preview-app entry (no prior hub); hoist ArrivalRecord type; drop defensive String(edge.type) ternary; use control-char join in tetherSortKey."
+    },
+    {
+      "id": "EB-10-05",
+      "title": "App_Name_World context + full-compile immutability proof",
+      "phase": 10,
+      "specRefs": [
+        "§10 SC-057",
+        "§10 SC-058",
+        "§6 INV-17"
+      ],
+      "tddRequired": true,
+      "verificationCommands": [
+        "cd kid-kode-landing && npx tsc --noEmit",
+        "cd kid-kode-landing && node scripts/verify-editor-runtimes.mjs --task-id=EB-10-05"
+      ],
+      "haltCheck": "CompiledAppView.world surfaces App_Name_World context at the top level; full-compile test computes sha256 of GraphSource before/after compileAppToPreview and confirms byte-identical; snapshot shows preview-app boot with world-context binding rendered.",
+      "kvVerify": true,
+      "status": "done",
+      "attemptCount": 1,
+      "commit": "58672c4fd7a5f95bfb8214eb8ad2411614ed7bd7",
+      "verifiedAt": "2026-05-17T00:41:46.018Z",
+      "notes": "SHOULD FIX (non-blocking, deferred): polling getter rebuilds full compile every 500ms (Zustand subscribe would be event-driven); verify-script sha256 bracket covers a fresh-getter pair but live fixture has no real PrismRootNode so the surface is the synthesized default; worldEchoMatches compares appNameWorldId only (deep stringify would be stronger); deepFreezeClone uses JSON round-trip — fine for current JSON-only schemas but loses Map/Set/Date if any future widening adds them; hash payload now includes the full compiledWorld so pre-EB-10-05 hashes shift even when world is empty. OPTIONAL: freeze-before-recurse in deepFreezeClone; shallow-compare guard in PreviewAppWorldBadge to avoid wasted renders; consolidate inline glass-style overlays."
+    }
+  ]
+}

@@ -113,3 +113,24 @@ Gates: vitest **277/277** (full animatable suite) · tsc baseline-diff **0 new e
 
 Full write-up: `notes/CATALOG-BATCH-REPORT.md`. **No commit — staged for Logan. HEAD =
 prism-editor-build.**
+
+---
+
+## FINISH RUN (target ≥300) — resumable, 8 waves W1–W8 (+159 → 312)
+
+Harness: `notes/catalog-finish-workflow.mjs` (159 specs, wave-selectable {batchLabel:'W1'..'W8'}).
+Reuses `catalog-wire-barrel.mjs` + `scripts/verify-catalog.mjs` + `scripts/verify-catalog-realgpu.mjs`.
+tsc baseline = 10 (unchanged target). No collisions with the 153 existing; no export-name mismatches.
+
+| Wave | Theme | N | ok | catalog total | tsc | vitest |
+|---|---|---|---|---|---|---|
+| W1 | transform 3D reveals + fade | 20 | **20/20** | 173 | 10 (0 new) ✅ | 537/537 (173 files) ✅ |
+| W2 | text kinetic typography | 20 | **20/20** | 193 | 10 (0 new) ✅ | 598/598 (193 files) ✅ |
+| W3 | scroll + pointer + blur | 20 | **20/20** | 213 | 10 (0 new) ✅ | 661/661 (213 files) ✅ |
+| W4 | wave/cloth/water + mask wipes | 20 | **20/20** | 233 | 10 (0 new) ✅ | 722/722 (233 files) ✅ |
+| W5 | displacement/transitions + smoke/fluid | 20 | **20/20** | 253 | 10 (0 new) ✅ | 782/782 (253 files) ✅ |
+| W6 | shimmer + glass/dispersion (⚑10 glass real-GPU) | 20 | **20/20** | 273 | 10 (0 new) ✅ | 842/842 (273 files) ✅ |
+| W7 | caustics + volumetric (fire/godray/aurora/nebula) | 20 | **20/20** | 293 | 10 (0 new) ✅ | 903/903 (293 files) ✅ |
+| W8 | particles GPGPU/physics/collision | 19 | **19/19** | **312** | 10 (0 new) ✅ | 960/960 (312 files) ✅ |
+
+**BUILD COMPLETE: 159/159 new primitives across 8 waves. Catalog 153 → 312 / 300 (≥300 ✅, +12 margin). Zero central fixes — every wave built ok on first orchestration. tsc baseline 10 held throughout.**

@@ -103,3 +103,57 @@ The real state lives ON DISK (git checkpoints + specs + reports + the whole veri
 and is re-readable via Desktop Commander — almost nothing critical lives only in chat context.
 Project knowledge holds the specs; claude-mem (project-scoped) likely holds this work; this doc is
 the map. Continuity is safe. A new session in THIS project picks up exactly here.
+
+---
+
+## UPDATE — 2026-06-08 (LATEST — this supersedes the "STATE" + "IMMEDIATE NEXT ACTION" above)
+
+### Catalog build is COMPLETE: 312 / 300 primitives
+pilot 24 + batch1 66 + batch2 63 + finish-run 159. Every build wave first-try, 960 unit tests
+green, tsc baseline held (0 new). Git checkpoints exist through `66f2cd3` (=153/300). The
+finish-run's 159 are STAGED, NOT yet committed.
+
+### A finish-run is STILL RUNNING (serial verify — the slow tail)
+claude PID 38827 · log ./catalog-finish-run.log · verify log
+kid-kode-landing/notes/verification/catalog-finish-verify.log · final report →
+kid-kode-landing/notes/CATALOG-FINISH-REPORT.md (not written yet). It is in the FINAL BROWSER
+verification pass, rendering/playing each of the 312 in ONE headless Chrome, SERIALLY (~40/312
+as of this update, ~1–2/min → multi-hour tail). Resumable (writes CATALOG-PROGRESS.md + the
+verify log + stages files); not stuck.
+
+### ON ULTRACODE — answered honestly (Logan asked, correctly, whether we're really using it)
+- BUILD: YES, real ultracode. `kid-kode-landing/notes/catalog-batch-workflow.mjs` runs
+  `parallel(...)` with ONE Opus subagent PER primitive, ~20 concurrent per wave. That concurrency
+  is real and is why the build was fast.
+- VERIFY: NO — it's a serial single-browser script. THIS is the bottleneck. The verification was
+  never parallelized.
+- **DIRECTIVE for the new session:** parallelize the VERIFICATION — multiple concurrent browser
+  contexts / verify subagents (same `parallel()` pattern as the build) so browser/art/glass
+  checks are also ultracode-speed. This is the top process fix.
+
+### IMMEDIATE NEXT ACTION (new session — start here)
+1. Check the finish-run (PID 38827 / verify log / report). RECOMMENDED: don't wait hours on the
+   serial verify — stop it, checkpoint the BUILT 312 (src is stable; only a few flagged
+   primitives get verify-fixes, e.g. one fade variant play=false), then RE-RUN verification in
+   PARALLEL (concurrent browser contexts) — far faster and is the ultracode fix Logan wants.
+   (If you prefer, let the serial run finish — it's resumable — but parallel is the better path.)
+2. When verification is complete + clean: independent re-verify (gallery + fresh glass real-GPU
+   frames; resize PNG→jpeg via sips to view), then CHECKPOINT the complete 300+ catalog.
+3. Build the PARALLEL verification harness as a focused step (the ultracode-for-verify upgrade).
+4. Then the next big pieces, ultracode-for-breadth / focused-for-depth, Logan approving each:
+   bind real MSDF text into the text animations · material + lighting systems · wire the toolbar's
+   deferred groups (Image/3D/Text/Animation-picker/Lighting) · art-polish pass (clear-glass needs a
+   backdrop in preview tiles + the ~5 minor nits from batch reports).
+
+### Cleanup note
+There may be orphaned `claude --output-format` processes from earlier runs (e.g. PIDs 21043 /
+21730) — safe to `kill` if idle. Also the usual: a leftover `next dev` server may linger after a
+run; tidy it.
+
+### Pattern (unchanged — keep following it)
+write self-contained prompt → launch headless `claude -p --model claude-opus-4-8`
+(`--permission-mode bypassPermissions`, `unset NODE_ENV`, run from git root) → monitor log/PID →
+INDEPENDENTLY re-verify (read report AND view screenshots) → report to Logan in plain language
+with screenshots → gate on his approval → checkpoint (git commit, with the standard exclusions) →
+next. Logan checks in with "check". Use ultracode (concurrent agents via the workflow `parallel()`)
+for BUILD breadth AND — now — for VERIFY.
