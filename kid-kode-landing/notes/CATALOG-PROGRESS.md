@@ -13,9 +13,45 @@ once at the end over everything.
 | | Count |
 |---|---|
 | Pre-existing (pilot) | 24 |
-| NEW this run | **66** |
-| **Total registered** | **90** |
-| Toward 300 | 90 / 300 |
+| Batch 1 | 66 |
+| **Total before batch 2** | **90** |
+| Toward 300 (before batch 2) | 90 / 300 |
+
+### Batch 2 (this run, target +50–70) — ✅ COMPLETE (+63, catalog 90 → 153 / 300)
+
+Verification: browser shared-rig **renders 153/153, plays 147, controls 146, device-lost 0, console
+errors 0, hover-plays proven**; of the 63 new, **60/63 fully verified** (3 soft misses = scroll-skew
+input-driven + bevel-glass/water-droplet headless-transmission, all vitest-green). Art-fidelity
+stage-1 **44 PASS / 19 polish** → first-hand vision pass: ~5 genuine nits, ~14 false-positives.
+**Real-GPU glass spot-check (Logan's GPU): backend `webgpu`, 11/11 glass captured with real
+refraction, device-lost 0.** Full write-up: `CATALOG-BATCH-2-REPORT.md`.
+
+
+| Wave | Theme | N | ok | wall | tokens | gate |
+|---|---|---|---|---|---|---|
+| E | transform/fade/scroll/pointer/text (CPU) | 21 | **21/21** | ~2.8 min | 1.73 M | vitest **342/342** (111 files) · tsc **10** (0 new) ✅ |
+| F | text/wave/cloth/mask/blur/displacement/physics | 21 | **21/21** | ~3.8 min | 1.80 M | vitest **409/409** (132 files) · tsc **10** (1 new TSL error in `splat-reveal` fixed centrally → 0 new) ✅ |
+| G | shimmer/glass/caustics/smoke/volumetric/GPGPU particles | 21 | **21/21** | ~3.5 min | 1.85 M | vitest **475/475** (153 files) · tsc **10** (1 new TSL error in `pool-caustics` fixed centrally → 0 new) ✅ |
+
+**Batch-2 BUILD COMPLETE: 63/63 new primitives. Catalog 90 → 153 / 300.**
+
+Wave G central fix (fix-don't-skip): `pool-caustics.ts` voronoi `dMin` accumulator hit the same narrow
+VarNode typing as splat-reveal; fixed with the opaque-node `any` type. No behavior change; vitest stayed green.
+
+Category totals after batch 2 (registry barrel): transform 19 · fade 8 · scroll 11 · pointer 8 · text 16 ·
+wave 13 · displacement 10 · mask 6 · blur 4 · shimmer 10 · glass 12 · caustics 5 · volumetric 9 · smoke 6 ·
+particles 16 = **153**.
+
+Build orchestration: 3 waves × 21 parallel Opus agents, **63/63 ok on first orchestration of each wave**,
+~10.1 min total build wall-clock, ~5.38 M subagent tokens, 0 parallel-build failures, 0 file collisions
+(every agent wrote 2 disjoint files; the shared barrel regenerated once per wave by the orchestrator). The
+only central fixes were 2 TSL-typing slips that vitest passed but the tsc baseline-diff gate caught — exactly
+the gap the gate exists to close.
+
+Wave F central fix (fix-don't-skip): `splat-reveal.ts` TSL metaball-union accumulator hit the narrow
+fluent VarNode typing (vitest passed, tsc caught it). Fixed by the canonical `type TNode = any` node
+alias (mirrors `foam.ts`/`clouds.ts`) + casting the `smoothstep().mul(uniform)` receiver. No behavior
+change; vitest stayed 3/3.
 
 Build phase COMPLETE: 66/66 new primitives, vitest **277/277**, tsc gate **0 new errors**.
 Browser + art-fidelity verification: see below.

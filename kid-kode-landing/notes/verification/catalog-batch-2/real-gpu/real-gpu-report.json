@@ -1,0 +1,83 @@
+{
+  "url": "http://localhost:4793/animation-catalog",
+  "startedAt": "2026-06-08T18:24:12.618Z",
+  "mode": "real-gpu headed Chrome",
+  "rig": {
+    "ready": true,
+    "backend": "webgpu",
+    "tileCount": 154,
+    "deviceLostCount": 0,
+    "adapter": null
+  },
+  "primitives": [
+    {
+      "name": "dispersion",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "refraction-warp",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "iridescent-glass",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "frosted-glass",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "liquid-glass",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "crystal-facet",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "glass-refraction",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "chromatic-aberration",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "bevel-glass",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "water-droplet",
+      "captured": true,
+      "notes": []
+    },
+    {
+      "name": "ice-glass",
+      "captured": true,
+      "notes": []
+    }
+  ],
+  "notes": [],
+  "rigAtEnd": {
+    "backend": "webgpu",
+    "deviceLostCount": 0
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "summary": {
+    "targets": 11,
+    "captured": 11,
+    "backend": "webgpu",
+    "deviceLost": 0
+  }
+}
