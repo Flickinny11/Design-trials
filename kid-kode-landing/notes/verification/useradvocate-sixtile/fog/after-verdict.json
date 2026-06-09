@@ -1,0 +1,56 @@
+{
+  "feature": "fog",
+  "claim": "Drifting fog banks roll sideways with real front-to-back depth — clean, soft-edged cool grey-white fog, not a flat wash.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "ROUND-2 RE-FIX VERIFIED: the hard rectangular square-tile grid from round-1 is GONE. Every play frame and every control frame now shows smooth, continuous, organic fog swirls with no axis-aligned seams and no checkerboard cells. I looked specifically for hard horizontal/vertical tile boundaries and found none in any frame. bandingScore reads ~0.29 on the dense play frames, but per the known over-report on high-detail organic fog swirls this is the desired wispy detail, not banding — the frames themselves contain zero hard square seams. No misalignment, cut-off, or low-contrast issues; the fog fills the viewport frame cleanly.",
+      "evidence": [
+        "fog/after/play-2.png",
+        "fog/after/idle.png",
+        "fog/after/control-density-low.png",
+        "metrics: play-2 bandingScore=0.287 (organic-swirl over-report per caveat; LOOKED — no hard tile seams in frame)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Reads clearly as clean, soft-edged cool grey-white fog with real front-to-back depth, exactly as claimed. Bright billowing wisps in the foreground sit over darker grey recesses, giving smooth volumetric falloff rather than blocky stepping. Hue is neutral grey-white (effSat=0), correct for cool fog and not a colored or warm wash. Strong luminance variation (stdev ~48) means it is NOT a flat wash.",
+      "evidence": [
+        "fog/after/play-2.png",
+        "fog/after/play-3.png",
+        "metrics: play-2 effSat=0 effRGB=[144.8,145.3,144.6] (neutral cool grey-white), stdev=47.7 (depthful, not flat)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The Density slider gives an obvious, sensible response a first-time user would read instantly: low = thin/dim fog, high = thick/bright dense fog. Layers low->high adds depth and structure, and Speed drives the sideways drift. All three labeled sliders map to intuitive results.",
+      "evidence": [
+        "fog/after/control-density-low.png",
+        "fog/after/control-density-high.png",
+        "control: density low->high meanLuma 27.8->78.3, changed=true (visible thicken/brighten)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, not janky. The three play frames clearly differ — the fog has drifted/evolved between them — and control-apply latency is sub-600ms.",
+      "evidence": [
+        "metrics: play-1 frameDeltaMag=2.99, play-2=3.3, play-3=8.61 (visible motion)",
+        "metrics: density latencyMs=579-583"
+      ]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'That's proper drifting fog now — soft, deep and clean, no more wall of grey square tiles.' The round-1 stone-wall checkerboard is fully fixed and it reads as volumetric cool grey-white fog with working controls.",
+      "evidence": [
+        "fog/after/play-1.png",
+        "fog/after/control-density-high.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "bandingScore stays near 0.29 on the dense play frames — harmless here (organic-swirl over-report, no visible tile seams) but it sits close to the 0.25 numeric threshold, so future automated checks shouldn't read that number as a regression.",
+      "evidence": "metrics: idle bandingScore=0.289 (organic detail, not banding)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

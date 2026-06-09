@@ -1,28 +1,41 @@
-// cosmic-dust — vast clouds of cosmic dust drift through starlight: a soft-lit
-// nebular haze layered with distant pinprick stars. HARD / GPU / volumetric
-// primitive. Swaps the host plane's material for a MeshBasicNodeMaterial whose
-// colorNode shades drifting fbm haze through a soft cosmic palette (deep blue ->
-// teal -> magenta) via smoothstep bands, and whose opacityNode = cloud + stars
-// (a hashed faint star field that twinkles slightly). seek() advances uTime
-// slowly; onParamChange() updates the live drift/scale/starDensity uniforms.
-// Mirrors nebula.ts / caustics.ts in structure, casting, and material restore.
+// cosmic-dust — a vast deep-space dust cloud / nebula drifting through starlight.
+// HARD / GPU primitive. SINGLE-PLANE (no slab stack): the depth-volume illusion
+// is built ENTIRELY IN-SHADER (fire-flame discipline) so there are NO slab-seam
+// shelves. The host plane's material is swapped for a MeshBasicNodeMaterial whose
+// colorNode shades layered domain-warped fbm at three scales (far haze → mid
+// billows → fine filaments) through a vivid cosmic palette (deep blue → indigo →
+// magenta) and adds sparse twinkling star/dust specks; opacityNode alpha-gates the
+// haze so empty space stays transparent. seek() advances uTime slowly;
+// onParamChange() updates the live drift/scale/starDensity uniforms.
 //
-// DISTINCT from nebula (denser churning plasma, no stars) and clouds (white
-// cumulus over blue sky): cosmic-dust is soft, deep, and sparsely lit, with an
-// overlaid pinprick star field — a nebular dust cloud, not plasma or cumulus.
+// ROUND-2 FIX (user-advocate gate):
+//   1. The nebula density now uses the SHARED `fbmRot` / `fbmWarped` helper
+//      (rotated-octave, QUINTIC, domain-warped value noise). Raw axis-aligned
+//      value-noise fbm read as a brick-banded tiled wall; the rotated octaves +
+//      quintic interpolation + domain warp keep the field continuous and organic
+//      with no shelves. Base frequency is >= 7 so the largest cells are small.
+//   2. NO centered `uv.sub(0.5)`/`.abs()` term is ever fed into the noise DOMAIN
+//      (that mirrors the field into a 4-quadrant mosaic with a hard cross seam).
+//      The noise domain is `uv * scale + drift` only — fully continuous across the
+//      quad. (The depth GRADIENT still reads `uv.y`, but a gradient is not a noise
+//      domain and cannot band.)
+//   3. Stars are now ROUND soft pinpricks: each grid cell hashes a star CENTRE and
+//      brightness, and the speck is a smooth radial exp/smoothstep falloff to that
+//      centre — not a hard `step()` on the cell hash (which lit whole square cells).
 
 import { Mesh, type Material } from 'three';
-import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float, attribute } from 'three/tsl';
+import { MeshBasicNodeMaterial, AdditiveBlending } from 'three/webgpu';
+import { uniform, uv, vec2, vec3, float } from 'three/tsl';
 import { defineAnimatable } from '../base';
-import { num, type ControlValue, type PrimitiveDefinition, VOLUMETRIC_DEPTH_ATTR } from '../contract';
+import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
+import { fbmRot, fbmWarped } from './_volume-fbm';
 
 // TSL's per-call generic typing is far narrower than the runtime node graph it
 // builds; helper functions that thread nodes through fbm/hash trip the strict
-// overloads. Like nebula.ts, we work through a single permissive chainable node
-// alias (method-chaining only, which every TSL node supports) so the helpers
-// compose without fighting the inferred VarNode generics. The graph this builds
-// is identical to the equivalent free-function form. (tsc strictness check —
+// overloads. Like nebula.ts / fog-roll.ts, we work through a single permissive
+// chainable node alias (method-chaining only, which every TSL node supports) so the
+// helpers compose without fighting the inferred VarNode generics. The graph this
+// builds is identical to the equivalent free-function form. (tsc strictness check —
 // matches the references' casting discipline.)
 interface TNode {
   add: (x: TNode | number) => TNode;
@@ -32,6 +45,9 @@ interface TNode {
   floor: () => TNode;
   fract: () => TNode;
   sin: () => TNode;
+  exp: () => TNode;
+  negate: () => TNode;
+  length: () => TNode;
   dot: (x: TNode) => TNode;
   mix: (a: TNode, b: TNode | number) => TNode;
   smoothstep: (lo: number | TNode, hi: number | TNode) => TNode;
@@ -49,6 +65,10 @@ const t2 = (x: V, y: V): TNode =>
 const t3 = (r: V, g: V, b: V): TNode =>
   (vec3 as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(r, g, b) as TNode;
 const f1 = (x: number): TNode => float(x) as unknown as TNode;
+// Loose-cast wrappers around the shared rotated/warped fbm so they compose with the
+// permissive TNode alias above.
+const FBMR = fbmRot as unknown as (p: unknown, o?: number) => TNode;
+const FBMW = fbmWarped as unknown as (p: unknown, w?: number, o?: number) => TNode;
 
 const SCHEMA = [
   { id: 'drift', label: 'Drift', type: 'knob', min: 0.01, max: 0.6, step: 0.01, default: 0.12 },
@@ -62,10 +82,12 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
   category: 'volumetric',
   difficulty: 'hard',
   subject: 'plane',
-  volumetric: true,
+  // SINGLE-PLANE: depth is faked in-shader (multi-scale domain-warped fbm +
+  // depth gradient), so we do NOT request the slab stack — no slab seams.
+  volumetric: false,
   defaultDriver: 'time',
   description:
-    'Vast clouds of cosmic dust drift through starlight, soft lit nebular haze layered with distant pinprick stars.',
+    'A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.',
   schema: SCHEMA,
   create: defineAnimatable(
     { name: 'cosmic-dust', category: 'volumetric', schema: SCHEMA },
@@ -80,37 +102,14 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
       // Publish handles so the host (and the CPU test) can observe .value.
       target.userData.cosmicDust = { uTime, uDrift, uScale, uStarDensity };
 
-      // Deterministic 2D value-noise hash → smooth value noise → fbm. All node
-      // expressions, so the chain compiles under the WebGPU node material.
+      // Deterministic 2D hash (used only for the round star field, NOT the haze).
       const hash = (p: TNode): TNode =>
         p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract();
-
-      const noise = (p: TNode): TNode => {
-        const i = p.floor();
-        const f = p.fract();
-        // smooth Hermite interpolant: f*f*(3-2f)
-        const u = f.mul(f).mul(f1(3).sub(f.mul(2)));
-        const a = hash(i);
-        const b = hash(i.add(t2(1, 0)));
-        const c = hash(i.add(t2(0, 1)));
-        const d = hash(i.add(t2(1, 1)));
-        const ab = a.mix(b, u.x);
-        const cd = c.mix(d, u.x);
-        return ab.mix(cd, u.y);
-      };
-
-      const fbm = (p0: TNode): TNode => {
-        let sum: TNode = f1(0);
-        let amp = 0.5;
-        let p = p0;
-        // 5 octaves of value noise → soft, layered haze
-        for (let o = 0; o < 5; o++) {
-          sum = sum.add(noise(p).mul(amp));
-          p = p.mul(2.02);
-          amp *= 0.5;
-        }
-        return sum;
-      };
+      const hash2 = (p: TNode): TNode =>
+        t2(
+          p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract(),
+          p.dot(t2(269.5, 183.3)).sin().mul(43758.5453).fract(),
+        );
 
       const uTimeN = uTime as unknown as TNode;
       const uDriftN = uDrift as unknown as TNode;
@@ -120,79 +119,108 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
       const uvN = uv() as unknown as TNode;
       const t = uTimeN; // slow master clock (seek advances uTime slowly)
 
-      // VOLUMETRIC: per-vertex depth 0 (front slab) → 1 (rearmost slab). With 5
-      // coplanar slabs sharing this one material we MUST sample a DIFFERENT slice
-      // per slab, else we just get 5× identical overdraw and a flat tile. aDepth
-      // is the third noise dimension AND the parallax/fade driver.
-      const aDepth = attribute(VOLUMETRIC_DEPTH_ATTR) as unknown as TNode;
+      // ── In-shader depth illusion ──────────────────────────────────────────
+      // Three rotated-octave / domain-warped fbm layers at different scales +
+      // drifts read as receding planes:
+      //   far  — large soft billows, slow drift (background haze)
+      //   mid  — medium structures, fastest-warped (the main billows)
+      //   near — fine filaments, faster drift (foreground dust)
+      // CRITICAL: the noise DOMAIN is `uv * scale + drift` ONLY — a continuous,
+      // non-mirrored coordinate. No `uv.sub(0.5)`/`.abs()` ever enters the domain
+      // (that produced the 2×2 cross-seam mosaic). fbmRot/fbmWarped's rotated
+      // octaves + quintic interp + domain warp kill the axis-aligned brick grid.
+      // Base frequency >= 7 keeps the largest cells small.
+      const base = uvN.mul(uScaleN.add(4.0)); // scale∈[1,8] → freq∈[5,12] before octaves
 
-      // Parallax: rear slabs slide the haze domain further with the drift, so the
-      // cloud genuinely sheers through depth as the camera/field moves. Plus a
-      // constant per-slab domain shift so each slab is a distinct slice even at
-      // rest (no overdraw twinning).
-      const parallax = aDepth.mul(0.9);
-      const depthDomain = aDepth.mul(2.4); // 3rd-dimension offset into fbm
+      // FAR layer: broad slow haze. Drift mostly horizontal with a gentle creep.
+      const farDrift = t2(t.mul(uDriftN.mul(0.4)), t.mul(0.04));
+      const far = FBMR(base.mul(0.7).add(farDrift), 4);
 
-      // Drifting nebular haze: sample fbm at scaled uv offset by a slow drift —
-      // mostly horizontal (uTime*drift) with a gentle vertical creep — then add
-      // the per-slab parallax + depth-domain shift so the volume reads in 3D.
-      const drift = t2(t.mul(uDriftN), t.mul(0.1));
-      const hazeP = uvN
-        .mul(uScaleN)
-        .add(drift)
-        .add(t2(parallax.mul(uDriftN.mul(6).add(0.6)), depthDomain));
-      const cloudRaw = fbm(hazeP).clamp(0, 1);
+      // MID layer: the main billows — domain-warped so the big shapes curdle into
+      // organic wisps instead of blobs. Drifts a touch faster.
+      const midDrift = t2(t.mul(uDriftN.mul(0.8)), t.mul(0.08));
+      const mid = FBMW(base.add(midDrift), 1.1, 5);
 
-      // Depth fade: front slabs (aDepth→0) are brightest/densest; rear slabs
-      // (aDepth→1) are fainter and a touch cooler/darker, so the stack reads as a
-      // lit volume with front-to-back density falloff & self-occlusion.
-      const depthFade = aDepth.oneMinus().mul(0.7).add(0.3); // 1.0 front → 0.3 rear
-      const depthTint = aDepth.mul(0.45).oneMinus(); // rear slabs darkened toward 0.55
+      // NEAR layer: fine filaments riding on top, fastest drift → parallax feel.
+      const nearDrift = t2(t.mul(uDriftN.mul(1.5)), t.mul(0.13));
+      const near = FBMR(base.mul(2.1).add(nearDrift), 5);
 
-      // Soft 2-3 color cosmic palette: deep blue -> teal -> magenta, banded via
-      // smoothstep on the haze density.
-      const deepBlue = t3(0.05, 0.09, 0.26);
-      const teal = t3(0.10, 0.42, 0.5);
-      const magenta = t3(0.55, 0.16, 0.5);
-      const loBand = deepBlue.mix(teal, cloudRaw.smoothstep(0.3, 0.62));
-      const palette = loBand.mix(magenta, cloudRaw.smoothstep(0.58, 0.9));
+      // Composite the three layers into one density field, weighting far→near so
+      // the cloud has soft deep background and crisper foreground filaments.
+      const density = far.mul(0.5).add(mid.mul(0.85)).add(near.mul(0.35)).clamp(0, 1);
 
-      // Keep it soft + deep: gentle internal glow where density peaks, no hard
-      // cores (that would read as plasma, not dust). Concentrate the glow on the
-      // front slabs so the volume looks lit from the camera-facing face.
-      const glow = cloudRaw.pow(2.0).mul(0.5).mul(aDepth.oneMinus().mul(0.7).add(0.3));
-      const cloudColor = palette
-        .mul(cloudRaw.mul(0.8).add(0.25))
-        .add(t3(glow.mul(0.4), glow.mul(0.5), glow.mul(0.6)))
-        .mul(depthTint);
+      // A smooth top→bottom depth gradient: the cloud reads as receding into
+      // space. (A GRADIENT on uv.y, not a noise domain — cannot band.)
+      const depthGrad = uvN.y.smoothstep(-0.2, 1.2); // 0 bottom(near) → 1 top(far)
+      const depthFade = depthGrad.oneMinus().mul(0.55).add(0.45); // 1.0 near → 0.45 far
 
-      // Faint star field: bright sparse motes that parallax through depth — rear
-      // slabs use a shifted cell grid so motes sit at distinct positions per slab
-      // (true parallax depth, not a decal). Hash a coarse cell grid, step on the
-      // hash so only the brightest cells light up (gated by starDensity), and
-      // twinkle each mote over time via a per-cell sine phase.
-      const starCell = uvN
-        .mul(uScaleN.mul(28))
-        .add(t2(2.7, 9.1))
-        .add(t2(aDepth.mul(17.3), aDepth.mul(11.7))); // per-slab mote parallax
-      const starId = starCell.floor();
-      const starHash = hash(starId);
-      // threshold: higher starDensity → lower edge → more stars survive the step.
-      const starEdge = f1(0.985).sub(uStarN.mul(0.05));
-      const starHit = starHash.step(starEdge);
-      // per-star twinkle: a slow sine in [0.35, 1] keyed off the cell hash phase.
-      const twPhase = starHash.mul(6.2831).add(t.mul(2.0));
-      const twinkle = twPhase.sin().mul(0.5).add(0.5).mul(0.65).add(0.35);
-      // motes fade with depth too — distant dust glints dimmer than near motes.
-      const stars = starHit.mul(twinkle).mul(uStarN.mul(0.6).add(0.4)).mul(depthFade);
+      // Cloud body: gate the density so empty space stays dark/transparent, with
+      // a soft shoulder (fire-flame-style threshold) so wisps trail off smoothly.
+      const cloud = density.smoothstep(0.18, 0.95);
 
-      const colorNode = cloudColor.add(t3(stars, stars, stars.mul(1.1)));
-      // opacityNode = (cloud + stars) × depth-fade. Each of the 5 far-first slabs
-      // composites painter-style 'over' (depthWrite:false), building a soft,
-      // genuinely volumetric haze instead of one flat plane.
-      const opacityNode = cloudRaw.mul(0.85).add(stars).mul(depthFade).clamp(0, 1);
+      // ── Vivid cosmic palette ──────────────────────────────────────────────
+      // deep space blue → indigo → magenta, banded on the density so the cloud
+      // has rich internal color variation rather than a flat smear. Warmer hues
+      // bloom where the field peaks (lit dust), cooler where it thins.
+      const space = t3(0.02, 0.03, 0.10); // near-black deep space
+      const blue = t3(0.06, 0.14, 0.42); // deep nebular blue
+      const indigo = t3(0.26, 0.16, 0.55); // indigo / violet mid
+      const magenta = t3(0.72, 0.20, 0.62); // hot magenta highlight
 
-      const mat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });
+      const ramp1 = space.mix(blue, density.smoothstep(0.12, 0.42));
+      const ramp2 = ramp1.mix(indigo, density.smoothstep(0.38, 0.66));
+      const palette = ramp2.mix(magenta, density.smoothstep(0.62, 0.92));
+
+      // Internal glow where the near-layer filaments peak — concentrates the hot
+      // magenta/violet bloom into the densest, nearest wisps (lit-from-within).
+      const glow = near.pow(2.0).mul(cloud).mul(0.9);
+      const litCloud = palette
+        .mul(cloud.mul(0.85).add(0.18))
+        .add(t3(glow.mul(0.55), glow.mul(0.30), glow.mul(0.6)))
+        .mul(depthFade);
+
+      // ── Twinkling ROUND star / dust specks ────────────────────────────────
+      // Sparse bright motes rendered as soft round pinpricks (NOT square cells):
+      //   • tile uv into a coarse grid; each cell hashes a star CENTRE + brightness.
+      //   • the speck is a smooth radial falloff (exp of −dist² to the centre),
+      //     so it reads as a round soft point, never a square block.
+      //   • starDensity gates which cells host a star (probabilistic, soft).
+      //   • per-cell sine twinkle modulates brightness over time.
+      const starField = (cells: number, radius: number, bright: number, phaseOff: number): TNode => {
+        const grid = uvN.mul(uScaleN.mul(cells)).add(t2(2.7, 9.1));
+        const id = grid.floor();
+        const cellUv = grid.fract(); // local [0,1] within the cell
+        const rnd = hash(id); // brightness / presence roll
+        const ctr = hash2(id.add(t2(0.5, 0.5))); // star centre within the cell ∈[0,1]²
+        // probabilistic presence: only the brightest cells host a star, gated by
+        // starDensity with a SOFT shoulder (smoothstep), not a hard step.
+        const present = rnd.smoothstep(uStarN.mul(0.85).oneMinus(), uStarN.mul(0.85).oneMinus().add(0.06));
+        // round radial falloff to the star centre: exp(−(d/r)²) → smooth pinprick.
+        const d = cellUv.sub(ctr).length();
+        const dn = d.div(radius);
+        const point = dn.mul(dn).negate().exp(); // gaussian-ish soft round dot
+        // per-star twinkle: slow sine in [0.4, 1] keyed off the cell hash phase.
+        const phase = rnd.mul(6.2831).add(t.mul(2.0)).add(phaseOff);
+        const tw = phase.sin().mul(0.5).add(0.5).mul(0.6).add(0.4);
+        return present.mul(point).mul(tw).mul(uStarN.mul(0.6).add(0.4)).mul(bright);
+      };
+      // Bright foreground stars + faint distant dust glints (two scales).
+      const stars = starField(7, 0.10, 1.0, 0.0).add(starField(15, 0.07, 0.5, 1.7));
+
+      // Color: lit cloud + cool-white star sparkle (a touch blue in the highlight).
+      const colorNode = litCloud.add(t3(stars, stars, stars.mul(1.12)));
+
+      // Alpha-gate: cloud body (soft) + star specks. Empty deep space → ~0 alpha
+      // so the tile reads as a cloud floating in space, not a full-bleed smear.
+      const opacityNode = cloud.mul(0.9).add(stars).mul(depthFade).clamp(0, 1);
+
+      // Additive blending so the dust glows and stars sparkle against the dark
+      // backdrop (fire-flame discipline) — reads as luminous deep-space dust.
+      const mat = new MeshBasicNodeMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: AdditiveBlending,
+      });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;
       (mat as unknown as { opacityNode: unknown }).opacityNode = opacityNode;
 

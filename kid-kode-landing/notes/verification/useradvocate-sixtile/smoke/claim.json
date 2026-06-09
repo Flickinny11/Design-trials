@@ -1,0 +1,7 @@
+{
+  "name": "smoke",
+  "label": "Speed",
+  "description": "A column of soft grey-blue smoke with in-shader volume: layered domain-warped fbm rises and curls with depth-faded internal contrast — a smooth rising plume, no slab seams.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

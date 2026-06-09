@@ -1,0 +1,24 @@
+{
+  "startedAt": "2026-06-09T20:27:05.732Z",
+  "state": "diag",
+  "port": 4820,
+  "backend": "webgpu",
+  "gpu": true,
+  "tiles": [
+    {
+      "tile": "clouds",
+      "state": "diag",
+      "dir": "clouds/diag",
+      "claim": {
+        "name": "clouds",
+        "label": "Speed",
+        "description": "Bright billowing cumulus clouds drift slowly across a clean blue sky gradient.",
+        "category": "volumetric"
+      },
+      "controls": 3,
+      "notes": []
+    }
+  ],
+  "groundTruth": null,
+  "deviceLostAtEnd": 0
+}

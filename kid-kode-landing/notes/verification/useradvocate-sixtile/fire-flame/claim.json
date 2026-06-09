@@ -1,0 +1,7 @@
+{
+  "name": "fire-flame",
+  "label": "Speed",
+  "description": "Licking flames rise with a hot gradient from white core to orange to red tips.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

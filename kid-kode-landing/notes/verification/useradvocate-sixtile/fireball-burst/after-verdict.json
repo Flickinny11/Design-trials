@@ -1,0 +1,34 @@
+{
+  "feature": "fireball-burst",
+  "claim": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward from a white-hot core to red flame tongues at the rim — looping.",
+  "groundTruthSibling": "fire-flame",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing visibly broken. The fireball is centered, crisp, well-contrasted against the black field with no cut-off, no seams, and no glitching. bandingScore stays at/under 0.246 across all frames (below the 0.25 visible threshold). No console or network errors. The only non-fire frame is idle, which is correctly dark/collapsed (the burst starts from a point before erupting).",
+      "evidence": ["fireball-burst/after/play-1.png", "fireball-burst/after/idle.png", "metrics: play-2 bandingScore=0.246 (<0.25); consoleErrors=[] networkErrors=[]"]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads unmistakably as fire. play-1 shows a turbulent ball with a white-hot core, orange/amber body, and red-tinged flame tongues at the rim, exactly as claimed. The dominant warm hue sits squarely in fire's band: play-1 effHue=37 deg at effSat=0.46. No pink ring and no blue/cream body. (Ignoring the saturated-pixel-only warmFrac/coolFrac census per the metric caveat: the white-hot core has few saturated pixels so coolFrac counts dark edge pixels — the frames clearly show warm fire.)",
+      "evidence": ["fireball-burst/after/play-1.png", "fireball-burst/after/play-2.png", "metrics: play-1 effHue=37 effSat=0.46 warmFrac=0.87 -> fire band"]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The labeled 'Burst Rate' control and the scale/turbulence sliders each produce a visible, sensible change. Scale low is a small soft glow; scale high is a markedly larger turbulent fireball with distinct flame detail. burstRate low vs high captures the loop at different motion phases (round mid-cycle vs more turbulent tongues forming). All three controls report changed:true.",
+      "evidence": ["fireball-burst/after/control-scale-low.png", "fireball-burst/after/control-scale-high.png", "control: scale changed=true, burstRate changed=true, turbulence changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The fireball visibly pulses through its burst cycle across play frames: play-1 is the large turbulent eruption, play-2/play-3 contract to a smaller core+halo. frameDeltaMag is non-trivial (play-1=13.37, play-2=17.58). Control latency ~563-584ms is acceptable for a slider apply.",
+      "evidence": ["fireball-burst/after/play-1.png", "fireball-burst/after/play-2.png", "metrics: play-1 frameDeltaMag=13.37, play-2 frameDeltaMag=17.58; burstRate latencyMs=563"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'That's a real fireball — white-hot middle, orange flames rolling out, and it pulses like an explosion. The sliders actually change the size and the burst.'",
+      "evidence": ["fireball-burst/after/play-1.png", "fireball-burst/after/control-scale-high.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "The cool/dark idle and contracted play-2/play-3 phases make the burst spend much of its loop small and dim; a user might wish the eruption peak held a touch longer. Subjective pacing taste, not a defect.", "evidence": "fireball-burst/after/play-3.png : meanLuma 13.6 vs play-1 28.6" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

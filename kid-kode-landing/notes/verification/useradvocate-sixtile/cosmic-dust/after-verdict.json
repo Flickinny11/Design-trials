@@ -1,0 +1,35 @@
+{
+  "feature": "cosmic-dust",
+  "claim": "A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Round-1's 2x2 cross-seam brick mosaic is GONE. The nebula now reads as one continuous organic domain-warped cloud with no hard tile/grid/cross seams. A column-luma scan of the tile interior found the largest adjacent-column jump (39.7) at col 26 — a single localized star/cloud-edge spike, NOT at the W/2 or W/4 tile-boundary positions, and there is no continuous vertical shelf. No banding shelves by eye (bandingScore ~0.24 is organic nebula detail per the caveat, not a hard seam). One minor cosmetic residual: in the mid star-density play frames the brighter stars sit on a slightly regular spacing rather than fully scattered.",
+      "evidence": ["cosmic-dust/after/idle.png", "cosmic-dust/after/play-1.png", "metrics: idle bandingScore=0.239 (organic detail, no hard shelf); console: consoleErrors=[] networkErrors=[]"]
+    },
+    "q2_reads_as": {
+      "answer": "YES — reads as a vivid deep-space nebula with sparkle. Magenta/violet dust cloud (effHue 292 deg, effSat 0.27, magentaFrac 0.45) with dark dust lanes weaving through luminous haze, matching 'deep-space dust cloud'. Stars are now ROUND: a 4x crop of a star-dense region shows soft circular glows with bright cores plus small pinprick points — a clear fix from round-1's square blocks. The starDensity-high frame sprinkles bright soft points across the whole field = the 'twinkling pinprick stars' the claim promises.",
+      "evidence": ["cosmic-dust/after/_starcrop.png", "cosmic-dust/after/control-starDensity-high.png", "metrics: idle effHue=292 effSat=0.27 magentaFrac=0.45 -> vivid violet nebula"]
+    },
+    "q3_discoverable": {
+      "answer": "YES. Both labeled controls produce a clear, sensible change. 'scale' low -> large soft billowing cloud masses; scale high -> fine granular dense cloud detail. 'starDensity' low -> nebula with almost no visible stars; high -> field densely sprinkled with bright stars. A first-time user dragging either slider immediately sees what it does. The 'drift' control is a motion-rate control (paused-sweep changed=false is expected per the caveat).",
+      "evidence": ["cosmic-dust/after/control-scale-low.png", "cosmic-dust/after/control-starDensity-high.png", "control: scale changed=true; control: starDensity changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, not frozen. The nebula cloud structure visibly drifts and re-forms across play-1/play-2/play-3 — dust lanes move and reshape between frames. Motion is gentle (frameDeltaMag 0.81 -> 0.91 -> 4.32) but clearly present, appropriate for a slow drifting dust cloud; it is NOT static. Control apply latency ~580-606ms, acceptable for a slider sweep.",
+      "evidence": ["cosmic-dust/after/play-2.png", "cosmic-dust/after/play-3.png", "metrics: play-1 frameDeltaMag=0.81, play-3 frameDeltaMag=4.32 (visible drift, not frozen)"]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A user would say: 'That's a gorgeous purple space cloud with little twinkling stars, and the clouds slowly drift.' Round-1's brick-seam mosaic and square stars are both fixed; the controls clearly reshape the cloud and sprinkle stars. Only nitpick is the stars sit on a slightly regular spacing in the mid-density view — cosmetic, not blocking.",
+      "evidence": ["cosmic-dust/after/idle.png", "cosmic-dust/after/control-starDensity-high.png", "cosmic-dust/after/_starcrop.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "Brighter stars sit on a slightly regular spacing in the mid star-density play frames rather than fully Poisson-scattered; jitter per-star positions for a more natural scatter. Cosmetic only — much less apparent at high starDensity.", "evidence": "cosmic-dust/after/play-1.png" },
+    { "note": "Cloud drift is quite gentle (frameDeltaMag 0.81-4.32). Reads as moving but a user wanting more obvious life could push the default drift higher.", "evidence": "metrics: play-1 frameDeltaMag=0.81" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,46 @@
+{
+  "startedAt": "2026-06-09T19:54:02.051Z",
+  "state": "before",
+  "port": 4814,
+  "backend": "webgpu",
+  "gpu": true,
+  "tiles": [
+    {
+      "tile": "fireball-burst",
+      "state": "before",
+      "dir": "fireball-burst/before",
+      "claim": {
+        "name": "fireball-burst",
+        "label": "Burst Rate",
+        "description": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward through depth before fading to smoke — looping.",
+        "category": "volumetric"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "heat-column",
+      "state": "before",
+      "dir": "heat-column/before",
+      "claim": {
+        "name": "heat-column",
+        "label": "Rise",
+        "description": "A shimmering volumetric column of rising heat-haze and embers glows faintly over an unseen ember bed, the air distorting and wobbling upward through depth.",
+        "category": "volumetric"
+      },
+      "controls": 3,
+      "notes": []
+    }
+  ],
+  "groundTruth": {
+    "tile": "fire-flame",
+    "dir": "fire-flame/ground-truth",
+    "claim": {
+      "name": "fire-flame",
+      "label": "Speed",
+      "description": "Licking flames rise with a hot gradient from white core to orange to red tips.",
+      "category": "volumetric"
+    }
+  },
+  "deviceLostAtEnd": 0
+}

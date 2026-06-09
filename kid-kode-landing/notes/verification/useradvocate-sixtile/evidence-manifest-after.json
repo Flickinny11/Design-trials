@@ -1,0 +1,24 @@
+{
+  "startedAt": "2026-06-09T20:38:56.485Z",
+  "state": "after",
+  "port": 4823,
+  "backend": "webgpu",
+  "gpu": true,
+  "tiles": [
+    {
+      "tile": "fog-roll",
+      "state": "after",
+      "dir": "fog-roll/after",
+      "claim": {
+        "name": "fog-roll",
+        "label": "Roll",
+        "description": "A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.",
+        "category": "smoke"
+      },
+      "controls": 3,
+      "notes": []
+    }
+  ],
+  "groundTruth": null,
+  "deviceLostAtEnd": 0
+}

@@ -1,0 +1,59 @@
+{
+  "feature": "smoke",
+  "claim": "A column of soft grey-blue smoke with in-shader volume: layered domain-warped fbm rises and curls with depth-faded internal contrast — a smooth rising plume, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Round-2 re-fix resolved the round-1 defect: the hard axis-aligned brick/shelf tile seams are GONE. Across idle and all three play frames the structure is organic curling swirls with soft billowing edges — no horizontal shelves, no rectangular masonry grid. bandingScore 0.228-0.243 is the over-report on organic noise detail the caveat warns about (down from round-1's 0.32-0.34), not real banding; visual inspection confirms no hard seams. Backend=webgpu, consoleErrors=[], networkErrors=[]. Only cosmetic note: the plume's lower edge is a fairly straight soft horizon, which is a frame boundary, not a tile seam.",
+      "evidence": [
+        "smoke/after/idle.png",
+        "smoke/after/play-2.png",
+        "metrics: idle bandingScore=0.239, play-2 bandingScore=0.233 (organic-noise over-report per caveat); consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it now clearly reads as a soft rising smoke volume: layered grey plumes with curling internal contrast and depth-faded darker pockets, dense at the base and feathering upward. It no longer reads as the round-1 muddy warm-grey brick stack. The body is a low-saturation near-neutral grey (effHue~51, effSat 0.12) with a faint warm/cream cast rather than the claimed 'grey-blue'; per the caveat this warm-vs-cool tint is a taste FLAG, not a MUST-FIX, because it unmistakably reads as smoke.",
+      "evidence": [
+        "smoke/after/play-3.png",
+        "metrics: idle/play effHue=51 effSat=0.12 -> near-neutral grey reads as smoke; faint warm cast (claim says grey-blue)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The labeled Density and Rise controls each produce a clear, sensible visible change a first-time user would understand: Density low empties the frame (smoke dissipates to near-black) and high fills it with thick smoke; Rise low keeps the plume hugging the bottom and high lifts it to fill the full vertical extent. Speed shows changed=false in the paused sweep (controls[0].changed=false), but per the caveat that is a paused-motion capture artifact, not a dead control.",
+      "evidence": [
+        "smoke/after/control-density-low.png",
+        "smoke/after/control-density-high.png",
+        "smoke/after/control-rise-high.png",
+        "control: density low->high meanLuma 7.5->63.3 (changed=true); rise low->high meanLuma 36.2->85.7 (changed=true)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The three play frames visibly evolve — the swirls shift and the plume reshapes between captures — with frameDeltaMag rising 3.25 -> 3.48 -> 6.82, i.e. real per-frame motion. Control apply latency ~575-608ms is acceptable for a slider. Density and Rise sweeps both register changed=true.",
+      "evidence": [
+        "metrics: play-1 frameDeltaMag=3.25, play-2 frameDeltaMag=3.48, play-3 frameDeltaMag=6.82 (visible motion)",
+        "smoke/after/play-1.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'That looks like real billowing smoke now — soft swirling plumes, no blocky shelves, and the sliders actually do something.' The only quibble is the smoke is a warm-neutral grey rather than the grey-blue the description promises, which is a taste nit, not a flaw.",
+      "evidence": [
+        "smoke/after/play-2.png",
+        "smoke/after/control-rise-high.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Body reads as warm-neutral grey (effHue~51, effSat 0.12 with a faint cream cast) rather than the 'grey-blue' the claim describes. Reads unmistakably as smoke, so this is a taste/palette FLAG, not a blocker.",
+      "evidence": "metrics: idle/play effHue=51 effSat=0.12; smoke/after/play-1.png"
+    },
+    {
+      "note": "Speed control shows changed=false in the paused sweep (controls[0].changed=false); play-frame deltas confirm motion is live, so this is a capture artifact rather than a dead control, but a future capture should sweep speed during playback to prove it.",
+      "evidence": "metrics: controls[0].id=speed changed=false; play frameDeltaMag 3.25->6.82 confirms live motion"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

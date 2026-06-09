@@ -1,0 +1,7 @@
+{
+  "name": "fog",
+  "label": "Speed",
+  "description": "Drifting fog banks roll sideways with real front-to-back depth — clean, soft-edged cool grey-white fog, not a flat wash.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

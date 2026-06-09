@@ -1,15 +1,17 @@
 // fog-roll — a directional bank of fog rolls in from one side, billowing across
-// the surface in slow churning layers. HARD / GPU / VOLUMETRIC primitive (smoke).
-// The host builds the subject as a back-to-front stack of 5 coplanar slabs sharing
-// one Mesh (per-vertex `aDepth` 0 front → 1 rear). This primitive swaps the mesh's
-// material for a MeshBasicNodeMaterial whose opacityNode/colorNode build a churning
-// domain-warped fbm field advected horizontally, then PARALLAX the field per slab
-// and DEPTH-FADE rear slabs so the stack reads as a real fog volume with front-to-
-// back density falloff — not a flat tile.
+// the surface in slow churning layers. HARD / GPU primitive (smoke).
+//
+// SINGLE-PLANE by construction: the subject is ONE flat quad (NOT a slab stack),
+// so there are NO inter-slab seams to band. The volume illusion is built ENTIRELY
+// IN-SHADER: three layered, domain-warped fbm fields sampled at different scales
+// and scroll speeds, composited front-to-back with a per-layer depth fade. The
+// near layer churns fast and crisp; the mid and far layers drift slower, larger,
+// and fainter — so the composite reads as soft rolling fog with genuine front-to-
+// back depth, not a flat gradient and not blocky shelves.
 //
 // DISTINCT from `fog` (low banded volumetric haze, vertical density gradient) and
 // `smoke` (rising vertical plume): fog-roll is a horizontally advecting FRONT — a
-// coherent bank with a leading edge that wraps across the surface, now with depth.
+// coherent bank with a leading edge that wraps across the surface.
 //
 // seek() advances the time uniform (continuous loop, duration Infinity).
 // onParamChange() + live reads keep the controls tweakable with no rebuild.
@@ -17,17 +19,18 @@
 
 import { Mesh, NormalBlending, type Material } from 'three';
 import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float, fract, smoothstep, max, min, attribute } from 'three/tsl';
+import { uniform, uv, vec2, vec3, float, fract, smoothstep, max, min } from 'three/tsl';
 import { defineAnimatable } from '../base';
-import { num, type ControlValue, type PrimitiveDefinition, VOLUMETRIC_DEPTH_ATTR } from '../contract';
+import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
+import { fbmRot, fbmWarped } from './_volume-fbm';
 
 // TSL's per-call generic typing is far narrower than the runtime node graph it
 // builds; value-noise / fbm pass nodes through helper functions that the strict
-// overloads of the free TSL functions reject. Like nebula.ts, we work through a
-// single permissive chainable node alias (method-chaining only, which every TSL
-// node supports) so the helpers compose without fighting the inferred VarNode
-// generics. The graph this builds is identical to the equivalent free-function
-// form. (tsc strictness — matches the reference's casting discipline.)
+// overloads of the free TSL functions reject. Like nebula.ts / fire-flame.ts, we
+// work through a single permissive chainable node alias (method-chaining only,
+// which every TSL node supports) so the helpers compose without fighting the
+// inferred VarNode generics. The graph this builds is identical to the equivalent
+// free-function form. (tsc strictness — matches the reference's casting discipline.)
 interface TNode {
   add: (x: TNode | number) => TNode;
   sub: (x: TNode | number) => TNode;
@@ -49,7 +52,6 @@ const t2 = (x: V, y: V): TNode =>
   (vec2 as unknown as (a: unknown, b: unknown) => unknown)(x, y) as TNode;
 const t3 = (r: V, g: V, b: V): TNode =>
   (vec3 as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(r, g, b) as TNode;
-const f1 = (x: number): TNode => float(x) as unknown as TNode;
 
 const SCHEMA = [
   { id: 'roll', label: 'Roll', type: 'knob', min: 0, max: 2, step: 0.02, default: 0.4 },
@@ -63,10 +65,11 @@ export const fogRollPrimitive: PrimitiveDefinition = {
   category: 'smoke',
   difficulty: 'hard',
   subject: 'plane',
-  volumetric: true,
+  // SINGLE-PLANE: no slab stack → no slab seams. Depth is faked in-shader.
+  volumetric: false,
   defaultDriver: 'time',
   description:
-    'A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with real front-to-back volume.',
+    'A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.',
   schema: SCHEMA,
   create: defineAnimatable(
     { name: 'fog-roll', category: 'smoke', schema: SCHEMA },
@@ -78,102 +81,85 @@ export const fogRollPrimitive: PrimitiveDefinition = {
       const uDensity = uniform(num(params.density, 0.5));
       const uScale = uniform(num(params.scale, 3));
 
-      // Per-vertex depth across the slab stack: 0 front (camera) → 1 rearmost.
-      const aDepth = attribute(VOLUMETRIC_DEPTH_ATTR) as unknown as TNode;
+      // ── premium volumetric noise (shared _volume-fbm) ─────────────────────
+      // The round-1 inline value-noise showed its axis-aligned integer lattice as
+      // a blocky tile grid (the user-advocate gate's exact defect: vertical seam +
+      // square patches). We now sample the SHARED `fbmWarped` / `fbmRot` field —
+      // rotated-octave, quintic-interp, domain-warped value noise that never
+      // resolves into a square grid and has NO centered/folded domain (so no
+      // mid-quad mirror seam). Each layer is one continuous domain across the whole
+      // quad; the only difference between layers is frequency, scroll, and offset.
+      const layer = (p: TNode, warp: number): TNode =>
+        fbmWarped(p, warp, 5).clamp(0, 1) as unknown as TNode;
 
-      // ── smooth value-noise + fbm (pure TSL, deterministic) ────────────────
-      // Sin-hash value noise smoothed with a Hermite bilinear blend of the 4
-      // lattice corners; fbm stacks octaves for a churning, billowing field.
-      const hash = (p: TNode): TNode =>
-        p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract();
-
-      const noise = (p: TNode): TNode => {
-        const i = p.floor();
-        const f = p.fract();
-        // smooth Hermite interpolant: f*f*(3-2f)
-        const w = f.mul(f).mul(f1(3).sub(f.mul(2)));
-        const a = hash(i);
-        const b = hash(i.add(t2(1, 0)));
-        const c = hash(i.add(t2(0, 1)));
-        const d = hash(i.add(t2(1, 1)));
-        const ab = a.mix(b, w.x);
-        const cd = c.mix(d, w.x);
-        return ab.mix(cd, w.y);
-      };
-
-      // 5-octave fbm → smooth, non-blocky billowing structure.
-      const fbm = (p0: TNode): TNode => {
-        let sum = f1(0);
-        let amp = 0.5;
-        let p = p0;
-        for (let o = 0; o < 5; o++) {
-          sum = sum.add(noise(p).mul(amp));
-          p = p.mul(2.02);
-          amp *= 0.5;
-        }
-        return sum;
-      };
-
-      // ── advection + per-slab parallax ────────────────────────────────────
+      // ── advection + three depth layers (the in-shader volume) ─────────────
       const u = uv() as unknown as TNode;
       const roll = (uTime as unknown as TNode).mul(uRoll as unknown as TNode);
-      const scale = uScale as unknown as TNode;
+      // Base frequency ≥7 so the largest warped cells are small → no big squares.
+      // `scale` (1..8, default 3) multiplies this base; even at scale=1 the field
+      // samples at ≥7 cells across the quad.
+      const scale = (uScale as unknown as TNode).mul(2.4).add(4.6); // 7.0 .. 23.8
 
-      // Slabs further back sample a parallax-shifted, slightly larger slice of
-      // the field, and slip past the front slabs as the bank drifts — so the 5
-      // coplanar quads read as genuine depth, not 5× overdraw of one image.
-      const parallax = aDepth.mul(0.9);
-      const slabDrift = aDepth.mul(roll.mul(0.4));
-      const base = t2(
-        u.x.mul(scale).add(roll).add(parallax).add(slabDrift),
-        u.y.mul(scale).sub(parallax.mul(0.35)),
+      // NEAR layer: highest freq, crisp, scrolls fast — the leading detail.
+      const near = layer(
+        t2(u.x.mul(scale).add(roll), u.y.mul(scale)),
+        1.1,
+      );
+      // MID layer: ~0.6× freq, scrolls slower & offset — body of the bank.
+      const mid = layer(
+        t2(u.x.mul(scale.mul(0.6)).add(roll.mul(0.55)).add(11.3), u.y.mul(scale.mul(0.6)).add(2.7)),
+        1.0,
+      );
+      // FAR layer: lowest freq fog-bank structure, slowest, faintest. Even this
+      // large-scale term goes through `fbmWarped` (NOT a raw low-freq value-noise),
+      // so the receding haze is wavy blobs, never visible squares.
+      const far = layer(
+        t2(u.x.mul(scale.mul(0.34)).add(roll.mul(0.3)).sub(5.1), u.y.mul(scale.mul(0.34)).sub(3.9)),
+        0.85,
       );
 
-      // Domain-warp the fbm (sample fbm at a point offset by another fbm) for a
-      // soft, organic churn instead of grid-aligned lobes. aDepth feeds the warp
-      // too, so the structure genuinely varies through the volume.
-      const wx = fbm(base.add(t2(roll.mul(0.3), aDepth.mul(1.7))));
-      const wy = fbm(base.add(t2(4.1, roll.mul(0.2))).sub(t2(0, aDepth.mul(1.1))));
-      const warped = base.add(t2(wx, wy).mul(1.6));
-      const fld = fbm(warped).clamp(0, 1);
+      // Composite front-to-back with depth fade: near dominates (1.0), mid behind
+      // it (0.7), far recedes (0.42). This is the volume illusion — three
+      // independently advecting sheets read as front-to-back fog, no slab seams.
+      const fld = near
+        .mul(1.0)
+        .add(mid.mul(0.7))
+        .add(far.mul(0.42))
+        .div(2.12)
+        .clamp(0, 1);
 
-      // ── advecting front envelope ─────────────────────────────────────────
-      // wrap(uTime*roll) sweeps a leading edge across uv.x in [0,1]; dense behind
-      // the front, thinning ahead. Rear slabs trail the front a touch so the bank
-      // billows forward through depth rather than as a flat wall.
-      const front = fract((roll as unknown as ReturnType<typeof float>).mul(0.35));
-      const dx = u.x.sub(front as unknown as TNode).add(aDepth.mul(0.12));
-      const wrapped = dx.sub(dx.add(0.5).floor());
-      const envelope = (smoothstep(float(0.5), float(-0.15), wrapped as unknown as ReturnType<typeof float>) as unknown as TNode);
+      // ── rolling-bank density modulation (NO wrapping front → NO seam) ─────────
+      // The prior version wrapped a leading edge with `dx - floor(dx+0.5)`, whose
+      // wrap point rendered as a hard VERTICAL SEAM down the quad (the user-advocate
+      // gate caught it). Instead, the "rolling bank" is a SMOOTH, CONTINUOUS
+      // low-frequency density field that DRIFTS horizontally with `roll` — denser
+      // and thinner pockets roll across the surface, but the field is continuous
+      // everywhere (no wrap, no seam). Floor at ~0.4 so the bank never fully clears.
+      const envelope = (fbmWarped(t2(u.x.mul(1.5).add(roll.mul(0.7)), u.y.mul(1.5).add(4.2)), 0.8, 4) as unknown as TNode)
+        .mul(0.7)
+        .add(0.45)
+        .clamp(0, 1);
 
-      // ── depth-fade: rear slabs fainter + cooler (self-shadow / falloff) ───
-      // depthFade: 1.0 at front → 0.3 at back. Multiplies opacity so the front
-      // of the volume occludes / dominates and rear layers recede.
-      const depthFade = aDepth.oneMinus().mul(0.7).add(0.3);
+      // Churning density: composited fog gated by the sweeping front, scaled by
+      // the density control.
+      const density = fld.mul(envelope).mul(uDensity as unknown as TNode).mul(1.7);
 
-      // Churning density: warped fbm gated by the sweeping front, scaled by the
-      // density control and faded back-to-front. Each slab contributes a thinner
-      // sheet so the painter-style 'over' composite sums to a soft body.
-      const density = fld
-        .mul(envelope)
-        .mul(uDensity as unknown as TNode)
-        .mul(1.5)
-        .mul(depthFade);
-
-      // ── colour: soft grey, rear slabs cooler/darker ──────────────────────
-      // Front slabs pale grey-white; rear slabs tinted a touch darker & cooler so
-      // the stack reads as a lit body with internal shadowing.
-      const loFront = t3(0.74, 0.76, 0.79);
-      const hiFront = t3(0.93, 0.94, 0.96);
-      const tintAmt = fld.mul(envelope).clamp(0, 1);
-      const litFront = loFront.mix(hiFront, tintAmt);
-      // Darken/cool toward the rear of the volume.
-      const rearTint = t3(0.42, 0.45, 0.52);
-      const colorNode = litFront.mix(rearTint, aDepth.mul(0.55));
+      // ── colour: soft grey-white fog with gentle internal contrast ─────────
+      // Denser/brighter regions read pale grey-white; thinner regions a cooler,
+      // slightly darker grey — vivid and defined, never muddy or black. The far
+      // layer's contribution cools the deep regions so the bank reads as a lit
+      // body with internal shadowing.
+      const lo = t3(0.6, 0.64, 0.7); // cool shadow grey
+      const hi = t3(0.94, 0.95, 0.97); // pale fog highlight
+      const litAmt = fld.mul(envelope).clamp(0, 1);
+      const body = lo.mix(hi, litAmt);
+      // Cool the deepest (far-dominated) pockets a touch for internal depth.
+      const cool = t3(0.5, 0.54, 0.62);
+      const colorNode = body.mix(cool, far.mul(0.35));
 
       const opacityNode: any = min(
         max(density as unknown as ReturnType<typeof float>, float(0)),
-        float(0.85),
+        float(0.9),
       );
 
       const mat = new MeshBasicNodeMaterial({

@@ -1,21 +1,29 @@
-// will-o-wisp — a glowing ghost-light VOLUME. HARD / volumetric primitive. The
-// host builds the plane as a 5-slab back-to-front stack (volumetric:true), each
-// vertex carrying an `aDepth` float (0 front → 1 rear). We swap the stack's one
-// material for a MeshBasicNodeMaterial that, per slab, samples a DIFFERENT slice
-// of a domain-warped fbm tendril field: the noise domain is parallaxed by aDepth
-// and aDepth is fed as a real 3rd noise dimension, so the wisp reads as genuine
-// depth rather than 5x flat overdraw. A soft luminous core sits over drifting
-// wispy tendrils; rear slabs fade + darken so the halo recedes behind the core.
-// The whole stack bobs via uTime. seek() advances uTime; controls (wisps,
-// driftSpeed, glowSize) read live. Additive blend + depthWrite:false composites
-// the far-first slabs as a glowing volume. Mirrors nebula.ts fbm/warp + TNode
-// casting discipline.
+// will-o-wisp — a glowing ghost-light. HARD / GPU primitive. SINGLE-PLANE
+// (volumetric:false): one flat quad, no slab seams. The "floating light in a
+// soft volume" illusion is built ENTIRELY in-shader:
+//
+//   • The drifting haze / wispy TENDRILS come from the SHARED _volume-fbm helper
+//     (fbmWarped): rotated-octave + quintic + domain-warped value noise, base
+//     frequency >= 7. That helper exists precisely to kill the axis-aligned
+//     square-cell grid that the user-advocate gate flagged on round 1 — so the
+//     background haze never reads as tiled. The haze noise domain is CONTINUOUS
+//     (uv-based, not a single re-centered domain), so there is no seam.
+//   • The wisp LIGHTS are a set of discrete soft radial cores at spread-out
+//     positions. More `wisps` => more DISTINCT glowing blobs lit (not one blob
+//     scaled up). Each is an eerie cyan/green ember.
+//   • Brightness is CAPPED below pure white so the glow keeps its colour /
+//     saturation — only a tiny white-hot pip at each core's centre is allowed to
+//     approach white. Soft exponential radial falloff => no hard edges, soft halo.
+//
+// Additive blend + depthWrite:false composites the glow. seek() advances uTime;
+// controls (wisps, driftSpeed, glowSize) read live, no rebuild.
 
-import { Mesh, type Material, AdditiveBlending } from 'three';
-import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float, sin, cos, attribute } from 'three/tsl';
+import { Mesh, type Material } from 'three';
+import { MeshBasicNodeMaterial, AdditiveBlending } from 'three/webgpu';
+import { uniform, uv, vec2, vec3, float, sin, cos } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type ControlValue, type PrimitiveDefinition } from '../contract';
+import { fbmWarped } from './_volume-fbm';
 
 const MAX_WISPS = 6;
 
@@ -26,10 +34,9 @@ const hash = (i: number): number => {
 };
 
 // TSL's per-call generics are narrower than the node graph they build; fbm/noise
-// pass nodes through helpers that the strict overloads reject. Like nebula.ts we
-// work through one permissive chainable alias (method-chaining only, supported by
-// every TSL node) so the helpers compose without fighting inferred generics. The
-// built graph is identical to the free-function form. (Keeps strict tsc at 0.)
+// pass nodes through helpers that the strict overloads reject. Like fire-flame.ts
+// we work through one permissive chainable alias (method-chaining only, supported
+// by every TSL node) so the helpers compose without fighting inferred generics.
 interface TNode {
   add: (x: TNode | number) => TNode;
   sub: (x: TNode | number) => TNode;
@@ -49,6 +56,8 @@ interface TNode {
   negate: () => TNode;
   exp: () => TNode;
   max: (x: TNode | number) => TNode;
+  min: (x: TNode | number) => TNode;
+  abs: () => TNode;
   x: TNode;
   y: TNode;
 }
@@ -71,10 +80,12 @@ export const willOWispPrimitive: PrimitiveDefinition = {
   category: 'volumetric',
   difficulty: 'hard',
   subject: 'plane',
-  volumetric: true,
+  // SINGLE-PLANE: no slab stack -> no slab-seam banding. The volume illusion is
+  // synthesized in-shader (shared domain-warped fbm haze + radial wisp cores).
+  volumetric: false,
   defaultDriver: 'time',
   description:
-    'A glowing ghost-light volume — a soft luminous core wreathed in wispy tendrils that drift and bob, its halo receding through depth like a marsh spirit.',
+    'A glowing ghost-light — a soft luminous core wreathed in wispy tendrils that drift and bob, its halo melting into a soft volume like a marsh spirit.',
   schema: SCHEMA,
   create: defineAnimatable(
     { name: 'will-o-wisp', category: 'volumetric', schema: SCHEMA },
@@ -88,102 +99,121 @@ export const willOWispPrimitive: PrimitiveDefinition = {
       // is a live uniform with no rebuild.
       const uCount = uniform(num(params.wisps, 4));
 
-      // Per-vertex depth (0 front slab → 1 rear slab); constant within each slab.
-      const aDepth = attribute('aDepth') as unknown as TNode;
-
       const u = uv() as unknown as TNode;
-      // Larger glowSize -> softer/wider orbs (smaller falloff).
+      // Larger glowSize -> softer/wider orbs (smaller falloff exponent).
       const falloff = (f1(1).div(uGlow as unknown as TNode)) as unknown as TNode;
       const driftT = (uTime as unknown as TNode).mul(uDrift as unknown as TNode);
 
-      // --- domain-warped fbm tendril field (per nebula.ts) ---------------------
-      const noiseHash = (p: TNode): TNode =>
-        p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract();
+      // Centered coords (-0.5..0.5) so wisp positions are symmetric about centre.
+      const p = u.sub(0.5);
 
-      const noise = (p: TNode): TNode => {
-        const i = p.floor();
-        const f = p.fract();
-        const sm = f.mul(f).mul(f1(3).sub(f.mul(2))); // f*f*(3-2f)
-        const a = noiseHash(i);
-        const b = noiseHash(i.add(t2(1, 0)));
-        const c = noiseHash(i.add(t2(0, 1)));
-        const d = noiseHash(i.add(t2(1, 1)));
-        return a.mix(b, sm.x).mix(c.mix(d, sm.x), sm.y);
-      };
+      // --- drifting wispy haze / tendrils (SHARED _volume-fbm) ----------------
+      // fbmWarped = rotated-octave + quintic + domain-warped value noise. The
+      // domain is the CONTINUOUS uv field (scaled, slowly translated by drift) —
+      // NOT a single re-centered global domain — so the background haze noise has
+      // no seam and never reads as a square-cell grid. Base freq 7.5 (>= ~7) keeps
+      // the largest cells small; warp carves long soft tendrils.
+      const hazeDomain = t2(
+        u.x.mul(7.5).add(driftT.mul(0.10)),
+        u.y.mul(7.5).sub(driftT.mul(0.07)),
+      );
+      const hazeRaw = fbmWarped(hazeDomain, 1.1, 5) as unknown as TNode;
+      // Bias toward wisps: keep the upper band of the field, soft-shoulder it.
+      const haze = hazeRaw.smoothstep(0.42, 0.92);
 
-      const fbm = (p0: TNode): TNode => {
-        let sum = f1(0);
-        let amp = 0.5;
-        let p = p0;
-        for (let o = 0; o < 5; o++) {
-          sum = sum.add(noise(p).mul(amp));
-          p = p.mul(2.02);
-          amp *= 0.5;
-        }
-        return sum;
-      };
+      // A second, larger-scale warped field forms the soft ambient veil the wisp
+      // sits in (gives the "melting into a soft volume" read). Continuous domain.
+      const veilDomain = t2(
+        u.x.mul(3.4).sub(driftT.mul(0.05)),
+        u.y.mul(3.4).add(driftT.mul(0.06)),
+      );
+      const veil = (fbmWarped(veilDomain, 0.9, 4) as unknown as TNode).smoothstep(0.4, 0.95);
 
-      // aDepth as a real 3rd noise dimension + a per-slab parallax shove so each
-      // slab samples a DIFFERENT tendril slice (no flat overdraw).
-      const depthOff = t2(aDepth.mul(0.9), aDepth.mul(-0.7));
-      const dShift = t2(aDepth.mul(17.3), aDepth.mul(8.1)); // decorrelate per slab
-
-      // Wispy tendrils: warp the sample point by a slow fbm, then sample density.
-      const tendrilBase = u.mul(3.4).add(depthOff).add(dShift);
-      const wx = fbm(tendrilBase.add(t2(driftT.mul(0.18), driftT.mul(0.11))));
-      const wy = fbm(tendrilBase.add(t2(4.7, 2.1)).sub(t2(driftT.mul(0.14), driftT.mul(0.2))));
-      const warp = t2(wx, wy);
-      const tendril = fbm(tendrilBase.add(warp.mul(1.6)).add(t2(driftT.mul(0.07), 0)))
-        .smoothstep(0.42, 0.92);
-
-      // --- soft luminous core orbs --------------------------------------------
-      // Accumulate orbs. `any` alias dodges narrow VarNode typing on reassign.
+      // --- discrete luminous wisp lights (radial cores) ------------------------
+      // Spread across the whole frame (NOT clustered at centre) so raising `wisps`
+      // lights up MORE distinct blobs at different positions instead of fattening
+      // one central blob. Each orb wanders gently and pulses.
       let glow: any = float(0); // eslint-disable-line @typescript-eslint/no-explicit-any
+      let tendril: any = float(0); // eslint-disable-line @typescript-eslint/no-explicit-any
       for (let k = 0; k < MAX_WISPS; k++) {
-        const bx = -0.32 + hash(k * 3 + 1) * 0.64;
-        const by = -0.32 + hash(k * 3 + 2) * 0.64;
-        const sx = 0.5 + hash(k * 7 + 3) * 1.5;
-        const sy = 0.5 + hash(k * 7 + 5) * 1.5;
-        const range = 0.18 + hash(k * 11 + 7) * 0.22;
+        // Home positions spread across most of the frame (-0.38..0.38).
+        const bx = -0.38 + hash(k * 3 + 1) * 0.76;
+        const by = -0.38 + hash(k * 3 + 2) * 0.76;
+        const wsx = 0.5 + hash(k * 7 + 3) * 1.5;
+        const wsy = 0.5 + hash(k * 7 + 5) * 1.5;
+        const range = 0.06 + hash(k * 11 + 7) * 0.10;
         const pulse = 1.0 + hash(k * 13 + 9) * 2.5;
+        // Per-wisp size variation so they don't read as identical dots.
+        const sizeJitter = 0.78 + hash(k * 17 + 4) * 0.5;
 
-        // gentle whole-volume bob + per-orb wander; rear slabs parallax-shifted.
-        const cx = f1(bx).add(driftT.mul(sx).sin().mul(range));
-        const cy = f1(by)
-          .add(driftT.mul(sy).cos().mul(range))
-          .add((uTime as unknown as TNode).mul(0.6).sin().mul(0.05)); // gentle global bob
-        const center = vec2(cx as unknown as never, cy as unknown as never);
+        // gentle per-orb wander (bob + drift).
+        const cx = f1(bx).add(driftT.mul(wsx).sin().mul(range));
+        const cy = f1(by).add(driftT.mul(wsy).cos().mul(range));
 
-        const parallax = (depthOff as unknown as { mul: (n: number) => unknown }).mul(0.18);
-        const d = (u as unknown as { sub: (c: unknown) => TNode })
-          .sub((center as unknown as { add: (p: unknown) => unknown }).add(parallax))
-          .length();
-        const bob = float(0.6).add(sin(uTime.mul(pulse)).mul(0.4));
-        const orb = (d.mul(falloff).negate() as unknown as TNode).exp().mul(bob as unknown as TNode);
+        const dx = p.x.sub(cx);
+        const dy = p.y.sub(cy);
+        const d = t2(dx, dy).length();
+        // Pulse 0.45..1.0 — flickering ghost-light, never fully dark.
+        const bob = float(0.7).add(sin(uTime.mul(pulse)).mul(0.3)) as unknown as TNode;
+        // Soft exponential radial falloff -> soft halo, NO hard edge.
+        const orb = d.mul(falloff.mul(sizeJitter)).negate().exp().mul(bob);
+        // gate: orb k contributes only while uCount > k (so more wisps = more lights).
         const active = (uCount as unknown as TNode).sub(f1(k + 0.5)).clamp(0, 1);
 
-        glow = glow.add(orb.mul(active as unknown as TNode));
+        glow = glow.add(orb.mul(active));
+        // Each lit wisp also seeds tendrils nearby: its falloff modulates the haze
+        // so tendrils visibly emanate from THAT wisp, not from a global centre.
+        const near = d.mul(falloff.mul(0.5)).negate().exp();
+        tendril = tendril.add(near.mul(active));
       }
 
-      // Combine bright core orbs with the wispy tendril haze. Lifted so the
-      // ghost-light core glow and its tendrils clearly read at tile size.
-      const coreGlow = (glow as TNode).max(0).mul(1.6);
-      const field = coreGlow.add(coreGlow.mul(tendril).mul(0.7)).add(tendril.mul(0.3));
+      // Tendrils = haze carved by proximity to lit wisps. Continuous-domain haze
+      // times per-wisp proximity => wispy filaments reaching off each core.
+      const tendrils = (tendril as TNode).clamp(0, 1.4).mul(haze);
 
-      // Depth-fade: rear slabs fainter (halo recedes) and slightly cooler/darker
-      // so the stack reads as a lit volume with front-to-back occlusion. Floor
-      // raised so the rear halo isn't near-black.
-      const depthFade = aDepth.oneMinus().mul(0.55).add(0.45);
-      const opacity = field.mul(depthFade).mul(1.25).clamp(0, 1);
+      // --- composite the field -------------------------------------------------
+      // cores: the bright glowing wisp bodies.   tendrils: filaments off them.
+      // veil: faint ambient volume the whole thing melts into.
+      const cores = (glow as TNode).clamp(0, 2.0);
+      const field = cores
+        .add(tendrils.mul(0.7))
+        .add(veil.mul(0.10))
+        .add((veil as TNode).mul(haze).mul(0.06));
 
-      // Pale cyan/green core, greener soft halo, rear slabs tinted darker.
-      const core = t3(0.66, 1.0, 0.88);
-      const halo = t3(0.26, 0.78, 0.5);
-      const litTint = halo.mix(core, opacity);
-      // rear slabs lean toward a deep teal so depth reads as cooler shadow.
-      const rearTint = t3(0.12, 0.42, 0.34);
-      const tinted = litTint.mix(rearTint, aDepth.mul(0.55));
-      const colorNode = tinted.mul(field.clamp(0, 1).add(0.5)).mul(1.3);
+      // --- pseudo-depth fade (soft volume, no geometry) ------------------------
+      // Smooth radial vignette so the light reads as embedded in a soft volume
+      // that recedes toward the edges — continuous gradient, no seams.
+      const vignette = p.length().mul(1.5).smoothstep(1.2, 0.0).add(0.22);
+      const lit = (field.mul(vignette) as TNode).max(f1(0));
+
+      // --- OPACITY: capped so glow keeps colour (no blown-out white) -----------
+      // Additive blending already brightens overlaps; cap alpha < 1 so the core
+      // body never clips to pure white. Only the very centre of each core (where
+      // `lit` is highest) gets a small near-white pip via the colour mix below.
+      const opacity = lit.mul(0.85).clamp(0, 0.92);
+
+      // --- COLOUR: eerie cyan/green that SURVIVES the brightness ----------------
+      // Body stays a saturated cyan-green; a small white-hot centre only at the
+      // hottest pixels (litHot). We DO NOT push the whole body toward white.
+      const haloCol = t3(0.10, 0.62, 0.40);  // deep eerie green halo (saturated)
+      const coreCol = t3(0.40, 0.95, 0.74);  // bright cyan-green core (still coloured)
+      const whiteHot = t3(0.85, 1.0, 0.92);  // near-white, NOT pure white
+
+      // Mix halo -> core by a SOFT (sub-unity) measure of brightness so most of
+      // the body sits at the coloured core, not white.
+      const litN = lit.clamp(0, 1);
+      const body = haloCol.mix(coreCol, litN.smoothstep(0.0, 0.7));
+      // White-hot pip ONLY where lit is very high (centre of a core). gateHot is 0
+      // across the body and ramps to ~1 only at the brightest core pixels, so
+      // saturation survives everywhere except a tiny central pip.
+      const gateHot = (lit as TNode).smoothstep(1.15, 1.9).mul(0.5);
+      const tint = body.mix(whiteHot, gateHot);
+
+      // Final colour: tint scaled by a CAPPED brightness so additive compositing
+      // does not march RGB to 255. The cap (1.0) plus the 0.92 alpha cap keeps the
+      // effective on-screen colour saturated.
+      const bright = lit.clamp(0, 1).add(0.35).min(1.0);
+      const colorNode = tint.mul(bright);
 
       const mat = new MeshBasicNodeMaterial({
         transparent: true,
@@ -216,6 +246,7 @@ export const willOWispPrimitive: PrimitiveDefinition = {
         },
         dispose: () => {
           if (mesh && prevMat) mesh.material = prevMat;
+          delete target.userData.wispUniforms;
           mat.dispose();
         },
       };

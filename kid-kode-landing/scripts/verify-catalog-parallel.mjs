@@ -50,6 +50,13 @@ const getArg = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 && ar
 const hasFlag = (k) => args.includes(`--${k}`);
 
 const TIER = getArg('tier', 'all');           // std | glass | all
+// USER-ADVOCATE gate (additive): after the functional + art-fidelity gates, capture
+// the human-grade evidence bundles for these tiles so the user-advocate reviewer
+// agents (the parallel fan-out, Claude side) can render their verdicts. The capture
+// itself is delegated to scripts/useradvocate-capture.mjs (real Metal-GPU Chrome).
+const ADVOCATE = getArg('advocate', '').split(',').map((s) => s.trim()).filter(Boolean);
+const ADVOCATE_GT = getArg('advocate-ground-truth', '');
+const ADVOCATE_STATE = getArg('advocate-state', 'after');
 const PORT = parseInt(getArg('port', '4799'), 10);
 const ONLY = getArg('only', '').split(',').map((s) => s.trim()).filter(Boolean);
 const NEW_ONLY = hasFlag('new-only');
@@ -67,7 +74,7 @@ const nowIso = () => new Date().toISOString();
 // ---------------------------------------------------------------------------
 const primDir = join(repoRoot, 'src/lib/prism/animatable/primitives');
 function readCatalog() {
-  const files = readdirSync(primDir).filter((f) => f.endsWith('.ts') && f !== 'index.ts' && !f.includes('.test.'));
+  const files = readdirSync(primDir).filter((f) => f.endsWith('.ts') && f !== 'index.ts' && !f.includes('.test.') && !f.startsWith('_'));
   const cat = new Map();
   for (const f of files) {
     const s = readFileSync(join(primDir, f), 'utf8');
@@ -421,6 +428,31 @@ async function main() {
     if (glassRun.length) {
       log(`\n${Y}=== GLASS tier (${glassRun.length} tiles, REAL Metal GPU) ===${X}`);
       await runTier('glass', glassRun, glassBrowser, { vw: 1280, vh: 1000, dpr: 2, seed: 2, max: parseInt(getArg('max-glass', '3'), 10), min: 1 }, catMap);
+    }
+    // ── FINAL GATE: user-advocate evidence capture (additive) ──────────────────
+    // Runs after the functional + art-fidelity tiers. Delegates to the dedicated
+    // real-GPU capture engine, then records a `pending-review` advocate slot per
+    // tile for the reviewer agents (the parallel fan-out) to fill. The reviewer
+    // verdict is validated by useradvocate-verdict-schema.mjs (anti-rubber-stamp).
+    if (ADVOCATE.length) {
+      log(`\n${Y}=== USER-ADVOCATE gate (${ADVOCATE.length} tiles, real Metal GPU) ===${X}`);
+      const captureArgs = ['scripts/useradvocate-capture.mjs', '--tiles', ADVOCATE.join(','), '--state', ADVOCATE_STATE, '--port', String(PORT), '--reuse-server'];
+      if (ADVOCATE_GT) captureArgs.push('--ground-truth', ADVOCATE_GT);
+      await new Promise((res) => {
+        const cap = spawn('node', captureArgs, { cwd: repoRoot, stdio: 'inherit', env: { ...process.env } });
+        cap.on('exit', (code) => { log(`${C}[parallel-verify] advocate-capture exited ${code}${X}`); res(); });
+      });
+      ledger.advocate = { state: ADVOCATE_STATE, groundTruth: ADVOCATE_GT || null, tiles: {} };
+      for (const t of ADVOCATE) {
+        const fn = ledger.results[t]?.verdict || 'unknown';
+        ledger.advocate.tiles[t] = {
+          functionalVerdict: fn,
+          evidenceDir: `notes/verification/useradvocate-sixtile/${t}/${ADVOCATE_STATE}`,
+          advocate: { status: 'pending-review' },
+        };
+      }
+      saveLedger();
+      log(`${G}[parallel-verify] advocate evidence captured → reviewer agents pending${X}`);
     }
   } catch (e) {
     ledger.fatal = e.message;
