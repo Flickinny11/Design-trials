@@ -14,14 +14,18 @@
 //   Migration rules: defaults are 'sprite' / null / null / [] / identity.
 
 import {
+  MATERIAL_SPEC_DEFAULT,
   RENDER_MODE_DEFAULT,
   SCENE_POSITION_DEFAULT,
+  receivesLightingDefault,
   type CinematicPrimitiveRef,
+  type LightingSpec,
+  type MaterialSpec,
   type PrismNode,
   type RenderMode,
   type ScenePosition,
-} from '@/lib/prism-graph/types';
-import type { CinematicPrimitiveName } from '@/lib/prism-graph/cinematic-primitives';
+} from '../../prism-graph/types';
+import type { CinematicPrimitiveName } from '../../prism-graph/cinematic-primitives';
 import type { VerifierViolation } from './verifier';
 
 const KNOWN_PRIMITIVE_NAMES: ReadonlySet<CinematicPrimitiveName> = new Set([
@@ -42,6 +46,13 @@ export interface PlanRendererDefaults {
   scenePosition: ScenePosition;
   depthMapUrl: string | null;
   meshUrl: string | null;
+  // §10/§11 Material+Lighting (additive, INV-18). `receivesLighting` always
+  // resolves to a concrete boolean (safe default per render mode). `materialSpec`
+  // and `lightingSpec` are normalized only when present — a node without them
+  // stays undefined so we never force a spec onto every node.
+  receivesLighting: boolean;
+  materialSpec: MaterialSpec | undefined;
+  lightingSpec: LightingSpec | undefined;
 }
 
 /** Apply renderer-migration defaults additively. Never mutates the input. */
@@ -63,6 +74,21 @@ export function applyPlanRendererDefaults<T extends Partial<PrismNode>>(
     : { ...SCENE_POSITION_DEFAULT };
   const depthMapUrl: string | null = input.depthMapUrl ?? null;
   const meshUrl: string | null = input.meshUrl ?? null;
+  // §10 decision 7 — image-bearing render modes default UNLIT, meshes LIT. An
+  // explicit boolean wins; otherwise the safe per-render-mode default.
+  const receivesLighting: boolean =
+    typeof input.receivesLighting === 'boolean'
+      ? input.receivesLighting
+      : receivesLightingDefault(renderMode);
+  // §11 — only normalize a materialSpec when the plan supplies one (mirrors how
+  // scenePosition spreads over its default). Absent → leave undefined so we do
+  // NOT force a materialSpec onto every node.
+  const materialSpec: MaterialSpec | undefined = input.materialSpec
+    ? { ...MATERIAL_SPEC_DEFAULT, ...input.materialSpec }
+    : undefined;
+  // §10 — lightingSpec passes through verbatim when present; absent → undefined
+  // (inherits the node's hub then the global default rig at runtime).
+  const lightingSpec: LightingSpec | undefined = input.lightingSpec ?? undefined;
 
   return {
     ...input,
@@ -71,6 +97,9 @@ export function applyPlanRendererDefaults<T extends Partial<PrismNode>>(
     scenePosition,
     depthMapUrl,
     meshUrl,
+    receivesLighting,
+    materialSpec,
+    lightingSpec,
   };
 }
 

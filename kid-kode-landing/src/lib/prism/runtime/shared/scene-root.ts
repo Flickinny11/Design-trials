@@ -18,6 +18,11 @@ import {
   Scene,
   type Object3D,
 } from 'three';
+import { createLightingRig, type LightingRigHandle } from './lighting-rig';
+import {
+  type LightingSpec,
+  type LightingTierPreference,
+} from '../../../prism-graph/types';
 
 export type RendererBackend = 'webgpu' | 'webgl2' | 'stub' | null;
 
@@ -51,6 +56,13 @@ export interface CreateSceneRootOptions {
   pixelRatio?: number;
   /** Initial canvas size in CSS pixels. Defaults to 800x600 in tests. */
   size?: { width: number; height: number };
+  /** Lighting capability-tier preference forwarded to the LightingRig.
+   *  `'auto'` lets the capability detector choose. Defaults to `'auto'`. */
+  tier?: LightingTierPreference;
+  /** Mobile/low-power hint forwarded to the LightingRig capability detector. */
+  isMobile?: boolean;
+  /** Initial per-scene lighting spec applied to the LightingRig. */
+  lightingSpec?: LightingSpec;
 }
 
 export interface SceneRootHandle {
@@ -60,6 +72,10 @@ export interface SceneRootHandle {
   readonly camera: PerspectiveCamera;
   /** Constructed renderer (or `null` when `noRenderer: true`). */
   readonly renderer: SceneRootRenderer | null;
+  /** The scene-wide Material+Lighting rig (env/IBL + lights + shadows + T2
+   *  post). `null` when `noRenderer: true` (the rig needs a renderer for
+   *  PMREM); in that case a minimal ambient+directional fallback is mounted. */
+  readonly lightingRig: LightingRigHandle | null;
 
   /** Mount a hub group under the scene (`scene.add(hubGroup)`). */
   addHub(hubGroup: Object3D): void;
@@ -135,18 +151,6 @@ export async function createSceneRoot(
   camera.position.set(0, 0, 10);
   camera.lookAt(0, 0, 0);
 
-  // Default lighting — hemisphere fill + directional key + ambient floor.
-  const hemi = new HemisphereLight(0xffffff, 0x111122, 0.6);
-  hemi.position.set(0, 50, 0);
-  scene.add(hemi);
-
-  const dir = new DirectionalLight(0xffffff, 0.8);
-  dir.position.set(5, 10, 7.5);
-  scene.add(dir);
-
-  const ambient = new AmbientLight(0xffffff, 0.15);
-  scene.add(ambient);
-
   let renderer: SceneRootRenderer | null = null;
   if (!options.noRenderer) {
     const factory = options.rendererFactory ?? defaultRendererFactory;
@@ -164,6 +168,32 @@ export async function createSceneRoot(
     if (renderer.setSize) renderer.setSize(size.width, size.height);
   }
 
+  // Lighting — owned by the LightingRig (env/IBL + lights + shadows + T2 post)
+  // once the renderer exists and its backend is known. The rig needs a renderer
+  // for PMREM, so under `noRenderer` (node tests) we mount a minimal
+  // hemisphere + directional + ambient floor so adapter/hub tests that count
+  // scene children or rely on lights still pass.
+  let lightingRig: LightingRigHandle | null = null;
+  if (!options.noRenderer && renderer) {
+    lightingRig = createLightingRig(scene, camera, renderer, {
+      tier: options.tier ?? 'auto',
+      isMobile: options.isMobile,
+      spec: options.lightingSpec,
+      size,
+    });
+  } else {
+    const hemi = new HemisphereLight(0xffffff, 0x111122, 0.6);
+    hemi.position.set(0, 50, 0);
+    scene.add(hemi);
+
+    const dir = new DirectionalLight(0xffffff, 0.8);
+    dir.position.set(5, 10, 7.5);
+    scene.add(dir);
+
+    const ambient = new AmbientLight(0xffffff, 0.15);
+    scene.add(ambient);
+  }
+
   let running = false;
   let rafId: number | null = null;
   let beforeRender: (() => void) | null = null;
@@ -175,6 +205,13 @@ export async function createSceneRoot(
     // loop; the driver itself logs.
     if (beforeRender) {
       try { beforeRender(); } catch { /* ignore */ }
+    }
+    // The LightingRig owns the T2 post path: when `render()` returns true it
+    // already drew the frame via PostProcessing, so we must NOT also call
+    // renderer.render (double-render). When it returns false (T0/T1, or no
+    // rig) the caller performs the normal render below.
+    if (lightingRig && lightingRig.render()) {
+      return;
     }
     // After `renderer.init()` the WebGPURenderer has been awaited at
     // construction (see `defaultRendererFactory`). Three deprecates
@@ -242,6 +279,12 @@ export async function createSceneRoot(
 
   function dispose(): void {
     stop();
+    // Dispose the lighting rig first (lights, env/IBL, T2 post pipeline) before
+    // detaching scene children.
+    if (lightingRig) {
+      lightingRig.dispose();
+      lightingRig = null;
+    }
     // Detach every direct child of the scene so userData.cleanup() (handled
     // by HubManager) is the disposal path, not silent garbage collection.
     while (scene.children.length > 0) {
@@ -264,6 +307,9 @@ export async function createSceneRoot(
     },
     get renderer() {
       return renderer;
+    },
+    get lightingRig() {
+      return lightingRig;
     },
     addHub,
     removeHub,

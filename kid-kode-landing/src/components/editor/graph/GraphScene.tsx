@@ -26,6 +26,7 @@ import { WebGPURenderer } from 'three/webgpu';
 import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import HubLighting from './HubLighting';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
 import { useGraphEditorStore, type ViewMode, type EditorRenderMode } from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
@@ -2605,9 +2606,11 @@ function AssembledSceneContent({
 
   return (
     <>
-      <ambientLight intensity={0.45} />
-      <directionalLight position={[4, 6, 8]} intensity={0.8} color="#e0edff" castShadow={false} />
-      <directionalLight position={[-4, -2, 5]} intensity={0.25} color="#ffdbb8" />
+      {/* §10 — lights + IBL driven by the active hub's lightingSpec. A hub with
+          no spec renders the exact legacy 3-light look (HubLighting default), so
+          the Canvas Lighting toolbar group visibly changes the scene (criterion
+          17) while legacy graphs stay pixel-stable. */}
+      <HubLighting hub={hub} />
       <SceneBackdrop hub={hub} />
       {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is
           the running app (no frame, no gizmo, no demo). */}

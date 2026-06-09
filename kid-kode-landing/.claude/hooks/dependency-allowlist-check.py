@@ -45,6 +45,19 @@ RUNTIME_ALLOW = {
     "react", "react-dom", "react/jsx-runtime", "simplex-noise", "tailwind-merge",
     "three", "three-msdf-text-webgpu",
     "three/examples/jsm/controls/OrbitControls", "three/tsl", "three/webgpu",
+    # Material+Lighting subsystem (canvas-spec §10/§11). First-party three.js
+    # addons that ship INSIDE the already-approved `three` package (one `three`
+    # instance — INV-R1 / RT-SC-02 intact; these are NOT a second renderer and
+    # NOT a new npm dep). RoomEnvironment = PMREM IBL (T0); the tsl/display nodes
+    # = native TSL screen-space GI/AO/SSR/TAA + volumetric godrays for the T2
+    # tier (capability-gated, INV-9 — never the default path). Rationale logged
+    # in notes/mockup-pipeline.md §10 (2026-06-08).
+    "three/examples/jsm/environments/RoomEnvironment.js",
+    "three/examples/jsm/tsl/display/GTAONode.js",
+    "three/examples/jsm/tsl/display/SSGINode.js",
+    "three/examples/jsm/tsl/display/SSRNode.js",
+    "three/examples/jsm/tsl/display/TRAANode.js",
+    "three/examples/jsm/tsl/display/GodraysNode.js",
     "zustand", "zustand/middleware",
 }
 BUILD_ALLOW = {

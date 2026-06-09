@@ -38,12 +38,16 @@ import {
   type Object3D,
   type Texture,
 } from 'three';
-import {
-  MeshBasicNodeMaterial,
-  MeshStandardNodeMaterial,
-} from 'three/webgpu';
 import type { gsap } from 'gsap';
 import { applyScenePosition, type NodeContext } from '../shared/adapter';
+import {
+  resolveReceivesLighting,
+  buildUnlitMaterial,
+  buildLitTextureMaterial,
+  buildPhysicalMaterial,
+  applyMaterialSpec,
+  resolveMaterialSpec,
+} from '../shared/material-system';
 import { displacementShader } from '../shared/shaders/displacement.tsl';
 import type {
   CinematicPrimitiveRef,
@@ -106,9 +110,33 @@ export function defaultRenderModeFactory(
 
   if (renderMode === 'sprite' || renderMode === 'plane') {
     const geo = new PlaneGeometry(width, height);
-    const mat = useNodeMaterials
-      ? new MeshBasicNodeMaterial({ transparent: true })
-      : new MeshBasicMaterial({ transparent: true });
+    // §10 decision 7 / criterion 17: image planes are UNLIT by default so
+    // lights/env never touch the baked texture. A node may opt in to lighting
+    // (receivesLighting=true) to catch scene light (e.g. a metallic text fill).
+    // Non-node-material (WebGL editor) path keeps the legacy MeshBasicMaterial
+    // verbatim — byte-identical to before for default nodes.
+    let mat: DisposableMaterial & { map?: Texture | null; needsUpdate?: boolean };
+    if (useNodeMaterials) {
+      const lit = resolveReceivesLighting(node);
+      mat = (lit
+        ? buildLitTextureMaterial({ spec: node.materialSpec })
+        : buildUnlitMaterial({ transparent: true })) as unknown as DisposableMaterial & {
+        map?: Texture | null;
+        needsUpdate?: boolean;
+      };
+    } else {
+      // Legacy (editor / non-node-material) path. Default image planes stay
+      // MeshBasicMaterial — UNLIT and byte-identical to before. A node that opts
+      // IN (receivesLighting=true) becomes MeshStandardMaterial so the editor's
+      // HubLighting actually lights it (criterion 17 opt-in on the editor surface).
+      const lit = resolveReceivesLighting(node);
+      mat = (lit
+        ? new MeshStandardMaterial({ transparent: true })
+        : new MeshBasicMaterial({ transparent: true })) as unknown as DisposableMaterial & {
+        map?: Texture | null;
+        needsUpdate?: boolean;
+      };
+    }
     if (sourceAsset) {
       void ctx.textureLoader
         .loadTexture(sourceAsset)
@@ -118,16 +146,31 @@ export function defaultRenderModeFactory(
         })
         .catch(() => { /* swallow — decorative */ });
     }
-    const mesh = new Mesh(geo, mat);
+    const mesh = new Mesh(geo, mat as unknown as MeshBasicMaterial);
     group.add(mesh);
     disposables.push(geo);
     materialsToDispose.push(mat as unknown as DisposableMaterial);
   } else if (renderMode === 'parallax-plane') {
     // §9.C — tessellated 64x64 plane + TSL displacement node.
+    // §10 decision 7 / criterion 17: an image plane is UNLIT by default, so the
+    // baked texture (carried by the displacement colorNode) is shown verbatim.
+    // A node may opt in to lighting (receivesLighting=true) to catch scene light.
+    // The non-node-material (WebGL editor) path keeps the legacy
+    // MeshStandardMaterial verbatim — byte-identical to before for default nodes.
     const geo = new PlaneGeometry(width, height, 64, 64);
-    const mat = useNodeMaterials
-      ? new MeshStandardNodeMaterial({ transparent: true })
-      : new MeshStandardMaterial({ transparent: true });
+    let mat: DisposableMaterial;
+    if (useNodeMaterials) {
+      const lit = resolveReceivesLighting(node);
+      if (lit) {
+        const litMat = buildLitTextureMaterial({ spec: node.materialSpec });
+        litMat.transparent = true;
+        mat = litMat as unknown as DisposableMaterial;
+      } else {
+        mat = buildUnlitMaterial({ transparent: true }) as unknown as DisposableMaterial;
+      }
+    } else {
+      mat = new MeshStandardMaterial({ transparent: true }) as unknown as DisposableMaterial;
+    }
     if (sourceAsset && node.depthMapUrl) {
       const baseP = ctx.textureLoader.loadTexture(sourceAsset);
       const depthP = ctx.textureLoader.loadTexture(node.depthMapUrl);
@@ -147,12 +190,21 @@ export function defaultRenderModeFactory(
         })
         .catch(() => { /* swallow */ });
     }
-    const mesh = new Mesh(geo, mat);
+    const mesh = new Mesh(geo, mat as unknown as MeshStandardMaterial);
     group.add(mesh);
     disposables.push(geo);
-    materialsToDispose.push(mat as unknown as DisposableMaterial);
+    materialsToDispose.push(mat);
   } else if (renderMode === 'mesh') {
     if (node.meshUrl) {
+      // §10 decision 7: meshes are LIT by default. When the node carries a
+      // MaterialSpec, route the mesh material through buildPhysicalMaterial
+      // (full PBR). Either way, lit meshes cast + receive shadows so the
+      // lighting rig's shadow path has occluders. The resolved spec is applied
+      // even without an explicit materialSpec so the lit defaults are explicit.
+      const lit = resolveReceivesLighting(node);
+      const meshSpec = node.materialSpec
+        ? resolveMaterialSpec(node.materialSpec)
+        : null;
       void ctx.glbLoader
         .loadGLB(node.meshUrl)
         .then((gltf) => {
@@ -160,6 +212,22 @@ export function defaultRenderModeFactory(
           // Loader cache hands the same Object3D to every caller; clone so
           // each node owns its own subtree (THREE.add() unparents otherwise).
           const cloned = gltf.scene.clone(true);
+          cloned.traverse((child) => {
+            if (!(child instanceof Mesh)) return;
+            if (lit) {
+              child.castShadow = true;
+              child.receiveShadow = true;
+            }
+            if (meshSpec) {
+              // Replace the GLB material (loader-cache-owned, untouched) with a
+              // node-owned physical material configured from the spec; only the
+              // ones we create get disposed on cleanup.
+              const physical = buildPhysicalMaterial(meshSpec);
+              applyMaterialSpec(physical, meshSpec);
+              child.material = physical;
+              materialsToDispose.push(physical as unknown as DisposableMaterial);
+            }
+          });
           group.add(cloned);
         })
         .catch(() => { /* swallow */ });

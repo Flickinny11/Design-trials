@@ -37,6 +37,19 @@ import type {
 
 const TILE_BG = new THREE.Color('#06070d');
 
+// Clear / colourless transmissive primitives that the CATALOG-PARALLEL-VERIFY
+// report flagged as near-black on the pure-dark backdrop: with nothing lit
+// BEHIND the subject, a perfectly clear refractor has nothing to bend, so it
+// reads as an unlit silhouette. We give every 'glass'-category tile a small
+// LIT BACKDROP (a soft emissive gradient panel + a few bright bokeh blobs, a
+// short distance behind the subject at z<0) so the refraction cone has
+// something to sample. Cheap, IBL-lit standard materials only — no new shaders.
+// Gating on the category covers the explicitly-flagged clear ids
+// (crystal-ball, liquid-glass, liquid-fill-glass, refraction-warp,
+// water-droplet) plus the rest of the glass family, and only the glass family
+// (non-glass tiles are untouched).
+const GLASS_BOKEH_COLORS = ['#7fb2ff', '#c79bff', '#9affe0', '#ffd98a', '#ff9ad1'];
+
 export interface RegisterOptions {
   element: HTMLElement;
   def: PrimitiveDefinition;
@@ -59,6 +72,8 @@ interface Tile {
   elapsed: number;
   lastT: number;
   opts: RegisterOptions;
+  /** Lit backdrop added behind glass-category subjects (else null). */
+  glassBackdrop: THREE.Group | null;
 }
 
 export interface TileHandle {
@@ -81,6 +96,8 @@ class SharedTileRenderer {
   ready = false;
   backend: 'webgpu' | 'webgl' | 'unknown' = 'unknown';
   deviceLostCount = 0;
+  /** Names of the def's that currently have a lit glass backdrop (diagnostic). */
+  glassBackdropTiles = new Set<string>();
 
   /** Idempotent: bind the rig to a canvas and start the loop. */
   acquire(canvas: HTMLCanvasElement): Promise<void> {
@@ -213,6 +230,7 @@ class SharedTileRenderer {
       elapsed: 0,
       lastT: 0,
       opts,
+      glassBackdrop: null,
     };
     this.tiles.set(id, tile);
     this.buildInstance(tile, opts.def, opts.params);
@@ -238,6 +256,9 @@ class SharedTileRenderer {
     }
     if (tile.target.object.parent) tile.scene.remove(tile.target.object);
     disposeObject(tile.target.object);
+    // Tear down any previous glass backdrop before (maybe) rebuilding it for
+    // the new def — a rebuild can swap a glass def for a non-glass one.
+    this.removeGlassBackdrop(tile);
 
     const { object, subject } = buildSubject(def.subject);
     const target: AnimatableTarget = { object, subject, scene: tile.scene, userData: {} };
@@ -256,7 +277,81 @@ class SharedTileRenderer {
     tile.elapsed = (tile.opts.frozenPhase ?? 0.45) * dur;
     tile.lastT = tile.elapsed % dur;
     tile.scene.add(object);
+    // Give clear/transmissive glass tiles something lit to refract through.
+    if (def.category === 'glass') this.addGlassBackdrop(tile);
     tile.opts.onInstance?.(inst);
+  }
+
+  /** Build a cheap, IBL-lit backdrop a short distance behind the subject so a
+   *  perfectly clear refractor has bright structure to bend. Glass tiles only. */
+  private addGlassBackdrop(tile: Tile): void {
+    const group = new THREE.Group();
+    group.name = 'glass-backdrop';
+    // Sit it behind the subject (camera is at z≈3.2 looking down -z), close
+    // enough to fill the refraction cone but far enough to stay out of focus.
+    group.position.z = -1.6;
+
+    // Soft emissive gradient panel — a vertex-coloured plane (top cool key →
+    // bottom deep ink) lit purely by its own emissive, so it never blows out.
+    const w = 4.6;
+    const h = 4.6;
+    const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
+    const top = new THREE.Color('#2a3b78');
+    const bot = new THREE.Color('#0a0e22');
+    const colors = new Float32Array(4 * 3);
+    // PlaneGeometry vertex order: top-left, top-right, bottom-left, bottom-right.
+    [top, top, bot, bot].forEach((c, i) => {
+      colors[i * 3] = c.r;
+      colors[i * 3 + 1] = c.g;
+      colors[i * 3 + 2] = c.b;
+    });
+    panelGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const panel = new THREE.Mesh(
+      panelGeo,
+      new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: true }),
+    );
+    panel.name = 'glass-backdrop-panel';
+    group.add(panel);
+
+    // A few bright bokeh blobs in front of the panel — these are the high-
+    // frequency highlights the glass sparkles on. Emissive standard spheres so
+    // they also catch the shared env a touch. Deterministic placement (seeded
+    // by tile id) so the gallery is stable across renders.
+    let seed = (tile.id * 2654435761) >>> 0;
+    const rand = (): number => {
+      seed = (seed * 1664525 + 1013904223) >>> 0;
+      return seed / 0xffffffff;
+    };
+    const BOKEH = 5;
+    for (let i = 0; i < BOKEH; i++) {
+      const color = new THREE.Color(GLASS_BOKEH_COLORS[i % GLASS_BOKEH_COLORS.length]);
+      const r = 0.18 + rand() * 0.34;
+      const blob = new THREE.Mesh(
+        new THREE.SphereGeometry(r, 20, 14),
+        new THREE.MeshStandardMaterial({
+          color,
+          emissive: color,
+          emissiveIntensity: 1.8,
+          roughness: 0.4,
+          metalness: 0,
+          envMapIntensity: 0.8,
+        }),
+      );
+      blob.position.set((rand() - 0.5) * 3.0, (rand() - 0.5) * 3.0, 0.2 + rand() * 0.5);
+      group.add(blob);
+    }
+
+    tile.scene.add(group);
+    tile.glassBackdrop = group;
+    this.glassBackdropTiles.add(tile.def.name);
+  }
+
+  private removeGlassBackdrop(tile: Tile): void {
+    if (!tile.glassBackdrop) return;
+    tile.scene.remove(tile.glassBackdrop);
+    disposeObject(tile.glassBackdrop);
+    this.glassBackdropTiles.delete(tile.def.name);
+    tile.glassBackdrop = null;
   }
 
   private disposeTile(tile: Tile): void {
@@ -269,6 +364,7 @@ class SharedTileRenderer {
     }
     tile.scene.remove(tile.target.object);
     disposeObject(tile.target.object);
+    this.removeGlassBackdrop(tile);
   }
 
   private resize = (): void => {
@@ -377,6 +473,11 @@ class SharedTileRenderer {
       },
       get backend() {
         return sharedRig.backend;
+      },
+      // Which def's currently have a lit glass backdrop (verification hook for
+      // the clear-glass refraction fix).
+      get glassBackdropTiles() {
+        return [...sharedRig.glassBackdropTiles];
       },
       // On-demand per-tile rects (diagnostic; useful when scaling to 300).
       debug: () =>

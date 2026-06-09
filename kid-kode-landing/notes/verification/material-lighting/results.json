@@ -1,0 +1,189 @@
+{
+  "startedAt": "2026-06-09T04:54:50.682Z",
+  "criterion17": {
+    "tier": "T1",
+    "points": {
+      "sphere": {
+        "x": 437.1079351174487,
+        "y": 338.2176219936262
+      },
+      "plane": {
+        "x": 855.6048141119459,
+        "y": 316.14212535974866
+      },
+      "w": 1280,
+      "h": 720
+    },
+    "litRegion": {
+      "left": 362,
+      "top": 263,
+      "width": 150,
+      "height": 150
+    },
+    "unlitRegion": {
+      "left": 826,
+      "top": 286,
+      "width": 60,
+      "height": 60
+    },
+    "litBefore": {
+      "luma": 235.71724444444445,
+      "contrast": 5.83596956696216,
+      "r": 235.71724444444445,
+      "gch": 237.10186666666667,
+      "b": 240.00737777777778
+    },
+    "litAfter": {
+      "luma": 231.99973333333332,
+      "contrast": 6.382652658765129,
+      "r": 231.99973333333332,
+      "gch": 233.64617777777778,
+      "b": 237.06613333333334
+    },
+    "unlitBefore": {
+      "luma": 207,
+      "contrast": 0,
+      "r": 207,
+      "gch": 91,
+      "b": 45
+    },
+    "unlitAfter": {
+      "luma": 207,
+      "contrast": 0,
+      "r": 207,
+      "gch": 91,
+      "b": 45
+    },
+    "litDrop": 3.717511111111122,
+    "unlitDelta": 0,
+    "expectation": "T1: lit mesh responds to key (luma drop >3) while unlit plane stays put (<1.5); lit ≫ unlit",
+    "pass": true
+  },
+  "criterion18": {
+    "desktop": {
+      "tier": "T2",
+      "backend": "webgpu",
+      "isMobile": false,
+      "shadows": true,
+      "screenSpaceGI": true,
+      "maxDynamicLights": 10,
+      "reason": "auto → ceiling T2 (backend=webgpu, mobile=false)"
+    },
+    "mobile": {
+      "tier": "T1",
+      "backend": "webgpu",
+      "isMobile": true,
+      "shadows": true,
+      "screenSpaceGI": false,
+      "maxDynamicLights": 6,
+      "reason": "auto → ceiling T1 (backend=webgpu, mobile=true)"
+    },
+    "deviceLost": 0,
+    "desktopT2ok": true,
+    "mobileDegrades": true,
+    "expectation": "webgpu-desktop→T2; mobile→not-T2 (T1/T0); deviceLost=0",
+    "pass": true,
+    "webgl2": {
+      "profile": {
+        "tier": "T1",
+        "backend": "webgl2",
+        "isMobile": false,
+        "shadows": true,
+        "screenSpaceGI": false,
+        "maxDynamicLights": 6,
+        "reason": "auto → ceiling T1 (backend=webgl2, mobile=false)"
+      },
+      "degradesToT1OrBelow": true
+    }
+  },
+  "glassLift": {
+    "backdropTiles": [
+      "acrylic-edge",
+      "aerogel-haze",
+      "bevel-glass",
+      "chromatic-aberration",
+      "crystal-ball",
+      "crystal-facet",
+      "dispersion",
+      "fluted-glass",
+      "fresnel-glow",
+      "frosted-glass",
+      "gemstone-cut",
+      "glass-refraction",
+      "holo-glass",
+      "ice-glass",
+      "iridescent-glass",
+      "liquid-fill-glass",
+      "liquid-glass",
+      "refraction-warp",
+      "smoked-glass",
+      "soap-bubble",
+      "water-droplet"
+    ],
+    "clearGlassWithBackdrop": [
+      "crystal-ball",
+      "liquid-glass",
+      "liquid-fill-glass",
+      "refraction-warp",
+      "water-droplet"
+    ],
+    "allClearLifted": true,
+    "crystal-ball": {
+      "after": {
+        "luma": 41.38866708607562,
+        "contrast": 54.276449335772696,
+        "r": 41.38866708607562,
+        "gch": 48.52718092657117,
+        "b": 78.49320073557878
+      },
+      "hasBackdrop": true,
+      "lifted": true
+    },
+    "liquid-glass": {
+      "after": {
+        "luma": 34.6979408633372,
+        "contrast": 55.59770508025391,
+        "r": 34.6979408633372,
+        "gch": 41.569670280036135,
+        "b": 71.513699348303
+      },
+      "hasBackdrop": true,
+      "lifted": true
+    },
+    "liquid-fill-glass": {
+      "after": {
+        "luma": 41.66039166344044,
+        "contrast": 62.35044787938113,
+        "r": 41.66039166344044,
+        "gch": 49.831893631436316,
+        "b": 84.75840027745515
+      },
+      "hasBackdrop": true,
+      "lifted": true
+    },
+    "refraction-warp": {
+      "after": {
+        "luma": 34.99593092657117,
+        "contrast": 55.33792800214114,
+        "r": 34.99593092657117,
+        "gch": 42.02371273712737,
+        "b": 72.25557329978062
+      },
+      "hasBackdrop": true,
+      "lifted": true
+    },
+    "water-droplet": {
+      "after": {
+        "luma": 34.48172748096528,
+        "contrast": 54.574426221295155,
+        "r": 34.48172748096528,
+        "gch": 41.55363998580462,
+        "b": 71.7110433604336
+      },
+      "hasBackdrop": true,
+      "lifted": true
+    }
+  },
+  "verdict": "PASS",
+  "finishedAt": "2026-06-09T04:55:40.361Z"
+}

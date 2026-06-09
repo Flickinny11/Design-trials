@@ -128,6 +128,162 @@ export const DEPTH_LAYER_VALUES: readonly DepthLayer[] = Object.freeze([
 
 export const DEPTH_LAYER_DEFAULT: DepthLayer = 'content';
 
+// ===========================================================================
+// Material + Lighting subsystem (PRISM-CANVAS-EDITOR-SPEC §10/§11, INV-8/INV-9).
+// All fields below are ADDITIVE-ONLY with safe defaults (INV-18). They round-trip
+// through save/reload exactly like scenePosition/canvasTransform. No existing
+// shared-interface field is renamed or removed.
+// ===========================================================================
+
+// §10 capability tiers (INV-9). `T0` = IBL + ambient (all devices incl. mobile);
+// `T1` = dynamic key/fill/rim + point/spot + soft shadows (workhorse); `T2` =
+// T1 + screen-space GI/AO (+ optional SSR/TRAA), WebGPU desktop only. `'auto'`
+// asks the runtime capability detector to pick the highest tier the device can
+// hold. Heavy effects are NEVER the default path — `'auto'` degrades to T0/T1.
+export type LightingTier = 'T0' | 'T1' | 'T2';
+export type LightingTierPreference = LightingTier | 'auto';
+
+export const LIGHTING_TIER_VALUES: readonly LightingTier[] = Object.freeze([
+  'T0',
+  'T1',
+  'T2',
+] as const);
+
+// §10 light types. `rim` is a back-positioned directional preset (edge light).
+export type PrismLightType =
+  | 'ambient'
+  | 'hemisphere'
+  | 'directional'
+  | 'point'
+  | 'spot'
+  | 'rim';
+
+export interface PrismVec3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+// §10 / §5 Lighting group — one configurable scene light. `id` + `type` required;
+// everything else optional with runtime defaults so the editor can add a light
+// with a single click and tune it incrementally. Additive only (INV-18).
+export interface PrismLight {
+  id: string;
+  type: PrismLightType;
+  /** Hex color, e.g. '#ffffff'. */
+  color?: string;
+  /** Secondary/ground color for `hemisphere` lights. */
+  groundColor?: string;
+  intensity?: number;
+  position?: PrismVec3;
+  /** Aim point for directional/spot/rim lights. */
+  target?: PrismVec3;
+  /** point/spot falloff distance (0 = infinite). */
+  distance?: number;
+  /** point/spot physical decay. */
+  decay?: number;
+  /** spot cone half-angle in radians. */
+  angle?: number;
+  /** spot edge softness 0..1. */
+  penumbra?: number;
+  /** Whether this light casts shadows (honored at T1+). */
+  castShadow?: boolean;
+}
+
+// §10 per-hub AND per-element lighting configuration (decision 5). Additive with
+// safe defaults; an empty/absent spec falls back to the runtime default rig.
+export interface LightingSpec {
+  /** Tier preference; `'auto'` lets capability detection choose (INV-9). */
+  tier?: LightingTierPreference;
+  /** Configurable light list. Absent/empty → runtime default 3-point rig. */
+  lights?: PrismLight[];
+  /** IBL/env-map URL override. `null`/absent → procedural studio IBL (PMREM). */
+  envMapUrl?: string | null;
+  /** Environment (IBL) reflection intensity. */
+  envIntensity?: number;
+  /** Global ambient floor intensity. */
+  ambientIntensity?: number;
+  /** Soft-shadow radius 0..1 (0 = crisp, 1 = very soft). Maps to PCFSoft/VSM. */
+  shadowSoftness?: number;
+}
+
+export const LIGHTING_SPEC_DEFAULT: LightingSpec = {
+  tier: 'auto',
+  lights: [],
+  envMapUrl: null,
+  envIntensity: 1,
+  ambientIntensity: 0.25,
+  shadowSoftness: 0.5,
+};
+
+// §11 per-node material (decision 4) — `MeshPhysicalNodeMaterial` params. All
+// optional; the material system fills unset fields from MATERIAL_SPEC_DEFAULT.
+// Only meshes/splats consume this for visible PBR; image-planes ignore it unless
+// `receivesLighting` opts them in. Additive only (INV-18).
+export interface MaterialSpec {
+  /** Base/albedo color, hex. */
+  baseColor?: string;
+  metalness?: number;
+  roughness?: number;
+  /** 0 = opaque, 1 = fully transmissive (glass). */
+  transmission?: number;
+  /** Index of refraction (1.0 air … ~2.4 diamond). */
+  ior?: number;
+  /** Chromatic dispersion strength (Abbe-style), 0 = none. */
+  dispersion?: number;
+  clearcoat?: number;
+  clearcoatRoughness?: number;
+  /** Thin-film iridescence 0..1 (soap-bubble / oil-slick look). */
+  iridescence?: number;
+  iridescenceIOR?: number;
+  /** Refraction slab thickness (transmission depth). */
+  thickness?: number;
+  emissive?: string;
+  emissiveIntensity?: number;
+  /** Normal-map influence. */
+  normalScale?: number;
+  /** Displacement-map influence. */
+  displacementScale?: number;
+  /** IBL/env reflection strength on this material. */
+  envMapIntensity?: number;
+  /** 0..1 surface opacity (independent of transmission). */
+  opacity?: number;
+  /** Optional texture URLs (loaded via ctx loaders, cached). */
+  normalMapUrl?: string | null;
+  displacementMapUrl?: string | null;
+}
+
+export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
+  baseColor: '#c8ccd8',
+  metalness: 0,
+  roughness: 0.5,
+  transmission: 0,
+  ior: 1.5,
+  dispersion: 0,
+  clearcoat: 0,
+  clearcoatRoughness: 0.1,
+  iridescence: 0,
+  iridescenceIOR: 1.3,
+  thickness: 0.5,
+  emissive: '#000000',
+  emissiveIntensity: 0,
+  normalScale: 1,
+  displacementScale: 0,
+  envMapIntensity: 1,
+  opacity: 1,
+  normalMapUrl: null,
+  displacementMapUrl: null,
+};
+
+// §10 decision 7 / §10 `receivesLighting` SAFE DEFAULT. Image-bearing render
+// modes default UNLIT so the diffusion-baked look is preserved pixel-identical;
+// generated geometry (mesh) defaults LIT. `'sprite'` and `'parallax-plane'`
+// are image planes → unlit. Text opts in elsewhere (textSpec), default unlit.
+// Splats are lit by default but have no `RenderMode` literal yet (mesh-routed).
+export function receivesLightingDefault(renderMode?: RenderMode): boolean {
+  return renderMode === 'mesh';
+}
+
 export interface PrismHubLayout {
   viewportWidth: number;
   viewportHeight: number;
@@ -189,6 +345,11 @@ export interface PrismHub {
   // `background` is present the compile path may prefer it. Optional per
   // INV-18 (additive schema growth).
   background?: PrismHubBackgroundLayer[];
+  // §10 decision 5 (INV-8 additive). Per-HUB lighting configuration: the light
+  // list, env/IBL, shadow softness, and tier preference for this page. Absent →
+  // the runtime default 3-point rig + procedural studio IBL. A node's own
+  // `lightingSpec` (per-element) overrides this for that node.
+  lightingSpec?: LightingSpec;
 }
 
 export interface PrismVisualTransform {
@@ -240,6 +401,10 @@ export interface PrismLayer {
   blendMode?: string;
   defaultAlpha?: number;
   mask?: { shape?: string; radius?: number; [k: string]: unknown };
+  // §10 decision 5 (INV-8 additive). Optional per-layer (sub-element) lighting
+  // override. Absent → inherits the node's then the hub's lightingSpec. The
+  // index signature already permitted this untyped; declared for type-safety.
+  lightingSpec?: LightingSpec;
   [k: string]: unknown;
 }
 
@@ -433,6 +598,22 @@ export interface PrismNode {
   // write its `scenePosition`. Distinct from `frozenNodeIds` (AI-off-limits) —
   // lock is a manual-edit guard. Absent / false on legacy nodes.
   locked?: boolean;
+  // §10 decision 7 / §10 (INV-8 additive, SAFE DEFAULT). Whether this node's
+  // built artifact participates in scene lighting. Absent → derived per render
+  // mode via `receivesLightingDefault(renderMode)`: image planes UNLIT (preserve
+  // the diffusion-baked look exactly, criterion 17), meshes LIT. Round-trips
+  // through save/reload. Toggled by the Lighting toolbar group's per-node switch.
+  receivesLighting?: boolean;
+  // §11 decision 4 (INV-8 additive). Per-node MeshPhysicalNodeMaterial params,
+  // editable in Canvas for meshes. Absent → MATERIAL_SPEC_DEFAULT. Only consumed
+  // for visible PBR when the node is a mesh or an opted-in lit plane; image
+  // planes ignore it (their texture IS their look) unless receivesLighting=true.
+  materialSpec?: MaterialSpec;
+  // §10 decision 5 (INV-8 additive). Per-ELEMENT lighting override (a single
+  // node can carry its own local lights / env / tier). Absent → the node inherits
+  // its hub's `lightingSpec` (and the global default rig). Per-hub spec lives on
+  // PrismHub.lightingSpec.
+  lightingSpec?: LightingSpec;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the

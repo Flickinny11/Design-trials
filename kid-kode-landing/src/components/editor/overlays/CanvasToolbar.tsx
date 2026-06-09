@@ -42,7 +42,18 @@ import { rebuildNode } from '@/lib/editor/rebuild-node';
 import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
-import type { PrismNode, ScenePosition } from '@/lib/prism-graph/types';
+import type {
+  PrismNode,
+  ScenePosition,
+  PrismHub,
+  PrismLight,
+  PrismLightType,
+  LightingSpec,
+} from '@/lib/prism-graph/types';
+import {
+  LIGHTING_SPEC_DEFAULT,
+  receivesLightingDefault,
+} from '@/lib/prism-graph/types';
 
 // ── Design tokens ──────────────────────────────────────────────────────────
 const GLASS: React.CSSProperties = {
@@ -87,7 +98,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: false, subsystem: 'Mesh & Material systems' },
   { id: 'text', icon: 'text', label: 'Text', wired: false, subsystem: 'Text System (MSDF)' },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: false, subsystem: 'Primitive Catalog' },
-  { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: false, subsystem: 'Lighting & Material systems' },
+  { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
   { id: 'build', icon: 'hammer', label: 'Build', wired: true },
 ];
 
@@ -107,6 +118,62 @@ function readSP(node: PrismNode | undefined | null): ScenePosition {
 
 const fmt = (n: number) => (Math.round(n * 100) / 100).toFixed(2);
 const deg = (rad: number) => `${Math.round((rad * 180) / Math.PI)}°`;
+
+// ── Lighting helpers (canvas-spec §5 / §10) ──────────────────────────────────
+const LIGHT_TYPES: PrismLightType[] = [
+  'directional',
+  'point',
+  'spot',
+  'ambient',
+  'hemisphere',
+  'rim',
+];
+
+const LIGHT_TYPE_LABEL: Record<PrismLightType, string> = {
+  directional: 'Directional',
+  point: 'Point',
+  spot: 'Spot',
+  ambient: 'Ambient',
+  hemisphere: 'Hemisphere',
+  rim: 'Rim',
+};
+
+// Merge a hub's stored lightingSpec over the canonical default so the flyout
+// always renders defined controls (and never overwrites unset fields with
+// undefined when it writes back). Additive read — never mutates the source.
+function readLightingSpec(hub: PrismHub | null | undefined): LightingSpec {
+  const s = hub?.lightingSpec;
+  return {
+    ...LIGHTING_SPEC_DEFAULT,
+    ...(s ?? {}),
+    lights: s?.lights ? [...s.lights] : [],
+  };
+}
+
+let lightSeq = 0;
+function makeLight(type: PrismLightType): PrismLight {
+  lightSeq += 1;
+  const id = `light-${Date.now().toString(36)}-${lightSeq.toString(36)}`;
+  const base: PrismLight = { id, type, color: '#ffffff', intensity: 1 };
+  switch (type) {
+    case 'directional':
+    case 'rim':
+      return { ...base, position: { x: 3, y: 5, z: 4 }, target: { x: 0, y: 0, z: 0 }, castShadow: true };
+    case 'point':
+      return { ...base, position: { x: 2, y: 3, z: 3 }, distance: 0, decay: 2 };
+    case 'spot':
+      return {
+        ...base, position: { x: 2, y: 4, z: 3 }, target: { x: 0, y: 0, z: 0 },
+        distance: 0, decay: 2, angle: Math.PI / 6, penumbra: 0.3, castShadow: true,
+      };
+    case 'hemisphere':
+      return { ...base, groundColor: '#404050', intensity: 0.6 };
+    case 'ambient':
+      return { ...base, intensity: 0.4 };
+    default:
+      return base;
+  }
+}
 
 // ── Small building blocks ────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -236,6 +303,7 @@ export default function CanvasToolbar() {
   const ungroupNodes = useGraphSourceStore((s) => s.ungroupNodes);
   const setNodeLocked = useGraphSourceStore((s) => s.setNodeLocked);
   const saveToServer = useGraphSourceStore((s) => s.saveToServer);
+  const markSourceDirty = useGraphSourceStore((s) => s.markDirty);
 
   const builtSnap = useBuiltSnapshotStore((s) => (selectedNodeId ? s.snapshots[selectedNodeId] : undefined));
 
@@ -246,12 +314,33 @@ export default function CanvasToolbar() {
   const [coming, setComing] = useState<{ tool: string; subsystem: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [snap, setSnap] = useState(true);
+  const [selectedLightId, setSelectedLightId] = useState<string | null>(null);
+  const [lightPickerOpen, setLightPickerOpen] = useState(false);
 
   const nodeById = useCallback(
     (id: string | null | undefined) => (id ? nodes.find((n) => n.nodeId === id) ?? null : null),
     [nodes],
   );
   const selectedNode = nodeById(selectedNodeId);
+
+  // ── Lighting target hub (canvas-spec §5/§10): the active hub, else the
+  // selected node's parent hub, else the first hub. The Lighting flyout writes
+  // this hub's `lightingSpec`. ────────────────────────────────────────────────
+  const lightingHub = useMemo<PrismHub | null>(() => {
+    const byActive = activeHubId ? hubs.find((h) => h.hubId === activeHubId) : null;
+    if (byActive) return byActive;
+    const byNode = selectedNode?.parentHubId
+      ? hubs.find((h) => h.hubId === selectedNode.parentHubId)
+      : null;
+    if (byNode) return byNode;
+    return hubs[0] ?? null;
+  }, [activeHubId, hubs, selectedNode]);
+
+  const lightingSpec = useMemo(() => readLightingSpec(lightingHub), [lightingHub]);
+  const selectedLight = useMemo(
+    () => (selectedLightId ? lightingSpec.lights?.find((l) => l.id === selectedLightId) ?? null : null),
+    [selectedLightId, lightingSpec],
+  );
 
   // Effective transform target set (canvas-spec §14 group cascade): a multi-
   // selection, else a selected node's whole group, else the single node.
@@ -372,6 +461,72 @@ export default function CanvasToolbar() {
     const r = addNodeToSystem(selectedNodeId);
     if (r.ok) setToast(`Added to system · re-captioned`);
   };
+
+  // ── Lighting actions (write the active hub's lightingSpec) ─────────────────
+  // The toolbar is NOT an Inspector tab, so per canvas-spec §5 it MAY write to
+  // the source store directly (like Transform does). No `updateHub` action
+  // exists, so we patch the hub in place via the store's `setState` — mirroring
+  // the shape `addHub`/`updateNode` use — then schedule the durable autosave
+  // through the public `markDirty`. Non-destructive: only `hub.lightingSpec`
+  // changes; topology and layout are untouched (INV-1 / INV-17).
+  const writeHubLightingSpec = useCallback(
+    (next: LightingSpec) => {
+      const hubId = lightingHub?.hubId;
+      if (!hubId) return;
+      useGraphSourceStore.setState((s) => ({
+        hubs: s.hubs.map((h) => (h.hubId === hubId ? { ...h, lightingSpec: next } : h)),
+      }));
+      markSourceDirty(true);
+    },
+    [lightingHub, markSourceDirty],
+  );
+
+  const patchLightingSpec = useCallback(
+    (patch: Partial<LightingSpec>) => {
+      writeHubLightingSpec({ ...lightingSpec, ...patch, lights: [...(lightingSpec.lights ?? [])] });
+    },
+    [lightingSpec, writeHubLightingSpec],
+  );
+
+  const addLight = useCallback(
+    (type: PrismLightType) => {
+      const light = makeLight(type);
+      writeHubLightingSpec({ ...lightingSpec, lights: [...(lightingSpec.lights ?? []), light] });
+      setSelectedLightId(light.id);
+      setLightPickerOpen(false);
+      setToast(`Added ${LIGHT_TYPE_LABEL[type]} light`);
+    },
+    [lightingSpec, writeHubLightingSpec],
+  );
+
+  const updateLight = useCallback(
+    (id: string, patch: Partial<PrismLight>) => {
+      writeHubLightingSpec({
+        ...lightingSpec,
+        lights: (lightingSpec.lights ?? []).map((l) => (l.id === id ? { ...l, ...patch } : l)),
+      });
+    },
+    [lightingSpec, writeHubLightingSpec],
+  );
+
+  const removeLight = useCallback(
+    (id: string) => {
+      writeHubLightingSpec({
+        ...lightingSpec,
+        lights: (lightingSpec.lights ?? []).filter((l) => l.id !== id),
+      });
+      setSelectedLightId((cur) => (cur === id ? null : cur));
+      setToast('Removed light');
+    },
+    [lightingSpec, writeHubLightingSpec],
+  );
+
+  const toggleReceivesLighting = useCallback(() => {
+    if (!selectedNode) return;
+    const cur = selectedNode.receivesLighting ?? receivesLightingDefault(selectedNode.renderMode);
+    updateNode(selectedNode.nodeId, { receivesLighting: !cur });
+    setToast(!cur ? 'Node receives lighting' : 'Node unlit (texture-only)');
+  }, [selectedNode, updateNode]);
 
   // ── Marquee select ─────────────────────────────────────────────────────────
   const onMarqueeCommit = useCallback(
@@ -571,17 +726,20 @@ export default function CanvasToolbar() {
               />
             )}
             {activeGroup === 'lighting' && (
-              <PlaceholderTiles
-                subsystem="Lighting & Material systems"
-                onPick={(t) => showComing(t, 'Lighting & Material systems')}
-                tiles={[
-                  { icon: 'bulb', label: 'Add / Select Light' },
-                  { icon: 'sliders', label: 'Type / Intensity' },
-                  { icon: 'palette', label: 'Color' },
-                  { icon: 'eye', label: 'Shadow Softness' },
-                  { icon: 'sparkle', label: 'Env / IBL' },
-                  { icon: 'grid', label: 'receivesLighting' },
-                ]}
+              <LightingFlyout
+                hubTitle={lightingHub?.title ?? null}
+                spec={lightingSpec}
+                selectedLightId={selectedLightId}
+                selectedLight={selectedLight}
+                pickerOpen={lightPickerOpen}
+                node={selectedNode}
+                onTogglePicker={() => setLightPickerOpen((v) => !v)}
+                onAddLight={addLight}
+                onSelectLight={setSelectedLightId}
+                onRemoveLight={removeLight}
+                onUpdateLight={updateLight}
+                onPatchSpec={patchLightingSpec}
+                onToggleReceives={toggleReceivesLighting}
               />
             )}
           </FlyoutShell>
@@ -866,6 +1024,233 @@ function BuildFlyout({
         <span className="text-[9.5px] font-mono text-white/70">{buildCount ?? 1} build{(buildCount ?? 1) === 1 ? '' : 's'} · view history</span>
       </button>
     </>
+  );
+}
+
+// ── Lighting flyout (WIRED — canvas-spec §5 / §10) ───────────────────────────
+function LightingFlyout({
+  hubTitle, spec, selectedLightId, selectedLight, pickerOpen, node,
+  onTogglePicker, onAddLight, onSelectLight, onRemoveLight, onUpdateLight,
+  onPatchSpec, onToggleReceives,
+}: {
+  hubTitle: string | null;
+  spec: LightingSpec;
+  selectedLightId: string | null;
+  selectedLight: PrismLight | null;
+  pickerOpen: boolean;
+  node: PrismNode | null;
+  onTogglePicker: () => void;
+  onAddLight: (type: PrismLightType) => void;
+  onSelectLight: (id: string) => void;
+  onRemoveLight: (id: string) => void;
+  onUpdateLight: (id: string, patch: Partial<PrismLight>) => void;
+  onPatchSpec: (patch: Partial<LightingSpec>) => void;
+  onToggleReceives: () => void;
+}) {
+  if (!hubTitle) {
+    return <EmptyHint icon="bulb" text="No hub in view. Enter a hub on the canvas to light its scene." />;
+  }
+  const lights = spec.lights ?? [];
+  const intensity = selectedLight?.intensity ?? 1;
+  const shadowSoftness = spec.shadowSoftness ?? 0.5;
+  const envIntensity = spec.envIntensity ?? 1;
+  const nodeReceives = node
+    ? node.receivesLighting ?? receivesLightingDefault(node.renderMode)
+    : false;
+
+  return (
+    <>
+      <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-black/30 border border-white/5">
+        <Icon name="bulb" size={12} color={ACCENT} />
+        <span className="flex-1 text-[10px] font-mono text-white/80 truncate">{hubTitle}</span>
+        <span className="text-[9px] font-mono text-white/40">{lights.length} light{lights.length === 1 ? '' : 's'}</span>
+      </div>
+
+      {/* Light list + Add */}
+      <SectionLabel>Lights · writes hub lightingSpec</SectionLabel>
+      <div className="flex flex-col gap-1">
+        {lights.length === 0 && (
+          <div className="text-[8.5px] font-mono text-white/35 leading-tight px-1 py-1">
+            No author lights — the runtime default 3-point rig is active. Add one to override.
+          </div>
+        )}
+        {lights.map((l) => {
+          const active = l.id === selectedLightId;
+          return (
+            <div
+              key={l.id}
+              className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border transition-all ${
+                active ? 'border-white/20' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.03]'
+              }`}
+              style={active ? { background: `${ACCENT}1a`, boxShadow: `inset 0 0 0 1px ${ACCENT}44` } : undefined}
+            >
+              <button
+                type="button"
+                onClick={() => onSelectLight(l.id)}
+                className="flex-1 flex items-center gap-2 text-left"
+                title={`Select ${LIGHT_TYPE_LABEL[l.type]} light`}
+              >
+                <span className="w-2.5 h-2.5 rounded-full border border-white/30" style={{ background: l.color ?? '#ffffff' }} />
+                <span className={`text-[10px] font-mono ${active ? 'text-white' : 'text-white/70'}`}>
+                  {LIGHT_TYPE_LABEL[l.type]}
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onRemoveLight(l.id)}
+                title="Remove light"
+                className="w-5 h-5 rounded-md hover:bg-white/5 flex items-center justify-center"
+              >
+                <Icon name="trash" size={10} color="#8b93b5" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        data-action="add-light"
+        onClick={onTogglePicker}
+        className="w-full h-8 rounded-lg border flex items-center justify-center gap-1.5 transition-all"
+        style={
+          pickerOpen
+            ? { background: `${ACCENT}22`, borderColor: `${ACCENT}55` }
+            : { borderColor: 'rgba(255,255,255,0.12)' }
+        }
+      >
+        <Icon name="plus" size={11} color={pickerOpen ? ACCENT : '#c5ccea'} />
+        <span className="text-[9.5px] font-mono text-white/80">Add Light</span>
+      </button>
+      {pickerOpen && (
+        <div className="grid grid-cols-2 gap-1.5">
+          {LIGHT_TYPES.map((t) => (
+            <ToolButton key={t} icon="bulb" label={LIGHT_TYPE_LABEL[t]} onClick={() => onAddLight(t)} />
+          ))}
+        </div>
+      )}
+
+      {/* Selected-light controls */}
+      {selectedLight ? (
+        <>
+          <SectionLabel>Light · {LIGHT_TYPE_LABEL[selectedLight.type]}</SectionLabel>
+          <label className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-black/30 border border-white/5">
+            <span className="text-[10px] font-mono text-white/55">Type</span>
+            <select
+              data-control="light-type"
+              value={selectedLight.type}
+              onChange={(e) => onUpdateLight(selectedLight.id, { type: e.target.value as PrismLightType })}
+              className="bg-transparent text-[10px] font-mono text-white/85 outline-none cursor-pointer"
+            >
+              {LIGHT_TYPES.map((t) => (
+                <option key={t} value={t} className="bg-[#0b0d1f] text-white">{LIGHT_TYPE_LABEL[t]}</option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-black/30 border border-white/5">
+            <span className="text-[10px] font-mono text-white/55">Color</span>
+            <input
+              type="color"
+              data-control="light-color"
+              value={selectedLight.color ?? '#ffffff'}
+              onChange={(e) => onUpdateLight(selectedLight.id, { color: e.target.value })}
+              className="w-7 h-6 rounded cursor-pointer bg-transparent border border-white/10"
+            />
+          </label>
+
+          <StepperRow
+            label="I"
+            testId="light-intensity"
+            value={fmt(intensity)}
+            onDec={() => onUpdateLight(selectedLight.id, { intensity: Math.max(0, intensity - 0.1) })}
+            onInc={() => onUpdateLight(selectedLight.id, { intensity: intensity + 0.1 })}
+          />
+
+          {(selectedLight.type === 'directional' || selectedLight.type === 'spot' || selectedLight.type === 'rim') && (
+            <ToolButton
+              icon="eye"
+              label={selectedLight.castShadow ? 'Casts Shadow' : 'No Shadow'}
+              active={selectedLight.castShadow === true}
+              accent={GREEN}
+              onClick={() => onUpdateLight(selectedLight.id, { castShadow: !(selectedLight.castShadow === true) })}
+            />
+          )}
+        </>
+      ) : (
+        lights.length > 0 && (
+          <div className="text-[8.5px] font-mono text-white/35 leading-tight px-1">Select a light above to tune it.</div>
+        )
+      )}
+
+      {/* Scene-wide: shadow softness + env/IBL */}
+      <SectionLabel>Scene · Shadow / Env</SectionLabel>
+      <FaderRow
+        label="Shadow Softness"
+        value={shadowSoftness}
+        accent={VIOLET}
+        testId="shadow-softness"
+        onChange={(v) => onPatchSpec({ shadowSoftness: v })}
+      />
+      <FaderRow
+        label="Env / IBL Intensity"
+        value={envIntensity}
+        max={2}
+        accent={GREEN}
+        testId="env-intensity"
+        onChange={(v) => onPatchSpec({ envIntensity: v })}
+      />
+
+      {/* Per-node receivesLighting toggle (shown when a node is selected) */}
+      {node && (
+        <>
+          <SectionLabel>Selected Node</SectionLabel>
+          <ToolButton
+            icon="bulb"
+            label={nodeReceives ? 'Receives Light' : 'Unlit'}
+            testId="receives-lighting"
+            active={nodeReceives}
+            accent={AMBER}
+            onClick={onToggleReceives}
+            title="Toggle whether this node is lit by the scene rig"
+          />
+          <div className="text-[8px] font-mono text-white/30 leading-tight">
+            {`renderMode: ${node.renderMode ?? 'sprite'} · default ${
+              receivesLightingDefault(node.renderMode) ? 'lit' : 'unlit'
+            }`}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+// ── Fader (0..max range, mirrors MaterialTab native range pattern) ───────────
+function FaderRow({
+  label, value, onChange, min = 0, max = 1, step = 0.01, accent, testId,
+}: {
+  label: string; value: number; onChange: (v: number) => void;
+  min?: number; max?: number; step?: number; accent?: string; testId?: string;
+}) {
+  const a = accent ?? ACCENT;
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <span className="text-[9.5px] font-mono text-white/55">{label}</span>
+        <span className="text-[9.5px] font-mono tabular-nums" style={{ color: a }}>{fmt(value)}</span>
+      </div>
+      <input
+        type="range"
+        data-control={testId}
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        className="w-full h-1.5 cursor-pointer accent-current"
+        style={{ accentColor: a }}
+      />
+    </div>
   );
 }
 

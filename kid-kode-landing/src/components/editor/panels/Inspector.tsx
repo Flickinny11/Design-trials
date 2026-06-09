@@ -13,6 +13,7 @@ import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
 import { Icon } from '@/components/editor/icons/Icon';
 import { ColorPicker } from './ColorPicker';
+import MaterialTab from './MaterialTab';
 import VisualPreview from './visual-preview/VisualPreview';
 import type {
   CapabilityRef,
@@ -41,6 +42,7 @@ import {
 // part of the preserved set, so it must remain reachable in every view mode.
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
+  { id: 'material', label: 'Material', icon: 'sparkle' },
   { id: 'behavior', label: 'Behavior', icon: 'flow' },
   { id: 'code', label: 'Code', icon: 'code' },
   { id: 'animation', label: 'Animation', icon: 'play' },
@@ -483,6 +485,7 @@ export default function Inspector() {
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
         {tab === 'visual' && <VisualTab node={node} frozen={frozen} sourceNode={sourceNodeById} />}
+        {tab === 'material' && <MaterialTab node={sourceNodeById} frozen={frozen} />}
         {tab === 'behavior' && <BehaviorTab node={node} />}
         {tab === 'code' && <CodeTab node={node} frozen={frozen} />}
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
