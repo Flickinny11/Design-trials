@@ -2066,6 +2066,22 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     };
   }, [buildKey]);
 
+  // Shadow-casting: the assembled artifact's meshes must cast + receive soft
+  // shadows so the editor canvas matches the runtime / material-lighting-probe
+  // look. resolveArtifactObject builds the artifact synchronously, so the Mesh
+  // children exist by the time this effect runs; keyed on buildKey so a
+  // Save-and-Rebuild (which remounts the artifact) re-applies the flags.
+  useEffect(() => {
+    const g = popRef.current;
+    if (!g) return;
+    g.traverse((obj) => {
+      if ((obj as THREE.Mesh).isMesh) {
+        obj.castShadow = true;
+        obj.receiveShadow = true;
+      }
+    });
+  }, [buildKey]);
+
   return (
     <group
       ref={(g) => {
@@ -2530,6 +2546,28 @@ function MarqueeSelectBridge() {
   return null;
 }
 
+// A large, dim shadow-receiver plane sitting just behind the assembled content
+// so a soft cast shadow is actually visible in the editor canvas (matching the
+// runtime / material-lighting-probe). It uses a dark MeshStandardMaterial so it
+// stays low-key and does not change the assembled look — it sits in front of
+// SceneBackdrop (z=-2) but behind the artifacts (≈z=0), faces the camera, and
+// only receives shadows. Mounted ONLY in the assembled (canvas/preview-app)
+// content path.
+function AssembledShadowCatcher() {
+  return (
+    <mesh position={[0, 0, -1.4]} receiveShadow name="assembled:shadow-catcher">
+      <planeGeometry args={[60, 60]} />
+      <meshStandardMaterial
+        color="#0a0d16"
+        roughness={1}
+        metalness={0}
+        transparent
+        opacity={0.6}
+      />
+    </mesh>
+  );
+}
+
 function AssembledSceneContent({
   onPerf,
   previewMode = false,
@@ -2612,6 +2650,7 @@ function AssembledSceneContent({
           17) while legacy graphs stay pixel-stable. */}
       <HubLighting hub={hub} />
       <SceneBackdrop hub={hub} />
+      <AssembledShadowCatcher />
       {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is
           the running app (no frame, no gizmo, no demo). */}
       {!previewMode && (
@@ -2731,6 +2770,15 @@ async function createUnifiedRenderer(props: { canvas?: HTMLCanvasElement } & Rec
   (renderer as unknown as { toneMapping: THREE.ToneMapping }).toneMapping =
     THREE.ACESFilmicToneMapping;
   await renderer.init();
+  // Enable soft shadow mapping so the editor's assembled-scene meshes cast +
+  // receive shadows, matching the runtime / material-lighting-probe look. The
+  // WebGPURenderer exposes the same shadowMap interface as WebGLRenderer.
+  (renderer as unknown as {
+    shadowMap: { enabled: boolean; type: THREE.ShadowMapType };
+  }).shadowMap.enabled = true;
+  (renderer as unknown as {
+    shadowMap: { enabled: boolean; type: THREE.ShadowMapType };
+  }).shadowMap.type = THREE.PCFSoftShadowMap;
   // Editor-shell backend probe (RT-SC-01 verification). GraphScene is not a
   // runtime/prism-player module, so window.* is permitted (FP-R11 scope).
   if (typeof window !== 'undefined') {
@@ -2806,6 +2854,7 @@ export default function GraphScene() {
         dpr={dpr}
         gl={createUnifiedRenderer}
         camera={camera}
+        shadows="soft"
       >
         <fog attach="fog" args={['#05060a', 300, 900]} />
         <Suspense fallback={null}>

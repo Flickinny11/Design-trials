@@ -27,6 +27,7 @@ import {
 import {
   buildPhysicalMaterial,
   buildUnlitMaterial,
+  tagUnlitObject,
 } from '@/lib/prism/runtime/shared/material-system';
 import type { LightingTier, LightingTierPreference } from '@/lib/prism-graph/types';
 
@@ -95,6 +96,9 @@ export default function ProbeScene() {
     const plane = new THREE.Mesh(planeGeo, planeMat);
     plane.position.set(1.9, 0.8, 0);
     plane.name = 'unlit-plane';
+    // criterion 17 @ T2: tag onto the unlit layer so the rig's screen-space
+    // GI/AO mask excludes it (its baked color stays byte-identical to T0/T1).
+    tagUnlitObject(plane);
     scene.add(plane);
 
     // (c) Large shadow-catching ground (MeshStandardNodeMaterial, receiveShadow).

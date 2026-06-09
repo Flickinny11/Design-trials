@@ -74,13 +74,20 @@ export const pixelDissolvePrimitive: PrimitiveDefinition = {
         hashThreshold,
       );
       // softness>0 → use the feathered edge; the hard step keeps the quantized
-      // wipe legible. Average of the two reads as a soft-edged pixel grid.
-      const alpha = soft.add(hard).mul(0.5);
+      // wipe legible. Bias toward the HARD step (0.7/0.3) so the pixel grid edges
+      // stay crisp and high-contrast instead of muddying into a uniform haze.
+      const alpha = hard.mul(0.7).add(soft.mul(0.3));
 
-      const colorNode = vec3(uR, uG, uB);
+      const tint = vec3(uR, uG, uB);
+      const colorNode = tint;
 
       const mat = new MeshStandardNodeMaterial({ transparent: true });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;
+      // Self-lit emissive so the surviving pixel blocks read with punch at tile
+      // size on the #06070d bg before scene lights land — the dissolve edge stays
+      // crisp and bright instead of sinking to near-black. Brighten where blocks
+      // survive (alpha high) so the dissolving front carries clear contrast.
+      (mat as unknown as { emissiveNode: unknown }).emissiveNode = tint.mul(alpha).mul(0.85);
       (mat as unknown as { opacityNode: unknown }).opacityNode = alpha;
 
       const prevMat = mesh ? (mesh.material as Material) : null;

@@ -16,6 +16,10 @@ import {
   float,
   sin,
   normalize,
+  normalView,
+  positionViewDirection,
+  pow,
+  max as tslMax,
 } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
@@ -59,9 +63,27 @@ export const liquidGlassPrimitive: PrimitiveDefinition = {
       const perturb = vec3(lobeX, lobeY, lobeZ).mul(float(0.5));
       const flowingNormal = normalize(normalLocal.add(perturb));
 
+      // Luminous internal CORE: the catalog preview rig renders tiles through a
+      // scissored multi-view pass that does NOT populate three's transmission
+      // render target, so a perfectly clear transmissive sphere has no backdrop
+      // to refract and its on-axis centre reads pure black. We light the molten
+      // glass from within via an emissiveNode. `facing` (= n·viewDir) peaks where
+      // the surface faces the camera — the geometric centre — and falls to 0 at
+      // the rim (the complement of the fresnel rim). pow(facing,2) keeps the glow
+      // tight to the on-axis core so the centre glows softly instead of black,
+      // while the rim still catches the env + clearcoat highlights. Cool
+      // blue-white tint.
+      const facing = tslMax(normalView.dot(positionViewDirection), float(0));
+      // Bright saturated blue core so it reads as luminous glass, not grey clay.
+      const core = pow(facing, float(2)).mul(float(1.1));
+      const emissive = vec3(0.4, 0.6, 1.0).mul(core);
+
       const mat = new MeshPhysicalNodeMaterial({
         transmission: 1,
-        thickness: 1.2,
+        // thickness lowered 1.2 → 0.9: a touch less magnification so the molten
+        // centre samples the bright on-axis backdrop hero rather than the dim
+        // inverted periphery. The clearcoat surface highlights are unchanged.
+        thickness: 0.9,
         roughness: 0.04,
         metalness: 0,
         clearcoat: 1,
@@ -70,6 +92,7 @@ export const liquidGlassPrimitive: PrimitiveDefinition = {
         transparent: true,
       });
       (mat as unknown as { normalNode: unknown }).normalNode = flowingNormal;
+      (mat as unknown as { emissiveNode: unknown }).emissiveNode = emissive;
 
       const prevMat = mesh ? (mesh.material as Material) : null;
       if (mesh) mesh.material = mat;

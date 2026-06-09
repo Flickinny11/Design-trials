@@ -55,16 +55,26 @@ export const causticsRipplePrimitive: PrimitiveDefinition = {
 
       const a = sin(sx.add(t)).mul(sin(sy.sub(t)));
       const b = sin(sx.sub(sy).mul(0.7).add(t.mul(1.3)));
-      const web = max(a.add(b).mul(0.5), float(0));
-      const sharp = pow(web, float(3));
+      // Lift the band sum into [0,1] before sharpening so the whole light-net
+      // carries energy (the previous max(...,0) clipped half the field to black,
+      // which is why the tile read nearly black).
+      const web = a.add(b).mul(0.25).add(0.5).clamp(0, 1);
+      // Sharpen the filaments, then drive HARD so the bright caustic web punches
+      // clearly on the dark bg instead of fading to near-black.
+      const sharp = pow(web, float(1.7)).mul(float(5.5));
 
       // Radial ripple term: rings expanding from the plane's center, breathing
       // the caustics in and out. length(uv-0.5) is the radius from center; the
-      // ring phase advances with time so the rings travel outward.
+      // ring phase advances with time so the rings travel outward. Lift the ring
+      // floor so the web never fully extinguishes in a trough (keeps contrast
+      // without going black) — rings modulate brightness, not visibility.
       const radius = length(u.sub(vec2(0.5, 0.5)));
-      const ring = sin(radius.mul(uRingFreq).sub(uTime.mul(uSpeed))).mul(0.5).add(0.5);
+      // Keep the ring floor high so the web never extinguishes in a trough — the
+      // rings modulate brightness, not visibility, and the net stays legible.
+      const ring = sin(radius.mul(uRingFreq).sub(uTime.mul(uSpeed))).mul(0.35).add(0.65);
 
-      const colorNode = vec3(uR, uG, uB).mul(sharp).mul(ring);
+      // A bright base bias so even trough pixels carry visible caustic light.
+      const colorNode = vec3(uR, uG, uB).mul(sharp.add(0.18)).mul(ring);
 
       const mat = new MeshBasicNodeMaterial({ transparent: true });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;

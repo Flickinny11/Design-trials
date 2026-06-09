@@ -19,6 +19,8 @@
 // materials build their own content into `target.object` (subject:'empty').
 
 import {
+  BufferAttribute,
+  BufferGeometry,
   Group,
   Mesh,
   PlaneGeometry,
@@ -28,7 +30,7 @@ import {
   type Object3D,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
-import type { SubjectKind } from './contract';
+import { VOLUMETRIC_DEPTH_ATTR, type SubjectKind } from './contract';
 
 const ACCENT = '#5d8bff';
 const VIOLET = '#a978ff';
@@ -40,6 +42,101 @@ export interface BuiltSubject {
   object: Group;
   /** Reference subject child, or null for 'empty'. */
   subject: Object3D | null;
+}
+
+/** Options threaded from a PrimitiveDefinition into the subject factory.
+ *  Additive — every field optional, so legacy `buildSubject(kind)` calls are
+ *  unchanged. */
+export interface BuildSubjectOptions {
+  /** Definition's `volumetric` flag — only meaningful for the 'plane' subject. */
+  volumetric?: boolean;
+}
+
+// Volumetric slab parameters. A volumetric plane is a single Mesh whose geometry
+// is VOL_SLABS coplanar quads stacked back-to-front from z=0 (front) to
+// z=-VOL_DEPTH (back), so one swapped material covers the whole stack (the
+// primitives swap `subject.material` — the contract is preserved: subject is ONE
+// Mesh). Each vertex carries an `aDepth` float (0 front → 1 back). A volumetric
+// shader reads it via `attribute('aDepth')` to parallax/fade its field across
+// depth. Far-to-near vertex order so a transparent (depthWrite:false) material
+// composites correctly painter-style.
+const VOL_SLABS = 5;
+const VOL_DEPTH = 0.62;
+const VOL_SEG = 40;
+const VOL_SIZE = 1.8;
+// The catalog camera sits at z≈3.2 looking down −z. Rear slabs are further from
+// the camera, so under perspective they project SMALLER than the front slab —
+// which exposed their rectangular edges as nested "square frame" outlines inside
+// the tile. Scaling each slab by (camZ + |z|)/camZ makes every slab cover the
+// SAME screen footprint (the front slab's), so the slab edges all land at/outside
+// the tile boundary (clipped by the scissor) and the nested-frame banding is gone.
+const VOL_CAM_Z = 3.2;
+
+/**
+ * Build a multi-slab "volume" geometry for a volumetric plane subject: VOL_SLABS
+ * subdivided quads stacked along −z, merged into ONE indexed BufferGeometry with
+ * position / normal / uv / `aDepth` attributes. Slabs are emitted far-first so a
+ * back-to-front transparent material blends correctly. Hand-merged (no
+ * BufferGeometryUtils import) from PlaneGeometry slices.
+ */
+export function buildVolumetricSlabGeometry(
+  size = VOL_SIZE,
+  seg = VOL_SEG,
+  slabs = VOL_SLABS,
+  depth = VOL_DEPTH,
+): BufferGeometry {
+  const slices: PlaneGeometry[] = [];
+  let vertCount = 0;
+  let idxCount = 0;
+  // Far (i = slabs-1) → near (i = 0): push far slabs first.
+  for (let i = slabs - 1; i >= 0; i--) {
+    const g = new PlaneGeometry(size, size, seg, seg);
+    const z = -depth * (slabs > 1 ? i / (slabs - 1) : 0);
+    // Perspective-compensate: enlarge rear slabs so every slab fills the same
+    // screen footprint as the front slab (kills the nested-frame slab banding).
+    const persp = (VOL_CAM_Z + Math.abs(z)) / VOL_CAM_Z;
+    if (persp !== 1) g.scale(persp, persp, 1);
+    g.translate(0, 0, z);
+    slices.push(g);
+    vertCount += g.attributes.position.count;
+    idxCount += g.index ? g.index.count : 0;
+  }
+
+  const position = new Float32Array(vertCount * 3);
+  const normal = new Float32Array(vertCount * 3);
+  const uv = new Float32Array(vertCount * 2);
+  const aDepth = new Float32Array(vertCount);
+  const index = new Uint32Array(idxCount);
+
+  let vOff = 0;
+  let iOff = 0;
+  // slices[] is already far→near; aDepth = 1 (far) → 0 (near).
+  for (let s = 0; s < slices.length; s++) {
+    const g = slices[s];
+    const pos = g.attributes.position.array as ArrayLike<number>;
+    const nor = g.attributes.normal.array as ArrayLike<number>;
+    const tex = g.attributes.uv.array as ArrayLike<number>;
+    const count = g.attributes.position.count;
+    // s = 0 is the farthest slab → depth 1; s = last is nearest → depth 0.
+    const dval = slices.length > 1 ? 1 - s / (slices.length - 1) : 0;
+    position.set(pos as never, vOff * 3);
+    normal.set(nor as never, vOff * 3);
+    uv.set(tex as never, vOff * 2);
+    for (let k = 0; k < count; k++) aDepth[vOff + k] = dval;
+    const gi = g.index!.array as ArrayLike<number>;
+    for (let k = 0; k < gi.length; k++) index[iOff + k] = gi[k] + vOff;
+    vOff += count;
+    iOff += gi.length;
+    g.dispose();
+  }
+
+  const geo = new BufferGeometry();
+  geo.setAttribute('position', new BufferAttribute(position, 3));
+  geo.setAttribute('normal', new BufferAttribute(normal, 3));
+  geo.setAttribute('uv', new BufferAttribute(uv, 2));
+  geo.setAttribute(VOLUMETRIC_DEPTH_ATTR, new BufferAttribute(aDepth, 1));
+  geo.setIndex(new BufferAttribute(index, 1));
+  return geo;
 }
 
 /** Premium panel material — metallic-ish so the env map reads as a soft sheen. */
@@ -76,10 +173,38 @@ function chromeBar(
   return new Mesh(new RoundedBoxGeometry(width, height, 0.03, 3, 0.014), mat);
 }
 
-/** Build the named subject. Returns the owning group + the subject handle. */
-export function buildSubject(kind: SubjectKind): BuiltSubject {
+/** Build the named subject. Returns the owning group + the subject handle.
+ *  `opts.volumetric` (additive) upgrades a 'plane' subject to a depth slab
+ *  stack; all other kinds ignore it. */
+export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}): BuiltSubject {
   const object = new Group();
   object.name = 'primitive-root';
+
+  if (kind === 'plane' && opts.volumetric) {
+    // Volumetric plane: a single Mesh whose geometry is a back-to-front slab
+    // stack carrying the `aDepth` attribute. The primitive swaps this mesh's
+    // material (contract preserved — subject is ONE Mesh) and reads `aDepth` to
+    // give its field real volume. depthWrite:false on the material lets the
+    // slabs composite; the volumetric primitives set that on their swapped mat.
+    const mesh = new Mesh(
+      buildVolumetricSlabGeometry(),
+      new MeshStandardMaterial({
+        color: new Color('#23304f'),
+        emissive: new Color(ACCENT),
+        emissiveIntensity: 0.28,
+        roughness: 0.45,
+        metalness: 0.25,
+        envMapIntensity: 1.1,
+        transparent: true,
+        depthWrite: false,
+      }),
+    );
+    mesh.name = 'subject';
+    mesh.renderOrder = 1;
+    mesh.userData.volumetric = true;
+    object.add(mesh);
+    return { object, subject: mesh };
+  }
 
   switch (kind) {
     case 'card': {

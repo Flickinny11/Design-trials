@@ -13,7 +13,7 @@ import type {
 
 export function makeTarget(def: PrimitiveDefinition): AnimatableTarget {
   const scene = new Scene();
-  const { object, subject } = buildSubject(def.subject);
+  const { object, subject } = buildSubject(def.subject, { volumetric: def.volumetric });
   scene.add(object);
   // Synthetic driver inputs the stage would supply.
   return { object, subject, scene, userData: { pointer: { x: 0.5, y: 0.5 }, scroll: 0.5 } };

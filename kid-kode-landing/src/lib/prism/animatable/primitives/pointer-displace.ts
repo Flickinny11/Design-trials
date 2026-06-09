@@ -56,6 +56,14 @@ export const pointerDisplacePrimitive: PrimitiveDefinition = {
       const base = new Float32Array(posAttr.array as ArrayLike<number>);
       const count = posAttr.count;
 
+      // A faint standing ripple woven into the rest surface so the plane reads
+      // with real structure even before the pointer touches it (the old version
+      // was a flat blue sheet at rest). Amplitude is deliberately tiny — small
+      // enough that a vertex far from the pointer is still effectively at its
+      // base z — and it FADES OUT under the pointer so the dimple stays clean.
+      const REST_AMP = 0.012; // u — gentle relief, kept well under the dimple
+      const REST_FREQ = 7.5;
+
       const applyDimple = () => {
         const depth = num(params.depth, 0.6);
         // radius knob (0..1) → gaussian sigma in uv space (0.05..0.5).
@@ -76,7 +84,15 @@ export const pointerDisplacePrimitive: PrimitiveDefinition = {
           const dv = v - p.y;
           const d2 = du * du + dv * dv;
           const falloff = Math.exp(-d2 / denom);
-          posAttr.setXYZ(i, bx, by, bz + sign * depth * falloff);
+          // Resting micro-ripple — a low-amplitude interfering wave field that
+          // gives the surface visible relief at rest. It is suppressed (× 1−falloff)
+          // right under the pointer so it never muddies the dimple.
+          const ripple =
+            REST_AMP *
+            Math.sin(u * REST_FREQ + v * REST_FREQ * 0.6) *
+            Math.cos(v * REST_FREQ - u * REST_FREQ * 0.4) *
+            (1 - falloff);
+          posAttr.setXYZ(i, bx, by, bz + ripple + sign * depth * falloff);
         }
         posAttr.needsUpdate = true;
         geom.computeVertexNormals();

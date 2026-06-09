@@ -13,9 +13,9 @@
 
 import { Mesh, type Material } from 'three';
 import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float } from 'three/tsl';
+import { uniform, uv, vec2, vec3, float, attribute } from 'three/tsl';
 import { defineAnimatable } from '../base';
-import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
+import { num, type ControlValue, type PrimitiveDefinition, VOLUMETRIC_DEPTH_ATTR } from '../contract';
 
 // TSL's per-call generic typing is far narrower than the runtime node graph it
 // builds; helper functions that thread nodes through fbm/hash trip the strict
@@ -38,6 +38,7 @@ interface TNode {
   step: (edge: number | TNode) => TNode;
   clamp: (lo: number, hi: number) => TNode;
   pow: (e: number) => TNode;
+  oneMinus: () => TNode;
   max: (x: TNode | number) => TNode;
   x: TNode;
   y: TNode;
@@ -61,6 +62,7 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
   category: 'volumetric',
   difficulty: 'hard',
   subject: 'plane',
+  volumetric: true,
   defaultDriver: 'time',
   description:
     'Vast clouds of cosmic dust drift through starlight, soft lit nebular haze layered with distant pinprick stars.',
@@ -118,11 +120,34 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
       const uvN = uv() as unknown as TNode;
       const t = uTimeN; // slow master clock (seek advances uTime slowly)
 
+      // VOLUMETRIC: per-vertex depth 0 (front slab) → 1 (rearmost slab). With 5
+      // coplanar slabs sharing this one material we MUST sample a DIFFERENT slice
+      // per slab, else we just get 5× identical overdraw and a flat tile. aDepth
+      // is the third noise dimension AND the parallax/fade driver.
+      const aDepth = attribute(VOLUMETRIC_DEPTH_ATTR) as unknown as TNode;
+
+      // Parallax: rear slabs slide the haze domain further with the drift, so the
+      // cloud genuinely sheers through depth as the camera/field moves. Plus a
+      // constant per-slab domain shift so each slab is a distinct slice even at
+      // rest (no overdraw twinning).
+      const parallax = aDepth.mul(0.9);
+      const depthDomain = aDepth.mul(2.4); // 3rd-dimension offset into fbm
+
       // Drifting nebular haze: sample fbm at scaled uv offset by a slow drift —
-      // mostly horizontal (uTime*drift) with a gentle vertical creep (uTime*0.1).
+      // mostly horizontal (uTime*drift) with a gentle vertical creep — then add
+      // the per-slab parallax + depth-domain shift so the volume reads in 3D.
       const drift = t2(t.mul(uDriftN), t.mul(0.1));
-      const hazeP = uvN.mul(uScaleN).add(drift);
+      const hazeP = uvN
+        .mul(uScaleN)
+        .add(drift)
+        .add(t2(parallax.mul(uDriftN.mul(6).add(0.6)), depthDomain));
       const cloudRaw = fbm(hazeP).clamp(0, 1);
+
+      // Depth fade: front slabs (aDepth→0) are brightest/densest; rear slabs
+      // (aDepth→1) are fainter and a touch cooler/darker, so the stack reads as a
+      // lit volume with front-to-back density falloff & self-occlusion.
+      const depthFade = aDepth.oneMinus().mul(0.7).add(0.3); // 1.0 front → 0.3 rear
+      const depthTint = aDepth.mul(0.45).oneMinus(); // rear slabs darkened toward 0.55
 
       // Soft 2-3 color cosmic palette: deep blue -> teal -> magenta, banded via
       // smoothstep on the haze density.
@@ -133,14 +158,23 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
       const palette = loBand.mix(magenta, cloudRaw.smoothstep(0.58, 0.9));
 
       // Keep it soft + deep: gentle internal glow where density peaks, no hard
-      // cores (that would read as plasma, not dust).
-      const glow = cloudRaw.pow(2.0).mul(0.5);
-      const cloudColor = palette.mul(cloudRaw.mul(0.8).add(0.25)).add(t3(glow.mul(0.4), glow.mul(0.5), glow.mul(0.6)));
+      // cores (that would read as plasma, not dust). Concentrate the glow on the
+      // front slabs so the volume looks lit from the camera-facing face.
+      const glow = cloudRaw.pow(2.0).mul(0.5).mul(aDepth.oneMinus().mul(0.7).add(0.3));
+      const cloudColor = palette
+        .mul(cloudRaw.mul(0.8).add(0.25))
+        .add(t3(glow.mul(0.4), glow.mul(0.5), glow.mul(0.6)))
+        .mul(depthTint);
 
-      // Faint star field: hash a coarse cell grid, step on the hash so only the
-      // brightest cells light up (gated by starDensity), and twinkle each star
-      // slightly over time via a per-cell sine phase.
-      const starCell = uvN.mul(uScaleN.mul(28)).add(t2(2.7, 9.1));
+      // Faint star field: bright sparse motes that parallax through depth — rear
+      // slabs use a shifted cell grid so motes sit at distinct positions per slab
+      // (true parallax depth, not a decal). Hash a coarse cell grid, step on the
+      // hash so only the brightest cells light up (gated by starDensity), and
+      // twinkle each mote over time via a per-cell sine phase.
+      const starCell = uvN
+        .mul(uScaleN.mul(28))
+        .add(t2(2.7, 9.1))
+        .add(t2(aDepth.mul(17.3), aDepth.mul(11.7))); // per-slab mote parallax
       const starId = starCell.floor();
       const starHash = hash(starId);
       // threshold: higher starDensity → lower edge → more stars survive the step.
@@ -149,11 +183,14 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
       // per-star twinkle: a slow sine in [0.35, 1] keyed off the cell hash phase.
       const twPhase = starHash.mul(6.2831).add(t.mul(2.0));
       const twinkle = twPhase.sin().mul(0.5).add(0.5).mul(0.65).add(0.35);
-      const stars = starHit.mul(twinkle).mul(uStarN.mul(0.6).add(0.4));
+      // motes fade with depth too — distant dust glints dimmer than near motes.
+      const stars = starHit.mul(twinkle).mul(uStarN.mul(0.6).add(0.4)).mul(depthFade);
 
       const colorNode = cloudColor.add(t3(stars, stars, stars.mul(1.1)));
-      // opacityNode = cloud + stars (soft haze body plus pinprick stars).
-      const opacityNode = cloudRaw.mul(0.85).add(stars).clamp(0, 1);
+      // opacityNode = (cloud + stars) × depth-fade. Each of the 5 far-first slabs
+      // composites painter-style 'over' (depthWrite:false), building a soft,
+      // genuinely volumetric haze instead of one flat plane.
+      const opacityNode = cloudRaw.mul(0.85).add(stars).mul(depthFade).clamp(0, 1);
 
       const mat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;

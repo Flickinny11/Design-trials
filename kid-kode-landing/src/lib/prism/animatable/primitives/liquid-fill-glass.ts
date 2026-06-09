@@ -8,7 +8,19 @@
 
 import { Mesh, Color, type Material } from 'three';
 import { MeshPhysicalNodeMaterial } from 'three/webgpu';
-import { uniform, uv, sin, step, mix, float, vec3 } from 'three/tsl';
+import {
+  uniform,
+  uv,
+  sin,
+  step,
+  mix,
+  float,
+  vec3,
+  normalView,
+  positionViewDirection,
+  pow,
+  max as tslMax,
+} from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, str, clamp, type ControlValue, type PrimitiveDefinition } from '../contract';
 
@@ -81,6 +93,20 @@ export const liquidFillGlassPrimitive: PrimitiveDefinition = {
       // where headless transmission under-renders.
       const colorNode = mix(vec3(0.85, 0.9, 1.0), liquidTint, mask.mul(0.85));
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;
+
+      // Luminous internal CORE: the catalog preview rig renders tiles through a
+      // scissored multi-view pass that does NOT populate three's transmission
+      // render target, so a perfectly clear transmissive surface has no backdrop
+      // to refract and reads pure black on-axis. We light the panel from within
+      // via an emissiveNode so it never reads black while keeping its fill
+      // character. `facing` (= n·viewDir) peaks where the surface faces the
+      // camera and falls to 0 at any rim. The glow tint follows the same mask as
+      // the surface color: liquid tint below the meniscus, cool blue-white above.
+      const facing = tslMax(normalView.dot(positionViewDirection), float(0));
+      const core = pow(facing, float(2)).mul(float(0.4));
+      const emissiveTint = mix(vec3(0.78, 0.86, 1.0), liquidTint, mask.mul(0.85));
+      const emissive = emissiveTint.mul(core);
+      (mat as unknown as { emissiveNode: unknown }).emissiveNode = emissive;
 
       const prevMat = mesh ? (mesh.material as Material) : null;
       if (mesh) mesh.material = mat;

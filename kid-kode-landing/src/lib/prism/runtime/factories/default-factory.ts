@@ -47,6 +47,7 @@ import {
   buildPhysicalMaterial,
   applyMaterialSpec,
   resolveMaterialSpec,
+  tagUnlitObject,
 } from '../shared/material-system';
 import { displacementShader } from '../shared/shaders/displacement.tsl';
 import type {
@@ -115,9 +116,9 @@ export function defaultRenderModeFactory(
     // (receivesLighting=true) to catch scene light (e.g. a metallic text fill).
     // Non-node-material (WebGL editor) path keeps the legacy MeshBasicMaterial
     // verbatim — byte-identical to before for default nodes.
+    const lit = resolveReceivesLighting(node);
     let mat: DisposableMaterial & { map?: Texture | null; needsUpdate?: boolean };
     if (useNodeMaterials) {
-      const lit = resolveReceivesLighting(node);
       mat = (lit
         ? buildLitTextureMaterial({ spec: node.materialSpec })
         : buildUnlitMaterial({ transparent: true })) as unknown as DisposableMaterial & {
@@ -129,7 +130,6 @@ export function defaultRenderModeFactory(
       // MeshBasicMaterial — UNLIT and byte-identical to before. A node that opts
       // IN (receivesLighting=true) becomes MeshStandardMaterial so the editor's
       // HubLighting actually lights it (criterion 17 opt-in on the editor surface).
-      const lit = resolveReceivesLighting(node);
       mat = (lit
         ? new MeshStandardMaterial({ transparent: true })
         : new MeshBasicMaterial({ transparent: true })) as unknown as DisposableMaterial & {
@@ -147,6 +147,9 @@ export function defaultRenderModeFactory(
         .catch(() => { /* swallow — decorative */ });
     }
     const mesh = new Mesh(geo, mat as unknown as MeshBasicMaterial);
+    // criterion 17 @ T2: tag UNLIT image planes onto the unlit layer so the
+    // rig's screen-space GI/AO post pass excludes them (baked look stays exact).
+    if (!lit) tagUnlitObject(mesh);
     group.add(mesh);
     disposables.push(geo);
     materialsToDispose.push(mat as unknown as DisposableMaterial);
@@ -158,9 +161,9 @@ export function defaultRenderModeFactory(
     // The non-node-material (WebGL editor) path keeps the legacy
     // MeshStandardMaterial verbatim — byte-identical to before for default nodes.
     const geo = new PlaneGeometry(width, height, 64, 64);
+    const lit = resolveReceivesLighting(node);
     let mat: DisposableMaterial;
     if (useNodeMaterials) {
-      const lit = resolveReceivesLighting(node);
       if (lit) {
         const litMat = buildLitTextureMaterial({ spec: node.materialSpec });
         litMat.transparent = true;
@@ -191,6 +194,8 @@ export function defaultRenderModeFactory(
         .catch(() => { /* swallow */ });
     }
     const mesh = new Mesh(geo, mat as unknown as MeshStandardMaterial);
+    // criterion 17 @ T2: exclude the UNLIT parallax plane from the SSGI/GTAO pass.
+    if (!lit) tagUnlitObject(mesh);
     group.add(mesh);
     disposables.push(geo);
     materialsToDispose.push(mat);

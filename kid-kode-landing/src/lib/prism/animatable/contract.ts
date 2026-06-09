@@ -185,9 +185,33 @@ export interface PrimitiveDefinition {
   schema: ControlSchema;
   /** One-line description for the tile + report gallery. */
   description: string;
+  /**
+   * ADDITIVE, OPT-IN depth tag (art-polish 2026-06-09). When `true` AND
+   * `subject === 'plane'`, the host builds the preview subject as a multi-slab
+   * "volume" instead of a single flat quad (see `buildSubject` /
+   * `buildVolumetricSlabGeometry`): N coplanar quads stacked back-to-front
+   * along −z, each vertex carrying a `VOLUMETRIC_DEPTH_ATTR` float (0 front → 1
+   * back). A volumetric shader can read that attribute via `attribute('aDepth')`
+   * to parallax-offset / depth-fade its density field so smoke/fog/cloud/fire
+   * reads as a real volume rather than a flat gradient.
+   *
+   * SAFE DEFAULT: omitted / `false` → the legacy single flat plane, byte-stable.
+   * This is purely static `PrimitiveDefinition` metadata; the frozen `Animatable`
+   * interface (duration/seek/controls/serialize/…) is untouched, so no existing
+   * primitive, test, or registry consumer changes behavior.
+   */
+  volumetric?: boolean;
   /** Construct a live Animatable bound to `target`. */
   create: (target: AnimatableTarget, params?: Partial<ParamState>) => Animatable;
 }
+
+/**
+ * Per-vertex float attribute carried by a volumetric multi-slab subject:
+ * 0.0 at the front (camera-facing) slab → 1.0 at the rearmost slab. Volumetric
+ * primitives read it in TSL via `attribute(VOLUMETRIC_DEPTH_ATTR)`. Frozen name
+ * so the host geometry and the primitive shaders agree.
+ */
+export const VOLUMETRIC_DEPTH_ATTR = 'aDepth';
 
 // ── Helpers shared by primitive authors ───────────────────────────────────
 /** Resolve initial params from a schema + caller overrides. */

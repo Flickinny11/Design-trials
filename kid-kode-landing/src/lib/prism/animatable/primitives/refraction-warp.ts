@@ -19,6 +19,10 @@ import {
   sin,
   add,
   normalize,
+  normalView,
+  positionViewDirection,
+  pow,
+  max as tslMax,
 } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
@@ -68,6 +72,20 @@ export const refractionWarpPrimitive: PrimitiveDefinition = {
         add(normalLocal, vec3(ripple, ripple.mul(0.6), float(0.0))),
       );
 
+      // Luminous internal CORE: the catalog preview rig renders tiles through a
+      // scissored multi-view pass that does NOT populate three's transmission
+      // render target, so a perfectly clear transmissive sphere has no backdrop
+      // to refract and its on-axis centre reads pure black. We light the warping
+      // glass from within via an emissiveNode. `facing` (= n·viewDir) peaks where
+      // the surface faces the camera — the geometric centre — and falls to 0 at
+      // the rim (the complement of the fresnel rim). pow(facing,2) keeps the glow
+      // tight to the on-axis core so the centre glows softly instead of black,
+      // while the rim still catches the warped env. Cool tint.
+      const facing = tslMax(normalView.dot(positionViewDirection), float(0));
+      // Bright saturated teal-blue core so it reads as luminous glass, not grey clay.
+      const core = pow(facing, float(2)).mul(float(1.1));
+      const emissive = vec3(0.35, 0.66, 1.0).mul(core);
+
       const mat = new MeshPhysicalNodeMaterial({ transparent: true });
       mat.transmission = 1.0;
       mat.roughness = 0.04;
@@ -76,6 +94,7 @@ export const refractionWarpPrimitive: PrimitiveDefinition = {
       mat.ior = num(params.ior, 1.45);
       mat.envMapIntensity = 1.4;
       (mat as unknown as { normalNode: unknown }).normalNode = perturbed;
+      (mat as unknown as { emissiveNode: unknown }).emissiveNode = emissive;
 
       const prevMat = mesh ? (mesh.material as Material) : null;
       if (mesh) mesh.material = mat;

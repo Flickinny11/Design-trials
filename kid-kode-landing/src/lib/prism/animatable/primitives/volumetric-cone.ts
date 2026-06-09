@@ -1,34 +1,58 @@
 // volumetric-cone — a single cone of volumetric light beams down from an apex at
 // top-center, widening downward, with dust motes drifting in the shaft as the
-// cone slowly sweeps. HARD / GPU primitive. Swaps the host plane's material for a
-// MeshBasicNodeMaterial whose opacityNode is the cone intensity: an angle test
-// from the apex (atan/dot against a slowly-sweeping cone direction) selects the
-// shaft, falloff with distance dims it, and an fbm-of-uv dust term modulates the
-// volume. seek() advances a time uniform (sweep + dust drift). Numeric controls
-// update uniforms via onParamChange and are also read live in seek.
+// cone slowly sweeps. HARD / GPU / VOLUMETRIC primitive. The host builds the
+// subject as a 5-slab coplanar stack (z 0 → -0.62), each vertex carrying the
+// frozen `aDepth` attribute (0 front → 1 rear). We swap the host plane's
+// material for a SINGLE MeshBasicNodeMaterial drawn across all slabs; the shader
+// reads `aDepth` to (1) PARALLAX the dust field per slab so the shaft reads as a
+// real haze volume rather than 5x identical overdraw, and (2) DEPTH-FADE rear
+// slabs so the cone has front-to-back density falloff and self-occlusion. An
+// angle test from the apex (atan against a slowly-sweeping cone direction)
+// selects the shaft; falloff makes it denser near the apex; an fbm dust term
+// modulates the volume. transparent + depthWrite:false + additive blending make
+// the far-first slabs composite as glowing haze. seek() advances a time uniform.
 //
 // DISTINCT from godray/light-shafts (parallel/marched radial shafts): this is one
-// coherent sweeping volumetric cone with an apex, soft angular edges, and dust.
+// coherent sweeping volumetric cone with an apex, soft angular edges, and depth.
 
-import { Mesh, type Material } from 'three';
+import { Mesh, AdditiveBlending, type Material } from 'three';
 import { MeshBasicNodeMaterial } from 'three/webgpu';
-import {
-  uniform,
-  uv,
-  vec2,
-  vec3,
-  float,
-  sin,
-  atan,
-  abs,
-  fract,
-  floor,
-  mix,
-  smoothstep,
-  clamp as tslClamp,
-} from 'three/tsl';
+import { uniform, uv, vec2, vec3, float, attribute, atan } from 'three/tsl';
 import { defineAnimatable } from '../base';
-import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
+import { num, type ControlValue, type PrimitiveDefinition, VOLUMETRIC_DEPTH_ATTR } from '../contract';
+
+// TSL's per-call generic typing is far narrower than the runtime node graph it
+// builds; value-noise / fbm pass nodes through helper functions that the strict
+// overloads of the free TSL functions reject. Like nebula.ts, we work through a
+// single permissive chainable node alias (method-chaining only, which every TSL
+// node supports) so the helpers compose without fighting the inferred VarNode
+// generics. The graph this builds is identical to the free-function form.
+interface TNode {
+  add: (x: TNode | number) => TNode;
+  sub: (x: TNode | number) => TNode;
+  mul: (x: TNode | number) => TNode;
+  div: (x: TNode | number) => TNode;
+  negate: () => TNode;
+  abs: () => TNode;
+  floor: () => TNode;
+  fract: () => TNode;
+  sin: () => TNode;
+  length: () => TNode;
+  oneMinus: () => TNode;
+  dot: (x: TNode) => TNode;
+  mix: (a: TNode, b: TNode | number) => TNode;
+  smoothstep: (lo: TNode | number, hi: TNode | number) => TNode;
+  clamp: (lo: number, hi: number) => TNode;
+  pow: (e: number) => TNode;
+  x: TNode;
+  y: TNode;
+}
+type V = number | TNode;
+const t2 = (x: V, y: V): TNode =>
+  (vec2 as unknown as (a: unknown, b: unknown) => unknown)(x, y) as TNode;
+const t3 = (r: V, g: V, b: V): TNode =>
+  (vec3 as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(r, g, b) as TNode;
+const f1 = (x: number): TNode => float(x) as unknown as TNode;
 
 const SCHEMA = [
   { id: 'sweep', label: 'Sweep', type: 'knob', min: 0, max: 2, step: 0.05, default: 0.6 },
@@ -43,6 +67,7 @@ export const volumetricConePrimitive: PrimitiveDefinition = {
   category: 'volumetric',
   difficulty: 'hard',
   subject: 'plane',
+  volumetric: true,
   defaultDriver: 'time',
   description:
     'A cone of volumetric light beams down from a point, dust motes drifting in the shaft as it slowly sweeps.',
@@ -58,63 +83,112 @@ export const volumetricConePrimitive: PrimitiveDefinition = {
       const uDust = uniform(num(params.dust, 0.6));
       const uIntensity = uniform(num(params.intensity, 1.2));
 
+      // Per-vertex slab depth: 0.0 on the FRONT (camera) slab → 1.0 on the
+      // rearmost slab. Constant within each slab, so each of the 5 coplanar
+      // quads samples a distinct slice of the volume.
+      const aDepth = attribute(VOLUMETRIC_DEPTH_ATTR) as unknown as TNode;
+
+      // Deterministic 2D value-noise → smooth value noise → fbm (nebula pattern).
+      const hash = (p: TNode): TNode =>
+        p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract();
+
+      const noise = (p: TNode): TNode => {
+        const i = p.floor();
+        const f = p.fract();
+        // smooth Hermite interpolant: f*f*(3-2f)
+        const w = f.mul(f).mul(f1(3).sub(f.mul(2)));
+        const a = hash(i);
+        const b = hash(i.add(t2(1, 0)));
+        const c = hash(i.add(t2(0, 1)));
+        const d = hash(i.add(t2(1, 1)));
+        const ab = a.mix(b, w.x);
+        const cd = c.mix(d, w.x);
+        return ab.mix(cd, w.y);
+      };
+
+      const fbm = (p0: TNode): TNode => {
+        let sum = f1(0);
+        let amp = 0.5;
+        let p = p0;
+        // 5 octaves of value noise → no blocky low-res look.
+        for (let o = 0; o < 5; o++) {
+          sum = sum.add(noise(p).mul(amp));
+          p = p.mul(2.02);
+          amp *= 0.5;
+        }
+        return sum;
+      };
+
+      const u = uv() as unknown as TNode;
+      const tt = (uTime as unknown as TNode);
+
       // Apex at top-center of the plane (uv y=1, x=0.5). Cone opens downward.
-      const u = uv();
-      const apex = vec2(0.5, 1.0);
+      const apex = t2(0.5, 1.0);
       const rel = u.sub(apex); // fragment relative to apex
       const dist = rel.length();
 
-      // Bearing of the fragment from the apex. Straight down is the -y axis;
-      // atan(rel.x, -rel.y) measures the signed angle off the downward axis.
-      const bearing = atan(rel.x, rel.y.negate());
+      // Bearing of the fragment from the apex. atan(rel.x, -rel.y) measures the
+      // signed angle off the straight-down axis.
+      const bearing = (atan as unknown as (y: TNode, x: TNode) => TNode)(rel.x, rel.y.negate());
 
       // Cone direction sweeps slowly side-to-side around straight-down.
-      const sweepAngle = sin(uTime.mul(uSweep)).mul(0.45);
-      const offAxis = abs(bearing.sub(sweepAngle));
+      const sweepAngle = tt.mul(uSweep as unknown as TNode).sin().mul(0.45);
+      const offAxis = bearing.sub(sweepAngle).abs();
 
       // Soft angular edges: inside the half-spread → 1, fading out past it.
-      const cone = smoothstep(uSpread, uSpread.mul(0.45), offAxis);
+      const sp = uSpread as unknown as TNode;
+      const cone = offAxis.smoothstep(sp, sp.mul(0.45));
 
-      // Distance falloff: brightest near the apex, dimming down the shaft.
-      const falloff = tslClamp(float(1).sub(dist.mul(0.85)), float(0), float(1));
+      // Distance falloff: brightest/densest near the apex, dimming down the shaft.
+      const falloff = f1(1).sub(dist.mul(0.85)).clamp(0, 1);
 
-      // Dusty volume: a cheap fbm of (uv*scale + time*drift). Two value-noise
-      // octaves built from a hashed lattice keep it deterministic and GPU-light.
-      const drift = vec2(uTime.mul(0.07), uTime.mul(-0.13));
-      // TSL node values infer over-narrow VarNode types as helper params; type
-      // the node args/locals as `any` so strict tsc accepts the lattice math.
-      /* eslint-disable @typescript-eslint/no-explicit-any */
-      const fbm = (p: any) => {
-        const hash = (cell: any) =>
-          fract(sin(cell.x.mul(127.1).add(cell.y.mul(311.7))).mul(43758.5453));
-        const noise = (q: any) => {
-          const i = floor(q);
-          const f = fract(q);
-          const w: any = f.mul(f).mul(float(3).sub(f.mul(2))); // smoothstep weights
-          const a = hash(i);
-          const b = hash(i.add(vec2(1, 0)));
-          const c = hash(i.add(vec2(0, 1)));
-          const d = hash(i.add(vec2(1, 1)));
-          return mix(mix(a, b, w.x), mix(c, d, w.x), w.y);
-        };
-        const p1 = p.add(drift);
-        const p2 = p.mul(2.13).add(drift.mul(1.7));
-        return noise(p1).mul(0.65).add(noise(p2).mul(0.35));
-      };
-      /* eslint-enable @typescript-eslint/no-explicit-any */
-      const dustTerm = fbm(u.mul(7.0));
-      // 0.7 baseline + dust modulation, scaled by the dust control.
-      const dusty = float(0.7).add(dustTerm.mul(0.3).mul(uDust));
+      // --- VOLUME via aDepth -------------------------------------------------
+      // 1) Parallax: each slab samples a different slice of the dust field. Push
+      //    the sample domain along the view by an aDepth-scaled offset AND feed
+      //    aDepth as a genuine 3rd noise dimension (folded into the 2D lattice),
+      //    so the field really varies through depth instead of 5x overdraw.
+      const drift = t2(tt.mul(0.07), tt.mul(-0.13));
+      const parallax = t2(aDepth.mul(0.6), aDepth.mul(-0.35));
+      const depthSlice = aDepth.mul(11.3); // distinct lattice offset per slab
+      const dustP = u.mul(7.0).add(drift).add(parallax).add(t2(depthSlice, depthSlice.mul(0.7)));
+      const dustTerm = fbm(dustP);
 
-      const intensityNode = cone.mul(falloff).mul(dusty).mul(uIntensity);
-      const opacityNode = tslClamp(intensityNode, float(0), float(1));
+      // Sparse drifting motes: sharpen the fbm peaks so bright specks pop in the
+      // shaft rather than a uniform haze.
+      const motes = dustTerm.clamp(0, 1).pow(2.4).mul(0.9);
+      // Dust density: a 0.7 baseline haze + fbm body + bright motes, the whole
+      // modulation scaled by the Dust control. At Dust=0 → flat 0.7 shaft.
+      const dustGain = f1(0.7).add(dustTerm.mul(0.3).add(motes).mul(uDust as unknown as TNode));
 
-      // Pale warm shaft color, slightly hotter near the apex.
-      const warmCore = vec3(1.0, 0.96, 0.82);
-      const warmEdge = vec3(0.78, 0.84, 1.0);
-      const colorNode = mix(warmEdge, warmCore, falloff);
+      // 2) Depth-fade: rear slabs fainter (density falloff / self-shadow). Front
+      //    slab (aDepth 0) → ~1.0, rear (aDepth 1) → ~0.3.
+      const depthFade = aDepth.oneMinus().mul(0.7).add(0.3);
 
-      const mat = new MeshBasicNodeMaterial({ transparent: true, depthWrite: false });
+      // Cone density: angular gate × apex falloff × dust × depth-fade. Boost the
+      // near-apex region so the cone is visibly denser at the top.
+      const apexBoost = falloff.pow(1.6).mul(0.8).add(0.5);
+      const density = cone
+        .mul(falloff)
+        .mul(apexBoost)
+        .mul(dustGain)
+        .mul(depthFade)
+        .mul(uIntensity as unknown as TNode);
+
+      const opacityNode = density.clamp(0, 1);
+
+      // Warm shaft, slightly hotter near the apex; rear slabs tinted a touch
+      // cooler/darker so the stack reads as a lit volume with front-to-back depth.
+      const warmCore = t3(1.0, 0.96, 0.82);
+      const warmEdge = t3(0.78, 0.84, 1.0);
+      const baseCol = warmEdge.mix(warmCore, falloff);
+      const depthTint = aDepth.oneMinus().mul(0.45).add(0.55); // rear slabs darker
+      const colorNode = baseCol.mul(depthTint);
+
+      const mat = new MeshBasicNodeMaterial({
+        transparent: true,
+        depthWrite: false,
+        blending: AdditiveBlending,
+      });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;
       (mat as unknown as { opacityNode: unknown }).opacityNode = opacityNode;
 

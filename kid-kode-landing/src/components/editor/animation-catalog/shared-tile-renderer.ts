@@ -260,7 +260,7 @@ class SharedTileRenderer {
     // the new def — a rebuild can swap a glass def for a non-glass one.
     this.removeGlassBackdrop(tile);
 
-    const { object, subject } = buildSubject(def.subject);
+    const { object, subject } = buildSubject(def.subject, { volumetric: def.volumetric });
     const target: AnimatableTarget = { object, subject, scene: tile.scene, userData: {} };
     let inst: Animatable | null = null;
     try {
@@ -289,15 +289,20 @@ class SharedTileRenderer {
     group.name = 'glass-backdrop';
     // Sit it behind the subject (camera is at z≈3.2 looking down -z), close
     // enough to fill the refraction cone but far enough to stay out of focus.
-    group.position.z = -1.6;
+    // Brought a touch closer than the pilot (was -1.6) so the on-axis centre
+    // has bright structure to magnify rather than reading through to black.
+    group.position.z = -1.35;
 
     // Soft emissive gradient panel — a vertex-coloured plane (top cool key →
     // bottom deep ink) lit purely by its own emissive, so it never blows out.
+    // The base floor is lifted off pure-ink (was #0a0e22) so even a dead-centre
+    // refraction ray that misses every highlight still lands on lit material,
+    // not near-black.
     const w = 4.6;
     const h = 4.6;
     const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
-    const top = new THREE.Color('#2a3b78');
-    const bot = new THREE.Color('#0a0e22');
+    const top = new THREE.Color('#33458a');
+    const bot = new THREE.Color('#141a3a');
     const colors = new Float32Array(4 * 3);
     // PlaneGeometry vertex order: top-left, top-right, bottom-left, bottom-right.
     [top, top, bot, bot].forEach((c, i) => {
@@ -313,10 +318,38 @@ class SharedTileRenderer {
     panel.name = 'glass-backdrop-panel';
     group.add(panel);
 
+    // GUARANTEED on-axis hero: a large bright OPAQUE emissive sphere sitting
+    // dead-centre (x=0,y=0) just in front of the panel. This is the element the
+    // subject's geometric centre refracts/magnifies. It MUST be opaque: three.js
+    // renders the transmission sample (what a transmissive MeshPhysicalMaterial
+    // refracts) from OPAQUE scene objects only — transparent objects are excluded
+    // from the transmission render target — so a transparent/additive hero would
+    // be invisible THROUGH the glass (the bug this fixes: clear centres read
+    // black because only the dark panel sat behind them in the transmission
+    // pass). An emissive sphere reads as a soft glowing core when magnified by a
+    // clear lens rather than a hard-edged disc. Bright but not white-hot, so the
+    // refracted centre is premium, not blown out.
+    const hero = new THREE.Mesh(
+      new THREE.SphereGeometry(0.78, 32, 24),
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color('#9ab8ff'),
+        emissive: new THREE.Color('#acc4ff'),
+        emissiveIntensity: 1.5,
+        roughness: 0.5,
+        metalness: 0,
+        envMapIntensity: 0.6,
+      }),
+    );
+    hero.name = 'glass-backdrop-hero';
+    hero.position.set(0, 0, 0.25);
+    group.add(hero);
+
     // A few bright bokeh blobs in front of the panel — these are the high-
     // frequency highlights the glass sparkles on. Emissive standard spheres so
     // they also catch the shared env a touch. Deterministic placement (seeded
-    // by tile id) so the gallery is stable across renders.
+    // by tile id) so the gallery is stable across renders. The FIRST blob is
+    // pinned near the axis (small jitter only) so off-centre magnification also
+    // catches a coloured highlight right next to the hero disc.
     let seed = (tile.id * 2654435761) >>> 0;
     const rand = (): number => {
       seed = (seed * 1664525 + 1013904223) >>> 0;
@@ -331,19 +364,54 @@ class SharedTileRenderer {
         new THREE.MeshStandardMaterial({
           color,
           emissive: color,
-          emissiveIntensity: 1.8,
+          emissiveIntensity: 2.2,
           roughness: 0.4,
           metalness: 0,
           envMapIntensity: 0.8,
         }),
       );
-      blob.position.set((rand() - 0.5) * 3.0, (rand() - 0.5) * 3.0, 0.2 + rand() * 0.5);
+      if (i === 0) {
+        // Near-axis highlight: small jitter so the centre always has colour.
+        blob.position.set((rand() - 0.5) * 0.7, (rand() - 0.5) * 0.7, 0.35 + rand() * 0.3);
+      } else {
+        blob.position.set((rand() - 0.5) * 3.0, (rand() - 0.5) * 3.0, 0.2 + rand() * 0.5);
+      }
       group.add(blob);
     }
 
     tile.scene.add(group);
     tile.glassBackdrop = group;
     this.glassBackdropTiles.add(tile.def.name);
+  }
+
+  /** Lazily-built soft radial disc texture (bright opaque core → transparent
+   *  rim) used as the guaranteed on-axis hero element behind glass subjects.
+   *  Cached + shared across tiles; disposed with the rig. */
+  private softDisc: THREE.Texture | null = null;
+  private softDiscTexture(): THREE.Texture {
+    if (this.softDisc) return this.softDisc;
+    const size = 128;
+    const data = new Uint8Array(size * size * 4);
+    const c = (size - 1) / 2;
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const dx = (x - c) / c;
+        const dy = (y - c) / c;
+        const d = Math.min(1, Math.sqrt(dx * dx + dy * dy));
+        // Smooth bright-core falloff: full at centre, 0 at the rim. Square the
+        // (1-d) ramp for a soft, premium glow rather than a hard edge.
+        const a = Math.pow(Math.max(0, 1 - d), 2.2);
+        const i = (y * size + x) * 4;
+        data[i] = 255;
+        data[i + 1] = 255;
+        data[i + 2] = 255;
+        data[i + 3] = Math.round(255 * a);
+      }
+    }
+    const tex = new THREE.DataTexture(data, size, size);
+    tex.needsUpdate = true;
+    this.softDisc = tex;
+    return tex;
   }
 
   private removeGlassBackdrop(tile: Tile): void {
@@ -494,6 +562,8 @@ class SharedTileRenderer {
     for (const tile of this.tiles.values()) this.disposeTile(tile);
     this.tiles.clear();
     this.env?.dispose();
+    this.softDisc?.dispose();
+    this.softDisc = null;
     this.renderer?.dispose();
     this.renderer = null;
     this.ready = false;

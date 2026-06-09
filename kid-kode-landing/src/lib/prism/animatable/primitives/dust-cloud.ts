@@ -16,16 +16,22 @@ import {
   vec3,
   float,
   sin,
-  cos,
   fract,
   floor,
   dot,
   mix,
   max,
   smoothstep,
+  attribute,
 } from 'three/tsl';
 import { defineAnimatable } from '../base';
-import { num, str, type ControlValue, type PrimitiveDefinition } from '../contract';
+import {
+  num,
+  str,
+  VOLUMETRIC_DEPTH_ATTR,
+  type ControlValue,
+  type PrimitiveDefinition,
+} from '../contract';
 
 const rgb = (hex: string): [number, number, number] => {
   const c = new Color(hex);
@@ -45,9 +51,10 @@ export const dustCloudPrimitive: PrimitiveDefinition = {
   category: 'smoke',
   difficulty: 'hard',
   subject: 'plane',
+  volumetric: true,
   defaultDriver: 'time',
   description:
-    'A drifting cloud of fine dust catches light — soft low-density haze slowly billowing sideways with motes glinting.',
+    'A drifting cloud of fine dust catches light — soft low-density haze slowly billowing sideways through real depth with motes glinting.',
   schema: SCHEMA,
   create: defineAnimatable(
     { name: 'dust-cloud', category: 'smoke', schema: SCHEMA },
@@ -65,9 +72,27 @@ export const dustCloudPrimitive: PrimitiveDefinition = {
 
       // ── value noise + fbm (deterministic, no Math.random) ──────────────
       // TSL node ops return a broad Node type; cast through V2 (a vec2-ish node)
-      // to dodge strict TSL typing, exactly as caustics.ts casts node assigns.
-      type V2 = ReturnType<typeof vec2>;
+      // to dodge strict TSL typing, exactly as caustics.ts / nebula.ts cast node
+      // assigns. The same permissive alias carries the scalar aDepth node.
+      // Opaque permissive chainable node alias (mirrors caustics.ts's `type
+      // TNode = any` discipline): the TSL ReturnType generics collapse chained
+      // .mul/.add to `never` under strict tsc, so we carry nodes as an opaque
+      // chainable type. The built node graph is identical.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      type V2 = any;
       const v2 = (n: unknown): V2 => n as V2;
+      // Permissive vec2/float builders (mirror nebula.ts t2/f1) so node args
+      // don't fight the strict TSL overloads under tsc.
+      const vc = (a: unknown, b: unknown): V2 =>
+        (vec2 as unknown as (x: unknown, y: unknown) => unknown)(a, b) as V2;
+      const vf = (x: number): V2 => float(x) as unknown as V2;
+      const mixp = (a: unknown, b: unknown, c: unknown): V2 =>
+        (mix as unknown as (x: unknown, y: unknown, z: unknown) => unknown)(a, b, c) as V2;
+
+      // Per-vertex depth on the volumetric slab stack: 0 = front slab → 1 = rear.
+      // Parallaxing the field per slab gives the dust real depth (5 back-to-front
+      // slices) instead of flat overdraw — matches the Wave-1 smoke tiles.
+      const aDepth = v2(attribute(VOLUMETRIC_DEPTH_ATTR));
 
       const hash = (p: V2) =>
         fract(sin(dot(p, vec2(127.1, 311.7))).mul(43758.5453));
@@ -95,28 +120,35 @@ export const dustCloudPrimitive: PrimitiveDefinition = {
       };
 
       // Drift: mostly sideways (driftX), gentle vertical billow (driftY * 0.3).
+      // Per-slab parallax shifts each depth slice into a DIFFERENT slab of the
+      // field so the 5 slabs read as a real volume, not stacked duplicates.
       const t = uTime.mul(uDrift);
-      const driftX = t;
-      const driftY = t.mul(0.3);
+      const parallax = aDepth.mul(0.7);
+      const driftX = v2(t.add(parallax.mul(0.55)));
+      const driftY = v2(t.mul(0.3).add(parallax.mul(0.2)));
       const u = uv();
-      const p = v2(u.mul(uScale).add(vec2(driftX, driftY)));
+      const p = v2(u.mul(uScale).add(vc(driftX, driftY)).add(aDepth.mul(1.3)));
 
-      // Low-density haze: fbm thresholded soft (smoothstep) and scaled by the
-      // low density control so the cloud stays thin and hazy.
+      // Haze: fbm thresholded soft (smoothstep). Widen the band slightly and lift
+      // the gain so the dust reads at tile size — a touch more body without going
+      // opaque. Rear slabs fade so the stack self-occludes front-to-back.
+      const depthFade = v2(aDepth.oneMinus().mul(0.6).add(0.4)); // 1.0 front → 0.4 rear
       const cloud = fbm(p);
-      const haze = smoothstep(float(0.45), float(0.85), cloud).mul(uDensity);
+      const haze = v2(smoothstep(float(0.4), float(0.82), cloud).mul(uDensity).mul(1.45).mul(depthFade));
 
       // Sparkle motes: a high-frequency noise field, sharply gated and twinkling
-      // slowly over time so individual dust motes glint as they catch light.
-      const spField = vnoise(v2(u.mul(uScale.mul(6)).add(vec2(driftX.mul(0.5), 0))));
+      // slowly over time so individual dust motes glint as they catch light. Gate
+      // a hair wider and drive brighter so the motes pop as crisp pinpoints.
+      const spField = vnoise(v2(u.mul(uScale.mul(6)).add(vc(driftX.mul(0.5), 0)).add(aDepth.mul(3.7))));
       const twinkle = sin(uTime.mul(3).add(spField.mul(40))).mul(0.5).add(0.5);
-      const sparkle = smoothstep(float(0.93), float(1), spField).mul(twinkle).mul(haze.mul(4));
+      const sparkle = smoothstep(float(0.9), float(1), spField).mul(twinkle).mul(max(haze, float(0.12)).mul(6)).mul(depthFade);
 
       // Warm dusty tint + the glinting sparkle term lifting toward near-white.
+      // Brighter floor + stronger haze gain so the haze itself carries luminance
+      // on the dark bg, not just the motes.
       const baseTint = vec3(uR, uG, uB);
-      const colorNode = mix(baseTint, vec3(1, 0.96, 0.85), sparkle).mul(
-        float(0.6).add(haze.mul(1.5)),
-      );
+      const bright = vf(0.85).add(haze.mul(2.2));
+      const colorNode = mixp(baseTint, vec3(1, 0.97, 0.88), sparkle).mul(bright);
 
       // Opacity = soft haze plus the bright mote pinpoints, kept low overall.
       const opacityNode = max(haze, sparkle);

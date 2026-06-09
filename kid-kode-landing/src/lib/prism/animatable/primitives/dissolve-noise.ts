@@ -17,6 +17,7 @@ import {
   sin,
   dot,
   vec2,
+  vec3,
   fract,
   floor,
   mix,
@@ -87,9 +88,17 @@ export const dissolveNoisePrimitive: PrimitiveDefinition = {
       const opacityNode = smoothstep(lo, hi, noise.oneMinus());
 
       const mat = new MeshStandardNodeMaterial({ transparent: true });
-      mat.color.set('#1b2444');
-      mat.roughness = 0.32;
-      mat.metalness = 0.45;
+      // Brighter base + a self-lit emissive so the dissolve front reads with
+      // punch at tile size even before scene lights land. A standard material at
+      // the old dark navy went near-black on the #06070d bg; lift the albedo and
+      // add a cool emissive tied to the same opacityNode so the EMERGING edge
+      // glows — the dissolve front stays legible across the whole timeline.
+      mat.color.set('#33457f');
+      mat.roughness = 0.3;
+      mat.metalness = 0.4;
+      (mat as unknown as { emissiveNode: unknown }).emissiveNode = vec3(0.16, 0.3, 0.62).mul(
+        opacityNode,
+      );
       (mat as unknown as { opacityNode: unknown }).opacityNode = opacityNode;
 
       const prevMat = mesh ? (mesh.material as Material) : null;

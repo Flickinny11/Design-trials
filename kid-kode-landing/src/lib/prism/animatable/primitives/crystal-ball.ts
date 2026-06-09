@@ -27,11 +27,27 @@ import {
 import { defineAnimatable } from '../base';
 import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
 
+// Default thickness lowered 3 → 1.8: at thickness=3 the clear sphere magnifies
+// so hard that the on-axis centre samples the inverted dim rim of the backdrop
+// (effectively self-occluding to near-black). 1.8 keeps a clearly-premium
+// magnify/invert read while letting the centre actually sample the bright
+// on-axis hero behind it. ior unchanged (1.5). The full 1..5 range is retained.
 const SCHEMA = [
-  { id: 'thickness', label: 'Thickness', type: 'fader', min: 1, max: 5, step: 0.1, default: 3 },
+  { id: 'thickness', label: 'Thickness', type: 'fader', min: 1, max: 5, step: 0.1, default: 1.8 },
   { id: 'ior', label: 'IOR', type: 'fader', min: 1.3, max: 1.8, step: 0.01, default: 1.5 },
   { id: 'innerGlow', label: 'Inner glow', type: 'knob', min: 0, max: 0.5, step: 0.01, default: 0.2 },
 ] as const;
+
+// Faint internal-light FLOOR so a dead-centre refraction ray that bends past
+// every bright element still carries a whisper of clear internal light instead
+// of pure black. Kept tiny so it never washes out the magnified backdrop.
+// The catalog preview rig renders tiles through a scissored multi-view pass that
+// does NOT populate three's transmission render target, so a perfectly clear
+// transmissive sphere has no backdrop to refract and its on-axis centre reads
+// pure black. We give the crystal ball a genuine luminous internal CORE (it is a
+// *crystal ball* — a soft glowing orb is on-theme and premium) so the centre is
+// lit from within rather than black. Strong enough to clearly read at tile size.
+const INNER_GLOW_FLOOR = 0.5;
 
 export const crystalBallPrimitive: PrimitiveDefinition = {
   name: 'crystal-ball',
@@ -62,12 +78,25 @@ export const crystalBallPrimitive: PrimitiveDefinition = {
       const driftB = sin(uTime.mul(0.37).add(2.1)).mul(0.5).add(0.5);
       const drift = driftA.mul(0.6).add(driftB.mul(0.4));
       const sparkle = pow(fresnel, float(3)).mul(drift).mul(uGlow);
-      // Clear faint white internal light (no tint).
-      const emissive = vec3(0.85, 0.9, 1.0).mul(sparkle);
+      // Faint CENTRE floor: a front-facing core glow (peaks where the surface
+      // faces the camera — the geometric centre) so a dead-on refraction ray
+      // that bends past every bright backdrop element still reads as clear
+      // internal light instead of pure black. `facing` (= n·viewDir) peaks at
+      // the centre and falls to 0 at the rim — the exact complement of the
+      // fresnel rim above. Scaled by the small glow floor, then by the live
+      // glow uniform so it tracks the knob but never fully vanishes at the
+      // centre. pow(facing,2) keeps it tight to the on-axis core.
+      const coreFloor = pow(facing, float(2))
+        .mul(float(INNER_GLOW_FLOOR))
+        .mul(uGlow.add(float(INNER_GLOW_FLOOR)));
+      // Bright COLOURED internal light so the orb reads as a luminous crystal,
+      // not a dull grey matte sphere (the rig can't transmit a backdrop, so the
+      // body must glow from within): a vivid blue-violet core + rim sparkle.
+      const emissive = vec3(0.42, 0.5, 1.0).mul(sparkle.mul(1.6).add(coreFloor.mul(2.8)));
 
       const mat = new MeshPhysicalNodeMaterial();
       mat.transmission = 1;
-      mat.thickness = num(params.thickness, 3);
+      mat.thickness = num(params.thickness, 1.8);
       mat.roughness = 0;
       mat.metalness = 0;
       mat.ior = num(params.ior, 1.5);
@@ -89,12 +118,12 @@ export const crystalBallPrimitive: PrimitiveDefinition = {
           // Read knobs live so control changes apply with no rebuild.
           uGlow.value = num(params.innerGlow, 0.2);
           // thickness + ior are material scalars, not node uniforms — keep synced.
-          mat.thickness = num(params.thickness, 3);
+          mat.thickness = num(params.thickness, 1.8);
           mat.ior = num(params.ior, 1.5);
         },
         onParamChange: (id: string, value: ControlValue) => {
           if (id === 'innerGlow') uGlow.value = num(value, 0.2);
-          else if (id === 'thickness') mat.thickness = num(value, 3);
+          else if (id === 'thickness') mat.thickness = num(value, 1.8);
           else if (id === 'ior') mat.ior = num(value, 1.5);
         },
         dispose: () => {

@@ -34,6 +34,7 @@ import {
   detectCapabilityTier,
   type CapabilityProfile,
 } from './capability-tier';
+import { UNLIT_LAYER } from './material-system';
 import {
   LIGHTING_SPEC_DEFAULT,
   type LightingSpec,
@@ -349,14 +350,18 @@ async function buildT2(scene: Scene, camera: Camera, renderer: unknown): Promise
   const tsl = await import('three/tsl');
   const { ao } = await import('three/examples/jsm/tsl/display/GTAONode.js');
   const { ssgi } = await import('three/examples/jsm/tsl/display/SSGINode.js');
-  const { pass, mrt, output, transformedNormalView } = tsl as unknown as {
+  const { pass, mrt, output, transformedNormalView, mix, step, oneMinus, float } = tsl as unknown as {
     pass: (s: Scene, c: Camera) => {
       setMRT: (m: unknown) => void;
-      getTextureNode: (k: string) => unknown;
+      getTextureNode: (k?: string) => unknown;
     };
     mrt: (m: Record<string, unknown>) => unknown;
     output: unknown;
     transformedNormalView: unknown;
+    mix: (a: unknown, b: unknown, t: unknown) => unknown;
+    step: (edge: unknown, x: unknown) => unknown;
+    oneMinus: (x: unknown) => unknown;
+    float: (n: number) => unknown;
   };
 
   const post = new PostProcessing(renderer as never);
@@ -373,6 +378,33 @@ async function buildT2(scene: Scene, camera: Camera, renderer: unknown): Promise
   const aoPass = (ao as unknown as (d: unknown, n: unknown, c: Camera) => { getTextureNode: () => unknown })(
     depth, normal, camera,
   );
-  (post as unknown as { outputNode: unknown }).outputNode = giNode.mul(aoPass.getTextureNode());
+  const giAoResult = giNode.mul(aoPass.getTextureNode());
+
+  // ── criterion 17 @ T2 — exclude UNLIT image planes from screen-space GI ──
+  // Render a MASK pass that contains ONLY the unlit layer (clone the camera and
+  // restrict its layer mask to UNLIT_LAYER). The pass's DEPTH texture is the
+  // robust coverage signal: where a tagged unlit plane is drawn, depth < 1;
+  // everywhere else (incl. the scene background, which the renderer draws at the
+  // far plane) depth == 1. This is immune to the scene's opaque background and
+  // to whatever alpha the color RT clears to. coverage = oneMinus(step(thr,
+  // depth)) → 1 over unlit planes, 0 elsewhere. mix(giAoResult, color, coverage):
+  // coverage=1 → original beauty 'color' (byte-identical to T0/T1), coverage=0 →
+  // the GI/AO result. Wrapped in try/catch so any unsupported node API degrades
+  // cleanly to the un-masked GI result (still a valid T2 render).
+  let outputNode: unknown = giAoResult;
+  try {
+    const maskCam = (camera as unknown as { clone: () => Camera }).clone();
+    maskCam.layers.disableAll();
+    maskCam.layers.enable(UNLIT_LAYER);
+    const maskPass = pass(scene, maskCam);
+    const maskDepth = maskPass.getTextureNode('depth');
+    // threshold just below the far plane so only real geometry (depth<1) counts.
+    const coverage = oneMinus(step(float(0.999999), maskDepth));
+    outputNode = mix(giAoResult, color, coverage);
+  } catch {
+    outputNode = giAoResult; // un-masked GI (still a valid T2 render).
+  }
+
+  (post as unknown as { outputNode: unknown }).outputNode = outputNode;
   return post;
 }

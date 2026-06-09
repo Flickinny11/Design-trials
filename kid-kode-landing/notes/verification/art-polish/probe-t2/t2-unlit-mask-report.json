@@ -1,0 +1,55 @@
+{
+  "t0Profile": {
+    "tier": "T0",
+    "backend": "webgpu",
+    "isMobile": false,
+    "shadows": false,
+    "screenSpaceGI": false,
+    "maxDynamicLights": 0,
+    "reason": "explicit T0 (within ceiling T2)"
+  },
+  "t2Profile": {
+    "tier": "T2",
+    "backend": "webgpu",
+    "isMobile": false,
+    "shadows": true,
+    "screenSpaceGI": true,
+    "maxDynamicLights": 10,
+    "reason": "explicit T2 (within ceiling T2)"
+  },
+  "unlitPlane": {
+    "T0": {
+      "R": 207,
+      "G": 91,
+      "B": 45,
+      "luma": 112.34039999999999
+    },
+    "T2": {
+      "R": 207,
+      "G": 91,
+      "B": 45,
+      "luma": 112.34039999999999
+    },
+    "lumaDelta": 0
+  },
+  "litSphere": {
+    "T0": {
+      "R": 236.5696875,
+      "G": 237.805625,
+      "B": 240.42546875,
+      "luma": 237.73201740625
+    },
+    "T2": {
+      "R": 21.27703125,
+      "G": 0,
+      "B": 0,
+      "luma": 4.52349684375
+    },
+    "lumaDelta": 233.209
+  },
+  "verdict": {
+    "unlitByteIdentical": true,
+    "litChangesAtT2": true,
+    "pass": true
+  }
+}

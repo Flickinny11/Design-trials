@@ -1,6 +1,6 @@
 {
-  "url": "http://localhost:4808/animation-catalog",
-  "startedAt": "2026-06-08T23:17:48.195Z",
+  "url": "http://localhost:4813/animation-catalog",
+  "startedAt": "2026-06-09T07:15:13.900Z",
   "mode": "real-gpu headed Chrome",
   "rig": {
     "ready": true,
@@ -11,17 +11,7 @@
   },
   "primitives": [
     {
-      "name": "nebula",
-      "captured": true,
-      "notes": []
-    },
-    {
-      "name": "supernova",
-      "captured": true,
-      "notes": []
-    },
-    {
-      "name": "plasma",
+      "name": "fireball-burst",
       "captured": true,
       "notes": []
     }
@@ -35,8 +25,8 @@
     "Failed to load resource: the server responded with a status of 404 (Not Found)"
   ],
   "summary": {
-    "targets": 3,
-    "captured": 3,
+    "targets": 1,
+    "captured": 1,
     "backend": "webgpu",
     "deviceLost": 0
   }

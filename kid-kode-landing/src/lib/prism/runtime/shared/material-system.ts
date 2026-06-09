@@ -15,7 +15,7 @@
 //
 // DOM-free (INV-R12): pure material factories; no document/window.
 
-import { Color, type Texture } from 'three';
+import { Color, type Object3D, type Texture } from 'three';
 import {
   MeshBasicNodeMaterial,
   MeshPhysicalNodeMaterial,
@@ -120,6 +120,28 @@ export function buildLitTextureMaterial(opts: {
   mat.emissiveIntensity = s.emissiveIntensity;
   mat.envMapIntensity = s.envMapIntensity;
   return mat;
+}
+
+// ---------------------------------------------------------------------------
+// Unlit-layer mask (criterion 17 @ T2). At tier T2 the lighting rig runs a
+// screen-space GI/AO post pass over the whole framebuffer; without a mask, an
+// "unlit" image plane (receivesLighting=false) would be re-lit in screen space,
+// breaking the "diffusion-baked image planes are pixel-identical" guarantee that
+// is exact at T0/T1. `UNLIT_LAYER` is a free THREE.Layers channel; unlit planes
+// are *enabled* on it (in addition to the default layer 0) so a mask camera can
+// render ONLY the unlit coverage and composite the original beauty back over it.
+// ---------------------------------------------------------------------------
+
+/** Free THREE.Layers channel that tags receivesLighting=false image planes. */
+export const UNLIT_LAYER = 1;
+
+/**
+ * Tag an object as UNLIT for the T2 screen-space-GI mask. ENABLES the unlit
+ * layer (does NOT replace layer 0) so the object still renders in the normal
+ * beauty pass; the mask camera renders only this layer to derive coverage.
+ */
+export function tagUnlitObject(obj: Object3D): void {
+  obj.layers.enable(UNLIT_LAYER);
 }
 
 /**

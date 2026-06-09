@@ -8,6 +8,7 @@
 //   INV-5 — one schema-driven control vocabulary (materialSpecToParams round-trip).
 
 import { describe, expect, it } from 'vitest';
+import { Object3D } from 'three';
 import {
   MeshBasicNodeMaterial,
   MeshPhysicalNodeMaterial,
@@ -20,6 +21,8 @@ import {
   materialSpecToParams,
   paramsToMaterialSpec,
   resolveReceivesLighting,
+  tagUnlitObject,
+  UNLIT_LAYER,
 } from '@/lib/prism/runtime/shared/material-system';
 
 describe('buildPhysicalMaterial', () => {
@@ -78,6 +81,27 @@ describe('resolveReceivesLighting / isLit', () => {
     expect(isLit(false, 'mesh')).toBe(false);
     expect(isLit(undefined, 'mesh')).toBe(true);
     expect(isLit(undefined, 'sprite')).toBe(false);
+  });
+});
+
+describe('UNLIT_LAYER / tagUnlitObject (criterion 17 @ T2 mask)', () => {
+  it('UNLIT_LAYER is a numeric, non-default layer channel', () => {
+    expect(typeof UNLIT_LAYER).toBe('number');
+    // Must be a real layer channel (0..31) and NOT the default layer 0.
+    expect(Number.isInteger(UNLIT_LAYER)).toBe(true);
+    expect(UNLIT_LAYER).toBeGreaterThan(0);
+    expect(UNLIT_LAYER).toBeLessThan(32);
+  });
+
+  it('tagUnlitObject ENABLES the unlit layer without dropping layer 0', () => {
+    const obj = new Object3D();
+    // Fresh objects are on layer 0 only.
+    expect(obj.layers.isEnabled(0)).toBe(true);
+    expect(obj.layers.isEnabled(UNLIT_LAYER)).toBe(false);
+    tagUnlitObject(obj);
+    // Still on the default beauty layer (0) AND now on the unlit layer.
+    expect(obj.layers.isEnabled(0)).toBe(true);
+    expect(obj.layers.isEnabled(UNLIT_LAYER)).toBe(true);
   });
 });
 
