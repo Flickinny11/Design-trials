@@ -34,3 +34,14 @@ no-regression + all completed-phase features keep working (text, picker, media, 
 ## OUTPUT
 notes/UI-FIDELITY-2-REPORT.md: per-surface before/after WITH zoom crops at DPR2, advocate verdicts, perf table,
 honest flags. AUTO-CKPTs. Plain-language summary. STOP.
+
+## AMENDMENT (2026-06-10, from Logan — this is now the CENTER of this run)
+READ docs/prism/DESIGN-REFERENCES.md IN FULL BEFORE ANY DESIGN WORK. It is the canonical 1,066-line catalog of the
+premium libraries + techniques this product is built around (GSAP/ScrollTrigger choreography, Lenis-class inertia,
+curtains-style distortion, mouse-follower/magnetic cursor physics, WebGPU compute particles, ray-marching/SDF, view
+transitions, + ~29 libraries with difficulty notes). THE EDITOR IS THE SHOWCASE: every toolbar, button, panel, element,
+animation, and style in the chrome must demonstrably use this stack — directly where the dependency fits the
+one-renderer/WebGPU architecture, or as a faithful TSL/WebGPU-native implementation of the catalogued technique where
+the library is DOM/2D-era. The report must include a DEPENDENCY-USAGE TABLE: each chrome surface → which
+DESIGN-REFERENCES entries it uses and how. A surface using none of them is a MUST-FIX. Logan's words: "I don't see how
+we can offer this to a user as a premium builder while our UI itself doesn't even use those dependencies."

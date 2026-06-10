@@ -34,3 +34,13 @@ note it in the ledger. These are refinements, not new scope.
   looking), and the advocate judges at devicePixelRatio 2 WITH zoomed crops against the standard "designed by a
   professional 3D designer." Logan's verdict outranks prior advocate passes. A deep real-rendered-materials chrome
   overhaul (UI-FIDELITY-2) is queued post-run — do NOT restructure this run for it; just stop adding anything flat.
+
+- [2026-06-10 | STANDING — all remaining phases] docs/prism/DESIGN-REFERENCES.md (the Awwwards-level effects
+  reference: 29+ premium libraries + techniques — GSAP/ScrollTrigger choreography, Lenis-class inertia scrolling,
+  curtains-style surface distortion, mouse-follower cursor physics, magnetic/elastic interactions, WebGPU compute
+  particles, ray-marched/SDF accents, view transitions, and the rest) is REQUIRED READING and the REQUIRED toolkit for
+  ANY new UI built in the remaining phases (P2 picker/toolbar UI, P3 media UI, P4 3D-object UI). Logan's standard: the
+  editor IS the showcase of the stack we sell — a premium builder whose own UI bypasses its premium stack is not
+  shippable. Rules: use the catalogued dependency directly when it fits the one-renderer/WebGPU architecture (GSAP is
+  already installed); when a catalogued library is DOM/2D-era, implement ITS TECHNIQUE natively in TSL/WebGPU per the
+  file's own technique notes — never a 2nd renderer. Flat, default-looking, dependency-free UI = MUST-FIX.
