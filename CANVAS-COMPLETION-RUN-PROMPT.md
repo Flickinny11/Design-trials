@@ -60,3 +60,17 @@ Halt + report any guard hit.
 notes/CANVAS-COMPLETION-REPORT.md: per-phase summary + AUTO-CKPT hashes; the §18 criterion-by-criterion evidence table;
 before/after for each new capability; advocate verdicts; metrics (phases, waves, peak parallelism, wall-clock, failures
 + fixes); honest flags. Frames under notes/verification/canvas-completion/. Plain-language summary for Logan. STOP.
+
+## ADDENDUM (2026-06-09, post design-overhaul) — fold these in
+- P2 scope ADDITION: fix the pre-existing MOBILE MODE-TOGGLE hole — phones currently cannot leave preview-app (no
+  toggle renders in the mobile branch). Ship a mobile-usable mode switch in the new design language; advocate must
+  verify mode switching on a phone-size viewport.
+- P5 scope ADDITION: the design-run's ergonomics backlog (toolbar steppers 24-28px touch targets; 9px tertiary text
+  contrast; Lighting-tab chip clipping at 460px; mobile flyout/popover scrim; minimap glyph ice adoption; orphaned
+  "inspection" TopBar label; favicon 404) + tile-content nits (bevel-glass transmission in shared rig; aurora
+  control-range clipping; campfire sparks; harness changed-flag false negatives on ghost-trail tiles) + reconcile
+  useradvocate-verdict-schema.mjs with the rubric's "INDIFFERENT + flags = PASS-WITH-FLAGS" row.
+- All new UI consumes the FROZEN Observatory Brass design system (docs: src/components/editor/design-system/). The
+  design language is now an INVARIANT: no purple, tokens-only styling, advocate anti-slop gate stays armed.
+- docs/prism/DESIGN-REFERENCES.md is the consolidated animation/style dependency reference (29+ libs). Physics/fluid/
+  gravity capability pack is explicitly POST-completion (do not scope-creep it into this run).
