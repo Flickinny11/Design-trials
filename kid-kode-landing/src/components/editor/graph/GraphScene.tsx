@@ -829,7 +829,7 @@ function HubHull({
           <meshPhysicalMaterial
             map={mockupTexture}
             emissiveMap={mockupTexture}
-            emissive={new THREE.Color(hub.color)}
+            emissive={new THREE.Color(DS.ice300)}
             emissiveIntensity={(isActive ? 0.32 : 0.18) * dimFactor}
             metalness={0.1}
             roughness={0.3}
@@ -843,10 +843,15 @@ function HubHull({
           />
         </mesh>
       )}
+      {/* Hull chrome — Observatory Brass retint (Wave-3 advocate MUST-FIX):
+          the hull volume/wireframe/ring/light are editor scaffolding, so they
+          read in the system's ice family rather than raw hub.color
+          (#5d8bff-family registered as forbidden dashboard blue). Roles,
+          opacities and intensities unchanged — color-only. */}
       <mesh>
         <sphereGeometry args={[radius, 32, 32]} />
         <meshBasicMaterial
-          color={hub.color}
+          color={DS.ice500}
           transparent
           opacity={(isActive ? 0.085 : 0.035) * dimFactor}
           side={THREE.BackSide}
@@ -856,7 +861,7 @@ function HubHull({
       <mesh>
         <sphereGeometry args={[radius, 24, 24]} />
         <meshBasicMaterial
-          color={hub.color}
+          color={DS.ice400}
           transparent
           opacity={(isActive ? 0.05 : 0.022) * dimFactor}
           wireframe
@@ -867,7 +872,7 @@ function HubHull({
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
         <meshBasicMaterial
-          color={hub.color}
+          color={DS.ice300}
           transparent
           opacity={(isActive ? 0.32 : 0.18) * dimFactor}
           side={THREE.DoubleSide}
@@ -877,7 +882,7 @@ function HubHull({
       {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
           give the mockup sphere a noticeable glow. */}
       <pointLight
-        color={hub.color}
+        color={DS.ice200}
         intensity={(isActive ? 2.4 : 1.0) * dimFactor}
         distance={radius * 3}
         decay={1.6}

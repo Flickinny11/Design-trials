@@ -86,8 +86,11 @@ export default function DesignSystemSheet() {
   }, []);
 
   return (
+    // h-screen (not min-h-screen): body is overflow-hidden in this app, so
+    // the sheet must be its OWN scroll container or everything below the
+    // first viewport is unreachable on phones (Wave-3 advocate MUST-FIX).
     <div
-      className="min-h-screen w-full overflow-y-auto px-10 py-8 flex flex-col gap-10"
+      className="h-screen w-full overflow-y-auto px-10 py-8 max-md:px-5 flex flex-col gap-10"
       style={{ background: 'var(--ds-void)', color: 'var(--ds-text)' }}
       data-component="ds-token-sheet"
     >

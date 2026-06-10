@@ -90,7 +90,10 @@ export default function HubNav() {
               style={active ? ACTIVE_SLOT : undefined}
             >
               <Pip active={active} />
-              <Icon name={hub.glyph} size={12} color={hub.color} glow={active} />
+              {/* On-system glyph tint (brass active / bone idle) — raw
+                  hub.color (#5d8bff-family) read as forbidden dashboard
+                  blue in chrome (Wave-3 advocate MUST-FIX). */}
+              <Icon name={hub.glyph} size={12} color={active ? DS.brass300 : DS.textMid} glow={active} />
               {hub.name}
               <span className="text-[9px] opacity-50">{nodeCount}</span>
             </button>

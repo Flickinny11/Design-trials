@@ -255,12 +255,19 @@ describe('EB-03-04 — GraphScene wires galaxy hub tethers', () => {
     // Existing entries (contains, navigates-to, triggers, data-flow,
     // shares-state, depends-on) must remain byte-for-byte. New galaxy-mode
     // reason entries MAY be added but the originals are frozen.
-    expect(graphSceneSrc).toMatch(/contains:\s*'rgba\(93, 139, 255, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'navigates-to':\s*'#5ee0ff'/);
-    expect(graphSceneSrc).toMatch(/triggers:\s*'rgba\(85, 230, 165, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'data-flow':\s*'rgba\(85, 230, 165, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'shares-state':\s*'#a978ff'/);
-    expect(graphSceneSrc).toMatch(/'depends-on':\s*'#6b7694'/);
+    //
+    // 2026-06-09 UI design overhaul: the frozen values were deliberately
+    // re-pinned from the legacy literals (blue rgba / cyan #5ee0ff / purple
+    // #a978ff / gray-blue #6b7694) to the Observatory Brass design-system
+    // tokens (Logan-ordered chrome retint — purple is banned). RA-15's
+    // intent — tether wiring must never have color SIDE-EFFECTS — is
+    // preserved: the table stays frozen, at the new sanctioned values.
+    expect(graphSceneSrc).toMatch(/contains:\s*dsAlpha\(DS\.brass400, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'navigates-to':\s*DS\.ice300/);
+    expect(graphSceneSrc).toMatch(/triggers:\s*dsAlpha\(DS\.ok, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'data-flow':\s*dsAlpha\(DS\.ok, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'shares-state':\s*DS\.brass300/);
+    expect(graphSceneSrc).toMatch(/'depends-on':\s*DS\.neutral/);
   });
 
   it('EB-03-04 snapshot directory contains outer.png + inner.png + state.json (post-implementation gate)', () => {

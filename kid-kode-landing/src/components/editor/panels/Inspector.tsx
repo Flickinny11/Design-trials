@@ -320,19 +320,23 @@ export default function Inspector() {
       className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
-      <div className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
-        <div className="min-w-0 flex-1">
-          <div className="ds-kicker flex items-center gap-1.5">
-            <span>INSPECTOR</span>
-            <Icon name="chevron" size={9} color={DS.textLow} />
-            <span className="text-ds-text-mid">{node.elementType}</span>
+      <div className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
+        {/* Row 1 — identity (truncating title) + status chip + close. Actions
+            live on their own rail below so the title never collides with the
+            button cluster (Wave-3 advocate MUST-FIX). */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <div className="ds-kicker flex items-center gap-1.5">
+              <span>INSPECTOR</span>
+              <Icon name="chevron" size={9} color={DS.textLow} />
+              <span className="text-ds-text-mid">{node.elementType}</span>
+            </div>
+            <div className="font-display font-bold text-ds-text-hi text-lg leading-tight flex items-center gap-2 min-w-0">
+              <span className="truncate">{node.name}</span>
+              {frozen && <Icon name="snow" size={13} color={DS.ice300} glow />}
+            </div>
           </div>
-          <div className="font-display font-bold text-ds-text-hi text-lg leading-tight flex items-center gap-2">
-            {node.name}
-            {frozen && <Icon name="snow" size={13} color={DS.ice300} glow />}
-          </div>
-        </div>
-        <div className="flex items-center gap-1.5 ml-2">
+          <div className="flex items-center gap-1.5 shrink-0">
           {/* STEP5 edit-path — build-state badge (NE-SC-11 dirty, NE-SC-13
               verify/repair). Observable surface for the Built→Dirty→Built
               lifecycle and the verify-in-path outcome. */}
@@ -366,6 +370,17 @@ export default function Inspector() {
               </span>
             );
           })()}
+          <button
+            onClick={close}
+            className="ds-btn ds-btn--quiet !px-0 w-8 h-8 !rounded-full shrink-0"
+            title="Close inspector"
+          >
+            <Icon name="close" size={12} color={DS.text} />
+          </button>
+        </div>
+        </div>
+        {/* Row 2 — machined action rail (wraps rather than crushing row 1). */}
+        <div className="flex items-center flex-wrap gap-1.5 mt-2.5">
           {/* EBR2-C-01 / §R2-C SC-068 — Edit/Done toggle. Selecting a node
               alone never reveals the CanvasTransformGizmo; the user must
               click Edit first. EBR2-C-02 will gate the gizmo on
@@ -434,13 +449,6 @@ export default function Inspector() {
             className="ds-btn ds-btn--quiet !px-2.5 h-7 text-[10px] whitespace-nowrap"
           >
             Preview in App UI
-          </button>
-          <button
-            onClick={close}
-            className="ds-btn ds-btn--quiet !px-0 w-8 h-8 !rounded-full shrink-0"
-            title="Close inspector"
-          >
-            <Icon name="close" size={12} color={DS.text} />
           </button>
         </div>
       </div>

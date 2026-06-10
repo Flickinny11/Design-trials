@@ -47,16 +47,18 @@ export default function DetailCard() {
       className="absolute z-30 right-5 top-20 w-[340px] ds-ceramic ds-edge rounded-ds-lg overflow-hidden animate-slide-in-r pointer-events-auto"
       style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
     >
-      {/* Hub identity rail — data-driven hub tint, engraved into the top edge. */}
+      {/* Hub identity rail — ice telemetry engraving (informational role).
+          Raw hub.color (#5d8bff-family) read as forbidden dashboard blue in
+          chrome (Wave-3 advocate MUST-FIX). */}
       <div
         className="h-0.5 w-full"
-        style={{ background: `linear-gradient(90deg, transparent, ${hub?.color}, transparent)` }}
+        style={{ background: `linear-gradient(90deg, transparent, ${dsAlpha(DS.ice300, 0.7)}, transparent)` }}
       />
 
       <div className="flex items-start justify-between px-4 pt-3.5">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 ds-kicker">
-            <Icon name={hub?.glyph || 'sparkle'} size={10} color={hub?.color} glow />
+            <Icon name={hub?.glyph || 'sparkle'} size={10} color={DS.ice300} glow />
             {hub?.name.toUpperCase()}
             {node.hubIds.length > 1 && (
               <span className="text-ds-text-low">• SHARED ({node.hubIds.length})</span>

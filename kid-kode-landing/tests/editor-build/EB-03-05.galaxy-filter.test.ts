@@ -281,12 +281,15 @@ describe('EB-03-05 — GraphScene wires the galaxy filter dim', () => {
   });
 
   it('does NOT mutate existing EDGE_COLORS entries (renderer-migration RA-15: additive only)', () => {
-    expect(graphSceneSrc).toMatch(/contains:\s*'rgba\(93, 139, 255, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'navigates-to':\s*'#5ee0ff'/);
-    expect(graphSceneSrc).toMatch(/triggers:\s*'rgba\(85, 230, 165, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'data-flow':\s*'rgba\(85, 230, 165, 0\.45\)'/);
-    expect(graphSceneSrc).toMatch(/'shares-state':\s*'#a978ff'/);
-    expect(graphSceneSrc).toMatch(/'depends-on':\s*'#6b7694'/);
+    // 2026-06-09 UI design overhaul: frozen values re-pinned to the
+    // Observatory Brass design-system tokens (see EB-03-04 for rationale —
+    // the table stays frozen, at the new Logan-sanctioned values).
+    expect(graphSceneSrc).toMatch(/contains:\s*dsAlpha\(DS\.brass400, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'navigates-to':\s*DS\.ice300/);
+    expect(graphSceneSrc).toMatch(/triggers:\s*dsAlpha\(DS\.ok, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'data-flow':\s*dsAlpha\(DS\.ok, 0\.45\)/);
+    expect(graphSceneSrc).toMatch(/'shares-state':\s*DS\.brass300/);
+    expect(graphSceneSrc).toMatch(/'depends-on':\s*DS\.neutral/);
   });
 });
 

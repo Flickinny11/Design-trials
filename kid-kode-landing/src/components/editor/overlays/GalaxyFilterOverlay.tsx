@@ -21,6 +21,13 @@ export default function GalaxyFilterOverlay() {
   const toggleFilter = useGraphEditorStore((s) => s.toggleFilter);
   const setFilterQuery = useGraphEditorStore((s) => s.setFilterQuery);
   const clearFilter = useGraphEditorStore((s) => s.clearFilter);
+  // Wave-3 advocate MUST-FIX: the dock shares the top-right corner with the
+  // floating Inspector (md:right-3 w-[460px]) and was painting over its
+  // header buttons. When an inspector panel is visible, slide the dock left
+  // of the panel (position-only; all behavior unchanged).
+  const inspectorVisible = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null)
+  );
 
   if (viewMode !== 'galaxy') return null;
 
@@ -30,7 +37,9 @@ export default function GalaxyFilterOverlay() {
   return (
     <div
       data-component="galaxy-filter-overlay"
-      className="absolute top-16 right-3 z-40 pointer-events-auto flex flex-col items-end gap-2"
+      className={`absolute top-16 z-40 pointer-events-auto flex flex-col items-end gap-2 right-3 ${
+        inspectorVisible ? 'md:right-[484px]' : ''
+      }`}
     >
       <button
         type="button"
