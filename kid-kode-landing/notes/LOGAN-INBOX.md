@@ -21,3 +21,16 @@ note it in the ledger. These are refinements, not new scope.
   12-ai-fill-applied.png; tsc 0-new, tests green, 312-catalog 306/312 (6 = documented pre-existing P5 set). Note:
   geometric extrusion/depth remains a backlog 3D-text feature (MSDF quads are flat; previews carry the shipped
   advanced options — shadows/outline/glow/weight/spacing).]
+
+- [2026-06-10 | URGENT QUALITY | target: P1 NOW + every remaining phase] Logan reviewed the live app on his Studio
+  display: the UI reads LOW-FIDELITY — "looks AI-built." Two parts:
+  (a) SHARPNESS BUG-HUNT (P1, immediately): the font/texture display areas look OUT OF FOCUS. Renderer DPR is set
+  correctly (verified), so hunt the real cause by eye at DPR 2: MSDF screen-space smoothing constants (fwidth term),
+  atlas px-per-em too low for on-screen sizes, any canvas CSS-displayed larger than its backing store, texture filtering
+  on fill previews. Evidence = zoomed pixel crops BEFORE/AFTER; text must be TACK-SHARP at Retina, no exceptions.
+  (b) RAISED BAR (all phases + P6 advocate): surfaces still read FLAT/basic/bland — boring fonts, no dynamics, no
+  ambient light refraction, no real materials on toolbar/buttons. From now on: every new surface uses the design
+  system's MATERIAL treatments (never flat fills), typography gets deliberate hierarchy/tracking (nothing default-
+  looking), and the advocate judges at devicePixelRatio 2 WITH zoomed crops against the standard "designed by a
+  professional 3D designer." Logan's verdict outranks prior advocate passes. A deep real-rendered-materials chrome
+  overhaul (UI-FIDELITY-2) is queued post-run — do NOT restructure this run for it; just stop adding anything flat.
