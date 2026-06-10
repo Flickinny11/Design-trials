@@ -1,0 +1,7 @@
+{
+  "name": "accordion-y",
+  "label": "Duration",
+  "description": "Card expands vertically accordion-style from a thin center band to full height with a springy settle.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

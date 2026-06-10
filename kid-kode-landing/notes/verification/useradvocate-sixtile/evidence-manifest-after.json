@@ -1,45 +1,84 @@
 {
-  "startedAt": "2026-06-09T23:44:42.141Z",
+  "startedAt": "2026-06-10T04:27:21.218Z",
   "state": "after",
-  "port": 4811,
+  "port": 4799,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "ink-bloom",
+      "tile": "bevel-glass",
       "state": "after",
-      "dir": "ink-bloom/after",
+      "dir": "bevel-glass/after",
       "claim": {
-        "name": "ink-bloom",
-        "label": "Speed",
-        "description": "A drop of dark ink blooms into clear water — a radial bloom front eaten into organic cauliflower tendrils by domain-warped fbm, near-opaque interior with slow internal swirls and soft wispy translucent edges, on a fully transparent background.",
-        "category": "smoke"
+        "name": "bevel-glass",
+        "label": "Bevel",
+        "description": "A thick beveled-edge glass panel — chunky refraction concentrated at chamfered borders with a clear center.",
+        "category": "glass"
       },
       "controls": 4,
       "notes": []
     },
     {
-      "tile": "wispy-smoke",
+      "tile": "caustic-rings",
       "state": "after",
-      "dir": "wispy-smoke/after",
+      "dir": "caustic-rings/after",
       "claim": {
-        "name": "wispy-smoke",
-        "label": "Rise",
-        "description": "Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.",
-        "category": "smoke"
+        "name": "caustic-rings",
+        "label": "Speed",
+        "description": "Concentric caustic rings ripple outward from a center, bright bands of focused light expanding like raindrop rings.",
+        "category": "caustics"
       },
       "controls": 3,
       "notes": []
     },
     {
-      "tile": "cosmic-dust",
+      "tile": "campfire",
       "state": "after",
-      "dir": "cosmic-dust/after",
+      "dir": "campfire/after",
       "claim": {
-        "name": "cosmic-dust",
-        "label": "Drift",
-        "description": "A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.",
+        "name": "campfire",
+        "label": "Flicker",
+        "description": "A small flickering campfire — licking orange-to-yellow flame tongues with a hot core and rising sparks, warmer and tighter than the big fire.",
         "category": "volumetric"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "aurora",
+      "state": "after",
+      "dir": "aurora/after",
+      "claim": {
+        "name": "aurora",
+        "label": "Speed",
+        "description": "Aurora borealis curtains — vertical ribbons of green-to-violet light waving and shimmering across a night sky.",
+        "category": "volumetric"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "accordion-y",
+      "state": "after",
+      "dir": "accordion-y/after",
+      "claim": {
+        "name": "accordion-y",
+        "label": "Duration",
+        "description": "Card expands vertically accordion-style from a thin center band to full height with a springy settle.",
+        "category": "transform"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "blur-spin",
+      "state": "after",
+      "dir": "blur-spin/after",
+      "claim": {
+        "name": "blur-spin",
+        "label": "Duration",
+        "description": "Card spins into place behind a rotational motion-blur of ghosted copies that catch up and merge sharp.",
+        "category": "blur"
       },
       "controls": 3,
       "notes": []

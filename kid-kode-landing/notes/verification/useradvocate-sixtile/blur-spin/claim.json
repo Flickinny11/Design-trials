@@ -1,0 +1,7 @@
+{
+  "name": "blur-spin",
+  "label": "Duration",
+  "description": "Card spins into place behind a rotational motion-blur of ghosted copies that catch up and merge sharp.",
+  "category": "blur",
+  "groundTruthSibling": null
+}

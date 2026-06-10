@@ -1,68 +1,55 @@
 {
-  "startedAt": "2026-06-10T01:50:37.892Z",
-  "updatedAt": "2026-06-10T01:51:28.141Z",
+  "startedAt": "2026-06-10T04:31:33.564Z",
+  "updatedAt": "2026-06-10T04:32:07.374Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 3,
+      "total": 2,
       "backend": "webgl",
-      "startedAt": "2026-06-10T01:50:42.614Z",
-      "finishedAt": "2026-06-10T01:51:28.141Z",
-      "peakConcurrency": 6,
+      "startedAt": "2026-06-10T04:31:36.717Z",
+      "finishedAt": "2026-06-10T04:32:07.373Z",
+      "peakConcurrency": 4,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "accordion-y": {
-      "name": "accordion-y",
-      "category": "transform",
+    "pointer-hue-shift": {
+      "name": "pointer-hue-shift",
+      "category": "pointer",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T01:50:49.504Z",
+      "at": "2026-06-10T04:31:43.726Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "card-fold": {
-      "name": "card-fold",
-      "category": "transform",
+    "text-typewriter-cursor": {
+      "name": "text-typewriter-cursor",
+      "category": "text",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T01:50:56.920Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "fire-flame": {
-      "name": "fire-flame",
-      "category": "volumetric",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T01:51:01.580Z",
+      "at": "2026-06-10T04:31:51.451Z",
       "backend": "webgl",
       "consoleErrors": []
     }
   },
   "summary": {
-    "total": 3,
-    "pass": 3,
+    "total": 2,
+    "pass": 2,
     "fail": 0,
     "missing": 0,
     "failNames": [],
     "missingNames": [],
-    "wallClockSec": 50,
+    "wallClockSec": 34,
     "peak": {
-      "std": 6
+      "std": 4
     },
     "backend": {
       "std": "webgl"

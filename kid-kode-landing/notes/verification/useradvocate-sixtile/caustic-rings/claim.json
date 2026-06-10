@@ -1,0 +1,7 @@
+{
+  "name": "caustic-rings",
+  "label": "Speed",
+  "description": "Concentric caustic rings ripple outward from a center, bright bands of focused light expanding like raindrop rings.",
+  "category": "caustics",
+  "groundTruthSibling": null
+}
