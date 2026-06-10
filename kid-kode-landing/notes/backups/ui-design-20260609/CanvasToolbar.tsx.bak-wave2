@@ -152,14 +152,6 @@ const LIGHT_TYPE_LABEL: Record<PrismLightType, string> = {
   rim: 'Rim',
 };
 
-// Light COLOR DATA defaults — sanctioned hex exception (NOT chrome styling).
-// These are physical emitter colors written into `hub.lightingSpec` graph data
-// and consumed by the renderer: a neutral white emitter and the conventional
-// three.js hemisphere ground-bounce tone. They are scene data, not UI paint,
-// so they intentionally bypass the chrome token system.
-const LIGHT_COLOR_DEFAULT = '#ffffff';
-const HEMI_GROUND_DEFAULT = '#404050';
-
 // Merge a hub's stored lightingSpec over the canonical default so the flyout
 // always renders defined controls (and never overwrites unset fields with
 // undefined when it writes back). Additive read — never mutates the source.
@@ -176,7 +168,7 @@ let lightSeq = 0;
 function makeLight(type: PrismLightType): PrismLight {
   lightSeq += 1;
   const id = `light-${Date.now().toString(36)}-${lightSeq.toString(36)}`;
-  const base: PrismLight = { id, type, color: LIGHT_COLOR_DEFAULT, intensity: 1 };
+  const base: PrismLight = { id, type, color: '#ffffff', intensity: 1 };
   switch (type) {
     case 'directional':
     case 'rim':
@@ -189,7 +181,7 @@ function makeLight(type: PrismLightType): PrismLight {
         distance: 0, decay: 2, angle: Math.PI / 6, penumbra: 0.3, castShadow: true,
       };
     case 'hemisphere':
-      return { ...base, groundColor: HEMI_GROUND_DEFAULT, intensity: 0.6 };
+      return { ...base, groundColor: '#404050', intensity: 0.6 };
     case 'ambient':
       return { ...base, intensity: 0.4 };
     default:
@@ -198,25 +190,13 @@ function makeLight(type: PrismLightType): PrismLight {
 }
 
 // ── Small building blocks ────────────────────────────────────────────────────
-// Engraved machined groove — a 1px shade line over a 1px bone catch-light,
-// both feathering out — used as the specular section divider across the
-// dock and flyouts (reads as a scribe line cut into the housing).
-const GROOVE_H: React.CSSProperties = {
-  background:
-    'linear-gradient(90deg, var(--ds-edge-shade), rgba(0, 0, 0, 0) 92%) top / 100% 1px no-repeat, ' +
-    'linear-gradient(90deg, var(--ds-edge-side), rgba(255, 252, 242, 0) 86%) bottom / 100% 1px no-repeat',
-};
-
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 mb-1.5 mt-0.5">
-      <span
-        className="text-[9px] font-mono tracking-[0.18em] uppercase whitespace-nowrap"
-        style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
-      >
-        {children}
-      </span>
-      <span aria-hidden className="flex-1 min-w-3 h-[2px]" style={GROOVE_H} />
+    <div
+      className="text-[9px] font-mono tracking-[0.18em] uppercase mb-1.5 mt-0.5"
+      style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
+    >
+      {children}
     </div>
   );
 }
@@ -624,34 +604,15 @@ export default function CanvasToolbar() {
               CANVAS
             </span>
           </div>
-          {/* Scribed part line under the nameplate — same machined groove as
-              the pre-Build divider, so the label reads as a fitted plate. */}
-          <div
-            aria-hidden
-            className="mx-1.5 mb-0.5 h-[2px]"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(0, 0, 0, 0), var(--ds-edge-shade) 22%, var(--ds-edge-shade) 78%, rgba(0, 0, 0, 0)) top / 100% 1px no-repeat, ' +
-                'linear-gradient(90deg, rgba(255, 252, 242, 0), var(--ds-edge-side) 26%, var(--ds-edge-side) 74%, rgba(255, 252, 242, 0)) bottom / 100% 1px no-repeat',
-            }}
-          />
           {GROUPS.map((g) => {
             const isActive = activeGroup === g.id;
             const beforeBuild = g.id === 'build';
             return (
               <div key={g.id} className="contents">
                 {beforeBuild && (
-                  // Machined V-groove cut across the dock plate — shade line
-                  // over bone catch-light, feathering into the metal at both
-                  // ends like a lathe-scribed part line.
                   <div
-                    aria-hidden
-                    className="mx-1.5 my-1 h-[2px]"
-                    style={{
-                      background:
-                        'linear-gradient(90deg, rgba(0, 0, 0, 0), var(--ds-edge-shade) 22%, var(--ds-edge-shade) 78%, rgba(0, 0, 0, 0)) top / 100% 1px no-repeat, ' +
-                        'linear-gradient(90deg, rgba(255, 252, 242, 0), var(--ds-edge-side) 26%, var(--ds-edge-side) 74%, rgba(255, 252, 242, 0)) bottom / 100% 1px no-repeat',
-                    }}
+                    className="mx-2 my-0.5 h-px"
+                    style={{ background: 'rgba(0, 0, 0, 0.45)', boxShadow: '0 1px 0 rgba(255, 252, 242, 0.07)' }}
                   />
                 )}
                 <button
@@ -859,9 +820,7 @@ function FlyoutShell({
     <div
       data-component="canvas-toolbar-flyout"
       data-group={meta.id}
-      // Hero surface of canvas mode (1 of ≤3 refract surfaces; RefractionDefs
-      // is mounted once in page.tsx). Falls back to plain frost below t2.
-      className="w-[252px] ds-glass ds-glass--refract ds-edge--brass max-h-[78vh] overflow-hidden flex ds-reveal"
+      className="w-[252px] ds-glass ds-edge max-h-[78vh] overflow-hidden flex ds-reveal"
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the
           glass while long flyouts (Lighting) scroll. */}
@@ -1215,7 +1174,7 @@ function LightingFlyout({
               >
                 <span
                   className="w-2.5 h-2.5 rounded-full"
-                  style={{ background: l.color ?? LIGHT_COLOR_DEFAULT, border: '1px solid rgba(255, 252, 242, 0.3)', boxShadow: 'inset 0 1px 1px rgba(255, 252, 242, 0.3), 0 1px 2px rgba(0, 0, 0, 0.5)' }}
+                  style={{ background: l.color ?? '#ffffff', border: '1px solid rgba(255, 252, 242, 0.3)', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)' }}
                 />
                 <span className="text-[10px] font-mono" style={{ color: active ? 'var(--ds-text-hi)' : 'var(--ds-text)' }}>
                   {LIGHT_TYPE_LABEL[l.type]}
@@ -1276,7 +1235,7 @@ function LightingFlyout({
             <input
               type="color"
               data-control="light-color"
-              value={selectedLight.color ?? LIGHT_COLOR_DEFAULT}
+              value={selectedLight.color ?? '#ffffff'}
               onChange={(e) => onUpdateLight(selectedLight.id, { color: e.target.value })}
               className="w-7 h-6 rounded-ds-xs cursor-pointer bg-transparent"
               style={{ border: '1px solid rgba(255, 252, 242, 0.14)', boxShadow: 'var(--ds-chamfer-soft)' }}
@@ -1478,15 +1437,10 @@ function KeyframeEditorPanel({
         className="m-3 ds-ceramic ds-edge pointer-events-auto overflow-hidden"
         style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
       >
-        {/* Header — machined metal strip with grain tooth and a specular
-            top catch / shaded bottom seam against the ceramic body. */}
+        {/* Header */}
         <div
-          className="relative ds-grain flex items-center justify-between px-3.5 h-11"
-          style={{
-            background: 'var(--ds-grad-metal)',
-            borderBottom: '1px solid rgba(255, 252, 242, 0.07)',
-            boxShadow: 'inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.5)',
-          }}
+          className="flex items-center justify-between px-3.5 h-11"
+          style={{ background: 'var(--ds-grad-metal)', borderBottom: '1px solid rgba(255, 252, 242, 0.07)' }}
         >
           <div className="flex items-center gap-2.5">
             <Icon name="timeline" size={14} color={DS_ACCENT} glow />
@@ -1618,9 +1572,9 @@ function KeyframeEditorPanel({
                     className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 rounded-[2px]"
                     style={{
                       left: `${6 + k * 88}%`,
-                      background: `radial-gradient(circle at 30% 26%, ${dsAlpha(DS.textHi, 0.5)} 0%, ${dsAlpha(tr.color, 0.92)} 45%, ${dsAlpha(tr.color, 0.7)} 100%)`,
+                      background: dsAlpha(tr.color, 0.85),
                       border: `1px solid ${dsAlpha(DS.textHi, 0.3)}`,
-                      boxShadow: `0 1px 2px rgba(0, 0, 0, 0.55), 0 0 6px ${dsAlpha(tr.color, 0.35)}`,
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
                     }}
                   />
                 ))}
