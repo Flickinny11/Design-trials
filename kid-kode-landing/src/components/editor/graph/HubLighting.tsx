@@ -15,13 +15,16 @@
 
 import { Environment } from '@react-three/drei';
 import type { LightingSpec, PrismHub, PrismLight } from '@/lib/prism-graph/types';
+// Wave-2E Observatory Brass retint — default-light tints come from the frozen
+// DS tokens (cool key → ice, warm fill → brass); roles + intensities unchanged.
+import { DS } from '@/components/editor/design-system';
 
 // Matches the pre-wiring hardcoded AssembledSceneContent look exactly, so a hub
 // without a lightingSpec is pixel-stable.
 const LEGACY_AMBIENT = 0.45;
 const LEGACY_LIGHTS: PrismLight[] = [
-  { id: 'key', type: 'directional', color: '#e0edff', intensity: 0.8, position: { x: 4, y: 6, z: 8 } },
-  { id: 'fill', type: 'directional', color: '#ffdbb8', intensity: 0.25, position: { x: -4, y: -2, z: 5 } },
+  { id: 'key', type: 'directional', color: DS.ice200, intensity: 0.8, position: { x: 4, y: 6, z: 8 } },
+  { id: 'fill', type: 'directional', color: DS.brass100, intensity: 0.25, position: { x: -4, y: -2, z: 5 } },
 ];
 
 // Shadow-camera frustum + map params for the single key caster. Kept modest
@@ -56,7 +59,7 @@ function ShadowCasterDirectional({
 }
 
 function LightObject({ light, isKeyCaster = false }: { light: PrismLight; isKeyCaster?: boolean }) {
-  const color = light.color ?? '#ffffff';
+  const color = light.color ?? '#ffffff'; // sanctioned: content-lighting no-tint default, not chrome
   const intensity = light.intensity ?? 1;
   const pos: [number, number, number] = light.position
     ? [light.position.x, light.position.y, light.position.z]
@@ -71,7 +74,7 @@ function LightObject({ light, isKeyCaster = false }: { light: PrismLight; isKeyC
     case 'ambient':
       return <ambientLight color={color} intensity={intensity} />;
     case 'hemisphere':
-      return <hemisphereLight color={color} groundColor={light.groundColor ?? '#202028'} intensity={intensity} />;
+      return <hemisphereLight color={color} groundColor={light.groundColor ?? '#202028' /* sanctioned: content-lighting neutral ground default, not chrome */} intensity={intensity} />;
     case 'point':
       return <pointLight color={color} intensity={intensity} position={pos} distance={light.distance ?? 0} decay={light.decay ?? 2} />;
     case 'spot':

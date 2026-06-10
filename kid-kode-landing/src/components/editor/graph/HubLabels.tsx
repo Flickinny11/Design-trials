@@ -10,6 +10,8 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import type { EditorHubView } from '@/lib/prism-graph/view-model';
+// Wave-2E Observatory Brass retint — label fill comes from the frozen DS tokens.
+import { DS } from '@/components/editor/design-system';
 
 interface HubCenter {
   x: number;
@@ -38,7 +40,7 @@ function makeHubLabelTexture(title: string, color: string): THREE.CanvasTexture 
 
   ctx.shadowBlur = 0;
   ctx.shadowOffsetY = 0;
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = DS.textHi;
   ctx.globalAlpha = 0.92;
   ctx.fillText(title.toUpperCase(), W / 2, H / 2);
   ctx.globalAlpha = 1;

@@ -88,6 +88,10 @@ import {
   HOVER_LIFT,
   interpolateKeyframePrimitive,
 } from '@/lib/prism-graph/keyframe-primitives';
+// Wave-2E Observatory Brass retint — all chrome accent colors (selection rings,
+// hover glows, edge tints, lighting fills, backdrop washes) come from the frozen
+// design-system tokens. No component-local hex; purple / electric-blue retired.
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 // Per-hub mockup texture cache — keyed by hubId so each hub textures its
 // hull from its own `hub.layout.mockupUrl` (Plan §P11 / Amendment 0002 §A.3).
@@ -112,7 +116,7 @@ function loadHubMockupTexture(hubId: string, mockupUrl: string): Promise<THREE.C
       canvas.width = size;
       canvas.height = size;
       const ctx = canvas.getContext('2d')!;
-      ctx.fillStyle = '#0a0d18';
+      ctx.fillStyle = DS.ink;
       ctx.fillRect(0, 0, size, size);
       const scale = Math.min(size / img.width, size / img.height);
       const w = img.width * scale;
@@ -139,12 +143,12 @@ export function __resetHubMockupTextureCache(): void {
 // Edge colors by type
 // ═══════════════════════════════════════════════════════════════════
 const EDGE_COLORS: Record<string, string> = {
-  contains: 'rgba(93, 139, 255, 0.45)',
-  'navigates-to': '#5ee0ff',
-  triggers: 'rgba(85, 230, 165, 0.45)',
-  'data-flow': 'rgba(85, 230, 165, 0.45)',
-  'shares-state': '#a978ff',
-  'depends-on': '#6b7694',
+  contains: dsAlpha(DS.brass400, 0.45),
+  'navigates-to': DS.ice300,
+  triggers: dsAlpha(DS.ok, 0.45),
+  'data-flow': dsAlpha(DS.ok, 0.45),
+  'shares-state': DS.brass300,
+  'depends-on': DS.neutral,
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -206,7 +210,7 @@ function Edge({ link, revealOpacity = 1 }: { link: SimLink; revealOpacity?: numb
     geom.computeBoundingSphere();
   });
 
-  const color = EDGE_COLORS[link.type] || '#ffffff';
+  const color = EDGE_COLORS[link.type] || DS.textHi;
   const baseOpacity = link.type === 'contains' ? 0.28 : 0.62;
   // EB-04-01 / SC-019 — intra-hub tethers in the active hub fade in with the
   // drill-in reveal. Callers pass revealOpacity in [0,1]; default 1 = no effect.
@@ -247,7 +251,7 @@ function EdgeParticle({ link }: { link: SimLink }) {
     );
   });
 
-  const color = EDGE_COLORS[link.type] || '#ffffff';
+  const color = EDGE_COLORS[link.type] || DS.textHi;
 
   return (
     <mesh ref={ref}>
@@ -296,7 +300,7 @@ function GalaxyHubTethers({
         const a = hubCenters[tether.hubA];
         const b = hubCenters[tether.hubB];
         if (!a || !b) return null;
-        const color = EDGE_COLORS[tether.type] || '#ffffff';
+        const color = EDGE_COLORS[tether.type] || DS.textHi;
         const positions = new Float32Array([a.x, a.y, a.z, b.x, b.y, b.z]);
         return (
 
@@ -563,14 +567,14 @@ function GlassNode({
   // Hub color
   const hubColor = useMemo(() => {
     const h = hubs.find((hub) => hub.id === node.hubIds[0]);
-    return h?.color || '#5d8bff';
+    return h?.color || DS.brass400;
   }, [hubs, node.hubIds]);
 
   const statusColor =
-    node.status === 'verified' ? '#22c55e' :
-    node.status === 'failed' ? '#ef4466' :
-    node.status === 'code_generated' ? '#5d8bff' :
-    node.status === 'image_ready' ? '#f5a524' : '#6b7694';
+    node.status === 'verified' ? DS.ok :
+    node.status === 'failed' ? DS.danger :
+    node.status === 'code_generated' ? DS.ice400 :
+    node.status === 'image_ready' ? DS.warn : DS.neutral;
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
@@ -646,7 +650,7 @@ function GlassNode({
             roughness={0.28}
             clearcoat={0.65}
             clearcoatRoughness={0.18}
-            emissive={frozen ? new THREE.Color('#8bb4ff') : new THREE.Color(hubColor)}
+            emissive={frozen ? new THREE.Color(DS.ice300) : new THREE.Color(hubColor)}
             emissiveIntensity={(frozen ? 0.22 : node.status === 'failed' ? 0.4 : 0.08) * dimFactor}
             emissiveMap={texture}
           />
@@ -670,7 +674,7 @@ function GlassNode({
             ior={1.33}
             roughness={frozen ? 0.3 : 0.08}
             transmission={0.95 * dimFactor}
-            color={frozen ? '#a5c8ff' : '#ffffff'}
+            color={frozen ? DS.ice200 : '#ffffff' /* sanctioned: physical no-tint white for transmission glass */}
             attenuationDistance={2}
             attenuationColor={hubColor as any}
             resolution={256}
@@ -694,7 +698,7 @@ function GlassNode({
             clearcoat={1}
             clearcoatRoughness={0.05}
             specularIntensity={1}
-            color={'#ffffff'}
+            color={'#ffffff' /* sanctioned: physical no-tint white for glass shell */}
           />
         </mesh>
       )}
@@ -703,7 +707,7 @@ function GlassNode({
       <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radius * 1.3, radius * 1.38, 80]} />
         <meshBasicMaterial
-          color={isSelected ? '#ffd966' : '#5ee0ff'}
+          color={isSelected ? DS.brass200 : DS.ice300}
           transparent
           opacity={0}
           side={THREE.DoubleSide}
@@ -723,13 +727,13 @@ function GlassNode({
       {node.hasBackend && (
         <mesh position={[radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
-          <meshBasicMaterial color={'#5d8bff'} toneMapped={false} />
+          <meshBasicMaterial color={DS.ice400} toneMapped={false} />
         </mesh>
       )}
       {node.hasAnimation && (
         <mesh position={[-radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
-          <meshBasicMaterial color={'#a978ff'} toneMapped={false} />
+          <meshBasicMaterial color={DS.brass300} toneMapped={false} />
         </mesh>
       )}
 
@@ -738,7 +742,7 @@ function GlassNode({
         <mesh scale={1.22}>
           <icosahedronGeometry args={[radius, 1]} />
           <meshStandardMaterial
-            color={'#8bb4ff'}
+            color={DS.ice300}
             metalness={0.9}
             roughness={0.05}
             transparent
@@ -935,8 +939,8 @@ function WorldSun() {
       <mesh ref={coreRef}>
         <sphereGeometry args={[radius, 96, 96]} />
         <meshStandardMaterial
-          color="#ffd966"
-          emissive={new THREE.Color('#ffb24a')}
+          color={DS.brass200}
+          emissive={new THREE.Color(DS.brass300)}
           emissiveIntensity={1.6}
           roughness={0.32}
           metalness={0.0}
@@ -946,14 +950,14 @@ function WorldSun() {
       <mesh ref={haloRef} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radius * 1.18, radius * 1.32, 96]} />
         <meshBasicMaterial
-          color={isSelected ? '#fff1a8' : '#ffd966'}
+          color={isSelected ? DS.brass100 : DS.brass200}
           transparent
           opacity={isSelected ? 0.85 : 0.55}
           side={THREE.DoubleSide}
           toneMapped={false}
         />
       </mesh>
-      <pointLight color="#ffd966" intensity={3.2} distance={260} decay={1.8} />
+      <pointLight color={DS.brass200} intensity={3.2} distance={260} decay={1.8} />
     </group>
   );
 }
@@ -1115,10 +1119,10 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
         if (tier === 0 && !isHovered && !isSelected) return null;
 
         const statusColor =
-          node.status === 'verified' ? '#22c55e' :
-          node.status === 'failed' ? '#ef4466' :
-          node.status === 'code_generated' ? '#5d8bff' :
-          node.status === 'image_ready' ? '#f5a524' : '#6b7694';
+          node.status === 'verified' ? DS.ok :
+          node.status === 'failed' ? DS.danger :
+          node.status === 'code_generated' ? DS.ice400 :
+          node.status === 'image_ready' ? DS.warn : DS.neutral;
 
         return (
           <Html
@@ -1133,7 +1137,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                 <div
                   className="font-mono font-semibold tracking-wide whitespace-nowrap"
                   style={{
-                    color: isSelected ? '#ffd966' : '#e8eaf5',
+                    color: isSelected ? DS.brass200 : DS.textHi,
                     fontSize: tier === 1 ? 10 : tier === 2 ? 11 : 13,
                     textShadow: '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
                     lineHeight: 1.2,
@@ -1145,7 +1149,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
               {tier >= 2 && showSubNodeDetail && (
                 <div
                   className="flex items-center gap-1.5 justify-center font-mono mt-0.5"
-                  style={{ fontSize: 9, color: '#b5bddf', opacity: subNodeDetailOpacity }}
+                  style={{ fontSize: 9, color: DS.textMid, opacity: subNodeDetailOpacity }}
                 >
                   <span>{node.elementType}</span>
                   <span
@@ -1156,9 +1160,9 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                       boxShadow: `0 0 6px ${statusColor}`,
                     }}
                   />
-                  {node.hasBackend && <span style={{ color: '#5d8bff' }}>BE</span>}
-                  {node.hasAnimation && <span style={{ color: '#a978ff' }}>○</span>}
-                  {frozen && <span style={{ color: '#8bb4ff' }}>❄</span>}
+                  {node.hasBackend && <span style={{ color: DS.ice400 }}>BE</span>}
+                  {node.hasAnimation && <span style={{ color: DS.brass300 }}>○</span>}
+                  {frozen && <span style={{ color: DS.ice300 }}>❄</span>}
                 </div>
               )}
               {tier >= 3 && showSubNodeDetail && (
@@ -1172,7 +1176,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
               {tier >= 4 && showSubNodeDetail && (
                 <div
                   className="mt-1 max-w-[200px] mx-auto text-[10px] text-center leading-snug"
-                  style={{ color: '#c5ccea', textShadow: '0 1px 3px rgba(0,0,0,0.9)', opacity: subNodeDetailOpacity }}
+                  style={{ color: DS.text, textShadow: '0 1px 3px rgba(0,0,0,0.9)', opacity: subNodeDetailOpacity }}
                 >
                   {node.caption.slice(0, 90)}…
                 </div>
@@ -1592,7 +1596,7 @@ function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
   return (
     <mesh position={[0, 0, -2]} name="hub:scene-backdrop">
       <planeGeometry args={[width, height]} />
-      <meshBasicMaterial map={texture ?? undefined} color={texture ? '#ffffff' : '#07101f'} transparent opacity={1} toneMapped={false} />
+      <meshBasicMaterial map={texture ?? undefined} color={texture ? '#ffffff' /* sanctioned: no-tint texture passthrough */ : DS.ink} transparent opacity={1} toneMapped={false} />
     </mesh>
   );
 }
@@ -1654,7 +1658,7 @@ function CanvasViewportFrame({
   const safeMat = useMemo(
     () =>
       new THREE.LineDashedMaterial({
-        color: '#8bb4ff',
+        color: DS.ice400,
         dashSize: 0.18,
         gapSize: 0.12,
         transparent: true,
@@ -1667,7 +1671,7 @@ function CanvasViewportFrame({
   const outerMat = useMemo(
     () =>
       new THREE.LineBasicMaterial({
-        color: '#a9c4ff',
+        color: DS.ice300,
         transparent: true,
         opacity: 0.9,
         depthTest: false,
@@ -1780,7 +1784,7 @@ function KeyframeDemo() {
         <planeGeometry args={[0.6, 0.6]} />
         <meshBasicMaterial
           ref={materialRef}
-          color="#5d8bff"
+          color={DS.brass400}
           transparent
           opacity={0}
           toneMapped={false}
@@ -2139,7 +2143,7 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
           <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
           <meshBasicMaterial
             color={
-              isSelected ? '#8bb4ff' : isMultiSelected ? '#a978ff' : '#55e6a5'
+              isSelected ? DS.brass200 : isMultiSelected ? DS.brass400 : DS.ok
             }
             transparent
             opacity={0.85}
@@ -2151,7 +2155,7 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       {!previewMode && isLocked && (
         <mesh position={[0, 0, 0.07]}>
           <ringGeometry args={[ringSize + 0.04, ringSize + 0.06, 64]} />
-          <meshBasicMaterial color="#f5a524" transparent opacity={0.7} toneMapped={false} />
+          <meshBasicMaterial color={DS.warn} transparent opacity={0.7} toneMapped={false} />
         </mesh>
       )}
     </group>
@@ -2255,8 +2259,8 @@ function TopologySceneContent({
 
       {/* Lighting — photoreal with environment IBL + fills */}
       <ambientLight intensity={0.06} />
-      <directionalLight position={[120, 120, 100]} intensity={0.5} color="#e0edff" castShadow={false} />
-      <directionalLight position={[-100, -60, -100]} intensity={0.25} color="#ffdbb8" />
+      <directionalLight position={[120, 120, 100]} intensity={0.5} color={DS.ice200} castShadow={false} />
+      <directionalLight position={[-100, -60, -100]} intensity={0.25} color={DS.brass100} />
       <Environment preset="night" environmentIntensity={0.55} />
 
       {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
@@ -2558,7 +2562,7 @@ function AssembledShadowCatcher() {
     <mesh position={[0, 0, -1.4]} receiveShadow name="assembled:shadow-catcher">
       <planeGeometry args={[60, 60]} />
       <meshStandardMaterial
-        color="#0a0d16"
+        color={DS.ink}
         roughness={1}
         metalness={0}
         transparent
@@ -2846,7 +2850,7 @@ export default function GraphScene() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 20% 20%, rgba(93,139,255,0.12) 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(169,120,255,0.1) 0%, transparent 55%), #04050a',
+            `radial-gradient(ellipse 70% 60% at 20% 20%, ${dsAlpha(DS.brass500, 0.12)} 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 80% 80%, ${dsAlpha(DS.ice500, 0.1)} 0%, transparent 55%), ${DS.void}`,
         }}
       />
       <Canvas
@@ -2856,7 +2860,7 @@ export default function GraphScene() {
         camera={camera}
         shadows="soft"
       >
-        <fog attach="fog" args={['#05060a', 300, 900]} />
+        <fog attach="fog" args={[DS.void, 300, 900]} />
         <Suspense fallback={null}>
           <SceneContent onPerf={(factor) => setDpr([1, factor])} />
         </Suspense>
