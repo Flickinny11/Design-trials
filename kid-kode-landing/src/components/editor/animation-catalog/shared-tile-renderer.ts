@@ -48,7 +48,7 @@ const TILE_BG = new THREE.Color('#06070d');
 // (crystal-ball, liquid-glass, liquid-fill-glass, refraction-warp,
 // water-droplet) plus the rest of the glass family, and only the glass family
 // (non-glass tiles are untouched).
-const GLASS_BOKEH_COLORS = ['#7fb2ff', '#c79bff', '#9affe0', '#ffd98a', '#ff9ad1'];
+const GLASS_BOKEH_COLORS = ['#8fb0c4', '#ecd49d', '#9fe0c4', '#ffd98a', '#ddba77']; // ice + brass bokeh (Observatory Brass; purple banned)
 
 export interface RegisterOptions {
   element: HTMLElement;
@@ -207,7 +207,10 @@ class SharedTileRenderer {
     const key = new THREE.DirectionalLight(0xffffff, 1.4);
     key.position.set(3, 4, 5);
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0xa978ff, 0.5);
+    // Cool steel fill against the warm key — classic studio pairing that keeps
+    // previews inside the Observatory Brass palette (design-system DS.ice400;
+    // the old 0xa978ff purple fill is banned chrome).
+    const fill = new THREE.DirectionalLight(0x7d9fb4, 0.5);
     fill.position.set(-4, -2, 2);
     scene.add(fill);
     return scene;
@@ -301,8 +304,8 @@ class SharedTileRenderer {
     const w = 4.6;
     const h = 4.6;
     const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
-    const top = new THREE.Color('#33458a');
-    const bot = new THREE.Color('#141a3a');
+    const top = new THREE.Color('#2e3a4e'); // steel (was AI-slop navy)
+    const bot = new THREE.Color('#11151f');
     const colors = new Float32Array(4 * 3);
     // PlaneGeometry vertex order: top-left, top-right, bottom-left, bottom-right.
     [top, top, bot, bot].forEach((c, i) => {
@@ -332,8 +335,8 @@ class SharedTileRenderer {
     const hero = new THREE.Mesh(
       new THREE.SphereGeometry(0.78, 32, 24),
       new THREE.MeshStandardMaterial({
-        color: new THREE.Color('#9ab8ff'),
-        emissive: new THREE.Color('#acc4ff'),
+        color: new THREE.Color('#a9c2d1'),
+        emissive: new THREE.Color('#cfdde6'),
         emissiveIntensity: 1.5,
         roughness: 0.5,
         metalness: 0,

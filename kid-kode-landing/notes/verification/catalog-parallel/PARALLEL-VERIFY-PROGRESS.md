@@ -675,3 +675,10 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/wispy-smoke (smoke) render=true play=true ctrl=true
 
 ### Run end 2026-06-09T23:51:07.314Z — pass 13/13, fail 0, missing 0, wall 120s
+
+## Resumed 2026-06-10T01:50:37.900Z (std 3, glass 0 remaining)
+- [PASS] std/accordion-y (transform) render=true play=true ctrl=true
+- [PASS] std/card-fold (transform) render=true play=true ctrl=true
+- [PASS] std/fire-flame (volumetric) render=true play=true ctrl=true
+
+### Run end 2026-06-10T01:51:28.142Z — pass 3/3, fail 0, missing 0, wall 50s

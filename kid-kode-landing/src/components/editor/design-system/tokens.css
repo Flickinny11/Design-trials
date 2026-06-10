@@ -1,0 +1,123 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM EDITOR DESIGN SYSTEM — tokens.css (Wave 0, FROZEN CONTRACT 2026-06-09)
+   ─────────────────────────────────────────────────────────────────────────────
+   The single source of truth for every color, surface, edge, elevation, motion
+   and type value in the editor chrome. Components consume these custom
+   properties (directly or via the `ds-*` classes in materials.css / the
+   Tailwind `ds` namespace). Component-local hex values are forbidden.
+
+   Language: deep-space observatory — machined graphite instruments with brass
+   fittings, bone-white engraving, cold starlight for informational states.
+   NO purple. NO flat fills. Every surface is a material; every edge catches
+   light.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Neutrals — graphite/ink machined housing ─────────────────────────── */
+  --ds-void: #04050a;        /* deep space; page + scene backdrop (unchanged) */
+  --ds-ink: #0b0d13;         /* darkest housing */
+  --ds-charcoal: #12151d;    /* recessed panel interiors */
+  --ds-graphite: #1a1e28;    /* primary panel body */
+  --ds-slate: #242936;       /* raised body / hover body */
+  --ds-steel: #323848;       /* highest neutral body */
+
+  /* ── Text — bone engraving on graphite ────────────────────────────────── */
+  --ds-text-hi: #f3f1ea;     /* headings / primary values */
+  --ds-text: #dfdcd2;        /* body */
+  --ds-text-mid: #a8a79e;    /* secondary */
+  --ds-text-low: #6e7077;    /* tertiary / disabled */
+
+  /* ── Brass accent ramp (the ONE accent family) ────────────────────────── */
+  --ds-brass-100: #f7e9c6;   /* specular hot point */
+  --ds-brass-200: #ecd49d;
+  --ds-brass-300: #ddba77;
+  --ds-brass-400: #cd9f55;   /* primary accent */
+  --ds-brass-500: #b3853f;
+  --ds-brass-600: #8f6930;
+  --ds-brass-700: #654a22;
+  /* rgb triplets for alpha composition */
+  --ds-brass-400-rgb: 205, 159, 85;
+  --ds-brass-300-rgb: 221, 186, 119;
+  --ds-brass-200-rgb: 236, 212, 157;
+
+  /* ── Ice secondary (informational / frozen ONLY — never the hero) ─────── */
+  --ds-ice-200: #cfdde6;
+  --ds-ice-300: #a9c2d1;
+  --ds-ice-400: #7d9fb4;
+  --ds-ice-500: #54788d;
+  --ds-ice-400-rgb: 125, 159, 180;
+
+  /* ── Status (semantic, palette-tuned) ─────────────────────────────────── */
+  --ds-ok: #63c389;
+  --ds-warn: #dfa14e;        /* sits inside the brass family */
+  --ds-danger: #d96a5e;
+  --ds-neutral: #76808f;
+  --ds-ok-rgb: 99, 195, 137;
+  --ds-danger-rgb: 217, 106, 94;
+
+  /* ── Gradient ramps (never flat-fill a surface) ───────────────────────── */
+  --ds-grad-brass: linear-gradient(165deg, var(--ds-brass-200) 0%, var(--ds-brass-400) 48%, var(--ds-brass-600) 100%);
+  --ds-grad-brass-soft: linear-gradient(165deg, rgba(var(--ds-brass-300-rgb), 0.22), rgba(var(--ds-brass-400-rgb), 0.1) 55%, rgba(var(--ds-brass-400-rgb), 0.04));
+  --ds-grad-panel: linear-gradient(168deg, rgba(52, 59, 78, 0.62) 0%, rgba(24, 27, 37, 0.76) 50%, rgba(12, 14, 20, 0.84) 100%);
+  --ds-grad-panel-opaque: linear-gradient(168deg, #232836 0%, #161922 55%, #0e1017 100%);
+  --ds-grad-smoked: linear-gradient(172deg, rgba(16, 18, 26, 0.78), rgba(7, 8, 13, 0.9));
+  --ds-grad-metal: linear-gradient(178deg, #2c3140 0%, #20242f 38%, #161924 72%, #1d212c 100%);
+  --ds-grad-ceramic: linear-gradient(176deg, #20242f 0%, #171a23 60%, #13161e 100%);
+  --ds-grad-well: linear-gradient(180deg, rgba(5, 6, 10, 0.85), rgba(16, 18, 26, 0.6));
+  --ds-grad-text-brass: linear-gradient(170deg, var(--ds-brass-100), var(--ds-brass-300) 55%, var(--ds-brass-500));
+
+  /* ── Edges — every surface catches light (specular TL → shade BR) ─────── */
+  --ds-edge-specular: rgba(255, 252, 242, 0.21);   /* top edge catch */
+  --ds-edge-side: rgba(255, 252, 242, 0.07);
+  --ds-edge-shade: rgba(0, 0, 0, 0.46);            /* bottom chamfer */
+  --ds-edge-grad: linear-gradient(165deg, rgba(255, 252, 242, 0.22) 0%, rgba(255, 252, 242, 0.05) 32%, rgba(120, 126, 140, 0.07) 60%, rgba(0, 0, 0, 0.32) 100%);
+  --ds-edge-grad-brass: linear-gradient(165deg, rgba(var(--ds-brass-200-rgb), 0.75) 0%, rgba(var(--ds-brass-400-rgb), 0.32) 38%, rgba(var(--ds-brass-400-rgb), 0.1) 62%, rgba(0, 0, 0, 0.3) 100%);
+
+  /* ── Elevation — contact shadow + ambient pair per level ──────────────── */
+  --ds-elev-0: inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.34);
+  --ds-elev-2: 0 2px 4px rgba(0, 0, 0, 0.52), 0 12px 30px rgba(0, 0, 0, 0.44);
+  --ds-elev-3: 0 4px 9px rgba(0, 0, 0, 0.56), 0 22px 52px rgba(0, 0, 0, 0.54);
+  --ds-elev-4: 0 8px 18px rgba(0, 0, 0, 0.6), 0 36px 90px rgba(0, 0, 0, 0.66);
+  /* inner chamfer pack — composes with any elevation */
+  --ds-chamfer: inset 0 1px 0 var(--ds-edge-specular), inset 1px 0 0 var(--ds-edge-side), inset -1px 0 0 rgba(0, 0, 0, 0.18), inset 0 -1px 0 var(--ds-edge-shade);
+  --ds-chamfer-soft: inset 0 1px 0 rgba(255, 252, 242, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  --ds-glow-brass: 0 0 22px rgba(var(--ds-brass-400-rgb), 0.28);
+  --ds-glow-brass-strong: 0 0 34px rgba(var(--ds-brass-400-rgb), 0.42);
+
+  /* ── Radii — machined corner scale ────────────────────────────────────── */
+  --ds-r-xs: 6px;
+  --ds-r-sm: 9px;
+  --ds-r-md: 13px;
+  --ds-r-lg: 18px;
+  --ds-r-xl: 24px;
+  --ds-r-pill: 999px;
+
+  /* ── Motion — time-based, transform/opacity only ──────────────────────── */
+  --ds-t-fast: 120ms;
+  --ds-t-base: 200ms;
+  --ds-t-slow: 320ms;
+  --ds-t-glide: 480ms;
+  --ds-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-ease-in: cubic-bezier(0.5, 0, 0.74, 0.24);
+  --ds-ease-inout: cubic-bezier(0.6, 0, 0.18, 1);
+  --ds-ease-spring: cubic-bezier(0.34, 1.36, 0.44, 1);
+
+  /* ── Type & rhythm ────────────────────────────────────────────────────── */
+  --ds-track-label: 0.16em;
+  --ds-track-kicker: 0.24em;
+  --ds-fs-kicker: 9px;
+  --ds-fs-label: 10px;
+  --ds-fs-body: 12px;
+  --ds-fs-md: 13px;
+  --ds-fs-title: 15px;
+  --ds-fs-display: 19px;
+
+  /* ── Backdrop (frost) strengths — tier-gated in materials.css ─────────── */
+  --ds-frost: blur(18px) saturate(160%) brightness(1.07);
+  --ds-frost-heavy: blur(26px) saturate(170%) brightness(1.09);
+  --ds-frost-light: blur(10px) saturate(130%);
+
+  /* ── Focus ring ───────────────────────────────────────────────────────── */
+  --ds-focus-ring: 0 0 0 1px rgba(var(--ds-brass-300-rgb), 0.7), 0 0 0 4px rgba(var(--ds-brass-400-rgb), 0.18);
+}

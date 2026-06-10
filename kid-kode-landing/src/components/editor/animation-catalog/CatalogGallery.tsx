@@ -10,6 +10,12 @@
 // content and each preview is a transparent DOM window scissored into it. This
 // is the rig the full 300-primitive catalog renders against — zero per-tile GL
 // contexts, zero device-lost.
+//
+// Chrome: Observatory Brass design system. Because previews are transparent
+// windows onto the canvas BEHIND the page, no panel may lay a fill or a
+// backdrop-filter over a preview rect — the detail rail is therefore a stack
+// of machined plates around a bezel-framed window, and only the sticky header
+// (which never overlaps the detail preview) carries frosted glass.
 
 import { useEffect, useMemo, useState } from 'react';
 import {
@@ -61,30 +67,42 @@ export default function CatalogGallery() {
   }, [defs]);
 
   return (
-    <div className="relative min-h-screen w-full text-white" style={{ background: '#04050a' }}>
+    <div className="relative min-h-screen w-full" style={{ background: 'var(--ds-void)', color: 'var(--ds-text)' }}>
       {/* The one shared-context canvas every preview draws through. */}
       <SharedCanvas />
 
       <div className="relative" style={{ zIndex: 1 }}>
-        <header className="px-6 py-4 border-b border-white/10 flex items-center justify-between sticky top-0 z-10" style={{ background: 'rgba(4,5,10,0.85)', backdropFilter: 'blur(8px)' }}>
-          <div className="flex flex-col">
-            <h1 className="text-lg font-semibold">Animation Primitive Catalog</h1>
-            <p className="text-[11px] text-white/45">
-              Animatable contract · shared-context preview rig · live ControlSchema
-            </p>
+        {/* Frosted-glass instrument header — the one backdrop surface on this
+            page; it frosts the tiles scrolling beneath it. */}
+        <header className="ds-glass sticky top-0 z-10 flex items-center justify-between px-6 py-3.5 rounded-none">
+          <div className="flex flex-col gap-0.5">
+            <span className="ds-kicker">prism editor · animatable contract · shared-context rig</span>
+            <h1 className="ds-title ds-title-brass text-[19px]">Animation Primitive Catalog</h1>
           </div>
-          <span data-component="primitive-count" className="text-[12px] text-white/60 tabular-nums">
+          <span data-component="primitive-count" className="ds-chip ds-chip--brass tabular-nums">
             {primitiveCount()} primitives
           </span>
         </header>
 
-        <div className="flex">
+        <div className="flex flex-col lg:flex-row">
           {/* Tile grid */}
-          <main data-component="animation-picker" className="flex-1 px-6 py-5 flex flex-col gap-7">
+          <main data-component="animation-picker" className="flex-1 px-4 lg:px-6 py-6 flex flex-col gap-8 min-w-0">
             {byCategory.map(([cat, items]) => (
-              <section key={cat} data-category-section={cat} className="flex flex-col gap-2.5">
-                <h2 className="text-[11px] uppercase tracking-[0.2em] text-white/40">{cat}</h2>
-                <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
+              <section key={cat} data-category-section={cat} className="flex flex-col gap-3">
+                {/* Engraved category rule — label + machined etch line */}
+                <h2 className="flex items-center gap-3">
+                  <span className="ds-label" style={{ color: 'var(--ds-brass-300)' }}>{cat}</span>
+                  <span
+                    aria-hidden
+                    className="h-px flex-1"
+                    style={{
+                      background:
+                        'linear-gradient(90deg, rgba(var(--ds-brass-400-rgb),0.4), rgba(255,252,242,0.07) 30%, rgba(255,252,242,0.03) 70%, transparent)',
+                    }}
+                  />
+                  <span className="ds-kicker tabular-nums">{items.length}</span>
+                </h2>
+                <div className="grid gap-3.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
                   {items.map((d) => (
                     <PrimitiveTile
                       key={d.name}
@@ -103,30 +121,36 @@ export default function CatalogGallery() {
             ))}
           </main>
 
-          {/* Focused detail + controls */}
+          {/* Focused detail + controls — a rail of machined plates around the
+              bezel-framed live window (no fill may cover the preview rect). */}
           <aside
             data-component="primitive-detail"
             data-focused={focused?.name ?? ''}
-            className="w-[320px] shrink-0 border-l border-white/10 p-4 flex flex-col gap-4 sticky top-[61px] self-start"
-            style={{ height: 'calc(100vh - 61px)' }}
+            className="w-full lg:w-[324px] shrink-0 px-4 py-4 flex flex-col gap-3.5 order-first lg:order-none lg:sticky lg:top-[64px] lg:self-start lg:h-[calc(100vh-64px)] lg:border-l"
+            style={{ borderColor: 'var(--ds-edge-side)' }}
           >
             {focused ? (
               <>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-sm font-medium">{focused.label}</span>
-                  <span className="text-[10px] uppercase tracking-wider text-white/40">
+                {/* Title plate */}
+                <div className="ds-ceramic ds-edge px-3.5 py-3 flex flex-col gap-1">
+                  <span className="ds-title text-[15px]">{focused.label}</span>
+                  <span className="ds-kicker" style={{ color: 'var(--ds-brass-300)' }}>
                     {focused.category} · {focused.difficulty} · {focused.defaultDriver} driver
                   </span>
-                  <p className="text-[11px] text-white/55 mt-1">{focused.description}</p>
+                  <p className="text-[11px] leading-relaxed" style={{ color: 'var(--ds-text-mid)' }}>
+                    {focused.description}
+                  </p>
                 </div>
-                {/* Transparent window into the shared canvas. The viewport fills
-                    an aspect-sized box via absolute inset-0 so it always has a
-                    real height (a percentage-height child of an aspect box can
-                    collapse to 0 and get culled by the rig). */}
+
+                {/* Bezel-framed live window. The viewport fills an aspect-sized
+                    box via absolute inset-0 so it always has a real height (a
+                    percentage-height child of an aspect box can collapse to 0
+                    and get culled by the rig). The frame is shadow-only — the
+                    GPU frame stays crisp and untinted. */}
                 <div
                   data-component="detail-preview"
-                  className="relative w-full rounded-lg overflow-hidden border border-white/10"
-                  style={{ background: 'transparent', aspectRatio: '4 / 3' }}
+                  className="relative w-full rounded-ds-md overflow-hidden ds-edge--brass"
+                  style={{ background: 'transparent', aspectRatio: '4 / 3', boxShadow: 'var(--ds-elev-2)' }}
                 >
                   <SharedViewport
                     def={focused}
@@ -135,22 +159,33 @@ export default function CatalogGallery() {
                     className="absolute inset-0"
                     style={{ background: 'transparent' }}
                   />
+                  <div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 rounded-ds-md"
+                    style={{
+                      boxShadow:
+                        'inset 0 1px 0 rgba(255,252,242,0.09), inset 0 0 22px rgba(0,0,0,0.38), inset 0 -12px 22px -14px rgba(0,0,0,0.65)',
+                    }}
+                  />
                 </div>
+
                 <button
                   type="button"
                   data-action="detail-playpause"
                   data-playing={detailPlaying ? 'true' : 'false'}
                   onClick={() => setDetailPlaying((p) => !p)}
-                  className="self-start text-[11px] rounded px-2 py-1 bg-white/10 hover:bg-white/20 text-white/80"
+                  className="ds-btn ds-btn--ghost self-start"
                 >
                   {detailPlaying ? 'Pause' : 'Play'}
                 </button>
-                <div className="overflow-y-auto pr-1">
+
+                {/* Controls plate */}
+                <div className="ds-ceramic ds-edge flex-1 min-h-0 overflow-y-auto px-3.5 py-3">
                   <ControlPanel inst={inst} />
                 </div>
               </>
             ) : (
-              <p className="text-white/40 text-sm">No primitives registered.</p>
+              <p className="text-sm" style={{ color: 'var(--ds-text-low)' }}>No primitives registered.</p>
             )}
           </aside>
         </div>

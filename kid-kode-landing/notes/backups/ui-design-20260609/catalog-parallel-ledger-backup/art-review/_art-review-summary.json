@@ -1,0 +1,53 @@
+{
+  "generatedAt": "2026-06-08T23:21:03.492Z",
+  "tally": {
+    "premium": 167,
+    "acceptable": 58,
+    "nit": 70,
+    "broken": 17,
+    "total": 312
+  },
+  "method": "15 parallel fresh-context reviewer subagents over per-category contact sheets + per-tile frames; 34 shader/edge-flagged tiles re-captured on the REAL Metal GPU (webgpu) and re-judged.",
+  "brokenReclassified": {
+    "okOnRealGpu": [
+      "plasma",
+      "nebula",
+      "sparkle-glints",
+      "parallax-layers",
+      "bounce",
+      "supernova",
+      "collision-balls"
+    ],
+    "okNote": "Flagged broken under SwiftShader/at a sparse capture phase; render correctly on the real Metal GPU (plasma=vivid, nebula=cloud structure, supernova=burst orb, sparkle-glints=glint field, parallax-layers=depth-layer separation by design, bounce=card in-frame, collision-balls=renders but sparse).",
+    "artPolishFlag": [
+      "clouds",
+      "fog",
+      "godray",
+      "dappled-light",
+      "ink-bloom",
+      "ink-spread",
+      "smoke",
+      "fog-roll",
+      "mist-drift",
+      "wispy-smoke",
+      "fireball-burst",
+      "pointer-displace"
+    ]
+  },
+  "artPolishFlag": {
+    "clouds": "flat blue gradient, no cloud density/structure (flat on real Metal GPU too)",
+    "fog": "flat grey gradient, no volumetric drift (flat on real GPU)",
+    "godray": "flat tan gradient, no light shafts (flat on real GPU)",
+    "dappled-light": "flat grey-green fill, dapple pattern not reading (flat on real GPU)",
+    "ink-bloom": "flat dark-navy fill, bloom not visible at captured phase (real GPU)",
+    "ink-spread": "very faint glow blob, caught at low-energy spread phase (real GPU)",
+    "smoke": "blocky low-res value-noise tiling, not soft smoke (blocky on real GPU)",
+    "fog-roll": "blocky low-res noise tiling (blocky on real GPU)",
+    "mist-drift": "blocky low-res noise tiling (blocky on real GPU)",
+    "wispy-smoke": "blocky low-res shards, very coarse (blocky on real GPU)",
+    "fireball-burst": "blocky + desaturated teal, wrong fire color, no warm tones (real GPU)",
+    "pointer-displace": "flat blue plane at rest, card title/text not carried onto displaced mesh (real GPU)"
+  },
+  "functionalFixesRequired": 0,
+  "fixNote": "Every art-flagged tile still RENDERS (non-blank), PLAYS (uniforms advance — contract vitest green), and its CONTROLS work. None meet the FIX bar (does-not-render / does-not-play / control-does-nothing / contract-or-tsc regression). All are art-polish, carried to the dedicated art-polish step."
+}

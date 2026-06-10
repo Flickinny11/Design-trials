@@ -34,25 +34,56 @@ import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
+import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
 
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0 flex items-center justify-center bg-[#04050a]">
-      <div className="flex flex-col items-center gap-3">
-        <div className="relative w-14 h-14">
-          <div className="absolute inset-0 rounded-full border-2 border-[#5d8bff]/30 border-t-[#5d8bff] animate-spin" />
-          <div className="absolute inset-2 rounded-full border-2 border-[#a978ff]/30 border-b-[#a978ff] animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.4s' }} />
+    // Observatory Brass boot instrument — graphite track ring with a brass
+    // sweep arc and an engraved label plate. DS tokens only; transform/opacity
+    // motion (rotation) only.
+    <div className="absolute inset-0 flex items-center justify-center bg-ds-void">
+      <div className="ds-reveal flex flex-col items-center gap-4">
+        <div className="relative w-16 h-16">
+          {/* Machined graphite track */}
+          <div
+            className="absolute inset-0 rounded-full border-2 border-ds-slate"
+            style={{
+              boxShadow:
+                'inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0,0,0,0.45), 0 4px 14px rgba(0,0,0,0.4)',
+            }}
+          />
+          {/* Brass sweep arc */}
+          <div
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-ds-brass-400 border-r-ds-brass-600 animate-spin"
+            style={{ animationDuration: '1.1s', filter: `drop-shadow(0 0 6px ${dsAlpha(DS.brass400, 0.45)})` }}
+          />
+          {/* Inner ice telemetry arc, counter-rotating */}
+          <div
+            className="absolute inset-[7px] rounded-full border border-transparent border-b-ds-ice-400 animate-spin"
+            style={{ animationDirection: 'reverse', animationDuration: '1.6s', opacity: 0.7 }}
+          />
+          {/* Brass hub cap */}
+          <div
+            className="absolute inset-[26px] rounded-full"
+            style={{
+              background: `radial-gradient(circle at 32% 28%, ${DS.brass100} 0%, ${DS.brass300} 38%, ${DS.brass500} 72%, ${DS.brass700} 100%)`,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.6), var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.4)',
+            }}
+          />
         </div>
-        <div className="text-[10px] font-mono tracking-widest text-white/45 flex items-center gap-1.5">
-          <Icon name="sparkle" size={10} color="#5d8bff" glow />
+        {/* Engraved label plate */}
+        <div
+          className="ds-label flex items-center gap-1.5"
+          style={{ textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+        >
+          <Icon name="sparkle" size={10} color={DS.brass400} glow />
           INITIALIZING PRISM RUNTIME
         </div>
       </div>
     </div>
   ),
 });
-
 export default function Page() {
   const [isDesktop, setIsDesktop] = useState(true);
   // viewMode lives on useGraphEditorStore (HL12 / Plan §P12) so Inspector's
@@ -545,13 +576,15 @@ export default function Page() {
   const isPreviewApp = viewMode === 'preview-app';
 
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-[#04050a]">
-      {/* Ambient nebula backdrop */}
+    <main className="relative w-screen h-screen overflow-hidden bg-ds-void">
+      {/* SVG displacement defs for .ds-glass--refract overlays (mounted once). */}
+      <RefractionDefs />
+      {/* Ambient observatory backdrop — warm brass starlight TL, cold ice BR. */}
       <div
         className="absolute inset-0 pointer-events-none opacity-75"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(93,139,255,0.14) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(169,120,255,0.12) 0%, transparent 58%)',
+            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-brass-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
         }}
       />
 
@@ -561,20 +594,32 @@ export default function Page() {
               galaxy:      free-camera view of every hub in the universe.
               canvas:      single-canvas authoring surface for the active hub
                            (hub-world's intra-hub authoring folds in here).
-              preview-app: the running app; default on boot (RA-17). */}
+              preview-app: the running app; default on boot (RA-17).
+              Chrome: machined brass-and-graphite segmented control — equal-width
+              slots so the brass thumb slides with a pure translateX (transform-
+              only motion per the DS contract). */}
           <div
             className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
             data-component="view-mode-toggle"
           >
             <div
-              className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
-              style={{
-                background: 'rgba(8,10,26,0.78)',
-                backdropFilter: 'blur(20px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-              }}
+              className="ds-metal ds-grain ds-edge relative flex items-center p-1"
+              style={{ borderRadius: 'var(--ds-r-pill)' }}
             >
+              {/* Sliding brass thumb — translateX only, spring-eased. */}
+              <span
+                aria-hidden
+                className="ds-edge--brass absolute top-1 bottom-1 left-1 w-24 rounded-full pointer-events-none"
+                style={{
+                  transform: `translateX(${Math.max(
+                    0,
+                    (['galaxy', 'canvas', 'preview-app'] as const).indexOf(viewMode),
+                  ) * 96}px)`,
+                  transition: 'transform var(--ds-t-slow) var(--ds-ease-spring)',
+                  background: 'var(--ds-grad-brass-soft)',
+                  boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-brass)',
+                }}
+              />
               {([
                 { id: 'galaxy',      label: 'Galaxy' },
                 { id: 'canvas',      label: 'Canvas' },
@@ -586,9 +631,16 @@ export default function Page() {
                     key={m.id}
                     type="button"
                     onClick={() => setViewMode(m.id)}
-                    className={`px-3 h-7 rounded-full text-[11px] font-mono transition-all ${
-                      active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
+                    className={`ds-press relative z-10 w-24 h-7 rounded-full text-[11px] font-mono transition-colors ${
+                      active
+                        ? 'text-ds-brass-200'
+                        : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
                     }`}
+                    style={
+                      active
+                        ? { textShadow: `0 0 10px ${dsAlpha(DS.brass400, 0.4)}` }
+                        : undefined
+                    }
                   >
                     {m.label}
                   </button>
@@ -613,13 +665,10 @@ export default function Page() {
           {isPreviewApp && (
             <div
               data-component="preview-app-nav"
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10"
-              style={{
-                background: 'rgba(8,10,26,0.78)',
-                backdropFilter: 'blur(20px) saturate(180%)',
-                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-              }}
+              className="ds-glass ds-edge absolute bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 px-2.5 py-1.5"
+              /* position:absolute inline — .ds-glass sets position:relative and
+                 materials.css loads after the Tailwind utilities. */
+              style={{ borderRadius: 'var(--ds-r-pill)', position: 'absolute' }}
             >
               <button
                 type="button"
@@ -631,11 +680,14 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.prev();
                 }}
-                className="h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+                className="ds-press h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors"
               >
                 ‹ Prev
               </button>
-              <span className="text-[10px] font-mono tracking-widest text-white/45 select-none">
+              <span
+                className="text-[10px] font-mono tracking-widest select-none text-ds-text-low"
+                style={{ textShadow: '0 1px 0 rgba(0,0,0,0.6)' }}
+              >
                 {activeHubId ?? '—'}
               </span>
               <button
@@ -648,7 +700,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.next();
                 }}
-                className="h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-white/65 hover:text-white hover:bg-white/5 transition-colors"
+                className="ds-press h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors"
               >
                 Next ›
               </button>
@@ -740,21 +792,22 @@ function PreviewAppWorldBadge() {
   if (!worldLabel) return null;
 
   return (
+    // Machined brass-fitted nameplate — metal housing, engraved kicker, bone value.
     <div
       data-component="preview-app-world-badge"
       data-app-name-world-id={worldLabel.appNameWorldId}
-      className="absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10"
-      style={{
-        background: 'rgba(8,10,26,0.78)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
-      }}
+      className="ds-metal ds-grain ds-edge absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5"
+      /* position:absolute inline — .ds-metal sets position:relative and
+         materials.css loads after the Tailwind utilities. */
+      style={{ borderRadius: 'var(--ds-r-pill)', position: 'absolute' }}
     >
-      <span className="text-[9px] font-mono tracking-widest text-white/45 uppercase">
+      <span
+        className="text-[9px] font-mono tracking-widest uppercase text-ds-brass-300"
+        style={{ textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+      >
         World
       </span>
-      <span className="text-[11px] font-mono text-white/85">
+      <span className="text-[11px] font-mono text-ds-text-hi">
         {worldLabel.name ?? worldLabel.appNameWorldId}
       </span>
     </div>

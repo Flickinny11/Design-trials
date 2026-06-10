@@ -32,10 +32,10 @@ import {
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { VOLUMETRIC_DEPTH_ATTR, type SubjectKind } from './contract';
 
-const ACCENT = '#5d8bff';
-const VIOLET = '#a978ff';
-const PANEL = '#1b2444';
-const INK = '#0b1124';
+const ACCENT = '#cd9f55'; // design-system brass-400 (Observatory Brass)
+const VIOLET = '#7d9fb4'; // design-system ice-400 (purple is banned)
+const PANEL = '#1d212b'; // design-system graphite family
+const INK = '#0b0d13';   // design-system ink
 
 export interface BuiltSubject {
   /** Group the primitive owns (added to the stage by the host). */
@@ -189,7 +189,7 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
     const mesh = new Mesh(
       buildVolumetricSlabGeometry(),
       new MeshStandardMaterial({
-        color: new Color('#23304f'),
+        color: new Color('#2a303d'),
         emissive: new Color(ACCENT),
         emissiveIntensity: 0.28,
         roughness: 0.45,
@@ -215,7 +215,7 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
       const h = 1.12;
       const panel = new Mesh(
         new RoundedBoxGeometry(w, h, 0.14, 6, 0.1),
-        panelMaterial(PANEL, '#101a3a', 0.42),
+        panelMaterial(PANEL, '#12151d', 0.42),
       );
       panel.name = 'subject';
 
@@ -253,8 +253,8 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
       const rows = new Group();
       rows.name = 'card-rows';
       rowWidths.forEach((rw, i) => {
-        const row = chromeBar(rw, 0.072, '#33406a', {
-          emissive: '#1b2747',
+        const row = chromeBar(rw, 0.072, '#3a4150', {
+          emissive: '#1f242e',
           emissiveIntensity: 0.3,
           metalness: 0.15,
           roughness: 0.55,
@@ -272,7 +272,7 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
       const mesh = new Mesh(
         new PlaneGeometry(1.8, 1.8, 64, 64),
         new MeshStandardMaterial({
-          color: new Color('#23304f'),
+          color: new Color('#2a303d'),
           emissive: new Color(ACCENT),
           emissiveIntensity: 0.28,
           roughness: 0.45,
@@ -290,7 +290,7 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
         new SphereGeometry(0.82, 96, 64),
         new MeshStandardMaterial({
           color: new Color(VIOLET),
-          emissive: new Color('#1a1140'),
+          emissive: new Color('#16202b'),
           emissiveIntensity: 0.45,
           roughness: 0.16,
           metalness: 0.5,
@@ -317,7 +317,7 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
           new RoundedBoxGeometry(gw, 0.46, 0.1, 4, 0.04),
           new MeshStandardMaterial({
             color: new Color(i % 2 ? ACCENT : VIOLET),
-            emissive: new Color('#0e1838'),
+            emissive: new Color('#141921'),
             emissiveIntensity: 0.7,
             roughness: 0.28,
             metalness: 0.35,

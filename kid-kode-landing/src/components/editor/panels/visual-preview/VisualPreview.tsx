@@ -43,6 +43,7 @@ import {
 } from '@/lib/prism/runtime/shared/adapter';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { saveAndVerify, type RegenApiResult } from './regen-api';
+import { DS } from '@/components/editor/design-system';
 
 // Local fallback createNode factory: returns an empty Group that satisfies
 // the spec §8 cleanup contract. Mirrors the adapter's internal
@@ -259,7 +260,7 @@ export default function VisualPreview({
 
   return (
     <div className="visual-preview" data-render-mode={node.renderMode ?? 'sprite'}>
-      <div className="visual-preview-canvas-wrap" style={{ position: 'relative', aspectRatio: '16 / 10', borderRadius: 12, overflow: 'hidden', background: '#0a0b1c' }}>
+      <div className="visual-preview-canvas-wrap" style={{ position: 'relative', aspectRatio: '16 / 10', borderRadius: 12, overflow: 'hidden', background: DS.ink }}>
         <Canvas
           gl={asyncGlFactory as unknown as never}
           camera={{ position: [0, 0, 4], fov: 45, near: 0.1, far: 100 }}
@@ -281,7 +282,7 @@ export default function VisualPreview({
         </Canvas>
         <div
           data-role="renderer-tag"
-          style={{ position: 'absolute', bottom: 8, right: 8, fontFamily: 'ui-monospace, monospace', fontSize: 10, padding: '3px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.6)', color: '#9aa3d4' }}
+          style={{ position: 'absolute', bottom: 8, right: 8, fontFamily: 'ui-monospace, monospace', fontSize: 10, padding: '3px 6px', borderRadius: 4, background: 'rgba(0,0,0,0.6)', color: DS.ice300 }}
         >
           {renderer}
         </div>
@@ -292,7 +293,7 @@ export default function VisualPreview({
         if (list.length === 0) return null;
         return (
           <fieldset key={g} data-slider-group={g} style={{ border: 0, padding: 0, margin: '12px 0 0' }}>
-            <legend style={{ fontSize: 9, letterSpacing: 1.4, color: '#7a85b4', textTransform: 'uppercase', padding: 0 }}>{g}</legend>
+            <legend style={{ fontSize: 9, letterSpacing: 1.4, color: DS.textMid, textTransform: 'uppercase', padding: 0 }}>{g}</legend>
             {list.map((s) => (
               <div
                 key={s.key}
@@ -300,7 +301,7 @@ export default function VisualPreview({
                 data-slider-key={s.key}
                 style={{ display: 'grid', gridTemplateColumns: '110px 1fr 60px', alignItems: 'center', gap: 8, marginTop: 6 }}
               >
-                <label style={{ fontSize: 11, color: '#c5cdee' }}>{s.label}</label>
+                <label style={{ fontSize: 11, color: DS.text }}>{s.label}</label>
                 <input
                   type="range"
                   min={s.min}
@@ -312,7 +313,7 @@ export default function VisualPreview({
                   disabled={frozen}
                   onChange={(e) => onSliderInput(s.key, Number(e.currentTarget.value))}
                 />
-                <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: '#5d8bff', textAlign: 'right' }}>
+                <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: DS.brass300, textAlign: 'right' }}>
                   {(values[s.key] ?? s.value).toFixed(2)}
                 </span>
               </div>
@@ -328,7 +329,7 @@ export default function VisualPreview({
           disabled={frozen || saving}
           onClick={onSave}
           style={{
-            background: frozen ? '#3a3f60' : '#5d8bff', color: 'white', border: 0,
+            background: frozen ? DS.slate : DS.brass400, color: frozen ? DS.textMid : DS.ink, border: 0,
             padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600,
             cursor: (frozen || saving) ? 'not-allowed' : 'pointer',
           }}
@@ -336,7 +337,7 @@ export default function VisualPreview({
           {saving ? 'Saving…' : 'Save & Verify'}
         </button>
         {saveStatus && (
-          <div data-role="save-status" style={{ fontSize: 11, color: saveStatus.ok ? '#76e3a8' : '#ff7a7a' }}>
+          <div data-role="save-status" style={{ fontSize: 11, color: saveStatus.ok ? DS.ok : DS.danger }}>
             {saveStatus.ok ? `verified: ${saveStatus.verifierStatus ?? 'clean'}` : `failed: ${saveStatus.error ?? 'unknown'}`}
           </div>
         )}

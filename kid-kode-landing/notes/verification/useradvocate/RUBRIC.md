@@ -117,3 +117,36 @@ The validator (`useradvocate-verdict-schema.mjs`) **rejects** a verdict if ANY o
 
 A rejected verdict is NOT a pass and NOT a fail — it is sent back to the reviewer to re-grade with
 evidence. **Evidence or it didn't happen.**
+
+## Amendment — the ANTI-SLOP gate for editor chrome (added 2026-06-09, UI design overhaul)
+
+> Additive amendment; everything above is unchanged. Applies to every EDITOR CHROME surface
+> (catalog tiles/headers/detail panel, toolbars, panels, overlays, HUD, pickers, sliders,
+> buttons, inputs). Engine-rendered tile CONTENT keeps being judged by the existing rubric +
+> photoreal bar; this gate judges the chrome around it.
+
+**ANTI-SLOP: Does this look like generic AI-generated dashboard chrome (flat dark cards,
+purple/blue gradient accents, default shadows, zero material character)? If yes → MUST-FIX.
+Would a senior product designer at a top-tier studio call this distinctive, premium, 3D, and
+material-driven? Cite the frame. Purple anywhere → MUST-FIX.**
+
+Concretely, each of these is a MUST-FIX in chrome (cite the frame that shows it):
+
+- **Purple** — any violet/purple chrome accent (`#a978ff`-family, indigo, violet). Anywhere.
+- **Flat untreated fills** — a surface with no gradient, no edge treatment, no elevation;
+  the "flat dark card with a 1px white border" default.
+- **Blue-default accenting** — the `#5d8bff`-family AI-dashboard blue as an accent.
+- **No material character** — chrome that reads as "div with background-color" rather than
+  glass / metal / ceramic; no visible edge/corner light behavior, no depth.
+- **Broken or half-rendered material** — a tier downgrade must read as a clean lighter
+  treatment of the same design, never as missing/broken chrome.
+- **Illegible text** — contrast failures on any new surface.
+
+The reference contract is the Wave-0 token sheet (`/design-system`,
+`notes/verification/ui-design/wave0-token-sheet.png`). Chrome surfaces are judged against it:
+same palette (graphite/bone/brass + ice), same material/edge/elevation language.
+
+**THE FINISH-LINE TEST (apply verbatim, per surface):** A user looks at it and says: "damn,
+this is really good looking. it's intuitive, easy to use, and all those animations and
+primitives are awesome, and they're great to design with in our 3D space in canvas mode."
+If a surface wouldn't earn that reaction, it is not done.

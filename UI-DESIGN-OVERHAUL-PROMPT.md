@@ -62,3 +62,24 @@ notes/verification/UI-DESIGN-PROGRESS.md per wave (surface → before/after → 
 notes/UI-DESIGN-REPORT.md: the design system (token sheet render); BEFORE/AFTER per surface (catalog grid + detail
 panel headline); advocate verdicts w/ evidence; functional no-regression proof; metrics; honest flags. Frames under
 kid-kode-landing/notes/verification/ui-design/. NO commit — staged. Plain-language summary for Logan. STOP.
+
+## INTENT RE-ANCHOR (added 2026-06-09 after re-reading the project's founding design conversations)
+The ORIGINAL design language Logan specified for this product — honor it: photorealistic light refraction; glass
+shaders (Fresnel / specular / iridescent); polished-orb / machined-material physicality; a deep-space-observatory
+premium feel (without literal starfields on every panel); shadow/shade/depth everywhere. The UI must look like it was
+designed by the same hands that built the photoreal engine. RESEARCH FIRST (web, June 2026): do NOT default to your
+go-to styling habits — search for current premium WebGPU/CSS material-UI techniques and the best-fit approaches for
+photoreal chrome on web, then choose deliberately.
+
+## PERFORMANCE + MOBILE (hard requirements, same weight as beauty)
+- LIGHTNING FAST and smooth on BOTH desktop and mobile. The editor chrome must hold target framerate on the T1
+  profile and remain fully usable (responsive layout, touch targets, legible type) on a phone-sized viewport.
+- Material/refraction chrome effects are capability-tiered (INV-9): full glass/refraction on capable devices, a
+  clean lighter treatment (same palette/geometry language) on low tiers — NEVER a broken or half-rendered look.
+- Interaction latency: hover/press feedback <100ms; panel open/close eased and jank-free. Verify with real
+  interaction timing in the advocate pass, desktop AND a mobile-sized viewport.
+
+## THE FINISH-LINE TEST (Logan's words — the advocate must apply this verbatim)
+> A user looks at it and says: "damn, this is really good looking. it's intuitive, easy to use, and all those
+> animations and primitives are awesome, and they're great to design with in our 3D space in canvas mode."
+If a surface wouldn't earn that reaction, it is not done.

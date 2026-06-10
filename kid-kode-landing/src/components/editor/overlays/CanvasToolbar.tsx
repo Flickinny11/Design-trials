@@ -4,12 +4,13 @@
  * STEP8 — Prism Canvas Toolbar (canvas-spec §5 the editing suite, §6 build
  * lifecycle, §8.4 keyframe editor, §14 selection/grouping, §1.3 boundary).
  *
- * The toolbar is part of the PRISM DESIGN SYSTEM: a glassy cosmic left rail of
- * grouped tool clusters with per-group flyouts, a slide-up keyframe editor, a
- * marquee-select overlay, and contextual "coming with <subsystem>" states for
- * the groups whose engines are not yet wired. It is the canvas authoring chrome
- * — it only renders while viewMode === 'canvas' (page.tsx gates it) and never
- * appears in galaxy or preview-app.
+ * The toolbar is part of the PRISM DESIGN SYSTEM ("Observatory Brass"): a
+ * machined brushed-metal left dock of grouped tool clusters with a frosted-
+ * glass flyout per group, a slide-up ceramic keyframe editor, a marquee-select
+ * overlay, and contextual "coming with <subsystem>" states for the groups
+ * whose engines are not yet wired. It is the canvas authoring chrome — it only
+ * renders while viewMode === 'canvas' (page.tsx gates it) and never appears in
+ * galaxy or preview-app.
  *
  * WIRED NOW (their engines already exist):
  *   - Transform — select / Edit handles / move / rotate / scale / nudge / align
@@ -41,6 +42,7 @@ import { commitPreviewToSource } from '@/lib/editor/preview-commit';
 import { rebuildNode } from '@/lib/editor/rebuild-node';
 import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -55,18 +57,30 @@ import {
   receivesLightingDefault,
 } from '@/lib/prism-graph/types';
 
-// ── Design tokens ──────────────────────────────────────────────────────────
-const GLASS: React.CSSProperties = {
-  background: 'rgba(8,10,26,0.82)',
-  backdropFilter: 'blur(22px) saturate(180%)',
-  WebkitBackdropFilter: 'blur(22px) saturate(180%)',
-  boxShadow:
-    '0 16px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.05)',
+// ── Observatory Brass treatments (derived from design-system tokens ONLY) ───
+// Machined key — a raised button face cut into the dock / flyout plates.
+const KEY_BG = 'linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal))';
+const KEY_SHADOW = 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.45)';
+// Recessed trough — value readouts, status plates, timeline lanes.
+const WELL_BG = 'var(--ds-grad-well)';
+const WELL_SHADOW =
+  'inset 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(255, 252, 242, 0.05)';
+// Transient smoked-glass pill (toast / marquee hint) — never always-visible,
+// so it sits outside the one-glass-per-region backdrop budget.
+const SMOKED_PILL: React.CSSProperties = {
+  background: 'var(--ds-grad-smoked)',
+  WebkitBackdropFilter: 'var(--ds-frost-light)',
+  backdropFilter: 'var(--ds-frost-light)',
+  boxShadow: 'var(--ds-chamfer-soft), var(--ds-elev-2)',
 };
-const ACCENT = '#5d8bff';
-const VIOLET = '#a978ff';
-const GREEN = '#55e6a5';
-const AMBER = '#f5a524';
+// Accent-tinted active key state (brass by default; ice for frozen states).
+function activeKeyStyle(a: string): React.CSSProperties {
+  return {
+    background: `linear-gradient(178deg, ${dsAlpha(a, 0.2)}, ${dsAlpha(a, 0.07)}), var(--ds-grad-ceramic)`,
+    boxShadow: `inset 0 0 0 1px ${dsAlpha(a, 0.45)}, var(--ds-chamfer-soft), 0 0 14px ${dsAlpha(a, 0.16)}`,
+  };
+}
+
 const TRANSLATE_STEP = 0.06;
 const ROTATE_STEP = Math.PI / 12; // 15°
 const SCALE_FACTOR = 1.08;
@@ -178,7 +192,10 @@ function makeLight(type: PrismLightType): PrismLight {
 // ── Small building blocks ────────────────────────────────────────────────────
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="text-[9px] font-mono tracking-[0.18em] uppercase text-white/35 mb-1.5 mt-0.5">
+    <div
+      className="text-[9px] font-mono tracking-[0.18em] uppercase mb-1.5 mt-0.5"
+      style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
+    >
       {children}
     </div>
   );
@@ -190,7 +207,7 @@ function ToolButton({
   icon: string; label: string; active?: boolean; disabled?: boolean;
   accent?: string; onClick?: () => void; title?: string; testId?: string;
 }) {
-  const a = accent ?? ACCENT;
+  const a = accent ?? DS_ACCENT;
   return (
     <button
       type="button"
@@ -198,17 +215,22 @@ function ToolButton({
       onClick={onClick}
       title={title ?? label}
       data-testid={testId}
-      className={`group/tool flex flex-col items-center justify-center gap-1 h-14 rounded-xl border transition-all ${
-        disabled
-          ? 'border-white/5 opacity-40 cursor-not-allowed'
-          : active
-            ? 'border-white/20'
-            : 'border-white/10 hover:border-white/20 hover:bg-white/[0.04]'
+      className={`group/tool flex flex-col items-center justify-center gap-1 h-14 rounded-ds-sm ds-press transition-all ${
+        disabled ? 'opacity-40 cursor-not-allowed' : active ? '' : 'hover:brightness-[1.15]'
       }`}
-      style={active && !disabled ? { background: `${a}1f`, boxShadow: `inset 0 0 0 1px ${a}55` } : undefined}
+      style={
+        disabled
+          ? { background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft)' }
+          : active
+            ? activeKeyStyle(a)
+            : { background: KEY_BG, boxShadow: KEY_SHADOW }
+      }
     >
-      <Icon name={icon} size={15} color={active ? a : '#c5ccea'} glow={active} />
-      <span className={`text-[8.5px] font-mono tracking-wide ${active ? 'text-white' : 'text-white/55'}`}>
+      <Icon name={icon} size={15} color={active ? a : DS.text} glow={active} />
+      <span
+        className="text-[8.5px] font-mono tracking-wide"
+        style={{ color: active ? 'var(--ds-text-hi)' : 'var(--ds-text-mid)' }}
+      >
         {label}
       </span>
     </button>
@@ -220,21 +242,22 @@ function StepperRow({
 }: {
   label: string; value: string; onDec: () => void; onInc: () => void; accent?: string; testId?: string;
 }) {
-  const a = accent ?? ACCENT;
+  const a = accent ?? DS_ACCENT;
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-5 text-[10px] font-mono text-white/45">{label}</span>
+      <span className="w-5 text-[10px] font-mono" style={{ color: 'var(--ds-text-low)' }}>{label}</span>
       <button
         type="button"
         onClick={onDec}
         data-testid={testId ? `${testId}-dec` : undefined}
-        className="w-6 h-6 rounded-md border border-white/10 text-white/70 hover:bg-white/5 hover:border-white/20 transition-colors text-[12px] leading-none"
+        className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[12px] leading-none"
+        style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
       >
         −
       </button>
       <span
-        className="flex-1 text-center text-[10px] font-mono tabular-nums text-white/80 px-1 py-1 rounded-md bg-black/30 border border-white/5"
-        style={{ color: a }}
+        className="flex-1 text-center text-[10px] font-mono tabular-nums px-1 py-1 rounded-ds-xs"
+        style={{ color: a, background: WELL_BG, boxShadow: WELL_SHADOW }}
       >
         {value}
       </span>
@@ -242,7 +265,8 @@ function StepperRow({
         type="button"
         onClick={onInc}
         data-testid={testId ? `${testId}-inc` : undefined}
-        className="w-6 h-6 rounded-md border border-white/10 text-white/70 hover:bg-white/5 hover:border-white/20 transition-colors text-[12px] leading-none"
+        className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[12px] leading-none"
+        style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
       >
         +
       </button>
@@ -266,11 +290,12 @@ function PlaceholderTiles({
           type="button"
           onClick={() => onPick(t.label)}
           title={`${t.label} — coming with the ${subsystem}`}
-          className="relative flex flex-col items-start gap-1 p-2 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 transition-all text-left"
+          className="relative flex flex-col items-start gap-1 p-2 rounded-ds-sm ds-press hover:brightness-[1.16] transition-all text-left"
+          style={{ background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.4)' }}
         >
-          <Icon name={t.icon} size={14} color="#b5bddf" />
-          <span className="text-[9.5px] font-mono text-white/75 leading-tight">{t.label}</span>
-          {t.hint && <span className="text-[8px] font-mono text-white/35 leading-tight">{t.hint}</span>}
+          <Icon name={t.icon} size={14} color={DS.textMid} />
+          <span className="text-[9.5px] font-mono leading-tight" style={{ color: 'var(--ds-text)' }}>{t.label}</span>
+          {t.hint && <span className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>{t.hint}</span>}
         </button>
       ))}
     </div>
@@ -570,39 +595,54 @@ export default function CanvasToolbar() {
         data-component="canvas-toolbar"
         className="absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2"
       >
-        <div className="flex flex-col gap-1 p-1.5 rounded-2xl border border-white/10" style={GLASS}>
+        {/* Machined brushed-metal dock — the instrument fitting the tool keys
+            are cut into (ds-metal + grain tooth + specular edge). */}
+        <div className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge">
           <div className="px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5">
-            <Icon name="grid" size={13} color={ACCENT} glow />
-            <span className="text-[7.5px] font-mono tracking-[0.2em] text-white/40">CANVAS</span>
+            <Icon name="grid" size={13} color={DS_ACCENT} glow />
+            <span className="text-[7.5px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
+              CANVAS
+            </span>
           </div>
           {GROUPS.map((g) => {
             const isActive = activeGroup === g.id;
             const beforeBuild = g.id === 'build';
             return (
               <div key={g.id} className="contents">
-                {beforeBuild && <div className="mx-2 my-0.5 h-px bg-white/10" />}
+                {beforeBuild && (
+                  <div
+                    className="mx-2 my-0.5 h-px"
+                    style={{ background: 'rgba(0, 0, 0, 0.45)', boxShadow: '0 1px 0 rgba(255, 252, 242, 0.07)' }}
+                  />
+                )}
                 <button
                   type="button"
                   data-tool-group={g.id}
                   onClick={() => setActiveGroup((cur) => (cur === g.id ? null : g.id))}
                   title={g.label}
-                  className={`relative w-12 h-12 rounded-xl flex flex-col items-center justify-center gap-0.5 transition-all ${
-                    isActive ? 'border border-white/20' : 'border border-transparent hover:bg-white/[0.05]'
+                  className={`relative w-12 h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
+                    isActive ? '' : 'hover:brightness-[1.2] hover:bg-white/[0.04]'
                   }`}
-                  style={isActive ? { background: `${ACCENT}1f`, boxShadow: `inset 0 0 0 1px ${ACCENT}55` } : undefined}
+                  style={isActive ? activeKeyStyle(DS_ACCENT) : undefined}
                 >
                   {isActive && (
                     <span
                       className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
-                      style={{ background: `linear-gradient(180deg, ${ACCENT}, ${VIOLET})` }}
+                      style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
                     />
                   )}
-                  <Icon name={g.icon} size={16} color={isActive ? '#fff' : '#c5ccea'} glow={isActive} />
-                  <span className={`text-[7px] font-mono tracking-wide ${isActive ? 'text-white' : 'text-white/45'}`}>
+                  <Icon name={g.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
+                  <span
+                    className="text-[7px] font-mono tracking-wide"
+                    style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-low)' }}
+                  >
                     {g.label}
                   </span>
                   {!g.wired && (
-                    <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: VIOLET, boxShadow: `0 0 6px ${VIOLET}` }} />
+                    <span
+                      className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
+                      style={{ background: 'var(--ds-ice-400)', boxShadow: `0 0 6px ${dsAlpha(DS.ice400, 0.8)}` }}
+                    />
                   )}
                 </button>
               </div>
@@ -756,11 +796,11 @@ export default function CanvasToolbar() {
       {/* Toast */}
       {toast && (
         <div
-          className="absolute z-50 left-1/2 -translate-x-1/2 top-16 pointer-events-none px-3.5 py-2 rounded-full border border-white/10 flex items-center gap-2"
-          style={GLASS}
+          className="absolute z-50 left-1/2 -translate-x-1/2 top-16 pointer-events-none px-3.5 py-2 rounded-full flex items-center gap-2 ds-reveal"
+          style={SMOKED_PILL}
         >
-          <Icon name="check" size={11} color={GREEN} />
-          <span className="text-[10px] font-mono text-white/85">{toast}</span>
+          <Icon name="check" size={11} color={DS.ok} />
+          <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text)' }}>{toast}</span>
         </div>
       )}
     </>
@@ -780,49 +820,69 @@ function FlyoutShell({
     <div
       data-component="canvas-toolbar-flyout"
       data-group={meta.id}
-      className="w-[252px] rounded-2xl border border-white/10 p-3 flex flex-col gap-2.5 max-h-[78vh] overflow-y-auto"
-      style={GLASS}
+      className="w-[252px] ds-glass ds-edge max-h-[78vh] overflow-hidden flex ds-reveal"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div
-            className="w-7 h-7 rounded-lg flex items-center justify-center"
-            style={{ background: meta.wired ? `${ACCENT}22` : `${VIOLET}22`, boxShadow: `inset 0 0 0 1px ${(meta.wired ? ACCENT : VIOLET)}44` }}
-          >
-            <Icon name={meta.icon} size={14} color={meta.wired ? ACCENT : VIOLET} glow />
-          </div>
-          <div>
-            <div className="text-[12px] font-display font-semibold text-white leading-none">{meta.label}</div>
-            <div className="text-[8px] font-mono tracking-widest mt-0.5" style={{ color: meta.wired ? `${GREEN}cc` : `${VIOLET}cc` }}>
-              {meta.wired ? 'WIRED' : 'COMING SOON'}
+      {/* Inner scroll plate — keeps the specular edge ring pinned to the
+          glass while long flyouts (Lighting) scroll. */}
+      <div className="flex-1 min-w-0 p-3 flex flex-col gap-2.5 overflow-y-auto">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-7 h-7 rounded-ds-xs flex items-center justify-center"
+              style={{
+                background: meta.wired ? 'var(--ds-grad-brass-soft)' : dsAlpha(DS.ice400, 0.12),
+                boxShadow: `inset 0 0 0 1px ${dsAlpha(meta.wired ? DS_ACCENT : DS.ice400, 0.34)}, var(--ds-chamfer-soft)`,
+              }}
+            >
+              <Icon name={meta.icon} size={14} color={meta.wired ? DS.brass300 : DS.ice300} glow />
+            </div>
+            <div>
+              <div className="text-[12px] font-display font-semibold leading-none" style={{ color: 'var(--ds-text-hi)' }}>
+                {meta.label}
+              </div>
+              <div
+                className="text-[8px] font-mono tracking-widest mt-0.5"
+                style={{ color: meta.wired ? 'var(--ds-ok)' : 'var(--ds-ice-300)' }}
+              >
+                {meta.wired ? 'WIRED' : 'COMING SOON'}
+              </div>
             </div>
           </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-6 h-6 rounded-ds-xs ds-press hover:bg-white/[0.06] flex items-center justify-center transition-colors"
+          >
+            <Icon name="close" size={10} color={DS.textMid} />
+          </button>
         </div>
-        <button type="button" onClick={onClose} className="w-6 h-6 rounded-md hover:bg-white/5 flex items-center justify-center">
-          <Icon name="close" size={10} color="#8b93b5" />
-        </button>
-      </div>
 
-      {!meta.wired && (
-        <div className="text-[9px] font-mono text-white/45 leading-relaxed -mt-1">
-          Designed preview. Wires to the <span className="text-white/70">{meta.subsystem}</span>.
-        </div>
-      )}
-
-      {children}
-
-      {coming && (
-        <div
-          className="mt-1 px-2.5 py-2 rounded-xl border flex items-start gap-2"
-          style={{ background: `${VIOLET}14`, borderColor: `${VIOLET}40` }}
-        >
-          <Icon name="sparkle" size={12} color={VIOLET} glow />
-          <div className="leading-tight">
-            <div className="text-[10px] font-mono text-white/90">{coming.tool}</div>
-            <div className="text-[8.5px] font-mono text-white/50">Coming with the {coming.subsystem}</div>
+        {!meta.wired && (
+          <div className="text-[9px] font-mono leading-relaxed -mt-1" style={{ color: 'var(--ds-text-low)' }}>
+            Designed preview. Wires to the <span style={{ color: 'var(--ds-text)' }}>{meta.subsystem}</span>.
           </div>
-        </div>
-      )}
+        )}
+
+        {children}
+
+        {coming && (
+          <div
+            className="mt-1 px-2.5 py-2 rounded-ds-sm flex items-start gap-2 ds-reveal"
+            style={{
+              background: dsAlpha(DS.ice400, 0.1),
+              boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.ice400, 0.28)}, var(--ds-chamfer-soft)`,
+            }}
+          >
+            <Icon name="sparkle" size={12} color={DS.ice300} glow />
+            <div className="leading-tight">
+              <div className="text-[10px] font-mono" style={{ color: 'var(--ds-text-hi)' }}>{coming.tool}</div>
+              <div className="text-[8.5px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>
+                Coming with the {coming.subsystem}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -852,7 +912,14 @@ function TransformFlyout({
     <>
       <SelectionChip label={selectionLabel} locked={isLocked} group={isGroup} />
       {isLocked && (
-        <div className="text-[9px] font-mono px-2 py-1.5 rounded-lg border" style={{ color: AMBER, background: `${AMBER}12`, borderColor: `${AMBER}33` }}>
+        <div
+          className="text-[9px] font-mono px-2 py-1.5 rounded-ds-sm"
+          style={{
+            color: 'var(--ds-warn)',
+            background: dsAlpha(DS.warn, 0.08),
+            boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.warn, 0.26)}`,
+          }}
+        >
           Locked — unlock in Selection to transform.
         </div>
       )}
@@ -860,15 +927,16 @@ function TransformFlyout({
         type="button"
         data-action="edit-toggle"
         onClick={onEditToggle}
-        className="w-full h-9 rounded-xl border flex items-center justify-center gap-2 transition-all"
-        style={
-          editorMode === 'edit'
-            ? { background: `${ACCENT}22`, borderColor: `${ACCENT}66`, boxShadow: `inset 0 0 0 1px ${ACCENT}55` }
-            : { borderColor: 'rgba(255,255,255,0.12)' }
-        }
+        className="w-full h-9 rounded-ds-sm flex items-center justify-center gap-2 ds-press hover:brightness-[1.12] transition-all"
+        style={editorMode === 'edit' ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
-        <Icon name="edit" size={13} color={editorMode === 'edit' ? ACCENT : '#c5ccea'} glow={editorMode === 'edit'} />
-        <span className="text-[11px] font-mono text-white/90">{editorMode === 'edit' ? 'Editing — handles on' : 'Edit Handles'}</span>
+        <Icon name="edit" size={13} color={editorMode === 'edit' ? DS_ACCENT : DS.text} glow={editorMode === 'edit'} />
+        <span
+          className="text-[11px] font-mono"
+          style={{ color: editorMode === 'edit' ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
+        >
+          {editorMode === 'edit' ? 'Editing — handles on' : 'Edit Handles'}
+        </span>
       </button>
 
       <SectionLabel>Tool</SectionLabel>
@@ -882,13 +950,13 @@ function TransformFlyout({
       <div className="flex flex-col gap-1.5">
         <StepperRow label="X" testId="tt-pos-x" value={fmt(sp.x)} onDec={() => onNudge('x', -1)} onInc={() => onNudge('x', 1)} />
         <StepperRow label="Y" testId="tt-pos-y" value={fmt(sp.y)} onDec={() => onNudge('y', -1)} onInc={() => onNudge('y', 1)} />
-        <StepperRow label="Z" testId="tt-pos-z" value={fmt(sp.z)} onDec={() => onNudge('z', -1)} onInc={() => onNudge('z', 1)} accent={GREEN} />
+        <StepperRow label="Z" testId="tt-pos-z" value={fmt(sp.z)} onDec={() => onNudge('z', -1)} onInc={() => onNudge('z', 1)} accent={DS.ice300} />
       </div>
 
       <SectionLabel>Scale · Rotate</SectionLabel>
       <div className="flex flex-col gap-1.5">
-        <StepperRow label="S" testId="tt-scale-val" value={`${fmt(sp.scaleX)}×`} onDec={() => onScale(-1)} onInc={() => onScale(1)} accent={VIOLET} />
-        <StepperRow label="R" testId="tt-rot-val" value={deg(sp.rotationZ)} onDec={() => onRotate(-1)} onInc={() => onRotate(1)} accent={VIOLET} />
+        <StepperRow label="S" testId="tt-scale-val" value={`${fmt(sp.scaleX)}×`} onDec={() => onScale(-1)} onInc={() => onScale(1)} accent={DS.brass300} />
+        <StepperRow label="R" testId="tt-rot-val" value={deg(sp.rotationZ)} onDec={() => onRotate(-1)} onInc={() => onRotate(1)} accent={DS.brass300} />
       </div>
 
       <SectionLabel>Align{isGroup ? '' : ' · needs group'}</SectionLabel>
@@ -901,19 +969,21 @@ function TransformFlyout({
         <button
           type="button"
           onClick={() => setSnap(!snap)}
-          className="flex-1 h-8 rounded-lg border border-white/10 flex items-center justify-center gap-1.5 hover:bg-white/5"
+          className="flex-1 h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+          style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
         >
-          <Icon name="grid" size={11} color={snap ? ACCENT : '#8b93b5'} />
-          <span className="text-[9.5px] font-mono text-white/70">Snap {snap ? 'On' : 'Off'}</span>
+          <Icon name="grid" size={11} color={snap ? DS_ACCENT : DS.textMid} />
+          <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>Snap {snap ? 'On' : 'Off'}</span>
         </button>
         <button
           type="button"
           data-action="reset-transform"
           onClick={onReset}
-          className="flex-1 h-8 rounded-lg border border-white/10 flex items-center justify-center gap-1.5 hover:bg-white/5"
+          className="flex-1 h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+          style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
         >
-          <Icon name="refresh" size={11} color="#c5ccea" />
-          <span className="text-[9.5px] font-mono text-white/70">Reset</span>
+          <Icon name="refresh" size={11} color={DS.text} />
+          <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>Reset</span>
         </button>
       </div>
     </>
@@ -932,37 +1002,45 @@ function SelectionFlyout({
 }) {
   return (
     <>
-      <div className="flex items-center justify-between px-2.5 py-2 rounded-xl bg-black/30 border border-white/5">
-        <span className="text-[10px] font-mono text-white/55">Selected</span>
-        <span className="text-[12px] font-mono font-semibold" style={{ color: count > 1 ? VIOLET : ACCENT }}>{count}</span>
+      <div className="flex items-center justify-between px-2.5 py-2 ds-well">
+        <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>Selected</span>
+        <span
+          className="text-[12px] font-mono font-semibold"
+          style={{ color: count > 1 ? 'var(--ds-brass-200)' : 'var(--ds-brass-300)' }}
+        >
+          {count}
+        </span>
       </div>
 
       <SectionLabel>Select</SectionLabel>
       <div className="grid grid-cols-2 gap-1.5">
-        <ToolButton icon="cursor" label="Marquee" testId="tt-marquee" active={marqueeArmed} accent={GREEN} onClick={onMarquee} title="Drag a box over the canvas to select" />
+        <ToolButton icon="cursor" label="Marquee" testId="tt-marquee" active={marqueeArmed} onClick={onMarquee} title="Drag a box over the canvas to select" />
         <ToolButton icon="grid" label="All in Hub" testId="tt-select-all" onClick={onSelectAll} />
       </div>
-      <div className="text-[8.5px] font-mono text-white/35 leading-tight -mt-0.5">Shift-click adds to the selection.</div>
+      <div className="text-[8.5px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-low)' }}>
+        Shift-click adds to the selection.
+      </div>
 
       <SectionLabel>Group</SectionLabel>
       <div className="grid grid-cols-2 gap-1.5">
-        <ToolButton icon="group" label="Group" testId="tt-group" accent={VIOLET} disabled={!canGroup} onClick={onGroup} title="Group 2+ selected elements" />
-        <ToolButton icon="ungroup" label="Ungroup" testId="tt-ungroup" accent={VIOLET} disabled={!canUngroup} onClick={onUngroup} />
+        <ToolButton icon="group" label="Group" testId="tt-group" accent={DS.brass300} disabled={!canGroup} onClick={onGroup} title="Group 2+ selected elements" />
+        <ToolButton icon="ungroup" label="Ungroup" testId="tt-ungroup" accent={DS.brass300} disabled={!canUngroup} onClick={onUngroup} />
       </div>
 
       <SectionLabel>Protect</SectionLabel>
       <div className="grid grid-cols-2 gap-1.5">
-        <ToolButton icon={isLocked ? 'lock' : 'lockOpen'} label={isLocked ? 'Unlock' : 'Lock'} testId="tt-lock" active={isLocked} accent={AMBER} onClick={onLock} />
-        <ToolButton icon="snow" label={isFrozen ? 'Unfreeze' : 'Freeze'} active={isFrozen} accent={GREEN} onClick={onFreeze} title="Freeze = AI off-limits" />
+        <ToolButton icon={isLocked ? 'lock' : 'lockOpen'} label={isLocked ? 'Unlock' : 'Lock'} testId="tt-lock" active={isLocked} accent={DS.warn} onClick={onLock} />
+        <ToolButton icon="snow" label={isFrozen ? 'Unfreeze' : 'Freeze'} active={isFrozen} accent={DS.ice300} onClick={onFreeze} title="Freeze = AI off-limits" />
       </div>
 
       <button
         type="button"
         onClick={onClear}
-        className="mt-0.5 h-8 rounded-lg border border-white/10 flex items-center justify-center gap-1.5 hover:bg-white/5"
+        className="mt-0.5 h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+        style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
-        <Icon name="close" size={10} color="#8b93b5" />
-        <span className="text-[9.5px] font-mono text-white/60">Clear selection</span>
+        <Icon name="close" size={10} color={DS.textMid} />
+        <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>Clear selection</span>
       </button>
     </>
   );
@@ -979,16 +1057,16 @@ function BuildFlyout({
   if (!hasSelection) {
     return <EmptyHint icon="hammer" text="Select a built element to rebuild it or re-add it to the system." />;
   }
-  const stateColor = dirty ? AMBER : status === 'failed' ? '#ef4466' : status === 'repaired' ? AMBER : GREEN;
+  const stateColor = dirty ? DS.warn : status === 'failed' ? DS.danger : status === 'repaired' ? DS.warn : DS.ok;
   const stateLabel = dirty ? 'Dirty — needs rebuild' : status === 'failed' ? 'Failed' : status === 'repaired' ? 'Repaired' : 'Built · in system';
   return (
     <>
-      <div className="flex items-center justify-between px-2.5 py-2 rounded-xl bg-black/30 border border-white/5">
+      <div className="flex items-center justify-between px-2.5 py-2 ds-well">
         <span className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: stateColor, boxShadow: `0 0 6px ${stateColor}` }} />
-          <span className="text-[10px] font-mono text-white/75">{stateLabel}</span>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: stateColor, boxShadow: `0 0 6px ${dsAlpha(stateColor, 0.8)}` }} />
+          <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text)' }}>{stateLabel}</span>
         </span>
-        <span className="text-[9px] font-mono text-white/40">v{buildCount ?? 1}</span>
+        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-low)' }}>v{buildCount ?? 1}</span>
       </div>
 
       <button
@@ -996,32 +1074,34 @@ function BuildFlyout({
         data-action="rebuild"
         disabled={busy}
         onClick={onRebuild}
-        className="w-full h-9 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50"
-        style={{ background: `linear-gradient(135deg, ${ACCENT}, ${VIOLET})`, boxShadow: `0 6px 20px ${ACCENT}44` }}
+        className="ds-btn ds-btn--primary ds-press w-full h-9"
       >
-        <Icon name="hammer" size={13} color="#fff" />
-        <span className="text-[11px] font-mono font-semibold text-white">{busy ? 'Rebuilding…' : 'Save & Rebuild'}</span>
+        <Icon name="hammer" size={13} color={DS.ink} />
+        <span className="text-[11px] font-mono font-semibold">{busy ? 'Rebuilding…' : 'Save & Rebuild'}</span>
       </button>
 
       <button
         type="button"
         data-action="add-to-system"
         onClick={onAddToSystem}
-        className="w-full h-9 rounded-xl border border-white/12 flex items-center justify-center gap-2 hover:bg-white/5 transition-colors"
+        className="ds-btn w-full h-9"
       >
-        <Icon name="check" size={12} color={GREEN} />
-        <span className="text-[11px] font-mono text-white/90">Add to System</span>
+        <Icon name="check" size={12} color={DS.ok} />
+        <span className="text-[11px] font-mono">Add to System</span>
       </button>
-      <div className="text-[8.5px] font-mono text-white/35 leading-tight -mt-0.5">Re-captions the node and clears its dirty flag.</div>
+      <div className="text-[8.5px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-low)' }}>
+        Re-captions the node and clears its dirty flag.
+      </div>
 
       <SectionLabel>History</SectionLabel>
       <button
         type="button"
         onClick={() => onComing('Version history')}
-        className="h-8 rounded-lg border border-white/10 flex items-center justify-center gap-1.5 hover:bg-white/5"
+        className="h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+        style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
-        <Icon name="layers" size={11} color="#c5ccea" />
-        <span className="text-[9.5px] font-mono text-white/70">{buildCount ?? 1} build{(buildCount ?? 1) === 1 ? '' : 's'} · view history</span>
+        <Icon name="layers" size={11} color={DS.text} />
+        <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>{buildCount ?? 1} build{(buildCount ?? 1) === 1 ? '' : 's'} · view history</span>
       </button>
     </>
   );
@@ -1060,17 +1140,17 @@ function LightingFlyout({
 
   return (
     <>
-      <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-black/30 border border-white/5">
-        <Icon name="bulb" size={12} color={ACCENT} />
-        <span className="flex-1 text-[10px] font-mono text-white/80 truncate">{hubTitle}</span>
-        <span className="text-[9px] font-mono text-white/40">{lights.length} light{lights.length === 1 ? '' : 's'}</span>
+      <div className="flex items-center gap-2 px-2.5 py-2 ds-well">
+        <Icon name="bulb" size={12} color={DS_ACCENT} />
+        <span className="flex-1 text-[10px] font-mono truncate" style={{ color: 'var(--ds-text)' }}>{hubTitle}</span>
+        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-low)' }}>{lights.length} light{lights.length === 1 ? '' : 's'}</span>
       </div>
 
       {/* Light list + Add */}
       <SectionLabel>Lights · writes hub lightingSpec</SectionLabel>
       <div className="flex flex-col gap-1">
         {lights.length === 0 && (
-          <div className="text-[8.5px] font-mono text-white/35 leading-tight px-1 py-1">
+          <div className="text-[8.5px] font-mono leading-tight px-1 py-1" style={{ color: 'var(--ds-text-low)' }}>
             No author lights — the runtime default 3-point rig is active. Add one to override.
           </div>
         )}
@@ -1079,10 +1159,12 @@ function LightingFlyout({
           return (
             <div
               key={l.id}
-              className={`flex items-center gap-2 px-2 py-1.5 rounded-lg border transition-all ${
-                active ? 'border-white/20' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.03]'
-              }`}
-              style={active ? { background: `${ACCENT}1a`, boxShadow: `inset 0 0 0 1px ${ACCENT}44` } : undefined}
+              className={`flex items-center gap-2 px-2 py-1.5 rounded-ds-sm transition-all ${active ? '' : 'hover:brightness-[1.15]'}`}
+              style={
+                active
+                  ? activeKeyStyle(DS_ACCENT)
+                  : { background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft)' }
+              }
             >
               <button
                 type="button"
@@ -1090,8 +1172,11 @@ function LightingFlyout({
                 className="flex-1 flex items-center gap-2 text-left"
                 title={`Select ${LIGHT_TYPE_LABEL[l.type]} light`}
               >
-                <span className="w-2.5 h-2.5 rounded-full border border-white/30" style={{ background: l.color ?? '#ffffff' }} />
-                <span className={`text-[10px] font-mono ${active ? 'text-white' : 'text-white/70'}`}>
+                <span
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ background: l.color ?? '#ffffff', border: '1px solid rgba(255, 252, 242, 0.3)', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)' }}
+                />
+                <span className="text-[10px] font-mono" style={{ color: active ? 'var(--ds-text-hi)' : 'var(--ds-text)' }}>
                   {LIGHT_TYPE_LABEL[l.type]}
                 </span>
               </button>
@@ -1099,9 +1184,9 @@ function LightingFlyout({
                 type="button"
                 onClick={() => onRemoveLight(l.id)}
                 title="Remove light"
-                className="w-5 h-5 rounded-md hover:bg-white/5 flex items-center justify-center"
+                className="w-5 h-5 rounded-ds-xs ds-press hover:bg-white/[0.06] flex items-center justify-center transition-colors"
               >
-                <Icon name="trash" size={10} color="#8b93b5" />
+                <Icon name="trash" size={10} color={DS.textMid} />
               </button>
             </div>
           );
@@ -1112,15 +1197,11 @@ function LightingFlyout({
         type="button"
         data-action="add-light"
         onClick={onTogglePicker}
-        className="w-full h-8 rounded-lg border flex items-center justify-center gap-1.5 transition-all"
-        style={
-          pickerOpen
-            ? { background: `${ACCENT}22`, borderColor: `${ACCENT}55` }
-            : { borderColor: 'rgba(255,255,255,0.12)' }
-        }
+        className="w-full h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.12] transition-all"
+        style={pickerOpen ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
-        <Icon name="plus" size={11} color={pickerOpen ? ACCENT : '#c5ccea'} />
-        <span className="text-[9.5px] font-mono text-white/80">Add Light</span>
+        <Icon name="plus" size={11} color={pickerOpen ? DS_ACCENT : DS.text} />
+        <span className="text-[9.5px] font-mono" style={{ color: pickerOpen ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}>Add Light</span>
       </button>
       {pickerOpen && (
         <div className="grid grid-cols-2 gap-1.5">
@@ -1134,28 +1215,30 @@ function LightingFlyout({
       {selectedLight ? (
         <>
           <SectionLabel>Light · {LIGHT_TYPE_LABEL[selectedLight.type]}</SectionLabel>
-          <label className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-black/30 border border-white/5">
-            <span className="text-[10px] font-mono text-white/55">Type</span>
+          <label className="flex items-center justify-between px-2.5 py-2 ds-well">
+            <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>Type</span>
             <select
               data-control="light-type"
               value={selectedLight.type}
               onChange={(e) => onUpdateLight(selectedLight.id, { type: e.target.value as PrismLightType })}
-              className="bg-transparent text-[10px] font-mono text-white/85 outline-none cursor-pointer"
+              className="bg-transparent text-[10px] font-mono outline-none cursor-pointer"
+              style={{ color: 'var(--ds-text-hi)' }}
             >
               {LIGHT_TYPES.map((t) => (
-                <option key={t} value={t} className="bg-[#0b0d1f] text-white">{LIGHT_TYPE_LABEL[t]}</option>
+                <option key={t} value={t} style={{ background: 'var(--ds-charcoal)', color: 'var(--ds-text-hi)' }}>{LIGHT_TYPE_LABEL[t]}</option>
               ))}
             </select>
           </label>
 
-          <label className="flex items-center justify-between px-2.5 py-2 rounded-lg bg-black/30 border border-white/5">
-            <span className="text-[10px] font-mono text-white/55">Color</span>
+          <label className="flex items-center justify-between px-2.5 py-2 ds-well">
+            <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>Color</span>
             <input
               type="color"
               data-control="light-color"
               value={selectedLight.color ?? '#ffffff'}
               onChange={(e) => onUpdateLight(selectedLight.id, { color: e.target.value })}
-              className="w-7 h-6 rounded cursor-pointer bg-transparent border border-white/10"
+              className="w-7 h-6 rounded-ds-xs cursor-pointer bg-transparent"
+              style={{ border: '1px solid rgba(255, 252, 242, 0.14)', boxShadow: 'var(--ds-chamfer-soft)' }}
             />
           </label>
 
@@ -1172,14 +1255,14 @@ function LightingFlyout({
               icon="eye"
               label={selectedLight.castShadow ? 'Casts Shadow' : 'No Shadow'}
               active={selectedLight.castShadow === true}
-              accent={GREEN}
+              accent={DS.brass300}
               onClick={() => onUpdateLight(selectedLight.id, { castShadow: !(selectedLight.castShadow === true) })}
             />
           )}
         </>
       ) : (
         lights.length > 0 && (
-          <div className="text-[8.5px] font-mono text-white/35 leading-tight px-1">Select a light above to tune it.</div>
+          <div className="text-[8.5px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-low)' }}>Select a light above to tune it.</div>
         )
       )}
 
@@ -1188,7 +1271,7 @@ function LightingFlyout({
       <FaderRow
         label="Shadow Softness"
         value={shadowSoftness}
-        accent={VIOLET}
+        accent={DS.brass300}
         testId="shadow-softness"
         onChange={(v) => onPatchSpec({ shadowSoftness: v })}
       />
@@ -1196,7 +1279,7 @@ function LightingFlyout({
         label="Env / IBL Intensity"
         value={envIntensity}
         max={2}
-        accent={GREEN}
+        accent={DS.ice300}
         testId="env-intensity"
         onChange={(v) => onPatchSpec({ envIntensity: v })}
       />
@@ -1210,11 +1293,11 @@ function LightingFlyout({
             label={nodeReceives ? 'Receives Light' : 'Unlit'}
             testId="receives-lighting"
             active={nodeReceives}
-            accent={AMBER}
+            accent={DS.brass300}
             onClick={onToggleReceives}
             title="Toggle whether this node is lit by the scene rig"
           />
-          <div className="text-[8px] font-mono text-white/30 leading-tight">
+          <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
             {`renderMode: ${node.renderMode ?? 'sprite'} · default ${
               receivesLightingDefault(node.renderMode) ? 'lit' : 'unlit'
             }`}
@@ -1232,11 +1315,11 @@ function FaderRow({
   label: string; value: number; onChange: (v: number) => void;
   min?: number; max?: number; step?: number; accent?: string; testId?: string;
 }) {
-  const a = accent ?? ACCENT;
+  const a = accent ?? DS_ACCENT;
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <span className="text-[9.5px] font-mono text-white/55">{label}</span>
+        <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>{label}</span>
         <span className="text-[9.5px] font-mono tabular-nums" style={{ color: a }}>{fmt(value)}</span>
       </div>
       <input
@@ -1247,8 +1330,7 @@ function FaderRow({
         step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full h-1.5 cursor-pointer accent-current"
-        style={{ accentColor: a }}
+        className="ds-slider w-full cursor-pointer"
       />
     </div>
   );
@@ -1271,15 +1353,16 @@ function AnimationFlyout({
         type="button"
         data-action="keyframe-toggle"
         onClick={onToggleKeyframe}
-        className="w-full h-9 rounded-xl border flex items-center justify-center gap-2 transition-all"
-        style={
-          keyframeOpen
-            ? { background: `${ACCENT}22`, borderColor: `${ACCENT}66`, boxShadow: `inset 0 0 0 1px ${ACCENT}55` }
-            : { borderColor: 'rgba(255,255,255,0.12)' }
-        }
+        className="w-full h-9 rounded-ds-sm flex items-center justify-center gap-2 ds-press hover:brightness-[1.12] transition-all"
+        style={keyframeOpen ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
-        <Icon name="timeline" size={13} color={keyframeOpen ? ACCENT : '#c5ccea'} glow={keyframeOpen} />
-        <span className="text-[11px] font-mono text-white/90">{keyframeOpen ? 'Hide Keyframe Editor' : 'Keyframe Editor'}</span>
+        <Icon name="timeline" size={13} color={keyframeOpen ? DS_ACCENT : DS.text} glow={keyframeOpen} />
+        <span
+          className="text-[11px] font-mono"
+          style={{ color: keyframeOpen ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
+        >
+          {keyframeOpen ? 'Hide Keyframe Editor' : 'Keyframe Editor'}
+        </span>
       </button>
 
       <SectionLabel>Triggers · assign driver</SectionLabel>
@@ -1287,9 +1370,11 @@ function AnimationFlyout({
         {(['Load', 'Click', 'Hover', 'Scroll', 'Drag'] as const).map((t) => (
           <ToolButton key={t} icon="zap" label={t} onClick={() => onComing(`${t} driver`)} />
         ))}
-        <ToolButton icon="wand" label="Scratch" accent={VIOLET} onClick={() => onComing('Create From Scratch')} />
+        <ToolButton icon="wand" label="Scratch" accent={DS.brass300} onClick={() => onComing('Create From Scratch')} />
       </div>
-      <div className="text-[8px] font-mono text-white/30 leading-tight">Drivers play animation only — behavior wiring lives in the node editor (§1.3).</div>
+      <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
+        Drivers play animation only — behavior wiring lives in the node editor (§1.3).
+      </div>
     </>
   );
 }
@@ -1297,10 +1382,10 @@ function AnimationFlyout({
 // ── Shared bits ──────────────────────────────────────────────────────────────
 function SelectionChip({ label, locked, group }: { label: string; locked: boolean; group: boolean }) {
   return (
-    <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl bg-black/30 border border-white/5">
-      <Icon name={group ? 'group' : 'cursor'} size={12} color={group ? VIOLET : ACCENT} />
-      <span className="flex-1 text-[10px] font-mono text-white/80 truncate">{label}</span>
-      {locked && <Icon name="lock" size={11} color={AMBER} />}
+    <div className="flex items-center gap-2 px-2.5 py-2 ds-well">
+      <Icon name={group ? 'group' : 'cursor'} size={12} color={group ? DS.brass300 : DS_ACCENT} />
+      <span className="flex-1 text-[10px] font-mono truncate" style={{ color: 'var(--ds-text)' }}>{label}</span>
+      {locked && <Icon name="lock" size={11} color={DS.warn} />}
     </div>
   );
 }
@@ -1308,19 +1393,19 @@ function SelectionChip({ label, locked, group }: { label: string; locked: boolea
 function EmptyHint({ icon, text }: { icon: string; text: string }) {
   return (
     <div className="flex flex-col items-center text-center gap-2 py-4 px-2">
-      <div className="w-9 h-9 rounded-xl border border-white/10 flex items-center justify-center bg-white/[0.02]">
-        <Icon name={icon} size={16} color="#8b93b5" />
+      <div className="w-9 h-9 ds-well flex items-center justify-center">
+        <Icon name={icon} size={16} color={DS.textMid} />
       </div>
-      <span className="text-[9.5px] font-mono text-white/45 leading-relaxed">{text}</span>
+      <span className="text-[9.5px] font-mono leading-relaxed" style={{ color: 'var(--ds-text-low)' }}>{text}</span>
     </div>
   );
 }
 
 // ── Keyframe editor (slide-up; §8.4 — designed, content forthcoming) ─────────
 const TRACKS = [
-  { name: 'Opacity', color: ACCENT, keys: [0.0, 0.25, 0.6, 1.0] },
-  { name: 'Translate Y', color: VIOLET, keys: [0.0, 0.5, 0.85] },
-  { name: 'Scale', color: GREEN, keys: [0.0, 1.0] },
+  { name: 'Opacity', color: DS.brass400, keys: [0.0, 0.25, 0.6, 1.0] },
+  { name: 'Translate Y', color: DS.brass200, keys: [0.0, 0.5, 0.85] },
+  { name: 'Scale', color: DS.ice300, keys: [0.0, 1.0] },
 ];
 
 function KeyframeEditorPanel({
@@ -1343,36 +1428,78 @@ function KeyframeEditorPanel({
       style={{
         transform: open ? 'translateY(0)' : 'translateY(110%)',
         opacity: open ? 1 : 0,
-        transition: 'transform 320ms cubic-bezier(0.16,1,0.3,1), opacity 240ms ease',
+        transition: 'transform var(--ds-t-slow) var(--ds-ease-out), opacity var(--ds-t-base) var(--ds-ease-out)',
       }}
     >
-      <div className="m-3 rounded-2xl border border-white/10 pointer-events-auto overflow-hidden" style={GLASS}>
+      {/* Ceramic instrument body with a machined header strip; engraved labels
+          + brass markers throughout. */}
+      <div
+        className="m-3 ds-ceramic ds-edge pointer-events-auto overflow-hidden"
+        style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between px-3.5 h-11 border-b border-white/8">
+        <div
+          className="flex items-center justify-between px-3.5 h-11"
+          style={{ background: 'var(--ds-grad-metal)', borderBottom: '1px solid rgba(255, 252, 242, 0.07)' }}
+        >
           <div className="flex items-center gap-2.5">
-            <Icon name="timeline" size={14} color={ACCENT} glow />
-            <span className="text-[11px] font-display font-semibold text-white">Keyframe Editor</span>
-            <span className="text-[9px] font-mono tracking-widest px-1.5 py-0.5 rounded" style={{ background: `${VIOLET}22`, color: VIOLET }}>
+            <Icon name="timeline" size={14} color={DS_ACCENT} glow />
+            <span className="text-[11px] font-display font-semibold" style={{ color: 'var(--ds-text-hi)' }}>Keyframe Editor</span>
+            <span className="ds-chip ds-chip--ice">
               CATALOG FORTHCOMING
             </span>
-            <span className="text-[9px] font-mono text-white/40 hidden lg:inline">· {selectionLabel}</span>
+            <span className="text-[9px] font-mono hidden lg:inline" style={{ color: 'var(--ds-text-low)' }}>· {selectionLabel}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <button type="button" onClick={() => setPlaying((p) => !p)} className="w-7 h-7 rounded-md border border-white/10 flex items-center justify-center hover:bg-white/5">
-              <Icon name={playing ? 'pause' : 'play'} size={11} color={GREEN} />
+            <button
+              type="button"
+              onClick={() => setPlaying((p) => !p)}
+              className="w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
+              style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
+            >
+              <Icon name={playing ? 'pause' : 'play'} size={11} color={DS.brass200} />
             </button>
-            <button type="button" onClick={() => setLoop((l) => !l)} title="Loop" className="w-7 h-7 rounded-md border border-white/10 flex items-center justify-center hover:bg-white/5" style={loop ? { background: `${ACCENT}1f` } : undefined}>
-              <Icon name="refresh" size={11} color={loop ? ACCENT : '#8b93b5'} />
+            <button
+              type="button"
+              onClick={() => setLoop((l) => !l)}
+              title="Loop"
+              className="w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
+              style={loop ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
+            >
+              <Icon name="refresh" size={11} color={loop ? DS_ACCENT : DS.textMid} />
             </button>
-            <div className="flex items-center rounded-md border border-white/10 overflow-hidden">
+            <div
+              className="flex items-center rounded-ds-xs overflow-hidden"
+              style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}
+            >
               {(['1/60', '1/100', '1/120'] as const).map((g) => (
-                <button key={g} type="button" onClick={() => setSnapGrid(g)} className={`px-1.5 h-7 text-[8.5px] font-mono ${snapGrid === g ? 'bg-white/10 text-white' : 'text-white/45 hover:text-white/70'}`}>
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setSnapGrid(g)}
+                  className={`px-1.5 h-7 text-[8.5px] font-mono transition-colors ${
+                    snapGrid === g ? '' : 'text-ds-text-low hover:text-ds-text'
+                  }`}
+                  style={
+                    snapGrid === g
+                      ? {
+                          background: dsAlpha(DS_ACCENT, 0.18),
+                          color: 'var(--ds-brass-200)',
+                          boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.35)}`,
+                        }
+                      : undefined
+                  }
+                >
                   {g}
                 </button>
               ))}
             </div>
-            <button type="button" onClick={onClose} className="w-7 h-7 rounded-md hover:bg-white/5 flex items-center justify-center">
-              <Icon name="close" size={10} color="#8b93b5" />
+            <button
+              type="button"
+              onClick={onClose}
+              className="w-7 h-7 rounded-ds-xs ds-press hover:bg-white/[0.06] flex items-center justify-center transition-colors"
+            >
+              <Icon name="close" size={10} color={DS.textMid} />
             </button>
           </div>
         </div>
@@ -1380,30 +1507,49 @@ function KeyframeEditorPanel({
         {/* Scrubber / fader */}
         <div className="px-3.5 pt-3 pb-1">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-mono tabular-nums text-white/55 w-10">{(playhead * 3).toFixed(2)}s</span>
+            <span className="text-[9px] font-mono tabular-nums w-10" style={{ color: 'var(--ds-text-mid)' }}>{(playhead * 3).toFixed(2)}s</span>
             <div className="relative flex-1 h-7">
               <input
                 type="range" min={0} max={1} step={0.001} value={playhead}
                 onChange={(e) => setPlayhead(parseFloat(e.target.value))}
                 className="absolute inset-0 w-full opacity-0 cursor-pointer z-10"
               />
-              <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 rounded-full bg-white/10">
-                <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${playhead * 100}%`, background: `linear-gradient(90deg, ${ACCENT}, ${VIOLET})` }} />
+              {/* Machined groove + brass fill */}
+              <div
+                className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 rounded-full"
+                style={{ background: WELL_BG, boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+              >
+                <div
+                  className="absolute inset-y-0 left-0 rounded-full"
+                  style={{
+                    width: `${playhead * 100}%`,
+                    background: 'var(--ds-grad-brass)',
+                    boxShadow: `0 0 8px ${dsAlpha(DS_ACCENT, 0.35)}`,
+                  }}
+                />
               </div>
               {/* ruler ticks — major every 0.5s, minor every 0.1s (reads as a real timeline at full width) */}
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
                 {Array.from({ length: 31 }).map((_, i) => (
                   <span
                     key={i}
-                    className={i % 5 === 0 ? 'w-px h-3 bg-white/25' : 'w-px h-1.5 bg-white/10'}
+                    className={i % 5 === 0 ? 'w-px h-3' : 'w-px h-1.5'}
+                    style={{ background: i % 5 === 0 ? 'rgba(255, 252, 242, 0.22)' : 'rgba(255, 252, 242, 0.08)' }}
                   />
                 ))}
               </div>
+              {/* Brass playhead jewel */}
               <div className="absolute top-0 bottom-0 w-3 -translate-x-1/2 flex justify-center pointer-events-none" style={{ left: `${playhead * 100}%` }}>
-                <span className="w-3 h-3 mt-0.5 rotate-45 rounded-[3px]" style={{ background: '#fff', boxShadow: `0 0 8px ${ACCENT}` }} />
+                <span
+                  className="w-3 h-3 mt-0.5 rotate-45 rounded-[3px]"
+                  style={{
+                    background: 'var(--ds-grad-brass)',
+                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.6), var(--ds-glow-brass)',
+                  }}
+                />
               </div>
             </div>
-            <span className="text-[9px] font-mono tabular-nums text-white/35 w-8">3.00s</span>
+            <span className="text-[9px] font-mono tabular-nums w-8" style={{ color: 'var(--ds-text-low)' }}>3.00s</span>
           </div>
         </div>
 
@@ -1411,27 +1557,42 @@ function KeyframeEditorPanel({
         <div className="px-3.5 pb-3 pt-1 flex flex-col gap-2 max-h-[200px] overflow-y-auto">
           {TRACKS.map((tr) => (
             <div key={tr.name} className="flex items-center gap-2.5">
-              <span className="w-28 text-[10px] font-mono text-white/60 truncate flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: tr.color, boxShadow: `0 0 5px ${tr.color}` }} />
+              <span className="w-28 text-[10px] font-mono truncate flex items-center gap-1.5" style={{ color: 'var(--ds-text-mid)' }}>
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: tr.color, boxShadow: `0 0 5px ${dsAlpha(tr.color, 0.7)}` }} />
                 {tr.name}
               </span>
-              <div className="relative flex-1 h-7 rounded-md bg-black/30 border border-white/5">
-                <div className="absolute inset-y-1.5 left-2 right-2 top-1/2 -translate-y-1/2 h-px bg-white/10" />
+              <div
+                className="relative flex-1 h-7 rounded-ds-xs"
+                style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}
+              >
+                <div className="absolute inset-y-1.5 left-2 right-2 top-1/2 -translate-y-1/2 h-px" style={{ background: 'rgba(255, 252, 242, 0.08)' }} />
                 {tr.keys.map((k, i) => (
                   <span
                     key={i}
-                    className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 rounded-[2px] border"
-                    style={{ left: `${6 + k * 88}%`, background: `${tr.color}cc`, borderColor: '#ffffff44' }}
+                    className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 rounded-[2px]"
+                    style={{
+                      left: `${6 + k * 88}%`,
+                      background: dsAlpha(tr.color, 0.85),
+                      border: `1px solid ${dsAlpha(DS.textHi, 0.3)}`,
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.5)',
+                    }}
                   />
                 ))}
-                <span className="absolute top-0 bottom-0 w-px bg-white/40" style={{ left: `${6 + playhead * 88}%` }} />
+                <span
+                  className="absolute top-0 bottom-0 w-px"
+                  style={{ left: `${6 + playhead * 88}%`, background: dsAlpha(DS.brass300, 0.6), boxShadow: `0 0 4px ${dsAlpha(DS_ACCENT, 0.4)}` }}
+                />
               </div>
-              <button type="button" className="w-6 h-6 rounded-md border border-white/10 flex items-center justify-center hover:bg-white/5">
-                <Icon name="plus" size={9} color="#8b93b5" />
+              <button
+                type="button"
+                className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
+                style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
+              >
+                <Icon name="plus" size={9} color={DS.textMid} />
               </button>
             </div>
           ))}
-          <div className="text-[8px] font-mono text-white/30 pl-[122px]">
+          <div className="text-[8px] font-mono pl-[122px]" style={{ color: 'var(--ds-text-low)' }}>
             Timeline is continuous seconds (no global fps). Tracks bind to the selection&apos;s Animatable controls once the Primitive Catalog lands.
           </div>
         </div>
@@ -1480,15 +1641,17 @@ function MarqueeOverlay({
         setCur(null);
       }}
     >
-      <div className="absolute top-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full border border-white/10 pointer-events-none" style={GLASS}>
-        <span className="text-[10px] font-mono text-white/80">Drag a box to select · release to confirm</span>
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full pointer-events-none" style={SMOKED_PILL}>
+        <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text)' }}>Drag a box to select · release to confirm</span>
       </div>
       {rect && (
         <div
           className="absolute rounded-md pointer-events-none"
           style={{
             left: rect.left, top: rect.top, width: rect.width, height: rect.height,
-            background: `${ACCENT}1a`, border: `1px solid ${ACCENT}`, boxShadow: `0 0 0 1px ${ACCENT}55, 0 0 24px ${ACCENT}33`,
+            background: dsAlpha(DS_ACCENT, 0.1),
+            border: `1px solid ${dsAlpha(DS_ACCENT, 0.85)}`,
+            boxShadow: `0 0 0 1px ${dsAlpha(DS_ACCENT, 0.35)}, 0 0 24px ${dsAlpha(DS_ACCENT, 0.22)}`,
           }}
         />
       )}

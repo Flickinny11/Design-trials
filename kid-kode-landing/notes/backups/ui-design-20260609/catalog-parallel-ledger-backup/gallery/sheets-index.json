@@ -1,0 +1,77 @@
+[
+  {
+    "cat": "blur",
+    "count": 10,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-blur.png"
+  },
+  {
+    "cat": "caustics",
+    "count": 12,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-caustics.png"
+  },
+  {
+    "cat": "displacement",
+    "count": 21,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-displacement.png"
+  },
+  {
+    "cat": "fade",
+    "count": 15,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-fade.png"
+  },
+  {
+    "cat": "glass",
+    "count": 21,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-glass.png"
+  },
+  {
+    "cat": "mask",
+    "count": 15,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-mask.png"
+  },
+  {
+    "cat": "particles",
+    "count": 35,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-particles.png"
+  },
+  {
+    "cat": "pointer",
+    "count": 15,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-pointer.png"
+  },
+  {
+    "cat": "scroll",
+    "count": 18,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-scroll.png"
+  },
+  {
+    "cat": "shimmer",
+    "count": 21,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-shimmer.png"
+  },
+  {
+    "cat": "smoke",
+    "count": 15,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-smoke.png"
+  },
+  {
+    "cat": "text",
+    "count": 36,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-text.png"
+  },
+  {
+    "cat": "transform",
+    "count": 32,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-transform.png"
+  },
+  {
+    "cat": "volumetric",
+    "count": 22,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-volumetric.png"
+  },
+  {
+    "cat": "wave",
+    "count": 24,
+    "out": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/catalog-parallel/gallery/sheet-wave.png"
+  }
+]

@@ -40,7 +40,7 @@ export default function MaterialTab({
   if (!node) {
     return (
       <div className="p-5 space-y-4">
-        <div className="rounded-xl border border-white/10 p-4 text-[11px] text-white/50">
+        <div className="ds-ceramic ds-edge rounded-ds-lg p-4 text-[11px] text-ds-text-mid">
           No source node available for this selection.
         </div>
       </div>
@@ -77,21 +77,23 @@ export default function MaterialTab({
 
   return (
     <div className="p-5 space-y-4">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">
+      <div className="ds-label text-ds-brass-300">
         PHYSICAL MATERIAL
       </div>
 
-      <div className="p-4 rounded-xl bg-white/[0.025] border border-white/5 flex flex-col gap-3">
+      {/* Ceramic instrument plate — engraved labels, machined ds-slider
+          grooves, brass tabular readouts. */}
+      <div className="p-4 ds-ceramic ds-edge rounded-ds-lg flex flex-col gap-3">
         {MATERIAL_CONTROL_SCHEMA.map((c: Control) => {
           const val = params[c.id];
           return (
             <label
               key={c.id}
-              className="flex flex-col gap-1 text-[11px] text-white/70"
+              className="flex flex-col gap-1 text-[11px] text-ds-text"
             >
               <span className="flex items-center justify-between">
                 <span>{c.label}</span>
-                <span className="text-white/40 tabular-nums">
+                <span className="font-mono tabular-nums text-ds-brass-300">
                   {typeof val === 'number' ? val.toFixed(2) : String(val)}
                   {('unit' in c && c.unit) || ''}
                 </span>
@@ -106,18 +108,20 @@ export default function MaterialTab({
                   value={typeof val === 'number' ? val : c.default}
                   disabled={frozen}
                   onChange={(e) => writeControl(c.id, parseFloat(e.target.value))}
-                  className="w-full disabled:opacity-40"
+                  className="ds-slider w-full disabled:opacity-40"
                 />
               )}
               {c.type === 'color' && (
-                <input
-                  type="color"
-                  data-control={c.id}
-                  value={typeof val === 'string' ? val : c.default}
-                  disabled={frozen}
-                  onChange={(e) => writeControl(c.id, e.target.value)}
-                  className="disabled:opacity-40"
-                />
+                <span className="ds-well inline-flex self-start rounded-ds-xs p-[3px]">
+                  <input
+                    type="color"
+                    data-control={c.id}
+                    value={typeof val === 'string' ? val : c.default}
+                    disabled={frozen}
+                    onChange={(e) => writeControl(c.id, e.target.value)}
+                    className="disabled:opacity-40 h-6 w-10 cursor-pointer rounded-[4px]"
+                  />
+                </span>
               )}
             </label>
           );
@@ -127,13 +131,13 @@ export default function MaterialTab({
       {/* §10 Lighting — receivesLighting opt-in. Image planes default UNLIT
           (preserve the diffusion-baked look); mesh defaults LIT. The toggle
           writes to the same preview buffer as the material controls. */}
-      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-1">
+      <div className="ds-label text-ds-brass-300 pt-1">
         LIGHTING
       </div>
-      <label className="px-3 py-2.5 rounded-lg bg-white/[0.025] border border-white/5 flex items-center justify-between cursor-pointer">
+      <label className="px-3 py-2.5 ds-ceramic ds-edge rounded-ds-md flex items-center justify-between cursor-pointer">
         <div className="flex flex-col">
-          <span className="text-[11px] text-white/85">Receives Lighting</span>
-          <span className="text-[9px] font-mono text-white/40 mt-0.5">
+          <span className="text-[11px] text-ds-text-hi">Receives Lighting</span>
+          <span className="ds-kicker mt-0.5 normal-case tracking-normal">
             {`renderMode: ${node.renderMode ?? 'sprite'} · default ${
               receivesLightingDefault(node.renderMode) ? 'lit' : 'unlit'
             }`}
@@ -145,7 +149,7 @@ export default function MaterialTab({
           checked={effectiveReceivesLighting}
           disabled={frozen}
           onChange={(e) => writeReceivesLighting(e.target.checked)}
-          className="disabled:opacity-40"
+          className="ds-toggle disabled:opacity-40"
         />
       </label>
     </div>

@@ -1,6 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Bricolage_Grotesque, Inter_Tight, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import '@/components/editor/design-system/tokens.css';
+import '@/components/editor/design-system/materials.css';
+import { DS_TIER_BOOT_SCRIPT } from '@/components/editor/design-system/tier';
 
 const display = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -42,7 +45,17 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      // data-ds-tier is stamped pre-hydration by the boot script below.
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Chrome capability tier (INV-9) stamped pre-paint so tier-gated
+            glass/refraction never flashes from the wrong tier. */}
+        <script dangerouslySetInnerHTML={{ __html: DS_TIER_BOOT_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   );
