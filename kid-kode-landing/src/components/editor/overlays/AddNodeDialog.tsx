@@ -16,10 +16,15 @@
 //
 // data-* attributes carry the contract surface the Playwright spec
 // (tests/browser/add-node.spec.ts) and KripVerify (HL13 kvAssert) drive.
+//
+// Chrome: Observatory Brass — frosted glass modal (ds-glass ds-edge) over a
+// smoked scrim, carved input troughs (ds-input / ds-select), machined
+// ds-btn actions with a brass primary.
 
 import { useEffect, useMemo, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 const DEFAULT_SUBTYPE = 'element';
 
@@ -66,26 +71,31 @@ export default function AddNodeDialog() {
       role="dialog"
       aria-modal="true"
       aria-label="Add node"
-      className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-40 flex items-center justify-center"
+      style={{
+        background: dsAlpha(DS.void, 0.6),
+        backdropFilter: 'var(--ds-frost-light)',
+        WebkitBackdropFilter: 'var(--ds-frost-light)',
+      }}
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) close();
       }}
     >
       <form
         onSubmit={handleSubmit}
-        className="w-[420px] max-w-[92vw] rounded-2xl bg-[#0a0c14] border border-white/10 shadow-[0_24px_64px_rgba(0,0,0,0.6)] p-5"
+        className="w-[420px] max-w-[92vw] ds-glass ds-edge rounded-ds-lg p-5 ds-reveal"
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
           <div>
-            <div className="text-[14px] font-display font-bold text-white tracking-tight">Add Node</div>
-            <div className="text-[10px] font-mono text-white/40 tracking-widest mt-0.5">STAGE-0 INTENT</div>
+            <div className="ds-title tracking-tight">Add Node</div>
+            <div className="ds-kicker mt-1">STAGE-0 INTENT</div>
           </div>
           <button
             type="button"
             data-role="add-node-cancel"
             onClick={close}
-            className="text-white/40 hover:text-white text-[18px] leading-none px-2 py-1"
+            className="ds-btn ds-btn--quiet ds-press w-8 h-8 px-0 text-[18px] leading-none"
             aria-label="Cancel"
           >
             ×
@@ -93,12 +103,13 @@ export default function AddNodeDialog() {
         </div>
 
         <label className="block mb-3">
-          <span className="block text-[10px] font-mono text-white/50 tracking-widest mb-1">PARENT HUB</span>
+          <span className="ds-label block mb-1.5">PARENT HUB</span>
           <select
             data-role="add-node-hub"
             value={parentHubId}
             onChange={(e) => setParentHubId(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 rounded-md text-white text-[12px] px-3 py-2 focus:outline-none focus:border-[#5d8bff]/60"
+            className="ds-select w-full"
+            style={{ minHeight: 34 }}
           >
             {hubs.length === 0 && <option value="">(no hubs)</option>}
             {hubs.map((h) => (
@@ -110,26 +121,28 @@ export default function AddNodeDialog() {
         </label>
 
         <label className="block mb-3">
-          <span className="block text-[10px] font-mono text-white/50 tracking-widest mb-1">CAPTION</span>
+          <span className="ds-label block mb-1.5">CAPTION</span>
           <textarea
             data-role="add-node-caption"
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
             rows={3}
             placeholder="One or two sentences describing what this node is and what it does."
-            className="w-full bg-white/5 border border-white/10 rounded-md text-white text-[12px] px-3 py-2 focus:outline-none focus:border-[#5d8bff]/60 resize-none"
+            className="ds-input w-full resize-none"
+            style={{ padding: '8px 10px', lineHeight: 1.5 }}
           />
         </label>
 
         <label className="block mb-5">
-          <span className="block text-[10px] font-mono text-white/50 tracking-widest mb-1">SUBTYPE</span>
+          <span className="ds-label block mb-1.5">SUBTYPE</span>
           <input
             data-role="add-node-subtype"
             type="text"
             value={subtype}
             onChange={(e) => setSubtype(e.target.value)}
             placeholder={DEFAULT_SUBTYPE}
-            className="w-full bg-white/5 border border-white/10 rounded-md text-white text-[12px] px-3 py-2 focus:outline-none focus:border-[#5d8bff]/60"
+            className="ds-input w-full"
+            style={{ minHeight: 34 }}
           />
         </label>
 
@@ -138,7 +151,7 @@ export default function AddNodeDialog() {
             type="button"
             data-role="add-node-cancel-2"
             onClick={close}
-            className="px-3 py-1.5 rounded-md text-[11px] font-mono text-white/60 hover:text-white hover:bg-white/5 transition-colors"
+            className="ds-btn ds-btn--quiet ds-press"
           >
             Cancel
           </button>
@@ -146,11 +159,7 @@ export default function AddNodeDialog() {
             type="submit"
             data-role="add-node-submit"
             disabled={!canSubmit}
-            className={`px-3 py-1.5 rounded-md text-[11px] font-mono font-semibold transition-colors ${
-              canSubmit
-                ? 'bg-[#5d8bff] text-white hover:bg-[#7aa0ff]'
-                : 'bg-white/10 text-white/30 cursor-not-allowed'
-            }`}
+            className="ds-btn ds-btn--primary ds-press"
           >
             Add Node
           </button>

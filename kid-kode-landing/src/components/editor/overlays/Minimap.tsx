@@ -1,9 +1,16 @@
 'use client';
 
+// Minimap — corner radar of the whole graph. Chrome: Observatory Brass — a
+// machined metal bezel plate (ds-metal ds-grain ds-edge) framing a recessed
+// instrument well (ds-well) that holds the 2D radar canvas. Canvas tints come
+// from the DS token mirror: status colors for nodes, brass for the selection
+// reticle; hub disc tints stay data-driven (hub.color).
+
 import { useRef, useEffect, useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function Minimap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -46,7 +53,7 @@ export default function Minimap() {
       nodePositions[n.id] = { x: hub.x + Math.cos(angle) * dist, y: hub.y + Math.sin(angle) * dist };
     });
 
-    ctx.fillStyle = 'rgba(5,6,16,0.75)';
+    ctx.fillStyle = dsAlpha(DS.void, 0.78);
     ctx.fillRect(0, 0, W, H);
 
     graph.hubs.forEach((hub) => {
@@ -61,7 +68,7 @@ export default function Minimap() {
       ctx.stroke();
     });
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeStyle = dsAlpha(DS.textHi, 0.07);
     ctx.lineWidth = 0.5;
     graph.edges.forEach((e) => {
       const s = nodePositions[e.source], t = nodePositions[e.target];
@@ -78,19 +85,19 @@ export default function Minimap() {
       const isSelected = selectedId === n.id;
       const isHovered = hoveredId === n.id;
       const c =
-        n.status === 'verified' ? '#22c55e' :
-        n.status === 'failed' ? '#ef4466' :
-        n.status === 'code_generated' ? '#5d8bff' : '#f5a524';
+        n.status === 'verified' ? DS.ok :
+        n.status === 'failed' ? DS.danger :
+        n.status === 'code_generated' ? DS.ice400 : DS.warn;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, isSelected ? 3.5 : isHovered ? 3 : 2, 0, Math.PI * 2);
-      ctx.fillStyle = isSelected ? '#ffd966' : c;
+      ctx.fillStyle = isSelected ? DS.brass200 : c;
       ctx.fill();
 
       if (isSelected) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-        ctx.strokeStyle = '#ffd966';
+        ctx.strokeStyle = DS.brass300;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -99,20 +106,15 @@ export default function Minimap() {
 
   return (
     <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
-      <div
-        className="rounded-xl border border-white/10 overflow-hidden"
-        style={{
-          background: 'rgba(5,6,16,0.65)',
-          backdropFilter: 'blur(18px)',
-          WebkitBackdropFilter: 'blur(18px)',
-          boxShadow: '0 12px 36px rgba(0,0,0,0.5)',
-        }}
-      >
-        <div className="px-2.5 py-1 border-b border-white/5 text-[9px] font-mono tracking-widest text-white/40 flex items-center justify-between">
+      {/* Machined bezel plate around a recessed instrument well. */}
+      <div className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
+        <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between">
           <span>MINIMAP</span>
-          <span>{graph.nodes.length} nodes</span>
+          <span className="text-ds-brass-300">{graph.nodes.length} nodes</span>
         </div>
-        <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
+        <div className="ds-well ds-edge rounded-ds-sm overflow-hidden">
+          <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
+        </div>
       </div>
     </div>
   );

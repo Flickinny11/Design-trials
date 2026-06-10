@@ -1,10 +1,44 @@
 'use client';
 
+// HubNav — bottom-center hub rail. Chrome: Observatory Brass — a machined
+// brushed-metal rail (ds-metal ds-grain ds-edge) whose active slot is a soft
+// brass wash with an inset brass keyline and a glowing brass pip. Hub glyph
+// tints stay data-driven (hub.color); the chrome accent is brass only.
+
 import { useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS, dsAlpha } from '@/components/editor/design-system';
+
+// Active slot — recessed brass-washed seat in the machined rail.
+const ACTIVE_SLOT: React.CSSProperties = {
+  background: 'var(--ds-grad-brass-soft)',
+  boxShadow:
+    'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.2), var(--ds-glow-brass)',
+};
+
+// Brass indicator pip — lit on the active slot, a dim machined dimple otherwise.
+function Pip({ active }: { active: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+      style={
+        active
+          ? {
+              background: 'var(--ds-grad-brass)',
+              boxShadow: `0 0 6px ${dsAlpha(DS.brass400, 0.7)}, inset 0 -1px 1px rgba(0,0,0,0.4)`,
+            }
+          : {
+              background: dsAlpha(DS.textLow, 0.3),
+              boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.5)',
+            }
+      }
+    />
+  );
+}
 
 export default function HubNav() {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
@@ -22,25 +56,24 @@ export default function HubNav() {
   return (
     <div className="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
       <div
-        className="flex items-center gap-1 p-1.5 rounded-full border border-white/10"
-        style={{
-          background: 'rgba(8,10,26,0.78)',
-          backdropFilter: 'blur(28px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04)',
-        }}
+        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
+        style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
         <button
           onClick={resetCamera}
-          className={`px-3.5 h-8 rounded-full text-[11px] font-mono transition-all flex items-center gap-1.5 ${
-            activeHubId === null ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
+          className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
+            activeHubId === null
+              ? 'text-ds-brass-200'
+              : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
           }`}
+          style={activeHubId === null ? ACTIVE_SLOT : undefined}
         >
-          <Icon name="compass" size={12} color={activeHubId === null ? '#fff' : '#8896b8'} />
+          <Pip active={activeHubId === null} />
+          <Icon name="compass" size={12} color={activeHubId === null ? DS.brass300 : DS.textMid} />
           Galaxy
         </button>
 
-        <div className="w-px h-5 bg-white/10" />
+        <div className="w-px h-5" style={{ background: 'var(--ds-edge-side)' }} />
 
         {graph.hubs.map((hub) => {
           const active = activeHubId === hub.id;
@@ -49,18 +82,14 @@ export default function HubNav() {
             <button
               key={hub.id}
               onClick={() => flyToHub(hub.id)}
-              className={`px-3.5 h-8 rounded-full text-[11px] font-mono transition-all flex items-center gap-1.5 ${
-                active ? 'text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
-              }`}
-              style={
+              className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
                 active
-                  ? {
-                      background: hub.color + '22',
-                      boxShadow: `inset 0 0 0 1px ${hub.color}55, 0 0 16px ${hub.color}33`,
-                    }
-                  : undefined
-              }
+                  ? 'text-ds-brass-200'
+                  : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
+              }`}
+              style={active ? ACTIVE_SLOT : undefined}
             >
+              <Pip active={active} />
               <Icon name={hub.glyph} size={12} color={hub.color} glow={active} />
               {hub.name}
               <span className="text-[9px] opacity-50">{nodeCount}</span>

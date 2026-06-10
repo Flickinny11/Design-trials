@@ -1,10 +1,16 @@
 'use client';
 
+// TopBar — the editor's masthead. Chrome: Observatory Brass — a thin machined
+// instrument bar (ds-metal ds-grain ds-edge) spanning the viewport: brass
+// nameplate, carved mode trough with brass-lit active slot, engraved
+// breadcrumb, recessed zoom/health readouts, and machined ds-btn fittings.
+
 import { useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function TopBar() {
   const zoomLevel = useGraphEditorStore((s) => s.zoomLevel);
@@ -44,25 +50,33 @@ export default function TopBar() {
   return (
     <div
       data-component="top-bar"
-      className="absolute z-30 top-0 left-0 right-0 h-14 flex items-center justify-between px-4 pointer-events-none"
-      style={{ background: 'linear-gradient(180deg, rgba(4,5,10,0.88) 0%, rgba(4,5,10,0) 100%)' }}
+      className="absolute z-30 top-0 left-0 right-0 h-14 flex items-center justify-between px-4 pointer-events-none ds-metal ds-grain ds-edge"
+      style={{ borderRadius: 0 }}
     >
       <div className="flex items-center gap-3 pointer-events-auto">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#5d8bff] via-[#a978ff] to-[#ff6ec7] flex items-center justify-center shadow-[0_0_24px_rgba(93,139,255,0.45)]">
-            <Icon name="sparkle" size={14} color="#fff" />
+          {/* Brass nameplate — milled fitting, lit from top-left. */}
+          <div
+            className="w-7 h-7 rounded-ds-sm flex items-center justify-center"
+            style={{
+              background: 'var(--ds-grad-brass)',
+              boxShadow:
+                'inset 0 1px 0 rgba(255,252,242,0.45), inset 0 -1px 0 rgba(0,0,0,0.3), var(--ds-elev-1), var(--ds-glow-brass)',
+            }}
+          >
+            <Icon name="sparkle" size={14} color={DS.ink} />
           </div>
           <div>
-            <div className="text-[13px] font-display font-bold text-white tracking-tight leading-none">Prism</div>
-            <div className="text-[8px] font-mono text-white/40 tracking-widest leading-none mt-0.5">KRIPTIK EDITOR</div>
+            <div className="ds-title-brass text-[13px] font-display font-bold tracking-tight leading-none">Prism</div>
+            <div className="ds-kicker text-[8px] leading-none mt-0.5">KRIPTIK EDITOR</div>
           </div>
         </div>
 
-        <div className="w-px h-6 bg-white/10" />
+        <div className="w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
 
         {/* SC-004 / RA-06b: editorRenderMode is a canvas-mode sub-toggle. */}
         {viewMode === 'canvas' && (
-          <div className="flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.035] p-0.5">
+          <div className="ds-well flex items-center gap-0.5 rounded-full p-0.5" style={{ borderRadius: 'var(--ds-r-pill)' }}>
             {([
               { id: 'scene', icon: 'grid', label: 'Scene' },
               { id: 'topology', icon: 'flow', label: 'Topology' },
@@ -73,12 +87,21 @@ export default function TopBar() {
                   key={mode.id}
                   type="button"
                   onClick={() => setEditorRenderMode(mode.id)}
-                  className={`h-7 px-2 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
-                    active ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white hover:bg-white/5'
+                  className={`ds-press h-7 px-2 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+                    active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text'
                   }`}
+                  style={
+                    active
+                      ? {
+                          background: 'var(--ds-grad-brass-soft)',
+                          boxShadow:
+                            'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.18)',
+                        }
+                      : undefined
+                  }
                   title={mode.label}
                 >
-                  <Icon name={mode.icon} size={10} color={active ? '#8bb4ff' : '#b5bddf'} />
+                  <Icon name={mode.icon} size={10} color={active ? DS.brass300 : DS.textMid} />
                   <span className="hidden xl:inline">{mode.label}</span>
                 </button>
               );
@@ -89,15 +112,15 @@ export default function TopBar() {
         <div className="flex items-center gap-1.5 text-[11px] font-mono">
           <button
             onClick={resetCamera}
-            className="px-2 py-1 rounded-md text-white/60 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-1"
+            className="ds-press px-2 py-1 rounded-ds-xs text-ds-text-mid hover:text-ds-text hover:bg-white/5 transition-colors flex items-center gap-1"
           >
-            <Icon name="home" size={11} color="#b5bddf" />
+            <Icon name="home" size={11} color={DS.textMid} />
             Graph
           </button>
           {hub && (
             <>
-              <span className="text-white/25">/</span>
-              <span className="px-2 py-1 rounded-md text-white/80 flex items-center gap-1">
+              <span className="text-ds-text-low">/</span>
+              <span className="px-2 py-1 rounded-ds-xs text-ds-text flex items-center gap-1">
                 <Icon name={hub.glyph} size={11} color={hub.color} glow />
                 {hub.name}
               </span>
@@ -105,8 +128,8 @@ export default function TopBar() {
           )}
           {selected && (
             <>
-              <span className="text-white/25">/</span>
-              <span className="px-2 py-1 rounded-md bg-white/5 text-white font-semibold">{selected.name}</span>
+              <span className="text-ds-text-low">/</span>
+              <span className="ds-well px-2 py-1 rounded-ds-xs text-ds-text-hi font-semibold">{selected.name}</span>
             </>
           )}
         </div>
@@ -117,59 +140,76 @@ export default function TopBar() {
           {(['L0', 'L1', 'L2', 'L3', 'L4'] as const).map((lvl) => (
             <div
               key={lvl}
-              className={`w-6 h-1.5 rounded-full transition-all ${
-                zoomLevel === lvl ? 'bg-[#5d8bff] shadow-[0_0_10px_#5d8bff]' : 'bg-white/10'
-              }`}
+              className="w-6 h-1.5 rounded-full transition-all"
+              style={
+                zoomLevel === lvl
+                  ? {
+                      background: 'var(--ds-grad-brass)',
+                      boxShadow: `var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.35)`,
+                    }
+                  : {
+                      background: dsAlpha(DS.textHi, 0.1),
+                      boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.45)',
+                    }
+              }
             />
           ))}
         </div>
-        <div className="text-[10px] font-mono text-white/50 tracking-widest">
+        <div className="text-[10px] font-mono text-ds-text-mid tracking-widest">
           {zoomLevel} · {zoomDesc[zoomLevel]}
         </div>
       </div>
 
       <div className="flex items-center gap-2 pointer-events-auto">
+        {/* Graph health — recessed instrument readout. */}
         <div
-          className="flex items-center gap-2 px-3 h-8 rounded-full bg-white/5 border border-white/10"
+          className="ds-well flex items-center gap-2 px-3 h-8 rounded-full"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Graph health"
         >
-          <Icon name="check" size={11} color="#55e6a5" />
+          <Icon name="check" size={11} color={DS.ok} />
           <div className="flex items-center gap-1.5">
-            <div className="flex h-1 w-24 rounded-full overflow-hidden bg-white/10">
-              <div className="bg-[#55e6a5]" style={{ width: `${(verified / total) * 100}%` }} />
-              <div className="bg-[#f5a524]" style={{ width: `${(pending / total) * 100}%` }} />
-              <div className="bg-[#ef4466]" style={{ width: `${(failed / total) * 100}%` }} />
+            <div
+              className="flex h-1 w-24 rounded-full overflow-hidden"
+              style={{ background: dsAlpha(DS.void, 0.65), boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.6)' }}
+            >
+              <div style={{ width: `${(verified / total) * 100}%`, background: 'var(--ds-ok)' }} />
+              <div style={{ width: `${(pending / total) * 100}%`, background: 'var(--ds-warn)' }} />
+              <div style={{ width: `${(failed / total) * 100}%`, background: 'var(--ds-danger)' }} />
             </div>
-            <span className="text-[10px] font-mono font-semibold text-white/80">{health}%</span>
+            <span className="text-[10px] font-mono font-semibold text-ds-text-hi">{health}%</span>
           </div>
         </div>
 
         <button
           data-component="add-node-button"
           onClick={openAddNodeDialog}
-          className="flex items-center gap-1.5 px-3 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+          className="ds-btn ds-btn--ghost ds-press h-8 rounded-full"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Add node"
         >
-          <span className="text-[11px] font-mono text-white/80 leading-none">+</span>
-          <span className="hidden md:inline text-[10px] font-mono text-white/70">Add Node</span>
+          <span className="text-[12px] font-mono leading-none">+</span>
+          <span className="hidden md:inline text-[10px] font-mono">Add Node</span>
         </button>
 
         <button
           onClick={resetCamera}
-          className="w-8 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors flex items-center justify-center"
+          className="ds-btn ds-press w-8 h-8 px-0 rounded-full"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Reset camera"
         >
-          <Icon name="refresh" size={12} color="#c5ccea" />
+          <Icon name="refresh" size={12} color={DS.textMid} />
         </button>
 
         <button
           onClick={toggleSearch}
-          className="flex items-center gap-2 px-3 h-8 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+          className="ds-btn ds-press h-8 rounded-full"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Search (⌘K)"
         >
-          <Icon name="search" size={11} color="#b5bddf" />
-          <span className="hidden md:inline text-[10px] font-mono text-white/60">Search</span>
-          <span className="hidden md:inline text-[9px] font-mono text-white/30">⌘K</span>
+          <Icon name="search" size={11} color={DS.textMid} />
+          <span className="hidden md:inline text-[10px] font-mono text-ds-text-mid">Search</span>
+          <span className="hidden md:inline text-[9px] font-mono text-ds-text-low">⌘K</span>
         </button>
       </div>
     </div>

@@ -6,9 +6,13 @@
 // The text the user types is mirrored into the editor store as `filterQuery`;
 // `GraphScene` reads that value, calls `computeGalaxyFilterMatches`, and dims
 // non-matching hubs/nodes. Clearing the filter restores full brightness.
+//
+// Chrome: Observatory Brass — machined toggle chip (ds-btn, brass when armed)
+// over a smoked-glass dock (ds-smoked ds-edge) with a carved ds-input trough.
 
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS } from '@/components/editor/design-system';
 
 export default function GalaxyFilterOverlay() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
@@ -21,46 +25,47 @@ export default function GalaxyFilterOverlay() {
   if (viewMode !== 'galaxy') return null;
 
   const active = filterQuery.trim().length > 0;
+  const armed = filterOpen || active;
 
   return (
     <div
       data-component="galaxy-filter-overlay"
-      className="absolute top-12 right-3 z-40 pointer-events-auto flex flex-col items-end gap-2"
+      className="absolute top-16 right-3 z-40 pointer-events-auto flex flex-col items-end gap-2"
     >
       <button
         type="button"
         onClick={toggleFilter}
         title={filterOpen ? 'Close filter' : 'Open filter'}
-        className={`flex items-center gap-2 h-8 px-3 rounded-full border transition-colors ${
-          filterOpen || active
-            ? 'border-[#5d8bff]/60 bg-[#5d8bff]/15 text-white'
-            : 'border-white/10 bg-white/5 text-white/75 hover:bg-white/10'
-        }`}
+        className={`ds-btn ds-press rounded-full h-8 ${armed ? 'ds-btn--ghost' : ''}`}
+        style={
+          armed
+            ? {
+                borderRadius: 'var(--ds-r-pill)',
+                boxShadow: 'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), var(--ds-elev-1), var(--ds-glow-brass)',
+              }
+            : { borderRadius: 'var(--ds-r-pill)' }
+        }
       >
-        <Icon name="search" size={11} color={filterOpen || active ? '#bcd4ff' : '#b5bddf'} />
+        <Icon name="search" size={11} color={armed ? DS.brass300 : DS.textMid} glow={armed} />
         <span className="text-[10px] font-mono tracking-widest uppercase">
           Filter{active ? ` · ${filterQuery.trim().slice(0, 18)}` : ''}
         </span>
       </button>
 
       {filterOpen && (
-        <div
-          className="w-[280px] rounded-xl border border-white/10 overflow-hidden"
-          style={{
-            background: 'linear-gradient(180deg, rgba(20,22,44,0.96), rgba(12,13,34,0.96))',
-            backdropFilter: 'blur(28px) saturate(160%)',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)',
-          }}
-        >
-          <div className="flex items-center gap-2 px-3 py-2.5 border-b border-white/5">
-            <Icon name="search" size={12} color="#b5bddf" />
+        <div className="w-[280px] ds-smoked ds-edge rounded-ds-md overflow-hidden ds-reveal">
+          <div
+            className="flex items-center gap-2 px-2.5 py-2"
+            style={{ boxShadow: 'inset 0 -1px 0 var(--ds-edge-shade), inset 0 1px 0 var(--ds-edge-side)' }}
+          >
+            <Icon name="search" size={12} color={DS.brass300} />
             <input
               data-component="galaxy-filter-input"
               type="text"
               value={filterQuery}
               onChange={(e) => setFilterQuery(e.target.value)}
               placeholder="Filter hubs, nodes…"
-              className="flex-1 bg-transparent outline-none text-white text-[12px] font-sans placeholder:text-white/30"
+              className="ds-input flex-1 min-w-0 font-sans"
               autoFocus
             />
             {active && (
@@ -68,13 +73,13 @@ export default function GalaxyFilterOverlay() {
                 type="button"
                 onClick={clearFilter}
                 title="Clear filter"
-                className="text-[10px] font-mono text-white/55 hover:text-white px-1.5 py-0.5 rounded border border-white/10"
+                className="ds-btn ds-btn--quiet ds-press shrink-0 text-[10px]"
               >
                 Clear
               </button>
             )}
           </div>
-          <div className="px-3 py-2 text-[10px] font-mono text-white/45 leading-relaxed">
+          <div className="px-3 py-2 text-[10px] font-mono text-ds-text-mid leading-relaxed">
             {active
               ? 'Non-matching hubs and nodes are dimmed. Matching items remain interactive.'
               : 'Type to dim non-matching hubs and nodes by name, route, element type, or caption.'}
