@@ -1,0 +1,7 @@
+{
+  "name": "supernova",
+  "label": "Nova Rate",
+  "description": "A star detonates — a blinding white-hot core flash blows out into a turbulent filamentary shock shell with radial debris streaks, fading to a glowing ember remnant. The volume is built in-shader from domain-warped fbm — a smooth premium burst, no slab seams. Looping.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

@@ -22,10 +22,27 @@
 //   3. Stars are now ROUND soft pinpricks: each grid cell hashes a star CENTRE and
 //      brightness, and the speck is a smooth radial exp/smoothstep falloff to that
 //      centre — not a hard `step()` on the cell hash (which lit whole square cells).
+//
+// ROUND-4 SURGICAL FIX (user-advocate gate, control-scale-low.png):
+//   A star whose hashed centre landed NEAR A CELL EDGE had its radial Gaussian
+//   truncated at the cell boundary (the neighbouring cell hashes a different
+//   star), exposing hard axis-aligned square edges — invisible at default scale
+//   (cells small on screen) but blatant at scale=1 where cells are 3× larger.
+//   Fix, entirely inside `starField` (nebula untouched):
+//     • the star centre is confined to [0.18, 0.82]² of its cell, so it always
+//       has >= 0.18 cell of room to every edge;
+//     • the Gaussian sigma is clamped to 45% of the centre's actual distance to
+//       its nearest cell edge (sigma scales with the available room, in CELL
+//       units, so the guarantee holds at EVERY scale value);
+//     • a ROUND smooth window (free-function smoothstep, 1 → 0 over
+//       [0.4·R, R] with R = 0.95 × distance-to-nearest-edge) hard-zeroes the
+//       speck strictly INSIDE the square cell.
+//   A star therefore reaches exactly 0 before any cell boundary at any legal
+//   scale ∈ [1, 8] — no quad edge can ever show.
 
 import { Mesh, type Material } from 'three';
 import { MeshBasicNodeMaterial, AdditiveBlending } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float } from 'three/tsl';
+import { uniform, uv, vec2, vec3, float, smoothstep } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
 import { fbmRot, fbmWarped } from './_volume-fbm';
@@ -56,6 +73,7 @@ interface TNode {
   pow: (e: number) => TNode;
   oneMinus: () => TNode;
   max: (x: TNode | number) => TNode;
+  min: (x: TNode | number) => TNode;
   x: TNode;
   y: TNode;
 }
@@ -65,6 +83,8 @@ const t2 = (x: V, y: V): TNode =>
 const t3 = (r: V, g: V, b: V): TNode =>
   (vec3 as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(r, g, b) as TNode;
 const f1 = (x: number): TNode => float(x) as unknown as TNode;
+// Free-function smoothstep for the load-bearing star window gate (ROUND-4 fix).
+const SSTEP = smoothstep as unknown as (lo: TNode | number, hi: TNode | number, x: TNode) => TNode;
 // Loose-cast wrappers around the shared rotated/warped fbm so they compose with the
 // permissive TNode alias above.
 const FBMR = fbmRot as unknown as (p: unknown, o?: number) => TNode;
@@ -191,18 +211,34 @@ export const cosmicDustPrimitive: PrimitiveDefinition = {
         const id = grid.floor();
         const cellUv = grid.fract(); // local [0,1] within the cell
         const rnd = hash(id); // brightness / presence roll
-        const ctr = hash2(id.add(t2(0.5, 0.5))); // star centre within the cell ∈[0,1]²
+        // ROUND-4: confine the star centre to [0.18, 0.82]² of its cell so the
+        // speck always has >= 0.18 cell of room before every cell edge. (A centre
+        // hashed near an edge had its Gaussian truncated by the cell boundary →
+        // the hard square edges seen at scale=1.)
+        const ctr = hash2(id.add(t2(0.5, 0.5))).mul(0.64).add(0.18);
         // probabilistic presence: only the brightest cells host a star, gated by
         // starDensity with a SOFT shoulder (smoothstep), not a hard step.
         const present = rnd.smoothstep(uStarN.mul(0.85).oneMinus(), uStarN.mul(0.85).oneMinus().add(0.06));
         // round radial falloff to the star centre: exp(−(d/r)²) → smooth pinprick.
         const d = cellUv.sub(ctr).length();
-        const dn = d.div(radius);
+        // ROUND-4: distance from this star's centre to its NEAREST cell edge, in
+        // cell units (>= 0.18 thanks to the confinement above). Both the Gaussian
+        // sigma and the zeroing window are derived from it, so the falloff reaches
+        // exactly 0 strictly inside the cell at EVERY scale value (cell-unit math
+        // is scale-invariant: the screen-space cell size cancels out).
+        const edgeRoom = ctr.x.min(ctr.x.oneMinus()).min(ctr.y).min(ctr.y.oneMinus());
+        const rEff = f1(radius).min(edgeRoom.mul(0.45)); // sigma <= 45% of the room
+        const dn = d.div(rEff);
         const point = dn.mul(dn).negate().exp(); // gaussian-ish soft round dot
+        // ROUND smooth window: 1 → 0 over [0.4·R, R] with R strictly inside the
+        // cell (0.95 × edgeRoom), so the speck is EXACTLY 0 at and beyond every
+        // cell boundary — no quad edge can ever show, at any scale.
+        const winR = edgeRoom.mul(0.95);
+        const win = SSTEP(winR.mul(0.4), winR, d).oneMinus();
         // per-star twinkle: slow sine in [0.4, 1] keyed off the cell hash phase.
         const phase = rnd.mul(6.2831).add(t.mul(2.0)).add(phaseOff);
         const tw = phase.sin().mul(0.5).add(0.5).mul(0.6).add(0.4);
-        return present.mul(point).mul(tw).mul(uStarN.mul(0.6).add(0.4)).mul(bright);
+        return present.mul(point).mul(win).mul(tw).mul(uStarN.mul(0.6).add(0.4)).mul(bright);
       };
       // Bright foreground stars + faint distant dust glints (two scales).
       const stars = starField(7, 0.10, 1.0, 0.0).add(starField(15, 0.07, 0.5, 1.7));

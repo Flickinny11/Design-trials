@@ -1,19 +1,45 @@
 {
-  "startedAt": "2026-06-09T20:38:56.485Z",
+  "startedAt": "2026-06-09T23:44:42.141Z",
   "state": "after",
-  "port": 4823,
+  "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "fog-roll",
+      "tile": "ink-bloom",
       "state": "after",
-      "dir": "fog-roll/after",
+      "dir": "ink-bloom/after",
       "claim": {
-        "name": "fog-roll",
-        "label": "Roll",
-        "description": "A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.",
+        "name": "ink-bloom",
+        "label": "Speed",
+        "description": "A drop of dark ink blooms into clear water — a radial bloom front eaten into organic cauliflower tendrils by domain-warped fbm, near-opaque interior with slow internal swirls and soft wispy translucent edges, on a fully transparent background.",
         "category": "smoke"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "wispy-smoke",
+      "state": "after",
+      "dir": "wispy-smoke/after",
+      "claim": {
+        "name": "wispy-smoke",
+        "label": "Rise",
+        "description": "Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.",
+        "category": "smoke"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "cosmic-dust",
+      "state": "after",
+      "dir": "cosmic-dust/after",
+      "claim": {
+        "name": "cosmic-dust",
+        "label": "Drift",
+        "description": "A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.",
+        "category": "volumetric"
       },
       "controls": 3,
       "notes": []

@@ -1,0 +1,68 @@
+{
+  "feature": "smoky-fire",
+  "claim": "A fire with heavy smoke — orange flames at the base feeding a churning grey smoke column rising above.",
+  "groundTruthSibling": "fire-flame",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken, misaligned, cut off, or glitchy. All four captures show a coherent composition: bright orange flame mound at the base, red transition zone, grey smoke column above, all with soft organic edges. No slab/shelf banding, no tile/lattice grid, no mirror seam, no jagged edges visible in any frame. The flat horizontal floor at the bottom of the flame is the shared capture-viewport floor (identical in the fire-flame ground-truth play-2 frame), not a clip defect. bandingScore runs 0.396-0.468, above the 0.25 nominal threshold, but the known-good fire-flame ground truth scores 0.427-0.491 on the same metric — it is inflated by the intense bright-flame-to-black vertical gradient on fire tiles, and visual inspection of every frame confirms no discrete shelves or stacked-card structure. Zero console and network errors.",
+      "evidence": [
+        "smoky-fire/after/play-2.png",
+        "smoky-fire/after/idle.png",
+        "metrics: play-2 bandingScore=0.434 vs fire-flame ground-truth play-2 bandingScore=0.491 (known-good baseline is HIGHER → score inflated by flame/black gradient, no visible shelves)",
+        "console: consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads exactly as claimed: 'orange flames at the base feeding a churning grey smoke column rising above.' Every play frame shows precisely that structure: a white-hot/orange flame mound at the bottom, a red ember transition, and a desaturating grey smoke column rising and dissipating at the top. Dominant warm hue 28-36 deg at sat 0.27-0.35 across play frames sits squarely in fire's band (10-45 deg) and is actually MORE saturated than the fire-flame ground truth (hue 37-43 deg, sat 0.17-0.27). warmFrac 0.73-0.79, coolFrac 0, magentaFrac 0 — no pink ring, no cream/olive drift, no ACES warm-to-cool shift. The grey of the smoke column is correct desaturation for smoke, not a hue error.",
+      "evidence": [
+        "smoky-fire/after/play-3.png",
+        "smoky-fire/after/play-1.png",
+        "metrics: play-1 effHue=36 effSat=0.35 warmFrac=0.79 coolFrac=0 magentaFrac=0 — in fire band, more saturated than ground-truth fire-flame play-1 (hue 43, sat 0.25)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. All three labeled controls do exactly what their names promise, visibly and sensibly, across their ranges. smokeAmount low removes the smoke column entirely (pure flame mound) and high produces a tall thick grey column — a first-time user sliding it sees an immediate, obvious cause-and-effect. rise low gives a short stubby column while high stretches and thins it upward. turbulence low gives a smooth laminar blurred cone, high gives a violently churning, detailed flame — exactly what a non-technical user would expect those words to mean. All three sweeps report changed=true in metrics.",
+      "evidence": [
+        "smoky-fire/after/control-smokeAmount-low.png",
+        "smoky-fire/after/control-smokeAmount-high.png",
+        "smoky-fire/after/control-turbulence-low.png",
+        "smoky-fire/after/control-turbulence-high.png",
+        "control: rise/smokeAmount/turbulence all changed=true; smokeAmount low→high satPixels 2377→1786 with column appearing, meanLuma 28.5→35.5"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The three play frames show real, continuous motion — flame lobes and smoke billows visibly reshape between play-1, play-2, and play-3 — with frameDeltaMag 4.39 / 5.14 / 6.10, larger deltas than the ground-truth fire-flame (2.69-5.53). Control apply latency is consistent at 576-597 ms across all nine sweep captures — a perceptible but sub-second beat, uniform across controls, with no dead or stuck sweeps.",
+      "evidence": [
+        "smoky-fire/after/play-1.png",
+        "smoky-fire/after/play-3.png",
+        "metrics: frameDeltaMag play-1=4.39 play-2=5.14 play-3=6.10; control latencyMs 576-597 across all 9 sweep frames"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That looks like a real campfire pumping out smoke — the flames glow white-hot at the bottom, the smoke is properly grey and churns as it rises, and when I drag the smoke slider the smoke actually goes away or thickens. It looks like movie footage, not a video game.' Smooth, organic, photoreal-grade volume on the trusted webgpu backend with zero errors.",
+      "evidence": [
+        "smoky-fire/after/play-2.png",
+        "smoky-fire/after/control-smokeAmount-high.png",
+        "metrics: backend=webgpu, consoleErrors=[], all 3 controls changed=true"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "bandingScore (0.396-0.468) exceeds the 0.25 nominal visibility threshold on every frame, but the known-good fire-flame ground truth scores 0.427-0.491 on the same metric and visual inspection shows no slab/shelf/lattice structure — the metric appears inflated by the bright-flame-to-black gradient on fire-family tiles. Worth recalibrating the metric for fire tiles, not a visual defect.",
+      "evidence": "metrics: smoky-fire play-2 bandingScore=0.434 vs fire-flame ground-truth play-2 bandingScore=0.491; smoky-fire/after/play-2.png shows no shelves"
+    },
+    {
+      "note": "At default controls the white-hot flame mound dominates the lower third of the frame and clips near-white at its core; the smoke column reads slightly secondary to the fire for a tile named 'smoky-fire'. Taste call — the ground-truth fire-flame core is similarly white-hot, and smokeAmount-high restores smoke dominance.",
+      "evidence": "smoky-fire/after/idle.png vs smoky-fire/after/control-smokeAmount-high.png"
+    },
+    {
+      "note": "Control apply latency is a consistent ~585 ms — perceptible beat between moving a slider and seeing the change, though uniform and sub-second.",
+      "evidence": "metrics: latencyMs 576-597 across all 9 control sweep frames"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

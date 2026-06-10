@@ -1,0 +1,64 @@
+{
+  "feature": "nebula",
+  "claim": "A colorful cosmic nebula churns slowly, clouds of violet and rose lit from within with dark dust lanes and a scatter of soft stars.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing visibly broken, misaligned, cut off, or glitchy. The volume is a centered, organic, soft-edged cloud over the correct alpha-0 dark surround; no slab/shelf banding, no tile lattice, no mirror seam, no jagged edges, no blow-out. All bandingScores sit well under the 0.25 visible-banding line (0.171-0.195). Zero console or network errors.",
+      "evidence": [
+        "nebula/after/idle.png",
+        "nebula/after/play-3.png",
+        "metrics: idle bandingScore=0.178, play-1..3 bandingScore=0.177, max across all 13 frames = brightness-high 0.195 (< 0.25 threshold)",
+        "console: consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads as exactly what it claims. idle.png and play-3.png show violet/rose clouds with a brighter rose-pink core lit from within, dark dust lanes cutting between the lobes, and a scatter of small soft stars. Measured dominant hue 261-267 deg at sat 0.40-0.45 is squarely violet (coolFrac 0.82-0.86, warmFrac 0), matching the violet-and-rose claim. Photoreal bar passed: smooth volumetric falloff, no Minecraft blockiness, bandingScore 0.177 on play frames.",
+      "evidence": [
+        "nebula/after/idle.png",
+        "nebula/after/play-3.png",
+        "metrics: play-3 effHue=262 effSat=0.44 coolFrac=0.84 warmFrac=0; bandingScore=0.177"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. 'scale' visibly and sensibly reworks the cloud (low = smooth blobby lobes with sparse large stars, satPixels 41616; high = finer wispy detail with a denser starfield, stdev 9->11.3). 'brightness' sweeps dim->glowing exactly as labeled (meanLuma 8.3->10.8, effRGB blue channel 14.5->52.9). 'speed' shows no visible difference between its three static frames (changed=false) — but speed changes churn RATE, which a single static frame per setting structurally cannot show for a cloud whose churn delta is only 0.18-0.2/frame; evidence is inconclusive rather than proof of a dead control. Flagged for a temporal recapture.",
+      "evidence": [
+        "nebula/after/control-scale-low.png",
+        "nebula/after/control-scale-high.png",
+        "control: scale low->high changed=true, satPixels 41616->4662, stdev 10.2->11.3",
+        "control: brightness low->high changed=true, meanLuma 8.3->10.8, effRGB [7.5,8,14.5]->[41.1,31.5,52.9]",
+        "control: speed low/mid/high changed=false (static frames identical; temporal-rate change not measurable by this capture)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, not janky. The cloud is visibly in motion across the play phase — play-3 shows the core brightened and the lower lobe churned versus idle (frameDeltaMag 1.01). Control applies land in ~0.6s consistently (583-597ms) with no stalls. Only 1 of 3 controls shows no static-frame change (below the rubric's '>1 control with no change = dead' line), and the other two change the frame decisively.",
+      "evidence": [
+        "nebula/after/play-3.png",
+        "metrics: play-1 frameDeltaMag=0.18, play-2=0.2, play-3=1.01 (visible churn)",
+        "control: latencyMs 583-597 across all 9 sweep applies"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That looks like a real nebula photo come to life — soft purple clouds with a glowing pink heart, dark gaps, little stars, and the sliders actually reshape and brighten it.' The only nit is I couldn't see the Speed slider do anything in a still frame, and it could default a touch brighter — neither would stop me using it.",
+      "evidence": [
+        "nebula/after/idle.png",
+        "nebula/after/control-brightness-high.png",
+        "metrics: play-3 effHue=262 effSat=0.44 bandingScore=0.177, consoleErrors=[]"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Speed control unverifiable from static frames: low/mid/high captures are pixel-identical (changed=false). Because speed alters churn RATE and the churn delta is only ~0.2/frame, single-frame capture cannot distinguish working-slow from dead. Recommend a paired-delta recapture (two frames N ms apart at speed=low vs speed=high, compare frameDeltaMag) to prove the control live.",
+      "evidence": "control: speed low/mid/high changed=false, satPixels 4421/4419/4400 (noise-level); nebula/after/control-speed-low.png vs nebula/after/control-speed-high.png visually identical"
+    },
+    {
+      "note": "Default presentation is on the dim side (meanLuma 9.3, effRGB [27.4,21.4,38.3] at idle) — visible and correctly composed against the alpha-0 surround, but a slightly punchier default would read better on bright displays. Taste call, not a defect; brightness-high proves headroom exists.",
+      "evidence": "metrics: idle meanLuma=9.3 effRGB=[27.4,21.4,38.3]; control-brightness-high meanLuma=10.8 effRGB=[41.1,31.5,52.9]"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

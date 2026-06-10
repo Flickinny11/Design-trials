@@ -1,0 +1,71 @@
+{
+  "feature": "godray",
+  "claim": "Warm amber light shafts radiate from a slowly rotating source: a small number of soft, wide beams decay away from the source with domain-warped shimmer and a drifting dust sparkle — in-shader volume, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No visible breakage, misalignment, cut-off, glitch, or blockiness. The volume is a smooth, organic, soft-edged amber star of beams centered in frame on the correct alpha-0 dark surround — no slab shelves, no tile/lattice grid, no mirror seam, no jagged edges in godray/after/idle.png or godray/after/play-1..3.png. One marginal metric: play-2 bandingScore=0.276 (just over the 0.25 threshold), but inspecting godray/after/play-2.png shows no discrete sheets or shelves — beams are continuous and feathered; all other frames are below threshold (idle 0.187, play-1 0.226, play-3 0.157). Zero console/network errors.",
+      "evidence": [
+        "godray/after/idle.png",
+        "godray/after/play-2.png",
+        "metrics: play-2 bandingScore=0.276 (marginal, no visible shelf structure in frame); idle=0.187, play-1=0.226, play-3=0.157 all < 0.25",
+        "console: consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads as exactly what it claims: a warm amber light source with a small number of soft, wide shafts radiating outward and decaying with distance, with irregular domain-warped edges. Measured hue is 30-33 deg (amber band) at effSat 0.39-0.44 with warmFrac 0.69-0.79 across idle and all play frames — squarely 'warm amber', no pink/magenta drift (magentaFrac 0.04) and no ACES warm-to-cool blowout shift. The slowly rotating source is real: beam orientation visibly rotates from godray/after/play-1.png to godray/after/play-3.png. The claimed 'drifting dust sparkle' is only barely perceptible (a faint speck near the beams in play-2.png) — noted as a flag, not a read failure.",
+      "evidence": [
+        "godray/after/play-3.png",
+        "metrics: idle effHue=30 effSat=0.43 warmFrac=0.71; play-3 effHue=30 effSat=0.44 warmFrac=0.69 magentaFrac=0.04 — warm amber band, no hue drift",
+        "godray/after/play-1.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. Every labeled control produces a visible, sensible change a first-timer would understand. Intensity: low(0) = effect fully off (control-intensity-low.png is black, meanLuma 7.5), mid = glowing star (meanLuma 14.0), high = noticeably brighter (meanLuma 16.1). Decay: low(0.8) = beams die right at the source leaving a tight glow (control-decay-low.png), high(1.0) = beams reach much further (control-decay-high.png). Density: beam count visibly grows 3 -> 4 -> 5 across control-density-{low,mid,high}.png even though aggregate luma barely moves (16.5 -> 16.7), which is why the harness marked changed=false — the frames prove the control works. AngleDeg: mid(180) shows the beam star visibly rotated vs low(0) (control-angleDeg-mid.png vs control-angleDeg-low.png); low and high are pixel-identical only because 0 deg = 360 deg (degenerate sweep endpoints, not a dead control).",
+      "evidence": [
+        "control: intensity low->high meanLuma 7.5 -> 14.0 -> 16.1, changed=true",
+        "godray/after/control-density-low.png",
+        "godray/after/control-density-high.png",
+        "godray/after/control-angleDeg-mid.png",
+        "godray/after/control-decay-low.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play phase shows real motion: frameDeltaMag 1.44 / 1.55 / 5.2 across play-1..3, and the rotation is plainly visible comparing godray/after/play-1.png to godray/after/play-3.png (beam star reorients). Control applies landed uniformly at 582-595 ms measured latency (harness capture-settle included), with no control taking visibly longer than another and no dead-feeling interaction. No identical-frame stalls.",
+      "evidence": [
+        "metrics: play-1 frameDeltaMag=1.44, play-2=1.55, play-3=5.2 — visible motion",
+        "godray/after/play-3.png",
+        "control: intensity latencyMs=582-589, decay=583-593, density=583-595, angleDeg=583-595 (uniform)"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That's a really pretty warm light — it glows, the rays slowly spin, and every slider does something I can see. It looks like something from a real movie title, not a video game sprite.' The only nitpicks are taste-level: the promised dust sparkle is too subtle to notice, and the beams are shortish so it reads slightly star-flare at default decay.",
+      "evidence": [
+        "godray/after/idle.png",
+        "metrics: backend=webgpu; idle effHue=30 effSat=0.43 warmFrac=0.71; consoleErrors=[]"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "play-2 bandingScore=0.276 marginally exceeds the 0.25 corroboration threshold, but no slab/shelf/tile structure is visible in the frame; all other frames are 0.157-0.226. Watch item, not a visible defect.",
+      "evidence": "godray/after/play-2.png — metrics: play-2 bandingScore=0.276 vs idle 0.187 / play-3 0.157"
+    },
+    {
+      "note": "Claimed 'drifting dust sparkle' is barely perceptible at default controls — only a faint speck visible near the beams; a user would not notice it unprompted.",
+      "evidence": "godray/after/play-2.png (faint single speck right of beams); godray/after/idle.png shows none"
+    },
+    {
+      "note": "Harness sweep design: angleDeg endpoints 0 and 360 are the same angle, so low/high frames are pixel-identical and density's structural change (3 -> 4 -> 5 beams) is invisible to aggregate luma stats — both controls were mis-summarized as changed=false. Fix the sweep/diff metric so working controls aren't reported dead.",
+      "evidence": "godray/after/control-angleDeg-low.png vs godray/after/control-angleDeg-high.png identical (metrics: both meanLuma=16.4 stdev=36.1 bandingScore=0.161); control: density low->high meanLuma 16.5->16.7 yet beam count 3->5 in control-density-{low,high}.png"
+    },
+    {
+      "note": "At default decay the beams are short relative to the glowing core, so the effect reads slightly more 'star flare' than long crepuscular shafts; decay=1.0 fixes this and is within the control's range — pure taste.",
+      "evidence": "godray/after/idle.png vs godray/after/control-decay-high.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

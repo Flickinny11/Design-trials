@@ -1,7 +1,7 @@
 # VOLUMETRIC SWEEP — kill the blocky slab look catalog-wide; premium 4K motion-graphics quality. (Claude Code, ultracode)
 
 ## MODEL & MODE
-MODEL: claude-opus-4-8 (NOT opusplan; confirm on line 1). 1M context.
+MODEL: claude-fable-5 (NOT opusplan; confirm on line 1). 1M context.
 ORCHESTRATION: ULTRACODE — Dynamic Workflows, PARALLEL subagents (reuse `parallel()` in
 notes/catalog-finish-workflow.mjs), one Opus subagent per tile. CONTRACT-FIRST: none needed (the additive `volumetric`
 tag already exists); this sweep REVERSES the slab approach for the named tiles.
@@ -49,3 +49,10 @@ notes/VOLUMETRIC-SWEEP-REPORT.md: before/after frames for all 7 (+ any extra off
 tile proving smooth (low bandingScore, PLEASED); 312 no-regression; metrics; tsc/vitest; honest flags. Frames under
 kid-kode-landing/notes/verification/volumetric-sweep/. NO commit — staged. Plain-language summary for Logan with the
 headline before/after. STOP. HEAD stays prism-editor-build.
+
+## MODEL-PIN GUARD (added 2026-06-09, Fable 5 day-one)
+This run pins `claude-fable-5` (CLI 2.1.170, smoke-tested: modelUsage=claude-fable-5). Fable 5 may silently fall back
+to opus-4-8 on classifier-flagged content — our graphics/shader work should never trigger that, but CONFIRM the active
+model at session start and note in the report if any fallback occurred. Leverage Fable 5's strengths deliberately:
+vision-critique your own rendered frames against the photoreal bar before sending them to the advocate, and
+self-verify more, retry less.

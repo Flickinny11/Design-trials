@@ -1,41 +1,63 @@
-// wispy-smoke — thin curling wisps of smoke that rise and dissipate, slower and
-// softer than billowing smoke. HARD / GPU / VOLUMETRIC primitive. The host builds
-// the plane subject as a back-to-front stack of 5 coplanar slabs (one Mesh) and
-// carries a per-vertex `aDepth` float (0 = front, 1 = rearmost). We swap the
-// material for a transparent MeshBasicNodeMaterial whose color + alpha come from a
-// domain-warped fbm (nebula-grade: 5 octaves, smooth Hermite interp, warped by a
-// second fbm) sampled with the uv ADVECTED UPWARD and a HORIZONTAL CURL. aDepth
-// parallaxes the field per slab (genuine 3rd noise dimension + a domain offset) so
-// the 5 slabs sample DIFFERENT slices of curling smoke, and depth-fades/darkens
-// rear slabs so the stack reads as a lit volume with front-to-back occlusion —
-// front denser, rear wispier. NormalBlending (smoke, not energy). Distinct from
-// smoke.ts: curling thin filaments that thin out toward the TOP as they rise.
+// wispy-smoke — thin curling wisps of smoke that rise and dissipate, sparser and
+// finer than the dense `smoke` tile. The ILLUSION of volume is built ENTIRELY
+// IN-SHADER on ONE flat quad (subject:'plane', volumetric:false → no slab stack,
+// so there are NO slab-edge seams / shelf banding by construction).
+//
+// ROUND-2 FIX (vision review of the round-1 REAL-GPU frames): the round-1 hard
+// alpha gate (smoothstep 0.56→0.78 on an ISOTROPIC fbm field) carved the noise
+// crests into harsh isolated BLOTCHES — torn-paper scraps with sharp bright cores —
+// and the rectangular edge vignette gave the whole effect a square extent. Fixes:
+//   1. SOFT gates: wide smoothstep windows (≈0.38 ramp), never a hard cut, so
+//      every strand is soft-edged. The gate floor RISES with height so tendrils
+//      visibly THIN OUT toward the top.
+//   2. ANISOTROPIC domains: x-frequency ≫ y-frequency (front t2(x·14, y·4.2)) so
+//      features are TALL AND THIN — rising tendrils, not blobs.
+//   3. CURL shear: horizontal warp displacement GROWS with height, so tendrils
+//      rise from the base then visibly BEND as they climb.
+//   4. SILHOUETTE from the effect's own shape: a loose base COLUMN with a noise-
+//      wandering centerline and noise-modulated width (widening as smoke rises)
+//      replaces the uniform rectangular vignette. A thin edge guard only zeroes
+//      alpha at the very quad border; it never shapes the look.
+//   5. Modest brightness: peak alpha ≈0.55, highlight mix capped low (no sharp
+//      bright cores, no blow-out).
+// ALL noise still comes from the shared `_volume-fbm` helper: rotated-octave +
+// QUINTIC (C2-continuous) + DOMAIN-WARPED value noise — no lattice, no seams.
+//
+// ART: two depth layers — a faint LARGE rear haze (low-warp fbmWarped) behind thin
+// brighter FRONT tendrils (anisotropic fbmRot) — scrolling up at different speeds
+// for parallax. `rise` scrolls the field upward AND sets the column REACH (how
+// high the tendrils climb before dissipating — visible on a paused frame, per the
+// heat-column precedent); `curl` shears it so the strands
+// bend; `density` scales coverage; soft grey-blue tint. The noise DOMAIN is a plain
+// scaled/scrolled uv — no centered `uv-0.5`/`.abs()` fold (which would mirror-seam
+// the mid-quad) and no `fract`/wrap term in the envelopes (which would hard-seam).
+// Load-bearing gates use the FREE-FUNCTION smoothstep/clamp/mix from 'three/tsl'
+// (method-form windows extrapolate on some node chains).
+//
+// seek() advances uTime; onParamChange() updates live rise/curl/density/tint
+// uniforms. Mirrors smoke.ts in alpha-gate / material-restore discipline.
 
 import { Mesh, Color, NormalBlending, type Material } from 'three';
 import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, vec2, vec3, float, sin, attribute } from 'three/tsl';
+import { uniform, uv, vec2, vec3, float, smoothstep, clamp, mix } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, str, type ControlValue, type PrimitiveDefinition } from '../contract';
-import { VOLUMETRIC_DEPTH_ATTR } from '../contract';
+import { fbmRot, fbmWarped } from './_volume-fbm';
 
-// TSL's per-call generic typing is far narrower than the runtime node graph it
-// builds; value-noise / fbm pass nodes through helper functions that the strict
-// overloads of the free TSL functions reject. Like nebula.ts we work through one
-// permissive chainable node alias (method-chaining only, which every TSL node
-// supports) so the helpers compose without fighting the inferred VarNode generics.
+// See smoke.ts / nebula.ts: TSL's per-call generic typing is far narrower than the
+// runtime node graph it builds, so fbm/value-noise helpers that pass nodes through
+// functions trip the strict overloads. We compose through one permissive chainable
+// node alias (method-chaining only, which every TSL node supports) so the helpers
+// compose without fighting the inferred VarNode generics. The graph is identical to
+// the free-function form. (tsc strictness.)
 interface TNode {
   add: (x: TNode | number) => TNode;
   sub: (x: TNode | number) => TNode;
   mul: (x: TNode | number) => TNode;
   div: (x: TNode | number) => TNode;
-  floor: () => TNode;
-  fract: () => TNode;
-  sin: () => TNode;
-  dot: (x: TNode) => TNode;
   mix: (a: TNode, b: TNode | number) => TNode;
-  max: (x: TNode | number) => TNode;
-  clamp: (lo: number, hi: number) => TNode;
   smoothstep: (lo: number, hi: number) => TNode;
+  clamp: (lo: number, hi: number) => TNode;
   oneMinus: () => TNode;
   pow: (e: number) => TNode;
   x: TNode;
@@ -47,6 +69,19 @@ const t2 = (x: V, y: V): TNode =>
 const t3 = (r: V, g: V, b: V): TNode =>
   (vec3 as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(r, g, b) as TNode;
 const f1 = (x: number): TNode => float(x) as unknown as TNode;
+// FREE-FUNCTION gates (load-bearing): method-form smoothstep windows extrapolate on
+// some node chains, so the alpha path goes through these three/tsl free functions.
+const ss = (lo: V, hi: V, x: V): TNode =>
+  (smoothstep as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(lo, hi, x) as TNode;
+const cl = (x: TNode, lo: number, hi: number): TNode =>
+  (clamp as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(x, lo, hi) as TNode;
+const mx = (a: TNode, b: TNode, t: TNode): TNode =>
+  (mix as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(a, b, t) as TNode;
+// Source ALL noise from the shared rotated/quintic/warped helper (no square grid).
+const warped = (p: TNode, warp: number, oct: number): TNode =>
+  fbmWarped(p as unknown, warp, oct) as unknown as TNode;
+const rotFbm = (p: TNode, oct: number): TNode =>
+  fbmRot(p as unknown, oct) as unknown as TNode;
 
 const rgb = (hex: string): [number, number, number] => {
   const c = new Color(hex);
@@ -66,10 +101,13 @@ export const wispySmokePrimitive: PrimitiveDefinition = {
   category: 'smoke',
   difficulty: 'hard',
   subject: 'plane',
-  volumetric: true,
+  // Single flat quad — the volume is an ILLUSION built in-shader from rotated,
+  // quintic, domain-warped fbm with a rotational curl-warp. NOT the 5-slab stack
+  // (which read as hard horizontal shelf steps), and NOT inline value noise.
+  volumetric: false,
   defaultDriver: 'time',
   description:
-    'Thin curling wisps of smoke rise and dissipate through real depth, slower and softer than billowing smoke.',
+    'Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.',
   schema: SCHEMA,
   create: defineAnimatable(
     { name: 'wispy-smoke', category: 'smoke', schema: SCHEMA },
@@ -88,101 +126,155 @@ export const wispySmokePrimitive: PrimitiveDefinition = {
       // Publish uniform handles so the host (and CPU tests) can read live state.
       target.userData.wispySmoke = { uTime, uRise, uCurl, uDensity };
 
-      // Per-vertex depth: 0 on the front (camera-facing) slab → 1 on the rearmost.
-      const aDepth = attribute(VOLUMETRIC_DEPTH_ATTR) as unknown as TNode;
-
-      // ── value-noise → fbm (nebula-grade: deterministic hash, smooth Hermite) ──
-      const hash = (p: TNode): TNode =>
-        p.dot(t2(127.1, 311.7)).sin().mul(43758.5453).fract();
-
-      const noise = (p: TNode): TNode => {
-        const i = p.floor();
-        const f = p.fract();
-        // smooth Hermite interpolant: f*f*(3-2f)
-        const u = f.mul(f).mul(f1(3).sub(f.mul(2)));
-        const a = hash(i);
-        const b = hash(i.add(t2(1, 0)));
-        const c = hash(i.add(t2(0, 1)));
-        const d = hash(i.add(t2(1, 1)));
-        const ab = a.mix(b, u.x);
-        const cd = c.mix(d, u.x);
-        return ab.mix(cd, u.y);
-      };
-
-      const fbm = (p0: TNode): TNode => {
-        let sum = f1(0);
-        let amp = 0.5;
-        let p = p0;
-        // 5 octaves of value noise for smooth, non-blocky structure.
-        for (let o = 0; o < 5; o++) {
-          sum = sum.add(noise(p).mul(amp));
-          p = p.mul(2.02);
-          amp *= 0.5;
-        }
-        return sum;
-      };
-
       const uTimeN = uTime as unknown as TNode;
       const uRiseN = uRise as unknown as TNode;
       const uCurlN = uCurl as unknown as TNode;
       const uDensityN = uDensity as unknown as TNode;
 
-      const coord = uv() as unknown as TNode;
+      const uvN = uv() as unknown as TNode;
+      const px = uvN.x;
+      const py = uvN.y; // 0 = bottom of quad, 1 = top
 
-      // Per-slab parallax: each slab (distinct aDepth) gets shifted into a DIFFERENT
-      // slice of the field, so the 5 coplanar slabs are not identical overdraw.
-      const parallax = aDepth.mul(0.85);
+      // ── Rising scroll: SUBTRACT an upward drift from y so the field flows up the
+      //    quad. Rise stays gentle (wisps rise slowly). A small fixed base keeps a
+      //    drift even at rise=0 so the tile is never frozen. ────────────────────
+      const drift = uTimeN.mul(uRiseN.mul(0.6).add(0.12));
 
-      // Advect the sample upward (rise) — subtracting from y scrolls the field down
-      // so wisps appear to climb. Rear slabs lag slightly for a sheared plume.
-      const advectedY = coord.y.add(uTimeN.mul(uRiseN)).add(parallax.mul(0.35));
-      // Horizontal curl: serpentine the column with a sine of (uv.y*k + time),
-      // phase-offset per slab so tendrils swirl in depth, not in lockstep.
-      const k = f1(6.0);
-      const curlOffset = (sin as unknown as (x: TNode) => TNode)(
-        coord.y.mul(k).add(uTimeN).add(aDepth.mul(2.1)),
-      ).mul(uCurlN.mul(0.18));
-      const curledX = coord.x.add(curlOffset).add(parallax.mul(0.5));
+      // ── CURL shear: a slow large-scale `fbmWarped` displacement of the plain uv
+      //    domain (no centered/abs fold, no wrap term). The HORIZONTAL displacement
+      //    GROWS with height, so tendrils leave the base nearly straight and BEND
+      //    sideways as they climb — the classic rising-smoke curl. ───────────────
+      const curlAmt = uCurlN.mul(0.3);
+      const swirlDomain = t2(
+        px.mul(2.6).add(uTimeN.mul(0.05)),
+        py.mul(2.6).sub(drift.mul(0.4)),
+      );
+      const swirlX = warped(swirlDomain, 0.7, 4).sub(0.5);
+      const swirlY = warped(
+        t2(swirlDomain.x.add(5.2), swirlDomain.y.add(1.3)),
+        0.7,
+        4,
+      ).sub(0.5);
+      const heightLift = py.mul(0.9).add(0.35); // bend grows with height
+      const curlX = px.add(swirlX.mul(curlAmt).mul(heightLift));
+      const curlY = py.sub(swirlY.mul(curlAmt).mul(0.5));
 
-      const base = t2(curledX.mul(2.4), advectedY.mul(2.4));
+      // ── FRONT layer: thin bright tendrils. ANISOTROPIC domain — x-frequency much
+      //    higher than y-frequency (14 vs 4.2) — stretches every feature TALL AND
+      //    THIN so the crests read as rising strands, never round blobs. Scrolls up
+      //    fastest (reads as foreground). ─────────────────────────────────────────
+      const frontDomain = t2(
+        curlX.mul(14.0),
+        curlY.mul(4.2).sub(drift.mul(1.6)),
+      );
+      const front = rotFbm(frontDomain, 5);
 
-      // Domain-warp the fbm (sample fbm at a point offset by another fbm) — the
-      // nebula gold-standard that kills blocky low-res value noise. Drift the warp
-      // in time and through depth so curls evolve and differ slab-to-slab.
-      const t = uTimeN.mul(uRiseN);
-      const wx = fbm(base.add(t2(t.mul(0.2), t.mul(0.13))).add(aDepth.mul(1.7)));
-      const wy = fbm(base.add(t2(4.4, 2.1)).sub(t2(t.mul(0.15), t.mul(0.22))));
-      const warp = t2(wx, wy);
+      // ── REAR layer: faint LARGE haze breathing behind the strands. Mildly
+      //    anisotropic warped field at lower frequency, slower scroll, big offset =
+      //    depth parallax. Never a raw low-frequency value-noise term. ───────────
+      const rearDomain = t2(
+        curlX.mul(7.5).add(23.7),
+        curlY.mul(3.0).sub(drift.mul(0.9)).add(9.1),
+      );
+      const rear = warped(rearDomain, 1.0, 5);
 
-      const warped = base.add(warp.mul(1.4));
-      // Final density field; the aDepth term genuinely varies the structure with
-      // depth (a real 3rd noise dimension), not just a 2D offset.
-      const f = fbm(warped.add(t2(0, t.mul(0.5))).add(aDepth.mul(0.9)));
+      // ── SOFT gates (the round-1 hard cut made torn-paper blotches): wide
+      //    smoothstep windows so every strand fades smoothly into transparency.
+      //    The front gate FLOOR rises with height → tendrils thin out by the top. ─
+      const gateLo = py.mul(0.14).add(0.4);
+      const gateHi = gateLo.add(0.38);
+      const frontWisp = ss(gateLo, gateHi, front); // soft thin strands
+      const rearWisp = ss(0.34, 0.92, rear).mul(0.35); // faint backing haze
+      const wisp = cl(frontWisp.add(rearWisp), 0, 1);
 
-      // Thin the field into wisps: sharpen and bias low so only filaments show.
-      const filament = f.sub(0.46).max(f1(0)).mul(2.7);
+      // ── Vertical narrative: emerge softly from a low base, dissipate by the top
+      //    edge. Plain non-wrapping envelopes. ────────────────────────────────────
+      const bottomFade = ss(0.02, 0.22, py);
 
-      // Alpha fades toward the TOP (uv.y == 1): wisps dissipate as they rise.
-      const fadeTop = coord.y.oneMinus().clamp(0, 1);
+      // ── ROUND-4 FIX (advocate: 'rise' was a pure scroll SPEED — invisible on a
+      //    paused frame; sweep measured changed=false). Heat-column precedent: rise
+      //    ALSO sets the column REACH — a static, visible property. The dissipation
+      //    window now climbs with rise: at rise=0 the fade runs 0.08→0.33 (wisps hug
+      //    a low puff near the base); at rise=1.5 it runs 0.80→1.63 (tendrils climb
+      //    near the top of the quad). The sqrt response + coefficients are calibrated
+      //    so the DEFAULT (rise=0.4) window is ≈(0.45, 1.0) — byte-for-byte the
+      //    window that passed the photoreal gate, so the default look is unchanged.
+      //    Scroll speed (`drift` above) still rides rise — both behaviors are real. ─
+      const riseT = cl(uRiseN.mul(1 / 1.5), 0, 1).pow(0.5);
+      const reachLo = riseT.mul(0.72).add(0.08);
+      const reachHi = reachLo.add(riseT.mul(0.581).add(0.25));
+      const topFade = ss(reachLo, reachHi, py).oneMinus();
+      // Thin top guard: alpha reaches exactly 0 at y=1 even when the rise-driven
+      // window extends past the quad (reachHi>1 at high rise). Mirrors guardX —
+      // it never shapes the visible silhouette below y≈0.93.
+      const guardY = ss(0.93, 1.0, py).oneMinus();
 
-      // Depth-fade: rear slabs (aDepth→1) are fainter for density falloff and a
-      // self-shadowed front-to-back read. depthFade: 1.0 front → 0.32 rear.
-      const depthFade = aDepth.oneMinus().mul(0.68).add(0.32);
+      // ── Loose base COLUMN — the SILHOUETTE comes from the effect's own organic
+      //    shape, not a uniform vignette. A noise-wandering centerline + a noise-
+      //    modulated half-width that WIDENS as the smoke rises; the column boundary
+      //    is therefore irregular on both sides (no mirror symmetry, no rectangle).
+      //    Low-frequency WARPED fields are sanctioned for shape masks. ────────────
+      const centerOff = warped(
+        t2(py.mul(1.7).add(4.3), uTimeN.mul(0.03).add(1.0)),
+        1.0,
+        4,
+      )
+        .sub(0.5)
+        .mul(0.22);
+      const halfW = py
+        .mul(0.2)
+        .add(0.16)
+        .add(
+          warped(t2(py.mul(2.3).add(11.0), uTimeN.mul(0.025).add(3.0)), 1.0, 4)
+            .sub(0.5)
+            .mul(0.1),
+        );
+      const xo = px.sub(0.5).sub(centerOff); // smooth signed offset (shape mask only)
+      const d2 = xo.mul(xo); // C∞ smooth — no fold seam, never fed into noise
+      const halfW2 = halfW.mul(halfW);
+      const colMask = ss(halfW2.mul(0.2), halfW2, d2).oneMinus();
 
-      const amount = filament.mul(uDensityN).mul(fadeTop).mul(depthFade);
+      // ── Edge guard: guarantees alpha EXACTLY 0 at the left/right quad border.
+      //    The organic column ends well inside it — the guard never shapes the
+      //    visible silhouette (it is not a vignette). ─────────────────────────────
+      const guardX = ss(0.0, 0.07, px).mul(ss(0.93, 1.0, px).oneMinus());
 
-      // Soft grey; lighten faintly where the wisp is densest, and tint rear slabs a
-      // touch darker so the stack occludes convincingly (lit-volume read).
-      const depthTint = aDepth.oneMinus().mul(0.22).add(0.78); // 1.0 front → 0.78 rear
-      const colorNode = t3(uR as unknown as TNode, uG as unknown as TNode, uB as unknown as TNode)
-        .mul(depthTint)
-        .add(t3(0.06, 0.06, 0.07).mul(amount));
-      const opacityNode = amount.clamp(0, 0.78);
+      const dens = cl(
+        wisp
+          .mul(bottomFade)
+          .mul(topFade)
+          .mul(guardY)
+          .mul(colMask)
+          .mul(guardX)
+          .mul(uDensityN),
+        0,
+        1,
+      );
+
+      // ── Gentle alpha mapping: long soft ramp, PEAK alpha ≈ 0.55 (modest — wisps
+      //    are translucent). No contrast-boosting re-gate (that made the blotches).
+      const alpha = ss(0.005, 0.85, dens).mul(0.55);
+
+      // ── Colour: soft grey-blue wisps with MILD internal contrast. The round-1
+      //    bright cores came from a strong highlight mix on hard-gated crests; the
+      //    highlight here is capped low and rides the soft density ramp. ──────────
+      const tint = t3(uR as unknown as TNode, uG as unknown as TNode, uB as unknown as TNode);
+      // Internal shading centred ~0: front crests brighten gently, rear dims.
+      const shade = front.sub(rear.mul(0.5)).mul(0.3);
+      const litTint = cl(tint.mul(f1(1).add(shade)), 0, 1);
+      // Densest strands lift slightly toward a cool blue-white (max 18% mix); a
+      // small cool floor keeps the faintest wisps grey-blue, never black/warm.
+      const lit = mx(litTint, t3(0.84, 0.87, 0.94), ss(0.6, 1.0, dens).mul(0.18)).add(
+        t3(0.05, 0.06, 0.08).mul(dens),
+      );
+      const colorNode = cl(lit, 0, 1);
+
+      const opacityNode = cl(alpha, 0, 0.55);
 
       const mat = new MeshBasicNodeMaterial({
         transparent: true,
         depthWrite: false,
-        blending: NormalBlending,
+        blending: NormalBlending, // smoke/cloud → painter 'over' composite
       });
       (mat as unknown as { colorNode: unknown }).colorNode = colorNode;
       (mat as unknown as { opacityNode: unknown }).opacityNode = opacityNode;

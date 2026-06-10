@@ -1,0 +1,64 @@
+{
+  "feature": "gas-flame",
+  "claim": "A blue gas-burner flame — sharp cones of blue with hot inner cores, hissing and steady like a stovetop.",
+  "groundTruthSibling": "fire-flame",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken. Edges are soft and anti-aliased, no slab/shelf banding, no tile/lattice grid, no mirror seams, no clipping or cut-off; backend is webgpu and there are zero console/network errors. Banding stays under the photoreal threshold across every frame.",
+      "evidence": [
+        "gas-flame/after/idle.png",
+        "gas-flame/after/play-2.png",
+        "metrics: bandingScore 0.208 (idle) to 0.231 (control-intensity-high), all <= 0.25 visible-banding threshold",
+        "console: consoleErrors=[] networkErrors=[], backend=webgpu"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads exactly as a blue gas-burner: five sharp blue cones with bright white-hot inner cores on a dark surround, steady like a stovetop. Dominant hue 203 deg at sat 0.68 with coolFrac 1.0 / warmFrac 0 is correct for the BLUE flame this tile claims (deliberately distinct from the warm 10-45 deg band of the fire-flame ground truth, whose play-2.png shows a turbulent orange flame — gas-flame is supposed to be the cool sibling).",
+      "evidence": [
+        "gas-flame/after/play-2.png",
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: play-2 effHue=203 effSat=0.68 coolFrac=1.0 warmFrac=0 -> saturated blue with hot core, matches 'blue gas-burner flame' claim"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. All three labeled controls do the obvious sensible thing in the captured sweeps: 'jets' goes from 2 wide cones (low) to 5 (mid) to 8 thin cones (high); 'flicker' low gives uniform tip heights while high gives visibly irregular, varied tip heights; 'intensity' goes from barely-glowing dim cones (meanLuma 10.6) to bright blazing ones (meanLuma 32.8). Note: metrics flagged jets/flicker changed=false, but that is an aggregate-stat false negative — the frames themselves show unmistakable change (jet COUNT changes while total emission stays similar).",
+      "evidence": [
+        "gas-flame/after/control-jets-low.png",
+        "gas-flame/after/control-jets-high.png",
+        "gas-flame/after/control-flicker-low.png",
+        "gas-flame/after/control-flicker-high.png",
+        "control: intensity low->high meanLuma 10.6 -> 32.8, satPixels 4740 -> 4053, visibly dim -> bright"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Control applies land consistently in ~0.58s (latencyMs 573-585 across all 9 sweep captures) and every sweep frame reflects its setting. Play-phase motion is real but subtle (frameDeltaMag 0.06-0.26 nonzero across play-1..3) — defensible for a 'steady like a stovetop' flame, noted as a flag below rather than a defect.",
+      "evidence": [
+        "metrics: play-1..3 frameDeltaMag = 0.06 / 0.23 / 0.26 (nonzero motion)",
+        "metrics: control latencyMs 573-585 for all jets/flicker/intensity sweeps",
+        "gas-flame/after/control-intensity-high.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That looks like a real stove burner — clean blue cones with the hot white middle, and the sliders actually add jets, make it dance, and turn the heat up.' Nothing blocky or cheap; it would sit fine in a real scene.",
+      "evidence": [
+        "gas-flame/after/idle.png",
+        "gas-flame/after/control-jets-high.png",
+        "metrics: bandingScore max 0.231 <= 0.25, no blocky/stacked/tiled artifact in any frame"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Play-phase flicker is very subtle — the three play frames are near-identical to idle; a touch more visible tip dance at default flicker would sell the 'hissing' part of the claim better.",
+      "evidence": "metrics: play-1..3 frameDeltaMag only 0.06-0.26; gas-flame/after/play-1.png vs gas-flame/after/play-3.png nearly identical"
+    },
+    {
+      "note": "At intensity high the flame drifts slightly toward cyan and desaturates (hue 203->192 deg, sat 0.68->0.58) — still clearly blue, but the hottest setting loses a little of the deep gas-blue.",
+      "evidence": "metrics: control-intensity-high effHue=192 effSat=0.58 vs idle effHue=203 effSat=0.68; gas-flame/after/control-intensity-high.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

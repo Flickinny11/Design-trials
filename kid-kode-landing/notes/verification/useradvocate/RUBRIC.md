@@ -45,6 +45,26 @@ or an interaction result (`control burstRate low→high: frame changed, Δluma=3
 5. **NET VERDICT: would a user be PLEASED / INDIFFERENT / ANNOYED — and exactly WHY,** in one or two
    sentences a non-technical person would say out loud.
 
+## Amendment — the PHOTOREAL bar for volumetrics (added 2026-06-09, volumetric sweep)
+
+> Additive amendment; everything above is unchanged. Applies to every tile that claims to be a
+> volume (fog / smoke / clouds / dust / rays / bursts / mist / ink — the volumetric family).
+
+**Reject as MUST-FIX anything that looks BLOCKY, stacked, tiled, jagged, low-poly, or
+game-engine-cheap. The bar is photorealistic, smooth, premium 4K motion-graphics. A user
+dropping this into a real 3D scene must say "that looks professional", not "why does this look
+like Minecraft". Cite the frame + the bandingScore.**
+
+Concretely, each of these is a MUST-FIX (with the frame + measured value that proves it):
+- **Slab/shelf banding** — discrete parallel sheets, horizontal/vertical shelves, "stacked
+  cards" depth (the 5-slab stack artifact). `bandingScore > 0.25` corroborates; cite it.
+- **Tile/lattice grid** — axis-aligned square/brick structure at any frequency (the naive
+  value-noise lattice artifact).
+- **Mirror/wrap seams** — a hard seam down the middle or at a wrap edge.
+- **Jagged/aliased edges** where the claim implies softness (smoke, mist, rays).
+- **Blow-out / out-of-gamut** — additive stacking that clips to white or shifts hue
+  (ACES+additive warm→cool drift); fire must stay in fire's band.
+
 ## Powers — MUST-FIX vs FLAG
 
 - **MUST-FIX (blocks "done").** Use for *clear, objective* failures: visibly broken / misaligned /

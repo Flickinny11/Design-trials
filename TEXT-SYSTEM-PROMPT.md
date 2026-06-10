@@ -1,7 +1,7 @@
 # TEXT SYSTEM — real MSDF text + bind it into the text-animation primitives (Canvas spec §7). (Claude Code, ultracode)
 
 ## MODEL & MODE
-MODEL: claude-opus-4-8 (NOT opusplan; confirm on line 1). 1M context.
+MODEL: claude-fable-5 (NOT opusplan; confirm on line 1). 1M context.
 ORCHESTRATION: ULTRACODE — Dynamic Workflows, PARALLEL subagents in verified waves (reuse `parallel()`).
 CONTRACT-FIRST: freeze the additive `textSpec` field + the MSDF TextObject API BEFORE parallel agents build against it.
 MODE: APP IMPLEMENTATION, verified. Edits under kid-kode-landing/src/** (text subsystem + the text-animation

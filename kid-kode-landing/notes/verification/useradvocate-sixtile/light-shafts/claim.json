@@ -1,0 +1,7 @@
+{
+  "name": "light-shafts",
+  "label": "Rays",
+  "description": "Radial god-ray shafts fan out from a bright point, shimmering as dust drifts through them.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

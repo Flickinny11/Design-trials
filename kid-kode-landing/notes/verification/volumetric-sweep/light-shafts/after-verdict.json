@@ -1,0 +1,64 @@
+{
+  "feature": "light-shafts",
+  "claim": "Radial god-ray shafts fan out from a bright point, shimmering as dust drifts through them.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken, misaligned, cut off, or banded. The volume is a soft, organic radial fan fully inside the frame with smooth feathered edges and no slab/shelf or lattice structure (photoreal amendment satisfied). bandingScore stays 0.165-0.186 across all 13 captures, well under the 0.25 visible-banding threshold. Only nit: faint squiggly thread-like aliasing right at the ray convergence point when ray count is high - subtle, flagged not blocked.",
+      "evidence": [
+        "light-shafts/after/idle.png",
+        "metrics: play-1..3 bandingScore=0.167-0.176, control frames 0.165-0.186 (all < 0.25)",
+        "light-shafts/after/control-rays-high.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes - it reads immediately as god-rays/light shafts. idle.png and play-1..3.png show warm golden shafts fanning radially from a single bright apex with soft volumetric falloff, exactly matching 'radial god-ray shafts fan out from a bright point'. Measured colour is warm sunlight: effHue=31 deg, effSat=0.45, warmFrac=0.84, magentaFrac=0 - no pink/cool drift. Dark surround is the correct alpha-0 composition over the near-black page.",
+      "evidence": [
+        "light-shafts/after/idle.png",
+        "light-shafts/after/play-2.png",
+        "metrics: idle effHue=31, effSat=0.45, warmFrac=0.84, magentaFrac=0"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. 'rays' low vs high is a clear, sensible change: control-rays-low.png shows a handful of broad soft lobes, control-rays-high.png shows dozens of fine shafts (the metrics 'changed:false' for rays is an aggregate-stat blind spot - the frames prove the change; satPixels/meanLuma barely move because the same energy is redistributed). 'spread' visibly widens/dims the fan (meanLuma 14.2 low -> 11.5 high, stdev 24.1 -> 18.4, changed:true). 'sharp' tightens the shafts (warmFrac 0.69 -> 0.53, stdev 19.9 -> 17.5, changed:true). 'speed' shows no difference between stills, which is expected for an animation-rate control and unverifiable from static captures - flagged.",
+      "evidence": [
+        "light-shafts/after/control-rays-low.png",
+        "light-shafts/after/control-rays-high.png",
+        "metrics: control spread low->high meanLuma 14.2->11.5, stdev 24.1->18.4, changed=true; sharp low->high stdev 19.9->17.5, changed=true"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Play frames show live motion - frameDeltaMag 0.93 (play-1), 1.03 (play-2), 3.86 (play-3); play-3 visibly rotates the ray pattern versus play-1, consistent with the claimed gentle shimmer rather than identical dead frames. Control apply latency is consistent at 574-596 ms across all 12 sweep captures - sub-second and uniform, no console or network errors (consoleErrors=[], networkErrors=[]).",
+      "evidence": [
+        "metrics: frameDeltaMag play-1=0.93, play-2=1.03, play-3=3.86; control latencyMs 574-596; consoleErrors=0",
+        "light-shafts/after/play-3.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That looks like real golden sunbeams breaking out of one bright spot - it is smooth and expensive-looking, and when I drag the sliders the rays actually multiply and spread like I expected.'",
+      "evidence": [
+        "light-shafts/after/idle.png",
+        "light-shafts/after/control-rays-high.png",
+        "metrics: bandingScore 0.165-0.186 (smooth), effHue=31 warm gold"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The 'speed' control cannot be verified from static captures - its three sweep frames are visually identical (expected for an animation-rate parameter) and metrics mark it changed:false. Recommend a frame-delta-under-sweep measurement so speed gets real evidence instead of a blind spot.",
+      "evidence": "metrics: control speed changed=false, low/mid/high meanLuma all 13.3, stdev all 22.0; light-shafts/after/control-speed-high.png"
+    },
+    {
+      "note": "Faint squiggly/wormy aliasing threads at the ray convergence apex when ray count is high - only visible on close inspection, edges of the shafts themselves stay soft.",
+      "evidence": "light-shafts/after/control-rays-high.png"
+    },
+    {
+      "note": "Possible sweep-state leak in the capture harness: speed/sharp/spread sweep frames all show the many-fine-rays look (rays near max) rather than the default ~16-ray state seen in idle/play frames, suggesting sweeps run cumulatively. Does not change any per-control conclusion.",
+      "evidence": "light-shafts/after/control-speed-low.png vs light-shafts/after/idle.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

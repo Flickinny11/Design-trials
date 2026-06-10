@@ -1,0 +1,7 @@
+{
+  "name": "smoky-fire",
+  "label": "Rise",
+  "description": "A fire with heavy smoke — orange flames at the base feeding a churning grey smoke column rising above.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

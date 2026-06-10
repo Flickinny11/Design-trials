@@ -1,7 +1,7 @@
 # TOOLBAR WIRING — make the ready toolbar groups real: Animation-picker, Add-Element, Group/Ungroup. (Claude Code, ultracode)
 
 ## MODEL & MODE
-MODEL: claude-opus-4-8 (NOT opusplan; confirm on line 1). 1M context.
+MODEL: claude-fable-5 (NOT opusplan; confirm on line 1). 1M context.
 ORCHESTRATION: ULTRACODE — Dynamic Workflows, PARALLEL subagents in verified waves (reuse `parallel()`).
 CONTRACT-FIRST: freeze the additive binding fields (`animationBindings`, `groupId` — already in INV-8) usage BEFORE
 parallel agents build. MODE: APP IMPLEMENTATION, verified. Edits under kid-kode-landing/src/components/editor/** +

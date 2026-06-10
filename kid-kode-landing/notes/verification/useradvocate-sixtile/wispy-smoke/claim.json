@@ -1,0 +1,7 @@
+{
+  "name": "wispy-smoke",
+  "label": "Rise",
+  "description": "Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

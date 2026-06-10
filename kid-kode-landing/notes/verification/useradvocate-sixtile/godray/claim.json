@@ -1,0 +1,7 @@
+{
+  "name": "godray",
+  "label": "Intensity",
+  "description": "Warm amber light shafts radiate from a slowly rotating source: a small number of soft, wide beams decay away from the source with domain-warped shimmer and a drifting dust sparkle — in-shader volume, no slab seams.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

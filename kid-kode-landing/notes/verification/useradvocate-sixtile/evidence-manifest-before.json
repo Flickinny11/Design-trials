@@ -1,46 +1,102 @@
 {
-  "startedAt": "2026-06-09T19:54:02.051Z",
+  "startedAt": "2026-06-09T22:16:31.527Z",
   "state": "before",
-  "port": 4814,
+  "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "fireball-burst",
+      "tile": "godray",
       "state": "before",
-      "dir": "fireball-burst/before",
+      "dir": "godray/before",
       "claim": {
-        "name": "fireball-burst",
-        "label": "Burst Rate",
-        "description": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward through depth before fading to smoke — looping.",
+        "name": "godray",
+        "label": "Intensity",
+        "description": "Warm amber light shafts radiate from a rotating source, accumulated by marching many samples weighted by decay, with drifting dust shimmer and front-to-back volumetric depth.",
+        "category": "volumetric"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "supernova",
+      "state": "before",
+      "dir": "supernova/before",
+      "claim": {
+        "name": "supernova",
+        "label": "Nova Rate",
+        "description": "A star detonates — a blinding core flash expanding into a shock shell of light and debris, fading to a glowing remnant. Looping volumetric burst.",
         "category": "volumetric"
       },
       "controls": 3,
       "notes": []
     },
     {
-      "tile": "heat-column",
+      "tile": "volumetric-cone",
       "state": "before",
-      "dir": "heat-column/before",
+      "dir": "volumetric-cone/before",
       "claim": {
-        "name": "heat-column",
-        "label": "Rise",
-        "description": "A shimmering volumetric column of rising heat-haze and embers glows faintly over an unseen ember bed, the air distorting and wobbling upward through depth.",
+        "name": "volumetric-cone",
+        "label": "Sweep",
+        "description": "A cone of volumetric light beams down from a point, dust motes drifting in the shaft as it slowly sweeps.",
         "category": "volumetric"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "dust-cloud",
+      "state": "before",
+      "dir": "dust-cloud/before",
+      "claim": {
+        "name": "dust-cloud",
+        "label": "Drift",
+        "description": "A drifting cloud of fine dust catches light — soft low-density haze slowly billowing sideways through real depth with motes glinting.",
+        "category": "smoke"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "ink-bloom",
+      "state": "before",
+      "dir": "ink-bloom/before",
+      "claim": {
+        "name": "ink-bloom",
+        "label": "Speed",
+        "description": "A drop of ink blooms into water — a dark organic cloud unfurling and diffusing through depth with feathered, curling tendrils.",
+        "category": "smoke"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "mist-drift",
+      "state": "before",
+      "dir": "mist-drift/before",
+      "claim": {
+        "name": "mist-drift",
+        "label": "Drift",
+        "description": "A low, thin mist drifts slowly sideways across the scene — soft, near-transparent, ground-hugging haze with real front-to-back depth.",
+        "category": "smoke"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "wispy-smoke",
+      "state": "before",
+      "dir": "wispy-smoke/before",
+      "claim": {
+        "name": "wispy-smoke",
+        "label": "Rise",
+        "description": "Thin curling wisps of smoke rise and dissipate through real depth, slower and softer than billowing smoke.",
+        "category": "smoke"
       },
       "controls": 3,
       "notes": []
     }
   ],
-  "groundTruth": {
-    "tile": "fire-flame",
-    "dir": "fire-flame/ground-truth",
-    "claim": {
-      "name": "fire-flame",
-      "label": "Speed",
-      "description": "Licking flames rise with a hot gradient from white core to orange to red tips.",
-      "category": "volumetric"
-    }
-  },
+  "groundTruth": null,
   "deviceLostAtEnd": 0
 }

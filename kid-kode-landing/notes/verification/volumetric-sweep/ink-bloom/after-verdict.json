@@ -1,0 +1,74 @@
+{
+  "feature": "ink-bloom",
+  "claim": "A drop of dark ink blooms into clear water — a radial bloom front eaten into organic cauliflower tendrils by domain-warped fbm, near-opaque interior with slow internal swirls and soft wispy translucent edges, on a fully transparent background.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing objectively broken in this fresh capture. The bloom is a smooth organic volume with soft wispy edges — no slab banding, tiling, mirror seams, or jagged aliasing (bandingScore 0.175-0.183 on every frame, well under the 0.25 photoreal threshold; play-2.png shows a continuous irregular rim, not shelves or lattice). No console or network errors. The round-3 blocker is RESOLVED: controls now visibly act — scale sweep grows the bloom from a ~10px speck (control-scale-low.png, stdev 3.4) to a large detailed cauliflower mass (control-scale-high.png, stdev 7.1, meanLuma 7.7->8.6), and flow-high visibly smears the bloom diagonally (control-flow-high.png, stdev 6.1->8.7). The only non-acting control on stills is speed (temporal-only). Remaining nit: the effect is dim and small at default (peak meanLuma 9.9), which is a taste call on a transparent-over-near-black composition, not a defect.",
+      "evidence": [
+        "ink-bloom/after/play-2.png",
+        "metrics: bandingScore 0.175-0.183 across all frames (<0.25 = no visible banding); consoleErrors=[] networkErrors=[]",
+        "ink-bloom/after/control-scale-low.png",
+        "ink-bloom/after/control-scale-high.png",
+        "control: scale changed=true (meanLuma 7.7->8.1->8.6, stdev 3.4->5.9->7.1); flow changed=true (stdev 6.1->7.7->8.7)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes, it reads as a dark ink drop blooming. play-1 and play-2 show a near-opaque dark disc expanding with a soft, irregular, wispy translucent rim — billowy lobes that read organic, not geometric — at cool hue 226 deg / sat 0.46 with coolFrac=1.0 and warmFrac=0 (a cold dark-ink palette, consistent with ink in water). play-3 shows the loop resetting to a fresh tiny droplet, which sells the 'drop blooms' narrative, and control-scale-high.png shows the claimed cauliflower-tendril character clearly at large scale. Partial miss: the claimed 'slow internal swirls' are not visible — the interior of play-2 is a flat near-opaque disc — which is a texture-detail shortfall, not a does-not-read-as-claimed failure.",
+      "evidence": [
+        "ink-bloom/after/play-1.png",
+        "ink-bloom/after/play-2.png",
+        "ink-bloom/after/play-3.png",
+        "ink-bloom/after/control-scale-high.png",
+        "metrics: play-2 effHue=226 effSat=0.46 coolFrac=1.0 warmFrac=0 -> cool dark-ink palette matching the claim"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. A first-time user dragging Scale sees an unmistakable change: a tiny speck at scale=1 (control-scale-low.png) grows into a large detailed cauliflower bloom at scale=12 (control-scale-high.png); metrics confirm changed=true. Flow is also clearly sensible: at flow=2 the bloom visibly smears/streaks diagonally (control-flow-high.png vs control-flow-low.png; changed=true). Turbulence visibly changes character — a smooth round rim at 0 (control-turbulence-low.png) becomes a ragged spiky burst at 0.4 (control-turbulence-high.png); the harness marks it changed=false because global luma barely moves (stdev 5.3 vs 5.2), but the shape change is plainly visible in the frames. Speed shows no visible difference on still captures (control-speed-low.png vs control-speed-high.png near-identical; changed=false), which is the expected behavior of a pure temporal-rate control on a paused frame — a flag, not a blocker, since three of four controls visibly respond.",
+      "evidence": [
+        "ink-bloom/after/control-scale-low.png",
+        "ink-bloom/after/control-scale-high.png",
+        "ink-bloom/after/control-flow-high.png",
+        "ink-bloom/after/control-turbulence-low.png",
+        "ink-bloom/after/control-turbulence-high.png",
+        "control: scale changed=true, flow changed=true; speed changed=false (temporal-only); turbulence changed=false by luma metric but rim shape visibly differs between sweep frames"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play loop is alive with visible progression: frameDeltaMag 1.29 (play-1), 0.66 (play-2), 1.99 (play-3), and play-2 vs play-3 are obviously different frames (full bloom vs reset droplet). Control application is sub-second at 583-600ms per set, and the two measurably-changing controls (scale, flow) show their effect in the very next capture. By the rubric's janky test, only one control (speed) lacks any visible change on stills, and that is temporal-only.",
+      "evidence": [
+        "metrics: frameDeltaMag play-1=1.29 play-2=0.66 play-3=1.99 -> continuous motion in play phase",
+        "ink-bloom/after/play-2.png",
+        "ink-bloom/after/play-3.png",
+        "control: latencyMs 583-600 across all sweeps; scale/flow effects visible in next capture (changed=true)"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. The little ink drop blooms with soft wispy edges and resets like a real droplet, and the sliders actually do things now — Scale makes it grow into a big inky cauliflower, Flow smears it sideways, Turbulence makes the edge spiky. Speed didn't seem to do anything when I looked at a single moment, and I wish the blot were a bit bigger and showed some swirling inside, but it looks like ink and it responds to me.",
+      "evidence": [
+        "ink-bloom/after/control-scale-high.png",
+        "ink-bloom/after/control-flow-high.png",
+        "ink-bloom/after/play-2.png",
+        "control: scale changed=true flow changed=true; metrics: bandingScore <=0.183, consoleErrors=[]"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Speed control produces no visible change on still captures (its only honest effect is temporal rate, unverifiable from paused frames). Acceptable per the control-judgement nuance because scale and flow show clear measured changes and turbulence shows a visible shape change — but the harness should gain a temporal probe (two frames at fixed offset) so speed can be positively verified, and the turbulence luma-only changed-detector misses shape-only changes (changed=false despite visibly different rims).",
+      "evidence": "ink-bloom/after/control-speed-low.png vs ink-bloom/after/control-speed-high.png near-identical; control: speed changed=false, turbulence changed=false (stdev 5.3 vs 5.2) while control-turbulence-low.png (smooth ring) vs control-turbulence-high.png (spiky burst) visibly differ"
+    },
+    {
+      "note": "Claimed 'slow internal swirls' are not visible — the bloom interior is a flat near-opaque dark disc; all the visual interest lives in the rim. Texture-detail shortfall vs the claim, subjective severity.",
+      "evidence": "ink-bloom/after/play-2.png : interior is a uniform dark disc; metrics: play-2 stdev 10.6 dominated by rim contrast"
+    },
+    {
+      "note": "Presence at default is modest: the bloom occupies roughly a fifth of frame width at its fullest and overall meanLuma peaks at 9.9 — correct for a transparent composition over the near-black page, but could be punchier/larger for a hero tile.",
+      "evidence": "ink-bloom/after/play-2.png; metrics: play-2 meanLuma=9.9 stdev=10.6"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}
