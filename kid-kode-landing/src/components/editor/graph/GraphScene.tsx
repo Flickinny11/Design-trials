@@ -77,9 +77,15 @@ import {
   type GizmoMode,
 } from '@/lib/editor/canvas-transform-gizmo';
 import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
+// P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — the binding player attaches
+// a node's catalog-primitive animationBindings to the mounted artifact and
+// plays them through the SAME driver dispatch the factory's STEP7 path uses.
+import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
+import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import { TEXT_SPEC_DEFAULT, type PrismHub, type PrismNode, type TextSpec } from '@/lib/prism-graph/types';
 import { getFontRegistry } from '@/lib/prism/text/font-registry';
 import type { TextObjectHandle } from '@/lib/prism/text/contract';
+import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
 // EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
 // in-view slide, hover lift). The canvas-mode KeyframeDemo block below
 // consumes the registry directly so any future addition to the baselines
@@ -2142,6 +2148,41 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
   }, [textSpecKey, buildKey]);
+
+  // P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — preview-app PLAYS the
+  // node's catalog-primitive bindings through the existing Driver model;
+  // canvas mode stays an editing surface (spec §16), so bindings attach ONLY
+  // when previewMode === true. Keyed on the serialized bindings (source ⊕
+  // preview overlay), the build identity, and the mode: any change detaches
+  // (timelines killed, Animatables disposed, driver wiring unsubscribed, the
+  // subject subtree restored to its authored pose) and re-attaches fresh.
+  // Changing `driver` never mutates keyframes (INV-6) — the player builds the
+  // identical timeline for every driver and only the playback wiring differs.
+  const bindingsKey =
+    previewMode && (composedNode.animationBindings?.length ?? 0) > 0
+      ? JSON.stringify(composedNode.animationBindings)
+      : '';
+  useEffect(() => {
+    if (!bindingsKey) return;
+    const g = popRef.current;
+    if (!g) return;
+    const detach = attachAnimationBindings({
+      node: composedNode,
+      root: g,
+      drivers: makeNodeDrivers(getSharedDriverHub()),
+    });
+    return () => {
+      detach();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized bindings
+  }, [bindingsKey, buildKey, previewMode]);
+
+  // P2 §6 — an unbuilt (stage-0 bubble) node is an EDITING affordance, not a
+  // UI element: it renders in canvas mode only. In preview-app (the played
+  // app) unbuilt nodes do not exist ("not rendered in Canvas/Preview until
+  // Built" — the bubble is the canvas-side stage representation). Placed
+  // after all hooks so the hook order is stable across mode toggles.
+  if (previewMode && isStage0Bubble(node)) return null;
 
   return (
     <group

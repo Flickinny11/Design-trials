@@ -6,7 +6,7 @@
 // Text rendering). Forbidden alternatives: THREE.TextGeometry, DOM text
 // overlays, troika-three-text.
 
-import { Group, TextureLoader, type Object3D, type Texture, type ColorRepresentation } from 'three';
+import { Group, LinearFilter, TextureLoader, type Object3D, type Texture, type ColorRepresentation } from 'three';
 import type { BMFontJSON } from 'three-msdf-text-webgpu';
 
 export interface TextOpts {
@@ -119,6 +119,13 @@ export function createFontAtlas(
         }),
         fetchJSON(fontJsonUrl),
       ]);
+      // SHARPNESS (Logan directive 2026-06-10): MSDF atlases must never be
+      // mipmapped — channel-averaged mips corrupt the median distance field
+      // and render small runtime labels soft. Linear/Linear, no mips.
+      tex.generateMipmaps = false;
+      tex.minFilter = LinearFilter;
+      tex.magFilter = LinearFilter;
+      tex.needsUpdate = true;
       atlas = tex;
       data = json;
     })();

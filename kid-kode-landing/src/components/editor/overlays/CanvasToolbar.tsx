@@ -26,12 +26,20 @@
  *     texture/ai-texture with local procedural swatches), outline/glow/
  *     shadow, preset chips, and the text-animation picker surface. Live
  *     styling edits route through usePreviewStateStore (FP-15).
+ *   - Animation — P2 TOOLBAR WIRING (canvas-spec §5 Animation group, §8.2/
+ *     §8.3, criteria 12/13): live hover-play picker over the full Animatable
+ *     registry (shared catalog rig — one WebGPU canvas), click-to-bind onto
+ *     `node.animationBindings`, per-binding driver chips (Load/Time · Scroll
+ *     · Pointer · State · Event), ControlSchema param tuning via the reused
+ *     catalog ControlPanel, reorder + remove. Lives in
+ *     `@/components/editor/animation-tools/`.
+ *   - Add — P2 (canvas-spec §5 Add group): AddElementFlyout at
+ *     `@/components/editor/add-tools/`.
  *
  * DESIGNED-PLACEHOLDER (look complete, never fake output — clicking a deferred
  * tool surfaces a tasteful "coming with <subsystem>" state):
- *   - Add (← Media & Library pipeline), Image (← Media pipeline), 3D Object
- *     (← Mesh & Material systems), Animation
- *     picker + triggers + from-scratch (← Primitive Catalog).
+ *   - Image (← Media pipeline), 3D Object (← Mesh & Material systems),
+ *     Animation from-scratch / bespoke authoring (← bespoke lane).
  *     The Keyframe Editor *toggle* is real
  *     (it slides the §8.4 editor in/out); its track content is designed.
  *
@@ -50,6 +58,8 @@ import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
 import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
+import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout';
+import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -114,11 +124,11 @@ interface ToolGroupMeta {
 const GROUPS: ToolGroupMeta[] = [
   { id: 'transform', icon: 'move', label: 'Transform', wired: true },
   { id: 'selection', icon: 'group', label: 'Selection', wired: true },
-  { id: 'add', icon: 'plus', label: 'Add', wired: false, subsystem: 'Media & Library pipeline' },
+  { id: 'add', icon: 'plus', label: 'Add', wired: true },
   { id: 'image', icon: 'image', label: 'Image', wired: false, subsystem: 'Media pipeline' },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: false, subsystem: 'Mesh & Material systems' },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
-  { id: 'animation', icon: 'wand', label: 'Animation', wired: false, subsystem: 'Primitive Catalog' },
+  { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
   { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
   { id: 'build', icon: 'hammer', label: 'Build', wired: true },
 ];
@@ -753,16 +763,10 @@ export default function CanvasToolbar() {
               />
             )}
             {activeGroup === 'add' && (
-              <PlaceholderTiles
-                subsystem="Media & Library pipeline"
-                onPick={(t) => showComing(t, 'Media & Library pipeline')}
-                tiles={[
-                  { icon: 'plus', label: 'Add Element', hint: 'blank bubble node' },
-                  { icon: 'text', label: 'Add Text', hint: 'MSDF text node' },
-                  { icon: 'layers', label: 'From Library', hint: 'prebuilt clusters' },
-                  { icon: 'refresh', label: 'Change Artifact', hint: 'upload / prompt' },
-                ]}
-              />
+              // P2 (Task C) — wired Add group. Same hub resolution the Text
+              // and Lighting groups share (active hub → selected node's
+              // parent → first hub).
+              <AddElementFlyout hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'image' && (
               <PlaceholderTiles
@@ -801,10 +805,16 @@ export default function CanvasToolbar() {
               />
             )}
             {activeGroup === 'animation' && (
+              // P2 TOOLBAR WIRING (Task B) — wired Animation group: live
+              // catalog picker + binding stack on the selected node. The
+              // keyframe-editor slide-up toggle stays owned here (§8.4).
               <AnimationFlyout
+                node={selectedNode}
+                multiCount={selectedNodeIds.size}
+                onToast={setToast}
                 keyframeOpen={keyframeOpen}
                 onToggleKeyframe={() => setKeyframeOpen((v) => !v)}
-                onComing={(t) => showComing(t, 'Primitive Catalog')}
+                onComing={(t) => showComing(t, 'bespoke authoring lane')}
               />
             )}
             {activeGroup === 'lighting' && (
@@ -858,17 +868,21 @@ function FlyoutShell({
   onClose: () => void;
   children: React.ReactNode;
 }) {
+  // P2: the Animation picker is a 3-across LIVE tile grid — it gets a wider
+  // plate and manages its OWN scroll region (the flyout component clips the
+  // shared-rig canvas to that region), so the shell must not double-scroll.
+  const wide = meta.id === 'animation';
   return (
     <div
       data-component="canvas-toolbar-flyout"
       data-group={meta.id}
       // Hero surface of canvas mode (1 of ≤3 refract surfaces; RefractionDefs
       // is mounted once in page.tsx). Falls back to plain frost below t2.
-      className="w-[252px] ds-glass ds-glass--refract ds-edge--brass max-h-[78vh] overflow-hidden flex ds-reveal"
+      className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[78vh] overflow-hidden flex ds-reveal`}
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the
           glass while long flyouts (Lighting) scroll. */}
-      <div className="flex-1 min-w-0 p-3 flex flex-col gap-2.5 overflow-y-auto">
+      <div className={`flex-1 min-w-0 p-3 flex flex-col gap-2.5 ${wide ? 'min-h-0 overflow-hidden' : 'overflow-y-auto'}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div
@@ -1377,49 +1391,6 @@ function FaderRow({
         className="ds-slider w-full cursor-pointer"
       />
     </div>
-  );
-}
-
-// ── Animation flyout (toggle is real; rest designed) ─────────────────────────
-function AnimationFlyout({
-  keyframeOpen, onToggleKeyframe, onComing,
-}: {
-  keyframeOpen: boolean; onToggleKeyframe: () => void; onComing: (tool: string) => void;
-}) {
-  return (
-    <>
-      <div className="grid grid-cols-2 gap-1.5">
-        <ToolButton icon="sparkle" label="Picker" onClick={() => onComing('Animation Picker (300+ catalog)')} />
-        <ToolButton icon="sliders" label="Edit Anim" onClick={() => onComing('Edit Animation')} />
-      </div>
-
-      <button
-        type="button"
-        data-action="keyframe-toggle"
-        onClick={onToggleKeyframe}
-        className="w-full h-9 rounded-ds-sm flex items-center justify-center gap-2 ds-press hover:brightness-[1.12] transition-all"
-        style={keyframeOpen ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
-      >
-        <Icon name="timeline" size={13} color={keyframeOpen ? DS_ACCENT : DS.text} glow={keyframeOpen} />
-        <span
-          className="text-[11px] font-mono"
-          style={{ color: keyframeOpen ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
-        >
-          {keyframeOpen ? 'Hide Keyframe Editor' : 'Keyframe Editor'}
-        </span>
-      </button>
-
-      <SectionLabel>Triggers · assign driver</SectionLabel>
-      <div className="grid grid-cols-3 gap-1.5">
-        {(['Load', 'Click', 'Hover', 'Scroll', 'Drag'] as const).map((t) => (
-          <ToolButton key={t} icon="zap" label={t} onClick={() => onComing(`${t} driver`)} />
-        ))}
-        <ToolButton icon="wand" label="Scratch" accent={DS.brass300} onClick={() => onComing('Create From Scratch')} />
-      </div>
-      <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
-        Drivers play animation only — behavior wiring lives in the node editor (§1.3).
-      </div>
-    </>
   );
 }
 

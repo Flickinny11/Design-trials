@@ -54,7 +54,10 @@ export default function HubNav() {
   );
 
   return (
-    <div className="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
+    // P2 mobile MUST-FIX (advocate 2026-06-10): on phone widths the mobile
+    // mode toggle owns the bottom-center band — lift the hub trail above it
+    // so the two pills never stack/occlude. Desktop position unchanged.
+    <div className="absolute z-30 bottom-5 max-md:bottom-[84px] left-1/2 -translate-x-1/2 pointer-events-auto">
       <div
         className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
         style={{ borderRadius: 'var(--ds-r-pill)' }}

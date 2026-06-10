@@ -28,6 +28,15 @@ note it in the ledger. These are refinements, not new scope.
   correctly (verified), so hunt the real cause by eye at DPR 2: MSDF screen-space smoothing constants (fwidth term),
   atlas px-per-em too low for on-screen sizes, any canvas CSS-displayed larger than its backing store, texture filtering
   on fill previews. Evidence = zoomed pixel crops BEFORE/AFTER; text must be TACK-SHARP at Retina, no exceptions.
+  [(a) DONE 2026-06-10 — root causes found + fixed: (1) MSDF atlases were MIPMAPPED (TextureLoader default
+  LinearMipmapLinear) — channel-averaged mips corrupt the median distance field and soften small text; both atlas
+  loaders (font-registry.ts + runtime/shared/text.ts) now force Linear/Linear + generateMipmaps:false. (2) Atlas
+  fidelity raised 48px/em·range-4 → 64px/em·range-8 across all three bake pipelines + on-demand cache cleared +
+  .prism rebuilt. (3) Every canvas backing store verified = clientSize × DPR(2). (4) Measured: scene glyph edge
+  transitions = 1 physical px at DPR 2; strip rows 1–2px; DOM crisp. Evidence: text-system/sharp-0[1-5]*.png.
+  (5) HONEST REMAINDER: the still-soft elements at Retina zoom are the BAKED ARTIFACT IMAGES (≈1x-resolution
+  mock-app assets magnified — blue panels/portal in sharp-04) — that is the image-asset pipeline, owned by P3
+  IMAGE/MEDIA (asset resolution + fit/crop); addressed there, not papered over.]
   (b) RAISED BAR (all phases + P6 advocate): surfaces still read FLAT/basic/bland — boring fonts, no dynamics, no
   ambient light refraction, no real materials on toolbar/buttons. From now on: every new surface uses the design
   system's MATERIAL treatments (never flat fills), typography gets deliberate hierarchy/tracking (nothing default-

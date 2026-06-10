@@ -1,7 +1,8 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
+import { gsap } from 'gsap';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
@@ -804,12 +805,114 @@ export default function Page() {
               </>
             )}
           </div>
+          {/* P2 Task C (Logan addendum, 2026-06-10) — mobile mode toggle.
+              Phones previously rendered NO Galaxy|Canvas|Preview-App switch,
+              so they were stuck in the preview-app boot default (RA-17).
+              Rendered UNCONDITIONALLY in the mobile branch (it must stay
+              reachable from preview-app, exactly like the desktop toggle).
+              Same store wiring (setViewMode), canonical 3 literals only
+              (FP-12/FP-14). */}
+          <MobileModeToggle />
         </>
       )}
 
       <SearchPalette />
       <AddNodeDialog />
     </main>
+  );
+}
+
+// P2 Task C (Logan addendum, 2026-06-10) — compact MOBILE mode switch.
+// A bottom-center floating Observatory Brass pill carrying the same canonical
+// 3 view modes as the desktop toggle (RA-06b / SC-065): galaxy | canvas |
+// preview-app — the ONLY legal literals (FP-12/FP-14). Reuses the exact store
+// wiring (useGraphEditorStore.setViewMode). 44px touch targets (h-11),
+// thumb-reachable bottom placement, safe-area-inset aware. The sliding brass
+// thumb is GSAP-driven (transform-only x slide, spring ease; gsap.set under
+// prefers-reduced-motion). Materials: ds-metal housing + ds-grain tooth +
+// specular ds-edge ring, brass-soft gradient thumb with chamfer + brass glow
+// — never flat. Mounted ONLY in the mobile branch; the desktop branch is
+// untouched.
+const MOBILE_MODE_SLOT_W = 88; // px — 3 slots = 264px + housing, fits 320px.
+
+function MobileModeToggle() {
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const setViewMode = useGraphEditorStore((s) => s.setViewMode);
+  const thumbRef = useRef<HTMLSpanElement | null>(null);
+
+  const idx = Math.max(
+    0,
+    (['galaxy', 'canvas', 'preview-app'] as const).indexOf(viewMode),
+  );
+
+  // GSAP slide indicator — translateX only (DS motion contract).
+  useEffect(() => {
+    const thumb = thumbRef.current;
+    if (!thumb) return;
+    const x = idx * MOBILE_MODE_SLOT_W;
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      gsap.set(thumb, { x });
+      return;
+    }
+    gsap.to(thumb, { x, duration: 0.5, ease: 'back.out(1.5)', overwrite: 'auto' });
+  }, [idx]);
+
+  return (
+    <div
+      data-component="mobile-mode-toggle"
+      className="fixed left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+      style={{ bottom: 'calc(10px + env(safe-area-inset-bottom, 0px))' }}
+    >
+      <div
+        className="ds-metal ds-grain ds-edge relative flex items-center p-1"
+        style={{ borderRadius: 'var(--ds-r-pill)' }}
+      >
+        {/* Sliding brass thumb — GSAP x-slide, spring-eased. */}
+        <span
+          ref={thumbRef}
+          aria-hidden
+          className="ds-edge--brass absolute top-1 bottom-1 left-1 rounded-full pointer-events-none"
+          style={{
+            width: MOBILE_MODE_SLOT_W,
+            transform: `translateX(${idx * MOBILE_MODE_SLOT_W}px)`,
+            background: 'var(--ds-grad-brass-soft)',
+            boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-brass)',
+          }}
+        />
+        {([
+          { id: 'galaxy',      label: 'Galaxy' },
+          { id: 'canvas',      label: 'Canvas' },
+          { id: 'preview-app', label: 'Preview' },
+        ] as const).map((m) => {
+          const active = viewMode === m.id;
+          return (
+            <button
+              key={m.id}
+              type="button"
+              data-mode={m.id}
+              onClick={() => setViewMode(m.id)}
+              className={`ds-press relative z-10 h-11 rounded-full text-[11px] font-mono tracking-wide transition-colors ${
+                active
+                  ? 'text-ds-brass-200'
+                  : 'text-ds-text-mid active:text-ds-text'
+              }`}
+              style={{
+                width: MOBILE_MODE_SLOT_W,
+                ...(active
+                  ? { textShadow: `0 0 10px ${dsAlpha(DS.brass400, 0.4)}` }
+                  : {}),
+              }}
+            >
+              {m.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

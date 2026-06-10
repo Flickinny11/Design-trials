@@ -161,9 +161,11 @@ export default function TopBar() {
       </div>
 
       <div className="flex items-center gap-2 pointer-events-auto">
-        {/* Graph health — recessed instrument readout. */}
+        {/* Graph health — recessed instrument readout. Hidden on phone widths
+            (advocate MUST-FIX 2026-06-10: it overflowed the right edge at
+            390px); the health detail lives in the desktop instrument row. */}
         <div
-          className="ds-well flex items-center gap-2 px-3 h-8 rounded-full"
+          className="ds-well max-md:hidden flex items-center gap-2 px-3 h-8 rounded-full"
           style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Graph health"
         >

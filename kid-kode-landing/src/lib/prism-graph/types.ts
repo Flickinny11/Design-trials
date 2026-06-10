@@ -707,6 +707,31 @@ export interface PrismNode {
   // MSDF font glyphs ALWAYS; AI may fill only the texture poured into the
   // glyph coverage, never the letter shapes (INV-11).
   textSpec?: TextSpec;
+  // P2 TOOLBAR WIRING (canvas-spec §5 Animation group, §8.2/§8.3; INV-8
+  // additive). Catalog-primitive bindings applied to this node: each entry =
+  // one Animatable-registry primitive + the Driver that plays it + param
+  // overrides for its ControlSchema. Multiple bindings stack (criterion 13);
+  // `order` is the stacking order. Changing `driver` never edits the
+  // primitive's keyframes (INV-6). Drivers play ANIMATION only, never app
+  // behavior (§1.3). Absent on legacy nodes. Round-trips through save/reload.
+  animationBindings?: AnimationBinding[];
+}
+
+// P2 TOOLBAR WIRING — the frozen binding contract (canvas-spec §8.2 Driver
+// model + §8.3 catalog). Additive only.
+export type AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event';
+
+export interface AnimationBinding {
+  /** Stable id for edit/remove (`ab-<base36>` convention). */
+  id: string;
+  /** Animatable-registry primitive name (the 312-tile catalog). */
+  primitive: string;
+  /** Which Driver plays this binding (canvas-spec §8.2). */
+  driver: AnimationDriverKind;
+  /** ControlSchema param overrides; unset params use the primitive's defaults. */
+  params?: Record<string, number | string | boolean>;
+  /** Stacking order among this node's bindings (criterion 13). */
+  order?: number;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the

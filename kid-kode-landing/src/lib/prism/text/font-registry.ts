@@ -14,7 +14,7 @@
 // The atlas texture is SHARED and registry-owned: consumers (TextObject)
 // must never dispose it; `texture.userData.prismShared = true` marks it.
 
-import { TextureLoader, type Texture } from 'three';
+import { LinearFilter, TextureLoader, type Texture } from 'three';
 
 import { FONTS_API_BASE } from './contract';
 import type {
@@ -120,6 +120,16 @@ export function createFontRegistry(options: FontRegistryOptions = {}): FontRegis
     ]);
     // Registry-owned shared texture — TextObject.dispose() must skip it.
     texture.userData.prismShared = true;
+    // SHARPNESS (Logan directive 2026-06-10): an MSDF atlas must NEVER be
+    // mipmapped — TextureLoader's default LinearMipmapLinear minFilter makes
+    // the sampler read channel-averaged mip levels at small on-screen sizes,
+    // which corrupts the median-of-RGB distance field and renders small text
+    // soft/out-of-focus. Linear/Linear, no mips: the fwidth-based AA in the
+    // material is the only smoothing, and it is exactly 1px in screen space.
+    texture.generateMipmaps = false;
+    texture.minFilter = LinearFilter;
+    texture.magFilter = LinearFilter;
+    texture.needsUpdate = true;
     return { family, weight, texture, data, source: urls.source };
   }
 

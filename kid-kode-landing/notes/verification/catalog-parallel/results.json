@@ -1,22 +1,22 @@
 {
-  "startedAt": "2026-06-10T19:07:36.759Z",
-  "updatedAt": "2026-06-10T20:51:52.789Z",
+  "startedAt": "2026-06-10T22:31:02.243Z",
+  "updatedAt": "2026-06-10T22:57:48.265Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 1,
+      "total": 272,
       "backend": "webgl",
-      "startedAt": "2026-06-10T20:51:34.137Z",
-      "finishedAt": "2026-06-10T20:51:52.788Z",
-      "peakConcurrency": 2,
+      "startedAt": "2026-06-10T22:31:06.277Z",
+      "finishedAt": "2026-06-10T22:56:53.743Z",
+      "peakConcurrency": 3,
       "deviceLostTotal": 0
     },
     "glass": {
       "tier": "glass",
       "total": 40,
       "backend": "webgpu",
-      "startedAt": "2026-06-10T20:44:29.487Z",
-      "finishedAt": "2026-06-10T20:45:26.765Z",
+      "startedAt": "2026-06-10T22:56:54.222Z",
+      "finishedAt": "2026-06-10T22:57:48.264Z",
       "peakConcurrency": 3,
       "deviceLostTotal": 0
     }
@@ -31,7 +31,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:07:47.234Z",
+      "at": "2026-06-10T22:31:13.004Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -44,7 +44,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:07:54.395Z",
+      "at": "2026-06-10T22:31:20.069Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -57,7 +57,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:07:58.680Z",
+      "at": "2026-06-10T22:31:24.567Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -70,7 +70,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:04.781Z",
+      "at": "2026-06-10T22:31:30.024Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -83,20 +83,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:07.739Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "blink": {
-      "name": "blink",
-      "category": "fade",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T19:08:12.167Z",
+      "at": "2026-06-10T22:31:33.713Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -109,7 +96,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:11.959Z",
+      "at": "2026-06-10T22:31:37.387Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "blink": {
+      "name": "blink",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:31:40.920Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -122,7 +122,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:22.749Z",
+      "at": "2026-06-10T22:31:44.226Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -135,7 +135,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:24.846Z",
+      "at": "2026-06-10T22:31:47.498Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -148,7 +148,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:31.405Z",
+      "at": "2026-06-10T22:31:50.909Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -161,7 +161,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:33.333Z",
+      "at": "2026-06-10T22:31:54.256Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -174,7 +174,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:35.237Z",
+      "at": "2026-06-10T22:31:58.046Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -187,7 +187,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:37.056Z",
+      "at": "2026-06-10T22:32:01.884Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -200,7 +200,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:37.704Z",
+      "at": "2026-06-10T22:32:05.305Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -213,20 +213,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:44.199Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "card-fold": {
-      "name": "card-fold",
-      "category": "transform",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T19:08:48.390Z",
+      "at": "2026-06-10T22:32:08.450Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -239,7 +226,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:46.454Z",
+      "at": "2026-06-10T22:32:11.942Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "card-fold": {
+      "name": "card-fold",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:32:15.390Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -252,7 +252,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:51.138Z",
+      "at": "2026-06-10T22:32:19.007Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -265,20 +265,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:08:51.453Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "clouds": {
-      "name": "clouds",
-      "category": "volumetric",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:14:43.692Z",
+      "at": "2026-06-10T22:32:22.352Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -291,42 +278,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:14:36.202Z",
+      "at": "2026-06-10T22:32:25.749Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "corner-peel": {
-      "name": "corner-peel",
-      "category": "transform",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "focus attr not confirmed"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-10T19:09:05.744Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "confetti": {
-      "name": "confetti",
-      "category": "particles",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "focus attr not confirmed"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-10T19:09:05.732Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "cosmic-dust": {
-      "name": "cosmic-dust",
+    "clouds": {
+      "name": "clouds",
       "category": "volumetric",
       "renders": true,
       "plays": true,
@@ -334,7 +291,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:10:36.013Z",
+      "at": "2026-06-10T22:32:29.563Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -347,46 +304,46 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:14:47.741Z",
+      "at": "2026-06-10T22:32:32.648Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "cross-wipe": {
-      "name": "cross-wipe",
-      "category": "mask",
+    "confetti": {
+      "name": "confetti",
+      "category": "particles",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:11:47.155Z",
+      "at": "2026-06-10T22:32:36.290Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "crumble-to-particles": {
-      "name": "crumble-to-particles",
-      "category": "displacement",
+    "corner-peel": {
+      "name": "corner-peel",
+      "category": "transform",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:14:57.836Z",
+      "at": "2026-06-10T22:32:39.258Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "crumble": {
-      "name": "crumble",
-      "category": "displacement",
+    "cosmic-dust": {
+      "name": "cosmic-dust",
+      "category": "volumetric",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:00.984Z",
+      "at": "2026-06-10T22:32:43.297Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -399,7 +356,46 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:14:53.970Z",
+      "at": "2026-06-10T22:32:46.605Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "cross-wipe": {
+      "name": "cross-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:32:50.591Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "crumble-to-particles": {
+      "name": "crumble-to-particles",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:32:53.967Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "crumble": {
+      "name": "crumble",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:32:57.246Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -412,7 +408,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:05.106Z",
+      "at": "2026-06-10T22:33:00.651Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -425,7 +421,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:07.700Z",
+      "at": "2026-06-10T22:33:04.119Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -438,7 +434,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:11.997Z",
+      "at": "2026-06-10T22:33:07.281Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -451,7 +447,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:14.460Z",
+      "at": "2026-06-10T22:33:10.964Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -464,20 +460,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:19.194Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "defocus-pulse": {
-      "name": "defocus-pulse",
-      "category": "blur",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:15:25.800Z",
+      "at": "2026-06-10T22:33:14.401Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -490,7 +473,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:21.962Z",
+      "at": "2026-06-10T22:33:17.818Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "defocus-pulse": {
+      "name": "defocus-pulse",
+      "category": "blur",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:33:21.205Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -503,20 +499,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:29.234Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "displacement-transition": {
-      "name": "displacement-transition",
-      "category": "displacement",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:15:36.230Z",
+      "at": "2026-06-10T22:33:24.816Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -529,20 +512,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:32.727Z",
+      "at": "2026-06-10T22:33:28.253Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "dissolve-noise": {
-      "name": "dissolve-noise",
-      "category": "fade",
+    "displacement-transition": {
+      "name": "displacement-transition",
+      "category": "displacement",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:39.775Z",
+      "at": "2026-06-10T22:33:31.417Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -555,7 +538,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:18:33.893Z",
+      "at": "2026-06-10T22:33:34.686Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "dissolve-noise": {
+      "name": "dissolve-noise",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:33:38.639Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -568,7 +564,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:43.339Z",
+      "at": "2026-06-10T22:33:41.762Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -581,7 +577,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:47.066Z",
+      "at": "2026-06-10T22:33:45.497Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -594,7 +590,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:20:37.249Z",
+      "at": "2026-06-10T22:33:48.807Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -607,7 +603,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:50.417Z",
+      "at": "2026-06-10T22:33:52.307Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -620,7 +616,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:53.695Z",
+      "at": "2026-06-10T22:33:55.792Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -633,7 +629,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:15:57.097Z",
+      "at": "2026-06-10T22:33:59.185Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -646,7 +642,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:00.779Z",
+      "at": "2026-06-10T22:34:02.522Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -655,11 +651,11 @@
       "category": "smoke",
       "renders": true,
       "plays": false,
-      "controls": true,
+      "controls": false,
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:22.047Z",
+      "at": "2026-06-10T22:34:05.869Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -672,7 +668,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:23:29.573Z",
+      "at": "2026-06-10T22:34:09.063Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -685,7 +681,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:07.629Z",
+      "at": "2026-06-10T22:34:12.488Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -698,7 +694,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:11.256Z",
+      "at": "2026-06-10T22:34:15.901Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -711,7 +707,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:14.645Z",
+      "at": "2026-06-10T22:34:19.291Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -724,7 +720,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:18.574Z",
+      "at": "2026-06-10T22:34:22.780Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -737,7 +733,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:21.075Z",
+      "at": "2026-06-10T22:34:26.130Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -750,7 +746,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:25.688Z",
+      "at": "2026-06-10T22:34:29.739Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -763,7 +759,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:27.992Z",
+      "at": "2026-06-10T22:34:33.123Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -776,7 +772,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:32.715Z",
+      "at": "2026-06-10T22:34:36.668Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -789,7 +785,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:35.396Z",
+      "at": "2026-06-10T22:34:39.977Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -802,7 +798,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:39.785Z",
+      "at": "2026-06-10T22:34:43.658Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -815,7 +811,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:42.317Z",
+      "at": "2026-06-10T22:34:47.027Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -828,7 +824,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:46.737Z",
+      "at": "2026-06-10T22:34:50.423Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -841,33 +837,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:49.416Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "fireflies": {
-      "name": "fireflies",
-      "category": "particles",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:17:01.300Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "fireball-burst": {
-      "name": "fireball-burst",
-      "category": "volumetric",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:16:56.630Z",
+      "at": "2026-06-10T22:34:53.773Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -880,7 +850,33 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:16:53.841Z",
+      "at": "2026-06-10T22:34:57.587Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "fireball-burst": {
+      "name": "fireball-burst",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:35:00.905Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "fireflies": {
+      "name": "fireflies",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:35:04.324Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -893,7 +889,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:03.639Z",
+      "at": "2026-06-10T22:35:07.664Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -906,7 +902,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:08.362Z",
+      "at": "2026-06-10T22:35:10.983Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -919,7 +915,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:10.646Z",
+      "at": "2026-06-10T22:35:14.332Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -932,7 +928,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:15.609Z",
+      "at": "2026-06-10T22:35:17.975Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -945,7 +941,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:17.995Z",
+      "at": "2026-06-10T22:35:21.251Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -958,7 +954,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:22.585Z",
+      "at": "2026-06-10T22:35:24.656Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -971,7 +967,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:24.852Z",
+      "at": "2026-06-10T22:35:27.894Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -984,7 +980,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:29.720Z",
+      "at": "2026-06-10T22:35:31.411Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -997,7 +993,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:32.014Z",
+      "at": "2026-06-10T22:35:34.751Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1010,7 +1006,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:36.454Z",
+      "at": "2026-06-10T22:35:38.196Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1023,7 +1019,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:36:37.572Z",
+      "at": "2026-06-10T22:35:41.402Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1036,7 +1032,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:38.795Z",
+      "at": "2026-06-10T22:35:44.681Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1049,7 +1045,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:43.342Z",
+      "at": "2026-06-10T22:35:48.081Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1062,7 +1058,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:45.930Z",
+      "at": "2026-06-10T22:35:51.330Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1075,7 +1071,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:50.476Z",
+      "at": "2026-06-10T22:35:55.042Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1088,7 +1084,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:53.150Z",
+      "at": "2026-06-10T22:35:58.030Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1101,7 +1097,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:57.409Z",
+      "at": "2026-06-10T22:36:01.392Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1114,7 +1110,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:40:22.579Z",
+      "at": "2026-06-10T22:36:04.756Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1127,20 +1123,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:17:59.759Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "glint-streak": {
-      "name": "glint-streak",
-      "category": "shimmer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:18:06.843Z",
+      "at": "2026-06-10T22:36:08.001Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1153,7 +1136,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:04.391Z",
+      "at": "2026-06-10T22:36:11.399Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "glint-streak": {
+      "name": "glint-streak",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:36:14.702Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1166,7 +1162,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:11.395Z",
+      "at": "2026-06-10T22:36:18.144Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1179,7 +1175,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:13.819Z",
+      "at": "2026-06-10T22:36:21.816Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1192,20 +1188,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:18.822Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "gravity-drop": {
-      "name": "gravity-drop",
-      "category": "particles",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:18:25.842Z",
+      "at": "2026-06-10T22:36:25.221Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1218,7 +1201,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:22.351Z",
+      "at": "2026-06-10T22:36:29.698Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "gravity-drop": {
+      "name": "gravity-drop",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:36:32.363Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1231,20 +1227,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:29.527Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "heat-haze-warp": {
-      "name": "heat-haze-warp",
-      "category": "wave",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:18:37.137Z",
+      "at": "2026-06-10T22:36:36.949Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1257,7 +1240,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:33.246Z",
+      "at": "2026-06-10T22:36:39.142Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "heat-haze-warp": {
+      "name": "heat-haze-warp",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:36:43.707Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1270,7 +1266,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:40.346Z",
+      "at": "2026-06-10T22:36:46.087Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1283,7 +1279,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:44.294Z",
+      "at": "2026-06-10T22:36:50.721Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1296,7 +1292,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:47.661Z",
+      "at": "2026-06-10T22:36:52.879Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1304,12 +1300,12 @@
       "name": "hover-lift",
       "category": "pointer",
       "renders": true,
-      "plays": true,
+      "plays": false,
       "controls": false,
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:29.429Z",
+      "at": "2026-06-10T22:36:57.539Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1322,33 +1318,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:54.650Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "ink-spread": {
-      "name": "ink-spread",
-      "category": "wave",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:19:01.474Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "ink-swirl": {
-      "name": "ink-swirl",
-      "category": "smoke",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:19:05.104Z",
+      "at": "2026-06-10T22:36:59.825Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1361,12 +1331,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:18:58.161Z",
+      "at": "2026-06-10T22:37:04.109Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "jelly-surface": {
-      "name": "jelly-surface",
+    "ink-spread": {
+      "name": "ink-spread",
       "category": "wave",
       "renders": true,
       "plays": true,
@@ -1374,7 +1344,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:12.065Z",
+      "at": "2026-06-10T22:37:06.590Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "ink-swirl": {
+      "name": "ink-swirl",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:37:10.815Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1387,7 +1370,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:08.484Z",
+      "at": "2026-06-10T22:37:12.954Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "jelly-surface": {
+      "name": "jelly-surface",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:37:17.512Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1400,7 +1396,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:15.709Z",
+      "at": "2026-06-10T22:37:19.896Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1413,7 +1409,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:19.424Z",
+      "at": "2026-06-10T22:37:24.532Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1426,7 +1422,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:23.015Z",
+      "at": "2026-06-10T22:37:26.999Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1439,7 +1435,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:33.696Z",
+      "at": "2026-06-10T22:37:31.613Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1452,7 +1448,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:30.224Z",
+      "at": "2026-06-10T22:37:33.819Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1465,20 +1461,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:33.505Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "magma-cracks": {
-      "name": "magma-cracks",
-      "category": "volumetric",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:19:40.782Z",
+      "at": "2026-06-10T22:37:38.338Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1491,7 +1474,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:37.470Z",
+      "at": "2026-06-10T22:37:40.643Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "magma-cracks": {
+      "name": "magma-cracks",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:37:45.557Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1504,7 +1500,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:45.256Z",
+      "at": "2026-06-10T22:37:47.899Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1517,7 +1513,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:47.417Z",
+      "at": "2026-06-10T22:37:52.352Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1530,7 +1526,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:51.985Z",
+      "at": "2026-06-10T22:37:54.721Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1543,7 +1539,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T19:57:07.366Z",
+      "at": "2026-06-10T22:37:59.071Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1556,7 +1552,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:54.433Z",
+      "at": "2026-06-10T22:38:01.423Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1569,7 +1565,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:19:59.061Z",
+      "at": "2026-06-10T22:38:05.944Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1582,7 +1578,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:01.310Z",
+      "at": "2026-06-10T22:38:08.134Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1595,7 +1591,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:05.830Z",
+      "at": "2026-06-10T22:38:12.889Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1608,7 +1604,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:08.474Z",
+      "at": "2026-06-10T22:38:15.045Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1621,7 +1617,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:12.952Z",
+      "at": "2026-06-10T22:38:19.631Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1634,7 +1630,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:15.294Z",
+      "at": "2026-06-10T22:38:22.308Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1647,7 +1643,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:19.624Z",
+      "at": "2026-06-10T22:38:26.370Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1660,7 +1656,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:22.644Z",
+      "at": "2026-06-10T22:38:29.037Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1673,7 +1669,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:51:41.168Z",
+      "at": "2026-06-10T22:38:33.556Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1686,7 +1682,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:29.716Z",
+      "at": "2026-06-10T22:38:36.120Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1699,7 +1695,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:35.135Z",
+      "at": "2026-06-10T22:38:41.329Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1712,7 +1708,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:36.648Z",
+      "at": "2026-06-10T22:38:42.773Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1725,7 +1721,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:42.442Z",
+      "at": "2026-06-10T22:38:48.243Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1738,20 +1734,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:43.786Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "parallax-layers": {
-      "name": "parallax-layers",
-      "category": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:20:50.930Z",
+      "at": "2026-06-10T22:38:49.562Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1764,7 +1747,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:49.587Z",
+      "at": "2026-06-10T22:38:55.220Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "parallax-layers": {
+      "name": "parallax-layers",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:38:56.719Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1777,7 +1773,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:56.209Z",
+      "at": "2026-06-10T22:39:02.480Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1790,20 +1786,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:20:57.943Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pendulum-settle": {
-      "name": "pendulum-settle",
-      "category": "transform",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:21:04.973Z",
+      "at": "2026-06-10T22:39:03.894Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1816,7 +1799,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:02.707Z",
+      "at": "2026-06-10T22:39:09.279Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pendulum-settle": {
+      "name": "pendulum-settle",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:39:10.759Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1829,7 +1825,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:09.709Z",
+      "at": "2026-06-10T22:39:16.455Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1842,7 +1838,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:12.121Z",
+      "at": "2026-06-10T22:39:17.746Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1855,7 +1851,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:16.612Z",
+      "at": "2026-06-10T22:39:23.477Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1868,7 +1864,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:18.924Z",
+      "at": "2026-06-10T22:39:24.747Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1881,7 +1877,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:23.664Z",
+      "at": "2026-06-10T22:39:30.254Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1894,7 +1890,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:25.925Z",
+      "at": "2026-06-10T22:39:31.704Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1907,7 +1903,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:30.751Z",
+      "at": "2026-06-10T22:39:37.366Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1920,7 +1916,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:42.729Z",
+      "at": "2026-06-10T22:39:38.488Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1933,7 +1929,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:37.669Z",
+      "at": "2026-06-10T22:39:44.312Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1946,7 +1942,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:40.468Z",
+      "at": "2026-06-10T22:39:45.584Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1959,7 +1955,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:45.171Z",
+      "at": "2026-06-10T22:39:51.424Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1967,12 +1963,12 @@
       "name": "pointer-press",
       "category": "pointer",
       "renders": true,
-      "plays": true,
+      "plays": false,
       "controls": false,
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:46.969Z",
+      "at": "2026-06-10T22:39:52.758Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1985,7 +1981,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:52.047Z",
+      "at": "2026-06-10T22:39:58.355Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1998,7 +1994,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:54.547Z",
+      "at": "2026-06-10T22:39:59.652Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2011,7 +2007,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:21:59.189Z",
+      "at": "2026-06-10T22:40:05.567Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2024,7 +2020,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:01.461Z",
+      "at": "2026-06-10T22:40:06.349Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2037,7 +2033,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:06.294Z",
+      "at": "2026-06-10T22:40:12.120Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2050,7 +2046,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:08.436Z",
+      "at": "2026-06-10T22:40:12.811Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2063,7 +2059,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:13.169Z",
+      "at": "2026-06-10T22:40:18.664Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2076,7 +2072,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:15.458Z",
+      "at": "2026-06-10T22:40:19.778Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2089,7 +2085,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:20.128Z",
+      "at": "2026-06-10T22:40:25.487Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2102,7 +2098,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:22.612Z",
+      "at": "2026-06-10T22:40:26.593Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2115,7 +2111,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:27.407Z",
+      "at": "2026-06-10T22:40:32.836Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2128,7 +2124,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:29.921Z",
+      "at": "2026-06-10T22:40:33.914Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2141,7 +2137,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:34.696Z",
+      "at": "2026-06-10T22:40:39.842Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2154,7 +2150,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:37.191Z",
+      "at": "2026-06-10T22:40:40.997Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2167,7 +2163,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:42.070Z",
+      "at": "2026-06-10T22:40:46.664Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2180,7 +2176,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:44.472Z",
+      "at": "2026-06-10T22:40:47.986Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2193,7 +2189,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:48.970Z",
+      "at": "2026-06-10T22:40:53.410Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2206,7 +2202,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:51.599Z",
+      "at": "2026-06-10T22:40:54.716Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2219,7 +2215,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:56.356Z",
+      "at": "2026-06-10T22:41:00.383Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2232,7 +2228,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:22:58.895Z",
+      "at": "2026-06-10T22:41:01.762Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2245,7 +2241,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:03.815Z",
+      "at": "2026-06-10T22:41:07.906Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2258,7 +2254,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:05.942Z",
+      "at": "2026-06-10T22:41:08.307Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2271,7 +2267,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:10.931Z",
+      "at": "2026-06-10T22:41:14.847Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2284,7 +2280,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:12.755Z",
+      "at": "2026-06-10T22:41:15.154Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2297,7 +2293,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:18.486Z",
+      "at": "2026-06-10T22:41:21.388Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2310,7 +2306,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:19.798Z",
+      "at": "2026-06-10T22:41:21.919Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2323,7 +2319,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:25.744Z",
+      "at": "2026-06-10T22:41:27.933Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2336,7 +2332,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T20:46:49.624Z",
+      "at": "2026-06-10T22:41:29.275Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2349,7 +2345,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:32.803Z",
+      "at": "2026-06-10T22:41:34.884Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2362,20 +2358,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:33.659Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scrub-morph": {
-      "name": "scrub-morph",
-      "category": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:23:40.545Z",
+      "at": "2026-06-10T22:41:35.995Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2388,7 +2371,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:40.121Z",
+      "at": "2026-06-10T22:41:41.947Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "scrub-morph": {
+      "name": "scrub-morph",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:41:42.857Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2401,7 +2397,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:47.615Z",
+      "at": "2026-06-10T22:41:48.722Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2414,7 +2410,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:47.616Z",
+      "at": "2026-06-10T22:41:49.950Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2427,7 +2423,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:54.799Z",
+      "at": "2026-06-10T22:41:55.830Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2440,7 +2436,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:23:54.940Z",
+      "at": "2026-06-10T22:41:57.169Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2453,7 +2449,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:02.052Z",
+      "at": "2026-06-10T22:42:02.979Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2466,20 +2462,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:02.052Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "smoke-burst": {
-      "name": "smoke-burst",
-      "category": "smoke",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:24:09.241Z",
+      "at": "2026-06-10T22:42:04.089Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2492,12 +2475,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:09.118Z",
+      "at": "2026-06-10T22:42:09.741Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "smoke-ring": {
-      "name": "smoke-ring",
+    "smoke-burst": {
+      "name": "smoke-burst",
       "category": "smoke",
       "renders": true,
       "plays": true,
@@ -2505,7 +2488,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:16.350Z",
+      "at": "2026-06-10T22:42:10.910Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2518,7 +2501,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:16.153Z",
+      "at": "2026-06-10T22:42:16.625Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "smoke-ring": {
+      "name": "smoke-ring",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:42:17.906Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2531,7 +2527,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:23.257Z",
+      "at": "2026-06-10T22:42:23.477Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2544,20 +2540,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:23.324Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "snow-globe": {
-      "name": "snow-globe",
-      "category": "particles",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:24:40.533Z",
+      "at": "2026-06-10T22:42:24.741Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2570,12 +2553,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:24:40.533Z",
+      "at": "2026-06-10T22:42:30.444Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "spark-shower": {
-      "name": "spark-shower",
+    "snow-globe": {
+      "name": "snow-globe",
       "category": "particles",
       "renders": true,
       "plays": true,
@@ -2583,7 +2566,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:25:13.209Z",
+      "at": "2026-06-10T22:42:31.810Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2596,7 +2579,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:25:13.014Z",
+      "at": "2026-06-10T22:42:37.392Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "spark-shower": {
+      "name": "spark-shower",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:42:38.261Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2609,7 +2605,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:25:39.802Z",
+      "at": "2026-06-10T22:42:43.799Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2622,7 +2618,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:25:42.070Z",
+      "at": "2026-06-10T22:42:44.927Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2635,7 +2631,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:26:06.494Z",
+      "at": "2026-06-10T22:42:50.672Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2648,7 +2644,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:46:54.214Z",
+      "at": "2026-06-10T22:42:51.987Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2661,7 +2657,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:26:29.866Z",
+      "at": "2026-06-10T22:42:57.460Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2674,7 +2670,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:26:35.470Z",
+      "at": "2026-06-10T22:42:58.699Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2687,7 +2683,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:46:59.784Z",
+      "at": "2026-06-10T22:43:04.409Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2700,7 +2696,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:27:04.251Z",
+      "at": "2026-06-10T22:43:05.591Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2713,7 +2709,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:27:25.843Z",
+      "at": "2026-06-10T22:43:11.639Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2726,7 +2722,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:27:41.003Z",
+      "at": "2026-06-10T22:43:13.440Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2739,7 +2735,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:27:56.290Z",
+      "at": "2026-06-10T22:43:18.087Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2752,7 +2748,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:28:13.550Z",
+      "at": "2026-06-10T22:43:20.140Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2765,7 +2761,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:28:19.002Z",
+      "at": "2026-06-10T22:43:24.786Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2778,7 +2774,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:28:44.358Z",
+      "at": "2026-06-10T22:43:26.845Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2791,7 +2787,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:28:46.217Z",
+      "at": "2026-06-10T22:43:32.043Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2804,7 +2800,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:29:07.800Z",
+      "at": "2026-06-10T22:43:33.873Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2817,7 +2813,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:29:19.178Z",
+      "at": "2026-06-10T22:43:39.653Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2830,7 +2826,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:29:34.457Z",
+      "at": "2026-06-10T22:43:40.790Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2843,7 +2839,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:29:47.862Z",
+      "at": "2026-06-10T22:43:46.288Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2856,7 +2852,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:29:55.879Z",
+      "at": "2026-06-10T22:43:47.212Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2869,7 +2865,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:30:17.214Z",
+      "at": "2026-06-10T22:43:53.345Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2882,20 +2878,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:30:28.828Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "text-counter-roll": {
-      "name": "text-counter-roll",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:30:53.581Z",
+      "at": "2026-06-10T22:43:54.290Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2908,12 +2891,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:31:01.367Z",
+      "at": "2026-06-10T22:44:01.493Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "text-elastic-in": {
-      "name": "text-elastic-in",
+    "text-counter-roll": {
+      "name": "text-counter-roll",
       "category": "text",
       "renders": true,
       "plays": true,
@@ -2921,7 +2904,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:47:20.038Z",
+      "at": "2026-06-10T22:44:01.443Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2934,7 +2917,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:31:30.175Z",
+      "at": "2026-06-10T22:44:21.884Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "text-elastic-in": {
+      "name": "text-elastic-in",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:44:16.419Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2947,7 +2943,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:32:02.541Z",
+      "at": "2026-06-10T22:44:52.478Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2960,7 +2956,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:32:06.361Z",
+      "at": "2026-06-10T22:44:52.480Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2973,7 +2969,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:32:40.837Z",
+      "at": "2026-06-10T22:45:28.406Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2986,7 +2982,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:32:38.931Z",
+      "at": "2026-06-10T22:45:24.672Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2999,7 +2995,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:33:15.554Z",
+      "at": "2026-06-10T22:45:59.078Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3012,7 +3008,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:33:13.499Z",
+      "at": "2026-06-10T22:45:57.021Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3025,7 +3021,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:33:48.277Z",
+      "at": "2026-06-10T22:46:29.776Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3038,20 +3034,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:47:48.203Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "text-pop-each": {
-      "name": "text-pop-each",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:34:24.594Z",
+      "at": "2026-06-10T22:46:33.653Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3064,7 +3047,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:34:20.843Z",
+      "at": "2026-06-10T22:47:04.190Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "text-pop-each": {
+      "name": "text-pop-each",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:47:08.033Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3077,7 +3073,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:34:57.705Z",
+      "at": "2026-06-10T22:47:34.949Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3090,20 +3086,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:34:57.770Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "text-shake": {
-      "name": "text-shake",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:35:31.924Z",
+      "at": "2026-06-10T22:47:39.315Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3116,12 +3099,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:35:33.708Z",
+      "at": "2026-06-10T22:48:13.550Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "text-swing-in": {
-      "name": "text-swing-in",
+    "text-shake": {
+      "name": "text-shake",
       "category": "text",
       "renders": true,
       "plays": true,
@@ -3129,7 +3112,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:36:10.077Z",
+      "at": "2026-06-10T22:48:09.860Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3142,7 +3125,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:36:08.011Z",
+      "at": "2026-06-10T22:48:42.284Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "text-swing-in": {
+      "name": "text-swing-in",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:48:46.092Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3155,7 +3151,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:36:42.574Z",
+      "at": "2026-06-10T22:49:16.486Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3168,7 +3164,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:36:42.772Z",
+      "at": "2026-06-10T22:49:20.278Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3181,7 +3177,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:37:17.395Z",
+      "at": "2026-06-10T22:49:54.331Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3194,7 +3190,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:37:13.504Z",
+      "at": "2026-06-10T22:49:52.701Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3207,7 +3203,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:37:44.165Z",
+      "at": "2026-06-10T22:50:22.723Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3220,7 +3216,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:37:49.744Z",
+      "at": "2026-06-10T22:50:23.036Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3233,20 +3229,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:38:09.018Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "trampoline": {
-      "name": "trampoline",
-      "category": "wave",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:38:34.499Z",
+      "at": "2026-06-10T22:50:47.823Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3259,7 +3242,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:38:22.727Z",
+      "at": "2026-06-10T22:50:55.290Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "trampoline": {
+      "name": "trampoline",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:51:15.805Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3272,7 +3268,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:38:55.869Z",
+      "at": "2026-06-10T22:51:27.202Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3285,7 +3281,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:38:56.009Z",
+      "at": "2026-06-10T22:51:44.251Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3298,20 +3294,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:39:21.095Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "velvet-sheen": {
-      "name": "velvet-sheen",
-      "category": "shimmer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:39:32.835Z",
+      "at": "2026-06-10T22:51:55.765Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3324,20 +3307,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:39:47.898Z",
+      "at": "2026-06-10T22:52:18.913Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "vortex": {
-      "name": "vortex",
-      "category": "particles",
+    "velvet-sheen": {
+      "name": "velvet-sheen",
+      "category": "shimmer",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:40:05.145Z",
+      "at": "2026-06-10T22:52:15.270Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3350,20 +3333,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:40:18.570Z",
+      "at": "2026-06-10T22:52:46.119Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "wave-cross": {
-      "name": "wave-cross",
-      "category": "wave",
+    "vortex": {
+      "name": "vortex",
+      "category": "particles",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:40:29.931Z",
+      "at": "2026-06-10T22:52:45.854Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3376,7 +3359,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:40:45.395Z",
+      "at": "2026-06-10T22:53:14.284Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "wave-cross": {
+      "name": "wave-cross",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:53:10.713Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3389,7 +3385,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:40:54.996Z",
+      "at": "2026-06-10T22:53:35.786Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3402,7 +3398,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:41:08.804Z",
+      "at": "2026-06-10T22:53:35.992Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3415,7 +3411,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:41:22.261Z",
+      "at": "2026-06-10T22:54:00.754Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3428,20 +3424,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:41:43.810Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "wedge-wipe": {
-      "name": "wedge-wipe",
-      "category": "mask",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T20:41:49.342Z",
+      "at": "2026-06-10T22:54:08.534Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3454,7 +3437,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:42:07.063Z",
+      "at": "2026-06-10T22:54:31.831Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "wedge-wipe": {
+      "name": "wedge-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T22:54:30.066Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3467,7 +3463,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:42:18.684Z",
+      "at": "2026-06-10T22:54:55.045Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3480,7 +3476,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:42:30.517Z",
+      "at": "2026-06-10T22:55:00.760Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3493,7 +3489,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:42:49.692Z",
+      "at": "2026-06-10T22:55:21.918Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3506,7 +3502,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:42:57.537Z",
+      "at": "2026-06-10T22:55:29.818Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3519,7 +3515,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:43:16.861Z",
+      "at": "2026-06-10T22:55:52.948Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3532,7 +3528,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:43:30.470Z",
+      "at": "2026-06-10T22:55:55.116Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3545,7 +3541,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:43:43.900Z",
+      "at": "2026-06-10T22:56:20.251Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3558,7 +3554,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:43:57.651Z",
+      "at": "2026-06-10T22:56:22.226Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3571,7 +3567,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:32.992Z",
+      "at": "2026-06-10T22:56:57.459Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3584,7 +3580,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:35.744Z",
+      "at": "2026-06-10T22:57:00.216Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3597,7 +3593,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:36.507Z",
+      "at": "2026-06-10T22:57:00.745Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3610,7 +3606,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:38.778Z",
+      "at": "2026-06-10T22:57:03.222Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3623,7 +3619,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:39.097Z",
+      "at": "2026-06-10T22:57:03.534Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3636,7 +3632,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:39.845Z",
+      "at": "2026-06-10T22:57:04.050Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3649,7 +3645,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:42.282Z",
+      "at": "2026-06-10T22:57:06.586Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3662,7 +3658,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:42.537Z",
+      "at": "2026-06-10T22:57:06.939Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3675,7 +3671,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:43.280Z",
+      "at": "2026-06-10T22:57:07.433Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3688,7 +3684,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:45.670Z",
+      "at": "2026-06-10T22:57:09.904Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3701,7 +3697,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:45.925Z",
+      "at": "2026-06-10T22:57:10.345Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3714,7 +3710,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:46.590Z",
+      "at": "2026-06-10T22:57:10.804Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3727,7 +3723,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:49.096Z",
+      "at": "2026-06-10T22:57:13.244Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3740,7 +3736,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:49.323Z",
+      "at": "2026-06-10T22:57:13.692Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3753,7 +3749,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:50.010Z",
+      "at": "2026-06-10T22:57:14.197Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3766,7 +3762,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:52.486Z",
+      "at": "2026-06-10T22:57:16.570Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3779,7 +3775,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:52.726Z",
+      "at": "2026-06-10T22:57:17.072Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3792,7 +3788,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:53.378Z",
+      "at": "2026-06-10T22:57:17.510Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3805,7 +3801,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:55.882Z",
+      "at": "2026-06-10T22:57:20.030Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3818,7 +3814,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:56.214Z",
+      "at": "2026-06-10T22:57:20.522Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3831,7 +3827,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:56.973Z",
+      "at": "2026-06-10T22:57:20.954Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3844,7 +3840,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:59.261Z",
+      "at": "2026-06-10T22:57:23.415Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3857,7 +3853,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:44:59.687Z",
+      "at": "2026-06-10T22:57:23.907Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3870,7 +3866,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:00.361Z",
+      "at": "2026-06-10T22:57:24.346Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3883,7 +3879,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:02.653Z",
+      "at": "2026-06-10T22:57:26.805Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3896,7 +3892,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:03.103Z",
+      "at": "2026-06-10T22:57:27.289Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3909,7 +3905,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:03.764Z",
+      "at": "2026-06-10T22:57:27.745Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3922,7 +3918,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:06.105Z",
+      "at": "2026-06-10T22:57:30.206Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3935,7 +3931,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:06.486Z",
+      "at": "2026-06-10T22:57:30.722Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3948,7 +3944,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:07.177Z",
+      "at": "2026-06-10T22:57:31.163Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3961,7 +3957,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:09.681Z",
+      "at": "2026-06-10T22:57:33.628Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3974,7 +3970,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:09.982Z",
+      "at": "2026-06-10T22:57:34.124Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3987,7 +3983,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:10.713Z",
+      "at": "2026-06-10T22:57:34.484Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4000,7 +3996,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:13.178Z",
+      "at": "2026-06-10T22:57:37.045Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4013,7 +4009,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:13.459Z",
+      "at": "2026-06-10T22:57:37.554Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4026,7 +4022,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:14.198Z",
+      "at": "2026-06-10T22:57:37.832Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4039,7 +4035,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:16.690Z",
+      "at": "2026-06-10T22:57:40.437Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4052,7 +4048,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:17.000Z",
+      "at": "2026-06-10T22:57:40.947Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4065,7 +4061,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:17.719Z",
+      "at": "2026-06-10T22:57:41.169Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4078,21 +4074,28 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T20:45:20.266Z",
+      "at": "2026-06-10T22:57:43.842Z",
       "backend": "webgpu",
       "consoleErrors": []
     }
   },
   "summary": {
-    "total": 2,
-    "pass": 2,
-    "fail": 0,
+    "total": 312,
+    "pass": 306,
+    "fail": 6,
     "missing": 0,
-    "failNames": [],
+    "failNames": [
+      "dust-poof",
+      "hover-lift",
+      "lightning-bolt",
+      "pointer-attract-scale",
+      "pointer-press",
+      "scroll-skew"
+    ],
     "missingNames": [],
-    "wallClockSec": 23,
+    "wallClockSec": 1606,
     "peak": {
-      "std": 2,
+      "std": 3,
       "glass": 3
     },
     "backend": {

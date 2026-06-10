@@ -46,6 +46,11 @@ import {
   type BuiltSnapshotStatus,
 } from '@/stores/useBuiltSnapshotStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+// P2 Task C (canvas-spec §6 state 1) — Stage-0 bubble look for the scene path.
+import {
+  buildBubbleArtifact,
+  isStage0Bubble,
+} from '@/components/editor/add-tools/create-element-node';
 
 interface CachedEntry {
   object: Object3D;
@@ -134,6 +139,28 @@ export function resolveArtifactObject(node: PrismNode, layout: ArtifactNodeLayou
   if (cached) {
     // Hash changed — dispose the stale object before rebuilding this one node.
     runCleanup(cached.object);
+  }
+  // P2 Task C (canvas-spec §6 state 1) — Stage-0 BUBBLE. An artifact-less
+  // node (no sourceAsset / meshUrl / codeRef; not a text node; no legacy §13
+  // runtime labels) is not yet a built UI element, so the scene path renders
+  // the §6 translucent liquid sphere instead of running the factory (which
+  // would produce a blank untextured plane). The bubble is a real raycast-
+  // hittable Mesh riding the AssembledSceneNode composed-pose wrapper like
+  // any artifact (selectable, transformable). It deliberately SKIPS the
+  // verify/repair/builtSnapshot block below: a bubble is stage-1 "not yet
+  // built" — recording a builtSnapshot for it would lie about §6 (Build Node
+  // appears only once the node is Populated). Galaxy/topology keep the
+  // GlassNode dormant-sphere fallback (hasArtifactData delegation), so the
+  // node still appears in galaxy through the normal store flow (INV-7).
+  if (layout === 'scene' && isStage0Bubble(node)) {
+    if (typeof window !== 'undefined') {
+      // RT-SC-08 accounting — a bubble build is still a cache MISS build.
+      const w = window as unknown as { __artifactBuildCount?: number };
+      w.__artifactBuildCount = (w.__artifactBuildCount ?? 0) + 1;
+    }
+    const object = buildBubbleArtifact(node.nodeId);
+    cache.set(key, { object, hash });
+    return object;
   }
   // STEP6 — scene layout is the built-state surface (canvas + preview-app):
   // bind the REAL primitives API and run the node's coded motion. Topology
