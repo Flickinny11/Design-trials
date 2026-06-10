@@ -45,3 +45,13 @@ one-renderer/WebGPU architecture, or as a faithful TSL/WebGPU-native implementat
 the library is DOM/2D-era. The report must include a DEPENDENCY-USAGE TABLE: each chrome surface → which
 DESIGN-REFERENCES entries it uses and how. A surface using none of them is a MUST-FIX. Logan's words: "I don't see how
 we can offer this to a user as a premium builder while our UI itself doesn't even use those dependencies."
+
+## THE BENCHMARK (2026-06-10, from Logan — make it concrete)
+The named competitive bar is Slider Revolution-class tools: premium templates, morphing/3D page transitions,
+story-driven pages you "morph into." Ours must not match — it must VISIBLY SMASH it. At build time, RESEARCH their
+current pages/templates/showcases (June 2026 web) and write a short "what makes theirs feel premium" analysis FIRST;
+then design ours to outclass it: morph-through transitions between editor states (picker→canvas→preview should feel
+like morphing INTO the workspace, not panel swaps), story-grade choreography on boot/mode changes, the
+DESIGN-REFERENCES stack visibly at work. ADVOCATE STANDARD: side-by-side judgment — "set our editor next to a Slider
+Revolution showcase: which looks like the more premium, more advanced product?" If the answer isn't OURS, decisively,
+it's a MUST-FIX. Our tech is lightyears ahead; the chrome must look like it.

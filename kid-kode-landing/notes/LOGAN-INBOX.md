@@ -31,7 +31,7 @@ note it in the ledger. These are refinements, not new scope.
   (b) RAISED BAR (all phases + P6 advocate): surfaces still read FLAT/basic/bland — boring fonts, no dynamics, no
   ambient light refraction, no real materials on toolbar/buttons. From now on: every new surface uses the design
   system's MATERIAL treatments (never flat fills), typography gets deliberate hierarchy/tracking (nothing default-
-  looking), and the advocate judges at devicePixelRatio 2 WITH zoomed crops against the standard "designed by a
+  looking), and the advocate judges at devicePixelRatio 2 WITH zoomed crops against BOTH the "professional 3D designer" standard AND the Slider-Revolution side-by-side standard ("ours must visibly outclass theirs"), per the
   professional 3D designer." Logan's verdict outranks prior advocate passes. A deep real-rendered-materials chrome
   overhaul (UI-FIDELITY-2) is queued post-run — do NOT restructure this run for it; just stop adding anything flat.
 
