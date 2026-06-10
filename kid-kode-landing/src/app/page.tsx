@@ -39,11 +39,32 @@ import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
   loading: () => (
-    // Observatory Brass boot instrument — graphite track ring with a brass
-    // sweep arc and an engraved label plate. DS tokens only; transform/opacity
-    // motion (rotation) only.
-    <div className="absolute inset-0 flex items-center justify-center bg-ds-void">
-      <div className="ds-reveal flex flex-col items-center gap-4">
+    // Observatory Brass boot sequence — ambient gradient backdrop (never a
+    // flat fill), machined graphite track ring with brass sweep arc, a
+    // calibrated brass progress rail riding a graphite well, and an
+    // ice-telemetry readout on a smoked strip. DS tokens only;
+    // transform/opacity motion only (rotation + translateX).
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden bg-ds-void">
+      {/* Transform-only keyframes for the indeterminate boot rail (scoped to
+          this boot shell; honors prefers-reduced-motion). */}
+      <style>{`
+        @keyframes ds-boot-rail {
+          0% { transform: translateX(-110%); }
+          100% { transform: translateX(420%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [data-boot-rail] { animation: none; }
+        }
+      `}</style>
+      {/* Ambient observatory backdrop — warm brass starlight TL, cold ice BR. */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-75"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-brass-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
+        }}
+      />
+      <div className="ds-reveal relative flex flex-col items-center gap-5">
         <div className="relative w-16 h-16">
           {/* Machined graphite track */}
           <div
@@ -72,13 +93,37 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
             }}
           />
         </div>
-        {/* Engraved label plate */}
+        {/* Calibrated boot rail — brass indicator sweeping a graphite well. */}
         <div
-          className="ds-label flex items-center gap-1.5"
-          style={{ textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+          className="ds-well relative w-44 h-2 overflow-hidden"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
+        >
+          <div
+            data-boot-rail
+            className="absolute top-0 bottom-0 w-1/4 rounded-full"
+            style={{
+              background: 'var(--ds-grad-brass)',
+              boxShadow:
+                'var(--ds-glow-brass), inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0,0,0,0.35)',
+              animation: 'ds-boot-rail 1.3s var(--ds-ease-inout) infinite',
+            }}
+          />
+        </div>
+        {/* Ice-telemetry readout on a smoked strip. */}
+        <div
+          className="ds-smoked ds-edge flex items-center gap-2 px-3.5 py-1.5"
+          style={{ borderRadius: 'var(--ds-r-pill)' }}
         >
           <Icon name="sparkle" size={10} color={DS.brass400} glow />
-          INITIALIZING PRISM RUNTIME
+          <span
+            className="ds-kicker"
+            style={{
+              color: 'var(--ds-ice-300)',
+              textShadow: `0 1px 0 rgba(0,0,0,0.7), 0 0 10px ${dsAlpha(DS.ice400, 0.35)}`,
+            }}
+          >
+            INITIALIZING PRISM RUNTIME
+          </span>
         </div>
       </div>
     </div>
@@ -593,11 +638,12 @@ export default function Page() {
           {/* View-mode toggle — canonical 3 modes (RA-06b / SC-065).
               galaxy:      free-camera view of every hub in the universe.
               canvas:      single-canvas authoring surface for the active hub
-                           (hub-world's intra-hub authoring folds in here).
+                           (the legacy intra-hub authoring mode folds in here).
               preview-app: the running app; default on boot (RA-17).
               Chrome: machined brass-and-graphite segmented control — equal-width
               slots so the brass thumb slides with a pure translateX (transform-
-              only motion per the DS contract). */}
+              only motion per the DS contract). Segments are 36px tall with an
+              invisible ::after extension for a ≥44px effective touch target. */}
           <div
             className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
             data-component="view-mode-toggle"
@@ -631,7 +677,7 @@ export default function Page() {
                     key={m.id}
                     type="button"
                     onClick={() => setViewMode(m.id)}
-                    className={`ds-press relative z-10 w-24 h-7 rounded-full text-[11px] font-mono transition-colors ${
+                    className={`ds-press relative z-10 w-24 h-9 rounded-full text-[11px] font-mono tracking-wide transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full ${
                       active
                         ? 'text-ds-brass-200'
                         : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
@@ -680,15 +726,27 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.prev();
                 }}
-                className="ds-press h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors"
+                className="ds-press relative h-9 px-3 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 ‹ Prev
               </button>
+              {/* HUD hub readout — ice-telemetry type on a smoked strip. */}
               <span
-                className="text-[10px] font-mono tracking-widest select-none text-ds-text-low"
-                style={{ textShadow: '0 1px 0 rgba(0,0,0,0.6)' }}
+                className="ds-smoked ds-edge flex items-center gap-2 h-7 px-3 select-none"
+                style={{ borderRadius: 'var(--ds-r-pill)' }}
               >
-                {activeHubId ?? '—'}
+                <span className="ds-kicker" style={{ color: 'var(--ds-ice-500)' }}>
+                  Hub
+                </span>
+                <span
+                  className="text-[10px] font-mono tracking-widest tabular-nums"
+                  style={{
+                    color: 'var(--ds-ice-300)',
+                    textShadow: `0 1px 0 rgba(0,0,0,0.6), 0 0 9px ${dsAlpha(DS.ice400, 0.35)}`,
+                  }}
+                >
+                  {activeHubId ?? '—'}
+                </span>
               </span>
               <button
                 type="button"
@@ -700,7 +758,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.next();
                 }}
-                className="ds-press h-6 px-2.5 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors"
+                className="ds-press relative h-9 px-3 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 Next ›
               </button>
@@ -792,22 +850,30 @@ function PreviewAppWorldBadge() {
   if (!worldLabel) return null;
 
   return (
-    // Machined brass-fitted nameplate — metal housing, engraved kicker, bone value.
+    // Machined brass-fitted nameplate — metal housing, engraved brass kicker,
+    // ice-telemetry value on an inset smoked strip (HUD readout).
     <div
       data-component="preview-app-world-badge"
       data-app-name-world-id={worldLabel.appNameWorldId}
-      className="ds-metal ds-grain ds-edge absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5"
+      className="ds-metal ds-grain ds-edge absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 pl-3 pr-1.5 py-1"
       /* position:absolute inline — .ds-metal sets position:relative and
          materials.css loads after the Tailwind utilities. */
       style={{ borderRadius: 'var(--ds-r-pill)', position: 'absolute' }}
     >
       <span
-        className="text-[9px] font-mono tracking-widest uppercase text-ds-brass-300"
-        style={{ textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+        className="ds-kicker"
+        style={{ color: 'var(--ds-brass-300)', textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
       >
         World
       </span>
-      <span className="text-[11px] font-mono text-ds-text-hi">
+      <span
+        className="ds-smoked flex items-center px-2.5 py-0.5 text-[11px] font-mono"
+        style={{
+          borderRadius: 'var(--ds-r-pill)',
+          color: 'var(--ds-ice-200)',
+          textShadow: `0 1px 0 rgba(0,0,0,0.6), 0 0 9px ${dsAlpha(DS.ice400, 0.3)}`,
+        }}
+      >
         {worldLabel.name ?? worldLabel.appNameWorldId}
       </span>
     </div>
