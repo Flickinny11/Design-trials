@@ -20,13 +20,19 @@
  *     INV-1 topology untouched), Lock / Unlock, Freeze, Select-all-in-hub.
  *   - Build — Build Node / Rebuild (Step-5/6 surgical rebuild path) and Add to
  *     System (re-caption + clear dirty).
+ *   - Text — P1 TEXT SYSTEM (canvas-spec §5 / §7.2-7.5): Add Text node
+ *     (create-text-node builder), font picker (full library + on-demand
+ *     atlas bake, criterion 27), type metrics, fills (solid/gradient/
+ *     texture/ai-texture with local procedural swatches), outline/glow/
+ *     shadow, preset chips, and the text-animation picker surface. Live
+ *     styling edits route through usePreviewStateStore (FP-15).
  *
  * DESIGNED-PLACEHOLDER (look complete, never fake output — clicking a deferred
  * tool surfaces a tasteful "coming with <subsystem>" state):
  *   - Add (← Media & Library pipeline), Image (← Media pipeline), 3D Object
- *     (← Mesh & Material systems), Text (← Text System / MSDF), Animation
- *     picker + triggers + from-scratch (← Primitive Catalog), Lighting
- *     (← Lighting & Material systems). The Keyframe Editor *toggle* is real
+ *     (← Mesh & Material systems), Animation
+ *     picker + triggers + from-scratch (← Primitive Catalog).
+ *     The Keyframe Editor *toggle* is real
  *     (it slides the §8.4 editor in/out); its track content is designed.
  *
  * Boundary (canvas-spec §1.3 / FP): this surface authors visual + spatial +
@@ -43,6 +49,7 @@ import { rebuildNode } from '@/lib/editor/rebuild-node';
 import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
+import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -110,7 +117,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'add', icon: 'plus', label: 'Add', wired: false, subsystem: 'Media & Library pipeline' },
   { id: 'image', icon: 'image', label: 'Image', wired: false, subsystem: 'Media pipeline' },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: false, subsystem: 'Mesh & Material systems' },
-  { id: 'text', icon: 'text', label: 'Text', wired: false, subsystem: 'Text System (MSDF)' },
+  { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: false, subsystem: 'Primitive Catalog' },
   { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
   { id: 'build', icon: 'hammer', label: 'Build', wired: true },
@@ -784,17 +791,13 @@ export default function CanvasToolbar() {
               />
             )}
             {activeGroup === 'text' && (
-              <PlaceholderTiles
-                subsystem="Text System (MSDF)"
-                onPick={(t) => showComing(t, 'Text System (MSDF)')}
-                tiles={[
-                  { icon: 'text', label: 'Font Picker', hint: '1,800+ families' },
-                  { icon: 'sliders', label: 'Size / Weight / Spacing' },
-                  { icon: 'palette', label: 'Fills / Strokes / Glow' },
-                  { icon: 'wand', label: 'AI Texture-Fill', hint: 'describe the look' },
-                  { icon: 'layers', label: 'Presets' },
-                  { icon: 'timeline', label: 'Text Animation' },
-                ]}
+              // P1 TEXT SYSTEM (Task B) — wired flyout. `lightingHub` is the
+              // shared active-hub resolution (active hub → selected node's
+              // parent → first hub); Add Text tethers the new node there.
+              <TextToolsFlyout
+                node={selectedNode}
+                hub={lightingHub}
+                onToast={setToast}
               />
             )}
             {activeGroup === 'animation' && (

@@ -72,6 +72,9 @@ function buildRelevantProjection(node: PrismNode): Record<string, unknown> {
     cinematicPrimitives: node.cinematicPrimitives ?? null,
     keyframes: node.keyframes ?? null,
     scrollBinding: node.scrollBinding ?? null,
+    // P1 TEXT (canvas-spec §7) — the text factory branch reads textSpec at
+    // build time, so a committed textSpec change must invalidate the snapshot.
+    textSpec: node.textSpec ?? null,
   };
 }
 

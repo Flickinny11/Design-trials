@@ -139,11 +139,26 @@ export interface TextObjectHandle {
   dispose(): void;
 }
 
+/** Additive build options (P1 hue-fidelity). `lit: false` = hue-faithful
+ *  unlit pigment routing (the node default per §10 "text defaults UNLIT");
+ *  omitted/true = the catalog rig's tuned lit surface (unchanged). */
+export interface CreateTextObjectOpts {
+  lit?: boolean;
+  /** Async pigment-texture loader for `texture` / `ai-texture` fills (the
+   *  material is DOM-free and never loads URLs itself). The factory passes
+   *  the runtime's cached `ctx.textureLoader`; when absent, textured fills
+   *  fall back to the live solid surface (catalog path — unchanged). The
+   *  TextObject re-resolves on every setSpec whose fill carries a url and
+   *  rebuilds units in place when it lands (same Group identity). */
+  resolveFillTexture?: (url: string) => Promise<Texture>;
+}
+
 /** Build a TextObject from a spec + a loaded atlas. Synchronous (atlas is
  *  pre-loaded by the font registry). Implemented in `text-object.ts`. */
 export type CreateTextObjectFn = (
   spec: TextSpec,
   atlas: LoadedFontAtlas,
+  opts?: CreateTextObjectOpts,
 ) => TextObjectHandle;
 
 // ── Font registry (client-side cache; criterion 27) ────────────────────────

@@ -51,7 +51,7 @@ const RENDERABLE_TYPES = new Set([
 
 /** Modes that load their artifact asynchronously after createNode returns, so
  *  an empty group at build time is "still building", not a failure. */
-const ASYNC_ARTIFACT_MODES = new Set(['mesh']);
+const ASYNC_ARTIFACT_MODES = new Set(['mesh', 'text']);
 
 function countRenderable(object: Object3D): number {
   let n = 0;
@@ -89,8 +89,11 @@ export function verifyBuiltNode(
   const mayPopulate =
     asyncPending || ASYNC_ARTIFACT_MODES.has(mode) || codeRef !== null;
   // A mesh/coderef node with NO source URL can never populate — still a failure.
+  // A text node ALWAYS has an async source: the cold-cache atlas resolve goes
+  // through the font registry (family defaults to Inter), so an empty group is
+  // "atlas still baking", never a build failure (P1 TEXT, canvas-spec §7).
   const hasAsyncSource =
-    (mode === 'mesh' && !!node.meshUrl) || (!!codeRef && codeRef.length > 0);
+    (mode === 'mesh' && !!node.meshUrl) || mode === 'text' || (!!codeRef && codeRef.length > 0);
   if (mayPopulate && hasAsyncSource) {
     return { ok: true, reason: 'async-pending', renderableCount: 0 };
   }

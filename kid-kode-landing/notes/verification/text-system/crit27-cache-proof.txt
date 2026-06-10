@@ -1,0 +1,17 @@
+--- First request (expect miss → server bake):
+HTTP/1.1 200 OK
+x-prism-font-cache: miss
+time_total=1.133015s
+--- Second request (expect hit):
+HTTP/1.1 200 OK
+x-prism-font-cache: hit
+time_total=0.006086s
+--- atlas JSON:
+chars: 97 | distanceField: {'fieldType': 'msdf', 'distanceRange': 4} | face: abel-400
+--- PNG asset:
+HTTP/1.1 200 OK
+content-type: image/png
+x-prism-font-cache: hit
+/tmp/atlas1.png: PNG image data, 301 x 297, 8-bit/color RGBA, non-interlaced
+atlases
+ttf

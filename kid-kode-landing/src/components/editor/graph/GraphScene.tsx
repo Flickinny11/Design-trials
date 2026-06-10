@@ -77,7 +77,9 @@ import {
   type GizmoMode,
 } from '@/lib/editor/canvas-transform-gizmo';
 import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
-import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
+import { TEXT_SPEC_DEFAULT, type PrismHub, type PrismNode, type TextSpec } from '@/lib/prism-graph/types';
+import { getFontRegistry } from '@/lib/prism/text/font-registry';
+import type { TextObjectHandle } from '@/lib/prism/text/contract';
 // EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
 // in-view slide, hover lift). The canvas-mode KeyframeDemo block below
 // consumes the registry directly so any future addition to the baselines
@@ -2090,6 +2092,56 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       }
     });
   }, [buildKey]);
+
+  // P1 TEXT (canvas-spec §7, criterion 26) — instant restyle: the source ⊕
+  // preview-overlay textSpec lands on the mounted TextObject IN PLACE via
+  // userData.textHandle.setSpec (geometry re-lays-out from the cached atlas;
+  // same Group identity; NO artifact re-render, NO rebuild). A font/weight
+  // change resolves its atlas through the app-wide font registry (criterion
+  // 27 cache) before the swap; resolution is cancelled if the spec moves on.
+  const mergedTextSpec: TextSpec | null =
+    (composedNode.renderMode as string) === 'text'
+      ? { ...TEXT_SPEC_DEFAULT, ...(composedNode.textSpec ?? {}) }
+      : null;
+  const textSpecKey = mergedTextSpec ? JSON.stringify(mergedTextSpec) : '';
+  useEffect(() => {
+    if (!mergedTextSpec) return;
+    const g = popRef.current;
+    if (!g) return;
+    let handle: TextObjectHandle | null = null;
+    g.traverse((obj) => {
+      const h = (obj.userData as { textHandle?: TextObjectHandle } | undefined)?.textHandle;
+      if (!handle && h) handle = h;
+    });
+    if (!handle) return; // cold-atlas deferred mount: factory builds with the committed spec
+    const found: TextObjectHandle = handle;
+    const family = mergedTextSpec.fontFamily ?? 'Inter';
+    const weight = mergedTextSpec.fontWeight ?? 400;
+    const cur = found.spec;
+    const fontChanged =
+      (cur.fontFamily ?? 'Inter') !== family || (cur.fontWeight ?? 400) !== weight;
+    if (!fontChanged) {
+      found.setSpec(mergedTextSpec);
+      return;
+    }
+    const reg = getFontRegistry();
+    const cached = reg.peekAtlas(family, weight);
+    if (cached) {
+      found.setSpec(mergedTextSpec, cached);
+      return;
+    }
+    let cancelled = false;
+    void reg
+      .resolveAtlas(family, weight)
+      .then((atlas) => {
+        if (!cancelled) found.setSpec(mergedTextSpec, atlas);
+      })
+      .catch(() => { /* offline / bake failure — keep the current glyphs */ });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
+  }, [textSpecKey, buildKey]);
 
   return (
     <group

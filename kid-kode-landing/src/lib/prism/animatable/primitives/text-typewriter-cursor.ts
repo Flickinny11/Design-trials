@@ -43,7 +43,10 @@ function materialsOf(root: Object3D): Array<Material & { opacity: number }> {
   return out;
 }
 
-/** Collect MeshStandardMaterials (those carrying emissiveIntensity) on a subtree. */
+/** Collect emissive-surfaced materials on a subtree. Duck-typed (the text
+ *  contract): real MSDF glyph units carry TSL `MeshStandardNodeMaterial`,
+ *  which exposes the same live property surface but is NOT `instanceof
+ *  MeshStandardMaterial` — an instanceof check silently skips real glyphs. */
 function emissivesOf(root: Object3D): MeshStandardMaterial[] {
   const out: MeshStandardMaterial[] = [];
   root.traverse((o) => {
@@ -51,7 +54,10 @@ function emissivesOf(root: Object3D): MeshStandardMaterial[] {
     if (m) {
       const arr = Array.isArray(m) ? m : [m];
       for (const mat of arr) {
-        if (mat instanceof MeshStandardMaterial) out.push(mat);
+        const std = mat as MeshStandardMaterial;
+        if (typeof std.emissiveIntensity === 'number' && std.emissive !== undefined) {
+          out.push(std);
+        }
       }
     }
   });

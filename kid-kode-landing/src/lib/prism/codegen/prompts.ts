@@ -229,6 +229,15 @@ const SUB_PROMPT_MESH = [
   'do NOT apply it as a texture override; the mesh has correct textures from generation.',
 ].join('\n');
 
+// Canvas-spec §7 / INV-11 — text nodes need NO generated code: the default
+// render-mode factory builds real MSDF glyphs from node.textSpec via the
+// Prism TextObject. Letterforms must never be hand-rendered or baked.
+const SUB_PROMPT_TEXT = [
+  "Do not generate a code module for renderMode 'text'. The runtime's default factory renders",
+  'real MSDF font glyphs from node.textSpec (Prism TextObject). Never synthesize letterforms,',
+  'never use THREE.TextGeometry, never bake text into images (INV-11).',
+].join('\n');
+
 export function buildRenderModeSubPrompt(mode: RenderMode): string {
   switch (mode) {
     case 'sprite':
@@ -239,6 +248,8 @@ export function buildRenderModeSubPrompt(mode: RenderMode): string {
       return SUB_PROMPT_PARALLAX;
     case 'mesh':
       return SUB_PROMPT_MESH;
+    case 'text':
+      return SUB_PROMPT_TEXT;
     default: {
       const exhaustive: never = mode;
       throw new Error(`Unknown render mode: ${exhaustive as string}`);

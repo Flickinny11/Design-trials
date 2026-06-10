@@ -23,6 +23,7 @@ import {
   float,
   fwidth,
   materialColor,
+  materialEmissive,
   materialOpacity,
   max,
   min,
@@ -30,6 +31,7 @@ import {
   texture,
   uv,
   vec2,
+  vec3,
 } from 'three/tsl';
 import type { TextFill, TextGlowSpec, TextOutlineSpec } from '../../prism-graph/types';
 import { TEXT_BLOCK_UV_ATTR } from './contract';
@@ -49,6 +51,15 @@ export interface MsdfNodeMaterialOptions {
    *  Carried for pixel-accurate outline mapping; the fwidth-based AA is
    *  already range-independent in screen space. */
   distanceRange?: number;
+  /** P1 hue-fidelity (§10 "text defaults UNLIT"): `lit: false` routes the
+   *  pigment through emissiveNode with zero lit response, so the fill color
+   *  the user picked is EXACTLY what renders — independent of the scene's
+   *  env/lights (the editor's night HDRI was tinting every fill blue). The
+   *  live property surface stays animatable: solid pigment = materialColor
+   *  (primitive color tweens recolor), and the live emissive×intensity is
+   *  ADDED on top (glow pulses still read). Default `true` preserves the
+   *  catalog rig's tuned lit look byte-for-byte. */
+  lit?: boolean;
 }
 
 export function createMsdfNodeMaterial(opts: MsdfNodeMaterialOptions): MeshStandardNodeMaterial {
@@ -68,6 +79,11 @@ export function createMsdfNodeMaterial(opts: MsdfNodeMaterialOptions): MeshStand
   mat.side = DoubleSide;
   mat.opacity = opts.opacity ?? 1;
   mat.userData.msdfDistanceRange = opts.distanceRange ?? 4;
+  // Diagnostics (verification harness reads these to prove which pigment
+  // path the mounted material actually compiled with).
+  mat.userData.msdfFillKind = fill?.kind ?? 'solid';
+  mat.userData.msdfHasFillTexture = !!opts.fillTexture;
+  mat.userData.msdfLit = opts.lit !== false;
 
   // @types/three (r184) types materialColor/materialOpacity as bare
   // MaterialNode (Node<unknown>); the runtime node types are vec3/float.
@@ -104,14 +120,33 @@ export function createMsdfNodeMaterial(opts: MsdfNodeMaterialOptions): MeshStand
   })();
 
   const outlineWidth = outline?.width ?? 0;
+  const unlit = opts.lit === false;
+  // The pigment that must reach the screen exactly as authored.
+  const pigment = (() => {
+    const base = fillRgb ?? liveColor;
+    if (outlineWidth > 0) {
+      return mix(color(outline?.color ?? '#000000'), base, fillCov);
+    }
+    return base;
+  })();
   if (outlineWidth > 0) {
     // Outline = a wider coverage band; the fill is mixed back over it.
     const outCov = clamp(sd.add(float(outlineWidth * 0.5)).div(aa).add(0.5), 0, 1);
     mat.opacityNode = max(fillCov, outCov).mul(liveOpacity);
-    mat.colorNode = mix(color(outline?.color ?? '#000000'), fillRgb ?? liveColor, fillCov);
+    if (!unlit) mat.colorNode = pigment;
   } else {
     mat.opacityNode = fillCov.mul(liveOpacity);
-    if (fillRgb) mat.colorNode = fillRgb;
+    if (!unlit && fillRgb) mat.colorNode = fillRgb;
+  }
+  if (unlit) {
+    // Hue-faithful unlit routing: zero lit response, pigment + live emissive
+    // out the emissive channel (materialEmissive = mat.emissive × intensity,
+    // so glow animation stays live).
+    mat.metalness = 0;
+    mat.roughness = 1;
+    mat.envMapIntensity = 0;
+    mat.colorNode = vec3(0, 0, 0);
+    mat.emissiveNode = pigment.add(materialEmissive as unknown as Node<'vec3'>);
   }
 
   // Live property surface (solid path + emissive defaults). Solid fills keep

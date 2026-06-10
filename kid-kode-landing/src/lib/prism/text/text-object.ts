@@ -9,7 +9,7 @@
 // The atlas texture is SHARED (registry-owned): never disposed here, and
 // tagged `userData.prismShared` so dispose paths elsewhere can skip it.
 
-import { BufferAttribute, BufferGeometry, Group, Mesh, type Material } from 'three';
+import { BufferAttribute, BufferGeometry, Group, Mesh, type Material, type Texture } from 'three';
 import { TEXT_SPEC_DEFAULT, type TextSpec } from '../../prism-graph/types';
 import {
   TEXT_BLOCK_UV_ATTR,
@@ -77,12 +77,26 @@ function buildUnitGeometry(unit: TextLayoutUnit): BufferGeometry {
   return geometry;
 }
 
-export const createTextObject: CreateTextObjectFn = (spec, atlas) => {
+export const createTextObject: CreateTextObjectFn = (spec, atlas, opts) => {
   const group = new Group();
   group.name = TEXT_OBJECT_NAME;
 
+  // P1 hue-fidelity: lit-ness is fixed at build (the node's resolved
+  // receivesLighting); setSpec rebuilds reuse it.
+  const lit = opts?.lit !== false;
+  const resolveFillTexture = opts?.resolveFillTexture;
   let currentAtlas = atlas;
   let resolved = resolveSpec(spec);
+  // Pigment texture for `texture`/`ai-texture` fills. Loader-cache-owned
+  // (never disposed here); rebuilt-into units when the async load lands and
+  // the spec still wants that url.
+  let fillTex: { url: string; tex: Texture } | null = null;
+  let disposed = false;
+  const wantFillUrl = (): string | null => {
+    const f = resolved.fill;
+    if (f && (f.kind === 'texture' || f.kind === 'ai-texture') && f.url) return f.url;
+    return null;
+  };
   let layout = layoutText(resolved, currentAtlas.data);
   const units: Mesh[] = [];
 
@@ -98,10 +112,13 @@ export const createTextObject: CreateTextObjectFn = (spec, atlas) => {
         createMsdfNodeMaterial({
           atlas: currentAtlas.texture,
           fill: resolved.fill,
+          fillTexture:
+            fillTex && fillTex.url === wantFillUrl() ? fillTex.tex : undefined,
           outline: resolved.outline,
           glow: resolved.glow,
           opacity: resolved.opacity,
           distanceRange: currentAtlas.data.distanceField?.distanceRange,
+          lit,
         }),
       );
       mesh.name = textUnitName(i);
@@ -121,7 +138,24 @@ export const createTextObject: CreateTextObjectFn = (spec, atlas) => {
     units.length = 0;
   };
 
+  // Kick (or re-kick) the async pigment-texture resolve for the current fill;
+  // rebuild in place when it lands, unless the spec moved on or we disposed.
+  const ensureFillTexture = () => {
+    const url = wantFillUrl();
+    if (!url || !resolveFillTexture) return;
+    if (fillTex && fillTex.url === url) return;
+    void resolveFillTexture(url)
+      .then((tex) => {
+        if (disposed || wantFillUrl() !== url) return;
+        fillTex = { url, tex };
+        clearUnits();
+        buildUnits();
+      })
+      .catch(() => { /* soft-fail: live solid surface stays */ });
+  };
+
   buildUnits();
+  ensureFillTexture();
 
   const handle: TextObjectHandle = {
     object: group,
@@ -138,11 +172,15 @@ export const createTextObject: CreateTextObjectFn = (spec, atlas) => {
       layout = layoutText(resolved, currentAtlas.data);
       clearUnits();
       buildUnits();
+      ensureFillTexture();
     },
     measure() {
       return { width: layout.width, height: layout.height };
     },
     dispose() {
+      disposed = true;
+      // fillTex is loader-cache-owned — never disposed here.
+      fillTex = null;
       clearUnits();
     },
   };

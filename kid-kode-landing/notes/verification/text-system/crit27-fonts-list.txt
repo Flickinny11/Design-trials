@@ -1,0 +1,3 @@
+total families: 1935
+core: ['Bebas Neue', 'Inter', 'JetBrains Mono', 'Lora', 'Playfair Display', 'Space Grotesk']
+sample non-core: ['ABeeZee', 'ADLaM Display', 'AR One Sans', 'Abel', 'Abhaya Libre']

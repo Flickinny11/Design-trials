@@ -22,7 +22,10 @@ export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
 export type { CapabilityRef, PrismRootNode } from './root-node.ts';
 export type { UiAnchor } from './compile-anchors.ts';
 
-export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
+// Canvas-spec §7 / criterion 26 (INV-18 additive): 'text' renders REAL MSDF
+// font glyphs via the Prism TextObject (src/lib/prism/text/), styled by the
+// node's `textSpec`. Letterforms are never synthesized (INV-11).
+export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh' | 'text';
 
 export interface ScenePosition {
   x: number;

@@ -30,6 +30,14 @@ interface GlyphMat {
   base: number;
 }
 
+/** Duck-typed emissive check (the text contract): real MSDF glyph units carry
+ *  TSL `MeshStandardNodeMaterial`, which exposes the same live property
+ *  surface but is NOT `instanceof MeshStandardMaterial` — an instanceof check
+ *  silently skipped every real glyph (caught by the P1 312-catalog gate). */
+const hasEmissiveSurface = (m: Material): m is MeshStandardMaterial =>
+  typeof (m as MeshStandardMaterial).emissiveIntensity === 'number' &&
+  (m as MeshStandardMaterial).emissive !== undefined;
+
 function glyphMaterials(root: Object3D): GlyphMat[] {
   const out: GlyphMat[] = [];
   let i = 0;
@@ -38,7 +46,7 @@ function glyphMaterials(root: Object3D): GlyphMat[] {
     if (!m) return;
     const arr = Array.isArray(m) ? m : [m];
     for (const mat of arr) {
-      if (mat instanceof MeshStandardMaterial) {
+      if (hasEmissiveSurface(mat)) {
         out.push({ mat, index: i, base: mat.emissiveIntensity });
         i += 1;
       }

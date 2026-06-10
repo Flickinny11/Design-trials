@@ -12,6 +12,9 @@
 //                     wired through `displacementShader` (TSL).
 //   mesh            — `ctx.glbLoader.loadGLB(node.meshUrl)`; the resolved
 //                     scene is reparented under the returned Group.
+//   text            — Prism TextObject (real MSDF glyphs, canvas-spec §7 /
+//                     criterion 26) styled by `node.textSpec`; atlas via the
+//                     shared font-registry cache (criterion 27).
 //
 // Spec refs:
 //   - PRISM-RENDERER-MIGRATION-SPEC.md §4 (RenderMode values).
@@ -40,6 +43,10 @@ import {
 } from 'three';
 import type { gsap } from 'gsap';
 import { applyScenePosition, type NodeContext } from '../shared/adapter';
+import { peekTextAtlas, resolveTextAtlas } from '../shared/text-atlas';
+import { createTextObject } from '../../text/text-object';
+import type { LoadedFontAtlas, TextObjectHandle } from '../../text/contract';
+import { TEXT_SPEC_DEFAULT, type TextSpec } from '../../../prism-graph/types';
 import {
   resolveReceivesLighting,
   buildUnlitMaterial,
@@ -103,6 +110,12 @@ export function defaultRenderModeFactory(
   // wiring + unregister the per-frame onTick, WITHOUT killing the timeline
   // (the primitiveResults loop below owns kill()).
   const driverDetachers: Array<() => void> = [];
+  // Canvas-spec §7 — TextObject handles built by the 'text' branch. Disposed
+  // on cleanup (unit geometries + materials only; the registry-owned atlas
+  // texture is SHARED and never disposed here). `textState.disposed` guards
+  // the async atlas-resolve callback against mounting into a cleaned group.
+  const textHandles: TextObjectHandle[] = [];
+  const textState = { disposed: false };
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
@@ -237,6 +250,65 @@ export function defaultRenderModeFactory(
         })
         .catch(() => { /* swallow */ });
     }
+  } else if (renderMode === 'text') {
+    // Canvas-spec §7 / criterion 26 — REAL MSDF glyphs via the Prism
+    // TextObject (src/lib/prism/text/). Spec resolves over TEXT_SPEC_DEFAULT;
+    // the atlas comes from the shared font-registry cache (criterion 27).
+    //
+    // Sync-first, async-fallback — the same shape as the textureLoader
+    // pattern above: when the (family, weight) atlas is already cached the
+    // glyph meshes exist synchronously; on a cold cache the group populates
+    // when the resolve lands (spec §8: createNode stays synchronous).
+    //
+    // Renderer note (deliberate): the unit material is the frozen contract's
+    // TSL MeshStandardNodeMaterial (msdf-material.ts) REGARDLESS of
+    // opts.nodeMaterials. Both call paths that pass nodeMaterials:false —
+    // the editor (ArtifactNode → GraphScene's createUnifiedRenderer) and the
+    // runtime player (mount-graph → createSceneRoot) — render exclusively
+    // through `WebGPURenderer` from three/webgpu, whose WebGL2 *backend*
+    // fallback still compiles TSL node materials (it is not the classic
+    // WebGLRenderer). No classic-WebGL call path invokes this factory, so
+    // there is no path that could crash on the node material. The
+    // nodeMaterials flag continues to mean what it always meant here:
+    // "keep legacy plain materials for default image planes" — it is not a
+    // statement about renderer capability.
+    //
+    // Lighting (P1 hue-fidelity): receivesLightingDefault('text') === false,
+    // and the DEFAULT-unlit node renders hue-faithful — the TextObject gets
+    // `lit: false`, which routes the fill pigment through emissiveNode with
+    // zero lit response, so the authored fill color is exactly what renders
+    // (the editor's night HDRI was tinting every lit fill blue). A node that
+    // opts IN (receivesLighting: true) keeps the standard-lit glyph surface
+    // (catalog-rig tuned constants). Units are still NOT tagged onto the
+    // unlit GI-mask layer (per-unit tags would not survive setSpec rebuilds).
+    const spec: TextSpec = { ...TEXT_SPEC_DEFAULT, ...(node.textSpec ?? {}) };
+    const family = spec.fontFamily ?? TEXT_SPEC_DEFAULT.fontFamily ?? 'Inter';
+    const fontWeight = spec.fontWeight ?? TEXT_SPEC_DEFAULT.fontWeight ?? 400;
+    const textLit = resolveReceivesLighting(node);
+    const mountText = (atlas: LoadedFontAtlas) => {
+      if (textState.disposed) return;
+      const handle = createTextObject(spec, atlas, {
+        lit: textLit,
+        // texture / ai-texture fills load their pigment through the runtime's
+        // cached loader (Amendment 0002 §A.2: loader-cache owns the texture
+        // lifetime — TextObject never disposes it).
+        resolveFillTexture: (url) => ctx.textureLoader.loadTexture(url),
+      });
+      group.add(handle.object);
+      // Editor surface for criterion 26: instant re-font/resize/restyle via
+      // handle.setSpec(next[, atlas]) — geometry rebuilds from cached atlas
+      // metrics in place (same Group identity), no artifact re-render.
+      group.userData.textHandle = handle;
+      textHandles.push(handle);
+    };
+    const cached = peekTextAtlas(family, fontWeight);
+    if (cached) {
+      mountText(cached);
+    } else {
+      void resolveTextAtlas(family, fontWeight)
+        .then(mountText)
+        .catch(() => { /* swallow — soft-fail like a missing texture asset */ });
+    }
   }
 
   // Spec §8 — apply scene position to the returned Group.
@@ -308,6 +380,15 @@ export function defaultRenderModeFactory(
       try { result.cleanup?.(); } catch { /* ignore */ }
     }
     primitiveResults.length = 0;
+    // Canvas-spec §7 — dispose TextObject units (geometries + materials).
+    // TextObjectHandle.dispose() never touches the registry-owned shared
+    // atlas texture. The disposed flag also cancels a still-pending async
+    // atlas mount for this group.
+    textState.disposed = true;
+    for (const h of textHandles) {
+      try { h.dispose(); } catch { /* ignore */ }
+    }
+    textHandles.length = 0;
     for (const geo of disposables) {
       try { geo.dispose(); } catch { /* ignore */ }
     }

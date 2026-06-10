@@ -5,6 +5,9 @@ the same gates (tsc/vitest/advocate/no-regression). When done, mark it [DONE <da
 note it in the ledger. These are refinements, not new scope.
 
 ## OPEN
+- (none)
+
+## DONE
 - [2026-06-10 | target: P1 text-fill picker (and P3 if shared)] The prompt-to-texture feature in the text editing
   window: when the user describes the texture they want, generate **10 examples** (not 5). Each example must render as
   the USER'S ACTUAL SELECTED TEXT with that texture applied — not a generic texture thumbnail — so the user sees their
@@ -12,3 +15,9 @@ note it in the ledger. These are refinements, not new scope.
   advanced options for shadows, floats/extrusion/depth, and next-level 3D text features, fonts, styles, and visuals.
   If the picker already shipped with 5 thumbnails this session, UPDATE it — additive UI change, nothing else in the
   build depends on it. Same verification loop (advocate must see the user's-own-text examples render in 3D).
+  [DONE 2026-06-10 — TextFillPreviewStrip.tsx: 10 candidates, each the user's own text ("Molten Brass") rendered as
+  real 3D MSDF glyphs with that texture poured in (one shared WebGPU canvas, node's full effective spec with only the
+  fill swapped per row, perspective sway); advocate re-grade PLEASED/PASS citing 11-ai-fill-swatches.png +
+  12-ai-fill-applied.png; tsc 0-new, tests green, 312-catalog 306/312 (6 = documented pre-existing P5 set). Note:
+  geometric extrusion/depth remains a backlog 3D-text feature (MSDF quads are flat; previews carry the shipped
+  advanced options — shadows/outline/glow/weight/spacing).]
