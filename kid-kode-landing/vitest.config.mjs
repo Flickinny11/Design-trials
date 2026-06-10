@@ -16,7 +16,7 @@ const here = (rel) => fileURLToPath(new URL(rel, import.meta.url));
 export default defineConfig({
   test: {
     environment: 'node',
-    include: ['tests/{unit,integration,shaders,editor-build,material-lighting}/**/*.test.{ts,tsx,mjs}'],
+    include: ['tests/{unit,integration,shaders,editor-build,material-lighting,text}/**/*.test.{ts,tsx,mjs}'],
     exclude: ['tests/browser/**', 'node_modules/**', '.next/**'],
     testTimeout: 15000,
   },

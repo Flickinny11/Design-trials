@@ -275,6 +275,89 @@ export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
   displacementMapUrl: null,
 };
 
+// ── Canvas-spec §7 Text System (INV-8 additive, INV-11) ────────────────────
+// `TextSpec` is the per-node text contract: real-font MSDF letterforms only —
+// the fill may be AI-generated TEXTURE, the letter SHAPES never are (INV-11).
+// All fields optional; the text system fills unset fields from
+// TEXT_SPEC_DEFAULT. Round-trips through save/reload (criterion 26).
+
+/** How a text fill paints the glyph coverage. The MSDF coverage is ALWAYS the
+ *  mask — every fill kind pours pigment into real letterforms (INV-11). */
+export type TextFill =
+  | { kind: 'solid'; color: string }
+  | {
+      kind: 'gradient';
+      from: string;
+      to: string;
+      /** Gradient angle in degrees over the text block (0 = left→right). */
+      angleDeg?: number;
+    }
+  | { kind: 'texture'; url: string }
+  | {
+      kind: 'ai-texture';
+      /** Natural-language look description ("molten gold", "hairy moss"). */
+      prompt: string;
+      /** Resolved texture URL once generated; absent while pending. */
+      url?: string;
+    };
+
+export interface TextOutlineSpec {
+  color?: string;
+  /** Outline width as a fraction of the MSDF distance range, 0..1. */
+  width?: number;
+}
+
+export interface TextGlowSpec {
+  color?: string;
+  /** 0 = off. Drives emissiveIntensity on the glyph material. */
+  intensity?: number;
+}
+
+export interface TextShadowSpec {
+  color?: string;
+  /** Offset in em units (fraction of fontSize). */
+  offsetX?: number;
+  offsetY?: number;
+  opacity?: number;
+}
+
+export interface TextSpec {
+  /** The literal string (line breaks via '\n'). */
+  content?: string;
+  /** Font family name as listed by the font manifest (e.g. 'Inter'). */
+  fontFamily?: string;
+  /** Em height in scene units. */
+  fontSize?: number;
+  /** Numeric weight (400, 700, …) — must exist in the family's atlas set. */
+  fontWeight?: number;
+  /** Extra inter-glyph advance in em units (fraction of fontSize). */
+  letterSpacing?: number;
+  /** Line height multiplier (1 = font default). */
+  lineHeight?: number;
+  align?: 'left' | 'center' | 'right';
+  fill?: TextFill;
+  outline?: TextOutlineSpec;
+  glow?: TextGlowSpec;
+  shadow?: TextShadowSpec;
+  /** 0..1 whole-object opacity. */
+  opacity?: number;
+  /** Animation unit granularity for text-animation primitives (§7.5). */
+  decompose?: 'glyph' | 'word' | 'line';
+}
+
+export const TEXT_SPEC_DEFAULT: TextSpec = {
+  content: 'Text',
+  fontFamily: 'Inter',
+  fontSize: 0.4,
+  fontWeight: 400,
+  letterSpacing: 0,
+  lineHeight: 1,
+  align: 'center',
+  fill: { kind: 'solid', color: '#e8e4da' },
+  opacity: 1,
+  decompose: 'glyph',
+};
+
 // §10 decision 7 / §10 `receivesLighting` SAFE DEFAULT. Image-bearing render
 // modes default UNLIT so the diffusion-baked look is preserved pixel-identical;
 // generated geometry (mesh) defaults LIT. `'sprite'` and `'parallax-plane'`
@@ -614,6 +697,13 @@ export interface PrismNode {
   // its hub's `lightingSpec` (and the global default rig). Per-hub spec lives on
   // PrismHub.lightingSpec.
   lightingSpec?: LightingSpec;
+  // Canvas-spec §7 (INV-8 additive, INV-11). Per-node text contract for
+  // `renderMode: 'text'` nodes: content, font, size/weight/spacing, fills
+  // (solid/gradient/texture/AI-texture), outline/glow/shadow, alignment,
+  // animation decomposition. Absent → TEXT_SPEC_DEFAULT. Letterforms are real
+  // MSDF font glyphs ALWAYS; AI may fill only the texture poured into the
+  // glyph coverage, never the letter shapes (INV-11).
+  textSpec?: TextSpec;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the

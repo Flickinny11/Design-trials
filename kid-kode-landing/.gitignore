@@ -1,3 +1,6 @@
 test-results/
 .vercel
 .env*.local
+
+# P1 text system — on-demand font bake cache (TTFs + generated atlases)
+.prism-font-cache/

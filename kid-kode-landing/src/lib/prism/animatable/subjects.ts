@@ -27,15 +27,28 @@ import {
   SphereGeometry,
   MeshStandardMaterial,
   Color,
+  type Material,
   type Object3D,
 } from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { VOLUMETRIC_DEPTH_ATTR, type SubjectKind } from './contract';
+import { createTextObject } from '../text/text-object';
+import type { LoadedFontAtlas } from '../text/contract';
 
 const ACCENT = '#cd9f55'; // design-system brass-400 (Observatory Brass)
 const VIOLET = '#7d9fb4'; // design-system ice-400 (purple is banned)
 const PANEL = '#1d212b'; // design-system graphite family
 const INK = '#0b0d13';   // design-system ink
+
+// Injectable MSDF atlas for the 'text' subject (INV-11). A host with async IO
+// (the catalog's shared rig) preloads the Inter-400 atlas and injects it here;
+// buildSubject('text') then assembles REAL letterforms via createTextObject.
+// When no atlas is set (vitest/node, atlas fetch failed) the legacy RoundedBox
+// proxy path below is used unchanged.
+let textSubjectAtlas: LoadedFontAtlas | null = null;
+export function setTextSubjectAtlas(atlas: LoadedFontAtlas | null): void {
+  textSubjectAtlas = atlas;
+}
 
 export interface BuiltSubject {
   /** Group the primitive owns (added to the stage by the host). */
@@ -303,6 +316,36 @@ export function buildSubject(kind: SubjectKind, opts: BuildSubjectOptions = {}):
       return { object, subject: mesh };
     }
     case 'text': {
+      if (textSubjectAtlas) {
+        // Real MSDF letterforms (INV-11): 'PRISM' decomposed per glyph into
+        // unit meshes named glyph-0..4 — the SAME names the text primitives
+        // traverse. fontSize 0.565 puts the block at ≈1.71×0.47 scene units
+        // (the legacy proxy row footprint, so tile framing is unchanged).
+        const handle = createTextObject(
+          {
+            content: 'PRISM',
+            fontSize: 0.565,
+            decompose: 'glyph',
+            fill: { kind: 'solid', color: ACCENT },
+          },
+          textSubjectAtlas,
+        );
+        handle.object.name = 'subject';
+        // Legacy proxy look: alternating ice/brass units over the dark
+        // emissive so the catalog tiles read consistently.
+        handle.units.forEach((unit, i) => {
+          const m = unit.material as Material & {
+            color: Color;
+            emissive: Color;
+            emissiveIntensity: number;
+          };
+          m.color.set(i % 2 ? ACCENT : VIOLET);
+          m.emissive.set('#141921');
+          m.emissiveIntensity = 0.7;
+        });
+        object.add(handle.object);
+        return { object, subject: handle.object };
+      }
       // A row of pseudo-glyph tiles. Production text primitives bind to MSDF
       // glyph coverage (INV-11); the catalog uses rounded glyph meshes to prove
       // the per-glyph decomposition mechanism visibly (now depth-rich, not flat).

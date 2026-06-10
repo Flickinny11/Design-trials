@@ -27,7 +27,8 @@
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { buildSubject } from '@/lib/prism/animatable/subjects';
+import { buildSubject, setTextSubjectAtlas } from '@/lib/prism/animatable/subjects';
+import { getFontRegistry } from '@/lib/prism/text/font-registry';
 import type {
   Animatable,
   AnimatableTarget,
@@ -96,6 +97,8 @@ class SharedTileRenderer {
   ready = false;
   backend: 'webgpu' | 'webgl' | 'unknown' = 'unknown';
   deviceLostCount = 0;
+  /** True once the Inter MSDF atlas is injected (text tiles = real glyphs). */
+  textAtlasReady = false;
   /** Names of the def's that currently have a lit glass backdrop (diagnostic). */
   glassBackdropTiles = new Set<string>();
 
@@ -142,6 +145,13 @@ class SharedTileRenderer {
       /* no device.lost on this backend */
     }
 
+    // Inject the Inter-400 MSDF atlas so buildSubject('text') assembles REAL
+    // letterforms (INV-11). Awaited before ready/loop, so no frame ever paints
+    // the proxy boxes; tiles registered while the renderer was still booting
+    // are rebuilt against the atlas. On failure: log once, keep proxy glyphs —
+    // the rig must never crash over a font fetch.
+    await this.preloadTextAtlas();
+
     this.buildEnv(renderer);
     this.resize();
     if (typeof window !== 'undefined') {
@@ -151,6 +161,22 @@ class SharedTileRenderer {
     this.ready = true;
     this.prevTime = (typeof performance !== 'undefined' ? performance.now() : 0);
     this.loop();
+  }
+
+  /** Resolve + inject the shared Inter atlas for the 'text' subject. The atlas
+   *  texture is registry-owned (`userData.prismShared`) — tile disposal only
+   *  ever disposes per-unit geometry/materials, never the atlas texture. */
+  private async preloadTextAtlas(): Promise<void> {
+    try {
+      const atlas = await getFontRegistry().resolveAtlas('Inter', 400);
+      setTextSubjectAtlas(atlas);
+      this.textAtlasReady = true;
+      for (const tile of this.tiles.values()) {
+        if (tile.def.subject === 'text') this.buildInstance(tile, tile.def, tile.opts.params);
+      }
+    } catch (err) {
+      console.warn('[catalog-rig] Inter MSDF atlas unavailable — text tiles fall back to proxy glyphs:', err);
+    }
   }
 
   /** Studio IBL so transmissive glass / PBR read well. Falls back to a simple
@@ -544,6 +570,10 @@ class SharedTileRenderer {
       },
       get backend() {
         return sharedRig.backend;
+      },
+      // True when the 'text' subject is building real MSDF letterforms.
+      get textAtlasReady() {
+        return sharedRig.textAtlasReady;
       },
       // Which def's currently have a lit glass backdrop (verification hook for
       // the clear-glass refraction fix).
