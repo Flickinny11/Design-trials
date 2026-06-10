@@ -10,6 +10,7 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore, type InspectorTab } from '@/stores/useGraphEditorStore';
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS } from '@/components/editor/design-system';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -39,46 +40,45 @@ export default function HubInspector() {
   const hubNodes = nodes.filter((n) => n.parentHubId === hub.hubId);
 
   return (
+    // Hero surface — frosted observatory glass with brass-fitted edge.
+    // RefractionDefs is mounted once in src/app/page.tsx; RightPane mounts
+    // either this panel OR Inspector (never both), so the refract budget is 1.
     <div
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] border-l border-white/10 flex flex-col animate-slide-in-r"
-      style={{
-        background: 'linear-gradient(180deg, rgba(14,16,37,0.97) 0%, rgba(8,10,26,0.98) 100%)',
-        backdropFilter: 'blur(32px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-        boxShadow: '-24px 0 64px rgba(0,0,0,0.55)',
-      }}
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
-      <div className="flex items-center justify-between px-5 py-4 border-b border-white/5">
+      {/* Machined header plate — brushed metal fitting riveted into the glass. */}
+      <div className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         <div className="min-w-0 flex-1">
-          <div className="text-[9px] font-mono tracking-widest text-white/40 flex items-center gap-1.5">
+          <div className="ds-kicker flex items-center gap-1.5">
             <span>INSPECTOR</span>
-            <Icon name="chevron" size={9} color="#6b7694" />
-            <span className="text-white/60">hub</span>
+            <Icon name="chevron" size={9} color={DS.textLow} />
+            <span className="text-ds-text-mid">hub</span>
           </div>
-          <div className="font-display font-bold text-white text-lg leading-tight flex items-center gap-2">
+          <div className="font-display font-bold text-ds-text-hi text-lg leading-tight flex items-center gap-2">
             {hub.title}
           </div>
         </div>
         <button
           onClick={close}
-          className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+          className="ds-btn ds-btn--quiet !px-0 w-8 h-8 !rounded-full shrink-0"
         >
-          <Icon name="close" size={12} color="#c5ccea" />
+          <Icon name="close" size={12} color={DS.text} />
         </button>
       </div>
 
-      <div className="flex border-b border-white/5 overflow-x-auto scrollbar-hide">
+      {/* Tab rail — engraved chips, brass-lit when active. */}
+      <div className="flex gap-1.5 px-3 py-2.5 overflow-x-auto scrollbar-hide">
         {TABS.map((t) => {
           const active = tab === t.id;
           return (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`px-3.5 py-2.5 text-[11px] font-semibold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap ${
-                active ? 'border-[#5d8bff] text-white bg-[#5d8bff]/6' : 'border-transparent text-white/45 hover:text-white/75'
+              className={`ds-chip ds-press cursor-pointer whitespace-nowrap min-h-[40px] px-3 gap-1.5 ${
+                active ? 'ds-chip--brass' : 'hover:text-ds-text'
               }`}
             >
-              <Icon name={t.icon} size={11} color={active ? '#5d8bff' : '#8896b8'} glow={active} />
+              <Icon name={t.icon} size={11} color={active ? DS.brass400 : DS.textMid} glow={active} />
               {t.label}
             </button>
           );
@@ -115,41 +115,41 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
     <div className="p-5 space-y-4">
       {hub.caption && (
         <>
-          <div className="text-[9px] font-mono tracking-widest text-white/40">CAPTION</div>
-          <div className="px-3 py-2.5 rounded-lg bg-white/[0.025] border border-white/5 text-[12px] text-white/80 leading-relaxed">
+          <div className="ds-kicker">CAPTION</div>
+          <div className="px-3 py-2.5 ds-well rounded-ds-md text-[12px] text-ds-text leading-relaxed">
             {hub.caption}
           </div>
         </>
       )}
 
-      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-2">LAYOUT</div>
+      <div className="ds-kicker pt-2">LAYOUT</div>
       <div className="grid grid-cols-2 gap-2 text-[11px]">
         <SpecRow icon="grid" label="Viewport">
-          <span className="text-white/85 font-mono">{layout.viewportWidth}×{layout.viewportHeight}</span>
+          <span className="text-ds-text font-mono">{layout.viewportWidth}×{layout.viewportHeight}</span>
         </SpecRow>
         <SpecRow icon="layers" label="Content H">
-          <span className="text-white/85 font-mono">{layout.contentHeight}px</span>
+          <span className="text-ds-text font-mono">{layout.contentHeight}px</span>
         </SpecRow>
         <SpecRow icon="sparkle" label="Bg">
-          <span className="text-white/85 font-mono">{layout.backgroundColor}</span>
+          <span className="text-ds-text font-mono">{layout.backgroundColor}</span>
         </SpecRow>
         <SpecRow icon="home" label="Hub ID">
-          <span className="text-white/85 font-mono">{hub.hubId}</span>
+          <span className="text-ds-text font-mono">{hub.hubId}</span>
         </SpecRow>
       </div>
 
-      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-2">RESPONSIVE BREAKPOINTS</div>
+      <div className="ds-kicker pt-2">RESPONSIVE BREAKPOINTS</div>
       <div className="space-y-1.5">
         {Object.keys(breakpoints).length === 0 ? (
-          <div className="text-[11px] text-white/40 italic">No responsiveBreakpoints declared</div>
+          <div className="text-[11px] text-ds-text-low italic">No responsiveBreakpoints declared</div>
         ) : (
           Object.entries(breakpoints).map(([name, bp]) =>
             bp ? (
-              <div key={name} className="px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5 flex items-center justify-between">
-                <span className="text-[11px] text-white/85 font-mono">{name}</span>
-                <div className="flex gap-3 text-[10px] font-mono text-white/55">
+              <div key={name} className="px-3 py-2 ds-well rounded-ds-md flex items-center justify-between">
+                <span className="text-[11px] text-ds-text font-mono">{name}</span>
+                <div className="flex gap-3 text-[10px] font-mono text-ds-text-mid">
                   <span>≤{bp.maxWidth}px</span>
-                  <span className="text-[#5d8bff]">×{bp.scale}</span>
+                  <span className="text-ds-brass-300">×{bp.scale}</span>
                 </div>
               </div>
             ) : null
@@ -181,26 +181,26 @@ function HubBehaviorTab({ nodes }: { nodes: PrismNode[] }) {
   });
   return (
     <div className="p-5 space-y-4">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">GLOBAL BINDINGS</div>
+      <div className="ds-kicker">GLOBAL BINDINGS</div>
       <div className="space-y-2">
         {bindings.length === 0 ? (
-          <div className="text-[11px] text-white/40 italic">No global state/theme bindings declared</div>
+          <div className="text-[11px] text-ds-text-low italic">No global state/theme bindings declared</div>
         ) : (
           bindings.map((b, i) => (
-            <div key={i} className="px-3 py-2.5 rounded-lg bg-white/[0.025] border border-white/5">
+            <div key={i} className="px-3 py-2.5 ds-well rounded-ds-md">
               <div className="flex items-center gap-1.5 text-[11px]">
-                <span className="px-1.5 py-0.5 rounded bg-[#a978ff]/15 text-[#a978ff] font-mono text-[10px]">{b.target}</span>
-                <Icon name="chevron" size={9} color="#6b7694" />
-                <span className="text-white/65 font-mono text-[11px] truncate">{b.source}</span>
+                <span className="ds-chip ds-chip--brass">{b.target}</span>
+                <Icon name="chevron" size={9} color={DS.textLow} />
+                <span className="text-ds-text-mid font-mono text-[11px] truncate">{b.source}</span>
               </div>
-              <div className="text-[9px] font-mono text-white/40 mt-1">via {b.nodeId}</div>
+              <div className="text-[9px] font-mono text-ds-text-low mt-1">via {b.nodeId}</div>
             </div>
           ))
         )}
       </div>
 
-      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-3">EVENT FAN-OUT</div>
-      <div className="text-[11px] text-white/65 leading-relaxed">
+      <div className="ds-kicker pt-3">EVENT FAN-OUT</div>
+      <div className="text-[11px] text-ds-text-mid leading-relaxed">
         {nodes.length} nodes attached to this hub.
       </div>
     </div>
@@ -223,21 +223,22 @@ function HubCodeTab({ hub, hubNodes }: { hub: PrismHub; hubNodes: PrismNode[] })
   };
   return (
     <div className="p-5 space-y-3">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">MANIFEST</div>
-      <div className="rounded-xl border border-white/10 bg-black/45 overflow-hidden">
-        <div className="px-3 py-2 border-b border-white/5 text-[10px] font-mono text-white/40">
+      <div className="ds-kicker">MANIFEST</div>
+      {/* Manifest trough — carved well with an engraved path header. */}
+      <div className="ds-well ds-edge rounded-ds-md overflow-hidden">
+        <div className="px-3 py-2 border-b border-white/5 text-[10px] font-mono text-ds-text-low">
           public/prism-assets/mock-app.prism :: manifest.json
         </div>
-        <pre className="p-3 text-[10.5px] font-mono leading-relaxed overflow-x-auto text-white/82">
+        <pre className="p-3 text-[10.5px] font-mono leading-relaxed overflow-x-auto text-ds-text">
           <code>{JSON.stringify(manifest, null, 2)}</code>
         </pre>
       </div>
 
-      <div className="text-[9px] font-mono tracking-widest text-white/40 pt-2">BUILD COMMANDS</div>
-      <div className="space-y-1.5 text-[11px] font-mono text-white/75">
-        <div className="px-3 py-1.5 rounded-lg bg-white/[0.025] border border-white/5">npm run build:atlas</div>
-        <div className="px-3 py-1.5 rounded-lg bg-white/[0.025] border border-white/5">npm run build:msdf</div>
-        <div className="px-3 py-1.5 rounded-lg bg-white/[0.025] border border-white/5">npm run build:prism</div>
+      <div className="ds-kicker pt-2">BUILD COMMANDS</div>
+      <div className="space-y-1.5 text-[11px] font-mono text-ds-text-mid">
+        <div className="px-3 py-1.5 ds-well rounded-ds-md">npm run build:atlas</div>
+        <div className="px-3 py-1.5 ds-well rounded-ds-md">npm run build:msdf</div>
+        <div className="px-3 py-1.5 ds-well rounded-ds-md">npm run build:prism</div>
       </div>
     </div>
   );
@@ -253,19 +254,19 @@ function HubAnimationTab({ hubNodes }: { hubNodes: PrismNode[] }) {
   });
   return (
     <div className="p-5 space-y-3">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">HUB-LEVEL ANIMATIONS</div>
+      <div className="ds-kicker">HUB-LEVEL ANIMATIONS</div>
       <div className="space-y-1.5">
         {animated.length === 0 ? (
-          <div className="text-[11px] text-white/40 italic">No animated nodes in this hub</div>
+          <div className="text-[11px] text-ds-text-low italic">No animated nodes in this hub</div>
         ) : (
           animated.map((n) => (
-            <div key={n.nodeId} className="px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5 flex items-center justify-between">
-              <span className="text-[11px] text-white/85 font-mono truncate">{n.nodeId}</span>
-              <div className="flex gap-2 text-[10px] font-mono text-white/55">
+            <div key={n.nodeId} className="px-3 py-2 ds-well rounded-ds-md flex items-center justify-between">
+              <span className="text-[11px] text-ds-text font-mono truncate">{n.nodeId}</span>
+              <div className="flex gap-2 text-[10px] font-mono text-ds-text-mid">
                 <span>{n.visual.frameCount} frames</span>
                 {(() => {
                   const fps = (n.intent?.animationSpec as { fps?: number } | undefined)?.fps;
-                  return typeof fps === 'number' ? <span className="text-[#5d8bff]">@ {fps}fps</span> : null;
+                  return typeof fps === 'number' ? <span className="text-ds-brass-300">@ {fps}fps</span> : null;
                 })()}
               </div>
             </div>
@@ -282,23 +283,23 @@ function HubAnimationTab({ hubNodes }: { hubNodes: PrismNode[] }) {
 function HubConnectionsTab({ hubNodes, onPickNode }: { hubNodes: PrismNode[]; onPickNode: (id: string) => void }) {
   return (
     <div className="p-5 space-y-3">
-      <div className="text-[9px] font-mono tracking-widest text-white/40">ATTACHED NODES ({hubNodes.length})</div>
+      <div className="ds-kicker">ATTACHED NODES ({hubNodes.length})</div>
       <div className="space-y-1.5">
         {hubNodes.length === 0 ? (
-          <div className="text-[11px] text-white/40 italic">No nodes attached</div>
+          <div className="text-[11px] text-ds-text-low italic">No nodes attached</div>
         ) : (
           hubNodes.map((n) => (
             <button
               key={n.nodeId}
               onClick={() => onPickNode(n.nodeId)}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5 hover:bg-white/[0.055] transition-colors text-left group"
+              className="w-full px-3 py-2 ds-well ds-edge rounded-ds-md ds-lift text-left group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-[12px] text-white/85 font-mono truncate">{n.nodeId}</span>
-                <Icon name="chevron" size={11} color="#6b7694" className="group-hover:translate-x-0.5 transition-transform" />
+                <span className="text-[12px] text-ds-text font-mono truncate">{n.nodeId}</span>
+                <Icon name="chevron" size={11} color={DS.textLow} className="group-hover:translate-x-0.5 transition-transform" />
               </div>
               {n.intent?.caption && (
-                <div className="text-[10px] text-white/45 mt-0.5 truncate">{n.intent.caption.slice(0, 80)}</div>
+                <div className="text-[10px] text-ds-text-low mt-0.5 truncate">{n.intent.caption.slice(0, 80)}</div>
               )}
             </button>
           ))
@@ -313,7 +314,7 @@ function HubConnectionsTab({ hubNodes, onPickNode }: { hubNodes: PrismNode[]; on
 // ═══════════════════════════════════════════════════════════════════
 function HubBackendTab() {
   return (
-    <div className="p-5 text-center text-white/40 text-[12px] italic">
+    <div className="p-5 text-center text-ds-text-low text-[12px] italic">
       Hubs do not declare backend contracts. Per-node backend bindings live on each node's Backend tab.
     </div>
   );
@@ -322,10 +323,10 @@ function HubBackendTab() {
 // ── Shared row helper (mirrors Inspector.tsx SpecRow) ──────────────────────
 function SpecRow({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
   return (
-    <div className="px-3 py-2 rounded-lg bg-white/[0.025] border border-white/5 flex items-center justify-between">
+    <div className="px-3 py-2 ds-well rounded-ds-md flex items-center justify-between">
       <div className="flex items-center gap-1.5">
-        <Icon name={icon} size={11} color="#7a86a8" />
-        <span className="text-[10px] font-mono tracking-widest text-white/50">{label}</span>
+        <Icon name={icon} size={11} color={DS.textLow} />
+        <span className="ds-label">{label}</span>
       </div>
       {children}
     </div>

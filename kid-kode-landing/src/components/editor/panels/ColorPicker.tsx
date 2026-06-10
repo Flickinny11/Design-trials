@@ -106,8 +106,9 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
           className="ds-press flex items-center gap-2 rounded-ds-xs px-1.5 py-1 transition-colors hover:bg-white/5 disabled:opacity-40 disabled:cursor-not-allowed group"
           type="button"
         >
-          {/* Swatch carved into a ds-well frame */}
-          <span className="ds-well inline-flex rounded-[6px] p-[2px]">
+          {/* Swatch carved into a ds-well frame; the brass ring lights up
+              while the picker popover is open (Radix data-state on trigger). */}
+          <span className="ds-well inline-flex rounded-[6px] p-[2px] transition-shadow group-data-[state=open]:shadow-[inset_0_2px_6px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(var(--ds-brass-400-rgb),0.85),var(--ds-glow-brass)]">
             <span
               className="block w-4 h-4 rounded-[4px] group-hover:scale-110 transition-transform"
               style={{
