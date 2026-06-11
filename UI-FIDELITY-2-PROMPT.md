@@ -63,3 +63,21 @@ a demo app/scene worthy of the engine — story-grade, morph-through sections, p
 textures, bound animations across all five drivers, 3D objects under the lighting rig — the thing a first-time user
 sees and says Logan's quote verbatim. Provision hi-res assets (kill the 1024² ceiling per the carried flag). Also fix
 the carried gizmo-offset bug (anchor double-transform) and migrate editor-chrome canvas2D labels → MSDF while in there.
+
+## ADDENDUM 3 (2026-06-11): FAL.AI CREATIVE MANDATE — Logan's words: "have fun with it; design something incredibly badass"
+- KEY: read FAL_KEY from kid-kode-landing/.env.local (NEVER print it; validate with one minimal call at start; if
+  absent/invalid, flag honestly and proceed with non-fal scope). BUDGET: $50 HARD CAP — keep a running spend ledger
+  (every call: model, purpose, est. cost), warn yourself at $25/$40, STOP fal calls at $48. Spend ledger goes in the report.
+- RE-VERIFY CURRENT BEST MODELS (June 2026 — do NOT assume training-era): fal's catalog for (a) hi-res image gen,
+  (b) the NEW generation of 3D object generators (complete 3D from prompt alone or single image — Logan notes these now
+  substantially outperform multi-view stitching; use multi-view→3D only if it measurably wins), (c) video gen for
+  video-texture moments. Pick deliberately; note choices + why in the report.
+- USE IT FOR BOTH TARGETS: (1) THE 5-HUB MOCK APP — design a flagship showcase app with FIVE hubs/pages, story-grade,
+  morph-through navigation between hubs, photoreal generated 3D objects placed as real scene nodes, generated hi-res
+  imagery (kills the 1024² ceiling), video where it elevates, text with poured textures, primitives bound across all
+  five drivers, the DESIGN-REFERENCES stack visibly everywhere. It must make a first-time user say Logan's finish-line
+  quote. (2) THE EDITOR UI — generated assets in service of the real-material chrome (env/HDRI maps for chrome lighting,
+  micro-material textures, accent assets); generated assets FEED the TSL materials — they never replace real rendering.
+- CREATIVE LATITUDE GRANTED: this is the one place Logan has said "have fun — make it awesome." Take real swings.
+  VERIFY WITH YOUR OWN EYES (vision-critique every generated asset + composed scene against the photoreal/premium bar
+  before the advocate sees it; reject and regenerate weak assets — budget permitting).
