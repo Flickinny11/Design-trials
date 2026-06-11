@@ -71,6 +71,7 @@ import { rebuildNode } from '@/lib/editor/rebuild-node';
 import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
 import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout';
 import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
@@ -343,6 +344,9 @@ function StepperRow({
 // ── Main component ───────────────────────────────────────────────────────────
 export default function CanvasToolbar() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  // UI-FIDELITY-2 — the dock surface renders as real brushed metal in the
+  // unified canvas (brushed along its long/vertical axis).
+  const dockSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'y' });
 
   // Selection / editor state
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
@@ -650,8 +654,9 @@ export default function CanvasToolbar() {
       >
         {/* Machined brushed-metal dock — the instrument fitting the tool keys
             are cut into (ds-metal + grain tooth + specular edge). Scrolls
-            within the bounded rail when the viewport is short. */}
-        <div className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain">
+            within the bounded rail when the viewport is short. At t2 the
+            surface renders as REAL brushed metal in the unified canvas. */}
+        <div ref={dockSlab.ref} className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain">
           <div className="px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5">
             <Icon name="grid" size={13} color={DS_ACCENT} glow />
             <span className="text-[9px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
@@ -877,6 +882,9 @@ function FlyoutShell({
   // plate and manages its OWN scroll region (the flyout component clips the
   // shared-rig canvas to that region), so the shell must not double-scroll.
   const wide = meta.id === 'animation';
+  // UI-FIDELITY-2 — hero glass: the flyout plate refracts the live scene
+  // (edge lensing + dispersion + frost) instead of the SVG-displacement frost.
+  const flyoutSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.55 });
   return (
     <div
       data-component="canvas-toolbar-flyout"
@@ -886,6 +894,7 @@ function FlyoutShell({
       // max-h carries a viewport-derived ceiling (not just 78vh) so short
       // windows (460px advocate flag) get a scrolling flyout instead of the
       // Lighting chips clipping below the fold.
+      ref={flyoutSlab.ref}
       className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[min(78vh,calc(100vh-7rem))] overflow-hidden flex ds-reveal`}
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the

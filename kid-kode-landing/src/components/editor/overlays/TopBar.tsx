@@ -6,6 +6,7 @@
 // breadcrumb, recessed zoom/health readouts, and machined ds-btn fittings.
 
 import { useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
@@ -39,6 +40,10 @@ export default function TopBar() {
   const pending = total - verified - failed;
   const health = Math.round((verified / total) * 100);
 
+  // UI-FIDELITY-2 — the bar surface renders as real brushed metal in the
+  // unified canvas (full-width rail, brushed along x; CSS keeps the layout).
+  const slab = useChromeSlab({ material: 'metal', radius: 0, brushAxis: 'x' });
+
   const zoomDesc: Record<string, string> = {
     L0: 'Galaxy · All hubs visible',
     L1: 'Cluster · Single hub',
@@ -51,6 +56,7 @@ export default function TopBar() {
 
   return (
     <div
+      ref={slab.ref}
       data-component="top-bar"
       className="absolute z-30 top-0 left-0 right-0 h-14 flex items-center justify-between px-4 pointer-events-none ds-metal ds-grain ds-edge"
       style={{ borderRadius: 0 }}

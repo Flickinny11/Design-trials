@@ -18,15 +18,53 @@
 | Wave | Scope | Status |
 |---|---|---|
 | W0 | Orientation: ledger, FAL validation, DESIGN-REFERENCES full read, research (Slider Rev / fal models / WebGPU chrome), baseline DPR2 screenshots | ✅ DONE (AUTO-CKPT pending→see git) |
-| W1 | Chrome material foundation: shared WebGPU chrome layer, TSL material lib (brushed metal/smoked glass/ceramic), Fresnel/refraction/bevels, pointer-reactive light, T0 fallback, <2ms budget | pending |
+| W1 | Chrome material foundation: shared WebGPU chrome layer, TSL material lib (brushed metal/smoked glass/ceramic), Fresnel/refraction/bevels, pointer-reactive light, T0 fallback, <2ms budget | ✅ FOUNDATION DONE (see W1 notes) |
 | W2 | Surface migration: toolbar+flyouts+sliders, inspector, catalog frame, overlays, HUD, keyframe shell, boot + typography overhaul + morph-through transitions + canvas2D→MSDF labels | pending |
 | W3 | Flagship 5-hub showcase: fal.ai assets (image/3D/video), hi-res (kill 1024²), morph-through nav, all-5-driver bindings, poured-texture text | pending |
 | W4 | Carried fixes + no-regression: gizmo offset, 312 catalog, full vitest, perf table, mobile fallback | pending |
 | W5 | Evidence + report: DPR2 zoom crops, advocate verdicts (Slider-Rev side-by-side), dependency-usage table, spend ledger, UI-FIDELITY-2-REPORT.md | pending |
 
+## W1 notes (foundation shipped S1)
+
+- **Built:** `src/components/editor/chrome-layer/` — page-lifetime slab registry
+  (survives Canvas contentKey remounts), two instanced material families
+  (opaque metal/ceramic/well + refractive glass), camera-parented CSS-px
+  placement, DOM twins keep layout/text/input (`.ds-slab-hosted` suppression in
+  materials.css, t2-gated, layer-active hysteresis), pointer PointLight +
+  damped uniforms, TSL nebula scene backgroundNode (refractable backdrop;
+  matches the CSS one used at t0/t1).
+- **Material physics:** IQ rounded-box SDF per instance (per-corner radii),
+  fwidth AA, SDF-gradient bevel normals → MeshPhysicalNodeMaterial (real
+  GGX/Fresnel/IBL), brushed-metal stretched-noise micro-normals, ceramic
+  clearcoat+grain, wells inverted-bevel, glass = edge-lensed 3-tap RGB
+  dispersion of viewportMipTexture w/ viewportSafeUV + Beer–Lambert smoke +
+  guaranteed rim light; brass keyline + magnetic pointer border-glow
+  (emissive) replace .ds-edge.
+- **Pilot surfaces live:** TopBar (metal), CanvasToolbar dock (metal, brushed y),
+  FlyoutShell (glass, accent), Inspector (glass). tsc gate: 10 baseline / 0 new.
+  backend=webgpu attested, consoleErrors=0.
+- **Evidence:** `notes/verification/fidelity2/w1-after/` — full frames + DPR2
+  zoom crops (dock static/hover, flyout hover + corner ultra, topbar, inspector
+  edge). Own-eyes: dock reads as machined brushed metal under the pointer
+  light; flyout reads as smoked glass w/ brass-lit bevel — REAL material, not
+  CSS. Flag: odd diagonal light band on inspector glass body (investigate in
+  W2 polish; likely refracted TopBar/nebula via mip chain — not a blocker).
+- **PERF (honest flag):** dev-mode headless rAF harness — HEAD canvas 10.3ms
+  median → +1.5ms fixed (bg node + pointer light + layer) → +~4ms with glass
+  slabs (viewport copy + mip-gen at DPR2 3360×2200). OVER the 2ms budget in
+  this harness; W4 owns GPU timestamp measurement on a real window +
+  production build + mitigations (half-res refraction copy, tap reduction).
+- **Pre-existing finding (not a regression — verified via stash-bisect at
+  HEAD):** canvas-mode demo backdrop nondeterministically shows the blue
+  mockup or the flat gray compiled slab depending on prior drive state
+  (hub-reveal/camera). The W3 showcase rebuild replaces this content wholesale.
+- **fal feed for chrome (Patina micro-normals + env):** deferred into W2
+  surface work where the material API grows texture slots. FAL_KEY re-check due
+  at W2 boundary per mandate.
+
 ## Surfaces done (advocate verdicts)
 
-(none yet)
+(pilot shipped; advocate gate runs at W2 when surfaces are complete)
 
 ## fal.ai spend ledger ($50 HARD CAP — warn $25/$40, stop $48)
 

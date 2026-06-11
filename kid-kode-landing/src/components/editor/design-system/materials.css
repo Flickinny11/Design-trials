@@ -415,3 +415,24 @@ html[data-ds-tier='t1'] .ds-glass--heavy {
   .ds-toggle::after { width: 18px; height: 18px; }
   .ds-toggle:checked::after { transform: translateX(20px); }
 }
+
+/* ── UI-FIDELITY-2: GPU-rendered chrome (slab-hosted surfaces) ─────────────────
+   At t2 the chrome-layer renders a surface's REAL material (SDF bevels with
+   physical Fresnel, live-scene refraction, brushed metal, pointer light) as an
+   instanced quad in the unified canvas BEHIND the DOM element. The DOM twin
+   keeps layout, text, shadow and input; its painted surface goes transparent.
+   `.ds-slab-hosted` is added at runtime by useChromeSlab ONLY when the GPU
+   layer is live, so below t2 (or pre-boot) the v1 CSS look stands untouched. */
+html[data-ds-tier='t2'] .ds-slab-hosted {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html[data-ds-tier='t2'] .ds-slab-hosted::before {
+  /* the .ds-edge keyline — replaced by the lit SDF keyline */
+  opacity: 0 !important;
+}
+html[data-ds-tier='t2'] .ds-slab-hosted::after {
+  /* the .ds-grain tooth — replaced by in-shader micro-normal noise */
+  opacity: 0 !important;
+}

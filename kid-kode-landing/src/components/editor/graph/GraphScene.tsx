@@ -26,6 +26,7 @@ import { WebGPURenderer } from 'three/webgpu';
 import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { ChromeSlabLayer } from '@/components/editor/chrome-layer';
 import HubLighting from './HubLighting';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
 import { useGraphEditorStore, type ViewMode, type EditorRenderMode } from '@/stores/useGraphEditorStore';
@@ -3094,6 +3095,10 @@ export default function GraphScene() {
         <Suspense fallback={null}>
           <SceneContent onPerf={(factor) => setDpr([1, factor])} />
         </Suspense>
+        {/* UI-FIDELITY-2 — rendered chrome: every registered DOM chrome
+            surface draws as a real SDF slab (Fresnel bevels, live-scene
+            refraction, pointer light) in this same unified canvas. */}
+        <ChromeSlabLayer />
       </Canvas>
     </div>
   );

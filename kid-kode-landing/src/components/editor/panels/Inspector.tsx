@@ -13,6 +13,7 @@ import { useElementImageStore } from '@/stores/useElementImageStore';
 import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/useAnimationEditsStore';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { ColorPicker } from './ColorPicker';
 import MaterialTab from './MaterialTab';
 import VisualPreview from './visual-preview/VisualPreview';
@@ -62,6 +63,8 @@ const WORLD_TABS: { id: InspectorTab; label: string; icon: string }[] = [
 ];
 
 export default function Inspector() {
+  // UI-FIDELITY-2 — hero glass: the inspector plate refracts the live scene.
+  const inspectorSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
   const open = useGraphEditorStore((s) => s.inspectorOpen);
   const close = useGraphEditorStore((s) => s.closeInspector);
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
@@ -317,6 +320,7 @@ export default function Inspector() {
     // t2-only ds-glass--refract displacement is legal here. RightPane mounts
     // exactly one inspector panel at a time, so the refract budget stays at 1.
     <div
+      ref={inspectorSlab.ref}
       // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
       // rail, hiding the first word of every body line — inset left-16 clears
       // the rail on phones; desktop geometry unchanged.
