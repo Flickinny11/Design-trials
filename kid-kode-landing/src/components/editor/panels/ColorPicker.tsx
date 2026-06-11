@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { DS } from '@/components/editor/design-system';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 // Simple HSV-like picker. Click to open; live-updates.
 // Chrome: Observatory Brass — swatches sit in carved ds-well frames, the
@@ -76,6 +77,10 @@ function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: n
 }
 
 export function ColorPicker({ value, onChange, label, disabled }: ColorPickerProps) {
+  // UI-FIDELITY-2 — the portaled palette renders as real heavy-frost glass
+  // at t2 (slab rects are read per frame, so the Radix portal hosts fine;
+  // the callback ref attaches/releases as the popover opens/closes).
+  const popoverSlab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.7 });
   const [local, setLocal] = useState(value);
   useEffect(() => { setLocal(value); }, [value]);
 
@@ -131,6 +136,7 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content
+          ref={popoverSlab.ref}
           side="left"
           align="start"
           sideOffset={8}

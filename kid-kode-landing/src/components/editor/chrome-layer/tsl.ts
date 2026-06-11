@@ -57,6 +57,7 @@ export const tsl = TSL as unknown as {
   dFdx: (x: unknown) => TSLNode;
   dFdy: (x: unknown) => TSLNode;
   instancedBufferAttribute: (attr: unknown) => TSLNode;
+  texture: (tex: unknown, uvNode?: unknown) => TSLNode;
   viewportMipTexture: (uvNode?: unknown) => TSLNode;
   viewportSafeUV: (uvNode?: unknown) => TSLNode;
   screenUV: TSLNode;

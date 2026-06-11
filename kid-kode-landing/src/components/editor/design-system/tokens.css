@@ -104,8 +104,19 @@
   --ds-ease-spring: cubic-bezier(0.34, 1.36, 0.44, 1);
 
   /* ── Type & rhythm ────────────────────────────────────────────────────── */
+  /* Font stacks (W2 type overhaul). The --font-* variables are stamped on
+     <html> by next/font/local in src/app/layout.tsx (self-hosted variable
+     fonts in public/fonts/ui/). Fallback names after each var() cover the
+     no-JS-vars edge so chrome never silently degrades to a serif default.
+       display — Clash Display  (nameplates, flyout titles)
+       ui      — Geist          (body, controls; supports tabular numerals)
+       mono    — JetBrains Mono (kickers, micro-labels, numeric readouts)   */
+  --ds-font-display: var(--font-display, 'Clash Display'), var(--font-ui, 'Geist'), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-ui: var(--font-ui, 'Geist'), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-mono: var(--font-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --ds-track-label: 0.16em;
   --ds-track-kicker: 0.24em;
+  --ds-track-title: 0.015em; /* Clash Display sits tight — a hair of air at title sizes */
   --ds-fs-kicker: 9px;
   --ds-fs-label: 10px;
   --ds-fs-body: 12px;

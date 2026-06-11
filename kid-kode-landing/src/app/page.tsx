@@ -36,6 +36,7 @@ import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverla
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
@@ -615,6 +616,16 @@ export default function Page() {
     w[arrivalsKey] = [...prior, record];
   }, [viewMode, activeHubId]);
 
+  // UI-FIDELITY-2 — page-level chrome slabs. At t2 the view-mode toggle
+  // housing renders as real brushed metal and the preview-app nav pill as
+  // real frosted glass in the unified canvas (below t2 the v1 CSS stands —
+  // INV-9). The toggle's sliding brass thumb stays CSS: it animates via
+  // transform on every mode switch and a slab rect (sampled from layout
+  // once per frame) would lag the spring; the 3 mode buttons stay CSS text
+  // riding the slab.
+  const modeToggleSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
+  const previewNavSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.4 });
+
   // RT-SC-03 / INV-R3 — ONE unified scene (GraphScene) for all three modes.
   // The mode is a STATE of that scene, not a choice of which mount to render.
   // preview-app hides editor chrome so the same built scene reads as the running
@@ -650,6 +661,7 @@ export default function Page() {
             data-component="view-mode-toggle"
           >
             <div
+              ref={modeToggleSlab.ref}
               className="ds-metal ds-grain ds-edge relative flex items-center p-1"
               style={{ borderRadius: 'var(--ds-r-pill)' }}
             >
@@ -711,6 +723,7 @@ export default function Page() {
 
           {isPreviewApp && (
             <div
+              ref={previewNavSlab.ref}
               data-component="preview-app-nav"
               className="ds-glass ds-edge absolute bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 px-2.5 py-1.5"
               /* position:absolute inline — .ds-glass sets position:relative and
@@ -839,6 +852,11 @@ function MobileModeToggle() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
   const thumbRef = useRef<HTMLSpanElement | null>(null);
+  // UI-FIDELITY-2 — housing slab. The hook is tier-gated, so phones (t1)
+  // keep the v1 CSS metal untouched while tablet-class t2 devices get the
+  // real brushed housing. The GSAP brass thumb stays CSS (transform-driven
+  // slide — a slab rect sampled from layout would lag the spring).
+  const housingSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
 
   const idx = Math.max(
     0,
@@ -868,6 +886,7 @@ function MobileModeToggle() {
       style={{ bottom: 'calc(10px + env(safe-area-inset-bottom, 0px))' }}
     >
       <div
+        ref={housingSlab.ref}
         className="ds-metal ds-grain ds-edge relative flex items-center p-1"
         style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
@@ -928,6 +947,14 @@ function PreviewAppWorldBadge() {
     name: string | null;
   } | null>(null);
 
+  // UI-FIDELITY-2 — at t2 the nameplate housing renders as real brushed
+  // metal and its inset value strip as real smoked glass in the unified
+  // canvas (CSS stands below t2). Hooks live ABOVE the `!worldLabel` early
+  // return (hooks rule); the ref callbacks simply never attach while the
+  // badge renders null.
+  const plateSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x' });
+  const stripSlab = useChromeSlab({ material: 'glass', radius: 9, frost: 0.3 });
+
   useEffect(() => {
     if (typeof window === 'undefined') return;
     function read() {
@@ -956,6 +983,7 @@ function PreviewAppWorldBadge() {
     // Machined brass-fitted nameplate — metal housing, engraved brass kicker,
     // ice-telemetry value on an inset smoked strip (HUD readout).
     <div
+      ref={plateSlab.ref}
       data-component="preview-app-world-badge"
       data-app-name-world-id={worldLabel.appNameWorldId}
       className="ds-metal ds-grain ds-edge absolute top-2 right-3 z-40 pointer-events-none flex items-center gap-2 pl-3 pr-1.5 py-1"
@@ -970,6 +998,7 @@ function PreviewAppWorldBadge() {
         World
       </span>
       <span
+        ref={stripSlab.ref}
         className="ds-smoked flex items-center px-2.5 py-0.5 text-[11px] font-mono"
         style={{
           borderRadius: 'var(--ds-r-pill)',

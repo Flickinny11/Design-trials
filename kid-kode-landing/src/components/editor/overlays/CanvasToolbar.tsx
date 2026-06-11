@@ -262,8 +262,16 @@ function ToolButton({
   accent?: string; onClick?: () => void; title?: string; testId?: string;
 }) {
   const a = accent ?? DS_ACCENT;
+  // UI-FIDELITY-2 — the machined key face renders as real ceramic in the
+  // unified canvas; the brass accent follows the active state (gizmo mode,
+  // lock, freeze, …). Already a per-item component, so the hook lives here.
+  const slab = useChromeSlab({ material: 'ceramic', radius: 9 });
+  useEffect(() => {
+    slab.update({ accent: active ? 1 : 0 });
+  }, [active, slab]);
   return (
     <button
+      ref={slab.ref}
       type="button"
       disabled={disabled}
       onClick={onClick}
@@ -299,6 +307,29 @@ const STEPPER_KEY_CLASS =
   "relative w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[13px] leading-none " +
   "after:content-[''] after:absolute after:-inset-x-1 after:-inset-y-0.5";
 
+// Stepper ± key — extracted from StepperRow so the slab hook can run per key
+// (two keys per row). At t2 the key face renders as real ceramic in the
+// unified canvas; the invisible ::after hit extension stays DOM.
+function StepperKey({
+  glyph, onClick, testId,
+}: {
+  glyph: '−' | '+'; onClick: () => void; testId?: string;
+}) {
+  const slab = useChromeSlab({ material: 'ceramic', radius: 9 });
+  return (
+    <button
+      ref={slab.ref}
+      type="button"
+      onClick={onClick}
+      data-testid={testId}
+      className={STEPPER_KEY_CLASS}
+      style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
+    >
+      {glyph}
+    </button>
+  );
+}
+
 function StepperRow({
   label, value, onDec, onInc, accent, testId,
 }: {
@@ -308,30 +339,14 @@ function StepperRow({
   return (
     <div className="flex items-center gap-1.5">
       <span className="w-5 text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>{label}</span>
-      <button
-        type="button"
-        onClick={onDec}
-        data-testid={testId ? `${testId}-dec` : undefined}
-        className={STEPPER_KEY_CLASS}
-        style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
-      >
-        −
-      </button>
+      <StepperKey glyph="−" onClick={onDec} testId={testId ? `${testId}-dec` : undefined} />
       <span
         className="flex-1 text-center text-[10px] font-mono tabular-nums px-1 py-1 rounded-ds-xs"
         style={{ color: a, background: WELL_BG, boxShadow: WELL_SHADOW }}
       >
         {value}
       </span>
-      <button
-        type="button"
-        onClick={onInc}
-        data-testid={testId ? `${testId}-inc` : undefined}
-        className={STEPPER_KEY_CLASS}
-        style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
-      >
-        +
-      </button>
+      <StepperKey glyph="+" onClick={onInc} testId={testId ? `${testId}-inc` : undefined} />
     </div>
   );
 }
@@ -341,12 +356,70 @@ function StepperRow({
 // bespoke-authoring lane inside Animation, which renders its own coming
 // state via `showComing`.)
 
+// Dock group key — one machined key per tool group, extracted from the GROUPS
+// map so the slab hook can run per item (hooks cannot live in a map callback).
+// At t2 the key face renders as real ceramic in the unified canvas with the
+// brass accent following the open group; the layer clips it to the dock's
+// scroll window. `order: 51` draws it above the dock housing (order 50).
+function DockGroupKey({
+  meta, isActive, onToggle,
+}: {
+  meta: ToolGroupMeta; isActive: boolean; onToggle: () => void;
+}) {
+  const slab = useChromeSlab({ material: 'ceramic', radius: 9, order: 51 });
+  useEffect(() => {
+    slab.update({ accent: isActive ? 1 : 0 });
+  }, [isActive, slab]);
+  return (
+    <button
+      ref={slab.ref}
+      type="button"
+      data-tool-group={meta.id}
+      onClick={onToggle}
+      title={meta.label}
+      // Ergonomics 2026-06-11: keys widened 48→54px so the group
+      // labels can hold 9px legible type (7px failed readability).
+      className={`relative w-[54px] h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
+        isActive ? '' : 'hover:brightness-[1.2] hover:bg-white/[0.04]'
+      }`}
+      style={isActive ? activeKeyStyle(DS_ACCENT) : undefined}
+    >
+      {isActive && (
+        <span
+          className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
+          style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
+        />
+      )}
+      <Icon name={meta.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
+      <span
+        className="text-[9px] font-mono"
+        style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
+      >
+        {meta.label}
+      </span>
+      {!meta.wired && (
+        <span
+          className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
+          style={{ background: 'var(--ds-ice-400)', boxShadow: `0 0 6px ${dsAlpha(DS.ice400, 0.8)}` }}
+        />
+      )}
+    </button>
+  );
+}
+
 // ── Main component ───────────────────────────────────────────────────────────
 export default function CanvasToolbar() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   // UI-FIDELITY-2 — the dock surface renders as real brushed metal in the
-  // unified canvas (brushed along its long/vertical axis).
-  const dockSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'y' });
+  // unified canvas (brushed along its long/vertical axis). Explicit `order`
+  // keeps the housing under its own ceramic keys (React attaches child refs
+  // before the parent's, so the keys would otherwise register first and the
+  // dock would paint over them).
+  const dockSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'y', order: 50 });
+  // UI-FIDELITY-2 — the transient toast renders as real smoked glass. The
+  // hook lives up here (hooks before the viewMode early return); the ref
+  // attaches whenever the pill mounts.
+  const toastSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.35 });
 
   // Selection / editor state
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
@@ -675,7 +748,6 @@ export default function CanvasToolbar() {
             }}
           />
           {GROUPS.map((g) => {
-            const isActive = activeGroup === g.id;
             const beforeBuild = g.id === 'build';
             return (
               <div key={g.id} className="contents">
@@ -693,38 +765,11 @@ export default function CanvasToolbar() {
                     }}
                   />
                 )}
-                <button
-                  type="button"
-                  data-tool-group={g.id}
-                  onClick={() => setActiveGroup((cur) => (cur === g.id ? null : g.id))}
-                  title={g.label}
-                  // Ergonomics 2026-06-11: keys widened 48→54px so the group
-                  // labels can hold 9px legible type (7px failed readability).
-                  className={`relative w-[54px] h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
-                    isActive ? '' : 'hover:brightness-[1.2] hover:bg-white/[0.04]'
-                  }`}
-                  style={isActive ? activeKeyStyle(DS_ACCENT) : undefined}
-                >
-                  {isActive && (
-                    <span
-                      className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
-                      style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
-                    />
-                  )}
-                  <Icon name={g.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
-                  <span
-                    className="text-[9px] font-mono"
-                    style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
-                  >
-                    {g.label}
-                  </span>
-                  {!g.wired && (
-                    <span
-                      className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
-                      style={{ background: 'var(--ds-ice-400)', boxShadow: `0 0 6px ${dsAlpha(DS.ice400, 0.8)}` }}
-                    />
-                  )}
-                </button>
+                <DockGroupKey
+                  meta={g}
+                  isActive={activeGroup === g.id}
+                  onToggle={() => setActiveGroup((cur) => (cur === g.id ? null : g.id))}
+                />
               </div>
             );
           })}
@@ -855,9 +900,10 @@ export default function CanvasToolbar() {
         selectionLabel={selectionLabel}
       />
 
-      {/* Toast */}
+      {/* Toast — real smoked glass at t2 (toastSlab; the CSS pill stands below). */}
       {toast && (
         <div
+          ref={toastSlab.ref}
           className="absolute z-50 left-1/2 -translate-x-1/2 top-16 pointer-events-none px-3.5 py-2 rounded-full flex items-center gap-2 ds-reveal"
           style={SMOKED_PILL}
         >
@@ -1399,6 +1445,10 @@ function FaderRow({
   min?: number; max?: number; step?: number; accent?: string; testId?: string;
 }) {
   const a = accent ?? DS_ACCENT;
+  // UI-FIDELITY-2 — the fader groove renders as a real recessed well in the
+  // unified canvas (the ds-slider element IS the 5px groove; its brass thumb
+  // is a pseudo-element and stays DOM).
+  const grooveSlab = useChromeSlab({ material: 'well', radius: 999 });
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
@@ -1406,6 +1456,7 @@ function FaderRow({
         <span className="text-[9.5px] font-mono tabular-nums" style={{ color: a }}>{fmt(value)}</span>
       </div>
       <input
+        ref={grooveSlab.ref}
         type="range"
         data-control={testId}
         min={min}
@@ -1472,6 +1523,14 @@ function KeyframeEditorPanel({
   const [loop, setLoop] = useState(true);
   const [snapGrid, setSnapGrid] = useState<'1/60' | '1/100' | '1/120'>('1/60');
 
+  // UI-FIDELITY-2 — the instrument body renders as real ceramic and its
+  // header strip as brushed metal (along the wide axis) in the unified
+  // canvas. Explicit `order`s keep the body under its header / track lanes
+  // (child refs register before the parent's) and the whole stack under the
+  // z-50 dock cluster (orders 50/51), matching the DOM z-40/z-50 split.
+  const bodySlab = useChromeSlab({ material: 'ceramic', radius: 18, order: 40 });
+  const headerSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x', order: 41 });
+
   return (
     <div
       data-component="keyframe-editor"
@@ -1488,12 +1547,14 @@ function KeyframeEditorPanel({
       {/* Ceramic instrument body with a machined header strip; engraved labels
           + brass markers throughout. */}
       <div
+        ref={bodySlab.ref}
         className="m-3 ds-ceramic ds-edge pointer-events-auto overflow-hidden"
         style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
       >
         {/* Header — machined metal strip with grain tooth and a specular
             top catch / shaded bottom seam against the ceramic body. */}
         <div
+          ref={headerSlab.ref}
           className="relative ds-grain flex items-center justify-between px-3.5 h-11"
           style={{
             background: 'var(--ds-grad-metal)',
@@ -1615,47 +1676,64 @@ function KeyframeEditorPanel({
         {/* Multi-track lanes */}
         <div className="px-3.5 pb-3 pt-1 flex flex-col gap-2 max-h-[200px] overflow-y-auto">
           {TRACKS.map((tr) => (
-            <div key={tr.name} className="flex items-center gap-2.5">
-              <span className="w-28 text-[10px] font-mono truncate flex items-center gap-1.5" style={{ color: 'var(--ds-text-mid)' }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: tr.color, boxShadow: `0 0 5px ${dsAlpha(tr.color, 0.7)}` }} />
-                {tr.name}
-              </span>
-              <div
-                className="relative flex-1 h-7 rounded-ds-xs"
-                style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}
-              >
-                <div className="absolute inset-y-1.5 left-2 right-2 top-1/2 -translate-y-1/2 h-px" style={{ background: 'rgba(255, 252, 242, 0.08)' }} />
-                {tr.keys.map((k, i) => (
-                  <span
-                    key={i}
-                    className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 rounded-[2px]"
-                    style={{
-                      left: `${6 + k * 88}%`,
-                      background: `radial-gradient(circle at 30% 26%, ${dsAlpha(DS.textHi, 0.5)} 0%, ${dsAlpha(tr.color, 0.92)} 45%, ${dsAlpha(tr.color, 0.7)} 100%)`,
-                      border: `1px solid ${dsAlpha(DS.textHi, 0.3)}`,
-                      boxShadow: `0 1px 2px rgba(0, 0, 0, 0.55), 0 0 6px ${dsAlpha(tr.color, 0.35)}`,
-                    }}
-                  />
-                ))}
-                <span
-                  className="absolute top-0 bottom-0 w-px"
-                  style={{ left: `${6 + playhead * 88}%`, background: dsAlpha(DS.brass300, 0.6), boxShadow: `0 0 4px ${dsAlpha(DS_ACCENT, 0.4)}` }}
-                />
-              </div>
-              <button
-                type="button"
-                className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
-                style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
-              >
-                <Icon name="plus" size={9} color={DS.textMid} />
-              </button>
-            </div>
+            <KeyframeTrackRow key={tr.name} track={tr} playhead={playhead} />
           ))}
           <div className="text-[9px] font-mono pl-[122px]" style={{ color: 'var(--ds-text-mid)' }}>
             Timeline is continuous seconds (no global fps). Tracks bind to the selection&apos;s Animatable controls once the Primitive Catalog lands.
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// Keyframe track row — one timeline lane, extracted from the TRACKS map so
+// the slab hook can run per item (hooks cannot live in a map callback). At t2
+// the lane trough renders as a real recessed well in the unified canvas,
+// above the ceramic body / metal header (orders 40/41); the brass key jewels
+// and playhead line stay DOM.
+function KeyframeTrackRow({
+  track, playhead,
+}: {
+  track: (typeof TRACKS)[number]; playhead: number;
+}) {
+  const laneSlab = useChromeSlab({ material: 'well', radius: 9, order: 42 });
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className="w-28 text-[10px] font-mono truncate flex items-center gap-1.5" style={{ color: 'var(--ds-text-mid)' }}>
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: track.color, boxShadow: `0 0 5px ${dsAlpha(track.color, 0.7)}` }} />
+        {track.name}
+      </span>
+      <div
+        ref={laneSlab.ref}
+        className="relative flex-1 h-7 rounded-ds-xs"
+        style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}
+      >
+        <div className="absolute inset-y-1.5 left-2 right-2 top-1/2 -translate-y-1/2 h-px" style={{ background: 'rgba(255, 252, 242, 0.08)' }} />
+        {track.keys.map((k, i) => (
+          <span
+            key={i}
+            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45 rounded-[2px]"
+            style={{
+              left: `${6 + k * 88}%`,
+              background: `radial-gradient(circle at 30% 26%, ${dsAlpha(DS.textHi, 0.5)} 0%, ${dsAlpha(track.color, 0.92)} 45%, ${dsAlpha(track.color, 0.7)} 100%)`,
+              border: `1px solid ${dsAlpha(DS.textHi, 0.3)}`,
+              boxShadow: `0 1px 2px rgba(0, 0, 0, 0.55), 0 0 6px ${dsAlpha(track.color, 0.35)}`,
+            }}
+          />
+        ))}
+        <span
+          className="absolute top-0 bottom-0 w-px"
+          style={{ left: `${6 + playhead * 88}%`, background: dsAlpha(DS.brass300, 0.6), boxShadow: `0 0 4px ${dsAlpha(DS_ACCENT, 0.4)}` }}
+        />
+      </div>
+      <button
+        type="button"
+        className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
+        style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
+      >
+        <Icon name="plus" size={9} color={DS.textMid} />
+      </button>
     </div>
   );
 }
@@ -1670,6 +1748,9 @@ function MarqueeOverlay({
   const [start, setStart] = useState<{ x: number; y: number } | null>(null);
   const [cur, setCur] = useState<{ x: number; y: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  // UI-FIDELITY-2 — the drag hint renders as real smoked glass in the
+  // unified canvas (transient, like the toast pill).
+  const hintSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.35 });
 
   const rect = start && cur
     ? {
@@ -1700,7 +1781,7 @@ function MarqueeOverlay({
         setCur(null);
       }}
     >
-      <div className="absolute top-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full pointer-events-none" style={SMOKED_PILL}>
+      <div ref={hintSlab.ref} className="absolute top-16 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full pointer-events-none" style={SMOKED_PILL}>
         <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text)' }}>Drag a box to select · release to confirm</span>
       </div>
       {rect && (

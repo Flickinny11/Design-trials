@@ -10,6 +10,7 @@
 // blue), adopted here 2026-06-11.
 
 import { useRef, useEffect, useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
@@ -28,6 +29,12 @@ export default function Minimap() {
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
+
+  // UI-FIDELITY-2 — the bezel plate renders as real brushed metal (brushed
+  // along its wide axis) and the radar window as a recessed well in the
+  // unified canvas. The canvas2D radar inside stays untouched.
+  const bezelSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x' });
+  const windowSlab = useChromeSlab({ material: 'well', radius: 9 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -113,13 +120,13 @@ export default function Minimap() {
   return (
     <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
       {/* Machined bezel plate around a recessed instrument well. */}
-      <div className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
+      <div ref={bezelSlab.ref} className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
         {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
         <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between" style={{ color: 'var(--ds-text-mid)' }}>
           <span>MINIMAP</span>
           <span className="text-ds-brass-300">{graph.nodes.length} nodes</span>
         </div>
-        <div className="ds-well ds-edge rounded-ds-sm overflow-hidden">
+        <div ref={windowSlab.ref} className="ds-well ds-edge rounded-ds-sm overflow-hidden">
           <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
         </div>
       </div>

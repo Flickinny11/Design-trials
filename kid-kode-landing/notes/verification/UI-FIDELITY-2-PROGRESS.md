@@ -68,9 +68,20 @@
 
 ## fal.ai spend ledger ($50 HARD CAP — warn $25/$40, stop $48)
 
+Machine ledger: `notes/verification/fidelity2/fal-ledger.json` (auto-appended by
+`scripts/fidelity2-fal-gen.mjs`, which enforces the $48 stop).
+
 | # | Model | Purpose | Est. cost | Running total |
 |---|---|---|---|---|
-| — | — | (no calls yet) | — | $0.00 |
+| 1 | fal-ai/patina/material | chrome brushed-metal normal+rough (W2 TSL feed) | $0.05 | $0.05 |
+| 2 | fal-ai/patina/material | chrome ceramic micro-grain (W2 TSL feed) | $0.05 | $0.10 |
+| 3 | fal-ai/flux-2 (dev) | warm observatory equirect env (chrome/boot accent) | $0.03 | $0.13 |
+
+All three vision-critiqued and APPROVED (brushed normal = clean tangent-space
+striations; ceramic = subtle micro-tooth; observatory env = on-brand warm-brass/
+ice studio — gorgeous). Patina maps wired into the opaque slab material
+(blend-in over procedural noise via readiness uniform); env reserved for
+boot/showcase lighting accents.
 
 ## W0 progress (S1)
 
@@ -148,6 +159,50 @@ behaving correctly (refraction/reflection/relighting/occlusion) across content +
 TransformControls (a world-space helper) is mounted INSIDE the translated anchor group
 (GraphScene.tsx:1944-1993) → handle world = 2·(sp+ct). Fix: render TransformControls
 as a sibling outside the anchor; proxy stays inside. No math changes elsewhere.
+
+## W3 SHOWCASE CREATIVE BRIEF (authored S1 — binding unless Logan overrides via inbox)
+
+**Concept: "ORRERY No.7" — a celestial-mechanics timepiece by Atelier Prism.**
+A flagship product-launch app for a fictional luxury watch whose movement is a
+miniature orrery. Why this concept: (1) jewelry-grade macro photorealism is the
+hardest premium bar — exactly what the engine must prove; (2) brass/sapphire/
+meteorite materials ARE the Observatory-Brass language — app and editor chrome
+resonate; (3) it weaponizes our strengths against Slider Revolution's flagship
+genre (product showcase) — their Zero Point is flat art swaps; ours is a lit,
+refracting, occluding place; (4) the watch CTA hero GLB already exists as a seed
+and the fal observatory env panorama is already generated.
+
+**The five hubs (story arc = descend INTO the mechanism, then out to the cosmos):**
+1. **ARRIVAL** — the timepiece floats in deep space over a faint brass orrery
+   ring. Headline "Time, machined." in molten-brass poured-texture MSDF. GPU
+   dust drifts (time driver). Scroll pulls the camera THROUGH the sapphire
+   crystal into the movement (fly-through + scroll driver) → morphs to hub 2.
+2. **MOVEMENT** — exploded mechanism: photoreal gears/tourbillon as real 3D
+   nodes under the lighting rig (Hunyuan3D), depth-rotate + orbit bindings,
+   pointer-parallax macro photography planes (4MP), engraved kinetic-text specs.
+3. **MATERIA** — "Brass. Sapphire. Meteorite." poured-texture text; 4K macro
+   material imagery; VIDEO TEXTURE moment: molten-metal pour loop (Kling v3
+   seamless); magnetic-cursor material swatches (pointer driver).
+4. **CELESTIA** — the planetarium: orbiting planet objects (3D), star particle
+   field, the observatory env, constellation kinetic-text. CLICK a planet →
+   state-driver relight (per-section relighting — smash-list #9).
+5. **ACQUIRE** — the watch on a pedestal under a key light; event-driver
+   variant switching (dial/strap states); brass CTA; closing line.
+All five drivers used: time (orbits/dust), scroll (fly-through/parallax),
+pointer (magnetic/parallax), state (planet relight, variants), event (clicks).
+Morph-through hub navigation: camera transit rails (already in runtime) +
+displacement/dissolve transition primitives.
+
+**fal asset plan (≈$8-10 of the $50):** ~8-10 3D meshes (watch re-gen at PBR
+quality, 2-3 gears, tourbillon, 3-4 planets, pedestal) via hunyuan3d-v3
+image-to-3d from FLUX.2-pro hero images (image→3D gives more art control than
+text→3D); ~12-16 hi-res images (hub backdrops 4MP, macro materials, dial macro;
+seedream 4096² for 2 ultra-wides — kills the 1024² ceiling); 1-2 Kling v3
+5s loops ($0.56 ea); deep-space equirect panorama. Every asset vision-critiqued
+before placement; rejects regenerated budget permitting.
+
+**Structural pre-work (agent running):** multi-hub wire format (4 seams),
+hubManager.activate on nav, additive videoUrl + loadVideo lane.
 
 ## Session log
 

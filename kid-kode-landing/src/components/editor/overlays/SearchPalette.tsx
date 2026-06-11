@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
@@ -29,6 +30,12 @@ export default function SearchPalette() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedIdx, setSelectedIdx] = useState(0);
+
+  // UI-FIDELITY-2 — hero glass: the palette plate refracts the live scene
+  // (the smoked scrim stays CSS); the search field renders as a carved well.
+  // Hooks run before the early return (hooks rule).
+  const panelSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.65 });
+  const inputSlab = useChromeSlab({ material: 'well', radius: 13 });
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -90,6 +97,7 @@ export default function SearchPalette() {
       onClick={toggleSearch}
     >
       <div
+        ref={panelSlab.ref}
         onClick={(e) => e.stopPropagation()}
         className="w-[min(640px,92vw)] ds-glass ds-glass--heavy ds-edge--brass rounded-ds-lg overflow-hidden ds-reveal"
         style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-4), var(--ds-glow-brass)' }}
@@ -100,7 +108,9 @@ export default function SearchPalette() {
         >
           <Icon name="search" size={16} color={DS.brass300} glow />
           <input
-            ref={inputRef}
+            // Merged ref: focus management keeps inputRef; the slab renders
+            // the ds-input trough as a real recessed well at t2.
+            ref={(el) => { inputRef.current = el; inputSlab.ref(el); }}
             value={query}
             onChange={(e) => { setQuery(e.target.value); setSelectedIdx(0); }}
             onKeyDown={onKey}

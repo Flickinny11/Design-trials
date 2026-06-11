@@ -29,7 +29,7 @@ import { tsl, type TSLNode, type TSLUniform } from './tsl';
 const {
   uniform, uv, vec2, vec3, vec4, float, mix, step, smoothstep, clamp, length,
   normalize, abs, min, max, exp, fwidth, dFdx, dFdy, instancedBufferAttribute,
-  viewportMipTexture, viewportSafeUV, screenUV, mx_noise_float,
+  viewportMipTexture, viewportSafeUV, screenUV, mx_noise_float, texture,
 } = tsl;
 
 export interface ChromeUniforms {
@@ -40,16 +40,17 @@ export interface ChromeUniforms {
 }
 
 export interface ChromeInstanceBuffers {
-  /** vec2 slab size (CSS px). */
-  aSize: THREE.InstancedBufferAttribute;
-  /** vec2 slab center (CSS px viewport coords, y down). */
-  aCenter: THREE.InstancedBufferAttribute;
+  /** vec4 slab rect (centerX, centerY, width, height) CSS px viewport coords, y down.
+   *  Packed to respect the WebGPU 8-vertex-buffer limit. */
+  aRect: THREE.InstancedBufferAttribute;
   /** vec4 corner radii px (tl, tr, br, bl). */
   aRadii: THREE.InstancedBufferAttribute;
   /** vec4 (borderPx, accent, hover, press) — hover/press pre-damped CPU-side. */
   aState: THREE.InstancedBufferAttribute;
   /** vec4 (frost, brushAxis 0|1, styleId, reserved). */
   aMisc: THREE.InstancedBufferAttribute;
+  /** vec4 ancestor-overflow clip window, viewport CSS px (minX, minY, maxX, maxY). */
+  aClip: THREE.InstancedBufferAttribute;
 }
 
 const BRASS = new THREE.Color(DS.brass400);
@@ -72,6 +73,42 @@ export function createChromeUniforms(): ChromeUniforms {
   };
 }
 
+export interface ChromeTextures {
+  brushedNormal: THREE.Texture;
+  brushedRough: THREE.Texture;
+  ceramicNormal: THREE.Texture;
+  ceramicRough: THREE.Texture;
+  /** 0 until all maps decoded — the graph blends them in over the procedural
+   *  noise so slabs never flash a broken black-normal state. */
+  ready: TSLUniform<number>;
+}
+
+/**
+ * fal.ai-generated micro-material maps (FIDELITY-2 ADDENDUM 3: generated
+ * assets FEED the TSL materials — they never replace real rendering).
+ * Tileable Patina maps baked to public/prism-assets/chrome/.
+ */
+export function createChromeTextures(): ChromeTextures {
+  const ready = uniform(0);
+  const loader = new THREE.TextureLoader();
+  let pending = 4;
+  const load = (url: string) =>
+    loader.load(url, (t) => {
+      t.wrapS = THREE.RepeatWrapping;
+      t.wrapT = THREE.RepeatWrapping;
+      t.colorSpace = THREE.NoColorSpace; // data maps, not color
+      t.needsUpdate = true;
+      if (--pending === 0) ready.value = 1;
+    });
+  return {
+    brushedNormal: load('/prism-assets/chrome/brushed-metal.normal.png'),
+    brushedRough: load('/prism-assets/chrome/brushed-metal.roughness.png'),
+    ceramicNormal: load('/prism-assets/chrome/ceramic-grain.normal.png'),
+    ceramicRough: load('/prism-assets/chrome/ceramic-grain.roughness.png'),
+    ready,
+  };
+}
+
 interface SlabCommon {
   p: TSLNode;
   size: TSLNode;
@@ -91,8 +128,9 @@ interface SlabCommon {
  * (matches viewport coords so pointer math needs no flips).
  */
 function slabCommon(bufs: ChromeInstanceBuffers, u: ChromeUniforms): SlabCommon {
-  const size = instancedBufferAttribute(bufs.aSize);
-  const center = instancedBufferAttribute(bufs.aCenter);
+  const rectA = instancedBufferAttribute(bufs.aRect);
+  const center = rectA.xy;
+  const size = vec2(rectA.z, rectA.w);
   const radii = instancedBufferAttribute(bufs.aRadii);
   const state = instancedBufferAttribute(bufs.aState);
   const misc = instancedBufferAttribute(bufs.aMisc);
@@ -100,36 +138,50 @@ function slabCommon(bufs: ChromeInstanceBuffers, u: ChromeUniforms): SlabCommon 
   // PlaneGeometry uv: (0,0) bottom-left → local px, y down:
   const p = vec2(uv().x.sub(0.5).mul(size.x), float(0.5).sub(uv().y).mul(size.y));
 
-  // Per-quadrant corner radius (tl, tr, br, bl) in y-down space.
+  // Per-quadrant corner radius (tl, tr, br, bl) in y-down space, clamped to
+  // the half-extent so pill radii (--ds-r-pill: 999px) stay valid SDFs.
+  const half = vec2(size.x.mul(0.5), size.y.mul(0.5));
+  const rMax = min(half.x, half.y);
   const rTop = mix(radii.x, radii.y, step(0.0, p.x)); // p.y < 0 (top edge)
   const rBot = mix(radii.w, radii.z, step(0.0, p.x)); // p.y > 0 (bottom edge)
-  const r = mix(rTop, rBot, step(0.0, p.y));
+  const r = min(mix(rTop, rBot, step(0.0, p.y)), rMax);
 
   // Rounded-box SDF (IQ), px units. Negative inside.
-  const half = vec2(size.x.mul(0.5), size.y.mul(0.5));
   const q = abs(p).sub(half).add(r);
-  const d = min(max(q.x, q.y), 0.0).add(length(max(q, vec2(0.0, 0.0)))).sub(r);
+  const dBox = min(max(q.x, q.y), 0.0).add(length(max(q, vec2(0.0, 0.0)))).sub(r);
+
+  // Ancestor-overflow clip: intersect with the scroll container's window so
+  // slabs inside scrollable flyouts crop exactly like their DOM twins.
+  const clip = instancedBufferAttribute(bufs.aClip);
+  const vp = vec2(center.x.add(p.x), center.y.add(p.y)); // fragment in viewport CSS px
+  const clipC = vec2(clip.x.add(clip.z).mul(0.5), clip.y.add(clip.w).mul(0.5));
+  const clipH = vec2(clip.z.sub(clip.x).mul(0.5), clip.w.sub(clip.y).mul(0.5));
+  const cq = abs(vp.sub(clipC)).sub(clipH);
+  const dClip = max(cq.x, cq.y);
+  const d = max(dBox, dClip);
 
   // Coverage with screen-space-derivative AA (never a fixed epsilon).
+  // Uses the clip-intersected field so scroll-cropping cuts cleanly…
   const coverage = clamp(float(0.5).sub(d.div(fwidth(d).max(1e-4))), 0.0, 1.0);
 
-  // SDF gradient via derivatives → outward edge direction (screen space).
-  const gradDir = normalize(vec2(dFdx(d), dFdy(d)).add(vec2(1e-5, 0.0)));
+  // …while bevel/keyline geometry derives from the BOX field only (a scroll
+  // clip is a cut, not an edge — it must not grow a bevel or keyline).
+  const gradDir = normalize(vec2(dFdx(dBox), dFdy(dBox)).add(vec2(1e-5, 0.0)));
 
   // Bevel profile: 0 on the flat face → 1 at the rim, circular fillet.
   const borderPx = state.x;
   const bevelPx = borderPx.mul(2.0).add(4.0);
-  const bevelT = smoothstep(bevelPx.negate(), 0.0, d);
+  const bevelT = smoothstep(bevelPx.negate(), 0.0, dBox);
   const fillet = bevelT.mul(bevelT).mul(float(3.0).sub(bevelT.mul(2.0)));
 
   // Border keyline band (the .ds-edge 1px masked border, now lit geometry).
-  const keyline = float(1.0).sub(smoothstep(0.0, borderPx.max(1.0), abs(d.add(borderPx))));
+  const keyline = float(1.0).sub(smoothstep(0.0, borderPx.max(1.0), abs(dBox.add(borderPx))));
 
   // Pointer, slab-local (CSS px, y down) — magnetic glow rides the SDF band.
   const pointerLocal = vec2(u.pointer.x, u.pointer.y).sub(center);
   const pointerDist = length(p.sub(pointerLocal));
   const magnet = exp(pointerDist.mul(pointerDist).div(-14400.0)).mul(u.pointerActive); // σ≈120px
-  const borderBand = float(1.0).sub(smoothstep(0.0, bevelPx, abs(d)));
+  const borderBand = float(1.0).sub(smoothstep(0.0, bevelPx, abs(dBox)));
   const magneticGlow = magnet.mul(borderBand);
 
   // Soft face sheen toward the pointer (the real speculars come from the
@@ -155,6 +207,7 @@ const brassGradient = (t: TSLNode | number) => mix(c3(BRASS_HI), c3(BRASS), t);
 export function createOpaqueSlabMaterial(
   bufs: ChromeInstanceBuffers,
   u: ChromeUniforms,
+  tex?: ChromeTextures,
 ): THREE.MeshPhysicalNodeMaterial {
   const m = new THREE.MeshPhysicalNodeMaterial();
   // Node-slot assignments go through a permissive view (same escape-hatch
@@ -198,10 +251,25 @@ export function createOpaqueSlabMaterial(
   // Wells sink inward (inverted bevel); plates rise. Brushing/grain on top.
   const plateNormal = bevelNormal(c.gradDir, c.fillet, 1.35, 1);
   const wellNormal = bevelNormal(c.gradDir, c.fillet, 1.1, -1);
-  const microXY = vec2(
+  let microXY = vec2(
     brush.mul(0.1).mul(isMetal),
     brush.mul(0.04).mul(isMetal).add(grain.mul(0.03).mul(isCeramic)),
   );
+  let roughDetail = float(0.0);
+  if (tex) {
+    // fal-generated Patina micro-maps (tileable) blend in over the procedural
+    // terms once decoded (tex.ready) — brushed striations follow brushAxis by
+    // swapping the tile lookup axes.
+    const tileUV = vec2(c.p.x.div(384.0), c.p.y.div(384.0));
+    const brushedUV = mix(tileUV, vec2(tileUV.y, tileUV.x), brushAxis);
+    const bN = texture(tex.brushedNormal, brushedUV).xy.mul(2.0).sub(vec2(1.0, 1.0));
+    const cN = texture(tex.ceramicNormal, tileUV).xy.mul(2.0).sub(vec2(1.0, 1.0));
+    const texXY = bN.mul(0.55).mul(isMetal).add(cN.mul(0.3).mul(isCeramic));
+    microXY = mix(microXY, texXY, tex.ready) as TSLNode;
+    const bR = texture(tex.brushedRough, brushedUV).r.sub(0.5);
+    const cR = texture(tex.ceramicRough, tileUV).r.sub(0.5);
+    roughDetail = bR.mul(0.16).mul(isMetal).add(cR.mul(0.1).mul(isCeramic)).mul(tex.ready) as TSLNode;
+  }
   const baseNormal = mix(plateNormal, wellNormal, isWell);
   n.normalNode = normalize(vec3(baseNormal.x.add(microXY.x), baseNormal.y.add(microXY.y), baseNormal.z));
 
@@ -209,7 +277,8 @@ export function createOpaqueSlabMaterial(
   n.roughnessNode = isMetal
     .mul(float(0.34).add(brush.mul(0.1)).sub(hover.mul(0.06)))
     .add(isCeramic.mul(float(0.46).add(grain.mul(0.06))))
-    .add(isWell.mul(0.7));
+    .add(isWell.mul(0.7))
+    .add(roughDetail);
   n.clearcoatNode = isCeramic.mul(0.85).add(isMetal.mul(0.15));
   n.clearcoatRoughnessNode = float(0.3);
 

@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --font-display: 'Bricolage Grotesque', ui-serif, serif;
-  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* --font-display / --font-ui / --font-mono are stamped on <html> by
+     next/font/local (src/app/layout.tsx; self-hosted variable fonts in
+     public/fonts/ui/). Do NOT redeclare them here — an equal-specificity
+     :root declaration races the next/font class for the cascade. The
+     design-system stacks live in design-system/tokens.css (--ds-font-*).
+     Legacy alias kept for any var(--font-sans) consumer: */
+  --font-sans: var(--ds-font-ui);
 }
 
 html, body {
@@ -13,7 +17,7 @@ html, body {
   padding: 0;
   background: #04050a;
   color: #e8eaf5;
-  font-family: var(--font-sans);
+  font-family: var(--ds-font-ui);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

@@ -22,6 +22,7 @@
 // ds-btn actions with a brass primary.
 
 import { useEffect, useMemo, useState } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { DS, dsAlpha } from '@/components/editor/design-system';
@@ -47,6 +48,12 @@ export default function AddNodeDialog() {
     setCaption('');
     setSubtype(DEFAULT_SUBTYPE);
   }, [open, fallbackHubId]);
+
+  // UI-FIDELITY-2 — the modal plate renders as real frosted glass and the
+  // brass primary as a ceramic key in the unified canvas (the smoked scrim
+  // stays CSS). Hooks run before the early return (hooks rule).
+  const panelSlab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.55 });
+  const submitSlab = useChromeSlab({ material: 'ceramic', radius: 9, accent: 1 });
 
   if (!open) return null;
 
@@ -82,6 +89,7 @@ export default function AddNodeDialog() {
       }}
     >
       <form
+        ref={panelSlab.ref}
         onSubmit={handleSubmit}
         className="w-[420px] max-w-[92vw] ds-glass ds-edge rounded-ds-lg p-5 ds-reveal"
         onMouseDown={(e) => e.stopPropagation()}
@@ -156,6 +164,7 @@ export default function AddNodeDialog() {
             Cancel
           </button>
           <button
+            ref={submitSlab.ref}
             type="submit"
             data-role="add-node-submit"
             disabled={!canSubmit}

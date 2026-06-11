@@ -5,9 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-display)', 'ui-serif', 'serif'],
-        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        // --ds-font-* (design-system/tokens.css) wrap the next/font/local
+        // variables with full fallback stacks: Clash Display / Geist / JBM.
+        display: ['var(--ds-font-display)', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
+        ui: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
+        mono: ['var(--ds-font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
         void: '#04050a',

@@ -181,24 +181,28 @@
 /* ── TYPE ─────────────────────────────────────────────────────────────────── */
 
 .ds-kicker {
-  font-family: var(--font-mono);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-kicker);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   letter-spacing: var(--ds-track-kicker);
   text-transform: uppercase;
   color: var(--ds-text-low);
 }
 .ds-label {
-  font-family: var(--font-mono);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-label);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   letter-spacing: var(--ds-track-label);
   text-transform: uppercase;
   color: var(--ds-text-mid);
 }
 .ds-title {
-  font-family: var(--font-display);
+  font-family: var(--ds-font-display);
   font-size: var(--ds-fs-title);
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: var(--ds-track-title, 0.015em);
   color: var(--ds-text-hi);
 }
 .ds-title-brass {
@@ -219,8 +223,10 @@
   padding: 0 12px;
   border: none;
   border-radius: var(--ds-r-sm);
-  font-family: var(--font-mono);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-label);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   letter-spacing: 0.08em;
   color: var(--ds-text);
   background: linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal));
@@ -271,8 +277,10 @@
   gap: 4px;
   padding: 2px 7px;
   border-radius: var(--ds-r-pill);
-  font-family: var(--font-mono);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-kicker);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   letter-spacing: var(--ds-track-label);
   text-transform: uppercase;
   color: var(--ds-text-mid);
@@ -290,8 +298,9 @@
   padding: 0 10px;
   border: none;
   border-radius: var(--ds-r-sm);
-  font-family: var(--font-mono);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-body);
+  font-variant-numeric: tabular-nums;
   color: var(--ds-text-hi);
   background: var(--ds-grad-well);
   box-shadow:

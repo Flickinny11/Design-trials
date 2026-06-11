@@ -56,7 +56,34 @@ export interface ChromeSlabEntry {
   pressK: number;
   /** Last written rect (physical-px quantized, CSS-px units). */
   rect: { x: number; y: number; w: number; h: number };
+  /**
+   * Ancestors with overflow clipping (resolved at registration). The layer
+   * intersects their rects per frame and passes the clip window to the
+   * shader, so slabs inside scrollable flyouts crop exactly like their DOM
+   * twins instead of bleeding past the scroll container.
+   */
+  clipEls: HTMLElement[];
+  /** Per-frame clip window (viewport CSS px). */
+  clip: { minX: number; minY: number; maxX: number; maxY: number };
   visible: boolean;
+}
+
+function resolveClipAncestors(el: HTMLElement): HTMLElement[] {
+  const out: HTMLElement[] = [];
+  let cur = el.parentElement;
+  while (cur && cur !== document.body) {
+    const cs = getComputedStyle(cur);
+    if (
+      cs.overflow !== 'visible' ||
+      cs.overflowX !== 'visible' ||
+      cs.overflowY !== 'visible' ||
+      cs.clipPath !== 'none'
+    ) {
+      out.push(cur);
+    }
+    cur = cur.parentElement;
+  }
+  return out;
 }
 
 type Listener = () => void;
@@ -86,6 +113,8 @@ class ChromeSlabRegistry {
       hoverK: 0,
       pressK: 0,
       rect: { x: 0, y: 0, w: 0, h: 0 },
+      clipEls: resolveClipAncestors(el),
+      clip: { minX: -1e6, minY: -1e6, maxX: 1e6, maxY: 1e6 },
       visible: false,
     };
     this.slabs.set(id, entry);

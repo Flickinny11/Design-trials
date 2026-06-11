@@ -10,6 +10,8 @@
 // Chrome: Observatory Brass — machined toggle chip (ds-btn, brass when armed)
 // over a smoked-glass dock (ds-smoked ds-edge) with a carved ds-input trough.
 
+import { useEffect } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS } from '@/components/editor/design-system';
@@ -29,10 +31,19 @@ export default function GalaxyFilterOverlay() {
     (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null)
   );
 
-  if (viewMode !== 'galaxy') return null;
-
   const active = filterQuery.trim().length > 0;
   const armed = filterOpen || active;
+
+  // UI-FIDELITY-2 — the toggle chip renders as a real ceramic key (brass
+  // accent when armed) and the dock as smoked glass in the unified canvas.
+  // Hooks run before the early return (hooks rule); `armed` moved above it.
+  const pillSlab = useChromeSlab({ material: 'ceramic', radius: 999, accent: armed ? 1 : 0 });
+  const dockSlab = useChromeSlab({ material: 'glass', radius: 13, frost: 0.35 });
+  useEffect(() => {
+    pillSlab.update({ accent: armed ? 1 : 0 });
+  }, [armed, pillSlab]);
+
+  if (viewMode !== 'galaxy') return null;
 
   return (
     <div
@@ -42,6 +53,7 @@ export default function GalaxyFilterOverlay() {
       }`}
     >
       <button
+        ref={pillSlab.ref}
         type="button"
         onClick={toggleFilter}
         title={filterOpen ? 'Close filter' : 'Open filter'}
@@ -62,7 +74,7 @@ export default function GalaxyFilterOverlay() {
       </button>
 
       {filterOpen && (
-        <div className="w-[280px] ds-smoked ds-edge rounded-ds-md overflow-hidden ds-reveal">
+        <div ref={dockSlab.ref} className="w-[280px] ds-smoked ds-edge rounded-ds-md overflow-hidden ds-reveal">
           <div
             className="flex items-center gap-2 px-2.5 py-2"
             style={{ boxShadow: 'inset 0 -1px 0 var(--ds-edge-shade), inset 0 1px 0 var(--ds-edge-side)' }}

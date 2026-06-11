@@ -1,0 +1,23 @@
+{
+  "calls": [
+    {
+      "model": "fal-ai/patina/material",
+      "purpose": "chrome brushed-metal micro-normals (W2 TSL feed)",
+      "estCost": 0.05,
+      "at": "2026-06-11T20:57:20.970Z"
+    },
+    {
+      "model": "fal-ai/patina/material",
+      "purpose": "chrome ceramic micro-grain (W2 TSL feed)",
+      "estCost": 0.05,
+      "at": "2026-06-11T20:57:42.830Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "warm observatory equirect env (chrome/boot lighting accent)",
+      "estCost": 0.03,
+      "at": "2026-06-11T20:58:20.046Z"
+    }
+  ],
+  "total": 0.13
+}

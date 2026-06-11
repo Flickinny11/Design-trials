@@ -27,9 +27,9 @@
 // debounced slider input" is reframed here as direct transform mutation
 // to honour the §17 L538 latency budget — see docs/spec-deviations-prism.md.)
 
-import { Canvas, type RootState, useThree } from '@react-three/fiber';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Group, Object3D } from 'three';
+import { Canvas, type RootState, useFrame, useThree } from '@react-three/fiber';
+import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { Box3, Group, MathUtils, Object3D, Vector3, type PerspectiveCamera } from 'three';
 import type { PrismNode } from '@/lib/prism-graph/types';
 import {
   applyVisualSpecSlider,
@@ -37,33 +37,40 @@ import {
   type VisualSpecSlider,
 } from '@/lib/prism-graph/visual-spec-sliders';
 import {
-  applyScenePosition,
   type CreateNodeFn,
   type NodeContext,
 } from '@/lib/prism/runtime/shared/adapter';
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
+import { defaultRenderModeFactory } from '@/lib/prism/runtime/factories/default-factory';
+import { buildPerNodeFactory } from '@/lib/prism/runtime/factories/coderef-factory';
 import { saveAndVerify, type RegenApiResult } from './regen-api';
 import { DS } from '@/components/editor/design-system';
 
-// Local fallback createNode factory: returns an empty Group that satisfies
-// the spec §8 cleanup contract. Mirrors the adapter's internal
-// `defaultCreateNode` (kept module-private there); duplicated here to keep
-// VisualPreview self-contained for the editor surface and not depend on
-// runtime-internal exports. T09 will pass codegen-emitted modules in.
-const previewDefaultCreateNode: CreateNodeFn = (config) => {
-  const g = new Group();
-  g.name = `preview:${config.nodeId}`;
-  applyScenePosition(g, config.scenePosition);
-  g.userData.cleanup = () => {};
-  g.userData.handlers = {};
-  return g;
-};
+// Default createNode pipeline — the SAME factory chain the editor's
+// ArtifactNode uses (per-node codeRef dispatch over defaultRenderModeFactory)
+// so the Visual tab previews the node's ACTUAL artifact instead of the old
+// empty-Group stand-in (which rendered the LIVE PREVIEW well solid black —
+// FP-R3 territory). runPrimitives:false keeps the authoring preview static
+// (slider edits drive transforms directly, per the header note above);
+// nodeMaterials:false keeps default image planes on the legacy plain
+// materials, matching the editor surface. Built lazily and cached at module
+// level — the chain is stateless per node, and each mount produces a fresh
+// Object3D, so nothing is ever stolen from the main scene's artifact cache.
+let cachedPreviewFactory: CreateNodeFn | null = null;
+function getPreviewFactory(): CreateNodeFn {
+  if (!cachedPreviewFactory) {
+    cachedPreviewFactory = buildPerNodeFactory((node, ctx) =>
+      defaultRenderModeFactory(node, ctx, { runPrimitives: false, nodeMaterials: false }),
+    );
+  }
+  return cachedPreviewFactory;
+}
 
 export interface VisualPreviewProps {
   node: PrismNode;
-  /** Optional override of the createNode factory — defaults to the
-   *  adapter's placeholder Group factory until codegen-emitted modules are
-   *  wired through (T09). */
+  /** Optional override of the createNode factory — defaults to the real
+   *  editor artifact pipeline (per-node codeRef dispatch over
+   *  defaultRenderModeFactory; see getPreviewFactory above). */
   createNode?: CreateNodeFn;
   /** Optional context override for tests. Production builds compose this
    *  via the runtime mount.ts. */
@@ -166,12 +173,66 @@ function SceneContent({ node, values, createNode, ctx, onMount }: SceneContentPr
 
   return (
     <>
+      {/* Light rig — small ambient + key + soft opposing fill so lit
+          artifacts (mesh nodes, receivesLighting planes) read in the well
+          and keep a visible backside under the rot.y slider. UNLIT image
+          planes (the §10 default) ignore all three by design. */}
       <ambientLight intensity={0.6} />
       <directionalLight intensity={0.9} position={[3, 5, 4]} />
+      <directionalLight intensity={0.25} position={[-4, -2, -3]} />
       <group ref={containerRef} />
+      <FrameRig subjectRef={containerRef} nodeKey={node.nodeId} />
       <RendererProbe onProbe={(kind) => onMount?.({ renderer: kind })} />
     </>
   );
+}
+
+// Fits the camera to the mounted artifact's bounding box (frontal, +z) with a
+// small margin — without this the fixed [0,0,4] camera missed artifacts whose
+// scenePosition sits off-origin or whose plane exceeds the frustum (the black
+// LIVE PREVIEW well). Re-fits while async loads (textures, MSDF atlas) are
+// still changing the box; once the box holds still for SETTLE_FRAMES frames
+// the rig locks so slider-driven transforms visibly move the artifact instead
+// of the camera chasing it. Re-arms when the node selection changes.
+const FIT_MARGIN = 1.35;
+const SETTLE_FRAMES = 45; // ~0.75s at 60Hz — covers texture/atlas resolution.
+
+function FrameRig({ subjectRef, nodeKey }: { subjectRef: RefObject<Group | null>; nodeKey: string }) {
+  const camera = useThree((s) => s.camera);
+  const settleRef = useRef(0);
+  const lastSizeRef = useRef(new Vector3(-1, -1, -1));
+
+  // Re-arm the settle window on selection switch (the mount effect above
+  // swaps the artifact under the same container group).
+  useEffect(() => {
+    settleRef.current = 0;
+    lastSizeRef.current.set(-1, -1, -1);
+  }, [nodeKey]);
+
+  useFrame(() => {
+    if (settleRef.current >= SETTLE_FRAMES) return;
+    const subject = subjectRef.current;
+    const persp = camera as PerspectiveCamera;
+    if (!subject || !persp.isPerspectiveCamera) return;
+    const box = new Box3().setFromObject(subject);
+    if (box.isEmpty()) return;
+    const size = box.getSize(new Vector3());
+    const center = box.getCenter(new Vector3());
+    if (size.distanceToSquared(lastSizeRef.current) < 1e-8) {
+      settleRef.current += 1;
+    } else {
+      settleRef.current = 0;
+      lastSizeRef.current.copy(size);
+    }
+    const halfV = MathUtils.degToRad(persp.fov) / 2;
+    const halfH = Math.atan(Math.tan(halfV) * persp.aspect);
+    const dist =
+      Math.max(size.y / 2 / Math.tan(halfV), size.x / 2 / Math.tan(halfH)) * FIT_MARGIN +
+      size.z / 2;
+    persp.position.set(center.x, center.y, center.z + Math.max(dist, persp.near * 4));
+    persp.lookAt(center);
+  });
+  return null;
 }
 
 // R3F-internal child that reads the active renderer via `useThree` (the
@@ -215,7 +276,7 @@ export default function VisualPreview({
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<RegenApiResult | null>(null);
 
-  const factory = createNode ?? previewDefaultCreateNode;
+  const factory = createNode ?? getPreviewFactory();
   const fallbackCtx = useMemo(
     () => getSharedNodeContext({ runPrimitives: false }),
     [],
@@ -260,7 +321,9 @@ export default function VisualPreview({
 
   return (
     <div className="visual-preview" data-render-mode={node.renderMode ?? 'sprite'}>
-      <div className="visual-preview-canvas-wrap" style={{ position: 'relative', aspectRatio: '16 / 10', borderRadius: 12, overflow: 'hidden', background: DS.ink }}>
+      {/* Subtle observatory-void backdrop (charcoal→void vignette, matching
+          the Animation tab's preview well) instead of a flat near-black. */}
+      <div className="visual-preview-canvas-wrap" style={{ position: 'relative', aspectRatio: '16 / 10', borderRadius: 12, overflow: 'hidden', background: `radial-gradient(ellipse at center, ${DS.charcoal}, ${DS.void})` }}>
         <Canvas
           gl={asyncGlFactory as unknown as never}
           camera={{ position: [0, 0, 4], fov: 45, near: 0.1, far: 100 }}

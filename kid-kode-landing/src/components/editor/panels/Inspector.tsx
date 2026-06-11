@@ -65,6 +65,17 @@ const WORLD_TABS: { id: InspectorTab; label: string; icon: string }[] = [
 export default function Inspector() {
   // UI-FIDELITY-2 — hero glass: the inspector plate refracts the live scene.
   const inspectorSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
+  // UI-FIDELITY-2 — machined header plate as real brushed metal. order: 0
+  // pins the plate under its own action-rail keys: React attaches child refs
+  // before the parent's, so without the bias the plate would register later —
+  // and draw over — the ceramic keys cut into it (same opaque GPU family).
+  const headerSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x', order: 0 });
+  // UI-FIDELITY-2 — action-rail keys as fired ceramic; brass accent tracks
+  // the armed/primary state via the update effects below the state reads.
+  const editKeySlab = useChromeSlab({ material: 'ceramic', radius: 9 });
+  const saveKeySlab = useChromeSlab({ material: 'ceramic', radius: 9 });
+  const rebuildKeySlab = useChromeSlab({ material: 'ceramic', radius: 9 });
+  const cloneKeySlab = useChromeSlab({ material: 'ceramic', radius: 9 });
   const open = useGraphEditorStore((s) => s.inspectorOpen);
   const close = useGraphEditorStore((s) => s.closeInspector);
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
@@ -107,6 +118,16 @@ export default function Inspector() {
     ? previewPatches[selectedId] !== undefined && Object.keys(previewPatches[selectedId]).length > 0
     : false;
   const isDirty = sourceDirty || previewDirtyForSelected;
+
+  // UI-FIDELITY-2 — GPU-side brass accent follows each rail key's armed/
+  // primary state (the ds-btn--ghost/--primary classes stay as the t0/t1
+  // fallback look).
+  useEffect(() => {
+    editKeySlab.update({ accent: editorMode === 'edit' ? 1 : 0 });
+  }, [editKeySlab, editorMode]);
+  useEffect(() => {
+    saveKeySlab.update({ accent: isDirty ? 1 : 0 });
+  }, [saveKeySlab, isDirty]);
 
   // EB-02-04: detect App_Name_World selection. The PrismRootNode lives in
   // useGraphSourceStore.rootNodes (RA-07, option B), not in `nodes`, so the
@@ -327,7 +348,7 @@ export default function Inspector() {
       className="absolute z-40 right-0 top-0 bottom-0 left-16 md:left-auto md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
-      <div className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
+      <div ref={headerSlab.ref} className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         {/* Row 1 — identity (truncating title) + status chip + close. Actions
             live on their own rail below so the title never collides with the
             button cluster (Wave-3 advocate MUST-FIX). */}
@@ -393,6 +414,7 @@ export default function Inspector() {
               click Edit first. EBR2-C-02 will gate the gizmo on
               editorMode === 'edit' AND viewMode === 'canvas'. */}
           <button
+            ref={editKeySlab.ref}
             type="button"
             data-role="edit-toggle"
             aria-pressed={editorMode === 'edit'}
@@ -405,6 +427,7 @@ export default function Inspector() {
             {editorMode === 'edit' ? 'Done' : 'Edit'}
           </button>
           <button
+            ref={saveKeySlab.ref}
             type="button"
             data-role="save"
             data-testid="inspector-save"
@@ -422,6 +445,7 @@ export default function Inspector() {
               this one node (userData.cleanup + cache evict + per-node
               rebuild-version bump). Other nodes are untouched. */}
           <button
+            ref={rebuildKeySlab.ref}
             type="button"
             data-role="save-and-rebuild"
             data-testid="inspector-save-and-rebuild"
@@ -438,6 +462,7 @@ export default function Inspector() {
               drag-snap flow (EBR2-F-04..F-05). Disabled until a node is
               selected. */}
           <button
+            ref={cloneKeySlab.ref}
             type="button"
             data-role="clone"
             data-testid="inspector-clone"
@@ -545,10 +570,14 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
       <div
         className="relative aspect-[16/10] ds-well ds-edge rounded-ds-lg overflow-hidden"
         style={{
+          // FIDELITY-2: the old primary/secondary linear-gradient fallback read
+          // as a saturated placeholder slab ("AI-built"); uncaptured nodes get
+          // a neutral recessed well with a quiet caption instead. The node's
+          // colors remain visible as a thin accent rail only.
           background: capturedImage
             ? 'var(--ds-ink)'
-            : `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor || primaryColor} 100%)`,
-          boxShadow: `inset 0 2px 6px rgba(0,0,0,0.55), 0 10px 40px ${primaryColor}44`,
+            : `radial-gradient(ellipse at center, ${dsAlpha(DS.charcoal ?? '#191d2a', 0.9)} 0%, var(--ds-void) 100%)`,
+          boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.55)',
         }}
       >
         {capturedImage ? (
@@ -561,8 +590,14 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
                 <div className="absolute inset-0 translate-x-1 translate-y-1 bg-white/5 rounded-xl border border-white/5" />
               </>
             )}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-ds-text font-display text-2xl font-bold">{node.name}</div>
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5">
+              <div className="text-ds-text-mid font-display text-lg font-medium">{node.name}</div>
+              <div className="ds-kicker">NO CAPTURED IMAGE</div>
+              <div
+                aria-hidden
+                className="absolute bottom-0 inset-x-0 h-[3px]"
+                style={{ background: `linear-gradient(90deg, ${primaryColor}, ${secondaryColor || primaryColor})`, opacity: 0.55 }}
+              />
             </div>
           </>
         )}
@@ -1496,10 +1531,14 @@ function WorldInspectorPanel({
   close: () => void;
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => void;
 }) {
+  // UI-FIDELITY-2 — hero glass: same slab recipe as the node Inspector
+  // housing (one inspector panel mounts at a time, so the budget holds).
+  const worldSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
   return (
     // Same glass-housing geometry as the node Inspector (one inspector panel
     // mounts at a time, so the refract/backdrop budget is unchanged).
     <div
+      ref={worldSlab.ref}
       className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
       data-role="world-inspector"
     >
@@ -1856,6 +1895,9 @@ function GroupInspector({
   close: () => void;
   clearMultiSelection: () => void;
 }) {
+  // UI-FIDELITY-2 — hero glass: same slab recipe as the node Inspector
+  // housing (mutually exclusive mount, so the budget holds).
+  const groupSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
   const groupNodes = editorNodes.filter((n) => selectedNodeIds.has(n.id));
   const groupHubs = editorHubs.filter((h) => selectedHubIds.has(h.id));
   const total = groupNodes.length + groupHubs.length;
@@ -1863,6 +1905,7 @@ function GroupInspector({
     // Same glass-housing geometry as the node Inspector (mutually exclusive
     // mount — the backdrop-filter budget stays at one inspector surface).
     <div
+      ref={groupSlab.ref}
       data-role="group-inspector"
       className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >

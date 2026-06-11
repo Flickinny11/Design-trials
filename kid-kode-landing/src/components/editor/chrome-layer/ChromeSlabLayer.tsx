@@ -26,6 +26,7 @@ import {
   type ChromeSlabEntry,
 } from './registry';
 import {
+  createChromeTextures,
   createChromeUniforms,
   createGlassSlabMaterial,
   createOpaqueSlabMaterial,
@@ -42,15 +43,15 @@ function makeBuffers(capacity: number): ChromeInstanceBuffers {
     a.setUsage(THREE.DynamicDrawUsage);
     return a;
   };
-  return { aSize: mk(2), aCenter: mk(2), aRadii: mk(4), aState: mk(4), aMisc: mk(4) };
+  return { aRect: mk(4), aRadii: mk(4), aState: mk(4), aMisc: mk(4), aClip: mk(4) };
 }
 
 function attachBuffers(geo: THREE.InstancedBufferGeometry | THREE.PlaneGeometry, bufs: ChromeInstanceBuffers) {
-  geo.setAttribute('aSize', bufs.aSize as unknown as THREE.BufferAttribute);
-  geo.setAttribute('aCenter', bufs.aCenter as unknown as THREE.BufferAttribute);
+  geo.setAttribute('aRect', bufs.aRect as unknown as THREE.BufferAttribute);
   geo.setAttribute('aRadii', bufs.aRadii as unknown as THREE.BufferAttribute);
   geo.setAttribute('aState', bufs.aState as unknown as THREE.BufferAttribute);
   geo.setAttribute('aMisc', bufs.aMisc as unknown as THREE.BufferAttribute);
+  geo.setAttribute('aClip', bufs.aClip as unknown as THREE.BufferAttribute);
 }
 
 function radiiOf(e: ChromeSlabEntry): [number, number, number, number] {
@@ -84,6 +85,8 @@ export function ChromeSlabLayer() {
 
   const registry = getChromeSlabRegistry();
   const uniforms = useMemo(() => createChromeUniforms(), []);
+  // fal-generated Patina micro-maps (page-lifetime; cheap, cached by the browser).
+  const textures = useMemo(() => createChromeTextures(), []);
 
   // Capacity-managed buffers + meshes (rebuilt when slab count outgrows them).
   const stateRef = useRef<{
@@ -118,7 +121,7 @@ export function ChromeSlabLayer() {
       attachBuffers(geo, bufs);
       const mat = glass
         ? createGlassSlabMaterial(bufs, uniforms)
-        : createOpaqueSlabMaterial(bufs, uniforms);
+        : createOpaqueSlabMaterial(bufs, uniforms, textures);
       const mesh = new THREE.InstancedMesh(geo, mat, capacity);
       mesh.count = 0;
       mesh.frustumCulled = false;
@@ -181,7 +184,7 @@ export function ChromeSlabLayer() {
       stateRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [camera, scene, uniforms]);
+  }, [camera, scene, uniforms, textures]);
 
   // ── Per-frame sync: rects → instances; pointer → uniforms + light.
   useFrame((_, delta) => {
@@ -225,8 +228,7 @@ export function ChromeSlabLayer() {
       s.dummy.rotation.set(0, 0, 0);
       s.dummy.updateMatrix();
       mesh.setMatrixAt(i, s.dummy.matrix);
-      bufs.aSize.setXY(i, w, h);
-      bufs.aCenter.setXY(i, cx, cy);
+      bufs.aRect.setXYZW(i, cx, cy, w, h);
       const [tl, tr, br, bl] = radiiOf(e);
       bufs.aRadii.setXYZW(i, tl, tr, br, bl);
       e.hoverK += (e.hover - e.hoverK) * damp;
@@ -239,6 +241,19 @@ export function ChromeSlabLayer() {
         STYLE_ID[e.opts.material] ?? 1,
         0,
       );
+      // Ancestor-overflow clip window (huge default = unclipped).
+      let minX = -1e6;
+      let minY = -1e6;
+      let maxX = 1e6;
+      let maxY = 1e6;
+      for (const clipEl of e.clipEls) {
+        const r = clipEl.getBoundingClientRect();
+        if (r.left > minX) minX = r.left;
+        if (r.top > minY) minY = r.top;
+        if (r.right < maxX) maxX = r.right;
+        if (r.bottom < maxY) maxY = r.bottom;
+      }
+      bufs.aClip.setXYZW(i, minX, minY, maxX, maxY);
     };
 
     for (const e of entries) {
@@ -256,11 +271,11 @@ export function ChromeSlabLayer() {
     s.opaque.instanceMatrix.needsUpdate = true;
     s.glass.instanceMatrix.needsUpdate = true;
     for (const bufs of [s.opaqueBufs, s.glassBufs]) {
-      bufs.aSize.needsUpdate = true;
-      bufs.aCenter.needsUpdate = true;
+      bufs.aRect.needsUpdate = true;
       bufs.aRadii.needsUpdate = true;
       bufs.aState.needsUpdate = true;
       bufs.aMisc.needsUpdate = true;
+      bufs.aClip.needsUpdate = true;
     }
   });
 

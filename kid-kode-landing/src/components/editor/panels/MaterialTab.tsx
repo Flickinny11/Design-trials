@@ -25,6 +25,7 @@ import {
 import type { PrismNode } from '@/lib/prism-graph/types';
 import { receivesLightingDefault } from '@/lib/prism-graph/types';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 export default function MaterialTab({
   node,
@@ -36,6 +37,12 @@ export default function MaterialTab({
   // Force a re-read of the seeded params after each control write so the
   // numeric read-out tracks the preview buffer.
   const [, bump] = useState(0);
+
+  // UI-FIDELITY-2 — the instrument plates render as real fired ceramic at t2
+  // (hooks before the early return — hooks rule; the slab layer SDF-clips
+  // them to the Inspector's scrolling tab region).
+  const plateSlab = useChromeSlab({ material: 'ceramic', radius: 18 });
+  const lightingSlab = useChromeSlab({ material: 'ceramic', radius: 13 });
 
   if (!node) {
     return (
@@ -83,7 +90,7 @@ export default function MaterialTab({
 
       {/* Ceramic instrument plate — engraved labels, machined ds-slider
           grooves, brass tabular readouts. */}
-      <div className="p-4 ds-ceramic ds-edge rounded-ds-lg flex flex-col gap-3">
+      <div ref={plateSlab.ref} className="p-4 ds-ceramic ds-edge rounded-ds-lg flex flex-col gap-3">
         {MATERIAL_CONTROL_SCHEMA.map((c: Control) => {
           const val = params[c.id];
           return (
@@ -134,7 +141,7 @@ export default function MaterialTab({
       <div className="ds-label text-ds-brass-300 pt-1">
         LIGHTING
       </div>
-      <label className="px-3 py-2.5 ds-ceramic ds-edge rounded-ds-md flex items-center justify-between cursor-pointer">
+      <label ref={lightingSlab.ref} className="px-3 py-2.5 ds-ceramic ds-edge rounded-ds-md flex items-center justify-between cursor-pointer">
         <div className="flex flex-col">
           <span className="text-[11px] text-ds-text-hi">Receives Lighting</span>
           <span className="ds-kicker mt-0.5 normal-case tracking-normal">

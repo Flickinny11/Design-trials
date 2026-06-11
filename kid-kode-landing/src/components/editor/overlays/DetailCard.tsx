@@ -7,11 +7,38 @@
 // status colors carry verification semantics only.
 
 import { useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
+
+// Action-rail key — one machined ds-btn fitting in the card's bottom rail.
+// Extracted so each key owns its slab hook (hooks cannot run per-sibling in
+// the parent body); at t2 the face renders as real ceramic in the unified
+// canvas, with brass accent on the primary (Edit). Below t2 the v1 CSS
+// ds-btn look stands untouched.
+function ActionKey({
+  accent, disabled, onClick, title, className, style, children,
+}: {
+  accent?: boolean; disabled?: boolean; onClick?: () => void; title?: string;
+  className: string; style?: React.CSSProperties; children: React.ReactNode;
+}) {
+  const slab = useChromeSlab({ material: 'ceramic', radius: 9, accent: accent ? 1 : 0 });
+  return (
+    <button
+      ref={slab.ref}
+      disabled={disabled}
+      onClick={onClick}
+      title={title}
+      className={className}
+      style={style}
+    >
+      {children}
+    </button>
+  );
+}
 
 export default function DetailCard() {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
@@ -29,6 +56,12 @@ export default function DetailCard() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // UI-FIDELITY-2 — the card housing renders as real matte ceramic and the
+  // verification meter as a recessed well in the unified canvas. Hooks run
+  // before the early returns (hooks rule).
+  const cardSlab = useChromeSlab({ material: 'ceramic', radius: 18 });
+  const meterSlab = useChromeSlab({ material: 'well', radius: 9 });
+
   if (!selectedId || inspectorOpen) return null;
   const node = graph.nodes.find((n) => n.id === selectedId);
   if (!node) return null;
@@ -44,6 +77,7 @@ export default function DetailCard() {
 
   return (
     <div
+      ref={cardSlab.ref}
       className="absolute z-30 right-5 top-20 w-[340px] ds-ceramic ds-edge rounded-ds-lg overflow-hidden animate-slide-in-r pointer-events-auto"
       style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
     >
@@ -100,7 +134,7 @@ export default function DetailCard() {
             {node.verificationScore.toFixed(2)}
           </span>
         </div>
-        <div className="ds-well h-1.5 rounded-full overflow-hidden">
+        <div ref={meterSlab.ref} className="ds-well h-1.5 rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{
@@ -126,30 +160,31 @@ export default function DetailCard() {
       )}
 
       <div className="p-3 flex gap-2" style={{ boxShadow: 'inset 0 1px 0 var(--ds-edge-side)' }}>
-        <button
+        <ActionKey
           onClick={() => openInspector('visual')}
           className="ds-btn ds-press flex-1 h-9 text-[11px]"
         >
           <Icon name="eye" size={11} color={DS.text} />
           Inspect
-        </button>
-        <button
+        </ActionKey>
+        <ActionKey
+          accent
           onClick={() => !frozen && openInspector('code')}
           disabled={frozen}
           className="ds-btn ds-btn--ghost ds-press flex-1 h-9 text-[11px] font-semibold"
         >
           <Icon name="edit" size={11} color={DS.brass300} />
           Edit
-        </button>
-        <button
+        </ActionKey>
+        <ActionKey
           onClick={() => !frozen && alert('Regenerate triggered (prototype)')}
           disabled={frozen}
           className="ds-btn ds-press h-9 w-9 px-0"
           title="Re-generate"
         >
           <Icon name="refresh" size={12} color={DS.textMid} />
-        </button>
-        <button
+        </ActionKey>
+        <ActionKey
           onClick={() => toggleFreeze(node.id)}
           className="ds-btn ds-press h-9 w-9 px-0"
           style={
@@ -164,7 +199,7 @@ export default function DetailCard() {
           title={frozen ? 'Unfreeze' : 'Freeze (lock from AI edits)'}
         >
           <Icon name={frozen ? 'snow' : 'zap'} size={12} color={frozen ? DS.ice200 : DS.textMid} />
-        </button>
+        </ActionKey>
       </div>
     </div>
   );

@@ -5,7 +5,8 @@
 // brass wash with an inset brass keyline and a glowing brass pip. Hub glyph
 // tints stay data-driven (hub.color); the chrome accent is brass only.
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
@@ -18,6 +19,33 @@ const ACTIVE_SLOT: React.CSSProperties = {
   boxShadow:
     'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.2), var(--ds-glow-brass)',
 };
+
+// Rail pill — one machined key seated in the rail. Extracted so each pill can
+// own its slab hook (hooks cannot run inside the map); at t2 the pill face
+// renders as real ceramic in the unified canvas, brass-accented on the
+// active slot. Below t2 the v1 CSS look stands untouched.
+function RailPill({
+  active, onClick, children,
+}: {
+  active: boolean; onClick: () => void; children: React.ReactNode;
+}) {
+  const slab = useChromeSlab({ material: 'ceramic', radius: 999, accent: active ? 1 : 0 });
+  useEffect(() => {
+    slab.update({ accent: active ? 1 : 0 });
+  }, [active, slab]);
+  return (
+    <button
+      ref={slab.ref}
+      onClick={onClick}
+      className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
+        active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
+      }`}
+      style={active ? ACTIVE_SLOT : undefined}
+    >
+      {children}
+    </button>
+  );
+}
 
 // Brass indicator pip — lit on the active slot, a dim machined dimple otherwise.
 function Pip({ active }: { active: boolean }) {
@@ -53,28 +81,25 @@ export default function HubNav() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // UI-FIDELITY-2 — the rail housing renders as real brushed metal in the
+  // unified canvas (brushed along its long/horizontal axis).
+  const railSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
+
   return (
     // P2 mobile MUST-FIX (advocate 2026-06-10): on phone widths the mobile
     // mode toggle owns the bottom-center band — lift the hub trail above it
     // so the two pills never stack/occlude. Desktop position unchanged.
     <div className="absolute z-30 bottom-5 max-md:bottom-[84px] left-1/2 -translate-x-1/2 pointer-events-auto">
       <div
+        ref={railSlab.ref}
         className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
         style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
-        <button
-          onClick={resetCamera}
-          className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
-            activeHubId === null
-              ? 'text-ds-brass-200'
-              : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
-          }`}
-          style={activeHubId === null ? ACTIVE_SLOT : undefined}
-        >
+        <RailPill active={activeHubId === null} onClick={resetCamera}>
           <Pip active={activeHubId === null} />
           <Icon name="compass" size={12} color={activeHubId === null ? DS.brass300 : DS.textMid} />
           Galaxy
-        </button>
+        </RailPill>
 
         <div className="w-px h-5" style={{ background: 'var(--ds-edge-side)' }} />
 
@@ -82,16 +107,7 @@ export default function HubNav() {
           const active = activeHubId === hub.id;
           const nodeCount = graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
           return (
-            <button
-              key={hub.id}
-              onClick={() => flyToHub(hub.id)}
-              className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
-                active
-                  ? 'text-ds-brass-200'
-                  : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
-              }`}
-              style={active ? ACTIVE_SLOT : undefined}
-            >
+            <RailPill key={hub.id} active={active} onClick={() => flyToHub(hub.id)}>
               <Pip active={active} />
               {/* On-system glyph tint (brass active / bone idle) — raw
                   hub.color (#5d8bff-family) read as forbidden dashboard
@@ -99,7 +115,7 @@ export default function HubNav() {
               <Icon name={hub.glyph} size={12} color={active ? DS.brass300 : DS.textMid} glow={active} />
               {hub.name}
               <span className="text-[9px] opacity-50">{nodeCount}</span>
-            </button>
+            </RailPill>
           );
         })}
       </div>

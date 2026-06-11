@@ -11,6 +11,7 @@ import { useGraphEditorStore, type InspectorTab } from '@/stores/useGraphEditorS
 import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS } from '@/components/editor/design-system';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -22,6 +23,11 @@ const TABS: { id: InspectorTab; label: string; icon: string }[] = [
 ];
 
 export default function HubInspector() {
+  // UI-FIDELITY-2 — hero glass: the hub inspector plate refracts the live
+  // scene (same slab recipe as Inspector.tsx; hooks before the early return).
+  const hubSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
+  // UI-FIDELITY-2 — machined header plate as real brushed metal.
+  const headerSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x' });
   const open = useGraphEditorStore((s) => s.inspectorOpen);
   const close = useGraphEditorStore((s) => s.closeInspector);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
@@ -44,10 +50,11 @@ export default function HubInspector() {
     // RefractionDefs is mounted once in src/app/page.tsx; RightPane mounts
     // either this panel OR Inspector (never both), so the refract budget is 1.
     <div
+      ref={hubSlab.ref}
       className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
-      <div className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
+      <div ref={headerSlab.ref} className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         <div className="min-w-0 flex-1">
           <div className="ds-kicker flex items-center gap-1.5">
             <span>INSPECTOR</span>
