@@ -66,12 +66,17 @@ async function defaultMSDFTextFactoryAsync(): Promise<
     const obj = new mod.MSDFText(
       {
         text: content,
+        // P6 capstone fix (2026-06-11): never pass `undefined` style fields —
+        // the package adds letterSpacingPx/widthPx into glyph advances without
+        // defaulting, so `x + undefined = NaN` and every glyph after the first
+        // collapses (the "only the first letter renders" + computeBoundingSphere
+        // NaN symptom).
         textStyles: {
           fontSize: opts?.fontSize ?? 32,
-          color: opts?.color,
+          ...(opts?.color !== undefined ? { color: opts.color } : {}),
           textAlign: opts?.align ?? 'left',
-          widthPx: opts?.maxWidthPx,
-          letterSpacingPx: opts?.letterSpacingPx,
+          ...(opts?.maxWidthPx !== undefined ? { widthPx: opts.maxWidthPx } : {}),
+          letterSpacingPx: opts?.letterSpacingPx ?? 0,
         },
       },
       { atlas, data },

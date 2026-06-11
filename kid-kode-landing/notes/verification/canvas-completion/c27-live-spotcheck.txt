@@ -1,0 +1,18 @@
+crit-27 LIVE spot-check Wed Jun 10 23:45:20 CDT 2026 — on-demand atlas cache headers
+-- non-core font 'Abel' (previously baked → expect hit):
+HTTP/1.1 200 OK
+x-prism-font-cache: miss
+-- fonts list size:
+families: 1935
+-- second request same font (expect hit):
+HTTP/1.1 200 OK
+x-prism-font-cache: hit
+time_total=0.008450s
+-- NEW never-baked font 'Yellowtail' (expect miss → on-demand bake):
+HTTP/1.1 200 OK
+x-prism-font-cache: miss
+time_total=0.579844s
+-- Yellowtail second request (expect hit, fast):
+HTTP/1.1 200 OK
+x-prism-font-cache: hit
+time_total=0.004003s

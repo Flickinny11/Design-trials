@@ -1,0 +1,23 @@
+c02 played-state probe — reading guide (2026-06-10 final sign-off pass)
+
+c02-played-state-probe.json:
+- previewApp.movers = ["home-orbit-decor"] over 1.5s on the pristine demo graph
+  → positive "played state" signal in preview-app (criterion 2's third state).
+  The other 5 demo nodes animate via TSL/material paths or are static unless an
+  animationBinding is applied; the orbit cinematic-primitive is the matrix-level
+  mover the probe samples.
+- canvas.movers = ["home-orbit-decor"] too: the legacy cinematic-primitive
+  (runtime-spec §7 orbit, factory-applied) keeps its idle motion in canvas mode.
+  This is NOT a criterion-2 failure: §18-2 requires same nodes + state semantics
+  + no graph mutation, which hold (see c01-c02-c10-results.json: identical node
+  key sets across galaxy/canvas/preview-app round trips and byte-identical
+  live-graph.json md5 21f7ad65c1e233ee7fca7bfc29410441 before/after).
+  The mode-dependent FREEZE contract for the editor's animation system
+  (animationBindings) is separately proven by committed evidence:
+  notes/verification/toolbar-wiring/results.json steps
+  "binding PLAYS in preview-app (master clock)" and
+  "canvas freezes + restores pose (editing surface)".
+- probe script: _drives/c02-played-probe.mjs. Its `pass:false` is the script's
+  own over-strict gate (it demanded ZERO canvas movers, which the spec does not
+  require for legacy cinematic primitives); the recorded measurements are the
+  evidence.

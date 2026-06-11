@@ -36,11 +36,13 @@
 // signature (`(node, ctx) => Object3D`) by partial-applying opts.
 
 import {
+  Box3,
   Group,
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
   PlaneGeometry,
+  Vector3,
   type BufferGeometry,
   type Object3D,
   type Texture,
@@ -481,7 +483,33 @@ export function defaultRenderModeFactory(
       const textObj = ctx.fontAtlas.createText(t.text, {
         fontSize: t.typography?.fontSize,
         color: t.typography?.color,
+        // No wrapping: §13 labels are single-phrase captions; the package's
+        // default wrap width split them mid-phrase and overprinted lines
+        // (P6 capstone). Bound the box by the text's own worst-case width
+        // (per-glyph advance < fontSize) so the line never wraps while the
+        // bbox stays glyph-sized — a huge constant here inflates the bbox
+        // and the scale-to-fit below would shrink the text to invisibility.
+        maxWidthPx: (t.typography?.fontSize ?? 32) * (t.text.length + 2),
       });
+      // P6 capstone MUST-FIX (2026-06-11): typography.fontSize is authored in
+      // DESIGN PX (the .prism player's pixel world), but this factory's plane
+      // sizes are SCENE UNITS — un-scaled, a real MSDFText renders hundreds of
+      // units wide (the giant slab the capstone caught once the editor warmed
+      // the factory). Scale-to-fit the node's visual envelope and center over
+      // the plane face. Empty placeholder Groups (cold factory) are size 0 and
+      // skip untouched.
+      const bbox = new Box3().setFromObject(textObj);
+      const size = new Vector3();
+      bbox.getSize(size);
+      if (size.x > 0 && size.y > 0) {
+        const s = Math.min((width * 0.86) / size.x, (height * 0.6) / size.y);
+        if (Number.isFinite(s) && s > 0 && s < 1) {
+          textObj.scale.setScalar(s);
+          const center = new Vector3();
+          bbox.getCenter(center);
+          textObj.position.set(-center.x * s, -center.y * s, 0.012);
+        }
+      }
       group.add(textObj);
     } catch {
       // Atlas not yet warm — surface as soft failure, not a runtime crash.

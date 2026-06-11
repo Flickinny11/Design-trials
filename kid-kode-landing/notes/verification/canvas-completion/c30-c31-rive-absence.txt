@@ -1,0 +1,29 @@
+crit-30/31 — Rive integration ABSENCE proof @ HEAD b9ff738 — Thu Jun 11 00:14:30 CDT 2026
+
+== package.json / lockfile rive deps:
+0
+0
+0
+0
+
+== '@rive-app' imports anywhere in src/:
+       0
+
+== '.riv' references in src/ (ts/tsx):
+       0
+
+== word-boundary 'Rive' in src/:
+       0
+
+== .riv asset files on disk (public/ src/):
+       0
+
+== StateDriver kind exists (driver model ready for Rive lane)?:
+src/lib/prism-graph/types.ts:803:export type AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event';
+src/lib/prism-graph/types.ts:803:export type AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event';
+src/lib/prism-graph/types.ts:811:  driver: AnimationDriverKind;
+
+VERDICT: no Rive runtime, no .riv assets, no CanvasTexture-Rive bridge, no overlay layer.
+Criteria 30 and 31 are spec'd (canvas-spec section 13) but NOT BUILT in this prototype.
+Honest UNMET. NOTE: nothing forces a Rive-vs-native choice (FP-15 CLEAR) - the native
+Animatable lane is unconditional; the Rive lane is simply absent, not excluded.

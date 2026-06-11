@@ -1,0 +1,21 @@
+=== c23 — builtSnapshot cache loads without rebuild; hash-keyed single-node rebuild (sign-off supplement, 2026-06-11) ===
+
+Live runtime assertions (committed notes/verification/step5/step5-verify-report.json, all pass):
+- boot.built          → "12 snapshots" recorded in canvas at load.
+- toggle.no-rebuild   → RT-SC-08: canvas↔preview-app toggle issues 0 artifact rebuilds
+                        (Δ window.__artifactBuildCount = 0) — snapshots load Canvas/Preview without rebuilding.
+- rebuild.surgical    → RT-SC-09/INV-R8: edit one node → changedNodes=["home-feature-card"],
+                        featureRebuilt=true, siblingsUntouched=true (only that node rebuilt).
+- snapshot.append-only→ feature-card history entries=2, hashes=["94d4b23e","20fb8cb5"]
+                        (the rebuild is HASH-KEYED: a new content hash produced the new snapshot).
+Frames (committed): notes/verification/step5/01..06*.png
+
+Hash-keyed mechanism + unit coverage:
+- src/lib/editor/node-content-hash.ts — deterministic FNV-1a over the canonical build-relevant
+  projection; src/stores/useBuiltSnapshotStore.ts — per-node snapshot registry keyed by that hash
+  (window.__prismBuiltSnapshots bridge); src/lib/editor/rebuild-node.ts — surgical rebuild.
+- tests/editor-build/P4-mesh-primitive.test.ts → describe "node-content-hash meshPrimitive projection":
+  committed change invalidates the hash; identical inputs hash identically (deterministic across runs).
+- tests/editor-build/EBR2-E-04.save-and-rebuild.test.ts → rebuild bumps ONLY the target node's
+  version; "does not touch other nodes (other nodes' source data is byte-identical after rebuild)";
+  single-entry cache evict (evictArtifactCacheEntry).

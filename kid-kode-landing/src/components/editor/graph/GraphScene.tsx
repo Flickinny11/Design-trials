@@ -2830,6 +2830,14 @@ function AssembledSceneContent({
     const ctx = getSharedNodeContext({ runPrimitives: false });
     ctx.fontAtlas
       .load('/prism-assets/font-inter.msdf.png', '/prism-assets/font-inter.msdf.json')
+      // P6 capstone MUST-FIX (2026-06-11): load() alone is NOT enough —
+      // createText() without a warmed factory returns the placeholder Group,
+      // which left every legacy §13 textContent label (the demo hero headline
+      // "Build worlds in seconds.") rendering as a blank slab in the editor.
+      // The editor's scene runs under WebGPURenderer (the WebGL2 backend also
+      // compiles the package's node material — P1 finding), so warming the
+      // default factory is safe on every editor path.
+      .then(() => ctx.fontAtlas.warmupDefaultFactory?.())
       .catch((err) => {
         console.warn('[GraphScene] MSDF font atlas warmup failed:', (err as Error).message);
       })

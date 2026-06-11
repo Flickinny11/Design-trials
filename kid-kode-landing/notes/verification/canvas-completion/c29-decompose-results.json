@@ -1,0 +1,36 @@
+{
+  "steps": [
+    {
+      "step": "decompose=glyph: one unit mesh per glyph",
+      "ok": true,
+      "nodeId": "c465b1ae-6fa1-4a5b-8e87-bfb902256a47",
+      "units": 11,
+      "decompose": "glyph",
+      "content": "ONE TWO\nTHREE"
+    },
+    {
+      "step": "decompose=word: one unit mesh per word",
+      "ok": true,
+      "nodeId": "c465b1ae-6fa1-4a5b-8e87-bfb902256a47",
+      "units": 3,
+      "decompose": "word",
+      "content": "ONE TWO\nTHREE"
+    },
+    {
+      "step": "decompose=line: one unit mesh per line",
+      "ok": true,
+      "nodeId": "c465b1ae-6fa1-4a5b-8e87-bfb902256a47",
+      "units": 2,
+      "decompose": "line",
+      "content": "ONE TWO\nTHREE"
+    }
+  ],
+  "consoleErrors": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "expected": {
+    "glyph": 11,
+    "word": 3,
+    "line": 2
+  }
+}

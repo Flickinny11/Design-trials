@@ -1,0 +1,71 @@
+{
+  "steps": [
+    {
+      "step": "canvas mode",
+      "ok": true,
+      "backend": "webgpu"
+    },
+    {
+      "step": "crit-26 spot-check: Add Text → real MSDF glyph meshes, selectable",
+      "ok": true,
+      "nodeId": "528e64b7-cd45-412f-bd9d-15ffdabd49fc",
+      "glyphs": 4,
+      "font": "Inter"
+    },
+    {
+      "step": "wave-text (category: text) bound via picker, driver=time default",
+      "ok": true
+    },
+    {
+      "step": "wave-text PLAYS per-glyph in preview-app on master clock (distinct per-glyph phases)",
+      "ok": true,
+      "glyphs": 4,
+      "moved": 4,
+      "distinct": 4,
+      "signedYDeltas": [
+        0.0461,
+        0.2636,
+        0.2175,
+        -0.0461
+      ],
+      "d1": [
+        0.0461,
+        0.2636,
+        0.2175,
+        0.0461
+      ],
+      "d2max": 0.3429470419491987
+    },
+    {
+      "step": "Driver model: swap time→scroll persisted; binding id + params byte-identical (INV-6)",
+      "ok": true,
+      "id": "ab-mq90ju99-1",
+      "driver": "scroll",
+      "params": "{}"
+    },
+    {
+      "step": "mobile boot: preview-app default, 3-mode pill present",
+      "ok": true,
+      "canvas": true,
+      "galaxy": true,
+      "preview": true
+    },
+    {
+      "step": "mobile canvas: Text flyout opens",
+      "ok": true
+    },
+    {
+      "step": "mobile canvas: Add flyout opens (add-element action present)",
+      "ok": true
+    },
+    {
+      "step": "mobile: switched all 3 modes via pill, frames captured",
+      "ok": true
+    }
+  ],
+  "consoleErrors": [],
+  "badResponses": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "rawConsoleMessages": []
+}
