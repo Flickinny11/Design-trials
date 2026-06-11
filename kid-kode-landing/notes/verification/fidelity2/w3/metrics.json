@@ -1,0 +1,7 @@
+{
+ "at": "w3-r3-final",
+ "backend": "webgpu",
+ "tier": "t2",
+ "consoleErrors": 0,
+ "errorSamples": []
+}

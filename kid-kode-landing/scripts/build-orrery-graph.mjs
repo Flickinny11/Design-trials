@@ -89,8 +89,8 @@ const arrivalNodes = [
     id: 'orr-arrival-headline', hub: 's1-arrival', subtype: 'headline-text', serviceTag: 'ui-text',
     caption: 'Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.',
     renderMode: 'text',
-    t: { x: 0, y: 1.05, z: 0, width: 7.2, height: 0.9 },
-    sp: sp(0, 1.05, 0.3),
+    t: { x: 0, y: 1.32, z: 0, width: 7.2, height: 0.9 },
+    sp: sp(0, 1.32, 0.3),
     textSpec: {
       content: 'Time, machined.',
       fontFamily: 'Inter', fontWeight: 600, fontSize: 0.78,
@@ -101,7 +101,6 @@ const arrivalNodes = [
     },
     bindings: [
       bind('float', 'time', { amplitude: 0.025, periodSec: 7 }),
-      bind('scroll-depth-dolly', 'scroll', { intensity: 0.5 }),
     ],
     prims: [{ name: 'kinetic-text', params: { stagger: 0.045, duration: 0.8, effect: 'wave', easing: 'power3.out' }, trigger: 'inview' }],
   }),
@@ -109,8 +108,8 @@ const arrivalNodes = [
     id: 'orr-arrival-sub', hub: 's1-arrival', subtype: 'subhead-text', serviceTag: 'ui-text',
     caption: 'Sub-line in bone — quiet counterpoint under the molten headline.',
     renderMode: 'text',
-    t: { x: 0, y: 0.62, z: 0, width: 5.4, height: 0.3 },
-    sp: sp(0, 0.62, 0.25),
+    t: { x: 0, y: 0.82, z: 0, width: 5.4, height: 0.3 },
+    sp: sp(0, 0.82, 0.25),
     textSpec: {
       content: 'ORRERY No.7 — a celestial movement, eleven years in the making.',
       fontFamily: 'Inter', fontWeight: 400, fontSize: 0.17,
@@ -125,7 +124,7 @@ const arrivalNodes = [
     caption: 'The timepiece itself — photoreal generated 3D under the hub light rig; floats on idle, tilts toward the pointer, glints on click.',
     renderMode: 'mesh', meshUrl: `${A}/meshes/watch.glb`,
     t: { x: 0, y: -1.15, z: 0.6, width: 3.2, height: 3.2 },
-    sp: sp(0, -1.25, 0.6, { scaleX: 2.4, scaleY: 2.4, scaleZ: 2.4, rotationX: 0.25 }),
+    sp: sp(0, -1.45, 0.6, { scaleX: 2.2, scaleY: 2.2, scaleZ: 2.2, rotationX: 0.25 }),
     bindings: [
       bind('float', 'time', { amplitude: 0.06, periodSec: 5 }),
       bind('pointer-tilt-3d', 'pointer', { maxDeg: 9, ease: 0.12 }),
@@ -158,17 +157,17 @@ const movementNodes = [
       fill: { kind: 'gradient', from: '#e8d9ac', to: '#8a6f2e', angleDeg: 90 },
       outline: { color: '#120e04', width: 0.24 },
     },
-    bindings: [bind('decode-text', 'time', { durationSec: 1.1 })],
+    bindings: [bind('fade-up', 'time', { delay: 0.15, duration: 0.9 })],
   }),
   node({
     id: 'orr-movement-gear-a', hub: 's2-movement', subtype: 'mechanism-3d', serviceTag: 'ui-3d',
     caption: 'Skeletonized brass gear — real generated 3D, turning forever on the time driver.',
     renderMode: 'mesh', meshUrl: `${A}/meshes/gear-a.glb`,
-    t: { x: -1.7, y: -0.3, z: 0.4, width: 1.7, height: 1.7 },
-    sp: sp(-1.7, -0.3, 0.4, { scaleX: 1.3, scaleY: 1.3, scaleZ: 1.3 }),
+    t: { x: -1.95, y: -0.55, z: 0.4, width: 1.7, height: 1.7 },
+    sp: sp(-1.95, -0.55, 0.4, { scaleX: 1.15, scaleY: 1.15, scaleZ: 1.15 }),
     bindings: [
       bind('spin', 'time', { axis: 'z', periodSec: 14 }),
-      bind('scroll-rotate-3d', 'scroll', { axis: 'y', degrees: 35 }),
+      bind('scroll-rotate-3d', 'scroll', { axis: 'y', degrees: 18 }),
     ],
   }),
   node({
@@ -176,7 +175,7 @@ const movementNodes = [
     caption: 'The tourbillon cage — counter-rotating heart of the movement; leans toward the cursor.',
     renderMode: 'mesh', meshUrl: `${A}/meshes/tourbillon.glb`,
     t: { x: 1.5, y: -0.25, z: 0.7, width: 2.0, height: 2.0 },
-    sp: sp(1.5, -0.25, 0.7, { scaleX: 1.55, scaleY: 1.55, scaleZ: 1.55, rotationX: 0.3 }),
+    sp: sp(1.7, -0.25, 0.7, { scaleX: 1.25, scaleY: 1.25, scaleZ: 1.25, rotationX: 0.6 }),
     bindings: [
       bind('spin', 'time', { axis: 'z', periodSec: -9 }),
       bind('pointer-tilt-3d', 'pointer', { maxDeg: 12, ease: 0.1 }),
@@ -184,27 +183,19 @@ const movementNodes = [
     ],
   }),
   node({
-    id: 'orr-movement-macro', hub: 's2-movement', subtype: 'macro-photo',
-    caption: 'Macro photography plane — 4MP generated movement interior, parallax-anchored.',
-    renderMode: 'plane', sourceAsset: `${A}/movement/backdrop.png`,
-    t: { x: 0.1, y: 0.2, z: -1.2, width: 8.4, height: 4.7 },
-    sp: sp(0.1, 0.2, -1.2),
-    alpha: 0.92,
-    bindings: [bind('parallax', 'pointer', { intensity: 0.06 })],
-  }),
-  node({
     id: 'orr-movement-spec', hub: 's2-movement', subtype: 'spec-text', serviceTag: 'ui-text',
     caption: 'Specification micro-copy — tabular, instrument-grade.',
     renderMode: 'text',
-    t: { x: -2.15, y: -1.25, z: 0, width: 3.6, height: 0.5 },
-    sp: sp(-2.15, -1.25, 0.15),
+    t: { x: -2.15, y: -1.45, z: 0.5, width: 3.6, height: 0.5 },
+    sp: sp(-2.15, -1.45, 0.5),
     textSpec: {
       content: '311 components — 27 jewels\n28,800 vph — 96h reserve',
       fontFamily: 'Inter', fontWeight: 400, fontSize: 0.13,
       letterSpacing: 0.06, lineHeight: 1.6, align: 'left',
-      fill: { kind: 'solid', color: '#9aa3b8' },
+      fill: { kind: 'solid', color: '#e2e7f2' },
+      outline: { color: '#0a0c12', width: 0.3 },
     },
-    bindings: [bind('scroll-stagger-rise', 'scroll', { distancePx: 30 })],
+    bindings: [bind('scroll-rotate-3d', 'scroll', { axis: 'x', degrees: 5 })],
   }),
 ];
 
@@ -235,8 +226,7 @@ const materiaNodes = [
     imageSpec: { cornerRadiusPx: 26 },
     bindings: [
       bind('magnetic', 'pointer', { strengthPx: 14, radiusPx: 200 }),
-      bind('pointer-shine', 'pointer', { intensity: 0.5 }),
-      bind('scroll-stagger-rise', 'scroll', { distancePx: 60, index: 0 }),
+      bind('scroll-rotate-3d', 'scroll', { axis: 'x', degrees: 7 }),
     ],
   }),
   node({
@@ -248,8 +238,7 @@ const materiaNodes = [
     imageSpec: { cornerRadiusPx: 26 },
     bindings: [
       bind('magnetic', 'pointer', { strengthPx: 14, radiusPx: 200 }),
-      bind('pointer-shine', 'pointer', { intensity: 0.55 }),
-      bind('scroll-stagger-rise', 'scroll', { distancePx: 60, index: 1 }),
+      bind('scroll-rotate-3d', 'scroll', { axis: 'x', degrees: 7 }),
     ],
   }),
   node({
@@ -261,8 +250,7 @@ const materiaNodes = [
     imageSpec: { cornerRadiusPx: 26 },
     bindings: [
       bind('magnetic', 'pointer', { strengthPx: 14, radiusPx: 200 }),
-      bind('pointer-shine', 'pointer', { intensity: 0.5 }),
-      bind('scroll-stagger-rise', 'scroll', { distancePx: 60, index: 2 }),
+      bind('scroll-rotate-3d', 'scroll', { axis: 'x', degrees: 7 }),
     ],
   }),
   node({
@@ -274,7 +262,6 @@ const materiaNodes = [
     sp: sp(0, -1.78, 0.1),
     imageSpec: { cornerRadiusPx: 22 },
     bindings: [
-      bind('embers', 'time', { density: 0.35 }),
       bind('scroll-zoom', 'scroll', { from: 0.96, to: 1.04 }),
     ],
   }),
@@ -315,9 +302,9 @@ const celestiaNodes = [
     prims: [{ name: 'kinetic-text', params: { stagger: 0.05, duration: 0.9, effect: 'rise', easing: 'power3.out' }, trigger: 'inview' }],
     bindings: [bind('fade-vignette', 'scroll', { intensity: 0.3 })],
   }),
-  planet('orr-celestia-planet-lapis', -2.2, -0.2, `${A}/celestia/planet-marble.png`, 0.52, 38, 0),
-  planet('orr-celestia-planet-brass', 0.4, -0.6, `${A}/celestia/planet-brass.png`, 0.34, 26, 1),
-  planet('orr-celestia-planet-obsidian', 2.4, 0.1, `${A}/celestia/planet-obsidian.png`, 0.42, 49, 2),
+  planet('orr-celestia-planet-lapis', -2.4, -0.2, `${A}/celestia/planet-marble.png`, 0.44, 38, 0),
+  planet('orr-celestia-planet-brass', 0.55, -0.6, `${A}/celestia/planet-brass.png`, 0.3, 26, 1),
+  planet('orr-celestia-planet-obsidian', 2.5, 0.1, `${A}/celestia/planet-obsidian.png`, 0.38, 49, 2),
   node({
     id: 'orr-celestia-stars', hub: 's4-celestia', subtype: 'ambience', serviceTag: 'ui-fx',
     caption: 'Galaxy particle field — the deep bench of stars behind the orrery.',
@@ -344,7 +331,7 @@ const acquireNodes = [
     caption: 'The timepiece, at rest on its pedestal — slow turntable; click for a glint pass.',
     renderMode: 'mesh', meshUrl: `${A}/meshes/watch.glb`,
     t: { x: 0, y: -0.35, z: 0.45, width: 2.0, height: 2.0 },
-    sp: sp(0, -0.5, 0.45, { scaleX: 1.45, scaleY: 1.45, scaleZ: 1.45, rotationX: 0.18 }),
+    sp: sp(0, -0.62, 0.45, { scaleX: 1.3, scaleY: 1.3, scaleZ: 1.3, rotationX: 0.18 }),
     bindings: [
       bind('spin', 'time', { axis: 'y', periodSec: 24 }),
       bind('scale-pop', 'event', { trigger: 'click', factor: 1.05 }),
@@ -355,11 +342,11 @@ const acquireNodes = [
     id: 'orr-acquire-cta', hub: 's5-acquire', subtype: 'cta-text', serviceTag: 'ui-text',
     caption: 'Closing line + call to action — brass-poured, magnetic, pops on click (event driver).',
     renderMode: 'text',
-    t: { x: 0, y: 1.0, z: 0.2, width: 6.4, height: 0.85 },
-    sp: sp(0, 1.0, 0.2),
+    t: { x: 0, y: 1.28, z: 0.2, width: 6.4, height: 0.85 },
+    sp: sp(0, 1.28, 0.2),
     textSpec: {
       content: 'Eleven made.\nOne is yours.',
-      fontFamily: 'Inter', fontWeight: 600, fontSize: 0.4,
+      fontFamily: 'Inter', fontWeight: 600, fontSize: 0.36,
       lineHeight: 1.35, align: 'center',
       fill: { kind: 'texture', url: `${A}/materia/brass-macro.png` },
       outline: { color: '#14100a', width: 0.22 },
@@ -375,8 +362,8 @@ const acquireNodes = [
     id: 'orr-acquire-reserve', hub: 's5-acquire', subtype: 'spec-text', serviceTag: 'ui-text',
     caption: 'Reservation micro-copy.',
     renderMode: 'text',
-    t: { x: 0, y: 2.0, z: 0.1, width: 4.2, height: 0.22 },
-    sp: sp(0, 2.0, 0.1),
+    t: { x: 0, y: 2.05, z: 0.1, width: 4.2, height: 0.22 },
+    sp: sp(0, 2.05, 0.1),
     textSpec: {
       content: 'ATELIER PRISM — BY APPOINTMENT',
       fontFamily: 'Inter', fontWeight: 400, fontSize: 0.11,
@@ -403,19 +390,19 @@ const hubs = [
     [
       { id: 'bg-space', attachment: 'parallax', sourceUrl: `${A}/arrival/backdrop.png`, z: -3, parallaxDepth: 0.25, opacity: 1 },
     ],
-    warmKey(1.2), 1440),
+    warmKey(1.2), 720),
   hub('s2-movement', 'The Movement',
     'Exploded mechanism — generated gears and tourbillon turning as real lit 3D over macro photography.',
     [
-      { id: 'bg-macro', attachment: 'parallax', sourceUrl: `${A}/movement/backdrop.png`, z: -3, parallaxDepth: 0.18, opacity: 0.32 },
+      { id: 'bg-macro', attachment: 'parallax', sourceUrl: `${A}/movement/backdrop.png`, z: -3, parallaxDepth: 0.18, opacity: 0.45 },
     ],
-    warmKey(1.0), 1080),
+    warmKey(1.0), 720),
   hub('s3-materia', 'Materia',
     'Brass, sapphire, meteorite — material swatches with magnetic pointer physics and the molten pour video moment.',
     [
       { id: 'bg-still', attachment: 'parallax', sourceUrl: `${A}/materia/backdrop.png`, z: -3, parallaxDepth: 0.15, opacity: 0.6 },
     ],
-    warmKey(1.05), 1440),
+    warmKey(1.05), 720),
   hub('s4-celestia', 'Celestia',
     'The planetarium — stone planets orbit a brass armillary under the star field; click a planet to relight the system.',
     [
@@ -428,7 +415,7 @@ const hubs = [
       ],
       env: { preset: 'night', intensity: 0.65 },
       shadowSoftness: 0.8,
-    }, 1080),
+    }, 720),
   hub('s5-acquire', 'Acquire',
     'The closing beat — the timepiece on its obsidian pedestal under a single warm key; eleven made, one is yours.',
     [

@@ -62,4 +62,6 @@ export const tsl = TSL as unknown as {
   viewportSafeUV: (uvNode?: unknown) => TSLNode;
   screenUV: TSLNode;
   mx_noise_float: (x: unknown) => TSLNode;
+  lights: (l: unknown[]) => TSLNode;
+  pmremTexture: (tex: unknown, uvNode?: unknown) => TSLNode;
 };

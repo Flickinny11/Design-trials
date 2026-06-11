@@ -1569,7 +1569,10 @@ function SceneControlsBridge({
       truckSpeed={1.1}
       azimuthRotateSpeed={0.7}
       polarRotateSpeed={0.7}
-      dollySpeed={0.75}
+      // W3 — in preview-app the wheel belongs to the SCROLL DRIVER (page
+      // semantics): camera dolly on wheel pulled the whole hub into a distant
+      // void cluster (advocate MF3). Editing modes keep dolly.
+      dollySpeed={viewMode === 'preview-app' ? 0 : 0.75}
       infinityDolly={false}
     />
   );
@@ -1998,17 +2001,27 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const sp = readSceneTransform(node);
   const ct = readCanvasTransform(node);
 
+  // FIDELITY-2 W4 — gizmo offset fix (carried flag, W0 root-cause): the
+  // three-stdlib TransformControls helper is a WORLD-space gizmo — it copies
+  // the attached object's worldPosition into its own LOCAL handle positions
+  // and then composes its parent's transform on top. Mounted INSIDE the
+  // translated anchor it rendered at 2·(sp+ct) — visibly offset from the
+  // artifact whenever scenePosition ≠ 0 (drags still worked because deltas
+  // are plane-relative). The controls now mount as a SIBLING of the anchor
+  // (identity parent); placement comes solely from the proxy's matrixWorld.
   return (
-    <group
-      name={`canvas:gizmo-anchor:${node.nodeId}`}
-      position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
-    >
+    <>
       <group
-        ref={(g) => {
-          setProxy(g);
-        }}
-        name={`canvas:gizmo-proxy:${node.nodeId}`}
-      />
+        name={`canvas:gizmo-anchor:${node.nodeId}`}
+        position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
+      >
+        <group
+          ref={(g) => {
+            setProxy(g);
+          }}
+          name={`canvas:gizmo-proxy:${node.nodeId}`}
+        />
+      </group>
       {proxy ? (
         <TransformControls
           object={proxy}
@@ -2047,7 +2060,7 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
           }}
         />
       ) : null}
-    </group>
+    </>
   );
 }
 

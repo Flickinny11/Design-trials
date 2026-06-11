@@ -1,0 +1,69 @@
+{
+  "feature": "UI-FIDELITY-2 W3 — ORRERY No.7 flagship showcase (RE-GRADE r4, final)",
+  "claim": "The r3 sole mustFix (untextured twin quads spawned by scroll-stagger-rise) is resolved by swapping the swatch + spec-line bindings to scroll-rotate-3d.",
+  "groundTruthSibling": null,
+  "state": "w3-r4",
+  "rubric": {
+    "q1_defects": {
+      "answer": "The r3 blocker is dead at its exact coordinates: the r4 drive-scroll.png crops at x950-1500,y600-1020 (sapphire tile, the region that held two bands plus a navy bar) and x250-900,y700-1080 (brass tile, bands plus bottom-left bar) show zero placeholder quads — only the gem, its brass mount, the relief swatch, and ember ambience around the molten pour. A whole-frame periwinkle hunt (B>110, B>R+25, B>G+18) finds 0.507% of pixels, all attributable to the sapphire itself. The root-cause story is consistent with the evidence trail: the bars rose with the stagger and vanished when stagger-rise was swapped for scroll-rotate-3d. No regressions in the fresh composed hub3-materia.png. Remaining nits are evidence-hygiene, not product: metrics.json was not refreshed for the r4 captures (at=w3-r3-final, written 18:14:50, frames at 18:20), and a stray W4 artifact (w4-gizmo-offorigin.png) landed in the w3 bundle.",
+      "evidence": [
+        "drive-scroll.png",
+        "metrics: whole-frame blue-dominant pixel count 0.507%, localized to the sapphire gem — zero flat quads at the r3 bar coordinates",
+        "hub3-materia.png",
+        "w4-gizmo-offorigin.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — a complete five-chapter luxury watch story, and the scroll chapter finally reads as designed choreography: through scroll the three material swatches TILT dimensionally in place (real perspective change per tile, visible against drive-scroll-pre.png), the molten-pour video zooms, and the headline shifts on its axis while the frame stays fully composed. The composed hub3-materia.png now carries a subtle rest-state tilt on the swatches that adds depth rather than reading as misalignment. Hubs 1/2/4/5 stand as verified in r3 (hub1-arrival.png, hub2-movement.png with the gear clear of the headline, hub4-celestia.png, hub5-acquire.png).",
+      "evidence": [
+        "drive-scroll-pre.png",
+        "drive-scroll.png",
+        "hub3-materia.png",
+        "hub2-movement.png",
+        "hub1-arrival.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The Prev / hub-pill / Next pager is on every frame, and scroll on the materia chapter now does the most discoverable thing possible: the content the user is looking at responds dimensionally, in place, immediately — nothing flies away, nothing blank appears. A first-time user needs no prompting for either navigation mode.",
+      "evidence": [
+        "hub3-materia.png",
+        "drive-scroll-pre.png",
+        "drive-scroll.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive across every driver. Scroll: 42.53% of pixels change in place between drive-scroll-pre and drive-scroll (meanΔ 30.84) with the composition holding full-frame — the strongest in-place response of the three rounds (r2: 54.78% but receding to void; r3: 27.01% in place with placeholder quads; r4: 42.53% in place and clean). The uncontested r2 driver evidence stands: time 12.44% pixels, pointer-vs-event distinct at 9.22%, state localized 2.20% (drive-time-a/b, drive-pointer.png, drive-event.png, drive-state-pre/post). Backend webgpu/t2 with consoleErrors=0 attested by the sidecar written mid-session at 18:14:50; the 18:20 r4 frames are a continuation of the same capture session (flagged for refresh below).",
+      "evidence": [
+        "metrics: scroll-pre vs scroll meanΔ=30.84, 42.53% pixels >8, composition holds full-frame",
+        "drive-scroll.png",
+        "drive-time-a.png",
+        "console: metrics.json backend=webgpu tier=t2 consoleErrors=0 (at=w3-r3-final, same session, 6 min before the r4 frames)"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. Paging five composed chapters of a watch that reacts to my cursor, planets that actually orbit, and a materials page where the swatches lean toward me in 3D as I scroll — I'd say this looks like a flagship product site, not a prototype. Against the before-state (grey slab, silhouette watch, cut-off button text) it is a different product; nothing left on screen would make a first-time user stop and say 'that's broken.'",
+      "evidence": [
+        "hub1-arrival.png",
+        "drive-scroll.png",
+        "metrics: 42.53% in-place scroll response, 0 console errors, zero placeholder quads at the r3 defect coordinates"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Evidence hygiene: metrics.json was not refreshed for the r4 captures — it still reads at=w3-r3-final (written 18:14:50; the r4 frames are 18:20:20-22). The webgpu/0-errors attestation is inherited from the same capture session minutes earlier and nothing contradicts it, but the next capture run should re-emit the sidecar stamped for its own frames.",
+      "evidence": "console: metrics.json at=w3-r3-final mtime 18:14:50 vs drive-scroll.png mtime 18:20:22"
+    },
+    {
+      "note": "Bundle hygiene: a W4 artifact (w4-gizmo-offorigin.png, 18:18) landed inside the w3 evidence bundle — move it to its own wave directory so future graders don't mistake it for showcase evidence.",
+      "evidence": "w4-gizmo-offorigin.png"
+    },
+    {
+      "note": "Carried taste items from r2, unchanged and non-blocking: at the 2200x1280 drive viewport hub1's headline tail overlaps the subline's last words (drive-time-a.png); pointer/event animations transiently float the watch over the subline (drive-pointer.png, drive-event.png). Worth a responsive/composition pass someday.",
+      "evidence": "drive-time-a.png, drive-pointer.png, drive-event.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

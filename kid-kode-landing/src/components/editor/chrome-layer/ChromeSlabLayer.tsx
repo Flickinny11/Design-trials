@@ -116,12 +116,21 @@ export function ChromeSlabLayer() {
     const opaqueBufs = makeBuffers(capacity);
     const glassBufs = makeBuffers(capacity);
 
+    // Chrome owns its lighting domain: hub light rigs vary wildly per hub
+    // (a bright key washed ceramic cards to white at canvas zoom) — slabs
+    // are lit ONLY by the pointer light + the scene environment (IBL stays
+    // reactive to the active hub, which is the desired behavior).
+    const light = new THREE.PointLight(dsHexNumber(DS.brass100), 0, 1.6, 2);
+    light.name = 'chrome-pointer-light';
+    const chromeLights = tsl.lights([light]);
+
     const mkMesh = (bufs: ChromeInstanceBuffers, glass: boolean) => {
       const geo = new THREE.PlaneGeometry(1, 1);
       attachBuffers(geo, bufs);
       const mat = glass
-        ? createGlassSlabMaterial(bufs, uniforms)
+        ? createGlassSlabMaterial(bufs, uniforms, textures)
         : createOpaqueSlabMaterial(bufs, uniforms, textures);
+      (mat as unknown as Record<string, unknown>).lightsNode = chromeLights;
       const mesh = new THREE.InstancedMesh(geo, mat, capacity);
       mesh.count = 0;
       mesh.frustumCulled = false;
@@ -133,9 +142,7 @@ export function ChromeSlabLayer() {
     const opaque = mkMesh(opaqueBufs, false);
     const glass = mkMesh(glassBufs, true);
 
-    // Pointer light: warm brass, tight falloff — chrome answers, scene barely.
-    const light = new THREE.PointLight(dsHexNumber(DS.brass100), 0, 2.6, 2);
-    light.name = 'chrome-pointer-light';
+    // Pointer light mounted under the camera group (position driven per frame).
     group.add(light);
 
     // In-scene nebula so glass has real content to refract at screen edges.
@@ -207,9 +214,9 @@ export function ChromeSlabLayer() {
     s.light.position.set(
       (uniforms.pointer.value.x - halfW) * pxToWorld,
       (halfH - uniforms.pointer.value.y) * pxToWorld,
-      -CHROME_DISTANCE + 0.55,
+      -CHROME_DISTANCE + 0.85,
     );
-    s.light.intensity = 3.0 * uniforms.pointerActive.value;
+    s.light.intensity = 1.5 * uniforms.pointerActive.value;
 
     const damp = 1 - Math.exp(-delta * 14);
     let oi = 0;

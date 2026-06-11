@@ -54,7 +54,7 @@ export function ModeTransitionConductor() {
   const prevHub = useRef(activeHubId);
   const paneRef = useRef<HTMLDivElement | null>(null);
   // The sweep pane is REAL refractive glass — strongest frost, hero accent.
-  const paneSlab = useChromeSlab({ material: 'glass', radius: 24, frost: 0.85, accent: 1, borderPx: 2 });
+  const paneSlab = useChromeSlab({ material: 'glass', radius: 24, frost: 0.6, accent: 0.4, borderPx: 1 });
   const bootDone = useRef(false);
 
   // ── Boot light sweep: one slow studio pass once the layer is live.

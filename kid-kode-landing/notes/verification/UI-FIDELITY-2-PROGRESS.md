@@ -8,7 +8,7 @@
 
 - **Run started:** 2026-06-11 (session 1, claude-fable-5)
 - **Branch:** prism-editor-build
-- **Current wave:** W3 (flagship showcase) — starting
+- **Current wave:** W4 (carried fixes + no-regression) — in progress
 - **Last AUTO-CKPT:** see git log (W0 7ba71c5 → W1 f339f06 → W2-core cb0424e → W2-morph+seams → W2-PASS pending commit)
 - **FAL_KEY:** VALID (probe-verified S1); re-checked at W2 boundary — present
 - **LOGAN-INBOX:** checked S1 + W1 + W2 boundaries — no OPEN directives
@@ -20,7 +20,7 @@
 | W0 | Orientation: ledger, FAL validation, DESIGN-REFERENCES full read, research (Slider Rev / fal models / WebGPU chrome), baseline DPR2 screenshots | ✅ DONE (AUTO-CKPT pending→see git) |
 | W1 | Chrome material foundation: shared WebGPU chrome layer, TSL material lib (brushed metal/smoked glass/ceramic), Fresnel/refraction/bevels, pointer-reactive light, T0 fallback, <2ms budget | ✅ FOUNDATION DONE (see W1 notes) |
 | W2 | Surface migration: toolbar+flyouts+sliders, inspector, catalog frame, overlays, HUD, keyframe shell, boot + typography overhaul + morph-through transitions + canvas2D→MSDF labels | ✅ DONE — ADVOCATE PASS r2 (PLEASED) |
-| W3 | Flagship 5-hub showcase: fal.ai assets (image/3D/video), hi-res (kill 1024²), morph-through nav, all-5-driver bindings, poured-texture text | pending |
+| W3 | Flagship 5-hub showcase: fal.ai assets (image/3D/video), hi-res (kill 1024²), morph-through nav, all-5-driver bindings, poured-texture text | ✅ DONE — ADVOCATE PASS r4 (PLEASED) |
 | W4 | Carried fixes + no-regression: gizmo offset, 312 catalog, full vitest, perf table, mobile fallback | pending |
 | W5 | Evidence + report: DPR2 zoom crops, advocate verdicts (Slider-Rev side-by-side), dependency-usage table, spend ledger, UI-FIDELITY-2-REPORT.md | pending |
 
@@ -223,6 +223,33 @@ before placement; rejects regenerated budget permitting.
 
 **Structural pre-work (agent running):** multi-hub wire format (4 seams),
 hubManager.activate on nav, additive videoUrl + loadVideo lane.
+
+## W3 notes (ORRERY No.7 — ADVOCATE PASS r4, PLEASED)
+
+- 5 hubs (s1-arrival…s5-acquire), 22 nodes, all five drivers bound + drive-
+  verified with pixel deltas; $4.02 fal spend; every asset vision-critiqued
+  (1 rejected + regenerated). Advocate r4 line: "Slider Revolution decorates
+  flat pages with shader-warped pictures; ORRERY No.7 scrolls a real lit
+  place… beating SR on their home turf." Verdict JSON in w3/.
+- Advocate rounds r1→r4: typography scramble (decode-text + duplicate macro
+  node), occlusions (recomposed), scroll-void (ROOT: wheel was camera-dolly in
+  preview-app → dollySpeed 0 there), placeholder quads (ROOT: scroll-stagger-
+  rise + pointer-shine + embers spawn untextured twin quads — swapped for
+  scroll-rotate-3d; ENGINE BACKLOG: fix those primitives' subject cloning).
+- Engine improvements shipped: hub.background[] honored by assembled
+  SceneBackdrop; MaterialSpec.baseColorMapUrl (additive) + meshPrimitive map
+  pour; late-subject retry in attachAnimationBindings (async GLB/MSDF
+  artifacts lost bindings forever); boot-null routing fix; narrative hub
+  ordering; scroll-depth-dolly binding KILLED the headline (degenerate
+  transform — primitive backlogged, binding removed).
+- W4 progress: GIZMO OFFSET FIXED + verified (TransformControls re-parented
+  to identity sibling; translate handles dead-center on sp(-2.3,…) node —
+  w4-gizmo-offorigin.png). CHROME STABILITY: spec'd hubs mount drei studio env
+  which washed chrome white → chrome now owns its lighting domain (per-
+  material lightsNode = pointer light only) + its OWN reflection env = the
+  fal observatory panorama (Addendum-3 synergy; envMapIntensity 0.55/0.7;
+  glass speculars capped roughness 0.32). Verified dark+legible in materia
+  canvas zoom (w4-chrome-stability-materia.png).
 
 ## Session log
 

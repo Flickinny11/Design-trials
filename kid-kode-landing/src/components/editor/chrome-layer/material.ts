@@ -29,7 +29,7 @@ import { tsl, type TSLNode, type TSLUniform } from './tsl';
 const {
   uniform, uv, vec2, vec3, vec4, float, mix, step, smoothstep, clamp, length,
   normalize, abs, min, max, exp, fwidth, dFdx, dFdy, instancedBufferAttribute,
-  viewportMipTexture, viewportSafeUV, screenUV, mx_noise_float, texture,
+  viewportMipTexture, viewportSafeUV, screenUV, mx_noise_float, texture, pmremTexture,
 } = tsl;
 
 export interface ChromeUniforms {
@@ -78,6 +78,11 @@ export interface ChromeTextures {
   brushedRough: THREE.Texture;
   ceramicNormal: THREE.Texture;
   ceramicRough: THREE.Texture;
+  /** fal-generated warm observatory equirect — the chrome's OWN reflection
+   *  environment. Hub light rigs vary wildly (a spec'd hub mounts the bright
+   *  drei 'studio' env, which washed ceramic cards to white); chrome must
+   *  read as the same machined instrument in every hub. */
+  env: THREE.Texture;
   /** 0 until all maps decoded — the graph blends them in over the procedural
    *  noise so slabs never flash a broken black-normal state. */
   ready: TSLUniform<number>;
@@ -100,11 +105,20 @@ export function createChromeTextures(): ChromeTextures {
       t.needsUpdate = true;
       if (--pending === 0) ready.value = 1;
     });
+  const env = new THREE.TextureLoader().load(
+    '/prism-assets/chrome/observatory-env.png',
+    (t) => {
+      t.mapping = THREE.EquirectangularReflectionMapping;
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.needsUpdate = true;
+    },
+  );
   return {
     brushedNormal: load('/prism-assets/chrome/brushed-metal.normal.png'),
     brushedRough: load('/prism-assets/chrome/brushed-metal.roughness.png'),
     ceramicNormal: load('/prism-assets/chrome/ceramic-grain.normal.png'),
     ceramicRough: load('/prism-assets/chrome/ceramic-grain.roughness.png'),
+    env,
     ready,
   };
 }
@@ -303,11 +317,12 @@ export function createOpaqueSlabMaterial(
   );
 
   n.opacityNode = c.coverage;
+  if (tex) n.envNode = pmremTexture(tex.env);
   m.transparent = true;
   m.depthTest = false;
   m.depthWrite = false;
   m.fog = false;
-  m.envMapIntensity = 0.9;
+  m.envMapIntensity = 0.55;
   return m;
 }
 
@@ -315,6 +330,7 @@ export function createOpaqueSlabMaterial(
 export function createGlassSlabMaterial(
   bufs: ChromeInstanceBuffers,
   u: ChromeUniforms,
+  tex?: ChromeTextures,
 ): THREE.MeshPhysicalNodeMaterial {
   const m = new THREE.MeshPhysicalNodeMaterial();
   const n = m as unknown as Record<string, unknown>;
@@ -356,8 +372,10 @@ export function createGlassSlabMaterial(
   n.colorNode = vec4(0.02, 0.022, 0.03, 1.0);
   n.normalNode = bevelNormal(c.gradDir, c.fillet, 1.6, 1);
   n.metalnessNode = float(0.0);
-  n.roughnessNode = float(0.18).add(frost.mul(0.1));
-  n.clearcoatNode = float(0.6);
+  // Roughness floor keeps on-panel pointer-light speculars from blowing the
+  // glass to white (W4 catch: cursor parked on a panel washed it out).
+  n.roughnessNode = float(0.32).add(frost.mul(0.1));
+  n.clearcoatNode = float(0.35);
   m.envMapIntensity = 1.1;
 
   const vT = uv().y.oneMinus();
@@ -369,9 +387,11 @@ export function createGlassSlabMaterial(
   n.emissiveNode = keyline.add(magnet).add(rim).add(c3(ICE).mul(c.sheen).mul(0.1));
 
   n.opacityNode = c.coverage;
+  if (tex) n.envNode = pmremTexture(tex.env);
   m.transparent = true;
   m.depthTest = false;
   m.depthWrite = false;
   m.fog = false;
+  m.envMapIntensity = 0.7;
   return m;
 }
