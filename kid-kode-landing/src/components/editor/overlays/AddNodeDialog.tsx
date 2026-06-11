@@ -53,7 +53,10 @@ export default function AddNodeDialog() {
   // brass primary as a ceramic key in the unified canvas (the smoked scrim
   // stays CSS). Hooks run before the early return (hooks rule).
   const panelSlab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.55 });
-  const submitSlab = useChromeSlab({ material: 'ceramic', radius: 9, accent: 1 });
+  // The brass submit key stays CSS: GPU slabs draw behind ALL DOM including
+  // this dialog's scrim, so a slab key would render veiled/dim under the
+  // smoked scrim (advocate MUST-FIX: unreadable primary). The DOM brass
+  // gradient sits above the scrim at full brightness.
 
   if (!open) return null;
 
@@ -164,7 +167,6 @@ export default function AddNodeDialog() {
             Cancel
           </button>
           <button
-            ref={submitSlab.ref}
             type="submit"
             data-role="add-node-submit"
             disabled={!canSubmit}

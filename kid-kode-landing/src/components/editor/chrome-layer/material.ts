@@ -186,7 +186,7 @@ function slabCommon(bufs: ChromeInstanceBuffers, u: ChromeUniforms): SlabCommon 
 
   // Soft face sheen toward the pointer (the real speculars come from the
   // PointLight; this keeps faces away from the light from going dead).
-  const sheen = exp(pointerDist.mul(pointerDist).div(-90000.0)).mul(0.35).mul(u.pointerActive);
+  const sheen = exp(pointerDist.mul(pointerDist).div(-90000.0)).mul(0.2).mul(u.pointerActive);
 
   return { p, size, state, misc, d, coverage, gradDir, fillet, keyline, magneticGlow, sheen };
 }
@@ -240,11 +240,14 @@ export function createOpaqueSlabMaterial(
   const grain = mx_noise_float(vec3(c.p.x.mul(0.9), c.p.y.mul(0.9), 3.0));
 
   const baseColor = metalBase.mul(isMetal).add(ceramicBase.mul(isCeramic)).add(wellBase.mul(isWell));
-  // Brass accent wash on active/hover keys (replaces activeKeyStyle tint).
+  // Accent = a REAL brass plate face (not a wash): primary keys keep their
+  // dark-ink labels legible because the face under them is actually bright
+  // brass, exactly like the CSS --ds-grad-brass they replace (advocate
+  // MUST-FIX: unreadable primary confirm key).
   const accented = mix(
     baseColor,
-    baseColor.add(brassGradient(vT).mul(0.3)),
-    accent.mul(0.85).add(hover.mul(0.15)),
+    brassGradient(vT).mul(0.82),
+    accent.mul(0.8).add(hover.mul(0.08)),
   ) as TSLNode;
   n.colorNode = vec4(accented.mul(press.mul(-0.18).add(1.0)), 1.0);
 
@@ -285,11 +288,16 @@ export function createOpaqueSlabMaterial(
   // Emissive: brass keyline + magnetic pointer glow + pointer sheen + a
   // static top-edge glint so pointer-less frames still read dimensional.
   const keylineColor = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.5));
-  const magnetGlow = brassGradient(0.2).mul(c.magneticGlow).mul(0.85);
+  const magnetGlow = brassGradient(0.2).mul(c.magneticGlow).mul(0.55);
   const sheenGlow = c3(ICE).mul(c.sheen).mul(0.16);
-  const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.035)).mul(isMetal);
+  const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.022)).mul(isMetal);
+  // Accent faces are SELF-LIT like the CSS --ds-grad-brass they replace: an
+  // albedo-only brass plate goes near-black under a dim scene env, which made
+  // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
+  // guarantees instrument-key luminance under any hub lighting.
+  const accentFace = brassGradient(vT).mul(accent.mul(0.34).add(accent.mul(hover).mul(0.08)));
   n.emissiveNode = mix(
-    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint),
+    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(accentFace),
     vec3(0.0, 0.0, 0.0),
     isWell.mul(0.7),
   );
@@ -335,9 +343,11 @@ export function createGlassSlabMaterial(
   // Beer–Lambert smoked tint, thicker at the rim (the bevel doubles as depth).
   const thickness = c.fillet.mul(2.2).add(1.0);
   const absorb = vec3(0.18, 0.16, 0.1); // smoked brass: pass warm, sink blue
-  const tinted = refracted.mul(exp(absorb.mul(thickness).negate()));
-  // Lift toward the panel tone so DOM text always has contrast footing.
-  const glassBody = mix(tinted, c3(GLASS_TINT), float(0.22).add(frost.mul(0.08)));
+  const tinted = refracted.mul(exp(absorb.mul(thickness).negate())).mul(0.82);
+  // Lift toward the panel tone so DOM text always has contrast footing —
+  // and damp total transmitted energy so bright scene content can never
+  // blow out labels on the panel (advocate MUST-FIX: specular wash).
+  const glassBody = mix(tinted, c3(GLASS_TINT), float(0.3).add(frost.mul(0.08)));
 
   n.backdropNode = vec4(glassBody, 1.0);
   n.backdropAlphaNode = c.coverage;
@@ -352,7 +362,7 @@ export function createGlassSlabMaterial(
 
   const vT = uv().y.oneMinus();
   const keyline = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.65));
-  const magnet = brassGradient(0.15).mul(c.magneticGlow);
+  const magnet = brassGradient(0.15).mul(c.magneticGlow).mul(0.65);
   // Guaranteed Fresnel-read rim: the env may be dim, so the bevel always
   // carries a faint edge light (ice → brass with accent).
   const rim = mix(c3(ICE), brassGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.085);

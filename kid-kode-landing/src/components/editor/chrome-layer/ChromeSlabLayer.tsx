@@ -209,7 +209,7 @@ export function ChromeSlabLayer() {
       (halfH - uniforms.pointer.value.y) * pxToWorld,
       -CHROME_DISTANCE + 0.55,
     );
-    s.light.intensity = 5.2 * uniforms.pointerActive.value;
+    s.light.intensity = 3.0 * uniforms.pointerActive.value;
 
     const damp = 1 - Math.exp(-delta * 14);
     let oi = 0;

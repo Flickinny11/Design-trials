@@ -1153,7 +1153,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
             key={node.id}
             position={[node.x, node.y + 5.8, node.z]}
             center
-            zIndexRange={[100, 0]}
+            zIndexRange={[25, 0]}
             style={{ pointerEvents: 'none', opacity: lodOpacity }}
           >
             <div className="select-none">
@@ -2906,7 +2906,7 @@ function AssembledSceneContent({
           />
         ))
       ) : (
-        <Html center>
+        <Html center zIndexRange={[25, 0]}>
           <div className="px-3 py-2 rounded-md border border-white/10 bg-black/60 text-[10px] font-mono text-white/65">
             Warming renderer fonts
           </div>

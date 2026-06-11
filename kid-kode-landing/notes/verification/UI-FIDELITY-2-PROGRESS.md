@@ -8,10 +8,10 @@
 
 - **Run started:** 2026-06-11 (session 1, claude-fable-5)
 - **Branch:** prism-editor-build
-- **Current wave:** W0 (orientation) — IN PROGRESS
-- **Last AUTO-CKPT:** (none yet — launch kit 10080ba is pre-run HEAD)
-- **FAL_KEY:** present in kid-kode-landing/.env.local (presence-checked session 1; minimal validation call pending)
-- **LOGAN-INBOX:** checked session 1 — no OPEN directives
+- **Current wave:** W3 (flagship showcase) — starting
+- **Last AUTO-CKPT:** see git log (W0 7ba71c5 → W1 f339f06 → W2-core cb0424e → W2-morph+seams → W2-PASS pending commit)
+- **FAL_KEY:** VALID (probe-verified S1); re-checked at W2 boundary — present
+- **LOGAN-INBOX:** checked S1 + W1 + W2 boundaries — no OPEN directives
 
 ## Waves
 
@@ -19,7 +19,7 @@
 |---|---|---|
 | W0 | Orientation: ledger, FAL validation, DESIGN-REFERENCES full read, research (Slider Rev / fal models / WebGPU chrome), baseline DPR2 screenshots | ✅ DONE (AUTO-CKPT pending→see git) |
 | W1 | Chrome material foundation: shared WebGPU chrome layer, TSL material lib (brushed metal/smoked glass/ceramic), Fresnel/refraction/bevels, pointer-reactive light, T0 fallback, <2ms budget | ✅ FOUNDATION DONE (see W1 notes) |
-| W2 | Surface migration: toolbar+flyouts+sliders, inspector, catalog frame, overlays, HUD, keyframe shell, boot + typography overhaul + morph-through transitions + canvas2D→MSDF labels | pending |
+| W2 | Surface migration: toolbar+flyouts+sliders, inspector, catalog frame, overlays, HUD, keyframe shell, boot + typography overhaul + morph-through transitions + canvas2D→MSDF labels | ✅ DONE — ADVOCATE PASS r2 (PLEASED) |
 | W3 | Flagship 5-hub showcase: fal.ai assets (image/3D/video), hi-res (kill 1024²), morph-through nav, all-5-driver bindings, poured-texture text | pending |
 | W4 | Carried fixes + no-regression: gizmo offset, 312 catalog, full vitest, perf table, mobile fallback | pending |
 | W5 | Evidence + report: DPR2 zoom crops, advocate verdicts (Slider-Rev side-by-side), dependency-usage table, spend ledger, UI-FIDELITY-2-REPORT.md | pending |
@@ -64,7 +64,27 @@
 
 ## Surfaces done (advocate verdicts)
 
-(pilot shipped; advocate gate runs at W2 when surfaces are complete)
+**W2 r1: FAIL/BLOCKED (ANNOYED)** — 3 mustFix: (1) specular/bloom text-contrast
+wash, (2) Add-Node primary key label invisible, (3) scene labels piercing
+panels. All root-caused + fixed: contrast-protection pass (light 5.2→3.0,
+glows −35%, glass energy ×0.82); accent faces = self-lit brass plates
+(emissive) + modal submit key reverted to DOM CSS (slabs draw behind scrims —
+structural, documented); drei Html zIndexRange [100,0]→[25,0].
+**W2 r2: PASS (PLEASED)** — all 3 resolutions verified with cited frames; sweep
+pane + keyframe shell now evidenced; ZERO new mustFix; "the 'flat, bland,
+basic, boring text' verdict is dead for the chrome on this evidence"; side-by-
+side: "clears the Slider-Revolution-class ceiling — lit materials with
+surviving text, not painted gloss." Verdict JSON:
+w2-evidence/advocate-verdict-r2-PASS.json. Open flags (5, non-blocking,
+carried): Add-Node label contrast measured 2.67:1 (below WCAG 4.5:1 —
+candidate ink-darkening in W4 polish); others in verdict JSON.
+
+**W2 residuals (honest, carried):** standalone /animation-catalog route frames
+not slabbed (separate page, no GraphScene canvas — needs its own slab host;
+tiles themselves already GPU); SpecRow wells/sliders inside scrolling tab
+content; boot surface stays CSS (no canvas at boot — choreography covered by
+boot light-sweep + stagger instead); nodeTexture.ts galaxy-sphere text still
+canvas2D (redesign-class, W4 backlog); W1 perf flag stands for W4.
 
 ## fal.ai spend ledger ($50 HARD CAP — warn $25/$40, stop $48)
 
