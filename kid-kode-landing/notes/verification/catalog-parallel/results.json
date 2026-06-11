@@ -1,13 +1,13 @@
 {
-  "startedAt": "2026-06-10T22:31:02.243Z",
-  "updatedAt": "2026-06-10T22:57:48.265Z",
+  "startedAt": "2026-06-10T23:39:43.045Z",
+  "updatedAt": "2026-06-11T00:23:23.855Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 272,
+      "total": 4,
       "backend": "webgl",
-      "startedAt": "2026-06-10T22:31:06.277Z",
-      "finishedAt": "2026-06-10T22:56:53.743Z",
+      "startedAt": "2026-06-11T00:22:47.400Z",
+      "finishedAt": "2026-06-11T00:23:23.854Z",
       "peakConcurrency": 3,
       "deviceLostTotal": 0
     },
@@ -15,8 +15,8 @@
       "tier": "glass",
       "total": 40,
       "backend": "webgpu",
-      "startedAt": "2026-06-10T22:56:54.222Z",
-      "finishedAt": "2026-06-10T22:57:48.264Z",
+      "startedAt": "2026-06-11T00:21:32.190Z",
+      "finishedAt": "2026-06-11T00:22:26.263Z",
       "peakConcurrency": 3,
       "deviceLostTotal": 0
     }
@@ -31,7 +31,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:13.004Z",
+      "at": "2026-06-10T23:39:53.471Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -44,7 +44,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:20.069Z",
+      "at": "2026-06-10T23:40:00.358Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -57,7 +57,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:24.567Z",
+      "at": "2026-06-10T23:40:04.500Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -70,7 +70,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:30.024Z",
+      "at": "2026-06-10T23:40:09.939Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -83,7 +83,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:33.713Z",
+      "at": "2026-06-10T23:40:13.532Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -96,7 +96,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:37.387Z",
+      "at": "2026-06-10T23:40:17.427Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -109,7 +109,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:40.920Z",
+      "at": "2026-06-10T23:40:20.676Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -122,7 +122,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:44.226Z",
+      "at": "2026-06-10T23:40:24.161Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -135,7 +135,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:47.498Z",
+      "at": "2026-06-10T23:40:27.753Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -148,7 +148,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:50.909Z",
+      "at": "2026-06-10T23:40:31.105Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -161,7 +161,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:54.256Z",
+      "at": "2026-06-10T23:40:34.610Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -174,7 +174,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:31:58.046Z",
+      "at": "2026-06-10T23:40:38.374Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -187,7 +187,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:01.884Z",
+      "at": "2026-06-10T23:40:42.357Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -200,7 +200,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:05.305Z",
+      "at": "2026-06-10T23:40:45.635Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -213,7 +213,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:08.450Z",
+      "at": "2026-06-10T23:40:48.938Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -226,7 +226,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:11.942Z",
+      "at": "2026-06-10T23:40:52.690Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -239,7 +239,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:15.390Z",
+      "at": "2026-06-10T23:40:55.865Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -252,7 +252,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:19.007Z",
+      "at": "2026-06-10T23:40:59.400Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -265,7 +265,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:22.352Z",
+      "at": "2026-06-10T23:41:02.914Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -278,7 +278,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:25.749Z",
+      "at": "2026-06-10T23:41:06.334Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -291,7 +291,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:29.563Z",
+      "at": "2026-06-10T23:41:10.042Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -304,7 +304,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:32.648Z",
+      "at": "2026-06-10T23:41:12.754Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -317,7 +317,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:36.290Z",
+      "at": "2026-06-10T23:41:17.130Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -330,7 +330,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:39.258Z",
+      "at": "2026-06-10T23:41:19.646Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -343,7 +343,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:43.297Z",
+      "at": "2026-06-10T23:41:23.924Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -356,7 +356,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:46.605Z",
+      "at": "2026-06-10T23:41:26.192Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -369,7 +369,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:50.591Z",
+      "at": "2026-06-10T23:41:31.169Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -382,7 +382,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:53.967Z",
+      "at": "2026-06-10T23:41:33.091Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -395,7 +395,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:32:57.246Z",
+      "at": "2026-06-10T23:41:38.210Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -408,7 +408,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:00.651Z",
+      "at": "2026-06-10T23:41:40.033Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -421,7 +421,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:04.119Z",
+      "at": "2026-06-10T23:41:44.878Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -434,7 +434,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:07.281Z",
+      "at": "2026-06-10T23:41:46.613Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -447,7 +447,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:10.964Z",
+      "at": "2026-06-10T23:41:51.859Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -460,7 +460,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:14.401Z",
+      "at": "2026-06-10T23:41:53.730Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -473,7 +473,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:17.818Z",
+      "at": "2026-06-10T23:41:58.485Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -486,7 +486,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:21.205Z",
+      "at": "2026-06-10T23:42:00.934Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -499,7 +499,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:24.816Z",
+      "at": "2026-06-10T23:42:05.700Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -512,7 +512,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:28.253Z",
+      "at": "2026-06-10T23:42:07.806Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -525,7 +525,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:31.417Z",
+      "at": "2026-06-10T23:42:12.566Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -538,7 +538,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:34.686Z",
+      "at": "2026-06-10T23:42:14.796Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -551,7 +551,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:38.639Z",
+      "at": "2026-06-10T23:42:19.742Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -564,7 +564,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:41.762Z",
+      "at": "2026-06-10T23:42:21.824Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -577,7 +577,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:45.497Z",
+      "at": "2026-06-10T23:42:26.865Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -590,7 +590,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:48.807Z",
+      "at": "2026-06-10T23:42:28.776Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -603,7 +603,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:52.307Z",
+      "at": "2026-06-10T23:42:33.464Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -616,7 +616,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:55.792Z",
+      "at": "2026-06-10T23:42:35.614Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -629,7 +629,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:33:59.185Z",
+      "at": "2026-06-10T23:42:40.323Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -642,7 +642,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:02.522Z",
+      "at": "2026-06-10T23:42:42.384Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -650,12 +650,12 @@
       "name": "dust-poof",
       "category": "smoke",
       "renders": true,
-      "plays": false,
+      "plays": true,
       "controls": false,
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:34:05.869Z",
+      "at": "2026-06-10T23:42:46.903Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -668,7 +668,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:09.063Z",
+      "at": "2026-06-10T23:42:48.929Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -681,7 +681,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:12.488Z",
+      "at": "2026-06-10T23:42:53.900Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -694,7 +694,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:15.901Z",
+      "at": "2026-06-10T23:42:55.810Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -707,7 +707,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:19.291Z",
+      "at": "2026-06-10T23:43:00.662Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -720,7 +720,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:22.780Z",
+      "at": "2026-06-10T23:43:02.412Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -733,7 +733,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:26.130Z",
+      "at": "2026-06-10T23:43:07.873Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -746,7 +746,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:29.739Z",
+      "at": "2026-06-10T23:43:09.291Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -759,7 +759,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:33.123Z",
+      "at": "2026-06-10T23:43:14.857Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -772,7 +772,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:36.668Z",
+      "at": "2026-06-10T23:43:16.155Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -785,7 +785,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:39.977Z",
+      "at": "2026-06-10T23:43:21.860Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -798,7 +798,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:43.658Z",
+      "at": "2026-06-10T23:43:23.244Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -811,7 +811,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:47.027Z",
+      "at": "2026-06-10T23:43:28.496Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -824,7 +824,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:50.423Z",
+      "at": "2026-06-10T23:43:29.871Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -837,7 +837,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:53.773Z",
+      "at": "2026-06-10T23:43:35.467Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -850,7 +850,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:34:57.587Z",
+      "at": "2026-06-10T23:43:36.782Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -863,7 +863,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:00.905Z",
+      "at": "2026-06-10T23:43:42.457Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -876,7 +876,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:04.324Z",
+      "at": "2026-06-10T23:43:43.369Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -889,7 +889,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:07.664Z",
+      "at": "2026-06-10T23:43:48.926Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -902,7 +902,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:10.983Z",
+      "at": "2026-06-10T23:43:49.719Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -915,7 +915,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:14.332Z",
+      "at": "2026-06-10T23:43:55.652Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -928,7 +928,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:17.975Z",
+      "at": "2026-06-10T23:43:56.469Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -941,7 +941,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:21.251Z",
+      "at": "2026-06-10T23:44:02.203Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -954,7 +954,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:24.656Z",
+      "at": "2026-06-10T23:44:03.575Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -967,7 +967,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:27.894Z",
+      "at": "2026-06-10T23:44:09.332Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -980,7 +980,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:31.411Z",
+      "at": "2026-06-10T23:44:10.734Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -993,7 +993,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:34.751Z",
+      "at": "2026-06-10T23:44:16.260Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1006,7 +1006,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:38.196Z",
+      "at": "2026-06-10T23:44:17.114Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1019,7 +1019,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:41.402Z",
+      "at": "2026-06-10T23:44:22.821Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1032,7 +1032,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:44.681Z",
+      "at": "2026-06-10T23:44:24.177Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1045,7 +1045,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:48.081Z",
+      "at": "2026-06-10T23:44:29.809Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1058,7 +1058,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:51.330Z",
+      "at": "2026-06-10T23:44:31.191Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1071,7 +1071,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:55.042Z",
+      "at": "2026-06-10T23:44:36.519Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1084,7 +1084,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:35:58.030Z",
+      "at": "2026-06-10T23:44:37.758Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1097,7 +1097,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:01.392Z",
+      "at": "2026-06-10T23:44:43.168Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1110,7 +1110,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:04.756Z",
+      "at": "2026-06-10T23:44:44.571Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1123,7 +1123,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:08.001Z",
+      "at": "2026-06-10T23:44:50.126Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1136,7 +1136,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:11.399Z",
+      "at": "2026-06-10T23:44:51.307Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1149,7 +1149,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:14.702Z",
+      "at": "2026-06-10T23:44:57.035Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1162,7 +1162,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:18.144Z",
+      "at": "2026-06-10T23:44:58.644Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1175,7 +1175,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:21.816Z",
+      "at": "2026-06-10T23:45:03.812Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1188,7 +1188,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:25.221Z",
+      "at": "2026-06-10T23:45:05.965Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1201,7 +1201,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:29.698Z",
+      "at": "2026-06-10T23:45:11.689Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1214,7 +1214,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:32.363Z",
+      "at": "2026-06-10T23:45:12.452Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1227,7 +1227,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:36.949Z",
+      "at": "2026-06-10T23:45:18.271Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1240,7 +1240,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:39.142Z",
+      "at": "2026-06-10T23:45:19.241Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1253,7 +1253,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:43.707Z",
+      "at": "2026-06-10T23:45:24.792Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1266,7 +1266,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:46.087Z",
+      "at": "2026-06-10T23:45:26.208Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1279,7 +1279,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:50.721Z",
+      "at": "2026-06-10T23:45:31.935Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1292,7 +1292,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:52.879Z",
+      "at": "2026-06-10T23:45:33.232Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1305,7 +1305,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:36:57.539Z",
+      "at": "2026-06-10T23:45:38.720Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1318,7 +1318,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:36:59.825Z",
+      "at": "2026-06-10T23:45:39.938Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1331,7 +1331,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:04.109Z",
+      "at": "2026-06-10T23:45:45.586Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1344,7 +1344,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:06.590Z",
+      "at": "2026-06-10T23:45:46.480Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1357,7 +1357,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:10.815Z",
+      "at": "2026-06-10T23:45:52.592Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1370,7 +1370,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:12.954Z",
+      "at": "2026-06-10T23:45:53.294Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1383,7 +1383,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:17.512Z",
+      "at": "2026-06-10T23:45:59.081Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1396,7 +1396,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:19.896Z",
+      "at": "2026-06-10T23:46:00.426Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1409,7 +1409,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:24.532Z",
+      "at": "2026-06-10T23:46:06.102Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1422,7 +1422,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:26.999Z",
+      "at": "2026-06-10T23:46:07.402Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1435,7 +1435,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:37:31.613Z",
+      "at": "2026-06-10T23:46:13.144Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1448,7 +1448,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:33.819Z",
+      "at": "2026-06-10T23:46:14.045Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1461,7 +1461,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:38.338Z",
+      "at": "2026-06-10T23:46:19.929Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1474,7 +1474,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:40.643Z",
+      "at": "2026-06-10T23:46:20.760Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1487,7 +1487,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:45.557Z",
+      "at": "2026-06-10T23:46:26.882Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1500,7 +1500,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:47.899Z",
+      "at": "2026-06-10T23:46:28.503Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1513,7 +1513,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:52.352Z",
+      "at": "2026-06-10T23:46:33.486Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1526,7 +1526,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:54.721Z",
+      "at": "2026-06-10T23:46:35.215Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1539,7 +1539,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:37:59.071Z",
+      "at": "2026-06-10T23:46:40.373Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1552,7 +1552,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:01.423Z",
+      "at": "2026-06-10T23:46:41.772Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1565,7 +1565,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:05.944Z",
+      "at": "2026-06-10T23:46:47.516Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1578,7 +1578,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:08.134Z",
+      "at": "2026-06-10T23:46:48.607Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1591,7 +1591,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:12.889Z",
+      "at": "2026-06-10T23:46:54.572Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1604,7 +1604,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:15.045Z",
+      "at": "2026-06-10T23:46:55.230Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1617,7 +1617,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:19.631Z",
+      "at": "2026-06-10T23:47:01.045Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1630,7 +1630,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:22.308Z",
+      "at": "2026-06-10T23:47:01.999Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1643,7 +1643,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:26.370Z",
+      "at": "2026-06-10T23:47:07.791Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1656,20 +1656,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:29.037Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "neon-flicker-text": {
-      "name": "neon-flicker-text",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:38:33.556Z",
+      "at": "2026-06-10T23:47:08.720Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1682,7 +1669,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:36.120Z",
+      "at": "2026-06-10T23:47:15.536Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "neon-flicker-text": {
+      "name": "neon-flicker-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:47:14.761Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1695,7 +1695,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:41.329Z",
+      "at": "2026-06-10T23:47:22.406Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1708,7 +1708,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:42.773Z",
+      "at": "2026-06-10T23:47:22.533Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1721,7 +1721,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:48.243Z",
+      "at": "2026-06-10T23:47:39.452Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1734,20 +1734,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:49.562Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "paint-spread": {
-      "name": "paint-spread",
-      "category": "displacement",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:38:55.220Z",
+      "at": "2026-06-10T23:47:39.583Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1760,7 +1747,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:38:56.719Z",
+      "at": "2026-06-10T23:48:07.382Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "paint-spread": {
+      "name": "paint-spread",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:48:07.380Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1773,7 +1773,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:02.480Z",
+      "at": "2026-06-10T23:48:33.457Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1786,7 +1786,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:03.894Z",
+      "at": "2026-06-10T23:48:39.108Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1799,7 +1799,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:09.279Z",
+      "at": "2026-06-10T23:48:55.994Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1812,7 +1812,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:10.759Z",
+      "at": "2026-06-10T23:49:07.254Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1825,7 +1825,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:16.455Z",
+      "at": "2026-06-10T23:49:24.305Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1838,7 +1838,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:17.746Z",
+      "at": "2026-06-10T23:49:33.473Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1851,7 +1851,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:23.477Z",
+      "at": "2026-06-10T23:49:50.425Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1864,7 +1864,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:24.747Z",
+      "at": "2026-06-10T23:49:57.880Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1877,7 +1877,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:30.254Z",
+      "at": "2026-06-10T23:50:16.787Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1890,7 +1890,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:31.704Z",
+      "at": "2026-06-10T23:50:24.498Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1903,7 +1903,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:37.366Z",
+      "at": "2026-06-10T23:50:43.229Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1916,20 +1916,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:39:38.488Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pointer-displace": {
-      "name": "pointer-displace",
-      "category": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:39:44.312Z",
+      "at": "2026-06-10T23:50:52.855Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1942,7 +1929,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:45.584Z",
+      "at": "2026-06-10T23:51:15.434Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pointer-displace": {
+      "name": "pointer-displace",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:51:13.761Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1955,7 +1955,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:51.424Z",
+      "at": "2026-06-10T23:51:41.809Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1968,20 +1968,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:39:52.758Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pointer-ripple": {
-      "name": "pointer-ripple",
-      "category": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:39:58.355Z",
+      "at": "2026-06-10T23:51:41.881Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -1994,7 +1981,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:39:59.652Z",
+      "at": "2026-06-10T23:52:06.423Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pointer-ripple": {
+      "name": "pointer-ripple",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:52:06.216Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2007,7 +2007,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:05.567Z",
+      "at": "2026-06-10T23:52:38.191Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2020,7 +2020,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:06.349Z",
+      "at": "2026-06-10T23:52:38.258Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2033,7 +2033,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:12.120Z",
+      "at": "2026-06-10T23:53:00.731Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2046,7 +2046,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:12.811Z",
+      "at": "2026-06-10T23:53:08.437Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2059,7 +2059,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:18.664Z",
+      "at": "2026-06-10T23:53:27.100Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2072,7 +2072,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:19.778Z",
+      "at": "2026-06-10T23:53:36.658Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2085,20 +2085,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:25.487Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "ripple-displace": {
-      "name": "ripple-displace",
-      "category": "displacement",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:40:26.593Z",
+      "at": "2026-06-10T23:53:50.024Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2111,7 +2098,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:32.836Z",
+      "at": "2026-06-10T23:54:16.921Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "ripple-displace": {
+      "name": "ripple-displace",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:54:05.422Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2124,7 +2124,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:33.914Z",
+      "at": "2026-06-10T23:54:38.036Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2137,7 +2137,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:39.842Z",
+      "at": "2026-06-10T23:54:38.037Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2150,7 +2150,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:40.997Z",
+      "at": "2026-06-11T00:22:54.203Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2163,7 +2163,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:46.664Z",
+      "at": "2026-06-10T23:55:06.774Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2176,7 +2176,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:47.986Z",
+      "at": "2026-06-10T23:55:27.199Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2189,7 +2189,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:53.410Z",
+      "at": "2026-06-10T23:55:29.112Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2202,7 +2202,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:40:54.716Z",
+      "at": "2026-06-10T23:55:48.361Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2215,7 +2215,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:00.383Z",
+      "at": "2026-06-10T23:56:01.716Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2228,7 +2228,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:01.762Z",
+      "at": "2026-06-10T23:56:11.452Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2241,7 +2241,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:07.906Z",
+      "at": "2026-06-10T23:56:36.348Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2254,20 +2254,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:08.307Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-fade-stack": {
-      "name": "scroll-fade-stack",
-      "category": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:41:14.847Z",
+      "at": "2026-06-10T23:56:38.110Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2280,7 +2267,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:15.154Z",
+      "at": "2026-06-10T23:57:04.598Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "scroll-fade-stack": {
+      "name": "scroll-fade-stack",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-10T23:57:02.645Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2293,7 +2293,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:21.388Z",
+      "at": "2026-06-10T23:57:30.975Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2306,7 +2306,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:21.919Z",
+      "at": "2026-06-10T23:57:31.025Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2319,7 +2319,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:27.933Z",
+      "at": "2026-06-10T23:57:57.320Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2332,7 +2332,7 @@
       "picker": true,
       "notes": [],
       "verdict": "fail",
-      "at": "2026-06-10T22:41:29.275Z",
+      "at": "2026-06-10T23:57:59.273Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2345,7 +2345,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:34.884Z",
+      "at": "2026-06-10T23:58:20.161Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2358,7 +2358,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:35.995Z",
+      "at": "2026-06-10T23:58:24.167Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2371,7 +2371,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:41.947Z",
+      "at": "2026-06-10T23:58:50.352Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2384,7 +2384,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:42.857Z",
+      "at": "2026-06-10T23:58:52.297Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2397,7 +2397,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:48.722Z",
+      "at": "2026-06-10T23:59:15.359Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2410,7 +2410,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:49.950Z",
+      "at": "2026-06-10T23:59:15.426Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2423,7 +2423,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:55.830Z",
+      "at": "2026-06-10T23:59:38.485Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2436,7 +2436,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:41:57.169Z",
+      "at": "2026-06-10T23:59:42.504Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2449,7 +2449,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:02.979Z",
+      "at": "2026-06-11T00:00:04.147Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2462,7 +2462,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:04.089Z",
+      "at": "2026-06-11T00:00:15.839Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2475,7 +2475,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:09.741Z",
+      "at": "2026-06-11T00:00:31.191Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2488,7 +2488,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:10.910Z",
+      "at": "2026-06-11T00:00:36.989Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2501,7 +2501,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:16.625Z",
+      "at": "2026-06-11T00:00:57.594Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2514,7 +2514,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:17.906Z",
+      "at": "2026-06-11T00:01:03.640Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2527,7 +2527,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:23.477Z",
+      "at": "2026-06-11T00:01:26.033Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2540,7 +2540,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:24.741Z",
+      "at": "2026-06-11T00:01:31.744Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2553,7 +2553,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:30.444Z",
+      "at": "2026-06-11T00:01:54.669Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2566,7 +2566,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:31.810Z",
+      "at": "2026-06-11T00:02:02.242Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2579,7 +2579,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:37.392Z",
+      "at": "2026-06-11T00:02:21.420Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2592,7 +2592,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:38.261Z",
+      "at": "2026-06-11T00:02:28.918Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2605,7 +2605,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:43.799Z",
+      "at": "2026-06-11T00:02:51.524Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2618,20 +2618,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:44.927Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "spin": {
-      "name": "spin",
-      "category": "transform",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:42:50.672Z",
+      "at": "2026-06-11T00:02:55.185Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2644,20 +2631,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:51.987Z",
+      "at": "2026-06-11T00:23:01.610Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "spiral-wipe": {
-      "name": "spiral-wipe",
-      "category": "mask",
+    "spin": {
+      "name": "spin",
+      "category": "transform",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:57.460Z",
+      "at": "2026-06-11T00:03:21.574Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2670,20 +2657,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:42:58.699Z",
+      "at": "2026-06-11T00:03:48.091Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "split-3d": {
-      "name": "split-3d",
-      "category": "text",
+    "spiral-wipe": {
+      "name": "spiral-wipe",
+      "category": "mask",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:04.409Z",
+      "at": "2026-06-11T00:23:05.357Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2696,7 +2683,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:05.591Z",
+      "at": "2026-06-11T00:04:20.399Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "split-3d": {
+      "name": "split-3d",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-11T00:04:18.573Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2709,7 +2709,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:11.639Z",
+      "at": "2026-06-11T00:04:52.486Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2722,7 +2722,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:13.440Z",
+      "at": "2026-06-11T00:04:54.494Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2735,7 +2735,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:18.087Z",
+      "at": "2026-06-11T00:05:19.344Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2748,7 +2748,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:20.140Z",
+      "at": "2026-06-11T00:05:23.290Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2761,7 +2761,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:24.786Z",
+      "at": "2026-06-11T00:05:45.942Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2774,7 +2774,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:26.845Z",
+      "at": "2026-06-11T00:05:55.586Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2787,7 +2787,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:32.043Z",
+      "at": "2026-06-11T00:06:10.766Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2800,7 +2800,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:33.873Z",
+      "at": "2026-06-11T00:06:20.247Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2813,7 +2813,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:39.653Z",
+      "at": "2026-06-11T00:06:44.875Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2826,7 +2826,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:40.790Z",
+      "at": "2026-06-11T00:06:47.001Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2839,7 +2839,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:46.288Z",
+      "at": "2026-06-11T00:07:09.859Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2852,7 +2852,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:47.212Z",
+      "at": "2026-06-11T00:07:15.267Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2865,7 +2865,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:53.345Z",
+      "at": "2026-06-11T00:07:38.757Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2878,7 +2878,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:43:54.290Z",
+      "at": "2026-06-11T00:07:42.675Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2891,7 +2891,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:44:01.493Z",
+      "at": "2026-06-11T00:08:13.866Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2904,20 +2904,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:44:01.443Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "text-extrude-rotate": {
-      "name": "text-extrude-rotate",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:44:21.884Z",
+      "at": "2026-06-11T00:08:11.953Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2930,12 +2917,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:44:16.419Z",
+      "at": "2026-06-11T00:08:42.215Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "text-extrude": {
-      "name": "text-extrude",
+    "text-extrude-rotate": {
+      "name": "text-extrude-rotate",
       "category": "text",
       "renders": true,
       "plays": true,
@@ -2943,7 +2930,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:44:52.478Z",
+      "at": "2026-06-11T00:08:46.163Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2956,12 +2943,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:44:52.480Z",
+      "at": "2026-06-11T00:09:19.141Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "text-glow-pulse": {
-      "name": "text-glow-pulse",
+    "text-extrude": {
+      "name": "text-extrude",
       "category": "text",
       "renders": true,
       "plays": true,
@@ -2969,7 +2956,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:45:28.406Z",
+      "at": "2026-06-11T00:09:17.194Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2982,7 +2969,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:45:24.672Z",
+      "at": "2026-06-11T00:09:51.366Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "text-glow-pulse": {
+      "name": "text-glow-pulse",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-11T00:09:53.361Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -2995,7 +2995,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:45:59.078Z",
+      "at": "2026-06-11T00:10:29.213Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3008,7 +3008,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:45:57.021Z",
+      "at": "2026-06-11T00:10:27.250Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3021,7 +3021,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:46:29.776Z",
+      "at": "2026-06-11T00:10:58.135Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3034,7 +3034,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:46:33.653Z",
+      "at": "2026-06-11T00:23:11.818Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3047,7 +3047,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:47:04.190Z",
+      "at": "2026-06-11T00:11:30.427Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3060,7 +3060,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:47:08.033Z",
+      "at": "2026-06-11T00:11:34.186Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3073,7 +3073,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:47:34.949Z",
+      "at": "2026-06-11T00:12:04.842Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3086,7 +3086,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:47:39.315Z",
+      "at": "2026-06-11T00:12:10.818Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3099,7 +3099,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:48:13.550Z",
+      "at": "2026-06-11T00:12:45.346Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3112,20 +3112,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:48:09.860Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "text-squash-each": {
-      "name": "text-squash-each",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:48:42.284Z",
+      "at": "2026-06-11T00:12:41.728Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3138,12 +3125,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:48:46.092Z",
+      "at": "2026-06-11T00:13:18.228Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "text-typewriter-cursor": {
-      "name": "text-typewriter-cursor",
+    "text-squash-each": {
+      "name": "text-squash-each",
       "category": "text",
       "renders": true,
       "plays": true,
@@ -3151,7 +3138,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:49:16.486Z",
+      "at": "2026-06-11T00:13:16.202Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3164,7 +3151,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:49:20.278Z",
+      "at": "2026-06-11T00:13:52.643Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "text-typewriter-cursor": {
+      "name": "text-typewriter-cursor",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-11T00:13:50.521Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3177,7 +3177,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:49:54.331Z",
+      "at": "2026-06-11T00:14:26.634Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3190,7 +3190,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:49:52.701Z",
+      "at": "2026-06-11T00:14:26.449Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3203,7 +3203,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:50:22.723Z",
+      "at": "2026-06-11T00:14:55.182Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3216,7 +3216,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:50:23.036Z",
+      "at": "2026-06-11T00:15:02.802Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3229,7 +3229,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:50:47.823Z",
+      "at": "2026-06-11T00:15:21.932Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3242,7 +3242,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:50:55.290Z",
+      "at": "2026-06-11T00:15:33.615Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3255,7 +3255,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:51:15.805Z",
+      "at": "2026-06-11T00:15:50.425Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3268,20 +3268,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:51:27.202Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "typewriter": {
-      "name": "typewriter",
-      "category": "text",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:51:44.251Z",
+      "at": "2026-06-11T00:15:58.287Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3294,20 +3281,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:51:55.765Z",
+      "at": "2026-06-11T00:16:26.740Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "volumetric-cone": {
-      "name": "volumetric-cone",
-      "category": "volumetric",
+    "typewriter": {
+      "name": "typewriter",
+      "category": "text",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:52:18.913Z",
+      "at": "2026-06-11T00:16:19.047Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3320,20 +3307,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:52:15.270Z",
+      "at": "2026-06-11T00:16:49.973Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "voxelize": {
-      "name": "voxelize",
-      "category": "displacement",
+    "volumetric-cone": {
+      "name": "volumetric-cone",
+      "category": "volumetric",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:52:46.119Z",
+      "at": "2026-06-11T00:16:55.901Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3346,12 +3333,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:52:45.854Z",
+      "at": "2026-06-11T00:17:18.752Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "wave-distort-in": {
-      "name": "wave-distort-in",
+    "voxelize": {
+      "name": "voxelize",
       "category": "displacement",
       "renders": true,
       "plays": true,
@@ -3359,7 +3346,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:53:14.284Z",
+      "at": "2026-06-11T00:17:26.304Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3372,7 +3359,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:53:10.713Z",
+      "at": "2026-06-11T00:17:47.047Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "wave-distort-in": {
+      "name": "wave-distort-in",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-11T00:17:54.849Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3385,7 +3385,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:53:35.786Z",
+      "at": "2026-06-11T00:18:12.100Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3398,7 +3398,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:53:35.992Z",
+      "at": "2026-06-11T00:18:20.061Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3411,7 +3411,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:54:00.754Z",
+      "at": "2026-06-11T00:18:44.578Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3424,20 +3424,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:54:08.534Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "wheat-field": {
-      "name": "wheat-field",
-      "category": "wave",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-10T22:54:31.831Z",
+      "at": "2026-06-11T00:18:56.220Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3450,7 +3437,20 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:54:30.066Z",
+      "at": "2026-06-11T00:19:11.788Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "wheat-field": {
+      "name": "wheat-field",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-11T00:19:17.536Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3463,7 +3463,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:54:55.045Z",
+      "at": "2026-06-11T00:19:40.998Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3476,7 +3476,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:55:00.760Z",
+      "at": "2026-06-11T00:19:41.198Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3489,7 +3489,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:55:21.918Z",
+      "at": "2026-06-11T00:20:06.310Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3502,7 +3502,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:55:29.818Z",
+      "at": "2026-06-11T00:20:10.041Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3515,7 +3515,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:55:52.948Z",
+      "at": "2026-06-11T00:20:31.604Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3528,7 +3528,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:55:55.116Z",
+      "at": "2026-06-11T00:20:37.838Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3541,7 +3541,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:56:20.251Z",
+      "at": "2026-06-11T00:21:00.663Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3554,7 +3554,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:56:22.226Z",
+      "at": "2026-06-11T00:21:02.781Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -3567,7 +3567,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:56:57.459Z",
+      "at": "2026-06-11T00:21:35.467Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3580,7 +3580,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:00.216Z",
+      "at": "2026-06-11T00:21:38.225Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3593,7 +3593,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:00.745Z",
+      "at": "2026-06-11T00:21:38.904Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3606,7 +3606,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:03.222Z",
+      "at": "2026-06-11T00:21:41.256Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3619,7 +3619,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:03.534Z",
+      "at": "2026-06-11T00:21:41.559Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3632,7 +3632,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:04.050Z",
+      "at": "2026-06-11T00:21:42.224Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3645,7 +3645,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:06.586Z",
+      "at": "2026-06-11T00:21:44.614Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3658,7 +3658,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:06.939Z",
+      "at": "2026-06-11T00:21:44.963Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3671,7 +3671,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:07.433Z",
+      "at": "2026-06-11T00:21:45.561Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3684,7 +3684,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:09.904Z",
+      "at": "2026-06-11T00:21:47.950Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3697,7 +3697,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:10.345Z",
+      "at": "2026-06-11T00:21:48.408Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3710,7 +3710,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:10.804Z",
+      "at": "2026-06-11T00:21:48.864Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3723,7 +3723,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:13.244Z",
+      "at": "2026-06-11T00:21:51.307Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3736,7 +3736,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:13.692Z",
+      "at": "2026-06-11T00:21:51.786Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3749,7 +3749,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:14.197Z",
+      "at": "2026-06-11T00:21:52.293Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3762,7 +3762,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:16.570Z",
+      "at": "2026-06-11T00:21:54.644Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3775,7 +3775,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:17.072Z",
+      "at": "2026-06-11T00:21:55.146Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3788,7 +3788,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:17.510Z",
+      "at": "2026-06-11T00:21:55.641Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3801,7 +3801,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:20.030Z",
+      "at": "2026-06-11T00:21:58.051Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3814,7 +3814,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:20.522Z",
+      "at": "2026-06-11T00:21:58.584Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3827,7 +3827,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:20.954Z",
+      "at": "2026-06-11T00:21:59.081Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3840,7 +3840,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:23.415Z",
+      "at": "2026-06-11T00:22:01.374Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3853,7 +3853,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:23.907Z",
+      "at": "2026-06-11T00:22:01.987Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3866,7 +3866,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:24.346Z",
+      "at": "2026-06-11T00:22:02.506Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3879,7 +3879,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:26.805Z",
+      "at": "2026-06-11T00:22:04.760Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3892,7 +3892,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:27.289Z",
+      "at": "2026-06-11T00:22:05.351Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3905,7 +3905,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:27.745Z",
+      "at": "2026-06-11T00:22:05.857Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3918,7 +3918,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:30.206Z",
+      "at": "2026-06-11T00:22:08.181Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3931,7 +3931,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:30.722Z",
+      "at": "2026-06-11T00:22:08.683Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3944,7 +3944,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:31.163Z",
+      "at": "2026-06-11T00:22:09.257Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3957,7 +3957,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:33.628Z",
+      "at": "2026-06-11T00:22:11.584Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3970,7 +3970,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:34.124Z",
+      "at": "2026-06-11T00:22:12.099Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3983,7 +3983,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:34.484Z",
+      "at": "2026-06-11T00:22:12.596Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -3996,7 +3996,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:37.045Z",
+      "at": "2026-06-11T00:22:14.968Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4009,7 +4009,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:37.554Z",
+      "at": "2026-06-11T00:22:15.522Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4022,7 +4022,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:37.832Z",
+      "at": "2026-06-11T00:22:16.026Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4035,7 +4035,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:40.437Z",
+      "at": "2026-06-11T00:22:18.325Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4048,7 +4048,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:40.947Z",
+      "at": "2026-06-11T00:22:18.903Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4061,7 +4061,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:41.169Z",
+      "at": "2026-06-11T00:22:19.418Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -4074,26 +4074,19 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-10T22:57:43.842Z",
+      "at": "2026-06-11T00:22:21.734Z",
       "backend": "webgpu",
       "consoleErrors": []
     }
   },
   "summary": {
-    "total": 312,
-    "pass": 306,
-    "fail": 6,
+    "total": 4,
+    "pass": 4,
+    "fail": 0,
     "missing": 0,
-    "failNames": [
-      "dust-poof",
-      "hover-lift",
-      "lightning-bolt",
-      "pointer-attract-scale",
-      "pointer-press",
-      "scroll-skew"
-    ],
+    "failNames": [],
     "missingNames": [],
-    "wallClockSec": 1606,
+    "wallClockSec": 40,
     "peak": {
       "std": 3,
       "glass": 3

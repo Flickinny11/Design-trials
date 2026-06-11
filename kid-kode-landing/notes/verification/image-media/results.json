@@ -1,0 +1,44 @@
+{
+  "steps": [
+    {
+      "step": "upload API: content-hashed URL + idempotent re-upload",
+      "ok": true,
+      "url": "/prism-mock/uploads/76044c4da9a4f14f217801a8497062262a60fa13ce6113f482354647ddcfa3f0.png"
+    },
+    {
+      "step": "Add via URL → textured image plane",
+      "ok": true,
+      "imgId": "82a10f55-a808-42d6-9c5b-f0797adf437a"
+    },
+    {
+      "step": "imageSpec instant restyle: radius mask + opacity + fit, all in place",
+      "ok": true,
+      "afterFit": {
+        "scale": [
+          1,
+          1
+        ],
+        "repeat": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "step": "Add Object: bubble → Populated → rebuilt as textured plane (§6)",
+      "ok": true,
+      "bubbleId": "3d4cc57e-7752-4ab2-8bda-286120de3adb"
+    },
+    {
+      "step": "generation honestly disclosed as unwired; no fake output",
+      "ok": true
+    }
+  ],
+  "consoleErrors": [],
+  "badResponses": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "rawConsoleMessages": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

@@ -35,10 +35,17 @@
  *     `@/components/editor/animation-tools/`.
  *   - Add — P2 (canvas-spec §5 Add group): AddElementFlyout at
  *     `@/components/editor/add-tools/`.
+ *   - Image — P3 IMAGE/MEDIA (canvas-spec §5 Image tools): upload (file-drop
+ *     well → /api/prism/assets) and paste-a-link creation of image-plane
+ *     nodes (born Populated — visual.sourceAsset IS the artifact), Replace
+ *     via the surgical rebuild path, and imageSpec presentation controls
+ *     (fit/crop/corners/opacity) restyling live. Generate stays HONEST: it
+ *     probes /api/prism/image-gen and discloses, never fakes. Lives in
+ *     `@/components/editor/image-tools/`.
  *
  * DESIGNED-PLACEHOLDER (look complete, never fake output — clicking a deferred
  * tool surfaces a tasteful "coming with <subsystem>" state):
- *   - Image (← Media pipeline), 3D Object (← Mesh & Material systems),
+ *   - 3D Object (← Mesh & Material systems),
  *     Animation from-scratch / bespoke authoring (← bespoke lane).
  *     The Keyframe Editor *toggle* is real
  *     (it slides the §8.4 editor in/out); its track content is designed.
@@ -60,6 +67,7 @@ import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
 import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
 import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout';
 import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
+import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -125,7 +133,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'transform', icon: 'move', label: 'Transform', wired: true },
   { id: 'selection', icon: 'group', label: 'Selection', wired: true },
   { id: 'add', icon: 'plus', label: 'Add', wired: true },
-  { id: 'image', icon: 'image', label: 'Image', wired: false, subsystem: 'Media pipeline' },
+  { id: 'image', icon: 'image', label: 'Image', wired: true },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: false, subsystem: 'Mesh & Material systems' },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
@@ -769,18 +777,10 @@ export default function CanvasToolbar() {
               <AddElementFlyout hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'image' && (
-              <PlaceholderTiles
-                subsystem="Media pipeline"
-                onPick={(t) => showComing(t, 'Media pipeline')}
-                tiles={[
-                  { icon: 'crop', label: 'Crop' },
-                  { icon: 'eye', label: 'Opacity' },
-                  { icon: 'scale', label: 'Borders / Radius' },
-                  { icon: 'palette', label: 'Color Adjust' },
-                  { icon: 'layers', label: 'Blend Mode' },
-                  { icon: 'sparkle', label: 'Filters' },
-                ]}
-              />
+              // P3 IMAGE/MEDIA (Task B) — wired Image group. Same hub
+              // resolution the Text / Add / Lighting groups share (active hub
+              // → selected node's parent → first hub).
+              <ImageFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'object3d' && (
               <PlaceholderTiles

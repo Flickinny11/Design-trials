@@ -1,0 +1,71 @@
+{
+  "feature": "P3 IMAGE/MEDIA — Image toolbar group: upload + URL image artifacts, image-plane creation, fit/crop/corner-radius/opacity presentation controls, bubble 'Add Object' populate path, honestly-flagged generation (RE-GRADE)",
+  "claim": "A first-time, non-technical user can add a picture by drop/browse or link (appears in the 3D scene as an image plane); instantly restyle it with Cover/Contain/Stretch, crop, rounded corners, opacity (live, no rebuild); replace the picture on any image element; populate a blank bubble via 'Add Object'; and the Generate section honestly says image generation isn't connected yet.",
+  "groundTruthSibling": "toolbar-wiring",
+  "state": "live-regrade",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Both prior MUST-FIXes are resolved in the fully regenerated bundle (all five files fresh at 19:24 vs the 18:28 originals). (1) Machine-id naming FIXED: the fresh inspector card reads 'HOME / New Image / element / New image' — the 64-char SHA-256 line is gone entirely, nothing touches the card edge, no clipping at 2x zoom; the flyout REPLACE row now reads just 'New image' (frame 01) / 'Image element' (frame 04) with no hex anywhere. (2) Disclosure FIXED in evidence: fresh 04 shows a fully rendered inline notice card directly under the Generate key — 'Image generation isn't connected yet — it needs the cloud endpoint. Upload or paste a URL instead.' — crisp and high-contrast at 2x zoom, with the typed prompt ('a golden prism') above it; and the minimap reads '8 NODES' with an identical dot pattern in both 03 and 04, photographically corroborating that Generate created nothing. Remaining items are minor and carried: stray dissolve particles below the page's bottom edge (feather primitive, pre-existing), one stray 404 in rawConsoleMessages (vetted badResponses=[]), and the flat-color fixture still cannot visually discriminate the fit modes.",
+      "evidence": [
+        "01-image-added.png",
+        "04-generate-honest.png",
+        "03-bubble-populated.png",
+        "console: results.json rawConsoleMessages one '404 (Not Found)'; badResponses=[], consoleErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes, now without caveats that block. The live in-place restyle is re-proven on the fresh pair at zoom: identical scene region in 01 vs 02 shows the selected plane go from sharp-cornered fully-opaque tan to visibly rounded-corner ~50%-translucent (smooth, alias-free corner mask) while the blue layers picture, watch, doorway picture, small gold plane, and gem hold position — only the target changed, corroborating 'live, no rebuild' with results.json step 3 ok. The bubble populate path reads as claimed in fresh 03: lifecycle card Bubble✓ → Populated✓ → Built✓ → In System, toast 'Picture added — the element is built from your image', inspector 'New Element / element / Image element', and the translucent gray sphere (bubble look per ground-truth sibling toolbar-wiring/05-bubble-canvas.png) is gone, replaced by a textured plane in the selection halo. The 'honest generation' claim now reads true ON SCREEN: plain-language inline notice under the Generate key plus matching '8 NODES' minimaps in 03 and 04 (no fake output). Only soft spot: the flat-color fixture renders Cover/Contain/Stretch identically and afterFit scale=[1,1] repeat=[1,1] is the identity transform, so fit modes rest on the measured step rather than a visual delta (carried flag).",
+      "evidence": [
+        "01-image-added.png",
+        "02-imagespec-styled.png",
+        "03-bubble-populated.png",
+        "04-generate-honest.png",
+        "metrics: results.json 5/5 steps ok, pass=true; step3 afterFit scale=[1,1] repeat=[1,1] (identity); step5 'generation honestly disclosed as unwired; no fake output' ok"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Genuinely yes, and the two comprehension breaks from round 1 are gone. The flyout copy remains plain-language end to end ('Drop a picture here' / '+ Browse files', 'OR PASTE A LINK', 'Swap file' / 'Swap from link' with 'Keeps the element where it is — only the picture changes', Cover/Contain/Stretch chips, sliders Left edge / Top edge / Width / Height / Rounded corners / Opacity with % readouts, 'Changes show on the canvas instantly.'). The user's picture is now called 'New image' / 'Image element' instead of a 64-char hex string, and pressing the inviting Generate key now answers in words a non-technical person can act on: it isn't connected yet, here's what to do instead (upload or paste a URL). The 03 lifecycle card still explains bubble→populated in human words.",
+      "evidence": [
+        "01-image-added.png",
+        "04-generate-honest.png",
+        "03-bubble-populated.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive as far as the bundle shows, re-confirmed on fresh captures: the restyle pair (01→02) is the same camera with only the target plane changed — no rebuild flash, no relayout, every other node pixel-stable at zoom; the populate path completed with a toast and the rebuilt textured plane standing in scene in 03; the generate path responded with an inline notice and zero scene mutation (8 NODES in both 03 and 04 minimaps). Drive health clean: 5/5 steps ok, consoleErrors=[], badResponses=[], rendererBackend=webgpu. No latency timings in this drive bundle, but no frame shows a broken or in-between state.",
+      "evidence": [
+        "metrics: results.json pass=true, 5/5 steps ok, consoleErrors=[], badResponses=[], rendererBackend=webgpu",
+        "01-image-added.png",
+        "02-imagespec-styled.png",
+        "03-bubble-populated.png",
+        "04-generate-honest.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'I dropped a picture in, it showed up on the page, and when I rounded its corners and faded it the page just did it — nothing reloaded. My picture is called New image now, not a wall of letters and numbers, and when I asked it to generate a picture it told me straight that that part isn't hooked up yet and what to do instead. That's how I want software to talk to me.'",
+      "evidence": [
+        "02-imagespec-styled.png",
+        "01-image-added.png",
+        "04-generate-honest.png",
+        "03-bubble-populated.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Fit-mode evidence remains non-discriminative: the flat-color synthetic swatch renders Cover/Contain/Stretch identically and the measured afterFit scale=[1,1] repeat=[1,1] is the identity transform. Acknowledged by the team (user-visible path accepts any image); use a patterned, non-square fixture at the next routine sweep so the fit sweep is photographable.",
+      "evidence": "metrics: results.json step3 afterFit scale=[1,1] repeat=[1,1]; 02-imagespec-styled.png (tan plane shows no letterbox/crop cue)"
+    },
+    {
+      "note": "Pre-populate bubble state is still photographed only in the ground-truth sibling, not in this bundle; the populate path is carried by 03's lifecycle card + toast + rebuilt plane. A before/after pair in this bundle would close it photographically.",
+      "evidence": "03-bubble-populated.png (lifecycle all-green, sphere absent, textured plane in halo); ground truth: toolbar-wiring/05-bubble-canvas.png"
+    },
+    {
+      "note": "Carried to P5 (acknowledged): stray dissolve particles drift below the page's bottom edge onto the black void (pre-existing feather primitive), and one stray 404 in rawConsoleMessages (vetted badResponses=[]).",
+      "evidence": "04-generate-honest.png (speckle cluster below page, left of center); console: results.json rawConsoleMessages 'Failed to load resource: … 404' x1, badResponses=[]"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

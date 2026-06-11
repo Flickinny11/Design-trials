@@ -75,6 +75,10 @@ function buildRelevantProjection(node: PrismNode): Record<string, unknown> {
     // P1 TEXT (canvas-spec §7) — the text factory branch reads textSpec at
     // build time, so a committed textSpec change must invalidate the snapshot.
     textSpec: node.textSpec ?? null,
+    // P3 IMAGE (canvas-spec §5) — the sprite/plane/parallax-plane branches
+    // read imageSpec at build time, so a committed imageSpec change must
+    // invalidate the snapshot (same rule as textSpec).
+    imageSpec: node.imageSpec ?? null,
   };
 }
 

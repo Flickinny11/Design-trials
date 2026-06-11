@@ -57,11 +57,22 @@ import {
   tagUnlitObject,
 } from '../shared/material-system';
 import { displacementShader } from '../shared/shaders/displacement.tsl';
+// P3 IMAGE (canvas-spec §5) — per-node ImageSpec presentation (fit/crop via a
+// per-node texture-clone window, TSL corner mask, opacity multiply). All
+// in-place; the texture is never re-rendered. See image-spec.ts header.
+import {
+  applyImageSpec,
+  disposeImageSpec,
+  isIdentityUvWindow,
+  readImageSpecTexture,
+  readImageSpecWindow,
+} from '../shared/image-spec';
 import type {
   CinematicPrimitiveRef,
+  ImageSpec,
   PrismNode,
   PrismTextContent,
-} from '@/lib/prism-graph/types';
+} from '../../../prism-graph/types';
 import type { PrimitiveResult } from '../shared/primitives/types';
 
 export interface DefaultFactoryOpts {
@@ -116,6 +127,10 @@ export function defaultRenderModeFactory(
   // the async atlas-resolve callback against mounting into a cleaned group.
   const textHandles: TextObjectHandle[] = [];
   const textState = { disposed: false };
+  // P3 IMAGE — meshes carrying a per-node ImageSpec texture clone. Cleanup
+  // disposes the clone (node-owned) but NEVER the loader-cache source
+  // (Amendment 0002 §A.2 — disposeImageSpec enforces the split).
+  const imageSpecMeshes: Mesh[] = [];
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
@@ -150,15 +165,6 @@ export function defaultRenderModeFactory(
         needsUpdate?: boolean;
       };
     }
-    if (sourceAsset) {
-      void ctx.textureLoader
-        .loadTexture(sourceAsset)
-        .then((tex) => {
-          mat.map = tex;
-          mat.needsUpdate = true;
-        })
-        .catch(() => { /* swallow — decorative */ });
-    }
     const mesh = new Mesh(geo, mat as unknown as MeshBasicMaterial);
     // criterion 17 @ T2: tag UNLIT image planes onto the unlit layer so the
     // rig's screen-space GI/AO post pass excludes them (baked look stays exact).
@@ -166,6 +172,52 @@ export function defaultRenderModeFactory(
     group.add(mesh);
     disposables.push(geo);
     materialsToDispose.push(mat as unknown as DisposableMaterial);
+
+    // P3 IMAGE (canvas-spec §5) — apply the node's ImageSpec at build time and
+    // expose an in-place updater so the editor restyles INSTANTLY (no artifact
+    // re-render, no rebuild). A default node (no imageSpec, no setSpec call)
+    // takes none of this path: the shared cache texture lands on the material
+    // untouched, byte-identical to before. applyImageSpec may upgrade a plain
+    // legacy material to its node-material twin when a cornerRadius first
+    // arrives (safe: every call path renders via WebGPURenderer — see the
+    // text-branch renderer note below); track the swap for disposal.
+    const imageState: { spec: ImageSpec | null } = {
+      spec: node.imageSpec ? { ...node.imageSpec } : null,
+    };
+    const applyCurrentImageSpec = () => {
+      if (!imageState.spec) return;
+      const prevMat = mesh.material;
+      applyImageSpec(mesh, imageState.spec, { nodeMaterials: useNodeMaterials });
+      if (mesh.material !== prevMat) {
+        materialsToDispose.push(mesh.material as unknown as DisposableMaterial);
+      }
+    };
+    group.userData.imageHandle = {
+      setSpec: (next: ImageSpec) => {
+        imageState.spec = { ...next };
+        applyCurrentImageSpec();
+      },
+    };
+    imageSpecMeshes.push(mesh);
+
+    if (sourceAsset) {
+      void ctx.textureLoader
+        .loadTexture(sourceAsset)
+        .then((tex) => {
+          // Read the material off the mesh (a radius upgrade may have swapped
+          // it); identical to the old captured-`mat` write for default nodes.
+          const m = mesh.material as unknown as DisposableMaterial;
+          m.map = tex;
+          m.needsUpdate = true;
+          // Re-apply with real image dims (clones the cache texture before
+          // any repeat/offset mutation). No-op when no spec is set.
+          applyCurrentImageSpec();
+        })
+        .catch(() => { /* swallow — decorative */ });
+    }
+    // Build-time apply: radius/opacity are live even before the texture
+    // resolves; the fit/crop window lands in the then() above.
+    applyCurrentImageSpec();
   } else if (renderMode === 'parallax-plane') {
     // §9.C — tessellated 64x64 plane + TSL displacement node.
     // §10 decision 7 / criterion 17: an image plane is UNLIT by default, so the
@@ -187,31 +239,89 @@ export function defaultRenderModeFactory(
     } else {
       mat = new MeshStandardMaterial({ transparent: true }) as unknown as DisposableMaterial;
     }
-    if (sourceAsset && node.depthMapUrl) {
-      const baseP = ctx.textureLoader.loadTexture(sourceAsset);
-      const depthP = ctx.textureLoader.loadTexture(node.depthMapUrl);
-      void Promise.all([baseP, depthP])
-        .then(([baseTex, depthTex]) => {
-          const m = mat as unknown as DisposableMaterial;
-          m.map = baseTex;
-          m.displacementMap = depthTex;
-          if (useNodeMaterials) {
-            m.colorNode = displacementShader({
-              baseTexture: baseTex,
-              displacementMap: depthTex,
-              intensity: 0.05,
-            });
-          }
-          m.needsUpdate = true;
-        })
-        .catch(() => { /* swallow */ });
-    }
     const mesh = new Mesh(geo, mat as unknown as MeshStandardMaterial);
     // criterion 17 @ T2: exclude the UNLIT parallax plane from the SSGI/GTAO pass.
     if (!lit) tagUnlitObject(mesh);
     group.add(mesh);
     disposables.push(geo);
     materialsToDispose.push(mat);
+
+    // P3 IMAGE (canvas-spec §5) — ImageSpec on the parallax plane. Same
+    // handle/clone mechanics as sprite/plane, plus one renderer honesty rule:
+    // the displacement colorNode samples with an EXPLICIT uv
+    // (displacement.tsl), which bypasses the texture matrix
+    // (TextureNode.setUpdateMatrix(uvNode === null)). So the UV-distortion
+    // colorNode is only mounted while the fit/crop window is identity; a
+    // non-identity window routes color through the matrix-respecting `.map`
+    // path instead — the crop renders correctly and the displacementMap keeps
+    // the vertex relief; only the UV-distortion flourish is traded. Default
+    // nodes (no imageSpec) keep the colorNode exactly as before.
+    const imageState: { spec: ImageSpec | null } = {
+      spec: node.imageSpec ? { ...node.imageSpec } : null,
+    };
+    const parallaxMaps: { base: Texture | null; depth: Texture | null } = {
+      base: null,
+      depth: null,
+    };
+    const refreshDisplacementColorNode = () => {
+      const m = mesh.material as unknown as DisposableMaterial & {
+        isNodeMaterial?: boolean;
+      };
+      // Legacy plain material: no colorNode lane (map matrix applies natively).
+      if (m.isNodeMaterial !== true) return;
+      if (!parallaxMaps.base || !parallaxMaps.depth) return;
+      if (isIdentityUvWindow(readImageSpecWindow(mesh))) {
+        m.colorNode = displacementShader({
+          // Prefer the per-node clone when one exists (same shared GPU image).
+          baseTexture: readImageSpecTexture(mesh) ?? parallaxMaps.base,
+          displacementMap: parallaxMaps.depth,
+          intensity: 0.05,
+        });
+      } else {
+        m.colorNode = null;
+      }
+      m.needsUpdate = true;
+    };
+    const applyCurrentImageSpec = () => {
+      if (!imageState.spec) return;
+      const prevMat = mesh.material;
+      applyImageSpec(mesh, imageState.spec, { nodeMaterials: useNodeMaterials });
+      if (mesh.material !== prevMat) {
+        materialsToDispose.push(mesh.material as unknown as DisposableMaterial);
+      }
+      refreshDisplacementColorNode();
+    };
+    group.userData.imageHandle = {
+      setSpec: (next: ImageSpec) => {
+        imageState.spec = { ...next };
+        applyCurrentImageSpec();
+      },
+    };
+    imageSpecMeshes.push(mesh);
+
+    if (sourceAsset && node.depthMapUrl) {
+      const baseP = ctx.textureLoader.loadTexture(sourceAsset);
+      const depthP = ctx.textureLoader.loadTexture(node.depthMapUrl);
+      void Promise.all([baseP, depthP])
+        .then(([baseTex, depthTex]) => {
+          parallaxMaps.base = baseTex;
+          parallaxMaps.depth = depthTex;
+          // Read the material off the mesh (a radius upgrade may have swapped
+          // it); identical to the old captured-`mat` write for default nodes.
+          const m = mesh.material as unknown as DisposableMaterial;
+          m.map = baseTex;
+          m.displacementMap = depthTex;
+          // Re-apply with real image dims (clones before any matrix mutation),
+          // then mount/skip the displacement colorNode per the window rule
+          // above. Defaults (no spec → identity window) keep the old wiring.
+          applyCurrentImageSpec();
+          refreshDisplacementColorNode();
+          m.needsUpdate = true;
+        })
+        .catch(() => { /* swallow */ });
+    }
+    // Build-time apply: radius/opacity live pre-resolve; window lands above.
+    applyCurrentImageSpec();
   } else if (renderMode === 'mesh') {
     if (node.meshUrl) {
       // §10 decision 7: meshes are LIT by default. When the node carries a
@@ -389,6 +499,13 @@ export function defaultRenderModeFactory(
       try { h.dispose(); } catch { /* ignore */ }
     }
     textHandles.length = 0;
+    // P3 IMAGE — release each mesh's node-owned texture clone. The loader-
+    // cache SOURCE texture is never disposed (Amendment 0002 §A.2);
+    // disposeImageSpec only touches the per-node clone + state.
+    for (const m of imageSpecMeshes) {
+      try { disposeImageSpec(m); } catch { /* ignore */ }
+    }
+    imageSpecMeshes.length = 0;
     for (const geo of disposables) {
       try { geo.dispose(); } catch { /* ignore */ }
     }

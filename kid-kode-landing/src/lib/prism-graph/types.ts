@@ -715,7 +715,43 @@ export interface PrismNode {
   // primitive's keyframes (INV-6). Drivers play ANIMATION only, never app
   // behavior (§1.3). Absent on legacy nodes. Round-trips through save/reload.
   animationBindings?: AnimationBinding[];
+  // P3 IMAGE/MEDIA (canvas-spec §5 Image tools; INV-8 additive). Per-node
+  // image presentation for image-bearing render modes (sprite / plane /
+  // parallax-plane): how the source texture sits in its plane. The artifact
+  // itself stays `visual.sourceAsset` (upload/URL both resolve to a URL).
+  // Absent → IMAGE_SPEC_DEFAULT (cover, no crop, square corners, opaque).
+  // Round-trips through save/reload. §5's color-adjust / blend / filter set
+  // is a later slice — these are the core four the P3 scope names.
+  imageSpec?: ImageSpec;
 }
+
+// P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).
+export interface ImageCrop {
+  /** Normalized 0..1 crop window over the source texture (x,y = top-left). */
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+}
+
+export interface ImageSpec {
+  /** How the (cropped) texture fills the node's plane. 'cover' crops to
+   *  fill; 'contain' letterboxes (transparent margins); 'fill' stretches. */
+  fit?: 'cover' | 'contain' | 'fill';
+  crop?: ImageCrop;
+  /** Rounded-corner radius as a fraction of the plane's half-min-dimension,
+   *  0 (square) .. 1 (fully pill/circular). Cut in the shader (TSL mask) —
+   *  the texture is never re-rendered. */
+  cornerRadius?: number;
+  /** 0..1 whole-plane opacity (multiplies any material opacity). */
+  opacity?: number;
+}
+
+export const IMAGE_SPEC_DEFAULT: ImageSpec = {
+  fit: 'cover',
+  cornerRadius: 0,
+  opacity: 1,
+};
 
 // P2 TOOLBAR WIRING — the frozen binding contract (canvas-spec §8.2 Driver
 // model + §8.3 catalog). Additive only.

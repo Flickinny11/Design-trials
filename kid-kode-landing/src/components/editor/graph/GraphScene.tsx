@@ -82,7 +82,14 @@ import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/sh
 // plays them through the SAME driver dispatch the factory's STEP7 path uses.
 import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
-import { TEXT_SPEC_DEFAULT, type PrismHub, type PrismNode, type TextSpec } from '@/lib/prism-graph/types';
+import {
+  IMAGE_SPEC_DEFAULT,
+  TEXT_SPEC_DEFAULT,
+  type ImageSpec,
+  type PrismHub,
+  type PrismNode,
+  type TextSpec,
+} from '@/lib/prism-graph/types';
 import { getFontRegistry } from '@/lib/prism/text/font-registry';
 import type { TextObjectHandle } from '@/lib/prism/text/contract';
 import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
@@ -2148,6 +2155,39 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
   }, [textSpecKey, buildKey]);
+
+  // P3 IMAGE (canvas-spec §5 Image tools) — instant restyle: the source ⊕
+  // preview-overlay imageSpec lands on the mounted image plane IN PLACE via
+  // userData.imageHandle.setSpec (per-node texture-clone fit/crop window +
+  // uniform-driven TSL corner mask + material-opacity multiply; same Mesh
+  // identity, NO artifact re-render, NO rebuild). Mirrors the textSpec effect
+  // above; the apply is synchronous, so no cancellation is needed. Only nodes
+  // that actually carry an imageSpec (committed or previewed) take this path —
+  // legacy image planes keep their untouched shared cache texture.
+  const imageRenderMode = composedNode.renderMode ?? 'sprite';
+  const isImageBearing =
+    imageRenderMode === 'sprite' ||
+    imageRenderMode === 'plane' ||
+    imageRenderMode === 'parallax-plane';
+  const mergedImageSpec: ImageSpec | null =
+    isImageBearing && composedNode.imageSpec
+      ? { ...IMAGE_SPEC_DEFAULT, ...composedNode.imageSpec }
+      : null;
+  const imageSpecKey = mergedImageSpec ? JSON.stringify(mergedImageSpec) : '';
+  useEffect(() => {
+    if (!mergedImageSpec) return;
+    const g = popRef.current;
+    if (!g) return;
+    let handle: { setSpec(next: ImageSpec): void } | null = null;
+    g.traverse((obj) => {
+      const h = (obj.userData as { imageHandle?: { setSpec(next: ImageSpec): void } } | undefined)
+        ?.imageHandle;
+      if (!handle && h) handle = h;
+    });
+    if (!handle) return; // non-factory artifact (codeRef/mesh) — nothing to restyle
+    (handle as { setSpec(next: ImageSpec): void }).setSpec(mergedImageSpec);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
+  }, [imageSpecKey, buildKey]);
 
   // P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — preview-app PLAYS the
   // node's catalog-primitive bindings through the existing Driver model;
