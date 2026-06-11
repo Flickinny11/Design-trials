@@ -55,3 +55,11 @@ like morphing INTO the workspace, not panel swaps), story-grade choreography on 
 DESIGN-REFERENCES stack visibly at work. ADVOCATE STANDARD: side-by-side judgment — "set our editor next to a Slider
 Revolution showcase: which looks like the more premium, more advanced product?" If the answer isn't OURS, decisively,
 it's a MUST-FIX. Our tech is lightyears ahead; the chrome must look like it.
+
+## ADDENDUM 2 (2026-06-11, post-completion-run): THE SHOWCASE SCENE
+The §13 demo content (the mock app users see on boot) is sparse, never-designed, 1024²-mock filler — it is a huge part
+of the "looks AI-built" impression because it's the hero surface. BUILD A FLAGSHIP SHOWCASE SCENE as part of this run:
+a demo app/scene worthy of the engine — story-grade, morph-through sections, photoreal materials, text with poured
+textures, bound animations across all five drivers, 3D objects under the lighting rig — the thing a first-time user
+sees and says Logan's quote verbatim. Provision hi-res assets (kill the 1024² ceiling per the carried flag). Also fix
+the carried gizmo-offset bug (anchor double-transform) and migrate editor-chrome canvas2D labels → MSDF while in there.
