@@ -89,6 +89,9 @@ function runCleanup(object: Object3D): void {
 export function hasArtifactData(node: PrismNode): boolean {
   if (node.visual?.sourceAsset) return true;
   if (node.meshUrl) return true;
+  // P4 3D-OBJECT — a meshPrimitive node is born Populated: the generated
+  // geometry is a real renderable artifact (factory mesh branch).
+  if (node.meshPrimitive) return true;
   if (node.codeRef) return true;
   return false;
 }

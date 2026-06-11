@@ -97,6 +97,9 @@ export function buildBubbleElementNode(opts: {
 export function isStage0Bubble(node: PrismNode): boolean {
   if (node.visual?.sourceAsset) return false;
   if (node.meshUrl) return false;
+  // P4 3D-OBJECT — a meshPrimitive node is BORN Populated: the generated
+  // geometry IS its artifact (same carve-out shape as the text rule below).
+  if (node.meshPrimitive) return false;
   if (node.codeRef) return false;
   if ((node.renderMode ?? 'sprite') === 'text') return false;
   if ((node.intent?.visualSpec?.textContent ?? []).length > 0) return false;

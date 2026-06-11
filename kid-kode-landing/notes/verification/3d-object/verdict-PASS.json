@@ -1,0 +1,64 @@
+{
+  "feature": "3d-object",
+  "claim": "A first-time, non-technical user can: open the 3D Object group, tap a shape key (7 primitives with hand-drawn glyphs) and get a real, lit, shadow-casting 3D object in the scene; reshape it live with per-shape dimension faders (instant, nothing rebuilds); style its surface with the SAME Material editor used everywhere (one click 'Edit Material' jumps to it; changes land live on the object); move it with the transform tools; and give it any of the 312 catalog animations, which play on it in Preview.",
+  "groundTruthSibling": "image-media",
+  "state": "live",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken in the feature surface itself: the flyout, faders, Inspector Material tab, and both primitives render cleanly at DPR 2 with no cut-offs or contrast failures. Two peripheral anomalies, neither caused by the feature: (a) a body-less white particle/dust patch floats in black space below the app card in canvas AND in preview-app — brightened 3.5x it has no parent object, while the identical region in the ground-truth sibling's frames is clean; results.json carries exactly one raw console 404 ('Failed to load resource'), consistent with a content node whose texture failed to load leaving only its particle animation. Both primitives (cube, torus) are visible and accounted for elsewhere, so this orphan is scene content, not the feature. (b) The brass selection ring does not rescale with the reshaped torus: it fits the torus in 01, but after the radius fader sweep (0.92 to 2.52) it stays at the original radius, ending up circling the donut hole instead of the object in 02 and 03. The pre-existing flat-black watch silhouette in the scene appears identically in the passed ground-truth sibling (image-media/01-image-added.png), so it is out-of-scope content, not a regression.",
+      "evidence": [
+        "3d-object/02-reshaped.png — body-less sparkle patch below the card's dashed border (also in 04-binding-plays.png); same region clean in image-media ground truth",
+        "console: rawConsoleMessages contains one 'Failed to load resource: 404' (consoleErrors=[] — harness classed it non-blocking)",
+        "3d-object/02-reshaped.png — cream selection ring unchanged while torus radius grew 0.92→2.52; in 03-material-live.png the ring circles the hole, not the object"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — every clause of the claim is visible or measured. (1) The flyout shows exactly 7 shape keys with hand-drawn line glyphs (Cube, Sphere, Plane, Cylinder, Cone, Torus, Capsule) under 'ADD A SHAPE'; tapping Torus raised a green-check toast 'Torus added to Home' and a torus appeared in the scene with a selection ring (01-primitives-added.png). It is a genuinely lit, shadow-casting 3D object: 03-material-live.png shows smooth curvature shading, sharp specular highlights, and a soft contact shadow cast onto the card beneath the torus; results.json attests matType=MeshPhysicalNodeMaterial with castShadow on a webgpu backend. (2) Reshape is live and in place: between 01 and 02 the 'Ring radius' fader (0.92→2.52) visibly grew the torus from a small donut to a large thin ring at the same center, with mesh+material identity held (no rebuild). (3) The SAME Inspector Material tab used everywhere (PHYSICAL MATERIAL: Base Color #c8ccd8, Metalness, Roughness, Transmission, IOR, Clearcoat, Iridescence, Emissive...) is open beside the torus in 03, and the torus visibly changed from matte gray (02) to dark glossy (03) — metalness=1, roughness=1 mutated on the same instance. The flyout also carries the one-click 'Edit Material' brass button. (4) Transform: scenePosition x=1.08 write moved it (results.json step ok), corroborated visually — in 04 the torus center sits right of the cube versus centered on it in 02/03. (5) Animation: 04-binding-plays.png shows the styled torus rendered inside the app frame in Preview App mode, with measured float-binding drift 0.2270 on the primitive.",
+      "evidence": [
+        "3d-object/01-primitives-added.png — 7 glyph shape keys, 'Torus added to Home' toast, torus + selection ring in scene",
+        "3d-object/03-material-live.png — specular highlights + soft cast shadow on the card; Inspector MATERIAL tab open beside the now-glossy torus",
+        "metrics: results.json — matType=MeshPhysicalNodeMaterial + castShadow; reshape 0.92→2.52 identity held; metalness=1 roughness=1 same instance; scenePosition x=1.08; preview drift=0.2270; rendererBackend=webgpu",
+        "3d-object/02-reshaped.png vs 01-primitives-added.png — torus visibly ~3x larger at same center after fader sweep"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The flyout reads like a person wrote it for a first-timer: 'ADD A SHAPE' over 7 named glyph keys; 'New shapes land in Home, ready to move and restyle.'; per-shape faders labeled in plain words (Ring radius, Ring thickness, Smoothness) with live value readouts; 'Changes show on the canvas instantly.'; a MATERIAL row with plain chips (Color, Metal 0%, Matte 50%) and a prominent brass 'Edit Material' button explained by 'Color, shine, glass and glow all live in the Material tab — this opens it.'; and a lightbulb tip in plain English about shapes catching the hub's lights and the Receives Light switch. No machine ids anywhere a user looks — the node is captioned 'New Torus', and adding a shape confirms itself with the 'Torus added to Home' toast. The labeled fader does a visible, sensible thing across its sweep (small donut → big ring).",
+      "evidence": [
+        "3d-object/01-primitives-added.png — flyout copy: 'ADD A SHAPE', 'New shapes land in Home...', 'Changes show on the canvas instantly.', 'Edit Material', lights tip; toast 'Torus added to Home'",
+        "control: Ring radius fader 0.92→2.52 — visible sensible growth, 01-primitives-added.png → 02-reshaped.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive on the evidence available. The reshape sweep is an instant in-place geometry swap (results.json: identity HELD, nothing rebuilt) and the frame pair shows the full visual change landed; the Material-tab edits mutate the same material instance live (matte gray in 02 → dark glossy in 03, no rebuild step); the preview-app binding shows real measured motion (drift 0.2270) rather than a frozen frame; consoleErrors is empty. This bundle carries drive-step measurements rather than per-frame frameDeltaMag, so I am judging latency from the structural same-instance proofs plus visible frame-to-frame change, all of which are consistent with 'instant'.",
+      "evidence": [
+        "metrics: results.json — reshape geometry swap with mesh+material identity HELD (no rebuild); material mutation same-instance; binding drift=0.2270; consoleErrors=[]",
+        "3d-object/02-reshaped.png → 03-material-live.png — material change fully landed on the object between captures"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'I tapped a donut button and got an actual shiny 3D donut sitting in my app casting a real shadow — then I dragged one slider and it grew instantly, and the same Material panel I use for everything else made it glossy while I watched.' The flyout looks premium (graphite/bone/brass, hand-drawn glyphs, no purple, no flat cards) and the copy tells you what will happen before you do it. The stray dust patch below the card and the selection ring not growing with the donut are the only blemishes, and neither would stop a first-timer from succeeding.",
+      "evidence": [
+        "3d-object/03-material-live.png — lit glossy torus with cast shadow beside the open Material tab",
+        "3d-object/01-primitives-added.png — premium flyout with 7 glyph keys and plain-language copy",
+        "backend: rendererBackend=webgpu attested in results.json"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Orphaned particle/dust patch floats body-less below the app card in canvas and preview-app; the same region is clean in the ground-truth sibling bundle. Likely a content node whose texture 404'd (one raw 'Failed to load resource: 404' in console) rendering only its particle animation. Not produced by the 3D-object feature (both primitives visible and accounted for), but it shows in the end-user preview surface — chase the 404.",
+      "evidence": "3d-object/02-reshaped.png and 04-binding-plays.png (patch visible, no parent at 3.5x brightness); console: rawConsoleMessages one 404; ground-truth image-media/04-generate-honest.png same region clean"
+    },
+    {
+      "note": "Selection ring does not track the reshaped geometry: after the Ring-radius sweep it stays at creation size, ending up circling the donut hole instead of the object. The object is plainly still selected (Inspector header 'New Torus'), so this is polish, but a professional 3D tool would resize the highlight with the mesh.",
+      "evidence": "3d-object/02-reshaped.png (ring unchanged while torus grew 0.92→2.52) and 03-material-live.png (ring around the hole)"
+    },
+    {
+      "note": "Pre-existing scene content: the flat-black watch silhouette reads as an unlit/unloaded blob next to the new, properly-lit primitives. It appears identically in the passed ground-truth sibling, so it is out of this feature's scope — but the contrast with the new physically-lit shapes now makes it look cheap by comparison.",
+      "evidence": "3d-object/03-material-live.png (black silhouette overlapping the lit torus); ground truth image-media/01-image-added.png shows the same silhouette"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

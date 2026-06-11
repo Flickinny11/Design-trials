@@ -42,11 +42,18 @@
  *     (fit/crop/corners/opacity) restyling live. Generate stays HONEST: it
  *     probes /api/prism/image-gen and discloses, never fakes. Lives in
  *     `@/components/editor/image-tools/`.
+ *   - 3D Object — P4 (canvas-spec §5 3D object tools): the 7-key primitive
+ *     picker (cube/sphere/plane/cylinder/cone/torus/capsule via the frozen
+ *     create-object-node builder seam), per-kind dimension faders writing
+ *     `node.meshPrimitive` (live reshape), a read-only material summary +
+ *     jump key into the Inspector's Material tab (the §11 editor stays the
+ *     single source of truth), and a lighting note pointing at the Lighting
+ *     group's Receives Light switch. Lives in
+ *     `@/components/editor/object-tools/`.
  *
  * DESIGNED-PLACEHOLDER (look complete, never fake output — clicking a deferred
  * tool surfaces a tasteful "coming with <subsystem>" state):
- *   - 3D Object (← Mesh & Material systems),
- *     Animation from-scratch / bespoke authoring (← bespoke lane).
+ *   - Animation from-scratch / bespoke authoring (← bespoke lane).
  *     The Keyframe Editor *toggle* is real
  *     (it slides the §8.4 editor in/out); its track content is designed.
  *
@@ -68,6 +75,7 @@ import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
 import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout';
 import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
+import ObjectFlyout from '@/components/editor/object-tools/ObjectFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -134,7 +142,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'selection', icon: 'group', label: 'Selection', wired: true },
   { id: 'add', icon: 'plus', label: 'Add', wired: true },
   { id: 'image', icon: 'image', label: 'Image', wired: true },
-  { id: 'object3d', icon: 'cube', label: '3D Object', wired: false, subsystem: 'Mesh & Material systems' },
+  { id: 'object3d', icon: 'cube', label: '3D Object', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
   { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
@@ -319,33 +327,10 @@ function StepperRow({
   );
 }
 
-/** Designed-placeholder tile grid. Clicking any tile surfaces the coming state. */
-function PlaceholderTiles({
-  tiles, subsystem, onPick,
-}: {
-  tiles: { icon: string; label: string; hint?: string }[];
-  subsystem: string;
-  onPick: (label: string) => void;
-}) {
-  return (
-    <div className="grid grid-cols-2 gap-1.5">
-      {tiles.map((t) => (
-        <button
-          key={t.label}
-          type="button"
-          onClick={() => onPick(t.label)}
-          title={`${t.label} — coming with the ${subsystem}`}
-          className="relative flex flex-col items-start gap-1 p-2 rounded-ds-sm ds-press hover:brightness-[1.16] transition-all text-left"
-          style={{ background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.4)' }}
-        >
-          <Icon name={t.icon} size={14} color={DS.textMid} />
-          <span className="text-[9.5px] font-mono leading-tight" style={{ color: 'var(--ds-text)' }}>{t.label}</span>
-          {t.hint && <span className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>{t.hint}</span>}
-        </button>
-      ))}
-    </div>
-  );
-}
+// (The designed-placeholder tile grid that used to live here retired with the
+// last placeholder group — every toolbar group is wired now except the
+// bespoke-authoring lane inside Animation, which renders its own coming
+// state via `showComing`.)
 
 // ── Main component ───────────────────────────────────────────────────────────
 export default function CanvasToolbar() {
@@ -783,16 +768,10 @@ export default function CanvasToolbar() {
               <ImageFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'object3d' && (
-              <PlaceholderTiles
-                subsystem="Mesh & Material systems"
-                onPick={(t) => showComing(t, 'Mesh & Material systems')}
-                tiles={[
-                  { icon: 'cube', label: 'Shape / Dimensions' },
-                  { icon: 'grid', label: 'Per-face Mapping' },
-                  { icon: 'palette', label: 'Material Editor' },
-                  { icon: 'move', label: 'Gizmos', hint: 'see Transform' },
-                ]}
-              />
+              // P4 3D-OBJECT (Task B) — wired 3D Object group. Same hub
+              // resolution the Text / Add / Image / Lighting groups share
+              // (active hub → selected node's parent → first hub).
+              <ObjectFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'text' && (
               // P1 TEXT SYSTEM (Task B) — wired flyout. `lightingHub` is the

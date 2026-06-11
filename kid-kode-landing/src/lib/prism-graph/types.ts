@@ -723,7 +723,52 @@ export interface PrismNode {
   // Round-trips through save/reload. §5's color-adjust / blend / filter set
   // is a later slice — these are the core four the P3 scope names.
   imageSpec?: ImageSpec;
+  // P4 3D-OBJECT (canvas-spec §5 3D object tools; INV-8 additive). A
+  // primitive mesh created in-canvas: the factory builds the geometry from
+  // `kind` + `params` and routes the surface through the EXISTING material
+  // system (`materialSpec`, LIT by default like renderMode 'mesh') and the
+  // lighting rig. Coexists with renderMode: a node carrying `meshPrimitive`
+  // renders the primitive regardless of meshUrl (which stays for GLBs).
+  // Round-trips through save/reload.
+  meshPrimitive?: MeshPrimitive;
 }
+
+// P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
+export type MeshPrimitiveKind =
+  | 'cube'
+  | 'sphere'
+  | 'plane'
+  | 'cylinder'
+  | 'cone'
+  | 'torus'
+  | 'capsule';
+
+export interface MeshPrimitive {
+  kind: MeshPrimitiveKind;
+  /** Per-kind dimensions in scene units + tessellation. All optional —
+   *  MESH_PRIMITIVE_DEFAULTS supplies per-kind values. Unknown keys are
+   *  ignored (forward-compat). */
+  params?: {
+    width?: number;
+    height?: number;
+    depth?: number;
+    radius?: number;
+    /** torus tube radius / capsule mid-section length, per kind. */
+    tube?: number;
+    length?: number;
+    segments?: number;
+  };
+}
+
+export const MESH_PRIMITIVE_DEFAULTS: Record<MeshPrimitiveKind, Required<NonNullable<MeshPrimitive['params']>>> = {
+  cube: { width: 0.6, height: 0.6, depth: 0.6, radius: 0, tube: 0, length: 0, segments: 1 },
+  sphere: { width: 0, height: 0, depth: 0, radius: 0.38, tube: 0, length: 0, segments: 48 },
+  plane: { width: 0.9, height: 0.9, depth: 0, radius: 0, tube: 0, length: 0, segments: 1 },
+  cylinder: { width: 0, height: 0.7, depth: 0, radius: 0.3, tube: 0, length: 0, segments: 48 },
+  cone: { width: 0, height: 0.7, depth: 0, radius: 0.34, tube: 0, length: 0, segments: 48 },
+  torus: { width: 0, height: 0, depth: 0, radius: 0.34, tube: 0.12, length: 0, segments: 48 },
+  capsule: { width: 0, height: 0, depth: 0, radius: 0.22, tube: 0, length: 0.45, segments: 24 },
+};
 
 // P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).
 export interface ImageCrop {

@@ -1,0 +1,39 @@
+{
+  "steps": [
+    {
+      "step": "Add Cube + Torus → lit shadow-casting physical meshes",
+      "ok": true,
+      "cubeId": "b9a4a0cf-4e6b-4a1d-88b0-e880846c4c49",
+      "matType": "MeshPhysicalNodeMaterial"
+    },
+    {
+      "step": "shape fader reshapes in place (geometry swap, identity held)",
+      "ok": true,
+      "from": "0.92",
+      "to": "2.52"
+    },
+    {
+      "step": "existing §11 Material editor mutates the primitive live, same instance",
+      "ok": true,
+      "metalness": 1,
+      "roughness": 1
+    },
+    {
+      "step": "gizmo/Transform participation (scenePosition writes move it)",
+      "ok": true,
+      "x": 1.08
+    },
+    {
+      "step": "animation binding plays on the primitive in preview-app",
+      "ok": true,
+      "drift": "0.2270"
+    }
+  ],
+  "consoleErrors": [],
+  "badResponses": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "rawConsoleMessages": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

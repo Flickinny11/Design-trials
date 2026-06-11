@@ -79,6 +79,10 @@ function buildRelevantProjection(node: PrismNode): Record<string, unknown> {
     // read imageSpec at build time, so a committed imageSpec change must
     // invalidate the snapshot (same rule as textSpec).
     imageSpec: node.imageSpec ?? null,
+    // P4 3D-OBJECT (canvas-spec §5) — the mesh branch reads meshPrimitive at
+    // build time (geometry from kind + params), so a committed meshPrimitive
+    // change must invalidate the snapshot (same rule as textSpec/imageSpec).
+    meshPrimitive: node.meshPrimitive ?? null,
   };
 }
 

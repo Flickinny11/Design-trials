@@ -92,6 +92,9 @@ import {
 } from '@/lib/prism-graph/types';
 import { getFontRegistry } from '@/lib/prism/text/font-registry';
 import type { TextObjectHandle } from '@/lib/prism/text/contract';
+// P4 3D-OBJECT — live primitive reshaping + material handle mounted by the
+// factory's mesh branch (userData.meshPrimitiveHandle).
+import type { MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
 import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
 // EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
 // in-view slide, hover lift). The canvas-mode KeyframeDemo block below
@@ -2188,6 +2191,42 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     (handle as { setSpec(next: ImageSpec): void }).setSpec(mergedImageSpec);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
   }, [imageSpecKey, buildKey]);
+
+  // P4 3D-OBJECT (canvas-spec §5 3D object tools) — instant reshaping +
+  // material: the source ⊕ preview-overlay meshPrimitive / materialSpec land
+  // on the mounted primitive Mesh IN PLACE via userData.meshPrimitiveHandle
+  // (setPrimitive swaps ONLY the geometry — same Mesh + material identity;
+  // setMaterialSpec writes the SAME physical material instance, uniform-only
+  // except documented recompile edges). Mirrors the imageSpec effect above —
+  // the apply is synchronous, no cancellation needed. The Inspector Material
+  // tab already writes materialSpec through usePreviewStateStore, so its
+  // fader/knob edits land here live before "Save" commits to source. The
+  // handle no-ops repeat setPrimitive writes of an unchanged shape, so this
+  // effect never churns geometry on material-only edits.
+  const meshPrimState =
+    (composedNode.renderMode ?? 'sprite') === 'mesh' && composedNode.meshPrimitive
+      ? {
+          meshPrimitive: composedNode.meshPrimitive,
+          materialSpec: composedNode.materialSpec ?? null,
+        }
+      : null;
+  const meshPrimKey = meshPrimState ? JSON.stringify(meshPrimState) : '';
+  useEffect(() => {
+    if (!meshPrimState) return;
+    const g = popRef.current;
+    if (!g) return;
+    let handle: MeshPrimitiveHandle | null = null;
+    g.traverse((obj) => {
+      const h = (obj.userData as { meshPrimitiveHandle?: MeshPrimitiveHandle } | undefined)
+        ?.meshPrimitiveHandle;
+      if (!handle && h) handle = h;
+    });
+    if (!handle) return; // non-factory artifact (codeRef/GLB) — nothing to reshape
+    const found: MeshPrimitiveHandle = handle;
+    found.setPrimitive(meshPrimState.meshPrimitive);
+    found.setMaterialSpec(meshPrimState.materialSpec);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
+  }, [meshPrimKey, buildKey]);
 
   // P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — preview-app PLAYS the
   // node's catalog-primitive bindings through the existing Driver model;

@@ -10,8 +10,12 @@
 //                     (Texture aspect-ratio resize lands when load resolves.)
 //   parallax-plane  — Tessellated PlaneGeometry + MeshStandardNodeMaterial
 //                     wired through `displacementShader` (TSL).
-//   mesh            — `ctx.glbLoader.loadGLB(node.meshUrl)`; the resolved
-//                     scene is reparented under the returned Group.
+//   mesh            — `node.meshPrimitive` (P4): synchronous generated
+//                     geometry (cube/sphere/…) + MeshPhysicalNodeMaterial,
+//                     with the live setPrimitive/setMaterialSpec handle.
+//                     Otherwise `ctx.glbLoader.loadGLB(node.meshUrl)`; the
+//                     resolved scene is reparented under the returned Group.
+//                     A node carrying BOTH renders the primitive (precedence).
 //   text            — Prism TextObject (real MSDF glyphs, canvas-spec §7 /
 //                     criterion 26) styled by `node.textSpec`; atlas via the
 //                     shared font-registry cache (criterion 27).
@@ -67,6 +71,13 @@ import {
   readImageSpecTexture,
   readImageSpecWindow,
 } from '../shared/image-spec';
+// P4 3D-OBJECT (canvas-spec §5) — primitive geometry from `node.meshPrimitive`
+// (kind + params over MESH_PRIMITIVE_DEFAULTS) with the live reshaping +
+// material handle. See mesh-primitive.ts header.
+import {
+  buildPrimitiveGeometry,
+  createMeshPrimitiveHandle,
+} from '../shared/mesh-primitive';
 import type {
   CinematicPrimitiveRef,
   ImageSpec,
@@ -131,6 +142,10 @@ export function defaultRenderModeFactory(
   // disposes the clone (node-owned) but NEVER the loader-cache source
   // (Amendment 0002 §A.2 — disposeImageSpec enforces the split).
   const imageSpecMeshes: Mesh[] = [];
+  // P4 3D-OBJECT — the primitive Mesh, tracked separately from `disposables`
+  // because setPrimitive swaps mesh.geometry in place (disposing the old one
+  // at swap time); cleanup must dispose whatever geometry is CURRENT.
+  const meshPrimitiveMeshes: Mesh[] = [];
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
@@ -323,7 +338,41 @@ export function defaultRenderModeFactory(
     // Build-time apply: radius/opacity live pre-resolve; window lands above.
     applyCurrentImageSpec();
   } else if (renderMode === 'mesh') {
-    if (node.meshUrl) {
+    if (node.meshPrimitive) {
+      // P4 3D-OBJECT (canvas-spec §5) — PRECEDENCE: a node carrying
+      // `meshPrimitive` renders the primitive; `meshUrl` stays the GLB lane
+      // for nodes without one (the GLB load below is skipped entirely).
+      //
+      // Material route is EXACTLY the meshUrl/GLB path's: §10 decision 7 —
+      // meshes are LIT by default (resolveReceivesLighting), the surface is a
+      // node-owned MeshPhysicalNodeMaterial built from the resolved spec via
+      // buildPhysicalMaterial + applyMaterialSpec, and lit meshes cast +
+      // receive shadows so the lighting rig's shadow path has occluders.
+      // Unlike the GLB lane this is fully synchronous: geometry is generated,
+      // so the artifact exists the moment createNode returns (spec §8).
+      const lit = resolveReceivesLighting(node);
+      const meshSpec = resolveMaterialSpec(node.materialSpec);
+      const physical = buildPhysicalMaterial(meshSpec);
+      applyMaterialSpec(physical, meshSpec);
+      const geo = buildPrimitiveGeometry(node.meshPrimitive);
+      const mesh = new Mesh(geo, physical);
+      mesh.name = `mesh-primitive:${node.nodeId}`;
+      if (lit) {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+      }
+      group.add(mesh);
+      materialsToDispose.push(physical as unknown as DisposableMaterial);
+      meshPrimitiveMeshes.push(mesh);
+      // Live-edit surface (instant, in-place — never a rebuild): dimension
+      // edits swap the geometry on the SAME Mesh; Material-tab writes land on
+      // the SAME physical material instance. The editor's AssembledSceneNode
+      // effect drives this exactly like textHandle / imageHandle.
+      group.userData.meshPrimitiveHandle = createMeshPrimitiveHandle(
+        mesh,
+        node.meshPrimitive,
+      );
+    } else if (node.meshUrl) {
       // §10 decision 7: meshes are LIT by default. When the node carries a
       // MaterialSpec, route the mesh material through buildPhysicalMaterial
       // (full PBR). Either way, lit meshes cast + receive shadows so the
@@ -506,6 +555,13 @@ export function defaultRenderModeFactory(
       try { disposeImageSpec(m); } catch { /* ignore */ }
     }
     imageSpecMeshes.length = 0;
+    // P4 3D-OBJECT — dispose whatever geometry is CURRENTLY mounted on the
+    // primitive Mesh (setPrimitive disposes superseded geometries at swap
+    // time; the material rides materialsToDispose below).
+    for (const m of meshPrimitiveMeshes) {
+      try { m.geometry.dispose(); } catch { /* ignore */ }
+    }
+    meshPrimitiveMeshes.length = 0;
     for (const geo of disposables) {
       try { geo.dispose(); } catch { /* ignore */ }
     }
