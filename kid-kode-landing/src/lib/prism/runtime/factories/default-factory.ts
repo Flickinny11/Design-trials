@@ -217,10 +217,25 @@ export function defaultRenderModeFactory(
     };
     imageSpecMeshes.push(mesh);
 
+    // FIDELITY-2 W3 — video texture lane (audit item 3, additive). When the
+    // node carries `videoUrl` AND the context wires a video loader, the
+    // VideoTexture takes precedence over the still image: the image (if any)
+    // loads as a placeholder, then the video replaces it once its first
+    // frame is decodable. `videoState.applied` guards the race where a
+    // slower image load would otherwise stomp the already-applied video map.
+    // ImageSpec note: `videoUrl` BYPASSES the imageSpec fit/crop window —
+    // applyImageSpec clones + windows still textures, and cloning a
+    // VideoTexture would double-drive the backing element. Texture-
+    // independent imageSpec effects applied at build time (corner radius,
+    // opacity) still hold; only the fit/crop window is skipped for video.
+    const videoState = { applied: false };
     if (sourceAsset) {
       void ctx.textureLoader
         .loadTexture(sourceAsset)
         .then((tex) => {
+          // FIDELITY-2 W3 — the video already landed; keep it (the image is
+          // only the placeholder in the video lane).
+          if (videoState.applied) return;
           // Read the material off the mesh (a radius upgrade may have swapped
           // it); identical to the old captured-`mat` write for default nodes.
           const m = mesh.material as unknown as DisposableMaterial;
@@ -231,6 +246,20 @@ export function defaultRenderModeFactory(
           applyCurrentImageSpec();
         })
         .catch(() => { /* swallow — decorative */ });
+    }
+    if (node.videoUrl && ctx.videoLoader) {
+      void ctx.videoLoader
+        .loadVideo(node.videoUrl)
+        .then((tex) => {
+          videoState.applied = true;
+          const m = mesh.material as unknown as DisposableMaterial;
+          m.map = tex;
+          m.needsUpdate = true;
+          // The video texture is loader-cache-owned (Amendment 0002 §A.2):
+          // cleanup below must NOT dispose it — the cache's dispose() pauses
+          // the element, clears src, and disposes the texture.
+        })
+        .catch(() => { /* swallow — the image placeholder (if any) stays */ });
     }
     // Build-time apply: radius/opacity are live even before the texture
     // resolves; the fit/crop window lands in the then() above.

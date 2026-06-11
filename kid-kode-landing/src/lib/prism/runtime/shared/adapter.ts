@@ -31,6 +31,9 @@ import type { NodeDrivers } from './driver-dispatch';
  *  both fields without leaking the cache surface into nodes. */
 export type NodeTextureLoader = Pick<LoaderCacheHandle, 'loadTexture'>;
 export type NodeGLBLoader = Pick<LoaderCacheHandle, 'loadGLB'>;
+// FIDELITY-2 W3 (audit item 3) — narrowed video lane. The same single
+// LoaderCacheHandle backs this field; nodes only see `loadVideo`.
+export type NodeVideoLoader = Pick<LoaderCacheHandle, 'loadVideo'>;
 
 export interface NodeContext {
   /** The single, bundled `three` module namespace (RT-SC-02 / INV-R1).
@@ -45,6 +48,11 @@ export interface NodeContext {
   textureLoader: NodeTextureLoader;
   /** GLB loader keyed by URL. Same URL yields the same `Promise<GLTF>`. */
   glbLoader: NodeGLBLoader;
+  /** FIDELITY-2 W3 (INV-18 additive) — video-texture loader keyed by URL.
+   *  Same URL yields the same `Promise<VideoTexture>`. OPTIONAL: legacy /
+   *  test contexts omit it and `videoUrl` nodes simply keep their still-image
+   *  texture (graceful degradation, no behavior change for existing graphs). */
+  videoLoader?: NodeVideoLoader;
   /** MSDF font atlas. Throws on createText() until ready. */
   fontAtlas: FontAtlasHandle;
   /** Cinematic primitives library, curried with the runtime

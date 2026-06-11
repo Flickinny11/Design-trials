@@ -393,22 +393,29 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     const s = get();
     const saveVersion = dirtyVersion;
     // The server expects HomeHubJson shape: { schemaVersion, hub, nodes, edges }.
-    // The store carries an array of hubs (the editor will eventually author
-    // multi-hub graphs); persist the FIRST hub plus its nodes/edges. Legal
-    // because the live-graph.json contract is single-hub today.
+    // FIDELITY-2 W3 (INV-18 additive): when the store carries MORE than one
+    // hub, persist ALL of them via the optional `hubs` array (multi-hub wire
+    // format) while keeping `hub: hubs[0]` for backward compat. A single-hub
+    // store sends the exact legacy payload (no `hubs` key) — bit-for-bit
+    // unchanged.
     const hub = s.hubs[0];
     if (!hub) {
       set({ isDirty: true });
       return { ok: false, error: 'no hub to persist' };
     }
+    const multiHub = s.hubs.length > 1;
+    const hubIds = new Set(s.hubs.map((h) => h.hubId));
     const graph: HomeHubJson = {
       schemaVersion: '0.1.0',
       hub,
+      ...(multiHub ? { hubs: s.hubs } : {}),
       // STEP5 — strip the editor-transient `dirty` build-freshness flag from the
       // persisted payload so a node never boots dirty on reload without a real
       // pending edit. `dirty` is live build state, not durable graph data.
+      // Multi-hub: include every node whose parentHubId belongs to a persisted
+      // hub (same orphan-stripping semantics, widened to all hubs).
       nodes: s.nodes
-        .filter((n) => n.parentHubId === hub.hubId)
+        .filter((n) => (multiHub ? hubIds.has(n.parentHubId) : n.parentHubId === hub.hubId))
         .map(({ dirty: _dirty, ...n }) => n as PrismNode),
       edges: s.edges,
       // EBR2-E-04 fix — SC-006: the GraphSource invariant ("exactly one

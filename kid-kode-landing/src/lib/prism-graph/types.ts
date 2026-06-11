@@ -620,6 +620,14 @@ export interface PrismNode {
   renderMode?: RenderMode;
   depthMapUrl?: string | null;
   meshUrl?: string | null;
+  // FIDELITY-2 W3 / audit item 3 (INV-18 additive). Optional video texture
+  // source for image-bearing render modes (sprite / plane). When set, the
+  // runtime's LoaderCache `loadVideo` lane wraps the URL in a
+  // THREE.VideoTexture (muted, looping, autoplaying, SRGB) and it replaces
+  // the still-image texture once the first frame is decodable; the still
+  // image (visual.sourceAsset) acts as the placeholder until then. Absent /
+  // null → image-only, bit-for-bit legacy behavior.
+  videoUrl?: string | null;
   cinematicPrimitives?: CinematicPrimitiveRef[];
   scenePosition?: ScenePosition;
   // EB-05-03 / §6 Phase 5 SC-025, Phase 8 SC-041, SC-042 (INV-18 additive).
@@ -923,6 +931,13 @@ export interface GraphSource {
 export interface HomeHubJson {
   schemaVersion: string;
   hub: PrismHub;
+  // FIDELITY-2 W3 / audit "What Must Change" item 1 (INV-18 additive): the
+  // optional multi-hub wire carrier. When present (non-empty), loaders use it
+  // verbatim and `hub` remains the legacy single-hub mirror (=== hubs[0]) for
+  // backward compat. Nodes stay one flat array — every PrismNode already
+  // names its hub via `parentHubId`, so no per-hub node grouping is needed.
+  // Legacy single-hub payloads omit this field and parse bit-for-bit.
+  hubs?: PrismHub[];
   nodes: PrismNode[];
   edges: PrismEdge[];
   // Editor-build §5 / SC-006: optional carrier for the App_Name_World root.

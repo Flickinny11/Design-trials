@@ -36,6 +36,7 @@ import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverla
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
+import { ModeTransitionConductor } from '@/components/editor/chrome-layer';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
@@ -636,6 +637,9 @@ export default function Page() {
     <main className="relative w-screen h-screen overflow-hidden bg-ds-void">
       {/* SVG displacement defs for .ds-glass--refract overlays (mounted once). */}
       <RefractionDefs />
+      {/* UI-FIDELITY-2 — mode-morph choreography: travelling refractive sweep
+          pane + staggered chrome reveal + boot light pass (t2 only). */}
+      <ModeTransitionConductor />
       {/* Ambient observatory backdrop — warm brass starlight TL, cold ice BR. */}
       <div
         className="absolute inset-0 pointer-events-none opacity-75"

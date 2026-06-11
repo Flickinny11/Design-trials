@@ -68,9 +68,21 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 }
 
 async function handlePersist(body: PersistBody): Promise<Response> {
-  if (!isPlainObject(body.graph) || !isPlainObject(body.graph.hub) || !Array.isArray(body.graph.nodes)) {
+  // FIDELITY-2 W3 (INV-18 additive): accept EITHER the legacy `hub` singular
+  // OR the multi-hub `hubs` array (non-empty). The atomic write below spreads
+  // `body.graph` over the existing file, so whichever form the payload
+  // carried (`hub`, `hubs`, or both) is persisted verbatim.
+  if (!isPlainObject(body.graph) || !Array.isArray(body.graph.nodes)) {
     return jsonResponse(
-      { ok: false, error: 'persist: body.graph must include hub and nodes[]' },
+      { ok: false, error: 'persist: body.graph must include hub (or non-empty hubs[]) and nodes[]' },
+      400,
+    );
+  }
+  const hasHub = isPlainObject(body.graph.hub);
+  const hasHubs = Array.isArray(body.graph.hubs) && body.graph.hubs.length > 0;
+  if (!hasHub && !hasHubs) {
+    return jsonResponse(
+      { ok: false, error: 'persist: body.graph must include hub (or non-empty hubs[]) and nodes[]' },
       400,
     );
   }

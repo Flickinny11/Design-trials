@@ -17,8 +17,9 @@ import type {
 
 /**
  * Map a parsed `home-hub.json` document to the canonical GraphSource shape the
- * editor reads through. The JSON is single-hub today; the result is a
- * one-entry `hubs` array so the multi-hub future is naturally extensible.
+ * editor reads through. Legacy payloads carry `hub` singular and the result
+ * is a one-entry `hubs` array; FIDELITY-2 W3 payloads may carry an optional
+ * `hubs` array (multi-hub wire format), consumed verbatim when present.
  *
  * Editor-build §5 / SC-006: rootNodes is threaded through when present so the
  * editor sees the App_Name_World instance after the initial fetch. Legacy
@@ -28,9 +29,18 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
   if (!json || typeof json !== 'object') {
     throw new Error('loadFromHomeHub: expected a parsed home-hub.json object');
   }
-  const hub = json.hub as PrismHub | undefined;
-  if (!hub || typeof hub !== 'object' || !hub.hubId) {
-    throw new Error('loadFromHomeHub: json.hub is missing or malformed');
+  // FIDELITY-2 W3 (INV-18 additive): when the optional multi-hub carrier is
+  // present and non-empty, use it verbatim. Legacy single-hub payloads (no
+  // `hubs` key) fall through to the original `hub`-singular path unchanged.
+  let hubs: PrismHub[];
+  if (Array.isArray(json.hubs) && json.hubs.length > 0) {
+    hubs = json.hubs as PrismHub[];
+  } else {
+    const hub = json.hub as PrismHub | undefined;
+    if (!hub || typeof hub !== 'object' || !hub.hubId) {
+      throw new Error('loadFromHomeHub: json.hub is missing or malformed');
+    }
+    hubs = [hub];
   }
   const nodes = Array.isArray(json.nodes) ? (json.nodes as PrismNode[]) : [];
   const edges = Array.isArray(json.edges) ? (json.edges as PrismEdge[]) : [];
@@ -38,7 +48,7 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
     ? (json.rootNodes as PrismRootNode[])
     : undefined;
   const out: GraphSource = {
-    hubs: [hub],
+    hubs,
     nodes,
     edges,
   };

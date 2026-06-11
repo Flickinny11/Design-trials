@@ -24,6 +24,7 @@ import {
   Texture,
   type Object3D,
 } from 'three';
+import * as THREE_NS from 'three';
 import {
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
@@ -72,6 +73,7 @@ function makeCtx(overrides: Partial<NodeContext> = {}): {
   };
 
   const ctx: NodeContext = {
+    THREE: THREE_NS,
     textureLoader: {
       loadTexture: async (url: string) => {
         textureLoadCalls.push(url);

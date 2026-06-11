@@ -259,6 +259,25 @@ export default function PrismHost({
       previousHubRailRef.current = null;
       return;
     }
+
+    // FIDELITY-2 W3 / audit item 2 — hub activation on navigation. The rail
+    // swap below moves the camera, but only the HubManager mounts hub groups
+    // under the scene (mount-graph activates just the entry hub at mount).
+    // Activate the destination hub at transit START so its group is mounted
+    // by the time the camera arrives. HubManager.activate() detaches the
+    // prior hub's group WITHOUT cleanup (non-destructive reparenting, hub
+    // manager §12), so Object3D identities survive a round trip. Guards:
+    // skip when already active (re-activating would re-fire 'load'/'inview'
+    // primitives via onActivate) and skip hubs the manager never registered
+    // (registration happens once at mount; legacy single-hub graphs always
+    // hit the already-active guard, leaving their behavior unchanged).
+    if (
+      live.hubManager.getActive() !== hub.hubId &&
+      live.hubManager.list().includes(hub.hubId)
+    ) {
+      live.hubManager.activate(hub.hubId);
+    }
+
     const hubNodes = source.nodes.filter((n) => n.parentHubId === hub.hubId);
 
     // INV-23: bounded damped-cinematic cameraRail. Prop-supplied when the

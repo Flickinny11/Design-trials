@@ -49,9 +49,15 @@ function addIfPresent(zip, entries, archivePath, filePath) {
 }
 
 function toCompiledGraph(source) {
+  // FIDELITY-2 W3 (INV-18 additive): accept the optional multi-hub `hubs`
+  // array when present (compile every hub); legacy single-hub sources keep
+  // wrapping `hub` singular — bit-for-bit unchanged output.
+  const hubs = Array.isArray(source.hubs) && source.hubs.length > 0
+    ? source.hubs
+    : [source.hub];
   return {
     version: PRISM_VERSION,
-    hubs: [source.hub],
+    hubs,
     nodes: source.nodes,
     edges: source.edges,
   };
@@ -82,7 +88,11 @@ async function main() {
   addIfPresent(zip, entries, 'assets/font-inter.msdf.png', msdfPng);
   addIfPresent(zip, entries, 'assets/font-inter.msdf.json', msdfJson);
 
-  addPublicAsset(zip, entries, source.hub?.layout?.mockupUrl);
+  // FIDELITY-2 W3 — embed every compiled hub's mockup (single-hub sources
+  // yield the identical single addPublicAsset call as before).
+  for (const hub of compiled.hubs) {
+    addPublicAsset(zip, entries, hub?.layout?.mockupUrl);
+  }
   for (const node of compiled.nodes) {
     addPublicAsset(zip, entries, node.visual?.sourceAsset);
     addPublicAsset(zip, entries, node.depthMapUrl);
@@ -106,8 +116,10 @@ async function main() {
   const manifest = {
     prismVersion: PRISM_VERSION,
     playerVersionRequired: '>=0.1.0 <0.2.0',
-    entryHub: source.hub.hubId,
-    hubs: [source.hub.hubId],
+    // FIDELITY-2 W3 — entryHub is the FIRST compiled hub; `hubs` lists all of
+    // them. Single-hub sources produce the same manifest values as before.
+    entryHub: compiled.hubs[0].hubId,
+    hubs: compiled.hubs.map((h) => h.hubId),
     nodeCount: compiled.nodes.length,
     services: {
       main: {

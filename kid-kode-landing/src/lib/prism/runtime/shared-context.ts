@@ -213,6 +213,9 @@ export function getSharedNodeContext(opts: {
     THREE,
     textureLoader: { loadTexture: loaders.loadTexture },
     glbLoader: { loadGLB: loaders.loadGLB },
+    // FIDELITY-2 W3 — the video lane rides the SAME shared loader cache, so
+    // the same URL yields the same VideoTexture across every surface.
+    videoLoader: { loadVideo: loaders.loadVideo },
     fontAtlas,
     primitives,
     // STEP7 — when running primitives (the built-state surface), route `emit`
