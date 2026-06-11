@@ -38,11 +38,10 @@ import {
 import { __resetSharedContext } from '@/lib/prism/runtime/shared-context';
 import type { HomeHubJson, PrismNode } from '@/lib/prism-graph/types';
 
-const fixturePath = resolve(
-  __dirname,
-  '..', '..', '..',
-  'public/prism-mock/home/live-graph.json',
-);
+// W3: frozen copy of the 6-node canonical seed (the LIVE graph is now the
+// ORRERY showcase and evolves with design work — this contract test pins the
+// known fixture instead of tracking demo content).
+const fixturePath = resolve(__dirname, 'fixtures', 'hl10-live-graph.fixture.json');
 const liveGraph = JSON.parse(readFileSync(fixturePath, 'utf8')) as HomeHubJson;
 
 beforeEach(() => {

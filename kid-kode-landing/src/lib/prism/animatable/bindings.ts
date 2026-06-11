@@ -237,30 +237,63 @@ export function attachAnimationBindings(
   const teardowns: Array<() => void> = [];
   const myResults = new Set<PrimitiveResult>();
 
-  for (const binding of bindings) {
+  const pending: AnimationBinding[] = [];
+  const tryAttach = (binding: AnimationBinding): boolean => {
     try {
       const attached = attachOneBinding(node, root, drivers, binding);
-      if (!attached) continue;
-      players.push(attached.player);
-      teardowns.push(attached.dispose);
-      myResults.add(attached.player.result);
+      if (attached === 'no-subject') return false; // retryable — artifact still streaming in
+      if (attached) {
+        players.push(attached.player);
+        teardowns.push(attached.dispose);
+        myResults.add(attached.player.result);
+        (root.userData as Record<string, unknown>)[BINDING_PLAYERS_KEY] = players;
+      }
+      return true; // attached OR permanently skipped (unknown/unmountable)
     } catch (err) {
       // A broken binding must never crash the scene — skip it.
       console.debug(
         `[animation-bindings] '${binding.primitive}' (${binding.id}) on ${node.nodeId} failed to attach — skipped:`,
         err,
       );
+      return true;
     }
+  };
+
+  for (const binding of bindings) {
+    if (!tryAttach(binding)) pending.push(binding);
   }
 
-  if (players.length > 0) {
-    (root.userData as Record<string, unknown>)[BINDING_PLAYERS_KEY] = players;
+  // W3 — late-subject retry: GLB meshes and MSDF glyphs mount asynchronously
+  // AFTER the attach effect runs; without this, their bindings were skipped
+  // forever ("no mountable subject"). Poll briefly until the subject lands.
+  let retryTimer: ReturnType<typeof setInterval> | null = null;
+  if (pending.length > 0) {
+    let tries = 0;
+    retryTimer = setInterval(() => {
+      tries++;
+      for (let i = pending.length - 1; i >= 0; i--) {
+        if (tryAttach(pending[i])) pending.splice(i, 1);
+      }
+      if (pending.length === 0 || tries >= 80) {
+        if (pending.length > 0) {
+          console.debug(
+            `[animation-bindings] ${pending.length} binding(s) on ${node.nodeId} never found a subject (artifact empty after retries)`,
+          );
+        }
+        if (retryTimer) clearInterval(retryTimer);
+        retryTimer = null;
+      }
+    }, 250);
   }
 
   let detached = false;
   return () => {
     if (detached) return;
     detached = true;
+    if (retryTimer) {
+      clearInterval(retryTimer);
+      retryTimer = null;
+    }
     for (const t of teardowns) {
       try {
         t();
@@ -287,7 +320,7 @@ function attachOneBinding(
   root: Object3D,
   drivers: NodeDrivers,
   binding: AnimationBinding,
-): { player: AnimationBindingPlayer; dispose: () => void } | null {
+): { player: AnimationBindingPlayer; dispose: () => void } | null | 'no-subject' {
   const def = getPrimitive(binding.primitive);
   if (!def) {
     // Forward-compat: a graph authored against a future catalog must not crash.
@@ -307,11 +340,10 @@ function attachOneBinding(
   // the artifact root (subject:'empty' definitions self-generate into it).
   const subject = def.subject === 'empty' ? null : resolveMountedSubject(node, root);
   if (def.subject !== 'empty' && !subject) {
-    // e.g. a cold-atlas text node whose glyphs haven't mounted yet.
-    console.debug(
-      `[animation-bindings] no mountable subject for '${def.name}' on ${node.nodeId} — skipped`,
-    );
-    return null;
+    // e.g. a cold-atlas text node whose glyphs haven't mounted yet, or a GLB
+    // whose mesh is still streaming in — the caller retries these (W3 fix:
+    // async artifacts used to lose their bindings permanently).
+    return 'no-subject';
   }
 
   const object = new Group();

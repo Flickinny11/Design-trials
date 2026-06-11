@@ -385,6 +385,22 @@ export function defaultRenderModeFactory(
       const meshSpec = resolveMaterialSpec(node.materialSpec);
       const physical = buildPhysicalMaterial(meshSpec);
       applyMaterialSpec(physical, meshSpec);
+      // W3 (INV-18 additive) — pour a base-color map onto the primitive when
+      // the spec carries one (async via the cached loader; the lit material
+      // shows resolved baseColor until the texture lands).
+      const baseMapUrl = node.materialSpec?.baseColorMapUrl;
+      if (baseMapUrl) {
+        ctx.textureLoader
+          .loadTexture(baseMapUrl)
+          .then((tex) => {
+            (tex as { colorSpace?: string }).colorSpace = 'srgb';
+            (physical as unknown as { map: unknown; needsUpdate: boolean }).map = tex;
+            (physical as unknown as { needsUpdate: boolean }).needsUpdate = true;
+          })
+          .catch(() => {
+            /* missing map → resolved baseColor stands */
+          });
+      }
       const geo = buildPrimitiveGeometry(node.meshPrimitive);
       const mesh = new Mesh(geo, physical);
       mesh.name = `mesh-primitive:${node.nodeId}`;

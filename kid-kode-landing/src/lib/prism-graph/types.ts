@@ -254,6 +254,10 @@ export interface MaterialSpec {
   /** Optional texture URLs (loaded via ctx loaders, cached). */
   normalMapUrl?: string | null;
   displacementMapUrl?: string | null;
+  /** Base-color/albedo map (sRGB). Additive (INV-18) — UI-FIDELITY-2 W3:
+   *  lets generated surface scans pour onto primitive geometry (e.g. the
+   *  showcase planets' lapis/brass/obsidian equirect textures on spheres). */
+  baseColorMapUrl?: string | null;
 }
 
 export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {

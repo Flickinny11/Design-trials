@@ -49,7 +49,9 @@ function reducedMotion(): boolean {
 
 export function ModeTransitionConductor() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const prevMode = useRef(viewMode);
+  const prevHub = useRef(activeHubId);
   const paneRef = useRef<HTMLDivElement | null>(null);
   // The sweep pane is REAL refractive glass — strongest frost, hero accent.
   const paneSlab = useChromeSlab({ material: 'glass', radius: 24, frost: 0.85, accent: 1, borderPx: 2 });
@@ -87,6 +89,27 @@ export function ModeTransitionConductor() {
       cancelled = true;
     };
   }, []);
+
+  // ── Hub morphs (preview-app chapter navigation): the same travelling glass
+  // pane, gentler — hub changes read as turning a page of the same book.
+  useEffect(() => {
+    const from = prevHub.current;
+    prevHub.current = activeHubId;
+    if (from === activeHubId || !from || !activeHubId) return;
+    if (useGraphEditorStore.getState().viewMode !== 'preview-app') return;
+    if (detectChromeTier() !== 't2' || reducedMotion()) return;
+    const pane = paneRef.current;
+    if (!pane) return;
+    const dir = activeHubId > from ? 1 : -1; // hub ids carry s1..s5 narrative order
+    gsap.killTweensOf(pane);
+    gsap.set(pane, { x: dir > 0 ? '-130%' : '130%', opacity: 1 });
+    gsap.to(pane, {
+      x: dir > 0 ? '130%' : '-130%',
+      duration: 0.78,
+      ease: 'power2.inOut',
+      onComplete: () => gsap.set(pane, { x: '-130%', opacity: 0 }),
+    });
+  }, [activeHubId]);
 
   // ── Mode morphs.
   useEffect(() => {

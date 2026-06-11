@@ -1575,19 +1575,26 @@ function SceneControlsBridge({
   );
 }
 
-function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
+/** One loaded backdrop plane (texture lazily fetched; disposed on change). */
+function SceneBackdropLayer({
+  url,
+  z,
+  opacity,
+  width,
+  height,
+}: {
+  url: string;
+  z: number;
+  opacity: number;
+  width: number;
+  height: number;
+}) {
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
-  const mockupUrl = hub?.layout?.mockupUrl ?? null;
-
   useEffect(() => {
-    if (!mockupUrl) {
-      setTexture(null);
-      return;
-    }
     let cancelled = false;
     const loader = new THREE.TextureLoader();
     loader.load(
-      mockupUrl,
+      url,
       (tex) => {
         if (cancelled) {
           tex.dispose();
@@ -1607,21 +1614,70 @@ function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
     return () => {
       cancelled = true;
     };
-  }, [mockupUrl]);
-
+  }, [url]);
   useEffect(() => () => texture?.dispose(), [texture]);
+  if (!texture) return null;
+  return (
+    <mesh position={[0, 0, z]} name="hub:scene-backdrop-layer">
+      <planeGeometry args={[width, height]} />
+      <meshBasicMaterial
+        map={texture}
+        color={'#ffffff' /* sanctioned: no-tint texture passthrough */}
+        transparent
+        opacity={opacity}
+        toneMapped={false}
+      />
+    </mesh>
+  );
+}
 
+function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
+  const mockupUrl = hub?.layout?.mockupUrl ?? null;
   const aspect = hub?.layout?.viewportWidth && hub?.layout?.viewportHeight
     ? hub.layout.viewportWidth / hub.layout.viewportHeight
     : 16 / 9;
   const width = 10;
   const height = width / aspect;
 
+  // UI-FIDELITY-2 W3 — the assembled view honors the hub's `background[]`
+  // layer stack (SC-036/SC-037 source of truth), matching compiled-view.ts:
+  // layers draw back-to-front behind the content with per-layer opacity;
+  // legacy `layout.mockupUrl` remains the single-layer fallback. The ink
+  // plane stays at the very back so a hub with no loaded layers never goes
+  // void-transparent.
+  const layers =
+    hub?.background && hub.background.length > 0
+      ? hub.background
+          .filter((l) => !!l.sourceUrl)
+          .map((l) => ({
+            id: l.id,
+            url: l.sourceUrl as string,
+            // source z is "behind-ness" (more negative = deeper); keep every
+            // layer behind content (-2) and in front of the ink floor (-2.6).
+            z: -2 + Math.max(-0.55, Math.min(0, (l.z ?? 0) * 0.15)),
+            opacity: l.opacity ?? 1,
+          }))
+      : mockupUrl
+        ? [{ id: 'legacy-mockup', url: mockupUrl, z: -2, opacity: 1 }]
+        : [];
+
   return (
-    <mesh position={[0, 0, -2]} name="hub:scene-backdrop">
-      <planeGeometry args={[width, height]} />
-      <meshBasicMaterial map={texture ?? undefined} color={texture ? '#ffffff' /* sanctioned: no-tint texture passthrough */ : DS.ink} transparent opacity={1} toneMapped={false} />
-    </mesh>
+    <group name="hub:scene-backdrop">
+      <mesh position={[0, 0, -2.6]} name="hub:scene-backdrop-ink">
+        <planeGeometry args={[width * 1.06, height * 1.06]} />
+        <meshBasicMaterial color={DS.ink} transparent opacity={1} toneMapped={false} />
+      </mesh>
+      {layers.map((l) => (
+        <SceneBackdropLayer
+          key={`${l.id}:${l.url}`}
+          url={l.url}
+          z={l.z}
+          opacity={l.opacity}
+          width={width}
+          height={height}
+        />
+      ))}
+    </group>
   );
 }
 

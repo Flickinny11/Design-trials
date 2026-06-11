@@ -504,7 +504,10 @@ export default function Page() {
         __PRISM_EDITOR_PREVIEW_APP_NAV__?: PreviewAppNav;
       }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
     };
-  }, [viewMode]);
+    // sourceHubs.length: the live graph loads async — at first mount the
+    // compile sees 0 hubs and entry resolution no-ops; re-run once hubs land
+    // so boot always resolves the entry hub (UI-FIDELITY-2 W3 boot-null fix).
+  }, [viewMode, sourceHubs.length]);
 
   // EB-10-02 — when the store's activeHubId changes while in preview-app
   // (e.g. via the Prev/Next buttons below or programmatic setState), keep
