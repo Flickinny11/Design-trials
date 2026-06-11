@@ -214,12 +214,21 @@ describe('EB-08-05 — Inspector wires "save as keyframe" in the Animation tab',
     expect(inspectorSrc).toMatch(/node\.keyframes/);
   });
 
-  it('Inspector.tsx writes captured keyframes through updateNode({ keyframes: … })', () => {
-    // Persistence path: the capture must flow through the graph-source
-    // store's updateNode mutator so autosave + the inner runtime see it.
-    // Match across whitespace/newlines so the multi-line call form is
-    // accepted.
-    expect(inspectorSrc).toMatch(/updateNode\([\s\S]*?keyframes\s*:/);
+  it('Inspector.tsx writes captured keyframes through usePreviewStateStore (FP-15 / SC-072) — never updateNode directly', () => {
+    // EBR2-E-02 / §R2-E SC-072 + FP-15: Inspector tab writes route through
+    // the ephemeral usePreviewStateStore buffer; the Save button is what
+    // later commits the buffer to the source store (EBR2-E-03). The capture
+    // therefore lands as a preview-state patch carrying `keyframes:`. (The
+    // original assertion pinned updateNode({ keyframes }) — that direct
+    // source-store write is the exact FP-15 bypass the hook now blocks.)
+    expect(inspectorSrc).toMatch(
+      /usePreviewStateStore\.getState\(\)\.set\(\s*[\w.]+\s*,\s*\{[\s\S]{0,200}?keyframes\s*:/,
+    );
+    // FP-15 negative pin: the forbidden direct-source-store call form must
+    // not return to Inspector.tsx (any tab).
+    expect(inspectorSrc).not.toMatch(/useGraphSourceStore\.getState\(\)\.updateNode\s*\(/);
+    // And no updateNode call (however obtained) may carry a keyframes patch.
+    expect(inspectorSrc).not.toMatch(/updateNode\s*\([\s\S]{0,120}?\{\s*keyframes\s*:/);
   });
 });
 

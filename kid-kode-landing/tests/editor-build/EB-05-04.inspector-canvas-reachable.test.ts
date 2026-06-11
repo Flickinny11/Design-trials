@@ -8,10 +8,13 @@
 //   "From canvas mode, opening a node's inspector preserves all tabs;
 //    animation tab's keyframe UI is reachable without changing viewMode."
 //
-// Coverage in this file (source-level guarantees):
-//   1. The desktop branch of `src/app/page.tsx` mounts RightPane whenever
-//      `viewMode === 'canvas'` — i.e. the inspector is reachable in canvas
-//      mode without first leaving the mode. This is the SC-026 entrypoint.
+// Coverage in this file (source-level guarantees, as amended by the
+// canonical unified-scene architecture — RT-SC-03 / INV-R3 / FP-R5/FP-R6):
+//   1. `src/app/page.tsx` mounts ONE GraphScene for all three modes and
+//      renders the editor overlay set (incl. RightPane → Inspector) whenever
+//      the user is NOT in preview-app — so the inspector is reachable in
+//      canvas mode without leaving the mode. The split-pane-era
+//      showsSplit/showsGraph derivations are superseded and must not return.
 //   2. The Inspector body renders all 7 canonical tabs (including
 //      'animation') unconditionally — no viewMode gating hides any tab when
 //      the user is in canvas mode (corollary of SC-026 + SC-020).
@@ -22,7 +25,9 @@
 //   4. Inspector.tsx contains no `setViewMode(` call inside the AnimationTab
 //      (or any tab) that would silently flip viewMode when the user
 //      interacts with keyframe UI from canvas mode. The only setViewMode
-//      call in Inspector.tsx is the explicit "Preview in App UI" button.
+//      calls in Inspector.tsx are explicit user actions: the "Preview in
+//      App UI" button (→ 'preview-app') and the Clone auto-switch
+//      (→ 'galaxy', SC-075).
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -47,34 +52,38 @@ const CANONICAL_TABS: InspectorTab[] = [
   'history',
 ];
 
-describe('EB-05-04 — page.tsx mounts RightPane in canvas mode (SC-026 entrypoint)', () => {
-  it('derives showsSplit from viewMode === "canvas"', () => {
-    // The split-pane branch (which mounts the graph pane + RightPane) must
-    // be active in canvas mode so the inspector is reachable without
-    // leaving the mode.
-    expect(pageSrc).toMatch(/showsSplit\s*=\s*viewMode\s*===\s*['"]canvas['"]/);
+describe('EB-05-04 — page.tsx keeps the inspector reachable in canvas mode (SC-026 entrypoint, unified scene)', () => {
+  it('the split-pane-era showsSplit/showsGraph derivations are gone (FP-R6 — one scene, modes are states not panes)', () => {
+    // The Round-1 page derived showsSplit/showsGraph and mounted a separate
+    // graph pane behind them. The canonical architecture mounts ONE
+    // GraphScene unconditionally; either derivation returning is drift.
+    expect(pageSrc).not.toMatch(/showsSplit/);
+    expect(pageSrc).not.toMatch(/showsGraph/);
   });
 
-  it('includes canvas (via showsSplit) in showsGraph so the graph pane mounts', () => {
-    // showsGraph guards the JSX block that mounts <RightPane />. Canvas
-    // mode must be part of this derived flag, otherwise the inspector
-    // would disappear the moment the user enters canvas.
-    const match = pageSrc.match(/showsGraph\s*=\s*([^;]+);/);
-    expect(match).not.toBeNull();
-    expect(match![1]).toMatch(/showsSplit/);
+  it('mounts ONE unconditional GraphScene inside the graph pane (RT-SC-03 / INV-R3)', () => {
+    // GraphScene mounts in every mode; viewMode drives what renders INSIDE
+    // it. No <PrismHost> compiled mount may reappear in page.tsx (FP-R5).
+    expect(pageSrc).toMatch(/data-pane="graph"/);
+    expect(pageSrc).toMatch(/<GraphScene\s*\/>/);
+    expect(pageSrc).not.toMatch(/<PrismHost\b/);
   });
 
-  it('renders <RightPane /> inside the showsGraph branch (desktop)', () => {
-    // The desktop branch wraps the graph + overlays in `{showsGraph && (...)}`.
-    // Inspector mount lives inside this block.
-    const guardIdx = pageSrc.indexOf('{showsGraph && (');
+  it('renders <RightPane /> inside the !isPreviewApp overlay block — reachable from canvas without leaving the mode', () => {
+    // Editor chrome (TopBar, RightPane → Inspector, toolbar) renders whenever
+    // the user is NOT in preview-app, i.e. in BOTH galaxy and canvas. The
+    // inspector therefore stays reachable in canvas mode (SC-026), and
+    // preview-app reads as the running app with chrome hidden (INV-R4).
+    const guardIdx = pageSrc.indexOf('{!isPreviewApp && (');
     expect(guardIdx).toBeGreaterThan(-1);
-    // Find the matching closing for this conditional block.
     const tail = pageSrc.slice(guardIdx);
     const closeIdx = tail.indexOf(')}');
     expect(closeIdx).toBeGreaterThan(-1);
     const block = tail.slice(0, closeIdx);
     expect(block).toMatch(/<RightPane\s*\/>/);
+    // The overlay block must not be additionally gated on viewMode ===
+    // 'canvas' only — galaxy keeps the inspector too (mode-agnostic chrome).
+    expect(block).not.toMatch(/viewMode\s*===\s*['"]canvas['"]\s*&&\s*<RightPane/);
   });
 });
 
@@ -130,21 +139,29 @@ describe('EB-05-04 — AnimationTab keyframe UI is reachable without viewMode ch
   });
 });
 
-describe('EB-05-04 — only the explicit "Preview in App UI" button calls setViewMode (SC-026 corollary)', () => {
-  it('setViewMode in Inspector.tsx is bound only to data-role="preview-in-app-ui"', () => {
-    // There may be one setViewMode call in Inspector.tsx for the explicit
-    // "Preview in App UI" affordance — that is opt-in user action, not
-    // implicit viewMode flipping. Any *other* setViewMode call would
-    // violate the SC-026 "without changing viewMode" clause.
-    const calls = [...inspectorSrc.matchAll(/setViewMode\s*\(/g)];
-    // 0 or 1 call is acceptable (1 for the preview button; 0 if removed).
-    expect(calls.length).toBeLessThanOrEqual(1);
-    if (calls.length === 1) {
-      // Confirm the single call belongs to the preview-in-app-ui handler.
-      // Walk back ~300 chars to find the role marker / handler function.
-      const idx = calls[0].index!;
+describe('EB-05-04 — setViewMode in Inspector.tsx fires only on explicit user actions (SC-026 corollary)', () => {
+  it('every setViewMode call is a canonical-3 literal inside an explicit handler (Clone → galaxy per SC-075; Preview in App UI → preview-app per RA-06b)', () => {
+    // SC-026's "without changing viewMode" clause forbids IMPLICIT mode
+    // flips (e.g. keyframe UI silently leaving canvas). Two explicit,
+    // user-initiated affordances are the only legal call sites:
+    //   - handleClone: auto-switch to 'galaxy' so the user can re-parent
+    //     the fresh clone (SC-075).
+    //   - handlePreviewInAppUi: 'preview-app' (preview-hub folded in,
+    //     RA-06b).
+    const literalCalls = [
+      ...inspectorSrc.matchAll(/setViewMode\s*\(\s*['"]([a-z-]+)['"]\s*\)/g),
+    ];
+    const allCalls = [...inspectorSrc.matchAll(/setViewMode\s*\(/g)];
+    // No variable-argument calls may hide a non-canonical target.
+    expect(allCalls.length).toBe(literalCalls.length);
+    expect(literalCalls.length).toBeLessThanOrEqual(2);
+    for (const call of literalCalls) {
+      // FP-12 — only canonical-3 literals; an Inspector action never lands
+      // the user in a superseded mode.
+      expect(['galaxy', 'preview-app']).toContain(call[1]);
+      const idx = call.index!;
       const ancestor = inspectorSrc.slice(Math.max(0, idx - 600), idx);
-      expect(ancestor).toMatch(/preview-in-app-ui|handlePreviewInAppUi/);
+      expect(ancestor).toMatch(/handleClone|handlePreviewInAppUi|preview-in-app-ui/);
     }
   });
 });

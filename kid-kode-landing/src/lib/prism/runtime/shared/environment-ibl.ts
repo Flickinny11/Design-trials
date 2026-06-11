@@ -48,8 +48,14 @@ export function buildEnvironmentIBL(renderer: IBLRenderer): EnvironmentIBLHandle
   let fromPMREM = false;
   try {
     const pmrem = new PMREMGenerator(renderer as never);
-    (pmrem as unknown as { compileEquirectangularShader?: () => void })
+    // On the three/webgpu build this warm-up awaits renderer.compile()
+    // internally and returns a promise — a rejection would otherwise escape
+    // this try/catch as an app-level unhandled rejection (P5 finding).
+    const warmup = (pmrem as unknown as { compileEquirectangularShader?: () => unknown })
       .compileEquirectangularShader?.();
+    if (warmup && typeof (warmup as Promise<unknown>).catch === 'function') {
+      (warmup as Promise<unknown>).catch(() => { /* IBL falls back below */ });
+    }
     const envScene = new RoomEnvironment();
     texture = pmrem.fromScene(envScene as never, 0.04).texture;
     pmrem.dispose();

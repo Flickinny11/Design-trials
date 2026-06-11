@@ -2055,7 +2055,44 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   const ct = readCanvasTransform(composedNode);
   const w = composedNode.visual?.transform?.width ?? 0.35;
   const h = composedNode.visual?.transform?.height ?? 0.35;
-  const ringSize = Math.max(w, h, 0.25) * 0.62;
+  // P5 punch-list (P4 advocate flag 2026-06-11) — the ring used to size ONCE
+  // from the schema envelope (visual.transform), so a live reshape (the
+  // meshPrimitive dimension faders, an imageSpec fit change, a rebuild into a
+  // different artifact) left it stale around the new silhouette. Measure the
+  // mounted artifact's first mesh boundingSphere inside the same effects that
+  // apply those reshapes (below) and keep the envelope as the pre-measure
+  // fallback. State-gated behind an epsilon so it updates only on real
+  // reshapes — never per frame.
+  const [measuredRing, setMeasuredRing] = useState<number | null>(null);
+  const measureArtifactRing = () => {
+    const g = popRef.current;
+    if (!g) return;
+    let firstMesh: THREE.Mesh | null = null;
+    g.traverse((obj) => {
+      if (!firstMesh && (obj as THREE.Mesh).isMesh) firstMesh = obj as THREE.Mesh;
+    });
+    if (!firstMesh) return; // no mesh mounted (stage-0 bubble path) — keep fallback
+    const mesh: THREE.Mesh = firstMesh;
+    const geom = mesh.geometry;
+    if (!geom.boundingSphere) geom.computeBoundingSphere();
+    const radius = geom.boundingSphere?.radius;
+    if (!radius || !Number.isFinite(radius)) return;
+    // Accumulate scale from the mesh up to the pop wrapper so internally
+    // scaled artifacts measure true (the wrapper's own build-pop scale and
+    // the outer scenePosition/canvasTransform scales stay excluded — the
+    // ring lives in that same outer space and scales with it).
+    let s = 1;
+    let walker: THREE.Object3D | null = mesh;
+    while (walker && walker !== g) {
+      s *= Math.max(Math.abs(walker.scale.x), Math.abs(walker.scale.y), Math.abs(walker.scale.z));
+      walker = walker.parent;
+    }
+    // 0.9 × boundingSphere radius ≈ the old envelope sizing for a square
+    // plane (max(w,h)·0.62), so unreshaped nodes keep their familiar ring.
+    const next = Math.max(radius * s * 0.9, 0.155);
+    setMeasuredRing((cur) => (cur !== null && Math.abs(cur - next) < 0.01 ? cur : next));
+  };
+  const ringSize = measuredRing ?? Math.max(w, h, 0.25) * 0.62;
 
   // STEP6 scope item 3 — once-per-build realization pop (see poppedBuilds note).
   const rebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion[node.nodeId] ?? 0);
@@ -2107,6 +2144,9 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
         obj.receiveShadow = true;
       }
     });
+    // P5 — initial ring measurement for this build (artifact just mounted).
+    measureArtifactRing();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the build identity
   }, [buildKey]);
 
   // P1 TEXT (canvas-spec §7, criterion 26) — instant restyle: the source ⊕
@@ -2189,6 +2229,8 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     });
     if (!handle) return; // non-factory artifact (codeRef/mesh) — nothing to restyle
     (handle as { setSpec(next: ImageSpec): void }).setSpec(mergedImageSpec);
+    // P5 — the spec apply can reshape the visible artifact; re-measure the ring.
+    measureArtifactRing();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
   }, [imageSpecKey, buildKey]);
 
@@ -2225,6 +2267,9 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     const found: MeshPrimitiveHandle = handle;
     found.setPrimitive(meshPrimState.meshPrimitive);
     found.setMaterialSpec(meshPrimState.materialSpec);
+    // P5 — a dimension-fader reshape just landed (geometry swap, identity
+    // held); re-measure so the selection ring tracks the new bounds.
+    measureArtifactRing();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- keyed on the serialized spec
   }, [meshPrimKey, buildKey]);
 

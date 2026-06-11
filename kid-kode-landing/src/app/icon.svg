@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Prism app icon — Observatory Brass. A brass prism on the ink housing
+       with an ice beam entering and a brass beam refracting out. Colors are
+       the frozen DS token values (tokens.ts): ink #0b0d13, brass ramp
+       f7e9c6/cd9f55/8f6930/ddba77, ice a9c2d1. Served by the Next.js
+       app-router icon convention (src/app/icon.svg) so the automatic
+       /favicon.ico probe stops 404ing. -->
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7e9c6"/>
+      <stop offset="0.45" stop-color="#cd9f55"/>
+      <stop offset="1" stop-color="#8f6930"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#0b0d13"/>
+  <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="none" stroke="#f7e9c6" stroke-opacity="0.12"/>
+  <!-- incoming ice beam -->
+  <path d="M3 17.2 L11 15.6" stroke="#a9c2d1" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- refracted brass beam -->
+  <path d="M21.2 18.4 L29 21.6" stroke="#ddba77" stroke-width="1.6" stroke-linecap="round"/>
+  <!-- the prism -->
+  <path d="M16 5.5 L26.5 24.5 H5.5 Z" fill="rgba(205,159,85,0.16)" stroke="url(#brass)" stroke-width="2.2" stroke-linejoin="round"/>
+</svg>

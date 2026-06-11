@@ -48,6 +48,16 @@ function makeStubRenderer() {
     init() {
       return Promise.resolve();
     },
+    // The lighting rig's IBL warm-up (environment-ibl.ts) constructs a
+    // PMREMGenerator over the injected renderer; on the three/webgpu build
+    // compileEquirectangularShader() AWAITS renderer.compile(...). The real
+    // WebGPURenderer provides compile(); a stub without it makes that
+    // warm-up promise reject OUTSIDE buildEnvironmentIBL's try/catch — an
+    // unhandled rejection that fails the vitest run even with every
+    // assertion green. Mirror the real renderer surface.
+    compile() {
+      return Promise.resolve();
+    },
   };
   return { renderer, calls };
 }

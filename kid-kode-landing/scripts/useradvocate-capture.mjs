@@ -167,6 +167,36 @@ async function metricsOf(buf, prevBuf) {
   } catch (e) { return { error: e.message }; }
 }
 
+/** Direct per-pixel frame diff (punch-list 2026-06-11). The aggregate `changed`
+ *  detector (meanLuma/effHue/stdev deltas) FALSE-NEGATIVES on ghost-trail /
+ *  low-contrast tiles: a faint trail can visibly move between control extremes
+ *  while barely moving any whole-frame aggregate. This measures what actually
+ *  changed: mean |Δluma| and the fraction of pixels whose luma moved by >8
+ *  levels. It can only ADD sensitivity for real pixel changes (paused,
+ *  deterministic frames) — identical frames always measure 0. */
+async function frameDeltaOf(bufA, bufB) {
+  const s = await loadSharp();
+  if (!s || !bufA || !bufB) return null;
+  try {
+    const W = 240;
+    const a = await s(bufA).resize(W, null, { fit: 'inside' }).raw().toBuffer({ resolveWithObject: true });
+    const b = await s(bufB).resize(W, null, { fit: 'inside' }).raw().toBuffer({ resolveWithObject: true });
+    if (a.info.width !== b.info.width || a.info.height !== b.info.height) return null;
+    const ch = a.info.channels;
+    const n = a.info.width * a.info.height;
+    let sum = 0, moved = 0;
+    for (let i = 0; i < n; i++) {
+      const ia = i * ch;
+      const la = 0.2126 * a.data[ia] + 0.7152 * a.data[ia + 1] + 0.0722 * a.data[ia + 2];
+      const lb = 0.2126 * b.data[ia] + 0.7152 * b.data[ia + 1] + 0.0722 * b.data[ia + 2];
+      const d = Math.abs(la - lb);
+      sum += d;
+      if (d > 8) moved++;
+    }
+    return { meanAbsDiff: +(sum / n).toFixed(3), changedFrac: +(moved / n).toFixed(4) };
+  } catch { return null; }
+}
+
 async function waitForServer(url, timeoutMs = 150000) {
   const start = Date.now();
   while (Date.now() - start < timeoutMs) {
@@ -238,18 +268,28 @@ async function captureTile(page, name, stateDir, consoleErrors, networkErrors) {
     };
     const mid = snap((min + max) / 2);
     const cEntry = { id, min, max, step, frames: {} };
+    const levelBufs = {};
     for (const [lvl, val] of [['low', min], ['mid', mid], ['high', max]]) {
       const t0 = Date.now();
       await ctrl.fill(String(val)); await ctrl.dispatchEvent('input'); await ctrl.dispatchEvent('change');
       await page.waitForTimeout(500);
       const f = await shotRegion(page, detailPreview);
+      levelBufs[lvl] = f;
       const fn = `control-${id}-${lvl}.png`;
       if (f) writeFileSync(join(dir, fn), f);
       cEntry.frames[lvl] = { file: fn, ...(await metricsOf(f)), latencyMs: Date.now() - t0 };
     }
     // did low vs high actually differ?
     const lo = cEntry.frames.low, hi = cEntry.frames.high;
-    cEntry.changed = !!(lo && hi && (Math.abs((lo.meanLuma || 0) - (hi.meanLuma || 0)) > 1.5 || Math.abs((lo.effHue || 0) - (hi.effHue || 0)) > 4 || Math.abs((lo.stdev || 0) - (hi.stdev || 0)) > 1.5));
+    const aggChanged = !!(lo && hi && (Math.abs((lo.meanLuma || 0) - (hi.meanLuma || 0)) > 1.5 || Math.abs((lo.effHue || 0) - (hi.effHue || 0)) > 4 || Math.abs((lo.stdev || 0) - (hi.stdev || 0)) > 1.5));
+    // Second opinion for low-contrast change (ghost trails): the aggregates
+    // miss a faint trail that plainly moved, so also measure the direct pixel
+    // delta. >0.5% of pixels moving by >8 luma levels (or a mean |Δ| > 0.35)
+    // is REAL spatial change — paused frames, so noise measures ~0. This only
+    // ever flips a false-negative to true; it cannot manufacture a change.
+    const pix = await frameDeltaOf(levelBufs.low, levelBufs.high);
+    cEntry.pixelDiff = pix;
+    cEntry.changed = aggChanged || !!(pix && (pix.changedFrac > 0.005 || pix.meanAbsDiff > 0.35));
     m.controls.push(cEntry);
   }
   if (nR === 0) m.notes.push('no range controls');

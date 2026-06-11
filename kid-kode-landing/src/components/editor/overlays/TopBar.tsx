@@ -44,7 +44,9 @@ export default function TopBar() {
     L1: 'Cluster · Single hub',
     L2: 'Orbit · Element detail',
     L3: 'Surface · Anatomy',
-    L4: 'Interior · Deep inspection',
+    // "Deep inspection" referenced a retired mode; L4 honestly reveals the
+    // per-element detail rows (see the GraphScene LOD ladder), so say that.
+    L4: 'Interior · Full detail',
   };
 
   return (
@@ -68,7 +70,9 @@ export default function TopBar() {
           </div>
           <div>
             <div className="ds-title-brass text-[13px] font-display font-bold tracking-tight leading-none">Prism</div>
-            <div className="ds-kicker text-[8px] leading-none mt-0.5">KRIPTIK EDITOR</div>
+            {/* 9px floor + mid contrast (ergonomics backlog 2026-06-11): the
+                8px low-grey kicker measured below AA on the metal bar. */}
+            <div className="ds-kicker leading-none mt-0.5" style={{ color: 'var(--ds-text-mid)' }}>KRIPTIK EDITOR</div>
           </div>
         </div>
 
@@ -133,34 +137,39 @@ export default function TopBar() {
             </>
           )}
         </div>
-      </div>
 
-      <div className="hidden lg:flex items-center gap-2 pointer-events-auto">
-        <div className="flex gap-1">
-          {(['L0', 'L1', 'L2', 'L3', 'L4'] as const).map((lvl) => (
-            <div
-              key={lvl}
-              className="w-6 h-1.5 rounded-full transition-all"
-              style={
-                zoomLevel === lvl
-                  ? {
-                      background: 'var(--ds-grad-brass)',
-                      boxShadow: `var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.35)`,
-                    }
-                  : {
-                      background: dsAlpha(DS.textHi, 0.1),
-                      boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.45)',
-                    }
-              }
-            />
-          ))}
-        </div>
-        <div className="text-[10px] font-mono text-ds-text-mid tracking-widest">
-          {zoomLevel} · {zoomDesc[zoomLevel]}
-        </div>
       </div>
 
       <div className="flex items-center gap-2 pointer-events-auto">
+        {/* Zoom readout — heads the RIGHT cluster (advocate MUST-FIX
+            2026-06-11: as the centered middle flex child — and even appended
+            to the left cluster — it collided with page.tsx's absolutely-
+            centered mode pill; right-aligned it ends ~200px clear of it). */}
+        <div className="hidden lg:flex items-center gap-2">
+          <div className="flex gap-1">
+            {(['L0', 'L1', 'L2', 'L3', 'L4'] as const).map((lvl) => (
+              <div
+                key={lvl}
+                className="w-6 h-1.5 rounded-full transition-all"
+                style={
+                  zoomLevel === lvl
+                    ? {
+                        background: 'var(--ds-grad-brass)',
+                        boxShadow: `var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.35)`,
+                      }
+                    : {
+                        background: dsAlpha(DS.textHi, 0.1),
+                        boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.45)',
+                      }
+                }
+              />
+            ))}
+          </div>
+          <div className="text-[10px] font-mono text-ds-text-mid tracking-widest whitespace-nowrap">
+            {zoomLevel} · {zoomDesc[zoomLevel]}
+          </div>
+          <div className="w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
+        </div>
         {/* Graph health — recessed instrument readout. Hidden on phone widths
             (advocate MUST-FIX 2026-06-10: it overflowed the right edge at
             390px); the health detail lives in the desktop instrument row. */}
@@ -211,7 +220,7 @@ export default function TopBar() {
         >
           <Icon name="search" size={11} color={DS.textMid} />
           <span className="hidden md:inline text-[10px] font-mono text-ds-text-mid">Search</span>
-          <span className="hidden md:inline text-[9px] font-mono text-ds-text-low">⌘K</span>
+          <span className="hidden md:inline text-[9px] font-mono text-ds-text-mid">⌘K</span>
         </button>
       </div>
     </div>

@@ -29,8 +29,13 @@
 //      setEnvironmentFog when the prop is supplied.
 //   4. page.tsx imports useMemo and memoizes a CompiledAppView via
 //      compileAppToPreview keyed on the live source store slices.
-//   5. page.tsx passes the active hub's CompiledHubView through to
-//      PrismHost as the compiledHubView prop.
+//   5. (As amended by the canonical unified-scene architecture, RT-SC-03 /
+//      INV-R3 / FP-R5:) page.tsx does NOT mount a separate PrismHost — the
+//      derived active CompiledHubView is consumed in-page (the
+//      __PRISM_EDITOR_COMPILED_HUB_VIEW__ verification surface) while
+//      preview-app renders as a STATE of the same GraphScene. PrismHost
+//      keeps its compiledHubView prop surface for the standalone player
+//      (items 1-3 above), but the page-level prop-pass is superseded.
 
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -150,12 +155,19 @@ describe('EBR2-B-02 — CompiledHubView plumbed into PrismHost props', () => {
       expect(src).toMatch(/activeHubId/);
     });
 
-    it('passes the derived compiledHubView through to PrismHost as a prop', () => {
+    it('consumes the derived CompiledHubView in the unified scene — page.tsx never mounts a separate PrismHost (FP-R5 supersedes the prop-pass)', () => {
       const src = read(PAGE_PATH);
-      // The JSX should mount PrismHost with `compiledHubView={...}`. We match
-      // the prop assignment regardless of the right-hand expression so the
-      // test does not couple to a specific variable name.
-      expect(src).toMatch(/<PrismHost[\s\S]*?compiledHubView=\{/);
+      // RT-SC-03 / INV-R3 / FP-R5: preview-app is a STATE of the one
+      // GraphScene, NOT a separate compiled PrismHost mount. The memoized
+      // active CompiledHubView still exists (INV-17 non-destructive compile;
+      // SC-066) and is consumed in-page — exposed through the
+      // __PRISM_EDITOR_COMPILED_HUB_VIEW__ verification surface keyed on the
+      // memo. A <PrismHost> mount returning to page.tsx is the superseded
+      // preview-as-compiled-screen architecture and fails here.
+      expect(src).not.toMatch(/<PrismHost\b/);
+      expect(src).toMatch(/activeCompiledHubView/);
+      expect(src).toMatch(/__PRISM_EDITOR_COMPILED_HUB_VIEW__/);
+      expect(src).toMatch(/<GraphScene\s*\/>/);
     });
   });
 });

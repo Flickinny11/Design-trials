@@ -74,10 +74,18 @@ export const dustPoofPrimitive: PrimitiveDefinition = {
       const N = (n: unknown): TNode => n as TNode;
 
       // Value-noise hash on a 2D lattice — deterministic, GPU-cheap.
+      //
+      // NOTE (punch-list fix 2026-06-11): the scale factor MUST multiply the
+      // RESULT of sin(), not its argument (canonical one-liner:
+      // fract(sin(dot(p, k)) * 43758.5453), as campfire/fire-flame use). The
+      // previous form sin(d * 43758.5453) fed sin() arguments up to ~1e8 —
+      // far outside f32 range-reduction — which real shader ALUs collapse to
+      // garbage/zero. grain then evaluated ≈0 everywhere, density ≈0, and the
+      // tile rendered permanently black (the documented dust-poof failure).
       const hash = (p: TNode): TNode => {
         const d = N(dot(p as unknown as never, vec2(127.1, 311.7) as unknown as never));
-        const s = N(sin(d.mul(43758.5453) as unknown as never));
-        return N(fract(s as unknown as never));
+        const s = N(sin(d as unknown as never));
+        return N(fract(s.mul(43758.5453) as unknown as never));
       };
 
       const noise = (p: TNode): TNode => {
@@ -123,12 +131,24 @@ export const dustPoofPrimitive: PrimitiveDefinition = {
 
       // Expanding soft disc whose radius grows with lt*spread; (1-lt) fades the
       // poof back down so it settles. Edge softness keeps the rim dusty.
+      //
+      // NOTE (punch-list fix 2026-06-11): smoothstep edges MUST be in GLSL
+      // order (edge0 < edge1). The previous reversed-edge form
+      // smoothstep(radius, radius - edge, r) is UNDEFINED in GLSL ES — the
+      // WebGL2/SwiftShader backend evaluated it to 0 everywhere, so the tile
+      // rendered permanently black (plays + controls both failed). Express the
+      // "1 inside the radius, soft rim outside" disc as 1 - smoothstep(...)
+      // with ascending edges instead (same intent as the dust-cloud fix).
       const edge = N(float(0.18));
       const ring = N(
-        smoothstep(
-          lt.mul(uSpread) as unknown as never,
-          lt.mul(uSpread).sub(edge) as unknown as never,
-          r as unknown as never,
+        N(float(1)).sub(
+          N(
+            smoothstep(
+              lt.mul(uSpread).sub(edge) as unknown as never,
+              lt.mul(uSpread) as unknown as never,
+              r as unknown as never,
+            ),
+          ),
         ),
       );
       const fall = N(float(1).sub(lt as unknown as never));

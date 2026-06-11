@@ -39,15 +39,11 @@ type SourceStore = {
   saveToServer: () => Promise<{ ok: boolean; error?: string; regeneratedAt?: string }>;
 };
 
-// Mirror of the editor-store surface this task uses. EB-01-03 narrowed the
-// store to the canonical 5-mode ViewMode (RA-06); this mirror tracks the same
-// shape so the cast at line 153/164 stays well-typed.
-type EditorViewMode =
-  | 'galaxy'
-  | 'hub-world'
-  | 'canvas'
-  | 'preview-hub'
-  | 'preview-app';
+// Mirror of the editor-store surface this task uses. Round 2 (RA-06b /
+// INV-24) reduced the canonical set to exactly 3 modes — 'hub-world' and
+// 'preview-hub' are superseded and FP-14 forbids those literals returning.
+// This mirror tracks the same shape so the casts below stay well-typed.
+type EditorViewMode = 'galaxy' | 'canvas' | 'preview-app';
 type EditorStore = {
   viewMode: EditorViewMode;
   flyToHubId: string | null;
@@ -157,26 +153,33 @@ describe('HL12 — useGraphSourceStore.saveToServer (Inspector Save button)', ()
 });
 
 describe('HL12 — useGraphEditorStore.setViewMode (Preview in App UI button)', () => {
-  it('exposes viewMode + setViewMode (default canvas after EB-01-02 RA-06 remap)', async () => {
+  it('exposes viewMode + setViewMode (boot default preview-app — RA-17; canonical 3 only per RA-06b)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
+    // RA-17: the app boots into preview-app (the running app), not an editor
+    // mode. A revert to the Round-1 'canvas' (or any superseded) default
+    // fails here.
+    expect(useGraphEditorStore.getState().viewMode).toBe('preview-app');
+    // The full canonical-3 round-trips through the setter; superseded
+    // literals ('hub-world'/'preview-hub') no longer typecheck (FP-14).
+    useGraphEditorStore.getState().setViewMode('canvas');
     expect(useGraphEditorStore.getState().viewMode).toBe('canvas');
-    useGraphEditorStore.getState().setViewMode('preview-hub');
-    expect(useGraphEditorStore.getState().viewMode).toBe('preview-hub');
-    useGraphEditorStore.getState().setViewMode('hub-world');
-    expect(useGraphEditorStore.getState().viewMode).toBe('hub-world');
+    useGraphEditorStore.getState().setViewMode('galaxy');
+    expect(useGraphEditorStore.getState().viewMode).toBe('galaxy');
+    useGraphEditorStore.getState().setViewMode('preview-app');
+    expect(useGraphEditorStore.getState().viewMode).toBe('preview-app');
   });
 
-  it('Preview-in-App-UI driver: setViewMode("preview-hub") + flyToHub(hubId)', async () => {
+  it('Preview-in-App-UI driver: setViewMode("preview-app") + flyToHub(hubId) — preview-hub folded into preview-app (RA-06b)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
     const s = useGraphEditorStore.getState();
-    s.setViewMode('preview-hub');
+    s.setViewMode('preview-app');
     s.flyToHub('home');
     const after = useGraphEditorStore.getState();
-    expect(after.viewMode).toBe('preview-hub');
+    expect(after.viewMode).toBe('preview-app');
     expect(after.flyToHubId).toBe('home');
     expect(after.activeHubId).toBe('home');
   });

@@ -4,7 +4,10 @@
 // machined metal bezel plate (ds-metal ds-grain ds-edge) framing a recessed
 // instrument well (ds-well) that holds the 2D radar canvas. Canvas tints come
 // from the DS token mirror: status colors for nodes, brass for the selection
-// reticle; hub disc tints stay data-driven (hub.color).
+// reticle, and the chrome ice/brass pair for hub discs (active hub brass,
+// idle hubs ice). Raw hub.color is data paint, not chrome — the same Wave-3
+// advocate MUST-FIX that retinted HubNav (it read as forbidden dashboard
+// blue), adopted here 2026-06-11.
 
 import { useRef, useEffect, useMemo } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
@@ -59,11 +62,14 @@ export default function Minimap() {
     graph.hubs.forEach((hub) => {
       const p = hubPositions[hub.id];
       if (!p) return;
+      const isActiveHub = activeHubId === hub.id;
+      const fill = isActiveHub ? DS.brass400 : DS.ice400;
+      const rim = isActiveHub ? DS.brass300 : DS.ice400;
       ctx.beginPath();
       ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
-      ctx.fillStyle = hub.color + (activeHubId === hub.id ? '40' : '18');
+      ctx.fillStyle = dsAlpha(fill, isActiveHub ? 0.25 : 0.09);
       ctx.fill();
-      ctx.strokeStyle = hub.color + (activeHubId === hub.id ? 'aa' : '50');
+      ctx.strokeStyle = dsAlpha(rim, isActiveHub ? 0.67 : 0.31);
       ctx.lineWidth = 1;
       ctx.stroke();
     });
@@ -108,7 +114,8 @@ export default function Minimap() {
     <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
       {/* Machined bezel plate around a recessed instrument well. */}
       <div className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
-        <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between">
+        {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
+        <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between" style={{ color: 'var(--ds-text-mid)' }}>
           <span>MINIMAP</span>
           <span className="text-ds-brass-300">{graph.nodes.length} nodes</span>
         </div>

@@ -245,7 +245,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <div className="flex items-center gap-2 mb-1.5 mt-0.5">
       <span
         className="text-[9px] font-mono tracking-[0.18em] uppercase whitespace-nowrap"
-        style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
+        style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
       >
         {children}
       </span>
@@ -281,7 +281,7 @@ function ToolButton({
     >
       <Icon name={icon} size={15} color={active ? a : DS.text} glow={active} />
       <span
-        className="text-[8.5px] font-mono tracking-wide"
+        className="text-[9px] font-mono tracking-wide"
         style={{ color: active ? 'var(--ds-text-hi)' : 'var(--ds-text-mid)' }}
       >
         {label}
@@ -289,6 +289,14 @@ function ToolButton({
     </button>
   );
 }
+
+// Stepper +/- keys — 28px machined faces (ergonomics backlog 2026-06-11: the
+// old 24px keys were the smallest interactive targets in the toolbar). An
+// invisible ::after extension widens the effective hit area to ~36×32px
+// without growing the visible key, mirroring the view-mode toggle's pattern.
+const STEPPER_KEY_CLASS =
+  "relative w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[13px] leading-none " +
+  "after:content-[''] after:absolute after:-inset-x-1 after:-inset-y-0.5";
 
 function StepperRow({
   label, value, onDec, onInc, accent, testId,
@@ -298,12 +306,12 @@ function StepperRow({
   const a = accent ?? DS_ACCENT;
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-5 text-[10px] font-mono" style={{ color: 'var(--ds-text-low)' }}>{label}</span>
+      <span className="w-5 text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>{label}</span>
       <button
         type="button"
         onClick={onDec}
         data-testid={testId ? `${testId}-dec` : undefined}
-        className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[12px] leading-none"
+        className={STEPPER_KEY_CLASS}
         style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
       >
         −
@@ -318,7 +326,7 @@ function StepperRow({
         type="button"
         onClick={onInc}
         data-testid={testId ? `${testId}-inc` : undefined}
-        className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all text-[12px] leading-none"
+        className={STEPPER_KEY_CLASS}
         style={{ background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }}
       >
         +
@@ -620,17 +628,33 @@ export default function CanvasToolbar() {
     <>
       {marqueeArmed && <MarqueeOverlay onCommit={onMarqueeCommit} onCancel={() => setMarqueeArmed(false)} />}
 
-      {/* Left tool rail */}
+      {/* Phone-width scrim (ergonomics backlog 2026-06-11) — when a flyout is
+          open on a narrow viewport it covers most of the canvas, so dim what
+          remains and let a tap outside dismiss it. md+ keeps the side-by-side
+          desktop behavior (no scrim). Sits under the z-50 rail. */}
+      {activeGroup && (
+        <div
+          data-component="canvas-toolbar-scrim"
+          aria-hidden
+          className="md:hidden absolute inset-0 z-40 pointer-events-auto ds-reveal"
+          style={{ background: dsAlpha(DS.void, 0.55) }}
+          onClick={() => setActiveGroup(null)}
+        />
+      )}
+
+      {/* Left tool rail — height-bounded so short viewports (460px advocate
+          flag) scroll the dock + flyout instead of clipping them. */}
       <div
         data-component="canvas-toolbar"
-        className="absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2"
+        className="absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]"
       >
         {/* Machined brushed-metal dock — the instrument fitting the tool keys
-            are cut into (ds-metal + grain tooth + specular edge). */}
-        <div className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge">
+            are cut into (ds-metal + grain tooth + specular edge). Scrolls
+            within the bounded rail when the viewport is short. */}
+        <div className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain">
           <div className="px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5">
             <Icon name="grid" size={13} color={DS_ACCENT} glow />
-            <span className="text-[7.5px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-low)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
+            <span className="text-[9px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
               CANVAS
             </span>
           </div>
@@ -669,7 +693,9 @@ export default function CanvasToolbar() {
                   data-tool-group={g.id}
                   onClick={() => setActiveGroup((cur) => (cur === g.id ? null : g.id))}
                   title={g.label}
-                  className={`relative w-12 h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
+                  // Ergonomics 2026-06-11: keys widened 48→54px so the group
+                  // labels can hold 9px legible type (7px failed readability).
+                  className={`relative w-[54px] h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
                     isActive ? '' : 'hover:brightness-[1.2] hover:bg-white/[0.04]'
                   }`}
                   style={isActive ? activeKeyStyle(DS_ACCENT) : undefined}
@@ -682,8 +708,8 @@ export default function CanvasToolbar() {
                   )}
                   <Icon name={g.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
                   <span
-                    className="text-[7px] font-mono tracking-wide"
-                    style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-low)' }}
+                    className="text-[9px] font-mono"
+                    style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
                   >
                     {g.label}
                   </span>
@@ -857,7 +883,10 @@ function FlyoutShell({
       data-group={meta.id}
       // Hero surface of canvas mode (1 of ≤3 refract surfaces; RefractionDefs
       // is mounted once in page.tsx). Falls back to plain frost below t2.
-      className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[78vh] overflow-hidden flex ds-reveal`}
+      // max-h carries a viewport-derived ceiling (not just 78vh) so short
+      // windows (460px advocate flag) get a scrolling flyout instead of the
+      // Lighting chips clipping below the fold.
+      className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[min(78vh,calc(100vh-7rem))] overflow-hidden flex ds-reveal`}
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the
           glass while long flyouts (Lighting) scroll. */}
@@ -878,7 +907,7 @@ function FlyoutShell({
                 {meta.label}
               </div>
               <div
-                className="text-[8px] font-mono tracking-widest mt-0.5"
+                className="text-[9px] font-mono tracking-widest mt-0.5"
                 style={{ color: meta.wired ? 'var(--ds-ok)' : 'var(--ds-ice-300)' }}
               >
                 {meta.wired ? 'WIRED' : 'COMING SOON'}
@@ -895,7 +924,7 @@ function FlyoutShell({
         </div>
 
         {!meta.wired && (
-          <div className="text-[9px] font-mono leading-relaxed -mt-1" style={{ color: 'var(--ds-text-low)' }}>
+          <div className="text-[9px] font-mono leading-relaxed -mt-1" style={{ color: 'var(--ds-text-mid)' }}>
             Designed preview. Wires to the <span style={{ color: 'var(--ds-text)' }}>{meta.subsystem}</span>.
           </div>
         )}
@@ -913,7 +942,7 @@ function FlyoutShell({
             <Icon name="sparkle" size={12} color={DS.ice300} glow />
             <div className="leading-tight">
               <div className="text-[10px] font-mono" style={{ color: 'var(--ds-text-hi)' }}>{coming.tool}</div>
-              <div className="text-[8.5px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>
+              <div className="text-[9px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>
                 Coming with the {coming.subsystem}
               </div>
             </div>
@@ -1054,7 +1083,7 @@ function SelectionFlyout({
         <ToolButton icon="cursor" label="Marquee" testId="tt-marquee" active={marqueeArmed} onClick={onMarquee} title="Drag a box over the canvas to select" />
         <ToolButton icon="grid" label="All in Hub" testId="tt-select-all" onClick={onSelectAll} />
       </div>
-      <div className="text-[8.5px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-low)' }}>
+      <div className="text-[9px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-mid)' }}>
         Shift-click adds to the selection.
       </div>
 
@@ -1103,7 +1132,7 @@ function BuildFlyout({
           <span className="w-1.5 h-1.5 rounded-full" style={{ background: stateColor, boxShadow: `0 0 6px ${dsAlpha(stateColor, 0.8)}` }} />
           <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text)' }}>{stateLabel}</span>
         </span>
-        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-low)' }}>v{buildCount ?? 1}</span>
+        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>v{buildCount ?? 1}</span>
       </div>
 
       <button
@@ -1126,7 +1155,7 @@ function BuildFlyout({
         <Icon name="check" size={12} color={DS.ok} />
         <span className="text-[11px] font-mono">Add to System</span>
       </button>
-      <div className="text-[8.5px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-low)' }}>
+      <div className="text-[9px] font-mono leading-tight -mt-0.5" style={{ color: 'var(--ds-text-mid)' }}>
         Re-captions the node and clears its dirty flag.
       </div>
 
@@ -1180,14 +1209,14 @@ function LightingFlyout({
       <div className="flex items-center gap-2 px-2.5 py-2 ds-well">
         <Icon name="bulb" size={12} color={DS_ACCENT} />
         <span className="flex-1 text-[10px] font-mono truncate" style={{ color: 'var(--ds-text)' }}>{hubTitle}</span>
-        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-low)' }}>{lights.length} light{lights.length === 1 ? '' : 's'}</span>
+        <span className="text-[9px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>{lights.length} light{lights.length === 1 ? '' : 's'}</span>
       </div>
 
       {/* Light list + Add */}
       <SectionLabel>Lights · writes hub lightingSpec</SectionLabel>
       <div className="flex flex-col gap-1">
         {lights.length === 0 && (
-          <div className="text-[8.5px] font-mono leading-tight px-1 py-1" style={{ color: 'var(--ds-text-low)' }}>
+          <div className="text-[9px] font-mono leading-tight px-1 py-1" style={{ color: 'var(--ds-text-mid)' }}>
             No author lights — the runtime default 3-point rig is active. Add one to override.
           </div>
         )}
@@ -1299,7 +1328,7 @@ function LightingFlyout({
         </>
       ) : (
         lights.length > 0 && (
-          <div className="text-[8.5px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-low)' }}>Select a light above to tune it.</div>
+          <div className="text-[9px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-mid)' }}>Select a light above to tune it.</div>
         )
       )}
 
@@ -1334,10 +1363,18 @@ function LightingFlyout({
             onClick={onToggleReceives}
             title="Toggle whether this node is lit by the scene rig"
           />
-          <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
-            {`renderMode: ${node.renderMode ?? 'sprite'} · default ${
+          <div className="text-[9px] font-mono leading-tight" style={{ color: 'var(--ds-text-mid)' }}>
+            {/* Plain copy (2026-06-11): the raw renderMode id read as machine
+                jargon — say what kind of element it is and what it starts as. */}
+            {`${
+              (node.renderMode ?? 'sprite') === 'mesh'
+                ? '3D objects'
+                : (node.renderMode as string) === 'text'
+                  ? 'Text'
+                  : 'Images'
+            } start ${
               receivesLightingDefault(node.renderMode) ? 'lit' : 'unlit'
-            }`}
+            } — this switch overrides it.`}
           </div>
         </>
       )}
@@ -1390,7 +1427,21 @@ function EmptyHint({ icon, text }: { icon: string; text: string }) {
       <div className="w-9 h-9 ds-well flex items-center justify-center">
         <Icon name={icon} size={16} color={DS.textMid} />
       </div>
-      <span className="text-[9.5px] font-mono leading-relaxed" style={{ color: 'var(--ds-text-low)' }}>{text}</span>
+      {/* Contrast floor (P2 advocate flag 2026-06-10): over a light canvas the
+          glass plate let the old low-grey hint wash out. Solid-ish ink backing
+          (no extra backdrop filter — stays inside the one-glass budget) + mid
+          text, stepping up to full bone text on phone widths where the canvas
+          sits brightest behind the flyout. */}
+      <span
+        className="text-[9.5px] font-mono leading-relaxed px-2.5 py-2 rounded-ds-sm text-ds-text-mid max-md:text-ds-text"
+        style={{
+          background: dsAlpha(DS.ink, 0.55),
+          boxShadow: 'var(--ds-chamfer-soft)',
+          textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)',
+        }}
+      >
+        {text}
+      </span>
     </div>
   );
 }
@@ -1447,7 +1498,7 @@ function KeyframeEditorPanel({
             <span className="ds-chip ds-chip--ice">
               CATALOG FORTHCOMING
             </span>
-            <span className="text-[9px] font-mono hidden lg:inline" style={{ color: 'var(--ds-text-low)' }}>· {selectionLabel}</span>
+            <span className="text-[9px] font-mono hidden lg:inline" style={{ color: 'var(--ds-text-mid)' }}>· {selectionLabel}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <button
@@ -1476,8 +1527,8 @@ function KeyframeEditorPanel({
                   key={g}
                   type="button"
                   onClick={() => setSnapGrid(g)}
-                  className={`px-1.5 h-7 text-[8.5px] font-mono transition-colors ${
-                    snapGrid === g ? '' : 'text-ds-text-low hover:text-ds-text'
+                  className={`px-1.5 h-7 text-[9px] font-mono transition-colors ${
+                    snapGrid === g ? '' : 'text-ds-text-mid hover:text-ds-text'
                   }`}
                   style={
                     snapGrid === g
@@ -1548,7 +1599,7 @@ function KeyframeEditorPanel({
                 />
               </div>
             </div>
-            <span className="text-[9px] font-mono tabular-nums w-8" style={{ color: 'var(--ds-text-low)' }}>3.00s</span>
+            <span className="text-[9px] font-mono tabular-nums w-8" style={{ color: 'var(--ds-text-mid)' }}>3.00s</span>
           </div>
         </div>
 
@@ -1591,7 +1642,7 @@ function KeyframeEditorPanel({
               </button>
             </div>
           ))}
-          <div className="text-[8px] font-mono pl-[122px]" style={{ color: 'var(--ds-text-low)' }}>
+          <div className="text-[9px] font-mono pl-[122px]" style={{ color: 'var(--ds-text-mid)' }}>
             Timeline is continuous seconds (no global fps). Tracks bind to the selection&apos;s Animatable controls once the Primitive Catalog lands.
           </div>
         </div>

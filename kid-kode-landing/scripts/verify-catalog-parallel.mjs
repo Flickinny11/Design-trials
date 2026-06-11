@@ -33,7 +33,13 @@
 // Usage:
 //   node scripts/verify-catalog-parallel.mjs [--tier std|glass|all]
 //        [--port 4799] [--only a,b] [--new-only] [--no-resume]
-//        [--seed N] [--max N] [--min N] [--no-lean]
+//        [--seed N] [--max N] [--min N] [--no-lean] [--no-retry]
+//
+// --no-retry disables the QUIET-RETRY tier: by default, fails from the loaded
+// parallel tiers are re-run once, serially, on a fresh browser (the proven
+// remedy for sustained-load flakiness — isolation, never loosened checks).
+// entry.preRetry preserves the loaded-run verdict; the summary reports
+// "pass X/N (Y recovered on quiet retry)".
 
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, readFileSync, existsSync, renameSync, readdirSync, appendFileSync } from 'node:fs';
@@ -62,6 +68,14 @@ const ONLY = getArg('only', '').split(',').map((s) => s.trim()).filter(Boolean);
 const NEW_ONLY = hasFlag('new-only');
 const RESUME = !hasFlag('no-resume');
 const LEAN = !hasFlag('no-lean');             // strip picker grid per page for throughput
+// QUIET-RETRY tier (load-flakiness remedy, 2026-06-11): long full-catalog runs
+// degrade under sustained load — 4–13 spurious fails per 312-run that recover
+// at --max 1. After the main tiers complete, the fails are re-run ONCE,
+// SERIALLY, on a FRESH browser (isolation, not tolerance: every check and
+// threshold is identical). The ledger keeps both verdicts (entry.preRetry =
+// the loaded-run verdict; the entry itself = the quiet verdict) and the
+// summary reports the recovered count honestly. --no-retry disables.
+const RETRY = !hasFlag('no-retry');
 const BASE = `http://localhost:${PORT}`;
 const URL = `${BASE}/animation-catalog`;
 
@@ -74,14 +88,15 @@ const nowIso = () => new Date().toISOString();
 // ---------------------------------------------------------------------------
 const primDir = join(repoRoot, 'src/lib/prism/animatable/primitives');
 function readCatalog() {
-  const files = readdirSync(primDir).filter((f) => f.endsWith('.ts') && f !== 'index.ts' && !f.includes('.test.') && !f.startsWith('_'));
+  const files = readdirSync(primDir).filter((f) => f.endsWith('.ts') && f !== 'index.ts' && !f.includes('.test.') && !f.startsWith('_') && !f.includes('.bak'));
   const cat = new Map();
   for (const f of files) {
     const s = readFileSync(join(primDir, f), 'utf8');
     const cm = s.match(/category:\s*['"]([^'"]+)['"]/);
     const nm = s.match(/name:\s*['"]([^'"]+)['"]/);
+    const dm = s.match(/defaultDriver:\s*['"]([^'"]+)['"]/);
     const name = nm ? nm[1] : f.replace(/\.ts$/, '');
-    cat.set(name, cm ? cm[1] : '(none)');
+    cat.set(name, { category: cm ? cm[1] : '(none)', driver: dm ? dm[1] : 'time' });
   }
   return cat;
 }
@@ -137,13 +152,70 @@ async function shotRegion(page, locator, vw, vh) {
   return page.screenshot({ clip }).catch(() => null);
 }
 
-async function verifyTile(page, name, category, pickerPresent, vw, vh) {
+// DRIVER-AWARE STIMULUS (punch-list 2026-06-11). The rig drives every tile
+// with a synthetic pointer/scroll, but three classes of tile need an explicit
+// stimulus or a deterministic phase to be verifiable — the remedy is the
+// stimulus, never a loosened threshold:
+//   • pointer-driver tiles: the controls sweep is meaningless if the frozen
+//     pointer is disengaged (proximity 0 multiplies every control by zero), so
+//     the harness PINS the rig pointer at an engaged point near the subject
+//     center for the duration of the frozen-frame compare.
+//   • scroll-VELOCITY tiles (e.g. scroll-skew): a frozen scroll has zero
+//     velocity by definition, so the retry applies a constant per-frame
+//     scroll-step stimulus. INTEGRITY GUARD: two baseline frames with the
+//     stimulus active and NO control change must be byte-identical first —
+//     a tile that moves by itself under the stimulus (position-mapped scroll)
+//     can never get a controls pass from this path.
+//   • strobe / duty-cycled tiles (e.g. lightning-bolt, ~15% flash duty): the
+//     3-instant quick sampling and the arbitrary pause phase routinely land in
+//     the dark 85%. A deterministic seek sweep over the loop finds a phase
+//     where the frame actually differs; plays passes only on a REAL byte
+//     difference, and the controls compare re-freezes at that visible phase.
+const POINTER_PIN = { x: 0.62, y: 0.5 };   // engaged: proximity 0.7–0.9 for all pointer tiles
+const SCROLL_STEP = 0.045;                  // constant per-frame scroll delta (velocity stimulus)
+
+async function setStimulus(page, s) {
+  await page.evaluate((arg) => window.__catalogRig?.setStimulus?.(arg), s).catch(() => {});
+}
+async function seekTile(page, name, t) {
+  return page.evaluate(({ n, tt }) => window.__catalogRig?.seek?.(n, tt) ?? null, { n: name, tt: t }).catch(() => null);
+}
+
+/** Pause + deterministically sweep the tile's timeline looking for two phases
+ *  whose rendered frames differ (byte compare — no thresholds). Returns
+ *  { tOn, frame } of the first differing phase, or null. 48 deterministic
+ *  phases (three interleaved 16-grids — dense enough that a 15%-duty strobe
+ *  at a fast strike rate is still hit), early exit on the first difference.
+ *  NOTE: the result is only meaningful for the CURRENT control/param state —
+ *  a phase that is visible at one strike rate can be dark at another. */
+async function sweepPhases(page, name, detailPreview, vw, vh) {
+  await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(false));
+  const dur = (await seekTile(page, name, 0)) ?? 4;
+  await page.waitForTimeout(120);
+  const base = await shotRegion(page, detailPreview, vw, vh);
+  if (!base) return null;
+  const phases = [];
+  for (let k = 0; k < 16; k++) phases.push(((k + 0.5) / 16) * dur);
+  for (let k = 0; k < 16; k++) phases.push((k / 16) * dur);
+  for (let k = 0; k < 16; k++) phases.push(((k + 0.27) / 16) * dur);
+  for (const t of phases) {
+    await seekTile(page, name, t);
+    await page.waitForTimeout(90);
+    const f = await shotRegion(page, detailPreview, vw, vh);
+    if (f && Buffer.compare(f, base) !== 0) return { tOn: t, frame: f, dur };
+  }
+  return null;
+}
+
+async function verifyTile(page, name, category, driver, pickerPresent, vw, vh) {
   const entry = {
-    name, category, renders: false, plays: false, controls: false,
+    name, category, driver, renders: false, plays: false, controls: false,
     picker: pickerPresent.has(name), notes: [], verdict: 'pending', at: nowIso(),
   };
   const detail = page.locator('[data-component="primitive-detail"]');
   const detailPreview = page.locator('[data-component="detail-preview"]');
+  // Phase the sweep found visibly "on" (used to re-freeze for the controls compare).
+  let visiblePhase = null;
   try {
     await page.evaluate((n) => window.__catalogFocus && window.__catalogFocus(n), name);
     await page.waitForFunction(
@@ -158,57 +230,139 @@ async function verifyTile(page, name, category, pickerPresent, vw, vh) {
     await page.waitForTimeout(350);
     const frames = [];
     for (let k = 0; k < 3; k++) { frames.push(await shotRegion(page, detailPreview, vw, vh)); if (k < 2) await page.waitForTimeout(420); }
-    const mid = frames[1] || frames[2] || frames[0];
+    let mid = frames[1] || frames[2] || frames[0];
     entry.plays = frames.some((a, i) => frames.slice(i + 1).some((b) => a && b && Buffer.compare(a, b) !== 0));
+
+    // Second chance for strobe/duty-cycled timelines: a deterministic phase
+    // sweep. Pass still requires a real rendered difference (byte compare).
+    if (!entry.plays) {
+      const hit = await sweepPhases(page, name, detailPreview, vw, vh);
+      if (hit) {
+        entry.plays = true;
+        visiblePhase = hit.tOn;
+        mid = hit.frame; // representative frame = a phase that visibly renders
+        entry.notes.push(`plays via deterministic phase sweep (t=${hit.tOn.toFixed(2)}s of ${hit.dur.toFixed(2)}s loop)`);
+      }
+      await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(true));
+      await page.waitForTimeout(200);
+    }
     const blank = await isBlank(mid);
     entry.renders = !!mid && !blank;
     if (blank) entry.notes.push('blank frame (stdev<1.5)');
     if (mid) writeFileSync(join(outDir, 'frames', `${name}.png`), mid);
 
-    // CONTROLS — pause, drive controls to an extreme, require the frozen frame to change.
-    await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(false));
-    await page.waitForTimeout(420);
-    const c1 = await shotRegion(page, detailPreview, vw, vh);
-    let driven = 0;
-    const ranges = detail.locator('input[type="range"][data-control]');
-    const nR = await ranges.count();
-    for (let i = 0; i < nR; i++) {
-      const ctrl = ranges.nth(i);
-      const max = await ctrl.getAttribute('max'); const min = await ctrl.getAttribute('min');
-      const cur = await ctrl.inputValue();
-      const tgt = String(cur) === String(max) ? min : max;
-      await ctrl.fill(String(tgt)); await ctrl.dispatchEvent('input'); await ctrl.dispatchEvent('change'); driven++;
-    }
-    if (nR === 0) {
-      // Fall back to non-range controls (select / checkbox / color).
-      const sels = detail.locator('select[data-control]');
-      const nS = await sels.count();
-      for (let i = 0; i < nS; i++) {
-        const opts = await sels.nth(i).locator('option').allTextContents();
-        if (opts.length > 1) { await sels.nth(i).selectOption({ index: opts.length - 1 }).catch(() => {}); driven++; }
+    // CONTROLS — pause, drive controls to an extreme, require the frozen frame
+    // to change. Driver-aware stimulus (see block comment above); the compare
+    // itself is untouched: byte-identical frames = fail.
+    const driveControls = async () => {
+      let driven = 0;
+      const ranges = detail.locator('input[type="range"][data-control]');
+      const nR = await ranges.count();
+      for (let i = 0; i < nR; i++) {
+        const ctrl = ranges.nth(i);
+        const max = await ctrl.getAttribute('max'); const min = await ctrl.getAttribute('min');
+        const cur = await ctrl.inputValue();
+        const tgt = String(cur) === String(max) ? min : max;
+        await ctrl.fill(String(tgt)); await ctrl.dispatchEvent('input'); await ctrl.dispatchEvent('change'); driven++;
       }
-      const checks = detail.locator('input[type="checkbox"][data-control]');
-      const nC = await checks.count();
-      for (let i = 0; i < nC; i++) { await checks.nth(i).click({ force: true }).catch(() => {}); driven++; }
-      if (driven === 0) {
-        const colors = detail.locator('input[type="color"][data-control]');
-        const nCol = await colors.count();
-        for (let i = 0; i < nCol; i++) {
-          await colors.nth(i).evaluate((el) => { el.value = '#ff00aa'; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); }).catch(() => {});
-          driven++;
+      if (nR === 0) {
+        // Fall back to non-range controls (select / checkbox / color).
+        const sels = detail.locator('select[data-control]');
+        const nS = await sels.count();
+        for (let i = 0; i < nS; i++) {
+          const opts = await sels.nth(i).locator('option').allTextContents();
+          if (opts.length > 1) { await sels.nth(i).selectOption({ index: opts.length - 1 }).catch(() => {}); driven++; }
+        }
+        const checks = detail.locator('input[type="checkbox"][data-control]');
+        const nC = await checks.count();
+        for (let i = 0; i < nC; i++) { await checks.nth(i).click({ force: true }).catch(() => {}); driven++; }
+        if (driven === 0) {
+          const colors = detail.locator('input[type="color"][data-control]');
+          const nCol = await colors.count();
+          for (let i = 0; i < nCol; i++) {
+            await colors.nth(i).evaluate((el) => { el.value = '#ff00aa'; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); }).catch(() => {});
+            driven++;
+          }
         }
       }
-    }
-    if (driven > 0) {
+      return driven;
+    };
+
+    // One frozen-frame controls attempt: capture → drive → capture → compare.
+    const controlsAttempt = async () => {
+      await page.waitForTimeout(420);
+      const c1 = await shotRegion(page, detailPreview, vw, vh);
+      const driven = await driveControls();
+      if (driven === 0) return { driven, changed: false, c2: null };
       await page.waitForTimeout(650);
       const c2 = await shotRegion(page, detailPreview, vw, vh);
-      entry.controls = !!(c1 && c2 && Buffer.compare(c1, c2) !== 0);
-      if (c2) writeFileSync(join(outDir, 'controls', `${name}.png`), c2);
-    } else {
-      entry.notes.push('no controls found');
+      return { driven, changed: !!(c1 && c2 && Buffer.compare(c1, c2) !== 0), c2 };
+    };
+
+    await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(false));
+    // Pointer tiles: pin the rig pointer at an engaged point so the frozen
+    // frame actually responds to its controls (proximity > 0).
+    if (driver === 'pointer') {
+      await setStimulus(page, { pointer: POINTER_PIN });
+      entry.notes.push('pointer stimulus pinned for controls');
     }
+    let attempt = await controlsAttempt();
+    entry.controls = attempt.changed;
+    if (attempt.c2) writeFileSync(join(outDir, 'controls', `${name}.png`), attempt.c2);
+    if (attempt.driven === 0) entry.notes.push('no controls found');
+
+    // Retry 1 — scroll-velocity stimulus (scroll tiles whose response is a
+    // per-frame scroll delta; frozen scroll = zero response by definition).
+    if (!entry.controls && attempt.driven > 0 && driver === 'scroll') {
+      await setStimulus(page, { scrollStep: SCROLL_STEP });
+      await page.waitForTimeout(500);
+      // Integrity guard: under the stimulus with NO control change the frame
+      // must be static — otherwise this path can prove nothing and is skipped.
+      const b1 = await shotRegion(page, detailPreview, vw, vh);
+      await page.waitForTimeout(450);
+      const b2 = await shotRegion(page, detailPreview, vw, vh);
+      if (b1 && b2 && Buffer.compare(b1, b2) === 0) {
+        const driven = await driveControls();
+        if (driven > 0) {
+          await page.waitForTimeout(650);
+          const c2 = await shotRegion(page, detailPreview, vw, vh);
+          entry.controls = !!(c2 && Buffer.compare(b2, c2) !== 0);
+          if (entry.controls) {
+            entry.notes.push('controls via scroll-velocity stimulus (baseline static)');
+            if (c2) writeFileSync(join(outDir, 'controls', `${name}.png`), c2);
+          }
+        }
+      } else {
+        entry.notes.push('scroll-step baseline unstable — stimulus retry not applicable');
+      }
+      await setStimulus(page, null);
+    }
+
+    // Retry 2 — re-freeze at a phase the sweep proves visible (strobe/one-shot
+    // tiles whose arbitrary pause phase renders nothing controllable). The
+    // sweep MUST run here, under the CURRENT param state: attempt 1 drove
+    // every control to an extreme, so a phase found earlier (with defaults)
+    // is stale — e.g. lightning-bolt's flash windows move when the strike
+    // rate changes (and the f32 GPU hash diverges from any CPU mirror, so the
+    // only trustworthy "visible" signal is the rendered frame itself).
+    if (!entry.controls && attempt.driven > 0 && driver !== 'scroll') {
+      const hit = await sweepPhases(page, name, detailPreview, vw, vh);
+      if (hit) {
+        await seekTile(page, name, hit.tOn);
+        attempt = await controlsAttempt();
+        if (attempt.changed) {
+          entry.controls = true;
+          entry.notes.push(`controls at swept visible phase t=${hit.tOn.toFixed(2)}s`);
+          if (attempt.c2) writeFileSync(join(outDir, 'controls', `${name}.png`), attempt.c2);
+        }
+      } else {
+        entry.notes.push('controls retry: phase sweep found no differing frame under current params');
+      }
+    }
+    if (driver === 'pointer') await setStimulus(page, null);
   } catch (e) {
     entry.notes.push('error: ' + e.message);
+    await setStimulus(page, null);
   }
   entry.verdict = (entry.renders && entry.plays && entry.controls) ? 'pass' : 'fail';
   return entry;
@@ -291,8 +445,9 @@ async function runTier(tier, tiles, browserFactory, tuning, catMap) {
         if (pool.active > pool.desired) break;          // shrink signal
         const name = queue.shift();
         if (!name) break;
-        const category = catMap.get(name) || '?';
-        const entry = await verifyTile(page, name, category, pickerPresent, vw, vh);
+        const meta = catMap.get(name) || { category: '?', driver: 'time' };
+        const category = meta.category;
+        const entry = await verifyTile(page, name, category, meta.driver, pickerPresent, vw, vh);
         // device-loss check for THIS page after the tile
         const dl = await deviceLost(page);
         if (dl > 0) {
@@ -387,7 +542,7 @@ async function main() {
   if (ONLY.length) names = names.filter((n) => ONLY.includes(n));
 
   const stdTiles = [], glassTiles = [];
-  for (const n of names) (isGlass(n, catMap.get(n)) ? glassTiles : stdTiles).push(n);
+  for (const n of names) (isGlass(n, catMap.get(n)?.category) ? glassTiles : stdTiles).push(n);
 
   // Resume: drop already-passed tiles.
   const skip = (arr) => arr.filter((n) => {
@@ -429,6 +584,37 @@ async function main() {
       log(`\n${Y}=== GLASS tier (${glassRun.length} tiles, REAL Metal GPU) ===${X}`);
       await runTier('glass', glassRun, glassBrowser, { vw: 1280, vh: 1000, dpr: 2, seed: 2, max: parseInt(getArg('max-glass', '3'), 10), min: 1 }, catMap);
     }
+    // ── QUIET-RETRY tier (see flag comment): re-run this run's fails serially
+    // on a fresh browser. Same verifyTile, same thresholds — pure isolation. ──
+    if (RETRY) {
+      const failNow = names.filter((n) => ledger.results[n]?.verdict === 'fail');
+      if (failNow.length) {
+        const preRetry = {};
+        for (const n of failNow) {
+          const r = ledger.results[n];
+          preRetry[n] = { verdict: r.verdict, renders: r.renders, plays: r.plays, controls: r.controls, notes: r.notes, at: r.at };
+        }
+        const quietStd = failNow.filter((n) => !isGlass(n, catMap.get(n)?.category));
+        const quietGlass = failNow.filter((n) => isGlass(n, catMap.get(n)?.category));
+        log(`\n${Y}=== QUIET-RETRY tier (${failNow.length} fails — fresh browser, serial) ===${X}`);
+        progress(`\n## Quiet retry ${nowIso()} — ${failNow.length} loaded-run fails re-run serially on a fresh browser`);
+        if (quietStd.length) await runTier('std-quiet', quietStd, stdBrowser, { vw: 1280, vh: 1000, dpr: 1, seed: 1, max: 1, min: 1 }, catMap);
+        if (quietGlass.length) await runTier('glass-quiet', quietGlass, glassBrowser, { vw: 1280, vh: 1000, dpr: 2, seed: 1, max: 1, min: 1 }, catMap);
+        let recovered = 0;
+        for (const n of failNow) {
+          const r = ledger.results[n];
+          if (!r) continue;
+          r.preRetry = preRetry[n];
+          r.retriedAt = nowIso();
+          if (r.verdict === 'pass') recovered++;
+        }
+        ledger.quietRetry = { attempted: failNow.length, recovered, names: failNow };
+        saveLedger();
+        log(`${C}[quiet-retry]${X} ${recovered}/${failNow.length} recovered in isolation`);
+      } else {
+        ledger.quietRetry = { attempted: 0, recovered: 0, names: [] };
+      }
+    }
     // ── FINAL GATE: user-advocate evidence capture (additive) ──────────────────
     // Runs after the functional + art-fidelity tiers. Delegates to the dedicated
     // real-GPU capture engine, then records a `pending-review` advocate slot per
@@ -468,18 +654,20 @@ async function main() {
   const pass = consider.filter((n) => verdictOf(n) === 'pass');
   const fail = consider.filter((n) => verdictOf(n) === 'fail');
   const missing = consider.filter((n) => !isFinal(ledger.results[n]));
+  const quiet = (RETRY && ledger.quietRetry) ? ledger.quietRetry : { attempted: 0, recovered: 0, names: [] };
   ledger.summary = {
     total: consider.length, pass: pass.length, fail: fail.length, missing: missing.length,
     failNames: fail, missingNames: missing,
+    quietRetry: { attempted: quiet.attempted, recovered: quiet.recovered },
     wallClockSec: Math.round((Date.now() - t0) / 1000),
     peak: { std: ledger.tiers.std?.peakConcurrency, glass: ledger.tiers.glass?.peakConcurrency },
     backend: { std: ledger.tiers.std?.backend, glass: ledger.tiers.glass?.backend },
     deviceLost: { std: ledger.tiers.std?.deviceLostTotal, glass: ledger.tiers.glass?.deviceLostTotal },
   };
   saveLedger();
-  progress(`\n### Run end ${nowIso()} — pass ${pass.length}/${consider.length}, fail ${fail.length}, missing ${missing.length}, wall ${ledger.summary.wallClockSec}s`);
+  progress(`\n### Run end ${nowIso()} — pass ${pass.length}/${consider.length} (${quiet.recovered} recovered on quiet retry), fail ${fail.length}, missing ${missing.length}, wall ${ledger.summary.wallClockSec}s`);
   log(`\n${Y}[parallel-verify]${X} ${JSON.stringify(ledger.summary, null, 0)}`);
-  log(`${pass.length === consider.length ? G : R}pass ${pass.length}/${consider.length}${X}  fail=${fail.length}  missing=${missing.length}  wall=${ledger.summary.wallClockSec}s  peak std=${ledger.summary.peak.std} glass=${ledger.summary.peak.glass}`);
+  log(`${pass.length === consider.length ? G : R}pass ${pass.length}/${consider.length} (${quiet.recovered} recovered on quiet retry)${X}  fail=${fail.length}  missing=${missing.length}  wall=${ledger.summary.wallClockSec}s  peak std=${ledger.summary.peak.std} glass=${ledger.summary.peak.glass}`);
   if (fail.length) log(`${R}FAILS:${X} ${fail.join(', ')}`);
   process.exit(ledger.fatal ? 1 : 0);
 }

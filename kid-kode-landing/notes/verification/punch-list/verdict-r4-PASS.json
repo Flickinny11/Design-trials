@@ -1,0 +1,67 @@
+{
+  "feature": "P5 punch-list — editor ergonomics polish + catalog verification fixes (re-grade round 4)",
+  "claim": "Round-3 MUST-FIX (truncated mobile fader values) fixed at the root: slider-row grid minmax(64px,110px)/minmax(0,1fr)/44px with minWidth:0 range input; all six values render complete at 390x844 ending x=364 vs card edge 390 (26px clear). Fresh 07; 03/04/05/07a carried from round 3.",
+  "groundTruthSibling": "3d-object",
+  "state": "after-remediation-r4",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No MUST-FIX-grade defects remain. The round-3 fader truncation is FIXED and measured in fresh 07 (mtime 23:28:34): all six values render COMPLETE — Position X '0.18', Position Y '1.50', Position Z '0.10', Rotate Y '0.00', Scale '1.00', Alpha '1.00' — and the value column's last glyph ends at device x726 (363.0 CSS transform band, 362.5 CSS alpha band) vs the 390 CSS viewport: ~27 CSS px clearance, matching the claimed 26px within a pixel. No clipped 'digit.' pattern anywhere. The rail/card separation still holds in the new capture: per-band scan y940-1140 puts card-side text at x79-90 device with the x70-73 hits visually confirmed as the rail's own border seam (lower-left crop shows every label complete: 'TRANSFORM', 'Position X/Y/Z', 'Rotate Y', 'Scale', 'VISUAL', 'Alpha', 'Save & Verify', 'ELEMENT IMAGE'). All earlier fixes hold: full 'L4 · Interior · Full detail' readout in 03/04/05; scrim tap-to-close proven by 06 -> 07a. Remaining observations are flag-grade only (CODE tab pill at the viewport edge; ring ~8% tight).",
+      "evidence": [
+        "07-mobile-after-scrim-tap.png (mtime 2026-06-10 23:28:34) — fader band shows complete values 0.18 / 1.50 / 0.10 / 0.00 / 1.00 / 1.00",
+        "metrics: value-column last bright glyph column device x726 -> 363.0 CSS (transform band) and 362.5 CSS (alpha band) vs 390 CSS viewport = ~27 CSS px clearance (claim 26px — matches)",
+        "metrics: per-20px-band scan y940-1140 — card text first columns x79-90 device; x70-73 hits are the rail border seam (visual crop confirms zero first-word occlusion)",
+        "04-desktop-lighting-460h.png — readout fix intact bundle-wide"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Every claimed punch-list item now reads as claimed, with measured proof accumulated across four rounds: steppers ~28 CSS px keys with raised key material (01); section label 8.48:1 (claim >=7.5 met); Lighting panel scrolls at 460h (04/05); mobile flyouts over a working dim scrim (06); minimap brass/ice (02); honest readout 'L4 · Interior · Full detail' fully legible and 12-13px clear of the pill (03/04/05); favicon ships (src/app/icon.svg); selection ring tracks reshape (centers sub-2px); and the mobile Inspector is now a genuinely premium, fully legible surface — complete labels clear of the rail AND complete full-precision values matching the desktop convention ('0.18'/'1.50' both places). Catalog: 312/312, quietRetry 0, deviceLost 0/0, six fixed tiles all rendering real content.",
+      "evidence": [
+        "07-mobile-after-scrim-tap.png — inspector card fully legible end-to-end: labels, faders, values, Save & Verify",
+        "metrics: mobile values now match desktop precision convention — 0.18/1.50/0.10 on both surfaces (01-desktop-toolbar-steppers.png vs 07 fader band)",
+        "03-desktop-canvas-full.png — readout 'L4 · Interior · Full detail' with ~13 CSS px pill clearance",
+        "metrics: catalog-parallel/results.json pass=312/312, deviceLost std=0 glass=0, quietRetry attempted=0"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. Labeled faders now show readable values, so a first-time user can both find AND use them — drag Position X, read '0.18'. The scrim flow is evidenced end-to-end (06 open+dimmed -> 07a closed+bright, canvas region meanRGB 27.7 -> 143.5). Steppers, tabs, and the prominent Save & Verify are self-evident. The empty-state hint (08, 13.29:1) guides the no-selection case.",
+      "evidence": [
+        "07-mobile-after-scrim-tap.png — fader labels + readable values",
+        "control: 06-mobile-flyout-scrim.png -> 07a-mobile-scrim-closed.png — flyout dismissed, canvas meanRGB 27.7 -> 143.5",
+        "metrics: 08 empty-hint contrast 13.29:1"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Static captures plus carried interaction/run evidence: scrim interaction applied (06->07a meanRGB delta +115.8); catalog 312 tiles in 1104s wall-clock, deviceLost 0 both tiers, renders/plays/controls true on all six previously-dead tiles; fresh frames show a healthy build (100% health pill, live webgpu preview well in the inspector).",
+      "evidence": [
+        "metrics: catalog-parallel/results.json wallClockSec=1104, 312/312, deviceLost std=0 glass=0",
+        "control: scrim tap 06 -> 07a, canvas meanRGB delta +115.8",
+        "07-mobile-after-scrim-tap.png — LIVE PREVIEW well with webgpu badge rendering"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'Everything I complained about is actually gone now — I can read the top label, the phone panel clears the toolbar, the sliders show real numbers like 0.18, the keys feel tappable, and the whole thing looks like a crafted instrument rather than a dashboard.' Four rounds of evidence, every fix measured, nothing left that a first-time user would hit.",
+      "evidence": [
+        "07-mobile-after-scrim-tap.png — final mobile inspector: complete labels, complete values, clear of rail",
+        "03-desktop-canvas-full.png — final desktop topbar: full honest readout",
+        "metrics: cumulative measured proof — key ~28 CSS px, label 8.48:1, hint 13.29:1, readout 13px clear, values 27px clear, ring centers sub-2px, catalog 312/312"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Inspector tab row's CODE pill still touches/bleeds the viewport right edge on phone widths; 'CODE' text fully legible and the row reads as horizontally scrollable — acceptable pattern, polish nicety to tuck the pill inside the card edge (carried from round 3).",
+      "evidence": "07-mobile-after-scrim-tap.png — tab row: CODE pill at frame edge x=780 device"
+    },
+    {
+      "note": "Selection ring slightly under-encloses the reshaped headline bar (~8% tight; centering sub-2px) — carried, acknowledged by operator.",
+      "evidence": "metrics: ring r~340 device px vs bar half-width ~370 px, centers 1623.5 vs 1624 (03-desktop-canvas-full.png)"
+    },
+    {
+      "note": "Catalog std-tier frames captured on webgl fallback; colour judgment advisory on five of six fixed tiles — carried, acknowledged by operator.",
+      "evidence": "metrics: catalog-parallel/results.json backend {std:'webgl', glass:'webgpu'}"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

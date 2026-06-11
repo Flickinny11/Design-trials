@@ -8,7 +8,7 @@
 
 import { Mesh, type Material } from 'three';
 import { MeshBasicNodeMaterial } from 'three/webgpu';
-import { uniform, uv, sin, exp, mix, vec3, float } from 'three/tsl';
+import { uniform, uv, sin, exp, mix, vec3, float, sqrt, max, min, sub, smoothstep } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, type ControlValue, type PrimitiveDefinition } from '../contract';
 
@@ -57,7 +57,34 @@ export const auroraPrimitive: PrimitiveDefinition = {
       const c2 = curtain(2.1, 0.16, 7.0);
       const c3 = curtain(4.3, 0.28, 4.0);
 
-      const total = c1.add(c2).add(c3).mul(uBright);
+      // ── Control-range containment (punch-list fix 2026-06-11) ──────────────
+      // At control extremes (width 0.4 + brightness 3) the three unit-peak
+      // gaussians overlap into total ≈ 6–7: the palette saturates to a white
+      // blob that fills the tile (the "control-range clipping" defect; the
+      // DEFAULT state was already clean). Two physically-motivated fixes:
+      //  1. ENERGY CONSERVATION — widening a curtain dims it (amp ∝ (w₀/w)^0.75,
+      //     a touch past √ so merged wide curtains stay ribbons, not a wall).
+      //  2. SOFT KNEE — totals are linear (untouched) up to K=1.8 (above the
+      //     typical default peak, so the default look is essentially
+      //     unchanged), then firmly compressed so extremes glow hot in-palette
+      //     instead of clipping the tile center to white.
+      const wRatio = float(0.12).div(max(uWidth, float(0.02)));
+      const amp = min(sqrt(wRatio).mul(sqrt(sqrt(wRatio))), float(1.6)); // (w0/w)^0.75
+      const totalRaw = c1.add(c2).add(c3).mul(uBright).mul(amp);
+      const knee = float(1.5);
+      const excess = max(totalRaw.sub(knee), float(0));
+      const compressed = min(totalRaw, knee).add(excess.div(float(1).add(excess.mul(2.0))));
+      //  3. EDGE CONTAINMENT — the literal "pushes the effect out of the tile
+      //     bounds" defect: at control extremes the glow ran to the plane
+      //     borders and hard-clipped. A soft window fades all four edges
+      //     (ascending smoothstep edges only); the default ribbons live mid-
+      //     plane so the default read is barely touched, while extremes now
+      //     dissolve organically inside the tile instead of slamming its rim.
+      const edgeWin = smoothstep(float(0), float(0.1), u.x)
+        .mul(smoothstep(float(0), float(0.1), sub(float(1), u.x)))
+        .mul(smoothstep(float(0), float(0.12), u.y))
+        .mul(smoothstep(float(0), float(0.12), sub(float(1), u.y)));
+      const total = compressed.mul(edgeWin);
 
       // Palette: green -> teal -> violet by uv.y, with a slow hue drift in time.
       const green = vec3(0.15, 0.95, 0.45);

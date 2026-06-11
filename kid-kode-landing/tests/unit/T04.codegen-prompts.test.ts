@@ -134,9 +134,22 @@ describe('SHARED_SYSTEM_PROMPT (spec §9.A L250-L276)', () => {
     expect(SHARED_SYSTEM_PROMPT).toMatch(/window\.devicePixelRatio/);
   });
 
-  it('forbids bespoke shader code, requires TSL only (spec §9.A L271)', () => {
-    expect(SHARED_SYSTEM_PROMPT).toMatch(/DO NOT author bespoke shader code/);
-    expect(SHARED_SYSTEM_PROMPT).toMatch(/TSL/);
+  it('does NOT re-encode the rescinded primitives-cage shader line; TSL stays the only shader lane via the import allowlist (SPEC-INDEX S4 / canvas §2 decision 6)', () => {
+    // The migration-era line "DO NOT author bespoke shader code — use TSL
+    // through ctx.primitives or three/tsl built-ins" encoded the rescinded
+    // no-bespoke-animation posture (animation/shading locked to the fixed
+    // primitives library). PRISM-CANVAS-EDITOR-SPEC §2 decision 6 rescinds it
+    // and SPEC-INDEX "pending code changes" §2 recorded the removal from
+    // prompts.ts. Re-introducing the line is drift — this assertion fails if
+    // it comes back.
+    expect(SHARED_SYSTEM_PROMPT).not.toMatch(/DO NOT author bespoke shader code/);
+    // TSL-only (PRISM-RUNTIME-SPEC §9, carried-forward renderer foundation)
+    // is enforced structurally: the closed import allowlist names
+    // 'three/tsl' as the shader lane. (A future prompt line forbidding raw
+    // GLSL WITHOUT the ctx.primitives cage would be legitimate — this test
+    // only pins the rescinded cage phrasing and the allowlist's presence.)
+    expect(SHARED_SYSTEM_PROMPT).toContain("'three/tsl'");
+    expect(SHARED_SYSTEM_PROMPT).toMatch(/Import only from:/);
   });
 
   it('output instruction: only JS code, no markdown fences (spec §9.A L273)', () => {

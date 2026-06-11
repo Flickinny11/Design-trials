@@ -163,31 +163,39 @@ describe('EBR2-C-04 — onObjectChange writes additive ct = start + proxy delta'
     expect(block).toMatch(/scaleZ:\s*start\.scaleZ\s*\*\s*proxy\.scale\.z/);
   });
 
-  it('drag-start captures ct via onMouseDown so onObjectChange has a stable baseline', () => {
+  it('drag-start captures the scene transform via onMouseDown so onObjectChange has a stable baseline', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'CanvasTransformGizmo');
     // The capture-on-mousedown / clear-on-mouseup pattern is what makes the
     // additive writeback above correct across multiple drag frames within a
-    // single gesture. Without it, `start` would drift each frame.
+    // single gesture. Without it, `start` would drift each frame. Per
+    // canvas-spec criterion 9 the gizmo authors scenePosition, so the
+    // baseline captured at drag start is the scene transform (the archived
+    // SC-042 dragStartCT/readCanvasTransform capture is superseded —
+    // SPEC-INDEX S6).
     expect(block).toMatch(/onMouseDown\s*=\s*\{/);
-    expect(block).toMatch(/dragStartCT\.current\s*=\s*readCanvasTransform\s*\(\s*node\s*\)/);
+    expect(block).toMatch(/dragStartSP\.current\s*=\s*readSceneTransform\s*\(\s*node\s*\)/);
     expect(block).toMatch(/onMouseUp\s*=\s*\{/);
-    expect(block).toMatch(/dragStartCT\.current\s*=\s*null/);
+    expect(block).toMatch(/dragStartSP\.current\s*=\s*null/);
   });
 
-  it('writes only canvasTransform — never scenePosition (SC-042 / FP-04)', () => {
+  it("writes the node's OWN scenePosition — never a canvasTransform patch (canvas-spec criterion 9; supersedes SC-042)", () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'CanvasTransformGizmo');
-    // INV-17 + SC-042 are reaffirmed: the gizmo must never write
-    // scenePosition. EBR2-C-04's writeback path goes through updateNode with
-    // a `canvasTransform:` patch. The block must NOT contain any
-    // `scenePosition:` field name in an updateNode call (the regex matches
-    // any updateNode site that passes scenePosition as a patch key).
-    expect(block).not.toMatch(
-      /updateNode\s*\([^)]*\{[^}]*scenePosition\s*:/m,
+    // PRISM-CANVAS-EDITOR-SPEC criterion 9: "Drag/resize-corner/rotate
+    // mutate the node's `scenePosition`; values persist and round-trip
+    // through save/reload." Transform tools are AUTHORING — writing the
+    // node's own schema field is the legitimate path. (INV-17 / FP-04 are
+    // untouched: they bind compile*/organize* functions, not authoring
+    // tools.) The archived editor-build SC-042 routed gizmo writes to
+    // `canvasTransform`; that routing is superseded (SPEC-INDEX S6) and
+    // must not return.
+    expect(block).toMatch(
+      /updateNode\s*\(\s*node\.nodeId\s*,\s*\{\s*scenePosition\s*:\s*next\s*\}\s*\)/,
     );
-    // Positive: the writeback IS through canvasTransform.
-    expect(block).toMatch(/updateNode\s*\([^)]*\{\s*canvasTransform\s*:\s*next\s*\}/);
+    // Negative: no updateNode call in the gizmo may carry a canvasTransform
+    // patch (the superseded SC-042 shape).
+    expect(block).not.toMatch(/updateNode\s*\([^)]*\{[^}]*canvasTransform\s*:/m);
   });
 });
 

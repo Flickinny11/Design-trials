@@ -299,9 +299,15 @@ export default function VisualPreview({
                 key={s.key}
                 data-slider-row
                 data-slider-key={s.key}
-                style={{ display: 'grid', gridTemplateColumns: '110px 1fr 60px', alignItems: 'center', gap: 8, marginTop: 6 }}
+                // Mobile MUST-FIX (advocate 2026-06-11): the range input's
+                // intrinsic min-width (~129px) kept the 1fr track from
+                // shrinking on narrow cards, pushing the value column past the
+                // card edge ("0." instead of "0.18"). minWidth:0 everywhere +
+                // a shrinkable label column lets the row fit any card width
+                // with the value always fully rendered.
+                style={{ display: 'grid', gridTemplateColumns: 'minmax(64px, 110px) minmax(0, 1fr) 44px', alignItems: 'center', gap: 8, marginTop: 6 }}
               >
-                <label style={{ fontSize: 11, color: DS.text }}>{s.label}</label>
+                <label style={{ fontSize: 11, color: DS.text, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.label}</label>
                 <input
                   type="range"
                   min={s.min}
@@ -311,6 +317,7 @@ export default function VisualPreview({
                   data-role="visual-spec-slider"
                   data-slider-key={s.key}
                   disabled={frozen}
+                  style={{ minWidth: 0, width: '100%' }}
                   onChange={(e) => onSliderInput(s.key, Number(e.currentTarget.value))}
                 />
                 <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: DS.brass300, textAlign: 'right' }}>

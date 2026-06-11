@@ -1,12 +1,26 @@
-// bevel-glass — a thick beveled-edge glass panel: chunky refraction concentrated
-// at the chamfered borders with a clear center. HARD / GPU primitive (glass).
-// Swaps the host card panel's material for a transmissive MeshPhysicalNodeMaterial
-// (transmission=1, high thickness, low roughness). Its normalNode is a *beveled*
-// normal: in the flat center the surface normal points straight out (+Z), but
-// near the uv borders the normal is pushed outward toward the nearest edge so
-// refraction concentrates at the chamfer — distinct from frosted (roughness
-// sweep), liquid (flowing metaball lobes), and crystal glass. A faint uTime
-// shimmer breathes the bevel width + thickness so the refractive rim glints.
+// bevel-glass — a thick beveled-edge glass panel: chunky edge shading
+// concentrated at the chamfered borders with a clear center. HARD / GPU
+// primitive (glass). Its normalNode is a *beveled* normal: in the flat center
+// the surface normal points straight out (+Z), but near the uv borders the
+// normal is pushed outward toward the nearest edge so the env-mapped specular
+// concentrates at the chamfer — distinct from frosted (roughness sweep),
+// liquid (flowing metaball lobes), and crystal glass. A faint uTime shimmer
+// breathes the bevel width so the rim glints.
+//
+// RIG-CAPABILITY REWORK (punch-list 2026-06-11): the shared scissored catalog
+// rig cannot populate three.js's transmission render target (documented rig
+// limitation — every transmission-sampling material reads BLACK there, which
+// is exactly how this tile looked: an opaque black slab). The thick-glass
+// read is therefore built from what the rig CAN do:
+//   • real alpha transparency — the lit backdrop genuinely shows through the
+//     clear center (same-scene alpha blending works fine in the rig);
+//   • env-mapped specular + clearcoat on the beveled normal — the chamfer
+//     glints like a polished edge;
+//   • Beer–Lambert edge tint — absorption grows with the thickness fader and
+//     with the longer light path through the chamfer, giving the classic
+//     green-edged thick-glass look exactly where a bevel is darkest.
+// transmission stays 0 on this material BY DESIGN (no RT to sample); ior is
+// kept and still visibly drives the specular fresnel.
 // seek() advances uTime and reads knobs live; onParamChange() mirrors uniforms.
 // dispose() restores the swapped material and disposes the created one.
 
@@ -22,8 +36,11 @@ import {
   max,
   sub,
   sin,
+  exp,
+  mix,
   smoothstep,
   normalize,
+  clamp as tslClamp,
 } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type ControlValue, type PrimitiveDefinition } from '../contract';
@@ -49,6 +66,14 @@ export const bevelGlassPrimitive: PrimitiveDefinition = {
     { name: 'bevel-glass', category: 'glass', schema: SCHEMA },
     (target, params) => {
       const mesh = (target.subject as Mesh) ?? null;
+
+      /** TSL clamp-to-[0,1] (the imported `clamp` is the CPU helper). */
+      const clamp01 = (n: unknown) =>
+        (tslClamp as unknown as (a: unknown, b: unknown, c: unknown) => unknown)(
+          n,
+          float(0),
+          float(1),
+        );
 
       const uTime = uniform(0);
       const uBevel = uniform(num(params.bevel, 0.18));
@@ -90,22 +115,36 @@ export const bevelGlassPrimitive: PrimitiveDefinition = {
 
       const mat = new MeshPhysicalNodeMaterial({
         transparent: true,
-        transmission: 1.0,
-        thickness: clamp(num(params.thickness, 1.4), 0.3, 3),
+        // No transmission: the scissored shared rig has no transmission RT to
+        // sample (it reads black). The glass read is alpha + env + edge tint.
+        transmission: 0.0,
         roughness: 0.05,
         metalness: 0.0,
         ior: clamp(num(params.ior, 1.5), 1.2, 1.9),
         clearcoat: 1.0,
         clearcoatRoughness: 0.08,
-        envMapIntensity: 1.3,
+        envMapIntensity: 1.5,
       });
       (mat as unknown as { normalNode: unknown }).normalNode = beveledNormal;
-      // Drive a subtle thickness shimmer on the GPU too via a thicknessNode so the
-      // refraction depth breathes with uTime (visible only on a real GPU).
-      const thicknessNode = uThickness.mul(
-        float(1).add(abs(sin(uTime.mul(1.3))).mul(uShimmer).mul(0.25)),
+
+      // Beer–Lambert absorption: the chamfer is a much longer light path than
+      // the flat center, and the thickness fader scales the whole slab. The
+      // shimmer breathes the absorption slightly so the rim glints with time.
+      const pathLen = float(1).add(bevelRamp.mul(3));
+      const breathing = float(1).add(abs(sin(uTime.mul(1.3))).mul(uShimmer).mul(0.25));
+      const absorb = sub(
+        float(1),
+        exp(uThickness.mul(pathLen).mul(breathing).mul(-0.45)),
       );
-      (mat as unknown as { thicknessNode: unknown }).thicknessNode = thicknessNode;
+      // Near-clear pale center → green-edged thick glass where absorption is high.
+      const clearTint = vec3(0.9, 0.95, 0.96);
+      const edgeTint = vec3(0.38, 0.62, 0.54);
+      (mat as unknown as { colorNode: unknown }).colorNode = mix(clearTint, edgeTint, absorb);
+      // Clear center (backdrop genuinely shows through), denser chamfer; the
+      // thickness fader visibly raises the overall density via `absorb`.
+      (mat as unknown as { opacityNode: unknown }).opacityNode = clamp01(
+        float(0.16).add(absorb.mul(0.5)).add(bevelRamp.mul(0.3)),
+      );
 
       const prevMat = mesh ? (mesh.material as Material) : null;
       if (mesh) mesh.material = mat;

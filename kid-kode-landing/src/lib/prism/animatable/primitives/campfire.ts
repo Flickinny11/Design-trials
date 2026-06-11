@@ -29,6 +29,7 @@ import {
   mix,
   max,
   abs,
+  exp,
   smoothstep,
   clamp as tslClamp,
 } from 'three/tsl';
@@ -137,11 +138,53 @@ export const campfirePrimitive: PrimitiveDefinition = {
       const ramp3 = mix(ramp2, core, smoothstep(float(0.66), float(1.0), m));
       // Warm flicker pulse on the core so it breathes hotter/cooler.
       const flick = sin(uTime.mul(uSpeed).mul(7).add(u.x.mul(11))).mul(0.5).add(0.5).mul(0.16);
-      const colorNode = ramp3.mul(float(1).add(flick)).mul(uIntensity);
 
-      // opacityNode = m, with a soft top fade so tongue tips dissolve.
+      // ── Rising sparks (punch-list fix 2026-06-11) ───────────────────────────
+      // The description promises "rising sparks" but the shader never had any.
+      // Deterministic ember points on an upward-advected cell grid: each cell
+      // (22 across × 9 tall) hosts a spark when its hash clears ~0.8 (≈1 in 5),
+      // jittered inside the cell, drawn as a tight isotropic gaussian dot
+      // (cell space is 22:9 anisotropic, so the y term is rescaled by 22/9).
+      // The grid scrolls up with t (sparks rise), each spark twinkles on its
+      // own hash phase, and a window confines them to above the flame column.
+      const sparkGrid = vec2(u.x.mul(22.0), u.y.mul(9.0).sub(t.mul(3.4)));
+      const sparkCell = floor(sparkGrid);
+      const sparkF = fract(sparkGrid);
+      const sparkSeed = hash(sparkCell);
+      const sparkJx = hash(sparkCell.add(vec2(7.3, 1.1))).mul(0.6).add(0.2);
+      const sparkJy = hash(sparkCell.add(vec2(3.7, 9.2))).mul(0.6).add(0.2);
+      const sdx = sparkF.x.sub(sparkJx);
+      const sdy = sparkF.y.sub(sparkJy).mul(22.0 / 9.0);
+      const sparkD2 = sdx.mul(sdx).add(sdy.mul(sdy));
+      const sparkDot = exp(sparkD2.mul(-110.0));
+      const sparkGate = smoothstep(float(0.78), float(0.82), sparkSeed);
+      const twinkle = sin(t.mul(9.0).add(sparkSeed.mul(41.0))).mul(0.5).add(0.5);
+      // Window: from the upper flame body to just below the top edge, and
+      // horizontally near the flame column (ascending smoothstep edges only).
+      const sparkBandY = smoothstep(float(0.18), float(0.38), u.y)
+        .mul(float(1).sub(smoothstep(float(0.78), float(0.98), u.y)));
+      const sparkBandX = float(1).sub(smoothstep(float(0.16), float(0.4), abs(xc)));
+      const spark = sparkDot
+        .mul(sparkGate)
+        .mul(twinkle)
+        .mul(sparkBandY)
+        .mul(sparkBandX)
+        .mul(tslClamp(uIntensity, float(0), float(2)));
+
+      const sparkColor = vec3(1.0, 0.72, 0.3); // ember orange-gold
+      const colorNode = ramp3
+        .mul(float(1).add(flick))
+        .mul(uIntensity)
+        .add(sparkColor.mul(spark));
+
+      // opacityNode = m, with a soft top fade so tongue tips dissolve; sparks
+      // add their own alpha so they survive above the flame body.
       const topFade = smoothstep(float(1.05), float(0.2), yUp);
-      const opacityNode = tslClamp(m.mul(1.25).mul(topFade), float(0), float(1));
+      const opacityNode = tslClamp(
+        m.mul(1.25).mul(topFade).add(spark),
+        float(0),
+        float(1),
+      );
 
       const mat = new MeshBasicNodeMaterial({
         transparent: true,

@@ -110,7 +110,7 @@ export function applyPlanRendererDefaults<T extends Partial<PrismNode>>(
 export function validatePlanRendererFields(
   node: Pick<
     PrismNode,
-    'renderMode' | 'depthMapUrl' | 'meshUrl' | 'cinematicPrimitives'
+    'renderMode' | 'depthMapUrl' | 'meshUrl' | 'cinematicPrimitives' | 'meshPrimitive'
   >,
 ): VerifierViolation[] {
   const out: VerifierViolation[] = [];
@@ -124,12 +124,16 @@ export function validatePlanRendererFields(
     });
   }
 
-  if (node.renderMode === 'mesh' && !node.meshUrl) {
+  // P4 3D-OBJECT (canvas-spec §5; INV-8 additive): a node carrying a
+  // `meshPrimitive` renders the primitive geometry regardless of meshUrl
+  // (which stays for GLBs) — the primitive IS the mesh artifact, so the
+  // mesh-artifact requirement is satisfied without a meshUrl.
+  if (node.renderMode === 'mesh' && !node.meshUrl && !node.meshPrimitive) {
     out.push({
       rule: 'MESH_REQUIRES_MESH_URL',
       severity: 'error',
       message:
-        'renderMode "mesh" requires meshUrl (spec §5; §6 stage 9.6)',
+        'renderMode "mesh" requires meshUrl or meshPrimitive (spec §5; §6 stage 9.6; P4 primitives)',
     });
   }
 

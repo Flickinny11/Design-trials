@@ -23,6 +23,10 @@ export const SHARED_SYSTEM_PROMPT: string = [
   'CONSTRAINTS:',
   "- Import only from: 'three/webgpu', 'three/tsl', 'gsap', '@/primitives' (alias for the",
   "  cinematic primitives library), '@/text' (alias for MSDF text utilities).",
+  // P5 follow-up (runtime-spec §9 "Shaders: TSL only") — cage-free restatement
+  // after the 876d603 rescission removed the whole shader line. Authoring
+  // bespoke shaders is allowed; raw GLSL/WGSL strings are not how.
+  '- Shaders are written with three/tsl nodes only — never raw GLSL/WGSL strings and never ShaderMaterial/RawShaderMaterial.',
   '- Export default a single function: createNode(config: NodeConfig, ctx: NodeContext): THREE.Object3D',
   '- The function MUST be synchronous. All async loading uses ctx.textureLoader / ctx.glbLoader',
   '  which return cached resources.',

@@ -1,26 +1,29 @@
-// EB-01-03 — remove legacy viewMode literals; arm FP-12; baseline preview-hub.
+// EB-01-03 — remove legacy viewMode literals; arm FP-12.
 //
-// Spec refs: §1 SC-002, §1 SC-003, §1 FP-12, §1 INV-20 of
-// PRISM-EDITOR-BUILD-SPEC.md.
+// Spec refs (as amended): the archived PRISM-EDITOR-BUILD-SPEC's §1 SC-002 /
+// SC-003 / FP-12 / INV-20, superseded for the mode set by Round 2 RA-06b /
+// INV-24 and by the canonical PRISM-RUNTIME-SPEC §1.3/§6 + FP-R8: the
+// canonical view modes are EXACTLY `galaxy | canvas | preview-app`.
+// 'hub-world' and 'preview-hub' (the Round-1 5-mode set) are superseded and
+// FP-14 forbids those literals anywhere under src/.
 //
-// EB-01-01 widened the store's setter to AnyViewMode and shipped the
-// legacy→canonical mapping table. EB-01-02 migrated the page.tsx / Inspector
-// call sites to canonical literals. EB-01-03 closes the loop:
+// What this file pins now:
 //
-//   1. The store's state field and setter signature are narrowed back to
+//   1. The store's state field and setter signature are narrowed to
 //      `ViewMode` so off-canon strings can no longer flow into the toggle
 //      via setViewMode (INV-20 type-level enforcement).
-//   2. The FP-12 regex is armed in .claude/hooks/anti-drift-check.sh so any
-//      future Write/Edit attempting to commit a legacy literal at a value
-//      site is blocked.
-//   3. Zero matches for `viewMode: 'preview'|'editor'|'split'` (and `=`
-//      assignment form) remain under kid-kode-landing/src/.
-//   4. The PrismHost preview path is still mounted behind preview-hub /
-//      preview-app — SC-003: Codex's preview logic is preserved, not
-//      deleted.
+//   2. The FP-12 regex is armed in .claude/hooks/anti-drift-check.sh against
+//      the FULL legacy set (Round-0 `preview|editor|split` AND Round-1
+//      `hub-world|preview-hub`), and FP-14 blocks the superseded literals
+//      outright.
+//   3. Zero legacy-literal value sites remain in the store / page / Inspector.
+//   4. page.tsx renders ONE unified GraphScene for all three modes — there is
+//      no separate PrismHost compiled mount and no preview-hub gate
+//      (RT-SC-03 / INV-R3 / FP-R5; supersedes the old SC-003 assertion that
+//      PrismHost stayed mounted behind preview-hub).
 //
 // Source-shape assertions read the files directly. The two-runtime snapshot
-// captures the rendered baseline at notes/ralph-snapshots/EB-01-03/.
+// captured the rendered baseline at notes/ralph-snapshots/EB-01-03/.
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -32,8 +35,10 @@ const pagePath = join(repoRoot, 'src', 'app', 'page.tsx');
 const inspectorPath = join(repoRoot, 'src', 'components', 'editor', 'panels', 'Inspector.tsx');
 const hookPath = join(repoRoot, '.claude', 'hooks', 'anti-drift-check.sh');
 
+// Round-0 legacy (preview|editor|split) AND Round-1 superseded
+// (hub-world|preview-hub) — none may appear at a viewMode value site.
 const LEGACY_VALUE_RE =
-  /viewMode[\t ]*[:=][\t ]*['"](preview|editor|split)['"]/g;
+  /viewMode[\t ]*[:=][\t ]*['"](preview|editor|split|hub-world|preview-hub)['"]/g;
 
 describe('EB-01-03 — narrow ViewMode, arm FP-12, preserve preview-hub mount', () => {
   it('store state field viewMode is typed `ViewMode` (not `AnyViewMode`)', () => {
@@ -66,21 +71,30 @@ describe('EB-01-03 — narrow ViewMode, arm FP-12, preserve preview-hub mount', 
     }
   });
 
-  it('anti-drift hook arms FP-12 against legacy viewMode literals (RA-06)', () => {
+  it('anti-drift hook arms FP-12 (v1.1) against the FULL legacy literal set and FP-14 against superseded modes (RA-06b / INV-24)', () => {
     const src = readFileSync(hookPath, 'utf8');
-    // The hook must run a grep against the legacy viewMode literal pattern
-    // AND push an FP-12 violation message.
+    // FP-12 v1.1 — the hook greps viewMode value sites for BOTH the Round-0
+    // legacy (preview|editor|split) AND the Round-1 superseded modes
+    // (hub-world|preview-hub). A regression back to the Round-1 regex (which
+    // accepted hub-world/preview-hub as canonical) fails here.
     expect(src).toContain('viewMode[[:space:]]*[:=][[:space:]]*');
-    expect(src).toContain('(preview|editor|split)');
+    expect(src).toContain('(preview|editor|split|hub-world|preview-hub)');
     expect(src).toMatch(/FP-12: legacy viewMode literal/);
+    // FP-14 — superseded-mode literals are blocked ANYWHERE under src/, not
+    // just at viewMode value sites.
+    expect(src).toContain('(hub-world|preview-hub)');
+    expect(src).toMatch(/FP-14/);
   });
 
-  it('page.tsx still mounts PrismHost behind preview-hub / preview-app (SC-003)', () => {
+  it('page.tsx renders ONE unified GraphScene — no PrismHost mount, no preview-hub gate (RT-SC-03 / INV-R3 / FP-R5; supersedes SC-003)', () => {
     const src = readFileSync(pagePath, 'utf8');
-    // The preview pane must be gated by a derived predicate that includes the
-    // canonical preview-hub mode and must render a <PrismHost ... />.
-    expect(src).toMatch(/viewMode\s*===\s*['"]preview-hub['"]/);
-    expect(src).toMatch(/<PrismHost\b/);
+    // RA-06b folded preview-hub into preview-app, and the canonical runtime
+    // spec made preview-app a STATE of the same GraphScene (not a separate
+    // compiled PrismHost mount — FP-R5). Either superseded shape returning —
+    // a preview-hub gate or a <PrismHost> mount in page.tsx — fails here.
+    expect(src).not.toMatch(/viewMode\s*===\s*['"]preview-hub['"]/);
+    expect(src).not.toMatch(/<PrismHost\b/);
+    expect(src).toMatch(/<GraphScene\s*\/>/);
   });
 
   it('EB-01-03 snapshot directory contains outer.png + inner.png + state.json', () => {

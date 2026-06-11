@@ -72,6 +72,8 @@ interface Tile {
   inst: Animatable | null;
   elapsed: number;
   lastT: number;
+  /** Accumulator for the scrollStep stimulus override (null = inactive). */
+  scrollPos: number | null;
   opts: RegisterOptions;
   /** Lit backdrop added behind glass-category subjects (else null). */
   glassBackdrop: THREE.Group | null;
@@ -97,6 +99,20 @@ class SharedTileRenderer {
   ready = false;
   backend: 'webgpu' | 'webgl' | 'unknown' = 'unknown';
   deviceLostCount = 0;
+  /**
+   * Verification stimulus overrides (driven via the __catalogRig hook by the
+   * catalog harness; null = the rig's own synthetic driver).
+   *  - pointer: pin userData.pointer at a fixed normalized 0..1 point so a
+   *    paused pointer-driven tile holds a deterministic, engaged state while
+   *    controls are swept (frozen-frame compare stays honest: the ONLY thing
+   *    that changes between captures is the control value).
+   *  - scrollStep: advance userData.scroll by a CONSTANT amount per frame,
+   *    even while paused. Velocity-driven scroll primitives (e.g. scroll-skew)
+   *    then hold a constant, static response — frozen-frame compare works —
+   *    while the per-frame delta stays exactly reproducible (no rAF jitter).
+   */
+  private pointerOverride: { x: number; y: number } | null = null;
+  private scrollStepOverride: number | null = null;
   /** True once the Inter MSDF atlas is injected (text tiles = real glyphs). */
   textAtlasReady = false;
   /** Names of the def's that currently have a lit glass backdrop (diagnostic). */
@@ -258,6 +274,7 @@ class SharedTileRenderer {
       inst: null,
       elapsed: 0,
       lastT: 0,
+      scrollPos: null,
       opts,
       glassBackdrop: null,
     };
@@ -547,12 +564,81 @@ class SharedTileRenderer {
     }
     const ph = t / dur;
     // Synthetic pointer/scroll so pointer- and scroll-driven primitives animate.
-    tile.target.userData.pointer = { x: Math.cos(ph * Math.PI * 2), y: Math.sin(ph * Math.PI * 2) };
-    tile.target.userData.scroll = ph;
+    //
+    // POINTER CONVENTION FIX (catalog punch-list 2026-06-11): pointer primitives
+    // read userData.pointer as NORMALIZED 0..1 with the subject center at
+    // (0.5, 0.5) (see cursor-trail/repel/pointer-displace/hover-lift readers).
+    // The old stimulus was cos/sin in [-1, 1] orbiting the ORIGIN — that path
+    // never comes within 0.29 of (0.5, 0.5), so proximity-gated primitives
+    // (hover-lift falloff, pointer-press/attract radius) sat at proximity 0 for
+    // most of the loop and read as static. The new stimulus sweeps around the
+    // center with an oscillating radius 0.05..0.35, so distance-to-center (and
+    // therefore every proximity response) varies substantially within any
+    // ~1 s sampling window.
+    const ang = ph * Math.PI * 2;
+    const rad = 0.05 + 0.3 * (0.5 + 0.5 * Math.sin(ang * 2));
+    tile.target.userData.pointer = this.pointerOverride
+      ? { x: this.pointerOverride.x, y: this.pointerOverride.y }
+      : { x: 0.5 + rad * Math.cos(ang), y: 0.5 + rad * Math.sin(ang) };
+    if (this.scrollStepOverride !== null) {
+      // Constant per-FRAME scroll advance (deliberately not delta-scaled: the
+      // per-seek delta must be exactly reproducible for frozen-frame compares).
+      tile.scrollPos = (tile.scrollPos ?? ph) + this.scrollStepOverride;
+      tile.target.userData.scroll = tile.scrollPos;
+    } else {
+      // SCROLL STIMULUS FIX (catalog punch-list 2026-06-11): a smooth cosine
+      // sweep instead of the old linear sawtooth (scroll = ph). The sawtooth
+      // has CONSTANT velocity, so velocity-driven primitives (scroll-skew)
+      // held a constant response and their only frame-to-frame "motion" was
+      // rAF jitter noise — a coin-flip plays verdict. The cosine still sweeps
+      // the full 0..1 position range every loop (position-mapped tiles are
+      // unaffected in coverage), varies its velocity continuously including
+      // sign flips (velocity-mapped tiles genuinely oscillate), and removes
+      // the sawtooth's wrap-discontinuity snap.
+      tile.scrollPos = null;
+      tile.target.userData.scroll = 0.5 - 0.5 * Math.cos(ph * Math.PI * 2);
+    }
     try {
       inst.seek(t);
     } catch {
       /* error already logged on create */
+    }
+  }
+
+  /**
+   * Deterministically position every tile bound to `name` at time `t` (seconds
+   * on the primitive's own clock). Works paused or playing: both the elapsed
+   * accumulator and the frozen lastT are pinned, so the very next frame seeks
+   * exactly `t`. Verification-grade hook: lets the harness freeze a strobe /
+   * one-shot tile at a KNOWN visible phase instead of wherever pause landed.
+   * Returns the tile's effective loop duration (seconds), or null if no tile
+   * with that name is registered.
+   */
+  seekTile(name: string, t: number): number | null {
+    let dur: number | null = null;
+    for (const tile of this.tiles.values()) {
+      if (tile.def.name !== name || !tile.inst) continue;
+      dur = safeDuration(tile.inst.duration());
+      tile.elapsed = t;
+      tile.lastT = t % dur;
+    }
+    return dur;
+  }
+
+  /**
+   * Set / clear the verification stimulus overrides (see field docs above).
+   * Passing null (or {}) clears both.
+   */
+  setStimulus(s: { pointer?: { x: number; y: number } | null; scrollStep?: number | null } | null): void {
+    this.pointerOverride =
+      s && s.pointer && Number.isFinite(s.pointer.x) && Number.isFinite(s.pointer.y)
+        ? { x: s.pointer.x, y: s.pointer.y }
+        : null;
+    this.scrollStepOverride = s && typeof s.scrollStep === 'number' && Number.isFinite(s.scrollStep)
+      ? s.scrollStep
+      : null;
+    if (this.scrollStepOverride === null) {
+      for (const tile of this.tiles.values()) tile.scrollPos = null;
     }
   }
 
@@ -580,6 +666,11 @@ class SharedTileRenderer {
       get glassBackdropTiles() {
         return [...sharedRig.glassBackdropTiles];
       },
+      // Deterministic per-tile seek + stimulus overrides (verification hooks —
+      // the catalog harness drives these; both no-ops for normal users).
+      seek: (name: string, t: number) => sharedRig.seekTile(name, t),
+      setStimulus: (s: { pointer?: { x: number; y: number } | null; scrollStep?: number | null } | null) =>
+        sharedRig.setStimulus(s),
       // On-demand per-tile rects (diagnostic; useful when scaling to 300).
       debug: () =>
         [...sharedRig.tiles.values()].map((t) => {

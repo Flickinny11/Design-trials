@@ -1,18 +1,15 @@
 // EB-04-01 — Drill-in: flyToHub + content reveal animation sequence.
 //
-// Spec refs:
-//   §4 Phase 4 — Hub drill-in + node reveal + inspector
-//     SC-018  "Clicking a hub from `galaxy` flies the camera to that hub and
-//             switches to `hub-world` mode with that hub active; reuse
-//             `flyToHub`."
-//     SC-019  "On entering `hub-world`, that hub's nodes + background +
-//             intra-hub tethers fade in via deterministic reveal animation
-//             (≤800ms)."
-//   §1 INV-20 — selection state (selectedNodeId, selectedHubId) survives every
-//               transition through any subset of the five canonical view modes.
+// Spec refs (as amended by Round 2 RA-06b / INV-24): the archived
+// editor-build SC-018/SC-019 said drill-in lands in `hub-world`; Round 2
+// folded hub-world into `canvas` (canonical modes are exactly
+// `galaxy | canvas | preview-app` — PRISM-RUNTIME-SPEC §1.3/§6). Drill-in
+// therefore switches galaxy → CANVAS with the clicked hub active. Everything
+// else in the contract (reuse flyToHub, ≤800ms reveal, selection preserved —
+// INV-20) is unchanged.
 //
-// haltCheck (from ralph-state.json):
-//   "Clicking a hub in galaxy fires flyToHub, switches viewMode to hub-world;
+// haltCheck (as amended):
+//   "Clicking a hub in galaxy fires flyToHub, switches viewMode to canvas;
 //    the target hub's nodes, background, and intra-hub tethers fade in over
 //    ≤800ms; selection on the clicked hub is preserved."
 //
@@ -30,7 +27,7 @@
 //
 //   - One new action:
 //       drillIntoHub(hubId): atomically (single set() call)
-//         * sets viewMode = 'hub-world'
+//         * sets viewMode = 'canvas' (RA-06b)
 //         * sets selectedHubId = hubId (selection preserved on the clicked hub)
 //         * sets activeHubId  = hubId
 //         * sets flyToHubId   = hubId  (reuses the existing flyToHub camera
@@ -129,12 +126,14 @@ describe('EB-04-01 — drillIntoHub behavior (SC-018, SC-019, INV-20)', () => {
     resetStore();
   });
 
-  it('switches viewMode from galaxy to hub-world (SC-018)', () => {
+  it('switches viewMode from galaxy to canvas (SC-018 as amended by RA-06b — hub-world folded into canvas)', () => {
     const s = getStore();
     expect(s.viewMode).toBe('galaxy');
     s.drillIntoHub('hub-home');
     const after = getStore();
-    expect(after.viewMode).toBe('hub-world');
+    // The superseded 'hub-world' landing (or any non-canvas mode) returning
+    // here is drift against INV-24's canonical-3 set.
+    expect(after.viewMode).toBe('canvas');
   });
 
   it('sets activeHubId and flyToHubId to the clicked hub id (SC-018 — reuse flyToHub)', () => {

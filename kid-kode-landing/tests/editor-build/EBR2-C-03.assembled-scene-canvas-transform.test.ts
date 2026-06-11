@@ -19,6 +19,14 @@
 //    scenePosition+canvasTransform.position; applies canvasTransform.rotation;
 //    applies canvasTransform.scale. Selection ring follows."
 //
+// As amended (canvas-spec criterion 9 / SPEC-INDEX S6): the Transform tools
+// now author the node's OWN scenePosition (rotation + scale included); the
+// archived SC-042 routing of gizmo writes to canvasTransform is superseded.
+// canvasTransform REMAINS a composable overlay per INV-25 — the renderer
+// composes sp ⊕ ct for the wrapper group (translate adds, rotation adds,
+// scale multiplies), and reads the COMPOSED node (source ⊕ preview overlay,
+// §R2-E SC-072) so live Inspector edits render before Save.
+//
 // Test strategy:
 //   • Source-level assertions on AssembledSceneNode in GraphScene.tsx,
 //     mirroring the EBR2-C-02 grep-the-block pattern. The full Canvas mount
@@ -92,13 +100,16 @@ function extractFunctionBlock(src: string, fnName: string): string {
 }
 
 describe('EBR2-C-03 — AssembledSceneNode composes scenePosition + canvasTransform (SC-069, INV-25)', () => {
-  it('reads canvasTransform off the node via the canonical helper', () => {
+  it('reads canvasTransform off the COMPOSED node (source ⊕ preview overlay) via the canonical helper', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'AssembledSceneNode');
     // Use the shared helper rather than inlining the read so the identity
-    // default and clone semantics from canvas-transform-gizmo.ts stay the
-    // single source of truth (matches the gizmo's own pattern at line ~1581).
-    expect(block).toMatch(/readCanvasTransform\s*\(\s*node\s*\)/);
+    // default and clone semantics stay the single source of truth. Since
+    // EBR2-E-02 (§R2-E SC-072) the renderer reads source ⊕ preview-overlay,
+    // so the helper takes composedNode — reading the raw source node here
+    // would drop live Inspector edits and is a regression.
+    expect(block).toMatch(/readCanvasTransform\s*\(\s*composedNode\s*\)/);
+    expect(block).not.toMatch(/readCanvasTransform\s*\(\s*node\s*\)/);
   });
 
   it('wraps the rendered artifact in a group at scenePosition + canvasTransform.position', () => {
@@ -114,21 +125,25 @@ describe('EBR2-C-03 — AssembledSceneNode composes scenePosition + canvasTransf
     expect(block).toMatch(/sp\.z\s*\+\s*ct\.z/);
   });
 
-  it('applies canvasTransform.rotation on the composed wrapper group', () => {
+  it('applies rotation as the COMPOSITION sp.rotation + ct.rotation on the wrapper group', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'AssembledSceneNode');
-    // <group rotation={[ct.rotationX, ct.rotationY, ct.rotationZ]} ...>
+    // Canvas-spec criterion 9 made scenePosition the authored transform the
+    // gizmo writes (rotation included); canvasTransform remains a composable
+    // overlay (identity unless a legacy ct-authored node carries one).
+    // Dropping EITHER contribution — ct-only (the pre-SC-9 shape) or sp-only
+    // (losing the legacy overlay) — fails here.
     expect(block).toMatch(
-      /rotation\s*=\s*\{\s*\[\s*ct\.rotationX\s*,\s*ct\.rotationY\s*,\s*ct\.rotationZ\s*\]\s*\}/,
+      /rotation\s*=\s*\{\s*\[\s*sp\.rotationX\s*\+\s*ct\.rotationX\s*,\s*sp\.rotationY\s*\+\s*ct\.rotationY\s*,\s*sp\.rotationZ\s*\+\s*ct\.rotationZ\s*,?\s*\]\s*\}/,
     );
   });
 
-  it('applies canvasTransform.scale on the composed wrapper group (SC-070)', () => {
+  it('applies scale as the COMPOSITION sp.scale * ct.scale on the wrapper group (SC-070)', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'AssembledSceneNode');
-    // <group scale={[ct.scaleX, ct.scaleY, ct.scaleZ]} ...>
+    // Scale composes multiplicatively so identity in either field is a no-op.
     expect(block).toMatch(
-      /scale\s*=\s*\{\s*\[\s*ct\.scaleX\s*,\s*ct\.scaleY\s*,\s*ct\.scaleZ\s*\]\s*\}/,
+      /scale\s*=\s*\{\s*\[\s*sp\.scaleX\s*\*\s*ct\.scaleX\s*,\s*sp\.scaleY\s*\*\s*ct\.scaleY\s*,\s*sp\.scaleZ\s*\*\s*ct\.scaleZ\s*,?\s*\]\s*\}/,
     );
   });
 

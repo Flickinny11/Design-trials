@@ -317,7 +317,10 @@ export default function Inspector() {
     // t2-only ds-glass--refract displacement is legal here. RightPane mounts
     // exactly one inspector panel at a time, so the refract budget stays at 1.
     <div
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
+      // rail, hiding the first word of every body line — inset left-16 clears
+      // the rail on phones; desktop geometry unchanged.
+      className="absolute z-40 right-0 top-0 bottom-0 left-16 md:left-auto md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
       <div className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">

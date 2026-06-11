@@ -155,15 +155,20 @@ describe('EBR2-C-02 — CanvasTransformGizmo gate (SC-068, haltCheck)', () => {
   it("the prior-snapshot effect resets when editorMode flips to 'idle'", () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractGizmoBlock(src);
-    // The effect that captures priorCanvasTransform.current at selection
-    // time should also include editorMode in its early-return guard so
-    // the snapshot doesn't grow stale across edit/idle toggles.
-    const captureIdx = block.indexOf('priorCanvasTransform.current = readCanvasTransform');
+    // The effect that captures the prior snapshot at selection time should
+    // also include editorMode in its early-return guard so the snapshot
+    // doesn't grow stale across edit/idle toggles. Per canvas-spec criterion
+    // 9 the gizmo authors the node's OWN scenePosition (the archived SC-042
+    // canvasTransform routing is superseded — SPEC-INDEX S6), so the
+    // Escape-rollback snapshot is of the scene transform.
+    const captureIdx = block.indexOf('priorSceneTransform.current = readSceneTransform');
     expect(captureIdx).toBeGreaterThan(0);
     const useEffectIdx = block.lastIndexOf('useEffect', captureIdx);
     expect(useEffectIdx).toBeGreaterThan(0);
     const effectBody = block.slice(useEffectIdx, captureIdx);
     expect(effectBody).toMatch(/isEditMode|editorMode/);
+    // The not-in-edit branch must clear the snapshot (reset on idle).
+    expect(effectBody).toMatch(/priorSceneTransform\.current\s*=\s*null/);
   });
 });
 

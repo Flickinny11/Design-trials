@@ -1,0 +1,76 @@
+{
+  "feature": "P5 punch-list — editor ergonomics polish + catalog verification fixes",
+  "claim": "Toolbar stepper keys comfortably tappable (28px); no sub-9px low-contrast labels; Lighting panel scrolls at 460px height; mobile flyouts over tap-to-close scrim; minimap retinted brass/ice; honest zoom readout ('Interior · Full detail'); favicon ships; selection ring tracks reshape; catalog 312/312 with six broken tiles root-cause fixed.",
+  "groundTruthSibling": "3d-object",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Two visible text-occlusion defects. (1) The zoom readout is clipped behind the centered mode pill: in every desktop frame only the tail 'll detail' is visible emerging from under the 'Preview App' segment (03-desktop-canvas-full.png at device x~1880-2020; identical in 04/05). The claimed string 'Interior · Full detail' is unreadable; the ground-truth sibling shows the same overlap with the OLD label tail 'nspection' (3d-object/02-reshaped.png), so the overlap is pre-existing — but the punch-list item 'readout says something true' cannot be read as true in any captured frame. (2) On mobile, the left tool rail draws OVER the open inspector card's body text: every line's first word is hidden ('y headline rendered...', '...read first', '...municates') in 07-mobile-after-scrim-tap.png. Everything else listed is clean: steppers, contrast, 460h scroll, scrim, minimap, ring.",
+      "evidence": [
+        "03-desktop-canvas-full.png — readout shows only 'll detail' right of the mode pill (native crop at x1850-2300)",
+        "04-desktop-lighting-460h.png — same clipped 'll detail' readout",
+        "07-mobile-after-scrim-tap.png — rail occludes first word of each inspector body line",
+        "metrics: ground-truth 3d-object/02-reshaped.png topbar shows old label also clipped ('nspection' tail) — overlap pre-existing, delta is label text only"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "The polish items themselves read as claimed. Stepper keys measure ~56 device px (~28 CSS px) wide rounded keys with raised material treatment and crisp +/- glyphs (01-desktop-toolbar-steppers.png). Section microcopy 'POSITION · WRITES SCENEPOSITION' measures 8.48:1 contrast (claim: lifted to 7.5:1 — met). Lighting at 460px height scrolls: 04 shows header/Add Light/Directional-Point grid, 05 shows Hemisphere/Rim, Shadow Softness 0.50, Env/IBL 1.00, Unlit toggle — nothing unreachable. Minimap (02-desktop-minimap.png) is brass header type, ice-green node dots, brass active node on graphite — matches Observatory Brass chrome, no purple, no AI-blue. Selection ring is dead-centered on the reshaped headline bar (ring center 1623.5,796 vs bar center 1624,~797) and sized to the wide bar — tracking works. src/app/icon.svg exists on disk (1282 bytes). Catalog: results.json summary pass=312/312, fail dir empty, quietRetry attempted=0; the six fixed tiles' frames all show real visible content (dust-poof soft warm puff, campfire warm flame+embers, bevel-glass refracting card, aurora green-teal ribbons, hover-lift lifted card, lightning-bolt bright bolt at swept phase t=0.88s per its honest note).",
+      "evidence": [
+        "01-desktop-toolbar-steppers.png — minus key ~56 device px (~28 CSS px), raised key material, crisp glyphs",
+        "metrics: section label contrast measured 8.48:1 (text core L=0.384 vs panel bg L=0.0012) — claim >=7.5:1 met",
+        "05-desktop-lighting-460h-scrolled.png — lower panel content reachable by scroll at 460h",
+        "02-desktop-minimap.png — brass/ice retint, no purple/blue-default",
+        "metrics: ring center (1623.5,796) vs bar center (1624,~797) in 03-desktop-canvas-full.png — sub-2px tracking; metrics: catalog-parallel/results.json pass=312/312, deviceLost std=0 glass=0, quietRetry attempted=0"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes for the polished surfaces. The +/- stepper keys are unmistakable flanking each value field (01-desktop-toolbar-steppers.png). On mobile the open flyout sits over a visibly dimmed canvas (06) and a tap outside closes it (07 shows flyout gone, canvas back to full brightness) — the scrim affordance behaves as a first-time user expects. The empty-state hint 'Select a built element on the canvas, then click Edit to reveal transform handles' is plainly legible at 13.29:1 (08-mobile-emptyhint-contrast.png). The one discoverability wound is the clipped readout: a user cannot learn what 'll detail' means.",
+      "evidence": [
+        "06-mobile-flyout-scrim.png vs 07-mobile-after-scrim-tap.png — control: scrim tap closed the flyout; canvas region meanRGB 27.7 (scrim) -> 38.2 (after), dim visible",
+        "metrics: 08 empty-hint contrast 13.29:1",
+        "01-desktop-toolbar-steppers.png — stepper affordance obvious"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "No latency metrics ship in this bundle (static UI captures), but the interaction pair 06->07 proves the scrim tap applied (flyout dismissed, dim removed: region meanRGB 27.7 -> 38.2), and the catalog run is the responsiveness evidence for tiles: 312 tiles verified in 1104s wall-clock with deviceLost 0 on both tiers and renders/plays/controls=true on all six previously-dead tiles (hover-lift now has an engaged pointer stimulus; lightning-bolt sampled at visible phase t=0.88s/1.13s).",
+      "evidence": [
+        "control: scrim tap 06->07 — flyout closed, canvas meanRGB delta +10.5",
+        "metrics: catalog-parallel/results.json wallClockSec=1104 for 312 tiles, deviceLost std=0 glass=0; six fixed tiles renders/plays/controls all true, consoleErrors []"
+      ]
+    },
+    "q5_net": {
+      "answer": "INDIFFERENT, leaning pleased. 'The buttons feel like real keys now, the panel scrolls instead of cutting off, and tapping the dark area to close a panel on my phone just works — but the label at the top of the screen literally says \"ll detail\", and on my phone the left toolbar covers the first word of every line I'm trying to read.' Two readable-text failures keep an otherwise excellent polish pass from landing.",
+      "evidence": [
+        "03-desktop-canvas-full.png — 'll detail' fragment in topbar",
+        "07-mobile-after-scrim-tap.png — rail over inspector body text",
+        "metrics: all measured polish targets met (key ~28 CSS px, label 8.48:1, hint 13.29:1, 312/312 pass)"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Zoom readout is occluded by the centered mode pill — only 'll detail' is visible in every desktop frame. The 'honest label' punch-list item cannot be read; user sees a meaningless fragment. (Overlap is pre-existing — ground truth shows old label clipped to 'nspection' — but it is the exact surface this phase claims polished, and a first-time user at ~1600 CSS px width hits it immediately.)",
+      "evidence": "03-desktop-canvas-full.png and 04-desktop-lighting-460h.png — readout text emerges from under the 'Preview App' segment at device x~1880, reading 'll detail'"
+    },
+    {
+      "issue": "Mobile: left tool rail draws over the open inspector card's body text — the first word of every line is hidden ('[Primar]y headline rendered...', '[users ]read first', '[Com]municates...'). A first-time phone user selecting a node cannot cleanly read its description.",
+      "evidence": "07-mobile-after-scrim-tap.png — rail icons (CANVAS/Transform/Selection...) overlap the card text block from x=0 to ~x50 CSS"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Selection ring slightly under-encloses the reshaped headline bar: ring radius ~340 device px vs bar half-width ~370 px, so the bar's ends poke ~15 CSS px past the ring on each side. Centering is sub-2px, so tracking itself works; sizing reads a touch tight (could be plate padding vs geometry extent, or billboard depth).",
+      "evidence": "metrics: 03-desktop-canvas-full.png ring extents x1285-1962 (r~340) vs bar extents x1254-1994 (half-width 370), centers 1623.5 vs 1624"
+    },
+    {
+      "note": "Five of the six fixed-tile catalog frames (dust-poof, campfire, aurora, hover-lift, lightning-bolt) were captured on the webgl fallback tier (results.json backend.std='webgl'); only bevel-glass is webgpu. Colour-critical judgment of those five is advisory; pass/fail mechanics and console cleanliness are unaffected.",
+      "evidence": "metrics: catalog-parallel/results.json backend {std:'webgl', glass:'webgpu'}; per-tile backend fields match"
+    },
+    {
+      "note": "lightning-bolt reads as smooth sinuous energy strands rather than jagged forked lightning — taste call; the P5 fix (phase-swept sampling) demonstrably works since the bolt is bright and fully formed at the sampled instant.",
+      "evidence": "metrics: lightning-bolt frame captured at swept phase t=0.88s of 4.00s loop (results.json note); frames/lightning-bolt.png shows high-luma bolt strands"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

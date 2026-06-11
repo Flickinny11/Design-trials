@@ -88,12 +88,42 @@ describe('validatePlanRendererFields', () => {
     ).toBeTruthy();
   });
 
-  it('flags renderMode "mesh" without meshUrl (§5 + §6 9.6)', () => {
+  it('flags renderMode "mesh" without meshUrl AND without meshPrimitive (§5 + §6 9.6)', () => {
     const violations = validatePlanRendererFields({
       renderMode: 'mesh',
       depthMapUrl: null,
       meshUrl: null,
       cinematicPrimitives: [],
+    });
+    expect(
+      violations.find((v) => v.rule === 'MESH_REQUIRES_MESH_URL'),
+    ).toBeTruthy();
+  });
+
+  it('accepts renderMode "mesh" with a meshPrimitive and no meshUrl (P4 — the primitive IS the mesh artifact)', () => {
+    // P4 3D-OBJECT (canvas-spec §5; INV-8 additive): a node carrying
+    // `meshPrimitive` renders the primitive regardless of meshUrl, so the
+    // regen-verify path must NOT false-flag MESH_REQUIRES_MESH_URL on it.
+    const violations = validatePlanRendererFields({
+      renderMode: 'mesh',
+      depthMapUrl: null,
+      meshUrl: null,
+      cinematicPrimitives: [],
+      meshPrimitive: { kind: 'sphere', params: { radius: 0.4 } },
+    });
+    expect(
+      violations.find((v) => v.rule === 'MESH_REQUIRES_MESH_URL'),
+    ).toBeUndefined();
+    expect(violations).toEqual([]);
+  });
+
+  it('still flags a meshUrl-less mesh node when meshPrimitive is explicitly absent (regression pin)', () => {
+    const violations = validatePlanRendererFields({
+      renderMode: 'mesh',
+      depthMapUrl: null,
+      meshUrl: null,
+      cinematicPrimitives: [],
+      meshPrimitive: undefined,
     });
     expect(
       violations.find((v) => v.rule === 'MESH_REQUIRES_MESH_URL'),
