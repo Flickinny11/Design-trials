@@ -89,3 +89,4 @@ required in reports; re-verify CURRENT best fal models at build time — image, 
 Everything real lives ON DISK: git checkpoints, specs, ledgers, reports, prompts, the verification system, the inbox.
 Chat context is disposable; this doc + the ledgers are the continuity. The pattern has survived 2 handoffs, 2 session-
 limit interruptions, and a model migration without losing a step.
+## CHAIN (2026-06-12): run-chain.sh auto-fires PHYSICS-FLUID when EXPANSION completes (report + 3min agent-quiet), probes session window, arms run-sentinel-physics.sh. Stop: touch CHAIN-STOP. Monitor verification still happens at every check.
