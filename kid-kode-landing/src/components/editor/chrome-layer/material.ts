@@ -309,7 +309,7 @@ export function createOpaqueSlabMaterial(
   // albedo-only brass plate goes near-black under a dim scene env, which made
   // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
   // guarantees instrument-key luminance under any hub lighting.
-  const accentFace = brassGradient(vT).mul(accent.mul(0.34).add(accent.mul(hover).mul(0.08)));
+  const accentFace = brassGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
   n.emissiveNode = mix(
     keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(accentFace),
     vec3(0.0, 0.0, 0.0),

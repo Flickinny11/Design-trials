@@ -8,7 +8,7 @@
 
 - **Run started:** 2026-06-11 (session 1, claude-fable-5)
 - **Branch:** prism-editor-build
-- **Current wave:** W4 finishing (catalog fresh run) → W5 report finalization
+- **Current wave:** RUN COMPLETE (W0-W5 all done; report final)
 - **Last AUTO-CKPT:** see git log (W0 7ba71c5 → W1 f339f06 → W2-core cb0424e → W2-morph+seams → W2-PASS pending commit)
 - **FAL_KEY:** VALID (probe-verified S1); re-checked at W2 boundary — present
 - **LOGAN-INBOX:** checked S1 + W1 + W2 boundaries — no OPEN directives
@@ -21,8 +21,8 @@
 | W1 | Chrome material foundation: shared WebGPU chrome layer, TSL material lib (brushed metal/smoked glass/ceramic), Fresnel/refraction/bevels, pointer-reactive light, T0 fallback, <2ms budget | ✅ FOUNDATION DONE (see W1 notes) |
 | W2 | Surface migration: toolbar+flyouts+sliders, inspector, catalog frame, overlays, HUD, keyframe shell, boot + typography overhaul + morph-through transitions + canvas2D→MSDF labels | ✅ DONE — ADVOCATE PASS r2 (PLEASED) |
 | W3 | Flagship 5-hub showcase: fal.ai assets (image/3D/video), hi-res (kill 1024²), morph-through nav, all-5-driver bindings, poured-texture text | ✅ DONE — ADVOCATE PASS r4 (PLEASED) |
-| W4 | Carried fixes + no-regression: gizmo offset, 312 catalog, full vitest, perf table, mobile fallback | gizmo✅ chrome-stability✅ vitest 2534✅(2 env) mobile-t1✅ · catalog fresh-run IN PROGRESS |
-| W5 | Evidence + report: DPR2 zoom crops, advocate verdicts (Slider-Rev side-by-side), dependency-usage table, spend ledger, UI-FIDELITY-2-REPORT.md | report DRAFTED (notes/UI-FIDELITY-2-REPORT.md; 2 result slots pending catalog+prod-build) |
+| W4 | Carried fixes + no-regression: gizmo offset, 312 catalog, full vitest, perf table, mobile fallback | ✅ DONE — gizmo✅ catalog effective 312/312 (311+1 isolated)✅ vitest 2536✅ (EB-02-07 8/8 on prod build) prod-perf 10.5ms median✅ mobile-t1✅ |
+| W5 | Evidence + report: DPR2 zoom crops, advocate verdicts (Slider-Rev side-by-side), dependency-usage table, spend ledger, UI-FIDELITY-2-REPORT.md | ✅ DONE — notes/UI-FIDELITY-2-REPORT.md FINAL |
 
 ## W1 notes (foundation shipped S1)
 

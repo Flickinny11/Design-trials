@@ -3425,3 +3425,450 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] glass/water-surface (wave) render=true play=true ctrl=true
 
 ### Run end 2026-06-11T03:39:02.210Z — pass 312/312 (0 recovered on quiet retry), fail 0, missing 0, wall 1104s
+
+## Resumed 2026-06-11T23:27:47.656Z (std 0, glass 0 remaining)
+
+### Run end 2026-06-11T23:27:56.223Z — pass 312/312 (0 recovered on quiet retry), fail 0, missing 0, wall 9s
+
+## Resumed 2026-06-11T23:28:22.186Z (std 272, glass 40 remaining)
+- [PASS] std/accordion-y (transform) render=true play=true ctrl=true
+- [PASS] std/attractor (particles) render=true play=true ctrl=true
+- [PASS] std/aurora (volumetric) render=true play=true ctrl=true
+- [PASS] std/banner-flutter (wave) render=true play=true ctrl=true
+- [PASS] std/bars-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/blink (fade) render=true play=true ctrl=true
+- [PASS] std/blinds-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/blur-dissolve-out (blur) render=true play=true ctrl=true
+- [PASS] std/blur-in (blur) render=true play=true ctrl=true
+- [PASS] std/blur-slide-in (blur) render=true play=true ctrl=true
+- [PASS] std/blur-spin (blur) render=true play=true ctrl=true
+- [PASS] std/bounce (transform) render=true play=true ctrl=true
+- [PASS] std/brushed-metal (shimmer) render=true play=true ctrl=true
+- [PASS] std/bubbles (particles) render=true play=true ctrl=true
+- [PASS] std/campfire (volumetric) render=true play=true ctrl=true
+- [PASS] std/candle-flame (volumetric) render=true play=true ctrl=true
+- [PASS] std/card-fold (transform) render=true play=true ctrl=true
+- [PASS] std/checker-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/clock-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/cloth-sway (wave) render=true play=true ctrl=true
+- [PASS] std/clouds (volumetric) render=true play=true ctrl=true
+- [PASS] std/collision-balls (particles) render=true play=true ctrl=true
+- [PASS] std/corner-peel (transform) render=true play=true ctrl=true
+- [PASS] std/confetti (particles) render=true play=true ctrl=true
+- [PASS] std/cosmic-dust (volumetric) render=true play=true ctrl=true
+- [PASS] std/cross-dissolve (fade) render=true play=true ctrl=true
+- [PASS] std/crumble-to-particles (displacement) render=true play=true ctrl=true
+- [PASS] std/cross-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/crumble (displacement) render=true play=true ctrl=true
+- [PASS] std/cube-rotate (transform) render=true play=true ctrl=true
+- [PASS] std/cursor-trail (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/curtain-wave (wave) render=true play=true ctrl=true
+- [PASS] std/datamosh (displacement) render=true play=true ctrl=true
+- [PASS] std/debris-tornado (particles) render=true play=true ctrl=true
+- [PASS] std/defocus-pulse (blur) render=true play=true ctrl=true
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/depth-pop (transform) render=true play=true ctrl=true
+- [PASS] std/diamond-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/displacement-transition (displacement) render=true play=true ctrl=true
+- [PASS] std/dissolve-burn (displacement) render=true play=true ctrl=true
+- [PASS] std/dissolve-noise (fade) render=true play=true ctrl=true
+- [PASS] std/dissolve-to-dust (text) render=true play=true ctrl=true
+- [PASS] std/door-open (transform) render=true play=true ctrl=true
+- [PASS] std/dna-helix (particles) render=true play=true ctrl=true
+- [PASS] std/drape-fold (wave) render=true play=true ctrl=true
+- [PASS] std/drop-bounce (transform) render=true play=true ctrl=true
+- [PASS] std/dust-cloud (smoke) render=true play=true ctrl=true
+- [PASS] std/dust-particles (particles) render=true play=true ctrl=true
+- [PASS] std/dust-poof (smoke) render=true play=true ctrl=true
+- [PASS] std/elastic (transform) render=true play=true ctrl=true
+- [PASS] std/explosion (particles) render=true play=true ctrl=true
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+- [PASS] std/fade-checker (fade) render=true play=true ctrl=true
+- [PASS] std/fade-down (fade) render=true play=true ctrl=true
+- [PASS] std/fade-flicker-in (fade) render=true play=true ctrl=true
+- [PASS] std/fade-in-out (fade) render=true play=true ctrl=true
+- [PASS] std/fade-pulse (fade) render=true play=true ctrl=true
+- [PASS] std/fade-rotate (fade) render=true play=true ctrl=true
+- [PASS] std/fade-scale (fade) render=true play=true ctrl=true
+- [PASS] std/fade-through-black (fade) render=true play=true ctrl=true
+- [PASS] std/fade-up (fade) render=true play=true ctrl=true
+- [PASS] std/fade-vignette (fade) render=true play=true ctrl=true
+- [PASS] std/fade (fade) render=true play=true ctrl=true
+- [PASS] std/fire-flame (volumetric) render=true play=true ctrl=true
+- [PASS] std/fireball-burst (volumetric) render=true play=true ctrl=true
+- [PASS] std/fireflies (particles) render=true play=true ctrl=true
+- [PASS] std/fireworks (particles) render=true play=true ctrl=true
+- [PASS] std/flash (fade) render=true play=true ctrl=true
+- [PASS] std/flag-wave (wave) render=true play=true ctrl=true
+- [PASS] std/flip-3d (transform) render=true play=true ctrl=true
+- [PASS] std/flip-board (transform) render=true play=true ctrl=true
+- [PASS] std/flip (transform) render=true play=true ctrl=true
+- [PASS] std/float (transform) render=true play=true ctrl=true
+- [PASS] std/flocking (particles) render=true play=true ctrl=true
+- [PASS] std/fluid-sph (particles) render=true play=true ctrl=true
+- [PASS] std/foam (wave) render=true play=true ctrl=true
+- [PASS] std/focus-rack (blur) render=true play=true ctrl=true
+- [PASS] std/fog-roll (smoke) render=true play=true ctrl=true
+- [PASS] std/fog (volumetric) render=true play=true ctrl=true
+- [PASS] std/galaxy-particles (particles) render=true play=true ctrl=true
+- [PASS] std/fountain (particles) render=true play=true ctrl=true
+- [PASS] std/galaxy-spiral (volumetric) render=true play=true ctrl=true
+- [PASS] std/gel-wobble (wave) render=true play=true ctrl=true
+- [PASS] std/gas-flame (volumetric) render=true play=true ctrl=true
+- [PASS] std/genie-column (smoke) render=true play=true ctrl=true
+- [PASS] std/glimmer-dust (shimmer) render=true play=true ctrl=true
+- [PASS] std/glint-streak (shimmer) render=true play=true ctrl=true
+- [PASS] std/glitch-displace (displacement) render=true play=true ctrl=true
+- [PASS] std/glitch-text (text) render=true play=true ctrl=true
+- [PASS] std/godray (volumetric) render=true play=true ctrl=true
+- [PASS] std/gold-glint (shimmer) render=true play=true ctrl=true
+- [PASS] std/gravity-drop (particles) render=true play=true ctrl=true
+- [PASS] std/hair-sway (wave) render=true play=true ctrl=true
+- [PASS] std/heat-column (volumetric) render=true play=true ctrl=true
+- [PASS] std/hinge-fall (transform) render=true play=true ctrl=true
+- [PASS] std/heat-haze-warp (wave) render=true play=true ctrl=true
+- [PASS] std/holographic (shimmer) render=true play=true ctrl=true
+- [PASS] std/horizontal-scroll (scroll) render=true play=true ctrl=true
+- [PASS] std/hover-lift (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/ink-bloom (smoke) render=true play=true ctrl=true
+- [PASS] std/ink-drip (smoke) render=true play=true ctrl=true
+- [PASS] std/ink-spread (wave) render=true play=true ctrl=true
+- [PASS] std/ink-swirl (smoke) render=true play=true ctrl=true
+- [PASS] std/iris-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/jelly-surface (wave) render=true play=true ctrl=true
+- [FAIL] std/jelly (transform) render=true play=true ctrl=false :: error: page.evaluate: Execution context was destroyed, most likely because of a navigation
+- [PASS] std/lightning-bolt (volumetric) render=true play=true ctrl=true :: controls at swept visible phase t=1.13s
+- [PASS] std/liquid-metal-flow (shimmer) render=true play=true ctrl=true
+- [PASS] std/liquid-text (text) render=true play=true ctrl=true
+- [PASS] std/magma-cracks (volumetric) render=true play=true ctrl=true
+- [FAIL] std/light-shafts (volumetric) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/light-sweep (shimmer) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [PASS] std/magnetic-field (particles) render=true play=true ctrl=true
+- [PASS] std/melt (displacement) render=true play=true ctrl=true
+- [PASS] std/metallic-sheen (shimmer) render=true play=true ctrl=true
+- [PASS] std/meteor-shower (particles) render=true play=true ctrl=true
+- [PASS] std/mist-drift (smoke) render=true play=true ctrl=true
+- [PASS] std/moonstone-sheen (shimmer) render=true play=true ctrl=true
+- [PASS] std/morph-cloud (particles) render=true play=true ctrl=true
+- [FAIL] std/liquefy-reveal (displacement) render=true play=false ctrl=false :: focus attr not confirmed; controls retry: phase sweep found no differing frame under current params
+- [PASS] std/motion-blur-streak (blur) render=true play=true ctrl=true
+- [PASS] std/nebula (volumetric) render=true play=true ctrl=true
+- [PASS] std/neon-edge-pulse (shimmer) render=true play=true ctrl=true
+- [PASS] std/neon-flicker-text (text) render=true play=true ctrl=true
+- [FAIL] std/magnetic (pointer) render=true play=false ctrl=true :: pointer stimulus pinned for controls; controls at swept visible phase t=1.32s
+- [FAIL] std/noise-wipe (mask) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/mask-wipe (mask) render=true play=false ctrl=false
+- [PASS] std/ocean-fft (wave) render=true play=true ctrl=true
+- [FAIL] std/murmuration (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=2.50s of 4.00s loop)
+- [PASS] std/overshoot (transform) render=true play=true ctrl=true
+- [FAIL] std/origami-fold (displacement) render=true play=true ctrl=false
+- [FAIL] std/orbit-rings (particles) render=true play=false ctrl=false
+- [FAIL] std/paint-spread (displacement) render=true play=true ctrl=false
+- [FAIL] std/parallax (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [PASS] std/pendulum-settle (transform) render=true play=true ctrl=true
+- [FAIL] std/particle-assemble (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.31s of 2.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/pearlescent (shimmer) render=true play=true ctrl=false
+- [FAIL] std/perspective-tilt-in (transform) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.10s of 1.10s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/pendulum-wave (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/petal-fall (particles) render=true play=true ctrl=false
+- [FAIL] std/pin-reveal (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/pivot-drop (transform) render=true play=true ctrl=false
+- [FAIL] std/pixel-dissolve (displacement) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.05s of 1.60s loop)
+- [PASS] std/pointer-attract-scale (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [FAIL] std/plasma (volumetric) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [PASS] std/pointer-displace (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [FAIL] std/pointer-orbit (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/parallax-layers (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/pointer-ripple (pointer) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [PASS] std/pointer-shine (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [FAIL] std/rain-splash (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/rain (particles) render=true play=true ctrl=false
+- [FAIL] std/pointer-hue-shift (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/pointer-press (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/reveal-mask-scroll (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [PASS] std/ripple-concentric (wave) render=true play=true ctrl=true
+- [FAIL] std/ring-wipe (mask) render=true play=true ctrl=false
+- [FAIL] std/pointer-tilt-3d (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/ripple-displace (displacement) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 1.40s loop)
+- [FAIL] std/ripple-interference (wave) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 4.00s loop)
+- [FAIL] std/ripple-pool (wave) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/ripple (wave) render=true play=true ctrl=false
+- [FAIL] std/rotate-in (transform) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [PASS] std/sail-bulge (wave) render=true play=true ctrl=true
+- [FAIL] std/repel (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [PASS] std/roll-in (transform) render=true play=true ctrl=true :: controls at swept visible phase t=1.59s
+- [FAIL] std/satin-band (shimmer) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.63s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/scroll-blur (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scramble (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.15s of 1.60s loop)
+- [FAIL] std/scale-pop (transform) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.08s of 0.90s loop)
+- [FAIL] std/scroll-color-shift (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-depth-dolly (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-flip (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-fade-stack (scroll) render=true play=false ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [PASS] std/scroll-rotate-3d (scroll) render=true play=true ctrl=true
+- [FAIL] std/scroll-progress-fill (scroll) render=true play=false ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-skew (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-shrink-away (scroll) render=true play=false ctrl=false
+- [FAIL] std/scroll-stagger-rise (scroll) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-tilt (scroll) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scroll-zoom (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/scrub-morph (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/seaweed-sway (wave) render=true play=true ctrl=false
+- [FAIL] std/shatter-assemble (displacement) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 1.40s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/shatter (displacement) render=true play=true ctrl=false
+- [FAIL] std/shimmer (shimmer) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.22s of 2.40s loop)
+- [FAIL] std/slice-strips (displacement) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/skew-in (transform) render=true play=true ctrl=false
+- [FAIL] std/slide (transform) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.03s of 1.00s loop)
+- [PASS] std/smoke-burst (smoke) render=true play=true ctrl=true :: controls at swept visible phase t=0.38s
+- [FAIL] std/smoke-plume (smoke) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/smoke-ring (smoke) render=true play=true ctrl=false
+- [PASS] std/smoke (smoke) render=true play=true ctrl=true
+- [PASS] std/smoke-trail (smoke) render=true play=true ctrl=true :: controls at swept visible phase t=0.38s
+- [FAIL] std/smoky-fire (volumetric) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/snow (particles) render=true play=false ctrl=true
+- [FAIL] std/snow-globe (particles) render=true play=true ctrl=false
+- [PASS] std/spark-shower (particles) render=true play=true ctrl=true
+- [PASS] std/spin (transform) render=true play=true ctrl=true
+- [FAIL] std/sparkle-glints (shimmer) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/sparks (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.10s of 1.10s loop)
+- [FAIL] std/spiral-in (transform) render=true play=true ctrl=false
+- [FAIL] std/splat-reveal (displacement) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 1.40s loop)
+- [PASS] std/spiral-wipe (mask) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.25s of 1.60s loop); controls at swept visible phase t=0.63s
+- [FAIL] std/split-3d (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.10s of 1.10s loop)
+- [FAIL] std/split-stagger (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.03s of 0.88s loop)
+- [FAIL] std/spotlight-follow (pointer) render=true play=false ctrl=false :: pointer stimulus pinned for controls
+- [FAIL] std/spring-lattice (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/sticky-pin (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [FAIL] std/starfield-twinkle (shimmer) render=true play=true ctrl=false
+- [FAIL] std/squash-stretch-in (transform) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.03s of 1.00s loop)
+- [FAIL] std/steam (smoke) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/swarm (particles) render=true play=true ctrl=false
+- [FAIL] std/supernova (volumetric) render=true play=true ctrl=false
+- [PASS] std/stretch-text (text) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.13s of 1.40s loop); controls at swept visible phase t=0.13s
+- [FAIL] std/swing (transform) render=true play=true ctrl=false
+- [PASS] std/tear-reveal (displacement) render=true play=true ctrl=true
+- [FAIL] std/swirl-warp (displacement) render=true play=true ctrl=false
+- [PASS] std/text-blur-in (text) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.15s of 1.60s loop)
+- [FAIL] std/text-cascade (text) render=true play=false ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/text-counter-roll (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.17s of 1.80s loop)
+- [PASS] std/text-draw-on (text) render=true play=true ctrl=true :: controls at swept visible phase t=0.78s
+- [FAIL] std/text-elastic-in (text) render=true play=true ctrl=false
+- [FAIL] std/text-extrude-rotate (text) render=true play=false ctrl=false
+- [FAIL] std/text-flip-each (text) render=true play=false ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/text-extrude (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.04s of 1.40s loop)
+- [PASS] std/text-fade-up-each (text) render=true play=true ctrl=true :: controls at swept visible phase t=0.28s
+- [FAIL] std/text-glow-pulse (text) render=true play=false ctrl=false
+- [PASS] std/text-gradient-sweep (text) render=true play=true ctrl=true
+- [FAIL] std/text-jump (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 4.00s loop)
+- [FAIL] std/text-mask-reveal (text) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [PASS] std/text-perspective-in (text) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.12s of 1.30s loop)
+- [FAIL] std/text-magnetic-in (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.04s of 1.40s loop)
+- [FAIL] std/text-rotate-each (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 1.40s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/text-pop-each (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.04s of 1.40s loop)
+- [FAIL] std/text-scale-wave (text) render=true play=true ctrl=false
+- [FAIL] std/text-shake (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [PASS] std/text-squash-each (text) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.04s of 1.40s loop)
+- [FAIL] std/text-swing-in (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.05s of 1.60s loop)
+- [PASS] std/text-spotlight (text) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.15s of 1.60s loop); controls at swept visible phase t=0.38s
+- [FAIL] std/text-typewriter-cursor (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.06s of 1.80s loop)
+- [FAIL] std/text-wave-3d (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 4.00s loop)
+- [FAIL] std/ticker-tape (particles) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [PASS] std/tiles-assemble (displacement) render=true play=true ctrl=true
+- [FAIL] std/text-wave-color (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 4.00s loop)
+- [FAIL] std/tilt (pointer) render=true play=true ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/tilt-shift-pulse (blur) render=true play=true ctrl=false
+- [FAIL] std/torch-flame (volumetric) render=true play=true ctrl=false
+- [PASS] std/trampoline (wave) render=true play=true ctrl=true :: controls at swept visible phase t=0.13s
+- [FAIL] std/tumble (transform) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [PASS] std/unfold (transform) render=true play=true ctrl=true
+- [FAIL] std/volumetric-cone (volumetric) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/typewriter (text) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.15s of 1.60s loop)
+- [FAIL] std/velvet-sheen (shimmer) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/vortex (particles) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop)
+- [FAIL] std/voxelize (displacement) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/wave-cross (wave) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 4.00s loop)
+- [FAIL] std/wave-distort-in (displacement) render=true play=true ctrl=false
+- [FAIL] std/wave-text (text) render=true play=false ctrl=true
+- [FAIL] std/wave-grid (particles) render=true play=true ctrl=false
+- [FAIL] std/wave (wave) render=true play=true ctrl=false
+- [FAIL] std/wheat-field (wave) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+- [FAIL] std/wave-wipe (mask) render=true play=true ctrl=false
+- [FAIL] std/wedge-wipe (mask) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.13s of 1.40s loop); controls retry: phase sweep found no differing frame under current params
+- [PASS] std/wind-ripple (wave) render=true play=true ctrl=true
+- [FAIL] std/wipe-linear (mask) render=true play=true ctrl=false
+- [FAIL] std/will-o-wisp (volumetric) render=true play=true ctrl=false
+- [FAIL] std/wispy-smoke (smoke) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.38s of 4.00s loop); controls retry: phase sweep found no differing frame under current params
+- [PASS] std/zoom-out-in (transform) render=true play=true ctrl=true
+- [PASS] std/zoom-rotate-in (transform) render=true play=true ctrl=true
+- [FAIL] std/zigzag-wipe (mask) render=true play=true ctrl=false :: plays via deterministic phase sweep (t=0.11s of 1.20s loop)
+- [PASS] std/zoom-blur (blur) render=true play=true ctrl=true :: controls at swept visible phase t=0.09s
+- [PASS] glass/acrylic-edge (glass) render=true play=true ctrl=true
+- [PASS] glass/aerogel-haze (glass) render=true play=true ctrl=true
+- [PASS] glass/bevel-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/caustic-net (caustics) render=true play=true ctrl=true
+- [PASS] glass/caustic-rings (caustics) render=true play=true ctrl=true
+- [PASS] glass/caustic-shimmer (shimmer) render=true play=true ctrl=true
+- [PASS] glass/caustic-spots (caustics) render=true play=true ctrl=true
+- [PASS] glass/caustics-ripple (caustics) render=true play=true ctrl=true
+- [PASS] glass/caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/chromatic-aberration (glass) render=true play=true ctrl=true
+- [PASS] glass/chromatic-blur (blur) render=true play=true ctrl=true
+- [PASS] glass/crystal-ball (glass) render=true play=true ctrl=true
+- [PASS] glass/crystal-facet (glass) render=true play=true ctrl=true
+- [PASS] glass/dappled-light (caustics) render=true play=true ctrl=true
+- [PASS] glass/diamond-sparkle (shimmer) render=true play=true ctrl=true
+- [PASS] glass/dispersion (glass) render=true play=true ctrl=true
+- [PASS] glass/edge-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/flowing-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/fluted-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/fresnel-glow (glass) render=true play=true ctrl=true
+- [PASS] glass/frosted-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/gem-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/gemstone-cut (glass) render=true play=true ctrl=true
+- [PASS] glass/glass-refraction (glass) render=true play=true ctrl=true
+- [PASS] glass/holo-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/ice-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/iridescence (shimmer) render=true play=true ctrl=true
+- [PASS] glass/iridescent-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/lava-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/liquid-fill-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/liquid-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/pool-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/prism-spectrum (shimmer) render=true play=true ctrl=true
+- [PASS] glass/rainbow-fresnel-edge (shimmer) render=true play=true ctrl=true
+- [PASS] glass/refraction-warp (glass) render=true play=true ctrl=true
+- [PASS] glass/smoked-glass (glass) render=true play=true ctrl=true
+- [PASS] glass/soap-bubble (glass) render=true play=true ctrl=true
+- [PASS] glass/underwater-caustics (caustics) render=true play=true ctrl=true
+- [PASS] glass/water-droplet (glass) render=true play=true ctrl=true
+- [PASS] glass/water-surface (wave) render=true play=true ctrl=true
+
+## Quiet retry 2026-06-12T02:32:31.992Z — 120 loaded-run fails re-run serially on a fresh browser
+- [PASS] std-quiet/jelly (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/light-shafts (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/light-sweep (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/liquefy-reveal (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/magnetic (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/mask-wipe (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/murmuration (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/noise-wipe (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/orbit-rings (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/origami-fold (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/paint-spread (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/parallax-layers (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/parallax (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/particle-assemble (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/pearlescent (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/pendulum-wave (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/perspective-tilt-in (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/petal-fall (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/pin-reveal (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/pivot-drop (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/pixel-dissolve (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/plasma (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/pointer-hue-shift (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/pointer-orbit (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/pointer-press (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/pointer-ripple (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/pointer-tilt-3d (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/rain-splash (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/rain (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/repel (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/reveal-mask-scroll (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/ring-wipe (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/ripple-displace (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/ripple-interference (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/ripple-pool (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/ripple (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/rotate-in (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/satin-band (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/scale-pop (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/scramble (text) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-blur (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-color-shift (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-depth-dolly (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-fade-stack (scroll) render=true play=true ctrl=true :: controls via scroll-velocity stimulus (baseline static)
+- [PASS] std-quiet/scroll-flip (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-progress-fill (scroll) render=true play=true ctrl=true
+- [FAIL] std-quiet/scroll-shrink-away (scroll) render=true play=true ctrl=false :: scroll-step baseline unstable — stimulus retry not applicable
+- [PASS] std-quiet/scroll-skew (scroll) render=true play=true ctrl=true :: controls via scroll-velocity stimulus (baseline static)
+- [PASS] std-quiet/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-tilt (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scroll-zoom (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/scrub-morph (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/seaweed-sway (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/shatter-assemble (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/shatter (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/shimmer (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/skew-in (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/slice-strips (displacement) render=true play=true ctrl=true :: controls at swept visible phase t=0.09s
+- [PASS] std-quiet/slide (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/smoke-plume (smoke) render=true play=true ctrl=true
+- [PASS] std-quiet/smoke-ring (smoke) render=true play=true ctrl=true
+- [PASS] std-quiet/smoky-fire (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/snow-globe (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/snow (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/sparkle-glints (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/sparks (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/spiral-in (transform) render=true play=true ctrl=true :: controls at swept visible phase t=0.09s
+- [PASS] std-quiet/splat-reveal (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/split-3d (text) render=true play=true ctrl=true
+- [PASS] std-quiet/split-stagger (text) render=true play=true ctrl=true
+- [PASS] std-quiet/spotlight-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/spring-lattice (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/squash-stretch-in (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/starfield-twinkle (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/steam (smoke) render=true play=true ctrl=true
+- [PASS] std-quiet/sticky-pin (scroll) render=true play=true ctrl=true
+- [PASS] std-quiet/supernova (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/swarm (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/swing (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/swirl-warp (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/text-cascade (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-counter-roll (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-elastic-in (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-extrude-rotate (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-extrude (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-flip-each (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-glow-pulse (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-jump (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-magnetic-in (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-mask-reveal (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-pop-each (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-rotate-each (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-scale-wave (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-shake (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-swing-in (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-typewriter-cursor (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-wave-3d (text) render=true play=true ctrl=true
+- [PASS] std-quiet/text-wave-color (text) render=true play=true ctrl=true
+- [PASS] std-quiet/ticker-tape (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/tilt-shift-pulse (blur) render=true play=true ctrl=true
+- [PASS] std-quiet/tilt (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std-quiet/torch-flame (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/tumble (transform) render=true play=true ctrl=true
+- [PASS] std-quiet/typewriter (text) render=true play=true ctrl=true
+- [PASS] std-quiet/velvet-sheen (shimmer) render=true play=true ctrl=true
+- [PASS] std-quiet/volumetric-cone (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/vortex (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/voxelize (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/wave-cross (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/wave-distort-in (displacement) render=true play=true ctrl=true
+- [PASS] std-quiet/wave-grid (particles) render=true play=true ctrl=true
+- [PASS] std-quiet/wave-text (text) render=true play=true ctrl=true
+- [PASS] std-quiet/wave-wipe (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/wave (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/wedge-wipe (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/wheat-field (wave) render=true play=true ctrl=true
+- [PASS] std-quiet/will-o-wisp (volumetric) render=true play=true ctrl=true
+- [PASS] std-quiet/wipe-linear (mask) render=true play=true ctrl=true
+- [PASS] std-quiet/wispy-smoke (smoke) render=true play=true ctrl=true
+- [PASS] std-quiet/zigzag-wipe (mask) render=true play=true ctrl=true
+
+### Run end 2026-06-12T02:42:55.884Z — pass 311/312 (119 recovered on quiet retry), fail 1, missing 0, wall 11674s
+
+## Resumed 2026-06-12T02:43:52.423Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-shrink-away (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T02:44:20.510Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
