@@ -50,3 +50,5 @@ kid-kode-landing/.kripverify/
 
 # Verification harness output (regenerated per run)
 artifacts/
+
+.claude/worktrees/
