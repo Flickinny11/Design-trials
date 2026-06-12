@@ -62,7 +62,7 @@ RUN IN FLIGHT: PRIMITIVES-EXPANSION (~60-100 new primitives from DESIGN-REFERENC
   → W5 particles → WF report+no-regression). Ledger: notes/verification/PRIMITIVES-EXPANSION-PROGRESS.md.
 - CHAIN v2 armed: on expansion completion auto-fires ./PHYSICS-FLUID-PACK-PROMPT.md (research-first stack decision —
   NOT liquidfun-era; Rapier/Jolt/WebGPU-compute per June-2026 web research; ~30-50 sim primitives tier-gated) with
-  ./run-sentinel-physics.sh (NOTE: physics sentinel is v1-pattern — REGENERATE with the v2 real-binary detector before
+  ./run-sentinel-physics.sh (NOTE: physics sentinel is v1-pattern — RESOLVED 2026-06-12: run-sentinel-physics-v2.sh created; chain-v2 points at it. (was: regenerate before
   it arms, or patch run-chain-v2's NEXT_SENTINEL to a v2 copy. Known follow-up!).
 
 ## IMMEDIATE NEXT ACTION (new session)
