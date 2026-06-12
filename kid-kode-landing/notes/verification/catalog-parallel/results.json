@@ -1,20 +1,20 @@
 {
-  "startedAt": "2026-06-12T08:03:37.735Z",
-  "updatedAt": "2026-06-12T08:04:31.120Z",
+  "startedAt": "2026-06-12T20:18:43.079Z",
+  "updatedAt": "2026-06-12T20:19:12.742Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 3,
+      "total": 1,
       "backend": "webgl",
-      "startedAt": "2026-06-12T08:03:42.310Z",
-      "finishedAt": "2026-06-12T08:04:31.119Z",
-      "peakConcurrency": 6,
+      "startedAt": "2026-06-12T20:18:47.837Z",
+      "finishedAt": "2026-06-12T20:19:12.741Z",
+      "peakConcurrency": 2,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "cross-morph": {
-      "name": "cross-morph",
+    "cylinder-unroll": {
+      "name": "cylinder-unroll",
       "category": "transform",
       "driver": "time",
       "renders": true,
@@ -23,35 +23,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-12T08:03:48.556Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "liquid-stretch-morph": {
-      "name": "liquid-stretch-morph",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-12T08:03:57.295Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "sdf-shape-morph": {
-      "name": "sdf-shape-morph",
-      "category": "mask",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-12T08:04:02.950Z",
+      "at": "2026-06-12T20:18:55.098Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -62,8 +34,8 @@
     "names": []
   },
   "summary": {
-    "total": 3,
-    "pass": 3,
+    "total": 1,
+    "pass": 1,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -72,9 +44,9 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 53,
+    "wallClockSec": 30,
     "peak": {
-      "std": 6
+      "std": 2
     },
     "backend": {
       "std": "webgl"

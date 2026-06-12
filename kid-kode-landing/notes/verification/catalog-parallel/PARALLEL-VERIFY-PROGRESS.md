@@ -4282,3 +4282,63 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/sdf-shape-morph (mask) render=true play=true ctrl=true
 
 ### Run end 2026-06-12T08:04:31.120Z — pass 3/3 (0 recovered on quiet retry), fail 0, missing 0, wall 53s
+
+## Resumed 2026-06-12T18:00:14.830Z (std 1, glass 0 remaining)
+- [PASS] std/morph-into-card (mask) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:00:41.217Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 26s
+
+## Resumed 2026-06-12T18:06:08.486Z (std 1, glass 0 remaining)
+- [PASS] std/mask-iris-morph (mask) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:06:38.448Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 30s
+
+## Resumed 2026-06-12T18:07:25.330Z (std 1, glass 0 remaining)
+- [PASS] std/cross-morph (transform) render=true play=true ctrl=true
+
+## Resumed 2026-06-12T18:07:50.662Z (std 1, glass 0 remaining)
+
+### Run end 2026-06-12T18:07:51.553Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 26s
+
+## Resumed 2026-06-12T18:08:00.818Z (std 1, glass 0 remaining)
+
+## Resumed 2026-06-12T18:08:07.810Z (std 1, glass 0 remaining)
+- [PASS] std/swap-flip-morph (transform) render=true play=true ctrl=true
+- [PASS] std/skeleton-resolve (mask) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:08:35.101Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 27s
+
+### Run end 2026-06-12T18:10:46.283Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 165s
+
+## Resumed 2026-06-12T18:10:59.882Z (std 1, glass 0 remaining)
+- [PASS] std/sdf-shape-morph (mask) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:11:34.881Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 35s
+
+## Resumed 2026-06-12T18:12:27.333Z (std 1, glass 0 remaining)
+- [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:12:53.830Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 26s
+
+## Resumed 2026-06-12T18:13:23.121Z (std 1, glass 0 remaining)
+- [PASS] std/genie-suck (transform) render=true play=true ctrl=true
+
+### Run end 2026-06-12T18:13:49.167Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 26s
+
+## Resumed 2026-06-12T19:43:33.644Z (std 9, glass 0 remaining)
+- [PASS] std/cross-morph (transform) render=true play=true ctrl=true
+- [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
+- [PASS] std/genie-suck (transform) render=true play=true ctrl=true
+- [PASS] std/liquid-stretch-morph (transform) render=true play=true ctrl=true
+- [PASS] std/morph-into-card (mask) render=true play=true ctrl=true
+- [PASS] std/mask-iris-morph (mask) render=true play=true ctrl=true
+- [PASS] std/skeleton-resolve (mask) render=true play=true ctrl=true
+- [PASS] std/sdf-shape-morph (mask) render=true play=true ctrl=true
+- [PASS] std/swap-flip-morph (transform) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.63s of 4.00s loop)
+
+### Run end 2026-06-12T19:47:45.473Z — pass 9/9 (0 recovered on quiet retry), fail 0, missing 0, wall 252s
+
+## Resumed 2026-06-12T20:18:43.090Z (std 1, glass 0 remaining)
+- [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
+
+### Run end 2026-06-12T20:19:12.742Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 30s

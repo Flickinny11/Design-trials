@@ -13,11 +13,14 @@ import { buildSubject } from '@/lib/prism/animatable/subjects';
 import { makeTarget, runConformance } from './_conformance';
 
 type UniformHandle = { value: number };
+type ColorUniformHandle = { value: { getHexString(): string } };
 interface GenieHandles {
   uSuck: UniformHandle;
   uK: UniformHandle;
   uCornerX: UniformHandle;
   uCornerY: UniformHandle;
+  uGlow: UniformHandle;
+  uGlowColor: ColorUniformHandle;
 }
 
 const handlesOf = (target: { userData: Record<string, unknown> }): GenieHandles =>
@@ -27,7 +30,10 @@ const findOverlay = (parent: Object3D): Group | null =>
   (parent.children.find((c) => c.name === 'genie-suck-overlay') as Group | undefined) ?? null;
 
 const overlayMeshOf = (overlay: Group): Mesh =>
-  overlay.children.find((c) => (c as Mesh).isMesh) as Mesh;
+  overlay.children.find((c) => c.name === 'genie-suck-surface') as Mesh;
+
+const glowMeshOf = (overlay: Group): Mesh =>
+  overlay.children.find((c) => c.name === 'genie-suck-dock-glow') as Mesh;
 
 describe('genie-suck primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -92,6 +98,11 @@ describe('genie-suck primitive', () => {
     inst.seek(0.3 * D);
     expect(h.uCornerX.value).toBeLessThan(0);
     expect(h.uCornerY.value).toBeGreaterThan(0);
+    // The dock glow re-docks onto the new convergence corner.
+    const overlay = findOverlay((target.subject as Mesh).parent as Object3D) as Group;
+    const glow = glowMeshOf(overlay);
+    expect(glow.position.x).toBeLessThan(0);
+    expect(glow.position.y).toBeGreaterThan(0);
 
     // Funnel curvature lands in the live uniform the vertex lane reads.
     inst.setControl('curvature', 0.6);
@@ -110,6 +121,51 @@ describe('genie-suck primitive', () => {
     const bounceSuck = h.uSuck.value;
     expect(bounceSuck).toBeCloseTo(0.52734, 3);
     expect(Math.abs(bounceSuck - backOutSuck)).toBeGreaterThan(0.2);
+
+    inst.dispose();
+  });
+
+  it('dock glow carries the held beat: invisible at rest, strong + pulsing in the hold, subject-derived color (advocate must-fix: no empty phase)', () => {
+    const target = makeTarget(genieSuckPrimitive);
+    const inst = genieSuckPrimitive.create(target);
+    const subject = target.subject as Mesh;
+    const srcMat = subject.material as MeshStandardMaterial;
+    const D = inst.duration();
+    const h = handlesOf(target);
+    const overlay = findOverlay(subject.parent as Object3D) as Group;
+    const glow = glowMeshOf(overlay);
+    expect(glow).toBeDefined();
+
+    // Rest: no glow at all — the idle frame is exactly the subject panel.
+    inst.seek(0);
+    expect(h.uGlow.value).toBe(0);
+    expect(glow.visible).toBe(false);
+
+    // Early suck-in (where the harness pins t=1s for control sweeps): glow is
+    // still negligible — the funnel silhouette owns the frame.
+    inst.seek(0.3 * D);
+    expect(h.uGlow.value).toBeLessThan(0.05);
+
+    // Held beat: the sheet has converged to the corner point — the glow must
+    // be strong so the frame is never empty…
+    inst.seek(0.5 * D);
+    const g1 = h.uGlow.value;
+    expect(g1).toBeGreaterThan(0.5);
+    expect(glow.visible).toBe(true);
+    // …and pulsing (deterministic cos of the cycle clock), so the held beat
+    // is never frozen either.
+    inst.seek(0.56 * D);
+    const g2 = h.uGlow.value;
+    expect(g2).toBeGreaterThan(0.5);
+    expect(Math.abs(g2 - g1)).toBeGreaterThan(0.02);
+
+    // Cycle end: gone again (loop-ready, idle stays pristine).
+    inst.seek(D);
+    expect(h.uGlow.value).toBe(0);
+
+    // Subject-derived color: the panel's own luminous emissive (brass for the
+    // catalog plane) — never an invented hue.
+    expect(h.uGlowColor.value.getHexString()).toBe(srcMat.emissive.getHexString());
 
     inst.dispose();
   });
@@ -184,6 +240,15 @@ describe('genie-suck primitive', () => {
     (mesh.material as Material).addEventListener('dispose', () => {
       matDisposed = true;
     });
+    const glow = glowMeshOf(overlay);
+    let glowGeomDisposed = false;
+    let glowMatDisposed = false;
+    glow.geometry.addEventListener('dispose', () => {
+      glowGeomDisposed = true;
+    });
+    (glow.material as Material).addEventListener('dispose', () => {
+      glowMatDisposed = true;
+    });
 
     inst.dispose();
 
@@ -192,6 +257,8 @@ describe('genie-suck primitive', () => {
     expect(target.userData.genieSuck).toBeUndefined();
     expect(geomDisposed).toBe(true);
     expect(matDisposed).toBe(true);
+    expect(glowGeomDisposed).toBe(true);
+    expect(glowMatDisposed).toBe(true);
     // The subject's own material was never touched.
     expect(srcMat.opacity).toBe(baseOpacity);
     expect(srcMat.transparent).toBe(baseTransparent);

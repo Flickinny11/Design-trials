@@ -329,7 +329,7 @@ function attachOneBinding(
     );
     return null;
   }
-  if (UNMOUNTABLE_CATEGORIES.has(def.category)) {
+  if (UNMOUNTABLE_CATEGORIES.has(def.category) && def.mountable !== true) {
     console.debug(
       `[animation-bindings] '${def.name}' (category '${def.category}') cannot run on a mounted artifact — skipped on ${node.nodeId}`,
     );

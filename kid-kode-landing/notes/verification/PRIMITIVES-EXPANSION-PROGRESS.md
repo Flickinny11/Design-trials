@@ -122,8 +122,37 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     flip-morph, domain-warp-morph, silhouette-glow-morph, pill-morph). Defect classes: chrome
     children visible through closed masks; map-less subjects → placeholder sheets; controls dead
     at pinned t=1; framing overflow.
-  - FIX ROUND in flight (workflow primitives-w1-fixround, 9 agents, self-verifying: vitest +
-    harness + re-capture + read-own-frames + controls-alive check). Then fresh advocate r2.
+  - FIX ROUND r1 in flight at session-1 kill (workflow primitives-w1-fixround, 9 agents).
+    FORENSICS (session 2, 2026-06-12): only morph-into-card.ts was actually edited (03:32,
+    unverified); the other 8 agents made .bak copies at most. All 14 .ts committed in 69ae119.
+    Session 2 RELAUNCHED the identical workflow (script survived at session-1's
+    workflows/scripts/primitives-w1-fixround-wf_c3c702f6-7a2.js) — all 9 tiles re-fixed +
+    self-verified. Then fresh advocate r2.
+  - SESSION-3 FORENSICS (2026-06-12 ~14:30): session 2 killed ~13:14 mid-flight. Fix-round r2
+    HAD re-edited all 9 tiles (13:03–13:11); 8/9 had post-fix harness PASSes (18:00–18:13Z);
+    liquid-stretch-morph self-verify never ran; advocate r2 capture died after 1 tile;
+    results.json clobbered by a single-tile run. Session 3 re-verified: vitest 9 files 78/78;
+    tsc gate had 1 NEW error (cylinder-unroll TS2769 — fix agent's normalNode .mul chain) →
+    fixed via repo-convention cast; harness fresh slate **9/9 r/p/c** (deviceLost 0);
+    art-fidelity 7/9 PASS + cross-morph (0.047) / sdf-shape-morph (0.056) lum-flagged
+    (phase-timing class, judged by advocate); fresh 9-tile capture (webgpu) → **ADVOCATE r2:
+    BLOCKED narrowly** (advocate-verdict-w1-morph-r2.json): 10/12 r1 mustFixes RESOLVED,
+    7/9 tiles ship-quality, 0 new mustFixes; cylinder-unroll + genie-suck NOT-RESOLVED on one
+    shared defect — featureless tan placeholder sheet (root cause: both declare subject
+    'plane', which is inherently featureless; all 7 ship-quality siblings are 'card').
+    → r3 FIX WORKFLOW launched (w1-r3-placeholder-fix, 2 sequential agents, card subject +
+    chrome co-treatment, eyes-on self-verify mandatory). Run wf_5ef0b0af-0fb.
+  - SESSION-3 W2 FORENSICS: session 2 ALSO ran the W2 authoring workflow (script persisted:
+    e6a41aee.../primitives-w2-scroll-wf_93e26e85-d19.js) — all 12 scroll-* .ts + tests exist
+    (untracked, 13:06–13:14 mtimes), per-file vitest **12/12 files, 95/95 green** (session 3
+    verified). NOT barrel-wired yet. All 12 category 'scroll'; §6 sources cited in headers.
+  - SESSION-3 ENGINE (W3 prereq, orchestrator-owned): `PrimitiveDefinition.mountable?: boolean`
+    added to contract.ts (additive metadata) + bindings.ts honors it as override of
+    UNMOUNTABLE_CATEGORIES; TDD (P2-animation-bindings.test.ts 16/16); tsc gate green.
+  - SESSION-3 STAGED: W3 authoring workflow script written (13 briefs, texture-preserving +
+    mountable:true + chrome co-treatment + pointer-rig facts) at session-3
+    workflows/scripts/primitives-w3-distortion.js — launch AFTER r3 completes (parallel
+    half-written files would pollute the fix agents' tsc gate).
 - [ ] W2 SCROLL-STORY
 - [ ] W3 DISTORTION/DISPLACEMENT
 - [ ] W4 CURSOR PHYSICS
@@ -134,3 +163,5 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
 
 - 2026-06-11: Session 1 start. Ledger created. Recon done (contract/harness/tests/ORRERY mapped;
   DESIGN-REFERENCES read in full). LOGAN-INBOX: no OPEN directives. Launching P0 workflow.
+- 2026-06-12 (session 2, resume): Forensics — fix-round r1 died early (only morph-into-card edited). Relaunching identical 9-agent fixround workflow from persisted script. LOGAN-INBOX: no OPEN directives.
+- 2026-06-12 (session 3, resume ~14:30 CT): Forensics above. W1: gates re-run (vitest/tsc/harness 9/9/art), advocate r2 BLOCKED narrowly (2 tiles, one shared placeholder defect) → r3 fix workflow in flight. W2: 12 files verified test-green, awaiting barrel+browser gates. mountable engine change landed. LOGAN-INBOX: no OPEN directives.

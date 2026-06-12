@@ -41,14 +41,34 @@
 // (discrete cube decimation — genie-suck is one smooth continuous surface),
 // and genie-column (smoke category: generates a coiling smoke column — it
 // never moves the surface; genie-suck warps the surface itself).
+//
+// ADVOCATE MUST-FIX HARDENING (W1 verdict, 2026-06-12):
+// (1) REST IDENTITY — the collapse window's lower clamp used a CONSTANT −0.18
+//     floor meant only for the spring-out's overshoot bulge. At rest (uSuck=0)
+//     w_pre = −1.5·aN is negative across the whole sheet, so the constant
+//     floor engaged AT REST: every row beyond aN≈0.12 was stretched 18% AWAY
+//     from the corner — the skewed, frame-top-clipped idle the advocate
+//     blocked. The floor now FOLLOWS uSuck (clamp(uSuck, −0.18, 0)): exactly 0
+//     at rest (perfect identity — the overlay is pixel-true to the subject
+//     panel), and only as negative as the live overshoot during spring-out.
+// (2) NO EMPTY PHASE — at full suck the surface converges to a literal point
+//     (zero area → empty tile through the held beat; play-3 read as broken).
+//     A corner DOCK GLOW now carries the held beat: a soft radial disc at the
+//     convergence point, color derived from the SUBJECT's own material
+//     (emissive when luminous, else albedo — never an invented hue), swelling
+//     in as the sheet is swallowed (ramp above suck≈0.55) and pulsing
+//     deterministically (cos of the cycle clock) through the hold so no
+//     sampled frame is empty OR frozen. It fades to nothing by suck≈0.55 on
+//     the way out and is invisible at rest.
 
 import {
   Box3,
+  Color,
+  DoubleSide,
   Group,
   Matrix4,
   Mesh,
   PlaneGeometry,
-  type Color,
   type Material,
   type Object3D,
   type Texture,
@@ -57,6 +77,7 @@ import { MeshBasicNodeMaterial, MeshStandardNodeMaterial } from 'three/webgpu';
 import {
   uniform,
   positionLocal,
+  uv,
   vec2,
   vec3,
   float,
@@ -116,6 +137,11 @@ const HOLD_END = 0.6;
 const STAGGER = 0.6;
 // Overlay subdivision — enough resolution for a smooth curved throat.
 const SEGMENTS = 48;
+// Dock glow: suck level where the corner glow starts swelling in (the sheet is
+// mostly swallowed by then), and the deterministic pulse rate (Hz on the
+// primitive's own clock) that keeps the held beat visibly alive.
+const GLOW_START = 0.55;
+const GLOW_PULSE_HZ = 1.6;
 
 // The three/tsl chain types are loose and fight strict tsc (the genie-column /
 // caustics dodge): treat every node as an opaque `N` and funnel chaining
@@ -173,11 +199,29 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
       // ── Measure the subject in ITS OWN local frame ──────────────────────
       // Overlay size/placement and the corner point all derive from this box
       // (NEVER hardcoded world units — mounted artifacts vary wildly in size).
+      // GEOMETRY-BASED on purpose: each mesh's geometry bounding box is mapped
+      // mesh-local → subject-local directly. The old route (world AABB →
+      // inverse subject matrix) double-inflates whenever the subject is tilted
+      // at measure time — and seek() re-measures DURING the animation when the
+      // async texture pour lands, when co-bindings may have the hidden subject
+      // mid-tilt. An inflated box = oversized overlay = frame-clipped sheet.
       const measureLocalBox = (): Box3 | null => {
         subject.updateWorldMatrix(true, true);
-        const wb = new Box3().setFromObject(subject);
-        if (wb.isEmpty()) return null;
-        return wb.applyMatrix4(new Matrix4().copy(subject.matrixWorld).invert());
+        const inv = new Matrix4().copy(subject.matrixWorld).invert();
+        const box = new Box3();
+        const rel = new Matrix4();
+        const sub = new Box3();
+        subject.traverse((o) => {
+          const mesh = o as Mesh;
+          if (!mesh.isMesh || !mesh.geometry) return;
+          if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+          const bb = mesh.geometry.boundingBox;
+          if (!bb || bb.isEmpty()) return;
+          rel.multiplyMatrices(inv, mesh.matrixWorld);
+          sub.copy(bb).applyMatrix4(rel);
+          box.union(sub);
+        });
+        return box.isEmpty() ? null : box;
       };
       let localBox = measureLocalBox();
 
@@ -198,8 +242,13 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
       const uK = uniform(clamp(num(params.curvature, 1.7), 0.2, 4));
       const uCornerX = uniform(0);
       const uCornerY = uniform(0);
+      // Dock-glow drive (0 = invisible, 1 = full held-beat glow) + its
+      // subject-derived color (copied from the live source material — never an
+      // invented hue; black until buildOverlay reads the source).
+      const uGlow = uniform(0);
+      const uGlowColor = uniform(new Color(0, 0, 0));
       // Publish handles so the host (and CPU tests) can observe the motion.
-      target.userData.genieSuck = { uSuck, uK, uCornerX, uCornerY };
+      target.userData.genieSuck = { uSuck, uK, uCornerX, uCornerY, uGlow, uGlowColor };
 
       // ── Vertex-lane warp (TSL, built once, reused across rebuilds) ──────
       const buildPositionTree = (): unknown => {
@@ -219,10 +268,22 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
         // Staggered collapse window — rows nearer the corner converge FIRST.
         // w < 0 is the spring-out overshoot (uSuck dips negative under
         // backOut/elasticOut): the surface bulges slightly past flat.
+        //
+        // REST-IDENTITY FIX (advocate must-fix): the lower clamp FOLLOWS uSuck
+        // instead of sitting at a constant −0.18. The pre-clamp window
+        // (uSuck − aN·STAGGER)/(1 − STAGGER) is NEGATIVE across most of the
+        // sheet whenever uSuck < aN·STAGGER — including the entire rest pose
+        // (uSuck = 0 → −1.5·aN) — so a constant floor stretched the sheet 18%
+        // away from the corner AT REST: the skewed, frame-clipped idle. With
+        // clamp(uSuck, −0.18, 0) the floor is exactly 0 at rest and during the
+        // whole suck-in (w ≥ 0, perfect identity where the window hasn't
+        // arrived), and during spring-out it admits a uniform outward bulge
+        // exactly as deep as the live overshoot (capped at 18% for elasticOut).
+        const wFloor = n(tslClamp(uSuck as never, float(-0.18) as never, float(0) as never));
         const w = n(
           tslClamp(
             n(uSuck).sub(aN.mul(STAGGER)).div(1 - STAGGER) as never,
-            float(-0.18) as never,
+            wFloor as never,
             float(1) as never,
           ),
         );
@@ -250,12 +311,54 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
       };
       const positionNodeTree = buildPositionTree();
 
+      // ── Dock-glow node trees (built once, reused across rebuilds) ───────
+      // Soft radial disc: falloff = max(1 − 2·|uv−0.5|, 0)^2.2. Color is the
+      // subject-derived uGlowColor with a hotter core; opacity rides uGlow.
+      const glowD = n(length(n(uv()).sub(vec2(0.5, 0.5) as never) as never));
+      const glowFalloff = n(
+        pow(
+          tslMax(n(float(1)).sub(glowD.mul(2)) as never, float(0) as never) as never,
+          float(2.2) as never,
+        ),
+      );
+      const glowColorTree = n(uGlowColor as never).mul(glowFalloff.mul(0.9).add(0.6));
+      const glowOpacityTree = glowFalloff.mul(uGlow as never);
+
+      /** The glow's hue comes from the SUBJECT's own material: its emissive
+       *  when luminous (the catalog panel's brass), else its albedo. Never an
+       *  invented color. */
+      const pickGlowColor = (src: SrcProps): Color => {
+        const em = src.emissive;
+        const emMax = em ? Math.max(em.r, em.g, em.b) : 0;
+        if (em && emMax > 0.22) return new Color().copy(em);
+        if (src.color) return new Color().copy(src.color);
+        return new Color(1, 1, 1).multiplyScalar(0); // unreachable for catalog subjects
+      };
+
+      const makeGlowMaterial = (src: SrcProps): Material => {
+        uGlowColor.value.copy(pickGlowColor(src));
+        const mat = new MeshBasicNodeMaterial();
+        const m = mat as unknown as { colorNode: unknown; opacityNode: unknown };
+        m.colorNode = glowColorTree;
+        m.opacityNode = glowOpacityTree;
+        mat.transparent = true;
+        mat.depthWrite = false;
+        mat.side = DoubleSide; // stays visible if co-bindings tilt the subject
+        return mat;
+      };
+
       // ── Overlay (sibling of the subject; scroll-stagger-rise discipline) ─
       const overlayGroup = new Group();
       overlayGroup.name = 'genie-suck-overlay';
       let overlayMesh: Mesh | null = null;
+      let glowMesh: Mesh | null = null;
       let halfW = 1;
       let halfH = 1;
+      // Face-plate placement (overlay-group space) — the warp corner lives at
+      // (faceCx + uCornerX, faceCy + uCornerY, faceZ0); the glow docks there.
+      let faceCx = 0;
+      let faceCy = 0;
+      let faceZ0 = 0;
       // What the overlay was built FROM — material instance + map identity.
       // seek() compares these against the live source and rebuilds when the
       // async texture pour / material swap lands AFTER create.
@@ -265,6 +368,15 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
       const applyCorner = (cornerId: string) => {
         uCornerX.value = cornerId.includes('r') ? halfW : -halfW;
         uCornerY.value = cornerId.includes('t') ? halfH : -halfH;
+        if (glowMesh) {
+          // Dock the glow AT the convergence point, a hair proud of the face
+          // (epsilon is measured-relative — never a hardcoded world unit).
+          glowMesh.position.set(
+            faceCx + uCornerX.value,
+            faceCy + uCornerY.value,
+            faceZ0 + 0.02 * Math.min(halfW, halfH),
+          );
+        }
       };
 
       /** Mirror the subject's own surface — color + map shared by reference
@@ -308,9 +420,9 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
 
         halfW = Math.max((localBox.max.x - localBox.min.x) / 2, 1e-3);
         halfH = Math.max((localBox.max.y - localBox.min.y) / 2, 1e-3);
-        const cx = (localBox.min.x + localBox.max.x) / 2;
-        const cy = (localBox.min.y + localBox.max.y) / 2;
-        const faceZ = localBox.max.z;
+        faceCx = (localBox.min.x + localBox.max.x) / 2;
+        faceCy = (localBox.min.y + localBox.max.y) / 2;
+        faceZ0 = localBox.max.z;
 
         const geometry = new PlaneGeometry(halfW * 2, halfH * 2, SEGMENTS, SEGMENTS);
         const material = makeOverlayMaterial(src);
@@ -324,7 +436,23 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
           overlayMesh.name = 'genie-suck-surface';
           overlayGroup.add(overlayMesh);
         }
-        overlayMesh.position.set(cx, cy, faceZ);
+        overlayMesh.position.set(faceCx, faceCy, faceZ0);
+
+        // Dock glow — sized from the measured face (never hardcoded units).
+        const glowHalf = 0.5 * Math.min(halfW, halfH);
+        const glowGeometry = new PlaneGeometry(glowHalf * 2, glowHalf * 2);
+        const glowMaterial = makeGlowMaterial(src);
+        if (glowMesh) {
+          glowMesh.geometry.dispose();
+          (glowMesh.material as Material).dispose();
+          glowMesh.geometry = glowGeometry;
+          glowMesh.material = glowMaterial;
+        } else {
+          glowMesh = new Mesh(glowGeometry, glowMaterial);
+          glowMesh.name = 'genie-suck-dock-glow';
+          glowMesh.visible = false; // seek() drives visibility from uGlow
+          overlayGroup.add(glowMesh);
+        }
         applyCorner(str(params.corner, 'br'));
       };
 
@@ -394,6 +522,20 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
             const src = liveSourceMaterial();
             const liveMap = (src?.map as Texture | null | undefined) ?? null;
             if (src !== builtSrcMat || liveMap !== builtSrcMap) buildOverlay();
+            // DOCK GLOW (no-empty-phase must-fix): swell in as the sheet is
+            // swallowed, pulse deterministically through the held beat (cos of
+            // the cycle clock — no Math.random), gone below GLOW_START. The
+            // held-in-the-point frames now read as a living glowing dock
+            // point, never an empty tile.
+            const s = clamp(uSuck.value, 0, 1);
+            const env =
+              s <= GLOW_START ? 0 : Math.pow((s - GLOW_START) / (1 - GLOW_START), 1.5);
+            const pulse = 0.82 + 0.18 * Math.cos(t * Math.PI * 2 * GLOW_PULSE_HZ);
+            uGlow.value = env * pulse;
+            if (glowMesh) {
+              glowMesh.visible = uGlow.value > 0.004;
+              glowMesh.scale.setScalar(0.55 + 0.45 * env);
+            }
           } else {
             applyFallback(uSuck.value);
           }
@@ -412,6 +554,12 @@ export const genieSuckPrimitive: PrimitiveDefinition = {
               (overlayMesh.material as Material).dispose();
               overlayGroup.remove(overlayMesh);
               overlayMesh = null;
+            }
+            if (glowMesh) {
+              glowMesh.geometry.dispose();
+              (glowMesh.material as Material).dispose();
+              overlayGroup.remove(glowMesh);
+              glowMesh = null;
             }
             if (overlayGroup.parent) overlayGroup.parent.remove(overlayGroup);
             subject.visible = prevVisible;

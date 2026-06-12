@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { DataTexture, Mesh, Scene, type Material, type Texture } from 'three';
+import { DataTexture, Group, Mesh, Scene, type Material, type Texture } from 'three';
 import { skeletonResolvePrimitive } from '@/lib/prism/animatable/primitives/skeleton-resolve';
 import { buildSubject } from '@/lib/prism/animatable/subjects';
 import { makeTarget, runConformance } from './_conformance';
@@ -10,19 +10,23 @@ type SkeletonUniforms = {
   uContrast: Uni;
   uSweep: Uni;
   uGhost: Uni;
+  uFront: Uni;
 };
+type BarRect = { cu: number; cv: number; hw: number; hh: number };
 type ChromeMat = Material & { opacity: number; emissiveIntensity?: number };
 type MappedMat = Material & { map?: Texture | null };
 
 const uniformsOf = (target: { userData: Record<string, unknown> }): SkeletonUniforms =>
   target.userData.skeletonResolveUniforms as SkeletonUniforms;
+const barsOf = (target: { userData: Record<string, unknown> }): BarRect[] =>
+  target.userData.skeletonResolveBars as BarRect[];
 
 describe('skeleton-resolve primitive', () => {
   it('conforms to the Animatable contract', () => {
     runConformance(skeletonResolvePrimitive).dispose();
   });
 
-  it('plays: ghost+shimmer phase sweeps, then content resolves with a contrast pop that settles', () => {
+  it('plays: skeleton phase hides the chrome entirely, then content resolves with a pop that settles', () => {
     const target = makeTarget(skeletonResolvePrimitive);
     const panel = target.subject as Mesh;
     const originalMat = panel.material as Material;
@@ -36,18 +40,21 @@ describe('skeleton-resolve primitive', () => {
     // The panel face material was swapped for the skeleton node material.
     expect(panel.material).not.toBe(originalMat);
 
-    // t=0 — pure skeleton: no resolve, chrome dimmed (ghost of the layout).
+    // t=0 — pure skeleton: no resolve, the resolve front parked off-face, and
+    // the chrome FULLY hidden (co-treatment — it must never float over the
+    // placeholder bars).
     inst.seek(0);
     expect(uni.uResolve.value).toBe(0);
     expect(uni.uSweep.value).toBe(0);
-    expect(headerMat.opacity).toBeLessThan(0.7);
+    expect(uni.uFront.value).toBeLessThan(0);
+    expect(headerMat.opacity).toBe(0);
 
     // Early ghost phase — the shimmer band has swept (uSweep advanced) while
-    // the resolve crossfade is still parked at zero.
+    // the resolve crossfade is still parked at zero and chrome stays hidden.
     inst.seek(0.3 * dur);
     expect(uni.uSweep.value).toBeGreaterThan(0.5);
     expect(uni.uResolve.value).toBe(0);
-    expect(headerMat.opacity).toBeLessThan(0.7);
+    expect(headerMat.opacity).toBe(0);
 
     // Near the end — content nearly resolved AND the sharpening pop is live
     // (contrast briefly overshoots 1).
@@ -65,7 +72,59 @@ describe('skeleton-resolve primitive', () => {
     inst.dispose();
   });
 
-  it('controls change output at a paused frame (t=1s): ghost darkness + shimmer speed', () => {
+  it('derives skeleton bars from the measured chrome layout (one per child, header wider than dot)', () => {
+    const target = makeTarget(skeletonResolvePrimitive);
+    const inst = skeletonResolvePrimitive.create(target);
+    const bars = barsOf(target);
+
+    // Card chrome = header + dot + 3 rows → 5 placeholder bars.
+    expect(bars.length).toBe(5);
+    // Every bar rect lands on the face's uv chart.
+    for (const b of bars) {
+      expect(b.cu).toBeGreaterThan(-0.05);
+      expect(b.cu).toBeLessThan(1.05);
+      expect(b.cv).toBeGreaterThan(-0.05);
+      expect(b.cv).toBeLessThan(1.05);
+      expect(b.hw).toBeGreaterThan(0);
+      expect(b.hh).toBeGreaterThan(0);
+    }
+    // The widest bar (a full content row) dwarfs the dot placeholder — the
+    // skeleton mirrors the real layout, not a generic stripe pattern.
+    const widths = bars.map((b) => b.hw);
+    expect(Math.max(...widths)).toBeGreaterThan(Math.min(...widths) * 5);
+
+    inst.dispose();
+    expect(target.userData.skeletonResolveBars).toBeUndefined();
+  });
+
+  it('chrome co-treatment: the resolve front wipes chrome back in positionally (header before last row)', () => {
+    const target = makeTarget(skeletonResolvePrimitive);
+    const panel = target.subject as Mesh;
+    const header = panel.getObjectByName('card-header') as Mesh;
+    const headerMat = header.material as ChromeMat;
+    const rows = panel.getObjectByName('card-rows') as Group;
+    const lastRow = rows.children[rows.children.length - 1] as Mesh;
+    const lastRowMat = lastRow.material as ChromeMat;
+
+    const inst = skeletonResolvePrimitive.create(target);
+    const dur = inst.duration();
+
+    // Mid-resolve: the diagonal front (top-left → bottom-right) has passed
+    // the header but not yet the bottom row — partial, ordered coverage.
+    inst.seek(0.63 * dur);
+    expect(headerMat.opacity).toBeGreaterThan(lastRowMat.opacity + 0.5);
+    expect(headerMat.opacity).toBeGreaterThan(0.5);
+    expect(lastRowMat.opacity).toBeLessThan(0.3);
+
+    // Fully resolved: every chrome child back at base.
+    inst.seek(dur);
+    expect(headerMat.opacity).toBeCloseTo(1, 6);
+    expect(lastRowMat.opacity).toBeCloseTo(1, 6);
+
+    inst.dispose();
+  });
+
+  it('controls change output at the paused pinned frame (t=1s, mid-ghost)', () => {
     const target = makeTarget(skeletonResolvePrimitive);
     const panel = target.subject as Mesh;
     const header = panel.getObjectByName('card-header') as Mesh;
@@ -74,20 +133,24 @@ describe('skeleton-resolve primitive', () => {
     const inst = skeletonResolvePrimitive.create(target);
     const uni = uniformsOf(target);
 
-    // Pause mid-ghost-phase exactly like the CONTROLS gate does.
+    // Pause mid-ghost-phase exactly like the CONTROLS gate does (t=1s at the
+    // default 2.4s duration → p≈0.42 < RESOLVE_START).
     inst.seek(1);
+    expect(uni.uResolve.value).toBe(0);
+    expect(headerMat.opacity).toBe(0);
 
+    // Ghost knob drives the PLATE darkness uniform live at the paused frame —
+    // and the chrome stays hidden at both extremes (co-treatment is phase-
+    // driven, never ghost-driven).
     inst.setControl('ghost', 0);
-    const opLight = headerMat.opacity;
     const ghostLight = uni.uGhost.value;
-
+    const opLight = headerMat.opacity;
     inst.setControl('ghost', 1);
-    const opDark = headerMat.opacity;
     const ghostDark = uni.uGhost.value;
-
-    // Max darkness clearly dims the layout ghost vs zero darkness.
-    expect(opLight - opDark).toBeGreaterThan(0.5);
+    const opDark = headerMat.opacity;
     expect(ghostDark).toBeGreaterThan(ghostLight + 0.5);
+    expect(opLight).toBe(0);
+    expect(opDark).toBe(0);
 
     // Shimmer speed repositions the sweep band at the same paused time.
     inst.setControl('speed', 0.2);
@@ -95,6 +158,10 @@ describe('skeleton-resolve primitive', () => {
     inst.setControl('speed', 4);
     const sweepFast = uni.uSweep.value;
     expect(sweepFast).toBeGreaterThan(sweepSlow + 2);
+
+    // Duration min resolves the frame entirely at the same paused t=1s.
+    inst.setControl('duration', 0.8);
+    expect(uni.uResolve.value).toBe(1);
 
     inst.dispose();
   });
@@ -137,11 +204,17 @@ describe('skeleton-resolve primitive', () => {
 
     const glyph0 = subject!.getObjectByName('glyph-0') as Mesh;
     const glyph0Mat = glyph0.material as Material;
+    const glyph6 = subject!.getObjectByName('glyph-6') as Mesh;
+    const glyph6Mat = glyph6.material as ChromeMat;
 
     const inst = skeletonResolvePrimitive.create(target);
     // Representative mesh inside the Group got the skeleton material.
     expect(glyph0.material).not.toBe(glyph0Mat);
     inst.seek(0.5);
+    // Sibling glyphs are co-treated chrome whose far-off-chart centers are
+    // clamped onto the face — they MUST fully resolve by the end.
+    inst.seek(inst.duration());
+    expect(glyph6Mat.opacity).toBeCloseTo(1, 6);
     inst.dispose();
     expect(glyph0.material).toBe(glyph0Mat);
   });

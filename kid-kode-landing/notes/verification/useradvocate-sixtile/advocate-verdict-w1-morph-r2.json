@@ -1,0 +1,276 @@
+{
+  "round": 2,
+  "wave": "w1-morph",
+  "overall": "BLOCKED",
+  "reviewer": "user-advocate (fresh-context, non-technical user grade)",
+  "capture": {
+    "manifest": "evidence-manifest-after.json",
+    "backend": "webgpu",
+    "gpu": true,
+    "deviceLostAtEnd": 0,
+    "capturedAt": "2026-06-12T19:48:32.775Z",
+    "errorSummary": "0 console errors, 0 network errors across all 9 metrics.json"
+  },
+  "tiles": {
+    "cylinder-unroll": {
+      "shipQuality": false,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#1 unroll sheet was a blank tan placeholder (no subject content)",
+          "status": "NOT-RESOLVED",
+          "evidence": "cylinder-unroll/after/play-3.png — fully-unrolled sheet is still a featureless tan rectangle: no amber header bar, no text rows, no dot. Confirmed by contrast-normalized zoom of the sheet region (blank even at 1.8x normalize). metrics: play-3 effHue=33 effSat=0.44 uniform warm fill, identical signature to r1 (effHue=33 effSat=0.43). Every other tile in this wave (e.g. swap-flip-morph/after/idle.png) shows the subject card with full chrome; this sheet carries none of it."
+        },
+        {
+          "r1Issue": "#2 roll cylinder taller than sheet, spanning full frame height",
+          "status": "RESOLVED",
+          "evidence": "cylinder-unroll/after/idle.png — rolled scroll now sits inside the layout with clear top/bottom margins; cylinder-unroll/after/play-2.png — travelling roll edge matches the sheet height exactly, no full-height brown stripe (r1 evidence frame control-overshoot-low.png now also shows the roll inside the sheet silhouette)."
+        },
+        {
+          "r1Issue": "#3 'overshoot' control dead (r1: meanAbsDiff=0, changedFrac=0)",
+          "status": "RESOLVED",
+          "evidence": "control: cylinder-unroll overshoot meanAbsDiff=3.251 changedFrac=0.043 changed=true; visually control-overshoot-low.png shows a clean single roll vs control-overshoot-high.png showing a pronounced double back-curl — visible, sensible response."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [
+        {
+          "note": "The unroll MOTION itself is now well-staged and reads as a parchment scroll laying flat (idle.png -> play-3.png, frameDeltaMag peak 26.27 at play-2); only the surface content is missing.",
+          "evidence": "cylinder-unroll/after/play-1.png, play-2.png, play-3.png"
+        }
+      ],
+      "evidence": [
+        "cylinder-unroll/after/idle.png",
+        "cylinder-unroll/after/play-2.png",
+        "cylinder-unroll/after/play-3.png",
+        "cylinder-unroll/after/control-overshoot-low.png",
+        "cylinder-unroll/after/control-overshoot-high.png",
+        "metrics: overshoot meanAbsDiff=3.251 changedFrac=0.043; play-3 effHue=33 effSat=0.44; 0 console errors"
+      ]
+    },
+    "genie-suck": {
+      "shipQuality": false,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#4a subject was a blank brown placeholder (no card content)",
+          "status": "NOT-RESOLVED",
+          "evidence": "genie-suck/after/idle.png — the surface is still a featureless brown rectangle: no amber bar, no rows, no dot. play-1.png and control-curvature-low/high.png confirm the funnel deforms the same blank brown fill. metrics: idle effHue=33 effSat=0.43 uniform warm fill — same placeholder signature r1 blocked."
+        },
+        {
+          "r1Issue": "#4b idle skew-clipped at top frame edge",
+          "status": "RESOLVED",
+          "evidence": "genie-suck/after/idle.png — sheet at rest is now a clean upright rectangle, fully inside the layout, no skew, no top-edge clipping."
+        },
+        {
+          "r1Issue": "#4c play-3 (hold) fully empty black",
+          "status": "RESOLVED",
+          "evidence": "genie-suck/after/play-3.png — hold state now shows a visible warm glowing docked target orb at the bottom-right corner; metrics: play-3 meanLuma=10.9 (vs r1 7.7 = pure background), play-2 frameDeltaMag=46.43 confirms the suck motion is strong."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [
+        {
+          "note": "Funnel choreography is genuinely nice now — curvature low/high gives a fat leaf vs a tight curving tail into the dock glint, a sensible 'Funnel Curve' response.",
+          "evidence": "genie-suck/after/control-curvature-low.png vs control-curvature-high.png; control curvature meanAbsDiff=15.425 changedFrac=0.1756"
+        }
+      ],
+      "evidence": [
+        "genie-suck/after/idle.png",
+        "genie-suck/after/play-2.png",
+        "genie-suck/after/play-3.png",
+        "genie-suck/after/control-curvature-low.png",
+        "genie-suck/after/control-curvature-high.png",
+        "metrics: play-3 meanLuma=10.9; curvature meanAbsDiff=15.425; duration meanAbsDiff=8.345; 0 console errors"
+      ]
+    },
+    "swap-flip-morph": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#5 alternate face was a featureless putty-grey slab",
+          "status": "RESOLVED",
+          "evidence": "swap-flip-morph/after/play-2.png — alternate face is now a designed second face: light warm-grey bias-tinted card with the SAME chrome intact (amber header bar, blue dot, three grey rows), exactly matching the claim 'the same card, bias-tinted, chrome intact'. metrics: play-2 meanLuma=38.8 stdev=52.2 (real content detail) vs r1's flat slab."
+        },
+        {
+          "r1Issue": "#6 'faceBias' control dead (r1: meanAbsDiff=0, changedFrac=0)",
+          "status": "RESOLVED",
+          "evidence": "control-faceBias-low.png shows the dark face A, control-faceBias-high.png shows the light bias-tinted face B — an unmistakable swap; control: faceBias meanAbsDiff=29.898 changedFrac=0.2733 changed=true."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [],
+      "evidence": [
+        "swap-flip-morph/after/idle.png",
+        "swap-flip-morph/after/play-1.png",
+        "swap-flip-morph/after/play-2.png",
+        "swap-flip-morph/after/play-3.png",
+        "swap-flip-morph/after/control-faceBias-low.png",
+        "swap-flip-morph/after/control-faceBias-high.png",
+        "metrics: faceBias meanAbsDiff=29.898 changedFrac=0.2733; play-2 frameDeltaMag=31.6; 0 console errors"
+      ]
+    },
+    "mask-iris-morph": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#7 iris never concealed card content (chrome floated above closed mask)",
+          "status": "RESOLVED",
+          "evidence": "mask-iris-morph/after/idle.png — closed aperture at t=0 conceals EVERYTHING: near-black frame with only a tiny warm brass glint at center; metrics: idle meanLuma=7.8 (background level), effHue=233 (no warm chrome visible). play-1.png shows a narrow slit revealing only a sliver of one row; play-2.png shows content confined inside the star aperture with the burning brass rim, card corners outside the star concealed (verified in a 1.8x-brightened zoom); play-3.png full reveal."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [
+        {
+          "note": "Under 1.8x brightening a faint hairline outline of the card's rounded rect is detectable outside the aperture mid-open, and the amber header bar's left end slightly crosses the soft star rim. Invisible at normal viewing; reads as a designed edge accent.",
+          "evidence": "mask-iris-morph/after/play-2.png (brightened crop inspection)"
+        },
+        {
+          "note": "edgeGlow control response is real but subtle at the pinned state.",
+          "evidence": "control: edgeGlow meanAbsDiff=2.02 changedFrac=0.0165 changed=true"
+        }
+      ],
+      "evidence": [
+        "mask-iris-morph/after/idle.png",
+        "mask-iris-morph/after/play-1.png",
+        "mask-iris-morph/after/play-2.png",
+        "mask-iris-morph/after/play-3.png",
+        "metrics: idle meanLuma=7.8; duration meanAbsDiff=8.595 changedFrac=0.263; 0 console errors"
+      ]
+    },
+    "morph-into-card": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#8 docked chip showed residual straight-edged ghost plate + chip dimmed to illegibility",
+          "status": "RESOLVED",
+          "evidence": "morph-into-card/after/play-2.png — docked chip is a clean fully-rounded pill with a crisp amber rim and clearly visible slate body, zero rectangular ghost edges; control-chipScale-high.png (r1's evidence frame for the ghost plate) now shows a large clean pill with rounded shoulders only. play-1.png even shows miniaturized card content (tiny amber bar + rows) riding inside the chip mid-fold. chipScale low->high sweeps small pill -> large pill: meanAbsDiff=7.341 changedFrac=0.0911 changed=true."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [],
+      "evidence": [
+        "morph-into-card/after/idle.png",
+        "morph-into-card/after/play-1.png",
+        "morph-into-card/after/play-2.png",
+        "morph-into-card/after/control-chipScale-low.png",
+        "morph-into-card/after/control-chipScale-high.png",
+        "metrics: chipScale meanAbsDiff=7.341; play-1 frameDeltaMag=9.35; 0 console errors"
+      ]
+    },
+    "sdf-shape-morph": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#9 circle/hexagon phases were flat featureless dark fills + mid-morph double-exposure ghost + morph dims below idle",
+          "status": "RESOLVED",
+          "evidence": "sdf-shape-morph/after/play-2.png and play-3.png — circle phase now carries the subject's own surface: amber header bar, grey rows and card fill ride inside the brass-rimmed circle; NO superimposed faded-rect double exposure. control-smoothness-low.png — clean hexagon silhouette WITH the bar and rows inside (r1's featureless-hexagon frame). Dimming: play-2 meanLuma=13.8 vs idle 18.5 reflects the smaller circle coverage, and content inside stays bright (amber bar unchanged) — not the r1 whole-surface dim (9.3 vs 14.7)."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [
+        {
+          "note": "Art-fidelity dark flag (lum 0.056) judged NOT broken: the dark phases are the card's own dark-navy body inside the shape, with bright brass rim + amber bar carrying contrast — reads as a designed dark phase, not a failure.",
+          "evidence": "sdf-shape-morph/after/play-2.png; metrics: play-2 meanLuma=13.8 effHue=34 warm"
+        },
+        {
+          "note": "Content clip slightly overflows the silhouette in some phases — the amber bar pokes a few px past the shape edge (hexagon and large-polygon states). Pixel-peep level, not visible at speed.",
+          "evidence": "sdf-shape-morph/after/control-smoothness-low.png, control-size-high.png"
+        },
+        {
+          "note": "Faint static hairline ticks marking the original rect extent are visible at frame edges throughout.",
+          "evidence": "sdf-shape-morph/after/idle.png"
+        }
+      ],
+      "evidence": [
+        "sdf-shape-morph/after/idle.png",
+        "sdf-shape-morph/after/play-2.png",
+        "sdf-shape-morph/after/play-3.png",
+        "sdf-shape-morph/after/control-smoothness-low.png",
+        "sdf-shape-morph/after/control-size-high.png",
+        "metrics: all 5 controls changed=true (size meanAbsDiff=10.289, speed 8.496, glow 7.818); 0 console errors"
+      ]
+    },
+    "cross-morph": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#10 'trough' control dead — element fully invisible at engaged state at every setting",
+          "status": "RESOLVED",
+          "evidence": "control-trough-low.png, control-trough-mid.png, control-trough-high.png — the card is VISIBLE at the engaged state at all three settings (dimmed but fully legible: amber bar, rows, dot), no blackout; control: trough meanAbsDiff=1.918 changedFrac=0.05 changed=true (was 0/0 in r1). Play arc reads as claimed: play-1.png recede/dip (meanLuma 10.8), play-2.png re-emerge advanced right (13.5), play-3.png return (11.6) — soft opacity trough with the subject visible throughout."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [
+        {
+          "note": "Art-fidelity dark flag (lum 0.047) judged NOT broken: the whole arc plays inside a designed dim trough, but the subject stays visible and legible in every frame. A user sees a deliberate dip, though it could afford to be one stop brighter.",
+          "evidence": "cross-morph/after/play-1.png, play-2.png; metrics: play-1 meanLuma=10.8 -> play-2 13.5"
+        },
+        {
+          "note": "r1's right-edge clipping at peak travel is also gone — card fully in frame at peak advance.",
+          "evidence": "cross-morph/after/play-2.png"
+        },
+        {
+          "note": "Trough low/mid/high differences are subtle at the pinned engaged phase (changedFrac 0.05) — alive but a first-time user might need the live loop to feel it.",
+          "evidence": "control: trough meanAbsDiff=1.918 changedFrac=0.05"
+        }
+      ],
+      "evidence": [
+        "cross-morph/after/control-trough-low.png",
+        "cross-morph/after/control-trough-mid.png",
+        "cross-morph/after/control-trough-high.png",
+        "cross-morph/after/play-1.png",
+        "cross-morph/after/play-2.png",
+        "cross-morph/after/play-3.png",
+        "metrics: trough changed=true 1.918/0.05; travel 2.59/0.0921; duration 7.64/0.2065; 0 console errors"
+      ]
+    },
+    "liquid-stretch-morph": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#11 'stretch' control no visible change + subject ~85% clipped off right frame edge",
+          "status": "RESOLVED",
+          "evidence": "control-stretch-low.png — card near-normal proportions, fully in frame; control-stretch-high.png — card dramatically stretched long-and-thin across the frame, still fully in frame; control: stretch meanAbsDiff=9.055 changedFrac=0.23 changed=true (was 0.118/0.0024). play-2.png mid-flight shows the taffy stretch with content riding (the blue dot visibly squashed to an ellipse) and zero edge clipping."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [],
+      "evidence": [
+        "liquid-stretch-morph/after/control-stretch-low.png",
+        "liquid-stretch-morph/after/control-stretch-high.png",
+        "liquid-stretch-morph/after/play-2.png",
+        "liquid-stretch-morph/after/play-3.png",
+        "metrics: stretch meanAbsDiff=9.055 changedFrac=0.23; travel 6.831/0.1766; 0 console errors"
+      ]
+    },
+    "skeleton-resolve": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        {
+          "r1Issue": "#12 no skeleton/ghost state — real content fully visible at t=0",
+          "status": "RESOLVED",
+          "evidence": "skeleton-resolve/after/idle.png — t=0 is now a true loading skeleton: bone-grey placeholder bars + grey dot over a silver ghost plate with a shimmer sheen, NO real content (no amber bar, no blue dot); metrics: idle effHue=64 effSat=0.04 (desaturated bone grey). play-3.png — the real card (amber bar, blue dot, dark body) wiped back in by a soft front still visible at the bottom-right corner; metrics: play-3 effHue=35 meanLuma=17.1 matching the real card's idle signature (16.3), frameDeltaMag=23.08 on the resolve. ghost control alive: control-ghost-low.png vs control-ghost-high.png distinct plate treatments, meanAbsDiff=13.466 changedFrac=0.2159."
+        }
+      ],
+      "newMustFix": [],
+      "flags": [],
+      "evidence": [
+        "skeleton-resolve/after/idle.png",
+        "skeleton-resolve/after/play-2.png",
+        "skeleton-resolve/after/play-3.png",
+        "skeleton-resolve/after/control-ghost-low.png",
+        "skeleton-resolve/after/control-ghost-high.png",
+        "metrics: ghost meanAbsDiff=13.466; duration meanAbsDiff=22.666; 0 console errors"
+      ]
+    }
+  },
+  "r1MustFixTally": {
+    "resolved": 10,
+    "notResolved": 2,
+    "notResolvedItems": [
+      "#1 cylinder-unroll: sheet still carries no subject content (blank tan placeholder)",
+      "#4a genie-suck: surface still a blank brown placeholder (idle-clean and visible-dock components of #4 ARE resolved)"
+    ]
+  },
+  "summary": "BLOCKED — but narrowly, and the fix-round was largely real. 10 of 12 r1 mustFixes are visibly resolved on fresh webgpu evidence (0 console/network errors, deviceLost 0): swap-flip's designed second face + live faceBias (29.9/0.27), mask-iris now truly conceals when closed (idle luma 7.8), morph-into-card's clean amber-rimmed pill with mini-content riding, sdf-shape-morph's content riding through circle AND hexagon with no double exposure, cross-morph's trough no longer a blackout, liquid-stretch's dramatic in-frame taffy stretch (9.06/0.23), and skeleton-resolve's genuine bone-grey skeleton at t=0. Seven of nine tiles are ship-quality. The block: cylinder-unroll and genie-suck STILL animate the same invented featureless tan-brown placeholder sheet r1 rejected — no amber bar, rows, or dot at any phase (cylinder-unroll/after/play-3.png contrast-normalized is pure blank fill, effHue=33 effSat=0.44 uniform; genie-suck/after/idle.png same signature) — directly contradicting the wave claim 'carries the subject's own look, no invented placeholder fills.' Their motion choreography is now good (roll height, overshoot, idle skew, docked-target hold all fixed), so the remaining work is surface-texture only: re-pour the subject's card texture onto both sheets and these two should pass on a focused r3 recapture.",
+  "antiRubberStamp": "Every status above cites the exact frame file and/or measured metrics.json value; cylinder-unroll/genie-suck placeholder findings additionally verified via contrast-normalized zoom crops of the sheet regions."
+}

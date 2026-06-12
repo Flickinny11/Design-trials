@@ -31,7 +31,7 @@ import {
   type AnimationBindingPlayer,
 } from '@/lib/prism/animatable/bindings';
 import { registerAllPrimitives } from '@/lib/prism/animatable/primitives';
-import { getPrimitive, listByCategory } from '@/lib/prism/animatable/registry';
+import { getPrimitive, listByCategory, registerPrimitive } from '@/lib/prism/animatable/registry';
 import { createDriverHub } from '@/lib/prism/runtime/shared/drivers';
 import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
 import type { PrimitiveResult } from '@/lib/prism/runtime/shared/primitives/types';
@@ -351,6 +351,57 @@ describe('attachAnimationBindings — skips, never crashes', () => {
     }).not.toThrow();
     expect(playersOf(root)).toHaveLength(0);
     detach();
+  });
+
+  it('mountable:true overrides the category skip (texture-preserving displacement)', () => {
+    // W3 expansion: displacement primitives that PRESERVE the subject's own
+    // material/texture may declare `mountable: true` to run on mounted
+    // artifacts despite their category being in UNMOUNTABLE_CATEGORIES.
+    let seen = 0;
+    registerPrimitive({
+      name: '__test-mountable-displacement',
+      label: 'Test Mountable',
+      category: 'displacement',
+      difficulty: 'easy',
+      subject: 'card',
+      defaultDriver: 'time',
+      schema: [],
+      description: 'test-only texture-preserving displacement',
+      mountable: true,
+      create: (target) => ({
+        name: '__test-mountable-displacement',
+        category: 'displacement',
+        duration: () => 1,
+        seek: (t: number) => {
+          seen += 1;
+          if (target.subject) target.subject.position.x = t;
+        },
+        controls: () => [],
+        setControl: () => {},
+        getParams: () => ({}),
+        serialize: () => ({
+          name: '__test-mountable-displacement',
+          category: 'displacement',
+          params: {},
+          duration: 1,
+        }),
+        dispose: () => {},
+      }),
+    });
+    expect(UNMOUNTABLE_CATEGORIES.has('displacement')).toBe(true);
+
+    const { root } = makeMounted();
+    const { drivers } = makeDrivers();
+    const node = makeNode({
+      animationBindings: [binding({ primitive: '__test-mountable-displacement' })],
+    });
+    const detach = attachAnimationBindings({ node, root, drivers });
+    const players = playersOf(root);
+    expect(players).toHaveLength(1);
+    players[0].result.timeline.progress(0.5);
+    expect(seen).toBeGreaterThan(0);
+    detach();
+    expect(playersOf(root)).toHaveLength(0);
   });
 
   it('an allowed-category primitive missing its subject is skipped (cold mount)', () => {

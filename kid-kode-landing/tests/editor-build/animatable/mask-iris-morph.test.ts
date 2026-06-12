@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Color, Mesh, MeshStandardMaterial, Texture } from 'three';
+import { Color, Mesh, MeshStandardMaterial, Texture, type Material } from 'three';
 import { maskIrisMorphPrimitive } from '@/lib/prism/animatable/primitives/mask-iris-morph';
 import { makeTarget, runConformance } from './_conformance';
 
@@ -10,9 +10,13 @@ import { makeTarget, runConformance } from './_conformance';
 //   irisMorphGlow    — uniform handle for the rim-glow intensity
 //   irisMorphLook    — () => { maps, tints }; what each masked mesh's material
 //                      currently binds (texture by reference) + carries (tint)
+//   irisMorphChrome  — () => [{ u, v, base, opacity }]; each chrome child's
+//                      center in face-uv space + its live gated opacity
 
 type U = { value: number };
 type Look = () => { maps: unknown[]; tints: string[] };
+type Chrome = () => Array<{ u: number; v: number; base: number; opacity: number }>;
+type OpaqueMat = Material & { opacity: number };
 
 describe('mask-iris-morph primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -103,6 +107,61 @@ describe('mask-iris-morph primitive', () => {
     inst.dispose();
   });
 
+  it('chrome co-treatment: a closed iris hides ALL chrome; the aperture front reveals each child as it passes', () => {
+    const target = makeTarget(maskIrisMorphPrimitive);
+    const inst = maskIrisMorphPrimitive.create(target);
+    inst.setControl('curve', 'linear'); // radius = (t/dur) * MAX_RADIUS exactly
+    const chrome = target.userData.irisMorphChrome as Chrome;
+    const dur = inst.duration();
+
+    // The card composite mounts chrome children (header bar, dot, 3 rows).
+    expect(chrome().length).toBeGreaterThanOrEqual(3);
+
+    // t=0 (closed): NOTHING of the card visible — every chrome child gated to 0
+    // (this is the advocate's cited defect: chrome used to float fully visible).
+    inst.seek(0);
+    for (const c of chrome()) expect(c.opacity).toBeLessThan(0.02);
+
+    // Mid-open (radius 0.28 in uv units): the front has passed the near-center
+    // row but NOT the far corner dot — reveal tracks the aperture, per-child.
+    inst.seek((0.28 / 1.35) * dur);
+    const mid = chrome();
+    const dist = (c: { u: number; v: number }) => Math.hypot(c.u - 0.5, c.v - 0.5);
+    const nearest = mid.reduce((a, b) => (dist(a) < dist(b) ? a : b));
+    const farthest = mid.reduce((a, b) => (dist(a) > dist(b) ? a : b));
+    expect(nearest.opacity).toBeGreaterThan(nearest.base * 0.6);
+    expect(farthest.opacity).toBeLessThan(0.02);
+
+    // Fully open: every chrome child restored to its base opacity — the
+    // settled card is the untouched composite.
+    inst.seek(dur);
+    for (const c of chrome()) expect(c.opacity).toBeCloseTo(c.base, 5);
+    inst.dispose();
+  });
+
+  it('chrome co-treatment latches on control change while PAUSED (capture-rig sweep at pinned t)', () => {
+    const target = makeTarget(maskIrisMorphPrimitive);
+    const inst = maskIrisMorphPrimitive.create(target);
+    inst.setControl('curve', 'linear');
+    const radius = target.userData.irisMorphRadius as U;
+    const chrome = target.userData.irisMorphChrome as Chrome;
+
+    // Pin t=1s (the rig's control-sweep phase), then change duration WITHOUT
+    // another seek: onParamChange must re-apply at the held time.
+    inst.seek(1);
+    inst.setControl('duration', 5); // slow iris — nearly closed at 1s
+    const slowR = radius.value;
+    const slowVis = chrome().reduce((s, c) => s + c.opacity, 0);
+
+    inst.setControl('duration', 0.5); // fast iris — fully open at 1s
+    const fastR = radius.value;
+    const fastVis = chrome().reduce((s, c) => s + c.opacity, 0);
+
+    expect(fastR).toBeGreaterThan(slowR + 0.3); // radius latched with NO re-seek
+    expect(fastVis).toBeGreaterThan(slowVis + 1); // chrome gating latched too
+    inst.dispose();
+  });
+
   it("carries the subject's look: tint from the live material, poured maps bound by reference", () => {
     const target = makeTarget(maskIrisMorphPrimitive);
     const mesh = target.subject as Mesh;
@@ -139,19 +198,38 @@ describe('mask-iris-morph primitive', () => {
     original.dispose();
   });
 
-  it('dispose restores the subject material and clears userData observables', () => {
+  it('dispose restores the subject material, chrome opacity, and clears userData observables', () => {
     const target = makeTarget(maskIrisMorphPrimitive);
     const mesh = target.subject as Mesh;
     const original = mesh.material;
+    // Snapshot every chrome child material's opacity/transparent BEFORE create.
+    const chromeSnaps: Array<{ mat: OpaqueMat; opacity: number; transparent: boolean }> = [];
+    mesh.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh || m === mesh || !m.material) return;
+      for (const cm of Array.isArray(m.material) ? m.material : [m.material]) {
+        const om = cm as OpaqueMat;
+        chromeSnaps.push({ mat: om, opacity: om.opacity, transparent: om.transparent });
+      }
+    });
+    expect(chromeSnaps.length).toBeGreaterThanOrEqual(3);
+
     const inst = maskIrisMorphPrimitive.create(target);
-    inst.seek(1.2);
+    inst.seek(0.4); // mostly closed — chrome gated well below base
     expect(mesh.material).not.toBe(original);
+    expect(chromeSnaps.some((s) => s.mat.opacity < s.opacity)).toBe(true);
 
     inst.dispose();
     expect(mesh.material).toBe(original);
+    // Chrome handed back exactly as found.
+    for (const s of chromeSnaps) {
+      expect(s.mat.opacity).toBe(s.opacity);
+      expect(s.mat.transparent).toBe(s.transparent);
+    }
     expect(target.userData.irisMorphRadius).toBeUndefined();
     expect(target.userData.irisMorphWeights).toBeUndefined();
     expect(target.userData.irisMorphGlow).toBeUndefined();
     expect(target.userData.irisMorphLook).toBeUndefined();
+    expect(target.userData.irisMorphChrome).toBeUndefined();
   });
 });

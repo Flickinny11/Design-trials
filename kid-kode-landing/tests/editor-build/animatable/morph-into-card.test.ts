@@ -3,6 +3,9 @@ import { Color, Mesh, MeshStandardMaterial, Texture } from 'three';
 import {
   morphIntoCardPrimitive,
   CHIP_HOLD,
+  LIFT_MAX,
+  RIM_MAX,
+  chipMaskSdf,
 } from '@/lib/prism/animatable/primitives/morph-into-card';
 import { makeTarget, runConformance } from './_conformance';
 
@@ -16,6 +19,8 @@ const T_FULL = 2.7; // mid full-card hold
 
 interface RadiusStash {
   uRadius: { value: number };
+  uLift: { value: number };
+  uRim: { value: number };
 }
 
 describe('morph-into-card primitive', () => {
@@ -117,6 +122,87 @@ describe('morph-into-card primitive', () => {
     inst.dispose();
   });
 
+  it('ghost-plate regression: the shared SDF clips the old rect corners at full pill radius', () => {
+    // Mask space for the catalog card face: half extents (aspect, 1) with
+    // aspect = 0.87 / 0.56. At full radius (r = 1, the half short side) the
+    // silhouette is a pill — the ORIGINAL rect's corners must sit strictly
+    // OUTSIDE it (positive SDF), i.e. alpha truly reaches 0 there. A faint
+    // full-size rect ghost around the docked chip is exactly this invariant
+    // failing.
+    const ax = 0.87 / 0.56;
+    expect(chipMaskSdf(ax, 1, ax, 1, 1)).toBeGreaterThan(0.3); // rect corner: clipped
+    expect(chipMaskSdf(-ax, -1, ax, 1, 1)).toBeGreaterThan(0.3);
+    // Inside / boundary sanity (the chrome coverage shares this geometry).
+    expect(chipMaskSdf(0, 0, ax, 1, 1)).toBeLessThan(-0.5); // centre: deep inside
+    expect(chipMaskSdf(ax, 0, ax, 1, 0.5)).toBeCloseTo(0, 5); // mid right edge: boundary
+    // Outside-rect points are positive even at the resting radius.
+    expect(chipMaskSdf(ax + 0.2, 1 + 0.2, ax, 1, 0.02)).toBeGreaterThan(0.1);
+  });
+
+  it('chip identity: the docked chip self-illuminates (lift + brass rim) instead of dimming', () => {
+    const target = makeTarget(morphIntoCardPrimitive);
+    const mesh = target.subject as Mesh;
+    const inst = morphIntoCardPrimitive.create(target);
+    const stash = target.userData.morphIntoCard as RadiusStash;
+
+    // The swapped material routes legibility through an emissiveNode.
+    const mat = mesh.material as unknown as { emissiveNode?: unknown };
+    expect(mat.emissiveNode).toBeDefined();
+
+    // Full card: no lift, no rim (the resting look is the source look).
+    inst.seek(0);
+    expect(stash.uLift.value).toBeCloseTo(0, 5);
+    expect(stash.uRim.value).toBeCloseTo(0, 5);
+
+    // Docked chip: full self-illumination lift of its own colour + brass rim —
+    // the surviving identity stays legible, never near-background.
+    inst.seek(T_CHIP);
+    expect(stash.uLift.value).toBeCloseTo(LIFT_MAX, 5);
+    expect(stash.uRim.value).toBeCloseTo(RIM_MAX, 5);
+    expect(LIFT_MAX).toBeGreaterThanOrEqual(2); // a real lift, not a token one
+
+    // Unfurled again: identity glow fully released.
+    inst.seek(T_FULL);
+    expect(stash.uLift.value).toBeCloseTo(0, 5);
+    expect(stash.uRim.value).toBeCloseTo(0, 5);
+
+    inst.dispose();
+  });
+
+  it('chrome co-treatment: chrome travels INTO the chip — full at rest, fading through the dock window, gone when docked', () => {
+    const target = makeTarget(morphIntoCardPrimitive);
+    const mesh = target.subject as Mesh;
+    const header = mesh.getObjectByName('card-header') as Mesh;
+    const dot = mesh.getObjectByName('card-dot') as Mesh;
+    const headerMat = header.material as MeshStandardMaterial;
+    const dotMat = dot.material as MeshStandardMaterial;
+    const inst = morphIntoCardPrimitive.create(target);
+
+    // Rest: chrome at full base opacity (coverage 1, dock fade not started).
+    inst.seek(0);
+    expect(headerMat.opacity).toBeCloseTo(1, 5);
+    expect(dotMat.opacity).toBeCloseTo(1, 5);
+
+    // Mid-dock (raw = 0.75 -> t = 0.675s with the 0.9s fold): partially
+    // dissolved — visibly fading, not a flat residue and not yet gone.
+    inst.seek(0.675);
+    expect(headerMat.opacity).toBeGreaterThan(0.05);
+    expect(headerMat.opacity).toBeLessThan(0.95);
+
+    // Docked: fully dissolved into the chip. NO residue at the old rect
+    // bounds — this is the other half of the ghost-plate regression.
+    inst.seek(T_CHIP);
+    expect(headerMat.opacity).toBeCloseTo(0, 5);
+    expect(dotMat.opacity).toBeCloseTo(0, 5);
+
+    // Unfurl restores chrome along with the card.
+    inst.seek(T_FULL);
+    expect(headerMat.opacity).toBeCloseTo(1, 5);
+    expect(dotMat.opacity).toBeCloseTo(1, 5);
+
+    inst.dispose();
+  });
+
   it('carries the subject map: rebinds when a texture pours in or the material is swapped', () => {
     const target = makeTarget(morphIntoCardPrimitive);
     const mesh = target.subject as Mesh;
@@ -156,9 +242,10 @@ describe('morph-into-card primitive', () => {
     const inst = morphIntoCardPrimitive.create(target);
     inst.seek(T_CHIP);
 
-    // Mid-effect: chrome is faded (and forced transparent) while the chip holds.
+    // Mid-effect: chrome has fully dissolved INTO the docked chip (co-treatment
+    // dock fade complete at the plateau) and is forced transparent.
     expect(headerMat.transparent).toBe(true);
-    expect(headerMat.opacity).toBeCloseTo(0.25, 5);
+    expect(headerMat.opacity).toBeCloseTo(0, 5);
     expect(mesh.scale.x).toBeCloseTo(0.28, 5);
 
     inst.dispose();

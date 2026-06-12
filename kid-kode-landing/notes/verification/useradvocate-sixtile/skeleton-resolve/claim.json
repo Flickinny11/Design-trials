@@ -1,7 +1,7 @@
 {
   "name": "skeleton-resolve",
   "label": "Resolve Duration",
-  "description": "Loading-skeleton shimmer bars sweep over a ghost of the layout, then dissolve as the real content resolves crisply into place.",
+  "description": "Bone-grey loading-skeleton bars shimmer over a ghost plate, then a soft front wipes the real content back in.",
   "category": "mask",
   "groundTruthSibling": null
 }

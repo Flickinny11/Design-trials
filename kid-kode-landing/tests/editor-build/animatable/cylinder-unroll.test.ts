@@ -23,6 +23,9 @@ interface UnrollHandles {
   uFront: { value: number };
   uRadius: { value: number };
   uOver: { value: number };
+  uSpiral: { value: number };
+  uCurl: { value: number };
+  uDecay: { value: number };
   uAxis: { value: number };
   uStart: { value: number };
   uDirSign: { value: number };
@@ -80,7 +83,8 @@ describe('cylinder-unroll primitive', () => {
   });
 
   it('plays: the unroll front sweeps the span over the duration and the curl overshoot settles flat', () => {
-    // Catalog plane subject: 1.8 x 1.8 local units, no texture map.
+    // Catalog CARD subject: 1.74 x 1.12 panel + chrome children (the panel is
+    // the representative mesh — the sheet carries ITS footprint).
     const target = makeTarget(cylinderUnrollPrimitive);
     const inst = cylinderUnrollPrimitive.create(target);
     const ud = handlesOf(target);
@@ -92,32 +96,35 @@ describe('cylinder-unroll primitive', () => {
     const sheet = sheetOf(target.scene);
     sheet.geometry.computeBoundingBox();
     const bb = sheet.geometry.boundingBox!;
-    expect(bb.max.x - bb.min.x).toBeCloseTo(1.8, 2);
-    expect(bb.max.y - bb.min.y).toBeCloseTo(1.8, 2);
+    expect(bb.max.x - bb.min.x).toBeCloseTo(1.74, 2);
+    expect(bb.max.y - bb.min.y).toBeCloseTo(1.12, 2);
     expect((target.subject as Mesh).visible).toBe(false);
 
     // t ~ 0: fully rolled — the front has not left the start edge.
     inst.seek(0.01 * dur);
-    expect(ud.uSpan.value).toBeCloseTo(1.8, 5);
+    expect(ud.uSpan.value).toBeCloseTo(1.74, 5);
     expect(ud.uFront.value).toBeLessThan(0.05);
     const frontEarly = ud.uFront.value;
 
-    // Mid-timeline: the front is mid-sweep across the 1.8 span.
+    // Mid-timeline: the front is mid-sweep across the 1.74 span.
     inst.seek(0.5 * dur);
     expect(ud.uFront.value).toBeGreaterThan(0.8);
-    expect(ud.uFront.value).toBeLessThan(1.7);
+    expect(ud.uFront.value).toBeLessThan(1.65);
     expect(ud.uFront.value).toBeGreaterThan(frontEarly + 0.5);
 
-    // Late: the sheet is laid (front past the span) and the paper-curl
-    // overshoot dip is ACTIVE (negative z bow of the far edge).
+    // Late: the sheet is laid (front past the span), the paper-curl
+    // overshoot dip is ACTIVE (negative z bow of the far edge), and the
+    // settle-curl bump is still fading out.
     inst.seek(0.91 * dur);
-    expect(ud.uFront.value).toBeCloseTo(1.8, 5);
+    expect(ud.uFront.value).toBeCloseTo(1.74, 5);
     expect(ud.uOver.value).toBeLessThan(-0.02);
+    expect(ud.uCurl.value).toBeGreaterThan(0);
 
-    // End: exactly flat — front at full span, overshoot settled to zero.
+    // End: exactly flat — front at full span, every overshoot term settled.
     inst.seek(dur);
-    expect(ud.uFront.value).toBeCloseTo(1.8, 5);
+    expect(ud.uFront.value).toBeCloseTo(1.74, 5);
     expect(ud.uOver.value).toBeCloseTo(0, 6);
+    expect(ud.uCurl.value).toBeCloseTo(0, 6);
 
     inst.dispose();
   });
@@ -128,33 +135,158 @@ describe('cylinder-unroll primitive', () => {
     const ud = handlesOf(target);
     inst.seek(1); // establish a live time so control tweaks re-apply at it
 
-    // Roll radius is a FRACTION of the span (scale-free): min vs max.
-    inst.setControl('radius', 0.05);
-    expect(ud.uRadius.value).toBeCloseTo(0.05 * 1.8, 5);
-    inst.setControl('radius', 0.35);
-    expect(ud.uRadius.value).toBeCloseTo(0.35 * 1.8, 5);
+    // Roll radius is a FRACTION of the span (scale-free): min vs max. The
+    // schema is bounded (0.04..0.2) so the wrap never exceeds the sheet
+    // silhouette's scale (advocate must-fix).
+    inst.setControl('radius', 0.04);
+    expect(ud.uRadius.value).toBeCloseTo(0.04 * 1.74, 5);
+    inst.setControl('radius', 0.2);
+    expect(ud.uRadius.value).toBeCloseTo(0.2 * 1.74, 5);
+    // Hand-fed params outside the schema hit the hard clamp (0.02..0.25).
+    inst.setControl('radius', 0.6);
+    expect(ud.uRadius.value).toBeCloseTo(0.25 * 1.74, 5);
+    inst.setControl('radius', 0.12);
 
-    // Direction remaps the travel axis uniforms without a rebuild.
+    // Direction remaps the travel axis uniforms without a rebuild. The card
+    // is 1.74 wide x 1.12 tall, so the travel span follows the axis.
     expect(ud.uAxis.value).toBe(0); // default 'left': travel along local x
     expect(ud.uDirSign.value).toBe(1);
-    expect(ud.uStart.value).toBeCloseTo(-0.9, 5);
+    expect(ud.uStart.value).toBeCloseTo(-0.87, 5);
     inst.setControl('direction', 'top');
     expect(ud.uAxis.value).toBe(1); // travel along local y
     expect(ud.uDirSign.value).toBe(-1); // start edge at +h/2
-    expect(ud.uStart.value).toBeCloseTo(0.9, 5);
-    expect(ud.uSpan.value).toBeCloseTo(1.8, 5);
+    expect(ud.uStart.value).toBeCloseTo(0.56, 5);
+    expect(ud.uSpan.value).toBeCloseTo(1.12, 5);
     inst.setControl('direction', 'left');
 
     // Duration: at the same wall-clock t, a short run is flat, a long run is
     // still mostly rolled.
     inst.setControl('duration', 0.6);
     inst.seek(1);
-    expect(ud.uFront.value).toBeCloseTo(1.8, 5);
+    expect(ud.uFront.value).toBeCloseTo(1.74, 5);
     inst.setControl('duration', 5);
     inst.seek(1);
     expect(ud.uFront.value).toBeLessThan(0.9);
 
     inst.dispose();
+  });
+
+  it("regression: 'overshoot' is ALIVE at the pinned t=1s controls state (mid-lay) — it loosens the spiral and raises the settle-curl bump", () => {
+    const target = makeTarget(cylinderUnrollPrimitive);
+    const inst = cylinderUnrollPrimitive.create(target);
+    const ud = handlesOf(target);
+
+    // The capture rig sweeps controls PAUSED at t=1s. At the default 2.2s
+    // duration that is MID-LAY: the front must be engaged (strictly inside
+    // the span) so the roll is on screen for the sweep.
+    inst.seek(1);
+    expect(ud.uFront.value).toBeGreaterThan(0.1);
+    expect(ud.uFront.value).toBeLessThan(1.65);
+
+    // min: no springiness — base spiral, no settle-curl.
+    inst.setControl('overshoot', 0);
+    expect(ud.uSpiral.value).toBeCloseTo(0.045, 6);
+    expect(ud.uCurl.value).toBeCloseTo(0, 6);
+
+    // max: the spiral loosens (the on-screen scroll visibly fattens) AND the
+    // settle-curl bump rides the just-laid band behind the front — both are
+    // geometry/shading changes at the frozen frame, so the sweep cannot be
+    // pixel-dead.
+    inst.setControl('overshoot', 0.6);
+    expect(ud.uSpiral.value).toBeCloseTo(0.045 * (1 + 4 * 0.6), 6);
+    expect(ud.uCurl.value).toBeGreaterThan(0.05);
+    expect(ud.uDecay.value).toBeCloseTo(1.74 * 0.16, 5);
+
+    // The settle-curl band sits BEHIND the front in laid territory, and the
+    // bump fades to exactly zero at t = duration (flat landing preserved).
+    inst.seek(inst.duration());
+    expect(ud.uCurl.value).toBeCloseTo(0, 6);
+    expect(ud.uOver.value).toBeCloseTo(0, 6);
+
+    inst.dispose();
+  });
+
+  it("chrome co-treatment: the card's header/rows ride the roll as bent clones, the dot as a rigid clone — subject chrome never mutated", () => {
+    // The catalog subject is the CARD (advocate must-fix: a chrome-less
+    // 'plane' rendered as a featureless slab).
+    expect(cylinderUnrollPrimitive.subject).toBe('card');
+
+    const target = makeTarget(cylinderUnrollPrimitive);
+    const inst = cylinderUnrollPrimitive.create(target);
+
+    const bent: Mesh[] = [];
+    let rigid: Mesh | undefined;
+    target.scene.traverse((o) => {
+      if (o.name.startsWith('cylinder-unroll-chrome-bent:')) bent.push(o as Mesh);
+      if (o.name.startsWith('cylinder-unroll-chrome-rigid:')) rigid = o as Mesh;
+    });
+    // Header + 3 content rows bend in the vertex lane; the accent dot is
+    // posed rigidly per seek.
+    expect(bent.length, 'header + 3 rows become bent clones').toBe(4);
+    expect(rigid, 'the dot becomes a rigid clone').toBeDefined();
+
+    // Bent clones share the SAME bend trees as the sheet (one uniform set
+    // drives the whole composite) and carry the chrome's OWN look.
+    const sheet = sheetOf(target.scene);
+    const sheetNodes = sheet.material as Material & { positionNode?: unknown };
+    for (const m of bent) {
+      const mat = m.material as Material & { positionNode?: unknown; normalNode?: unknown };
+      expect(mat.positionNode, 'bent clone shares the sheet bend tree').toBe(
+        sheetNodes.positionNode,
+      );
+      expect(mat).not.toBe(sheet.material);
+    }
+
+    // The dot clone shares the subject child's geometry BY REFERENCE but owns
+    // its material clone; the original child is untouched.
+    const subjectPanel = target.subject as Mesh;
+    let srcDot: Mesh | undefined;
+    subjectPanel.traverse((o) => {
+      if (o.name === 'card-dot') srcDot = o as Mesh;
+    });
+    expect(srcDot).toBeDefined();
+    expect(rigid!.geometry, 'rigid clone geometry shared by reference').toBe(srcDot!.geometry);
+    expect(rigid!.material).not.toBe(srcDot!.material);
+
+    // Subject chrome materials are NEVER mutated: no node-material fields
+    // injected, opacity untouched.
+    subjectPanel.traverse((o) => {
+      const m = o as Mesh;
+      if (!m.isMesh || m === subjectPanel) return;
+      const mats = Array.isArray(m.material) ? m.material : [m.material];
+      for (const mat of mats) {
+        expect(
+          (mat as Material & { positionNode?: unknown }).positionNode,
+          'subject chrome material untouched',
+        ).toBeUndefined();
+        expect((mat as Material & { opacity: number }).opacity).toBe(1);
+      }
+    });
+
+    // The rigid dot RIDES the roll: wrapped (lifted behind the sheet) while
+    // rolled at t~0, back at its rest offset proud of the face at t=dur.
+    const dur = inst.duration();
+    inst.seek(0.01 * dur);
+    const zWrapped = rigid!.position.z;
+    inst.seek(dur);
+    const zFlat = rigid!.position.z;
+    expect(Math.abs(zWrapped - zFlat), 'dot moves with the wrap').toBeGreaterThan(0.05);
+    expect(zFlat, 'dot settles proud of the laid sheet').toBeGreaterThan(
+      sheet.position.z - 1e-3,
+    );
+
+    // Dispose removes every clone, restores the subject, and never touches
+    // the subject's shared dot geometry.
+    let dotGeoDisposed = 0;
+    srcDot!.geometry.addEventListener('dispose', () => dotGeoDisposed++);
+    inst.dispose();
+    let leftovers = 0;
+    target.scene.traverse((o) => {
+      if (o.name.startsWith('cylinder-unroll')) leftovers++;
+    });
+    expect(leftovers, 'nothing of ours left in the tree').toBe(0);
+    expect(subjectPanel.visible).toBe(true);
+    expect(dotGeoDisposed, 'shared dot geometry never disposed').toBe(0);
   });
 
   it("honest look: the sheet's colorNode samples the subject's OWN texture by reference (never an invented fill)", () => {

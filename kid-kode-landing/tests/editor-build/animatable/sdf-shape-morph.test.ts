@@ -17,9 +17,26 @@ interface MorphWeights {
   circle: UniformHandle;
   hex: UniformHandle;
 }
+interface ChromeStashEntry {
+  name: string;
+  px: number;
+  py: number;
+  uCover: UniformHandle;
+}
 
 const weightsOf = (ud: Record<string, unknown>): MorphWeights =>
   ud.sdfMorphWeights as MorphWeights;
+const chromeOf = (ud: Record<string, unknown>): ChromeStashEntry[] =>
+  ud.sdfMorphChrome as ChromeStashEntry[];
+
+/** Every descendant mesh of the panel EXCEPT the panel itself (the chrome). */
+const chromeMeshesOf = (panel: Mesh): Mesh[] => {
+  const out: Mesh[] = [];
+  panel.traverse((o) => {
+    if ((o as Mesh).isMesh && o !== panel) out.push(o as Mesh);
+  });
+  return out;
+};
 
 describe('sdf-shape-morph primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -68,6 +85,32 @@ describe('sdf-shape-morph primitive', () => {
     inst.dispose();
   });
 
+  it('single-silhouette guarantee: weights stay a convex combination at every phase', () => {
+    // The mixed SDF is a convex combination of three convex SDFs, so the
+    // sub-zero set is convex (connected) — the default tour can NEVER show
+    // two disjoint silhouettes. The convexity precondition is the weights:
+    // each >= 0 and sum == 1 at every t, for every shape set.
+    const target = makeTarget(sdfShapeMorphPrimitive);
+    const inst = sdfShapeMorphPrimitive.create(target);
+    const w = weightsOf(target.userData);
+    const speed = inst.getParams().speed as number;
+
+    for (const set of ['tour', 'rect-circle', 'circle-hex'] as const) {
+      inst.setControl('shapes', set);
+      for (let i = 0; i <= 240; i++) {
+        inst.seek((i / 240) * (3 / speed)); // a full 3-segment span
+        const r = w.rect.value;
+        const c = w.circle.value;
+        const h = w.hex.value;
+        expect(r).toBeGreaterThanOrEqual(-1e-9);
+        expect(c).toBeGreaterThanOrEqual(-1e-9);
+        expect(h).toBeGreaterThanOrEqual(-1e-9);
+        expect(r + c + h).toBeCloseTo(1, 9);
+      }
+    }
+    inst.dispose();
+  });
+
   it('controls change output live (paused at t=1, no re-seek needed)', () => {
     const target = makeTarget(sdfShapeMorphPrimitive);
     const inst = sdfShapeMorphPrimitive.create(target);
@@ -90,17 +133,76 @@ describe('sdf-shape-morph primitive', () => {
     expect(w.circle.value).toBeCloseTo(1, 5);
     expect(w.rect.value).toBeCloseTo(0, 5);
 
-    // Edge softness and size drive their live uniforms.
+    // Edge softness, size, and rim glow drive their live uniforms.
     const soft = target.userData.sdfMorphSoftness as UniformHandle;
     const size = target.userData.sdfMorphSize as UniformHandle;
+    const glow = target.userData.sdfMorphGlow as UniformHandle;
     inst.setControl('softness', 0.15);
     expect(soft.value).toBeCloseTo(0.15, 5);
     inst.setControl('softness', 0.002);
     expect(soft.value).toBeCloseTo(0.002, 5);
     inst.setControl('size', 1.1);
     expect(size.value).toBeCloseTo(1.1, 5);
+    inst.setControl('glow', 2);
+    expect(glow.value).toBeCloseTo(2, 5);
+    inst.setControl('glow', 0);
+    expect(glow.value).toBeCloseTo(0, 5);
 
     inst.dispose();
+  });
+
+  it('chrome co-treatment: chrome rides the morphing silhouette, never floats over a hidden face', () => {
+    const target = makeTarget(sdfShapeMorphPrimitive);
+    const panel = target.subject as Mesh;
+    const chromeMeshes = chromeMeshesOf(panel);
+    expect(chromeMeshes.length).toBeGreaterThanOrEqual(5); // header + dot + 3 rows
+    const origs = chromeMeshes.map((m) => m.material as Material);
+
+    const inst = sdfShapeMorphPrimitive.create(target);
+    const speed = inst.getParams().speed as number;
+
+    // Every chrome child's material is swapped for a masked node material
+    // (GPU per-fragment clip by the SAME morphing SDF) — transparent so the
+    // silhouette actually cuts it.
+    chromeMeshes.forEach((m, i) => {
+      expect(m.material).not.toBe(origs[i]);
+      expect((m.material as Material).transparent).toBe(true);
+    });
+
+    const stash = chromeOf(target.userData);
+    expect(stash.length).toBe(chromeMeshes.length);
+
+    // t=0 (pure rect): the rect silhouette spans the whole card — every
+    // chrome child is covered at full base opacity.
+    inst.seek(0);
+    for (const c of stash) expect(c.uCover.value).toBeGreaterThan(0.95);
+
+    // Segment 1 start (t = 1/speed): pure CIRCLE silhouette.
+    inst.seek(1 / speed);
+    const dot = stash.find((c) => c.name === 'card-dot')!;
+    const header = stash.find((c) => c.name === 'card-header')!;
+    const centerMost = [...stash].sort(
+      (a, b) => Math.hypot(a.px, a.py) - Math.hypot(b.px, b.py),
+    )[0];
+    // The corner dot sits OUTSIDE the circle -> melted away with the shape.
+    expect(dot.uCover.value).toBeLessThan(0.05);
+    // The center-most row is deep inside the circle -> fully carried.
+    expect(centerMost.uCover.value).toBeGreaterThan(0.95);
+    // The header center is still (barely) inside the circle: it SURVIVES
+    // while the silhouette spans the top (the advocate's cited semantics),
+    // partially faded as the front passes it.
+    expect(header.uCover.value).toBeGreaterThan(0.5);
+    expect(header.uCover.value).toBeLessThan(0.999);
+
+    // Controls re-evaluate the chrome coverage immediately while PAUSED:
+    // shrinking the silhouette drops the header out of coverage with no
+    // further seek (the frozen CONTROLS frame must respond).
+    inst.setControl('size', 0.7);
+    expect(header.uCover.value).toBeLessThan(0.2);
+
+    // dispose hands every chrome child its own material back.
+    inst.dispose();
+    chromeMeshes.forEach((m, i) => expect(m.material).toBe(origs[i]));
   });
 
   it('carries the subject look: shares the live map by reference and rebinds on async pours', () => {
@@ -178,5 +280,7 @@ describe('sdf-shape-morph primitive', () => {
     expect(target.userData.sdfMorphWeights).toBeUndefined();
     expect(target.userData.sdfMorphSoftness).toBeUndefined();
     expect(target.userData.sdfMorphSize).toBeUndefined();
+    expect(target.userData.sdfMorphGlow).toBeUndefined();
+    expect(target.userData.sdfMorphChrome).toBeUndefined();
   });
 });

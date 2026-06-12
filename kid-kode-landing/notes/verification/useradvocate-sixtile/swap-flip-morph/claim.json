@@ -1,7 +1,7 @@
 {
   "name": "swap-flip-morph",
-  "label": "Flip Time",
-  "description": "On every state change the card snaps a half-flip, swapping to its alternate face mid-edge — a two-faced identity morph.",
+  "label": "Face B Bias",
+  "description": "On every state change the card snaps a half-flip, swapping at the 90° edge to its alternate face — the same card, bias-tinted, chrome intact.",
   "category": "transform",
   "groundTruthSibling": null
 }

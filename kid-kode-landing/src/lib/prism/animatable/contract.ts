@@ -201,6 +201,19 @@ export interface PrimitiveDefinition {
    * primitive, test, or registry consumer changes behavior.
    */
   volumetric?: boolean;
+  /**
+   * ADDITIVE, OPT-IN mount override (primitives-expansion W3, 2026-06-12).
+   * Bindings skip whole categories whose primitives swap `subject.material`
+   * (see `UNMOUNTABLE_CATEGORIES` in bindings.ts) because that would destroy a
+   * mounted artifact's baked look. A primitive that PRESERVES the subject's
+   * own material/texture (e.g. a texture-preserving displacement that bends
+   * vertices or overlays, never replaces, the subject's map) may declare
+   * `mountable: true` to run on mounted artifacts despite its category.
+   *
+   * SAFE DEFAULT: omitted / `false` → the category skip applies unchanged.
+   * Static metadata only; the frozen `Animatable` interface is untouched.
+   */
+  mountable?: boolean;
   /** Construct a live Animatable bound to `target`. */
   create: (target: AnimatableTarget, params?: Partial<ParamState>) => Animatable;
 }
