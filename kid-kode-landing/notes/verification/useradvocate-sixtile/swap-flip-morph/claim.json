@@ -1,0 +1,7 @@
+{
+  "name": "swap-flip-morph",
+  "label": "Flip Time",
+  "description": "On every state change the card snaps a half-flip, swapping to its alternate face mid-edge — a two-faced identity morph.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

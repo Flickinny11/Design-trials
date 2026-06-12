@@ -10,7 +10,9 @@ import { accordionYPrimitive } from './accordion-y';
 import { bouncePrimitive } from './bounce';
 import { cardFoldPrimitive } from './card-fold';
 import { cornerPeelPrimitive } from './corner-peel';
+import { crossMorphPrimitive } from './cross-morph';
 import { cubeRotatePrimitive } from './cube-rotate';
+import { cylinderUnrollPrimitive } from './cylinder-unroll';
 import { depthPopPrimitive } from './depth-pop';
 import { doorOpenPrimitive } from './door-open';
 import { dropBouncePrimitive } from './drop-bounce';
@@ -18,9 +20,12 @@ import { elasticPrimitive } from './elastic';
 import { flipPrimitive } from './flip';
 import { flip3dPrimitive } from './flip-3d';
 import { flipBoardPrimitive } from './flip-board';
+import { flipMorphPrimitive } from './flip-morph';
 import { floatPrimitive } from './float';
+import { genieSuckPrimitive } from './genie-suck';
 import { hingeFallPrimitive } from './hinge-fall';
 import { jellyPrimitive } from './jelly';
+import { liquidStretchMorphPrimitive } from './liquid-stretch-morph';
 import { overshootPrimitive } from './overshoot';
 import { pendulumSettlePrimitive } from './pendulum-settle';
 import { perspectiveTiltInPrimitive } from './perspective-tilt-in';
@@ -33,6 +38,7 @@ import { slidePrimitive } from './slide';
 import { spinPrimitive } from './spin';
 import { spiralInPrimitive } from './spiral-in';
 import { squashStretchInPrimitive } from './squash-stretch-in';
+import { swapFlipMorphPrimitive } from './swap-flip-morph';
 import { swingPrimitive } from './swing';
 import { tumblePrimitive } from './tumble';
 import { unfoldPrimitive } from './unfold';
@@ -173,10 +179,18 @@ import { checkerWipePrimitive } from './checker-wipe';
 import { clockWipePrimitive } from './clock-wipe';
 import { crossWipePrimitive } from './cross-wipe';
 import { diamondWipePrimitive } from './diamond-wipe';
+import { domainWarpMorphPrimitive } from './domain-warp-morph';
 import { irisWipePrimitive } from './iris-wipe';
+import { maskIrisMorphPrimitive } from './mask-iris-morph';
 import { maskWipePrimitive } from './mask-wipe';
+import { metaballMergePrimitive } from './metaball-merge';
+import { morphIntoCardPrimitive } from './morph-into-card';
 import { noiseWipePrimitive } from './noise-wipe';
+import { pillMorphPrimitive } from './pill-morph';
 import { ringWipePrimitive } from './ring-wipe';
+import { sdfShapeMorphPrimitive } from './sdf-shape-morph';
+import { silhouetteGlowMorphPrimitive } from './silhouette-glow-morph';
+import { skeletonResolvePrimitive } from './skeleton-resolve';
 import { spiralWipePrimitive } from './spiral-wipe';
 import { waveWipePrimitive } from './wave-wipe';
 import { wedgeWipePrimitive } from './wedge-wipe';
@@ -324,7 +338,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   bouncePrimitive,
   cardFoldPrimitive,
   cornerPeelPrimitive,
+  crossMorphPrimitive,
   cubeRotatePrimitive,
+  cylinderUnrollPrimitive,
   depthPopPrimitive,
   doorOpenPrimitive,
   dropBouncePrimitive,
@@ -332,9 +348,12 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   flipPrimitive,
   flip3dPrimitive,
   flipBoardPrimitive,
+  flipMorphPrimitive,
   floatPrimitive,
+  genieSuckPrimitive,
   hingeFallPrimitive,
   jellyPrimitive,
+  liquidStretchMorphPrimitive,
   overshootPrimitive,
   pendulumSettlePrimitive,
   perspectiveTiltInPrimitive,
@@ -347,6 +366,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   spinPrimitive,
   spiralInPrimitive,
   squashStretchInPrimitive,
+  swapFlipMorphPrimitive,
   swingPrimitive,
   tumblePrimitive,
   unfoldPrimitive,
@@ -487,10 +507,18 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   clockWipePrimitive,
   crossWipePrimitive,
   diamondWipePrimitive,
+  domainWarpMorphPrimitive,
   irisWipePrimitive,
+  maskIrisMorphPrimitive,
   maskWipePrimitive,
+  metaballMergePrimitive,
+  morphIntoCardPrimitive,
   noiseWipePrimitive,
+  pillMorphPrimitive,
   ringWipePrimitive,
+  sdfShapeMorphPrimitive,
+  silhouetteGlowMorphPrimitive,
+  skeletonResolvePrimitive,
   spiralWipePrimitive,
   waveWipePrimitive,
   wedgeWipePrimitive,

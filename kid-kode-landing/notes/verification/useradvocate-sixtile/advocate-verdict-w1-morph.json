@@ -1,0 +1,159 @@
+{
+  "feature": "PRIMITIVES-EXPANSION Wave 1 \u2014 14 morph/transition primitives",
+  "claim": "14 brand-new premium morph/transition primitives, Slider-Revolution-class or better, each visually distinct from the existing 312-tile catalog. All carry the subject's own look (texture/color) \u2014 no invented placeholder fills.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "tiles": {
+    "metaball-merge": "PASS",
+    "flip-morph": "PASS",
+    "domain-warp-morph": "PASS (flag)",
+    "silhouette-glow-morph": "PASS (flags)",
+    "pill-morph": "PASS (flags)",
+    "sdf-shape-morph": "MUST-FIX",
+    "cross-morph": "MUST-FIX",
+    "morph-into-card": "MUST-FIX",
+    "mask-iris-morph": "MUST-FIX",
+    "cylinder-unroll": "MUST-FIX",
+    "genie-suck": "MUST-FIX",
+    "liquid-stretch-morph": "MUST-FIX",
+    "skeleton-resolve": "MUST-FIX",
+    "swap-flip-morph": "MUST-FIX"
+  },
+  "rubric": {
+    "q1_defects": {
+      "answer": "Yes, several objective defects. (a) Two tiles animate a blank featureless tan-brown placeholder sheet with zero subject content \u2014 no orange title bar, no text rows, no dot anywhere in the arc: cylinder-unroll (idle through play-3 is a flat brown fill) and genie-suck (idle sheet is also skewed and clipped at the top frame edge at rest). (b) cylinder-unroll's roll cylinder extends past the sheet and runs the full frame height as a brown stripe. (c) swap-flip-morph's alternate face is a featureless putty-grey slab \u2014 reads as an untextured quad / missing content. (d) mask-iris-morph's mask never conceals the card content: with the iris CLOSED at t=0 the orange bar, all three text rows and the blue dot are fully visible floating without the panel; at mid-open, content outside the star aperture is still visible. (e) morph-into-card's docked chip has a visible rectangular ghost plate behind the rounded pill and the chip is dimmed to near-background. (f) sdf-shape-morph shows a double-exposure mid-morph (faded rect card content + ghost disk simultaneously) and its circle/hexagon phases are flat featureless dark fills. (g) cross-morph's card is clipped at the right frame edge at peak travel. (h) Four labeled controls produce zero (or near-zero) pixel change at the engaged mid-state, and liquid-stretch-morph's stretch-sweep frames show the subject ~85% off-frame.",
+      "evidence": [
+        "cylinder-unroll/after/play-3.png \u2014 fully-unrolled sheet is a blank brown rectangle, no card content",
+        "genie-suck/after/idle.png \u2014 blank brown sheet, skewed at rest, top-left corner clipped at frame top",
+        "cylinder-unroll/after/control-overshoot-low.png \u2014 roll cylinder runs full frame height past the sheet's top/bottom edges",
+        "swap-flip-morph/after/play-3.png \u2014 alternate face is a featureless putty-grey slab",
+        "mask-iris-morph/after/idle.png \u2014 iris closed at t=0 yet orange bar + text rows + dot fully visible without the panel",
+        "mask-iris-morph/after/play-2.png \u2014 panel and content visible OUTSIDE the star aperture's brass rim",
+        "morph-into-card/after/control-chipScale-high.png \u2014 straight-edged rect ghost plate visible around the rounded chip",
+        "metrics: morph-into-card play-2 meanLuma=8.2 vs idle 16.3 \u2014 docked chip near background level",
+        "sdf-shape-morph/after/play-2.png \u2014 double exposure: faded rect card + superimposed ghost disk",
+        "cross-morph/after/play-2.png \u2014 card clipped at right frame edge at peak travel",
+        "control: cross-morph trough meanAbsDiff=0 changedFrac=0; cylinder-unroll overshoot 0/0; swap-flip-morph faceBias 0/0; liquid-stretch-morph stretch meanAbsDiff=0.118 changedFrac=0.0024",
+        "liquid-stretch-morph/after/control-stretch-low.png \u2014 subject ~85% outside the right frame edge at the engaged state"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Split. FIVE tiles read exactly as claimed and look premium: metaball-merge (cream/brass liquid blobs with smooth-union necks coalescing into the true card), flip-morph (corner thumbnail leaps to full layout; anisotropic counter-scale visible as the squashed dot mid-flight), domain-warp-morph (marbled liquid channels consume and re-form the card), pill-morph (rect breathes into a fully-rounded capsule and back), silhouette-glow-morph (fill drains to a glowing golden outline, holds, refills). NINE do not fully read as claimed: cylinder-unroll and genie-suck animate an invented blank-brown placeholder, directly contradicting 'all carry the subject's own look \u2014 no invented placeholder fills'; swap-flip-morph's 'alternate face' is a blank grey slab, not a designed second identity; mask-iris-morph does not read as an iris reveal because nothing is ever hidden; skeleton-resolve has no skeleton/ghost state \u2014 the real content is fully visible at t=0 under a diagonal sheen, so it reads as a gloss sweep (close to the existing pointer-shine look, hurting the 'visually distinct from the 312-tile catalog' claim); sdf-shape-morph's silhouette does morph (clean hexagon exists) but the surface look does NOT ride along \u2014 circle/hex phases are featureless dark fills; cross-morph's A-B-A recede/dip/advance arc is measurable and reads correctly, though its trough behavior is unverifiable (see q3).",
+      "evidence": [
+        "metaball-merge/after/play-1.png \u2014 liquid metaballs with smooth-union necks, brass/cream",
+        "metaball-merge/after/play-2.png \u2014 brass rim resolving into the true card content",
+        "flip-morph/after/idle.png \u2014 small corner thumbnail; flip-morph/after/play-2.png \u2014 full layout, content crisp",
+        "domain-warp-morph/after/play-1.png \u2014 domain-warped liquid channels over the card",
+        "pill-morph/after/play-2.png \u2014 compact fully-rounded pill",
+        "silhouette-glow-morph/after/play-2.png \u2014 glowing golden edge outline after fill drain",
+        "cylinder-unroll/after/idle.png and genie-suck/after/play-1.png \u2014 blank brown placeholder, no subject look",
+        "swap-flip-morph/after/play-2.png \u2014 blank grey alternate face",
+        "skeleton-resolve/after/idle.png \u2014 real orange bar + text rows fully visible at t=0; no ghost/placeholder state even at control-ghost-high.png",
+        "sdf-shape-morph/after/control-smoothness-low.png \u2014 clean hexagon silhouette but flat featureless fill",
+        "metrics: cross-morph play arc idle hue=33/luma 16.3 -> play-1 luma 10.7 (dip) -> play-2 luma 15.5 (advance) \u2014 A-B-A arc measurable",
+        "metrics: skeleton-resolve idle effHue=200 (cool sheen) -> play-3 effHue=39 (warm resolved) \u2014 resolve gradient exists but content never ghosts"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes \u2014 the majority of labeled sliders produce immediate, visible, sensible change at the engaged mid-state (metaball-merge blend/glow/balls/speed/duration all strong; domain-warp warpStrength/flowSpeed strong; swap-flip hold/duration strong). BUT four labeled controls produce zero visible change across their full low-to-high range at the captured engaged state, which to a first-time user is a dead slider: cross-morph 'trough' (both sweep frames are pure background \u2014 the subject is fully invisible at the pinned mid-state at every trough setting), cylinder-unroll 'overshoot', swap-flip-morph 'faceBias', and liquid-stretch-morph 'stretch'. If some of these are end-phase-only parameters the t=1s pin cannot certify them \u2014 either way the user evidence shows no response.",
+      "evidence": [
+        "control: metaball-merge blend meanAbsDiff=20.107 changedFrac=0.2372; glow 16.489; domain-warp-morph warpStrength meanAbsDiff=14.83; swap-flip-morph hold meanAbsDiff=25.021",
+        "control: cross-morph trough meanAbsDiff=0 changedFrac=0 \u2014 cross-morph/after/control-trough-low.png and control-trough-high.png are identical pure-background frames",
+        "control: cylinder-unroll overshoot meanAbsDiff=0; swap-flip-morph faceBias meanAbsDiff=0 (control-faceBias-low.png identical to control-faceBias-high.png, front face shown in both)",
+        "control: liquid-stretch-morph stretch meanAbsDiff=0.118 changedFrac=0.0024 \u2014 no visible taffy-stretch response at any setting"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Motion is real and large across play frames on every tile (no dead loops), control apply latency is uniform ~0.57-0.66s in the harness, and there are zero console or network errors on a webgpu backend for all 14 bundles. The few near-static samples are legitimate hold phases of finite entrance morphs (swap-flip play-1 is the pre-trigger hold; silhouette-glow play-3 is the held outline \u2014 though that hold being near-frozen undercuts its 'living outline' wording, see flags).",
+      "evidence": [
+        "metrics: frameDeltaMag peaks \u2014 genie-suck play-2 54.18, cylinder-unroll play-2 35.03, swap-flip-morph play-2 27.75, metaball-merge play-1 20.6, domain-warp-morph play-2 18.3",
+        "metrics: control latencyMs range 564-661 across all 47 control sweeps",
+        "console: 0 errors, network: 0 errors, backend: webgpu \u2014 all 14 metrics.json",
+        "metrics: silhouette-glow-morph play-3 frameDeltaMag=0.16 (hold near-static); swap-flip-morph play-1 frameDeltaMag=0 (pre-trigger hold)"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED, at the wave level. A first-time user would say: 'Five of these are genuinely gorgeous \u2014 the mercury merge, the corner-thumbnail leap and the liquid-marble dissolve feel like premium motion design. But three of them turn my card into a blank brown or grey slab with none of my content on it, the camera-iris one never actually hides anything, the skeleton one is just a shine sweep over my already-loaded card, and four of the sliders do literally nothing. I can't trust this set as shipped.' The headline claim \u2014 all 14 carry the subject's own look, no invented placeholder fills \u2014 is contradicted on camera by three tiles, so the wave cannot pass as a unit.",
+      "evidence": [
+        "metaball-merge/after/play-1.png and domain-warp-morph/after/play-1.png \u2014 the premium end",
+        "cylinder-unroll/after/play-3.png, genie-suck/after/idle.png, swap-flip-morph/after/play-3.png \u2014 blank placeholder surfaces contradicting the wave claim",
+        "mask-iris-morph/after/idle.png \u2014 content visible with the iris closed",
+        "control: 4 dead controls (trough/overshoot/faceBias/stretch, meanAbsDiff 0-0.118)"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "cylinder-unroll: the unrolling surface is a blank featureless tan-brown placeholder \u2014 none of the subject's content (orange bar, text rows, dot) appears at any phase, violating the wave claim 'carries the subject's own look, no invented placeholder fills'. Re-pour the subject's texture onto the unroll sheet.",
+      "evidence": "cylinder-unroll/after/play-3.png (fully unrolled = blank brown rectangle) and cylinder-unroll/after/idle.png (blank brown roll); metrics: play-3 effHue=33 effSat=0.43 uniform warm fill, stdev driven by silhouette only"
+    },
+    {
+      "issue": "cylinder-unroll: the roll cylinder is taller than the sheet and renders as a brown stripe spanning the entire frame height, poking past the layout top and bottom.",
+      "evidence": "cylinder-unroll/after/control-overshoot-low.png and control-radius-high.png \u2014 full-height brown vertical band beyond the sheet's edges"
+    },
+    {
+      "issue": "cylinder-unroll: 'overshoot' control produces zero pixel change across its full range at the engaged mid-state \u2014 dead slider as captured.",
+      "evidence": "control: cylinder-unroll overshoot meanAbsDiff=0, changedFrac=0 (low/mid/high pixel-identical)"
+    },
+    {
+      "issue": "genie-suck: the subject is a blank brown placeholder sheet with no card content, and at rest (idle) it is skewed and clipped at the top frame edge; play-3 is fully empty black (the 'hold' leaves nothing visible, unlike a genie minimize which docks to a visible target).",
+      "evidence": "genie-suck/after/idle.png (blank skewed sheet, clipped at frame top), genie-suck/after/play-3.png (empty frame); metrics: play-3 meanLuma=7.7 = pure background"
+    },
+    {
+      "issue": "swap-flip-morph: the alternate face is a featureless putty-grey untextured slab \u2014 reads as missing content, not a designed second face; contradicts 'no invented placeholder fills'.",
+      "evidence": "swap-flip-morph/after/play-3.png and play-2.png \u2014 blank grey slab; metrics: play-3 effSat=0.10 effHue=41 (flat greige), zero content detail"
+    },
+    {
+      "issue": "swap-flip-morph: 'faceBias' control is dead \u2014 zero pixel change across the full range at the engaged state.",
+      "evidence": "control: swap-flip-morph faceBias meanAbsDiff=0 changedFrac=0; control-faceBias-low.png identical to control-faceBias-high.png"
+    },
+    {
+      "issue": "mask-iris-morph: the iris mask never conceals the card's content \u2014 with the aperture CLOSED at t=0 the orange title bar, all text rows and the blue dot are fully visible floating without the panel; mid-open, panel and content outside the star aperture remain visible. The reveal is fake: only the panel body fades.",
+      "evidence": "mask-iris-morph/after/idle.png (closed iris, content fully visible) and mask-iris-morph/after/play-2.png (content visible outside the brass star rim)"
+    },
+    {
+      "issue": "morph-into-card: the docked chip state (which dominates the loop) shows a residual straight-edged rectangular ghost plate around the rounded pill, and the chip content is dimmed to near-background legibility.",
+      "evidence": "morph-into-card/after/control-chipScale-high.png (clear rect edges above the pill's rounded shoulders), morph-into-card/after/play-2.png; metrics: play-2 meanLuma=8.2 vs idle 16.3"
+    },
+    {
+      "issue": "sdf-shape-morph: the claim 'its own surface look rides along' fails \u2014 circle and hexagon phases are flat featureless dark fills (no orange bar, no texture, no chrome speculars), and mid-morph shows a double-exposure of the faded rect card content with a superimposed ghost disk; the whole morph also dims well below the idle card.",
+      "evidence": "sdf-shape-morph/after/play-3.png (featureless dark disk), play-2.png (double exposure), control-smoothness-low.png (featureless hexagon); metrics: play-3 meanLuma=9.3 vs idle 14.7"
+    },
+    {
+      "issue": "cross-morph: 'trough' control is dead \u2014 both sweep frames are pure background with the subject fully invisible at every setting; at the engaged mid-state the element disappears completely (a full blackout, not the claimed 'soft opacity trough').",
+      "evidence": "control: cross-morph trough meanAbsDiff=0 changedFrac=0; cross-morph/after/control-trough-low.png and control-trough-high.png are identical empty frames"
+    },
+    {
+      "issue": "liquid-stretch-morph: 'stretch' control (the tile's headline behavior) produces no visible change across its full range, and the stretch sweep frames show the subject ~85% clipped off the right frame edge at the engaged state.",
+      "evidence": "control: liquid-stretch-morph stretch meanAbsDiff=0.118 changedFrac=0.0024; liquid-stretch-morph/after/control-stretch-low.png (subject sliver at right edge, frame otherwise empty)"
+    },
+    {
+      "issue": "skeleton-resolve: there is no skeleton/ghost state \u2014 the real content (orange bar, text rows) is fully visible at t=0 and at every captured setting, so the effect reads as a diagonal gloss sweep over an already-loaded card (overlapping the existing pointer-shine look), not a loading-skeleton resolving into content.",
+      "evidence": "skeleton-resolve/after/idle.png (real content visible under sheen at t=0) and skeleton-resolve/after/control-ghost-high.png (max ghost still shows real content, only fogged)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "metaball-merge: the metaball field is hard-clipped to the card rectangle, so the balls read as a lava-lamp inside the card window rather than swimming in from outside the edges. Taste call \u2014 the effect still reads as liquid coalescing and looks premium.",
+      "evidence": "metaball-merge/after/play-1.png \u2014 blob tails truncated at the straight card boundary"
+    },
+    {
+      "note": "silhouette-glow-morph: the transitional border is a flat matte tan-brown with no luminosity \u2014 at wide settings it reads as a wooden picture frame before the glow arrives; and the held outline is near-static, undercutting 'living' tracery.",
+      "evidence": "silhouette-glow-morph/after/play-1.png and control-edgeWidth-high.png (matte brown frame); metrics: play-3 frameDeltaMag=0.16 during the hold"
+    },
+    {
+      "note": "domain-warp-morph: the liquid channels are a uniform bone/cream tone rather than the card's own colors smearing (the orange bar stays intact-but-dimmed beneath the overlay). Reads as 'dissolving through liquid' rather than 'surface smearing' \u2014 gorgeous either way.",
+      "evidence": "domain-warp-morph/after/play-1.png \u2014 all channels cream, orange bar unsmeared beneath"
+    },
+    {
+      "note": "pill-morph: a fainter version of the rect-ghost halo is visible around the capsule mid-morph, and the whole element dims during the squeeze.",
+      "evidence": "pill-morph/after/play-2.png (faint straight-edged halo around the pill); metrics: play-2 meanLuma=8.8 vs idle 16.3"
+    },
+    {
+      "note": "cross-morph: at peak travel the card is partially clipped by the right frame edge \u2014 fine if the user tunes travel down, but the default capture shows the subject cut off.",
+      "evidence": "cross-morph/after/play-2.png \u2014 right portion of card outside the frame"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

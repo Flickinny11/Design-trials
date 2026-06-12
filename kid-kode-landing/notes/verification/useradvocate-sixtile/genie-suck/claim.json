@@ -1,0 +1,7 @@
+{
+  "name": "genie-suck",
+  "label": "Funnel Curve",
+  "description": "The surface is drawn into a corner through a curving genie funnel, holds a beat, then springs back out.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

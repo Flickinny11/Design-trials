@@ -1,0 +1,7 @@
+{
+  "name": "sdf-shape-morph",
+  "label": "Speed",
+  "description": "The card silhouette fluidly morphs through pure SDF shapes — rounded rect to circle to hexagon and back — while its own surface look rides along.",
+  "category": "mask",
+  "groundTruthSibling": null
+}

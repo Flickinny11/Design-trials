@@ -1,0 +1,7 @@
+{
+  "name": "metaball-merge",
+  "label": "Duration",
+  "description": "Liquid metaballs swim in from the edges and smooth-union into the full card, like mercury coalescing.",
+  "category": "mask",
+  "groundTruthSibling": null
+}

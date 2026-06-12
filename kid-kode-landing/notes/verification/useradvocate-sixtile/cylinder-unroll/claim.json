@@ -1,0 +1,7 @@
+{
+  "name": "cylinder-unroll",
+  "label": "Duration",
+  "description": "The surface arrives rolled into a tight scroll and unrolls flat like parchment, the roll edge travelling across as it lays down.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

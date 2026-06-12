@@ -1,0 +1,7 @@
+{
+  "name": "morph-into-card",
+  "label": "Chip Size",
+  "description": "The element folds itself into a neat floating chip — shrinking and gliding into a corner as its silhouette rounds into a pill — then unfurls back to full size.",
+  "category": "mask",
+  "groundTruthSibling": null
+}

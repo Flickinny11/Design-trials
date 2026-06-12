@@ -1,21 +1,21 @@
 {
-  "startedAt": "2026-06-12T06:24:07.025Z",
-  "updatedAt": "2026-06-12T06:25:07.011Z",
+  "startedAt": "2026-06-12T08:03:37.735Z",
+  "updatedAt": "2026-06-12T08:04:31.120Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 5,
+      "total": 3,
       "backend": "webgl",
-      "startedAt": "2026-06-12T06:24:12.595Z",
-      "finishedAt": "2026-06-12T06:25:07.011Z",
-      "peakConcurrency": 8,
+      "startedAt": "2026-06-12T08:03:42.310Z",
+      "finishedAt": "2026-06-12T08:04:31.119Z",
+      "peakConcurrency": 6,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "decode-text": {
-      "name": "decode-text",
-      "category": "text",
+    "cross-morph": {
+      "name": "cross-morph",
+      "category": "transform",
       "driver": "time",
       "renders": true,
       "plays": true,
@@ -23,13 +23,13 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-12T06:24:19.362Z",
+      "at": "2026-06-12T08:03:48.556Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "embers": {
-      "name": "embers",
-      "category": "particles",
+    "liquid-stretch-morph": {
+      "name": "liquid-stretch-morph",
+      "category": "transform",
       "driver": "time",
       "renders": true,
       "plays": true,
@@ -37,51 +37,21 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-12T06:24:27.325Z",
+      "at": "2026-06-12T08:03:57.295Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "pointer-shine": {
-      "name": "pointer-shine",
-      "category": "pointer",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-12T06:24:30.433Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-stagger-rise": {
-      "name": "scroll-stagger-rise",
-      "category": "scroll",
-      "driver": "scroll",
+    "sdf-shape-morph": {
+      "name": "sdf-shape-morph",
+      "category": "mask",
+      "driver": "time",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-12T06:24:40.436Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-depth-dolly": {
-      "name": "scroll-depth-dolly",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-12T06:24:38.918Z",
+      "at": "2026-06-12T08:04:02.950Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -92,8 +62,8 @@
     "names": []
   },
   "summary": {
-    "total": 5,
-    "pass": 5,
+    "total": 3,
+    "pass": 3,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -102,9 +72,9 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 60,
+    "wallClockSec": 53,
     "peak": {
-      "std": 8
+      "std": 6
     },
     "backend": {
       "std": "webgl"

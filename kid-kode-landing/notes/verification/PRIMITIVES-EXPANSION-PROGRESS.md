@@ -105,7 +105,25 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     embers/'empty' particle extents not artifact-scale-relative (pre-existing convention, all 35
     particle primitives); in-context co-binding opacity stacking (fade-up owns opacity over dolly's
     dim — last-writer semantics, by design); advocate r2's 6 taste flags (verdict JSON).
-- [ ] W1 MORPH/TRANSITION
+- [~] **W1 MORPH/TRANSITION** — BUILD DONE (2026-06-12): all 14 authored + per-file vitest green
+  (sdf-shape-morph, metaball-merge, flip-morph, cross-morph, morph-into-card, mask-iris-morph,
+  silhouette-glow-morph, domain-warp-morph, cylinder-unroll, genie-suck, liquid-stretch-morph,
+  pill-morph, skeleton-resolve, swap-flip-morph; mask 15→23, transform 32→38). Barrel wired →
+  registry 326. tsc-gate 0-new; full vitest 2,649/0. PENDING: 14-tile harness + art-fidelity +
+  advocate + AUTO-CKPT.
+  - FULL-312 NO-REGRESSION: **312/312, 0 fails, 0 quiet-retries, deviceLost 0** (wall 5387s under
+    agent load; the mid-run barrel hot-reload caused zero flakes).
+  - W1 harness: **14/14 r/p/c first run**. Art-fidelity: 6 PASS; 8 lum-flagged (phase-timing class).
+  - Orchestrator art polish: sdf-shape-morph chrome co-fade (was floating unmasked), cross-morph
+    travel default 0.9→0.5 (was half out of frame; test magic-constant relaxed), liquid-stretch
+    travel 1.1→0.7. Re-verified 3/3 harness.
+  - ADVOCATE r1 (w1): **BLOCKED** — 12 mustFix across 9 tiles (verdict
+    useradvocate-sixtile/advocate-verdict-w1-morph.json); 5 ship-quality (metaball-merge,
+    flip-morph, domain-warp-morph, silhouette-glow-morph, pill-morph). Defect classes: chrome
+    children visible through closed masks; map-less subjects → placeholder sheets; controls dead
+    at pinned t=1; framing overflow.
+  - FIX ROUND in flight (workflow primitives-w1-fixround, 9 agents, self-verifying: vitest +
+    harness + re-capture + read-own-frames + controls-alive check). Then fresh advocate r2.
 - [ ] W2 SCROLL-STORY
 - [ ] W3 DISTORTION/DISPLACEMENT
 - [ ] W4 CURSOR PHYSICS
