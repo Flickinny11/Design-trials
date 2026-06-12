@@ -1,0 +1,97 @@
+{
+  "feature": "P0 primitive bug-fix wave — scroll-stagger-rise, pointer-shine, embers, scroll-depth-dolly, decode-text",
+  "claim": "All five primitives flagged broken by the UI-FIDELITY-2 advocate are now fixed and premium: (1) scroll-stagger-rise rows are the card's real brass/content rows arriving one by one as scroll advances; (2) pointer-shine never destroys the subject material, crisp anamorphic glint tracks the pointer; (3) embers are round, luminous, soft-edged with white-hot cores cooling cream-gold to deep red; (4) scroll-depth-dolly is never invisible — distant-but-visible at scroll=0, rushes in through midrange, dissolving past ~0.85, depth/passBy change the travel; (5) decode-text glyphs scramble and lock left-to-right, ending exactly at settled layout at full opacity.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Per tile. pointer-shine: nothing broken — the card's baked look (brass header, blue orb, grey rows) is intact in every frame with the glint as a clean additive overlay (idle.png through play-3.png). embers: nothing broken — round soft-edged particles, no raw squares anywhere (embers/after/play-2.png). decode-text: nothing broken — settled frames are crisp MSDF glyphs with no ghosting (decode-text/after/play-3.png identical to idle.png). scroll-stagger-rise: two defects — (a) the motion runs INVERTED to its label (rows fall downward and fade OUT as scroll advances, ending near-black: idle meanLuma 16.3 at scroll=0 falls monotonically to 8.3 by play-3, where the brass header lies detached BELOW the card silhouette), and (b) the control sweeps were frozen at the decomposed end-state so all nine control frames are near-black (meanLuma 8.1-8.6; control-lift-mid.png shows nothing but a faint card shell). scroll-depth-dolly: two defects — (a) at scroll=0 (idle.png) the card is at its CLOSEST, overflowing and cropped by the preview frame edges, the exact opposite of the claimed 'rests distant' pose; (b) the passBy control is dead (low/high frames pixel-identical). Zero console/network errors and backend=webgpu on all five bundles.",
+      "evidence": [
+        "scroll-stagger-rise/after/play-3.png",
+        "metrics: scroll-stagger-rise idle meanLuma 16.3 (scroll=0, full card) -> play-3 meanLuma 8.3 (near-empty); rig maps seek(0)->scroll=0 via 0.5-0.5*cos(ph*2pi)",
+        "scroll-stagger-rise/after/control-lift-mid.png",
+        "scroll-depth-dolly/after/idle.png",
+        "metrics: scroll-depth-dolly passBy pixelDiff meanAbsDiff=0.002, changedFrac=0.0000 (min 0 -> max 2)",
+        "console: 0 consoleErrors / 0 networkErrors across all five metrics.json; backend=webgpu in all five"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "pointer-shine READS AS CLAIMED: a crisp anamorphic star glint visibly relocates across the glossy card (lower-left in idle.png, center in play-2.png, upper-right beside the orb in play-3.png) while the card keeps its full baked material — the prior material-destruction bug is gone. embers READS AS CLAIMED: round luminous soft-edged particles with white-hot cream cores at the base cooling through orange to deep red at the top (play-2.png); measured hue 26-32 deg at sat 0.38-0.47 with warmFrac 0.84-0.96 — squarely in fire's 10-45 deg band, no raw squares. decode-text READS AS CLAIMED: play-1.png is a genuine mid-scramble (leftmost 'P' already near-settled, right glyphs still jittered = left-to-right locking) and play-3.png matches the settled idle.png layout exactly at full opacity — no mid-scramble sticking. scroll-stagger-rise HALF-READS: the rows ARE the card's real textured rows now (brass header keeps its bake in play-1.png/play-2.png — placeholder-quad bug fixed), but the direction is inverted: at scroll=0 the card is fully assembled and rows sink/fade OUT as scroll advances, the opposite of 'rise and fade in... arriving one by one as scroll advances'. scroll-depth-dolly HALF-READS: 'never invisible' holds (card plainly legible at every captured scroll — huge in idle.png, mid in play-1.png, small but clear in play-2/3.png), but the travel is inverted vs claim: closest at scroll=0, receding as scroll advances, instead of 'distant at 0, rushing in through the midrange'.",
+      "evidence": [
+        "pointer-shine/after/play-3.png",
+        "pointer-shine/after/idle.png",
+        "metrics: embers play-1 effHue=27, effSat=0.46, warmFrac=0.95 (fire band 10-45 deg); embers/after/play-2.png",
+        "decode-text/after/play-1.png",
+        "decode-text/after/play-3.png",
+        "scroll-stagger-rise/after/idle.png",
+        "scroll-stagger-rise/after/play-2.png",
+        "scroll-depth-dolly/after/play-2.png",
+        "metrics: scroll-depth-dolly idle meanLuma 35.5 (closest, scroll=0) -> play-3 meanLuma 8.3 (most distant, scroll~0.84) — inverse of claimed travel"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "pointer-shine: yes — 'length' low is a compact glint dot vs high a full-card-width anamorphic streak (control-length-low.png vs control-length-high.png); 'intensity' 0 removes the glint entirely, 4 is a bright cross-flare (control-intensity-low.png vs control-intensity-high.png). embers: yes — 'count' low is a sparse drift vs high a dense column (control-count-low.png vs control-count-high.png; meanLuma 10.2 -> 37.8); 'size' sweeps 8.5 -> 67.7 meanLuma; all 5 controls changedFrac 0.31-0.50. decode-text: yes — 'intensity' low shows settled PRISM vs high a violent scramble (control-intensity-low.png vs control-intensity-high.png). scroll-depth-dolly: split — 'depth' visibly changes travel distance (control-depth-low.png card mid-size vs control-depth-high.png card tiny), but 'passBy' produces NO change at all (frames identical, changedFrac 0.0000): a first-time user dragging that slider sees nothing happen. scroll-stagger-rise: poor — the sweep was frozen at the decomposed near-black state, so bands/stagger/lift changes are technically measurable (changedFrac 0.0079-0.032) but practically invisible to a human (all control frames meanLuma ~8).",
+      "evidence": [
+        "pointer-shine/after/control-length-low.png",
+        "pointer-shine/after/control-length-high.png",
+        "pointer-shine/after/control-intensity-low.png",
+        "embers/after/control-count-low.png",
+        "metrics: embers count low->high meanLuma 10.2 -> 37.8, pixelDiff changedFrac 0.3084",
+        "decode-text/after/control-intensity-high.png",
+        "scroll-depth-dolly/after/control-depth-high.png",
+        "control: scroll-depth-dolly passBy low->high changedFrac 0.0000 — no visible change",
+        "control: scroll-stagger-rise bands low->high changedFrac 0.0079 at meanLuma ~8.3 frames (near-black)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Motion is real on all five — no dead playback. embers is the liveliest (frameDeltaMag 37.67/44.49/45.36 across play frames). scroll-depth-dolly moves hard out of idle (frameDeltaMag 28.85 idle->play-1) then settles (0.32 by play-3, consistent with the far end of travel). scroll-stagger-rise shows staggered per-row motion (frameDeltaMag up to 7.86). decode-text scrambles continuously (4.49/4.17/1.85, converging as glyphs lock). pointer-shine's whole-frame delta is small (0.64-0.84) because only the glint moves, but the glint visibly relocates from frame to frame. Control application is uniform and prompt: latencyMs 564-591 across all 16 swept controls (harness-paced ~500ms wait included), every control except dolly-passBy applying a visible or measurable change within one capture interval.",
+      "evidence": [
+        "metrics: embers frameDeltaMag 37.67 / 44.49 / 45.36 (play-1..3)",
+        "metrics: scroll-depth-dolly idle->play-1 frameDeltaMag 28.85",
+        "metrics: decode-text frameDeltaMag 4.49 / 4.17 / 1.85 (converging lock)",
+        "metrics: control latencyMs 564-591 across all five tiles' sweeps",
+        "pointer-shine/after/play-2.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "Mixed, so INDIFFERENT for the wave as a whole. Three of five are genuinely premium and claim-true — 'that glint chasing my cursor is gorgeous and the card never breaks', 'those embers actually look like embers now', 'the text scramble locks perfectly'. But the two scroll tiles would confuse me: 'the description says the rows rise in as I scroll, but they fall out and the card empties to black — and on the dolly one the passBy slider does nothing at all and the card starts jammed in my face instead of far away'. Great fixes on 3/5; the 2 scroll tiles still contradict their own labels.",
+      "evidence": [
+        "pointer-shine/after/play-3.png",
+        "embers/after/play-2.png",
+        "decode-text/after/play-3.png",
+        "scroll-stagger-rise/after/play-3.png",
+        "metrics: scroll-depth-dolly passBy changedFrac 0.0000; scroll-stagger-rise meanLuma 16.3 -> 8.3 as scroll advances (inverse of 'arrive')"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "scroll-stagger-rise scroll mapping is INVERTED vs its claim ('rows rise and fade in staggered as scroll advances, like list rows arriving one by one'): at scroll=0 (idle, rig maps seek(0)->scroll=0) the card is fully assembled, and as scroll advances the rows fall DOWNWARD and fade OUT one by one, ending near-empty with the brass header detached below the card silhouette. The placeholder-quad fix is real, but the effect a user gets is list-disintegration on scroll, not list-arrival.",
+      "evidence": "scroll-stagger-rise/after/idle.png (scroll=0, full card, meanLuma 16.3) vs play-1.png (bottom row dropped below card edge) vs play-3.png (scroll~0.84, near-black, meanLuma 8.3, header bar below the card)"
+    },
+    {
+      "issue": "scroll-depth-dolly 'passBy' control does nothing: sweeping min(0) -> max(2) produced pixel-identical frames. The fix claim explicitly says 'controls (depth/passBy) change the travel'; depth does, passBy does not — a labeled control with zero visible effect.",
+      "evidence": "metrics: passBy pixelDiff meanAbsDiff=0.002, changedFrac=0.0000; scroll-depth-dolly/after/control-passBy-low.png identical to control-passBy-high.png"
+    },
+    {
+      "issue": "scroll-depth-dolly travel is INVERTED vs its claim ('at scroll=0 the card rests distant but plainly visible, rushes in through the midrange'): at scroll=0 the card is at its CLOSEST — overflowing and cropped by the preview frame edges — and it recedes into the distance as scroll advances. 'Never invisible' genuinely holds (card legible in every frame), but the directional story a user reads is backwards.",
+      "evidence": "scroll-depth-dolly/after/idle.png (scroll=0: card fills/overflows frame, meanLuma 35.5) vs play-2.png/play-3.png (scroll mid-high: card small and distant, meanLuma 8.3-8.5)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "scroll-stagger-rise control sweeps are captured at the fully-decomposed freeze point, so the bands/stagger/lift sliders read as dragging over a black frame — a side-effect of the inverted mapping (the pause lands at high scroll = empty card). Fixing the direction inversion should make the control state legible for free, but re-capture and confirm.",
+      "evidence": "scroll-stagger-rise/after/control-lift-mid.png (all-black except faint card shell); metrics: all 9 control frames meanLuma 8.1-8.6, bands low->high changedFrac 0.0079"
+    },
+    {
+      "note": "embers at combined slider extremes (size=max left pinned by sweep order, then flickerRate=max) clips the base to a near-solid white mass. Hue stays in the warm band (no cool drift), and this is slider-extreme territory, so taste-level — but worth a softer top-end curve.",
+      "evidence": "embers/after/control-flickerRate-high.png; metrics: flickerRate-high meanLuma 94 vs play frames 27-49"
+    },
+    {
+      "note": "pointer-shine 'twinkle' is only weakly demonstrable in paused stills (a rate parameter needs motion to show); the pixel diff confirms it does something but a still-frame sweep undersells it.",
+      "evidence": "metrics: twinkle low->high pixelDiff meanAbsDiff 0.23, changedFrac 0.0111 (changed=true via pixel diff only)"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

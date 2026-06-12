@@ -1,0 +1,7 @@
+{
+  "name": "pointer-shine",
+  "label": "Length",
+  "description": "A sharp anamorphic glint flares at the pointer location, twinkling as it tracks the cursor across glossy glass.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -1,84 +1,71 @@
 {
-  "startedAt": "2026-06-10T04:27:21.218Z",
+  "startedAt": "2026-06-12T05:44:16.030Z",
   "state": "after",
-  "port": 4799,
+  "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "bevel-glass",
+      "tile": "scroll-stagger-rise",
       "state": "after",
-      "dir": "bevel-glass/after",
+      "dir": "scroll-stagger-rise/after",
       "claim": {
-        "name": "bevel-glass",
-        "label": "Bevel",
-        "description": "A thick beveled-edge glass panel — chunky refraction concentrated at chamfered borders with a clear center.",
-        "category": "glass"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "caustic-rings",
-      "state": "after",
-      "dir": "caustic-rings/after",
-      "claim": {
-        "name": "caustic-rings",
-        "label": "Speed",
-        "description": "Concentric caustic rings ripple outward from a center, bright bands of focused light expanding like raindrop rings.",
-        "category": "caustics"
+        "name": "scroll-stagger-rise",
+        "label": "Bands",
+        "description": "Bands of the card rise and fade in staggered as scroll advances, like list rows arriving one by one.",
+        "category": "scroll"
       },
       "controls": 3,
       "notes": []
     },
     {
-      "tile": "campfire",
+      "tile": "pointer-shine",
       "state": "after",
-      "dir": "campfire/after",
+      "dir": "pointer-shine/after",
       "claim": {
-        "name": "campfire",
-        "label": "Flicker",
-        "description": "A small flickering campfire — licking orange-to-yellow flame tongues with a hot core and rising sparks, warmer and tighter than the big fire.",
-        "category": "volumetric"
+        "name": "pointer-shine",
+        "label": "Length",
+        "description": "A sharp anamorphic glint flares at the pointer location, twinkling as it tracks the cursor across glossy glass.",
+        "category": "pointer"
       },
       "controls": 3,
       "notes": []
     },
     {
-      "tile": "aurora",
+      "tile": "embers",
       "state": "after",
-      "dir": "aurora/after",
+      "dir": "embers/after",
       "claim": {
-        "name": "aurora",
-        "label": "Speed",
-        "description": "Aurora borealis curtains — vertical ribbons of green-to-violet light waving and shimmering across a night sky.",
-        "category": "volumetric"
+        "name": "embers",
+        "label": "Count",
+        "description": "Glowing embers rise and flicker upward from a fire, fading as they cool.",
+        "category": "particles"
       },
-      "controls": 3,
+      "controls": 5,
       "notes": []
     },
     {
-      "tile": "accordion-y",
+      "tile": "scroll-depth-dolly",
       "state": "after",
-      "dir": "accordion-y/after",
+      "dir": "scroll-depth-dolly/after",
       "claim": {
-        "name": "accordion-y",
+        "name": "scroll-depth-dolly",
+        "label": "Depth Travel",
+        "description": "Scroll dollies the card through depth — rushing toward then past the viewer as the page moves.",
+        "category": "scroll"
+      },
+      "controls": 2,
+      "notes": []
+    },
+    {
+      "tile": "decode-text",
+      "state": "after",
+      "dir": "decode-text/after",
+      "claim": {
+        "name": "decode-text",
         "label": "Duration",
-        "description": "Card expands vertically accordion-style from a thin center band to full height with a springy settle.",
-        "category": "transform"
-      },
-      "controls": 3,
-      "notes": []
-    },
-    {
-      "tile": "blur-spin",
-      "state": "after",
-      "dir": "blur-spin/after",
-      "claim": {
-        "name": "blur-spin",
-        "label": "Duration",
-        "description": "Card spins into place behind a rotational motion-blur of ghosted copies that catch up and merge sharp.",
-        "category": "blur"
+        "description": "Glyphs resolve out of a rapid scramble of jitter and flicker, locking into place left-to-right like a decryption reveal.",
+        "category": "text"
       },
       "controls": 3,
       "notes": []

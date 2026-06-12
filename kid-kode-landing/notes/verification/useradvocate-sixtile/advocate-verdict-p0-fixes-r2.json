@@ -1,0 +1,107 @@
+{
+  "feature": "P0 primitive bug-fix wave, round 2 — scroll-stagger-rise, pointer-shine, embers, scroll-depth-dolly, decode-text",
+  "claim": "All five primitives flagged broken by the UI-FIDELITY-2 advocate are now fixed and premium: (1) scroll-stagger-rise — no untextured placeholder quads; the card's real brass header/content rows rise in one by one as scroll advances 0->1 (entrance effect: at scroll=0 it has not yet arrived); (2) pointer-shine — subject material never destroyed; full baked look with a crisp anamorphic star glint tracking the pointer as an additive overlay; (3) embers — round, luminous, soft-edged embers with white-hot cores cooling cream-gold to deep red as they rise, no squares; (4) scroll-depth-dolly — at scroll=0 the card rests distant but plainly visible (never invisible), rushes in through the midrange, dissolves only past scroll~0.85 with fadeEnds; depth and passBy visibly change the travel; (5) decode-text — glyphs scramble and lock cleanly, ending EXACTLY at settled layout with full opacity.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "All three round-1 MUST-FIX defects are gone in this capture. (a) scroll-stagger-rise direction is no longer inverted: idle.png at scroll=0 is an empty tile (meanLuma 7.7, the not-yet-arrived entrance state the claim declares legitimate) and the card assembles as scroll advances, play-3.png fully settled (meanLuma 16.3, matching the pointer-shine settled card). (b) scroll-depth-dolly is no longer closest at scroll=0: idle.png shows a small, dimmed, plainly legible card centered in the distance, and play-3.png shows it huge, passing the viewer. (c) dolly passBy is no longer dead: changedFrac 0.0421 and the card is visibly larger in control-passBy-high.png than control-passBy-low.png. Remaining nits are cosmetic, listed as flags: in-flight stagger rows render un-clipped below the card silhouette (scroll-stagger-rise/after/play-2.png bottom row; control-bands-high.png); pointer-shine's vertical streak at length max spills slightly past the card's bottom edge (control-length-high.png). High bandingScores (0.5-0.58) on the card tiles are the card's own horizontal rows on a flat dark field, not volumetric slab banding — embers, the only particle tile, scores 0.13-0.32 and shows no lattice, seams, or squares (embers/after/play-2.png). Zero consoleErrors / networkErrors and backend=webgpu in all five metrics.json.",
+      "evidence": [
+        "scroll-stagger-rise/after/idle.png",
+        "metrics: scroll-stagger-rise idle meanLuma 7.7 (scroll=0, not yet arrived) -> play-3 meanLuma 16.3 (settled card) — arrival direction now matches the label",
+        "scroll-depth-dolly/after/idle.png",
+        "scroll-depth-dolly/after/play-3.png",
+        "control: scroll-depth-dolly passBy low->high pixelDiff meanAbsDiff 1.503, changedFrac 0.0421 (was 0.0000 in round 1)",
+        "scroll-stagger-rise/after/play-2.png",
+        "pointer-shine/after/control-length-high.png",
+        "metrics: embers bandingScore 0.215-0.316 across play frames, round soft particles, no grid/seam in embers/after/play-2.png",
+        "console: 0 consoleErrors / 0 networkErrors in all five metrics.json; backend=webgpu in all five"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "All five now read as claimed. scroll-stagger-rise: the arriving rows ARE the card's real parts — the brass header bar mid-rise in play-1.png is the same baked brass as the settled header, and the in-flight grey row in play-2.png matches the settled row style; play-3.png ends pixel-equivalent to the settled card seen in pointer-shine/after/idle.png. No placeholder quads anywhere. pointer-shine: the card keeps its full baked look in every frame (brass header, blue orb, grey rows all intact even at intensity max), with a crisp anamorphic cross-flare that relocates from the top-right corner (play-1.png) to mid-card (play-2.png) — reads exactly as 'glint tracking the pointer on glossy glass'. embers: round, soft-edged, luminous particles with white-hot cream cores at the base cooling through orange to deep red at the top of the rise (idle.png, play-2.png); measured effHue 26-30 deg, effSat 0.41-0.46, warmFrac 0.90-0.96 — squarely in the fire band, zero squares at any size from pinprick sparks (control-size-low.png) to big glow blobs (control-size-high.png). scroll-depth-dolly: idle.png at scroll=0 is distant-but-plainly-visible (readable header, orb and rows at small scale — 'never invisible' holds), play-2.png is the mid-travel arrival, and play-3.png is the pass-by: card blown past frame edges and visibly dimmed/desaturated, consistent with fadeEnds dissolving only late in the travel. decode-text: idle.png (t=0) is a genuine glyph scramble of PRISM, play-2.png locks EXACTLY onto the settled baseline at full opacity, and that settled layout is byte-stable across independent captures (play-2.png, control-duration-low.png, control-intensity-low.png all show the identical crisp PRISM).",
+      "evidence": [
+        "scroll-stagger-rise/after/play-1.png",
+        "scroll-stagger-rise/after/play-3.png",
+        "pointer-shine/after/play-1.png",
+        "pointer-shine/after/play-2.png",
+        "metrics: embers play-1 effHue=26, effSat=0.46, warmFrac=0.96 — fire band 10-45 deg; embers/after/play-2.png",
+        "embers/after/control-size-low.png",
+        "scroll-depth-dolly/after/idle.png",
+        "scroll-depth-dolly/after/play-3.png",
+        "decode-text/after/idle.png",
+        "decode-text/after/play-2.png",
+        "decode-text/after/control-duration-low.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes for 15 of 16 labeled controls; one saturates at its top end. pointer-shine: length low is a compact dot vs high a full-card anamorphic cross (control-length-low.png vs control-length-high.png); intensity 0 removes the glint entirely leaving the pristine card, 4 is a bright flare (control-intensity-low.png vs control-intensity-high.png). embers: count low=sparse drift vs high=dense column (control-count-low.png vs control-count-high.png, meanLuma 11.1 -> 41.6); size sweeps pinprick sparks to merged glow (meanLuma 8.7 -> 74.4); flickerRate shifts warmth visibly (warmFrac 0.06 -> 0.51). scroll-depth-dolly: depth visibly changes travel — card close at depth min (control-depth-low.png) vs small and distant at max (control-depth-high.png, changedFrac 0.2808); passBy now changes the frame (card larger at high) though subtly at the pinned mid-scroll. decode-text: duration low shows the decode already finished at t=1 vs high still mid-scramble (control-duration-low.png vs control-duration-high.png); intensity 0 = clean settle vs 1.2 = violent scatter (control-intensity-high.png). scroll-stagger-rise: bands and stagger and lift all produce sensible mid-arrival differences at the pinned scroll=0.5 (one fewer settled row at bands low vs mid; in-flight row travels visibly farther at lift max — control-lift-low.png row at upper position vs control-lift-high.png row near card bottom) — round 1's all-black control sweep is fixed — but bands mid and high render identically (effRGB 56.2/52.3/47.7 in both), so the top half of that slider's range shows nothing at this moment.",
+      "evidence": [
+        "pointer-shine/after/control-length-low.png",
+        "pointer-shine/after/control-length-high.png",
+        "pointer-shine/after/control-intensity-low.png",
+        "metrics: embers count low->high meanLuma 11.1 -> 41.6, changedFrac 0.3403; size low->high meanLuma 8.7 -> 74.4, changedFrac 0.5222",
+        "embers/after/control-count-low.png",
+        "scroll-depth-dolly/after/control-depth-low.png",
+        "scroll-depth-dolly/after/control-depth-high.png",
+        "control: scroll-depth-dolly depth changedFrac 0.2808; passBy changedFrac 0.0421",
+        "decode-text/after/control-duration-low.png",
+        "decode-text/after/control-duration-high.png",
+        "decode-text/after/control-intensity-high.png",
+        "scroll-stagger-rise/after/control-lift-low.png",
+        "scroll-stagger-rise/after/control-lift-high.png",
+        "metrics: scroll-stagger-rise bands mid effRGB [56.2,52.3,47.7] identical to bands high — top of range saturates at pinned scroll=0.5"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Motion is real on all five, no dead playback. embers is the liveliest (frameDeltaMag 36.4 / 41.1 / 43.35 across play frames). scroll-depth-dolly accelerates through its travel exactly as a dolly should (frameDeltaMag 0.65 far away -> 8.63 mid -> 19.85 at the pass-by). scroll-stagger-rise shows the staggered arrival ramp (3.63 -> 8.29 -> 1.3, settling as rows lock). decode-text scrambles then converges (4.65 / 1.83 / 5.53 — the 5.53 is the next loop's re-scramble, visible as the scattered glyphs in play-3.png). pointer-shine's whole-frame delta is small (0.54-0.84) because only the glint moves, but it visibly relocates between play-1.png and play-2.png. Control application is uniform across all 16 sweeps (latencyMs 561-616, harness-paced), with no control taking anomalously long.",
+      "evidence": [
+        "metrics: embers frameDeltaMag 36.4 / 41.1 / 43.35 (play-1..3)",
+        "metrics: scroll-depth-dolly frameDeltaMag 0.65 -> 8.63 -> 19.85 (accelerating dolly)",
+        "metrics: scroll-stagger-rise frameDeltaMag 3.63 / 8.29 / 1.3 (settling as rows lock)",
+        "metrics: control latencyMs 561-616 across all five tiles' sweeps",
+        "pointer-shine/after/play-2.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A first-time user gets exactly what each label promises: 'the card builds itself out of its own rows as I scroll — and ends perfectly assembled', 'that star glint chases my cursor and the card never breaks', 'those are real glowing embers, white-hot at the bottom and red as they rise', 'the card waits far away, rushes at me as I scroll, then sweeps past my face', 'the letters scramble and snap into PRISM dead-on'. Every round-1 blocker (inverted stagger, inverted dolly, dead passBy, black control sweeps) is demonstrably gone in this capture; what remains is polish-level (un-clipped in-flight rows, a subtle passBy at mid-scroll, a top-saturating bands slider).",
+      "evidence": [
+        "scroll-stagger-rise/after/play-3.png",
+        "pointer-shine/after/play-2.png",
+        "embers/after/play-2.png",
+        "scroll-depth-dolly/after/play-3.png",
+        "decode-text/after/play-2.png",
+        "metrics: all round-1 blockers reversed — stagger idle meanLuma 7.7->settled 16.3 (was 16.3->8.3); dolly idle distant small card (was frame-filling); passBy changedFrac 0.0421 (was 0.0000)"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "scroll-stagger-rise in-flight rows render un-clipped below the card silhouette, floating on the bare background while traveling. It reads as an intentional 3D fly-in and ends exactly settled, but a masked/clipped arrival (rows revealed within the card bounds) would look tighter.",
+      "evidence": "scroll-stagger-rise/after/play-2.png (bottom grey row below the card edge); scroll-stagger-rise/after/control-bands-high.png (row half-emerged under the card)"
+    },
+    {
+      "note": "scroll-stagger-rise 'bands' slider saturates at the top of its range at the pinned mid-scroll: low->mid visibly changes (one fewer settled row) but mid and high render identically, so a user dragging the upper half of the slider sees nothing change at that moment.",
+      "evidence": "metrics: bands mid and high frames identical (effRGB [56.2,52.3,47.7], meanLuma 15.1, satPixels 5085 in both); scroll-stagger-rise/after/control-bands-mid.png vs control-bands-high.png"
+    },
+    {
+      "note": "scroll-depth-dolly 'passBy' now works but its visible effect at the pinned scroll=0.5 is subtle (card slightly larger at max); its headline effect — the late dissolve as the card passes the viewer — only shows past scroll~0.85, which a paused mid-scroll sweep cannot exhibit. Demonstrated by play-3's dimmed pass-by instead.",
+      "evidence": "control: passBy low->high changedFrac 0.0421 (card width grows ~25% between control-passBy-low.png and control-passBy-high.png); scroll-depth-dolly/after/play-3.png (dimmed pass-by frame)"
+    },
+    {
+      "note": "pointer-shine 'twinkle' is a rate parameter and undersells in paused stills — measurable but nearly invisible frame-to-frame at the pinned moment.",
+      "evidence": "control: twinkle low->high pixelDiff meanAbsDiff 0.161, changedFrac 0.0078 (changed=true via pixel diff only)"
+    },
+    {
+      "note": "pointer-shine vertical streak at length max spills slightly past the card's bottom edge onto the background; a card-bounds clip would read cleaner. Taste-level.",
+      "evidence": "pointer-shine/after/control-length-high.png (faint vertical flare continuing below the card silhouette)"
+    },
+    {
+      "note": "embers at combined slider extremes (count/size carried high by sweep order, then flickerRate swept) merge into a near-solid cream-white mass at the base. Hue stays warm (no cool drift), and this is slider-extreme territory — a softer top-end curve would keep individual embers readable.",
+      "evidence": "embers/after/control-flickerRate-high.png; metrics: flickerRate-low meanLuma 90.2 vs play frames 27.8-43.1, effRGB [253.6,252.4,224.7] (warm cream, not clipped cool)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

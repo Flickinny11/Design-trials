@@ -3872,3 +3872,72 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/scroll-shrink-away (scroll) render=true play=true ctrl=true
 
 ### Run end 2026-06-12T02:44:20.510Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
+
+## Resumed 2026-06-12T04:44:36.679Z (std 5, glass 0 remaining)
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/pointer-shine (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/scroll-depth-dolly (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+- [FAIL] std/embers (particles) render=true play=true ctrl=false :: controls retry: phase sweep found no differing frame under current params
+
+## Quiet retry 2026-06-12T04:47:22.776Z — 1 loaded-run fails re-run serially on a fresh browser
+- [FAIL] std-quiet/embers (particles) render=true play=false ctrl=false :: controls retry: phase sweep found no differing frame under current params
+
+### Run end 2026-06-12T04:48:22.121Z — pass 4/5 (0 recovered on quiet retry), fail 1, missing 0, wall 225s
+
+## Resumed 2026-06-12T05:04:49.736Z (std 1, glass 0 remaining)
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:05:11.939Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 22s
+
+## Resumed 2026-06-12T05:06:51.729Z (std 5, glass 0 remaining)
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+- [PASS] std/pointer-shine (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/scroll-depth-dolly (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:07:52.038Z — pass 5/5 (0 recovered on quiet retry), fail 0, missing 0, wall 60s
+
+## Resumed 2026-06-12T05:12:52.271Z (std 1, glass 0 remaining)
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:13:14.449Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 22s
+
+## Resumed 2026-06-12T05:14:14.798Z (std 1, glass 0 remaining)
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:14:36.973Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 22s
+
+## Resumed 2026-06-12T05:18:39.047Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:19:01.194Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 22s
+
+## Resumed 2026-06-12T05:20:50.494Z (std 5, glass 0 remaining)
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+- [PASS] std/pointer-shine (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/scroll-depth-dolly (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T05:21:47.701Z — pass 5/5 (0 recovered on quiet retry), fail 0, missing 0, wall 57s
+
+## Resumed 2026-06-12T06:15:34.564Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T06:15:56.842Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 22s
+
+## Resumed 2026-06-12T06:18:33.420Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T06:18:56.340Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 23s
+
+## Resumed 2026-06-12T06:24:07.033Z (std 5, glass 0 remaining)
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/embers (particles) render=true play=true ctrl=true
+- [PASS] std/pointer-shine (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/scroll-stagger-rise (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-depth-dolly (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-12T06:25:07.011Z — pass 5/5 (0 recovered on quiet retry), fail 0, missing 0, wall 60s

@@ -227,9 +227,18 @@ async function captureTile(page, name, stateDir, consoleErrors, networkErrors) {
   await page.waitForFunction((n) => document.querySelector('[data-component="primitive-detail"]')?.getAttribute('data-focused') === n, name, { timeout: 8000 }).catch(() => m.notes.push('focus not confirmed'));
   await page.waitForTimeout(600);
 
-  // IDLE (paused at t=0)
+  // IDLE (paused, pinned to t=0). BUGFIX 2026-06-12: this used to call a
+  // nonexistent `window.__catalogSeek` hook — the && short-circuited silently,
+  // so "idle" was whatever phase pause landed on (the P0-fixes advocate round
+  // mis-read two scroll primitives as "inverted" off such an unpinned frame).
+  // The real verification hook is __catalogRig.seek(name, t).
   await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(false));
-  await page.evaluate(() => window.__catalogSeek && window.__catalogSeek(0));
+  m.stimulus = {
+    note: 'scroll tiles: userData.scroll = 0.5 - 0.5*cos(2*PI*t/dur) — cosine sweep, NOT linear; dur=4s for Infinity-duration primitives',
+    idlePinT: 0,
+    controlsPinT: 1,
+  };
+  await page.evaluate((n) => window.__catalogRig?.seek?.(n, 0), name);
   await page.waitForTimeout(400);
   const idle = await shotRegion(page, detailPreview);
   if (idle) writeFileSync(join(dir, 'idle.png'), idle);
@@ -247,8 +256,13 @@ async function captureTile(page, name, stateDir, consoleErrors, networkErrors) {
     if (k < 3) await page.waitForTimeout(520);
   }
 
-  // CONTROL sweeps — pause, drive each range control low / mid / high.
+  // CONTROL sweeps — pause AND pin a deterministic mid-animation phase (t=1 →
+  // cosine scroll 0.5, mid pointer orbit) so every control is judged at an
+  // ENGAGED state: freezing wherever pause lands can park entrance/dolly
+  // primitives at a not-yet-arrived or fully-dissolved phase where any control
+  // is visually dead by construction (BUGFIX 2026-06-12, same root as idle pin).
   await page.evaluate(() => window.__catalogSetPlaying && window.__catalogSetPlaying(false));
+  await page.evaluate((n) => window.__catalogRig?.seek?.(n, 1), name);
   await page.waitForTimeout(350);
   const ranges = detail.locator('input[type="range"][data-control]');
   const nR = await ranges.count();
