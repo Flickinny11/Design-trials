@@ -331,9 +331,13 @@ import { smokeTrailPrimitive } from './smoke-trail';
 import { steamPrimitive } from './steam';
 import { wispySmokePrimitive } from './wispy-smoke';
 import { attractorPrimitive } from './attractor';
+import { bokehDriftPrimitive } from './bokeh-drift';
 import { bubblesPrimitive } from './bubbles';
+import { clickBurstPrimitive } from './click-burst';
 import { collisionBallsPrimitive } from './collision-balls';
+import { cometOrbitPrimitive } from './comet-orbit';
 import { confettiPrimitive } from './confetti';
+import { constellationNetPrimitive } from './constellation-net';
 import { debrisTornadoPrimitive } from './debris-tornado';
 import { dnaHelixPrimitive } from './dna-helix';
 import { dustParticlesPrimitive } from './dust-particles';
@@ -342,20 +346,27 @@ import { explosionPrimitive } from './explosion';
 import { firefliesPrimitive } from './fireflies';
 import { fireworksPrimitive } from './fireworks';
 import { flockingPrimitive } from './flocking';
+import { flowRibbonPrimitive } from './flow-ribbon';
 import { fluidSphPrimitive } from './fluid-sph';
 import { fountainPrimitive } from './fountain';
 import { galaxyParticlesPrimitive } from './galaxy-particles';
 import { gravityDropPrimitive } from './gravity-drop';
+import { hyperspaceWarpPrimitive } from './hyperspace-warp';
+import { imageToParticlesPrimitive } from './image-to-particles';
 import { magneticFieldPrimitive } from './magnetic-field';
 import { meteorShowerPrimitive } from './meteor-shower';
 import { morphCloudPrimitive } from './morph-cloud';
 import { murmurationPrimitive } from './murmuration';
 import { orbitRingsPrimitive } from './orbit-rings';
+import { orbitTrailsPrimitive } from './orbit-trails';
 import { particleAssemblePrimitive } from './particle-assemble';
 import { pendulumWavePrimitive } from './pendulum-wave';
 import { petalFallPrimitive } from './petal-fall';
+import { pointerSparkTrailPrimitive } from './pointer-spark-trail';
 import { rainPrimitive } from './rain';
 import { rainSplashPrimitive } from './rain-splash';
+import { sandPilePrimitive } from './sand-pile';
+import { sdfMetablobPrimitive } from './sdf-metablob';
 import { snowPrimitive } from './snow';
 import { snowGlobePrimitive } from './snow-globe';
 import { sparkShowerPrimitive } from './spark-shower';
@@ -692,9 +703,13 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   steamPrimitive,
   wispySmokePrimitive,
   attractorPrimitive,
+  bokehDriftPrimitive,
   bubblesPrimitive,
+  clickBurstPrimitive,
   collisionBallsPrimitive,
+  cometOrbitPrimitive,
   confettiPrimitive,
+  constellationNetPrimitive,
   debrisTornadoPrimitive,
   dnaHelixPrimitive,
   dustParticlesPrimitive,
@@ -703,20 +718,27 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   firefliesPrimitive,
   fireworksPrimitive,
   flockingPrimitive,
+  flowRibbonPrimitive,
   fluidSphPrimitive,
   fountainPrimitive,
   galaxyParticlesPrimitive,
   gravityDropPrimitive,
+  hyperspaceWarpPrimitive,
+  imageToParticlesPrimitive,
   magneticFieldPrimitive,
   meteorShowerPrimitive,
   morphCloudPrimitive,
   murmurationPrimitive,
   orbitRingsPrimitive,
+  orbitTrailsPrimitive,
   particleAssemblePrimitive,
   pendulumWavePrimitive,
   petalFallPrimitive,
+  pointerSparkTrailPrimitive,
   rainPrimitive,
   rainSplashPrimitive,
+  sandPilePrimitive,
+  sdfMetablobPrimitive,
   snowPrimitive,
   snowGlobePrimitive,
   sparkShowerPrimitive,

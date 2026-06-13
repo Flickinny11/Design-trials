@@ -1,0 +1,7 @@
+{
+  "name": "orbit-trails",
+  "label": "Bodies",
+  "description": "A miniature orrery of light — bright bodies sweeping elliptical orbits, each dragging a fading arc of its own path behind it.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

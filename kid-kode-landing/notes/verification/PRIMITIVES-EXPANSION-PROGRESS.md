@@ -299,7 +299,12 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
   pose (synthesize standing vRef for velocity-coupled; map stiffness/damping/drag/bounciness/wobble→standing pose param;
   rate→standing level; moteCount must render at pin; shadowLength→direct geometric rake). Log: w4-advocate-r1-log.txt.
   PENDING: r1 → tsc/vitest/harness 9 → re-capture 9 → re-advocate 9 → CKPT.
-- [ ] W5 PARTICLES/GENERATIVE
+- [~] **W5 PARTICLES/GENERATIVE** — BUILD IN FLIGHT (2026-06-13, session 7). 11 from staged script (DESIGN-REFERENCES
+  §3/§8/§9/§11): constellation-net, pointer-spark-trail, click-burst, flow-ribbon, sdf-metablob, hyperspace-warp,
+  orbit-trails, sand-pile, bokeh-drift, image-to-particles, comet-orbit. Script HARDENED before launch with the W4
+  control-liveness lesson (advocate sweeps controls at a FROZEN pin; rate/count/speed/life controls must reshape the
+  STANDING pinned state with BOLD amplitude ≥6 meanAbsDiff; pointer pin corrected to {0.5,0.7}). wf_b477af0f-a34, batches
+  of 4. PENDING: barrel-wire (359→370) → tsc/vitest/harness 11 → art-fidelity → capture → advocate → fix-rounds → CKPT.
 - [ ] WF report + final no-regression (312+N) + STOP
 
 ## Log

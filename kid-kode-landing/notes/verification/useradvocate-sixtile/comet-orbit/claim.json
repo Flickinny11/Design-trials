@@ -1,0 +1,7 @@
+{
+  "name": "comet-orbit",
+  "label": "Eccentricity",
+  "description": "A single comet rounds the tile on a long ellipse — an ice-bright head trailing a fire tail that streams away from the sun, flaring at perihelion and ghosting at the far turn.",
+  "category": "particles",
+  "groundTruthSibling": null
+}
