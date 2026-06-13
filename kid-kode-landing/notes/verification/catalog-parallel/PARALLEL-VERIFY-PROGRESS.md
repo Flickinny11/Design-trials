@@ -4482,3 +4482,123 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
 
 ### Run end 2026-06-13T06:10:10.561Z — pass 2/2 (0 recovered on quiet retry), fail 0, missing 0, wall 51s
+
+## Resumed 2026-06-13T06:53:30.374Z (std 9, glass 0 remaining)
+- [PASS] std/charge-release (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/gravity-well (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/magnetic-stick (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pendant-dangle (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-cast-shadow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/proximity-rim-glow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/spring-chain-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/throw-physics (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/velocity-skew-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T06:55:34.059Z — pass 9/9 (0 recovered on quiet retry), fail 0, missing 0, wall 124s
+
+## Resumed 2026-06-13T07:19:07.342Z (std 9, glass 0 remaining)
+- [PASS] std/charge-release (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/gravity-well (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/magnetic-stick (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pendant-dangle (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-cast-shadow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/proximity-rim-glow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/spring-chain-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/throw-physics (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/velocity-skew-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T07:21:59.086Z — pass 9/9 (0 recovered on quiet retry), fail 0, missing 0, wall 172s
+
+## Resumed 2026-06-13T07:41:31.166Z (std 7, glass 0 remaining)
+- [PASS] std/charge-release (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/gravity-well (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/magnetic-stick (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-cast-shadow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pendant-dangle (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/throw-physics (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/velocity-skew-follow (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T07:43:25.721Z — pass 7/7 (0 recovered on quiet retry), fail 0, missing 0, wall 115s
+
+## Resumed 2026-06-13T07:58:10.472Z (std 2, glass 0 remaining)
+- [PASS] std/gravity-well (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/magnetic-stick (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T07:59:01.217Z — pass 2/2 (0 recovered on quiet retry), fail 0, missing 0, wall 51s
+
+## Resumed 2026-06-13T08:33:16.345Z (std 11, glass 0 remaining)
+- [PASS] std/bokeh-drift (particles) render=true play=true ctrl=true
+- [PASS] std/click-burst (particles) render=true play=true ctrl=true
+- [PASS] std/comet-orbit (particles) render=true play=true ctrl=true
+- [PASS] std/constellation-net (particles) render=true play=true ctrl=true
+- [PASS] std/flow-ribbon (particles) render=true play=true ctrl=true
+- [PASS] std/hyperspace-warp (particles) render=true play=true ctrl=true
+- [PASS] std/image-to-particles (particles) render=true play=true ctrl=true
+- [PASS] std/orbit-trails (particles) render=true play=true ctrl=true
+- [PASS] std/pointer-spark-trail (particles) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/sand-pile (particles) render=true play=true ctrl=true
+- [PASS] std/sdf-metablob (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-13T08:40:15.173Z — pass 11/11 (0 recovered on quiet retry), fail 0, missing 0, wall 419s
+
+## Resumed 2026-06-13T09:02:44.301Z (std 3, glass 0 remaining)
+- [PASS] std/click-burst (particles) render=true play=true ctrl=true
+- [PASS] std/image-to-particles (particles) render=true play=true ctrl=true
+- [PASS] std/sand-pile (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-13T09:04:06.802Z — pass 3/3 (0 recovered on quiet retry), fail 0, missing 0, wall 83s
+
+## Resumed 2026-06-13T09:15:08.138Z (std 1, glass 0 remaining)
+- [PASS] std/click-burst (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-13T09:15:37.786Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 30s
+
+## Resumed 2026-06-13T09:31:56.416Z (std 331, glass 40 remaining)
+- [PASS] std/accordion-y (transform) render=true play=true ctrl=true
+- [PASS] std/attractor (particles) render=true play=true ctrl=true
+- [PASS] std/aurora (volumetric) render=true play=true ctrl=true
+- [PASS] std/banner-flutter (wave) render=true play=true ctrl=true
+- [PASS] std/bars-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/blinds-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/blink (fade) render=true play=true ctrl=true
+- [PASS] std/blur-dissolve-out (blur) render=true play=true ctrl=true
+- [PASS] std/blur-in (blur) render=true play=true ctrl=true
+- [PASS] std/blur-spin (blur) render=true play=true ctrl=true
+- [PASS] std/blur-slide-in (blur) render=true play=true ctrl=true :: controls at swept visible phase t=0.66s
+- [PASS] std/bokeh-drift (particles) render=true play=true ctrl=true
+- [PASS] std/brushed-metal (shimmer) render=true play=true ctrl=true
+- [PASS] std/bounce (transform) render=true play=true ctrl=true :: controls at swept visible phase t=1.03s
+- [PASS] std/bubbles (particles) render=true play=true ctrl=true
+- [PASS] std/campfire (volumetric) render=true play=true ctrl=true
+- [PASS] std/candle-flame (volumetric) render=true play=true ctrl=true
+- [PASS] std/card-fold (transform) render=true play=true ctrl=true
+- [PASS] std/checker-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/charge-release (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/click-burst (particles) render=true play=true ctrl=true
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/clock-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/cloth-sway (wave) render=true play=true ctrl=true
+- [PASS] std/clouds (volumetric) render=true play=true ctrl=true
+- [PASS] std/collision-balls (particles) render=true play=true ctrl=true
+- [PASS] std/comet-orbit (particles) render=true play=true ctrl=true
+- [PASS] std/confetti (particles) render=true play=true ctrl=true
+- [PASS] std/constellation-net (particles) render=true play=true ctrl=true
+- [PASS] std/corner-peel (transform) render=true play=true ctrl=true
+- [PASS] std/cosmic-dust (volumetric) render=true play=true ctrl=true
+- [PASS] std/cross-dissolve (fade) render=true play=true ctrl=true
+- [PASS] std/cross-morph (transform) render=true play=true ctrl=true
+- [PASS] std/cross-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/crumble-to-particles (displacement) render=true play=true ctrl=true
+- [PASS] std/crumble (displacement) render=true play=true ctrl=true
+- [PASS] std/cube-rotate (transform) render=true play=true ctrl=true
+- [PASS] std/cursor-trail (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/curtain-wave (wave) render=true play=true ctrl=true
+- [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
+- [PASS] std/datamosh (displacement) render=true play=true ctrl=true
+- [PASS] std/debris-tornado (particles) render=true play=true ctrl=true
+- [PASS] std/decode-text (text) render=true play=true ctrl=true
+- [PASS] std/defocus-pulse (blur) render=true play=true ctrl=true
+- [PASS] std/depth-pop (transform) render=true play=true ctrl=true
+- [PASS] std/diamond-wipe (mask) render=true play=true ctrl=true
+- [PASS] std/displacement-transition (displacement) render=true play=true ctrl=true

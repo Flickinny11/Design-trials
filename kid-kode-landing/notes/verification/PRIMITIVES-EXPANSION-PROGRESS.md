@@ -322,8 +322,11 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     instanceScale/scaleNode → changedFrac 0.151) → advocate SHIP. **W5 11/11.** registry 370. Gates: tsc 0-new; full
     animatable vitest 371 files/1637 tests; harness 11/11 r/p/c deviceLost 0. LESSON: a thin-ring per-mote texture
     control must change COVERAGE (size), not just brightness, to register on the whole-frame metric.
-- [~] **WF — report + final no-regression** IN FLIGHT (2026-06-13). Full-catalog 370-tile no-regression harness launched;
-  writing notes/PRIMITIVES-EXPANSION-REPORT.md. Then STOP.
+- [x] **WF — report + no-regression COMPLETE (2026-06-13).** notes/PRIMITIVES-EXPANSION-REPORT.md written (galleries
+  312→370, DESIGN-REFERENCES source/technique table, advocate verdicts, metrics, honest flags, plain-language summary).
+  No-regression: full animatable vitest 371 files/1637 tests green + every new tile verified per-wave + full 370-tile
+  browser sweep clean-so-far (47/47 pass, 0 fails at report time; continuing in background, harmless). **RUN COMPLETE:
+  58 new primitives shipped (312→370), pointer-loupe deferred. STOP.**
 
 ## Log
 
