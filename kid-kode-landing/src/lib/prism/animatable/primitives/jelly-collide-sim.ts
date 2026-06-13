@@ -77,6 +77,9 @@ const WALL_X = 1.04; // the wall plane sits here; cube flies toward +x into it
 const START_X = -0.78; // cube centre launch x (left side of the tile)
 const REST_Y = 0.0; // cube vertical centre (middle of the tile)
 const FLOOR_Y = -0.92; // soft floor — kept well inside the viewport bottom
+const CEIL_Y = 0.92; // soft ceiling — mirrors the floor so an energetic peel
+//                       (lighter damping for a visibly springy rebound) can
+//                       never fling the body off the TOP of the frame.
 const LEFT_X = -1.2; // soft left wall — body can never escape off the left
 
 const SCHEMA = [
@@ -176,25 +179,50 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       };
 
       // Cap any single particle's speed so a hard wall clamp can never fling a
-      // vertex out into a spike (the source of the jagged "torn" look).
-      const MAX_SPEED = 9.0;
+      // vertex out into a spike (the source of the jagged "torn" look). Tighter
+      // now that damping is lighter, so an energetic rebound stays bounded.
+      const MAX_SPEED = 7.0;
+      // How hard the wall pushes back per unit of the Bounciness control. The raw
+      // 0.05..0.9 control range is too gentle to move the FROZEN pinned frame (it
+      // only set a velocity that had already decayed by the pin); boosting it lets
+      // low→high visibly change how far the body has PEELED off the wall at the
+      // pin (markDirty replay). Clamped <1.5 so it can never gain energy unboundedly.
+      const REST_BOOST = 1.5;
+      // While any particle is in wall-contact, gravity is scaled WAY down so the
+      // restitution-driven peel (not a uniform gravity drop) dominates the motion
+      // through the pinned window — this is what makes Bounciness the load-bearing
+      // control of the frozen post-squash frame instead of a dead slider.
+      const GRAV_CONTACT_SCALE = 0.15;
+      const CONTACT_BAND = 0.03; // a particle within this of the wall counts as touching
 
       const stepOne = (dt: number) => {
         const g = num(params.gravity, 2.6);
         const stiff = clamp(num(params.stiffness, 0.42), 0.05, 0.95);
-        const rest = clamp(num(params.bounciness, 0.5), 0.05, 0.9);
+        // Bounciness → wall restitution. Boosted (see REST_BOOST) so the rebound
+        // is energetic enough that low/mid/high are distinct at the pinned frame.
+        const rest = clamp(num(params.bounciness, 0.5) * REST_BOOST, 0.05, 1.5);
         const dtSub = dt / SUBSTEPS;
         const alphaTilde = complianceAlpha(stiff, dtSub);
-        // Light per-substep velocity damping → the blob LINGERS flat against the
-        // wall (a clear, held squash) and settles in-frame instead of pinging off.
-        const velDamp = Math.exp(-0.9 * dtSub);
+        // Lighter per-substep velocity damping than round-1 → the body still holds
+        // a clear squash against the wall, but then PEELS off with real spring
+        // instead of dying flat; the rebound survives all the way to the pin so
+        // Bounciness moves the frozen frame. The ceiling guard keeps it in-frame.
+        const velDamp = Math.exp(-0.45 * dtSub);
 
         for (let s = 0; s < SUBSTEPS; s++) {
+          // Is the body currently pressed on the wall? If so, damp gravity hard so
+          // the peel trajectory (set by restitution) dominates over a uniform drop.
+          let inContact = false;
+          for (let i = 0; i < parts; i++) {
+            if (px[i] >= WALL_X - CONTACT_BAND) { inContact = true; break; }
+          }
+          const gEff = inContact ? g * GRAV_CONTACT_SCALE : g;
+
           // 1. Save prev, integrate velocity (gravity) + predict positions.
           for (let i = 0; i < parts; i++) {
             prevX[i] = px[i];
             prevY[i] = py[i];
-            pvy[i] -= g * dtSub;
+            pvy[i] -= gEff * dtSub;
             px[i] += pvx[i] * dtSub;
             py[i] += pvy[i] * dtSub;
             pz[i] += pvz[i] * dtSub;
@@ -217,6 +245,7 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
             if (px[i] > WALL_X) px[i] = WALL_X; // right wall (the target)
             if (px[i] < LEFT_X) px[i] = LEFT_X; // soft left wall (keep in frame)
             if (py[i] < FLOOR_Y) py[i] = FLOOR_Y; // soft floor (keep in frame)
+            if (py[i] > CEIL_Y) py[i] = CEIL_Y; // soft ceiling (keep peel in frame)
           }
 
           // 3. Update velocities from (pos - prevPos)/dtSub, damp, clamp speed,
@@ -229,6 +258,7 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
             if (px[i] >= WALL_X - 1e-5 && vx > 0) vx = -vx * rest; // bounce off wall
             if (px[i] <= LEFT_X + 1e-5 && vx < 0) vx = -vx * rest;
             if (py[i] <= FLOOR_Y + 1e-5 && vy < 0) vy = -vy * rest;
+            if (py[i] >= CEIL_Y - 1e-5 && vy > 0) vy = -vy * rest; // bounce off ceiling
             // Clamp speed so the impact can never explode a vertex into a spike.
             const sp = Math.hypot(vx, vy);
             if (sp > MAX_SPEED) {
@@ -268,18 +298,20 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       geometry.setIndex(idxAttr);
       geometry.setDrawRange(0, t);
 
-      // Jelly look: a translucent ice-tinted body with a brass emissive core, so
-      // the folds catch light when the lattice compresses (Observatory Brass +
-      // ice/steel — no purple). Smooth-shaded via computeVertexNormals.
+      // Jelly look: a saturated ice/mint translucent body with a warm amber
+      // emissive core, so the folds catch light when the lattice compresses
+      // (Observatory ice/mint + amber — no purple, no pale olive). A higher base
+      // saturation + opacity reads as a SOLID jelly block, not a pale cloth sheet.
+      // Smooth-shaded via computeVertexNormals.
       const material = new MeshStandardMaterial({
-        color: new Color('#9fe0c4'), // ice-mint jelly body
-        emissive: new Color('#d9a86c'), // brass inner glow
-        emissiveIntensity: 0.4,
-        roughness: 0.18,
-        metalness: 0.12,
+        color: new Color('#5fd6b0'), // brighter ice-mint jelly body (more saturated)
+        emissive: new Color('#e8b366'), // warm amber inner glow
+        emissiveIntensity: 0.5,
+        roughness: 0.14,
+        metalness: 0.1,
         transparent: true,
-        opacity: 0.88,
-        envMapIntensity: 1.25,
+        opacity: 0.94,
+        envMapIntensity: 1.3,
         side: DoubleSide,
       });
 

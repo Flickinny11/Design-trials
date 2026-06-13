@@ -35,16 +35,18 @@
 // duration() is finite (a few drip cycles) and the rig loops t→0 → re-drip. The
 // ~0.45 frozen phase is tuned to catch a droplet MID-DETACH / falling.
 //
-// RENDER PATH (P0 particle lesson — embers.ts / bubble-rise-sim.ts /
-// smoke-plume-sim.ts): the prior MeshPhysicalMaterial build blew out to clipped
-// PURE WHITE (emissiveIntensity + envMap + tone-mapping) and its transmission/ior
-// refracted the cold environment background into a stray COLD PALE-BLUE blob — it
-// read as overexposed placeholder circles, not glowing molten metal. The proven
-// fix: instanced THREE.Sprite + PointsNodeMaterial (TSL) with a soft radial
-// falloff to a BRIGHT WARM CORE on a generous billboard footprint, premultiplied
-// by a per-bead AMBER/BRASS tint whose luma peaks well UNDER white (a glowing hot
-// amber, never clipped). Additive blending renders identically on both backends.
-// No transmission, no ior, no envMap → no cold-blue refraction artifact.
+// RENDER PATH (round-2 white-out fix): the earlier ADDITIVE-blended build summed
+// 3 overlapping reservoir lobes + neck root past 1.0 in every channel, so the whole
+// molten body clipped to PURE WHITE (effRGB=[255,255,255], satPixels=0, warmFrac=0)
+// — a blown disk + stray cream/cold-blue blobs, never glowing amber. The dominant
+// cause was additive stacking on a DENSE field (★ catalog lesson: additive only
+// survives for SPARSE translucent glows like bubble-rise — a packed molten column
+// always blows out). The fix: instanced THREE.Sprite + PointsNodeMaterial (TSL)
+// with NORMAL blending + an OPAQUE shaded amber CORE (alpha mask = bead profile)
+// so each bead reads as a distinct solid molten body that OCCLUDES rather than
+// SUMS — overlapping beads stay amber, never clip. A thin additive-free emissive
+// rim gives the hot glow without summing to white. No envMap / transmission / ior
+// → no cold-blue refraction artifact. Renders identically on WebGPU + WebGL2.
 //
 // Palette: Observatory Brass / amber molten (#f0b35a hot, #d9a86c body, #b9742e
 // cool root) — warm metal, NEVER purple, never clipped white.
@@ -55,11 +57,11 @@ import {
   BufferAttribute,
   InstancedBufferAttribute,
   Color,
-  AdditiveBlending,
+  NormalBlending,
   DynamicDrawUsage,
 } from 'three';
 import { PointsNodeMaterial } from 'three/webgpu';
-import { instancedBufferAttribute, uv, vec3, vec4, float, exp, smoothstep } from 'three/tsl';
+import { instancedBufferAttribute, uv, vec3, vec4, float, smoothstep, pow } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, str, type PrimitiveDefinition } from '../contract';
 import {
@@ -70,8 +72,10 @@ import {
 } from './_sim-core';
 
 const DT = 1 / 120; // small fixed step (stiff-ish spring)
-const SOURCE_Y = 0.92; // reservoir root height (pinned) — pulled in so the column fits
-const FLOOR_Y = -1.05; // a free droplet below this recycles to the reservoir (in-frame)
+const SOURCE_Y = 1.0; // reservoir root height (pinned) — column reads top→bottom
+// Recycle a free droplet a touch ABOVE the literal frame bottom so the fat bead
+// (radius ≈0.24 quad) is fully inside the tile — no droplet ever clips the edge.
+const FLOOR_Y = -0.95;
 const MAX_DROPS = 6; // fixed pool of free falling droplets
 const RESERVOIR_LOBES = 3; // fat blob lobes at the very top
 // Generous fixed billboard footprint — must hold the fattest reservoir bead with
@@ -184,10 +188,10 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
           dropActive[d] = 1;
           dropY[d] = tipY;
           dropVy[d] = Math.min(tipVy, -0.2); // ensure it's moving down
-          // Keep the falling droplet near the column centre so it never clips the
-          // tile's right/bottom edge (the advocate's cut-off droplet finding).
-          dropX[d] = (hash(nextDrop * 1.7 + 0.3) - 0.5) * 0.1;
-          dropZ[d] = (hash(nextDrop * 3.1 + 1.9) - 0.5) * 0.12;
+          // Keep the falling droplet TIGHT to the column centre so it never clips
+          // the tile's right/bottom edge (the advocate's cut-off droplet finding).
+          dropX[d] = (hash(nextDrop * 1.7 + 0.3) - 0.5) * 0.05;
+          dropZ[d] = (hash(nextDrop * 3.1 + 1.9) - 0.5) * 0.06;
           dropR[d] = 0.15 + tipMass * 0.03; // fatter if more fluid pooled
           nextDrop++;
           // Reservoir reforms a fresh tip back near the root.
@@ -244,38 +248,43 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
       geometry.setAttribute('instanceColor', colAttr);
       geometry.setAttribute('instanceRadius', radAttr);
 
-      // ── Look layer: TSL molten bead profile × per-bead warm instanced color ─
+      // ── Look layer: TSL molten bead with NORMAL blending (no white-out) ─────
       // d: 0 at the quad centre → 1 at the edge midpoint (√2 at the corner).
       const d = uv().sub(0.5).mul(2).length();
       type FloatNode = ReturnType<typeof float>;
       // Per-bead radius drives the size of the bead inside the quad (bigger
-      // radius → wider molten bead). Dividing d by it makes the falloff scale.
+      // radius → wider molten bead). Dividing d by it makes the disc scale.
       const rNode = instancedBufferAttribute(radAttr) as unknown as FloatNode;
       const dn = d.div(rNode.add(0.001));
-      // Dense, rounded molten body: a tight gaussian core (reads as a solid hot
-      // bead with mass, not a faint speck) with a smooth shoulder. Peaks at 1 in
-      // the centre so the per-bead WARM tint sets the colour — the amber tint,
-      // not white, is what saturates.
-      const body = exp(dn.mul(dn).mul(-2.0));
-      // …killed to EXACT zero strictly before the quad edge (no square rim at any
-      // DPR; classic PointsMaterial.map renders black under three/webgpu).
-      const rim = smoothstep(float(0.74), float(0.97), d).oneMinus();
-      const profile = body.mul(rim);
+      // ALPHA mask (coverage) — a near-solid disc of the molten body that falls to
+      // 0 just before the edge. With NormalBlending this is what makes overlapping
+      // beads OCCLUDE each other (premultiplied src-over) instead of SUMMING to
+      // white. Soft 1px-free feather: full inside the core, smooth to 0 at dn≈1.
+      const alpha = smoothstep(float(1.02), float(0.82), dn)
+        // …and hard-clipped to zero before the billboard's square edge.
+        .mul(smoothstep(float(0.97), float(0.74), d));
 
-      const moltenTint = instancedBufferAttribute(colAttr) as unknown as {
+      // RGB color: the per-bead warm amber tint, BRIGHTER toward the molten core so
+      // it reads as a glowing hot bead — but the channels are pre-capped on the CPU
+      // (setBead) so even the crest peaks WELL UNDER white. A subtle radial
+      // brighten (×~1.25 at centre) gives a hot inner glow without clipping.
+      const coreGlow = pow(smoothstep(float(1.0), float(0.0), dn), float(1.5)).mul(0.18).add(1);
+      const moltenRGB = (instancedBufferAttribute(colAttr) as unknown as {
         mul: (x: unknown) => ReturnType<typeof vec3>;
-      };
+      }).mul(coreGlow);
 
       const material = new PointsNodeMaterial({
         size: FIXED_BILLBOARD,
         sizeAttenuation: true,
         transparent: true,
         opacity: 1,
-        blending: AdditiveBlending,
+        blending: NormalBlending,
         depthWrite: false,
       });
       material.positionNode = instancedBufferAttribute(posAttr);
-      material.colorNode = vec4(moltenTint.mul(profile), float(1));
+      // Opaque-cored, alpha-masked molten bead. NormalBlending + this alpha → solid
+      // amber bodies on the dark field; the field never clips to white.
+      material.colorNode = vec4(moltenRGB, alpha);
 
       const sprite = new Sprite(material);
       sprite.geometry = geometry;
@@ -331,11 +340,16 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
         }
         const t = stepper.now();
 
-        // Heat drives the glow LIVE (visible even on a same-t reseek). Capped so
-        // the peak molten body lands a saturated amber, NOT clipped white: the
-        // brightest crest tops out around ~0.95, the cool body sits dimmer but
-        // still reads with mass (luma well above the advocate's >120 bar).
-        const glow = 0.55 + heat * 0.42; // 0.55 → 0.97
+        // Heat drives the glow LIVE (visible even on a same-t reseek). Capped HARD
+        // so the peak molten body lands a SATURATED amber, NOT clipped white. With
+        // NormalBlending the final pixel is the bead color itself (no summing), so
+        // the hot amber crest (#f0b35a ≈ R0.94) × glow × the ~1.18 core boost must
+        // stay under 1.0 in every channel → glow tops out at 0.78. The amber's R≫B
+        // gap then survives compositing (warmFrac>0, satPixels>0), and the body
+        // luma still sits well above the advocate's >120 bar. The 0.40-wide swing
+        // makes HEAT bite hard (the body visibly darkens→glows) while the 0.80
+        // ceiling × ~1.18 core boost keeps even the hot R channel under 1.0.
+        const glow = 0.4 + heat * 0.4; // 0.40 → 0.80
 
         // Bead radius in quad units; the reservoir is fattest, the thread thin.
         const fatQuad = 0.4 * (1 - visc * 0.1); // reservoir bead radius (quad units)

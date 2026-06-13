@@ -238,11 +238,18 @@ export const pourSplashSimPrimitive: PrimitiveDefinition = {
             vx[i] *= FLOOR_FRICTION;
             // First fast impact throws a crown: kick up + outward, scaled by the
             // impact speed and the splash control. This is what makes droplets
-            // fly back UP out of the pool rather than just pooling flat.
-            if (!splashed[i] && impact > SPLASH_SPEED_GATE && splash > 0) {
-              const kick = (impact - SPLASH_SPEED_GATE) * splash;
-              vy[i] += kick * 2.2; // upward crown
-              vx[i] += Math.sign(px[i] - SPOUT_X || 1) * kick * 0.9; // outward
+            // fly back UP out of the pool rather than just pooling flat. The
+            // effective speed gate DROPS with splash so a higher splash also
+            // recruits MORE (slower) impacts into the crown — at full splash the
+            // whole pool surface throws spray, at zero it pools flat.
+            const gate = SPLASH_SPEED_GATE * (1 - splash * 0.7);
+            if (!splashed[i] && impact > gate && splash > 0) {
+              // Base launch (above the gate) PLUS a flat splash floor so even
+              // gentle impacts get a clearly visible vertical throw at high
+              // splash. Up-kick scales hard with splash → a tall crown.
+              const kick = (impact - gate + 0.4) * splash;
+              vy[i] += kick * 4.0; // upward crown (tall at high splash)
+              vx[i] += Math.sign(px[i] - SPOUT_X || 1) * kick * 1.4; // outward fan
               splashed[i] = 1;
             }
           }
@@ -351,20 +358,28 @@ export const pourSplashSimPrimitive: PrimitiveDefinition = {
           positions[i * 3 + 1] = py[i];
           positions[i * 3 + 2] = pz[i];
 
-          // Splash motes (a deterministic subset still rising out of the crown)
-          // read as bigger, brighter droplets — the sparkle clusters at the
-          // impact crown rather than the still pool.
+          // Splash motes (the subset thrown up out of the crown) read as bigger,
+          // brighter droplets so the sparkle clusters at the impact crown rather
+          // than the still pool. Splash drives HOW MANY drops sparkle: at low
+          // splash only every 6th rising drop is a mote; at high splash nearly
+          // every rising drop sparkles (moteStride → 1). It also widens the
+          // crown band so motes count well above the floor, not just at +0.04.
+          const moteStride = Math.max(1, Math.round(MOTE_EVERY - splash * (MOTE_EVERY - 1)));
+          const crownBand = FLOOR_Y + 0.04 + splash * 0.06;
           const isCrownMote =
-            i % MOTE_EVERY === 0 && splashed[i] === 1 && py[i] > FLOOR_Y + 0.04;
+            i % moteStride === 0 && splashed[i] === 1 && py[i] > crownBand;
           // Profile radius in quad-center units. Body drops are full, rounded
-          // blobs; crown motes swell with the splash control.
-          radii[i] = isCrownMote ? 0.34 + splash * 0.16 : 0.3;
+          // blobs; crown motes swell strongly with the splash control so the
+          // spray visibly fattens from low→high splash.
+          radii[i] = isCrownMote ? 0.3 + splash * 0.34 : 0.3;
 
           // Brightness: BRIGHT enough that each drop reads as an object with mass
           // (luma ≫ 120 on the dense core, not a faint star). Crown motes pop
-          // even brighter with splash so the spray sparkles.
+          // brighter with splash so the spray flares from low→high — but the
+          // peak is held below the additive-white-out point so a dense crown
+          // reads as distinct ice droplets on a dark field, never a white blob.
           const lum = isCrownMote
-            ? (1.25 + splash * 0.9) * streamLum
+            ? (1.1 + splash * 0.7) * streamLum
             : 1.05 * streamLum;
           colors[i * 3] = tintR[i] * lum;
           colors[i * 3 + 1] = tintG[i] * lum;

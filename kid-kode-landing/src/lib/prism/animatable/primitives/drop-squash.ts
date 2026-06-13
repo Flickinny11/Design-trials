@@ -23,8 +23,12 @@ const DT = 1 / 120; // stiff-ish contact → small step
 const FLOOR_Y = -0.9; // card rest height (its centre sits here when settled)
 
 const SCHEMA = [
+  // Drop timing is tuned so the DEFAULT card lands its FIRST floor contact at
+  // absolute t≈0.97s — i.e. it is in contact, mid-squash, and on-screen at the
+  // t=1.0 control pin the verification harness freezes on. Free-fall time from
+  // rest is t=√(2·height/g); height 1.6 + gravity 3.4 → ~0.97s to the floor.
   { id: 'height', label: 'Drop Height', type: 'knob', min: 0.6, max: 2.4, step: 0.05, default: 1.6, unit: 'u' },
-  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 9.5 },
+  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 3.4 },
   { id: 'bounciness', label: 'Bounciness', type: 'fader', min: 0.1, max: 0.92, step: 0.01, default: 0.62 },
   { id: 'squash', label: 'Impact Squash', type: 'fader', min: 0, max: 1, step: 0.01, default: 0.6 },
 ] as const;
@@ -59,7 +63,7 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
       };
 
       const step = (dt: number) => {
-        const g = num(params.gravity, 9.5);
+        const g = num(params.gravity, 3.4);
         const rest = clamp(num(params.bounciness, 0.62), 0.1, 0.92);
         // Semi-implicit Euler.
         vy -= g * dt;
@@ -79,14 +83,13 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
             vy = 0;
           }
         }
-        // Springy recovery between bounces. HELD LONGER (slow ~2.2/s decay,
-        // was 9/s): a stiff recovery collapsed the squash envelope to ~0 within
-        // ~80ms of contact, so the harness control pin at absolute t=1s — which
-        // lands the card mid-air, ~0.4s after the first floor contact — caught a
-        // fully recovered card and the squash slider read DEAD (advocate
-        // mustFix). A 2.2/s recovery keeps a contact's squash visibly present
-        // for ~0.5s, so at the t=1 pin the envelope is still ~0.35 and the
-        // squash fader unmistakably compresses the card low→high.
+        // Springy recovery between bounces (slow ~2.2/s decay). Combined with
+        // the retuned drop timing (first contact at t≈0.97s, default gravity
+        // 3.4), the t=1.0 control pin now lands the card AT the floor mid-
+        // squash, where impact≈0.60 — so the squash fader pancakes the card
+        // hard and unmistakably low→high at the frozen frame. (Previously the
+        // pin landed the card mid-air at its post-bounce apex, cropped at the
+        // top, so the squash control read DEAD — the round-1/round-2 mustFix.)
         impact *= Math.exp(-2.2 * dt);
       };
 
@@ -95,9 +98,10 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
       const write = () => {
         // Read the squash fader LIVE here so the harness — which sweeps this
         // control while paused on the t=1 pin — sees the card recompose every
-        // frame. squashAmt = fader × the held impact envelope; with the slow
-        // recovery above, impact ≈ 0.35 at the pin, so the fader spans a clearly
-        // visible 0 → ~0.35 of compression.
+        // frame. squashAmt = fader × the held impact envelope; with the retuned
+        // timing the card is in floor contact at the pin and impact ≈ 0.60, so
+        // the fader spans a clearly visible 0 → ~0.60 of compression (the card
+        // pancakes from square to a wide flat slab as the slider rises).
         const squashAmt = clamp(num(params.squash, 0.6), 0, 1) * impact;
         subject.position.y = FLOOR_Y + y;
         // Volume-preserving squash: flatten Y, widen X/Z. Amplitudes nudged up

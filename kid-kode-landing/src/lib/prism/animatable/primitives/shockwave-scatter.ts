@@ -48,6 +48,7 @@ import {
   InstancedBufferAttribute,
   Color,
   AdditiveBlending,
+  NormalBlending,
   DynamicDrawUsage,
 } from 'three';
 import { PointsNodeMaterial } from 'three/webgpu';
@@ -278,16 +279,31 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
       tileGeo.setAttribute('instancePosition', posAttr);
       tileGeo.setAttribute('instanceColor', colAttr);
 
-      // TSL tile profile: quad-centered coords p = (uv-0.5)*2 → −1..1. A BRIGHT
-      // soft core feathered to exact zero before the quad edge (no square rim at
-      // any DPR; PointsMaterial.map renders BLACK under three/webgpu so we never
-      // use it). radius ~0.78 in quad units → a fat object with mass.
+      // TSL tile profile: quad-centered coords p = (uv-0.5)*2 → −1..1. Each tile
+      // is a SOLID ROUND BALL — NOT an additive glow. On a dense grid additive
+      // bright cores SUM past 1.0 everywhere and clip the whole field to white
+      // (the round-2 regression). So we render OPAQUE shaded discs with
+      // NormalBlending: a filled body with a soft-shaded falloff + a thin bright
+      // specular rim, alpha-clipped to a circle so each ball reads as a distinct
+      // golden object on a DARK field (idle meanLuma stays in the 30–90 band).
       const tp = uv().sub(0.5).mul(2.0);
       const td = vec2(tp.x, tp.y).length();
-      const tileCore = float(0.78);
-      const tileFeather = float(0.34);
-      // 1 in the bright core → 0 feathered out before the quad edge.
-      const tileProfile = smoothstep(tileCore, tileCore.sub(tileFeather), td);
+      const tileR = float(0.82); // ball radius in quad units
+      const tileFeather = float(0.12); // crisp anti-aliased rim (alpha → 0)
+      // ALPHA: opaque inside the ball, feathered to 0 at the silhouette so the
+      // quad never shows a square and NormalBlending composites a round body.
+      const tileAlpha = smoothstep(tileR, tileR.sub(tileFeather), td);
+      // SHADE the body: a center-lit falloff (brighter toward the middle, darker
+      // toward the rim) gives the ball volume instead of a flat coin. Range stays
+      // ≤1 — no additive blow-out.
+      const tileShade = smoothstep(float(1.05), float(0.0), td).mul(0.55).add(0.55);
+      // Thin bright specular highlight just inside the rim — the premium-physical
+      // read (a lit sphere). Kept narrow so it accents, never floods.
+      const rimMid = tileR.sub(tileFeather.mul(1.6));
+      const rimW = tileFeather.mul(0.9);
+      const rimUp = smoothstep(rimMid.sub(rimW), rimMid, td);
+      const rimDn = smoothstep(rimMid, rimMid.add(rimW), td).oneMinus();
+      const tileBody = tileShade.add(rimUp.mul(rimDn).mul(0.5));
       const tileTint = instancedBufferAttribute(colAttr) as unknown as {
         mul: (x: unknown) => ReturnType<typeof vec3>;
       };
@@ -296,11 +312,12 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
         sizeAttenuation: true,
         transparent: true,
         opacity: 1,
-        blending: AdditiveBlending,
+        blending: NormalBlending,
         depthWrite: false,
       });
       tileMat.positionNode = instancedBufferAttribute(posAttr);
-      tileMat.colorNode = vec4(tileTint.mul(tileProfile), float(1));
+      // RGB = tint × body shading; ALPHA = circular mask → distinct round balls.
+      tileMat.colorNode = vec4(tileTint.mul(tileBody), tileAlpha);
 
       const tiles = new Sprite(tileMat);
       tiles.geometry = tileGeo;
@@ -384,9 +401,12 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
           const r = brass.r + (ice.r - brass.r) * m;
           const g = brass.g + (ice.g - brass.g) * m;
           const b = brass.b + (ice.b - brass.b) * m;
-          // Displaced tiles flare brighter (impact glow); resting tiles stay a
-          // solid warm brass well above the near-black floor.
-          const lum = 0.92 + m * 0.85;
+          // NormalBlending opaque balls — keep the base tint MODERATE so the grid
+          // reads as distinct golden bodies on a dark field (not a white waffle
+          // wall). Resting tiles sit at a calm brass mid-tone; tiles riding the
+          // wave flare a touch brighter to ice, but the body shading (≤1) plus
+          // this capped luma keeps the field well under blow-out.
+          const lum = 0.6 + m * 0.45; // 0.6 (rest) → 1.05 (peak impact)
           colors[i * 3] = r * lum;
           colors[i * 3 + 1] = g * lum;
           colors[i * 3 + 2] = b * lum;
@@ -411,14 +431,26 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
           const worldR = r / 0.84; // map normalised annulus radius → world front
           const quadScale = Math.max(worldR * 2.0, 0.001); // quad is 1 unit wide
           ring.scale.set(quadScale, quadScale, 1);
-          // Bright at birth, easing as it widens (energy spreads over a longer
-          // circumference) — a fat amber flash at small radius, a thinner arc far
-          // out. Stays well above the floor so the wavefront is always visible.
+          // Brightness is DELIBERATELY DIM and additive only — the ring is a
+          // sweeping wavefront accent, not a light source. When the radius is tiny
+          // the annulus is concentrated at the centre and additive light pools
+          // into a bloom mandala (the round-2 regression), so we FADE IT IN as the
+          // ring leaves the centre and FADE IT OUT as it nears the corners. Peak
+          // amplitude is kept low (~0.55) so summed coverage stays well under
+          // white — the front reads as a clean expanding amber annulus crossing
+          // the grid, never a central flare.
           const grow = clamp(r / MAX_RADIUS, 0, 1);
-          ringBright.value = (1.9 - grow * 0.9);
-          // Wavefront keeps a fairly constant world thickness → thinner in
-          // normalised-quad units as the quad grows.
-          ringThick.value = clamp(0.22 / Math.max(worldR, 0.4), 0.05, 0.3);
+          // Scalar smoothstep (TSL `smoothstep` is for shader nodes, not JS).
+          const ss = (e0: number, e1: number, x: number) => {
+            const u = clamp((x - e0) / (e1 - e0), 0, 1);
+            return u * u * (3 - 2 * u);
+          };
+          const birthFade = ss(0, 0.18, grow); // off at centre → on once it leaves
+          const deathFade = 1 - ss(0.78, 1, grow); // fades before the corners
+          ringBright.value = 0.55 * birthFade * deathFade;
+          // Wavefront keeps a fairly constant, fairly THIN world thickness → a
+          // crisp arc, thinner in normalised-quad units as the quad grows.
+          ringThick.value = clamp(0.16 / Math.max(worldR, 0.4), 0.035, 0.2);
         } else {
           // Recharging: ring gone.
           ringBright.value = 0;

@@ -6,6 +6,16 @@
 // steel rings, the ball is an ice-bright head, the trail is a pool of cooling
 // motes — one draw call, TSL radial falloff (round at any DPR, no square sprites).
 //
+// RENDER PATH (round-2 white-out fix): the elements are OPAQUE shaded circles
+// drawn with NormalBlending on a DARK field — NOT additive. Additive stacking of
+// a dense field (12 pegs + 22 walls + 56 trail + ball) clipped the whole tile to
+// pure white (advocate effRGB=[255,255,255], satPixels=0). Now each mote outputs
+// vec4(rgb, coverageAlpha): the per-instance RADIUS lives inside the TSL profile
+// (d.div(rNode), as in molten-drip / bubble-rise) on a fixed billboard, so motes
+// composite as DISTINCT solid bodies that never sum past white. The ball is a
+// bright ice core, pegs are hollow steel rings, walls are dim steel studs, and the
+// trail is a short low-alpha mint→brass streak.
+//
 // GENUINE SIMULATION, not an easing curve: holds the ball's velocity state and
 // integrates gravity with semi-implicit (symplectic) Euler at a fixed dt; on each
 // step it tests the ball against every fixed peg (circle vs point) and the two
@@ -27,11 +37,11 @@ import {
   BufferAttribute,
   InstancedBufferAttribute,
   Color,
-  AdditiveBlending,
+  NormalBlending,
   DynamicDrawUsage,
 } from 'three';
 import { PointsNodeMaterial } from 'three/webgpu';
-import { instancedBufferAttribute, uv, vec3, vec4, float, exp, smoothstep, abs } from 'three/tsl';
+import { instancedBufferAttribute, uv, vec3, vec4, float, smoothstep } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type PrimitiveDefinition } from '../contract';
 import { hash2, makeReplayStepper, resolveSimTier, tierPick } from './_sim-core';
@@ -71,10 +81,11 @@ const POOL = PEG_MAX + WALL_COUNT + TRAIL_MAX + 1;
 
 const HIDDEN_Y = -1000; // park inactive pool slots far out of view (and dark)
 
-// Per-mote size carried in the geometry (sprites share one base size; the look
-// layer + premultiplied brightness give the ball a bigger/brighter read than the
-// trail and pegs without a second material). Base = ball head footprint.
-const BASE_SIZE = 0.2;
+// One FIXED billboard footprint holds the LARGEST body (a peg + feather). Each
+// mote then sets its own RADIUS *inside* the quad via the TSL profile, so we never
+// scale the quad per-instance (the round-1 sizeNode path blew the billboards up to
+// tile-spanning additive quads → white-out). Mirrors molten-drip / bubble-rise.
+const BILLBOARD = 0.56;
 
 // Palette — Observatory Brass world (NO purple). Ball: ice-white core, brass
 // corona. Pegs: cool steel rings. Trail: cools ice → brass as it ages.
@@ -260,14 +271,16 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
       // ── Geometry: one billboard quad + per-mote instanced attributes ──────
       const positions = new Float32Array(POOL * 3);
       const colors = new Float32Array(POOL * 3);
-      // Per-instance size multiplier (ball is big, trail mid, pegs ring-styled).
-      const sizes = new Float32Array(POOL);
+      // Per-instance RADIUS (quad units): the size of the body inside the fixed
+      // billboard (ball big, trail mid, pegs ring-sized). Carried into the TSL
+      // profile, NOT used to scale the quad.
+      const radii = new Float32Array(POOL);
       const posAttr = new InstancedBufferAttribute(positions, 3);
       const colAttr = new InstancedBufferAttribute(colors, 3);
-      const sizeAttr = new InstancedBufferAttribute(sizes, 1);
+      const radAttr = new InstancedBufferAttribute(radii, 1);
       posAttr.setUsage(DynamicDrawUsage);
       colAttr.setUsage(DynamicDrawUsage);
-      sizeAttr.setUsage(DynamicDrawUsage);
+      radAttr.setUsage(DynamicDrawUsage);
 
       const geometry = new BufferGeometry();
       geometry.setIndex([0, 1, 2, 0, 2, 3]);
@@ -284,24 +297,26 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
       );
       geometry.setAttribute('instancePosition', posAttr);
       geometry.setAttribute('instanceColor', colAttr);
-      geometry.setAttribute('instanceSize', sizeAttr);
+      geometry.setAttribute('instanceRadius', radAttr);
 
-      // ── Look layer: TSL radial falloff × per-mote color, + a peg RING look ──
-      // d: 0 at quad center → 1 at edge midpoint (√2 at the corner).
+      // ── Look layer: TSL profiles → a COVERAGE ALPHA (not additive glow) ─────
+      // d: 0 at quad center → 1 at edge midpoint (√2 at the corner). The body's
+      // size inside the fixed quad is the per-instance RADIUS: dn = d / radius.
       const d = uv().sub(0.5).mul(2).length();
-      // COMPACT Gaussian core so a body reads as a tight, round object with mass
-      // (not a tile-wide bloom). Steeper falloff than before (−7 vs −3) keeps the
-      // bright footprint small so overlapping additive motes don't wash the field.
-      const glow = exp(d.mul(d).mul(-7.0));
-      // Killed to EXACT zero before the quad edge (no square rim at any DPR).
-      const rim = smoothstep(float(0.62), float(0.86), d).oneMinus();
-      const solid = glow.mul(rim);
-      // Hollow RING look for pegs: bright at a mid radius, dark in the middle —
-      // reads as a bumper rim rather than a blob. Peaks near d≈0.5, killed to
-      // zero at the center and before the edge (no square rim at any DPR).
-      const ring = smoothstep(float(0.18), float(0.5), d).mul(rim).mul(
-        smoothstep(float(0.82), float(0.5), d),
-      );
+      type FloatNode = ReturnType<typeof float>;
+      const rNode = instancedBufferAttribute(radAttr) as unknown as FloatNode;
+      const dn = d.div(rNode.add(0.001)); // 0 at center → 1 at the body's edge
+      // Killed to EXACT zero before the quad edge (no square rim at any DPR;
+      // classic PointsMaterial.map renders black under three/webgpu).
+      const rim = smoothstep(float(0.7), float(0.94), d).oneMinus();
+      // SOLID disc coverage: ~1 across the body, a feathered antialiased edge at
+      // dn≈1. This is the OPAQUE shaded circle (ball / wall stud / trail mote).
+      const solid = smoothstep(float(1.0), float(0.78), dn).mul(rim);
+      // HOLLOW RING coverage for pegs: opaque at a mid radius (the bumper rim),
+      // hollow in the middle. Reads as a steel ring, not a blob.
+      const ring = smoothstep(float(0.42), float(0.62), dn)
+        .mul(smoothstep(float(1.0), float(0.82), dn))
+        .mul(rim);
       // Dedicated peg-flag attribute (0 = solid body/trail, 1 = ring peg). The
       // look is selected per-mote so pegs, trail, and ball share ONE draw call.
       const flags = new Float32Array(POOL);
@@ -312,27 +327,38 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
         mul: (x: unknown) => ReturnType<typeof float>;
         oneMinus: () => { mul: (x: unknown) => ReturnType<typeof float> };
       };
-      // shape = isPeg ? ring : solid  ⇒  flag*ring + (1−flag)*solid
-      const shape = flagNode.mul(ring).add(flagNode.oneMinus().mul(solid));
+      // coverage = isPeg ? ring : solid  ⇒  flag*ring + (1−flag)*solid
+      const coverage = flagNode.mul(ring).add(flagNode.oneMinus().mul(solid));
 
       const moteTint = instancedBufferAttribute(colAttr) as unknown as {
         mul: (x: unknown) => ReturnType<typeof vec3>;
       };
-      // Per-instance size: sizeNode scales the billboard. abs() guards against
-      // any accidental negative; sizes are written positive.
-      const sizeNode = abs(instancedBufferAttribute(sizeAttr));
+      // Per-instance ALPHA carries opacity: ball/pegs/walls are near-opaque, the
+      // trail motes are low-alpha and fade with age. Multiplied into coverage so
+      // NormalBlending composites each body distinctly (and the trail translucent)
+      // without any additive summation toward white.
+      const alphas = new Float32Array(POOL);
+      const alphaAttr = new InstancedBufferAttribute(alphas, 1);
+      alphaAttr.setUsage(DynamicDrawUsage);
+      geometry.setAttribute('instanceAlpha', alphaAttr);
+      const alphaNode = instancedBufferAttribute(alphaAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof float>;
+      };
 
       const material = new PointsNodeMaterial({
-        size: BASE_SIZE,
+        size: BILLBOARD,
         sizeAttenuation: true,
         transparent: true,
         opacity: 1,
-        blending: AdditiveBlending,
+        blending: NormalBlending,
         depthWrite: false,
       });
       material.positionNode = instancedBufferAttribute(posAttr);
-      material.sizeNode = sizeNode;
-      material.colorNode = vec4(moteTint.mul(shape), float(1));
+      // RGB = full per-mote color (NOT premultiplied — NormalBlending uses the
+      // alpha channel). Alpha = coverage × per-instance opacity, so each body
+      // composites as a DISTINCT solid (or translucent trail) circle on the dark
+      // field and overlapping motes NEVER sum past white.
+      material.colorNode = vec4(moteTint.mul(float(1)), alphaNode.mul(coverage));
 
       const sprite = new Sprite(material);
       sprite.geometry = geometry;
@@ -348,7 +374,8 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
         colors[slot * 3] = 0;
         colors[slot * 3 + 1] = 0;
         colors[slot * 3 + 2] = 0;
-        sizes[slot] = 0.001;
+        radii[slot] = 0.001;
+        alphas[slot] = 0;
         flags[slot] = 0;
       };
 
@@ -365,14 +392,15 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
           positions[slot * 3] = pegX[i];
           positions[slot * 3 + 1] = pegY[i];
           positions[slot * 3 + 2] = -0.02; // a hair behind the ball plane
-          // Steel ring, modest brightness so the ball clearly out-shines it.
-          // Capped well under 1 (additive): a discrete cool ring, not a hot blob.
-          const lum = 0.62;
-          colors[slot * 3] = pegSteel[0] * lum;
-          colors[slot * 3 + 1] = pegSteel[1] * lum;
-          colors[slot * 3 + 2] = pegSteel[2] * lum;
-          // Peg footprint ~ 2·PEG_R relative to BASE_SIZE.
-          sizes[slot] = (PEG_R * 2) / BASE_SIZE;
+          // Steel ring at full color; opacity via alpha (NormalBlending) so it
+          // reads as a discrete cool bumper rim on the dark field, not a blob.
+          colors[slot * 3] = pegSteel[0];
+          colors[slot * 3 + 1] = pegSteel[1];
+          colors[slot * 3 + 2] = pegSteel[2];
+          // Peg body radius inside the fixed billboard (quad units). PEG_R·2 in
+          // world ≈ BILLBOARD wide → radius ≈ PEG_R/BILLBOARD, clamped under 0.5.
+          radii[slot] = clamp((PEG_R * 1.9) / BILLBOARD, 0.1, 0.48);
+          alphas[slot] = 0.92; // near-opaque steel ring
           flags[slot] = 1; // ring look
         }
 
@@ -390,12 +418,15 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
             positions[slot * 3] = wx;
             positions[slot * 3 + 1] = wallBot + f * wallSpan;
             positions[slot * 3 + 2] = -0.03; // just behind the pegs
-            const lum = 0.5;
+            // Dimmer steel for the containing walls (scaled color, opaque alpha)
+            // so the playfield boundary reads without out-shining the pegs/ball.
+            const lum = 0.66;
             colors[slot * 3] = wallSteel[0] * lum;
             colors[slot * 3 + 1] = wallSteel[1] * lum;
             colors[slot * 3 + 2] = wallSteel[2] * lum;
-            // Small round studs running the height of the wall.
-            sizes[slot] = (0.07 * 2) / BASE_SIZE;
+            // Small round studs running the height of the wall (quad-unit radius).
+            radii[slot] = clamp((0.06) / BILLBOARD, 0.06, 0.3);
+            alphas[slot] = 0.85;
             flags[slot] = 0; // solid look
           }
         }
@@ -414,26 +445,28 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
           positions[slot * 3] = trX[idx];
           positions[slot * 3 + 1] = trY[idx];
           positions[slot * 3 + 2] = -0.005;
-          // Cool ice→brass over age; fade quadratically to nothing at the tail.
+          // Cool ice→brass over age (full color; the fade is carried by alpha).
           const m = ageNorm;
           const tr = trailHot[0] + (trailCool[0] - trailHot[0]) * m;
           const tg = trailHot[1] + (trailCool[1] - trailHot[1]) * m;
           const tb = trailHot[2] + (trailCool[2] - trailHot[2]) * m;
+          colors[slot * 3] = tr;
+          colors[slot * 3 + 1] = tg;
+          colors[slot * 3 + 2] = tb;
+          // Low-alpha, SHORT fading streak (NormalBlending → translucent, never
+          // stacks to white): the newest mote is the most opaque, the tail fades
+          // quadratically to nothing well before the ring buffer end.
           const lifeFade = (1 - ageNorm) * (1 - ageNorm);
-          // Capped under 1 (additive): the newest mote glows, the tail fades to
-          // nothing — a readable streak that never stacks toward white.
-          const lum = 0.72 * lifeFade;
-          colors[slot * 3] = tr * lum;
-          colors[slot * 3 + 1] = tg * lum;
-          colors[slot * 3 + 2] = tb * lum;
-          // Trail motes shrink slightly with age (a tapering streak).
-          sizes[slot] = (BALL_R * (1.0 - ageNorm * 0.5) * 1.6) / BASE_SIZE;
+          alphas[slot] = 0.5 * lifeFade;
+          // Trail motes are small and taper with age (a thin tapering streak).
+          radii[slot] = clamp((BALL_R * (1.0 - ageNorm * 0.5) * 1.1) / BILLBOARD, 0.03, 0.4);
           flags[slot] = 0; // solid look
         }
 
         // ── Ball (ice-bright head) ───────────────────────────────────────
-        // If the ball has drained it sits dim at the bottom; otherwise it blazes.
-        const ballLum = drained ? 0.6 : 1.0;
+        // The brightest, most opaque body — the obvious subject. If drained it
+        // sits dimmer at the bottom; otherwise it blazes ice-white.
+        const ballLum = drained ? 0.7 : 1.0;
         positions[BALL_SLOT * 3] = bx;
         positions[BALL_SLOT * 3 + 1] = by;
         positions[BALL_SLOT * 3 + 2] = 0.0;
@@ -441,25 +474,26 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
         // a faster ball reads hotter (a live, frozen-visible energy cue). This is
         // the at-least-one control read LIVE in write().
         const launch = num(params.launchSpeed, 2.2);
-        // Speed-heat stays a gentle multiplier; capped so even a max-launch ball
-        // does not blow out under additive blending (compact Gaussian core).
-        const speedHeat = clamp(0.85 + launch * 0.07, 0.85, 1.2);
-        const cr = ballCore[0] * 0.6 + ballCorona[0] * 0.4;
-        const cg = ballCore[1] * 0.6 + ballCorona[1] * 0.4;
-        const cb = ballCore[2] * 0.6 + ballCorona[2] * 0.4;
-        // Brightest body in the scene, but bounded near ~1 (×1.2 heat ⇒ ~1.06)
-        // so the bright pixels read as a hot ice ball, not a saturated white plane.
-        const lum = 0.88 * ballLum * speedHeat;
+        // Speed-heat is a gentle color multiplier; capped well under clipping so
+        // the ball reads as a hot ice body, never a saturated white plane.
+        const speedHeat = clamp(0.82 + launch * 0.05, 0.82, 1.0);
+        const cr = ballCore[0] * 0.62 + ballCorona[0] * 0.38;
+        const cg = ballCore[1] * 0.62 + ballCorona[1] * 0.38;
+        const cb = ballCore[2] * 0.62 + ballCorona[2] * 0.38;
+        const lum = ballLum * speedHeat;
         colors[BALL_SLOT * 3] = cr * lum;
         colors[BALL_SLOT * 3 + 1] = cg * lum;
         colors[BALL_SLOT * 3 + 2] = cb * lum;
-        sizes[BALL_SLOT] = (BALL_R * 2.4) / BASE_SIZE;
+        // The ball is the biggest body and fully opaque (solid ice head).
+        radii[BALL_SLOT] = clamp((BALL_R * 2.2) / BILLBOARD, 0.12, 0.49);
+        alphas[BALL_SLOT] = 1.0;
         flags[BALL_SLOT] = 0;
 
         sprite.count = POOL;
         posAttr.needsUpdate = true;
         colAttr.needsUpdate = true;
-        sizeAttr.needsUpdate = true;
+        radAttr.needsUpdate = true;
+        alphaAttr.needsUpdate = true;
         flagAttr.needsUpdate = true;
       };
 
