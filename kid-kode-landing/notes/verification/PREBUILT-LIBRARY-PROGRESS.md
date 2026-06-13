@@ -22,17 +22,35 @@ Model: claude-opus-4-8 (confirmed at start; Fable-5 down → pinned Opus). ULTRA
 - Home is `src/lib/editor/**` (editor scope; dep-guard allows `@/` alias there).
 - AUTO-CKPT: <pending commit>
 
-### Phase 1 — Library UI — ⬜ NOT STARTED
-Toolbar "Elements" group + root-mounted premium browser (shared-rig hover tiles,
-search/category) + drag-to-place. Mount browser in `src/app/page.tsx`.
+### Phase 1 — Library UI — ✅ COMPLETE (real-GPU verified)
+Commit 5650e06. Toolbar 'Elements' group (icon 'layers') + LibraryFlyout +
+root-mounted ElementLibraryBrowser (search/category, z-stack so the cluster rig
+shows through transparent tile windows) + cluster-tile-renderer (dedicated
+shared-rig; members built via defaultRenderModeFactory = preview==placed;
+integrated animationBindings play) + ClusterCanvas/ClusterTile +
+ElementPlacementLayer (galaxy drag/click-to-place). Rig auto-frames cluster
+bounds + re-frames for async members.
+EVIDENCE (scripts/prebuilt-library-capture.mjs, channel:chrome DPR-2):
+backend webgpu, rig ready/tileCount2/deviceLost0, consoleErrors 0; tiles render
+real 3D (frames 03/04b); criterion 21 PROVEN. tsc 9 (0 new); suite 2826 pass.
+Backlog: hero seed sparse/dark (Phase 2/4 quality), placement lands in nearest
+hub (driver now flies to it).
 
-### Phase 2 — Element catalog — ⬜ NOT STARTED
-Comprehensive catalog, every §13 category + UI-enhancers, multiple variants each.
-One subagent per element → `src/lib/editor/elements/catalog/<id>.ts`.
+### Phase 2 — Element catalog — ⏳ RUNNING (workflow wf_fb6b489e-306)
+34 NEW elements across all 16 categories (one subagent each), self-registering
+catalog files. Plan: notes/PREBUILT-LIBRARY-CATALOG-PLAN.md. After: regenerate
+barrel + tsc + catalog-render check.
 
 ### Phase 3 — Hybrid customization + integration — ⬜ NOT STARTED
+Prove placed element: integrated anim editable + swappable (Animation Picker),
+keyframe editor, material/light/geometry/text/per-face customizable, "take just
+the object", composes live with other features. Driver-verified.
 
-### Phase 4 — Interaction verification + sign-off — ⬜ NOT STARTED
+### Phase 4 — Interaction verification + sign-off — ⬜ DRIVER READY
+scripts/prebuilt-library-advocate-capture.mjs (real-GPU DPR-2 + mobile DPR3:
+per-element frozen+playing crops w/ sharp frameDelta motion proof + nonEmptyFrac,
+gallery overview, place→fly-to-hub→canvas+preview-app). Then user-advocate agent
+judges the bundle. Criterion 21/23 + no-regression + perf + SR side-by-side.
 
 ## Key reuse map (audited Phase 0)
 - Schema: `src/lib/prism-graph/types.ts` (PrismNode fields; `ArtifactSource` already has `'prebuilt'`).

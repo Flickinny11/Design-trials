@@ -353,6 +353,16 @@ class ClusterTileRenderer {
 
     tile.scene.add(group);
     this.frameCamera(tile);
+    // Members can assemble ASYNC (MSDF text atlas, GLB/texture loads) after the
+    // factory returns, so the build-time bounding box may exclude them and the
+    // camera frames too tight (e.g. an MSDF headline overflowing the tile).
+    // Re-fit a couple of times as late members land — cheap, and the tile is
+    // frozen until hover so a small settle is imperceptible.
+    if (typeof window !== 'undefined') {
+      const reframe = () => { if (this.tiles.get(tile.id) === tile) this.frameCamera(tile); };
+      window.setTimeout(reframe, 260);
+      window.setTimeout(reframe, 720);
+    }
 
     // Seed the frozen phase so a never-hovered tile shows a representative
     // mid-frame, not t=0.

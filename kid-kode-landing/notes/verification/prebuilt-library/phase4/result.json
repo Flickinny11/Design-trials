@@ -1,0 +1,996 @@
+{
+  "ok": true,
+  "backend": "webgpu",
+  "elements": [],
+  "placements": [
+    {
+      "id": "hero-glass-prism",
+      "note": "ERR page.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-role=\"library-fly"
+    },
+    {
+      "id": "carousel-coverflow-depth",
+      "before": 22,
+      "total": 22,
+      "groupId": null,
+      "members": 0,
+      "hubId": null,
+      "added": 0
+    },
+    {
+      "id": "slider-morph-through",
+      "before": 22,
+      "total": 30,
+      "groupId": "grp-6818f77f-aff7-4ef2-b34a-ff58f6ed6f15",
+      "members": 8,
+      "hubId": "s2-movement",
+      "added": 8
+    },
+    {
+      "id": "pricing-pillars-3d",
+      "before": 30,
+      "total": 36,
+      "groupId": "grp-a0abbf91-5607-443d-bfa2-7eb44d783083",
+      "members": 6,
+      "hubId": "s2-movement",
+      "added": 6
+    }
+  ],
+  "consoleErrors": [],
+  "notes": [],
+  "desktopRig": {
+    "ready": true,
+    "tileCount": 36,
+    "backend": "webgpu",
+    "deviceLostCount": 0
+  },
+  "desktopIds": [
+    "pricing-pillars-3d",
+    "banner-ticker-3d",
+    "logocloud-constellation",
+    "carousel-coverflow-depth",
+    "carousel-cylinder-billboard",
+    "slider-depth-parallax",
+    "featuregrid-depth-pop",
+    "gallery-depth-wall",
+    "slider-distortion-fade",
+    "showcase-exploded",
+    "cardstack-fan-spread",
+    "testimonial-float-glass",
+    "wheel-fortune-spinner",
+    "cta-glass-banner",
+    "nav-glass-dock",
+    "pricing-glass-tiers",
+    "hero-glass-prism",
+    "banner-light-sweep",
+    "hero-liquid-metal",
+    "cta-magnetic-pedestal",
+    "gallery-masonry-reveal",
+    "slider-morph-through",
+    "stats-odometer",
+    "testimonial-orbit-quotes",
+    "logocloud-orbital",
+    "nav-orbital-ring",
+    "hero-particle-emerge",
+    "hero-photoreal-monolith",
+    "carousel-photoreal-ring",
+    "wheel-radial-menu",
+    "marquee-ribbon-flow",
+    "stats-ring-progress",
+    "banner-silk-flag",
+    "cardstack-swipe-deck",
+    "featuregrid-tilt-cards",
+    "showcase-turntable"
+  ],
+  "desktopElements": [
+    {
+      "id": "pricing-pillars-3d",
+      "frozen": {
+        "meanLuma": 16.5,
+        "nonEmptyFrac": 0.227,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.81,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "banner-ticker-3d",
+      "frozen": {
+        "meanLuma": 18.3,
+        "nonEmptyFrac": 0.266,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.51,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "logocloud-constellation",
+      "frozen": {
+        "meanLuma": 17.9,
+        "nonEmptyFrac": 0.232,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.15,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-coverflow-depth",
+      "frozen": {
+        "meanLuma": 19.7,
+        "nonEmptyFrac": 0.296,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.63,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-cylinder-billboard",
+      "frozen": {
+        "meanLuma": 18.5,
+        "nonEmptyFrac": 0.256,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.13,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "slider-depth-parallax",
+      "frozen": {
+        "meanLuma": 22.9,
+        "nonEmptyFrac": 0.553,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.1,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "featuregrid-depth-pop",
+      "frozen": {
+        "meanLuma": 12.4,
+        "nonEmptyFrac": 0.159,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.06,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "gallery-depth-wall",
+      "frozen": {
+        "meanLuma": 22.8,
+        "nonEmptyFrac": 0.377,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 6.56,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "slider-distortion-fade",
+      "frozen": {
+        "meanLuma": 25.8,
+        "nonEmptyFrac": 0.363,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.46,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "showcase-exploded",
+      "frozen": {
+        "meanLuma": 15.4,
+        "nonEmptyFrac": 0.209,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.55,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cardstack-fan-spread",
+      "frozen": {
+        "meanLuma": 15.3,
+        "nonEmptyFrac": 0.297,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.1,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "testimonial-float-glass",
+      "frozen": {
+        "meanLuma": 20.9,
+        "nonEmptyFrac": 0.295,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.2,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "wheel-fortune-spinner",
+      "frozen": {
+        "meanLuma": 18.8,
+        "nonEmptyFrac": 0.331,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.45,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cta-glass-banner",
+      "frozen": {
+        "meanLuma": 20.9,
+        "nonEmptyFrac": 0.328,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.48,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "nav-glass-dock",
+      "frozen": {
+        "meanLuma": 23.7,
+        "nonEmptyFrac": 0.266,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.45,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "pricing-glass-tiers",
+      "frozen": {
+        "meanLuma": 19.8,
+        "nonEmptyFrac": 0.325,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.45,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-glass-prism",
+      "frozen": {
+        "meanLuma": 46.7,
+        "nonEmptyFrac": 0.474,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.08,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "banner-light-sweep",
+      "frozen": {
+        "meanLuma": 23.6,
+        "nonEmptyFrac": 0.44,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.1,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-liquid-metal",
+      "frozen": {
+        "meanLuma": 16.9,
+        "nonEmptyFrac": 0.215,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.63,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cta-magnetic-pedestal",
+      "frozen": {
+        "meanLuma": 32.7,
+        "nonEmptyFrac": 0.557,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 0.35,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "gallery-masonry-reveal",
+      "frozen": {
+        "meanLuma": 12.4,
+        "nonEmptyFrac": 0.16,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 1.91,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "slider-morph-through",
+      "frozen": {
+        "meanLuma": 13.2,
+        "nonEmptyFrac": 0.204,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 1.42,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "stats-odometer",
+      "frozen": {
+        "meanLuma": 18.8,
+        "nonEmptyFrac": 0.292,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.66,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "testimonial-orbit-quotes",
+      "frozen": {
+        "meanLuma": 30.9,
+        "nonEmptyFrac": 0.595,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 1.38,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "logocloud-orbital",
+      "frozen": {
+        "meanLuma": 17.5,
+        "nonEmptyFrac": 0.241,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 2.55,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "nav-orbital-ring",
+      "frozen": {
+        "meanLuma": 16.5,
+        "nonEmptyFrac": 0.21,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 0.72,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-particle-emerge",
+      "frozen": {
+        "meanLuma": 25.1,
+        "nonEmptyFrac": 0.575,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.15,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-photoreal-monolith",
+      "frozen": {
+        "meanLuma": 23.7,
+        "nonEmptyFrac": 0.511,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 5.2,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-photoreal-ring",
+      "frozen": {
+        "meanLuma": 25.2,
+        "nonEmptyFrac": 0.332,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.06,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "wheel-radial-menu",
+      "frozen": {
+        "meanLuma": 21.4,
+        "nonEmptyFrac": 0.287,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.67,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "marquee-ribbon-flow",
+      "frozen": {
+        "meanLuma": 21.8,
+        "nonEmptyFrac": 0.234,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 4.85,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "stats-ring-progress",
+      "frozen": {
+        "meanLuma": 23.7,
+        "nonEmptyFrac": 0.258,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 0,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "banner-silk-flag",
+      "frozen": {
+        "meanLuma": 17.4,
+        "nonEmptyFrac": 0.217,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.33,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cardstack-swipe-deck",
+      "frozen": {
+        "meanLuma": 19.3,
+        "nonEmptyFrac": 0.314,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.06,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "featuregrid-tilt-cards",
+      "frozen": {
+        "meanLuma": 29,
+        "nonEmptyFrac": 0.423,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.28,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "showcase-turntable",
+      "frozen": {
+        "meanLuma": 28.4,
+        "nonEmptyFrac": 0.664,
+        "w": 672,
+        "h": 602
+      },
+      "motionDelta": 3.04,
+      "rendersContent": true,
+      "animates": true
+    }
+  ],
+  "mobileRig": {
+    "ready": true,
+    "tileCount": 36,
+    "backend": "webgpu",
+    "deviceLostCount": 0
+  },
+  "mobileIds": [
+    "pricing-pillars-3d",
+    "banner-ticker-3d",
+    "logocloud-constellation",
+    "carousel-coverflow-depth",
+    "carousel-cylinder-billboard",
+    "slider-depth-parallax",
+    "featuregrid-depth-pop",
+    "gallery-depth-wall",
+    "slider-distortion-fade",
+    "showcase-exploded",
+    "cardstack-fan-spread",
+    "testimonial-float-glass",
+    "wheel-fortune-spinner",
+    "cta-glass-banner",
+    "nav-glass-dock",
+    "pricing-glass-tiers",
+    "hero-glass-prism",
+    "banner-light-sweep",
+    "hero-liquid-metal",
+    "cta-magnetic-pedestal",
+    "gallery-masonry-reveal",
+    "slider-morph-through",
+    "stats-odometer",
+    "testimonial-orbit-quotes",
+    "logocloud-orbital",
+    "nav-orbital-ring",
+    "hero-particle-emerge",
+    "hero-photoreal-monolith",
+    "carousel-photoreal-ring",
+    "wheel-radial-menu",
+    "marquee-ribbon-flow",
+    "stats-ring-progress",
+    "banner-silk-flag",
+    "cardstack-swipe-deck",
+    "featuregrid-tilt-cards",
+    "showcase-turntable"
+  ],
+  "mobileElements": [
+    {
+      "id": "pricing-pillars-3d",
+      "frozen": {
+        "meanLuma": 16.8,
+        "nonEmptyFrac": 0.282,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 2.81,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "banner-ticker-3d",
+      "frozen": {
+        "meanLuma": 18.4,
+        "nonEmptyFrac": 0.247,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.8,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "logocloud-constellation",
+      "frozen": {
+        "meanLuma": 18,
+        "nonEmptyFrac": 0.237,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.14,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-coverflow-depth",
+      "frozen": {
+        "meanLuma": 19.9,
+        "nonEmptyFrac": 0.298,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.55,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-cylinder-billboard",
+      "frozen": {
+        "meanLuma": 20.7,
+        "nonEmptyFrac": 0.305,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 8.31,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "slider-depth-parallax",
+      "frozen": {
+        "meanLuma": 23.3,
+        "nonEmptyFrac": 0.554,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "featuregrid-depth-pop",
+      "frozen": {
+        "meanLuma": 12.7,
+        "nonEmptyFrac": 0.162,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "gallery-depth-wall",
+      "frozen": {
+        "meanLuma": 22.7,
+        "nonEmptyFrac": 0.381,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "slider-distortion-fade",
+      "frozen": {
+        "meanLuma": 26.2,
+        "nonEmptyFrac": 0.369,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "showcase-exploded",
+      "frozen": {
+        "meanLuma": 15.6,
+        "nonEmptyFrac": 0.213,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.55,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cardstack-fan-spread",
+      "frozen": {
+        "meanLuma": 17.3,
+        "nonEmptyFrac": 0.321,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 3.31,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "testimonial-float-glass",
+      "frozen": {
+        "meanLuma": 21.1,
+        "nonEmptyFrac": 0.298,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 2.28,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "wheel-fortune-spinner",
+      "frozen": {
+        "meanLuma": 19.1,
+        "nonEmptyFrac": 0.337,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 6.47,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cta-glass-banner",
+      "frozen": {
+        "meanLuma": 20.9,
+        "nonEmptyFrac": 0.332,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.28,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "nav-glass-dock",
+      "frozen": {
+        "meanLuma": 23.9,
+        "nonEmptyFrac": 0.273,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "pricing-glass-tiers",
+      "frozen": {
+        "meanLuma": 19.9,
+        "nonEmptyFrac": 0.326,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "hero-glass-prism",
+      "frozen": {
+        "meanLuma": 48.3,
+        "nonEmptyFrac": 0.481,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.32,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "banner-light-sweep",
+      "frozen": {
+        "meanLuma": 23.8,
+        "nonEmptyFrac": 0.439,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.14,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "hero-liquid-metal",
+      "frozen": {
+        "meanLuma": 17.2,
+        "nonEmptyFrac": 0.221,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 2.38,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cta-magnetic-pedestal",
+      "frozen": {
+        "meanLuma": 32.8,
+        "nonEmptyFrac": 0.557,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.96,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "gallery-masonry-reveal",
+      "frozen": {
+        "meanLuma": 12.7,
+        "nonEmptyFrac": 0.165,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "slider-morph-through",
+      "frozen": {
+        "meanLuma": 15.4,
+        "nonEmptyFrac": 0.212,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.15,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "stats-odometer",
+      "frozen": {
+        "meanLuma": 19.1,
+        "nonEmptyFrac": 0.297,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 3.62,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "testimonial-orbit-quotes",
+      "frozen": {
+        "meanLuma": 31.2,
+        "nonEmptyFrac": 0.592,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.58,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "logocloud-orbital",
+      "frozen": {
+        "meanLuma": 17.6,
+        "nonEmptyFrac": 0.249,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 2.32,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "nav-orbital-ring",
+      "frozen": {
+        "meanLuma": 16.9,
+        "nonEmptyFrac": 0.22,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.75,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-particle-emerge",
+      "frozen": {
+        "meanLuma": 23.1,
+        "nonEmptyFrac": 0.567,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.58,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "hero-photoreal-monolith",
+      "frozen": {
+        "meanLuma": 26.3,
+        "nonEmptyFrac": 0.528,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 3.62,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "carousel-photoreal-ring",
+      "frozen": {
+        "meanLuma": 25.3,
+        "nonEmptyFrac": 0.34,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 8.74,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "wheel-radial-menu",
+      "frozen": {
+        "meanLuma": 21.6,
+        "nonEmptyFrac": 0.291,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 1.34,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "marquee-ribbon-flow",
+      "frozen": {
+        "meanLuma": 20.8,
+        "nonEmptyFrac": 0.236,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 4.86,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "stats-ring-progress",
+      "frozen": {
+        "meanLuma": 23.9,
+        "nonEmptyFrac": 0.265,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.16,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "banner-silk-flag",
+      "frozen": {
+        "meanLuma": 18,
+        "nonEmptyFrac": 0.225,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 3.08,
+      "rendersContent": true,
+      "animates": true
+    },
+    {
+      "id": "cardstack-swipe-deck",
+      "frozen": {
+        "meanLuma": 19.4,
+        "nonEmptyFrac": 0.313,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.17,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "featuregrid-tilt-cards",
+      "frozen": {
+        "meanLuma": 29.2,
+        "nonEmptyFrac": 0.429,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.19,
+      "rendersContent": true,
+      "animates": false
+    },
+    {
+      "id": "showcase-turntable",
+      "frozen": {
+        "meanLuma": 28.6,
+        "nonEmptyFrac": 0.662,
+        "w": 960,
+        "h": 867
+      },
+      "motionDelta": 0.2,
+      "rendersContent": true,
+      "animates": false
+    }
+  ]
+}
