@@ -105,7 +105,20 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     embers/'empty' particle extents not artifact-scale-relative (pre-existing convention, all 35
     particle primitives); in-context co-binding opacity stacking (fade-up owns opacity over dolly's
     dim — last-writer semantics, by design); advocate r2's 6 taste flags (verdict JSON).
-- [~] **W1 MORPH/TRANSITION** — BUILD DONE (2026-06-12): all 14 authored + per-file vitest green
+- [x] **W1 MORPH/TRANSITION** — COMPLETE (2026-06-12, session 4). 14 authored; barrel-wired → registry 326;
+  full vitest 2,649/0; tsc 0-new. ADVOCATE r3 **SHIP** (advocate-verdict-w1-morph-r3.json): the two r2-BLOCKED
+  tiles (cylinder-unroll, genie-suck) cleared the shared featureless-placeholder defect.
+  - SESSION-4 RESOLUTION: cylinder-unroll's unverified r3 rewrite (card subject + bent chrome clones sharing the
+    TSL bend tree + rigid dot clone) VERIFIED AS-IS — eyes-on PASS, zero changes (vitest 11/11, tsc 0-new, harness
+    r/p/c, controls live). genie-suck FIXED this session (plane→card; union+face bbox split; rounded-corner SDF
+    sheet mask read live from RoundedBoxGeometry.parameters.radius; header+rows = bent clones sharing the funnel
+    positionNode; dot = rigid CPU-posed clone; dock-glow color traverses to first luminous emissive = brass header;
+    onParamChange re-applies at lastT; dispose frees only created resources, shared geo by-reference). vitest 9/9,
+    tsc 0-new, harness r/p/c, metrics 0 console/0 net, curvature+duration controls changed=true.
+  - Fresh-context user-advocate r3 (agentId a0866e547f8105caa): both shipQuality=true, 0 new mustFix, ground-truthed
+    vs swap-flip-morph card sibling; honest flags: cylinder overshoot subtlest of 3 controls; dot reads ice-blue
+    (cloned subject material under rig key, sibling-consistent); genie dot swallowed early in deep-suck.
+  - [HISTORICAL] BUILD DONE (2026-06-12): all 14 authored + per-file vitest green
   (sdf-shape-morph, metaball-merge, flip-morph, cross-morph, morph-into-card, mask-iris-morph,
   silhouette-glow-morph, domain-warp-morph, cylinder-unroll, genie-suck, liquid-stretch-morph,
   pill-morph, skeleton-resolve, swap-flip-morph; mask 15→23, transform 32→38). Barrel wired →
@@ -165,3 +178,4 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
   DESIGN-REFERENCES read in full). LOGAN-INBOX: no OPEN directives. Launching P0 workflow.
 - 2026-06-12 (session 2, resume): Forensics — fix-round r1 died early (only morph-into-card edited). Relaunching identical 9-agent fixround workflow from persisted script. LOGAN-INBOX: no OPEN directives.
 - 2026-06-12 (session 3, resume ~14:30 CT): Forensics above. W1: gates re-run (vitest/tsc/harness 9/9/art), advocate r2 BLOCKED narrowly (2 tiles, one shared placeholder defect) → r3 fix workflow in flight. W2: 12 files verified test-green, awaiting barrel+browser gates. mountable engine change landed. LOGAN-INBOX: no OPEN directives.
+- 2026-06-12 (session 4, resume ~21:00 CT): W1 r3 CLOSED → **W1 COMPLETE, advocate SHIP**. Resume workflow (wf_97135b79-e5e): cylinder-unroll rewrite verified as-is (eyes-on PASS, 0 changes); genie-suck card-subject fix landed + self-verified; fresh joint capture. Advocate phase died on a transient model-access error (claude-fable-5) inside the workflow → re-ran the user-advocate directly via Agent tool (its own model): SHIP both tiles. Verdict JSON written. tsc 0-new, cylinder+genie vitest 20/20. Committing W1 CKPT, then W2 barrel-wire + gates. LOGAN-INBOX: no OPEN directives.

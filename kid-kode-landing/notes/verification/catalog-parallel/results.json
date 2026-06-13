@@ -1,20 +1,20 @@
 {
-  "startedAt": "2026-06-12T20:18:43.079Z",
-  "updatedAt": "2026-06-12T20:19:12.742Z",
+  "startedAt": "2026-06-13T01:45:17.507Z",
+  "updatedAt": "2026-06-13T01:45:46.956Z",
   "tiers": {
     "std": {
       "tier": "std",
       "total": 1,
       "backend": "webgl",
-      "startedAt": "2026-06-12T20:18:47.837Z",
-      "finishedAt": "2026-06-12T20:19:12.741Z",
+      "startedAt": "2026-06-13T01:45:22.185Z",
+      "finishedAt": "2026-06-13T01:45:46.955Z",
       "peakConcurrency": 2,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "cylinder-unroll": {
-      "name": "cylinder-unroll",
+    "genie-suck": {
+      "name": "genie-suck",
       "category": "transform",
       "driver": "time",
       "renders": true,
@@ -23,7 +23,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-12T20:18:55.098Z",
+      "at": "2026-06-13T01:45:29.312Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -44,7 +44,7 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 30,
+    "wallClockSec": 29,
     "peak": {
       "std": 2
     },

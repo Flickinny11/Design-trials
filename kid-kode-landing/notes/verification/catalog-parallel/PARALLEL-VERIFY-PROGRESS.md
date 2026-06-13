@@ -4342,3 +4342,13 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
 
 ### Run end 2026-06-12T20:19:12.742Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 30s
+
+## Resumed 2026-06-13T01:32:06.793Z (std 1, glass 0 remaining)
+- [PASS] std/cylinder-unroll (transform) render=true play=true ctrl=true
+
+### Run end 2026-06-13T01:32:34.927Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
+
+## Resumed 2026-06-13T01:45:17.521Z (std 1, glass 0 remaining)
+- [PASS] std/genie-suck (transform) render=true play=true ctrl=true
+
+### Run end 2026-06-13T01:45:46.956Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s

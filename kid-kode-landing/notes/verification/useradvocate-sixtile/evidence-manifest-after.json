@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-12T20:19:23.842Z",
+  "startedAt": "2026-06-13T01:49:15.625Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
@@ -16,6 +16,19 @@
         "category": "transform"
       },
       "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "genie-suck",
+      "state": "after",
+      "dir": "genie-suck/after",
+      "claim": {
+        "name": "genie-suck",
+        "label": "Funnel Curve",
+        "description": "The surface is drawn into a corner through a curving genie funnel, holds a beat, then springs back out.",
+        "category": "transform"
+      },
+      "controls": 2,
       "notes": []
     }
   ],

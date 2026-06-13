@@ -34,16 +34,16 @@
       ],
       "effRGB": [
         39.3,
-        39.2,
+        39.1,
         40.8
       ],
-      "effHue": 244,
+      "effHue": 247,
       "effSat": 0.04,
       "effVal": 0,
       "warmFrac": 0.19,
       "coolFrac": 0.81,
       "magentaFrac": 0,
-      "satPixels": 5108,
+      "satPixels": 5109,
       "meanLuma": 10.8,
       "stdev": 16.5,
       "bandingScore": 0.417,
@@ -66,7 +66,7 @@
       "warmFrac": 0.21,
       "coolFrac": 0.79,
       "magentaFrac": 0,
-      "satPixels": 6347,
+      "satPixels": 6348,
       "meanLuma": 15.5,
       "stdev": 24.1,
       "bandingScore": 0.555,
@@ -89,7 +89,7 @@
       "warmFrac": 0.24,
       "coolFrac": 0.76,
       "magentaFrac": 0,
-      "satPixels": 5652,
+      "satPixels": 5653,
       "meanLuma": 16.4,
       "stdev": 24.3,
       "bandingScore": 0.538,
@@ -126,7 +126,7 @@
           "stdev": 24.4,
           "bandingScore": 0.538,
           "frameDeltaMag": null,
-          "latencyMs": 583
+          "latencyMs": 575
         },
         "mid": {
           "file": "control-duration-mid.png",
@@ -136,20 +136,20 @@
             17.5
           ],
           "effRGB": [
-            51.7,
+            51.8,
             49,
             46.8
           ],
-          "effHue": 27,
-          "effSat": 0.09,
+          "effHue": 26,
+          "effSat": 0.1,
           "effVal": 0,
           "warmFrac": 0.22,
           "coolFrac": 0.78,
           "magentaFrac": 0,
-          "satPixels": 5762,
+          "satPixels": 5761,
           "meanLuma": 13,
           "stdev": 21.8,
-          "bandingScore": 0.526,
+          "bandingScore": 0.527,
           "frameDeltaMag": null,
           "latencyMs": 585
         },
@@ -214,7 +214,7 @@
           "stdev": 12.6,
           "bandingScore": 0.388,
           "frameDeltaMag": null,
-          "latencyMs": 586
+          "latencyMs": 578
         },
         "mid": {
           "file": "control-radius-mid.png",
@@ -239,7 +239,7 @@
           "stdev": 13.4,
           "bandingScore": 0.379,
           "frameDeltaMag": null,
-          "latencyMs": 586
+          "latencyMs": 583
         },
         "high": {
           "file": "control-radius-high.png",
@@ -264,7 +264,7 @@
           "stdev": 18.1,
           "bandingScore": 0.443,
           "frameDeltaMag": null,
-          "latencyMs": 581
+          "latencyMs": 585
         }
       },
       "pixelDiff": {
@@ -302,7 +302,7 @@
           "stdev": 17.9,
           "bandingScore": 0.436,
           "frameDeltaMag": null,
-          "latencyMs": 570
+          "latencyMs": 586
         },
         "mid": {
           "file": "control-overshoot-mid.png",

@@ -163,9 +163,70 @@ describe('genie-suck primitive', () => {
     inst.seek(D);
     expect(h.uGlow.value).toBe(0);
 
-    // Subject-derived color: the panel's own luminous emissive (brass for the
-    // catalog plane) — never an invented hue.
-    expect(h.uGlowColor.value.getHexString()).toBe(srcMat.emissive.getHexString());
+    // Subject-derived color: the first sufficiently-luminous emissive in the
+    // subject's own subtree — the card's brass header chrome (the panel's
+    // near-black emissive scores out) — never an invented hue.
+    const header = subject.children.find((c) => c.name === 'card-header') as Mesh;
+    const headerMat = header.material as MeshStandardMaterial;
+    expect(h.uGlowColor.value.getHexString()).toBe(headerMat.emissive.getHexString());
+    expect(h.uGlowColor.value.getHexString()).not.toBe(srcMat.emissive.getHexString());
+
+    inst.dispose();
+  });
+
+  it('card chrome rides the funnel (advocate must-fix r3): bent clones for header/rows share the warp, the dot is CPU-posed into the throat and shrinks', () => {
+    const target = makeTarget(genieSuckPrimitive);
+    const inst = genieSuckPrimitive.create(target);
+    const subject = target.subject as Mesh;
+    const overlay = findOverlay(subject.parent as Object3D) as Group;
+
+    // The declared subject is the catalog CARD (the featureless-plane defect).
+    expect(genieSuckPrimitive.subject).toBe('card');
+
+    const bent = overlay.children.filter((c) =>
+      c.name.startsWith('genie-suck-chrome-bent:'),
+    ) as Mesh[];
+    const rigid = overlay.children.filter((c) =>
+      c.name.startsWith('genie-suck-chrome-rigid:'),
+    ) as Mesh[];
+    expect(bent.length).toBe(4); // header bar + 3 content rows
+    expect(rigid.length).toBe(1); // the accent dot
+
+    // Bent clones share the sheet's vertex-lane funnel warp, and carry the
+    // child's OWN look (header brass copied, never an invented fill).
+    const headerSrc = subject.children.find((c) => c.name === 'card-header') as Mesh;
+    const headerSrcMat = headerSrc.material as MeshStandardMaterial;
+    const headerClone = bent.find((m) => m.name.endsWith(':card-header')) as Mesh;
+    expect(headerClone).toBeDefined();
+    for (const m of bent) {
+      expect((m.material as Material & { positionNode?: unknown }).positionNode).toBeTruthy();
+    }
+    const headerCloneMat = headerClone.material as MeshStandardMaterial;
+    expect(headerCloneMat.color.getHexString()).toBe(headerSrcMat.color.getHexString());
+    expect(headerCloneMat.emissive.getHexString()).toBe(headerSrcMat.emissive.getHexString());
+
+    // The card panel sheet carries the rounded-corner silhouette mask.
+    const sheet = overlayMeshOf(overlay);
+    expect(
+      (sheet.material as Material & { opacityNode?: unknown }).opacityNode,
+    ).toBeTruthy();
+
+    // Rigid dot: REAL geometry by reference, material clone, identity at rest…
+    const dot = rigid[0];
+    const realDot = subject.children.find((c) => c.name === 'card-dot') as Mesh;
+    expect(dot.geometry).toBe(realDot.geometry);
+    expect(dot.material).not.toBe(realDot.material);
+    inst.seek(0);
+    expect(dot.position.x).toBeCloseTo(realDot.position.x, 4);
+    expect(dot.position.y).toBeCloseTo(realDot.position.y, 4);
+    expect(dot.scale.x).toBeCloseTo(1, 4);
+
+    // …and mid-suck it is drawn toward the default br corner (+x, −y in the
+    // sheet frame) and shrinks with the local funnel compression.
+    inst.seek(0.3 * inst.duration());
+    expect(dot.position.x).toBeGreaterThan(realDot.position.x);
+    expect(dot.position.y).toBeLessThan(realDot.position.y);
+    expect(dot.scale.x).toBeLessThan(1);
 
     inst.dispose();
   });
@@ -250,6 +311,36 @@ describe('genie-suck primitive', () => {
       glowMatDisposed = true;
     });
 
+    // Chrome clones: bent geometry+material are ours; the rigid dot's
+    // geometry is the SUBJECT's (shared by reference — must NOT be disposed),
+    // its cloned material is ours.
+    const bent = overlay.children.filter((c) =>
+      c.name.startsWith('genie-suck-chrome-bent:'),
+    ) as Mesh[];
+    const rigid = overlay.children.filter((c) =>
+      c.name.startsWith('genie-suck-chrome-rigid:'),
+    ) as Mesh[];
+    let bentGeomDisposed = 0;
+    let bentMatDisposed = 0;
+    for (const m of bent) {
+      m.geometry.addEventListener('dispose', () => {
+        bentGeomDisposed += 1;
+      });
+      (m.material as Material).addEventListener('dispose', () => {
+        bentMatDisposed += 1;
+      });
+    }
+    let rigidGeomDisposed = false;
+    let rigidMatDisposed = false;
+    for (const m of rigid) {
+      m.geometry.addEventListener('dispose', () => {
+        rigidGeomDisposed = true;
+      });
+      (m.material as Material).addEventListener('dispose', () => {
+        rigidMatDisposed = true;
+      });
+    }
+
     inst.dispose();
 
     expect(subject.visible).toBe(true);
@@ -259,6 +350,10 @@ describe('genie-suck primitive', () => {
     expect(matDisposed).toBe(true);
     expect(glowGeomDisposed).toBe(true);
     expect(glowMatDisposed).toBe(true);
+    expect(bentGeomDisposed).toBe(bent.length);
+    expect(bentMatDisposed).toBe(bent.length);
+    expect(rigidMatDisposed).toBe(true);
+    expect(rigidGeomDisposed).toBe(false); // the subject's own geometry survives
     // The subject's own material was never touched.
     expect(srcMat.opacity).toBe(baseOpacity);
     expect(srcMat.transparent).toBe(baseTransparent);

@@ -1,0 +1,35 @@
+{
+  "round": 3,
+  "wave": "W1-MORPH",
+  "date": "2026-06-12",
+  "overall": "SHIP",
+  "reviewer": "fresh-context user-advocate (agentId a0866e547f8105caa)",
+  "capture": { "backend": "webgpu", "dpr": 2, "consoleErrors": 0, "networkErrors": 0 },
+  "scope": "Re-judge of the single shared r2 blocker (featureless tan/brown placeholder) on the two BLOCKED tiles only; the other 7 W1 tiles were ship-quality at r2.",
+  "tiles": {
+    "cylinder-unroll": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        { "r2Issue": "#1 unroll sheet was a blank tan placeholder (no subject content)", "status": "RESOLVED", "evidence": "idle.png + play-1.png show full card chrome (amber header bar, light-blue accent dot, 3 grey rows, rounded panel) wrapped on the rolled cylinder; play-3.png shows the same card laid flat matching the swap-flip-morph ground-truth card. No blank slab at any phase." },
+        { "r2Issue": "#2 roll cylinder taller than sheet (regression check)", "status": "NO-REGRESSION", "evidence": "idle.png — roll sits inside the layout with top/bottom margins; play-2.png — travelling roll edge matches sheet height." },
+        { "r2Issue": "#3 overshoot control dead (regression check)", "status": "NO-REGRESSION", "evidence": "control-overshoot-{low,high}.png visibly differ (looser/fatter roll + extra wrap edge); metrics changed=true." }
+      ],
+      "newMustFix": [],
+      "flags": ["overshoot is the subtlest of the three controls at the pinned engaged state (meanAbsDiff 0.643) but visibly alive in side-by-side frames", "accent dot renders pale ice-blue rather than violet — honest render of the subject's own cloned material under the rig key light, consistent with ship-quality siblings, not introduced by this primitive"],
+      "evidence": ["cylinder-unroll/after/idle.png", "cylinder-unroll/after/play-1.png", "cylinder-unroll/after/play-2.png", "cylinder-unroll/after/play-3.png", "cylinder-unroll/after/control-duration-low.png", "cylinder-unroll/after/control-duration-high.png", "cylinder-unroll/after/control-radius-low.png", "cylinder-unroll/after/control-radius-high.png", "cylinder-unroll/after/control-overshoot-low.png", "cylinder-unroll/after/control-overshoot-high.png", "cylinder-unroll/after/metrics.json"]
+    },
+    "genie-suck": {
+      "shipQuality": true,
+      "mustFixResolved": [
+        { "r2Issue": "#4a subject was a blank brown placeholder (no card content)", "status": "RESOLVED", "evidence": "idle.png IS the real card (panel, brass header, accent dot, 3 rows, rounded corners — blank tan square gone); play-1.png + control-curvature-{low,high}.png show header bar and rows streaming through the funnel throat into the corner." },
+        { "r2Issue": "#4b idle skew-clipped at top frame edge (regression check)", "status": "NO-REGRESSION", "evidence": "idle.png — clean upright rectangle fully inside the layout, no skew/clip." },
+        { "r2Issue": "#4c play-3 (hold) fully empty (regression check)", "status": "NO-REGRESSION", "evidence": "play-3.png shows the held-beat dock glow at the corner." }
+      ],
+      "newMustFix": [],
+      "flags": ["duration-control progress read is subtler than the curvature sweep (both nonzero, changed=true)", "accent dot is swallowed early in deep-suck frames nearest the default corner — staggered collapse, acceptable per advocate"],
+      "evidence": ["genie-suck/after/idle.png", "genie-suck/after/play-1.png", "genie-suck/after/play-2.png", "genie-suck/after/play-3.png", "genie-suck/after/control-curvature-low.png", "genie-suck/after/control-curvature-high.png", "genie-suck/after/control-duration-low.png", "genie-suck/after/control-duration-high.png", "genie-suck/after/metrics.json"]
+    }
+  },
+  "summary": "The single shared r2 'featureless tan/brown placeholder' defect is decisively fixed on fresh webgpu evidence (0 console/network errors). Both tiles now declare the 'card' subject and the card's full look (brass header bar, grey rows, accent dot, rounded panel) rides the effect at idle, mid-animation, and engaged control states; the r2-passed choreography is preserved on both. No new mustFix; two minor taste flags per tile. W1 MORPH wave is now 9/9 ship-quality.",
+  "antiRubberStamp": "verdict cites specific frame filenames + per-phase chrome observations + metrics deltas for both tiles; ground-truthed against swap-flip-morph/after card sibling"
+}
