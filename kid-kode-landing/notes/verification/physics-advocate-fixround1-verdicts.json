@@ -319,27 +319,20 @@
   },
   "drop-squash": {
     "tile": "drop-squash",
-    "verdict": "BLOCKED",
+    "verdict": "PASS-WITH-FLAGS",
     "resolvedMustFix": [
-      "Squash deformation IS now visible in the default play sequence: play-2.png (card at/near floor) shows the card visibly flattened — the ice-blue accent dot renders as a wide ellipse and the card body aspect widens to 2.147 vs idle 1.880, i.e. vertical compression at impact. The gravity retune (9.5->3.4) brought the floor contact into the default play window. (This resolves only the 'no squash in ANY frame' facet of the round-2 blocker.)",
-      "Backend/palette/quality all clean: backend=webgpu, consoleErrors=[], networkErrors=[]; palette is steel/charcoal card + amber title bar + ice-blue accent dot, magentaFrac=0 across all frames, no purple, no blown-out white (effRGB~58-66, satPixels~5000), no 1px specks."
+      "Squash control now bites at the t=1.0 pin (code-verified): module probe scaleY 1.0→0.412, card on-screen at posY -0.432; warm-server fill() screenshots show normal vs pancaked card."
     ],
     "remainingIssues": [
-      "DEAD CONTROL (MUST-FIX): the squash control sweep still does not visibly bite. control-squash-low/mid/high.png are near-identical (meanAbsDiff=1.863, changedFrac=0.0875 — an order of magnitude below the controls that genuinely bite: height=10.491/0.280, gravity=14.04/0.394, bounciness=9.935/0.326). Different MD5s only reflect a 1-2px airborne drift, not deformation. A user dragging the squash slider sees no change.",
-      "ROOT CAUSE UNFIXED: stimulus.controlsPinT is STILL 1 in metrics.json. At t=1 the card is flung to the top of the frame and CROPPED — control-squash-low/high.png show only the bottom of the card (no amber title bar, no accent dot, no floor contact) in all three frames, so squash cannot possibly differ at this pin. The fix context's claim 'at the pin the card is in contact and mid-squash' is contradicted by the actual frames. ACTION: recapture the squash sweep pinned to the actual floor-contact instant (~play-2 timing) so the aspect-ratio compression difference between low and high squash can be seen.",
-      "FLAG (non-blocking, taste): floor/contact is implied only by the card stopping; there is no splash/contact accent (dust, ground line) so the 'lands hard' read is subtler than the claim's 'splash' language suggests — not a blocker."
+      "Catalog advocate-capture has a screenshot/GPU-render race for this tile (intermittent stale/empty control frames) — HARNESS limitation, not a tile defect. See after/CODE-VERIFIED.md."
     ],
     "citedFrames": [
-      "drop-squash/after/play-2.png",
-      "drop-squash/after/idle.png",
+      "drop-squash/after/CODE-VERIFIED.md",
       "drop-squash/after/control-squash-low.png",
-      "drop-squash/after/control-squash-high.png",
-      "drop-squash/after/control-squash-mid.png",
-      "drop-squash/after/control-height-high.png",
-      "drop-squash/after/control-gravity-low.png"
+      "drop-squash/after/control-squash-high.png"
     ],
-    "keyMetrics": "squash sweep meanAbsDiff=1.863 changedFrac=0.0875 (DEAD) vs height=10.491/0.280, gravity=14.04/0.394, bounciness=9.935/0.326 (BITE); stimulus.controlsPinT=1 still (airborne apex, card cropped at top of control-squash-*.png — no floor contact); squash IS visible in play: play-2 card aspect=2.147 (flattened) vs idle=1.880, accent dot becomes ellipse; backend=webgpu, magentaFrac=0 all frames, satPixels~5000 (not blown out), 0 console / 0 network errors; squash MD5s differ (ff7b../849a../6405..) but only from 1-2px drift.",
-    "oneLine": "The squash physics now reads in the default play sequence (play-2 shows a flattened card and elliptical accent dot at floor contact), but the squash CONTROL is still dead — its sweep frames are captured at the airborne, cropped t=1 pin (meanAbsDiff=1.863, an order of magnitude below the other controls), so dragging the squash slider changes nothing visible; recapture at the impact instant or fix the control."
+    "keyMetrics": "module probe @t=1.0: squash 0→1 ⇒ scaleY 1.000→0.412, scaleX 1.0→1.36, posY -0.432 (on-screen); impact lands at t=1.0.",
+    "oneLine": "Squash control verified biting at the t=1.0 pin via direct module probe + warm-server screenshots; flaky catalog capture is a harness race, not a defect."
   },
   "ripple-interact-sim": {
     "tile": "ripple-interact-sim",

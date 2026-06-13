@@ -1,23 +1,14 @@
 {
-  "startedAt": "2026-06-13T13:09:03.124Z",
-  "updatedAt": "2026-06-13T13:10:44.482Z",
+  "startedAt": "2026-06-13T13:26:17.103Z",
+  "updatedAt": "2026-06-13T13:27:16.320Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 3,
+      "total": 2,
       "backend": "webgl",
-      "startedAt": "2026-06-13T13:09:12.268Z",
-      "finishedAt": "2026-06-13T13:10:34.602Z",
-      "peakConcurrency": 8,
-      "deviceLostTotal": 0
-    },
-    "glass": {
-      "tier": "glass",
-      "total": 1,
-      "backend": "webgpu",
-      "startedAt": "2026-06-13T13:10:35.066Z",
-      "finishedAt": "2026-06-13T13:10:44.482Z",
-      "peakConcurrency": 2,
+      "startedAt": "2026-06-13T13:26:26.330Z",
+      "finishedAt": "2026-06-13T13:27:16.319Z",
+      "peakConcurrency": 5,
       "deviceLostTotal": 0
     }
   },
@@ -32,7 +23,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T13:09:20.600Z",
+      "at": "2026-06-13T13:26:34.639Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -46,36 +37,8 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T13:09:31.197Z",
+      "at": "2026-06-13T13:26:45.342Z",
       "backend": "webgl",
-      "consoleErrors": []
-    },
-    "molten-drip-sim": {
-      "name": "molten-drip-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T13:09:41.014Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pour-splash-sim": {
-      "name": "pour-splash-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T13:10:38.714Z",
-      "backend": "webgpu",
       "consoleErrors": []
     }
   },
@@ -85,8 +48,8 @@
     "names": []
   },
   "summary": {
-    "total": 4,
-    "pass": 4,
+    "total": 2,
+    "pass": 2,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -95,18 +58,15 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 101,
+    "wallClockSec": 59,
     "peak": {
-      "std": 8,
-      "glass": 2
+      "std": 5
     },
     "backend": {
-      "std": "webgl",
-      "glass": "webgpu"
+      "std": "webgl"
     },
     "deviceLost": {
-      "std": 0,
-      "glass": 0
+      "std": 0
     }
   }
 }

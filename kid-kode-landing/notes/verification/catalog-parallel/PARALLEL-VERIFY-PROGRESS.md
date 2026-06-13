@@ -4683,3 +4683,9 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] glass/pour-splash-sim (particles) render=true play=true ctrl=true
 
 ### Run end 2026-06-13T13:10:44.482Z — pass 4/4 (0 recovered on quiet retry), fail 0, missing 0, wall 101s
+
+## Resumed 2026-06-13T13:26:17.119Z (std 2, glass 0 remaining)
+- [PASS] std/drop-squash (transform) render=true play=true ctrl=true
+- [PASS] std/jelly-collide-sim (wave) render=true play=true ctrl=true
+
+### Run end 2026-06-13T13:27:16.320Z — pass 2/2 (0 recovered on quiet retry), fail 0, missing 0, wall 59s

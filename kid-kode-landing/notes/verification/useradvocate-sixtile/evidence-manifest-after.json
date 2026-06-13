@@ -1,19 +1,19 @@
 {
-  "startedAt": "2026-06-13T13:12:58.383Z",
+  "startedAt": "2026-06-13T13:53:28.119Z",
   "state": "after",
-  "port": 4843,
+  "port": 4852,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "molten-drip-sim",
+      "tile": "drop-squash",
       "state": "after",
-      "dir": "molten-drip-sim/after",
+      "dir": "drop-squash/after",
       "claim": {
-        "name": "molten-drip-sim",
-        "label": "Viscosity",
-        "description": "A hanging blob of viscous molten metal stretches under gravity, necks, and drips off a glowing droplet that falls before the column reforms — a real viscous CPU sim, not an easing curve.",
-        "category": "particles"
+        "name": "drop-squash",
+        "label": "Drop Height",
+        "description": "A card falls under real gravity, bounces with restitution, and squashes on each impact in proportion to its landing speed before settling — physics, not an easing curve.",
+        "category": "transform"
       },
       "controls": 4,
       "notes": []
