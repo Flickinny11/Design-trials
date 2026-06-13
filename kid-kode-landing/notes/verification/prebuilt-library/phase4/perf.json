@@ -1,0 +1,31 @@
+{
+  "desktop": {
+    "backend": "webgpu",
+    "openFlyoutMs": 58,
+    "openBrowserMs": 162,
+    "frame": {
+      "avgDt": 16.61,
+      "p95Dt": 18.6,
+      "approxFps": 60.2,
+      "samples": 90
+    },
+    "hoverPlayMs": 54,
+    "placeCommitMs": 5049,
+    "placedAdded": 0
+  },
+  "mobile": {
+    "backend": "webgpu",
+    "openFlyoutMs": 61,
+    "openBrowserMs": 420,
+    "frame": {
+      "avgDt": 16.48,
+      "p95Dt": 18,
+      "approxFps": 60.7,
+      "samples": 90
+    },
+    "hoverPlayMs": 54,
+    "placeCommitMs": 350,
+    "placedAdded": 6
+  },
+  "notes": []
+}

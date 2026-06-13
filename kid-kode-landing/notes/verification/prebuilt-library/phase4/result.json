@@ -10,28 +10,34 @@
     {
       "id": "carousel-coverflow-depth",
       "before": 22,
-      "total": 22,
-      "groupId": null,
-      "members": 0,
-      "hubId": null,
-      "added": 0
+      "total": 30,
+      "groupId": "grp-9f8fbbef-e522-4068-a94e-9bc23634fbc5",
+      "members": 8,
+      "hubId": "s1-arrival",
+      "viewMode": "canvas",
+      "activeHubId": "s1-arrival",
+      "added": 8
     },
     {
       "id": "slider-morph-through",
-      "before": 22,
-      "total": 30,
-      "groupId": "grp-6818f77f-aff7-4ef2-b34a-ff58f6ed6f15",
+      "before": 30,
+      "total": 38,
+      "groupId": "grp-bbb01fe1-4aaf-495e-8ca8-f4c61d97e485",
       "members": 8,
-      "hubId": "s2-movement",
+      "hubId": "s1-arrival",
+      "viewMode": "canvas",
+      "activeHubId": "s1-arrival",
       "added": 8
     },
     {
       "id": "pricing-pillars-3d",
-      "before": 30,
-      "total": 36,
-      "groupId": "grp-a0abbf91-5607-443d-bfa2-7eb44d783083",
+      "before": 38,
+      "total": 44,
+      "groupId": "grp-202a0556-1a7a-4d3e-aa2c-dafc7b938697",
       "members": 6,
-      "hubId": "s2-movement",
+      "hubId": "s1-arrival",
+      "viewMode": "canvas",
+      "activeHubId": "s1-arrival",
       "added": 6
     }
   ],
@@ -85,12 +91,12 @@
     {
       "id": "pricing-pillars-3d",
       "frozen": {
-        "meanLuma": 16.5,
-        "nonEmptyFrac": 0.227,
+        "meanLuma": 17.3,
+        "nonEmptyFrac": 0.29,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.81,
+      "motionDelta": 2.75,
       "rendersContent": true,
       "animates": true
     },
@@ -98,11 +104,11 @@
       "id": "banner-ticker-3d",
       "frozen": {
         "meanLuma": 18.3,
-        "nonEmptyFrac": 0.266,
+        "nonEmptyFrac": 0.245,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.51,
+      "motionDelta": 5.07,
       "rendersContent": true,
       "animates": true
     },
@@ -114,31 +120,31 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.15,
+      "motionDelta": 4.36,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-coverflow-depth",
       "frozen": {
-        "meanLuma": 19.7,
-        "nonEmptyFrac": 0.296,
+        "meanLuma": 19.8,
+        "nonEmptyFrac": 0.297,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.63,
+      "motionDelta": 2.82,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-cylinder-billboard",
       "frozen": {
-        "meanLuma": 18.5,
-        "nonEmptyFrac": 0.256,
+        "meanLuma": 20,
+        "nonEmptyFrac": 0.278,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.13,
+      "motionDelta": 3.52,
       "rendersContent": true,
       "animates": true
     },
@@ -150,31 +156,31 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.1,
+      "motionDelta": 3.29,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "featuregrid-depth-pop",
       "frozen": {
-        "meanLuma": 12.4,
-        "nonEmptyFrac": 0.159,
+        "meanLuma": 24.6,
+        "nonEmptyFrac": 0.356,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.06,
+      "motionDelta": 4.85,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-depth-wall",
       "frozen": {
-        "meanLuma": 22.8,
-        "nonEmptyFrac": 0.377,
+        "meanLuma": 22.9,
+        "nonEmptyFrac": 0.379,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 6.56,
+      "motionDelta": 6.76,
       "rendersContent": true,
       "animates": true
     },
@@ -182,83 +188,83 @@
       "id": "slider-distortion-fade",
       "frozen": {
         "meanLuma": 25.8,
-        "nonEmptyFrac": 0.363,
+        "nonEmptyFrac": 0.362,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.46,
+      "motionDelta": 4.67,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "showcase-exploded",
       "frozen": {
-        "meanLuma": 15.4,
-        "nonEmptyFrac": 0.209,
+        "meanLuma": 15.7,
+        "nonEmptyFrac": 0.215,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.55,
+      "motionDelta": 2.86,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cardstack-fan-spread",
       "frozen": {
-        "meanLuma": 15.3,
-        "nonEmptyFrac": 0.297,
+        "meanLuma": 20,
+        "nonEmptyFrac": 0.275,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.1,
+      "motionDelta": 3.08,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-float-glass",
       "frozen": {
-        "meanLuma": 20.9,
+        "meanLuma": 20.8,
         "nonEmptyFrac": 0.295,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.2,
+      "motionDelta": 3.41,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-fortune-spinner",
       "frozen": {
-        "meanLuma": 18.8,
+        "meanLuma": 18.7,
         "nonEmptyFrac": 0.331,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.45,
+      "motionDelta": 3.65,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cta-glass-banner",
       "frozen": {
-        "meanLuma": 20.9,
-        "nonEmptyFrac": 0.328,
+        "meanLuma": 20.7,
+        "nonEmptyFrac": 0.332,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.48,
+      "motionDelta": 1.02,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-glass-dock",
       "frozen": {
-        "meanLuma": 23.7,
-        "nonEmptyFrac": 0.266,
+        "meanLuma": 19.2,
+        "nonEmptyFrac": 0.255,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.45,
+      "motionDelta": 3.97,
       "rendersContent": true,
       "animates": true
     },
@@ -270,43 +276,43 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.45,
+      "motionDelta": 2.67,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-glass-prism",
       "frozen": {
-        "meanLuma": 46.7,
-        "nonEmptyFrac": 0.474,
+        "meanLuma": 45.8,
+        "nonEmptyFrac": 0.46,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.08,
+      "motionDelta": 3.88,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "banner-light-sweep",
       "frozen": {
-        "meanLuma": 23.6,
+        "meanLuma": 23.7,
         "nonEmptyFrac": 0.44,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.1,
+      "motionDelta": 3.34,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-liquid-metal",
       "frozen": {
-        "meanLuma": 16.9,
-        "nonEmptyFrac": 0.215,
+        "meanLuma": 16,
+        "nonEmptyFrac": 0.213,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.63,
+      "motionDelta": 3.57,
       "rendersContent": true,
       "animates": true
     },
@@ -314,59 +320,59 @@
       "id": "cta-magnetic-pedestal",
       "frozen": {
         "meanLuma": 32.7,
-        "nonEmptyFrac": 0.557,
+        "nonEmptyFrac": 0.528,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 0.35,
+      "motionDelta": 4.87,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "gallery-masonry-reveal",
       "frozen": {
-        "meanLuma": 12.4,
-        "nonEmptyFrac": 0.16,
+        "meanLuma": 20.5,
+        "nonEmptyFrac": 0.313,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 1.91,
+      "motionDelta": 2.95,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-morph-through",
       "frozen": {
-        "meanLuma": 13.2,
-        "nonEmptyFrac": 0.204,
+        "meanLuma": 26.4,
+        "nonEmptyFrac": 0.434,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 1.42,
+      "motionDelta": 2.92,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "stats-odometer",
       "frozen": {
-        "meanLuma": 18.8,
-        "nonEmptyFrac": 0.292,
+        "meanLuma": 19.4,
+        "nonEmptyFrac": 0.299,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.66,
+      "motionDelta": 2.98,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-orbit-quotes",
       "frozen": {
-        "meanLuma": 30.9,
+        "meanLuma": 30.8,
         "nonEmptyFrac": 0.595,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 1.38,
+      "motionDelta": 3.44,
       "rendersContent": true,
       "animates": true
     },
@@ -378,67 +384,67 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.55,
+      "motionDelta": 2.75,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-orbital-ring",
       "frozen": {
-        "meanLuma": 16.5,
-        "nonEmptyFrac": 0.21,
+        "meanLuma": 17.2,
+        "nonEmptyFrac": 0.216,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 0.72,
+      "motionDelta": 5.37,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-particle-emerge",
       "frozen": {
-        "meanLuma": 25.1,
-        "nonEmptyFrac": 0.575,
+        "meanLuma": 25.2,
+        "nonEmptyFrac": 0.574,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.15,
+      "motionDelta": 4.28,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-photoreal-monolith",
       "frozen": {
-        "meanLuma": 23.7,
-        "nonEmptyFrac": 0.511,
+        "meanLuma": 41.5,
+        "nonEmptyFrac": 0.634,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 5.2,
+      "motionDelta": 6.77,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-photoreal-ring",
       "frozen": {
-        "meanLuma": 25.2,
-        "nonEmptyFrac": 0.332,
+        "meanLuma": 27.8,
+        "nonEmptyFrac": 0.347,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.06,
+      "motionDelta": 3.13,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-radial-menu",
       "frozen": {
-        "meanLuma": 21.4,
-        "nonEmptyFrac": 0.287,
+        "meanLuma": 21.1,
+        "nonEmptyFrac": 0.288,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.67,
+      "motionDelta": 3.85,
       "rendersContent": true,
       "animates": true
     },
@@ -450,7 +456,7 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.85,
+      "motionDelta": 5.03,
       "rendersContent": true,
       "animates": true
     },
@@ -462,19 +468,19 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 0,
+      "motionDelta": 0.04,
       "rendersContent": true,
       "animates": false
     },
     {
       "id": "banner-silk-flag",
       "frozen": {
-        "meanLuma": 17.4,
-        "nonEmptyFrac": 0.217,
+        "meanLuma": 18.6,
+        "nonEmptyFrac": 0.221,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.33,
+      "motionDelta": 3.31,
       "rendersContent": true,
       "animates": true
     },
@@ -486,7 +492,7 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.06,
+      "motionDelta": 3.27,
       "rendersContent": true,
       "animates": true
     },
@@ -498,7 +504,7 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.28,
+      "motionDelta": 2.27,
       "rendersContent": true,
       "animates": true
     },
@@ -510,7 +516,7 @@
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.04,
+      "motionDelta": 3.26,
       "rendersContent": true,
       "animates": true
     }
@@ -568,7 +574,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.81,
+      "motionDelta": 2.72,
       "rendersContent": true,
       "animates": true
     },
@@ -580,7 +586,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.8,
+      "motionDelta": 0.69,
       "rendersContent": true,
       "animates": true
     },
@@ -592,7 +598,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.14,
+      "motionDelta": 1.21,
       "rendersContent": true,
       "animates": true
     },
@@ -600,13 +606,13 @@
       "id": "carousel-coverflow-depth",
       "frozen": {
         "meanLuma": 19.9,
-        "nonEmptyFrac": 0.298,
+        "nonEmptyFrac": 0.299,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.55,
+      "motionDelta": 0.29,
       "rendersContent": true,
-      "animates": true
+      "animates": false
     },
     {
       "id": "carousel-cylinder-billboard",
@@ -628,21 +634,21 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.16,
       "rendersContent": true,
       "animates": false
     },
     {
       "id": "featuregrid-depth-pop",
       "frozen": {
-        "meanLuma": 12.7,
-        "nonEmptyFrac": 0.162,
+        "meanLuma": 24.9,
+        "nonEmptyFrac": 0.364,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 2.15,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "gallery-depth-wall",
@@ -652,7 +658,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.16,
       "rendersContent": true,
       "animates": false
     },
@@ -664,19 +670,19 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.55,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "showcase-exploded",
       "frozen": {
-        "meanLuma": 15.6,
-        "nonEmptyFrac": 0.213,
+        "meanLuma": 15.9,
+        "nonEmptyFrac": 0.218,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.55,
+      "motionDelta": 1.49,
       "rendersContent": true,
       "animates": true
     },
@@ -700,7 +706,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.28,
+      "motionDelta": 2.33,
       "rendersContent": true,
       "animates": true
     },
@@ -712,7 +718,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 6.47,
+      "motionDelta": 6.42,
       "rendersContent": true,
       "animates": true
     },
@@ -720,25 +726,25 @@
       "id": "cta-glass-banner",
       "frozen": {
         "meanLuma": 20.9,
-        "nonEmptyFrac": 0.332,
+        "nonEmptyFrac": 0.336,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.28,
+      "motionDelta": 1.23,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-glass-dock",
       "frozen": {
-        "meanLuma": 23.9,
-        "nonEmptyFrac": 0.273,
+        "meanLuma": 19.4,
+        "nonEmptyFrac": 0.26,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.89,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "pricing-glass-tiers",
@@ -748,7 +754,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.16,
       "rendersContent": true,
       "animates": false
     },
@@ -760,7 +766,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.32,
+      "motionDelta": 0.26,
       "rendersContent": true,
       "animates": false
     },
@@ -772,19 +778,19 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.14,
+      "motionDelta": 0.15,
       "rendersContent": true,
       "animates": false
     },
     {
       "id": "hero-liquid-metal",
       "frozen": {
-        "meanLuma": 17.2,
-        "nonEmptyFrac": 0.221,
+        "meanLuma": 15.3,
+        "nonEmptyFrac": 0.217,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.38,
+      "motionDelta": 2.36,
       "rendersContent": true,
       "animates": true
     },
@@ -796,43 +802,43 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.96,
+      "motionDelta": 0.97,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-masonry-reveal",
       "frozen": {
-        "meanLuma": 12.7,
-        "nonEmptyFrac": 0.165,
+        "meanLuma": 20.9,
+        "nonEmptyFrac": 0.319,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.78,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "slider-morph-through",
       "frozen": {
-        "meanLuma": 15.4,
-        "nonEmptyFrac": 0.212,
+        "meanLuma": 26.6,
+        "nonEmptyFrac": 0.434,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 0.16,
       "rendersContent": true,
       "animates": false
     },
     {
       "id": "stats-odometer",
       "frozen": {
-        "meanLuma": 19.1,
-        "nonEmptyFrac": 0.297,
+        "meanLuma": 18.9,
+        "nonEmptyFrac": 0.302,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.62,
+      "motionDelta": 3.11,
       "rendersContent": true,
       "animates": true
     },
@@ -844,7 +850,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.58,
+      "motionDelta": 1.6,
       "rendersContent": true,
       "animates": true
     },
@@ -856,7 +862,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.32,
+      "motionDelta": 2.25,
       "rendersContent": true,
       "animates": true
     },
@@ -875,24 +881,24 @@
     {
       "id": "hero-particle-emerge",
       "frozen": {
-        "meanLuma": 23.1,
-        "nonEmptyFrac": 0.567,
+        "meanLuma": 25.6,
+        "nonEmptyFrac": 0.581,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.58,
+      "motionDelta": 0.57,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-photoreal-monolith",
       "frozen": {
-        "meanLuma": 26.3,
-        "nonEmptyFrac": 0.528,
+        "meanLuma": 39.3,
+        "nonEmptyFrac": 0.622,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.62,
+      "motionDelta": 2.65,
       "rendersContent": true,
       "animates": true
     },
@@ -904,7 +910,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 8.74,
+      "motionDelta": 8.82,
       "rendersContent": true,
       "animates": true
     },
@@ -940,19 +946,19 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.16,
+      "motionDelta": 0.17,
       "rendersContent": true,
       "animates": false
     },
     {
       "id": "banner-silk-flag",
       "frozen": {
-        "meanLuma": 18,
-        "nonEmptyFrac": 0.225,
+        "meanLuma": 18.6,
+        "nonEmptyFrac": 0.228,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.08,
+      "motionDelta": 3.38,
       "rendersContent": true,
       "animates": true
     },
@@ -964,7 +970,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.17,
+      "motionDelta": 0.18,
       "rendersContent": true,
       "animates": false
     },
@@ -988,7 +994,7 @@
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.2,
+      "motionDelta": 0.21,
       "rendersContent": true,
       "animates": false
     }
