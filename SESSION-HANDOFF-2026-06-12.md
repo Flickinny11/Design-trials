@@ -77,3 +77,24 @@ RUN IN FLIGHT: PRIMITIVES-EXPANSION (~60-100 new primitives from DESIGN-REFERENC
 ## REASSURANCE
 Everything real is ON DISK (git + ledgers + reports + prompts + this doc). Chat context is disposable. The pattern has
 survived 3 handoffs, 4 limit-kills, 1 model migration, and 2 of its own bugs — each made the system stronger.
+
+---
+## UPDATE 2026-06-13 ~10:30am CT (SUPERSEDES "LIVE STATE" + "IMMEDIATE NEXT ACTION" above)
+**PROTOTYPE BUILD RUNWAY COMPLETE — both queued runs finished UNATTENDED overnight via sentinel-v2 + chain-v2.**
+- Sentinel log proof: expansion auto-resumed 23:06 + 23:56; CHAIN auto-fired Physics 05:20; physics auto-resumed 06:53.
+  No human input from ~6pm to ~10am. The autonomy infra worked end-to-end through ~4 session limits.
+- PRIMITIVES-EXPANSION: COMPLETE. Catalog 312 → 370 (58 new across morph/scroll-story/distortion/cursor-physics/
+  particles + 5 P0 fixes). 1,637 animatable tests green, 0 regression. Honest deferral: `pointer-loupe` (optical loupe
+  needs a render capability the per-element pipeline doesn't expose — code parked, not shipped broken).
+- PHYSICS/FLUID PACK: COMPLETE. +36 sim primitives (gravity/rigid, springs/soft, fluids, force-fields), 36/36
+  SHIP-or-PASS, 0 BLOCKED. STACK: hand-rolled deterministic fixed-dt symplectic-Euler integrators, NO new dependency
+  (seeded, reset-and-replay backward seek → Preview-consistent), tier-gated. Honest taste/polish flags listed in
+  notes/PHYSICS-FLUID-REPORT.md §6 (soft bead edges, bright-clip crowns, jelly saturation — real physics, cosmetic).
+- Registry now ~406 primitives. Tree CLEAN, all committed, 0 leftover agents/sentinels/chains. Monitor independently
+  verified pour-splash + charged-particles frames (real, honestly-flagged).
+**IMMEDIATE NEXT (new session):** the prototype CANVAS EDITOR is functionally COMPLETE + premium. Remaining horizons
+(gate with Logan, no auto-run queued): (1) §18 UNMET product features — bespoke animation author, cloud generation
+lanes, prebuilt-element library, a11y tree, Rive wiring; (2) polish passes on the honest cosmetic flags above +
+violet-orb retint question; (3) the engine/harness (separate concern, not this repo); (4) AI-relighting as a
+build-time harness item; (5) REMIND LOGAN to rotate FAL_KEY. Nothing is mid-flight; nothing auto-fires. Await Logan's
+direction on which horizon is next.
