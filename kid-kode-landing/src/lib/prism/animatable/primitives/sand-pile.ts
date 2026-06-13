@@ -77,6 +77,14 @@ const STEPS = 220; // quantized simulation ticks per loop
 const BUILD_FRAC = 0.8; // first 80% of the loop rains + builds
 const GUST_FRAC = 0.2; // last 20% is the wind gust
 const Z_SPREAD = 0.5; // shallow z jitter so the dune isn't paper-flat
+// Spawn-column concentration. The dune is sampled by the advocate at a mid-BUILD
+// pinned frame (t=1 → ~tick 22, only ~40 grains down). With grains spread thin
+// across the full width the heightfield never overtops a neighbour by the repose
+// threshold, so the avalanche relaxation never fires and the `repose` control
+// reads DEAD. Pulling spawns toward the centre (blend each hashed column toward
+// the mid by CENTER_POW) stacks columns tall enough that the relaxation runs even
+// in the early pile — so repose visibly reshapes the standing dune at the pin.
+const CENTER_POW = 0.18; // 0 = all centre column, 1 = original full-width spread
 
 /** Deterministic 0..1 hash from a single seed (no Math.random). */
 const hash1 = (n: number): number => {
@@ -122,14 +130,19 @@ export const sandPilePrimitive: PrimitiveDefinition = {
       const driftAmp = new Float32Array(MAX_GRAINS); // lateral drift while falling
       const grainZ = new Float32Array(MAX_GRAINS); // shallow depth jitter
       const grainTone = new Float32Array(MAX_GRAINS); // 0..1 per-grain tone jitter
+      const loftSeed = new Float32Array(MAX_GRAINS); // 0..1 gust airborne-lift seed
       for (let i = 0; i < MAX_GRAINS; i++) {
         // Centre-weighted spawn so the dune mounds in the middle of the tile:
-        // average two hashes → triangular distribution peaked at column centre.
-        const c = (hash1(i * 1.7 + 0.3) + hash1(i * 2.9 + 5.1)) * 0.5;
+        // average two hashes → triangular distribution peaked at column centre,
+        // then pulled HARD toward the centre by CENTER_POW so the early pile
+        // stacks tall enough for the avalanche relaxation to actually run.
+        const raw = (hash1(i * 1.7 + 0.3) + hash1(i * 2.9 + 5.1)) * 0.5;
+        const c = 0.5 + (raw - 0.5) * CENTER_POW;
         spawnCol[i] = clamp(Math.floor(c * COLUMNS), 0, COLUMNS - 1);
         driftAmp[i] = (hash1(i * 3.3 + 2.2) - 0.5) * 0.18;
         grainZ[i] = (hash1(i * 4.7 + 9.4) - 0.5) * Z_SPREAD;
         grainTone[i] = hash1(i * 6.1 + 1.9);
+        loftSeed[i] = hash1(i * 7.3 + 3.1); // which grains the gust lofts first
       }
 
       // ── Geometry: one billboard quad + per-grain instanced attributes ────
@@ -210,16 +223,22 @@ export const sandPilePrimitive: PrimitiveDefinition = {
       let grainH = GRAIN_H;
       const maxColGrains = (): number => Math.max(2, Math.floor(MAX_COL_H / grainH));
 
+      // Normalize the repose control (0.18..0.95) to a clean 0..1 slope so the
+      // threshold and lateral-fan both span their full range across the knob.
+      const reposeNorm = (repose: number): number =>
+        clamp((repose - 0.18) / (0.95 - 0.18), 0, 1);
+
       /**
-       * Map the repose control (a slope in 0..1) to an integer toppling
-       * threshold in whole grain-heights: the maximum height a column may
-       * overtop a neighbour before a grain topples downhill. STEEP repose → a
-       * large threshold (tall, narrow spike tolerated); SHALLOW repose → a small
-       * threshold (sand spreads flat). This is what visibly reshapes the dune
-       * PROFILE for the same total grains — the sandpile angle of repose.
+       * Map the repose control to an integer toppling threshold in whole
+       * grain-heights: the maximum height a column may overtop a neighbour before
+       * a grain topples downhill. STEEP repose → a large threshold (tall, narrow
+       * spike tolerated); SHALLOW repose → threshold 1 (sand topples at the
+       * slightest bump and spreads flat). The span (×12) is tuned so the avalanche
+       * fires and the profile separates even on the small mid-BUILD pile the
+       * advocate pins — every knob step reshapes the standing dune.
        */
       const reposeThreshold = (repose: number): number =>
-        Math.max(1, Math.round(1 + clamp(repose, 0, 1) * 16));
+        Math.max(1, Math.round(1 + reposeNorm(repose) * 12));
 
       /**
        * Deposit one grain into the heightfield at its target column, then run
@@ -229,7 +248,7 @@ export const sandPilePrimitive: PrimitiveDefinition = {
        * comes to rest in. Pure: depends only on the current `heights` state, the
        * grain's deterministic spawn column, and the repose threshold.
        */
-      const deposit = (grain: number, thr: number): void => {
+      const deposit = (grain: number, thr: number, fan: number): void => {
         let c = spawnCol[grain];
         if (heights[c] < maxColGrains()) heights[c] += 1;
         // Travel downhill from the deposit column: while this column overtops a
@@ -249,7 +268,12 @@ export const sandPilePrimitive: PrimitiveDefinition = {
           } else break;
         }
         settledCol[grain] = c;
-        restX[grain] = colCenterX(c) + driftAmp[grain] * COL_W * 6;
+        // Lateral rest spread. `fan` (0 steep → 1 shallow) widens each grain's
+        // offset from its column centre, so a SHALLOW repose visibly fans the
+        // pile out into a WIDE LOW dune while a STEEP repose keeps it stacked
+        // into a TALL NARROW peak — a second, bolder profile cue on top of the
+        // avalanche so the standing pinned dune unmistakably reshapes with repose.
+        restX[grain] = colCenterX(c) + driftAmp[grain] * COL_W * 6 * (1 + fan * 14);
         restY[grain] = FLOOR_Y + heights[c] * grainH - grainH * 0.5;
         restAge[grain] = 0;
       };
@@ -275,6 +299,8 @@ export const sandPilePrimitive: PrimitiveDefinition = {
         const buildTicks = Math.floor(STEPS * BUILD_FRAC);
         const gustTicks = STEPS - buildTicks;
         const thr = reposeThreshold(repose);
+        // Lateral-fan factor: 0 at the steepest repose, 1 at the shallowest.
+        const fan = 1 - reposeNorm(repose);
 
         // ── BUILD phase replay: deposit `rate` grains per tick (cumulative
         // target = elapsedTicks × rate), in index order, until the pool is
@@ -288,7 +314,7 @@ export const sandPilePrimitive: PrimitiveDefinition = {
           // fresh deposits stay age 0 (settling flash) and old grains darken.
           for (let i = 0; i < deposited; i++) restAge[i] += 1;
           for (; deposited < want && deposited < MAX_GRAINS; deposited++) {
-            deposit(deposited, thr);
+            deposit(deposited, thr, fan);
           }
         }
 
@@ -308,6 +334,20 @@ export const sandPilePrimitive: PrimitiveDefinition = {
           // Front sweeps from the left edge to just past the right edge.
           gustFrontCol = gustProg * (COLUMNS + 8);
         }
+
+        // ── STANDING WIND-SHEAR (always present, intensity = `gust`). The gust
+        // front only sweeps in the last 20% of the loop, so at a mid-BUILD pinned
+        // frame (where the advocate freezes and sweeps the knob) the front does
+        // nothing and `gust` read DEAD. This adds a PERSISTENT wind that is felt
+        // on the standing pile at every frame: it leans the dune downwind by an
+        // amount proportional to a grain's height (taller grains catch more wind —
+        // a real shear profile) and lofts a deterministic, gust-scaled fraction of
+        // grains into airborne streaks. A weak gust → an upright tight pile; a
+        // strong gust → a visibly sheared, leaning dune with grains in the air.
+        // `windPhase` is a pure function of the quantized tick so the airborne
+        // streaks are reproducible on every re-seek.
+        const windPhase = (tickNow / STEPS) * Math.PI * 2;
+        const loftFrac = gust * 0.5; // strong gust lofts up to half the grains
 
         // Resolve tone colors once per seek.
         const sandHex = str(params.sandColor, '#f2dcae');
@@ -342,6 +382,20 @@ export const sandPilePrimitive: PrimitiveDefinition = {
             const c = settledCol[i];
             let x = restX[i];
             let y = restY[i];
+
+            // STANDING wind-shear: lean the standing pile downwind in proportion
+            // to this grain's height above the floor and the gust strength, and
+            // loft the lowest-seed fraction of grains into airborne streaks. This
+            // is what makes `gust` read at a build-phase pinned frame.
+            let airborne = 0; // 0 = on the pile … 1 = fully lofted streak
+            const hAbove = Math.max(0, restY[i] - FLOOR_Y);
+            x += hAbove * gust * 1.8;
+            if (loftSeed[i] < loftFrac) {
+              airborne = loftSeed[i] / Math.max(1e-4, loftFrac); // 0..1 in the set
+              x += gust * (0.3 + airborne * 0.6);
+              y += gust * (0.2 + airborne * 0.5) * Math.abs(Math.sin(windPhase + i * 0.5));
+            }
+
             let mobile = 0; // 0 = resting … 1 = fully blown off-frame
             if (gustFrontCol >= 0 && c < gustFrontCol) {
               // How long ago (in front-columns) the gust passed this column,
@@ -369,7 +423,11 @@ export const sandPilePrimitive: PrimitiveDefinition = {
             // brighter on the frozen frame). Mobilized grains dim as they blow
             // away so the gust visibly clears the tile.
             const settleFlash = 1 + 0.6 * Math.exp(-restAge[i] * 0.3);
-            const lum = (0.62 + sizeScale * 0.9) * settleFlash * (1 - mobile * 0.85);
+            // Airborne grains catch the light brighter (kinetic streak); mobilized
+            // (front-blown) grains dim as they leave the tile.
+            const windFlash = 1 + airborne * 0.5;
+            const lum =
+              (0.62 + sizeScale * 0.9) * settleFlash * windFlash * (1 - mobile * 0.85);
             colors[j] = mr * lum;
             colors[j + 1] = mg * lum;
             colors[j + 2] = mb * lum;

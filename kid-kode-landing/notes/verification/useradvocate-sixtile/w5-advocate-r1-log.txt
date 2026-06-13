@@ -1,0 +1,670 @@
+{
+  "summary": "Fresh-context user-advocate review of 11 new W5 particles/generative primitives",
+  "agentCount": 11,
+  "logs": [
+    "SHIP 8/11: constellation-net, pointer-spark-trail, flow-ribbon, sdf-metablob, hyperspace-warp, orbit-trails, bokeh-drift, comet-orbit",
+    "BLOCKED: click-burst, sand-pile, image-to-particles"
+  ],
+  "result": {
+    "ship": [
+      "constellation-net",
+      "pointer-spark-trail",
+      "flow-ribbon",
+      "sdf-metablob",
+      "hyperspace-warp",
+      "orbit-trails",
+      "bokeh-drift",
+      "comet-orbit"
+    ],
+    "blocked": [
+      "click-burst",
+      "sand-pile",
+      "image-to-particles"
+    ],
+    "verdicts": [
+      {
+        "tile": "constellation-net",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "starCount",
+            "live": true,
+            "evidence": "control-starCount-low.png shows only a sparse handful of motes with one lone link (~24 stars); control-starCount-high.png shows a dense net of many motes and abundant links (~80 stars). metrics: starCount changed=true, meanAbsDiff=16.4, meanLuma 12.7(low)->28.8(high)."
+          },
+          {
+            "control": "linkDistance",
+            "live": true,
+            "evidence": "control-linkDistance-low.png shows only short links between very-near stars; control-linkDistance-high.png shows a densely-webbed net with long-range links spanning the field. metrics: linkDistance changed=true, meanAbsDiff=21.3, changedFrac=0.366, meanLuma 27.2->46.8."
+          },
+          {
+            "control": "driftSpeed",
+            "live": true,
+            "evidence": "control-driftSpeed-low/mid/high.png show visibly different frozen star arrangements and link topology (positions advanced differently per drift rate). metrics: driftSpeed changed=true, meanAbsDiff=46.8 (largest of all controls), changedFrac=0.607."
+          },
+          {
+            "control": "linkBrightness",
+            "live": true,
+            "evidence": "control-linkBrightness-low.png shows faint, barely-visible hairline links; control-linkBrightness-high.png shows bright glowing links forming a vivid web. metrics: linkBrightness changed=true, meanAbsDiff=21.7, changedFrac=0.375, meanLuma 33->53.6."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "idle.png and play-1/2/3.png plainly read as a living constellation to a layperson: soft star motes (bone-white + amber accents) linked by hairline light when near each other; across play frames the stars drift and the link net reforms. metrics: play frameDeltaMag 8.22/8.64/8.22 confirms continuous motion, satPixels rising 1437->1605 as warm motes wander."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "constellation-net/after/idle.png",
+          "constellation-net/after/play-1.png",
+          "constellation-net/after/play-2.png",
+          "constellation-net/after/play-3.png",
+          "constellation-net/after/control-starCount-low.png",
+          "constellation-net/after/control-starCount-high.png",
+          "constellation-net/after/control-linkDistance-low.png",
+          "constellation-net/after/control-linkDistance-high.png",
+          "constellation-net/after/control-driftSpeed-low.png",
+          "constellation-net/after/control-driftSpeed-mid.png",
+          "constellation-net/after/control-driftSpeed-high.png",
+          "constellation-net/after/control-linkBrightness-low.png",
+          "constellation-net/after/control-linkBrightness-high.png",
+          "constellation-net/after/metrics.json",
+          "fireflies/after/idle.png"
+        ],
+        "flags": [
+          "driftSpeed reads via repositioning of the frozen standing frame rather than via any per-frame velocity cue; it is unambiguously live by metric (meanAbsDiff=46.8) and by frame-to-frame layout difference, but a static screenshot does not convey 'speed' as directly as count/distance/brightness do — taste-level, not a blocker.",
+          "On dense control frames (driftSpeed/linkBrightness) metrics report effHue~220 (cool); this is a measurement artifact of the bright white link mesh against the near-black background, not purple paint (magentaFrac=0 throughout, palette is warm bone+amber)."
+        ],
+        "summary": "SHIP. constellation-net (real WebGPU, DPR2) plainly reads as a living constellation: soft radial star motes in warm bone-white plus amber/gold accents, linked by hairline light, drifting and re-forming the net across play frames (frameDeltaMag ~8.2-8.6). All four named controls are live both visibly and by metric: starCount (sparse->dense field), linkDistance (short local links->full long-range web), driftSpeed (different frozen arrangements, meanAbsDiff=46.8), linkBrightness (faint hairlines->bright glowing web). Idle is a populated faint constellation (not pure black), satisfying the time-tile rest-state rule. Particle quality matches the fireflies ground-truth sibling (soft falloff, no hard sprites/1px points, no slab). No purple paint (magentaFrac=0; the cool effHue readings on dense frames are a white-mesh-vs-dark-bg artifact). No console/network errors. No anti-slop defects, no MUST-FIX. Two FLAGs are pure taste/measurement-artifact notes."
+      },
+      {
+        "tile": "pointer-spark-trail",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "emissionRate",
+            "live": true,
+            "evidence": "control-emissionRate-low.png shows ~7 sparse sparks; control-emissionRate-mid.png ~20; control-emissionRate-high.png a dense cluster of ~40+ sparks. Monotonic count increase. metrics: emissionRate changed=true, changedFrac=0.0572, meanLuma 8.7→10.9→12.8 (more lit sparks)."
+          },
+          {
+            "control": "gravity",
+            "live": true,
+            "evidence": "control-gravity-low.png shows a compact cluster floating near origin; control-gravity-high.png shows sparks streaming/arcing into a clear downward plume below the origin. metrics: gravity changed=true, changedFrac=0.0922 (largest pixel diff of the four)."
+          },
+          {
+            "control": "sparkLife",
+            "live": true,
+            "evidence": "control-sparkLife-low.png shows a tight short-lived cluster of sparks dying quickly; control-sparkLife-high.png shows longer-lived sparks spread into a wider/longer arc reaching further from origin. metrics: sparkLife changed=true, changedFrac=0.0667."
+          },
+          {
+            "control": "coneSpread",
+            "live": true,
+            "evidence": "control-coneSpread-low.png shows a narrow vertical column of sparks (tight cone); control-coneSpread-mid.png a medium ring; control-coneSpread-high.png a wide fanned spray. Most dramatic reshape. metrics: coneSpread changed=true, changedFrac=0.0603."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "play-1.png / play-2.png / play-3.png plainly read as hot sparks shedding off a cursor point: bright white-cored sparks at the emission point fading to brass and dim ash bokeh as they arc downward — exactly the claim 'sparks shear off the path, arcing down on gravity, cooling white→brass→ash'. Particle render quality matches the ground-truth embers sibling (embers/after/play-2.png): same soft warm radial bokeh and white→brass→ash gradient, just clustered around a point as a pointer-driven trail rather than a full-frame fountain."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "pointer-spark-trail/after/idle.png",
+          "pointer-spark-trail/after/play-1.png",
+          "pointer-spark-trail/after/play-2.png",
+          "pointer-spark-trail/after/play-3.png",
+          "pointer-spark-trail/after/control-emissionRate-low.png",
+          "pointer-spark-trail/after/control-emissionRate-mid.png",
+          "pointer-spark-trail/after/control-emissionRate-high.png",
+          "pointer-spark-trail/after/control-gravity-low.png",
+          "pointer-spark-trail/after/control-gravity-mid.png",
+          "pointer-spark-trail/after/control-gravity-high.png",
+          "pointer-spark-trail/after/control-sparkLife-low.png",
+          "pointer-spark-trail/after/control-sparkLife-mid.png",
+          "pointer-spark-trail/after/control-sparkLife-high.png",
+          "pointer-spark-trail/after/control-coneSpread-low.png",
+          "pointer-spark-trail/after/control-coneSpread-mid.png",
+          "pointer-spark-trail/after/control-coneSpread-high.png",
+          "embers/after/play-2.png",
+          "embers/after/idle.png",
+          "pointer-spark-trail/after/metrics.json"
+        ],
+        "flags": [
+          "idle.png is NOT empty — it shows the standing spark cluster rather than a clean/disengaged rest. Acceptable for a pointer tile (the brief allows empty-clean OR a pinned standing frame; this is the t=0 pin, and it is clearly NOT the pure-black time-tile failure), so this is a taste FLAG, not a blocker.",
+          "metrics idle/play-1/play-3 report effHue~246-254 / coolFrac~0.89 (cool/blue) which contradicts the visibly WARM brass/white bokeh in the frames. This is a measurement artifact: warm spark pixels are sparse against a large dim-blue-tinted background, so the area-averaged effRGB is dominated by background. I judge the rendered frames, which are unambiguously warm. play-2 effHue=25/warmFrac=0.74 correctly captures the warm peak when the cluster is brightest."
+        ],
+        "summary": "pointer-spark-trail SHIPS. net SHIP / gate PASS. All four named controls (emissionRate, gravity, sparkLife, coneSpread) are LIVE: their low→high frozen-pin sweeps visibly reshape the standing spark state (count, downward arc, lifetime spread, and cone width respectively) and every control reports changed=true with changedFrac 0.057–0.092, well above noise. The effect reads plainly as the claim — hot white-cored sparks shear off a point, arc downward on gravity, and cool white→brass→ash — at premium particle quality matching the embers ground-truth sibling. No anti-slop defects: soft radial bokeh (no hard sprites or 1px points), warm brass/bone/ash palette with no purple, bright discoverable cores, no slab. Backend is webgpu (true color), zero console/network errors. Two non-blocking FLAGs: idle shows the standing cluster rather than an empty rest (allowed for pointer tiles), and the idle/play-1/play-3 effHue metric reads cool due to background-averaging, contradicted by the unambiguously warm rendered frames (judged on the visual).\""
+      },
+      {
+        "tile": "click-burst",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "controlsLive": [
+          {
+            "control": "count",
+            "live": false,
+            "evidence": "control-count-low.png vs control-count-high.png are byte-identical empty panels; metrics: meanAbsDiff=0, changedFrac=0, changed=false. effVal=0 on all (no particles to count)."
+          },
+          {
+            "control": "radius",
+            "live": false,
+            "evidence": "control-radius-low/mid/high.png all identical empty panels; metrics: meanAbsDiff=0, changedFrac=0, changed=false (mid satPixels 33820 vs 33803 is sub-noise card chrome jitter, no burst ring)."
+          },
+          {
+            "control": "deceleration",
+            "live": false,
+            "evidence": "control-deceleration-high.png is the same empty deep-blue panel as idle; metrics: meanAbsDiff=0, changedFrac=0, changed=false."
+          },
+          {
+            "control": "twinkle",
+            "live": false,
+            "evidence": "control-twinkle-low/mid/high.png all byte-identical empty panels; metrics: meanAbsDiff=0, changedFrac=0, changed=false."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": false,
+          "evidence": "Claim is 'a ring of brass motes detonates outward — one clean decelerating radial bloom that twinkles and dies'. play-1/2/3.png show NO motes, NO ring, NO burst — just an empty near-black panel with the faint brass card-frame border. metrics: all play frames effHue=232 (deep blue), coolFrac=0.98, warmFrac=0.02, effVal=0, frameDeltaMag=0. Ground-truth embers/after/play-2.png shows what a working warm particle tile looks like (hundreds of soft radial bokeh motes); click-burst renders nothing comparable."
+        },
+        "newMustFixes": [
+          {
+            "issue": "Effect does not render — claimed brass-mote burst is entirely absent. All play frames are byte-identical to idle (frameDeltaMag=0) and show only an empty deep-blue card panel with the chrome border; no particles, ring, bloom, or twinkle.",
+            "evidence": "click-burst/after/idle.png == play-1/2/3.png (effVal=0, meanLuma=7.7, effHue=232 deep blue, warmFrac=0.02); contrast embers/after/play-2.png which shows a live warm particle field."
+          },
+          {
+            "issue": "All four named controls (count, radius, deceleration, twinkle) are dead — low/high sweeps are byte-identical with changed=false; there is no standing state for them to reshape because nothing renders.",
+            "evidence": "metrics controls[].pixelDiff meanAbsDiff=0 changedFrac=0 changed=false for count/radius/deceleration/twinkle; control-*-low.png vs control-*-high.png visually identical empty panels."
+          }
+        ],
+        "citedFrames": [
+          "click-burst/after/idle.png",
+          "click-burst/after/play-1.png",
+          "click-burst/after/play-2.png",
+          "click-burst/after/play-3.png",
+          "click-burst/after/control-count-low.png",
+          "click-burst/after/control-count-high.png",
+          "click-burst/after/control-twinkle-high.png",
+          "click-burst/after/control-radius-high.png",
+          "click-burst/after/control-deceleration-high.png",
+          "embers/after/play-2.png",
+          "click-burst/after/metrics.json"
+        ],
+        "flags": [
+          "effVal reported as 0 across all frames and idle effHue=232 deep-blue matches the empty card background — strongly indicates the particle system never instantiated or never emitted in the captured states; recapture only meaningful after the effect is made to render."
+        ],
+        "summary": "BLOCKED. The click-burst particle effect does not render at all. Across idle, all three play frames, and all 12 control sweep frames the output is byte-identical: an empty near-black deep-blue card panel (effHue 232, coolFrac 0.98, effVal 0, meanLuma 7.7) showing only the faint brass card-frame chrome border. There is no ring of motes, no decelerating radial bloom, no twinkle — the claimed 'brass motes detonate outward' is entirely absent. All play frames report frameDeltaMag 0 (no animation) and all four named controls (count, radius, deceleration, twinkle) report changed=false with meanAbsDiff 0 / changedFrac 0 — they are dead because there is no standing state to reshape. The ground-truth sibling embers/after/play-2.png demonstrates what a working warm particle field looks like (hundreds of soft radial bokeh motes); click-burst renders nothing comparable. This is exactly the 'technically a panel, but a person sees an empty box' failure this gate exists to catch. Effect-does-not-read plus all-controls-dead = hard BLOCK."
+      },
+      {
+        "tile": "flow-ribbon",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "speed",
+            "live": true,
+            "evidence": "control-speed-low.png shows a looser, less-folded scatter; control-speed-high.png shows a tighter folded U-curve ribbon. metrics: speed pixelDiff meanAbsDiff=31.485 changedFrac=0.287 changed=true."
+          },
+          {
+            "control": "width",
+            "live": true,
+            "evidence": "control-width-low.png = a single tight cord tracing one continuous flowing line; control-width-high.png = a wide spread-out scatter of particles. Dramatic, legible reshape. metrics: width meanAbsDiff=26.88 changedFrac=0.2214 changed=true."
+          },
+          {
+            "control": "turbulence",
+            "live": true,
+            "evidence": "control-turbulence-low.png = smooth orderly scatter; control-turbulence-high.png = a tighter, more-folded coherent ribbon shape with shearing folds. metrics: turbulence meanAbsDiff=23.596 changedFrac=0.2299 changed=true."
+          },
+          {
+            "control": "density",
+            "live": true,
+            "evidence": "control-density-low.png = sparse, few well-separated particles; control-density-mid.png moderate; control-density-high.png = a dense packed stream of grains. Clear particle-count change. metrics: density meanAbsDiff=13.366 changedFrac=0.1244 changed=true (well above noise, visibly obvious)."
+          },
+          {
+            "control": "size",
+            "live": true,
+            "evidence": "Bonus 5th swept control. control-size-low.png = tiny pinpoint dots; control-size-high.png = large soft bokeh discs. metrics: size meanAbsDiff=49.152 changedFrac=0.3931 changed=true."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1/2/3.png a coherent curved ribbon/cord of warm light particles traces a flowing S/U-curve across the scene — play-2.png and play-3.png show a clearly folded U-shape, idle.png and play-1.png a diagonal stream. Plainly reads as a silk ribbon of light streaming on an invisible current and folding where the field shears. metrics: play frames effHue 34-35 warmFrac ~1.0, frameDeltaMag 30-35 (real motion)."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "flow-ribbon/after/idle.png",
+          "flow-ribbon/after/play-1.png",
+          "flow-ribbon/after/play-2.png",
+          "flow-ribbon/after/play-3.png",
+          "flow-ribbon/after/control-speed-low.png",
+          "flow-ribbon/after/control-speed-mid.png",
+          "flow-ribbon/after/control-speed-high.png",
+          "flow-ribbon/after/control-width-low.png",
+          "flow-ribbon/after/control-width-high.png",
+          "flow-ribbon/after/control-turbulence-low.png",
+          "flow-ribbon/after/control-turbulence-high.png",
+          "flow-ribbon/after/control-density-low.png",
+          "flow-ribbon/after/control-density-mid.png",
+          "flow-ribbon/after/control-density-high.png",
+          "flow-ribbon/after/control-size-low.png",
+          "flow-ribbon/after/control-size-high.png",
+          "embers/after/play-2.png"
+        ],
+        "flags": [
+          "density-low (control-density-low.png) and size-low (control-size-low.png) metrics report a cool-shifted eff readout (effHue 243/235, coolFrac 0.93/0.96) — but this is a sampler artifact: with few/tiny bright pixels the eff sampler latches onto the dark cool-tinted near-black background; the actual particles in those frames are warm brass/bone. Not a palette defect, no action needed.",
+          "Taste-only: at the engaged pin the standing ribbon is sometimes a sparse scatter rather than a continuous unbroken silk band; the width-low frame is the cleanest 'ribbon' read. Subtle, not a blocker."
+        ],
+        "summary": "flow-ribbon SHIPS. Backend=webgpu, true-color, no console/network errors. Idle is a sensible non-empty rest for a time tile (warm motes streaming diagonally, meanLuma 26.3, hue 35) — not pure black. Particles are soft radial-falloff bokeh (no square sprites, no 1px points, no slab) in a warm brass/bone palette matching the embers ground-truth quality; zero purple/magenta. The named effect reads plainly: play-1/2/3 show a coherent curved ribbon of light streaming and folding across the scene. All four named controls are LIVE with visibly differing low->high frames and metrics changed=true above noise — width is especially dramatic (single cord vs wide scatter), density clearly changes particle count, speed and turbulence reshape the folded curve; a 5th bonus 'size' control is also live. No anti-slop defects, no mustFixes. net SHIP / gate SHIP."
+      },
+      {
+        "tile": "sdf-metablob",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "count",
+            "live": true,
+            "evidence": "control-count-low.png single near-solid blob (count=2) vs control-count-high.png body with 4+ satellite lobes; metrics count changed=true meanAbsDiff=8.379 changedFrac=0.0606"
+          },
+          {
+            "control": "fusion",
+            "live": true,
+            "evidence": "control-fusion-low.png 4 discrete separated droplets vs control-fusion-high.png one fully-merged continuous blob (the exact 'fuse through necks' claim); metrics fusion changed=true meanAbsDiff=10.756 changedFrac=0.1206"
+          },
+          {
+            "control": "orbitSpeed",
+            "live": true,
+            "evidence": "control-orbitSpeed-low.png horizontal lozenge with side lobes vs control-orbitSpeed-high.png vertical-leaning body; standing frozen state reshapes; metrics orbitSpeed changed=true meanAbsDiff=19.881 changedFrac=0.1733"
+          },
+          {
+            "control": "gloss",
+            "live": true,
+            "evidence": "control-gloss-low.png matte broad highlight vs control-gloss-high.png tighter brighter specular hotspot on right bulge; subtle but visible; metrics gloss changed=true meanAbsDiff=1.096 changedFrac=0.0406"
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "play-1/2/3.png show a molten 3D-shaded brass blob: central breathing body, satellite droplets orbiting in, fusing through liquid necks, pinching free. Real specular highlights + gradient falloff + AO in necks (genuine 3D, not flat silhouette). metrics frameDeltaMag 12.35/11.57/10.84; effHue 39-41 deg in warm brass band; warmFrac 0.77-0.84; fusion control directly demonstrates the fuse-through-necks behavior (control-fusion-low vs -high)"
+        },
+        "newMustFixes": [],
+        "flags": [
+          "gloss control is live but subtle to a layperson (meanAbsDiff 1.096, changedFrac 0.0406) — specular highlight tightens/brightens but the overall frame barely changes; taste, not a blocker",
+          "palette reads pale cream-gold rather than deep molten brass — hue is correct (39-41 deg, warm band) but saturation is modest (~0.33); could be richer to better sell 'molten brass'; taste, not anti-slop"
+        ],
+        "citedFrames": [
+          "sdf-metablob/after/idle.png",
+          "sdf-metablob/after/play-1.png",
+          "sdf-metablob/after/play-2.png",
+          "sdf-metablob/after/play-3.png",
+          "sdf-metablob/after/control-count-low.png",
+          "sdf-metablob/after/control-count-mid.png",
+          "sdf-metablob/after/control-count-high.png",
+          "sdf-metablob/after/control-fusion-low.png",
+          "sdf-metablob/after/control-fusion-high.png",
+          "sdf-metablob/after/control-orbitSpeed-low.png",
+          "sdf-metablob/after/control-orbitSpeed-high.png",
+          "sdf-metablob/after/control-gloss-low.png",
+          "sdf-metablob/after/control-gloss-mid.png",
+          "sdf-metablob/after/control-gloss-high.png",
+          "embers/after/play-2.png"
+        ],
+        "summary": "SHIP (net PLEASED, gate PASS — validator confirmed valid). Backend webgpu, no console/network errors. The molten brass SDF metablob reads plainly as claimed across all play frames: a 3D-shaded raymarched body (real specular highlights, gradient falloff, AO in necks — not a flat silhouette) that breathes while satellite droplets orbit in, fuse through liquid necks, and pinch free. All four named controls are LIVE and reshape the frozen pinned state with changed=true above noise: count (single blob to 4+ lobes), fusion (discrete droplets to one merged body — the literal claim), orbitSpeed (largest diff, 19.9), gloss (subtle highlight tightening). No anti-slop defects: soft AA edges, no square/1px sprites, no slab, no purple (count-low's effHue 295 is a near-black-frame artifact, magentaFrac=0 and the visible blob is warm cream), idle is a non-empty lit brass blob. Two taste FLAGS only: gloss is subtle, and the brass reads a touch pale (modest saturation). Render quality is at sibling-grade vs embers."
+      },
+      {
+        "tile": "hyperspace-warp",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "warpSpeed",
+            "live": true,
+            "evidence": "control-warpSpeed-low.png shows a sparse cluster of short stubby streaks near the vanishing point; control-warpSpeed-high.png shows long fully-stretched bright streaks reaching the frame edges. metrics: meanAbsDiff=12.2, changed=true, meanLuma 9.1(low)->18.4(high), effRGB [9.6,10,15.2]->[103.1,89.6,79.4]."
+          },
+          {
+            "control": "streakLength",
+            "live": true,
+            "evidence": "control-streakLength-low.png shows short streak segments; control-streakLength-high.png shows greatly elongated streaks spanning the whole frame. metrics: meanAbsDiff=14.5, changed=true, meanLuma 10.4(low)->21.1(high), stdev 16->33.1."
+          },
+          {
+            "control": "density",
+            "live": true,
+            "evidence": "control-density-low.png shows a thin set of radial streaks; control-density-high.png shows a dense radial field of streaks. metrics: meanAbsDiff=18.1, changedFrac=0.28, changed=true, meanLuma 12.3(low)->28.4(high)."
+          },
+          {
+            "control": "surgeDepth",
+            "live": false,
+            "evidence": "control-surgeDepth-low.png, -mid.png and -high.png are visually near-identical dense radial bursts; metrics low->high are sub-noise: meanLuma 24.8->27.0->27.8, effRGB [121.4,106.5,95.2]->[127.1,111.7,99.7], stdev 36.2->38.3. Subtle-but-present, treated as FLAG not a blocker."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "play-1.png/play-2.png/play-3.png each show thin warm-white streaks emanating radially from a central vanishing point — the classic lightspeed-jump streak tunnel. The streaks progressively lengthen/brighten (metrics frameDeltaMag 10.88->11.53->12.92, warmFrac 0.71->0.75->0.86), reading as the 'surging in waves' described in the claim."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "hyperspace-warp/after/idle.png",
+          "hyperspace-warp/after/play-1.png",
+          "hyperspace-warp/after/play-2.png",
+          "hyperspace-warp/after/play-3.png",
+          "hyperspace-warp/after/control-warpSpeed-low.png",
+          "hyperspace-warp/after/control-warpSpeed-mid.png",
+          "hyperspace-warp/after/control-warpSpeed-high.png",
+          "hyperspace-warp/after/control-streakLength-low.png",
+          "hyperspace-warp/after/control-streakLength-high.png",
+          "hyperspace-warp/after/control-density-low.png",
+          "hyperspace-warp/after/control-density-high.png",
+          "hyperspace-warp/after/control-surgeDepth-low.png",
+          "hyperspace-warp/after/control-surgeDepth-mid.png",
+          "hyperspace-warp/after/control-surgeDepth-high.png",
+          "embers/after/play-2.png",
+          "embers/after/idle.png"
+        ],
+        "flags": [
+          "surgeDepth control is subtle: control-surgeDepth-low/mid/high render as near-identical dense radial bursts (meanLuma 24.8->27.0->27.8, effRGB delta <6 across the sweep). It changes the standing frozen state only marginally — not a discoverable knob to a layperson. FLAG, not a blocker, since the effect reads and the other three controls are robustly live.",
+          "Warm palette is correct (effHue 19-27 deg, ember/bone/white-hot) with no purple (magentaFrac ~0.02). Streaks are soft anti-aliased lines with white-hot cores, comparable polish to the embers ground-truth bokeh; no hard 1px points or square sprites."
+        ],
+        "summary": "hyperspace-warp ships. Backend is webgpu (trustworthy color), no console/network errors. The effect reads unmistakably as the claimed lightspeed streak tunnel: play-1/2/3 show warm-white streaks stretching radially from a central vanishing point, progressively lengthening (frameDeltaMag 10.88->12.92) to convey surging waves. Idle is a sensible non-empty rest (faint warm streaks, meanLuma 11.7, satPixels 3780) — not pure black. Palette is warm ember/bone/white-hot (effHue 19-27 deg), no purple. Streaks are soft anti-aliased lines with white-hot cores — no hard points/square sprites/slab, polish on par with the embers ground-truth. Three of four named controls are robustly live with clear low->high frame differences and above-noise metrics: warpSpeed (meanLuma 9.1->18.4), streakLength (10.4->21.1), density (12.3->28.4). The fourth, surgeDepth, is subtle — low/mid/high frames are near-identical and metrics move <6 across the sweep — treated as a FLAG, not a blocker, since the effect reads and the other controls are live. No anti-slop defects. Net SHIP."
+      },
+      {
+        "tile": "orbit-trails",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "bodies",
+            "live": true,
+            "evidence": "orbit-trails/after/control-bodies-low.png shows ~3 bodies (bone head top-left, brass arc top-right, faint third); control-bodies-high.png adds a distinct 4th ice-blue body sweeping the bottom-left plus a denser blue arc. metrics: bodies pixelDiff meanAbsDiff=6.376 changedFrac=0.0614 changed=true. Visible body-count increase."
+          },
+          {
+            "control": "speed",
+            "live": true,
+            "evidence": "orbit-trails/after/control-speed-low.png shows stubby near-static heads with tiny streaks (slow bodies barely move per trail-life); control-speed-high.png shows long dense multi-bead trails sweeping the whole frame. metrics: speed meanAbsDiff=21.602 changedFrac=0.223, meanLuma 13.6→27.1. Strong visible reshape."
+          },
+          {
+            "control": "trailLength",
+            "live": true,
+            "evidence": "orbit-trails/after/control-trailLength-low.png shows short arcs (~8-12 beads, gaps in orbit); control-trailLength-high.png shows long dense trails wrapping nearly the full orbit. metrics: trailLength meanAbsDiff=18.315 changedFrac=0.2508, meanLuma 15.1→24.8→33.4 monotonic as beads accumulate."
+          },
+          {
+            "control": "eccentricity",
+            "live": true,
+            "evidence": "orbit-trails/after/control-eccentricity-low.png (e=0) shows near-circular concentric rings; control-eccentricity-high.png (e=0.7) shows highly stretched elliptical orbits with bodies bunched at perihelion. metrics: eccentricity meanAbsDiff=39.438 changedFrac=0.4564 — largest sweep of all four controls."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Claim is 'a miniature orrery of light — bright bodies sweeping elliptical orbits, each dragging a fading arc of its own path.' orbit-trails/after/play-1.png, play-2.png, play-3.png each show 3 bright body-heads (warm brass/bone + a cool ice-blue) each trailing a tapering, fading arc along curved orbital paths. control-eccentricity-high.png confirms the orbits are elliptical, not circular. effHue 40-54 warm brass with cool blue accent; magentaFrac=0 (no purple). Soft radial-falloff discs match the embers ground-truth (embers/after/play-2.png) particle quality — no hard sprites or 1px points. Plainly reads as an orrery with glowing path-trails."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "orbit-trails/after/idle.png",
+          "orbit-trails/after/play-1.png",
+          "orbit-trails/after/play-2.png",
+          "orbit-trails/after/play-3.png",
+          "orbit-trails/after/control-bodies-low.png",
+          "orbit-trails/after/control-bodies-mid.png",
+          "orbit-trails/after/control-bodies-high.png",
+          "orbit-trails/after/control-speed-low.png",
+          "orbit-trails/after/control-speed-mid.png",
+          "orbit-trails/after/control-speed-high.png",
+          "orbit-trails/after/control-trailLength-low.png",
+          "orbit-trails/after/control-trailLength-mid.png",
+          "orbit-trails/after/control-trailLength-high.png",
+          "orbit-trails/after/control-eccentricity-low.png",
+          "orbit-trails/after/control-eccentricity-mid.png",
+          "orbit-trails/after/control-eccentricity-high.png",
+          "orbit-trails/after/metrics.json",
+          "embers/after/play-2.png"
+        ],
+        "flags": [
+          "bandingScore reads elevated (idle 0.357, eccentricity-low 0.417) but this is the metric reacting to the intentional discrete bead-strings of the trails, NOT slab-shelf/volumetric banding — visually the orbits are smooth arcs of soft discs with no horizontal shelves or stacked-card structure. The volumetric photoreal amendment does not apply to this particles tile. Taste-only note: the beaded look (visible individual discs along each trail) could be smoothed into a more continuous ribbon for a slightly more premium feel, but it reads correctly as an orrery trail and matches the embers sibling's bokeh-disc rendering — FLAG, not a blocker."
+        ],
+        "summary": "SHIP. orbit-trails plainly reads as the claimed miniature orrery: across play-1/2/3 three bright bodies (warm brass/bone plus a cool ice-blue, magentaFrac=0 so no purple) sweep curved orbital paths each dragging a tapering fading trail; eccentricity-high confirms the orbits are elliptical. All four named controls are live with both visible low→high frame differences and metrics changed=true: bodies (meanAbsDiff 6.4, adds a 4th/5th body), speed (21.6, stubby→long sweeps), trailLength (18.3, short→full-orbit arcs, meanLuma 15→33), eccentricity (39.4, circular→stretched ellipses). Particle quality matches the embers ground-truth (soft radial-falloff discs, no hard sprites/1px points). Idle is non-empty (bright trails, meanLuma=20.2 — not pure black). No console/network errors. Elevated bandingScore is the metric reacting to intentional trail beads, not slab/volumetric banding, and the volumetric amendment does not apply to this particles tile. No anti-slop defect, no MUST-FIX. A first-time user would be PLEASED — it looks like a tasteful little solar-system of glowing comets, and every slider visibly does what its label says."
+      },
+      {
+        "tile": "sand-pile",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "controlsLive": [
+          {
+            "control": "rate",
+            "live": true,
+            "evidence": "sand-pile/after/control-rate-low.png (a few sparse grains) vs control-rate-mid.png (moderate pile) vs control-rate-high.png (dense full dune); metrics rate meanLuma 8.2->11.1->13.7, stdev 9.9->22.8->30.8, changedFrac 0.0472"
+          },
+          {
+            "control": "grainSize",
+            "live": true,
+            "evidence": "sand-pile/after/control-grainSize-low.png (tiny pinpoint grains) vs control-grainSize-high.png (large fat brass blobs); metrics grainSize meanAbsDiff 13.969, changedFrac 0.0923, high effHue 41 warmFrac 0.81"
+          },
+          {
+            "control": "repose",
+            "live": false,
+            "evidence": "sand-pile/after/control-repose-low.png, control-repose-mid.png, control-repose-high.png visually indistinguishable; metrics repose mid+high byte-identical effRGB [15.6,15.4,18.9], meanAbsDiff 0.779, changedFrac 0.0069 (sub-noise) — dune slope does not change"
+          },
+          {
+            "control": "gust",
+            "live": false,
+            "evidence": "sand-pile/after/control-gust-low.png, control-gust-mid.png, control-gust-high.png pixel-for-pixel identical; metrics gust changed=false, meanAbsDiff 0, changedFrac 0, all three effRGB [148.2,136.3,110.6] — the sweep the claim depends on does nothing"
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "sand-pile/after/play-1.png (brass grains falling, small scattered base), play-2.png (fuller accumulating pile), play-3.png (largest dune with a falling grain) read plainly as brass grains raining down and BUILDING a growing dune; soft radial falloff matches ground-truth embers/after/play-2.png; metrics control-grainSize-high effHue 41 warmFrac 0.81 confirms warm brass grains"
+        },
+        "newMustFixes": [
+          {
+            "issue": "Named control 'gust' is fully DEAD — the gust that the claim's narrative depends on ('a gust sweeps it clean and it begins again') has zero effect. low/mid/high render identically.",
+            "evidence": "sand-pile/after/control-gust-{low,mid,high}.png byte-identical; metrics gust changed=false, meanAbsDiff 0, changedFrac 0"
+          },
+          {
+            "issue": "Named control 'repose' is DEAD — angle-of-repose does not reshape the dune slope; the standing pile is unchanged across the sweep.",
+            "evidence": "sand-pile/after/control-repose-{low,mid,high}.png visually identical; metrics repose mid+high byte-identical, meanAbsDiff 0.779 / changedFrac 0.0069 (sub-noise). 'changed:true' in metrics is a sub-noise artifact, not a layperson-visible change."
+          }
+        ],
+        "citedFrames": [
+          "sand-pile/after/idle.png",
+          "sand-pile/after/play-1.png",
+          "sand-pile/after/play-2.png",
+          "sand-pile/after/play-3.png",
+          "sand-pile/after/control-rate-low.png",
+          "sand-pile/after/control-rate-mid.png",
+          "sand-pile/after/control-rate-high.png",
+          "sand-pile/after/control-repose-low.png",
+          "sand-pile/after/control-repose-mid.png",
+          "sand-pile/after/control-repose-high.png",
+          "sand-pile/after/control-grainSize-low.png",
+          "sand-pile/after/control-grainSize-mid.png",
+          "sand-pile/after/control-grainSize-high.png",
+          "sand-pile/after/control-gust-low.png",
+          "sand-pile/after/control-gust-mid.png",
+          "sand-pile/after/control-gust-high.png",
+          "embers/after/play-2.png"
+        ],
+        "flags": [
+          "Idle (sand-pile/after/idle.png, meanLuma 7.8) is near pure-black with only one faint mote at the top edge; for a 'time' tile a slightly richer non-empty rest (a settled pile or drifting motes) would feel more alive. Subjective, not a blocker.",
+          "Metrics effHue reads cool (233-243) on play/idle frames because the small warm pile is averaged against the large dark frame; the grains themselves are genuine warm brass (grainSize-high effHue 41, warmFrac 0.81). No palette defect."
+        ],
+        "summary": "net=ANNOYED, gate=BLOCKED. The effect reads exactly as claimed — brass grains rain down and build a growing dune across play-1/2/3 — with premium soft radial-falloff particles matching the embers ground-truth sibling, warm brass palette, no purple, no hard sprites, no slab. Two of four named controls are live and read sensibly (rate: sparse->dense pile, changedFrac 0.0472; grainSize: tiny->fat grains, changedFrac 0.0923). BLOCKED because the other two named controls are dead: 'gust' is byte-identical across low/mid/high (changed=false, meanAbsDiff 0) — and gust is the very 'sweeps it clean' mechanic the claim is built on — and 'repose' is sub-noise indistinguishable (mid/high byte-identical, changedFrac 0.0069). Verdict validated by useradvocate-verdict-schema.mjs (valid:true, computedGate:BLOCKED). Verdict file at /tmp/sand-pile-verdict.json."
+      },
+      {
+        "tile": "bokeh-drift",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "count",
+            "live": true,
+            "evidence": "control-count-low.png shows ~4 discs vs control-count-mid.png many vs control-count-high.png densely packed field; metrics meanLuma 11.9→45.6→73.3, changed=true, changedFrac=0.6634"
+          },
+          {
+            "control": "size",
+            "live": true,
+            "evidence": "control-size-low.png small tight discs vs control-size-high.png huge frame-filling overlapping discs; metrics meanLuma 21.2→73.3→133.8, changed=true, changedFrac=0.9607"
+          },
+          {
+            "control": "drift",
+            "live": true,
+            "evidence": "control-drift-low/mid/high.png show visibly reorganized disc layout & bright-cluster position; metrics meanAbsDiff=58.997, changedFrac=0.9206, effHue 47→47→53, changed=true"
+          },
+          {
+            "control": "iris",
+            "live": false,
+            "evidence": "claim names a 4th control 'iris (round/hex)' but metrics.json controls[] lists only count/size/drift and no control-iris-*.png frames exist in after/ dir — iris was NOT exercised; all visible discs render round, no hex variant captured. Evidence gap, not a confirmed dead control."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "play-1.png/play-2.png/play-3.png show big soft aperture discs (bright rim + soft core) in warm amber and cool ice, swelling and melting through each other in overlapping parallax — plainly reads as 'out-of-focus lights drifting across a lens'. effHue 35-38 amber, warmFrac 0.89-0.99, cool ice discs present, frameDeltaMag 33-45 confirms motion. backend=webgpu, no console/network errors."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "bokeh-drift/after/idle.png",
+          "bokeh-drift/after/play-1.png",
+          "bokeh-drift/after/play-2.png",
+          "bokeh-drift/after/play-3.png",
+          "bokeh-drift/after/control-count-low.png",
+          "bokeh-drift/after/control-count-mid.png",
+          "bokeh-drift/after/control-count-high.png",
+          "bokeh-drift/after/control-size-low.png",
+          "bokeh-drift/after/control-size-mid.png",
+          "bokeh-drift/after/control-size-high.png",
+          "bokeh-drift/after/control-drift-low.png",
+          "bokeh-drift/after/control-drift-mid.png",
+          "bokeh-drift/after/control-drift-high.png",
+          "bokeh-drift/after/metrics.json",
+          "fireflies/after/idle.png",
+          "fireflies/after/play-2.png"
+        ],
+        "flags": [
+          "Claim lists a 4th named control 'iris (round/hex)' but it was not captured in evidence (no control-iris-*.png, not in metrics controls[]). All discs render round; no hex variant is shown. Cannot confirm iris live — recommend recapturing with the iris sweep. Does not block since the three captured controls are all live and the effect reads strongly.",
+          "drift control is the subtlest of the three — it reshapes clustering/position rather than count or luma, so it reads more as 'rearranged' than dramatically different; present and live but the least dramatic sweep (subjective taste, FLAG not blocker)."
+        ],
+        "summary": "SHIP. bokeh-drift renders as premium, claim-accurate out-of-focus lens bokeh: big soft aperture discs with bright rims and soft cores in warm amber and cool ice, swelling and melting through each other in parallax across play-1/2/3 (effHue 35-38, warmFrac 0.89-0.99, frameDeltaMag 33-45). Idle is a sensible non-empty rest (populated discs, effHue 38, NOT pure black). Three captured controls are all live: count (~4→many→dense, meanLuma 11.9→73.3), size (small→frame-filling, meanLuma 21.2→133.8), drift (layout reorganizes, changedFrac 0.92). Anti-slop clean: soft radial falloff (no square/1px sprites), no slab, cores well above discoverability floor, magentaFrac=0 everywhere (no purple), backend=webgpu, zero console/network errors. Render quality matches/exceeds the fireflies ground-truth sibling. FLAG: the claim's 4th control 'iris (round/hex)' was not captured (no control-iris frames, absent from metrics) so it could not be confirmed — recommend recapture, but it does not block given the three live controls and a strongly-reading effect."
+      },
+      {
+        "tile": "image-to-particles",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "controlsLive": [
+          {
+            "control": "grainDensity",
+            "live": false,
+            "evidence": "metrics: changed=false, pixelDiff.meanAbsDiff=0.015. control-grainDensity-low.png (empty black), control-grainDensity-mid.png and control-grainDensity-high.png each show only 1 stray grain — sub-noise identical, DEAD."
+          },
+          {
+            "control": "swirlTurbulence",
+            "live": false,
+            "evidence": "metrics: changed=false, pixelDiff.meanAbsDiff=0.033. control-swirlTurbulence-low.png and control-swirlTurbulence-high.png are near-pure-black with 1-2 stray grains, no visible reshaping of a standing field — DEAD."
+          },
+          {
+            "control": "scatterDistance",
+            "live": false,
+            "evidence": "metrics: changed=true meanAbsDiff=0.246, but control-scatterDistance-low.png shows a faint sparse grain field while control-scatterDistance-mid.png and control-scatterDistance-high.png are pure black void — the control only pushes grains off-frame to nothing, not a legible standing reshape; effect just disappears."
+          },
+          {
+            "control": "dissolveSoftness",
+            "live": true,
+            "evidence": "metrics: changed=true meanAbsDiff=1.638, changedFrac=0.0264. control-dissolveSoftness-low.png shows a legible grain grid (card silhouette in gray motes) vs control-dissolveSoftness-mid.png/high.png going black — visibly differs above noise."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": false,
+          "evidence": "Claim: card disintegrates into grains CARRYING ITS ACTUAL COLORS, swirls, then flies home to reassemble. idle.png shows the card (orange button effHue=41, blue circle). But play-1.png shows only sparse MONOCHROME GRAY grains (metrics play-1 effSat=0.0, effHue=240 — zero saturation, no card colors carried), and play-2.png/play-3.png are near-pure black (meanLuma 7.7, effVal 0, play-3 frameDeltaMag=0 frozen). The card never reassembles and grains carry an invented neutral fill, not the card's warm/blue colors. Against ground-truth embers/after/play-2.png (warm color-rich soft glows filling frame) this is dim, gray, mostly empty."
+        },
+        "newMustFixes": [
+          {
+            "issue": "Grains do NOT carry the card's own colors — invented flat gray fill, violating the explicit image-to-particles must-preserve clause.",
+            "evidence": "image-to-particles/after/play-1.png shows monochrome gray motes; metrics play-1 effSat=0.0 effHue=240. idle.png card colors (orange button, blue circle) are entirely absent from the dissolved grains."
+          },
+          {
+            "issue": "Effect falls below the discoverability floor — play state collapses to a near-pure-black void with no reassembly of the card.",
+            "evidence": "image-to-particles/after/play-2.png and play-3.png are near-black; metrics meanLuma 7.7, effVal 0, play-3 frameDeltaMag=0 (frozen). The claimed 'fly home to reassemble' never appears."
+          },
+          {
+            "issue": "Two of four named controls are fully dead; a third only removes grains rather than reshaping a standing field.",
+            "evidence": "control: grainDensity changed=false meanAbsDiff 0.015 (control-grainDensity-high.png ~empty); swirlTurbulence changed=false meanAbsDiff 0.033; scatterDistance mid/high frames (control-scatterDistance-mid.png, control-scatterDistance-high.png) pure black."
+          }
+        ],
+        "citedFrames": [
+          "image-to-particles/after/idle.png",
+          "image-to-particles/after/play-1.png",
+          "image-to-particles/after/play-2.png",
+          "image-to-particles/after/play-3.png",
+          "image-to-particles/after/control-grainDensity-low.png",
+          "image-to-particles/after/control-grainDensity-mid.png",
+          "image-to-particles/after/control-grainDensity-high.png",
+          "image-to-particles/after/control-swirlTurbulence-low.png",
+          "image-to-particles/after/control-swirlTurbulence-high.png",
+          "image-to-particles/after/control-scatterDistance-low.png",
+          "image-to-particles/after/control-scatterDistance-mid.png",
+          "image-to-particles/after/control-scatterDistance-high.png",
+          "image-to-particles/after/control-dissolveSoftness-low.png",
+          "image-to-particles/after/control-dissolveSoftness-mid.png",
+          "image-to-particles/after/control-dissolveSoftness-high.png",
+          "image-to-particles/after/metrics.json",
+          "embers/after/play-2.png"
+        ],
+        "flags": [
+          "Idle rest state is good — idle.png shows a clean assembled card with soft grid grains, the colored button (effHue=41) and blue circle, appropriate for a state-driver tile."
+        ],
+        "summary": "BLOCKED (net=ANNOYED). The card dissolves into MONOCHROME GRAY grains that do not carry its actual colors (play-1 effSat=0.0, effHue=240), violating the explicit image-to-particles must-preserve clause. The play state then collapses to a near-pure-black void (play-2/3 meanLuma 7.7, effVal 0, play-3 frozen frameDeltaMag=0) with no reassembly — the central claim does not read. grainDensity and swirlTurbulence are byte-identical DEAD (changed=false); scatterDistance only pushes grains off-frame into black; only dissolveSoftness is genuinely live. Against the embers ground-truth this tile is dim, gray, and mostly empty. Verdict validated by useradvocate-verdict-schema.mjs (valid=true, computedGate=BLOCKED). Idle rest state is the lone positive (FLAG, not blocker)."
+      },
+      {
+        "tile": "comet-orbit",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "eccentricity",
+            "live": true,
+            "evidence": "control-eccentricity-{low,mid,high}.png visibly differ: low has a tight low-left arc, high lifts the head and stretches the curve; metrics changed=true meanAbsDiff=11.312 changedFrac=0.0764 effSat 0.20->0.29"
+          },
+          {
+            "control": "tailLength",
+            "live": true,
+            "evidence": "control-tailLength-{low,mid,high}.png: tail clearly grows from a few trailing blobs (low) to a long trail reaching the top-right (high); metrics changed=true meanAbsDiff=1.634 changedFrac=0.0289 meanLuma 10.9->12.3. Subtle but visibly present (FLAG)."
+          },
+          {
+            "control": "flare",
+            "live": true,
+            "evidence": "control-flare-{low,mid,high}.png: head + tail + the warm top-right sun-point glow all brighten/grow low->high; metrics changed=true meanAbsDiff=2.456 changedFrac=0.0333 meanLuma 10.6->13.1. Subtle but present (FLAG)."
+          },
+          {
+            "control": "speed",
+            "live": true,
+            "evidence": "control-speed-{low,mid,high}.png: dramatic position change — low is nearly parked at the orbit top, mid has traveled mid-arc, high has rounded far with a long warm ember tail; metrics changed=true meanAbsDiff=14.105 changedFrac=0.1443; speed-high effHue=22 warmFrac=0.92 = the fire tail."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "play-1/2/3.png plainly show a single ice-bright head trailing a soft tail that curves along an ellipse — reads as a comet to any layperson. Pixel check on play-3 luminous particles: 3067/3738 warm (hue 10-60 amber/bone/ember), 0 cool-blue, 0 purple. idle.png brightest pixel (179,164,156) is the ice-white comet head parked at the top edge (matches 'rounds on a long ellipse / ghosts at the far turn'). flare/speed frames show a warm sun-point glow top-right with the tail streaming away from it (anti-solar)."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "comet-orbit/after/idle.png",
+          "comet-orbit/after/play-1.png",
+          "comet-orbit/after/play-2.png",
+          "comet-orbit/after/play-3.png",
+          "comet-orbit/after/control-eccentricity-low.png",
+          "comet-orbit/after/control-eccentricity-mid.png",
+          "comet-orbit/after/control-eccentricity-high.png",
+          "comet-orbit/after/control-tailLength-low.png",
+          "comet-orbit/after/control-tailLength-mid.png",
+          "comet-orbit/after/control-tailLength-high.png",
+          "comet-orbit/after/control-flare-low.png",
+          "comet-orbit/after/control-flare-mid.png",
+          "comet-orbit/after/control-flare-high.png",
+          "comet-orbit/after/control-speed-low.png",
+          "comet-orbit/after/control-speed-mid.png",
+          "comet-orbit/after/control-speed-high.png",
+          "comet-orbit/after/metrics.json",
+          "embers/after/play-2.png",
+          "embers/after/idle.png"
+        ],
+        "flags": [
+          "tailLength and flare are LIVE but subtle (meanAbsDiff 1.6 and 2.5; changedFrac ~0.03) — the head/tail size delta is visible but understated next to eccentricity/speed. FLAG, not a blocker.",
+          "The 'fire tail' reads as ice/bone/cream in the default play frames; a fully warm orange ember tail only emerges strongly at speed-high (effHue 22). The comet particles are warm-toned (0% blue/purple) so it is on-palette, but the tail is more ice than fire at rest pace.",
+          "Idle rest is very sparse vs the premium embers sibling (comet idle meanLuma=7.8 vs embers 31.9) — but this is the honest nature of a single-object orbit (comet parked at far turn); a bright ice-white head IS visible at the top edge, so not pure-black and not a MUST-FIX."
+        ],
+        "summary": "SHIP. comet-orbit reads unmistakably as a comet — an ice-bright bone-white head trailing a soft warm tail that curves along an ellipse across play-1/2/3, with an anti-solar sun-point glow top-right. All four named controls are live and pass both gates: eccentricity (meanAbsDiff 11.3) and speed (14.1) are dramatic; tailLength (1.6) and flare (2.5) are subtle but clearly visible in the frames (tail lengthens, head/sun-point brighten) — FLAGs not blockers. Particle render quality matches the premium embers ground-truth: soft radial-falloff blobs, no hard/1px sprites, no slab. Palette is warm ice/bone/ember — luminous-particle pixel sample is 82% warm, 0% blue, 0% purple (magentaFrac=0 throughout). Idle is not pure-black: the comet head is visible at the top edge (parked at its far turn, per the claim). backend=webgpu, zero console/network errors. No anti-slop MUST-FIX defects found."
+      }
+    ]
+  }
+}

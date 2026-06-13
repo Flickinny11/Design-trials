@@ -48,11 +48,12 @@ function totalLuma(target: ReturnType<typeof makeTarget>, count: number): number
 }
 
 /**
- * Replicate the advocate "pinned engaged frame" control sweep: hold
- * userData.state engaged, repeatedly seek the SAME pinned t (dt≈0), then
- * measure. A live control must reshape THIS frozen frame, not merely a
- * transient. Returns the live-mote summary at the pin for the given control
- * value.
+ * Replicate the advocate "pinned engaged frame" control sweep EXACTLY as the
+ * shared rig drives a state tile: the rig NEVER sets userData.state (so the
+ * primitive is engaged-by-default), and it pins the same frozen t=1 with
+ * repeated dt≈0 seeks before sweeping each control. A live control must reshape
+ * THIS frozen frame, not merely a transient. Returns the live-mote summary at
+ * the pin for the given control value.
  */
 function pinnedEngagedSummary(
   controlId: string,
@@ -60,7 +61,8 @@ function pinnedEngagedSummary(
 ): { radius: number; luma: number; count: number } {
   const target = makeTarget(clickBurstPrimitive);
   const inst = clickBurstPrimitive.create(target);
-  target.userData.state = 1; // engaged (held)
+  // NO userData.state — exactly what the rig does. The primitive must engage by
+  // default and carry a standing bloom at the pinned t.
   inst.setControl(controlId, value);
   // Repeated seeks at the same pinned t — exactly what the rig does for sweeps.
   inst.seek(1);
@@ -72,6 +74,8 @@ function pinnedEngagedSummary(
   inst.dispose();
   return { radius, luma, count };
 }
+
+const MAX = 120;
 
 describe('click-burst primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -108,64 +112,91 @@ describe('click-burst primitive', () => {
     inst.dispose();
   });
 
-  it('idle (disengaged) shows a clean rest state — no live motes lit', () => {
+  it('idle (t=0) shows a clean rest state — no live motes lit', () => {
     const target = makeTarget(clickBurstPrimitive);
     const inst = clickBurstPrimitive.create(target);
-    target.userData.state = 0; // disengaged
+    // No userData.state (rig idle pin is seek(t=0) with state never set). At
+    // t=0 the recycle seam life is 0, so the field carries no emitted light.
     inst.seek(0);
-    // At rest, nothing has been fired, so the field carries no emitted light.
     expect(totalLuma(target, MAX)).toBeLessThan(1e-4);
     inst.dispose();
   });
 
-  it('engage fires ONE decelerating ring-bloom: motes expand then fade over the burst life', () => {
+  it('explicit disengage shows a clean empty rest even at a mid-cycle t', () => {
+    const target = makeTarget(clickBurstPrimitive);
+    const inst = clickBurstPrimitive.create(target);
+    target.userData.state = false; // explicitly OFF
+    inst.seek(1); // mid-cycle, but disengaged ⇒ no bloom
+    expect(totalLuma(target, MAX)).toBeLessThan(1e-4);
+    inst.dispose();
+  });
+
+  // ── THE CORE FIX: the stateless engaged pin renders a NON-EMPTY standing bloom.
+  // This is the defect the advocate caught (idle == play == every control sweep,
+  // effVal 0, empty panel). The rig never sets userData.state and pins the
+  // engaged sweep at seek(t=1); a one-shot rising-edge burst showed nothing.
+  it('engaged-by-default: the pinned t=1 frame is a NON-EMPTY standing bloom', () => {
+    const target = makeTarget(clickBurstPrimitive);
+    const inst = clickBurstPrimitive.create(target);
+    const count = Math.round(inst.getParams().count as number);
+    // No userData.state — exactly the rig's stateless drive.
+    inst.seek(1);
+    inst.seek(1); // repeated dt≈0 seeks (the frozen pin)
+    const luma = totalLuma(target, count);
+    const r = meanRadius(target, count);
+    expect(luma, 'standing bloom emits substantial light at the pin').toBeGreaterThan(5);
+    expect(r, 'standing bloom motes have expanded outward from the origin').toBeGreaterThan(0.1);
+    inst.dispose();
+  });
+
+  it('engaged recycling bloom: motes expand outward as the clock advances within a cycle', () => {
     const target = makeTarget(clickBurstPrimitive);
     const inst = clickBurstPrimitive.create(target);
     const count = Math.round(inst.getParams().count as number);
 
-    // Rising edge: state goes 0 -> 1, recording the fire time at t=0.2.
-    target.userData.state = 0;
-    inst.seek(0.2);
-    target.userData.state = 1;
-    inst.seek(0.2); // fire here
-
-    // Early in the bloom (natural life past the engaged mid-bloom floor):
-    // motes are at the inner part of their decelerating reach.
-    inst.seek(2.2);
+    // Stateless engaged-by-default. Pick two times inside the SAME bloom cycle
+    // (CYCLE_PERIOD ≈ 2.6) where the later one sits further along the bloom.
+    inst.seek(0.4);
     const rEarly = meanRadius(target, count);
     const lumaEarly = totalLuma(target, count);
 
-    // Later: the ring has expanded outward (deceleration toward the plateau).
-    inst.seek(3.4);
+    inst.seek(1.4);
     const rMid = meanRadius(target, count);
-
-    // End of life (disengaged so the burst can fully die): light collapses.
-    target.userData.state = 0;
-    inst.seek(0.2 + 4.0);
-    const lumaEnd = totalLuma(target, count);
 
     expect(rMid, 'ring expands outward as the bloom decelerates').toBeGreaterThan(rEarly + 0.05);
     expect(lumaEarly, 'the fresh bloom is bright').toBeGreaterThan(1);
-    expect(lumaEnd, 'everything fades by life end').toBeLessThan(lumaEarly * 0.1);
+    inst.dispose();
+  });
+
+  it('the bloom fades toward the end of its cycle (one clean ignite→fade)', () => {
+    const target = makeTarget(clickBurstPrimitive);
+    const inst = clickBurstPrimitive.create(target);
+    const count = Math.round(inst.getParams().count as number);
+
+    // A mid-bloom frame is bright; a near-end-of-cycle frame has faded.
+    inst.seek(1); // pinned mid-tail (PIN_LIFE)
+    const lumaMid = totalLuma(target, count);
+    // Choose a t whose phase is near 1 (end of cycle): phase = frac(t/P + off).
+    // P≈2.6, off≈0.1654 → t=2.17 gives phase ≈ frac(0.835 + 0.165) = ~0.999.
+    inst.seek(2.17);
+    const lumaEnd = totalLuma(target, count);
+
+    expect(lumaEnd, 'everything fades toward the end of the bloom cycle').toBeLessThan(
+      lumaMid * 0.25,
+    );
     inst.dispose();
   });
 
   it('cools white-hot -> brass: a fresh mote is whiter than a tail mote', () => {
     const target = makeTarget(clickBurstPrimitive);
     const inst = clickBurstPrimitive.create(target);
-    const count = Math.round(inst.getParams().count as number);
 
-    target.userData.state = 0;
-    inst.seek(0);
-    target.userData.state = 1;
-    inst.seek(0); // fire at t=0
-    target.userData.state = 0; // let it run its natural life (no engaged floor)
-
-    // Fresh: chroma spread between channels is small (near white-hot).
-    inst.seek(0.18);
+    // Stateless engaged. Fresh (small phase) vs tail (large phase) within a
+    // cycle. phase = frac(t/2.6 + 0.1654). t=0.05 → phase ≈ 0.184 (fresh-ish),
+    // t=1.6 → phase ≈ 0.781 (cooled tail).
+    inst.seek(0.05);
     const colA = Float32Array.from(instanceColors(target).array as Float32Array);
-    // Tail: cooled to brass — the blue channel has dropped well below red.
-    inst.seek(1.4);
+    inst.seek(1.6);
     const colB = Float32Array.from(instanceColors(target).array as Float32Array);
 
     // Normalize a representative mote's hue (divide by its own max so the
@@ -183,40 +214,16 @@ describe('click-burst primitive', () => {
     inst.dispose();
   });
 
-  it('re-engage re-fires: a second rising edge restarts the bloom from the origin', () => {
-    const target = makeTarget(clickBurstPrimitive);
-    const inst = clickBurstPrimitive.create(target);
-    const count = Math.round(inst.getParams().count as number);
-
-    // First burst, then disengage and let it fully expand its natural life.
-    target.userData.state = 0;
-    inst.seek(0);
-    target.userData.state = 1;
-    inst.seek(0);
-    target.userData.state = 0;
-    inst.seek(2.0);
-    const rExpanded = meanRadius(target, count);
-
-    // A fresh rising edge at a later time re-fires; disengage immediately so the
-    // genuinely-fresh (small) ring is observable without the engaged floor.
-    target.userData.state = 1;
-    inst.seek(2.5); // re-fire (rising edge)
-    target.userData.state = 0;
-    inst.seek(2.55); // just after the new fire — ring is small again
-    const rFresh = meanRadius(target, count);
-
-    expect(rFresh, 're-engage restarts the bloom near the origin').toBeLessThan(rExpanded * 0.6);
-    inst.dispose();
-  });
-
-  // ── Control liveness at the PINNED ENGAGED frame (the W4 #1 failure) ──────
+  // ── Control liveness at the PINNED ENGAGED frame (the W5 #1 failure) ──────
   // The advocate sweeps each control low/mid/high at a single frozen engaged
-  // frame (repeated dt≈0 seeks) and pixel-diffs. Every control must reshape
-  // THAT frame boldly. We assert each control's low→high delta at the real pin.
+  // frame (the rig sets NO state, pins seek(t=1), repeated dt≈0) and pixel-
+  // diffs. Every control must reshape THAT standing frame boldly. We assert
+  // each control's low→high delta at the real pin AND that the pin is non-empty.
 
   it('control [count] reshapes the pinned engaged frame: more live motes', () => {
     const lo = pinnedEngagedSummary('count', 40);
     const hi = pinnedEngagedSummary('count', 90);
+    expect(lo.luma, 'low-count pin is still a non-empty standing bloom').toBeGreaterThan(1);
     expect(hi.count, 'high count draws far more motes').toBeGreaterThan(lo.count + 30);
     // More motes => more total emitted light at the frozen frame.
     expect(hi.luma, 'denser burst emits more light at the pin').toBeGreaterThan(lo.luma * 1.4);
@@ -225,6 +232,7 @@ describe('click-burst primitive', () => {
   it('control [radius] reshapes the pinned engaged frame: wider ring', () => {
     const lo = pinnedEngagedSummary('radius', 0.5);
     const hi = pinnedEngagedSummary('radius', 1.8);
+    expect(lo.radius, 'low-radius pin is a non-empty expanded ring').toBeGreaterThan(0.05);
     expect(hi.radius, 'larger radius pushes the standing ring further out').toBeGreaterThan(
       lo.radius * 1.6,
     );
@@ -236,6 +244,7 @@ describe('click-burst primitive', () => {
     // At a fixed mid-bloom local life, a snappier deceleration has already
     // reached more of its plateau radius than a slow one — a visibly different
     // standing ring at the same frozen frame.
+    expect(lo.radius, 'low-decel pin is a non-empty ring').toBeGreaterThan(0.02);
     expect(Math.abs(hi.radius - lo.radius), 'deceleration changes the pinned ring radius').toBeGreaterThan(
       0.12,
     );
@@ -244,6 +253,7 @@ describe('click-burst primitive', () => {
   it('control [twinkle] reshapes the pinned engaged frame: emitted light differs', () => {
     const lo = pinnedEngagedSummary('twinkle', 0);
     const hi = pinnedEngagedSummary('twinkle', 1);
+    expect(lo.luma, 'twinkle-low pin is a non-empty standing bloom').toBeGreaterThan(1);
     // Twinkle modulates per-mote opacity (premultiplied into RGB) at the
     // standing frame, so total emitted light shifts measurably low→high.
     expect(Math.abs(hi.luma - lo.luma), 'twinkle changes total emitted light at the pin').toBeGreaterThan(
@@ -251,14 +261,9 @@ describe('click-burst primitive', () => {
     );
   });
 
-  it('determinism: re-seeking the same t (same fire history) reproduces identical buffers', () => {
+  it('determinism: re-seeking the same t reproduces identical buffers', () => {
     const target = makeTarget(clickBurstPrimitive);
     const inst = clickBurstPrimitive.create(target);
-
-    target.userData.state = 0;
-    inst.seek(0);
-    target.userData.state = 1;
-    inst.seek(0); // fire at t=0
 
     inst.seek(0.9);
     const posA = Float32Array.from(instancePositions(target).array as Float32Array);
@@ -277,10 +282,6 @@ describe('click-burst primitive', () => {
     const ia = clickBurstPrimitive.create(ta);
     const ib = clickBurstPrimitive.create(tb);
 
-    for (const t of [ta, tb]) t.userData.state = 0;
-    ia.seek(0.1);
-    ib.seek(0.1);
-    for (const t of [ta, tb]) t.userData.state = 1;
     ia.seek(0.1);
     ib.seek(0.1);
     ia.seek(0.8);
@@ -319,6 +320,3 @@ describe('click-burst primitive', () => {
     expect(target.object.children.includes(sprite), 'sprite removed from target').toBe(false);
   });
 });
-
-// Mirror of the primitive's build-time max instance allocation.
-const MAX = 120;

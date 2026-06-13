@@ -16,18 +16,30 @@
 // per-grain constants derive from index hashes — no Math.random, EVER — so seek()
 // is a pure function of (state-integrated progress).
 //
-// TEXTURE-TRUE (the §11 "carry its actual colors" promise) — the grain material's
-// colorNode samples the SUBJECT'S OWN live texture at the grain's instanced UV
-// cell (texture shared by reference, scroll-stagger-rise / morph-into-card
-// discipline): a late texture pour or an applyImageSpec material swap rebuilds the
-// grain material the moment the map identity changes, so a mounted artifact's
-// grains upgrade from the map-less fallback to its real pixels in flight. When the
-// subject is map-less (the catalog card ships map-less), each grain's color comes
-// from the subject material's own color/emissive PLUS a per-cell deterministic
-// tonal variation, so the grid still reads as the card — NEVER an invented fill.
-// A radial soft-falloff alpha on each quad's uv (gaussian core killed to EXACT
-// zero before the edge) keeps grains as soft motes, never hard squares;
-// depthWrite:false so the translucent storm composites.
+// TEXTURE-TRUE (the §11 "carry its actual colors" promise) — when the subject has
+// a real .map the grain material's colorNode samples the SUBJECT'S OWN live texture
+// at the grain's instanced UV cell (texture shared by reference, scroll-stagger-rise
+// / morph-into-card discipline): a late texture pour or an applyImageSpec material
+// swap rebuilds the grain material the moment the map identity changes, so a mounted
+// artifact's grains upgrade to its real pixels in flight. When the subject is
+// map-less (the catalog card ships map-less GEOMETRY — a dark panel plus colored
+// chrome children: a brass/amber header bar, an ice accent dot, grey content rows),
+// each grain is colored by the CARD REGION its home cell covers: the chrome
+// children's OWN materials/positions seed a region color-map (brass over the header,
+// ice over the dot, grey over the rows, lifted panel over the bare body), so the
+// dissolving storm visibly CARRIES THE CARD'S COLORS — a recognizable color map of
+// the card, NEVER a flat gray fill. A radial soft-falloff alpha on each quad's uv
+// (gaussian core killed to EXACT zero before the edge) keeps grains as soft motes,
+// never hard squares; depthWrite:false so the translucent storm composites.
+//
+// STANDING-FRAME DISCOVERABILITY (the W5 advocate fix) — the held engaged pin is a
+// VISIBLE lit mid-storm, never a void: (1) the per-grain fade is FLOORED (a launched
+// grain dims to ~0.45, never to black) so the dispersed cloud stays lit; (2) the
+// launch travel is VIEWPORT-BOUNDED (offset magnitude clamped + a final absolute
+// frame-box clamp) so grains spread but stay ON-FRAME under any scatter/swirl,
+// never flung off-screen. scatterDistance grows the standing radius within that
+// envelope; swirlTurbulence reshapes the standing cloud's layout; grainDensity
+// scales the live population; dissolveSoftness widens the mid-transit band.
 //
 // SUBJECT LOOK IS SACRED: the original card is HIDDEN while the storm is active
 // (the grains ARE the card now) and restored byte-for-byte on dispose. CHROME
@@ -174,6 +186,74 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
         .applyMatrix4(invWorld).z;
       const CZ = Number.isFinite(localMaxZ) && localMaxZ > -1e8 ? localMaxZ : FALLBACK.cz;
 
+      // ── Region color map (the card's ACTUAL colors per face region) ───────
+      // Walk the subject's chrome children (header bar, accent dot, content rows
+      // — each a Mesh with its own colored material) and record, in the SUBJECT'S
+      // LOCAL frame (the same frame as the grain home positions below), each
+      // child's footprint AABB + its emissive-lifted color. A grain whose home
+      // cell falls inside a region takes that region's color; bare body grains
+      // take the lifted panel color. This is what makes the dissolving storm a
+      // recognizable COLOR MAP of the card rather than a flat gray fill — derived
+      // from the chrome's OWN materials/positions, never invented.
+      interface Region {
+        minX: number;
+        maxX: number;
+        minY: number;
+        maxY: number;
+        r: number;
+        g: number;
+        b: number;
+      }
+      const regions: Region[] = [];
+      const rgbOf = (m: SourceLike | null): { r: number; g: number; b: number } => {
+        const c = m?.color instanceof Color ? m.color : new Color('#3a4150');
+        const e = m?.emissive instanceof Color ? m.emissive : new Color('#000000');
+        const eI = m?.emissiveIntensity ?? 0;
+        // Lift the color by its emissive contribution + a brightness floor so the
+        // storm reads bright/saturated against the dark rig (embers lesson).
+        return {
+          r: Math.min(1, c.r + e.r * eI + 0.18),
+          g: Math.min(1, c.g + e.g * eI + 0.16),
+          b: Math.min(1, c.b + e.b * eI + 0.14),
+        };
+      };
+      {
+        const childBox = new Box3();
+        const cMin = new Vector3();
+        const cMax = new Vector3();
+        subject.traverse((o) => {
+          if (o === subject || o === mesh) return;
+          const mm = o as Mesh;
+          if (!mm.isMesh || !mm.geometry) return;
+          childBox.setFromObject(mm);
+          if (!Number.isFinite(childBox.min.x)) return;
+          // Into the subject's local frame (chrome is parented to the subject, so
+          // its world AABB → local via the subject's inverse world matrix).
+          cMin.copy(childBox.min).applyMatrix4(invWorld);
+          cMax.copy(childBox.max).applyMatrix4(invWorld);
+          const childMat = (Array.isArray(mm.material) ? mm.material[0] : mm.material) as
+            | SourceLike
+            | null;
+          const { r, g, b } = rgbOf(childMat);
+          regions.push({
+            minX: Math.min(cMin.x, cMax.x),
+            maxX: Math.max(cMin.x, cMax.x),
+            minY: Math.min(cMin.y, cMax.y),
+            maxY: Math.max(cMin.y, cMax.y),
+            r,
+            g,
+            b,
+          });
+        });
+      }
+      // Lifted panel (bare-body) base — the subject's own color/emissive, lifted
+      // so body grains still glow against the graphite rig (never pure black).
+      const bodyRGB = rgbOf(
+        mesh
+          ? ((Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) as SourceLike)
+          : null,
+      );
+
       // ── Per-grain deterministic constants, cached once ───────────────────
       // cellU/cellV: the grain's UV cell centre (rebuilt per density). thresh:
       // its §11 departure threshold (0..1). launch dir + swirl axis + sag: a
@@ -191,11 +271,18 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
       const spin = new Float32Array(MAX_GRAINS); // per-grain billboard spin
 
       // Per-grain UV cell (vec2) → texture sample location. Per-grain tint (vec3,
-      // premultiplied) → carries the map-less fallback color AND the per-grain
+      // premultiplied) → carries the per-grain REGION color AND the per-grain
       // opacity fade (premultiplied so it reads as an alpha fade). Declared here
       // so rebuildGrid can fill the cell uvs (per-cell constants) at build time.
       const cellUvArr = new Float32Array(MAX_GRAINS * 2);
       const tintArr = new Float32Array(MAX_GRAINS * 3);
+      // Per-grain REGION base color (rgb, 0..1) — the card's ACTUAL color at the
+      // grain's home cell: brass over the header, ice over the accent dot, grey
+      // over the content rows, lifted panel over the bare body. Filled per density
+      // in rebuildGrid from the chrome children's own materials + positions, so
+      // the dissolving storm visibly CARRIES THE CARD'S COLORS (never a flat gray
+      // fill). The map path overrides this with a live texture sample.
+      const regionColor = new Float32Array(MAX_GRAINS * 3);
 
       let curSide = -1;
       const rebuildGrid = (sideRaw: number): void => {
@@ -218,6 +305,31 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
             // Home position on the face (local frame).
             homeX[idx] = CX + (u - 0.5) * W;
             homeY[idx] = CY + (v - 0.5) * H;
+            // REGION COLOR: which chrome region does this grain's home cell sit
+            // in? Last matching region wins (children pushed front-to-back). Bare
+            // body grains take the lifted panel color. A tiny per-cell tonal
+            // jitter keeps the cloud from banding flat. This carries the CARD'S
+            // OWN COLORS into the storm.
+            let rc = bodyRGB.r;
+            let gc = bodyRGB.g;
+            let bc = bodyRGB.b;
+            for (let ri = 0; ri < regions.length; ri++) {
+              const rg = regions[ri];
+              if (
+                homeX[idx] >= rg.minX &&
+                homeX[idx] <= rg.maxX &&
+                homeY[idx] >= rg.minY &&
+                homeY[idx] <= rg.maxY
+              ) {
+                rc = rg.r;
+                gc = rg.g;
+                bc = rg.b;
+              }
+            }
+            const tone = 0.86 + hash1(idx * 8.13 + v * 6.0) * 0.28; // 0.86..1.14
+            regionColor[idx * 3] = Math.min(1, rc * tone);
+            regionColor[idx * 3 + 1] = Math.min(1, gc * tone);
+            regionColor[idx * 3 + 2] = Math.min(1, bc * tone);
             // §11 departure threshold from index-hash noise (the "left" order).
             thresh[idx] = hash1(idx * 1.37 + 0.7);
             // Launch direction: OUTWARD from the face centre (so the storm
@@ -363,24 +475,6 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
         }
       });
 
-      // Map-less fallback color: the subject material's color/emissive blend, so
-      // the grid reads as the card without a texture. Cached; re-derived when the
-      // source material changes.
-      const fallbackBase = new Color('#2a2f3a');
-      const computeFallback = (src: SourceLike | null): void => {
-        const c = src?.color instanceof Color ? src.color : new Color('#1d212b');
-        const e = src?.emissive instanceof Color ? src.emissive : new Color('#12151d');
-        const eI = src?.emissiveIntensity ?? 0.42;
-        // Lift it well above the dark panel value so the storm reads bright
-        // against the graphite rig (the embers brightness lesson, lum ≥ 0.06).
-        fallbackBase.setRGB(
-          Math.min(1, c.r + e.r * eI + 0.16),
-          Math.min(1, c.g + e.g * eI + 0.16),
-          Math.min(1, c.b + e.b * eI + 0.14),
-        );
-      };
-      computeFallback(srcMat);
-
       const prevVisible = subject.visible;
 
       // ── State integration (morph-into-card convention) ───────────────────
@@ -390,10 +484,13 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
       // A held-engaged boolean settles to a MID-STORM equilibrium (not full
       // scatter) so the pinned frame is a VISIBLE mid-effect storm where EVERY
       // control reshapes the standing population (W4 liveness — softness in
-      // particular only differentiates the mid-transit band). A NUMERIC state
-      // scrubs the dissolve directly to that value (0 assembled → 1 storm), the
-      // §11 scrub. String 'on'/'active'/'hover' = engaged.
-      const ENGAGED_TARGET = 0.62;
+      // particular only differentiates the mid-transit band). At this value a
+      // good fraction of grains are mid-transit — dispersed, lit (the fade is
+      // floored), and ON-FRAME (travel is viewport-bounded) — so the standing
+      // frame is a lit colored cloud of the card's grains, never a void. A
+      // NUMERIC state scrubs the dissolve directly to that value (0 assembled → 1
+      // storm), the §11 scrub. String 'on'/'active'/'hover' = engaged.
+      const ENGAGED_TARGET = 0.52;
       /** Target progress for the driver, or null when no state input exists. */
       const readStateTarget = (): number | null => {
         const ud = target.userData as Record<string, unknown>;
@@ -428,7 +525,15 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
         if (live !== srcMat || liveMap !== builtMap) {
           srcMat = live;
           builtMap = liveMap;
-          computeFallback(live);
+          // Refresh the bare-body color from the live source and rebuild the grid
+          // so map-less region colors track a material swap.
+          const lifted = rgbOf(live);
+          bodyRGB.r = lifted.r;
+          bodyRGB.g = lifted.g;
+          bodyRGB.b = lifted.b;
+          const side = curSide;
+          curSide = -1;
+          rebuildGrid(side);
           const next = buildMat(live);
           grains.material = next;
           material.dispose();
@@ -496,6 +601,10 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
         // Reference span for travel (face diagonal-ish), so scatter reads the
         // same on any artifact size.
         const span = Math.max(0.4, Math.hypot(W, H) * 0.5);
+        // Viewport-frame envelope (card half-extent + a margin): the standing
+        // storm is hard-clamped inside this so no grain is ever flung off-frame.
+        const frameHalfX = W * 0.5 + span * 0.6;
+        const frameHalfY = H * 0.5 + span * 0.6;
 
         // Chrome co-fade with the EARLY dissolve: gone by ~40% scattered.
         const chromeFade = 1 - clamp(progress / 0.4, 0, 1);
@@ -507,28 +616,30 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
         subject.visible = progress <= 0.001 ? prevVisible : false;
 
         const tintFor = (i: number, depart: number): void => {
-          // depart 0 = on the face (full), 1 = fully launched (faded out).
-          // Premultiplied fade so it reads as an alpha fade under additive
-          // blending (a leaving grain's RGB sinks toward 0 ⇒ it dissolves).
-          const fade = 1 - depart; // grains fade as they leave
+          // depart 0 = on the face (full), 1 = fully launched. The fade is
+          // FLOORED: a launched grain dims but NEVER sinks to black while the
+          // storm is held — so the standing engaged frame is a VISIBLE lit cloud
+          // of the card's grains (the discoverability fix), not a void. The fade
+          // premultiplies into RGB so it still reads as a gentle dim under
+          // additive blending; full brightness only at home (depart 0).
+          const fade = 1 - depart * 0.55; // 1.0 at home → 0.45 fully launched
           if (builtMap) {
             // MAP PATH: the texture sample carries the TRUE color; the tint is a
             // near-white SCALAR so the card's real pixels pass through faithfully,
-            // just faded as the grain leaves, with a gentle lift over the dark rig.
-            const lum = fade * 1.25;
+            // dimmed (floored) as the grain leaves, with a gentle lift over the rig.
+            const lum = fade * 1.35;
             tintArr[i * 3] = lum;
             tintArr[i * 3 + 1] = lum;
             tintArr[i * 3 + 2] = lum;
             return;
           }
-          // MAP-LESS FALLBACK: the subject-derived base color × a per-cell
-          // deterministic tonal variation, so the grid still reads as the card
-          // (rows of slightly different luminance) — never a flat invented fill.
-          const tone = 0.72 + hash1(i * 8.13 + cellV[i] * 6.0) * 0.56; // 0.72..1.28
-          const lum = fade * tone;
-          tintArr[i * 3] = fallbackBase.r * lum;
-          tintArr[i * 3 + 1] = fallbackBase.g * lum;
-          tintArr[i * 3 + 2] = fallbackBase.b * lum;
+          // MAP-LESS: the grain's REGION color (brass header / ice dot / grey rows
+          // / lifted body — the card's ACTUAL colors per region, filled in
+          // rebuildGrid), premultiplied by the floored fade. The storm reads as a
+          // recognizable COLOR MAP of the card — never a flat gray fill.
+          tintArr[i * 3] = regionColor[i * 3] * fade;
+          tintArr[i * 3 + 1] = regionColor[i * 3 + 1] * fade;
+          tintArr[i * 3 + 2] = regionColor[i * 3 + 2] * fade;
         };
 
         for (let i = 0; i < count; i++) {
@@ -552,25 +663,54 @@ export const imageToParticlesPrimitive: PrimitiveDefinition = {
             continue;
           }
 
-          // Launch path: outward drift × scatter, a curl swirl (deterministic
-          // sine of the grain's own travel), and a slight gravity sag — the §9
-          // procedural curl that gives the storm its swirl. Reassembly flies the
-          // SAME path in reverse with a late overshoot snap near home.
+          // Launch path: outward drift, a curl swirl, and a slight gravity sag —
+          // the §9 procedural curl that gives the storm its swirl. Reassembly
+          // flies the SAME path in reverse with a late overshoot snap near home.
           const e = snapEase(depart); // 0 at home → ~1 launched (slight overshoot)
-          const travel = e * scatter * span;
-          // Curl: rotate the launch direction by an angle that grows with travel
-          // (a swirl), magnitude scaled by the turbulence control.
-          const ang = swirlFreq[i] * e * Math.PI + spin[i];
+          // BOUNDED on-frame travel: scatterDistance modulates the storm radius
+          // WITHIN a viewport-bounded envelope so grains spread but stay ON-FRAME
+          // and visible (the advocate's "pushed into the void" fix). Even at
+          // scatter=5 the radius stays ≈0.9·span, roughly one card half-extent —
+          // a wide standing cloud, never off-screen.
+          const travel = e * span * (0.26 + scatter * 0.13);
+          // Curl: rotate the launch DIRECTION by an angle that grows with travel,
+          // scaled by the turbulence control — a swirl that reshapes the cloud's
+          // angular layout. Applied to the unit direction BEFORE the travel scale
+          // (plus a bounded radial wobble) so swirl reshapes the storm without
+          // ever blowing the radius off-frame.
+          const ang = (swirlFreq[i] * e * Math.PI + spin[i]) * (0.35 + swirl * 0.65);
           const ca = Math.cos(ang);
           const sa = Math.sin(ang);
-          const sx = dirX[i] * ca - dirY[i] * sa;
-          const sy = dirX[i] * sa + dirY[i] * ca;
-          const swirlOff = swirl * swirlAmp[i] * e;
-          posV.set(
-            homeX[i] + (dirX[i] + sx * swirlOff) * travel,
-            homeY[i] + (dirY[i] + sy * swirlOff) * travel - e * e * scatter * 0.35,
-            CZ + dirZ[i] * travel,
-          );
+          const rx = dirX[i] * ca - dirY[i] * sa;
+          const ry = dirX[i] * sa + dirY[i] * ca;
+          // Swirl mixes the rotated direction into the launch and adds a bounded
+          // per-grain radial wobble so the cloud visibly reshapes low→high swirl.
+          const wob = 1 + swirl * swirlAmp[i] * 0.35 * Math.sin(swirlFreq[i] * e * 3.0 + spin[i]);
+          const mix = clamp(swirl * 0.5, 0, 1);
+          const dx = dirX[i] * (1 - mix) + rx * mix;
+          const dy = dirY[i] * (1 - mix) + ry * mix;
+          // Planar offset from home, then HARD-CLAMP its magnitude to a viewport-
+          // bounded envelope so NO grain (not even a long-direction outlier under
+          // high scatter × swirl wobble) is flung off-frame into the void. The
+          // controls still modulate spread up to this cap — a wide standing cloud
+          // that always stays on-screen and lit.
+          let offX = dx * travel * wob;
+          let offY = dy * travel * wob - e * e * span * 0.18;
+          const offLen = Math.hypot(offX, offY);
+          const OFFSET_MAX = span * 1.0; // ≈ one card half-extent of spread
+          if (offLen > OFFSET_MAX) {
+            const k = OFFSET_MAX / offLen;
+            offX *= k;
+            offY *= k;
+          }
+          // Final absolute-position clamp to a viewport-frame box (card extent +
+          // margin): a hard guarantee that EVERY grain — including corner grains —
+          // stays on-screen, lit, and legible. The storm never bleeds to a void.
+          let px = homeX[i] + offX;
+          let py = homeY[i] + offY;
+          px = clamp(px, CX - frameHalfX, CX + frameHalfX);
+          py = clamp(py, CY - frameHalfY, CY + frameHalfY);
+          posV.set(px, py, CZ + dirZ[i] * travel);
           // Grains shrink slightly as they fly (sand grains, not growing blobs).
           const gs = GRAIN_QUAD * (1 - depart * 0.35);
           // Billboard spin: a cheap z-rotation so flying grains tumble.

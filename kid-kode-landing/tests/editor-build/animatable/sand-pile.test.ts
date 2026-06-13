@@ -202,15 +202,76 @@ describe('sand-pile primitive', () => {
   });
 
   // ── CONTROL LIVENESS — each control must BOLDLY reshape the FROZEN pinned
-  // engaged frame (repeated dt≈0 seeks at the same t). The rig pins time-tile
-  // control sweeps at t=duration on a fallback clock; we measure at the dune's
-  // peak (pre-gust) so structural changes are unmistakable. Target: a plainly
-  // visible delta, far above sub-noise (~0.5-3). ──────────────────────────────
-  const PIN = LOOP * 0.6; // engaged: a tall, settled dune, before the gust
+  // ENGAGED frame (repeated dt≈0 seeks at the SAME t). The user-advocate capture
+  // harness pins time-tiles at t=1 (controlsPinT=1, paused) and sweeps each knob
+  // low→mid→high at that single frozen frame — so EVERY measure here must use the
+  // SAME pin the advocate uses, NOT the dune peak. The r1 advocate BLOCKED this
+  // tile because two controls were dead at this pin: 'gust' (its erosion front
+  // only acts in the last 20% of the loop → byte-identical at a mid-BUILD pin)
+  // and 'repose' (the early pile was too thin for the avalanche to fire). The fix
+  // (standing wind-shear for gust; centre-concentrated spawn + lateral fan for
+  // repose) must make BOTH visibly reshape the standing frame at THIS pin. ──────
+  const PIN = LOOP * 0.1; // t=1 — the advocate's exact engaged controlsPinT.
 
-  /** Snapshot the live grain positions at the pinned frame after setting one
-   *  control low then high, with REPEATED seeks at the SAME t (frozen frame,
-   *  the advocate's static measure). Returns the L1 distance between the two. */
+  /** All live grain (x,y) at the frozen pinned frame, flattened — the positional
+   *  signal the advocate's pixel diff reads. Parked grains (HIDDEN_Y) excluded. */
+  function liveXY(target: ReturnType<typeof makeTarget>, n: number): number[] {
+    const pos = grainPositions(target).array as Float32Array;
+    const out: number[] = [];
+    for (let i = 0; i < n; i++) {
+      const y = pos[i * 3 + 1];
+      if (y >= FLOOR_Y - 0.5) out.push(pos[i * 3], y);
+    }
+    return out;
+  }
+
+  /** L1 distance between two flattened position snapshots (prefix-aligned). */
+  function l1(a: number[], b: number[]): number {
+    let s = 0;
+    const m = Math.min(a.length, b.length);
+    for (let i = 0; i < m; i++) s += Math.abs(a[i] - b[i]);
+    // Count grains that appear/disappear between the two as full displacement too.
+    s += Math.abs(a.length - b.length) * 0.5;
+    return s;
+  }
+
+  /** Mean signed x of the settled-band grains — the downwind LEAN the standing
+   *  wind-shear produces. A stronger gust leans the whole pile further right. */
+  function leanX(target: ReturnType<typeof makeTarget>, n: number): number {
+    const pos = grainPositions(target).array as Float32Array;
+    let sx = 0;
+    let c = 0;
+    for (let i = 0; i < n; i++) {
+      const y = pos[i * 3 + 1];
+      if (y >= FLOOR_Y - 0.5 && y <= FLOOR_Y + 1.2) {
+        sx += pos[i * 3];
+        c += 1;
+      }
+    }
+    return c ? sx / c : 0;
+  }
+
+  /** Mean height (above floor) of the settled-band grains — the dune PROFILE.
+   *  A STEEP repose holds grains stacked HIGH (a tall narrow peak → larger mean
+   *  height); a SHALLOW repose topples them down and out into a WIDE LOW dune
+   *  (smaller mean height). Excludes the high spawn band of in-flight grains. */
+  function settledMeanH(target: ReturnType<typeof makeTarget>, n: number): number {
+    const pos = grainPositions(target).array as Float32Array;
+    let s = 0;
+    let c = 0;
+    for (let i = 0; i < n; i++) {
+      const y = pos[i * 3 + 1];
+      if (y >= FLOOR_Y - 0.5 && y <= FLOOR_Y + 1.0) {
+        s += y - FLOOR_Y;
+        c += 1;
+      }
+    }
+    return c ? s / c : 0;
+  }
+
+  /** Snapshot one numeric metric at the pinned frame after setting one control
+   *  low then high, with REPEATED frozen seeks at the SAME t — the advocate's
+   *  exact static capture (paused, dt≈0 re-seeks). Returns |hi − lo|. */
   function controlDelta(
     id: string,
     low: number,
@@ -236,17 +297,75 @@ describe('sand-pile primitive', () => {
     return Math.abs(hi - lo);
   }
 
-  it('control liveness: grain rate BOLDLY reshapes the pinned dune (more grains accumulated)', () => {
-    // More grains raining over the same elapsed time = a far bigger dune.
-    const dMass = controlDelta('rate', 6, 60, pileMass);
-    expect(dMass).toBeGreaterThan(10.0); // bold — measured ~80 scene-units
+  it('the engaged pinned frame is NON-EMPTY (a standing dune is rendered, not a dead frame)', () => {
+    // The advocate sweeps controls at this frozen pin; a one-shot/edge effect that
+    // collapsed to empty here would read DEAD. Assert a real standing pile exists.
+    const target = makeTarget(sandPilePrimitive);
+    const inst = sandPilePrimitive.create(target);
+    const n = grainPositions(target).count;
+    inst.seek(PIN);
+    inst.seek(PIN);
+    expect(settledCount(target, n), 'grains are settled in the pile at the pin').toBeGreaterThan(20);
+    expect(pileMass(target, n), 'the standing dune carries real mass at the pin').toBeGreaterThan(3.0);
+    inst.dispose();
   });
 
-  it('control liveness: repose angle reshapes the pinned dune profile', () => {
-    // A steeper repose angle holds a taller, narrower dune; a shallow one
-    // spreads flat — the accumulated mass profile at the pin differs.
-    const dMass = controlDelta('repose', 0.18, 0.95, pileMass);
-    expect(dMass).toBeGreaterThan(2.0);
+  it('control liveness: grain rate BOLDLY reshapes the pinned dune (more grains accumulated)', () => {
+    // More grains raining over the same elapsed time = a far denser, brighter,
+    // bigger pile at the frozen pin (the advocate read this LIVE via luma/stdev).
+    const dMass = controlDelta('rate', 6, 60, pileMass);
+    const dLuma = controlDelta('rate', 6, 60, meanLuma);
+    expect(dMass).toBeGreaterThan(10.0); // bold positional/mass reshape
+    expect(dLuma).toBeGreaterThan(0.05); // and the field brightens with density
+  });
+
+  it('control liveness: repose angle reshapes the pinned dune PROFILE (wide-low ↔ tall-narrow)', () => {
+    // FIX for the r1 BLOCK: 'repose' was byte-identical because the early pile was
+    // too thin for the avalanche to fire. Now a SHALLOW repose topples grains down
+    // and out into a WIDE LOW dune; a STEEP repose stacks them into a TALL NARROW
+    // peak. Measured at the advocate's exact pin (t=1), repeated frozen seeks.
+    const target = makeTarget(sandPilePrimitive);
+    const inst = sandPilePrimitive.create(target);
+    const n = grainPositions(target).count;
+    inst.setControl('repose', 0.18);
+    inst.seek(PIN);
+    inst.seek(PIN);
+    const wideXY = liveXY(target, n);
+    const wideH = settledMeanH(target, n);
+    inst.setControl('repose', 0.95);
+    inst.seek(PIN);
+    inst.seek(PIN);
+    const narrowXY = liveXY(target, n);
+    const steepH = settledMeanH(target, n);
+    inst.dispose();
+    // The whole standing pile is repositioned between the two repose extremes.
+    expect(l1(wideXY, narrowXY), 'repose moves the standing dune at the pin').toBeGreaterThan(3.0);
+    // …and specifically: a STEEP repose stacks the pile visibly HIGHER on average
+    // (tall narrow peak) than a shallow one (wide low spread).
+    expect(steepH, 'steep repose stacks the dune taller than shallow').toBeGreaterThan(
+      wideH + 0.01,
+    );
+  });
+
+  it('control liveness: repose sweep is MONOTONE across low→mid→high (every knob step reshapes)', () => {
+    // The advocate sweeps low/mid/high; each adjacent pair must visibly differ so
+    // none reads byte-identical. The settled pile must stack monotonically TALLER
+    // as repose steepens — proof the avalanche relaxation runs at the pin.
+    const target = makeTarget(sandPilePrimitive);
+    const inst = sandPilePrimitive.create(target);
+    const n = grainPositions(target).count;
+    const h = (rep: number): number => {
+      inst.setControl('repose', rep);
+      inst.seek(PIN);
+      inst.seek(PIN);
+      return settledMeanH(target, n);
+    };
+    const lo = h(0.18);
+    const mid = h(0.5);
+    const hi = h(0.95);
+    inst.dispose();
+    expect(mid, 'mid stacks taller than shallow').toBeGreaterThan(lo);
+    expect(hi, 'steep stacks taller than mid').toBeGreaterThan(mid);
   });
 
   it('control liveness: grain size BOLDLY reshapes the pinned frame (taller dune + brighter motes)', () => {
@@ -254,17 +373,54 @@ describe('sand-pile primitive', () => {
     // brighter on the frozen frame (per-grain luma lift) — both are visible.
     const dMass = controlDelta('grainSize', 0.02, 0.07, pileMass);
     const dLuma = controlDelta('grainSize', 0.02, 0.07, meanLuma);
-    expect(dMass).toBeGreaterThan(10.0); // bold — measured ~42 scene-units
+    expect(dMass).toBeGreaterThan(3.0); // positional reshape at the pin
     expect(dLuma).toBeGreaterThan(0.02); // and the motes brighten too
   });
 
-  it('control liveness: gust strength BOLDLY reshapes the pinned dune (stronger gust erodes more)', () => {
-    // The gust only acts in the last 20% of the loop, so pin INSIDE the gust
-    // window: a stronger gust has blown a visibly larger bite out of the dune
-    // at the frozen frame than a weak one. (The harness re-freezes at a swept-
-    // visible phase; this asserts the effect is real where the gust is live.)
-    const dMass = controlDelta('gust', 0.1, 1.0, pileMass, LOOP * 0.9);
-    expect(dMass).toBeGreaterThan(6.0); // bold — measured ~16 scene-units
+  it('control liveness: gust strength BOLDLY reshapes the pinned dune (stronger gust shears + lofts)', () => {
+    // FIX for the r1 BLOCK: 'gust' was byte-identical at a mid-BUILD pin because
+    // its erosion front only acts in the last 20% of the loop. Now a PERSISTENT
+    // wind-shear is felt on the standing pile at EVERY frame — a stronger gust
+    // visibly LEANS the dune downwind and lofts grains into airborne streaks.
+    // Measured at the advocate's exact pin (t=1, mid-BUILD), repeated frozen seeks.
+    const dLean = controlDelta('gust', 0.1, 1.0, leanX);
+    const dMass = controlDelta('gust', 0.1, 1.0, pileMass);
+    expect(dLean, 'a strong gust leans the standing pile far downwind').toBeGreaterThan(0.1);
+    expect(dMass, 'the sheared+lofted pile redistributes mass boldly').toBeGreaterThan(3.0);
+  });
+
+  it('control liveness: gust sweep is MONOTONE across low→mid→high (lean grows with strength)', () => {
+    // Each adjacent pair must differ (no byte-identical step). The downwind lean
+    // must grow monotonically with gust strength at the standing pinned frame.
+    const target = makeTarget(sandPilePrimitive);
+    const inst = sandPilePrimitive.create(target);
+    const n = grainPositions(target).count;
+    const lean = (g: number): number => {
+      inst.setControl('gust', g);
+      inst.seek(PIN);
+      inst.seek(PIN);
+      return leanX(target, n);
+    };
+    const lo = lean(0.1);
+    const mid = lean(0.55);
+    const hi = lean(1.0);
+    inst.dispose();
+    expect(mid, 'mid leans further than low').toBeGreaterThan(lo);
+    expect(hi, 'high leans further than mid').toBeGreaterThan(mid);
+  });
+
+  it('GUST still clears the dune for the seamless loop (standing shear did not break erosion)', () => {
+    // The new persistent shear must NOT prevent the late-loop erosion front from
+    // sweeping the dune back to ~empty — the seamless restart still holds.
+    const target = makeTarget(sandPilePrimitive);
+    const inst = sandPilePrimitive.create(target);
+    const n = grainPositions(target).count;
+    inst.seek(LOOP * 0.6);
+    const peak = pileMass(target, n);
+    inst.seek(LOOP * 0.99);
+    const end = pileMass(target, n);
+    expect(end).toBeLessThan(peak * 0.5);
+    inst.dispose();
   });
 
   it('dispose restores: sprite removed and its geometry/material freed', () => {

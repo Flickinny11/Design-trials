@@ -69,6 +69,73 @@ function captureHomes(target: ReturnType<typeof makeTarget>): Vector3[] {
   return out;
 }
 
+/** Snapshot every live grain's current instance position (drawn count). Used to
+ *  measure how a control RESHAPES the standing storm between two settings — the
+ *  mean per-grain positional shift, which is what the advocate's pixel-diff of
+ *  the frozen frame actually sees (an angular swirl reshape barely moves the
+ *  mean radius, but plainly moves the grains). */
+function snapshotPositions(target: ReturnType<typeof makeTarget>): Vector3[] {
+  const mesh = grainMesh(target);
+  const m = new Matrix4();
+  const out: Vector3[] = [];
+  for (let i = 0; i < mesh.count; i++) {
+    mesh.getMatrixAt(i, m);
+    out.push(new Vector3().setFromMatrixPosition(m));
+  }
+  return out;
+}
+
+/** Mean per-grain positional shift between two equal-length position snapshots
+ *  (over the overlapping live grains). */
+function meanShift(a: Vector3[], b: Vector3[]): number {
+  const n = Math.min(a.length, b.length);
+  if (n === 0) return 0;
+  let sum = 0;
+  for (let i = 0; i < n; i++) sum += a[i].distanceTo(b[i]);
+  return sum / n;
+}
+
+/** Read the live per-grain premultiplied tint buffer (vec3) — the RGB the storm
+ *  actually draws under additive blending. Used to assert the standing frame is
+ *  NON-EMPTY (lit) and CARRIES THE CARD'S COLORS (not a flat monochrome fill). */
+function tintBuffer(target: ReturnType<typeof makeTarget>): Float32Array {
+  const geo = grainMesh(target).geometry as BufferGeometry;
+  const attr = geo.attributes.instanceTint as InstancedBufferAttribute;
+  return attr.array as Float32Array;
+}
+
+/** Mean luminance of the live grains' drawn tint (a single brightness scalar for
+ *  the standing frame — the discoverability floor the advocate's meanLuma checks). */
+function meanGrainLuma(target: ReturnType<typeof makeTarget>): number {
+  const buf = tintBuffer(target);
+  const n = grainMesh(target).count;
+  if (n === 0) return 0;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    sum += 0.2126 * buf[i * 3] + 0.7152 * buf[i * 3 + 1] + 0.0722 * buf[i * 3 + 2];
+  }
+  return sum / n;
+}
+
+/** Per-channel spread (max-min) across the live grains' tint — a proxy for "the
+ *  grains carry MULTIPLE colors" (a recognizable color map). A flat monochrome
+ *  fill collapses this toward ~0; a brass header + ice dot + grey rows + body
+ *  give a wide spread, especially in the hue-bearing R−B difference. */
+function tintColorSpread(target: ReturnType<typeof makeTarget>): number {
+  const buf = tintBuffer(target);
+  const n = grainMesh(target).count;
+  let minRB = Infinity;
+  let maxRB = -Infinity;
+  for (let i = 0; i < n; i++) {
+    const r = buf[i * 3];
+    const b = buf[i * 3 + 2];
+    const rb = r - b; // warm (brass, +) vs cool (ice, −) axis
+    if (rb < minRB) minRB = rb;
+    if (rb > maxRB) maxRB = rb;
+  }
+  return n > 0 ? maxRB - minRB : 0;
+}
+
 /** First decorative chrome material under the card panel (header bar etc.). */
 function firstChromeMat(panel: Mesh): FadableMat {
   let found: FadableMat | null = null;
@@ -213,6 +280,51 @@ describe('image-to-particles primitive', () => {
     inst.seek(PIN_T); // repeated seek — frozen frame
   }
 
+  // ── STANDING-FRAME DISCOVERABILITY (the play-2/3 near-black void fix) ────────
+  // The held engaged pin must be a VISIBLE lit mid-storm, NOT collapsed to black.
+  it('held engaged: standing frame is a NON-EMPTY lit storm (not a black void)', () => {
+    const target = makeTarget(imageToParticlesPrimitive);
+    const subject = target.subject as Mesh;
+    const inst = imageToParticlesPrimitive.create(target);
+    target.userData.state = 0;
+    inst.seek(0);
+    const homes = captureHomes(target);
+
+    pinEngaged(target, inst);
+
+    // The storm is dispersed (grains off home) AND lit (mean tint luma above the
+    // discoverability floor) — the standing frame reads, it does not go to void.
+    expect(meanDisplacement(target, homes), 'standing storm is dispersed').toBeGreaterThan(0.1);
+    expect(meanGrainLuma(target), 'standing storm grains stay lit (no black-void collapse)')
+      .toBeGreaterThan(0.06);
+    // Grains stay ON-FRAME: mean displacement bounded to ≈ one card half-extent,
+    // never flung off-screen into the void (the advocate's "pushed off-frame" fix).
+    expect(meanDisplacement(target, homes), 'standing storm stays on-frame (bounded radius)')
+      .toBeLessThan(1.3);
+    // While engaged the card itself is hidden — the grains ARE the card.
+    expect(subject.visible, 'subject hidden while engaged').toBe(false);
+    inst.dispose();
+  });
+
+  it('carries the CARD COLORS: grains are a multi-color map, never a flat gray fill', () => {
+    const target = makeTarget(imageToParticlesPrimitive);
+    const inst = imageToParticlesPrimitive.create(target);
+
+    // At rest the grains tile the face and must already carry the card's region
+    // colors (brass header / ice dot / grey rows / lifted body) — a wide warm↔cool
+    // spread. A monochrome gray fill (the defect) collapses this toward ~0.
+    target.userData.state = 0;
+    inst.seek(0);
+    expect(tintColorSpread(target), 'rest grains carry MULTIPLE card colors (not monochrome)')
+      .toBeGreaterThan(0.12);
+
+    // The color map survives into the standing storm (still not a flat gray cloud).
+    pinEngaged(target, inst);
+    expect(tintColorSpread(target), 'storm grains still carry the card colors')
+      .toBeGreaterThan(0.08);
+    inst.dispose();
+  });
+
   it('control: scatter distance reshapes the frozen storm (grains fling farther)', () => {
     const target = makeTarget(imageToParticlesPrimitive);
     const inst = imageToParticlesPrimitive.create(target);
@@ -231,26 +343,37 @@ describe('image-to-particles primitive', () => {
 
     // Bold, plainly-visible delta at the frozen frame (mean grain travel grows).
     expect(hi - lo, 'scatter distance grows the standing storm radius').toBeGreaterThan(0.3);
+    // …but the storm stays ON-FRAME even at max scatter (the void fix: scatter
+    // spreads the cloud within a bounded envelope, never flinging grains off-screen).
+    expect(hi, 'max-scatter storm is still on-frame (bounded radius)').toBeLessThan(1.5);
+    expect(meanGrainLuma(target), 'max-scatter storm is still lit (not a void)').toBeGreaterThan(
+      0.06,
+    );
     inst.dispose();
   });
 
-  it('control: swirl turbulence reshapes the frozen storm (grain spread changes)', () => {
+  it('control: swirl turbulence reshapes the frozen storm (grains visibly move)', () => {
     const target = makeTarget(imageToParticlesPrimitive);
     const inst = imageToParticlesPrimitive.create(target);
     target.userData.state = 0;
     inst.seek(0);
-    const homes = captureHomes(target);
 
     inst.setControl('swirlTurbulence', 0);
     pinEngaged(target, inst);
-    const lo = meanDisplacement(target, homes);
+    const posLo = snapshotPositions(target);
 
     inst.setControl('swirlTurbulence', 2.0);
     inst.seek(PIN_T);
     inst.seek(PIN_T);
-    const hi = meanDisplacement(target, homes);
+    const posHi = snapshotPositions(target);
 
-    expect(Math.abs(hi - lo), 'swirl turbulence visibly reshapes the storm').toBeGreaterThan(0.1);
+    // Swirl reshapes the standing storm's LAYOUT (angular curl + bounded radial
+    // wobble), so the mean per-grain positional shift between swirl=0 and swirl=2
+    // is bold — exactly the reshape the advocate's frozen-frame pixel-diff sees.
+    // A mean-radius metric would miss an angular reshape; per-grain shift does not.
+    expect(meanShift(posLo, posHi), 'swirl turbulence visibly reshapes the storm').toBeGreaterThan(
+      0.12,
+    );
     inst.dispose();
   });
 

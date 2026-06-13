@@ -304,7 +304,17 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
   orbit-trails, sand-pile, bokeh-drift, image-to-particles, comet-orbit. Script HARDENED before launch with the W4
   control-liveness lesson (advocate sweeps controls at a FROZEN pin; rate/count/speed/life controls must reshape the
   STANDING pinned state with BOLD amplitude ≥6 meanAbsDiff; pointer pin corrected to {0.5,0.7}). wf_b477af0f-a34, batches
-  of 4. PENDING: barrel-wire (359→370) → tsc/vitest/harness 11 → art-fidelity → capture → advocate → fix-rounds → CKPT.
+  of 4. Barrel-wired registry 359→370 (particles 35→46). GATES: tsc 0-new; full animatable vitest 371 files/1628 green;
+  harness 11/11 r/p/c deviceLost 0; webgpu DPR2 capture (+embers/fireflies refs). SAFETY-CKPT 12dacad (pushed).
+  ADVOCATE r1 (wf_f9858237-caa): **8 SHIP** (constellation-net, pointer-spark-trail, flow-ribbon, sdf-metablob,
+  hyperspace-warp, orbit-trails, bokeh-drift [iris dropdown uncaptured=non-blocking flag — capture sweeps range inputs
+  only], comet-orbit), **3 BLOCKED**: click-burst (state one-shot never renders at held pin; all 4 controls dead,
+  frameDeltaMag=0), sand-pile (gust+repose dead — both act outside the mid-loop pin; rate/grainSize live),
+  image-to-particles (grains MONOCHROME GRAY=no card colors, held state collapses to near-black, grainDensity+
+  swirlTurbulence dead). FIX-ROUND r1 (wf_2feb5c90-36f, 3 agents, standing-pose-at-pin): click-burst persist mid-bloom
+  ring; sand-pile standing gust/repose cues + repose reshapes dune slope; image-to-particles region-color grains +
+  standing on-frame mid-storm + live density/swirl/scatter. Log: w5-advocate-r1-log.txt. PENDING: r1 → gates 3 →
+  re-capture 3 → re-advocate 3 → CKPT → WF report.
 - [ ] WF report + final no-regression (312+N) + STOP
 
 ## Log
