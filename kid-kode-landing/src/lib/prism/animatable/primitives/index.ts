@@ -68,12 +68,24 @@ import { scrollColorShiftPrimitive } from './scroll-color-shift';
 import { scrollDepthDollyPrimitive } from './scroll-depth-dolly';
 import { scrollFadeStackPrimitive } from './scroll-fade-stack';
 import { scrollFlipPrimitive } from './scroll-flip';
+import { scrollFlipBookPrimitive } from './scroll-flip-book';
+import { scrollFoldScrubPrimitive } from './scroll-fold-scrub';
+import { scrollInertiaGlidePrimitive } from './scroll-inertia-glide';
+import { scrollMarqueePrimitive } from './scroll-marquee';
+import { scrollOrbitScrubPrimitive } from './scroll-orbit-scrub';
+import { scrollPathScrubPrimitive } from './scroll-path-scrub';
+import { scrollPendulumSwayPrimitive } from './scroll-pendulum-sway';
 import { scrollProgressFillPrimitive } from './scroll-progress-fill';
 import { scrollRotate3dPrimitive } from './scroll-rotate-3d';
+import { scrollRubberBandPrimitive } from './scroll-rubber-band';
+import { scrollSceneScrubPrimitive } from './scroll-scene-scrub';
 import { scrollShrinkAwayPrimitive } from './scroll-shrink-away';
 import { scrollSkewPrimitive } from './scroll-skew';
+import { scrollSnapSectionsPrimitive } from './scroll-snap-sections';
 import { scrollStaggerRisePrimitive } from './scroll-stagger-rise';
 import { scrollTiltPrimitive } from './scroll-tilt';
+import { scrollVelocityStretchPrimitive } from './scroll-velocity-stretch';
+import { scrollWaveRidePrimitive } from './scroll-wave-ride';
 import { scrollZoomPrimitive } from './scroll-zoom';
 import { scrubMorphPrimitive } from './scrub-morph';
 import { stickyPinPrimitive } from './sticky-pin';
@@ -396,12 +408,24 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   scrollDepthDollyPrimitive,
   scrollFadeStackPrimitive,
   scrollFlipPrimitive,
+  scrollFlipBookPrimitive,
+  scrollFoldScrubPrimitive,
+  scrollInertiaGlidePrimitive,
+  scrollMarqueePrimitive,
+  scrollOrbitScrubPrimitive,
+  scrollPathScrubPrimitive,
+  scrollPendulumSwayPrimitive,
   scrollProgressFillPrimitive,
   scrollRotate3dPrimitive,
+  scrollRubberBandPrimitive,
+  scrollSceneScrubPrimitive,
   scrollShrinkAwayPrimitive,
   scrollSkewPrimitive,
+  scrollSnapSectionsPrimitive,
   scrollStaggerRisePrimitive,
   scrollTiltPrimitive,
+  scrollVelocityStretchPrimitive,
+  scrollWaveRidePrimitive,
   scrollZoomPrimitive,
   scrubMorphPrimitive,
   stickyPinPrimitive,

@@ -1,0 +1,7 @@
+{
+  "name": "scroll-orbit-scrub",
+  "label": "Orbit Degrees",
+  "description": "Scrolling flies the camera around the card — it swings through a shallow orbital arc, showing its sides as the page moves.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

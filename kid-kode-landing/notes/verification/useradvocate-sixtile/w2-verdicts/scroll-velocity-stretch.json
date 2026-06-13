@@ -1,0 +1,34 @@
+{
+  "feature": "scroll-velocity-stretch",
+  "claim": "Scroll speed pulls the card like taffy along its travel — stretching long mid-fling, relaxing square as the page settles.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No broken/blank states. Idle is a clean ship-quality card (brass header, blue dot, 3 grey rows, rounded panel) sitting low at rest. play-3 well-framed, chrome crisp. At extreme stretch (settleDamping-low, travel-high) the card fills much of the frame and the bottom grey row can graze the frame edge, but all chrome stays legible — acceptable stretch behavior, not a defect.",
+      "evidence": ["scroll-velocity-stretch/after/idle.png", "scroll-velocity-stretch/after/play-3.png", "scroll-velocity-stretch/after/control-settleDamping-low.png", "metrics: 0 consoleErrors, 0 networkErrors, backend webgpu"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads precisely as velocity stretch / taffy: stretchGain-high elongates the card dramatically tall along its travel axis with the accent dot stretching into a vertical oval and the panel/rows elongating, while stretchGain-low is near-square (relaxed). Exactly the 'stretch long mid-fling, relax square at rest' claim. Same card subject as ground truth, chrome intact at full stretch.",
+      "evidence": ["scroll-velocity-stretch/after/control-stretchGain-high.png", "scroll-velocity-stretch/after/control-stretchGain-low.png", "control: stretchGain changed=true (low.luma=16.4 band=0.534 -> high.luma=18.5 band=0.447)"]
+    },
+    "q3_discoverable": {
+      "answer": "All three labeled controls produce clear, sensible visible change: 'Stretch Gain' scales the elongation, 'travel' moves the up-frame position with stretch, and 'settleDamping' controls residual stretch (low damping = very tall, high damping = squarer). A user dragging any slider immediately sees the taffy respond.",
+      "evidence": ["scroll-velocity-stretch/after/control-stretchGain-high.png", "scroll-velocity-stretch/after/control-travel-high.png", "scroll-velocity-stretch/after/control-settleDamping-low.png", "control: stretchGain/travel/settleDamping all changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive: play frame deltas 9.57/12.13/12.80 show continuous motion, and every control changes the frame with monotonic luma/banding progressions. No dead controls.",
+      "evidence": ["metrics: play-1 delta=9.57 play-2 delta=12.13 play-3 delta=12.80", "control: all 3 changed=true (stretchGain luma 16.4->18.5, settleDamping luma 19.0->17.6)"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'oh nice, the card stretches like taffy when I fling it and snaps back square when I let go' — the headline effect is dramatic, premium, on-claim, and every slider does something sensible.",
+      "evidence": ["scroll-velocity-stretch/after/control-stretchGain-high.png", "scroll-velocity-stretch/after/control-stretchGain-low.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "At the most extreme stretch (settleDamping-low) the card is large enough that the bottom grey row grazes the lower frame edge; cosmetic, chrome still legible.", "evidence": "scroll-velocity-stretch/after/control-settleDamping-low.png" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

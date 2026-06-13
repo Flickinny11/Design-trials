@@ -1,0 +1,7 @@
+{
+  "name": "scroll-inertia-glide",
+  "label": "Smoothness",
+  "description": "The card glides on buttery inertia — trailing the scroll like Lenis smooth-scroll made physical, easing into place when the page rests.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

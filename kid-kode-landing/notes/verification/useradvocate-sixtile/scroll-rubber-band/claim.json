@@ -1,0 +1,7 @@
+{
+  "name": "scroll-rubber-band",
+  "label": "Resistance",
+  "description": "The card scrolls on a rubber band — linear through the middle, straining with resistance near the ends, twanging back when released.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,17 @@
+{
+  "feature": "scroll-pendulum-sway",
+  "claim": "subject sways like a pendulum reacting to scroll motion",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "No defects. Card hangs from a brass pivot rod with a bead at top-centre; everything sharp at DPR-2; full card chrome intact.", "evidence": ["scroll-pendulum-sway/after/idle.png", "scroll-pendulum-sway/after/play-3.png"] },
+    "q2_reads_as": { "answer": "Reads literally as a pendulum: the card is suspended from a thin brass rod/pin at top-centre and the body swings beneath it — idle hangs near-level, play-3 has swung clockwise to a clear ~15-20 deg tilt. Card chrome (brass header, 3 grey rows, ice dot, rounded panel) preserved, matches ground truth.", "evidence": ["scroll-pendulum-sway/after/idle.png", "scroll-pendulum-sway/after/play-3.png", "swap-flip-morph/after/play-3.png"] },
+    "q3_discoverable": { "answer": "Yes for 3 of 4. swayGain clearly scales swing amplitude (low near-level, high large swing); pivotLength clearly lengthens the suspension rod and drops/widens the swing; damping changes the settle. ambientSway is the exception — low and high are visually indistinguishable.", "evidence": ["scroll-pendulum-sway/after/control-swayGain-low.png", "scroll-pendulum-sway/after/control-swayGain-high.png", "scroll-pendulum-sway/after/control-pivotLength-high.png", "control: pivotLength changedFrac 0.2944"] },
+    "q4_responsive": { "answer": "Responsive: card swings across play frames, frameDeltaMag 5.82 then 6.27; controls apply ~571-592ms.", "evidence": ["metrics: play-1 frameDeltaMag 5.82, play-2 frameDeltaMag 6.27", "control: swayGain changedFrac 0.2114"] },
+    "q5_net": { "answer": "PLEASED — the hanging-pendulum metaphor is unmistakable and premium, the card stays fully legible, and 3 of 4 knobs are obvious. One nearly-dead knob is a taste flag, not a blocker.", "evidence": ["scroll-pendulum-sway/after/play-3.png", "scroll-pendulum-sway/after/control-pivotLength-high.png"] }
+  },
+  "mustFix": [],
+  "flags": [{ "note": "ambientSway control produces no user-legible change: low vs high are essentially the same frame (effRGB 70.4,65.8,59.8 both; meanAbsDiff 2.1). It is 1 of 4 controls so it does not cross the >1-dead-control MUST-FIX threshold, but a user would not notice it doing anything.", "evidence": "control: ambientSway changedFrac 0.0528 meanAbsDiff 2.1, effRGB identical low/high" }],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

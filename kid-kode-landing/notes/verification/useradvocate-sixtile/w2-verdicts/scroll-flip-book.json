@@ -1,0 +1,17 @@
+{
+  "feature": "scroll-flip-book",
+  "claim": "subject advances through discrete flip-book frames/poses on scroll",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "No defects. Card is sharp at every pose; chrome (brass header, ice dot, 3 grey rows, rounded panel) intact through every rotation. bandingScore drops to ~0.25 during play (clean).", "evidence": ["scroll-flip-book/after/play-1.png", "scroll-flip-book/after/play-3.png", "metrics: play-1 bandingScore 0.254"] },
+    "q2_reads_as": { "answer": "Reads as a flip-book: idle=flat front card, play-1=card rotated diagonally ~30 deg, play-3=card flipped 90 deg to portrait (brass header now a vertical bar, dot moved to bottom-right). Discrete advancing poses, full card preserved at each, matches the ground-truth card.", "evidence": ["scroll-flip-book/after/idle.png", "scroll-flip-book/after/play-1.png", "scroll-flip-book/after/play-3.png"] },
+    "q3_discoverable": { "answer": "Yes. frames control changes pose granularity (low snaps to a flat near-vertical pose, high lands on a smoother intermediate angle); holdRatio changes which held pose appears at the pinned scroll point; jitter adds a small rotation offset. All three produce visibly distinct poses.", "evidence": ["scroll-flip-book/after/control-frames-low.png", "scroll-flip-book/after/control-frames-high.png", "scroll-flip-book/after/control-holdRatio-high.png", "control: frames changedFrac 0.1957"] },
+    "q4_responsive": { "answer": "Responsive: pose advances across play frames, frameDeltaMag ~10-11.6; controls apply ~571-585ms, all changed:true.", "evidence": ["metrics: play-2 frameDeltaMag 11.31, play-3 frameDeltaMag 11.62", "control: holdRatio changedFrac 0.1592"] },
+    "q5_net": { "answer": "PLEASED — it genuinely looks like a card being flipped through discrete frames, the card look never breaks, and the knobs change the pose sensibly.", "evidence": ["scroll-flip-book/after/play-3.png", "scroll-flip-book/after/control-frames-high.png"] }
+  },
+  "mustFix": [],
+  "flags": [{ "note": "jitter control is the subtlest of the three (changedFrac 0.0816); a first-time user might not immediately notice it, though the pose angle does differ between low and high.", "evidence": "control: jitter changedFrac 0.0816 meanAbsDiff 3.159" }],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

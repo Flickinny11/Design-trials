@@ -166,7 +166,23 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     mountable:true + chrome co-treatment + pointer-rig facts) at session-3
     workflows/scripts/primitives-w3-distortion.js — launch AFTER r3 completes (parallel
     half-written files would pollute the fix agents' tsc gate).
-- [ ] W2 SCROLL-STORY
+- [~] **W2 SCROLL-STORY** — WIRED + 9/12 advocate-SHIP (2026-06-12, session 4). 12 scroll-* primitives
+  barrel-wired (registry 326→338, all category 'scroll' → 30 total). Gates: tsc 0-new; full animatable
+  vitest **338 files / 1190 tests green**; harness **12/12 r/p/c first run** (deviceLost 0, wall 94s, SwiftShader
+  worker-boot throttling under concurrency = not tile failures); art-fidelity 11/12 PASS (scroll-orbit-scrub
+  lum-flagged 0.043 — turned out to be a real structural defect, see below). Advocate capture webgpu, 0 console/net.
+  - ADVOCATE r1 (2 parallel fresh-context agents, 6 tiles each): **9 ship-quality** (velocity-stretch, snap-sections,
+    scene-scrub, rubber-band, marquee, flip-book, pendulum-sway, path-scrub, wave-ride), **3 BLOCKED** — verdict
+    JSONs in notes/verification/useradvocate-sixtile/w2-verdicts/:
+    - scroll-inertia-glide: 'Smoothness' + 'Tilt Degrees' controls DEAD (byte-identical low/high — transient-only,
+      settle identically at the pinned engaged scroll state); brass header clips off top at full travel.
+    - scroll-orbit-scrub: single-sided billboard → blank dark BACK FACE at play-2/3 + orbitDeg-high (forbidden
+      featureless-slab-at-a-phase; the art-fidelity dark flag was THIS); 'counterTiltDeg' dead.
+    - scroll-fold-scrub: folds a featureless tan SLAB (card chrome never visible — same placeholder-plane defect
+      as cylinder-unroll/genie-suck); 'shade' control dead.
+  - FIX ROUND r1 in flight (workflow wf_5576b906-07d, 3 parallel agents + re-capture + advocate r2). Defect-specific
+    briefs: control-at-engaged-state rule (re-apply at lastT, affect steady pose not transient); orbit billboard/arc
+    or double-side; fold chrome co-treatment per cylinder-unroll. 9 good tiles committed wired in this CKPT.
 - [ ] W3 DISTORTION/DISPLACEMENT
 - [ ] W4 CURSOR PHYSICS
 - [ ] W5 PARTICLES/GENERATIVE

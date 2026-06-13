@@ -1,0 +1,34 @@
+{
+  "feature": "scroll-scene-scrub",
+  "claim": "Scroll scrubs a three-act mini-film — the card rises into frame, pivots to present itself, then settles forward.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No broken/blank states. Idle (Act 1) shows the card low and tilted back; play-3 (Act 3) shows it large, centered, forward-facing. All control frames keep full chrome (brass header, blue dot, 3 grey rows, rounded panel) legible with real 3D perspective. Idle is a touch dim/cool (hue 259, sat 0.04) but the card is clearly visible.",
+      "evidence": ["scroll-scene-scrub/after/idle.png", "scroll-scene-scrub/after/play-3.png", "scroll-scene-scrub/after/control-riseAmount-high.png", "metrics: idle luma=14.6 -> play-3 luma=22.0 (brightens through the acts)"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads clearly as a scrubbed three-act mini-film: Act 1 small/low/tilted-back (idle), Act 2 pivots to present a foreshortened side (riseAmount/turnDeg frames), Act 3 settles large and forward (play-3). The choreography is cinematic and matches the claim, chrome intact throughout the pivot.",
+      "evidence": ["scroll-scene-scrub/after/idle.png", "scroll-scene-scrub/after/control-riseAmount-low.png", "scroll-scene-scrub/after/play-3.png", "metrics: play deltas 12.35/10.56/13.90"]
+    },
+    "q3_discoverable": {
+      "answer": "All four labeled controls change the frame sensibly: 'Rise' moves the vertical rise position, 'turnDeg' changes how far the card pivots to present its side (low = near face-on, high = strong turn), 'settleScale' and 'actBalance' retime/rescale the acts. A user dragging any slider sees the mini-film recompose.",
+      "evidence": ["scroll-scene-scrub/after/control-riseAmount-low.png", "scroll-scene-scrub/after/control-riseAmount-high.png", "scroll-scene-scrub/after/control-turnDeg-low.png", "control: riseAmount/turnDeg/settleScale/actBalance all changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive: play deltas 12.35/10.56/13.90 show continuous choreographed motion and all 4 controls are live (changed=true). No dead controls.",
+      "evidence": ["metrics: play-1 delta=12.35 play-2 delta=10.56 play-3 delta=13.90", "control: all 4 changed=true (turnDeg luma 18.9->9.5, actBalance luma 16.7->23.6)"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'whoa, as I scroll the card rises up, turns to show itself, then settles in front of me like a little movie' — it's a premium, intentional cinematic effect with every slider live.",
+      "evidence": ["scroll-scene-scrub/after/play-3.png", "scroll-scene-scrub/after/control-riseAmount-high.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "Act-1 idle is noticeably dimmer/cooler than the other tiles (hue 259, sat 0.04, luma 14.6); a touch more key light on the opening pose would make the first act pop without changing the choreography.", "evidence": "metrics: idle hue=259 sat=0.04 luma=14.6 (cooler/dimmer than play-3 luma=22.0)" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

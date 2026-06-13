@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T19:48:07.460Z",
+  "generatedAt": "2026-06-13T02:06:33.251Z",
   "dir": "notes/verification/catalog-parallel/frames",
   "bar": {
     "tooDarkLum": 0.06,
@@ -9,9 +9,9 @@
     "flatStdDev": 0.018
   },
   "summary": {
-    "total": 326,
-    "pass": 191,
-    "needsPolish": 135
+    "total": 338,
+    "pass": 201,
+    "needsPolish": 137
   },
   "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
   "results": [
@@ -612,10 +612,10 @@
       "name": "cylinder-unroll",
       "frame": "notes/verification/catalog-prep/tiles/cylinder-unroll.png",
       "metrics": {
-        "meanLum": 0.18913846131539913,
-        "lumStdDev": 0.17778760583783668,
-        "meanSat": 0.4982918923146687,
-        "coverage": 0.46708333333333335
+        "meanLum": 0.06397620036763123,
+        "lumStdDev": 0.09513408701606943,
+        "meanSat": 0.4796381263013843,
+        "coverage": 0.29494791666666664
       },
       "verdict": "PASS",
       "reasons": []
@@ -1474,13 +1474,15 @@
       "name": "genie-suck",
       "frame": "notes/verification/catalog-prep/tiles/genie-suck.png",
       "metrics": {
-        "meanLum": 0.08140034199343926,
-        "lumStdDev": 0.12621082761475072,
-        "meanSat": 0.5228302732927446,
-        "coverage": 0.1659375
+        "meanLum": 0.035974648774497194,
+        "lumStdDev": 0.04863142615178241,
+        "meanSat": 0.526256852870776,
+        "coverage": 0.06
       },
-      "verdict": "PASS",
-      "reasons": []
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.036) — underlit / needs env light"
+      ]
     },
     {
       "name": "glass-refraction",
@@ -2827,6 +2829,92 @@
       "reasons": []
     },
     {
+      "name": "scroll-flip-book",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-flip-book.png",
+      "metrics": {
+        "meanLum": 0.06367851258168267,
+        "lumStdDev": 0.09510566475156043,
+        "meanSat": 0.47875936863352,
+        "coverage": 0.28432291666666665
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-fold-scrub",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-fold-scrub.png",
+      "metrics": {
+        "meanLum": 0.08743892083330984,
+        "lumStdDev": 0.13352895781517404,
+        "meanSat": 0.5234968501509933,
+        "coverage": 0.1790625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-inertia-glide",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-inertia-glide.png",
+      "metrics": {
+        "meanLum": 0.06515330739376299,
+        "lumStdDev": 0.09608843578214771,
+        "meanSat": 0.47406975724694644,
+        "coverage": 0.27786458333333336
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-marquee",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-marquee.png",
+      "metrics": {
+        "meanLum": 0.06873474493463061,
+        "lumStdDev": 0.09556621396448312,
+        "meanSat": 0.46793352872866156,
+        "coverage": 0.38177083333333334
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-orbit-scrub",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-orbit-scrub.png",
+      "metrics": {
+        "meanLum": 0.042729302083317953,
+        "lumStdDev": 0.03692980686503673,
+        "meanSat": 0.4970616884738813,
+        "coverage": 0.18109375
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.043) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "scroll-path-scrub",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-path-scrub.png",
+      "metrics": {
+        "meanLum": 0.08722452969769365,
+        "lumStdDev": 0.13004922918946904,
+        "meanSat": 0.4542222642418679,
+        "coverage": 0.25515625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-pendulum-sway",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-pendulum-sway.png",
+      "metrics": {
+        "meanLum": 0.06509629848854677,
+        "lumStdDev": 0.09677753666657751,
+        "meanSat": 0.47839573614666137,
+        "coverage": 0.2878125
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
       "name": "scroll-progress-fill",
       "frame": "notes/verification/catalog-prep/tiles/scroll-progress-fill.png",
       "metrics": {
@@ -2846,6 +2934,30 @@
         "lumStdDev": 0.08694707797003974,
         "meanSat": 0.48117855810646887,
         "coverage": 0.24692708333333332
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-rubber-band",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-rubber-band.png",
+      "metrics": {
+        "meanLum": 0.06415049023690446,
+        "lumStdDev": 0.09522382042438995,
+        "meanSat": 0.4784375679641361,
+        "coverage": 0.27802083333333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-scene-scrub",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-scene-scrub.png",
+      "metrics": {
+        "meanLum": 0.08710624906045113,
+        "lumStdDev": 0.11756971561110423,
+        "meanSat": 0.4418297412125696,
+        "coverage": 0.4619270833333333
       },
       "verdict": "PASS",
       "reasons": []
@@ -2875,6 +2987,18 @@
       "reasons": []
     },
     {
+      "name": "scroll-snap-sections",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-snap-sections.png",
+      "metrics": {
+        "meanLum": 0.0631147860293879,
+        "lumStdDev": 0.09368116370992761,
+        "meanSat": 0.47783372784201544,
+        "coverage": 0.265625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
       "name": "scroll-stagger-rise",
       "frame": "notes/verification/catalog-prep/tiles/scroll-stagger-rise.png",
       "metrics": {
@@ -2899,6 +3023,30 @@
       "reasons": [
         "too dark (mean luminance 0.049) — underlit / needs env light"
       ]
+    },
+    {
+      "name": "scroll-velocity-stretch",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-velocity-stretch.png",
+      "metrics": {
+        "meanLum": 0.06649379285128376,
+        "lumStdDev": 0.09767311720084526,
+        "meanSat": 0.47321482947669,
+        "coverage": 0.29333333333333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-wave-ride",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-wave-ride.png",
+      "metrics": {
+        "meanLum": 0.0636540556780924,
+        "lumStdDev": 0.09514322590464715,
+        "meanSat": 0.4798330459034143,
+        "coverage": 0.28421875
+      },
+      "verdict": "PASS",
+      "reasons": []
     },
     {
       "name": "scroll-zoom",

@@ -4352,3 +4352,19 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/genie-suck (transform) render=true play=true ctrl=true
 
 ### Run end 2026-06-13T01:45:46.956Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+
+## Resumed 2026-06-13T02:04:02.141Z (std 12, glass 0 remaining)
+- [PASS] std/scroll-flip-book (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-inertia-glide (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-orbit-scrub (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-marquee (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-path-scrub (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-pendulum-sway (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-scene-scrub (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-rubber-band (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-snap-sections (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-velocity-stretch (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-wave-ride (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:05:35.879Z — pass 12/12 (0 recovered on quiet retry), fail 0, missing 0, wall 94s

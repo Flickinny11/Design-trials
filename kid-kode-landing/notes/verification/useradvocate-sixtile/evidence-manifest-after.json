@@ -1,32 +1,162 @@
 {
-  "startedAt": "2026-06-13T01:49:15.625Z",
+  "startedAt": "2026-06-13T02:06:44.619Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "cylinder-unroll",
+      "tile": "scroll-inertia-glide",
       "state": "after",
-      "dir": "cylinder-unroll/after",
+      "dir": "scroll-inertia-glide/after",
       "claim": {
-        "name": "cylinder-unroll",
-        "label": "Duration",
-        "description": "The surface arrives rolled into a tight scroll and unrolls flat like parchment, the roll edge travelling across as it lays down.",
-        "category": "transform"
+        "name": "scroll-inertia-glide",
+        "label": "Smoothness",
+        "description": "The card glides on buttery inertia — trailing the scroll like Lenis smooth-scroll made physical, easing into place when the page rests.",
+        "category": "scroll"
       },
       "controls": 3,
       "notes": []
     },
     {
-      "tile": "genie-suck",
+      "tile": "scroll-velocity-stretch",
       "state": "after",
-      "dir": "genie-suck/after",
+      "dir": "scroll-velocity-stretch/after",
       "claim": {
-        "name": "genie-suck",
-        "label": "Funnel Curve",
-        "description": "The surface is drawn into a corner through a curving genie funnel, holds a beat, then springs back out.",
-        "category": "transform"
+        "name": "scroll-velocity-stretch",
+        "label": "Stretch Gain",
+        "description": "Scroll speed pulls the card like taffy along its travel — stretching long mid-fling, relaxing square as the page settles.",
+        "category": "scroll"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "scroll-snap-sections",
+      "state": "after",
+      "dir": "scroll-snap-sections/after",
+      "claim": {
+        "name": "scroll-snap-sections",
+        "label": "Sections",
+        "description": "The card clicks through magnetic section stops as you scroll — easing into each detent with a soft landing.",
+        "category": "scroll"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "scroll-scene-scrub",
+      "state": "after",
+      "dir": "scroll-scene-scrub/after",
+      "claim": {
+        "name": "scroll-scene-scrub",
+        "label": "Rise",
+        "description": "Scroll scrubs a three-act mini-film — the card rises into frame, pivots to present itself, then settles forward.",
+        "category": "scroll"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "scroll-orbit-scrub",
+      "state": "after",
+      "dir": "scroll-orbit-scrub/after",
+      "claim": {
+        "name": "scroll-orbit-scrub",
+        "label": "Orbit Degrees",
+        "description": "Scrolling flies the camera around the card — it swings through a shallow orbital arc, showing its sides as the page moves.",
+        "category": "scroll"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "scroll-rubber-band",
+      "state": "after",
+      "dir": "scroll-rubber-band/after",
+      "claim": {
+        "name": "scroll-rubber-band",
+        "label": "Resistance",
+        "description": "The card scrolls on a rubber band — linear through the middle, straining with resistance near the ends, twanging back when released.",
+        "category": "scroll"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "scroll-marquee",
+      "state": "after",
+      "dir": "scroll-marquee/after",
+      "claim": {
+        "name": "scroll-marquee",
+        "label": "Gap",
+        "description": "The card becomes an endless belt — ghost copies trailing it in a lateral marquee whose drift is steered by the scroll.",
+        "category": "scroll"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "scroll-flip-book",
+      "state": "after",
+      "dir": "scroll-flip-book/after",
+      "claim": {
+        "name": "scroll-flip-book",
+        "label": "Frames",
+        "description": "Scroll riffles a stop-motion flip-book — the card jumps through hand-posed frames in hard cuts, like a printed animation thumbed by the page.",
+        "category": "scroll"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "scroll-pendulum-sway",
+      "state": "after",
+      "dir": "scroll-pendulum-sway/after",
+      "claim": {
+        "name": "scroll-pendulum-sway",
+        "label": "Sway Gain",
+        "description": "The card hangs from a brass pin and swings like a pendant — each scroll flick kicks it, inertia carries it through, stillness settles it into a living sway.",
+        "category": "scroll"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "scroll-path-scrub",
+      "state": "after",
+      "dir": "scroll-path-scrub/after",
+      "claim": {
+        "name": "scroll-path-scrub",
+        "label": "Path",
+        "description": "Scroll steers the card along a sculpted 3D path — banking into the curves like a camera dolly on a bent track.",
+        "category": "scroll"
+      },
+      "controls": 2,
+      "notes": []
+    },
+    {
+      "tile": "scroll-wave-ride",
+      "state": "after",
+      "dir": "scroll-wave-ride/after",
+      "claim": {
+        "name": "scroll-wave-ride",
+        "label": "Swell",
+        "description": "The card surfs a rolling swell — bobbing and rolling as the wave travels under it, the scroll scrubbing the sea.",
+        "category": "scroll"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "scroll-fold-scrub",
+      "state": "after",
+      "dir": "scroll-fold-scrub/after",
+      "claim": {
+        "name": "scroll-fold-scrub",
+        "label": "Panels",
+        "description": "Scroll folds the panel up like a brochure — side leaves hinging over the center in sequence — and unfolds it flat again.",
+        "category": "scroll"
       },
       "controls": 2,
       "notes": []
