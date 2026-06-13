@@ -1,0 +1,7 @@
+{
+  "name": "jelly-collide-sim",
+  "label": "Stiffness",
+  "description": "A soft jelly cube is thrown at a wall, squashes flat against it on impact — the lattice compressing and bulging — then peels off and springs back. Real XPBD soft body with wall collision.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

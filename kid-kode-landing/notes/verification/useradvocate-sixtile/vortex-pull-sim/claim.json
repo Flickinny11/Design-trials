@@ -1,0 +1,7 @@
+{
+  "name": "vortex-pull-sim",
+  "label": "Swirl",
+  "description": "A real vortex force field — tangential swirl plus inward radial pull suck ice particles into a swirling funnel, spinning faster as they near the eye, then recycling from the rim. Integrated velocity, not a closed-form spiral.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

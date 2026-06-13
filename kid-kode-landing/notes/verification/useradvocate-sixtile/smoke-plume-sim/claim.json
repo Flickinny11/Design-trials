@@ -1,0 +1,7 @@
+{
+  "name": "smoke-plume-sim",
+  "label": "Buoyancy",
+  "description": "Sim-driven buoyant smoke: CPU parcels emitted at the base rise under buoyancy, are advected by a deterministic curl-noise turbulence field, and expand and fade as they age — a real advected plume, not a scrolling shader.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

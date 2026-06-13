@@ -1,0 +1,7 @@
+{
+  "name": "block-topple",
+  "label": "Blocks",
+  "description": "A stacked tower of rigid blocks is hit by a horizontal impulse and topples, the blocks tumbling and bouncing off the floor under gravity — real per-block rigid physics, not an easing curve.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

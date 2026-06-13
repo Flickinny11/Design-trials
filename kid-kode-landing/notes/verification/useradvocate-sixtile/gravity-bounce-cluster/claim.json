@@ -1,0 +1,7 @@
+{
+  "name": "gravity-bounce-cluster",
+  "label": "Count",
+  "description": "A cluster of balls drops under real gravity, bounces off the floor and walls, and separates into a settling heap — physics, not an easing curve.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

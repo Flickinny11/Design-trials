@@ -1,0 +1,1327 @@
+{
+ "total": 36,
+ "pass": 19,
+ "passWithFlags": 3,
+ "blocked": [
+  {
+   "tile": "drop-squash",
+   "mustFix": [
+    {
+     "issue": "The squash mechanic \u2014 the headline behavior named in the tile and claim ('squashes on each impact in proportion to its landing speed') \u2014 cannot be confirmed from ANY captured frame. The squash control sweep is dead (low/mid/high pixel-identical) and the card shows no aspect-ratio compression at impact in the play frames. Recapture pinned to an impact instant to prove the squash, or fix the control if it truly does nothing.",
+     "evidence": "control: squash changed=false meanAbsDiff=0.082 changedFrac=0; control-squash-low.png / control-squash-mid.png / control-squash-high.png are visually identical"
+    }
+   ],
+   "oneLine": "The card drops, bounces, and rebounds with convincing real gravity and restitution, but the one thing the tile is named for \u2014 the impact squash \u2014 never appears in any captured frame, so the headline claim is unproven."
+  },
+  {
+   "tile": "gravity-bounce-cluster",
+   "mustFix": [
+    {
+     "issue": "The effect is functionally invisible: every frame is near-black (metrics meanLuma=7.7-7.8 of 255) and the 'balls' are 1-2px sub-pixel specks. Measured: only 0.19% of pixels exceed luminance 120 and brightest pixel maxes at 187-209/255, giving ~30-100 lit px per ball. There is NO visible basin, no walls, no ball mass/shading/material, no splash, and the 'pile' is just a faint dotted line at the bottom. A non-technical user would read this as a broken/black screen, not 'a cluster of balls dropping into a basin.' Balls must be rendered as large, shaded, lit spheres against a visible basin so the drop/bounce/heap reads to a human eye.",
+     "evidence": "gravity-bounce-cluster/after/play-1.png (~12 faint pinpricks on black); gravity-bounce-cluster/after/play-3.png (faint dotted row at bottom); metrics: idle/play-* meanLuma=7.7-7.8, measured px>lum120 = 0.19% of 582x436, maxLum=187-209"
+    },
+    {
+     "issue": "Hits the anti-slop / 1px-square-sprite bar. The motion artifacts are sub-pixel white dots with no volume or material \u2014 cheap placeholder-grade rendering, not photoreal balls with weight.",
+     "evidence": "gravity-bounce-cluster/after/control-count-high.png (18 specks, measured 0.19% bright pixels); metrics: effSat=0.47 cool blue specks, satPixels just ~33.7k of 253k mostly background tint"
+    }
+   ],
+   "oneLine": "The gravity physics is genuinely real, but the balls render as near-invisible 1-2px specks on a black screen with no visible basin or splash, so a first-time user would just see a broken/empty screen rather than a cluster of balls dropping and piling up."
+  },
+  {
+   "tile": "n-body-orbit",
+   "mustFix": [
+    {
+     "issue": "No claimed content is visible: the claim promises 'two or three BRIGHT suns and a swarm of satellites' with 'genuine orbits and slingshots,' but every frame is a near-black panel (meanLuma 7.5/255, effVal 0) with only a handful of barely-perceptible single-pixel dots \u2014 no bright suns, no swarm, no orbit/slingshot arcs. A first-time user reads this as a failed/unloaded render.",
+     "evidence": "n-body-orbit/after/idle.png, n-body-orbit/after/play-1.png, n-body-orbit/after/play-2.png, n-body-orbit/after/play-3.png; metrics: all frames effRGB [6.8,7.7,13.4] meanLuma=7.5 effVal=0 stdev~5.4 \u2014 a dark background, not glowing bodies"
+    },
+    {
+     "issue": "No motion / frozen playback: the system claims 'integrated physics, not a drawn curve,' yet the three play frames are visually static. frameDeltaMag=0.02 on play-1/2/3 is effectively zero \u2014 no visible orbiting or slingshotting whatsoever.",
+     "evidence": "metrics: play-1 frameDeltaMag=0.02, play-2 frameDeltaMag=0.02, play-3 frameDeltaMag=0.02; play-1.png vs play-2.png vs play-3.png show no legible body movement"
+    },
+    {
+     "issue": "All four controls are dead: dragging gravity, satellites, bodies, or speed produces no perceptible visual change low->high, so the interactivity that sells the physics does nothing.",
+     "evidence": "metrics: gravity changed=false (meanAbsDiff 0.031), satellites changed=false (meanAbsDiff 0.01), bodies changed=false (meanAbsDiff 0.034), speed changed=false (meanAbsDiff 0.034); control-gravity-low.png vs control-gravity-high.png and control-bodies-low.png vs control-bodies-high.png are indistinguishable black fields"
+    }
+   ],
+   "oneLine": "It's a black rectangle with a few invisible specks \u2014 there are no suns, no orbiting satellites, and nothing moves, so it looks completely broken, not like gravity."
+  },
+  {
+   "tile": "pinball-bounce",
+   "mustFix": [
+    {
+     "issue": "The claimed effect does not render. idle.png and all three play frames show only an overexposed white field with a soft dark vignette in the corners and a thin brass border \u2014 no ball, no field of pegs, no side walls, no fading trail. The core subject of the tile is entirely absent.",
+     "evidence": "pinball-bounce/after/play-1.png, play-2.png, play-3.png all visually identical to idle.png; metrics: effRGB=[255,255,255], effSat=0, effVal=0, satPixels=0 across every frame \u2014 no detectable effect pixels"
+    },
+    {
+     "issue": "No motion across the play phase \u2014 the ball never moves because there is no ball. A pinball claim demands visible launch, ricochet, and a traced trail; none occurs.",
+     "evidence": "metrics: play-1 frameDeltaMag=0.14, play-2=0.10, play-3=0.04 (collapsing toward zero); frames pinball-bounce/after/play-1.png vs play-3.png are indistinguishable"
+    },
+    {
+     "issue": "Controls do not produce a sensible pinball change. bounciness is completely dead, and the others only slide the white bloom / dark vignette around rather than revealing pegs, a ball, or different bounce behavior.",
+     "evidence": "metrics: control bounciness meanAbsDiff=0, changed=false (dead); control-pegs-low.png shows only a shrunken white blob with cloudy dark edges (no discrete circular pegs); control-launchSpeed-low/high.png show no ball or path difference"
+    },
+    {
+     "issue": "Anti-slop: the only rendered content is a hard, blown-out white plane abutting a smoky black gradient \u2014 reads as a broken/placeholder render, not a designed physics scene.",
+     "evidence": "pinball-bounce/after/control-pegs-low.png (white-blob-on-smoke); metrics: meanLuma 226.9 with effVal=0 confirms a featureless overexposed field"
+    }
+   ],
+   "oneLine": "There is no pinball here at all \u2014 just a blown-out white box with smoky dark corners and a brass frame, nothing bounces, no ball, no pegs, no trail."
+  },
+  {
+   "tile": "rope-dangle-sim",
+   "mustFix": [
+    {
+     "issue": "Tile renders NOTHING \u2014 no rope, no chain of segments, no anchor. Every captured frame is an identical empty dark-navy panel with only a thin brass border. The advertised XPBD rope is entirely absent. This is the exact 'verified but only a background' failure the gate exists to catch.",
+     "evidence": "rope-dangle-sim/after/idle.png and rope-dangle-sim/after/play-2.png are visually empty; metrics: every frame effVal=0, meanLuma=7.7, stdev=6.4 (near-black panel, no subject detected)."
+    },
+    {
+     "issue": "Zero motion across the entire play sequence \u2014 no swing, no whip, no momentum, no settle. Play frames are pixel-identical.",
+     "evidence": "metrics: play-1/play-2/play-3 frameDeltaMag=0; play-1.png, play-2.png, play-3.png are byte-for-byte the same empty frame."
+    },
+    {
+     "issue": "All four controls (segments, stiffness, gravity, damping) are dead \u2014 no visible change low->high. A user dragging any slider sees nothing happen.",
+     "evidence": "metrics: every control has changed=false, pixelDiff.meanAbsDiff=0, changedFrac=0; control-segments-low.png == control-segments-high.png == control-gravity-high.png == control-stiffness-high.png (all identical empty panels)."
+    }
+   ],
+   "oneLine": "It's a completely empty box \u2014 there's no rope, nothing moves, and none of the sliders do anything, so the 'swinging rope physics' it promises is just not there."
+  },
+  {
+   "tile": "jelly-collide-sim",
+   "mustFix": [
+    {
+     "issue": "Soft body ruptures into a jagged, faceted, LOW-POLY torn mass with visible internal holes/tears \u2014 reads as crumpling paper/foil, not jelly. Trips the photoreal/anti-slop bar (jagged/low-poly/cheap).",
+     "evidence": "jelly-collide-sim/after/play-2.png (crumpled spiky lump), jelly-collide-sim/after/control-throwSpeed-high.png and control-stiffness-high.png (visible faceted holes/tears); full-res 582x436 so faceting is real, not downscaling"
+    },
+    {
+     "issue": "Does not read as the claim: no FLAT squash, no visible wall, no lattice bulge, no peel-off-and-spring-back recovery. Cube just travels right then disintegrates and falls out of frame \u2014 fails the real-physics test.",
+     "evidence": "jelly-collide-sim/after/play-1.png (intact cube travels right) -> play-2.png (crumpled lump) -> play-3.png (tiny sliver at bottom edge); metrics meanLuma 27.9 idle -> 8.6 play-3, frameDeltaMag decays 35.09->17.27->6.08 as effect vanishes"
+    },
+    {
+     "issue": "Effect falls/peels out of the viewport and ends cut off at the frame edge in most end-states, leaving near-empty dark frames; bounciness control is effectively dead.",
+     "evidence": "jelly-collide-sim/after/control-gravity-high.png and control-bounciness-high.png (blob cut off at bottom/corner); metrics bounciness pixelDiff meanAbsDiff=1.559 changedFrac=0.0133 \u2014 barely above noise across 3 near-empty frames"
+    }
+   ],
+   "oneLine": "A green square flies across the screen and crumples into a jagged, low-poly torn blob that falls off-screen \u2014 there's no visible wall, no flat squash, and no bounce-back, so it neither reads as the claim nor as real jelly physics."
+  },
+  {
+   "tile": "pour-splash-sim",
+   "mustFix": [
+    {
+     "issue": "Tile renders no liquid sim at all \u2014 a near-black panel (meanLuma 7.7, effVal 0) with only sparse ~1px blue-white pinprick dots. No pouring stream, no pool surface, no impact, no crown of droplets. This is the 1px-sprite / dead-tile anti-slop reject case; nothing reads as the claimed liquid.",
+     "evidence": "pour-splash-sim/after/play-2.png and play-3.png show only scattered 1px dots on black; metrics: idle/play effVal=0, meanLuma=7.7, effHue=232-233 (blue), satPixels constant"
+    },
+    {
+     "issue": "Effect is effectively frozen \u2014 frameDeltaMag 0 / 0.02 / 0.06 across play-1..3 means no perceptible motion; there is no visible pour/fall/splash animation a user could see.",
+     "evidence": "metrics: play-1 frameDeltaMag=0, play-2=0.02, play-3=0.06 \u2014 near-identical near-black frames"
+    },
+    {
+     "issue": "All four controls are dead \u2014 flowRate/gravity/viscosity/splash all report changed:false with no visible difference low\u2192high; the splash control produces literally zero pixel change. >1 dead control fails the responsiveness bar.",
+     "evidence": "metrics: controls flowRate changed=false (meanAbsDiff 0.054), gravity false (0.088), viscosity false (0.108), splash false (meanAbsDiff 0); control-flowRate-low.png vs control-flowRate-high.png show only random sparse dots, no parameter-driven change"
+    }
+   ],
+   "oneLine": "It's just a black box with a few faint specks \u2014 I don't see any liquid pouring or splashing, and none of the sliders do anything."
+  },
+  {
+   "tile": "ripple-interact-sim",
+   "mustFix": [
+    {
+     "issue": "Default play/idle state is visually dead \u2014 a user watching the tile sees a flat blue-gray square with none of the propagating, reflecting, interfering ripples the claim promises. The water only animates when a poke control is dragged, so the headline running state fails to read as the claim.",
+     "evidence": "ripple-interact-sim/after/play-1.png (flat surface) + metrics: play-1 frameDeltaMag=0, play-2=0.06, play-3=0.07; idle+play frames byte-identical effHue=202 effSat=0.45 meanLuma=38.5 stdev=34.1 bandingScore=0.221"
+    },
+    {
+     "issue": "Two of five controls are dead (tension, damping) \u2014 both are the core wave-equation parameters this physics tile exists to tune, yet neither produces a visible change. >1 dead control = janky per rubric.",
+     "evidence": "metrics: tension changed=false meanAbsDiff=0.049 changedFrac=0.0005; damping changed=false meanAbsDiff=0.091 changedFrac=0.0012; control-tension-high.png looks identical to idle.png"
+    }
+   ],
+   "oneLine": "Watching it I just see a flat dead blue square \u2014 the gorgeous ripples only appear when I drag a slider, and two of the five sliders do nothing at all."
+  },
+  {
+   "tile": "buoyancy-bob-sim",
+   "mustFix": [
+    {
+     "issue": "The buoy and the water are visually disconnected \u2014 they never touch. In every play frame the water mass is crammed into the left ~40% of the frame while the buoy sits in empty black void on the right with no water under or around it. The claim ('an object floats and bobs ON a wavy water surface') simply does not read: the object is not on the water.",
+     "evidence": "buoyancy-bob-sim/after/play-1.png, play-2.png, play-3.png \u2014 blue water blob occupies left half, mint/gray buoy sits in black void on the right, no overlap"
+    },
+    {
+     "issue": "The buoy is a blocky stacked-rectangle placeholder (three flat-shaded gray/mint rectangles + a thin pole), not a believable buoy. It reads as a cheap low-poly stand-in and fails the anti-slop bar.",
+     "evidence": "buoyancy-bob-sim/after/idle.png \u2014 flat stacked rectangles, bandingScore 0.446; idle frameDeltaMag null (static)"
+    },
+    {
+     "issue": "No real physics read: the buoy never visibly bobs, tilts to the swell slope, or settles. It is static stacked rectangles while a chaotic lumpy blob writhes beside it \u2014 there is no weight, momentum, or surface-coupling. The 'tilting to passing swells' behavior is absent.",
+     "evidence": "buoyancy-bob-sim/after/play-1.png vs play-3.png \u2014 buoy pose/position identical across all play frames; water is a turbulent blob, not a coherent traveling swell"
+    },
+    {
+     "issue": "The headline 'buoyancy' physics control is completely dead. Low, mid, and high buoyancy frames are byte-identical (meanAbsDiff 0, changedFrac 0). For a tile claiming 'buoyant-spring physics,' the buoyancy slider doing literally nothing directly contradicts the core claim.",
+     "evidence": "metrics: controls[buoyancy] meanAbsDiff=0, changedFrac=0, changed=false; control-buoyancy-low.png and control-buoyancy-high.png are identical"
+    }
+   ],
+   "oneLine": "The buoy floats in empty black void completely disconnected from a chaotic blob of water on the other side of the frame, never bobs or tilts, is a blocky placeholder, and its buoyancy slider does nothing \u2014 it does not read as the claim at all."
+  },
+  {
+   "tile": "wave-tank-slosh",
+   "mustFix": [
+    {
+     "issue": "The claimed shallow-water slosh is rendered as a single flat, untextured blue quad that merely tilts/skews as a rigid plane. There is no water surface relief, no height field, no bulk mass piling against walls, no surge-back, no splash, no specular glint, and no visible tank/container walls. This is a placeholder-grade flat slab standing in for a fluid sim \u2014 it does not read as water and does not read as the claim.",
+     "evidence": "wave-tank-slosh/after/play-1.png and play-3.png show a uniform flat quad skewing as a rigid body; metrics: every frame effHue=200-201 effSat=0.52-0.53 stdev~67-70 (one constant flat blue, stdev from the hard quad-vs-black edge, no internal surface variation)"
+    },
+    {
+     "issue": "Fails the PHYSICS-pack real-physics bar: zero sense of weight, momentum, collision against walls, or settling. Control sweeps are affine transforms of the same flat polygon (tilt skews it, height scales it) and never expose a fluid surface, so the motion reads as an eased fake card-tilt, not sloshing liquid.",
+     "evidence": "wave-tank-slosh/after/control-tilt-high.png and control-height-high.png show the same flat quad skewed/scaled with no curved meniscus or wall pile-up; metrics: tilt meanAbsDiff=13.593, height meanAbsDiff=20.225 are pure plane transforms"
+    }
+   ],
+   "oneLine": "It's just a flat blue rectangle that wobbles and skews \u2014 nothing about it looks like water sloshing in a tank or piling against the walls."
+  },
+  {
+   "tile": "molten-drip-sim",
+   "mustFix": [
+    {
+     "issue": "Tile is dominated by large flat, blown-out white/cream circles plus a COLD PALE-BLUE circle (top-right) that read as placeholder/overexposed blobs, not glowing molten metal. Overexposure is confirmed objectively: every frame measures the effect as pure clipped white with zero glow.",
+     "evidence": "molten-drip-sim/after/idle.png (top-left cream, top-right pale-BLUE, giant central pure-white disk, bottom-right cluster); metrics: ALL frames effRGB=[255,255,255] effSat=0 satPixels=0 warmFrac=0 \u2014 no detectable warm/glowing pixels for a 'glowing molten metal' claim"
+    },
+    {
+     "issue": "The molten-drip column \u2014 the one element that delivers the claim \u2014 is small and visually swallowed behind the giant overexposed central white disk, so the headline physics is hard to see.",
+     "evidence": "molten-drip-sim/after/play-1.png and play-3.png: the necking/teardrop drip sits in front of/over a fully clipped pure-white disk that dwarfs and washes it out"
+    },
+    {
+     "issue": "Droplet cluster is cut off by the tile's right/bottom edge.",
+     "evidence": "molten-drip-sim/after/play-2.png and idle.png: bottom-right yellow droplet pair is clipped by the frame border"
+    },
+    {
+     "issue": "Top-left and top-right circles are static/dead across all four frames \u2014 decorative blobs that never participate in the simulation.",
+     "evidence": "molten-drip-sim/after/idle.png vs play-3.png: the two top side-circles are pixel-identical in position/shading; play frameDeltaMag stays low (play-1=0.62, play-2=0.21) consistent with only the thin drip column moving"
+    }
+   ],
+   "oneLine": "There's a genuine viscous drip-and-reform happening in the middle, but it's buried behind a clutter of big flat blown-out white/cream/cold-blue blobs that don't read as glowing molten metal, with droplets cut off at the edge \u2014 it looks unfinished and placeholder-y."
+  },
+  {
+   "tile": "explode-reassemble-sim",
+   "mustFix": [
+    {
+     "issue": "The claim is 'blast outward, then spring back to reassemble the formation,' but no play frame ever shows reassembly. idle.png is the only frame with a legible formation (faint concentric rings); play-1/2/3.png all show particles fully dispersed into a near-static scatter that never returns. The defining 'reassemble' half of the effect is absent from the captured window.",
+     "evidence": "idle.png shows concentric-ring formation; play-1.png, play-2.png, play-3.png all show only dispersed scattered specks with no formation reforming"
+    },
+    {
+     "issue": "No real physics reads \u2014 no momentum, trajectory arc, or spring settle. frameDeltaMag collapses to a near-frozen scene during the captured play window, and play-2 vs play-3 are visually near-identical, so a user sees static dots, not 'integrated velocity, gravity and drag.'",
+     "evidence": "metrics: play-1 frameDeltaMag=0.64, play-2=0.19, play-3=0.17 (near-frozen); play-2.png and play-3.png visually near-identical"
+    },
+    {
+     "issue": "3 of 4 controls are dead. gravity, springBack, and count produce no perceptible visual change low->high. springBack is the control that governs the 'reassemble' claim and does nothing visible; count 80->520 shows no density change (count-high looks no denser than count-low).",
+     "evidence": "metrics: gravity changed=false meanAbsDiff=0.107; springBack changed=false meanAbsDiff=0.105; count changed=false meanAbsDiff=0.06; control-count-low.png vs control-count-high.png show no density difference"
+    },
+    {
+     "issue": "Effect is far too dark/dim to read as anything \u2014 particles are ~1px specks on a near-black field, effVal=0 and meanLuma ~7.5/255 across all frames. A first-time user would barely see the effect, let alone recognize an explode-reassemble simulation.",
+     "evidence": "metrics: idle effVal=0 meanLuma=7.9; play-2 effVal=0 meanLuma=7.5; play-2.png is near-black with only faint scattered dots"
+    }
+   ],
+   "oneLine": "It just shows a few faint dots scattered on black that never reassemble into anything, three of its four sliders do nothing, and it looks broken rather than like a physics blast."
+  },
+  {
+   "tile": "charged-particles-sim",
+   "mustFix": [
+    {
+     "issue": "The claim is 'charged particles curve on Lorentz-force arcs' but there are NO visible arcs, curves, helical paths, or trails anywhere. Each particle renders as an isolated ~1px dot, so no path (let alone a curved one) is perceptible, and the 'opposite charges curl opposite ways' behavior is completely unreadable. Trips the anti-slop 1px-sprite bar.",
+     "evidence": "charged-particles-sim/after/play-1.png + play-2.png + play-3.png show only scattered point-specks with no streaks/arcs; metrics frameDeltaMag play-1=0.95/play-2=0.93/play-3=0.93 = faint jitter, not directed curved motion"
+    },
+    {
+     "issue": "Extremely dark and low-contrast: the scene is nearly black and the motes are barely visible faint specks. A first-time user would struggle to see the particles at all, never mind read physics from them.",
+     "evidence": "metrics: play-1..3 meanLuma=7.9/255, effVal=0, stdev=6.3; idle.png/play-1.png read as near-black with faint dots"
+    },
+    {
+     "issue": "Charge identity does not read: claim says positive=brass (warm/gold), negative=ice (cool/blue), but the left cluster reads white/silver with essentially zero warm content, so the two charge populations are not visually distinguishable as brass vs ice.",
+     "evidence": "metrics: play-1..3 warmFrac=0.02, coolFrac=0.98, effHue=232 effSat=0.47 (cool/blue dominant); idle.png left cluster appears white not gold"
+    }
+   ],
+   "oneLine": "It looks like two dim blobs of tiny static specks, not charged particles curving on magnetic-field arcs \u2014 the whole claim (curved Lorentz paths, opposite charges curling opposite ways) is invisible."
+  },
+  {
+   "tile": "shockwave-scatter",
+   "mustFix": [
+    {
+     "issue": "The 'grid of elements' renders as a field of single-pixel dots on a near-black background \u2014 the exact 1px-square-sprite / placeholder look the photoreal bar rejects. There is no element body, no mass, nothing that can be seen to be pushed. Replace the 1px dots with real, visible-size elements (tiles/glyphs/cells) that read as objects.",
+     "evidence": "shockwave-scatter/after/idle.png and play-2.png show only 1px dots; metrics: idle/play meanLuma=7.8/255, effVal=0, bandingScore=0.546 \u2014 near-black scene"
+    },
+    {
+     "issue": "No visible shockwave RING appears in any frame. The headline of the claim ('A shockwave ring expands through a grid') is never visible to the user \u2014 only faint dots twitch. The propagating ring front must be rendered as a visible arc/wavefront.",
+     "evidence": "shockwave-scatter/after/play-1.png, play-2.png, play-3.png \u2014 no ring/arc present in any play frame; metrics frameDeltaMag=0.12/0.22/0.26 (motion present but no ring rendered)"
+    },
+    {
+     "issue": "Does not read as real physics: with no element body and no ring, the displacement reads as random sparkle, not weight/momentum/impulse-and-spring. A first-time user would not understand it as 'shock power'.",
+     "evidence": "shockwave-scatter/after/play-2.png shows only scattered pixels with no mass cue; metrics effSat=0.47 effHue=233 (uniform dim blue, no impact flash)"
+    },
+    {
+     "issue": "The springBack control is dead \u2014 moving it produces no perceptible change, so 1 of 4 controls does nothing.",
+     "evidence": "metrics: control springBack changed=false, pixelDiff.meanAbsDiff=0.138, changedFrac=0.0039 (below threshold); control-springBack-low.png vs -high.png visually indistinguishable"
+    }
+   ],
+   "oneLine": "It's a near-black screen of tiny twitching pixel-dots with no visible shockwave ring and no sense of weight \u2014 it looks broken or unfinished, not like 'shock power.'"
+  }
+ ],
+ "flaggedTiles": [
+  {
+   "tile": "liquid-fill-sim",
+   "flags": [
+    {
+     "note": "Two of four controls (viscosity, waveTension) are visually DEAD \u2014 their low/mid/high frames are pixel-identical to each other and to fillRate-high, so a user dragging those sliders sees nothing move. They were pinned at controlsPinT=1 where the glass is already filled to the brim and the surface is static, so the wave-physics params they govern have nothing to modulate; recapture them mid-fill with an unsettled surface to prove they're alive.",
+     "evidence": "metrics: viscosity meanAbsDiff=0 changed=false; waveTension meanAbsDiff=0 changed=false; control-viscosity-low.png byte-identical to control-waveTension-high.png and control-fillRate-high.png (all effRGB[201.5,221.4,205.7] meanLuma=100.3 satPixels=2504)"
+    },
+    {
+     "note": "Liquid is a cool sea-green tint (effHue~131, effSat 0.09) rather than a clear/neutral pour; reads fine as a generic liquid \u2014 stylistic taste flag, not a defect.",
+     "evidence": "metrics: play-3 effHue=131 effSat=0.09 effRGB[203.5,222.6,207.1]; play-3.png shows a uniform green body"
+    }
+   ]
+  },
+  {
+   "tile": "boid-swarm-sim",
+   "flags": [
+    {
+     "note": "Scene is very dim and boids render as tiny ~1px white specks on near-black, so the murmuration shape is subtle in a single glance and only fully legible by comparing frames; brighter/larger motes (or motion trails) would make the emergent flock read instantly. This is a legibility/taste flag, not a broken render \u2014 faint specks are a legitimate distant-flock aesthetic and they are anti-aliased points, not jagged blocky/placeholder sprites.",
+     "evidence": "metrics: idle/play meanLuma=7.7, effVal=0, stdev=5.9; frames boid-swarm-sim/after/play-1.png and play-3.png show pinpoint specks"
+    },
+    {
+     "note": "Per-frame mean-color metrics (effRGB/effHue/effSat/meanLuma) are nearly identical across idle and all three play frames because the boids occupy a tiny pixel fraction; the real motion is only visible in the frame images themselves and in frameDeltaMag, not the aggregate color stats.",
+     "evidence": "metrics: play-1/2/3 effHue=231 effSat=0.49 meanLuma=7.7 identical, but frameDeltaMag=0.42/0.43/0.43 (nonzero) and frames differ"
+    }
+   ]
+  },
+  {
+   "tile": "turbulence-drift",
+   "flags": [
+    {
+     "note": "Motes read as tiny ~1px steel-blue sparkle dots on near-black (meanLuma ~8), so a first-time user is more likely to read it as a starfield/twinkle than 'dust drifting through a turbulence field.' The promised 'slow rolling eddies and filaments' are only legible by comparing successive frames (center clears, edges gather) rather than visible as swirls/trails in any single frame. This is a legibility/taste concern, not a broken render.",
+     "evidence": "turbulence-drift/after/idle.png + play-1.png show isolated 1px cool dots; metrics: play frames meanLuma 8.1->7.9, frameDeltaMag declining 1.88->1.43->1.11 (slow, subtle motion)"
+    },
+    {
+     "note": "Motion is genuinely slow and individual motes lack visible trails/streaks, so the 'inertia / carries momentum' physics is inferred from cross-frame redistribution rather than felt instantly. Acceptable for 'slow rolling drift' but on the quiet side for a hero physics tile.",
+     "evidence": "metrics: play-3 frameDeltaMag=1.11 (lowest of the three); turbulence-drift/after/play-2.png vs play-3.png show the cluster migrating without per-mote streaks"
+    }
+   ]
+  }
+ ],
+ "verdicts": [
+  {
+   "tile": "drop-squash",
+   "net": "INDIFFERENT",
+   "gate": "BLOCKED",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [
+    {
+     "issue": "The squash mechanic \u2014 the headline behavior named in the tile and claim ('squashes on each impact in proportion to its landing speed') \u2014 cannot be confirmed from ANY captured frame. The squash control sweep is dead (low/mid/high pixel-identical) and the card shows no aspect-ratio compression at impact in the play frames. Recapture pinned to an impact instant to prove the squash, or fix the control if it truly does nothing.",
+     "evidence": "control: squash changed=false meanAbsDiff=0.082 changedFrac=0; control-squash-low.png / control-squash-mid.png / control-squash-high.png are visually identical"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The dead squash is plausibly a capture-timing artifact: controls are pinned to t=1 (stimulus.controlsPinT=1) which caught the card mid-bounce/airborne, so contact-frame squash would not appear. A recapture at an impact instant could confirm the effect and drop this to PASS.",
+     "evidence": "metrics: stimulus.controlsPinT=1; control-bounciness-high.png shows card high off-frame (airborne pin)"
+    }
+   ],
+   "oneLine": "The card drops, bounces, and rebounds with convincing real gravity and restitution, but the one thing the tile is named for \u2014 the impact squash \u2014 never appears in any captured frame, so the headline claim is unproven.",
+   "citedEvidence": [
+    "drop-squash/after/play-1.png frameDeltaMag=16.39 \u2014 card visibly dropped low under gravity (real fall motion)",
+    "control: bounciness changed=true meanAbsDiff=10.174 \u2014 high restitution bounces card far up off-frame (control-bounciness-high.png)",
+    "control: gravity changed=true meanAbsDiff=13.583 changedFrac=0.38 \u2014 stronger gravity drops card further/faster (sensible low->high)",
+    "control: squash changed=false meanAbsDiff=0.082 \u2014 squash control dead; control-squash-{low,mid,high}.png pixel-identical, no deformation visible"
+   ]
+  },
+  {
+   "tile": "gravity-bounce-cluster",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "The effect is functionally invisible: every frame is near-black (metrics meanLuma=7.7-7.8 of 255) and the 'balls' are 1-2px sub-pixel specks. Measured: only 0.19% of pixels exceed luminance 120 and brightest pixel maxes at 187-209/255, giving ~30-100 lit px per ball. There is NO visible basin, no walls, no ball mass/shading/material, no splash, and the 'pile' is just a faint dotted line at the bottom. A non-technical user would read this as a broken/black screen, not 'a cluster of balls dropping into a basin.' Balls must be rendered as large, shaded, lit spheres against a visible basin so the drop/bounce/heap reads to a human eye.",
+     "evidence": "gravity-bounce-cluster/after/play-1.png (~12 faint pinpricks on black); gravity-bounce-cluster/after/play-3.png (faint dotted row at bottom); metrics: idle/play-* meanLuma=7.7-7.8, measured px>lum120 = 0.19% of 582x436, maxLum=187-209"
+    },
+    {
+     "issue": "Hits the anti-slop / 1px-square-sprite bar. The motion artifacts are sub-pixel white dots with no volume or material \u2014 cheap placeholder-grade rendering, not photoreal balls with weight.",
+     "evidence": "gravity-bounce-cluster/after/control-count-high.png (18 specks, measured 0.19% bright pixels); metrics: effSat=0.47 cool blue specks, satPixels just ~33.7k of 253k mostly background tint"
+    }
+   ],
+   "flags": [
+    {
+     "note": "CREDIT (not a blocker): the underlying gravity simulation is genuinely REAL physics, not an easing fake \u2014 balls are mid-field in play-1 then settle into a heap at the bottom by play-3; gravity-low keeps them suspended while gravity-high drops them; count-low~5 vs count-high~18; spread visibly widens the cluster. All four controls visibly change behavior even though metrics marked changed:false (the pixel-diff metric is fooled by how sub-pixel-tiny the balls are). Backend=webgpu, zero console/network errors. Once the balls are rendered visibly this would likely read well.",
+     "evidence": "gravity-bounce-cluster/after/control-gravity-low.png (suspended mid-air) vs control-gravity-high.png (fallen to floor); control-count-low.png (~5 dots) vs control-count-high.png (~18); play-2.png/play-3.png show settling heap"
+    }
+   ],
+   "oneLine": "The gravity physics is genuinely real, but the balls render as near-invisible 1-2px specks on a black screen with no visible basin or splash, so a first-time user would just see a broken/empty screen rather than a cluster of balls dropping and piling up.",
+   "citedEvidence": [
+    "gravity-bounce-cluster/after/play-3.png \u2014 settling heap visible only as a faint dotted row of sub-pixel specks at the very bottom on a near-black field",
+    "metrics: play-1/2/3 meanLuma=7.7-7.8 of 255, frameDeltaMag=0.03-0.05; measured px>lum120 = 0.19% of 582x436 frame, maxLum=187-209",
+    "gravity-bounce-cluster/after/idle.png \u2014 essentially black frame with only 2-3 pinprick dots, no basin or container drawn",
+    "gravity-bounce-cluster/after/control-count-high.png vs control-count-low.png \u2014 count visibly changes (~18 vs ~5 specks), proving real but invisibly-tiny rendering"
+   ]
+  },
+  {
+   "tile": "tumble-settle",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "No visible floor plane or impact/contact cue is rendered, so the 'bounce/collision' is inferred from the card's motion rather than shown directly. Pure taste \u2014 the tumble still reads as real physics. Not a defect.",
+     "evidence": "play-3.png shows the card settled flat and low with no contact-shadow floor under it; physics inferred purely from card pose."
+    },
+    {
+     "note": "Card sits partially out-of-frame at extremes of the physics (idle cropped upper-left; bounciness-low card mostly below frame). This is the physics carrying the card across/off the floor envelope, not a layout cut-off bug.",
+     "evidence": "control-bounciness-low.png shows card settled mostly below the bottom frame edge; idle.png shows card cropped at upper-left."
+    }
+   ],
+   "oneLine": "A card visibly flips end-over-end, loses momentum, and lands flat \u2014 it reads as a real tumbling card with weight, not a canned easing animation.",
+   "citedEvidence": [
+    "tumble-settle/after/play-1.png: card rotated ~25\u00b0 mid-tumble on its long axis (genuine end-over-end rotation, not a slide)",
+    "tumble-settle/after/play-3.png: card settled flat and low at frame bottom (the claimed 'settles flat' end state)",
+    "metrics: play frameDeltaMag 11.88 \u2192 10.70 \u2192 8.49 across play-1/2/3 \u2014 three distinct, descending-momentum frames (real settle, not identical/eased frames)",
+    "metrics: all 4 controls changed=true (spin meanAbsDiff 11.56 / changedFrac 0.29, gravity 11.05/0.29, bounciness 10.35/0.35, friction 10.12/0.25); latency 564-605ms, 0 dead controls",
+    "tumble-settle/after/control-spin-high.png: card shows its back face (vertical stripes, blue dot lower-right) vs front face in play-2 \u2014 confirms true end-over-end flipping",
+    "metrics: backend=webgpu, consoleErrors=[], networkErrors=[] \u2014 trustworthy color, no runtime faults"
+   ]
+  },
+  {
+   "tile": "domino-cascade",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Flat side-on near-orthographic camera means the chain reads left-to-right with little perspective depth, and dominoes settle slightly overlapping rather than perfectly butted end-to-end \u2014 a subjective polish nit, not a defect; the contact physics still reads clearly.",
+     "evidence": "domino-cascade/after/play-3.png shows all tiles flat and partially overlapping; domino-cascade/after/idle.png shows the row dead-flat-on with minimal depth cue."
+    }
+   ],
+   "oneLine": "A row of upright tiles topples one-by-one in a clear contact-triggered wave that genuinely reads as falling-domino physics \u2014 I instantly got it and the sliders all changed it sensibly.",
+   "citedEvidence": [
+    "domino-cascade/after/idle.png: upright row of 3D beveled domino tiles with distinct light/dark shaded faces \u2014 webgpu backend, bandingScore 0.406, no blocky/tiled/sprite artifacts",
+    "domino-cascade/after/play-1.png: leftmost dominoes fallen and leaning into each other while the rest still stand (frameDeltaMag 10.61) \u2014 wave front clearly forming",
+    "domino-cascade/after/play-2.png + play-3.png: wave propagated through to the far right then whole row flat (frameDeltaMag 17.24 then 9.15) \u2014 sequential topple, never identical frames",
+    "domino-cascade/after/control-knockForce-high.png + control-gravity-mid.png: a domino caught at a diagonal mid-fall LEANING INTO the next upright tile \u2014 genuine inverted-pendulum contact/momentum, not an eased fade",
+    "metrics.json: consoleErrors [] / networkErrors []; all 4 controls changed:true (count meanAbsDiff 17.96, gravity 15.41, knockForce 8.29, spacing 5.51); latency 577-589ms \u2014 zero dead controls",
+    "domino-cascade/after/control-count-low.png vs control-count-high.png: low shows few short fallen tiles, high shows many tiles in the row \u2014 sensible low->high change a first-time user would grasp"
+   ]
+  },
+  {
+   "tile": "block-topple",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "oneLine": "A clean tower of blocks gets knocked over and tumbles into a scattered pile under gravity with believable per-block weight and momentum \u2014 it reads exactly as the claim.",
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "bandingScore peaks at 0.557 (control-blocks-low) / 0.541 (control-blocks-mid), but this is the large flat dark background not subject banding \u2014 the blocks themselves show clean 3D shading with lit faces and floor-contact shadows; cosmetic only.",
+     "evidence": "metrics: control-blocks-low bandingScore=0.557, meanLuma=18.2; frame block-topple/after/control-blocks-low.png shows lit/shaded debris on a dark void, not placeholder slabs"
+    }
+   ],
+   "citedEvidence": [
+    "block-topple/after/idle.png \u2014 intact vertical stack of 5 distinct shaded blocks with contact shadow (the tower before impulse)",
+    "block-topple/after/play-1.png + metrics play-1 frameDeltaMag=16.84 \u2014 tower collapsing, blue block flung far right and tumbling (real momentum)",
+    "metrics: play frameDeltaMag 16.84 -> 3.58 -> 2.99 \u2014 decelerating settle arc, three distinct non-identical frames (not an eased fake, not janky)",
+    "block-topple/after/control-impulse-low.png (blocks clustered/undisturbed) vs control-impulse-high.png (blocks thrown wide apart, one tumbling), meanAbsDiff=9.101 changed=true \u2014 sensible low->high energy scaling",
+    "metrics: all 4 controls changed=true, latencyMs 571-586, consoleErrors=[] networkErrors=[] \u2014 responsive, no dead controls, backend=webgpu"
+   ]
+  },
+  {
+   "tile": "magnet-snap",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Very low chroma / wandering effect hue (effSat 0.04-0.13; play-2 effHue=234 cool) because the card is a dark-grey object on near-black; harmless for a motion tile but worth noting the body could carry a touch more warmth/contrast for pop.",
+     "evidence": "metrics: play-2 effHue=234 effSat=0.07; idle effHue=31 effSat=0.11 -- dark-on-dark, low color signal"
+    },
+    {
+     "note": "bandingScore reads moderate (up to 0.54 on control-mass-low) but inspected frames show smooth soft gradients on the card body and shadow, no visible posterization -- the metric is inflated by the low-luma background gradient, not real artifacts.",
+     "evidence": "magnet-snap/after/control-mass-low.png bandingScore=0.538 -- visually smooth, no blocky bands"
+    }
+   ],
+   "oneLine": "The card gets yanked up, overshoots off the top-left, swings back and rings into a settled centered pose with believable weight and momentum -- it does exactly what 'Pull' promises.",
+   "citedEvidence": [
+    "magnet-snap/after/play-1.png: card flung up and off the top-left edge (initial yank/overshoot), play-2.png: rebounded lower with different rotation, play-3.png: rings down into a centered settled resting pose -- a real spring/momentum arc, not a single ease",
+    "metrics: play frameDeltaMag 11.07 / 7.53 / 11.52 -- all non-trivial and distinct, frames are not identical (no jank); consoleErrors=[] networkErrors=[]",
+    "metrics: all 4 controls changed=true (pull meanAbsDiff 9.85, damping 11.50, mass 10.49, overshoot 4.58); zero dead controls; latency ~571-588ms consistent",
+    "magnet-snap/after/control-damping-low.png vs control-damping-high.png: damping-low settles at a steeper under-damped tilt while damping-high lands flatter/more settled -- damping visibly affects the ring-down",
+    "magnet-snap/after/control-pull-low.png vs control-pull-high.png: stronger pull yanks the card further/up-right -- sensible low->high progression",
+    "magnet-snap/after/play-3.png: photoreal card with rounded corners, soft contact shadow, glossy magnet sphere, warm accent bar (idle effHue=31) -- no purple chrome, 1px sprites, tiled slabs, or low-poly artifacts"
+   ]
+  },
+  {
+   "tile": "weightless-drift",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "driftAngle control reports changed=false (meanAbsDiff=0) because the harness compared the 0 deg (low) and 360 deg (high) endpoints, which are the same drift direction and therefore pixel-identical. The mid frame (180 deg) proves the parameter works \u2014 the card drifts to the OPPOSITE (upper-left) corner. This is an angular-wrap artifact, not a dead control; flagging so the automated reader does not mistake it for a defect.",
+     "evidence": "metrics: driftAngle low effRGB=[57.4,53.6,48.8] == high effRGB=[57.4,53.6,48.8] (meanAbsDiff=0); control-driftAngle-mid.png shows card drifted to upper-left corner vs lower-right in low/high"
+    },
+    {
+     "note": "Spin is the least dramatic of the four sweeps in raw pixel terms (meanAbsDiff=4.009 vs 12-14 for speed/bounds); the orientation change is real but subtler than the translation controls. Pure taste, not a defect.",
+     "evidence": "metrics: spin meanAbsDiff=4.009 changedFrac=0.0956; control-spin-low.png vs control-spin-high.png show distinct card rotation"
+    }
+   ],
+   "oneLine": "A clean 3D UI card convincingly floats, drifts, and slowly tumbles through zero gravity with four working, sensible controls \u2014 exactly what it claims.",
+   "citedEvidence": [
+    "weightless-drift/after/play-1.png, play-2.png, play-3.png: card translates up-right while progressively rotating (tumbling) \u2014 constant linear+angular motion, frameDeltaMag 8.97/10.84/10.25 all distinct",
+    "metrics: play frames bandingScore 0.23-0.262, consoleErrors=[], networkErrors=[], backend=webgpu \u2014 clean render, no banding/placeholder/purple-chrome",
+    "weightless-drift/after/control-speed-low.png -> mid -> high: monotonic displacement near-center -> further -> nearly off-screen (speed meanAbsDiff=13.985, changed=true)",
+    "weightless-drift/after/control-bounds-low/mid/high and control-spin-low/mid/high: visible sensible changes (bounds meanAbsDiff=12.503, spin meanAbsDiff=4.009, both changed=true); control latency 577-588ms consistent"
+   ]
+  },
+  {
+   "tile": "n-body-orbit",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "oneLine": "It's a black rectangle with a few invisible specks \u2014 there are no suns, no orbiting satellites, and nothing moves, so it looks completely broken, not like gravity.",
+   "mustFix": [
+    {
+     "issue": "No claimed content is visible: the claim promises 'two or three BRIGHT suns and a swarm of satellites' with 'genuine orbits and slingshots,' but every frame is a near-black panel (meanLuma 7.5/255, effVal 0) with only a handful of barely-perceptible single-pixel dots \u2014 no bright suns, no swarm, no orbit/slingshot arcs. A first-time user reads this as a failed/unloaded render.",
+     "evidence": "n-body-orbit/after/idle.png, n-body-orbit/after/play-1.png, n-body-orbit/after/play-2.png, n-body-orbit/after/play-3.png; metrics: all frames effRGB [6.8,7.7,13.4] meanLuma=7.5 effVal=0 stdev~5.4 \u2014 a dark background, not glowing bodies"
+    },
+    {
+     "issue": "No motion / frozen playback: the system claims 'integrated physics, not a drawn curve,' yet the three play frames are visually static. frameDeltaMag=0.02 on play-1/2/3 is effectively zero \u2014 no visible orbiting or slingshotting whatsoever.",
+     "evidence": "metrics: play-1 frameDeltaMag=0.02, play-2 frameDeltaMag=0.02, play-3 frameDeltaMag=0.02; play-1.png vs play-2.png vs play-3.png show no legible body movement"
+    },
+    {
+     "issue": "All four controls are dead: dragging gravity, satellites, bodies, or speed produces no perceptible visual change low->high, so the interactivity that sells the physics does nothing.",
+     "evidence": "metrics: gravity changed=false (meanAbsDiff 0.031), satellites changed=false (meanAbsDiff 0.01), bodies changed=false (meanAbsDiff 0.034), speed changed=false (meanAbsDiff 0.034); control-gravity-low.png vs control-gravity-high.png and control-bodies-low.png vs control-bodies-high.png are indistinguishable black fields"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The faint dots that do exist render as 1-pixel specks rather than rounded, glowing celestial bodies \u2014 even if brightness/scale were fixed, the body rendering would need real bloom/size to read as 'bright suns' rather than dead pixels.",
+     "evidence": "n-body-orbit/after/control-gravity-low.png \u2014 sub-pixel dots; metrics bandingScore=0.335 (low, consistent with a near-empty black frame)"
+    }
+   ],
+   "citedEvidence": [
+    "n-body-orbit/after/play-2.png \u2014 near-black panel, no suns/satellites/orbits visible; metrics meanLuma=7.5 effVal=0",
+    "metrics: play-1/2/3 frameDeltaMag=0.02 (frozen, no motion)",
+    "metrics: gravity/satellites/bodies/speed all changed=false (4 dead controls)",
+    "n-body-orbit/after/control-bodies-low.png vs control-bodies-high.png \u2014 indistinguishable, meanAbsDiff 0.034"
+   ]
+  },
+  {
+   "tile": "newton-cradle",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Restitution control's visible change is subtle in the static pin-pose capture \u2014 it reads as a small position shift of the swung-out ball rather than an obvious bounce-decay change.",
+     "evidence": "metrics: restitution pixelDiff meanAbsDiff=1.484 changedFrac=0.0174 (changed:true); control-restitution-high.png vs control-restitution-low.png show only a small swing-position delta"
+    },
+    {
+     "note": "Per-frame effHue/effSat metrics swing between warm and cool depending on which lighting moment was frozen \u2014 a metrics-capture artifact, not a visible defect; the spheres render consistently metallic in every frame.",
+     "evidence": "metrics: control-count-low effHue=235 coolFrac=0.94 vs play-1 effHue=39 warmFrac=0.80, yet control-count-low.png clearly shows 3 normal metallic balls"
+    }
+   ],
+   "oneLine": "It is an instantly-recognizable Newton's cradle with photoreal chrome balls where the end ball drops and the opposite ball kicks out, alternating sides \u2014 convincing real momentum-transfer physics with all four controls responsive.",
+   "citedEvidence": [
+    "newton-cradle/after/idle.png \u2014 end ball lifted on a taut string with 4 balls at rest in a row (classic cradle pose)",
+    "newton-cradle/after/play-1.png \u2014 left ball back in line, RIGHT end ball kicked out: momentum transferred through the line",
+    "newton-cradle/after/play-3.png \u2014 momentum returned; LEFT ball now kicked out: alternating-end kick-out = real conservation of momentum, not an eased fake",
+    "metrics: frameDeltaMag play-1=4.35 play-2=2.97 play-3=5.71 (real continuous motion); all 4 controls changed:true, latency 580-588ms; consoleErrors=[] networkErrors=[]; backend=webgpu",
+    "newton-cradle/after/control-count-low.png (3 balls) vs control-count-high.png (7 balls) \u2014 sensible legible low->high change; bandingScore 0.555-0.639 is dark-background edge, balls render smooth"
+   ]
+  },
+  {
+   "tile": "pinball-bounce",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "oneLine": "There is no pinball here at all \u2014 just a blown-out white box with smoky dark corners and a brass frame, nothing bounces, no ball, no pegs, no trail.",
+   "mustFix": [
+    {
+     "issue": "The claimed effect does not render. idle.png and all three play frames show only an overexposed white field with a soft dark vignette in the corners and a thin brass border \u2014 no ball, no field of pegs, no side walls, no fading trail. The core subject of the tile is entirely absent.",
+     "evidence": "pinball-bounce/after/play-1.png, play-2.png, play-3.png all visually identical to idle.png; metrics: effRGB=[255,255,255], effSat=0, effVal=0, satPixels=0 across every frame \u2014 no detectable effect pixels"
+    },
+    {
+     "issue": "No motion across the play phase \u2014 the ball never moves because there is no ball. A pinball claim demands visible launch, ricochet, and a traced trail; none occurs.",
+     "evidence": "metrics: play-1 frameDeltaMag=0.14, play-2=0.10, play-3=0.04 (collapsing toward zero); frames pinball-bounce/after/play-1.png vs play-3.png are indistinguishable"
+    },
+    {
+     "issue": "Controls do not produce a sensible pinball change. bounciness is completely dead, and the others only slide the white bloom / dark vignette around rather than revealing pegs, a ball, or different bounce behavior.",
+     "evidence": "metrics: control bounciness meanAbsDiff=0, changed=false (dead); control-pegs-low.png shows only a shrunken white blob with cloudy dark edges (no discrete circular pegs); control-launchSpeed-low/high.png show no ball or path difference"
+    },
+    {
+     "issue": "Anti-slop: the only rendered content is a hard, blown-out white plane abutting a smoky black gradient \u2014 reads as a broken/placeholder render, not a designed physics scene.",
+     "evidence": "pinball-bounce/after/control-pegs-low.png (white-blob-on-smoke); metrics: meanLuma 226.9 with effVal=0 confirms a featureless overexposed field"
+    }
+   ],
+   "flags": [],
+   "citedEvidence": [
+    "pinball-bounce/after/play-1.png, play-2.png, play-3.png \u2014 all identical to idle.png, blown-out white field + dark vignette + brass frame, NO ball/pegs/walls/trail visible",
+    "metrics.json: play frames frameDeltaMag 0.14\u21920.10\u21920.04 (no motion); effRGB=[255,255,255], effSat=0, effVal=0, satPixels=0 every frame (no effect rendered)",
+    "metrics.json: control bounciness meanAbsDiff=0 changed=false (dead control); pinball-bounce/after/control-pegs-low.png shows only a moving white bloom with smoky edges, not discrete pegs"
+   ]
+  },
+  {
+   "tile": "spring-arrive",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Secondary controls 'mass' and 'distance' barely register at the captured pin time \u2014 visually near-identical low vs high. Subjective/weak, not dead; primary stiffness+damping controls carry the demo. Could be tuned for stronger feedback.",
+     "evidence": "metrics: mass meanAbsDiff=1.74 changedFrac=0.053; distance meanAbsDiff=1.35 changedFrac=0.039; compare control-mass-low.png vs control-mass-high.png (card in nearly identical settled pose)"
+    }
+   ],
+   "oneLine": "A clean UI card visibly flies in and springs to rest, and the damping slider proves it's real integrated spring physics \u2014 flung clean off-screen at low damping, settling smoothly at high.",
+   "citedEvidence": [
+    "spring-arrive/after/play-1.png, play-2.png, play-3.png show the card at distinctly different vertical positions (high \u2192 centered \u2192 lower) with frameDeltaMag rising 8.83 \u2192 10.17 \u2192 11.42 \u2014 real non-identical travel, not a frozen frame",
+    "spring-arrive/after/control-damping-low.png shows the card flown completely off the top of the frame (massive under-damped overshoot, effHue=223 as card leaves viewport) vs control-damping-mid.png / control-damping-high.png settled cleanly at rest \u2014 textbook damped-spring behavior, not a stylized ease; metrics: damping meanAbsDiff=12.34 changedFrac=0.41",
+    "metrics.json: backend=webgpu, consoleErrors=[] networkErrors=[]; control latencies tight 571\u2013587ms across all sweeps; all 4 controls changed:true",
+    "spring-arrive/after/play-1.png renders a smooth rounded card with soft drop shadow, amber title bar and blue avatar dot \u2014 no blocky/jagged/tiled/low-poly artifacts, no purple chrome or placeholder slabs"
+   ]
+  },
+  {
+   "tile": "soft-body-bounce",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "At peak compression the deforming surface shows visible angular/low-poly faceting (sharp triangular facets, slightly coarse silhouette) because the XPBD lattice is low-resolution \u2014 it still clearly reads as a real soft body, but the deepest-squash moment looks a touch faceted rather than buttery smooth. Subjective polish nit, not broken (recovered sphere is clean; bandingScore stays low).",
+     "evidence": "soft-body-bounce/after/play-2.png (angular facets at max splat; metrics: play-2 bandingScore=0.343, meanLuma=15.9) and soft-body-bounce/after/control-stiffness-low.png (faceted floppy heap)"
+    },
+    {
+     "note": "bounciness and jiggle controls are sampled at the settled/recovered pin (controlsPinT=1, round-blob pose), so their static silhouettes barely change low->high (meanAbsDiff 2.51 and 2.33); the parameter affects restitution/jiggle motion not captured in a single still. The two PRIMARY physics controls (stiffness, gravity) are unmistakably live, so this is one sampling-artifact flag, not >1 dead control.",
+     "evidence": "metrics: control bounciness meanAbsDiff=2.513 / jiggle meanAbsDiff=2.326 (both changed=true) vs stiffness meanAbsDiff=23.991 and gravity meanAbsDiff=51.43; frames control-jiggle-low.png vs control-jiggle-high.png look near-identical"
+    }
+   ],
+   "oneLine": "A soft cyan gel blob convincingly drops, splats flat with crumpled real-physics jiggle, and springs back into a clean round sphere \u2014 it reads exactly as claimed and clearly as genuine soft-body deformation rather than a scale tween.",
+   "citedEvidence": [
+    "soft-body-bounce/after/idle.png (round blob mid-air at top) -> soft-body-bounce/after/play-1.png (squashed dome on floor, crumpled edges) -> soft-body-bounce/after/play-2.png (max splat flat against floor) -> soft-body-bounce/after/play-3.png (fully recovered glossy round sphere): the drop->squash->recover arc is all present",
+    "metrics: frameDeltaMag play-1=38.89, play-2=22.19, play-3=28.09 (all distinct, no dead/identical frames); backend=webgpu; consoleErrors=[] networkErrors=[]",
+    "metrics: control stiffness meanAbsDiff=23.991 changed=true and gravity meanAbsDiff=51.43 changed=true \u2014 confirmed by control-stiffness-low.png (floppy heap) vs control-stiffness-high.png (holds round form) showing sensible low->high physics; control latency ~572-586ms (responsive, no jank)",
+    "metrics: effHue 182-189 / effSat 0.33-0.44 / magentaFrac=0 across all frames \u2014 consistent cyan gel, no purple chrome or placeholder slab; bandingScore idle=0.127, play-3=0.169 (no banding artifact)"
+   ]
+  },
+  {
+   "tile": "cloth-drape-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Minor stray-vertex spike at the top-right pin in low-tension states (cloth holds rigid shape so the pin corner forms a thin dark spike). Cosmetic only, not a defect \u2014 subjective polish.",
+     "evidence": "cloth-drape-sim/after/control-stiffness-low.png and cloth-drape-sim/after/control-gravity-low.png show a thin dark spike at the right pin corner"
+    },
+    {
+     "note": "Faint soft blotchy lightmap-like patches on the cloth body read as slightly soft texturing rather than crisp fabric weave; pure taste, well above slop bar (bandingScore <=0.197).",
+     "evidence": "metrics: idle bandingScore=0.193, damping-high bandingScore=0.197 \u2014 far below any banding/slop concern; cloth-drape-sim/after/idle.png"
+    }
+   ],
+   "oneLine": "It looks and behaves exactly like a piece of cloth pinned at the top sagging under gravity into deepening folds and settling \u2014 believable real-physics drape with responsive, intuitive controls.",
+   "citedEvidence": [
+    "cloth-drape-sim/after/play-1.png \u2192 play-2.png \u2192 play-3.png: top edge progressively sags into a deeper catenary curve between two pinned corners while pins pull into sharper peaks \u2014 gravity drape, not a static sine",
+    "metrics: play frameDeltaMag 7.15 \u2192 6.76 \u2192 4.38 \u2014 decreasing motion = a settling sway, not frozen and not jittery",
+    "cloth-drape-sim/after/control-stiffness-low.png (slack flat) vs control-stiffness-high.png (rigid pleated vertical folds with sheen): meaningful, intuitive low\u2192high change; metrics stiffness meanAbsDiff=12.66 changed=true",
+    "metrics: backend=webgpu, consoleErrors=[], networkErrors=[], all 9 control latencies 582\u2013598ms, 0 dead controls (gravity meanAbsDiff=6.616, damping meanAbsDiff=10.222, all changed=true)",
+    "metrics: effHue=33\u00b0 effSat\u22480.42 warmFrac=1 across all frames \u2014 believable warm tan fabric; bandingScore 0.133\u20130.197 (no blocky/banded slop)"
+   ]
+  },
+  {
+   "tile": "flag-wind-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "At the gravity-high frozen frame the flag has drooped to a near-invisible warm sliver in the bottom-left corner against an otherwise empty dark viewport; a first-time user who pauses on that extreme could mistake it for 'nothing rendering.' This is correct heavy-drape physics, not a defect, so it is taste/polish, not a must-fix.",
+     "evidence": "flag-wind-sim/after/control-gravity-high.png (flag reduced to tiny sliver); metrics: control-gravity-high meanLuma=7.9, effHue=233 \u2014 the blue/dark reading is the empty viewport background, not the fabric"
+    }
+   ],
+   "oneLine": "A convincing tan cloth flag that genuinely flaps, ripples, and drapes with real weight, and whose wind/gust/stiffness/gravity sliders all visibly and sensibly change the fabric \u2014 it reads exactly as the claim.",
+   "citedEvidence": [
+    "flag-wind-sim/after/play-1.png + play-2.png + play-3.png: idle flat flag \u2192 billowing curved leading edge \u2192 whipping with visible surface-ripple highlight folds \u2192 streamed/collapsed pose = genuine emergent cloth motion, not a scripted sine; metrics frameDeltaMag 14.95/22.62/21.18 confirm distinct real motion (no identical play frames)",
+    "metrics: all play/control frames effHue=33-34 effSat=0.43-0.48 warm tan fabric, bandingScore 0.12-0.22 (no banding/slab artifacts), consoleErrors=[] networkErrors=[], backend=webgpu",
+    "control sweeps all changed:true with sensible low->high physics \u2014 stiffness meanAbsDiff=17.18 (floppy->rigid, control-stiffness-low.png vs control-stiffness-high.png), gravity meanAbsDiff=46.10 changedFrac=0.53 (full billow->narrow drape->pinned sliver, control-gravity-low.png vs mid vs high), wind extends the flag (control-wind-low.png vs control-wind-high.png); latency 566-593ms, no dead controls"
+   ]
+  },
+  {
+   "tile": "rope-dangle-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "Tile renders NOTHING \u2014 no rope, no chain of segments, no anchor. Every captured frame is an identical empty dark-navy panel with only a thin brass border. The advertised XPBD rope is entirely absent. This is the exact 'verified but only a background' failure the gate exists to catch.",
+     "evidence": "rope-dangle-sim/after/idle.png and rope-dangle-sim/after/play-2.png are visually empty; metrics: every frame effVal=0, meanLuma=7.7, stdev=6.4 (near-black panel, no subject detected)."
+    },
+    {
+     "issue": "Zero motion across the entire play sequence \u2014 no swing, no whip, no momentum, no settle. Play frames are pixel-identical.",
+     "evidence": "metrics: play-1/play-2/play-3 frameDeltaMag=0; play-1.png, play-2.png, play-3.png are byte-for-byte the same empty frame."
+    },
+    {
+     "issue": "All four controls (segments, stiffness, gravity, damping) are dead \u2014 no visible change low->high. A user dragging any slider sees nothing happen.",
+     "evidence": "metrics: every control has changed=false, pixelDiff.meanAbsDiff=0, changedFrac=0; control-segments-low.png == control-segments-high.png == control-gravity-high.png == control-stiffness-high.png (all identical empty panels)."
+    }
+   ],
+   "flags": [],
+   "oneLine": "It's a completely empty box \u2014 there's no rope, nothing moves, and none of the sliders do anything, so the 'swinging rope physics' it promises is just not there.",
+   "citedEvidence": [
+    "rope-dangle-sim/after/idle.png \u2014 empty dark-navy panel with thin brass border, no rope visible (metrics effVal=0, meanLuma=7.7)",
+    "metrics.json: play-1/play-2/play-3 frameDeltaMag=0 \u2014 all play frames pixel-identical, zero motion",
+    "metrics.json: all 4 controls (segments/stiffness/gravity/damping) changed=false, meanAbsDiff=0, changedFrac=0 \u2014 4 dead controls",
+    "rope-dangle-sim/after/control-segments-high.png and control-gravity-high.png \u2014 identical empty panels, no subject and no change vs low"
+   ]
+  },
+  {
+   "tile": "chain-dangle",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "No visible connecting link/cord drawn between the beads \u2014 they read as discrete brass spheres that move as a coupled chain rather than a visibly-linked strand; claim says 'linked' so a cord would strengthen the read. Subjective polish, not blocking.",
+     "evidence": "chain-dangle/after/play-1.png and chain-dangle/after/idle.png show beads with clear gaps and no rendered cord between them"
+    },
+    {
+     "note": "Strand sits right-of-center and the top pinned bead kisses/slightly clips the top viewport edge in several frames; chain is never cut off enough to hurt comprehension but recentering would look cleaner.",
+     "evidence": "chain-dangle/after/play-1.png top bead overlaps the top border; chain-dangle/after/idle.png same"
+    }
+   ],
+   "oneLine": "A string of shiny brass beads that hangs, swings in a believable arc and bunches/collides at the bottom under its own momentum \u2014 it genuinely looks like real swinging chain physics, and every slider visibly changes it.",
+   "citedEvidence": [
+    "chain-dangle/after/play-2.png \u2014 chain swung hard left into a curved arc with the bottom beads bunched horizontally (momentum + bead-to-bead coupling), frameDeltaMag=6.35; play-1=5.49, play-3=6.80 \u2192 three distinct, clearly-moving poses, not frozen",
+    "chain-dangle/after/control-stiffness-low.png vs control-stiffness-high.png \u2014 low stiffness shows widely-spaced beads with big gaps, high shows a tight touching strand: real distance-constraint behavior (metrics: stiffness changed=true, meanAbsDiff=1.955)",
+    "chain-dangle/after/control-links-low.png (5 large beads) vs control-links-high.png (14 small beads) \u2014 links changed=true, meanAbsDiff=6.447, latency 578-584ms",
+    "metrics.json \u2014 backend=webgpu, consoleErrors=[], networkErrors=[], all 5 controls changed=true with latency 573-588ms (no dead controls)"
+   ]
+  },
+  {
+   "tile": "water-balloon-wobble",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "poke/pressure/damping control diffs are numerically faint (poke meanAbsDiff=0.524 changedFrac=0.012; pressure=0.92; damping=1.206) compared to the marquee stiffness control (meanAbsDiff=6.714). They register and the frames show real silhouette differences, but a power-user wiggling those three sliders gets a subtle response. Subjective/taste, not a defect.",
+     "evidence": "metrics: controls poke meanAbsDiff=0.524, pressure=0.92, damping=1.206 vs stiffness=6.714; frames water-balloon-wobble/after/control-poke-low.png vs control-poke-high.png show differing rim dents"
+    },
+    {
+     "note": "The 'trapped water sloshing' part of the claim reads as an implied jiggle/wobble rather than a literal visible fluid; the soft-body wobble carries it but the water-inside cue is inferred. Taste, not a defect.",
+     "evidence": "frames water-balloon-wobble/after/play-1.png..play-3.png show deforming translucent shell; sloshing is implied by decaying wobble not literally rendered"
+    }
+   ],
+   "oneLine": "A soft, smooth translucent teal balloon that visibly wobbles, dents and settles back to round when poked \u2014 it genuinely reads as a squishy water balloon, not a stylized fake.",
+   "citedEvidence": [
+    "frames water-balloon-wobble/after/control-poke-low.png and control-poke-high.png show a clearly dented/lumpy non-circular silhouette with the top specular highlight smeared into a comet shape \u2014 a real soft-body deformation-in-motion cue, not a static gloss",
+    "frames water-balloon-wobble/after/control-stiffness-low.png (egg-stretched, streaked highlight) -> control-stiffness-mid.png (rounder/calmer) -> control-stiffness-high.png (lumpy rigid skin) show a sensible low->high progression; metrics: stiffness pixelDiff meanAbsDiff=6.714 changedFrac=0.1483 changed=true",
+    "metrics: play frameDeltaMag=4.78 -> 3.33 -> 1.92 \u2014 three distinct, monotonically decaying frames = a wobble settling back to round (decaying oscillation), not identical/janky frames",
+    "metrics: backend=webgpu, effHue=163 effSat=0.32 (calm translucent water-balloon teal), bandingScore=0.132-0.15 (smooth, no banding/blocky), magentaFrac=0 (no purple chrome), consoleErrors=[] networkErrors=[]",
+    "metrics: all 4 controls changed=true with consistent latency ~580-588ms (stiffness 581/582/585, no dead control)"
+   ]
+  },
+  {
+   "tile": "jelly-collide-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "Soft body ruptures into a jagged, faceted, LOW-POLY torn mass with visible internal holes/tears \u2014 reads as crumpling paper/foil, not jelly. Trips the photoreal/anti-slop bar (jagged/low-poly/cheap).",
+     "evidence": "jelly-collide-sim/after/play-2.png (crumpled spiky lump), jelly-collide-sim/after/control-throwSpeed-high.png and control-stiffness-high.png (visible faceted holes/tears); full-res 582x436 so faceting is real, not downscaling"
+    },
+    {
+     "issue": "Does not read as the claim: no FLAT squash, no visible wall, no lattice bulge, no peel-off-and-spring-back recovery. Cube just travels right then disintegrates and falls out of frame \u2014 fails the real-physics test.",
+     "evidence": "jelly-collide-sim/after/play-1.png (intact cube travels right) -> play-2.png (crumpled lump) -> play-3.png (tiny sliver at bottom edge); metrics meanLuma 27.9 idle -> 8.6 play-3, frameDeltaMag decays 35.09->17.27->6.08 as effect vanishes"
+    },
+    {
+     "issue": "Effect falls/peels out of the viewport and ends cut off at the frame edge in most end-states, leaving near-empty dark frames; bounciness control is effectively dead.",
+     "evidence": "jelly-collide-sim/after/control-gravity-high.png and control-bounciness-high.png (blob cut off at bottom/corner); metrics bounciness pixelDiff meanAbsDiff=1.559 changedFrac=0.0133 \u2014 barely above noise across 3 near-empty frames"
+    }
+   ],
+   "flags": [
+    {
+     "note": "Control latencies ~580-587ms per sweep \u2014 sluggish response even though changes register.",
+     "evidence": "metrics: controls[].frames.*.latencyMs \u2248 583-587 across stiffness/throwSpeed/gravity/bounciness"
+    },
+    {
+     "note": "Body color is a desaturated pale olive/cream (effHue~85-88, effSat 0.18) in flight, then frames go dark-blue-dominant (effHue ~226-232, coolFrac ~0.97) once the subject leaves frame and only background remains \u2014 not a fire/color issue but confirms the subject exits the view.",
+     "evidence": "metrics: play-1 effHue=85 effSat=0.18 warmFrac=0.43; play-3 effHue=230 coolFrac=0.97 (background only)"
+    }
+   ],
+   "oneLine": "A green square flies across the screen and crumples into a jagged, low-poly torn blob that falls off-screen \u2014 there's no visible wall, no flat squash, and no bounce-back, so it neither reads as the claim nor as real jelly physics.",
+   "citedEvidence": [
+    "jelly-collide-sim/after/play-2.png \u2014 crumpled, faceted low-poly mass with visible internal tears (anti-slop fail), full-res 582x436",
+    "jelly-collide-sim/after/play-3.png \u2014 subject reduced to a tiny jagged sliver at the bottom frame edge; metrics meanLuma=8.6, frameDeltaMag=6.08 (effect dying/gone)",
+    "metrics.json: bounciness control meanAbsDiff=1.559 changedFrac=0.0133 (dead control); control latencies ~583-587ms",
+    "jelly-collide-sim/after/control-gravity-high.png \u2014 soft body fallen out of frame, cut off at bottom edge, no wall/squash/recovery visible"
+   ]
+  },
+  {
+   "tile": "ragdoll-dangle",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Scene is fairly dark (meanLuma ~11.6) and the figure occupies a modest share of the frame \u2014 a touch small/dim, though contrast between the lit golden bones and the black field is strong and fully legible. Pure taste, not a defect.",
+     "evidence": "metrics: play-1 meanLuma=11.6, idle.png shows figure mid-frame with large black margins; bones still cleanly anti-aliased and high-contrast"
+    }
+   ],
+   "oneLine": "A first-time user immediately reads it as a stick-figure ragdoll dangling and flopping under gravity \u2014 the limbs visibly lag and overshoot, and all four sliders change the swing in physically sensible ways.",
+   "citedEvidence": [
+    "ragdoll-dangle/after/idle.png \u2014 clear stick-figure ragdoll: anchor sphere at top, green head, torso/arm/leg joints linked by golden bone segments hanging downward",
+    "ragdoll-dangle/after/play-1.png vs play-2.png vs play-3.png \u2014 figure swings hard right then flops then settles toward vertical with limbs lagging/rearranging; metrics frameDeltaMag=8.3/6.13/7.5 (no frozen frame)",
+    "metrics.json controls: all four changed=true (gravity meanAbsDiff=5.445, damping=3.546, floppiness=3.135, stiffness=2.536); 0 consoleErrors, 0 networkErrors, backend=webgpu",
+    "ragdoll-dangle/after/control-damping-low.png (limbs flung out with momentum) vs control-damping-high.png (calm symmetric settled hang) \u2014 textbook physics distinction, reads as real momentum not a canned ease"
+   ]
+  },
+  {
+   "tile": "liquid-fill-sim",
+   "net": "INDIFFERENT",
+   "gate": "PASS-WITH-FLAGS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Two of four controls (viscosity, waveTension) are visually DEAD \u2014 their low/mid/high frames are pixel-identical to each other and to fillRate-high, so a user dragging those sliders sees nothing move. They were pinned at controlsPinT=1 where the glass is already filled to the brim and the surface is static, so the wave-physics params they govern have nothing to modulate; recapture them mid-fill with an unsettled surface to prove they're alive.",
+     "evidence": "metrics: viscosity meanAbsDiff=0 changed=false; waveTension meanAbsDiff=0 changed=false; control-viscosity-low.png byte-identical to control-waveTension-high.png and control-fillRate-high.png (all effRGB[201.5,221.4,205.7] meanLuma=100.3 satPixels=2504)"
+    },
+    {
+     "note": "Liquid is a cool sea-green tint (effHue~131, effSat 0.09) rather than a clear/neutral pour; reads fine as a generic liquid \u2014 stylistic taste flag, not a defect.",
+     "evidence": "metrics: play-3 effHue=131 effSat=0.09 effRGB[203.5,222.6,207.1]; play-3.png shows a uniform green body"
+    }
+   ],
+   "oneLine": "It clearly reads as liquid pouring into a glass with a rising, sloshing surface that the fill and level sliders control intuitively, but the viscosity and wave-tension sliders do nothing on screen so two of the four controls feel broken.",
+   "citedEvidence": [
+    "play sequence shows the surface rising empty->thin->~40%->~55%: idle.png (empty) -> play-1.png (thin tilted/sloshing layer) -> play-2.png (~40%) -> play-3.png (~55%); metrics frameDeltaMag 5.98/2.27/2.22 (animating, not frozen)",
+    "fillRate sweep reads intuitively low->high: control-fillRate-low.png (near-empty, with a curved free-surface meniscus/wave) -> control-fillRate-mid.png (~half) -> control-fillRate-high.png (near-full); metrics meanAbsDiff=22.184 changed=true",
+    "level sweep also valid: control-level-low.png (~30%) -> control-level-mid.png (~50%) -> control-level-high.png (~95%); metrics meanAbsDiff=16.046 changed=true",
+    "dead controls: metrics viscosity & waveTension meanAbsDiff=0 changed=false; control-viscosity-low.png is pixel-identical to control-waveTension-high.png",
+    "clean render: metrics backend=webgpu, consoleErrors=[] networkErrors=[], bandingScore 0.099-0.127 (smooth, no banding/slop)"
+   ]
+  },
+  {
+   "tile": "pour-splash-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "Tile renders no liquid sim at all \u2014 a near-black panel (meanLuma 7.7, effVal 0) with only sparse ~1px blue-white pinprick dots. No pouring stream, no pool surface, no impact, no crown of droplets. This is the 1px-sprite / dead-tile anti-slop reject case; nothing reads as the claimed liquid.",
+     "evidence": "pour-splash-sim/after/play-2.png and play-3.png show only scattered 1px dots on black; metrics: idle/play effVal=0, meanLuma=7.7, effHue=232-233 (blue), satPixels constant"
+    },
+    {
+     "issue": "Effect is effectively frozen \u2014 frameDeltaMag 0 / 0.02 / 0.06 across play-1..3 means no perceptible motion; there is no visible pour/fall/splash animation a user could see.",
+     "evidence": "metrics: play-1 frameDeltaMag=0, play-2=0.02, play-3=0.06 \u2014 near-identical near-black frames"
+    },
+    {
+     "issue": "All four controls are dead \u2014 flowRate/gravity/viscosity/splash all report changed:false with no visible difference low\u2192high; the splash control produces literally zero pixel change. >1 dead control fails the responsiveness bar.",
+     "evidence": "metrics: controls flowRate changed=false (meanAbsDiff 0.054), gravity false (0.088), viscosity false (0.108), splash false (meanAbsDiff 0); control-flowRate-low.png vs control-flowRate-high.png show only random sparse dots, no parameter-driven change"
+    }
+   ],
+   "flags": [],
+   "oneLine": "It's just a black box with a few faint specks \u2014 I don't see any liquid pouring or splashing, and none of the sliders do anything.",
+   "citedEvidence": [
+    "pour-splash-sim/after/play-3.png \u2014 near-black panel with only ~20 scattered 1px blue-white dots, no stream/pool/crown",
+    "metrics.json: play-1..3 effVal=0, meanLuma=7.7, frameDeltaMag 0/0.02/0.06 (effectively frozen)",
+    "metrics.json: all controls changed=false \u2014 flowRate meanAbsDiff=0.054, gravity=0.088, viscosity=0.108, splash=0",
+    "pour-splash-sim/after/control-splash-high.png vs control-flowRate-low.png \u2014 only random sparse dots, no sensible low\u2192high change",
+    "claim.json: claims liquid stream pours, hits a pool, splashes a crown \u2014 none of pool/stream/crown is present in any frame"
+   ]
+  },
+  {
+   "tile": "ripple-interact-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": true,
+   "mustFix": [
+    {
+     "issue": "Default play/idle state is visually dead \u2014 a user watching the tile sees a flat blue-gray square with none of the propagating, reflecting, interfering ripples the claim promises. The water only animates when a poke control is dragged, so the headline running state fails to read as the claim.",
+     "evidence": "ripple-interact-sim/after/play-1.png (flat surface) + metrics: play-1 frameDeltaMag=0, play-2=0.06, play-3=0.07; idle+play frames byte-identical effHue=202 effSat=0.45 meanLuma=38.5 stdev=34.1 bandingScore=0.221"
+    },
+    {
+     "issue": "Two of five controls are dead (tension, damping) \u2014 both are the core wave-equation parameters this physics tile exists to tune, yet neither produces a visible change. >1 dead control = janky per rubric.",
+     "evidence": "metrics: tension changed=false meanAbsDiff=0.049 changedFrac=0.0005; damping changed=false meanAbsDiff=0.091 changedFrac=0.0012; control-tension-high.png looks identical to idle.png"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The underlying effect is genuinely photoreal and physically correct \u2014 concentric circular rings, specular crest highlights, refraction, and multi-poke interference with edge reflections are all visible in the poke-control sweeps. If the default play state were seeded with the same pokes this would be a strong PASS.",
+     "evidence": "ripple-interact-sim/after/control-pokeInterval-low.png (3-4 overlapping ripple systems with reflections) + control-pokeStrength-high.png (clean concentric rings with specular highlights)"
+    }
+   ],
+   "oneLine": "Watching it I just see a flat dead blue square \u2014 the gorgeous ripples only appear when I drag a slider, and two of the five sliders do nothing at all.",
+   "citedEvidence": [
+    "ripple-interact-sim/after/play-1.png \u2014 flat surface; metrics frameDeltaMag=0 (zero motion in default play state)",
+    "metrics: play-1/2/3 frameDeltaMag = 0 / 0.06 / 0.07; idle+play frames byte-identical effHue=202 meanLuma=38.5 stdev=34.1 bandingScore=0.221",
+    "metrics: tension changed=false (meanAbsDiff=0.049) and damping changed=false (meanAbsDiff=0.091) \u2014 2 dead controls of 5",
+    "ripple-interact-sim/after/control-pokeInterval-low.png \u2014 real interfering ripples WITH edge reflections prove the capability exists but is entirely absent from the play frames"
+   ]
+  },
+  {
+   "tile": "buoyancy-bob-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "The buoy and the water are visually disconnected \u2014 they never touch. In every play frame the water mass is crammed into the left ~40% of the frame while the buoy sits in empty black void on the right with no water under or around it. The claim ('an object floats and bobs ON a wavy water surface') simply does not read: the object is not on the water.",
+     "evidence": "buoyancy-bob-sim/after/play-1.png, play-2.png, play-3.png \u2014 blue water blob occupies left half, mint/gray buoy sits in black void on the right, no overlap"
+    },
+    {
+     "issue": "The buoy is a blocky stacked-rectangle placeholder (three flat-shaded gray/mint rectangles + a thin pole), not a believable buoy. It reads as a cheap low-poly stand-in and fails the anti-slop bar.",
+     "evidence": "buoyancy-bob-sim/after/idle.png \u2014 flat stacked rectangles, bandingScore 0.446; idle frameDeltaMag null (static)"
+    },
+    {
+     "issue": "No real physics read: the buoy never visibly bobs, tilts to the swell slope, or settles. It is static stacked rectangles while a chaotic lumpy blob writhes beside it \u2014 there is no weight, momentum, or surface-coupling. The 'tilting to passing swells' behavior is absent.",
+     "evidence": "buoyancy-bob-sim/after/play-1.png vs play-3.png \u2014 buoy pose/position identical across all play frames; water is a turbulent blob, not a coherent traveling swell"
+    },
+    {
+     "issue": "The headline 'buoyancy' physics control is completely dead. Low, mid, and high buoyancy frames are byte-identical (meanAbsDiff 0, changedFrac 0). For a tile claiming 'buoyant-spring physics,' the buoyancy slider doing literally nothing directly contradicts the core claim.",
+     "evidence": "metrics: controls[buoyancy] meanAbsDiff=0, changedFrac=0, changed=false; control-buoyancy-low.png and control-buoyancy-high.png are identical"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The waveAmp control does work and shows a sensible low\u2192high change (water grows from a thin ripple to a large turbulent mass), but the growth happens entirely on the left side away from the buoy, so it never makes the buoy bob more.",
+     "evidence": "control-waveAmp-low.png (thin ripple) \u2192 control-waveAmp-high.png (large blob); metrics waveAmp meanAbsDiff=11.17, changed=true"
+    },
+    {
+     "note": "damping nominally registers as changed but the visual delta is negligible (meanAbsDiff 1.97, changedFrac 0.025) \u2014 effectively imperceptible to a user.",
+     "evidence": "metrics: controls[damping] meanAbsDiff=1.971, changedFrac=0.025"
+    }
+   ],
+   "oneLine": "The buoy floats in empty black void completely disconnected from a chaotic blob of water on the other side of the frame, never bobs or tilts, is a blocky placeholder, and its buoyancy slider does nothing \u2014 it does not read as the claim at all.",
+   "citedEvidence": [
+    "buoyancy-bob-sim/after/play-2.png \u2014 water blob confined to left ~40% of frame, mint/gray buoy isolated in black void on the right, zero overlap between object and water surface",
+    "buoyancy-bob-sim/after/idle.png \u2014 buoy is flat stacked rectangles (gray base + mint block + thin pole), bandingScore 0.446, reads as low-poly placeholder",
+    "metrics: controls[buoyancy] meanAbsDiff=0 / changedFrac=0 / changed=false \u2014 buoyancy slider produces byte-identical frames (dead control on the headline physics parameter)",
+    "metrics: play-1/2/3 frameDeltaMag 1.55/1.32/1.94 with buoy pose unchanged across frames \u2014 water animates but the object never bobs/tilts (no physical read)"
+   ]
+  },
+  {
+   "tile": "wave-tank-slosh",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "The claimed shallow-water slosh is rendered as a single flat, untextured blue quad that merely tilts/skews as a rigid plane. There is no water surface relief, no height field, no bulk mass piling against walls, no surge-back, no splash, no specular glint, and no visible tank/container walls. This is a placeholder-grade flat slab standing in for a fluid sim \u2014 it does not read as water and does not read as the claim.",
+     "evidence": "wave-tank-slosh/after/play-1.png and play-3.png show a uniform flat quad skewing as a rigid body; metrics: every frame effHue=200-201 effSat=0.52-0.53 stdev~67-70 (one constant flat blue, stdev from the hard quad-vs-black edge, no internal surface variation)"
+    },
+    {
+     "issue": "Fails the PHYSICS-pack real-physics bar: zero sense of weight, momentum, collision against walls, or settling. Control sweeps are affine transforms of the same flat polygon (tilt skews it, height scales it) and never expose a fluid surface, so the motion reads as an eased fake card-tilt, not sloshing liquid.",
+     "evidence": "wave-tank-slosh/after/control-tilt-high.png and control-height-high.png show the same flat quad skewed/scaled with no curved meniscus or wall pile-up; metrics: tilt meanAbsDiff=13.593, height meanAbsDiff=20.225 are pure plane transforms"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The 'tension' control is effectively dead \u2014 sub-pixel change \u2014 though flagged changed:true by a low threshold. Moot given the larger must-fix, but it would be a dead control on its own.",
+     "evidence": "metrics: tension pixelDiff meanAbsDiff=0.283 changedFrac=0.0067 across low/mid/high"
+    },
+    {
+     "note": "play-3 frameDeltaMag drops to 0.76 vs 7.27/8.36 on play-1/2, indicating the motion nearly freezes \u2014 but responsiveness is moot since the rendered object is not the claim.",
+     "evidence": "metrics: play-1 frameDeltaMag=7.27, play-2=8.36, play-3=0.76"
+    }
+   ],
+   "oneLine": "It's just a flat blue rectangle that wobbles and skews \u2014 nothing about it looks like water sloshing in a tank or piling against the walls.",
+   "citedEvidence": [
+    "wave-tank-slosh/after/play-1.png \u2014 flat blue quad skewed as a rigid plane, no water surface",
+    "wave-tank-slosh/after/control-height-high.png \u2014 same flat quad merely scaled/shifted, no fluid relief or wall pile-up",
+    "metrics.json: all play frames effHue=200-201, effSat=0.52-0.53 (one constant flat fill, no surface variation)",
+    "metrics.json: tension control meanAbsDiff=0.283 changedFrac=0.0067 (effectively dead)"
+   ]
+  },
+  {
+   "tile": "molten-drip-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": true,
+   "oneLine": "There's a genuine viscous drip-and-reform happening in the middle, but it's buried behind a clutter of big flat blown-out white/cream/cold-blue blobs that don't read as glowing molten metal, with droplets cut off at the edge \u2014 it looks unfinished and placeholder-y.",
+   "mustFix": [
+    {
+     "issue": "Tile is dominated by large flat, blown-out white/cream circles plus a COLD PALE-BLUE circle (top-right) that read as placeholder/overexposed blobs, not glowing molten metal. Overexposure is confirmed objectively: every frame measures the effect as pure clipped white with zero glow.",
+     "evidence": "molten-drip-sim/after/idle.png (top-left cream, top-right pale-BLUE, giant central pure-white disk, bottom-right cluster); metrics: ALL frames effRGB=[255,255,255] effSat=0 satPixels=0 warmFrac=0 \u2014 no detectable warm/glowing pixels for a 'glowing molten metal' claim"
+    },
+    {
+     "issue": "The molten-drip column \u2014 the one element that delivers the claim \u2014 is small and visually swallowed behind the giant overexposed central white disk, so the headline physics is hard to see.",
+     "evidence": "molten-drip-sim/after/play-1.png and play-3.png: the necking/teardrop drip sits in front of/over a fully clipped pure-white disk that dwarfs and washes it out"
+    },
+    {
+     "issue": "Droplet cluster is cut off by the tile's right/bottom edge.",
+     "evidence": "molten-drip-sim/after/play-2.png and idle.png: bottom-right yellow droplet pair is clipped by the frame border"
+    },
+    {
+     "issue": "Top-left and top-right circles are static/dead across all four frames \u2014 decorative blobs that never participate in the simulation.",
+     "evidence": "molten-drip-sim/after/idle.png vs play-3.png: the two top side-circles are pixel-identical in position/shading; play frameDeltaMag stays low (play-1=0.62, play-2=0.21) consistent with only the thin drip column moving"
+    }
+   ],
+   "flags": [
+    {
+     "note": "The drip column itself shows convincing viscous physics (stretch, neck, pinch-off, fall, reform) and is the strongest part \u2014 if the blobs were fixed and the column made the hero, this would read well.",
+     "evidence": "molten-drip-sim/after/play-1.png (teardrop forming), play-2.png (neck pinching), play-3.png (reforming)"
+    },
+    {
+     "note": "Controls respond sensibly low->high: heat shifts the column from cold muddy brown to hot cream; latency is uniform ~580ms with no errors.",
+     "evidence": "molten-drip-sim/after/control-heat-low.png (brown/olive cold blob) vs control-heat-high.png (pale hot cream); metrics: heat meanAbsDiff=3.643, latencyMs=576-585, consoleErrors=[], networkErrors=[]"
+    }
+   ],
+   "citedEvidence": [
+    "molten-drip-sim/after/idle.png \u2014 flat blown-out cream/white/pale-BLUE placeholder circles dominate; metrics ALL frames effRGB=[255,255,255], effSat=0, satPixels=0, warmFrac=0",
+    "molten-drip-sim/after/play-2.png \u2014 bottom-right droplet cluster clipped by tile edge; drip neck swallowed by giant clipped white central disk",
+    "molten-drip-sim/after/control-heat-low.png vs control-heat-high.png \u2014 heat sweep shifts column cold-brown->hot-cream (heat meanAbsDiff=3.643), so controls DO respond",
+    "metrics: play frameDeltaMag play-1=0.62 play-2=0.21 play-3=1.3 \u2014 only the thin drip column moves, top side-circles static (idle vs play-3 identical)"
+   ]
+  },
+  {
+   "tile": "smoke-plume-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Plume reads as bright bluish-white backlit steam/vapor rather than dark grey smoke; a darker neutral-grey body would read more obviously as 'smoke'. Neutral and unsaturated, not a fake hue, so taste not broken.",
+     "evidence": "metrics: play-2 effHue=201 effSat=0.04 effRGB=[236,243,247]; play-3 effHue=202 effSat=0.08; magentaFrac=0 (no chrome artifact)"
+    },
+    {
+     "note": "Rate control is the weakest of the four sweeps \u2014 visual change low->high is modest.",
+     "evidence": "metrics: controls.rate meanAbsDiff=4.907 changedFrac=0.2418 (changed:true); control-rate-low.png vs control-rate-high.png look nearly identical, still not a dead control"
+    }
+   ],
+   "oneLine": "It clearly rises, curls, expands and breaks into aging puffs like a real buoyant plume, and the buoyancy/turbulence/density sliders each change it in the physically expected way.",
+   "citedEvidence": [
+    "smoke-plume-sim/after/play-1.png -> play-2.png -> play-3.png: plume builds from base, billows and rises with discrete soft aging parcels; metrics frameDeltaMag 12.66 -> 44.8 -> 74.4 confirms escalating real motion",
+    "smoke-plume-sim/after/control-turbulence-low.png (clean laminar column) vs control-turbulence-high.png (chaotic broken-up spread); metrics meanAbsDiff=35.855 changed:true",
+    "smoke-plume-sim/after/control-buoyancy-low.png (flat puddle at base) vs control-buoyancy-high.png (tall rising column with stem); metrics meanAbsDiff=62.023 changed:true",
+    "metrics.json: backend=webgpu, consoleErrors=[], networkErrors=[]; bandingScore play 0.376->0.189->0.11 (no banding); soft Gaussian puffs in play-3.png (no blocky/sprite slop)"
+   ]
+  },
+  {
+   "tile": "bubble-rise-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Bubble edges are quite soft/blurry (reads as depth-of-field); a sharper-rim option could increase crispness \u2014 pure taste, not a defect.",
+     "evidence": "bubble-rise-sim/after/play-1.png + play-3.png show soft-edged rings; bandingScore low (play-1 0.248, play-3 0.207) so softness is gradient, not banding"
+    }
+   ],
+   "oneLine": "It clearly reads as bubbles rising and swelling through cyan liquid, with all four sliders producing obvious sensible changes \u2014 a convincing, physics-driven sim, not a stylized loop.",
+   "citedEvidence": [
+    "bubble-rise-sim/after/play-1.png, play-2.png, play-3.png: translucent hollow rings with bright rims in cyan water, visibly translating/rearranging; metrics frameDeltaMag rises 32.21 -> 34.39 -> 39.4 (all distinct, none dead)",
+    "metrics: play frames effHue 192-195 deg, effSat 0.33-0.39, coolFrac ~0.87 -> liquid/bubble color, not warm or magenta fake",
+    "bubble-rise-sim/after/control-count-low.png (~6 bubbles) vs control-count-high.png (packed); control-size-low.png (tiny dots) vs control-size-high.png (large rings filling frame) -> sensible low->high; metrics size pixelDiff meanAbsDiff 94.97 changedFrac 0.597, all four controls changed=true",
+    "metrics: bandingScore idle 0.183 / play-3 0.207 (low, no banding/tiling); consoleErrors=[], networkErrors=[], backend=webgpu; control latencies 575-604ms with 0 dead controls"
+   ]
+  },
+  {
+   "tile": "raindrop-ripple-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Falling-drop streaks at the top of frames are very faint (thin dotted lines) \u2014 a first-time user might not register where the drops come from until rings appear. Subjective polish only, not a defect.",
+     "evidence": "raindrop-ripple-sim/after/idle.png (faint dotted vertical streaks near top edge); play-2.png top-center streak above the impact cluster"
+    },
+    {
+     "note": "Idle frame is a flat featureless blue square until play begins \u2014 the resting water state is correct but reads as 'nothing happening' on first glance.",
+     "evidence": "raindrop-ripple-sim/after/idle.png (uniform effRGB ~[99,165,200], frameDeltaMag=null)"
+    }
+   ],
+   "oneLine": "Looks just like raindrops hitting a pond \u2014 rings expand, overlap and interfere across the surface, and the sliders visibly change rain density, ripple depth and how long the waves linger.",
+   "citedEvidence": [
+    "raindrop-ripple-sim/after/play-2.png \u2014 multiple concentric expanding rings at distinct impact points with overlapping/interfering wavefronts and refracted dimpled centers; reads as a wave-equation height field, not a sine texture",
+    "raindrop-ripple-sim/after/play-3.png \u2014 clear interference between adjacent ripple sets; metrics frameDeltaMag rises 0.32\u21921.7\u21921.98 across play-1/2/3 (live motion, not frozen frames)",
+    "metrics.json \u2014 backend=webgpu, effHue=200-201 effSat=0.5 coolFrac=1 magentaFrac=0 (clean water-blue, no purple/slop), bandingScore~0.22 (smooth, no tiling/posterization), consoleErrors=[] networkErrors=[]",
+    "raindrop-ripple-sim/after/control-rainRate-low.png vs control-rainRate-high.png \u2014 single ripple \u2192 many overlapping ripples (pixelDiff meanAbsDiff=2.755, changedFrac=0.095, changed=true)",
+    "raindrop-ripple-sim/after/control-dropSize-low.png vs control-dropSize-high.png \u2014 small shallow ripples \u2192 large deep splashes with bright specular crests (meanAbsDiff=4.899, changedFrac=0.168); conveys impact momentum",
+    "metrics.json controls[] \u2014 all 4 controls changed=true, latency 579-599ms; zero dead controls"
+   ]
+  },
+  {
+   "tile": "wind-gust-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "The 'gust' slider \u2014 the tile's namesake parameter \u2014 barely changes the captured frame (gust-low/mid/high are near-identical). This is a frozen-frame sampling limitation (gust is a temporal acceleration effect, controls pinned at controlsPinT=1) rather than a dead control, and the other four sliders move the field convincingly, so it is a taste FLAG not a blocker.",
+     "evidence": "metrics: control gust pixelDiff meanAbsDiff=8.208 changedFrac=0.1282 (vs wind=40.3, turbulence=45.1, drag=46.3); gust-mid effRGB[175.3,155.4,112.1] meanLuma34.6 ~= gust-high effRGB[175.7,155.7,112.3] meanLuma34.5 \u2192 wind-gust-sim/after/control-gust-mid.png vs control-gust-high.png visually identical"
+    },
+    {
+     "note": "Reads as a gentle leaf-mote flow field (drift + swirl + drag) rather than a punchy, obvious gust burst; physics is correct for the claim (advection/momentum) but subdued \u2014 a polish/taste preference, not a defect.",
+     "evidence": "wind-gust-sim/after/play-1.png vs play-3.png: swarm migrates right/down, left side empties \u2014 coherent directional drift, but soft"
+    }
+   ],
+   "oneLine": "A pretty field of soft amber leaf-motes that drift and swirl convincingly on the wind, with sliders that mostly do clear things \u2014 only the 'gust' slider feels too subtle.",
+   "citedEvidence": [
+    "wind-gust-sim/after/play-3.png: warm amber motes (effHue=41, warmFrac=0.84) blown into a dense right cluster while the left side empties \u2014 directional wind advection reads clearly",
+    "metrics: play-1/2/3 frameDeltaMag = 24.42 \u2192 30.37 \u2192 33.13 (rising/accelerating, none null) \u2014 responsive distinct frames, consistent with 'accelerate into gusts'",
+    "wind-gust-sim/after/control-count-low.png (~15 motes) vs control-count-high.png (dense field), pixelDiff meanAbsDiff=21.613 \u2014 count control is self-evidently meaningful",
+    "metrics: backend=webgpu, consoleErrors=[] networkErrors=[], bandingScore 0.23\u20130.37 with soft anti-aliased bokeh motes (no blocky/tiled/1px sprites, no purple chrome) \u2014 passes anti-slop bar",
+    "metrics: control latency 580\u2013602ms across all five sliders, four of five controls meanAbsDiff>21 \u2014 responsive, not janky, zero dead controls"
+   ]
+  },
+  {
+   "tile": "vortex-pull-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "The scene is very dark (meanLuma ~8.3, effVal=0) and the particles are tiny dim 1-2px blue points on near-black; before motion organizes them they could read like faint stars to a casual first glance. Subjective taste/brightness, not a defect \u2014 the evacuated eye and ring sell the vortex once it spins. A touch more particle glow/size would make the swirl pop harder.",
+     "evidence": "metrics: idle meanLuma=8.2 effVal=0 stdev=7.3; frame vortex-pull-sim/after/idle.png shows a faint scattered point field"
+    },
+    {
+     "note": "Inter-play-frame motion is subtle (frameDeltaMag ~1.5-1.7); the convincing change is the structural idle->play-3 evolution from a flat scatter into a hollow ring, not a fast frame-to-frame swirl. Reads fine in sequence but a single mid-play frame alone is less dynamic.",
+     "evidence": "metrics: play-1/2 frameDeltaMag=1.74, play-3=1.53; frames vortex-pull-sim/after/play-1.png (scatter) vs vortex-pull-sim/after/play-3.png (ring + empty eye)"
+    }
+   ],
+   "oneLine": "A clear blue whirlpool that sucks particles into a spinning ring with a hollow eye, and every slider visibly changes it \u2014 it just runs a bit dark and dim.",
+   "citedEvidence": [
+    "frame vortex-pull-sim/after/play-3.png: particles organized into a hollow ring with a clearly evacuated central eye \u2014 reads as a vortex funnel",
+    "frame vortex-pull-sim/after/control-drag-high.png: dense bright rim around a clean circular eye = strong velocity damping concentrating particles, real-physics read",
+    "frame vortex-pull-sim/after/control-pull-high.png vs control-pull-low.png: high pull tightens a dense ring, low pull leaves a loose diffuse cloud \u2014 sensible low->high sweep",
+    "metrics: swirl meanAbsDiff=2.18, pull=2.03, count=1.24, drag=2.83, all changed=true; 0 dead controls",
+    "metrics: backend=webgpu, consoleErrors=[], networkErrors=[], control latency 571-589ms; play frameDeltaMag 1.74/1.74/1.53 (non-zero, frames evolve)",
+    "metrics: effHue~230 effSat=0.47 (cool blue) matches 'ice particles' claim; no magenta/purple chrome (magentaFrac=0)"
+   ]
+  },
+  {
+   "tile": "explode-reassemble-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "The claim is 'blast outward, then spring back to reassemble the formation,' but no play frame ever shows reassembly. idle.png is the only frame with a legible formation (faint concentric rings); play-1/2/3.png all show particles fully dispersed into a near-static scatter that never returns. The defining 'reassemble' half of the effect is absent from the captured window.",
+     "evidence": "idle.png shows concentric-ring formation; play-1.png, play-2.png, play-3.png all show only dispersed scattered specks with no formation reforming"
+    },
+    {
+     "issue": "No real physics reads \u2014 no momentum, trajectory arc, or spring settle. frameDeltaMag collapses to a near-frozen scene during the captured play window, and play-2 vs play-3 are visually near-identical, so a user sees static dots, not 'integrated velocity, gravity and drag.'",
+     "evidence": "metrics: play-1 frameDeltaMag=0.64, play-2=0.19, play-3=0.17 (near-frozen); play-2.png and play-3.png visually near-identical"
+    },
+    {
+     "issue": "3 of 4 controls are dead. gravity, springBack, and count produce no perceptible visual change low->high. springBack is the control that governs the 'reassemble' claim and does nothing visible; count 80->520 shows no density change (count-high looks no denser than count-low).",
+     "evidence": "metrics: gravity changed=false meanAbsDiff=0.107; springBack changed=false meanAbsDiff=0.105; count changed=false meanAbsDiff=0.06; control-count-low.png vs control-count-high.png show no density difference"
+    },
+    {
+     "issue": "Effect is far too dark/dim to read as anything \u2014 particles are ~1px specks on a near-black field, effVal=0 and meanLuma ~7.5/255 across all frames. A first-time user would barely see the effect, let alone recognize an explode-reassemble simulation.",
+     "evidence": "metrics: idle effVal=0 meanLuma=7.9; play-2 effVal=0 meanLuma=7.5; play-2.png is near-black with only faint scattered dots"
+    }
+   ],
+   "flags": [
+    {
+     "note": "Only the 'power' control registers a visible change, and even that reads only as a slight scatter-density difference (control-power-low denser than power-high), not a clearly readable blast strength.",
+     "evidence": "metrics: power changed=true meanAbsDiff=0.537; control-power-low.png shows more particles than control-power-high.png"
+    }
+   ],
+   "oneLine": "It just shows a few faint dots scattered on black that never reassemble into anything, three of its four sliders do nothing, and it looks broken rather than like a physics blast.",
+   "citedEvidence": [
+    "idle.png: faint concentric-ring formation is the only legible state; play-1/2/3.png show only dispersed near-static specks, no reassembly",
+    "metrics: play frameDeltaMag 0.64->0.19->0.17 (scene near-frozen); effVal=0, meanLuma~7.5/255 across all frames (far too dark)",
+    "metrics: gravity changed=false (0.107), springBack changed=false (0.105), count changed=false (0.06) \u2014 3 dead controls; control-count-low.png vs control-count-high.png show no density difference"
+   ]
+  },
+  {
+   "tile": "boid-swarm-sim",
+   "net": "INDIFFERENT",
+   "gate": "PASS-WITH-FLAGS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Scene is very dim and boids render as tiny ~1px white specks on near-black, so the murmuration shape is subtle in a single glance and only fully legible by comparing frames; brighter/larger motes (or motion trails) would make the emergent flock read instantly. This is a legibility/taste flag, not a broken render \u2014 faint specks are a legitimate distant-flock aesthetic and they are anti-aliased points, not jagged blocky/placeholder sprites.",
+     "evidence": "metrics: idle/play meanLuma=7.7, effVal=0, stdev=5.9; frames boid-swarm-sim/after/play-1.png and play-3.png show pinpoint specks"
+    },
+    {
+     "note": "Per-frame mean-color metrics (effRGB/effHue/effSat/meanLuma) are nearly identical across idle and all three play frames because the boids occupy a tiny pixel fraction; the real motion is only visible in the frame images themselves and in frameDeltaMag, not the aggregate color stats.",
+     "evidence": "metrics: play-1/2/3 effHue=231 effSat=0.49 meanLuma=7.7 identical, but frameDeltaMag=0.42/0.43/0.43 (nonzero) and frames differ"
+    }
+   ],
+   "oneLine": "A faint but genuine flocking sim where tiny motes visibly murmurate, cluster, and drift like a real flock with controls that clearly respond \u2014 it works and reads true, just too dim and tiny to feel delightful.",
+   "citedEvidence": [
+    "boid-swarm-sim/after/idle.png shows boids scattered uniformly; boid-swarm-sim/after/play-2.png shows them coalesced into a center cluster and play-3.png shows the cluster herded to lower-right \u2014 emergent cohesion + pointer-pull over time, not a static field",
+    "boid-swarm-sim/after/control-count-low.png (~40 sparse boids) vs control-count-high.png (dense ~220-boid field) \u2014 unmistakable sensible low\u2192high change; metrics count meanAbsDiff=0.493 changedFrac=0.0148 changed=true",
+    "boid-swarm-sim/after/control-separation-low.png (tight/dense) vs control-separation-high.png (spread out) \u2014 correct physics direction; metrics separation meanAbsDiff=0.567 changed=true",
+    "metrics.json: backend=webgpu, consoleErrors=[] networkErrors=[], frameDeltaMag play-1=0.42/play-2=0.43/play-3=0.43 (live motion), control latencyMs 567-590 (sub-second, responsive), bandingScore~0.33 (vignette edge, no stacked-slab artifact)"
+   ]
+  },
+  {
+   "tile": "gravity-well-sim",
+   "net": "PLEASED",
+   "gate": "PASS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Scene is dim and particles are small/faint; a first-time user glancing at the idle frame may briefly see a near-black tile before motion reveals the streams. Subjective taste, not a defect \u2014 the play and control frames clearly convey the effect.",
+     "evidence": "metrics: idle meanLuma=7.5, very sparse seeded points (gravity-well-sim/after/idle.png); play frames meanLuma 8.1-8.5"
+    }
+   ],
+   "oneLine": "It clearly looks like a stream of particles being pulled and slung around a gravity well, the curving paths read as real physics, and every slider visibly changes the behavior in a sensible way.",
+   "citedEvidence": [
+    "gravity-well-sim/after/play-3.png \u2014 particles converge on a central point and fan out in a radial slingshot spray, the signature of bodies whipping past a gravity well",
+    "gravity-well-sim/after/control-mass-high.png vs control-mass-low.png \u2014 high mass shows a pronounced radial slingshot fan (upper-right) while low mass is mostly straight streaks: more well mass = more deflection (correct attraction physics)",
+    "gravity-well-sim/after/control-softening-low.png vs control-softening-high.png \u2014 low softening = tight sharp near-singular convergence with crossing trails; high softening = smoother spread-out curves (correct softened inverse-square)",
+    "metrics: play frameDeltaMag 0.56 -> 1.45 -> 1.78 (continuous motion, no frozen frames); all 4 controls changed=true (mass/count/speed/softening meanAbsDiff 1.5-3.0); latency 573-590ms; consoleErrors=[] networkErrors=[]; backend=webgpu; bandingScore 0.30-0.335 (no banding/tiling)"
+   ]
+  },
+  {
+   "tile": "charged-particles-sim",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "oneLine": "It looks like two dim blobs of tiny static specks, not charged particles curving on magnetic-field arcs \u2014 the whole claim (curved Lorentz paths, opposite charges curling opposite ways) is invisible.",
+   "mustFix": [
+    {
+     "issue": "The claim is 'charged particles curve on Lorentz-force arcs' but there are NO visible arcs, curves, helical paths, or trails anywhere. Each particle renders as an isolated ~1px dot, so no path (let alone a curved one) is perceptible, and the 'opposite charges curl opposite ways' behavior is completely unreadable. Trips the anti-slop 1px-sprite bar.",
+     "evidence": "charged-particles-sim/after/play-1.png + play-2.png + play-3.png show only scattered point-specks with no streaks/arcs; metrics frameDeltaMag play-1=0.95/play-2=0.93/play-3=0.93 = faint jitter, not directed curved motion"
+    },
+    {
+     "issue": "Extremely dark and low-contrast: the scene is nearly black and the motes are barely visible faint specks. A first-time user would struggle to see the particles at all, never mind read physics from them.",
+     "evidence": "metrics: play-1..3 meanLuma=7.9/255, effVal=0, stdev=6.3; idle.png/play-1.png read as near-black with faint dots"
+    },
+    {
+     "issue": "Charge identity does not read: claim says positive=brass (warm/gold), negative=ice (cool/blue), but the left cluster reads white/silver with essentially zero warm content, so the two charge populations are not visually distinguishable as brass vs ice.",
+     "evidence": "metrics: play-1..3 warmFrac=0.02, coolFrac=0.98, effHue=232 effSat=0.47 (cool/blue dominant); idle.png left cluster appears white not gold"
+    }
+   ],
+   "flags": [
+    {
+     "note": "Controls are mechanically wired and respond (field separates one blob into two; count thins/densifies the specks; speed-low/charge-low show a faint warm tint), so the underlying sim params do change \u2014 but the changes are too subtle/dark to read as the claimed physics.",
+     "evidence": "metrics: controls field changed=true meanAbsDiff=1.137, speed meanAbsDiff=1.535, count meanAbsDiff=0.73; control-count-low.png far fewer dots vs control-count-high.png; control-field-low.png one merged cluster vs control-field-high.png two split clusters"
+    },
+    {
+     "note": "No console or network errors and backend is webgpu, so color/metrics are trustworthy; the failure is purely visual readability, not a crash.",
+     "evidence": "metrics: backend=webgpu, consoleErrors=[], networkErrors=[]"
+    }
+   ],
+   "citedEvidence": [
+    "charged-particles-sim/after/play-1.png \u2014 scattered 1px specks, no arcs/trails; left cluster white/silver, right faint blue",
+    "charged-particles-sim/after/play-3.png \u2014 clusters jitter but show no curved Lorentz paths",
+    "metrics: play-1..3 meanLuma=7.9/255, effVal=0, warmFrac=0.02, frameDeltaMag~0.93 \u2014 dark, low-contrast, faint motion, no warm 'brass' charge",
+    "metrics: effHue=232 effSat=0.47 coolFrac=0.98 \u2014 scene reads cool/blue, not the brass-vs-ice split the claim requires",
+    "charged-particles-sim/after/control-field-high.png vs control-field-low.png \u2014 field control does separate the clusters (changed=true, meanAbsDiff=1.137)"
+   ]
+  },
+  {
+   "tile": "turbulence-drift",
+   "net": "INDIFFERENT",
+   "gate": "PASS-WITH-FLAGS",
+   "readsAsClaim": true,
+   "physicalRead": true,
+   "mustFix": [],
+   "flags": [
+    {
+     "note": "Motes read as tiny ~1px steel-blue sparkle dots on near-black (meanLuma ~8), so a first-time user is more likely to read it as a starfield/twinkle than 'dust drifting through a turbulence field.' The promised 'slow rolling eddies and filaments' are only legible by comparing successive frames (center clears, edges gather) rather than visible as swirls/trails in any single frame. This is a legibility/taste concern, not a broken render.",
+     "evidence": "turbulence-drift/after/idle.png + play-1.png show isolated 1px cool dots; metrics: play frames meanLuma 8.1->7.9, frameDeltaMag declining 1.88->1.43->1.11 (slow, subtle motion)"
+    },
+    {
+     "note": "Motion is genuinely slow and individual motes lack visible trails/streaks, so the 'inertia / carries momentum' physics is inferred from cross-frame redistribution rather than felt instantly. Acceptable for 'slow rolling drift' but on the quiet side for a hero physics tile.",
+     "evidence": "metrics: play-3 frameDeltaMag=1.11 (lowest of the three); turbulence-drift/after/play-2.png vs play-3.png show the cluster migrating without per-mote streaks"
+    }
+   ],
+   "oneLine": "It's a clean, error-free steel-blue dust field whose particles genuinely advect and whose four sliders all visibly change the flow, but the motes are so tiny and dim that a first-time user could mistake it for a starfield rather than 'turbulence with rolling eddies.'",
+   "citedEvidence": [
+    "metrics: backend=webgpu, consoleErrors=[], networkErrors=[] \u2014 trustworthy capture",
+    "metrics: play-1/2/3 frameDeltaMag = 1.88 / 1.43 / 1.11 (non-identical frames, real but slow advection)",
+    "metrics: effHue ~224-231 deg, effSat ~0.47 \u2014 correct cool steel/ice blue per claim, not an off-band color miss",
+    "turbulence-drift/after/control-turbulence-low.png (even spread) vs control-turbulence-high.png (dust swept to edges, center cleared) \u2014 turbulence slider visibly works",
+    "turbulence-drift/after/control-scale-low.png (many small eddies) vs control-scale-high.png (large sweeping swirl top-right) \u2014 scale slider changes eddy size sensibly",
+    "metrics: all 4 controls changed=true, meanAbsDiff 0.68-2.4, latency 567-589ms; bandingScore ~0.31-0.33 (no blocky/banding artifacts)",
+    "turbulence-drift/after/control-count-low.png (sparse) vs control-count-high.png (dense) \u2014 count slider visibly adds/removes motes"
+   ]
+  },
+  {
+   "tile": "shockwave-scatter",
+   "net": "ANNOYED",
+   "gate": "BLOCKED",
+   "readsAsClaim": false,
+   "physicalRead": false,
+   "mustFix": [
+    {
+     "issue": "The 'grid of elements' renders as a field of single-pixel dots on a near-black background \u2014 the exact 1px-square-sprite / placeholder look the photoreal bar rejects. There is no element body, no mass, nothing that can be seen to be pushed. Replace the 1px dots with real, visible-size elements (tiles/glyphs/cells) that read as objects.",
+     "evidence": "shockwave-scatter/after/idle.png and play-2.png show only 1px dots; metrics: idle/play meanLuma=7.8/255, effVal=0, bandingScore=0.546 \u2014 near-black scene"
+    },
+    {
+     "issue": "No visible shockwave RING appears in any frame. The headline of the claim ('A shockwave ring expands through a grid') is never visible to the user \u2014 only faint dots twitch. The propagating ring front must be rendered as a visible arc/wavefront.",
+     "evidence": "shockwave-scatter/after/play-1.png, play-2.png, play-3.png \u2014 no ring/arc present in any play frame; metrics frameDeltaMag=0.12/0.22/0.26 (motion present but no ring rendered)"
+    },
+    {
+     "issue": "Does not read as real physics: with no element body and no ring, the displacement reads as random sparkle, not weight/momentum/impulse-and-spring. A first-time user would not understand it as 'shock power'.",
+     "evidence": "shockwave-scatter/after/play-2.png shows only scattered pixels with no mass cue; metrics effSat=0.47 effHue=233 (uniform dim blue, no impact flash)"
+    },
+    {
+     "issue": "The springBack control is dead \u2014 moving it produces no perceptible change, so 1 of 4 controls does nothing.",
+     "evidence": "metrics: control springBack changed=false, pixelDiff.meanAbsDiff=0.138, changedFrac=0.0039 (below threshold); control-springBack-low.png vs -high.png visually indistinguishable"
+    }
+   ],
+   "flags": [
+    {
+     "note": "Controls power, ringSpeed, and gridSize do register changes (gridSize-low is a coarse 4x4, gridSize-high a dense ~10x10), so the parameter plumbing partly works \u2014 the failure is the visual primitive, not the control wiring.",
+     "evidence": "metrics: power changed=true (meanAbsDiff 0.199), ringSpeed changed=true (0.246), gridSize changed=true (0.265); control-gridSize-low.png vs control-gridSize-high.png differ in density"
+    },
+    {
+     "note": "No console or network errors and latency is acceptable (~580ms), so the tile is not crashing or laggy \u2014 it is a fidelity failure, not a stability failure.",
+     "evidence": "metrics: consoleErrors=[], networkErrors=[], control latencyMs 577-598"
+    }
+   ],
+   "oneLine": "It's a near-black screen of tiny twitching pixel-dots with no visible shockwave ring and no sense of weight \u2014 it looks broken or unfinished, not like 'shock power.'",
+   "citedEvidence": [
+    "shockwave-scatter/after/idle.png \u2014 clean regular grid of 1px dots, meanLuma=7.8/255, effVal=0 (near-black placeholder look)",
+    "shockwave-scatter/after/play-2.png \u2014 dots scattered toward center but no visible ring, no element body; frameDeltaMag=0.22",
+    "metrics.json \u2014 control springBack changed=false (meanAbsDiff=0.138), 1 of 4 controls dead",
+    "shockwave-scatter/after/control-gridSize-high.png \u2014 confirms grid is rendered only as single-pixel dots even at max density; bandingScore=0.54"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "buoyancy-bob-sim",
+  "label": "Wave Amp",
+  "description": "A buoy floats on a simulated wave-equation water surface, bobbing on passing swells and tilting to the surface slope — real fluid + buoyant-spring physics, not an easing curve.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

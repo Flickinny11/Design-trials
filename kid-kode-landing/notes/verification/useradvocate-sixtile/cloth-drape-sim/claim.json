@@ -1,0 +1,7 @@
+{
+  "name": "cloth-drape-sim",
+  "label": "Stiffness",
+  "description": "Real XPBD cloth: the plane is a grid of mass particles pinned at the top that drape under gravity into catenary folds with structural and shear constraints, settling with a gentle sway — physics, not a sine.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

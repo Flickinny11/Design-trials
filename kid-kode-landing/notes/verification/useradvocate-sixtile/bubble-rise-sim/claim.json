@@ -1,0 +1,7 @@
+{
+  "name": "bubble-rise-sim",
+  "label": "Count",
+  "description": "Bubbles rise through liquid under real buoyancy and drag, wobbling on the currents, swelling as they climb, then popping at the surface — physics, not an easing curve.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

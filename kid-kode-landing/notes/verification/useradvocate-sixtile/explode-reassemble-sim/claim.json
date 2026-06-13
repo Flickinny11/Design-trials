@@ -1,0 +1,7 @@
+{
+  "name": "explode-reassemble-sim",
+  "label": "Blast Power",
+  "description": "An impulse blasts a logo-like particle formation outward under real integrated velocity, gravity and drag; a spring-back force then pulls every particle home and reassembles the figure before it loops — true integration, not a parametric blast.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

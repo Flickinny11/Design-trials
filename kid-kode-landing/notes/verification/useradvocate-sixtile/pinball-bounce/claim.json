@@ -1,0 +1,7 @@
+{
+  "name": "pinball-bounce",
+  "label": "Launch Speed",
+  "description": "A ball is launched and ricochets under real gravity off a field of fixed circular bumpers and the side walls, bouncing with restitution along a deterministic chaotic path traced by a fading trail.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,7 @@
+{
+  "name": "pour-splash-sim",
+  "label": "Flow Rate",
+  "description": "A stream of liquid pours from a spout, hits a pool, and splashes — a real SPH-lite particle sim with gravity, collision, neighbour spread, and impact-driven crowns.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

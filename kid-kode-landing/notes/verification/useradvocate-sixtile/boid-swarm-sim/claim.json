@@ -1,0 +1,7 @@
+{
+  "name": "boid-swarm-sim",
+  "label": "Cohesion",
+  "description": "A real flocking simulation: each mote integrates separation, alignment, and cohesion forces from its neighbours plus a pointer pull, so a coherent murmuration emerges and herds around the cursor — physics, not a closed-form field.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

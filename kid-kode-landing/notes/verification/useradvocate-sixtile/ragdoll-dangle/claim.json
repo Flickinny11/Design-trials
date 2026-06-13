@@ -1,0 +1,7 @@
+{
+  "name": "ragdoll-dangle",
+  "label": "Gravity",
+  "description": "A stick-figure ragdoll hangs from a pinned hand that follows the cursor and flops under real gravity — the arms and legs lag, swing, and overshoot with floppy momentum.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,7 @@
+{
+  "name": "weightless-drift",
+  "label": "Drift Speed",
+  "description": "A card floats in zero gravity, carrying constant linear and angular momentum and bouncing elastically off the invisible viewport walls while slowly tumbling — momentum conservation, not an easing curve.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

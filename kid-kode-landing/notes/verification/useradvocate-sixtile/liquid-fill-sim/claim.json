@@ -1,0 +1,7 @@
+{
+  "name": "liquid-fill-sim",
+  "label": "Fill Rate",
+  "description": "Liquid pours into a clear glass vessel; the free surface rises and settles with real CPU wave-equation sloshing — a genuine fluid, not a shader fake.",
+  "category": "glass",
+  "groundTruthSibling": null
+}

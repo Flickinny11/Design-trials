@@ -1,0 +1,7 @@
+{
+  "name": "gravity-well-sim",
+  "label": "Well Mass",
+  "description": "A stream of particles flies past a gravity well at the pointer; real softened inverse-square attraction bends their paths — some slingshot past, some are captured into orbits — leaving curved trails. Physics, integrated, not a closed-form curve.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

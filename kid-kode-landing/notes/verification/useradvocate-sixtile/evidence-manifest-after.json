@@ -1,19 +1,474 @@
 {
-  "startedAt": "2026-06-13T09:26:50.982Z",
+  "startedAt": "2026-06-13T11:36:20.501Z",
   "state": "after",
-  "port": 4837,
+  "port": 4822,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "click-burst",
+      "tile": "drop-squash",
       "state": "after",
-      "dir": "click-burst/after",
+      "dir": "drop-squash/after",
       "claim": {
-        "name": "click-burst",
-        "label": "Motes",
-        "description": "Engage and a ring of brass motes detonates outward — one clean radial burst that decelerates, twinkles, and dies like a struck match head.",
+        "name": "drop-squash",
+        "label": "Drop Height",
+        "description": "A card falls under real gravity, bounces with restitution, and squashes on each impact in proportion to its landing speed before settling — physics, not an easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "gravity-bounce-cluster",
+      "state": "after",
+      "dir": "gravity-bounce-cluster/after",
+      "claim": {
+        "name": "gravity-bounce-cluster",
+        "label": "Count",
+        "description": "A cluster of balls drops under real gravity, bounces off the floor and walls, and separates into a settling heap — physics, not an easing curve.",
         "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "tumble-settle",
+      "state": "after",
+      "dir": "tumble-settle/after",
+      "claim": {
+        "name": "tumble-settle",
+        "label": "Spin",
+        "description": "A card is launched with linear and angular velocity, falls under gravity, and tumbles end-over-end across the floor — bouncing with restitution while floor friction bleeds off its spin — until it settles flat. Real rigid-body physics, not an easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "domino-cascade",
+      "state": "after",
+      "dir": "domino-cascade/after",
+      "claim": {
+        "name": "domino-cascade",
+        "label": "Count",
+        "description": "A row of thin domino tiles topples in sequence — each falls as an inverted pendulum under gravity-torque and knocks the next into its own fall, a real contact-triggered chain reaction.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "block-topple",
+      "state": "after",
+      "dir": "block-topple/after",
+      "claim": {
+        "name": "block-topple",
+        "label": "Blocks",
+        "description": "A stacked tower of rigid blocks is hit by a horizontal impulse and topples, the blocks tumbling and bouncing off the floor under gravity — real per-block rigid physics, not an easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "magnet-snap",
+      "state": "after",
+      "dir": "magnet-snap/after",
+      "claim": {
+        "name": "magnet-snap",
+        "label": "Pull",
+        "description": "The card is yanked toward the pointer by a strong magnetic spring with real mass and momentum — it accelerates in, overshoots the magnet, and rings down before sticking.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "weightless-drift",
+      "state": "after",
+      "dir": "weightless-drift/after",
+      "claim": {
+        "name": "weightless-drift",
+        "label": "Drift Speed",
+        "description": "A card floats in zero gravity, carrying constant linear and angular momentum and bouncing elastically off the invisible viewport walls while slowly tumbling — momentum conservation, not an easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "n-body-orbit",
+      "state": "after",
+      "dir": "n-body-orbit/after",
+      "claim": {
+        "name": "n-body-orbit",
+        "label": "Gravity",
+        "description": "A real gravitational N-body system: two or three bright suns and a swarm of satellites pull on each other under softened inverse-square gravity, producing genuine orbits and slingshots — integrated physics, not a drawn curve.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "newton-cradle",
+      "state": "after",
+      "dir": "newton-cradle/after",
+      "claim": {
+        "name": "newton-cradle",
+        "label": "Balls",
+        "description": "A real Newton",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "pinball-bounce",
+      "state": "after",
+      "dir": "pinball-bounce/after",
+      "claim": {
+        "name": "pinball-bounce",
+        "label": "Launch Speed",
+        "description": "A ball is launched and ricochets under real gravity off a field of fixed circular bumpers and the side walls, bouncing with restitution along a deterministic chaotic path traced by a fading trail.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "spring-arrive",
+      "state": "after",
+      "dir": "spring-arrive/after",
+      "claim": {
+        "name": "spring-arrive",
+        "label": "Stiffness",
+        "description": "A card flies in from off-screen and arrives via a real damped spring (mass + stiffness + damping): it accelerates in, overshoots past rest, and rings down — integrated physics, not an elasticOut easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "soft-body-bounce",
+      "state": "after",
+      "dir": "soft-body-bounce/after",
+      "claim": {
+        "name": "soft-body-bounce",
+        "label": "Stiffness",
+        "description": "A soft luminous gel blob — an XPBD particle lattice — drops, hits the floor and squashes with real jiggle, then springs back to round via its distance constraints. Genuine soft-body deformation, not a scale tween.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "cloth-drape-sim",
+      "state": "after",
+      "dir": "cloth-drape-sim/after",
+      "claim": {
+        "name": "cloth-drape-sim",
+        "label": "Stiffness",
+        "description": "Real XPBD cloth: the plane is a grid of mass particles pinned at the top that drape under gravity into catenary folds with structural and shear constraints, settling with a gentle sway — physics, not a sine.",
+        "category": "wave"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "flag-wind-sim",
+      "state": "after",
+      "dir": "flag-wind-sim/after",
+      "claim": {
+        "name": "flag-wind-sim",
+        "label": "Wind",
+        "description": "A real XPBD cloth flag pinned at the pole: a steady wind, swelling gusts, and turbulence push genuine flapping ripples down the fabric — emergent physics, not a scripted sine.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "rope-dangle-sim",
+      "state": "after",
+      "dir": "rope-dangle-sim/after",
+      "claim": {
+        "name": "rope-dangle-sim",
+        "label": "Segments",
+        "description": "A real XPBD rope — a chain of particles pinned to a moving anchor, hanging under gravity and swinging with genuine momentum as the cursor whips the anchor around.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "chain-dangle",
+      "state": "after",
+      "dir": "chain-dangle/after",
+      "claim": {
+        "name": "chain-dangle",
+        "label": "Links",
+        "description": "A hanging chain of discrete brass beads linked by real distance constraints, the top pinned to the cursor and the strand swinging under gravity with genuine bead-to-bead coupling — physics, not an easing curve.",
+        "category": "pointer"
+      },
+      "controls": 5,
+      "notes": []
+    },
+    {
+      "tile": "water-balloon-wobble",
+      "state": "after",
+      "dir": "water-balloon-wobble/after",
+      "claim": {
+        "name": "water-balloon-wobble",
+        "label": "Skin Stiffness",
+        "description": "A pressurized soft balloon: an XPBD particle shell held round by surface springs plus a volume/pressure restoring force. Poke it and the skin dents, the trapped water sloshes, and it wobbles back to round — physics, not an easing curve.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "jelly-collide-sim",
+      "state": "after",
+      "dir": "jelly-collide-sim/after",
+      "claim": {
+        "name": "jelly-collide-sim",
+        "label": "Stiffness",
+        "description": "A soft jelly cube is thrown at a wall, squashes flat against it on impact — the lattice compressing and bulging — then peels off and springs back. Real XPBD soft body with wall collision.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "ragdoll-dangle",
+      "state": "after",
+      "dir": "ragdoll-dangle/after",
+      "claim": {
+        "name": "ragdoll-dangle",
+        "label": "Gravity",
+        "description": "A stick-figure ragdoll hangs from a pinned hand that follows the cursor and flops under real gravity — the arms and legs lag, swing, and overshoot with floppy momentum.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "liquid-fill-sim",
+      "state": "after",
+      "dir": "liquid-fill-sim/after",
+      "claim": {
+        "name": "liquid-fill-sim",
+        "label": "Fill Rate",
+        "description": "Liquid pours into a clear glass vessel; the free surface rises and settles with real CPU wave-equation sloshing — a genuine fluid, not a shader fake.",
+        "category": "glass"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "pour-splash-sim",
+      "state": "after",
+      "dir": "pour-splash-sim/after",
+      "claim": {
+        "name": "pour-splash-sim",
+        "label": "Flow Rate",
+        "description": "A stream of liquid pours from a spout, hits a pool, and splashes — a real SPH-lite particle sim with gravity, collision, neighbour spread, and impact-driven crowns.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "ripple-interact-sim",
+      "state": "after",
+      "dir": "ripple-interact-sim/after",
+      "claim": {
+        "name": "ripple-interact-sim",
+        "label": "Tension",
+        "description": "A real interactive water surface: the pointer pokes a wave-equation height field and the ripples propagate, reflect off the edges, and interfere — true simulated water, not a closed-form sine.",
+        "category": "wave"
+      },
+      "controls": 5,
+      "notes": []
+    },
+    {
+      "tile": "buoyancy-bob-sim",
+      "state": "after",
+      "dir": "buoyancy-bob-sim/after",
+      "claim": {
+        "name": "buoyancy-bob-sim",
+        "label": "Wave Amp",
+        "description": "A buoy floats on a simulated wave-equation water surface, bobbing on passing swells and tilting to the surface slope — real fluid + buoyant-spring physics, not an easing curve.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "wave-tank-slosh",
+      "state": "after",
+      "dir": "wave-tank-slosh/after",
+      "claim": {
+        "name": "wave-tank-slosh",
+        "label": "Slosh",
+        "description": "Water sloshing in a tank: a shallow-water height field driven by a tilt body force so the bulk of the water piles against the walls and surges back — low-frequency bulk motion, not a ripple.",
+        "category": "wave"
+      },
+      "controls": 5,
+      "notes": []
+    },
+    {
+      "tile": "molten-drip-sim",
+      "state": "after",
+      "dir": "molten-drip-sim/after",
+      "claim": {
+        "name": "molten-drip-sim",
+        "label": "Viscosity",
+        "description": "A hanging blob of viscous molten metal stretches under gravity, necks, and drips off a glowing droplet that falls before the column reforms — a real viscous CPU sim, not an easing curve.",
+        "category": "glass"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "smoke-plume-sim",
+      "state": "after",
+      "dir": "smoke-plume-sim/after",
+      "claim": {
+        "name": "smoke-plume-sim",
+        "label": "Buoyancy",
+        "description": "Sim-driven buoyant smoke: CPU parcels emitted at the base rise under buoyancy, are advected by a deterministic curl-noise turbulence field, and expand and fade as they age — a real advected plume, not a scrolling shader.",
+        "category": "smoke"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "bubble-rise-sim",
+      "state": "after",
+      "dir": "bubble-rise-sim/after",
+      "claim": {
+        "name": "bubble-rise-sim",
+        "label": "Count",
+        "description": "Bubbles rise through liquid under real buoyancy and drag, wobbling on the currents, swelling as they climb, then popping at the surface — physics, not an easing curve.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "raindrop-ripple-sim",
+      "state": "after",
+      "dir": "raindrop-ripple-sim/after",
+      "claim": {
+        "name": "raindrop-ripple-sim",
+        "label": "Rain Rate",
+        "description": "Rain drops fall and impact a water surface; each impact splats a real propagating ripple into a wave-equation height field, so the surface is a living mesh of expanding, overlapping, interfering rings — fluid simulation, not a sine texture.",
+        "category": "wave"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "wind-gust-sim",
+      "state": "after",
+      "dir": "wind-gust-sim/after",
+      "claim": {
+        "name": "wind-gust-sim",
+        "label": "Count",
+        "description": "A field of leaf-amber motes is blown by a real wind force field — a steady breeze plus traveling gusts and curl turbulence, integrated with drag so they accelerate in the gust front, swirl, and coast between gusts. Physics, not an easing curve.",
+        "category": "particles"
+      },
+      "controls": 5,
+      "notes": []
+    },
+    {
+      "tile": "vortex-pull-sim",
+      "state": "after",
+      "dir": "vortex-pull-sim/after",
+      "claim": {
+        "name": "vortex-pull-sim",
+        "label": "Swirl",
+        "description": "A real vortex force field — tangential swirl plus inward radial pull suck ice particles into a swirling funnel, spinning faster as they near the eye, then recycling from the rim. Integrated velocity, not a closed-form spiral.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "explode-reassemble-sim",
+      "state": "after",
+      "dir": "explode-reassemble-sim/after",
+      "claim": {
+        "name": "explode-reassemble-sim",
+        "label": "Blast Power",
+        "description": "An impulse blasts a logo-like particle formation outward under real integrated velocity, gravity and drag; a spring-back force then pulls every particle home and reassembles the figure before it loops — true integration, not a parametric blast.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "boid-swarm-sim",
+      "state": "after",
+      "dir": "boid-swarm-sim/after",
+      "claim": {
+        "name": "boid-swarm-sim",
+        "label": "Cohesion",
+        "description": "A real flocking simulation: each mote integrates separation, alignment, and cohesion forces from its neighbours plus a pointer pull, so a coherent murmuration emerges and herds around the cursor — physics, not a closed-form field.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "gravity-well-sim",
+      "state": "after",
+      "dir": "gravity-well-sim/after",
+      "claim": {
+        "name": "gravity-well-sim",
+        "label": "Well Mass",
+        "description": "A stream of particles flies past a gravity well at the pointer; real softened inverse-square attraction bends their paths — some slingshot past, some are captured into orbits — leaving curved trails. Physics, integrated, not a closed-form curve.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "charged-particles-sim",
+      "state": "after",
+      "dir": "charged-particles-sim/after",
+      "claim": {
+        "name": "charged-particles-sim",
+        "label": "Field (B)",
+        "description": "Charged motes drift through a crossed magnetic + electric field and follow real Lorentz-force curved/helical paths (F = q(E + v×B)); positive (brass) and negative (ice) charges curl opposite ways and drift apart — integrated velocity, not field-line drawing.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "turbulence-drift",
+      "state": "after",
+      "dir": "turbulence-drift/after",
+      "claim": {
+        "name": "turbulence-drift",
+        "label": "Turbulence",
+        "description": "Steel-and-ice dust drifts through an integrated curl-noise turbulence field with inertia — motes carry momentum across eddies, forming slow rolling swirls and filaments. Real advection, not a closed-form path.",
+        "category": "particles"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "shockwave-scatter",
+      "state": "after",
+      "dir": "shockwave-scatter/after",
+      "claim": {
+        "name": "shockwave-scatter",
+        "label": "Shock Power",
+        "description": "A radial shockwave expands from the centre across a regular grid; each element is pushed outward as the ring sweeps past, then springs back to its slot — a propagating displacement wave, then it recharges and re-fires. Real impulse + spring integration.",
+        "category": "displacement"
       },
       "controls": 4,
       "notes": []

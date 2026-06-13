@@ -1,0 +1,7 @@
+{
+  "name": "drop-squash",
+  "label": "Drop Height",
+  "description": "A card falls under real gravity, bounces with restitution, and squashes on each impact in proportion to its landing speed before settling — physics, not an easing curve.",
+  "category": "transform",
+  "groundTruthSibling": null
+}
