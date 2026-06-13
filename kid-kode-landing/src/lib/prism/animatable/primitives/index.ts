@@ -219,6 +219,7 @@ import { pointerWakeWavePrimitive } from './pointer-wake-wave';
 import { rippleDisplacePrimitive } from './ripple-displace';
 import { shatterPrimitive } from './shatter';
 import { shatterAssemblePrimitive } from './shatter-assemble';
+import { shockwaveScatterPrimitive } from './shockwave-scatter';
 import { sliceStripsPrimitive } from './slice-strips';
 import { splatRevealPrimitive } from './splat-reveal';
 import { swirlWarpPrimitive } from './swirl-warp';
@@ -354,9 +355,11 @@ import { smokeTrailPrimitive } from './smoke-trail';
 import { steamPrimitive } from './steam';
 import { wispySmokePrimitive } from './wispy-smoke';
 import { attractorPrimitive } from './attractor';
+import { boidSwarmSimPrimitive } from './boid-swarm-sim';
 import { bokehDriftPrimitive } from './bokeh-drift';
 import { bubbleRiseSimPrimitive } from './bubble-rise-sim';
 import { bubblesPrimitive } from './bubbles';
+import { chargedParticlesSimPrimitive } from './charged-particles-sim';
 import { clickBurstPrimitive } from './click-burst';
 import { collisionBallsPrimitive } from './collision-balls';
 import { cometOrbitPrimitive } from './comet-orbit';
@@ -366,6 +369,7 @@ import { debrisTornadoPrimitive } from './debris-tornado';
 import { dnaHelixPrimitive } from './dna-helix';
 import { dustParticlesPrimitive } from './dust-particles';
 import { embersPrimitive } from './embers';
+import { explodeReassembleSimPrimitive } from './explode-reassemble-sim';
 import { explosionPrimitive } from './explosion';
 import { firefliesPrimitive } from './fireflies';
 import { fireworksPrimitive } from './fireworks';
@@ -376,6 +380,7 @@ import { fountainPrimitive } from './fountain';
 import { galaxyParticlesPrimitive } from './galaxy-particles';
 import { gravityBounceClusterPrimitive } from './gravity-bounce-cluster';
 import { gravityDropPrimitive } from './gravity-drop';
+import { gravityWellSimPrimitive } from './gravity-well-sim';
 import { hyperspaceWarpPrimitive } from './hyperspace-warp';
 import { imageToParticlesPrimitive } from './image-to-particles';
 import { magneticFieldPrimitive } from './magnetic-field';
@@ -402,8 +407,11 @@ import { sparksPrimitive } from './sparks';
 import { springLatticePrimitive } from './spring-lattice';
 import { swarmPrimitive } from './swarm';
 import { tickerTapePrimitive } from './ticker-tape';
+import { turbulenceDriftPrimitive } from './turbulence-drift';
 import { vortexPrimitive } from './vortex';
+import { vortexPullSimPrimitive } from './vortex-pull-sim';
 import { waveGridPrimitive } from './wave-grid';
+import { windGustSimPrimitive } from './wind-gust-sim';
 
 export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   accordionYPrimitive,
@@ -619,6 +627,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   rippleDisplacePrimitive,
   shatterPrimitive,
   shatterAssemblePrimitive,
+  shockwaveScatterPrimitive,
   sliceStripsPrimitive,
   splatRevealPrimitive,
   swirlWarpPrimitive,
@@ -754,9 +763,11 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   steamPrimitive,
   wispySmokePrimitive,
   attractorPrimitive,
+  boidSwarmSimPrimitive,
   bokehDriftPrimitive,
   bubbleRiseSimPrimitive,
   bubblesPrimitive,
+  chargedParticlesSimPrimitive,
   clickBurstPrimitive,
   collisionBallsPrimitive,
   cometOrbitPrimitive,
@@ -766,6 +777,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   dnaHelixPrimitive,
   dustParticlesPrimitive,
   embersPrimitive,
+  explodeReassembleSimPrimitive,
   explosionPrimitive,
   firefliesPrimitive,
   fireworksPrimitive,
@@ -776,6 +788,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   galaxyParticlesPrimitive,
   gravityBounceClusterPrimitive,
   gravityDropPrimitive,
+  gravityWellSimPrimitive,
   hyperspaceWarpPrimitive,
   imageToParticlesPrimitive,
   magneticFieldPrimitive,
@@ -802,8 +815,11 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   springLatticePrimitive,
   swarmPrimitive,
   tickerTapePrimitive,
+  turbulenceDriftPrimitive,
   vortexPrimitive,
+  vortexPullSimPrimitive,
   waveGridPrimitive,
+  windGustSimPrimitive,
 ];
 
 let registered = false;
