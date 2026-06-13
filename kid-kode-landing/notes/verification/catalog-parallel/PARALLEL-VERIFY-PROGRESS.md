@@ -4603,3 +4603,46 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/diamond-wipe (mask) render=true play=true ctrl=true
 - [PASS] std/displacement-transition (displacement) render=true play=true ctrl=true
 - [PASS] std/dissolve-burn (displacement) render=true play=true ctrl=true
+
+## Resumed 2026-06-13T11:25:35.371Z (std 26, glass 10 remaining)
+- [PASS] std/block-topple (transform) render=true play=true ctrl=true
+- [PASS] std/boid-swarm-sim (particles) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/chain-dangle (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/cloth-drape-sim (wave) render=true play=true ctrl=true
+- [PASS] std/charged-particles-sim (particles) render=true play=true ctrl=true
+- [PASS] std/domino-cascade (transform) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.08s of 2.69s loop)
+- [PASS] std/drop-squash (transform) render=true play=true ctrl=true
+- [PASS] std/explode-reassemble-sim (particles) render=true play=true ctrl=true
+- [PASS] std/flag-wind-sim (wave) render=true play=true ctrl=true
+- [PASS] std/gravity-bounce-cluster (particles) render=true play=true ctrl=true
+- [PASS] std/gravity-well-sim (particles) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/jelly-collide-sim (wave) render=true play=true ctrl=true
+- [PASS] std/magnet-snap (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/n-body-orbit (particles) render=true play=true ctrl=true
+- [PASS] std/newton-cradle (transform) render=true play=true ctrl=true
+- [PASS] std/pinball-bounce (particles) render=true play=true ctrl=true
+- [PASS] std/ragdoll-dangle (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/shockwave-scatter (displacement) render=true play=true ctrl=true
+- [PASS] std/soft-body-bounce (wave) render=true play=true ctrl=true
+- [PASS] std/spring-arrive (transform) render=true play=true ctrl=true
+- [PASS] std/tumble-settle (transform) render=true play=true ctrl=true
+- [PASS] std/turbulence-drift (particles) render=true play=true ctrl=true
+- [PASS] std/vortex-pull-sim (particles) render=true play=true ctrl=true
+- [PASS] std/weightless-drift (transform) render=true play=true ctrl=true
+- [PASS] std/wind-gust-sim (particles) render=true play=true ctrl=true
+- [FAIL] std/rope-dangle-sim (pointer) render=true play=false ctrl=false :: pointer stimulus pinned for controls; controls retry: phase sweep found no differing frame under current params
+- [PASS] glass/bubble-rise-sim (particles) render=true play=true ctrl=true
+- [PASS] glass/liquid-fill-sim (glass) render=true play=true ctrl=true
+- [PASS] glass/buoyancy-bob-sim (wave) render=true play=true ctrl=true
+- [PASS] glass/molten-drip-sim (glass) render=true play=true ctrl=true
+- [PASS] glass/pour-splash-sim (particles) render=true play=true ctrl=true
+- [PASS] glass/raindrop-ripple-sim (wave) render=true play=true ctrl=true
+- [PASS] glass/ripple-interact-sim (wave) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] glass/smoke-plume-sim (smoke) render=true play=true ctrl=true
+- [PASS] glass/water-balloon-wobble (wave) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] glass/wave-tank-slosh (wave) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+## Quiet retry 2026-06-13T11:35:34.185Z — 1 loaded-run fails re-run serially on a fresh browser
+- [PASS] std-quiet/rope-dangle-sim (pointer) render=true play=true ctrl=true :: plays via deterministic phase sweep (t=0.09s of 3.00s loop); pointer stimulus pinned for controls
+
+### Run end 2026-06-13T11:35:51.845Z — pass 36/36 (1 recovered on quiet retry), fail 0, missing 0, wall 616s
