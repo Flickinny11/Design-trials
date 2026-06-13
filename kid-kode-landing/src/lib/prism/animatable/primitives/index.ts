@@ -41,6 +41,7 @@ import { skewInPrimitive } from './skew-in';
 import { slidePrimitive } from './slide';
 import { spinPrimitive } from './spin';
 import { spiralInPrimitive } from './spiral-in';
+import { springArrivePrimitive } from './spring-arrive';
 import { squashStretchInPrimitive } from './squash-stretch-in';
 import { swapFlipMorphPrimitive } from './swap-flip-morph';
 import { swingPrimitive } from './swing';
@@ -95,6 +96,7 @@ import { scrollWaveRidePrimitive } from './scroll-wave-ride';
 import { scrollZoomPrimitive } from './scroll-zoom';
 import { scrubMorphPrimitive } from './scrub-morph';
 import { stickyPinPrimitive } from './sticky-pin';
+import { chainDanglePrimitive } from './chain-dangle';
 import { chargeReleasePrimitive } from './charge-release';
 import { cursorTrailPrimitive } from './cursor-trail';
 import { gravityWellPrimitive } from './gravity-well';
@@ -114,7 +116,9 @@ import { pointerRipplePrimitive } from './pointer-ripple';
 import { pointerShinePrimitive } from './pointer-shine';
 import { pointerTilt3dPrimitive } from './pointer-tilt-3d';
 import { proximityRimGlowPrimitive } from './proximity-rim-glow';
+import { ragdollDanglePrimitive } from './ragdoll-dangle';
 import { repelPrimitive } from './repel';
+import { ropeDangleSimPrimitive } from './rope-dangle-sim';
 import { spotlightFollowPrimitive } from './spotlight-follow';
 import { springChainFollowPrimitive } from './spring-chain-follow';
 import { throwPhysicsPrimitive } from './throw-physics';
@@ -157,15 +161,18 @@ import { textWaveColorPrimitive } from './text-wave-color';
 import { typewriterPrimitive } from './typewriter';
 import { waveTextPrimitive } from './wave-text';
 import { bannerFlutterPrimitive } from './banner-flutter';
+import { clothDrapeSimPrimitive } from './cloth-drape-sim';
 import { clothSwayPrimitive } from './cloth-sway';
 import { curtainWavePrimitive } from './curtain-wave';
 import { drapeFoldPrimitive } from './drape-fold';
 import { flagWavePrimitive } from './flag-wave';
+import { flagWindSimPrimitive } from './flag-wind-sim';
 import { foamPrimitive } from './foam';
 import { gelWobblePrimitive } from './gel-wobble';
 import { hairSwayPrimitive } from './hair-sway';
 import { heatHazeWarpPrimitive } from './heat-haze-warp';
 import { inkSpreadPrimitive } from './ink-spread';
+import { jellyCollideSimPrimitive } from './jelly-collide-sim';
 import { jellySurfacePrimitive } from './jelly-surface';
 import { oceanFftPrimitive } from './ocean-fft';
 import { ripplePrimitive } from './ripple';
@@ -174,7 +181,9 @@ import { rippleInterferencePrimitive } from './ripple-interference';
 import { ripplePoolPrimitive } from './ripple-pool';
 import { sailBulgePrimitive } from './sail-bulge';
 import { seaweedSwayPrimitive } from './seaweed-sway';
+import { softBodyBouncePrimitive } from './soft-body-bounce';
 import { trampolinePrimitive } from './trampoline';
+import { waterBalloonWobblePrimitive } from './water-balloon-wobble';
 import { waterSurfacePrimitive } from './water-surface';
 import { wavePrimitive } from './wave';
 import { waveCrossPrimitive } from './wave-cross';
@@ -423,6 +432,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   slidePrimitive,
   spinPrimitive,
   spiralInPrimitive,
+  springArrivePrimitive,
   squashStretchInPrimitive,
   swapFlipMorphPrimitive,
   swingPrimitive,
@@ -477,6 +487,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   scrollZoomPrimitive,
   scrubMorphPrimitive,
   stickyPinPrimitive,
+  chainDanglePrimitive,
   chargeReleasePrimitive,
   cursorTrailPrimitive,
   gravityWellPrimitive,
@@ -496,7 +507,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   pointerShinePrimitive,
   pointerTilt3dPrimitive,
   proximityRimGlowPrimitive,
+  ragdollDanglePrimitive,
   repelPrimitive,
+  ropeDangleSimPrimitive,
   spotlightFollowPrimitive,
   springChainFollowPrimitive,
   throwPhysicsPrimitive,
@@ -539,15 +552,18 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   typewriterPrimitive,
   waveTextPrimitive,
   bannerFlutterPrimitive,
+  clothDrapeSimPrimitive,
   clothSwayPrimitive,
   curtainWavePrimitive,
   drapeFoldPrimitive,
   flagWavePrimitive,
+  flagWindSimPrimitive,
   foamPrimitive,
   gelWobblePrimitive,
   hairSwayPrimitive,
   heatHazeWarpPrimitive,
   inkSpreadPrimitive,
+  jellyCollideSimPrimitive,
   jellySurfacePrimitive,
   oceanFftPrimitive,
   ripplePrimitive,
@@ -556,7 +572,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   ripplePoolPrimitive,
   sailBulgePrimitive,
   seaweedSwayPrimitive,
+  softBodyBouncePrimitive,
   trampolinePrimitive,
+  waterBalloonWobblePrimitive,
   waterSurfacePrimitive,
   wavePrimitive,
   waveCrossPrimitive,
