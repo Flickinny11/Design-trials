@@ -1,6 +1,11 @@
 // molten-drip-sim — a hanging blob of VISCOUS molten metal/lava stretches under
 // gravity, NECKS, and DRIPS off a glowing droplet that falls before the column
-// reforms and the cycle repeats. CATALOG primitive (hard / glass, subject:'empty').
+// reforms and the cycle repeats. CATALOG primitive (hard / particles, subject:'empty').
+// NOTE: category is 'particles' (NOT 'glass'): the round-2 render is OPAQUE
+// NormalBlending amber beads with no transmission, so the rig's glass backdrop
+// (a bright emissive hero sphere + bokeh) must NOT be added behind it — that
+// backdrop was the real source of the "blown-out white disk + cream/cold-blue
+// blobs" the advocate kept blocking, NOT molten's own beads.
 //
 // REAL CPU SIM, not an easing curve. The physics:
 //   • A pinned RESERVOIR sits at the top (a fat molten blob). It is NOT a static
@@ -98,7 +103,7 @@ const SCHEMA = [
 export const moltenDripSimPrimitive: PrimitiveDefinition = {
   name: 'molten-drip-sim',
   label: 'Molten Drip',
-  category: 'glass',
+  category: 'particles',
   difficulty: 'hard',
   subject: 'empty',
   defaultDriver: 'time',
@@ -106,7 +111,7 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
     'A hanging blob of viscous molten metal stretches under gravity, necks, and drips off a glowing droplet that falls before the column reforms — a real viscous CPU sim, not an easing curve.',
   schema: SCHEMA,
   create: defineAnimatable(
-    { name: 'molten-drip-sim', category: 'glass', schema: SCHEMA },
+    { name: 'molten-drip-sim', category: 'particles', schema: SCHEMA },
     (target, params) => {
       const tier = resolveSimTier(target);
       // HEAVY-ish sim: cheaper neck resolution + fewer falling droplets on T0.

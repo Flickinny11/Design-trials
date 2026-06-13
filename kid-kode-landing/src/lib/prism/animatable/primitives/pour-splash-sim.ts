@@ -87,6 +87,18 @@ const STREAM_VY = -0.9; // initial downward push (POURING, not dripping)
 const SPLASH_SPEED_GATE = 0.9; // min impact speed that throws a crown
 const HIDDEN = BASIN_HALF + 1000; // park inactive particles far away
 const MOTE_EVERY = 6; // every Nth particle renders as a brighter mote
+// Deterministic warm-up baked into reset(): the catalog rig sweeps each control
+// PAUSED and pinned at ABSOLUTE t = 1.0s, then screenshots. With a cold reset the
+// first emitted drop only reaches the floor at t ≈ sqrt(2·2.6/4.4) ≈ 1.09s — JUST
+// AFTER that pin — so at t=1.0 there is no pool and no crown, and the `splash`
+// control (which only scales the impact crown) would read DEAD. We instead bake an
+// already-ESTABLISHED pour into t=0 by stepping ~1.4s of fixed dt inside reset(),
+// so the t=0 baseline already has a settled pool + an in-flight stream + an
+// ONGOING crown (the stream recycles, so fresh impacts keep throwing spray). The
+// warm-up reads params live (incl. `splash`), and a control sweep's
+// markDirty()→reset() replays the warm-up with the new value, so raising `splash`
+// at the t=1.0 pin visibly fattens/raises the crown.
+const WARMUP_TIME = 1.4; // seconds of pre-rolled pour baked into the t=0 baseline
 // Generous fixed billboard footprint — must hold the LARGEST drop (a splash mote
 // at full splash) with its feathered edge, à la bokeh-drift / smoke-plume.
 const FIXED_BILLBOARD = 0.5;
@@ -157,9 +169,17 @@ export const pourSplashSimPrimitive: PrimitiveDefinition = {
         }
         emitCursor = 0;
         stepIndex = 0;
+        // Deterministic warm-up: pre-roll an established pour so the t=0 baseline
+        // already has a pool + falling stream + ONGOING crown (see WARMUP_TIME).
+        // step() reads params live, so this replays with the swept control value;
+        // it uses only index hashes (no Math.random / Date.now), so the warmed
+        // state stays a pure function of (params) and the frame at t a pure
+        // function of (params, t).
+        const warmSteps = Math.round(WARMUP_TIME / FIXED_DT);
+        for (let s = 0; s < warmSteps; s++) step(FIXED_DT);
       };
 
-      const step = (dt: number) => {
+      function step(dt: number) {
         const flowRate = num(params.flowRate, 1.4);
         const gravity = num(params.gravity, 4.4);
         const viscosity = clamp(num(params.viscosity, 0.42), 0, 1);
@@ -261,7 +281,7 @@ export const pourSplashSimPrimitive: PrimitiveDefinition = {
             vx[i] = -vx[i] * WALL_DAMP;
           }
         }
-      };
+      }
 
       const stepper = makeReplayStepper({ dt: FIXED_DT, reset, step });
 
