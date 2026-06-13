@@ -77,7 +77,7 @@ function hasCameraLockedHint(intent: PrismIntent): boolean {
 }
 
 function classifyBySubtype(subtype: string): UiAnchor | null {
-  const s = subtype.toLowerCase();
+  const s = (subtype ?? '').toLowerCase();
 
   // 3D mesh elements live in hub-scene world space (depth-aware).
   if (s.endsWith('-mesh') || s.includes('mesh-')) return 'world';
@@ -108,7 +108,9 @@ function classifyBySubtype(subtype: string): UiAnchor | null {
 }
 
 function classifyByServiceTag(serviceTag: string): UiAnchor | null {
-  const t = serviceTag.toLowerCase();
+  // CANVAS-FINAL — editor-minted nodes (Add Node / Change Artifact "new
+  // element") may carry no serviceTag; the compile path must not crash on one.
+  const t = (serviceTag ?? '').toLowerCase();
   if (t === 'action') return 'sticky';
   if (t === 'hud') return 'viewport';
   if (t === 'decor') return 'parallax';

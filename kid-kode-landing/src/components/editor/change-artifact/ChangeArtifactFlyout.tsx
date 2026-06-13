@@ -45,6 +45,7 @@ export default function ChangeArtifactFlyout({
     const id = addNode({
       parentHubId: hub.hubId,
       subtype: 'element',
+      serviceTag: 'decor',
       intent: { caption: 'New element' },
     } as Parameters<typeof addNode>[0]);
     selectNode(id);

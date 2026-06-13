@@ -5,7 +5,7 @@
     40
   ],
   "hardStop": 48,
-  "total": 0.053,
+  "total": 0.263,
   "calls": [
     {
       "at": "2026-06-13",
@@ -58,6 +58,54 @@
       "ok": true,
       "ms": 3561,
       "requestId": "019ec251-c8ea-7931-99eb-ee4cf3ad7e5b"
+    },
+    {
+      "at": "2026-06-13T19:10:56.825Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:27:07.561Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:33:39.360Z",
+      "model": "prism-3d",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 8,
+      "estCost": 0.075,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:35:27.015Z",
+      "model": "prism-3d",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 8,
+      "estCost": 0.075,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:38:43.597Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:38:52.110Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
     }
   ]
 }
