@@ -48,33 +48,66 @@ describe('scroll-inertia-glide primitive', () => {
     runConformance(scrollInertiaGlidePrimitive).dispose();
   });
 
-  it('scroll-position response: fresh seeks snap to exact settled offsets at scroll 0 / 0.5 / 1', () => {
-    // First seek snaps settled (no integration history) — so the mapping is
-    // exact: offset = scroll * span * subjectHeight along +y (default axis).
+  it('scroll-position response: fresh seeks snap to the engaged steady pose; the rest extremes are exact', () => {
+    // A fresh seek snaps to the ENGAGED steady pose for that scroll: the target
+    // offset MINUS the persistent momentum lag. The momentum proxy sin(π·scroll)
+    // is exactly 0 at the rest extremes (scroll 0 and 1), so those snap to the
+    // bare target (clean idle / clean end), while the mid-scroll pin carries a
+    // visible lag — the engaged-state contract (CONTROL-AT-ENGAGED-STATE fix).
     const span = 0.55; // schema default
-    for (const scroll of [0, 0.5, 1]) {
+    // Idle extreme (scroll=0): zero momentum AND zero offset -> EXACT rest pose.
+    {
+      const { target, inst, subject } = fresh();
+      const baseY = subject.position.y;
+      target.userData.scroll = 0;
+      inst.seek(0.25); // arbitrary t; first seek snaps regardless
+      expect(subject.position.y).toBeCloseTo(baseY, 6);
+      expect(subject.position.x).toBeCloseTo(0, 9);
+      expect(subject.position.z).toBeCloseTo(0, 9);
+      expect(subject.rotation.x).toBeCloseTo(0, 9);
+      inst.dispose();
+    }
+    // End extreme (scroll=1): zero momentum -> no lag, but the in-frame travel
+    // guard bounds the offset so the brass header never clips off the top. The
+    // pose is positive and monotone-near the bare target, clamped to the frame.
+    {
       const { target, inst, subject } = fresh();
       const h = subjectHeight(subject);
       const baseY = subject.position.y;
-      target.userData.scroll = scroll;
-      inst.seek(0.25); // arbitrary t; first seek snaps regardless
-      expect(subject.position.y).toBeCloseTo(baseY + scroll * span * h, 6);
-      // Idle-frame legibility: scroll=0 is EXACTLY the rest pose.
-      if (scroll === 0) {
-        expect(subject.position.x).toBeCloseTo(0, 9);
-        expect(subject.position.z).toBeCloseTo(0, 9);
-        expect(subject.rotation.x).toBeCloseTo(0, 9);
-      }
+      target.userData.scroll = 1;
+      inst.seek(0.25);
+      const off = subject.position.y - baseY;
+      expect(off).toBeGreaterThan(0.4); // clearly traveled toward the end
+      expect(off).toBeLessThanOrEqual(1 * span * h + 1e-6); // never past the bare target
+      // Card top edge stays inside the tile frame (~1.165 half-height).
+      expect(baseY + off + h / 2).toBeLessThan(1.165);
+      expect(subject.rotation.x).toBeCloseTo(0, 6); // zero momentum -> no lean
+      inst.dispose();
+    }
+    // Mid-scroll pin: the engaged pose lags BEHIND the bare target (momentum
+    // peaks here), and the lag-derived lean is engaged — never the bare target,
+    // never an empty frame.
+    {
+      const { target, inst, subject } = fresh();
+      const h = subjectHeight(subject);
+      const baseY = subject.position.y;
+      const bareTarget = baseY + 0.5 * span * h;
+      target.userData.scroll = 0.5;
+      inst.seek(0.25);
+      const engaged = subject.position.y;
+      expect(engaged).toBeGreaterThan(baseY + 0.05); // clearly displaced from rest
+      expect(engaged).toBeLessThan(bareTarget - 0.02); // trails the bare target
+      expect(Math.abs(subject.rotation.x)).toBeGreaterThan(0.005); // leaning into the lag
       inst.dispose();
     }
   });
 
-  it('inertia: fast scroll LAGS behind the target, then glides to rest; trail tilt engages then settles', () => {
+  it('inertia: fast scroll LAGS behind the target, then glides to the engaged steady pose', () => {
     const { target, inst, subject } = fresh();
     const h = subjectHeight(subject);
     const baseY = subject.position.y;
     const baseRotX = subject.rotation.x;
-    const targetOff = 0.5 * 0.55 * h; // settled offset for scroll=0.5
+    const targetOff = 0.5 * 0.55 * h; // bare target offset for scroll=0.5
 
     target.userData.scroll = 0;
     inst.seek(0); // snap at rest
@@ -89,14 +122,19 @@ describe('scroll-inertia-glide primitive', () => {
     // Trail tilt: gliding upward leans the card (rotation.x deviates).
     expect(Math.abs(subject.rotation.x - baseRotX)).toBeGreaterThan(0.005);
 
-    // Page rests at scroll=0.5: repeated seeks converge — the glide-in.
+    // Page rests at scroll=0.5: repeated seeks converge to the ENGAGED steady
+    // pose (target MINUS the persistent momentum lag) — the buttery glide-in.
+    // At scroll=0.5 momentum peaks, so the resting pose keeps a residual lag and
+    // a residual lean (this is the engaged-state signature, not a flat settle).
     for (let i = 1; i <= 120; i++) {
       target.userData.scroll = 0.5;
       inst.seek(0.1 + i / 30);
     }
-    expect(Math.abs(subject.position.y - baseY - targetOff)).toBeLessThan(0.01);
-    // Tilt settles flat once the lag has decayed.
-    expect(Math.abs(subject.rotation.x - baseRotX)).toBeLessThan(0.01);
+    const engagedY = subject.position.y - baseY;
+    expect(engagedY).toBeGreaterThan(0.05); // engaged, not collapsed to rest
+    expect(engagedY).toBeLessThan(targetOff - 0.02); // and still trails the bare target
+    // The residual lean persists at the engaged mid-scroll pose.
+    expect(Math.abs(subject.rotation.x - baseRotX)).toBeGreaterThan(0.005);
 
     inst.dispose();
   });
@@ -126,7 +164,10 @@ describe('scroll-inertia-glide primitive', () => {
 
     driveToPin(target, inst);
 
-    // Advocate pin: repeated seeks at the SAME t hold the frame perfectly still.
+    // Advocate pin: the rig seeks the SAME t repeatedly. The first pinned seek
+    // re-derives the engaged steady pose from (scroll, params); every seek after
+    // it holds that frame perfectly still (byte-stable frozen frame).
+    inst.seek(1);
     const pinnedY = subject.position.y;
     for (let i = 0; i < 3; i++) inst.seek(1);
     expect(subject.position.y).toBeCloseTo(pinnedY, 12);

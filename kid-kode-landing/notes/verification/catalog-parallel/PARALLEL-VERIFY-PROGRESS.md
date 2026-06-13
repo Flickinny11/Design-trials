@@ -4368,3 +4368,50 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/scroll-wave-ride (scroll) render=true play=true ctrl=true
 
 ### Run end 2026-06-13T02:05:35.879Z — pass 12/12 (0 recovered on quiet retry), fail 0, missing 0, wall 94s
+
+## Resumed 2026-06-13T02:21:47.435Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-orbit-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:22:16.883Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+
+## Resumed 2026-06-13T02:24:04.915Z (std 1, glass 0 remaining)
+
+## Resumed 2026-06-13T02:24:25.504Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:24:33.835Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+- [PASS] std/scroll-inertia-glide (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:24:49.785Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 24s
+
+## Resumed 2026-06-13T02:24:51.519Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-orbit-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:25:19.781Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
+
+## Resumed 2026-06-13T02:28:43.866Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:29:12.163Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
+
+## Resumed 2026-06-13T02:33:00.296Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-inertia-glide (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:33:29.041Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+
+## Resumed 2026-06-13T02:49:00.901Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T02:49:30.283Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+
+## Resumed 2026-06-13T03:07:20.414Z (std 1, glass 0 remaining)
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T03:07:48.943Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 29s
+
+## Resumed 2026-06-13T03:11:29.079Z (std 3, glass 0 remaining)
+- [PASS] std/scroll-fold-scrub (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-inertia-glide (scroll) render=true play=true ctrl=true
+- [PASS] std/scroll-orbit-scrub (scroll) render=true play=true ctrl=true
+
+### Run end 2026-06-13T03:12:54.411Z — pass 3/3 (0 recovered on quiet retry), fail 0, missing 0, wall 85s

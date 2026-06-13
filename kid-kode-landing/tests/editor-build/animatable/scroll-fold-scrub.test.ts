@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  Color,
   DataTexture,
   Group,
   Mesh,
@@ -324,21 +325,32 @@ describe('scroll-fold-scrub primitive', () => {
     const leaf = panels.find((p) => p.name === 'fold-scrub-panel-0')!;
     const center = panels.find((p) => p.name === 'fold-scrub-panel-1')!;
 
-    // Fully folded leaf, shade=0.4 default: m(h) = 1 - shade*drive*(1 - 0.7h),
-    // drive=1 => darkest 0.6 at the crease, 0.88 at the free edge. The shade
-    // channel is a MULTIPLIER over the subject's own look — no invented color.
+    // Fully folded leaf, shade=0.4 default. Crease shade m(h) = 1 - shade*(1 -
+    // 0.7h) => 0.6 at the hinge. A uniform whole-leaf BODY dim (the leaf falls
+    // into shadow as it tilts away) = LEAF_BODY_SHADE*shade*w = 0.72*0.4 = 0.288
+    // floors the free-edge multiplier at 1-0.288 = 0.712. The shade channel is a
+    // MULTIPLIER over the subject's own look — no invented color.
     const r = colorRange(leaf);
-    expect(r.min).toBeCloseTo(0.6, 5);
-    expect(r.max).toBeCloseTo(0.88, 5);
+    expect(r.min).toBeCloseTo(0.6, 5); // darkest at the crease
+    expect(r.max).toBeCloseTo(0.712, 5); // free edge: floored by the body dim
 
-    // The center anchor never folds and never darkens.
+    // BOOK-GUTTER CONTACT SHADOW (advocate MF1): with both adjacent leaves
+    // folded the center ANCHOR is now darkened down BOTH creases — the largest
+    // lit band near the gutter. It is still a MULTIPLIER over the subject tone
+    // (≤ 1, never an invented color) and the card stays legible (no black-out).
     const rc = colorRange(center);
-    expect(rc.min).toBe(1);
-    expect(rc.max).toBe(1);
+    expect(rc.min, 'anchor darkens near the gutter').toBeLessThan(0.95);
+    expect(rc.min, 'gutter is a contact shadow, not a black-out').toBeGreaterThan(0.4);
+    expect(rc.max, 'anchor never brightens past base').toBeLessThanOrEqual(1.000001);
 
-    // Control reshapes the pinned frame with NO fresh seek (onParamChange).
+    // Control reshapes the pinned frame with NO fresh seek (onParamChange):
+    // raising shade deepens BOTH the leaf crease AND the anchor gutter.
+    const anchorMinBefore = colorRange(center).min;
     inst.setControl('shade', 0.8);
     expect(colorRange(leaf).min).toBeCloseTo(0.2, 5);
+    expect(colorRange(center).min, 'higher shade deepens the gutter').toBeLessThan(
+      anchorMinBefore,
+    );
 
     // Legible stacked card at full fold: every panel visible, nothing faded.
     for (const p of panels) {
@@ -348,17 +360,21 @@ describe('scroll-fold-scrub primitive', () => {
     // The center anchor still sits in the fold group at the subject's spot.
     expect(center.parent?.name).toBe('fold-scrub-group');
 
-    // Unfold flat again: shading clears exactly (idle frame = pure subject).
+    // Unfold flat again: ALL shading clears exactly — leaf AND anchor gutter
+    // (idle frame = pure subject, no adjacent fold ⇒ no contact shadow).
     target.userData.scroll = 0;
     inst.seek(0);
     const flat = colorRange(leaf);
     expect(flat.min).toBeCloseTo(1, 6);
     expect(flat.max).toBeCloseTo(1, 6);
+    const flatCenter = colorRange(center);
+    expect(flatCenter.min).toBeCloseTo(1, 6);
+    expect(flatCenter.max).toBeCloseTo(1, 6);
 
     inst.dispose();
   });
 
-  it('no-map plane subject: panel clones carry the subject color AND PBR scalars (catalog plane path)', () => {
+  it('no-map card panel: panel clones carry the panel color AND PBR scalars (catalog card path)', () => {
     const target = makeTarget(scrollFoldScrubPrimitive);
     const subjMat = (target.subject as Mesh).material as MeshStandardMaterial;
     const inst = scrollFoldScrubPrimitive.create(target);
@@ -375,6 +391,162 @@ describe('scroll-fold-scrub primitive', () => {
       expect(mat.envMapIntensity).toBe(subjMat.envMapIntensity);
       expect(mat.map ?? null).toBeNull();
     }
+    inst.dispose();
+  });
+
+  it('CHROME CO-TREATMENT: the card chrome (header/dot/rows) rides the fold as per-leaf clones, not a blank panel', () => {
+    // The catalog subject is the card: a dark RoundedBox panel + brass header,
+    // accent dot, three grey rows parented to it. The advocate flagged a
+    // FEATURELESS TAN SLAB — the chrome was never visible. After the fix every
+    // wide bar is clipped per panel slice and the dot is a rigid clone, all
+    // PARENTED to the slice panel meshes so they fold WITH the leaves.
+    const target = makeTarget(scrollFoldScrubPrimitive);
+    const inst = scrollFoldScrubPrimitive.create(target);
+
+    const chromeOf = (root: Object3D): Mesh[] => {
+      const out: Mesh[] = [];
+      root.traverse((o) => {
+        if (o.name.startsWith('fold-scrub-chrome-')) out.push(o as Mesh);
+      });
+      return out;
+    };
+
+    const clones = chromeOf(target.scene);
+    // header + row0 + row1 + row2 = 4 wide bars clipped across the slices they
+    // overlap (default tri-fold), plus the dot rigid clone on the right leaf.
+    expect(clones.length, 'chrome rides the fold').toBeGreaterThanOrEqual(8);
+    // At least one clip is a child of a FOLDING leaf panel (slice 0/2), not all
+    // parked on the static center — so chrome visibly hinges away.
+    const onLeaf = clones.filter((m) => {
+      const parent = m.parent;
+      return (
+        parent?.name === 'fold-scrub-panel-0' || parent?.name === 'fold-scrub-panel-2'
+      );
+    });
+    expect(onLeaf.length, 'chrome sits on the folding leaves').toBeGreaterThan(0);
+    // The dot (small chrome) is a rigid clone sharing the subject sphere
+    // geometry by reference (never our PlaneGeometry).
+    const rigid = clones.filter((m) => m.name.startsWith('fold-scrub-chrome-rigid'));
+    expect(rigid.length, 'the dot is a rigid clone').toBeGreaterThanOrEqual(1);
+
+    // Every chrome clone carries the child's OWN tone (brass/violet/grey),
+    // never an invented fill — material is a clone, never the subject's own.
+    const dot = target.subject!.getObjectByName('card-dot') as Mesh;
+    const dotMat = dot.material as MeshStandardMaterial;
+    for (const m of rigid) {
+      const mat = m.material as MeshStandardMaterial;
+      expect(mat).not.toBe(dotMat);
+      expect(mat.color.getHex()).toBe(dotMat.color.getHex());
+    }
+
+    inst.dispose();
+    // After dispose nothing of ours survives in the scene.
+    expect(chromeOf(target.scene).length, 'chrome cleaned up').toBe(0);
+  });
+
+  it('SHADE CONTROL reshapes the chrome crease at the engaged fold (not just the dark panel)', () => {
+    // MF1: the shade control read as dead on a featureless dark slab. With the
+    // chrome riding the fold, the crease shadow multiplies the brass/grey
+    // chrome tone — visible at the pinned engaged angle, and re-applied by
+    // onParamChange with no fresh seek.
+    const target = makeTarget(scrollFoldScrubPrimitive);
+    const inst = scrollFoldScrubPrimitive.create(target);
+
+    // Pinned engaged frame (the advocate's controls state ≈ scroll 0.5).
+    target.userData.scroll = 0.5;
+    inst.seek(0);
+
+    // Find a chrome clip on a FOLDING leaf and read its lit color at low vs
+    // high shade — the crease darkening must visibly change it.
+    const clipOnLeaf = (): Mesh | null => {
+      let found: Mesh | null = null;
+      target.scene.traverse((o) => {
+        if (found) return;
+        const parent = (o as Mesh).parent;
+        if (
+          o.name.startsWith('fold-scrub-chrome-clip-') &&
+          (parent?.name === 'fold-scrub-panel-0' || parent?.name === 'fold-scrub-panel-2')
+        ) {
+          found = o as Mesh;
+        }
+      });
+      return found;
+    };
+
+    const clip = clipOnLeaf();
+    expect(clip, 'a chrome clip sits on a folding leaf').not.toBeNull();
+    const colorHex = () =>
+      ((clip!.material as MeshStandardMaterial).color as Color).getHex();
+
+    inst.setControl('shade', 0); // no crease shadow
+    const lowHex = colorHex();
+    inst.setControl('shade', 0.8); // full crease shadow — re-applied via onParamChange
+    const highHex = colorHex();
+
+    expect(highHex, 'shade visibly darkens the chrome at the engaged fold').not.toBe(lowHex);
+
+    inst.dispose();
+  });
+
+  it('BOOK-GUTTER: shade casts a contact shadow onto the STATIONARY center anchor (panel + chrome) at the engaged fold', () => {
+    // MF1 residual: shade read DEAD at the pinned engaged frame because the
+    // only darkening lived on one partially-folded leaf — a tiny bright sliver.
+    // The fix casts a gutter contact shadow down BOTH sides of every active
+    // crease onto the center ANCHOR too: a large central band, plus the bright
+    // header/rows crossing it darken near the gutter. That band is what makes
+    // shade visibly reshape the pinned frame.
+    const target = makeTarget(scrollFoldScrubPrimitive);
+    const inst = scrollFoldScrubPrimitive.create(target);
+
+    target.userData.scroll = 0.5; // pinned engaged frame
+    inst.seek(0);
+
+    const center = panelMeshesOf(target.scene).find(
+      (p) => p.name === 'fold-scrub-panel-1',
+    )!;
+    const centerMinColor = () => {
+      const attr = center.geometry.getAttribute('color') as BufferAttribute;
+      let min = Infinity;
+      for (let i = 0; i < attr.count; i++) min = Math.min(min, attr.getX(i));
+      return min;
+    };
+
+    // An anchor chrome clip (the header/rows clipped onto the center slice).
+    const anchorClip = (): Mesh | null => {
+      let found: Mesh | null = null;
+      target.scene.traverse((o) => {
+        if (found) return;
+        if (
+          o.name.startsWith('fold-scrub-chrome-clip-') &&
+          (o as Mesh).parent?.name === 'fold-scrub-panel-1'
+        ) {
+          found = o as Mesh;
+        }
+      });
+      return found;
+    };
+    const clip = anchorClip();
+    expect(clip, 'the header/rows clip onto the center anchor').not.toBeNull();
+    const clipHex = () => (clip!.material as MeshStandardMaterial).color.getHex();
+
+    // shade=0 ⇒ NO gutter: anchor panel is pristine base (1.0), chrome at base.
+    inst.setControl('shade', 0);
+    expect(centerMinColor(), 'no gutter when shade=0').toBeCloseTo(1, 5);
+    const clipLow = clipHex();
+
+    // shade=0.8 ⇒ the gutter band darkens the anchor panel AND its near-crease
+    // chrome — re-applied via onParamChange, no fresh seek.
+    inst.setControl('shade', 0.8);
+    expect(centerMinColor(), 'gutter darkens the anchor panel band').toBeLessThan(0.85);
+    expect(centerMinColor(), 'but stays legible — contact shadow, not a black-out').toBeGreaterThan(0.3);
+    const clipHigh = clipHex();
+    expect(clipHigh, 'gutter darkens the anchor chrome near the crease').not.toBe(clipLow);
+
+    // Flat (scroll=0): no adjacent fold ⇒ the gutter clears to exactly base.
+    target.userData.scroll = 0;
+    inst.seek(0);
+    expect(centerMinColor(), 'gutter clears flat').toBeCloseTo(1, 5);
+
     inst.dispose();
   });
 

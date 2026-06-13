@@ -1,32 +1,18 @@
 {
-  "startedAt": "2026-06-13T02:04:02.129Z",
-  "updatedAt": "2026-06-13T02:05:35.878Z",
+  "startedAt": "2026-06-13T03:11:29.067Z",
+  "updatedAt": "2026-06-13T03:12:54.411Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 12,
+      "total": 3,
       "backend": "webgl",
-      "startedAt": "2026-06-13T02:04:07.140Z",
-      "finishedAt": "2026-06-13T02:05:35.878Z",
+      "startedAt": "2026-06-13T03:11:32.864Z",
+      "finishedAt": "2026-06-13T03:12:54.411Z",
       "peakConcurrency": 8,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "scroll-flip-book": {
-      "name": "scroll-flip-book",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:14.280Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
     "scroll-fold-scrub": {
       "name": "scroll-fold-scrub",
       "category": "scroll",
@@ -37,7 +23,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T02:04:24.852Z",
+      "at": "2026-06-13T03:11:39.739Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -51,7 +37,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T02:04:31.439Z",
+      "at": "2026-06-13T03:11:51.271Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -65,119 +51,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T02:04:38.862Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-marquee": {
-      "name": "scroll-marquee",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:38.862Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-path-scrub": {
-      "name": "scroll-path-scrub",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:44.806Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-pendulum-sway": {
-      "name": "scroll-pendulum-sway",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:52.247Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-scene-scrub": {
-      "name": "scroll-scene-scrub",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:53.285Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-rubber-band": {
-      "name": "scroll-rubber-band",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:04:52.717Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-snap-sections": {
-      "name": "scroll-snap-sections",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:05:03.002Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-velocity-stretch": {
-      "name": "scroll-velocity-stretch",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:05:03.210Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "scroll-wave-ride": {
-      "name": "scroll-wave-ride",
-      "category": "scroll",
-      "driver": "scroll",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T02:05:03.468Z",
+      "at": "2026-06-13T03:12:01.903Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -188,8 +62,8 @@
     "names": []
   },
   "summary": {
-    "total": 12,
-    "pass": 12,
+    "total": 3,
+    "pass": 3,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -198,7 +72,7 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 94,
+    "wallClockSec": 85,
     "peak": {
       "std": 8
     },

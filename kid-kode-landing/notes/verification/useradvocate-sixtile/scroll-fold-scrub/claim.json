@@ -1,7 +1,7 @@
 {
   "name": "scroll-fold-scrub",
   "label": "Panels",
-  "description": "Scroll folds the panel up like a brochure — side leaves hinging over the center in sequence — and unfolds it flat again.",
+  "description": "Scroll folds the card up like a brochure — side leaves hinging over the center in sequence — and unfolds it flat again.",
   "category": "scroll",
   "groundTruthSibling": null
 }

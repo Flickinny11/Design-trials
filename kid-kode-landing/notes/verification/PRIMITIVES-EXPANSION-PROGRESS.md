@@ -166,7 +166,7 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
     mountable:true + chrome co-treatment + pointer-rig facts) at session-3
     workflows/scripts/primitives-w3-distortion.js — launch AFTER r3 completes (parallel
     half-written files would pollute the fix agents' tsc gate).
-- [~] **W2 SCROLL-STORY** — WIRED + 9/12 advocate-SHIP (2026-06-12, session 4). 12 scroll-* primitives
+- [x] **W2 SCROLL-STORY** — COMPLETE, 12/12 advocate-SHIP (2026-06-12, session 4). 12 scroll-* primitives
   barrel-wired (registry 326→338, all category 'scroll' → 30 total). Gates: tsc 0-new; full animatable
   vitest **338 files / 1190 tests green**; harness **12/12 r/p/c first run** (deviceLost 0, wall 94s, SwiftShader
   worker-boot throttling under concurrency = not tile failures); art-fidelity 11/12 PASS (scroll-orbit-scrub
@@ -180,9 +180,21 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
       featureless-slab-at-a-phase; the art-fidelity dark flag was THIS); 'counterTiltDeg' dead.
     - scroll-fold-scrub: folds a featureless tan SLAB (card chrome never visible — same placeholder-plane defect
       as cylinder-unroll/genie-suck); 'shade' control dead.
-  - FIX ROUND r1 in flight (workflow wf_5576b906-07d, 3 parallel agents + re-capture + advocate r2). Defect-specific
-    briefs: control-at-engaged-state rule (re-apply at lastT, affect steady pose not transient); orbit billboard/arc
-    or double-side; fold chrome co-treatment per cylinder-unroll. 9 good tiles committed wired in this CKPT.
+  - FIX ROUND r1 (workflow wf_5576b906-07d, 3 parallel agents + re-capture + advocate r2) + r3 shade fix → **W2 NOW
+    12/12 SHIP**. Resolutions (full detail in w2-verdicts/_W2-FIXROUND-SUMMARY.json):
+    - scroll-inertia-glide SHIP: dead controls were transient-only → made engaged pose a function of scroll POSITION
+      (momentumOf(scroll)=sin(π·scroll)·VREF, peaks at the scroll=0.5 pin); Smoothness reshapes pinned lag+lean,
+      Tilt reaches full pitch; boundOffset() keeps header in frame. control-smoothness 8.4, tiltDeg 4.85.
+    - scroll-orbit-scrub SHIP: single-sided billboard → scroll-scrubbed camera fly-around (position arcs, card stays
+      lens-facing via yaw=YAW_CAP·tanh(θ/YAW_CAP), CAP 52° < edge-on blank-out); counterTilt was sin(θ)=0 at the
+      pinned θ=180 → steady saturating roll=−tilt·tanh(θ/90), 2.109 (was 0). No blank face any phase.
+    - scroll-fold-scrub SHIP: r2 resolved the placeholder slab (real card folds along book-crease, chrome legible)
+      but 'shade' stayed dead (0.877, multiplicative darkening invisible on the dark card except brass header). r3
+      fix = book-gutter CONTACT SHADOW cast into the center-anchor leaf too (was excluded), deepening toward the
+      crease on BOTH leaves + reaching bright chrome near the gutter, card legible at shade-high. meanAbsDiff 3.156
+      (orchestrator eyes-on + advocate r3 SHIP, agentId ab3db1e84fe4cba77).
+    - 6 stray scroll-*.bak-* files (prior sessions) removed. Gates: tsc 0-new; 3-fixed vitest 31/31; 3-fixed harness
+      3/3 r/p/c deviceLost 0. W2 SCROLL COMPLETE.
 - [ ] W3 DISTORTION/DISPLACEMENT
 - [ ] W4 CURSOR PHYSICS
 - [ ] W5 PARTICLES/GENERATIVE
