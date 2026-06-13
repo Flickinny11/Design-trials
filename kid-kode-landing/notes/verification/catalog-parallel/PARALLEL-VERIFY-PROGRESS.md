@@ -4476,3 +4476,9 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
 
 ### Run end 2026-06-13T05:32:50.319Z — pass 7/7 (0 recovered on quiet retry), fail 0, missing 0, wall 183s
+
+## Resumed 2026-06-13T06:09:19.851Z (std 2, glass 0 remaining)
+- [PASS] std/pointer-glitch-split (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T06:10:10.561Z — pass 2/2 (0 recovered on quiet retry), fail 0, missing 0, wall 51s

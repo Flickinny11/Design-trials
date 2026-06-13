@@ -185,7 +185,6 @@ import { paintSpreadPrimitive } from './paint-spread';
 import { pixelDissolvePrimitive } from './pixel-dissolve';
 import { pixelSortSweepPrimitive } from './pixel-sort-sweep';
 import { pointerGlitchSplitPrimitive } from './pointer-glitch-split';
-import { pointerLoupePrimitive } from './pointer-loupe';
 import { pointerTwistWarpPrimitive } from './pointer-twist-warp';
 import { pointerWakeWavePrimitive } from './pointer-wake-wave';
 import { rippleDisplacePrimitive } from './ripple-displace';
@@ -538,7 +537,6 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   pixelDissolvePrimitive,
   pixelSortSweepPrimitive,
   pointerGlitchSplitPrimitive,
-  pointerLoupePrimitive,
   pointerTwistWarpPrimitive,
   pointerWakeWavePrimitive,
   rippleDisplacePrimitive,

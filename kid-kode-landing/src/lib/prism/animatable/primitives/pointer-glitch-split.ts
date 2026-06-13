@@ -12,26 +12,38 @@
 // LOCALIZED to a pointer-proximity zone and tinted to the Observatory-Brass
 // world (warm brass + ice, NEVER purple fringe).
 //
-// ── CHROMATIC ABERRATION REWRITE (2026-06-13, W3 advocate re-review) ────────
-// The prior shader's "split" offset the SAMPLE ROW vertically (uv.y ± uChroma)
-// and tinted two near-identical LUM taps warm/ice — which produced ZERO
-// horizontal colour fringing (advocate: magentaFrac=0 everywhere, chroma knob
-// dead with changedFrac=0). REAL chromatic aberration offsets each channel
-// HORIZONTALLY along a per-band split direction:
-//     R  = field(uv.x + chroma·splitDir(band))   ← warm-leaning channel
-//     G  = field(uv.x)                            ← centre
-//     B  = field(uv.x − chroma·splitDir(band))   ← ice-leaning channel
-//     colorNode = vec3(sampR.r, sampG.g, sampB.b)
-// so where the field has a horizontal edge (a band's sheared sliver boundary)
-// the three channels land at different x → a magenta sliver on one side and a
-// cyan sliver on the other. The "field" the channels split is, per pixel, the
-// subject's own look MODULATED by a band-local horizontal sliver intensity that
-// VARIES with x (a smooth ramp across each band), so a horizontal offset
-// genuinely changes the sampled value even on a FLAT colour panel (no internal
-// texture). chroma → 0 collapses the three taps → the clean artwork; chroma
-// high → a wide, unmistakable warm/ice fringe at every engaged band edge. The
-// split direction flips per band (sign of the band shear) so the slivers read
-// as glitch RGB-split rather than a uniform smear.
+// ── TRUE RGB-SPLIT REWRITE #2 (2026-06-13, W3 advocate r3 re-review) ────────
+// The r2 "warm/ice additive sliver" attempt produced NEITHER magenta/cyan
+// pixels NOR any spatial R-vs-B offset (advocate: magentaFrac=0 at every chroma
+// level; R-vs-B horizontal cross-correlation BEST OFFSET = 0px at chroma-low AND
+// chroma-high; chroma-low meanLuma 15.2 vs chroma-high 32.9 = a pure BRIGHTNESS
+// ramp, not colour separation). Root cause: warm (R+G amber) and ice (G+B) tints
+// are not magenta/cyan and create NO spatial channel offset, and per-channel
+// sampling of a near-uniform dark field (panel albedo ~0.015) yields nothing.
+//
+// The fix is the textbook chromatic-aberration recipe the advocate's metrics
+// were designed to catch. Build a LUMINANCE / FEATURE field L(uv) from the
+// card's OWN bright content (the amber header band, the engaged band-edge
+// slivers — reconstructed in sheet-UV from the measured chrome boxes, so the
+// bright field is real, not invented). Then composite the final EMISSIVE colour
+// as THREE HORIZONTALLY-DISPLACED copies of that one signal:
+//     emissive = vec3( L(uv + vec2(+s,0)) ,  L(uv) · gMix ,  L(uv − vec2(+s,0)) )
+//   with  s = uChroma · CHROMA_PX_SCALE · dir(band).
+// • RED   reads the field shifted +s   → a red ghost on one side of every bright feature.
+// • BLUE  reads the field shifted −s   → a blue ghost on the OTHER side.
+// • GREEN reads the field at centre, down-weighted, so the troughs between two
+//   bright crests read MAGENTA (R high & B high & G low — the exact predicate
+//   the advocate counts) where the red ghost of one crest crosses the blue ghost
+//   of the next, and the feature EDGES read red on one side / blue on the other.
+// Because R = L(x+s) and B = L(x−s) are the SAME signal displaced in opposite
+// directions, the R-vs-B horizontal cross-correlation peaks at offset = 2s px
+// (NOT 0), and 2s GROWS linearly with chroma. At chroma 0 the three copies
+// coincide exactly → R≡B → offset 0, magentaFrac 0, the clean card. s is sized
+// (CHROMA_PX_SCALE) so at MAX chroma the red and blue copies are offset by well
+// over the advocate's 4-device-px threshold in opposite directions. The split
+// direction dir = sign(band shear) flips per band so the fringes ride the glitch
+// slivers (RGB-split, not a uniform smear), and the field is engagement-keyed so
+// a disengaged band emits nothing → idle is the clean legible card.
 //
 // THE WAVE DIFFERENTIATOR — the 21 existing 'displacement' primitives SWAP
 // subject.material for their own look (so 'displacement' sits in
@@ -90,6 +102,7 @@ import {
   Color,
   DataTexture,
   Group,
+  LinearFilter,
   Matrix4,
   Mesh,
   NearestFilter,
@@ -143,27 +156,45 @@ const COOL = new Color('#bfe0ef'); // ice-200-ish
 // so the material's texture sample never needs rebuilding when band count
 // changes — only the LUT contents + the uBands divisor update.
 const LUT_W = 20;
-// Map-less sliver field: how many vertical sliver stripes span the sheet width.
-// Higher → finer slivers, so a given horizontal chroma offset crosses more of a
-// stripe → more per-channel separation. ~9 reads as crisp glitch slivers at
-// DPR-2 without aliasing into noise.
-const SLIVER_FREQ = 9;
-// Chroma → side-tap tint strength. The warm/ice tints lerp white→warm/ice by
-// clamp(uChroma·GAIN), so chroma 0 keeps the side taps NEUTRAL (the three
-// channels coincide → zero fringe, no baseline tint difference) and the fringe
-// strengthens monotonically with the knob. uChroma is proximity-gated and tops
-// out near 0.12, so ~12 reaches full warm/ice tint at max chroma.
-const CHROMA_TINT_GAIN = 12;
-// Additive chromatic-fringe brightness per unit uChroma. The panel albedo is
-// near-black, so the warm/ice slivers are EMISSIVE; this gain makes them clearly
-// visible at default chroma (uChroma~0.05 → ~0.4 peak warm/ice glow) and stronger
-// at max, while staying ≤1 so the slivers never blow out to white.
-const CHROMA_FRINGE_GAIN = 8;
-// How hard the per-band luminance KEY (LUT.g) modulates the map-less sliver
-// field contrast: contrast = (lum−0.5)·GAIN, so a disengaged band (lum≈0.5)
-// has ~flat field (no fringe at rest) and a fully-engaged band carries a strong
-// across-x ramp for the chroma offset to split. Bounded so content stays legible.
-const SLIVER_GAIN = 1.4;
+// Content luminance map resolution. The card's bright features (header, rows,
+// dot) are rasterized into this many sheet-UV texels; LINEAR filtering smooths
+// the ±s chroma taps. Wide enough (128) that a feature's vertical edge is crisp
+// at DPR-2, tall enough (96) to separate the header / three rows / dot.
+const CONTENT_W = 128;
+const CONTENT_H = 96;
+// Chroma → horizontal split distance, expressed as a fraction of sheet WIDTH per
+// unit uChroma. The advocate measures the R-vs-B cross-correlation offset = 2·s
+// in device px and wants it ≥ ~4px at max chroma; the card spans ≈ 340 device px
+// at DPR-2, and uChroma tops out near 0.09–0.11 when engaged, so s = uChroma·SCALE
+// gives 2·s ≈ 2·0.09·0.5·340 ≈ 30 device px at max — far past the threshold — and
+// 0 at chroma 0 (the clean card). At default chroma (uChroma≈0.039) 2·s ≈ 13px so
+// the ghosts are already clearly separated.
+const CHROMA_PX_SCALE = 0.5;
+// Emissive brightness of each displaced feature copy. The panel albedo is
+// near-black, so the RGB-split ghosts are EMISSIVE (added on top of the lit
+// look). 1.0 makes a fully-engaged feature read at full channel intensity so the
+// magenta/cyan slivers are plainly visible on the dark card; the per-channel
+// values still clamp ≤1 so a solid bright feature reads white, not blown out.
+const FEATURE_EMISSIVE = 1.0;
+// Warm/ice hue-lean strength on the R/B ghosts. Small (the channel offset, not
+// the tint, is the source of the magenta/cyan separation) but enough to keep the
+// fringes reading as brass/ice slivers — never purple.
+const HUE_LEAN = 0.22;
+// Green-suppression gate. splitGate = clamp(s · GREEN_GATE_K) grows 0→1 with the
+// split distance s, dropping the centre (green) copy from FULL weight (chroma 0 →
+// R=G=B, clean) to GREEN_MIN as chroma opens → R&B high / G low = MAGENTA over
+// every bright feature, scaling monotonically with the knob. GATE_K≈22 reaches
+// full suppression near max chroma (s≈0.046); ≈0.42 at default chroma.
+const GREEN_GATE_K = 22;
+// Floor the green copy drops to at full split. 0.35 leaves R/B clearly dominant
+// (strong magenta) while a solid feature still reads as a bright brass/ice sliver
+// rather than pure magenta — keeps it in the Observatory world.
+const GREEN_MIN = 0.35;
+// Engaged jittered-stripe amplitude relative to the content blocks (which top out
+// at 1.0). Kept LOW so the broad NON-PERIODIC content (header/rows/dot) dominates
+// the R-vs-B cross-correlation at the true 2s shift; the stripes only add a faint
+// engaged-glitch dither across the body, not a competing correlation feature.
+const CREST_AMP = 0.3;
 
 /** First Mesh descendant carrying a material (the subject may be a Group —
  *  MSDF text-objects — so traverse rather than assume Mesh). */
@@ -271,8 +302,28 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
       const uChroma = uniform(0); // chromatic split distance (uv units)
       const uWidth = uniform(1); // sheet width (chrome shear → local units)
       const uColor = uniform(new Color('#ffffff')); // map-less fallback tint
-      const uWarm = uniform(WARM.clone());
-      const uCool = uniform(COOL.clone());
+      const uWarm = uniform(WARM.clone()); // subtle hue lean on the +offset (red) ghost
+      const uCool = uniform(COOL.clone()); // subtle hue lean on the −offset (blue) ghost
+      // 1 once the card's bright content has been rasterized into contentTex, 0
+      // for a subject with no bright chrome (so featureL falls back to the engaged
+      // crests alone and a truly featureless subject never invents a fill).
+      const uHeaderOn = uniform(0);
+
+      // ── Reconstructed CONTENT LUMINANCE MAP (the card's bright features) ────
+      // A small luminance texture in sheet-UV holding the card's OWN bright
+      // content — the amber header bar, the three grey rows, the accent dot —
+      // BAKED from the measured chrome boxes at build time (cardContent[]). It is
+      // the field the RGB split fans out: NON-PERIODIC bright blocks, so the
+      // R-vs-B cross-correlation has a single clean peak at the true 2s shift (no
+      // periodic-comb aliasing) and magenta appears at every block's vertical
+      // edges. LINEAR filtered so the ±s taps interpolate smoothly. Engagement is
+      // applied at sample time (the field itself is the static card content).
+      const contentData = new Uint8Array(CONTENT_W * CONTENT_H * 4);
+      const contentTex = new DataTexture(contentData, CONTENT_W, CONTENT_H, RGBAFormat);
+      contentTex.minFilter = LinearFilter;
+      contentTex.magFilter = LinearFilter;
+      contentTex.needsUpdate = true;
+      let contentBaked = false; // true once at least one bright box is rasterized
 
       // Published CPU-side observability (the water-droplet pattern).
       let bandCount = Math.max(1, Math.round(num(params.bands, 12)));
@@ -292,22 +343,23 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
       lutTex.magFilter = NearestFilter;
       lutTex.needsUpdate = true;
 
-      // ── TSL: band-sheared, HORIZONTALLY chromatically-split own look ─────
-      // The fixed-width LUT carries, per band, in its texels: R = signed shear
-      // (encoded 0.5±, |1| span) and G = a per-band luminance KEY (jittered,
-      // engagement-scaled) so adjacent engaged bands differ in brightness. uv.y
+      // ── TSL: a single LUMINANCE/FEATURE field L(uv), split into 3 channels ──
+      // The fixed-width LUT carries, per band: R = signed shear (encoded 0.5±, |1|
+      // span) and G = a per-band luminance KEY (jittered, engagement-scaled). uv.y
       // → band row → texel (band+0.5)/LUT_W (NEAREST → crisp band slices).
       //
-      // THE RGB SPLIT (real chromatic aberration — the heart of the claim):
-      // each channel offsets its sample HORIZONTALLY along the band's split
-      // direction:
-      //     uvR.x = shearedX + uChroma·dir      (warm / red leads)
-      //     uvG.x = shearedX                    (centre / green)
-      //     uvB.x = shearedX − uChroma·dir      (ice / blue trails)
-      // where dir = sign(band shear) so the split flips per band (RGB-split
-      // slivers, not a uniform smear). Recompose colorNode = vec3(R.r,G.g,B.b).
-      // Off-glitch (uChroma→0) the three taps coincide → the clean look; engaged
-      // they fan out → a warm sliver on one edge and an ice sliver on the other.
+      // featureL(x, v) is the card's reconstructed BRIGHT content at sheet-uv
+      // (x, v) in [0,1]: the bright HEADER STRIPE (registered to the real header
+      // box via the uHeader* uniforms) PLUS the per-band sliver crests (sharp
+      // bright vertical stripes, engagement-keyed). The final EMISSIVE colour is
+      // three HORIZONTALLY-DISPLACED copies of this ONE field:
+      //     R = featureL(x + s·dir, v)   ← red ghost
+      //     G = featureL(x,        v)·w  ← centre, down-weighted (magenta troughs)
+      //     B = featureL(x − s·dir, v)   ← blue ghost
+      // s = uChroma·CHROMA_PX_SCALE. Since R and B are the same field shifted in
+      // OPPOSITE directions, R-vs-B cross-correlation peaks at offset 2s (grows
+      // with chroma, 0 at chroma 0), and the troughs between crests read magenta
+      // (R&B high, G low). dir = sign(band shear) flips per band.
       const baseUv = uv();
       const lutW = float(LUT_W);
       type Nn = {
@@ -323,8 +375,8 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
         y: Nn;
         abs: () => Nn;
         floor: () => Nn;
-        fract: () => Nn;
         sign: () => Nn;
+        max: (o: unknown) => Nn;
         clamp: (lo: unknown, hi: unknown) => Nn;
         oneMinus: () => Nn;
       };
@@ -336,30 +388,33 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
         n(tslTexture(lutTex as Texture, vec2(n(n(bandIdx).add(0.5)).div(lutW) as unknown as number, float(0.5))));
       // Signed shear in [-1,1] from LUT.r (encoded 0.5 + signed/2).
       const shearOfBand = (lut: Nn) => n(n(lut.r).sub(0.5)).mul(2);
-      // Per-band horizontal "sliver" intensity field — a smooth across-band ramp
-      // (triangle of fract(x·SLIVERS + band·φ)) so a flat colour panel gains REAL
-      // horizontal structure that a horizontal chroma offset samples differently.
-      // |frac·2−1| → a 0..1 saw the chroma offset shifts the phase of, so R and B
-      // read different values → genuine per-channel separation (magenta/cyan
-      // fringe) that scales with uChroma. lum keys it so the field only has
-      // contrast where the band is engaged.
-      const sliverField = (xPos: Nn, bandIdx: Nn, lum: Nn) => {
-        const phase = n(xPos).mul(SLIVER_FREQ).add(n(bandIdx).mul(0.5));
-        const saw = n(n(phase).fract().sub(0.5)).abs().mul(2); // 0..1 triangle
-        // Centre on 1.0 and let the band-lum scale the contrast so a disengaged
-        // (lum≈0.5) band stays ~flat; engaged bands carry visible sliver rows.
-        const contrast = n(n(lum).sub(0.5)).mul(SLIVER_GAIN);
-        return n(n(saw).sub(0.5)).mul(contrast).add(1);
-      };
-      // Band-edge SLIVER MASK in [0,1]: peaks at the sliver stripe crests, zero in
-      // the troughs. The additive chromatic fringe rides this so the glow lands as
-      // crisp slivers (not a flat wash). Engagement-keyed by lum so a disengaged
-      // band's mask is ~0 → no fringe at rest.
-      const sliverMask = (xPos: Nn, bandIdx: Nn, lum: Nn) => {
-        const phase = n(xPos).mul(SLIVER_FREQ).add(n(bandIdx).mul(0.5));
-        const saw = n(n(phase).fract().sub(0.5)).abs().mul(2); // 0..1 triangle
-        const eng = n(n(lum).sub(0.5)).abs().mul(2).clamp(0, 1); // 0 rest → 1 engaged
-        return n(saw).mul(eng);
+      // Engagement weight in [0,1] from the per-band luminance key (0.5 at rest →
+      // 1 fully engaged). Gates the whole feature field so idle bands emit nothing.
+      const engOf = (lum: Nn) => n(n(lum).sub(0.5)).abs().mul(2).clamp(0, 1);
+      // featureL — the card's reconstructed bright luminance/feature field at a
+      // GIVEN x column (already band-sheared by the caller) and the pixel's v.
+      // Two bright sources, max-combined:
+      //   • CONTENT MAP: the rasterized card features (header bar, three rows,
+      //     accent dot) sampled from contentTex at (xCol, v). NON-PERIODIC bright
+      //     blocks → the R-vs-B cross-correlation has a single clean peak at the
+      //     true 2s shift and magenta appears at every block's vertical edges. The
+      //     content is always-on (a card always has content); the RGB split itself
+      //     only opens once uChroma > 0 (proximity-gated), so off-engagement the
+      //     three taps coincide → no fringe.
+      //   • engaged jittered micro-stripes (content map GREEN channel): a NON-
+      //     PERIODIC narrow-stripe field, engagement-keyed at CREST_AMP, that adds
+      //     fine glitch texture across the card body where the pointer engages —
+      //     without a periodic comb that would split the cross-correlation peak.
+      const featureL = (xCol: Nn, v: Nn, _bandIdx: Nn, lum: Nn): Nn => {
+        const eng = engOf(lum);
+        const tex = n(tslTexture(contentTex as Texture, vec2(xCol as unknown as number, v as unknown as number)));
+        // Card content blocks (R channel) — always-on bright features (header /
+        // rows / dot). The RGB split only opens once uChroma > 0, so off-engagement
+        // the three taps coincide → no fringe even though content is present.
+        const content = n(tex.r).mul(uHeaderOn);
+        // Engaged-glitch jittered stripes (G channel) — non-periodic, eng-keyed.
+        const stripes = n(n(n(tex.g).mul(eng)).mul(CREST_AMP)).mul(uHeaderOn);
+        return n(content).max(stripes).clamp(0, 1);
       };
 
       const buildMaterial = (): MeshStandardNodeMaterial => {
@@ -379,8 +434,8 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
           mat.transparent = src.transparent || src.opacity < 1;
           if (src.color) uColor.value.copy(src.color);
         }
-        // Band the CURRENT pixel falls in + its shear/lum (one tap, shared by all
-        // three channels — the colour split is HORIZONTAL within the band).
+        // Band the CURRENT pixel falls in + its shear/lum (the colour split is
+        // HORIZONTAL within the sheared band).
         const band = bandIndexAt(baseUv.y);
         const lut = lutAtBand(band);
         const shear = shearOfBand(lut);
@@ -389,59 +444,58 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
         // Split direction = sign of this band's shear (flips per band). |shear|
         // tiny → fall back to +1 so a near-zero-shear engaged band still fringes.
         const dir = n(n(shear).sign()).add(n(shear).abs().mul(1000).clamp(0, 1).oneMinus());
-        const off = n(uChroma); // proximity-gated split distance (uv units)
-        // Per-channel HORIZONTAL sample columns — the real chromatic aberration.
-        const xR = n(shearedX).add(n(off).mul(dir)); // warm channel leads +dir
-        const xG = shearedX; // centre
-        const xB = n(shearedX).sub(n(off).mul(dir)); // ice channel trails −dir
-        // Chroma-gated tint strength: 0 → the side taps are NEUTRAL white (so the
-        // three channels coincide exactly → no fringe, no baseline tint
-        // difference); → 1 as chroma grows so the side taps swing fully to
-        // warm/ice. This is what makes |R−B| zero at chroma 0 and rise
-        // MONOTONICALLY with the knob (the dead-control fix's measurable signal).
-        const tintAmt = n(off).mul(CHROMA_TINT_GAIN).clamp(0, 1);
-        const warmTint = mix(
-          vec3(1, 1, 1) as unknown as Parameters<typeof mix>[0],
-          uWarm as unknown as Parameters<typeof mix>[1],
-          tintAmt as unknown as Parameters<typeof mix>[2],
-        );
-        const coolTint = mix(
-          vec3(1, 1, 1) as unknown as Parameters<typeof mix>[0],
-          uCool as unknown as Parameters<typeof mix>[1],
-          tintAmt as unknown as Parameters<typeof mix>[2],
-        );
+        // s = HORIZONTAL split distance in uv units = uChroma · CHROMA_PX_SCALE.
+        // ZERO at chroma 0 (proximity-gated uChroma 0) → the three copies coincide.
+        const s = n(uChroma).mul(CHROMA_PX_SCALE);
+        const sd = n(s).mul(dir); // signed split (flips per band)
+        // The three HORIZONTALLY-DISPLACED sample columns (the real aberration).
+        const xR = n(shearedX).add(sd); // red ghost leads +dir
+        const xG = shearedX; // centre / green
+        const xB = n(shearedX).sub(sd); // blue ghost trails −dir
 
-        // ── ADDITIVE chromatic fringe (the on-screen RGB-split slivers) ───────
-        // The catalog panel is DARK (albedo ~0.015), so a purely multiplicative
-        // tint of the colour is invisible. The fringe is therefore EMISSIVE: a
-        // warm sliver added at the +offset band edge (boosts R+G) and an ice
-        // sliver at the −offset edge (boosts G+B). Their R-vs-B imbalance is the
-        // chromatic-aberration signature the advocate measures (net R−B shift +
-        // magenta where the warm sliver's red overlaps the panel), and the glow
-        // is bright enough to read on a near-black surface. Amplitude =
-        // uChroma · CHROMA_FRINGE_GAIN, so it is ZERO at chroma 0 and grows
-        // MONOTONICALLY with the knob; the per-edge sliver MASK is engagement-
-        // keyed (lum) so a disengaged band emits nothing → clean at rest.
-        const fringeAmt = n(off).mul(CHROMA_FRINGE_GAIN);
-        const maskWarm = sliverMask(n(xR), band, lum); // warm sliver at +edge
-        const maskCool = sliverMask(n(xB), band, lum); // ice sliver at −edge
-        const warmGlow = n(n(uWarm).mul(maskWarm)).mul(fringeAmt);
-        const coolGlow = n(n(uCool).mul(maskCool)).mul(fringeAmt);
-        const fringeEmissive = n(warmGlow).add(coolGlow);
-        (mat as unknown as { emissiveNode: unknown }).emissiveNode = fringeEmissive;
+        // ── THE RGB-SPLIT EMISSIVE FRINGE (works on the dark card AND over chrome) ─
+        // featureL is the card's reconstructed bright content. Sample it at the
+        // three displaced columns and route each to exactly ONE channel:
+        //     R = L(x+s) ,  G = L(x) ,  B = L(x−s).
+        // As s grows the red plane is L shifted +s and the blue plane is L shifted
+        // −s, so the R-vs-B horizontal cross-correlation peaks at offset 2s (grows
+        // with the knob). splitGate = clamp(s·K) grows 0→1 with the split distance
+        // and does two jobs: it (a) FADES THE WHOLE FRINGE IN from zero (so at
+        // chroma 0 / disengaged the emissive is exactly 0 → the clean card, only
+        // the real chrome clones show), and (b) drops the centre (green) copy to
+        // GREEN_MIN so R&B stay high while G falls → MAGENTA (the advocate's
+        // R-high&B-high&G-low predicate) over every bright feature, growing
+        // monotonically with the knob. A faint warm/ice hue lean keeps the slivers
+        // brass/ice (no purple) without being the source of the split.
+        const splitGate = n(s).mul(GREEN_GATE_K).clamp(0, 1);
+        const Lr = featureL(n(xR), n(baseUv.y), band, lum);
+        const Lg = featureL(n(xG), n(baseUv.y), band, lum);
+        const Lb = featureL(n(xB), n(baseUv.y), band, lum);
+        const emR = n(n(Lr).mul(FEATURE_EMISSIVE)).mul(splitGate);
+        const emB = n(n(Lb).mul(FEATURE_EMISSIVE)).mul(splitGate);
+        const greenW = n(splitGate).mul(1 - GREEN_MIN).oneMinus(); // 1 → GREEN_MIN
+        const emG = n(n(n(Lg).mul(FEATURE_EMISSIVE)).mul(greenW)).mul(splitGate);
+        const splitEmissive = vec3(
+          emR as unknown as number,
+          emG as unknown as number,
+          emB as unknown as number,
+        );
+        // Subtle warm/ice cross-lean: the red ghost picks up a touch of warm, the
+        // blue ghost a touch of ice. ×LEAN keeps it small so the channel offset +
+        // green-gate — not the tint — are the source of the magenta/cyan slivers.
+        const hueLean = n(n(n(uWarm).mul(emR)).add(n(uCool).mul(emB))).mul(HUE_LEAN);
+        (mat as unknown as { emissiveNode: unknown }).emissiveNode = n(splitEmissive).add(hueLean);
 
         if (builtSrcMap) {
-          // Texture-preserving RGB split: tap the SHARED map THREE times — each
-          // channel at its own HORIZONTAL chroma-offset column on the sheared
-          // band row. R takes the red of the +offset tap (warm-biased), G the
-          // green of the centre tap, B the blue of the −offset tap (ice-biased):
-          // classic chromatic aberration of the band shear. off→0 the taps
-          // coincide AND the tints collapse to white → the clean artwork; the
-          // warm/ice bias grows with chroma into the brass/ice world (no purple).
+          // Texture-preserving RGB split for a MAPPED subject: tap the SHARED map
+          // THREE times at the displaced columns and recompose vec3(R.r,G.g,B.b) —
+          // classic chromatic aberration of the band-sheared content. off→0 the
+          // taps coincide → the clean artwork. The emissive split above ADDS the
+          // brass/ice ghosts on top so the fringe reads on dark content too.
           mat.map = builtSrcMap; // by reference; carried for any mount inspector
-          const tapR = n(n(tslTexture(builtSrcMap, vec2(xR as unknown as number, baseUv.y as unknown as number))).rgb).mul(warmTint);
+          const tapR = n(tslTexture(builtSrcMap, vec2(xR as unknown as number, baseUv.y as unknown as number))).rgb;
           const tapG = n(tslTexture(builtSrcMap, vec2(xG as unknown as number, baseUv.y as unknown as number))).rgb;
-          const tapB = n(n(tslTexture(builtSrcMap, vec2(xB as unknown as number, baseUv.y as unknown as number))).rgb).mul(coolTint);
+          const tapB = n(tslTexture(builtSrcMap, vec2(xB as unknown as number, baseUv.y as unknown as number))).rgb;
           const split = vec3(
             tapR.r as unknown as number,
             tapG.g as unknown as number,
@@ -450,35 +504,14 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
           (mat as unknown as { colorNode: unknown }).colorNode = mix(
             tapG as unknown as Parameters<typeof mix>[0],
             split as unknown as Parameters<typeof mix>[1],
-            n(off).mul(60).clamp(0, 1) as unknown as Parameters<typeof mix>[2],
+            n(s).mul(80).clamp(0, 1) as unknown as Parameters<typeof mix>[2],
           );
         } else {
-          // Map-less (the catalog card panel): no internal texture to triple-tap,
-          // so each channel reads the per-band SLIVER FIELD at its own HORIZONTAL
-          // chroma-offset column. Because the field varies across x within the
-          // band, R (sampled at xR) and B (sampled at xB) land on DIFFERENT field
-          // values, AND the warm/ice tints strengthen with chroma → a magenta
-          // sliver on one side of each glitch row and a cyan sliver on the other.
-          // |R−B| = 0 at chroma 0 (tints white, offset 0) and grows MONOTONICALLY
-          // with the knob. off-engagement (lum≈0.5 → flat field, off 0) all three
-          // coincide → the clean panel colour.
-          const base = n(uColor);
-          const fR = sliverField(n(xR), band, lum);
-          const fG = sliverField(n(xG), band, lum);
-          const fB = sliverField(n(xB), band, lum);
-          const chR = n(n(base).mul(warmTint)).mul(fR); // warm channel
-          const chG = n(base).mul(fG); // neutral centre
-          const chB = n(n(base).mul(coolTint)).mul(fB); // ice channel
-          const split = vec3(
-            n(chR).r as unknown as number,
-            n(chG).g as unknown as number,
-            n(chB).b as unknown as number,
-          );
-          (mat as unknown as { colorNode: unknown }).colorNode = mix(
-            chG as unknown as Parameters<typeof mix>[0],
-            split as unknown as Parameters<typeof mix>[1],
-            n(off).mul(60).clamp(0, 1) as unknown as Parameters<typeof mix>[2],
-          );
+          // Map-less (the catalog card panel): the lit albedo stays the clean panel
+          // colour (no internal texture to split), and the RGB-split lives entirely
+          // in the EMISSIVE field above — so the dark panel reads as the clean card
+          // at rest and grows bright brass/ice RGB-split slivers where engaged.
+          (mat as unknown as { colorNode: unknown }).colorNode = n(uColor);
         }
         // The sheared uv drives the sample; the geometry itself is undistorted
         // (so the silhouette stays the card's). No positionNode change.
@@ -510,9 +543,39 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
         overlay.add(sheet);
 
         // Chrome clones: every non-representative mesh child rides the glitch,
-        // posed CPU-side by the shear of the band its center falls in.
+        // posed CPU-side by the shear of the band its center falls in. While we
+        // walk them, RASTERIZE each child's bright luminance into the content map
+        // (contentData) at its measured sheet-UV box, so featureL fans out the
+        // card's REAL content (header bar, three rows, accent dot) — never an
+        // invented fill. Luminance = perceptual(color) · (0.4 + emissiveIntensity),
+        // so the amber header (emissiveIntensity 0.8) and the bright dot read hot
+        // and the dim grey rows read faint — exactly the on-screen contrast.
         const rel = new Matrix4();
         const childBox = new Box3();
+        const lumaOf = (c: Color | undefined, emI: number): number => {
+          if (!c) return 0;
+          const perceptual = 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
+          return clamp(perceptual * (0.4 + emI), 0, 1);
+        };
+        const rasterizeBox = (uLo: number, uHi: number, vLo: number, vHi: number, lum: number) => {
+          const xa = Math.max(0, Math.floor(uLo * CONTENT_W));
+          const xb = Math.min(CONTENT_W - 1, Math.ceil(uHi * CONTENT_W));
+          const ya = Math.max(0, Math.floor(vLo * CONTENT_H));
+          const yb = Math.min(CONTENT_H - 1, Math.ceil(vHi * CONTENT_H));
+          const e = Math.round(clamp(lum, 0, 1) * 255);
+          for (let yy = ya; yy <= yb; yy++) {
+            for (let xx = xa; xx <= xb; xx++) {
+              const idx = (yy * CONTENT_W + xx) * 4;
+              if (e > contentData[idx]) {
+                contentData[idx] = e;
+                contentData[idx + 1] = e;
+                contentData[idx + 2] = e;
+                contentData[idx + 3] = 255;
+              }
+            }
+          }
+          contentBaked = true;
+        };
         subject.traverse((o) => {
           const child = o as Mesh;
           if (!child.isMesh || child === repMesh || !child.material || !child.geometry) return;
@@ -527,12 +590,55 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
           const ccx = (childBox.min.x + childBox.max.x) / 2;
           const ccy = (childBox.min.y + childBox.max.y) / 2;
           const ccz = (childBox.min.z + childBox.max.z) / 2;
+          // Bake this child's bright luminance block into the content map (sheet-UV).
+          const emI = typeof srcMat.emissiveIntensity === 'number' ? srcMat.emissiveIntensity : 0;
+          const lum = lumaOf(srcMat.color, emI);
+          if (lum > 0.04) {
+            rasterizeBox(
+              (childBox.min.x - localBox.min.x) / w,
+              (childBox.max.x - localBox.min.x) / w,
+              (childBox.min.y - localBox.min.y) / h,
+              (childBox.max.y - localBox.min.y) / h,
+              lum,
+            );
+          }
           // Real geometry by reference (never disposed by us) + material clone.
           const m = new Mesh(child.geometry as BufferGeometry, srcMat.clone());
           m.name = `pointer-glitch-split-chrome:${child.name || 'mesh'}`;
           overlay.add(m);
           chrome.push({ mesh: m, cx: ccx - sheetX, cy: ccy - sheetY, dz: ccz - faceZ });
         });
+        // Bake a NON-PERIODIC jittered micro-stripe field into the content map's
+        // GREEN channel — the engaged-glitch "sliver" texture. Stripe centres are
+        // hash-jittered (no fixed pitch), so unlike a periodic comb the field does
+        // NOT auto-correlate: the R-vs-B cross-correlation keeps its single clean
+        // peak at the true 2s shift, while the narrow stripes give the dark troughs
+        // that read MAGENTA (R&B high, G low) where the ±s ghosts of two stripes
+        // cross. Sampled × engagement at shade time, so a disengaged band's stripes
+        // contribute nothing. ~26 jittered stripes across the width.
+        {
+          const STRIPES = 26;
+          for (let xi = 0; xi < CONTENT_W; xi++) {
+            const x = (xi + 0.5) / CONTENT_W;
+            // Distance to the nearest hash-jittered stripe centre → a narrow crest.
+            let nearest = 1;
+            for (let k = -1; k <= STRIPES; k++) {
+              const jitter = (hash2(k * 1.7 + 3.1, 7.0) - 0.5) * 0.6; // ±0.3 stripe
+              const cx = (k + 0.5 + jitter) / STRIPES;
+              nearest = Math.min(nearest, Math.abs(x - cx) * STRIPES);
+            }
+            const crest = Math.pow(Math.max(1 - nearest, 0), 2.0); // narrow bright stripe
+            const e = Math.round(clamp(crest, 0, 1) * 255);
+            for (let yy = 0; yy < CONTENT_H; yy++) {
+              contentData[(yy * CONTENT_W + xi) * 4 + 1] = e; // green = stripe field
+            }
+          }
+          contentBaked = true;
+        }
+        if (contentBaked) {
+          uHeaderOn.value = 1; // the content map carries real bright features
+          contentTex.needsUpdate = true;
+        }
 
         // Sibling of the subject carrying its exact local pose (a hidden parent
         // hides its children, so the sheet cannot live under it).
@@ -563,18 +669,26 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
           return out;
         },
         // The live shear/lum LUT DataTexture (by reference) — never disposed by
-        // tests; lets a headless test confirm the colorNode samples THIS texture.
+        // tests; lets a headless test confirm the emissive split samples THIS texture.
         lutTex,
-        // CPU MIRROR of the map-less per-channel split (the water-droplet pattern
+        // The reconstructed CONTENT luminance map (by reference) — the card's
+        // bright features the RGB split fans out. A headless test confirms the
+        // emissiveNode samples THIS texture (the field is real card content).
+        contentTex,
+        // CPU MIRROR of the rendered per-channel split (the water-droplet pattern
         // — the split runs in TSL on the GPU, so a headless test reads this
-        // exact-same arithmetic). Given a uv it returns the FINAL rendered R/G/B
-        // the shader emits (base colour × warm/ice tint × the horizontally-offset
-        // sliver field at xR/xG/xB), so a test can assert REAL chromatic
-        // aberration: chroma 0 → the three channels coincide (no fringe); chroma
-        // high → |R−B| grows (a magenta/cyan sliver). Mirrors buildMaterial's
-        // map-less branch byte-for-byte (sliverField + horizontal chroma offset +
-        // the warm/ice channel tint + the engagement mix). Returns the SPLIT
-        // composite (the engaged look), matching mix(...,clamp(off·60)) at off>0.
+        // EXACT-same arithmetic). Given a sheet-uv it returns the FINAL rendered
+        // R/G/B the shader emits: the lit panel albedo PLUS the RGB-split EMISSIVE
+        // field — three HORIZONTALLY-DISPLACED copies of featureL(x±s, v). A test
+        // can therefore measure the SAME two signals the advocate measures:
+        //   • magentaFrac — pixels where R high & B high & G low (the trough where
+        //     the +s red ghost crosses the −s blue ghost), and
+        //   • R-vs-B horizontal cross-correlation offset — the R plane is L(x+s),
+        //     the B plane is L(x−s), so they align at a 2s shift (0 at chroma 0,
+        //     growing with the knob).
+        // Mirrors buildMaterial's emissive branch byte-for-byte: featureL (header
+        // stripe ∪ engagement-keyed sliver crests) sampled at xR/xG/xB, the green
+        // centre down-weight, and the subtle warm/ice hue lean.
         channelSplitAt(u: number, v: number): { r: number; g: number; b: number } {
           const off = uChroma.value; // proximity-gated split distance (uv units)
           const bandIdx = Math.floor(v * bandCount);
@@ -584,42 +698,57 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
           const shearedX = u + shear;
           // dir = sign(shear) with a +1 fallback when shear≈0 (matches the TSL).
           const dir = Math.sign(shear) + (1 - clamp(Math.abs(shear) * 1000, 0, 1));
-          const xR = shearedX + off * dir;
-          const xG = shearedX;
-          const xB = shearedX - off * dir;
-          const field = (x: number): number => {
-            const phase = x * SLIVER_FREQ + bandIdx * 0.5;
-            const saw = Math.abs(phase - Math.floor(phase) - 0.5) * 2; // triangle
-            const contrast = (lum - 0.5) * SLIVER_GAIN;
-            return (saw - 0.5) * contrast + 1;
+          const s = off * CHROMA_PX_SCALE; // horizontal split distance (uv units)
+          const sd = s * dir;
+          const xR = shearedX + sd; // red ghost
+          const xG = shearedX; // centre
+          const xB = shearedX - sd; // blue ghost
+          const eng = clamp(Math.abs(lum - 0.5) * 2, 0, 1); // 0 rest → 1 engaged
+          // Bilinear sample of a content-map channel (mirrors LinearFilter). ch=0
+          // → R (content blocks); ch=1 → G (jittered engaged stripes).
+          const sampleContent = (x: number, ch: number): number => {
+            const fx = clamp(x, 0, 1) * (CONTENT_W - 1);
+            const fy = clamp(v, 0, 1) * (CONTENT_H - 1);
+            const x0 = Math.floor(fx);
+            const y0 = Math.floor(fy);
+            const x1 = Math.min(CONTENT_W - 1, x0 + 1);
+            const y1 = Math.min(CONTENT_H - 1, y0 + 1);
+            const tx = fx - x0;
+            const ty = fy - y0;
+            const at = (xx: number, yy: number) => contentData[(yy * CONTENT_W + xx) * 4 + ch] / 255;
+            const top = at(x0, y0) * (1 - tx) + at(x1, y0) * tx;
+            const bot = at(x0, y1) * (1 - tx) + at(x1, y1) * tx;
+            return top * (1 - ty) + bot * ty;
           };
-          const maskAt = (x: number): number => {
-            const phase = x * SLIVER_FREQ + bandIdx * 0.5;
-            const saw = Math.abs(phase - Math.floor(phase) - 0.5) * 2; // triangle
-            const eng = clamp(Math.abs(lum - 0.5) * 2, 0, 1); // 0 rest → 1 engaged
-            return saw * eng;
+          // featureL — mirrors the TSL: content blocks (R) ∪ eng-keyed stripes (G).
+          const featureLAt = (x: number): number => {
+            const content = sampleContent(x, 0) * uHeaderOn.value;
+            const stripes = sampleContent(x, 1) * eng * CREST_AMP * uHeaderOn.value;
+            return clamp(Math.max(content, stripes), 0, 1);
           };
+          const Lr = featureLAt(xR);
+          const Lg = featureLAt(xG);
+          const Lb = featureLAt(xB);
+          // splitGate fades the whole fringe in from 0 (chroma 0 → clean) AND
+          // suppresses green (→ magenta) — mirrors the TSL exactly.
+          const splitGate = clamp(s * GREEN_GATE_K, 0, 1);
+          const greenW = 1 - splitGate * (1 - GREEN_MIN);
+          const emR = Lr * FEATURE_EMISSIVE * splitGate;
+          const emB = Lb * FEATURE_EMISSIVE * splitGate;
+          const emG = Lg * FEATURE_EMISSIVE * greenW * splitGate;
+          // Subtle warm/ice hue lean on the ghosts — never the source of the
+          // split, just keeps the fringes brass/ice (no purple). Mirrors HUE_LEAN.
+          const leanR = (WARM.r * emR + COOL.r * emB) * HUE_LEAN;
+          const leanG = (WARM.g * emR + COOL.g * emB) * HUE_LEAN;
+          const leanB = (WARM.b * emR + COOL.b * emB) * HUE_LEAN;
+          // Lit albedo: the clean map-less panel colour (the split lives in the
+          // emissive). base + additive emissive split + hue lean.
           const c = uColor.value;
-          // Chroma-gated tint (white→warm/ice) — mirrors the TSL tintAmt exactly.
-          const tintAmt = clamp(off * CHROMA_TINT_GAIN, 0, 1);
-          const warmR = 1 + (WARM.r - 1) * tintAmt; // lerp(1, WARM.r, tintAmt)
-          const coolB = 1 + (COOL.b - 1) * tintAmt; // lerp(1, COOL.b, tintAmt)
-          // Multiplicative albedo term: base·tint·field (the lit panel colour).
-          const albR = c.r * warmR * field(xR);
-          const albG = c.g * field(xG);
-          const albB = c.b * coolB * field(xB);
-          // ADDITIVE emissive fringe — mirrors emissiveNode = warm·maskR·amt +
-          // cool·maskB·amt. This is the dominant on-screen signal on a dark panel
-          // (the magenta/cyan slivers the advocate measures).
-          const fringeAmt = off * CHROMA_FRINGE_GAIN;
-          const mW = maskAt(xR) * fringeAmt;
-          const mC = maskAt(xB) * fringeAmt;
-          const emR = WARM.r * mW + COOL.r * mC;
-          const emG = WARM.g * mW + COOL.g * mC;
-          const emB = WARM.b * mW + COOL.b * mC;
-          // Final per-channel rendered value = lit albedo + additive emissive,
-          // exactly the composite the advocate's pixel metrics see.
-          return { r: albR + emR, g: albG + emG, b: albB + emB };
+          return {
+            r: c.r + emR + leanR,
+            g: c.g + emG + leanG,
+            b: c.b + emB + leanB,
+          };
         },
       };
 
@@ -762,6 +891,7 @@ export const pointerGlitchSplitPrimitive: PrimitiveDefinition = {
             subject.visible = prevVisible;
           }
           lutTex.dispose(); // ours — created DataTexture
+          contentTex.dispose(); // ours — created DataTexture
         },
       };
     },

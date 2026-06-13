@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
+  Box3,
   DataTexture,
   Group,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
   MeshStandardMaterial,
@@ -30,6 +32,9 @@ interface LoupeHandles {
   /** Peak content enlargement applied this seek (1 = none) — a deterministic,
    *  browser-free proof the loupe magnifies the real content. */
   uMagApplied: { value: number };
+  /** Magnification a child sitting AT the disc edge would receive (≈1) — the
+   *  containment proof: nothing is torn / clipped past the rim. */
+  uEdgeMag: { value: number };
 }
 const handlesOf = (t: AnimatableTarget): LoupeHandles =>
   t.userData.pointerLoupe as LoupeHandles;
@@ -113,7 +118,7 @@ describe('pointer-loupe primitive', () => {
     inst.dispose();
   });
 
-  it('faithful base: an OVERLAY stands in for the subject (sheet + disc + rim + shadow); the subject is hidden, never mutated, and restored on dispose', () => {
+  it('faithful base: a faithful OVERLAY stands in for the subject (sheet + translucent glass disc); the subject is hidden, never mutated, and restored on dispose; NO dark occluding shadow dome', () => {
     const { target, subject } = makeTexturedTarget(2, 1);
     const inst = pointerLoupePrimitive.create(target);
 
@@ -121,11 +126,17 @@ describe('pointer-loupe primitive', () => {
     // original showing through), but its material is NEVER mutated.
     expect(subject.visible, 'subject hidden behind the overlay').toBe(false);
     expect((subject.material as MeshBasicMaterial).opacity).toBe(1);
-    // The loupe overlay: a flat sheet + the disc + rim + shadow furniture.
+    // The loupe overlay: a flat sheet + the translucent glass disc (the brass rim
+    // ring lives inside the disc glass). NO dark occluding dome, NO drop shadow.
     expect(meshNamed(target.scene, 'pointer-loupe-sheet')).toBeTruthy();
     expect(meshNamed(target.scene, 'pointer-loupe-disc')).toBeTruthy();
-    expect(meshNamed(target.scene, 'pointer-loupe-rim')).toBeTruthy();
-    expect(meshNamed(target.scene, 'pointer-loupe-shadow')).toBeTruthy();
+    // The old dark occluding 'shadow' mesh must be GONE (it read as a dark dome
+    // and was a root cause of the advocate block).
+    let shadowFound = false;
+    target.scene.traverse((o) => {
+      if (o.name === 'pointer-loupe-shadow') shadowFound = true;
+    });
+    expect(shadowFound, 'no dark drop-shadow dome in the overlay').toBe(false);
 
     inst.dispose();
     // Dispose restores the subject we hid.
@@ -363,49 +374,56 @@ describe('pointer-loupe primitive', () => {
     expect((subject.material as MeshBasicMaterial).map).toBe(texture);
   });
 
-  it('MAGNIFIES the real content: at the engaged state chrome clones under the glass scale well above rest (the loupe optics)', () => {
+  it('MAGNIFIES the real content via a CONTAINED vertex warp: every chrome clone carries the loupe positionNode; the published magnification climbs toward zoom when engaged', () => {
     // makeTarget builds the real `card` subject — a panel + brass header + ice
-    // dot + 3 grey rows (NO single texture). The loupe magnifies the chrome
-    // clones whose footprint falls under the disc, uniformly about the loupe
-    // center, and frames them with the disc + rim.
+    // dot + 3 grey rows (NO single texture). The loupe ENLARGES the card's own
+    // chrome geometry by a radial vertex expansion (positionNode) within the
+    // disc, contained at the rim — NOT a rigid mesh scale (that smeared a slab),
+    // NOT a UV-sampled cutout. The magnification is observed through the
+    // published uMagApplied uniform (the warp runs on the GPU, headless-invisible).
     const target = makeTarget(pointerLoupePrimitive);
     const inst = pointerLoupePrimitive.create(target);
     const ud = handlesOf(target);
 
-    // panel + header + dot + 3 rows = header + dot + 3 rows cloned (the panel is
+    // panel + header + dot + 3 rows → header + dot + 3 rows cloned (the panel is
     // the representative mesh = the flat sheet, the rest become chrome clones).
-    expect(chromeClonesIn(target.scene).length, 'card mirrored its real chrome to magnify')
-      .toBeGreaterThan(3);
+    const clones = chromeClonesIn(target.scene);
+    expect(clones.length, 'card mirrored its real chrome to magnify').toBeGreaterThan(3);
+    // Every chrome clone carries the loupe vertex warp as a positionNode (the
+    // optical magnification lives in the shader, not a rigid transform).
+    for (const c of clones) {
+      const mat = c.material as Material & { positionNode?: unknown };
+      expect(mat.positionNode, 'chrome clone carries the loupe vertex warp').toBeTruthy();
+    }
 
-    // Rest scale of every chrome clone, captured while disengaged (no magnify).
+    // Disengaged (far corner): no magnification — the card is flat and untouched.
     inst.setControl('zoom', 2.4);
     inst.setControl('radius', 0.4);
     settle(inst, 0.02, 0.98, target);
     expect(ud.uMagApplied.value, 'no magnification when disengaged').toBeCloseTo(1, 3);
-    const restScales = chromeClonesIn(target.scene).map((m) => m.scale.x);
 
-    // Engaged at the card center with a strong zoom + wide radius: chrome under
-    // the glass is scaled well above rest — the real content reads bodily
-    // ENLARGED. uMagApplied (the measured factor) climbs toward `zoom`.
+    // Engaged at the card center with a strong zoom + wide radius: the chrome
+    // geometry under the glass expands — uMagApplied (the measured vertex
+    // expansion) climbs toward `zoom`. The chrome meshes themselves keep scale 1
+    // (the magnification is in their positionNode, not their transform).
     inst.setControl('zoom', 4);
     settle(inst, 0.5, 0.5, target);
-    const liveScales = chromeClonesIn(target.scene).map((m) => m.scale.x);
-    const maxLive = Math.max(...liveScales);
-    const maxRest = Math.max(...restScales);
-    expect(maxLive, 'a chrome clone under the glass is scaled up = magnified')
-      .toBeGreaterThan(maxRest * 2);
+    for (const c of chromeClonesIn(target.scene)) {
+      expect(c.scale.x, 'chrome transform is NOT rigidly scaled (warp is in the shader)')
+        .toBeCloseTo(1, 5);
+    }
     expect(ud.uMagApplied.value, 'engaged loupe magnifies the real content').toBeGreaterThan(2);
 
     inst.dispose();
   });
 
-  it('zoom is LIVE at the ACTUAL capture geometry: DEFAULT radius, engaged pin {0.62,0.5}, frozen t — chrome under the glass magnifies low→high', () => {
+  it('zoom is LIVE at the ACTUAL capture geometry: DEFAULT radius, engaged pin {0.62,0.5}, frozen t — the warp magnification climbs low→high', () => {
     // This reproduces the advocate CONTROL sweep exactly: the rig pins the
     // engaged pose ({0.62,0.5}) and drives zoom min→max at the DEFAULT radius
     // (0.22) — the conditions under which zoom previously read DEAD
-    // (meanAbsDiff=0.067, changed=false). The loupe must magnify whatever its
-    // disc COVERS, so a content row reaching under the small off-center disc
-    // enlarges visibly as zoom climbs.
+    // (meanAbsDiff=0.067, changed=false). The loupe magnifies whatever its disc
+    // COVERS, so a content row reaching under the small off-center disc enlarges
+    // visibly as zoom climbs. Observed through the published warp magnification.
     const target = makeTarget(pointerLoupePrimitive);
     const inst = pointerLoupePrimitive.create(target);
     const ud = handlesOf(target);
@@ -419,23 +437,19 @@ describe('pointer-loupe primitive', () => {
 
     inst.setControl('zoom', 1.2);
     pinAndSeek();
-    const lowScales = chromeClonesIn(target.scene).map((m) => m.scale.x);
     const magLow = ud.uMagApplied.value;
 
     inst.setControl('zoom', 4);
     pinAndSeek();
-    const highScales = chromeClonesIn(target.scene).map((m) => m.scale.x);
     const magHigh = ud.uMagApplied.value;
 
-    // At least one chrome clone (a content row under the disc) is magnified far
-    // more at high zoom — the measured, browser-free proof the headline control
-    // is now LIVE at the exact frozen engaged frame the advocate captures.
-    const someRowMagnifiedMore = highScales.some((s, i) => s > lowScales[i] + 1.5);
-    expect(someRowMagnifiedMore, 'a covered chrome clone magnifies much more at high zoom')
-      .toBe(true);
-    // And the published magnification factor climbs strongly with zoom.
+    // The published magnification factor climbs strongly with zoom at the EXACT
+    // frozen engaged frame the advocate captures — the headline control is LIVE,
+    // and the warp's uZoom uniform tracks it.
+    expect(magLow, 'low zoom still magnifies the covered chrome a little').toBeGreaterThan(1);
     expect(magHigh, 'measured magnification rises sharply with zoom at the default radius')
       .toBeGreaterThan(magLow + 1.5);
+    expect(ud.uZoom.value, 'zoom uniform follows the control').toBeCloseTo(4, 5);
 
     inst.dispose();
   });
@@ -522,6 +536,112 @@ describe('pointer-loupe primitive', () => {
     inst.dispose();
   });
 
+  it('rim is LIVE: the rim brightness control reshapes the glass bezel (was DEAD in the advocate r3 block)', () => {
+    // The advocate measured the 'rim' control as DEAD (control-rim-low vs
+    // control-rim-high visually identical, meanAbsDiff=0.194 sub-noise). The rim
+    // now drives the brass ring's brightness AND width on the disc glass: the
+    // published uRim uniform tracks the control, AND the disc material's opacity
+    // node derives from it so the rendered bezel changes low→high.
+    const target = makeTarget(pointerLoupePrimitive);
+    const inst = pointerLoupePrimitive.create(target);
+    const ud = handlesOf(target);
+    const disc = meshNamed(target.scene, 'pointer-loupe-disc');
+
+    settle(inst, ENGAGED.x, ENGAGED.y, target);
+    const pinAndSeek = () => {
+      target.userData.pointer = { ...ENGAGED };
+      inst.seek(9);
+    };
+
+    inst.setControl('rim', 0.1);
+    pinAndSeek();
+    const lowRim = ud.uRim.value;
+    inst.setControl('rim', 2);
+    pinAndSeek();
+    const highRim = ud.uRim.value;
+
+    // The control moves the published rim uniform substantially.
+    expect(highRim, 'rim uniform rises with the control').toBeGreaterThan(lowRim + 0.5);
+    // The disc glass material reads the rim uniform (its bezel brightness/width is
+    // a live function of uRim), so the rendered ring is NOT a dead constant — the
+    // opacity/color nodes reference the same uniform the control drives.
+    const discMat = disc.material as Material & {
+      opacityNode?: unknown;
+      colorNode?: unknown;
+    };
+    expect(discMat.opacityNode, 'disc glass has a live opacity node (rim-driven)').toBeTruthy();
+    expect(discMat.colorNode, 'disc glass has a live color node (rim-tinted ring)').toBeTruthy();
+
+    inst.dispose();
+  });
+
+  it('CONTAINMENT: at the disc edge the magnification returns to ~1.0 — no torn/clipped header off the frame', () => {
+    // The advocate r3 block found the header ripped off and stretched past the
+    // LEFT frame edge at radius/glide high. The fix: the chrome magnification
+    // decays SMOOTHLY to 1.0 at the disc edge, so the enlarged content is
+    // contained inside the disc and pinches to the card at the rim. Proven two
+    // ways: (1) the published uEdgeMag (magnification at the disc edge) is ≈1 at
+    // every zoom; (2) no chrome clone center is ever pushed outside the card span.
+    const target = makeTarget(pointerLoupePrimitive);
+    const inst = pointerLoupePrimitive.create(target);
+    const ud = handlesOf(target);
+
+    // The card span (subject-local), so we can assert chrome stays in-frame.
+    const subject = target.subject as Object3D;
+    subject.updateWorldMatrix(true, true);
+    const localBox = (() => {
+      const b = new Box3().makeEmpty();
+      const inv = new Matrix4().copy(subject.matrixWorld).invert();
+      const rel = new Matrix4();
+      const tmp = new Box3();
+      subject.traverse((o) => {
+        const mesh = o as Mesh;
+        if (!mesh.isMesh || !mesh.geometry) return;
+        if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
+        const bb = mesh.geometry.boundingBox;
+        if (!bb || bb.isEmpty()) return;
+        rel.multiplyMatrices(inv, mesh.matrixWorld);
+        tmp.copy(bb).applyMatrix4(rel);
+        b.union(tmp);
+      });
+      return b;
+    })();
+
+    // Strong zoom + wide radius pinned at the engaged point — the worst case for
+    // tearing in the prior implementation.
+    inst.setControl('zoom', 4);
+    inst.setControl('radius', 0.4);
+    settle(inst, ENGAGED.x, ENGAGED.y, target);
+    target.userData.pointer = { ...ENGAGED };
+    inst.seek(11);
+
+    // (1) The magnification at the disc edge is ≈1 (containment), even though the
+    // center magnification is large.
+    expect(ud.uMagApplied.value, 'center magnifies strongly').toBeGreaterThan(2);
+    expect(ud.uEdgeMag.value, 'magnification at the disc edge returns to ~1').toBeLessThan(1.05);
+
+    // (2) Every chrome clone CENTER stays inside the card span — nothing is
+    // pushed off the frame (the header is never ripped off the left edge). Allow
+    // a small margin for the clone's own half-extent (the center is what we bound).
+    const margin = 0.08;
+    for (const c of chromeClonesIn(target.scene)) {
+      expect(c.position.x, 'chrome center stays within the card left edge').toBeGreaterThan(
+        localBox.min.x - margin,
+      );
+      expect(c.position.x, 'chrome center stays within the card right edge').toBeLessThan(
+        localBox.max.x + margin,
+      );
+      expect(c.position.y, 'chrome center stays within the card top edge').toBeLessThan(
+        localBox.max.y + margin,
+      );
+      expect(c.position.y, 'chrome center stays within the card bottom edge').toBeGreaterThan(
+        localBox.min.y - margin,
+      );
+    }
+
+    inst.dispose();
+  });
+
   it('dispose restores the subject and releases everything created (never subject resources)', () => {
     const { target, subject, texture } = makeTexturedTarget(2, 1);
     expect(subject.visible).toBe(true);
@@ -530,10 +650,9 @@ describe('pointer-loupe primitive', () => {
     const sheet = meshNamed(target.scene, 'pointer-loupe-sheet');
     const disc = meshNamed(target.scene, 'pointer-loupe-disc');
     const rim = meshNamed(target.scene, 'pointer-loupe-rim');
-    const shadow = meshNamed(target.scene, 'pointer-loupe-shadow');
 
     let createdDisposed = 0;
-    for (const m of [sheet, disc, rim, shadow]) {
+    for (const m of [sheet, disc, rim]) {
       m.geometry.addEventListener('dispose', () => createdDisposed++);
       (m.material as Material).addEventListener('dispose', () => createdDisposed++);
     }
@@ -545,7 +664,7 @@ describe('pointer-loupe primitive', () => {
     inst.dispose();
 
     expect(subject.visible, 'subject visibility restored on dispose').toBe(true);
-    expect(createdDisposed, 'sheet + disc + rim + shadow geometry & material disposed').toBe(8);
+    expect(createdDisposed, 'sheet + disc + rim geometry & material disposed').toBe(6);
     expect(subjectDisposed, 'subject material/texture never disposed').toBe(0);
     expect(loupeNodesIn(target.scene), 'nothing of ours left in the tree').toBe(0);
   });

@@ -195,7 +195,80 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
       (orchestrator eyes-on + advocate r3 SHIP, agentId ab3db1e84fe4cba77).
     - 6 stray scroll-*.bak-* files (prior sessions) removed. Gates: tsc 0-new; 3-fixed vitest 31/31; 3-fixed harness
       3/3 r/p/c deviceLost 0. W2 SCROLL COMPLETE.
-- [ ] W3 DISTORTION/DISPLACEMENT
+- [x] **W3 DISTORTION/DISPLACEMENT** — COMPLETE (2026-06-13, session 7). **12/13 advocate-SHIP shipped + 1 deferred.**
+  Final tally after 3 fix-rounds: r1 SHIP heat-haze-refract/lens-bulge/pointer-wake-wave; r2 SHIP hover-liquid-distort
+  (regression fixed)/pixel-sort-sweep/hover-displacement-map/click-shockwave/crt-warp; r3 SHIP pointer-glitch-split
+  (real 3-channel chromatic aberration — magentaFrac 0→0.38, R/B offset grows with chroma); plus session-6 r1 PASS
+  drag-elastic-warp/flow-warp-idle/pointer-twist-warp. **pointer-loupe DEFERRED** (unregistered via barrel DEFERRED set,
+  registry 351→350): true optical magnification needs a framebuffer/render-target pass (sample a wider region into the
+  lens), which the synchronous per-node createNode contract has no post-pass for; a geometry-warp loupe over the
+  featureless dark card body reads as a dark occluding bead, and the harness's orbiting-pointer pin lands it
+  inconsistently over content vs gap. Advocate BLOCKED across 3 rounds + my direct pixel-debugging (radius-bump made
+  zoom live & header magnify, but the dark-body-over-gap read + position-flakiness persist). File + 19 unit tests kept
+  on disk for revival with an RT pass. Honest backlog flag in REPORT. GATES at completion: tsc 0-new; full animatable
+  vitest **351 files / 1375 tests green**; harness 12/12 (+loupe) r/p/c deviceLost 0; webgpu DPR2 captures + fresh
+  user-advocate verdicts (w3-verdicts/_r2 & _r3 logs). DOCTRINE proven: every named control a STANDING fn of the
+  engaged pose (seek t=1); onParamChange re-applies at lastT; map-less cards need bright-feature-derived effects (not
+  per-channel taps of a flat field). CKPT 61a69b7 (11/13) + W3-COMPLETE ckpt (this commit). NEXT: W4 CURSOR PHYSICS.
+- [~] **W3 (session-6 historical)** — VERIFICATION IN FLIGHT (2026-06-13, session 6, resume). Build COMPLETE on
+  disk (13 displacement primitives + tests, barrel-wired registry 351, all mountable:true + texture-preserving).
+  CHEAP VERIFY DONE this session: tsc gate **0-new** (9 errors / baseline 10); harness **13/13 r/p/c** (pointer-wake-wave
+  was the one missing tile — ran it, PASS, deviceLost 0; other 12 already PASS from session 5); art-fidelity numeric
+  **13/13 PASS** (lum 0.064-0.071 above 0.06 floor, sat ~0.48, coverage ~30% = preserved card look). Advocate capture
+  RE-RUN for all 13 on webgpu true-color (idle+play3+4-5ctrl each, evidence-manifest-after.json). Fresh-context
+  user-advocate review COMPLETE (wf_95bb3c3a-aa6, 13 agents, 594k subagent tokens). Verdicts → w3-verdicts/*.json (all
+  13 schema-VALID; pointer-twist-warp gate corrected PASS-WITH-FLAGS→PASS). RESULT: **3 PASS** (drag-elastic-warp,
+  flow-warp-idle, pointer-twist-warp), **10 BLOCKED**. Texture-preserving held EVERYWHERE (0 placeholder-slabs); defects
+  = weak-effect + dead-namesake-controls + 1 capture-phase artifact: hover-liquid-distort(viscosity dead+idle unsettled),
+  pointer-glitch-split(no RGB split, chroma dead), heat-haze-refract(edge-only+below floor+ctrl dead), lens-bulge(opaque
+  dome vs see-through magnify; magnify/rim dead), pointer-wake-wave(NO animation — velocity-only; 3 ctrl dead),
+  pixel-sort-sweep(no traveling front; streak dead), hover-displacement-map(grainy idle, noise not emboss; proximityRange
+  dead), click-shockwave(one-shot exited by engaged pin — recapture/hold-engaged), crt-warp(scanlines dead), pointer-loupe
+  (no optical magnification; zoom/glide dead). FIX-ROUND r1 LAUNCHED (wf_9d97df9b-172, 10 agents, batches of 5): each SEES
+  evidence + root-causes + fixes every mustFix + adds tests proving each dead control changes a measured output at the
+  engaged state. DOCTRINE: engaged pose = STANDING fn of position/phase (not transient velocity/one-shot), onParamChange
+  re-applies at lastT, amplitude above discoverability floor.
+  - SESSION-7 (resume, 2026-06-13): fix-round r1 CONFIRMED complete on disk — all 10 BLOCKED tiles re-edited
+    23:27–23:47Z (AFTER the 23:17Z verdicts), 575–837 lines each, onParamChange+lastT doctrine present, NO .bak
+    shells (W1 phantom-edit lesson cleared). CHEAP GATES GREEN: tsc gate 0-new (9/baseline 10); W3 vitest 13 files
+    **170 tests pass** (was 152 — fix-round added control-proving tests); harness **10/10 r/p/c deviceLost 0** (wall
+    296s, SwiftShader worker-boot throttling only). Re-captured all 10 on webgpu true-color DPR2 (idle+play3+3-5ctrl,
+    deviceLost 0, evidence-manifest-after.json). Fresh-context user-advocate re-review LAUNCHED (wf_38599fd3-704, 10
+    user-advocate agents, each verifies its prior mustFixes resolved vs new after/ frames, ground-truthed vs a PASS
+    sibling). RESULT (wf_38599fd3-704, 10 agents, 480k tokens): **3 SHIP** (heat-haze-refract, lens-bulge,
+    pointer-wake-wave — full mustFixes resolved, texture preserved, controls live), **7 BLOCKED**. Verdicts →
+    w3-verdicts/<tile>.r2.json + _r2-advocate-log.txt (47KB). Residual defect classes: dead namesake control at the
+    pinned engaged pose + 2 genuinely-missing mechanics. Per tile: hover-liquid-distort (REGRESSION — r1 broke its 4
+    previously-live controls; all 5 now dead, well decays flat at t=1), pointer-glitch-split (no real RGB-split:
+    magentaFrac=0, chroma dead — shader never per-channel-offset-samples), pixel-sort-sweep (NEW dead 'speed' knob —
+    temporal-only; effect itself resolved), hover-displacement-map (proximityRange dead + starfield-grain at high
+    patternScale; idle+reliefDepth resolved), click-shockwave (wobble dead — temporal; play+width+kick resolved),
+    crt-warp (scanlines freq knob dead — wire broken, retune didn't fix), pointer-loupe (NO optical magnification —
+    core mechanic; zoom dead; glide+radius live). ROOT cause shared: effect/control not a STANDING fn of the control
+    at seek(t=1). FIX-ROUND r2 LAUNCHED (wf_c169f924-37d, 7 general-purpose agents, tile-specific root-cause briefs:
+    standing-pose control wiring + real chromatic-aberration sampling + real UV-magnification; each adds engaged-phase
+    control tests + eyes-on its own defect frame).
+  - SESSION-7 cont: fix-round r2 (wf_c169f924-37d, 7 agents, 1.15M tokens) all tests-green; consolidated gates: tsc
+    0-new, full animatable vitest **351 files/1372 green** (no-regression), harness **7/7 r/p/c deviceLost 0**, webgpu
+    DPR2 re-capture. Re-advocate (wf_825f2091-3fb, 7 agents): **5 SHIP** (hover-liquid-distort regression fully fixed —
+    all 5 controls standing+live; pixel-sort-sweep speed live; hover-displacement-map proximityRange live + grain gone;
+    click-shockwave wobble live, largest delta; crt-warp scanlines density live), **2 BLOCKED**. → **W3 TALLY: 11/13
+    SHIP.** SAFETY-CKPT committed 61a69b7 (pushed). Residual 2 (fix-round r3 wf_0d011346-091, 2 recipe-level agents):
+    (a) pointer-glitch-split — RGB-split still MEASURABLY absent (magentaFrac=0, R/B x-corr offset=0px at every chroma;
+    chroma ramps brightness 15→33 not separation); brief = build 3 horizontally-displaced channels from the card's
+    bright features (R at +s, B at −s, s=chroma·SCALE ≥4px) + CPU mirror asserting magentaFrac>0 & R/B offset≥3px grow
+    with chroma. (b) pointer-loupe — r2 hide-subject overlay REGRESSED to placeholder slab + dark dome + torn header,
+    zero magnification; brief = delete overlay, adopt lens-bulge.ts idiom (subject visible), contained radial vertex
+    EXPANSION within the disc (mag grows w/ zoom, smooth falloff →1.0 at rim = containment), translucent rim not dome.
+    PENDING: r3 → tsc/vitest/harness 2 → re-capture 2 → re-advocate 2 → CKPT W3 COMPLETE. W4/W5 staged scripts
+    launch-ready (63c756a7). LOGAN-INBOX: no OPEN.
+- [~] **W3 (session-4 historical)** — BUILD IN FLIGHT note (superseded by session-6 line above). workflow wf_e63fcc1e-42a. 13
+  texture-preserving + mountable:true primitives authoring in parallel from the staged session-3 script
+  (hover-liquid-distort, drag-elastic-warp, pointer-glitch-split, heat-haze-refract, lens-bulge, pointer-wake-wave,
+  pixel-sort-sweep, hover-displacement-map, pointer-twist-warp, click-shockwave, crt-warp, flow-warp-idle,
+  pointer-loupe). §1 curtains/§11 shader-cookbook techniques, native TSL, chrome co-treatment, pointer-rig facts.
+  Engine prereq (mountable override of UNMOUNTABLE_CATEGORIES) landed session 3. PENDING on completion: barrel-wire,
+  tsc gate, full vitest, harness, art-fidelity, advocate, CKPT.
 - [ ] W4 CURSOR PHYSICS
 - [ ] W5 PARTICLES/GENERATIVE
 - [ ] WF report + final no-regression (312+N) + STOP
@@ -207,3 +280,4 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
 - 2026-06-12 (session 2, resume): Forensics — fix-round r1 died early (only morph-into-card edited). Relaunching identical 9-agent fixround workflow from persisted script. LOGAN-INBOX: no OPEN directives.
 - 2026-06-12 (session 3, resume ~14:30 CT): Forensics above. W1: gates re-run (vitest/tsc/harness 9/9/art), advocate r2 BLOCKED narrowly (2 tiles, one shared placeholder defect) → r3 fix workflow in flight. W2: 12 files verified test-green, awaiting barrel+browser gates. mountable engine change landed. LOGAN-INBOX: no OPEN directives.
 - 2026-06-12 (session 4, resume ~21:00 CT): W1 r3 CLOSED → **W1 COMPLETE, advocate SHIP**. Resume workflow (wf_97135b79-e5e): cylinder-unroll rewrite verified as-is (eyes-on PASS, 0 changes); genie-suck card-subject fix landed + self-verified; fresh joint capture. Advocate phase died on a transient model-access error (claude-fable-5) inside the workflow → re-ran the user-advocate directly via Agent tool (its own model): SHIP both tiles. Verdict JSON written. tsc 0-new, cylinder+genie vitest 20/20. Committing W1 CKPT, then W2 barrel-wire + gates. LOGAN-INBOX: no OPEN directives.
+- 2026-06-12 (session 5, resume ~23:00 CT): W3 build found COMPLETE on disk from session 4 — all 13 displacement primitives + tests authored, barrel-wired (registry 351 = 338+13), all category 'displacement' + mountable:true + DESIGN-REFERENCES §1/§11 cited. CHEAP VERIFY: tsc gate 0-new; W3 per-file vitest 152/152; full animatable vitest 351 files/1346 tests green (no-regression). Running W3 functional harness (13 tiles r/p/c) now; then art-fidelity + advocate capture + fresh-context advocate review agents → CKPT. LOGAN-INBOX: no OPEN directives.

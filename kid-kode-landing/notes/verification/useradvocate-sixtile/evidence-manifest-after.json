@@ -1,88 +1,10 @@
 {
-  "startedAt": "2026-06-13T05:32:55.880Z",
+  "startedAt": "2026-06-13T06:24:55.988Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
-    {
-      "tile": "hover-liquid-distort",
-      "state": "after",
-      "dir": "hover-liquid-distort/after",
-      "claim": {
-        "name": "hover-liquid-distort",
-        "label": "Ripple Amplitude",
-        "description": "The surface goes liquid under the cursor — slow viscous ripples well out from the touch point and settle like honey when the pointer leaves.",
-        "category": "displacement"
-      },
-      "controls": 5,
-      "notes": []
-    },
-    {
-      "tile": "pointer-glitch-split",
-      "state": "after",
-      "dir": "pointer-glitch-split/after",
-      "claim": {
-        "name": "pointer-glitch-split",
-        "label": "Bands",
-        "description": "The cursor slices the surface into glitch bands — RGB-split slivers shearing out of alignment around the pointer, snapping clean when it leaves.",
-        "category": "displacement"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "pixel-sort-sweep",
-      "state": "after",
-      "dir": "pixel-sort-sweep/after",
-      "claim": {
-        "name": "pixel-sort-sweep",
-        "label": "Sweep Speed",
-        "description": "A sorting wave sweeps the surface — content smearing into directional streaks along the wavefront, resolving crisp behind it — the glitch-art pixel-sort look, tamed.",
-        "category": "displacement"
-      },
-      "controls": 3,
-      "notes": []
-    },
-    {
-      "tile": "hover-displacement-map",
-      "state": "after",
-      "dir": "hover-displacement-map/after",
-      "claim": {
-        "name": "hover-displacement-map",
-        "label": "Relief Depth",
-        "description": "Hover pours a hidden relief into the surface — a procedural displacement map embossing the content, deepening as the cursor nears.",
-        "category": "displacement"
-      },
-      "controls": 3,
-      "notes": []
-    },
-    {
-      "tile": "click-shockwave",
-      "state": "after",
-      "dir": "click-shockwave/after",
-      "claim": {
-        "name": "click-shockwave",
-        "label": "Ring Speed",
-        "description": "Engage and a shockwave detonates from the center — one crisp pressure ring racing outward, kicking the surface and its chrome as it passes.",
-        "category": "displacement"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "crt-warp",
-      "state": "after",
-      "dir": "crt-warp/after",
-      "claim": {
-        "name": "crt-warp",
-        "label": "Barrel Curve",
-        "description": "The surface becomes an old CRT — barrel-curved glass, drifting scanlines, and a slow rolling flicker band — retro phosphor warmth over the real content.",
-        "category": "displacement"
-      },
-      "controls": 4,
-      "notes": []
-    },
     {
       "tile": "pointer-loupe",
       "state": "after",

@@ -26,9 +26,21 @@ const CATEGORY_ORDER = [
 const camel = (kebab) => kebab.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
 const exportNameOf = (name) => camel(name) + 'Primitive';
 
+// DEFERRED — primitives kept on disk (valid + unit-tested) but intentionally NOT
+// registered in the shippable catalog. Excluded from the barrel so they never reach
+// the picker / a user / the AI builder until revived.
+//   pointer-loupe: true optical magnification needs a framebuffer/render-target
+//     magnification pass (sample a wider region into the lens disc); the synchronous
+//     per-node createNode contract has no post-pass, so a geometry-warp loupe over the
+//     featureless dark card body reads as a dark occluding bead and the harness's
+//     orbiting-pointer pin lands it inconsistently over content vs gap. Advocate
+//     BLOCKED across 3 fix-rounds (PRIMITIVES-EXPANSION W3). Revisit with a RT pass.
+const DEFERRED = new Set(['pointer-loupe']);
+
 const files = readdirSync(primDir)
   .filter((f) => f.endsWith('.ts') && f !== 'index.ts')
-  .map((f) => f.replace(/\.ts$/, ''));
+  .map((f) => f.replace(/\.ts$/, ''))
+  .filter((name) => !DEFERRED.has(name));
 
 const entries = [];
 const problems = [];

@@ -1,21 +1,21 @@
 {
-  "startedAt": "2026-06-09T20:27:05.732Z",
+  "startedAt": "2026-06-13T06:23:26.734Z",
   "state": "diag",
-  "port": 4820,
+  "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "clouds",
+      "tile": "pointer-loupe",
       "state": "diag",
-      "dir": "clouds/diag",
+      "dir": "pointer-loupe/diag",
       "claim": {
-        "name": "clouds",
-        "label": "Speed",
-        "description": "Bright billowing cumulus clouds drift slowly across a clean blue sky gradient.",
-        "category": "volumetric"
+        "name": "pointer-loupe",
+        "label": "Zoom Factor",
+        "description": "A jeweler",
+        "category": "displacement"
       },
-      "controls": 3,
+      "controls": 4,
       "notes": []
     }
   ],

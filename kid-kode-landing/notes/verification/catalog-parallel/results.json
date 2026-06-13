@@ -1,92 +1,18 @@
 {
-  "startedAt": "2026-06-13T05:29:47.740Z",
-  "updatedAt": "2026-06-13T05:32:50.318Z",
+  "startedAt": "2026-06-13T06:09:19.838Z",
+  "updatedAt": "2026-06-13T06:10:10.560Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 7,
+      "total": 2,
       "backend": "webgl",
-      "startedAt": "2026-06-13T05:29:52.745Z",
-      "finishedAt": "2026-06-13T05:32:50.318Z",
-      "peakConcurrency": 8,
+      "startedAt": "2026-06-13T06:09:24.728Z",
+      "finishedAt": "2026-06-13T06:10:10.560Z",
+      "peakConcurrency": 5,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "click-shockwave": {
-      "name": "click-shockwave",
-      "category": "displacement",
-      "driver": "state",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T05:29:59.962Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "crt-warp": {
-      "name": "crt-warp",
-      "category": "displacement",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T05:30:13.688Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "hover-liquid-distort": {
-      "name": "hover-liquid-distort",
-      "category": "displacement",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T05:30:25.149Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "hover-displacement-map": {
-      "name": "hover-displacement-map",
-      "category": "displacement",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T05:30:25.149Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pixel-sort-sweep": {
-      "name": "pixel-sort-sweep",
-      "category": "displacement",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T05:30:33.630Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
     "pointer-glitch-split": {
       "name": "pointer-glitch-split",
       "category": "displacement",
@@ -99,7 +25,7 @@
         "pointer stimulus pinned for controls"
       ],
       "verdict": "pass",
-      "at": "2026-06-13T05:31:08.525Z",
+      "at": "2026-06-13T06:09:31.923Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -115,7 +41,7 @@
         "pointer stimulus pinned for controls"
       ],
       "verdict": "pass",
-      "at": "2026-06-13T05:31:12.529Z",
+      "at": "2026-06-13T06:09:42.675Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -126,8 +52,8 @@
     "names": []
   },
   "summary": {
-    "total": 7,
-    "pass": 7,
+    "total": 2,
+    "pass": 2,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -136,9 +62,9 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 183,
+    "wallClockSec": 51,
     "peak": {
-      "std": 8
+      "std": 5
     },
     "backend": {
       "std": "webgl"

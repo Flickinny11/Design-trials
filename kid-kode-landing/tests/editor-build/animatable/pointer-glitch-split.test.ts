@@ -30,6 +30,8 @@ interface GlitchHandles {
   bandCount: number;
   lumKeys: number[];
   lutTex: Texture;
+  /** The reconstructed card-content luminance map the RGB split fans out. */
+  contentTex: Texture;
   /** CPU mirror of the rendered per-channel split (water-droplet pattern): the
    *  final R/G/B the shader emits for the map-less branch at a given uv (base ×
    *  warm/ice tint × the horizontally chroma-offset sliver field). Proves real
@@ -46,7 +48,10 @@ const handlesOf = (t: AnimatableTarget): GlitchHandles =>
 function nodeReaches(root: unknown, target: unknown): boolean {
   const seen = new Set<unknown>();
   const visit = (nd: unknown, depth: number): boolean => {
-    if (!nd || typeof nd !== 'object' || seen.has(nd) || depth > 24) return false;
+    // Depth 64: the map-less emissive split buries the shear/lum LUT deep in the
+    // contentTex UV-coordinate chain (shear → shearedX → xR → tex uv), past the
+    // old 24 cap. The graph is small (a few dozen nodes) so a deeper walk is cheap.
+    if (!nd || typeof nd !== 'object' || seen.has(nd) || depth > 64) return false;
     seen.add(nd);
     // The target may be the node itself (a uniform node) OR a resource a leaf
     // node wraps in `.value` (a TextureNode holds its DataTexture there).
@@ -274,12 +279,12 @@ describe('pointer-glitch-split primitive', () => {
     inst.dispose();
   });
 
-  it('chroma is WIRED INTO the rendered colour: the sheet colorNode reaches the live uChroma uniform and the LUT (the dead-control fix)', () => {
+  it('chroma is WIRED INTO the rendered colour: the sheet colorNode reaches the live uChroma uniform and the LUT (the dead-control fix, mapped subject)', () => {
     // The W3 dead-control defect was: the chroma knob moved a uniform that the
-    // colorNode never read, so the rendered frame was identical low→high. This
-    // asserts the structural fix — the engaged-frame colour graph literally
-    // consumes uChroma — so a future regression that unwires it FAILS here, not
-    // only under the GPU-vision rig.
+    // rendered colour never read, so the frame was identical low→high. For a
+    // MAPPED subject the RGB split lives in the colorNode (three displaced map
+    // taps), so this asserts the colour graph literally consumes uChroma + the
+    // shear/lum LUT — a regression that unwires it FAILS here, not only on the rig.
     const { target } = makeTexturedTarget(2, 1);
     const inst = pointerGlitchSplitPrimitive.create(target);
     const ud = handlesOf(target);
@@ -304,95 +309,160 @@ describe('pointer-glitch-split primitive', () => {
     inst.dispose();
   });
 
-  it('chroma drives REAL chromatic aberration: at the engaged frozen frame the per-channel R−B fringe is ZERO at chroma 0 and grows MONOTONICALLY with the knob (the dead-control fix, measured)', () => {
-    // THE CORE FIX. The W3 advocate measured the chroma control DEAD
-    // (meanAbsDiff~0, changedFrac=0) and magentaFrac=0 in every frame: the
-    // shader sheared bands but never produced per-channel RGB-split. This test
-    // freezes the ENGAGED pose (pinned pointer, fixed seek — exactly how the
-    // rig sweeps controls) and reads the CPU mirror of the final rendered R/G/B
-    // (base·tint·field + the additive warm/ice emissive fringe). It asserts the
-    // chromatic-aberration signal — the per-pixel R-vs-B separation that the
-    // magenta/cyan slivers ARE — is null at chroma 0 and rises with the knob.
-    // A future regression that unwires chroma (the original defect) FAILS here,
-    // not only under the GPU-vision rig.
+  it('chroma is WIRED INTO the rendered EMISSIVE: the map-less sheet emissiveNode reaches uChroma, the LUT, and the content map (the RGB-split source)', () => {
+    // On the dark catalog card (map-less) the RGB split is EMISSIVE: three
+    // horizontally-displaced taps of the reconstructed CONTENT luminance map. This
+    // asserts the emissive graph literally consumes uChroma (the split distance),
+    // the shear/lum LUT (the band structure), AND the content texture (the card's
+    // own bright features the split fans out) — so unwiring any of them FAILS here.
     const target = makeTarget(pointerGlitchSplitPrimitive); // map-less card
     const inst = pointerGlitchSplitPrimitive.create(target);
     const ud = handlesOf(target);
-    // Pin the engaged pointer + a fixed seek (the rig's controls-pin state).
     target.userData.pointer = { x: 0.62, y: 0.5 };
     inst.seek(0.5);
 
-    /** Per-pixel R−B at the chroma-0 baseline (base-colour asymmetry only) — the
-     *  CHROMATIC signal is how far |R−B| MOVES from this baseline as chroma opens
-     *  (so a constant base-colour tint never counts as a "split"). Also report
-     *  the absolute per-pixel max |R−B| and whether any pixel reads magenta-ish
-     *  (R and B both clearly above G — the chromatic-aberration colour). */
-    const sampleGrid = (): Array<{ u: number; v: number }> => {
-      const pts: Array<{ u: number; v: number }> = [];
-      for (let vi = 0; vi < 16; vi++) {
-        for (let xi = 0; xi < 96; xi++) {
-          pts.push({ u: (xi + 0.5) / 96, v: (vi + 0.5) / 16 });
-        }
-      }
-      return pts;
-    };
-    const grid = sampleGrid();
+    const sheet = sheetOf(target.scene);
+    const emissiveNode = (sheet.material as Material & { emissiveNode?: unknown }).emissiveNode;
+    expect(emissiveNode, 'a chromatic-split emissiveNode is wired').toBeDefined();
+    expect(
+      nodeReaches(emissiveNode, ud.uChroma),
+      'the chroma uniform feeds the emissive RGB split',
+    ).toBe(true);
+    expect(
+      nodeReaches(emissiveNode, ud.lutTex),
+      'the emissive split samples the band shear/lum LUT',
+    ).toBe(true);
+    expect(
+      nodeReaches(emissiveNode, ud.contentTex),
+      'the emissive split fans out the card content luminance map',
+    ).toBe(true);
 
-    // Baseline R−B per pixel at chroma 0.
-    inst.setControl('chroma', 0);
+    inst.dispose();
+  });
+
+  it('chroma drives REAL chromatic aberration: the advocate-measured signals — magentaFrac AND the R-vs-B horizontal cross-correlation offset — are ~0 at chroma 0 and grow with the knob (THE CORE FIX)', () => {
+    // THE CORE FIX, asserted on the EXACT two signals the W3 advocate measured
+    // and found dead on the r2 attempt: (a) magentaFrac = fraction of pixels that
+    // read R-high & B-high & G-low (the chromatic-aberration colour), which was 0
+    // at every chroma level; and (b) the best horizontal R-vs-B cross-correlation
+    // offset in device px, which was 0px at BOTH chroma-low and chroma-high (no
+    // spatial channel separation — the knob only ramped brightness). This test
+    // renders the CPU mirror of the FINAL per-channel R/G/B over a grid and
+    // computes those SAME two signals, asserting both are ~0 at chroma 0 and rise
+    // with the knob (offset ≥ the advocate's px threshold at max). A regression to
+    // the brightness-ramp defect FAILS here, not only under the GPU-vision rig.
+    const target = makeTarget(pointerGlitchSplitPrimitive); // map-less catalog card
+    const inst = pointerGlitchSplitPrimitive.create(target);
+    const ud = handlesOf(target);
+    // Pin the engaged pointer + a fixed seek (exactly how the rig sweeps controls).
+    target.userData.pointer = { x: 0.62, y: 0.5 };
     inst.seek(0.5);
-    const base0 = grid.map(({ u, v }) => {
-      const c = ud.channelSplitAt(u, v);
-      return c.r - c.b;
-    });
 
-    const measure = (chroma: number) => {
+    // Sample grid in sheet-uv. The advocate captures the card at DPR-2 where it
+    // spans ≈ 340 device px across; GW columns over that width → DEVICE_PX_PER_COL
+    // px per sampled column, the unit the cross-correlation offset is reported in.
+    const GW = 160;
+    const GH = 40;
+    const CARD_DEVICE_PX = 340;
+    const DEVICE_PX_PER_COL = CARD_DEVICE_PX / GW;
+
+    /** Render the per-channel R/G/B grid, then compute the advocate's two signals:
+     *  • magentaFrac — pixels where R & B are both clearly above the dark floor AND
+     *    G is clearly the lowest channel (the R-high/B-high/G-low predicate).
+     *  • R-vs-B best horizontal offset — the column shift k (in device px) that
+     *    maximizes the ZERO-MEAN cross-correlation of the Red plane against the
+     *    Blue plane (a Pearson-style offset finder: DC-insensitive, so it locks on
+     *    the spatial structure, not overall brightness). Because R = featureL(x+s)
+     *    and B = featureL(x−s), the peak sits at 2·s and grows with chroma. */
+    const render = (chroma: number) => {
       inst.setControl('chroma', chroma);
       inst.seek(0.5);
-      let maxFringe = 0;
-      let sumFringe = 0;
-      let splitPixels = 0;
-      grid.forEach(({ u, v }, i) => {
-        const c = ud.channelSplitAt(u, v);
-        const fringe = Math.abs(c.r - c.b - base0[i]); // chromatic delta from rest
-        maxFringe = Math.max(maxFringe, fringe);
-        sumFringe += fringe;
-        // RGB-split sliver signature: a pixel that reads with a clear WARM bias
-        // (R the dominant channel — the brass sliver) OR a clear COOL bias (B
-        // dominant — the ice sliver). Both are the per-channel separation
-        // chromatic aberration produces; either side counts. 0.015 is well above
-        // the dark panel's base channel spread (~0.01) so it only fires on a real
-        // chromatic sliver, not base-colour noise.
-        const warmBias = c.r > c.g + 0.015 && c.r > c.b + 0.015;
-        const coolBias = c.b > c.g + 0.015 && c.b > c.r + 0.015;
-        if (warmBias || coolBias) splitPixels++;
-      });
-      return { maxFringe, meanFringe: sumFringe / grid.length, splitPixels };
+      const R: Float64Array[] = [];
+      const B: Float64Array[] = [];
+      let magenta = 0;
+      let total = 0;
+      let sumR = 0;
+      let sumB = 0;
+      for (let vi = 0; vi < GH; vi++) {
+        const rr = new Float64Array(GW);
+        const bb = new Float64Array(GW);
+        for (let xi = 0; xi < GW; xi++) {
+          const c = ud.channelSplitAt((xi + 0.5) / GW, (vi + 0.5) / GH);
+          rr[xi] = c.r;
+          bb[xi] = c.b;
+          sumR += c.r;
+          sumB += c.b;
+          // magenta: R & B both bright, G clearly the lowest channel.
+          if (c.r > 0.06 && c.b > 0.06 && c.g < Math.min(c.r, c.b) * 0.6) magenta++;
+          total += 1;
+        }
+        R.push(rr);
+        B.push(bb);
+      }
+      const meanR = sumR / total;
+      const meanB = sumB / total;
+      // Total R-plane variance — when there is NO structure (the clean card at
+      // chroma 0: a uniform dark panel), the cross-correlation is degenerate and
+      // its argmax is meaningless, so report 0px (there is no spatial offset to
+      // measure — which is exactly what the advocate sees on the clean rest frame).
+      let varR = 0;
+      for (let vi = 0; vi < GH; vi++) {
+        for (let x = 0; x < GW; x++) varR += (R[vi][x] - meanR) * (R[vi][x] - meanR);
+      }
+      if (varR < 1e-4) return { magentaFrac: magenta / total, offsetPx: 0 };
+      let bestK = 0;
+      let bestC = -Infinity;
+      const KMAX = 22;
+      for (let k = -KMAX; k <= KMAX; k++) {
+        let acc = 0;
+        for (let vi = 0; vi < GH; vi++) {
+          const r = R[vi];
+          const b = B[vi];
+          for (let x = 0; x < GW; x++) {
+            const xb = x + k;
+            if (xb < 0 || xb >= GW) continue;
+            acc += (r[x] - meanR) * (b[xb] - meanB);
+          }
+        }
+        if (acc > bestC) {
+          bestC = acc;
+          bestK = k;
+        }
+      }
+      return {
+        magentaFrac: magenta / total,
+        offsetPx: Math.abs(bestK) * DEVICE_PX_PER_COL,
+      };
     };
 
-    const at0 = measure(0);
-    const atMid = measure(0.05);
-    const atMax = measure(0.12);
+    const at0 = render(0);
+    const atLow = render(0.024);
+    const atMid = render(0.06);
+    const atMax = render(0.12);
 
-    // (1) chroma 0 → exactly the clean panel: no fringe at all.
-    expect(at0.maxFringe, 'chroma 0 → zero chromatic fringe (clean)').toBeCloseTo(0, 6);
-    expect(at0.splitPixels, 'chroma 0 → no warm/ice slivers').toBe(0);
+    // (1) chroma 0 → the clean card: NO magenta, NO R-vs-B spatial offset (the
+    //     three channel copies coincide exactly). This is the advocate's rest pin.
+    expect(at0.magentaFrac, 'chroma 0 → no magenta pixels (clean card)').toBeCloseTo(0, 6);
+    expect(at0.offsetPx, 'chroma 0 → R and B coincide (0px offset)').toBeCloseTo(0, 6);
 
-    // (2) the fringe GROWS monotonically with the knob (the live control).
-    expect(atMid.meanFringe, 'mid chroma opens a real fringe').toBeGreaterThan(0.01);
-    expect(atMax.meanFringe, 'max chroma fringe exceeds mid (monotonic)').toBeGreaterThan(
-      atMid.meanFringe + 0.01,
+    // (2) the R-vs-B horizontal cross-correlation offset is the headline signal
+    //     the advocate measured as DEAD (0px at low AND high). It must now be a
+    //     real, growing spatial separation: present once chroma opens, ≥ the
+    //     advocate's few-px threshold at max, and larger at max than at low.
+    expect(atLow.offsetPx, 'low chroma already separates R and B spatially').toBeGreaterThan(2);
+    expect(atMax.offsetPx, 'max chroma R/B offset is well past the advocate threshold').toBeGreaterThanOrEqual(4);
+    expect(atMax.offsetPx, 'the R/B offset GROWS from low→max chroma').toBeGreaterThan(
+      atLow.offsetPx + 2,
     );
-    expect(atMax.maxFringe, 'max chroma peak fringe is substantial').toBeGreaterThan(0.15);
 
-    // (3) the split reads as ITS NAME — visible warm/ice RGB-split slivers are
-    // present at the engaged frame at both mid and max chroma (none at rest).
-    // (Raw sliver COUNT is not monotonic — the per-edge mask phase shifts as the
-    // offset crosses stripe boundaries — so growth is asserted on the fringe
-    // MAGNITUDE above, which is monotonic; here we only require the slivers
-    // EXIST when engaged and vanish at chroma 0.)
-    expect(atMid.splitPixels, 'mid chroma shows RGB-split slivers').toBeGreaterThan(0);
-    expect(atMax.splitPixels, 'max chroma shows RGB-split slivers').toBeGreaterThan(0);
+    // (3) magentaFrac — 0 on the r2 attempt at every level — is now genuinely
+    //     present once chroma opens and substantially larger at max than at rest.
+    expect(atMid.magentaFrac, 'mid chroma produces real magenta RGB-split pixels').toBeGreaterThan(
+      0.01,
+    );
+    expect(atMax.magentaFrac, 'max chroma magenta exceeds the rest baseline').toBeGreaterThan(
+      at0.magentaFrac + 0.05,
+    );
 
     inst.dispose();
   });
