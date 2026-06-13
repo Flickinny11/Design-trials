@@ -1,0 +1,70 @@
+{
+  "feature": "crt-warp",
+  "claim": "The surface becomes an old CRT — barrel-curved glass, drifting scanlines, and a slow rolling flicker band — retro phosphor warmth over the real content (content still readable through the curve).",
+  "groundTruthSibling": "datamosh",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "One genuinely dead control and weak/absent headline motion; no placeholder-slab, no clipping, no broken frame. The 'scanlines' frequency knob (40->220) produces zero visible change at native resolution.",
+      "evidence": [
+        "metrics: scanlines control changed=false meanAbsDiff=0.122 changedFrac=0",
+        "crt-warp/after/control-scanlines-low.png vs crt-warp/after/control-scanlines-high.png — visually indistinguishable line density",
+        "metrics: rollSpeed control changed=false meanAbsDiff=0.049 changedFrac=0",
+        "metrics: play-1/2/3 frameDeltaMag=0.08/0.10/0.11 — near-static, no visible rolling band drift"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes at meaningful curvature — it reads convincingly as a CRT barrel-curved glass with scanline ridges and phosphor bloom over the REAL card content. Premium-adjacent; the default-state bulge is a touch subtle.",
+      "evidence": [
+        "crt-warp/after/control-curvature-high.png — strong fish-eye barrel bulge, rounded bezel, content wraps the curve = unmistakable CRT glass",
+        "crt-warp/after/control-scanStrength-high.png — fine horizontal scanline ridges across the curved body = phosphor tube read",
+        "crt-warp/after/play-2.png — amber header, grey rows, blue accent dot all preserved and curved (real card distorted, not a slab)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The card already shows a soft barrel outline and specular bloom at idle, inviting the effect; sweeping curvature makes the CRT bulge obvious and satisfying.",
+      "evidence": [
+        "crt-warp/after/idle.png — card shows subtle barrel-curved edges + corner bloom even at rest",
+        "crt-warp/after/control-curvature-low.png — flat crisp card baseline makes the bulge in -high read as a deliberate transformation"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Partially. curvature is strongly live and scanStrength is visibly live; but scanlines is dead and rollSpeed shows no change in the static capture.",
+      "evidence": [
+        "crt-warp/after/control-curvature-low.png (flat) vs crt-warp/after/control-curvature-high.png (deep barrel) — strong live change, metrics meanAbsDiff=5.178 changedFrac=0.1",
+        "crt-warp/after/control-scanStrength-low.png vs crt-warp/after/control-scanStrength-high.png — scanline ridges clearly more prominent at high",
+        "metrics: scanlines changed=false meanAbsDiff=0.122 — DEAD frequency knob",
+        "metrics: rollSpeed changed=false meanAbsDiff=0.049 — no visible change in frozen capture"
+      ]
+    },
+    "q5_net": {
+      "answer": "Leaning positive on the core effect but blocked by a dead control: the barrel curve is genuine and the real card is preserved, but a user who grabs the scanlines knob gets nothing, and the promised drifting/rolling motion is not visible in the play sequence.",
+      "evidence": [
+        "crt-warp/after/control-curvature-high.png — the strong, satisfying CRT bulge is the win",
+        "metrics: scanlines changed=false; play frameDeltaMag<=0.11 — the dead knob and absent roll band are the letdowns"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "'scanlines' control (line frequency 40->220) is dead — a user dragging it sees zero change in line density, which is an objectively broken control on a CRT effect whose whole identity is scanlines.",
+      "evidence": "metrics: scanlines changed=false meanAbsDiff=0.122 changedFrac=0; crt-warp/after/control-scanlines-low.png vs control-scanlines-high.png are visually indistinguishable"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Headline 'drifting scanlines / slow rolling flicker band' motion is not visible across the play sequence (near-static). May be the cosine sweep pinning near-static phases, but a driving user would expect to see the band travel.",
+      "evidence": "metrics: play-1/2/3 frameDeltaMag=0.08/0.10/0.11; crt-warp/after/play-1.png vs play-2.png vs play-3.png are near-identical"
+    },
+    {
+      "note": "'rollSpeed' shows no change in the frozen capture; expected for a speed knob (manifests only over time), but it leaves two of four controls without verifiable live behavior in the evidence.",
+      "evidence": "metrics: rollSpeed changed=false meanAbsDiff=0.049; crt-warp/after/control-rollSpeed-low.png vs control-rollSpeed-high.png indistinguishable"
+    },
+    {
+      "note": "Default-state curvature is a touch subtle vs the dramatic -high sweep; bumping the default bulge would read more premium out of the box.",
+      "evidence": "crt-warp/after/play-2.png (moderate bulge) vs crt-warp/after/control-curvature-high.png (strong bulge)"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

@@ -1,57 +1,121 @@
 {
-  "startedAt": "2026-06-13T03:11:29.067Z",
-  "updatedAt": "2026-06-13T03:12:54.411Z",
+  "startedAt": "2026-06-13T05:29:47.740Z",
+  "updatedAt": "2026-06-13T05:32:50.318Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 3,
+      "total": 7,
       "backend": "webgl",
-      "startedAt": "2026-06-13T03:11:32.864Z",
-      "finishedAt": "2026-06-13T03:12:54.411Z",
+      "startedAt": "2026-06-13T05:29:52.745Z",
+      "finishedAt": "2026-06-13T05:32:50.318Z",
       "peakConcurrency": 8,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "scroll-fold-scrub": {
-      "name": "scroll-fold-scrub",
-      "category": "scroll",
-      "driver": "scroll",
+    "click-shockwave": {
+      "name": "click-shockwave",
+      "category": "displacement",
+      "driver": "state",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T03:11:39.739Z",
+      "at": "2026-06-13T05:29:59.962Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "scroll-inertia-glide": {
-      "name": "scroll-inertia-glide",
-      "category": "scroll",
-      "driver": "scroll",
+    "crt-warp": {
+      "name": "crt-warp",
+      "category": "displacement",
+      "driver": "time",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T03:11:51.271Z",
+      "at": "2026-06-13T05:30:13.688Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "scroll-orbit-scrub": {
-      "name": "scroll-orbit-scrub",
-      "category": "scroll",
-      "driver": "scroll",
+    "hover-liquid-distort": {
+      "name": "hover-liquid-distort",
+      "category": "displacement",
+      "driver": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [
+        "pointer stimulus pinned for controls"
+      ],
+      "verdict": "pass",
+      "at": "2026-06-13T05:30:25.149Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "hover-displacement-map": {
+      "name": "hover-displacement-map",
+      "category": "displacement",
+      "driver": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [
+        "pointer stimulus pinned for controls"
+      ],
+      "verdict": "pass",
+      "at": "2026-06-13T05:30:25.149Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pixel-sort-sweep": {
+      "name": "pixel-sort-sweep",
+      "category": "displacement",
+      "driver": "time",
       "renders": true,
       "plays": true,
       "controls": true,
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T03:12:01.903Z",
+      "at": "2026-06-13T05:30:33.630Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pointer-glitch-split": {
+      "name": "pointer-glitch-split",
+      "category": "displacement",
+      "driver": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [
+        "pointer stimulus pinned for controls"
+      ],
+      "verdict": "pass",
+      "at": "2026-06-13T05:31:08.525Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "pointer-loupe": {
+      "name": "pointer-loupe",
+      "category": "displacement",
+      "driver": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [
+        "pointer stimulus pinned for controls"
+      ],
+      "verdict": "pass",
+      "at": "2026-06-13T05:31:12.529Z",
       "backend": "webgl",
       "consoleErrors": []
     }
@@ -62,8 +126,8 @@
     "names": []
   },
   "summary": {
-    "total": 3,
-    "pass": 3,
+    "total": 7,
+    "pass": 7,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -72,7 +136,7 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 85,
+    "wallClockSec": 183,
     "peak": {
       "std": 8
     },

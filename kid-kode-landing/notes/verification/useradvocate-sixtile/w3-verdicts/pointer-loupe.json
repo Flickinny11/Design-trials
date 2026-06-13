@@ -1,0 +1,71 @@
+{
+  "feature": "pointer-loupe",
+  "claim": "A magnifier loupe follows the cursor, optically zooming the content beneath it like a glass lens — a crisp magnified inset that tracks the pointer; surrounding card preserved.",
+  "groundTruthSibling": "lens-bulge",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Two blocking defects. (1) No optical magnification anywhere: the content beneath the loupe ring (brass header bar, grey rows) is at the SAME scale as content outside it in every frame — the claim's 'crisp magnified inset' is entirely absent. (2) The primary 'Zoom Factor' control (magnification strength) is dead. Texture-preservation is GOOD (real card content preserved, not a placeholder slab) and content is tack-sharp.",
+      "evidence": [
+        "pointer-loupe/after/play-2.png — header bar passes through the ring at identical thickness; no enlargement",
+        "pointer-loupe/after/play-3.png — grey row beneath the ring is unmagnified",
+        "pointer-loupe/after/control-zoom-low.png vs control-zoom-high.png — visually identical, no magnification at zoom=4",
+        "metrics: control zoom meanAbsDiff=0.003 changedFrac=0 changed=false; glide meanAbsDiff=0 changed=false"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "No. The claim is an optical magnifier loupe with a crisp magnified inset. What renders is a thin circular ring with a faint dark disc fill drifting across the card — it reads as a selection circle or spotlight cursor, not a glass lens. Nothing under the ring is ever scaled up. This fails the reads-as-its-name bar.",
+      "evidence": [
+        "pointer-loupe/after/play-1.png — ring over header, no magnified content inside",
+        "pointer-loupe/after/play-3.png — dark disc + ring, underlying row at native scale",
+        "pointer-loupe/after/control-zoom-high.png — even at max zoom factor the inset is not magnified"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Partially. A faint ring is visible and it tracks across the card between frames, so motion is discoverable, but because there is no magnification the user has no signal that it is supposed to be a lens — the idle ring looks like a stray UI circle rather than inviting a magnify interaction.",
+      "evidence": [
+        "pointer-loupe/after/idle.png — faint ring sits over the second row with no magnified content",
+        "pointer-loupe/after/play-1.png vs play-3.png — ring position moves, confirming it tracks"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "The headline control is dead and one other is dead; only two are weakly live. zoom (magnification, the load-bearing knob) is pixel-identical low to high. glide is fully dead. radius (ring diameter) and rim (ring stroke brightness) do show small visible changes, but none of them introduce any magnification.",
+      "evidence": [
+        "pointer-loupe/after/control-zoom-low.png vs control-zoom-high.png — identical (metrics meanAbsDiff=0.003, changedFrac=0)",
+        "metrics: glide low/mid/high meanAbsDiff=0 changedFrac=0",
+        "pointer-loupe/after/control-radius-low.png vs control-radius-high.png — ring is visibly larger at high",
+        "pointer-loupe/after/control-rim-low.png vs control-rim-high.png — golden ring stroke visibly brighter at high"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The card look is preserved and sharp, but the primitive does not do the one thing its name and claim promise — it never magnifies. It reads as a drifting circle, and the primary Zoom Factor control is dead, so a user cannot even coax magnification out of it. This is the reads-as-claimed failure class.",
+      "evidence": [
+        "pointer-loupe/after/control-zoom-high.png — max zoom shows no magnified inset",
+        "pointer-loupe/after/play-2.png — content under loupe at native scale",
+        "metrics: zoom changed=false, glide changed=false"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "No optical magnification: the loupe never enlarges the content beneath it. Across idle, all play frames, and all control sweeps the header bar and rows pass through the ring at native scale. The claim's core 'crisp magnified inset' does not exist — the effect reads as a drifting selection circle, not a magnifier loupe. Fails the reads-as-its-name bar.",
+      "evidence": "pointer-loupe/after/play-2.png and play-3.png — content under the ring is unmagnified; control-zoom-high.png shows no inset even at zoom=4"
+    },
+    {
+      "issue": "Dead primary control: the 'Zoom Factor' knob (magnification strength) produces no change low→high. control-zoom-low.png and control-zoom-high.png are pixel-identical (metrics meanAbsDiff=0.003, changedFrac=0). The single most important control for a loupe is non-functional. The 'glide' control is also fully dead (meanAbsDiff=0).",
+      "evidence": "metrics: zoom meanAbsDiff=0.003 changedFrac=0 changed=false; glide meanAbsDiff=0 changed=false; control-zoom-low.png ≡ control-zoom-high.png"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The metrics 'changed=false' flag on the radius control is a false negative for human review: the ring is visibly larger at high vs low, but because the ring stroke is thin only a small pixel fraction changes, so it falls under the changedFrac threshold. radius and rim ARE live; only zoom and glide are truly dead.",
+      "evidence": "pointer-loupe/after/control-radius-low.png vs control-radius-high.png — clearly larger ring; metrics radius changedFrac=0.0018"
+    },
+    {
+      "note": "Texture-preservation and sharpness are good — the real card (brass header, grey rows, blue accent dot, beveled body) is preserved and tack-sharp; this is NOT a featureless-placeholder-slab defect. The fix is to add the actual magnification, not to rebuild the subject.",
+      "evidence": "pointer-loupe/after/idle.png — full card content crisp at native resolution"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

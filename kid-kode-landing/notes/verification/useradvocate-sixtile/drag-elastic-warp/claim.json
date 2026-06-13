@@ -1,0 +1,7 @@
+{
+  "name": "drag-elastic-warp",
+  "label": "Grab Strength",
+  "description": "Grab and drag: the surface stretches toward the cursor like elastic skin pinned at its corners, snapping back with a wobble on release.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

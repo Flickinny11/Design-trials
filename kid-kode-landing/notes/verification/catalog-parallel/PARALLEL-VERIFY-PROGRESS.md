@@ -4415,3 +4415,64 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/scroll-orbit-scrub (scroll) render=true play=true ctrl=true
 
 ### Run end 2026-06-13T03:12:54.411Z — pass 3/3 (0 recovered on quiet retry), fail 0, missing 0, wall 85s
+
+## Resumed 2026-06-13T03:54:11.787Z (std 13, glass 0 remaining)
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/drag-elastic-warp (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/flow-warp-idle (displacement) render=true play=true ctrl=true
+- [PASS] std/heat-haze-refract (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-displacement-map (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+## Resumed 2026-06-13T03:59:30.155Z (std 13, glass 0 remaining)
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/flow-warp-idle (displacement) render=true play=true ctrl=true
+- [PASS] std/drag-elastic-warp (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/heat-haze-refract (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-displacement-map (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/hover-liquid-distort (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/lens-bulge (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pixel-sort-sweep (displacement) render=true play=true ctrl=true
+- [PASS] std/pointer-glitch-split (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-twist-warp (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+## Resumed 2026-06-13T04:08:40.853Z (std 1, glass 0 remaining)
+- [PASS] std/pointer-wake-wave (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T04:09:08.769Z — pass 1/1 (0 recovered on quiet retry), fail 0, missing 0, wall 28s
+
+## Resumed 2026-06-13T04:51:46.411Z (std 10, glass 0 remaining)
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-displacement-map (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/heat-haze-refract (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-liquid-distort (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/lens-bulge (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pixel-sort-sweep (displacement) render=true play=true ctrl=true
+
+## Resumed 2026-06-13T04:58:31.184Z (std 10, glass 0 remaining)
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/heat-haze-refract (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-displacement-map (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/hover-liquid-distort (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pixel-sort-sweep (displacement) render=true play=true ctrl=true
+- [PASS] std/pointer-glitch-split (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/lens-bulge (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-wake-wave (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T05:03:26.805Z — pass 10/10 (0 recovered on quiet retry), fail 0, missing 0, wall 296s
+
+## Resumed 2026-06-13T05:29:47.754Z (std 7, glass 0 remaining)
+- [PASS] std/click-shockwave (displacement) render=true play=true ctrl=true
+- [PASS] std/crt-warp (displacement) render=true play=true ctrl=true
+- [PASS] std/hover-liquid-distort (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/hover-displacement-map (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pixel-sort-sweep (displacement) render=true play=true ctrl=true
+- [PASS] std/pointer-glitch-split (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/pointer-loupe (displacement) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+
+### Run end 2026-06-13T05:32:50.319Z — pass 7/7 (0 recovered on quiet retry), fail 0, missing 0, wall 183s

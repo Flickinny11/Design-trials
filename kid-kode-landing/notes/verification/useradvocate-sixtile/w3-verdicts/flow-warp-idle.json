@@ -1,0 +1,65 @@
+{
+  "feature": "flow-warp-idle",
+  "claim": "The surface breathes in a slow current — content drifting along a gentle flow field and back, like a reflection on calm water. Subtle, premium, content preserved.",
+  "groundTruthSibling": "wave-distort-in",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No blocking defects. The real card subject is fully preserved in every frame (dark navy body, amber/gold header bar, blue accent dot top-right, three grey content rows) — this is NOT a featureless tan/blue placeholder slab, so the #1 defect class that killed sibling tiles is cleared. Card content is tack-sharp at native resolution; no clipping, no broken frame. All four controls register changed=true. The only weakness is that the default idle/play animation is extremely subtle (near-frozen stills), not a defect per se but a discoverability note.",
+      "evidence": [
+        "flow-warp-idle/after/idle.png",
+        "flow-warp-idle/after/control-duration-low.png",
+        "metrics: consoleErrors=[] networkErrors=[] backend=webgpu",
+        "metrics: all 4 controls changed=true (drift/flowScale/breathing/duration)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — reads as the claim at premium quality. control-duration-low warps the entire card into a curved trapezoid with bowing, tilted rows, exactly like a reflection rippling on calm water drifting along a flow field. control-breathing-high shows the card swelling/breathing with the accent dot displaced. The distortion is applied to the subject's own texture (header, rows, dot all carried into the warp), which is the load-bearing W3 invariant. Distinctly a flow/drift displacement, not a generic wobble.",
+      "evidence": [
+        "flow-warp-idle/after/control-duration-low.png",
+        "flow-warp-idle/after/control-breathing-high.png",
+        "flow-warp-idle/after/control-duration-high.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Partially. The idle.png is a clean, fully legible card that invites engagement, and the effect is unmistakably premium when parameters move. But at the default setting captured in play-1/2/3 the motion is barely perceptible in a still frame (frameDeltaMag drops 0.33->0.26->0.16 and frames are near-identical to idle). A first-time user glancing at the default tile may not notice the drift. The claim does specify 'subtle,' so this is intended, but it sits at the very edge of discoverability.",
+      "evidence": [
+        "flow-warp-idle/after/idle.png",
+        "flow-warp-idle/after/play-1.png",
+        "flow-warp-idle/after/play-3.png",
+        "metrics: frameDeltaMag play-1=0.33 play-2=0.26 play-3=0.16 (near-frozen)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Yes — controls visibly change the look. duration-low shows a strong trapezoid water-warp vs the near-flat duration-high (cosine sweep lands different animation phases; metrics meanAbsDiff=1.944, changedFrac=0.0504). breathing-low is a calm card with the accent dot present, while breathing-high warps the card and displaces/shrinks the dot (meanAbsDiff=1.43). flowScale and drift differ more subtly between low and high. All four flagged changed=true.",
+      "evidence": [
+        "flow-warp-idle/after/control-duration-low.png",
+        "flow-warp-idle/after/control-duration-high.png",
+        "flow-warp-idle/after/control-breathing-low.png",
+        "flow-warp-idle/after/control-breathing-high.png",
+        "metrics: duration meanAbsDiff=1.944 changedFrac=0.0504; breathing meanAbsDiff=1.43 changedFrac=0.0385"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. The effect is a genuine, content-preserving liquid/flow displacement of the real card, sharp and premium, with all four controls live. It clears the placeholder-slab defect class and reads convincingly as a reflection drifting on calm water. The only reservation is that the default idle motion is so subtle it nearly disappears in a still — a taste/discoverability flag, not a blocking defect, and consistent with the explicitly 'subtle' claim.",
+      "evidence": [
+        "flow-warp-idle/after/control-duration-low.png",
+        "flow-warp-idle/after/control-breathing-high.png",
+        "flow-warp-idle/after/idle.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The default idle/play animation is extremely subtle — play-1/2/3 are near-identical to idle (frameDeltaMag 0.33->0.26->0.16). The premium water-warp is only obvious when controls are pushed (e.g. duration-low). A first-time user on the default tile may not notice any motion. Consistent with the explicitly 'subtle' claim, but consider nudging the default drift/breathing slightly higher so the effect is self-evidently alive on first glance.",
+      "evidence": "flow-warp-idle/after/play-2.png vs flow-warp-idle/after/idle.png (near-identical); metrics: frameDeltaMag play-3=0.16"
+    },
+    {
+      "note": "breathing-high displaces/shrinks the blue accent dot noticeably while the card warps; verify this is intended flow behavior and not the dot being clipped at the displacement boundary.",
+      "evidence": "flow-warp-idle/after/control-breathing-high.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,76 @@
+{
+  "feature": "pointer-wake-wave",
+  "claim": "The cursor carves a wake across the surface — a V of cresting ripples trailing its path, fading like water behind a boat. Card preserved.",
+  "groundTruthSibling": "wave-distort-in",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Multiple blocking defects. (1) NO MOTION: all four play frames are byte-identical (md5 4b0ce859ac92979b1ef92c34a0a75026; metrics frameDeltaMag=0 for play-1/2/3). The pointer-wake animation never animates across the captured sequence. (2) THREE DEAD CONTROLS: trailLength, waveSpeed and decayRate are byte-identical across low/mid/high (md5 4b5ce3d53827b48f2c09d0317746d8cc; metrics changed=false, meanAbsDiff=0). Only amplitude is live. NOT a placeholder-slab defect — the real card content (brass header, blue dot, grey rows) is preserved in every frame, and content is tack-sharp.",
+      "evidence": [
+        "metrics: play-1/play-2/play-3 frameDeltaMag=0",
+        "pointer-wake-wave/after/idle.png == pointer-wake-wave/after/play-2.png (md5 4b0ce859ac92979b1ef92c34a0a75026, identical)",
+        "metrics: controls trailLength/waveSpeed/decayRate changed=false meanAbsDiff=0",
+        "pointer-wake-wave/after/control-trailLength-low.png == control-waveSpeed-high.png (md5 4b5ce3d53827b48f2c09d0317746d8cc, identical)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Does NOT read as the claim at premium quality. The claim is a moving V of cresting ripples trailing the cursor, fading like a boat wake. The play sequence shows zero motion, so the defining trailing-wake behavior is absent. The only visible distortion (in the amplitude sweep) is a single static curved refraction arc that bends the text rows — a generic lens/bulge bend, not a V, not a trail, not a fade. The real card look IS preserved and distorted (passes the texture-preservation invariant), but the effect is not legible as a wake.",
+      "evidence": [
+        "pointer-wake-wave/after/control-amplitude-high.png shows a single static curved refraction arc bending the rows, not a V of trailing ripples",
+        "pointer-wake-wave/after/play-2.png shows no wake motion vs idle.png",
+        "metrics: play frames frameDeltaMag=0 — no trailing-ripple animation"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Weakly discoverable and misleading. idle.png shows a clean, legible card with only a faint static sheen — it does not telegraph a wake. When driven, the effect produces no motion (play frames identical), so a user toggling it would assume it is broken. The amplitude knob is the only way to see anything happen.",
+      "evidence": [
+        "pointer-wake-wave/after/idle.png clean card, faint static central sheen only",
+        "pointer-wake-wave/after/play-1.png identical to idle.png (md5 4b0ce859)",
+        "pointer-wake-wave/after/control-amplitude-low.png vs control-amplitude-high.png is the only visible state change"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Mostly UNresponsive. Only 1 of 4 controls (amplitude) visibly changes the look: amplitude-low is near-flat with a soft central highlight while amplitude-high shows a pronounced curved displacement arc bending the rows (metrics pixelDiff meanAbsDiff=1.112). The other three controls — trailLength, waveSpeed, decayRate — are completely dead (byte-identical low/mid/high, meanAbsDiff=0). trailLength and waveSpeed are exactly the knobs that would shape a wake, and both are inert.",
+      "evidence": [
+        "pointer-wake-wave/after/control-amplitude-low.png (near-flat) vs control-amplitude-high.png (strong curved displacement bending rows)",
+        "metrics: amplitude changed=true meanAbsDiff=1.112",
+        "metrics: trailLength/waveSpeed/decayRate changed=false meanAbsDiff=0",
+        "control-trailLength-low.png == control-trailLength-high.png == control-waveSpeed-high.png (md5 4b5ce3d5)"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The card content is preserved and one control is live, but the primitive fails on its defining behavior: it produces no motion at all (the play sequence is frozen), it does not read as a trailing wake, and three of its four controls — including the two most wake-relevant ones — are dead. A user would conclude the effect is broken.",
+      "evidence": [
+        "pointer-wake-wave/after/play-1.png == play-2.png == play-3.png == idle.png (md5 4b0ce859, frameDeltaMag=0)",
+        "metrics: 3 of 4 controls changed=false",
+        "pointer-wake-wave/after/control-amplitude-high.png shows a static bulge, not a V wake"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "No animation / no wake: all four play frames (idle, play-1, play-2, play-3) are byte-identical and frameDeltaMag=0, so the cursor-driven trailing wake never moves. The primitive's defining behavior does not render over time.",
+      "evidence": "pointer-wake-wave/after/play-1.png == play-2.png == play-3.png == idle.png (md5 4b0ce859ac92979b1ef92c34a0a75026); metrics frameDeltaMag=0 for all play frames"
+    },
+    {
+      "issue": "Does not read as the claim: even in the one live state (amplitude-high) the effect is a single static curved refraction/bulge arc, not a 'V of cresting ripples trailing the cursor and fading like a boat wake'. No V, no trail, no fade.",
+      "evidence": "pointer-wake-wave/after/control-amplitude-high.png (static curved arc bending rows, no trailing ripples)"
+    },
+    {
+      "issue": "Three of four controls are dead: trailLength, waveSpeed and decayRate produce byte-identical low/mid/high frames (changed=false, meanAbsDiff=0). The two controls that should shape a wake (trailLength, waveSpeed) are inert.",
+      "evidence": "metrics: trailLength/waveSpeed/decayRate changed=false meanAbsDiff=0; control-trailLength-low.png == control-trailLength-high.png == control-waveSpeed-high.png (md5 4b5ce3d53827b48f2c09d0317746d8cc)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Positive: the real card content (brass header bar, blue accent dot, grey text rows) is preserved and tack-sharp across all frames — this is NOT the placeholder-slab defect class that killed sibling tiles. The amplitude control does produce a genuine, sharp displacement of the real content.",
+      "evidence": "pointer-wake-wave/after/idle.png and control-amplitude-high.png both show the real card content being distorted, not a featureless slab"
+    },
+    {
+      "note": "The provided ground-truth sibling catalog frame wave-distort-in.png is itself a featureless tan slab (an older capture) and is not a useful premium reference; the tile under review is actually superior to it on content preservation.",
+      "evidence": "catalog-parallel/frames/wave-distort-in.png shows a featureless tan deformed slab"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

@@ -164,17 +164,30 @@ import { wavePrimitive } from './wave';
 import { waveCrossPrimitive } from './wave-cross';
 import { wheatFieldPrimitive } from './wheat-field';
 import { windRipplePrimitive } from './wind-ripple';
+import { clickShockwavePrimitive } from './click-shockwave';
+import { crtWarpPrimitive } from './crt-warp';
 import { crumblePrimitive } from './crumble';
 import { crumbleToParticlesPrimitive } from './crumble-to-particles';
 import { datamoshPrimitive } from './datamosh';
 import { displacementTransitionPrimitive } from './displacement-transition';
 import { dissolveBurnPrimitive } from './dissolve-burn';
+import { dragElasticWarpPrimitive } from './drag-elastic-warp';
+import { flowWarpIdlePrimitive } from './flow-warp-idle';
 import { glitchDisplacePrimitive } from './glitch-displace';
+import { heatHazeRefractPrimitive } from './heat-haze-refract';
+import { hoverDisplacementMapPrimitive } from './hover-displacement-map';
+import { hoverLiquidDistortPrimitive } from './hover-liquid-distort';
+import { lensBulgePrimitive } from './lens-bulge';
 import { liquefyRevealPrimitive } from './liquefy-reveal';
 import { meltPrimitive } from './melt';
 import { origamiFoldPrimitive } from './origami-fold';
 import { paintSpreadPrimitive } from './paint-spread';
 import { pixelDissolvePrimitive } from './pixel-dissolve';
+import { pixelSortSweepPrimitive } from './pixel-sort-sweep';
+import { pointerGlitchSplitPrimitive } from './pointer-glitch-split';
+import { pointerLoupePrimitive } from './pointer-loupe';
+import { pointerTwistWarpPrimitive } from './pointer-twist-warp';
+import { pointerWakeWavePrimitive } from './pointer-wake-wave';
 import { rippleDisplacePrimitive } from './ripple-displace';
 import { shatterPrimitive } from './shatter';
 import { shatterAssemblePrimitive } from './shatter-assemble';
@@ -504,17 +517,30 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   waveCrossPrimitive,
   wheatFieldPrimitive,
   windRipplePrimitive,
+  clickShockwavePrimitive,
+  crtWarpPrimitive,
   crumblePrimitive,
   crumbleToParticlesPrimitive,
   datamoshPrimitive,
   displacementTransitionPrimitive,
   dissolveBurnPrimitive,
+  dragElasticWarpPrimitive,
+  flowWarpIdlePrimitive,
   glitchDisplacePrimitive,
+  heatHazeRefractPrimitive,
+  hoverDisplacementMapPrimitive,
+  hoverLiquidDistortPrimitive,
+  lensBulgePrimitive,
   liquefyRevealPrimitive,
   meltPrimitive,
   origamiFoldPrimitive,
   paintSpreadPrimitive,
   pixelDissolvePrimitive,
+  pixelSortSweepPrimitive,
+  pointerGlitchSplitPrimitive,
+  pointerLoupePrimitive,
+  pointerTwistWarpPrimitive,
+  pointerWakeWavePrimitive,
   rippleDisplacePrimitive,
   shatterPrimitive,
   shatterAssemblePrimitive,

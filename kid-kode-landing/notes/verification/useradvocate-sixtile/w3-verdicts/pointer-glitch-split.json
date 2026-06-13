@@ -1,0 +1,73 @@
+{
+  "feature": "pointer-glitch-split",
+  "claim": "The cursor slices the surface into glitch bands — RGB-split slivers shearing out of alignment around the pointer, snapping clean when it leaves. Card content stays legible between/under the bands.",
+  "groundTruthSibling": "datamosh",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Two real defects. (1) The 'chroma' control is DEAD — chroma-low and chroma-high are pixel-identical (metrics: chroma pixelDiff meanAbsDiff=0, changedFrac=0, changed=false). This is the knob that drives the RGB-split amount, the heart of the claim. (2) No RGB chroma split is visible in ANY frame — bands are plain monochrome grey slices with zero red/cyan/blue fringing (metrics: magentaFrac=0 in every frame, effSat flat at 0.11-0.13, satPixels flat ~5200-5600). The card itself is NOT a placeholder slab and content is sharp.",
+      "evidence": [
+        "pointer-glitch-split/after/control-chroma-low.png",
+        "pointer-glitch-split/after/control-chroma-high.png",
+        "metrics: chroma control changed=false, meanAbsDiff=0, changedFrac=0",
+        "metrics: play-1/2/3 magentaFrac=0, effSat=0.11-0.12 (no color split)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Only PARTIALLY. It reads as a monochrome horizontal band-SHEAR/slice (rows sliced and offset at band boundaries), which is half the claim. But the defining 'RGB-split slivers' part does not read at all — there is no chromatic aberration / color fringing anywhere, so it does not deliver the promised premium RGB-glitch look. A user told 'RGB-split slivers' gets grey slicing instead.",
+      "evidence": [
+        "pointer-glitch-split/after/play-2.png",
+        "pointer-glitch-split/after/play-3.png",
+        "pointer-glitch-split/after/control-flicker-low.png",
+        "metrics: effSat 0.11-0.13 and magentaFrac=0 across all frames = no RGB split"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes, the idle state is a clean, fully legible card that snaps clean, and the band-shear motion when engaged is obvious (rows visibly shove out of alignment). The slice effect is discoverable; only the color component is missing.",
+      "evidence": [
+        "pointer-glitch-split/after/idle.png",
+        "pointer-glitch-split/after/control-flicker-low.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Mixed. THREE of four controls live: bands (bands-low strongly sheared vs bands-high settled, changedFrac=0.017), shear (shear-low neutral vs shear-high whole-card displaced, changedFrac=0.022), flicker (flicker-low vs -high differ, changedFrac=0.046). But chroma is DEAD (changedFrac=0, pixel-identical), and it is the most claim-critical knob.",
+      "evidence": [
+        "pointer-glitch-split/after/control-bands-low.png",
+        "pointer-glitch-split/after/control-bands-high.png",
+        "pointer-glitch-split/after/control-shear-high.png",
+        "pointer-glitch-split/after/control-chroma-low.png",
+        "metrics: chroma changed=false vs bands/shear/flicker changed=true"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The texture-preserving slice mechanism is real and most controls work, so this is not a slab failure — but the headline of the claim (RGB-split slivers) is entirely absent and the chroma control that should produce it is stone dead. A discerning user is shorted the premium glitch look they were promised.",
+      "evidence": [
+        "pointer-glitch-split/after/play-3.png",
+        "pointer-glitch-split/after/control-chroma-high.png",
+        "metrics: magentaFrac=0 + chroma changed=false"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "The 'chroma' control is dead — sweeping it 0 to 0.05 produces zero pixel change, and it is the knob that drives the RGB-split that the primitive is named for. Wire the chroma parameter into a real per-channel offset.",
+      "evidence": "metrics: chroma pixelDiff meanAbsDiff=0, changedFrac=0, changed=false; control-chroma-low.png and control-chroma-high.png are pixel-identical"
+    },
+    {
+      "issue": "No RGB-split / chromatic aberration is visible in any frame — the bands are monochrome grey slices, so the effect does not read as its claimed 'RGB-split slivers'. Add visible per-channel R/G/B offset on the sheared bands.",
+      "evidence": "metrics: magentaFrac=0 across idle/play-1/2/3 and all controls; effSat flat 0.11-0.13; play-2.png/play-3.png show grey slicing with no color fringe"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The 'shear' control reads as a global whole-card translation rather than per-band sliver shear; band-level differential offset would feel more like true datamosh-grade glitch.",
+      "evidence": "pointer-glitch-split/after/control-shear-high.png vs control-shear-low.png"
+    },
+    {
+      "note": "Per-frame frameDeltaMag is low (0.45-1.65), so the motion is fairly subtle frame-to-frame; a more aggressive snap could feel more premium.",
+      "evidence": "metrics: play-1 frameDeltaMag=0.45, play-2=1.26, play-3=1.65"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

@@ -1,0 +1,81 @@
+{
+  "feature": "pixel-sort-sweep",
+  "claim": "A sorting wave sweeps the surface — content smearing into directional streaks along the wavefront, resolving crisp behind it — the glitch-art pixel-sort look, tamed. The card resolves legible behind the sweep.",
+  "groundTruthSibling": "datamosh",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Two real defects. (1) The 'streak' control is DEAD: control-streak-low.png and control-streak-high.png are pixel-identical (metrics: streak pixelDiff.meanAbsDiff=0, changedFrac=0, changed=false) — a control literally named 'streak' does nothing. (2) The animation barely moves: play-2 and play-3 are nearly indistinguishable from idle, only a faint smudge above the brass bar (metrics: play-1 frameDeltaMag=0.15, play-2=0.2, play-3=0.12 — almost no motion). The card content itself is preserved and sharp (no placeholder-slab defect, no clipping, frame intact).",
+      "evidence": [
+        "pixel-sort-sweep/after/control-streak-low.png",
+        "pixel-sort-sweep/after/control-streak-high.png",
+        "pixel-sort-sweep/after/play-2.png",
+        "pixel-sort-sweep/after/play-3.png",
+        "metrics: streak pixelDiff meanAbsDiff=0 changedFrac=0 changed=false",
+        "metrics: play frameDeltaMag 0.15/0.2/0.12 — near-static"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "No. The claim is a sorting WAVE that SWEEPS ACROSS the surface with directional streaks, resolving crisp behind it. What actually renders is a localized jagged tear pinned to the LEFT edge of the card (clearest in control-speed-low.png — black combing teeth down the left side). It never travels across the card, there is no traveling wavefront, and there are no horizontal directional pixel-sort streaks. It reads as accidental edge corruption / torn fringe, not a designed pixel-sort sweep. Does not meet the premium bar and does not outclass DOM glitch effects.",
+      "evidence": [
+        "pixel-sort-sweep/after/control-speed-low.png",
+        "pixel-sort-sweep/after/play-1.png",
+        "pixel-sort-sweep/after/play-2.png",
+        "metrics: effSat 0.12-0.13 and frameDeltaMag<=0.2 — near-static, low-energy effect"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Weakly. idle.png shows a clean, legible, inviting card. But in the actual play frames the effect is nearly invisible — play-2 and play-3 differ from idle only by a faint smudge, and play-1's only visible action is a small tear at the left edge. A user would barely notice anything is happening; the most visible distortion only appears in the control-sweep frames (control-speed-low.png), not in normal playback.",
+      "evidence": [
+        "pixel-sort-sweep/after/idle.png",
+        "pixel-sort-sweep/after/play-1.png",
+        "pixel-sort-sweep/after/play-3.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Largely no. 'streak' is completely dead (control-streak-low.png === control-streak-high.png, metrics changedFrac=0). 'speed' is barely live — control-speed-low.png shows more left-edge combing than control-speed-high.png but the metric delta is tiny (changedFrac=0.0065). 'bandWidth' is marginally live (changedFrac=0.011); control-bandWidth-low.png and -high.png are near-identical to the eye. Two of three controls are effectively non-responsive.",
+      "evidence": [
+        "pixel-sort-sweep/after/control-streak-low.png",
+        "pixel-sort-sweep/after/control-streak-high.png",
+        "pixel-sort-sweep/after/control-speed-low.png",
+        "pixel-sort-sweep/after/control-speed-high.png",
+        "metrics: streak changedFrac=0; speed changedFrac=0.0065; bandWidth changedFrac=0.011"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The card is preserved (the one thing that goes right), but the effect does not read as a pixel-sort sweep — it is a static-ish left-edge tear with no traveling wavefront and no directional streaks. The 'streak' control is dead and 'speed'/'bandWidth' are barely live. This is below the premium bar and would not satisfy a discerning user.",
+      "evidence": [
+        "pixel-sort-sweep/after/control-speed-low.png",
+        "pixel-sort-sweep/after/play-1.png",
+        "pixel-sort-sweep/after/control-streak-high.png",
+        "metrics: play frameDeltaMag<=0.2; streak changedFrac=0"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Does-not-read-as-claimed: there is no traveling pixel-sort wavefront. The distortion is a localized jagged tear pinned to the card's LEFT edge that never sweeps across, with no directional streaks and no 'crisp resolve behind it'. It reads as accidental edge corruption, not a glitch-art pixel-sort sweep.",
+      "evidence": "pixel-sort-sweep/after/control-speed-low.png (black combing teeth confined to the left edge); play-1/play-2/play-3 show the tear stays at the left edge and never travels; metrics frameDeltaMag<=0.2 across play frames"
+    },
+    {
+      "issue": "Dead control: the 'streak' knob produces zero visible change across its full range — low and high frames are pixel-identical.",
+      "evidence": "pixel-sort-sweep/after/control-streak-low.png vs control-streak-high.png (identical); metrics: streak pixelDiff meanAbsDiff=0, changedFrac=0, changed=false"
+    },
+    {
+      "issue": "Effect is near-static during normal playback: play-2 and play-3 are almost indistinguishable from the clean idle frame, so a user would not perceive an animation is occurring.",
+      "evidence": "pixel-sort-sweep/after/play-2.png and play-3.png vs idle.png; metrics: frameDeltaMag 0.15/0.2/0.12"
+    }
+  ],
+  "flags": [
+    {
+      "note": "'speed' and 'bandWidth' controls are technically live but their visible effect is so small (changedFrac 0.0065 and 0.011) that a user would struggle to tell low from high; worth strengthening even if the wavefront defect is fixed.",
+      "evidence": "pixel-sort-sweep/after/control-bandWidth-low.png vs control-bandWidth-high.png (near-identical); metrics speed/bandWidth changedFrac 0.0065/0.011"
+    },
+    {
+      "note": "Overall card luminance is very dark (meanLuma ~16.5, effSat ~0.13), which makes any subtle distortion even harder to see against the near-black surface.",
+      "evidence": "metrics: idle meanLuma=16.5 effSat=0.13"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

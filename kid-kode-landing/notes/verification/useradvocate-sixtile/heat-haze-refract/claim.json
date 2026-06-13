@@ -1,0 +1,7 @@
+{
+  "name": "heat-haze-refract",
+  "label": "Duration",
+  "description": "A column of heat shimmer rises across the surface — the image wavering through refracting air, like asphalt in August.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

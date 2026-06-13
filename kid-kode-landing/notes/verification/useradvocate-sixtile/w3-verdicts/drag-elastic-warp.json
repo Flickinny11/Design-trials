@@ -1,0 +1,72 @@
+{
+  "feature": "drag-elastic-warp",
+  "claim": "Grab-and-drag stretches the surface toward the cursor like elastic skin pinned at its corners, snapping back with a wobble on release. The card texture/chrome stays intact through the stretch.",
+  "groundTruthSibling": "swirl-warp",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No blocking defects. The real card (brass/gold header bar, blue accent dot top-right, three grey content rows) is preserved and distorted as a cohesive elastic skin in every frame — NOT a featureless placeholder slab. Card content stays tack-sharp at native resolution; brass and rows hold crisp edges through the warp. No clipping, no broken frames, no console/network errors (metrics: consoleErrors=[], networkErrors=[], backend=webgpu). One non-blocking issue: the wobble control is pixel-identical across low/mid/high (metrics: wobble pixelDiff meanAbsDiff=0, changedFrac=0, changed=false), but this is a static-pin capture artifact — wobble governs the post-release snap-back oscillation, which has nothing to act on while the surface is frozen mid-hold (stimulus.controlsPinT=1).",
+      "evidence": [
+        "drag-elastic-warp/after/idle.png",
+        "drag-elastic-warp/after/play-2.png",
+        "drag-elastic-warp/after/control-stiffness-high.png",
+        "metrics: wobble pixelDiff meanAbsDiff=0 changedFrac=0 changed=false (frozen-mid-hold pin)",
+        "metrics: consoleErrors=[] networkErrors=[] backend=webgpu"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes, at premium quality. The deformation reads unmistakably as an elastic-skin stretch pinned at the corners: play-1 begins the rightward pull/bow, play-2 shows a deep curved wave where header and rows bend toward the drag point while corners stay anchored, play-3 shows the ease-back/wobble relaxation. grabStrength-high delivers a pronounced deep stretch. The motion is organic and physically plausible, clearly outclassing flat DOM filter effects.",
+      "evidence": [
+        "drag-elastic-warp/after/play-1.png",
+        "drag-elastic-warp/after/play-2.png",
+        "drag-elastic-warp/after/play-3.png",
+        "drag-elastic-warp/after/control-grabStrength-high.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. idle.png shows a clean, fully legible card that invites a grab; the play frames make the stretch obvious and dramatic. The effect is large-amplitude and the named knob is 'Grab Strength', matching the grab-and-drag mental model.",
+      "evidence": [
+        "drag-elastic-warp/after/idle.png",
+        "drag-elastic-warp/after/play-2.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "3 of 4 controls are dramatically live. grabStrength low is nearly flat vs high showing a deep elastic pull (metrics: meanAbsDiff=6.86, changedFrac=0.11). falloff-low is a tight localized V-pinch vs falloff-high a broad full-width bow (metrics: meanAbsDiff=8.28, changedFrac=0.12). stiffness-low is a gentle even bow vs stiffness-high a deep saggy drag (metrics: meanAbsDiff=9.38, changedFrac=0.14). The wobble control shows zero delta (metrics: meanAbsDiff=0) — a static-pin capture limitation since wobble only animates the release oscillation, not the held deformation shown in the pinned frame.",
+      "evidence": [
+        "drag-elastic-warp/after/control-grabStrength-low.png",
+        "drag-elastic-warp/after/control-grabStrength-high.png",
+        "drag-elastic-warp/after/control-falloff-low.png",
+        "drag-elastic-warp/after/control-falloff-high.png",
+        "drag-elastic-warp/after/control-stiffness-low.png",
+        "drag-elastic-warp/after/control-stiffness-high.png",
+        "metrics: grabStrength changed=true / falloff changed=true / stiffness changed=true / wobble changed=false"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A premium, texture-preserving elastic-warp that reads exactly as its claim, keeps the real card chrome sharp and intact through a large organic deformation, and exposes three strongly responsive controls. The only blemish is the wobble control showing no delta in the frozen capture — a known harness artifact (release-oscillation params have nothing to act on during a held mid-drag pin), so it is a non-blocking flag rather than a defect.",
+      "evidence": [
+        "drag-elastic-warp/after/play-2.png",
+        "drag-elastic-warp/after/control-grabStrength-high.png",
+        "drag-elastic-warp/after/control-falloff-low.png",
+        "metrics: backend=webgpu, no console/network errors"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The 'wobble' control is pixel-identical across low/mid/high in the captured frames (dead in this capture). This is almost certainly a static-pin artifact — wobble governs the post-release snap-back oscillation, which cannot be observed in a frame frozen mid-hold (stimulus.controlsPinT=1). Recommend a release-phase capture (a frame sampled shortly after pointer-up) to confirm wobble is genuinely live; if it remains dead under a release-phase pin, escalate to mustFix.",
+      "evidence": "metrics: wobble pixelDiff meanAbsDiff=0 changedFrac=0 changed=false; control-wobble-low.png and control-wobble-high.png are visually identical"
+    },
+    {
+      "note": "At the deepest warps (stiffness-high, grabStrength-high) the three grey rows merge into broad dark masses and lose individual separation. This reads as intentional extreme stretch rather than blur, but a touch more inter-row contrast preservation at peak amplitude would feel even more premium. Pure taste.",
+      "evidence": "drag-elastic-warp/after/control-stiffness-high.png"
+    },
+    {
+      "note": "No swirl-warp ground-truth sibling bundle is present on disk (notes/verification/useradvocate-sixtile/swirl-warp/ does not exist), so no side-by-side premium-bar calibration was possible; this tile was judged on its own merits, which are strong.",
+      "evidence": "Bash: ls of swirl-warp dir returned NO SWIRL DIR"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

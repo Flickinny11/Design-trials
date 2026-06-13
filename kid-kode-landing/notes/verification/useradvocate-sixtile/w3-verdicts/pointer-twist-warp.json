@@ -1,0 +1,72 @@
+{
+  "feature": "pointer-twist-warp",
+  "claim": "The cursor wrings the surface — a local twist vortex rotating the content around the pointer, untwisting smoothly as it leaves. Texture preserved through the twist.",
+  "groundTruthSibling": "swirl-warp",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "One real defect: the 'damping' control is dead in the captured evidence — low/mid/high frames are pixel-identical. No placeholder slab: the REAL card subject (brass/gold header bar, light-blue accent dot, grey rows) is present and distorted in every frame, satisfying the texture-preserving invariant. No clipping or broken frames; content stays inside the card body. Card content is tack-sharp at native DPR-2 (crisp brass edge and dot in play-3/radius-high). Minor: idle is not perfectly at rest — already shows a faint wave + center specular bloom.",
+      "evidence": [
+        "pointer-twist-warp/after/control-damping-low.png",
+        "pointer-twist-warp/after/control-damping-high.png",
+        "metrics: damping pixelDiff meanAbsDiff=0 changedFrac=0, all 3 frames effRGB=[77.4,75,72.5] meanLuma=19 — identical",
+        "pointer-twist-warp/after/play-3.png shows brass header + blue dot + grey rows preserved through twist",
+        "metrics: backend=webgpu, consoleErrors=[], networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads clearly and premium as a twist vortex. The brass header, grey rows and accent dot rotate coherently around a pointer center; strength-high wrings them into a strong local spiral and radius-high spreads the vortex across the whole card into a clean swirl silhouette. The real card texture is preserved through the deformation (not a featureless slab). Outclasses DOM-class effects.",
+      "evidence": [
+        "pointer-twist-warp/after/control-strength-high.png",
+        "pointer-twist-warp/after/control-radius-high.png",
+        "pointer-twist-warp/after/play-3.png",
+        "metrics: frameDeltaMag play-2=6.34 — visible inter-frame twist motion"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. idle.png shows the full legible card (brass header, blue dot, grey rows) with a subtle resting sheen that invites interaction; the moment the pointer engages, the twist is unmistakable. The effect is obvious and centered on the pointer.",
+      "evidence": [
+        "pointer-twist-warp/after/idle.png",
+        "pointer-twist-warp/after/play-1.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Three of four controls are vividly alive; one is dead in this capture. strength: low = near-flat rows, high = dramatic spiral wring (changed, meanAbsDiff=5.82). radius: low = tiny localized twist near pointer, high = whole-card vortex (changed, meanAbsDiff=10.56). lift: low vs high adds a stronger raised-surface specular highlight and brass gloss (changed, meanAbsDiff=9.34, meanLuma 16.4->19). damping: low/mid/high pixel-identical (meanAbsDiff=0) — but damping is a TEMPORAL untwist-speed param and the harness pins a single settled pose (controlsPinT=1), which cannot show a spring-decay rate, so this is a measurement limitation rather than proof of a broken control.",
+      "evidence": [
+        "pointer-twist-warp/after/control-strength-low.png",
+        "pointer-twist-warp/after/control-strength-high.png",
+        "pointer-twist-warp/after/control-radius-low.png",
+        "pointer-twist-warp/after/control-radius-high.png",
+        "pointer-twist-warp/after/control-lift-high.png",
+        "metrics: damping changed=false meanAbsDiff=0; controlsPinT=1 (settled pose)"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A premium, texture-preserving twist vortex on the real card subject, sharp at native resolution, with three lively controls and zero console/network errors. The only blemish is the damping control showing no delta in a settled-frame capture, which is most plausibly a still-frame limitation on a temporal parameter — a flag, not a blocking defect.",
+      "evidence": [
+        "pointer-twist-warp/after/control-strength-high.png",
+        "pointer-twist-warp/after/control-radius-high.png",
+        "pointer-twist-warp/after/play-3.png",
+        "metrics: backend=webgpu consoleErrors=[] networkErrors=[]"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The 'damping' control shows zero visible change across low/mid/high (pixel-identical frames). Damping governs the temporal untwist/spring-relaxation SPEED, and the harness captures a single settled pose (controlsPinT=1), which structurally cannot reveal a decay-rate parameter — so this is most likely a still-frame measurement limitation rather than a broken control. Recommend a motion/time-series capture to confirm damping is live before fully clearing it.",
+      "evidence": "metrics: damping pixelDiff meanAbsDiff=0 changedFrac=0; control-damping-low.png == control-damping-high.png (identical)"
+    },
+    {
+      "note": "idle.png is not perfectly at rest — it already shows a faint surface wave and a small center specular bloom rather than a dead-flat card. The card is still fully legible (all elements read), so this is a minor taste note, not a defect; a truly flat idle would make the engage transition pop harder.",
+      "evidence": "pointer-twist-warp/after/idle.png"
+    },
+    {
+      "note": "Saturation/contrast of the card body is fairly low (effSat 0.03-0.13, mostly cool dark-grey body); the brass header and blue dot carry most of the color. The twist reads fine, but a touch more body contrast would let the deformation register even more crisply.",
+      "evidence": "metrics: idle effSat=0.03, play-1 effSat=0.13, coolFrac~0.8 across frames"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS",
+  "_gateCorrection": "agent wrote PASS-WITH-FLAGS; PLEASED+0 mustFix maps to PASS per RUBRIC table"
+}

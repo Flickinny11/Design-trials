@@ -1,0 +1,7 @@
+{
+  "name": "pointer-wake-wave",
+  "label": "Wake Amplitude",
+  "description": "The cursor carves a wake across the surface — a V of cresting ripples trailing its path, fading like water behind a boat.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

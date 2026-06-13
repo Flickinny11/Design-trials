@@ -1,0 +1,463 @@
+{
+  "summary": "Fresh-context user-advocate re-review of 10 fixed W3 displacement tiles vs their prior BLOCKED mustFixes",
+  "agentCount": 10,
+  "logs": [
+    "SHIP 3/10: heat-haze-refract, lens-bulge, pointer-wake-wave",
+    "BLOCKED: hover-liquid-distort, pointer-glitch-split, pixel-sort-sweep, hover-displacement-map, click-shockwave, crt-warp, pointer-loupe"
+  ],
+  "result": {
+    "ship": [
+      "heat-haze-refract",
+      "lens-bulge",
+      "pointer-wake-wave"
+    ],
+    "blocked": [
+      "hover-liquid-distort",
+      "pointer-glitch-split",
+      "pixel-sort-sweep",
+      "hover-displacement-map",
+      "click-shockwave",
+      "crt-warp",
+      "pointer-loupe"
+    ],
+    "verdicts": [
+      {
+        "tile": "hover-liquid-distort",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "viscosity-control-dead",
+            "resolved": false,
+            "evidence": "NOT resolved. control-viscosity-low.png and control-viscosity-high.png are pixel-identical to each other AND to the clean idle card (flat resting card, no well). metrics: viscosity pixelDiff meanAbsDiff=0, changedFrac=0, changed=false; effRGB identical [63.8,60.3,56.3] across low/mid/high. The namesake control still produces zero visible change."
+          }
+        ],
+        "newMustFixes": [
+          {
+            "issue": "REGRESSION: the four controls that were LIVE in the prior bundle (amplitude, swirl, spread, rings) are now ALL dead. Every control sweep low->high renders the identical undistorted resting card; no liquid well appears at any value. The fix attempt broke the previously-working controls instead of wiring the one dead one — now ALL FIVE controls are inert.",
+            "evidence": "metrics: amplitude/swirl/spread/rings each pixelDiff meanAbsDiff=0, changedFrac=0, changed=false, effRGB identical [63.8,60.3,56.3] low/mid/high. Visually: control-amplitude-low.png, control-amplitude-high.png, control-swirl-high.png, control-spread-high.png, control-rings-high.png are all pixel-identical to the clean idle card with zero distortion. Prior verdict had these LIVE (amplitude meanAbsDiff=1.622, swirl 1.472, spread 1.629). Compare ground-truth sibling drag-elastic-warp/after/metrics.json: grabStrength meanAbsDiff=6.861/changed=true, falloff 8.281/true, stiffness 9.381/true."
+          },
+          {
+            "issue": "Effect strength dropped below the prior bundle: inter-play motion is now faint. frameDeltaMag between play frames is 0.33/0.83/0.85 vs the prior bundle's 1.34/1.39/1.28 and the passing sibling's 1.94/6.85/3.98. The liquid well is barely-moving and weak, weakening discoverability of the named distortion under sweep/hover.",
+            "evidence": "metrics: play-1/2/3 frameDeltaMag=0.33/0.83/0.85 (this bundle) vs drag-elastic-warp play frameDeltaMag=1.94/6.85/3.98. hover-liquid-distort/after/play-1.png shows only a small soft well lower-right; the distortion is mild relative to the passing sibling."
+          }
+        ],
+        "citedFrames": [
+          "hover-liquid-distort/after/idle.png",
+          "hover-liquid-distort/after/play-1.png",
+          "hover-liquid-distort/after/play-2.png",
+          "hover-liquid-distort/after/play-3.png",
+          "hover-liquid-distort/after/control-viscosity-low.png",
+          "hover-liquid-distort/after/control-viscosity-high.png",
+          "hover-liquid-distort/after/control-amplitude-low.png",
+          "hover-liquid-distort/after/control-amplitude-high.png",
+          "hover-liquid-distort/after/control-swirl-high.png",
+          "hover-liquid-distort/after/control-spread-high.png",
+          "hover-liquid-distort/after/control-rings-high.png",
+          "hover-liquid-distort/after/metrics.json",
+          "drag-elastic-warp/after/metrics.json"
+        ],
+        "flags": [
+          "GOOD/RESOLVED FLAG: the prior idle-not-settled FLAG is now fixed — hover-liquid-distort/after/idle.png shows a crisp, fully-settled, legible card (amber header, four grey rows, blue dot, rounded body) with no distortion well at rest. Tack-sharp at DPR2, no grain, card texture preserved (no slab). This is a genuine improvement but cannot offset the unresolved mustFix and the four new dead controls.",
+          "The play frames themselves do read as a liquid well with the card's own texture riding the displacement (no untextured slab at any phase) — the core texture-preserving invariant still holds. The failure is in the controls and effect strength, not in slab/clipping/legibility."
+        ],
+        "summary": "BLOCKED — regression, not a fix. The sole prior mustFix (dead 'viscosity' control) is NOT resolved: control-viscosity-low/high remain pixel-identical (meanAbsDiff=0, changed=false). Worse, the four controls that were LIVE in the prior bundle (amplitude, swirl, spread, rings) are now ALSO dead — every control sweep renders the identical undistorted resting card and all five report meanAbsDiff=0/changed=false with byte-identical effRGB [63.8,60.3,56.3]. The fix broke the working controls. Effect strength also dropped (play frameDeltaMag 0.33/0.83/0.85 vs prior 1.34/1.39/1.28 and sibling 1.94/6.85/3.98). On the positive side, the idle frame is now a clean settled card (prior FLAG resolved) and the play frames still read as a textured liquid well with no slab — but a layperson would find every distortion slider in this primitive completely inert, which is a clear does-as-labeled failure. Cannot ship."
+      },
+      {
+        "tile": "pointer-glitch-split",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "mustFix-1-chroma-control-dead",
+            "resolved": false,
+            "evidence": "Chroma control is STILL dead. Direct pixel diff control-chroma-low.png vs control-chroma-high.png: meanAbsDiff=0.416, changedFrac=0.000% (zero pixels above the d>8 threshold). For reference the three LIVE controls measured the same way: bands low-vs-high changedFrac=1.495%, shear 1.848%, flicker 4.188% — chroma is an order of magnitude below them and indistinguishable from sensor noise. metrics.json corroborates: chroma pixelDiff meanAbsDiff=0.163, changedFrac=0. Sweeping the knob 0->0.12 produces no visible change to the eye (control-chroma-low/mid/high.png look identical apart from sub-noise dither)."
+          },
+          {
+            "id": "mustFix-2-no-rgb-split-visible",
+            "resolved": false,
+            "evidence": "No RGB-split / chromatic aberration in any frame. metrics: magentaFrac=0 across idle/play-1/2/3 and ALL controls; effSat flat 0.11-0.13. Measured net signed per-channel shift idle->play-2 netRedΔ=-0.04 netBlueΔ=-0.09 and idle->play-3 netRedΔ=-0.08 netBlueΔ=0.00 — i.e. NO directional R-vs-B offset, which is exactly what an RGB-split would create. Per-channel separation in the band region is identical between effect-off and effect-on: idle.png=14.23%, play-2.png=14.23%, play-3.png=14.21% (that separation is just the card's native amber header, not aberration). play-2.png/play-3.png show only monochrome horizontal band-shear, no colour fringing. The named 'RGB-split slivers' does not read to a layperson."
+          }
+        ],
+        "newMustFixes": [],
+        "citedFrames": [
+          "pointer-glitch-split/after/idle.png",
+          "pointer-glitch-split/after/play-1.png",
+          "pointer-glitch-split/after/play-2.png",
+          "pointer-glitch-split/after/play-3.png",
+          "pointer-glitch-split/after/control-chroma-low.png",
+          "pointer-glitch-split/after/control-chroma-mid.png",
+          "pointer-glitch-split/after/control-chroma-high.png",
+          "pointer-glitch-split/after/control-bands-low.png",
+          "pointer-glitch-split/after/control-bands-high.png",
+          "pointer-glitch-split/after/control-shear-high.png",
+          "pointer-glitch-split/after/control-flicker-high.png",
+          "pointer-glitch-split/after/metrics.json",
+          "pointer-twist-warp/after/idle.png",
+          "pointer-twist-warp/after/play-2.png"
+        ],
+        "flags": [
+          "The 'shear' control still reads as a global whole-card translation/displacement rather than per-band differential sliver shear (control-shear-high.png) — taste, not a blocker.",
+          "Frame-to-frame motion is modest (metrics frameDeltaMag play-1=0.54, play-2=1.5, play-3=1.9); idle->play changedFrac only ~1.5%. A more aggressive snap would feel more premium but the shear IS discoverable."
+        ],
+        "summary": "BLOCKED — both prior blocking mustFixes remain UNRESOLVED on the post-fix WebGPU/DPR2 bundle (backend=webgpu, 0 console/network errors). (1) The 'chroma' control is still dead: control-chroma-low.png vs -high.png measures meanAbsDiff=0.416, changedFrac=0.000%, versus the three genuinely-live controls at 1.5-4.2% — it is at the noise floor and produces no visible change. (2) No RGB-split / chromatic aberration appears in any frame: magentaFrac=0 everywhere, effSat flat 0.11-0.13, net R-vs-B channel shift ~0 in play frames, and band-region per-channel separation in play (14.2%) is identical to idle (14.2%) = just the card's native amber, not aberration. The card itself is fine — texture preserved at every phase (no slab), idle is crisp and legible, sharp at DPR2, and bands/shear/flicker controls all work (changedFrac 1.5-4.2%, idle->play band-shear changedFrac=1.5% is visible). So no NEW mustFixes are added. But the defining 'RGB-split slivers' that the primitive is named for is entirely absent and the chroma knob driving it is stone dead — the exact unfixed gap from the prior verdict. Ground-truth sibling pointer-twist-warp delivers an obvious, premium distortion by comparison. A discerning user is shorted the promised glitch look. Not ship-quality."
+      },
+      {
+        "tile": "heat-haze-refract",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "resolvedMustFixes": [
+          {
+            "id": "effect-does-not-read-as-claim-confined-to-brass-bar-edge",
+            "resolved": true,
+            "evidence": "play-1.png/play-2.png/play-3.png and control-amplitude-high.png/control-distortionScale-high.png now show whole-surface wavering: all three grey rows bend into wavy lines, the card's outer edges ripple, AND the brass bar undulates — true asphalt-in-August heat haze, not a single edge wobble. The grey rows that were 'perfectly straight' in the prior bundle are now clearly refracted. metrics: play frameDeltaMag rose from prior 0.02-0.05 to 1.01/1.07/1.17."
+          },
+          {
+            "id": "controls-not-live-all-five-changed-false",
+            "resolved": true,
+            "evidence": "4 of 5 controls now changed=true with above-noise deltas: amplitude meanAbsDiff=1.345 changedFrac=0.0456, distortionScale 1.813/0.0512, riseSpeed 2.036/0.0606, duration 0.203/0.0051. control-amplitude-low.png (near-flat clean card) vs control-amplitude-high.png (pronounced surface-wide waver) and control-distortionScale-low.png vs control-distortionScale-high.png are dramatically different to the eye. The two readability-critical controls (amplitude, distortionScale) are emphatically responsive. (columnWidth remains changed=false / frames identical — logged as a residual FLAG, not blocking.)"
+          },
+          {
+            "id": "effect-below-discoverability-floor-static-playback",
+            "resolved": true,
+            "evidence": "frameDeltaMag between play frames is now ~1.0-1.2 (play-1=1.01, play-2=1.07, play-3=1.17) vs the prior 0.02-0.05. idle.png is a clean still card; play-1/2/3.png are obviously shimmering — a first-time user would immediately see motion. Well above the discoverability floor."
+          }
+        ],
+        "newMustFixes": [],
+        "citedFrames": [
+          "heat-haze-refract/after/idle.png",
+          "heat-haze-refract/after/play-1.png",
+          "heat-haze-refract/after/play-2.png",
+          "heat-haze-refract/after/play-3.png",
+          "heat-haze-refract/after/control-amplitude-low.png",
+          "heat-haze-refract/after/control-amplitude-high.png",
+          "heat-haze-refract/after/control-distortionScale-low.png",
+          "heat-haze-refract/after/control-distortionScale-high.png",
+          "heat-haze-refract/after/control-duration-low.png",
+          "heat-haze-refract/after/control-duration-high.png",
+          "heat-haze-refract/after/control-riseSpeed-low.png",
+          "heat-haze-refract/after/control-riseSpeed-high.png",
+          "heat-haze-refract/after/control-columnWidth-low.png",
+          "heat-haze-refract/after/control-columnWidth-high.png",
+          "flow-warp-idle/after/idle.png",
+          "flow-warp-idle/after/play-2.png"
+        ],
+        "flags": [
+          "columnWidth control is still visually dead: changed=false, meanAbsDiff=0.141, changedFrac=0.0039, and control-columnWidth-low.png vs control-columnWidth-high.png are indistinguishable. Non-blocking polish item — 4 of 5 controls are live and the two readability-critical ones (amplitude, distortionScale) respond strongly, so the primitive reads as fully responsive overall.",
+          "Positive vs ground truth: heat-haze-refract's effect is MORE legible than the shipped/passing sibling flow-warp-idle, whose play-2.png shows only a very subtle warp. The heat-haze whole-surface wavering reads clearly at a glance.",
+          "W3 texture-preserving invariant satisfied at every phase: real card (brass header, grey rows, blue accent dot) preserved and sharp in idle and every play/control frame; no placeholder/untextured slab, no blur at DPR2, no AI-grain. backend=webgpu, zero console/network errors."
+        ],
+        "summary": "All three prior mustFixes are resolved with cited frames and metrics. The named effect now reads as the claim: play-1/2/3 and the high-amplitude/high-distortionScale control frames show whole-card heat-haze wavering (all three grey rows, card edges, and brass bar refract), not the prior single-bar edge wobble. frameDeltaMag climbed from 0.02-0.05 to ~1.0-1.2, clearly above the discoverability floor. Controls went from all-five changed=false to 4/5 changed=true with plainly visible low-to-high differences (amplitude 1.345/0.0456, distortionScale 1.813/0.0512, riseSpeed 2.036/0.0606, duration 0.203/0.0051). idle.png is a crisp legible card; the real card texture is preserved in every phase with no placeholder slab, no blur, no grain; backend=webgpu, zero console/network errors. The effect is more legible than the shipped sibling flow-warp-idle. Only residual is a single sub-perceptual control (columnWidth, changed=false) — logged as a non-blocking FLAG, not a new mustFix, since the primitive reads as responsive and on-claim overall. Net: SHIP."
+      },
+      {
+        "tile": "lens-bulge",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "resolvedMustFixes": [
+          {
+            "id": "magnify-control-dead",
+            "resolved": true,
+            "evidence": "control-magnify-low/mid/high.png now have 3 distinct MD5s (5b93e82e... / cb714319... / 45e5398a...), no longer the byte-identical 2134d4b1... hash. metrics: magnify changed=true, meanAbsDiff=5.021, changedFrac=0.1091. To the eye, low->mid->high progressively stretches the brass header and rows into/through the lens (lens-bulge/after/control-magnify-low.png vs control-magnify-high.png)."
+          },
+          {
+            "id": "rim-control-dead",
+            "resolved": true,
+            "evidence": "control-rim-low/mid/high.png now have 3 distinct MD5s (ed132568... / cbc70ef1... / 0019a4cd...). metrics: rim changed=true, meanAbsDiff=10.749 (strongest sweep), changedFrac=0.1966. control-rim-low.png is a faint near-flat lens; control-rim-high.png shows a pronounced glowing brass rim ring with heavy distortion of the rows below — clearly visible to a layperson."
+          },
+          {
+            "id": "does-not-read-as-claimed-opaque-occluding-orb",
+            "resolved": true,
+            "evidence": "The lens is no longer a dark opaque orb. In lens-bulge/after/play-1.png, play-2.png, play-3.png the lens is translucent with a warm brass rim, and the card's own content (brass header, grey rows) visibly bulges, stretches and bends around/through the lens zone — the displacement is applied to the real card texture, not occluding it. metrics: idle/play effHue=33 (brass preserved), magentaFrac=0, frameDeltaMag 3.48/5.02/3.83 (up from prior 0.6/1.76/1.33). Calibrated against shipped sibling pointer-twist-warp/after/play-2.png/play-3.png, which similarly preserves and distorts the card texture."
+          }
+        ],
+        "newMustFixes": [],
+        "citedFrames": [
+          "lens-bulge/after/idle.png",
+          "lens-bulge/after/play-1.png",
+          "lens-bulge/after/play-2.png",
+          "lens-bulge/after/play-3.png",
+          "lens-bulge/after/control-magnify-low.png",
+          "lens-bulge/after/control-magnify-mid.png",
+          "lens-bulge/after/control-magnify-high.png",
+          "lens-bulge/after/control-rim-low.png",
+          "lens-bulge/after/control-rim-mid.png",
+          "lens-bulge/after/control-rim-high.png",
+          "lens-bulge/after/control-radius-low.png",
+          "lens-bulge/after/control-radius-mid.png",
+          "lens-bulge/after/control-radius-high.png",
+          "lens-bulge/after/control-strength-low.png",
+          "lens-bulge/after/control-strength-mid.png",
+          "lens-bulge/after/control-strength-high.png",
+          "pointer-twist-warp/after/idle.png",
+          "pointer-twist-warp/after/play-2.png",
+          "pointer-twist-warp/after/play-3.png"
+        ],
+        "flags": [
+          "The lens CENTER still renders as a soft grey blur rather than a crisp, optically magnified view of the card texture beneath it. The displacement/bulge reads correctly and the card content stretches through the rim (the claim), but a perfect glass-over-paper loupe would show a sharper magnified interior. This is a fidelity/taste weakness, not a legibility-breaking defect — FLAG, not MUST-FIX. Evidence: lens-bulge/after/control-magnify-high.png, play-3.png.",
+          "The 'strength' control is live but the weakest sweep (metrics meanAbsDiff=1.205, changedFrac=0.0367); low->high mainly brightens the rim and nudges the row directly beneath the lens. It changes visibly enough to be functional (control-strength-low.png vs control-strength-high.png) but is subtle relative to magnify/rim/radius."
+        ],
+        "summary": "All three prior mustFixes are RESOLVED. The two previously-dead controls (magnify, rim) are now live: each has three distinct MD5 hashes (the old shared 2134d4b1... collapse is gone) and metrics confirm changed=true with meanAbsDiff 5.021 (magnify) and 10.749 (rim), both well above noise; they visibly differ low->high to the eye. The does-not-read-as-claimed orb is fixed: the lens is now a translucent, warm-rimmed bulge through which the real card texture (brass header, grey rows, blue dot) stretches and bends — displacement applied to content, not an occluding dark orb. Idle is a clean legible card; play frameDeltaMag rose to 3.48/5.02/3.83 (clear motion). No anti-slop violations: no placeholder slab, texture preserved every phase, effect above floor, card stays framed, no AI-grain. Calibrated against the shipped sibling pointer-twist-warp, which similarly preserves and warps the card texture. Two FLAGS remain (soft lens center; subtle strength control) but both are taste/fidelity, not blockers. Verdict: SHIP."
+      },
+      {
+        "tile": "pointer-wake-wave",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "resolvedMustFixes": [
+          {
+            "id": "no-animation-no-wake",
+            "resolved": true,
+            "evidence": "play-1/play-2/play-3 are now visibly distinct wake distortions (different ripple position/shape each frame) and all have distinct md5s (idle 3a1d85f0, play-1 cecd1b1f, play-2 12056b51, play-3 1adf3c3f); metrics frameDeltaMag now 0.74/0.91/0.66 (was 0). Motion across the play sequence is visible to the eye: pointer-wake-wave/after/play-1.png (strong curved wake on right + rows), play-2.png (wake lower-center), play-3.png (different ripple pattern)."
+          },
+          {
+            "id": "does-not-read-as-claim",
+            "resolved": true,
+            "evidence": "A V/chevron-shaped cresting ripple front trailing toward the right edge with a softer fade behind is now plainly visible in pointer-wake-wave/after/control-waveSpeed-high.png and control-decayRate-low.png/control-decayRate-high.png — reads as a trailing wake, not a single static bulge."
+          },
+          {
+            "id": "three-dead-controls",
+            "resolved": true,
+            "evidence": "All four controls now changed=true with meanAbsDiff above noise (amplitude 0.865, trailLength 1.129, waveSpeed 1.479, decayRate 1.108). Low vs high visibly differ: control-trailLength-low.png (small localized ripple) vs control-trailLength-high.png (long wake across right + bending header); control-waveSpeed-low.png (gentle sheen) vs control-waveSpeed-high.png (multi-crest V wake); control-decayRate-low.png vs control-decayRate-high.png (contained vs softer-fading wake). All control frames have distinct md5s (e.g. trailLength-low ba891ff2 vs trailLength-high a04f4728)."
+          }
+        ],
+        "newMustFixes": [],
+        "citedFrames": [
+          "pointer-wake-wave/after/idle.png",
+          "pointer-wake-wave/after/play-1.png",
+          "pointer-wake-wave/after/play-2.png",
+          "pointer-wake-wave/after/play-3.png",
+          "pointer-wake-wave/after/control-amplitude-low.png",
+          "pointer-wake-wave/after/control-amplitude-high.png",
+          "pointer-wake-wave/after/control-trailLength-low.png",
+          "pointer-wake-wave/after/control-trailLength-high.png",
+          "pointer-wake-wave/after/control-waveSpeed-low.png",
+          "pointer-wake-wave/after/control-waveSpeed-high.png",
+          "pointer-wake-wave/after/control-decayRate-low.png",
+          "pointer-wake-wave/after/control-decayRate-high.png",
+          "pointer-twist-warp/after/idle.png",
+          "pointer-twist-warp/after/play-2.png"
+        ],
+        "flags": [
+          "frameDeltaMag between play frames is modest (0.66-0.91) and per-control changedFrac is small (~0.025-0.047). The wake distortion is real and visible but spatially localized to the cursor path, so the global pixel-change footprint is small. Acceptable for a cursor-driven displacement primitive, not a blocker.",
+          "The named 'V of cresting ripples / boat wake' reads more as a directional chevron/folded-cloth ripple front than a textbook water-wake V. It is legible as a trailing wake to a layperson, so this is taste, not a defect."
+        ],
+        "summary": "Previously BLOCKED pointer-wake-wave is now ship-quality. All three prior mustFixes are resolved against rendered WebGPU/DPR2 evidence: (1) the play sequence now animates — play-1/2/3 are visibly distinct wake distortions with distinct md5s and frameDeltaMag 0.74/0.91/0.66 (was 0); (2) the effect now reads as a trailing wake — a V/chevron cresting ripple front trailing the right edge with a softer fade is plainly visible in waveSpeed-high and decayRate frames; (3) all four controls are live — amplitude/trailLength/waveSpeed/decayRate all changed=true with meanAbsDiff 0.865/1.129/1.479/1.108 and visibly different low-vs-high frames (distinct md5s). The real card texture (brass header, blue accent dot, grey rows) is preserved and tack-sharp at every phase — no placeholder slab, no blur, no grain, no clipping. idle.png is a clean legible card. Fidelity matches the shipped sibling pointer-twist-warp. backend=webgpu, zero console/network errors. Zero new mustFixes. Verdict: SHIP."
+      },
+      {
+        "tile": "pixel-sort-sweep",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [],
+        "newMustFixes": [
+          {
+            "issue": "NEW dead control: the 'speed' knob produces zero visible change across its full range. control-speed-low/mid/high render identically — a control literally named 'speed' does nothing as captured. (Prior bundle had speed barely-live at changedFrac=0.0065; this fix regressed it to fully dead.)",
+            "evidence": "control-speed-low.png, control-speed-mid.png, control-speed-high.png are byte-identical (MD5 41668c75bf3d3e98ccfe27a31ed914a7 for all three). metrics: speed changed=false, pixelDiff meanAbsDiff=0, changedFrac=0."
+          }
+        ],
+        "citedFrames": [
+          "pixel-sort-sweep/after/idle.png",
+          "pixel-sort-sweep/after/play-1.png",
+          "pixel-sort-sweep/after/play-2.png",
+          "pixel-sort-sweep/after/play-3.png",
+          "pixel-sort-sweep/after/control-speed-low.png",
+          "pixel-sort-sweep/after/control-speed-mid.png",
+          "pixel-sort-sweep/after/control-speed-high.png",
+          "pixel-sort-sweep/after/control-streak-low.png",
+          "pixel-sort-sweep/after/control-streak-mid.png",
+          "pixel-sort-sweep/after/control-streak-high.png",
+          "pixel-sort-sweep/after/control-bandWidth-low.png",
+          "pixel-sort-sweep/after/control-bandWidth-mid.png",
+          "pixel-sort-sweep/after/control-bandWidth-high.png",
+          "drag-elastic-warp/after/idle.png",
+          "drag-elastic-warp/after/play-2.png"
+        ],
+        "flags": [
+          "bandWidth control is live but subtle: control-bandWidth-low.png vs -high.png show a visibly wider central sort band, but the delta is modest (metrics changedFrac=0.0181, meanAbsDiff=0.399). Reads correctly but could be punchier.",
+          "Card is very dark overall (idle meanLuma=16.5, effSat=0.13), making subtle distortion harder to read against the near-black surface — same as the passing sibling, so not blocking, but the effect leans on the brighter streak/bandWidth settings to be legible."
+        ],
+        "summary": "All three prior mustFixes are RESOLVED. The effect now reads as a genuine glitch-art pixel-sort: play-2/play-3 show a traveling vertical sort band mid-card (no longer a left-edge tear), the header and rows smear into directional streaks, and motion is clearly visible (frameDeltaMag jumped from <=0.2 to ~0.7). The previously-dead 'streak' control is now alive and dramatic (control-streak-low clean vs -high heavily sorted; changed=true, changedFrac=0.0203). The card texture is fully preserved at every phase — header, rows, brass dot, no untextured slab, no AI grain, no clipping — at parity with the passing sibling drag-elastic-warp. HOWEVER, a NEW defect blocks ship: the 'speed' control is now completely dead — control-speed-low/mid/high are byte-identical (single MD5 41668c75) and metrics report changed=false, changedFrac=0. A control named 'speed' producing zero visible change across its full range fails the dead-control anti-slop bar. Net: ANNOYED on the dead speed knob despite the strong effect. BLOCKED pending a speed control that visibly responds low->high."
+      },
+      {
+        "tile": "hover-displacement-map",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "idle-not-clean",
+            "resolved": true,
+            "evidence": "hover-displacement-map/after/idle.png now renders a crisp, fully legible card (brass header bar, three grey rows, blue accent dot, smooth dark body) with NO grain/speckle — it matches the clean baseline of control-reliefDepth-low.png that the prior verdict asked to become the idle state. The visible rest state is clean (metrics idle effSat=0.12, and the stdev is driven by legitimate card-vs-background contrast, not stipple). RESOLVED."
+          },
+          {
+            "id": "proximityRange-dead-control",
+            "resolved": false,
+            "evidence": "control-proximityRange-low.png, control-proximityRange-mid.png, control-proximityRange-high.png are visually identical and metrics confirm proximityRange meanAbsDiff=0 changedFrac=0 changed=false (byte-identical, sub-noise). The claim's load-bearing promise 'deepening as the cursor nears' is still completely inert. NOT RESOLVED."
+          },
+          {
+            "id": "displacement-reads-as-noise",
+            "resolved": false,
+            "evidence": "The reliefDepth sweep is now premium (control-reliefDepth-high.png shows a smooth glossy emboss with specular highlights, content legible), BUT control-patternScale-high.png and all three control-proximityRange-*.png frames still show a heavy starfield/glitter sparkle stipple over the entire card body — the same AI-grain look the prior verdict flagged, and visibly degraded versus the crisp ground-truth sibling drag-elastic-warp/after/control-grabStrength-high.png. NOT fully resolved."
+          }
+        ],
+        "newMustFixes": [
+          {
+            "issue": "proximityRange remains a fully DEAD control: low/mid/high frames are byte-identical, so the named effect's defining behavior ('a procedural displacement deepening as the cursor nears') cannot be demonstrated. This is the load-bearing knob for the claim.",
+            "evidence": "control-proximityRange-low.png == control-proximityRange-mid.png == control-proximityRange-high.png; metrics: proximityRange meanAbsDiff=0 changedFrac=0 changed=false"
+          },
+          {
+            "issue": "At high patternScale and across the proximityRange frames the displacement still reads as a heavy starfield/glitter sensor-noise stipple smeared over the whole card body rather than a crisp tactile emboss — below the premium DPR-2 bar and visibly degraded next to the passing sibling, which stays crisp while warping.",
+            "evidence": "hover-displacement-map/after/control-patternScale-high.png and control-proximityRange-high.png (heavy sparkle stipple) vs drag-elastic-warp/after/control-grabStrength-high.png (crisp, grain-free warp)"
+          }
+        ],
+        "citedFrames": [
+          "hover-displacement-map/after/idle.png",
+          "hover-displacement-map/after/play-1.png",
+          "hover-displacement-map/after/play-2.png",
+          "hover-displacement-map/after/play-3.png",
+          "hover-displacement-map/after/control-reliefDepth-low.png",
+          "hover-displacement-map/after/control-reliefDepth-mid.png",
+          "hover-displacement-map/after/control-reliefDepth-high.png",
+          "hover-displacement-map/after/control-patternScale-low.png",
+          "hover-displacement-map/after/control-patternScale-high.png",
+          "hover-displacement-map/after/control-proximityRange-low.png",
+          "hover-displacement-map/after/control-proximityRange-mid.png",
+          "hover-displacement-map/after/control-proximityRange-high.png",
+          "drag-elastic-warp/after/idle.png",
+          "drag-elastic-warp/after/play-2.png",
+          "drag-elastic-warp/after/control-grabStrength-high.png"
+        ],
+        "flags": [
+          "reliefDepth is now genuinely premium and well-tuned: clean idle baseline (control-reliefDepth-low.png) to a smooth glossy emboss with specular highlights (control-reliefDepth-high.png), card content fully preserved and legible. The idle-cleanliness fix is real and good.",
+          "The card look is preserved at all phases (brass header, three grey rows, blue accent dot) — this is NOT a featureless placeholder slab, so the W3 texture-preserving invariant holds.",
+          "Play-frame motion is subtle (frameDeltaMag 0.95/0.75/0.52) but present as a gentle warm relief building over the clean card; acceptable for a hover-reveal, not a blocker on its own."
+        ],
+        "summary": "BLOCKED. Backend webgpu, no console/network errors. One of three prior mustFixes is resolved: idle.png is now a clean, crisp, legible card (header + three rows + blue dot, no grain) matching the reliefDepth-low baseline, and the reliefDepth knob is now genuinely premium (clean to smooth glossy emboss with specular highlights, content preserved). However TWO prior mustFixes remain unresolved: (1) proximityRange is still a fully DEAD control — low/mid/high are byte-identical (meanAbsDiff=0 changedFrac=0 changed=false), so the claim's defining 'deepens as the cursor nears' behavior cannot be shown; (2) at high patternScale and across the proximity frames the effect still renders as a heavy starfield/glitter sensor-noise stipple over the whole card body, degraded versus the crisp grain-free ground-truth sibling drag-elastic-warp. Not ship-quality."
+      },
+      {
+        "tile": "click-shockwave",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "mustFix#1: controls width/kick/wobble dead-unverifiable",
+            "resolved": false,
+            "evidence": "PARTIALLY resolved. width now LIVE: control-width-low.png (calm, thin ring) vs control-width-mid/high.png (broad ring-band warp across whole card); metrics width changed=true meanAbsDiff=1.546 changedFrac=0.0499. kick now LIVE: control-kick-low.png (flat resting card, kick=0) -> control-kick-mid.png (card bows/lifts) -> control-kick-high.png (strong surface kick + bright specular streaks); metrics kick changed=true meanAbsDiff=3.164 changedFrac=0.096 meanLuma 16.5->18.4. BUT wobble STILL DEAD: control-wobble-low.png, control-wobble-mid.png, control-wobble-high.png are byte-identical (md5 590f0c5a... for all three) AND md5-identical to control-kick-high.png; metrics wobble changed=false meanAbsDiff=0 changedFrac=0. The wobble knob cannot be shown to alter the look across its full range, so this mustFix is not fully resolved per the dead-control rule (byte-identical = NOT resolved)."
+          },
+          {
+            "id": "mustFix#2: hollow play sequence (play-2/play-3 identical to idle)",
+            "resolved": true,
+            "evidence": "RESOLVED. play-2.png now shows a broad concentric pressure ring detonating across the card with refractive arcs warping the edges (dramatic, name-true). play-3.png shows a tight central ring lensing the grey rows + brass header. The wave lifecycle is visible: play-1 (near-onset) -> play-2 (broad outer ring) -> play-3 (tight central ring). metrics frameDeltaMag play-1=1.14 play-2=1.7 play-3=2.22 (all non-zero; prior play-3 was 0). Card texture preserved throughout."
+          }
+        ],
+        "newMustFixes": [
+          {
+            "issue": "Control 'wobble' is DEAD: its low/mid/high sweep frames are byte-identical to each other and md5-identical to control-kick-high.png (changed=false, meanAbsDiff=0, changedFrac=0). The wobble knob produces zero visible variation across its entire 0->0.12 range at the captured phase, so a user could not discover what it does. Recapture wobble at a timeline phase where the wave's secondary oscillation is active so low-vs-high visibly differs, or remove the control if it has no effect. (Note: the passing sibling drag-elastic-warp also has wobble changed=false, so this may be an inherent subtlety rather than a regression — but as captured it remains unverifiable.)",
+            "evidence": "metrics: wobble changed=false, pixelDiff.meanAbsDiff=0, changedFrac=0; md5 of control-wobble-{low,mid,high}.png == md5 control-kick-high.png == 590f0c5a5406d670473ef825b2eed154 (all 29578 bytes); control-wobble-low.png and control-wobble-high.png render as the identical pillow-warp card."
+          }
+        ],
+        "citedFrames": [
+          "click-shockwave/after/idle.png",
+          "click-shockwave/after/play-1.png",
+          "click-shockwave/after/play-2.png",
+          "click-shockwave/after/play-3.png",
+          "click-shockwave/after/control-speed-low.png",
+          "click-shockwave/after/control-speed-mid.png",
+          "click-shockwave/after/control-speed-high.png",
+          "click-shockwave/after/control-width-low.png",
+          "click-shockwave/after/control-width-mid.png",
+          "click-shockwave/after/control-width-high.png",
+          "click-shockwave/after/control-kick-low.png",
+          "click-shockwave/after/control-kick-mid.png",
+          "click-shockwave/after/control-kick-high.png",
+          "click-shockwave/after/control-wobble-low.png",
+          "click-shockwave/after/control-wobble-mid.png",
+          "click-shockwave/after/control-wobble-high.png",
+          "drag-elastic-warp/after/play-2.png",
+          "drag-elastic-warp/after/control-wobble-high.png"
+        ],
+        "flags": [
+          "Where the effect fires it is genuinely premium and name-true: play-2.png and control-speed-low.png show a textbook concentric pressure ring detonating from center, lensing the real card rows + warping the brass header — exactly 'a crisp pressure ring racing outward, kicking the surface.' Texture-preserving discipline fully satisfied: brass header, blue accent dot, and 4 grey rows are present and distorted in every effect frame; no placeholder slab. backend=webgpu, consoleErrors=[], networkErrors=[]. Fidelity/sharpness are at parity with the passing sibling drag-elastic-warp/after/play-2.png.",
+          "The blocker is narrow: 3 of 4 controls (speed, width, kick) are now demonstrably live with visible low->high deltas, the play sequence is rich, and the idle card is clean. Only the single 'wobble' control remains flat. The passing ground-truth sibling drag-elastic-warp also ships with wobble changed=false meanAbsDiff=0 (byte-identical 16806-byte frames), so wobble may be an inherently subtle shared control rather than a true defect — but as captured here it cannot be certified as live."
+        ],
+        "summary": "click-shockwave is now a premium, name-true shockwave: the play sequence shows the pressure ring's full lifecycle (play-2 broad outer ring, play-3 tight central ring; frameDeltaMag 1.14/1.7/2.22, prior play-3 was 0) and the card's own texture (brass header, blue dot, 4 grey rows) is preserved and lensed in every effect frame with no placeholder slab, no grain, and DPR2 sharpness at parity with the passing sibling drag-elastic-warp. MustFix#2 (hollow play sequence) is fully RESOLVED. MustFix#1 (dead controls width/kick/wobble) is only PARTIALLY resolved: width is now live (changed=true meanAbsDiff=1.546) and kick is clearly live (changed=true meanAbsDiff=3.164, meanLuma 16.5->18.4), but wobble is STILL dead — its low/mid/high frames are byte-identical (md5 590f0c5a...) and md5-identical to control-kick-high.png, with changed=false meanAbsDiff=0. Per the strict dead-control rule (byte-identical/sub-noise = NOT resolved) and the requirement that EVERY prior mustFix be resolved for SHIP, the verdict is BLOCKED — narrowly. The lone remaining fix is to make the wobble control visibly vary across its sweep (or remove it). Note the passing sibling carries the same dead-wobble signature, so this is borderline, but the named control cannot be certified as live from this evidence."
+      },
+      {
+        "tile": "crt-warp",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "scanlines-control-dead",
+            "resolved": false,
+            "evidence": "Still dead. metrics: scanlines changed=false meanAbsDiff=0.138 changedFrac=0 (sub-noise). crt-warp/after/control-scanlines-low.png vs control-scanlines-mid.png vs control-scanlines-high.png are visually indistinguishable — identical line density, identical curvature, identical bloom position. The slider range was retuned (was 40->220, now 8->48) but dragging the frequency knob still produces zero visible change in scanline density. On a CRT effect whose whole identity is scanlines, this remains an objectively broken control."
+          }
+        ],
+        "newMustFixes": [],
+        "citedFrames": [
+          "crt-warp/after/idle.png",
+          "crt-warp/after/play-1.png",
+          "crt-warp/after/play-2.png",
+          "crt-warp/after/play-3.png",
+          "crt-warp/after/control-scanlines-low.png",
+          "crt-warp/after/control-scanlines-mid.png",
+          "crt-warp/after/control-scanlines-high.png",
+          "crt-warp/after/control-curvature-low.png",
+          "crt-warp/after/control-curvature-high.png",
+          "crt-warp/after/control-scanStrength-low.png",
+          "crt-warp/after/control-scanStrength-high.png",
+          "crt-warp/after/control-rollSpeed-low.png",
+          "crt-warp/after/control-rollSpeed-high.png",
+          "flow-warp-idle/after/idle.png"
+        ],
+        "flags": [
+          "Headline drifting/rolling-band motion barely perceptible across play sequence. metrics: play-1/2/3 frameDeltaMag=0.16/0.19/0.18; crt-warp/after/play-1.png vs play-2.png vs play-3.png are near-identical. Flag, not mustFix (consistent with prior verdict).",
+          "rollSpeed shows no change in frozen capture (expected for a speed knob — manifests only over time). metrics: rollSpeed changed=false meanAbsDiff=0.043; crt-warp/after/control-rollSpeed-low.png vs control-rollSpeed-high.png indistinguishable. Flag, not mustFix.",
+          "Default-state play-frame curvature is a touch subtle vs the dramatic curvature-high sweep; could read more premium out of the box. crt-warp/after/play-2.png vs control-curvature-high.png."
+        ],
+        "summary": "The CRT effect reads convincingly and preserves the real card at every phase — amber header, grey rows, blue accent dot and specular bloom all survive and wrap the barrel curve (idle.png, play-1/2/3.png). No placeholder slab, no lost texture, no clipping; idle is clean and legible at DPR2, on par with the flow-warp-idle ground-truth sibling. Curvature is strongly live (meanAbsDiff=5.189, changed=true) and scanStrength visibly intensifies the scanline ridges (meanAbsDiff=0.749, changed=true). HOWEVER the single prior mustFix — the dead scanlines frequency knob — is NOT resolved: control-scanlines low/mid/high are visually identical and metrics show changed=false, meanAbsDiff=0.138, changedFrac=0 (sub-noise). The range was retuned (40->220 to 8->48) but the knob still does nothing. On a CRT whose identity IS scanlines, a user dragging that control gets zero feedback — an objectively broken control. Because the prior mustFix remains unresolved, the tile stays BLOCKED."
+      },
+      {
+        "tile": "pointer-loupe",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "resolvedMustFixes": [
+          {
+            "id": "mustFix-1-no-optical-magnification",
+            "resolved": false,
+            "evidence": "Still NOT resolved. Across pointer-loupe/after/play-1.png, play-2.png, play-3.png and the entire zoom sweep (control-zoom-low.png / -mid.png / -high.png), the header bar, grey rows and inter-element gaps pass through the loupe ring at NATIVE scale — there is no crisp magnified inset anywhere. metrics: play frames frameDeltaMag=0.2/0.25/0.22 (barely-there motion); zoom control pixelDiff meanAbsDiff=0.067 changedFrac=0.0012 changed=false. The glide-high/radius-high frames (control-glide-high.png, control-radius-high.png) show only a dark translucent dome bowing the header silhouette — a displacement/darkening overlay, NOT optical magnification of the card texture. Calibrated against the SHIP sibling pointer-twist-warp/after/play-2.png & play-3.png, which loudly bends/swirls the actual card content, this loupe still reads as a drifting selection circle, not a magnifier glass. Fails the reads-as-its-name bar."
+          },
+          {
+            "id": "mustFix-2-dead-zoom-and-glide-controls",
+            "resolved": false,
+            "evidence": "Partially fixed but NOT resolved. The 'glide' control is now LIVE: control-glide-low.png vs control-glide-high.png visibly differ (a large dark dome sweeps over header+first row at high), metrics glide meanAbsDiff=1.289 changedFrac=0.0234 changed=true. BUT the load-bearing 'Zoom Factor' knob is STILL dead: control-zoom-low.png, control-zoom-mid.png, control-zoom-high.png are visually indistinguishable with no magnified inset at any level; metrics zoom meanAbsDiff=0.067 changedFrac=0.0012 changed=false (sub-noise). The single most important control for a loupe remains non-functional, so this mustFix is not resolved."
+          }
+        ],
+        "newMustFixes": [
+          {
+            "issue": "Effect does not read as its claim: the named optical-magnifier loupe never magnifies. A layperson sees a thin drifting ring (idle/play/zoom frames) or, at high glide/radius, a dark translucent dome — neither reads as 'a glass lens optically zooming the content beneath it'. Effect is below the legibility floor for the claim.",
+            "evidence": "pointer-loupe/after/play-2.png and play-3.png (content under ring at native scale); control-zoom-high.png (no magnified inset even at max zoom=4); contrast with the SHIP sibling pointer-twist-warp/after/control-strength-high.png which unmistakably distorts the card content."
+          }
+        ],
+        "citedFrames": [
+          "pointer-loupe/after/idle.png",
+          "pointer-loupe/after/play-1.png",
+          "pointer-loupe/after/play-2.png",
+          "pointer-loupe/after/play-3.png",
+          "pointer-loupe/after/control-zoom-low.png",
+          "pointer-loupe/after/control-zoom-mid.png",
+          "pointer-loupe/after/control-zoom-high.png",
+          "pointer-loupe/after/control-radius-low.png",
+          "pointer-loupe/after/control-radius-high.png",
+          "pointer-loupe/after/control-glide-low.png",
+          "pointer-loupe/after/control-glide-high.png",
+          "pointer-twist-warp/after/play-2.png",
+          "pointer-twist-warp/after/play-3.png",
+          "pointer-twist-warp/after/control-strength-high.png"
+        ],
+        "flags": [
+          "Texture-preservation and sharpness remain GOOD — pointer-loupe/after/idle.png shows the real card (brass header, grey rows, blue accent dot, beveled body) crisp and legible at DPR2, no placeholder slab, no AI-grain, no clipping. The defect is the missing magnification, not the subject.",
+          "Positive progress: the 'glide' control that was fully dead in the prior verdict is now live (metrics changed=true, meanAbsDiff=1.289; control-glide-high.png visibly differs). The 'radius' control is also live (changed=true, meanAbsDiff=0.623). Only the load-bearing zoom knob and the magnification effect itself remain broken."
+        ],
+        "summary": "BLOCKED. backend=webgpu, no console/network errors, idle is clean and tack-sharp with full card texture preserved (no placeholder slab) — but the two prior mustFixes are NOT resolved. (1) No optical magnification: across all play frames and the full zoom sweep the card content passes through the loupe ring at native scale; the only distortion (glide/radius-high) is a dark translucent dome, not a crisp magnified inset. metrics zoom changed=false (meanAbsDiff=0.067, changedFrac=0.0012). (2) The primary 'Zoom Factor' knob is still dead (visually identical low/mid/high); glide was fixed (changed=true) but the load-bearing zoom is not. Against the SHIP sibling pointer-twist-warp — which loudly distorts the actual card content — this still reads as a drifting selection circle, failing the reads-as-its-name bar. net ANNOYED, gate BLOCKED."
+      }
+    ]
+  }
+}

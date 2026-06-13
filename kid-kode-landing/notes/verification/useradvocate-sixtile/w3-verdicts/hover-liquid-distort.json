@@ -1,0 +1,69 @@
+{
+  "feature": "hover-liquid-distort",
+  "claim": "The surface goes LIQUID under the cursor — slow viscous ripples well out from the touch point and settle like honey when the pointer leaves. The card's OWN texture/header/rows must be preserved and ride the well; it must NEVER become a blank/featureless deformed slab.",
+  "groundTruthSibling": "ripple-displace",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "One hard defect: the 'viscosity' control is fully dead — its low/mid/high frames are byte-identical and produce zero visible change, and it is the claim's namesake mechanic ('viscous... settle like honey'). Secondary: the t=0 'idle' frame is NOT a clean settled card — it still shows a pronounced dark whirlpool well distorting the rows on the right, where the claim asks the disengaged state to be clean/settled. No slab/clipping/broken-frame/low-contrast issues: card content stays fully legible and tack-sharp throughout; backend is webgpu with zero console/network errors.",
+      "evidence": [
+        "metrics: viscosity control low/mid/high pixelDiff meanAbsDiff=0, changedFrac=0, changed=false; effRGB identical [69.1,65.9,61.9] across all three",
+        "hover-liquid-distort/after/control-viscosity-low.png vs hover-liquid-distort/after/control-viscosity-high.png (visually identical)",
+        "hover-liquid-distort/after/idle.png (still shows a deep distortion well in the row band at t=0, not a settled clean card)",
+        "metrics: consoleErrors=[], networkErrors=[], backend=webgpu"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads unmistakably as a viscous liquid well. A dark whirlpool/vortex wells out under the cursor and the card's grey rows bend, pinch and spiral around it with concentric ripple rings, exactly like honey/water displacement. Crucially the card's OWN content is preserved and rides the distortion (amber header bar, four grey rows, blue accent dot, rounded body all present in every frame) — it is NOT a featureless slab, so the load-bearing W3 texture-preserving invariant passes. Premium-grade smooth liquid shading at DPR-2, content sharp.",
+      "evidence": [
+        "hover-liquid-distort/after/play-2.png (centered liquid vortex pinching the grey rows; header+rows+blue dot intact)",
+        "hover-liquid-distort/after/control-swirl-high.png (strong rotational whirlpool spiral, rows twist around it, content preserved)",
+        "hover-liquid-distort/after/control-amplitude-high.png (deep honey well reaching toward the header)",
+        "hover-liquid-distort/after/control-rings-high.png (multiple concentric ripple rings radiating from the well)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes — the play frames make the liquid well obvious as it travels across the card (right in play-1, center in play-2/3), and the well visibly tracks a cursor point so a user would connect hover-to-ripple. The one snag: the t=0 idle frame already shows the surface mid-distortion rather than a calm resting card, so the 'before you touch it, it's clean; touch it and it goes liquid' contrast is weaker than it should be — the resting state never fully settles in the captured frame.",
+      "evidence": [
+        "hover-liquid-distort/after/play-1.png (well on the right) vs hover-liquid-distort/after/play-3.png (well moved toward center) — reads as cursor-tracked",
+        "hover-liquid-distort/after/idle.png (resting state still distorted, weakening the clean-to-liquid invitation)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive overall, not janky. Play frames are visibly different (the well travels and changes shape), and 4 of 5 controls are vividly live: amplitude scales the well from a faint ripple to a deep whirlpool, swirl adds rotation up to a full spiral vortex, spread widens the affected band card-wide, and rings adds concentric ripple rings. Only the single viscosity control is dead. Control-apply latency is ~580ms across the board (acceptable for a swept knob).",
+      "evidence": [
+        "metrics: play-1/2/3 frameDeltaMag = 1.34 / 1.39 / 1.28 (non-zero, frames differ)",
+        "hover-liquid-distort/after/control-amplitude-low.png (gentle ripple) vs hover-liquid-distort/after/control-amplitude-high.png (deep whirlpool) — metrics changed=true, meanAbsDiff=1.622",
+        "hover-liquid-distort/after/control-swirl-low.png (concentric rings) vs hover-liquid-distort/after/control-swirl-high.png (spiral vortex) — metrics changed=true, meanAbsDiff=1.472",
+        "hover-liquid-distort/after/control-spread-low.png (tight well) vs hover-liquid-distort/after/control-spread-high.png (card-wide spread) — metrics changed=true, meanAbsDiff=1.629",
+        "metrics: viscosity changed=false (the lone dead control); latencyMs ~580 across controls"
+      ]
+    },
+    "q5_net": {
+      "answer": "A user would be impressed by the ripple itself — it genuinely looks like premium liquid honey welling under the cursor and the card stays fully readable — but they'd notice that the slider literally labeled for viscosity does nothing, which is the one word that defines the effect, and that the card never fully calms when 'at rest'. Good effect, one broken namesake knob holds it back from a clean ship.",
+      "evidence": [
+        "hover-liquid-distort/after/control-swirl-high.png (premium liquid vortex, content preserved)",
+        "metrics: viscosity changed=false (namesake control dead)",
+        "hover-liquid-distort/after/idle.png (resting state not settled)"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "The 'viscosity' control is completely dead — sweeping it low to high produces zero visible change. Because 'viscous' is the claim's headline mechanic ('slow viscous ripples... settle like honey'), a do-nothing viscosity slider is a clear does-as-labeled failure. Wire viscosity to the ripple decay/settle speed so the well slows and thickens at high viscosity.",
+      "evidence": "metrics: viscosity control pixelDiff meanAbsDiff=0, changedFrac=0, changed=false; hover-liquid-distort/after/control-viscosity-low.png and hover-liquid-distort/after/control-viscosity-high.png byte-identical (effRGB [69.1,65.9,61.9] all three)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The t=0 'idle' frame still shows a pronounced distortion well rather than a fully settled clean card; the claim asks the disengaged/resting state to be clean and 'settled like honey'. Card stays legible so it is not a content defect, but the clean-to-liquid contrast and the 'settle' beat are undersold. Consider capturing/animating a true settled rest frame.",
+      "evidence": "hover-liquid-distort/after/idle.png (distortion well visible at t=0) vs hover-liquid-distort/after/control-amplitude-low.png (much calmer card)"
+    },
+    {
+      "note": "Taste: the liquid wells are slightly dark/low-saturation (effSat ~0.10-0.12, hue ~32 warm-grey) so the distortion reads more as a dark gloss whirlpool than a bright honey amber; a touch more warmth/translucency could push it further past DOM-effect quality. Subjective only.",
+      "evidence": "metrics: play-2 effSat=0.11, effHue=33; hover-liquid-distort/after/play-2.png"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}
