@@ -35,19 +35,23 @@ describe('ripple-interact-sim primitive', () => {
     const target = makeTarget(rippleInteractSimPrimitive);
     const inst = rippleInteractSimPrimitive.create(target);
 
-    // t=0 → calm surface (no poke fired yet): essentially flat.
+    // t=0 → the surface is pre-seeded with several propagating, interfering
+    // ripple systems (advocate-directed: the prior flat-at-t=0 surface read as a
+    // dead blue square). So even the first captured frame is genuinely displaced.
     inst.seek(0);
     const z0 = readZ(target);
-    expect(maxAbs(z0)).toBeLessThan(1e-3);
+    expect(maxAbs(z0)).toBeGreaterThan(1e-3);
 
-    // After the first poke fires and propagates, the surface is genuinely
-    // displaced (a height disturbance, not zero).
+    // After the running poke schedule fires and the field integrates forward, the
+    // surface is still genuinely displaced (a height disturbance, not zero).
     inst.seek(0.5);
     const zMid = readZ(target);
     expect(maxAbs(zMid)).toBeGreaterThan(1e-3);
 
-    // The field keeps EVOLVING — a closed-form snapshot at a later time differs
-    // from the earlier one (wavefronts travel / reflect / interfere).
+    // The field keeps EVOLVING — a snapshot at a later time differs from the
+    // earlier one (wavefronts travel / reflect / interfere): the t=0 pre-seed
+    // frame, the mid frame, and the late frame are all materially different.
+    expect(meanAbsDiff(z0, zMid)).toBeGreaterThan(1e-4);
     inst.seek(0.9);
     const zLate = readZ(target);
     expect(meanAbsDiff(zMid, zLate)).toBeGreaterThan(1e-4);

@@ -4,8 +4,8 @@
 // (symplectic) Euler at a small fixed dt. The satellites trace genuine orbits,
 // precess, and slingshot when they swing past a sun — emergent motion no
 // closed-form curve produces. CATALOG primitive (hard / particles,
-// subject:'empty'). Builds two THREE.Points (suns + satellites) into
-// target.object.
+// subject:'empty'). Builds two instanced THREE.Sprite clouds (suns + satellites)
+// into target.object.
 //
 // NOT closed-form like orbit-rings / orbit-trails and NOT a precomputed static
 // orbit like attractor: every frame is the result of integrating the full
@@ -25,15 +25,41 @@
 // duration() is finite (one good orbital sweep) so the rig's ~0.45 frozen phase
 // lands with satellites mid-orbit; the rig loops t→0, which the replay stepper
 // treats as a rewind → the system re-seeds and re-runs.
+//
+// RENDER PATH (P0 particle lesson — embers.ts / bubble-rise-sim.ts): r184
+// THREE.Points render as 1px specks on both backends (PointsMaterial.map never
+// samples a per-quad uv under three/webgpu), so the prior PointsMaterial build
+// read as a near-black panel with invisible dots. Bright suns + visible
+// satellites MUST be instanced THREE.Sprite carrying a PointsNodeMaterial whose
+//   • positionNode = instancedBufferAttribute(per-body CENTER)
+//   • colorNode    = a TSL radial profile of the quad uv → a BRIGHT solid core
+//     with a soft glowing falloff (so each sun reads as a luminous disc with
+//     mass, luma >> 120, not a star) times a per-body instanced premultiplied
+//     COLOR, with a per-body instanced RADIUS sizing the core inside a generous
+//     fixed billboard footprint.
+// All randomness derives from index hashes (no Math.random — EVER). DOM-free,
+// TSL only. Palette: brass-gold suns (#ecd49d #d9a86c), ice/steel/mint
+// satellites (#7fd4ff #cfdde6 #9fe0c4) — Observatory Brass, never purple.
 
 import {
-  Points,
+  Sprite,
   BufferGeometry,
   BufferAttribute,
-  PointsMaterial,
+  InstancedBufferAttribute,
   Color,
   AdditiveBlending,
+  DynamicDrawUsage,
 } from 'three';
+import { PointsNodeMaterial } from 'three/webgpu';
+import {
+  instancedBufferAttribute,
+  uv,
+  vec2,
+  vec3,
+  vec4,
+  float,
+  smoothstep,
+} from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type PrimitiveDefinition } from '../contract';
 import { hash1, hash2, makeReplayStepper, resolveSimTier, tierPick } from './_sim-core';
@@ -230,68 +256,135 @@ export const nBodyOrbitPrimitive: PrimitiveDefinition = {
 
       const stepper = makeReplayStepper({ dt: DT, reset, step });
 
-      // ── Geometry: two Points clouds (massive suns vs light satellites) ──────
+      // ── Geometry: ONE instanced billboard quad per cloud (suns / sats) ──────
+      // Premium round bodies via the embers/bubble-rise mechanism: an instanced
+      // Sprite carrying a PointsNodeMaterial whose position/color/radius come
+      // from instanced attributes and whose alpha is a TSL radial profile. This
+      // replaces the prior 1px THREE.Points specks that read as a black panel.
       const sunPos = new Float32Array(MAX_BODIES * 3);
+      const sunCol = new Float32Array(MAX_BODIES * 3); // premultiplied bright tint
+      const sunRad = new Float32Array(MAX_BODIES); // per-sun core radius (quad units)
       const satPos = new Float32Array(MAX_SATS * 3);
-      const sunCol = new Float32Array(MAX_BODIES * 3);
       const satCol = new Float32Array(MAX_SATS * 3);
+      const satRad = new Float32Array(MAX_SATS);
 
-      // Brass-gold suns; ice/steel satellites (Observatory Brass palette, no purple).
-      const sunHot = new Color('#ecd49d'); // bright primary sun
-      const sunWarm = new Color('#d9a86c'); // brass second/third sun
-      for (let b = 0; b < MAX_BODIES; b++) {
-        const c = b === 0 ? sunHot : sunWarm;
-        sunCol[b * 3] = c.r;
-        sunCol[b * 3 + 1] = c.g;
-        sunCol[b * 3 + 2] = c.b;
-      }
-      const satIce = new Color('#7fd4ff');
-      const satMint = new Color('#9fe0c4');
-      const satSteel = new Color('#cfdde6');
-      for (let k = 0; k < MAX_SATS; k++) {
-        // Deterministic per-satellite tint across the cool palette.
-        const h = hash1(k * 2.17 + 0.5);
-        const c = h < 0.4 ? satIce : h < 0.72 ? satSteel : satMint;
-        satCol[k * 3] = c.r;
-        satCol[k * 3 + 1] = c.g;
-        satCol[k * 3 + 2] = c.b;
-      }
+      const sunPosAttr = new InstancedBufferAttribute(sunPos, 3);
+      const sunColAttr = new InstancedBufferAttribute(sunCol, 3);
+      const sunRadAttr = new InstancedBufferAttribute(sunRad, 1);
+      const satPosAttr = new InstancedBufferAttribute(satPos, 3);
+      const satColAttr = new InstancedBufferAttribute(satCol, 3);
+      const satRadAttr = new InstancedBufferAttribute(satRad, 1);
+      sunPosAttr.setUsage(DynamicDrawUsage);
+      sunColAttr.setUsage(DynamicDrawUsage);
+      sunRadAttr.setUsage(DynamicDrawUsage);
+      satPosAttr.setUsage(DynamicDrawUsage);
+      satColAttr.setUsage(DynamicDrawUsage);
+      satRadAttr.setUsage(DynamicDrawUsage);
 
-      const sunGeo = new BufferGeometry();
-      const sunPosAttr = new BufferAttribute(sunPos, 3);
-      sunGeo.setAttribute('position', sunPosAttr);
-      sunGeo.setAttribute('color', new BufferAttribute(sunCol, 3));
+      // Brass-gold suns; ice/steel/mint satellites (Observatory Brass, no purple).
+      // Tints are stored pre-brightened (the profile alpha is premultiplied into
+      // the RGB under additive blending → the core reads luminous, luma >> 120).
+      const sunHot = new Color('#ffe9b8'); // bright primary sun (brass-white core)
+      const sunWarm = new Color('#f2c98a'); // brass second/third sun
+      const satIce = new Color('#bfe9ff');
+      const satMint = new Color('#c7f0dd');
+      const satSteel = new Color('#e4eef5');
 
-      const satGeo = new BufferGeometry();
-      const satPosAttr = new BufferAttribute(satPos, 3);
-      satGeo.setAttribute('position', satPosAttr);
-      satGeo.setAttribute('color', new BufferAttribute(satCol, 3));
+      // Shared per-quad billboard (4 verts + uv + index). Built once each.
+      const makeQuad = () => {
+        const g = new BufferGeometry();
+        g.setIndex([0, 1, 2, 0, 2, 3]);
+        g.setAttribute(
+          'position',
+          new BufferAttribute(
+            new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]),
+            3,
+          ),
+        );
+        g.setAttribute('uv', new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), 2));
+        return g;
+      };
 
-      const sunMat = new PointsMaterial({
-        color: new Color('#ffffff'),
-        vertexColors: true,
-        size: 0.34, // big, bright suns
+      const sunGeo = makeQuad();
+      sunGeo.setAttribute('instancePosition', sunPosAttr);
+      sunGeo.setAttribute('instanceColor', sunColAttr);
+      sunGeo.setAttribute('instanceRadius', sunRadAttr);
+
+      const satGeo = makeQuad();
+      satGeo.setAttribute('instancePosition', satPosAttr);
+      satGeo.setAttribute('instanceColor', satColAttr);
+      satGeo.setAttribute('instanceRadius', satRadAttr);
+
+      type FloatNode = ReturnType<typeof float>;
+
+      // ── Look layer: TSL radial body profile (bright solid core + soft glow) ──
+      // p: quad-centered coords −1..1; d: radius from center. A bigger instanced
+      // radius → the bright core fills more of the generous fixed billboard, so
+      // suns read as large luminous discs and satellites as smaller glowing
+      // motes — both as rounded objects with mass, not 1px squares.
+      const buildProfile = (radAttr: InstancedBufferAttribute) => {
+        const p = uv().sub(0.5).mul(2.0);
+        const d = vec2(p.x, p.y).length();
+        const rNode = instancedBufferAttribute(radAttr) as unknown as FloatNode;
+        // Bright SOLID core (1 inside the radius → 0 at the rim) — the body mass.
+        const core = smoothstep(rNode, rNode.mul(0.55), d);
+        // Soft outer GLOW halo trailing past the core, killed to exact zero well
+        // before the quad edge (no square rim at any DPR).
+        const glow = smoothstep(float(0.98), rNode.mul(0.5), d).mul(0.55);
+        // Combined luminous profile: solid core + halo, clamped ≤ ~1.5 so the
+        // additive core blooms hot without smearing the whole quad.
+        return core.add(glow);
+      };
+
+      const sunProfile = buildProfile(sunRadAttr);
+      const satProfile = buildProfile(satRadAttr);
+
+      const sunTint = instancedBufferAttribute(sunColAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof vec3>;
+      };
+      const satTint = instancedBufferAttribute(satColAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof vec3>;
+      };
+
+      // Generous fixed billboard footprints (hold the largest possible body +
+      // its glow halo). Suns get a bigger footprint than satellites.
+      const SUN_BILLBOARD = 0.9;
+      const SAT_BILLBOARD = 0.34;
+
+      const sunMat = new PointsNodeMaterial({
+        size: SUN_BILLBOARD,
         sizeAttenuation: true,
         transparent: true,
         opacity: 1,
         blending: AdditiveBlending,
         depthWrite: false,
       });
-      const satMat = new PointsMaterial({
-        color: new Color('#ffffff'),
-        vertexColors: true,
-        size: 0.1,
+      sunMat.positionNode = instancedBufferAttribute(sunPosAttr);
+      sunMat.colorNode = vec4(sunTint.mul(sunProfile), float(1));
+
+      const satMat = new PointsNodeMaterial({
+        size: SAT_BILLBOARD,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.95,
+        opacity: 1,
         blending: AdditiveBlending,
         depthWrite: false,
       });
+      satMat.positionNode = instancedBufferAttribute(satPosAttr);
+      satMat.colorNode = vec4(satTint.mul(satProfile), float(1));
 
-      const sunPoints = new Points(sunGeo, sunMat);
+      const sunPoints = new Sprite(sunMat);
+      sunPoints.geometry = sunGeo;
+      sunPoints.count = MAX_BODIES;
+      sunPoints.frustumCulled = false;
       sunPoints.name = 'n-body-orbit-suns';
-      const satPoints = new Points(satGeo, satMat);
+
+      const satPoints = new Sprite(satMat);
+      satPoints.geometry = satGeo;
+      satPoints.count = MAX_SATS;
+      satPoints.frustumCulled = false;
       satPoints.name = 'n-body-orbit-satellites';
+
       target.object.add(sunPoints);
       target.object.add(satPoints);
 
@@ -301,44 +394,81 @@ export const nBodyOrbitPrimitive: PrimitiveDefinition = {
       // (no markDirty) shows a difference; sizes also resolved live. ───────────
       const write = () => {
         // Live control read in write() (guide requirement): speed gently breathes
-        // the sun glow size so the control reads even without a re-run.
+        // the sun core radius + brightness so the control reads even without a
+        // re-run (markDirty below also replays the whole sim for the trajectory).
         const speed = clamp(num(params.speed, 1), 0.3, 2.2);
-        sunMat.size = 0.30 + speed * 0.05;
+        const sunR = 0.42 + speed * 0.05; // core fraction of the sun billboard
+        const sunLum = 1.4 + speed * 0.35; // bright suns (premultiplied → luma >> 120)
+        const satLum = 1.05; // visible satellites
 
         for (let b = 0; b < MAX_BODIES; b++) {
           if (b < activeBodies) {
             sunPos[b * 3] = px[b];
             sunPos[b * 3 + 1] = py[b];
             sunPos[b * 3 + 2] = pz[b];
+            const c = b === 0 ? sunHot : sunWarm;
+            const lum = b === 0 ? sunLum : sunLum * 0.85;
+            sunCol[b * 3] = c.r * lum;
+            sunCol[b * 3 + 1] = c.g * lum;
+            sunCol[b * 3 + 2] = c.b * lum;
+            // Primary sun a touch larger than the companions.
+            sunRad[b] = b === 0 ? sunR : sunR * 0.82;
           } else {
             sunPos[b * 3] = HIDDEN;
             sunPos[b * 3 + 1] = HIDDEN;
             sunPos[b * 3 + 2] = 0;
+            sunCol[b * 3] = 0;
+            sunCol[b * 3 + 1] = 0;
+            sunCol[b * 3 + 2] = 0;
+            sunRad[b] = 0;
           }
         }
+        sunPoints.count = activeBodies;
+
         for (let k = 0; k < MAX_SATS; k++) {
           const i = MAX_BODIES + k;
           if (k < activeSats) {
             satPos[k * 3] = px[i];
             satPos[k * 3 + 1] = py[i];
             satPos[k * 3 + 2] = pz[i];
+            // Deterministic per-satellite cool tint (ice/steel/mint).
+            const h = hash1(k * 2.17 + 0.5);
+            const c = h < 0.4 ? satIce : h < 0.72 ? satSteel : satMint;
+            satCol[k * 3] = c.r * satLum;
+            satCol[k * 3 + 1] = c.g * satLum;
+            satCol[k * 3 + 2] = c.b * satLum;
+            // Hashed mote radius so the swarm reads with varied object sizes.
+            satRad[k] = 0.4 + hash1(k * 5.9 + 1.3) * 0.18;
           } else {
             satPos[k * 3] = HIDDEN;
             satPos[k * 3 + 1] = HIDDEN;
             satPos[k * 3 + 2] = 0;
+            satCol[k * 3] = 0;
+            satCol[k * 3 + 1] = 0;
+            satCol[k * 3 + 2] = 0;
+            satRad[k] = 0;
           }
         }
+        satPoints.count = activeSats;
+
         sunPosAttr.needsUpdate = true;
+        sunColAttr.needsUpdate = true;
+        sunRadAttr.needsUpdate = true;
         satPosAttr.needsUpdate = true;
+        satColAttr.needsUpdate = true;
+        satRadAttr.needsUpdate = true;
       };
 
       reset();
       write();
 
       return {
-        // One generous orbital sweep; the rig loops back to 0 (a rewind → the
-        // system re-seeds). ~0.45 of this lands satellites mid-orbit.
-        duration: () => 6,
+        // One brisk orbital sweep. Shorter than before so the rig's ~0.45 frozen
+        // phase lands the satellites further around their orbits AND so adjacent
+        // play frames span more orbital phase → motion reads clearly between
+        // pinned frames (the advocate saw a frozen panel at the old 6s sweep).
+        // The rig loops back to 0 (a rewind → the system re-seeds).
+        duration: () => 3,
         seek: (t) => {
           stepper.seekStep(t);
           write();

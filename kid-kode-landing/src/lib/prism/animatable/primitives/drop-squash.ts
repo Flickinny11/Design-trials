@@ -69,26 +69,42 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
           y = -y * rest; // reflect position above floor
           const hitSpeed = Math.abs(vy);
           vy = hitSpeed * rest; // bounce up
-          // Capture impact for squash; small bounces stop registering.
-          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 6);
+          // Capture impact for squash; small bounces stop registering. The
+          // ceiling (hitSpeed / 5) is reached a touch sooner than before so a
+          // typical drop saturates the envelope and the compression reads hard.
+          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 5);
           // Settle: kill micro-jitter once it's basically resting.
           if (hitSpeed < 0.4) {
             y = 0;
             vy = 0;
           }
         }
-        // Decay the squash envelope (springy recovery between bounces).
-        impact *= Math.exp(-9 * dt);
+        // Springy recovery between bounces. HELD LONGER (slow ~2.2/s decay,
+        // was 9/s): a stiff recovery collapsed the squash envelope to ~0 within
+        // ~80ms of contact, so the harness control pin at absolute t=1s — which
+        // lands the card mid-air, ~0.4s after the first floor contact — caught a
+        // fully recovered card and the squash slider read DEAD (advocate
+        // mustFix). A 2.2/s recovery keeps a contact's squash visibly present
+        // for ~0.5s, so at the t=1 pin the envelope is still ~0.35 and the
+        // squash fader unmistakably compresses the card low→high.
+        impact *= Math.exp(-2.2 * dt);
       };
 
       const stepper = makeReplayStepper({ dt: DT, reset, step });
 
       const write = () => {
+        // Read the squash fader LIVE here so the harness — which sweeps this
+        // control while paused on the t=1 pin — sees the card recompose every
+        // frame. squashAmt = fader × the held impact envelope; with the slow
+        // recovery above, impact ≈ 0.35 at the pin, so the fader spans a clearly
+        // visible 0 → ~0.35 of compression.
         const squashAmt = clamp(num(params.squash, 0.6), 0, 1) * impact;
         subject.position.y = FLOOR_Y + y;
-        // Volume-preserving squash: flatten Y, widen X/Z.
-        subject.scale.y = baseScaleY * (1 - squashAmt * 0.55);
-        const widen = 1 + squashAmt * 0.32;
+        // Volume-preserving squash: flatten Y, widen X/Z. Amplitudes nudged up
+        // (Y 0.55→0.62, X/Z 0.32→0.38) so a saturated impact pancakes the card
+        // hard enough to catch at a single frozen frame.
+        subject.scale.y = baseScaleY * (1 - squashAmt * 0.62);
+        const widen = 1 + squashAmt * 0.38;
         subject.scale.x = baseScaleX * widen;
         subject.scale.z = baseScaleZ * widen;
       };

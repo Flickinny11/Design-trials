@@ -1,16 +1,28 @@
 import { describe, it, expect } from 'vitest';
-import { Points } from 'three';
+import { Sprite } from 'three';
 import { gravityBounceClusterPrimitive } from '@/lib/prism/animatable/primitives/gravity-bounce-cluster';
 import { makeTarget, runConformance } from './_conformance';
 
 // Pull the live position buffer the primitive writes into target.object.
+//
+// RENDER PATH (post fix-round-1): the balls are no longer THREE.Points. They are
+// an instanced THREE.Sprite named 'gravity-bounce-cluster' whose per-ball CENTERS
+// live in the geometry's 'instancePosition' InstancedBufferAttribute (the basin is
+// a SEPARATE decorative sprite named 'gravity-bounce-cluster-basin' — we must pick
+// the elements one, not it). 'instancePosition' carries the same flat
+// [x0,y0,z0, x1,…] layout and the same .array/.count API the old 'position' attr
+// did, so every downstream physics assertion reads unchanged. Parked balls are
+// written to HIDDEN = WALL_X + 1000 ≈ 1001.25, far above the y < 50 skip threshold
+// the tests already use, so that threshold is unchanged.
 function readPoints(target: ReturnType<typeof makeTarget>): {
   count: number;
   pos: Float32Array;
 } {
-  const pts = target.object.children.find((c) => c instanceof Points) as Points | undefined;
-  if (!pts) throw new Error('no Points built');
-  const attr = pts.geometry.getAttribute('position');
+  const sprite = target.object.children.find(
+    (c) => c instanceof Sprite && c.name === 'gravity-bounce-cluster',
+  ) as Sprite | undefined;
+  if (!sprite) throw new Error('no gravity-bounce-cluster element Sprite built');
+  const attr = sprite.geometry.getAttribute('instancePosition');
   return { count: attr.count, pos: attr.array as Float32Array };
 }
 

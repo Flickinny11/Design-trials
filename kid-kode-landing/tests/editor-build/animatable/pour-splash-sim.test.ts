@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Points, type BufferAttribute } from 'three';
+import { Sprite, type BufferAttribute } from 'three';
 import { pourSplashSimPrimitive } from '@/lib/prism/animatable/primitives/pour-splash-sim';
 import { makeTarget, runConformance } from './_conformance';
 
@@ -7,17 +7,29 @@ import { makeTarget, runConformance } from './_conformance';
 const FLOOR_Y = -1.05;
 const HIDDEN_MIN = 100; // parked particles sit at BASIN_HALF + 1000
 
-function bodyPoints(target: ReturnType<typeof makeTarget>): Points {
+// The render layer is now an instanced THREE.Sprite (named 'pour-splash-sim')
+// carrying the simulated drop centers in an 'instancePosition'
+// InstancedBufferAttribute — the old THREE.Points named 'pour-splash-body' with
+// a plain 'position' buffer is gone. The InstancedBufferAttribute exposes the
+// identical getX/getY/count API, so only the object lookup + attribute name
+// change here; every physics assertion below is unchanged.
+function bodySprite(target: ReturnType<typeof makeTarget>): Sprite {
   const p = target.object.children.find(
-    (c) => (c as Points).name === 'pour-splash-body',
+    (c) => (c as Sprite).name === 'pour-splash-sim' && c instanceof Sprite,
   );
-  if (!p) throw new Error('body Points not found');
-  return p as Points;
+  if (!p) throw new Error('body Sprite not found');
+  return p as Sprite;
+}
+
+/** The simulated drop centers — an InstancedBufferAttribute, getX/getY/count
+ *  compatible with the old position attr. */
+function bodyAttr(spr: Sprite): BufferAttribute {
+  return spr.geometry.getAttribute('instancePosition') as BufferAttribute;
 }
 
 /** Collect live (non-parked) particle [x,y] from the body buffer. */
-function liveParticles(pts: Points): Array<[number, number]> {
-  const attr = pts.geometry.getAttribute('position') as BufferAttribute;
+function liveParticles(spr: Sprite): Array<[number, number]> {
+  const attr = bodyAttr(spr);
   const out: Array<[number, number]> = [];
   for (let i = 0; i < attr.count; i++) {
     const x = attr.getX(i);
@@ -35,11 +47,11 @@ describe('pour-splash-sim primitive', () => {
   it('pours a stream that lands and throws a splash crown (real SPH-lite, not analytic)', () => {
     const target = makeTarget(pourSplashSimPrimitive);
     const inst = pourSplashSimPrimitive.create(target);
-    const pts = bodyPoints(target);
+    const spr = bodySprite(target);
 
     // Early: a few particles have just left the spout near the top.
     inst.seek(0.25);
-    const early = liveParticles(pts);
+    const early = liveParticles(spr);
     expect(early.length).toBeGreaterThan(0); // the pour has started
     const topY = Math.max(...early.map(([, y]) => y));
     expect(topY).toBeGreaterThan(0.6); // stream emerging from the top spout
@@ -53,7 +65,7 @@ describe('pour-splash-sim primitive', () => {
     let sawCrownRebound = false;
     let lowestY = Infinity;
     // Per-index "was it down in the pool then came back up" tracking.
-    const attr = pts.geometry.getAttribute('position') as BufferAttribute;
+    const attr = bodyAttr(spr);
     const wasLow = new Uint8Array(attr.count);
 
     for (let k = 1; k <= 220; k++) {
@@ -82,8 +94,8 @@ describe('pour-splash-sim primitive', () => {
   it('splash control is live at the frozen pin (markDirty proves trajectory controls move the frame)', () => {
     const target = makeTarget(pourSplashSimPrimitive);
     const inst = pourSplashSimPrimitive.create(target);
-    const pts = bodyPoints(target);
-    const attr = pts.geometry.getAttribute('position') as BufferAttribute;
+    const spr = bodySprite(target);
+    const attr = bodyAttr(spr);
 
     // Mid-action pin (rig freezes ~0.45 of duration; for an Infinite-duration
     // continuous pour the rig pins an absolute seconds value — pick one where the

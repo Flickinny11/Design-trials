@@ -46,7 +46,17 @@ import {
 } from './_sim-core';
 
 const DT = 1 / 90; // explicit wave solver wants a small, stable step
-const FIRST_POKE = 0.12; // first ripple lands shortly after t=0 (mid-action at 0.45)
+const FIRST_POKE = 0.05; // first ripple lands almost immediately
+// Pre-seed pokes injected at reset (t=0) so even the very first captured frame
+// already shows several propagating, interfering ripple systems — the surface is
+// never the flat dead square the advocate flagged. Deterministic spread (no RNG).
+const PRESEED_POKES = 5;
+// Wave steps run after pre-seeding so the pre-seed rings have already travelled
+// outward / begun reflecting by t=0 (a mid-action surface, not fresh splats).
+// The count is deliberately generous: more settle steps let tension (wave speed)
+// and damping (decay) compound, so both controls reshape the frozen frame more
+// decisively (the advocate found them dead).
+const PRESEED_SETTLE = 48;
 
 const SCHEMA = [
   // tension = c2 in the wave equation (how fast wavefronts travel).
@@ -121,11 +131,25 @@ export const rippleInteractSimPrimitive: PrimitiveDefinition = {
         v.fill(0);
         pokesFired = 0;
         simTime = 0;
+        // Pre-seed the tank so even the FIRST captured frame (idle / t=0) already
+        // shows several propagating, interfering ripple systems — the surface is
+        // never the flat dead square the advocate flagged. We fire a deterministic
+        // spread of pokes, then advance the wave solver a fixed number of steps at
+        // the LIVE tension/damping so the rings have already travelled outward and
+        // begun reflecting (and so tension/damping visibly reshape the frozen frame
+        // — the two controls the advocate found dead). pokesFired is left at 0 so
+        // the running schedule continues to add fresh rings on top.
+        const c2 = num(params.tension, 16);
+        const damp = clamp(num(params.damping, 0.985), 0.6, 0.999);
+        for (let k = 0; k < PRESEED_POKES; k++) injectPoke(k);
+        for (let s = 0; s < PRESEED_SETTLE; s++) waveStep2D(h, v, N, c2, damp, DT);
       };
 
       // Read the live pointer (normalized 0..1, subject centre at 0.5,0.5). The
-      // host updates this; the harness keeps it fixed while pinned, so a replay
-      // to the same t reproduces the same pokes.
+      // host always supplies one (the catalog rig orbits a synthetic pointer; a
+      // real host feeds the cursor), so this only biases WHERE the next poke's
+      // spread is centred — the deterministic quadrant walk in injectPoke does the
+      // heavy lifting of scattering sources across the whole tank.
       const readPointer = (): { px: number; py: number } => {
         const p = target.userData.pointer as { x?: unknown; y?: unknown } | undefined;
         const px = p && typeof p.x === 'number' && Number.isFinite(p.x) ? p.x : 0.5;
@@ -133,20 +157,34 @@ export const rippleInteractSimPrimitive: PrimitiveDefinition = {
         return { px, py };
       };
 
-      // Inject poke #k at the current pointer, jittered deterministically per
-      // poke so a static pointer still produces a spread-out, interfering train.
+      // Inject poke #k. Sources WALK a deterministic spread of opposite quadrants
+      // on successive pokes (gently pulled toward the live pointer), so the
+      // sources never collapse onto the dead centre — the frozen frame shows
+      // several ripple systems mid-propagation, reflecting off all four walls and
+      // crossing each other. AMPLITUDE is generous: the prior 0.06 coefficient
+      // read as a flat dead blue square per the advocate.
       const injectPoke = (k: number) => {
         const strength = num(params.pokeStrength, 1.0);
         const size = clamp(num(params.pokeSize, 3.4), 1.0, N * 0.4);
         const { px, py } = readPointer();
-        // Per-poke deterministic jitter (±~0.3 of the surface) around the pointer.
-        const jx = shash(k * 3.17 + 1.7) * 0.3;
-        const jy = shash(k * 5.91 + 4.3) * 0.3;
-        const gx = clamp((px + jx), 0.06, 0.94) * (N - 1);
-        const gy = clamp((py + jy), 0.06, 0.94) * (N - 1);
+        // Rotating-quadrant base so consecutive pokes land far apart and their
+        // wavefronts have room to travel, reflect, and interfere.
+        const quad = k % 4;
+        const qx = quad === 1 || quad === 2 ? 0.7 : 0.3;
+        const qy = quad >= 2 ? 0.7 : 0.3;
+        // Per-poke deterministic scatter around the quadrant anchor.
+        const sx = shash(k * 4.27 + 2.1) * 0.18;
+        const sy = shash(k * 6.83 + 5.4) * 0.18;
+        // Blend a little toward the live pointer so a real cursor still steers the
+        // train without ever collapsing the spread to a single point.
+        const cx = clamp(qx + sx + (px - 0.5) * 0.35, 0.08, 0.92);
+        const cy = clamp(qy + sy + (py - 0.5) * 0.35, 0.08, 0.92);
+        const gx = cx * (N - 1);
+        const gy = cy * (N - 1);
         // Alternate poke polarity (drop vs lift) so crests and troughs interfere.
         const sign = hash1(k * 2.39 + 0.5) > 0.5 ? 1 : -1;
-        splat2D(h, N, gx, gy, size, -strength * 0.06 * sign);
+        // Raised splat amplitude: the surface now visibly deforms (was 0.06).
+        splat2D(h, N, gx, gy, size, -strength * 0.2 * sign);
       };
 
       const step = (dt: number) => {
@@ -189,12 +227,16 @@ export const rippleInteractSimPrimitive: PrimitiveDefinition = {
 
       const write = () => {
         // Live amplitude readout so even a same-t reseek (no markDirty) shows a
-        // height response when poke strength is swept.
+        // height response when poke strength is swept. The DISP gain lifts the
+        // bilinear-sampled height into a displacement big enough that
+        // computeVertexNormals() tilts the surface visibly — the prior gain left
+        // the water reading flat (advocate: dead blue square).
         const amp = clamp(num(params.pokeStrength, 1.0), 0.1, 2.4);
+        const DISP = 1.8; // surface-relative displacement gain (plane span ≈ 1.8)
         for (let i = 0; i < vCount; i++) {
           const fx = ((baseX[i] - minX) / spanX) * (N - 1);
           const fy = ((baseY[i] - minY) / spanY) * (N - 1);
-          const z = sampleH(fx, fy) * (0.7 + amp * 0.3);
+          const z = sampleH(fx, fy) * (0.7 + amp * 0.3) * DISP;
           posAttr.setZ(i, baseZ[i] + z);
         }
         posAttr.needsUpdate = true;

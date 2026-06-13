@@ -1,23 +1,46 @@
 import { describe, it, expect } from 'vitest';
-import { Points, type BufferAttribute } from 'three';
+import { Sprite, type InstancedBufferAttribute } from 'three';
 import { shockwaveScatterPrimitive } from '@/lib/prism/animatable/primitives/shockwave-scatter';
 import { makeTarget, runConformance } from './_conformance';
 
-// Pull the live position buffer for the generated Points (subject:'empty').
-function posAttr(target: ReturnType<typeof makeTarget>): BufferAttribute {
-  let pts: Points | null = null;
+// The grid tiles now render as an instanced billboard THREE.Sprite (the P0
+// particle lesson: THREE.Points draw 1px specks under three/webgpu). The live
+// per-element centers the sim integrates live in the geometry's
+// 'instancePosition' InstancedBufferAttribute (an InstancedBufferAttribute,
+// same getX/getY/getZ/count API as the old Points 'position' buffer), mutated
+// in place by write() on every seek — so we grab it ONCE and re-read after each
+// seek() exactly like the old buffer.
+//
+// NOTE: the primitive adds TWO Sprites — the grid-element sprite (name
+// 'shockwave-scatter', carrying the simulated tiles via 'instancePosition') and
+// a SEPARATE decorative wavefront sprite (name 'shockwave-scatter-ring', which
+// has no 'instancePosition'). We must pick the element sprite, not the ring.
+function posAttr(target: ReturnType<typeof makeTarget>): InstancedBufferAttribute {
+  let tiles: Sprite | null = null;
   target.object.traverse((o) => {
-    if ((o as Points).isPoints) pts = o as Points;
+    if (
+      (o as Sprite).isSprite &&
+      o.name === 'shockwave-scatter' &&
+      (o as Sprite).geometry.getAttribute('instancePosition')
+    ) {
+      tiles = o as Sprite;
+    }
   });
-  if (!pts) throw new Error('shockwave-scatter did not add a Points object');
-  return (pts as Points).geometry.getAttribute('position') as BufferAttribute;
+  if (!tiles) {
+    throw new Error(
+      'shockwave-scatter did not add a tiles Sprite with an instancePosition attribute',
+    );
+  }
+  return (tiles as Sprite).geometry.getAttribute(
+    'instancePosition',
+  ) as InstancedBufferAttribute;
 }
 
 // Sum of squared radial distance of every active element from the grid centre —
 // a single scalar that rises as the wave scatters the grid and falls as it
 // springs back. Inactive (parked) elements sit at HIDDEN (≈1001), so restrict to
 // the on-screen band to measure only the live grid.
-function spread(attr: BufferAttribute): number {
+function spread(attr: InstancedBufferAttribute): number {
   let s = 0;
   for (let i = 0; i < attr.count; i++) {
     const x = attr.getX(i);

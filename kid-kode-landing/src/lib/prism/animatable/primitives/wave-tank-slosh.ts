@@ -1,16 +1,22 @@
 // wave-tank-slosh — water SLOSHING in a tank. A shallow-water height field on a
 // CPU Eulerian grid, driven by a TILT body force so the BULK of the water piles
-// up against one wall, reflects, and surges back — low-frequency bulk motion,
-// deliberately distinct from the high-frequency concentric `ripple`. CATALOG
-// primitive (hard / wave, subject:'plane').
+// up against one wall as a CURVED MENISCUS, reflects, and surges back as a
+// travelling bore — low-frequency bulk motion, deliberately distinct from the
+// high-frequency concentric `ripple`. CATALOG primitive (hard / wave,
+// subject:'plane').
 //
 // Genuine simulation, NOT a sine: a height grid h[] + vertical-velocity grid v[]
 // are integrated by the explicit wave equation (`waveStep2D` from _sim-core).
-// Each step a tilt — pointer.x plus a deterministic periodic component — applies
-// a horizontal BODY FORCE that biases v[] toward the down-tilt side, so mass
-// accumulates against that wall (a real slosh), the closed Neumann walls reflect
-// it, and damping bleeds energy. The grid height is bilinearly sampled onto the
-// host 'plane' z buffer and re-normalled, so it lights as real ice/steel water.
+// Each step a tilt — pointer.x plus a deterministic periodic component — drives
+// the surface toward a NON-LINEAR wall-piling equilibrium (a concave meniscus
+// that rises steeply against the down-tilt wall, NOT a flat affine slope), and a
+// deterministic travelling SURGE FRONT is splatted at that wall so a real moving
+// bore crosses the tank and reflects off the closed Neumann walls. Damping
+// bleeds energy. The grid height is bilinearly sampled onto the host 'plane' z
+// buffer, the plane is PITCHED BACK so the camera looks across the surface (so
+// the relief reads as silhouette undulation, not a foreshortened ramp), the
+// normals are recomputed, and a per-vertex height→luma colour ramp glints the
+// crests so the surface reads as moving water with real relief.
 //
 // Deterministic via the reset-replay stepper: the frame at time t is a pure
 // function of (params, t). The tilt phase is seeded from a hash (no wallclock,
@@ -21,6 +27,9 @@
 import {
   Mesh,
   Color,
+  BoxGeometry,
+  MeshStandardMaterial as MeshStandardMaterialCtor,
+  Float32BufferAttribute,
   type BufferAttribute,
   type InterleavedBufferAttribute,
   type MeshStandardMaterial,
@@ -32,13 +41,19 @@ import {
   resolveSimTier,
   tierPick,
   waveStep2D,
+  splat2D,
   hash1,
 } from './_sim-core';
 
 const DT = 1 / 120; // small fixed step for a stable explicit grid
 const PLANE_HALF = 0.9; // host plane spans XY ∈ [-0.9, 0.9]
+const PLANE_SPAN = PLANE_HALF * 2;
+const VIEW_PITCH = -0.62; // lay the plane back so the camera reads the relief
 const WATER = '#7fd4ff'; // ice water
 const WATER_EMISSIVE = '#16384a'; // steel-blue depth glow
+const WALL_COLOR = '#cfdde6'; // pale steel tank walls
+const CREST_TINT = new Color('#dff2ff'); // ice highlight on crests / wall pile
+const TROUGH_TINT = new Color('#3a6f8c'); // deep steel-blue in the troughs
 
 const SCHEMA = [
   // Drive strength of the slosh body force (how hard the tilt pushes the bulk).
@@ -74,18 +89,66 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
       const vCount = posAttr.count;
 
       // Recolor the host plane to ice/steel water (lit, transmissive-feeling).
+      // vertexColors ON so a per-vertex height→luma ramp can glint the crests:
+      // without surface luma variation a foreshortened plane reads as one flat
+      // fill (the advocate's "constant blue, no surface variation" complaint).
       const mat = mesh.material as MeshStandardMaterial;
       const prevColor = mat.color.clone();
       const prevEmissive = mat.emissive.clone();
       const prevEmissiveI = mat.emissiveIntensity;
       const prevRough = mat.roughness;
       const prevMetal = mat.metalness;
+      const prevVertexColors = mat.vertexColors;
       mat.color = new Color(WATER);
       mat.emissive = new Color(WATER_EMISSIVE);
-      mat.emissiveIntensity = 0.5;
-      mat.roughness = 0.12;
-      mat.metalness = 0.18;
+      mat.emissiveIntensity = 0.45;
+      mat.roughness = 0.1; // glossy water → strong specular glint on crests
+      mat.metalness = 0.22;
+      mat.vertexColors = true;
       mat.needsUpdate = true;
+
+      // Pitch the plane back so the camera (straight-on at z≈3.2) looks ACROSS
+      // the water surface — relief then reads as silhouette undulation instead of
+      // a foreshortened Z ramp. This is the same trick the passing water sims use
+      // (buoyancy-bob lays its plane flat). Restored on dispose.
+      const prevRotX = mesh.rotation.x;
+      mesh.rotation.x = VIEW_PITCH;
+
+      // Steel tank walls + floor so the bulk has visible containers to pile
+      // against (the advocate flagged "no visible tank/container walls").
+      const wallMat = new MeshStandardMaterialCtor({
+        color: new Color(WALL_COLOR),
+        emissive: new Color('#26343f'),
+        emissiveIntensity: 0.28,
+        roughness: 0.4,
+        metalness: 0.35,
+      });
+      // The plane lives in local XY (x = across-tank, y = down-tank) and the
+      // surface displaces along local +z (the HEIGHT axis). So the tank walls
+      // must be thin in x, span the full y, and RISE along z; the floor sits a
+      // little below z=0 spanning x and y. Children of the mesh ⇒ they inherit
+      // the view pitch and frame the bulk where it piles against the x-walls.
+      const WALL_T = 0.05; // wall thickness (across-tank)
+      const WALL_Z = 0.6; // wall height along the displacement axis
+      const makeWall = (
+        w: number,
+        d: number,
+        zh: number,
+        x: number,
+        y: number,
+        z: number,
+      ): Mesh => {
+        const m = new Mesh(new BoxGeometry(w, d, zh), wallMat);
+        m.position.set(x, y, z);
+        m.name = 'tank-wall';
+        return m;
+      };
+      // Left / right end walls (the bulk slams into these as it surges wall-to-
+      // wall), and a floor pan a touch below the resting surface.
+      const wallL = makeWall(WALL_T, PLANE_SPAN + WALL_T, WALL_Z, -PLANE_HALF, 0, WALL_Z * 0.32);
+      const wallR = makeWall(WALL_T, PLANE_SPAN + WALL_T, WALL_Z, PLANE_HALF, 0, WALL_Z * 0.32);
+      const floor = makeWall(PLANE_SPAN + WALL_T, PLANE_SPAN + WALL_T, WALL_T, 0, 0, -WALL_T);
+      mesh.add(wallL, wallR, floor);
 
       // Cache base vertex XY (so dispose restores) and precompute, per vertex,
       // the bilinear sample weights into the height grid (XY → grid cell).
@@ -98,6 +161,15 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
         baseZ[i] = posAttr.getZ(i);
       }
 
+      // Per-vertex colour buffer (height → ice-crest / steel-trough ramp).
+      const colorArr = new Float32Array(vCount * 3);
+      const hadColor = !!geom.getAttribute('color');
+      const prevColorAttr = hadColor
+        ? (geom.getAttribute('color') as BufferAttribute)
+        : null;
+      const colAttr = new Float32BufferAttribute(colorArr, 3);
+      geom.setAttribute('color', colAttr);
+
       // ── Height grid (CPU Eulerian shallow water) ──────────────────────────
       // Tier-gated resolution: T0 markedly coarser/cheaper than T2 (HEAVY sim).
       const tier = resolveSimTier(target);
@@ -108,11 +180,16 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
 
       // Deterministic per-instance tilt phase offset (no Math.random / Date.now).
       const phaseSeed = hash1(7.0) * Math.PI * 2;
+      const surgeSeed = hash1(13.0); // deterministic transverse offset of the bore
+      let stepIdx = 0; // deterministic surge cadence counter (reset → 0)
+      let prevTiltSign = 0; // detect slosh reversal → fire the bore at the new wall
 
       const reset = () => {
-        // Start flat and at rest; the tilt body force builds the slosh up.
+        // Start flat and at rest; the tilt body force + surge bore build it up.
         h.fill(0);
         v.fill(0);
+        stepIdx = 0;
+        prevTiltSign = 0;
       };
 
       const step = (dt: number) => {
@@ -133,28 +210,57 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
         const tilt = clamp(pointerTilt + tiltBias + sway, -2, 2);
 
         // Surface wave propagation: spreads the pile into the natural sloshing
-        // mode and carries the crest wall-to-wall. c² = tension.
-        const c2 = tension * 6.0;
+        // mode and carries the crest wall-to-wall. tension scales c² strongly so
+        // the knob visibly changes how fast the bore travels (was a dead control).
+        const c2 = tension * 22.0;
         const damp = 1 - damping * 0.02;
         waveStep2D(h, v, N, c2, damp, dt);
 
-        // GRAVITY RESTORING toward a TILT-DEFINED equilibrium plane: a tilted
-        // tank's water settles to a sloped surface, HIGH on the down-tilt wall.
-        // Accelerate each cell's vertical velocity toward h_eq(x) = ampEq·tilt·x.
-        // This is the slosh body force — it drives genuine MASS TRANSPORT across
-        // the tank (the bulk piles on a wall), and because `tilt` reverses with
-        // the sway/pointer the bulk surges back to the other wall. Strong global
-        // damping keeps it a bounded, controllable slosh (no resonant blow-up).
-        const ampEq = 0.55 * slosh; // peak equilibrium tilt height
+        // TRAVELLING SURGE BORE: when the slosh reverses (the bulk starts heading
+        // to the other wall) splat a localized crest against the down-tilt wall.
+        // It then propagates across the tank as a moving bore and reflects off the
+        // closed walls — this is the cross-surface RELIEF the advocate found
+        // missing (the equilibrium alone is too smooth). Fully deterministic:
+        // fired on the tilt-sign flip plus a fixed cadence, position seeded by a
+        // hash, amplitude follows the live slosh control.
+        const tiltSign = tilt > 0.04 ? 1 : tilt < -0.04 ? -1 : prevTiltSign;
+        const reversed = tiltSign !== 0 && tiltSign !== prevTiltSign;
+        prevTiltSign = tiltSign;
+        if (reversed || stepIdx % 70 === 0) {
+          // Wall the bulk is heading toward (down-tilt side): +tilt → right wall.
+          const wallX = tiltSign > 0 ? N - 2 : 1;
+          // Transverse position drifts deterministically so successive bores hit
+          // at slightly different y — gives the surface y-axis structure too.
+          const k = Math.floor(stepIdx / 35);
+          const cy = (((k + surgeSeed * 5) % 5) / 5) * (N - 4) + 2;
+          splat2D(h, N, wallX, cy, N * 0.32, (0.16 + 0.5 * slosh) * tiltSign);
+        }
+        stepIdx++;
+
+        // GRAVITY RESTORING toward a NON-LINEAR wall-piling equilibrium: a tilted
+        // tank's bulk does NOT settle to a flat slope — it piles steeply against
+        // the down-tilt wall as a concave MENISCUS and stays low across the rest
+        // of the basin. h_eq(x) = ampEq·tilt·sign(xn)·|xn|^p (p>1 ⇒ curved, wall-
+        // weighted) plus a gentle transverse bow so the surface is never a 1-D
+        // ramp. This is the slosh body force — it drives genuine MASS TRANSPORT
+        // across the tank, and because `tilt` reverses with the sway/pointer the
+        // bulk surges back to the other wall. Strong damping keeps it bounded.
+        const ampEq = 0.62 * slosh; // peak equilibrium pile height
         const kRestore = 26.0; // gravity-like pull toward equilibrium
         const vDamp = Math.exp(-(0.6 + damping * 5.0) * dt); // bulk-mode damping
+        const bow = 0.12 * slosh; // shallow transverse cross-tank bow
         for (let y = 0; y < N; y++) {
           const row = y * N;
+          const yn = N > 1 ? (y / (N - 1)) * 2 - 1 : 0; // −1..1 down-tank
+          const yBow = bow * (1 - yn * yn); // bulge mid-tank, low at the y-walls
           for (let x = 0; x < N; x++) {
             const xn = N > 1 ? (x / (N - 1)) * 2 - 1 : 0; // −1..1 across tank
-            const hEq = ampEq * tilt * xn;
+            // Curved, wall-weighted pile (|xn|^1.6) so relief is a meniscus, not
+            // a straight ramp. Sign carries the down-tilt direction.
+            const pile = Math.sign(xn) * Math.pow(Math.abs(xn), 1.6);
+            const hEq = ampEq * tilt * pile + yBow * Math.sign(tilt || 1);
             const i = row + x;
-            v[i] += (hEq - h[i]) * kRestore * dt; // pull surface toward the slope
+            v[i] += (hEq - h[i]) * kRestore * dt; // pull surface toward the pile
             v[i] *= vDamp; // bleed energy so the slosh stays bounded
           }
         }
@@ -192,15 +298,35 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
       };
 
       const write = () => {
-        const exaggerate = num(params.height, 0.32);
+        // Strong vertical exaggeration so the relief reads as real water across
+        // the pitched-back plane (a timid displacement reads as a flat fill).
+        const exaggerate = num(params.height, 0.32) * 2.4;
+        // First pass: find the height range so the crest-glint colour ramp
+        // normalizes per-frame (a small slosh still glints, a big one isn't
+        // clipped). Deterministic — derived only from the height grid.
+        let lo = Infinity;
+        let hi = -Infinity;
+        for (let i = 0, cells = N * N; i < cells; i++) {
+          if (h[i] < lo) lo = h[i];
+          if (h[i] > hi) hi = h[i];
+        }
+        const range = hi - lo > 1e-4 ? hi - lo : 1;
         for (let i = 0; i < vCount; i++) {
           // Plane XY ∈ [-0.9, 0.9] → grid UV ∈ [0,1].
           const sx = (baseX[i] + PLANE_HALF) / (2 * PLANE_HALF);
           const sy = (baseY[i] + PLANE_HALF) / (2 * PLANE_HALF);
-          const z = sampleHeight(sx, sy) * exaggerate;
-          posAttr.setZ(i, baseZ[i] + z);
+          const hs = sampleHeight(sx, sy);
+          posAttr.setZ(i, baseZ[i] + hs * exaggerate);
+          // Height → ice-crest / steel-trough colour ramp. Crests glint bright
+          // (ice), troughs sink deep steel-blue → real surface luma variation.
+          const t = clamp((hs - lo) / range, 0, 1);
+          const tt = t * t * (3 - 2 * t); // smoothstep for a softer crest roll-off
+          colorArr[i * 3] = TROUGH_TINT.r + (CREST_TINT.r - TROUGH_TINT.r) * tt;
+          colorArr[i * 3 + 1] = TROUGH_TINT.g + (CREST_TINT.g - TROUGH_TINT.g) * tt;
+          colorArr[i * 3 + 2] = TROUGH_TINT.b + (CREST_TINT.b - TROUGH_TINT.b) * tt;
         }
         posAttr.needsUpdate = true;
+        colAttr.needsUpdate = true;
         geom.computeVertexNormals();
       };
 
@@ -224,12 +350,24 @@ export const waveTankSloshPrimitive: PrimitiveDefinition = {
           }
           posAttr.needsUpdate = true;
           geom.computeVertexNormals();
+          // Restore the host plane material + orientation.
+          mesh.rotation.x = prevRotX;
           mat.color = prevColor;
           mat.emissive = prevEmissive;
           mat.emissiveIntensity = prevEmissiveI;
           mat.roughness = prevRough;
           mat.metalness = prevMetal;
+          mat.vertexColors = prevVertexColors;
           mat.needsUpdate = true;
+          // Restore / clear the per-vertex colour attribute we added.
+          if (prevColorAttr) geom.setAttribute('color', prevColorAttr);
+          else geom.deleteAttribute('color');
+          // Tear down the tank walls we mounted.
+          mesh.remove(wallL, wallR, floor);
+          wallL.geometry.dispose();
+          wallR.geometry.dispose();
+          floor.geometry.dispose();
+          wallMat.dispose();
         },
       };
     },

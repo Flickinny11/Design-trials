@@ -56,11 +56,18 @@ const TRAIL_SAMPLE_EVERY = 3; // capture a trail mote every N sim steps
 // Pegs: fixed build-time max; the live `pegs` knob narrows how many are active.
 const PEG_MAX = 12;
 
-// Pool layout: [ pegs (PEG_MAX) | trail (TRAIL_MAX) | ball (1) ].
+// Side walls — the ball reflects off ±WALL_X. They're drawn as two columns of
+// small steel motes (a dotted boundary) so the playfield edges read as real
+// containing walls on the dark field, all in the same one draw call.
+const WALL_DOTS = 11; // motes per wall column
+const WALL_COUNT = WALL_DOTS * 2; // left + right columns
+
+// Pool layout: [ pegs (PEG_MAX) | walls (WALL_COUNT) | trail (TRAIL_MAX) | ball (1) ].
 const PEG_BASE = 0;
-const TRAIL_BASE = PEG_MAX;
-const BALL_SLOT = PEG_MAX + TRAIL_MAX;
-const POOL = PEG_MAX + TRAIL_MAX + 1;
+const WALL_BASE = PEG_MAX;
+const TRAIL_BASE = PEG_MAX + WALL_COUNT;
+const BALL_SLOT = PEG_MAX + WALL_COUNT + TRAIL_MAX;
+const POOL = PEG_MAX + WALL_COUNT + TRAIL_MAX + 1;
 
 const HIDDEN_Y = -1000; // park inactive pool slots far out of view (and dark)
 
@@ -74,6 +81,7 @@ const BASE_SIZE = 0.2;
 const BALL_CORE = '#eaf6ff'; // ice-bright white ball core
 const BALL_CORONA = '#7fd4ff'; // ice-blue corona around the core
 const PEG_STEEL = '#cfdde6'; // cool steel peg ring
+const WALL_STEEL = '#9fb4c4'; // dimmer steel for the containing side walls
 const TRAIL_HOT = '#9fe0c4'; // freshly laid trail (mint near the ball)
 const TRAIL_COOL = '#ecd49d'; // older trail cools to brass
 
@@ -119,6 +127,7 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
       const ballCore = toRGB(BALL_CORE);
       const ballCorona = toRGB(BALL_CORONA);
       const pegSteel = toRGB(PEG_STEEL);
+      const wallSteel = toRGB(WALL_STEEL);
       const trailHot = toRGB(TRAIL_HOT);
       const trailCool = toRGB(TRAIL_COOL);
 
@@ -280,16 +289,18 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
       // ── Look layer: TSL radial falloff × per-mote color, + a peg RING look ──
       // d: 0 at quad center → 1 at edge midpoint (√2 at the corner).
       const d = uv().sub(0.5).mul(2).length();
-      // Gaussian glow core so bodies read bright against the dark rig.
-      const glow = exp(d.mul(d).mul(-3.0));
+      // COMPACT Gaussian core so a body reads as a tight, round object with mass
+      // (not a tile-wide bloom). Steeper falloff than before (−7 vs −3) keeps the
+      // bright footprint small so overlapping additive motes don't wash the field.
+      const glow = exp(d.mul(d).mul(-7.0));
       // Killed to EXACT zero before the quad edge (no square rim at any DPR).
-      const rim = smoothstep(float(0.7), float(0.95), d).oneMinus();
+      const rim = smoothstep(float(0.62), float(0.86), d).oneMinus();
       const solid = glow.mul(rim);
       // Hollow RING look for pegs: bright at a mid radius, dark in the middle —
-      // reads as a bumper rim rather than a blob. Peaks near d≈0.55, killed to
+      // reads as a bumper rim rather than a blob. Peaks near d≈0.5, killed to
       // zero at the center and before the edge (no square rim at any DPR).
-      const ring = smoothstep(float(0.2), float(0.55), d).mul(rim).mul(
-        smoothstep(float(0.95), float(0.55), d),
+      const ring = smoothstep(float(0.18), float(0.5), d).mul(rim).mul(
+        smoothstep(float(0.82), float(0.5), d),
       );
       // Dedicated peg-flag attribute (0 = solid body/trail, 1 = ring peg). The
       // look is selected per-mote so pegs, trail, and ball share ONE draw call.
@@ -355,13 +366,38 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
           positions[slot * 3 + 1] = pegY[i];
           positions[slot * 3 + 2] = -0.02; // a hair behind the ball plane
           // Steel ring, modest brightness so the ball clearly out-shines it.
-          const lum = 0.9;
+          // Capped well under 1 (additive): a discrete cool ring, not a hot blob.
+          const lum = 0.62;
           colors[slot * 3] = pegSteel[0] * lum;
           colors[slot * 3 + 1] = pegSteel[1] * lum;
           colors[slot * 3 + 2] = pegSteel[2] * lum;
           // Peg footprint ~ 2·PEG_R relative to BASE_SIZE.
           sizes[slot] = (PEG_R * 2) / BASE_SIZE;
           flags[slot] = 1; // ring look
+        }
+
+        // ── Side walls (two dotted steel columns at ±WALL_X) ─────────────
+        // The ball reflects off these; drawn as small solid motes so the dark
+        // field reads as a contained playfield with visible boundaries.
+        const wallTop = TOP_Y + 0.12;
+        const wallBot = DRAIN_Y + 0.18;
+        const wallSpan = wallTop - wallBot;
+        for (let s = 0; s < 2; s++) {
+          const wx = s === 0 ? -WALL_X : WALL_X;
+          for (let j = 0; j < WALL_DOTS; j++) {
+            const slot = WALL_BASE + s * WALL_DOTS + j;
+            const f = WALL_DOTS > 1 ? j / (WALL_DOTS - 1) : 0;
+            positions[slot * 3] = wx;
+            positions[slot * 3 + 1] = wallBot + f * wallSpan;
+            positions[slot * 3 + 2] = -0.03; // just behind the pegs
+            const lum = 0.5;
+            colors[slot * 3] = wallSteel[0] * lum;
+            colors[slot * 3 + 1] = wallSteel[1] * lum;
+            colors[slot * 3 + 2] = wallSteel[2] * lum;
+            // Small round studs running the height of the wall.
+            sizes[slot] = (0.07 * 2) / BASE_SIZE;
+            flags[slot] = 0; // solid look
+          }
         }
 
         // ── Trail (cooling motes, oldest dimmest) ────────────────────────
@@ -384,7 +420,9 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
           const tg = trailHot[1] + (trailCool[1] - trailHot[1]) * m;
           const tb = trailHot[2] + (trailCool[2] - trailHot[2]) * m;
           const lifeFade = (1 - ageNorm) * (1 - ageNorm);
-          const lum = 1.15 * lifeFade;
+          // Capped under 1 (additive): the newest mote glows, the tail fades to
+          // nothing — a readable streak that never stacks toward white.
+          const lum = 0.72 * lifeFade;
           colors[slot * 3] = tr * lum;
           colors[slot * 3 + 1] = tg * lum;
           colors[slot * 3 + 2] = tb * lum;
@@ -403,11 +441,15 @@ export const pinballBouncePrimitive: PrimitiveDefinition = {
         // a faster ball reads hotter (a live, frozen-visible energy cue). This is
         // the at-least-one control read LIVE in write().
         const launch = num(params.launchSpeed, 2.2);
-        const speedHeat = clamp(0.85 + launch * 0.12, 0.85, 1.6);
+        // Speed-heat stays a gentle multiplier; capped so even a max-launch ball
+        // does not blow out under additive blending (compact Gaussian core).
+        const speedHeat = clamp(0.85 + launch * 0.07, 0.85, 1.2);
         const cr = ballCore[0] * 0.6 + ballCorona[0] * 0.4;
         const cg = ballCore[1] * 0.6 + ballCorona[1] * 0.4;
         const cb = ballCore[2] * 0.6 + ballCorona[2] * 0.4;
-        const lum = 2.3 * ballLum * speedHeat;
+        // Brightest body in the scene, but bounded near ~1 (×1.2 heat ⇒ ~1.06)
+        // so the bright pixels read as a hot ice ball, not a saturated white plane.
+        const lum = 0.88 * ballLum * speedHeat;
         colors[BALL_SLOT * 3] = cr * lum;
         colors[BALL_SLOT * 3 + 1] = cg * lum;
         colors[BALL_SLOT * 3 + 2] = cb * lum;

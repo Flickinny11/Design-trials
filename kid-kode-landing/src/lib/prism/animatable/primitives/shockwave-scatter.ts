@@ -1,5 +1,5 @@
 // shockwave-scatter — a radial SHOCKWAVE expands from the centre across a regular
-// GRID of elements (dots/tiles). As the expanding force ring sweeps past each
+// GRID of elements (visible tiles). As the expanding force ring sweeps past each
 // element it is PUSHED outward (an impulse the moment the ring crosses, plus the
 // integrated velocity that follows); a spring then pulls it back toward its grid
 // slot — a propagating displacement wave through a layout. After the wave passes
@@ -20,15 +20,47 @@
 // (a rewind → re-fire). The ~0.45 frozen phase lands MID-EXPANSION: the ring is
 // partway across the grid, a visible bulge wave of displaced elements trailing
 // behind it.
+//
+// RENDER PATH (P0 particle lesson — bubble-rise-sim.ts / smoke-plume-sim.ts):
+// THREE.Points render 1px specks on both backends and PointsMaterial.map never
+// samples a per-quad uv under three/webgpu, so the grid elements MUST be an
+// instanced THREE.Sprite carrying a PointsNodeMaterial whose
+//   • positionNode = instancedBufferAttribute(per-element CENTER)
+//   • colorNode    = a TSL tile profile of the quad uv: a BRIGHT soft-edged core
+//     (luma >> 120) feathered to exact zero before the quad edge, times a
+//     per-element instanced COLOR. Generous fixed billboard footprint so each
+//     element reads as an object with mass, not a star.
+// The expanding shock RING is a SEPARATE single billboard sprite whose TSL
+// colorNode draws a bright annulus (the wavefront arc) at a normalised radius;
+// the quad is scaled to the live ring radius each frame so the user sees a real
+// expanding ring sweep across the grid. It flares bright at the leading edge and
+// fades to nothing once the ring has passed the corners (recharge).
+// All randomness derives from index hashes (hash1/hash2 — no Math.random, no
+// Date.now) so seek() is pure and reproducible headless. DOM-free, TSL only.
+//
+// Palette: Observatory brass (#ecd49d, rest) → ice (#7fd4ff, excited); the ring
+// is amber/ice. Never purple, never 1px squares.
 
 import {
-  Points,
+  Sprite,
   BufferGeometry,
   BufferAttribute,
-  PointsMaterial,
+  InstancedBufferAttribute,
   Color,
   AdditiveBlending,
+  DynamicDrawUsage,
 } from 'three';
+import { PointsNodeMaterial } from 'three/webgpu';
+import {
+  instancedBufferAttribute,
+  uv,
+  vec2,
+  vec3,
+  vec4,
+  float,
+  smoothstep,
+  uniform,
+} from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type PrimitiveDefinition } from '../contract';
 import { hash2, makeReplayStepper, resolveSimTier, tierPick } from './_sim-core';
@@ -41,6 +73,9 @@ const RING_WIDTH = 0.36; // thickness of the moving force annulus (world units)
 const MAX_RADIUS = 2.0; // ring fully past the corners by here
 const CYCLE = 2.6; // seconds per fire→settle→recharge cycle
 const EXPAND_FRAC = 0.62; // fraction of the cycle the ring spends expanding
+// Generous fixed billboard footprint per grid tile — holds the largest tile a
+// dense grid produces plus the feathered edge, so a tile reads as an object.
+const TILE_BILLBOARD = 0.34;
 
 const SCHEMA = [
   { id: 'power', label: 'Shock Power', type: 'knob', min: 0.5, max: 6, step: 0.1, default: 3.4 },
@@ -136,9 +171,12 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
         const ringSpeed = num(params.ringSpeed, 1.5);
 
         // Spring stiffness + drag derived from springBack: more springBack → a
-        // snappier return and a quicker settle.
-        const k = 30 + spring01 * 90; // Hooke constant toward the slot
-        const drag = Math.exp(-(3.2 + spring01 * 7) * dt); // velocity retention
+        // stiffer return AND heavier velocity bleed, so even MID-expansion (the
+        // pinned frame) a high springBack visibly reins the displaced tiles in
+        // toward home while a low springBack lets them fling far out. This is
+        // what makes the control move the pinned pose (advocate: springBack dead).
+        const k = 22 + spring01 * 150; // Hooke constant toward the slot
+        const drag = Math.exp(-(2.6 + spring01 * 11) * dt); // velocity retention
 
         const r = ringRadius(ringSpeed);
         const half = RING_WIDTH;
@@ -169,13 +207,15 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
             // Sharp one-shot impulse the first time the ring reaches this element
             // (the leading-edge "kick"), then a continuous annulus force while it
             // straddles the ring. Both are velocity contributions → integrated.
+            // The impulse is damped by springBack so a stiff grid resists the
+            // kick (the displacement at the pinned frame scales with the control).
             if (!kicked[i] && dr <= 0) {
-              const impulse = power * 1.6;
+              const impulse = power * 1.6 * (1.25 - spring01 * 0.55);
               vx[i] += nx * impulse;
               vy[i] += ny * impulse;
               kicked[i] = 1;
             }
-            const force = power * 14 * env;
+            const force = power * 14 * env * (1.25 - spring01 * 0.55);
             vx[i] += nx * force * dt;
             vy[i] += ny * force * dt;
           }
@@ -213,35 +253,122 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
         step,
       });
 
-      // --- Geometry / material: round additive points (a brass→ice grid), never
-      //     1px squares (sizeAttenuation round-ish points, soft additive falloff).
-      const positions = new Float32Array(MAX_COUNT * 3);
-      const colors = new Float32Array(MAX_COUNT * 3);
-      const geometry = new BufferGeometry();
-      const posAttr = new BufferAttribute(positions, 3);
-      const colAttr = new BufferAttribute(colors, 3);
-      geometry.setAttribute('position', posAttr);
-      geometry.setAttribute('color', colAttr);
+      // ── GRID TILES: instanced billboard sprite (bright soft-bodied tiles, NOT
+      //    1px Points). One quad + per-element instanced center/color. ──────────
+      const positions = new Float32Array(MAX_COUNT * 3); // tile centers
+      const colors = new Float32Array(MAX_COUNT * 3); // premultiplied tint×brightness
+      const posAttr = new InstancedBufferAttribute(positions, 3);
+      const colAttr = new InstancedBufferAttribute(colors, 3);
+      posAttr.setUsage(DynamicDrawUsage);
+      colAttr.setUsage(DynamicDrawUsage);
 
-      const material = new PointsMaterial({
-        size: 0.16,
+      const tileGeo = new BufferGeometry();
+      tileGeo.setIndex([0, 1, 2, 0, 2, 3]);
+      tileGeo.setAttribute(
+        'position',
+        new BufferAttribute(
+          new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]),
+          3,
+        ),
+      );
+      tileGeo.setAttribute(
+        'uv',
+        new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), 2),
+      );
+      tileGeo.setAttribute('instancePosition', posAttr);
+      tileGeo.setAttribute('instanceColor', colAttr);
+
+      // TSL tile profile: quad-centered coords p = (uv-0.5)*2 → −1..1. A BRIGHT
+      // soft core feathered to exact zero before the quad edge (no square rim at
+      // any DPR; PointsMaterial.map renders BLACK under three/webgpu so we never
+      // use it). radius ~0.78 in quad units → a fat object with mass.
+      const tp = uv().sub(0.5).mul(2.0);
+      const td = vec2(tp.x, tp.y).length();
+      const tileCore = float(0.78);
+      const tileFeather = float(0.34);
+      // 1 in the bright core → 0 feathered out before the quad edge.
+      const tileProfile = smoothstep(tileCore, tileCore.sub(tileFeather), td);
+      const tileTint = instancedBufferAttribute(colAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof vec3>;
+      };
+      const tileMat = new PointsNodeMaterial({
+        size: TILE_BILLBOARD,
         sizeAttenuation: true,
-        vertexColors: true,
         transparent: true,
-        opacity: 0.96,
+        opacity: 1,
         blending: AdditiveBlending,
         depthWrite: false,
       });
+      tileMat.positionNode = instancedBufferAttribute(posAttr);
+      tileMat.colorNode = vec4(tileTint.mul(tileProfile), float(1));
 
-      const points = new Points(geometry, material);
-      points.name = 'shockwave-scatter';
-      target.object.add(points);
+      const tiles = new Sprite(tileMat);
+      tiles.geometry = tileGeo;
+      tiles.count = MAX_COUNT;
+      tiles.frustumCulled = false;
+      tiles.name = 'shockwave-scatter';
+      target.object.add(tiles);
+
+      // ── SHOCK RING: a single big billboard whose TSL colorNode draws a bright
+      //    annulus (the expanding wavefront). The quad is scaled in world space to
+      //    the live ring radius each frame, and its brightness driven by a uniform
+      //    so it flares at the leading edge and fades once the ring has passed. ──
+      const ringGeo = new BufferGeometry();
+      ringGeo.setIndex([0, 1, 2, 0, 2, 3]);
+      ringGeo.setAttribute(
+        'position',
+        new BufferAttribute(
+          new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]),
+          3,
+        ),
+      );
+      ringGeo.setAttribute(
+        'uv',
+        new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), 2),
+      );
+
+      // Uniforms feeding the ring shader: brightness (fades at recharge) and the
+      // ring's annulus thickness in normalised-quad units (so the wavefront stays
+      // a crisp arc as the quad scales up in world space).
+      const ringBright = uniform(0);
+      const ringThick = uniform(0.16);
+      const rp = uv().sub(0.5).mul(2.0);
+      const rd = vec2(rp.x, rp.y).length();
+      // Annulus centred at normalised radius 0.84 (just inside the quad edge so
+      // the world-radius scale maps the ring front to MAX_RADIUS); a bright thin
+      // band feathered both sides → a clean expanding wavefront arc.
+      const ringR = float(0.84);
+      const inner = smoothstep(ringR.sub(ringThick), ringR, rd);
+      const outer = smoothstep(ringR.add(ringThick), ringR, rd);
+      const ringBand = inner.mul(outer);
+      // Amber→ice wavefront, premultiplied by the brightness uniform (additive).
+      const ringColor = vec3(1.0, 0.86, 0.52);
+      const ringMat = new PointsNodeMaterial({
+        size: 1,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 1,
+        blending: AdditiveBlending,
+        depthWrite: false,
+      });
+      ringMat.colorNode = vec4(
+        ringColor.mul(ringBand).mul(ringBright),
+        float(1),
+      );
+
+      const ring = new Sprite(ringMat);
+      ring.geometry = ringGeo;
+      ring.frustumCulled = false;
+      ring.name = 'shockwave-scatter-ring';
+      target.object.add(ring);
 
       const HIDDEN = HALF + 1000;
       const brass = new Color('#ecd49d'); // Observatory brass (rest)
       const ice = new Color('#7fd4ff'); // ice (excited / displaced)
 
       const write = () => {
+        const ringSpeed = num(params.ringSpeed, 1.5);
+        tiles.count = activeCount;
         for (let i = 0; i < activeCount; i++) {
           positions[i * 3] = px[i];
           positions[i * 3 + 1] = py[i];
@@ -249,12 +376,20 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
           // Tint by displacement magnitude: a resting element reads brass, a
           // displaced (riding-the-wave) element flares to ice — so the bulge
           // wave is visible as a band of cool colour, read LIVE so a same-t
-          // re-seek still shows colour shift if anything moved.
+          // re-seek still shows colour shift if anything moved. Premultiplied to
+          // a BRIGHT level (>>120/255 luma) so tiles read as lit objects, not
+          // near-black specks — fixes the advocate's near-black / 1px-dot flag.
           const off = Math.hypot(px[i] - homeX[i], py[i] - homeY[i]);
           const m = clamp(off / 0.55, 0, 1);
-          colors[i * 3] = brass.r + (ice.r - brass.r) * m;
-          colors[i * 3 + 1] = brass.g + (ice.g - brass.g) * m;
-          colors[i * 3 + 2] = brass.b + (ice.b - brass.b) * m;
+          const r = brass.r + (ice.r - brass.r) * m;
+          const g = brass.g + (ice.g - brass.g) * m;
+          const b = brass.b + (ice.b - brass.b) * m;
+          // Displaced tiles flare brighter (impact glow); resting tiles stay a
+          // solid warm brass well above the near-black floor.
+          const lum = 0.92 + m * 0.85;
+          colors[i * 3] = r * lum;
+          colors[i * 3 + 1] = g * lum;
+          colors[i * 3 + 2] = b * lum;
         }
         for (let i = activeCount; i < MAX_COUNT; i++) {
           positions[i * 3] = HIDDEN;
@@ -266,6 +401,29 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
         }
         posAttr.needsUpdate = true;
         colAttr.needsUpdate = true;
+
+        // Drive the visible ring: scale the quad to the live ring world radius
+        // (the annulus sits at 0.84 of the quad → multiply so the arc lands at
+        // the true ring front) and set its brightness so it flares while
+        // expanding and fades to nothing during recharge.
+        const r = ringRadius(ringSpeed);
+        if (r < MAX_RADIUS) {
+          const worldR = r / 0.84; // map normalised annulus radius → world front
+          const quadScale = Math.max(worldR * 2.0, 0.001); // quad is 1 unit wide
+          ring.scale.set(quadScale, quadScale, 1);
+          // Bright at birth, easing as it widens (energy spreads over a longer
+          // circumference) — a fat amber flash at small radius, a thinner arc far
+          // out. Stays well above the floor so the wavefront is always visible.
+          const grow = clamp(r / MAX_RADIUS, 0, 1);
+          ringBright.value = (1.9 - grow * 0.9);
+          // Wavefront keeps a fairly constant world thickness → thinner in
+          // normalised-quad units as the quad grows.
+          ringThick.value = clamp(0.22 / Math.max(worldR, 0.4), 0.05, 0.3);
+        } else {
+          // Recharging: ring gone.
+          ringBright.value = 0;
+          ring.scale.set(0.001, 0.001, 1);
+        }
       };
 
       stepper.reset();
@@ -281,9 +439,12 @@ export const shockwaveScatterPrimitive: PrimitiveDefinition = {
         // frame visibly changes (standing function of the engaged pose).
         onParamChange: () => stepper.markDirty(),
         dispose: () => {
-          target.object.remove(points);
-          geometry.dispose();
-          material.dispose();
+          target.object.remove(tiles);
+          target.object.remove(ring);
+          tileGeo.dispose();
+          tileMat.dispose();
+          ringGeo.dispose();
+          ringMat.dispose();
         },
       };
     },

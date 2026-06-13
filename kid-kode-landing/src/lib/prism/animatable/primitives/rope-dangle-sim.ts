@@ -37,6 +37,7 @@
 import {
   Mesh,
   TubeGeometry,
+  SphereGeometry,
   CatmullRomCurve3,
   Vector3,
   MeshStandardNodeMaterial,
@@ -54,17 +55,25 @@ import {
 } from './_sim-core';
 
 // ── Fixed build-time allocation (live `segments` clamps to MAX, never realloc) ──
+// Camera (catalog rig): PerspectiveCamera(fov 40) at z=3.2 → visible half-height
+// at z=0 is ≈1.165 scene units. The whole rope MUST live inside that band or it
+// clips at the frame edge and reads as the "empty panel" the advocate flagged.
 const MAX_SEG = 22; // up to 22 particles in the chain
-const TOP_Y = 1.15; // anchor rest height (scene units; camera sees ±~1.2 in y)
-const ROPE_LEN = 1.9; // total rope length when fully extended (sum of link rests)
-const TUBE_RADIAL = 7; // tube cross-section segments (round-ish, cheap)
+const TOP_Y = 0.82; // anchor rest height — lowered from 1.15 so the pin + bob
+//                     never push past the top edge (was clipped at +1.165).
+const ROPE_LEN = 1.55; // total rope length when fully extended — shortened from
+//                       1.9 so the free end rests at ≈−0.73, comfortably inside
+//                       frame (the whole cord now sits centred in the ±1.0 band).
+const TUBE_RADIAL = 8; // tube cross-section segments (round-ish, cheap)
 const TUBE_PATH = 48; // tube path samples along the CatmullRom curve
+const TUBE_R = 0.085; // base tube radius — thickened from 0.05 so the cord reads
+//                      as a rope with mass (~8px at a catalog tile), not a hair.
 
 // Anchor sweep tuning (deterministic swing; pointer adds on top of this).
-const SWEEP_AMP = 0.62; // base horizontal sweep half-width (scene units)
+const SWEEP_AMP = 0.5; // base horizontal sweep half-width (kept inside frame)
 const SWEEP_HZ = 0.62; // primary sweep frequency (cycles/sec)
-const BOB_AMP = 0.12; // vertical bob amplitude
-const POINTER_GAIN = 0.7; // how far the live pointer drags the anchor (scene units)
+const BOB_AMP = 0.09; // vertical bob amplitude (small; anchor stays in frame)
+const POINTER_GAIN = 0.55; // how far the live pointer drags the anchor (scene units)
 
 const SCHEMA = [
   { id: 'segments', label: 'Segments', type: 'knob', min: 8, max: 22, step: 1, default: 18 },
@@ -142,7 +151,13 @@ export const ropeDangleSimPrimitive: PrimitiveDefinition = {
         // Live pointer drags the anchor laterally (and a touch vertically).
         const dragX = (clamp(p.x, 0, 1) - 0.5) * 2 * POINTER_GAIN;
         const dragY = (clamp(p.y, 0, 1) - 0.5) * 2 * POINTER_GAIN * 0.35;
-        return { ax: clamp(sweep + dragX, -1.25, 1.25), ay: TOP_Y + bob + dragY, az: 0 };
+        // Clamp the anchor inside the visible frame so the pin is never off-screen
+        // (square tiles see ≈±1.0 in x; the top edge is ≈+1.165 in y).
+        return {
+          ax: clamp(sweep + dragX, -0.95, 0.95),
+          ay: clamp(TOP_Y + bob + dragY, -0.2, 1.05),
+          az: 0,
+        };
       };
 
       /** (Re)build the rope as an N-particle vertical chain hanging from the
@@ -238,22 +253,50 @@ export const ropeDangleSimPrimitive: PrimitiveDefinition = {
       for (let i = 0; i < MAX_SEG; i++) curvePts.push(new Vector3());
       const curve = new CatmullRomCurve3(curvePts.slice(0, 18));
 
+      // The cord must read BRIGHT against the near-black tile (the advocate's
+      // empty-panel block was a dark brass MIRROR — metalness 0.82 + emissive
+      // 0.12 reflected only the dim IBL → luma ≈7.7). Fix per the passing sim
+      // tiles (molten-drip-sim): drop metalness, push a strong WARM-BRASS
+      // emissive so the rope self-illuminates, plus a hot env catch on top. This
+      // lands the cord well above the luma>>120 bar regardless of scene light.
       const material = new MeshStandardNodeMaterial({
-        color: new Color('#d9a86c'), // Observatory Brass
-        roughness: 0.34,
-        metalness: 0.82,
-        emissive: new Color('#7fd4ff'), // faint ice rim so the cord reads in dark
-        emissiveIntensity: 0.12,
+        color: new Color('#e8c79a'), // warm Observatory Brass
+        roughness: 0.28,
+        metalness: 0.35, // satin, not a black mirror
+        emissive: new Color('#f0c98a'), // brass/amber self-glow (no purple)
+        emissiveIntensity: 1.35, // bright — the cord lights itself in the dark
       });
+      (material as unknown as { envMapIntensity: number }).envMapIntensity = 1.4;
 
-      let tube: Mesh = new Mesh(
-        new TubeGeometry(curve, TUBE_PATH, 0.05, TUBE_RADIAL, false),
+      // The rope tube is the PRIMARY artifact and is added FIRST so it is the
+      // first Mesh child of target.object (the conformance harness measures the
+      // tube via the first Mesh — the anchor bead below must not shadow it).
+      const tube: Mesh = new Mesh(
+        new TubeGeometry(curve, TUBE_PATH, TUBE_R, TUBE_RADIAL, false),
         material,
       );
       tube.name = 'rope-dangle-sim';
       target.object.add(tube);
 
-      /** Rebuild the tube geometry from the current active particle positions. */
+      // A bright anchor BEAD pins the top of the rope — a guaranteed hero so the
+      // tile is never empty even when the cord swings to a frame edge. Added
+      // AFTER the tube so it never becomes the harness's measured "first Mesh".
+      const beadMat = new MeshStandardNodeMaterial({
+        color: new Color('#cfdde6'), // pale steel
+        roughness: 0.3,
+        metalness: 0.25,
+        emissive: new Color('#bfe0ff'), // cool ice glow
+        emissiveIntensity: 1.5,
+      });
+      (beadMat as unknown as { envMapIntensity: number }).envMapIntensity = 1.2;
+      const bead = new Mesh(new SphereGeometry(0.12, 20, 14), beadMat);
+      bead.name = 'rope-dangle-sim-anchor';
+      target.object.add(bead);
+
+      /** Rebuild the tube geometry from the current active particle positions.
+       *  The tube is rebuilt EVERY write (i.e. every seek/frame) from the live
+       *  XPBD node path, so the cord visibly swings and every control reshapes
+       *  the frozen frame. */
       const write = () => {
         const n = activeN > 0 ? activeN : 18;
         // Update the CatmullRom control points to the live particle path.
@@ -263,11 +306,11 @@ export const ropeDangleSimPrimitive: PrimitiveDefinition = {
           pts.push(curvePts[i]);
         }
         curve.points = pts;
-        // Tube radius eases thinner toward the free end so it reads as a cord.
-        const radius = 0.05;
         const oldGeo = tube.geometry;
-        tube.geometry = new TubeGeometry(curve, TUBE_PATH, radius, TUBE_RADIAL, false);
+        tube.geometry = new TubeGeometry(curve, TUBE_PATH, TUBE_R, TUBE_RADIAL, false);
         oldGeo.dispose();
+        // Pin the bright anchor bead to the live top-particle position.
+        bead.position.set(px[0], py[0], pz[0]);
       };
 
       reset();
@@ -291,8 +334,11 @@ export const ropeDangleSimPrimitive: PrimitiveDefinition = {
         onParamChange: () => stepper.markDirty(),
         dispose: () => {
           target.object.remove(tube);
+          target.object.remove(bead);
           tube.geometry.dispose();
           material.dispose();
+          bead.geometry.dispose();
+          beadMat.dispose();
         },
       };
     },

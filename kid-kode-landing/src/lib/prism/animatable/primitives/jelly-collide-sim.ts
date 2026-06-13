@@ -1,15 +1,32 @@
 // jelly-collide-sim — a soft JELLY cube is thrown horizontally at a wall,
-// SQUASHES against it on impact (the XPBD lattice compresses against the wall
-// plane, bulging tall), then peels off and recovers as it rebounds. CATALOG
-// primitive (hard / wave, subject:'empty' — builds its own soft 2D lattice cube
-// mesh). Genuine XPBD: a grid of particles (flat px/py/pz + pvx/pvy/pvz +
-// invMass) linked by structural + shear distance constraints, integrated with
-// "small steps" XPBD (N substeps of dt/N), one Gauss-Seidel pass per substep in
-// fixed order. The wall is a vertical plane at WALL_X: each substep clamps any
-// particle that has crossed it back to the wall surface (a hard one-sided
-// position constraint), which transfers momentum back into the next velocity
-// pass — the cube squashes flat against the wall, the lattice compresses and
-// bulges, then springs off and recovers.
+// SQUASHES FLAT against it on impact (the XPBD lattice compresses against the
+// wall plane, bulging tall), then peels off and recovers as it rebounds.
+// CATALOG primitive (hard / wave, subject:'empty' — builds its own soft 2D
+// lattice cube mesh + a visible wall plane). Genuine XPBD: a grid of particles
+// (flat px/py/pz + pvx/pvy/pvz + invMass) linked by structural + shear + BEND
+// distance constraints, integrated with "small steps" XPBD (N substeps of dt/N),
+// several Gauss-Seidel passes per substep in fixed order. The wall is a vertical
+// plane at WALL_X: each substep clamps any particle that has crossed it back to
+// the wall surface (a hard one-sided position constraint), which transfers
+// momentum back into the next velocity pass — the cube squashes flat against the
+// wall, the lattice compresses and bulges, then springs off and recovers.
+//
+// Cohesion (anti-rupture, advocate round-1): the lattice was tearing into a
+// jagged low-poly torn mass on impact because a single solver pass + only
+// axis/shear links let cells invert under the violent wall clamp. The fix keeps
+// the same XPBD math but holds the blob TOGETHER: (1) BEND constraints (skip-1
+// links along each axis) resist sharp folding; (2) several Gauss-Seidel passes
+// per substep converge the lattice instead of leaving it crumpled; (3) a
+// per-particle speed clamp prevents the impact from exploding into spikes; (4)
+// light velocity damping makes the body LINGER flat against the wall (a clear,
+// sustained squash) before it peels. The mesh is smooth-shaded
+// (computeVertexNormals over a 9×9 grid at T2) so it reads as a rounded jelly
+// blob with mass, not crumpling foil.
+//
+// Containment (advocate round-1): the body used to fly off the bottom-right
+// corner and end cut off at the frame edge. A soft left wall + raised floor +
+// gravity that only acts while airborne keep it inside the viewport for the
+// whole throw → squash → peel → recover loop.
 //
 // Distinct from soft-body-bounce / drop-squash (a FLOOR drop, vertical gravity
 // collision): this is a HORIZONTAL throw into a WALL — visible lateral
@@ -22,12 +39,14 @@
 // gravity, bounciness) — visibly changes any frozen frame: onParamChange →
 // markDirty re-runs the sim to the same pinned t.
 //
-// duration() is finite (throw → impact → peel-off → recover); the rig loops t
-// back to 0 (a rewind → re-throw). The ~0.45 frozen phase lands MID-SQUASH:
-// the cube pressed flat against the wall, mid-compression.
+// duration() is finite (throw → impact → squash → peel-off → recover); the rig
+// loops t back to 0 (a rewind → re-throw). The ~0.45 frozen phase lands the cube
+// pressed FLAT against the wall, mid-compression — so bounciness (which sets how
+// deep it holds and how hard it peels) visibly moves that frozen frame.
 
 import {
   Mesh,
+  PlaneGeometry,
   BufferGeometry,
   BufferAttribute,
   MeshStandardMaterial,
@@ -53,15 +72,16 @@ const MAX_CELLS = (MAX_N - 1) * (MAX_N - 1);
 const MAX_TRIS = MAX_CELLS * 2;
 
 const DT = 1 / 60; // outer step; substepped below
-const CUBE_SIZE = 0.92; // edge length of the rest jelly cube (scene units)
+const CUBE_SIZE = 0.86; // edge length of the rest jelly cube (scene units)
 const WALL_X = 1.04; // the wall plane sits here; cube flies toward +x into it
 const START_X = -0.78; // cube centre launch x (left side of the tile)
-const REST_Y = 0.06; // cube vertical centre (a touch above middle)
-const FLOOR_Y = -1.18; // a soft floor so gravity doesn't drop it off-tile
+const REST_Y = 0.0; // cube vertical centre (middle of the tile)
+const FLOOR_Y = -0.92; // soft floor — kept well inside the viewport bottom
+const LEFT_X = -1.2; // soft left wall — body can never escape off the left
 
 const SCHEMA = [
   { id: 'stiffness', label: 'Stiffness', type: 'fader', min: 0.05, max: 0.95, step: 0.01, default: 0.6 },
-  { id: 'throwSpeed', label: 'Throw Speed', type: 'knob', min: 1.5, max: 7.5, step: 0.1, default: 2.6, unit: 'u/s' },
+  { id: 'throwSpeed', label: 'Throw Speed', type: 'knob', min: 1.5, max: 7.5, step: 0.1, default: 3.0, unit: 'u/s' },
   { id: 'gravity', label: 'Gravity', type: 'knob', min: 0, max: 9, step: 0.25, default: 1.4 },
   { id: 'bounciness', label: 'Bounciness', type: 'fader', min: 0.05, max: 0.9, step: 0.01, default: 0.42 },
 ] as const;
@@ -83,6 +103,9 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       // Heavy soft body → coarser lattice + fewer substeps on T0.
       const N = tierPick(tier, { T0: 5, T1: 7, T2: 9 });
       const SUBSTEPS = tierPick(tier, { T0: 6, T1: 8, T2: 10 });
+      // Several Gauss-Seidel passes per substep so the lattice CONVERGES and
+      // stays a cohesive blob instead of crumpling into a torn low-poly mass.
+      const ITERS = tierPick(tier, { T0: 4, T1: 5, T2: 6 });
       const parts = N * N;
 
       // Flat particle state (allocate to MAX; only [0..parts) are live).
@@ -109,9 +132,11 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       }
       const cell = N > 1 ? CUBE_SIZE / (N - 1) : CUBE_SIZE;
       const diag = cell * Math.SQRT2;
+      const bend = cell * 2; // skip-1 rest length (anti-fold bend link)
 
       // Constraint list (i, j, restLength) — structural (axis) + shear (diagonal)
-      // so the cube resists shear and reads as a solid jelly block, not a net.
+      // + bend (skip-1) so the cube resists shear AND sharp folding, reading as a
+      // solid jelly block that squashes coherently rather than tearing.
       const ci: number[] = [];
       const cj: number[] = [];
       const crest: number[] = [];
@@ -127,6 +152,8 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
           if (r + 1 < N) addC(i, i + N, cell); // structural ↑
           if (c + 1 < N && r + 1 < N) addC(i, i + N + 1, diag); // shear ↗
           if (c + 1 < N && r - 1 >= 0) addC(i, i - N + 1, diag); // shear ↘
+          if (c + 2 < N) addC(i, i + 2, bend); // bend → (resists horizontal fold)
+          if (r + 2 < N) addC(i, i + 2 * N, bend); // bend ↑ (resists vertical fold)
         }
       }
       const constraintCount = ci.length;
@@ -148,12 +175,19 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
         }
       };
 
+      // Cap any single particle's speed so a hard wall clamp can never fling a
+      // vertex out into a spike (the source of the jagged "torn" look).
+      const MAX_SPEED = 9.0;
+
       const stepOne = (dt: number) => {
         const g = num(params.gravity, 2.6);
         const stiff = clamp(num(params.stiffness, 0.42), 0.05, 0.95);
         const rest = clamp(num(params.bounciness, 0.5), 0.05, 0.9);
         const dtSub = dt / SUBSTEPS;
         const alphaTilde = complianceAlpha(stiff, dtSub);
+        // Light per-substep velocity damping → the blob LINGERS flat against the
+        // wall (a clear, held squash) and settles in-frame instead of pinging off.
+        const velDamp = Math.exp(-0.9 * dtSub);
 
         for (let s = 0; s < SUBSTEPS; s++) {
           // 1. Save prev, integrate velocity (gravity) + predict positions.
@@ -166,33 +200,44 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
             pz[i] += pvz[i] * dtSub;
           }
 
-          // 2. Solve all distance constraints ONCE in fixed order.
-          for (let k = 0; k < constraintCount; k++) {
-            solveDistanceConstraint(px, py, pz, invMass, ci[k], cj[k], crest[k], alphaTilde);
+          // 2. Solve all distance constraints over SEVERAL Gauss-Seidel passes in
+          // fixed order so the lattice converges to a cohesive shape (no tearing).
+          for (let it = 0; it < ITERS; it++) {
+            for (let k = 0; k < constraintCount; k++) {
+              solveDistanceConstraint(px, py, pz, invMass, ci[k], cj[k], crest[k], alphaTilde);
+            }
           }
 
-          // 2b. Wall + floor collision: clamp any particle that crossed the wall
-          // back to the surface (a hard one-sided position constraint). The
-          // momentum transfer happens in the velocity pass below — the position
-          // is pinned to the wall this substep, so (p - prevPos) carries the
-          // arrested motion, and we damp the normal component by restitution.
+          // 2b. Wall + floor + soft-left-wall collision: clamp any particle that
+          // crossed a boundary back to the surface (hard one-sided position
+          // constraints). The momentum transfer happens in the velocity pass
+          // below — the position is pinned to the wall this substep, so
+          // (p - prevPos) carries the arrested motion, damped by restitution.
           for (let i = 0; i < parts; i++) {
             if (px[i] > WALL_X) px[i] = WALL_X; // right wall (the target)
-            if (py[i] < FLOOR_Y) py[i] = FLOOR_Y; // soft floor
+            if (px[i] < LEFT_X) px[i] = LEFT_X; // soft left wall (keep in frame)
+            if (py[i] < FLOOR_Y) py[i] = FLOOR_Y; // soft floor (keep in frame)
           }
 
-          // 3. Update velocities from (pos - prevPos)/dtSub, then apply
-          // restitution on the wall-normal component for particles in contact so
-          // the cube actively peels off rather than sticking.
+          // 3. Update velocities from (pos - prevPos)/dtSub, damp, clamp speed,
+          // then apply restitution on the contact-normal component for particles
+          // touching a boundary so the cube actively PEELS off rather than
+          // sticking — bounciness sets how hard it springs back.
           for (let i = 0; i < parts; i++) {
-            pvx[i] = (px[i] - prevX[i]) / dtSub;
-            pvy[i] = (py[i] - prevY[i]) / dtSub;
-            if (px[i] >= WALL_X - 1e-5 && pvx[i] > 0) {
-              pvx[i] = -pvx[i] * rest; // bounce off the wall
+            let vx = ((px[i] - prevX[i]) / dtSub) * velDamp;
+            let vy = ((py[i] - prevY[i]) / dtSub) * velDamp;
+            if (px[i] >= WALL_X - 1e-5 && vx > 0) vx = -vx * rest; // bounce off wall
+            if (px[i] <= LEFT_X + 1e-5 && vx < 0) vx = -vx * rest;
+            if (py[i] <= FLOOR_Y + 1e-5 && vy < 0) vy = -vy * rest;
+            // Clamp speed so the impact can never explode a vertex into a spike.
+            const sp = Math.hypot(vx, vy);
+            if (sp > MAX_SPEED) {
+              const k2 = MAX_SPEED / sp;
+              vx *= k2;
+              vy *= k2;
             }
-            if (py[i] <= FLOOR_Y + 1e-5 && pvy[i] < 0) {
-              pvy[i] = -pvy[i] * rest;
-            }
+            pvx[i] = vx;
+            pvy[i] = vy;
           }
         }
       };
@@ -225,7 +270,7 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
 
       // Jelly look: a translucent ice-tinted body with a brass emissive core, so
       // the folds catch light when the lattice compresses (Observatory Brass +
-      // ice/steel — no purple).
+      // ice/steel — no purple). Smooth-shaded via computeVertexNormals.
       const material = new MeshStandardMaterial({
         color: new Color('#9fe0c4'), // ice-mint jelly body
         emissive: new Color('#d9a86c'), // brass inner glow
@@ -233,7 +278,7 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
         roughness: 0.18,
         metalness: 0.12,
         transparent: true,
-        opacity: 0.86,
+        opacity: 0.88,
         envMapIntensity: 1.25,
         side: DoubleSide,
       });
@@ -242,6 +287,23 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       mesh.name = 'jelly-collide-sim';
       target.object.add(mesh);
 
+      // ── Visible WALL plane the cube slams into (steel slab, brass rim glow) ──
+      // A real surface so the squash reads as "flat against a wall", not a body
+      // crumpling in empty space. Slightly behind the cube's z so it never clips.
+      const wallGeo = new PlaneGeometry(0.16, 2.4);
+      const wallMat = new MeshStandardMaterial({
+        color: new Color('#7f8a96'), // cool steel slab
+        emissive: new Color('#d9a86c'), // faint brass edge glow
+        emissiveIntensity: 0.12,
+        roughness: 0.55,
+        metalness: 0.45,
+        side: DoubleSide,
+      });
+      const wall = new Mesh(wallGeo, wallMat);
+      wall.name = 'jelly-collide-sim-wall';
+      wall.position.set(WALL_X + 0.08, 0, -0.12);
+      mesh.add(wall); // child of the jelly mesh so it disposes/transforms together
+
       const write = () => {
         for (let i = 0; i < parts; i++) {
           positions[i * 3] = px[i];
@@ -249,7 +311,7 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
           positions[i * 3 + 2] = pz[i];
         }
         posAttr.needsUpdate = true;
-        geometry.computeVertexNormals();
+        geometry.computeVertexNormals(); // smooth shading → rounded jelly, not facets
         geometry.computeBoundingSphere();
       };
 
@@ -257,8 +319,10 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       write();
 
       return {
-        // Throw → impact (~0.35s) → squash/peel (~0.5s) → recover/fly back.
-        // Bounded so the loop stays lively; faster throws reach the wall sooner.
+        // Throw → impact (~0.6s at default throwSpeed) → held squash/peel
+        // (~0.6s) → recover/settle. Bounded so the loop stays lively; faster
+        // throws reach the wall sooner. The 0.45 pin (~1.08s) lands during the
+        // sustained wall squash, so bounciness (peel hardness) moves the frame.
         duration: () => 2.4,
         seek: (t2) => {
           stepper.seekStep(t2);
@@ -269,6 +333,8 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
         onParamChange: () => stepper.markDirty(),
         dispose: () => {
           target.object.remove(mesh);
+          wallGeo.dispose();
+          wallMat.dispose();
           geometry.dispose();
           material.dispose();
         },

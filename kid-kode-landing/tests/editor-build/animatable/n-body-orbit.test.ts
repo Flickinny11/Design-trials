@@ -1,22 +1,27 @@
 import { describe, it, expect } from 'vitest';
-import { Points } from 'three';
+import { Sprite } from 'three';
 import { nBodyOrbitPrimitive } from '@/lib/prism/animatable/primitives/n-body-orbit';
 import { makeTarget, runConformance } from './_conformance';
 
-// Pull the satellite / sun point clouds the primitive adds to target.object.
+// RENDER PATH change (fix-round-1): the prior 1px THREE.Points specks read as a
+// near-black panel under three/webgpu, so suns + satellites are now instanced
+// THREE.Sprite clouds. Each cloud carries its simulated per-body CENTERS in an
+// 'instancePosition' InstancedBufferAttribute (same getX/getY/getZ API the old
+// 'position' attr exposed). We pull the two named Sprite clouds and read that
+// attribute — physics is unchanged, only the object type + attribute name moved.
 function clouds(object: { children: unknown[] }) {
-  const pts = object.children.filter((c): c is Points => c instanceof Points);
-  const suns = pts.find((p) => p.name === 'n-body-orbit-suns')!;
-  const sats = pts.find((p) => p.name === 'n-body-orbit-satellites')!;
+  const sprites = object.children.filter((c): c is Sprite => c instanceof Sprite);
+  const suns = sprites.find((p) => p.name === 'n-body-orbit-suns')!;
+  const sats = sprites.find((p) => p.name === 'n-body-orbit-satellites')!;
   return { suns, sats };
 }
 
-function satXYZ(sats: Points, k: number): [number, number, number] {
-  const a = sats.geometry.getAttribute('position');
+function satXYZ(sats: Sprite, k: number): [number, number, number] {
+  const a = sats.geometry.getAttribute('instancePosition');
   return [a.getX(k), a.getY(k), a.getZ(k)];
 }
-function sunXYZ(suns: Points, b: number): [number, number, number] {
-  const a = suns.geometry.getAttribute('position');
+function sunXYZ(suns: Sprite, b: number): [number, number, number] {
+  const a = suns.geometry.getAttribute('instancePosition');
   return [a.getX(b), a.getY(b), a.getZ(b)];
 }
 

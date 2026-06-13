@@ -3,7 +3,9 @@
 // reforms and the cycle repeats. CATALOG primitive (hard / glass, subject:'empty').
 //
 // REAL CPU SIM, not an easing curve. The physics:
-//   • A pinned RESERVOIR sits at the top (a fat molten blob).
+//   • A pinned RESERVOIR sits at the top (a fat molten blob). It is NOT a static
+//     decorative blob — it visibly PULSES (a slow molten swell) and sags into the
+//     forming neck so the whole source reads alive in every frame.
 //   • A dynamic TIP mass (the forming droplet) hangs from it on a viscous spring.
 //     It is integrated with semi-implicit (symplectic) Euler under gravity +
 //     spring restoring force + viscous velocity damping. As it hangs, the spring
@@ -21,32 +23,43 @@
 //
 // The neck is rendered as a row of lobes interpolated reservoir→tip whose radius
 // pinches to a minimum in the MIDDLE (the classic capillary neck profile), so the
-// necking reads unmistakably. Reservoir + droplets are fat round beads.
+// necking reads unmistakably. Reservoir + droplets are fat round beads. The drip
+// COLUMN is the hero — it sits dead-centre and droplets are kept fully in-frame.
 //
 // DETERMINISM: reset()-and-replay via makeReplayStepper → the frame at time t is a
 // pure function of (params, t). onParamChange → markDirty makes every trajectory
 // control (viscosity/gravity/dripRate) visibly change any pinned frozen frame; heat
 // is ALSO read live in write() so a same-t reseek still shows a change. No
-// Math.random / Date.now — z spread seeded via a fract(sin) hash.
+// Math.random / Date.now — z spread seeded via the index-hash discipline (hash1).
 //
 // duration() is finite (a few drip cycles) and the rig loops t→0 → re-drip. The
 // ~0.45 frozen phase is tuned to catch a droplet MID-DETACH / falling.
 //
-// Brass/amber EMISSIVE molten material (glowing) — MeshPhysicalMaterial with
-// transmission + ior≈1.33 so it reads as a hot, semi-transmissive liquid. NO
-// purple. DISTINCT from liquid-metal-flow (a TSL surface shader): this is a
-// particle SIM that physically pinches off and drops real free-falling droplets.
+// RENDER PATH (P0 particle lesson — embers.ts / bubble-rise-sim.ts /
+// smoke-plume-sim.ts): the prior MeshPhysicalMaterial build blew out to clipped
+// PURE WHITE (emissiveIntensity + envMap + tone-mapping) and its transmission/ior
+// refracted the cold environment background into a stray COLD PALE-BLUE blob — it
+// read as overexposed placeholder circles, not glowing molten metal. The proven
+// fix: instanced THREE.Sprite + PointsNodeMaterial (TSL) with a soft radial
+// falloff to a BRIGHT WARM CORE on a generous billboard footprint, premultiplied
+// by a per-bead AMBER/BRASS tint whose luma peaks well UNDER white (a glowing hot
+// amber, never clipped). Additive blending renders identically on both backends.
+// No transmission, no ior, no envMap → no cold-blue refraction artifact.
+//
+// Palette: Observatory Brass / amber molten (#f0b35a hot, #d9a86c body, #b9742e
+// cool root) — warm metal, NEVER purple, never clipped white.
 
 import {
-  InstancedMesh,
-  SphereGeometry,
-  MeshPhysicalMaterial,
+  Sprite,
+  BufferGeometry,
+  BufferAttribute,
+  InstancedBufferAttribute,
   Color,
-  Matrix4,
-  Vector3,
-  Quaternion,
+  AdditiveBlending,
   DynamicDrawUsage,
 } from 'three';
+import { PointsNodeMaterial } from 'three/webgpu';
+import { instancedBufferAttribute, uv, vec3, vec4, float, exp, smoothstep } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, str, type PrimitiveDefinition } from '../contract';
 import {
@@ -57,10 +70,14 @@ import {
 } from './_sim-core';
 
 const DT = 1 / 120; // small fixed step (stiff-ish spring)
-const SOURCE_Y = 1.05; // reservoir root height (pinned)
-const FLOOR_Y = -1.35; // a free droplet below this recycles to the reservoir
+const SOURCE_Y = 0.92; // reservoir root height (pinned) — pulled in so the column fits
+const FLOOR_Y = -1.05; // a free droplet below this recycles to the reservoir (in-frame)
 const MAX_DROPS = 6; // fixed pool of free falling droplets
 const RESERVOIR_LOBES = 3; // fat blob lobes at the very top
+// Generous fixed billboard footprint — must hold the fattest reservoir bead with
+// its feathered glow (à la bokeh-drift / smoke-plume): the radius attribute drives
+// where the falloff lives inside this quad, so it never reaches the square edge.
+const FIXED_BILLBOARD = 0.92;
 
 const SCHEMA = [
   // Viscous resistance: high → the thread draws out long & thin before letting
@@ -137,7 +154,9 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
 
         // Neck length at which the thread severs. Higher dripRate → shorter neck
         // (sheds sooner); higher viscosity → it draws out LONGER before pinch.
-        const detachLen = 0.55 + (1 - drip) * 0.5 + visc * 0.7;
+        // Slightly tightened ceiling so a fully syrupy thread still pinches off
+        // before the tip can leave the frame.
+        const detachLen = 0.5 + (1 - drip) * 0.42 + visc * 0.55;
         // Surface-tension "spring" RESISTING the stretch — deliberately weaker
         // than gravity so the neck keeps drawing out (an unstable filament that
         // necks toward pinch-off) rather than settling at a Hookean equilibrium.
@@ -165,8 +184,10 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
           dropActive[d] = 1;
           dropY[d] = tipY;
           dropVy[d] = Math.min(tipVy, -0.2); // ensure it's moving down
-          dropX[d] = (hash(nextDrop * 1.7 + 0.3) - 0.5) * 0.18;
-          dropZ[d] = (hash(nextDrop * 3.1 + 1.9) - 0.5) * 0.22;
+          // Keep the falling droplet near the column centre so it never clips the
+          // tile's right/bottom edge (the advocate's cut-off droplet finding).
+          dropX[d] = (hash(nextDrop * 1.7 + 0.3) - 0.5) * 0.1;
+          dropZ[d] = (hash(nextDrop * 3.1 + 1.9) - 0.5) * 0.12;
           dropR[d] = 0.15 + tipMass * 0.03; // fatter if more fluid pooled
           nextDrop++;
           // Reservoir reforms a fresh tip back near the root.
@@ -191,73 +212,157 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
 
       const stepper = makeReplayStepper({ dt: DT, reset, step });
 
-      // ── Render: glowing molten spheres as one InstancedMesh ───────────────
-      const geo = new SphereGeometry(1, 18, 12);
-      const baseColor = new Color(str(params.tint, '#d9a86c'));
-      const mat = new MeshPhysicalMaterial({
-        color: baseColor.clone(),
-        emissive: new Color('#ecd49d'), // amber glow
-        emissiveIntensity: 1.0,
-        roughness: 0.22,
-        metalness: 0.35,
-        transmission: 0.45, // semi-transmissive hot liquid
-        thickness: 0.4,
-        ior: 1.33,
-        envMapIntensity: 1.3,
+      // ── Render: glowing molten beads as one instanced Sprite (TSL) ─────────
+      // Per-bead instanced attributes: centre position, premultiplied warm color,
+      // and a profile radius (quad units) that drives WHERE the soft falloff
+      // lives inside the billboard. Filled every write().
+      const positions = new Float32Array(MAX * 3);
+      const colors = new Float32Array(MAX * 3);
+      const radii = new Float32Array(MAX);
+      const posAttr = new InstancedBufferAttribute(positions, 3);
+      const colAttr = new InstancedBufferAttribute(colors, 3);
+      const radAttr = new InstancedBufferAttribute(radii, 1);
+      posAttr.setUsage(DynamicDrawUsage);
+      colAttr.setUsage(DynamicDrawUsage);
+      radAttr.setUsage(DynamicDrawUsage);
+
+      // Own billboard quad (never class-shared) so dispose() frees it.
+      const geometry = new BufferGeometry();
+      geometry.setIndex([0, 1, 2, 0, 2, 3]);
+      geometry.setAttribute(
+        'position',
+        new BufferAttribute(
+          new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]),
+          3,
+        ),
+      );
+      geometry.setAttribute(
+        'uv',
+        new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), 2),
+      );
+      geometry.setAttribute('instancePosition', posAttr);
+      geometry.setAttribute('instanceColor', colAttr);
+      geometry.setAttribute('instanceRadius', radAttr);
+
+      // ── Look layer: TSL molten bead profile × per-bead warm instanced color ─
+      // d: 0 at the quad centre → 1 at the edge midpoint (√2 at the corner).
+      const d = uv().sub(0.5).mul(2).length();
+      type FloatNode = ReturnType<typeof float>;
+      // Per-bead radius drives the size of the bead inside the quad (bigger
+      // radius → wider molten bead). Dividing d by it makes the falloff scale.
+      const rNode = instancedBufferAttribute(radAttr) as unknown as FloatNode;
+      const dn = d.div(rNode.add(0.001));
+      // Dense, rounded molten body: a tight gaussian core (reads as a solid hot
+      // bead with mass, not a faint speck) with a smooth shoulder. Peaks at 1 in
+      // the centre so the per-bead WARM tint sets the colour — the amber tint,
+      // not white, is what saturates.
+      const body = exp(dn.mul(dn).mul(-2.0));
+      // …killed to EXACT zero strictly before the quad edge (no square rim at any
+      // DPR; classic PointsMaterial.map renders black under three/webgpu).
+      const rim = smoothstep(float(0.74), float(0.97), d).oneMinus();
+      const profile = body.mul(rim);
+
+      const moltenTint = instancedBufferAttribute(colAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof vec3>;
+      };
+
+      const material = new PointsNodeMaterial({
+        size: FIXED_BILLBOARD,
+        sizeAttenuation: true,
         transparent: true,
         opacity: 1,
+        blending: AdditiveBlending,
+        depthWrite: false,
       });
-      const mesh = new InstancedMesh(geo, mat, MAX);
-      mesh.name = 'molten-drip-sim';
-      mesh.instanceMatrix.setUsage(DynamicDrawUsage);
-      mesh.frustumCulled = false;
-      target.object.add(mesh);
+      material.positionNode = instancedBufferAttribute(posAttr);
+      material.colorNode = vec4(moltenTint.mul(profile), float(1));
 
-      const tmp = new Matrix4();
-      const scl = new Vector3();
-      const pos = new Vector3();
-      const Q = new Quaternion(); // identity (lobes are spheres → no rotation)
+      const sprite = new Sprite(material);
+      sprite.geometry = geometry;
+      sprite.count = MAX;
+      sprite.frustumCulled = false; // beads extend beyond the unit quad
+      sprite.name = 'molten-drip-sim';
+      target.object.add(sprite);
 
-      const hideInstance = (i: number) => {
-        pos.set(9999, 9999, 9999);
-        scl.set(0, 0, 0);
-        tmp.compose(pos, Q, scl);
-        mesh.setMatrixAt(i, tmp);
+      const HIDDEN_Y = FLOOR_Y - 1000; // park unused beads far below view
+
+      // Live color-control cache (re-parse only when the hex actually changes).
+      const tintC = new Color();
+      let lastTint = '';
+      // Warm reference anchors for the molten gradient: hot crest (near the
+      // emissive root) and a cooler body further down the thread. The user tint
+      // multiplies in so a custom hue still reads, but we bias every bead WARM
+      // and keep peak luma UNDER clipping so it glows amber, never blows to white.
+      const hotC = new Color('#f0b35a'); // hot amber crest
+      const bodyTmp = new Color();
+
+      const setBead = (i: number, x: number, y: number, z: number, r: number, lum: number, warm: number) => {
+        positions[i * 3] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+        // Mix the user tint toward the hot amber crest by `warm` (0 body → 1 hot),
+        // then premultiply brightness. Peak lum is capped < 1 so additive
+        // compositing lands a glowing amber (e.g. ~[255,180,95]) not pure white.
+        bodyTmp.copy(tintC).lerp(hotC, warm);
+        colors[i * 3] = bodyTmp.r * lum;
+        colors[i * 3 + 1] = bodyTmp.g * lum;
+        colors[i * 3 + 2] = bodyTmp.b * lum;
+        // Profile radius in quad units; clamp under 0.5 so the feather never
+        // reaches the square edge of the billboard.
+        radii[i] = clamp(r, 0.08, 0.46);
       };
-      const setInstance = (i: number, x: number, y: number, z: number, r: number) => {
-        pos.set(x, y, z);
-        scl.set(r, r, r);
-        tmp.compose(pos, Q, scl);
-        mesh.setMatrixAt(i, tmp);
+      const hideBead = (i: number) => {
+        positions[i * 3] = 0;
+        positions[i * 3 + 1] = HIDDEN_Y;
+        positions[i * 3 + 2] = 0;
+        colors[i * 3] = 0;
+        colors[i * 3 + 1] = 0;
+        colors[i * 3 + 2] = 0;
+        radii[i] = 0.0001;
       };
 
       const write = () => {
         const heat = clamp(num(params.heat, 0.7), 0, 1);
         const visc = clamp(num(params.viscosity, 0.6), 0, 1);
-        // Heat drives the emissive glow LIVE (visible even on a same-t reseek).
-        mat.emissiveIntensity = 0.25 + heat * 1.85;
-        mat.color.set(str(params.tint, '#d9a86c'));
+        const tintHex = str(params.tint, '#d9a86c');
+        if (tintHex !== lastTint) {
+          tintC.set(tintHex);
+          lastTint = tintHex;
+        }
+        const t = stepper.now();
 
-        const fat = 0.19 * (1 - visc * 0.12); // reservoir bead radius
+        // Heat drives the glow LIVE (visible even on a same-t reseek). Capped so
+        // the peak molten body lands a saturated amber, NOT clipped white: the
+        // brightest crest tops out around ~0.95, the cool body sits dimmer but
+        // still reads with mass (luma well above the advocate's >120 bar).
+        const glow = 0.55 + heat * 0.42; // 0.55 → 0.97
+
+        // Bead radius in quad units; the reservoir is fattest, the thread thin.
+        const fatQuad = 0.4 * (1 - visc * 0.1); // reservoir bead radius (quad units)
         let inst = 0;
 
-        // (a) Reservoir blob — fat lobes clustered at the source root.
+        // (a) Reservoir blob — fat lobes clustered at the source root. It PULSES
+        //     (slow molten swell, fn of t) and sags slightly into the neck, so it
+        //     is never a pixel-static decorative blob across frames.
+        const pulse = 1 + Math.sin(t * 2.1) * 0.06; // ±6% molten breathing
+        const sag = Math.sin(t * 1.3) * 0.018; // tiny vertical settle
         for (let i = 0; i < RESERVOIR_LOBES; i++) {
-          const y = SOURCE_Y + 0.06 - i * 0.085;
-          const r = fat * (1.25 - i * 0.18);
-          setInstance(inst++, 0, y, 0, r);
+          const y = SOURCE_Y + 0.05 - i * 0.075 + sag;
+          const r = fatQuad * (1.0 - i * 0.16) * pulse;
+          // Reservoir is the hottest source → strongest warm crest + full glow.
+          setBead(inst++, 0, y, 0, r, glow, 0.85);
         }
 
         // (b) The hanging NECK: lobes interpolated root→tip. Radius pinches to a
         //     minimum in the MIDDLE (capillary neck), fattening into the forming
-        //     bead at the tip — the necking reads unmistakably as the thread
-        //     stretches. The bead at the tip swells with tipMass.
+        //     bead at the tip — the necking reads unmistakably. The tip swells
+        //     with tipMass. This is the HERO — dead-centre, well lit.
         const rootY = SOURCE_Y - 0.06;
         const neckLen = Math.max(0.0001, rootY - tipY);
-        const tipBead = fat * (0.7 + tipMass * 0.16);
+        const tipBead = fatQuad * (0.6 + tipMass * 0.12);
         for (let n = 0; n < MAX_NECK; n++) {
           if (n >= NECK_LOBES) {
-            hideInstance(inst++);
+            hideBead(inst++);
             continue;
           }
           const f = NECK_LOBES > 1 ? n / (NECK_LOBES - 1) : 1; // 0 root → 1 tip
@@ -268,24 +373,34 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
           const waist = 1 - Math.sin(f * Math.PI) * (0.55 + (stretch - 1) * 0.16);
           const radius =
             f < 0.85
-              ? fat * 0.55 * clamp(waist, 0.16, 1)
-              : tipBead * (0.6 + (f - 0.85) / 0.15 * 0.4); // swell into the bead
-          setInstance(inst++, 0, y, 0, Math.max(radius, 0.02));
+              ? fatQuad * 0.45 * clamp(waist, 0.16, 1)
+              : tipBead * (0.55 + (f - 0.85) / 0.15 * 0.45); // swell into the bead
+          // The thread cools as it draws out: hot near the root (warm≈0.8),
+          // cooling toward the falling tip (warm≈0.35). Glow slightly dims down
+          // the thread so the hero crest reads hottest.
+          const warm = 0.8 - f * 0.45;
+          const lum = glow * (0.92 - f * 0.18);
+          setBead(inst++, 0, y, 0, Math.max(radius, 0.05), lum, warm);
         }
 
-        // (c) Free falling droplets (real ballistic beads).
-        for (let d = 0; d < MAX_DROPS; d++) {
-          if (d >= dropCount || !dropActive[d]) {
-            hideInstance(inst++);
+        // (c) Free falling droplets (real ballistic beads) — kept near centre and
+        //     within FLOOR_Y so they never clip the tile edge.
+        for (let dI = 0; dI < MAX_DROPS; dI++) {
+          if (dI >= dropCount || !dropActive[dI]) {
+            hideBead(inst++);
             continue;
           }
-          setInstance(inst++, dropX[d], dropY[d], dropZ[d], dropR[d]);
+          // A falling droplet is a discrete bead of fluid that has left the hot
+          // root → cooler amber body, slightly dimmer glow.
+          setBead(inst++, dropX[dI], dropY[dI], dropZ[dI], dropR[dI] * 1.6, glow * 0.82, 0.4);
         }
 
         // Park any remaining allocation (defensive; inst should equal MAX here).
-        for (; inst < MAX; inst++) hideInstance(inst);
+        for (; inst < MAX; inst++) hideBead(inst);
 
-        mesh.instanceMatrix.needsUpdate = true;
+        posAttr.needsUpdate = true;
+        colAttr.needsUpdate = true;
+        radAttr.needsUpdate = true;
       };
 
       reset();
@@ -301,10 +416,9 @@ export const moltenDripSimPrimitive: PrimitiveDefinition = {
         },
         onParamChange: () => stepper.markDirty(),
         dispose: () => {
-          target.object.remove(mesh);
-          geo.dispose();
-          mat.dispose();
-          mesh.dispose();
+          target.object.remove(sprite);
+          geometry.dispose();
+          material.dispose();
         },
       };
     },

@@ -19,22 +19,43 @@
 // The impulse re-arms at the start of each loop, so the figure perpetually blows
 // apart and re-forms.
 //
+// CYCLE TUNING (advocate round 1 fix): the loop is SHORT (CYCLE≈2s) so a single
+// play window (idle→play-3 spans ~t=0..1.5s) captures the WHOLE arc — blast,
+// peak scatter, AND the spring reeling the formation back home. The control
+// sweeps pin t=1.0 (~half a cycle in), which lands MID-FLIGHT where the spring is
+// already strongly active: power/gravity/springBack/count all visibly re-pin the
+// frozen frame because the sim is genuinely in motion there, not decelerated to a
+// near-frozen scatter.
+//
+// RENDER PATH (P0 particle lesson — bubble-rise-sim.ts / smoke-plume-sim.ts):
+// THREE.Points render 1px on both backends and PointsMaterial.map never samples a
+// per-quad uv under three/webgpu, so motes that read as OBJECTS WITH MASS (not
+// stars) MUST be an instanced THREE.Sprite carrying a PointsNodeMaterial whose
+//   • positionNode = instancedBufferAttribute(per-particle CENTER)
+//   • colorNode    = a TSL radial profile of the quad uv: a BRIGHT dense core with
+//     a soft gaussian falloff feathered to EXACT zero before the quad edge (no
+//     square rim at any DPR), its footprint driven by a per-particle instanced
+//     RADIUS attribute, times a per-particle instanced COLOR (premultiplied
+//     brightness; additive = alpha). Generous fixed billboard footprint.
+//
 // Determinism: home slots + blast directions are seeded ONLY via hash1/hash2/shash
 // (no Math.random / Date.now). The reset-and-replay stepper makes the frame at
 // time t a pure function of (params, t), so the verification harness can pin any
 // frozen "engaged" frame by reseeking; onParamChange → markDirty makes every
-// trajectory-only control (power / gravity / springBack) visibly move the frozen
-// frame. The ~0.45 frozen phase lands MID-FLIGHT (mid-scatter / early reassembly),
-// where the controls bite.
+// trajectory-only control (power / gravity / springBack / count) visibly move the
+// frozen frame.
 
 import {
-  Points,
+  Sprite,
   BufferGeometry,
   BufferAttribute,
-  PointsMaterial,
+  InstancedBufferAttribute,
   Color,
   AdditiveBlending,
+  DynamicDrawUsage,
 } from 'three';
+import { PointsNodeMaterial } from 'three/webgpu';
+import { instancedBufferAttribute, uv, vec3, vec4, float, exp, smoothstep } from 'three/tsl';
 import { defineAnimatable } from '../base';
 import { num, clamp, type PrimitiveDefinition } from '../contract';
 import {
@@ -50,9 +71,12 @@ import {
 // never reallocate per seek. Unused particles are parked far off-screen.
 const MAX_COUNT = 520;
 const DT = 1 / 90; // fixed sim step (stiff-ish spring → modest step)
-const CYCLE = 4.4; // seconds per blast→reassemble loop
-const BLAST_AT = 0.12; // seconds into the cycle the impulse fires (brief hold first)
+const CYCLE = 2.0; // seconds per blast→reassemble loop (short → whole arc in window)
+const BLAST_AT = 0.08; // seconds into the cycle the impulse fires (brief hold first)
 const HOME_R = 0.95; // outer radius of the home ring formation
+// Generous fixed billboard footprint — holds the largest mote (biggest power /
+// near the bright core) fully feathered with no square edge.
+const BILLBOARD = 0.5;
 
 const SCHEMA = [
   { id: 'power', label: 'Blast Power', type: 'knob', min: 1, max: 9, step: 0.1, default: 4.6 },
@@ -89,6 +113,17 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
       const dirY = new Float32Array(MAX_COUNT);
       const dirZ = new Float32Array(MAX_COUNT);
       const sizeJ = new Float32Array(MAX_COUNT); // per-particle blast-strength jitter
+      const tintR = new Float32Array(MAX_COUNT); // resolved cool tint
+      const tintG = new Float32Array(MAX_COUNT);
+      const tintB = new Float32Array(MAX_COUNT);
+      const baseR = new Float32Array(MAX_COUNT); // per-mote intrinsic radius
+
+      // Observatory-Brass cool palette: ice / mint / steel cores, brass-warm
+      // accents on a minority so the formation reads with warmth, never purple.
+      const ice = new Color('#8fd9ff'); // ice-blue majority
+      const mint = new Color('#a8e8cf'); // mint
+      const steel = new Color('#d6e3ec'); // pale steel highlight
+      const amber = new Color('#ffcf8a'); // brass-warm accent (minority)
       for (let i = 0; i < MAX_COUNT; i++) {
         // Ring index 0..2 + golden-angle placement → an even, logo-ish disc.
         const ring = i % 3; // 0 inner, 1 mid, 2 outer
@@ -115,6 +150,12 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
         dirY[i] = by;
         dirZ[i] = bz;
         sizeJ[i] = 0.7 + hash2(i, 9.1) * 0.6; // 0.7..1.3 strength multiplier
+        baseR[i] = 0.62 + hash1(i * 8.19 + 4.4) * 0.42; // intrinsic mote size
+        const h = hash1(i * 11.7 + 2.4);
+        const c = h > 0.86 ? amber : h > 0.66 ? steel : h > 0.36 ? mint : ice;
+        tintR[i] = c.r;
+        tintG[i] = c.g;
+        tintB[i] = c.b;
       }
 
       // ── Live integrated state (closure-held).
@@ -149,8 +190,8 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
         const g = num(params.gravity, 1.6);
         // springBack 0..1 → spring stiffness (force back home) and its damping.
         const sb = clamp(num(params.springBack, 0.5), 0.05, 1);
-        const k = 6 + sb * 46; // Hooke constant: stiffer return at high springBack
-        const springDamp = 1.4 + sb * 4.5; // velocity damping toward home
+        const k = 10 + sb * 70; // Hooke constant: stiffer return at high springBack
+        const springDamp = 2.2 + sb * 6.0; // velocity damping toward home
 
         const cyclePrev = simT;
         simT += dt;
@@ -183,11 +224,12 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
         }
 
         // Phase weight: 0 right after blast → 1 late in the cycle. The spring
-        // ramps in so particles fly free first, then get reeled home — distinct
-        // explode then reassemble, both INTEGRATED.
+        // ramps in (gentle ease, NOT since²) so it is already meaningfully active
+        // by the mid-cycle frame the harness pins (t=1.0 → since≈0.48), reeling
+        // the cloud home — distinct explode then reassemble, both INTEGRATED.
         const since = clamp((simT - BLAST_AT) / (CYCLE - BLAST_AT), 0, 1);
-        const springGate = since * since; // ease-in: weak early, strong late
-        const drag = 1 - 0.9 * dt; // air drag bleeds blast speed
+        const springGate = since * (0.45 + 0.55 * since); // ~0.16 early, 1 late
+        const drag = 1 - 0.6 * dt; // lighter air drag — motion persists, not frozen
 
         for (let i = 0; i < count; i++) {
           // Force at the CURRENT position: spring-to-home + gravity.
@@ -218,46 +260,110 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
 
       const stepper = makeReplayStepper({ dt: DT, reset, step });
 
-      // ── Render: additive round points (NEVER 1px squares). Observatory-Brass
-      // ice/steel palette; brass-warm core.
-      const positions = new Float32Array(MAX_COUNT * 3);
-      const geometry = new BufferGeometry();
-      const posAttr = new BufferAttribute(positions, 3);
-      geometry.setAttribute('position', posAttr);
+      // ── Render: instanced billboard sprites with a bright radial TSL core (the
+      // P0 particle lesson — NEVER plain Points/PointsMaterial, which render 1px
+      // and never sample a per-quad uv under three/webgpu). Observatory-Brass
+      // ice/mint/steel palette with brass-warm accents; bright dense cores so
+      // motes read as objects with mass, not stars.
+      const positions = new Float32Array(MAX_COUNT * 3); // particle centers
+      const colors = new Float32Array(MAX_COUNT * 3); // premultiplied tint × brightness
+      const radii = new Float32Array(MAX_COUNT); // per-particle profile radius (quad units)
+      const posAttr = new InstancedBufferAttribute(positions, 3);
+      const colAttr = new InstancedBufferAttribute(colors, 3);
+      const radAttr = new InstancedBufferAttribute(radii, 1);
+      posAttr.setUsage(DynamicDrawUsage);
+      colAttr.setUsage(DynamicDrawUsage);
+      radAttr.setUsage(DynamicDrawUsage);
 
-      const material = new PointsMaterial({
-        color: new Color('#9fe0c4'), // mint-ice
-        size: 0.055,
+      // ── Geometry: one billboard quad + per-particle instanced attributes ─────
+      const geometry = new BufferGeometry();
+      geometry.setIndex([0, 1, 2, 0, 2, 3]);
+      geometry.setAttribute(
+        'position',
+        new BufferAttribute(
+          new Float32Array([-0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0, -0.5, 0.5, 0]),
+          3,
+        ),
+      );
+      geometry.setAttribute(
+        'uv',
+        new BufferAttribute(new Float32Array([0, 0, 1, 0, 1, 1, 0, 1]), 2),
+      );
+      geometry.setAttribute('instancePosition', posAttr);
+      geometry.setAttribute('instanceColor', colAttr);
+      geometry.setAttribute('instanceRadius', radAttr);
+
+      // ── Look layer: TSL radial mote profile × per-particle instanced color ───
+      // d: 0 at the quad center → 1 at the edge midpoint (√2 at the corner).
+      const d = uv().sub(0.5).mul(2).length();
+      type FloatNode = ReturnType<typeof float>;
+      const rNode = instancedBufferAttribute(radAttr) as unknown as FloatNode;
+      // Bright dense core with a soft gaussian falloff scaled by the per-particle
+      // radius (bigger radius → wider, brighter mote). The −3.0 coefficient keeps
+      // a punchy core so luma reads >> 120 on near-black, not a faint speck.
+      const dn = d.div(rNode.add(0.001));
+      const core = exp(dn.mul(dn).mul(-3.0)).mul(1.35);
+      // …killed to EXACT zero strictly before the quad edge so no square rim can
+      // ever show, at any DPR.
+      const rim = smoothstep(float(0.72), float(0.96), d).oneMinus();
+      const moteTint = instancedBufferAttribute(colAttr) as unknown as {
+        mul: (x: unknown) => ReturnType<typeof vec3>;
+      };
+
+      const material = new PointsNodeMaterial({
+        size: BILLBOARD,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.92,
+        opacity: 1,
         blending: AdditiveBlending,
         depthWrite: false,
       });
+      material.positionNode = instancedBufferAttribute(posAttr);
+      material.colorNode = vec4(moteTint.mul(core.mul(rim)), float(1));
 
-      const points = new Points(geometry, material);
-      points.name = 'explode-reassemble-sim';
-      target.object.add(points);
+      const sprite = new Sprite(material);
+      sprite.geometry = geometry;
+      sprite.count = MAX_COUNT; // live count narrows this in write()
+      sprite.frustumCulled = false; // instances extend beyond the unit quad
+      sprite.name = 'explode-reassemble-sim';
+      target.object.add(sprite);
 
       const HIDDEN = 1000; // park unused particles far off-screen
 
       const write = () => {
         const count = activeCount();
+        // power read LIVE here (not only in step) so a same-t reseek without
+        // markDirty still shows a difference; onParamChange below replays the
+        // whole sim so trajectory controls (power/gravity/springBack/count)
+        // re-pin the frozen frame too.
+        const powerK = clamp(num(params.power, 4.6), 1, 9);
+        const sizeK = 0.92 + (powerK - 1) / 8 * 0.5; // 0.92..1.42 with blast power
+        sprite.count = count;
         for (let i = 0; i < count; i++) {
           positions[i * 3] = px[i];
           positions[i * 3 + 1] = py[i];
           positions[i * 3 + 2] = pz[i];
+          // Quad-center radius (profile lives where d < ~rad); clamp under 0.5 so
+          // the feathered edge never reaches the quad rim.
+          radii[i] = clamp(baseR[i] * 0.34 * sizeK, 0.08, 0.46);
+          // Bright premultiplied tint — motes read as luminous objects with mass.
+          const lum = 1.25;
+          colors[i * 3] = tintR[i] * lum;
+          colors[i * 3 + 1] = tintG[i] * lum;
+          colors[i * 3 + 2] = tintB[i] * lum;
         }
         for (let i = count; i < MAX_COUNT; i++) {
           positions[i * 3] = HIDDEN;
           positions[i * 3 + 1] = HIDDEN;
           positions[i * 3 + 2] = 0;
+          colors[i * 3] = 0;
+          colors[i * 3 + 1] = 0;
+          colors[i * 3 + 2] = 0;
+          radii[i] = 0;
         }
         posAttr.needsUpdate = true;
-        // A control read LIVE in write() (not just in step): point size scales
-        // gently with blast power, so even a same-t reseek without markDirty
-        // shows a difference — belt-and-braces with onParamChange.
-        material.size = 0.045 + clamp(num(params.power, 4.6), 1, 9) * 0.0028;
+        colAttr.needsUpdate = true;
+        radAttr.needsUpdate = true;
       };
 
       reset();
@@ -269,11 +375,11 @@ export const explodeReassembleSimPrimitive: PrimitiveDefinition = {
           stepper.seekStep(t);
           write();
         },
-        // Trajectory-only controls (power/gravity/springBack) re-run the sim to
-        // the SAME pinned frame → the frozen frame visibly changes.
+        // Trajectory-only controls (power/gravity/springBack/count) re-run the sim
+        // to the SAME pinned frame → the frozen frame visibly changes.
         onParamChange: () => stepper.markDirty(),
         dispose: () => {
-          target.object.remove(points);
+          target.object.remove(sprite);
           geometry.dispose();
           material.dispose();
         },

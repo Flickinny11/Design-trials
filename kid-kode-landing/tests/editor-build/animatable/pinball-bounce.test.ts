@@ -4,12 +4,31 @@ import { pinballBouncePrimitive } from '@/lib/prism/animatable/primitives/pinbal
 import { makeTarget, runConformance } from './_conformance';
 
 // Pull the live ball position out of the sprite's instance-position buffer. The
-// pool layout is [ pegs(12) | trail(56) | ball(1) ], so the ball is the LAST
-// slot. We read the buffer directly because there is no host subject (empty).
-const POOL_BALL_SLOT = 12 + 56; // PEG_MAX + TRAIL_MAX
+// pool layout is [ pegs(12) | walls(22) | trail(56) | ball(1) ], so the ball is
+// the LAST slot. We read the buffer directly because there is no host subject
+// (empty). NOTE the render rep now carries the elements on an instanced Sprite
+// (named 'pinball-bounce') via an 'instancePosition' InstancedBufferAttribute;
+// a decorative wall column shares the pool, so the ball slot sits after the
+// pegs + walls + trail blocks (PEG_MAX 12 + WALL_COUNT 22 + TRAIL_MAX 56 = 90).
+const PEG_MAX = 12;
+const WALL_COUNT = 22; // WALL_DOTS(11) * 2 columns
+const TRAIL_MAX = 56;
+const TRAIL_BASE = PEG_MAX + WALL_COUNT; // 34
+const POOL_BALL_SLOT = PEG_MAX + WALL_COUNT + TRAIL_MAX; // 90
+
+// The sim elements live on the Sprite named 'pinball-bounce' carrying the
+// 'instancePosition' attribute — pick it explicitly so a decorative sprite (if
+// any) never shadows the physics one.
+function simSprite(target: ReturnType<typeof makeTarget>): Sprite {
+  const sprites = target.object.children.filter((o) => o instanceof Sprite) as Sprite[];
+  const named = sprites.find(
+    (s) => s.name === 'pinball-bounce' && s.geometry.getAttribute('instancePosition'),
+  );
+  return (named ?? sprites.find((s) => s.geometry.getAttribute('instancePosition'))) as Sprite;
+}
 
 function ballPos(target: ReturnType<typeof makeTarget>): { x: number; y: number } {
-  const sprite = target.object.children.find((o) => o instanceof Sprite) as Sprite;
+  const sprite = simSprite(target);
   const pos = sprite.geometry.getAttribute('instancePosition');
   return { x: pos.getX(POOL_BALL_SLOT), y: pos.getY(POOL_BALL_SLOT) };
 }
@@ -68,14 +87,14 @@ describe('pinball-bounce primitive', () => {
   it('lays a visible trail of past positions behind the ball', () => {
     const target = makeTarget(pinballBouncePrimitive);
     const inst = pinballBouncePrimitive.create(target);
-    const sprite = target.object.children.find((o) => o instanceof Sprite) as Sprite;
+    const sprite = simSprite(target);
     const col = sprite.geometry.getAttribute('instanceColor');
 
-    // Mid-flight, a chunk of the trail slots (indices 12..67) should be lit
+    // Mid-flight, a chunk of the trail slots (indices 34..89) should be lit
     // (non-zero brightness) — proving the breadcrumb path is populated.
     inst.seek(1.2);
     let litTrail = 0;
-    for (let k = 12; k < 12 + 56; k++) {
+    for (let k = TRAIL_BASE; k < TRAIL_BASE + TRAIL_MAX; k++) {
       const b = col.getX(k) + col.getY(k) + col.getZ(k);
       if (b > 1e-3) litTrail++;
     }

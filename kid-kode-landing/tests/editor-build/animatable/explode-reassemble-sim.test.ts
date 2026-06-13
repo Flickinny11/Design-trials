@@ -1,14 +1,25 @@
 import { describe, it, expect } from 'vitest';
 import { explodeReassembleSimPrimitive } from '@/lib/prism/animatable/primitives/explode-reassemble-sim';
 import { makeTarget, runConformance } from './_conformance';
-import { Points, BufferAttribute } from 'three';
+import { Sprite, InstancedBufferAttribute } from 'three';
 
 // Mean distance of the active particle cloud from the origin (formation centre),
 // read from the live geometry buffer the primitive writes each seek.
+//
+// Render layer (fix-round-1): the simulated motes are an instanced billboard
+// THREE.Sprite (named 'explode-reassemble-sim') whose per-particle centers live
+// in an 'instancePosition' InstancedBufferAttribute — NOT a THREE.Points cloud
+// reading a plain 'position' attr. The InstancedBufferAttribute exposes the same
+// getX/getY/getZ API, so the radius math below is unchanged; only the object
+// lookup + attribute name move to the new representation. (Other Sprites in the
+// scene would be decorative; we pick the one carrying the sim by its .name.)
 function meanRadius(target: ReturnType<typeof makeTarget>, count: number): number {
-  const pts = target.object.children.find((c) => c instanceof Points) as Points | undefined;
-  expect(pts, 'primitive added a Points cloud').toBeTruthy();
-  const pos = pts!.geometry.getAttribute('position') as BufferAttribute;
+  const sprite = target.object.children.find(
+    (c) => c instanceof Sprite && c.name === 'explode-reassemble-sim',
+  ) as Sprite | undefined;
+  expect(sprite, 'primitive added the explode-reassemble-sim sprite').toBeTruthy();
+  const pos = sprite!.geometry.getAttribute('instancePosition') as InstancedBufferAttribute;
+  expect(pos, 'sprite carries the instancePosition attribute').toBeTruthy();
   let sum = 0;
   for (let i = 0; i < count; i++) {
     const x = pos.getX(i);

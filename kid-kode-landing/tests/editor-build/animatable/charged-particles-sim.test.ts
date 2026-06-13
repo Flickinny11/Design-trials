@@ -1,16 +1,48 @@
 import { describe, it, expect } from 'vitest';
 import { chargedParticlesSimPrimitive } from '@/lib/prism/animatable/primitives/charged-particles-sim';
 import { makeTarget, runConformance } from './_conformance';
-import { Points } from 'three';
+import { InstancedMesh, Matrix4, Vector3 } from 'three';
 
-/** Pull the live position BufferAttribute the primitive writes into. */
+// The render layer is an instanced oriented-streak field (one InstancedMesh,
+// per-mote matrix). Each streak's HEAD endpoint — its matrix translation — sits
+// exactly at the mote position the sim integrates, so we recover the mote
+// centers from the instance matrices into the same flat [x0,y0,z0, x1,…] layout
+// the old THREE.Points position buffer used.
+//
+// The tests grab `pos` ONCE, then index `pos[i*3]` after each seek() and expect
+// fresh values (the old Points position buffer was mutated in place by write()).
+// We preserve that exact access pattern by returning a numeric-index Proxy that
+// re-extracts the live instanceMatrix on every read — so `pos[k]` always
+// reflects whatever frame the latest seek() pinned, no call-site changes needed.
 function getPositions(target: ReturnType<typeof makeTarget>): Float32Array {
-  const pts = target.object.children.find(
-    (c) => c instanceof Points,
-  ) as Points | undefined;
-  if (!pts) throw new Error('charged-particles-sim did not add a Points object');
-  const attr = pts.geometry.getAttribute('position');
-  return attr.array as Float32Array;
+  const mesh = target.object.children.find(
+    (c) => c instanceof InstancedMesh,
+  ) as InstancedMesh | undefined;
+  if (!mesh) {
+    throw new Error('charged-particles-sim did not add an InstancedMesh object');
+  }
+  const m = new Matrix4();
+  const v = new Vector3();
+  const read = (flatIndex: number): number => {
+    const i = Math.floor(flatIndex / 3);
+    const comp = flatIndex % 3;
+    if (i >= mesh.count) return 0;
+    mesh.getMatrixAt(i, m);
+    v.setFromMatrixPosition(m);
+    return comp === 0 ? v.x : comp === 1 ? v.y : v.z;
+  };
+  // Proxy over a zero-filled Float32Array: numeric reads are live, length/typing
+  // come from the backing array so it still satisfies `Float32Array`.
+  const backing = new Float32Array(mesh.count * 3);
+  return new Proxy(backing, {
+    get(t, prop, recv) {
+      if (typeof prop === 'string') {
+        const n = Number(prop);
+        if (Number.isInteger(n) && n >= 0) return read(n);
+      }
+      return Reflect.get(t, prop, recv);
+    },
+  }) as Float32Array;
 }
 
 describe('charged-particles-sim primitive', () => {
