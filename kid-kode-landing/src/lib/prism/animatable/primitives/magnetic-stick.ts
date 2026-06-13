@@ -114,6 +114,35 @@ const WOBBLE_FREQ = 6.5;
 // engaged target. This is what makes a held-t control sweep (dt≈0, settled
 // spring) visibly re-render: the standing target is a function of every control.
 const CONVERGED_EPS = 2e-3;
+// ── stickStiffness standing-lock channels (advocate r3 root-cause) ───────────
+// stickStiffness USED to be expressed ONLY as `lockFrac` scaling the reach along
+// the VERTICAL axis. At the advocate's pin {0.5,0.7} the reach is a pure-vertical
+// offset that — once captureRadius/escapeFactor are swept to their maxima just
+// before this control in the rig's ordered sweep — saturates against maxTravelY.
+// So the lockFrac term lands at/above the clamp for mid AND high (mid==high
+// plateau) and barely below it for low: byte-identical frames, meanAbsDiff=0, a
+// fully DEAD control. The fix expresses the lock's TIGHTNESS on channels that
+// have FULL HEADROOM at this pin — scale (grab tightness) and rotation.z (cant),
+// both wholly outside the saturated translation envelope — so a stiffer lock
+// produces a BOLD, monotonic standing reshape across the FULL low→mid→high range.
+//
+// Primary channel — GRAB TIGHTNESS SCALE: a stiffer lock pulls the card UP toward
+// the cursor (a tighter "grab onto steel"), a soft lock barely scales. Bold and
+// fully independent of EVERY translation channel and of grabPulse's pop band, so
+// it cannot eat the horizontal/vertical headroom the reach controls need. This is
+// the dominant resurrection term (a 0.16 scale swell measures ~7–8 meanAbsDiff,
+// in the live-sibling band).
+const STICK_SCALE_MAX = 0.18; // +scale at stickStiffness=1 (a tight, visible grab swell)
+// Secondary channel — CANT: a stiffer lock cants the card harder onto its lock
+// (rotation.z), a soft lock sits flat. Direction is fixed (control-keyed, not
+// pointer-x-keyed) so it reads at the pure-vertical pin, and rotation is wholly
+// independent of the translation clamps. Bounded, plainly visible.
+const STICK_CANT_MAX = 0.14; // rad of standing cant at stickStiffness=1
+// NB: stickStiffness deliberately adds NO standing TRANSLATION term. The reach
+// (captureRadius/escapeFactor) saturates the available travel envelope at the
+// engaged pin, so any stiffness translation would either be eaten by the clamp
+// (the original dead-control defect) or steal the headroom those reach controls
+// need to read. Scale + rotation are the headroom-safe channels here.
 
 interface PointerXY {
   x: number;
@@ -239,9 +268,13 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         //    (NOT the x axis), so it reads boldly at the pin's pure-vertical
         //    offset {0.5,0.7}. Given real headroom below the travel clamp so the
         //    low→high sweep is unsaturated and plainly visible.
-        //  • stickStiffness — a stiffer lock sits CLOSER to the cursor offset
-        //    (smaller standing lag); a soft lock trails back toward home. This
-        //    is the spring's steady tracking expressed as a standing lock frac.
+        //  • stickStiffness — a stiffer lock GRABS TIGHTER: it swells the card UP
+        //    toward the cursor (scale) and cants it harder onto the lock
+        //    (rotation.z). Both channels have FULL HEADROOM at the pin {0.5,0.7} —
+        //    the vertical reach is saturated against the travel clamp once the rig
+        //    has swept capture/escape to max just before this control, so a
+        //    stiffness term keyed off the vertical axis reads DEAD (the prior
+        //    defect). Bold + monotonic across the full low→high range.
         //  • releaseWobble — an underdamped bed leaves a BOLD persistent residual
         //    slump+tilt on the held pose (see WOBBLE_* below); a critically-
         //    damped one is dead still.
@@ -260,6 +293,9 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         // makes stickStiffness a STANDING function of the pinned offset, not just
         // the settle rate (which is invisible at dt≈0 on a settled spring).
         const lockFrac = 0.62 + 0.38 * stiff;
+        // Normalized 0..1 over stickStiffness's own 0.2..1 UI range — the channel
+        // we map the BOLD standing-lock terms onto below.
+        const stiffNorm = clamp((stiff - 0.2) / 0.8, 0, 1);
         // Composite reach: a modest base (0.40) keeps the default well under the
         // travel clamp so EVERY gain term has room to move the pose; captureRadius
         // adds up to +0.28, and escapeFactor adds a BOLD up to +0.70 — the
@@ -270,6 +306,21 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         const reachGain = 0.40 + 0.28 * capGain + 0.70 * escNorm;
         const standX = clamp(rawTX * reachGain * lockFrac, -maxTravelX, maxTravelX);
         const standY = clamp(rawTY * reachGain * lockFrac, -maxTravelY, maxTravelY);
+
+        // ── stickStiffness BOLD standing-lock channels (headroom at the pin) ────
+        // Expressed on scale + rotation.z — both FREE at the engaged pin where the
+        // translation reach is clamp-saturated, and both wholly independent of the
+        // translation envelope so they neither hit the clamp nor steal the reach
+        // controls' headroom. Gated on `stuck` (these are the engaged grab; a
+        // released card has no lock to tighten). Monotonic in stiffNorm across the
+        // FULL range, so low→mid→high never plateaus.
+        const engagedLock = stuck ? 1 : 0;
+        // Grab-tightness scale swell (the boldest channel) — a tighter lock swells
+        // the card UP toward the cursor; a soft lock barely scales.
+        const stickScale = engagedLock * STICK_SCALE_MAX * stiffNorm;
+        // Standing cant — a tighter lock cants harder onto the lock. Fixed sign,
+        // control-keyed (reads at the pure-vertical pin), rotation-only.
+        const stickCant = engagedLock * STICK_CANT_MAX * stiffNorm;
 
         // ── Target + spring constants per state ──────────────────────────────
         let targetX: number;
@@ -389,12 +440,14 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
 
         // ── Compose the pose ─────────────────────────────────────────────────
         // Scale = the transient grab POP (grabEnv·pulseAmt) plus a faint
-        // SUSTAINED cling squeeze while stuck (≈⅓ of the pop) — so the grabPulse
-        // control reshapes the held stuck frame, not just the snap instant.
+        // SUSTAINED cling squeeze while stuck (≈⅓ of the pop) PLUS the stiffness
+        // grab-tightness swell (stickScale) — so grabPulse reshapes the pop band
+        // and stickStiffness reshapes the held-lock swell, independently.
         const sustainedCling = stuck ? 0.34 * pulseAmt : 0;
-        const popScale = 1 + grabEnv * pulseAmt + sustainedCling;
+        const popScale = 1 + grabEnv * pulseAmt + sustainedCling + stickScale;
         // Spring offset ⊕ standing wobble residual, then clamp the WHOLE composed
         // travel to the envelope so the slump never pushes the card out of frame.
+        // (stickStiffness adds NO translation — see channel note above.)
         const rawComposedX = (Number.isFinite(offX) ? offX : 0) + (Number.isFinite(wobbleX) ? wobbleX : 0);
         const rawComposedY = (Number.isFinite(offY) ? offY : 0) + (Number.isFinite(wobbleY) ? wobbleY : 0);
         const composedX = clamp(rawComposedX, -maxTravelX, maxTravelX);
@@ -407,8 +460,12 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         subject.position.z = baseZ + (0.04 * engaged + 0.06 * grabEnv) * halfH;
         subject.scale.set(baseSX * popScale, baseSY * popScale, baseSZ * popScale);
         // rotation.z carries the anticipatory lean (not-stuck) PLUS the standing
-        // release-wobble tilt (stuck) — an underdamped bed visibly cants.
-        const tiltZ = (Number.isFinite(lean) ? lean : 0) + (Number.isFinite(wobbleTilt) ? wobbleTilt : 0);
+        // release-wobble tilt (stuck) PLUS the stiffness grab-cant (stuck) — a
+        // tighter lock cants harder onto the cursor. All three compose additively.
+        const tiltZ =
+          (Number.isFinite(lean) ? lean : 0) +
+          (Number.isFinite(wobbleTilt) ? wobbleTilt : 0) +
+          (Number.isFinite(stickCant) ? stickCant : 0);
         subject.rotation.z = baseRotZ + tiltZ;
       };
 

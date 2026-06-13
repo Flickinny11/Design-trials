@@ -1,23 +1,10 @@
 {
-  "startedAt": "2026-06-13T07:43:33.498Z",
+  "startedAt": "2026-06-13T07:59:06.397Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
-    {
-      "tile": "velocity-skew-follow",
-      "state": "after",
-      "dir": "velocity-skew-follow/after",
-      "claim": {
-        "name": "velocity-skew-follow",
-        "label": "Chase Speed",
-        "description": "The card chases the cursor with Cuberto swagger — leaning and skewing into its own velocity, easing out long like an expo tween.",
-        "category": "pointer"
-      },
-      "controls": 4,
-      "notes": []
-    },
     {
       "tile": "magnetic-stick",
       "state": "after",
@@ -42,58 +29,6 @@
         "category": "pointer"
       },
       "controls": 5,
-      "notes": []
-    },
-    {
-      "tile": "pendant-dangle",
-      "state": "after",
-      "dir": "pendant-dangle/after",
-      "claim": {
-        "name": "pendant-dangle",
-        "label": "Chain Length",
-        "description": "The card hangs from an unseen chain and dangles toward the cursor, swinging on its pivot and settling with the lazy physics of a pendant in a jeweler’s hand.",
-        "category": "pointer"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "throw-physics",
-      "state": "after",
-      "dir": "throw-physics/after",
-      "claim": {
-        "name": "throw-physics",
-        "label": "Throw power",
-        "description": "Grab the card with the cursor and throw it — it sails on real ballistics, bounces off the frame walls, and glides home ashamed.",
-        "category": "pointer"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "charge-release",
-      "state": "after",
-      "dir": "charge-release/after",
-      "claim": {
-        "name": "charge-release",
-        "label": "Charge rate",
-        "description": "Hold the cursor close and the card charges — compressing, trembling, edges heating brass — break away and it releases, springing tall with a crack of light.",
-        "category": "pointer"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "pointer-cast-shadow",
-      "state": "after",
-      "dir": "pointer-cast-shadow/after",
-      "claim": {
-        "name": "pointer-cast-shadow",
-        "label": "Shadow length",
-        "description": "The cursor becomes the room lamp — the card throws a soft true shadow away from it, raking long when the light is low and snapping tight underfoot when it hovers above.",
-        "category": "pointer"
-      },
-      "controls": 4,
       "notes": []
     }
   ],

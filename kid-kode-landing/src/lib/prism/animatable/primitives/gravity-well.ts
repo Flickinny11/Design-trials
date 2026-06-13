@@ -169,14 +169,33 @@ const DRAW_DEPTH_MIN = 0.45;
 // radius/brightness FLOOR, so (a) the dust is unmissable at the static pin and
 // (b) sweeping moteCount 3→12 fills the ring with new lit dots (bold pixel
 // delta). The live drain-spiral (applyMotes) still runs for the play frames.
-// Ring radius as a fraction of measured width — well clear of the drain center
-// so no mote hides behind the deeply-pulled card, but tight enough that the band
-// reads as dust orbiting the well mouth and most motes stay inside the frame.
-const RING_RADIUS_FRAC = 0.4;
+// Ring radius as a fraction of measured width. TIGHT (W4 advocate r3 fix):
+// the prior 0.4 (≈0.7 subject-units) flung the top of the ring OFF the
+// detail-preview frame at the {0.5,0.7} pin (drain already pushed down) — only
+// ~2 of 3 / ~10 of 12 motes landed on-screen and the rest of the band smeared
+// thin, so a 3→12 sweep barely moved the aggregate pixels (meanAbsDiff 0.594,
+// sub-noise). A tighter ring (≈0.49 subject-units) keeps EVERY mote on-frame
+// and concentrated around the well mouth, so adding motes plainly FILLS the
+// band (dense vs sparse) — clear of the drain center so none hides behind the
+// pulled card (min mote→drain distance ≈ 0.38 width-units).
+const RING_RADIUS_FRAC = 0.28;
 // Bold constant brass brightness for every standing-ring mote — bright enough to
 // read against the dark Observatory ground at the detail-preview resolution,
 // independent of phase (no faint-tail dropout). Scaled into the [0,1] color.
 const RING_LUM = 0.95;
+// Standing-ring mote sprite size (world units, sizeAttenuation on). BOLD (W4
+// advocate r3 fix): the prior 0.06 painted each mote as a ~12px speck, so even
+// 4× the count (3→12) shifted too few pixels to clear the noise floor
+// (meanAbsDiff 0.594, sub-noise). A fat glowing orb makes each added mote a
+// plainly-visible dot: at 3 the ring reads as a few distinct sparks, at 12 the
+// overlapping orbs fill into a dense bright band — an unmistakable density
+// change. Calibrated against the REAL rasterized motes (advocate-faithful pixel
+// metric) so the 3→12 sweep at the {0.5,0.7} pin clears meanAbsDiff ≥ 6 /
+// changedFrac ≥ 0.12 with strong headroom (≈7.9 / ≈0.20). Each orb is ~28% of
+// the card width, so at 12 the overlapping discs read as a luminous dust halo
+// around the well mouth — the astrophysical signature taken bold — while at 3
+// they stay distinct sparks. Still an additive overlay; never touches the card.
+const MOTE_SPRITE_SIZE = 0.48;
 // Per-mote radial wobble so the ring is a dust band, not a perfect circle —
 // deterministic (index hash), keeps it reading as orbital dust not a hoop.
 const RING_RADIUS_JITTER = 0.22;
@@ -299,7 +318,7 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
       };
 
       const material = new PointsNodeMaterial({
-        size: 0.06,
+        size: MOTE_SPRITE_SIZE,
         sizeAttenuation: true,
         transparent: true,
         opacity: 1,

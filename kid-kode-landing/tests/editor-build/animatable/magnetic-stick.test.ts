@@ -210,7 +210,7 @@ describe('magnetic-stick primitive', () => {
       id: string,
       lo: number,
       hi: number,
-    ): { dx: number; dy: number; drz: number; dmag: number } => {
+    ): { dx: number; dy: number; drz: number; ds: number; dmag: number } => {
       const target = makeTarget(magneticStickPrimitive);
       const subject = target.subject as Object3D;
       target.userData.pointer = { ...ADVOCATE_PIN };
@@ -218,18 +218,25 @@ describe('magnetic-stick primitive', () => {
       const t = settle(inst, 0, 160); // converge onto the standing target
       inst.setControl(id, lo);
       inst.seek(t); // held-t re-seek at the SAME time (dt=0) — advocate's path
-      const loX = subject.position.x, loY = subject.position.y, loRz = subject.rotation.z;
+      const loX = subject.position.x, loY = subject.position.y, loRz = subject.rotation.z, loS = subject.scale.x;
       inst.setControl(id, hi);
       inst.seek(t); // again at the same held t
-      const hiX = subject.position.x, hiY = subject.position.y, hiRz = subject.rotation.z;
+      const hiX = subject.position.x, hiY = subject.position.y, hiRz = subject.rotation.z, hiS = subject.scale.x;
       inst.dispose();
       return {
         dx: Math.abs(hiX - loX),
         dy: Math.abs(hiY - loY),
         drz: Math.abs(hiRz - loRz),
+        ds: Math.abs(hiS - loS),
         dmag: Math.hypot(hiX - loX, hiY - loY),
       };
     };
+
+    // A formerly-dead control's low→high sweep must clear this scale-channel bold
+    // target. grabPulse (the live scale sibling) moves the card ~0.12 scale →
+    // meanAbsDiff 17; stickStiffness's grab-swell moves ~0.18 scale → ≈8
+    // meanAbsDiff, well into the live-control band and far above the dead floor.
+    const BOLD_SCALE = 0.08;
 
     // ── captureRadius: was LIVE — keep it live + monotonic (mid ≠ high) ──────
     // At the pure-vertical pin its reach reads on Y (a stronger magnet grips a
@@ -256,14 +263,43 @@ describe('magnetic-stick primitive', () => {
     expect(escHeld.dmag).toBeGreaterThan(BOLD);
     expect(escHeld.dy).toBeGreaterThan(BOLD);
 
-    // ── stickStiffness: was LIVE — keep it live (standing lock-distance lag) ─
-    // Reads on Y at this pin (stiffer locks closer to the downward offset).
-    const stiLo = measure({ stickStiffness: 0.2 });
-    const stiHi = measure({ stickStiffness: 1.0 });
-    expect(Math.abs(stiHi.y - stiLo.y)).toBeGreaterThan(0.02);
-    expect(stiHi.y).toBeLessThan(stiLo.y); // stiffer sits closer to the offset
+    // ── stickStiffness: formerly DEAD — now a BOLD grab-tightness swell + cant ─
+    // ROOT CAUSE of the r3 block: stickStiffness used to scale only the VERTICAL
+    // reach (`lockFrac`). At THIS pin the reach is a pure-vertical offset, and once
+    // the rig has swept captureRadius/escapeFactor to their maxima just before this
+    // control (their swept-leftover state), that reach SATURATES against maxTravelY
+    // — so the lockFrac term landed at/above the clamp for mid AND high (a mid==high
+    // plateau) and barely below it for low: byte-identical frames, meanAbsDiff=0,
+    // FULLY DEAD. The fix expresses the lock's tightness on channels with FULL
+    // HEADROOM at the engaged pin — SCALE (a tighter grab swells the card up toward
+    // the cursor) and rotation.z (a tighter lock cants harder) — neither of which
+    // touches the saturated translation envelope. We measure under the rig's REAL
+    // condition (capture/escape pinned to max, as the ordered sweep leaves them) so
+    // the test reproduces the exact dead-control trap.
+    const stiLo = measure({ captureRadius: 1.2, escapeFactor: 2.2, stickStiffness: 0.2 });
+    const stiMid = measure({ captureRadius: 1.2, escapeFactor: 2.2, stickStiffness: 0.6 });
+    const stiHi = measure({ captureRadius: 1.2, escapeFactor: 2.2, stickStiffness: 1.0 });
+    // PRIMARY channel — the grab-tightness scale swell clears the bold scale band
+    // (grabPulse's live band) low→high, and is MONOTONIC across the FULL range
+    // (the prior mid==high plateau is itself a defect — kill it).
+    expect(Math.abs(stiHi.s - stiLo.s)).toBeGreaterThan(BOLD_SCALE); // ≈0.18 measured
+    expect(stiHi.s).toBeGreaterThan(stiMid.s + 0.02); // no high plateau
+    expect(stiMid.s).toBeGreaterThan(stiLo.s + 0.02); // no low plateau
+    expect(stiHi.s).toBeGreaterThan(stiLo.s); // a stiffer lock swells the card UP
+    // SECONDARY channel — the standing cant grows monotonically too.
+    expect(Math.abs(stiHi.rz - stiLo.rz)).toBeGreaterThan(0.05); // ≈0.14 rad cant
+    expect(Math.abs(stiHi.rz - stiMid.rz)).toBeGreaterThan(0.02);
+    expect(Math.abs(stiMid.rz - stiLo.rz)).toBeGreaterThan(0.02);
+    // The translation channels are UNCHANGED by stickStiffness now (it deliberately
+    // adds no translation — that was the saturated, dead axis): a stiffer lock does
+    // NOT move the card, it tightens the grab. This is the inverse of the old bug.
+    expect(Math.abs(stiHi.y - stiLo.y)).toBeLessThan(0.005);
+    expect(Math.abs(stiHi.x - stiLo.x)).toBeLessThan(0.005);
+    // and BOLDLY observable on the SAME held frame via the paused-sweep path
+    // (dt=0 onParamChange) — the literal path the advocate's paused sweep drives.
     const stiHeld = sweepHeld('stickStiffness', 0.2, 1.0);
-    expect(stiHeld.dmag).toBeGreaterThan(0.02);
+    expect(stiHeld.ds).toBeGreaterThan(BOLD_SCALE); // bold scale swell on the held frame
+    expect(stiHeld.drz).toBeGreaterThan(0.05); // bold cant on the held frame
 
     // ── releaseWobble: formerly DEAD — now a BOLD standing slump + tilt ──────
     // A dead-still lock (0) vs an underdamped bed (1): the bed visibly SLUMPS off
@@ -273,11 +309,16 @@ describe('magnetic-stick primitive', () => {
     // standing displacement AND the visible tilt.
     const wobLo = measure({ releaseWobble: 0.0 });
     const wobHi = measure({ releaseWobble: 1.0 });
-    // wobble=0 is a perfectly dead-still lock: the card holds its clean stuck
-    // pose (a pure-vertical reach, x≈0) with NO horizontal slump and NO tilt.
-    // (mag is non-zero — that's the engagement reach, not a residual.)
+    // wobble=0 contributes NO horizontal slump — the card holds its clean stuck
+    // pose on X (the stickStiffness lock adds no translation either). (mag's
+    // vertical part is the engagement reach, not a residual.)
     expect(Math.abs(wobLo.x)).toBeLessThan(0.002); // no horizontal slump at wobble=0
-    expect(Math.abs(wobLo.rz)).toBeLessThan(0.002); // no tilt at wobble=0
+    // wobble=0 contributes NO TILT of its own: with the stickStiffness grab-cant
+    // also driven to its minimum, the engaged pose carries zero standing rotation —
+    // proving the release-wobble tilt term is exactly zero at wobble=0 (the cant
+    // present at default stiffness is the stiffness channel, not wobble).
+    const noCantNoWobble = measure({ releaseWobble: 0.0, stickStiffness: 0.2 });
+    expect(Math.abs(noCantNoWobble.rz)).toBeLessThan(0.002); // no standing tilt when both are min
     // wobble=1 slumps boldly off the lock AND tilts.
     const wobDmag = Math.hypot(wobHi.x - wobLo.x, wobHi.y - wobLo.y);
     expect(wobDmag).toBeGreaterThan(BOLD); // ≈0.23 measured — far above noise

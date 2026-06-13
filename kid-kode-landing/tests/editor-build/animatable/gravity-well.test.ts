@@ -84,6 +84,73 @@ function moteEnergy(motes: Sprite): number {
   return energy;
 }
 
+// ── Advocate-faithful RASTER PROXY ──────────────────────────────────────────
+// The advocate's verdict is a PIXEL metric, not an energy sum: it resizes the
+// detail-preview region, computes per-pixel luma (0.2126R+0.7152G+0.0722B),
+// and reports meanAbsDiff = mean(|lumaLo − lumaHi|) over the frame plus
+// changedFrac = frac(pixels moving > 8 luma). A pure energy sum can grow while
+// the RASTERIZED footprint stays sub-noise (tiny far-flung motes) — exactly the
+// W4 r2/r3 failure mode (energy claim met, meanAbsDiff 0.594). So the test
+// rasterizes the standing motes the SAME way the GPU does and runs the SAME
+// metric the advocate runs, asserting the BOLD target at the real {0.5,0.7} pin.
+const RASTER_PX = 240; //               advocate's frameDeltaOf resize width
+const RASTER_HALF = 1.165; //           visible half-extent @ fov40°,z3.2 (tan20°·3.2)
+const SPRITE_SIZE = 0.48; //            MOTE_SPRITE_SIZE in the primitive (world units)
+
+/** Render the LIVE standing motes of `motes` into a RASTER_PX² luma grid the
+ *  same way the renderer does: each instance is an additive brass disc with a
+ *  Gaussian×rim radial falloff (the primitive's TSL `glow·rim`), projected with
+ *  the rig camera scale, composited additively over the dark Observatory ground.
+ *  Returns Float32 luma per pixel (0..255-ish). Mirrors what the advocate's
+ *  camera captures, so meanAbsDiff over two such grids ≈ the advocate's number. */
+function rasterizeMotes(motes: Sprite): Float32Array {
+  const luma = new Float32Array(RASTER_PX * RASTER_PX);
+  const pos = motes.geometry.getAttribute('instancePosition').array as ArrayLike<number>;
+  const col = motes.geometry.getAttribute('instanceColor').array as ArrayLike<number>;
+  // Projected disc radius in pixels: a world-size sprite of SPRITE_SIZE spans
+  // SPRITE_SIZE / (2·RASTER_HALF) of the frame; half of that is the radius.
+  const radiusPx = (SPRITE_SIZE / (2 * RASTER_HALF)) * RASTER_PX * 0.5;
+  const r2 = radiusPx * radiusPx;
+  const toPx = (w: number) => ((w / (2 * RASTER_HALF)) + 0.5) * RASTER_PX; // world→pixel
+  for (let i = 0; i < motes.count; i++) {
+    const cx = toPx(pos[i * 3]);
+    const cy = toPx(-pos[i * 3 + 1]); // screen y is flipped
+    // Per-instance brass luma (additive), matching the renderer's blend.
+    const r = col[i * 3], g = col[i * 3 + 1], b = col[i * 3 + 2];
+    const baseL = (0.2126 * r + 0.7152 * g + 0.0722 * b) * 255;
+    const lo = Math.max(0, Math.floor(cx - radiusPx)), hi = Math.min(RASTER_PX - 1, Math.ceil(cx + radiusPx));
+    const lo2 = Math.max(0, Math.floor(cy - radiusPx)), hi2 = Math.min(RASTER_PX - 1, Math.ceil(cy + radiusPx));
+    for (let py = lo2; py <= hi2; py++) {
+      for (let px = lo; px <= hi; px++) {
+        const dx = px - cx, dy = py - cy;
+        const dd = (dx * dx + dy * dy) / r2; // 0 center → 1 edge
+        if (dd >= 1) continue;
+        // Gaussian core × rim cutoff to EXACT zero before the edge — the
+        // primitive's TSL is `glow = exp(d²·−3.4)` with `d` the unit radial
+        // distance (0 center → 1 disc edge), `rim = 1 − smoothstep(0.7,0.95,d)`.
+        const d = Math.sqrt(dd);
+        const glow = Math.exp(-3.4 * d * d);
+        const rim = d < 0.7 ? 1 : Math.max(0, 1 - (d - 0.7) / 0.25);
+        luma[py * RASTER_PX + px] += baseL * glow * rim;
+      }
+    }
+  }
+  return luma;
+}
+
+/** The advocate's exact pixel metric over two rasterized luma grids:
+ *  meanAbsDiff (mean |Δluma|, 0..255) + changedFrac (frac moving > 8 luma). */
+function rasterDelta(a: Float32Array, b: Float32Array): { meanAbsDiff: number; changedFrac: number } {
+  const n = a.length;
+  let sum = 0, moved = 0;
+  for (let i = 0; i < n; i++) {
+    const d = Math.abs(a[i] - b[i]);
+    sum += d;
+    if (d > 8) moved += 1;
+  }
+  return { meanAbsDiff: sum / n, changedFrac: moved / n };
+}
+
 /** Pin the pointer at an engaged point and hold it with REPEATED same-t seeks
  *  (dt≈0), exactly as the capture rigs do (controlsPinT, paused control sweep).
  *  Returns after the pose is byte-stable. */
@@ -386,6 +453,7 @@ describe('gravity-well primitive', () => {
     inst.seek(1); // re-derive the pinned standing pose (dt=0 path)
     inst.seek(1);
     const loEnergy = moteEnergy(motes);
+    const loGrid = rasterizeMotes(motes); // advocate-faithful pixel capture (3)
     expect(loEnergy).toBeGreaterThan(1); // motes plainly lit at the pin (bold)
     expect(motes.count).toBe(3);
 
@@ -393,6 +461,7 @@ describe('gravity-well primitive', () => {
     inst.seek(1);
     inst.seek(1);
     const hiEnergy = moteEnergy(motes);
+    const hiGrid = rasterizeMotes(motes); // advocate-faithful pixel capture (12)
     expect(motes.count).toBe(12);
 
     // BOLD density change: 12 motes carry ≥2.5× the visible brass of 3 — the
@@ -401,6 +470,30 @@ describe('gravity-well primitive', () => {
     // ring, so 12/3 ≈ 4× in the ideal; assert well above the discoverability
     // floor.
     expect(hiEnergy).toBeGreaterThan(loEnergy * 2.5);
+
+    // ── THE ADVOCATE'S OWN METRIC (the real BLOCK gate) ──────────────────────
+    // The r2 verdict measured meanAbsDiff=0.594 / changedFrac=0.0083 (sub-noise)
+    // over the rasterized frame. Rasterize the SAME motes the SAME way the GPU
+    // does and run the SAME pixel metric: the 3→12 sweep at the real {0.5,0.7}
+    // pin must now clear the BOLD discoverability target the advocate uses for a
+    // live control — meanAbsDiff ≥ 6 (live siblings: 3.4–5.0; we exceed them),
+    // changedFrac ≥ 0.12 (live siblings: 0.06–0.13). This is the assertion that
+    // would have caught the byte-identical r2 frame.
+    const delta = rasterDelta(loGrid, hiGrid);
+    expect(delta.meanAbsDiff).toBeGreaterThanOrEqual(6);
+    expect(delta.changedFrac).toBeGreaterThanOrEqual(0.12);
+
+    // And the same BOLD delta lands via onParamChange ALONE (no clock seek) —
+    // the rig fires the control input then captures the held frame. Drive 3→12
+    // purely through setControl and re-measure: the pinned frame must reshape
+    // boldly off the paused tweak, not only after an extra seek.
+    inst.setControl('moteCount', 3);
+    const loParamGrid = rasterizeMotes(motes);
+    inst.setControl('moteCount', 12);
+    const hiParamGrid = rasterizeMotes(motes);
+    const paramDelta = rasterDelta(loParamGrid, hiParamGrid);
+    expect(paramDelta.meanAbsDiff).toBeGreaterThanOrEqual(6);
+    expect(paramDelta.changedFrac).toBeGreaterThanOrEqual(0.12);
 
     // Every drawn mote sits on a VISIBLE ring around the drain — none collapsed
     // onto the occluded drain centre. Drain is a PURE VERTICAL offset at this pin

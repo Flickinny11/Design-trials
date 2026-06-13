@@ -269,7 +269,36 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
   pointer-loupe). §1 curtains/§11 shader-cookbook techniques, native TSL, chrome co-treatment, pointer-rig facts.
   Engine prereq (mountable override of UNMOUNTABLE_CATEGORIES) landed session 3. PENDING on completion: barrel-wire,
   tsc gate, full vitest, harness, art-fidelity, advocate, CKPT.
-- [ ] W4 CURSOR PHYSICS
+- [x] **W4 CURSOR PHYSICS** — COMPLETE, **9/9 advocate-SHIP** (2026-06-13, session 7). registry 350→359, all category 'pointer'.
+  9 new: velocity-skew-follow, magnetic-stick, proximity-rim-glow, spring-chain-follow, gravity-well, pendant-dangle,
+  throw-physics, charge-release, pointer-cast-shadow. Path: build (vitest/tsc/harness green) → advocate r1 (0/9 SHIP,
+  uniform dead-dynamics-control root cause) → fix r1 (standing fns; advocate r2 → 2 SHIP) → fix r2 (BOLD standing fns
+  keyed to the REAL pin {0.5,0.7}=pure-vertical, x=0.5; advocate r3 → 7 SHIP) → fix r3 (magnetic-stick stickStiffness→
+  scale-swell+cant on headroom axes; gravity-well moteCount→bigger orbs on tighter ring scaling 3-sparse→12-dense;
+  advocate r4 → 9/9 SHIP). KEY LESSON (record for W5): the advocate capture pins the cursor at **{x:0.5, y:0.7}** (NOT
+  {0.62,0.5} — that was wrong in the prose); it is a PURE VERTICAL offset (x dead-center), so any standing-pose control
+  keyed off the pointer X-offset reads DEAD. Controls must key off vertical/full-magnitude/the control value directly,
+  on a NON-saturated channel (watch travel clamps), with BOLD amplitude (≥6 meanAbsDiff). Transient/rate/release-phase
+  controls (stiffness/damping/drag/bounciness/wobble/chargeRate/speed/moteCount/shadowLength) MUST be mapped into the
+  standing engaged pose. GATES at completion: tsc 0-new; full animatable vitest 360 files/1479 tests green; harness 9/9
+  r/p/c deviceLost 0; webgpu DPR2 captures + 4 advocate rounds. CKPTs bc71627/b66e38b/f95ae9f + W4-COMPLETE (this).
+  Advocate logs: w4-advocate-r1/r2/r3-log.txt + the r4 verdicts. NEXT: W5 PARTICLES/GENERATIVE.
+- [~] **W4 (session-7 historical)** — BUILD + fix-round r1 (superseded by COMPLETE line above). 9 new pointer primitives
+  authored (velocity-skew-follow, magnetic-stick, proximity-rim-glow, spring-chain-follow, gravity-well, pendant-dangle,
+  throw-physics, charge-release, pointer-cast-shadow) from staged script (DESIGN-REFERENCES §7). Barrel wired registry
+  350→359. GATES: tsc 0-new; full animatable vitest **360 files/1462 tests green**; harness **9/9 r/p/c deviceLost 0**;
+  webgpu DPR2 capture (+3 reference siblings magnetic/pointer-shine/spotlight-follow). SAFETY-CKPT bc71627 (pushed).
+  ADVOCATE r1 (wf_aa2320c8-7ed, 9 agents): **0 SHIP / 9 BLOCKED — uniform single root cause.** EVERY tile: effect READS
+  as claim, card look preserved, idle legible, no anti-slop, premium vs sibling. Sole blocker everywhere = DEAD
+  *dynamics* controls at the STATIC engaged pin (velocity≈0, no transient): velocity-skew (speed/skewAmount/skewClamp),
+  magnetic-stick (escapeFactor/stickStiffness/releaseWobble + captureRadius mid==high), proximity-rim-glow
+  (proximityRange), spring-chain (stiffness/chaseSpeed), gravity-well (moteCount/pullSpeed), pendant-dangle
+  (damping/ambientSway), throw-physics (bounciness/drag), charge-release (chargeRate/overshoot+tremble subtle),
+  pointer-cast-shadow (shadowLength HEADLINE). Same class as W2/W3 dead-control lesson but on the dynamics controls.
+  FIX-ROUND r1 LAUNCHED (wf_6dfae196-694, 9 agents batches of 5): make EACH dead control a STANDING fn of the engaged
+  pose (synthesize standing vRef for velocity-coupled; map stiffness/damping/drag/bounciness/wobble→standing pose param;
+  rate→standing level; moteCount must render at pin; shadowLength→direct geometric rake). Log: w4-advocate-r1-log.txt.
+  PENDING: r1 → tsc/vitest/harness 9 → re-capture 9 → re-advocate 9 → CKPT.
 - [ ] W5 PARTICLES/GENERATIVE
 - [ ] WF report + final no-regression (312+N) + STOP
 
