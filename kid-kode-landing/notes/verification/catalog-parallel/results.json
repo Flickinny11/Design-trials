@@ -1,96 +1,27 @@
 {
-  "startedAt": "2026-06-13T11:25:35.355Z",
-  "updatedAt": "2026-06-13T11:35:51.845Z",
+  "startedAt": "2026-06-13T12:14:31.003Z",
+  "updatedAt": "2026-06-13T12:16:01.521Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 26,
+      "total": 9,
       "backend": "webgl",
-      "startedAt": "2026-06-13T11:25:40.851Z",
-      "finishedAt": "2026-06-13T11:34:47.597Z",
+      "startedAt": "2026-06-13T12:14:36.783Z",
+      "finishedAt": "2026-06-13T12:15:45.616Z",
       "peakConcurrency": 8,
       "deviceLostTotal": 0
     },
     "glass": {
       "tier": "glass",
-      "total": 10,
+      "total": 5,
       "backend": "webgpu",
-      "startedAt": "2026-06-13T11:34:48.447Z",
-      "finishedAt": "2026-06-13T11:35:34.184Z",
+      "startedAt": "2026-06-13T12:15:46.121Z",
+      "finishedAt": "2026-06-13T12:16:01.521Z",
       "peakConcurrency": 3,
-      "deviceLostTotal": 0
-    },
-    "std-quiet": {
-      "tier": "std-quiet",
-      "total": 1,
-      "backend": "webgl",
-      "startedAt": "2026-06-13T11:35:34.259Z",
-      "finishedAt": "2026-06-13T11:35:51.843Z",
-      "peakConcurrency": 1,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "block-topple": {
-      "name": "block-topple",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:25:48.074Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "boid-swarm-sim": {
-      "name": "boid-swarm-sim",
-      "category": "particles",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:25:58.801Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "chain-dangle": {
-      "name": "chain-dangle",
-      "category": "pointer",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:05.827Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "cloth-drape-sim": {
-      "name": "cloth-drape-sim",
-      "category": "wave",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:13.819Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
     "charged-particles-sim": {
       "name": "charged-particles-sim",
       "category": "particles",
@@ -101,23 +32,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:13.819Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "domino-cascade": {
-      "name": "domino-cascade",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "plays via deterministic phase sweep (t=0.08s of 2.69s loop)"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:22.201Z",
+      "at": "2026-06-13T12:14:44.157Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -131,7 +46,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:26.238Z",
+      "at": "2026-06-13T12:14:54.954Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -145,21 +60,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:26.915Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "flag-wind-sim": {
-      "name": "flag-wind-sim",
-      "category": "wave",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:32.312Z",
+      "at": "2026-06-13T12:15:06.285Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -173,23 +74,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:34.215Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "gravity-well-sim": {
-      "name": "gravity-well-sim",
-      "category": "particles",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:35.826Z",
+      "at": "2026-06-13T12:15:09.949Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -203,23 +88,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:40.314Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "magnet-snap": {
-      "name": "magnet-snap",
-      "category": "pointer",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:43.231Z",
+      "at": "2026-06-13T12:15:09.949Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -233,21 +102,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:44.750Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "newton-cradle": {
-      "name": "newton-cradle",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:26:48.834Z",
+      "at": "2026-06-13T12:15:20.937Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -261,12 +116,12 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:52.175Z",
+      "at": "2026-06-13T12:15:23.575Z",
       "backend": "webgl",
       "consoleErrors": []
     },
-    "ragdoll-dangle": {
-      "name": "ragdoll-dangle",
+    "rope-dangle-sim": {
+      "name": "rope-dangle-sim",
       "category": "pointer",
       "driver": "pointer",
       "renders": true,
@@ -277,7 +132,7 @@
         "pointer stimulus pinned for controls"
       ],
       "verdict": "pass",
-      "at": "2026-06-13T11:26:53.309Z",
+      "at": "2026-06-13T12:15:24.176Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -291,163 +146,8 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:27:00.722Z",
+      "at": "2026-06-13T12:15:29.406Z",
       "backend": "webgl",
-      "consoleErrors": []
-    },
-    "soft-body-bounce": {
-      "name": "soft-body-bounce",
-      "category": "wave",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:01.967Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "spring-arrive": {
-      "name": "spring-arrive",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:09.765Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "tumble-settle": {
-      "name": "tumble-settle",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:10.842Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "turbulence-drift": {
-      "name": "turbulence-drift",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:17.610Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "vortex-pull-sim": {
-      "name": "vortex-pull-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:19.929Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "weightless-drift": {
-      "name": "weightless-drift",
-      "category": "transform",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:25.273Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "wind-gust-sim": {
-      "name": "wind-gust-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:27:28.029Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "rope-dangle-sim": {
-      "name": "rope-dangle-sim",
-      "category": "pointer",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "plays via deterministic phase sweep (t=0.09s of 3.00s loop)",
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:35:40.194Z",
-      "backend": "webgl",
-      "consoleErrors": [],
-      "preRetry": {
-        "verdict": "fail",
-        "renders": true,
-        "plays": false,
-        "controls": false,
-        "notes": [
-          "pointer stimulus pinned for controls",
-          "controls retry: phase sweep found no differing frame under current params"
-        ],
-        "at": "2026-06-13T11:26:57.259Z"
-      },
-      "retriedAt": "2026-06-13T11:35:51.844Z"
-    },
-    "bubble-rise-sim": {
-      "name": "bubble-rise-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:34:52.259Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "liquid-fill-sim": {
-      "name": "liquid-fill-sim",
-      "category": "glass",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:34:56.147Z",
-      "backend": "webgpu",
       "consoleErrors": []
     },
     "buoyancy-bob-sim": {
@@ -460,7 +160,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:34:55.384Z",
+      "at": "2026-06-13T12:15:49.752Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -474,7 +174,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:34:59.650Z",
+      "at": "2026-06-13T12:15:52.867Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -488,21 +188,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T11:34:59.979Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "raindrop-ripple-sim": {
-      "name": "raindrop-ripple-sim",
-      "category": "wave",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:34:59.980Z",
+      "at": "2026-06-13T12:15:53.255Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -518,37 +204,7 @@
         "pointer stimulus pinned for controls"
       ],
       "verdict": "pass",
-      "at": "2026-06-13T11:35:03.074Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "smoke-plume-sim": {
-      "name": "smoke-plume-sim",
-      "category": "smoke",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T11:35:03.642Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "water-balloon-wobble": {
-      "name": "water-balloon-wobble",
-      "category": "wave",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T11:35:03.645Z",
+      "at": "2026-06-13T12:15:55.821Z",
       "backend": "webgpu",
       "consoleErrors": []
     },
@@ -564,30 +220,28 @@
         "pointer stimulus pinned for controls"
       ],
       "verdict": "pass",
-      "at": "2026-06-13T11:35:06.605Z",
+      "at": "2026-06-13T12:15:56.210Z",
       "backend": "webgpu",
       "consoleErrors": []
     }
   },
   "quietRetry": {
-    "attempted": 1,
-    "recovered": 1,
-    "names": [
-      "rope-dangle-sim"
-    ]
+    "attempted": 0,
+    "recovered": 0,
+    "names": []
   },
   "summary": {
-    "total": 36,
-    "pass": 36,
+    "total": 14,
+    "pass": 14,
     "fail": 0,
     "missing": 0,
     "failNames": [],
     "missingNames": [],
     "quietRetry": {
-      "attempted": 1,
-      "recovered": 1
+      "attempted": 0,
+      "recovered": 0
     },
-    "wallClockSec": 616,
+    "wallClockSec": 91,
     "peak": {
       "std": 8,
       "glass": 3
