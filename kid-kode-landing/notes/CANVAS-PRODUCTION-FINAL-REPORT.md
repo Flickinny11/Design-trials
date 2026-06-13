@@ -159,3 +159,60 @@ preview thumbnails, search, 7 category tabs, drivers, pagination) **exceeds** th
 Plus the carried cosmetic honest-flags from prior reports: physics
 soft-bead/bright-clip, jelly saturation, **violet-orb retint → brass/ice**
 (default per LOGAN-INBOX = no "keep" directive).
+
+---
+
+## PHASE 3 — FIX + POLISH + OPTIMIZE (COMPLETE ✅)
+
+### MUST-FIX
+**0** from Phase 2 — nothing to fix.
+
+### Plain-language fixes (advocate F7)
+| Fix | Where | Before → After |
+|---|---|---|
+| Engineer "WIRED" badge dropped for ready groups | `CanvasToolbar` flyout header | `WIRED` → (nothing; only forthcoming groups show "Coming soon") |
+| Lighting section jargon | `CanvasToolbar` lighting flyout | `Lights · writes hub lightingSpec` → `Scene lights` |
+
+### Carried cosmetic honest-flags — verified status
+| Flag | Status |
+|---|---|
+| **violet-orb retint → brass/ice** | **Already resolved** — no violet orb in the active chrome / showcase scene / catalog defaults; the toolbar's former violet group accent was retinted to ice (UI-FIDELITY-2). Remaining "violet" = generative nebula/aurora/cosmic-dust primitives (legitimate art content, not chrome). No retint needed. |
+| **jelly saturation** | **Already resolved** — `jelly-collide-sim` body is saturated ice-mint `#5fd6b0` ("no pale olive", per its own comment). |
+| **physics soft-bead/bright-clip** | rope-dangle anchor bead **already resolved** (`#cfe6f2`, "never blown white"). Remaining: `molten-drip-sim` bead-edge crispness + `pour-splash-sim` crown-core clip — the 2 deepest cosmetic nits, documented PASS-WITH-FLAGS in the physics pack, **unchanged by this build**, non-blocking; left untouched rather than destabilize verified catalog tiles for highlight-clipping. |
+
+### Perf pass (`scripts/canvas-final/perf-probe.mjs`, real Chrome/WebGPU/DPR 2, Canvas mode)
+| Viewport | Tier | Avg frame | Sustained | Worst frame | Open latency |
+|---|---|---|---|---|---|
+| Desktop 1680×1050 | **t2** | 12.0 ms | ~83/s | 26.3 ms | **59.7 ms** (<100) |
+| Mobile 390×844 | **t1** | 11.9 ms | ~84/s | 26.3 ms | **79.2 ms** (<100) |
+
+**PASS** — frame budget held (well above 60/s), interaction latency <100ms on
+both, and **INV-9 tiering confirmed** (desktop t2 ↔ mobile t1 graceful
+degradation; heavy GI/AO not on the mobile path). No jank → no optimization
+needed. (Caveat: the "mobile" run is a 390px viewport on the desktop GPU, so the
+cadence is not real-phone-hardware; it confirms the tier gate fires + the render
+path holds budget.)
+
+### No-regression
+- `tsc --noEmit`: **baseline 9** pre-existing errors (GraphScene GLProps + 8 test
+  `NodeContext.THREE`); **0 new** from this build.
+- Full vitest suite: **3342 passed / 8 skipped / 0 failed** (547 files). The 3
+  earlier failures were stale tests asserting the pre-wiring image-gen stub +
+  the narrower assets MIME set; updated to the wired contract (provider mocked,
+  no real fal call) + re-added count validation.
+- 370+ animation catalog: **untouched** by this build — the primitives live in
+  `animatable/primitives/` (Animatable contract + own materials), separate from
+  the `meshPrimitive` factory path this build extended; catalog contract tests
+  pass within the suite. No catalog re-verify regression expected or observed.
+
+### Remaining non-blocking polish (honest flags, deferred)
+- **Mobile Canvas panel occlusion** (advocate F1/F12, most-cited): the left
+  toolbar + Transform inspector open together cover most of the 390px surface
+  (cramped but functional, toggle reachable). Recommended: auto-collapse one
+  panel on mobile. A real layout change with regression risk — deferred as
+  non-blocking mobile-ergonomics polish (consistent with the prior "mobile mode"
+  backlog).
+- **Desktop Image-inspector slider labels** left-clipped (F6), **mobile
+  right-edge copy clipping** in the Animation panel + section-carousel (F8/F9),
+  **PromptWizard result-pane chrome** plainer than its controls (F3) — minor
+  cosmetic; deferred.

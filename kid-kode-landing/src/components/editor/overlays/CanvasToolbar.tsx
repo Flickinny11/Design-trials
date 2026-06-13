@@ -970,12 +970,17 @@ function FlyoutShell({
               <div className="text-[12px] font-display font-semibold leading-none" style={{ color: 'var(--ds-text-hi)' }}>
                 {meta.label}
               </div>
-              <div
-                className="text-[9px] font-mono tracking-widest mt-0.5"
-                style={{ color: meta.wired ? 'var(--ds-ok)' : 'var(--ds-ice-300)' }}
-              >
-                {meta.wired ? 'WIRED' : 'COMING SOON'}
-              </div>
+              {/* CANVAS-FINAL — plain language (advocate F7): the engineer
+                  "WIRED" badge is dropped for ready groups; only forthcoming
+                  ones carry an honest "Coming soon". */}
+              {!meta.wired && (
+                <div
+                  className="text-[9px] font-mono tracking-widest mt-0.5"
+                  style={{ color: 'var(--ds-ice-300)' }}
+                >
+                  Coming soon
+                </div>
+              )}
             </div>
           </div>
           <button
@@ -1277,7 +1282,7 @@ function LightingFlyout({
       </div>
 
       {/* Light list + Add */}
-      <SectionLabel>Lights · writes hub lightingSpec</SectionLabel>
+      <SectionLabel>Scene lights</SectionLabel>
       <div className="flex flex-col gap-1">
         {lights.length === 0 && (
           <div className="text-[9px] font-mono leading-tight px-1 py-1" style={{ color: 'var(--ds-text-mid)' }}>
