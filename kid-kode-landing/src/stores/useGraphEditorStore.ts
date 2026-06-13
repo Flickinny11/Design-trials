@@ -255,6 +255,23 @@ interface GraphEditorState {
    * Inspector follows the committed entry.
    */
   clearDraggingClone: () => void;
+
+  // ── §13 prebuilt element library (criterion 21) ───────────────────────────
+  /** Whether the premium element-library browser is open (root-mounted modal,
+   *  mirroring the changeArtifact* mounting pattern). */
+  libraryOpen: boolean;
+  openLibrary: () => void;
+  closeLibrary: () => void;
+  /** The cluster id currently being drag-placed, or null when idle. The
+   *  galaxy/canvas placement layer keys on this (analogous to draggingNodeId
+   *  for clone-drag, but there is no node yet — the cluster spawns on commit).
+   *  The live tether reuses the generic draggingPointerWorld + draggingNearestHubId
+   *  slots (placement and clone-drag are mutually exclusive). */
+  placingClusterId: string | null;
+  setPlacingCluster: (clusterId: string | null) => void;
+  /** Clear the placement slot + the shared tether slots in lockstep (pointer-up
+   *  commit / cancel). Selection is set by the placement commit, not here. */
+  clearPlacement: () => void;
 }
 
 export const useGraphEditorStore = create<GraphEditorState>()(
@@ -501,6 +518,19 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     clearDraggingClone: () =>
       set({
         draggingNodeId: null,
+        draggingNearestHubId: null,
+        draggingPointerWorld: null,
+      }),
+
+    // ── §13 prebuilt element library (criterion 21) ─────────────────────────
+    libraryOpen: false,
+    placingClusterId: null,
+    openLibrary: () => set({ libraryOpen: true }),
+    closeLibrary: () => set({ libraryOpen: false }),
+    setPlacingCluster: (clusterId) => set({ placingClusterId: clusterId }),
+    clearPlacement: () =>
+      set({
+        placingClusterId: null,
         draggingNearestHubId: null,
         draggingPointerWorld: null,
       }),

@@ -55,6 +55,13 @@ interface GraphSourceState {
   reset: () => void;
   // HL04 mutators (Plan §P5)
   addNode: (input: Partial<PrismNode> & { parentHubId: string }) => string;
+  // §13 prebuilt element library (criterion 21). Batch-create many nodes in ONE
+  // commit (single dirty-cycle + single autosave schedule + single re-render) so
+  // drag-to-place instantiates a whole cluster atomically. Each input is the
+  // same shape `addNode` takes (flows through applyPlanRendererDefaults); a
+  // pre-stamped shared `groupId` makes the placed nodes a group. Returns the
+  // minted node ids in input order. Additive (INV-18), non-topological (INV-1).
+  addNodesBatch: (inputs: Array<Partial<PrismNode> & { parentHubId: string }>) => string[];
   cloneNode: (sourceId: string) => string;
   // EBR2-F-05 / §R2-F SC-076 — Pointer-up commit of a Clone-drag. Re-parents
   // `cloneId` to `hubId` and rewrites the caption to advertise the new hub.
@@ -213,6 +220,20 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, created], isDirty: true }));
     return nodeId;
+  },
+
+  // §13 prebuilt element library (criterion 21) — atomic multi-node create.
+  addNodesBatch: (inputs) => {
+    if (inputs.length === 0) return [];
+    const ids: string[] = [];
+    const created = inputs.map((input) => {
+      const nodeId = input.nodeId ?? generateNodeId();
+      ids.push(nodeId);
+      return applyPlanRendererDefaults({ ...input, nodeId }) as PrismNode;
+    });
+    markGraphDirty(get);
+    set((s) => ({ nodes: [...s.nodes, ...created], isDirty: true }));
+    return ids;
   },
 
   // EBR2-F-02 / §R2-F SC-075 — Inspector "Clone" entry point on the source
