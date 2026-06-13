@@ -25,18 +25,27 @@ import {
 
 export default function ClusterTile({
   def,
-  onPlace,
+  onClickPlace,
+  onDragPlace,
 }: {
   def: ElementClusterDefinition;
-  /** Begin drag-to-place / click-to-place for this cluster (closes the browser
-   *  and arms placement). The browser owns the store wiring. */
-  onPlace: (def: ElementClusterDefinition) => void;
+  /** A plain CLICK (press + release without dragging): place the cluster
+   *  immediately at the active hub (reliable, intuitive). */
+  onClickPlace: (def: ElementClusterDefinition) => void;
+  /** A DRAG (pointer moved past threshold while pressed): arm the galaxy
+   *  positioned drop. Fired once when the drag threshold is crossed. */
+  onDragPlace: (def: ElementClusterDefinition) => void;
 }) {
   const winRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<ClusterTileHandle | null>(null);
   const [hovered, setHovered] = useState(false);
   const playingRef = useRef(false);
   playingRef.current = hovered;
+
+  // Click-vs-drag: a quick press+release = place-now; a press that moves past
+  // ~8px before release = arm the galaxy positioned drop (fired once).
+  const pressRef = useRef<{ x: number; y: number; dragged: boolean } | null>(null);
+  const DRAG_THRESHOLD = 8;
 
   // Register the transparent preview window with the rig once on mount.
   useEffect(() => {
@@ -74,14 +83,24 @@ export default function ClusterTile({
       onMouseLeave={() => setPlaying(false)}
       onFocus={() => setPlaying(true)}
       onBlur={() => setPlaying(false)}
-      // Drag-to-place: a pointerdown on the tile begins placement. The browser
-      // closes + arms the scene placement layer. Click also lands here
-      // (pointerdown fires first) so the click-to-place fallback is the same
-      // entry point — criterion 21 works via this path even without scene drag.
+      // Click = place-now; drag = galaxy positioned drop (see refs above).
       onPointerDown={(e) => {
-        e.preventDefault();
-        onPlace(def);
+        pressRef.current = { x: e.clientX, y: e.clientY, dragged: false };
       }}
+      onPointerMove={(e) => {
+        const p = pressRef.current;
+        if (!p || p.dragged) return;
+        if (Math.hypot(e.clientX - p.x, e.clientY - p.y) > DRAG_THRESHOLD) {
+          p.dragged = true;
+          onDragPlace(def); // closes the browser + arms galaxy; this tile unmounts
+        }
+      }}
+      onPointerUp={() => {
+        const p = pressRef.current;
+        pressRef.current = null;
+        if (p && !p.dragged) onClickPlace(def);
+      }}
+      onPointerCancel={() => { pressRef.current = null; }}
       className="group relative flex flex-col text-left rounded-ds-md overflow-hidden ds-lift ds-edge"
       style={{ background: 'transparent', boxShadow: 'var(--ds-elev-1)' }}
     >
@@ -125,7 +144,7 @@ export default function ClusterTile({
               boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)',
             }}
           >
-            Drag onto a hub to place
+            Click to place · drag to position
           </span>
         </div>
       </div>

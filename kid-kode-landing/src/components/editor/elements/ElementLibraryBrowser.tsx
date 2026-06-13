@@ -27,6 +27,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { buildClusterNodeInputs } from '@/lib/editor/elements/instantiate';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 import {
@@ -49,6 +50,10 @@ export default function ElementLibraryBrowser() {
   const setPlacingCluster = useGraphEditorStore((s) => s.setPlacingCluster);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
   const hubs = useGraphSourceStore((s) => s.hubs);
+  const addNodesBatch = useGraphSourceStore((s) => s.addNodesBatch);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const drillIntoHub = useGraphEditorStore((s) => s.drillIntoHub);
+  const selectNode = useGraphEditorStore((s) => s.selectNode);
 
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<ElementCategory | 'all'>('all');
@@ -82,9 +87,30 @@ export default function ElementLibraryBrowser() {
     });
   }, [all, category, query]);
 
-  // Begin placement for a tile: close the browser, arm the cluster, and switch
-  // to galaxy mode (the only mode where placement-drag navigation is free) so
-  // the scene placement layer mounts. If no hub exists yet, no-op gracefully.
+  // CLICK-TO-PLACE (primary, reliable): place the cluster IMMEDIATELY at the
+  // active hub (or the first hub), frame it in canvas, select it, close the
+  // browser. The user then repositions with the gizmo — a bulletproof "drop
+  // then position" flow (no mode-switch race, no second click). Criterion 21:
+  // every member is tethered to the hub + shares a groupId (buildClusterNodeInputs).
+  const placeNow = (def: ElementClusterDefinition) => {
+    if (hubs.length === 0) {
+      closeLibrary();
+      return;
+    }
+    const hubId = activeHubId ?? hubs[0].hubId;
+    const ids = addNodesBatch(buildClusterNodeInputs(def, hubId, { x: 0, y: 0, z: 0 }));
+    closeLibrary();
+    // drillIntoHub frames the hub in canvas (viewMode := 'canvas', activeHub := hubId)
+    // so the freshly-placed cluster is immediately visible — never dropped into an
+    // off-screen hub.
+    drillIntoHub(hubId);
+    if (ids.length > 0) selectNode(ids[0]);
+  };
+
+  // DRAG-TO-PLACE (positioned): a real drag from the tile arms the galaxy
+  // placement layer so the user can drop the cluster onto a chosen hub with a
+  // live tether. Closes the browser + switches to galaxy; ElementPlacementLayer
+  // commits on canvas pointer-up.
   const beginPlacement = (def: ElementClusterDefinition) => {
     if (hubs.length === 0) {
       closeLibrary();
@@ -249,7 +275,7 @@ export default function ElementLibraryBrowser() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {filtered.map((def) => (
-                <ClusterTile key={def.id} def={def} onPlace={beginPlacement} />
+                <ClusterTile key={def.id} def={def} onClickPlace={placeNow} onDragPlace={beginPlacement} />
               ))}
             </div>
           )}
