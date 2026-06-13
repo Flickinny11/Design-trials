@@ -2,6 +2,6 @@
   "name": "molten-drip-sim",
   "label": "Viscosity",
   "description": "A hanging blob of viscous molten metal stretches under gravity, necks, and drips off a glowing droplet that falls before the column reforms — a real viscous CPU sim, not an easing curve.",
-  "category": "glass",
+  "category": "particles",
   "groundTruthSibling": null
 }

@@ -1,0 +1,18 @@
+{
+  "jelly-collide-sim": {
+    "remainingIssues": [
+      "BLOCKER (MF#3b, unresolved): the Bounciness slider is still provably dead. control-bounciness-low/mid/high.png are visually indistinguishable (identical resting position + identical deform); bounciness pixelDiff meanAbsDiff=1.124, changedFrac=0.0147 — below the ~3 noise floor (the .changed:true flag is a false positive; differing MD5s are sub-perceptual jitter). A user dragging Bounciness 0.05->0.9 sees zero change. The 'fresh capture after cache clear' did NOT fix it.",
+      "FLAG: physical read is soft cloth/sticky-note that gently billows (effHue ~80-84, effSat ~0.19-0.23), not a jelly CUBE that slams flat with momentum and springs back; play-2/play-3 show mild billow near the floor, no visible lattice bulge / splash / energetic rebound — the claim's weight/squash/spring-back is muted.",
+      "FLAG: body color is desaturated pale olive/cream (effHue ~84) rather than Observatory ice/mint/amber jelly. Minor palette nit only — no purple (magentaFrac=0), no 1px specks, not blown out (effRGB ~168,184,143; satPixels=4197-4434)."
+    ],
+    "keyMetrics": "backend=webgpu, consoleErrors=0, networkErrors=0. DEAD CONTROL (BLOCKER): bounciness meanAbsDiff=1.124 / changedFrac=0.0147 (below ~3 noise floor; .changed=true is a false positive). Controls that bite: stiffness 24.878/0.1437, throwSpeed 36.901/0.209, gravity 22.55/0.1316. Body persists: idle meanLuma=31.9, play-1/2/3 meanLuma=25.5/30.4/31.3 (never vanishes); frameDeltaMag 29.06->20.28->19.99. Palette effHue ~80-84, effSat ~0.19-0.23 (pale olive), magentaFrac=0, satPixels 4197-4434, effRGB ~168,184,143 (not blown out)."
+  },
+  "drop-squash": {
+    "remainingIssues": [
+      "DEAD CONTROL (MUST-FIX): the squash control sweep still does not visibly bite. control-squash-low/mid/high.png are near-identical (meanAbsDiff=1.863, changedFrac=0.0875 — an order of magnitude below the controls that genuinely bite: height=10.491/0.280, gravity=14.04/0.394, bounciness=9.935/0.326). Different MD5s only reflect a 1-2px airborne drift, not deformation. A user dragging the squash slider sees no change.",
+      "ROOT CAUSE UNFIXED: stimulus.controlsPinT is STILL 1 in metrics.json. At t=1 the card is flung to the top of the frame and CROPPED — control-squash-low/high.png show only the bottom of the card (no amber title bar, no accent dot, no floor contact) in all three frames, so squash cannot possibly differ at this pin. The fix context's claim 'at the pin the card is in contact and mid-squash' is contradicted by the actual frames. ACTION: recapture the squash sweep pinned to the actual floor-contact instant (~play-2 timing) so the aspect-ratio compression difference between low and high squash can be seen.",
+      "FLAG (non-blocking, taste): floor/contact is implied only by the card stopping; there is no splash/contact accent (dust, ground line) so the 'lands hard' read is subtler than the claim's 'splash' language suggests — not a blocker."
+    ],
+    "keyMetrics": "squash sweep meanAbsDiff=1.863 changedFrac=0.0875 (DEAD) vs height=10.491/0.280, gravity=14.04/0.394, bounciness=9.935/0.326 (BITE); stimulus.controlsPinT=1 still (airborne apex, card cropped at top of control-squash-*.png — no floor contact); squash IS visible in play: play-2 card aspect=2.147 (flattened) vs idle=1.880, accent dot becomes ellipse; backend=webgpu, magentaFrac=0 all frames, satPixels~5000 (not blown out), 0 console / 0 network errors; squash MD5s differ (ff7b../849a../6405..) but only from 1-2px drift."
+  }
+}

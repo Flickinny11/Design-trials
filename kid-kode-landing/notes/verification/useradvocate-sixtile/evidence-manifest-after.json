@@ -1,34 +1,21 @@
 {
-  "startedAt": "2026-06-13T12:21:52.170Z",
+  "startedAt": "2026-06-13T13:12:58.383Z",
   "state": "after",
-  "port": 4832,
+  "port": 4843,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "drop-squash",
+      "tile": "molten-drip-sim",
       "state": "after",
-      "dir": "drop-squash/after",
+      "dir": "molten-drip-sim/after",
       "claim": {
-        "name": "drop-squash",
-        "label": "Drop Height",
-        "description": "A card falls under real gravity, bounces with restitution, and squashes on each impact in proportion to its landing speed before settling — physics, not an easing curve.",
-        "category": "transform"
+        "name": "molten-drip-sim",
+        "label": "Viscosity",
+        "description": "A hanging blob of viscous molten metal stretches under gravity, necks, and drips off a glowing droplet that falls before the column reforms — a real viscous CPU sim, not an easing curve.",
+        "category": "particles"
       },
       "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "ripple-interact-sim",
-      "state": "after",
-      "dir": "ripple-interact-sim/after",
-      "claim": {
-        "name": "ripple-interact-sim",
-        "label": "Tension",
-        "description": "A real interactive water surface: the pointer pokes a wave-equation height field and the ripples propagate, reflect off the edges, and interfere — true simulated water, not a closed-form sine.",
-        "category": "wave"
-      },
-      "controls": 5,
       "notes": []
     }
   ],

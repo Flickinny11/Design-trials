@@ -5,95 +5,95 @@
   "frames": {
     "idle": {
       "meanRGB": [
-        29.3,
-        31.4,
-        32.5
+        29.9,
+        32.5,
+        31.9
       ],
       "effRGB": [
-        164.2,
-        176.9,
-        148.8
+        168.8,
+        186.3,
+        143.4
       ],
-      "effHue": 87,
-      "effSat": 0.16,
+      "effHue": 84,
+      "effSat": 0.23,
       "effVal": 0,
       "warmFrac": 0,
       "coolFrac": 0,
       "magentaFrac": 0,
-      "satPixels": 739,
-      "meanLuma": 31,
-      "stdev": 56,
-      "bandingScore": 0.282,
+      "satPixels": 4434,
+      "meanLuma": 31.9,
+      "stdev": 58.4,
+      "bandingScore": 0.286,
       "frameDeltaMag": null
     },
     "play-1": {
       "meanRGB": [
-        27.4,
-        29.3,
-        30.9
+        23.9,
+        25.9,
+        27.1
       ],
       "effRGB": [
-        160.9,
-        172.1,
-        146.4
+        150.8,
+        161.2,
+        130.6
       ],
-      "effHue": 86,
-      "effSat": 0.15,
+      "effHue": 80,
+      "effSat": 0.19,
       "effVal": 0,
-      "warmFrac": 0,
+      "warmFrac": 0.06,
       "coolFrac": 0,
       "magentaFrac": 0,
-      "satPixels": 599,
-      "meanLuma": 29,
-      "stdev": 54.1,
-      "bandingScore": 0.274,
-      "frameDeltaMag": 32.01
+      "satPixels": 3288,
+      "meanLuma": 25.5,
+      "stdev": 50.7,
+      "bandingScore": 0.248,
+      "frameDeltaMag": 29.06
     },
     "play-2": {
       "meanRGB": [
-        26.8,
-        28.6,
-        30.4
+        28.5,
+        30.9,
+        30.7
       ],
       "effRGB": [
-        157.4,
-        167.3,
-        143.4
+        164.9,
+        180.1,
+        141
       ],
-      "effHue": 85,
-      "effSat": 0.14,
+      "effHue": 83,
+      "effSat": 0.22,
       "effVal": 0,
       "warmFrac": 0,
       "coolFrac": 0,
       "magentaFrac": 0,
-      "satPixels": 899,
-      "meanLuma": 28.4,
-      "stdev": 52.8,
-      "bandingScore": 0.3,
-      "frameDeltaMag": 17.73
+      "satPixels": 4039,
+      "meanLuma": 30.4,
+      "stdev": 56.5,
+      "bandingScore": 0.265,
+      "frameDeltaMag": 20.28
     },
     "play-3": {
       "meanRGB": [
-        28.6,
-        30.6,
-        31.9
+        29.4,
+        31.9,
+        31.4
       ],
       "effRGB": [
-        162.2,
-        173.9,
-        147.3
+        167.5,
+        184.1,
+        142.6
       ],
-      "effHue": 86,
-      "effSat": 0.15,
+      "effHue": 84,
+      "effSat": 0.23,
       "effVal": 0,
       "warmFrac": 0,
       "coolFrac": 0,
       "magentaFrac": 0,
-      "satPixels": 782,
-      "meanLuma": 30.2,
-      "stdev": 55.1,
+      "satPixels": 4266,
+      "meanLuma": 31.3,
+      "stdev": 57.7,
       "bandingScore": 0.271,
-      "frameDeltaMag": 14.17
+      "frameDeltaMag": 19.99
     }
   },
   "controls": [
@@ -106,82 +106,82 @@
         "low": {
           "file": "control-stiffness-low.png",
           "meanRGB": [
-            22,
-            23.5,
-            26.3
+            18.8,
+            20.1,
+            23
           ],
           "effRGB": [
-            139.1,
-            144.8,
-            126.6
+            114.7,
+            118.5,
+            100.7
           ],
-          "effHue": 79,
-          "effSat": 0.13,
+          "effHue": 73,
+          "effSat": 0.15,
           "effVal": 0,
-          "warmFrac": 0.43,
-          "coolFrac": 0,
+          "warmFrac": 0.23,
+          "coolFrac": 0.17,
           "magentaFrac": 0,
-          "satPixels": 1060,
-          "meanLuma": 23.4,
-          "stdev": 46.4,
-          "bandingScore": 0.244,
+          "satPixels": 2916,
+          "meanLuma": 20,
+          "stdev": 41.6,
+          "bandingScore": 0.227,
           "frameDeltaMag": null,
-          "latencyMs": 611
+          "latencyMs": 578
         },
         "mid": {
           "file": "control-stiffness-mid.png",
           "meanRGB": [
-            27.4,
-            29.3,
-            30.9
+            27.2,
+            29.5,
+            29.7
           ],
           "effRGB": [
-            159.8,
-            170.6,
-            145.4
+            162.6,
+            176.8,
+            139.5
           ],
-          "effHue": 86,
-          "effSat": 0.15,
+          "effHue": 83,
+          "effSat": 0.21,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 807,
-          "meanLuma": 29,
-          "stdev": 53.8,
-          "bandingScore": 0.252,
+          "satPixels": 3816,
+          "meanLuma": 29.1,
+          "stdev": 55.2,
+          "bandingScore": 0.238,
           "frameDeltaMag": null,
-          "latencyMs": 583
+          "latencyMs": 582
         },
         "high": {
           "file": "control-stiffness-high.png",
           "meanRGB": [
-            28.8,
-            30.8,
-            32.1
+            29.2,
+            31.7,
+            31.3
           ],
           "effRGB": [
-            162.8,
-            175,
-            147.9
+            167.1,
+            183.7,
+            142.5
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 732,
-          "meanLuma": 30.5,
-          "stdev": 55.4,
-          "bandingScore": 0.292,
+          "satPixels": 4241,
+          "meanLuma": 31.2,
+          "stdev": 57.5,
+          "bandingScore": 0.297,
           "frameDeltaMag": null,
           "latencyMs": 578
         }
       },
       "pixelDiff": {
-        "meanAbsDiff": 22.301,
-        "changedFrac": 0.1376
+        "meanAbsDiff": 24.878,
+        "changedFrac": 0.1437
       },
       "changed": true
     },
@@ -194,82 +194,82 @@
         "low": {
           "file": "control-throwSpeed-low.png",
           "meanRGB": [
-            28.8,
-            30.8,
-            32.1
+            29.7,
+            32.3,
+            31.7
           ],
           "effRGB": [
-            163,
-            175.2,
-            148
+            168.5,
+            185.7,
+            143.3
           ],
-          "effHue": 87,
-          "effSat": 0.16,
+          "effHue": 84,
+          "effSat": 0.23,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 740,
-          "meanLuma": 30.5,
-          "stdev": 55.4,
-          "bandingScore": 0.292,
+          "satPixels": 4372,
+          "meanLuma": 31.7,
+          "stdev": 58.2,
+          "bandingScore": 0.294,
           "frameDeltaMag": null,
-          "latencyMs": 597
+          "latencyMs": 606
         },
         "mid": {
           "file": "control-throwSpeed-mid.png",
           "meanRGB": [
-            28.7,
-            30.7,
-            32
+            29.4,
+            32,
+            31.5
           ],
           "effRGB": [
-            162.5,
-            174.6,
-            147.7
+            167.5,
+            184.1,
+            142.7
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 707,
-          "meanLuma": 30.4,
-          "stdev": 55.2,
-          "bandingScore": 0.294,
+          "satPixels": 4284,
+          "meanLuma": 31.4,
+          "stdev": 57.7,
+          "bandingScore": 0.282,
           "frameDeltaMag": null,
-          "latencyMs": 583
+          "latencyMs": 574
         },
         "high": {
           "file": "control-throwSpeed-high.png",
           "meanRGB": [
-            28.9,
-            30.9,
-            32.2
+            29.5,
+            32.1,
+            31.6
           ],
           "effRGB": [
-            163.1,
-            175.2,
-            148
+            168,
+            184.8,
+            142.9
           ],
-          "effHue": 87,
-          "effSat": 0.16,
+          "effHue": 84,
+          "effSat": 0.23,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 737,
-          "meanLuma": 30.6,
-          "stdev": 55.5,
-          "bandingScore": 0.213,
+          "satPixels": 4306,
+          "meanLuma": 31.5,
+          "stdev": 57.9,
+          "bandingScore": 0.217,
           "frameDeltaMag": null,
-          "latencyMs": 583
+          "latencyMs": 584
         }
       },
       "pixelDiff": {
-        "meanAbsDiff": 32.934,
-        "changedFrac": 0.1954
+        "meanAbsDiff": 36.901,
+        "changedFrac": 0.209
       },
       "changed": true
     },
@@ -282,82 +282,82 @@
         "low": {
           "file": "control-gravity-low.png",
           "meanRGB": [
-            29.1,
-            31.1,
-            32.3
+            29.6,
+            32.2,
+            31.7
           ],
           "effRGB": [
-            163.6,
-            176,
-            148.4
+            168.2,
+            185.2,
+            143.1
           ],
-          "effHue": 87,
-          "effSat": 0.16,
+          "effHue": 84,
+          "effSat": 0.23,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 748,
-          "meanLuma": 30.8,
-          "stdev": 55.7,
-          "bandingScore": 0.174,
+          "satPixels": 4334,
+          "meanLuma": 31.6,
+          "stdev": 58,
+          "bandingScore": 0.209,
           "frameDeltaMag": null,
-          "latencyMs": 592
+          "latencyMs": 586
         },
         "mid": {
           "file": "control-gravity-mid.png",
           "meanRGB": [
-            28.6,
-            30.6,
-            31.9
+            29.4,
+            32,
+            31.5
           ],
           "effRGB": [
-            162.4,
-            174.2,
-            147.5
+            167.6,
+            184.3,
+            142.8
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.23,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 708,
-          "meanLuma": 30.3,
-          "stdev": 55.1,
-          "bandingScore": 0.197,
+          "satPixels": 4283,
+          "meanLuma": 31.4,
+          "stdev": 57.8,
+          "bandingScore": 0.219,
           "frameDeltaMag": null,
           "latencyMs": 584
         },
         "high": {
           "file": "control-gravity-high.png",
           "meanRGB": [
-            28.7,
-            30.7,
-            32
+            29.1,
+            31.6,
+            31.2
           ],
           "effRGB": [
-            162.4,
-            174.4,
-            147.4
+            166.7,
+            182.8,
+            142.1
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 835,
-          "meanLuma": 30.3,
-          "stdev": 55.2,
-          "bandingScore": 0.277,
+          "satPixels": 4200,
+          "meanLuma": 31.1,
+          "stdev": 57.3,
+          "bandingScore": 0.284,
           "frameDeltaMag": null,
           "latencyMs": 583
         }
       },
       "pixelDiff": {
-        "meanAbsDiff": 22.054,
-        "changedFrac": 0.1349
+        "meanAbsDiff": 22.55,
+        "changedFrac": 0.1316
       },
       "changed": true
     },
@@ -370,82 +370,82 @@
         "low": {
           "file": "control-bounciness-low.png",
           "meanRGB": [
-            28.7,
-            30.7,
-            32
+            29.1,
+            31.6,
+            31.2
           ],
           "effRGB": [
-            162.4,
-            174.3,
-            147.4
+            166.5,
+            182.7,
+            142
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 834,
-          "meanLuma": 30.3,
-          "stdev": 55.1,
-          "bandingScore": 0.277,
+          "satPixels": 4211,
+          "meanLuma": 31.1,
+          "stdev": 57.3,
+          "bandingScore": 0.279,
           "frameDeltaMag": null,
-          "latencyMs": 576
+          "latencyMs": 572
         },
         "mid": {
           "file": "control-bounciness-mid.png",
           "meanRGB": [
-            28.7,
-            30.7,
-            32
+            29.1,
+            31.6,
+            31.3
           ],
           "effRGB": [
-            162.5,
-            174.5,
-            147.5
+            166.7,
+            182.8,
+            142.1
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 828,
-          "meanLuma": 30.4,
-          "stdev": 55.2,
-          "bandingScore": 0.275,
+          "satPixels": 4204,
+          "meanLuma": 31.1,
+          "stdev": 57.3,
+          "bandingScore": 0.285,
           "frameDeltaMag": null,
           "latencyMs": 583
         },
         "high": {
           "file": "control-bounciness-high.png",
           "meanRGB": [
-            28.7,
-            30.7,
-            32
+            29.1,
+            31.6,
+            31.2
           ],
           "effRGB": [
-            162.5,
-            174.4,
-            147.5
+            166.7,
+            182.8,
+            142
           ],
-          "effHue": 87,
-          "effSat": 0.15,
+          "effHue": 84,
+          "effSat": 0.22,
           "effVal": 0,
           "warmFrac": 0,
           "coolFrac": 0,
           "magentaFrac": 0,
-          "satPixels": 807,
-          "meanLuma": 30.3,
-          "stdev": 55.1,
-          "bandingScore": 0.275,
+          "satPixels": 4197,
+          "meanLuma": 31,
+          "stdev": 57.3,
+          "bandingScore": 0.282,
           "frameDeltaMag": null,
           "latencyMs": 583
         }
       },
       "pixelDiff": {
-        "meanAbsDiff": 0.307,
-        "changedFrac": 0.0075
+        "meanAbsDiff": 1.124,
+        "changedFrac": 0.0147
       },
       "changed": true
     }

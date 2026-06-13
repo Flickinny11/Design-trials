@@ -4664,3 +4664,22 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] glass/wave-tank-slosh (wave) render=true play=true ctrl=true :: pointer stimulus pinned for controls
 
 ### Run end 2026-06-13T12:16:01.521Z — pass 14/14 (0 recovered on quiet retry), fail 0, missing 0, wall 91s
+
+## Resumed 2026-06-13T12:39:10.871Z (std 5, glass 2 remaining)
+- [PASS] std/drop-squash (transform) render=true play=true ctrl=true
+- [PASS] std/jelly-collide-sim (wave) render=true play=true ctrl=true
+- [PASS] std/pinball-bounce (particles) render=true play=true ctrl=true
+- [PASS] std/rope-dangle-sim (pointer) render=true play=true ctrl=true :: pointer stimulus pinned for controls
+- [PASS] std/shockwave-scatter (displacement) render=true play=true ctrl=true
+- [PASS] glass/molten-drip-sim (glass) render=true play=true ctrl=true
+- [PASS] glass/pour-splash-sim (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-13T12:41:01.806Z — pass 7/7 (0 recovered on quiet retry), fail 0, missing 0, wall 111s
+
+## Resumed 2026-06-13T13:09:03.141Z (std 3, glass 1 remaining)
+- [PASS] std/drop-squash (transform) render=true play=true ctrl=true
+- [PASS] std/jelly-collide-sim (wave) render=true play=true ctrl=true
+- [PASS] std/molten-drip-sim (particles) render=true play=true ctrl=true
+- [PASS] glass/pour-splash-sim (particles) render=true play=true ctrl=true
+
+### Run end 2026-06-13T13:10:44.482Z — pass 4/4 (0 recovered on quiet retry), fail 0, missing 0, wall 101s

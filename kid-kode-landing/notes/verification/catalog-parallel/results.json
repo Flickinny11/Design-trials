@@ -1,41 +1,27 @@
 {
-  "startedAt": "2026-06-13T12:14:31.003Z",
-  "updatedAt": "2026-06-13T12:16:01.521Z",
+  "startedAt": "2026-06-13T13:09:03.124Z",
+  "updatedAt": "2026-06-13T13:10:44.482Z",
   "tiers": {
     "std": {
       "tier": "std",
-      "total": 9,
+      "total": 3,
       "backend": "webgl",
-      "startedAt": "2026-06-13T12:14:36.783Z",
-      "finishedAt": "2026-06-13T12:15:45.616Z",
+      "startedAt": "2026-06-13T13:09:12.268Z",
+      "finishedAt": "2026-06-13T13:10:34.602Z",
       "peakConcurrency": 8,
       "deviceLostTotal": 0
     },
     "glass": {
       "tier": "glass",
-      "total": 5,
+      "total": 1,
       "backend": "webgpu",
-      "startedAt": "2026-06-13T12:15:46.121Z",
-      "finishedAt": "2026-06-13T12:16:01.521Z",
-      "peakConcurrency": 3,
+      "startedAt": "2026-06-13T13:10:35.066Z",
+      "finishedAt": "2026-06-13T13:10:44.482Z",
+      "peakConcurrency": 2,
       "deviceLostTotal": 0
     }
   },
   "results": {
-    "charged-particles-sim": {
-      "name": "charged-particles-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:14:44.157Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
     "drop-squash": {
       "name": "drop-squash",
       "category": "transform",
@@ -46,35 +32,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T12:14:54.954Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "explode-reassemble-sim": {
-      "name": "explode-reassemble-sim",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:06.285Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "gravity-bounce-cluster": {
-      "name": "gravity-bounce-cluster",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:09.949Z",
+      "at": "2026-06-13T13:09:20.600Z",
       "backend": "webgl",
       "consoleErrors": []
     },
@@ -88,85 +46,13 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T12:15:09.949Z",
+      "at": "2026-06-13T13:09:31.197Z",
       "backend": "webgl",
-      "consoleErrors": []
-    },
-    "n-body-orbit": {
-      "name": "n-body-orbit",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:20.937Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "pinball-bounce": {
-      "name": "pinball-bounce",
-      "category": "particles",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:23.575Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "rope-dangle-sim": {
-      "name": "rope-dangle-sim",
-      "category": "pointer",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:24.176Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "shockwave-scatter": {
-      "name": "shockwave-scatter",
-      "category": "displacement",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:29.406Z",
-      "backend": "webgl",
-      "consoleErrors": []
-    },
-    "buoyancy-bob-sim": {
-      "name": "buoyancy-bob-sim",
-      "category": "wave",
-      "driver": "time",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:49.752Z",
-      "backend": "webgpu",
       "consoleErrors": []
     },
     "molten-drip-sim": {
       "name": "molten-drip-sim",
-      "category": "glass",
+      "category": "particles",
       "driver": "time",
       "renders": true,
       "plays": true,
@@ -174,8 +60,8 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T12:15:52.867Z",
-      "backend": "webgpu",
+      "at": "2026-06-13T13:09:41.014Z",
+      "backend": "webgl",
       "consoleErrors": []
     },
     "pour-splash-sim": {
@@ -188,39 +74,7 @@
       "picker": true,
       "notes": [],
       "verdict": "pass",
-      "at": "2026-06-13T12:15:53.255Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "ripple-interact-sim": {
-      "name": "ripple-interact-sim",
-      "category": "wave",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:55.821Z",
-      "backend": "webgpu",
-      "consoleErrors": []
-    },
-    "wave-tank-slosh": {
-      "name": "wave-tank-slosh",
-      "category": "wave",
-      "driver": "pointer",
-      "renders": true,
-      "plays": true,
-      "controls": true,
-      "picker": true,
-      "notes": [
-        "pointer stimulus pinned for controls"
-      ],
-      "verdict": "pass",
-      "at": "2026-06-13T12:15:56.210Z",
+      "at": "2026-06-13T13:10:38.714Z",
       "backend": "webgpu",
       "consoleErrors": []
     }
@@ -231,8 +85,8 @@
     "names": []
   },
   "summary": {
-    "total": 14,
-    "pass": 14,
+    "total": 4,
+    "pass": 4,
     "fail": 0,
     "missing": 0,
     "failNames": [],
@@ -241,10 +95,10 @@
       "attempted": 0,
       "recovered": 0
     },
-    "wallClockSec": 91,
+    "wallClockSec": 101,
     "peak": {
       "std": 8,
-      "glass": 3
+      "glass": 2
     },
     "backend": {
       "std": "webgl",
