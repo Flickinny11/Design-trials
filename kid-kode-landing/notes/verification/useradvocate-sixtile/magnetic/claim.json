@@ -1,0 +1,7 @@
+{
+  "name": "magnetic",
+  "label": "Max offset",
+  "description": "The tile is magnetically pulled toward the pointer by a spring; reach and stiffness tunable.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

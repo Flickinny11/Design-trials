@@ -1,0 +1,7 @@
+{
+  "name": "magnetic-stick",
+  "label": "Capture radius",
+  "description": "Drift close and the card snaps onto the cursor like a magnet finding steel — sticking while held near, releasing with a wobbling snap-back past the escape radius.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

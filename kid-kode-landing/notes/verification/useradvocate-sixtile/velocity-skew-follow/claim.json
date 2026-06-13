@@ -1,0 +1,7 @@
+{
+  "name": "velocity-skew-follow",
+  "label": "Chase Speed",
+  "description": "The card chases the cursor with Cuberto swagger — leaning and skewing into its own velocity, easing out long like an expo tween.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

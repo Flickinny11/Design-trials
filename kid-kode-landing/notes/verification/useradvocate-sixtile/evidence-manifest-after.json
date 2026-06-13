@@ -1,21 +1,47 @@
 {
-  "startedAt": "2026-06-13T06:24:55.988Z",
+  "startedAt": "2026-06-13T06:57:48.845Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "pointer-loupe",
+      "tile": "magnetic",
       "state": "after",
-      "dir": "pointer-loupe/after",
+      "dir": "magnetic/after",
       "claim": {
-        "name": "pointer-loupe",
-        "label": "Zoom Factor",
-        "description": "A jeweler",
-        "category": "displacement"
+        "name": "magnetic",
+        "label": "Max offset",
+        "description": "The tile is magnetically pulled toward the pointer by a spring; reach and stiffness tunable.",
+        "category": "pointer"
       },
-      "controls": 4,
+      "controls": 2,
+      "notes": []
+    },
+    {
+      "tile": "pointer-shine",
+      "state": "after",
+      "dir": "pointer-shine/after",
+      "claim": {
+        "name": "pointer-shine",
+        "label": "Length",
+        "description": "A sharp anamorphic glint flares at the pointer location, twinkling as it tracks the cursor across glossy glass.",
+        "category": "pointer"
+      },
+      "controls": 3,
+      "notes": []
+    },
+    {
+      "tile": "spotlight-follow",
+      "state": "after",
+      "dir": "spotlight-follow/after",
+      "claim": {
+        "name": "spotlight-follow",
+        "label": "Radius",
+        "description": "A bright specular hotspot tracks the pointer across the card surface, like a light gliding over glass.",
+        "category": "pointer"
+      },
+      "controls": 2,
       "notes": []
     }
   ],

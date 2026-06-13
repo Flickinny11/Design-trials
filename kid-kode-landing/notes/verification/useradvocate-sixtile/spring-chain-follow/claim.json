@@ -1,0 +1,7 @@
+{
+  "name": "spring-chain-follow",
+  "label": "Chain Stiffness",
+  "description": "The card leads a spring-linked chain — two ghost echoes whipping and overshooting behind it as the cursor drags the head around.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

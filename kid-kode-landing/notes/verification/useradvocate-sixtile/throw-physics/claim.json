@@ -1,0 +1,7 @@
+{
+  "name": "throw-physics",
+  "label": "Throw power",
+  "description": "Grab the card with the cursor and throw it — it sails on real ballistics, bounces off the frame walls, and glides home ashamed.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -89,11 +89,16 @@ import { scrollWaveRidePrimitive } from './scroll-wave-ride';
 import { scrollZoomPrimitive } from './scroll-zoom';
 import { scrubMorphPrimitive } from './scrub-morph';
 import { stickyPinPrimitive } from './sticky-pin';
+import { chargeReleasePrimitive } from './charge-release';
 import { cursorTrailPrimitive } from './cursor-trail';
+import { gravityWellPrimitive } from './gravity-well';
 import { hoverLiftPrimitive } from './hover-lift';
 import { magneticPrimitive } from './magnetic';
+import { magneticStickPrimitive } from './magnetic-stick';
 import { parallaxLayersPrimitive } from './parallax-layers';
+import { pendantDanglePrimitive } from './pendant-dangle';
 import { pointerAttractScalePrimitive } from './pointer-attract-scale';
+import { pointerCastShadowPrimitive } from './pointer-cast-shadow';
 import { pointerDisplacePrimitive } from './pointer-displace';
 import { pointerHueShiftPrimitive } from './pointer-hue-shift';
 import { pointerOrbitPrimitive } from './pointer-orbit';
@@ -101,9 +106,13 @@ import { pointerPressPrimitive } from './pointer-press';
 import { pointerRipplePrimitive } from './pointer-ripple';
 import { pointerShinePrimitive } from './pointer-shine';
 import { pointerTilt3dPrimitive } from './pointer-tilt-3d';
+import { proximityRimGlowPrimitive } from './proximity-rim-glow';
 import { repelPrimitive } from './repel';
 import { spotlightFollowPrimitive } from './spotlight-follow';
+import { springChainFollowPrimitive } from './spring-chain-follow';
+import { throwPhysicsPrimitive } from './throw-physics';
 import { tiltPrimitive } from './tilt';
+import { velocitySkewFollowPrimitive } from './velocity-skew-follow';
 import { decodeTextPrimitive } from './decode-text';
 import { dissolveToDustPrimitive } from './dissolve-to-dust';
 import { glitchTextPrimitive } from './glitch-text';
@@ -441,11 +450,16 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   scrollZoomPrimitive,
   scrubMorphPrimitive,
   stickyPinPrimitive,
+  chargeReleasePrimitive,
   cursorTrailPrimitive,
+  gravityWellPrimitive,
   hoverLiftPrimitive,
   magneticPrimitive,
+  magneticStickPrimitive,
   parallaxLayersPrimitive,
+  pendantDanglePrimitive,
   pointerAttractScalePrimitive,
+  pointerCastShadowPrimitive,
   pointerDisplacePrimitive,
   pointerHueShiftPrimitive,
   pointerOrbitPrimitive,
@@ -453,9 +467,13 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   pointerRipplePrimitive,
   pointerShinePrimitive,
   pointerTilt3dPrimitive,
+  proximityRimGlowPrimitive,
   repelPrimitive,
   spotlightFollowPrimitive,
+  springChainFollowPrimitive,
+  throwPhysicsPrimitive,
   tiltPrimitive,
+  velocitySkewFollowPrimitive,
   decodeTextPrimitive,
   dissolveToDustPrimitive,
   glitchTextPrimitive,
