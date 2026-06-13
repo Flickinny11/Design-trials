@@ -78,6 +78,7 @@ import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
 import ObjectFlyout from '@/components/editor/object-tools/ObjectFlyout';
 import ChangeArtifactFlyout from '@/components/editor/change-artifact/ChangeArtifactFlyout';
+import LibraryFlyout from '@/components/editor/elements/LibraryFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -124,6 +125,7 @@ type ToolGroupId =
   | 'transform'
   | 'selection'
   | 'add'
+  | 'library'
   | 'image'
   | 'object3d'
   | 'changeArtifact'
@@ -144,6 +146,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'transform', icon: 'move', label: 'Transform', wired: true },
   { id: 'selection', icon: 'group', label: 'Selection', wired: true },
   { id: 'add', icon: 'plus', label: 'Add', wired: true },
+  { id: 'library', icon: 'layers', label: 'Elements', wired: true },
   { id: 'image', icon: 'image', label: 'Image', wired: true },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: true },
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
@@ -839,6 +842,13 @@ export default function CanvasToolbar() {
               // and Lighting groups share (active hub → selected node's
               // parent → first hub).
               <AddElementFlyout hub={lightingHub} onToast={setToast} />
+            )}
+            {activeGroup === 'library' && (
+              // §13 PREBUILT ELEMENT LIBRARY — opens the root-mounted browser of
+              // ready-made 3D element clusters; drag-to-place tethers the cluster
+              // to a hub (criterion 21). Same hub resolution the other groups
+              // share (active hub → selected node's parent → first hub).
+              <LibraryFlyout hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'image' && (
               // P3 IMAGE/MEDIA (Task B) — wired Image group. Same hub

@@ -52,6 +52,7 @@ import {
   getHubWorldPositions,
 } from '@/lib/prism-graph/hub-geometry';
 import { computeCloneDragTether } from '@/lib/editor/clone-drag-tether';
+import ElementPlacementLayer from '@/components/editor/elements/ElementPlacementLayer';
 import {
   computeGalaxyFilterMatches,
   GALAXY_FILTER_DIM_OPACITY,
@@ -3038,8 +3039,13 @@ function SceneContent({
   // is reachable in both editorRenderMode branches.
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const draggingNodeId = useGraphEditorStore((s) => s.draggingNodeId);
+  const placingClusterId = useGraphEditorStore((s) => s.placingClusterId);
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const cloneDragActive = viewMode === 'galaxy' && draggingNodeId != null;
+  // §13 criterion 21 — prebuilt-element drag-to-place. Mounts the placement
+  // listener whenever a cluster is armed in galaxy mode (mutually exclusive
+  // with clone-drag — both reuse the generic draggingPointerWorld slots).
+  const placementActive = viewMode === 'galaxy' && placingClusterId != null;
   const showsAssembled = showsAssembledFor(viewMode, editorRenderMode);
   // preview-app hides authoring handles/gizmos/frames so the built scene reads
   // as the running app (INV-R4). canvas keeps them.
@@ -3050,6 +3056,7 @@ function SceneContent({
         ? <AssembledSceneContent onPerf={onPerf} previewMode={previewMode} />
         : <TopologySceneContent onPerf={onPerf} />}
       {cloneDragActive && <GalaxyCloneDragLayer hubs={sourceHubs} />}
+      {placementActive && <ElementPlacementLayer hubs={sourceHubs} />}
     </>
   );
 }

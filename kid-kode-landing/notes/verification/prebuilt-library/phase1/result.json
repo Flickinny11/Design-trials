@@ -1,0 +1,105 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "msg": "app loaded",
+      "backend": "webgpu"
+    },
+    {
+      "msg": "canvas mode"
+    },
+    {
+      "msg": "active hub resolved",
+      "activeHub": "s1-arrival"
+    },
+    {
+      "msg": "library flyout",
+      "present": true
+    },
+    {
+      "msg": "browser open",
+      "rig": {
+        "ready": true,
+        "tileCount": 2,
+        "backend": "webgpu",
+        "deviceLostCount": 0
+      },
+      "tileSelectorCount": 2
+    },
+    {
+      "msg": "tile hover-preview",
+      "firstId": "hero-photoreal-monolith",
+      "playing": "true"
+    },
+    {
+      "msg": "placement armed",
+      "viewMode": "galaxy",
+      "placingClusterId": "hero-photoreal-monolith"
+    },
+    {
+      "msg": "placement committed",
+      "nodesBefore": 25,
+      "nodesAfter": 28,
+      "added": 3,
+      "placedGroupId": "grp-c8a3b0aa-fa1b-4808-824c-407bffeb5a37",
+      "placedMembers": [
+        {
+          "id": "6937e597-29a1-4da5-abb9-df47d5e25017",
+          "parentHubId": "s2-movement",
+          "subtype": "element"
+        },
+        {
+          "id": "4566fbf3-522c-4c72-8444-27366a63828f",
+          "parentHubId": "s2-movement",
+          "subtype": "element"
+        },
+        {
+          "id": "0e968e42-4146-416d-b2c9-a90a62c058c0",
+          "parentHubId": "s2-movement",
+          "subtype": "text"
+        }
+      ],
+      "allTetheredToSameHub": true
+    },
+    {
+      "msg": "placed cluster in canvas",
+      "mountedNodeGroups": 4
+    },
+    {
+      "msg": "preview-app"
+    }
+  ],
+  "consoleErrors": [],
+  "notes": [],
+  "backend": "webgpu",
+  "rig": {
+    "ready": true,
+    "tileCount": 2,
+    "backend": "webgpu",
+    "deviceLostCount": 0
+  },
+  "criterion21": {
+    "nodesBefore": 25,
+    "nodesAfter": 28,
+    "added": 3,
+    "placedGroupId": "grp-c8a3b0aa-fa1b-4808-824c-407bffeb5a37",
+    "placedMembers": [
+      {
+        "id": "6937e597-29a1-4da5-abb9-df47d5e25017",
+        "parentHubId": "s2-movement",
+        "subtype": "element"
+      },
+      {
+        "id": "4566fbf3-522c-4c72-8444-27366a63828f",
+        "parentHubId": "s2-movement",
+        "subtype": "element"
+      },
+      {
+        "id": "0e968e42-4146-416d-b2c9-a90a62c058c0",
+        "parentHubId": "s2-movement",
+        "subtype": "text"
+      }
+    ],
+    "allTetheredToSameHub": true
+  }
+}
