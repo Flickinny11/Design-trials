@@ -55,9 +55,16 @@ Phase-4 per-criterion verification. Honors multi-agent-where-it-helps without sa
       swapped onto live nodes + persisted. fal spend $0.263/$50. Fixed pre-existing compile-anchors
       crash. Honest flags: criterion 21 (=§13 prebuilt library) is separate scope, NOT built; video
       lane wired but not re-billed; ShapeFaceMapper labels small at DPR2 (P3 polish).
-- [ ] Phase 2 — Full human-grade system test (advocate, desktop + mobile, system-test matrix) — IN PROGRESS
-- [ ] Phase 3 — Fix + polish + optimize (MUST-FIX, cosmetic flags, perf, no-regression)
-- [ ] Phase 4 — Production sign-off (§18 + §19 re-verify, DPR-2 evidence table, verdict)
+- [x] Phase 2 — Full human-grade system test — DONE (ckpt 379ac52). 30 GPU frames × 6 user-advocates;
+      0 MUST-FIX; all systems PASS/MIXED (cosmetic flags only); 606-tile catalog exceeds the ≥300 claim.
+- [x] Phase 3 — Fix + polish + optimize — DONE (ckpt 5fb6d8e). Plain-language fixes (WIRED badge,
+      lighting jargon); perf PASS (t2 desktop/t1 mobile, <100ms, INV-9 intact); no-regression 3342 green;
+      carried flags verified resolved (violet-orb/jelly/rope-bead).
+- [x] Phase 4 — Production sign-off — DONE. §19 sweep CLEAN; §18 table (19/20 directly proven, 21=§13
+      not-built honest flag); VERDICT: Change-Artifact PRODUCTION-READY, wider editor SHIPPABLE w/ documented
+      non-blocking polish. fal $0.263/$50. Model re-confirmed claude-opus-4-8 (no sentinel resume occurred).
+
+RUN COMPLETE. Report: notes/CANVAS-PRODUCTION-FINAL-REPORT.md. Worktrees=0 extra; dev server killed.
 
 ## Setup notes
 - Cleaned 4 stale worktrees (cool-gauss, pensive-kalam, relaxed-chaum, xenodochial) — only marker

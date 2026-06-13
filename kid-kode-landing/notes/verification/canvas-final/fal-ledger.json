@@ -106,6 +106,22 @@
       "credits": 2,
       "estCost": 0.015,
       "ok": true
+    },
+    {
+      "at": "2026-06-13T19:46:16.724Z",
+      "model": "prism-image-standard",
+      "purpose": "image flyout generate",
+      "credits": 2,
+      "estCost": 0,
+      "ok": false
+    },
+    {
+      "at": "2026-06-13T19:46:16.728Z",
+      "model": "prism-image-standard",
+      "purpose": "image flyout generate",
+      "credits": 2,
+      "estCost": 0,
+      "ok": false
     }
   ]
 }
