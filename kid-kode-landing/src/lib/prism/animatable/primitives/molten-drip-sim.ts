@@ -77,7 +77,9 @@ import {
 } from './_sim-core';
 
 const DT = 1 / 120; // small fixed step (stiff-ish spring)
-const SOURCE_Y = 1.0; // reservoir root height (pinned) — column reads top→bottom
+const SOURCE_Y = 0.72; // reservoir root height (pinned) — lowered so the fattest
+// reservoir bulb (≈0.4 quad × 0.92 billboard ≈ 0.37 above its centre) sits fully
+// inside the ±1.4 viewport instead of clipping the top edge; still a long drip to FLOOR_Y.
 // Recycle a free droplet a touch ABOVE the literal frame bottom so the fat bead
 // (radius ≈0.24 quad) is fully inside the tile — no droplet ever clips the edge.
 const FLOOR_Y = -0.95;
