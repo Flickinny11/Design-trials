@@ -8,7 +8,7 @@ PROMPT="./PRIMITIVES-EXPANSION-RESUME-COMBINED.md"; RUNLOG="./primitives-expansi
 MAXRESUMES=6; RESUMES=0; TICK=0
 notify(){ osascript -e "display notification \"$1\" with title \"Prism · $NAME\" sound name \"$2\"" 2>/dev/null; }
 agents(){ c=0; for p in $(pgrep -f 'claude -p' 2>/dev/null); do case "$(ps -p $p -o comm= 2>/dev/null)" in *claude) c=$((c+1));; esac; done; echo $c; }
-launch(){ unset NODE_ENV; nohup /Users/loganbaird/.local/bin/claude -p "$(cat $PROMPT)" --model claude-fable-5 --permission-mode bypassPermissions --output-format text > "$RUNLOG" 2>&1 & echo "$(date) launched $!" >> ./sentinel.log; }
+launch(){ unset NODE_ENV; nohup /Users/loganbaird/.local/bin/claude -p "$(cat $PROMPT)" --model claude-opus-4-8 --permission-mode bypassPermissions --output-format text > "$RUNLOG" 2>&1 & echo "$(date) launched $!" >> ./sentinel.log; }
 notify "Sentinel v3 armed: status pings, auto-resume on session limits." "Tink"
 while true; do
   [ -f ./SENTINEL-STOP ] && notify "Sentinel stopped by STOP file." "Tink" && exit 0
@@ -18,7 +18,7 @@ while true; do
     sleep 30; [ "$(agents)" != "0" ] && continue
     [ -f "$REPORT" ] && continue
     if [ $RESUMES -ge $MAXRESUMES ]; then notify "⚠️ Max auto-resumes reached. Tell Claude: check" "Basso"; exit 0; fi
-    PROBE=$(unset NODE_ENV; cd /tmp && /Users/loganbaird/.local/bin/claude -p "Say OK" --model claude-fable-5 --output-format text < /dev/null 2>&1 | tail -1)
+    PROBE=$(unset NODE_ENV; cd /tmp && /Users/loganbaird/.local/bin/claude -p "Say OK" --model claude-opus-4-8 --output-format text < /dev/null 2>&1 | tail -1)
     if echo "$PROBE" | grep -q "OK"; then
       RESUMES=$((RESUMES+1)); cd /Users/loganbaird/Prototype_Prism/Design-trials
       launch; notify "🔄 Auto-resumed (#$RESUMES) after interruption." "Submarine"; sleep 120

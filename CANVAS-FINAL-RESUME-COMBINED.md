@@ -3,7 +3,7 @@ cheaply, do NOT redo verified phases, continue from first incomplete phase. Chec
 # CANVAS PRODUCTION-READY FINAL — Change-Artifact generation wired to fal + full human-grade system test. (Claude Code, ultracode)
 
 ## MODEL & MODE
-claude-fable-5 (confirm line 1; note any opus fallback). ULTRACODE: Dynamic Workflows, parallel subagents, contract-first
+claude-opus-4-8 (confirm line 1; note any opus fallback). ULTRACODE: Dynamic Workflows, parallel subagents, contract-first
 per phase. Branch prism-editor-build, from git root. AUTO-CKPT at every VERIFIED phase (standard exclusions; verify
 worktrees=0). LOGAN-INBOX polling at phase boundaries. ANTI-STUCK: web-search CURRENT (June 2026) approaches after ~2
 fails; never downgrade a dep; NEVER fake/assert — evidence or it didn't happen. ENV: NODE_ENV unset; kill all browsers/

@@ -1,7 +1,7 @@
 # PHYSICS / FLUID CAPABILITY PACK — simulation-driven primitives. (Claude Code, ultracode, post-expansion)
 
 ## MODEL & MODE
-claude-fable-5 (confirm line 1). ULTRACODE parallel waves on the FROZEN Animatable+Driver contract (additive catalog
+claude-opus-4-8 (confirm line 1). ULTRACODE parallel waves on the FROZEN Animatable+Driver contract (additive catalog
 entries only). Branch prism-editor-build, git root. AUTO-CKPT at verified wave boundaries (standard exclusions).
 LOGAN-INBOX polling at wave boundaries. ANTI-STUCK: web-search CURRENT (2026) approaches after ~2 fails.
 

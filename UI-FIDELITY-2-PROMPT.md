@@ -6,7 +6,7 @@ glass and fire, and the UI looks like this?" Observatory Brass v1 used CSS appro
 read FLAT in person. This pass replaces approximation with REAL RENDERING.
 
 ## MODEL & MODE
-claude-fable-5 (confirm line 1). ULTRACODE waves, contract-first. Branch prism-editor-build, from git root.
+claude-opus-4-8 (confirm line 1). ULTRACODE waves, contract-first. Branch prism-editor-build, from git root.
 AUTO-CKPT at verified wave boundaries (standard exclusions). LOGAN-INBOX polling rule applies. ANTI-STUCK: web-search
 CURRENT (2026) techniques — research award-level WebGPU UI chrome before building; do not default to habit.
 

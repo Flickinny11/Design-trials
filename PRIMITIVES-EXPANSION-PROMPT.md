@@ -6,7 +6,7 @@ the same premium techniques that make Slider Revolution-class pages feel premium
 the AI builder) drop onto elements in 3D canvas space.
 
 ## MODEL & MODE
-claude-fable-5 (confirm line 1). ULTRACODE parallel waves against the FROZEN Animatable+Driver contract (one agent per
+claude-opus-4-8 (confirm line 1). ULTRACODE parallel waves against the FROZEN Animatable+Driver contract (one agent per
 primitive; contract untouched — these are additive catalog entries). Branch prism-editor-build, from git root.
 AUTO-CKPT at verified wave boundaries. LOGAN-INBOX polling. ANTI-STUCK web-search (June 2026). Full verification loop:
 parallel harness + art-fidelity + USER-ADVOCATE (photoreal/anti-slop/sharpness bars; DPR-2 zoom crops; smooth

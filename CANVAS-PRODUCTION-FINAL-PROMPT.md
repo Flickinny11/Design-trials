@@ -1,7 +1,7 @@
 # CANVAS PRODUCTION-READY FINAL — Change-Artifact generation wired to fal + full human-grade system test. (Claude Code, ultracode)
 
 ## MODEL & MODE
-claude-fable-5 (confirm line 1; note any opus fallback). ULTRACODE: Dynamic Workflows, parallel subagents, contract-first
+claude-opus-4-8 (confirm line 1; note any opus fallback). ULTRACODE: Dynamic Workflows, parallel subagents, contract-first
 per phase. Branch prism-editor-build, from git root. AUTO-CKPT at every VERIFIED phase (standard exclusions; verify
 worktrees=0). LOGAN-INBOX polling at phase boundaries. ANTI-STUCK: web-search CURRENT (June 2026) approaches after ~2
 fails; never downgrade a dep; NEVER fake/assert — evidence or it didn't happen. ENV: NODE_ENV unset; kill all browsers/
@@ -76,3 +76,10 @@ before/after, fal spend ledger); the system-test matrix (every system × desktop
 the §18 + §19 production sign-off table with DPR-2 evidence; dependency-usage for any new UI; honest flags; AUTO-CKPT
 hashes. Frames under kid-kode-landing/notes/verification/canvas-final/. Plain-language summary for Logan + the
 production-ready verdict. STOP.
+
+## MODEL FALLBACK GUARD (2026-06-13 — CRITICAL)
+Fable-5 is unavailable and SILENTLY falls back to opus-4-8 (verified: requesting fable returned modelUsage=
+claude-opus-4-8). This run is pinned to claude-opus-4-8 deliberately. At session start AND after any sentinel
+auto-resume, CONFIRM modelUsage is the pinned model and RECORD it in the ledger. If a future session finds fable-5
+genuinely available again (modelUsage==claude-fable-5 on a probe) you MAY switch back — but never trust the label;
+always verify modelUsage.

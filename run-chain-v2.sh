@@ -20,13 +20,13 @@ done
 # Phase B: session-window probe loop, then fire
 while true; do
   [ -f ./CHAIN-STOP ] && notify "Chain stopped." "Tink" && exit 0
-  PROBE=$(unset NODE_ENV; cd /tmp && /Users/loganbaird/.local/bin/claude -p "Say OK" --model claude-fable-5 --output-format text < /dev/null 2>&1 | tail -1)
+  PROBE=$(unset NODE_ENV; cd /tmp && /Users/loganbaird/.local/bin/claude -p "Say OK" --model claude-opus-4-8 --output-format text < /dev/null 2>&1 | tail -1)
   echo "$PROBE" | grep -q "OK" && break
   notify "⏸ Session limit — chain retries in 15 min." "Pop"; sleep 900
 done
 cd /Users/loganbaird/Prototype_Prism/Design-trials
 unset NODE_ENV
-nohup /Users/loganbaird/.local/bin/claude -p "$(cat $NEXT_PROMPT)" --model claude-fable-5 --permission-mode bypassPermissions --output-format text > "$NEXT_LOG" 2>&1 &
+nohup /Users/loganbaird/.local/bin/claude -p "$(cat $NEXT_PROMPT)" --model claude-opus-4-8 --permission-mode bypassPermissions --output-format text > "$NEXT_LOG" 2>&1 &
 echo "$(date) chain-fired $NEXT_NAME pid=$!" >> ./sentinel.log
 sleep 10
 nohup "$NEXT_SENTINEL" > ./sentinel-physics-out.log 2>&1 &
