@@ -7,6 +7,7 @@ import { registerPrimitive } from '../registry';
 import type { PrimitiveDefinition } from '../contract';
 
 import { accordionYPrimitive } from './accordion-y';
+import { blockTopplePrimitive } from './block-topple';
 import { bouncePrimitive } from './bounce';
 import { cardFoldPrimitive } from './card-fold';
 import { cornerPeelPrimitive } from './corner-peel';
@@ -14,8 +15,10 @@ import { crossMorphPrimitive } from './cross-morph';
 import { cubeRotatePrimitive } from './cube-rotate';
 import { cylinderUnrollPrimitive } from './cylinder-unroll';
 import { depthPopPrimitive } from './depth-pop';
+import { dominoCascadePrimitive } from './domino-cascade';
 import { doorOpenPrimitive } from './door-open';
 import { dropBouncePrimitive } from './drop-bounce';
+import { dropSquashPrimitive } from './drop-squash';
 import { elasticPrimitive } from './elastic';
 import { flipPrimitive } from './flip';
 import { flip3dPrimitive } from './flip-3d';
@@ -26,6 +29,7 @@ import { genieSuckPrimitive } from './genie-suck';
 import { hingeFallPrimitive } from './hinge-fall';
 import { jellyPrimitive } from './jelly';
 import { liquidStretchMorphPrimitive } from './liquid-stretch-morph';
+import { newtonCradlePrimitive } from './newton-cradle';
 import { overshootPrimitive } from './overshoot';
 import { pendulumSettlePrimitive } from './pendulum-settle';
 import { perspectiveTiltInPrimitive } from './perspective-tilt-in';
@@ -41,7 +45,9 @@ import { squashStretchInPrimitive } from './squash-stretch-in';
 import { swapFlipMorphPrimitive } from './swap-flip-morph';
 import { swingPrimitive } from './swing';
 import { tumblePrimitive } from './tumble';
+import { tumbleSettlePrimitive } from './tumble-settle';
 import { unfoldPrimitive } from './unfold';
+import { weightlessDriftPrimitive } from './weightless-drift';
 import { zoomOutInPrimitive } from './zoom-out-in';
 import { zoomRotateInPrimitive } from './zoom-rotate-in';
 import { blinkPrimitive } from './blink';
@@ -93,6 +99,7 @@ import { chargeReleasePrimitive } from './charge-release';
 import { cursorTrailPrimitive } from './cursor-trail';
 import { gravityWellPrimitive } from './gravity-well';
 import { hoverLiftPrimitive } from './hover-lift';
+import { magnetSnapPrimitive } from './magnet-snap';
 import { magneticPrimitive } from './magnetic';
 import { magneticStickPrimitive } from './magnetic-stick';
 import { parallaxLayersPrimitive } from './parallax-layers';
@@ -350,6 +357,7 @@ import { flowRibbonPrimitive } from './flow-ribbon';
 import { fluidSphPrimitive } from './fluid-sph';
 import { fountainPrimitive } from './fountain';
 import { galaxyParticlesPrimitive } from './galaxy-particles';
+import { gravityBounceClusterPrimitive } from './gravity-bounce-cluster';
 import { gravityDropPrimitive } from './gravity-drop';
 import { hyperspaceWarpPrimitive } from './hyperspace-warp';
 import { imageToParticlesPrimitive } from './image-to-particles';
@@ -357,11 +365,13 @@ import { magneticFieldPrimitive } from './magnetic-field';
 import { meteorShowerPrimitive } from './meteor-shower';
 import { morphCloudPrimitive } from './morph-cloud';
 import { murmurationPrimitive } from './murmuration';
+import { nBodyOrbitPrimitive } from './n-body-orbit';
 import { orbitRingsPrimitive } from './orbit-rings';
 import { orbitTrailsPrimitive } from './orbit-trails';
 import { particleAssemblePrimitive } from './particle-assemble';
 import { pendulumWavePrimitive } from './pendulum-wave';
 import { petalFallPrimitive } from './petal-fall';
+import { pinballBouncePrimitive } from './pinball-bounce';
 import { pointerSparkTrailPrimitive } from './pointer-spark-trail';
 import { rainPrimitive } from './rain';
 import { rainSplashPrimitive } from './rain-splash';
@@ -379,6 +389,7 @@ import { waveGridPrimitive } from './wave-grid';
 
 export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   accordionYPrimitive,
+  blockTopplePrimitive,
   bouncePrimitive,
   cardFoldPrimitive,
   cornerPeelPrimitive,
@@ -386,8 +397,10 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   cubeRotatePrimitive,
   cylinderUnrollPrimitive,
   depthPopPrimitive,
+  dominoCascadePrimitive,
   doorOpenPrimitive,
   dropBouncePrimitive,
+  dropSquashPrimitive,
   elasticPrimitive,
   flipPrimitive,
   flip3dPrimitive,
@@ -398,6 +411,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   hingeFallPrimitive,
   jellyPrimitive,
   liquidStretchMorphPrimitive,
+  newtonCradlePrimitive,
   overshootPrimitive,
   pendulumSettlePrimitive,
   perspectiveTiltInPrimitive,
@@ -413,7 +427,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   swapFlipMorphPrimitive,
   swingPrimitive,
   tumblePrimitive,
+  tumbleSettlePrimitive,
   unfoldPrimitive,
+  weightlessDriftPrimitive,
   zoomOutInPrimitive,
   zoomRotateInPrimitive,
   blinkPrimitive,
@@ -465,6 +481,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   cursorTrailPrimitive,
   gravityWellPrimitive,
   hoverLiftPrimitive,
+  magnetSnapPrimitive,
   magneticPrimitive,
   magneticStickPrimitive,
   parallaxLayersPrimitive,
@@ -722,6 +739,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   fluidSphPrimitive,
   fountainPrimitive,
   galaxyParticlesPrimitive,
+  gravityBounceClusterPrimitive,
   gravityDropPrimitive,
   hyperspaceWarpPrimitive,
   imageToParticlesPrimitive,
@@ -729,11 +747,13 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   meteorShowerPrimitive,
   morphCloudPrimitive,
   murmurationPrimitive,
+  nBodyOrbitPrimitive,
   orbitRingsPrimitive,
   orbitTrailsPrimitive,
   particleAssemblePrimitive,
   pendulumWavePrimitive,
   petalFallPrimitive,
+  pinballBouncePrimitive,
   pointerSparkTrailPrimitive,
   rainPrimitive,
   rainSplashPrimitive,

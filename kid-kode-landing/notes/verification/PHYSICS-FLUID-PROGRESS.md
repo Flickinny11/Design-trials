@@ -19,4 +19,9 @@ Resumable: this file + AUTO-CKPT commits at verified wave boundaries.
 
 ## Phase log
 - [2026-06-13] Phase 0 orientation COMPLETE (contract, pattern, harness, dep posture mapped).
-- [2026-06-13] Phase 1 launched: research+audit workflow (5 web-research agents + catalog audit fan).
+- [2026-06-13] Phase 1 COMPLETE: research+audit done. Stack decision: NO new dep; hand-rolled fixed-dt CPU integrators (rigid), XPBD (soft/cloth/rope), CPU Eulerian grid (fluids). Rapier/Jolt/Box2D/PhysX all rejected (async wasm breaks sync createNode; no cheap reverse-step; bundle). Raw: notes/verification/physics-research-raw.json. Doc: notes/PHYSICS-STACK-DECISION.md.
+- [2026-06-13] Phase 2 COMPLETE: PHYSICS-STACK-DECISION.md written (gate cleared).
+- [2026-06-13] Phase 3 foundation: _sim-core.ts (deterministic replay stepper + markDirty + XPBD distance + wave-eq grid + tier) + drop-squash worked example (3/3 tests, tsc 0-new). CKPT 6e4f6d1.
+  - KEY FIX baked into core: makeReplayStepper.markDirty() wired to every primitive's onParamChange — the rig re-seeks the SAME frozen t while paused, so trajectory-only controls (gravity/stiffness/viscosity) would read DEAD without it. This is the structural cure for the "dead control at engaged pose" failure that cost prior waves 2-3 fix-rounds.
+- [2026-06-13] Pack design: 36 net-new sim primitives across 4 waves (A rigid 10, B soft/XPBD 9, C fluids 9, D force-fields 8). Authoring guide: notes/PHYSICS-AUTHORING-GUIDE.md.
+- [2026-06-13] Wave A launched (9 agents: gravity-bounce-cluster, tumble-settle, domino-cascade, block-topple, magnet-snap, weightless-drift, n-body-orbit, newton-cradle, pinball-bounce).
