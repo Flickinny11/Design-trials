@@ -118,21 +118,19 @@ try {
     try {
       await openLibrary(page);
       const before = await page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.().nodes.length ?? -1);
-      await page.locator(`[data-cluster-tile="${pid}"]`).click(); // arms galaxy placement
-      await sleep(900);
-      const canvas = page.locator('canvas').first(); const b = await canvas.boundingBox();
-      await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.mouse.down(); await sleep(80); await page.mouse.up();
-      await sleep(1000);
+      // NEW FLOW: a plain click places immediately at the active hub + frames it
+      // in canvas (placeNow). No galaxy step, no second canvas click.
+      await page.locator(`[data-cluster-tile="${pid}"]`).click();
+      await sleep(1200);
       const placed = await page.evaluate(() => {
         const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.(); const ns = gs?.nodes ?? [];
         const groups = {}; for (const n of ns) if (n.groupId) (groups[n.groupId] ??= []).push(n);
         const g = Object.entries(groups).slice(-1)[0];
         const hubId = g ? g[1][0].parentHubId : null;
         const ed = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
-        if (hubId && ed?.drillIntoHub) ed.drillIntoHub(hubId);
-        return { total: ns.length, groupId: g?.[0] ?? null, members: g ? g[1].length : 0, hubId };
+        return { total: ns.length, groupId: g?.[0] ?? null, members: g ? g[1].length : 0, hubId, viewMode: ed?.viewMode, activeHubId: ed?.activeHubId };
       });
-      await page.getByRole('button', { name: 'Canvas', exact: true }).click(); await sleep(1600);
+      await sleep(1400);
       await page.screenshot({ path: path.join(OUT, `place-${pid}-canvas.png`) });
       await page.getByRole('button', { name: 'Preview App', exact: true }).click(); await sleep(1800);
       await page.screenshot({ path: path.join(OUT, `place-${pid}-preview.png`) });

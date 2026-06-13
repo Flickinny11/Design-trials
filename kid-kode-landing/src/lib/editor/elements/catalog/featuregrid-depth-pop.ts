@@ -1,23 +1,32 @@
-// featuregrid-depth-pop — a 3×2 grid of premium feature cards that POP FORWARD
-// out of depth as they enter view (§13 prebuilt-library element). Each card is
-// a thick beveled box (meshPrimitive cube) wearing a rich PBR materialSpec drawn
+// featuregrid-depth-pop — a 3×2 grid of premium feature cards that read COMPLETE
+// and gently alive at all times (§13 prebuilt-library element). Each card is a
+// thick beveled box (meshPrimitive cube) wearing a rich PBR materialSpec drawn
 // from the Observatory Brass palette (warm brass / pale gold + cool ice-steel +
 // charcoal obsidian, NEVER purple) so it reads photoreal standalone — the deep
 // cube + clearcoat does the layered-bevel work without extra geometry. A
 // centered MSDF heading (real letterforms, INV-11) frames the section above the
 // grid. Seven members total (6 cards + 1 heading) — squarely premium, not bloated.
 //
-// THE SR-SMASHING MOVE: every card carries TWO integrated bindings —
-//   1. `depth-pop` (time driver): the card rushes forward from deep in Z to its
-//      resting plane, scaling up with a perspective ramp and fading in. Per-card
-//      `duration` is staggered column-by-column / row-by-row so the grid pops in
-//      as a left-to-right, top-to-bottom WAVE rather than all at once.
-//   2. `scroll-stagger-rise` (scroll driver): as the section scrolls into view
-//      the same cards decompose into staggered rows that rise and settle — the
-//      scroll choreography Slider Revolution fakes with CSS, here done as real
-//      decomposed geometry riding live PBR materials.
-// The two bindings stack (order 0 + order 1) so the element is alive both
-// ambiently (time) and on scroll — best-in-class out of the box.
+// THE AMBIENT MOTION (always-visible, never popping): the dominant time-driven
+// motion is a CONTINUOUS gentle FLOAT — the whole grid bobs and drifts buoyantly,
+// so the cards are FULLY PRESENT at full scale at EVERY phase of the loop. Float
+// speed/amplitude/tilt are staggered per card (a column+row phase offset) so the
+// grid reads as an organic, alive surface rather than a single rigid block — but
+// it NEVER reveals/scales-in from nothing. (The old `depth-pop` time binding,
+// which rushed cards forward from deep in Z and left them tiny/absent for part of
+// the loop, is REMOVED — that was the empty-black-preview defect.)
+//
+// THE PREMIUM LIVE FEEL (cursor, post-place): two pointer-driven bindings make
+// each placed card behave like a premium trading card:
+//   • `pointer-tilt-3d` — the whole card parallax-tilts in 3D toward the cursor,
+//     catching the studio IBL as it faces you. With no pointer it rests dead-on
+//     (steady, fully present), so it is always safe in the no-pointer preview rig.
+//   • `proximity-rim-glow` — a warm brass rim light kindles along the card's
+//     pointer-facing edge as the cursor nears, on a NON-DESTRUCTIVE additive
+//     overlay shell (the card's own PBR material is never touched). Off at rest,
+//     so it can never wipe or empty the card.
+// All four motions keep the card's geometry + premium PBR surface fully intact —
+// nothing here ever decomposes, scales from zero, or hides the artifact.
 //
 // Every member is a real, editable PrismNode (move / recolor / re-skin / swap
 // the animation post-place). Photorealism is procedural PBR + studio IBL (free)
@@ -125,14 +134,18 @@ function buildCards(): ClusterMemberTemplate[] {
       const y = yStart - r * ROW_GAP;
       const mat = CARD_MATERIALS[i % CARD_MATERIALS.length];
 
-      // Stagger the depth-pop duration so the grid pops in as a wave: cards
-      // closer to top-left land first (shorter pop), bottom-right last. Each
-      // card still rushes from the same depth, so the wave reads as a coherent
-      // pop-forward of the whole grid.
-      const popDuration = 0.9 + (c + r) * 0.18;
+      // Stagger the FLOAT per card (column+row phase) so the grid bobs as an
+      // organic alive surface rather than one rigid block — but every card stays
+      // FULL-SIZE and present at every phase (continuous idle motion, never a
+      // reveal). Slight speed/amplitude/tilt variation desynchronizes the bob.
+      const phase = c + r; // 0 (top-left) .. 3 (bottom-right)
+      const floatSpeed = 0.9 + phase * 0.12;
+      const floatAmp = 0.14 + (phase % 2) * 0.04;
+      const floatTilt = 5 + phase * 0.8;
 
-      // The feature card — premium PBR surface, carrying BOTH integrated
-      // bindings (ambient depth-pop on time + scroll-stagger-rise on scroll).
+      // The feature card — premium PBR surface, carrying its integrated motion:
+      // a continuous always-visible FLOAT (time) plus live cursor parallax +
+      // rim glow (pointer). NONE of these ever hide or shrink the card.
       cards.push({
         localId: `card-${i}`,
         subtype: 'card',
@@ -157,24 +170,41 @@ function buildCards(): ClusterMemberTemplate[] {
         },
         materialSpec: mat,
         receivesLighting: true,
-        // INTEGRATED animation — TWO real registry primitives, stacked.
+        // INTEGRATED animation — FOUR real registry primitives. The element is
+        // alive AND complete at every phase: the time-driven `float` is the
+        // dominant always-visible ambient (no reveal, no scale-from-zero), and
+        // the two pointer-driven bindings add a premium live feel once placed
+        // (and rest fully-present / off in the no-pointer preview rig).
         animationBindings: [
           {
-            // depth-pop: rush forward from deep in Z, scale up + fade in.
-            // Staggered duration per card → the grid pops in as a wave.
-            id: `ab-fg-pop-${i}`,
-            primitive: 'depth-pop',
+            // float (TIME, dominant ambient): the card bobs + drifts gently in a
+            // continuous idle loop — FULL-SIZE and present at every phase. This
+            // replaces depth-pop as the time motion so the preview never empties.
+            id: `ab-fg-float-${i}`,
+            primitive: 'float',
             driver: 'time',
-            params: { duration: popDuration, depth: 7, curve: 'expoOut' },
+            params: { speed: floatSpeed, amplitude: floatAmp, tiltDeg: floatTilt },
             order: 0,
           },
           {
-            // scroll-stagger-rise: on scroll, the card's rows arrive one by one.
-            id: `ab-fg-rise-${i}`,
-            primitive: 'scroll-stagger-rise',
-            driver: 'scroll',
-            params: { bands: 5, stagger: 0.18, lift: 1.2 },
+            // pointer-tilt-3d (POINTER): whole-card parallax tilt toward the
+            // cursor, like a premium trading card. Rests dead-on (steady, fully
+            // present) with no pointer, so it is preview-safe.
+            id: `ab-fg-tilt-${i}`,
+            primitive: 'pointer-tilt-3d',
+            driver: 'pointer',
+            params: { maxTiltDeg: 16, smoothing: 0.22, lift: 0.14 },
             order: 1,
+          },
+          {
+            // proximity-rim-glow (POINTER): a warm brass rim kindles along the
+            // pointer-facing edge as the cursor nears — additive overlay, the
+            // card's PBR material is never touched. Off at rest → never wipes.
+            id: `ab-fg-rim-${i}`,
+            primitive: 'proximity-rim-glow',
+            driver: 'pointer',
+            params: { intensity: 1.5, rimTightness: 3, proximityRange: 0.55, directionalBias: 0.6 },
+            order: 2,
           },
         ],
       });
@@ -187,9 +217,9 @@ const featuregridDepthPop: ElementClusterDefinition = {
   id: 'featuregrid-depth-pop',
   label: 'Depth Pop Feature Grid',
   category: 'feature-grid',
-  caption: 'A 3×2 grid of PBR feature cards that pop forward out of depth',
+  caption: 'A 3×2 grid of premium PBR feature cards that gently float and tilt to the cursor',
   description:
-    'Premium feature tiles that rush forward from deep in Z as they enter view, popping in as a left-to-right wave with scroll-staggered row reveals.',
+    'Premium feature tiles that read complete at all times — the grid bobs in a buoyant continuous float, parallax-tilts in 3D toward the cursor, and kindles a warm brass rim glow on proximity.',
   members: [
     // ── Section heading — REAL MSDF text (INV-11), framed above the grid.
     {
@@ -226,9 +256,12 @@ const featuregridDepthPop: ElementClusterDefinition = {
   ],
   preview: {
     // Frame the whole 3×2 grid + heading head-on with a slight high three-
-    // quarter so the pop-forward depth is legible in a ~4:3 tile.
+    // quarter so the beveled card depth catches the rim light in a ~4:3 tile.
+    // The cards are full-size and complete at EVERY phase (continuous float),
+    // so the frozen still is always a complete grid; 0.25 lands the bob near
+    // its gentle mid-rise for a lively-but-legible poster.
     camera: { distance: 6.6, polar: Math.PI / 2.3, azimuth: Math.PI * 0.06 },
-    frozenPhase: 0.4,
+    frozenPhase: 0.25,
     loopSeconds: 6,
     tier: 'T1',
   },
@@ -241,8 +274,9 @@ const featuregridDepthPop: ElementClusterDefinition = {
     shadowSoftness: 0.55,
   },
   designRefs: [
-    'depth-pop reveal-on-enter',
-    'scroll-stagger choreography',
+    'continuous buoyant float (always-present idle motion)',
+    'pointer parallax 3D card tilt',
+    'proximity rim-glow edge light (Cursify Glow take)',
     'PBR brushed-metal + obsidian feature cards',
     'transmission glass tile',
   ],

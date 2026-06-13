@@ -1,21 +1,32 @@
-// slider-distortion-fade — a photoreal full-bleed slider whose slides crossfade
-// THROUGH a liquid swirl/ripple distortion instead of a flat opacity dissolve
-// (the Slider-Revolution-killing move). Composition reads as a real slider:
-//   • slide-current  — the centerpiece glass slide caught mid-crossfade, its
-//                       surface twisted into a whirlpool that unwinds to flat.
-//   • slide-incoming — the next slide queued behind-right, rippling in from a
-//                       strong sine warp that calms to a resting surface.
+// slider-distortion-fade — a photoreal full-bleed slider that ALWAYS presents a
+// complete, premium front slide. The earlier build crossfaded THROUGH reveal
+// transitions (swirl-warp + wave-distort-in) on driver:time, which fade opacity
+// 0→1 and twist the geometry away — so on the cluster preview's time loop the
+// live slide went empty/garbled for part of the cycle. The preview rig does NOT
+// drive scroll/pointer; a reveal/transition primitive there leaves the element
+// absent. FIX: both moving members now carry CONTINUOUS, full-coverage motions
+// that never wipe coverage, so the slider reads complete at every loop phase.
+//
+// Composition reads as a real slider:
+//   • slide-current  — the centerpiece GLASS slide, always full-frame, gently
+//                       floating (buoyant idle bob/tilt) so the transmission +
+//                       dispersion glass refracts the rail + dots behind it.
+//   • slide-incoming — the next slide queued behind-right, a polished ice-steel
+//                       panel raked by a continuous diagonal light-sweep.
 //   • slide-outgoing — the departing slide behind-left (polished obsidian).
 //   • frame-rail     — a polished-brass track the slides ride on.
 //   • dot-active / dot-rest-1 / dot-rest-2 — brass + ice pagination dots.
 //   • caption        — a real MSDF label (INV-11, never diffusion).
 //
-// INTEGRATED animation:
-//   • slide-current  carries `swirl-warp` (registry, displacement category,
-//     subject:card, driver:time, VERIFIED) — the whirlpool crossfade twist.
-//   • slide-incoming carries `wave-distort-in` (registry, displacement,
-//     subject:plane, driver:time, VERIFIED) — the rippling settle of the next
-//     slide. Together they read as one liquid distortion crossfade.
+// INTEGRATED animation (both CONTINUOUS, coverage-safe; never reveal/transition):
+//   • slide-current  carries `float` (registry, transform category, subject:card,
+//     driver:time, looping) — a buoyant idle bob/tilt that NEVER swaps the glass
+//     material or touches opacity, so the premium transmission+dispersion glass
+//     stays full-frame at every phase.
+//   • slide-incoming carries `light-sweep` (registry, shimmer category,
+//     subject:card, driver:time, looping) — a single clean specular band glances
+//     diagonally across the panel forever, full coverage at every phase. Together
+//     they read as a live, premium glass slider — never an empty crossfade gap.
 //
 // Photorealism is procedural PBR + IBL (free): glass transmission/dispersion on
 // the live slide, polished obsidian clearcoat on the outgoing slide, brushed/
@@ -114,9 +125,10 @@ const members: ClusterMemberTemplate[] = [
     receivesLighting: true,
   },
 
-  // ── slide-incoming — the NEXT slide, queued behind-right, rippling in from a
-  // strong sine warp that calms to flat. A lit plane (so the warp displaces
-  // visible vertices) wearing a cool ice-steel PBR. Carries `wave-distort-in`.
+  // ── slide-incoming — the NEXT slide, queued behind-right: a polished
+  // ice-steel panel that stays FULL-FRAME at every phase while a continuous
+  // diagonal specular band rakes across it (light-sweep). A lit plane wearing a
+  // cool ice-steel PBR. Carries `light-sweep` (continuous, coverage-safe).
   {
     localId: 'slide-incoming',
     subtype: 'card',
@@ -126,8 +138,8 @@ const members: ClusterMemberTemplate[] = [
     pose: poseAt(1.35, 0.06, -0.7, { rotationY: -0.42, scaleX: 0.86, scaleY: 0.86, scaleZ: 0.86 }),
     footprint: { width: SLIDE_W, height: SLIDE_H },
     meshPrimitive: {
-      // A finely-tessellated plane so the CPU vertex ripple of wave-distort-in
-      // has geometry to displace (the warp travels across the surface).
+      // A finely-tessellated plane so the lit panel reads smoothly under the
+      // raking specular band (light-sweep lives in emissive over the surface).
       kind: 'plane',
       params: { width: SLIDE_W, height: SLIDE_H, segments: 48 },
     },
@@ -140,23 +152,26 @@ const members: ClusterMemberTemplate[] = [
       envMapIntensity: 1.2,
     },
     receivesLighting: true,
-    // INTEGRATED animation: the incoming slide ripples in from a sine warp and
-    // settles flat — the liquid half of the distortion crossfade.
+    // INTEGRATED animation: a single clean specular band glances diagonally
+    // across the panel forever — CONTINUOUS, never reveals/fades. The panel is
+    // fully present at every loop phase (no empty crossfade gap).
     animationBindings: [
       {
-        id: 'ab-slider-distortion-incoming-wave',
-        primitive: 'wave-distort-in',
+        id: 'ab-slider-distortion-incoming-sweep',
+        primitive: 'light-sweep',
         driver: 'time',
-        params: { duration: 2.2, freq: 8, amplitude: 0.5 },
+        params: { speed: 0.8, width: 0.16, angleDeg: 35, intensity: 1.5, tint: '#bfe0f0' },
         order: 0,
       },
     ],
   },
 
-  // ── slide-current — the live centerpiece slide, caught mid-crossfade with its
-  // surface twisted into a whirlpool that unwinds to flat. Premium dispersive
-  // GLASS (transmission + dispersion + clearcoat) so the swirl refracts the
-  // rail + dots behind it. Carries `swirl-warp` (subject:card).
+  // ── slide-current — the live centerpiece slide, ALWAYS full-frame. Premium
+  // dispersive GLASS (transmission + dispersion + clearcoat) so it refracts the
+  // rail + dots behind it. Carries `float` (subject:card) — a buoyant idle
+  // bob/tilt that NEVER swaps the glass material or fades opacity, so the glass
+  // is complete and refracting at every loop phase (the SR-killer move is now a
+  // permanently-present premium glass slide, not an empty distortion gap).
   {
     localId: 'slide-current',
     subtype: 'card',
@@ -182,14 +197,16 @@ const members: ClusterMemberTemplate[] = [
       envMapIntensity: 1.6,
     },
     receivesLighting: true,
-    // INTEGRATED animation: the whirlpool crossfade twist that unwinds to flat
-    // as the slide resolves — the SR-killer distortion move.
+    // INTEGRATED animation: a gentle buoyant float (bob + slow tilt). CONTINUOUS
+    // and transform-only — it never swaps the glass material nor touches
+    // opacity/coverage, so the premium transmission+dispersion glass slide stays
+    // complete and refracting at EVERY loop phase.
     animationBindings: [
       {
-        id: 'ab-slider-distortion-current-swirl',
-        primitive: 'swirl-warp',
+        id: 'ab-slider-distortion-current-float',
+        primitive: 'float',
         driver: 'time',
-        params: { duration: 2.2, swirl: 4.5, curve: 'expoOut', tint: '#c9a86a' },
+        params: { speed: 0.9, amplitude: 0.07, tiltDeg: 3.5 },
         order: 0,
       },
     ],
@@ -296,15 +313,16 @@ const sliderDistortionFade: ElementClusterDefinition = {
   id: 'slider-distortion-fade',
   label: 'Distortion Fade Slider',
   category: 'slider',
-  caption: 'Slides crossfade through a liquid swirl + ripple distortion',
-  description: 'A glass slide twists out of a whirlpool while the next ripples in — a 3D distortion crossfade.',
+  caption: 'A premium glass slide on a brass rail, always full-frame',
+  description: 'A dispersive glass slide floats on a polished-brass rail while the next panel is raked by a continuous light-sweep — a complete, premium 3D slider at every phase.',
   members,
   preview: {
     // Frame the full slider — live slide centered, flanking slides + rail + dots
     // in the ~4:3 tile, three-quarter from slightly above so the depth-stack and
-    // glass refraction read.
+    // glass refraction read. With continuous motions the slider is complete at
+    // every phase, so the frozen still is always a full premium frame.
     camera: { distance: 6.4, polar: Math.PI / 2.35, azimuth: Math.PI * 0.06 },
-    frozenPhase: 0.4,
+    frozenPhase: 0.45,
     loopSeconds: 6,
     tier: 'T2',
   },
@@ -317,8 +335,8 @@ const sliderDistortionFade: ElementClusterDefinition = {
     shadowSoftness: 0.55,
   },
   designRefs: [
-    'swirl/whirlpool distortion transition',
-    'wave-ripple settle transition',
+    'buoyant float / idle motion',
+    'continuous diagonal light-sweep specular',
     'PBR transmission + dispersion glass',
     'polished-brass machined hardware',
   ],

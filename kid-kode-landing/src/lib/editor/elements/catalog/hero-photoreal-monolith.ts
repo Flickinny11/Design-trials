@@ -52,11 +52,16 @@ export const heroPhotorealMonolith: ElementClusterDefinition = {
         params: { width: 5, height: 3 },
       },
       materialSpec: {
-        baseColor: '#2b3340',
-        metalness: 0.35,
-        roughness: 0.55,
-        clearcoat: 0.2,
-        envMapIntensity: 0.8,
+        baseColor: '#3a4554',
+        metalness: 0.4,
+        roughness: 0.45,
+        clearcoat: 0.3,
+        // Lift the backdrop's IBL response + a whisper of warm self-glow so it
+        // reads as a softly-lit pewter slab (never a black void) and gives the
+        // monolith a bright, structured surface to reflect.
+        emissive: '#1d2733',
+        emissiveIntensity: 0.35,
+        envMapIntensity: 1.8,
       },
       receivesLighting: true,
     },
@@ -84,14 +89,26 @@ export const heroPhotorealMonolith: ElementClusterDefinition = {
         params: { radius: 0.85, segments: 64 },
       },
       materialSpec: {
-        baseColor: '#cdb98a',
-        metalness: 1.0,
-        roughness: 0.16,
+        // Brighter warm-brass albedo. Pulling metalness off a pure 1.0 mirror
+        // means the surface no longer reflects the dark void as near-black —
+        // the lit albedo + a stronger IBL now carry the centerpiece.
+        baseColor: '#e6cf9a',
+        metalness: 0.82,
+        roughness: 0.22,
         clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        iridescence: 0.9,
-        iridescenceIOR: 1.6,
-        envMapIntensity: 1.4,
+        clearcoatRoughness: 0.05,
+        // Lifted iridescence for a richer soap-bubble / oil-slick sheen that
+        // catches the cool fill + gold rim across the curvature.
+        iridescence: 1.0,
+        iridescenceIOR: 1.8,
+        // Warm brass self-glow so the monolith ALWAYS reads as a luminous,
+        // premium centerpiece and can never collapse to a black sphere — the
+        // rim stays lit even if the IBL is weak on a given device.
+        emissive: '#6b5220',
+        emissiveIntensity: 0.55,
+        // Much stronger IBL reflection — the dominant brightening lever for a
+        // metallic hero.
+        envMapIntensity: 3.4,
       },
       receivesLighting: true,
       // INTEGRATED animation: a slow float (gentle bob + tilt) so the
@@ -153,11 +170,46 @@ export const heroPhotorealMonolith: ElementClusterDefinition = {
     loopSeconds: 5,
     tier: 'T1',
   },
+  // Explicit, bright Observatory-Brass 3-point rig + lifted IBL/ambient so the
+  // metallic monolith is fully lit from all sides — a stunning, premium hero,
+  // never a dark sphere with two pinpoint speculars.
   sceneLighting: {
     tier: 'auto',
-    envIntensity: 1.3,
-    ambientIntensity: 0.28,
+    envIntensity: 2.4,
+    ambientIntensity: 0.55,
     shadowSoftness: 0.55,
+    lights: [
+      // Warm brass KEY — strong front-upper-right, the primary modeling light.
+      {
+        id: 'hero-key',
+        type: 'directional',
+        color: '#ffe6b8',
+        intensity: 3.2,
+        position: { x: 2.6, y: 2.4, z: 3.2 },
+        target: { x: 0, y: 0.1, z: 0 },
+        castShadow: true,
+      },
+      // Cool ice/steel FILL — opens the shadow side so the sphere reads round.
+      {
+        id: 'hero-fill',
+        type: 'directional',
+        color: '#bcd4e6',
+        intensity: 1.6,
+        position: { x: -3.0, y: 0.6, z: 1.6 },
+        target: { x: 0, y: 0.1, z: 0 },
+        castShadow: false,
+      },
+      // Gold RIM — back-upper light carving a bright premium edge highlight.
+      {
+        id: 'hero-rim',
+        type: 'rim',
+        color: '#ffd277',
+        intensity: 2.4,
+        position: { x: -1.2, y: 2.6, z: -2.8 },
+        target: { x: 0, y: 0.1, z: 0 },
+        castShadow: false,
+      },
+    ],
   },
   designRefs: ['iridescent hero centerpiece', 'kinetic typography reveal'],
   tier: 'T1',

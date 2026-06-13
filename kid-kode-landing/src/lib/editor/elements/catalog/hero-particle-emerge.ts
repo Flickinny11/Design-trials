@@ -1,30 +1,38 @@
-// hero-particle-emerge — a photoreal 3D hero whose mark ASSEMBLES from a
-// particle cloud as the headline reveals (§13 element; catalog roster "HEROES").
-// The SR-smashing move: a scattered chaos cloud of points converges onto a
-// crisp sphere-shell formation around a polished obsidian mark-disc, while a
-// brushed-brass framing ring catches the studio IBL and an MSDF headline sweeps
-// in edge-to-edge through a soft reveal front. Where Slider Revolution fakes
-// "particle to logo" with sprite-sheet overlays, this is a real THREE.Points
-// field driven by a deterministic assembly primitive + real PBR centerpiece +
-// real MSDF letterforms (INV-11, never diffusion-baked text).
+// hero-particle-emerge — a photoreal 3D hero: a polished obsidian mark sits
+// FULLY PRESENT inside a brushed-brass ring while an ambient point-cloud orbits
+// around it and an MSDF headline glows (§13 element; catalog roster "HEROES").
+// The mark never assembles-from-nothing and the headline is never masked away —
+// every member runs a CONTINUOUS, always-visible motion, so the composition is
+// complete and premium at every phase of the hover-preview loop. Where Slider
+// Revolution fakes "particle to logo" with sprite-sheet overlays, this is a real
+// THREE.Points ring system + real PBR centerpiece + real MSDF letterforms
+// (INV-11, never diffusion-baked text).
+//
+// PREVIEW-RIG FIT: the cluster rig plays time-driven bindings on a loop and does
+// NOT drive scroll/pointer in the preview. Reveal/transition primitives (e.g.
+// particle-assemble, text-mask-reveal) would leave the element absent for part
+// of the loop, so this element uses only CONTINUOUS primitives whose categories
+// the binding player actually mounts (transform / text / particles — NOT the
+// material-swap shimmer/glass/etc. categories the player skips on a mounted
+// artifact).
 //
 // Composition (cluster-local, origin 0,0,0):
 //   • backdrop      — large softly-lit charcoal panel (depth + reflections).
-//   • frame-ring    — brushed-brass torus framing the mark (Observatory Brass).
-//   • mark-disc     — polished obsidian cylinder centerpiece (the assembled mark).
-//   • particle-field— an empty member carrying `particle-assemble`: the chaos
-//                     cloud that converges onto a sphere shell around the mark.
-//   • headline      — REAL MSDF text below, revealed via `text-mask-reveal`.
+//   • frame-ring    — brushed-brass torus framing the mark; CONTINUOUS slow spin.
+//   • mark-disc     — polished obsidian cylinder centerpiece; CONTINUOUS float.
+//   • particle-field— an empty member carrying `orbit-rings`: an ambient nested
+//                     ring system of points that continuously orbits the mark.
+//   • headline      — REAL MSDF text below, with a continuous emissive glow pulse.
 //
-// INTEGRATED animation (both verified registered):
-//   • particle-field — `particle-assemble` (particles category): scatter → snap
-//     into a sphere-shell formation. driver:'time'. This IS the emerge move.
-//   • headline       — `text-mask-reveal` (text category): a soft alpha front
-//     sweeps the line left→right as the cloud lands. driver:'time'.
+// INTEGRATED animation (all CONTINUOUS / always-visible, all driver:'time'):
+//   • frame-ring     — `spin` (transform): slow brushed-brass ring rotation.
+//   • mark-disc      — `float` (transform): gentle bob + tilt idle loop.
+//   • particle-field — `orbit-rings` (particles): nested Keplerian orbital rings.
+//   • headline       — `text-glow-pulse` (text): calm emissive shimmer pulse.
 //
 // Photorealism is procedural PBR + studio IBL (free) — no hero imagery needed.
 // Palette: Observatory Brass (brass/gold + ice-steel + charcoal/obsidian). No
-// purple. Tier: T2 full-fidelity (the additive particle field + GI reflections
+// purple. Tier: T2 full-fidelity (the additive orbit field + GI reflections
 // shine at T2); MUST still read clean at T0 — the obsidian disc, brass ring and
 // crisp MSDF headline remain a legible, composed hero without GI (INV-9).
 
@@ -53,9 +61,9 @@ const heroParticleEmerge: ElementClusterDefinition = {
   id: 'hero-particle-emerge',
   label: 'Particle Emerge Hero',
   category: 'hero',
-  caption: 'A mark assembles from a particle cloud as the headline reveals',
+  caption: 'A point-cloud orbits a glowing obsidian mark inside a spinning brass ring',
   description:
-    'A real point-cloud converges onto an obsidian mark inside a brass ring, with an MSDF headline sweeping in.',
+    'A real point-cloud orbits a present obsidian mark inside a slow-spinning brass ring, with a glowing MSDF headline.',
   members: [
     // ── Backdrop ── large, softly-lit charcoal panel set well behind the
     // composition so the brass ring + obsidian disc have something to reflect
@@ -108,6 +116,19 @@ const heroParticleEmerge: ElementClusterDefinition = {
         envMapIntensity: 1.3,
       },
       receivesLighting: true,
+      // ALWAYS-VISIBLE motion: a slow continuous spin about the ring's facing
+      // axis (Z). Because the torus is rotationally symmetric, spinning it reads
+      // as a brushed-brass ring shimmer/rotation that catches the studio IBL —
+      // the ring is fully present at every phase (transform primitive, looping).
+      animationBindings: [
+        {
+          id: 'ab-hero-emerge-ring-spin',
+          primitive: 'spin',
+          driver: 'time',
+          params: { cycle: 5.4, turns: 1, axis: 'z' },
+          order: 0,
+        },
+      ],
     },
     // ── Mark disc ── the polished-obsidian centerpiece the cloud assembles
     // around: a thin upright cylinder reading as a dark medallion/mark. Obsidian
@@ -134,33 +155,49 @@ const heroParticleEmerge: ElementClusterDefinition = {
         envMapIntensity: 1.5,
       },
       receivesLighting: true,
-    },
-    // ── Particle field ── an EMPTY member (no geometry) carrying the
-    // `particle-assemble` primitive: the primitive builds its own THREE.Points,
-    // scattering ~520 points then converging onto a sphere shell (~radius 1.05)
-    // centered on the mark. This is the literal "emerge" move. Sits just in
-    // front of the disc so the assembling shell wraps the medallion.
-    {
-      localId: 'particle-field',
-      subtype: 'element',
-      serviceTag: 'decor',
-      caption: 'Emerge particle field',
-      renderMode: 'mesh',
-      pose: pose({ y: 0.15, z: 0.05 }),
-      footprint: { width: 2.3, height: 2.3 },
-      // INTEGRATED animation: the chaos-cloud → sphere-shell assembly.
+      // ALWAYS-VISIBLE motion: the obsidian mark gently floats (sine bob + slow
+      // tilt), a continuous idle loop (duration Infinity) so the centerpiece is
+      // FULLY PRESENT and premium at every phase — never assembled-from-nothing.
       animationBindings: [
         {
-          id: 'ab-hero-emerge-assemble',
-          primitive: 'particle-assemble',
+          id: 'ab-hero-emerge-mark-float',
+          primitive: 'float',
           driver: 'time',
-          params: { duration: 2.4, shape: 'sphere', scatter: 3.4, count: 520, size: 0.045 },
+          params: { speed: 0.9, amplitude: 0.06, tiltDeg: 3 },
           order: 0,
         },
       ],
     },
-    // ── Headline ── REAL MSDF text (INV-11) below the mark, revealed by a soft
-    // alpha front sweeping left→right as the cloud lands. Modest fontSize so the
+    // ── Particle field ── an EMPTY member (no geometry) carrying the
+    // `orbit-rings` primitive: the primitive builds its own THREE.Points (540
+    // icy-blue additive points) orbiting in nested Keplerian rings (radius
+    // 0.45→1.7) centered on the mark. This is an AMBIENT ring system that is
+    // ALWAYS PRESENT and continuously orbiting — it drifts AROUND the present
+    // obsidian mark rather than assembling-from-nothing on the loop, so the
+    // composition never goes scattered/empty for any part of the time loop.
+    {
+      localId: 'particle-field',
+      subtype: 'element',
+      serviceTag: 'decor',
+      caption: 'Ambient orbit-ring field',
+      renderMode: 'mesh',
+      pose: pose({ y: 0.15, z: 0.05 }),
+      footprint: { width: 2.3, height: 2.3 },
+      // INTEGRATED animation: continuous nested orbital rings (looping forever,
+      // duration Infinity) — an ambient drift around the always-present mark.
+      animationBindings: [
+        {
+          id: 'ab-hero-emerge-orbit',
+          primitive: 'orbit-rings',
+          driver: 'time',
+          params: { rings: 5, speed: 0.9, tilt: 0.26, size: 0.035 },
+          order: 0,
+        },
+      ],
+    },
+    // ── Headline ── REAL MSDF text (INV-11) below the mark. ALWAYS LEGIBLE: a
+    // continuous soft emissive glow pulse (never a mask that hides glyphs). The
+    // full word "EMERGE" reads at every phase of the loop. Modest fontSize so the
     // line frames inside the tile.
     {
       localId: 'headline',
@@ -180,14 +217,16 @@ const heroParticleEmerge: ElementClusterDefinition = {
         fill: { kind: 'gradient', from: '#e8d6a6', to: '#9fc3d6', angleDeg: 18 },
         decompose: 'glyph',
       },
-      // INTEGRATED animation: a soft reveal front sweeps the headline edge-to-
-      // edge, timed to land with the particle assembly.
+      // INTEGRATED animation: a calm continuous emissive glow pulse with a gentle
+      // per-glyph phase offset (a travelling shimmer along the word). Looping
+      // (duration Infinity) — the headline is FULLY PRESENT and readable at every
+      // phase; nothing is ever masked or wiped.
       animationBindings: [
         {
           id: 'ab-hero-emerge-headline',
-          primitive: 'text-mask-reveal',
+          primitive: 'text-glow-pulse',
           driver: 'time',
-          params: { duration: 1.8, softness: 0.22, direction: 'ltr' },
+          params: { speed: 1.3, loGlow: 0.45, hiGlow: 1.7, phaseStep: 0.3 },
           order: 0,
         },
       ],
@@ -210,9 +249,9 @@ const heroParticleEmerge: ElementClusterDefinition = {
     shadowSoftness: 0.55,
   },
   designRefs: [
-    'image-to-particles emergence',
-    'particle-assemble formation',
-    'kinetic typography reveal',
+    'orbital particle ring system',
+    'continuous idle float + ring spin',
+    'kinetic typography glow shimmer',
     'PBR obsidian + brushed-brass studio IBL',
   ],
   tier: 'T2',

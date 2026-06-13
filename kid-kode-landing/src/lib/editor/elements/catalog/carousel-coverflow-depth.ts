@@ -18,13 +18,22 @@
 // real glyphs — INV-11) frames the row beneath the focus card.
 //
 // INTEGRATED animation:
-//   • wing cards — `scroll-orbit-scrub` (driver:'scroll'): as the page scrolls
-//     the whole arc swings around the focus point, each card flying past the
-//     camera with bounded facing parallax — the Coverflow scrub. Verified
-//     registered (src/lib/prism/animatable/primitives/scroll-orbit-scrub.ts).
-//   • focus card — `depth-pop` (driver:'time'): the center tile rushes forward
-//     from depth and rests on its focus plane, breathing the "in-focus" pop.
-//     Verified registered (src/lib/prism/animatable/primitives/depth-pop.ts).
+//   • wing cards — `scroll-orbit-scrub` (driver:'time'): the whole arc swings
+//     around the focus point on a continuous loop, each card flying past the
+//     camera with BOUNDED facing parallax (yaw saturates short of edge-on, so a
+//     wing never turns its blank back face) — the Coverflow scrub, always fully
+//     present at every phase (pure transform; no opacity/scale-from-0). On a
+//     real placed page the same binding re-drivers to 'scroll' via the Animation
+//     Picker. Verified registered (src/lib/prism/animatable/primitives/scroll-orbit-scrub.ts).
+//   • focus card — `float` (driver:'time'): the in-focus glass tile breathes a
+//     gentle, CONTINUOUS idle bob+tilt so it always reads alive and selected,
+//     while staying FULLY PRESENT at every loop phase (a pure transform — never
+//     fades or scales from zero). It REPLACES the prior `depth-pop`, which (as a
+//     reveal primitive on driver:'time') collapsed the focus card to opacity-0 /
+//     scale-0.3 at the start of every cycle — the advocate "pops from 0" defect.
+//     `float` leaves the glass `materialSpec` untouched so the transmission +
+//     clearcoat highlight is preserved. Verified registered
+//     (src/lib/prism/animatable/primitives/float.ts).
 //
 // This is a real, editable cluster: every card / caption is a PrismNode you can
 // move, recolor, re-skin, or re-bind post-place. Photorealism is procedural PBR
@@ -162,27 +171,37 @@ function buildCards(): ClusterMemberTemplate[] {
     };
 
     if (isFocus) {
-      // INTEGRATED animation (focus): a slow depth-pop so the in-focus tile
-      // rushes forward from depth and rests on its focus plane — the breathing
-      // "this one is selected" pop. driver:'time' for ambient motion.
+      // INTEGRATED animation (focus): a gentle CONTINUOUS float so the in-focus
+      // glass tile reads alive and selected — a buoyant idle bob + slow tilt that
+      // catches the IBL differently as it moves. driver:'time' ambient. CRUCIAL:
+      // `float` is a pure, always-present transform (duration = Infinity, no
+      // opacity/scale ramp), so the focus card is FULLY PRESENT at every phase —
+      // it never "pops from 0" the way the prior depth-pop did. The glass
+      // materialSpec is left untouched (float touches only position.y/rotation.z),
+      // so the transmission + clearcoat highlight survives intact.
       card.animationBindings = [
         {
-          id: 'ab-coverflow-focus-pop',
-          primitive: 'depth-pop',
+          id: 'ab-coverflow-focus-float',
+          primitive: 'float',
           driver: 'time',
-          params: { duration: 1.4, depth: 1.6, curve: 'expoOut' },
+          params: { speed: 0.85, amplitude: 0.05, tiltDeg: 2.5 },
           order: 0,
         },
       ];
     } else {
       // INTEGRATED animation (wings): scroll-orbit-scrub swings the arc around
-      // the focus as the page scrolls — each wing flies past the camera with
-      // bounded facing parallax. Outer wings scrub a wider arc (more travel).
+      // the focus — each wing flies past the camera with BOUNDED facing parallax
+      // (yaw saturates short of edge-on; no blank back face) and a banked roll.
+      // driver:'time' so the preview loop continuously orbits the cards through
+      // focus (the primitive's CPU phase fallback scrubs the full sweep when no
+      // scroll signal is present) — always fully present, no opacity/scale ramp.
+      // Outer wings scrub a wider arc (more travel). On a placed page the
+      // Animation Picker can re-driver this binding back to 'scroll'.
       card.animationBindings = [
         {
           id: `ab-coverflow-scrub-${offset > 0 ? 'r' : 'l'}${dist}`,
           primitive: 'scroll-orbit-scrub',
-          driver: 'scroll',
+          driver: 'time',
           params: {
             orbitDeg: 120 + dist * 30,
             arcDepth: 0.35,

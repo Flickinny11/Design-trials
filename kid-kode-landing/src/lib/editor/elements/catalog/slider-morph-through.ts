@@ -1,31 +1,41 @@
 // slider-morph-through — THE Slider-Revolution killer (§13 prebuilt-library
-// element, category 'slider'). Full-bleed panels that morph THROUGH 3D between
-// slides: a front "stage" plane runs a real displacement-mapped wipe while a
-// panel set just behind it liquefies into coverage, so a slide doesn't crossfade
-// — it dissolves through depth into the next. Framed by polished-chrome rails, a
-// refractive liquid-glass bezel with a sweeping specular, a modest MSDF caption,
-// and a row of chrome progress pips. Where Slider Revolution fakes 3D with CSS
-// transforms, this is GPU displacement + metaball coverage on real PBR geometry
-// under studio IBL.
+// element, category 'slider'). Two STACKED full-bleed panels read as a slide
+// morphing THROUGH 3D: an oversized back panel always fills the frame while a
+// stage-sized front panel subtly displaces (a slow parallax drift) and catches a
+// continuous specular sweep, so the back reads THROUGH the front — depth, not a
+// CSS crossfade. Framed by polished-chrome rails, a refractive liquid-glass bezel
+// with a sweeping specular, a modest MSDF caption, and a row of chrome progress
+// pips. Where Slider Revolution fakes 3D with CSS transforms, this is layered PBR
+// geometry with continuous specular + parallax motion under studio IBL.
+//
+// COVERAGE-PRESERVING by construction (the preview rig plays animationBindings on
+// a time loop and never drives scroll/pointer): EVERY bound primitive is a
+// CONTINUOUS, always-visible motion — none ever wipes a panel to empty. The two
+// stacked panels guarantee the 4:3 tile is FULL at every phase of the loop.
 //
 // INTEGRATED animation (all real registry primitives, verified registered):
-//   • stage      — 'displacement-transition' (displacement category): a
-//                  noise-roughened wipe front sweeps the full-bleed plane, mixing
-//                  the two slide tints. THE morph-through-3D move.
-//   • depth-panel — 'liquefy-reveal' (displacement category): the panel behind
-//                  the stage coalesces from a gooey metaball field into solid
-//                  coverage, reading as the next slide forming THROUGH the front.
-//   • glass-bezel — 'light-sweep' (shimmer category): a specular band sweeps the
-//                  refractive bezel so the framing reads as polished liquid glass.
+//   • back-panel  — 'metallic-sheen' (shimmer): an oversized full-bleed panel
+//                   carries a slow brushed-metal sheen band. Material stays fully
+//                   opaque + lit — this layer ALWAYS fills the frame behind the
+//                   stage, so the tile is never empty. The slide showing THROUGH.
+//   • stage       — 'light-sweep' (shimmer): the front full-bleed panel runs a
+//                   crisp specular band glancing across its surface. The material
+//                   swap keeps the panel fully covered + lit at every phase.
+//   • stage(drift)— 'float' (transform): a gentle slow drift/tilt of the front
+//                   panel reads as it subtly DISPLACING over the back — the
+//                   morph-through-3D identity, with the back panel showing through.
+//   • glass-bezel — 'light-sweep' (shimmer): a specular band sweeps the
+//                   refractive bezel so the framing reads as polished liquid glass.
 //
 // This is a TEMPLATE: every member is a real, editable PrismNode (move / recolor /
 // re-skin / swap animation post-place). Photorealism is procedural PBR + IBL
-// (free) — no hero imagery needed; the morph IS the spectacle.
+// (free) — no hero imagery needed; the layered depth + specular IS the spectacle.
 //
 // Tier: T2 full-fidelity (the transmission bezel + GI catch on the chrome rails
-// land at T2). MUST still read clean at T0 — degraded, the stage still shows the
-// displacement wipe, the rails read as lit chrome bars, the bezel as a glossy
-// frame, the caption as crisp MSDF. Never broken. INV-9.
+// land at T2). MUST still read clean at T0 — degraded, the stacked panels still
+// fill the frame with the specular sweep + sheen, the rails read as lit chrome
+// bars, the bezel as a glossy frame, the caption as crisp MSDF. Never broken,
+// never empty. INV-9.
 
 import { registerElement } from '../registry';
 import type {
@@ -37,7 +47,12 @@ import type { ScenePosition } from '@/lib/prism-graph/types';
 // ── Full-bleed stage footprint (scene units) — a wide 16:9-ish panel. ─────────
 const STAGE_W = 3.2;
 const STAGE_H = 1.8;
-const PANEL_DEPTH_GAP = 0.12; // how far the morphing panel sits behind the stage.
+const PANEL_DEPTH_GAP = 0.12; // how far the back panel sits behind the stage.
+// The back panel is OVERSIZED so that however the floating front stage drifts /
+// tilts, this always-full layer still covers the whole frame — the tile is never
+// empty. The overscan comfortably exceeds the front 'float' amplitude.
+const BACK_W = STAGE_W + 0.36;
+const BACK_H = STAGE_H + 0.36;
 
 // Identity local pose helper (cluster origin is 0,0,0; the instantiator offsets
 // every member by the drop anchor). Keeps each member a full 9-field
@@ -128,69 +143,86 @@ const sliderMorphThrough: ElementClusterDefinition = {
   description:
     'A full-bleed slide displaces and liquefies into the next — a real GPU morph-through, not a CSS crossfade.',
   members: [
-    // ── Depth panel — the slide FORMING behind the stage. A full-bleed plane set
-    // back by a small z gap, running 'liquefy-reveal' so it coalesces from a
-    // gooey metaball field into solid coverage — the next slide emerging THROUGH
-    // the front panel. Lit so its coverage catches the warm key. The primitive
-    // swaps its material for the goo-coverage shader at play time.
+    // ── Back panel — the always-full slide showing THROUGH the front. An
+    // OVERSIZED full-bleed plane set back by a small z gap; sized larger than the
+    // stage so that however the front panel drifts, this layer still fills the
+    // whole frame — the tile is NEVER empty. Lit mesh so it catches the warm key.
+    // Runs 'metallic-sheen': a slow brushed-metal sheen band that NEVER wipes the
+    // panel (material stays fully opaque + lit), so coverage is preserved at every
+    // phase of the time loop.
     {
-      localId: 'depth-panel',
+      localId: 'back-panel',
       subtype: 'element',
       serviceTag: 'decor',
-      caption: 'Slide depth panel',
-      renderMode: 'plane',
+      caption: 'Slide back panel',
+      renderMode: 'mesh',
       pose: pose(0, 0, -PANEL_DEPTH_GAP),
-      footprint: { width: STAGE_W, height: STAGE_H },
-      meshPrimitive: { kind: 'plane', params: { width: STAGE_W, height: STAGE_H } },
+      footprint: { width: BACK_W, height: BACK_H },
+      meshPrimitive: { kind: 'plane', params: { width: BACK_W, height: BACK_H } },
       materialSpec: {
         baseColor: '#1d2533',
-        metalness: 0.3,
-        roughness: 0.6,
-        clearcoat: 0.15,
-        envMapIntensity: 0.7,
+        metalness: 0.55,
+        roughness: 0.42,
+        clearcoat: 0.25,
+        clearcoatRoughness: 0.3,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
-      // INTEGRATED: the gooey liquefy-into-coverage reveal (offset/slow so it
-      // reads as a continuous ambient morph behind the stage wipe).
+      // INTEGRATED: a continuous brushed-metal sheen band. Coverage-preserving —
+      // the panel surface is always fully painted; only a soft specular band
+      // travels across it. This layer guarantees the frame is never empty.
       animationBindings: [
         {
-          id: 'ab-slider-depth-liquefy',
-          primitive: 'liquefy-reveal',
+          id: 'ab-slider-back-sheen',
+          primitive: 'metallic-sheen',
           driver: 'time',
-          params: { duration: 3.2, wobble: 0.22, viscosity: 0.85 },
+          params: { speed: 0.5, width: 0.22, brightness: 1.1, tint: '#9fc3d6' },
           order: 0,
         },
       ],
     },
-    // ── Stage — the FRONT full-bleed slide. Runs 'displacement-transition': a
-    // noise-roughened wipe front sweeps horizontally, mixing two slide tints.
-    // THE morph-through-3D move that smashes Slider Revolution. The primitive
-    // swaps its material for the displacement-wipe shader at play time.
+    // ── Stage — the FRONT full-bleed slide. A lit mesh plane that ALWAYS fills
+    // its footprint. Runs 'light-sweep' (a crisp specular band glancing across the
+    // surface — material swap keeps it fully opaque + lit) and a gentle 'float'
+    // drift so the front panel subtly DISPLACES over the back panel. That layered
+    // drift + the back showing through IS the morph-through-3D identity — and
+    // because both motions are continuous and coverage-preserving, the panel is
+    // never wiped to empty. No reveal/transition primitive here.
     {
       localId: 'stage',
       subtype: 'element',
       serviceTag: 'decor',
       caption: 'Slide stage',
-      renderMode: 'plane',
+      renderMode: 'mesh',
       pose: pose(0, 0, 0),
       footprint: { width: STAGE_W, height: STAGE_H },
       meshPrimitive: { kind: 'plane', params: { width: STAGE_W, height: STAGE_H } },
       materialSpec: {
         baseColor: '#23304f',
-        metalness: 0.2,
-        roughness: 0.5,
-        envMapIntensity: 0.9,
+        metalness: 0.35,
+        roughness: 0.4,
+        clearcoat: 0.4,
+        clearcoatRoughness: 0.25,
+        envMapIntensity: 1.1,
       },
-      receivesLighting: false,
-      // INTEGRATED: the displacement-mapped morph-through wipe (the headline
-      // move). Horizontal axis, roughened front.
+      receivesLighting: true,
+      // INTEGRATED: continuous specular sweep + a slow parallax drift. Both keep
+      // the panel fully covered at every phase — the back panel shows THROUGH as
+      // the front gently displaces.
       animationBindings: [
         {
-          id: 'ab-slider-stage-morph',
-          primitive: 'displacement-transition',
+          id: 'ab-slider-stage-sweep',
+          primitive: 'light-sweep',
           driver: 'time',
-          params: { duration: 2.6, amount: 0.42, axis: 'x' },
+          params: { speed: 0.8, width: 0.18, angleDeg: 18, intensity: 1.5, tint: '#f3e6c4' },
           order: 0,
+        },
+        {
+          id: 'ab-slider-stage-drift',
+          primitive: 'float',
+          driver: 'time',
+          params: { speed: 0.6, amplitude: 0.05, tiltDeg: 4 },
+          order: 1,
         },
       ],
     },
@@ -297,8 +329,9 @@ const sliderMorphThrough: ElementClusterDefinition = {
   ],
   preview: {
     // Frame the full-bleed slide head-on with a slight three-quarter tilt so the
-    // depth gap between stage + depth-panel + bezel reads, and the chrome rails
-    // catch the key. 4:3 tile.
+    // depth gap between back-panel + stage + bezel reads, and the chrome rails
+    // catch the key. 4:3 tile. The stacked panels keep the frame full at every
+    // phase, so any frozenPhase lands a complete still.
     camera: { distance: 5.4, polar: Math.PI / 2.2, azimuth: Math.PI * 0.06 },
     frozenPhase: 0.4,
     loopSeconds: 6,
@@ -313,9 +346,9 @@ const sliderMorphThrough: ElementClusterDefinition = {
     shadowSoftness: 0.55,
   },
   designRefs: [
-    'morph-through-3D slide transition',
-    'GPU displacement-mapped wipe',
-    'metaball liquefy reveal',
+    'morph-through-3D layered depth (front panel drifts over a back panel)',
+    'continuous specular light-sweep',
+    'brushed metallic sheen',
     'PBR transmission glass bezel',
     'polished-chrome framing rails',
   ],
