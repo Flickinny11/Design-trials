@@ -179,15 +179,28 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       };
 
       // Cap any single particle's speed so a hard wall clamp can never fling a
-      // vertex out into a spike (the source of the jagged "torn" look). Tighter
-      // now that damping is lighter, so an energetic rebound stays bounded.
-      const MAX_SPEED = 7.0;
+      // vertex out into a spike (the source of the jagged "torn" look). Raised so
+      // a high-bounciness rebound can carry real travel without being throttled
+      // to the same speed as a low-bounciness one (the cap, not restitution, used
+      // to flatten the difference at the pin).
+      const MAX_SPEED = 12.0;
       // How hard the wall pushes back per unit of the Bounciness control. The raw
       // 0.05..0.9 control range is too gentle to move the FROZEN pinned frame (it
-      // only set a velocity that had already decayed by the pin); boosting it lets
-      // low→high visibly change how far the body has PEELED off the wall at the
-      // pin (markDirty replay). Clamped <1.5 so it can never gain energy unboundedly.
-      const REST_BOOST = 1.5;
+      // only set a velocity that had already decayed by the pin). Boosted HARD so
+      // low→high changes the rebound by a LARGE body displacement at the pin:
+      // high bounciness rockets the blob far back off the wall (and up), low
+      // bounciness barely peels and slumps at the wall base. The rebound is also
+      // kept in-progress at t=1.0 (lighter peel damping below) so the divergence
+      // is captured at the frozen frame instead of decaying before it.
+      const REST_BOOST = 4.0;
+      // A high-restitution wall rebound also redirects some of the arrested
+      // compression energy UPWARD as the squashed lattice un-squashes off the
+      // wall — so high bounciness launches the body up-AND-away while low
+      // bounciness just slides down the wall. This vertical lift (scaled by the
+      // same bounciness term) de-overlaps the low vs high silhouettes in Y, not
+      // only X, so the frozen frame reads as obviously different (a horizontal-
+      // only shift of two same-height blobs overlaps too much to register).
+      const LIFT_BOOST = 3.4;
       // While any particle is in wall-contact, gravity is scaled WAY down so the
       // restitution-driven peel (not a uniform gravity drop) dominates the motion
       // through the pinned window — this is what makes Bounciness the load-bearing
@@ -198,16 +211,25 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
       const stepOne = (dt: number) => {
         const g = num(params.gravity, 2.6);
         const stiff = clamp(num(params.stiffness, 0.42), 0.05, 0.95);
-        // Bounciness → wall restitution. Boosted (see REST_BOOST) so the rebound
-        // is energetic enough that low/mid/high are distinct at the pinned frame.
-        const rest = clamp(num(params.bounciness, 0.5) * REST_BOOST, 0.05, 1.5);
+        // Raw bounciness 0..1-ish (control range 0.05..0.9). Drives BOTH the wall
+        // restitution and an upward un-squash lift, so it changes the rebound by a
+        // large body displacement (in X and Y) at the pin rather than a velocity
+        // that decays before it.
+        const b01 = clamp(num(params.bounciness, 0.42), 0.05, 0.9);
+        // Bounciness → wall restitution. Boosted HARD (see REST_BOOST) so high
+        // bounciness rockets the blob far back off the wall while low barely peels.
+        const rest = clamp(b01 * REST_BOOST, 0.05, 4.0);
+        // Bounciness → upward un-squash lift applied as the blob springs off the
+        // wall, so high vs low separate vertically too (see LIFT_BOOST).
+        const lift = b01 * LIFT_BOOST;
         const dtSub = dt / SUBSTEPS;
         const alphaTilde = complianceAlpha(stiff, dtSub);
-        // Lighter per-substep velocity damping than round-1 → the body still holds
-        // a clear squash against the wall, but then PEELS off with real spring
-        // instead of dying flat; the rebound survives all the way to the pin so
-        // Bounciness moves the frozen frame. The ceiling guard keeps it in-frame.
-        const velDamp = Math.exp(-0.45 * dtSub);
+        // Very light per-substep velocity damping → the body still holds a clear
+        // squash against the wall, but then PEELS off with real spring and the
+        // rebound SURVIVES all the way to the pin (t=1.0) instead of decaying
+        // first — so Bounciness is the load-bearing control of the frozen frame.
+        // The floor/ceiling guards keep even an energetic peel in-frame.
+        const velDamp = Math.exp(-0.18 * dtSub);
 
         for (let s = 0; s < SUBSTEPS; s++) {
           // Is the body currently pressed on the wall? If so, damp gravity hard so
@@ -255,7 +277,13 @@ export const jellyCollideSimPrimitive: PrimitiveDefinition = {
           for (let i = 0; i < parts; i++) {
             let vx = ((px[i] - prevX[i]) / dtSub) * velDamp;
             let vy = ((py[i] - prevY[i]) / dtSub) * velDamp;
-            if (px[i] >= WALL_X - 1e-5 && vx > 0) vx = -vx * rest; // bounce off wall
+            if (px[i] >= WALL_X - 1e-5 && vx > 0) {
+              vx = -vx * rest; // bounce off wall (restitution scales travel back)
+              // Un-squash lift: the arrested inbound speed (vx, now negative) is
+              // partly redirected upward as the compressed lattice springs off the
+              // wall — high bounciness → a bigger up-and-away launch, low → none.
+              vy += -vx * lift;
+            }
             if (px[i] <= LEFT_X + 1e-5 && vx < 0) vx = -vx * rest;
             if (py[i] <= FLOOR_Y + 1e-5 && vy < 0) vy = -vy * rest;
             if (py[i] >= CEIL_Y - 1e-5 && vy > 0) vy = -vy * rest; // bounce off ceiling

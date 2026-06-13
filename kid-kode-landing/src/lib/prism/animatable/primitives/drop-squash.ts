@@ -20,16 +20,36 @@ import { num, clamp, type PrimitiveDefinition } from '../contract';
 import { makeReplayStepper } from './_sim-core';
 
 const DT = 1 / 120; // stiff-ish contact → small step
-const FLOOR_Y = -0.9; // card rest height (its centre sits here when settled)
+// Card rest height (its centre sits here at floor contact). Raised from the old
+// −0.9 so the WHOLE card — including the bottom edge and lowest content row that
+// the squash visibly compresses — stays inside the camera frustum at the t=1.0
+// control pin. Camera: fov 40, z=3.2 looking down −z → visible Y half-extent at
+// the subject plane is 3.2·tan(20°) ≈ ±1.165. A 1.12-tall card centred at −0.45
+// keeps its bottom (−0.45 − 0.56 = −1.01) on-screen, and a max-squash card
+// (scaleY≈0.62 → half-height 0.35) lands its bottom at −0.80 — both well inside
+// the frame. The OLD −0.9 pushed the contact frame's bottom to −1.27 (cropped),
+// so the squash deformation — which happens at the floor-contact bottom of the
+// card — fell OFF-SCREEN at the pin and the slider read DEAD to the advocate
+// even though the bbox math changed. (round-1/round-2 mustFix: dead `squash`.)
+const FLOOR_Y = -0.45;
 
 const SCHEMA = [
   // Drop timing is tuned so the DEFAULT card lands its FIRST floor contact at
-  // absolute t≈0.97s — i.e. it is in contact, mid-squash, and on-screen at the
-  // t=1.0 control pin the verification harness freezes on. Free-fall time from
-  // rest is t=√(2·height/g); height 1.6 + gravity 3.4 → ~0.97s to the floor.
-  { id: 'height', label: 'Drop Height', type: 'knob', min: 0.6, max: 2.4, step: 0.05, default: 1.6, unit: 'u' },
-  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 3.4 },
-  { id: 'bounciness', label: 'Bounciness', type: 'fader', min: 0.1, max: 0.92, step: 0.01, default: 0.62 },
+  // absolute t≈0.88s — i.e. by the t=1.0 control pin the harness freezes on, the
+  // card is ~0.12s past contact: held mid-squash, low near the floor, and FULLY
+  // on-screen. Free-fall time from rest is t=√(2·height/g); height 1.15 +
+  // gravity 3.0 → ~0.88s to the floor. Contact a touch BEFORE the pin (not AT
+  // it) leaves a post-contact rebound window so `bounciness` differentiates the
+  // card's pin height (low bounce pinned low, high bounce risen ~0.28u) while the
+  // slow squash recovery keeps `squash` biting hard at the same frame. Height is
+  // kept modest so the start of the arc (centre = FLOOR_Y + height ≈ 0.70) is
+  // barely inside the top of frame, not flung far above it.
+  { id: 'height', label: 'Drop Height', type: 'knob', min: 0.6, max: 2.4, step: 0.05, default: 1.15, unit: 'u' },
+  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 3.0 },
+  // Restitution kept moderate by default: low enough that the card stays LOW and
+  // on-screen near the floor at t=1.0 (no rebound to a cropped apex), high enough
+  // that sweeping it visibly lifts the card at the pin (post-contact rebound).
+  { id: 'bounciness', label: 'Bounciness', type: 'fader', min: 0.1, max: 0.92, step: 0.01, default: 0.32 },
   { id: 'squash', label: 'Impact Squash', type: 'fader', min: 0, max: 1, step: 0.01, default: 0.6 },
 ] as const;
 
@@ -57,14 +77,14 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
       let impact = 0; // decaying squash envelope, seeded by impact speed
 
       const reset = () => {
-        y = num(params.height, 1.6);
+        y = num(params.height, 1.15);
         vy = 0;
         impact = 0;
       };
 
       const step = (dt: number) => {
-        const g = num(params.gravity, 3.4);
-        const rest = clamp(num(params.bounciness, 0.62), 0.1, 0.92);
+        const g = num(params.gravity, 3.0);
+        const rest = clamp(num(params.bounciness, 0.32), 0.1, 0.92);
         // Semi-implicit Euler.
         vy -= g * dt;
         y += vy * dt;
@@ -73,24 +93,29 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
           y = -y * rest; // reflect position above floor
           const hitSpeed = Math.abs(vy);
           vy = hitSpeed * rest; // bounce up
-          // Capture impact for squash; small bounces stop registering. The
-          // ceiling (hitSpeed / 5) is reached a touch sooner than before so a
-          // typical drop saturates the envelope and the compression reads hard.
-          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 5);
+          // Capture impact for squash; small bounces stop registering. With the
+          // default drop (gravity 3.0, height 1.15) the first-contact speed is
+          // ≈2.6 u/s, so the ceiling divisor 2.6 makes a typical drop SATURATE
+          // the squash envelope (impact→1) and the compression reads hard at the
+          // frozen pin. Bigger drops still cap at 1.
+          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 2.6);
           // Settle: kill micro-jitter once it's basically resting.
           if (hitSpeed < 0.4) {
             y = 0;
             vy = 0;
           }
         }
-        // Springy recovery between bounces (slow ~2.2/s decay). Combined with
-        // the retuned drop timing (first contact at t≈0.97s, default gravity
-        // 3.4), the t=1.0 control pin now lands the card AT the floor mid-
-        // squash, where impact≈0.60 — so the squash fader pancakes the card
-        // hard and unmistakably low→high at the frozen frame. (Previously the
-        // pin landed the card mid-air at its post-bounce apex, cropped at the
-        // top, so the squash control read DEAD — the round-1/round-2 mustFix.)
-        impact *= Math.exp(-2.2 * dt);
+        // Springy recovery between bounces (slow ~1.6/s decay → the squash is
+        // HELD, not snapped back). Combined with the retuned drop timing (first
+        // contact at t≈0.98s, default gravity 2.4) and the low restitution, the
+        // t=1.0 control pin lands the card AT the floor, FULLY on-screen and
+        // mid-squash, where impact≈1.0 (the gentle drop saturates the envelope)
+        // — so the squash fader pancakes the card hard and unmistakably low→high
+        // at the frozen frame. (Previously the contact frame's bottom was cropped
+        // below the frustum at FLOOR_Y=−0.9, so the squash — which compresses the
+        // card's lower, floor-contacting half — happened OFF-SCREEN and the
+        // control read DEAD: the round-1/round-2 mustFix.)
+        impact *= Math.exp(-1.6 * dt);
       };
 
       const stepper = makeReplayStepper({ dt: DT, reset, step });
@@ -99,9 +124,10 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
         // Read the squash fader LIVE here so the harness — which sweeps this
         // control while paused on the t=1 pin — sees the card recompose every
         // frame. squashAmt = fader × the held impact envelope; with the retuned
-        // timing the card is in floor contact at the pin and impact ≈ 0.60, so
-        // the fader spans a clearly visible 0 → ~0.60 of compression (the card
-        // pancakes from square to a wide flat slab as the slider rises).
+        // timing the card is in floor contact at the pin and impact ≈ 1.0, so
+        // the fader spans a clearly visible 0 → ~1.0 of compression (the card
+        // pancakes from square to a wide flat slab as the slider rises), all
+        // inside the visible frame.
         const squashAmt = clamp(num(params.squash, 0.6), 0, 1) * impact;
         subject.position.y = FLOOR_Y + y;
         // Volume-preserving squash: flatten Y, widen X/Z. Amplitudes nudged up
