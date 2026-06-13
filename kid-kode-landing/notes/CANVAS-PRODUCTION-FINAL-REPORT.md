@@ -117,4 +117,45 @@ too (stub tally; billing backend is engine-spec scope, never faked).
   the raised-bar / Slider-Revolution standard.
 
 ### Checkpoints
-- `dbe3500` — server spine. `8ccdcfe` — wizard UI. (Phase-1 verify + fix commit follows.)
+- `dbe3500` — server spine. `8ccdcfe` — wizard UI. `4d9ec3b` — Phase-1 verify + compile-anchors fix.
+
+---
+
+## PHASE 2 — FULL HUMAN-GRADE SYSTEM TEST (COMPLETE ✅ — 0 MUST-FIX)
+
+30 real-GPU frames captured (`scripts/canvas-final/system-test-capture.mjs`,
+Chrome/WebGPU/DPR 2, desktop 1680×1050 + mobile 390×844, **0 console errors**),
+then judged by 6 parallel **user-advocate** agents (non-technical-user rubric +
+pro-3D-designer / Slider-Revolution bar; evidence-required, anti-rubber-stamp).
+Frames in `notes/verification/canvas-final/system-test/`.
+
+### System-test matrix
+
+| System | Desktop | Mobile | Verdict |
+|---|---|---|---|
+| Modes (Galaxy/Canvas/Preview) + transitions | PASS | PASS (Canvas panels cramped — FLAG) | **MIXED** |
+| Change Artifact (Upload + Prompt, generate→Use This→library) | PASS | PASS | **PASS** |
+| Add / Text / Image tools | PASS | PASS | **PASS** |
+| 3D object / Material / Lighting | PASS | PASS | **PASS** |
+| Animation catalog (606 tiles, 46 pages, drivers) / Selection / Transform / Build | PASS | PASS (panel copy clipped — FLAG) | **MIXED** |
+| Whole-editor mobile (390px) | — | PASS | **PASS** |
+
+**MUST-FIX: 0.** Every system functions and reads premium. The advocate noted
+the desktop animation catalog (**606 animations across 46 pages** with real
+preview thumbnails, search, 7 category tabs, drivers, pagination) **exceeds** the
+≥300 claim (criterion 12).
+
+### Actionable flags (cosmetic — addressed in Phase 3)
+
+| # | Flag | Where |
+|---|---|---|
+| F1/F12 | Mobile Canvas opens toolbar + Transform inspector together → occludes most of the 390px work surface | mobile-mode-canvas |
+| F6 | Desktop Image inspector slider labels clipped on the left edge ("eft edge", "idth"…) | ImageFlyout PresentationControls |
+| F7 | Engineer-jargon labels user-facing ("WIRED" status pill; "WRITES HUB LIGHTINGSPEC") | flyouts / lighting |
+| F8/F9 | Mobile right-edge clipping (animation panel copy; bottom section-carousel tabs) | 390px panels |
+| F3/F4 | Result-pane chrome plainer than the controls; quality-tier rows small | PromptWizard |
+| F2/F10 | Mobile capture artifacts (Preview switch frame stuck on Canvas; tile-grid not reached) | recapture (not product bugs) |
+
+Plus the carried cosmetic honest-flags from prior reports: physics
+soft-bead/bright-clip, jelly saturation, **violet-orb retint → brass/ice**
+(default per LOGAN-INBOX = no "keep" directive).

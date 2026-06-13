@@ -49,9 +49,13 @@ for genuinely independent parts: wizard leaf components (distinct new files, fix
 Phase-4 per-criterion verification. Honors multi-agent-where-it-helps without sabotaging the build.
 
 ## Phase status
-- [ ] Phase 0 — orient + scout codebase + re-verify fal models (IN PROGRESS)
-- [ ] Phase 1 — Change-Artifact generation wired to fal (Upload + Prompt wizards, provider layer, credit meter)
-- [ ] Phase 2 — Full human-grade system test (advocate, desktop + mobile, system-test matrix)
+- [x] Phase 0 — orient + scout codebase + re-verify fal models — DONE
+- [x] Phase 1 — Change-Artifact wired to fal — DONE/VERIFIED (ckpts dbe3500, 8ccdcfe, 4d9ec3b).
+      Criteria 19/20 + round-trip proven in real app (Chrome/WebGPU/DPR2); real image+3D+library
+      swapped onto live nodes + persisted. fal spend $0.263/$50. Fixed pre-existing compile-anchors
+      crash. Honest flags: criterion 21 (=§13 prebuilt library) is separate scope, NOT built; video
+      lane wired but not re-billed; ShapeFaceMapper labels small at DPR2 (P3 polish).
+- [ ] Phase 2 — Full human-grade system test (advocate, desktop + mobile, system-test matrix) — IN PROGRESS
 - [ ] Phase 3 — Fix + polish + optimize (MUST-FIX, cosmetic flags, perf, no-regression)
 - [ ] Phase 4 — Production sign-off (§18 + §19 re-verify, DPR-2 evidence table, verdict)
 

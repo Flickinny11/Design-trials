@@ -38,6 +38,11 @@ export async function POST(req: Request): Promise<Response> {
   if (typeof prompt !== 'string' || prompt.trim() === '') {
     return jsonError('Describe the picture you want.', 400);
   }
+  // Validate count BEFORE any generation: a malformed count must 400, not
+  // silently generate (and never reach the paid provider).
+  if (count !== undefined && (typeof count !== 'number' || !Number.isInteger(count) || count < 1)) {
+    return jsonError(`invalid count: ${String(count)} (expected positive integer)`, 400);
+  }
 
   try {
     const result = await handleGenerate({

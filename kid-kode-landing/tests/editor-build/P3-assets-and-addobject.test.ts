@@ -25,6 +25,33 @@
 // (`server-only` is aliased to a no-op in vitest.config.mjs.)
 
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+
+// CANVAS-FINAL — the image-gen route is now WIRED to the Prism Media Generator
+// (no longer the flagged stub). Mock the single generation code path so the
+// route's contract can be asserted WITHOUT a real (paid) provider call. The
+// route's own prompt/count validation runs BEFORE handleGenerate, so the 400
+// validation tests below never reach this mock.
+vi.mock('@/server/media-gen/handle', () => {
+  class GenerateError extends Error {
+    status: number;
+    constructor(message: string, status: number) {
+      super(message);
+      this.status = status;
+    }
+  }
+  return {
+    GenerateError,
+    handleGenerate: vi.fn(async (req: { kind: string }) => ({
+      ok: true,
+      kind: req.kind,
+      model: { id: 'prism-image-standard', label: 'Standard', blurb: '', kind: 'image', credits: 2 },
+      images: [{ url: '/prism-mock/uploads/test-mock.png', width: 1024, height: 1024 }],
+      credits: 2,
+      meter: { used: 2, generations: 1 },
+    })),
+  };
+});
+
 import { promises as fs } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -169,7 +196,9 @@ describe('POST /api/prism/assets — content-hashed image upload', () => {
     expect(res.status).toBe(415);
     const json = (await res.json()) as { ok: boolean; error: string };
     expect(json.ok).toBe(false);
-    expect(json.error).toMatch(/PNG, JPEG, WebP, or AVIF/);
+    // CANVAS-FINAL — the route now accepts images + 3D + video + Rive, so the
+    // unsupported-type message lists those rather than image formats only.
+    expect(json.error).toMatch(/not supported/i);
   });
 
   it('rejects bytes that are not a real image even with an image/* claim (sniff is authoritative)', async () => {
@@ -237,11 +266,17 @@ function imageGenRequest(body: unknown): Request {
 }
 
 describe('POST /api/prism/image-gen', () => {
-  it('{ prompt } → 200 with the flagged shape, never cached', async () => {
+  it('{ prompt } → 200 with the WIRED shape, never cached', async () => {
+    // CANVAS-FINAL — the route is now wired to the Prism Media Generator
+    // (handleGenerate mocked above so no real provider call). It returns the
+    // wired payload: { wired: true, url, images, model, credits, meter }.
     const res = await imageGenPOST(imageGenRequest({ prompt: 'a brass pocket watch' }));
     expect(res.status).toBe(200);
     expect(res.headers.get('Cache-Control')).toBe('no-store');
-    expect(await res.json()).toEqual({ wired: false, images: [] });
+    const json = (await res.json()) as { wired: boolean; url: string; images: unknown[] };
+    expect(json.wired).toBe(true);
+    expect(typeof json.url).toBe('string');
+    expect(Array.isArray(json.images)).toBe(true);
   });
 
   it('missing / malformed prompt or count → 400', async () => {
