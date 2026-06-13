@@ -24,6 +24,10 @@ export type EditorRenderMode = 'scene' | 'topology';
  */
 export type EditorMode = 'idle' | 'edit';
 
+// CANVAS-FINAL — Change Artifact wizard (canvas-spec §12) sub-flow. 'launch' is
+// the Upload-or-Prompt chooser; 'upload' is §12.1; 'prompt' is §12.2.
+export type ChangeArtifactFlow = 'launch' | 'upload' | 'prompt';
+
 // EB-04-04 / §1 INV-20 / §5 SC-022, SC-027 — per-mode camera pose checkpoint.
 // Selection survives every mode transition (already invariant), but camera
 // pose is mode-specific: each mode keeps its own pose so that re-entering a
@@ -87,6 +91,14 @@ interface GraphEditorState {
 
   // Add-node dialog (HL13 / Plan §P13)
   addNodeDialogOpen: boolean;
+
+  // CANVAS-FINAL — Change Artifact wizard (canvas-spec §12). Targets a node
+  // (normally the selected one) and opens the Upload (§12.1) / Prompt (§12.2)
+  // flows. `changeArtifactNodeId` is the node whose artifact is being
+  // regenerated/replaced; null is only transient before a target resolves.
+  changeArtifactOpen: boolean;
+  changeArtifactNodeId: string | null;
+  changeArtifactFlow: ChangeArtifactFlow;
 
   // Freeze
   frozenNodeIds: Set<string>;
@@ -185,6 +197,10 @@ interface GraphEditorState {
   clearFilter: () => void;
   openAddNodeDialog: () => void;
   closeAddNodeDialog: () => void;
+  // CANVAS-FINAL — Change Artifact wizard controls.
+  openChangeArtifact: (nodeId: string | null, flow?: ChangeArtifactFlow) => void;
+  closeChangeArtifact: () => void;
+  setChangeArtifactFlow: (flow: ChangeArtifactFlow) => void;
   toggleFreeze: (id: string) => void;
   setLivePreviewHover: (id: string | null) => void;
   flyToNode: (id: string) => void;
@@ -268,6 +284,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     filterOpen: false,
     filterQuery: '',
     addNodeDialogOpen: false,
+    changeArtifactOpen: false,
+    changeArtifactNodeId: null,
+    changeArtifactFlow: 'launch',
     frozenNodeIds: new Set<string>(),
     livePreviewHoverId: null,
     flyToNodeId: null,
@@ -411,6 +430,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     clearFilter: () => set({ filterQuery: '' }),
     openAddNodeDialog: () => set({ addNodeDialogOpen: true }),
     closeAddNodeDialog: () => set({ addNodeDialogOpen: false }),
+    openChangeArtifact: (nodeId, flow = 'launch') =>
+      set({ changeArtifactOpen: true, changeArtifactNodeId: nodeId, changeArtifactFlow: flow }),
+    closeChangeArtifact: () => set({ changeArtifactOpen: false }),
+    setChangeArtifactFlow: (flow) => set({ changeArtifactFlow: flow }),
     toggleFreeze: (id) =>
       set((s) => {
         const next = new Set(s.frozenNodeIds);

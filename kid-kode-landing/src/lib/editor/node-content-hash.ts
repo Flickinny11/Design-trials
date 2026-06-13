@@ -83,6 +83,10 @@ function buildRelevantProjection(node: PrismNode): Record<string, unknown> {
     // build time (geometry from kind + params), so a committed meshPrimitive
     // change must invalidate the snapshot (same rule as textSpec/imageSpec).
     meshPrimitive: node.meshPrimitive ?? null,
+    // CANVAS-FINAL §12.1 (criterion 19) — the mesh branch reads faceTextures at
+    // build time (per-face material array), so a committed face-mapping change
+    // must invalidate the snapshot so the surgical rebuild re-textures the faces.
+    faceTextures: node.faceTextures ?? null,
   };
 }
 

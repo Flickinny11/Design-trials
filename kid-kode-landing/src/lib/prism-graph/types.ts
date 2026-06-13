@@ -743,6 +743,20 @@ export interface PrismNode {
   // renders the primitive regardless of meshUrl (which stays for GLBs).
   // Round-trips through save/reload.
   meshPrimitive?: MeshPrimitive;
+  // CANVAS-FINAL / Change Artifact Upload wizard (canvas-spec §12.1, criterion
+  // 19; INV-8 additive). Per-face image mapping onto a `meshPrimitive` shape.
+  // Each entry binds an image to one geometry group (face slot); slot counts
+  // match the spec exactly (cube=6, cone=2, sphere=1 — see FACE_SLOT_COUNT).
+  // Absent → the primitive renders with its single `materialSpec` surface.
+  // Round-trips through save/reload.
+  faceTextures?: FaceTexture[];
+  // CANVAS-FINAL / Change Artifact wizard (canvas-spec §12.2 + §11, criterion
+  // 20; INV-8 additive). Append-only retention of this node's PRIOR artifacts.
+  // "Use This" snapshots the outgoing artifact-bearing fields into a library
+  // entry BEFORE swapping the replacement in ("outgoing artifact retained in
+  // the artifact library"). Restoring an entry snapshots the then-current
+  // artifact in turn — never lossy. Absent on legacy nodes. Round-trips.
+  artifactLibrary?: ArtifactLibraryEntry[];
 }
 
 // P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
@@ -781,6 +795,71 @@ export const MESH_PRIMITIVE_DEFAULTS: Record<MeshPrimitiveKind, Required<NonNull
   torus: { width: 0, height: 0, depth: 0, radius: 0.34, tube: 0.12, length: 0, segments: 48 },
   capsule: { width: 0, height: 0, depth: 0, radius: 0.22, tube: 0, length: 0.45, segments: 24 },
 };
+
+// CANVAS-FINAL / Change Artifact Upload wizard — per-face image mapping
+// (canvas-spec §12.1, criterion 19; additive only). A node carrying a
+// `meshPrimitive` may map an image onto each FACE SLOT of its shape. Slots are
+// the geometry's material groups (three r184), which line up with the spec's
+// counts exactly: cube/box = 6, cone = 2 (curved lateral = slot 0, base = slot
+// 1), cylinder = 3 (lateral, top, bottom), sphere = 1 (single curved face),
+// plane = 1. A slot with no entry keeps the primitive's base `materialSpec`.
+export interface FaceTexture {
+  /** Geometry group index this image binds to (0-based). */
+  faceIndex: number;
+  /** Image URL (upload / URL / generated all resolve to a URL). */
+  url: string;
+  /** Normalized 0..1 crop window over the source; absent → full frame. */
+  crop?: ImageCrop;
+  /** 0..1 face opacity (multiplies any material opacity). Absent → 1. */
+  opacity?: number;
+}
+
+// Face-slot counts per primitive kind — the material-group count three's
+// geometry constructors emit. The Upload wizard renders exactly this many
+// numbered slots (§12.1: cube=6, cone=2, sphere=1). `torus`/`capsule` are
+// single-group surfaces (one wrap). Kept in sync with buildPrimitiveGeometry.
+export const FACE_SLOT_COUNT: Record<MeshPrimitiveKind, number> = {
+  cube: 6,
+  cone: 2,
+  cylinder: 3,
+  sphere: 1,
+  plane: 1,
+  torus: 1,
+  capsule: 1,
+};
+
+// CANVAS-FINAL / Change Artifact wizard — how an artifact originated. Plain
+// vocabulary; surfaced in the artifact-library tile label (no machine ids).
+export type ArtifactSource = 'upload' | 'url' | 'generated' | 'prebuilt' | 'initial';
+
+// CANVAS-FINAL / Change Artifact wizard (canvas-spec §12.2 + §11, criterion
+// 20; additive only). One retired artifact in a node's append-only library.
+// Snapshots only the artifact-bearing fields that applied to its renderMode,
+// so a restore reinstates the node's prior look verbatim.
+export interface ArtifactLibraryEntry {
+  /** Stable id (`al-<base36>`). */
+  id: string;
+  /** ISO timestamp this artifact was retired from active use. */
+  at: string;
+  /** The render mode this artifact drove. */
+  renderMode: RenderMode;
+  /** How the artifact originated. */
+  source: ArtifactSource;
+  /** Plain-language label ("Brass sphere · generated"). No machine ids. */
+  label?: string;
+  /** The natural-language prompt that produced it, when generated. */
+  prompt?: string;
+  /** Artifact-bearing snapshot (only the fields for this renderMode are set). */
+  sourceAsset?: string;
+  meshUrl?: string | null;
+  videoUrl?: string | null;
+  depthMapUrl?: string | null;
+  meshPrimitive?: MeshPrimitive;
+  faceTextures?: FaceTexture[];
+  textSpec?: TextSpec;
+  /** Optional still image for the library tile preview. */
+  thumbnailUrl?: string;
+}
 
 // P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).
 export interface ImageCrop {

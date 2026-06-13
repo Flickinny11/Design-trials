@@ -33,7 +33,8 @@ import path from 'node:path';
 
 export const runtime = 'nodejs';
 
-const MAX_UPLOAD_BYTES = 12 * 1024 * 1024; // ~12 MB cap
+const MAX_UPLOAD_BYTES = 12 * 1024 * 1024; // ~12 MB cap (images)
+const MAX_BINARY_UPLOAD_BYTES = 64 * 1024 * 1024; // ~64 MB cap (glb/video/riv)
 
 /** Client-claimed MIME types we accept (fast reject before the byte sniff). */
 const ACCEPTED_TYPES = new Set([
@@ -42,6 +43,31 @@ const ACCEPTED_TYPES = new Set([
   'image/webp',
   'image/avif',
 ]);
+
+/** CANVAS-FINAL §12.1 — non-image artifact uploads (3D / video / Rive). The
+ *  content-hash store name comes from the bytes + a sniffed extension; the
+ *  client name/type are only a routing hint here. */
+function classifyBinaryUpload(
+  type: string,
+  lowerName: string,
+): { kind: 'mesh' | 'video'; label: string } | null {
+  const t = type.toLowerCase();
+  if (
+    t.includes('gltf-binary') || t.includes('model/gltf') || lowerName.endsWith('.glb') ||
+    t.includes('usd') || lowerName.endsWith('.usdz') || lowerName.endsWith('.usd')
+  ) {
+    return { kind: 'mesh', label: '3d' };
+  }
+  if (t.startsWith('video/') || lowerName.endsWith('.mp4') || lowerName.endsWith('.webm')) {
+    return { kind: 'video', label: 'video' };
+  }
+  // Rive: store as a binary mesh-class asset (it is a node artifact); keep the
+  // .riv extension so the runtime can route it to the Rive layer.
+  if (lowerName.endsWith('.riv') || t.includes('rive')) {
+    return { kind: 'mesh', label: 'rive' };
+  }
+  return null;
+}
 
 /** sharp-sniffed format → stored extension. sharp reports AVIF as 'heif'
  *  (AV1-compressed HEIF container), so both spellings map to .avif. */
@@ -84,12 +110,40 @@ export async function POST(req: Request): Promise<Response> {
   }
   const file = entry as File;
 
+  // CANVAS-FINAL §12.1 — the Change Artifact Upload wizard accepts 3D models
+  // (GLB/USDZ), video (MP4/WebM), and Rive (.riv) in addition to images. These
+  // binary kinds route through the content-hash store (storeBytes) and return
+  // { ok, url, kind, ext }. The IMAGE path below is unchanged (bit-identical).
+  const lowerName = (file.name ?? '').toLowerCase();
+  const binaryKind = classifyBinaryUpload(file.type, lowerName);
+  if (binaryKind) {
+    if (file.size > MAX_BINARY_UPLOAD_BYTES) {
+      return jsonError('That file is too large — keep it under 64 MB.', 413);
+    }
+    const bytes = Buffer.from(await file.arrayBuffer());
+    if (bytes.byteLength === 0) {
+      return jsonError('That file is empty — pick one with something in it.', 400);
+    }
+    try {
+      const { storeBytes } = await import('@/server/assets/store');
+      const ext = lowerName.includes('.') ? lowerName.split('.').pop()! : undefined;
+      const stored = await storeBytes(bytes, binaryKind.kind, ext);
+      return new Response(
+        JSON.stringify({ ok: true, url: stored.url, kind: binaryKind.label, ext: stored.ext }),
+        { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } },
+      );
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      return jsonError(`Saving the file failed on the server — ${reason}`, 500);
+    }
+  }
+
   if (file.size > MAX_UPLOAD_BYTES) {
     return jsonError('That image is too large — keep it under 12 MB.', 413);
   }
   if (!ACCEPTED_TYPES.has(file.type)) {
     return jsonError(
-      'That file type is not supported — use a PNG, JPEG, WebP, or AVIF image.',
+      'That file type is not supported — use an image, a 3D model (GLB/USDZ), a video (MP4), or a Rive file.',
       415,
     );
   }

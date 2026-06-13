@@ -1,23 +1,24 @@
-// P3 ASSETS (C) — POST /api/prism/image-gen
+// CANVAS-FINAL — POST /api/prism/image-gen
 //
-// AI image generation endpoint for the Add Object pipeline. Body:
-// { prompt: string, count?: number }. Delegates to the FLAGGED hook
-// src/server/image-gen/generate.ts, which returns { wired: false, images: [] }
-// until the fal.ai FLUX-family prompt→image endpoint is wired (re-verify the
-// current best model id at wiring time — see the hook's header). Generated
-// assets land in a node's `visual.sourceAsset`, same as uploads and URLs.
+// WIRED (was a flagged stub). The Add Object / Image flyout's "Generate" calls
+// this with { prompt, count?, quality?, width?, height? }. It runs through the
+// Prism Media Generator (src/server/media-gen) → persists each image through
+// the content-hash asset store → returns the wired shape the flyout expects:
+//   { wired: true, url, width, height, images: [{url,width,height}], credits, meter }
+// Backward-compatible: the legacy flyout reads `wired` + top-level `url`.
 //
-// Errors are honest (same style as the text-fill route): 400 for a missing
-// or malformed prompt/count; the flagged hook itself cannot fail.
+// Honest errors: 400 for a missing prompt; 503 when the build generation budget
+// is spent (BudgetExceededError → plain-language pause, never faked output).
+// FAL_KEY is never read or printed here (server-only provider owns it).
 
-import { generateImages } from '@/server/image-gen/generate';
+import { handleGenerate, GenerateError } from '@/server/media-gen/handle';
 
 export const runtime = 'nodejs';
 
 function jsonError(message: string, status: number): Response {
-  return new Response(JSON.stringify({ ok: false, error: message }), {
+  return new Response(JSON.stringify({ ok: false, wired: false, error: message }), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
 }
 
@@ -31,25 +32,41 @@ export async function POST(req: Request): Promise<Response> {
   if (!body || typeof body !== 'object') {
     return jsonError('expected a JSON object body', 400);
   }
-
-  const { prompt, count } = body as { prompt?: unknown; count?: unknown };
+  const { prompt, count, quality, width, height } = body as {
+    prompt?: unknown; count?: unknown; quality?: unknown; width?: unknown; height?: unknown;
+  };
   if (typeof prompt !== 'string' || prompt.trim() === '') {
-    return jsonError('missing required field: prompt (non-empty string)', 400);
-  }
-  let countNum: number | undefined;
-  if (count !== undefined) {
-    if (typeof count !== 'number' || !Number.isInteger(count) || count < 1) {
-      return jsonError(`invalid count: ${String(count)} (expected positive integer)`, 400);
-    }
-    countNum = count;
+    return jsonError('Describe the picture you want.', 400);
   }
 
-  const result = await generateImages(prompt, countNum);
-  return new Response(JSON.stringify(result), {
-    headers: {
-      'Content-Type': 'application/json',
-      // Generation results (once wired) vary per call — never cache.
-      'Cache-Control': 'no-store',
-    },
-  });
+  try {
+    const result = await handleGenerate({
+      kind: 'image',
+      prompt,
+      count: typeof count === 'number' ? count : undefined,
+      quality: quality === 'studio' ? 'studio' : quality === 'standard' ? 'standard' : undefined,
+      width: typeof width === 'number' ? width : undefined,
+      height: typeof height === 'number' ? height : undefined,
+      purpose: 'image flyout generate',
+    });
+    const first = result.images?.[0];
+    return new Response(
+      JSON.stringify({
+        ok: true,
+        wired: true,
+        url: first?.url,
+        width: first?.width,
+        height: first?.height,
+        images: result.images,
+        model: result.model,
+        credits: result.credits,
+        meter: result.meter,
+      }),
+      { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } },
+    );
+  } catch (e) {
+    if (e instanceof GenerateError) return jsonError(e.message, e.status);
+    const msg = e instanceof Error ? e.message : 'Generation failed.';
+    return jsonError(msg, 500);
+  }
 }

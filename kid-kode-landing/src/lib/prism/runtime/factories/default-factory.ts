@@ -77,6 +77,7 @@ import {
 // (kind + params over MESH_PRIMITIVE_DEFAULTS) with the live reshaping +
 // material handle. See mesh-primitive.ts header.
 import {
+  buildFaceMaterials,
   buildPrimitiveGeometry,
   createMeshPrimitiveHandle,
 } from '../shared/mesh-primitive';
@@ -382,14 +383,23 @@ export function defaultRenderModeFactory(
       // Unlike the GLB lane this is fully synchronous: geometry is generated,
       // so the artifact exists the moment createNode returns (spec §8).
       const lit = resolveReceivesLighting(node);
-      const meshSpec = resolveMaterialSpec(node.materialSpec);
-      const physical = buildPhysicalMaterial(meshSpec);
-      applyMaterialSpec(physical, meshSpec);
-      // W3 (INV-18 additive) — pour a base-color map onto the primitive when
-      // the spec carries one (async via the cached loader; the lit material
-      // shows resolved baseColor until the texture lands).
+      // CANVAS-FINAL §12.1 (criterion 19) — per-face image mapping. With no
+      // faceTextures this returns the single base material (existing behavior);
+      // with face textures it returns a per-group material ARRAY (Box=6,
+      // Cone=2, Cylinder=3) so each face wears its assigned image. The base
+      // material remains the un-textured-slot surface + baseColorMap target.
+      const faceBuild = buildFaceMaterials(
+        node.meshPrimitive,
+        node.faceTextures,
+        node.materialSpec,
+        ctx.textureLoader,
+      );
+      const physical = faceBuild.base;
+      // W3 (INV-18 additive) — pour a base-color map onto the base material
+      // when the spec carries one (async; only when faces aren't already
+      // mapping their own textures onto every slot).
       const baseMapUrl = node.materialSpec?.baseColorMapUrl;
-      if (baseMapUrl) {
+      if (baseMapUrl && (!node.faceTextures || node.faceTextures.length === 0)) {
         ctx.textureLoader
           .loadTexture(baseMapUrl)
           .then((tex) => {
@@ -402,14 +412,16 @@ export function defaultRenderModeFactory(
           });
       }
       const geo = buildPrimitiveGeometry(node.meshPrimitive);
-      const mesh = new Mesh(geo, physical);
+      const mesh = new Mesh(geo, faceBuild.material);
       mesh.name = `mesh-primitive:${node.nodeId}`;
       if (lit) {
         mesh.castShadow = true;
         mesh.receiveShadow = true;
       }
       group.add(mesh);
-      materialsToDispose.push(physical as unknown as DisposableMaterial);
+      for (const m of faceBuild.dispose) {
+        materialsToDispose.push(m as unknown as DisposableMaterial);
+      }
       meshPrimitiveMeshes.push(mesh);
       // Live-edit surface (instant, in-place — never a rebuild): dimension
       // edits swap the geometry on the SAME Mesh; Material-tab writes land on

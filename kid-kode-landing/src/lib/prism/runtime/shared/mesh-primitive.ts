@@ -33,14 +33,17 @@ import {
   TorusGeometry,
   type BufferGeometry,
   type Mesh,
+  type Texture,
 } from 'three';
 import type { MeshPhysicalNodeMaterial } from 'three/webgpu';
 import {
+  FACE_SLOT_COUNT,
   MESH_PRIMITIVE_DEFAULTS,
+  type FaceTexture,
   type MaterialSpec,
   type MeshPrimitive,
 } from '../../../prism-graph/types';
-import { applyMaterialSpec, resolveMaterialSpec } from './material-system';
+import { applyMaterialSpec, buildPhysicalMaterial, resolveMaterialSpec } from './material-system';
 
 /** Tessellation bounds. Curved kinds need ≥ 3 segments to be a surface at
  *  all; 96 caps runaway vertex counts from a wild param write. Flat kinds
@@ -124,6 +127,118 @@ export function buildPrimitiveGeometry(prim: MeshPrimitive): BufferGeometry {
   }
 }
 
+// ── Per-face image mapping (CANVAS-FINAL §12.1, criterion 19) ────────────────
+
+/** The texture loader the factory hands in (ctx.textureLoader). Async; the
+ *  material shows its resolved baseColor until the texture lands. */
+export interface FaceTextureLoaderLike {
+  loadTexture(url: string): Promise<Texture>;
+}
+
+/** Apply a normalized 0..1 crop window to a texture via offset/repeat (the
+ *  texture is never re-rendered). y is flipped to texture space. */
+function applyFaceCrop(tex: Texture, crop?: FaceTexture['crop']): void {
+  if (!crop) return;
+  const x = clamp01(crop.x ?? 0);
+  const y = clamp01(crop.y ?? 0);
+  const w = clamp01(crop.width ?? 1);
+  const h = clamp01(crop.height ?? 1);
+  if (w <= 0 || h <= 0) return;
+  tex.offset.set(x, Math.max(0, 1 - y - h));
+  tex.repeat.set(w, h);
+  tex.needsUpdate = true;
+}
+
+function clamp01(n: number): number {
+  return Math.min(1, Math.max(0, Number.isFinite(n) ? n : 0));
+}
+
+export interface FaceMaterialBuild {
+  /** Single material, or a per-face array when `faceTextures` are present. */
+  material: MeshPhysicalNodeMaterial | MeshPhysicalNodeMaterial[];
+  /** The shared base material (un-textured faces + baseColorMap target). */
+  base: MeshPhysicalNodeMaterial;
+  /** Every distinct material to register for disposal. */
+  dispose: MeshPhysicalNodeMaterial[];
+}
+
+/** Build the surface material(s) for a primitive. With no `faceTextures` this
+ *  returns the single base material (existing behavior). With face textures it
+ *  returns a per-group material ARRAY (Box=6, Cone=2, Cylinder=3, Sphere=1 —
+ *  three's geometry groups), each textured face a clone of the base spec with
+ *  the assigned image poured into `.map` (sRGB, crop applied, opacity honored).
+ *  Un-textured slots reuse the shared base material. */
+export function buildFaceMaterials(
+  prim: MeshPrimitive,
+  faceTextures: FaceTexture[] | undefined,
+  baseSpec: MaterialSpec | null | undefined,
+  loader: FaceTextureLoaderLike,
+): FaceMaterialBuild {
+  const resolved = resolveMaterialSpec(baseSpec);
+  const base = buildPhysicalMaterial(resolved);
+  applyMaterialSpec(base, resolved);
+
+  const slots = FACE_SLOT_COUNT[prim.kind] ?? 1;
+  const byFace = new Map<number, FaceTexture>();
+  if (faceTextures) {
+    for (const ft of faceTextures) {
+      if (ft && typeof ft.url === 'string' && ft.url.length > 0 && ft.faceIndex >= 0 && ft.faceIndex < slots) {
+        byFace.set(ft.faceIndex, ft);
+      }
+    }
+  }
+  if (byFace.size === 0 || slots <= 1) {
+    // Sphere/plane/torus/capsule are single-group; a lone face texture still
+    // maps onto the one slot via the base material's map (set below) when
+    // present, else the plain base material.
+    const only = byFace.get(0);
+    if (only && slots <= 1) {
+      void loader
+        .loadTexture(only.url)
+        .then((tex) => {
+          (tex as { colorSpace?: string }).colorSpace = 'srgb';
+          applyFaceCrop(tex, only.crop);
+          (base as unknown as { map: Texture | null; needsUpdate: boolean }).map = tex;
+          (base as unknown as { needsUpdate: boolean }).needsUpdate = true;
+          if (typeof only.opacity === 'number' && only.opacity < 1) {
+            base.opacity = only.opacity;
+            base.transparent = true;
+          }
+        })
+        .catch(() => { /* missing → base color stands */ });
+    }
+    return { material: base, base, dispose: [base] };
+  }
+
+  const dispose: MeshPhysicalNodeMaterial[] = [base];
+  const arr: MeshPhysicalNodeMaterial[] = [];
+  for (let i = 0; i < slots; i += 1) {
+    const ft = byFace.get(i);
+    if (!ft) {
+      arr.push(base);
+      continue;
+    }
+    const m = buildPhysicalMaterial(resolved);
+    applyMaterialSpec(m, resolved);
+    if (typeof ft.opacity === 'number' && ft.opacity < 1) {
+      m.opacity = ft.opacity;
+      m.transparent = true;
+    }
+    void loader
+      .loadTexture(ft.url)
+      .then((tex) => {
+        (tex as { colorSpace?: string }).colorSpace = 'srgb';
+        applyFaceCrop(tex, ft.crop);
+        (m as unknown as { map: Texture | null; needsUpdate: boolean }).map = tex;
+        (m as unknown as { needsUpdate: boolean }).needsUpdate = true;
+      })
+      .catch(() => { /* missing → base color stands */ });
+    arr.push(m);
+    dispose.push(m);
+  }
+  return { material: arr, base, dispose };
+}
+
 /** Stable identity key for a primitive (kind + resolved params) so the live
  *  handle can no-op repeat writes of the same shape instead of churning
  *  geometry every effect pass. */
@@ -196,7 +311,20 @@ export function createMeshPrimitiveHandle(
       }
     },
     setMaterialSpec(spec?: MaterialSpec | null): void {
-      applyMaterialSpecLive(mesh.material as MeshPhysicalNodeMaterial, spec);
+      const mat = mesh.material;
+      if (Array.isArray(mat)) {
+        // Per-face material array: apply to each DISTINCT physical material
+        // (the shared base may appear in multiple slots — dedupe).
+        const seen = new Set<unknown>();
+        for (const m of mat) {
+          if (m && !seen.has(m)) {
+            seen.add(m);
+            applyMaterialSpecLive(m as MeshPhysicalNodeMaterial, spec);
+          }
+        }
+      } else {
+        applyMaterialSpecLive(mat as MeshPhysicalNodeMaterial, spec);
+      }
     },
   };
 }
