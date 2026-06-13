@@ -315,7 +315,15 @@ embers→orr-materia-pour [time]. Graph builder: scripts/build-orrery-graph.mjs 
   ring; sand-pile standing gust/repose cues + repose reshapes dune slope; image-to-particles region-color grains +
   standing on-frame mid-storm + live density/swirl/scatter. Log: w5-advocate-r1-log.txt. PENDING: r1 → gates 3 →
   re-capture 3 → re-advocate 3 → CKPT → WF report.
-- [ ] WF report + final no-regression (312+N) + STOP
+  - **W5 COMPLETE (2026-06-13): 11/11 advocate-SHIP.** advocate r1 8 SHIP / 3 BLOCKED → fix r1 (click-burst recycling
+    standing bloom, sand-pile standing gust/repose, image-to-particles region-color grains+lit on-frame storm) →
+    advocate r2 sand-pile+image-to-particles SHIP, click-burst BLOCKED (twinkle dead) → fix r2 (brightness speckle —
+    insufficient: thin ring can't hit whole-frame meanAbsDiff) → fix r3 (twinkle = per-mote SIZE variance via
+    instanceScale/scaleNode → changedFrac 0.151) → advocate SHIP. **W5 11/11.** registry 370. Gates: tsc 0-new; full
+    animatable vitest 371 files/1637 tests; harness 11/11 r/p/c deviceLost 0. LESSON: a thin-ring per-mote texture
+    control must change COVERAGE (size), not just brightness, to register on the whole-frame metric.
+- [~] **WF — report + final no-regression** IN FLIGHT (2026-06-13). Full-catalog 370-tile no-regression harness launched;
+  writing notes/PRIMITIVES-EXPANSION-REPORT.md. Then STOP.
 
 ## Log
 

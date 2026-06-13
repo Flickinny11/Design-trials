@@ -24,6 +24,14 @@ function instanceColors(target: ReturnType<typeof makeTarget>): InstancedBufferA
   return geo.attributes.instanceColor as InstancedBufferAttribute;
 }
 
+/** Per-mote billboard quad scale (1 float each). The material reads this via
+ *  material.scaleNode, so it is the literal per-instance SIZE the GPU draws —
+ *  the pixel-coverage variance the twinkle control reshapes at the frozen pin. */
+function instanceScales(target: ReturnType<typeof makeTarget>): InstancedBufferAttribute {
+  const geo = burstSprite(target).geometry as BufferGeometry;
+  return geo.attributes.instanceScale as InstancedBufferAttribute;
+}
+
 /** Mean radial distance of the live (drawn) motes from the burst origin. */
 function meanRadius(target: ReturnType<typeof makeTarget>, count: number): number {
   const arr = instancePositions(target).array as Float32Array;
@@ -48,6 +56,60 @@ function totalLuma(target: ReturnType<typeof makeTarget>, count: number): number
 }
 
 /**
+ * Standard deviation of per-mote luminance across the live color buffer. This is
+ * the "speckle" measure: a smooth/uniform ring has near-zero per-mote spread; a
+ * strongly twinkled ring has some bright motes and some dim ones, so the spread
+ * is large. It is what the advocate's pixel-diff actually sees at the FROZEN pin,
+ * where time-only flicker averages out and only a per-mote hash can vary
+ * neighbouring motes.
+ */
+function lumaStdDev(target: ReturnType<typeof makeTarget>, count: number): number {
+  const col = instanceColors(target).array as Float32Array;
+  const lums: number[] = [];
+  for (let i = 0; i < count; i++) {
+    lums.push(col[i * 3] + col[i * 3 + 1] + col[i * 3 + 2]);
+  }
+  const mean = lums.reduce((a, b) => a + b, 0) / Math.max(1, lums.length);
+  const variance = lums.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, lums.length);
+  return Math.sqrt(variance);
+}
+
+/** Mean per-mote quad SIZE across the live motes. */
+function sizeMean(target: ReturnType<typeof makeTarget>, count: number): number {
+  const s = instanceScales(target).array as Float32Array;
+  let sum = 0;
+  for (let i = 0; i < count; i++) sum += s[i];
+  return sum / Math.max(1, count);
+}
+
+/** Standard deviation of per-mote quad SIZE — the dominant "speckle" measure.
+ *  A smooth/uniform ring has every mote at scale 1 (std 0); a strongly twinkled
+ *  ring has some motes bloomed big and some shrunk to pinpoints, so the spread
+ *  is wide. This is the per-mote SIZE variance that moves PIXEL COVERAGE (a
+ *  brightness-only change over a sparse ring cannot move enough pixels to read
+ *  on the advocate's whole-frame diff; a size change does). */
+function sizeStdDev(target: ReturnType<typeof makeTarget>, count: number): number {
+  const s = instanceScales(target).array as Float32Array;
+  const sizes: number[] = [];
+  for (let i = 0; i < count; i++) sizes.push(s[i]);
+  const mean = sizes.reduce((a, b) => a + b, 0) / Math.max(1, sizes.length);
+  const variance = sizes.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, sizes.length);
+  return Math.sqrt(variance);
+}
+
+/** Coverage proxy: Σ scale² over the live motes. Quad area scales with the
+ *  square of the per-mote size, so this tracks the lit PIXEL FOOTPRINT of the
+ *  ring at the static pinned frame. A uniform ring and a size-speckled ring of
+ *  the same mote count differ here precisely because big motes cover much more
+ *  area than the equal-and-opposite small ones give back. */
+function coverageProxy(target: ReturnType<typeof makeTarget>, count: number): number {
+  const s = instanceScales(target).array as Float32Array;
+  let sum = 0;
+  for (let i = 0; i < count; i++) sum += s[i] * s[i];
+  return sum;
+}
+
+/**
  * Replicate the advocate "pinned engaged frame" control sweep EXACTLY as the
  * shared rig drives a state tile: the rig NEVER sets userData.state (so the
  * primitive is engaged-by-default), and it pins the same frozen t=1 with
@@ -58,7 +120,15 @@ function totalLuma(target: ReturnType<typeof makeTarget>, count: number): number
 function pinnedEngagedSummary(
   controlId: string,
   value: number,
-): { radius: number; luma: number; count: number } {
+): {
+  radius: number;
+  luma: number;
+  count: number;
+  lumaStd: number;
+  sizeStd: number;
+  sizeMean: number;
+  coverage: number;
+} {
   const target = makeTarget(clickBurstPrimitive);
   const inst = clickBurstPrimitive.create(target);
   // NO userData.state — exactly what the rig does. The primitive must engage by
@@ -71,8 +141,12 @@ function pinnedEngagedSummary(
   const count = Math.round(inst.getParams().count as number);
   const radius = meanRadius(target, count);
   const luma = totalLuma(target, count);
+  const lumaStd = lumaStdDev(target, count);
+  const sizeStd = sizeStdDev(target, count);
+  const sizeMeanV = sizeMean(target, count);
+  const coverage = coverageProxy(target, count);
   inst.dispose();
-  return { radius, luma, count };
+  return { radius, luma, count, lumaStd, sizeStd, sizeMean: sizeMeanV, coverage };
 }
 
 const MAX = 120;
@@ -250,15 +324,87 @@ describe('click-burst primitive', () => {
     );
   });
 
-  it('control [twinkle] reshapes the pinned engaged frame: emitted light differs', () => {
+  it('control [twinkle] reshapes the pinned engaged frame: a BOLD per-mote SIZE speckle', () => {
     const lo = pinnedEngagedSummary('twinkle', 0);
     const hi = pinnedEngagedSummary('twinkle', 1);
     expect(lo.luma, 'twinkle-low pin is a non-empty standing bloom').toBeGreaterThan(1);
-    // Twinkle modulates per-mote opacity (premultiplied into RGB) at the
-    // standing frame, so total emitted light shifts measurably low→high.
-    expect(Math.abs(hi.luma - lo.luma), 'twinkle changes total emitted light at the pin').toBeGreaterThan(
-      lo.luma * 0.08 + 1,
+
+    // ── THE DOMINANT, COVERAGE-CHANGING TERM: per-mote SIZE variance ─────────
+    // The prior fix drove a brightness-only speckle. But the burst is a THIN
+    // SPARSE RING (~5% frame coverage), and the advocate's gate is a WHOLE-FRAME
+    // meanAbsDiff: a brightness-only change over 5% of pixels can never clear it.
+    // The fix gives twinkle real PIXEL COVERAGE by varying each mote's SIZE.
+    //
+    // At twinkle=0 every mote is exactly baseline size — a SMOOTH uniform ring.
+    expect(lo.sizeStd, 'twinkle=0 ring is uniform — zero per-mote SIZE spread').toBeLessThan(1e-4);
+    expect(lo.sizeMean, 'twinkle=0 motes are all baseline size (1.0)').toBeCloseTo(1, 3);
+    // At twinkle=1 the per-mote sizes vary WIDELY — some bloom into big sparkle-
+    // stars, some shrink to pinpoints. The SIZE std is a BOLD fraction (≥30%) of
+    // the mean size, so the lit footprint of the ring visibly changes low→high
+    // (big motes cover many more pixels). This is what clears the whole-frame
+    // diff that brightness alone could not.
+    expect(hi.sizeStd, 'twinkle=1 ring has a wide per-mote SIZE spread').toBeGreaterThan(0.1);
+    expect(
+      hi.sizeStd,
+      'twinkle=1 per-mote SIZE spread is ≥30% of the mean mote size — a bold, area-moving glitter',
+    ).toBeGreaterThan(hi.sizeMean * 0.3);
+    // And the lit pixel FOOTPRINT (Σ scale², the coverage proxy) shifts boldly
+    // low→high: a real area change, not just a brightness redistribution. This
+    // is the coverage-proxy delta at the static pinned frame.
+    expect(
+      Math.abs(hi.coverage - lo.coverage),
+      'twinkle changes the ring pixel footprint (coverage proxy) at the frozen pin',
+    ).toBeGreaterThan(lo.coverage * 0.08);
+
+    // ── Complementary brightness speckle still rides on top ─────────────────
+    // At twinkle=0 every ring mote also burns at the same brightness (smooth);
+    // at twinkle=1 the per-mote luminance spread blows up too.
+    expect(lo.lumaStd, 'twinkle=0 ring is smooth/uniform — near-zero per-mote luma spread').toBeLessThan(
+      0.02,
     );
+    expect(hi.lumaStd, 'twinkle=1 ring is strongly speckled — wide per-mote luma spread').toBeGreaterThan(
+      lo.lumaStd + 0.1,
+    );
+    const meanMoteLuma = hi.luma / Math.max(1, hi.count);
+    expect(
+      hi.lumaStd,
+      'twinkle=1 per-mote luma spread is a substantial fraction of mean mote brightness',
+    ).toBeGreaterThan(meanMoteLuma * 0.25);
+    // Mean-preserving brightness: total emitted light stays roughly stable (the
+    // fix is a per-mote redistribution, NOT a global dim — a uniform dim reads as
+    // the same smooth ring, just darker, which is the original sub-noise defect).
+    expect(
+      Math.abs(hi.luma - lo.luma),
+      'twinkle is mean-preserving — no global dim/brighten',
+    ).toBeLessThan(lo.luma * 0.2);
+  });
+
+  it('control [twinkle] holds its per-mote SIZE + brightness speckle across repeated dt=0 seeks (frozen pin)', () => {
+    const target = makeTarget(clickBurstPrimitive);
+    const inst = clickBurstPrimitive.create(target);
+    inst.setControl('twinkle', 1);
+    // Repeated identical seeks at the SAME pinned t — exactly the rig's frozen
+    // sweep. The speckle must persist (it's hash-driven, not transient flicker
+    // that would average out at dt=0). Capture both the SIZE and color buffers.
+    inst.seek(1);
+    const count = Math.round(inst.getParams().count as number);
+    const colA = Float32Array.from(instanceColors(target).array as Float32Array);
+    const sizeA = Float32Array.from(instanceScales(target).array as Float32Array);
+    inst.seek(1);
+    inst.seek(1);
+    const colB = Float32Array.from(instanceColors(target).array as Float32Array);
+    const sizeB = Float32Array.from(instanceScales(target).array as Float32Array);
+    expect(sizeB, 'frozen-pin SIZE speckle is identical across repeated dt=0 seeks').toEqual(sizeA);
+    expect(colB, 'frozen-pin brightness speckle is identical across repeated dt=0 seeks').toEqual(colA);
+    // And it is genuinely speckled — both in SIZE (the dominant coverage term)
+    // and brightness — not uniform, at this frozen frame.
+    expect(sizeStdDev(target, count), 'frozen pin carries a wide per-mote SIZE spread').toBeGreaterThan(
+      0.1,
+    );
+    expect(lumaStdDev(target, count), 'frozen pin carries a wide per-mote luma spread').toBeGreaterThan(
+      0.1,
+    );
+    inst.dispose();
   });
 
   it('determinism: re-seeking the same t reproduces identical buffers', () => {

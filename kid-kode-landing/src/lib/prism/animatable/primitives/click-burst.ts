@@ -34,8 +34,15 @@
 //    a small per-mote cone jitter (index-hashed angles — no Math.random).
 //  • EXPONENTIAL DECELERATION: radial reach = radius · speed · (1 − e^(−K·life)).
 //    A dandelion bloom that shoots out then settles — no gravity, no chaos.
-//  • TWINKLE on the tail: deterministic hash flicker of per-mote opacity,
-//    ramped in over the second half of life so the dying ring sparkles.
+//  • TWINKLE on the tail: deterministic per-mote SIZE variance (the dominant
+//    term) plus a brightness speckle. At twinkle=0 every mote is the same
+//    uniform size (a smooth ring); at high twinkle the per-mote sizes vary
+//    WIDELY — some motes bloom into big bright sparkle-stars, others shrink to
+//    pinpoints — so the ring's PIXEL FOOTPRINT visibly changes (a brightness-
+//    only speckle over a ~5%-coverage ring can never move enough pixels to read
+//    on a whole-frame diff; a size variance moves area, which does). Driven by a
+//    deterministic per-mote hash (frozen at dt≈0), area-preserving so the ring
+//    still reads clean, and STRONGLY present at the pinned mid-bloom life.
 //  • COOLING: white-hot core → brass as life advances; brightness ignites fast
 //    then fades to nothing by life end (premultiplied into RGB — under additive
 //    blending that IS the alpha fade).
@@ -94,7 +101,24 @@ const PHASE_OFFSET = (() => {
   off -= Math.floor(off); // wrap into [0,1)
   return off;
 })();
-const TWINKLE_START = 0.22; // life at which the tail sparkle ramps in
+// Twinkle sparkle ramp: life at which the per-mote variance ramps in. Kept LOW
+// (well before the pinned PIN_LIFE = 0.55) so the speckle is STRONGLY present at
+// the frozen pin rather than gated to a near-zero tail — the prior brightness-
+// only fix died partly because the ramp was barely on at the pin. By PIN_LIFE
+// the ramp is fully (≈1) engaged.
+const TWINKLE_START = 0.08;
+// Twinkle BOLDNESS at the frozen pin. Two terms, both BIDIRECTIONAL and centered
+// (per-mote hashes, not a one-sided dim), so at twinkle=0 the ring is perfectly
+// smooth and uniform:
+//  • TW_SIZE_DEPTH — the DOMINANT term: per-mote SIZE variance. At full twinkle a
+//    mote's quad scales anywhere from ~0.25× (a pinpoint) to ~2.5× (a bloomed
+//    sparkle-star). Bigger motes cover MANY more pixels, so the ring's whole-
+//    frame footprint shifts boldly low→high — the coverage change a pixel-diff
+//    actually sees (a brightness-only change over a sparse ring cannot).
+//  • TW_BRIGHT_DEPTH — a complementary per-mote brightness glitter riding on top.
+const TW_SIZE_DEPTH = 0.62; // per-mote scale swing (×SIZE around 1.0)
+const TW_BRIGHT_DEPTH = 1.4; // per-mote brightness swing
+const SIZE_FLOOR = 0.22; // a shrunk mote never collapses fully to zero area
 const GOLDEN = 2.39996323; // golden-angle (rad) — second ring offset for depth
 
 /** Deterministic 0..1 hash from a single seed (no Math.random — pure seek). */
@@ -134,7 +158,19 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
       const dirY = new Float32Array(MAX_COUNT);
       const dirZ = new Float32Array(MAX_COUNT);
       const speed = new Float32Array(MAX_COUNT); // per-mote reach scale (ring thickness)
-      const twPhase = new Float32Array(MAX_COUNT); // twinkle hash phase
+      const twPhase = new Float32Array(MAX_COUNT); // twinkle time-ripple phase (PLAY motion)
+      // Per-mote FROZEN-FRAME sparkle hash, flat-uniform across [0,1) and
+      // decorrelated from the angular/speed/z hashes. THIS is the dominant
+      // twinkle driver: at a pinned dt≈0 frame the time ripple is constant, so
+      // only this deterministic per-mote hash makes one mote bright and its
+      // neighbour dim — the glittering speckle the twinkle control reshapes.
+      const twBright = new Float32Array(MAX_COUNT);
+      // Per-mote FROZEN-FRAME SIZE hash — the dominant twinkle driver.
+      // Decorrelated from twBright so a mote that's bright is not necessarily
+      // big: this is what scales each mote's quad at the pinned dt≈0 frame, so
+      // some motes bloom into big sparkle-stars and others shrink to pinpoints,
+      // visibly changing the ring's pixel footprint low→high.
+      const twSize = new Float32Array(MAX_COUNT);
       for (let i = 0; i < MAX_COUNT; i++) {
         const ring = i % 2; // 0 = main ring, 1 = golden inner ring
         // Even base angle around the circle + golden offset for the 2nd ring +
@@ -148,6 +184,8 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
         // Inner ring travels a touch shorter so the two rings stay legible.
         speed[i] = (ring ? 0.62 : 0.92) + hash1(i * 7.91 + 9.2) * 0.18;
         twPhase[i] = hash1(i * 9.27 + 2.2);
+        twBright[i] = hash1(i * 17.13 + 5.7);
+        twSize[i] = hash1(i * 23.51 + 8.3);
       }
 
       // ── Geometry: one billboard quad + per-mote instanced attributes ─────
@@ -156,10 +194,16 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
       // buffers the node material reads).
       const positions = new Float32Array(MAX_COUNT * 3);
       const colors = new Float32Array(MAX_COUNT * 3);
+      // Per-mote quad scale (1 float each, default 1.0 = baseline size). The
+      // material reads this via material.scaleNode so the billboard quad sizes
+      // per-instance — the per-mote SIZE variance the twinkle control drives.
+      const scales = new Float32Array(MAX_COUNT).fill(1);
       const posAttr = new InstancedBufferAttribute(positions, 3);
       const colAttr = new InstancedBufferAttribute(colors, 3);
+      const scaleAttr = new InstancedBufferAttribute(scales, 1);
       posAttr.setUsage(DynamicDrawUsage);
       colAttr.setUsage(DynamicDrawUsage);
+      scaleAttr.setUsage(DynamicDrawUsage);
 
       const geometry = new BufferGeometry();
       geometry.setIndex([0, 1, 2, 0, 2, 3]);
@@ -178,6 +222,7 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
       // them via instancedBufferAttribute() nodes.
       geometry.setAttribute('instancePosition', posAttr);
       geometry.setAttribute('instanceColor', colAttr);
+      geometry.setAttribute('instanceScale', scaleAttr);
 
       // ── Look layer: TSL radial falloff × per-mote instanced color ────────
       // d: 0 at the quad center → 1 at the edge midpoint (√2 at the corner).
@@ -205,6 +250,13 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
       });
       material.positionNode = instancedBufferAttribute(posAttr);
       material.colorNode = vec4(moteTint.mul(glow.mul(rim)), float(1));
+      // Per-mote quad SIZE: setupVertexSprite multiplies pointSize by
+      // vec2(scaleNode), so a per-instance scalar scales each billboard quad
+      // independently on BOTH backends (WebGPU + WebGL2 fallback). This is the
+      // pixel-coverage variance the twinkle control reshapes — bigger motes
+      // cover more pixels, smaller cover fewer, so the ring footprint visibly
+      // shifts at the frozen pin (a brightness-only speckle cannot).
+      material.scaleNode = instancedBufferAttribute(scaleAttr);
 
       const sprite = new Sprite(material);
       sprite.geometry = geometry;
@@ -280,19 +332,29 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
         const ignite = alive ? Math.min(1, life / 0.06) : 0;
         const fade = alive ? Math.pow(1 - life, 1.5) : 0;
         const coolT = alive ? Math.min(1, life * 1.4) : 0; // hue mix 0..1
-        // Twinkle ramps in over the tail (second half of life), so the dying
-        // ring sparkles while the fresh core stays clean.
-        const tailRamp = alive ? smoothstepCpu(TWINKLE_START, 1, life) : 0;
+        // Twinkle ramp: rises EARLY (TWINKLE_START = 0.08) so the per-mote
+        // sparkle is STRONGLY present at the pinned PIN_LIFE (≈0.55) rather than
+        // gated to a near-zero tail. By PIN_LIFE this is essentially fully on, so
+        // the size variance dominates the frozen pinned frame. We give it a short
+        // ramp window so the very first ignition flash (life ≈ 0) is still a
+        // clean uniform spark before the ring begins to glitter.
+        const tailRamp = alive ? smoothstepCpu(TWINKLE_START, 0.42, life) : 0;
+
+        // Twinkle strength at this frozen frame (0 when the control is at 0, so
+        // the ring stays perfectly uniform and smooth). Shared by the size and
+        // brightness sparkle terms below.
+        const twActive = alive ? twinkleAmt * tailRamp : 0;
 
         for (let i = 0; i < count; i++) {
           if (!alive) {
-            // Rest / spent: park out of view, dark.
+            // Rest / spent: park out of view, dark, baseline size.
             positions[i * 3] = 0;
             positions[i * 3 + 1] = PARKED_Y;
             positions[i * 3 + 2] = 0;
             colors[i * 3] = 0;
             colors[i * 3 + 1] = 0;
             colors[i * 3 + 2] = 0;
+            scales[i] = 1;
             continue;
           }
           const r = reach * speed[i];
@@ -300,10 +362,26 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
           positions[i * 3 + 1] = dirY[i] * r;
           positions[i * 3 + 2] = dirZ[i] * r;
 
-          // Per-mote deterministic twinkle on the tail: a hash flicker of
-          // brightness, only meaningful once tailRamp ramps in.
-          const flick = 0.5 + 0.5 * Math.sin((life * 22 + twPhase[i] * 12) * Math.PI);
-          const tw = 1 - twinkleAmt * tailRamp * (1 - flick);
+          // ── DOMINANT twinkle term: per-mote SIZE variance ─────────────────
+          // A FROZEN per-mote hash (twSize) centered to [-1,1] drives each
+          // mote's quad scale. At twinkle=0 every scale is exactly 1 (uniform
+          // smooth ring). At high twinkle some motes bloom to ~(1+TW_SIZE_DEPTH)×
+          // and others shrink toward SIZE_FLOOR — a glittering, size-varied ring
+          // whose PIXEL FOOTPRINT changes (big motes cover more pixels), which is
+          // exactly what a whole-frame diff can read. Hash-driven so it is
+          // identical across repeated dt≈0 seeks (the rig's frozen pin).
+          const sizeSparkle = twSize[i] * 2 - 1; // [-1,1], flat per-mote hash
+          let scale = 1 + twActive * TW_SIZE_DEPTH * sizeSparkle;
+          if (scale < SIZE_FLOOR) scale = SIZE_FLOOR;
+          scales[i] = scale;
+
+          // ── Complementary brightness speckle (rides on top) ───────────────
+          // Bidirectional, hash-dominant. A gentle time ripple shimmers during
+          // PLAY but averages out at a static frame, so the frozen-frame glitter
+          // is the twBright hash. Decorrelated from twSize so bright ≠ big.
+          const ripple = 0.5 + 0.5 * Math.sin(life * 9 + twPhase[i] * 6.28318);
+          const brightSparkle = (twBright[i] * 0.8 + ripple * 0.2) * 2 - 1; // ~[-1,1]
+          const tw = Math.max(0, 1 + twActive * TW_BRIGHT_DEPTH * brightSparkle);
 
           // White-hot → brass cooling; hotBoost pushes fresh motes above 1.0 so
           // additive blending clips the core toward white-hot.
@@ -316,8 +394,8 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
           colors[i * 3 + 1] = cg * lum;
           colors[i * 3 + 2] = cb * lum;
         }
-        // Park any motes beyond the live count (dark, out of view) so the
-        // buffers stay fully deterministic for a given t + count.
+        // Park any motes beyond the live count (dark, out of view, baseline
+        // size) so the buffers stay fully deterministic for a given t + count.
         for (let i = count; i < MAX_COUNT; i++) {
           positions[i * 3] = 0;
           positions[i * 3 + 1] = PARKED_Y;
@@ -325,9 +403,11 @@ export const clickBurstPrimitive: PrimitiveDefinition = {
           colors[i * 3] = 0;
           colors[i * 3 + 1] = 0;
           colors[i * 3 + 2] = 0;
+          scales[i] = 1;
         }
         posAttr.needsUpdate = true;
         colAttr.needsUpdate = true;
+        scaleAttr.needsUpdate = true;
       };
 
       let lastSeekT = 0;
