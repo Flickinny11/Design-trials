@@ -1,0 +1,613 @@
+{
+  "summary": "Web-research the 2026 browser/WebGPU physics+fluid stack and audit existing physics-named Prism primitives for sim-vs-fake",
+  "agentCount": 10,
+  "logs": [],
+  "result": {
+    "research": [
+      {
+        "question": "Current (June 2026) state of Rapier physics for the browser (@dimforge/rapier3d and rapier3d-compat): latest version, gzipped wasm size, cross-platform determinism, snapshot/restore API and backward-reseek cost, suitability for 10-50 decorative rigid bodies that must be deterministically reproducible frame-for-frame, given a SYNCHRONOUS createNode contract and a single three/webgpu scene.",
+        "headline": "Rapier 0.19.3 is genuinely cross-platform deterministic and small enough, but it integrates ONLY forward and its sole \"reseek\" is full-deserialize World.restoreSnapshot — plus a Jan-2026 broadphase snapshot-determinism bug is unfixed in any release and the async wasm init breaks your synchronous createNode contract.",
+        "recommendation": "For a fixed catalog of 10-50 decorative bodies whose ONLY requirement is repeatable frozen \"engaged\" frames at seek(t), do NOT pull in Rapier. The deterministic-replay value Rapier sells (rollback netcode) is overkill here, and its reseek model is exactly wrong for you: Rapier cannot step backward, so seek(t) means either (a) re-run the world from frame 0 with fixed dt up to t every time you scrub backward (O(t) per seek, fine for a few hundred frames but pure CPU you don't need for decoration), or (b) snapshot every keyframe and World.restoreSnapshot() to jump back, which allocates a brand-new World/wasm object graph per restore (expensive, GC-churny) and is currently hit by the unfixed broadphase non-determinism bug (rapier#910). Either way you fight an async-init wasm engine that violates your synchronous createNode contract (you'd need a module-scope `await RAPIER.init()` gate or a top-level-await wrapper, and createNode would have to assume the singleton is already inited). For decorative rigs, prefer a deterministic, synchronous, closed-form or fixed-dt-integrated motion model authored in TSL/JS (seeded PRNG + analytic curves, or your existing Animatable keyframe system) where seek(t) is a pure function of t with no integration history. Keep Rapier on the shelf ONLY if you later need genuine emergent contact/stacking physics that you cannot fake; if so, run it in a fixed-dt accumulator, precompute the frozen frames once into a transform LUT keyed by t, and feed the LUT (not the live solver) to the verification harness so seek(t) becomes a deterministic table lookup.",
+        "currentVersionOrApi": "Latest published: 0.19.3 across all three JS variants — @dimforge/rapier3d, @dimforge/rapier3d-compat, @dimforge/rapier3d-simd-compat — published 2025-11-05 (verified via registry.npmjs.org). 0.19.x wraps Rust Rapier 0.29.0 (introduced in JS 0.19.0, 2025-09-05). API: await RAPIER.init() (async wasm), new RAPIER.World(gravity), world.step(eventQueue), world.timestep / world.integrationParameters for fixed dt, world.takeSnapshot(): Uint8Array, static World.restoreSnapshot(bytes): World. 0.19.0 removed the legacy PGS solver methods (numAdditionalFrictionIterations, switchToStandardPgsSolver, switchTo*PgsSolver*) — solver is now small-steps TGS only. No native backward time-stepping exists in the API.",
+        "bundleOrPerfCost": "Measured from the actual 0.19.3 npm tarballs. Non-compat @dimforge/rapier3d: rapier_wasm3d_bg.wasm is 1,570,176 B raw -> 583,748 B gzipped (~570 KB), plus JS glue gzipping to ~100 KB (~670 KB total) BUT the wasm is a separate file requiring an async fetch+instantiate. Compat @dimforge/rapier3d-compat: ships rapier.mjs with the wasm base64-inlined, 2,238,719 B raw -> 834,500 B gzipped (~815 KB) in a single JS file, no second fetch — base64 inlining costs ~45% over the raw-wasm path (815 KB vs ~570 KB). simd-compat is the same size class and ~2-5x faster per Dimforge's own 2026 review, but SIMD threading/perf does not change the determinism story. For 10-50 small bodies the per-step solve cost is negligible (sub-millisecond); the real cost in YOUR use case is reseek, not stepping.",
+        "determinismReseek": "Determinism: YES, genuinely cross-platform deterministic on IEEE-754-compliant platforms when using the SAME Rapier version, identical initial conditions, and identical operation order; Dimforge guarantees world.takeSnapshot() yields a byte array whose MD5 is identical across machines/browsers/OSes after the same number of timesteps. Caveat they call out: avoid Math.sin/cos etc. for deriving inputs (transcendentals are not cross-platform). Reseek BACKWARD: NOT cheap and NOT native. Rapier only integrates forward via world.step(); there is no seek(t) and no reverse step. The only ways to land on an arbitrary frozen frame: (1) re-step from frame 0 at fixed dt to t (deterministic, but O(number of steps) CPU each scrub-back), or (2) World.restoreSnapshot(bytes) which is a FULL deserialization returning a brand-new World instance (new wasm-side object graph) — not an in-place reset — so doing it per-seek allocates/frees a whole world each time (heavy, GC pressure). dt~=0 reseek is fine deterministically (fixed dt -> identical floats) but there is no way to make the backward jump itself cheap without precomputing+caching frames.",
+        "fitsOneWebGPUScene": "Does NOT fit cleanly. Rapier requires an async wasm fetch+init (await RAPIER.init() / for -compat await import then init) before any World/body can be constructed. Your createNode contract is SYNCHRONOUS and must return a THREE.Object3D immediately. To use Rapier inside createNode you would have to gate the whole runtime behind a module-scope top-level-await that resolves the RAPIER singleton before any node mounts, and have createNode assume the singleton is already inited (throwing if not) — i.e. an out-of-band async bootstrap, which is exactly the kind of async-fetch dependency the single-scene synchronous-createNode design avoids. Rapier itself is renderer-agnostic (it owns no GL/GPU context) so it does NOT need a second renderer and coexists fine alongside the one three/webgpu scene; the conflict is purely the async-init-vs-synchronous-createNode mismatch, not a second-renderer or TSL problem. It produces transforms (position/quaternion) you copy onto Object3Ds each frame — no shader involvement, so the TSL-only rule is unaffected.",
+        "fallbackStory": "N/A in the WebGL2/WebGPU sense — Rapier is a CPU wasm physics engine and does not touch the GPU, so it is identical under three/webgpu and the WebGL2 fallback; whichever renderer is active just receives the same CPU-computed transforms. The only platform dependency is the wasm engine itself: it runs anywhere wasm runs (effectively universal in 2026 browsers). The non-compat build needs a wasm MIME/fetch path; the -compat build avoids that by base64-inlining (the reason to pay the +245 KB gzip). There is no GPU fallback concern.",
+        "verdict": "reject",
+        "citations": [
+          "https://www.npmjs.com/package/@dimforge/rapier3d-compat",
+          "https://registry.npmjs.org/@dimforge/rapier3d-compat",
+          "https://registry.npmjs.org/@dimforge/rapier3d",
+          "https://registry.npmjs.org/@dimforge/rapier3d-simd-compat",
+          "https://rapier.rs/docs/user_guides/javascript/determinism/",
+          "https://rapier.rs/docs/user_guides/javascript/serialization/",
+          "https://github.com/dimforge/rapier.js/blob/master/CHANGELOG.md",
+          "https://github.com/dimforge/rapier/issues/910",
+          "https://dimforge.com/blog/2026/01/09/the-year-2025-in-dimforge/"
+        ],
+        "confidence": "high"
+      },
+      {
+        "question": "Do any current (June 2026) browser physics engines other than Rapier (jolt-physics, Box2D v3 wasm, PhysX-js-webidl, cannon-es, ammo.js, Havok, propel-js, etc.) beat a hand-rolled deterministic fixed-dt CPU integrator for ~10-50 small decorative, frozen-frame-reproducible catalog animation primitives on a single three/webgpu scene with a synchronous node-creation contract?",
+        "headline": "No third-party physics engine beats a hand-rolled fixed-dt integrator for this use case — they all cost an async multi-hundred-KB-to-MB wasm fetch that breaks the synchronous createNode contract, and the only ones that are even genuinely deterministic (Jolt, Box2D v3.1) are massive overkill for decorative primitives where you control every body and just want the same frame every reseek.",
+        "recommendation": "Keep the hand-rolled deterministic fixed-dt CPU integrator. For 10-50 small DECORATIVE primitives the physics is trivial (semi-implicit/symplectic Euler or Verlet at a fixed dt with an integer step counter), and a hand-roll is the ONLY option that satisfies all four of your constraints at once: (1) synchronous createNode — no wasm fetch/instantiate, the integrator is plain JS available at module-eval time; (2) frozen-frame reproducibility — you own the seed, the dt, the step count, and can advance N steps from a known state to land on byte-identical frame N every time, and reseek backward by re-simulating from step 0 (cheap at this body count, 10-50 bodies × a few hundred steps is sub-millisecond) or by snapshotting your own tiny state array; (3) single three/webgpu scene — zero second renderer, zero wasm heap, you just write positions onto the existing Object3D transforms each frame; (4) WebGL2 fallback is automatic because there is no GPU compute, no SIMD requirement, no SharedArrayBuffer. Reach for a real engine ONLY if a future primitive needs genuine many-body stacking/contact resolution or true fluid SPH — and even then prefer Jolt (deterministic + SaveState/RestoreState) or Box2D v3.1 (deterministic, smallest wasm) over the others, isolated behind a lazy async loader so it never pollutes the synchronous path.",
+        "currentVersionOrApi": "jolt-physics (JoltPhysics.js) 1.0.0, pub 2025-12-28, wraps Jolt 5.x, exposes SaveState/RestoreState + StateRecorder. box2d3-wasm 5.2.0, pub 2026-02-16, wraps Box2D v3.1.1 (cross-platform determinism landed in core 3.1.0). physx-js-webidl 2.7.3, pub 2026-04-15, wraps Nvidia PhysX 5.6.1. @babylonjs/havok 1.3.12, pub 2026-03-16. cannon-es 0.20.0, pub 2022-08-12 (dormant, no release in ~3.5y). ammo.js 0.0.10 / ammojs-typed 1.0.6 (2022, Bullet 2.x). Reference baseline: @dimforge/rapier3d-compat 0.19.3, pub 2025-11-05. Newcomer noted: propel-js (serializable deterministic 2D, niche).",
+        "bundleOrPerfCost": "Real measured gzipped sizes (single lean wasm + required JS glue, not npm unpackedSize): box2d3-wasm ~154 KB (compat) / ~158 KB (deluxe) wasm, 2D only. cannon-es ~75 KB pure JS, no wasm. @babylonjs/havok ~662 KB wasm. jolt-physics ~726 KB wasm + ~134 KB JS glue for the lean 'wasm' build (the 'wasm-compat' single-file build is ~888 KB gz; multithread variants need SharedArrayBuffer/COOP-COEP headers). physx-js-webidl ~1.61 MB wasm. ammo.js/ammojs-typed ~1.5 MB. Rapier (baseline) ~585 KB wasm + ~23 KB JS. Hand-rolled integrator: effectively 0 KB net-new (a few hundred lines of JS, tree-shaken into the existing bundle, no wasm). Perf: 10-50 tiny bodies is nowhere near any engine's CPU floor; wasm boundary-crossing overhead per step would likely make a full engine SLOWER than the hand-roll at this scale, on top of a 50-700ms one-time instantiate cost.",
+        "determinismReseek": "Hand-roll: fully deterministic by construction (fixed dt, integer step counter, seeded RNG), trivially reseekable — re-run from step 0 to land on any frozen frame, or keep a tiny per-body state snapshot for O(1) restore. Jolt: genuinely deterministic (same binary => same result; WASM is one binary so it is deterministic across all browsers; cross-platform mode is +~8% but you do not even need it since you ship one wasm), and it is the ONLY engine here with first-class snapshot/reseek — SaveState/RestoreState + StateRecorder/StateRecorderFilter freeze and restore exact positions/velocities. Box2D v3.1: deterministic (cross-platform since 3.1.0, same result 2 vs 8 threads) BUT explicitly NO rollback determinism and no built-in compact serialize, so reseek = re-simulate from inputs (fine for short decorative loops). cannon-es: no determinism guarantee (semi-implicit Euler, float-order sensitive), manual snapshot only. PhysX / Havok / ammo(Bullet): not advertised as cross-platform deterministic, no simple frozen-frame snapshot API — wrong tool for reproducible frames.",
+        "fitsOneWebGPUScene": "Hand-roll fits perfectly: pure JS, available synchronously inside createNode, writes straight onto existing THREE.Object3D transforms on the single three/webgpu scene, no second renderer, no async, no TSL conflict (it does not touch shaders at all). EVERY wasm engine here FAILS the synchronous createNode contract: instantiating wasm is inherently async (await init / instantiateStreaming), so you must either pre-warm the module before any node is created and gate node creation on it, or accept a node that pops in a frame late — both violate 'synchronous createNode'. None of them is a renderer (they are sim-only, you still drive three/webgpu yourself), so there is no TSL/renderer conflict, but the async-load + wasm-heap footprint is the disqualifier. Jolt multithread additionally needs SharedArrayBuffer (COOP/COEP headers) and Havok needs WASM SIMD — extra deployment constraints the hand-roll never imposes.",
+        "fallbackStory": "Hand-roll: flawless WebGL2 fallback — it is CPU JS with zero GPU/SIMD/SharedArrayBuffer dependency, so it behaves identically whether three renders via WebGPU or falls back to WebGL2. The wasm engines are renderer-agnostic so they technically also 'work' under a WebGL2 three fallback, BUT carry their own platform gates: Havok requires WASM SIMD (absent on iOS < 16.4), Jolt/Box2D multithread builds require SharedArrayBuffer + cross-origin isolation headers (often unavailable), and all add a wasm-unsupported failure mode that the pure-JS hand-roll and pure-JS cannon-es do not have.",
+        "verdict": "reject",
+        "citations": [
+          "https://www.npmjs.com/package/jolt-physics",
+          "https://github.com/jrouwe/JoltPhysics.js/",
+          "https://raw.githubusercontent.com/jrouwe/JoltPhysics/master/Docs/Architecture.md",
+          "https://box2d.org/documentation/md_faq.html",
+          "https://github.com/Birch-san/box2d3-wasm",
+          "https://github.com/erincatto/box2d/releases",
+          "https://www.npmjs.com/package/physx-js-webidl/v/0.4.15",
+          "https://github.com/fabmax/physx-js-webidl",
+          "https://www.npmjs.com/package/@babylonjs/havok",
+          "https://github.com/pmndrs/cannon-es",
+          "https://www.npmjs.com/package/cannon-es",
+          "https://www.npmjs.com/package/box2d-wasm"
+        ],
+        "confidence": "high"
+      },
+      {
+        "question": "Best-in-class June 2026 real-time WebGPU fluid sim for a decorative liquid-fill/pour/splash/ripple primitive: compare SPH, FLIP/PIC, and Jos-Stam stable-fluids (Eulerian grid); survey three.js/WebGPU demos; note GPU cost, liquid read, and determinism/reseekability.",
+        "headline": "Use the Eulerian grid family (Jos-Stam stable-fluids dye for pour/splash + a GPGPU height-field for ripple), not a particle solver: SPH/FLIP/MLS-MPM look best but their atomic scatter and variable timestep make them non-deterministic and expensive to reseek to a frozen frame.",
+        "recommendation": "One TSL grid primitive, two modes, both ping-ponged StorageTextures on the existing three/webgpu scene, both seekable by frame index. (1) POUR/SPLASH/FILL = 2D Jos-Stam stable-fluids (semi-Lagrangian advect + Jacobi pressure-project + vorticity confinement) driving a DYE field, the exact pattern in @three-blocks/core's `smoke` TSL node (128x128 velocity, 512x512 dye); render the dye as a refractive liquid sheet (steep dye ramp, higher dissipation, screen-space normal from density gradient + Fresnel) so it reads as ink/liquid not gas. (2) RIPPLE = GPGPU wave-equation HEIGHT FIELD (classic three.js webgl_gpgpu_water ported to TSL), 256x256 displaced/normal-mapped plane, essentially free, perfect still-water ripple read. DETERMINISM: drive from a fixed-step accumulator keyed to an external frame counter (not wall-clock dt), seed splats from a hashed PRNG keyed on (frameIndex, splatId), use Jacobi (pure reads, order-independent) not atomic scatter; pin any frame N by replaying N fixed steps from 0 (few ms at 128/256) or snapshot/restore the 2-5 textures. REJECT particle solvers here: atomicAdd particle->grid scatter is accumulation-order non-deterministic, shipped examples use Math.random() init + variable dt, and reseeking means restoring 32k-300k particle buffers. Keep MLS-MPM as a separate non-frozen-frame fluids-only primitive only if you later need a free-floating 3D splashing blob.",
+        "currentVersionOrApi": "three.js r17x (June 2026), three/webgpu + three/tsl with automatic WebGL2 fallback. Official example webgpu_compute_particles_fluid = MLS-MPM in TSL (kernels clearGrid/p2g1/p2g2/updateGrid/g2p; 4,096-131,072 particles, default 32,768; dt clamped 1e-5..1/60; Math.random() init). @three-blocks/core `smoke` TSL node = 2D velocity-pressure stable-fluids (velocity 128x128, pressure 128x128, dye 512x512, curl, divergence; semi-Lagrangian advect + divergence-free projection + vorticity confinement; needs three/webgpu Tier2 read-write StorageTextures). WebGPU shipped in Safari 26 (Sept 2025) so broad coverage in 2026.",
+        "bundleOrPerfCost": "No wasm; pure TSL compute, zero extra binary (three/webgpu already shipped). Grid stable-fluids 128x128 sim/512x512 dye: ~0.3-0.8ms/frame iGPU, easy 60fps with many tiles. Height-field 256x256: <0.3ms/frame, near free. Particle solvers: MLS-MPM ~100k particles iGPU / ~300k discrete; SPH only ~30k iGPU (neighbor-search bound, crashes on macOS in WebGPU-Ocean); FLIP/PIC ~100k / tens-of-thousands at 60fps (jeantimex/fluid). Particle screen-space surface rendering adds several fullscreen passes (depth+thickness+bilateral blur+normals); grid render is one material pass. Grid family ~5-10x cheaper for a decorative tile, leaving budget for sibling tiles on the shared scene.",
+        "determinismReseek": "Grid + height-field: YES, fully deterministic and cheaply reseekable. State = 2-5 fixed-size textures; fixed-step accumulator keyed to a frame counter + hashed PRNG for impulses; reach frame N by replaying N steps (few ms at 128/256) OR snapshot/restore the textures. Jacobi pressure solve is pure reads = order-independent = deterministic. Particle solvers: effectively NO for a frozen-frame catalog — atomicAdd float scatter is accumulation-order-dependent (non-deterministic frame-to-frame and cross-GPU), examples seed with Math.random() and use variable wall-clock dt, and reseeking needs restoring 32k-300k per-particle position+velocity buffers. Pinnable only with heavy extra work (seeded PRNG, fixed dt, deterministic counting-sort, full particle snapshots).",
+        "fitsOneWebGPUScene": "YES for the grid/height-field recommendation: one three/webgpu scene, TSL-only (both @three-blocks smoke and gpgpu-water are expressible as TSL Fn compute kernels, no raw WGSL/GLSL), no second renderer, no async wasm fetch. createNode stays synchronous: allocate StorageTextures and build the compute/material node graph up front; per-frame is renderer.computeAsync of pre-built kernels driven by a uniform frame counter. MLS-MPM also fits one TSL scene (official example proves it), so it does not break the renderer rules — it breaks the determinism/frozen-frame rule, which is why it is rejected for this primitive, not for scene-architecture reasons.",
+        "fallbackStory": "Good but needs care. Both recommended approaches degrade to WebGL2 via TSL GLSL compilation, BUT WebGL2 has no compute, so kernels must be authored as ping-pong fragment passes (the original three.js webgl_gpgpu_water is exactly a WebGL2 fragment height-field; stable-fluids has decades of WebGL fragment implementations). Plan: write the math once in TSL, let r17x route to compute on WebGPU / fragment on WebGL2; where the compute->fragment auto-path is incomplete, gate a reduced-res fragment fallback (64x64) or a baked looping normal/dye texture for the lowest tier. Particle solvers fall back far worse — MLS-MPM/SPH rely on atomic compute scatter with no efficient WebGL2 equivalent, needing a different algorithm entirely. Another reason the grid family is the safer primitive.",
+        "verdict": "adopt-for-fluids-only",
+        "citations": [
+          "https://tympanus.net/codrops/2025/02/26/webgpu-fluid-simulations-high-performance-real-time-rendering/",
+          "https://github.com/matsuoka-601/WebGPU-Ocean",
+          "https://threejs.org/examples/webgpu_compute_particles_fluid.html",
+          "https://github.com/mrdoob/three.js/blob/dev/examples/webgpu_compute_particles_fluid.html",
+          "https://www.threejs-blocks.com/docs/smoke",
+          "https://github.com/jeantimex/fluid",
+          "https://github.com/kishimisu/WebGPU-Fluid-Simulation",
+          "https://experiments.withgoogle.com/fluid-particles",
+          "https://github.com/dli/fluid",
+          "https://github.com/mrdoob/three.js/blob/dev/examples/webgl_gpgpu_water.html",
+          "https://www.vitalify.asia/blog/xr-3d-web/fluid-simulation-webgl-webgpu-real-time-en",
+          "https://en.wikipedia.org/wiki/Fluid_animation"
+        ],
+        "confidence": "high"
+      },
+      {
+        "question": "Is r184 TSL/WebGPU compute (Fn, instancedArray, compute/computeAsync, atomics) stable for particle/fluid sims, and what is the WebGL2 fallback behavior?",
+        "headline": "The compute API is real and ships in official r184 examples, but WebGPURenderer is still officially experimental; the WebGL2 fallback emulates self-element compute via transform feedback (no no-op/throw), while atomics and neighbor-heavy fluids are effectively WebGPU-only.",
+        "recommendation": "Adopt compute for self-contained instanceIndex-keyed particle primitives (emitters, swirls, sparks) which degrade onto WebGL2. Do NOT make fluids (MLS-MPM, neighbor grids, atomics) baseline primitives. Branch explicitly on backend and ship a non-compute WebGL2 degrade. For frozen frames, drive from a seeded init pass plus fixed-timestep step count so frames replay from seed.",
+        "currentVersionOrApi": "r184 (2026-04-16, current stable). instancedArray(count,type) returns StorageBufferNode (.element, .toAttribute, .toAtomic, .setAccess). Dispatch Fn().compute(count) via renderer.computeAsync. Imports from three/tsl + three/webgpu. renderer.init() async; forceWebGL:true forces WebGL2.",
+        "bundleOrPerfCost": "No extra wasm; part of three/webgpu build (WGSL on WebGPU, GLSL on WebGL2). WebGPU scales to 500k-1M+ particles; WebGL2 transform-feedback emulation is slower, cross-element reads via PBO-to-texture texelFetch (r162). r184 cut per-frame allocations.",
+        "determinismReseek": "Conditionally deterministic: seeded init + fixed-timestep dispatches replay reproducibly; reseek by replaying K steps from seed. Arbitrary backward scrub needs re-sim or a storage-buffer snapshot; no built-in snapshot/restore, readback is async and lost on device-lost. WebGPU vs WebGL2 not bit-identical.",
+        "fitsOneWebGPUScene": "Partial. Fits one-scene TSL-only (same renderer, no second renderer, no wasm) but strains synchronous createNode: renderer.init() and computeAsync are async, and dispatch is renderer-driven per-frame, not pure node construction.",
+        "fallbackStory": "Better than the no-compute myth. WebGLBackend implements compute() via transform feedback (RASTERIZER_DISCARD, drawArrays POINTS); cross-element reads added r162 via PBO/texelFetch. Self-element compute runs on WebGL2 with no no-op/throw. But atomics and neighbor/fluid patterns need WebGPU; official compute examples assume WebGPU (no forceWebGL); renderer still labeled experimental. Detect via navigator.gpu/forceWebGL, not a documented backend flag. Treat WebGL2 compute as a per-primitive opt-in degrade, not transparent parity.",
+        "verdict": "adopt-for-fluids-only",
+        "citations": [
+          "https://threejs.org/manual/en/webgpurenderer.html",
+          "https://threejs.org/docs/pages/StorageBufferNode.html",
+          "https://github.com/mrdoob/three.js/blob/master/examples/webgpu_compute_particles.html",
+          "https://threejs.org/examples/webgpu_compute_particles_fluid.html",
+          "https://github.com/mrdoob/three.js/issues/27642",
+          "https://github.com/mrdoob/three.js/releases/tag/r184"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "question": "Is XPBD the modern unified approach for hand-rolled browser cloth/rope/soft-body/springs vs classic spring-mass (Provot) or mass-aggregate Verlet, and should our catalog primitives use XPBD or simpler Verlet spring-mass — verifying substepping, compliance, and determinism/reseekability?",
+        "headline": "XPBD is the current consensus unified approach and the right default for hand-rolled cloth/rope/soft/spring primitives; its fixed-dt + fixed Gauss-Seidel-order form is deterministic and trivially reseekable to a frozen frame, and small CPU XPBD fits one three/webgpu scene with a synchronous createNode.",
+        "recommendation": "Use XPBD as the unified solver for all four primitive families (spring, soft-body, cloth, rope), not classic Provot spring-mass and not plain mass-aggregate Verlet. Reasons specific to a decorative, deterministic, frozen-frame-pinnable catalog: (1) One code path covers springs (distance constraints), rope (chain of distance constraints), cloth (structural+shear+bend distance constraints), and soft-body (volume + distance constraints) — you stop maintaining three slightly-different integrators. (2) Stiffness becomes a physical compliance value alpha (1/k) that is timestep-independent, so a primitive 'reads' the same regardless of frame rate or substep count — exactly what you want for a catalog where authors tune feel once. (3) Drape/dangle/jiggle/squash all emerge from the same constraint machinery. Implement it the Ten Minute Physics way: fixed frameDt (e.g. 1/60), split into N substeps (dt = frameDt/N), ONE constraint pass per substep — at single iteration per substep you can drop lambda tracking entirely (plain PBD-with-compliance form: lambda = -C / (sum w|gradC|^2 + alpha/dt^2)), which is simpler than full XPBD. Pick small N: 4-8 substeps for rope/spring, 8-20 for cloth (paper used up to 30 for 150k-particle cloth). Solve constraints CPU-side, synchronously, inside createNode's update; write results to a BufferGeometry each frame. Do NOT reach for the WebGPU compute-cloth path (graph-colored parallel Gauss-Seidel) for catalog-scale geometry — it adds a second async pipeline and coloring complexity you don't need at dozens-to-low-thousands of particles. Keep plain Verlet only as a mental fallback; there is no quality or simplicity reason to ship it once XPBD-compliance is in place.",
+        "currentVersionOrApi": "Algorithm sources are stable/canonical: PBD (Müller et al. 2007), XPBD compliant constraints (Macklin, Müller, Chentanez 2016, https://matthias-research.github.io/pages/publications/XPBD.pdf), and the substepping result 'Small Steps in Physics Simulation' (Macklin et al., SCA 2019, https://mmacklin.com/smallsteps.pdf). Compliance formula confirmed verbatim from Ten Minute Physics lesson 09: lambda = -C / (w1|gradC1|^2 + ... + wn|gradCn|^2 + alpha/dt^2), alpha = inverse physical stiffness, alpha=0 => infinitely stiff/hard. Distance constraint: dx1 = +w1/(w1+w2) (l-l0) (x2-x1)/|x2-x1|. Renderer target verified current: three.js stable r184 (released 2026-04-16); WebGPURenderer production-ready since r171 (Sep 2025) with automatic WebGL2 backend fallback. The official three.js webgpu_compute_cloth example uses Verlet (not XPBD) in compute shaders — a data point that plain Verlet is still 'fine' for pure decoration, but it does not give you timestep-independent stiffness.",
+        "bundleOrPerfCost": "Zero new dependencies and zero wasm — hand-rolled XPBD is ~150-400 lines of plain TS/JS (predict positions, solve distance/volume/bend constraints in a fixed order, write back velocities). No bundle hit beyond your own module. Perf is the headline result from the Small Steps paper: at a FIXED time budget, N substeps x 1 iteration beats 1 step x N iterations. Paper benchmark (150k particles, 896k springs over a bunny): 1 substep/30 iterations = 12.4ms/frame with visible stretch; 30 substeps/1 iteration = 13.5ms/frame with far less stretch and higher effective stiffness — ~same cost, dramatically better. For catalog primitives (tens to low-thousands of particles) a CPU solve at 60fps is comfortably sub-millisecond. Cost scales with particles x constraints x substeps; keep substeps small. Bend constraints and self-collision (spatial hash) are the expensive extras — add only where a primitive needs them.",
+        "determinismReseek": "Deterministic and cheaply reseekable — this is XPBD's strong suit for a frozen-frame catalog. Determinism requires three things, all under your control: (1) FIXED dt with an accumulator (Gaffer 'Fix Your Timestep!') — variable dt is non-deterministic because non-associative float math accumulates differently each run; fixed dt makes the operation sequence identical => same inputs same output. (2) FIXED constraint solve order — XPBD uses sequential (Gauss-Seidel) projection; the Small Steps paper explicitly notes 'the residual has some dependence on the iteration order' but in practice this is not an issue AS LONG AS the order is fixed (it is, if you iterate the same array each frame). Avoid parallel/GPU Jacobi or graph-colored ordering if bit-exact reproducibility matters — those reorder work. (3) Seed any randomness (initial jitter) from a fixed seed. Reseek/snapshot is trivial: the ENTIRE simulation state is just current positions + previous positions (or positions + velocities) per particle — a flat Float32Array. Snapshot = copy that array; restore = write it back; a frozen frame is just 'stop calling update and hold the last positions.' To pin a specific deterministic frame, step the solver forward F fixed substeps from the seeded rest state and capture — fully reproducible. One caveat from the paper: the alpha/dt^2 term can hit single-precision float limits after a very large number of substeps; cap substeps (you will, for perf anyway) and this never bites.",
+        "fitsOneWebGPUScene": "Yes — clean fit, no second renderer and no async wasm. Run the XPBD solve on the CPU synchronously: createNode returns a THREE.Object3D (Group with a Mesh/Line over a BufferGeometry) immediately; the per-frame update mutates the geometry's position attribute from the solver. This satisfies synchronous createNode (no awaited physics init) and stays on the single three/webgpu scene — the geometry is just normal three.js, rendered by the one WebGPURenderer. TSL-only is unaffected: materials stay TSL; the physics is plain JS math, not a shader, so there's no GLSL and no raw-shader violation. You do NOT need a compute-shader implementation for catalog scale, so you avoid the WGSL/TSL-compute + graph-coloring path entirely. If a future primitive ever needs 100k+ particle cloth, the upgrade is a TSL compute pass on the same renderer (the three.js webgpu_compute_cloth example shows the shape) — but that would trade away bit-exact CPU determinism for parallel Jacobi/colored Gauss-Seidel, so keep heavy GPU cloth out of the deterministic-catalog tier.",
+        "fallbackStory": "No physics-specific fallback needed: the XPBD solve is CPU JS and identical on WebGPU and WebGL2 — only the render backend differs. three.js WebGPURenderer auto-falls back to a WebGL2 backend when WebGPU is absent (~5% of browsers per current estimates), and a BufferGeometry-based cloth/rope/spring renders fine on both. Because the solver is CPU-side, the simulated motion (and thus any frozen frame) is byte-identical regardless of which backend draws it — the fallback cannot change physics determinism. The only backend-sensitive scenario is the heavy GPU-compute cloth tier (compute shaders are WebGPU-only); that is exactly why the catalog default stays CPU XPBD.",
+        "verdict": "adopt",
+        "citations": [
+          "https://matthias-research.github.io/pages/publications/XPBD.pdf",
+          "https://mmacklin.com/smallsteps.pdf",
+          "https://matthias-research.github.io/pages/tenMinutePhysics/09-xpbd.pdf",
+          "https://www.physicsbasedanimation.com/2019/08/01/small-steps-in-physics-simulation/",
+          "https://carmencincotti.com/2022-08-08/xpbd-extended-position-based-dynamics/",
+          "https://carmencincotti.com/2022-11-21/cloth-self-collisions/",
+          "https://gafferongames.com/post/fix_your_timestep/",
+          "https://gafferongames.com/post/floating_point_determinism/",
+          "https://threejs.org/examples/webgpu_compute_cloth.html",
+          "https://threejs.org/manual/en/webgpurenderer.html",
+          "https://www.utsubo.com/blog/threejs-2026-what-changed",
+          "https://github.com/jspdown/cloth",
+          "https://erkaman.github.io/posts/gauss_seidel_graph_coloring.html"
+        ],
+        "confidence": "high"
+      }
+    ],
+    "audit": [
+      {
+        "name": "attractor",
+        "category": "particles",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "buildOrbit() iterates a Lorenz/Aizawa map at BUILD time into a static point cloud; seek() only revolves it (rotation.y=t*speed) and pulses scale via sin(t). No per-frame integration, no forces, no state advanced in seek. The dynamical system runs once at build; runtime is pure rotation of a frozen shape."
+      },
+      {
+        "name": "bounce",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek() computes position.y = baseY + height*(1 - ease('bounceOut', phase(t))). No velocity/restitution state; the 'bounce' is purely the bounceOut easing curve of phase(t). A real gravity+restitution integrator would convey weight better for a physics pack."
+      },
+      {
+        "name": "caustics-ripple",
+        "category": "caustics",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Swaps subject material for MeshBasicNodeMaterial whose colorNode layers sin(uv*scale) caustic bands modulated by a radial ripple sin(length(uv-0.5)*ringFreq - uTime*speed). seek() only advances uTime uniform. Pure fragment-shader look, no simulated water/height state."
+      },
+      {
+        "name": "cloth-sway",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek()->applySway() sets each vertex z = sin(bx*freq + t*speed)*amp*pow(v,stiffness) + a second crossed sine, weighted by vertical coord. CPU vertex displacement but closed-form sines of (position,t) with no mass/spring/constraint state. A real mass-spring cloth integrator would visibly beat it (soft pack)."
+      },
+      {
+        "name": "collision-balls",
+        "category": "particles",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "Holds live state arrays px/py/vx/vy; step() integrates with FIXED_DT, reflects off walls with restitution, and resolves equal-mass elastic ball-ball collisions with overlap separation and normal-impulse. seek() steps lastT->t in fixed increments and resets+replays on backward seek. Genuine stateful billiard sim."
+      },
+      {
+        "name": "comet-orbit",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "writeFrame(t) computes head + every tail mote as a closed-form function of (t,params): Kepler-flavored mean-anomaly orbitClock(t), trueAngle = M+2*ecc*sin(M), tail mote k sampled at past clock clock-k*step then pushed anti-solar by an age expansion. No integrated state, no inter-mote forces; PointsNodeMaterial reading instanced buffers. Closed-form per comment ('all closed-form => pure / deterministic')."
+      },
+      {
+        "name": "drag-elastic-warp",
+        "category": "displacement",
+        "mechanism": "mixed",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "TSL vertex-lane warp (smoothstep grab falloff * corner edge-mask * pull) is a stateless shader field, BUT the engagement envelope 'eng' is a stateful closure: on release it runs a damped-spring snap-back e(tau)=e0*exp(-DAMP*tau)*cos(FREQ*tau), dt-normalized from consecutive seek times. Spring state over a shader displacement = mixed; the release wobble carries real elastic feel."
+      },
+      {
+        "name": "drape-fold",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "applyFolds() sets vertex z = sin(u*foldFreq*2PI)*foldDepth * (0.6+0.4*sin(t*breath + v*2)) * v. Standing sine creases 'breathing' by another sine of t; no cloth state, no gravity solve. A real draped-cloth solver would beat this for the soft pack."
+      },
+      {
+        "name": "drop-bounce",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek() sets position.y = baseY + height*(1-ease('bounceOut',phase)); squash via scale.y dip computed from a finite-difference 'velocity proxy' of the bounceOut curve. The velocity is a numerical derivative of an easing curve, not integrated dynamics. A true drop/gravity+restitution sim with squash on impact would visibly beat it (physics pack)."
+      },
+      {
+        "name": "elastic",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek() sets uniform scale s from ease('elasticOut', phase(t)) blended by amplitude knob; opacity = phase. The 'spring' is the elasticOut easing function, no spring-mass state. A real damped-spring scale solver would convey springiness better for the springs pack."
+      },
+      {
+        "name": "explosion",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "Per-particle unit direction + speed hashed once at build; seek() places each at dir*speed*reach where reach=power*(1-exp(-K*t)) plus quadratic gravity drop=0.5*grav*t^2. Closed-form position(t) per particle, no integrated velocity or collisions; CPU but stateless. A real force-field/integrated burst would beat it (force-field pack)."
+      },
+      {
+        "name": "flag-wave",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "applyWave() sets vertex z = sin(bx*frequency + t*speed)*amplitude*weight, weight a normalized-x ramp pinning the left edge. Single traveling sine of (position,t); no wind force-field or cloth state. A real wind-driven cloth sim would visibly beat it (wind pack)."
+      },
+      {
+        "name": "float",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek(): position.y = baseY + Math.sin(t*speed)*amp; rotation.z = baseRotZ + Math.sin(t*speed*0.7)*tiltRad. Pure closed-form sine of t, no velocity/state. An idle decorative bob, not in the physics/fluid upgrade scope."
+      },
+      {
+        "name": "fluid-sph",
+        "category": "particles",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "Closure state arrays px/py/vx/vy; step() integrates gravity into velocity at FIXED_DT=1/60, O(n^2) short-range neighbour repulsion (SPH-ish), damped floor+wall collisions; resetState() on backward seek and fixed-dt catch-up loop in seek(). Genuine stepped integrator conveying slosh/pool/splash; already the real thing."
+      },
+      {
+        "name": "gravity-drop",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "integrateY() re-solves the whole trajectory analytically every seek: quadratic floor-crossing roots, velocity reflected *restitution per bounce, settle at |vy|<0.02. No persisted per-frame velocity state (closed-form function of (t,g,rest) per particle) and x drifts linearly: ix0[i]+ivx[i]*t. Deterministic and physically real bounce/momentum read despite being analytic, not a stepped integrator."
+      },
+      {
+        "name": "gravity-well",
+        "category": "pointer",
+        "mechanism": "mixed",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Card transform: inverse-square-ish pull fraction f=clamp(gravity/distN^falloff), chased with a dt-normalized exponential spring (posX/posY tracked) plus anisotropic tidal scale — eased pointer-follow, no momentum/collision. Motes ride closed-form decaying spirals / a standing ring from index hashes (stateless particles). Astrophysical-styled fake, not a simulated body."
+      },
+      {
+        "name": "hover-liquid-distort",
+        "category": "displacement",
+        "mechanism": "mixed",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Look is a TSL vertex/UV-warp shader: fieldH = amp*viscBoost*env*prox*Sigma damped sin rings (no simulated fluid state). The only CPU 'state' is a persisted scalar touch envelope uEnv eased toward proximity (RISE_RATE / viscosity*fall) — an eased honey settle, not an SPH/wave sim. Shader-fake with an eased envelope."
+      },
+      {
+        "name": "jelly-surface",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "apply(): per-vertex z = baseZ + Math.sin(dist*FREQ - t*speed)*amp*Math.exp(-dist*falloff). Closed-form radial wave of t on CPU, no velocity/mass/spring state — a decaying ripple, not a soft-body jiggle. A real spring-mesh/soft-body sim of a poke would visibly beat this (soft/cloth pack)."
+      },
+      {
+        "name": "jelly",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek(): decay=Math.exp(-3.2*p); osc=Math.sin(p*freq*2pi)*wobble*decay; scale.x=base*(1+osc), scale.y=base*(1-osc). A damped-sine easing of phase(t), no spring state/momentum. A true mass-spring squash settle would read with more genuine weight (springs pack)."
+      },
+      {
+        "name": "liquid-fill-glass",
+        "category": "glass",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "Swaps material to MeshPhysicalNodeMaterial; uFill = clamp(t*fillSpeed,0,1) linear rise, meniscus = sin(uv.x*waves+uTime*speed)*meniscus, mask=step(uv.y,level). Fill line is a linear ramp + sine wobble in a fragment shader, no fluid state. A real liquid-fill/pour with a settling free surface would beat it (liquid-fill/pour pack)."
+      },
+      {
+        "name": "liquid-glass",
+        "category": "glass",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Swaps to transmissive MeshPhysicalNodeMaterial; normalNode perturbed by three summed sin lobes over positionLocal driven by uTime (fake metaballs). Pure TSL normal animation, no simulated state. Stylized molten look; not in the drop/fluid-sim upgrade scope."
+      },
+      {
+        "name": "liquid-metal-flow",
+        "category": "shimmer",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Swaps to MeshStandardNodeMaterial; colorNode = 3-octave value-noise fbm over uv flowing with uTime, smoothstep highlight bands mixing base->metal. Fragment-shader faux-reflection, no state. A surface look, not a simulation."
+      },
+      {
+        "name": "liquid-stretch-morph",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "seek(): position.x along truncated-sine arc p(f)=(1-cos(Phi*f))/POS_NORM, sAlong=1+stretch*speedScale*velNorm, arrival rings down via 1-ease(wobble,w) (elasticOut). Phase-eased transform with volume-preserving reciprocal scale; no velocity/spring state. A real elastic/soft-body taffy with momentum would beat the canned curve (soft/springs pack)."
+      },
+      {
+        "name": "liquid-text",
+        "category": "text",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek(): per-glyph angle=t*speed+i*phaseStep; position.y=base+sin(angle)*amp; scale=1+sin(t*speed*0.7+i*phaseStep)*scaleAmp; rotation.z=base+cos(angle)*amp*0.8. Closed-form per-index sine of t, no state. Decorative text wave, outside the physics/fluid scope."
+      },
+      {
+        "name": "magnetic-field",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek() sets position = fieldLinePoint(L, phaseOffset[i] + t*speed) — a closed-form polar dipole curve; no velocity/forces/integration, just a pure function of t per particle."
+      },
+      {
+        "name": "magnetic-stick",
+        "category": "pointer",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Real semi-implicit Euler spring with velX/velY state, dt from consecutive seeks clamped to MAX_DT, accX=-c*velX-k*(offX-targetX), plus a bistable Schmitt-trigger latch with hysteresis and a decaying grab pulse. Integrated state, but it is a UI cursor-stick (scale/translate/lean), not weight/momentum/collision; a true sim would not visibly beat it."
+      },
+      {
+        "name": "magnetic",
+        "category": "pointer",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek() does subject.position += (target - position) * strength each call — a per-seek lerp with NO velocity, NO dt, NO accumulated momentum. An exponential ease toward the pointer, not a spring."
+      },
+      {
+        "name": "orbit-rings",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "angle = baseAngle[i] + t*speedScale*(1/sqrt(r)); position = polar(radius, angle). Keplerian rate is a closed-form 1/sqrt(r) factor, not gravity integration — pure function of t, no inter-particle forces or state."
+      },
+      {
+        "name": "orbit-trails",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "orbitAngle(b,clock,ecc)=M+2*ecc*sin(M) (first-order Kepler) and bodyPos() are closed-form; trail crumb k is an analytic lookback (orbitAngle at clock - k*step). Instanced PointsNodeMaterial, no integrator, no state — pure function of (t,params)."
+      },
+      {
+        "name": "pendant-dangle",
+        "category": "pointer",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "Damped angular spring with angle/angularVel closure state, substepped semi-implicit Euler (acc=-omega0^2*(angle-eq)-2*zeta*omega0*angularVel), dt from consecutive seeks, omega0=OMEGA_BASE/sqrt(arm)*sqrt(g) like a real pendulum. Conveys hanging swing weight (overlaid with standing-pose param hacks, but the swing itself is integrated)."
+      },
+      {
+        "name": "pendulum-settle",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "rotation.z = startAngle * cos(p*swings*PI) * (1 - easeOut(p)). A cosine carrier times an easeOut envelope of phase(t) — no angular velocity, no integration. A real damped-pendulum integrator would give physically-correct decay/period vs this fixed cos*envelope."
+      },
+      {
+        "name": "pendulum-wave",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Per bob: angle = MAX_ANGLE*cos(2PI*uTime/period); position hangs at pivot via sin/cos(angle)*length. Closed-form harmonic sinusoid per index, no integration or state — exactly correct for the small-angle pendulum-wave art piece, so no sim upgrade needed."
+      },
+      {
+        "name": "pivot-drop",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "rot = -startRad*(1-ease(settle,p)) with settle in {bounceOut,elasticOut,backOut}; the 'bounce' is purely an easing curve of phase(t), no velocity/restitution/gravity. A real drop+bounce integrator (gravity + collision restitution at the hinge) would visibly beat the eased fake for the physics pack."
+      },
+      {
+        "name": "pointer-attract-scale",
+        "category": "pointer",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "proximity = 1 - clamp(d/radius); targetScale via smoothstep; current += (targetScale-current)*alpha (exponential smoothing). Scale-only proximity bloom eased toward target — no physical state, and none is wanted."
+      },
+      {
+        "name": "pointer-orbit",
+        "category": "pointer",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "targetZ = baseRotZ + atan2(dy,dx)*gain; curZ += (targetZ-curZ)*k per step (exponential lerp toward the pointer azimuth, plus a small lean lerp). Smoothed rotation tracking with no velocity/inertia — a compass-needle ease, not a sim."
+      },
+      {
+        "name": "pointer-ripple",
+        "category": "pointer",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "MeshStandardNodeMaterial.emissiveNode = tint * max(0, sin(r*freq - uTime*speed)*exp(-r*falloff)*intensity) in TSL; seek only advances uTime and sets uPointer. The ripple look is a fragment shader function, no simulated water/height-field state."
+      },
+      {
+        "name": "rain-splash",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": true,
+        "upgradeCandidate": true,
+        "basis": "seek() computes each drop's y from fract-style phase ph=(t*fallSpeed+phaseOffset[i])%1 (closed-form, no integrated state); splash crown is a parabolic arc spread*u and arc=u*(1-u) keyed off the same phase. No velocity/forces, no collision resolution, no reset-on-backward-seek. Pure function of t. Splash crowns convey impact, but the 'gravity' is a hand-authored parabola, not integrated."
+      },
+      {
+        "name": "ripple-concentric",
+        "category": "wave",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek() sets posAttr z = Math.sin(r*freq - t*speed)*amp*exp(-r*falloff) per vertex — a closed-form sine of radius and time. CPU vertex displacement but no wave-equation state; it is a kinematic/analytic surface (effectively the shader-fake category for a wave look). No mass/momentum."
+      },
+      {
+        "name": "ripple-displace",
+        "category": "displacement",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "TSL MeshStandardNodeMaterial: colorNode warps uv by warp=sin(r*uFreq - uProgress*uSpeed)*uAmp*(1-uProgress); seek() only advances uProgress 0->1. Pure fragment-shader distortion, no simulated state. The warp lives entirely in the GPU colorNode per the comments."
+      },
+      {
+        "name": "ripple-interference",
+        "category": "wave",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek()/applyAt() sets z = sin(d1*freq - t*speed)*amp + sin(d2*freq - t*speed*1.07)*amp — sum of two analytic travelling sines from fixed sources. CPU vertex displacement but closed-form, no integrated wavefield state. Superposition is faked by adding two sines, not solving a wave equation."
+      },
+      {
+        "name": "ripple-pool",
+        "category": "wave",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "apply() sums damped concentric sines per drop source: sin(dist*freq - (t-tOffset)*speed)*amp*exp(-dist*falloff). Closed-form analytic per-vertex z, no state, no integration. Staggered tOffsets are constants, not a simulated drop release."
+      },
+      {
+        "name": "ripple",
+        "category": "wave",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek() sets z = sin(d*wavelength - t*speed)*amplitude/(1+d*2) — a single analytic radial sine of cached distance and time. CPU vertex displacement, zero physical state. Reference-style kinematic ripple."
+      },
+      {
+        "name": "sand-pile",
+        "category": "particles",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "simulate() rebuilds a stateful heightfield from tick 0: deposit() increments a column then runs sandpile avalanche relaxation (while a column overtops a neighbour by > repose threshold, a grain topples downhill, looping over columns) — a real constraint/relaxation with memory (heights[] state). Quantized fixed ticks, backward seeks replay fewer ticks. In-flight grains use frac^2 gravity ease (kinematic) and gust is a travelling-front kinematic blow-off, so the deposit+avalanche core is a real CPU integrator/relaxation; mixed but dominantly real-sim with a persistent stateful heightfield."
+      },
+      {
+        "name": "scroll-orbit-scrub",
+        "category": "scroll",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "apply() is a pure function of scroll: theta=dir*orbit*scroll; position.x=base-d*sin(theta); position.z bow=-d*(1-cos(theta)); rotation.y=tanh-capped yaw; rotation.z=tanh roll. Header states 'no velocity term', pose is pure function of (scroll,params). No physical state — a scrubbed kinematic camera arc."
+      },
+      {
+        "name": "scroll-pendulum-sway",
+        "category": "scroll",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "seek() integrates a damped angular spring with closure state springAngle/springVel via substepped semi-implicit Euler (acc=-omega0^2*angle - 2*zeta*omega0*vel + kick), dt from consecutive seek t values clamped, kicked by scroll velocity, with an impulse-memory envelope. dt=0 on repeated seeks integrates nothing (reproducible pins). Real inertia/momentum pendulum; dragLean/ambient are added kinematic terms on top, so primarily a real integrator (lightly mixed)."
+      },
+      {
+        "name": "scroll-progress-fill",
+        "category": "scroll",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "TSL MeshStandardNodeMaterial: colorNode=mix(base,fill, oneMinus(smoothstep(progress-soft,progress,axisCoord))), emissiveNode lights the filled region. seek() only sets uProgress=userData.scroll. Pure shader fill mask driven by scroll; no motion state at all."
+      },
+      {
+        "name": "spring-chain-follow",
+        "category": "pointer",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "integrateRelay() runs a chain of damped springs with per-link pos/vel state, semi-implicit Euler sub-stepped (accel=(target-pos)*omega2 - vel*damp), head pursued by exponential lerp, dt clamped from consecutive seeks, dt=0 holds via settlePose. Real multi-body spring relay with whip/overshoot from velocity. Standing-pose re-derivation at dt=0 is kinematic but the live path is a true integrator — multi-body spring sim."
+      },
+      {
+        "name": "spring-lattice",
+        "category": "particles",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "step() integrates Hooke forces per node: anchor spring -k*0.25*d plus 4-neighbour link springs k*(d[j]-d[i]) plus velocity damping, semi-implicit Euler at FIXED_DT=1/120; closure state dx/dy/dz + vx/vy/vz. Deterministic corner poke propagates node-to-node; backward seek (t<lastT) calls resetState() and replays from 0. Textbook real CPU integrator with state and fixed-dt stepping (matches the collision-balls.ts reference pattern)."
+      },
+      {
+        "name": "squash-stretch-in",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek() sets scale.x/y from ease('easeOut'/'elasticOut') of phase(t,dur) plus a sin() positional hop; no velocity/forces/state. The 'anticipation' and 'elastic overshoot' are easing curves, not a spring."
+      },
+      {
+        "name": "swarm",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "Points cloud; each position = base + curlField(i,t)*spread + (attractor-base)*pull, attractor a pure sin/cos of t. Comment states 'pure function of (i,t), no integration of prior state.' No inter-particle/boid forces — a true flocking sim (separation/alignment/cohesion integrator) would visibly beat it."
+      },
+      {
+        "name": "text-elastic-in",
+        "category": "text",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Per glyph scale = ease('elasticOut', local) where local = clamp((phase - i*stagger)/window); opacity = clamp(local*2.5). Easing curve of staggered phase, no spring state."
+      },
+      {
+        "name": "text-magnetic-in",
+        "category": "text",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Per glyph pos = rest + dir*scatter*(1-easeOut(local)), rot lerps to 0 by same factor. Deterministic hash scatter, then a single easeOut lerp home — no magnetic force field or integrated velocity."
+      },
+      {
+        "name": "text-squash-each",
+        "category": "text",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Per glyph: squash stage sy=squashY*easeOut(u), then spring stage sy=squashY+(1-squashY)*elasticOut(...). Anti-correlated x/y via easing curves of local phase; no physical state."
+      },
+      {
+        "name": "throw-physics",
+        "category": "pointer",
+        "mechanism": "real-sim-cpu-integrator",
+        "physicalRead": true,
+        "upgradeCandidate": false,
+        "basis": "Closure state velX/velY/spinVel; thrown phase does semi-implicit Euler (velY -= grav*dt; vel *= exp(-drag*dt); off += vel*dt) with wall collision: reflect velocity, multiply by restitution, clamp inside, add spin kick = SPIN_PER_IMPACT*impact. dt clamped to MAX_DT=1/30. Genuine ballistic integrator with collision resolution and momentum."
+      },
+      {
+        "name": "tumble",
+        "category": "transform",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "seek(): rotation.x/y = base + spin*TAU*(1 - easeOut(phase)), scale 0.5->1, opacity = eased phase. Dual-axis spin is an easing curve toward rest; no angular momentum or state."
+      },
+      {
+        "name": "underwater-caustics",
+        "category": "caustics",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "Builds MeshBasicNodeMaterial.colorNode from layered sin() bands * pow() sharpen * vertical depth gradient + ambient. seek() only advances uTime uniform; no simulated light/caustic state. Pure TSL fragment look."
+      },
+      {
+        "name": "vortex",
+        "category": "particles",
+        "mechanism": "gpu-particle-stateless",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "Points; r = (baseRadius - t*inflow - R_INNER) % R_RANGE + R_INNER, angle = baseAngle + t*swirl/(r+EPS), y bob = sin(t*1.3+phase). Closed-form function of t per particle, no integrated velocity/forces. A true swirling force-field/vorticity sim would beat the modulo-recycle whirlpool."
+      },
+      {
+        "name": "water-droplet",
+        "category": "glass",
+        "mechanism": "shader-tsl-fake",
+        "physicalRead": false,
+        "upgradeCandidate": false,
+        "basis": "MeshPhysicalNodeMaterial with positionNode = pos + normal*sin(pos*freq+uTime)*wobble and an emissive facing core. seek() advances uTime/uniforms only. Surface-tension 'jiggle' is a sin vertex displacement shader, not a fluid/surface-tension sim."
+      },
+      {
+        "name": "water-surface",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "CPU per-vertex z = baseZ + Σ_k sin(dot(dir_k,xy)*freq + t*speed)*amp computed from rest each frame. Closed-form sum-of-sines (no wave-equation propagation, no height/velocity field state). A real shallow-water/FFT-ocean integrator would visibly beat it; classified kinematic (deterministic phase function, not a TSL shader since it runs on CPU BufferAttribute)."
+      },
+      {
+        "name": "wind-ripple",
+        "category": "wave",
+        "mechanism": "kinematic-eased",
+        "physicalRead": false,
+        "upgradeCandidate": true,
+        "basis": "CPU per-vertex z = baseZ + sin(x*freq + t*speed)*amp * exp(-(x-wrap(t*frontSpeed))^2 * sharpness). Closed-form gust band sweeping in x; no integrated wind force field or wave state. A real advected wind/displacement field would beat it for the wind/force-field pack."
+      }
+    ]
+  }
+}

@@ -17,7 +17,11 @@
   "maxAttemptsPerTask": 3,
   "status": "complete",
   "createdAt": "2026-05-18T15:00:00Z",
+<<<<<<< Updated upstream
   "updatedAt": "2026-05-20T19:55:41Z",
+=======
+  "updatedAt": "2026-05-20T19:50:31Z",
+>>>>>>> Stashed changes
   "invariants": {
     "twoRuntimes": true,
     "nonDestructiveCompile": true,
@@ -32,8 +36,13 @@
   "convergence": {
     "stagnantStreak": 1,
     "stagnantThreshold": 5,
+<<<<<<< Updated upstream
     "lastProductiveIteration": 25,
     "lastProductiveCommit": "135a153e231c1b78ee5730abc47d436f8f1d77e9"
+=======
+    "lastProductiveIteration": 24,
+    "lastProductiveCommit": "2a8ce2f724c320e2c3a30d10cef1774199bcb0dc"
+>>>>>>> Stashed changes
   },
   "phaseCaps": {
     "§R2-A": {
@@ -67,17 +76,29 @@
       "status": "active"
     },
     "§R2-G": {
+<<<<<<< Updated upstream
       "used": 2,
+=======
+      "used": 1,
+>>>>>>> Stashed changes
       "cap": 50,
       "status": "active"
     }
   },
   "checkpoint": {
+<<<<<<< Updated upstream
     "iteration": 25,
     "commit": "135a153e231c1b78ee5730abc47d436f8f1d77e9",
     "verifiedAt": "2026-05-20T19:54:15Z",
     "artifactHash": null,
     "recordedAt": "2026-05-20T19:54:15Z"
+=======
+    "iteration": 24,
+    "commit": "2a8ce2f724c320e2c3a30d10cef1774199bcb0dc",
+    "verifiedAt": "2026-05-20T19:46:52Z",
+    "artifactHash": null,
+    "recordedAt": "2026-05-20T19:46:52Z"
+>>>>>>> Stashed changes
   },
   "resumeFrom": null,
   "breakpoints": [],
@@ -888,11 +909,19 @@
       ],
       "haltCheck": "Both Vercel scripts (wait-for-vercel-preview, fetch-vercel-logs) exist and are executable. /ralph-step-editor documents Step 8c as SECONDARY/non-blocking. .vercel/project.json exists and points at kid-kode-ai-landing. wait-for-vercel-preview --check-only returns ok. This task is Round-2's final iteration.",
       "kvVerify": false,
+<<<<<<< Updated upstream
       "status": "done",
       "attemptCount": 1,
       "commit": "99bef436211d2ddf52276830356b2aba2eb6225b",
       "verifiedAt": "2026-05-20T19:51:55Z",
       "notes": "haltCheck already satisfied at audit; no implementation needed. All 7 verificationCommands exit 0 from repo root. Closes group §R2-G.",
+=======
+      "status": "in-progress",
+      "attemptCount": 1,
+      "commit": null,
+      "verifiedAt": null,
+      "notes": "",
+>>>>>>> Stashed changes
       "interactionScript": null
     }
   ]

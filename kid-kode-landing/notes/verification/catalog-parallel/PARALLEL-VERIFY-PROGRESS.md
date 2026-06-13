@@ -4602,3 +4602,4 @@ Started 2026-06-08T21:58:24.311Z · port 4799
 - [PASS] std/depth-pop (transform) render=true play=true ctrl=true
 - [PASS] std/diamond-wipe (mask) render=true play=true ctrl=true
 - [PASS] std/displacement-transition (displacement) render=true play=true ctrl=true
+- [PASS] std/dissolve-burn (displacement) render=true play=true ctrl=true

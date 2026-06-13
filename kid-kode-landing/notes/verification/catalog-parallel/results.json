@@ -1,6 +1,6 @@
 {
   "startedAt": "2026-06-13T09:31:56.401Z",
-  "updatedAt": "2026-06-13T10:16:22.592Z",
+  "updatedAt": "2026-06-13T10:17:54.479Z",
   "tiers": {
     "std": {
       "tier": "std",
@@ -687,6 +687,20 @@
       "notes": [],
       "verdict": "pass",
       "at": "2026-06-13T10:14:02.990Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "dissolve-burn": {
+      "name": "dissolve-burn",
+      "category": "displacement",
+      "driver": "time",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-13T10:15:34.909Z",
       "backend": "webgl",
       "consoleErrors": []
     }
