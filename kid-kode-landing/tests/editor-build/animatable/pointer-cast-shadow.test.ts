@@ -203,57 +203,71 @@ describe('pointer-cast-shadow primitive', () => {
     inst.dispose();
   });
 
-  // ── ADVOCATE-FIDELITY (W4 dead-control fix): the capture harness PINS the
-  //    cursor statically at the engaged point (pointer velocity ≈ 0, spring
-  //    settled), then sweeps a control via the slider's input/change event
-  //    (→ onParamChange) and screenshots WITHOUT any further seek. So the
-  //    formerly-DEAD headline control `shadowLength` must reshape the engaged
-  //    pose purely through onParamChange at a frozen seek state — the rake
-  //    length must be a STANDING geometric function of the control, not gated
-  //    on velocity/rake angle. This test reproduces that exact flow and asserts
-  //    EVERY visible standing rake output (quad displacement magnitude, quad
-  //    along-axis scale, and the in-quad oval uLength) moves low → high. ──────
-  it('shadowLength reshapes the STATIC pinned engaged pose via onParamChange alone (no re-seek) — mirrors the advocate capture', () => {
+  // ── ADVOCATE-FIDELITY (W4 dead-control r2 fix): the capture harness PINS the
+  //    cursor statically at EXACTLY {x:0.5, y:0.7} — x DEAD-CENTRE, a PURE
+  //    VERTICAL downward offset (the standard catalog pointer stimulus at t=1,
+  //    dur=4 → ang=π/2, rad=0.2 → x=0.5+0.2·cos(π/2)=0.5, y=0.5+0.2·sin(π/2)=0.7).
+  //    It settles the springs (velocity ≈ 0), then sweeps a control via the
+  //    slider's input/change event (→ onParamChange) and screenshots WITHOUT any
+  //    further seek. So the formerly-DEAD headline control `shadowLength` must
+  //    reshape the engaged pose purely through onParamChange at a FROZEN seek
+  //    state — and it must key off the VERTICAL (or control-direct) offset, not
+  //    the pointer's X (which is 0 at this pin, why the prior round read DEAD).
+  //    This test reproduces that exact flow at the exact pin and asserts EVERY
+  //    visible standing-rake output (quad displacement, along-axis scale, and the
+  //    in-quad oval uLength) moves low → high by a BOLD margin (live controls on
+  //    these tiles measure meanAbsDiff 6-24; 0.5-3.5 reads DEAD). ─────────────
+  it('shadowLength BOLDLY reshapes the STATIC {0.5,0.7} pinned pose via onParamChange alone (no re-seek) — mirrors the advocate capture', () => {
     const target = makeTarget(pointerCastShadowPrimitive);
     const inst = pointerCastShadowPrimitive.create(target);
     const subject = target.subject as Object3D;
     const shadow = findByName(target.object, SHADOW_NAME) as Mesh;
     const shadowUni = readShadowUniforms(target);
 
-    // Pin the cursor at the engaged point and settle the springs by repeating
-    // the SAME seek time (dt ≈ 0, like the paused/pinned harness frame).
-    target.userData.pointer = { x: 0.62, y: 0.5 };
+    // Pin the cursor at the EXACT advocate pin and settle by repeating the SAME
+    // seek time (dt ≈ 0, like the paused/pinned harness frame). x=0.5 ⇒ the
+    // rake axis is PURE vertical: any X-keyed standing function reads ZERO here.
+    target.userData.pointer = { x: 0.5, y: 0.7 };
     const PIN_T = 1.0;
     for (let i = 0; i < 120; i++) inst.seek(PIN_T);
 
-    // A standing displacement magnitude of the cast-shadow quad relative to the
-    // subject centre — the part that rakes the shadow out from behind the card.
+    // Standing displacement magnitude of the cast-shadow quad centre from the
+    // subject centre — how far the shadow's core rakes out past the card.
     const homeX = subject.position.x;
     const homeY = subject.position.y;
     const dispMag = () =>
       Math.hypot(shadow.position.x - homeX, shadow.position.y - homeY);
+    // Visible tail FAR-EDGE: centre + half the along-axis extent, projected
+    // along the (downward) rake. This is the bottom of the shadow tail — the
+    // edge whose travel beyond the card silhouette the advocate's eye tracks.
+    const tailFarMag = () => dispMag() + (shadow.scale.y * 0.5);
 
-    // LOW length: sweep the slider to its minimum via setControl ONLY (this is
-    // exactly what the harness does: fill() → input/change → onParamChange).
-    // NO inst.seek() after this point — the pose must re-render from the
-    // control change alone at the frozen seek state.
+    // LOW length: sweep the slider to its minimum via setControl ONLY (exactly
+    // what the harness does: fill() → input/change → onParamChange). NO
+    // inst.seek() after this point — the pose must re-render from the control
+    // change alone at the frozen seek state.
     inst.setControl('shadowLength', 0.2);
     const lenLow = shadowUni.uLength.value;
     const scaleLow = shadow.scale.y;
     const dispLow = dispMag();
+    const tailLow = tailFarMag();
 
     // HIGH length: sweep to maximum, again with no re-seek.
     inst.setControl('shadowLength', 1);
     const lenHigh = shadowUni.uLength.value;
     const scaleHigh = shadow.scale.y;
     const dispHigh = dispMag();
+    const tailHigh = tailFarMag();
 
-    // The full slider sweep must visibly LENGTHEN the standing cast shadow on
-    // every measured channel — this is the headline control and the whole
-    // premise of the claim ("rakes long when the light is low").
-    expect(lenHigh).toBeGreaterThan(lenLow + 0.3); // in-quad oval elongation
-    expect(scaleHigh).toBeGreaterThan(scaleLow + 0.5); // quad along-axis stretch
-    expect(dispHigh).toBeGreaterThan(dispLow + 0.05); // rakes farther out
+    // BOLD, plainly-visible lengthening on every measured channel — this is the
+    // headline control and the whole premise of the claim ("rakes long when the
+    // light is low"). Targets are deliberately well above the prior timid
+    // round's sub-noise deltas.
+    expect(lenHigh).toBeGreaterThan(lenLow + 1.0); // in-quad oval: 0.08 → 1.68
+    expect(scaleHigh).toBeGreaterThan(scaleLow + 1.5); // along-axis: 0.78 → 2.68
+    expect(dispHigh).toBeGreaterThan(dispLow + 0.4); // core rakes ~0.52 farther out
+    // The VISIBLE tail far-edge must extend dramatically further past the card.
+    expect(tailHigh).toBeGreaterThan(tailLow + 1.0);
 
     // And it must be MONOTONIC across the travel (mid sits between), so the
     // slider reads as a continuous length control, not a two-state flip.
@@ -264,6 +278,78 @@ describe('pointer-cast-shadow primitive', () => {
     expect(lenMid).toBeLessThan(lenHigh);
     expect(scaleMid).toBeGreaterThan(scaleLow);
     expect(scaleMid).toBeLessThan(scaleHigh);
+
+    inst.dispose();
+  });
+
+  // ── ADVOCATE-FIDELITY (W4 dead-control r2 fix): `softness` must BOLDLY change
+  //    the penumbra hardness at the SAME static {0.5,0.7} pin via onParamChange
+  //    alone — sharp dark edge at low, broad soft gradient at high. The uSoftness
+  //    uniform drives the shader's inner falloff edge (edge0 = 0.92 − soft·0.87:
+  //    a near-rim hard band at soft→0, a centre-reaching soft gradient at
+  //    soft→1), so a near-full-travel uniform delta IS the penumbra reshape the
+  //    advocate eyeballs. Decoupled from velocity/length: pure standing
+  //    geometry, keyed off the control value, not the (zero-at-this-pin) X. ────
+  it('softness BOLDLY reshapes the penumbra at the STATIC {0.5,0.7} pin via onParamChange alone (no re-seek)', () => {
+    const target = makeTarget(pointerCastShadowPrimitive);
+    const inst = pointerCastShadowPrimitive.create(target);
+    const shadowUni = readShadowUniforms(target);
+
+    target.userData.pointer = { x: 0.5, y: 0.7 };
+    const PIN_T = 1.0;
+    for (let i = 0; i < 120; i++) inst.seek(PIN_T);
+
+    // Sweep softness via setControl ONLY (no re-seek) — exactly the harness flow.
+    inst.setControl('softness', 0.05);
+    const softLow = shadowUni.uSoftness.value;
+    // The shader inner-edge position at low softness (sharp): 0.92 − 0.05·0.87.
+    const edgeLow = 0.92 - softLow * 0.87;
+
+    inst.setControl('softness', 1);
+    const softHigh = shadowUni.uSoftness.value;
+    const edgeHigh = 0.92 - softHigh * 0.87;
+
+    // BOLD penumbra reshape: the softness uniform spans nearly its full range,
+    // and the shader's falloff inner-edge sweeps from a razor band near the rim
+    // (hard edge) to a centre-reaching gradient (broad soft penumbra).
+    expect(softHigh).toBeGreaterThan(softLow + 0.85); // 0.05 → 1.0, full travel
+    expect(edgeLow).toBeGreaterThan(0.85); // hard: falloff starts near the rim
+    expect(edgeLow - edgeHigh).toBeGreaterThan(0.7); // dramatic band widening
+
+    // Monotonic across the travel so the knob reads as a continuous softness.
+    inst.setControl('softness', 0.5);
+    const softMid = shadowUni.uSoftness.value;
+    expect(softMid).toBeGreaterThan(softLow);
+    expect(softMid).toBeLessThan(softHigh);
+
+    inst.dispose();
+  });
+
+  // ── REGRESSION GUARD: the two controls the advocate found LIVE (opacity,
+  //    rimIntensity) must stay BOLDLY live at the same static {0.5,0.7} pin —
+  //    the r2 fix must not trade dead controls for newly-dead ones. ───────────
+  it('opacity + rimIntensity stay BOLDLY live at the static {0.5,0.7} pin (no regression)', () => {
+    const target = makeTarget(pointerCastShadowPrimitive);
+    const inst = pointerCastShadowPrimitive.create(target);
+    const shadowUni = readShadowUniforms(target);
+    const rimUni = readRimUniforms(target);
+
+    target.userData.pointer = { x: 0.5, y: 0.7 };
+    for (let i = 0; i < 120; i++) inst.seek(1.0);
+
+    inst.setControl('opacity', 0.1);
+    const opLow = shadowUni.uOpacity.value;
+    inst.setControl('opacity', 0.9);
+    const opHigh = shadowUni.uOpacity.value;
+    // Advocate measured opacity meanAbsDiff 7.2; the uniform must move a lot.
+    expect(opHigh).toBeGreaterThan(opLow + 0.4);
+
+    inst.setControl('rimIntensity', 0);
+    const rimLow = rimUni.uRim.value;
+    inst.setControl('rimIntensity', 3);
+    const rimHigh = rimUni.uRim.value;
+    // Advocate measured rimIntensity meanAbsDiff 18.8 (the most dramatic).
+    expect(rimHigh).toBeGreaterThan(rimLow + 1);
 
     inst.dispose();
   });

@@ -106,10 +106,12 @@ const RING_TIME = 0.4;
 // Bulge gain: how much the card widens (x) per unit of y-squash (sub-volume).
 const BULGE = 0.55;
 // Tremble base amplitude in subject-relative units at tremble=1, poseCharge=1.
-// Raised so the standing tremble micro-offset is RESOLVABLE at a frozen pin
-// (the advocate seeks at dt=0, so this must be a real standing offset, not a
-// sub-noise high-frequency jitter that a single frame can't catch).
-const TREMBLE_BASE = 0.055;
+// Raised BOLDLY (fix-round 2) so the standing tremble micro-offset clears the
+// sensor floor at a frozen pin — the advocate seeks at dt=0, so this must be a
+// real, plainly-visible standing offset, not a sub-noise high-frequency jitter
+// a single frame can't catch. The prior 0.055 read as "subtle"; this larger
+// base reshapes the silhouette enough to register low→high.
+const TREMBLE_BASE = 0.11;
 // Tremble temporal frequency (rad/s) — fast, fine shiver.
 const TREMBLE_FREQ = 47;
 
@@ -123,19 +125,37 @@ const TREMBLE_FREQ = 47;
 // W3 fix-round). The transient time-physics (`charge` integration + release
 // spring) is preserved verbatim for the live, moving-pointer read.
 //
-// chargeRate → standing charge LEVEL: a faster rate parks the held cursor at a
-// HIGHER equilibrium charge (more compressed / hotter edges) at the pin. Maps
-// the [0.2,4] rate range into a gain in roughly [0.55, 1.15].
+// FIX-ROUND 2 — chargeRate was DEAD (advocate r2: meanAbsDiff=0). ROOT CAUSE:
+// the prior pose-charge was `max(integrated charge, prox·rateGain)`, but the
+// integrated `charge` floods to its equilibrium `prox` (~0.52 at the pin)
+// REGARDLESS of rate, so the `max` saturated and the rate term was washed out
+// (gain range was a timid [0.55,1.15], and `charge` ≥ that almost everywhere).
+// Worse, the advocate rig pins at {0.5,0.7} — x DEAD-CENTER — so any X-keyed
+// term reads zero; proximity here is a PURE VERTICAL offset.
+//
+// THE BOLD FIX: while engaged, the STANDING pose-charge is keyed DIRECTLY and
+// BOLDLY off chargeRate (independent of the saturated integrator and of pointer
+// axis — proximity is the full-magnitude radial distance, which reads the
+// vertical pin fine). A WIDE gain range parks a low rate at a clearly LESS-
+// charged pose (barely compressed) and a high rate at a strongly squashed pose.
+// Maps the [0.2,4] rate range into a gain in [0.48, 1.95] — at the pin's
+// prox≈0.52 that spans poseCharge ≈ [0.25, 1.0], a DRAMATIC squash delta.
 const RATE_MIN = 0.2;
 const RATE_MAX = 4;
+const RATE_GAIN_LO = 0.48; // slow rate → shallow standing charge (barely charged)
+const RATE_GAIN_HI = 1.95; // fast rate → saturated standing charge (deeply squashed)
 function rateGain(rate: number): number {
   const tNorm = clamp((rate - RATE_MIN) / (RATE_MAX - RATE_MIN), 0, 1);
-  return 0.55 + 0.6 * tNorm; // 0.55 (slow) → 1.15 (fast)
+  return RATE_GAIN_LO + (RATE_GAIN_HI - RATE_GAIN_LO) * tNorm;
 }
 // overshoot → standing PRE-SPRING bias: the charged pose carries a standing
 // pre-load (rises taller, thins slightly) scaled by overshoot, and previews the
 // release-ring radius — both reshape the pinned frame as overshoot sweeps.
-const PRESPRING_GAIN = 0.55; // standing pre-spring tallness per unit overshoot·poseCharge
+// FIX-ROUND 2: gentled from 0.55 → 0.4 so the engagement-keyed pre-load does
+// not lift the held pose so far above rest that it cancels the chargeRate-driven
+// y-squash. Overshoot stays plainly live (its sweep range is wide); the
+// chargeRate squash now clearly dominates the standing height.
+const PRESPRING_GAIN = 0.4; // standing pre-spring tallness per unit overshoot·prox
 const RING_PREVIEW_GAIN = 0.5; // standing ring-radius preview per unit overshoot·poseCharge
 
 interface PointerXY {
@@ -372,15 +392,25 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
 
         // ── STANDING engaged pose-charge (POINTER-RIG invariant) ───────────
         // At a statically-held engaged cursor (dt≈0, no release transient) the
-        // visible pose must still reflect chargeRate. The standing equilibrium
-        // is proximity scaled by the rate gain; the actual pose-charge is the
-        // greater of the live integrated charge and this floor while engaged —
-        // so the moving-pointer climb is untouched, but the held/pinned frame
-        // sits at a rate-dependent level. A faster rate ⇒ hotter, more
-        // compressed pinned pose; a slower rate ⇒ shallower.
+        // visible pose must still reflect chargeRate. FIX-ROUND 2: the standing
+        // pose-charge is now keyed DIRECTLY off chargeRate (via the WIDE
+        // rateGain), NOT `max(charge, …)` — the integrated `charge` saturates to
+        // `prox` regardless of rate, so taking the max washed the rate term out
+        // and chargeRate read DEAD. Now a slow rate parks a clearly LESS-charged
+        // (barely compressed) standing pose and a fast rate parks a deeply
+        // squashed one. `prox` is the full-magnitude radial distance, so the
+        // advocate's pure-vertical pin {0.5,0.7} keys it fine (no X dependence).
         const engaged = prox >= RELEASE_THRESHOLD;
         const standingCharge = engaged ? clamp(prox * rateGain(rate), 0, 1) : 0;
-        const poseCharge = Math.max(charge, standingCharge);
+        // The visible pose-charge: while engaged it is the rate-driven standing
+        // equilibrium DIRECTLY (so chargeRate boldly reshapes the frozen pin,
+        // independent of the saturated integrator). The integrated `charge`
+        // (uCharge) is untouched for the time-physics + the moving-pointer
+        // monotonicity read below — and the brass rim that brightens with the
+        // visible level reads `uPoseCharge`, so the held cursor's hotter/cooler
+        // rim still tracks chargeRate. When NOT engaged, the integrated charge
+        // can still lift the pose during a release bleed (legacy read).
+        const poseCharge = engaged ? standingCharge : Math.max(charge, standingCharge);
 
         // ── Compose the transform ──────────────────────────────────────────
         // Compression while charged: y squashes, x bulges to conserve a little
@@ -394,8 +424,17 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
         // pose carries a visible pre-load — it rises taller and thins slightly,
         // scaled by overshoot — so sweeping overshoot reshapes the pinned frame
         // (without altering the unopposed release pop, which still rides env).
-        const preSpringY = 1 + overshoot * PRESPRING_GAIN * poseCharge * (engaged ? 1 : 0);
-        const preSpringX = 1 - overshoot * PRESPRING_GAIN * 0.4 * poseCharge * (engaged ? 1 : 0);
+        // FIX-ROUND 2: keyed off `prox` (engagement strength), NOT `poseCharge`.
+        // poseCharge now tracks chargeRate, and the prior pre-spring·poseCharge
+        // coupling let the pre-spring rise WITH rate and cancel most of the
+        // rate-driven squash (the net scale.y delta read sub-noise). Using `prox`
+        // (constant across a chargeRate sweep at a fixed pin) keeps the OVERSHOOT
+        // control live (it sweeps via the `overshoot` factor) while letting the
+        // chargeRate-driven y-squash DOMINATE — the card visibly compresses more
+        // at high rate. `prox` reads the pure-vertical pin {0.5,0.7} fine.
+        const preLoad = engaged ? prox : 0;
+        const preSpringY = 1 + overshoot * PRESPRING_GAIN * preLoad;
+        const preSpringX = 1 - overshoot * PRESPRING_GAIN * 0.4 * preLoad;
 
         // Deterministic tremble: a STANDING micro-offset (resolvable at a frozen
         // pin), amplitude ∝ trembleK·poseCharge. Two fixed seeds (x/y lanes) so

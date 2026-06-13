@@ -84,22 +84,32 @@ function moteEnergy(motes: Sprite): number {
   return energy;
 }
 
-/** Pin the pointer at the engaged point and hold it with REPEATED same-t seeks
- *  (dt≈0), exactly as the user-advocate capture rig does (controlsPinT, paused
- *  control sweep). Returns after the pose is byte-stable. */
+/** Pin the pointer at an engaged point and hold it with REPEATED same-t seeks
+ *  (dt≈0), exactly as the capture rigs do (controlsPinT, paused control sweep).
+ *  Returns after the pose is byte-stable. */
 function pinEngaged(
   target: AnimatableTarget,
   inst: { seek(t: number): void },
   pinT = 1,
+  pin: { x: number; y: number } = PIN,
 ): void {
   idle(target, inst);
-  target.userData.pointer = { ...PIN };
+  target.userData.pointer = { ...pin };
   settle(inst, 0, 120); // drive in with real velocity (live spring)
   for (let i = 0; i < 4; i++) inst.seek(pinT); // then freeze: repeated same-t
 }
 
-// The harness pins the rig pointer here for pointer tiles (proximity 0.7–0.9).
+// TWO capture rigs pin this tile, at DIFFERENT points — the engaged pose must
+// reshape under every control at BOTH:
+//  • verify-catalog-parallel pins {0.62,0.5} — a HORIZONTAL pull (+x).
+//  • useradvocate-capture pins the orbit pointer at lastT=1 of a dur=4 loop:
+//    ph=0.25 → {0.5,0.7} — a PURE VERTICAL downward offset, x DEAD-CENTER. Any
+//    standing function keyed off the pointer's X reads ZERO here (the W4 r2
+//    moteCount BLOCK: the spiral collapsed motes onto the occluded drain → no
+//    visible dust, byte-identical sweep). The standing ring is keyed off the
+//    FULL-MAGNITUDE drain so it works at both.
 const PIN = { x: 0.62, y: 0.5 };
+const PIN_ADVOCATE = { x: 0.5, y: 0.7 };
 
 describe('gravity-well primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -355,46 +365,82 @@ describe('gravity-well primitive', () => {
     inst.dispose();
   });
 
-  it('moteCount (was DEAD): motes are actually DRAWN at the static engaged pin and their visible energy grows low→high', () => {
+  // moteCount was the W4 r2 BLOCK: at the useradvocate pin {0.5,0.7} (pure
+  // vertical, x dead-center) the live spiral collapsed every mote onto the
+  // occluded drain at a faint phase tail → NO visible dust, byte-identical
+  // low/mid/high (meanAbsDiff=0). The fix lays a BOLD standing ring keyed off the
+  // FULL-MAGNITUDE drain. This test mirrors the rig EXACTLY (repeated dt=0 seeks
+  // at the real {0.5,0.7} pin) and asserts a BOLD low→high delta — the advocate
+  // target is meanAbsDiff ≥ 6 / changedFrac ≥ 0.12; the energy-domain proxy is a
+  // ≥2.5× growth in summed visible luminance with EVERY mote on a legible ring.
+  it('moteCount (was DEAD): BOLD ring of dust is drawn at the {0.5,0.7} pin and the visible count grows low→high', () => {
     const { target, inst } = fresh({ moteCount: 3 });
-    pinEngaged(target, inst);
+    // The pin the useradvocate rig actually uses — pure vertical, x = 0.5.
+    pinEngaged(target, inst, 1, PIN_ADVOCATE);
     const motes = findMotes(target) as Sprite;
 
-    // At the static pin the dust must be VISIBLY drawn — the advocate saw NONE in
-    // the control frames because a phase-only fade left every mote in its tail.
-    // The standing presence floor guarantees real luminance here.
+    // At the static pin the dust must be VISIBLY drawn — the advocate saw NONE
+    // because the spiral left every mote on the occluded drain. The bold standing
+    // ring guarantees strong luminance here.
     inst.setControl('moteCount', 3);
+    inst.seek(1); // re-derive the pinned standing pose (dt=0 path)
+    inst.seek(1);
     const loEnergy = moteEnergy(motes);
-    expect(loEnergy).toBeGreaterThan(0); // motes are actually lit at the pin
+    expect(loEnergy).toBeGreaterThan(1); // motes plainly lit at the pin (bold)
     expect(motes.count).toBe(3);
 
     inst.setControl('moteCount', 12);
+    inst.seek(1);
+    inst.seek(1);
     const hiEnergy = moteEnergy(motes);
     expect(motes.count).toBe(12);
 
-    // More motes → more visible brass energy at the very same pinned frame (the
-    // density change a user would see dragging the knob). Strictly greater, well
-    // above noise.
-    expect(hiEnergy).toBeGreaterThan(loEnergy * 1.5);
+    // BOLD density change: 12 motes carry ≥2.5× the visible brass of 3 — the
+    // density a user plainly sees dragging the knob (NOT the timid sub-noise
+    // delta the prior round produced). Energy scales ~linearly with count on the
+    // ring, so 12/3 ≈ 4× in the ideal; assert well above the discoverability
+    // floor.
+    expect(hiEnergy).toBeGreaterThan(loEnergy * 2.5);
 
-    // And every drawn mote sits at a finite position spread AROUND the drain —
-    // not collapsed onto the occluded drain centre (a pure phase decay piled them
-    // all at r≈0, hidden behind the deeply-pulled card). The standing radius floor
-    // keeps them on a visible ring, so the added dust moves real pixels. Drain x is
-    // the bounded pointer offset (+x at this pin); measure radius FROM the drain.
+    // Every drawn mote sits on a VISIBLE ring around the drain — none collapsed
+    // onto the occluded drain centre. Drain is a PURE VERTICAL offset at this pin
+    // (x = 0), so a function keyed off x alone would put every mote at x≈0; the
+    // full-magnitude ring spreads them in BOTH axes. Measure radius FROM the
+    // drain point (bounded vertical offset, x = 0).
     const w = subjectWidth(target.subject as Object3D);
-    const drainX = Math.min((0.62 - 0.5) * 2 * 1.1 * w, 1.55 * 0.94 - w / 2);
+    const drainY = Math.min((0.7 - 0.5) * 2 * 1.1 * 0.7 * w, 1.55 * 0.94 - w / 2);
     const pos = motes.geometry.getAttribute('instancePosition');
     const arr = pos.array as ArrayLike<number>;
     let onRing = 0;
+    let spreadX = 0; // motes must spread in x too (not all stuck at the x=0 axis)
     for (let i = 0; i < motes.count; i++) {
       const x = arr[i * 3];
       const y = arr[i * 3 + 1];
       expect(Number.isFinite(x)).toBe(true);
       expect(Number.isFinite(y)).toBe(true);
-      if (Math.hypot(x - drainX, y) > 0.05) onRing += 1;
+      if (Math.hypot(x - 0, y - drainY) > 0.2) onRing += 1;
+      if (Math.abs(x) > 0.1) spreadX += 1;
     }
-    expect(onRing).toBe(motes.count); // none collapsed onto the drain centre
+    expect(onRing).toBe(motes.count); // all on a legible ring, none on the drain
+    expect(spreadX).toBeGreaterThan(0); // horizontally spread (full-mag, not x-keyed)
+    inst.dispose();
+  });
+
+  // The same bold ring must also work at the OTHER rig pin (horizontal {0.62,0.5}).
+  it('moteCount: bold ring + count growth also hold at the {0.62,0.5} horizontal pin', () => {
+    const { target, inst } = fresh({ moteCount: 3 });
+    pinEngaged(target, inst, 1, PIN);
+    const motes = findMotes(target) as Sprite;
+    inst.setControl('moteCount', 3);
+    inst.seek(1);
+    inst.seek(1);
+    const loEnergy = moteEnergy(motes);
+    expect(loEnergy).toBeGreaterThan(1);
+    inst.setControl('moteCount', 12);
+    inst.seek(1);
+    inst.seek(1);
+    const hiEnergy = moteEnergy(motes);
+    expect(hiEnergy).toBeGreaterThan(loEnergy * 2.5);
     inst.dispose();
   });
 

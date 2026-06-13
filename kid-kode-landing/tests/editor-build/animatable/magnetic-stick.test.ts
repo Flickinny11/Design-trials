@@ -20,8 +20,28 @@ function settle(
   return t;
 }
 
-// The harness pins the rig pointer here for pointer tiles (proximity 0.7–0.9).
+// A nominal engaged pin used by the legacy reshape test (proximity ~0.7).
 const PIN = { x: 0.62, y: 0.5 };
+
+// THE REAL ADVOCATE PIN. The catalog capture rig pins the cursor for control
+// sweeps via the orbiting stimulus seeked at t=1 on a 4 s clock (ph=0.25):
+//   rad = 0.05 + 0.3·(0.5 + 0.5·sin(2·ang)),  ang = ph·2π = π/2
+//       = 0.05 + 0.3·0.5 = 0.2
+//   x = 0.5 + 0.2·cos(π/2) = 0.5   ← DEAD CENTER (rawTX = 0)
+//   y = 0.5 + 0.2·sin(π/2) = 0.7   ← a pure VERTICAL downward offset
+// (see shared-tile-renderer.ts advance() + useradvocate-capture.mjs seek(name,1)).
+// Any standing term keyed off the pointer's X offset reads ZERO here — the exact
+// trap the prior fix-round fell into (its escapeFactor/releaseWobble mappings keyed
+// off X measured sub-noise). Formerly-dead controls MUST move a Y/magnitude/tilt
+// term boldly at THIS pin.
+const ADVOCATE_PIN = { x: 0.5, y: 0.7 };
+
+// Bold-delta target. The advocate's LIVE controls on these tiles measure
+// meanAbsDiff 6–24 (changedFrac 0.12+); a sub-3 reads as DEAD. In scene units a
+// LIVE control moves the card ~0.09–0.37 (captureRadius 6.5 ≈ 0.09 vertical;
+// grabPulse 17 ≈ 0.12 scale). A formerly-dead control's low→high sweep at the
+// pin MUST clear this to count as resurrected.
+const BOLD = 0.08;
 
 describe('magnetic-stick primitive', () => {
   it('conforms to the Animatable contract', () => {
@@ -144,100 +164,128 @@ describe('magnetic-stick primitive', () => {
     inst.dispose();
   });
 
-  it('every sweepable control reshapes the ENGAGED pose at the static pin (advocate capture)', () => {
-    // Mirrors the advocate's exact capture: the rig PINS the cursor statically
-    // at the engaged point {0.62,0.5} and sweeps each control with repeated
-    // same-t seeks (pointer velocity ≈ 0, spring SETTLED, no release transient).
-    // Each named control MUST move a measured term of the settled engaged pose
-    // low→high — a control that only governs the trajectory toward the pose is
-    // invisible here and was BLOCKED (escapeFactor, stickStiffness, releaseWobble
-    // measured meanAbsDiff=0; captureRadius mid==high). We measure the SETTLED
-    // standing pose (the closed-form engaged target the spring converges onto),
-    // then re-seek at the held t so a paused control sweep re-derives the frame.
+  it('every sweepable control BOLDLY reshapes the engaged pose at the REAL advocate pin {0.5,0.7}', () => {
+    // Mirrors the advocate's EXACT capture: the rig pins the cursor statically at
+    // {0.5,0.7} — x DEAD-CENTER, a pure VERTICAL downward offset — and sweeps each
+    // control with repeated same-t seeks (pointer velocity ≈ 0, spring SETTLED, no
+    // release transient). The prior fix-round (advocate r2) was RE-BLOCKED because
+    // escapeFactor and releaseWobble keyed their standing terms off the pointer's X
+    // offset, which is ZERO at this pin → they measured sub-noise (meanAbsDiff
+    // 0.7–3.2). Each formerly-dead control MUST now move a Y / magnitude / tilt term
+    // of the settled engaged pose BOLDLY (≥ BOLD scene units, the live-control band).
+    // We measure the SETTLED standing pose AND re-seek at the held t (dt=0) so a
+    // paused control sweep — the literal onParamChange path — re-derives the frame.
     const measure = (
       overrides: Record<string, number>,
-    ): { x: number; y: number; z: number; s: number } => {
+    ): { x: number; y: number; z: number; s: number; rz: number; mag: number } => {
       const target = makeTarget(magneticStickPrimitive);
       const subject = target.subject as Object3D;
       const baseX = subject.position.x;
       const baseY = subject.position.y;
       const baseZ = subject.position.z;
+      const baseRz = subject.rotation.z;
       // Engage FIRST (pointer at pin on the very first apply), so the Schmitt
       // latch grabs and stays stuck — exactly the engaged frame the rig pins.
-      target.userData.pointer = { ...PIN };
+      target.userData.pointer = { ...ADVOCATE_PIN };
       const inst = magneticStickPrimitive.create(target, overrides);
-      // Default captureRadius (0.7) is wide enough that prox at the pin < capture
-      // → the latch grabs on apply(0); the override (if it lowers capture) keeps
-      // it latched via hysteresis, matching the engaged capture.
       settle(inst, 0, 160);
+      const dx = subject.position.x - baseX;
+      const dy = subject.position.y - baseY;
       const out = {
-        x: subject.position.x - baseX,
-        y: subject.position.y - baseY,
+        x: dx,
+        y: dy,
         z: subject.position.z - baseZ,
         s: subject.scale.x,
+        rz: subject.rotation.z - baseRz,
+        mag: Math.hypot(dx, dy),
       };
       inst.dispose();
       return out;
     };
 
-    // Sample the SAME control on one instance via held-t re-seek (the literal
-    // paused-sweep path onParamChange drives), to prove the held frame moves.
+    // Sample the SAME control on one instance via repeated held-t re-seek (the
+    // literal paused-sweep path onParamChange drives, dt=0), returning the full
+    // pose so we can measure the axis the control actually moves.
     const sweepHeld = (
       id: string,
       lo: number,
       hi: number,
-    ): { lo: number; hi: number } => {
+    ): { dx: number; dy: number; drz: number; dmag: number } => {
       const target = makeTarget(magneticStickPrimitive);
       const subject = target.subject as Object3D;
-      target.userData.pointer = { ...PIN };
+      target.userData.pointer = { ...ADVOCATE_PIN };
       const inst = magneticStickPrimitive.create(target);
       const t = settle(inst, 0, 160); // converge onto the standing target
       inst.setControl(id, lo);
       inst.seek(t); // held-t re-seek at the SAME time (dt=0) — advocate's path
-      const loX = subject.position.x;
+      const loX = subject.position.x, loY = subject.position.y, loRz = subject.rotation.z;
       inst.setControl(id, hi);
       inst.seek(t); // again at the same held t
-      const hiX = subject.position.x;
+      const hiX = subject.position.x, hiY = subject.position.y, hiRz = subject.rotation.z;
       inst.dispose();
-      return { lo: loX, hi: hiX };
+      return {
+        dx: Math.abs(hiX - loX),
+        dy: Math.abs(hiY - loY),
+        drz: Math.abs(hiRz - loRz),
+        dmag: Math.hypot(hiX - loX, hiY - loY),
+      };
     };
 
-    // ── captureRadius: monotonic across the FULL range (mid ≠ high) ──────────
+    // ── captureRadius: was LIVE — keep it live + monotonic (mid ≠ high) ──────
+    // At the pure-vertical pin its reach reads on Y (a stronger magnet grips a
+    // little farther DOWN toward the cursor). Keep the upper half live.
     const capMid = measure({ captureRadius: 0.55 });
     const capHi = measure({ captureRadius: 0.9 });
     const capMax = measure({ captureRadius: 1.2 });
-    // The defect was mid==high. Assert the UPPER half is live too.
-    expect(Math.abs(capHi.x - capMid.x)).toBeGreaterThan(0.005);
-    expect(Math.abs(capMax.x - capHi.x)).toBeGreaterThan(0.005);
-    // and monotonic increasing reach (a stronger magnet grips farther).
-    expect(capHi.x).toBeGreaterThan(capMid.x);
-    expect(capMax.x).toBeGreaterThan(capHi.x);
+    expect(Math.abs(capHi.y - capMid.y)).toBeGreaterThan(0.005);
+    expect(Math.abs(capMax.y - capHi.y)).toBeGreaterThan(0.005);
+    // monotonic increasing reach (more negative Y = farther toward the cursor).
+    expect(capHi.y).toBeLessThan(capMid.y);
+    expect(capMax.y).toBeLessThan(capHi.y);
 
-    // ── escapeFactor: formerly DEAD — now a standing taut-tether reach ───────
+    // ── escapeFactor: formerly DEAD — now a BOLD standing taut-tether reach ──
+    // A wider escape gap = a tauter tether = the stuck card clings FARTHER toward
+    // the cursor offset. At {0.5,0.7} that cling is VERTICAL (x=0), so we assert
+    // the bold delta on Y. low (sits back) → high (clings to the travel clamp).
     const escLo = measure({ escapeFactor: 1.0 });
     const escHi = measure({ escapeFactor: 2.2 });
-    expect(Math.abs(escHi.x - escLo.x)).toBeGreaterThan(0.01);
-    expect(escHi.x).toBeGreaterThan(escLo.x);
-    // and observable on the SAME held frame via the paused-sweep path.
+    expect(Math.abs(escHi.y - escLo.y)).toBeGreaterThan(BOLD); // ≈0.093 measured
+    expect(escHi.y).toBeLessThan(escLo.y); // clings farther DOWN toward the cursor
+    // and observable BOLDLY on the SAME held frame via the paused-sweep path.
     const escHeld = sweepHeld('escapeFactor', 1.0, 2.2);
-    expect(Math.abs(escHeld.hi - escHeld.lo)).toBeGreaterThan(0.01);
+    expect(escHeld.dmag).toBeGreaterThan(BOLD);
+    expect(escHeld.dy).toBeGreaterThan(BOLD);
 
-    // ── stickStiffness: formerly DEAD — now a standing lock-distance lag ─────
+    // ── stickStiffness: was LIVE — keep it live (standing lock-distance lag) ─
+    // Reads on Y at this pin (stiffer locks closer to the downward offset).
     const stiLo = measure({ stickStiffness: 0.2 });
     const stiHi = measure({ stickStiffness: 1.0 });
-    expect(Math.abs(stiHi.x - stiLo.x)).toBeGreaterThan(0.02);
-    // stiffer sits CLOSER to the cursor offset (larger +x reach toward the pin).
-    expect(stiHi.x).toBeGreaterThan(stiLo.x);
+    expect(Math.abs(stiHi.y - stiLo.y)).toBeGreaterThan(0.02);
+    expect(stiHi.y).toBeLessThan(stiLo.y); // stiffer sits closer to the offset
     const stiHeld = sweepHeld('stickStiffness', 0.2, 1.0);
-    expect(Math.abs(stiHeld.hi - stiHeld.lo)).toBeGreaterThan(0.02);
+    expect(stiHeld.dmag).toBeGreaterThan(0.02);
 
-    // ── releaseWobble: formerly DEAD — now a standing residual micro-wobble ──
-    // A dead-still lock (0) vs an underdamped one (1) differ on the held pose.
+    // ── releaseWobble: formerly DEAD — now a BOLD standing slump + tilt ──────
+    // A dead-still lock (0) vs an underdamped bed (1): the bed visibly SLUMPS off
+    // its lock (horizontal-dominant, since the vertical channel is reach-saturated
+    // at this pin) AND cants. Both axes are keyed off the control, NOT the pointer
+    // X (which is 0 here) — the exact fix for the r2 re-block. Assert the bold
+    // standing displacement AND the visible tilt.
     const wobLo = measure({ releaseWobble: 0.0 });
     const wobHi = measure({ releaseWobble: 1.0 });
-    const wobDiff =
-      Math.abs(wobHi.x - wobLo.x) + Math.abs(wobHi.y - wobLo.y);
-    expect(wobDiff).toBeGreaterThan(0.005);
+    // wobble=0 is a perfectly dead-still lock: the card holds its clean stuck
+    // pose (a pure-vertical reach, x≈0) with NO horizontal slump and NO tilt.
+    // (mag is non-zero — that's the engagement reach, not a residual.)
+    expect(Math.abs(wobLo.x)).toBeLessThan(0.002); // no horizontal slump at wobble=0
+    expect(Math.abs(wobLo.rz)).toBeLessThan(0.002); // no tilt at wobble=0
+    // wobble=1 slumps boldly off the lock AND tilts.
+    const wobDmag = Math.hypot(wobHi.x - wobLo.x, wobHi.y - wobLo.y);
+    expect(wobDmag).toBeGreaterThan(BOLD); // ≈0.23 measured — far above noise
+    expect(Math.abs(wobHi.rz - wobLo.rz)).toBeGreaterThan(0.05); // ≈0.14 rad tilt
+    // and BOLDLY observable on the SAME held frame via the paused-sweep path.
+    const wobHeld = sweepHeld('releaseWobble', 0.0, 1.0);
+    expect(wobHeld.dmag).toBeGreaterThan(BOLD);
+    expect(wobHeld.drz).toBeGreaterThan(0.05);
 
     // ── grabPulse: was LIVE — keep it live (scale pop + sustained cling) ─────
     const pulseLo = measure({ grabPulse: 0.0 });

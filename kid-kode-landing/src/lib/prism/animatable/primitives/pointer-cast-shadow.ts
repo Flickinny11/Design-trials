@@ -145,8 +145,15 @@ export const pointerCastShadowPrimitive: PrimitiveDefinition = {
       const stretch = float(1).add(uLength.mul(1.6));
       const dAlong = along.div(stretch);
       const d = length(vec2(dAlong, length(across)));
-      // Soft edge: core opaque, fading to 0 at the rim; softness widens penumbra.
-      const edge0 = oneMinus(uSoftness).mul(0.5);
+      // Penumbra: `softness` sets the WIDTH of the falloff band and therefore
+      // the hardness of the shadow edge — a SECOND, standing, control-driven cue
+      // (advocate W4 fix). At softness→0 the inner edge (edge0) is pushed almost
+      // to the rim, so core→transparent happens over a razor-thin band: a SHARP,
+      // hard dark silhouette. At softness→1 edge0 collapses toward the centre, so
+      // the falloff is a BROAD smooth gradient from a dim core all the way out: a
+      // soft, diffuse penumbra. The wide [0.92 → 0.05] inner-edge travel makes
+      // low→high a dramatic hard-edge → soft-gradient reshape, not a nuance.
+      const edge0 = float(0.92).sub(uSoftness.mul(0.87)); // 0.92 (hard) → 0.05 (soft)
       const falloff = oneMinus(smoothstep(edge0, float(1.0), d));
       const shadowAlpha = falloff.mul(uOpacity);
 
@@ -170,8 +177,10 @@ export const pointerCastShadowPrimitive: PrimitiveDefinition = {
         float(1),
       );
 
-      // Base quad slightly larger than the card; scale/position driven per seek.
-      const shadowGeo = new PlaneGeometry(span * 1.5, span * 1.5);
+      // Base quad sized a touch wider than the card; the along-axis (local y)
+      // is the short dimension so per-seek `scaleAlong` grows a real TAIL that
+      // projects beyond the silhouette rather than starting already oversized.
+      const shadowGeo = new PlaneGeometry(span * 1.05, span * 0.5);
       const shadow = new Mesh(shadowGeo, shadowMat);
       shadow.name = SHADOW_NAME;
       shadow.renderOrder = -1; // draw behind the card
@@ -298,28 +307,46 @@ export const pointerCastShadowPrimitive: PrimitiveDefinition = {
         // 0 → 1 across the full slider travel.
         const lengthCtrl = clamp(num(params.shadowLength, 0.62), 0.2, 1);
         const lenN = (lengthCtrl - 0.2) / 0.8; // 0..1 across the slider
-        // The rake ANGLE (engagement) still makes a low/off-axis light throw the
-        // shadow FARTHER than an overhead one — but this is ADDITIVE on top of
-        // the control-driven standing rake, so it can never gate or swamp the
-        // control's own contribution. A fast flick adds a transient reach kick.
-        const reach = lenN * 0.7 + eng * 1.1 + lastImpulse * 0.25;
+        // The rake ANGLE (engagement) + a fast-flick impulse still make a
+        // low/off-axis or flicked light throw the shadow FARTHER than an
+        // overhead/still one — but these are ADDITIVE on top of the
+        // control-driven standing rake (below), so they can never gate or swamp
+        // the control's own contribution. (Folded directly into offsetMag /
+        // scaleAlong via `eng` and `lastImpulse`.)
+        const flick = clamp(lastImpulse, 0, 1.5);
 
-        // Place the shadow center: thrown OPPOSITE the light along the rake axis,
-        // by a subject-relative distance that grows DIRECTLY with shadowLength so
-        // the standing shadow visibly rakes farther out from behind the card as
-        // the slider rises. Dropped slightly behind the card on −z. A small
-        // base + downward bias keeps an idle/overhead frame showing the shadow.
-        const offsetMag = (0.12 + reach * 0.9) * span * 0.6;
+        // ── Place the shadow center so the cast shadow's TAIL extends CLEARLY
+        // BEYOND the card silhouette (advocate W4 r2 fix). The advocate rig pins
+        // the cursor at {0.5,0.7} → rake is a PURE downward vector (rakeX≈0,
+        // rakeY≈−1). The OLD mapping dropped the quad only ~0.46→1.37 below
+        // centre with the bulk hidden BEHIND the card, so lengthening it grew the
+        // shadow where the card occludes it — visually dead. Now the quad's
+        // NEAR edge is anchored just past the card's silhouette edge along the
+        // rake axis and the FAR edge is pushed out by a distance that scales
+        // boldly + directly with shadowLength, so the visible tail beyond the
+        // card plainly lengthens low→high. `edgeReach` = half-extent of the card
+        // along the rake direction (so we always clear the silhouette), `tail` =
+        // the control-driven projection beyond it.
+        const edgeReach = Math.abs(rakeX) * halfW + Math.abs(rakeY) * halfH;
+        // Push the quad CENTRE just past the silhouette edge by a distance that
+        // grows DIRECTLY + boldly with shadowLength, so the standing shadow's
+        // core (and the whole visible tail) marches outward from behind the card
+        // as the slider rises — even at the pure-vertical pin where rakeX=0.
+        const offsetMag = edgeReach + (0.04 + lenN * 0.3 + eng * 0.12 + flick * 0.08) * span;
         shadow.position.set(
           centerV.x + rakeX * offsetMag,
-          centerV.y + rakeY * offsetMag - halfH * 0.12,
+          centerV.y + rakeY * offsetMag,
           centerV.z - halfDepth - span * 0.04,
         );
-        // Stretch the quad along the throw: length is driven PRIMARILY by the
-        // control (standing), with a minor rake-angle bonus. lenN 0→1 roughly
-        // doubles the along-axis scale, so the cast shadow plainly elongates.
-        const scaleAlong = 1 + lenN * 1.7 + eng * 0.4;
-        shadow.scale.set(1 + eng * 0.15, scaleAlong, 1);
+        // Stretch the quad along the throw: length driven PRIMARILY by the
+        // control (standing). lenN 0→1 roughly QUADRUPLES the along-axis scale,
+        // so the cast-shadow tail plainly elongates well beyond the card edge.
+        // Softness also fattens the cross-axis a little so a soft shadow visibly
+        // spreads sideways too.
+        const softN = clamp(num(params.softness, 0.55), 0.05, 1);
+        const scaleAlong = 0.7 + lenN * 1.9 + eng * 0.4 + flick * 0.25;
+        const scaleCross = (1 + eng * 0.15) * (0.9 + softN * 0.45);
+        shadow.scale.set(scaleCross, scaleAlong, 1);
         // Rotate the quad so its long axis follows the throw direction.
         shadow.rotation.z = Math.atan2(rakeY, rakeX) - Math.PI / 2;
 
@@ -328,8 +355,11 @@ export const pointerCastShadowPrimitive: PrimitiveDefinition = {
         // falloff lengthens along the rake as shadowLength rises — a SECOND,
         // standing, control-driven cue independent of the quad scale.
         uLength.value = clamp(lenN * 1.6 + eng * 0.4, 0, 2);
-        uSoftness.value = clamp(num(params.softness, 0.55), 0.05, 1);
-        uOpacity.value = clamp(num(params.opacity, 0.62) * (0.35 + eng * 0.65), 0, 1);
+        uSoftness.value = softN;
+        // Keep a firm visible floor on opacity so the longer tail + penumbra band
+        // always READ at the static pin (engagement is only 0.2 there); opacity
+        // still rides engagement on top so a hard engage deepens the well.
+        uOpacity.value = clamp(num(params.opacity, 0.62) * (0.62 + eng * 0.38), 0, 1);
 
         // Rim: the LIT edge faces the light (the pointer side), which in uv space
         // is the opposite of the shadow throw — i.e. center MINUS the throw

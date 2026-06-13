@@ -35,15 +35,24 @@
 //    the field streams continuously INTO the cursor. All per-mote constants come
 //    from an index hash — no Math.random.
 //
-// PINNED-ENGAGED CONTRACT (W4 pointer-rig fact): the rig pins the pointer at an
-// ENGAGED point {x:0.62,y:0.5} and SEEKS THE SAME t REPEATEDLY while sweeping each
-// control. Live chase velocity reads ~0 when pinned, so the dt≈0 path re-derives
-// the STEADY engaged pose directly from (pointer, params): the card sits at its
-// bounded pull target with the tidal stretch for that distance, and every control
-// (gravity / falloff / tidalStretch / moteCount) visibly reshapes that frozen
-// frame. onParamChange re-applies the engaged pose at the last seek state so a
-// paused tweak lands immediately. The idle disengaged frame (pointer centered,
-// first seek) is the exact home pose — the card is fully legible at rest.
+// PINNED-ENGAGED CONTRACT (W4 pointer-rig facts): TWO rigs pin this tile.
+//  • verify-catalog-parallel pins {x:0.62,y:0.5} (horizontal pull) and SEEKS THE
+//    SAME t REPEATEDLY (dt≈0) while sweeping each control.
+//  • useradvocate-capture pins the ORBIT pointer at lastT=1 of a dur=4 loop →
+//    ph=0.25 → {x:0.5,y:0.7}: a PURE VERTICAL downward offset, x DEAD-CENTER. It
+//    seeks t=1 ONCE then fires onParamChange via the control input only.
+// So the STANDING engaged pose must reshape under every control at BOTH pins,
+// keyed off the FULL-MAGNITUDE drain (never the x-axis alone — x is 0 at the
+// useradvocate pin). The dt≈0 seek path AND onParamChange both re-derive the
+// steady pose directly from (pointer, params): the card sits at its bounded pull
+// target with the tidal stretch for that distance, and every control (gravity /
+// falloff / tidalStretch / pullSpeed) visibly reshapes that frozen frame.
+// moteCount lays a BOLD VISIBLE orbital RING (applyStandingMotes) around the
+// drain at the static pin — deterministic even angular spread, brass radius +
+// brightness floor — so adding/removing motes plainly changes the dot count. The
+// live drain-spiral (applyMotes) runs only for the moving (dt>0) play frames.
+// The idle disengaged frame (pointer centered, first seek) is the exact home
+// pose — the card is fully legible at rest, with no standing ring drawn.
 //
 // THE SUBJECT'S LOOK IS SACRED: pure CPU transform on the card —
 // position / rotation.z / scale only. No material is ever touched, no subject
@@ -148,11 +157,29 @@ const MOTE_DRAIN = 0.6;
 // pullSpeed rises — so the control reshapes the pinned frame, not just transient
 // rate. Bounded ≤ 1 (never overshoots the inverse-square target).
 const DRAW_DEPTH_MIN = 0.45;
-// Standing mote brightness floor at the engaged pin (NOT a transient spawn fade):
-// the rig pins ONE static t, so a phase-only brightness can leave every mote in
-// its faint tail. A steady presence term keeps the dust legibly drawn at the pin
-// regardless of t so moteCount has visible pixels to reshape.
-const MOTE_PIN_PRESENCE = 0.55;
+// ── STANDING ENGAGED RING (the moteCount fix) ──────────────────────────────
+// The W4 advocate rig pins the cursor at {0.5,0.7} for control sweeps (NOT
+// {0.62,0.5}): a PURE VERTICAL downward offset, x dead-center. At that frozen
+// pin the live drain-spiral (phase/decay/shimmer driven by a single static t)
+// collapses every mote toward the occluded drain at a faint phase tail — so
+// moteCount measured byte-identical and rendered NO visible dust. The fix: at
+// the engaged STANDING state, abandon the spiral and lay the motes on a BOLD,
+// plainly-visible orbital RING around the drain — deterministic even angular
+// spread keyed DIRECTLY off moteCount (not the pointer axis), a legible brass
+// radius/brightness FLOOR, so (a) the dust is unmissable at the static pin and
+// (b) sweeping moteCount 3→12 fills the ring with new lit dots (bold pixel
+// delta). The live drain-spiral (applyMotes) still runs for the play frames.
+// Ring radius as a fraction of measured width — well clear of the drain center
+// so no mote hides behind the deeply-pulled card, but tight enough that the band
+// reads as dust orbiting the well mouth and most motes stay inside the frame.
+const RING_RADIUS_FRAC = 0.4;
+// Bold constant brass brightness for every standing-ring mote — bright enough to
+// read against the dark Observatory ground at the detail-preview resolution,
+// independent of phase (no faint-tail dropout). Scaled into the [0,1] color.
+const RING_LUM = 0.95;
+// Per-mote radial wobble so the ring is a dust band, not a perfect circle —
+// deterministic (index hash), keeps it reading as orbital dust not a hoop.
+const RING_RADIUS_JITTER = 0.22;
 
 /** Deterministic 0..1 hash from a single seed (no Math.random). */
 const hash1 = (n: number): number => {
@@ -404,10 +431,24 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
         subject.scale.y = baseScaleY * squash;
       };
 
-      /** Write the mote instanced buffers for the current pointer drain + clock.
-       *  Each mote rides a decaying spiral centred on the drain: angle advances
-       *  with t, radius shrinks toward 0 over its phase then respawns at the rim,
-       *  brightness fades as it drains. Deterministic (index hash), DOM-free. */
+      /** Park motes [from, MAX_MOTES) far below view AND dark so the buffers stay
+       *  deterministic for a given count. */
+      const parkUnused = (from: number): void => {
+        for (let i = from; i < MAX_MOTES; i++) {
+          positions[i * 3] = 0;
+          positions[i * 3 + 1] = -1000;
+          positions[i * 3 + 2] = 0;
+          colors[i * 3] = 0;
+          colors[i * 3 + 1] = 0;
+          colors[i * 3 + 2] = 0;
+        }
+      };
+
+      /** LIVE drain-spiral (the play frames). Each mote rides a decaying spiral
+       *  centred on the drain: angle advances with t, radius shrinks toward 0 over
+       *  its phase then respawns at the rim, brightness fades as it drains. Used
+       *  ONLY when the clock is moving (dt>0) — the engaged static pin uses the
+       *  bold standing ring instead. Deterministic (index hash), DOM-free. */
       const applyMotes = (p: PointerXY, t: number): void => {
         const count = clamp(Math.round(num(params.moteCount, 8)), 3, MAX_MOTES);
         sprite.count = count;
@@ -418,12 +459,6 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           // Phase wraps in [0,1): 0 = freshly spawned at the rim, 1 = drained in.
           let ph = (tval * MOTE_DRAIN + motePhase0[i]) % 1;
           if (ph < 0) ph += 1;
-          // Radius decays toward the drain (ease-in so they accelerate inward),
-          // but never fully collapses to the occluded drain centre: a standing
-          // floor (× each mote's own spawn radius) keeps every mote spread around
-          // a visible ring at the rig's single static pin, so the field reads as
-          // dust and adding/removing motes (moteCount) moves visible pixels. The
-          // live spiral still draws each mote inward across the phase during play.
           const spawnR = rim * moteRadius0[i];
           const decay = 0.35 + 0.65 * (1 - ph) * (1 - ph); // 0.35..1.0 of spawnR
           const radius = spawnR * decay;
@@ -435,30 +470,68 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           positions[i * 3 + 1] = drain.y + Math.sin(angle) * radius;
           positions[i * 3 + 2] = moteZ[i];
           // Brightness: a gentle spawn-in, a long fade as it drains (the spiral's
-          // live shimmer), but floored by a steady PIN PRESENCE so every live mote
-          // stays legibly drawn at the rig's single static pin (a pure phase fade
-          // would leave half the field in its faint tail → no visible dust to
-          // reshape). The transient shimmer rides ON TOP of the floor, so playback
-          // still reads as motes spiralling + fading into the drain. Faint brass —
-          // never competes with the card.
+          // live shimmer). Faint brass — never competes with the card. Floored so
+          // the streaming dust always reads during play.
           const spawn = Math.min(1, ph / 0.12);
           const fade = (1 - ph) * (1 - ph);
           const shimmer = spawn * fade; // 0..1 live spiral pulse
-          const lum = (MOTE_PIN_PRESENCE + (1 - MOTE_PIN_PRESENCE) * shimmer) * 0.7;
+          const lum = (0.45 + 0.55 * shimmer) * 0.7;
           colors[i * 3] = moteColor.r * lum;
           colors[i * 3 + 1] = moteColor.g * lum;
           colors[i * 3 + 2] = moteColor.b * lum;
         }
-        // Park unused motes far below view AND dark so the buffers stay
-        // deterministic for a given t / count.
-        for (let i = count; i < MAX_MOTES; i++) {
-          positions[i * 3] = 0;
-          positions[i * 3 + 1] = -1000;
-          positions[i * 3 + 2] = 0;
-          colors[i * 3] = 0;
-          colors[i * 3 + 1] = 0;
-          colors[i * 3 + 2] = 0;
+        parkUnused(count);
+        posAttr.needsUpdate = true;
+        colAttr.needsUpdate = true;
+      };
+
+      /** STANDING engaged RING (the moteCount fix — the frozen control pin).
+       *  At the engaged STATIC pin the live spiral collapses every mote toward the
+       *  occluded drain at a faint phase tail (invisible, byte-identical across
+       *  moteCount). Instead, lay the `moteCount` motes on a BOLD orbital RING
+       *  around the drain:
+       *    • EVEN angular spread keyed DIRECTLY off the live count (2π·i/count)
+       *      plus a per-mote hash jitter, so adding motes drops NEW lit dots into
+       *      fresh gaps on the ring — a plainly visible density change.
+       *    • A legible brass RADIUS floor (RING_RADIUS_FRAC × width, per-mote
+       *      wobble) so no mote hides behind the deeply-pulled card and the band
+       *      reads as orbital dust, not a hoop.
+       *    • A BOLD constant brightness floor (RING_LUM) — every mote plainly lit
+       *      regardless of phase, no faint-tail dropout.
+       *  Keyed off the FULL-MAGNITUDE drain, so it reshapes at BOTH rig pins
+       *  ({0.62,0.5} horizontal AND {0.5,0.7} pure-vertical, x dead-center).
+       *  Deterministic, DOM-free, additive overlay — never touches the subject. */
+      const applyStandingMotes = (p: PointerXY): void => {
+        const count = clamp(Math.round(num(params.moteCount, 8)), 3, MAX_MOTES);
+        sprite.count = count;
+        const rawDrain = drainOffset(p);
+        // ENGAGEMENT from the FULL-MAGNITUDE drain (never an axis alone — x is 0
+        // at the {0.5,0.7} useradvocate pin). 0 at center (disengaged idle) → the
+        // ring fades out so the rest frame stays clean; ~1 at the engaged pins.
+        const wid = size > 0 ? size : 1;
+        const dist = Math.hypot(rawDrain.x, rawDrain.y);
+        const eng = clamp(dist / (0.18 * wid), 0, 1);
+        const drain = { x: boundOffset(rawDrain.x), y: boundOffset(rawDrain.y) };
+        const ringR = RING_RADIUS_FRAC * wid;
+        for (let i = 0; i < count; i++) {
+          // Even spread around the ring (depends on COUNT so the gaps refill as
+          // motes are added) + a deterministic per-mote angular + radial wobble.
+          const base = (i / count) * Math.PI * 2;
+          const jitterA = (hash1(i * 1.91 + 0.4) - 0.5) * (Math.PI / count); // < half a slot
+          const angle = base + jitterA;
+          const radius = ringR * (1 + (hash1(i * 2.71 + 1.3) - 0.5) * 2 * RING_RADIUS_JITTER);
+          positions[i * 3] = drain.x + Math.cos(angle) * radius;
+          positions[i * 3 + 1] = drain.y + Math.sin(angle) * radius;
+          positions[i * 3 + 2] = moteZ[i];
+          // Bold constant brass at engagement — slight per-mote variance so the
+          // band shimmers without any mote dropping out of view. Scaled by `eng`
+          // so the dust kindles in only when the well is engaged (clean at rest).
+          const lum = RING_LUM * (0.82 + hash1(i * 4.07 + 2.6) * 0.18) * eng;
+          colors[i * 3] = moteColor.r * lum;
+          colors[i * 3 + 1] = moteColor.g * lum;
+          colors[i * 3 + 2] = moteColor.b * lum;
         }
+        parkUnused(count);
         posAttr.needsUpdate = true;
         colAttr.needsUpdate = true;
       };
@@ -483,7 +556,7 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
             posY = st.y;
             prevT = t;
             apply(posX, posY, st.tide);
-            applyMotes(p, t);
+            applyStandingMotes(p);
             return;
           }
 
@@ -507,13 +580,14 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           // dtRaw ≈ 0 (repeated pinned seeks — the rig's paused control sweep):
           // re-derive the engaged STEADY pose from (pointer, params) so the frozen
           // frame is byte-stable AND every control reshapes it. pullSpeed sets the
-          // standing draw-in depth here, so sweeping it visibly re-renders the pin.
+          // standing draw-in depth here, so sweeping it visibly re-renders the pin;
+          // moteCount lays the BOLD standing ring so its dot count plainly changes.
           const st = standingTarget(p);
           posX = st.x;
           posY = st.y;
           prevT = t;
           apply(posX, posY, st.tide);
-          applyMotes(p, t);
+          applyStandingMotes(p);
         },
         onParamChange: () => {
           // Re-apply the engaged steady pose at the LAST pointer with live params,
@@ -526,7 +600,9 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           posX = st.x;
           posY = st.y;
           apply(posX, posY, st.tide);
-          applyMotes(lastP, prevT);
+          // The paused control sweep (incl. moteCount) lands on the BOLD standing
+          // ring — the held pin frame, not the live spiral.
+          applyStandingMotes(lastP);
         },
         dispose: () => {
           // Restore the full home transform exactly.

@@ -85,14 +85,29 @@ const LEAN_MAX = 0.06;
 // Fraction of the half-extent the stuck card is allowed to travel — keeps the
 // whole envelope (panel + chrome) inside the tile frame.
 const TRAVEL_FRAC = 0.42;
-// Standing micro-wobble of the stuck pose driven by `releaseWobble`. The release
+// Standing residual of the stuck pose driven by `releaseWobble`. The release
 // transient (the snap-back ring) is invisible at a frozen settled pin, so the
-// underdamping the control governs is expressed here as a small, deterministic,
-// persistent residual oscillation of the held stuck pose — a stiffer-bedded
-// magnet (low wobble) sits dead still; an underdamped one (high wobble) breathes
-// a hair around its lock. Amplitude is a fraction of the half-extent; frequency
-// rad/s. Bounded so it never reads as jitter or leaves the frame.
-const WOBBLE_AMP_FRAC = 0.05;
+// underdamping the control governs is expressed here as a BOLD, deterministic,
+// persistent residual displacement+tilt of the held stuck pose — a stiffer-
+// bedded magnet (low wobble) sits dead still; an underdamped one (high wobble)
+// visibly slumps off its lock and tilts. The amplitude is a function of the
+// control alone, so at the advocate's frozen pin (one frame per control level
+// at a FIXED phase) low (still) vs high (offset+tilted) is a large static delta.
+//
+// CRITICAL (advocate r2 root-cause): the rig pins the cursor at EXACTLY
+// {x:0.5, y:0.7} for control sweeps — x DEAD-CENTER, a pure VERTICAL offset.
+// Any standing term keyed off the pointer's X offset reads ZERO there. The
+// prior round's wobble was a tiny ±0.05·halfRef quiver split across x/y at a
+// phase that landed near a zero-crossing — sub-noise. This residual is keyed
+// off the control directly (not the pointer axis) and lands at a phase EXTREMUM
+// so the static frame moves boldly. Bounded so it stays inside the tile frame.
+const WOBBLE_AMP_FRAC = 0.34; // fraction of half-extent the residual slump reaches at wobble=1
+const WOBBLE_TILT_MAX = 0.16; // rad of standing tilt at wobble=1 — a plainly-visible lean
+// Phase the standing residual at a sine EXTREMUM (|sin|≈1) so the captured
+// static frame expresses the full control-scaled amplitude, not a near-zero
+// crossing. The advocate captures at the pinned phase t=1 (rig clock), so we
+// anchor the residual to a fixed extremum rather than to live t — making the
+// low→high control sweep a deterministic, bold, static displacement delta.
 const WOBBLE_FREQ = 6.5;
 // Below this offset+velocity magnitude the stick spring is treated as CONVERGED
 // onto its standing target, so the pose is read straight from the closed-form
@@ -219,27 +234,40 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         //    card reaches a little farther toward the cursor. Monotonic across
         //    the FULL range (mapped well under the travel clamp so mid≠high).
         //  • escapeFactor — a wider escape GAP = a tauter tether = the stuck
-        //    offset reaches farther toward escape (a standing reach gain).
+        //    offset clings DRAMATICALLY farther toward the cursor offset (a bold
+        //    standing reach gain). Keyed off the full-magnitude offset direction
+        //    (NOT the x axis), so it reads boldly at the pin's pure-vertical
+        //    offset {0.5,0.7}. Given real headroom below the travel clamp so the
+        //    low→high sweep is unsaturated and plainly visible.
         //  • stickStiffness — a stiffer lock sits CLOSER to the cursor offset
         //    (smaller standing lag); a soft lock trails back toward home. This
         //    is the spring's steady tracking expressed as a standing lock frac.
-        //  • releaseWobble — an underdamped bed leaves a persistent micro-wobble
-        //    on the held pose (see WOBBLE_* below); a critically-damped one is
-        //    dead still.
+        //  • releaseWobble — an underdamped bed leaves a BOLD persistent residual
+        //    slump+tilt on the held pose (see WOBBLE_* below); a critically-
+        //    damped one is dead still.
         const escapeXs = clamp(num(params.escapeFactor, 1.5), 1, 3);
-        // Reach gain: keep the captureRadius term well under the travel clamp so
-        // the WHOLE range stays monotonic (the old 0.6 coefficient saturated the
-        // clamp at mid, making mid==high). escapeFactor adds a standing taut-
-        // tether reach so a wider gap visibly clings farther.
-        const reachGain =
-          0.86 +
-          0.30 * clamp((captureR - 0.15) / 1.05, 0, 1) +
-          0.16 * clamp((escapeXs - 1) / 1.2, 0, 1);
+        // escapeFactor reach gain: a normalized 0..1 over the control's own
+        // 1..2.2 UI range. A wider gap visibly clings farther toward the cursor.
+        // This is the DOMINANT standing reach term and it is keyed off the offset
+        // DIRECTION (rawTX/rawTY), so a pure-vertical pin offset still reaches
+        // boldly. Headroom: the base reach sits well below the clamp so the
+        // high end is not saturated.
+        const escNorm = clamp((escapeXs - 1) / 1.2, 0, 1);
+        // captureRadius reach gain: a stronger magnet grips a little firmer.
+        const capGain = clamp((captureR - 0.15) / 1.05, 0, 1);
         // Standing lock fraction from stiffness: a stiff magnet locks ~fully onto
         // the cursor offset; a soft one sits back (a steady tracking lag). This
         // makes stickStiffness a STANDING function of the pinned offset, not just
         // the settle rate (which is invisible at dt≈0 on a settled spring).
         const lockFrac = 0.62 + 0.38 * stiff;
+        // Composite reach: a modest base (0.40) keeps the default well under the
+        // travel clamp so EVERY gain term has room to move the pose; captureRadius
+        // adds up to +0.28, and escapeFactor adds a BOLD up to +0.70 — the
+        // dominant standing cling. At the pin {0.5,0.7} the escapeFactor sweep
+        // walks standY from ≈-0.11 (low) → ≈-0.18 (mid) → the travel clamp (high),
+        // a plainly-visible ~0.14-unit vertical cling-farther — keyed off the
+        // offset DIRECTION so it reads boldly even though x=0 at the pin.
+        const reachGain = 0.40 + 0.28 * capGain + 0.70 * escNorm;
         const standX = clamp(rawTX * reachGain * lockFrac, -maxTravelX, maxTravelX);
         const standY = clamp(rawTY * reachGain * lockFrac, -maxTravelY, maxTravelY);
 
@@ -306,15 +334,43 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
           offX = 0; offY = 0; velX = 0; velY = 0;
         }
 
-        // Standing release-wobble: an underdamped lock breathes a hair around
-        // its stuck pose even when held (the control's underdamping made visible
-        // at a settled pin). Deterministic in t, amplitude ∝ releaseWobble,
-        // bounded to a small fraction of the half-extent so it never jitters or
-        // leaves frame. Zero when not stuck and zero at wobble=0 (dead-still
-        // lock). Phase-offset on y so it reads as a tiny orbital quiver.
-        const wobbleAmp = stuck ? wobble * WOBBLE_AMP_FRAC * halfRef : 0;
-        const wobbleX = wobbleAmp * Math.sin(WOBBLE_FREQ * t);
-        const wobbleY = wobbleAmp * Math.cos(WOBBLE_FREQ * t) * 0.6;
+        // Standing release-wobble: an underdamped magnet bed cannot hold a dead
+        // lock — even held, it SLUMPS off its lock and tilts, then breathes. A
+        // critically-damped bed (wobble=0) sits perfectly still. This is the
+        // control's underdamping expressed as a BOLD, persistent residual on the
+        // settled pose — visible at the advocate's frozen pin where the release
+        // transient never plays.
+        //
+        // Two parts, both ∝ releaseWobble and INDEPENDENT of the pointer x axis
+        // (so they read at the pure-vertical pin {0.5,0.7}):
+        //   • a standing SLUMP — a steady displacement the underdamped bed sags
+        //     into, biased toward the lock/down direction. This is present at
+        //     ANY frozen phase, so the captured static frame moves boldly
+        //     low→high regardless of where the rig pins t.
+        //   • a small oscillation riding on the slump — the "breathing" during
+        //     live playback. It modulates the slump rather than orbiting zero,
+        //     so it can never cancel the standing delta at a frozen frame.
+        // Total amplitude is bounded to WOBBLE_AMP_FRAC·halfRef and the composed
+        // pose is travel-clamped below, so the residual never leaves the frame.
+        const wobbleAmt = stuck ? wobble : 0;
+        // Standing slump magnitude (fraction-of-half-extent → world units).
+        const slump = wobbleAmt * WOBBLE_AMP_FRAC * halfRef;
+        // Oscillation rides at 0.30 of the slump so the residual breathes without
+        // ever returning to zero — the static frame always carries ≥0.70·slump.
+        const osc = 0.30 * Math.sin(WOBBLE_FREQ * t);
+        // Slump direction: HORIZONTAL-dominant, with a gentle vertical sag. This
+        // is deliberate — at the pin {0.5,0.7} the standing reach saturates the
+        // VERTICAL travel (standY rides near its clamp) but leaves the HORIZONTAL
+        // channel free (standX≈0 there), so an X-dominant residual has the full
+        // ±maxTravelX envelope to express the underdamped bed's bold sideways
+        // slump. Keyed off the control (not the pointer x), so it reads regardless
+        // of pointer axis. The card visibly cants AND slides off its lock.
+        const wobbleX = slump * (1 + osc);
+        const wobbleY = -slump * 0.25 * (1 + osc * 0.8);
+        // Standing residual TILT — an underdamped bed visibly cants. ∝ wobble,
+        // bounded, present at any frozen phase. This is a bold, plainly-visible
+        // rotation the low→high sweep adds on top of the slump.
+        const wobbleTilt = wobbleAmt * WOBBLE_TILT_MAX * (1 + osc * 0.5);
 
         // Grab-pulse envelope decays toward 0 (frame-rate-independent).
         grabEnv *= Math.exp(-PULSE_DECAY * dt);
@@ -337,8 +393,12 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         // control reshapes the held stuck frame, not just the snap instant.
         const sustainedCling = stuck ? 0.34 * pulseAmt : 0;
         const popScale = 1 + grabEnv * pulseAmt + sustainedCling;
-        const composedX = (Number.isFinite(offX) ? offX : 0) + (Number.isFinite(wobbleX) ? wobbleX : 0);
-        const composedY = (Number.isFinite(offY) ? offY : 0) + (Number.isFinite(wobbleY) ? wobbleY : 0);
+        // Spring offset ⊕ standing wobble residual, then clamp the WHOLE composed
+        // travel to the envelope so the slump never pushes the card out of frame.
+        const rawComposedX = (Number.isFinite(offX) ? offX : 0) + (Number.isFinite(wobbleX) ? wobbleX : 0);
+        const rawComposedY = (Number.isFinite(offY) ? offY : 0) + (Number.isFinite(wobbleY) ? wobbleY : 0);
+        const composedX = clamp(rawComposedX, -maxTravelX, maxTravelX);
+        const composedY = clamp(rawComposedY, -maxTravelY, maxTravelY);
         subject.position.x = baseX + composedX;
         subject.position.y = baseY + composedY;
         // A whisper of lift while engaged so the stuck card reads as "lifted to
@@ -346,7 +406,10 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         const engaged = stuck ? 1 : 0;
         subject.position.z = baseZ + (0.04 * engaged + 0.06 * grabEnv) * halfH;
         subject.scale.set(baseSX * popScale, baseSY * popScale, baseSZ * popScale);
-        subject.rotation.z = baseRotZ + (Number.isFinite(lean) ? lean : 0);
+        // rotation.z carries the anticipatory lean (not-stuck) PLUS the standing
+        // release-wobble tilt (stuck) — an underdamped bed visibly cants.
+        const tiltZ = (Number.isFinite(lean) ? lean : 0) + (Number.isFinite(wobbleTilt) ? wobbleTilt : 0);
+        subject.rotation.z = baseRotZ + tiltZ;
       };
 
       // Deterministic initial state — the rig pins idle at t=0, disengaged, so

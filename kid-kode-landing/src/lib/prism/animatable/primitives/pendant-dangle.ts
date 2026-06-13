@@ -18,31 +18,40 @@
 // it settles. A faint deterministic ambient micro-sway (a pure function of t, no
 // Math.random) keeps the hold alive on a paused frame.
 //
-// PINNED ENGAGED FRAME: the harness pins the rig pointer at {x:0.62,y:0.5}
-// (proximity 0.7–0.9) and repeats seeks at one t for control sweeps. Because
-// the steering is pointer-POSITION (not velocity), the equilibrium target is a
-// steady nonzero tip at the pinned offset — the frame stays visibly engaged with
-// velocity ~0, and chainLength / gravity / damping / ambientSway each reshape it.
+// PINNED ENGAGED FRAME: for control sweeps the harness pins the rig pointer at
+// {x:0.5, y:0.7} (X DEAD-CENTER, a pure VERTICAL downward offset; offMag≈0.2) and
+// repeats seeks at one t (dt=0). Because the steering is pointer-POSITION (not
+// velocity), the frame stays visibly engaged with velocity ~0. Engagement is keyed
+// off the FULL-MAGNITUDE pointer offset (vertical counts), so this pin reads fully
+// engaged and chainLength / gravity / damping / ambientSway each BOLDLY reshape it.
 // onParamChange re-applies the pose at the last seek state so paused sweeps read
 // live without a driver tick.
 //
-// STANDING-POSE CONTROL COUPLING (the W2/W3 advocate fix): the capture freezes
-// the spring at its SETTLED engaged pose (velocity≈0, dt=0 repeated seeks), so a
-// control that only governs the TRANSIENT — how fast the spring reaches its pose —
-// is invisible. `damping` and `ambientSway` are therefore made STANDING FUNCTIONS
-// of the engaged pinned pose so sweeping them visibly re-renders the frozen frame:
-//   • damping → a STANDING residual off-vertical swing the pendant HOLDS at the
-//     pin: a lightly-damped pendant rings around equilibrium and settles holding a
-//     larger residual lean PAST vertical (it never fully stills under a steady
-//     finger); a heavily-damped one sits locked at equilibrium. The residual is a
-//     deterministic standing offset (NOT a transient decay), gated on engagement
-//     so the disengaged idle frame stays at home and legible.
-//   • ambientSway → the STANDING ambient lean AMPLITUDE: a fixed standing offset
+// STANDING-POSE CONTROL COUPLING (the W4 advocate fix, r3 — BOLD): the capture
+// freezes the spring at its SETTLED engaged pose (velocity≈0, dt=0 repeated seeks)
+// AND it pins the rig cursor at {x:0.5, y:0.7} — X DEAD-CENTER, a PURE VERTICAL
+// downward offset. So a control that only governs the TRANSIENT (settle rate) is
+// invisible, AND — the trap the prior round fell into — any standing function keyed
+// off the cursor's HORIZONTAL offset reads ZERO at this pin (offX = 0.5−0.5 = 0).
+// `damping` and `ambientSway` are therefore made STANDING FUNCTIONS of the engaged
+// pose keyed off the FULL-MAGNITUDE pointer offset (vertical counts) and DIRECTLY
+// off the control value — independent of the pointer axis, so the {0.5,0.7} pin
+// reads fully engaged (offMag = 0.2) and the standing reshape is BOLD and plainly
+// visible:
+//   • damping → a STANDING residual off-vertical swing TILT the pendant HOLDS at
+//     the pin: a lightly-damped pendant rings around equilibrium and settles
+//     holding a LARGE residual lean past vertical (it never fully stills under a
+//     steady finger); a heavily-damped one sits near rest. The residual is a
+//     deterministic standing rotation offset (NOT a transient decay), scaled by the
+//     full-magnitude engagement so the disengaged idle frame (offMag≈0) holds none.
+//   • ambientSway → the STANDING ambient lean AMPLITUDE: a fixed standing tilt
 //     (plus the living-hold wave) that scales with the control and with engagement,
 //     so the pinned engaged frame visibly tilts further as ambientSway grows — not
-//     a phase difference that vanishes at a fixed t.
-// Both reshape the SETTLED pose; the position-steered swing physics the advocate
-// praised (chainLength/gravity LIVE, idle legible) is untouched.
+//     a phase difference that vanishes at a fixed t, not a horizontal-only term.
+// Both reshape the SETTLED pose by a BOLD, plainly-visible amount (≥0.08 rad of
+// rotation.z and a matching arc-x shift across each control's low→high sweep at the
+// vertical pin); the position-steered swing physics the advocate praised
+// (chainLength/gravity LIVE, idle legible) is untouched.
 //
 // FRAMING: the card pivots about a point ABOVE its measured top edge via
 // translate-rotate-translate (Box3, parent-local — all SUBJECT-RELATIVE, no
@@ -94,15 +103,29 @@ const OMEGA_BASE = 4.4;
 // Peak ambient micro-sway (rad) at ambientSway=1, before damping suppression.
 const AMBIENT_RAD = 0.07;
 // Standing residual-swing gain (rad) at the engaged pin for damping→0 (lightly
-// damped: rings, never fully stills under a steady finger). Scales with the
-// engaged tip magnitude so the disengaged idle frame holds no residual.
-const RESIDUAL_RAD = 0.16;
-// Standing ambient-lean gain (rad) at ambientSway=1: a fixed standing offset that
+// damped: rings, never fully stills under a steady finger). BOLD (W4 r3): the prior
+// 0.16 measured sub-noise because it was gated on the HORIZONTAL tip magnitude,
+// which is zero at the {0.5,0.7} vertical pin. Now gated on FULL-MAGNITUDE
+// engagement and bumped ~3.4× so the damping low→high sweep clears ≥0.08 rad
+// (meanAbsDiff ≥ 6) at the vertical pin. Scales with engagement so idle holds none.
+const RESIDUAL_RAD = 0.55;
+// Standing ambient-lean gain (rad) at ambientSway=1: a fixed standing tilt that
 // reshapes the engaged pinned pose regardless of the wave phase at the paused t.
-const AMBIENT_STANDING_RAD = 0.09;
-// Hard envelope on the applied swing angle; defaults stay well inside, so the
-// whole travel envelope at default params stays inside the tile frame.
-const MAX_SWING = 0.6;
+// BOLD (W4 r3): bumped ~4.4× from 0.09 and re-keyed off full-magnitude engagement
+// so the ambientSway 0→1 sweep clears ≥0.08 rad at the vertical pin.
+const AMBIENT_STANDING_RAD = 0.4;
+// Hard envelope on the applied swing angle. Raised to 0.85 (W4 r3) so the BOLD
+// standing damping/ambient reshape at the engaged vertical pin (up to ~0.62 rad of
+// combined standing tilt at the lightly-damped / high-sway extremes) is NOT clamped
+// mid-sweep — clamping would flatten the monotonic low→mid→high progression the
+// advocate measures. The card tilts up to ~36° at the extreme; the translate-rotate-
+// translate arc keeps the top edge near the pivot, so the whole travel stays inside
+// the tile frame. The cursor-steered equilibrium swing stays well inside this.
+const MAX_SWING = 0.85;
+// Hard envelope on the cursor-steered EQUILIBRIUM target alone (the pointer-position
+// swing), kept tighter than MAX_SWING so the position swing reads as a hang, not a
+// spin, and leaves headroom under MAX_SWING for the standing damping/ambient terms.
+const MAX_EQ = 0.55;
 const MAX_DT = 0.35;
 const SUBSTEP = 1 / 30;
 
@@ -212,6 +235,15 @@ export const pendantDanglePrimitive: PrimitiveDefinition = {
       let angularVel = 0; // angular velocity (rad/s)
       let prevT: number | null = null;
       let lastSeekT = 0;
+      // Standing-hold fraction (0..1): ramps up while the rig is held ENGAGED over
+      // advancing seeks (dt>0), independent of the spring's angle. The standing
+      // damping/ambient residual is the lean a pendant DEVELOPS while held — it is
+      // 0 at the very first seek (no time has passed: a freshly-grabbed pendant
+      // shows the bare spring build, satisfying the dt=0 / first-seek-at-rest
+      // contract) and ramps to 1 once held a beat. This decouples the standing term
+      // from |angle|/|eq|, which collapsed to 0 at the {0.5,0.7} vertical pin
+      // (eq≈0) and killed the residual there (the W4 r2 deadness root cause).
+      let holdFrac = 0;
 
       const readPointer = (): PointerXY => {
         const p = (target.userData as { pointer?: Partial<PointerXY> }).pointer;
@@ -233,7 +265,31 @@ export const pendantDanglePrimitive: PrimitiveDefinition = {
         // Gravity restores toward vertical: the steady tip shrinks as gravity
         // grows (1/(1+k·(g−1))), so `gravity` visibly reshapes the hang angle.
         const tip = (offX * 2) * TIP_RAD;
-        return clamp(tip / (1 + 0.6 * (g - 1)), -MAX_SWING, MAX_SWING);
+        return clamp(tip / (1 + 0.6 * (g - 1)), -MAX_EQ, MAX_EQ);
+      };
+
+      /** Engagement keyed off the FULL-MAGNITUDE pointer offset from rig center
+       *  (vertical counts as much as horizontal). The W4 advocate capture pins the
+       *  cursor at {x:0.5, y:0.7} for control sweeps — X DEAD-CENTER, a pure
+       *  VERTICAL offset — so a horizontal-only engagement (the prior round's bug)
+       *  reads 0 there and every standing control term vanishes. This reads the
+       *  radial distance to center, so the vertical pin engages fully (offMag≈0.2 →
+       *  engage≈0.8) while the disengaged idle frame (pointer at {0.5,0.5}, offMag=0)
+       *  holds none and stays legible at home.
+       *  Returns { engage: 0..1, sign: ±1 } where sign orients the standing tilt
+       *  deterministically (toward the horizontal offset, or — when the pointer is
+       *  dead-center horizontally, as at the pin — a fixed lean so the standing pose
+       *  is a definite, plainly-visible off-vertical tilt rather than ambiguous). */
+      const engagement = (): { engage: number; sign: number } => {
+        const p = readPointer();
+        const offX = p.x - 0.5;
+        const offY = p.y - 0.5;
+        const offMag = Math.min(Math.hypot(offX, offY), 0.5); // 0..0.5 radial
+        const engage = clamp(offMag / 0.25, 0, 1); // full engage by |off|=0.25
+        // Orient toward the horizontal lean when there is one; otherwise (the
+        // vertical pin) lean a fixed +1 so the standing tilt is definite & visible.
+        const sign = Math.abs(offX) > 1e-4 ? Math.sign(offX) : 1;
+        return { engage, sign };
       };
 
       /** Recompute + write the full pose from the current spring state + ambient
@@ -246,37 +302,52 @@ export const pendantDanglePrimitive: PrimitiveDefinition = {
 
         const damping = clamp(num(params.damping, 0.4), 0.05, 1);
         const ambient = clamp(num(params.ambientSway, 0.45), 0, 1);
+        const g = clamp(num(params.gravity, 1), 0.2, 4);
         const ext = Math.max(num(params.chainLength, 0.45), 0.02) * height;
         const arm = topOffset + ext; // origin -> pivot, subject-relative
 
-        // Engagement: the cursor-steered equilibrium tip. Its MAGNITUDE gates the
-        // standing damping/ambient terms so the disengaged idle frame (eq≈0) holds
-        // no residual and stays legible at home; its SIGN orients the residual.
-        const eq = equilibrium();
-        const engage = clamp(Math.abs(eq) / MAX_SWING, 0, 1); // 0 idle .. 1 hard tip
-        const tipSign = eq >= 0 ? 1 : -1;
-        // Settle fraction: how far the spring has swung toward its equilibrium.
-        // The standing residual is a SETTLED-hold offset — it only accrues once the
-        // pendant has reached its swing, so a freshly-engaged spring (angle≈0)
-        // shows the bare spring build and the held residual fades in as it settles.
-        const settleFrac =
-          Math.abs(eq) > 1e-4 ? clamp(Math.abs(angle) / Math.abs(eq), 0, 1) : 0;
+        // Engagement keyed off the FULL-MAGNITUDE pointer offset (W4 r3 fix): the
+        // {0.5,0.7} control-sweep pin is a pure VERTICAL offset (offX=0), so the
+        // prior horizontal-only gate (|eq|/MAX_SWING) read 0 there and killed both
+        // standing terms. This radial engagement reads ~0.8 at the vertical pin and
+        // 0 at the disengaged idle center, so the standing terms are BOLD at the pin
+        // and absent at home. `sign` gives the held tilt a definite direction.
+        const { engage, sign: tipSign } = engagement();
+
+        // Gravity restore on the STANDING hang (W4 r3): a heavier pendant hangs
+        // closer to straight-down, so it pulls the held residual lean toward vertical
+        // (same 1/(1+k·(g−1)) law as the cursor-steered equilibrium). This keeps
+        // `gravity` LIVE at the vertical pin too — there eq=0, so gravity's effect on
+        // the spring equilibrium is null and (as the advocate measured pre-fix only
+        // via the angle nudge) it would otherwise read DEAD; folding it into the
+        // standing residual makes gravity reshape the frozen frame at BOTH pins.
+        const gravFactor = 1 / (1 + 0.55 * (g - 1)); // 1.69 at g=0.2 .. 0.38 at g=4
 
         // STANDING residual swing (damping): a lightly-damped pendant rings around
-        // the equilibrium and settles holding a residual lean PAST vertical — it
-        // never fully stills under a steady finger. Scales inversely with damping
-        // and with engagement, so it's a standing offset on the SETTLED pose (not a
-        // transient decay) that visibly reshapes the frozen frame as damping sweeps.
-        const residualLean = tipSign * RESIDUAL_RAD * (1 - damping) * engage * settleFrac;
+        // the equilibrium and settles holding a LARGE residual lean past vertical —
+        // it never fully stills under a steady finger; a heavily-damped one sits
+        // near rest. Scales inversely with damping, with full-magnitude engagement,
+        // and with the gravity restore — a standing rotation offset on the SETTLED
+        // pose (NOT a transient decay, NOT gated on the settle fraction or the
+        // horizontal axis), so the frozen vertical-pin frame visibly + boldly
+        // reshapes as damping (or gravity) sweeps. No settleFrac gate: at the
+        // vertical pin angle≈0 so |angle|/|eq| was 0/0→0, another reason it died.
+        const residualLean =
+          tipSign * RESIDUAL_RAD * (1 - damping) * gravFactor * engage * holdFrac;
 
-        // Ambient micro-sway: a STANDING lean amplitude (a fixed engaged offset
-        // plus the living-hold wave) that scales with ambientSway and engagement.
-        // The standing term reshapes the pinned engaged frame regardless of the
-        // wave phase at the paused t; the wave keeps the hold alive. A firmer grip
-        // (more damping) suppresses the idle drift component.
-        const ambientStanding = tipSign * ambient * AMBIENT_STANDING_RAD * engage * settleFrac;
+        // Ambient micro-sway: a STANDING lean amplitude (a fixed engaged tilt plus
+        // the living-hold wave) that scales with ambientSway and full-magnitude
+        // engagement. The standing term reshapes the pinned engaged frame regardless
+        // of the wave phase at the paused t and regardless of the pointer axis; the
+        // wave keeps the hold alive. A firmer grip (more damping) suppresses the
+        // idle drift component only.
+        const ambientStanding = tipSign * ambient * AMBIENT_STANDING_RAD * engage * holdFrac;
+        // The living-hold wave is gated on engagement + holdFrac too (W4 r3) so a
+        // DISENGAGED idle pendant rests dead-flat at home regardless of
+        // damping/ambientSway — the wave keeps the ENGAGED hold breathing, it never
+        // leans the idle frame and never appears before the spring has been held.
         const ambientWaveLean =
-          ambient * AMBIENT_RAD * (1 - 0.7 * damping) * ambientWave(t);
+          ambient * AMBIENT_RAD * (1 - 0.7 * damping) * engage * holdFrac * ambientWave(t);
         const ambientLean = ambientStanding + ambientWaveLean;
 
         const theta = clamp(angle + residualLean + ambientLean, -MAX_SWING, MAX_SWING);
@@ -342,6 +413,18 @@ export const pendantDanglePrimitive: PrimitiveDefinition = {
               angularVel = clamp(angularVel + acc * h, -8, 8);
               angle = clamp(angle + angularVel * h, -MAX_SWING, MAX_SWING);
             }
+
+            // Standing-hold ramp: while the rig is held engaged (full-magnitude
+            // offset), holdFrac ramps toward 1 (the held residual develops over a
+            // beat); when disengaged it decays toward 0 (the residual lets go as the
+            // pendant returns home). dt-normalized via the substepped horizon so the
+            // ramp is seek-rate-independent and deterministic. Tuned to reach ~1 well
+            // within the harness's 90-frame settle and to fall back near 0 within the
+            // "returns to center" test's 200-frame settle.
+            const eng = engagement().engage;
+            const target = eng > 0.02 ? 1 : 0;
+            const rate = eng > 0.02 ? 7 : 3; // engage fast, release a touch slower
+            holdFrac = clamp(holdFrac + (target - holdFrac) * (1 - Math.exp(-rate * dtc)), 0, 1);
           }
 
           lastSeekT = t;

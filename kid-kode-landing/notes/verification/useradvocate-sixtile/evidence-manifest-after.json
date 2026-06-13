@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-06-13T07:22:04.550Z",
+  "startedAt": "2026-06-13T07:43:33.498Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
@@ -29,32 +29,6 @@
         "category": "pointer"
       },
       "controls": 5,
-      "notes": []
-    },
-    {
-      "tile": "proximity-rim-glow",
-      "state": "after",
-      "dir": "proximity-rim-glow/after",
-      "claim": {
-        "name": "proximity-rim-glow",
-        "label": "Glow Intensity",
-        "description": "The card",
-        "category": "pointer"
-      },
-      "controls": 4,
-      "notes": []
-    },
-    {
-      "tile": "spring-chain-follow",
-      "state": "after",
-      "dir": "spring-chain-follow/after",
-      "claim": {
-        "name": "spring-chain-follow",
-        "label": "Chain Stiffness",
-        "description": "The card leads a spring-linked chain — two ghost echoes whipping and overshooting behind it as the cursor drags the head around.",
-        "category": "pointer"
-      },
-      "controls": 4,
       "notes": []
     },
     {

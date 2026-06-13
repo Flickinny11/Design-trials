@@ -5,6 +5,13 @@ import { makeTarget, runConformance } from './_conformance';
 
 // The harness pins the rig pointer at an ENGAGED point for control sweeps.
 const PIN = { x: 0.62, y: 0.5 };
+// The REAL advocate control-sweep pin: at the seek used for control sweeps the
+// shared rig parks the synthetic pointer at {x:0.5, y:0.7} — X DEAD-CENTER, a PURE
+// VERTICAL downward offset (offX = 0). This is the exact pin the W4 advocate capture
+// measured damping/ambientSway against; the prior fix-round keyed its standing terms
+// off the HORIZONTAL offset, which is 0 here, so they measured byte-identical and
+// the tile was BLOCKED. The dead-control test below asserts at THIS pin.
+const VPIN = { x: 0.5, y: 0.7 };
 // The idle frame is pinned t=0 with the pointer DISENGAGED (rig center).
 const CENTER = { x: 0.5, y: 0.5 };
 
@@ -171,21 +178,27 @@ describe('pendant-dangle primitive', () => {
     inst.dispose();
   });
 
-  // The advocate's EXACT capture: pin the cursor STATICALLY at the engaged point,
-  // settle the spring, then sweep each formerly-dead control low→mid→high with
-  // REPEATED same-t seeks (dt=0 → no integration, no release transient, velocity
-  // ≈ 0). damping and ambientSway were measured byte-identical there and BLOCKED
-  // the tile. This asserts each now drives the SETTLED engaged pose monotonically
-  // and well above the sensor-noise floor — a standing function, not a transient.
-  it('damping + ambientSway visibly reshape the SETTLED pinned pose (advocate capture, dt=0)', () => {
+  // The advocate's EXACT capture: at the {0.5,0.7} VERTICAL pin (offX = 0, the trap
+  // the prior round missed) settle the spring, then sweep each formerly-dead control
+  // low→mid→high with REPEATED same-t seeks (dt=0 → no integration, no release
+  // transient, velocity ≈ 0). damping and ambientSway were measured byte-identical
+  // there (meanAbsDiff ~1.0, sub-noise) and BLOCKED the tile because their standing
+  // terms were keyed off the horizontal offset, which is 0 at this pin. This asserts
+  // each now drives the SETTLED engaged pose monotonically and by a BOLD, plainly-
+  // visible amount — a standing function of the control + the VERTICAL/full-magnitude
+  // engagement, independent of the pointer axis. The live controls on these tiles
+  // measure meanAbsDiff 6-24; a rotation.z delta of ≥0.08 rad here is the geometric
+  // analogue of that bold pixel delta (the prior dead terms produced <0.001 rad).
+  const BOLD_RAD = 0.08; // floor; the fix actually reaches ~0.34-0.43 rad
+  it('damping + ambientSway BOLDLY reshape the SETTLED pose at the {0.5,0.7} vertical pin (advocate capture, dt=0)', () => {
     const target = makeTarget(pendantDanglePrimitive);
-    target.userData.pointer = { ...PIN };
+    target.userData.pointer = { ...VPIN }; // the REAL control-sweep pin (vertical)
     const inst = pendantDanglePrimitive.create(target);
     const subject = target.subject as Object3D;
     const cord = target.object.getObjectByName('pendant-cord') as Mesh;
 
-    // Settle the spring at the engaged pin, then PAUSE at a fixed t. Every read
-    // below is at this single t with dt=0 — exactly what the static capture sees.
+    // Settle the spring at the engaged vertical pin, then PAUSE at a fixed t. Every
+    // read below is at this single t with dt=0 — exactly what the static capture sees.
     settle(inst);
     const tPaused = 90 * 0.016;
     inst.seek(tPaused);
@@ -194,16 +207,41 @@ describe('pendant-dangle primitive', () => {
     const settledTheta = subject.rotation.z;
     inst.seek(tPaused);
     expect(subject.rotation.z).toBeCloseTo(settledTheta, 10);
-    expect(Math.abs(settledTheta)).toBeGreaterThan(0.05); // engaged, not flat
+    // Engaged, not flat: the standing residual holds a real tilt at the vertical pin
+    // (this is exactly what was DEAD before — the pin held a perfect vertical hang).
+    expect(Math.abs(settledTheta)).toBeGreaterThan(0.05);
 
     // The cord is mounted and reads at the pin (a sampled frame is never empty).
     expect(cord).toBeTruthy();
     expect(cord.scale.y).toBeGreaterThan(0);
 
-    // ── DAMPING sweep at the STATIC pin (ambientSway held fixed to isolate it) ──
-    // Lower damping holds a LARGER standing residual lean past vertical; higher
-    // damping sits closer to the bare equilibrium. The pose must move monotonically
-    // and the low→high change must clear the noise floor on BOTH θ and the arc-x.
+    // ── GRAVITY sweep at the STATIC vertical pin (regression guard) ────────────
+    // The advocate found gravity LIVE; at the vertical pin eq=0, so gravity's effect
+    // on the cursor-steered equilibrium is null there. Gravity is folded into the
+    // standing residual (heavier = pulled toward vertical), so it stays BOLDLY live
+    // at this pin too. This guards the regression that keying the standing terms off
+    // engagement alone (without the gravity factor) silently killed gravity here.
+    inst.setControl('ambientSway', 0.45);
+    inst.setControl('damping', 0.4);
+    inst.setControl('gravity', 0.2);
+    const gLoZ = subject.rotation.z;
+    const gLoX = subject.position.x;
+    inst.setControl('gravity', 2.1);
+    const gMiZ = subject.rotation.z;
+    inst.setControl('gravity', 4);
+    const gHiZ = subject.rotation.z;
+    const gHiX = subject.position.x;
+    expect(Math.abs(gLoZ)).toBeGreaterThan(Math.abs(gMiZ)); // lighter = more swung
+    expect(Math.abs(gMiZ)).toBeGreaterThan(Math.abs(gHiZ));
+    expect(Math.abs(gLoZ - gHiZ)).toBeGreaterThan(BOLD_RAD);
+    expect(Math.abs(gLoX - gHiX)).toBeGreaterThan(BOLD_RAD);
+    inst.setControl('gravity', 1);
+    inst.seek(tPaused);
+
+    // ── DAMPING sweep at the STATIC vertical pin (ambientSway held fixed) ───────
+    // Lower damping holds a LARGE standing residual lean past vertical; higher
+    // damping sits near the bare equilibrium (≈vertical). Monotonic, and the
+    // low→high change must clear the BOLD floor on BOTH θ and the arc-x.
     inst.setControl('ambientSway', 0.45);
     inst.setControl('damping', 0.05);
     const dLoZ = subject.rotation.z;
@@ -217,16 +255,16 @@ describe('pendant-dangle primitive', () => {
     // Monotonic in θ across the sweep (lightly damped = larger |tilt|).
     expect(Math.abs(dLoZ)).toBeGreaterThan(Math.abs(dMiZ));
     expect(Math.abs(dMiZ)).toBeGreaterThan(Math.abs(dHiZ));
-    // Above-noise standing change low→high (the advocate noise floor was ~0.001
-    // meanAbsDiff; this is a real geometric reshape of the frozen frame).
-    expect(Math.abs(dLoZ - dHiZ)).toBeGreaterThan(0.02);
-    expect(Math.abs(dLoX - dHiX)).toBeGreaterThan(0.02); // the card body visibly moves
+    // BOLD standing change low→high — the geometric analogue of the live controls'
+    // meanAbsDiff 6-24 (the prior DEAD damping produced <0.001 rad here).
+    expect(Math.abs(dLoZ - dHiZ)).toBeGreaterThan(BOLD_RAD);
+    expect(Math.abs(dLoX - dHiX)).toBeGreaterThan(BOLD_RAD); // the card body visibly moves
     inst.setControl('damping', 0.4);
 
-    // ── ambientSway sweep at the STATIC pin (re-seek to the same paused t) ──────
+    // ── ambientSway sweep at the STATIC vertical pin (re-seek to the same t) ────
     // Higher ambientSway grows the standing ambient lean amplitude on the engaged
-    // pose — a standing offset, not a wave-phase difference that vanishes at a
-    // fixed t. Monotonic and above-noise on both θ and the arc-x.
+    // pose — a standing offset, not a wave-phase difference that vanishes at a fixed
+    // t and NOT a horizontal-only term. Monotonic and BOLD on both θ and the arc-x.
     inst.seek(tPaused);
     inst.setControl('ambientSway', 0);
     const aLoZ = subject.rotation.z;
@@ -240,8 +278,8 @@ describe('pendant-dangle primitive', () => {
     // Monotonic: more ambientSway = larger |standing lean| at the engaged pin.
     expect(Math.abs(aHiZ)).toBeGreaterThan(Math.abs(aMiZ));
     expect(Math.abs(aMiZ)).toBeGreaterThan(Math.abs(aLoZ));
-    expect(Math.abs(aHiZ - aLoZ)).toBeGreaterThan(0.02);
-    expect(Math.abs(aHiX - aLoX)).toBeGreaterThan(0.02);
+    expect(Math.abs(aHiZ - aLoZ)).toBeGreaterThan(BOLD_RAD);
+    expect(Math.abs(aHiX - aLoX)).toBeGreaterThan(BOLD_RAD);
     inst.setControl('ambientSway', 0.45);
 
     inst.dispose();

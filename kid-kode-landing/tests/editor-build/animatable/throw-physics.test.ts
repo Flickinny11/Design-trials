@@ -66,7 +66,12 @@ describe('throw-physics primitive', () => {
     const baseX = subject.position.x;
 
     target.userData.pointer = { ...PIN };
-    const inst = throwPhysicsPrimitive.create(target);
+    // Isolate the grip-follow read: drag is an INDEPENDENT bold horizontal lag
+    // channel (−X, keyed off the control value) that legitimately competes with
+    // the +x cursor follow, so zero it here to test the pure grab-toward-cursor
+    // behavior this case is named for. The drag lag itself is covered by the
+    // BOLD per-control test below.
+    const inst = throwPhysicsPrimitive.create(target, { drag: 0 });
     // Repeated seeks at the held pointer — the card should grab and follow the
     // +x cursor offset (pin is right of center), settling into the HELD pose.
     play(inst, 0, 120);
@@ -196,65 +201,95 @@ describe('throw-physics primitive', () => {
     expect(Math.abs(gravHi.y - gravLo.y)).toBeGreaterThan(0.01);
   });
 
-  it('EVERY named control reshapes the engaged pose at a STATIC pinned pointer (dt=0 repeated same-t seeks — the advocate capture)', () => {
-    // The verification rig pins the cursor at the engaged point {0.62,0.5} and
-    // sweeps each control with REPEATED same-t seeks (pointer velocity ≈ 0, no
-    // release, settled spring). Mirror that EXACTLY: seek the SAME t repeatedly
-    // so dt=0, then read the engaged-pose outputs (subject position + the
-    // published standing-pose uniform). Each control low→high must move them.
+  it('EVERY named control BOLDLY + INDEPENDENTLY reshapes the engaged pose at the STATIC {0.5,0.7} pin (dt=0 repeated same-t seeks — the advocate capture)', () => {
+    // ROOT CAUSE the r1 fix missed: the advocate capture rig pins the cursor at
+    // EXACTLY {x:0.5, y:0.7} — x DEAD-CENTER (pointer X offset = 0), a PURE
+    // VERTICAL downward grip. The r1 standing channels keyed off the pointer X /
+    // throw direction, which collapses to straight-down at this pin, so gravity,
+    // bounciness, and drag all pushed the SAME −Y axis and all CLAMPED to the same
+    // boundY → byte-identical frames → three DEAD controls (advocate meanAbsDiff=0).
+    //
+    // This test mirrors the rig EXACTLY: pin at {0.5,0.7}, seek the SAME t
+    // repeatedly so dt=0 (the paused control sweep), and assert each formerly-dead
+    // control moves its OWN axis by a BOLD margin (the advocate target is
+    // meanAbsDiff ≥ 6 / changedFrac ≥ 0.12 in pixel space; the live siblings
+    // measure 6-24). The card half-extents are halfW≈0.87, halfH≈0.56, so a BOLD
+    // pixel delta corresponds to a large fraction of a half-extent in subject
+    // units. We assert the underlying pose deltas that PRODUCE those pixels.
     const PIN_T = 1; // matches metrics.json stimulus.controlsPinT
     const measure = (
       overrides: Record<string, number>,
-    ): { x: number; y: number; charge: number; lagScale: number; sag: number } => {
+    ): { x: number; y: number; rot: number; sag: number; lag: number; charge: number; chargeTilt: number } => {
       const target = makeTarget(throwPhysicsPrimitive);
       const subject = target.subject as Object3D;
-      target.userData.pointer = { ...PIN };
+      const baseX = subject.position.x;
+      const baseY = subject.position.y;
+      const baseRotZ = subject.rotation.z;
+      // PIN EXACTLY where the advocate rig pins: x dead-center, y=0.7.
+      target.userData.pointer = { x: 0.5, y: 0.7 };
       const inst = throwPhysicsPrimitive.create(target, overrides);
       // Repeated seeks at the SAME t → dt=0 after the first (the rig's paused
       // control sweep). The held pose must be a STANDING function of the params.
       for (let i = 0; i < 8; i++) inst.seek(PIN_T);
       const tp = target.userData.throwPhysics as {
-        charge: number;
-        lagScale: number;
         sag: number;
+        lag: number;
+        charge: number;
+        chargeTilt: number;
       };
       const out = {
-        x: subject.position.x,
-        y: subject.position.y,
-        charge: tp.charge,
-        lagScale: tp.lagScale,
+        x: subject.position.x - baseX,
+        y: subject.position.y - baseY,
+        rot: subject.rotation.z - baseRotZ,
         sag: tp.sag,
+        lag: tp.lag,
+        charge: tp.charge,
+        chargeTilt: tp.chargeTilt,
       };
       inst.dispose();
       return out;
     };
 
-    // bounciness — FORMERLY DEAD (flight-only restitution). Now a STANDING charge
-    // pre-load on the held pose: low→high must move the held x AND raise charge.
-    const bLo = measure({ bounciness: 0.0 });
-    const bHi = measure({ bounciness: 0.92 });
-    expect(bHi.charge).toBeGreaterThan(bLo.charge + 1e-4);
-    expect(Math.abs(bHi.x - bLo.x)).toBeGreaterThan(0.01);
+    // Subject half-extents (card): halfW≈0.87, halfH≈0.56. The BOLD floor for an
+    // independent standing channel — large enough to clear the advocate's pixel
+    // gate by a wide margin (live siblings measure 6-24 vs the ~0-3.5 of the dead
+    // r1 controls). The computed channel deltas are far above these floors.
+    const BOLD_Y = 0.18; // ≈ 0.32·halfH
+    const BOLD_X = 0.28; // ≈ 0.32·halfW
+    const BOLD_TILT = 0.18; // rad
 
-    // drag — FORMERLY DEAD (flight-only air drag). Now a STANDING held-lag: more
-    // drag retracts the held offset toward home → smaller lagScale AND a measurably
-    // different held x across the sweep.
-    const dLo = measure({ drag: 0.0 });
-    const dHi = measure({ drag: 3.0 });
-    expect(dHi.lagScale).toBeLessThan(dLo.lagScale - 1e-4);
-    expect(Math.abs(dHi.x - dLo.x)).toBeGreaterThan(0.01);
-
-    // gravity — was only SUBTLY live; the standing sag is now strong. Low→high
-    // must droop the held y AND deepen the published sag.
+    // gravity — FORMERLY DEAD (regressed to byte-identical). Now a BOLD downward
+    // SAG on its OWN −Y axis: low→high must droop the held y hard AND deepen the
+    // published sag. Does NOT touch x (sideways) — that is drag's axis.
     const gLo = measure({ gravity: 0.0 });
     const gHi = measure({ gravity: 5.0 });
-    expect(gHi.sag).toBeLessThan(gLo.sag - 1e-3); // sag is negative (downward)
-    expect(Math.abs(gHi.y - gLo.y)).toBeGreaterThan(0.01);
+    expect(gHi.sag).toBeLessThan(gLo.sag - 0.05); // sag is negative (downward)
+    expect(gLo.y - gHi.y).toBeGreaterThan(BOLD_Y); // held card droops boldly down
+
+    // drag — FORMERLY DEAD. Now a BOLD horizontal LAG on its OWN −X axis (a
+    // DIFFERENT axis from gravity), keyed off the control VALUE so it drives even
+    // at the x-centered pin. low→high must slide the held card sideways hard.
+    const dLo = measure({ drag: 0.0 });
+    const dHi = measure({ drag: 3.0 });
+    expect(dHi.lag).toBeLessThan(dLo.lag - 0.1); // lag is negative (−X)
+    expect(Math.abs(dHi.x - dLo.x)).toBeGreaterThan(BOLD_X); // bold sideways slide
+    // and it must NOT just be re-using gravity's vertical channel:
+    expect(Math.abs(dHi.x - dLo.x)).toBeGreaterThan(Math.abs(dHi.y - dLo.y));
+
+    // bounciness — FORMERLY DEAD. Now a BOLD forward CHARGE pre-load: UPWARD (+Y,
+    // the OPPOSITE direction from gravity's sag) PLUS a standing overshoot TILT.
+    // low→high must lift the held y AND visibly rotate it — a read distinct from
+    // both gravity (down) and drag (sideways).
+    const bLo = measure({ bounciness: 0.0 });
+    const bHi = measure({ bounciness: 0.92 });
+    expect(bHi.charge).toBeGreaterThan(bLo.charge + 0.05);
+    expect(bHi.y - bLo.y).toBeGreaterThan(BOLD_Y); // bold UPWARD preload (opposite gravity)
+    expect(Math.abs(bHi.rot - bLo.rot)).toBeGreaterThan(BOLD_TILT); // bold charge tilt
 
     // power stays live (grip reach) — unchanged by the fix.
     const pLo = measure({ power: 0.4 });
     const pHi = measure({ power: 2.2 });
-    expect(Math.abs(pHi.x - pLo.x)).toBeGreaterThan(0.01);
+    expect(Math.abs(pHi.y - pLo.y) + Math.abs(pHi.x - pLo.x)).toBeGreaterThan(0.01);
   });
 
   it('onParamChange re-applies the held pose at the last seek state without a new seek', () => {

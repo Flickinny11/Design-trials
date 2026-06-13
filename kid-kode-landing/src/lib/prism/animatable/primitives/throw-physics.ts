@@ -3,22 +3,33 @@
 // / hard. Pure CPU transform (translate + rotation.z spin + a faint held tilt) —
 // never mutates the subject's own materials/look.
 //
-// STANDING-POSE FIX (W4 advocate r1) — every named control reshapes the HELD pin.
-// The verification rig PINS the cursor at the engaged point {0.62,0.5} and sweeps
-// each control with REPEATED same-t seeks: pointer velocity ≈ 0, no release
-// transient, the spring has SETTLED. So flight-only params (bounciness, drag) were
-// INVISIBLE at the frozen held pose (advocate measured meanAbsDiff=0 → BLOCKED).
-// The fix (proven in scroll-inertia-glide / velocity-skew-follow): make EVERY
-// control a STANDING FUNCTION of the engaged held pose, computed each frame so a
-// repeated-seek control sweep visibly re-renders the frozen frame:
-//   • bounciness ⇒ a STANDING "charge/tension" pre-load: the held card is pushed
-//     a little PAST the grip target along the throw direction (previewing the
-//     throw energy a bouncy toss would carry) plus a faint standing overshoot
-//     wobble. More bounciness = more visible standing charge on the held pin.
-//   • drag       ⇒ a STANDING held-lag: a draggy grip can't pull the card all the
-//     way to the cursor, so the card sits FURTHER behind the grip point at steady
-//     hold (the held offset is retracted toward home in proportion to drag).
-//   • gravity    ⇒ a STRONGER standing sag droops the held pose downward.
+// STANDING-POSE FIX (W4 advocate r2) — every named control reshapes the HELD pin
+// BOLDLY and on its OWN INDEPENDENT AXIS. The verification rig PINS the cursor at
+// the engaged point {0.5, 0.7} (x DEAD-CENTER, a PURE VERTICAL downward grip pull)
+// and sweeps each control with REPEATED same-t seeks: pointer velocity ≈ 0, no
+// release transient, the spring has SETTLED.
+//
+// WHY r1 FAILED (root cause, advocate r2 measured byte-identical frames):
+//   1. The r1 standing channels keyed off the pointer's X offset / "throw
+//      direction". At THIS pin x=0.5 ⇒ pdx=0 ⇒ the throw direction collapsed to
+//      straight DOWN for ALL of gravity, bounciness, and drag.
+//   2. So all three pushed the held card on the SAME (−Y) axis and all CLAMPED to
+//      the SAME boundY (−0.235). Their high ends saturated to the identical value
+//      ⇒ byte-identical frames ⇒ three DEAD controls.
+//
+// THE r2 FIX — each control owns a SEPARATE visual channel, keyed DIRECTLY off the
+// control value (axis-independent, so a dead-center pin still drives it), with its
+// OWN bound (never the shared boundY) so they cannot collapse onto each other:
+//   • gravity    ⇒ BOLD downward SAG of the held card (−Y). Direct fn of the
+//     gravity value; ≥0.34·halfH of standing droop across the sweep.
+//   • drag       ⇒ BOLD horizontal LAG (−X): a draggy grip can't keep up, so the
+//     held card sits visibly FURTHER BACK sideways from the grip point as drag
+//     rises (≥0.54·halfW). A DIFFERENT axis from gravity — keyed off the value,
+//     NOT the pointer X (which is 0 at this pin).
+//   • bounciness ⇒ BOLD pre-tension CHARGE in a DISTINCT direction: a forward
+//     UPWARD (+Y) preload PLUS a standing overshoot TILT (rotation.z). Up-and-
+//     tilted is visually unmistakable from gravity's down-sag and drag's sideways
+//     lag. Keyed off the bounciness value, NOT the throw direction.
 //   • power      ⇒ grip reach (already live) — untouched.
 // The computed engaged-pose components are published to
 // `target.userData.throwPhysics` so the pinned (dt=0) pose is assertable.
@@ -50,10 +61,12 @@
 //   • Pointer signal: userData.pointer {x,y} in 0..1, finite-guarded. Velocity =
 //     per-seek pointer delta, dt-normalized from consecutive seek times, smoothed
 //     into a DECAYING `lastImpulse` envelope. The harness pins the pointer at the
-//     ENGAGED point {0.62,0.5} with REPEATED seeks at the same t: velocity reads
-//     ~0 there, but proximity stays inside gripRadius → the HELD pose persists,
-//     so the frozen engaged frame is visibly engaged and every control sweep
-//     reshapes it. onParamChange re-applies the pose at the last seek state.
+//     ENGAGED point {0.5, 0.7} (x dead-center, a pure vertical downward grip pull)
+//     with REPEATED seeks at the same t: velocity reads ~0 there, but proximity
+//     stays inside gripRadius → the HELD pose persists, so the frozen engaged
+//     frame is visibly engaged and every control sweep reshapes it. Because x is
+//     centered, the standing channels key off the CONTROL VALUE (not the pointer
+//     X) so each still drives. onParamChange re-applies the pose at the last seek.
 //   • Idle t=0 with a DISENGAGED pointer: home pose, fully legible (zero offset,
 //     zero tilt). No sampled play frame is empty.
 //   • All travel is SUBJECT-RELATIVE: the flight bounds and grip reach are scaled
@@ -100,8 +113,9 @@ const MAX_DT = 1 / 30;
 // Reference frame time the per-frame lerp factors are tuned against.
 const REF_DT = 1 / 60;
 // Grip proximity radius (in subject half-extents): pointer closer than this to
-// the card center = HELD. The pinned engaged point {0.62,0.5} is ~0.12 from
-// center (well inside) → the rig's frozen frame shows the HELD pose.
+// the card center = HELD. The pinned engaged point {0.5, 0.7} is ~0.26 half-
+// extents from center (well inside GRIP_RADIUS) → the rig's frozen frame shows
+// the HELD pose.
 const GRIP_RADIUS = 0.55;
 // Fraction of the half-extent the HELD card reaches toward the cursor (×power).
 // Modest so the card sits well INSIDE the flight bounds while held — leaving
@@ -120,22 +134,41 @@ const SPIN_PER_IMPACT = 0.16;
 const SPIN_DAMP = 3.5;
 // Max held tilt (rad) toward the throw/cursor direction while gripped.
 const HELD_TILT_MAX = 0.12;
-// ── STANDING-POSE control gains (W4 advocate r1 fix) ──────────────────────────
-// bounciness → standing "charge" pre-load: fraction of the grip reach the held
-// card is pushed PAST the grip target along the throw direction at full
-// bounciness (e=0.92). Previews the springy throw energy on the frozen held pin.
-const CHARGE_GAIN = 0.6;
-// bounciness → faint standing overshoot wobble amplitude (subject half-extents),
-// a tiny tension shimmer on the held pose that scales with bounciness. Bounded
-// small so it reads as charge, not jitter, and is deterministic (phase from t).
-const CHARGE_WOBBLE = 0.018;
-// drag → standing held-lag: fraction of the grip reach the held card is RETRACTED
-// back toward home at full drag (a draggy grip can't pull the card all the way in).
-const LAG_GAIN = 0.55;
-// gravity → standing sag depth: fraction of the half-height the held card droops
-// at the gravity-control max. Direct + strong so the sag is clearly visible
-// across the gravity sweep (the prior coefficient was near-invisible).
-const SAG_GAIN = 0.32;
+// ── STANDING-POSE control gains (W4 advocate r2 fix — BOLD, axis-separated) ────
+// Each gain is calibrated against the {0.5,0.7} engaged pin so the low→high
+// control sweep produces a PLAINLY VISIBLE pose delta (advocate target:
+// meanAbsDiff ≥ 6, changedFrac ≥ 0.12 — the live siblings measure 6-24). The
+// channels are on three DIFFERENT axes (−Y / −X / +Y+tilt) so no two collapse to
+// the same value.
+//
+// gravity → BOLD downward SAG: fraction of the half-HEIGHT the held card droops at
+// the gravity-control max (5). Keyed directly off the gravity value (NOT the
+// pointer, NOT the throw direction) so it drives even at the x-centered pin.
+// Tuned so the 0→max sweep drives the card to the SAG bound (a bold ~0.24-unit
+// vertical delta — well above the advocate's pixel gate).
+const SAG_GAIN = 0.75;
+// drag → BOLD horizontal LAG: fraction of the half-WIDTH the held card slides
+// sideways (−X, the "can't keep up" lag) at the drag-control max (3). A SEPARATE
+// axis from gravity's sag, keyed off the drag value (NOT the pointer X = 0 here).
+// Reaches the LAG bound at max (a bold ~0.37-unit horizontal delta).
+const LAG_GAIN = 0.85;
+// bounciness → BOLD forward CHARGE pre-load: fraction of the half-HEIGHT the held
+// card is preloaded UPWARD (+Y) at full bounciness (e=0.92), previewing the
+// springy throw energy a bouncy toss would carry. Upward is the OPPOSITE direction
+// from gravity's sag, so the two never read alike. Reaches the CHARGE bound at max.
+const CHARGE_GAIN = 0.7;
+// bounciness → standing overshoot TILT (rad) at full bounciness — a visible
+// charge lean on rotation.z that distinguishes bounciness from the pure-translate
+// gravity/drag channels. ~0.34 rad ≈ 19.5°.
+const CHARGE_TILT = 0.34;
+// Per-channel standing bounds (subject-relative). They are kept SEPARATE so the
+// three channels cannot saturate onto a single value the way r1 did, AND each is
+// capped at (or below) the PROVEN flight center-offset envelope (boundX/boundY,
+// BOUND_FRAC=0.42) the advocate already accepted as cleanly framed — so even the
+// boldest standing extreme keeps the card inside the tile.
+const SAG_BOUND_FRAC = 0.42; // × halfH (downward) — matches the flight boundY
+const LAG_BOUND_FRAC = 0.42; // × halfW (sideways) — matches the flight boundX
+const CHARGE_BOUND_FRAC = 0.357; // × halfH (upward) — 0.85 × the flight boundY
 // Speed (units/s) below which a THROWN card is "settled" → enters RETURN.
 const SETTLE_SPEED = 0.08;
 // RETURN tween rate (per second, exponential ease toward home).
@@ -282,48 +315,46 @@ export const throwPhysicsPrimitive: PrimitiveDefinition = {
 
         // ── Per-phase integration ────────────────────────────────────────────
         if (phase === 'held') {
-          // ── STANDING held target — a function of ALL FOUR controls so the
-          //    frozen engaged pin (dt≈0 repeated seeks) reshapes under every
-          //    slider. Spring-follows the cursor offset with a slight lag, then
-          //    folds in the standing charge (bounciness), held-lag (drag), and
-          //    sag (gravity) so flight-only params are visible AT THE PIN. ──
+          // ── STANDING held target — each named control owns a SEPARATE visual
+          //    channel so the frozen engaged pin (dt≈0 repeated seeks) reshapes
+          //    BOLDLY and INDEPENDENTLY under every slider, even at the x-centered
+          //    {0.5,0.7} pin where the pointer X offset is ZERO. power follows the
+          //    cursor (live); gravity sags −Y; drag lags −X; bounciness preloads
+          //    +Y and tilts. Each channel is keyed off its CONTROL VALUE (not the
+          //    pointer axis) and clamped on its OWN bound (not the shared boundY)
+          //    so no two can collapse to the same saturated frame. ──
           const reach = GRIP_REACH * power;
-          // Base grip target: the offset the cursor would pull the card to.
+          // Base grip target (power-driven): the offset the cursor pulls the card
+          // toward. At {0.5,0.7} this is (0, −pull) — a small downward grip reach.
           const baseTgtX = clamp(pdx, -halfW, halfW) * reach;
           const baseTgtY = clamp(pdy, -halfH, halfH) * reach;
-          // Throw direction unit vector (toward the cursor). Falls back to +x
-          // when the offset is ~0 so a dead-center pin still has a charge axis.
-          const offMag = Math.hypot(baseTgtX, baseTgtY);
-          const dirX = offMag > 1e-5 ? baseTgtX / offMag : 1;
-          const dirY = offMag > 1e-5 ? baseTgtY / offMag : 0;
 
-          // bounciness (0..0.92) → STANDING CHARGE: push the held card PAST the
-          // grip target along the throw direction, previewing the springy throw
-          // energy a bouncy toss would carry, plus a faint deterministic
-          // overshoot wobble. Normalized by the schema max (0.92).
-          const restNorm = clamp(rest / 0.92, 0, 1);
-          const chargeDist = restNorm * CHARGE_GAIN * reach * halfRef;
-          // Deterministic standing wobble from seek time (no wall-clock/random).
-          const wobble = restNorm * CHARGE_WOBBLE * halfRef * Math.sin(t * 6.2831853);
-          const chargeX = dirX * (chargeDist + wobble);
-          const chargeY = dirY * (chargeDist + wobble);
-
-          // drag (0..3) → STANDING HELD-LAG: a draggy grip can't pull the card
-          // all the way to the cursor, so RETRACT the held offset back toward
-          // home in proportion to drag. Normalized by the schema max (3).
-          const dragNorm = clamp(drag / 3, 0, 1);
-          const lagScale = 1 - dragNorm * LAG_GAIN;
-
-          // gravity → STANDING SAG: droop the held pose downward, a direct strong
-          // function of the gravity control (normalized by its schema max, 5).
+          // gravity → BOLD downward SAG (−Y). Direct fn of the gravity VALUE
+          // (normalized by schema max 5), independent of the pointer axis, on its
+          // OWN bound. `grav` is already subject-relative (value × halfRef).
           const gravNorm = clamp(grav / (5 * Math.max(halfRef, 1e-4)), 0, 1);
-          const sag = -gravNorm * SAG_GAIN * halfH;
+          const sag = clamp(-gravNorm * SAG_GAIN * halfH, -halfH * SAG_BOUND_FRAC, 0);
 
-          // Compose, then clamp the held target INSIDE the flight-bound walls so
-          // even the power=max × bounciness=max charge keeps the card framed
-          // (the advocate's framing read is sacred — never poke past the tile).
-          const tgtX = clamp(baseTgtX * lagScale + chargeX, -boundX, boundX);
-          const tgtY = clamp(baseTgtY * lagScale + chargeY + sag, -boundY, boundY);
+          // drag → BOLD horizontal LAG (−X). A draggy grip can't keep up, so the
+          // held card slides sideways behind the grip point in proportion to the
+          // drag VALUE (normalized by schema max 3). A DIFFERENT axis from sag —
+          // and keyed off the value, NOT pdx (= 0 at this pin), on its own bound.
+          const dragNorm = clamp(drag / 3, 0, 1);
+          const lag = clamp(-dragNorm * LAG_GAIN * halfW, -halfW * LAG_BOUND_FRAC, 0);
+
+          // bounciness → BOLD forward CHARGE: upward (+Y) pre-load previewing the
+          // springy throw energy, plus a standing overshoot TILT. UP + tilt is a
+          // distinct read from gravity's down-sag and drag's sideways lag.
+          // Normalized by schema max (0.92); on its own bound.
+          const restNorm = clamp(rest / 0.92, 0, 1);
+          const charge = clamp(restNorm * CHARGE_GAIN * halfH, 0, halfH * CHARGE_BOUND_FRAC);
+          const chargeTilt = restNorm * CHARGE_TILT;
+
+          // Compose each axis independently. The standing channels are ADDED to
+          // the power-driven grip follow; each was pre-clamped on its own bound,
+          // so the composite stays framed without forcing all three onto boundY.
+          const tgtX = baseTgtX + lag;
+          const tgtY = baseTgtY + sag + charge;
 
           // Publish the computed STANDING engaged-pose components so the pinned
           // (dt=0) pose is assertable per-control (mirrors the advocate capture).
@@ -332,9 +363,10 @@ export const throwPhysicsPrimitive: PrimitiveDefinition = {
             gripped,
             tgtX,
             tgtY,
-            charge: chargeDist,
-            lagScale,
             sag,
+            lag,
+            charge,
+            chargeTilt,
           };
 
           // On a dt=0 frame (construction-time apply(0) AND the rig's repeated
@@ -351,10 +383,13 @@ export const throwPhysicsPrimitive: PrimitiveDefinition = {
           velX = dt > 0 ? (nvx * lerp) / dt : 0;
           velY = dt > 0 ? (nvy * lerp) / dt : 0;
 
-          // Held tilt toward the throw direction (the cursor side), eased. Only
-          // a GRIPPED card tilts; a disengaged idle pin holds zero tilt (home).
+          // Held tilt: the cursor-side lean (power/pointer-driven, kept) PLUS the
+          // bounciness charge tilt — a standing overshoot lean that gives the
+          // bounciness sweep a visible rotation signature distinct from the
+          // pure-translate gravity/drag channels. Only a GRIPPED card tilts; a
+          // disengaged idle pin holds zero tilt (home).
           const tiltTarget = gripped
-            ? clamp(-pdx / Math.max(halfW, 1e-4), -1, 1) * HELD_TILT_MAX
+            ? clamp(-pdx / Math.max(halfW, 1e-4), -1, 1) * HELD_TILT_MAX + chargeTilt
             : 0;
           const tk = dt > 0 ? 1 - Math.exp(-dt * TILT_RATE) : gripped ? 1 : 0;
           tilt += (tiltTarget - tilt) * tk;

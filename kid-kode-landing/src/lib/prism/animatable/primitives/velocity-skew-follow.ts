@@ -91,6 +91,16 @@ const VEL_NORM = 6.0;
 // engaged skew so the DEFAULT speed lands a clearly-visible — but not clamped —
 // persistent lean at the engaged pin. Modest so a live flick clearly exceeds it.
 const STEADY_REF_K = 4.5;
+// BOLD standing-lean gain (W4 advocate r2): the steady engaged lean is now a
+// STRONG linear function of (offset magnitude × skewAmount). At the rig's pinned
+// vertical offset (~0.24 span) and the widest clamp this lands the card near-
+// upright at skewAmount=0.1 and strongly sheared (clamp-limited) at skewAmount=1.4
+// — a plainly-visible low→high bend. The r1 mapping divided this by STEADY_REF_K/k
+// (~0.15 at default speed), which crushed the lean into the sub-noise floor and
+// the tile re-blocked. Speed still modulates the lean (a slower follower leans
+// harder) via a SOFT ±factor around 1 so it stays live without erasing the bold
+// skewAmount gradient.
+const STANDING_GAIN = 1.3;
 // Travel-envelope guard: the card's CENTER offset is clamped so its near edge
 // stays inside the tile's visible half-width (camera fov 40° @ z≈3.2 →
 // half-width ≈ 1.55). Conservative; clips the offset, never the geometry.
@@ -206,7 +216,19 @@ export const velocitySkewFollowPrimitive: PrimitiveDefinition = {
        *  The lean SIGN follows the travel direction (lean INTO the heading): the
        *  horizontal axis when it carries the motion (preserving the +x flick
        *  semantics), else the vertical axis (so the rig's pinned vertical offset
-       *  signs deterministically). */
+       *  signs deterministically).
+       *
+       *  BOLD FIX (W4 advocate r2): r1 multiplied the lean by STEADY_REF_K/k
+       *  (~0.15 at default speed), which collapsed skewAmount's full 0.1→1.4 sweep
+       *  into ~0.2°→2.8° of lean at the pin — sub-noise (meanAbsDiff 0.467), so
+       *  skewAmount & skewClamp re-blocked as DEAD. The standing lean is now a
+       *  STRONG LINEAR function of skewAmount: raw ∝ offMag × STANDING_GAIN ×
+       *  skewAmount, so at the pin (offMag≈0.24) it spans ~2°(near-upright) at
+       *  skewAmount=0.1 to ~30°(clamp-limited) at skewAmount=1.4 — a dramatic
+       *  low→high bend. Speed still modulates the lean via a SOFT factor around 1
+       *  (a slower follower leans harder) so it stays live without erasing the
+       *  bold skewAmount gradient, and skewClamp is the binding cap on the result
+       *  (a tight clamp visibly shrinks the standing pose, a wide one frees it). */
       const steadyLean = (p: PointerXY): number => {
         const span = spanUnits();
         if (span <= 1e-6) return 0;
@@ -219,7 +241,13 @@ export const velocitySkewFollowPrimitive: PrimitiveDefinition = {
         // Sign INTO the travel direction: horizontal when it dominates (keeps the
         // canonical +x lean), else vertical — well-defined whenever offMag > 0.
         const sign = Math.abs(off.x) >= Math.abs(off.y) ? Math.sign(off.x) : Math.sign(off.y);
-        const raw = sign * offMag * (STEADY_REF_K / k) * num(params.skewAmount, 0.7);
+        // Soft speed modulation around 1: a slower follower (low k) sits farther
+        // behind its target so it holds a larger persistent lean. Bounded to
+        // [0.7, 1.3] so speed stays a LIVE control without crushing skewAmount.
+        const speedFactor = 0.7 + 0.6 * clamp(STEADY_REF_K / k, 0, 1);
+        // BOLD linear-in-skewAmount standing lean. skewAmount is the headline shear
+        // knob, so it drives the magnitude directly (no /k division).
+        const raw = sign * offMag * STANDING_GAIN * num(params.skewAmount, 0.7) * speedFactor;
         return clamp(raw, -skewCap(), skewCap());
       };
 

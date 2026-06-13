@@ -216,24 +216,35 @@ describe('velocity-skew-follow primitive', () => {
     expect(speedSlow).toBeGreaterThan(speedFast + 0.01); // formerly DEAD (Δ=0)
     inst.setControl('speed', 0.4);
 
-    // skewAmount: scales the standing lean. Wide clamp so the gain is the only cap.
+    // skewAmount: BOLDLY scales the standing lean (the headline shear knob). Wide
+    // clamp so the gain is the only cap and the full 0.1→1.4 sweep is visible. The
+    // r1 mapping divided by STEADY_REF_K/k, capping this delta at ~0.046 rad
+    // (~2.8°) — sub-noise (meanAbsDiff 0.467), so it re-blocked as DEAD. The bold
+    // mapping must reach a plainly-visible bend: low near-upright (≤ ~0.06 rad),
+    // high strongly sheared, Δ ≥ 0.2 rad (~11°) — the engaged-pose proxy for the
+    // advocate's ≥6 meanAbsDiff / ≥0.12 changedFrac target (live controls measure
+    // 6–24%). NOT a timid +0.01.
     inst.setControl('skewClamp', 0.6);
     inst.setControl('skewAmount', 0.1);
     const amtLow = Math.abs(subject.rotation.z);
     inst.setControl('skewAmount', 1.4);
     const amtHigh = Math.abs(subject.rotation.z);
-    expect(amtHigh).toBeGreaterThan(amtLow + 0.01); // formerly DEAD (Δ=0)
+    expect(amtLow).toBeLessThan(0.06); // low = near-upright
+    expect(amtHigh - amtLow).toBeGreaterThan(0.2); // BOLD bend, not sub-noise
 
-    // skewClamp: caps the standing lean. Push the lean hard (slow + max amount) so
-    // the clamp is the binding limit, then a tight clamp visibly shrinks the pose.
+    // skewClamp: visibly CAPS the standing lean. Push the lean hard (slow + max
+    // amount) so the clamp is the binding limit, then sweep it: a low clamp = small
+    // lean even at max skewAmount, a high clamp = full lean. The Δ must be BOLD
+    // (≥ 0.2 rad), not the r1 timid -0.01.
     inst.setControl('speed', 0.05);
     inst.setControl('skewAmount', 1.4);
     inst.setControl('skewClamp', 0.6);
     const clampWide = Math.abs(subject.rotation.z);
     inst.setControl('skewClamp', 0.04);
     const clampTight = Math.abs(subject.rotation.z);
-    expect(clampTight).toBeLessThan(clampWide - 0.01); // formerly DEAD (Δ=0)
-    expect(clampTight).toBeLessThanOrEqual(0.04 + 1e-6); // the clamp truly binds
+    expect(clampWide - clampTight).toBeGreaterThan(0.2); // BOLD cap, formerly DEAD (Δ=0)
+    expect(clampTight).toBeLessThanOrEqual(0.04 + 1e-6); // a tight clamp truly binds
+    expect(clampWide).toBeGreaterThan(0.3); // a wide clamp frees the full bold lean
 
     inst.dispose();
   });

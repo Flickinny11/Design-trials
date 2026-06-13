@@ -240,15 +240,21 @@ describe('charge-release primitive', () => {
       for (let i = 0; i < 8; i++) inst.seek(PIN_T);
     };
 
-    // ---- chargeRate: LOW vs HIGH must change the STANDING engaged level ----
-    // (visible as both the pose-charge uniform that drives the brass rim AND
-    //  the compression of the card) at the frozen pin.
+    // ---- chargeRate: LOW vs HIGH must BOLDLY change the STANDING engaged ----
+    // pose at the EXACT advocate pin {0.5,0.7} — x DEAD-CENTER, a PURE VERTICAL
+    // downward offset (NOT {0.62,0.5}). The prior fix-round keyed the standing
+    // function off X (zero here) and saturated via max(charge,…), so chargeRate
+    // read byte-identical (meanAbsDiff=0). This asserts a BOLD low→high delta in
+    // BOTH the pose-charge uniform (drives the brass rim) AND the card squash —
+    // the LIVE controls on these tiles measure 6-24 pixel meanAbsDiff, so the
+    // standing reshape must be comparably dramatic, not the prior saturated ~0.
     {
       const target = makeTarget(chargeReleasePrimitive);
-      target.userData.pointer = { x: 0.62, y: 0.5 }; // the advocate's engaged pin
+      target.userData.pointer = { x: 0.5, y: 0.7 }; // the advocate's REAL pin (pure-vertical)
       const inst = chargeReleasePrimitive.create(target);
       const mesh = target.subject as Mesh;
       const uni = target.userData.chargeReleaseUniforms as ChargeUniforms;
+      const baseY = mesh.scale.y;
 
       inst.setControl('chargeRate', 0.2); // slow
       warmAndPin(inst);
@@ -260,10 +266,20 @@ describe('charge-release primitive', () => {
       const poseChargeHigh = uni.uPoseCharge.value;
       const squashHigh = mesh.scale.y;
 
-      // Faster rate parks the held cursor at a HIGHER standing charge → hotter
-      // brass rim AND more compressed (shorter) card at the SAME static pin.
-      expect(poseChargeHigh).toBeGreaterThan(poseChargeLow + 0.05);
+      // BOLD reshape: faster rate parks the held cursor at a DRAMATICALLY higher
+      // standing charge — hotter brass rim AND a far more compressed (shorter)
+      // card at the SAME static, x-dead-center pin.
+      expect(poseChargeHigh).toBeGreaterThan(poseChargeLow + 0.4); // bold uniform delta
       expect(squashHigh).toBeLessThan(squashLow); // more squashed when hotter
+      // The card visibly COMPRESSES MORE at high rate: the scale.y delta between
+      // low and high must be a plainly-visible fraction of rest height (≈ the
+      // compression a depth sweep produces), not a sub-noise wobble.
+      expect(squashLow - squashHigh).toBeGreaterThan(0.1);
+      // Low rate parks a CLEARLY LESS-charged pose: only lightly compressed (well
+      // above the deep-squash floor), so a user sliding rate down sees it relax.
+      expect(squashLow).toBeGreaterThan(baseY * 0.9);
+      // High rate parks a strongly squashed pose (deep compression at the pin).
+      expect(squashHigh).toBeLessThan(baseY * 0.85);
       inst.dispose();
     }
 
