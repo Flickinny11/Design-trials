@@ -161,6 +161,7 @@ import { textWaveColorPrimitive } from './text-wave-color';
 import { typewriterPrimitive } from './typewriter';
 import { waveTextPrimitive } from './wave-text';
 import { bannerFlutterPrimitive } from './banner-flutter';
+import { buoyancyBobSimPrimitive } from './buoyancy-bob-sim';
 import { clothDrapeSimPrimitive } from './cloth-drape-sim';
 import { clothSwayPrimitive } from './cloth-sway';
 import { curtainWavePrimitive } from './curtain-wave';
@@ -175,8 +176,10 @@ import { inkSpreadPrimitive } from './ink-spread';
 import { jellyCollideSimPrimitive } from './jelly-collide-sim';
 import { jellySurfacePrimitive } from './jelly-surface';
 import { oceanFftPrimitive } from './ocean-fft';
+import { raindropRippleSimPrimitive } from './raindrop-ripple-sim';
 import { ripplePrimitive } from './ripple';
 import { rippleConcentricPrimitive } from './ripple-concentric';
+import { rippleInteractSimPrimitive } from './ripple-interact-sim';
 import { rippleInterferencePrimitive } from './ripple-interference';
 import { ripplePoolPrimitive } from './ripple-pool';
 import { sailBulgePrimitive } from './sail-bulge';
@@ -187,6 +190,7 @@ import { waterBalloonWobblePrimitive } from './water-balloon-wobble';
 import { waterSurfacePrimitive } from './water-surface';
 import { wavePrimitive } from './wave';
 import { waveCrossPrimitive } from './wave-cross';
+import { waveTankSloshPrimitive } from './wave-tank-slosh';
 import { wheatFieldPrimitive } from './wheat-field';
 import { windRipplePrimitive } from './wind-ripple';
 import { clickShockwavePrimitive } from './click-shockwave';
@@ -292,7 +296,9 @@ import { holoGlassPrimitive } from './holo-glass';
 import { iceGlassPrimitive } from './ice-glass';
 import { iridescentGlassPrimitive } from './iridescent-glass';
 import { liquidFillGlassPrimitive } from './liquid-fill-glass';
+import { liquidFillSimPrimitive } from './liquid-fill-sim';
 import { liquidGlassPrimitive } from './liquid-glass';
+import { moltenDripSimPrimitive } from './molten-drip-sim';
 import { refractionWarpPrimitive } from './refraction-warp';
 import { smokedGlassPrimitive } from './smoked-glass';
 import { soapBubblePrimitive } from './soap-bubble';
@@ -342,12 +348,14 @@ import { mistDriftPrimitive } from './mist-drift';
 import { smokePrimitive } from './smoke';
 import { smokeBurstPrimitive } from './smoke-burst';
 import { smokePlumePrimitive } from './smoke-plume';
+import { smokePlumeSimPrimitive } from './smoke-plume-sim';
 import { smokeRingPrimitive } from './smoke-ring';
 import { smokeTrailPrimitive } from './smoke-trail';
 import { steamPrimitive } from './steam';
 import { wispySmokePrimitive } from './wispy-smoke';
 import { attractorPrimitive } from './attractor';
 import { bokehDriftPrimitive } from './bokeh-drift';
+import { bubbleRiseSimPrimitive } from './bubble-rise-sim';
 import { bubblesPrimitive } from './bubbles';
 import { clickBurstPrimitive } from './click-burst';
 import { collisionBallsPrimitive } from './collision-balls';
@@ -382,6 +390,7 @@ import { pendulumWavePrimitive } from './pendulum-wave';
 import { petalFallPrimitive } from './petal-fall';
 import { pinballBouncePrimitive } from './pinball-bounce';
 import { pointerSparkTrailPrimitive } from './pointer-spark-trail';
+import { pourSplashSimPrimitive } from './pour-splash-sim';
 import { rainPrimitive } from './rain';
 import { rainSplashPrimitive } from './rain-splash';
 import { sandPilePrimitive } from './sand-pile';
@@ -552,6 +561,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   typewriterPrimitive,
   waveTextPrimitive,
   bannerFlutterPrimitive,
+  buoyancyBobSimPrimitive,
   clothDrapeSimPrimitive,
   clothSwayPrimitive,
   curtainWavePrimitive,
@@ -566,8 +576,10 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   jellyCollideSimPrimitive,
   jellySurfacePrimitive,
   oceanFftPrimitive,
+  raindropRippleSimPrimitive,
   ripplePrimitive,
   rippleConcentricPrimitive,
+  rippleInteractSimPrimitive,
   rippleInterferencePrimitive,
   ripplePoolPrimitive,
   sailBulgePrimitive,
@@ -578,6 +590,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   waterSurfacePrimitive,
   wavePrimitive,
   waveCrossPrimitive,
+  waveTankSloshPrimitive,
   wheatFieldPrimitive,
   windRipplePrimitive,
   clickShockwavePrimitive,
@@ -683,7 +696,9 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   iceGlassPrimitive,
   iridescentGlassPrimitive,
   liquidFillGlassPrimitive,
+  liquidFillSimPrimitive,
   liquidGlassPrimitive,
+  moltenDripSimPrimitive,
   refractionWarpPrimitive,
   smokedGlassPrimitive,
   soapBubblePrimitive,
@@ -733,12 +748,14 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   smokePrimitive,
   smokeBurstPrimitive,
   smokePlumePrimitive,
+  smokePlumeSimPrimitive,
   smokeRingPrimitive,
   smokeTrailPrimitive,
   steamPrimitive,
   wispySmokePrimitive,
   attractorPrimitive,
   bokehDriftPrimitive,
+  bubbleRiseSimPrimitive,
   bubblesPrimitive,
   clickBurstPrimitive,
   collisionBallsPrimitive,
@@ -773,6 +790,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   petalFallPrimitive,
   pinballBouncePrimitive,
   pointerSparkTrailPrimitive,
+  pourSplashSimPrimitive,
   rainPrimitive,
   rainSplashPrimitive,
   sandPilePrimitive,

@@ -105,6 +105,12 @@ function readCatalog() {
 const GLASS_EXTRA = new Set([
   'iridescence', 'prism-spectrum', 'rainbow-fresnel-edge', 'diamond-sparkle',
   'caustic-shimmer', 'chromatic-blur', 'water-surface', 'soap-bubble',
+  // Physics/Fluid pack — sim fluids + transmissive soft bodies want the real
+  // Metal GPU (refraction / normals / transmission under-render on SwiftShader).
+  'pour-splash-sim', 'ripple-interact-sim', 'buoyancy-bob-sim', 'wave-tank-slosh',
+  'bubble-rise-sim', 'raindrop-ripple-sim', 'smoke-plume-sim',
+  'water-balloon-wobble',
+  // (liquid-fill-sim + molten-drip-sim are category 'glass' → already real-GPU.)
 ]);
 const isGlass = (name, category) => category === 'glass' || category === 'caustics' || GLASS_EXTRA.has(name);
 
