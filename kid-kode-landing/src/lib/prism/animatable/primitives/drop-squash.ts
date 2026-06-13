@@ -34,18 +34,20 @@ const DT = 1 / 120; // stiff-ish contact → small step
 const FLOOR_Y = -0.45;
 
 const SCHEMA = [
-  // Drop timing is tuned so the DEFAULT card lands its FIRST floor contact at
-  // absolute t≈0.88s — i.e. by the t=1.0 control pin the harness freezes on, the
-  // card is ~0.12s past contact: held mid-squash, low near the floor, and FULLY
-  // on-screen. Free-fall time from rest is t=√(2·height/g); height 1.15 +
-  // gravity 3.0 → ~0.88s to the floor. Contact a touch BEFORE the pin (not AT
-  // it) leaves a post-contact rebound window so `bounciness` differentiates the
-  // card's pin height (low bounce pinned low, high bounce risen ~0.28u) while the
-  // slow squash recovery keeps `squash` biting hard at the same frame. Height is
-  // kept modest so the start of the arc (centre = FLOOR_Y + height ≈ 0.70) is
-  // barely inside the top of frame, not flung far above it.
-  { id: 'height', label: 'Drop Height', type: 'knob', min: 0.6, max: 2.4, step: 0.05, default: 1.15, unit: 'u' },
-  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 3.0 },
+  // Drop timing is tuned so the DEFAULT card lands its FIRST floor contact a hair
+  // BEFORE the absolute t≈1.0s control pin the harness freezes on — so AT the pin
+  // the card is just-contacted (~0.03s past impact), low near the floor, and at
+  // PEAK squash (the squash envelope is maximal at the impact instant, scaled by
+  // the `squash` control → the slider bites hardest exactly here). Free-fall time
+  // from rest is t=√(2·height/g); height 0.95 + gravity 2.0 → ~0.975s to the
+  // floor. A LOW gravity + modest height is deliberate: it keeps the contact at
+  // t≈1.0 while also keeping the arc START on-screen — centre at t=0 = FLOOR_Y +
+  // height = 0.50, card top ≈ 1.06, inside the ±1.165 frustum (a higher/faster
+  // drop would crop the idle card off the top). An earlier ~0.88s contact left the
+  // card already rebounded to mid-frame and un-squashed at the pin — that was why
+  // the `squash` slider read DEAD to the advocate.
+  { id: 'height', label: 'Drop Height', type: 'knob', min: 0.6, max: 2.4, step: 0.05, default: 0.95, unit: 'u' },
+  { id: 'gravity', label: 'Gravity', type: 'knob', min: 2, max: 18, step: 0.5, default: 2.0 },
   // Restitution kept moderate by default: low enough that the card stays LOW and
   // on-screen near the floor at t=1.0 (no rebound to a cropped apex), high enough
   // that sweeping it visibly lifts the card at the pin (post-contact rebound).
@@ -77,13 +79,13 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
       let impact = 0; // decaying squash envelope, seeded by impact speed
 
       const reset = () => {
-        y = num(params.height, 1.15);
+        y = num(params.height, 0.95);
         vy = 0;
         impact = 0;
       };
 
       const step = (dt: number) => {
-        const g = num(params.gravity, 3.0);
+        const g = num(params.gravity, 2.0);
         const rest = clamp(num(params.bounciness, 0.32), 0.1, 0.92);
         // Semi-implicit Euler.
         vy -= g * dt;
@@ -94,11 +96,11 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
           const hitSpeed = Math.abs(vy);
           vy = hitSpeed * rest; // bounce up
           // Capture impact for squash; small bounces stop registering. With the
-          // default drop (gravity 3.0, height 1.15) the first-contact speed is
-          // ≈2.6 u/s, so the ceiling divisor 2.6 makes a typical drop SATURATE
-          // the squash envelope (impact→1) and the compression reads hard at the
+          // default drop (gravity 2.0, height 0.95) the first-contact speed is
+          // ≈1.95 u/s, so the ceiling divisor 1.9 makes the default drop SATURATE
+          // the squash envelope (impact→1) and the compression reads HARD at the
           // frozen pin. Bigger drops still cap at 1.
-          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 2.6);
+          if (hitSpeed > 0.15) impact = Math.min(1, hitSpeed / 1.9);
           // Settle: kill micro-jitter once it's basically resting.
           if (hitSpeed < 0.4) {
             y = 0;
@@ -145,7 +147,7 @@ export const dropSquashPrimitive: PrimitiveDefinition = {
       return {
         // Settle window: tall drops + low gravity take longer. Bounded so the
         // loop stays lively.
-        duration: () => clamp(1.6 + num(params.height, 1.6) * 0.6, 2, 4),
+        duration: () => clamp(1.6 + num(params.height, 0.95) * 0.6, 2, 4),
         seek: (t) => {
           stepper.seekStep(t);
           write();
