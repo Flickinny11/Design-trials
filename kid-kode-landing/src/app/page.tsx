@@ -32,6 +32,7 @@ import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import CanvasToolbar from '@/components/editor/overlays/CanvasToolbar';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
+import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
@@ -838,6 +839,7 @@ export default function Page() {
 
       <SearchPalette />
       <AddNodeDialog />
+      <ChangeArtifactWizard />
     </main>
   );
 }

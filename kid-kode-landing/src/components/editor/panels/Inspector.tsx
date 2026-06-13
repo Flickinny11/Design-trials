@@ -100,6 +100,9 @@ export default function Inspector() {
   // EBR2-F-05 will commit on pointer-up.
   const setDraggingNode = useGraphEditorStore((s) => s.setDraggingNode);
   const selectNode = useGraphEditorStore((s) => s.selectNode);
+  // CANVAS-FINAL — Change Artifact wizard entry (canvas-spec §12) from the
+  // selected element's Inspector.
+  const openChangeArtifact = useGraphEditorStore((s) => s.openChangeArtifact);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -472,6 +475,21 @@ export default function Inspector() {
             className="ds-btn !px-2.5 h-7 text-[10px]"
           >
             Clone
+          </button>
+          {/* CANVAS-FINAL (canvas-spec §12) — regenerate/replace the selected
+              element's artifact (Upload §12.1 / Generate §12.2), keeping its
+              position, animation, and lighting. Disabled until a node is
+              selected. */}
+          <button
+            type="button"
+            data-role="change-artifact"
+            data-testid="inspector-change-artifact"
+            disabled={!selectedId}
+            onClick={() => selectedId && openChangeArtifact(selectedId, 'launch')}
+            title="Change this element's artifact"
+            className="ds-btn !px-2.5 h-7 text-[10px] whitespace-nowrap"
+          >
+            Change Artifact
           </button>
           <button
             type="button"

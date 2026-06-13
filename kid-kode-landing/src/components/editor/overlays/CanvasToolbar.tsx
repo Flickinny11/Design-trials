@@ -77,6 +77,7 @@ import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout
 import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
 import ObjectFlyout from '@/components/editor/object-tools/ObjectFlyout';
+import ChangeArtifactFlyout from '@/components/editor/change-artifact/ChangeArtifactFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -125,6 +126,7 @@ type ToolGroupId =
   | 'add'
   | 'image'
   | 'object3d'
+  | 'changeArtifact'
   | 'text'
   | 'animation'
   | 'lighting'
@@ -144,6 +146,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'add', icon: 'plus', label: 'Add', wired: true },
   { id: 'image', icon: 'image', label: 'Image', wired: true },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: true },
+  { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
   { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
@@ -848,6 +851,12 @@ export default function CanvasToolbar() {
               // resolution the Text / Add / Image / Lighting groups share
               // (active hub → selected node's parent → first hub).
               <ObjectFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
+            )}
+            {activeGroup === 'changeArtifact' && (
+              // CANVAS-FINAL (canvas-spec §12) — Change Artifact entry: opens
+              // the Upload (§12.1) / Generate (§12.2) wizards on the selected
+              // element (or mints a fresh element tethered to the active hub).
+              <ChangeArtifactFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
             )}
             {activeGroup === 'text' && (
               // P1 TEXT SYSTEM (Task B) — wired flyout. `lightingHub` is the
