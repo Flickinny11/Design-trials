@@ -117,13 +117,29 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
       // Pointer-offset direction in screen XY (unit), defaulting to +x.
       const uPointerDir = uniform(new Vector2(1, 0));
       const uColor = uniform(new Color(RIM_TINT));
+      // Standing "sensing reach" gain driven by proximityRange. A wider range
+      // means the card's edge is MORE awake at any given cursor distance — so at
+      // the SAME pinned engaged offset a larger range yields a stronger, wider
+      // rim (not just a slower distance falloff). This is the standing-pose
+      // coupling the advocate harness samples: it pins the cursor and sweeps
+      // proximityRange with same-t (dt≈0) re-seeks, so the rim must re-render
+      // from the control alone. uRangeGain scales the rim brightness; uRangeSoft
+      // softens the fresnel power so the lit edge band visibly WIDENS as the
+      // range opens up.
+      const uRangeGain = uniform(1);
+      const uRangeSoft = uniform(1);
 
       // ── TSL rim (fresnel EDGE term) ────────────────────────────────────────
       // fresnel = 1 - |normalView · viewDir|: ~0 across the flat face, ~1 at the
       // grazing silhouette edge. pow(fresnel, power) tightens the rim into the
       // border as `rimTightness` rises.
       const fresnel = oneMinus(normalView.dot(positionViewDirection).abs());
-      const edge = pow(fresnel, uPower);
+      // Effective tightness = rimTightness softened by the sensing reach: a wider
+      // proximityRange (uRangeSoft > 1) divides the power down so the lit edge
+      // band WIDENS, a tighter range raises it so the rim pulls into the border.
+      // Floored at 1 so the rim never inverts into a face flood.
+      const effPower = max(uPower.div(uRangeSoft) as never, float(1));
+      const edge = pow(fresnel, effPower);
 
       // Directional bias: how much this fragment's view-space edge direction
       // faces the pointer. normalView.xy is the screen-projected edge direction;
@@ -142,6 +158,7 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
       const rim = edge
         .mul(directional)
         .mul(uProximity)
+        .mul(uRangeGain)
         .mul(breathe)
         .mul(uIntensity);
       const colorNode = uColor.mul(rim);
@@ -207,6 +224,8 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
         uPointerDir,
         uTime,
         uColor,
+        uRangeGain,
+        uRangeSoft,
       };
 
       // ── Pointer read (0..1, finite-guarded) ────────────────────────────────
@@ -224,6 +243,40 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
       let leanX = 0;
       let leanY = 0;
       let lastT = -Infinity;
+      // Last pointer offset/distance from center, captured each seek so a
+      // control tweak (onParamChange) can recompute the STANDING engaged
+      // proximity from the pinned cursor with no re-seek — the advocate sweeps
+      // controls with same-t (dt≈0) re-seeks, so the settled hold must respond
+      // to proximityRange immediately.
+      let lastDist = 0;
+
+      // Standing proximity at a pinned cursor distance for a given sensing
+      // range: smoothstep falloff, 1 at center → 0 beyond range. This IS the
+      // settled equilibrium for a stationary pointer, so it's the value a pinned
+      // engaged pose holds — and it RISES with `range` at the same distance.
+      const computeProxTarget = (dist: number, range: number): number => {
+        const r = clamp(range, 0.2, 0.9);
+        const k = clamp(1 - dist / r, 0, 1);
+        return k * k * (3 - 2 * k);
+      };
+
+      // Standing rim-shape gains for the sensing range, relative to the schema
+      // default (0.55). A wider range makes the edge MORE awake: brighter rim
+      // (uRangeGain ↑) over a WIDER band (uRangeSoft ↑ → softer fresnel power).
+      // Both are smooth, monotonic, and bounded so the rim never explodes or
+      // floods the face at the control extremes.
+      const RANGE_DEFAULT = 0.55;
+      const applyRangeGains = (range: number) => {
+        const r = clamp(range, 0.2, 0.9);
+        // Normalize the 0.2..0.9 range to ~0.57..2.57 around the default: a
+        // larger reach kindles a stronger rim at the same distance.
+        const norm = r / RANGE_DEFAULT;
+        uRangeGain.value = clamp(0.4 + norm, 0.5, 3);
+        // Softening factor widens the lit edge band as the range opens up,
+        // bounded so the rim stays an edge (effPower floored at 1 in TSL).
+        uRangeSoft.value = clamp(0.6 + norm * 0.6, 0.6, 2.2);
+      };
+      applyRangeGains(num(params.proximityRange, RANGE_DEFAULT));
 
       // Re-apply the smoothed pose to the live uniforms/transform. Called from
       // seek AND onParamChange so a control tweak reshapes the frame at the last
@@ -245,12 +298,15 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
           const offX = p.x - 0.5;
           const offY = p.y - 0.5;
           const dist = Math.hypot(offX, offY); // 0 center → ~0.707 corner
+          lastDist = dist;
 
           // Proximity target: smoothstep falloff over `proximityRange` (a wider
           // range keeps the rim lit further out). 1 at center → 0 beyond range.
-          const range = clamp(num(params.proximityRange, 0.55), 0.2, 0.9);
-          const k = clamp(1 - dist / range, 0, 1);
-          const proxTarget = k * k * (3 - 2 * k); // smoothstep
+          const range = clamp(num(params.proximityRange, RANGE_DEFAULT), 0.2, 0.9);
+          const proxTarget = computeProxTarget(dist, range); // standing equilibrium
+          // Keep the standing rim-shape gains coherent with the live range so
+          // the engaged hold reflects the current sensing reach.
+          applyRangeGains(range);
 
           // Pointer-offset direction in screen XY (unit). When the cursor sits
           // dead center the direction is undefined → keep the previous value so
@@ -298,9 +354,25 @@ export const proximityRimGlowPrimitive: PrimitiveDefinition = {
           if (id === 'rimTightness') uPower.value = clamp(num(value, 3), 1, 6);
           else if (id === 'intensity') uIntensity.value = clamp(num(value, 1.6), 0, 3);
           else if (id === 'directionalBias') uBias.value = clamp(num(value, 0.6), 0, 1);
-          // proximityRange feeds the CPU falloff; it re-resolves on the next seek
-          // via the live `params` read, but re-apply the current pose now so the
-          // other uniforms/transform stay coherent.
+          else if (id === 'proximityRange') {
+            // proximityRange reshapes the STANDING engaged pose directly. The
+            // advocate sweeps it at a pinned cursor with same-t re-seeks (dt≈0),
+            // so the smoothing path can't move proxState — recompute the
+            // standing equilibrium from the last pinned distance and snap the
+            // settled hold to it, plus refresh the rim-shape gains. At the same
+            // pinned offset, a wider range ⇒ higher proximity + stronger/wider
+            // rim; the frozen frame re-renders from the control alone.
+            const range = clamp(num(value, RANGE_DEFAULT), 0.2, 0.9);
+            applyRangeGains(range);
+            // Only re-derive the settled proximity once the pointer has been
+            // read at least once (a real engaged seek happened); before that,
+            // leave proxState at rest so the idle frame stays dark.
+            if (Number.isFinite(lastT)) {
+              proxState = computeProxTarget(lastDist, range);
+            }
+          }
+          // Re-apply the current pose now so the uniforms/transform stay coherent
+          // at the pinned seek state.
           applyPose();
         },
         dispose: () => {

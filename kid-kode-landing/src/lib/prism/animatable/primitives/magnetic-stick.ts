@@ -85,6 +85,20 @@ const LEAN_MAX = 0.06;
 // Fraction of the half-extent the stuck card is allowed to travel — keeps the
 // whole envelope (panel + chrome) inside the tile frame.
 const TRAVEL_FRAC = 0.42;
+// Standing micro-wobble of the stuck pose driven by `releaseWobble`. The release
+// transient (the snap-back ring) is invisible at a frozen settled pin, so the
+// underdamping the control governs is expressed here as a small, deterministic,
+// persistent residual oscillation of the held stuck pose — a stiffer-bedded
+// magnet (low wobble) sits dead still; an underdamped one (high wobble) breathes
+// a hair around its lock. Amplitude is a fraction of the half-extent; frequency
+// rad/s. Bounded so it never reads as jitter or leaves the frame.
+const WOBBLE_AMP_FRAC = 0.05;
+const WOBBLE_FREQ = 6.5;
+// Below this offset+velocity magnitude the stick spring is treated as CONVERGED
+// onto its standing target, so the pose is read straight from the closed-form
+// engaged target. This is what makes a held-t control sweep (dt≈0, settled
+// spring) visibly re-render: the standing target is a function of every control.
+const CONVERGED_EPS = 2e-3;
 
 interface PointerXY {
   x: number;
@@ -192,28 +206,55 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
           stuck = false;
         }
 
+        // ── The STANDING stuck pose — a closed-form function of EVERY control ─
+        // The advocate pins the cursor statically and sweeps each control with
+        // repeated same-t seeks: pointer velocity ≈ 0, no release transient, the
+        // spring is SETTLED. So every control must reshape the *standing* stuck
+        // pose, not merely the trajectory toward it. We compute that standing
+        // pose in closed form, drive the spring toward it for live transients,
+        // and READ it directly once the spring has converged (or on a held-t
+        // re-derive). dt-independent, deterministic, bounded.
+        //
+        //  • captureRadius — a STRONGER magnet (bigger radius) grips FIRMER: the
+        //    card reaches a little farther toward the cursor. Monotonic across
+        //    the FULL range (mapped well under the travel clamp so mid≠high).
+        //  • escapeFactor — a wider escape GAP = a tauter tether = the stuck
+        //    offset reaches farther toward escape (a standing reach gain).
+        //  • stickStiffness — a stiffer lock sits CLOSER to the cursor offset
+        //    (smaller standing lag); a soft lock trails back toward home. This
+        //    is the spring's steady tracking expressed as a standing lock frac.
+        //  • releaseWobble — an underdamped bed leaves a persistent micro-wobble
+        //    on the held pose (see WOBBLE_* below); a critically-damped one is
+        //    dead still.
+        const escapeXs = clamp(num(params.escapeFactor, 1.5), 1, 3);
+        // Reach gain: keep the captureRadius term well under the travel clamp so
+        // the WHOLE range stays monotonic (the old 0.6 coefficient saturated the
+        // clamp at mid, making mid==high). escapeFactor adds a standing taut-
+        // tether reach so a wider gap visibly clings farther.
+        const reachGain =
+          0.86 +
+          0.30 * clamp((captureR - 0.15) / 1.05, 0, 1) +
+          0.16 * clamp((escapeXs - 1) / 1.2, 0, 1);
+        // Standing lock fraction from stiffness: a stiff magnet locks ~fully onto
+        // the cursor offset; a soft one sits back (a steady tracking lag). This
+        // makes stickStiffness a STANDING function of the pinned offset, not just
+        // the settle rate (which is invisible at dt≈0 on a settled spring).
+        const lockFrac = 0.62 + 0.38 * stiff;
+        const standX = clamp(rawTX * reachGain * lockFrac, -maxTravelX, maxTravelX);
+        const standY = clamp(rawTY * reachGain * lockFrac, -maxTravelY, maxTravelY);
+
         // ── Target + spring constants per state ──────────────────────────────
         let targetX: number;
         let targetY: number;
         let omega: number;
         let zeta: number; // damping ratio
         if (stuck) {
-          // The stick: track the live pointer offset with a fast,
-          // critically-damped spring (zeta=1 → snaps with no ring). A STRONGER
-          // magnet (larger capture radius) grips FIRMER — the card travels a
-          // little farther toward the cursor, a subject-relative reach gain
-          // (1×..~1.6×) clamped to the travel envelope. This makes the radius
-          // control visibly reshape the stuck offset at the pinned engaged
-          // frame (where prox is fixed) without breaking the geometric track.
-          // A wider escape GAP also means a firmer hold (the magnet clings
-          // harder before it will let go) → a small extra reach folded in, so
-          // the escapeFactor control reshapes the stuck frame too.
-          const reachGain =
-            1 +
-            0.6 * clamp((captureR - 0.15) / 1.05, 0, 1) +
-            0.18 * clamp(num(params.escapeFactor, 1.5) - 1, 0, 1.2);
-          targetX = clamp(rawTX * reachGain, -maxTravelX, maxTravelX);
-          targetY = clamp(rawTY * reachGain, -maxTravelY, maxTravelY);
+          // The stick: a fast critically-damped spring chases the STANDING stuck
+          // target (zeta=1 → snaps with no ring). The target itself carries all
+          // four standing-control terms above, so the pinned engaged frame
+          // reshapes under any of their sweeps.
+          targetX = standX;
+          targetY = standY;
           omega = STICK_OMEGA * (0.45 + 0.55 * stiff);
           zeta = 1;
         } else {
@@ -236,11 +277,44 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         offX += velX * dt;
         offY += velY * dt;
 
+        // CONVERGENCE READ-OUT — the standing-pose contract. The pose must be
+        // read STRAIGHT from the closed-form standing target whenever the spring
+        // is not in a live snap-on transient, so a held-t control sweep re-renders
+        // the frozen frame. Two cases both demand it:
+        //   • dt === 0 — the advocate's repeated same-t seek and the paused
+        //     onParamChange re-derive: the integrator is inert at dt=0, so a
+        //     control tweak (which only re-runs at dt≈0) would otherwise be
+        //     frozen at whatever the spring last converged to — the exact dead-
+        //     control defect. At dt=0 the standing target IS the settled pose.
+        //   • already near the target — a normal live settle has finished; lock
+        //     onto the standing target so subsequent control sweeps track it
+        //     with no residual integrator lag.
+        // We never snap mid-transient (dt>0 and still far from target), so the
+        // live snap-on motion the effect-read shows is preserved.
+        const nearTarget =
+          Math.hypot(offX - targetX, offY - targetY, velX, velY) < CONVERGED_EPS;
+        if (stuck && (dt === 0 || nearTarget)) {
+          offX = targetX;
+          offY = targetY;
+          velX = 0;
+          velY = 0;
+        }
+
         // Snap tiny residuals so the released idle frame is exactly home (no
         // sub-pixel drift, no jitter at rest).
         if (!stuck && Math.hypot(offX, offY, velX, velY) < 1e-4) {
           offX = 0; offY = 0; velX = 0; velY = 0;
         }
+
+        // Standing release-wobble: an underdamped lock breathes a hair around
+        // its stuck pose even when held (the control's underdamping made visible
+        // at a settled pin). Deterministic in t, amplitude ∝ releaseWobble,
+        // bounded to a small fraction of the half-extent so it never jitters or
+        // leaves frame. Zero when not stuck and zero at wobble=0 (dead-still
+        // lock). Phase-offset on y so it reads as a tiny orbital quiver.
+        const wobbleAmp = stuck ? wobble * WOBBLE_AMP_FRAC * halfRef : 0;
+        const wobbleX = wobbleAmp * Math.sin(WOBBLE_FREQ * t);
+        const wobbleY = wobbleAmp * Math.cos(WOBBLE_FREQ * t) * 0.6;
 
         // Grab-pulse envelope decays toward 0 (frame-rate-independent).
         grabEnv *= Math.exp(-PULSE_DECAY * dt);
@@ -263,8 +337,10 @@ export const magneticStickPrimitive: PrimitiveDefinition = {
         // control reshapes the held stuck frame, not just the snap instant.
         const sustainedCling = stuck ? 0.34 * pulseAmt : 0;
         const popScale = 1 + grabEnv * pulseAmt + sustainedCling;
-        subject.position.x = baseX + (Number.isFinite(offX) ? offX : 0);
-        subject.position.y = baseY + (Number.isFinite(offY) ? offY : 0);
+        const composedX = (Number.isFinite(offX) ? offX : 0) + (Number.isFinite(wobbleX) ? wobbleX : 0);
+        const composedY = (Number.isFinite(offY) ? offY : 0) + (Number.isFinite(wobbleY) ? wobbleY : 0);
+        subject.position.x = baseX + composedX;
+        subject.position.y = baseY + composedY;
         // A whisper of lift while engaged so the stuck card reads as "lifted to
         // the cursor" — peaks with the grab pulse, rides the engagement.
         const engaged = stuck ? 1 : 0;

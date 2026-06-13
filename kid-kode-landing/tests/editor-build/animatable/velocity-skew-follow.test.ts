@@ -178,6 +178,66 @@ describe('velocity-skew-follow primitive', () => {
     inst.dispose();
   });
 
+  it('advocate rig pin {0.5,0.7} (purely vertical offset, dt≈0): speed / skewAmount / skewClamp each reshape the engaged-pose rotation.z', () => {
+    // EXACT reproduction of the W4 user-advocate capture that BLOCKED this tile:
+    // the paused control sweep pins the pointer at the rig's mid-orbit phase
+    // (t=1, dur=4 ⇒ ph=0.25), which lands the synthetic pointer at {x:0.5,y:0.7}
+    // — X dead-center, offset PURELY VERTICAL — and SEEKS THE SAME t REPEATEDLY
+    // (dt≈0) while sweeping each control. The earlier x-only steady reference read
+    // 0 lean there, so speed/skewAmount/skewClamp measured byte-identical
+    // (meanAbsDiff=0) and the tile blocked. The standing reference is now the full
+    // pointer-offset MAGNITUDE, so the vertical pin engages a non-zero lean that
+    // every velocity-coupled control re-shapes. These assertions sweep each
+    // control at the STATIC pin via onParamChange (no re-seek) — exactly the rig's
+    // measurement surface (a published engaged-pose output: rotation.z).
+    const { target, inst, subject } = fresh();
+
+    // Drive in then PIN at the advocate pointer with repeated same-t seeks.
+    idle(target, inst);
+    target.userData.pointer = { x: 0.5, y: 0.7 };
+    for (let i = 1; i <= 40; i++) inst.seek(i * 0.016);
+    inst.seek(1); // settle to the pin t
+    for (let i = 0; i < 3; i++) inst.seek(1); // dt≈0 repeated seeks (frozen frame)
+
+    // Frozen frame is byte-stable across repeated pinned seeks.
+    const pinnedZ = subject.rotation.z;
+    for (let i = 0; i < 3; i++) inst.seek(1);
+    expect(subject.rotation.z).toBeCloseTo(pinnedZ, 12);
+    // And it is a REAL engaged lean at this purely-vertical pin (the old bug: 0).
+    expect(Math.abs(pinnedZ)).toBeGreaterThan(0.005);
+
+    // speed: a slower chase (low speed → low k) sits farther behind its target,
+    // holding a LARGER persistent lean than a snappy follower. Swept via
+    // onParamChange at the static pin — no seek — mirroring the rig's fill().
+    inst.setControl('speed', 0.05);
+    const speedSlow = Math.abs(subject.rotation.z);
+    inst.setControl('speed', 0.9);
+    const speedFast = Math.abs(subject.rotation.z);
+    expect(speedSlow).toBeGreaterThan(speedFast + 0.01); // formerly DEAD (Δ=0)
+    inst.setControl('speed', 0.4);
+
+    // skewAmount: scales the standing lean. Wide clamp so the gain is the only cap.
+    inst.setControl('skewClamp', 0.6);
+    inst.setControl('skewAmount', 0.1);
+    const amtLow = Math.abs(subject.rotation.z);
+    inst.setControl('skewAmount', 1.4);
+    const amtHigh = Math.abs(subject.rotation.z);
+    expect(amtHigh).toBeGreaterThan(amtLow + 0.01); // formerly DEAD (Δ=0)
+
+    // skewClamp: caps the standing lean. Push the lean hard (slow + max amount) so
+    // the clamp is the binding limit, then a tight clamp visibly shrinks the pose.
+    inst.setControl('speed', 0.05);
+    inst.setControl('skewAmount', 1.4);
+    inst.setControl('skewClamp', 0.6);
+    const clampWide = Math.abs(subject.rotation.z);
+    inst.setControl('skewClamp', 0.04);
+    const clampTight = Math.abs(subject.rotation.z);
+    expect(clampTight).toBeLessThan(clampWide - 0.01); // formerly DEAD (Δ=0)
+    expect(clampTight).toBeLessThanOrEqual(0.04 + 1e-6); // the clamp truly binds
+
+    inst.dispose();
+  });
+
   it('travel stays bounded subject-relative inside the tile frame at max span / extreme pointer', () => {
     const { target, inst, subject } = fresh({ span: 1.0 });
     const w = subjectWidth(subject);

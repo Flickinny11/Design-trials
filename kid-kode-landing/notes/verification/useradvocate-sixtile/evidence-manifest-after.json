@@ -1,47 +1,125 @@
 {
-  "startedAt": "2026-06-13T06:57:48.845Z",
+  "startedAt": "2026-06-13T07:22:04.550Z",
   "state": "after",
   "port": 4811,
   "backend": "webgpu",
   "gpu": true,
   "tiles": [
     {
-      "tile": "magnetic",
+      "tile": "velocity-skew-follow",
       "state": "after",
-      "dir": "magnetic/after",
+      "dir": "velocity-skew-follow/after",
       "claim": {
-        "name": "magnetic",
-        "label": "Max offset",
-        "description": "The tile is magnetically pulled toward the pointer by a spring; reach and stiffness tunable.",
+        "name": "velocity-skew-follow",
+        "label": "Chase Speed",
+        "description": "The card chases the cursor with Cuberto swagger — leaning and skewing into its own velocity, easing out long like an expo tween.",
         "category": "pointer"
       },
-      "controls": 2,
+      "controls": 4,
       "notes": []
     },
     {
-      "tile": "pointer-shine",
+      "tile": "magnetic-stick",
       "state": "after",
-      "dir": "pointer-shine/after",
+      "dir": "magnetic-stick/after",
       "claim": {
-        "name": "pointer-shine",
-        "label": "Length",
-        "description": "A sharp anamorphic glint flares at the pointer location, twinkling as it tracks the cursor across glossy glass.",
+        "name": "magnetic-stick",
+        "label": "Capture radius",
+        "description": "Drift close and the card snaps onto the cursor like a magnet finding steel — sticking while held near, releasing with a wobbling snap-back past the escape radius.",
         "category": "pointer"
       },
-      "controls": 3,
+      "controls": 5,
       "notes": []
     },
     {
-      "tile": "spotlight-follow",
+      "tile": "proximity-rim-glow",
       "state": "after",
-      "dir": "spotlight-follow/after",
+      "dir": "proximity-rim-glow/after",
       "claim": {
-        "name": "spotlight-follow",
-        "label": "Radius",
-        "description": "A bright specular hotspot tracks the pointer across the card surface, like a light gliding over glass.",
+        "name": "proximity-rim-glow",
+        "label": "Glow Intensity",
+        "description": "The card",
         "category": "pointer"
       },
-      "controls": 2,
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "spring-chain-follow",
+      "state": "after",
+      "dir": "spring-chain-follow/after",
+      "claim": {
+        "name": "spring-chain-follow",
+        "label": "Chain Stiffness",
+        "description": "The card leads a spring-linked chain — two ghost echoes whipping and overshooting behind it as the cursor drags the head around.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "gravity-well",
+      "state": "after",
+      "dir": "gravity-well/after",
+      "claim": {
+        "name": "gravity-well",
+        "label": "Gravity",
+        "description": "The cursor bends space — the card slides down the well’s curve toward it, stretching tidally as it nears, orbital dust streaming past into the drain.",
+        "category": "pointer"
+      },
+      "controls": 5,
+      "notes": []
+    },
+    {
+      "tile": "pendant-dangle",
+      "state": "after",
+      "dir": "pendant-dangle/after",
+      "claim": {
+        "name": "pendant-dangle",
+        "label": "Chain Length",
+        "description": "The card hangs from an unseen chain and dangles toward the cursor, swinging on its pivot and settling with the lazy physics of a pendant in a jeweler’s hand.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "throw-physics",
+      "state": "after",
+      "dir": "throw-physics/after",
+      "claim": {
+        "name": "throw-physics",
+        "label": "Throw power",
+        "description": "Grab the card with the cursor and throw it — it sails on real ballistics, bounces off the frame walls, and glides home ashamed.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "charge-release",
+      "state": "after",
+      "dir": "charge-release/after",
+      "claim": {
+        "name": "charge-release",
+        "label": "Charge rate",
+        "description": "Hold the cursor close and the card charges — compressing, trembling, edges heating brass — break away and it releases, springing tall with a crack of light.",
+        "category": "pointer"
+      },
+      "controls": 4,
+      "notes": []
+    },
+    {
+      "tile": "pointer-cast-shadow",
+      "state": "after",
+      "dir": "pointer-cast-shadow/after",
+      "claim": {
+        "name": "pointer-cast-shadow",
+        "label": "Shadow length",
+        "description": "The cursor becomes the room lamp — the card throws a soft true shadow away from it, raking long when the light is low and snapping tight underfoot when it hovers above.",
+        "category": "pointer"
+      },
+      "controls": 4,
       "notes": []
     }
   ],

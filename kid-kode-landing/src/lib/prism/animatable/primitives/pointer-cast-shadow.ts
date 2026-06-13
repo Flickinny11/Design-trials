@@ -274,38 +274,60 @@ export const pointerCastShadowPrimitive: PrimitiveDefinition = {
       };
 
       const apply = () => {
-        // Shadow direction = OPPOSITE the pointer (light) direction. The pointer
-        // sits at {x,y}; the card is centered at 0.5,0.5; the light comes FROM
-        // the pointer, so the shadow is thrown along (center - pointer).
-        const dirLen = Math.hypot(curOffX, curOffY) || 1e-4;
-        (uDir.value as Vector2).set(curOffX / dirLen, curOffY / dirLen);
+        // Shadow throw DIRECTION = OPPOSITE the pointer (light) direction. The
+        // pointer sits at {x,y}; the card is centered at 0.5,0.5; the light comes
+        // FROM the pointer, so the shadow is thrown along (center - pointer).
+        // When the light is nearly overhead (curOff ~ 0 ⇒ no defined rake axis),
+        // fall back to a stable downward rake so the standing shadow still rakes
+        // into visible frame BELOW the card rather than hiding dead-centre behind
+        // it. This keeps a real, length-controllable rake at the static pin.
+        const RAKE_EPS = 1e-3;
+        const rawLen = Math.hypot(curOffX, curOffY);
+        const rakeX = rawLen > RAKE_EPS ? curOffX / rawLen : 0;
+        const rakeY = rawLen > RAKE_EPS ? curOffY / rawLen : -1;
+        (uDir.value as Vector2).set(rakeX, rakeY);
 
-        // How "low / off-axis" the light is = engagement magnitude → longer
-        // shadow + farther displacement; overhead (low engagement) → tight.
-        const eng = clamp(Math.hypot(curOffX, curOffY), 0, 1);
+        // How "low / off-axis" the light is = engagement magnitude → leans the
+        // card + biases displacement; overhead (low engagement) → tight underfoot.
+        const eng = clamp(rawLen, 0, 1);
+        // ── shadowLength is the HEADLINE control: it sets the standing rake
+        // LENGTH directly. 0..1 normalized so it drives geometry as a PURE
+        // function of the control, NOT gated on pointer velocity or rake angle —
+        // sweeping it must visibly lengthen/shorten the cast shadow even at the
+        // static engaged pin (advocate W4 fix). min 0.2 → max 1 maps to lenN
+        // 0 → 1 across the full slider travel.
         const lengthCtrl = clamp(num(params.shadowLength, 0.62), 0.2, 1);
-        // Effective stretch grows with both the control and the rake angle, plus
-        // a transient kick from a fast flick (lastImpulse) — keeps the pinned
-        // engaged frame alive and lets the velocity envelope read.
-        const reach = eng * (0.55 + lengthCtrl) + lastImpulse * 0.25;
+        const lenN = (lengthCtrl - 0.2) / 0.8; // 0..1 across the slider
+        // The rake ANGLE (engagement) still makes a low/off-axis light throw the
+        // shadow FARTHER than an overhead one — but this is ADDITIVE on top of
+        // the control-driven standing rake, so it can never gate or swamp the
+        // control's own contribution. A fast flick adds a transient reach kick.
+        const reach = lenN * 0.7 + eng * 1.1 + lastImpulse * 0.25;
 
-        // Place the shadow center: opposite the light, offset by subject-relative
-        // reach, dropped slightly behind the card on −z. Tight underfoot (a small
-        // downward bias) when overhead so an idle/overhead frame still shows it.
-        const offsetMag = (0.18 + reach) * span * 0.55;
+        // Place the shadow center: thrown OPPOSITE the light along the rake axis,
+        // by a subject-relative distance that grows DIRECTLY with shadowLength so
+        // the standing shadow visibly rakes farther out from behind the card as
+        // the slider rises. Dropped slightly behind the card on −z. A small
+        // base + downward bias keeps an idle/overhead frame showing the shadow.
+        const offsetMag = (0.12 + reach * 0.9) * span * 0.6;
         shadow.position.set(
-          centerV.x + curOffX * offsetMag,
-          centerV.y + curOffY * offsetMag - halfH * 0.12,
+          centerV.x + rakeX * offsetMag,
+          centerV.y + rakeY * offsetMag - halfH * 0.12,
           centerV.z - halfDepth - span * 0.04,
         );
-        // Stretch the quad along the throw: longer with the length control + rake.
-        const scaleAlong = 1 + (lengthCtrl + eng) * 1.1;
+        // Stretch the quad along the throw: length is driven PRIMARILY by the
+        // control (standing), with a minor rake-angle bonus. lenN 0→1 roughly
+        // doubles the along-axis scale, so the cast shadow plainly elongates.
+        const scaleAlong = 1 + lenN * 1.7 + eng * 0.4;
         shadow.scale.set(1 + eng * 0.15, scaleAlong, 1);
         // Rotate the quad so its long axis follows the throw direction.
-        shadow.rotation.z = Math.atan2(curOffY, curOffX) - Math.PI / 2;
+        shadow.rotation.z = Math.atan2(rakeY, rakeX) - Math.PI / 2;
 
-        // Uniforms (read controls live so sweeps reshape the pinned frame).
-        uLength.value = clamp(num(params.shadowLength, 0.62) * (0.5 + eng), 0, 2);
+        // Uniforms (read controls live so sweeps reshape the pinned frame). The
+        // shader's radial oval also elongates with uLength, so the in-quad
+        // falloff lengthens along the rake as shadowLength rises — a SECOND,
+        // standing, control-driven cue independent of the quad scale.
+        uLength.value = clamp(lenN * 1.6 + eng * 0.4, 0, 2);
         uSoftness.value = clamp(num(params.softness, 0.55), 0.05, 1);
         uOpacity.value = clamp(num(params.opacity, 0.62) * (0.35 + eng * 0.65), 0, 1);
 

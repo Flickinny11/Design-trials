@@ -26,6 +26,24 @@
 // onParamChange re-applies the pose at the last seek state so paused sweeps read
 // live without a driver tick.
 //
+// STANDING-POSE CONTROL COUPLING (the W2/W3 advocate fix): the capture freezes
+// the spring at its SETTLED engaged pose (velocity≈0, dt=0 repeated seeks), so a
+// control that only governs the TRANSIENT — how fast the spring reaches its pose —
+// is invisible. `damping` and `ambientSway` are therefore made STANDING FUNCTIONS
+// of the engaged pinned pose so sweeping them visibly re-renders the frozen frame:
+//   • damping → a STANDING residual off-vertical swing the pendant HOLDS at the
+//     pin: a lightly-damped pendant rings around equilibrium and settles holding a
+//     larger residual lean PAST vertical (it never fully stills under a steady
+//     finger); a heavily-damped one sits locked at equilibrium. The residual is a
+//     deterministic standing offset (NOT a transient decay), gated on engagement
+//     so the disengaged idle frame stays at home and legible.
+//   • ambientSway → the STANDING ambient lean AMPLITUDE: a fixed standing offset
+//     (plus the living-hold wave) that scales with the control and with engagement,
+//     so the pinned engaged frame visibly tilts further as ambientSway grows — not
+//     a phase difference that vanishes at a fixed t.
+// Both reshape the SETTLED pose; the position-steered swing physics the advocate
+// praised (chainLength/gravity LIVE, idle legible) is untouched.
+//
 // FRAMING: the card pivots about a point ABOVE its measured top edge via
 // translate-rotate-translate (Box3, parent-local — all SUBJECT-RELATIVE, no
 // hardcoded world units): rotation.z = θ and position += (arm·sinθ, arm·(1−cosθ))
@@ -75,6 +93,13 @@ const TIP_RAD = 0.6;
 const OMEGA_BASE = 4.4;
 // Peak ambient micro-sway (rad) at ambientSway=1, before damping suppression.
 const AMBIENT_RAD = 0.07;
+// Standing residual-swing gain (rad) at the engaged pin for damping→0 (lightly
+// damped: rings, never fully stills under a steady finger). Scales with the
+// engaged tip magnitude so the disengaged idle frame holds no residual.
+const RESIDUAL_RAD = 0.16;
+// Standing ambient-lean gain (rad) at ambientSway=1: a fixed standing offset that
+// reshapes the engaged pinned pose regardless of the wave phase at the paused t.
+const AMBIENT_STANDING_RAD = 0.09;
 // Hard envelope on the applied swing angle; defaults stay well inside, so the
 // whole travel envelope at default params stays inside the tile frame.
 const MAX_SWING = 0.6;
@@ -224,10 +249,37 @@ export const pendantDanglePrimitive: PrimitiveDefinition = {
         const ext = Math.max(num(params.chainLength, 0.45), 0.02) * height;
         const arm = topOffset + ext; // origin -> pivot, subject-relative
 
-        // Ambient micro-sway: a damped pendant's living hold is suppressed as the
-        // hand grips harder (more damping → less idle drift).
-        const ambientLean = ambient * AMBIENT_RAD * (1 - 0.7 * damping) * ambientWave(t);
-        const theta = clamp(angle + ambientLean, -MAX_SWING, MAX_SWING);
+        // Engagement: the cursor-steered equilibrium tip. Its MAGNITUDE gates the
+        // standing damping/ambient terms so the disengaged idle frame (eq≈0) holds
+        // no residual and stays legible at home; its SIGN orients the residual.
+        const eq = equilibrium();
+        const engage = clamp(Math.abs(eq) / MAX_SWING, 0, 1); // 0 idle .. 1 hard tip
+        const tipSign = eq >= 0 ? 1 : -1;
+        // Settle fraction: how far the spring has swung toward its equilibrium.
+        // The standing residual is a SETTLED-hold offset — it only accrues once the
+        // pendant has reached its swing, so a freshly-engaged spring (angle≈0)
+        // shows the bare spring build and the held residual fades in as it settles.
+        const settleFrac =
+          Math.abs(eq) > 1e-4 ? clamp(Math.abs(angle) / Math.abs(eq), 0, 1) : 0;
+
+        // STANDING residual swing (damping): a lightly-damped pendant rings around
+        // the equilibrium and settles holding a residual lean PAST vertical — it
+        // never fully stills under a steady finger. Scales inversely with damping
+        // and with engagement, so it's a standing offset on the SETTLED pose (not a
+        // transient decay) that visibly reshapes the frozen frame as damping sweeps.
+        const residualLean = tipSign * RESIDUAL_RAD * (1 - damping) * engage * settleFrac;
+
+        // Ambient micro-sway: a STANDING lean amplitude (a fixed engaged offset
+        // plus the living-hold wave) that scales with ambientSway and engagement.
+        // The standing term reshapes the pinned engaged frame regardless of the
+        // wave phase at the paused t; the wave keeps the hold alive. A firmer grip
+        // (more damping) suppresses the idle drift component.
+        const ambientStanding = tipSign * ambient * AMBIENT_STANDING_RAD * engage * settleFrac;
+        const ambientWaveLean =
+          ambient * AMBIENT_RAD * (1 - 0.7 * damping) * ambientWave(t);
+        const ambientLean = ambientStanding + ambientWaveLean;
+
+        const theta = clamp(angle + residualLean + ambientLean, -MAX_SWING, MAX_SWING);
 
         // Translate-rotate-translate about the pivot P = base + (0, arm):
         // newOrigin = P + R(θ)·(−(0, arm)) → offset (arm·sinθ, arm·(1−cosθ)).

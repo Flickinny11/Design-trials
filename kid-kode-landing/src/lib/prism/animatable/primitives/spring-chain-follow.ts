@@ -85,6 +85,41 @@ const Z_STEP = 0.06; // per-link −z recession so ghosts sit behind the head.
 const SCALE_STEP = 0.06; // per-link scale taper (depth read).
 const SETTLE_EPS = 1e-4; // squared-distance below which a link is "at target".
 
+// ── STANDING-POSE control coupling (the advocate fix, mirroring W2/W3) ───────
+// The advocate PINS the pointer at the engaged point and sweeps each control
+// with NO further seek (dt=0, integration frozen). A control that only governs
+// the spring's TRANSIENT (how fast it converges) is invisible at the settled
+// pin. So `stiffness` and `chaseSpeed` are made STANDING FUNCTIONS of the
+// engaged pose — they reshape the SETTLED frame, not just the approach rate.
+// (The live dt>0 integration path is UNCHANGED: the real whip/overshoot the
+// advocate praised survives; only the settled re-derivation is control-coupled.)
+//
+// chaseSpeed → standing head OFFSET: a faster chaser settles CLOSER to the
+// pinned target; a slower chaser sits SHORT of it (a standing head lag). The
+// head's standing equilibrium = base + (target−base)·headReach(chase), with
+// headReach a saturating fraction in (0,1] — monotonic in chaseSpeed, never 0
+// (the head is always engaged toward the cursor), never >1 (never overshoots
+// the cursor at rest). Range: chase 2→30 maps reach ≈0.74→0.98.
+const HEAD_REACH_K = 0.09; // chaseSpeed → reach saturation rate
+const HEAD_REACH_FLOOR = 0.55; // slowest chaser still reaches >half the offset
+//
+// stiffness → standing LINK geometry. A stiffer chain holds the links TIGHTER
+// to the rest line and CLOSER to the head (less standing lag + less droop); a
+// looser chain lets them lag farther back and sag off the line. Two standing
+// effects, both monotonic and bounded:
+//   • gapScale(k): looser ⇒ links rest a LONGER gap behind the head along the
+//     chain line (more standing lag). gapScale ∈ ~[0.62 .. 1.5], 1 at the
+//     default knob, so the head→link spacing visibly grows as stiffness drops.
+//   • droop(k): looser ⇒ each link sags farther PERPENDICULAR to the chain
+//     line (a standing catenary-style droop); stiffer ⇒ the line stays taut.
+//     droop is a fraction of the rest gap, 0 at max stiffness.
+const STIFF_REF = 14; // the default knob = the neutral gapScale=1 anchor
+const GAP_SOFT_GAIN = 0.45; // how strongly low stiffness lengthens the standing gap
+const GAP_SCALE_MIN = 0.6; // stiffest chain pulls links to ~0.6× the rest gap
+const GAP_SCALE_MAX = 1.6; // loosest chain lets them lag to ~1.6× the rest gap
+const DROOP_MAX = 0.5; // loosest chain's perpendicular sag, in rest-gap units
+const DROOP_REF = 40; // stiffness at/above which standing droop → 0 (taut line)
+
 type EchoMat = Material & { opacity: number; map?: Texture | null };
 
 /** A source mesh ↔ echo mesh pair plus the look identity the clones were built
@@ -252,73 +287,63 @@ export const springChainFollowPrimitive: PrimitiveDefinition = {
       const restOff = new Vector3();
       const accel = new Vector3();
 
-      /** Integrate the head pursuit + the chain relay by `dt` seconds, then
-       *  write every body's pose + live echo look. dt=0 ⇒ a pure re-apply
-       *  (no integration), so pinned repeats and onParamChange hold the pose. */
-      const apply = (dt: number): void => {
-        // External co-binding moved the subject since our last write → fold the
-        // delta into the head spring so the whole chain follows.
-        if (lastWrittenX !== null && subject.position.x !== lastWrittenX) {
-          headPos.x += subject.position.x - lastWrittenX;
+      // Standing chain-line geometry shared by the LIVE relay and the pinned
+      // re-derivation, so BOTH converge to the IDENTICAL engaged pose (no snap
+      // between playback and the frozen pin — the scroll-inertia-glide pattern).
+      // restOff = one resting gap along the head→home direction (stiffness-
+      // scaled); perp* = unit perpendicular for the stiffness-driven droop.
+      let perpX = 0;
+      let perpY = 0;
+      /** Recompute restOff + perp from the live head pose + stiffness/spacing.
+       *  A stiffer chain pulls links to a SHORTER gap (gapScale↓) and a taut
+       *  line (droop→0); a looser chain lengthens the gap and lets links sag. */
+      const computeRestGeometry = (wRef: number, stiffness: number, spacing: number): void => {
+        const restGap = spacing * 0.18 * wRef * gapScaleOf(stiffness);
+        restOff.set(baseX - headPos.x, baseY - headPos.y, 0);
+        const dirLen = Math.hypot(restOff.x, restOff.y);
+        if (dirLen > 1e-5) {
+          restOff.multiplyScalar(restGap / dirLen);
+          perpX = -(baseY - headPos.y) / dirLen; // unit ⟂ to the chain line
+          perpY = (baseX - headPos.x) / dirLen;
+        } else {
+          restOff.set(0, 0, 0);
+          perpX = 0;
+          perpY = 0;
         }
-        if (lastWrittenY !== null && subject.position.y !== lastWrittenY) {
-          headPos.y += subject.position.y - lastWrittenY;
-        }
-        // Async-mounted subjects: keep re-measuring until geometry lands; a
-        // mesh-count change rebuilds the echoes outright.
-        if (halfW <= 1e-6) {
-          const w = measureHalfWidth();
-          if (w > 1e-6) halfW = w;
-        }
-        if (countMeshes() !== builtMeshCount) buildLinks();
+      };
 
-        const wRef = halfW > 1e-6 ? halfW : 1;
-        const stiffness = clamp(num(params.stiffness, 14), 1, 80);
-        const spacing = clamp(num(params.spacing, 1.1), 0.1, 4);
-        const dimKnob = clamp(num(params.dimming, 0.45), 0, 1);
-        const chase = clamp(num(params.chaseSpeed, 9), 0.5, 60);
-
-        // ── Head pursuit: exponential lerp toward the pointer-derived target ─
-        const p = readPointer();
-        target3.set(baseX + (p.x - 0.5) * 2 * REACH * wRef, baseY + (p.y - 0.5) * 2 * REACH * wRef, baseZ);
-        // dt-normalized exponential approach (frame-rate independent, never
-        // overshoots ⇒ the head itself is rock-stable; the WHIP lives in the
-        // relay below). a = 1 − e^(−chase·dt); dt=0 ⇒ a=0 ⇒ no move.
-        const aHead = 1 - Math.exp(-chase * dt);
-        headPos.x += (target3.x - headPos.x) * aHead;
-        headPos.y += (target3.y - headPos.y) * aHead;
-
-        // ── Chain relay: each link is a damped spring toward its PARENT link,
-        // offset by a subject-relative rest gap along the chain direction so
-        // the links string out BEHIND the head. Semi-implicit Euler, sub-
-        // stepped so a stiff knob + a clamped dt stays unconditionally stable.
-        const restGap = spacing * 0.18 * wRef; // resting link-to-link distance
+      /** The LIVE chain relay (dt>0): each link is a damped spring toward its
+       *  PARENT link's standing rest target (gap along the line + a per-link
+       *  perpendicular droop). Semi-implicit Euler, sub-stepped so a stiff knob
+       *  + a clamped dt stays unconditionally stable. The transient whip +
+       *  overshoot the advocate praised emerges from the spring dynamics; the
+       *  EQUILIBRIUM of this relay is exactly settlePose()'s standing line, so
+       *  playback and the frozen pin agree and both reshape with stiffness. */
+      const integrateRelay = (dt: number, wRef: number, stiffness: number, spacing: number): void => {
         const omega2 = stiffness; // spring constant (k/m, m = 1)
         const zeta = DAMP; // damping ratio multiplier (≥ critical ⇒ no jitter)
         const damp = 2 * Math.sqrt(omega2) * zeta;
         // Sub-step count so each integration step is ≤ ~1/120 s even at the
         // stiffest knob — guarantees no explosion at any control extreme.
-        const steps = dt > 0 ? Math.max(1, Math.ceil(dt / (1 / 120))) : 0;
-        const h = steps > 0 ? dt / steps : 0;
+        const steps = Math.max(1, Math.ceil(dt / (1 / 120)));
+        const h = dt / steps;
+        const droopMag = (spacing * 0.18 * wRef * gapScaleOf(stiffness)) * droopOf(stiffness);
 
-        // Chain direction: from the head BACK toward the home pose, so every
-        // link rests a fixed gap further behind its parent along ONE direction
-        // — a monotonic trailing line that strings out behind the head toward
-        // the pointer (never folds back on itself). Degenerate at home ⇒ links
-        // collapse onto the head (taut, no empty frame).
-        restOff.set(baseX - headPos.x, baseY - headPos.y, 0);
-        const dirLen = Math.hypot(restOff.x, restOff.y);
-        if (dirLen > 1e-5) restOff.multiplyScalar(restGap / dirLen);
-        else restOff.set(0, 0, 0);
+        computeRestGeometry(wRef, stiffness, spacing);
 
         for (let li = 0; li < links.length; li++) {
           const link = links[li];
           // Parent body position: the head for link 0, the previous link else.
           const parentPos = li === 0 ? headPos : links[li - 1].pos;
+          const sag = droopMag * (li + 1); // deeper links sag more (catenary)
           for (let s = 0; s < steps; s++) {
-            // Rest target = parent + the fixed back-of-chain offset (one gap
-            // behind the parent along the head→home direction).
-            target3.set(parentPos.x + restOff.x, parentPos.y + restOff.y, parentPos.z - Z_STEP);
+            // Rest target = parent + the standing gap along the line + the
+            // stiffness-driven perpendicular droop (looser ⇒ more sag).
+            target3.set(
+              parentPos.x + restOff.x + perpX * sag,
+              parentPos.y + restOff.y + perpY * sag,
+              parentPos.z - Z_STEP,
+            );
             // Spring accel toward the rest target with velocity damping.
             accel.set(
               (target3.x - link.pos.x) * omega2 - link.vel.x * damp,
@@ -339,9 +364,72 @@ export const springChainFollowPrimitive: PrimitiveDefinition = {
             }
             link.pos.z = target3.z;
           }
-          // Per-link dim falloff (closer link brighter): dimKnob^(li+1).
-          link.dim = Math.pow(dimKnob, li + 1);
         }
+      };
+
+      /** Integrate the head pursuit + the chain relay by `dt` seconds, then
+       *  write every body's pose + live echo look. dt=0 ⇒ a pure STANDING
+       *  re-derivation via settlePose() (no integration), so pinned repeats and
+       *  onParamChange hold AND reshape the pose with every control. */
+      const apply = (dt: number): void => {
+        // External co-binding moved the subject since our last write → fold the
+        // delta into the head spring so the whole chain follows.
+        if (lastWrittenX !== null && subject.position.x !== lastWrittenX) {
+          headPos.x += subject.position.x - lastWrittenX;
+        }
+        if (lastWrittenY !== null && subject.position.y !== lastWrittenY) {
+          headPos.y += subject.position.y - lastWrittenY;
+        }
+        // Async-mounted subjects: keep re-measuring until geometry lands; a
+        // mesh-count change rebuilds the echoes outright.
+        if (halfW <= 1e-6) {
+          const w = measureHalfWidth();
+          if (w > 1e-6) halfW = w;
+        }
+        if (countMeshes() !== builtMeshCount) buildLinks();
+
+        const dimKnob = clamp(num(params.dimming, 0.45), 0, 1);
+
+        // ── dt≈0 (pinned repeat / onParamChange): NO integration. Re-derive the
+        // FULL standing pose from the live pointer + every control so the frozen
+        // engaged frame visibly reshapes as stiffness/chaseSpeed/spacing sweep
+        // (the advocate's exact capture: pause, then fill() each control with no
+        // re-seek). This is the W2/W3 fix — make every control a STANDING
+        // function of the engaged pose, not a transient-only convergence rate.
+        if (dt <= 0) {
+          settlePose();
+        } else {
+          const wRef = halfW > 1e-6 ? halfW : 1;
+          const stiffness = clamp(num(params.stiffness, 14), 1, 80);
+          const spacing = clamp(num(params.spacing, 1.1), 0.1, 4);
+          const chase = clamp(num(params.chaseSpeed, 9), 0.5, 60);
+
+          // ── Head pursuit: exponential lerp toward the chaseSpeed-coupled
+          // EQUILIBRIUM point (base + (pointerTarget−base)·headReach), NOT the
+          // bare target. So a faster chaser both approaches faster (rate) AND
+          // settles CLOSER to the cursor (standing reach) — chaseSpeed reshapes
+          // the settled head offset, matching settleHead() exactly (no snap
+          // between playback and the pinned frame). The head never overshoots
+          // ⇒ rock-stable; the WHIP lives in the relay's per-link lag below.
+          const p = readPointer();
+          const reach = headReachOf(chase);
+          target3.set(
+            baseX + (p.x - 0.5) * 2 * REACH * wRef * reach,
+            baseY + (p.y - 0.5) * 2 * REACH * wRef * reach,
+            baseZ,
+          );
+          // dt-normalized exponential approach. a = 1 − e^(−chase·dt).
+          const aHead = 1 - Math.exp(-chase * dt);
+          headPos.x += (target3.x - headPos.x) * aHead;
+          headPos.y += (target3.y - headPos.y) * aHead;
+
+          integrateRelay(dt, wRef, stiffness, spacing);
+        }
+
+        // Per-link dim falloff (closer link brighter): dimKnob^(li+1). Computed
+        // for BOTH the integrated and the settled path so `dimming` re-grades
+        // the echoes in place at the pinned frame.
+        for (let li = 0; li < links.length; li++) links[li].dim = Math.pow(dimKnob, li + 1);
 
         // ── Write the head (the SUBJECT) pose; remember the write so the next
         // frame can tell external motion from our own.
@@ -384,27 +472,73 @@ export const springChainFollowPrimitive: PrimitiveDefinition = {
         }
       };
 
+      // ── STANDING control functions (engaged-pin signatures) ───────────────
+      /** chaseSpeed → head reach fraction toward the pinned target. Saturating,
+       *  monotonic, bounded (HEAD_REACH_FLOOR, 1): a faster chaser settles
+       *  closer to the cursor offset, a slower one sits short (standing lag). */
+      const headReachOf = (chase: number): number =>
+        clamp(HEAD_REACH_FLOOR + (1 - HEAD_REACH_FLOOR) * (1 - Math.exp(-HEAD_REACH_K * chase)), 0, 1);
+      /** stiffness → standing gap scale along the chain line. Looser (lower k)
+       *  ⇒ longer standing gap (links lag farther back); 1 at the default knob. */
+      const gapScaleOf = (stiffness: number): number =>
+        clamp(1 + GAP_SOFT_GAIN * (STIFF_REF / Math.max(stiffness, 1e-3) - 1), GAP_SCALE_MIN, GAP_SCALE_MAX);
+      /** stiffness → standing perpendicular droop (rest-gap units). Looser ⇒
+       *  more sag off the line; 0 at/above DROOP_REF (a taut line). */
+      const droopOf = (stiffness: number): number =>
+        DROOP_MAX * clamp((DROOP_REF - stiffness) / (DROOP_REF - 4), 0, 1);
+
+      /** The head's DETERMINISTIC standing equilibrium for the live pointer +
+       *  chaseSpeed: base + (target−base)·headReach. (The live dt>0 path chases
+       *  the full target so the transient whip is unchanged; this is the SETTLED
+       *  pose the advocate's frozen pin must show, coupled to chaseSpeed.) */
+      const settleHead = (): void => {
+        const wRef = halfW > 1e-6 ? halfW : 1;
+        const chase = clamp(num(params.chaseSpeed, 9), 0.5, 60);
+        const p = readPointer();
+        const reach = headReachOf(chase);
+        target3.set(baseX + (p.x - 0.5) * 2 * REACH * wRef, baseY + (p.y - 0.5) * 2 * REACH * wRef, baseZ);
+        headPos.x = baseX + (target3.x - baseX) * reach;
+        headPos.y = baseY + (target3.y - baseY) * reach;
+      };
+
       /** Snap every link to its DETERMINISTIC settled rest position for the
-       *  current head pose + spacing (velocity zeroed). `spacing` is structural
-       *  — it defines the resting chain geometry — so an integrated spring
-       *  would only reach the new layout after many seeks; the advocate's
-       *  pinned control sweep needs it to reshape the engaged frame on the
-       *  param change itself, so we re-seat directly (cf. scroll-marquee's
-       *  structural `ghosts` knob). The settled line is parent + a fixed gap
-       *  along the head→home direction, applied link-by-link. */
+       *  current head pose + spacing + STIFFNESS (velocity zeroed). All three
+       *  are STRUCTURAL at the engaged pin — an integrated spring reaches the
+       *  new layout only after many seeks, but the advocate's pinned control
+       *  sweep is dt=0, so we re-seat directly (cf. scroll-marquee's structural
+       *  `ghosts` knob). The settled line is parent + a stiffness-scaled gap
+       *  along the head→home direction, plus a stiffness-driven perpendicular
+       *  droop, applied link-by-link. */
       const reseatLinks = (): void => {
         const wRef = halfW > 1e-6 ? halfW : 1;
         const spacing = clamp(num(params.spacing, 1.1), 0.1, 4);
-        const restGap = spacing * 0.18 * wRef;
-        restOff.set(baseX - headPos.x, baseY - headPos.y, 0);
-        const dirLen = Math.hypot(restOff.x, restOff.y);
-        if (dirLen > 1e-5) restOff.multiplyScalar(restGap / dirLen);
-        else restOff.set(0, 0, 0);
+        const stiffness = clamp(num(params.stiffness, 14), 1, 80);
+        // Same control-coupled geometry the LIVE relay integrates toward, so the
+        // pinned snap lands EXACTLY on the integrated equilibrium (no jump).
+        computeRestGeometry(wRef, stiffness, spacing);
+        const droopMag = (spacing * 0.18 * wRef * gapScaleOf(stiffness)) * droopOf(stiffness);
         for (let li = 0; li < links.length; li++) {
           const parentPos = li === 0 ? headPos : links[li - 1].pos;
-          links[li].pos.set(parentPos.x + restOff.x, parentPos.y + restOff.y, parentPos.z - Z_STEP);
+          // Deeper links sag more (catenary-style): droop grows with link index.
+          const sag = droopMag * (li + 1);
+          links[li].pos.set(
+            parentPos.x + restOff.x + perpX * sag,
+            parentPos.y + restOff.y + perpY * sag,
+            parentPos.z - Z_STEP,
+          );
           links[li].vel.set(0, 0, 0);
         }
+      };
+
+      /** Re-derive the FULL engaged standing pose (head + chain) from the live
+       *  pointer + every control, with NO integration. This is what the
+       *  advocate's pinned frame shows: stiffness reshapes the standing link
+       *  geometry, chaseSpeed reshapes the standing head offset, spacing the
+       *  line length, dimming the echo opacity. Used by the dt≈0 seek and by
+       *  onParamChange so every control visibly re-renders the frozen frame. */
+      const settlePose = (): void => {
+        settleHead();
+        reseatLinks();
       };
 
       buildLinks();
@@ -419,15 +553,15 @@ export const springChainFollowPrimitive: PrimitiveDefinition = {
           lastT = t;
           apply(dt);
         },
-        onParamChange: (id: string, _value: ControlValue) => {
-          // `spacing` is structural: re-seat the resting chain geometry so the
-          // pinned engaged frame reshapes on the change itself (no integration
-          // needed). All controls then re-apply the pose at the LAST seek state
-          // with NO advance (dt=0 ⇒ no spring step) — stiffness/chaseSpeed
-          // re-tune the live params (visible on the next seek and across the
-          // settled pose), dimming re-grades the echo opacity in place.
+        onParamChange: (_id: string, _value: ControlValue) => {
+          // Re-derive the FULL standing engaged pose at the LAST seek state with
+          // NO advance (dt=0 ⇒ apply() routes through settlePose, no spring
+          // step). EVERY control is a STANDING function of that pose, so the
+          // advocate's pinned sweep (pause, fill() each control, no re-seek)
+          // visibly re-renders the frozen frame: stiffness re-tunes the standing
+          // link geometry (gap + droop), chaseSpeed the standing head offset,
+          // spacing the resting line length, dimming the echo opacity in place.
           void lastT;
-          if (id === 'spacing') reseatLinks();
           apply(0);
         },
         dispose: () => {

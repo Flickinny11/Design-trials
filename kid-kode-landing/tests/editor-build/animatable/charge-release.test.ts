@@ -24,8 +24,10 @@ function findByName(root: Object3D, name: string): Object3D | null {
 
 interface ChargeUniforms {
   uCharge: { value: number };
+  uPoseCharge: { value: number };
   uEdgeColor: { value: { r: number; g: number; b: number } };
   uRingT: { value: number };
+  trembleAmp: { value: number };
 }
 
 /** A mounted-artifact-shaped target: subject is a GROUP (e.g. the MSDF
@@ -215,6 +217,114 @@ describe('charge-release primitive', () => {
       expect(fast).toBeGreaterThan(slow);
       inst.dispose();
       inst2.dispose();
+    }
+  });
+
+  // ── ADVOCATE-MIRROR: every named control reshapes the ENGAGED-PINNED pose
+  //    at a STATIC cursor with REPEATED same-t seeks (dt=0) — exactly the
+  //    user-advocate capture that previously read chargeRate/overshoot as
+  //    byte-identical (meanAbsDiff=0) and tremble as sub-noise. Each control
+  //    must move a MEASURED engaged-pose output low→high at the frozen pin. ──
+  it('ADVOCATE-MIRROR: chargeRate, overshoot, tremble each reshape the engaged pose at a STATIC pin (dt=0)', () => {
+    // Warm to the engaged equilibrium, then PIN: repeated seeks at the SAME t
+    // so dt=0 (the integrator does not advance, no release fires) — the harness
+    // capture. Any live control must reshape this frozen frame.
+    const PIN_T = 2.4;
+    const warmAndPin = (inst: ReturnType<typeof chargeReleasePrimitive.create>) => {
+      for (let i = 0; i < 24; i++) inst.seek(i * 0.1); // ramp to equilibrium
+      for (let i = 0; i < 8; i++) inst.seek(PIN_T); // PINNED (dt=0 re-seeks)
+    };
+    // Re-pin at the SAME t after a control change — mirrors onParamChange +
+    // the advocate re-seeking the same frame.
+    const rePin = (inst: ReturnType<typeof chargeReleasePrimitive.create>) => {
+      for (let i = 0; i < 8; i++) inst.seek(PIN_T);
+    };
+
+    // ---- chargeRate: LOW vs HIGH must change the STANDING engaged level ----
+    // (visible as both the pose-charge uniform that drives the brass rim AND
+    //  the compression of the card) at the frozen pin.
+    {
+      const target = makeTarget(chargeReleasePrimitive);
+      target.userData.pointer = { x: 0.62, y: 0.5 }; // the advocate's engaged pin
+      const inst = chargeReleasePrimitive.create(target);
+      const mesh = target.subject as Mesh;
+      const uni = target.userData.chargeReleaseUniforms as ChargeUniforms;
+
+      inst.setControl('chargeRate', 0.2); // slow
+      warmAndPin(inst);
+      const poseChargeLow = uni.uPoseCharge.value;
+      const squashLow = mesh.scale.y;
+
+      inst.setControl('chargeRate', 4); // fast
+      rePin(inst);
+      const poseChargeHigh = uni.uPoseCharge.value;
+      const squashHigh = mesh.scale.y;
+
+      // Faster rate parks the held cursor at a HIGHER standing charge → hotter
+      // brass rim AND more compressed (shorter) card at the SAME static pin.
+      expect(poseChargeHigh).toBeGreaterThan(poseChargeLow + 0.05);
+      expect(squashHigh).toBeLessThan(squashLow); // more squashed when hotter
+      inst.dispose();
+    }
+
+    // ---- overshoot: LOW vs HIGH must change the engaged pose ----
+    // (standing pre-spring tallness AND the standing release-ring radius
+    //  preview) at the frozen pin — overshoot is no longer release-only.
+    {
+      const target = makeTarget(chargeReleasePrimitive);
+      target.userData.pointer = { x: 0.62, y: 0.5 };
+      const inst = chargeReleasePrimitive.create(target);
+      const mesh = target.subject as Mesh;
+      const uni = target.userData.chargeReleaseUniforms as ChargeUniforms;
+
+      // A SMALL non-zero overshoot: faint pre-spring, small standing ring.
+      inst.setControl('overshoot', 0.12);
+      warmAndPin(inst);
+      const scaleYLow = mesh.scale.y;
+      const ringRadiusLow = uni.uRingT.value; // live preview radius in (0,1)
+      expect(ringRadiusLow).toBeLessThan(1); // the standing ring is ALIVE
+
+      // A BIG overshoot: taller pre-spring, larger standing ring radius.
+      inst.setControl('overshoot', 0.6);
+      rePin(inst);
+      const scaleYHigh = mesh.scale.y;
+      const ringRadiusHigh = uni.uRingT.value;
+      expect(ringRadiusHigh).toBeLessThan(1); // still a live preview
+
+      // Bigger overshoot pre-loads the held pose TALLER and previews a LARGER
+      // standing release ring radius — both reshape the frozen engaged frame.
+      expect(scaleYHigh).toBeGreaterThan(scaleYLow + 0.01);
+      expect(ringRadiusHigh).toBeGreaterThan(ringRadiusLow + 0.02);
+
+      // And overshoot=0 leaves NO standing ring (dead sentinel ≥ 1) — the
+      // control genuinely gates the cue rather than always drawing it.
+      inst.setControl('overshoot', 0);
+      rePin(inst);
+      expect(uni.uRingT.value).toBeGreaterThanOrEqual(1);
+      inst.dispose();
+    }
+
+    // ---- tremble: LOW vs HIGH must change the STANDING micro-offset ----
+    // amplitude at the frozen pin (resolvable, not sub-noise).
+    {
+      const target = makeTarget(chargeReleasePrimitive);
+      target.userData.pointer = { x: 0.62, y: 0.5 };
+      const inst = chargeReleasePrimitive.create(target);
+      const uni = target.userData.chargeReleaseUniforms as ChargeUniforms;
+
+      inst.setControl('tremble', 0);
+      warmAndPin(inst);
+      const trembleLow = uni.trembleAmp.value;
+
+      inst.setControl('tremble', 1);
+      rePin(inst);
+      const trembleHigh = uni.trembleAmp.value;
+
+      // A resolvable standing amplitude delta (not sub-pixel sensor noise): at a
+      // charged pin trembleAmp climbs meaningfully from 0 → a visible offset.
+      expect(trembleLow).toBe(0);
+      expect(trembleHigh).toBeGreaterThan(0.01);
+      inst.dispose();
     }
   });
 

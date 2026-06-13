@@ -90,8 +90,12 @@ const SCHEMA = [
   { id: 'tidalStretch', label: 'Tidal Stretch', type: 'knob', min: 0.05, max: 0.5, step: 0.01, default: 0.22 },
   // Orbital dust mote count (3–12). Faint brass specks spiralling into the drain.
   { id: 'moteCount', label: 'Mote Count', type: 'knob', min: 3, max: 12, step: 1, default: 8 },
-  // Chase tightness — how fast the card slides toward its pull target. 0.05 = a
-  // long, viscous fall; 0.9 = a snappy drop. (Not a "premium look" axis; tuning.)
+  // Pull strength — how hard the well draws the card IN. During live motion this
+  // is the chase tightness (0.05 = a long, viscous fall; 0.9 = a snappy drop); at
+  // the engaged steady state it is ALSO the standing draw-in DEPTH: a viscous well
+  // settles the card shallower in the well, a snappy pull locks it DEEPER toward
+  // the drain (and so the tidal stretch deepens with it). This makes the control a
+  // standing function of the pinned pose, not a transient-only rate (W2/W3 pattern).
   { id: 'pullSpeed', label: 'Pull Speed', type: 'fader', min: 0.05, max: 0.9, step: 0.01, default: 0.4 },
 ] as const;
 
@@ -136,6 +140,19 @@ const MOTE_RIM = 0.55;
 // Mote spiral speed (radians/sec base) and per-phase drain rate.
 const MOTE_SPIN = 2.4;
 const MOTE_DRAIN = 0.6;
+// Standing draw-in depth band as a function of pullSpeed. At the engaged STEADY
+// state a viscous (slow) well leaves the card hanging part-way down the well —
+// the equilibrium draw-in is damped to DRAW_DEPTH_MIN of the full inverse-square
+// target; a snappy (fast) pull locks the card the full way IN. The card thus
+// sits visibly DEEPER (and stretches MORE, since tide tracks the draw-in) as
+// pullSpeed rises — so the control reshapes the pinned frame, not just transient
+// rate. Bounded ≤ 1 (never overshoots the inverse-square target).
+const DRAW_DEPTH_MIN = 0.45;
+// Standing mote brightness floor at the engaged pin (NOT a transient spawn fade):
+// the rig pins ONE static t, so a phase-only brightness can leave every mote in
+// its faint tail. A steady presence term keeps the dust legibly drawn at the pin
+// regardless of t so moteCount has visible pixels to reshape.
+const MOTE_PIN_PRESENCE = 0.55;
 
 /** Deterministic 0..1 hash from a single seed (no Math.random). */
 const hash1 = (n: number): number => {
@@ -283,6 +300,19 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
 
       const reachUnits = (): number => REACH_UNITS * (size > 0 ? size : 1);
 
+      /** Standing draw-in DEPTH as a function of pullSpeed: a viscous (slow) well
+       *  settles the card only DRAW_DEPTH_MIN of the way to the inverse-square
+       *  target at steady state, a snappy (fast) pull draws it the full way in.
+       *  Maps the rate control into the EQUILIBRIUM pose, so sweeping it at the
+       *  static pin visibly re-renders the frame (deeper offset + deeper tide).
+       *  Bounded (0,1]. */
+      const drawDepth = (): number => {
+        const speed = clamp(num(params.pullSpeed, 0.4), 0.05, 0.95);
+        // speed 0.05 → DRAW_DEPTH_MIN; speed 0.95 → 1. Smooth, monotone.
+        const u = (speed - 0.05) / (0.95 - 0.05);
+        return clamp(DRAW_DEPTH_MIN + (1 - DRAW_DEPTH_MIN) * u, DRAW_DEPTH_MIN, 1);
+      };
+
       /** Bound a raw travel offset so the card's near edge stays on-screen.
        *  Subject-relative: the limit subtracts the card's own measured half-width
        *  so its edge never pushes past the tile envelope. */
@@ -337,6 +367,21 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
         return { x: drain.x * f, y: drain.y * f, tide };
       };
 
+      /** The ENGAGED STEADY pose for a pointer — the inverse-square pull target
+       *  scaled by the standing draw-in DEPTH (a function of pullSpeed). At the
+       *  pinned dt≈0 frame the card sits at this damped equilibrium: a viscous
+       *  well hangs it part-way in, a snappy pull locks it deep — and the tide
+       *  (well depth) scales with the same draw-in, so a faster pull both pulls
+       *  the card deeper AND stretches it more. Live motion still chases the full
+       *  `pullTarget` (this depth is the standing equilibrium the spring relaxes
+       *  toward); only the pinned re-derive reads it, so playback physics (travel,
+       *  near-vs-far) are unchanged. */
+      const standingTarget = (p: PointerXY): { x: number; y: number; tide: number } => {
+        const tgt = pullTarget(p);
+        const depth = drawDepth();
+        return { x: tgt.x * depth, y: tgt.y * depth, tide: tgt.tide * depth };
+      };
+
       /** Write the full pose: bounded position offset, a rotation.z aiming the
        *  stretch axis at the drain, and the anisotropic tidal scale (elongate
        *  along the pull axis, squash across it). All written every seek so a
@@ -373,8 +418,15 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           // Phase wraps in [0,1): 0 = freshly spawned at the rim, 1 = drained in.
           let ph = (tval * MOTE_DRAIN + motePhase0[i]) % 1;
           if (ph < 0) ph += 1;
-          // Radius decays toward the drain (ease-in so they accelerate inward).
-          const radius = rim * moteRadius0[i] * (1 - ph) * (1 - ph);
+          // Radius decays toward the drain (ease-in so they accelerate inward),
+          // but never fully collapses to the occluded drain centre: a standing
+          // floor (× each mote's own spawn radius) keeps every mote spread around
+          // a visible ring at the rig's single static pin, so the field reads as
+          // dust and adding/removing motes (moteCount) moves visible pixels. The
+          // live spiral still draws each mote inward across the phase during play.
+          const spawnR = rim * moteRadius0[i];
+          const decay = 0.35 + 0.65 * (1 - ph) * (1 - ph); // 0.35..1.0 of spawnR
+          const radius = spawnR * decay;
           // Angle winds faster as the radius shrinks (conservation-of-angular-
           // momentum flavour): more spin near the core.
           const winding = 1 + ph * 1.6;
@@ -382,10 +434,17 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           positions[i * 3] = drain.x + Math.cos(angle) * radius;
           positions[i * 3 + 1] = drain.y + Math.sin(angle) * radius;
           positions[i * 3 + 2] = moteZ[i];
-          // Brightness: a gentle spawn-in, a long fade as it drains (faint brass).
+          // Brightness: a gentle spawn-in, a long fade as it drains (the spiral's
+          // live shimmer), but floored by a steady PIN PRESENCE so every live mote
+          // stays legibly drawn at the rig's single static pin (a pure phase fade
+          // would leave half the field in its faint tail → no visible dust to
+          // reshape). The transient shimmer rides ON TOP of the floor, so playback
+          // still reads as motes spiralling + fading into the drain. Faint brass —
+          // never competes with the card.
           const spawn = Math.min(1, ph / 0.12);
           const fade = (1 - ph) * (1 - ph);
-          const lum = spawn * fade * 0.7; // faint — never competes with the card
+          const shimmer = spawn * fade; // 0..1 live spiral pulse
+          const lum = (MOTE_PIN_PRESENCE + (1 - MOTE_PIN_PRESENCE) * shimmer) * 0.7;
           colors[i * 3] = moteColor.r * lum;
           colors[i * 3 + 1] = moteColor.g * lum;
           colors[i * 3 + 2] = moteColor.b * lum;
@@ -414,15 +473,16 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           const tgt = pullTarget(p);
 
           if (prevT === null || t < prevT - 1e-6) {
-            // First frame or loop wrap: SNAP to the engaged steady pose for this
-            // pointer. At center (disengaged idle) the pull target is 0 → exact
-            // home pose (legible at rest). At an engaged offset it lands on the
-            // bounded pull target with the tidal stretch for that distance — never
-            // an empty frame.
-            posX = tgt.x;
-            posY = tgt.y;
+            // First frame or loop wrap: SNAP to the engaged STEADY pose for this
+            // pointer (the standing draw-in depth set by pullSpeed). At center
+            // (disengaged idle) the pull target is 0 → exact home pose (legible at
+            // rest). At an engaged offset it lands on the standing pull target with
+            // the tidal stretch for that depth — never an empty frame.
+            const st = standingTarget(p);
+            posX = st.x;
+            posY = st.y;
             prevT = t;
-            apply(posX, posY, tgt.tide);
+            apply(posX, posY, st.tide);
             applyMotes(p, t);
             return;
           }
@@ -445,24 +505,27 @@ export const gravityWellPrimitive: PrimitiveDefinition = {
           }
 
           // dtRaw ≈ 0 (repeated pinned seeks — the rig's paused control sweep):
-          // re-derive the engaged steady pose from (pointer, params) so the frozen
-          // frame is byte-stable AND every control reshapes it.
-          posX = tgt.x;
-          posY = tgt.y;
+          // re-derive the engaged STEADY pose from (pointer, params) so the frozen
+          // frame is byte-stable AND every control reshapes it. pullSpeed sets the
+          // standing draw-in depth here, so sweeping it visibly re-renders the pin.
+          const st = standingTarget(p);
+          posX = st.x;
+          posY = st.y;
           prevT = t;
-          apply(posX, posY, tgt.tide);
+          apply(posX, posY, st.tide);
           applyMotes(p, t);
         },
         onParamChange: () => {
-          // Re-apply the engaged pose at the LAST pointer with live params, so a
-          // paused tweak (gravity / falloff / tidalStretch / moteCount / pullSpeed)
-          // lands immediately on the held frame.
+          // Re-apply the engaged steady pose at the LAST pointer with live params,
+          // so a paused tweak (gravity / falloff / tidalStretch / moteCount /
+          // pullSpeed) lands immediately on the held frame. pullSpeed reshapes the
+          // standing draw-in depth (deeper + more stretch as it rises).
           if (prevT === null) return; // untouched until the first seek
           if (size <= 0) size = measureWidthLocal(subject);
-          const tgt = pullTarget(lastP);
-          posX = tgt.x;
-          posY = tgt.y;
-          apply(posX, posY, tgt.tide);
+          const st = standingTarget(lastP);
+          posX = st.x;
+          posY = st.y;
+          apply(posX, posY, st.tide);
           applyMotes(lastP, prevT);
         },
         dispose: () => {

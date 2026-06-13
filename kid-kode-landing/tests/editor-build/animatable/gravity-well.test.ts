@@ -68,6 +68,36 @@ function findMotes(target: AnimatableTarget): Sprite | null {
   return found;
 }
 
+/** Aggregate VISIBLE mote energy at the current frame: sum over the LIVE draw
+ *  count of each mote's instanced luminance (the additive brass it contributes
+ *  to the frame). This is the quantity a per-pixel control sweep measures — it
+ *  must be > 0 (motes are actually drawn at the pin, not all in their faint
+ *  tail) and must GROW with moteCount (more dust = more visible pixels). Mirrors
+ *  the advocate's pixel-energy read at the static engaged pin. */
+function moteEnergy(motes: Sprite): number {
+  const col = motes.geometry.getAttribute('instanceColor');
+  const arr = col.array as ArrayLike<number>;
+  let energy = 0;
+  for (let i = 0; i < motes.count; i++) {
+    energy += arr[i * 3] + arr[i * 3 + 1] + arr[i * 3 + 2];
+  }
+  return energy;
+}
+
+/** Pin the pointer at the engaged point and hold it with REPEATED same-t seeks
+ *  (dt≈0), exactly as the user-advocate capture rig does (controlsPinT, paused
+ *  control sweep). Returns after the pose is byte-stable. */
+function pinEngaged(
+  target: AnimatableTarget,
+  inst: { seek(t: number): void },
+  pinT = 1,
+): void {
+  idle(target, inst);
+  target.userData.pointer = { ...PIN };
+  settle(inst, 0, 120); // drive in with real velocity (live spring)
+  for (let i = 0; i < 4; i++) inst.seek(pinT); // then freeze: repeated same-t
+}
+
 // The harness pins the rig pointer here for pointer tiles (proximity 0.7–0.9).
 const PIN = { x: 0.62, y: 0.5 };
 
@@ -280,6 +310,91 @@ describe('gravity-well primitive', () => {
     inst.setControl('moteCount', 10);
     expect(motes.count).toBe(10);
 
+    inst.dispose();
+  });
+
+  // ── REGRESSION GUARD for the W4 advocate r1 BLOCK ───────────────────────────
+  // The advocate pins the pointer STATICALLY at {0.62,0.5} and sweeps each control
+  // with REPEATED same-t seeks (dt≈0). moteCount and pullSpeed were measured
+  // byte-identical (meanAbsDiff=0) and the tile was BLOCKED. These tests assert
+  // BOTH formerly-dead controls now change a measured ENGAGED-POSE output across
+  // low→high at that exact static pin (not a transient-only / count-field-only
+  // difference) — mirroring the rig.
+
+  it('pullSpeed (was DEAD): reshapes the standing engaged pose at the static pin (deeper draw-in + more stretch low→high)', () => {
+    const { target, inst, subject } = fresh();
+    const baseX = subject.position.x;
+
+    // Hold the engaged pin with dt≈0 repeated seeks (the rig's paused sweep).
+    pinEngaged(target, inst);
+
+    // Sweep pullSpeed at the FROZEN pin (onParamChange re-applies at the held
+    // pose; no extra clock step). A faster pull settles the card DEEPER in the
+    // well at the very same pinned pointer → larger offset AND larger tidal
+    // stretch. The pose must visibly differ low→high.
+    inst.setControl('pullSpeed', 0.05);
+    const loOff = Math.abs(subject.position.x - baseX);
+    const loStretch = subject.scale.x;
+
+    inst.setControl('pullSpeed', 0.9);
+    const hiOff = Math.abs(subject.position.x - baseX);
+    const hiStretch = subject.scale.x;
+
+    // Standing draw-in depth rises with pullSpeed: deeper offset, more stretch.
+    expect(hiOff).toBeGreaterThan(loOff + 0.01);
+    expect(hiStretch).toBeGreaterThan(loStretch + 0.01);
+
+    // Byte-stable across further repeated pinned seeks at the high value (no
+    // jitter / drift — physics stays critically stable at the extreme).
+    inst.seek(1);
+    inst.seek(1);
+    const settledX = subject.position.x;
+    inst.seek(1);
+    expect(subject.position.x).toBeCloseTo(settledX, 10);
+    expect(Number.isFinite(subject.position.x)).toBe(true);
+    inst.dispose();
+  });
+
+  it('moteCount (was DEAD): motes are actually DRAWN at the static engaged pin and their visible energy grows low→high', () => {
+    const { target, inst } = fresh({ moteCount: 3 });
+    pinEngaged(target, inst);
+    const motes = findMotes(target) as Sprite;
+
+    // At the static pin the dust must be VISIBLY drawn — the advocate saw NONE in
+    // the control frames because a phase-only fade left every mote in its tail.
+    // The standing presence floor guarantees real luminance here.
+    inst.setControl('moteCount', 3);
+    const loEnergy = moteEnergy(motes);
+    expect(loEnergy).toBeGreaterThan(0); // motes are actually lit at the pin
+    expect(motes.count).toBe(3);
+
+    inst.setControl('moteCount', 12);
+    const hiEnergy = moteEnergy(motes);
+    expect(motes.count).toBe(12);
+
+    // More motes → more visible brass energy at the very same pinned frame (the
+    // density change a user would see dragging the knob). Strictly greater, well
+    // above noise.
+    expect(hiEnergy).toBeGreaterThan(loEnergy * 1.5);
+
+    // And every drawn mote sits at a finite position spread AROUND the drain —
+    // not collapsed onto the occluded drain centre (a pure phase decay piled them
+    // all at r≈0, hidden behind the deeply-pulled card). The standing radius floor
+    // keeps them on a visible ring, so the added dust moves real pixels. Drain x is
+    // the bounded pointer offset (+x at this pin); measure radius FROM the drain.
+    const w = subjectWidth(target.subject as Object3D);
+    const drainX = Math.min((0.62 - 0.5) * 2 * 1.1 * w, 1.55 * 0.94 - w / 2);
+    const pos = motes.geometry.getAttribute('instancePosition');
+    const arr = pos.array as ArrayLike<number>;
+    let onRing = 0;
+    for (let i = 0; i < motes.count; i++) {
+      const x = arr[i * 3];
+      const y = arr[i * 3 + 1];
+      expect(Number.isFinite(x)).toBe(true);
+      expect(Number.isFinite(y)).toBe(true);
+      if (Math.hypot(x - drainX, y) > 0.05) onRing += 1;
+    }
+    expect(onRing).toBe(motes.count); // none collapsed onto the drain centre
     inst.dispose();
   });
 

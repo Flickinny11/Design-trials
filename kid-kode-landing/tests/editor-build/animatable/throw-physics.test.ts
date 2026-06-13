@@ -196,6 +196,67 @@ describe('throw-physics primitive', () => {
     expect(Math.abs(gravHi.y - gravLo.y)).toBeGreaterThan(0.01);
   });
 
+  it('EVERY named control reshapes the engaged pose at a STATIC pinned pointer (dt=0 repeated same-t seeks — the advocate capture)', () => {
+    // The verification rig pins the cursor at the engaged point {0.62,0.5} and
+    // sweeps each control with REPEATED same-t seeks (pointer velocity ≈ 0, no
+    // release, settled spring). Mirror that EXACTLY: seek the SAME t repeatedly
+    // so dt=0, then read the engaged-pose outputs (subject position + the
+    // published standing-pose uniform). Each control low→high must move them.
+    const PIN_T = 1; // matches metrics.json stimulus.controlsPinT
+    const measure = (
+      overrides: Record<string, number>,
+    ): { x: number; y: number; charge: number; lagScale: number; sag: number } => {
+      const target = makeTarget(throwPhysicsPrimitive);
+      const subject = target.subject as Object3D;
+      target.userData.pointer = { ...PIN };
+      const inst = throwPhysicsPrimitive.create(target, overrides);
+      // Repeated seeks at the SAME t → dt=0 after the first (the rig's paused
+      // control sweep). The held pose must be a STANDING function of the params.
+      for (let i = 0; i < 8; i++) inst.seek(PIN_T);
+      const tp = target.userData.throwPhysics as {
+        charge: number;
+        lagScale: number;
+        sag: number;
+      };
+      const out = {
+        x: subject.position.x,
+        y: subject.position.y,
+        charge: tp.charge,
+        lagScale: tp.lagScale,
+        sag: tp.sag,
+      };
+      inst.dispose();
+      return out;
+    };
+
+    // bounciness — FORMERLY DEAD (flight-only restitution). Now a STANDING charge
+    // pre-load on the held pose: low→high must move the held x AND raise charge.
+    const bLo = measure({ bounciness: 0.0 });
+    const bHi = measure({ bounciness: 0.92 });
+    expect(bHi.charge).toBeGreaterThan(bLo.charge + 1e-4);
+    expect(Math.abs(bHi.x - bLo.x)).toBeGreaterThan(0.01);
+
+    // drag — FORMERLY DEAD (flight-only air drag). Now a STANDING held-lag: more
+    // drag retracts the held offset toward home → smaller lagScale AND a measurably
+    // different held x across the sweep.
+    const dLo = measure({ drag: 0.0 });
+    const dHi = measure({ drag: 3.0 });
+    expect(dHi.lagScale).toBeLessThan(dLo.lagScale - 1e-4);
+    expect(Math.abs(dHi.x - dLo.x)).toBeGreaterThan(0.01);
+
+    // gravity — was only SUBTLY live; the standing sag is now strong. Low→high
+    // must droop the held y AND deepen the published sag.
+    const gLo = measure({ gravity: 0.0 });
+    const gHi = measure({ gravity: 5.0 });
+    expect(gHi.sag).toBeLessThan(gLo.sag - 1e-3); // sag is negative (downward)
+    expect(Math.abs(gHi.y - gLo.y)).toBeGreaterThan(0.01);
+
+    // power stays live (grip reach) — unchanged by the fix.
+    const pLo = measure({ power: 0.4 });
+    const pHi = measure({ power: 2.2 });
+    expect(Math.abs(pHi.x - pLo.x)).toBeGreaterThan(0.01);
+  });
+
   it('onParamChange re-applies the held pose at the last seek state without a new seek', () => {
     const target = makeTarget(throwPhysicsPrimitive);
     const subject = target.subject as Object3D;

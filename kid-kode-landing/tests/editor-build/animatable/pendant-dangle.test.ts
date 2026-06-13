@@ -171,6 +171,100 @@ describe('pendant-dangle primitive', () => {
     inst.dispose();
   });
 
+  // The advocate's EXACT capture: pin the cursor STATICALLY at the engaged point,
+  // settle the spring, then sweep each formerly-dead control low→mid→high with
+  // REPEATED same-t seeks (dt=0 → no integration, no release transient, velocity
+  // ≈ 0). damping and ambientSway were measured byte-identical there and BLOCKED
+  // the tile. This asserts each now drives the SETTLED engaged pose monotonically
+  // and well above the sensor-noise floor — a standing function, not a transient.
+  it('damping + ambientSway visibly reshape the SETTLED pinned pose (advocate capture, dt=0)', () => {
+    const target = makeTarget(pendantDanglePrimitive);
+    target.userData.pointer = { ...PIN };
+    const inst = pendantDanglePrimitive.create(target);
+    const subject = target.subject as Object3D;
+    const cord = target.object.getObjectByName('pendant-cord') as Mesh;
+
+    // Settle the spring at the engaged pin, then PAUSE at a fixed t. Every read
+    // below is at this single t with dt=0 — exactly what the static capture sees.
+    settle(inst);
+    const tPaused = 90 * 0.016;
+    inst.seek(tPaused);
+
+    // The frozen frame is reproducible: a repeated same-t seek advances nothing.
+    const settledTheta = subject.rotation.z;
+    inst.seek(tPaused);
+    expect(subject.rotation.z).toBeCloseTo(settledTheta, 10);
+    expect(Math.abs(settledTheta)).toBeGreaterThan(0.05); // engaged, not flat
+
+    // The cord is mounted and reads at the pin (a sampled frame is never empty).
+    expect(cord).toBeTruthy();
+    expect(cord.scale.y).toBeGreaterThan(0);
+
+    // ── DAMPING sweep at the STATIC pin (ambientSway held fixed to isolate it) ──
+    // Lower damping holds a LARGER standing residual lean past vertical; higher
+    // damping sits closer to the bare equilibrium. The pose must move monotonically
+    // and the low→high change must clear the noise floor on BOTH θ and the arc-x.
+    inst.setControl('ambientSway', 0.45);
+    inst.setControl('damping', 0.05);
+    const dLoZ = subject.rotation.z;
+    const dLoX = subject.position.x;
+    inst.setControl('damping', 0.5);
+    const dMiZ = subject.rotation.z;
+    inst.setControl('damping', 1);
+    const dHiZ = subject.rotation.z;
+    const dHiX = subject.position.x;
+
+    // Monotonic in θ across the sweep (lightly damped = larger |tilt|).
+    expect(Math.abs(dLoZ)).toBeGreaterThan(Math.abs(dMiZ));
+    expect(Math.abs(dMiZ)).toBeGreaterThan(Math.abs(dHiZ));
+    // Above-noise standing change low→high (the advocate noise floor was ~0.001
+    // meanAbsDiff; this is a real geometric reshape of the frozen frame).
+    expect(Math.abs(dLoZ - dHiZ)).toBeGreaterThan(0.02);
+    expect(Math.abs(dLoX - dHiX)).toBeGreaterThan(0.02); // the card body visibly moves
+    inst.setControl('damping', 0.4);
+
+    // ── ambientSway sweep at the STATIC pin (re-seek to the same paused t) ──────
+    // Higher ambientSway grows the standing ambient lean amplitude on the engaged
+    // pose — a standing offset, not a wave-phase difference that vanishes at a
+    // fixed t. Monotonic and above-noise on both θ and the arc-x.
+    inst.seek(tPaused);
+    inst.setControl('ambientSway', 0);
+    const aLoZ = subject.rotation.z;
+    const aLoX = subject.position.x;
+    inst.setControl('ambientSway', 0.5);
+    const aMiZ = subject.rotation.z;
+    inst.setControl('ambientSway', 1);
+    const aHiZ = subject.rotation.z;
+    const aHiX = subject.position.x;
+
+    // Monotonic: more ambientSway = larger |standing lean| at the engaged pin.
+    expect(Math.abs(aHiZ)).toBeGreaterThan(Math.abs(aMiZ));
+    expect(Math.abs(aMiZ)).toBeGreaterThan(Math.abs(aLoZ));
+    expect(Math.abs(aHiZ - aLoZ)).toBeGreaterThan(0.02);
+    expect(Math.abs(aHiX - aLoX)).toBeGreaterThan(0.02);
+    inst.setControl('ambientSway', 0.45);
+
+    inst.dispose();
+  });
+
+  it('the standing residual stays at home when DISENGAGED (idle legible, no spurious tilt)', () => {
+    // The standing damping/ambient terms are gated on engagement, so a disengaged
+    // cursor (center) holds NO residual regardless of damping/ambientSway — the
+    // idle frame stays legible at home (no regression of the advocate's idle pass).
+    const target = makeTarget(pendantDanglePrimitive);
+    target.userData.pointer = { ...CENTER };
+    const inst = pendantDanglePrimitive.create(target);
+    const subject = target.subject as Object3D;
+
+    settle(inst, 0, 200); // let any spring motion fully settle at center
+    inst.setControl('damping', 0.05); // the extreme that holds the most residual
+    inst.setControl('ambientSway', 1); // and the most ambient lean
+    expect(Math.abs(subject.rotation.z)).toBeLessThan(0.05);
+    expect(Math.abs(subject.position.x)).toBeLessThan(0.05);
+
+    inst.dispose();
+  });
+
   it('onParamChange re-applies the pose at the last seek state with no driver tick', () => {
     const target = makeTarget(pendantDanglePrimitive);
     target.userData.pointer = { ...PIN };

@@ -203,6 +203,71 @@ describe('pointer-cast-shadow primitive', () => {
     inst.dispose();
   });
 
+  // ── ADVOCATE-FIDELITY (W4 dead-control fix): the capture harness PINS the
+  //    cursor statically at the engaged point (pointer velocity ≈ 0, spring
+  //    settled), then sweeps a control via the slider's input/change event
+  //    (→ onParamChange) and screenshots WITHOUT any further seek. So the
+  //    formerly-DEAD headline control `shadowLength` must reshape the engaged
+  //    pose purely through onParamChange at a frozen seek state — the rake
+  //    length must be a STANDING geometric function of the control, not gated
+  //    on velocity/rake angle. This test reproduces that exact flow and asserts
+  //    EVERY visible standing rake output (quad displacement magnitude, quad
+  //    along-axis scale, and the in-quad oval uLength) moves low → high. ──────
+  it('shadowLength reshapes the STATIC pinned engaged pose via onParamChange alone (no re-seek) — mirrors the advocate capture', () => {
+    const target = makeTarget(pointerCastShadowPrimitive);
+    const inst = pointerCastShadowPrimitive.create(target);
+    const subject = target.subject as Object3D;
+    const shadow = findByName(target.object, SHADOW_NAME) as Mesh;
+    const shadowUni = readShadowUniforms(target);
+
+    // Pin the cursor at the engaged point and settle the springs by repeating
+    // the SAME seek time (dt ≈ 0, like the paused/pinned harness frame).
+    target.userData.pointer = { x: 0.62, y: 0.5 };
+    const PIN_T = 1.0;
+    for (let i = 0; i < 120; i++) inst.seek(PIN_T);
+
+    // A standing displacement magnitude of the cast-shadow quad relative to the
+    // subject centre — the part that rakes the shadow out from behind the card.
+    const homeX = subject.position.x;
+    const homeY = subject.position.y;
+    const dispMag = () =>
+      Math.hypot(shadow.position.x - homeX, shadow.position.y - homeY);
+
+    // LOW length: sweep the slider to its minimum via setControl ONLY (this is
+    // exactly what the harness does: fill() → input/change → onParamChange).
+    // NO inst.seek() after this point — the pose must re-render from the
+    // control change alone at the frozen seek state.
+    inst.setControl('shadowLength', 0.2);
+    const lenLow = shadowUni.uLength.value;
+    const scaleLow = shadow.scale.y;
+    const dispLow = dispMag();
+
+    // HIGH length: sweep to maximum, again with no re-seek.
+    inst.setControl('shadowLength', 1);
+    const lenHigh = shadowUni.uLength.value;
+    const scaleHigh = shadow.scale.y;
+    const dispHigh = dispMag();
+
+    // The full slider sweep must visibly LENGTHEN the standing cast shadow on
+    // every measured channel — this is the headline control and the whole
+    // premise of the claim ("rakes long when the light is low").
+    expect(lenHigh).toBeGreaterThan(lenLow + 0.3); // in-quad oval elongation
+    expect(scaleHigh).toBeGreaterThan(scaleLow + 0.5); // quad along-axis stretch
+    expect(dispHigh).toBeGreaterThan(dispLow + 0.05); // rakes farther out
+
+    // And it must be MONOTONIC across the travel (mid sits between), so the
+    // slider reads as a continuous length control, not a two-state flip.
+    inst.setControl('shadowLength', 0.6);
+    const lenMid = shadowUni.uLength.value;
+    const scaleMid = shadow.scale.y;
+    expect(lenMid).toBeGreaterThan(lenLow);
+    expect(lenMid).toBeLessThan(lenHigh);
+    expect(scaleMid).toBeGreaterThan(scaleLow);
+    expect(scaleMid).toBeLessThan(scaleHigh);
+
+    inst.dispose();
+  });
+
   // ── onParamChange re-applies the pose at the last seek state without a new
   //    seek call. ───────────────────────────────────────────────────────────
   it('onParamChange re-applies at the last seek state (no new seek needed)', () => {

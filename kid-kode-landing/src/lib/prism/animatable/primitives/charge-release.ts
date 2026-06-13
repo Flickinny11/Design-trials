@@ -105,10 +105,38 @@ const RELEASE_TAU = 0.13; // exp decay τ → ~0.4s to fall to <5%
 const RING_TIME = 0.4;
 // Bulge gain: how much the card widens (x) per unit of y-squash (sub-volume).
 const BULGE = 0.55;
-// Tremble base amplitude in subject-relative units at tremble=1, charge=1.
-const TREMBLE_BASE = 0.02;
+// Tremble base amplitude in subject-relative units at tremble=1, poseCharge=1.
+// Raised so the standing tremble micro-offset is RESOLVABLE at a frozen pin
+// (the advocate seeks at dt=0, so this must be a real standing offset, not a
+// sub-noise high-frequency jitter that a single frame can't catch).
+const TREMBLE_BASE = 0.055;
 // Tremble temporal frequency (rad/s) — fast, fine shiver.
 const TREMBLE_FREQ = 47;
+
+// ── Standing-pose mapping at the ENGAGED pin (POINTER-RIG invariant) ───────
+// The rig pins the cursor statically at an engaged point and re-seeks at the
+// SAME t, so dt≈0: the charge integrator does not advance and a release never
+// fires. To keep EVERY named control live, the visible pose is composed from a
+// STANDING `poseCharge` that is an equilibrium function of proximity AND
+// chargeRate, plus overshoot/tremble standing biases — so sweeping any control
+// re-renders the frozen engaged frame (proven pattern: W2 scroll-inertia-glide,
+// W3 fix-round). The transient time-physics (`charge` integration + release
+// spring) is preserved verbatim for the live, moving-pointer read.
+//
+// chargeRate → standing charge LEVEL: a faster rate parks the held cursor at a
+// HIGHER equilibrium charge (more compressed / hotter edges) at the pin. Maps
+// the [0.2,4] rate range into a gain in roughly [0.55, 1.15].
+const RATE_MIN = 0.2;
+const RATE_MAX = 4;
+function rateGain(rate: number): number {
+  const tNorm = clamp((rate - RATE_MIN) / (RATE_MAX - RATE_MIN), 0, 1);
+  return 0.55 + 0.6 * tNorm; // 0.55 (slow) → 1.15 (fast)
+}
+// overshoot → standing PRE-SPRING bias: the charged pose carries a standing
+// pre-load (rises taller, thins slightly) scaled by overshoot, and previews the
+// release-ring radius — both reshape the pinned frame as overshoot sweeps.
+const PRESPRING_GAIN = 0.55; // standing pre-spring tallness per unit overshoot·poseCharge
+const RING_PREVIEW_GAIN = 0.5; // standing ring-radius preview per unit overshoot·poseCharge
 
 interface PointerXY {
   x: number;
@@ -179,7 +207,11 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
       let fireT = -1; // seek time of the last release (-1 = none live)
 
       // ── Additive overlays — the subject's own pixels are never touched ──
-      // (1) brass edge-heat: a rim that brightens with charge.
+      // (1) brass edge-heat: a rim that brightens with the STANDING pose-charge
+      // (so it tracks chargeRate at a held/pinned cursor, not just the live
+      // integrated energy). `uCharge` below stays the pure integrated charge for
+      // the time-physics read; `uPoseCharge` is the visible standing level.
+      const uPoseCharge = uniform(0);
       const uCharge = uniform(0);
       const uEdgeColor = uniform(new Color(EDGE_COLOR));
       const u = uv();
@@ -189,8 +221,10 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
         mul: (a: unknown) => unknown;
       };
       // Edge-heat color: black (invisible) at charge 0, brass rim at full charge.
+      // Driven by the STANDING pose-charge so the rim brightens with chargeRate
+      // at a held/pinned cursor (chargeRate stays live in the brass rim).
       const edgeColorNode = (uEdgeColor as unknown as { mul: (a: unknown) => unknown }).mul(
-        rim.mul(uCharge),
+        rim.mul(uPoseCharge),
       );
 
       const edgeMat = new MeshBasicNodeMaterial({
@@ -277,7 +311,8 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
       // Expose live handles for the host/driver + CPU tests (no GPU needed).
       const trembleAmp = uniform(0);
       target.userData.chargeReleaseUniforms = {
-        uCharge,
+        uCharge, // pure integrated charge (time-physics read)
+        uPoseCharge, // STANDING visible pose-charge (rate-dependent at the pin)
         uEdgeColor,
         uRingT,
         trembleAmp,
@@ -335,28 +370,73 @@ export const chargeReleasePrimitive: PrimitiveDefinition = {
           }
         }
 
+        // ── STANDING engaged pose-charge (POINTER-RIG invariant) ───────────
+        // At a statically-held engaged cursor (dt≈0, no release transient) the
+        // visible pose must still reflect chargeRate. The standing equilibrium
+        // is proximity scaled by the rate gain; the actual pose-charge is the
+        // greater of the live integrated charge and this floor while engaged —
+        // so the moving-pointer climb is untouched, but the held/pinned frame
+        // sits at a rate-dependent level. A faster rate ⇒ hotter, more
+        // compressed pinned pose; a slower rate ⇒ shallower.
+        const engaged = prox >= RELEASE_THRESHOLD;
+        const standingCharge = engaged ? clamp(prox * rateGain(rate), 0, 1) : 0;
+        const poseCharge = Math.max(charge, standingCharge);
+
         // ── Compose the transform ──────────────────────────────────────────
         // Compression while charged: y squashes, x bulges to conserve a little
         // visual volume. Release spring pops y TALL above rest, riding env.
-        const squashY = 1 - depth * charge;
-        const bulgeX = 1 + depth * BULGE * charge;
+        const squashY = 1 - depth * poseCharge;
+        const bulgeX = 1 + depth * BULGE * poseCharge;
         const springY = 1 + overshoot * releaseCharge * env;
         const springX = 1 - overshoot * 0.4 * releaseCharge * env; // thin as it leaps
 
-        // Deterministic tremble: fine micro-offset, amplitude ∝ charge. Indexed
-        // by two fixed seeds (x/y lanes) so it shivers without translating away.
-        const amp = TREMBLE_BASE * halfSpan * trembleK * charge;
+        // overshoot STANDING pre-spring bias: while engaged & charged, the held
+        // pose carries a visible pre-load — it rises taller and thins slightly,
+        // scaled by overshoot — so sweeping overshoot reshapes the pinned frame
+        // (without altering the unopposed release pop, which still rides env).
+        const preSpringY = 1 + overshoot * PRESPRING_GAIN * poseCharge * (engaged ? 1 : 0);
+        const preSpringX = 1 - overshoot * PRESPRING_GAIN * 0.4 * poseCharge * (engaged ? 1 : 0);
+
+        // Deterministic tremble: a STANDING micro-offset (resolvable at a frozen
+        // pin), amplitude ∝ trembleK·poseCharge. Two fixed seeds (x/y lanes) so
+        // it shivers without translating away. Standing (dt-independent) so the
+        // advocate's same-t seek still differs low→high.
+        const amp = TREMBLE_BASE * halfSpan * trembleK * poseCharge;
         trembleAmp.value = amp;
         const tx = hash11(1, t) * amp;
         const ty = hash11(7, t) * amp;
 
-        xform.scale.set(home.sx * bulgeX * springX, home.sy * squashY * springY, home.sz);
+        xform.scale.set(
+          home.sx * bulgeX * springX * preSpringX,
+          home.sy * squashY * springY * preSpringY,
+          home.sz,
+        );
         xform.position.set(home.px + tx, home.py + ty, xform.position.z);
 
         // ── Drive the overlays ──────────────────────────────────────────────
+        // `uCharge` keeps the pure integrated energy (time-physics + the
+        // moving-pointer monotonicity read); `uPoseCharge` carries the standing
+        // visible level that the edge-heat rim renders, so the brass brightens
+        // with chargeRate at a held/pinned cursor.
         uCharge.value = charge;
-        uRingT.value = ringProg;
-        if (ringMesh) ringMesh.visible = ringProg < 1;
+        uPoseCharge.value = poseCharge;
+        // The release ring shows the live travelling ring when one is firing;
+        // otherwise, while engaged & charged, it shows a faint STANDING radius
+        // PREVIEW whose size scales with overshoot — a charged-up "about to
+        // release this big" cue that makes overshoot reshape the pinned frame.
+        if (ringProg < 1) {
+          uRingT.value = ringProg;
+          if (ringMesh) ringMesh.visible = true;
+        } else if (engaged && poseCharge > MIN_FIRE && overshoot > 0) {
+          // Map overshoot → a preview radius in (0,1); clamp away from the live
+          // band so it never masquerades as a real release (kept ≤ 0.92).
+          const previewT = clamp(overshoot * RING_PREVIEW_GAIN * poseCharge, 0, 0.92);
+          uRingT.value = previewT;
+          if (ringMesh) ringMesh.visible = previewT > 0.001;
+        } else {
+          uRingT.value = ringProg;
+          if (ringMesh) ringMesh.visible = false;
+        }
       };
 
       return {

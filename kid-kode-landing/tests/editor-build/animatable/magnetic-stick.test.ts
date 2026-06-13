@@ -144,38 +144,105 @@ describe('magnetic-stick primitive', () => {
     inst.dispose();
   });
 
-  it('every sweepable control reshapes the frame at the pinned engaged point', () => {
-    // The harness sweeps each numeric control to its extremes at the pinned
-    // engaged pointer and requires a visible (byte) frame change. Assert each
-    // control moves SOME composed transform term at the held stuck state.
-    const measure = (overrides: Record<string, number>): { x: number; s: number } => {
+  it('every sweepable control reshapes the ENGAGED pose at the static pin (advocate capture)', () => {
+    // Mirrors the advocate's exact capture: the rig PINS the cursor statically
+    // at the engaged point {0.62,0.5} and sweeps each control with repeated
+    // same-t seeks (pointer velocity ≈ 0, spring SETTLED, no release transient).
+    // Each named control MUST move a measured term of the settled engaged pose
+    // low→high — a control that only governs the trajectory toward the pose is
+    // invisible here and was BLOCKED (escapeFactor, stickStiffness, releaseWobble
+    // measured meanAbsDiff=0; captureRadius mid==high). We measure the SETTLED
+    // standing pose (the closed-form engaged target the spring converges onto),
+    // then re-seek at the held t so a paused control sweep re-derives the frame.
+    const measure = (
+      overrides: Record<string, number>,
+    ): { x: number; y: number; z: number; s: number } => {
       const target = makeTarget(magneticStickPrimitive);
       const subject = target.subject as Object3D;
+      const baseX = subject.position.x;
+      const baseY = subject.position.y;
+      const baseZ = subject.position.z;
+      // Engage FIRST (pointer at pin on the very first apply), so the Schmitt
+      // latch grabs and stays stuck — exactly the engaged frame the rig pins.
       target.userData.pointer = { ...PIN };
       const inst = magneticStickPrimitive.create(target, overrides);
-      settle(inst, 0, 140);
-      const out = { x: subject.position.x, s: subject.scale.x };
+      // Default captureRadius (0.7) is wide enough that prox at the pin < capture
+      // → the latch grabs on apply(0); the override (if it lowers capture) keeps
+      // it latched via hysteresis, matching the engaged capture.
+      settle(inst, 0, 160);
+      const out = {
+        x: subject.position.x - baseX,
+        y: subject.position.y - baseY,
+        z: subject.position.z - baseZ,
+        s: subject.scale.x,
+      };
       inst.dispose();
       return out;
     };
 
-    const captureLo = measure({ captureRadius: 0.2 });
-    const captureHi = measure({ captureRadius: 0.9 });
-    expect(Math.abs(captureHi.x - captureLo.x)).toBeGreaterThan(0.02);
+    // Sample the SAME control on one instance via held-t re-seek (the literal
+    // paused-sweep path onParamChange drives), to prove the held frame moves.
+    const sweepHeld = (
+      id: string,
+      lo: number,
+      hi: number,
+    ): { lo: number; hi: number } => {
+      const target = makeTarget(magneticStickPrimitive);
+      const subject = target.subject as Object3D;
+      target.userData.pointer = { ...PIN };
+      const inst = magneticStickPrimitive.create(target);
+      const t = settle(inst, 0, 160); // converge onto the standing target
+      inst.setControl(id, lo);
+      inst.seek(t); // held-t re-seek at the SAME time (dt=0) — advocate's path
+      const loX = subject.position.x;
+      inst.setControl(id, hi);
+      inst.seek(t); // again at the same held t
+      const hiX = subject.position.x;
+      inst.dispose();
+      return { lo: loX, hi: hiX };
+    };
 
-    const escapeLo = measure({ escapeFactor: 1.0 });
-    const escapeHi = measure({ escapeFactor: 2.2 });
-    expect(Math.abs(escapeHi.x - escapeLo.x)).toBeGreaterThan(0.005);
+    // ── captureRadius: monotonic across the FULL range (mid ≠ high) ──────────
+    const capMid = measure({ captureRadius: 0.55 });
+    const capHi = measure({ captureRadius: 0.9 });
+    const capMax = measure({ captureRadius: 1.2 });
+    // The defect was mid==high. Assert the UPPER half is live too.
+    expect(Math.abs(capHi.x - capMid.x)).toBeGreaterThan(0.005);
+    expect(Math.abs(capMax.x - capHi.x)).toBeGreaterThan(0.005);
+    // and monotonic increasing reach (a stronger magnet grips farther).
+    expect(capHi.x).toBeGreaterThan(capMid.x);
+    expect(capMax.x).toBeGreaterThan(capHi.x);
 
+    // ── escapeFactor: formerly DEAD — now a standing taut-tether reach ───────
+    const escLo = measure({ escapeFactor: 1.0 });
+    const escHi = measure({ escapeFactor: 2.2 });
+    expect(Math.abs(escHi.x - escLo.x)).toBeGreaterThan(0.01);
+    expect(escHi.x).toBeGreaterThan(escLo.x);
+    // and observable on the SAME held frame via the paused-sweep path.
+    const escHeld = sweepHeld('escapeFactor', 1.0, 2.2);
+    expect(Math.abs(escHeld.hi - escHeld.lo)).toBeGreaterThan(0.01);
+
+    // ── stickStiffness: formerly DEAD — now a standing lock-distance lag ─────
+    const stiLo = measure({ stickStiffness: 0.2 });
+    const stiHi = measure({ stickStiffness: 1.0 });
+    expect(Math.abs(stiHi.x - stiLo.x)).toBeGreaterThan(0.02);
+    // stiffer sits CLOSER to the cursor offset (larger +x reach toward the pin).
+    expect(stiHi.x).toBeGreaterThan(stiLo.x);
+    const stiHeld = sweepHeld('stickStiffness', 0.2, 1.0);
+    expect(Math.abs(stiHeld.hi - stiHeld.lo)).toBeGreaterThan(0.02);
+
+    // ── releaseWobble: formerly DEAD — now a standing residual micro-wobble ──
+    // A dead-still lock (0) vs an underdamped one (1) differ on the held pose.
+    const wobLo = measure({ releaseWobble: 0.0 });
+    const wobHi = measure({ releaseWobble: 1.0 });
+    const wobDiff =
+      Math.abs(wobHi.x - wobLo.x) + Math.abs(wobHi.y - wobLo.y);
+    expect(wobDiff).toBeGreaterThan(0.005);
+
+    // ── grabPulse: was LIVE — keep it live (scale pop + sustained cling) ─────
     const pulseLo = measure({ grabPulse: 0.0 });
     const pulseHi = measure({ grabPulse: 0.35 });
     expect(Math.abs(pulseHi.s - pulseLo.s)).toBeGreaterThan(0.02);
-
-    // stickStiffness changes the settle trajectory; over a fixed frame budget a
-    // very soft vs very stiff spring reaches different positions toward target.
-    const stiffLo = measure({ stickStiffness: 0.2 });
-    const stiffHi = measure({ stickStiffness: 1.0 });
-    expect(Number.isFinite(stiffLo.x) && Number.isFinite(stiffHi.x)).toBe(true);
   });
 
   it('settle/restore: an idle, disengaged pointer holds the card at home', () => {

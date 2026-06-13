@@ -213,6 +213,143 @@ describe('spring-chain-follow primitive', () => {
     inst.dispose();
   });
 
+  // ── ADVOCATE-MIRROR (the dead-control fix): the user-advocate harness PINS
+  // the pointer at the engaged point, seeks ONCE, then fills each control
+  // low→high with NO further seek — so onParamChange (dt=0) is the only thing
+  // that re-renders the frame. stiffness + chaseSpeed were measured byte-
+  // identical (meanAbsDiff=0) and BLOCKED. These tests assert that EACH
+  // formerly-dead control changes a MEASURED engaged-pose output across
+  // low→high at a STATIC pinned pointer, exactly as the harness sees it.
+  it('advocate-mirror: chaseSpeed reshapes the STANDING head offset at a static pinned pointer (dt=0)', () => {
+    const { target, subject } = makeTexturedTarget();
+    const inst = springChainFollowPrimitive.create(target);
+    // Pin the pointer at the engaged point and seek ONCE (the harness's single
+    // seek to t=1). prevT=null ⇒ dt=0 ⇒ the standing pose is re-derived.
+    target.userData.pointer = { x: 0.62, y: 0.62 };
+    inst.seek(1);
+
+    // Sweep chaseSpeed low → high with NO re-seek (pure onParamChange).
+    inst.setControl('chaseSpeed', 2); // schema min
+    const headLowX = subject.position.x;
+    const headLowY = subject.position.y;
+    inst.setControl('chaseSpeed', 30); // schema max
+    const headHighX = subject.position.x;
+    const headHighY = subject.position.y;
+
+    // The standing head offset MUST move with chaseSpeed (a faster chaser sits
+    // CLOSER to the cursor ⇒ a larger engaged offset). This is the exact metric
+    // the advocate diffs; it was 0 before the fix.
+    const offLow = Math.hypot(headLowX, headLowY);
+    const offHigh = Math.hypot(headHighX, headHighY);
+    expect(offHigh).toBeGreaterThan(offLow + 1e-3); // measurable, monotone
+    // Faster chase ⇒ closer to the cursor target (larger offset).
+    expect(offHigh).toBeGreaterThan(offLow);
+    // Still finite + engaged at both extremes (no NaN / explosion).
+    expect(Number.isFinite(offLow)).toBe(true);
+    expect(Number.isFinite(offHigh)).toBe(true);
+    expect(offLow).toBeGreaterThan(0.05);
+    inst.dispose();
+  });
+
+  it('advocate-mirror: stiffness reshapes the STANDING link geometry at a static pinned pointer (dt=0)', () => {
+    const { target, subject } = makeTexturedTarget();
+    const inst = springChainFollowPrimitive.create(target);
+    target.userData.pointer = { x: 0.62, y: 0.62 };
+    inst.seek(1); // single pinned seek (dt=0)
+    const ghosts = ghostRootsOf(target.scene);
+
+    // Measure the standing head→link0 gap (and the perpendicular droop) across
+    // the stiffness sweep, with NO re-seek. A stiffer chain holds the links
+    // TIGHTER (shorter gap, less droop); a looser chain lets them lag/sag.
+    const gapAndDroop = () => {
+      const hx = subject.position.x;
+      const hy = subject.position.y;
+      const g0x = ghosts[0].position.x;
+      const g0y = ghosts[0].position.y;
+      // Total head→link0 distance is the standing lag (gap + droop combined).
+      return Math.hypot(hx - g0x, hy - g0y);
+    };
+
+    inst.setControl('stiffness', 4); // schema min (loosest)
+    const lagLoose = gapAndDroop();
+    const g1LooseX = ghosts[1].position.x;
+    const g1LooseY = ghosts[1].position.y;
+
+    inst.setControl('stiffness', 40); // schema max (stiffest)
+    const lagStiff = gapAndDroop();
+    const g1StiffX = ghosts[1].position.x;
+    const g1StiffY = ghosts[1].position.y;
+
+    // The standing link geometry MUST change with stiffness — a looser chain
+    // lags FARTHER from the head than a stiffer one. This is the metric the
+    // advocate diffs; it was 0 before the fix.
+    expect(Math.abs(lagLoose - lagStiff)).toBeGreaterThan(1e-3);
+    expect(lagLoose).toBeGreaterThan(lagStiff); // looser ⇒ links lag farther
+    // The deepest link's absolute position also moves measurably low→high.
+    expect(Math.hypot(g1LooseX - g1StiffX, g1LooseY - g1StiffY)).toBeGreaterThan(1e-3);
+    // Finite + engaged at both extremes.
+    expect(Number.isFinite(lagLoose)).toBe(true);
+    expect(Number.isFinite(lagStiff)).toBe(true);
+    inst.dispose();
+  });
+
+  it('advocate-mirror: stiffness + chaseSpeed re-render is STABLE on repeat (no jitter at the pinned frame)', () => {
+    // After a control sweep, repeated setControl to the SAME value must be a
+    // no-op on the pose (the frozen frame is byte-stable — the advocate seeks
+    // each level multiple times implicitly via fill/dispatch).
+    const { target, subject } = makeTexturedTarget();
+    const inst = springChainFollowPrimitive.create(target);
+    target.userData.pointer = { x: 0.62, y: 0.62 };
+    inst.seek(1);
+    const ghosts = ghostRootsOf(target.scene);
+
+    inst.setControl('stiffness', 22);
+    inst.setControl('chaseSpeed', 16);
+    const hx = subject.position.x;
+    const hy = subject.position.y;
+    const g = ghosts.map((gh) => [gh.position.x, gh.position.y] as const);
+    // Re-apply the SAME values repeatedly: the pose must hold exactly.
+    for (let i = 0; i < 5; i++) {
+      inst.setControl('stiffness', 22);
+      inst.setControl('chaseSpeed', 16);
+      expect(subject.position.x).toBeCloseTo(hx, 9);
+      expect(subject.position.y).toBeCloseTo(hy, 9);
+      ghosts.forEach((gh, k) => {
+        expect(gh.position.x).toBeCloseTo(g[k][0], 9);
+        expect(gh.position.y).toBeCloseTo(g[k][1], 9);
+      });
+    }
+    inst.dispose();
+  });
+
+  it('extremes are physics-stable: every control corner stays finite + engaged at the pinned frame', () => {
+    const { target, subject } = makeTexturedTarget();
+    const inst = springChainFollowPrimitive.create(target);
+    target.userData.pointer = { x: 0.62, y: 0.62 };
+    inst.seek(1);
+    const ghosts = ghostRootsOf(target.scene);
+    const corners: Array<[number, number]> = [
+      [4, 2],
+      [4, 30],
+      [40, 2],
+      [40, 30],
+    ];
+    for (const [k, c] of corners) {
+      inst.setControl('stiffness', k);
+      inst.setControl('chaseSpeed', c);
+      expect(Number.isFinite(subject.position.x)).toBe(true);
+      expect(Number.isFinite(subject.position.y)).toBe(true);
+      expect(Math.hypot(subject.position.x, subject.position.y)).toBeGreaterThan(0.04);
+      for (const g of ghosts) {
+        expect(Number.isFinite(g.position.x)).toBe(true);
+        expect(Number.isFinite(g.position.y)).toBe(true);
+        // No explosion: the whole envelope stays in a sane subject-relative box.
+        expect(Math.hypot(g.position.x, g.position.y)).toBeLessThan(5);
+      }
+    }
+    inst.dispose();
+  });
+
   it('home settle: when the pointer disengages to center, the head and chain return toward base', () => {
     const { target, subject } = makeTexturedTarget();
     const inst = springChainFollowPrimitive.create(target);

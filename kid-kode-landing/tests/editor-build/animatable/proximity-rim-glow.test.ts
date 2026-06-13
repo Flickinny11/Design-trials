@@ -29,6 +29,8 @@ interface RimUniforms {
   uBias: { value: number };
   uPointerDir: { value: Vector2 };
   uTime: { value: number };
+  uRangeGain: { value: number };
+  uRangeSoft: { value: number };
 }
 
 /** A mounted-artifact-shaped target: subject is a GROUP (e.g. the MSDF
@@ -193,6 +195,84 @@ describe('proximity-rim-glow primitive', () => {
     settle(20, 4.0);
     const proxWide = uni.uProximity.value;
     expect(proxWide).toBeGreaterThan(proxTight);
+
+    inst.dispose();
+  });
+
+  // ── DEAD-CONTROL REGRESSION: proximityRange must reshape the FROZEN engaged
+  //    frame the way the advocate captures it — pin the cursor STATICALLY at
+  //    {0.62,0.5}, settle, then sweep the control with SAME-t (dt≈0) re-seeks.
+  //    The advocate measured proximityRange byte-identical (meanAbsDiff=0) and
+  //    BLOCKED the tile because the smoothing path can't move the settled pose
+  //    when dt=0. This asserts every engaged-pose output the control governs
+  //    changes low→high at a pinned pointer with no advancing time. ──────────
+  it('REGRESSION: proximityRange reshapes the engaged pose at a STATIC pinned cursor (dt=0 sweep)', () => {
+    const target = makeTarget(proximityRimGlowPrimitive);
+    const inst = proximityRimGlowPrimitive.create(target);
+    const uni = target.userData.proximityRimGlowUniforms as RimUniforms;
+
+    // Pin the cursor exactly where the advocate pins it and settle the hold.
+    target.userData.pointer = { x: 0.62, y: 0.5 };
+    const PIN_T = 1.0;
+    for (let i = 0; i < 24; i++) inst.seek(i * 0.05);
+    // Land the settled pose on the advocate's pinned controls-t.
+    inst.seek(PIN_T);
+    expect(uni.uProximity.value).toBeGreaterThan(0.2); // engaged & lit
+
+    // LOW range — tweak the control, then re-seek at the SAME pinned t (dt=0),
+    // mirroring the advocate's capture loop exactly.
+    inst.setControl('proximityRange', 0.2);
+    inst.seek(PIN_T);
+    const proxLow = uni.uProximity.value;
+    const gainLow = uni.uRangeGain.value;
+    const softLow = uni.uRangeSoft.value;
+
+    // HIGH range — same pinned t, same cursor, no advancing time.
+    inst.setControl('proximityRange', 0.9);
+    inst.seek(PIN_T);
+    const proxHigh = uni.uProximity.value;
+    const gainHigh = uni.uRangeGain.value;
+    const softHigh = uni.uRangeSoft.value;
+
+    // A wider sensing range at the SAME pinned engaged offset must produce a
+    // visibly stronger, wider rim: higher standing proximity, higher rim gain,
+    // softer (wider) edge band. The frozen frame re-renders from the control.
+    expect(proxHigh).toBeGreaterThan(proxLow + 0.05);
+    expect(gainHigh).toBeGreaterThan(gainLow + 0.3);
+    expect(softHigh).toBeGreaterThan(softLow + 0.2);
+
+    // And the standing rim brightness the GPU draws (proximity × range-gain)
+    // must rise materially — this is the product the additive shell scales by.
+    expect(proxHigh * gainHigh).toBeGreaterThan(proxLow * gainLow + 0.2);
+
+    // setControl ALONE (no following seek) must already move the engaged pose,
+    // since onParamChange recomputes the standing equilibrium from the pin.
+    inst.setControl('proximityRange', 0.2);
+    const proxBare = uni.uProximity.value;
+    inst.setControl('proximityRange', 0.9);
+    expect(uni.uProximity.value).toBeGreaterThan(proxBare + 0.05);
+    expect(uni.uRangeGain.value).toBeGreaterThan(gainLow + 0.3);
+
+    // Stability: outputs stay finite and bounded at both extremes.
+    expect(Number.isFinite(uni.uProximity.value)).toBe(true);
+    expect(uni.uProximity.value).toBeLessThanOrEqual(1.0001);
+    expect(uni.uRangeGain.value).toBeLessThanOrEqual(3.0001);
+
+    inst.dispose();
+  });
+
+  it('REGRESSION: proximityRange does NOT light the rim before any engaged seek (idle stays dark)', () => {
+    // The standing recompute must not wake the rim before a pointer has been
+    // read — a range tweak on a never-seeked instance leaves the idle frame dark
+    // so the disengaged subject stays fully legible.
+    const target = makeTarget(proximityRimGlowPrimitive);
+    const inst = proximityRimGlowPrimitive.create(target);
+    const uni = target.userData.proximityRimGlowUniforms as RimUniforms;
+
+    inst.setControl('proximityRange', 0.9);
+    expect(uni.uProximity.value).toBeLessThan(0.05);
+    inst.setControl('proximityRange', 0.2);
+    expect(uni.uProximity.value).toBeLessThan(0.05);
 
     inst.dispose();
   });

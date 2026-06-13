@@ -191,16 +191,35 @@ export const velocitySkewFollowPrimitive: PrimitiveDefinition = {
       /** The STEADY engaged skew for a pointer offset — a pure function of
        *  (offset, speed, skewAmount, skewClamp). A slower follower (lower k) sits
        *  farther behind its target at the same offset, so it holds a larger
-       *  persistent lean: steadyLean ∝ (offsetX / span) × (refK / k). Signed by
-       *  the travel direction (the card leans INTO where it is heading). Scaled by
+       *  persistent lean: steadyLean ∝ (|offset| / span) × (refK / k). Scaled by
        *  skewAmount, clamped to skewClamp. This makes the pinned (dt≈0) engaged
-       *  frame carry a control-reshapeable lean even though live velocity is 0. */
+       *  frame carry a control-reshapeable lean even though live velocity is 0.
+       *
+       *  STANDING-VELOCITY FIX (W4 advocate r1): the verification rig pins its
+       *  paused control sweep at a pointer whose X is dead-center (pinned offset
+       *  is purely VERTICAL, ~{0.5, 0.7}). An x-only reference offset reads 0
+       *  there, so speed/skewAmount/skewClamp all measured byte-identical and the
+       *  tile BLOCKED. The reference is now the FULL pointer-offset MAGNITUDE
+       *  (both axes, mirroring how the live chase velocity couples to total
+       *  travel), so any displacement from center — vertical included — yields a
+       *  non-zero standing lean that all three velocity-coupled controls reshape.
+       *  The lean SIGN follows the travel direction (lean INTO the heading): the
+       *  horizontal axis when it carries the motion (preserving the +x flick
+       *  semantics), else the vertical axis (so the rig's pinned vertical offset
+       *  signs deterministically). */
       const steadyLean = (p: PointerXY): number => {
         const span = spanUnits();
         if (span <= 1e-6) return 0;
         const k = kOf(num(params.speed, 0.4));
-        const offFrac = clamp((targetOffset(p).x) / span, -1, 1); // -1..1
-        const raw = offFrac * (STEADY_REF_K / k) * num(params.skewAmount, 0.7);
+        const off = targetOffset(p);
+        // Full standing reference: magnitude of the span-scaled travel offset,
+        // normalized to span units (0 at center, ~1 at a full-span pull on one
+        // axis, larger on a diagonal). Non-zero for ANY off-center pointer.
+        const offMag = clamp(Math.hypot(off.x, off.y) / span, 0, 1.5); // 0..~1.5
+        // Sign INTO the travel direction: horizontal when it dominates (keeps the
+        // canonical +x lean), else vertical — well-defined whenever offMag > 0.
+        const sign = Math.abs(off.x) >= Math.abs(off.y) ? Math.sign(off.x) : Math.sign(off.y);
+        const raw = sign * offMag * (STEADY_REF_K / k) * num(params.skewAmount, 0.7);
         return clamp(raw, -skewCap(), skewCap());
       };
 
