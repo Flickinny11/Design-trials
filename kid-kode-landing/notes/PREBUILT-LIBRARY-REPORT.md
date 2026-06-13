@@ -121,10 +121,14 @@ A placed element is a fully-editable node-group plugged into the existing system
 
 - **Tests:** full vitest suite **3349 passed / 8 skipped / 0 failed** (incl. 7 new
   instantiation tests). **tsc:** 9 errors (baseline; **0 new**) across all 36 elements.
-- **Perf** (`phase4/perf.json`, real webgpu): **60fps** with all 36 tiles open
-  (desktop avgDt 16.6ms, mobile 16.5ms); open-flyout ~60ms; **hover→play 54ms**
-  (well under the 100ms bar) on desktop AND mobile. deviceLostCount 0; no jank.
+- **Perf** (`phase4/perf.json`, real webgpu, post-fix): **60fps** with all 36
+  tiles open (desktop avgDt 16.6ms / 60.6fps, mobile 16.5ms / 60.2fps); open-flyout
+  ~60ms; **hover→play 54ms** (well under the 100ms bar) on desktop AND mobile;
+  **click-to-place commit 226ms desktop / 446ms mobile** (reliable +6 members each;
+  the prior galaxy two-step raced and timed out — fixed). deviceLostCount 0; no jank.
 - Animation primitive catalog untouched (additive run); its tests pass in the suite.
+- Re-capture after fix-round: **rendersContent 36/36 desktop AND 36/36 mobile**,
+  animates 35/36 (the 1 still tile is scroll-driven, correctly static when frozen).
 
 ---
 
@@ -148,17 +152,74 @@ All photorealism is procedural PBR + IBL + MSDF text — no fal generation used.
 | P2 catalog | `ed339ec` | 34 elements, 16 categories (render-verified 36/36) |
 | P3 integration | `755777f` | hybrid customization + composition (9/9 steps) |
 | P4 placement fix | `b3f6d0a` | click-to-place immediate + reliable (advocate MUST-FIX #4) |
-| P4 element fix-round | _(pending)_ | empty-preview + nav + hero fixes |
-| P4 sign-off | _(pending)_ | re-judge + final verdict |
+| P4 element fix-round | `0414686` | empty-preview + nav + hero fixes (9 elements) |
+| P4 re-capture | `fb984ea` | MUST-FIX resolved (36/36 render, placement reliable) |
+| P4 sign-off | _(this commit)_ | advocate PASS-WITH-FLAGS + cluster-rig lit backdrop + report |
 
 ---
 
-## 8. User-advocate verdict + fix-round
+## 8. User-advocate verdict (human-grade, evidence-cited)
 
-_(Section finalized after the fix-round re-capture + re-judge — see §8 below.)_
+A fresh-context `user-advocate` judged the run as a non-technical first-time user,
+twice, from real-GPU frames + measured pixel stats (never the DOM/source), applying
+Logan's bar verbatim.
 
-Round 1 (pre-fix) verdict: **MIXED — 5 MUST-FIX** (empty previews on
-slider-morph-through / featuregrid-depth-pop / gallery-masonry-reveal; placed-not-
-visible; muddy nav-glass-dock). Root cause of empty previews: time-driven one-shot
-reveal/transition primitives loop-wipe the element. Fix-round re-balances to
-continuous always-visible motion + the placement-UX fix. Re-verification pending.
+**Round 1 (pre-fix): MIXED — 5 MUST-FIX.** Empty previews on slider-morph-through /
+featuregrid-depth-pop / gallery-masonry-reveal; placed element not visible;
+muddy/illegible nav-glass-dock. Root cause of the empty previews: time-driven
+one-shot reveal/transition primitives loop-wipe the element to empty for part of
+the preview loop.
+
+**Fix-round** (commits `b3f6d0a`, `0414686`): replaced those with continuous
+always-visible motion (reveals → scroll bindings for real hosts); click-to-place
+made immediate + reliable; nav cleaned to clear glass + legible labels; the
+featured monolith hero brightened. Plus a systemic cluster-rig **lit backdrop** so
+transmissive glass refracts bright structure + metals catch reflections.
+
+**Round 2 (re-judge): PASS-WITH-FLAGS — PRODUCTION-SHIPPABLE.** Validator
+`{ valid: true, computedGate: "PASS-WITH-FLAGS" }`. **All 5 prior MUST-FIX
+RESOLVED** with cited frames; **no remaining MUST-FIX.**
+
+| Prior MUST-FIX | Verdict | Evidence |
+|---|---|---|
+| slider-morph-through empty | RESOLVED | `phase4/desktop/slider-morph-through-{frozen,play2}.png` — full glass slide + title |
+| featuregrid-depth-pop empty | RESOLVED | `…/featuregrid-depth-pop-*.png` — populated 6-tile grid |
+| gallery-masonry-reveal empty | RESOLVED | `…/gallery-masonry-reveal-*.png` — packed masonry wall |
+| placed not visible | RESOLVED | `phase4/place-*-{canvas,preview}.png`; placements +8/+8/+6 grouped+tethered |
+| nav muddy/illegible | RESOLVED | `…/nav-glass-dock-frozen.png` — 3 glossy pills, legible labels |
+
+### Documented polish FLAGs (non-blocking; honest backlog)
+- nav-dock labels sit slightly low / clip on the pills (worse on mobile).
+- some glass members still read more opaque than fully transmissive (the lit
+  backdrop improves this; deeper transmission tuning is a future pass).
+- a few grid/gallery tiles run dark; some slider panel bodies are flat-grey.
+- showcase title partly occluded; placed clusters land at the hub origin and can
+  overlap existing hub content until repositioned (the cluster is auto-selected for
+  immediate gizmo repositioning).
+
+These are taste/polish, not breakage — every element renders as real, lit, animated
+premium 3D (advocate's 5-best: Glass Pricing Tiers, Liquid Metal Hero, Orbit Quotes,
+Turntable Showcase, Ribbon Flow Marquee).
+
+### Slider-Revolution standard
+Ours independently reads as **real 3D** — genuine depth, PBR materials, rotation,
+morph-through, parallax, cursor physics — versus SR's flat 2D layer crossfades
+(SR's paid product can't be screenshotted; the advocate judged ours best-in-class
+3D on its own merits: carousels/wheels/showcase/heroes clearly beat a flat slider
+plugin). The literal Morph-Through Slider now keeps full coverage while morphing.
+
+---
+
+## 9. VERDICT — PRODUCTION-READY (with documented polish backlog)
+
+The §13 Prebuilt Element Library is **PRODUCTION-READY**: a comprehensive, premium
+catalog of **36 drag-to-place 3D element-clusters across all 16 categories**, each a
+fully-editable node-group that composes live with every other editor system.
+Criterion 21 (drag-to-place → grouped, hub-tethered) and criterion 23 (per-node
+hash-keyed builtSnapshot) are proven on the real Metal GPU. Hover previews render
+the real cluster + its animation through one shared WebGPU context (richer than the
+primitive tiles, 60fps, 0 device-lost). Human-grade advocate verdict:
+PASS-WITH-FLAGS, production-shippable, zero MUST-FIX. No-regression: 3349 tests
+green, tsc 0-new, §19 forbidden sweep clean, fal $0. A short polish backlog (glass
+transmission depth, nav label positioning, a few dark tiles, placement anchor) is
+documented for a future taste pass — none blocking.

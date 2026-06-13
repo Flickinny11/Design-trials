@@ -246,7 +246,51 @@ class ClusterTileRenderer {
     const rim = new THREE.DirectionalLight(0xffd9a0, 0.35);
     rim.position.set(0, 2, -5);
     scene.add(rim);
+    this.addBackdrop(scene);
     return scene;
+  }
+
+  /** A far, dim lit backdrop behind every cluster (mirrors the proven
+   *  shared-tile-renderer glass-backdrop fix). Transmissive glass refracts only
+   *  OPAQUE scene structure, so without this a clear refractor reads as an
+   *  opaque dark silhouette (the advocate's "pills read as grey not glass" /
+   *  "near-black tiles" flag). A soft emissive gradient panel + a few dim
+   *  brass/ice bokeh give glass something to bend and metals something to
+   *  reflect — kept dim + far (z≈-8) so non-glass elements are never washed. */
+  private addBackdrop(scene: THREE.Scene): void {
+    const group = new THREE.Group();
+    group.name = 'cluster-backdrop';
+    group.position.z = -8;
+
+    const w = 16, h = 11;
+    const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
+    const top = new THREE.Color('#2a3546'); // steel key
+    const bot = new THREE.Color('#0e121b'); // deep ink floor (lifted off pure black)
+    const colors = new Float32Array(4 * 3);
+    [top, top, bot, bot].forEach((c, i) => { colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b; });
+    panelGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const panel = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: true }));
+    group.add(panel);
+
+    // A few dim opaque emissive bokeh (brass + ice) for high-frequency glints —
+    // deterministic placement (no Math.random at module scope concerns; this is
+    // UI runtime). Bright enough to read THROUGH clear glass, dim enough not to
+    // dominate. z just in front of the panel so on-axis refraction catches them.
+    const BOKEH = [
+      { c: '#d9b878', x: -3.2, y: 1.8, r: 0.9 },
+      { c: '#9fc3d6', x: 3.0, y: -1.4, r: 1.1 },
+      { c: '#e6d2a0', x: 0.6, y: 0.4, r: 0.7 },
+      { c: '#8fb0c4', x: -1.8, y: -2.2, r: 0.8 },
+    ];
+    for (const b of BOKEH) {
+      const m = new THREE.Mesh(
+        new THREE.SphereGeometry(b.r, 18, 12),
+        new THREE.MeshStandardMaterial({ color: new THREE.Color(b.c), emissive: new THREE.Color(b.c), emissiveIntensity: 1.1, roughness: 0.5, metalness: 0 }),
+      );
+      m.position.set(b.x, b.y, 0.6);
+      group.add(m);
+    }
+    scene.add(group);
   }
 
   register(opts: RegisterClusterOptions): ClusterTileHandle {
@@ -445,6 +489,12 @@ class ClusterTileRenderer {
 
   private disposeTile(tile: ClusterTile): void {
     this.teardownTileContents(tile);
+    // Dispose the per-tile lit backdrop (added directly to the scene in makeScene).
+    const backdrop = tile.scene.getObjectByName('cluster-backdrop');
+    if (backdrop) {
+      tile.scene.remove(backdrop);
+      disposeObject(backdrop);
+    }
   }
 
   private resize = (): void => {

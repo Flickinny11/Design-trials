@@ -46,7 +46,20 @@ Prove placed element: integrated anim editable + swappable (Animation Picker),
 keyframe editor, material/light/geometry/text/per-face customizable, "take just
 the object", composes live with other features. Driver-verified.
 
-### Phase 4 — Interaction verification + sign-off — ⬜ DRIVER READY
+### Phase 4 — Interaction verification + sign-off — ⏳ FINALIZING
+- Round-1 advocate verdict: MIXED, 5 MUST-FIX (empty previews on slider-morph/
+  featuregrid/gallery; placement flaky; muddy nav).
+- Fix-round (commit 0414686): replaced time-driven one-shot reveals with continuous
+  always-visible motion (9 elements); placement-UX fix (b3f6d0a): click=place-now.
+- Re-capture (fb984ea): rendersContent 36/36 desktop+mobile, animates 35/36,
+  deviceLost 0, 0 console errors; 9 fixed elements nonEmptyFrac 0.22-0.63; placement
+  reliable (coverflow+8, slider+8, pricing+6). Perf: 60fps, hover→play 54ms,
+  place-commit 226ms desktop / 446ms mobile. nav now clean legible glass pills.
+- IN PROGRESS: advocate re-judge (final verdict) + vitest re-run (post-fix gate).
+- Commits: 5ce5b8d (P0) → 5650e06 (P1) → ed339ec (P2) → 755777f (P3) → b3f6d0a
+  (place fix) → 0414686 (fix-round) → fb984ea (re-capture).
+
+### Phase 4 — (archived driver note) — ⬜ DRIVER READY
 scripts/prebuilt-library-advocate-capture.mjs (real-GPU DPR-2 + mobile DPR3:
 per-element frozen+playing crops w/ sharp frameDelta motion proof + nonEmptyFrac,
 gallery overview, place→fly-to-hub→canvas+preview-app). Then user-advocate agent

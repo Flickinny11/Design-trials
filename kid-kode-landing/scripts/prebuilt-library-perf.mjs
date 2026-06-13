@@ -52,12 +52,10 @@ async function run(tag, viewport, dsf, mobile) {
   try { await page.waitForFunction((el) => el?.dataset?.clusterTilePlaying === 'true' || el?.getAttribute?.('data-playing') === 'true', await tile.elementHandle(), { timeout: 3000 }); m.hoverPlayMs = Date.now() - t; }
   catch { m.hoverPlayMs = -1; }
 
-  // Latency: click-to-place → node added (arms galaxy + click canvas).
+  // Latency: click-to-place → node added (NEW flow: a plain click places now).
   const before = await page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.().nodes.length ?? -1);
-  await tile.click(); await sleep(700);
-  const canvas = page.locator('canvas').first(); const b = await canvas.boundingBox();
   t = Date.now();
-  await page.mouse.move(b.x + b.width / 2, b.y + b.height / 2); await page.mouse.down(); await sleep(40); await page.mouse.up();
+  await tile.click();
   await page.waitForFunction((n0) => (window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.().nodes.length ?? 0) > n0, before, { timeout: 5000 }).catch(() => {});
   m.placeCommitMs = Date.now() - t;
   m.placedAdded = (await page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.().nodes.length ?? -1)) - before;

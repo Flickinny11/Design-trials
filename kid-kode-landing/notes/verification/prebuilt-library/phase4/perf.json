@@ -1,30 +1,30 @@
 {
   "desktop": {
     "backend": "webgpu",
-    "openFlyoutMs": 58,
-    "openBrowserMs": 162,
+    "openFlyoutMs": 63,
+    "openBrowserMs": 154,
     "frame": {
-      "avgDt": 16.61,
-      "p95Dt": 18.6,
-      "approxFps": 60.2,
+      "avgDt": 16.5,
+      "p95Dt": 17.6,
+      "approxFps": 60.6,
       "samples": 90
     },
     "hoverPlayMs": 54,
-    "placeCommitMs": 5049,
-    "placedAdded": 0
+    "placeCommitMs": 226,
+    "placedAdded": 6
   },
   "mobile": {
     "backend": "webgpu",
     "openFlyoutMs": 61,
-    "openBrowserMs": 420,
+    "openBrowserMs": 427,
     "frame": {
-      "avgDt": 16.48,
-      "p95Dt": 18,
-      "approxFps": 60.7,
+      "avgDt": 16.62,
+      "p95Dt": 18.1,
+      "approxFps": 60.2,
       "samples": 90
     },
-    "hoverPlayMs": 54,
-    "placeCommitMs": 350,
+    "hoverPlayMs": 55,
+    "placeCommitMs": 446,
     "placedAdded": 6
   },
   "notes": []

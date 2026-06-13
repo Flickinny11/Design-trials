@@ -11,7 +11,7 @@
       "id": "carousel-coverflow-depth",
       "before": 22,
       "total": 30,
-      "groupId": "grp-9f8fbbef-e522-4068-a94e-9bc23634fbc5",
+      "groupId": "grp-d41ed056-f35e-4b79-833b-89e1aa007671",
       "members": 8,
       "hubId": "s1-arrival",
       "viewMode": "canvas",
@@ -22,7 +22,7 @@
       "id": "slider-morph-through",
       "before": 30,
       "total": 38,
-      "groupId": "grp-bbb01fe1-4aaf-495e-8ca8-f4c61d97e485",
+      "groupId": "grp-5cea2d1a-7629-4556-a3d9-28f03340bfb3",
       "members": 8,
       "hubId": "s1-arrival",
       "viewMode": "canvas",
@@ -33,7 +33,7 @@
       "id": "pricing-pillars-3d",
       "before": 38,
       "total": 44,
-      "groupId": "grp-202a0556-1a7a-4d3e-aa2c-dafc7b938697",
+      "groupId": "grp-ae2ca196-1ccb-4f86-ac39-386bbd5e0346",
       "members": 6,
       "hubId": "s1-arrival",
       "viewMode": "canvas",
@@ -91,432 +91,432 @@
     {
       "id": "pricing-pillars-3d",
       "frozen": {
-        "meanLuma": 17.3,
-        "nonEmptyFrac": 0.29,
+        "meanLuma": 41.7,
+        "nonEmptyFrac": 0.762,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.75,
+      "motionDelta": 3,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "banner-ticker-3d",
       "frozen": {
-        "meanLuma": 18.3,
-        "nonEmptyFrac": 0.245,
+        "meanLuma": 35.4,
+        "nonEmptyFrac": 0.65,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 5.07,
+      "motionDelta": 6.33,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "logocloud-constellation",
       "frozen": {
-        "meanLuma": 17.9,
-        "nonEmptyFrac": 0.232,
+        "meanLuma": 44.2,
+        "nonEmptyFrac": 0.793,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.36,
+      "motionDelta": 5.6,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-coverflow-depth",
       "frozen": {
-        "meanLuma": 19.8,
-        "nonEmptyFrac": 0.297,
+        "meanLuma": 42.2,
+        "nonEmptyFrac": 0.801,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.82,
+      "motionDelta": 3.66,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-cylinder-billboard",
       "frozen": {
-        "meanLuma": 20,
-        "nonEmptyFrac": 0.278,
+        "meanLuma": 39.6,
+        "nonEmptyFrac": 0.615,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.52,
+      "motionDelta": 3.25,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-depth-parallax",
       "frozen": {
-        "meanLuma": 22.9,
-        "nonEmptyFrac": 0.553,
+        "meanLuma": 32.1,
+        "nonEmptyFrac": 0.749,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.29,
+      "motionDelta": 3.61,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "featuregrid-depth-pop",
       "frozen": {
-        "meanLuma": 24.6,
-        "nonEmptyFrac": 0.356,
+        "meanLuma": 43.4,
+        "nonEmptyFrac": 0.733,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.85,
+      "motionDelta": 3.26,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-depth-wall",
       "frozen": {
-        "meanLuma": 22.9,
-        "nonEmptyFrac": 0.379,
+        "meanLuma": 40.9,
+        "nonEmptyFrac": 0.737,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 6.76,
+      "motionDelta": 4.61,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-distortion-fade",
       "frozen": {
-        "meanLuma": 25.8,
-        "nonEmptyFrac": 0.362,
+        "meanLuma": 42.2,
+        "nonEmptyFrac": 0.755,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.67,
+      "motionDelta": 5.17,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "showcase-exploded",
       "frozen": {
-        "meanLuma": 15.7,
-        "nonEmptyFrac": 0.215,
+        "meanLuma": 38.1,
+        "nonEmptyFrac": 0.642,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.86,
+      "motionDelta": 3.47,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cardstack-fan-spread",
       "frozen": {
-        "meanLuma": 20,
-        "nonEmptyFrac": 0.275,
+        "meanLuma": 41.6,
+        "nonEmptyFrac": 0.787,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.08,
+      "motionDelta": 2.48,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-float-glass",
       "frozen": {
-        "meanLuma": 20.8,
-        "nonEmptyFrac": 0.295,
+        "meanLuma": 42,
+        "nonEmptyFrac": 0.742,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.41,
+      "motionDelta": 3.4,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-fortune-spinner",
       "frozen": {
-        "meanLuma": 18.7,
-        "nonEmptyFrac": 0.331,
+        "meanLuma": 33.9,
+        "nonEmptyFrac": 0.672,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.65,
+      "motionDelta": 3.21,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cta-glass-banner",
       "frozen": {
-        "meanLuma": 20.7,
-        "nonEmptyFrac": 0.332,
+        "meanLuma": 39.5,
+        "nonEmptyFrac": 0.814,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 1.02,
+      "motionDelta": 4.64,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-glass-dock",
       "frozen": {
-        "meanLuma": 19.2,
-        "nonEmptyFrac": 0.255,
+        "meanLuma": 40.2,
+        "nonEmptyFrac": 0.765,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.97,
+      "motionDelta": 5.87,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "pricing-glass-tiers",
       "frozen": {
-        "meanLuma": 19.8,
-        "nonEmptyFrac": 0.325,
+        "meanLuma": 39.2,
+        "nonEmptyFrac": 0.735,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.67,
+      "motionDelta": 4.23,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-glass-prism",
       "frozen": {
-        "meanLuma": 45.8,
-        "nonEmptyFrac": 0.46,
+        "meanLuma": 61.1,
+        "nonEmptyFrac": 0.781,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.88,
+      "motionDelta": 2.21,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "banner-light-sweep",
       "frozen": {
-        "meanLuma": 23.7,
-        "nonEmptyFrac": 0.44,
+        "meanLuma": 36.8,
+        "nonEmptyFrac": 0.831,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.34,
+      "motionDelta": 3.45,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-liquid-metal",
       "frozen": {
-        "meanLuma": 16,
-        "nonEmptyFrac": 0.213,
+        "meanLuma": 24.3,
+        "nonEmptyFrac": 0.452,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.57,
+      "motionDelta": 3.37,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cta-magnetic-pedestal",
       "frozen": {
-        "meanLuma": 32.7,
-        "nonEmptyFrac": 0.528,
+        "meanLuma": 46.5,
+        "nonEmptyFrac": 0.828,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.87,
+      "motionDelta": 3.05,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-masonry-reveal",
       "frozen": {
-        "meanLuma": 20.5,
-        "nonEmptyFrac": 0.313,
+        "meanLuma": 36.6,
+        "nonEmptyFrac": 0.707,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.95,
+      "motionDelta": 3.43,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-morph-through",
       "frozen": {
-        "meanLuma": 26.4,
-        "nonEmptyFrac": 0.434,
+        "meanLuma": 44,
+        "nonEmptyFrac": 0.825,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.92,
+      "motionDelta": 6.32,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "stats-odometer",
       "frozen": {
-        "meanLuma": 19.4,
-        "nonEmptyFrac": 0.299,
+        "meanLuma": 43.9,
+        "nonEmptyFrac": 0.801,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.98,
+      "motionDelta": 5.47,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-orbit-quotes",
       "frozen": {
-        "meanLuma": 30.8,
-        "nonEmptyFrac": 0.595,
+        "meanLuma": 39.3,
+        "nonEmptyFrac": 0.919,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.44,
+      "motionDelta": 3.21,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "logocloud-orbital",
       "frozen": {
-        "meanLuma": 17.5,
-        "nonEmptyFrac": 0.241,
+        "meanLuma": 42.5,
+        "nonEmptyFrac": 0.671,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.75,
+      "motionDelta": 5.7,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-orbital-ring",
       "frozen": {
-        "meanLuma": 17.2,
-        "nonEmptyFrac": 0.216,
+        "meanLuma": 42.3,
+        "nonEmptyFrac": 0.728,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 5.37,
+      "motionDelta": 4.12,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-particle-emerge",
       "frozen": {
-        "meanLuma": 25.2,
-        "nonEmptyFrac": 0.574,
+        "meanLuma": 32.9,
+        "nonEmptyFrac": 0.871,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 4.28,
+      "motionDelta": 4.09,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-photoreal-monolith",
       "frozen": {
-        "meanLuma": 41.5,
-        "nonEmptyFrac": 0.634,
+        "meanLuma": 49.6,
+        "nonEmptyFrac": 0.927,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 6.77,
+      "motionDelta": 7.62,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-photoreal-ring",
       "frozen": {
-        "meanLuma": 27.8,
-        "nonEmptyFrac": 0.347,
+        "meanLuma": 46.5,
+        "nonEmptyFrac": 0.696,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.13,
+      "motionDelta": 2.73,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-radial-menu",
       "frozen": {
-        "meanLuma": 21.1,
-        "nonEmptyFrac": 0.288,
+        "meanLuma": 43.7,
+        "nonEmptyFrac": 0.775,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.85,
+      "motionDelta": 3.19,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "marquee-ribbon-flow",
       "frozen": {
-        "meanLuma": 21.8,
-        "nonEmptyFrac": 0.234,
+        "meanLuma": 51.2,
+        "nonEmptyFrac": 0.806,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 5.03,
+      "motionDelta": 1.48,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "stats-ring-progress",
       "frozen": {
-        "meanLuma": 23.7,
-        "nonEmptyFrac": 0.258,
+        "meanLuma": 48.7,
+        "nonEmptyFrac": 0.685,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 0.04,
+      "motionDelta": 3.99,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "banner-silk-flag",
       "frozen": {
-        "meanLuma": 18.6,
-        "nonEmptyFrac": 0.221,
+        "meanLuma": 45.4,
+        "nonEmptyFrac": 0.745,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.31,
+      "motionDelta": 4.52,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cardstack-swipe-deck",
       "frozen": {
-        "meanLuma": 19.3,
-        "nonEmptyFrac": 0.314,
+        "meanLuma": 46,
+        "nonEmptyFrac": 0.801,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.27,
+      "motionDelta": 4.44,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "featuregrid-tilt-cards",
       "frozen": {
-        "meanLuma": 29,
-        "nonEmptyFrac": 0.423,
+        "meanLuma": 49.9,
+        "nonEmptyFrac": 0.897,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 2.27,
+      "motionDelta": 2.45,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "showcase-turntable",
       "frozen": {
-        "meanLuma": 28.4,
-        "nonEmptyFrac": 0.664,
+        "meanLuma": 30.7,
+        "nonEmptyFrac": 0.746,
         "w": 672,
         "h": 602
       },
-      "motionDelta": 3.26,
+      "motionDelta": 3.16,
       "rendersContent": true,
       "animates": true
     }
@@ -569,434 +569,434 @@
     {
       "id": "pricing-pillars-3d",
       "frozen": {
-        "meanLuma": 16.8,
-        "nonEmptyFrac": 0.282,
+        "meanLuma": 41.4,
+        "nonEmptyFrac": 0.774,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.72,
+      "motionDelta": 2.16,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "banner-ticker-3d",
       "frozen": {
-        "meanLuma": 18.4,
-        "nonEmptyFrac": 0.247,
+        "meanLuma": 36,
+        "nonEmptyFrac": 0.646,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.69,
+      "motionDelta": 3.87,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "logocloud-constellation",
       "frozen": {
-        "meanLuma": 18,
-        "nonEmptyFrac": 0.237,
+        "meanLuma": 44.8,
+        "nonEmptyFrac": 0.792,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.21,
+      "motionDelta": 3.34,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-coverflow-depth",
       "frozen": {
-        "meanLuma": 19.9,
-        "nonEmptyFrac": 0.299,
+        "meanLuma": 41.9,
+        "nonEmptyFrac": 0.822,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.29,
+      "motionDelta": 2.95,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "carousel-cylinder-billboard",
       "frozen": {
-        "meanLuma": 20.7,
-        "nonEmptyFrac": 0.305,
+        "meanLuma": 40.6,
+        "nonEmptyFrac": 0.617,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 8.31,
+      "motionDelta": 3.62,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-depth-parallax",
       "frozen": {
-        "meanLuma": 23.3,
-        "nonEmptyFrac": 0.554,
+        "meanLuma": 32.9,
+        "nonEmptyFrac": 0.748,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.16,
+      "motionDelta": 3.89,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "featuregrid-depth-pop",
       "frozen": {
-        "meanLuma": 24.9,
-        "nonEmptyFrac": 0.364,
+        "meanLuma": 42.4,
+        "nonEmptyFrac": 0.7,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.15,
+      "motionDelta": 3.6,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-depth-wall",
       "frozen": {
-        "meanLuma": 22.7,
-        "nonEmptyFrac": 0.381,
+        "meanLuma": 41,
+        "nonEmptyFrac": 0.738,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.16,
+      "motionDelta": 3.01,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "slider-distortion-fade",
       "frozen": {
-        "meanLuma": 26.2,
-        "nonEmptyFrac": 0.369,
+        "meanLuma": 43.5,
+        "nonEmptyFrac": 0.753,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.55,
+      "motionDelta": 3.58,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "showcase-exploded",
       "frozen": {
-        "meanLuma": 15.9,
-        "nonEmptyFrac": 0.218,
+        "meanLuma": 38.1,
+        "nonEmptyFrac": 0.64,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.49,
+      "motionDelta": 1.68,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cardstack-fan-spread",
       "frozen": {
-        "meanLuma": 17.3,
-        "nonEmptyFrac": 0.321,
+        "meanLuma": 41.8,
+        "nonEmptyFrac": 0.793,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.31,
+      "motionDelta": 1.76,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-float-glass",
       "frozen": {
-        "meanLuma": 21.1,
-        "nonEmptyFrac": 0.298,
+        "meanLuma": 41.9,
+        "nonEmptyFrac": 0.739,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.33,
+      "motionDelta": 1.81,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-fortune-spinner",
       "frozen": {
-        "meanLuma": 19.1,
-        "nonEmptyFrac": 0.337,
+        "meanLuma": 33.2,
+        "nonEmptyFrac": 0.661,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 6.42,
+      "motionDelta": 3.13,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cta-glass-banner",
       "frozen": {
-        "meanLuma": 20.9,
-        "nonEmptyFrac": 0.336,
+        "meanLuma": 40.1,
+        "nonEmptyFrac": 0.816,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.23,
+      "motionDelta": 2.91,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-glass-dock",
       "frozen": {
-        "meanLuma": 19.4,
-        "nonEmptyFrac": 0.26,
+        "meanLuma": 41.1,
+        "nonEmptyFrac": 0.766,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.89,
+      "motionDelta": 3.8,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "pricing-glass-tiers",
       "frozen": {
-        "meanLuma": 19.9,
-        "nonEmptyFrac": 0.326,
+        "meanLuma": 38.4,
+        "nonEmptyFrac": 0.728,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.16,
+      "motionDelta": 2.89,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "hero-glass-prism",
       "frozen": {
-        "meanLuma": 48.3,
-        "nonEmptyFrac": 0.481,
+        "meanLuma": 64.9,
+        "nonEmptyFrac": 0.798,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.26,
+      "motionDelta": 3.52,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "banner-light-sweep",
       "frozen": {
-        "meanLuma": 23.8,
-        "nonEmptyFrac": 0.439,
+        "meanLuma": 37.6,
+        "nonEmptyFrac": 0.828,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.15,
+      "motionDelta": 2.85,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "hero-liquid-metal",
       "frozen": {
-        "meanLuma": 15.3,
-        "nonEmptyFrac": 0.217,
+        "meanLuma": 23.3,
+        "nonEmptyFrac": 0.459,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.36,
+      "motionDelta": 4.24,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cta-magnetic-pedestal",
       "frozen": {
-        "meanLuma": 32.8,
-        "nonEmptyFrac": 0.557,
+        "meanLuma": 47.3,
+        "nonEmptyFrac": 0.823,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.97,
+      "motionDelta": 3.94,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "gallery-masonry-reveal",
       "frozen": {
-        "meanLuma": 20.9,
-        "nonEmptyFrac": 0.319,
+        "meanLuma": 37.5,
+        "nonEmptyFrac": 0.705,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.78,
+      "motionDelta": 3.04,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "slider-morph-through",
       "frozen": {
-        "meanLuma": 26.6,
-        "nonEmptyFrac": 0.434,
+        "meanLuma": 43.9,
+        "nonEmptyFrac": 0.822,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.16,
+      "motionDelta": 3.01,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "stats-odometer",
       "frozen": {
-        "meanLuma": 18.9,
-        "nonEmptyFrac": 0.302,
+        "meanLuma": 44.3,
+        "nonEmptyFrac": 0.802,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.11,
+      "motionDelta": 3.98,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "testimonial-orbit-quotes",
       "frozen": {
-        "meanLuma": 31.2,
-        "nonEmptyFrac": 0.592,
+        "meanLuma": 40.4,
+        "nonEmptyFrac": 0.914,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.6,
+      "motionDelta": 3.46,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "logocloud-orbital",
       "frozen": {
-        "meanLuma": 17.6,
-        "nonEmptyFrac": 0.249,
+        "meanLuma": 39,
+        "nonEmptyFrac": 0.645,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.25,
+      "motionDelta": 3.61,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "nav-orbital-ring",
       "frozen": {
-        "meanLuma": 16.9,
-        "nonEmptyFrac": 0.22,
+        "meanLuma": 43.1,
+        "nonEmptyFrac": 0.728,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.75,
+      "motionDelta": 1.59,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-particle-emerge",
       "frozen": {
-        "meanLuma": 25.6,
-        "nonEmptyFrac": 0.581,
+        "meanLuma": 33.7,
+        "nonEmptyFrac": 0.871,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.57,
+      "motionDelta": 2.68,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "hero-photoreal-monolith",
       "frozen": {
-        "meanLuma": 39.3,
-        "nonEmptyFrac": 0.622,
+        "meanLuma": 47.5,
+        "nonEmptyFrac": 0.941,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 2.65,
+      "motionDelta": 2.03,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "carousel-photoreal-ring",
       "frozen": {
-        "meanLuma": 25.3,
-        "nonEmptyFrac": 0.34,
+        "meanLuma": 47.4,
+        "nonEmptyFrac": 0.699,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 8.82,
+      "motionDelta": 2.97,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "wheel-radial-menu",
       "frozen": {
-        "meanLuma": 21.6,
-        "nonEmptyFrac": 0.291,
+        "meanLuma": 44.5,
+        "nonEmptyFrac": 0.773,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 1.34,
+      "motionDelta": 3.41,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "marquee-ribbon-flow",
       "frozen": {
-        "meanLuma": 20.8,
-        "nonEmptyFrac": 0.236,
+        "meanLuma": 49.6,
+        "nonEmptyFrac": 0.803,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 4.86,
+      "motionDelta": 4.52,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "stats-ring-progress",
       "frozen": {
-        "meanLuma": 23.9,
-        "nonEmptyFrac": 0.265,
+        "meanLuma": 48.7,
+        "nonEmptyFrac": 0.689,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.17,
+      "motionDelta": 7.05,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "banner-silk-flag",
       "frozen": {
-        "meanLuma": 18.6,
-        "nonEmptyFrac": 0.228,
+        "meanLuma": 45.2,
+        "nonEmptyFrac": 0.745,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 3.38,
+      "motionDelta": 5.67,
       "rendersContent": true,
       "animates": true
     },
     {
       "id": "cardstack-swipe-deck",
       "frozen": {
-        "meanLuma": 19.4,
-        "nonEmptyFrac": 0.313,
+        "meanLuma": 45.8,
+        "nonEmptyFrac": 0.794,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.18,
+      "motionDelta": 3.32,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "featuregrid-tilt-cards",
       "frozen": {
-        "meanLuma": 29.2,
-        "nonEmptyFrac": 0.429,
+        "meanLuma": 49.7,
+        "nonEmptyFrac": 0.895,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.19,
+      "motionDelta": 3.14,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     },
     {
       "id": "showcase-turntable",
       "frozen": {
-        "meanLuma": 28.6,
-        "nonEmptyFrac": 0.662,
+        "meanLuma": 30.8,
+        "nonEmptyFrac": 0.742,
         "w": 960,
         "h": 867
       },
-      "motionDelta": 0.21,
+      "motionDelta": 2.11,
       "rendersContent": true,
-      "animates": false
+      "animates": true
     }
   ]
 }
