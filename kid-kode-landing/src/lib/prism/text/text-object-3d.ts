@@ -17,16 +17,18 @@
 
 import {
   Box3,
+  DoubleSide,
   ExtrudeGeometry,
   Group,
   Mesh,
   Shape,
+  ShapeGeometry,
   ShapePath,
   type BufferGeometry,
   type Material,
   type Texture,
 } from 'three';
-import { MeshPhysicalNodeMaterial, type Node } from 'three/webgpu';
+import { MeshBasicNodeMaterial, MeshPhysicalNodeMaterial, type Node } from 'three/webgpu';
 import {
   abs,
   clamp,
@@ -291,6 +293,79 @@ function remapFaceUv(geo: BufferGeometry, unitCenter: { x: number; y: number }, 
   uvAttr.needsUpdate = true;
 }
 
+// ── controllable drop shadow (offset X/Y/Z, color, opacity, blur) ──────────
+// A flat silhouette of the whole text block, offset behind the geometry and
+// tinted — the artist-controllable drop shadow (distinct from, and layered with,
+// the genuine PCFSoft scene shadow the lit mesh casts onto the catcher). Blur is
+// a stacked multi-tap (golden-angle disk) so it stays renderer-agnostic with no
+// offscreen RT. Returns the group + the SHARED geometry to dispose once.
+function buildShadowGroup(
+  layout: Layout3D,
+  o: LoadedFontOutlines,
+  emScale: number,
+  spec: TextSpec,
+  fontSize: number,
+  tier: 'T0' | 'T1' | 'T2',
+): { group: Group; geo: BufferGeometry } | null {
+  const sh = spec.shadow;
+  if (!sh || (sh.opacity ?? 0) <= 0) return null;
+  const offX = (sh.offsetX ?? 0) * fontSize;
+  const offY = (sh.offsetY ?? 0) * fontSize;
+  const offZ = (sh.offsetZ ?? 0) * fontSize;
+  const blur = Math.max(0, sh.blur ?? 0) * fontSize;
+  const baseOpacity = Math.min(1, sh.opacity ?? 0);
+  const curve = tier === 'T2' ? 12 : 8;
+
+  // One merged flat silhouette in block space.
+  const geoms: BufferGeometry[] = [];
+  for (const unit of layout.units) {
+    for (const gl of unit.glyphs) {
+      const outline = o.glyphs[gl.char];
+      if (!outline || outline.commands.length === 0) continue;
+      const shapes = glyphToShapes(outline.commands, emScale);
+      if (shapes.length === 0) continue;
+      const g = new ShapeGeometry(shapes, curve);
+      g.translate(unit.center.x + gl.x, unit.center.y + gl.y, 0);
+      geoms.push(g);
+    }
+  }
+  if (geoms.length === 0) return null;
+  const merged = geoms.length === 1 ? geoms[0] : mergeGeometries(geoms, false);
+  if (geoms.length > 1) for (const g of geoms) g.dispose();
+  if (!merged) return null;
+
+  const group = new Group();
+  group.name = 'text-shadow';
+  const taps = blur > 0 ? (tier === 'T2' ? 8 : tier === 'T0' ? 1 : 6) : 1;
+  const per = baseOpacity / taps;
+  // Slightly behind the back face so it never z-fights the glyphs.
+  const backset = -fontSize * 0.02;
+  for (let i = 0; i < taps; i++) {
+    const mat = new MeshBasicNodeMaterial();
+    mat.color.set(sh.color ?? '#000000');
+    mat.transparent = true;
+    mat.opacity = per;
+    mat.depthWrite = false;
+    mat.toneMapped = false;
+    mat.side = DoubleSide;
+    const mesh = new Mesh(merged, mat); // shared geometry; disposed once
+    let jx = 0;
+    let jy = 0;
+    if (taps > 1) {
+      const a = i * 2.399963229; // golden angle
+      const r = blur * Math.sqrt((i + 0.5) / taps);
+      jx = Math.cos(a) * r;
+      jy = Math.sin(a) * r;
+    }
+    mesh.position.set(offX + jx, offY + jy, offZ + backset);
+    mesh.renderOrder = -1;
+    mesh.castShadow = false;
+    mesh.receiveShadow = false;
+    group.add(mesh);
+  }
+  return { group, geo: merged };
+}
+
 // ── material: lit PBR with a TSL face/side colorNode split ──────────────────
 function fillBase(fill: TextFill | undefined, fallback: string): string {
   if (fill?.kind === 'solid') return fill.color;
@@ -391,6 +466,8 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
   let fillTex: { url: string; tex: Texture } | null = null;
   let disposed = false;
   const units: Mesh[] = [];
+  let shadowGroup: Group | null = null;
+  let shadowGeo: BufferGeometry | null = null;
 
   const wantFillUrl = (): string | null => {
     const f = resolved.extrude?.faceFill ?? resolved.fill;
@@ -422,6 +499,15 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
       units.push(mesh);
       group.add(mesh);
     });
+
+    // Controllable drop shadow (textSpec.shadow). Layered with the genuine
+    // PCFSoft scene shadow the lit glyph meshes cast onto the catcher.
+    const sg = buildShadowGroup(layout, currentOutlines, emScale, resolved, fontSize, tier);
+    if (sg) {
+      shadowGroup = sg.group;
+      shadowGeo = sg.geo;
+      group.add(sg.group);
+    }
   };
 
   const clearUnits = () => {
@@ -431,6 +517,15 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
       (mesh.material as Material).dispose();
     }
     units.length = 0;
+    if (shadowGroup) {
+      group.remove(shadowGroup);
+      for (const m of shadowGroup.children) {
+        if ((m as Mesh).isMesh) ((m as Mesh).material as Material).dispose();
+      }
+      shadowGroup = null;
+    }
+    // Shared silhouette geometry disposed once (all taps reference it).
+    if (shadowGeo) { shadowGeo.dispose(); shadowGeo = null; }
   };
 
   const ensureFillTexture = () => {
