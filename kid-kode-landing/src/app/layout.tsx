@@ -43,6 +43,9 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  // APP-REALITY P4 — edge-to-edge on mobile: let the scene's full-bleed
+  // background extend under the notch / home-indicator (no letterbox bars).
+  viewportFit: 'cover',
 };
 
 // RT-SC-02 / INV-R1 — there is exactly ONE `three` instance for the whole app:

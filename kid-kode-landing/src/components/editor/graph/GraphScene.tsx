@@ -3116,6 +3116,92 @@ function AssembledShadowCatcher() {
   );
 }
 
+// APP-REALITY P4 — full-viewport hub background ("the app surface").
+//
+// A camera-CENTERED gradient skybox sphere: because it surrounds the camera it
+// fills the entire viewport on every device and aspect (desktop, mobile,
+// constrained) — there is never a letterbox bar or an exposed scene edge, and
+// resize/DPR/safe-area are handled for free (it is just geometry the renderer
+// fills). It gives a subtle parallax as the canvas camera orbits, and a fixed
+// designed atmosphere under the locked preview camera. Built from the hub's
+// palette into a 2:1 equirect gradient (deep sky → warm brass horizon glow at
+// eye level → dark ground), so the built composition reads as a premium app
+// hero, not a 3D object floating in an editor void. `fog={false}` keeps the
+// gradient pure; renderOrder -1 + depthWrite false keep it behind all content.
+function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
+  const w = 1024;
+  const h = 512;
+  const cv = document.createElement('canvas');
+  cv.width = w;
+  cv.height = h;
+  const ctx = cv.getContext('2d')!;
+  // Vertical sky → ground base. y=0 (texture top) maps to the sphere's top pole.
+  // Luminous moody atmosphere (NOT near-black) so it reads as a designed app
+  // surface. Cool deep sky, a slightly-lifted horizon band, darker warm ground.
+  const base = ctx.createLinearGradient(0, 0, 0, h);
+  base.addColorStop(0, '#070d18'); // deep night sky
+  base.addColorStop(0.4, '#0e1a2e'); // upper horizon (cool, moody)
+  base.addColorStop(0.56, '#13233c'); // brightest band at eye level
+  base.addColorStop(0.74, '#0b1322'); // lower horizon
+  base.addColorStop(1, baseHex && baseHex !== DS.ink ? baseHex : '#070b14'); // ground / hub tint
+  ctx.fillStyle = base;
+  ctx.fillRect(0, 0, w, h);
+  // Warm brass horizon glow at eye level (equator) — a strong studio key behind
+  // the content. Screen-blended over the lit base for a luminous hero glow.
+  ctx.globalCompositeOperation = 'screen';
+  const horizon = ctx.createRadialGradient(w * 0.5, h * 0.55, 0, w * 0.5, h * 0.55, w * 0.6);
+  horizon.addColorStop(0, dsAlpha(DS.brass300, 0.9));
+  horizon.addColorStop(0.28, dsAlpha(DS.brass400, 0.52));
+  horizon.addColorStop(0.55, dsAlpha(DS.brass600, 0.16));
+  horizon.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = horizon;
+  ctx.fillRect(0, 0, w, h);
+  // Cool ice counter-glow, upper area, for depth + colour contrast.
+  const ice = ctx.createRadialGradient(w * 0.24, h * 0.24, 0, w * 0.24, h * 0.24, w * 0.46);
+  ice.addColorStop(0, dsAlpha(DS.ice400, 0.28));
+  ice.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = ice;
+  ctx.fillRect(0, 0, w, h);
+  // Soft vignette (multiply) — darkens corners toward, but NOT to, black so the
+  // glow reads as a spotlight while the background still fills the frame.
+  ctx.globalCompositeOperation = 'multiply';
+  const vig = ctx.createRadialGradient(w * 0.5, h * 0.54, h * 0.16, w * 0.5, h * 0.54, w * 0.6);
+  vig.addColorStop(0, '#ffffff');
+  vig.addColorStop(0.6, '#aeb6c8');
+  vig.addColorStop(1, '#2b3550');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, w, h);
+  ctx.globalCompositeOperation = 'source-over';
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function HubSceneBackground({ hub }: { hub?: PrismHub | null }) {
+  const camera = useThree((s) => s.camera);
+  const meshRef = useRef<THREE.Mesh>(null);
+  const baseHex = hub?.layout?.backgroundColor || DS.ink;
+  const tex = useMemo(() => buildHubSkyGradient(baseHex), [baseHex]);
+  useEffect(() => () => tex.dispose(), [tex]);
+  // Keep the skybox centred on the camera so its surface is never approached
+  // (infinite-environment feel; always fills the frustum).
+  useFrame(() => {
+    if (meshRef.current) meshRef.current.position.copy(camera.position);
+  });
+  return (
+    <mesh ref={meshRef} scale={480} renderOrder={-1} frustumCulled={false}>
+      <sphereGeometry args={[1, 64, 40]} />
+      <meshBasicMaterial
+        map={tex}
+        side={THREE.BackSide}
+        toneMapped={false}
+        fog={false}
+        depthWrite={false}
+      />
+    </mesh>
+  );
+}
+
 function AssembledSceneContent({
   onPerf,
   previewMode = false,
@@ -3205,6 +3291,8 @@ function AssembledSceneContent({
           the Canvas Lighting toolbar group visibly changes the scene (criterion
           17) while legacy graphs stay pixel-stable. */}
       <HubLighting hub={hub} />
+      {/* APP-REALITY P4 — full-viewport designed background (the app surface). */}
+      <HubSceneBackground hub={hub} />
       <SceneBackdrop hub={hub} />
       <AssembledShadowCatcher />
       {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is

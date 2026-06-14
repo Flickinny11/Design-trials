@@ -1,0 +1,38 @@
+{
+  "url": "http://localhost:4793",
+  "configs": {
+    "desktop": {
+      "luma": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "errors": [],
+      "cornersLit": false
+    },
+    "mobile": {
+      "luma": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "errors": [],
+      "cornersLit": false
+    },
+    "constrained": {
+      "luma": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "errors": [],
+      "cornersLit": false
+    }
+  }
+}

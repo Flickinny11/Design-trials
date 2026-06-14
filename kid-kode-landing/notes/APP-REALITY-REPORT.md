@@ -139,3 +139,43 @@ patterns (only gating differs). editInPreview is additive, canvas-only, and rese
 it cannot leak into galaxy/preview-app. P9 advocate exercises it end-to-end.
 
 ### Verdict: edit the built app against its shipped framing, toolbar live — the real-result design loop. ✅
+
+---
+
+## P4 — BACKGROUNDS, FULL VIEWPORT (the app surface)
+
+### Before → after
+Before, the built composition floated as a small card on the generic near-black editor void — it read
+as "a 3D object in an editor", not an app. After, every hub has a **designed full-viewport atmosphere**
+it sits on.
+
+### What changed
+- New `HubSceneBackground` (mounted in the assembled scene → canvas + preview-app, NOT galaxy): a
+  **camera-CENTERED gradient skybox sphere**. Because it surrounds the camera it fills the entire
+  viewport on every device and aspect — there is **never a letterbox bar or an exposed scene edge**,
+  and resize / DPR / safe-area are handled for free (it is geometry the renderer fills). It gives a
+  subtle parallax as the canvas camera orbits and a fixed designed atmosphere under the locked preview
+  camera. One renderer (a `BackSide` sphere, `fog={false}`, renderOrder −1, depthWrite false).
+- The gradient is built from the hub palette into a 2:1 equirect: deep cool night sky → a warm brass
+  horizon glow pool at eye level (the studio key behind the content) → ice counter-glow → soft
+  (non-black) vignette → dark ground. Reads as a premium product hero, not an editor void.
+- `viewport.viewportFit: 'cover'` (layout) — edge-to-edge under the mobile notch / home-indicator.
+
+### Evidence — `notes/verification/app-reality/p4/` (real browser, DPR-2)
+Frames per viewport (`{desktop,mobile,constrained}-preview-fullbleed.png` + `-canvas-atmosphere.png`):
+- **desktop** — the whole viewport is the moody atmosphere with a warm glow behind the "Time, machined."
+  watch hero; no void, depth at the corners.
+- **mobile (390×844, the hard case)** — **edge-to-edge, top to bottom, no letterbox**; the skybox fills
+  the tall aspect (it surrounds the camera, so aspect cannot expose an edge). `viewportFit:cover` covers
+  the safe-area.
+- **constrained / canvas** — same full-coverage atmosphere; canvas shows it behind the page frame.
+0 console errors in all 3 contexts.
+(Note: the JSON corner-luma probe reads 0 — a known WebGPU/WebGL `drawImage`→2D pixel-read limitation,
+not a black background; the screenshots are the definitive evidence.)
+
+### Review
+Additive (new component, no schema/store change beyond the viewport meta); mounted only in the assembled
+scene so galaxy keeps its cosmic nebula; texture disposed on unmount / palette change; one renderer (no
+2nd renderer, no PixiJS); design-tokens palette only.
+
+### Verdict: the built app now owns the whole viewport on desktop and mobile — a designed surface, never a void. ✅
