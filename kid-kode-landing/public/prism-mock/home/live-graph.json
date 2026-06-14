@@ -428,6 +428,10 @@
           "y": -2.0,
           "scale": 0.7
         }
+      },
+      "functionBinding": {
+        "kind": "navigate",
+        "hubId": "s2-movement"
       }
     },
     {
@@ -615,6 +619,18 @@
         "tablet": {
           "y": -0.55,
           "scale": 0.85
+        }
+      },
+      "functionBinding": {
+        "kind": "overlay",
+        "elementId": "orr-watch-detail-card",
+        "size": {
+          "w": 0.36,
+          "h": 0.66
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
         }
       }
     },
@@ -2266,6 +2282,76 @@
         }
       ],
       "receivesLighting": false
+    },
+    {
+      "nodeId": "orr-watch-detail-card",
+      "subtype": "overlay-element",
+      "parentHubId": "",
+      "serviceTag": "ui-overlay",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 0,
+          "width": 0.35,
+          "height": 0.35,
+          "z": 0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Holographic detail card for the ORRERY No.7 \u2014 opens as an overlay on click of the watch.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "isGlobalElement": true,
+      "overlaySpec": {
+        "kind": "holographic-detail",
+        "title": "ORRERY No.7",
+        "tagline": "Flying tourbillon \u00b7 meteorite dial \u00b7 sapphire bridge",
+        "specs": [
+          {
+            "label": "Movement",
+            "value": "Cal. OR-7 \u2014 manual tourbillon"
+          },
+          {
+            "label": "Power reserve",
+            "value": "100 hours"
+          },
+          {
+            "label": "Frequency",
+            "value": "28,800 vph"
+          },
+          {
+            "label": "Jewels",
+            "value": "47"
+          },
+          {
+            "label": "Case",
+            "value": "Meteorite + sapphire \u00b7 41 mm"
+          },
+          {
+            "label": "Edition",
+            "value": "No. 07 / 50"
+          }
+        ]
+      }
     }
   ],
   "edges": [

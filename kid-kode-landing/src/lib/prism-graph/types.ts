@@ -802,6 +802,18 @@ export interface PrismNode {
   // on every device. The assembled scene composes scenePosition with the
   // active device's override (absolute pose + scale multiplier + hidden).
   responsiveScenePos?: ResponsiveScenePos;
+  // APP-REALITY P7 (AMENDMENT 2026-06-14; INV-8 additive). Click behaviour bound
+  // in Canvas (Function action) — navigate-to-hub OR open-overlay. The shared
+  // source of truth (node editor reads/writes the same field). Preview executes.
+  functionBinding?: FunctionBinding;
+  // APP-REALITY P7 (INV-8 additive). When true, this node is a GLOBAL ELEMENT:
+  // not placed in a hub (not rendered in the scene), opened as an overlay by a
+  // functionBinding. Absent / false → an ordinary placed node.
+  isGlobalElement?: boolean;
+  // APP-REALITY P7 (INV-8 additive). The overlay presentation for a global
+  // element (title/tagline/specs/image/accent). Consumed by the holographic
+  // detail-card overlay. Absent → derived from the node's caption.
+  overlaySpec?: OverlaySpec;
   // P4 3D-OBJECT (canvas-spec §5 3D object tools; INV-8 additive). A
   // primitive mesh created in-canvas: the factory builds the geometry from
   // `kind` + `params` and routes the surface through the EXISTING material
@@ -951,6 +963,40 @@ export interface ResponsiveScenePos {
   mobile?: ResponsiveDevicePose;
   tablet?: ResponsiveDevicePose;
   desktop?: ResponsiveDevicePose;
+}
+
+// APP-REALITY P7 — Function / navigation binding (AMENDMENT 2026-06-14; INV-8
+// additive). The SHARED source of truth: Canvas writes these via the Function
+// action; the future node editor reads/writes the SAME schema; Preview executes
+// them. A node click either NAVIGATES to a hub or OPENS a global element as an
+// OVERLAY on the current hub (customizable size + location). Deeper behaviour
+// (live data/API/submit) remains node-editor scope.
+export type FunctionBinding =
+  | { kind: 'navigate'; hubId: string }
+  | {
+      kind: 'overlay';
+      /** The global element (nodeId, isGlobalElement) to open as an overlay. */
+      elementId: string;
+      /** Overlay size as viewport fractions (0..1). Default ~0.34 × 0.62. */
+      size?: { w: number; h: number };
+      /** Overlay centre as viewport fractions (0..1). Default 0.5, 0.5. */
+      anchor?: { x: number; y: number };
+    };
+
+// APP-REALITY P7 — a GLOBAL ELEMENT's overlay presentation. The element's
+// VISUAL design (a premium holographic detail card with glitch/transparency
+// animation from the primitives + DESIGN-REFERENCES) is Canvas scope; the rich
+// DATA content (pricing, manufacturer copy) is node-editor scope. Additive.
+export interface OverlaySpec {
+  /** Overlay component kind. 'holographic-detail' = the premium glitch/holo card. */
+  kind?: 'holographic-detail';
+  title?: string;
+  tagline?: string;
+  specs?: { label: string; value: string }[];
+  /** Optional hero image (photoreal product shot). */
+  imageUrl?: string;
+  /** Accent hex (defaults to the brass accent). */
+  accent?: string;
 }
 
 // P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).

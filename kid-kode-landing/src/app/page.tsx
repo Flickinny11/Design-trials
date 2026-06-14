@@ -36,6 +36,8 @@ import PreviewJourneyReplay from '@/components/editor/overlays/PreviewJourneyRep
 import PreviewDeviceFrame from '@/components/editor/overlays/PreviewDeviceFrame';
 import PreviewHubNav from '@/components/editor/overlays/PreviewHubNav';
 import HubMorphTransition from '@/components/editor/overlays/HubMorphTransition';
+import FunctionBindingPopup from '@/components/editor/overlays/FunctionBindingPopup';
+import OverlayHost from '@/components/editor/overlays/OverlayHost';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -867,6 +869,9 @@ export default function Page() {
       {/* APP-REALITY P6 — preview hub nav rail + premium morph transition. */}
       <PreviewHubNav />
       <HubMorphTransition />
+      {/* APP-REALITY P7 — Function binding popup (canvas) + preview overlay host. */}
+      <FunctionBindingPopup />
+      <OverlayHost />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />

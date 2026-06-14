@@ -252,3 +252,56 @@ each navigation (`sawBand`/`sawDim` true, dim opacity ramps).
   equivalent of reparent-on-navigate (one scene, in place; no second mount).
 
 ### Verdict: the hub rail navigates hub→hub in preview — distinct pages, hash-routed, with a morph. ✅
+
+---
+
+## P7 — FUNCTION BUTTON + BINDING + HOLOGRAPHIC OVERLAY (implements AMENDMENT 2026-06-14)
+
+### What changed
+- **Additive binding schema** (the SHARED source of truth): `PrismNode.functionBinding`
+  (`{kind:'navigate',hubId}` | `{kind:'overlay',elementId,size?,anchor?}`), `isGlobalElement`,
+  `overlaySpec`. Canvas writes them; the future node editor reads/writes the SAME field; Preview
+  executes them. Deeper behaviour (data/API/submit) stays node-editor scope.
+- **Function toolbar action** (Canvas): new `function` tool group (icon `link`). Clicking it opens the
+  binding popup for the selected element (not a left-dock flyout).
+- **Function popup** (`FunctionBindingPopup`): selectable visuals of **every hub** (navigate tiles) +
+  **every global element** (overlay tiles) + **New hub / New global element / New element**. Picking a
+  hub binds navigate-on-click; picking a global element reveals **size (S/M/L) + location (3×3)**
+  controls → binds open-overlay. Writes `functionBinding` via `useGraphSourceStore.updateNode` (the
+  shared graph). Shows + can clear the current binding.
+- **Preview execution**: in preview-app, a click on a Function-bound element executes its binding —
+  navigate (pushState + setState `activeHubId`, with the P6 morph) or open the global element as an
+  overlay (`OverlayHost` renders it at the binding's size/location). It does NOT select / open the
+  inspector (that stays canvas behaviour).
+- **Sample premium overlay** (`HolographicDetailCard`): a photoreal **holographic detail-card** with a
+  glitch / RGB-split title, a code-drawn holographic emblem (rings + rotating reticle), scanline sweep,
+  holo gridlines, transparency breathing, and the watch's spec rows — built from the DESIGN-REFERENCES
+  toolkit (scoped `<style jsx>` keyframes, no global CSS, reduced-motion aware, brass/ice tokens, no
+  purple). Bound to the ORRERY **watch** as the payoff.
+
+### Evidence — `notes/verification/app-reality/p7/` (real browser, DPR-2, REAL clicks)
+`p7-log.json`: authoring loaded (watch→overlay binding, headline→navigate binding, card
+`isGlobalElement` + title "ORRERY No.7") ✅; `popupOpen` ✅; **`watchClickOpenedOverlay` ✅ (real
+raycast click on the watch opened the holographic card)**; `holoCardInDom` ✅; **`headlineClickNavigated`
+✅ (real click on the headline navigated to `s2-movement`)**; 0 console errors.
+Frames: `desktop-function-popup.png` (the full popup — hub tiles + global-element tile + New options +
+size/location controls + "Bind overlay on click"); `desktop-holographic-overlay.png` (the centred
+premium holographic card opened over the running app).
+
+### fal
+None used — the holographic card is code-driven (DESIGN-REFERENCES toolkit), so no diffusion generation
+was needed. fal ledger unchanged (cumulative $0.479).
+
+### Adversarial review + MUST-FIX (resolved)
+`prism-criteria-reviewer`: all invariants pass — INV-8 additive (schema 46/0, store 22/0, zero
+deletions), AMENDMENT compliance (binding on the node's own `functionBinding`, written by Canvas via
+`updateNode`, read/written by the future node editor — same field; no deep data/API wired), FP-15
+non-applicable (the popup is the Function action, not an Inspector tab), preview execution with no
+double-fire (canvas select+inspector unchanged when not previewMode), one renderer / tokens-only / no
+purple / `<style jsx>` scoped keyframes / listener cleanup. **One MUST-FIX:** the global element
+(`parentHubId: ''`) rendered as a stray orphan sphere in galaxy/canvas-topology (the assembled path
+excluded it, the topology path didn't). **Fixed:** topology `toEditorView` now filters
+`!isGlobalElement`. Re-verified: `desktop-galaxy-no-orphan.png` (23 nodes, 5 hub clusters, no orphan)
+and P7 re-run after the fix still passes all click verdicts, 0 errors.
+
+### Verdict: bind navigation/overlay in Canvas, stored in the shared schema, executed in Preview — clicking the watch opens a premium holographic card. ✅

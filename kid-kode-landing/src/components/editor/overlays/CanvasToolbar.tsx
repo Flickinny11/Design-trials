@@ -136,6 +136,7 @@ type ToolGroupId =
   | 'changeArtifact'
   | 'text'
   | 'animation'
+  | 'function'
   | 'lighting'
   | 'build';
 
@@ -157,6 +158,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
+  { id: 'function', icon: 'link', label: 'Function', wired: true },
   { id: 'lighting', icon: 'bulb', label: 'Lighting', wired: true },
   { id: 'build', icon: 'hammer', label: 'Build', wired: true },
 ];
@@ -807,7 +809,17 @@ export default function CanvasToolbar() {
                 <DockGroupKey
                   meta={g}
                   isActive={activeGroup === g.id}
-                  onToggle={() => setActiveGroup((cur) => (cur === g.id ? null : g.id))}
+                  onToggle={() => {
+                    // APP-REALITY P7 — the Function action opens the binding
+                    // popup for the selected element (AMENDMENT 2026-06-14),
+                    // not a left-dock flyout.
+                    if (g.id === 'function') {
+                      const st = useGraphEditorStore.getState();
+                      if (st.selectedNodeId) st.openFunctionPopup(st.selectedNodeId);
+                      return;
+                    }
+                    setActiveGroup((cur) => (cur === g.id ? null : g.id));
+                  }}
                 />
               </div>
             );

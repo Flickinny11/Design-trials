@@ -1,0 +1,41 @@
+{
+  "errors": [],
+  "schema": {
+    "watchBinding": {
+      "kind": "overlay",
+      "elementId": "orr-watch-detail-card",
+      "size": {
+        "w": 0.36,
+        "h": 0.66
+      },
+      "anchor": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "headlineBinding": {
+      "kind": "navigate",
+      "hubId": "s2-movement"
+    },
+    "cardIsGlobal": true,
+    "cardTitle": "ORRERY No.7"
+  },
+  "popupOpen": true,
+  "watchClickOpenedOverlay": true,
+  "holoCardInDom": true,
+  "overlayState": {
+    "elementId": "orr-watch-detail-card",
+    "size": {
+      "w": 0.36,
+      "h": 0.66
+    },
+    "anchor": {
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  "headlineClickNavigated": true,
+  "navFrom": "s1-arrival",
+  "navTo": "s2-movement",
+  "popupHasHubsAndGlobals": true
+}

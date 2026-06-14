@@ -85,6 +85,16 @@ interface GraphEditorState {
    */
   deviceMode: DeviceMode;
   /**
+   * APP-REALITY P7 — the node currently being bound in the Function popup
+   * (Canvas); null = popup closed.
+   */
+  functionPopupNodeId: string | null;
+  /**
+   * APP-REALITY P7 — the global element overlay currently OPEN in preview-app
+   * (executed by a node's functionBinding). null = no overlay open.
+   */
+  openOverlay: { elementId: string; size?: { w: number; h: number }; anchor?: { x: number; y: number } } | null;
+  /**
    * STEP8 canvas-toolbar Transform group (canvas-spec §5) — the active gizmo
    * axis-set the CanvasTransformGizmo renders while in edit mode. Lifted to the
    * store so the toolbar's Move / Rotate / Scale buttons and the Blender-style
@@ -211,6 +221,11 @@ interface GraphEditorState {
   setEditInPreview: (b: boolean) => void;
   // APP-REALITY P5 — set the preview device mode (desktop/tablet/mobile).
   setDeviceMode: (m: DeviceMode) => void;
+  // APP-REALITY P7 — Function binding popup (Canvas) + preview overlay execution.
+  openFunctionPopup: (nodeId: string) => void;
+  closeFunctionPopup: () => void;
+  openOverlayElement: (o: { elementId: string; size?: { w: number; h: number }; anchor?: { x: number; y: number } }) => void;
+  closeOverlay: () => void;
   /**
    * STEP8 — set the active transform-gizmo axis set (translate/rotate/scale).
    * Called by the toolbar Transform buttons and the g/r/s shortcuts.
@@ -345,6 +360,9 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     editInPreview: false,
     // APP-REALITY P5 — preview device mode (desktop until the switcher changes it).
     deviceMode: 'desktop',
+    // APP-REALITY P7 — Function popup + preview overlay (closed by default).
+    functionPopupNodeId: null,
+    openOverlay: null,
     // STEP8 — default transform gizmo axis set.
     canvasGizmoMode: 'translate',
     selectedNodeId: null,
@@ -401,6 +419,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setEditInPreview: (b) => set({ editInPreview: b }),
     setDeviceMode: (m) => set({ deviceMode: m }),
+    openFunctionPopup: (nodeId) => set({ functionPopupNodeId: nodeId }),
+    closeFunctionPopup: () => set({ functionPopupNodeId: null }),
+    openOverlayElement: (o) => set({ openOverlay: o }),
+    closeOverlay: () => set({ openOverlay: null }),
     // EBR2-C-01 / §R2-C SC-068 — Inspector Edit toggle. Selection-reset is
     // handled inside the selection actions (selectNode/selectHub/flyToNode/
     // drillIntoHub), not here.

@@ -2671,10 +2671,25 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
         e.stopPropagation();
         // STEP7 — EventDriver input: a click on the built artifact fires a
         // node-addressed 'click' event so any click-triggered animation the
-        // node declares plays. This drives ANIMATION only; the existing
-        // selection / inspector behavior is unchanged (that is the node
-        // editor's job, not the driver's).
+        // node declares plays. This drives ANIMATION only.
         getSharedDriverHub().events.fire('click', { nodeId: node.nodeId });
+        // APP-REALITY P7 — in preview-app (the running app) a Function-bound
+        // element EXECUTES its binding on click: navigate to a hub, or open a
+        // global element as an overlay (AMENDMENT 2026-06-14). It does NOT
+        // select / open the inspector (that is canvas/editor behaviour).
+        if (previewMode) {
+          const fb = composedNode.functionBinding;
+          if (fb) {
+            const st = useGraphEditorStore.getState();
+            if (fb.kind === 'navigate') {
+              try { window.history.pushState(null, '', '#hub=' + fb.hubId); } catch { /* noop */ }
+              useGraphEditorStore.setState({ activeHubId: fb.hubId });
+            } else if (fb.kind === 'overlay') {
+              st.openOverlayElement({ elementId: fb.elementId, size: fb.size, anchor: fb.anchor });
+            }
+          }
+          return;
+        }
         selectNode(node.nodeId);
         openInspector();
       }}
@@ -2764,7 +2779,10 @@ function TopologySceneContent({
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
   const editorGraph = useMemo<EditorGraph>(
-    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
+    // APP-REALITY P7 — global elements (isGlobalElement, parentHubId '') are
+    // opened as overlays, never placed in the graph; exclude them from the
+    // galaxy/canvas-topology node spheres so they never render as a stray orphan.
+    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes.filter((n) => !n.isGlobalElement), edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
