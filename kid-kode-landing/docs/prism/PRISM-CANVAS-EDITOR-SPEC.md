@@ -450,3 +450,20 @@ User picks **Upload** or **Prompt**.
 ---
 
 *End of PRISM-CANVAS-EDITOR-SPEC.md*
+
+---
+## AMENDMENT 2026-06-14 (Logan) — Function/Navigation configurable in Canvas (deliberate change to the §line-57 boundary)
+The load-bearing boundary "function/behavior wiring happens in the node editor, NOT Canvas" is DELIBERATELY AMENDED to
+allow a DEFINED SUBSET of interaction-binding in Canvas, with bidirectional sync to the node editor:
+- Canvas gains a **Function** toolbar action. Select an element → popup with selectable visuals of (a) every existing
+  hub, (b) every global element, plus (c) New hub / New global element / New element.
+  - Pick a hub → bind "navigate to that hub on click".
+  - Pick a global element → bind "open this global element as an OVERLAY on top of the current hub", with
+    user-customizable overlay size + location.
+- SINGLE SOURCE OF TRUTH: these bindings live in the node's own ADDITIVE schema (the shared graph state). Canvas writes
+  them; the node editor (future session) reads/writes the SAME schema. Editing either surface updates the other by
+  construction — no conflict.
+- DEEPER behavior (live data, API calls, submit, state logic, rich data content like pricing/manufacturer copy) REMAINS
+  node-editor scope. The overlay ELEMENT's visual design (e.g. a photoreal holographic detail card with glitch/
+  transparency animation from the primitives + DESIGN-REFERENCES) is Canvas scope.
+- Preview executes the bindings: clicking a bound element navigates (hub) or opens the overlay (global element).
