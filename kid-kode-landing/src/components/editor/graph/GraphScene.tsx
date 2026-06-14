@@ -1604,7 +1604,7 @@ function SceneControlsBridge({
     const z = deviceMode === 'mobile' ? 11 : deviceMode === 'tablet' ? 14.5 : 18;
     c.setLookAt(0, 0, z, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deviceMode, viewMode]);
+  }, [deviceMode, viewMode, hub?.hubId]);
 
   // APP-REALITY P3 — entering Edit-in-Preview snaps the (now locked) canvas
   // camera to the configured shipped framing: the journey landing pose if the

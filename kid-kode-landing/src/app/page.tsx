@@ -34,6 +34,8 @@ import CanvasToolbar from '@/components/editor/overlays/CanvasToolbar';
 import CanvasCameraHud from '@/components/editor/overlays/CanvasCameraHud';
 import PreviewJourneyReplay from '@/components/editor/overlays/PreviewJourneyReplay';
 import PreviewDeviceFrame from '@/components/editor/overlays/PreviewDeviceFrame';
+import PreviewHubNav from '@/components/editor/overlays/PreviewHubNav';
+import HubMorphTransition from '@/components/editor/overlays/HubMorphTransition';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -862,6 +864,9 @@ export default function Page() {
       <PreviewJourneyReplay />
       {/* APP-REALITY P5 — preview device modes + device bezel (self-gates to preview-app). */}
       <PreviewDeviceFrame />
+      {/* APP-REALITY P6 — preview hub nav rail + premium morph transition. */}
+      <PreviewHubNav />
+      <HubMorphTransition />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />

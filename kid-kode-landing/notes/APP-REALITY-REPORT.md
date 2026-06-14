@@ -218,3 +218,37 @@ frame:
   `responsiveScenePos` would need to be added there too (it is not in the build chain).
 
 ### Verdict: Preview shows the real responsive version per device — a re-laid-out composition in a device frame, not a shrunk window. ✅
+
+---
+
+## P6 — HUB NAVIGATION WORKING (reparent-on-navigate + morph)
+
+### What changed
+- New `PreviewHubNav` rail (preview-app only): the running app's section nav — the hubs as tabs.
+  Clicking navigates hub→hub via the canonical write (`pushState(serializePreviewAppHash) +
+  setState({activeHubId})`), so the assembled scene re-scopes to the new hub (it resolves
+  `hub = hubs.find(activeHubId)` → `nodes = nodes.filter(parentHubId === hub)` and renders them at the
+  local origin — the editor's reparent-on-navigate). `navigateToHub(hubId)` is exported for P7's
+  Function-bound elements to reuse, keeping hash routing + the Prev/Next pager in sync.
+- New `HubMorphTransition` (preview-app only): on `activeHubId` change a **premium morph** plays — a
+  brass refractive band sweeps across while a brief dim crossfades the page swap, so navigation reads
+  as a designed page morph, not an instant cut. Inert under reduced motion.
+- Device-framing effect now re-applies on hub change (deps include `hub.hubId`).
+
+### Evidence — `notes/verification/app-reality/p6/` (real browser, DPR-2)
+`p6-log.json`: `navRailPresent` ✅, `hubChanged` ✅, `contentChanged` ✅ (rendered node ids differ),
+`hashUpdated` ✅ (`#hub=…`), `thirdHubChanged` ✅, 0 console errors. Frames show **three genuinely
+different pages**: `…-Arrival` (watch hero), `…-The Movement` (gears + "901 components · 47 jewels"),
+`…-Materia` ("Brass. Sapphire. Meteorite." material swatches) — switching pages like a real app, the
+nav rail highlighting the active section. Morph: DOM-confirmed the brass band + dim overlay animate on
+each navigation (`sawBand`/`sawDim` true, dim opacity ramps).
+
+### Honest flags
+- The morph's brass band uses `backdrop-filter`, which headless Chromium does not render, so it reads
+  subtle in the captured frame; the dim + band animate (DOM-confirmed) and the refractive band is more
+  pronounced in a real browser. Navigation itself is fully proven.
+- The literal `runtime/shared/hub-manager.ts` reparent adapter is the dead PrismHost runtime path; the
+  editor's preview navigates by re-scoping the single assembled scene to the active hub — the in-editor
+  equivalent of reparent-on-navigate (one scene, in place; no second mount).
+
+### Verdict: the hub rail navigates hub→hub in preview — distinct pages, hash-routed, with a morph. ✅

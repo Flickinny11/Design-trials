@@ -1,0 +1,65 @@
+{
+  "hubs": [
+    {
+      "id": "s1-arrival",
+      "title": "Arrival"
+    },
+    {
+      "id": "s2-movement",
+      "title": "The Movement"
+    },
+    {
+      "id": "s3-materia",
+      "title": "Materia"
+    },
+    {
+      "id": "s4-celestia",
+      "title": "Celestia"
+    },
+    {
+      "id": "s5-acquire",
+      "title": "Acquire"
+    }
+  ],
+  "errors": [],
+  "steps": [
+    {
+      "when": "boot",
+      "activeHubId": "s1-arrival",
+      "nodeIds": [
+        "orr-arrival-headline",
+        "orr-arrival-sub",
+        "orr-arrival-watch",
+        "orr-arrival-dust"
+      ],
+      "hash": "#hub=s1-arrival"
+    },
+    {
+      "when": "nav→The Movement",
+      "activeHubId": "s2-movement",
+      "nodeIds": [
+        "orr-movement-title",
+        "orr-movement-gear-a",
+        "orr-movement-tourbillon",
+        "orr-movement-spec"
+      ],
+      "hash": "#hub=s2-movement"
+    },
+    {
+      "when": "nav→Acquire",
+      "activeHubId": "s5-acquire",
+      "nodeIds": [
+        "orr-acquire-pedestal",
+        "orr-acquire-watch",
+        "orr-acquire-cta",
+        "orr-acquire-reserve"
+      ],
+      "hash": "#hub=s5-acquire"
+    }
+  ],
+  "navRailPresent": true,
+  "hubChanged": true,
+  "contentChanged": true,
+  "hashUpdated": true,
+  "thirdHubChanged": true
+}

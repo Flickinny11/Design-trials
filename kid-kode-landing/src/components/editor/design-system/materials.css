@@ -541,3 +541,27 @@ html[data-ds-tier='t2'] .ds-slab-hosted::after {
 @media (prefers-reduced-motion: reduce) {
   .ds-zero-pulse { animation: none; }
 }
+
+/* ── APP-REALITY P6 — premium hub morph transition ────────────────────────────
+   On hub→hub navigation in preview, a brass refractive band sweeps across while
+   a brief dim crossfades the page swap, so it reads as a designed page morph. */
+.ds-hub-morph-dim {
+  animation: ds-hub-morph-dim 620ms var(--ds-ease-out) both;
+}
+@keyframes ds-hub-morph-dim {
+  0%   { opacity: 0; }
+  18%  { opacity: 0.62; }
+  100% { opacity: 0; }
+}
+.ds-hub-morph-band {
+  animation: ds-hub-morph-band 620ms cubic-bezier(0.45, 0, 0.15, 1) both;
+}
+@keyframes ds-hub-morph-band {
+  0%   { transform: translateX(-130%) skewX(-14deg); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(130%) skewX(-14deg); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-hub-morph-dim, .ds-hub-morph-band { animation-duration: 1ms; }
+}
