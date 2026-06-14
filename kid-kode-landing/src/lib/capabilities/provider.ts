@@ -17,7 +17,7 @@ import type {
   IntegrationAsset,
   IntegrationAuthMethod,
   CapabilityRef,
-} from '../prism-graph/types.ts';
+} from '../prism-graph/types';
 
 /** A branded action returned by `searchActions` — becomes a draggable tile (B2). */
 export interface ActionTileDescriptor {

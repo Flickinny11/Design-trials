@@ -3,9 +3,9 @@
 // otherwise the deterministic STUB. The live path falls back to the stub on ANY
 // error so production is robust (a transient model failure never blocks an edit).
 import 'server-only';
-import type { PromptEditOrchestrator, PromptEditRequest, PromptEditPlan } from '../../lib/prompt-edit/contract.ts';
-import { stubOrchestrator } from '../../lib/prompt-edit/stub-orchestrator.ts';
-import { LiveOrchestrator } from './live-orchestrator.ts';
+import type { PromptEditOrchestrator, PromptEditRequest, PromptEditPlan } from '../../lib/prompt-edit/contract';
+import { stubOrchestrator } from '../../lib/prompt-edit/stub-orchestrator';
+import { LiveOrchestrator } from './live-orchestrator';
 
 /** A resilient orchestrator: live when configured, stub otherwise / on failure. */
 class ResilientOrchestrator implements PromptEditOrchestrator {

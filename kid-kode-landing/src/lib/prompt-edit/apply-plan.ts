@@ -8,9 +8,9 @@
 // schema / behavior / backend steps are recorded as advisory (they need an
 // interactive step — auth, a build, etc.) and logged for provenance.
 
-import type { PromptEditPlan, PlanStep } from './contract.ts';
-import { APPLYABLE_NODE_FIELDS } from './contract.ts';
-import type { PrismNode, FunctionTile, PromptEditLogEntry } from '../prism-graph/types.ts';
+import type { PromptEditPlan, PlanStep } from './contract';
+import { APPLYABLE_NODE_FIELDS } from './contract';
+import type { PrismNode, FunctionTile, PromptEditLogEntry } from '../prism-graph/types';
 
 export interface ApplyPlanIO {
   /** Read the current node (to merge arrays additively). */

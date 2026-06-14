@@ -22,9 +22,9 @@ import type {
   FunctionPlanStep,
   IntegrationPlanStep,
   NewArtifactPlanStep,
-} from './contract.ts';
-import { PREMIUM_PRIMITIVES, PREMIUM_ELEMENTS } from './catalog-context.ts';
-import type { MaterialSpec } from '../prism-graph/types.ts';
+} from './contract';
+import { PREMIUM_PRIMITIVES, PREMIUM_ELEMENTS } from './catalog-context';
+import type { MaterialSpec } from '../prism-graph/types';
 
 function hash(seed: string): string {
   let h = 2166136261;
@@ -114,7 +114,7 @@ export class StubOrchestrator implements PromptEditOrchestrator {
       usedPrimitives.add(prim);
       const targets = req.selection.nodeIds.length >= 2 ? req.selection.nodeIds : nodeIds;
       if (req.selection.nodeIds.length < 2) warnings.push('Collision works best with 2+ selected elements; applied a collision animation to the selection.');
-      const patches: Record<string, Partial<import('../prism-graph/types.ts').PrismNode>> = {};
+      const patches: Record<string, Partial<import('../prism-graph/types').PrismNode>> = {};
       targets.forEach((id, i) => {
         patches[id] = {
           animationBindings: [{ id: `ab-${hash(prim + id + i)}`, primitive: prim, driver: 'event', params: { strength: 1, restitution: 0.7 }, order: 0 }],

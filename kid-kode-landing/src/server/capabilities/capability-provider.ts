@@ -4,9 +4,9 @@
 // composio|nango to swap aggregators once their SDK is installed + keyed. Route
 // handlers import THIS; client components never import an adapter (INV-NEV2-4).
 import 'server-only';
-import type { CapabilityProvider } from '../../lib/capabilities/provider.ts';
-import { McpReferenceAdapter } from './mcp-adapter.ts';
-import { PipedreamAdapter, ComposioAdapter, NangoAdapter } from './aggregator-stubs.ts';
+import type { CapabilityProvider } from '../../lib/capabilities/provider';
+import { McpReferenceAdapter } from './mcp-adapter';
+import { PipedreamAdapter, ComposioAdapter, NangoAdapter } from './aggregator-stubs';
 
 let cached: CapabilityProvider | null = null;
 

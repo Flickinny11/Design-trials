@@ -10,7 +10,7 @@
 // In PRODUCTION the live orchestrator receives the FULL catalogs (via tool/RAG);
 // for the harness this curated, premium-first subset proves the behavior NOW.
 
-import type { PromptEditCatalogContext, CatalogEntrySummary } from './contract.ts';
+import type { PromptEditCatalogContext, CatalogEntrySummary } from './contract';
 
 export const DESIGN_REFERENCES_SUMMARY =
   'Observatory-Brass premium system: aged-brass + bone-ivory + deep-space ink palette (NO purple); ' +

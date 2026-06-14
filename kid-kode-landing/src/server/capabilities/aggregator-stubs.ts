@@ -10,8 +10,8 @@ import type {
   PlatformDescriptor,
   ValidationResult,
   ConnectResult,
-} from '../../lib/capabilities/provider.ts';
-import type { IntegrationAsset, IntegrationAuthMethod, CapabilityRef } from '../../lib/prism-graph/types.ts';
+} from '../../lib/capabilities/provider';
+import type { IntegrationAsset, IntegrationAuthMethod, CapabilityRef } from '../../lib/prism-graph/types';
 
 abstract class AggregatorStub implements CapabilityProvider {
   abstract readonly id: string;

@@ -17,7 +17,7 @@ import type {
   PrismNode,
   FunctionTile,
   IntegrationRef,
-} from '../prism-graph/types.ts';
+} from '../prism-graph/types';
 
 /** Where the prompt-edit was invoked from / what it is scoped to (A5). */
 export type PromptEditScope =
@@ -69,8 +69,17 @@ export interface PromptEditRequest {
   selection: PromptEditSelection;
   /** Injected catalogs (A3). The route assembles this; UI never sends secrets. */
   context: PromptEditCatalogContext;
-  /** Snapshot of the selected nodes (read-only) so the planner can diff intent. */
-  nodes: Array<Pick<PrismNode, 'id' | 'caption' | 'renderMode' | 'subtype'> & Record<string, unknown>>;
+  /** Snapshot of the selected nodes (read-only) so the planner can diff intent.
+   *  A plain structural snapshot (decoupled from PrismNode's exact keys). */
+  nodes: PromptEditNodeSnapshot[];
+}
+
+export interface PromptEditNodeSnapshot {
+  nodeId: string;
+  subtype?: string;
+  renderMode?: string;
+  caption?: string;
+  [k: string]: unknown;
 }
 
 // ── Plan steps — a discriminated union; each maps to ADDITIVE schema only ─────
@@ -219,5 +228,4 @@ export const APPLYABLE_NODE_FIELDS: ReadonlyArray<keyof PrismNode> = [
   'integrationRefs',
   'functionBinding',
   'overlaySpec',
-  'caption',
 ] as const;

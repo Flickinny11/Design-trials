@@ -13,12 +13,12 @@
 // installing `ai`@6.0.205 + `@anthropic-ai/sdk`@0.104.1 and setting the key is
 // the entire "go live" swap, with zero UI/contract change.
 import 'server-only';
-import { optionalImport } from '../optional-import.ts';
+import { optionalImport } from '../optional-import';
 import type {
   PromptEditOrchestrator,
   PromptEditRequest,
   PromptEditPlan,
-} from '../../lib/prompt-edit/contract.ts';
+} from '../../lib/prompt-edit/contract';
 
 /** The newest Opus id, verified at build (Fable-5 down → Opus). */
 export const PROMPT_EDIT_MODEL = process.env.PRISM_PROMPT_EDIT_MODEL || 'claude-opus-4-8';
@@ -73,7 +73,7 @@ export class LiveOrchestrator implements PromptEditOrchestrator {
     const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
     // Vercel AI SDK v6 structured output. The JSON Schema for PromptEditPlan
     // lives in plan-schema.ts so the same shape gates both stub and live.
-    const { promptEditPlanJsonSchema } = await import('./plan-schema.ts');
+    const { promptEditPlanJsonSchema } = await import('./plan-schema');
     const result = await ai.generateObject({
       model: anthropic(this.model),
       schema: ai.jsonSchema(promptEditPlanJsonSchema),

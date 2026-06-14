@@ -11,19 +11,19 @@
 //     REAL brand marks, simulated sandbox validation, and a MOCK managed-auth
 //     flow yielding a capability REFERENCE only (INV-NEV2-2 / INV-R13).
 import 'server-only';
-import { optionalImport } from '../optional-import.ts';
+import { optionalImport } from '../optional-import';
 import type {
   CapabilityProvider,
   ActionTileDescriptor,
   PlatformDescriptor,
   ValidationResult,
   ConnectResult,
-} from '../../lib/capabilities/provider.ts';
+} from '../../lib/capabilities/provider';
 import type {
   IntegrationAsset,
   IntegrationAuthMethod,
   CapabilityRef,
-} from '../../lib/prism-graph/types.ts';
+} from '../../lib/prism-graph/types';
 
 interface CatalogAction extends ActionTileDescriptor {
   platformId: string;
