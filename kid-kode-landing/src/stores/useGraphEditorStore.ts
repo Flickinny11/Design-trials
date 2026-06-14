@@ -37,6 +37,17 @@ export type CameraPose = {
   target: { x: number; y: number; z: number };
 };
 
+// APP-REALITY P1 — live canvas-mode camera read-out (azimuth/polar/distance),
+// pushed each frame by SceneControlsBridge and rendered by the CanvasCameraHud
+// angle readout. `azimuthDeg`/`polarDeg` are degrees; "straight-on / zero" is
+// azimuth 0°, polar 90° (tilt = polarDeg - 90). Null whenever the camera is not
+// the free canvas-edit camera (galaxy / preview-app). Throttled to real motion.
+export type CanvasView = {
+  azimuthDeg: number;
+  polarDeg: number;
+  distance: number;
+};
+
 interface GraphEditorState {
   // View
   zoomLevel: ZoomLevel;
@@ -110,6 +121,14 @@ interface GraphEditorState {
   flyToNodeId: string | null;
   flyToHubId: string | null;
   resetCameraSignal: number;
+  // APP-REALITY P1 — canvas "reset view to zero" (straight-on). Distinct from
+  // resetCamera (which clears activeHubId, a galaxy gesture): this re-centers
+  // the free canvas-edit camera to the deterministic straight-on pose on the
+  // ACTIVE hub without dropping the hub. SceneControlsBridge + CanvasCameraHud
+  // both watch the signal (bridge re-poses; HUD pulses + haptic).
+  resetViewSignal: number;
+  // APP-REALITY P1 — live canvas camera read-out (null off the canvas camera).
+  canvasView: CanvasView | null;
 
   // EB-04-01 / SC-019 — drill-in reveal animation timing. `hubRevealAt` is the
   // wall-clock timestamp (Date.now()) of the last galaxy→canvas drill-in;
@@ -206,6 +225,10 @@ interface GraphEditorState {
   flyToNode: (id: string) => void;
   flyToHub: (hubId: string) => void;
   clearFlyTarget: () => void;
+  // APP-REALITY P1 — bump the reset-view-to-zero signal (canvas straight-on).
+  resetViewToZero: () => void;
+  // APP-REALITY P1 — SceneControlsBridge pushes the live canvas camera angles.
+  setCanvasView: (v: CanvasView | null) => void;
   /**
    * EB-04-01 / SC-018 + SC-019 — galaxy→canvas drill-in (RA-06b: the
    * intra-hub authoring mode is now `canvas`). Atomically:
@@ -309,6 +332,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     flyToNodeId: null,
     flyToHubId: null,
     resetCameraSignal: 0,
+    resetViewSignal: 0,
+    canvasView: null,
     hubRevealAt: null,
     hubRevealDurationMs: 800,
     pinnedPositions: new Map(),
@@ -486,6 +511,11 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       }),
     resetCamera: () =>
       set((s) => ({ resetCameraSignal: s.resetCameraSignal + 1, activeHubId: null })),
+    // APP-REALITY P1 — straight-on reset of the canvas camera. Keeps activeHubId
+    // (the user stays on the same hub) — only the camera pose snaps to zero.
+    resetViewToZero: () =>
+      set((s) => ({ resetViewSignal: s.resetViewSignal + 1 })),
+    setCanvasView: (v) => set({ canvasView: v }),
     pinNode: (id, pos) =>
       set((s) => {
         const next = new Map(s.pinnedPositions);

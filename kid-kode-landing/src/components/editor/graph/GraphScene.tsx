@@ -1451,11 +1451,17 @@ function SceneControlsBridge({
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const checkpointCameraPose = useGraphEditorStore((s) => s.checkpointCameraPose);
+  // APP-REALITY P1 — straight-on reset signal + live angle read-out feed.
+  const resetViewSignal = useGraphEditorStore((s) => s.resetViewSignal);
+  const setCanvasView = useGraphEditorStore((s) => s.setCanvasView);
+  // Throttle the per-frame angle push to real motion.
+  const lastViewRef = useRef<{ az: number; pol: number; dist: number } | null>(null);
 
-  // EBR2-D-02 / §R2-D SC-071 — derive canvas-mode camera rail (6 angular
-  // bounds + pan limits) from the active hub envelope + viewport frame.
-  // Non-canvas modes hand `null` so the rail stays inert and the
-  // CameraControls fall back to the default (preview-app) constraints.
+  // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
+  // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
+  // SUPERSEDES SC-071 for canvas: the camera is now fully free (no angular /
+  // pan clamps fed to CameraControls below). Kept computing so existing probes
+  // still resolve a value; it no longer constrains motion.
   const rail = useMemo<CanvasCameraRail | null>(() => {
     if (viewMode === 'canvas' && hub) {
       const breakpoint = hub.responsiveBreakpoints?.desktop ?? null;
@@ -1476,6 +1482,41 @@ function SceneControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resetSignal]);
 
+  // APP-REALITY P1 — RESET VIEW TO ZERO (canvas straight-on). Snaps the free
+  // canvas camera back to the deterministic front-facing pose on the active
+  // hub (which renders at the local origin in scene mode). Keeps activeHubId.
+  // The CanvasCameraHud watches the same signal for the haptic + visual pulse.
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'canvas') return;
+    const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+    c.setLookAt(
+      pose.position.x, pose.position.y, pose.position.z,
+      pose.target.x, pose.target.y, pose.target.z,
+      true,
+    );
+    checkpointCameraPose('canvas', pose);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetViewSignal]);
+
+  // APP-REALITY P1 — PREVIEW-APP is camera-LOCKED to the configured view. On
+  // entry, snap to the deterministic front-facing "configured" pose so the
+  // locked camera never strands on a prior canvas orbit (which would expose
+  // scene edges / a partial frame). The camera then holds this pose — only the
+  // P2 camera journey (programmatic setLookAt, still honored while disabled)
+  // may move it. This is the configured landing view of the built app.
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'preview-app') return;
+    const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+    c.setLookAt(
+      pose.position.x, pose.position.y, pose.position.z,
+      pose.target.x, pose.target.y, pose.target.z,
+      true,
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode]);
+
   // EB-05-01 / §5 SC-022, SC-024 — Canvas mode entry: deterministic
   // center/face pose on the active hub. AssembledSceneContent filters to a
   // single hub whose nodes live in their local frame, so the active hub
@@ -1493,8 +1534,14 @@ function SceneControlsBridge({
     if (prev && prev !== viewMode) {
       const pos = new THREE.Vector3();
       const tgt = new THREE.Vector3();
-      c.getPosition(pos);
-      c.getTarget(tgt);
+      // APP-REALITY P1 regression-fix (SC-027 / INV-20): snapshot the LIVE pose
+      // (receiveEndValue=false), NOT the transition destination. The new
+      // preview-app entry effect is defined earlier and runs `setLookAt(front,
+      // true)` in the same commit, which overwrites _sphericalEnd/_targetEnd;
+      // reading the END value here would checkpoint the front pose over the
+      // user's last canvas orbit and break canvas→preview-app→canvas restore.
+      c.getPosition(pos, false);
+      c.getTarget(tgt, false);
       checkpointCameraPose(prev, {
         position: { x: pos.x, y: pos.y, z: pos.z },
         target: { x: tgt.x, y: tgt.y, z: tgt.z },
@@ -1533,6 +1580,26 @@ function SceneControlsBridge({
     const c = controlsRef.current;
     if (!c) return;
     setCameraDistance(c.distance);
+    // APP-REALITY P1 — feed the live canvas angle read-out (CanvasCameraHud).
+    // Throttled to real motion so the store isn't thrashed every frame.
+    if (viewMode === 'canvas') {
+      const az = (c.azimuthAngle * 180) / Math.PI;
+      const pol = (c.polarAngle * 180) / Math.PI;
+      const dist = c.distance;
+      const last = lastViewRef.current;
+      if (
+        !last ||
+        Math.abs(az - last.az) > 0.25 ||
+        Math.abs(pol - last.pol) > 0.25 ||
+        Math.abs(dist - last.dist) > 0.05
+      ) {
+        lastViewRef.current = { az, pol, dist };
+        setCanvasView({ azimuthDeg: az, polarDeg: pol, distance: dist });
+      }
+    } else if (lastViewRef.current !== null) {
+      lastViewRef.current = null;
+      setCanvasView(null);
+    }
   });
 
   // EBR2-D-02 / §R2-D SC-071 — apply pan-target clamps via camera-controls
@@ -1544,16 +1611,9 @@ function SceneControlsBridge({
   useEffect(() => {
     const c = controlsRef.current;
     if (!c) return;
-    if (rail) {
-      const { panLimits } = rail;
-      const box = new THREE.Box3(
-        new THREE.Vector3(panLimits.minX, panLimits.minY, -1000),
-        new THREE.Vector3(panLimits.maxX, panLimits.maxY, 1000),
-      );
-      c.setBoundary(box);
-    } else {
-      c.setBoundary(undefined);
-    }
+    // APP-REALITY P1 — canvas is fully free now (SC-071 pan boundary
+    // deliberately superseded). No pan clamp in any scene-bridge mode.
+    c.setBoundary(undefined);
   }, [rail]);
 
   // EBR2-D-02 / §R2-D SC-071 — dev hooks consumed by verify-editor-runtimes
@@ -1596,25 +1656,29 @@ function SceneControlsBridge({
     };
   }, [rail]);
 
+  // APP-REALITY P1 — Preview-app LOCKS the camera (it IS the running app: the
+  // configured view / camera journey owns the camera, the user cannot orbit it
+  // and so can never expose scene edges or a blank backdrop). Canvas is FULLY
+  // FREE — orbit/pan/zoom like a real 3D editor (SC-071 rail superseded). When
+  // `enabled={false}`, programmatic `setLookAt` still works (P2 journey).
+  const isPreview = viewMode === 'preview-app';
   return (
     <CameraControls
       ref={controlsRef}
-      minDistance={rail ? rail.minDistance : 3}
-      maxDistance={rail ? rail.maxDistance : 80}
-      minPolarAngle={rail ? rail.minPolarAngle : 0}
-      maxPolarAngle={rail ? rail.maxPolarAngle : Math.PI}
-      minAzimuthAngle={rail ? rail.minAzimuthAngle : -Infinity}
-      maxAzimuthAngle={rail ? rail.maxAzimuthAngle : Infinity}
+      enabled={!isPreview}
+      minDistance={1.5}
+      maxDistance={220}
+      minPolarAngle={0}
+      maxPolarAngle={Math.PI}
+      minAzimuthAngle={-Infinity}
+      maxAzimuthAngle={Infinity}
       smoothTime={0.24}
       draggingSmoothTime={0.12}
       dollyToCursor
       truckSpeed={1.1}
       azimuthRotateSpeed={0.7}
       polarRotateSpeed={0.7}
-      // W3 — in preview-app the wheel belongs to the SCROLL DRIVER (page
-      // semantics): camera dolly on wheel pulled the whole hub into a distant
-      // void cluster (advocate MF3). Editing modes keep dolly.
-      dollySpeed={viewMode === 'preview-app' ? 0 : 0.75}
+      dollySpeed={0.75}
       infinityDolly={false}
     />
   );

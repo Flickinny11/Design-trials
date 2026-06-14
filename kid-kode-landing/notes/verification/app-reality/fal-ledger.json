@@ -1,0 +1,12 @@
+{
+  "run": "app-reality",
+  "account": "shared $50 fal account",
+  "warnAt": 25,
+  "hardWarnAt": 40,
+  "stopAt": 48,
+  "entries": [],
+  "total": 0.0,
+  "priorCumulative": 0.479,
+  "cumulative": 0.479,
+  "note": "fal fires only on explicit user-gated generation (P7 holographic overlay texture is the likely consumer). No spend yet."
+}

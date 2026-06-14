@@ -1,0 +1,14 @@
+{
+  "hubId": "s1-arrival",
+  "orbitPose": {
+    "az": -84,
+    "pol": 48
+  },
+  "restoredPose": {
+    "az": -84,
+    "pol": 48
+  },
+  "azDelta": 0,
+  "polDelta": 0,
+  "restoredOrbit": true
+}

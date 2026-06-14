@@ -31,6 +31,7 @@ import RightPane from '@/components/editor/panels/RightPane';
 import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import CanvasToolbar from '@/components/editor/overlays/CanvasToolbar';
+import CanvasCameraHud from '@/components/editor/overlays/CanvasCameraHud';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -815,6 +816,9 @@ export default function Page() {
                 <GalaxyFilterOverlay />
                 {/* STEP8 — Canvas authoring suite. Self-gates to viewMode==='canvas'. */}
                 <CanvasToolbar />
+                {/* APP-REALITY P1 — canvas camera instrument (angle read-out +
+                    reset-to-zero + haptic pulse). Self-gates to canvas. */}
+                <CanvasCameraHud />
               </>
             )}
           </div>
@@ -832,6 +836,7 @@ export default function Page() {
                 <RightPane />
                 <GalaxyFilterOverlay />
                 <CanvasToolbar />
+                <CanvasCameraHud />
               </>
             )}
           </div>

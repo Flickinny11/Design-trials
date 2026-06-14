@@ -525,3 +525,19 @@ html[data-ds-tier='t2'] .ds-slab-hosted::after {
   /* the .ds-grain tooth — replaced by in-shader micro-normal noise */
   opacity: 0 !important;
 }
+
+/* ── APP-REALITY P1 — return-to-zero pulse (CanvasCameraHud) ───────────────────
+   Fired when the free canvas camera returns to straight-on (reset button OR a
+   manual orbit back to centre). A single brass ring/glow throb so "centred" is
+   felt. Paired with navigator.vibrate() in the HUD. Inert under reduced-motion. */
+.ds-zero-pulse {
+  animation: ds-zero-pulse 600ms var(--ds-ease-out) both;
+}
+@keyframes ds-zero-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--ds-brass-200-rgb), 0.55), 0 6px 22px -8px rgba(var(--ds-brass-400-rgb), 0.55); }
+  55%  { box-shadow: 0 0 0 7px rgba(var(--ds-brass-200-rgb), 0.0), 0 8px 26px -6px rgba(var(--ds-brass-400-rgb), 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--ds-brass-200-rgb), 0.0), 0 6px 22px -8px rgba(var(--ds-brass-400-rgb), 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-zero-pulse { animation: none; }
+}
