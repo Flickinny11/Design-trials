@@ -51,8 +51,8 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
 | P1 | Camera model (canvas free / preview locked + reset-zero + angle HUD + haptic) | DONE ✅ | 42c270e6 |
 | P2 | Camera-in-keyframe (keyframeable camera journey) | DONE ✅ | 34fa3d49 |
 | P3 | Edit-in-Preview | DONE ✅ | 5f9ac470 |
-| P4 | Backgrounds full viewport (desktop+mobile) | DONE ✅ | (commit) |
-| P5 | Device modes (real responsive) | TODO | — |
+| P4 | Backgrounds full viewport (desktop+mobile) | DONE ✅ | 9bf8e2da |
+| P5 | Device modes (real responsive) | DONE ✅ | (commit) |
 | P6 | Hub navigation working (reparent-on-navigate + morph) | TODO | — |
 | P7 | Function button + binding popup + sample holographic overlay | TODO | — |
 | P8 | Nav chrome primitives (nav library category) | TODO | — |

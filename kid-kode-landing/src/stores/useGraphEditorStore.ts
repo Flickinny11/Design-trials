@@ -3,6 +3,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
+import type { DeviceMode } from '@/lib/prism-graph/types';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
 export type InspectorTab = 'visual' | 'material' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
@@ -76,6 +77,13 @@ interface GraphEditorState {
    * designs against the real result. Reset to false on any mode change.
    */
   editInPreview: boolean;
+  /**
+   * APP-REALITY P5 — Preview device mode. The assembled scene applies each
+   * node's per-device `responsiveScenePos` override so the built app RE-LAYS-OUT
+   * for the device (real responsive, not a resized frame). Only the preview
+   * device switcher changes it; reset to 'desktop' whenever leaving preview-app.
+   */
+  deviceMode: DeviceMode;
   /**
    * STEP8 canvas-toolbar Transform group (canvas-spec §5) — the active gizmo
    * axis-set the CanvasTransformGizmo renders while in edit mode. Lifted to the
@@ -201,6 +209,8 @@ interface GraphEditorState {
   setEditorMode: (m: EditorMode) => void;
   // APP-REALITY P3 — toggle the "Edit in Preview" canvas sub-mode.
   setEditInPreview: (b: boolean) => void;
+  // APP-REALITY P5 — set the preview device mode (desktop/tablet/mobile).
+  setDeviceMode: (m: DeviceMode) => void;
   /**
    * STEP8 — set the active transform-gizmo axis set (translate/rotate/scale).
    * Called by the toolbar Transform buttons and the g/r/s shortcuts.
@@ -333,6 +343,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     editorMode: 'idle',
     // APP-REALITY P3 — Edit-in-Preview canvas sub-mode (off by default).
     editInPreview: false,
+    // APP-REALITY P5 — preview device mode (desktop until the switcher changes it).
+    deviceMode: 'desktop',
     // STEP8 — default transform gizmo axis set.
     canvasGizmoMode: 'translate',
     selectedNodeId: null,
@@ -383,9 +395,12 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
       // APP-REALITY P3 — Edit-in-Preview is a canvas sub-mode; any mode change
       // clears it so it never leaks into galaxy/preview-app.
-      set({ viewMode: m, hubRevealAt: null, editInPreview: false }),
+      // APP-REALITY P5 — device mode is a preview-app concern; reset to desktop
+      // when leaving preview-app so canvas authoring always sees the desktop layout.
+      set((s) => ({ viewMode: m, hubRevealAt: null, editInPreview: false, deviceMode: m === 'preview-app' ? s.deviceMode : 'desktop' })),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setEditInPreview: (b) => set({ editInPreview: b }),
+    setDeviceMode: (m) => set({ deviceMode: m }),
     // EBR2-C-01 / §R2-C SC-068 — Inspector Edit toggle. Selection-reset is
     // handled inside the selection actions (selectNode/selectHub/flyToNode/
     // drillIntoHub), not here.

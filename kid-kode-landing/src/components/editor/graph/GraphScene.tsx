@@ -1478,6 +1478,8 @@ function SceneControlsBridge({
   const journeyStartRef = useRef<number | null>(null);
   // APP-REALITY P3 — Edit-in-Preview locks the canvas camera to the shipped view.
   const editInPreview = useGraphEditorStore((s) => s.editInPreview);
+  // APP-REALITY P5 — device mode reframes the locked preview camera per device.
+  const deviceMode = useGraphEditorStore((s) => s.deviceMode);
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -1592,6 +1594,17 @@ function SceneControlsBridge({
     journeyActiveRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [journeyReplaySignal]);
+
+  // APP-REALITY P5 — reframe the locked preview camera for the device so the
+  // device's re-laid-out composition fills its frame (mobile pulls in closer to
+  // fill the tall portrait window). Skips when a journey owns the camera.
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'preview-app' || hasJourney(hub)) return;
+    const z = deviceMode === 'mobile' ? 11 : deviceMode === 'tablet' ? 14.5 : 18;
+    c.setLookAt(0, 0, z, 0, 0, 0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceMode, viewMode]);
 
   // APP-REALITY P3 — entering Edit-in-Preview snaps the (now locked) canvas
   // camera to the configured shipped framing: the journey landing pose if the
@@ -2329,6 +2342,8 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   // selector returns the patch for this specific node (or null), so the
   // component re-renders only when this node's preview buffer changes.
   const previewPatch = usePreviewStateStore((s) => s.patches[node.nodeId] ?? null);
+  // APP-REALITY P5 — active Preview device mode (drives the responsive override).
+  const deviceMode = useGraphEditorStore((s) => s.deviceMode);
   const composedNode = composeNodeWithPreview(node, previewPatch);
   // STEP8 canvas-spec SC-9 — scenePosition is the authored transform the
   // Transform tools write (gizmo + toolbar). Read it with full defaults
@@ -2346,6 +2361,20 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     scaleY: spRaw?.scaleY ?? 1,
     scaleZ: spRaw?.scaleZ ?? 1,
   };
+  // APP-REALITY P5 — compose the per-device responsive override: absolute pose
+  // overrides + a scale multiplier so the built composition RE-LAYS-OUT for the
+  // device (real responsive, not a resized frame). Absent → authored layout.
+  const rdp = composedNode.responsiveScenePos?.[deviceMode];
+  if (rdp) {
+    if (rdp.x !== undefined) sp.x = rdp.x;
+    if (rdp.y !== undefined) sp.y = rdp.y;
+    if (rdp.z !== undefined) sp.z = rdp.z;
+    if (rdp.scale !== undefined) {
+      sp.scaleX *= rdp.scale;
+      sp.scaleY *= rdp.scale;
+      sp.scaleZ *= rdp.scale;
+    }
+  }
   // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
   // consumer of scenePosition + canvasTransform for visible node placement.
   // Compose them here so the artifact, selection ring, and the gizmo anchor
@@ -2609,6 +2638,8 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   // Built" — the bubble is the canvas-side stage representation). Placed
   // after all hooks so the hook order is stable across mode toggles.
   if (previewMode && isStage0Bubble(node)) return null;
+  // APP-REALITY P5 — responsively hidden on the active device (declutter).
+  if (rdp?.hidden) return null;
 
   return (
     <group

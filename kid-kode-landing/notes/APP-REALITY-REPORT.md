@@ -179,3 +179,42 @@ scene so galaxy keeps its cosmic nebula; texture disposed on unmount / palette c
 2nd renderer, no PixiJS); design-tokens palette only.
 
 ### Verdict: the built app now owns the whole viewport on desktop and mobile — a designed surface, never a void. ✅
+
+---
+
+## P5 — DEVICE MODES (real responsive)
+
+### What changed
+- New additive `PrismNode.responsiveScenePos` (`{ mobile?, tablet?, desktop? }`, each `{x?,y?,z?,scale?,
+  hidden?}`) — per-device absolute pose overrides + scale multiplier + hide flag. The assembled scene
+  composes `scenePosition` with the active device's override, so the built composition genuinely
+  **re-lays-out** for the device (not a resized frame).
+- New `deviceMode` store state (resets to desktop when leaving preview-app). `SceneControlsBridge`
+  reframes the locked preview camera per device (mobile pulls in to z 11, tablet 14.5, desktop 18) so
+  the device's layout fills its frame.
+- New `PreviewDeviceFrame` overlay (preview-app only): a Desktop/Tablet/Mobile switcher + a device
+  **bezel** (9:19.5 phone with notch / 3:4 tablet, dimmed surround) that frames the live preview as the
+  real device view.
+- Authored real per-device layouts for the ORRERY arrival hub's 4 nodes in `live-graph.json` (the
+  editor loads this directly; `build:prism` reads it, never regenerates it).
+
+### Evidence — `notes/verification/app-reality/p5/` (real browser, DPR-2)
+`p5-log.json` confirms the showcase carries the authoring (`authoredOnGraph` present). Three frames
+(`desktop-preview-{desktop,tablet,mobile}.png`) show **three genuinely different layouts**, not a resized
+frame:
+- **desktop** — full authored layout, full-bleed (no bezel).
+- **tablet** — 3:4 bezel; intermediate scale; subtitle/watch/headline sized for tablet and fit.
+- **mobile** — 9:19.5 phone bezel + notch; tighter portrait column, hero text scaled to fit the phone
+  width, **the ambient dust node hidden** (responsive declutter). Watch re-centred + scaled, camera
+  pulled in. 0 console errors across all three.
+
+### Honest flags
+- The numeric world-pos probe (`__PRISM_EDITOR_GET_NODE_WORLD_POS__`) returned null in this preview
+  context (a harness getter limitation); the three side-by-side frames are the definitive proof of real
+  adaptation (positions/scales/visibility differ per device).
+- Per-device layouts are authored for the ORRERY **arrival** hub (the landing). The other 4 hubs use
+  their authored layout on every device (the device system works everywhere; per-node responsive
+  authoring is per-hub and can be extended). If `scripts/build-orrery-graph.mjs` is ever re-run, the
+  `responsiveScenePos` would need to be added there too (it is not in the build chain).
+
+### Verdict: Preview shows the real responsive version per device — a re-laid-out composition in a device frame, not a shrunk window. ✅

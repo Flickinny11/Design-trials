@@ -797,6 +797,11 @@ export interface PrismNode {
   // Round-trips through save/reload. §5's color-adjust / blend / filter set
   // is a later slice — these are the core four the P3 scope names.
   imageSpec?: ImageSpec;
+  // APP-REALITY P5 (INV-8 additive). Per-device responsive layout override
+  // applied by the Preview device modes. Absent → the authored desktop layout
+  // on every device. The assembled scene composes scenePosition with the
+  // active device's override (absolute pose + scale multiplier + hidden).
+  responsiveScenePos?: ResponsiveScenePos;
   // P4 3D-OBJECT (canvas-spec §5 3D object tools; INV-8 additive). A
   // primitive mesh created in-canvas: the factory builds the geometry from
   // `kind` + `params` and routes the surface through the EXISTING material
@@ -921,6 +926,31 @@ export interface ArtifactLibraryEntry {
   textSpec?: TextSpec;
   /** Optional still image for the library tile preview. */
   thumbnailUrl?: string;
+}
+
+// APP-REALITY P5 — per-DEVICE responsive layout override (INV-8 additive).
+// The Preview device modes (Desktop / Tablet / Mobile) show the REAL responsive
+// version: each node may carry an absolute pose override + a scale multiplier +
+// a hidden flag per device, so the built composition genuinely RE-LAYS-OUT for
+// the device (not merely a resized viewport). Absent device / absent field →
+// the authored desktop layout (no change). Never mutated by compile/preview.
+export type DeviceMode = 'desktop' | 'tablet' | 'mobile';
+
+export interface ResponsiveDevicePose {
+  /** Absolute scene-position overrides for this device (omit = keep authored). */
+  x?: number;
+  y?: number;
+  z?: number;
+  /** Multiplier on the authored scaleXYZ for this device (omit = 1×). */
+  scale?: number;
+  /** Hide this node entirely on this device (responsive declutter). */
+  hidden?: boolean;
+}
+
+export interface ResponsiveScenePos {
+  mobile?: ResponsiveDevicePose;
+  tablet?: ResponsiveDevicePose;
+  desktop?: ResponsiveDevicePose;
 }
 
 // P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).
