@@ -63,37 +63,37 @@ GALAXY transformed [glowing sun/orbit-rings/energy-tethers/nebula], perf 60fps m
 3D-TEXT (just signed off WOW: true extruded 3D text from opentype outlines, font preview gallery, B/I/S/U, shadow
 offset/color/opacity/blur, prompt→texture on 3D faces).
 
-## LIVE STATE (2026-06-14)
-RUNNING NOW: **APP REALITY** (`./APP-REALITY-PROMPT.md`, opus-pinned, sentinel `run-sentinel-appreality.sh` armed) — 9
-phases: P1 camera model (canvas FREE 3D / preview LOCKED + full-bleep, never show edges; reset-to-zero + angle readout +
-haptic) · P2 camera-in-keyframe (camera journeys; preview plays them) · P3 edit-in-preview · P4 background covers full
-viewport desktop+mobile · P5 device modes (real responsive desktop/tablet/mobile) · P6 hub navigation working (reparent-
-on-navigate) · P7 FUNCTION button + binding (navigate-to-hub OR open-global-element-overlay; bindings in node's ADDITIVE
-schema = shared source synced w/ node editor; sample holographic watch-detail overlay) · P8 nav chrome primitives
-(menus/dropdowns/headers/footers) · P9 interactive verification. Ledger: notes/verification/APP-REALITY-PROGRESS.md.
-**SPEC AMENDMENT 2026-06-14** (at end of PRISM-CANVAS-EDITOR-SPEC.md): Function/nav configurable in Canvas AND node
-editor, bidirectionally synced via the node's additive schema (single source of truth). Deeper behavior stays node-editor.
+## LIVE STATE (2026-06-14, latest)
+APP REALITY — FINISHING (into P9 verification, advocate browsers active). P1-P8 all checkpointed: P1 camera model
+(canvas FREE 3D / preview LOCKED + full-bleed + reset-to-zero HUD w/ angle readout + haptic) - P2 keyframeable camera
+journeys (canvas authors, preview plays) - P3 edit-in-preview - P4 full-viewport hub background desktop+mobile - P5
+real-responsive device modes (not resized frames) - P6 hub navigation in preview - P7 Function binding (the AMENDMENT) +
+premium holographic overlay payoff - P8 nav chrome primitives (header/footer/dropdown/menu). Prompt ./APP-REALITY-PROMPT.md,
+ledger notes/verification/APP-REALITY-PROGRESS.md, report notes/APP-REALITY-REPORT.md (skeleton until P9 done), frames
+notes/verification/app-reality/. Sentinel run-sentinel-appreality.sh armed.
+SENTINEL v4 RULE (learned this session, applies to ALL future sentinels): completion = report-exists AND agents==0. Agents
+PRE-CREATE the report skeleton at run start; old v3 read mere file-existence as "done" and exited, leaving the run with no
+auto-resume net. The fixed sentinels (appreality, nodeeditor) have this guard; copy from them.
+SPEC AMENDMENT 2026-06-14 (end of PRISM-CANVAS-EDITOR-SPEC.md): Function/nav configurable in Canvas AND node editor, synced
+via the node's additive schema (single source). App Reality P7 implements the Canvas side.
 
-QUEUED (gate on Logan after he judges App Reality): **3D BACKGROUND LIBRARY** (massive depth-scattered 3D backgrounds,
-image+3D-sprinkle hybrid, animated/customizable, camera-journey ready) and **GUIDED TIPS** (glowing lightbulb top-right;
-first-visit walkthrough where Prism "drives the screen" — animated cursor highlights areas, high-tech popups with the
-artifact animated in 3D + premium-type explanation + Skip/Close; built from primitives + DESIGN-REFERENCES; advocate
-verifies by interacting). Prompts not yet written for these — write when firing.
+NODE EDITOR (next big workstream) — SPEC HARDENED + BUILD READY-TO-FIRE:
+- docs/prism/PRISM-NODE-EDITOR-SPEC-V2.md (committed): 33 numbered criteria + invariants + forbidden for prompt-to-edit
+  (canvas + node), Functions tab, Integrations tab, galaxy planets. LOCKED DECISIONS: provider-agnostic CapabilityProvider
+  adapter (MCP default + Pipedream/Composio/Nango stubs - defers vendor/COGS choice); prompt-edit via Vercel AI SDK v6 +
+  @anthropic-ai/sdk NEWEST Opus with DESIGN-REFERENCES + 406 primitives + 36-element library injected (premium-first);
+  Supabase for saved/named snippets; capability-references-only for secrets (INV-R13); HARNESS/CONTRACT build (UI +
+  interfaces + stubs + MCP reference adapter, production-ready so the live AI service + aggregator are a SWAP).
+- Build kit READY (committed): ./NODE-EDITOR-PROMPT.md (5 phases), ./NODE-EDITOR-RESUME-COMBINED.md, run-sentinel-
+  nodeeditor.sh (v4), launcher /tmp/launch-nodeeditor.sh. FIRE with: bash /tmp/launch-nodeeditor.sh (ONLY after App Reality
+  clears - one browser-run at a time). Analysis + live June-2026 tool versions: notes/NODE-EDITOR-HARDENING.md.
 
-NEXT BIG WORKSTREAM (Logan kicked off 2026-06-14, ANALYSIS/SPEC phase): **NODE EDITOR (= Galaxy mode) spec hardening.**
-See notes/NODE-EDITOR-HARDENING.md (the gap analysis + new concepts + current research). Concepts to lock in: (a)
-PROMPT-TO-EDIT on elements (canvas) AND nodes — select element(s) → "Prompt Edit" → describe design/function/animation →
-AI MUST consider the premium DESIGN-REFERENCES + primitives FIRST (others allowed; user may optionally tag deps) → can
-request new artifacts, collisions, any 3D anim/styling; function described routes to node editor; calls newest Opus (or
-Fable if back). (b) Node editor FUNCTIONS tab: smart auto-complete search → MASSIVE library of branded, auto-tested
-templated function snippets (REAL logos); add as drag-drop TILES to nodes (multiple, ordered); tested on select +
-auto-fixed if external API changed; users paste/save/name own snippets (Supabase profile). (c) INTEGRATIONS tab:
-auto-fill search of ~every external platform w/ branded logos → one-click auth (OAuth 2.1 + MCP + API token + CLI +
-newest one-click-auth) → once authed, self-populates that platform's saved assets → drag/drop into nodes. (d) Galaxy
-viz: hubs as photoreal PLANETS orbiting "<app_name>_world", each hub sized by total artifact size (mostly spec'd). NODE
-EDITOR = each element in its IN-BUILT state; canvas/preview = the BUILT state. Apps built here = anything, integrate w/
-anything, fully functional + shippable. Research-current tooling (Composio/Pipedream/Nango/MCP registries/WorkOS/Supabase
-— see hardening doc).
+QUEUED (fire-on-command, gate on Logan, ONE browser-run at a time): NODE EDITOR (kit ready) - 3D BACKGROUND LIBRARY (massive
+depth-scattered 3D backgrounds, image+3D-sprinkle hybrid, animated/customizable, camera-journey ready - prompt not yet
+written) - GUIDED TIPS (glowing lightbulb top-right; first-visit walkthrough where Prism "drives the screen": animated
+cursor highlights areas, high-tech popups w/ the artifact animated in 3D + premium-type explanation + Skip/Close; built from
+primitives + DESIGN-REFERENCES; advocate verifies by interacting - prompt not yet written). Logan picks order; can chain.
+
 
 ## IMMEDIATE NEXT ACTION (new session)
 1. Check live state (realagents, sentinel/chain, ledger, git log). If App Reality running → monitor/verify/report/gate.
