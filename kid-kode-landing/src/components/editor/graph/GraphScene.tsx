@@ -23,6 +23,7 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
+import { GalaxyStarfield, GalaxyNebula, GalaxyOrbitRings, SunCorona } from '@/components/editor/graph/GalaxyAtmosphere';
 import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
@@ -301,49 +302,82 @@ function GalaxyHubTethers({
     [nodes, edges]
   );
 
-  const materialsRef = useRef<THREE.LineBasicMaterial[]>([]);
-  materialsRef.current = [];
+  // UI-WOW-2 P2 — glowing additive TUBES (were 1px grey lines). hubCenters is a
+  // fresh object each frame but the galaxy centers are deterministic, so a value
+  // signature keeps the tube geometries from rebuilding every frame.
+  const posSig = tethers
+    .map((t) => {
+      const a = hubCenters[t.hubA];
+      const b = hubCenters[t.hubB];
+      return a && b ? `${a.x | 0},${a.y | 0},${a.z | 0}|${b.x | 0},${b.y | 0},${b.z | 0}` : 'x';
+    })
+    .join(';');
 
+  const tubes = useMemo(() => {
+    const out: { id: string; geo: THREE.TubeGeometry; halo: THREE.TubeGeometry; color: string }[] = [];
+    for (const tether of tethers) {
+      const a = hubCenters[tether.hubA];
+      const b = hubCenters[tether.hubB];
+      if (!a || !b) continue;
+      const va = new THREE.Vector3(a.x, a.y, a.z);
+      const vb = new THREE.Vector3(b.x, b.y, b.z);
+      const mid = va.clone().add(vb).multiplyScalar(0.5);
+      const dist = va.distanceTo(vb);
+      // bow the arc outward from the central sun → reads as an orbit-connection
+      mid.add(mid.clone().normalize().multiplyScalar(dist * 0.14 + 8));
+      const curve = new THREE.QuadraticBezierCurve3(va, mid, vb);
+      out.push({
+        id: tether.id,
+        geo: new THREE.TubeGeometry(curve, 28, 0.45, 6, false),
+        halo: new THREE.TubeGeometry(curve, 28, 1.7, 6, false),
+        color: EDGE_COLORS[tether.type] || DS.textHi,
+      });
+    }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tethers, posSig]);
+
+  // dispose superseded geometries when the layout changes / on unmount
+  useEffect(() => () => { tubes.forEach((p) => { p.geo.dispose(); p.halo.dispose(); }); }, [tubes]);
+
+  const coreMats = useRef<THREE.MeshBasicMaterial[]>([]);
+  coreMats.current = [];
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
-    for (let i = 0; i < materialsRef.current.length; i++) {
-      const mat = materialsRef.current[i];
-      if (!mat) continue;
-      // Subtle pulse: opacity oscillates around 0.45 with ±0.15, phase per index.
-      mat.opacity = 0.45 + 0.15 * Math.sin(t * 1.4 + i * 0.6);
+    for (let i = 0; i < coreMats.current.length; i++) {
+      const mat = coreMats.current[i];
+      // energy pulse travelling along the hub trail (phase per index)
+      if (mat) mat.opacity = 0.4 + 0.24 * Math.sin(t * 1.4 + i * 0.6);
     }
   });
 
   return (
     <group>
-      {tethers.map((tether, i) => {
-        const a = hubCenters[tether.hubA];
-        const b = hubCenters[tether.hubB];
-        if (!a || !b) return null;
-        const color = EDGE_COLORS[tether.type] || DS.textHi;
-        const positions = new Float32Array([a.x, a.y, a.z, b.x, b.y, b.z]);
-        return (
-
-          <line key={tether.id}>
-            <bufferGeometry>
-              <bufferAttribute
-                attach="attributes-position"
-                args={[positions, 3]}
-              />
-            </bufferGeometry>
-            <lineBasicMaterial
-              ref={(m) => {
-                if (m) materialsRef.current[i] = m;
-              }}
-              color={color}
+      {tubes.map((tube, i) => (
+        <group key={tube.id}>
+          <mesh geometry={tube.geo}>
+            <meshBasicMaterial
+              ref={(m) => { if (m) coreMats.current[i] = m as THREE.MeshBasicMaterial; }}
+              color={tube.color}
               transparent
-              opacity={0.45}
+              opacity={0.5}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
               toneMapped={false}
             />
-
-          </line>
-        );
-      })}
+          </mesh>
+          <mesh geometry={tube.halo}>
+            <meshBasicMaterial
+              color={tube.color}
+              transparent
+              opacity={0.08}
+              depthWrite={false}
+              blending={THREE.AdditiveBlending}
+              toneMapped={false}
+            />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
@@ -983,6 +1017,8 @@ function WorldSun() {
         />
       </mesh>
       <pointLight color={DS.brass200} intensity={3.2} distance={260} decay={1.8} />
+      {/* UI-WOW-2 P2 — layered additive corona so the sun reads as a star. */}
+      <SunCorona radius={radius} />
     </group>
   );
 }
@@ -2548,6 +2584,18 @@ function TopologySceneContent({
           node-material starfield is a later polish item.) */}
       {!isWebGPU && (
         <Stars radius={800} depth={500} count={5000} factor={4} saturation={0.5} fade speed={0.3} />
+      )}
+
+      {/* UI-WOW-2 P2 — galaxy atmosphere: additive starfield + nebula depth +
+          glowing orrery rings. Standard-material additive geometry (self-blooms
+          by accumulation) so it works under WebGPU where the legacy bloom
+          composer + drei <Stars> are off. Galaxy-only; tier-scaled. */}
+      {viewMode === 'galaxy' && (
+        <>
+          <GalaxyStarfield quality={qualityMode === 'low' ? 'low' : 'high'} />
+          <GalaxyNebula quality={qualityMode === 'low' ? 'low' : 'high'} />
+          <GalaxyOrbitRings quality={qualityMode === 'low' ? 'low' : 'high'} />
+        </>
       )}
 
       {/* Lighting — photoreal with environment IBL + fills */}
