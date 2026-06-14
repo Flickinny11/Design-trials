@@ -1601,9 +1601,13 @@ function SceneControlsBridge({
   useEffect(() => {
     const c = controlsRef.current;
     if (!c || viewMode !== 'preview-app' || hasJourney(hub)) return;
-    // APP-REALITY P9 — frame the hero so it FILLS the surface (mobile pulls
-    // closest; desktop/tablet also fill prominently, not a tiny centred card).
-    const z = deviceMode === 'mobile' ? 11 : deviceMode === 'tablet' ? 12.5 : 14;
+    // PROD-FINISH Phase B — pull the locked preview camera CLOSER on every
+    // device so the authored composition FILLS the frame and the product hero
+    // reads punchy (the prior desktop z=14 left the composition at ~34% of frame
+    // height — heroes read small in a large empty surface). z chosen so the
+    // tallest composition (acquire: reserve text y≈2.05 → pedestal y≈-2.3) still
+    // clears the frame at fov 45 (half-height = z·0.414): z=10.5 → ±4.35.
+    const z = deviceMode === 'mobile' ? 11 : 10.5; // mobile portrait keeps its proven framing
     c.setLookAt(0, 0, z, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMode, viewMode, hub?.hubId]);
@@ -3542,6 +3546,32 @@ function AssembledSceneContent({
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  // PROD-FINISH Phase B — PRELOAD every hub's hero GLB on mount so the product
+  // hero appears immediately, not after a multi-second async load. The mesh
+  // factory calls ctx.glbLoader.loadGLB(url) which is URL-keyed-cached; warming
+  // that cache up front means navigating to a hub mounts the hero from cache
+  // (next microtask) instead of leaving the first screen as empty atmosphere +
+  // text for ~3s while a 2–4 MB GLB downloads. Reads ALL source nodes (every
+  // hub) so hub→hub navigation is instant too. Cache-only warm — non-destructive
+  // (INV-17), never touches the source graph.
+  useEffect(() => {
+    const ctx = getSharedNodeContext({ runPrimitives: false });
+    const urls = Array.from(
+      new Set(
+        useGraphSourceStore
+          .getState()
+          .nodes.map((n) => n.meshUrl)
+          .filter((u): u is string => !!u),
+      ),
+    );
+    for (const url of urls) {
+      ctx.glbLoader.loadGLB(url).catch(() => {
+        /* poisoned-retry handled by the loader cache; a failed preload just
+           falls back to the on-demand load when the node mounts. */
+      });
+    }
   }, []);
 
   // EBR2-C-04 / §R2-C SC-069 — install the world-pos lookup on mount (once),

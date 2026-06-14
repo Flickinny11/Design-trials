@@ -1,0 +1,372 @@
+{
+  "total": 20,
+  "pass": 20,
+  "fail": 0,
+  "thresholds": {
+    "minCoverage": 0.008,
+    "minDiff": 6,
+    "minPeak": 90
+  },
+  "results": [
+    {
+      "viewport": "desktop",
+      "hub": "s1-arrival",
+      "primary": "orr-arrival-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0296,
+      "meanAbsDiff": 42.6,
+      "peak": 255,
+      "changedFrac": 0.434,
+      "rect": {
+        "cx": 0.502,
+        "cy": 0.571,
+        "w": 0.098,
+        "h": 0.302
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "desktop",
+      "hub": "s2-movement",
+      "primary": "orr-movement-tourbillon",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0213,
+      "meanAbsDiff": 25.7,
+      "peak": 241,
+      "changedFrac": 0.509,
+      "rect": {
+        "cx": 0.637,
+        "cy": 0.468,
+        "w": 0.124,
+        "h": 0.172
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "desktop",
+      "hub": "s3-materia",
+      "primary": "orr-materia-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.031,
+      "meanAbsDiff": 71,
+      "peak": 224,
+      "changedFrac": 0.772,
+      "rect": {
+        "cx": 0.326,
+        "cy": 0.544,
+        "w": 0.159,
+        "h": 0.195
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "desktop",
+      "hub": "s4-celestia",
+      "primary": "orr-celestia-planet-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0213,
+      "meanAbsDiff": 12.9,
+      "peak": 254,
+      "changedFrac": 0.198,
+      "rect": {
+        "cx": 0.545,
+        "cy": 0.513,
+        "w": 0.276,
+        "h": 0.077
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "desktop",
+      "hub": "s5-acquire",
+      "primary": "orr-acquire-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0116,
+      "meanAbsDiff": 57.9,
+      "peak": 255,
+      "changedFrac": 0.706,
+      "rect": {
+        "cx": 0.501,
+        "cy": 0.506,
+        "w": 0.063,
+        "h": 0.185
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "hub": "s1-arrival",
+      "primary": "orr-arrival-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0339,
+      "meanAbsDiff": 45.4,
+      "peak": 255,
+      "changedFrac": 0.461,
+      "rect": {
+        "cx": 0.503,
+        "cy": 0.56,
+        "w": 0.115,
+        "h": 0.295
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "hub": "s2-movement",
+      "primary": "orr-movement-tourbillon",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0255,
+      "meanAbsDiff": 32.7,
+      "peak": 253,
+      "changedFrac": 0.512,
+      "rect": {
+        "cx": 0.666,
+        "cy": 0.47,
+        "w": 0.146,
+        "h": 0.174
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "hub": "s3-materia",
+      "primary": "orr-materia-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0372,
+      "meanAbsDiff": 70.8,
+      "peak": 224,
+      "changedFrac": 0.772,
+      "rect": {
+        "cx": 0.291,
+        "cy": 0.544,
+        "w": 0.191,
+        "h": 0.195
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "hub": "s4-celestia",
+      "primary": "orr-celestia-planet-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0256,
+      "meanAbsDiff": 16,
+      "peak": 254,
+      "changedFrac": 0.245,
+      "rect": {
+        "cx": 0.553,
+        "cy": 0.513,
+        "w": 0.332,
+        "h": 0.077
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "hub": "s5-acquire",
+      "primary": "orr-acquire-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0139,
+      "meanAbsDiff": 61.8,
+      "peak": 255,
+      "changedFrac": 0.712,
+      "rect": {
+        "cx": 0.501,
+        "cy": 0.506,
+        "w": 0.075,
+        "h": 0.185
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "hub": "s1-arrival",
+      "primary": "orr-arrival-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0213,
+      "meanAbsDiff": 39.8,
+      "peak": 255,
+      "changedFrac": 0.414,
+      "rect": {
+        "cx": 0.501,
+        "cy": 0.476,
+        "w": 0.087,
+        "h": 0.244
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "hub": "s2-movement",
+      "primary": "orr-movement-tourbillon",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0229,
+      "meanAbsDiff": 33.4,
+      "peak": 252,
+      "changedFrac": 0.519,
+      "rect": {
+        "cx": 0.651,
+        "cy": 0.471,
+        "w": 0.127,
+        "h": 0.18
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "hub": "s3-materia",
+      "primary": "orr-materia-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0338,
+      "meanAbsDiff": 70.7,
+      "peak": 223,
+      "changedFrac": 0.773,
+      "rect": {
+        "cx": 0.31,
+        "cy": 0.544,
+        "w": 0.174,
+        "h": 0.195
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "hub": "s4-celestia",
+      "primary": "orr-celestia-planet-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0232,
+      "meanAbsDiff": 20.2,
+      "peak": 253,
+      "changedFrac": 0.299,
+      "rect": {
+        "cx": 0.548,
+        "cy": 0.513,
+        "w": 0.301,
+        "h": 0.077
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "hub": "s5-acquire",
+      "primary": "orr-acquire-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0126,
+      "meanAbsDiff": 63.9,
+      "peak": 254,
+      "changedFrac": 0.684,
+      "rect": {
+        "cx": 0.501,
+        "cy": 0.506,
+        "w": 0.068,
+        "h": 0.185
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "hub": "s1-arrival",
+      "primary": "orr-arrival-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0292,
+      "meanAbsDiff": 43.6,
+      "peak": 255,
+      "changedFrac": 0.438,
+      "rect": {
+        "cx": 0.502,
+        "cy": 0.403,
+        "w": 0.181,
+        "h": 0.161
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "hub": "s2-movement",
+      "primary": "orr-movement-tourbillon",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0405,
+      "meanAbsDiff": 49,
+      "peak": 255,
+      "changedFrac": 0.499,
+      "rect": {
+        "cx": 0.952,
+        "cy": 0.472,
+        "w": 0.399,
+        "h": 0.164
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "hub": "s3-materia",
+      "primary": "orr-materia-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0345,
+      "meanAbsDiff": 66.1,
+      "peak": 223,
+      "changedFrac": 0.768,
+      "rect": {
+        "cx": -0.075,
+        "cy": 0.542,
+        "w": 0.522,
+        "h": 0.185
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "hub": "s4-celestia",
+      "primary": "orr-celestia-planet-brass",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0593,
+      "meanAbsDiff": 14.5,
+      "peak": 253,
+      "changedFrac": 0.22,
+      "rect": {
+        "cx": 0.645,
+        "cy": 0.512,
+        "w": 0.908,
+        "h": 0.073
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "hub": "s5-acquire",
+      "primary": "orr-acquire-watch",
+      "pass": true,
+      "inFrustum": true,
+      "coverage": 0.0355,
+      "meanAbsDiff": 20.8,
+      "peak": 244,
+      "changedFrac": 0.243,
+      "rect": {
+        "cx": 0.39,
+        "cy": 0.635,
+        "w": 0.282,
+        "h": 0.126
+      },
+      "errors": 0
+    }
+  ]
+}

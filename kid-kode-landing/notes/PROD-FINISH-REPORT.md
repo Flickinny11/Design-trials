@@ -24,7 +24,24 @@ key), and a near-black ink pool (opacity 0.97) over that bright center read as a
 maxCorner luma 64–71) to one premium dark textured atmosphere (minCornerStd ≥1.1 desktop/tablet/
 constrained, cornerSpread ≤14, maxCorner ≤43). Mobile good look preserved. Frames:
 `prod-finish/atmosphere/<viewport>-<hub>.png` (before: `prod-finish/baseline/ATM-*`).
-## Phase B — hero present + lit (Arrival watch on desktop/tablet) — TODO
+## Phase B — hero present + lit (Arrival watch on desktop/tablet) — DONE ✅
+**Defect:** Arrival hero watch read as absent on desktop/tablet; heroes generally under-scaled on
+desktop; s5-acquire watch tiny on landscape. Root causes (hard-measured): (1) hero GLBs are 2–4 MB
+and loaded async with NO preload → ~3 s "absent on first look" race (watch invisible at 2.6 s,
+present at 3.8 s); (2) preview camera sat far (z=14, fov 45) → composition filled only ~34 % of
+frame height, heroes small; (3) s5-acquire watch base scale 1.3 → coverage 0.004 on landscape.
+**Changes:**
+- `GraphScene.tsx` — PRELOAD every hub's hero GLB into the URL-keyed loader cache on mount
+  (cache-only warm, non-destructive INV-17) so heroes mount from cache (no multi-second blank).
+- `GraphScene.tsx` — pull the locked preview camera closer: desktop/tablet z 14/12.5 → 10.5,
+  mobile keeps its proven z=11. Composition now fills the frame; heroes ~1.3–2× bigger. Verified
+  no crop on the tallest composition (acquire) at fov 45.
+- `live-graph.json` — `orr-acquire-watch` scale 1.3 → 1.55, y −0.62 → −0.72 so the watch reads as
+  a clear hero seated cleanly on its pedestal (no headline overlap).
+**Proof (heroes-log.json, DPR-2, projection hook + background-robust HIDE-DIFF):** 20/20 PASS.
+Every primary hero on every hub × viewport is in-frustum, genuinely drawn (meanAbsDiff 13–71),
+lit (peak luma 220–255), with real coverage (desktop arrival 0.015→0.030; acquire 0.004→0.012+).
+Frames: `prod-finish/heroes/<viewport>-<hub>.png` (before: `prod-finish/baseline/HERO-*`).
 ## Phase C — production functional validation + capstone — TODO
 
 ---
