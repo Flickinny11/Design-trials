@@ -1,0 +1,19 @@
+{
+  "at": "2026-06-14T07:59:43.023Z",
+  "label": "p3",
+  "base": "http://localhost:3000",
+  "steps": [
+    "text"
+  ],
+  "results": [
+    {
+      "profile": "desktop",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 1440,
+      "density": "wide",
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ]
+}

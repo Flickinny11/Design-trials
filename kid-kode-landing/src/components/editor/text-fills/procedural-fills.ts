@@ -14,6 +14,7 @@
 // src/lib/prism/**). Verified by scripts/verify-procedural-fills.mjs in real
 // headless Chromium (vitest's node env has no canvas).
 
+import { createNoise4D } from 'simplex-noise';
 import type { TextFillSuggestion } from '@/lib/prism/text/contract';
 import { DS } from '@/components/editor/design-system/tokens';
 
@@ -65,12 +66,33 @@ function makeValueNoise(rng: Rng, grid: number): (u: number, v: number) => numbe
   };
 }
 
-// 3-octave fBm over independent seeded lattices.
+// 3-octave fBm — UI-WOW-2 P3: simplex gradients (resurrects the installed-but-
+// dead `simplex-noise` dep) for richer, more organic pigment than the value-
+// noise lattice. Kept TILEABLE by sampling 4D simplex on a torus (u,v → two
+// circles), so the 256² tile still repeats seamlessly over the text block's
+// aBlockUv. Deterministic: the same seeded PRNG drives simplex's permutation,
+// so identical prompt ⇒ stable output (no Math.random / Date).
 function makeFbm(rng: Rng): (u: number, v: number) => number {
-  const n1 = makeValueNoise(rng, 5);
-  const n2 = makeValueNoise(rng, 11);
-  const n3 = makeValueNoise(rng, 23);
-  return (u, v) => n1(u, v) * 0.55 + n2(u, v) * 0.3 + n3(u, v) * 0.15;
+  const n = createNoise4D(rng);
+  const TAU = Math.PI * 2;
+  const R = 1 / TAU;
+  return (u, v) => {
+    const ux = Math.cos(u * TAU) * R;
+    const uy = Math.sin(u * TAU) * R;
+    const vx = Math.cos(v * TAU) * R;
+    const vy = Math.sin(v * TAU) * R;
+    let amp = 0.55;
+    let freq = 5;
+    let sum = 0;
+    let norm = 0;
+    for (let o = 0; o < 3; o++) {
+      sum += amp * n(ux * freq, uy * freq, vx * freq, vy * freq);
+      norm += amp;
+      amp *= 0.5;
+      freq *= 2.1;
+    }
+    return Math.min(1, Math.max(0, (sum / norm) * 0.5 + 0.5));
+  };
 }
 
 type Rgb = [number, number, number];

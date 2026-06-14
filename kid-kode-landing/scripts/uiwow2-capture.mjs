@@ -162,6 +162,25 @@ async function runProfile(browser, profile) {
     await sleep(160); await shot(out, '22-keyframe-reveal-c', page);
     await sleep(700); await shot(out, '22-keyframe-open', page);
   }
+  if (STEPS.includes('text')) {
+    // Showcase prompt->texture on TEXT: select the headline node, open the Text
+    // tool, switch to Texture / AI fills (poured pigment in MSDF glyphs, 3D).
+    await setMode(page, 'canvas', 1400);
+    const sres = await selectFirstNode(page);
+    log(`[${profile}] text select → ${sres}`);
+    await sleep(900);
+    await clickToolGroup(page, 'Text');
+    await sleep(1000);
+    await shot(out, '50-text-tool', page);
+    for (const kind of ['texture', 'ai-texture']) {
+      await page.evaluate((k) => {
+        const b = document.querySelector(`[data-testid="fill-kind-${k}"]`);
+        b?.click();
+      }, kind).catch(() => {});
+      await sleep(1700);
+      await shot(out, `51-text-${kind}-fills`, page);
+    }
+  }
   if (STEPS.includes('kfdata')) {
     // Select a node, open the keyframe editor, capture a few keys at spread
     // playhead positions → populated lanes (diamonds) proving the data binding.
