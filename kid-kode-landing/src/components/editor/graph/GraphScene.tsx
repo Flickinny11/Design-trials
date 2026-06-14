@@ -2753,6 +2753,68 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
 }
 
 function AssembledSceneDiagnostics({ nodes }: { nodes: PrismNode[] }) {
+  const { camera, size } = useThree();
+  // PROD-FINISH — reliable hero on-screen measurement hook. Projects a node's
+  // mounted artifact bounding box to NORMALIZED screen space (0..1, y-down to
+  // match a screenshot) so the heroes verifier can confirm the product renders
+  // WITHIN the frustum with real on-screen coverage — independent of camera fov
+  // (which __PRISM_EDITOR_GET_NODE_WORLD_POS__ alone cannot give). Editor-shell
+  // dev scope (NODE_ENV gate + window), FP-05 safe. Reads the group map the
+  // AssembledSceneNode ref callback populates.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+      __PRISM_EDITOR_GET_NODE_SCREEN_RECT__?: (nodeId: string) => {
+        inFrustum: boolean;
+        minX: number; minY: number; maxX: number; maxY: number;
+        cx: number; cy: number; coverage: number;
+      } | null;
+    };
+    const box = new THREE.Box3();
+    const v = new THREE.Vector3();
+    w.__PRISM_EDITOR_GET_NODE_SCREEN_RECT__ = (nodeId: string) => {
+      const group = w.__PRISM_EDITOR_NODE_GROUPS__?.get(nodeId);
+      if (!group) return null;
+      group.updateWorldMatrix(true, true);
+      box.setFromObject(group, true);
+      if (box.isEmpty()) return null;
+      camera.updateMatrixWorld();
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let anyInFront = false;
+      const corners = [
+        [box.min.x, box.min.y, box.min.z], [box.min.x, box.min.y, box.max.z],
+        [box.min.x, box.max.y, box.min.z], [box.min.x, box.max.y, box.max.z],
+        [box.max.x, box.min.y, box.min.z], [box.max.x, box.min.y, box.max.z],
+        [box.max.x, box.max.y, box.min.z], [box.max.x, box.max.y, box.max.z],
+      ];
+      for (const [x, y, z] of corners) {
+        v.set(x, y, z).project(camera);
+        if (v.z < 1) anyInFront = true;
+        const sx = (v.x * 0.5 + 0.5);
+        const sy = (1 - (v.y * 0.5 + 0.5)); // y-down (screenshot space)
+        minX = Math.min(minX, sx); maxX = Math.max(maxX, sx);
+        minY = Math.min(minY, sy); maxY = Math.max(maxY, sy);
+      }
+      const clampedW = Math.max(0, Math.min(1, maxX) - Math.max(0, minX));
+      const clampedH = Math.max(0, Math.min(1, maxY) - Math.max(0, minY));
+      const coverage = clampedW * clampedH; // fraction of the viewport area
+      const inFrustum =
+        anyInFront && maxX > 0 && minX < 1 && maxY > 0 && minY < 1;
+      return {
+        inFrustum,
+        minX, minY, maxX, maxY,
+        cx: (minX + maxX) / 2, cy: (minY + maxY) / 2,
+        coverage,
+      };
+    };
+    return () => {
+      delete w.__PRISM_EDITOR_GET_NODE_SCREEN_RECT__;
+    };
+    // size is a dep so the hook recomputes against the current drawing buffer
+    // aspect after a device-mode/viewport change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [camera, size.width, size.height]);
   useFrame(() => {
     if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
     (window as any).__prismEditorDebug = {
