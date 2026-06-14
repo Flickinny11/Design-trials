@@ -81,6 +81,13 @@ BUILD_ALLOW = {
 DEVDEP_ALLOW = {
     "@types/node", "@types/react", "@types/react-dom", "@types/three",
     "autoprefixer", "postcss", "tailwindcss", "typescript",
+    # Test harness. Most prism tests live in tests/{unit,...} (outside the
+    # Surface-2 src scope), but COLOCATED unit tests (e.g.
+    # src/lib/prism/text/font-outline-registry.test.ts) import vitest from
+    # inside the prism scope. vitest is a real devDependency (^2.1.9); allow the
+    # bare specifier so colocated *.test.ts files pass the import guard.
+    # Rationale: 3D TEXT STYLING outline-registry colocated test (2026-06-14).
+    "vitest",
 }
 ALL_ALLOW = RUNTIME_ALLOW | BUILD_ALLOW | DEVDEP_ALLOW
 

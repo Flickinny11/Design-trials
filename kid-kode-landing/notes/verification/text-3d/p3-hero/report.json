@@ -1,0 +1,34 @@
+{
+  "label": "p3-hero",
+  "startedAt": "2026-06-14T15:04:22.920Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    },
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "profile",
+      "file": "profile.png",
+      "crop": "profile-crop.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 5,
+    "depthZ": 0.2356,
+    "is3d": true,
+    "faceFill": "solid",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "f7a8a3f9-46cf-4209-9de8-3e1bbaf90ba9",
+  "mounted3d": true
+}

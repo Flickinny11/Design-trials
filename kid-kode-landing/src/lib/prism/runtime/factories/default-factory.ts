@@ -49,9 +49,16 @@ import {
 } from 'three';
 import type { gsap } from 'gsap';
 import { applyScenePosition, type NodeContext } from '../shared/adapter';
-import { peekTextAtlas, resolveTextAtlas } from '../shared/text-atlas';
+import {
+  peekTextAtlas,
+  resolveTextAtlas,
+  peekTextOutlines,
+  resolveTextOutlines,
+} from '../shared/text-atlas';
 import { createTextObject } from '../../text/text-object';
+import { createTextObject3D } from '../../text/text-object-3d';
 import type { LoadedFontAtlas, TextObjectHandle } from '../../text/contract';
+import type { LoadedFontOutlines } from '../../text/contract-3d';
 import { TEXT_SPEC_DEFAULT, type TextSpec } from '../../../prism-graph/types';
 import {
   resolveReceivesLighting,
@@ -501,8 +508,12 @@ export function defaultRenderModeFactory(
     // unlit GI-mask layer (per-unit tags would not survive setSpec rebuilds).
     const spec: TextSpec = { ...TEXT_SPEC_DEFAULT, ...(node.textSpec ?? {}) };
     const family = spec.fontFamily ?? TEXT_SPEC_DEFAULT.fontFamily ?? 'Inter';
-    const fontWeight = spec.fontWeight ?? TEXT_SPEC_DEFAULT.fontWeight ?? 400;
+    const baseWeight = spec.fontWeight ?? TEXT_SPEC_DEFAULT.fontWeight ?? 400;
+    // Bold maps to a heavier REAL weight face (real font styles where available,
+    // §7). Both the flat atlas and the 3D outline source key by this weight.
+    const fontWeight = spec.bold ? Math.max(baseWeight, 700) : baseWeight;
     const textLit = resolveReceivesLighting(node);
+
     const mountText = (atlas: LoadedFontAtlas) => {
       if (textState.disposed) return;
       const handle = createTextObject(spec, atlas, {
@@ -519,13 +530,47 @@ export function defaultRenderModeFactory(
       group.userData.textHandle = handle;
       textHandles.push(handle);
     };
-    const cached = peekTextAtlas(family, fontWeight);
-    if (cached) {
-      mountText(cached);
+    const mountFlatAsync = () => {
+      const cached = peekTextAtlas(family, fontWeight);
+      if (cached) {
+        mountText(cached);
+      } else {
+        void resolveTextAtlas(family, fontWeight)
+          .then(mountText)
+          .catch(() => { /* swallow — soft-fail like a missing texture asset */ });
+      }
+    };
+
+    // TRUE 3D EXTRUDED TEXT (canvas-spec §7 / INV-11), tier-gated (INV-9). When
+    // `extrude.enabled` and the device tier permits (T1+), build REAL extruded
+    // geometry from the font's vector outlines — lit + shadow-casting. T0 (or an
+    // outline-resolve failure) falls back to the flat MSDF path. The 3D handle
+    // satisfies the SAME TextObjectHandle contract, so cleanup + restyle work.
+    const tier = ctx.tier ?? 'T1';
+    const want3D = spec.extrude?.enabled === true && tier !== 'T0';
+    if (want3D) {
+      const chars = spec.content ?? TEXT_SPEC_DEFAULT.content ?? '';
+      const italic = spec.italic === true;
+      const mount3D = (outlines: LoadedFontOutlines) => {
+        if (textState.disposed) return;
+        const handle = createTextObject3D(spec, outlines, {
+          tier,
+          resolveFillTexture: (url) => ctx.textureLoader.loadTexture(url),
+        });
+        group.add(handle.object);
+        group.userData.textHandle = handle;
+        textHandles.push(handle);
+      };
+      const cachedOutlines = peekTextOutlines(family, fontWeight, chars, italic);
+      if (cachedOutlines) {
+        mount3D(cachedOutlines);
+      } else {
+        void resolveTextOutlines(family, fontWeight, chars, italic)
+          .then(mount3D)
+          .catch(mountFlatAsync); // graceful: outline source unavailable → flat
+      }
     } else {
-      void resolveTextAtlas(family, fontWeight)
-        .then(mountText)
-        .catch(() => { /* swallow — soft-fail like a missing texture asset */ });
+      mountFlatAsync();
     }
   }
 

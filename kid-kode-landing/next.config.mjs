@@ -5,7 +5,10 @@ const nextConfig = {
   // msdfgen binary; webpack-bundling it into .next/server/vendor-chunks breaks
   // that path resolution. Externalize so the on-demand atlas bake requires it
   // from real node_modules at runtime.
-  serverExternalPackages: ['msdf-bmfont-xml'],
+  // opentype.js (3D-text glyph-outline gen) is CommonJS and reads font files
+  // at runtime; externalize alongside msdf-bmfont-xml so it resolves from real
+  // node_modules rather than a webpack vendor chunk.
+  serverExternalPackages: ['msdf-bmfont-xml', 'opentype.js'],
   outputFileTracingExcludes: {
     '*': [
       'node_modules/@swc/core-linux-x64-gnu',

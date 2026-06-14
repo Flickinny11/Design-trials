@@ -1,0 +1,486 @@
+// text-object-3d.ts — TRUE 3D EXTRUDED TextObject (CreateTextObject3DFn from
+// contract-3d.ts). The opt-in sibling of the flat MSDF text-object.ts.
+//
+// Letterforms are REAL font outlines (opentype.js → THREE.ShapePath →
+// ExtrudeGeometry), never THREE.TextGeometry / typeface JSON (FP-02) and never
+// diffusion-drawn (INV-11). One flat Group named TEXT_OBJECT_NAME whose direct
+// children are unit meshes `glyph-0..N-1` (SAME contract the 36 text-animation
+// primitives + the GraphScene restyle effect + HubManager cleanup consume — so
+// they work with zero edits). Each unit is one lit MeshPhysicalNodeMaterial mesh
+// (catches scene light + casts/receives real shadows). A TSL colorNode splits
+// the fill: front/back CAPS show the face fill (solid/gradient/texture), the
+// extruded WALLS+bevel show a derived metallic edge — a single material (so
+// primitives that mutate mat.color stay crash-safe) with a premium 3D look.
+//
+// DOM-free by construction (FP-05): no DOM globals. Outlines + textures are
+// injected (the builder never fetches). Relative imports only (dep-guard).
+
+import {
+  Box3,
+  ExtrudeGeometry,
+  Group,
+  Mesh,
+  Shape,
+  ShapePath,
+  type BufferGeometry,
+  type Material,
+  type Texture,
+} from 'three';
+import { MeshPhysicalNodeMaterial, type Node } from 'three/webgpu';
+import {
+  abs,
+  clamp,
+  color,
+  dot,
+  float,
+  materialColor,
+  mix,
+  normalLocal,
+  step,
+  texture,
+  uv,
+  vec2,
+} from 'three/tsl';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { TEXT_SPEC_DEFAULT, type TextFill, type TextSpec } from '../../prism-graph/types';
+import { TEXT_OBJECT_NAME, textUnitName, type TextObjectHandle } from './contract';
+import type {
+  CreateTextObject3DFn,
+  GlyphOutline,
+  GlyphOutlineCommand,
+  LoadedFontOutlines,
+} from './contract-3d';
+
+// ── extrude defaults (em units; tier-scaled in resolveExtrude) ─────────────
+const EXTRUDE_DEFAULT = {
+  depth: 0.22,
+  bevelEnabled: true,
+  bevelThickness: 0.018,
+  bevelSize: 0.016,
+  bevelSegments: 3,
+  curveSegments: 10,
+  metalness: 0.12,
+  roughness: 0.34,
+};
+
+/** Resolve a partial spec over TEXT_SPEC_DEFAULT (explicit undefined must not
+ *  clobber). Mirrors text-object.ts:resolveSpec. */
+function resolveSpec(spec: TextSpec): TextSpec {
+  const out: TextSpec = { ...TEXT_SPEC_DEFAULT };
+  for (const [key, value] of Object.entries(spec)) {
+    if (value !== undefined) (out as Record<string, unknown>)[key] = value;
+  }
+  return out;
+}
+
+// ── outline command → THREE.Shape ──────────────────────────────────────────
+// opentype getPath() coords are y-DOWN (canvas convention); negate y for THREE
+// y-up. Coords arrive in font units → multiply by emScale (= fontSize /
+// unitsPerEm) so shapes are in scene units (1 em = fontSize scene units).
+function glyphToShapes(commands: GlyphOutlineCommand[], emScale: number): Shape[] {
+  const sp = new ShapePath();
+  for (const c of commands) {
+    switch (c.type) {
+      case 'M':
+        sp.moveTo((c.x ?? 0) * emScale, -(c.y ?? 0) * emScale);
+        break;
+      case 'L':
+        sp.lineTo((c.x ?? 0) * emScale, -(c.y ?? 0) * emScale);
+        break;
+      case 'Q':
+        sp.quadraticCurveTo(
+          (c.x1 ?? 0) * emScale, -(c.y1 ?? 0) * emScale,
+          (c.x ?? 0) * emScale, -(c.y ?? 0) * emScale,
+        );
+        break;
+      case 'C':
+        sp.bezierCurveTo(
+          (c.x1 ?? 0) * emScale, -(c.y1 ?? 0) * emScale,
+          (c.x2 ?? 0) * emScale, -(c.y2 ?? 0) * emScale,
+          (c.x ?? 0) * emScale, -(c.y ?? 0) * emScale,
+        );
+        break;
+      case 'Z':
+        // ShapePath closes subpaths implicitly at toShapes(); nothing to do.
+        break;
+    }
+  }
+  // TrueType (glyf) outlines + the y-negation above triangulate correctly with
+  // isCCW=true (the same value three's Font.generateShapes uses). Holes
+  // (counters of o/a/e/g/B/8) are auto-detected per glyph because we only ever
+  // feed ONE glyph's self-contained contours here (never a whole word — avoids
+  // three #16950/#13653 nested-contour mis-assignment).
+  return sp.toShapes(true);
+}
+
+// ── layout (pen-based; mirrors msdf-layout.ts with opentype metrics) ────────
+interface Placed3DGlyph {
+  char: string;
+  /** Pen origin (baseline, left side bearing) in BLOCK space, y-up. */
+  x: number;
+  y: number;
+  lineIndex: number;
+  wordIndex: number;
+}
+interface Unit3D {
+  center: { x: number; y: number };
+  glyphs: { char: string; x: number; y: number }[]; // unit-local pen origins
+  text: string;
+  lineIndex: number;
+  wordIndex: number;
+}
+interface Layout3D {
+  units: Unit3D[];
+  width: number;
+  height: number;
+}
+
+function layoutOutline(spec: TextSpec, o: LoadedFontOutlines): Layout3D {
+  const content = spec.content ?? TEXT_SPEC_DEFAULT.content ?? '';
+  const fontSize = spec.fontSize ?? TEXT_SPEC_DEFAULT.fontSize ?? 0.4;
+  const letterSpacing = spec.letterSpacing ?? 0;
+  const lineHeightMul = spec.lineHeight ?? 1;
+  const align = spec.align ?? 'center';
+  const decompose = spec.decompose ?? 'glyph';
+
+  const emScale = fontSize / (o.unitsPerEm || 1000);
+  const lineStep = (o.ascender - o.descender || o.unitsPerEm) * emScale * lineHeightMul;
+
+  const lines = content.split('\n');
+  const placed: Placed3DGlyph[] = [];
+  const lineWidths: number[] = [];
+  let wordIndex = -1;
+  let inWord = false;
+
+  for (let k = 0; k < lines.length; k++) {
+    const baseline = -k * lineStep;
+    let penX = 0;
+    let prevChar: string | null = null;
+    let advanced = 0;
+    for (const ch of Array.from(lines[k])) {
+      const g: GlyphOutline | undefined = o.glyphs[ch];
+      const advance = (g?.advanceWidth ?? o.glyphs[' ']?.advanceWidth ?? o.unitsPerEm * 0.3) * emScale;
+      if (prevChar !== null) {
+        const kern = o.kerning?.[`${prevChar}${ch}`];
+        if (kern) penX += kern * emScale;
+      }
+      if (/\s/.test(ch) || !g || g.commands.length === 0) {
+        inWord = false;
+      } else {
+        if (!inWord) { wordIndex += 1; inWord = true; }
+        placed.push({ char: ch, x: penX, y: baseline, lineIndex: k, wordIndex });
+      }
+      penX += advance + letterSpacing * fontSize;
+      advanced += 1;
+      prevChar = ch;
+    }
+    inWord = false;
+    lineWidths.push(advanced > 0 ? penX - letterSpacing * fontSize : 0);
+  }
+
+  if (placed.length === 0) return { units: [], width: 0, height: 0 };
+
+  // Align each line within the widest line's advance.
+  const blockAdvance = Math.max(...lineWidths, 0);
+  for (const p of placed) {
+    const slack = blockAdvance - lineWidths[p.lineIndex];
+    p.x += align === 'center' ? slack / 2 : align === 'right' ? slack : 0;
+  }
+
+  // Typographic block extents (cap/asc + desc across lines), centered on origin.
+  const ascY = o.ascender * emScale;
+  const descY = o.descender * emScale;
+  const topY = ascY; // first line baseline 0
+  const botY = -(lines.length - 1) * lineStep + descY;
+  const minX = Math.min(...placed.map((p) => p.x));
+  const maxX = blockAdvance + minX; // advance from leftmost pen
+  const width = Math.max(maxX - minX, blockAdvance);
+  const height = Math.max(topY - botY, 1e-3);
+  const cx = (minX + maxX) / 2;
+  const cy = (topY + botY) / 2;
+  for (const p of placed) {
+    p.x -= cx;
+    p.y -= cy;
+  }
+
+  // Group into animation units (glyph default).
+  const groups: Placed3DGlyph[][] = [];
+  if (decompose === 'glyph') {
+    for (const p of placed) groups.push([p]);
+  } else {
+    const byKey = new Map<number, Placed3DGlyph[]>();
+    for (const p of placed) {
+      const key = decompose === 'word' ? p.wordIndex : p.lineIndex;
+      let grp = byKey.get(key);
+      if (!grp) { grp = []; byKey.set(key, grp); groups.push(grp); }
+      grp.push(p);
+    }
+  }
+
+  const units: Unit3D[] = groups.map((grp) => {
+    const xs = grp.map((p) => p.x);
+    const center = {
+      x: (Math.min(...xs) + Math.max(...xs)) / 2,
+      y: (Math.min(...grp.map((p) => p.y)) + Math.max(...grp.map((p) => p.y))) / 2,
+    };
+    return {
+      center,
+      glyphs: grp.map((p) => ({ char: p.char, x: p.x - center.x, y: p.y - center.y })),
+      text: grp.map((p) => p.char).join(''),
+      lineIndex: grp[0].lineIndex,
+      wordIndex: grp[0].wordIndex,
+    };
+  });
+  return { units, width, height };
+}
+
+// ── geometry: extrude one unit (per-glyph extrude → merge w/ groups) ────────
+function buildUnitGeometry(
+  unit: Unit3D,
+  o: LoadedFontOutlines,
+  emScale: number,
+  ex: typeof EXTRUDE_DEFAULT,
+  fontSize: number,
+): BufferGeometry | null {
+  const depth = ex.depth * fontSize;
+  const opts = {
+    depth,
+    bevelEnabled: ex.bevelEnabled,
+    bevelThickness: ex.bevelThickness * fontSize,
+    bevelSize: ex.bevelSize * fontSize,
+    bevelOffset: 0,
+    bevelSegments: ex.bevelEnabled ? ex.bevelSegments : 0,
+    curveSegments: ex.curveSegments,
+    steps: 1,
+  };
+  const geoms: BufferGeometry[] = [];
+  for (const gl of unit.glyphs) {
+    const outline = o.glyphs[gl.char];
+    if (!outline || outline.commands.length === 0) continue;
+    const shapes = glyphToShapes(outline.commands, emScale);
+    if (shapes.length === 0) continue;
+    const geo = new ExtrudeGeometry(shapes, opts);
+    // Front cap at z≈0, body extruded toward -z (so text faces +z / camera).
+    geo.translate(gl.x, gl.y, -depth);
+    geoms.push(geo);
+  }
+  if (geoms.length === 0) return null;
+  const merged = geoms.length === 1 ? geoms[0] : mergeGeometries(geoms, true);
+  if (geoms.length > 1) for (const g of geoms) g.dispose();
+  return merged ?? null;
+}
+
+/** Remap CAP (front/back face) UVs to block-space 0..1 so a poured texture /
+ *  gradient spans the whole text block (ExtrudeGeometry's default front UVs are
+ *  raw object-space XY and would tile/garble). Cap verts = |normal.z| > 0.5.
+ *  Side/bevel verts keep their wrap UVs (sides use the edge color, not the map). */
+function remapFaceUv(geo: BufferGeometry, unitCenter: { x: number; y: number }, block: Box3): void {
+  const pos = geo.getAttribute('position');
+  const nor = geo.getAttribute('normal');
+  const uvAttr = geo.getAttribute('uv');
+  if (!pos || !nor || !uvAttr) return;
+  const bw = Math.max(block.max.x - block.min.x, 1e-4);
+  const bh = Math.max(block.max.y - block.min.y, 1e-4);
+  for (let i = 0; i < pos.count; i++) {
+    if (Math.abs(nor.getZ(i)) > 0.5) {
+      const wx = pos.getX(i) + unitCenter.x;
+      const wy = pos.getY(i) + unitCenter.y;
+      uvAttr.setXY(i, (wx - block.min.x) / bw, (wy - block.min.y) / bh);
+    }
+  }
+  uvAttr.needsUpdate = true;
+}
+
+// ── material: lit PBR with a TSL face/side colorNode split ──────────────────
+function fillBase(fill: TextFill | undefined, fallback: string): string {
+  if (fill?.kind === 'solid') return fill.color;
+  if (fill?.kind === 'gradient') return fill.from;
+  return fallback;
+}
+
+function buildUnitMaterial(
+  spec: TextSpec,
+  fillTex: Texture | null,
+): MeshPhysicalNodeMaterial {
+  const ex = spec.extrude ?? {};
+  const faceFill: TextFill | undefined = ex.faceFill ?? spec.fill;
+  const sideFill: TextFill | undefined = ex.sideFill;
+  const baseHex = fillBase(faceFill, '#e8e4da');
+
+  const mat = new MeshPhysicalNodeMaterial();
+  mat.metalness = ex.metalness ?? EXTRUDE_DEFAULT.metalness;
+  mat.roughness = ex.roughness ?? EXTRUDE_DEFAULT.roughness;
+  mat.envMapIntensity = 1.1;
+  mat.color.set(baseHex);
+  // Diagnostics (verification reads these to prove the 3D path compiled).
+  mat.userData.text3dFaceFill = faceFill?.kind ?? 'solid';
+  mat.userData.text3dHasFaceTexture = !!fillTex;
+  mat.userData.text3d = true;
+
+  const live = materialColor as unknown as Node<'vec3'>;
+
+  // Face pigment expression (caps). Folds in materialColor so the 36 primitives'
+  // mat.color tweens still recolor (msdf-material.ts parity).
+  const faceColor = (() => {
+    if (faceFill?.kind === 'gradient') {
+      const a = ((faceFill.angleDeg ?? 0) * Math.PI) / 180;
+      const t = clamp(
+        dot(vec2(uv()).sub(vec2(0.5, 0.5)), vec2(Math.cos(a), Math.sin(a))).add(0.5),
+        0, 1,
+      );
+      return mix(color(faceFill.from), color(faceFill.to), t).mul(live);
+    }
+    if ((faceFill?.kind === 'texture' || faceFill?.kind === 'ai-texture') && fillTex) {
+      return texture(fillTex, vec2(uv())).rgb.mul(live);
+    }
+    return live; // solid → live mat.color (set above + animatable)
+  })();
+
+  // Side (wall + bevel) color. Explicit sideFill wins; else a darker metallic
+  // edge derived from the face base → premium dimensional read on rotation.
+  const sideColor = (() => {
+    if (sideFill?.kind === 'solid') return color(sideFill.color);
+    if (sideFill?.kind === 'gradient') return color(sideFill.from);
+    return color(baseHex).mul(float(0.5)); // derived edge
+  })();
+  if (sideFill) {
+    mat.metalness = Math.max(mat.metalness, 0.35); // explicit edge → metallic
+  }
+
+  // step(0.5, |normal.z|): caps (|nz|≈1) → 1 → faceColor; walls (|nz|≈0) → 0 →
+  // sideColor. One material, per-surface look, primitive-safe.
+  const capMask = step(float(0.5), abs(normalLocal.z));
+  mat.colorNode = mix(sideColor, faceColor, capMask);
+
+  // Opacity + glow (native props; primitives + editor tween these live).
+  const op = spec.opacity ?? 1;
+  mat.opacity = op;
+  mat.transparent = op < 1;
+  if (spec.glow?.color !== undefined || spec.glow?.intensity !== undefined) {
+    if (spec.glow?.color) mat.emissive.set(spec.glow.color);
+    else mat.emissive.set(baseHex);
+    mat.emissiveIntensity = spec.glow?.intensity ?? 0.6;
+  }
+  return mat;
+}
+
+function resolveExtrude(spec: TextSpec, tier: 'T0' | 'T1' | 'T2'): typeof EXTRUDE_DEFAULT {
+  const ex = spec.extrude ?? {};
+  // T2 desktop affords richer tessellation for DPR-2 sharpness; T1 the default.
+  const curveBoost = tier === 'T2' ? 4 : 0;
+  return {
+    depth: ex.depth ?? EXTRUDE_DEFAULT.depth,
+    bevelEnabled: ex.bevelEnabled ?? EXTRUDE_DEFAULT.bevelEnabled,
+    bevelThickness: ex.bevelThickness ?? EXTRUDE_DEFAULT.bevelThickness,
+    bevelSize: ex.bevelSize ?? EXTRUDE_DEFAULT.bevelSize,
+    bevelSegments: ex.bevelSegments ?? EXTRUDE_DEFAULT.bevelSegments,
+    curveSegments: (ex.curveSegments ?? EXTRUDE_DEFAULT.curveSegments) + curveBoost,
+    metalness: ex.metalness ?? EXTRUDE_DEFAULT.metalness,
+    roughness: ex.roughness ?? EXTRUDE_DEFAULT.roughness,
+  };
+}
+
+export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) => {
+  const group = new Group();
+  group.name = TEXT_OBJECT_NAME;
+  const tier = opts?.tier ?? 'T1';
+  const resolveFillTexture = opts?.resolveFillTexture;
+
+  let resolved = resolveSpec(spec);
+  let currentOutlines = outlines;
+  let fillTex: { url: string; tex: Texture } | null = null;
+  let disposed = false;
+  const units: Mesh[] = [];
+
+  const wantFillUrl = (): string | null => {
+    const f = resolved.extrude?.faceFill ?? resolved.fill;
+    if (f && (f.kind === 'texture' || f.kind === 'ai-texture') && f.url) return f.url;
+    return null;
+  };
+
+  const buildUnits = () => {
+    const fontSize = resolved.fontSize ?? 0.4;
+    const emScale = fontSize / (currentOutlines.unitsPerEm || 1000);
+    const ex = resolveExtrude(resolved, tier);
+    const layout = layoutOutline(resolved, currentOutlines);
+    lastMeasure = { width: layout.width, height: layout.height };
+    // Block bbox in block space (centered on origin) for face-UV remap.
+    const block = new Box3();
+    block.min.set(-layout.width / 2, -layout.height / 2, 0);
+    block.max.set(layout.width / 2, layout.height / 2, 0);
+    const tex = fillTex && fillTex.url === wantFillUrl() ? fillTex.tex : null;
+
+    layout.units.forEach((unit, i) => {
+      const geo = buildUnitGeometry(unit, currentOutlines, emScale, ex, fontSize);
+      if (!geo) return;
+      remapFaceUv(geo, unit.center, block);
+      const mesh = new Mesh(geo, buildUnitMaterial(resolved, tex));
+      mesh.name = textUnitName(i);
+      mesh.position.set(unit.center.x, unit.center.y, 0);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      units.push(mesh);
+      group.add(mesh);
+    });
+  };
+
+  const clearUnits = () => {
+    for (const mesh of units) {
+      group.remove(mesh);
+      mesh.geometry.dispose();
+      (mesh.material as Material).dispose();
+    }
+    units.length = 0;
+  };
+
+  const ensureFillTexture = () => {
+    const url = wantFillUrl();
+    if (!url || !resolveFillTexture) return;
+    if (fillTex && fillTex.url === url) return;
+    void resolveFillTexture(url)
+      .then((tex) => {
+        if (disposed || wantFillUrl() !== url) return;
+        fillTex = { url, tex };
+        clearUnits();
+        buildUnits();
+      })
+      .catch(() => { /* soft-fail: solid/edge surface stays */ });
+  };
+
+  let lastMeasure = { width: 0, height: 0 };
+  buildUnits();
+  ensureFillTexture();
+
+  const handle: TextObjectHandle = {
+    object: group,
+    units,
+    get spec() {
+      return resolved;
+    },
+    setSpec(next, _atlas) {
+      resolved = resolveSpec(next);
+      clearUnits();
+      buildUnits();
+      ensureFillTexture();
+    },
+    measure() {
+      return lastMeasure;
+    },
+    dispose() {
+      disposed = true;
+      fillTex = null;
+      clearUnits();
+    },
+  };
+  // Allow the 3D handle to accept a refreshed outline set via setSpec's atlas
+  // slot is N/A; callers swap outlines by rebuilding. Expose for the factory.
+  (handle as unknown as { setOutlines?: (o: LoadedFontOutlines) => void }).setOutlines = (o) => {
+    currentOutlines = o;
+    clearUnits();
+    buildUnits();
+    ensureFillTexture();
+  };
+  group.userData.textHandle = handle;
+  group.userData.text3d = true;
+  return handle;
+};

@@ -19,8 +19,10 @@
 // delegates to. Relative imports only (dep-guard).
 
 import { getFontRegistry } from '../../text/font-registry';
+import { getFontOutlineRegistry } from '../../text/font-outline-registry';
 import { TEXT_SPEC_DEFAULT } from '../../../prism-graph/types';
 import type { FontRegistry, LoadedFontAtlas } from '../../text/contract';
+import type { FontOutlineRegistry, LoadedFontOutlines } from '../../text/contract-3d';
 
 const DEFAULT_FAMILY = TEXT_SPEC_DEFAULT.fontFamily ?? 'Inter';
 const DEFAULT_WEIGHT = TEXT_SPEC_DEFAULT.fontWeight ?? 400;
@@ -54,4 +56,48 @@ export function resolveTextAtlas(
   weight: number = DEFAULT_WEIGHT,
 ): Promise<LoadedFontAtlas> {
   return getTextAtlasRegistry().resolveAtlas(family, weight);
+}
+
+// ── Outline seam (3D extruded text — contract-3d.ts) ───────────────────────
+// The extruded builder needs glyph OUTLINES, not an MSDF atlas. These three
+// functions are the outline siblings of the atlas seam above: same
+// synchronous-peek / async-resolve / swappable-registry shape, delegating to
+// the app-wide outline-registry singleton (`getFontOutlineRegistry()`) by
+// default. DOM-free, relative imports only — same hygiene as the atlas seam.
+
+let outlineRegistryOverride: FontOutlineRegistry | null = null;
+
+/** Swap the backing outline registry (tests / isolated hosts). Pass `null` to
+ *  restore the app-wide singleton. */
+export function setTextOutlineRegistry(registry: FontOutlineRegistry | null): void {
+  outlineRegistryOverride = registry;
+}
+
+/** The outline registry currently backing the seam. */
+export function getTextOutlineRegistry(): FontOutlineRegistry {
+  return outlineRegistryOverride ?? getFontOutlineRegistry();
+}
+
+/** Synchronous cache peek — returns the loaded outline set ONLY when this
+ *  (family, weight, italic) key already covers every char in `chars` (so
+ *  createNode can mount synchronously, spec §8), else `undefined`. */
+export function peekTextOutlines(
+  family: string = DEFAULT_FAMILY,
+  weight: number = DEFAULT_WEIGHT,
+  chars: string = '',
+  italic = false,
+): LoadedFontOutlines | undefined {
+  return getTextOutlineRegistry().peekOutlines(family, weight, chars, italic);
+}
+
+/** Load-or-cache glyph outlines covering at least `chars`. Memoized per
+ *  (family, weight, italic) by the registry, which ACCUMULATES newly-requested
+ *  chars into the cached set (fetches only the missing ones). */
+export function resolveTextOutlines(
+  family: string = DEFAULT_FAMILY,
+  weight: number = DEFAULT_WEIGHT,
+  chars: string = '',
+  italic = false,
+): Promise<LoadedFontOutlines> {
+  return getTextOutlineRegistry().resolveOutlines(family, weight, chars, italic);
 }

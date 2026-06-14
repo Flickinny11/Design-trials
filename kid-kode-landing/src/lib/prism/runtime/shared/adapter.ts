@@ -70,6 +70,11 @@ export interface NodeContext {
    *  (ScrollDriver / PointerDriver / StateDriver / EventDriver). Absent on the
    *  no-op editor context (runPrimitives:false) and the legacy bundle path. */
   drivers?: NodeDrivers;
+  /** Device capability tier (INV-9), injected by the host that owns the
+   *  renderer (the factory is DOM-free and cannot detect it). Gates expensive
+   *  opt-in paths such as true-3D extruded text (T1+) vs a flat fallback (T0).
+   *  Absent → callers treat it as 'T1'. Additive (INV-18). */
+  tier?: 'T0' | 'T1' | 'T2';
 }
 
 /** A `createNode` factory satisfying the spec §8 contract. The adapter
