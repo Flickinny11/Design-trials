@@ -87,7 +87,7 @@ function nebulaTexture(hex: string): THREE.Texture {
 export function GalaxyStarfield({ quality = 'high' }: { quality?: GalaxyQuality }) {
   const ref = useRef<THREE.Points>(null);
   const matRef = useRef<THREE.PointsMaterial>(null);
-  const count = quality === 'low' ? 1100 : 3200;
+  const count = quality === 'low' ? 900 : 2200;
 
   const { geometry } = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -188,7 +188,7 @@ export function GalaxyOrbitRings({ quality = 'high' }: { quality?: GalaxyQuality
   const groupRef = useRef<THREE.Group>(null);
   const coreMats = useRef<THREE.MeshBasicMaterial[]>([]);
   coreMats.current = [];
-  const seg = quality === 'low' ? 96 : 220;
+  const seg = quality === 'low' ? 90 : 140;
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;

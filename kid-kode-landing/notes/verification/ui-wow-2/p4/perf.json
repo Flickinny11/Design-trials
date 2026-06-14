@@ -1,0 +1,15 @@
+{
+  "measured": "2026-06-14, real Chrome Metal WebGPU (--enable-unsafe-webgpu)",
+  "steadyStateGalaxyFps": { "desktop": 60, "mobile-390": 60, "deviceLost": 0, "backend": "webgpu", "consoleErrors": 0 },
+  "perfProbe": {
+    "desktop_t2": { "hoverLatencyMs": {"p50":15.9,"p95":28.1}, "pressLatencyMs": {"p50":10.7,"p95":28}, "fps": {"idle":71.7,"paletteChurn":76.5,"modeToggle":20.1} },
+    "mobile390_t1": { "hoverLatencyMs": {"p50":14.3,"p95":28.6}, "pressLatencyMs": {"p50":13.3,"p95":28.2}, "fps": {"idle":72.4,"paletteChurn":72.3,"modeToggle":null} }
+  },
+  "notes": [
+    "Interaction latency p95 <=30ms both platforms — far under the <100ms bar.",
+    "Galaxy steady-state 60fps (vsync) desktop AND mobile with the new additive atmosphere; deviceLost 0.",
+    "modeToggle FPS (20-26) is the rapid galaxy<->canvas REMOUNT churn; a 30% atmosphere geometry cut did not move it -> it is the canvas remount cost (pre-existing), not the P2 atmosphere, and not a normal user pattern.",
+    "Atmosphere tier-gated: quality 'low' on coarse-pointer t1/t0 (phones) + adaptive low-quality (INV-9). Memory bounded: tube geometries dispose on unmount, GSAP timelines kill, useLenis destroys, keyframe rAF cancels.",
+    "mobile-390 modeToggle null = probe can't find the desktop view-mode-toggle selector on the mobile tree (MobileModeToggle); not a crash — mobile galaxy renders 60fps/0-errors."
+  ]
+}

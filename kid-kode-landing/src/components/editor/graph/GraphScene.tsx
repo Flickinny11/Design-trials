@@ -2574,6 +2574,14 @@ function TopologySceneContent({
   // canvas-spec/Step-5 follow-up).
   const isWebGPU = useIsWebGPU();
   const usePost = qualityMode !== 'low' && !isWebGPU;
+  // UI-WOW-2 P4 — galaxy atmosphere quality: 'low' under adaptive low-quality
+  // OR on a coarse-pointer device tier (t1/t0 = phones), so the additive
+  // starfield/nebula/rings scale down where the frame budget is tight (INV-9).
+  const galaxyQuality: 'low' | 'high' =
+    qualityMode === 'low' ||
+    (typeof document !== 'undefined' && document.documentElement.dataset.dsTier !== 't2')
+      ? 'low'
+      : 'high';
 
   return (
     <>
@@ -2592,9 +2600,9 @@ function TopologySceneContent({
           composer + drei <Stars> are off. Galaxy-only; tier-scaled. */}
       {viewMode === 'galaxy' && (
         <>
-          <GalaxyStarfield quality={qualityMode === 'low' ? 'low' : 'high'} />
-          <GalaxyNebula quality={qualityMode === 'low' ? 'low' : 'high'} />
-          <GalaxyOrbitRings quality={qualityMode === 'low' ? 'low' : 'high'} />
+          <GalaxyStarfield quality={galaxyQuality} />
+          <GalaxyNebula quality={galaxyQuality} />
+          <GalaxyOrbitRings quality={galaxyQuality} />
         </>
       )}
 
