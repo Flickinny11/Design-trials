@@ -150,8 +150,17 @@ async function runProfile(browser, profile) {
   if (STEPS.includes('canvas')) { await setMode(page, 'canvas'); await shot(out, '20-canvas', page); }
   if (STEPS.includes('anim')) { await clickToolGroup(page, 'Animation'); await shot(out, '21-canvas-animation-flyout', page); }
   if (STEPS.includes('keyframe')) {
-    // Click the toggle, then grab a rapid sequence through the smoky EXPANDING
+    // Select a node first so keyframe lanes are populated (not empty-state).
+    // We need canvas mode + a selected node for the editor to show real data.
+    await setMode(page, 'canvas', 1400);
+    const kfSel = await selectFirstNode(page);
+    log(`[${profile}] keyframe select → ${kfSel}`);
+    await sleep(900);
+    // Open Animation flyout so the Keyframe Editor button is visible,
+    // then click it. Then grab a rapid sequence through the smoky EXPANDING
     // reveal (it runs ~0.5s) plus the settled instrument.
+    await clickToolGroup(page, 'Animation');
+    await sleep(600);
     await page.evaluate(() => {
       const b = [...document.querySelectorAll('button,[role=button]')]
         .find((x) => /keyframe/i.test(x.getAttribute('title') || x.getAttribute('aria-label') || x.textContent || ''));
