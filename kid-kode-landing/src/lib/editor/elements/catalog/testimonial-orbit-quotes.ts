@@ -67,13 +67,33 @@ const AVATAR_RADIUS = 1.95;
 const AVATAR_Y = 0.15;
 const AVATAR_Z = 0.55; // pulled toward camera so the ring sits in front of glass
 
+// Each medallion shows a REAL customer face (square portraits) printed onto the
+// coin under a glossy photo-print clearcoat. baseColor is white so the map shows
+// true (the map multiplies baseColor); the third disc reuses a cosmic-marble
+// macro as an abstract avatar to keep the ring varied. (Observatory Brass rim
+// reflections come from envMap, not tint.)
 const AVATAR_PALETTE = [
-  // polished chrome
-  { baseColor: '#d6dde6', metalness: 1.0, roughness: 0.08, clearcoat: 1.0 },
-  // brass
-  { baseColor: '#c9a86a', metalness: 0.95, roughness: 0.18, clearcoat: 0.6 },
-  // ice steel
-  { baseColor: '#9fc3d6', metalness: 0.85, roughness: 0.14, clearcoat: 0.7 },
+  {
+    map: '/prism-mock/library-content/portrait-a.png',
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+  },
+  {
+    map: '/prism-mock/library-content/portrait-b.png',
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+  },
+  {
+    map: '/prism-mock/orrery/celestia/planet-marble.png',
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+  },
 ];
 
 function buildAvatars(): ClusterMemberTemplate[] {
@@ -99,12 +119,16 @@ function buildAvatars(): ClusterMemberTemplate[] {
         params: { radius: 0.38, height: 0.1, segments: 64 },
       },
       materialSpec: {
+        // Real customer face printed on the medallion (map multiplies baseColor,
+        // so baseColor stays white). Glossy photo-print clearcoat for the premium
+        // "coin portrait" read; brass/chrome rim still catches the studio IBL.
+        baseColorMapUrl: pal.map,
         baseColor: pal.baseColor,
         metalness: pal.metalness,
         roughness: pal.roughness,
         clearcoat: pal.clearcoat,
         clearcoatRoughness: 0.12,
-        envMapIntensity: 1.5,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // INTEGRATED animation: each medallion turns in place about Y, in sync, so

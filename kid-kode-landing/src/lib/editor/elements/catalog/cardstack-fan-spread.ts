@@ -45,24 +45,35 @@ const FAN_SPREAD_RAD = 0.26; // per-card rotation step about Z (≈15°)
 const FAN_STEP_X = 0.42; // per-card horizontal step
 const FAN_ARC_Y = 0.1; // shallow Y arc so the fan curves like a held hand
 
-// Alternating premium PBR — Observatory Brass (warm brass / pale gold) against
-// cool ice-steel + pewter, anchored by one obsidian face card. Every recipe is
-// physically plausible; NEVER purple. Card data colors are graph data, not
-// chrome. The face card (index 2, the lead) is the polished obsidian one so the
-// hover-lift pulls the richest card out of the fan.
+// Each card is a real photo print: a premium sample image is mapped onto the
+// card face via `baseColorMapUrl`, with `baseColor: '#ffffff'` so the map shows
+// at full fidelity (the map MULTIPLIES baseColor — any darker tint would dim the
+// photo). The material is tuned for a glossy "poster / photo print" read:
+// non-metal base, mid roughness, strong clearcoat so the fan still catches
+// studio IBL like a hand of laminated cards. Images VARY across cards and match
+// the tall card footprint (portrait / square). The lead/face card (index 2)
+// wears the richest hero shot — the luxury watch on black — so the hover-lift
+// pulls the most striking card out of the fan. NEVER purple. Card data is graph
+// data, not chrome.
 const CARD_PALETTE: Array<{
   baseColor: string;
+  map: string;
   metalness: number;
   roughness: number;
   clearcoat: number;
   iridescence?: number;
   iridescenceIOR?: number;
 }> = [
-  { baseColor: '#9fc3d6', metalness: 0.7, roughness: 0.22, clearcoat: 0.7 }, // ice steel
-  { baseColor: '#d8c089', metalness: 0.82, roughness: 0.3, clearcoat: 0.7 }, // pale gold
-  { baseColor: '#15171f', metalness: 0.7, roughness: 0.18, clearcoat: 1.0, iridescence: 0.45, iridescenceIOR: 1.4 }, // obsidian (lead/face card)
-  { baseColor: '#cbb06f', metalness: 0.88, roughness: 0.26, clearcoat: 0.7 }, // antique brass
-  { baseColor: '#aebfcb', metalness: 0.6, roughness: 0.2, clearcoat: 0.6 }, // pewter
+  // portrait studio headphones — tall card
+  { baseColor: '#ffffff', map: '/prism-mock/library-content/product-audio.png', metalness: 0.0, roughness: 0.42, clearcoat: 0.6 },
+  // square editorial portrait (woman, warm light)
+  { baseColor: '#ffffff', map: '/prism-mock/library-content/portrait-a.png', metalness: 0.0, roughness: 0.42, clearcoat: 0.6 },
+  // lead/face card — luxury astronomical watch on black (the hero shot)
+  { baseColor: '#ffffff', map: '/prism-mock/orrery/refs/watch-hero.png', metalness: 0.0, roughness: 0.4, clearcoat: 0.7, iridescence: 0.18, iridescenceIOR: 1.3 },
+  // portrait flowing amber/teal silk
+  { baseColor: '#ffffff', map: '/prism-mock/library-content/editorial-silk.png', metalness: 0.0, roughness: 0.42, clearcoat: 0.6 },
+  // square editorial portrait (man, rembrandt light)
+  { baseColor: '#ffffff', map: '/prism-mock/library-content/portrait-b.png', metalness: 0.0, roughness: 0.42, clearcoat: 0.6 },
 ];
 
 /** A full 9-field local pose (cluster origin); instantiator adds the drop anchor. */
@@ -111,7 +122,10 @@ function buildCards(): ClusterMemberTemplate[] {
         params: { width: CARD_W, height: CARD_H, depth: CARD_DEPTH },
       },
       materialSpec: {
+        // Real sample photo mapped onto the card face. baseColor stays white so
+        // the map (which multiplies baseColor) shows at full fidelity.
         baseColor: pal.baseColor,
+        baseColorMapUrl: pal.map,
         metalness: pal.metalness,
         roughness: pal.roughness,
         clearcoat: pal.clearcoat,
@@ -120,10 +134,11 @@ function buildCards(): ClusterMemberTemplate[] {
           ? { iridescence: pal.iridescence, iridescenceIOR: pal.iridescenceIOR }
           : {}),
         // Small emissive seat so hover-lift (which scales emissiveIntensity with
-        // proximity) has something to brighten on the lead card.
+        // proximity) has something to brighten on the lead card. Kept very low so
+        // it doesn't wash out the mapped photo.
         emissive: '#1a1d26',
-        emissiveIntensity: isFace ? 0.18 : 0.08,
-        envMapIntensity: 1.35,
+        emissiveIntensity: isFace ? 0.1 : 0.05,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // INTEGRATED animation #1: ambient `card-fold` — the fan unfolds open from

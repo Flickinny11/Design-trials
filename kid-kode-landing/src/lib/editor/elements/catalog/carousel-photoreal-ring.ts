@@ -24,15 +24,20 @@ const CARD_W = 1.0;
 const CARD_H = 1.4;
 const CARD_DEPTH = 0.08;
 
-// Alternating premium palette: warm brass and cool ice, both physically
-// plausible PBR (NEVER purple). Card data colors are graph data, not chrome.
-const CARD_PALETTE = [
-  { baseColor: '#c8a45a', metalness: 0.85, roughness: 0.28 }, // brass
-  { baseColor: '#9fc3d6', metalness: 0.7, roughness: 0.22 }, // ice steel
-  { baseColor: '#d8c089', metalness: 0.8, roughness: 0.3 }, // pale gold
-  { baseColor: '#aebfcb', metalness: 0.6, roughness: 0.2 }, // pewter
-  { baseColor: '#cbb06f', metalness: 0.82, roughness: 0.26 }, // antique brass
-  { baseColor: '#b6d0dd', metalness: 0.66, roughness: 0.24 }, // frost
+// Each ring panel now wears REAL premium sample imagery on its front face. The
+// baseColorMapUrl photo MULTIPLIES baseColor, so baseColor is pinned to pure
+// white (#ffffff) and the material is tuned to a glossy "photo print / poster"
+// look (low metalness, mid roughness, clearcoat sheen) so the photo reads true
+// and luminous rather than tinted brushed metal. Imagery is VARIED across
+// panels — dramatic architecture, golden landscapes, botanical macro, luxury
+// interior, and a portrait product still — matched to the tall card footprint.
+const CARD_IMAGES = [
+  '/prism-mock/library-content/arch-warm.png', // brass+glass atrium, warm gold
+  '/prism-mock/library-content/landscape-dune.png', // golden sand dunes at sunrise
+  '/prism-mock/library-content/landscape-peak.png', // misty mountain peaks, golden hour
+  '/prism-mock/library-content/botanical.png', // dark orchid macro, chiaroscuro
+  '/prism-mock/library-content/arch-interior.png', // luxury minimalist interior
+  '/prism-mock/library-content/product-scent.png', // luxury perfume bottle (portrait)
 ];
 
 function buildCards(): ClusterMemberTemplate[] {
@@ -41,7 +46,7 @@ function buildCards(): ClusterMemberTemplate[] {
     const angle = (i / CARD_COUNT) * Math.PI * 2;
     const x = Math.sin(angle) * RING_RADIUS;
     const z = Math.cos(angle) * RING_RADIUS;
-    const pal = CARD_PALETTE[i % CARD_PALETTE.length];
+    const imageUrl = CARD_IMAGES[i % CARD_IMAGES.length];
     cards.push({
       localId: `card-${i}`,
       subtype: 'card',
@@ -67,12 +72,16 @@ function buildCards(): ClusterMemberTemplate[] {
         params: { width: CARD_W, height: CARD_H, depth: CARD_DEPTH },
       },
       materialSpec: {
-        baseColor: pal.baseColor,
-        metalness: pal.metalness,
-        roughness: pal.roughness,
+        // Real premium imagery on the front face. White base so the photo
+        // shows true; glossy photo-print finish (low metalness, mid roughness,
+        // clearcoat sheen) for a luminous poster look under IBL.
+        baseColor: '#ffffff',
+        baseColorMapUrl: imageUrl,
+        metalness: 0.0,
+        roughness: 0.42,
         clearcoat: 0.6,
-        clearcoatRoughness: 0.2,
-        envMapIntensity: 1.2,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // INTEGRATED animation: a slow turntable spin about Y (registry

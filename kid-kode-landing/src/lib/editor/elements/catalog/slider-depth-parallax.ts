@@ -81,12 +81,16 @@ const sliderDepthParallax: ElementClusterDefinition = {
         params: { width: 5.2, height: 3.0, depth: 0.12 },
       },
       materialSpec: {
-        baseColor: CHARCOAL,
-        metalness: 0.45,
-        roughness: 0.55,
-        clearcoat: 0.25,
-        clearcoatRoughness: 0.35,
-        envMapIntensity: 0.85,
+        // Wide landscape hero photo on the deepest slide panel (the parallax
+        // backdrop the visitor sees behind the glass focal slide). White base so
+        // the map reads at full color; glossy print/poster finish.
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/landscape-peak.png',
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       depthLayer: 'background',
@@ -153,11 +157,15 @@ const sliderDepthParallax: ElementClusterDefinition = {
         params: { width: 3.2, height: 1.85, depth: 0.08 },
       },
       materialSpec: {
-        baseColor: STEEL,
-        metalness: 0.7,
-        roughness: 0.4,
-        clearcoat: 0.3,
-        clearcoatRoughness: 0.3,
+        // Second wide landscape hero photo on the inset midground slide plate —
+        // a DIFFERENT image from the backdrop so the staged depth reads as a
+        // real layered slideshow, not one flat repeated panel. Glossy print look.
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/arch-warm.png',
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
         envMapIntensity: 1.0,
       },
       receivesLighting: true,

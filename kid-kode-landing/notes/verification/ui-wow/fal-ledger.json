@@ -1,0 +1,80 @@
+{
+  "run": "ui-wow",
+  "calls": [
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: arch-warm",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:02:49.000Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: arch-interior",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:02:53.072Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: landscape-dune",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:02:56.860Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: landscape-peak",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:03:00.040Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: abstract-gold",
+      "estCost": 0.013,
+      "at": "2026-06-14T05:03:02.864Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: abstract-glass",
+      "estCost": 0.013,
+      "at": "2026-06-14T05:03:05.659Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: product-scent",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:03:08.380Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: product-audio",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:03:12.321Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: portrait-a",
+      "estCost": 0.013,
+      "at": "2026-06-14T05:03:15.745Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: portrait-b",
+      "estCost": 0.013,
+      "at": "2026-06-14T05:03:19.280Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: editorial-silk",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:03:22.488Z"
+    },
+    {
+      "model": "fal-ai/flux-2",
+      "purpose": "library sample content: botanical",
+      "estCost": 0.012,
+      "at": "2026-06-14T05:03:25.208Z"
+    }
+  ],
+  "total": 0.148,
+  "priorCumulative": 0.263,
+  "cumulative": 0.411
+}

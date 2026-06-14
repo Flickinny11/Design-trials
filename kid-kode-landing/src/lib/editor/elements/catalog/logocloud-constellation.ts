@@ -72,63 +72,76 @@ interface ChipSpec {
 
 const CHIPS: ChipSpec[] = [
   {
-    // Brushed-brass mark, front-right, the brightest anchor of the cloud.
+    // Brushed-brass mark, front-right, the brightest anchor of the cloud — now
+    // wearing a brushed-brass macro so the chip reads as a real metal brand tile.
     id: 'logo-0',
     x: 1.25, y: 0.62, z: 0.55, rot: -0.08, w: 0.92, h: 0.62,
     material: {
-      baseColor: '#c9a86a', metalness: 0.95, roughness: 0.32,
-      clearcoat: 0.7, clearcoatRoughness: 0.18, envMapIntensity: 1.3,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/orrery/materia/brass-macro.png',
+      metalness: 0.0, roughness: 0.42,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 1.35, floatAmp: 0.16, floatTilt: 7,
   },
   {
-    // Polished-chrome mark, upper-left.
+    // Upper-left mark — a liquid-gold/brass swirl macro for a glossy abstract
+    // brand tile that catches the warm key.
     id: 'logo-1',
     x: -1.32, y: 0.84, z: 0.18, rot: 0.1, w: 0.78, h: 0.56,
     material: {
-      baseColor: '#dfe6ee', metalness: 1.0, roughness: 0.08,
-      clearcoat: 1.0, clearcoatRoughness: 0.06, envMapIntensity: 1.6,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/library-content/abstract-gold.png',
+      metalness: 0.0, roughness: 0.42,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 1.15, floatAmp: 0.14, floatTilt: 6,
   },
   {
-    // Ice-steel mark, center-low, mid depth.
+    // Center-low mark, mid depth — a sapphire-crystal macro for an icy-blue
+    // brand tile that balances the warm chips.
     id: 'logo-2',
     x: -0.18, y: -0.78, z: 0.3, rot: -0.04, w: 0.86, h: 0.58,
     material: {
-      baseColor: '#9fc3d6', metalness: 0.72, roughness: 0.22,
-      clearcoat: 0.6, clearcoatRoughness: 0.2, envMapIntensity: 1.35,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/orrery/materia/sapphire-macro.png',
+      metalness: 0.0, roughness: 0.42,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 1.05, floatAmp: 0.13, floatTilt: 5,
   },
   {
-    // Iridescent accent mark, right-low — the soap-bubble shimmer that gives
-    // the cloud its premium glint (thin-film iridescence, NOT purple).
+    // Right-low accent mark — a dark iridescent glass-dispersion macro for the
+    // soap-bubble shimmer that gives the cloud its premium glint (NOT purple).
+    // Keep a touch of thin-film iridescence over the photo for the glint.
     id: 'logo-3',
     x: 1.05, y: -0.66, z: -0.1, rot: 0.06, w: 0.72, h: 0.5,
     material: {
-      baseColor: '#b9c6cf', metalness: 0.6, roughness: 0.25,
-      iridescence: 0.8, iridescenceIOR: 1.3, clearcoat: 0.5, envMapIntensity: 1.4,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/library-content/abstract-glass.png',
+      metalness: 0.0, roughness: 0.42,
+      iridescence: 0.5, iridescenceIOR: 1.3,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 0.92, floatAmp: 0.11, floatTilt: 5,
   },
   {
-    // Obsidian mark, left-mid, deeper — a dark anchor so the cloud has weight.
+    // Left-mid mark, deeper — a meteorite macro for a dark, weighty brand tile
+    // that anchors the cloud.
     id: 'logo-4',
     x: -1.5, y: -0.32, z: -0.35, rot: -0.12, w: 0.7, h: 0.5,
     material: {
-      baseColor: '#15171f', metalness: 0.7, roughness: 0.18,
-      clearcoat: 1.0, clearcoatRoughness: 0.1, envMapIntensity: 1.45,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/orrery/materia/meteorite-macro.png',
+      metalness: 0.0, roughness: 0.42,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 0.8, floatAmp: 0.1, floatTilt: 4,
   },
   {
-    // Pale-gold mark, top-center, deepest — the faintest, slowest-drifting star.
+    // Top-center mark, deepest — a cosmic brass-planet macro for the faintest,
+    // slowest-drifting star tile, warm-gold to echo the brass anchor.
     id: 'logo-5',
     x: 0.32, y: 1.02, z: -0.5, rot: 0.05, w: 0.66, h: 0.46,
     material: {
-      baseColor: '#d8c089', metalness: 0.86, roughness: 0.3,
-      clearcoat: 0.55, clearcoatRoughness: 0.2, envMapIntensity: 1.25,
+      baseColor: '#ffffff', baseColorMapUrl: '/prism-mock/orrery/celestia/planet-brass.png',
+      metalness: 0.0, roughness: 0.42,
+      clearcoat: 0.6, clearcoatRoughness: 0.12, envMapIntensity: 1.0,
     },
     floatSpeed: 0.7, floatAmp: 0.09, floatTilt: 4,
   },

@@ -64,49 +64,65 @@ function pose(p: Partial<ScenePosition>): ScenePosition {
   };
 }
 
-// Five DISTINCT premium PBR recipes — Observatory Brass palette (warm brass /
-// gold + ice/steel blues + charcoal obsidian; NEVER purple). Each chip reads as
-// a different precious surface so the ring shimmers with material variety as it
-// turns through the IBL. Chip data colors are graph data, not chrome.
+// Five DISTINCT premium chips — Observatory Brass palette (warm brass / gold +
+// ice/steel blues + charcoal obsidian; NEVER purple). The first four chips wear
+// REAL premium MATERIAL-MACRO scans (brushed brass / sapphire crystal /
+// meteorite iron / liquid gold) poured onto the plate via
+// baseColorMapUrl — these are the abstract "brand" surfaces, glossy photo-print
+// chips that catch the IBL like precious lacquered tiles. The map MULTIPLIES
+// baseColor, so each textured chip uses baseColor '#ffffff' to show the scan at
+// full richness. The fifth chip stays a transmissive ice GLASS plate (no map) so
+// the ring still shimmers with one true refractive surface. Chip data is graph
+// data, not chrome — every chip remains a real, re-skinnable PrismNode.
+//
+// Square-ish material macros sit naturally on the wide chip plate (the scan
+// reads as a cropped premium texture); orientation is uniform so no macro looks
+// stretched. Images VARY across chips per the catalog WOW bar.
 const CHIP_MATERIALS: MaterialSpec[] = [
-  // polished chrome — mirror specular
+  // brushed-brass scan — warm key chip, glossy photo-print finish
   {
-    baseColor: '#d7dde6',
-    metalness: 1.0,
-    roughness: 0.08,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.06,
-    envMapIntensity: 1.6,
+    baseColor: '#ffffff',
+    baseColorMapUrl: '/prism-mock/orrery/materia/brass-macro.png',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    envMapIntensity: 1.0,
   },
-  // brushed brass — warm anisotropic-feel key chip
+  // sapphire-crystal macro — cool jewel chip with a faint thin-film sheen
   {
-    baseColor: '#c9a86a',
-    metalness: 0.95,
-    roughness: 0.32,
-    clearcoat: 0.5,
-    clearcoatRoughness: 0.2,
-    envMapIntensity: 1.3,
-  },
-  // obsidian — deep charcoal lacquer with a clearcoat sheen
-  {
-    baseColor: '#15171f',
-    metalness: 0.7,
-    roughness: 0.18,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.1,
-    envMapIntensity: 1.2,
-  },
-  // iridescent steel — thin-film oil-slick cool chip
-  {
-    baseColor: '#9fc3d6',
-    metalness: 0.6,
-    roughness: 0.25,
-    iridescence: 0.8,
+    baseColor: '#ffffff',
+    baseColorMapUrl: '/prism-mock/orrery/materia/sapphire-macro.png',
+    metalness: 0.0,
+    roughness: 0.42,
+    iridescence: 0.35,
     iridescenceIOR: 1.3,
     clearcoat: 0.6,
-    envMapIntensity: 1.35,
+    clearcoatRoughness: 0.12,
+    envMapIntensity: 1.0,
   },
-  // glass — transmissive ice plate with dispersion
+  // meteorite macro — deep charcoal-iron brand surface, lacquered clearcoat
+  {
+    baseColor: '#ffffff',
+    baseColorMapUrl: '/prism-mock/orrery/materia/meteorite-macro.png',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    envMapIntensity: 1.0,
+  },
+  // liquid-gold swirl — glossy abstract brand mark, mirror clearcoat
+  {
+    baseColor: '#ffffff',
+    baseColorMapUrl: '/prism-mock/library-content/abstract-gold.png',
+    metalness: 0.0,
+    roughness: 0.38,
+    clearcoat: 0.7,
+    clearcoatRoughness: 0.1,
+    envMapIntensity: 1.0,
+  },
+  // glass — transmissive ice plate with dispersion (untouched: keeps one true
+  // refractive surface in the ring so the material variety still reads).
   {
     baseColor: '#e6f1f6',
     metalness: 0.0,

@@ -160,11 +160,16 @@ const sliderMorphThrough: ElementClusterDefinition = {
       footprint: { width: BACK_W, height: BACK_H },
       meshPrimitive: { kind: 'plane', params: { width: BACK_W, height: BACK_H } },
       materialSpec: {
-        baseColor: '#1d2533',
-        metalness: 0.55,
+        // Real hero slide on the back panel: a landscape atrium photo (warm gold,
+        // dramatic) maps onto the always-full plane so the layer showing THROUGH
+        // is a populated premium image, not a flat dark panel. baseColor stays
+        // white so the map reads at full color; glossy-print finish.
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/arch-warm.png',
+        metalness: 0.0,
         roughness: 0.42,
-        clearcoat: 0.25,
-        clearcoatRoughness: 0.3,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
         envMapIntensity: 1.0,
       },
       receivesLighting: true,
@@ -198,12 +203,17 @@ const sliderMorphThrough: ElementClusterDefinition = {
       footprint: { width: STAGE_W, height: STAGE_H },
       meshPrimitive: { kind: 'plane', params: { width: STAGE_W, height: STAGE_H } },
       materialSpec: {
-        baseColor: '#23304f',
-        metalness: 0.35,
-        roughness: 0.4,
-        clearcoat: 0.4,
-        clearcoatRoughness: 0.25,
-        envMapIntensity: 1.1,
+        // The FRONT slide carries a DIFFERENT landscape hero (luxury minimalist
+        // interior, travertine/walnut) so the morph-through reads as one slide
+        // displacing over another distinct image. White base + glossy clearcoat
+        // gives the premium photo-print finish the specular sweep glides across.
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/arch-interior.png',
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // INTEGRATED: continuous specular sweep + a slow parallax drift. Both keep

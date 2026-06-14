@@ -115,12 +115,16 @@ const members: ClusterMemberTemplate[] = [
       params: { width: SLIDE_W, height: SLIDE_H, depth: SLIDE_DEPTH },
     },
     materialSpec: {
-      baseColor: '#15171f', // obsidian
-      metalness: 0.7,
-      roughness: 0.18,
-      clearcoat: 1.0,
+      // The departing slide now carries a real landscape hero photo (dark orchid
+      // botanical macro) printed on a premium glossy clearcoat surface — reads as
+      // a finished slide receding behind-left, not a blank obsidian slab.
+      baseColor: '#ffffff', // white so the photo map shows true color (map MULTIPLIES)
+      baseColorMapUrl: '/prism-mock/library-content/botanical.png',
+      metalness: 0.0,
+      roughness: 0.42,
+      clearcoat: 0.6,
       clearcoatRoughness: 0.12,
-      envMapIntensity: 1.4,
+      envMapIntensity: 1.0,
     },
     receivesLighting: true,
   },
@@ -137,6 +141,10 @@ const members: ClusterMemberTemplate[] = [
     renderMode: 'mesh',
     pose: poseAt(1.35, 0.06, -0.7, { rotationY: -0.42, scaleX: 0.86, scaleY: 0.86, scaleZ: 0.86 }),
     footprint: { width: SLIDE_W, height: SLIDE_H },
+    // The queued NEXT slide now shows a real landscape hero photo (misty golden-
+    // hour mountain peaks) so the panel reads as a finished slide waiting in the
+    // wings, while the continuous light-sweep still rakes a specular band over it.
+    sourceAsset: '/prism-mock/library-content/landscape-peak.png',
     meshPrimitive: {
       // A finely-tessellated plane so the lit panel reads smoothly under the
       // raking specular band (light-sweep lives in emissive over the surface).
@@ -144,12 +152,15 @@ const members: ClusterMemberTemplate[] = [
       params: { width: SLIDE_W, height: SLIDE_H, segments: 48 },
     },
     materialSpec: {
-      baseColor: '#9fc3d6', // ice steel
-      metalness: 0.55,
-      roughness: 0.22,
+      // white base so the landscape photo map renders true color (map MULTIPLIES
+      // baseColor); premium glossy clearcoat print look.
+      baseColor: '#ffffff',
+      baseColorMapUrl: '/prism-mock/library-content/landscape-peak.png',
+      metalness: 0.0,
+      roughness: 0.42,
       clearcoat: 0.6,
-      clearcoatRoughness: 0.2,
-      envMapIntensity: 1.2,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: 1.0,
     },
     receivesLighting: true,
     // INTEGRATED animation: a single clean specular band glances diagonally

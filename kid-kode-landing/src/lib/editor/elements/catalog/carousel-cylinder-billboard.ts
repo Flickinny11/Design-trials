@@ -54,30 +54,60 @@ function pose(
   };
 }
 
-// Alternating premium PBR for the wrapped panels — brushed brass and ice-glass,
-// both physically plausible (Observatory Brass). These are graph data, not
-// chrome, so the hex values live here as the member's editable material.
+// Alternating premium content for the wrapped panels: three OPAQUE poster panels
+// that each carry a real premium photo (portrait-oriented to match the tall panel
+// footprint), interleaved with two ice-glass refractive panels (kept transmissive,
+// NO photo — they read as the glass between the posters). The photo panels use a
+// glossy "photo-print" PBR (white base so the map shows true color, light clearcoat
+// gloss) so the imagery sings under IBL instead of sitting flat. Observatory Brass
+// is preserved for the glass tint and all chrome. NEVER purple.
 const PANEL_PALETTE: Array<{
   baseColor: string;
   metalness: number;
   roughness: number;
   clearcoat: number;
+  clearcoatRoughness?: number;
+  baseColorMapUrl?: string; // photo skin for the opaque poster panels
   transmission?: number;
   ior?: number;
   dispersion?: number;
   thickness?: number;
   envMapIntensity: number;
 }> = [
-  // brushed brass
-  { baseColor: '#c9a86a', metalness: 0.95, roughness: 0.32, clearcoat: 0.5, envMapIntensity: 1.3 },
-  // ice glass
+  // poster 1 — flowing amber/teal silk (portrait): the brass-feature panel that unrolls
+  {
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    baseColorMapUrl: '/prism-mock/library-content/editorial-silk.png',
+    envMapIntensity: 1.0,
+  },
+  // ice glass — refractive panel between posters (no photo, stays transmissive)
   { baseColor: '#9fc3d6', metalness: 0.0, roughness: 0.06, clearcoat: 1, transmission: 0.92, ior: 1.5, dispersion: 0.04, thickness: 0.5, envMapIntensity: 1.6 },
-  // pale gold
-  { baseColor: '#d8c089', metalness: 0.9, roughness: 0.3, clearcoat: 0.55, envMapIntensity: 1.3 },
-  // steel-frost glass
+  // poster 2 — luxury perfume bottle, studio (portrait)
+  {
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    baseColorMapUrl: '/prism-mock/library-content/product-scent.png',
+    envMapIntensity: 1.0,
+  },
+  // steel-frost glass — refractive panel between posters (no photo, stays transmissive)
   { baseColor: '#aebfcb', metalness: 0.0, roughness: 0.07, clearcoat: 1, transmission: 0.9, ior: 1.5, dispersion: 0.04, thickness: 0.5, envMapIntensity: 1.55 },
-  // antique brass
-  { baseColor: '#cbb06f', metalness: 0.92, roughness: 0.28, clearcoat: 0.5, envMapIntensity: 1.3 },
+  // poster 3 — premium headphones, studio (portrait)
+  {
+    baseColor: '#ffffff',
+    metalness: 0.0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    baseColorMapUrl: '/prism-mock/library-content/product-audio.png',
+    envMapIntensity: 1.0,
+  },
 ];
 
 function buildMembers(): ClusterMemberTemplate[] {
@@ -143,7 +173,10 @@ function buildMembers(): ClusterMemberTemplate[] {
         metalness: pal.metalness,
         roughness: pal.roughness,
         clearcoat: pal.clearcoat,
-        clearcoatRoughness: 0.12,
+        clearcoatRoughness: pal.clearcoatRoughness ?? 0.12,
+        // Opaque poster panels carry a real photo on the outward-facing front
+        // face (the map multiplies the white base, so the image shows true).
+        ...(pal.baseColorMapUrl !== undefined ? { baseColorMapUrl: pal.baseColorMapUrl } : {}),
         ...(pal.transmission !== undefined ? { transmission: pal.transmission } : {}),
         ...(pal.ior !== undefined ? { ior: pal.ior } : {}),
         ...(pal.dispersion !== undefined ? { dispersion: pal.dispersion } : {}),

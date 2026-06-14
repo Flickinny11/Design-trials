@@ -81,13 +81,20 @@ const heroParticleEmerge: ElementClusterDefinition = {
         kind: 'plane',
         params: { width: 5.4, height: 3.2 },
       },
+      // The backdrop now carries a real atmospheric landscape (misty golden-hour
+      // peaks) instead of a flat charcoal fill — a wide 5.4×3.2 panel paired with
+      // a landscape ref so orientation matches. baseColor white so the photo shows;
+      // a dark-leaning glossy recipe keeps it premium and reflective so the brass
+      // ring + obsidian medallion still have depth to read against (it stays a
+      // recessed backdrop, never competing with the hero medallion in front).
       materialSpec: {
-        baseColor: '#1b1f27',
-        metalness: 0.4,
-        roughness: 0.58,
-        clearcoat: 0.2,
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/landscape-peak.png',
+        metalness: 0.2,
+        roughness: 0.5,
+        clearcoat: 0.25,
         clearcoatRoughness: 0.3,
-        envMapIntensity: 0.85,
+        envMapIntensity: 0.9,
       },
       receivesLighting: true,
     },
@@ -146,13 +153,20 @@ const heroParticleEmerge: ElementClusterDefinition = {
         kind: 'cylinder',
         params: { radius: 0.78, height: 0.12, segments: 96 },
       },
+      // The obsidian medallion's circular face now PRESENTS a real hero subject —
+      // a luxury astronomical watch on black (on-theme with the Observatory
+      // aesthetic, and a near-square ref that fronts the round disc cleanly). The
+      // base map MULTIPLIES baseColor, so baseColor is pulled to white to show the
+      // photo at full luminance; a glossy photo-print recipe (mid roughness +
+      // strong clearcoat) keeps the premium screen/print sheen the obsidian had.
       materialSpec: {
-        baseColor: '#15171f',
-        metalness: 0.7,
-        roughness: 0.18,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.08,
-        envMapIntensity: 1.5,
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/orrery/refs/watch-hero.png',
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // ALWAYS-VISIBLE motion: the obsidian mark gently floats (sine bob + slow

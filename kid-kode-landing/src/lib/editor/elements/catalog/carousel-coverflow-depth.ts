@@ -36,8 +36,9 @@
 //     (src/lib/prism/animatable/primitives/float.ts).
 //
 // This is a real, editable cluster: every card / caption is a PrismNode you can
-// move, recolor, re-skin, or re-bind post-place. Photorealism is procedural PBR
-// + IBL (free); no hero imagery is needed for this element.
+// move, recolor, re-skin, or re-bind post-place. The center focus tile is
+// procedural glass (PBR + IBL); the opaque wings are skinned with real premium
+// album-art sample imagery so the row reads as populated covers, not blank panels.
 //
 // Tier: T1 full-fidelity (clean fallback to T0 — the cards still read as lit,
 // arranged glass/metal panels with a crisp MSDF caption without screen-space
@@ -66,9 +67,10 @@ const YAW_PER_STEP = 0.46; // radians a wing turns toward the focus per step (~2
 const MAX_YAW = 1.15; // saturate the billboard yaw so no wing goes edge-on (~66°)
 
 // ── Palette: Observatory Brass, physically-plausible PBR (NEVER purple) ───────
-// The focus card is polished glass; wings alternate obsidian / chrome / brass.
-// Roughness is overridden per-card by the depth-of-focus gradient below, so
-// these are the *base* recipes (focus distance = 0 keeps them at their crispest).
+// The center card is polished glass; the OPAQUE wings are glossy album-print
+// cards skinned with real sample album-art (see WING_ALBUM_ART below).
+// Roughness is overridden per-card by the depth-of-focus gradient below, so this
+// is the *base* glass recipe (focus distance = 0 keeps it at its crispest).
 const GLASS_FOCUS: MaterialSpec = {
   baseColor: '#bfe0ef', // ice-blue tinted glass
   transmission: 0.92,
@@ -82,36 +84,33 @@ const GLASS_FOCUS: MaterialSpec = {
   envMapIntensity: 1.6,
 };
 
-const OBSIDIAN: MaterialSpec = {
-  baseColor: '#15171f',
-  metalness: 0.7,
-  roughness: 0.18,
-  clearcoat: 1.0,
+// ── Album art on the OPAQUE wing cards ───────────────────────────────────────
+// The wing cards are the carousel's content surfaces, so each shows REAL premium
+// sample album-art on its visible front face (baseColorMapUrl MULTIPLIES the lit
+// base material). Keyed by signed offset from focus so the two sides carry
+// distinct, varied art (never one image repeated). All portrait / ~square refs —
+// they fit the tall Coverflow album-tile footprint (0.92 × 1.28). The central
+// GLASS focus card is intentionally absent here — it stays a clear glass tile.
+const WING_ALBUM_ART: Record<number, string> = {
+  [-3]: '/prism-mock/library-content/editorial-silk.png', // far-left  — flowing amber/teal silk
+  [-2]: '/prism-mock/library-content/portrait-b.png', //      mid-left  — editorial portrait, man
+  [-1]: '/prism-mock/library-content/product-scent.png', //   near-left — luxury perfume bottle
+  [1]: '/prism-mock/library-content/product-audio.png', //    near-right— premium headphones
+  [2]: '/prism-mock/library-content/portrait-a.png', //       mid-right — editorial portrait, woman
+  [3]: '/prism-mock/orrery/refs/watch-hero.png', //           far-right — luxury watch on black
+};
+
+// Glossy "album print" surfacing applied alongside the album-art map on each wing
+// card: lit photo-print look (the map carries the color; baseColor stays white so
+// the photo isn't tinted), a soft clearcoat sheen so the card catches the rig's
+// IBL like a laminated cover. envMapIntensity is left to the per-card DOF gradient.
+const ALBUM_PRINT_SURFACE = {
+  baseColor: '#ffffff',
+  metalness: 0.0,
+  roughness: 0.42,
+  clearcoat: 0.6,
   clearcoatRoughness: 0.12,
-  envMapIntensity: 1.35,
-};
-
-const CHROME: MaterialSpec = {
-  baseColor: '#c4ccd6',
-  metalness: 1.0,
-  roughness: 0.08,
-  clearcoat: 1.0,
-  clearcoatRoughness: 0.06,
-  envMapIntensity: 1.6,
-};
-
-const BRASS: MaterialSpec = {
-  baseColor: '#c9a86a',
-  metalness: 0.95,
-  roughness: 0.32,
-  clearcoat: 0.5,
-  clearcoatRoughness: 0.2,
-  envMapIntensity: 1.3,
-};
-
-// Wing material rotation (focus uses GLASS_FOCUS). Reads outward from focus:
-// nearest wings chrome, then brass, then obsidian at the far edges.
-const WING_RECIPES: MaterialSpec[] = [CHROME, BRASS, OBSIDIAN];
+} as const;
 
 const identityRotScale = {
   rotationX: 0,
@@ -138,7 +137,13 @@ function buildCards(): ClusterMemberTemplate[] {
 
     // Depth-of-focus material: copy the base recipe, then roughen + dim env with
     // distance so far cards read optically "soft" — a real PBR DOF, no post blur.
-    const baseMat = isFocus ? GLASS_FOCUS : WING_RECIPES[(dist - 1) % WING_RECIPES.length];
+    // The focus card keeps its pure GLASS recipe. The OPAQUE wings switch to a
+    // glossy album-print surface carrying REAL sample album-art on the front face
+    // (baseColorMapUrl), so each wing reads as a populated cover, not a blank
+    // metal panel — while the DOF env falloff still sells recession.
+    const baseMat: MaterialSpec = isFocus
+      ? GLASS_FOCUS
+      : { ...ALBUM_PRINT_SURFACE, baseColorMapUrl: WING_ALBUM_ART[offset] };
     const roughnessBoost = dist * 0.07;
     const material: MaterialSpec = {
       ...baseMat,

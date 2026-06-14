@@ -52,16 +52,19 @@ export const heroPhotorealMonolith: ElementClusterDefinition = {
         params: { width: 5, height: 3 },
       },
       materialSpec: {
-        baseColor: '#3a4554',
-        metalness: 0.4,
-        roughness: 0.45,
-        clearcoat: 0.3,
-        // Lift the backdrop's IBL response + a whisper of warm self-glow so it
-        // reads as a softly-lit pewter slab (never a black void) and gives the
-        // monolith a bright, structured surface to reflect.
-        emissive: '#1d2733',
-        emissiveIntensity: 0.35,
-        envMapIntensity: 1.8,
+        // Premium hero FACE: a real landscape sample image (brass+glass atrium,
+        // warm gold, dramatic) printed onto the backdrop panel as a glossy
+        // poster. The map MULTIPLIES baseColor, so baseColor is white (#ffffff)
+        // to keep the photo true; a glossy clearcoat "photo print" finish gives
+        // it the premium screen/poster sheen and a structured surface for the
+        // monolith to reflect.
+        baseColor: '#ffffff',
+        baseColorMapUrl: '/prism-mock/library-content/arch-warm.png',
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
     },

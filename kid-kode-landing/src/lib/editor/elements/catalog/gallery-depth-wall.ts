@@ -71,6 +71,31 @@ const PANEL_MATERIALS = [
 // honest end-to-end.
 const COL_DEPTH_LAYER = ['content', 'midground', 'background'] as const;
 
+// Premium sample imagery per panel — six framed photos so the wall reads as a
+// real gallery, not blank panels. The map MULTIPLIES baseColor, so textured
+// panels switch to white base (full photo) + a glossy photo-print PBR recipe.
+// idx 2 is the ice-tinted GLASS inlay (transmission) — intentionally left
+// transmissive (null), never wallpapered. Orientation matched to the upright
+// portrait-ish panel footprint where possible.
+const PANEL_IMAGES: (string | null)[] = [
+  '/prism-mock/library-content/arch-warm.png',      // brass+glass atrium, warm gold
+  '/prism-mock/library-content/landscape-peak.png', // misty golden-hour peaks
+  null,                                             // GLASS inlay — keep transmissive
+  '/prism-mock/library-content/arch-interior.png',  // luxury minimalist interior
+  '/prism-mock/library-content/editorial-silk.png', // flowing amber/teal silk (portrait)
+  '/prism-mock/library-content/abstract-glass.png', // dark iridescent dispersion
+];
+
+// Glossy "framed photo print" PBR recipe applied to any textured panel so the
+// image reads as a premium poster behind clearcoat rather than a flat decal.
+const PHOTO_PRINT_MATERIAL = {
+  metalness: 0.0,
+  roughness: 0.42,
+  clearcoat: 0.6,
+  clearcoatRoughness: 0.12,
+  envMapIntensity: 1.0,
+} as const;
+
 function buildPanels(): ClusterMemberTemplate[] {
   const panels: ClusterMemberTemplate[] = [];
   const xCenter = ((COLS - 1) * COL_GAP) / 2;
@@ -82,7 +107,15 @@ function buildPanels(): ClusterMemberTemplate[] {
       const x = c * COL_GAP - xCenter;
       const y = yCenter - r * ROW_GAP + 0.45; // lift the wall above the label
       const z = c * COL_Z_STEP; // columns step back in Z
-      const mat = PANEL_MATERIALS[idx % PANEL_MATERIALS.length];
+      const baseMat = PANEL_MATERIALS[idx % PANEL_MATERIALS.length];
+      const imageUrl = PANEL_IMAGES[idx % PANEL_IMAGES.length];
+
+      // Textured panels show a real framed photo: white base so the map renders
+      // at full color, with the glossy photo-print clearcoat recipe. Glass and
+      // any untextured panel keep their original premium metal/glass material.
+      const mat = imageUrl
+        ? { ...baseMat, ...PHOTO_PRINT_MATERIAL, baseColor: '#ffffff', baseColorMapUrl: imageUrl }
+        : { ...baseMat };
 
       // Depth-weighted parallax: closer panels (front column) travel farther on
       // scroll than the recessed back column, so the wall parallaxes in 3D.

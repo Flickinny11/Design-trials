@@ -15,8 +15,9 @@
 // transformed rectangle.
 //
 // Every member is a real, editable PrismNode (move / scale / recolor / re-skin /
-// swap the animation post-place). Photorealism here is procedural PBR + IBL
-// (free) — no hero imagery needed.
+// swap the animation post-place). The three opaque card faces wear premium
+// glossy photo-prints (portrait/editorial/product sample imagery) under studio
+// IBL; the ice-glass card stays transmissive and the brass tray stays metal.
 //
 // Tier: T1 full-fidelity, clean T0 fallback — the cards still read as lit,
 // stacked, premium panels (obsidian / brass / glass / steel) without
@@ -72,13 +73,14 @@ const DECK: DeckCardSpec[] = [
     caption: 'Swipe card (back)',
     pose: pose(-0.16, -0.06, -0.18, 0.14),
     material: {
-      // obsidian recipe
-      baseColor: '#15171f',
-      metalness: 0.7,
-      roughness: 0.18,
-      clearcoat: 1.0,
+      // premium glossy photo-print: editorial silk on the deep card face
+      baseColor: '#ffffff',
+      baseColorMapUrl: '/prism-mock/library-content/editorial-silk.png',
+      metalness: 0.0,
+      roughness: 0.42,
+      clearcoat: 0.6,
       clearcoatRoughness: 0.12,
-      envMapIntensity: 1.25,
+      envMapIntensity: 1.0,
     },
   },
   // ── Card 3 — pewter brushed metal (cool counterweight to the brass).
@@ -87,13 +89,14 @@ const DECK: DeckCardSpec[] = [
     caption: 'Swipe card (mid)',
     pose: pose(0.1, -0.02, -0.12, -0.09),
     material: {
-      // brushed metal recipe
-      baseColor: '#aeb7c2',
-      metalness: 0.95,
-      roughness: 0.32,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.22,
-      envMapIntensity: 1.3,
+      // premium glossy photo-print: studio product shot on the mid card face
+      baseColor: '#ffffff',
+      baseColorMapUrl: '/prism-mock/library-content/product-scent.png',
+      metalness: 0.0,
+      roughness: 0.42,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: 1.0,
     },
   },
   // ── Card 2 — ice / steel-blue glass, lightly transmissive for depth.
@@ -122,13 +125,14 @@ const DECK: DeckCardSpec[] = [
     caption: 'Swipe card (top — flingable)',
     pose: pose(0.0, 0.06, 0.0, 0.0),
     material: {
-      // brass / polished gold recipe (Observatory Brass hero)
-      baseColor: '#c9a86a',
-      metalness: 0.95,
-      roughness: 0.22,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.08,
-      envMapIntensity: 1.6,
+      // premium glossy photo-print: editorial portrait on the hero swipe face
+      baseColor: '#ffffff',
+      baseColorMapUrl: '/prism-mock/library-content/portrait-a.png',
+      metalness: 0.0,
+      roughness: 0.42,
+      clearcoat: 0.6,
+      clearcoatRoughness: 0.12,
+      envMapIntensity: 1.0,
     },
   },
 ];

@@ -149,6 +149,19 @@ interface TileSpec {
   sweep: SweepKind;
 }
 
+// A glossy "photo print / poster / screen" surface: the base color map MULTIPLIES
+// baseColor, so baseColor goes pure white and we keep a clearcoated PBR sheen.
+const PHOTO_PRINT: Omit<MaterialSpec, 'baseColorMapUrl'> = {
+  baseColor: '#ffffff',
+  metalness: 0.0,
+  roughness: 0.42,
+  clearcoat: 0.6,
+  clearcoatRoughness: 0.12,
+  envMapIntensity: 1.0,
+};
+/** Build a per-tile photo-print materialSpec wearing the given image. */
+const photo = (url: string): MaterialSpec => ({ ...PHOTO_PRINT, baseColorMapUrl: url });
+
 // A packed masonry arrangement: column tops align near the same upper line, the
 // VARYING heights make the bottoms stagger (the masonry look). Heights chosen so
 // each column fills a similar total span with a different number of tiles.
@@ -175,14 +188,21 @@ const tile = (
 // + medium + short. Tops cascade so seams never line up across columns. Each
 // tile's surface sweep is matched to its material (gold-glint on brass/gold,
 // metallic-sheen on steel/pewter/obsidian, light-sweep on the ice glass).
+// Six tiles wear premium sample imagery on their front face — a photo print look
+// (PHOTO_PRINT material ⊕ baseColorMapUrl). Orientation is matched to footprint:
+// the tall l1/c2 cards take PORTRAIT images, the wide r1/r3 panels take LANDSCAPE,
+// the squarish c1/r2 tiles take SQUARE. The ICE_GLASS tile (l2) keeps NO image so
+// it stays transmissive glass — the one clear pane in a wall of photographs. The
+// surface sweep stays material-matched (gold/metallic/light) atop the photo.
+const IMG_BASE = '/prism-mock/library-content/';
 const TILES: TileSpec[] = [
-  tile('tile-l1', 0, TOP, 1.55, BRUSHED_BRASS, 'Gallery tile — feature', 'gold-glint'),
-  tile('tile-l2', 0, TOP - 1.55 - ROW_GAP, 0.95, ICE_GLASS, 'Gallery tile — glass', 'light-sweep'),
-  tile('tile-c1', 1, TOP - 0.2, 1.05, POLISHED_GOLD, 'Gallery tile — gold', 'gold-glint'),
-  tile('tile-c2', 1, TOP - 0.2 - 1.05 - ROW_GAP, 1.4, OBSIDIAN, 'Gallery tile — obsidian', 'metallic-sheen'),
-  tile('tile-r1', 2, TOP, 0.9, STEEL_BLUE, 'Gallery tile — steel', 'metallic-sheen'),
-  tile('tile-r2', 2, TOP - 0.9 - ROW_GAP, 1.0, PEWTER, 'Gallery tile — pewter', 'metallic-sheen'),
-  tile('tile-r3', 2, TOP - 0.9 - 1.0 - 2 * ROW_GAP, 0.78, BRUSHED_BRASS, 'Gallery tile — accent', 'gold-glint'),
+  tile('tile-l1', 0, TOP, 1.55, photo(IMG_BASE + 'editorial-silk.png'), 'Gallery tile — silk', 'gold-glint'), // portrait → tall
+  tile('tile-l2', 0, TOP - 1.55 - ROW_GAP, 0.95, ICE_GLASS, 'Gallery tile — glass', 'light-sweep'), // GLASS — intentionally no image
+  tile('tile-c1', 1, TOP - 0.2, 1.05, photo(IMG_BASE + 'portrait-a.png'), 'Gallery tile — portrait', 'metallic-sheen'), // square → squarish
+  tile('tile-c2', 1, TOP - 0.2 - 1.05 - ROW_GAP, 1.4, photo(IMG_BASE + 'product-scent.png'), 'Gallery tile — scent', 'gold-glint'), // portrait → tall
+  tile('tile-r1', 2, TOP, 0.9, photo(IMG_BASE + 'landscape-dune.png'), 'Gallery tile — dune', 'metallic-sheen'), // landscape → wide
+  tile('tile-r2', 2, TOP - 0.9 - ROW_GAP, 1.0, photo(IMG_BASE + 'abstract-gold.png'), 'Gallery tile — gold', 'gold-glint'), // square → square
+  tile('tile-r3', 2, TOP - 0.9 - 1.0 - 2 * ROW_GAP, 0.78, photo(IMG_BASE + 'arch-warm.png'), 'Gallery tile — atrium', 'metallic-sheen'), // landscape → wide
 ];
 
 // The always-visible surface sweep params, tuned per material so the glint

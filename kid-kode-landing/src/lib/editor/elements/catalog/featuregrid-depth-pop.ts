@@ -1,10 +1,14 @@
 // featuregrid-depth-pop — a 3×2 grid of premium feature cards that read COMPLETE
 // and gently alive at all times (§13 prebuilt-library element). Each card is a
-// thick beveled box (meshPrimitive cube) wearing a rich PBR materialSpec drawn
-// from the Observatory Brass palette (warm brass / pale gold + cool ice-steel +
-// charcoal obsidian, NEVER purple) so it reads photoreal standalone — the deep
-// cube + clearcoat does the layered-bevel work without extra geometry. A
-// centered MSDF heading (real letterforms, INV-11) frames the section above the
+// thick beveled box (meshPrimitive cube). FIVE of the six cards now wear a REAL
+// premium sample image on their front face (a glossy photo-print materialSpec:
+// `baseColorMapUrl` over a pure-white base, low-roughness clearcoat for a
+// poster-under-glass read) so the content surfaces are populated and photoreal,
+// not flat panels. The sixth tile stays a transmissive ICE_GLASS pane for one
+// real glass read. All imagery is square, matched to the square card footprint,
+// and VARIES across the grid (gold swirl, iridescent glass, sapphire, brass,
+// meteorite) so no image repeats. Palette stays Observatory Brass, NEVER purple.
+// A centered MSDF heading (real letterforms, INV-11) frames the section above the
 // grid. Seven members total (6 cards + 1 heading) — squarely premium, not bloated.
 //
 // THE AMBIENT MOTION (always-visible, never popping): the dominant time-driven
@@ -29,8 +33,9 @@
 // nothing here ever decomposes, scales from zero, or hides the artifact.
 //
 // Every member is a real, editable PrismNode (move / recolor / re-skin / swap
-// the animation post-place). Photorealism is procedural PBR + studio IBL (free)
-// — no generated imagery needed.
+// the image or animation post-place). Photorealism is real sample imagery on a
+// glossy photo-print PBR surface + studio IBL, with the glass tile carried by
+// procedural transmission.
 //
 // Tier: T1 full-fidelity (clean fallback to T0 — the cards still read as lit,
 // beveled brushed/obsidian/glass panels without screen-space GI). INV-9.
@@ -53,33 +58,9 @@ const CARD_W = 1.32;
 const CARD_H = 1.32;
 const CARD_DEPTH = 0.16;
 
-// Premium PBR recipes from the catalog plan, all physically plausible and in the
-// Observatory Brass palette. Cards cycle through these so the grid alternates
-// brushed metal, obsidian, polished chrome, iridescent and glass reads.
-const BRUSHED_BRASS: MaterialSpec = {
-  baseColor: '#c9a86a',
-  metalness: 0.95,
-  roughness: 0.32,
-  clearcoat: 0.5,
-  clearcoatRoughness: 0.25,
-  envMapIntensity: 1.3,
-};
-const OBSIDIAN: MaterialSpec = {
-  baseColor: '#15171f',
-  metalness: 0.7,
-  roughness: 0.18,
-  clearcoat: 1,
-  clearcoatRoughness: 0.1,
-  envMapIntensity: 1.4,
-};
-const POLISHED_CHROME: MaterialSpec = {
-  baseColor: '#aebfcb',
-  metalness: 1,
-  roughness: 0.08,
-  clearcoat: 1,
-  clearcoatRoughness: 0.06,
-  envMapIntensity: 1.6,
-};
+// The one real GLASS tile in the grid — a transmissive ice-steel pane (kept
+// untouched: transmission > 0.3 means it must stay refractive glass, never
+// wear an opaque photo). The other five tiles are photo-print surfaces below.
 const ICE_GLASS: MaterialSpec = {
   baseColor: '#9fc3d6',
   metalness: 0,
@@ -92,34 +73,38 @@ const ICE_GLASS: MaterialSpec = {
   clearcoatRoughness: 0.06,
   envMapIntensity: 1.4,
 };
-const IRIDESCENT_STEEL: MaterialSpec = {
-  baseColor: '#b6d0dd',
-  metalness: 0.6,
-  roughness: 0.25,
-  iridescence: 0.8,
-  iridescenceIOR: 1.3,
-  clearcoat: 0.7,
-  clearcoatRoughness: 0.18,
-  envMapIntensity: 1.5,
-};
-const PALE_GOLD: MaterialSpec = {
-  baseColor: '#d8c089',
-  metalness: 0.88,
-  roughness: 0.28,
-  clearcoat: 0.6,
-  clearcoatRoughness: 0.22,
-  envMapIntensity: 1.35,
-};
 
-// Card order reads brass → obsidian → chrome (top row), then iridescent → glass
-// → pale-gold (bottom row): a balanced, premium mix per column.
+// PREMIUM PHOTO-PRINT recipe (UI-WOW): each non-glass card's front face wears a
+// real sample image via `baseColorMapUrl` (the map MULTIPLIES baseColor, so
+// baseColor is pure #ffffff to show the photo undimmed). The glossy
+// clearcoat + low roughness give a poster/screen "photo print under glass"
+// read that catches the studio IBL. receivesLighting stays true so the print
+// still sits in the lit scene. Square images go on these square feature tiles
+// (footprint CARD_W === CARD_H), and they VARY across the grid (glossy gold
+// swirl → iridescent glass → sapphire → brass → meteorite) so no image repeats.
+function photoCard(url: string): MaterialSpec {
+  return {
+    baseColor: '#ffffff',
+    baseColorMapUrl: url,
+    metalness: 0,
+    roughness: 0.42,
+    clearcoat: 0.6,
+    clearcoatRoughness: 0.12,
+    envMapIntensity: 1.0,
+  };
+}
+
+// Card order (top row): glossy-gold abstract → iridescent-glass abstract →
+// sapphire macro. Bottom row: brushed-brass macro → ICE_GLASS (untouched
+// transmissive glass tile, kept as the one real glass read) → meteorite macro.
+// Five distinct square sample images, one transmissive glass tile.
 const CARD_MATERIALS: MaterialSpec[] = [
-  BRUSHED_BRASS,
-  OBSIDIAN,
-  POLISHED_CHROME,
-  IRIDESCENT_STEEL,
+  photoCard('/prism-mock/library-content/abstract-gold.png'),
+  photoCard('/prism-mock/library-content/abstract-glass.png'),
+  photoCard('/prism-mock/orrery/materia/sapphire-macro.png'),
+  photoCard('/prism-mock/orrery/materia/brass-macro.png'),
   ICE_GLASS,
-  PALE_GOLD,
+  photoCard('/prism-mock/orrery/materia/meteorite-macro.png'),
 ];
 
 function buildCards(): ClusterMemberTemplate[] {
@@ -277,7 +262,7 @@ const featuregridDepthPop: ElementClusterDefinition = {
     'continuous buoyant float (always-present idle motion)',
     'pointer parallax 3D card tilt',
     'proximity rim-glow edge light (Cursify Glow take)',
-    'PBR brushed-metal + obsidian feature cards',
+    'glossy photo-print feature thumbnails (real sample imagery)',
     'transmission glass tile',
   ],
   tier: 'T1',

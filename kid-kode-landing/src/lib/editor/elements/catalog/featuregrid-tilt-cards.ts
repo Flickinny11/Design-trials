@@ -43,10 +43,16 @@ const ROW_Y = 0.72; // half vertical pitch
 // premium accent base color. The accent is the obsidian core tint each card's
 // smoked glass sits over — warm brass and cool ice/steel, NEVER purple.
 const CELLS = [
-  { col: -1, row: 1, label: 'Photoreal\nMaterials', accent: '#16181f', trim: '#c9a86a' }, // brass trim
-  { col: 1, row: 1, label: 'Cursor\nPhysics', accent: '#141821', trim: '#9fc3d6' }, // ice trim
-  { col: -1, row: -1, label: 'Real-Time\nLighting', accent: '#171a22', trim: '#d8c089' }, // pale gold
-  { col: 1, row: -1, label: 'Edit\nEverything', accent: '#13161d', trim: '#aebfcb' }, // pewter
+  // Each card's face shows a real premium feature thumbnail (abstract / product /
+  // material imagery — reads as gallery-grade "feature" art). `image` is mapped
+  // onto the card's front face via materialSpec.baseColorMapUrl (it MULTIPLIES a
+  // #ffffff base, so the photo shows full-fidelity). Images vary per card and
+  // suit the near-square 1.5×1.1 tile footprint. `trim` survives as the emissive
+  // brass/ice edge breath that the rim-glow primitive wakes.
+  { col: -1, row: 1, label: 'Photoreal\nMaterials', trim: '#c9a86a', image: '/prism-mock/library-content/abstract-gold.png' }, // brass trim — liquid gold swirl
+  { col: 1, row: 1, label: 'Cursor\nPhysics', trim: '#9fc3d6', image: '/prism-mock/library-content/product-audio.png' }, // ice trim — premium headphones
+  { col: -1, row: -1, label: 'Real-Time\nLighting', trim: '#d8c089', image: '/prism-mock/orrery/materia/sapphire-macro.png' }, // pale gold — sapphire crystal macro
+  { col: 1, row: -1, label: 'Edit\nEverything', trim: '#aebfcb', image: '/prism-mock/orrery/refs/watch-hero.png' }, // pewter — luxury astronomical watch
 ] as const;
 
 const IDENTITY_RS = {
@@ -85,23 +91,21 @@ function buildMembers(): ClusterMemberTemplate[] {
         kind: 'cube',
         params: { width: CARD_W, height: CARD_H, depth: CARD_DEPTH },
       },
-      // Smoked-glass-over-obsidian: dark accent base color, real transmission
-      // (ior 1.5 + dispersion for chromatic edges), full clearcoat for a wet
-      // bevel, low roughness, brass/ice emissive trim breath. envMapIntensity
-      // high so reflections sell the glass.
+      // Glossy photo-print panel: a real premium feature thumbnail mapped onto
+      // the card face (baseColorMapUrl × #ffffff base = full-fidelity image), with
+      // a clearcoat "wet print" finish so the rig light and IBL sweep a glossy
+      // sheen across the photo. Brass/ice emissive trim breath survives for the
+      // rim-glow primitive to wake along the pointer-facing edge.
       materialSpec: {
-        baseColor: cell.accent,
-        metalness: 0.2,
-        roughness: 0.08,
-        transmission: 0.55,
-        ior: 1.5,
-        dispersion: 0.03,
-        thickness: 0.4,
-        clearcoat: 1.0,
-        clearcoatRoughness: 0.06,
+        baseColor: '#ffffff',
+        baseColorMapUrl: cell.image,
+        metalness: 0.0,
+        roughness: 0.42,
+        clearcoat: 0.6,
+        clearcoatRoughness: 0.12,
         emissive: cell.trim,
-        emissiveIntensity: 0.12,
-        envMapIntensity: 1.5,
+        emissiveIntensity: 0.1,
+        envMapIntensity: 1.0,
       },
       receivesLighting: true,
       // INTEGRATED animation: the card faces the cursor in 3D AND its edge wakes

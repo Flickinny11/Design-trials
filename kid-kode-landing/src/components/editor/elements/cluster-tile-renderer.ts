@@ -250,47 +250,94 @@ class ClusterTileRenderer {
     return scene;
   }
 
-  /** A far, dim lit backdrop behind every cluster (mirrors the proven
+  /** A far, dim lit STUDIO backdrop behind every cluster (mirrors the proven
    *  shared-tile-renderer glass-backdrop fix). Transmissive glass refracts only
-   *  OPAQUE scene structure, so without this a clear refractor reads as an
-   *  opaque dark silhouette (the advocate's "pills read as grey not glass" /
-   *  "near-black tiles" flag). A soft emissive gradient panel + a few dim
-   *  brass/ice bokeh give glass something to bend and metals something to
-   *  reflect — kept dim + far (z≈-8) so non-glass elements are never washed. */
+   *  OPAQUE scene structure, so without bright structure a clear refractor reads
+   *  as an opaque dark silhouette (the advocate's "pills read as grey not glass" /
+   *  "near-black tiles" flag).
+   *
+   *  This used to place 4 hard emissive SPHERES in the background — which read
+   *  as exposed yellow/blue LIGHT ORBS (the monitor/Logan "demo-rig-exposed"
+   *  flag, P0). They are replaced by a premium photographer's seamless: a soft
+   *  steel→ink gradient panel + soft VERTICAL SOFTBOX COLUMNS (warm-brass key
+   *  left, cool-ice rim right, faint center back-light). Soft-edged columns read
+   *  as studio strip-light reflections in chrome/glass — never as discrete bulbs
+   *  — while still giving glass bright structure to bend and metal reflections to
+   *  catch. Kept far (z≈-8) so non-glass elements are never washed. */
   private addBackdrop(scene: THREE.Scene): void {
     const group = new THREE.Group();
     group.name = 'cluster-backdrop';
     group.position.z = -8;
 
-    const w = 16, h = 11;
+    const w = 20, h = 13;
     const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
     const top = new THREE.Color('#2a3546'); // steel key
-    const bot = new THREE.Color('#0e121b'); // deep ink floor (lifted off pure black)
+    const bot = new THREE.Color('#0c0f17'); // deep ink floor (lifted off pure black)
     const colors = new Float32Array(4 * 3);
     [top, top, bot, bot].forEach((c, i) => { colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b; });
     panelGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     const panel = new THREE.Mesh(panelGeo, new THREE.MeshBasicMaterial({ vertexColors: true, toneMapped: true }));
+    panel.position.z = -0.4;
     group.add(panel);
 
-    // A few dim opaque emissive bokeh (brass + ice) for high-frequency glints —
-    // deterministic placement (no Math.random at module scope concerns; this is
-    // UI runtime). Bright enough to read THROUGH clear glass, dim enough not to
-    // dominate. z just in front of the panel so on-axis refraction catches them.
-    const BOKEH = [
-      { c: '#d9b878', x: -3.2, y: 1.8, r: 0.9 },
-      { c: '#9fc3d6', x: 3.0, y: -1.4, r: 1.1 },
-      { c: '#e6d2a0', x: 0.6, y: 0.4, r: 0.7 },
-      { c: '#8fb0c4', x: -1.8, y: -2.2, r: 0.8 },
+    // Soft vertical softbox columns — studio strip-light reflections, not orbs.
+    // Each is a tall thin quad carrying a soft-capsule emissive gradient (bright
+    // core column, transparent toward every edge), additively blended so it
+    // reads as light, not a painted bar. Warm-brass key left, cool-ice rim
+    // right, faint warm fill center-back. These are the refraction/reflection
+    // targets the glass + chrome need; their soft edges never read as a bulb.
+    const COLUMNS = [
+      { c: '#e7c684', x: -6.4, y: 0.4, z: 0.2, w: 3.0, h: 12, i: 0.9 },  // warm key, left
+      { c: '#a9cede', x: 6.0, y: -0.3, z: 0.1, w: 2.4, h: 12, i: 0.7 },  // cool rim, right
+      { c: '#d9bd86', x: 0.8, y: 1.4, z: -0.8, w: 4.2, h: 9, i: 0.32 },  // faint warm fill, center back
+      { c: '#cfe0ea', x: -2.6, y: -2.6, z: -0.6, w: 2.0, h: 6, i: 0.22 }, // cool floor catch
     ];
-    for (const b of BOKEH) {
-      const m = new THREE.Mesh(
-        new THREE.SphereGeometry(b.r, 18, 12),
-        new THREE.MeshStandardMaterial({ color: new THREE.Color(b.c), emissive: new THREE.Color(b.c), emissiveIntensity: 1.1, roughness: 0.5, metalness: 0 }),
-      );
-      m.position.set(b.x, b.y, 0.6);
-      group.add(m);
+    for (const col of COLUMNS) {
+      const tex = this.softboxTexture();
+      const mat = new THREE.MeshBasicMaterial({
+        map: tex,
+        color: new THREE.Color(col.c).multiplyScalar(col.i),
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        toneMapped: true,
+      });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(col.w, col.h), mat);
+      quad.position.set(col.x, col.y, col.z);
+      group.add(quad);
     }
     scene.add(group);
+  }
+
+  /** Cached soft-capsule alpha/light gradient for the studio softbox columns:
+   *  a bright vertical core that fades to transparent toward every edge. Built
+   *  once (Canvas2D), reused by every column tile. */
+  private _softboxTex: THREE.Texture | null = null;
+  private softboxTexture(): THREE.Texture {
+    if (this._softboxTex) return this._softboxTex;
+    const cv = document.createElement('canvas');
+    cv.width = 64; cv.height = 256;
+    const g = cv.getContext('2d')!;
+    // Horizontal soft column: transparent → bright core → transparent.
+    const lin = g.createLinearGradient(0, 0, 64, 0);
+    lin.addColorStop(0.0, 'rgba(255,255,255,0)');
+    lin.addColorStop(0.5, 'rgba(255,255,255,1)');
+    lin.addColorStop(1.0, 'rgba(255,255,255,0)');
+    g.fillStyle = lin;
+    g.fillRect(0, 0, 64, 256);
+    // Vertical soft falloff at the ends (multiply alpha).
+    g.globalCompositeOperation = 'destination-in';
+    const ver = g.createLinearGradient(0, 0, 0, 256);
+    ver.addColorStop(0.0, 'rgba(0,0,0,0)');
+    ver.addColorStop(0.18, 'rgba(0,0,0,1)');
+    ver.addColorStop(0.82, 'rgba(0,0,0,1)');
+    ver.addColorStop(1.0, 'rgba(0,0,0,0)');
+    g.fillStyle = ver;
+    g.fillRect(0, 0, 64, 256);
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    this._softboxTex = tex;
+    return tex;
   }
 
   register(opts: RegisterClusterOptions): ClusterTileHandle {
@@ -619,6 +666,8 @@ class ClusterTileRenderer {
     for (const tile of this.tiles.values()) this.disposeTile(tile);
     this.tiles.clear();
     this.env?.dispose();
+    this._softboxTex?.dispose();
+    this._softboxTex = null;
     this.renderer?.dispose();
     this.renderer = null;
     this.ready = false;
