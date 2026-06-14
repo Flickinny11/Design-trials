@@ -11,7 +11,7 @@ Branch: `prism-editor-build` · Model: **claude-opus-4-8** (confirmed via env at
 - [x] P4 — Real controllable drop shadow DONE + VERIFIED (3D). Finding: shadow CONTROLS existed in TextToolsFlyout but the renderer NEVER consumed textSpec.shadow (the "incomplete styling"). Now `text-object-3d.ts` builds a flat block-silhouette shadow group (ShapeGeometry, unlit MeshBasicNodeMaterial) offset (offsetX/Y/Z em), tinted shadow.color @ opacity, blur via golden-angle stacked taps (tier-capped 6/8), layered with the genuine PCFSoft scene shadow. p4-shadow: blue PRISM pops with soft dark offset shadow, 0 errors. DEFERRED: flat-MSDF-mode shadow (lower priority; 3D is the focus) → polish.
 - [x] P5 — Fill on 3D faces DONE + VERIFIED (real fal). (a) p5-texface: abstract-gold texture poured across 3D FACES (UV remap spans whole word) + distinct metallic side walls. (b) p5-ai: REAL fal-ai/flux-2 generated 4 textures ('molten copper relief, hammered metal'), wired:true, applied as ai-texture on the 3D faces — copper PRISM pops, 0 console/network errors, depthZ=0.236. Server: generateTextFills→falProvider.generateImage + storeRemoteAsset, /prism-mock/uploads/, 10-count default, INV-11 negative prompt, FP-07-clean route (Boolean(process.env.FAL_KEY) probe — no value leak). Client: FillEditor "Generate with AI" (cost-gated explicit click; procedural instant preview); TextFillPreviewStrip renders TRUE 3D when extrude.enabled (+lights). fal ledger: +$0.048 → cumulative $0.479 (<<$25). DEFERRED to P7: VISUAL capture of the 3D preview strip (headless flyout-open mechanics flaky; strip code is equivalence-verified — same createTextObject3D; advocate drives the UI in P7).
 - [x] P6 — Wire controls + store round-trip DONE + VERIFIED. TextToolsFlyout: Style flags B/I/S/U (write top-level bold/italic/strikethrough/underline); "3D · extruded geometry" section (Flat/3D toggle → extrude.enabled, Depth, Bevel off/on, Bevel Size, Metalness, Roughness, Side color); Shadow += Blur + Offset Z faders. All route via usePreviewStateStore (FP-15-clean). INV-9 host tier wired: GraphScene createUnifiedRenderer → setSharedNodeContextTier(detectCapabilityTier(renderer,{isMobile}).tier) → ctx.tier → factory gate. p6-ui/p6-gallery frames confirm controls render w/ material treatment + drive the 3D text (3D toggle active, gold extruded scene). Flat↔3D kind-switch applies via Save-and-Rebuild (RA-16); params tune live. 0 console errors.
-- [ ] P7 — Verify (advocate builds in real app, frames, no-regression) + report
+- [x] P7 — Verify + report DONE. user-advocate: **WOW, net PASS, 0 MUST-FIX, 3 polish FLAGs** (all 6 dimensions WOW/PASS, webgpu, 0 errors). I/S/U styling completed (italic shear + underline/strike bars render — p6-style). Final no-regression: vitest 3349/0, tsc 9/0-new, flat catalog byte-unchanged. Report: notes/TEXT-3D-REPORT.md. fal cum $0.479.
 
 ## Established facts (audit before any implement)
 - HEAD `3808db73` "launch kit" = harness/resume scaffolding ONLY (4 root files); NO feature code shipped yet → fresh build on P1 MSDF foundation.
@@ -38,7 +38,19 @@ ADD (additive, optional): style flags (bold/italic/strike/underline); `extrude` 
 - NOTE: kv_*/KripVerify + chrome-devtools MCP are NOT connected this session → drive via Playwright harness (real-GPU), judge frames with the `user-advocate` subagent. Assertion-only verification FORBIDDEN.
 
 ## Checkpoints (hash — phase)
-_(none yet)_
+- c61ece09 — P1 schema + contract + dep allowlist
+- ac367672 — P3 true extruded renderer (render-verified webgpu)
+- 1b112496 — P4 controllable drop shadow
+- 5195b344 — P5 fill on faces + real fal prompt→texture
+- d4a279f1 — P2 font gallery + P6 controls + INV-9 host tier
+- (P7 report commit pending advocate verdict)
+
+## No-regression (final)
+- vitest **3349 passed / 0 failed / 8 skipped** (== baseline; re-confirmed after P5 and P6).
+- tsc **9 pre-existing errors / 0-new** (8 test-mock NodeContext.THREE + 1 pre-existing GraphScene GLProps async-gl-factory; none in touched files).
+- 406-catalog: flat text builder (text-object/msdf-material/msdf-layout), all catalog primitives, material-system, mesh-primitive **byte-UNCHANGED** vs base 815d35f5 → catalog path byte-identical, no regression (full GPU sweep not needed; additive/opt-in only).
+- 0 console + 0 network errors in every real-GPU capture (p3/p4/p5/p6).
+- fal cumulative $0.479 (<<$25 warn).
 
 ## Log
 - P0 started: parallel research+understand workflow launched (wf_81bee7f5-d53).
