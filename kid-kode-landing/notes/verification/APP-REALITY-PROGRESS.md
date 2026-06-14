@@ -45,6 +45,8 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
   edges or blank bg. Camera is programmatic-only (the configured view / P2 journey).
 - **AMENDMENT 2026-06-14 (Function in Canvas):** implemented this run — additive node schema.
 
+## RUN COMPLETE — all 9 phases DONE (advocate: WOW + behaves like a real app, 0 MUST-FIX). Final: 08e7c5e6
+
 ## Phase status
 | P | Title | Status | Checkpoint |
 |---|---|---|---|
@@ -56,7 +58,7 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
 | P6 | Hub navigation working (reparent-on-navigate + morph) | DONE ✅ | 8e51c64a |
 | P7 | Function button + binding popup + sample holographic overlay | DONE ✅ | a1fc45be |
 | P8 | Nav chrome primitives (nav library category) | DONE ✅ | e7a2a44f |
-| P9 | Interactive verification + sign-off | DONE ✅ | (commit) |
+| P9 | Interactive verification + sign-off | DONE ✅ | 08e7c5e6 |
 
 ## fal ledger
 `notes/verification/app-reality/fal-ledger.json` (continues cumulative ~$0.479; warn $25/$40, STOP $48).
