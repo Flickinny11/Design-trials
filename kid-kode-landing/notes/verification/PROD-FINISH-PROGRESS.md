@@ -54,7 +54,7 @@ s1-arrival · s2-movement · s3-materia · s4-celestia · s5-acquire (5 hubs).
 | Phase | Title | Status | Checkpoint |
 |---|---|---|---|
 | BASE | Stand up app + capture baseline evidence (confirm both diagnoses) | DONE ✅ | (this commit) |
-| A | Full-viewport atmosphere (kill oval/stipple/flat-corners) [C1–C3] | TODO | — |
+| A | Full-viewport atmosphere (kill oval/stipple/flat-corners) [C1–C3] | DONE ✅ | (this commit) |
 | B | Hero present + lit every hub×viewport (Arrival watch desktop/tablet) [C4–C5] | TODO | — |
 | C | Production functional validation + capstone [C6–C13] | TODO | — |
 

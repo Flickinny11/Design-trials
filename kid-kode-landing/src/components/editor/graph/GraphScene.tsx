@@ -1917,17 +1917,20 @@ function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
 
   return (
     <group name="hub:scene-backdrop">
-      {/* APP-REALITY P4/P9 — a soft FEATHERED dark pool (radial alpha falloff,
-          oversized) instead of a hard-edged ink rectangle, so the content sits
-          in a pool that melts into the full-viewport skybox atmosphere with no
-          visible card seam. Reads as an app hero surface, not a panel. */}
+      {/* PROD-FINISH Phase A — a SUBTLE, colour-matched central deepening behind
+          content (not a hard dark ellipse). The premium dark nebula skybox is
+          now the full-bleed app surface; this pool only gently seats the content
+          for legibility. Colour = the skybox's dark base (DS.void) and opacity
+          is low, so the textured skybox shows THROUGH the corners (no flat
+          plate) and the smooth wide feather has near-zero contrast against the
+          atmosphere → no visible oval/seam on any aspect. */}
       <mesh position={[0, 0, -2.6]} name="hub:scene-backdrop-ink">
-        <planeGeometry args={[width * 1.7, height * 2.0]} />
+        <planeGeometry args={[width * 1.9, height * 2.0]} />
         <meshBasicMaterial
-          color={DS.ink}
+          color={DS.void}
           transparent
           alphaMap={getBackdropFalloffTexture()}
-          opacity={0.97}
+          opacity={0.5}
           depthWrite={false}
           toneMapped={false}
         />
@@ -3259,74 +3262,205 @@ function AssembledShadowCatcher() {
 // eye level → dark ground), so the built composition reads as a premium app
 // hero, not a 3D object floating in an editor void. `fog={false}` keeps the
 // gradient pure; renderOrder -1 + depthWrite false keep it behind all content.
+// PROD-FINISH Phase A — premium DARK nebula atmosphere. The prior build floored
+// the corners to a flat blue-grey (#2b3550) vignette and blew the center bright
+// with a strong brass key, so a dark pool plane over the bright center read as
+// an OVAL on flat corners. This rebuild makes the WHOLE equirect one premium
+// dark deep-space atmosphere — textured everywhere (nebula wisps + starfield +
+// dither, so even pure-skybox corners carry depth and never read flat), dark in
+// the corners (no bright halo), with only a MODERATE brass key behind content
+// (no white-hot center to fight). Combines the DESIGN-REFERENCES toolkit's FBM /
+// procedural-cloud + starfield techniques natively (no new dep; mirrors
+// GalaxyAtmosphere.nebulaTexture). 2048×1024 + per-pixel dither + LinearFilter
+// (no mipmaps) → no 8-bit banding.
+const _hubSkyCache: Record<string, THREE.CanvasTexture> = {};
 function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
-  const w = 1024;
-  const h = 512;
+  const cacheKey = baseHex || DS.ink;
+  if (_hubSkyCache[cacheKey]) return _hubSkyCache[cacheKey];
+  const w = 2048;
+  const h = 1024;
   const cv = document.createElement('canvas');
   cv.width = w;
   cv.height = h;
   const ctx = cv.getContext('2d')!;
-  // Vertical sky → ground base. y=0 (texture top) maps to the sphere's top pole.
-  // Luminous moody atmosphere (NOT near-black) so it reads as a designed app
-  // surface. Cool deep sky, a slightly-lifted horizon band, darker warm ground.
+  // deterministic PRNG so the atmosphere is stable across builds (resume-safe).
+  let seed = 0x9e3779b1 >>> 0;
+  const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+  // 1. base vertical gradient — premium graphite/ink, DARK at every latitude so
+  //    the corners (off-equator) never resolve to a flat light grey.
   const base = ctx.createLinearGradient(0, 0, 0, h);
-  base.addColorStop(0, '#070d18'); // deep night sky
-  base.addColorStop(0.4, '#0e1a2e'); // upper horizon (cool, moody)
-  base.addColorStop(0.56, '#13233c'); // brightest band at eye level
-  base.addColorStop(0.74, '#0b1322'); // lower horizon
-  base.addColorStop(1, baseHex && baseHex !== DS.ink ? baseHex : '#070b14'); // ground / hub tint
+  base.addColorStop(0, '#05070e'); // top pole (deep)
+  base.addColorStop(0.42, '#0a0f19'); // upper sky
+  base.addColorStop(0.54, '#0e1422'); // equator band (subtle lift behind content)
+  base.addColorStop(0.72, '#080c15'); // lower sky
+  base.addColorStop(1, baseHex && baseHex !== DS.ink ? baseHex : '#05080f'); // ground / hub tint
   ctx.fillStyle = base;
   ctx.fillRect(0, 0, w, h);
-  // Warm brass horizon glow at eye level (equator) — a strong studio key behind
-  // the content. Screen-blended over the lit base for a luminous hero glow.
+  // 2. nebula wisps — soft brass/ice clouds across the WHOLE canvas (incl. the
+  //    off-equator bands that map to screen corners) so corners are textured,
+  //    not flat. Screen-blended at low alpha; no purple (D2).
   ctx.globalCompositeOperation = 'screen';
-  const horizon = ctx.createRadialGradient(w * 0.5, h * 0.55, 0, w * 0.5, h * 0.55, w * 0.6);
-  horizon.addColorStop(0, dsAlpha(DS.brass300, 0.9));
-  horizon.addColorStop(0.28, dsAlpha(DS.brass400, 0.52));
-  horizon.addColorStop(0.55, dsAlpha(DS.brass600, 0.16));
-  horizon.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = horizon;
+  const tints = [DS.brass400, DS.brass600, DS.ice400, DS.ice500, DS.brass300];
+  for (let i = 0; i < 78; i++) {
+    const px = rnd() * w;
+    const py = (0.08 + rnd() * 0.84) * h;
+    const r = 90 + rnd() * 360;
+    const a = 0.025 + rnd() * 0.06;
+    const col = tints[(rnd() * tints.length) | 0];
+    const g = ctx.createRadialGradient(px, py, 0, px, py, r);
+    g.addColorStop(0, dsAlpha(col, a));
+    g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+  }
+  // 3. MODERATE brass key glow behind content (equator center) — depth without a
+  //    blown-out white core, so a content backdrop never needs a hard dark pool.
+  const key = ctx.createRadialGradient(w * 0.5, h * 0.52, 0, w * 0.5, h * 0.52, w * 0.4);
+  key.addColorStop(0, dsAlpha(DS.brass300, 0.30));
+  key.addColorStop(0.4, dsAlpha(DS.brass500, 0.11));
+  key.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = key;
   ctx.fillRect(0, 0, w, h);
-  // Cool ice counter-glow, upper area, for depth + colour contrast.
-  const ice = ctx.createRadialGradient(w * 0.24, h * 0.24, 0, w * 0.24, h * 0.24, w * 0.46);
-  ice.addColorStop(0, dsAlpha(DS.ice400, 0.28));
+  const ice = ctx.createRadialGradient(w * 0.27, h * 0.32, 0, w * 0.27, h * 0.32, w * 0.38);
+  ice.addColorStop(0, dsAlpha(DS.ice400, 0.12));
   ice.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = ice;
   ctx.fillRect(0, 0, w, h);
-  // Soft vignette (multiply) — darkens corners toward, but NOT to, black so the
-  // glow reads as a spotlight while the background still fills the frame.
+  // 4. gentle vignette (multiply) — corners a touch deeper, NOT floored to a
+  //    flat plate; the starfield laid on top keeps them textured.
   ctx.globalCompositeOperation = 'multiply';
-  const vig = ctx.createRadialGradient(w * 0.5, h * 0.54, h * 0.16, w * 0.5, h * 0.54, w * 0.6);
+  const vig = ctx.createRadialGradient(w * 0.5, h * 0.52, h * 0.22, w * 0.5, h * 0.52, w * 0.6);
   vig.addColorStop(0, '#ffffff');
-  vig.addColorStop(0.6, '#aeb6c8');
-  vig.addColorStop(1, '#2b3550');
+  vig.addColorStop(0.64, '#cdd2dc');
+  vig.addColorStop(1, '#8b93a4');
   ctx.fillStyle = vig;
   ctx.fillRect(0, 0, w, h);
+  // 5. starfield — two tiers laid on top of the vignette so corners stay
+  //    textured (NOT a flat plate). A dense fine tier + a sparser BRIGHT/bigger
+  //    tier whose stars span several texels so they survive the ~8× corner
+  //    magnification on screen (fine sub-texel speckle alone gets filtered away).
+  //    Brass/bone/ice, no purple. Each bright star gets a soft halo for depth.
+  ctx.globalCompositeOperation = 'lighter';
+  const starTints = [DS.textHi, DS.brass200, DS.ice200, DS.ice300, DS.brass100];
+  for (let i = 0; i < 4200; i++) {
+    const px = rnd() * w;
+    const py = rnd() * h;
+    const rad = rnd() * 1.3 + 0.35;
+    const a = 0.16 + rnd() * 0.5;
+    ctx.fillStyle = dsAlpha(starTints[(rnd() * starTints.length) | 0], a);
+    ctx.beginPath();
+    ctx.arc(px, py, rad, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  for (let i = 0; i < 300; i++) {
+    const px = rnd() * w;
+    const py = rnd() * h;
+    const rad = 1.3 + rnd() * 1.4;
+    const a = 0.55 + rnd() * 0.4;
+    const col = starTints[(rnd() * starTints.length) | 0];
+    // small tight halo so the bright star reads as a crisp point, not a glow
+    // blob that brightens a whole corner region (which would break uniformity).
+    const halo = ctx.createRadialGradient(px, py, 0, px, py, rad * 1.8);
+    halo.addColorStop(0, dsAlpha(col, a * 0.4));
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(px - rad * 1.8, py - rad * 1.8, rad * 3.6, rad * 3.6);
+    ctx.fillStyle = dsAlpha(col, a);
+    ctx.beginPath();
+    ctx.arc(px, py, rad, 0, Math.PI * 2);
+    ctx.fill();
+  }
   ctx.globalCompositeOperation = 'source-over';
+  // 6. LOW-FREQUENCY FBM atmospheric depth + per-pixel dither. The fine
+  //    starfield/dither get filtered away at the heavy magnification of the
+  //    widest viewport's corners (a star-free corner would otherwise render as a
+  //    perfectly flat black plate). A continuous multi-octave value-noise field
+  //    (DESIGN-REFERENCES FBM technique, native — no dep) guarantees EVERY
+  //    region carries gentle dust/gas variation that survives magnification, so
+  //    no corner is ever flat. Tiling bilinear value noise, 3 octaves.
+  const mkNoise = (gw: number, gh: number) => {
+    const g = new Float32Array(gw * gh);
+    for (let i = 0; i < g.length; i++) g[i] = rnd();
+    return { gw, gh, g };
+  };
+  const sampleNoise = (ng: { gw: number; gh: number; g: Float32Array }, u: number, v: number) => {
+    const { gw, gh, g } = ng;
+    const x = u * gw - 0.5, y = v * gh - 0.5;
+    const x0 = Math.floor(x), y0 = Math.floor(y);
+    const fx = x - x0, fy = y - y0;
+    const ix0 = ((x0 % gw) + gw) % gw, ix1 = (ix0 + 1) % gw;
+    const iy0 = ((y0 % gh) + gh) % gh, iy1 = (iy0 + 1) % gh;
+    const a = g[iy0 * gw + ix0], b = g[iy0 * gw + ix1], c = g[iy1 * gw + ix0], e = g[iy1 * gw + ix1];
+    const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+    return (a * (1 - sx) + b * sx) * (1 - sy) + (c * (1 - sx) + e * sx) * sy;
+  };
+  const n1 = mkNoise(40, 22), n2 = mkNoise(96, 52), n3 = mkNoise(208, 110);
+  const img = ctx.getImageData(0, 0, w, h);
+  const d = img.data;
+  for (let y = 0; y < h; y++) {
+    const v = y / h;
+    for (let x = 0; x < w; x++) {
+      const u = x / w;
+      const fbm = sampleNoise(n1, u, v) * 0.55 + sampleNoise(n2, u, v) * 0.3 + sampleNoise(n3, u, v) * 0.15;
+      const add = (fbm - 0.5) * 11 + (rnd() * 2 - 1) * 1.6; // low-freq depth + fine dither
+      const i = (y * w + x) * 4;
+      d[i] = Math.max(0, Math.min(255, d[i] + add));
+      d[i + 1] = Math.max(0, Math.min(255, d[i + 1] + add));
+      d[i + 2] = Math.max(0, Math.min(255, d[i + 2] + add));
+    }
+  }
+  ctx.putImageData(img, 0, 0);
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.generateMipmaps = false;
+  _hubSkyCache[cacheKey] = tex;
   return tex;
 }
 
-// APP-REALITY P4/P9 — soft radial falloff (alpha) so the hub backdrop pool
-// FEATHERS into the skybox atmosphere instead of presenting a hard-edged
-// rectangle (the "floating card" seam the advocate flagged). Built once.
+// PROD-FINISH Phase A — smooth ANALYTIC radial feather (alpha) so the hub
+// backdrop image / pool melts into the skybox atmosphere with NO banding and NO
+// hard elliptical edge. The prior 256px 8-bit canvas-gradient quantized into
+// visible stair-step bands when stretched across the plane. This is a high-res
+// (1024²) per-pixel smoothstep falloff with a WIDE feather (fades from r≈0.36)
+// + a small blue-ish dither on the alpha; LinearFilter + no mipmaps. Built once.
 let _backdropFalloffTex: THREE.CanvasTexture | null = null;
 function getBackdropFalloffTexture(): THREE.CanvasTexture {
   if (_backdropFalloffTex) return _backdropFalloffTex;
-  const s = 256;
+  const s = 1024;
   const cv = document.createElement('canvas');
   cv.width = s;
   cv.height = s;
   const ctx = cv.getContext('2d')!;
-  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
-  g.addColorStop(0, 'rgba(255,255,255,1)');
-  g.addColorStop(0.5, 'rgba(255,255,255,0.94)');
-  g.addColorStop(0.8, 'rgba(255,255,255,0.4)');
-  g.addColorStop(1, 'rgba(255,255,255,0)');
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, s, s);
+  const img = ctx.createImageData(s, s);
+  const d = img.data;
+  let seed = 0x2545f491 >>> 0;
+  const rnd = () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; };
+  const cx = s / 2, cy = s / 2, R = s / 2;
+  const smooth = (e0: number, e1: number, x: number) => {
+    const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0)));
+    return t * t * (3 - 2 * t);
+  };
+  for (let y = 0; y < s; y++) {
+    for (let x = 0; x < s; x++) {
+      const dx = (x - cx) / R, dy = (y - cy) / R;
+      const r = Math.sqrt(dx * dx + dy * dy);
+      // full opacity to r≈0.36, then a long smooth feather to 0 at r=1.
+      let a = 1 - smooth(0.36, 1.0, r);
+      a = a * a * (3 - 2 * a); // double-smooth → no perceptible boundary
+      a = Math.max(0, Math.min(1, a + (rnd() * 2 - 1) * 0.012)); // dither (anti-band)
+      const i = (y * s + x) * 4;
+      d[i] = d[i + 1] = d[i + 2] = 255;
+      d[i + 3] = Math.round(a * 255);
+    }
+  }
+  ctx.putImageData(img, 0, 0);
   _backdropFalloffTex = new THREE.CanvasTexture(cv);
+  _backdropFalloffTex.colorSpace = THREE.SRGBColorSpace;
+  _backdropFalloffTex.minFilter = THREE.LinearFilter;
+  _backdropFalloffTex.magFilter = THREE.LinearFilter;
+  _backdropFalloffTex.generateMipmaps = false;
   return _backdropFalloffTex;
 }
 
