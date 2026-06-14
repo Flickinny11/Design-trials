@@ -1,0 +1,29 @@
+{
+  "label": "p5-texface",
+  "startedAt": "2026-06-14T15:19:12.368Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 4,
+    "depthZ": 0.2232,
+    "is3d": true,
+    "faceFill": "texture",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "539a6b71-4484-4cfb-8eed-e53967ce25eb",
+  "mounted3d": true
+}

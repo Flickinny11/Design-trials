@@ -1,0 +1,45 @@
+{
+  "label": "p5-ai",
+  "startedAt": "2026-06-14T15:22:12.353Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    },
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "profile",
+      "file": "profile.png",
+      "crop": "profile-crop.png"
+    },
+    {
+      "rot": "ai-fill-strip",
+      "file": "ai-fill-strip.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 5,
+    "depthZ": 0.2356,
+    "is3d": true,
+    "faceFill": "ai-texture",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "7a9bf8b2-853e-4e70-bf92-0f0f795660a2",
+  "ai": {
+    "prompt": "molten copper relief, hammered metal",
+    "wired": true,
+    "count": 4,
+    "firstUrl": "/prism-mock/uploads/f07d62c22d15d1e5ad2732eb3b7f6013cf95b4334ebe3083aa990c2a0799d39d.png",
+    "error": null
+  },
+  "mounted3d": true
+}

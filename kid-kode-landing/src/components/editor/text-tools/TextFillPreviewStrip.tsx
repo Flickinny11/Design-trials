@@ -14,13 +14,23 @@
 // so every row previews exactly what clicking it will produce.
 
 import { useEffect, useMemo, useRef } from 'react';
-import { PerspectiveCamera, Scene, TextureLoader, type Texture } from 'three';
+import {
+  AmbientLight,
+  DirectionalLight,
+  HemisphereLight,
+  PerspectiveCamera,
+  Scene,
+  TextureLoader,
+  type Texture,
+} from 'three';
 import { WebGPURenderer } from 'three/webgpu';
 import type { TextSpec } from '@/lib/prism-graph/types';
 import type { TextFillSuggestion } from '@/lib/prism/text/contract';
 import type { LoadedFontAtlas, TextObjectHandle } from '@/lib/prism/text/contract';
 import { createTextObject } from '@/lib/prism/text/text-object';
+import { createTextObject3D } from '@/lib/prism/text/text-object-3d';
 import { getFontRegistry } from '@/lib/prism/text/font-registry';
+import { getFontOutlineRegistry } from '@/lib/prism/text/font-outline-registry';
 
 const ROW_H = 42; // CSS px per candidate row
 const CAM_Z = 3.0;
@@ -97,27 +107,53 @@ export default function TextFillPreviewStrip({
       await renderer.init();
       if (disposed) return;
       const family = spec.fontFamily ?? 'Inter';
-      const weight = spec.fontWeight ?? 400;
-      const reg = getFontRegistry();
-      let atlas: LoadedFontAtlas;
-      try {
-        atlas = reg.peekAtlas(family, weight) ?? (await reg.resolveAtlas(family, weight));
-      } catch {
-        return; // offline — strip stays blank; CSS fallback row titles remain
+      const baseWeight = spec.fontWeight ?? 400;
+      const weight = spec.bold ? Math.max(baseWeight, 700) : baseWeight;
+      const italic = spec.italic === true;
+      // True-3D preview when the node's spec opts in — each candidate becomes
+      // the user's OWN text EXTRUDED with that texture poured on the faces
+      // (LOGAN-INBOX 2026-06-10). Flat MSDF otherwise.
+      const is3d = !!spec.extrude?.enabled;
+
+      let atlas: LoadedFontAtlas | null = null;
+      if (is3d) {
+        // A lit extruded material needs lights, or it renders black — the strip
+        // Scene has none by default. Add a compact key + fill so textured faces
+        // read clearly in the preview.
+        const key = new DirectionalLight(0xffffff, 2.6);
+        key.position.set(2.5, 3, 4);
+        scene.add(key);
+        scene.add(new HemisphereLight(0xdfe7ff, 0x2a3340, 1.15));
+        scene.add(new AmbientLight(0xffffff, 0.35));
+        try {
+          await getFontOutlineRegistry().resolveOutlines(family, weight, spec.content ?? 'Text', italic);
+        } catch {
+          return; // offline — strip stays blank
+        }
+      } else {
+        const reg = getFontRegistry();
+        try {
+          atlas = reg.peekAtlas(family, weight) ?? (await reg.resolveAtlas(family, weight));
+        } catch {
+          return; // offline — strip stays blank; CSS fallback row titles remain
+        }
       }
       if (disposed) return;
 
       candidates.forEach((c, i) => {
-        const handle = createTextObject(
-          {
-            ...spec,
-            fill: { kind: 'texture', url: c.url },
-            // Per-glyph so the sway can ripple subtly later if wanted.
-            decompose: spec.decompose ?? 'glyph',
-          },
-          atlas,
-          { lit: false, resolveFillTexture: loadFillTexture },
-        );
+        // Pour the candidate texture onto the letterforms (3D: faces; flat: mask).
+        const candidateSpec: TextSpec = {
+          ...spec,
+          fill: { kind: 'texture', url: c.url },
+          decompose: spec.decompose ?? 'glyph',
+        };
+        const handle = is3d
+          ? createTextObject3D(
+              candidateSpec,
+              getFontOutlineRegistry().peekOutlines(family, weight, spec.content ?? 'Text', italic)!,
+              { tier: 'T2', resolveFillTexture: loadFillTexture },
+            )
+          : createTextObject(candidateSpec, atlas!, { lit: false, resolveFillTexture: loadFillTexture });
         const m = handle.measure();
         // Fit within 92% of row width / 70% of row height, centered on row i.
         const s = Math.min((worldW * 0.92) / Math.max(m.width, 1e-3), 0.7 / Math.max(m.height, 1e-3));

@@ -61,11 +61,35 @@ export default function FillEditor({
   const [batch, setBatch] = useState(0);
   const [suggestions, setSuggestions] = useState<TextFillSuggestion[]>([]);
   const [baking, setBaking] = useState(false);
+  // Real fal prompt→texture generation in flight (explicit button only).
+  const [aiGen, setAiGen] = useState(false);
   // null = not probed yet; false = unwired (honest note); true = wired.
   const [cloudWired, setCloudWired] = useState<boolean | null>(null);
   const probed = useRef(false);
 
   const prompt = fill.kind === 'ai-texture' ? fill.prompt : '';
+
+  // Explicit AI generation (cost-gated: real fal fires ONLY on button click, not
+  // on every keystroke). Procedural swatches remain the instant live preview.
+  const generateAi = async () => {
+    if (aiGen) return;
+    setAiGen(true);
+    try {
+      const r = await fetch('/api/prism/text-fill', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ prompt: prompt || DEFAULT_PROMPT, count: SUGGESTION_COUNT }),
+      });
+      const j: { wired?: boolean; suggestions?: TextFillSuggestion[] } = await r.json();
+      if (j?.wired && Array.isArray(j.suggestions) && j.suggestions.length > 0) {
+        setSuggestions(j.suggestions);
+      }
+    } catch {
+      /* keep the procedural swatches already shown */
+    } finally {
+      setAiGen(false);
+    }
+  };
 
   // Probe the cloud endpoint exactly once, the first time the AI section
   // shows. Non-200 / network error / missing route all count as unwired.
@@ -200,7 +224,8 @@ export default function FillEditor({
           )}
           {cloudWired === true && (
             <div className="text-[8px] font-mono px-1" style={{ color: 'var(--ds-ok)' }}>
-              Cloud endpoint wired — P1 still previews with local procedural swatches.
+              Cloud wired — “Generate with AI” pours a real prompt→texture onto your text
+              (procedural swatches preview instantly while you type).
             </div>
           )}
 
@@ -250,13 +275,20 @@ export default function FillEditor({
           <button
             type="button"
             data-action="ai-fill-generate-more"
-            onClick={() => setBatch((b) => b + 1)}
-            className="h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+            disabled={aiGen}
+            onClick={() => (cloudWired === true ? void generateAi() : setBatch((b) => b + 1))}
+            className="h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all disabled:opacity-60"
             style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
           >
-            <Icon name="wand" size={11} color={DS.text} />
+            <Icon name={aiGen ? 'sparkle' : 'wand'} size={11} color={DS.text} />
             <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>
-              {baking ? 'Baking…' : 'Generate more'}
+              {aiGen
+                ? 'Generating…'
+                : cloudWired === true
+                  ? 'Generate with AI'
+                  : baking
+                    ? 'Baking…'
+                    : 'Generate more'}
             </span>
           </button>
           <div className="text-[8px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-low)' }}>

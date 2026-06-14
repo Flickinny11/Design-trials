@@ -102,6 +102,31 @@ try {
   if (!nodeId) throw new Error('no text node added');
   report.nodeId = nodeId;
 
+  // Optional: REAL fal prompt→texture, poured onto the 3D faces (--ai="prompt").
+  const aiPrompt = arg('ai', '');
+  if (aiPrompt) {
+    const gen = await page.evaluate(async (p) => {
+      try {
+        const r = await fetch('/api/prism/text-fill', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ prompt: p, count: 4 }),
+        });
+        return await r.json();
+      } catch (e) { return { error: String(e && e.message || e) }; }
+    }, aiPrompt);
+    report.ai = {
+      prompt: aiPrompt,
+      wired: gen?.wired === true,
+      count: Array.isArray(gen?.suggestions) ? gen.suggestions.length : 0,
+      firstUrl: gen?.suggestions?.[0]?.url ?? null,
+      error: gen?.error ?? null,
+    };
+    if (gen?.wired && gen.suggestions?.length) {
+      CFG.textSpec = { ...CFG.textSpec, fill: { kind: 'ai-texture', prompt: aiPrompt, url: gen.suggestions[0].url } };
+    }
+  }
+
   // Select + open Inspector, then preview-edit the textSpec (extrude on), Save,
   // Save-and-Rebuild (re-invokes createNode → factory dispatches to the 3D
   // builder). This is the authentic geometry-kind-change path (RA-16).
@@ -157,6 +182,29 @@ try {
     const cf = `${rot.label}-crop.png`;
     await page.screenshot({ path: join(OUT, cf), clip: { x: 360, y: 230, width: 560, height: 420 } });
     report.frames.push({ rot: rot.label, file: f, crop: cf });
+  }
+
+  // Capture the AI-fill preview strip — the user's OWN text rendered in TRUE 3D
+  // per candidate (LOGAN-INBOX backlog). Procedural candidates suffice to prove
+  // the 3D-strip render (no fal needed); --ai additionally shows generated ones.
+  if (aiPrompt || flag('strip')) {
+    await page.evaluate((id) => { window.__PRISM_EDITOR_NODE_GROUPS__.get(id)?.rotation.set(0, 0, 0); }, nodeId).catch(() => {});
+    // Open the Text flyout ONLY if it isn't rendered at all (count===0). Don't
+    // use isVisible — the AI chip is often just scrolled out of the long flyout,
+    // and re-clicking the group would TOGGLE IT CLOSED.
+    const chipCount = await page.locator('[data-testid="fill-kind-ai"]').count();
+    if (chipCount === 0) { await page.click('[data-tool-group="text"]').catch(() => {}); await page.waitForTimeout(700); }
+    const chip = page.locator('[data-testid="fill-kind-ai"]').first();
+    await chip.scrollIntoViewIfNeeded().catch(() => {});
+    await chip.click().catch(() => {});
+    await page.waitForTimeout(800);
+    const strip = page.locator('[data-component="ai-fill-suggestions"]').first();
+    await strip.scrollIntoViewIfNeeded().catch(() => {});
+    await page.waitForTimeout(3500); // 3D previews build + intro sway
+    report.stripFound = await strip.count();
+    await strip.screenshot({ path: join(OUT, 'ai-fill-strip.png') })
+      .catch(async () => { await page.screenshot({ path: join(OUT, 'ai-fill-strip.png') }); });
+    report.frames.push({ rot: 'ai-fill-strip', file: 'ai-fill-strip.png' });
   }
 
   report.consoleErrors = report.consoleErrors.filter((t) => !/DevTools|Download the React/.test(t)).slice(0, 12);
