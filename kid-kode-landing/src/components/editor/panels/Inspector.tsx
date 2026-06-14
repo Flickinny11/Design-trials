@@ -64,7 +64,11 @@ const WORLD_TABS: { id: InspectorTab; label: string; icon: string }[] = [
 
 export default function Inspector() {
   // UI-FIDELITY-2 — hero glass: the inspector plate refracts the live scene.
-  const inspectorSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
+  // UI-WOW P2 — heavier frost so the full-height inspector reads as a clean
+  // frosted instrument panel, not a muddy window onto the live scene behind it
+  // (the monitor's "semi-transparent overlap" flag). Content stays crisp; the
+  // scene behind softens to bokeh.
+  const inspectorSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.84 });
   // UI-FIDELITY-2 — machined header plate as real brushed metal. order: 0
   // pins the plate under its own action-rail keys: React attaches child refs
   // before the parent's, so without the bias the plate would register later —

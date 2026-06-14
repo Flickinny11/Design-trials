@@ -457,6 +457,37 @@ html[data-ds-tier='t1'] .ds-glass--heavy {
   }
 }
 
+/* ── SIGNATURE CURSOR (UI-WOW P2 — MagneticCursor) ─────────────────────────────
+   A soft ring + hot dot that lerp toward the pointer and warm to brass + grow +
+   magnetically snap over interactive controls. The component sets ONLY transform
+   + opacity imperatively (allowed); the warm/press visual is class-driven here so
+   color/glow transitions live in CSS. Inert on touch / reduced-motion (the
+   component never mounts the loop there). */
+.ds-cursor-ring {
+  position: fixed; top: 0; left: 0; width: 26px; height: 26px;
+  border-radius: var(--ds-r-pill);
+  border: 1px solid rgba(var(--ds-ice-400-rgb), 0.5);
+  opacity: 0;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  transition: opacity 200ms var(--ds-ease-out), border-color 180ms var(--ds-ease-out),
+              box-shadow 220ms var(--ds-ease-out), border-width 180ms var(--ds-ease-out);
+}
+.ds-cursor-ring.is-warm {
+  border-color: rgba(var(--ds-brass-300-rgb), 0.85);
+  border-width: 1.6px;
+  box-shadow: 0 0 22px rgba(var(--ds-brass-400-rgb), 0.34);
+}
+.ds-cursor-dot {
+  position: fixed; top: 0; left: 0; width: 4px; height: 4px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-brass-100);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 200ms var(--ds-ease-out);
+}
+@media (pointer: coarse) { .ds-cursor-ring, .ds-cursor-dot { display: none; } }
+
 /* ── TOUCH ergonomics ─────────────────────────────────────────────────────── */
 
 @media (pointer: coarse) {

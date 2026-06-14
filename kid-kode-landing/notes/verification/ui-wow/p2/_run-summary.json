@@ -1,0 +1,14 @@
+{
+  "at": "2026-06-14T05:37:28.298Z",
+  "base": "http://localhost:4925",
+  "scenes": [
+    {
+      "name": "p2-chrome",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    }
+  ]
+}

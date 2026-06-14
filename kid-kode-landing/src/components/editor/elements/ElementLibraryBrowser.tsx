@@ -43,9 +43,14 @@ import {
 } from '@/lib/editor/elements/contract';
 import ClusterCanvas from './ClusterCanvas';
 import ClusterTile from './ClusterTile';
+import { useLenis } from '@/components/editor/design-system/use-lenis';
 
 export default function ElementLibraryBrowser() {
   const open = useGraphEditorStore((s) => s.libraryOpen);
+  // UI-WOW P2 — buttery momentum scroll on the tile grid (DESIGN-REFERENCES §6
+  // Lenis; previously installed-but-unused). The shared rig reads each tile's
+  // rect per-frame, so the scissored previews track the smooth scroll.
+  const { ref: gridScrollRef } = useLenis<HTMLDivElement>({ lerp: 0.11 });
   const closeLibrary = useGraphEditorStore((s) => s.closeLibrary);
   const setPlacingCluster = useGraphEditorStore((s) => s.setPlacingCluster);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
@@ -257,6 +262,7 @@ export default function ElementLibraryBrowser() {
             rig canvas shows through each tile's transparent preview window.
             Scrolls within the modal. */}
         <div
+          ref={gridScrollRef}
           className="flex-1 overflow-y-auto px-5 py-4 ds-scroll min-h-0"
           style={{ background: 'transparent' }}
         >

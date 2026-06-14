@@ -284,6 +284,52 @@ const SCENE_FNS = {
     ]);
     c.log('typography scene captured');
   },
+  // P2 chrome beauty + dependency-wiring verification: frost/solidity, overlap
+  // fix, the magnetic cursor ring (move pointer over a control), the GSAP flyout
+  // reveal, and Lenis grid scroll (wheel + scrolled state).
+  'p2-chrome': async (c) => {
+    await c.waitScene();
+    await c.setMode('canvas');
+    await c.page.waitForTimeout(1200);
+    await c.crop('00-top-bar-overlap-fix', '[data-component="top-bar"]', 2);
+    // Magnetic cursor: hover a toolbar dock key, let the ring lerp+warm, shoot.
+    const dockBtn = c.page.locator('[data-component="canvas-toolbar"] button').first();
+    const box = await dockBtn.boundingBox().catch(() => null);
+    if (box) {
+      await c.page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 8 });
+      await c.page.waitForTimeout(500);
+      await c.shot('01-cursor-over-control');
+      await dockBtn.click().catch(() => {});
+      await c.page.waitForTimeout(180); // mid-reveal
+      await c.shot('02-flyout-mid-reveal');
+      await c.page.waitForTimeout(700);
+      await c.shot('03-flyout-settled');
+      await c.crop('04-flyout', '[data-component="canvas-toolbar-flyout"]', 6).catch(() => {});
+    }
+    // Inspector frost: select a node, open inspector.
+    await c.page.evaluate(() => {
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const pick = (gs?.nodes || []).find((n) => n.parentHubId === ge?.activeHubId) || (gs?.nodes || [])[0];
+      if (pick && ge) (ge.selectNode ? ge.selectNode(pick.nodeId) : window.__PRISM_DEBUG_STORES__.graphEditor.setState({ selectedNodeId: pick.nodeId }));
+    });
+    await c.page.waitForTimeout(1300);
+    await c.shot('05-inspector-frost');
+    // Library + Lenis scroll: open, wheel-scroll, capture scrolled state.
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().openLibrary?.());
+    await c.page.waitForSelector('[data-component="element-library-browser"]', { timeout: 15000 }).catch(() => {});
+    await c.page.waitForTimeout(2800);
+    await c.shot('06-library-top');
+    const grid = c.page.locator('[data-component="element-library-browser"] .ds-scroll').first();
+    const gbox = await grid.boundingBox().catch(() => null);
+    if (gbox) {
+      await c.page.mouse.move(gbox.x + gbox.width / 2, gbox.y + gbox.height / 2);
+      for (let i = 0; i < 6; i++) { await c.page.mouse.wheel(0, 320); await c.page.waitForTimeout(120); }
+      await c.page.waitForTimeout(900);
+      await c.shot('07-library-scrolled-lenis');
+    }
+    c.log('p2-chrome scene captured');
+  },
   'baseline-mobile': async (c) => {
     await c.waitScene();
     await c.shot('00-mobile-boot');

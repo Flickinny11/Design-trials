@@ -72,6 +72,7 @@ import { addNodeToSystem } from '@/lib/editor/add-to-system';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
+import { useReveal } from '@/components/editor/design-system/use-reveal';
 import TextToolsFlyout from '@/components/editor/text-tools/TextToolsFlyout';
 import AnimationFlyout from '@/components/editor/animation-tools/AnimationFlyout';
 import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
@@ -949,7 +950,14 @@ function FlyoutShell({
   const wide = meta.id === 'animation';
   // UI-FIDELITY-2 — hero glass: the flyout plate refracts the live scene
   // (edge lensing + dispersion + frost) instead of the SVG-displacement frost.
-  const flyoutSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.55 });
+  // UI-WOW P2 — bump frost so the large content plate reads as a clean frosted
+  // field, not a muddy window onto the live scene (the "semi-transparent overlap"
+  // flag). The scene behind reads as soft bokeh; content stays crisp.
+  const flyoutSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.82 });
+  // UI-WOW P2 — GSAP-choreographed content cascade on open (DESIGN-REFERENCES §5);
+  // skip the per-child stagger for the wide Animation picker (it hosts the shared
+  // rig canvas whose scissor rects must not be transform-offset mid-open).
+  const revealRef = useReveal<HTMLDivElement>({ stagger: !wide, resetKey: meta.id });
   return (
     <div
       data-component="canvas-toolbar-flyout"
@@ -963,8 +971,9 @@ function FlyoutShell({
       className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[min(78vh,calc(100vh-7rem))] overflow-hidden flex ds-reveal`}
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the
-          glass while long flyouts (Lighting) scroll. */}
-      <div className={`flex-1 min-w-0 p-3 flex flex-col gap-2.5 ${wide ? 'min-h-0 overflow-hidden' : 'overflow-y-auto'}`}>
+          glass while long flyouts (Lighting) scroll. UI-WOW P2: revealRef
+          drives the GSAP content cascade on open. */}
+      <div ref={revealRef} className={`flex-1 min-w-0 p-3 flex flex-col gap-2.5 ${wide ? 'min-h-0 overflow-hidden' : 'overflow-y-auto'}`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div

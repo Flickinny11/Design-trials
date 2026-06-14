@@ -63,6 +63,22 @@ Changes:
 3. Targeted surface upgrades: panel/modal/flyout/library titles → display; descriptions → ds-body; numeric values → ds-num.
 Verify: computed first-family is a loaded face on every surface (no serif); DPR-2 zoom crops before/after on toolbar/panels/captions/library/demo.
 
+## P2 DEPENDENCY-USAGE TABLE (surface/interaction → DESIGN-REFERENCES → what the user sees)
+| Surface / interaction | DESIGN-REFERENCES | What the user SEES | Status |
+|---|---|---|---|
+| Global pointer (everywhere) | §7 Cursor & Interaction (mouse-follower / magnetic) | Soft ice ring + hot brass dot lerp-follow the cursor; over any control the ring GROWS, warms to brass, glows, and magnetically snaps toward the control centre. Native cursor stays (augments). | NEW (MagneticCursor.tsx, mounted in page.tsx) |
+| Toolbar flyout open (every group) | §5/§15 GSAP-choreographed reveal | Flyout content CASCADES in — staggered fade+rise, expo settle. "ooh" each open. | NEW (use-reveal.ts → FlyoutShell) |
+| Library tile-grid scroll | §6 Lenis smooth scroll | Buttery momentum/lerped scrolling of the 36-tile grid; live 3D previews track it. (Lenis was installed-but-unused; now wired.) | NEW (use-lenis.ts → ElementLibraryBrowser) — VERIFIED scrolling |
+| Controls (toolbar keys, flyout buttons) | §7 magnetic-elements | Controls physically pull toward the cursor on proximity + tactile press. | existing magnetic.ts (7 surfaces) |
+| Mode switch galaxy↔canvas↔preview-app | §5 GSAP + §4 refraction sweep | Travelling refractive glass sweep + staggered chrome reveal morph between modes (t2). | existing ModeTransitionConductor |
+| Chrome panels (toolbar/inspector/flyout/badges) | §3 TSL/WebGPU + §4 refraction | Panels render as REAL frosted/refractive glass + brushed metal in the unified WebGPU canvas (TSL slabs), not CSS fakes. | existing chrome-layer + P2 frost-solidity tune |
+| Card/button hover | §16 transform-only GPU motion | ds-lift + ds-sweep specular pass on hover. | existing |
+
+## P2 fixes
+- Inspector + flyout glass frost 0.6/0.55 → 0.84/0.82 → clean frosted field, kills the "muddy semi-transparent overlap" flag (content crisp, scene→bokeh).
+- TopBar zoom text now `hidden 2xl:block` (compact L0–L4 bars stay at lg) → the centered mode pill no longer collides with the right cluster at 1440.
+- Verified real-GPU DPR-2 (notes/verification/ui-wow/p2): 0 console errors; cursor ring renders; flyout cascades; Lenis grid scrolled to later elements; inspector solid. tsc 0-new (9).
+
 ## Checkpoints (AUTO-CKPT at each VERIFIED phase)
 | Phase | commit | what |
 |---|---|---|

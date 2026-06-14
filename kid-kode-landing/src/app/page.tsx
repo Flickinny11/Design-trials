@@ -35,6 +35,7 @@ import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
 import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverlay';
+import MagneticCursor from '@/components/editor/overlays/MagneticCursor';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
@@ -842,6 +843,9 @@ export default function Page() {
       <AddNodeDialog />
       <ChangeArtifactWizard />
       <ElementLibraryBrowser />
+      {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
+          touch / reduced-motion). DESIGN-REFERENCES §7. */}
+      <MagneticCursor />
     </main>
   );
 }

@@ -171,10 +171,13 @@ export default function TopBar() {
               />
             ))}
           </div>
-          <div className="text-[10px] font-mono text-ds-text-mid tracking-widest whitespace-nowrap">
+          {/* UI-WOW P2 — the wide level text only appears at 2xl, where the
+              right cluster clears the absolutely-centered mode pill. The compact
+              L0–L4 bars stay visible at lg+ as the zoom indicator. */}
+          <div className="hidden 2xl:block text-[10px] font-mono text-ds-text-mid tracking-widest whitespace-nowrap">
             {zoomLevel} · {zoomDesc[zoomLevel]}
           </div>
-          <div className="w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
+          <div className="hidden 2xl:block w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
         </div>
         {/* Graph health — recessed instrument readout. Hidden on phone widths
             (advocate MUST-FIX 2026-06-10: it overflowed the right edge at
