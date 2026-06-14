@@ -149,7 +149,55 @@ async function runProfile(browser, profile) {
   if (STEPS.includes('galaxy')) { await setMode(page, 'galaxy'); await shot(out, '10-galaxy', page); }
   if (STEPS.includes('canvas')) { await setMode(page, 'canvas'); await shot(out, '20-canvas', page); }
   if (STEPS.includes('anim')) { await clickToolGroup(page, 'Animation'); await shot(out, '21-canvas-animation-flyout', page); }
-  if (STEPS.includes('keyframe')) { await openKeyframe(page); await shot(out, '22-keyframe-open', page); }
+  if (STEPS.includes('keyframe')) {
+    // Click the toggle, then grab a rapid sequence through the smoky EXPANDING
+    // reveal (it runs ~0.5s) plus the settled instrument.
+    await page.evaluate(() => {
+      const b = [...document.querySelectorAll('button,[role=button]')]
+        .find((x) => /keyframe/i.test(x.getAttribute('title') || x.getAttribute('aria-label') || x.textContent || ''));
+      b?.click();
+    }).catch(() => {});
+    await sleep(70); await shot(out, '22-keyframe-reveal-a', page);
+    await sleep(120); await shot(out, '22-keyframe-reveal-b', page);
+    await sleep(160); await shot(out, '22-keyframe-reveal-c', page);
+    await sleep(700); await shot(out, '22-keyframe-open', page);
+  }
+  if (STEPS.includes('kfdata')) {
+    // Select a node, open the keyframe editor, capture a few keys at spread
+    // playhead positions → populated lanes (diamonds) proving the data binding.
+    await setMode(page, 'canvas', 1400);
+    const sres = await selectFirstNode(page);
+    log(`[${profile}] kfdata select → ${sres}`);
+    await sleep(900);
+    await clickToolGroup(page, 'Animation');
+    await sleep(700);
+    await page.evaluate(() => {
+      const b = [...document.querySelectorAll('button,[role=button]')]
+        .find((x) => /keyframe/i.test(x.getAttribute('title') || x.getAttribute('aria-label') || x.textContent || ''));
+      b?.click();
+    }).catch(() => {});
+    await sleep(900);
+    // capture keys at 3 playhead positions
+    for (const pos of [0.15, 0.5, 0.82]) {
+      await page.evaluate((p) => {
+        const r = document.querySelector('[data-component="keyframe-editor"] input[type=range], [data-component="bottom-sheet"] input[type=range]');
+        if (r) {
+          const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+          setter.call(r, String(p));
+          r.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }, pos).catch(() => {});
+      await sleep(250);
+      // click the + on each lane (capture at this playhead)
+      await page.evaluate(() => {
+        const plus = [...document.querySelectorAll('button[title="Capture keyframe at playhead"]')];
+        plus.forEach((b) => b.click());
+      }).catch(() => {});
+      await sleep(350);
+    }
+    await sleep(700);
+    await shot(out, '23-keyframe-populated', page);
+  }
   if (STEPS.includes('inspector')) {
     // Ensure canvas mode (the inspector is editor chrome, hidden in preview-app)
     // and close any open tool sheet/flyout so the inspector is the only surface.
