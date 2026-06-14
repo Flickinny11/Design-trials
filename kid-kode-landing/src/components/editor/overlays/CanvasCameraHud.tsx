@@ -38,6 +38,8 @@ export default function CanvasCameraHud() {
   const captureCameraKeyframe = useGraphEditorStore((s) => s.captureCameraKeyframe);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const editInPreview = useGraphEditorStore((s) => s.editInPreview);
+  const setEditInPreview = useGraphEditorStore((s) => s.setEditInPreview);
   const updateHub = useGraphSourceStore((s) => s.updateHub);
   const journeyCount = useGraphSourceStore(
     (s) => s.hubs.find((h) => h.hubId === activeHubId)?.cameraKeyframes?.length ?? 0,
@@ -75,6 +77,28 @@ export default function CanvasCameraHud() {
   useEffect(() => () => { if (pulseTimer.current) clearTimeout(pulseTimer.current); }, []);
 
   if (viewMode !== 'canvas') return null;
+
+  // ── P3: Edit-in-Preview — the camera is locked to the shipped framing; the
+  // free-orbit instrument + journey REC don't apply, so show the exit control. ─
+  if (editInPreview) {
+    return (
+      <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto md:bottom-4">
+        <div className="ds-glass ds-edge--brass ds-reveal pointer-events-auto flex items-center gap-2.5 rounded-full pl-3 pr-1.5 py-1.5"
+          style={{ boxShadow: '0 0 0 1px rgba(var(--ds-brass-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-brass-400-rgb),0.5)' }}>
+          <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-brass-200)', boxShadow: '0 0 7px var(--ds-brass-200)' }} />
+          <div className="flex flex-col leading-none">
+            <span className="text-[10px] font-ui font-semibold tracking-wide" style={{ color: 'var(--ds-brass-200)' }}>Editing in Preview</span>
+            <span className="text-[8px] font-mono mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>SHIPPED FRAME · TOOLBAR LIVE</span>
+          </div>
+          <button type="button" onClick={() => setEditInPreview(false)} title="Back to free orbit"
+            className="ds-press flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-full"
+            style={{ background: 'rgba(var(--ds-brass-200-rgb),0.08)', border: '1px solid rgba(var(--ds-brass-200-rgb),0.28)' }}>
+            <span className="text-[9.5px] font-ui font-medium" style={{ color: 'var(--ds-brass-200)' }}>Exit</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none flex flex-col items-center gap-2 top-[60px] md:top-auto md:bottom-4">
@@ -155,6 +179,17 @@ export default function CanvasCameraHud() {
           <span className="text-[9.5px] font-ui font-semibold" style={{ color: journeyCount >= 2 ? '#2a1f12' : 'var(--ds-text-mid)' }}>Preview</span>
         </button>
       </div>
+
+      {/* ── P3: Edit-in-Preview enter ──────────────────────────────────────── */}
+      <button type="button" onClick={() => setEditInPreview(true)}
+        title="Lock to the shipped framing and edit against the real result"
+        className="ds-glass ds-edge--brass ds-reveal pointer-events-auto flex items-center gap-1.5 h-7 pl-2.5 pr-3 rounded-full">
+        <svg width="13" height="11" viewBox="0 0 13 11" aria-hidden>
+          <rect x="0.7" y="0.7" width="11.6" height="9.6" rx="1.4" fill="none" stroke="var(--ds-brass-200)" strokeWidth="1.1" />
+          <path d="M3.4 7.6 L6 4.2 L7.6 6 L9 4.2 L9.6 7.6 Z" fill="var(--ds-brass-200)" opacity="0.85" />
+        </svg>
+        <span className="text-[9px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-brass-200)' }}>Edit in Preview</span>
+      </button>
     </div>
   );
 }

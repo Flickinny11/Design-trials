@@ -109,3 +109,33 @@ untouched), FP-15 OK (the HUD is a camera tool, not an Inspector tab; journey ca
 authoring), no per-frame leak/loop (journeyActiveRef stops driving at progress≥1).
 
 ### Verdict: the canvas user designs a camera journey; preview plays it as a deterministic landing fly-in. ✅
+
+---
+
+## P3 — EDIT-IN-PREVIEW
+
+### What changed
+- New additive canvas sub-mode `editInPreview` on the editor store (reset on any mode change /
+  drill-in). When on (in canvas): the camera locks to the configured shipped framing (the journey
+  landing pose if the hub has one, else the deterministic front pose), the editor viewport-frame
+  scaffolding (`CanvasViewportFrame` diamond) hides, but the toolbar, selection rings, and transform
+  gizmo stay live — so the user designs **against the real result**. Distinct from free-orbit canvas
+  editing. Toggle in the canvas HUD: "Edit in Preview" enter / "Editing in Preview · Exit" pill.
+- Camera: `SceneControlsBridge` `enabled={!isPreview && !framed}` (framed = canvas+editInPreview);
+  an effect snaps to the shipped pose on entry; exit re-enables free orbit at the current pose.
+
+### Evidence — `notes/verification/app-reality/p3/` (real browser, DPR-2)
+`p3-log.json`: free-orbit off-axis → **Edit-in-Preview**: snapped to shipped front view
+(az −0.4° / pol 89.8°) ✅; camera **locked** (drag Δpos 0.0000) ✅; **still editable** (node selected
++ editorMode 'edit' + gizmo) ✅; **exit restores free orbit** (camera orbits off-axis again) ✅;
+0 console errors. Frame `desktop-edit-in-preview.png`: front-facing composition, **no editor
+viewport-frame diamond** (app-like), Transform toolbar flyout open, transform gizmo ring on the
+selected node, Inspector present, "Editing in Preview · Exit" pill. Free-orbit / exit frames confirm
+the round-trip.
+
+### Review
+Self-audited; the camera lock/snap logic mirrors the already-reviewed P1 lock + P2 configured-pose
+patterns (only gating differs). editInPreview is additive, canvas-only, and resets on mode change —
+it cannot leak into galaxy/preview-app. P9 advocate exercises it end-to-end.
+
+### Verdict: edit the built app against its shipped framing, toolbar live — the real-result design loop. ✅

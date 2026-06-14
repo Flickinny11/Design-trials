@@ -68,6 +68,15 @@ interface GraphEditorState {
    */
   editorMode: EditorMode;
   /**
+   * APP-REALITY P3 — "Edit in Preview" canvas sub-mode. When true (only
+   * meaningful while viewMode === 'canvas'), the camera locks to the configured
+   * shipped view (the preview framing / journey landing) and the canvas-only
+   * viewport-frame scaffolding hides, so the canvas reads as the built app —
+   * yet the toolbar, selection, and transform gizmo stay live so the user
+   * designs against the real result. Reset to false on any mode change.
+   */
+  editInPreview: boolean;
+  /**
    * STEP8 canvas-toolbar Transform group (canvas-spec §5) — the active gizmo
    * axis-set the CanvasTransformGizmo renders while in edit mode. Lifted to the
    * store so the toolbar's Move / Rotate / Scale buttons and the Blender-style
@@ -190,6 +199,8 @@ interface GraphEditorState {
    * the click handler.
    */
   setEditorMode: (m: EditorMode) => void;
+  // APP-REALITY P3 — toggle the "Edit in Preview" canvas sub-mode.
+  setEditInPreview: (b: boolean) => void;
   /**
    * STEP8 — set the active transform-gizmo axis set (translate/rotate/scale).
    * Called by the toolbar Transform buttons and the g/r/s shortcuts.
@@ -320,6 +331,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     // EBR2-C-01 / §R2-C SC-068 — handles never render on selection alone;
     // the Inspector Edit button must flip this to 'edit' first.
     editorMode: 'idle',
+    // APP-REALITY P3 — Edit-in-Preview canvas sub-mode (off by default).
+    editInPreview: false,
     // STEP8 — default transform gizmo axis set.
     canvasGizmoMode: 'translate',
     selectedNodeId: null,
@@ -368,8 +381,11 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       // can't re-trigger the fade-in when the user returns to canvas via
       // a different path (toolbar toggle, preview→canvas, etc.).
       // drillIntoHub re-stamps hubRevealAt itself, so it stays authoritative.
-      set({ viewMode: m, hubRevealAt: null }),
+      // APP-REALITY P3 — Edit-in-Preview is a canvas sub-mode; any mode change
+      // clears it so it never leaks into galaxy/preview-app.
+      set({ viewMode: m, hubRevealAt: null, editInPreview: false }),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
+    setEditInPreview: (b) => set({ editInPreview: b }),
     // EBR2-C-01 / §R2-C SC-068 — Inspector Edit toggle. Selection-reset is
     // handled inside the selection actions (selectNode/selectHub/flyToNode/
     // drillIntoHub), not here.
@@ -520,6 +536,7 @@ export const useGraphEditorStore = create<GraphEditorState>()(
         hubRevealAt: Date.now(),
         inspectorOpen: true,
         editorMode: 'idle',
+        editInPreview: false,
       }),
     resetCamera: () =>
       set((s) => ({ resetCameraSignal: s.resetCameraSignal + 1, activeHubId: null })),

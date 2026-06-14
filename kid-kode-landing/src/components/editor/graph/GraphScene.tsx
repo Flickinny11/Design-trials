@@ -1476,6 +1476,8 @@ function SceneControlsBridge({
   const journeyReplaySignal = useGraphEditorStore((s) => s.journeyReplaySignal);
   const journeyActiveRef = useRef(false);
   const journeyStartRef = useRef<number | null>(null);
+  // APP-REALITY P3 — Edit-in-Preview locks the canvas camera to the shipped view.
+  const editInPreview = useGraphEditorStore((s) => s.editInPreview);
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -1590,6 +1592,34 @@ function SceneControlsBridge({
     journeyActiveRef.current = true;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [journeyReplaySignal]);
+
+  // APP-REALITY P3 — entering Edit-in-Preview snaps the (now locked) canvas
+  // camera to the configured shipped framing: the journey landing pose if the
+  // hub has one, else the deterministic front pose. The user then edits against
+  // exactly what ships. Leaving it re-enables free orbit at the current pose.
+  useEffect(() => {
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'canvas' || !editInPreview) return;
+    if (hasJourney(hub)) {
+      const first = sampleJourney(hub!.cameraKeyframes, 0);
+      if (first) {
+        c.setLookAt(
+          first.position.x, first.position.y, first.position.z,
+          first.target.x, first.target.y, first.target.z,
+          true,
+        );
+        applyCameraFov(c, first.fov);
+      }
+    } else {
+      const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+      c.setLookAt(
+        pose.position.x, pose.position.y, pose.position.z,
+        pose.target.x, pose.target.y, pose.target.z,
+        true,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editInPreview, viewMode]);
 
   // EB-05-01 / §5 SC-022, SC-024 — Canvas mode entry: deterministic
   // center/face pose on the active hub. AssembledSceneContent filters to a
@@ -1753,10 +1783,12 @@ function SceneControlsBridge({
   // FREE — orbit/pan/zoom like a real 3D editor (SC-071 rail superseded). When
   // `enabled={false}`, programmatic `setLookAt` still works (P2 journey).
   const isPreview = viewMode === 'preview-app';
+  // APP-REALITY P3 — Edit-in-Preview also locks the camera (shipped framing).
+  const framed = viewMode === 'canvas' && editInPreview;
   return (
     <CameraControls
       ref={controlsRef}
-      enabled={!isPreview}
+      enabled={!isPreview && !framed}
       minDistance={1.5}
       maxDistance={220}
       minPolarAngle={0}
@@ -1908,6 +1940,9 @@ function CanvasViewportFrame({
   breakpoint?: { scale?: number } | null;
 }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
+  // APP-REALITY P3 — hide the editor viewport-frame scaffolding in Edit-in-
+  // Preview so the canvas reads as the shipped app (gizmo + rings still show).
+  const editInPreview = useGraphEditorStore((s) => s.editInPreview);
 
   const frame = useMemo(
     () => computeCanvasViewportFrame({ breakpoint }),
@@ -1981,7 +2016,7 @@ function CanvasViewportFrame({
     [outerMat, safeMat],
   );
 
-  return viewMode === 'canvas' ? (
+  return viewMode === 'canvas' && !editInPreview ? (
     <group name="canvas:viewport-frame" position={[0, 0, -1.2]} renderOrder={10}>
       <lineSegments geometry={outerGeom} material={outerMat} renderOrder={10} />
       <lineSegments ref={safeRef} geometry={safeGeom} material={safeMat} renderOrder={11} />
