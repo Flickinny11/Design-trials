@@ -1,0 +1,243 @@
+{
+  "total": 4,
+  "pass": 4,
+  "totalConsoleErrors": 0,
+  "deviceSwitch": {
+    "applied": {
+      "Tablet": "tablet",
+      "Mobile": "mobile",
+      "Desktop": "desktop"
+    },
+    "ok": true
+  },
+  "editFlow": {
+    "ok": true,
+    "selectedNodeId": "orr-arrival-headline"
+  },
+  "journeyOk": {
+    "noError": true,
+    "note": "no hub authors cameraKeyframes; configured-view landing plays (camera lock + landing verified above)"
+  },
+  "results": [
+    {
+      "viewport": "desktop",
+      "autoDevice": "desktop",
+      "nav": [
+        {
+          "hub": "s1-arrival",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s1-arrival"
+        },
+        {
+          "hub": "s2-movement",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s2-movement"
+        },
+        {
+          "hub": "s3-materia",
+          "clickedRail": true,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s3-materia"
+        },
+        {
+          "hub": "s4-celestia",
+          "clickedRail": false,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s4-celestia"
+        },
+        {
+          "hub": "s5-acquire",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s5-acquire"
+        }
+      ],
+      "navOk": true,
+      "prevNextOk": true,
+      "overlayRaycastOk": true,
+      "overlayOk": true,
+      "lockOk": true,
+      "lockDelta": 0,
+      "errors": 0,
+      "errorSamples": [],
+      "pass": true
+    },
+    {
+      "viewport": "tablet",
+      "autoDevice": "desktop",
+      "nav": [
+        {
+          "hub": "s1-arrival",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s1-arrival"
+        },
+        {
+          "hub": "s2-movement",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s2-movement"
+        },
+        {
+          "hub": "s3-materia",
+          "clickedRail": true,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s3-materia"
+        },
+        {
+          "hub": "s4-celestia",
+          "clickedRail": false,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s4-celestia"
+        },
+        {
+          "hub": "s5-acquire",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s5-acquire"
+        }
+      ],
+      "navOk": true,
+      "prevNextOk": true,
+      "overlayRaycastOk": true,
+      "overlayOk": true,
+      "lockOk": true,
+      "lockDelta": 0,
+      "errors": 0,
+      "errorSamples": [],
+      "pass": true
+    },
+    {
+      "viewport": "constrained",
+      "autoDevice": "tablet",
+      "nav": [
+        {
+          "hub": "s1-arrival",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s1-arrival"
+        },
+        {
+          "hub": "s2-movement",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s2-movement"
+        },
+        {
+          "hub": "s3-materia",
+          "clickedRail": true,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s3-materia"
+        },
+        {
+          "hub": "s4-celestia",
+          "clickedRail": false,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s4-celestia"
+        },
+        {
+          "hub": "s5-acquire",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s5-acquire"
+        }
+      ],
+      "navOk": true,
+      "prevNextOk": true,
+      "overlayRaycastOk": true,
+      "overlayOk": true,
+      "lockOk": true,
+      "lockDelta": 0,
+      "errors": 0,
+      "errorSamples": [],
+      "pass": true
+    },
+    {
+      "viewport": "mobile",
+      "autoDevice": "mobile",
+      "nav": [
+        {
+          "hub": "s1-arrival",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s1-arrival"
+        },
+        {
+          "hub": "s2-movement",
+          "clickedRail": true,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s2-movement"
+        },
+        {
+          "hub": "s3-materia",
+          "clickedRail": true,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s3-materia"
+        },
+        {
+          "hub": "s4-celestia",
+          "clickedRail": true,
+          "nodeCount": 5,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s4-celestia"
+        },
+        {
+          "hub": "s5-acquire",
+          "clickedRail": false,
+          "nodeCount": 4,
+          "blank": false,
+          "changed": true,
+          "hash": "#hub=s5-acquire"
+        }
+      ],
+      "navOk": true,
+      "prevNextOk": true,
+      "overlayRaycastOk": true,
+      "overlayOk": true,
+      "lockOk": true,
+      "lockDelta": 0,
+      "errors": 0,
+      "errorSamples": [],
+      "pass": true
+    }
+  ]
+}

@@ -56,7 +56,13 @@ s1-arrival · s2-movement · s3-materia · s4-celestia · s5-acquire (5 hubs).
 | BASE | Stand up app + capture baseline evidence (confirm both diagnoses) | DONE ✅ | (this commit) |
 | A | Full-viewport atmosphere (kill oval/stipple/flat-corners) [C1–C3] | DONE ✅ | (this commit) |
 | B | Hero present + lit every hub×viewport (Arrival watch desktop/tablet) [C4–C5] | DONE ✅ | (this commit) |
-| C | Production functional validation + capstone [C6–C13] | TODO | — |
+| C | Production functional validation + capstone [C6–C13] | DONE ✅ | (final commit) |
+
+**ALL C1–C13 PASS.** production.mjs 4/4 viewports (nav+prevNext+raycast-overlay+camera-lock Δ0+
+device-switch+edit-in-preview, 0 console errors). Regressions: tsc 0-new · vitest 3349 pass/0 fail ·
+primitives 406 + elements ~42 git-proven UNCHANGED. Capstone advocate: PASS, 0 MUST-FIX (claims a/b/c
+CONFIRMED w/ cited frames; 2 non-blocking NICE-TO-HAVE). Phase C fix: Prev/Next chevrons added to
+PreviewHubNav rail (mobile compact layout omitted the desktop bottom pager).
 
 ## BASE findings (evidence-confirmed; baseline frames in prod-finish/baseline/)
 - **Defect 1 CONFIRMED.** atmosphere.mjs baseline = 0/20. Landscape (desktop/tablet/constrained)
