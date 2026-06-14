@@ -1,0 +1,42 @@
+{
+  "at": "2026-06-14T06:59:49.619Z",
+  "label": "before",
+  "base": "http://localhost:3000",
+  "steps": [
+    "canvas",
+    "anim",
+    "keyframe",
+    "galaxy",
+    "inspector",
+    "preview"
+  ],
+  "results": [
+    {
+      "profile": "desktop",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 1440,
+      "density": null,
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "mobile",
+      "backend": "webgpu",
+      "tier": "t1",
+      "mainW": 390,
+      "density": null,
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "constrained",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 560,
+      "density": null,
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ]
+}

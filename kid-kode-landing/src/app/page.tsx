@@ -41,6 +41,8 @@ import { populateElementImages } from '@/lib/editor/populate-element-images';
 import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
 import { ModeTransitionConductor } from '@/components/editor/chrome-layer';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
+import { useEditorLayoutStore } from '@/stores/useEditorLayoutStore';
+import { useEditorLayoutObserver } from '@/components/editor/layout/useEditorLayoutObserver';
 
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
@@ -136,7 +138,15 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
   ),
 });
 export default function Page() {
-  const [isDesktop, setIsDesktop] = useState(true);
+  // UI-WOW-2 P0 — CONTAINER-aware density. The editor is the preview pane of an
+  // app-builder, so responsiveness must key off the editor's own box, not the
+  // viewport (a narrow pane in a wide browser is invisible to innerWidth). A
+  // single ResizeObserver on <main> (below) publishes the measured box to
+  // useEditorLayoutStore; `density` drives the layout tree + every overlay.
+  const mainRef = useRef<HTMLElement>(null);
+  useEditorLayoutObserver(mainRef);
+  const density = useEditorLayoutStore((s) => s.density);
+  const isCompact = density === 'compact';
   // viewMode lives on useGraphEditorStore (HL12 / Plan §P12) so Inspector's
   // "Preview in App UI" button can swap panes without prop-drilling.
   const viewMode = useGraphEditorStore((s) => s.viewMode);
@@ -202,13 +212,6 @@ export default function Page() {
     }
     return compiledAppView.hubs[0] ?? null;
   }, [compiledAppView, activeHubId]);
-
-  useEffect(() => {
-    const check = () => setIsDesktop(window.innerWidth >= 900);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
 
   useEffect(() => {
     populateElementImages().catch(() => {
@@ -640,7 +643,11 @@ export default function Page() {
   const isPreviewApp = viewMode === 'preview-app';
 
   return (
-    <main className="relative w-screen h-screen overflow-hidden bg-ds-void">
+    <main
+      ref={mainRef}
+      data-density={density}
+      className="relative w-full h-full overflow-hidden bg-ds-void"
+    >
       {/* SVG displacement defs for .ds-glass--refract overlays (mounted once). */}
       <RefractionDefs />
       {/* UI-FIDELITY-2 — mode-morph choreography: travelling refractive sweep
@@ -655,7 +662,7 @@ export default function Page() {
         }}
       />
 
-      {isDesktop ? (
+      {!isCompact ? (
         <>
           {/* View-mode toggle — canonical 3 modes (RA-06b / SC-065).
               galaxy:      free-camera view of every hub in the universe.
@@ -897,7 +904,10 @@ function MobileModeToggle() {
   return (
     <div
       data-component="mobile-mode-toggle"
-      className="fixed left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+      // UI-WOW-2 P0 — `absolute` (not `fixed`) so it centers in the editor's
+      // CONTAINER, not the browser viewport. Fixed positioning parked this pill
+      // in the dead gutter when the editor is embedded in a narrow preview-pane.
+      className="absolute left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
       style={{ bottom: 'calc(10px + env(safe-area-inset-bottom, 0px))' }}
     >
       <div

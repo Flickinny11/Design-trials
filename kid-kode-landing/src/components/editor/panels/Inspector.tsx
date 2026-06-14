@@ -14,6 +14,8 @@ import { useAnimationEditsStore, defaultFrame, type FrameProps } from '@/stores/
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
+import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { ColorPicker } from './ColorPicker';
 import MaterialTab from './MaterialTab';
 import VisualPreview from './visual-preview/VisualPreview';
@@ -304,6 +306,15 @@ export default function Inspector() {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [editorMode, setEditorMode]);
 
+  // UI-WOW-2 P0 — container density. On a COMPACT pane (phone / narrow embedded
+  // preview-pane, <820px) the right-rail inspector is a full-bleed takeover that
+  // occludes the whole 3D scene; re-house it as a draggable BottomSheet there.
+  // Regular/wide (≥820px) is byte-identical to the shipped desktop floating panel.
+  // Called unconditionally, before any early return (hook-order invariant), so it
+  // is in scope for every Inspector variant (node / world / group).
+  const density = useEditorDensity();
+  const compact = density === 'compact';
+
   // EB-03-06 / SC-017 — when the user shift-clicks across multiple items in
   // galaxy mode, render the group view in place of the single-node tabs. The
   // group view is gated on (nodes + hubs > 1) so a 1-member multi-set falls
@@ -342,22 +353,12 @@ export default function Inspector() {
   }
   if (!node) return null;
 
-  return (
-    // Hero surface — frosted observatory glass with brass-fitted edge.
-    // RefractionDefs is already mounted once in src/app/page.tsx, so the
-    // t2-only ds-glass--refract displacement is legal here. RightPane mounts
-    // exactly one inspector panel at a time, so the refract budget stays at 1.
-    <div
-      ref={inspectorSlab.ref}
-      // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
-      // rail, hiding the first word of every body line — inset left-16 clears
-      // the rail on phones; desktop geometry unchanged.
-      // UI-WOW P3 fix (advocate MUST-FIX) — the panel started at md:top-3 (12px)
-      // and slid UNDER the 56px top bar, so its header collided with the bar's
-      // Add Node / Search cluster. Drop it to clear the bar (top-[64px]) with a
-      // touch more width so the header tabs breathe (cramped flag).
-      className="absolute z-40 right-0 top-14 bottom-0 left-16 md:left-auto md:w-[484px] md:right-3 md:top-[64px] md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
-    >
+  // UI-WOW-2 P0 — the header plate, save-status strip, tab rail, frozen banner,
+  // and tab body. Density-agnostic; the WRAPPER below decides whether they live
+  // in the desktop floating glass housing (regular/wide, unchanged) or a
+  // draggable BottomSheet (compact). The header's own slab ref stays attached.
+  const inner = (
+    <>
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
       <div ref={headerSlab.ref} className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         {/* Row 1 — identity (truncating title) + status chip + close. Actions
@@ -557,6 +558,38 @@ export default function Inspector() {
         {tab === 'backend' && <BackendTab node={node} />}
         {tab === 'history' && <HistoryTab node={node} />}
       </div>
+    </>
+  );
+
+  // Compact pane → draggable bottom sheet (no full-bleed scene takeover); the
+  // sheet supplies its own glass surface, so the absolute housing + slab ref
+  // are dropped here. Regular/wide → the shipped floating glass housing,
+  // byte-identical to before.
+  if (compact) {
+    return (
+      <BottomSheet id="inspector" open onClose={close} initialSnap="half">
+        {inner}
+      </BottomSheet>
+    );
+  }
+
+  return (
+    // Hero surface — frosted observatory glass with brass-fitted edge.
+    // RefractionDefs is already mounted once in src/app/page.tsx, so the
+    // t2-only ds-glass--refract displacement is legal here. RightPane mounts
+    // exactly one inspector panel at a time, so the refract budget stays at 1.
+    <div
+      ref={inspectorSlab.ref}
+      // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
+      // rail, hiding the first word of every body line — inset left-16 clears
+      // the rail on phones; desktop geometry unchanged.
+      // UI-WOW P3 fix (advocate MUST-FIX) — the panel started at md:top-3 (12px)
+      // and slid UNDER the 56px top bar, so its header collided with the bar's
+      // Add Node / Search cluster. Drop it to clear the bar (top-[64px]) with a
+      // touch more width so the header tabs breathe (cramped flag).
+      className="absolute z-40 right-0 top-14 bottom-0 left-16 md:left-auto md:w-[484px] md:right-3 md:top-[64px] md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+    >
+      {inner}
     </div>
   );
 }
@@ -1560,14 +1593,12 @@ function WorldInspectorPanel({
   // UI-FIDELITY-2 — hero glass: same slab recipe as the node Inspector
   // housing (one inspector panel mounts at a time, so the budget holds).
   const worldSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
-  return (
-    // Same glass-housing geometry as the node Inspector (one inspector panel
-    // mounts at a time, so the refract/backdrop budget is unchanged).
-    <div
-      ref={worldSlab.ref}
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
-      data-role="world-inspector"
-    >
+  // UI-WOW-2 P0 — compact pane re-houses this panel as a draggable BottomSheet
+  // (hook called unconditionally, before any branch).
+  const density = useEditorDensity();
+  const compact = density === 'compact';
+  const inner = (
+    <>
       <div className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         <div className="min-w-0 flex-1">
           <div className="ds-kicker flex items-center gap-1.5">
@@ -1615,6 +1646,26 @@ function WorldInspectorPanel({
           </div>
         )}
       </div>
+    </>
+  );
+
+  if (compact) {
+    return (
+      <BottomSheet id="inspector" open onClose={close} initialSnap="half">
+        {inner}
+      </BottomSheet>
+    );
+  }
+
+  return (
+    // Same glass-housing geometry as the node Inspector (one inspector panel
+    // mounts at a time, so the refract/backdrop budget is unchanged).
+    <div
+      ref={worldSlab.ref}
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      data-role="world-inspector"
+    >
+      {inner}
     </div>
   );
 }
@@ -1924,17 +1975,15 @@ function GroupInspector({
   // UI-FIDELITY-2 — hero glass: same slab recipe as the node Inspector
   // housing (mutually exclusive mount, so the budget holds).
   const groupSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
+  // UI-WOW-2 P0 — compact pane re-houses this panel as a draggable BottomSheet
+  // (hook called unconditionally, before any branch).
+  const density = useEditorDensity();
+  const compact = density === 'compact';
   const groupNodes = editorNodes.filter((n) => selectedNodeIds.has(n.id));
   const groupHubs = editorHubs.filter((h) => selectedHubIds.has(h.id));
   const total = groupNodes.length + groupHubs.length;
-  return (
-    // Same glass-housing geometry as the node Inspector (mutually exclusive
-    // mount — the backdrop-filter budget stays at one inspector surface).
-    <div
-      ref={groupSlab.ref}
-      data-role="group-inspector"
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
-    >
+  const inner = (
+    <>
       <div className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         <div className="min-w-0 flex-1">
           <div className="ds-kicker">INSPECTOR · GROUP</div>
@@ -1999,6 +2048,26 @@ function GroupInspector({
           </div>
         )}
       </div>
+    </>
+  );
+
+  if (compact) {
+    return (
+      <BottomSheet id="inspector" open onClose={close} initialSnap="half">
+        {inner}
+      </BottomSheet>
+    );
+  }
+
+  return (
+    // Same glass-housing geometry as the node Inspector (mutually exclusive
+    // mount — the backdrop-filter budget stays at one inspector surface).
+    <div
+      ref={groupSlab.ref}
+      data-role="group-inspector"
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+    >
+      {inner}
     </div>
   );
 }

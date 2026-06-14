@@ -63,7 +63,10 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
+import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useBuiltSnapshotStore } from '@/stores/useBuiltSnapshotStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
@@ -463,6 +466,17 @@ export default function CanvasToolbar() {
   const [snap, setSnap] = useState(true);
   const [selectedLightId, setSelectedLightId] = useState<string | null>(null);
   const [lightPickerOpen, setLightPickerOpen] = useState(false);
+  // UI-WOW-2 P0 — container density: on compact (phone / narrow embedded pane)
+  // the left tool rail becomes a horizontal-scroll bottom dock and the flyout
+  // re-houses as a draggable bottom sheet, so the 11 tools stay reachable and
+  // the 424px Animation picker stops overflowing the pane.
+  const compact = useEditorDensity() === 'compact';
+  // Compact: land on the horizontal dock (all 11 tools visible/reachable), not
+  // an auto-opened flyout that would cover the dock. A tool sheet opens on tap.
+  // Desktop keeps its shipped default 'transform' flyout (unchanged).
+  useEffect(() => {
+    if (compact) setActiveGroup(null);
+  }, [compact]);
 
   const nodeById = useCallback(
     (id: string | null | undefined) => (id ? nodes.find((n) => n.nodeId === id) ?? null : null),
@@ -716,7 +730,7 @@ export default function CanvasToolbar() {
           open on a narrow viewport it covers most of the canvas, so dim what
           remains and let a tap outside dismiss it. md+ keeps the side-by-side
           desktop behavior (no scrim). Sits under the z-50 rail. */}
-      {activeGroup && (
+      {activeGroup && !compact && (
         <div
           data-component="canvas-toolbar-scrim"
           aria-hidden
@@ -726,17 +740,33 @@ export default function CanvasToolbar() {
         />
       )}
 
-      {/* Left tool rail — height-bounded so short viewports (460px advocate
-          flag) scroll the dock + flyout instead of clipping them. */}
+      {/* Tool rail. Desktop/regular: a height-bounded LEFT vertical rail (dock +
+          side flyout). Compact (phone / narrow embedded pane, UI-WOW-2 P0): a
+          centered HORIZONTAL scroll dock pinned just above the mobile mode
+          toggle, with the flyout re-housed as a bottom sheet (see below). */}
       <div
         data-component="canvas-toolbar"
-        className="absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]"
+        data-density={compact ? 'compact' : 'regular'}
+        className={
+          compact
+            ? 'absolute left-1/2 -translate-x-1/2 bottom-[calc(64px+var(--ds-safe-bottom))] pointer-events-auto flex items-stretch max-w-[calc(100%-16px)]'
+            : 'absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
+        }
+        style={compact ? ({ zIndex: 'var(--ds-z-dock)' } as React.CSSProperties) : undefined}
       >
         {/* Machined brushed-metal dock — the instrument fitting the tool keys
             are cut into (ds-metal + grain tooth + specular edge). Scrolls
             within the bounded rail when the viewport is short. At t2 the
             surface renders as REAL brushed metal in the unified canvas. */}
-        <div ref={dockSlab.ref} className="flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain">
+        <div
+          ref={dockSlab.ref}
+          className={
+            compact
+              ? 'flex flex-row items-center gap-1 p-1.5 ds-metal ds-grain ds-edge min-w-0 overflow-x-auto overscroll-contain scrollbar-hide'
+              : 'flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain'
+          }
+        >
+          {!compact && (<>
           <div className="px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5">
             <Icon name="grid" size={13} color={DS_ACCENT} glow />
             <span className="text-[9px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
@@ -754,11 +784,12 @@ export default function CanvasToolbar() {
                 'linear-gradient(90deg, rgba(255, 252, 242, 0), var(--ds-edge-side) 26%, var(--ds-edge-side) 74%, rgba(255, 252, 242, 0)) bottom / 100% 1px no-repeat',
             }}
           />
+          </>)}
           {GROUPS.map((g) => {
             const beforeBuild = g.id === 'build';
             return (
               <div key={g.id} className="contents">
-                {beforeBuild && (
+                {beforeBuild && !compact && (
                   // Machined V-groove cut across the dock plate — shade line
                   // over bone catch-light, feathering into the metal at both
                   // ends like a lathe-scribed part line.
@@ -782,9 +813,11 @@ export default function CanvasToolbar() {
           })}
         </div>
 
-        {/* Flyout */}
+        {/* Flyout — desktop/regular: side glass plate beside the rail; compact:
+            a draggable bottom sheet portaled to the pane (UI-WOW-2 P0). */}
         {activeGroup && (
-          <FlyoutShell
+          <ToolFlyoutContainer
+            compact={compact}
             meta={GROUPS.find((g) => g.id === activeGroup)!}
             coming={coming}
             onClose={() => setActiveGroup(null)}
@@ -909,7 +942,7 @@ export default function CanvasToolbar() {
                 onToggleReceives={toggleReceivesLighting}
               />
             )}
-          </FlyoutShell>
+          </ToolFlyoutContainer>
         )}
       </div>
 
@@ -933,6 +966,48 @@ export default function CanvasToolbar() {
       )}
     </>
   );
+}
+
+// ── Tool flyout container (UI-WOW-2 P0) ──────────────────────────────────────
+// Desktop/regular: the side glass plate (FlyoutShell) beside the rail. Compact:
+// a draggable bottom sheet portaled to the editor pane, so it spans a narrow
+// embedded pane correctly and never overflows the way the 252/424px side plate
+// did on phones. The 120-line flyout switch is passed once as `children`.
+function ToolFlyoutContainer({
+  compact, meta, coming, onClose, children,
+}: {
+  compact: boolean;
+  meta: ToolGroupMeta;
+  coming: { tool: string; subsystem: string } | null;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  const [paneEl, setPaneEl] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!compact) return;
+    setPaneEl(document.querySelector('[data-pane="graph"]') as HTMLElement | null);
+  }, [compact]);
+
+  if (!compact) {
+    return (
+      <FlyoutShell meta={meta} coming={coming} onClose={onClose}>
+        {children}
+      </FlyoutShell>
+    );
+  }
+  const sheet = (
+    <BottomSheet
+      id="toolgroup"
+      open
+      onClose={onClose}
+      kicker="TOOL"
+      title={meta.label}
+      initialSnap={meta.id === 'animation' ? 'full' : 'half'}
+    >
+      <div className="px-3 pb-6">{children}</div>
+    </BottomSheet>
+  );
+  return paneEl ? createPortal(sheet, paneEl) : null;
 }
 
 // ── Flyout shell ─────────────────────────────────────────────────────────────

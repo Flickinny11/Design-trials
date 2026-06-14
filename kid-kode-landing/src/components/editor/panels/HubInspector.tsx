@@ -12,6 +12,8 @@ import type { PrismHub, PrismNode } from '@/lib/prism-graph/types';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS } from '@/components/editor/design-system';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
+import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -28,6 +30,11 @@ export default function HubInspector() {
   const hubSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.6 });
   // UI-FIDELITY-2 — machined header plate as real brushed metal.
   const headerSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x' });
+  // UI-WOW-2 P0 — compact pane re-houses this panel as a draggable BottomSheet
+  // instead of the edge-to-edge full-height slab. Hook called unconditionally,
+  // before the early returns below (hook-order invariant).
+  const density = useEditorDensity();
+  const compact = density === 'compact';
   const open = useGraphEditorStore((s) => s.inspectorOpen);
   const close = useGraphEditorStore((s) => s.closeInspector);
   const selectedHubId = useGraphEditorStore((s) => s.selectedHubId);
@@ -45,14 +52,8 @@ export default function HubInspector() {
 
   const hubNodes = nodes.filter((n) => n.parentHubId === hub.hubId);
 
-  return (
-    // Hero surface — frosted observatory glass with brass-fitted edge.
-    // RefractionDefs is mounted once in src/app/page.tsx; RightPane mounts
-    // either this panel OR Inspector (never both), so the refract budget is 1.
-    <div
-      ref={hubSlab.ref}
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
-    >
+  const inner = (
+    <>
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
       <div ref={headerSlab.ref} className="flex items-center justify-between gap-2 px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">
         <div className="min-w-0 flex-1">
@@ -108,6 +109,30 @@ export default function HubInspector() {
         )}
         {tab === 'backend' && <HubBackendTab />}
       </div>
+    </>
+  );
+
+  // Compact pane → draggable bottom sheet (the hub inspector was the worst
+  // offender: edge-to-edge, full viewport height, covering the top bar AND
+  // tool rail on phones). Regular/wide → the shipped floating glass housing,
+  // byte-identical to before.
+  if (compact) {
+    return (
+      <BottomSheet id="inspector" open onClose={close} initialSnap="half">
+        {inner}
+      </BottomSheet>
+    );
+  }
+
+  return (
+    // Hero surface — frosted observatory glass with brass-fitted edge.
+    // RefractionDefs is mounted once in src/app/page.tsx; RightPane mounts
+    // either this panel OR Inspector (never both), so the refract budget is 1.
+    <div
+      ref={hubSlab.ref}
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+    >
+      {inner}
     </div>
   );
 }

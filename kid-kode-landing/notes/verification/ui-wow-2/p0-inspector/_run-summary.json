@@ -1,0 +1,28 @@
+{
+  "at": "2026-06-14T07:29:46.571Z",
+  "label": "p0-inspector",
+  "base": "http://localhost:3000",
+  "steps": [
+    "inspector"
+  ],
+  "results": [
+    {
+      "profile": "mobile",
+      "backend": "webgpu",
+      "tier": "t1",
+      "mainW": 390,
+      "density": "compact",
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "constrained",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 560,
+      "density": "compact",
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ]
+}

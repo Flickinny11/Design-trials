@@ -93,6 +93,26 @@
   --ds-r-xl: 24px;
   --ds-r-pill: 999px;
 
+  /* ── Z-index scale (UI-WOW-2) — pure-DOM chrome stacking over the ONE canvas.
+     Names, not magic numbers, so the bottom-sheet host + compact dock layer
+     deterministically above the existing z-30/40/50 overlays and below the
+     global magnetic cursor (z-100). ────────────────────────────────────── */
+  --ds-z-overlay: 30;      /* detail cards, galaxy filter */
+  --ds-z-chrome: 40;       /* floating panels, top toggle */
+  --ds-z-toolbar: 50;      /* canvas tool rail */
+  --ds-z-dock: 60;         /* compact bottom tool dock */
+  --ds-z-sheet-scrim: 78;  /* bottom-sheet dim layer */
+  --ds-z-sheet: 82;        /* bottom-sheet surface */
+  --ds-z-modal: 95;        /* dialogs / palettes */
+  --ds-z-cursor: 100;      /* magnetic cursor — above all */
+
+  /* ── Responsive / safe-area (UI-WOW-2 container-density + sheets) ──────── */
+  --ds-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ds-safe-top: env(safe-area-inset-top, 0px);
+  --ds-sheet-peek: 140px;   /* compact bottom-sheet peek-snap height */
+  --ds-sheet-handle: 5px;   /* grab-handle bar thickness */
+  --ds-dock-h: 62px;        /* compact horizontal tool-dock height */
+
   /* ── Motion — time-based, transform/opacity only ──────────────────────── */
   --ds-t-fast: 120ms;
   --ds-t-base: 200ms;

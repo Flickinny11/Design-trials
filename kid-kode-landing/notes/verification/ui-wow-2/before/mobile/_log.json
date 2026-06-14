@@ -1,0 +1,15 @@
+{
+  "profile": "mobile",
+  "at": "2026-06-14T06:59:30.234Z",
+  "base": "http://localhost:3000",
+  "backend": {
+    "backend": "webgpu",
+    "gpu": true,
+    "tier": "t1",
+    "innerW": 390,
+    "mainW": 390,
+    "density": null
+  },
+  "consoleErrors": [],
+  "badResponses": []
+}

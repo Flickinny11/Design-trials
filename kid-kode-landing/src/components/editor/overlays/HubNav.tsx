@@ -8,6 +8,7 @@
 import { useEffect, useMemo } from 'react';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -72,6 +73,13 @@ export default function HubNav() {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
+  // UI-WOW-2 P0 — on compact density the bottom band is shared with the mobile
+  // mode toggle (bottom 10px) and, in canvas mode, the horizontal tool dock
+  // (bottom 64px). Lift the hub trail clear of whatever is below it. Keyed off
+  // CONTAINER density + viewMode, not a viewport media query (the old
+  // max-md:bottom-[84px] collided in a wide-viewport embedded pane).
+  const compact = useEditorDensity() === 'compact';
+  const railViewMode = useGraphEditorStore((s) => s.viewMode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -86,10 +94,13 @@ export default function HubNav() {
   const railSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
 
   return (
-    // P2 mobile MUST-FIX (advocate 2026-06-10): on phone widths the mobile
-    // mode toggle owns the bottom-center band — lift the hub trail above it
-    // so the two pills never stack/occlude. Desktop position unchanged.
-    <div className="absolute z-30 bottom-5 max-md:bottom-[84px] left-1/2 -translate-x-1/2 pointer-events-auto">
+    // Compact: clear the mobile mode toggle (and, in canvas mode, the tool
+    // dock) above it. Regular/wide: the shipped desktop position (bottom-5).
+    <div
+      className={`absolute z-30 left-1/2 -translate-x-1/2 pointer-events-auto ${
+        compact ? (railViewMode === 'canvas' ? 'bottom-[140px]' : 'bottom-[68px]') : 'bottom-5'
+      }`}
+    >
       <div
         ref={railSlab.ref}
         className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
