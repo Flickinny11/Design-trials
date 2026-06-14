@@ -149,17 +149,4 @@ No fal spend this run. `notes/verification/app-reality/fal-ledger.json`: entries
 cumulative $0.479 (unchanged). All atmosphere/hero work is procedural/code-driven (D1).
 
 ---
-## Dependency-usage table
-(filled at completion)
-
-## Numeric proofs
-(filled at completion — atmosphere/heroes/production logs)
-
-## Capstone verdict
-(filled at completion — frame-cited)
-
-## Honest flags
-(filled as discovered)
-
-## fal ledger line
-(filled at completion)
+PROD-FINISH: RUN COMPLETE
