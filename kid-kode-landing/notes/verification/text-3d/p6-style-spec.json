@@ -1,0 +1,9 @@
+{
+  "textSpec": {
+    "content": "Italic", "fontFamily": "Inter", "fontSize": 0.6, "fontWeight": 400,
+    "bold": true, "italic": true, "underline": true, "strikethrough": true,
+    "fill": { "kind": "solid", "color": "#e8c069" },
+    "extrude": { "enabled": true, "depth": 0.26, "bevelEnabled": true, "bevelSize": 0.02, "metalness": 0.4, "roughness": 0.3 }
+  },
+  "rotations": [ { "label": "front", "x": 0, "y": 0 }, { "label": "hero-3q", "x": -0.1, "y": 0.45 } ]
+}

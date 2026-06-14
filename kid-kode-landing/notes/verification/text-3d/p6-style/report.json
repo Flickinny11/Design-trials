@@ -1,0 +1,29 @@
+{
+  "label": "p6-style",
+  "startedAt": "2026-06-14T15:49:31.885Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 6,
+    "depthZ": 0.1776,
+    "is3d": true,
+    "faceFill": "solid",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "cc4757d6-cf1d-43ee-98ed-3409e11f4a4e",
+  "mounted3d": true
+}

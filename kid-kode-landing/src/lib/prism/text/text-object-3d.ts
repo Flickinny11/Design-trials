@@ -79,27 +79,28 @@ function resolveSpec(spec: TextSpec): TextSpec {
 // opentype getPath() coords are y-DOWN (canvas convention); negate y for THREE
 // y-up. Coords arrive in font units → multiply by emScale (= fontSize /
 // unitsPerEm) so shapes are in scene units (1 em = fontSize scene units).
-function glyphToShapes(commands: GlyphOutlineCommand[], emScale: number): Shape[] {
+function glyphToShapes(commands: GlyphOutlineCommand[], emScale: number, italicShear = 0): Shape[] {
   const sp = new ShapePath();
+  // y is negated (opentype y-down → THREE y-up). Synthesized italic shears x by
+  // `italicShear * yUp` (baseline-relative), so taller points lean right.
+  const py = (y?: number) => -(y ?? 0) * emScale;
+  const px = (x?: number, y?: number) => (x ?? 0) * emScale + italicShear * py(y);
   for (const c of commands) {
     switch (c.type) {
       case 'M':
-        sp.moveTo((c.x ?? 0) * emScale, -(c.y ?? 0) * emScale);
+        sp.moveTo(px(c.x, c.y), py(c.y));
         break;
       case 'L':
-        sp.lineTo((c.x ?? 0) * emScale, -(c.y ?? 0) * emScale);
+        sp.lineTo(px(c.x, c.y), py(c.y));
         break;
       case 'Q':
-        sp.quadraticCurveTo(
-          (c.x1 ?? 0) * emScale, -(c.y1 ?? 0) * emScale,
-          (c.x ?? 0) * emScale, -(c.y ?? 0) * emScale,
-        );
+        sp.quadraticCurveTo(px(c.x1, c.y1), py(c.y1), px(c.x, c.y), py(c.y));
         break;
       case 'C':
         sp.bezierCurveTo(
-          (c.x1 ?? 0) * emScale, -(c.y1 ?? 0) * emScale,
-          (c.x2 ?? 0) * emScale, -(c.y2 ?? 0) * emScale,
-          (c.x ?? 0) * emScale, -(c.y ?? 0) * emScale,
+          px(c.x1, c.y1), py(c.y1),
+          px(c.x2, c.y2), py(c.y2),
+          px(c.x, c.y), py(c.y),
         );
         break;
       case 'Z':
@@ -131,10 +132,17 @@ interface Unit3D {
   lineIndex: number;
   wordIndex: number;
 }
+interface LineRule {
+  /** Rule span in centered block space + the line's baseline y. */
+  minX: number;
+  maxX: number;
+  baseline: number;
+}
 interface Layout3D {
   units: Unit3D[];
   width: number;
   height: number;
+  rules: LineRule[];
 }
 
 function layoutOutline(spec: TextSpec, o: LoadedFontOutlines): Layout3D {
@@ -180,7 +188,7 @@ function layoutOutline(spec: TextSpec, o: LoadedFontOutlines): Layout3D {
     lineWidths.push(advanced > 0 ? penX - letterSpacing * fontSize : 0);
   }
 
-  if (placed.length === 0) return { units: [], width: 0, height: 0 };
+  if (placed.length === 0) return { units: [], width: 0, height: 0, rules: [] };
 
   // Align each line within the widest line's advance.
   const blockAdvance = Math.max(...lineWidths, 0);
@@ -233,7 +241,45 @@ function layoutOutline(spec: TextSpec, o: LoadedFontOutlines): Layout3D {
       wordIndex: grp[0].wordIndex,
     };
   });
-  return { units, width, height };
+
+  // Per-line rule spans (underline / strikethrough). Pen origins underestimate
+  // the right edge by ~one glyph advance, so pad maxX by ~0.6em.
+  const byLine = new Map<number, Placed3DGlyph[]>();
+  for (const p of placed) {
+    const g = byLine.get(p.lineIndex);
+    if (g) g.push(p); else byLine.set(p.lineIndex, [p]);
+  }
+  const rules: LineRule[] = [...byLine.values()].map((grp) => ({
+    minX: Math.min(...grp.map((p) => p.x)) - fontSize * 0.04,
+    maxX: Math.max(...grp.map((p) => p.x)) + fontSize * 0.6,
+    baseline: grp[0].y,
+  }));
+
+  return { units, width, height, rules };
+}
+
+/** A line rule (underline/strikethrough) as a thin extruded bar matching the
+ *  text depth, so it reads as part of the 3D object. */
+function buildRuleBar(
+  rule: LineRule,
+  yOffset: number,
+  thickness: number,
+  ex: typeof EXTRUDE_DEFAULT,
+  fontSize: number,
+): BufferGeometry | null {
+  const w = rule.maxX - rule.minX;
+  if (w <= 0) return null;
+  const y = rule.baseline + yOffset;
+  const bar = new Shape();
+  bar.moveTo(rule.minX, y - thickness / 2);
+  bar.lineTo(rule.maxX, y - thickness / 2);
+  bar.lineTo(rule.maxX, y + thickness / 2);
+  bar.lineTo(rule.minX, y + thickness / 2);
+  bar.closePath();
+  const depth = ex.depth * fontSize;
+  const geo = new ExtrudeGeometry([bar], { depth, bevelEnabled: false, steps: 1 });
+  geo.translate(0, 0, -depth);
+  return geo;
 }
 
 // ── geometry: extrude one unit (per-glyph extrude → merge w/ groups) ────────
@@ -243,6 +289,7 @@ function buildUnitGeometry(
   emScale: number,
   ex: typeof EXTRUDE_DEFAULT,
   fontSize: number,
+  shear: number,
 ): BufferGeometry | null {
   const depth = ex.depth * fontSize;
   const opts = {
@@ -259,7 +306,7 @@ function buildUnitGeometry(
   for (const gl of unit.glyphs) {
     const outline = o.glyphs[gl.char];
     if (!outline || outline.commands.length === 0) continue;
-    const shapes = glyphToShapes(outline.commands, emScale);
+    const shapes = glyphToShapes(outline.commands, emScale, shear);
     if (shapes.length === 0) continue;
     const geo = new ExtrudeGeometry(shapes, opts);
     // Front cap at z≈0, body extruded toward -z (so text faces +z / camera).
@@ -306,6 +353,7 @@ function buildShadowGroup(
   spec: TextSpec,
   fontSize: number,
   tier: 'T0' | 'T1' | 'T2',
+  shear: number,
 ): { group: Group; geo: BufferGeometry } | null {
   const sh = spec.shadow;
   if (!sh || (sh.opacity ?? 0) <= 0) return null;
@@ -322,7 +370,7 @@ function buildShadowGroup(
     for (const gl of unit.glyphs) {
       const outline = o.glyphs[gl.char];
       if (!outline || outline.commands.length === 0) continue;
-      const shapes = glyphToShapes(outline.commands, emScale);
+      const shapes = glyphToShapes(outline.commands, emScale, shear);
       if (shapes.length === 0) continue;
       const g = new ShapeGeometry(shapes, curve);
       g.translate(unit.center.x + gl.x, unit.center.y + gl.y, 0);
@@ -466,6 +514,7 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
   let fillTex: { url: string; tex: Texture } | null = null;
   let disposed = false;
   const units: Mesh[] = [];
+  const decorations: Mesh[] = []; // underline / strikethrough rule bars
   let shadowGroup: Group | null = null;
   let shadowGeo: BufferGeometry | null = null;
 
@@ -486,9 +535,12 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
     block.min.set(-layout.width / 2, -layout.height / 2, 0);
     block.max.set(layout.width / 2, layout.height / 2, 0);
     const tex = fillTex && fillTex.url === wantFillUrl() ? fillTex.tex : null;
+    // Synthesized italic = a baseline-relative X shear on the outlines (§7;
+    // real italic faces are requested via the italic flag on the outline fetch).
+    const shear = resolved.italic ? 0.22 : 0;
 
     layout.units.forEach((unit, i) => {
-      const geo = buildUnitGeometry(unit, currentOutlines, emScale, ex, fontSize);
+      const geo = buildUnitGeometry(unit, currentOutlines, emScale, ex, fontSize, shear);
       if (!geo) return;
       remapFaceUv(geo, unit.center, block);
       const mesh = new Mesh(geo, buildUnitMaterial(resolved, tex));
@@ -500,9 +552,38 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
       group.add(mesh);
     });
 
+    // Underline / strikethrough — thin extruded bars matching the text depth,
+    // positioned from the font's own post-table metrics (§7).
+    if (resolved.underline || resolved.strikethrough) {
+      const upm = currentOutlines.unitsPerEm || 1000;
+      const uthick = Math.max(
+        (currentOutlines.underlineThickness / upm) * fontSize || 0,
+        fontSize * 0.045,
+      );
+      const upos = currentOutlines.underlinePosition
+        ? (currentOutlines.underlinePosition / upm) * fontSize
+        : -fontSize * 0.12;
+      for (const rule of layout.rules) {
+        const bars: Array<{ y: number; tag: string }> = [];
+        if (resolved.underline) bars.push({ y: upos, tag: 'u' });
+        if (resolved.strikethrough) bars.push({ y: fontSize * 0.3, tag: 's' });
+        for (const b of bars) {
+          const g = buildRuleBar(rule, b.y, uthick, ex, fontSize);
+          if (!g) continue;
+          remapFaceUv(g, { x: 0, y: 0 }, block);
+          const m = new Mesh(g, buildUnitMaterial(resolved, tex));
+          m.name = `text-rule-${b.tag}`;
+          m.castShadow = true;
+          m.receiveShadow = true;
+          decorations.push(m);
+          group.add(m);
+        }
+      }
+    }
+
     // Controllable drop shadow (textSpec.shadow). Layered with the genuine
     // PCFSoft scene shadow the lit glyph meshes cast onto the catcher.
-    const sg = buildShadowGroup(layout, currentOutlines, emScale, resolved, fontSize, tier);
+    const sg = buildShadowGroup(layout, currentOutlines, emScale, resolved, fontSize, tier, shear);
     if (sg) {
       shadowGroup = sg.group;
       shadowGeo = sg.geo;
@@ -511,12 +592,13 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
   };
 
   const clearUnits = () => {
-    for (const mesh of units) {
+    for (const mesh of [...units, ...decorations]) {
       group.remove(mesh);
       mesh.geometry.dispose();
       (mesh.material as Material).dispose();
     }
     units.length = 0;
+    decorations.length = 0;
     if (shadowGroup) {
       group.remove(shadowGroup);
       for (const m of shadowGroup.children) {
