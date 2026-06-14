@@ -4,3 +4,4 @@ test-results/
 
 # P1 text system — on-demand font bake cache (TTFs + generated atlases)
 .prism-font-cache/
+.data/

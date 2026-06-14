@@ -836,6 +836,25 @@ export interface PrismNode {
   // the artifact library"). Restoring an entry snapshots the then-current
   // artifact in turn — never lossy. Absent on legacy nodes. Round-trips.
   artifactLibrary?: ArtifactLibraryEntry[];
+  // NODE-EDITOR-V2 Functions tab (criteria B; INV-NEV2-6 additive, INV-NE-8
+  // additive). Ordered list of branded action tiles attached to this node:
+  // multiple-per-node, REORDERABLE (`order`), attach/detach round-trips. Each
+  // tile is a provider/action reference + its validation status; the executable
+  // capability lives in the provider/adapter (Prism stores the reference, never
+  // raw code or secrets). Absent on legacy nodes. Round-trips through save/reload.
+  functionTiles?: FunctionTile[];
+  // NODE-EDITOR-V2 Integrations tab (criteria C; INV-NEV2-2 / INV-R13 additive).
+  // Third-party platform hookups connected on this node. Each entry carries a
+  // CAPABILITY REFERENCE only (never a raw token — vault resolves server-side),
+  // the user's selected saved assets, an `order`, and a content-icon descriptor
+  // surfaced in galaxy (§3.3 / D3). Absent on legacy nodes. Round-trips.
+  integrationRefs?: IntegrationRef[];
+  // NODE-EDITOR-V2 Prompt-to-Edit (criteria A; INV-NEV2-3 additive). Light
+  // provenance trail of prompt-edit plans applied to this node. The ACTUAL
+  // changes land in the existing additive fields (animationBindings, materialSpec,
+  // functionTiles, integrationRefs, functionBinding, …); this is an audit record
+  // only (prompt + planId + summary + applied step kinds). Absent on legacy nodes.
+  promptEditLog?: PromptEditLogEntry[];
 }
 
 // P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
@@ -938,6 +957,121 @@ export interface ArtifactLibraryEntry {
   textSpec?: TextSpec;
   /** Optional still image for the library tile preview. */
   thumbnailUrl?: string;
+}
+
+// ── NODE-EDITOR-V2 (2026-06-14) — Functions / Integrations / Prompt-edit ──────
+// All three are ADDITIVE optional fields on PrismNode (INV-NEV2-1 / INV-NE-8):
+// legacy graphs omit them and round-trip byte-stable; no serializer change.
+
+// Validation status of a function tile (criteria B4). `unvalidated` until the
+// adapter sandbox-tests it; `broken` when an external change broke it (Opus
+// auto-fix dispatched); `fixed` after an in-place repair; `valid` when the live
+// test passed. The status is surfaced as a badge in the Functions tab.
+export type FunctionTileValidationStatus =
+  | 'unvalidated'
+  | 'validating'
+  | 'valid'
+  | 'broken'
+  | 'fixed';
+
+export interface FunctionTileValidation {
+  status: FunctionTileValidationStatus;
+  /** ISO timestamp of the last validation attempt. */
+  testedAt?: string;
+  /** Human-readable result/diagnostic ("200 OK from sandbox", "param `amount` missing"). */
+  message?: string;
+  /** When auto-fixed, a short note of what Opus changed (provenance, never raw code). */
+  autoFixNote?: string;
+}
+
+// A branded action TILE attached to a node (criteria B). The TILE is a
+// REFERENCE to a provider action; the maintained, executable implementation
+// lives in the capability provider/adapter (Pipedream/Composio/Nango/MCP).
+export interface FunctionTile {
+  /** Stable id (`ft-<base36>`). */
+  id: string;
+  /** Stacking/exec order within the node (criteria B3 — reorderable). */
+  order: number;
+  /** The CapabilityProvider that owns this action (e.g. 'mcp', 'pipedream'). */
+  providerId: string;
+  /** Provider-scoped action id (e.g. 'stripe-create-payment-intent'). */
+  actionId: string;
+  /** Brand/platform key for the real logo (resolved via brand-assets, NOT stock). */
+  brandKey: string;
+  /** Plain-language label shown on the tile ("Create payment intent"). */
+  label: string;
+  /** Plain-language platform name ("Stripe"). */
+  platform: string;
+  /** Where this tile came from: the provider catalog, or a saved user snippet. */
+  source: 'catalog' | 'snippet';
+  /** When `source === 'snippet'`, the SnippetStore id it was instantiated from. */
+  snippetId?: string;
+  /** Free-form, NON-SECRET params the action takes (amounts, ids, modes — never tokens). */
+  params?: Record<string, unknown>;
+  /** Last validation result (criteria B4). */
+  validation?: FunctionTileValidation;
+}
+
+// A saved asset the user owns on a connected platform (criteria C3) — e.g. a
+// RunPod pod/template, a Supabase table, a GitHub repo. Selectable + draggable
+// into a node. Carries NO secret material; access is gated by the integration's
+// CapabilityRef at request time.
+export interface IntegrationAsset {
+  /** Provider-scoped asset id. */
+  id: string;
+  /** Asset kind ('pod' | 'template' | 'repo' | 'table' | 'channel' | …). */
+  kind: string;
+  /** Plain-language name ("A100 80GB · us-east"). */
+  name: string;
+  /** Optional sub-label / status line ("running", "private"). */
+  detail?: string;
+}
+
+// The auth method used to connect a platform (criteria C2). All resolve to a
+// CapabilityRef in the vault/provider — Prism never holds the raw credential.
+export type IntegrationAuthMethod = 'oauth2.1' | 'mcp' | 'api-token' | 'cli';
+
+// A connected third-party integration on a node (criteria C). SECURITY: carries
+// a CAPABILITY REFERENCE only (INV-NEV2-2 / INV-R13 / FP-NE-7) — never a raw
+// token. Surfaces as a content icon in galaxy (§3.3 / D3).
+export interface IntegrationRef {
+  /** Stable id (`ig-<base36>`). */
+  id: string;
+  /** Ordering within the node. */
+  order: number;
+  /** The CapabilityProvider that brokered the connection. */
+  providerId: string;
+  /** Platform key (e.g. 'runpod') — also the brand key for the real logo. */
+  platformId: string;
+  /** Plain-language platform name ("RunPod"). */
+  platform: string;
+  /** Auth method used to connect. */
+  authMethod: IntegrationAuthMethod;
+  /** The opaque capability reference the vault resolves server-side. NEVER a secret. */
+  capabilityRef: CapabilityRef;
+  /** The user's saved assets dragged onto this node from the platform. */
+  assets?: IntegrationAsset[];
+  /** Galaxy content-icon descriptor (the small colored icon per integration, §3.3). */
+  contentIcon?: { brandKey: string; tint?: string };
+}
+
+// One applied prompt-edit plan (criteria A). Provenance/audit only — the real
+// mutations are written into the existing additive fields by `applyPlan`.
+export interface PromptEditLogEntry {
+  /** Stable id (`pe-<base36>`). */
+  id: string;
+  /** ISO timestamp the plan was applied. */
+  at: string;
+  /** The natural-language prompt the user typed. */
+  prompt: string;
+  /** The plan id returned by the orchestrator. */
+  planId: string;
+  /** The orchestrator's one-line summary of what it did. */
+  summary: string;
+  /** The kinds of steps applied (e.g. ['design','animation','function']). */
+  stepKinds: string[];
+  /** Which orchestrator produced it ('stub' | 'live'), for honest provenance. */
+  origin: 'stub' | 'live';
 }
 
 // APP-REALITY P5 — per-DEVICE responsive layout override (INV-8 additive).
