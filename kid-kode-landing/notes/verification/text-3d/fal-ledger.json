@@ -1,0 +1,11 @@
+{
+  "run": "text-3d-styling",
+  "account": "shared $50 fal account",
+  "warnAt": 25,
+  "hardWarnAt": 40,
+  "stopAt": 48,
+  "entries": [],
+  "total": 0,
+  "priorCumulative": 0.431,
+  "cumulative": 0.431
+}

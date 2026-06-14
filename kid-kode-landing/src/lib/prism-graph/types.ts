@@ -325,7 +325,48 @@ export interface TextShadowSpec {
   /** Offset in em units (fraction of fontSize). */
   offsetX?: number;
   offsetY?: number;
+  /** Depth offset in em units, pushing the shadow behind the text along -Z.
+   *  True-3D extruded mode only; ignored by the flat MSDF path. Additive
+   *  (INV-18). */
+  offsetZ?: number;
   opacity?: number;
+  /** Soft-shadow blur radius in em units (0 / absent = hard edge). Additive
+   *  (INV-18). */
+  blur?: number;
+}
+
+// §7 — TRUE 3D EXTRUDED TEXT (additive, INV-18 / INV-11). When `enabled` and the
+// device tier permits (INV-9, T1+), the text node builds REAL extruded geometry
+// from the font's vector outlines (opentype.js → THREE.Shape → ExtrudeGeometry),
+// lit + shadow-casting. Absent / `enabled:false` → the flat MSDF path runs
+// (default, byte-identical). Letterforms are ALWAYS real font outlines, never
+// diffusion-drawn (INV-11). Depth / bevel are in em units (fractions of
+// fontSize). `faceFill`/`sideFill` reuse the standard TextFill union so the
+// existing solid/gradient/texture/ai-texture pipeline (and the prompt→texture
+// picker) pour onto the 3D faces vs the bevel/sides independently.
+export interface TextExtrudeSpec {
+  enabled?: boolean;
+  /** Extrusion depth (slab thickness) in em units. */
+  depth?: number;
+  bevelEnabled?: boolean;
+  /** Bevel rise along +Z in em units. */
+  bevelThickness?: number;
+  /** Bevel inset (how far the bevel cuts in) in em units. */
+  bevelSize?: number;
+  /** Bevel curve resolution (cost driver; 2–4 typical). */
+  bevelSegments?: number;
+  /** Glyph-curve tessellation (bezier flatness; higher = sharper at DPR-2). */
+  curveSegments?: number;
+  /** Fill for the front/back FACES (ExtrudeGeometry material group 0). Falls
+   *  back to `TextSpec.fill` when absent. */
+  faceFill?: TextFill;
+  /** Fill for the extruded SIDE walls + bevel (material group 1). Falls back to
+   *  a tinted edge derived from the face fill. */
+  sideFill?: TextFill;
+  /** PBR surface so the extruded faces/sides catch real scene light (photoreal,
+   *  never flat). Sensible defaults applied when absent. */
+  metalness?: number;
+  roughness?: number;
 }
 
 export interface TextSpec {
@@ -350,6 +391,17 @@ export interface TextSpec {
   opacity?: number;
   /** Animation unit granularity for text-animation primitives (§7.5). */
   decompose?: 'glyph' | 'word' | 'line';
+  /** Real-or-synthesized style flags (§7 extended styling, additive INV-18).
+   *  `bold` prefers a real heavier weight face, else faux-bold; `italic`
+   *  prefers a real italic face, else a synthesized shear. `strikethrough` /
+   *  `underline` are metrics-derived rules. */
+  bold?: boolean;
+  italic?: boolean;
+  strikethrough?: boolean;
+  underline?: boolean;
+  /** True-3D extruded geometry (opt-in; tier-gated INV-9). Absent / disabled →
+   *  the flat MSDF path renders (default). Additive (INV-18). */
+  extrude?: TextExtrudeSpec;
 }
 
 export const TEXT_SPEC_DEFAULT: TextSpec = {

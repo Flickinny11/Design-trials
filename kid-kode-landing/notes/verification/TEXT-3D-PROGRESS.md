@@ -1,0 +1,43 @@
+# 3D TEXT STYLING — progress ledger (resumable)
+
+Branch: `prism-editor-build` · Model: **claude-opus-4-8** (confirmed via env at start; Fable-5 down → opus fallback) · Bar: **WOW**
+
+## Phase status
+- [x] P0 — Research + Understand DONE: architecture locked in DESIGN.md (opentype.js→ShapePath→ExtrudeGeometry; canvas/preview-app rig complete; stores/tier/fal mapped).
+- [x] P1 — Schema + contract DONE: additive TextSpec (bold/italic/strikethrough/underline, extrude:TextExtrudeSpec), TextShadowSpec += blur/offsetZ, new contract-3d.ts (GlyphOutline*, FontOutlineRegistry, CreateTextObject3DFn). opentype.js→BUILD_ALLOW + package.json devDep; BufferGeometryUtils→RUNTIME_ALLOW. **tsc 0-new** (baseline = 9 pre-existing test-mock errors, none in touched files). vitest baseline capturing.
+- [ ] P2 — Font preview gallery (virtualized, search, bold/italic/strike/underline)
+- [ ] P3 — True 3D extrude renderer (opentype.js outlines → ExtrudeGeometry → TSL, lit, shadow-casting, tier-gated INV-9)
+- [ ] P4 — Real drop shadow (offset X/Y/Z, color, opacity, blur)
+- [ ] P5 — Fill on 3D faces (color + opacity + solid/gradient/texture/AI prompt→texture; configurable bevel/sides)
+- [ ] P6 — Wire controls + store round-trip (Canvas + Preview; Save / Save-and-Rebuild)
+- [ ] P7 — Verify (advocate builds in real app, frames, no-regression) + report
+
+## Established facts (audit before any implement)
+- HEAD `3808db73` "launch kit" = harness/resume scaffolding ONLY (4 root files); NO feature code shipped yet → fresh build on P1 MSDF foundation.
+- P1 text system: `src/lib/prism/text/{contract,font-registry,text-object,create-text-node,msdf-layout,msdf-material}.ts`. Letterforms = real MSDF glyphs (INV-11). `TextSpec` @ `src/lib/prism-graph/types.ts:331`; `TEXT_SPEC_DEFAULT` @ :355.
+- Fonts on disk: ONLY `public/fonts/Inter-Variable.ttf` (+ 3 UI woffs). 1,935 families come from on-demand Google Fonts atlas bake (`/api/prism/fonts/atlas`). True extrude needs OUTLINES → fetch TTF + parse with opentype.js (new additive dep; update dependency-allowlist-check.sh).
+- Anti-drift FP-02 blocks ONLY `new THREE.TextGeometry(` — `ExtrudeGeometry` is permitted. opentype.js→THREE.Shape→ExtrudeGeometry keeps real outlines (INV-11) and avoids forbidden TextGeometry/typeface path.
+- fal ledger: cumulative $0.431 prior; seeded `notes/verification/text-3d/fal-ledger.json`. STOP $48.
+
+## TextSpec today (types.ts:331) — additive targets
+content, fontFamily, fontSize, fontWeight, letterSpacing, lineHeight, align, fill(TextFill), outline, glow, shadow(TextShadowSpec: color/offsetX/offsetY/opacity — **no blur, no offsetZ**), opacity, decompose.
+ADD (additive, optional): style flags (bold/italic/strike/underline); `extrude` sub-spec (enabled, depth, bevel*, curveSegments, faceFill/sideFill routing); shadow.blur + shadow.offsetZ. `receivesLightingDefault`: mesh=LIT — 3D text routes LIT.
+
+## LOGAN-INBOX standing directives folded in (DONE-section, but load-bearing here)
+1. Prompt→texture picker = **10 candidates, each the USER'S OWN selected text** with the texture applied — and the 3D-extrusion of that text is the **explicitly-flagged backlog item = THIS task**. Upgrade `TextFillPreviewStrip.tsx` (already 10 flat) to render TRUE 3D.
+2. Retina DPR-2 tack-sharp → high curveSegments/bevelSegments; advocate judges at DPR2 w/ zoomed crops vs "pro 3D designer" + Slider-Revolution side-by-side ("must visibly outclass").
+3. Every new UI surface = design-system MATERIAL treatments (never flat) + deliberate typography hierarchy.
+4. STANDING: `docs/prism/DESIGN-REFERENCES.md` REQUIRED reading + toolkit for any new UI (GSAP installed; Lenis-class inertia for gallery scroll; implement DOM-era techniques natively in TSL).
+
+## Verification plan (harnesses to reuse — real Metal GPU dev server + user-advocate agent)
+- `scripts/useradvocate-capture.mjs` + `useradvocate-verdict-schema.mjs` — advocate evidence capture pattern.
+- `scripts/capture-text-closeups.mjs` / `verify-text-system.mjs` — text frame capture.
+- `scripts/verify-editor-shadow.mjs` — shadow verification (P4).
+- `scripts/verify-editor-runtimes.mjs` — two-runtime (canvas + preview) snapshot.
+- NOTE: kv_*/KripVerify + chrome-devtools MCP are NOT connected this session → drive via Playwright harness (real-GPU), judge frames with the `user-advocate` subagent. Assertion-only verification FORBIDDEN.
+
+## Checkpoints (hash — phase)
+_(none yet)_
+
+## Log
+- P0 started: parallel research+understand workflow launched (wf_81bee7f5-d53).

@@ -58,11 +58,25 @@ RUNTIME_ALLOW = {
     "three/examples/jsm/tsl/display/SSRNode.js",
     "three/examples/jsm/tsl/display/TRAANode.js",
     "three/examples/jsm/tsl/display/GodraysNode.js",
+    # 3D TEXT STYLING (canvas-spec §7 / INV-11) — true extruded text from REAL
+    # font outlines. BufferGeometryUtils (mergeGeometries) is a first-party
+    # three.js addon shipped INSIDE the already-approved `three` package (one
+    # `three` instance — INV-R1 / RT-SC-02 intact; NOT a 2nd renderer, NOT a new
+    # npm dep). Used at runtime to merge per-glyph ExtrudeGeometry into one draw
+    # call. Rationale logged in notes/mockup-pipeline.md §10 (2026-06-14).
+    "three/examples/jsm/utils/BufferGeometryUtils.js",
     "zustand", "zustand/middleware",
 }
 BUILD_ALLOW = {
     "@fal-ai/client", "dotenv", "ffmpeg-static", "globby", "maxrects-packer",
     "msdf-bmfont-xml", "playwright", "sharp",
+    # 3D TEXT STYLING — opentype.js parses on-demand TTFs (already vendored
+    # transitively ^1.3.4 via msdf-bmfont-xml; promoted to a direct dep) into
+    # glyph path commands SERVER-SIDE (sibling of sharp/msdf-bmfont-xml), which
+    # the client converts to THREE.ShapePath → ExtrudeGeometry (NOT the forbidden
+    # THREE.TextGeometry/typeface path; anti-drift FP-02 intact, real outlines =
+    # INV-11). Rationale logged in notes/mockup-pipeline.md §10 (2026-06-14).
+    "opentype.js",
 }
 DEVDEP_ALLOW = {
     "@types/node", "@types/react", "@types/react-dom", "@types/three",
