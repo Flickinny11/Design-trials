@@ -196,8 +196,8 @@ export default function ElementLibraryBrowser() {
                 <Icon name="layers" size={16} color={DS.brass200} glow />
               </div>
               <div className="min-w-0">
-                <div className="ds-title tracking-tight truncate">Element Library</div>
-                <div className="ds-kicker mt-0.5">
+                <div className="ds-headline tracking-tight truncate">Element Library</div>
+                <div className="ds-body mt-0.5 text-[12px] truncate" style={{ color: 'var(--ds-text-mid)' }}>
                   Ready-made 3D pieces — drag one onto a hub to place it
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function ElementLibraryBrowser() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search elements…"
                 data-role="library-search"
-                className="w-full h-9 pl-8 pr-3 rounded-ds-sm text-[12px] font-mono outline-none"
+                className="w-full h-9 pl-8 pr-3 rounded-ds-sm text-[12px] font-ui outline-none"
                 style={{
                   background: 'var(--ds-grad-well)',
                   color: 'var(--ds-text-hi)',
@@ -266,7 +266,7 @@ export default function ElementLibraryBrowser() {
               style={{ color: 'var(--ds-text-mid)' }}
             >
               <Icon name="layers" size={22} color={DS.textMid} />
-              <span className="text-[12px] font-mono">
+              <span className="text-[12px] font-ui">
                 {all.length === 0
                   ? 'No elements registered yet.'
                   : 'Nothing matches that search.'}
@@ -300,7 +300,7 @@ function CategoryChip({
       onClick={onClick}
       data-role="library-category"
       data-active={active ? 'true' : 'false'}
-      className="px-2.5 h-7 rounded-full text-[10px] font-mono tracking-wide ds-press transition-all"
+      className="px-2.5 h-7 rounded-full text-[11px] font-ui font-semibold tracking-normal ds-press transition-all"
       style={
         active
           ? {

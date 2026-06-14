@@ -101,7 +101,7 @@ export default function DetailCard() {
           <div className="ds-title text-[17px] leading-tight mt-0.5">
             {node.name}
           </div>
-          <div className="text-[10px] font-mono text-ds-text-low mt-0.5">{node.elementType}</div>
+          <div className="text-[11px] font-ui text-ds-text-low mt-0.5">{node.elementType}</div>
         </div>
         <button
           onClick={() => selectNode(null)}
@@ -112,7 +112,7 @@ export default function DetailCard() {
         </button>
       </div>
 
-      <div className="px-4 py-3 text-[12px] text-ds-text leading-relaxed">{node.caption}</div>
+      <div className="px-4 py-3 font-ui text-[12px] text-ds-text leading-relaxed">{node.caption}</div>
 
       <div className="px-4 flex flex-wrap gap-1.5">
         <Badge active={node.status === 'verified'} label={`FE ${node.status === 'verified' ? '✓' : node.status === 'failed' ? '✗' : '○'}`} />
@@ -155,7 +155,7 @@ export default function DetailCard() {
           }}
         >
           <Icon name="snow" size={12} color={DS.ice200} glow />
-          <div className="text-[10px] font-mono" style={{ color: DS.ice200 }}>Node frozen — AI cannot edit</div>
+          <div className="text-[12px] font-ui" style={{ color: DS.ice200 }}>Node frozen — AI cannot edit</div>
         </div>
       )}
 

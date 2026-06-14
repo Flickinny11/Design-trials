@@ -97,7 +97,7 @@ export default function TopBar() {
                   key={mode.id}
                   type="button"
                   onClick={() => setEditorRenderMode(mode.id)}
-                  className={`ds-press h-7 px-2 rounded-full text-[10px] font-mono transition-colors flex items-center gap-1 ${
+                  className={`ds-press h-7 px-2 rounded-full text-[11px] font-ui font-medium tracking-normal transition-colors flex items-center gap-1 ${
                     active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text'
                   }`}
                   style={
@@ -119,7 +119,7 @@ export default function TopBar() {
           </div>
         )}
 
-        <div className="flex items-center gap-1.5 text-[11px] font-mono">
+        <div className="flex items-center gap-1.5 text-[12px] font-ui font-medium">
           <button
             onClick={resetCamera}
             className="ds-press px-2 py-1 rounded-ds-xs text-ds-text-mid hover:text-ds-text hover:bg-white/5 transition-colors flex items-center gap-1"
@@ -205,8 +205,8 @@ export default function TopBar() {
           style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Add node"
         >
-          <span className="text-[12px] font-mono leading-none">+</span>
-          <span className="hidden md:inline text-[10px] font-mono">Add Node</span>
+          <span className="text-[13px] font-mono leading-none">+</span>
+          <span className="hidden md:inline text-[12px] font-ui font-semibold">Add Node</span>
         </button>
 
         <button
@@ -225,7 +225,7 @@ export default function TopBar() {
           title="Search (⌘K)"
         >
           <Icon name="search" size={11} color={DS.textMid} />
-          <span className="hidden md:inline text-[10px] font-mono text-ds-text-mid">Search</span>
+          <span className="hidden md:inline text-[12px] font-ui font-semibold text-ds-text-mid">Search</span>
           <span className="hidden md:inline text-[9px] font-mono text-ds-text-mid">⌘K</span>
         </button>
       </div>

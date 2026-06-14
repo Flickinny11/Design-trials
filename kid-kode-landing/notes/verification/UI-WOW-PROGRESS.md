@@ -25,7 +25,8 @@
 - capture harness: `scripts/ui-wow-capture.mjs` (this run). Evidence → `notes/verification/ui-wow/`.
 
 ## Phase status
-- [ ] P0 — library fixes (light spheres + surface imagery)
+- [x] P0 — library fixes — DONE + pushed (commit c45c844f). Studio softbox backdrop (orbs killed) + premium imagery on 36 content surfaces; tsc 0-new; real-GPU verified (coverflow/gallery/sliders/feature-grid/testimonials all premium).
+- [x] P1 — typography — DONE. Cascade-race CLOSED (font-after.json: every surface resolves to a loaded next/font face ui/display/mono, ZERO serif). 3-voice hierarchy live: mode-toggle/nav/buttons/breadcrumb/body→Geist, wordmark/panel-titles/library-header→Clash, numerals/IDs/shortcuts/kicker→mono. Foundation: tokens.css (cascade fix + scale + ds-track/fs/lh tokens), materials.css (ds-label/ds-btn/ds-input→Geist, +.ds-display/.ds-headline/.ds-body/.ds-num). Sweep: 8 always-visible surfaces (page mode toggle, TopBar, HubNav, library browser+tile, CanvasToolbar SectionLabel/keys/flyout-title, Inspector, DetailCard). tsc 0-new (9 baseline); 0 console errors; real-GPU DPR-2 crops in notes/verification/ui-wow/p1/. NOTE for P2: centered mode pill overlaps TopBar zoom readout (layout fix); panels still flat (beauty).
 - [ ] P1 — typography excellence (cascade-race fix + type rebuild)
 - [ ] P2 — chrome beauty + visible dependencies
 - [ ] P3 — wow-grade interaction test (advocate, desktop+mobile, fix-rounds → 0 MUST-FIX)

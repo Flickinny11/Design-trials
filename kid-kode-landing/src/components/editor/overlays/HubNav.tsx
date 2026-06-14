@@ -37,7 +37,7 @@ function RailPill({
     <button
       ref={slab.ref}
       onClick={onClick}
-      className={`ds-press px-3.5 h-9 rounded-full text-[11px] font-mono transition-colors flex items-center gap-1.5 ${
+      className={`ds-press px-3.5 h-9 rounded-full text-[12px] font-ui font-semibold tracking-tight transition-colors flex items-center gap-1.5 ${
         active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
       }`}
       style={active ? ACTIVE_SLOT : undefined}
@@ -114,7 +114,7 @@ export default function HubNav() {
                   blue in chrome (Wave-3 advocate MUST-FIX). */}
               <Icon name={hub.glyph} size={12} color={active ? DS.brass300 : DS.textMid} glow={active} />
               {hub.name}
-              <span className="text-[9px] opacity-50">{nodeCount}</span>
+              <span className="text-[10px] font-mono tabular-nums opacity-50">{nodeCount}</span>
             </RailPill>
           );
         })}

@@ -535,7 +535,7 @@ export default function Inspector() {
       {frozen && (
         <div className="mx-3 mt-1 px-3 py-2 ds-well ds-edge rounded-ds-md flex items-center gap-2">
           <Icon name="snow" size={12} color={DS.ice300} glow />
-          <div className="text-[11px] text-ds-ice-300 font-mono">Node frozen — AI cannot edit</div>
+          <div className="ds-body text-[12px] text-ds-ice-300">Node frozen — AI cannot edit</div>
         </div>
       )}
 
@@ -637,7 +637,7 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
             onChange={(e) => setFrame(+e.target.value)}
             className="ds-slider w-full"
           />
-          <div className="text-[9px] font-mono text-ds-text-low">Drag to preview frames. Open the Animation tab to edit them.</div>
+          <div className="ds-body text-[12px] text-ds-text-low">Drag to preview frames. Open the Animation tab to edit them.</div>
         </div>
       )}
 
@@ -706,7 +706,7 @@ function BehaviorTab({ node }: { node: any }) {
       <div className="ds-kicker">INTERACTIONS</div>
       <div className="space-y-2">
         {node.interactions.length === 0 ? (
-          <div className="text-[11px] text-ds-text-low italic">No interactions defined</div>
+          <div className="ds-body text-[12px] text-ds-text-low italic">No interactions defined</div>
         ) : (
           node.interactions.map((i: any, idx: number) => (
             <div key={idx} className="px-3 py-2.5 ds-well rounded-ds-md">
@@ -903,7 +903,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
   if (!node.hasAnimation) {
     return (
       <div className="p-5 space-y-4">
-        <div className="text-center text-ds-text-low text-[12px] italic">
+        <div className="ds-body text-center text-ds-text-low text-[12px] italic">
           This node has no animations. Pick a primitive from the library to add one.
         </div>
         <AnimationLibrarySection />
@@ -1088,7 +1088,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
         <PropSlider label="Translate Y" value={currentFrame.y}      min={-50} max={50}  step={1}   disabled={frozen} onChange={(v) => handleFrameEdit({ y: v })} fmt={(v) => v + 'px'} />
 
         <div className="flex items-center justify-between pt-1 border-t border-white/5">
-          <span className="text-[10px] font-mono text-ds-text-low tracking-widest">GLOW COLOR</span>
+          <span className="ds-label">GLOW COLOR</span>
           <ColorPicker
             value={currentFrame.color}
             onChange={(c) => handleFrameEdit({ color: c })}
@@ -1175,7 +1175,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
           <span>{persistedKeyframes.length}</span>
         </div>
         {persistedKeyframes.length === 0 ? (
-          <div className="text-[10px] italic text-ds-text-low">
+          <div className="ds-body text-[12px] italic text-ds-text-low">
             No keyframes captured yet. Drag the canvas-mode gizmo, then click
             “save as keyframe”.
           </div>
@@ -1245,7 +1245,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
         </button>
       </div>
 
-      <div className="text-[10px] text-ds-text-low leading-relaxed italic pt-1">
+      <div className="ds-body text-[12px] text-ds-text-low italic pt-1">
         Drag any slider to modify that keyframe. Tap Preview to play the full animation. The Code tab shows the generated GSAP code updating in real time.
       </div>
 
@@ -1451,7 +1451,7 @@ function ConnectionsTab({ node, graph, flyToNode }: { node: any; graph: EditorGr
           <Icon name="flow" size={10} color={DS.brass400} />
           FLOW NAVIGATOR
         </div>
-        <div className="text-[11px] text-ds-text-mid italic leading-relaxed">
+        <div className="ds-body text-[12px] text-ds-text-mid italic">
           {outgoing.length > 0
             ? `Step through this node's interaction chain: ${node.name} → ${other(outgoing[0].target)?.name}`
             : 'This node is a terminal — no outgoing flows.'}
@@ -1466,7 +1466,7 @@ function ConnectionsTab({ node, graph, flyToNode }: { node: any; graph: EditorGr
 // ═══════════════════════════════════════════════════════════════════
 function BackendTab({ node }: { node: any }) {
   if (!node.backendContract) {
-    return <div className="p-5 text-center text-ds-text-low text-[12px] italic">No backend contract. This is a client-only node.</div>;
+    return <div className="ds-body p-5 text-center text-ds-text-low text-[12px] italic">No backend contract. This is a client-only node.</div>;
   }
   const bc = node.backendContract;
   return (
@@ -1602,7 +1602,7 @@ function WorldInspectorPanel({
         {tab === 'world' ? (
           <WorldTab root={root} updateRootNode={updateRootNode} />
         ) : (
-          <div className="p-5 text-center text-ds-text-low text-[12px] italic leading-relaxed">
+          <div className="ds-body p-5 text-center text-ds-text-low text-[12px] italic">
             The <span className="text-ds-text-mid font-mono">{tab}</span> tab surfaces component-node data. App_Name_World holds app-level state — switch to <span className="text-ds-brass-300 font-mono">World</span> for the D1 fields.
           </div>
         )}
@@ -1676,7 +1676,7 @@ function WorldTab({
   return (
     <div className="p-5 space-y-4">
       <div className="ds-kicker">APP_NAME_WORLD · D1</div>
-      <div className="text-[11px] text-ds-text-mid leading-relaxed">
+      <div className="ds-body text-[12px] text-ds-text-mid">
         The root-node fields below are real graph data per RA-01/D1. Edits write back through <span className="font-mono text-ds-brass-300">useGraphSourceStore.updateRootNode</span>.
       </div>
 
@@ -1787,11 +1787,11 @@ function CapabilitiesPanel({
   return (
     <div data-role="capabilities-panel" className="space-y-2 pt-3 border-t border-white/5">
       <div className="ds-kicker">CAPABILITIES</div>
-      <div className="text-[10px] text-ds-text-low leading-relaxed italic">
+      <div className="ds-body text-[12px] text-ds-text-low italic">
         Capability refs bind to vault entries. Resolve is server-only; the response is redacted (INV-19).
       </div>
       {list.length === 0 ? (
-        <div className="text-[11px] text-ds-text-low italic">No capabilityRefs configured.</div>
+        <div className="ds-body text-[12px] text-ds-text-low italic">No capabilityRefs configured.</div>
       ) : (
         <div className="space-y-1.5">
           {list.map((ref) => {
@@ -1866,7 +1866,7 @@ function HistoryTab({ node }: { node: EditorNode }) {
     <div className="p-5 space-y-4">
       <div className="ds-kicker">EDIT HISTORY</div>
       {events.length === 0 ? (
-        <div className="px-3 py-2.5 ds-well rounded-ds-md text-[11px] text-ds-text-mid italic">
+        <div className="ds-body px-3 py-2.5 ds-well rounded-ds-md text-[12px] text-ds-text-mid italic">
           No edits recorded for this node yet.
         </div>
       ) : (
@@ -1882,7 +1882,7 @@ function HistoryTab({ node }: { node: EditorNode }) {
           ))}
         </ul>
       )}
-      <div className="text-[9px] font-mono text-ds-text-low pt-1">
+      <div className="ds-body text-[12px] text-ds-text-low pt-1">
         AI regeneration events will appear here once the codegen pipeline lands.
       </div>
     </div>
@@ -1965,10 +1965,10 @@ function GroupInspector({
               {groupHubs.map((h) => (
                 <li
                   key={h.id}
-                  className="px-3 py-2 ds-well rounded-ds-md text-[11px] text-ds-text font-mono"
+                  className="px-3 py-2 ds-well rounded-ds-md text-[12px] text-ds-text font-ui font-medium"
                 >
                   {h.name}
-                  <span className="text-ds-text-low"> · {h.route}</span>
+                  <span className="text-ds-text-low font-mono"> · {h.route}</span>
                 </li>
               ))}
             </ul>
@@ -1981,10 +1981,10 @@ function GroupInspector({
               {groupNodes.map((n) => (
                 <li
                   key={n.id}
-                  className="px-3 py-2 ds-well rounded-ds-md text-[11px] text-ds-text font-mono"
+                  className="px-3 py-2 ds-well rounded-ds-md text-[12px] text-ds-text font-ui font-medium"
                 >
                   {n.name}
-                  <span className="text-ds-text-low"> · {n.elementType}</span>
+                  <span className="text-ds-text-low font-mono"> · {n.elementType}</span>
                 </li>
               ))}
             </ul>

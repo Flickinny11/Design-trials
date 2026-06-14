@@ -251,8 +251,8 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-2 mb-1.5 mt-0.5">
       <span
-        className="text-[9px] font-mono tracking-[0.18em] uppercase whitespace-nowrap"
-        style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
+        className="ds-label whitespace-nowrap"
+        style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.55)' }}
       >
         {children}
       </span>
@@ -398,7 +398,7 @@ function DockGroupKey({
       )}
       <Icon name={meta.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
       <span
-        className="text-[9px] font-mono"
+        className="text-[9px] font-ui font-medium tracking-normal"
         style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
       >
         {meta.label}
@@ -977,7 +977,7 @@ function FlyoutShell({
               <Icon name={meta.icon} size={14} color={meta.wired ? DS.brass300 : DS.ice300} glow />
             </div>
             <div>
-              <div className="text-[12px] font-display font-semibold leading-none" style={{ color: 'var(--ds-text-hi)' }}>
+              <div className="ds-title">
                 {meta.label}
               </div>
               {/* CANVAS-FINAL — plain language (advocate F7): the engineer

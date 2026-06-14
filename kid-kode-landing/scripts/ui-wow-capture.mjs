@@ -239,6 +239,51 @@ const SCENE_FNS = {
     }
     c.log('library scene captured 16 tile crops + 3 grid shots');
   },
+  // Typography verification — DPR-2 zoom crops on every type-bearing surface +
+  // a computed-font proof that the resolved first-family is a loaded face (no
+  // serif fallback). Run after the type sweep.
+  typography: async (c) => {
+    await c.waitScene();
+    await c.setMode('canvas');
+    await c.page.waitForTimeout(1500);
+    await c.shot('00-canvas-full');
+    await c.crop('10-top-bar', '[data-component="top-bar"]', 2);
+    await c.crop('11-mode-toggle', '[data-component="view-mode-toggle"]', 6);
+    await c.crop('12-toolbar-dock', '[data-component="canvas-toolbar"]', 4);
+    // open the first toolbar flyout group → crop its header + content
+    await c.page.evaluate(() => {
+      const dock = document.querySelector('[data-component="canvas-toolbar"]');
+      const btn = dock && dock.querySelector('button');
+      btn && btn.click();
+    });
+    await c.page.waitForTimeout(900);
+    await c.shot('13-toolbar-flyout-open');
+    // try selecting a node so the Inspector renders
+    await c.page.evaluate(() => {
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const activeHub = ge?.activeHubId;
+      const nodes = gs?.nodes || [];
+      const pick = nodes.find((n) => n.parentHubId === activeHub) || nodes[0];
+      if (pick && ge) {
+        (ge.selectNode ? ge.selectNode(pick.nodeId) : window.__PRISM_DEBUG_STORES__.graphEditor.setState({ selectedNodeId: pick.nodeId }));
+      }
+    });
+    await c.page.waitForTimeout(1400);
+    await c.shot('14-inspector-open');
+    await c.crop('15-inspector', '[data-component="inspector"], [data-pane="right"], aside', 2).catch(() => {});
+    // library header + tiles
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().openLibrary?.());
+    await c.page.waitForSelector('[data-component="element-library-browser"]', { timeout: 15000 }).catch(() => {});
+    await c.page.waitForTimeout(2500);
+    await c.crop('20-library-header', '[data-component="element-library-browser"]', 0);
+    await c.fontDump('font-after', [
+      '[data-component="view-mode-toggle"] button',
+      '[data-component="top-bar"] .ds-title-brass',
+      '.ds-title', '.ds-display', '.ds-headline', '.ds-label', '.ds-body', '.ds-btn', '.ds-kicker', 'body',
+    ]);
+    c.log('typography scene captured');
+  },
   'baseline-mobile': async (c) => {
     await c.waitScene();
     await c.shot('00-mobile-boot');

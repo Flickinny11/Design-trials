@@ -103,26 +103,40 @@
   --ds-ease-inout: cubic-bezier(0.6, 0, 0.18, 1);
   --ds-ease-spring: cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* ── Type & rhythm ────────────────────────────────────────────────────── */
-  /* Font stacks (W2 type overhaul). The --font-* variables are stamped on
-     <html> by next/font/local in src/app/layout.tsx (self-hosted variable
-     fonts in public/fonts/ui/). Fallback names after each var() cover the
-     no-JS-vars edge so chrome never silently degrades to a serif default.
-       display — Clash Display  (nameplates, flyout titles)
-       ui      — Geist          (body, controls; supports tabular numerals)
-       mono    — JetBrains Mono (kickers, micro-labels, numeric readouts)   */
-  --ds-font-display: var(--font-display, 'Clash Display'), var(--font-ui, 'Geist'), ui-sans-serif, system-ui, sans-serif;
-  --ds-font-ui: var(--font-ui, 'Geist'), ui-sans-serif, system-ui, sans-serif;
-  --ds-font-mono: var(--font-mono, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --ds-track-label: 0.16em;
-  --ds-track-kicker: 0.24em;
-  --ds-track-title: 0.015em; /* Clash Display sits tight — a hair of air at title sizes */
-  --ds-fs-kicker: 9px;
-  --ds-fs-label: 10px;
-  --ds-fs-body: 12px;
-  --ds-fs-md: 13px;
-  --ds-fs-title: 15px;
-  --ds-fs-display: 19px;
+  /* ── Type & rhythm (W3 type overhaul — UI-WOW P1) ─────────────────────────
+     Roles (the three voices of the editor):
+       display — Clash Display  → the SIGNATURE voice: titles, headlines, hero
+                 numbers. Confident + expressive. Used generously now.
+       ui      — Geist          → the WORKHORSE: labels, buttons, body, inputs,
+                 descriptions, captions. Premium neutral; carries the bulk.
+       mono    — JetBrains Mono → the SPICE only: numeric readouts (tabular),
+                 small instrument kickers/tags, shortcuts. NOT the dominant voice.
+     The --font-* vars are stamped on <html> by next/font/local (src/app/layout.tsx;
+     self-hosted variable fonts in public/fonts/ui/) and resolve to next/font's
+     generated families `display`/`ui`/`mono`.
+     CASCADE-RACE FIX (UI-WOW P1): the per-var() fallbacks below are clean SANS /
+     MONO system stacks — NOT the literal face names 'Clash Display'/'Geist'/
+     'JetBrains Mono', which are NOT registered under those names and render as
+     the browser SERIF default. So if next/font's var ever fails to define on a
+     subtree, type degrades to a clean sans/mono, never an ugly serif. */
+  --ds-font-display: var(--font-display, ui-sans-serif), var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-ui: var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-mono: var(--font-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Tracking: Geist labels sit refined (tight), mono kickers keep the wide
+     instrument track, Clash titles sit tight with a hair of negative tracking. */
+  --ds-track-label: 0.06em;   /* Geist uppercase labels — refined, not the wide mono track */
+  --ds-track-kicker: 0.2em;   /* mono kicker keeps the wide instrument track (the accent) */
+  --ds-track-title: -0.012em; /* Clash Display sits tight at title/display sizes */
+  --ds-track-body: 0.005em;
+  --ds-fs-kicker: 9.5px;
+  --ds-fs-label: 11px;
+  --ds-fs-body: 12.5px;
+  --ds-fs-md: 13.5px;
+  --ds-fs-title: 16px;
+  --ds-fs-display: 22px;
+  --ds-fs-display-lg: 30px; /* modal / library headers, hero numerals */
+  --ds-lh-body: 1.5;
+  --ds-lh-tight: 1.12;
 
   /* ── Backdrop (frost) strengths — tier-gated in materials.css ─────────── */
   --ds-frost: blur(18px) saturate(160%) brightness(1.07);

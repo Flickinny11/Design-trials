@@ -178,8 +178,13 @@
   .ds-reveal, .ds-reveal-r { animation: none; }
 }
 
-/* ── TYPE ─────────────────────────────────────────────────────────────────── */
+/* ── TYPE (W3 overhaul — UI-WOW P1) ────────────────────────────────────────
+   Three voices: Clash Display = signature (display/headline/title), Geist =
+   workhorse (label/body/btn/input), JetBrains Mono = spice (kicker/chip/num).
+   The mono-caps that used to dominate are demoted to the kicker/chip accent;
+   labels + the bulk of readable chrome are now Geist. */
 
+/* SPICE — small mono instrument tag. Use sparingly (telemetry, micro-tags). */
 .ds-kicker {
   font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-kicker);
@@ -189,23 +194,60 @@
   text-transform: uppercase;
   color: var(--ds-text-low);
 }
+/* WORKHORSE — field / section label. Geist, refined uppercase (no longer mono). */
 .ds-label {
-  font-family: var(--ds-font-mono);
+  font-family: var(--ds-font-ui);
   font-size: var(--ds-fs-label);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
+  font-weight: 600;
   letter-spacing: var(--ds-track-label);
   text-transform: uppercase;
   color: var(--ds-text-mid);
 }
+/* SIGNATURE — panel / section title. Clash Display, confident. */
 .ds-title {
   font-family: var(--ds-font-display);
   font-size: var(--ds-fs-title);
   font-weight: 600;
-  letter-spacing: var(--ds-track-title, 0.015em);
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
   color: var(--ds-text-hi);
 }
-.ds-title-brass {
+/* SIGNATURE — large display (modal / library headers, hero numerals). */
+.ds-display {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-display-lg);
+  font-weight: 600;
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
+  color: var(--ds-text-hi);
+}
+/* SIGNATURE — section headline (between title and display). */
+.ds-headline {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-display);
+  font-weight: 600;
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
+  color: var(--ds-text-hi);
+}
+/* WORKHORSE — readable body / description copy. Geist, generous line-height. */
+.ds-body {
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-fs-body);
+  font-weight: 400;
+  letter-spacing: var(--ds-track-body);
+  line-height: var(--ds-lh-body);
+  color: var(--ds-text);
+}
+/* SPICE — numeric readout (tabular mono). For values, counts, coordinates. */
+.ds-num {
+  font-family: var(--ds-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: var(--ds-text-hi);
+}
+.ds-title-brass,
+.ds-display-brass {
   background: var(--ds-grad-text-brass);
   -webkit-background-clip: text;
   background-clip: text;
@@ -220,14 +262,14 @@
   justify-content: center;
   gap: 6px;
   min-height: 28px;
-  padding: 0 12px;
+  padding: 0 13px;
   border: none;
   border-radius: var(--ds-r-sm);
-  font-family: var(--ds-font-mono);
+  font-family: var(--ds-font-ui);
   font-size: var(--ds-fs-label);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--ds-text);
   background: linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal));
   box-shadow: var(--ds-chamfer-soft), var(--ds-elev-1);
@@ -295,12 +337,13 @@
 .ds-input,
 .ds-select {
   min-height: 28px;
-  padding: 0 10px;
+  padding: 0 11px;
   border: none;
   border-radius: var(--ds-r-sm);
-  font-family: var(--ds-font-mono);
+  font-family: var(--ds-font-ui);
   font-size: var(--ds-fs-body);
   font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-track-body);
   color: var(--ds-text-hi);
   background: var(--ds-grad-well);
   box-shadow:

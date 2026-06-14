@@ -137,8 +137,13 @@ export default function ClusterTile({
           className="pointer-events-none absolute bottom-2 left-2 right-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <span
-            className="ds-chip text-[9px]"
+            className="ds-chip"
             style={{
+              fontFamily: 'var(--ds-font-ui)',
+              fontWeight: 500,
+              fontSize: '10.5px',
+              letterSpacing: '0.005em',
+              textTransform: 'none',
               color: 'var(--ds-text-hi)',
               background: 'var(--ds-grad-smoked)',
               boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.5)',
@@ -159,8 +164,8 @@ export default function ClusterTile({
       >
         <span className="flex items-center justify-between gap-1.5">
           <span
-            className="text-[12px] font-medium truncate"
-            style={{ color: 'var(--ds-text-hi)' }}
+            className="ds-title truncate"
+            style={{ fontSize: '14px', color: 'var(--ds-text-hi)' }}
           >
             {def.label}
           </span>
@@ -175,8 +180,8 @@ export default function ClusterTile({
           </span>
         </span>
         <span
-          className="text-[9.5px] font-mono leading-snug truncate"
-          style={{ color: 'var(--ds-text-mid)' }}
+          className="ds-body truncate"
+          style={{ fontSize: '12px', color: 'var(--ds-text-mid)' }}
           title={def.description}
         >
           {def.description}

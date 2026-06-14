@@ -699,7 +699,7 @@ export default function Page() {
                     key={m.id}
                     type="button"
                     onClick={() => setViewMode(m.id)}
-                    className={`ds-press relative z-10 w-24 h-9 rounded-full text-[11px] font-mono tracking-wide transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full ${
+                    className={`ds-press relative z-10 w-24 h-9 rounded-full text-[12px] font-ui font-semibold tracking-normal transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full ${
                       active
                         ? 'text-ds-brass-200'
                         : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
@@ -749,7 +749,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.prev();
                 }}
-                className="ds-press relative h-9 px-3 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
+                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 ‹ Prev
               </button>
@@ -781,7 +781,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.next();
                 }}
-                className="ds-press relative h-9 px-3 rounded-full text-[10px] font-mono tracking-wide text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
+                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 Next ›
               </button>
@@ -925,7 +925,7 @@ function MobileModeToggle() {
               type="button"
               data-mode={m.id}
               onClick={() => setViewMode(m.id)}
-              className={`ds-press relative z-10 h-11 rounded-full text-[11px] font-mono tracking-wide transition-colors ${
+              className={`ds-press relative z-10 h-11 rounded-full text-[12px] font-ui font-semibold tracking-normal transition-colors ${
                 active
                   ? 'text-ds-brass-200'
                   : 'text-ds-text-mid active:text-ds-text'
@@ -1010,7 +1010,7 @@ function PreviewAppWorldBadge() {
       </span>
       <span
         ref={stripSlab.ref}
-        className="ds-smoked flex items-center px-2.5 py-0.5 text-[11px] font-mono"
+        className="ds-smoked flex items-center px-2.5 py-0.5 text-[12px] font-ui font-medium"
         style={{
           borderRadius: 'var(--ds-r-pill)',
           color: 'var(--ds-ice-200)',
