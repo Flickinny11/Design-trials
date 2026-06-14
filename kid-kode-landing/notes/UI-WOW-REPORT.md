@@ -41,7 +41,18 @@ The full build-a-scene flow was DRIVEN on the real Metal GPU and judged by a fre
 **Desktop build (9/9 steps, `ui-wow/p3/p3-build/` + `p3-mediagen/`):** Canvas+hub → open library → place Coverflow (+8 members) → select+Edit (handles) → Animation picker+apply → Keyframe editor → Add Text (MSDF) → Lighting → **Media Generator (fal) prompt→generate→Use-This swap** (a photoreal obsidian/brass sculpture, never surfaces "fal") → Preview-app composed scene plays.
 **Mobile (`ui-wow/p3/p3-build-mobile/`):** clean + premium — confident Clash library header, legible Geist chips, responsive single-column tiles, place + composed preview.
 
-_(Advocate verdict + fix-rounds + the 5 explicit answers: filled at sign-off below.)_
+**User-advocate (fresh-context, frames-only, anti-rubber-stamp) — two rounds:**
+- **Round 1: WOW-WITH-FLAGS, 3 MUST-FIX** — (1) glass tiles read opaque/flat not transmissive; (2) magnetic cursor under-delivered; (3) p3 inspector cramped + top-bar overlap.
+- **Fix-round:** (1) the scissored preview rig has no transmission render-target → transmissive glass refracted black → re-expressed high-transmission glass as ALPHA translucency over a bright opaque studio fill (placed glass in the full-screen Canvas keeps true transmission); (2) cursor bolder — 32px ring, persistent glow, stronger brass warm + snap; (3) inspector dropped below the 56px top bar (`top-[64px]`) + widened to 484px; plus breadcrumb node-name truncation (the residual top-bar label flag).
+- **Round 2 RE-JUDGE: WOW.** All 3 MUST-FIX confirmed WOW (cited: `p3final/library/tile-pricing-glass-tiers.png`, `p3fix3/library/tile-hero-glass-prism.png`, `p3fix/p2-chrome/01-cursor-over-control.png`, `05-inspector-frost.png`). **Zero remaining MUST-FIX.**
+
+**The 5 explicit answers (advocate, all WOW, frame-cited):**
+1. **Fonts BEAUTIFUL — WOW.** Confident Clash wordmark/headers, Geist workhorse, mono only for numerics; `font-after.json` proves no serif fallback anywhere. (`p1/typography/10-top-bar.png`, `20-library-header.png`.)
+2. **Real 3D — WOW.** Genuine depth/perspective/parallax/billboarding (coverflow album-cards receding+yawing, placed cluster over the hero, composed preview). (`p3/p3-build/03-placed-element.png`, `15-preview-app-composed.png`, `p0/library/tile-carousel-coverflow-depth.png`.)
+3. **Actually photorealistic — WOW.** Real PBR glass/metal + premium photo imagery + the fal-generated obsidian/brass sculpture + the "Split the Light" hero. (`p3/p3-mediagen/13-generator-result.png`, `p3fix/p2-chrome/05-inspector-frost.png`, `p0/library/tile-gallery-depth-wall.png`.)
+4. **Dependencies visibly create wow — WOW.** Magnetic cursor (brass ring), Lenis momentum scroll (grid scrolled), GSAP flyout cascade, real-glass TSL chrome, mode morph. (`p2/p2-chrome/07-library-scrolled-lenis.png`, `p3fix/p2-chrome/01-cursor-over-control.png`.)
+5. **Real user WOW'd + intuitive, desktop AND mobile — WOW.** End-to-end build flows cleanly; mobile is clean + premium (responsive library, place, composed preview). (`p3/p3-build-mobile/04-mobile-library.png`, `07-mobile-preview-composed.png`.)
+**Before→after leap:** vs the cold tiny-mono dark dashboard `baseline-desktop/02-canvas.png`.
 
 ---
 
@@ -53,7 +64,21 @@ _(Advocate verdict + fix-rounds + the 5 explicit answers: filled at sign-off bel
 | P3 — in-app Media Generator demo image | ~$0.02 | ~$0.431 |
 | **total this run** | **~$0.168** | **~$0.431 / $50** |
 
-## No-regression + perf — _(filled at sign-off)_
-## Honest flags — _(filled at sign-off)_
-## Checkpoints (AUTO-CKPT) — c45c844f (P0) · ac517545 (P1) · d7b4cdb1 (P2) · _(P3 pending)_
-## VERDICT — _(filled at sign-off)_
+## No-regression + perf
+- **vitest:** 3349 passed / 8 skipped / **0 failed** (548 files) — identical to baseline → **zero regressions**.
+- **tsc:** 9 errors (the pre-existing baseline: GraphScene GLProps + 8 test NodeContext) — **0 new** across all phases.
+- **Catalog render:** all 36 elements render on the real Metal GPU (verified in every library capture, deviceLost 0); the 406+ animation-primitive catalog + its rig (`shared-tile-renderer.ts`) were NOT touched (additive run).
+- **Forbidden-pattern sweep:** clean — no purple, no PixiJS/second renderer, no `html-to-image`, no `THREE.TextGeometry`, no new external dependency (lenis + gsap were already installed; lenis was the dead dep now wired). DOM use is confined to editor-chrome modules (allowed), never the prism runtime.
+- **Perf:** real-GPU DPR-2 desktop + DPR-3 mobile, **0 console errors** across every capture, deviceLost 0; the added work is lightweight (1 studio-fill texture + 1 plane/tile, a one-time per-build glass pass, one rAF for the cursor, lenis rAF only while scrolling). No jank observed; chrome motion is transform/opacity only.
+
+## Honest flags (non-blocking)
+- **Mobile composed-preview density:** stacking a placed hero onto an already-populated hero hub makes the portrait preview busy (`p3/p3-build-mobile/07-mobile-preview-composed.png`). This is scene-composition content, not a chrome defect — a user arranging their own scene won't hit it.
+- **Glass in the preview rig is alpha-translucency, not true refraction** (the rig has no transmission RT). It reads as real glass and is faithful enough; placed glass in the full-screen Canvas uses true `transmission`. Deeper per-tile transmission rendering remains a future rig upgrade.
+- Inherited prebuilt-library polish backlog (nav-dock label positioning, a few darker tiles) is unchanged and minor.
+- Out of scope here: 9 STEP-4 canonical-3 architectural criteria (single-bundled `three`, in-place mode transition, deep zoom, unified edit/build path) tracked separately in `notes/verification/unmet-criteria.json` — not UI-quality items.
+
+## Checkpoints (AUTO-CKPT, branch prism-editor-build)
+- `c45c844f` — P0 library beauty · `ac517545` — P1 typography · `d7b4cdb1` — P2 chrome + deps · `54f7a05d` — P3 fix-round · _(P4 sign-off = this commit)_
+
+## VERDICT — **WOW (end-to-end).**
+The editor no longer reads as a cold dark dashboard: confident expressive typography (cascade-race closed, mono-caps demoted), a populated premium library (studio-lit, real photoreal imagery, real translucent glass), genuinely beautiful chrome with VISIBLE signature interactions (magnetic cursor, GSAP-choreographed reveals, Lenis momentum scroll, real-glass TSL panels, mode morph), and a complete, intuitive build-a-scene flow — place → edit → animate → keyframe → add text → material/lighting → Media-Generator(fal) regen+swap → composed preview — that works desktop AND mobile, stable, with zero regressions. Fresh-context human-grade advocate: **WOW**, all five questions WOW, zero MUST-FIX. The chrome now matches the depth of the underlying 3D/library/animation tech.

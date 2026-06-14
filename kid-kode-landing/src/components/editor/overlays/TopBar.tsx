@@ -119,7 +119,10 @@ export default function TopBar() {
           </div>
         )}
 
-        <div className="flex items-center gap-1.5 text-[12px] font-ui font-medium">
+        {/* UI-WOW — bound the breadcrumb (min-w-0 + max-w + truncate on the
+            node name) so a long selected-node name can't grow rightward into
+            the absolutely-centered mode pill (advocate label-overlap flag). */}
+        <div className="flex items-center gap-1.5 text-[12px] font-ui font-medium min-w-0 max-w-[32vw]">
           <button
             onClick={resetCamera}
             className="ds-press px-2 py-1 rounded-ds-xs text-ds-text-mid hover:text-ds-text hover:bg-white/5 transition-colors flex items-center gap-1"
@@ -139,7 +142,7 @@ export default function TopBar() {
           {selected && (
             <>
               <span className="text-ds-text-low">/</span>
-              <span className="ds-well px-2 py-1 rounded-ds-xs text-ds-text-hi font-semibold">{selected.name}</span>
+              <span className="ds-well px-2 py-1 rounded-ds-xs text-ds-text-hi font-semibold truncate max-w-[180px]">{selected.name}</span>
             </>
           )}
         </div>

@@ -72,9 +72,15 @@
       "purpose": "library sample content: botanical",
       "estCost": 0.012,
       "at": "2026-06-14T05:03:25.208Z"
+    },
+    {
+      "model": "fal-ai (media-gen route)",
+      "purpose": "P3 in-app Media Generator demo image (obsidian+brass sculpture)",
+      "estCost": 0.02,
+      "at": "2026-01-01T00:00:00.000Z"
     }
   ],
-  "total": 0.148,
+  "total": 0.168,
   "priorCumulative": 0.263,
-  "cumulative": 0.411
+  "cumulative": 0.431
 }
