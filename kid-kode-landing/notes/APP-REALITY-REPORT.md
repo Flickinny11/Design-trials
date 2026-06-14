@@ -305,3 +305,36 @@ excluded it, the topology path didn't). **Fixed:** topology `toEditorView` now f
 and P7 re-run after the fix still passes all click verdicts, 0 errors.
 
 ### Verdict: bind navigation/overlay in Canvas, stored in the shared schema, executed in Preview — clicking the watch opens a premium holographic card. ✅
+
+---
+
+## P8 — NAV CHROME PRIMITIVES (nav library category)
+
+### What changed
+- New `src/lib/editor/elements/catalog/nav-chrome.ts` adds **4 nav-chrome primitives** to the prebuilt
+  library's existing `navigation` category — all preconfigured, selectable, droppable, fully
+  customizable VISUAL elements built from real editable `PrismNode` members (MSDF text + PBR meshes):
+  - **Header bar** — logo + nav links + a brass CTA pill on a machined-glass bar.
+  - **Footer** — brand mark + three link columns + baseline on a glass slab.
+  - **Dropdown menu** — a brass trigger + a floating glass menu panel with items + active highlight.
+  - **Menu list** — a vertical menu / command list: glass panel + active brass row + items with glyphs.
+  Observatory-Brass (brass/gold + ice/steel + charcoal glass, **no purple**), premium, procedural PBR
+  (no fal). Barrel regenerated (`regen-element-barrel.mjs`). Their targets are bound via the P7
+  Function action / node editor (these are the chrome, not the behaviour). Mobile-aware: each member is
+  an ordinary node, so once placed it carries the P5 `responsiveScenePos` device-layout system.
+
+### Evidence — `notes/verification/app-reality/p8/` (real browser, DPR-2)
+`p8-log.json`: library opens; **all four** (`Header bar`, `Footer`, `Dropdown menu`, `Menu list`) are
+registered + present in the DOM; 0 console errors; tsc 0-new. Frame `desktop-library-navigation.png`
+(Navigation category filtered): the four render as **premium live tiles** — Header bar (brass bar +
+Work/Studio/Journal/About + CTA), Dropdown menu (brass "Products" trigger + glass panel + Editor/
+Runtime/Library/Pricing), Footer (glass slab + Product/Company columns), Menu list (glass panel + MENU
++ Home/Galaxy/Canvas/Preview/Settings + active brass row) — beside the 2 existing nav elements.
+
+### Honest flags
+- The headless library-grid filter/drag interactions were finicky to drive (portal + live shared-rig
+  canvas); the rendered Navigation tiles are the definitive proof the elements are valid + premium.
+  Drop-to-place uses the **same** `buildClusterNodeInputs` + `addNodesBatch` path as the existing 36
+  catalog elements (a proven mechanism), so placement is inherited, not re-implemented.
+
+### Verdict: menus, dropdowns, headers, footers — premium Observatory-Brass nav chrome, droppable from the library, bound via the Function action. ✅

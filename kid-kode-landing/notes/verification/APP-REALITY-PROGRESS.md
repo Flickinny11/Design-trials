@@ -54,8 +54,8 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
 | P4 | Backgrounds full viewport (desktop+mobile) | DONE ✅ | 9bf8e2da |
 | P5 | Device modes (real responsive) | DONE ✅ | 1018585b |
 | P6 | Hub navigation working (reparent-on-navigate + morph) | DONE ✅ | 8e51c64a |
-| P7 | Function button + binding popup + sample holographic overlay | DONE ✅ | (commit) |
-| P8 | Nav chrome primitives (nav library category) | TODO | — |
+| P7 | Function button + binding popup + sample holographic overlay | DONE ✅ | a1fc45be |
+| P8 | Nav chrome primitives (nav library category) | DONE ✅ | (commit) |
 | P9 | Interactive verification + sign-off | TODO | — |
 
 ## fal ledger

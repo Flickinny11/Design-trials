@@ -29,6 +29,7 @@ import './hero-particle-emerge';
 import './logocloud-constellation';
 import './logocloud-orbital';
 import './marquee-ribbon-flow';
+import './nav-chrome';
 import './nav-glass-dock';
 import './nav-orbital-ring';
 import './pricing-glass-tiers';
