@@ -49,7 +49,7 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
 | P | Title | Status | Checkpoint |
 |---|---|---|---|
 | P1 | Camera model (canvas free / preview locked + reset-zero + angle HUD + haptic) | DONE ✅ | 42c270e6 |
-| P2 | Camera-in-keyframe (keyframeable camera journey) | DONE ✅ | (commit below) |
+| P2 | Camera-in-keyframe (keyframeable camera journey) | DONE ✅ | 34fa3d49 |
 | P3 | Edit-in-Preview | TODO | — |
 | P4 | Backgrounds full viewport (desktop+mobile) | TODO | — |
 | P5 | Device modes (real responsive) | TODO | — |
