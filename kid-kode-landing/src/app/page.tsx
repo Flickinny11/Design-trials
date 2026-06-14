@@ -32,6 +32,7 @@ import SearchPalette from '@/components/editor/overlays/SearchPalette';
 import Minimap from '@/components/editor/overlays/Minimap';
 import CanvasToolbar from '@/components/editor/overlays/CanvasToolbar';
 import CanvasCameraHud from '@/components/editor/overlays/CanvasCameraHud';
+import PreviewJourneyReplay from '@/components/editor/overlays/PreviewJourneyReplay';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -855,6 +856,9 @@ export default function Page() {
       <AddNodeDialog />
       <ChangeArtifactWizard />
       <ElementLibraryBrowser />
+      {/* APP-REALITY P2 — preview-side "replay intro" (self-gates to preview-app
+          + a hub that has an authored camera journey). */}
+      <PreviewJourneyReplay />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />

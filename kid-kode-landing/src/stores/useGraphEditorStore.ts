@@ -129,6 +129,12 @@ interface GraphEditorState {
   resetViewSignal: number;
   // APP-REALITY P1 — live canvas camera read-out (null off the canvas camera).
   canvasView: CanvasView | null;
+  // APP-REALITY P2 — camera-journey authoring/playback signals. Capture bumps
+  // when the canvas user "records" the current free-camera pose as a waypoint;
+  // SceneControlsBridge reads the live pose and appends it to the active hub's
+  // `cameraKeyframes`. Replay bumps to restart the deterministic preview play.
+  captureKeyframeSignal: number;
+  journeyReplaySignal: number;
 
   // EB-04-01 / SC-019 — drill-in reveal animation timing. `hubRevealAt` is the
   // wall-clock timestamp (Date.now()) of the last galaxy→canvas drill-in;
@@ -229,6 +235,10 @@ interface GraphEditorState {
   resetViewToZero: () => void;
   // APP-REALITY P1 — SceneControlsBridge pushes the live canvas camera angles.
   setCanvasView: (v: CanvasView | null) => void;
+  // APP-REALITY P2 — record current free-camera pose as a journey waypoint.
+  captureCameraKeyframe: () => void;
+  // APP-REALITY P2 — restart the deterministic camera-journey playback.
+  replayCameraJourney: () => void;
   /**
    * EB-04-01 / SC-018 + SC-019 — galaxy→canvas drill-in (RA-06b: the
    * intra-hub authoring mode is now `canvas`). Atomically:
@@ -334,6 +344,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     resetCameraSignal: 0,
     resetViewSignal: 0,
     canvasView: null,
+    captureKeyframeSignal: 0,
+    journeyReplaySignal: 0,
     hubRevealAt: null,
     hubRevealDurationMs: 800,
     pinnedPositions: new Map(),
@@ -516,6 +528,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     resetViewToZero: () =>
       set((s) => ({ resetViewSignal: s.resetViewSignal + 1 })),
     setCanvasView: (v) => set({ canvasView: v }),
+    captureCameraKeyframe: () =>
+      set((s) => ({ captureKeyframeSignal: s.captureKeyframeSignal + 1 })),
+    replayCameraJourney: () =>
+      set((s) => ({ journeyReplaySignal: s.journeyReplaySignal + 1 })),
     pinNode: (id, pos) =>
       set((s) => {
         const next = new Map(s.pinnedPositions);

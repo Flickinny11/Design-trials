@@ -72,3 +72,40 @@ pointer/scroll drivers confirmed still active under `enabled={false}`.
   `NodeContext.THREE` fixture mocks — all predate this run).
 
 ### Verdict: camera model behaves like a real app's — free to author, locked to ship. ✅ (full-bleed → P4)
+
+---
+
+## P2 — CAMERA-IN-KEYFRAME (keyframeable camera journey)
+
+### What changed
+- **The camera is now a keyframeable track.** New additive `PrismHub.cameraKeyframes?: PrismKeyframe[]`
+  — each a `PrismKeyframe` with `coordinateSpace: 'camera'` (INV-21) and `params {px,py,pz,tx,ty,tz,fov}`.
+  Stored in the SHARED source graph (new `useGraphSourceStore.updateHub`), so the future node-editor
+  reads/writes the same data. No global fps (INV-4) — playback is progress-over-time.
+- **Canvas authors the journey.** The camera HUD gains a JOURNEY strip: orbit the free edit camera
+  to a vantage → **● REC** captures the live pose+fov as a waypoint (count badge updates live), **✕**
+  clears, **▶ Preview** plays it. New editor-store signals `captureCameraKeyframe` / `replayCameraJourney`;
+  `SceneControlsBridge` reads the live pose (receiveEndValue=false) and appends to the active hub.
+- **Preview plays exactly that journey.** New pure sampler `src/lib/editor/camera-journey.ts`
+  (`sampleJourney`, evenly-spaced segments, per-segment smoothstep ease). On entering preview-app, if
+  the hub has ≥2 waypoints the camera lands on waypoint 0 and the per-frame block flies position/target/
+  fov to the end, then holds — all via programmatic `setLookAt` (works while the camera is user-LOCKED
+  from P1). A preview-side **↻ Replay intro** pill re-runs it. Deterministic (same waypoints → same path).
+
+### Evidence — `notes/verification/app-reality/p2/` (real browser, DPR-2)
+`p2-journey-log.json`: authored 3 waypoints in canvas → `hub.cameraKeyframes.length === 3` ✅. Preview
+auto-play: **start pose = waypoint 0 (Δ 0.000)**, **end pose = last waypoint (Δ 0.000)**, 18.1-unit
+camera travel between (a real fly-through, not a static frame). **Determinism:** replay → ran full
+duration → landed on the same end pose (**Δ 0.000**). Replay restart independently confirmed (camera
+moved 22.1 units off the end pose on replay). 0 console errors through REC→Preview→Replay.
+Frames: `desktop-canvas-journey-3pts.png` (HUD shows "3 pts" + REC/Preview), `desktop-preview-journey-
+start/mid/end.png` (three distinct vantages — the camera flies the path), `↻ Replay intro` pill present.
+
+### Adversarial review
+`prism-criteria-reviewer`: **pass / zero MUST-FIX** — additive (cameraKeyframes optional, updateHub
+non-destructive), INV-4 (no fps), INV-21 (coordinateSpace:'camera' set by buildCameraKeyframe), P1
+lock/free unaffected (journey runs only in preview-app + only when hasJourney; canvas free-orbit/reset
+untouched), FP-15 OK (the HUD is a camera tool, not an Inspector tab; journey capture is structural
+authoring), no per-frame leak/loop (journeyActiveRef stops driving at progress≥1).
+
+### Verdict: the canvas user designs a camera journey; preview plays it as a deterministic landing fly-in. ✅

@@ -1,0 +1,34 @@
+{
+  "hubId": "s1-arrival",
+  "errors": [],
+  "captured": 3,
+  "keyframePositions": [
+    {
+      "x": -16.611,
+      "y": 6.038,
+      "z": 3.41,
+      "fov": 45
+    },
+    {
+      "x": 6.342,
+      "y": -6.859,
+      "z": 15.386,
+      "fov": 45
+    },
+    {
+      "x": -2.481,
+      "y": 12.683,
+      "z": 12.529,
+      "fov": 45
+    }
+  ],
+  "startToKf0": 0,
+  "endToKfLast": 0,
+  "startToMidMove": 18.082,
+  "replayMovedFromEnd": 0,
+  "replayEndToEnd": 0,
+  "capturedOk": true,
+  "playsJourney": true,
+  "replayWorks": false,
+  "deterministic": true
+}

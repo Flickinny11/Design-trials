@@ -492,6 +492,16 @@ export interface PrismHub {
   // the runtime default 3-point rig + procedural studio IBL. A node's own
   // `lightingSpec` (per-element) overrides this for that node.
   lightingSpec?: LightingSpec;
+  // APP-REALITY P2 — hub-level CAMERA JOURNEY (INV-8 additive, INV-21). An
+  // ordered list of camera waypoints (position/target/fov over time) the
+  // Canvas user authors with the free edit camera; Preview plays exactly this
+  // journey, deterministically, as the landing fly-in. Each entry is a
+  // `PrismKeyframe` with `coordinateSpace: 'camera'` (the canonical 5, §4),
+  // `t` ∈ [0..1] normalized journey time, and `params`:
+  //   { px, py, pz, tx, ty, tz, fov } in hub-scene world units / degrees.
+  // Absent / fewer than 2 waypoints → no journey (Preview holds the configured
+  // landing pose). Never mutated by compile/preview functions (read-only there).
+  cameraKeyframes?: PrismKeyframe[];
 }
 
 export interface PrismVisualTransform {

@@ -64,6 +64,12 @@ import {
   resolveCanvasCameraPose,
 } from '@/lib/editor/canvas-camera';
 import {
+  buildCameraKeyframe,
+  hasJourney,
+  journeyDurationSeconds,
+  sampleJourney,
+} from '@/lib/editor/camera-journey';
+import {
   computeCanvasViewportFrame,
   CANVAS_VIEWPORT_FRAME_DEFAULTS,
 } from '@/lib/editor/canvas-viewport-frame';
@@ -1434,6 +1440,15 @@ function ControlsBridge({
   );
 }
 
+// APP-REALITY P2 — animate camera fov (enables dolly-zoom over a journey).
+function applyCameraFov(c: CameraControls, fov: number) {
+  const cam = c.camera as THREE.PerspectiveCamera;
+  if (cam && cam.isPerspectiveCamera && Math.abs(cam.fov - fov) > 0.01) {
+    cam.fov = fov;
+    cam.updateProjectionMatrix();
+  }
+}
+
 function SceneControlsBridge({
   nodes,
   hub,
@@ -1456,6 +1471,11 @@ function SceneControlsBridge({
   const setCanvasView = useGraphEditorStore((s) => s.setCanvasView);
   // Throttle the per-frame angle push to real motion.
   const lastViewRef = useRef<{ az: number; pol: number; dist: number } | null>(null);
+  // APP-REALITY P2 — camera-journey authoring + deterministic preview playback.
+  const captureKeyframeSignal = useGraphEditorStore((s) => s.captureKeyframeSignal);
+  const journeyReplaySignal = useGraphEditorStore((s) => s.journeyReplaySignal);
+  const journeyActiveRef = useRef(false);
+  const journeyStartRef = useRef<number | null>(null);
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -1508,14 +1528,68 @@ function SceneControlsBridge({
   useEffect(() => {
     const c = controlsRef.current;
     if (!c || viewMode !== 'preview-app') return;
-    const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
-    c.setLookAt(
-      pose.position.x, pose.position.y, pose.position.z,
-      pose.target.x, pose.target.y, pose.target.z,
-      true,
-    );
+    // APP-REALITY P2 — if this hub has an authored camera JOURNEY, land on its
+    // first waypoint and start the deterministic play (the per-frame block
+    // below drives it). Otherwise snap to the static configured front pose.
+    if (hasJourney(hub)) {
+      const first = sampleJourney(hub!.cameraKeyframes, 0);
+      if (first) {
+        c.setLookAt(
+          first.position.x, first.position.y, first.position.z,
+          first.target.x, first.target.y, first.target.z,
+          false,
+        );
+        applyCameraFov(c, first.fov);
+      }
+      journeyStartRef.current = null;
+      journeyActiveRef.current = true;
+    } else {
+      const pose = computeCanvasCameraPose({ x: 0, y: 0, z: 0 });
+      c.setLookAt(
+        pose.position.x, pose.position.y, pose.position.z,
+        pose.target.x, pose.target.y, pose.target.z,
+        true,
+      );
+      journeyActiveRef.current = false;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewMode]);
+  }, [viewMode, hub?.hubId]);
+
+  // APP-REALITY P2 — CAPTURE the current free canvas-camera pose as a journey
+  // waypoint on the active hub (canvas writes the SHARED source graph). The
+  // live pose is read here (the bridge owns the controls), so the HUD button
+  // stays a thin signal. receiveEndValue=false reads the settled live pose.
+  useEffect(() => {
+    if (captureKeyframeSignal === 0) return;
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'canvas') return;
+    const hubId = useGraphEditorStore.getState().activeHubId;
+    if (!hubId) return;
+    const pos = new THREE.Vector3();
+    const tgt = new THREE.Vector3();
+    c.getPosition(pos, false);
+    c.getTarget(tgt, false);
+    const cam = c.camera as THREE.PerspectiveCamera;
+    const fov = cam && cam.isPerspectiveCamera ? cam.fov : 45;
+    const kf = buildCameraKeyframe(
+      { x: pos.x, y: pos.y, z: pos.z },
+      { x: tgt.x, y: tgt.y, z: tgt.z },
+      fov,
+    );
+    const src = useGraphSourceStore.getState();
+    const existing = src.hubs.find((h) => h.hubId === hubId)?.cameraKeyframes ?? [];
+    src.updateHub(hubId, { cameraKeyframes: [...existing, kf] });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [captureKeyframeSignal]);
+
+  // APP-REALITY P2 — replay the journey from t=0 (Preview "replay" button).
+  useEffect(() => {
+    if (journeyReplaySignal === 0) return;
+    if (viewMode !== 'preview-app' || !hasJourney(hub)) return;
+    journeyStartRef.current = null;
+    journeyActiveRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [journeyReplaySignal]);
 
   // EB-05-01 / §5 SC-022, SC-024 — Canvas mode entry: deterministic
   // center/face pose on the active hub. AssembledSceneContent filters to a
@@ -1576,10 +1650,27 @@ function SceneControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flyToNodeId, nodes]);
 
-  useFrame(() => {
+  useFrame((state) => {
     const c = controlsRef.current;
     if (!c) return;
     setCameraDistance(c.distance);
+    // APP-REALITY P2 — drive the deterministic camera journey in preview-app.
+    if (viewMode === 'preview-app' && journeyActiveRef.current && hasJourney(hub)) {
+      const dur = journeyDurationSeconds(hub!.cameraKeyframes);
+      if (journeyStartRef.current == null) journeyStartRef.current = state.clock.elapsedTime;
+      const elapsed = state.clock.elapsedTime - journeyStartRef.current;
+      const progress = dur > 0 ? Math.min(1, elapsed / dur) : 1;
+      const s = sampleJourney(hub!.cameraKeyframes, progress);
+      if (s) {
+        c.setLookAt(
+          s.position.x, s.position.y, s.position.z,
+          s.target.x, s.target.y, s.target.z,
+          false,
+        );
+        applyCameraFov(c, s.fov);
+      }
+      if (progress >= 1) journeyActiveRef.current = false; // hold final pose
+    }
     // APP-REALITY P1 — feed the live canvas angle read-out (CanvasCameraHud).
     // Throttled to real motion so the store isn't thrashed every frame.
     if (viewMode === 'canvas') {

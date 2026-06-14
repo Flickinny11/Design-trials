@@ -79,6 +79,10 @@ interface GraphSourceState {
   addEdge: (edge: PrismEdge) => void;
   removeEdge: (predicate: (e: PrismEdge) => boolean) => void;
   addHub: (hub: PrismHub) => void;
+  // APP-REALITY P2 (INV-8 additive) — patch a hub's own fields (e.g. the
+  // `cameraKeyframes` journey). Mirrors updateNode/updateRootNode: marks the
+  // graph dirty + schedules the durable autosave. The shared source of truth.
+  updateHub: (hubId: string, patch: Partial<PrismHub>) => void;
   setScenePosition: (nodeId: string, patch: Partial<ScenePosition>) => void;
   // STEP8 canvas-toolbar Selection group (canvas-spec §14, SC-22). Stamp a
   // single fresh `groupId` onto every listed node so their transforms cascade
@@ -312,6 +316,15 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
       rootNodes: s.rootNodes.map((r) =>
         r.appNameWorldId === appNameWorldId ? { ...r, ...patch } : r,
       ),
+      isDirty: true,
+    }));
+  },
+
+  // APP-REALITY P2 (INV-8 additive) — patch a hub's own fields.
+  updateHub: (hubId, patch) => {
+    markGraphDirty(get);
+    set((s) => ({
+      hubs: s.hubs.map((h) => (h.hubId === hubId ? { ...h, ...patch } : h)),
       isDirty: true,
     }));
   },
