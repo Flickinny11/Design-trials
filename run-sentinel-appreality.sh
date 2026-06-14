@@ -12,7 +12,7 @@ launch(){ unset NODE_ENV; nohup /Users/loganbaird/.local/bin/claude -p "$(cat $P
 notify "Sentinel v3 armed: status pings, auto-resume on session limits." "Tink"
 while true; do
   [ -f ./SENTINEL-STOP ] && notify "Sentinel stopped by STOP file." "Tink" && exit 0
-  [ -f "$REPORT" ] && notify "✅ COMPLETE — report ready. Tell Claude: check" "Glass" && exit 0
+  [ -f "$REPORT" ] && [ "$(agents)" = "0" ] && notify "✅ COMPLETE — report ready. Tell Claude: check" "Glass" && exit 0
   if [ "$(agents)" = "0" ]; then
     sleep 30; [ "$(agents)" != "0" ] && continue
     sleep 30; [ "$(agents)" != "0" ] && continue
