@@ -79,7 +79,12 @@ import {
   type CanvasTransform,
   type GizmoMode,
 } from '@/lib/editor/canvas-transform-gizmo';
-import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
+import {
+  getSharedNodeContext,
+  getSharedDriverHub,
+  setSharedNodeContextTier,
+} from '@/lib/prism/runtime/shared-context';
+import { detectCapabilityTier } from '@/lib/prism/runtime/shared/capability-tier';
 // P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — the binding player attaches
 // a node's catalog-primitive animationBindings to the mounted artifact and
 // plays them through the SAME driver dispatch the factory's STEP7 path uses.
@@ -3154,6 +3159,18 @@ async function createUnifiedRenderer(props: { canvas?: HTMLCanvasElement } & Rec
     }).backend;
     (window as unknown as { __PRISM_RENDERER_BACKEND__?: string }).__PRISM_RENDERER_BACKEND__ =
       backend?.isWebGPUBackend ? 'webgpu' : backend?.isWebGLBackend ? 'webgl2' : 'unknown';
+  }
+  // INV-9 — record the device tier so the node factory gates true-3D extruded
+  // text (T1+) vs a flat MSDF fallback (T0). Renderer-derived (backend ceiling)
+  // + coarse-pointer mobile signal; failures leave it unset (factory → T1).
+  try {
+    const isMobile =
+      typeof window !== 'undefined' &&
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(pointer: coarse)').matches;
+    setSharedNodeContextTier(detectCapabilityTier(renderer, { isMobile }).tier);
+  } catch {
+    /* tier stays unset → factory treats as T1 */
   }
   return renderer as unknown as THREE.WebGLRenderer;
 }

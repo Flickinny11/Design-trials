@@ -33,6 +33,7 @@ import type { FontManifestEntry } from '@/lib/prism/text/contract';
 import type {
   PrismHub,
   PrismNode,
+  TextExtrudeSpec,
   TextGlowSpec,
   TextOutlineSpec,
   TextShadowSpec,
@@ -117,6 +118,15 @@ export default function TextToolsFlyout({
         ...p,
       },
     });
+  const patchExtrude = (p: Partial<TextExtrudeSpec>) =>
+    write({ extrude: { ...(eff.extrude ?? {}), ...p } });
+  const ex = eff.extrude ?? {};
+  const is3D = ex.enabled === true;
+  // Bold/italic/strike/underline are top-level TextSpec flags. Toggling them
+  // writes to the preview overlay; bold/italic re-resolve the face on
+  // Save-and-Rebuild (a heavier weight / italic outline set).
+  const toggleStyle = (key: 'bold' | 'italic' | 'strikethrough' | 'underline') =>
+    write({ [key]: !eff[key] } as Partial<TextSpec>);
 
   // ── Font library + atlas resolution (criterion 27) ────────────────────────
   const [fonts, setFonts] = useState<FontManifestEntry[] | null>(null);
@@ -279,6 +289,30 @@ export default function TextToolsFlyout({
             </select>
           </label>
 
+          {/* Style — bold / italic / strike / underline (real or synthesized) */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-mono w-12" style={{ color: 'var(--ds-text-low)' }}>
+              Style
+            </span>
+            <div className="grid grid-cols-4 gap-1.5 flex-1">
+              {([
+                ['bold', 'B'],
+                ['italic', 'I'],
+                ['strikethrough', 'S'],
+                ['underline', 'U'],
+              ] as const).map(([k, lbl]) => (
+                <ChipKey
+                  key={k}
+                  label={lbl}
+                  testId={`text-style-${k}`}
+                  active={!!eff[k]}
+                  accent={DS.brass300}
+                  onClick={() => toggleStyle(k)}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Type metrics */}
           <SectionLabel>Type · writes textSpec</SectionLabel>
           <FaderRow
@@ -364,6 +398,104 @@ export default function TextToolsFlyout({
             previewSpec={eff}
           />
 
+          {/* 3D — true extruded geometry from real font outlines (INV-11) */}
+          <SectionLabel>3D · extruded geometry</SectionLabel>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[9px] font-mono w-12" style={{ color: 'var(--ds-text-low)' }}>
+              Extrude
+            </span>
+            <div className="grid grid-cols-2 gap-1.5 flex-1">
+              <ChipKey
+                label="Flat"
+                testId="text-3d-off"
+                active={!is3D}
+                onClick={() => patchExtrude({ enabled: false })}
+              />
+              <ChipKey
+                label="3D"
+                testId="text-3d-on"
+                accent={DS.brass300}
+                active={is3D}
+                onClick={() => patchExtrude({ enabled: true })}
+              />
+            </div>
+          </div>
+          {is3D && (
+            <>
+              <FaderRow
+                label="Depth"
+                testId="text-3d-depth"
+                value={ex.depth ?? 0.22}
+                min={0.04}
+                max={0.8}
+                step={0.01}
+                accent={DS.brass300}
+                onChange={(depth) => patchExtrude({ depth })}
+              />
+              <div className="flex items-center gap-1.5">
+                <span className="text-[9px] font-mono w-12" style={{ color: 'var(--ds-text-low)' }}>
+                  Bevel
+                </span>
+                <div className="grid grid-cols-2 gap-1.5 flex-1">
+                  <ChipKey
+                    label="off"
+                    testId="text-3d-bevel-off"
+                    active={ex.bevelEnabled === false}
+                    onClick={() => patchExtrude({ bevelEnabled: false })}
+                  />
+                  <ChipKey
+                    label="on"
+                    testId="text-3d-bevel-on"
+                    active={ex.bevelEnabled !== false}
+                    onClick={() => patchExtrude({ bevelEnabled: true })}
+                  />
+                </div>
+              </div>
+              {ex.bevelEnabled !== false && (
+                <FaderRow
+                  label="Bevel Size"
+                  testId="text-3d-bevel-size"
+                  value={ex.bevelSize ?? 0.016}
+                  min={0}
+                  max={0.08}
+                  step={0.002}
+                  onChange={(bevelSize) => patchExtrude({ bevelSize, bevelThickness: bevelSize })}
+                />
+              )}
+              <FaderRow
+                label="Metalness"
+                testId="text-3d-metalness"
+                value={ex.metalness ?? 0.12}
+                min={0}
+                max={1}
+                step={0.01}
+                accent={DS.ice300}
+                onChange={(metalness) => patchExtrude({ metalness })}
+              />
+              <FaderRow
+                label="Roughness"
+                testId="text-3d-roughness"
+                value={ex.roughness ?? 0.34}
+                min={0}
+                max={1}
+                step={0.01}
+                accent={DS.ice300}
+                onChange={(roughness) => patchExtrude({ roughness })}
+              />
+              <ColorRow
+                label="Side"
+                testId="text-3d-side"
+                value={(ex.sideFill?.kind === 'solid' ? ex.sideFill.color : undefined) ?? '#7a6a4a'}
+                onChange={(color) => patchExtrude({ sideFill: { kind: 'solid', color } })}
+              />
+              <div className="text-[8px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-low)' }}>
+                Extrudes the REAL font outlines (INV-11). Switching Flat↔3D changes
+                geometry — Save &amp; Rebuild in the Inspector to apply. Depth, bevel,
+                material, and fill tune live. Fill (above) pours onto the faces.
+              </div>
+            </>
+          )}
+
           {/* Outline */}
           <SectionLabel>Outline</SectionLabel>
           <ColorRow
@@ -435,6 +567,30 @@ export default function TextToolsFlyout({
             step={0.01}
             onChange={(opacity) => patchShadow({ opacity })}
           />
+          <FaderRow
+            label="Blur"
+            testId="shadow-blur"
+            value={eff.shadow?.blur ?? 0}
+            min={0}
+            max={0.15}
+            step={0.005}
+            accent={DS.ice300}
+            onChange={(blur) => patchShadow({ blur })}
+          />
+          <FaderRow
+            label="Offset Z"
+            testId="shadow-offset-z"
+            value={eff.shadow?.offsetZ ?? 0}
+            min={-0.4}
+            max={0.1}
+            step={0.01}
+            accent={DS.ice300}
+            onChange={(offsetZ) => patchShadow({ offsetZ })}
+          />
+          <div className="text-[8px] font-mono leading-tight px-1" style={{ color: 'var(--ds-text-low)' }}>
+            Offset Z + Blur shape the depth shadow on 3D text; a real soft drop
+            shadow, not a glow.
+          </div>
 
           {/* Presets */}
           <SectionLabel>Presets · merge onto spec</SectionLabel>

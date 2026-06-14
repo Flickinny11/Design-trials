@@ -153,6 +153,17 @@ export function getSharedSceneRoot(): Promise<SceneRootHandle> {
   return registry.sceneRootPromise;
 }
 
+// Device capability tier (INV-9), set by the host once it owns the renderer
+// (the shared context is renderer-agnostic). Gates opt-in expensive paths such
+// as true-3D extruded text (T1+) vs a flat fallback (T0). Additive (INV-18).
+let sharedTier: 'T0' | 'T1' | 'T2' | undefined;
+
+/** Host hook: record the detected device tier so every NodeContext built after
+ *  this carries it. Idempotent; safe to call on each renderer (re)init. */
+export function setSharedNodeContextTier(tier: 'T0' | 'T1' | 'T2'): void {
+  sharedTier = tier;
+}
+
 /** Build the shared NodeContext. Synchronous — when `runPrimitives: true`
  *  and no scene root exists yet, primitives are wired to a fallback
  *  scene/camera Group/PerspectiveCamera proxy that PrismHost replaces on
@@ -226,6 +237,8 @@ export function getSharedNodeContext(opts: {
       ? (event, payload) => getSharedDriverHub().events.fire(event, payload)
       : () => {},
     drivers: opts.runPrimitives ? getSharedNodeDrivers() : undefined,
+    // INV-9 — gates true-3D extruded text (T1+) vs flat fallback (T0).
+    tier: sharedTier,
   };
 }
 

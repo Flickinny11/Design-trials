@@ -207,6 +207,33 @@ try {
     report.frames.push({ rot: 'ai-fill-strip', file: 'ai-fill-strip.png' });
   }
 
+  // UI evidence (P2 gallery + P6 controls): open the Text flyout and capture
+  // the font preview gallery + the new 3D / style / shadow controls.
+  if (flag('ui')) {
+    await page.evaluate((id) => { window.__PRISM_EDITOR_NODE_GROUPS__.get(id)?.rotation.set(0, 0, 0); }, nodeId).catch(() => {});
+    if ((await page.locator('[data-testid="text-3d-on"]').count()) === 0) {
+      await page.click('[data-tool-group="text"]').catch(() => {});
+      await page.waitForTimeout(800);
+    }
+    // Flyout top: font preview gallery + content + style flags.
+    await page.locator('[data-control="text-content"]').first().scrollIntoViewIfNeeded().catch(() => {});
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: join(OUT, 'ui-flyout-top.png') });
+    // Open the font preview gallery — each family rendered IN ITS OWN FACE.
+    await page.click('[data-action="font-picker-toggle"]').catch(() => {});
+    await page.waitForTimeout(2800); // visible-row Google webfonts swap in
+    await page.locator('[data-component="font-picker-gallery"]').first()
+      .screenshot({ path: join(OUT, 'ui-font-gallery.png') })
+      .catch(async () => { await page.screenshot({ path: join(OUT, 'ui-font-gallery.png') }); });
+    report.frames.push({ rot: 'ui-font-gallery', file: 'ui-font-gallery.png' });
+    await page.click('[data-action="font-picker-toggle"]').catch(() => {}); // collapse
+    // 3D controls section (Extrude toggle, depth, bevel, material, side).
+    await page.locator('[data-testid="text-3d-on"]').first().scrollIntoViewIfNeeded().catch(() => {});
+    await page.waitForTimeout(600);
+    await page.screenshot({ path: join(OUT, 'ui-3d-controls.png') });
+    report.frames.push({ rot: 'ui-flyout-top', file: 'ui-flyout-top.png' }, { rot: 'ui-3d-controls', file: 'ui-3d-controls.png' });
+  }
+
   report.consoleErrors = report.consoleErrors.filter((t) => !/DevTools|Download the React/.test(t)).slice(0, 12);
   report.ok = mounted && report.probe.is3d && report.probe.depthZ > 0.01 && report.probe.glyphs >= 3;
   writeFileSync(join(OUT, 'report.json'), JSON.stringify(report, null, 2));

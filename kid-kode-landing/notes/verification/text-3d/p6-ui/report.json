@@ -1,0 +1,42 @@
+{
+  "label": "p6-ui",
+  "startedAt": "2026-06-14T15:39:16.393Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    },
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "profile",
+      "file": "profile.png",
+      "crop": "profile-crop.png"
+    },
+    {
+      "rot": "ui-flyout-top",
+      "file": "ui-flyout-top.png"
+    },
+    {
+      "rot": "ui-3d-controls",
+      "file": "ui-3d-controls.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 5,
+    "depthZ": 0.2356,
+    "is3d": true,
+    "faceFill": "solid",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "bb0cbba5-d8df-4db8-9609-76d8d177e3a7",
+  "mounted3d": true
+}
