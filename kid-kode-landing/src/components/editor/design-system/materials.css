@@ -464,24 +464,30 @@ html[data-ds-tier='t1'] .ds-glass--heavy {
    color/glow transitions live in CSS. Inert on touch / reduced-motion (the
    component never mounts the loop there). */
 .ds-cursor-ring {
-  position: fixed; top: 0; left: 0; width: 26px; height: 26px;
+  position: fixed; top: 0; left: 0; width: 32px; height: 32px;
   border-radius: var(--ds-r-pill);
-  border: 1px solid rgba(var(--ds-ice-400-rgb), 0.5);
+  border: 1.5px solid rgba(var(--ds-ice-300-rgb, 169, 194, 209), 0.75);
+  /* a faint resting glow so the ring reads even before it warms (advocate: the
+     cursor must register as a wow moment, not be near-invisible). */
+  box-shadow: 0 0 12px rgba(var(--ds-ice-400-rgb), 0.28), inset 0 0 6px rgba(var(--ds-ice-300-rgb, 169, 194, 209), 0.12);
   opacity: 0;
   mix-blend-mode: screen;
   will-change: transform, opacity;
-  transition: opacity 200ms var(--ds-ease-out), border-color 180ms var(--ds-ease-out),
-              box-shadow 220ms var(--ds-ease-out), border-width 180ms var(--ds-ease-out);
+  transition: opacity 200ms var(--ds-ease-out), border-color 160ms var(--ds-ease-out),
+              box-shadow 200ms var(--ds-ease-out), border-width 160ms var(--ds-ease-out),
+              background 200ms var(--ds-ease-out);
 }
 .ds-cursor-ring.is-warm {
-  border-color: rgba(var(--ds-brass-300-rgb), 0.85);
-  border-width: 1.6px;
-  box-shadow: 0 0 22px rgba(var(--ds-brass-400-rgb), 0.34);
+  border-color: rgba(var(--ds-brass-200-rgb), 0.98);
+  border-width: 2px;
+  background: radial-gradient(circle, rgba(var(--ds-brass-400-rgb), 0.12) 0%, transparent 68%);
+  box-shadow: 0 0 34px rgba(var(--ds-brass-400-rgb), 0.55), 0 0 12px rgba(var(--ds-brass-200-rgb), 0.4), inset 0 0 10px rgba(var(--ds-brass-300-rgb), 0.22);
 }
 .ds-cursor-dot {
-  position: fixed; top: 0; left: 0; width: 4px; height: 4px;
+  position: fixed; top: 0; left: 0; width: 6px; height: 6px;
   border-radius: var(--ds-r-pill);
   background: var(--ds-brass-100);
+  box-shadow: 0 0 10px rgba(var(--ds-brass-300-rgb), 0.7);
   opacity: 0;
   will-change: transform;
   transition: opacity 200ms var(--ds-ease-out);

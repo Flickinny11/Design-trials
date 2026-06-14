@@ -1,0 +1,14 @@
+{
+  "at": "2026-06-14T05:47:52.604Z",
+  "base": "http://localhost:4928",
+  "scenes": [
+    {
+      "name": "p3-mediagen",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    }
+  ]
+}

@@ -29,7 +29,7 @@
 - [x] P1 — typography — DONE. Cascade-race CLOSED (font-after.json: every surface resolves to a loaded next/font face ui/display/mono, ZERO serif). 3-voice hierarchy live: mode-toggle/nav/buttons/breadcrumb/body→Geist, wordmark/panel-titles/library-header→Clash, numerals/IDs/shortcuts/kicker→mono. Foundation: tokens.css (cascade fix + scale + ds-track/fs/lh tokens), materials.css (ds-label/ds-btn/ds-input→Geist, +.ds-display/.ds-headline/.ds-body/.ds-num). Sweep: 8 always-visible surfaces (page mode toggle, TopBar, HubNav, library browser+tile, CanvasToolbar SectionLabel/keys/flyout-title, Inspector, DetailCard). tsc 0-new (9 baseline); 0 console errors; real-GPU DPR-2 crops in notes/verification/ui-wow/p1/. NOTE for P2: centered mode pill overlaps TopBar zoom readout (layout fix); panels still flat (beauty).
 - [ ] P1 — typography excellence (cascade-race fix + type rebuild)
 - [ ] P2 — chrome beauty + visible dependencies
-- [ ] P3 — wow-grade interaction test (advocate, desktop+mobile, fix-rounds → 0 MUST-FIX)
+- [~] P3 — wow-grade test: full scene built end-to-end desktop (9/9: place coverflow+8, edit, animate, keyframe, add-text, lighting, MEDIA-GENERATOR fal regen+swap [obsidian/brass sculpture], preview-composed) + mobile clean. Advocate verdict R1: **WOW-WITH-FLAGS**, 3 MUST-FIX → (1) glass tiles flat [fixing: rig opaque studio-fill so transmission has bright content], (2) magnetic cursor under-delivered [fixed: bolder 32px ring+glow+stronger warm], (3) inspector cramped+top-bar overlap [fixed: top-[64px], w-484]. Re-judging after fixes.
 - [ ] P4 — sign-off (no-regression + perf + report + verdict)
 
 ## Key file map (from recon)

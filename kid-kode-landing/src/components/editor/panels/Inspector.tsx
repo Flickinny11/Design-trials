@@ -352,7 +352,11 @@ export default function Inspector() {
       // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
       // rail, hiding the first word of every body line — inset left-16 clears
       // the rail on phones; desktop geometry unchanged.
-      className="absolute z-40 right-0 top-0 bottom-0 left-16 md:left-auto md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      // UI-WOW P3 fix (advocate MUST-FIX) — the panel started at md:top-3 (12px)
+      // and slid UNDER the 56px top bar, so its header collided with the bar's
+      // Add Node / Search cluster. Drop it to clear the bar (top-[64px]) with a
+      // touch more width so the header tabs breathe (cramped flag).
+      className="absolute z-40 right-0 top-14 bottom-0 left-16 md:left-auto md:w-[484px] md:right-3 md:top-[64px] md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {/* Machined header plate — brushed metal fitting riveted into the glass. */}
       <div ref={headerSlab.ref} className="px-4 py-3 m-3 mb-0 ds-metal ds-grain ds-edge rounded-ds-md">

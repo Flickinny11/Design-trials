@@ -1,0 +1,14 @@
+{
+  "at": "2026-06-14T06:08:08.513Z",
+  "base": "http://localhost:4932",
+  "scenes": [
+    {
+      "name": "library",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    }
+  ]
+}

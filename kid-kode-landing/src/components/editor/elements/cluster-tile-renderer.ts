@@ -232,7 +232,10 @@ class ClusterTileRenderer {
     const scene = new THREE.Scene();
     scene.background = null;
     if (this.env) scene.environment = this.env;
-    (scene as unknown as { environmentIntensity: number }).environmentIntensity = 1.5;
+    // Brighter IBL so transmissive glass + polished metal catch richer studio
+    // reflections (advocate "glass reads flat/opaque" fix — env is what a clear
+    // refractor reflects at its Fresnel rim).
+    (scene as unknown as { environmentIntensity: number }).environmentIntensity = 1.85;
     scene.add(new THREE.AmbientLight(0xffffff, 0.85));
     const key = new THREE.DirectionalLight(0xffffff, 1.5);
     key.position.set(3, 4, 5);
@@ -271,8 +274,16 @@ class ClusterTileRenderer {
 
     const w = 20, h = 13;
     const panelGeo = new THREE.PlaneGeometry(w, h, 1, 1);
-    const top = new THREE.Color('#2a3546'); // steel key
-    const bot = new THREE.Color('#0c0f17'); // deep ink floor (lifted off pure black)
+    // Bright studio seamless — this is the ONE OPAQUE surface behind the cluster,
+    // so it is the ONLY thing transmissive glass refracts (the additive softbox
+    // columns below are transparent → invisible to the transmission render-pass,
+    // which captures opaque objects only). It MUST be bright or clear glass in
+    // front refracts the void and reads solid/dark (the advocate "glass reads
+    // opaque" flag). Bright cool-steel key → lifted graphite floor.
+    // Moody field (keeps the deep-space Observatory tone); the BRIGHT bit glass
+    // refracts is the central studio FILL below, not this full-field panel.
+    const top = new THREE.Color('#3c4a62'); // moody steel key
+    const bot = new THREE.Color('#161c28'); // deep graphite floor
     const colors = new Float32Array(4 * 3);
     [top, top, bot, bot].forEach((c, i) => { colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b; });
     panelGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
@@ -280,17 +291,32 @@ class ClusterTileRenderer {
     panel.position.z = -0.4;
     group.add(panel);
 
+    // A soft BRIGHT OPAQUE central card directly behind the subject — pure studio
+    // fill that the transmission pass DOES capture, so centred glass refracts a
+    // luminous warm-ice field (clear glass → bright glass, not a dark slab). Soft
+    // radial gradient via a canvas texture; opaque (no blending) so it lands in
+    // the transmission RT. Kept mid-bright + behind the panel-plane subjects.
+    const fillTex = this.studioFillTexture();
+    const fill = new THREE.Mesh(
+      new THREE.PlaneGeometry(11, 9),
+      new THREE.MeshBasicMaterial({ map: fillTex, toneMapped: true }),
+    );
+    fill.position.set(0, 0.4, -0.2);
+    group.add(fill);
+
     // Soft vertical softbox columns — studio strip-light reflections, not orbs.
     // Each is a tall thin quad carrying a soft-capsule emissive gradient (bright
     // core column, transparent toward every edge), additively blended so it
     // reads as light, not a painted bar. Warm-brass key left, cool-ice rim
-    // right, faint warm fill center-back. These are the refraction/reflection
-    // targets the glass + chrome need; their soft edges never read as a bulb.
+    // right, AND a bright CENTRAL softbox directly behind the subject so centred
+    // glass has bright, coloured structure to refract + disperse (the glass-
+    // reads-opaque fix). Their soft edges never read as a bulb.
     const COLUMNS = [
-      { c: '#e7c684', x: -6.4, y: 0.4, z: 0.2, w: 3.0, h: 12, i: 0.9 },  // warm key, left
-      { c: '#a9cede', x: 6.0, y: -0.3, z: 0.1, w: 2.4, h: 12, i: 0.7 },  // cool rim, right
-      { c: '#d9bd86', x: 0.8, y: 1.4, z: -0.8, w: 4.2, h: 9, i: 0.32 },  // faint warm fill, center back
-      { c: '#cfe0ea', x: -2.6, y: -2.6, z: -0.6, w: 2.0, h: 6, i: 0.22 }, // cool floor catch
+      { c: '#e7c684', x: -6.0, y: 0.4, z: 0.2, w: 3.2, h: 12, i: 0.95 },  // warm key, left
+      { c: '#aed2e2', x: 5.8, y: -0.3, z: 0.1, w: 2.8, h: 12, i: 0.78 },  // cool rim, right
+      { c: '#e8dcc0', x: 0.0, y: 0.6, z: -1.2, w: 5.4, h: 11, i: 0.6 },   // BRIGHT central softbox (glass refracts this)
+      { c: '#cfe0ea', x: 2.4, y: 1.8, z: -0.9, w: 2.4, h: 8, i: 0.34 },   // cool upper fill
+      { c: '#d9bd86', x: -2.6, y: -2.4, z: -0.6, w: 2.2, h: 6, i: 0.26 }, // warm floor catch
     ];
     for (const col of COLUMNS) {
       const tex = this.softboxTexture();
@@ -340,6 +366,36 @@ class ClusterTileRenderer {
     return tex;
   }
 
+  /** Soft OPAQUE studio-fill gradient (bright warm-ice centre → mid steel rim).
+   *  Opaque so the transmission render-pass captures it → transmissive glass in
+   *  front refracts a luminous field instead of the void. Built once, reused. */
+  private _studioFillTex: THREE.Texture | null = null;
+  private studioFillTexture(): THREE.Texture {
+    if (this._studioFillTex) return this._studioFillTex;
+    const cv = document.createElement('canvas');
+    cv.width = 256; cv.height = 256;
+    const g = cv.getContext('2d')!;
+    g.fillStyle = '#2c374a';
+    g.fillRect(0, 0, 256, 256);
+    const rg = g.createRadialGradient(128, 110, 10, 128, 128, 170);
+    rg.addColorStop(0.0, '#d8e0ea');   // bright cool-ice core
+    rg.addColorStop(0.35, '#9fb0c6');  // steel
+    rg.addColorStop(0.7, '#56657f');   // mid
+    rg.addColorStop(1.0, '#2c374a');   // rim
+    g.fillStyle = rg;
+    g.fillRect(0, 0, 256, 256);
+    // a faint warm wash lower-left for studio warmth
+    const wg = g.createRadialGradient(80, 190, 8, 80, 190, 120);
+    wg.addColorStop(0.0, 'rgba(224, 196, 140, 0.5)');
+    wg.addColorStop(1.0, 'rgba(224, 196, 140, 0)');
+    g.fillStyle = wg;
+    g.fillRect(0, 0, 256, 256);
+    const tex = new THREE.CanvasTexture(cv);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    this._studioFillTex = tex;
+    return tex;
+  }
+
   register(opts: RegisterClusterOptions): ClusterTileHandle {
     const id = this.nextId++;
     const scene = this.makeScene();
@@ -372,6 +428,32 @@ class ClusterTileRenderer {
         this.tiles.delete(id);
       },
     };
+  }
+
+  /** Re-express transmissive glass as alpha translucency for THIS rig (no
+   *  transmission RT). Walks the built group; for any MeshPhysical material with
+   *  transmission > 0.3, drops transmission, enables alpha (opacity ~0.52) so it
+   *  composites against the bright studio backdrop, and keeps the glossy surface
+   *  (clearcoat/roughness/env) intact. THREE material props only (no DOM). */
+  private glassToTranslucent(root: THREE.Object3D): void {
+    root.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!(mesh as { isMesh?: boolean }).isMesh || !mesh.material) return;
+      const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      for (const m of mats) {
+        const pm = m as THREE.MeshPhysicalMaterial & { needsUpdate: boolean };
+        const t = (pm as { transmission?: number }).transmission;
+        if (typeof t === 'number' && t > 0.3) {
+          (pm as { transmission: number }).transmission = 0.05;
+          pm.transparent = true;
+          pm.opacity = 0.52;
+          pm.depthWrite = false;
+          // a touch more clearcoat keeps the polished-glass highlight reading.
+          if (typeof pm.clearcoat === 'number' && pm.clearcoat < 0.6) pm.clearcoat = 0.8;
+          pm.needsUpdate = true;
+        }
+      }
+    });
   }
 
   /** Assemble the cluster mini-scene: build each member's Object3D faithfully
@@ -441,6 +523,17 @@ class ClusterTileRenderer {
         }
       }
     }
+
+    // Make transmissive glass legible in THIS rig. The scissored multi-tile
+    // WebGPU render has no transmission render-target, so MeshPhysical
+    // `transmission` refracts a black RT → clear glass reads as a dark/opaque
+    // slab (the advocate "glass reads flat" flag). Re-express high-transmission
+    // members as ALPHA translucency, which composites against the bright studio
+    // backdrop already in the framebuffer (reliable in any renderer). Surface
+    // tint + clearcoat + env reflections are preserved, so it reads as real
+    // polished glass. Preview-rig only — placed glass in the full-screen Canvas
+    // keeps true transmission (its render DOES have the transmission RT).
+    this.glassToTranslucent(group);
 
     tile.scene.add(group);
     this.frameCamera(tile);
@@ -668,6 +761,8 @@ class ClusterTileRenderer {
     this.env?.dispose();
     this._softboxTex?.dispose();
     this._softboxTex = null;
+    this._studioFillTex?.dispose();
+    this._studioFillTex = null;
     this.renderer?.dispose();
     this.renderer = null;
     this.ready = false;

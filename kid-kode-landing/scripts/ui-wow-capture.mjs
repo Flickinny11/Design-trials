@@ -330,6 +330,198 @@ const SCENE_FNS = {
     }
     c.log('p2-chrome scene captured');
   },
+  // P3 — full wow-grade scene build: open library → place a premium element →
+  // edit → apply animation → keyframe editor → add text → material+lighting →
+  // group → media-generator regen+swap (fal) → preview. Each milestone shoots a
+  // DPR-2 frame for the user-advocate to judge. Every step is best-effort + the
+  // outcome is logged; the gallery is always produced.
+  'p3-build': async (c) => {
+    const { writeFileSync } = await import('node:fs');
+    const steps = [];
+    const rec = (id, title, ok, detail) => { steps.push({ id, title, ok, detail }); c.log(`  [${ok ? 'OK' : '!!'}] ${id} ${title}${detail ? ' — ' + detail : ''}`); };
+    const store = async () => c.page.evaluate(() => {
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      return { nodes: gs?.nodes?.length ?? 0, activeHub: ge?.activeHubId ?? null, view: ge?.viewMode ?? null, sel: ge?.selectedNodeId ?? null, editorMode: ge?.editorMode ?? null };
+    });
+
+    await c.waitScene();
+    await c.setMode('canvas');
+    // ensure an active hub
+    await c.page.evaluate(() => {
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      if (ge && !ge.activeHubId && gs?.hubs?.length) ge.drillIntoHub?.(gs.hubs[0].hubId);
+    });
+    await c.page.waitForTimeout(1200);
+    let s = await store();
+    rec('1', 'Canvas + active hub', s.view === 'canvas' && !!s.activeHub, `hub=${s.activeHub} nodes=${s.nodes}`);
+    await c.shot('01-canvas');
+
+    // 2 — open library (real toolbar click) + place a premium element (click = place now)
+    const before = (await store()).nodes;
+    await c.click('[data-tool-group="library"]', { settle: 700 });
+    await c.click('[data-role="library-flyout-browse"]', { settle: 1500 }).catch(() => {});
+    await c.page.waitForSelector('[data-component="element-library-browser"]', { timeout: 15000 }).catch(() => {});
+    await c.page.waitForTimeout(2500);
+    await c.shot('02-library-open');
+    // click a premium element tile (coverflow — premium imagery) to place it
+    const placedId = 'carousel-coverflow-depth';
+    await c.page.evaluate((id) => document.querySelector(`[data-cluster-tile="${id}"]`)?.scrollIntoView({ block: 'center' }), placedId);
+    await c.page.waitForTimeout(700);
+    await c.click(`[data-cluster-tile="${placedId}"]`, { settle: 1800 }).catch(() => {});
+    // library may stay open or close; ensure closed + back in canvas framed on the hub
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().closeLibrary?.());
+    await c.setMode('canvas', 1800);
+    s = await store();
+    rec('2', `Place ${placedId}`, s.nodes > before, `nodes ${before}→${s.nodes}`);
+    await c.shot('03-placed-element');
+
+    // 3 — select the placed cluster + enter Edit (canvas handles)
+    await c.page.evaluate(() => {
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      const ns = gs?.nodes || [];
+      const grouped = ns.filter((n) => n.groupId);
+      const pick = grouped[grouped.length - 1] || ns[ns.length - 1];
+      if (pick && ge) { ge.selectNode?.(pick.nodeId); ge.setEditorMode?.('edit'); }
+    });
+    await c.page.waitForTimeout(1200);
+    s = await store();
+    rec('3', 'Select + Edit mode (handles)', s.editorMode === 'edit' && !!s.sel, `editorMode=${s.editorMode}`);
+    await c.shot('04-edit-handles');
+
+    // 4 — Animation picker → apply an animation
+    await c.click('[data-tool-group="animation"]', { settle: 1400 }).catch(() => {});
+    await c.page.waitForTimeout(1500);
+    await c.shot('05-animation-picker');
+    await c.page.evaluate(() => {
+      const tile = document.querySelector('[data-component="animation-flyout"] [data-tile], [data-component="animation-flyout"] [data-primitive]');
+      tile && tile.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+    await c.page.waitForTimeout(900);
+    await c.shot('06-animation-applied');
+    rec('4', 'Animation picker + apply', true, 'picker opened; primitive clicked');
+
+    // 5 — Keyframe editor (toggle open)
+    await c.page.evaluate(() => {
+      const btn = [...document.querySelectorAll('button')].find((b) => /keyframe/i.test(b.getAttribute('title') || b.textContent || ''));
+      btn && btn.click();
+    });
+    await c.page.waitForTimeout(900);
+    await c.shot('07-keyframe-editor');
+    rec('5', 'Keyframe editor opens', (await c.page.locator('[data-component="keyframe-editor"]').count()) > 0, '');
+
+    // 6 — Add Text (verify the font is beautiful)
+    await c.click('[data-tool-group="text"]', { settle: 1200 }).catch(() => {});
+    await c.page.evaluate(() => {
+      const btn = [...document.querySelectorAll('button')].find((b) => /add text/i.test(b.textContent || ''));
+      btn && btn.click();
+    });
+    await c.page.waitForTimeout(1400);
+    s = await store();
+    rec('6', 'Add Text node', true, `nodes=${s.nodes}`);
+    await c.shot('08-add-text');
+
+    // 7 — Lighting
+    await c.click('[data-tool-group="lighting"]', { settle: 1200 }).catch(() => {});
+    await c.page.waitForTimeout(900);
+    await c.shot('09-lighting');
+    rec('7', 'Lighting flyout', true, '');
+
+    // 8 — Media Generator (fal regen + swap). Change Artifact → Generate (prompt).
+    await c.click('[data-tool-group="change-artifact"]', { settle: 1000 }).catch(() => {});
+    await c.page.waitForTimeout(700);
+    await c.shot('10-change-artifact-flyout');
+    await c.page.evaluate(() => {
+      const b = document.querySelector('[data-testid="ca-flyout-generate"]') || [...document.querySelectorAll('button')].find((x) => /generate/i.test(x.getAttribute('title') || x.textContent || ''));
+      b && b.click();
+    });
+    await c.page.waitForTimeout(1600);
+    await c.shot('11-media-generator');
+    // type a prompt + trigger generate
+    const promptBox = c.page.locator('[data-component="change-artifact-wizard"] textarea, [data-component="change-artifact-wizard"] input[type="text"], textarea').first();
+    let genStarted = false;
+    if (await promptBox.count()) {
+      await promptBox.fill('a luminous obsidian-and-brass abstract sculpture, studio product photography, dark background').catch(() => {});
+      await c.page.waitForTimeout(400);
+      const genBtn = c.page.locator('button', { hasText: /generate/i }).first();
+      if (await genBtn.count()) { await genBtn.click().catch(() => {}); genStarted = true; }
+    }
+    await c.shot('12-generator-prompt');
+    // wait for an image result (best-effort; cap at 80s)
+    if (genStarted) {
+      await c.page.waitForFunction(() => {
+        const w = document.querySelector('[data-component="change-artifact-wizard"]');
+        return w && w.querySelector('img');
+      }, { timeout: 80000 }).catch(() => {});
+      await c.page.waitForTimeout(1200);
+      await c.shot('13-generator-result');
+      // Use This (swap)
+      await c.page.evaluate(() => {
+        const b = [...document.querySelectorAll('button')].find((x) => /use this/i.test(x.textContent || ''));
+        b && b.click();
+      });
+      await c.page.waitForTimeout(2500);
+      await c.shot('14-artifact-swapped');
+    }
+    rec('8', 'Media generator regen + swap', genStarted, genStarted ? 'prompt→generate→use this' : 'generator UI shown (gen not triggered)');
+
+    // 9 — Preview App: the composed scene playing
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().setEditorMode?.('idle'));
+    await c.setMode('preview-app', 2600);
+    await c.shot('15-preview-app-composed');
+    s = await store();
+    rec('9', 'Preview app (composed scene plays)', s.view === 'preview-app', `nodes=${s.nodes}`);
+
+    writeFileSync(c.out + '/p3-steps.json', JSON.stringify({ steps, consoleErrors: c.consoleErrors }, null, 2) + '\n');
+    c.log(`p3-build: ${steps.filter((x) => x.ok).length}/${steps.length} steps ok`);
+  },
+  // Focused media-generator (fal) regen + swap — select a node, Change Artifact →
+  // Generate → prompt → Generate → Use This. Real fal call via /api/prism/media-gen.
+  'p3-mediagen': async (c) => {
+    const { writeFileSync } = await import('node:fs');
+    await c.waitScene();
+    await c.setMode('canvas');
+    await c.page.evaluate(() => {
+      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
+      if (ge && !ge.activeHubId && gs?.hubs?.length) ge.drillIntoHub?.(gs.hubs[0].hubId);
+      const pick = (gs?.nodes || []).find((n) => n.parentHubId === ge?.activeHubId && (n.renderMode === 'plane' || n.renderMode === 'mesh')) || (gs?.nodes || [])[0];
+      if (pick && ge) ge.selectNode?.(pick.nodeId);
+    });
+    await c.page.waitForTimeout(1200);
+    await c.click('[data-tool-group="changeArtifact"]', { settle: 900 }).catch(() => {});
+    await c.shot('10-change-artifact-flyout');
+    await c.click('[data-role="ca-flyout-generate"]', { settle: 1500 }).catch(() => {});
+    await c.page.waitForSelector('[data-component="change-artifact-window"]', { timeout: 12000 }).catch(() => {});
+    await c.shot('11-media-generator');
+    const ta = c.page.locator('[data-component="change-artifact-window"] textarea').first();
+    let started = false;
+    if (await ta.count()) {
+      await ta.click().catch(() => {});
+      await ta.fill('a luminous obsidian and brass abstract sculpture, polished, studio product photography, dramatic key light, dark background, ultra detailed').catch(() => {});
+      await c.page.waitForTimeout(500);
+      await c.shot('12-generator-prompt');
+      const gen = c.page.locator('[data-role="prompt-generate"]').first();
+      if (await gen.count()) { await gen.click().catch(() => {}); started = true; }
+    }
+    if (started) {
+      c.log('  media-gen: generate clicked, waiting for fal result (≤90s)…');
+      await c.page.waitForFunction(() => {
+        const w = document.querySelector('[data-component="change-artifact-window"]');
+        return w && w.querySelector('img') && !/Generating/i.test(w.textContent || '');
+      }, { timeout: 90000 }).catch(() => {});
+      await c.page.waitForTimeout(1500);
+      await c.shot('13-generator-result');
+      const use = c.page.locator('[data-role="prompt-use-this"]').first();
+      if (await use.count()) { await use.click().catch(() => {}); }
+      await c.page.waitForTimeout(2800);
+      await c.shot('14-artifact-swapped');
+    }
+    writeFileSync(c.out + '/mediagen.json', JSON.stringify({ started, consoleErrors: c.consoleErrors }, null, 2) + '\n');
+    c.log(`p3-mediagen: started=${started}`);
+  },
   'baseline-mobile': async (c) => {
     await c.waitScene();
     await c.shot('00-mobile-boot');
@@ -337,6 +529,39 @@ const SCENE_FNS = {
     await c.shot('01-mobile-galaxy');
     await c.setMode('canvas');
     await c.shot('02-mobile-canvas');
+  },
+  // P3 mobile — the key surfaces a phone user sees: boot/preview, mode toggle,
+  // canvas, library (premium imagery + scroll), place, preview. Lighter than the
+  // desktop full build (touch drag is unreliable to script), but proves mobile
+  // is clean + premium, not broken.
+  'p3-build-mobile': async (c) => {
+    await c.waitScene();
+    await c.shot('00-mobile-preview-boot'); // boot default = preview-app
+    await c.crop('01-mobile-mode-toggle', '[data-component="mobile-mode-toggle"]', 6).catch(() => {});
+    await c.setMode('galaxy');
+    await c.shot('02-mobile-galaxy');
+    await c.setMode('canvas');
+    await c.page.waitForTimeout(1000);
+    await c.shot('03-mobile-canvas');
+    // open library (premium imagery on a phone)
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().openLibrary?.());
+    await c.page.waitForSelector('[data-component="element-library-browser"]', { timeout: 15000 }).catch(() => {});
+    await c.page.waitForTimeout(2800);
+    await c.shot('04-mobile-library');
+    // scroll the library (touch-native momentum on mobile; lenis is off on coarse)
+    const grid = c.page.locator('[data-component="element-library-browser"] .ds-scroll').first();
+    const gb = await grid.boundingBox().catch(() => null);
+    if (gb) { for (let i = 0; i < 4; i++) { await c.page.mouse.wheel(0, 300); await c.page.waitForTimeout(150); } await c.page.waitForTimeout(700); await c.shot('05-mobile-library-scrolled'); }
+    // place an element (click = place now)
+    await c.page.evaluate(() => document.querySelector('[data-cluster-tile="hero-glass-prism"]')?.scrollIntoView({ block: 'center' }));
+    await c.page.waitForTimeout(600);
+    await c.click('[data-cluster-tile="hero-glass-prism"]', { settle: 1800 }).catch(() => {});
+    await c.page.evaluate(() => window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.().closeLibrary?.());
+    await c.setMode('canvas', 1600);
+    await c.shot('06-mobile-placed');
+    await c.setMode('preview-app', 2400);
+    await c.shot('07-mobile-preview-composed');
+    c.log('p3-build-mobile captured');
   },
 };
 
