@@ -103,36 +103,39 @@ describe('EBR2-D-02 — SceneControlsBridge canvas guardrails (SC-071, haltCheck
     expect(block).toMatch(/viewMode\s*===\s*['"]canvas['"]/);
   });
 
-  it("SceneControlsBridge's CameraControls reads minDistance/maxDistance from the rail", () => {
+  // ── APP-REALITY P1 — SC-071 DELIBERATELY SUPERSEDED for canvas ────────────
+  // Logan-authorized override (same class as the 2026-06-14 AMENDMENT): the
+  // canvas camera is now FULLY FREE (orbit/pan/zoom) so designers can edit from
+  // any angle. The rail is retained ONLY to feed __PRISM_EDITOR_GET_CANVAS_RAIL__
+  // (asserted below); it no longer clamps CameraControls. These assertions
+  // therefore encode the NEW free-camera contract, not the old rail binding.
+  it('canvas CameraControls uses FREE distance bounds (SC-071 rail superseded)', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'function SceneControlsBridge(');
-    // We require both bounds to bind to rail.minDistance / rail.maxDistance
-    // (or a destructured equivalent) — not the legacy hardcoded numbers.
-    expect(block).toMatch(/minDistance\s*=\s*\{[^}]*rail[^}]*\}/);
-    expect(block).toMatch(/maxDistance\s*=\s*\{[^}]*rail[^}]*\}/);
+    expect(block).toMatch(/minDistance\s*=\s*\{\s*1\.5\s*\}/);
+    expect(block).toMatch(/maxDistance\s*=\s*\{\s*220\s*\}/);
   });
 
-  it("SceneControlsBridge's CameraControls reads minPolarAngle/maxPolarAngle from the rail", () => {
+  it('canvas CameraControls uses FREE polar/azimuth (no rail clamp)', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'function SceneControlsBridge(');
-    expect(block).toMatch(/minPolarAngle\s*=\s*\{[^}]*rail[^}]*\}/);
-    expect(block).toMatch(/maxPolarAngle\s*=\s*\{[^}]*rail[^}]*\}/);
+    expect(block).toMatch(/minPolarAngle\s*=\s*\{\s*0\s*\}/);
+    expect(block).toMatch(/maxPolarAngle\s*=\s*\{\s*Math\.PI\s*\}/);
+    expect(block).toMatch(/minAzimuthAngle\s*=\s*\{\s*-Infinity\s*\}/);
+    expect(block).toMatch(/maxAzimuthAngle\s*=\s*\{\s*Infinity\s*\}/);
   });
 
-  it("SceneControlsBridge's CameraControls reads minAzimuthAngle/maxAzimuthAngle from the rail", () => {
+  it('preview-app LOCKS the camera via enabled={!isPreview ...} (APP-REALITY P1)', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'function SceneControlsBridge(');
-    expect(block).toMatch(/minAzimuthAngle\s*=\s*\{[^}]*rail[^}]*\}/);
-    expect(block).toMatch(/maxAzimuthAngle\s*=\s*\{[^}]*rail[^}]*\}/);
+    expect(block).toMatch(/enabled\s*=\s*\{\s*!isPreview/);
   });
 
-  it('SceneControlsBridge wires panLimits into the camera-controls boundary', () => {
+  it('canvas pan is FREE — the rail boundary clamp is cleared (SC-071 superseded)', () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'function SceneControlsBridge(');
-    // SC-071 includes "pan-target clamps prevent drift past the frame". The
-    // CameraControls API for this is .setBoundary(Box3). We require both:
-    expect(block).toMatch(/setBoundary\s*\(/);
-    expect(block).toMatch(/panLimits/);
+    // The pan boundary is cleared unconditionally (free canvas).
+    expect(block).toMatch(/setBoundary\s*\(\s*undefined\s*\)/);
   });
 
   it("SceneControlsBridge installs __PRISM_EDITOR_GET_CANVAS_CAMERA__ window hook", () => {

@@ -73,7 +73,7 @@
           "sourceUrl": "/prism-mock/orrery/arrival/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.25,
-          "opacity": 1
+          "opacity": 0.72
         }
       ],
       "lightingSpec": {

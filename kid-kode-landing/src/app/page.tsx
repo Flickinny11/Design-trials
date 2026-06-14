@@ -158,6 +158,22 @@ export default function Page() {
   // "Preview in App UI" button can swap panes without prop-drilling.
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const setViewMode = useGraphEditorStore((s) => s.setViewMode);
+  // APP-REALITY P9 — TRUE responsive: in preview-app, auto-pick the device mode
+  // from the REAL viewport width so a phone visitor gets the mobile layout
+  // automatically (the P5 switcher still overrides per session; a resize
+  // re-applies). Canvas authoring stays on the desktop layout (deviceMode is
+  // reset to 'desktop' off preview-app by setViewMode).
+  const setDeviceMode = useGraphEditorStore((s) => s.setDeviceMode);
+  useEffect(() => {
+    if (viewMode !== 'preview-app') return;
+    const apply = () => {
+      const w = window.innerWidth;
+      setDeviceMode(w < 640 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop');
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, [viewMode, setDeviceMode]);
   // EB-10-02 / §10 SC-054 — preview-app routing reads the active hub from
   // the store and writes back via setState (no dedicated action needed).
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);

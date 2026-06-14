@@ -338,3 +338,106 @@ Runtime/Library/Pricing), Footer (glass slab + Product/Company columns), Menu li
   catalog elements (a proven mechanism), so placement is inherited, not re-implemented.
 
 ### Verdict: menus, dropdowns, headers, footers — premium Observatory-Brass nav chrome, droppable from the library, bound via the Function action. ✅
+
+---
+
+## P9 — INTERACTIVE VERIFICATION + SIGN-OFF
+
+### The "behaves like a real app" system-test matrix (real browser, real clicks, DPR-2)
+Every row was driven like a person, not asserted. Desktop 1440×900, mobile 390×844, constrained 880×600.
+
+| Journey step | Proof (real interaction) | Desktop | Mobile | Constrained |
+|---|---|---|---|---|
+| Free-orbit edit camera + reset-to-zero + angle HUD | drag-orbit off-axis, reset signal | ✅ az −84 | ✅ az −89.6 | ✅ az −121.9 |
+| Preview camera LOCKED | drag does not move camera (Δpos 0) | ✅ | ✅ | ✅ |
+| Camera journey authored → plays in preview | REC 3 waypoints, preview start=kf0 end=kfL (Δ0) | ✅ | — | — |
+| Edit-in-Preview (shipped frame, still editable) | toggle, select node + edit gizmo | ✅ | (resp.) | (resp.) |
+| Full-viewport background (no void/seam) | feathered hero surface fills viewport | ✅ | ✅ WOW | ✅ |
+| Device modes (real responsive) | auto from viewport + manual switch + bezels | ✅ | ✅ | ✅ |
+| Hub→hub navigation (rail, hash, morph) | click rail → distinct pages | ✅ | ✅ | ✅ |
+| Function-bound click → holographic overlay | real raycast click on the watch | ✅ | ✅ | ✅ |
+| Navigate-on-click binding | real click on headline → s2-movement | ✅ | — | — |
+| Nav chrome library | 4 premium nav tiles in the nav category | ✅ | — | — |
+
+### P4 MUST-FIX (raised by the capstone advocate) — RESOLVED
+First capstone pass: WITHHELD — 7/8 phases WOW, but P4's content read as "a hard-edged card floating on a
+gradient — panel-on-background, not an app surface." **Fix:** the hub's hero backdrop + dark pool now
+FEATHER (radial alpha falloff) into the full-viewport skybox so the surface bleeds off-frame (no card
+seam); preview AUTO-picks the device layout from the real viewport width (a phone gets the mobile layout,
+no bezel — `page.tsx` resize effect); the camera frames the hero to fill. Re-captured
+`p4/desktop-preview-fullbleed.png` (feathered oval surface, "Time, machined." clear, no seam) +
+`p9/mobile-preview-app.png` (auto Mobile, prominent watch hero, full-bleed, no bezel).
+
+### No-regression
+- **tsc: 0 new errors** (9 pre-existing baseline — the async-gl `GLProps` factory + 8 `tests/**`
+  `NodeContext.THREE` fixture mocks — all predate this run).
+- **vitest: 3349 passed / 0 failed / 8 skipped (3357).** The only failures were the 3 `EBR2-D-02`
+  SC-071 canvas-rail assertions, which P1 deliberately superseded (free canvas) — **updated** to encode
+  the new free-camera contract (canvas free bounds + preview `enabled={false}` lock + cleared boundary).
+- **409 animatable primitives** intact (the 406+ catalog); **40 prebuilt elements** (the 36 + the 4 new
+  nav-chrome). No catalog/element removed.
+- **0 console errors** across every phase's real-browser capture (all `*-log.json` `errors: 0`).
+
+### Perf
+Headless Chromium runs WebGL2 via **software (SwiftShader)** — its rAF frame rate (~2–6) is NOT
+representative of real devices (prior catalog runs verified the real-Metal-GPU path is far faster). The
+product signal that matters here held: every interactive capture rendered + responded with **0 console
+errors** on mobile + constrained, and the scene is one renderer with capability tiering (INV-9). A real
+on-device perf pass is the honest next step (flagged).
+
+### fal ledger
+**$0 spent this run** — every premium visual (skybox atmosphere, holographic card, nav chrome, feathered
+surface) is code-driven (DESIGN-REFERENCES toolkit + procedural PBR). Cumulative unchanged at $0.479.
+
+### Honest flags (polish-nits, non-blocking)
+- Desktop hero (the watch mesh) reads moody/subtle vs the mobile hero — an art-direction nit (lighting/
+  atmosphere), not a panel-on-background failure; the seam is resolved.
+- The morph sweep + holographic card backdrop-blur are subtle in headless (backdrop-filter not rendered);
+  more pronounced on a real browser.
+- Prev/Next + Replay-intro + hub-name chrome pills are plainer than the premium content.
+- Numeric harness getters (`__PRISM_EDITOR_GET_NODE_WORLD_POS__`, corner-luma) returned 0/null in some
+  contexts — harness limits, not product bugs; the frames + other numeric logs govern.
+
+### Capstone advocate sign-off (fresh-context, frame-cited)
+- **Pass 1:** WITHHELD — 7/8 phases WOW (P1/P2/P3/P6/P7 WOW; P5/P8 pass), one MUST-FIX (P4 floating-card seam).
+- **Re-check (after fix):** "The P4 floating-card seam MUST-FIX is **RESOLVED** on both desktop and mobile —
+  content now feathers off-frame and reads as an app surface; **only a desktop hero-punchiness polish-nit
+  remains, so the prior block is cleared.**" Remaining MUST-FIX: **NONE.**
+
+### FINAL VERDICT — WOW + behaves like a real app ✅ (0 MUST-FIX)
+The editor now reads as a real navigable 3D app, not a set of 3D scenes: free to author from any angle
+and locked to ship; a camera journey you design and the app plays as a fly-in; a full-viewport designed
+surface that bleeds edge-to-edge on desktop and mobile; real responsive layouts per device; hub→hub page
+navigation with a morph; click a watch and a premium holographic card opens; nav chrome you drop and bind.
+All proven by driving the running app with real clicks (0 console errors), no regressions (vitest 0-fail,
+tsc 0-new, catalog + elements intact), $0 of fal. Mobile is WOW; desktop hero-punchiness is the one
+remaining polish-nit.
+
+---
+
+## Plain-language summary
+We made the Prism editor feel like a real app you can navigate, not just 3D scenes sitting in a frame.
+
+- **You design from any angle, but visitors can't break the shot.** In the editing canvas the camera is
+  fully free to orbit/pan/zoom, with a little compass + "reset to straight-on" (with a haptic buzz). In
+  the live preview the camera is locked to the view you chose, so the app never spins off to show empty edges.
+- **You can choreograph a camera fly-in.** Record a few camera angles in canvas; the preview plays that
+  exact journey as a landing-page intro, the same way every time.
+- **The whole screen is a designed surface, on phone and desktop.** Instead of a small card floating in a
+  black void, each page now has a full-viewport atmosphere the content melts into — edge-to-edge, no bars,
+  even on a phone with a notch.
+- **It's genuinely responsive.** Preview shows the real Desktop / Tablet / Mobile version (the layout
+  actually rearranges), and a phone visitor automatically gets the mobile layout.
+- **It navigates like a website.** A nav bar switches between the five pages (Arrival, Movement, Materia,
+  Celestia, Acquire) with a premium morph, and the URL updates.
+- **Things do things when clicked.** A new "Function" button lets you point an element at a page (go there)
+  or at a pop-up panel — and we built a showy holographic watch-detail card that opens when you click the
+  watch, to show the payoff. These bindings are saved on the element itself, so the future node-editor sees
+  the same wiring.
+- **Ready-made nav pieces.** Headers, footers, dropdowns and menus are now drag-in library pieces in your
+  brand's brass-and-glass style.
+
+Verified by actually using the running app (real clicks, screenshots, on desktop + mobile + a constrained
+pane), with no test regressions and no money spent on image generation. The independent reviewer's verdict:
+**WOW and behaves like a real app, zero must-fix** — the only leftover is making the desktop watch shot a
+touch punchier. STOP.

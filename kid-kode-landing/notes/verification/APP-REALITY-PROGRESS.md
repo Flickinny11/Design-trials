@@ -55,8 +55,8 @@ desktop + mobile + constrained(preview-pane). 0 MUST-FIX per phase before checkp
 | P5 | Device modes (real responsive) | DONE ✅ | 1018585b |
 | P6 | Hub navigation working (reparent-on-navigate + morph) | DONE ✅ | 8e51c64a |
 | P7 | Function button + binding popup + sample holographic overlay | DONE ✅ | a1fc45be |
-| P8 | Nav chrome primitives (nav library category) | DONE ✅ | (commit) |
-| P9 | Interactive verification + sign-off | TODO | — |
+| P8 | Nav chrome primitives (nav library category) | DONE ✅ | e7a2a44f |
+| P9 | Interactive verification + sign-off | DONE ✅ | (commit) |
 
 ## fal ledger
 `notes/verification/app-reality/fal-ledger.json` (continues cumulative ~$0.479; warn $25/$40, STOP $48).

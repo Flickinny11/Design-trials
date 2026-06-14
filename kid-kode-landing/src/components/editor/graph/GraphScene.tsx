@@ -1601,7 +1601,9 @@ function SceneControlsBridge({
   useEffect(() => {
     const c = controlsRef.current;
     if (!c || viewMode !== 'preview-app' || hasJourney(hub)) return;
-    const z = deviceMode === 'mobile' ? 11 : deviceMode === 'tablet' ? 14.5 : 18;
+    // APP-REALITY P9 — frame the hero so it FILLS the surface (mobile pulls
+    // closest; desktop/tablet also fill prominently, not a tiny centred card).
+    const z = deviceMode === 'mobile' ? 11 : deviceMode === 'tablet' ? 12.5 : 14;
     c.setLookAt(0, 0, z, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMode, viewMode, hub?.hubId]);
@@ -1863,13 +1865,20 @@ function SceneBackdropLayer({
   useEffect(() => () => texture?.dispose(), [texture]);
   if (!texture) return null;
   return (
+    // APP-REALITY P4/P9 — feather the backdrop image into the skybox atmosphere
+    // (radial alpha falloff) so the hub's hero composition bleeds off into the
+    // app surface instead of presenting a hard-edged floating card (the seam the
+    // advocate flagged). Oversized + edge-feathered = a full-bleed hero, not a
+    // panel. The crisp MSDF/mesh content nodes still sit on top.
     <mesh position={[0, 0, z]} name="hub:scene-backdrop-layer">
-      <planeGeometry args={[width, height]} />
+      <planeGeometry args={[width * 1.34, height * 1.5]} />
       <meshBasicMaterial
         map={texture}
         color={'#ffffff' /* sanctioned: no-tint texture passthrough */}
         transparent
+        alphaMap={getBackdropFalloffTexture()}
         opacity={opacity}
+        depthWrite={false}
         toneMapped={false}
       />
     </mesh>
@@ -1908,9 +1917,20 @@ function SceneBackdrop({ hub }: { hub: PrismHub | undefined }) {
 
   return (
     <group name="hub:scene-backdrop">
+      {/* APP-REALITY P4/P9 — a soft FEATHERED dark pool (radial alpha falloff,
+          oversized) instead of a hard-edged ink rectangle, so the content sits
+          in a pool that melts into the full-viewport skybox atmosphere with no
+          visible card seam. Reads as an app hero surface, not a panel. */}
       <mesh position={[0, 0, -2.6]} name="hub:scene-backdrop-ink">
-        <planeGeometry args={[width * 1.06, height * 1.06]} />
-        <meshBasicMaterial color={DS.ink} transparent opacity={1} toneMapped={false} />
+        <planeGeometry args={[width * 1.7, height * 2.0]} />
+        <meshBasicMaterial
+          color={DS.ink}
+          transparent
+          alphaMap={getBackdropFalloffTexture()}
+          opacity={0.97}
+          depthWrite={false}
+          toneMapped={false}
+        />
       </mesh>
       {layers.map((l) => (
         <SceneBackdropLayer
@@ -3224,6 +3244,28 @@ function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
   const tex = new THREE.CanvasTexture(cv);
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
+}
+
+// APP-REALITY P4/P9 — soft radial falloff (alpha) so the hub backdrop pool
+// FEATHERS into the skybox atmosphere instead of presenting a hard-edged
+// rectangle (the "floating card" seam the advocate flagged). Built once.
+let _backdropFalloffTex: THREE.CanvasTexture | null = null;
+function getBackdropFalloffTexture(): THREE.CanvasTexture {
+  if (_backdropFalloffTex) return _backdropFalloffTex;
+  const s = 256;
+  const cv = document.createElement('canvas');
+  cv.width = s;
+  cv.height = s;
+  const ctx = cv.getContext('2d')!;
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.5, 'rgba(255,255,255,0.94)');
+  g.addColorStop(0.8, 'rgba(255,255,255,0.4)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, s, s);
+  _backdropFalloffTex = new THREE.CanvasTexture(cv);
+  return _backdropFalloffTex;
 }
 
 function HubSceneBackground({ hub }: { hub?: PrismHub | null }) {

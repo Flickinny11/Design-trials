@@ -12,7 +12,7 @@
  * Self-gates to preview-app. Editor overlay scope (DOM is fine here).
  */
 
-import type { ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import type { DeviceMode } from '@/lib/prism-graph/types';
 
@@ -33,10 +33,23 @@ export default function PreviewDeviceFrame() {
   const deviceMode = useGraphEditorStore((s) => s.deviceMode);
   const setDeviceMode = useGraphEditorStore((s) => s.setDeviceMode);
 
+  // Track the real viewport width so the device bezel only appears when we are
+  // previewing a SMALLER device than the actual viewport (no phone-bezel on a
+  // real phone — there the layout simply IS the mobile layout, full-bleed).
+  const [vw, setVw] = useState(1440);
+  useEffect(() => {
+    const apply = () => setVw(window.innerWidth);
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, []);
+
   if (viewMode !== 'preview-app') return null;
 
-  const framed = deviceMode !== 'desktop';
   const isMobile = deviceMode === 'mobile';
+  // Bezel only when the viewport is clearly bigger than the previewed device.
+  const framed =
+    (deviceMode === 'mobile' && vw > 520) || (deviceMode === 'tablet' && vw > 900);
 
   return (
     <>
