@@ -1,0 +1,143 @@
+{
+  "brass-nebula": {
+    "preset": "brass-nebula",
+    "c1": {
+      "nearPointShiftPx": 241.4,
+      "farPointShiftPx": 24,
+      "parallaxRatio": 10.07,
+      "nebulaRenderDelta": 28.273,
+      "particleRenderDelta": 3.498,
+      "pass": true
+    },
+    "c2": {
+      "frameMean": 130.11,
+      "frameStd": 62.32,
+      "banding": 0,
+      "ovalEdge": 20.68,
+      "cornerSpread": 58.18,
+      "pass": true
+    },
+    "c3": {
+      "counts": {
+        "embers": 3584,
+        "motes": 1165
+      },
+      "totalCount": 4749,
+      "particleRenderDelta": 3.498,
+      "nearPointShiftPx": 241.4,
+      "frameStd": 31.91,
+      "pass": true
+    },
+    "c4": {
+      "t2": {
+        "counts": {
+          "embers": 3584,
+          "motes": 1165
+        },
+        "frameMs": 22.02,
+        "mean": 133.83
+      },
+      "t0": {
+        "counts": {
+          "embers": 627,
+          "motes": 400
+        },
+        "frameMs": 26.05,
+        "mean": 135.7
+      },
+      "pass": true
+    }
+  },
+  "ice-field": {
+    "preset": "ice-field",
+    "c1": {
+      "nearPointShiftPx": 241.4,
+      "farPointShiftPx": 24,
+      "parallaxRatio": 10.07,
+      "nebulaRenderDelta": 24.063,
+      "particleRenderDelta": 3.104,
+      "pass": true
+    },
+    "c2": {
+      "frameMean": 129.48,
+      "frameStd": 45.22,
+      "banding": 0,
+      "ovalEdge": 16.86,
+      "cornerSpread": 42.16,
+      "pass": true
+    },
+    "c3": {
+      "counts": {
+        "crystals": 8714
+      },
+      "totalCount": 8714,
+      "particleRenderDelta": 3.104,
+      "nearPointShiftPx": 241.4,
+      "frameStd": 14.3,
+      "pass": true
+    },
+    "c4": {
+      "t2": {
+        "counts": {
+          "crystals": 8714
+        },
+        "frameMs": 29.07,
+        "mean": 131.5
+      },
+      "t0": {
+        "counts": {
+          "crystals": 1525
+        },
+        "frameMs": 22.06,
+        "mean": 144.22
+      },
+      "pass": true
+    }
+  },
+  "observatory-deep": {
+    "preset": "observatory-deep",
+    "c1": {
+      "nearPointShiftPx": 241.4,
+      "farPointShiftPx": 24,
+      "parallaxRatio": 10.07,
+      "nebulaRenderDelta": 21.951,
+      "particleRenderDelta": 1.45,
+      "pass": true
+    },
+    "c2": {
+      "frameMean": 45.88,
+      "frameStd": 39.1,
+      "banding": 1,
+      "ovalEdge": 20.49,
+      "cornerSpread": 24.64,
+      "pass": true
+    },
+    "c3": {
+      "counts": {
+        "starfield": 13792
+      },
+      "totalCount": 13792,
+      "particleRenderDelta": 1.45,
+      "nearPointShiftPx": 241.4,
+      "frameStd": 9.79,
+      "pass": true
+    },
+    "c4": {
+      "t2": {
+        "counts": {
+          "starfield": 13792
+        },
+        "frameMs": 25.25,
+        "mean": 48.23
+      },
+      "t0": {
+        "counts": {
+          "starfield": 2414
+        },
+        "frameMs": 21.99,
+        "mean": 68.57
+      },
+      "pass": true
+    }
+  }
+}

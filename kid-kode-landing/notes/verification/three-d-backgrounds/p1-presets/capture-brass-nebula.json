@@ -1,0 +1,27 @@
+{
+  "url": "http://localhost:4810",
+  "preset": "brass-nebula",
+  "params": "",
+  "modes": [
+    "preview-app"
+  ],
+  "frames": [
+    {
+      "viewport": "desktop",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p1-presets/desktop-preview-app-brass-nebula.png",
+      "counts": {
+        "embers": 3584,
+        "motes": 1165
+      },
+      "bgLen": 3
+    }
+  ],
+  "errors": [],
+  "backend": "webgpu",
+  "particleCounts": {
+    "embers": 3584,
+    "motes": 1165
+  }
+}

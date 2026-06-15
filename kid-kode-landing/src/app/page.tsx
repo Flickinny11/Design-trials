@@ -24,6 +24,7 @@ import {
   serializePreviewAppHash,
 } from '@/lib/prism-graph/preview-app-routing';
 import type { PrismRootNode } from '@/lib/prism-graph/root-node';
+import { applyBackgroundPreset } from '@/lib/editor/backgrounds/presets';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -351,10 +352,18 @@ export default function Page() {
       graphEditor: useGraphEditorStore,
       previewState: usePreviewStateStore,
     };
+    // THREE-D-BACKGROUNDS — dev/verification hook: build a preset's layer stack
+    // so the capture harness can apply backgrounds via the live source store
+    // (editor-shell code; not subject to INV-13 — no secrets, pure data).
+    (window as unknown as {
+      __PRISM_APPLY_BG_PRESET__?: (preset: string, params?: Record<string, number | string>) => unknown;
+    }).__PRISM_APPLY_BG_PRESET__ = (preset, params) =>
+      applyBackgroundPreset(preset, params as never);
     return () => {
       delete (window as unknown as {
         __PRISM_DEBUG_STORES__?: unknown;
       }).__PRISM_DEBUG_STORES__;
+      delete (window as unknown as { __PRISM_APPLY_BG_PRESET__?: unknown }).__PRISM_APPLY_BG_PRESET__;
     };
   }, []);
 

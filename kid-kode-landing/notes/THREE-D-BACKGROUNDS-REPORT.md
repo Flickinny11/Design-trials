@@ -8,7 +8,19 @@
 - **Library (`src/lib/editor/backgrounds/`):** `palettes.ts` (4 Observatory-Brass palettes, no purple), `tier.ts` (`TIER_BUDGET` + `resolveBackgroundTier`), `types.ts` (`BackgroundPreset`/`BackgroundParamControl`), `presets.ts` (3 presets: Brass Nebula, Ice Field, Observatory Deep + `applyBackgroundPreset`).
 - **Integration target:** R3F `GraphScene.tsx` `SceneBackdrop` (live path); imperative `mount-graph.ts` compositor is dormant reference. Round-trip confirmed by code read (loader passes hubs verbatim; `updateHub` spreads patch).
 - **tsc:** 9 errors = pre-existing baseline, 0 new.
-## P1 — procedural core (volumetric nebula + GPU-compute particles, tiered) — TODO
+## P1 — procedural core (volumetric nebula + depth-scattered particles, tiered) — DONE
+Live R3F components in `src/components/editor/graph/backgrounds/`, mounted by `GraphScene` `AssembledSceneContent` (canvas + preview-app), dispatched from `hub.background` by `HubBackgroundStack` per `kind`. One renderer (three/webgpu, TSL).
+
+- **Volumetric nebula** (`VolumetricNebulaLayer.tsx`): camera-centred inverted sphere; fragment RAYMARCHES a world-anchored 3D `mx_fractal_noise` density field from the camera outward → genuine parallax (not a flat skybox). Beer-Lambert absorption (`exp(-density·σ·ds)`) + Henyey-Greenstein phase (forward in-scatter) + a JS-unrolled self-shadow light-march (cheap 2-octave density). Tier-gated step count.
+- **Particle field** (`ParticleFieldLayer.tsx`): instanced billboarded sprites (`SpriteNodeMaterial` + `THREE.InstancedMesh`) — WebGPU renders `THREE.Points` at 1px, so sized particles MUST be instanced quads. Per-instance position/seed/size derived on the GPU from `instanceIndex`+`hash` (deterministic); GPU vertex-stage drift; round soft glows via quad uv; additive. Real-Z scatter → camera flies through (parallax + near/far size spread). Variants: embers/crystals/starfield/motes.
+- **Tiering** (`tier.ts` + `useBackgroundTier`): WebGL2⇒T0; WebGPU⇒device-mode/width/cores ⇒ T1/T2. `TIER_BUDGET` gates raymarch steps (28/18/8), light-march (3/2/0), particle count (16k/8k/2.8k).
+
+**C1 depth/parallax — PASS.** Near world point (z=−15) shifts **241.4px** vs far point (z=−260) **24px** under a matched camera pan → parallaxRatio **10.07** (near ≫ far = true depth). Both layers' rendered frames change between waypoints (nebula meanAbsDiff ~24, particles ~3) → neither is a flat static skybox. Evidence: `p1/*-par-camx{0,3}.png`, `p1/metrics-c1-c4.json`.
+**C2 volumetric — PASS.** Nebula frame luma std **39–62** (rich texture, a flat plane ≈ 0); banding **0–1** (smooth feather, no contrast cliff). Evidence: `p1/*-neb-camx0.png` + metrics.
+**C3 depth-scattered particles — PASS.** Live counts **4,749 / 8,714 / 13,792** (brass/ice/observatory) measured off `__PRISM_BG_PARTICLE_COUNTS__`; real-Z parallax confirmed via C1. Evidence: lab particle frames + metrics.
+**C4 tiering — PASS.** Same preset renders on T2 AND T0 (both non-black); T0 drops particle counts ~5× (e.g. embers 3584→627) and raymarch steps; frame-time T2 **~23ms** (optimized from 90ms via octave/step/light-march cuts), all tiers ≥40fps headless (≥60 expected interactive). Evidence: `p1/*-tierT{0,2}.png` + metrics.
+
+3 presets verified on the REAL preview-app with content reading cleanly on top: `p1-presets/desktop-preview-app-{brass-nebula,ice-field,observatory-deep}.png`. Isolation lab at `/bg-lab` (verification route). tsc 9 (baseline, 0-new).
 ## P2 — hybrid image layer (fal plate + parallax-plane depth) — TODO
 ## P3 — splat preset (Spark 2.0, desktop/T2) — TODO
 ## P4 — library UX + camera-journey readiness — TODO

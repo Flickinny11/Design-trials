@@ -51,7 +51,7 @@ const brassNebula: BackgroundPreset = {
     'A warm forge nebula: brass gas clouds raymarched in depth, drifting embers scattered through real Z, and fine motes near the lens.',
   tagline: 'warm forge nebula',
   controls: sharedControls(ALL_PALETTE_OPTIONS, 'brass'),
-  defaultParams: { palette: 'brass', density: 0.62, drift: 0.5, depthSpread: 0.65, intensity: 0.72 },
+  defaultParams: { palette: 'brass', density: 0.5, drift: 0.5, depthSpread: 0.65, intensity: 0.56 },
   build(params) {
     const p = { ...this.defaultParams, ...params };
     return [
@@ -97,7 +97,7 @@ const iceField: BackgroundPreset = {
     'A cold, clean field: thin ice-blue volumetrics, a bright scattered crystal starfield, and a crisp deep base — informational and calm.',
   tagline: 'cold crystal field',
   controls: sharedControls(ALL_PALETTE_OPTIONS, 'ice'),
-  defaultParams: { palette: 'ice', density: 0.42, drift: 0.32, depthSpread: 0.7, intensity: 0.78 },
+  defaultParams: { palette: 'ice', density: 0.38, drift: 0.32, depthSpread: 0.7, intensity: 0.6 },
   build(params) {
     const p = { ...this.defaultParams, ...params };
     return [
@@ -136,7 +136,7 @@ const observatoryDeep: BackgroundPreset = {
     'Deep space from the observatory: a graphite void with a slow brass core glow and a dense, far-scattered starfield. Splat-ready on desktop.',
   tagline: 'deep graphite void',
   controls: sharedControls(ALL_PALETTE_OPTIONS, 'deep'),
-  defaultParams: { palette: 'deep', density: 0.5, drift: 0.22, depthSpread: 0.85, intensity: 0.6 },
+  defaultParams: { palette: 'deep', density: 0.42, drift: 0.22, depthSpread: 0.85, intensity: 0.5 },
   build(params) {
     const p = { ...this.defaultParams, ...params };
     return [

@@ -56,6 +56,7 @@ import {
 } from '@/lib/prism-graph/hub-geometry';
 import { computeCloneDragTether } from '@/lib/editor/clone-drag-tether';
 import ElementPlacementLayer from '@/components/editor/elements/ElementPlacementLayer';
+import { HubBackgroundStack, hubHasVolumetricNebula } from '@/components/editor/graph/backgrounds/HubBackgroundStack';
 import {
   computeGalaxyFilterMatches,
   GALAXY_FILTER_DIM_OPACITY,
@@ -3876,8 +3877,14 @@ function AssembledSceneContent({
           the Canvas Lighting toolbar group visibly changes the scene (criterion
           17) while legacy graphs stay pixel-stable. */}
       <HubLighting hub={hub} />
-      {/* APP-REALITY P4 — full-viewport designed background (the app surface). */}
-      <HubSceneBackground hub={hub} />
+      {/* APP-REALITY P4 — full-viewport designed background (the app surface).
+          THREE-D-BACKGROUNDS: when the hub carries a procedural volumetric-nebula
+          background layer, that raymarched nebula OWNS the backdrop (it provides
+          its own dark base + always fills the frustum), so the flat gradient
+          skybox is suppressed to avoid a doubled/flattened sky. Legacy hubs (no
+          nebula) keep the gradient skybox unchanged. */}
+      {!hubHasVolumetricNebula(hub) && <HubSceneBackground hub={hub} />}
+      <HubBackgroundStack hub={hub} />
       <SceneBackdrop hub={hub} />
       <AssembledShadowCatcher />
       {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is

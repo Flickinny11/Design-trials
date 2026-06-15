@@ -32,10 +32,14 @@ export interface TierBudget {
   dprCap: number;
 }
 
+// particleCount is the per-tier TOTAL the field scales by variant countScale +
+// the density slider. Billboard sprites are area-heavy (each a soft quad), so a
+// tasteful starfield is thousands, not tens of thousands (the latter reads as a
+// blizzard / additive white-out).
 export const TIER_BUDGET: Readonly<Record<DeviceTier, TierBudget>> = Object.freeze({
-  T2: { raymarchSteps: 48, lightMarchSteps: 6, particleCount: 60000, compute: true, splat: true, dprCap: 2 },
-  T1: { raymarchSteps: 24, lightMarchSteps: 4, particleCount: 24000, compute: true, splat: false, dprCap: 2 },
-  T0: { raymarchSteps: 10, lightMarchSteps: 0, particleCount: 6000, compute: false, splat: false, dprCap: 1.5 },
+  T2: { raymarchSteps: 28, lightMarchSteps: 3, particleCount: 16000, compute: true, splat: true, dprCap: 2 },
+  T1: { raymarchSteps: 18, lightMarchSteps: 2, particleCount: 8000, compute: true, splat: false, dprCap: 2 },
+  T0: { raymarchSteps: 8, lightMarchSteps: 0, particleCount: 2800, compute: false, splat: false, dprCap: 1.5 },
 });
 
 export const TIER_ORDER: Readonly<Record<DeviceTier, number>> = Object.freeze({ T0: 0, T1: 1, T2: 2 });
