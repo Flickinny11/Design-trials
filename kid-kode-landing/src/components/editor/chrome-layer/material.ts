@@ -56,13 +56,19 @@ export interface ChromeInstanceBuffers {
 const BRASS = new THREE.Color(DS.brass400);
 const BRASS_HI = new THREE.Color(DS.brass200);
 const ICE = new THREE.Color(DS.ice400);
-const METAL_TOP = new THREE.Color('#353b4e');
-const METAL_BOT = new THREE.Color('#13161f');
-const CERAMIC_TOP = new THREE.Color('#23283a');
-const CERAMIC_BOT = new THREE.Color('#161a28');
-const WELL_TOP = new THREE.Color('#0a0c14');
-const WELL_BOT = new THREE.Color('#10131e');
-const GLASS_TINT = new THREE.Color('#141826');
+// CHROME OVERHAUL 2026-06-15: slab body colors lifted + warmed to match the new
+// OKLCH graphite ramp so a slab reads as LIT machined material over the black
+// scene, never a near-black hole punched in the void (Logan's #1 complaint).
+const METAL_TOP = new THREE.Color('#454d61');
+const METAL_BOT = new THREE.Color('#1c2029');
+const CERAMIC_TOP = new THREE.Color('#2b3142');
+const CERAMIC_BOT = new THREE.Color('#1b1f2b');
+const WELL_TOP = new THREE.Color('#0d1016');
+const WELL_BOT = new THREE.Color('#141823');
+// Lit smoked-glass body floor (top key-lit → bottom shade) — the guaranteed
+// presence a glass panel keeps even when the scene behind it is pure black.
+const GLASS_BODY_TOP = new THREE.Color('#272f3e');
+const GLASS_BODY_BOT = new THREE.Color('#11151d');
 
 const c3 = (c: THREE.Color) => vec3(c.r, c.g, c.b);
 
@@ -301,19 +307,26 @@ export function createOpaqueSlabMaterial(
 
   // Emissive: brass keyline + magnetic pointer glow + pointer sheen + a
   // static top-edge glint so pointer-less frames still read dimensional.
-  const keylineColor = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.5));
-  const magnetGlow = brassGradient(0.2).mul(c.magneticGlow).mul(0.55);
-  const sheenGlow = c3(ICE).mul(c.sheen).mul(0.16);
-  const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.022)).mul(isMetal);
+  const keylineColor = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.6));
+  const magnetGlow = brassGradient(0.2).mul(c.magneticGlow).mul(0.6);
+  const sheenGlow = c3(ICE).mul(c.sheen).mul(0.18);
+  const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.03)).mul(isMetal);
+  // VOID FIX (Logan): a broad baked key-light sheen graced across the upper
+  // face of every opaque panel so the tool rail + inspector bodies read as LIT
+  // machined graphite at rest, regardless of how dim the hub env is — not the
+  // near-black slabs that disappeared into the scene.
+  const keySheen = vec3(0.80, 0.79, 0.74)
+    .mul(smoothstep(0.72, 0.0, vT))
+    .mul(float(0.055).mul(isMetal.add(isCeramic)));
   // Accent faces are SELF-LIT like the CSS --ds-grad-brass they replace: an
   // albedo-only brass plate goes near-black under a dim scene env, which made
   // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
   // guarantees instrument-key luminance under any hub lighting.
   const accentFace = brassGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
   n.emissiveNode = mix(
-    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(accentFace),
+    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace),
     vec3(0.0, 0.0, 0.0),
-    isWell.mul(0.7),
+    isWell.mul(0.78),
   );
 
   n.opacityNode = c.coverage;
@@ -322,7 +335,7 @@ export function createOpaqueSlabMaterial(
   m.depthTest = false;
   m.depthWrite = false;
   m.fog = false;
-  m.envMapIntensity = 0.55;
+  m.envMapIntensity = 0.8;
   return m;
 }
 
@@ -346,10 +359,12 @@ export function createGlassSlabMaterial(
   const lensPx = c.fillet.mul(14.0).add(1.5);
   const shiftUV = c.gradDir.mul(lensPx).mul(0.0012);
 
+  // Wider chromatic split at the rim → a stronger, more obviously-refractive
+  // lens read (the prior 0.12 split was barely perceptible).
   const frostMip = frost.mul(3.2).add(hover.mul(0.8)).add(c.fillet.mul(1.4));
-  const uvR = viewportSafeUV(screenUV.add(shiftUV.mul(1.12)));
+  const uvR = viewportSafeUV(screenUV.add(shiftUV.mul(1.2)));
   const uvG = viewportSafeUV(screenUV.add(shiftUV));
-  const uvB = viewportSafeUV(screenUV.add(shiftUV.mul(0.88)));
+  const uvB = viewportSafeUV(screenUV.add(shiftUV.mul(0.82)));
   const refracted = vec3(
     viewportMipTexture(uvR).level(frostMip).r,
     viewportMipTexture(uvG).level(frostMip).g,
@@ -357,13 +372,21 @@ export function createGlassSlabMaterial(
   );
 
   // Beer–Lambert smoked tint, thicker at the rim (the bevel doubles as depth).
-  const thickness = c.fillet.mul(2.2).add(1.0);
+  const thicknessG = c.fillet.mul(2.2).add(1.0);
   const absorb = vec3(0.18, 0.16, 0.1); // smoked brass: pass warm, sink blue
-  const tinted = refracted.mul(exp(absorb.mul(thickness).negate())).mul(0.82);
-  // Lift toward the panel tone so DOM text always has contrast footing —
-  // and damp total transmitted energy so bright scene content can never
-  // blow out labels on the panel (advocate MUST-FIX: specular wash).
-  const glassBody = mix(tinted, c3(GLASS_TINT), float(0.3).add(frost.mul(0.08)));
+  const tinted = refracted.mul(exp(absorb.mul(thicknessG).negate()));
+  // VOID FIX (Logan): a guaranteed LIT smoked-glass floor (top key-light →
+  // bottom shade) so the panel reads as a crafted instrument even when the scene
+  // behind it is pure black. Scene refraction is layered ON TOP at reduced
+  // weight so distortion still reads where the backdrop has content; the sum is
+  // clamped so bright scene content can never wash the DOM labels sitting over
+  // it (advocate MUST-FIX history: specular wash).
+  const vTb = uv().y.oneMinus(); // 0 top → 1 bottom of slab
+  const litFloor = mix(c3(GLASS_BODY_TOP), c3(GLASS_BODY_BOT), vTb);
+  const glassBody = min(
+    litFloor.add(tinted.mul(float(0.55).sub(frost.mul(0.12)))),
+    vec3(0.4, 0.4, 0.42),
+  ) as TSLNode;
 
   n.backdropNode = vec4(glassBody, 1.0);
   n.backdropAlphaNode = c.coverage;
@@ -379,12 +402,16 @@ export function createGlassSlabMaterial(
   m.envMapIntensity = 1.1;
 
   const vT = uv().y.oneMinus();
-  const keyline = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.65));
-  const magnet = brassGradient(0.15).mul(c.magneticGlow).mul(0.65);
-  // Guaranteed Fresnel-read rim: the env may be dim, so the bevel always
-  // carries a faint edge light (ice → brass with accent).
-  const rim = mix(c3(ICE), brassGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.085);
-  n.emissiveNode = keyline.add(magnet).add(rim).add(c3(ICE).mul(c.sheen).mul(0.1));
+  const keyline = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.72));
+  const magnet = brassGradient(0.15).mul(c.magneticGlow).mul(0.7);
+  // Guaranteed Fresnel-read rim: the env may be dim, so the bevel always carries
+  // an edge light (ice → brass with accent). Strengthened so the glass rim reads
+  // as a lit bevel, not a flat dark band, over the black scene.
+  const rim = mix(c3(ICE), brassGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.16);
+  // Baked top key-glint: a soft specular catch on the top edge so a static
+  // pointer-less panel still reads as a surface a light is grazing.
+  const topKey = vec3(0.86, 0.84, 0.78).mul(smoothstep(0.16, 0.0, vT)).mul(0.06);
+  n.emissiveNode = keyline.add(magnet).add(rim).add(topKey).add(c3(ICE).mul(c.sheen).mul(0.12));
 
   n.opacityNode = c.coverage;
   if (tex) n.envNode = pmremTexture(tex.env);

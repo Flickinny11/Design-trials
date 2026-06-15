@@ -145,3 +145,4 @@ Will self-report phase events below.
 [08:12] CHAIN: CHAIN-STOP seen, exiting
 [10:02:29] LOOP[chrome]: START (breaker: stop after 3 no-progress resumes or 20 total)
 [10:21:49] CHROME W1: DONE | Switzer (display+UI, one grotesque) + OKLCH Observatory-Brass palette + 8pt spacing scale + brighter edges | fonts verified rendering (width fingerprint), tier t2, tsc 0-new, 0 console err | NEXT W2 lit refraction glass (slab shader makes panels read as material not void)
+[10:28:07] CHROME W2: DONE | slab shader lit resting state — top-lit glass body floor + baked key-light sheen on opaque + stronger rim/keyline + wider chromatic split; real scene refraction retained | panels (toolbar/rail/flyout/inspector) now read as lit premium material over black scene (was near-invisible voids); tsc 0-new, 0 console err, tier t2 | NEXT W3 true-3D hero controls

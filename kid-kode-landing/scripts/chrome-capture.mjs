@@ -58,13 +58,18 @@ function makeCtx(page, sceneOut, consoleErrors) {
   };
   const selectNode = async () => {
     await page.evaluate(() => {
-      const ge = window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.();
+      const store = window.__PRISM_DEBUG_STORES__?.graphEditor;
+      const ge = store?.getState?.();
       const gs = window.__PRISM_DEBUG_STORES__?.graphSource?.getState?.();
       if (ge && !ge.activeHubId && gs?.hubs?.length) ge.drillIntoHub?.(gs.hubs[0].hubId);
       const pick = (gs?.nodes || []).find((n) => n.parentHubId === ge?.activeHubId) || (gs?.nodes || [])[0];
-      if (pick && ge) (ge.selectNode ? ge.selectNode(pick.nodeId) : window.__PRISM_DEBUG_STORES__.graphEditor.setState({ selectedNodeId: pick.nodeId }));
+      if (pick && ge) {
+        if (ge.selectNode) ge.selectNode(pick.nodeId); else store?.setState?.({ selectedNodeId: pick.nodeId });
+        ge.openInspector?.();
+        store?.setState?.({ inspectorOpen: true });
+      }
     });
-    await page.waitForTimeout(1300);
+    await page.waitForTimeout(1400);
   };
   const shot = async (name, clip) => {
     const path = join(sceneOut, name.endsWith('.png') ? name : `${name}.png`);
