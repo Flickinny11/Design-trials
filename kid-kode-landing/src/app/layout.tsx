@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import '@/components/editor/design-system/tokens.css';
 import '@/components/editor/design-system/materials.css';
+import '@/components/editor/walkthrough/walkthrough.css';
 import { DS_TIER_BOOT_SCRIPT } from '@/components/editor/design-system/tier';
 
 // ── W2 type system — self-hosted variable fonts (public/fonts/ui/) ──────────

@@ -5,7 +5,7 @@ Run started: 2026-06-15. Branch: prism-editor-build. Model: claude-opus-4-8 (con
 | Phase | Title | Status |
 |---|---|---|
 | P0 | Contract + re-verify (bespoke controller, step model) | DONE |
-| P1 | Lightbulb + shell (spotlight, driven cursor, lifecycle) | TODO |
+| P1 | Lightbulb + shell (spotlight, driven cursor, lifecycle) | DONE |
 | P2 | Scene-spotlight + 3D popups (premium, primitive-composed) | TODO |
 | P3 | Accessibility + responsive | TODO |
 | P4 | Verification + capstone | TODO |

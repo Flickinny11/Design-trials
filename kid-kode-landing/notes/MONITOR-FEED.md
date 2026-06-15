@@ -62,3 +62,4 @@ Will self-report phase events below.
 [02:32] CHAIN: threedbg COMPLETE (marker + quiet)
 [02:32] CHAIN: launching guidedtips
 [02:43] TIPS P0 DONE: bespoke a11y-first controller contract (store + 7-step DATA + seen-flag), tsc 0-new (baseline 9). Baselines: prims 408, elements 37. Next: P1 lightbulb+shell.
+[03:37] TIPS P1 DONE: lightbulb+scrim+cursor+popup+lifecycle. C1-C5 PASS all 4 viewports (cursor 417/349/268/114px), C7 Δcanvas=0, 0 console errs. C6 scene-spotlight in P2. Next: P2 3D artifacts.

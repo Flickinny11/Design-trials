@@ -602,6 +602,7 @@ export default function Inspector() {
     // exactly one inspector panel at a time, so the refract budget stays at 1.
     <div
       ref={inspectorSlab.ref}
+      data-component="inspector"
       // Mobile MUST-FIX (advocate 2026-06-11): w-full sat UNDER the left tool
       // rail, hiding the first word of every body line — inset left-16 clears
       // the rail on phones; desktop geometry unchanged.
