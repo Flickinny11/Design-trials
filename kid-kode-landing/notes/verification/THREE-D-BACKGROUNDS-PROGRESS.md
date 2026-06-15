@@ -30,3 +30,6 @@ notes/verification/three-d-backgrounds/fal-ledger.json
 
 ## AUTO-CKPT hashes
 (filled per phase)
+
+## RUN COMPLETE — 2026-06-15
+All P0-P5 DONE. C1-C14 PASS. Advocate PLEASED/0 MUST-FIX. Drift review clean. No regression (tsc 9/0-new, vitest 3349/0, prod build ✓).

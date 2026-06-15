@@ -1,5 +1,51 @@
 # THREE-D-BACKGROUNDS — 3D hub background library
-(status: in progress)
+(status: COMPLETE — all C1–C14 PASS · capstone advocate PLEASED/0 MUST-FIX · drift review clean · no regression)
+
+## Summary
+A library of 5 reusable, droppable, customizable 3D hub backgrounds — each an **image + real-3D HYBRID** layer-stack bound to `PrismHub.background`, rendered in the single `three/webgpu` scene (TSL, WebGL2 fallback), camera-journey-ready, tiered T0/T1/T2, premium on desktop + lightning-fast on mobile. Presets: **Brass Nebula**, **Ice Field**, **Observatory Deep** (procedural volumetric raymarch nebula + depth-scattered instanced-sprite particle field), **Cosmic Drift** (fal flux-2 plate depth-displaced via depth-anything/v2 + translucent nebula veil + starfield), **Captured Observatory** (fal-captured scene → WebGPU-native 3D gaussian splat, T2-gated, nebula fallback).
+
+### Layer-stack architecture (which schema field carries it)
+The background is a typed `PrismHubBackgroundLayer[]` on `PrismHub.background` (additive, INV-2/18). Each layer: `kind` (`image|volumetric-nebula|particle-field|parallax-plane|splat`) + `attachment` (`infinite-environment|world|camera-locked|parallax|viewport-fixed`) + `z`/`opacity`/`parallaxDepth` + `params` (`palette/density/drift/depthSpread/intensity`, round-trippable) + `depthMapUrl`/`renderMode` (parallax-plane) + `minTier` (tier floor). The live R3F path: `GraphScene.AssembledSceneContent` → `HubBackgroundStack` reads `hub.background` and dispatches each layer by `kind` to its R3F component; `hubSuppressesSkybox` lifts the flat gradient when an opaque nebula owns the backdrop; galaxy mode shows the active hub's nebula as the universe backdrop (`GalaxyHubBackdrop`). Pure preset/tier/palette data in `src/lib/editor/backgrounds/`. Editor UX: `HubBackgroundPicker` (Hub Inspector → Visual tab) writes only `PrismHub.background` via `updateHub` → autosave → `live-graph.json` round-trip.
+
+### Dependency-usage table (newest reachable; INV-1 one renderer)
+| Need | Tool wired | Version | Where |
+|---|---|---|---|
+| Renderer / shaders | `three/webgpu` + `three/tsl` (NodeMaterials, raymarch Loop/If/Break, `mx_fractal_noise_float`, `instanceIndex`/`hash`, `SpriteNodeMaterial`, `texture` displacement) | three 0.184.0 (=latest) | all layer components |
+| Volumetric core | TSL raymarch: Beer-Lambert `exp(-d·σ·ds)` + Henyey-Greenstein phase + JS-unrolled light-march self-shadow | — | VolumetricNebulaLayer |
+| Particles | Instanced billboard sprites (`SpriteNodeMaterial`+`InstancedMesh`, GPU `instanceIndex`+`hash` scatter, vertex drift) — WebGPU renders THREE.Points at 1px so sized particles MUST be instanced quads | — | ParticleFieldLayer |
+| Base image plate | fal `fal-ai/flux-2` (negative "no text/letters/labels", INV-6) | client 1.4.0 (latest 1.10.1) | gen scripts (server) |
+| Depth → parallax | fal `fal-ai/image-preprocessors/depth-anything/v2` → depth-displaced subdivided plane | — | ParallaxPlaneLayer |
+| Splat / captured env | fal RGBD capture → WebGPU-native 3D gaussian sprites (GPU depth unprojection). `@sparkjsdev/spark` 2.1.0 evaluated as the `.spz/.sog` decode seam but NOT added (WebGL2-only render conflicts with INV-1) | — | SplatLayer |
+| Pixel verification | sharp (existing) | — | scripts/three-d-backgrounds/*.mjs |
+
+No new heavy dependency added (Spark removed; FLUX/depth-anything via the existing fal client).
+
+### Tier map + measured frame-times (lab, real WebGPU/Metal, DPR-2)
+| Tier | raymarch steps | light-march | particle count | compute/splat | measured |
+|---|---|---|---|---|---|
+| T2 (desktop/WebGPU) | 28 | 3 | 16000 | splat ✓ | ~23 ms/frame (raymarch optimized 90→23 ms) |
+| T1 (constrained/WebGPU) | 18 | 2 | 8000 | splat ✗ | ~24 ms/frame |
+| T0 (mobile/WebGL2) | 8 | 0 | 2800 | splat dropped → nebula fallback | ~24 ms/frame |
+All tiers ≥40 fps headless (≥60 expected interactive). Mobile splat count verified 0 (FP-4 respected).
+
+### fal ledger (notes/verification/three-d-backgrounds/fal-ledger.json)
+4 calls total (~$0.10): flux-2 ×2 (cosmic plate + observatory capture) + depth-anything/v2 ×2. Plates generated once, reusable across hubs (D8). Spark 2.0 evaluation noted in ledger.notes.
+
+### Honest flags / what's procedural vs fal vs splat
+- Brass Nebula / Ice Field / Observatory Deep = 100% procedural (TSL raymarch + instanced sprites), zero fal at runtime.
+- Cosmic Drift = fal plate (image half) + depth-anything depth + procedural veil/starfield (the hybrid).
+- Captured Observatory = fal-captured scene rendered as a WebGPU-native RGBD gaussian splat. This is a captured-environment splat rendered in the single WebGPU renderer; it is NOT a full anisotropic-covariance 3DGS renderer (Spark, the true-3DGS path, is WebGL2-only and conflicts with INV-1 — documented swap seam). The Spark `{position[],rgba[],scale[]}` array shape is the documented swap-in under a WebGL2 renderer.
+- Non-blocking polish backlog (advocate NICE-TO-HAVE, 0 MUST-FIX): soften splat grain + edge vignette; optional scrim behind the Cosmic Drift sub-headline.
+
+### Verification gate results
+- **Numeric harness** (`scripts/three-d-backgrounds/{metrics,metrics-p2,metrics-p3}.mjs`, `drive-picker.mjs`, `c11-journey.mjs`): all C1–C11 numeric PASS off real frames.
+- **Capstone advocate** (fresh-context user-advocate): NET PLEASED · GATE PASS · **0 MUST-FIX**.
+- **Drift / forbidden-pattern review** (fresh-context prism-criteria-reviewer): feature diff CLEAN — 0 feature-introduced INV/FP violations (INV-1 one-renderer, INV-2 additive, INV-5 schema-only writes, INV-6 no-text, INV-7 no-secret, INV-9 no-purple, INV-10 tiered, FP-3 no-hardcode all verified). The 9 open canonical-3 items it surfaced are pre-existing project gaps in other surfaces (out of scope for this run).
+- **No regression**: tsc 9 baseline/0-new · vitest 3349/0 · prod build ✓ · primitives 408 · 0 console errors.
+
+### AUTO-CKPT hashes
+P0 `8a50b527` · P1 `0358eea2` · P2 `d54217f4` · P3 `040c5b05` · P4 `fce28ee0` · P5 `6e9d2505` · final (this commit).
+
 
 ## P0 — contract + re-verify current tooling — DONE
 - **Model:** claude-opus-4-8 (env-confirmed; Fable-5 down → opus is the target).
@@ -59,3 +105,6 @@ A photoreal CAPTURED environment rendered as 3D gaussian splats the camera flies
 - Cross-viewport premium on all 4 sizes; renders in galaxy + canvas + preview-app; real camera-through-depth parallax (`parallaxRatio 10.07`); decisive before/after vs the old flat void.
 - **0 MUST-FIX.** "No frame reads as flat/cold/AI-built; content legible everywhere."
 - NICE-TO-HAVE (non-blocking backlog): (1) soften the Captured Observatory splat grain + add an edge vignette; (2) a local scrim behind the Cosmic Drift sub-headline; (3) (resolved) mobile Captured Observatory uses the documented nebula fallback — splat count 0 on mobile confirmed.
+
+---
+THREE-D-BACKGROUNDS: RUN COMPLETE
