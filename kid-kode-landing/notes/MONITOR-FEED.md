@@ -59,3 +59,6 @@ Will self-report phase events below.
 [02:11] 3DBG P4 DONE: library UX + camera-journey — HubBackgroundPicker (5 droppable preset cards + live sliders) in Hub Inspector; galaxy backdrop=active-hub nebula; C8 apply+3-modes, C9 slider+save/reload round-trip, C10 additive, C11 journey parallax+no-blank-corner — all PASS. Next: P5 capstone.
 [02:22] 3DBG P5 DONE: C12 20/20 frames premium cross-viewport 0-err; C13 tsc 0-new + vitest 3349/0 + prod build ✓ + prims 408; C14 advocate PLEASED/PASS/0 MUST-FIX. Running criteria-reviewer drift gate before completion.
 [02:29] 3DBG RUN COMPLETE: 5 presets (3 procedural + hybrid + captured-splat), C1-C14 all PASS, advocate PLEASED/0 MUST-FIX, drift review clean, no regression (tsc/vitest/build). Report + sentinel written. STOP.
+[02:32] CHAIN: threedbg COMPLETE (marker + quiet)
+[02:32] CHAIN: launching guidedtips
+[02:43] TIPS P0 DONE: bespoke a11y-first controller contract (store + 7-step DATA + seen-flag), tsc 0-new (baseline 9). Baselines: prims 408, elements 37. Next: P1 lightbulb+shell.
