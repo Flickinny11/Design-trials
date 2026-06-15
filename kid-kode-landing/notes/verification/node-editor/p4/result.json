@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "name": "galaxy-meta",
+      "hubs": 5,
+      "nodes": 22,
+      "roots": 1
+    },
+    {
+      "name": "desktop-overview",
+      "stats": {
+        "meanLuma": 15.7,
+        "nonEmptyFrac": 0.216,
+        "warmFrac": 0.226
+      }
+    },
+    {
+      "name": "desktop-close",
+      "stats": {
+        "meanLuma": 14.6,
+        "nonEmptyFrac": 0.192,
+        "warmFrac": 0.183
+      }
+    },
+    {
+      "name": "perf",
+      "hz": 60
+    },
+    {
+      "name": "mobile",
+      "stats": {
+        "meanLuma": 28.1,
+        "nonEmptyFrac": 0.418,
+        "warmFrac": 0.259
+      },
+      "hz": 60
+    }
+  ],
+  "consoleErrors": [],
+  "notes": []
+}

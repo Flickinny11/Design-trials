@@ -79,7 +79,12 @@
   - `IntegrationsTab` (in `integrations/`, hook-form updateNode) reusing `BrandLogo`. Inspector tab `integrations` (compass icon).
   - Evidence: search "runpod"→card; **OAuth 2.1 connect → capabilityRef keys [refId,scope,label,provider,authMethod], hasTokenLike=FALSE** (INV-R13); self-populated assets → added "A100 80GB"; **integration+ref+asset survived PAGE RELOAD (no token)**; contentIcon=runpod set for galaxy (P4/C5). Mobile: supabase search OK.
   - Frames `notes/verification/node-editor/p3/`; harness `scripts/node-editor-p3-capture.mjs`. tsc 9/9 (0-new).
-- [ ] **P4** Galaxy planet/<app>_world (criteria D) — photoreal planets, size-by-artifact, node spheres + content icons.
+- [x] **P4** Galaxy planet/<app>_world (criteria D) — **DONE + verified** (real Chrome desktop+mobile, 0 console errors, 60Hz).
+  - `HubPlanet` (new): photoreal PBR brass/bone/ice planet — procedural banded+speckled surface texture, bumpMap, clearcoat/transmission, lit by the scene night-IBL + directionals, atmosphere halo + rim (Bloom-lifted). Family = hash(hubId)%3 (5 hubs → 2 bone/2 ice/1 brass). Rendered in `HubHull` galaxy branch (replaces page-mockup sphere; FP-NE-3 compliant).
+  - Central `<app>_world` = existing `WorldSun` (glowing core + brass ring). D2 size-by-content via existing `hubDiameters` (§3.2 f(nodeCount,depth)). D4 60Hz desktop AND mobile; tier-gated post-FX retained.
+  - D3: dormant node spheres (existing GlassNode) + new `NodeContentIcons` — brand-tinted badge per integrationRef + unique function platform (orr-arrival-headline → runpod+stripe), galaxy-gated.
+  - Frames `notes/verification/node-editor/p4/` (galaxy overview, planet close-up = photoreal brass/bone gas-giant, content-icon crop, mobile). Harness `scripts/node-editor-p4-capture.mjs`. tsc 9/9 (0-new).
+  - NOTE: content-icon badges are sub-pixel at galaxy OVERVIEW zoom (they're §3.3 node-detail markers); deep-zoom-to-node is the known-shallow NE-SC-03 path. Headline (photoreal planets) is WOW. Advocate to assess content-icon legibility in P5.
 - [ ] **P5** Interactive verification + sign-off (criteria E) — advocate drives desktop+mobile+constrained → 0 MUST-FIX.
 
 ## LEDGER

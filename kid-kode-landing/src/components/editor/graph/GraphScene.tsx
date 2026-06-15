@@ -44,6 +44,7 @@ import {
 } from '@/lib/useForceGraph';
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
+import HubPlanet, { NodeContentIcons } from '@/components/editor/graph/HubPlanet';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
 import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
 import { computeHubWorldLabelVisibility } from '@/lib/hub-world-label-lod';
@@ -816,6 +817,13 @@ function GlassNode({
           />
         </mesh>
       )}
+
+      {/* NODE-EDITOR-V2 D3 — per-integration content icons (galaxy node-state,
+          §3.3): one brand-tinted badge per connected integration + function
+          platform, showing what the node HOLDS. */}
+      {viewMode === 'galaxy' && (
+        <NodeContentIcons sourceNode={sourceNode} radius={radius} dimFactor={dimFactor} />
+      )}
     </group>
   );
 }
@@ -832,6 +840,7 @@ function HubHull({
   onSelect,
   dim,
   revealOpacity = 1,
+  galaxy = false,
 }: {
   hub: EditorHubView;
   center: { x: number; y: number; z: number };
@@ -839,6 +848,9 @@ function HubHull({
   innerRadius: number;
   isActive: boolean;
   onSelect: (shiftKey: boolean) => void;
+  // NODE-EDITOR-V2 D1 — in galaxy mode the hub renders as a photoreal PLANET
+  // (HubPlanet) instead of the editor-scaffolding hull + page-mockup sphere.
+  galaxy?: boolean;
   // EB-03-05 / SC-016: when true, the hub is a non-match against the active
   // galaxy filter. Its opacity is scaled by GALAXY_FILTER_DIM_OPACITY and
   // pointer events are suppressed so dimmed hubs aren't clickable. Matches
@@ -885,73 +897,96 @@ function HubHull({
         onSelect(e.nativeEvent.shiftKey);
       }}
     >
-      {/* Inner mockup sphere — textures the hub's hull with `hub.mockupUrl`
-          via MeshPhysicalMaterial (transmission/clearcoat/ior layered
-          vocabulary). Skipped entirely when the hub has no mockupUrl. */}
-      {mockupTexture && (
-        <mesh>
-          <sphereGeometry args={[innerRadius, 64, 64]} />
-          <meshPhysicalMaterial
-            map={mockupTexture}
-            emissiveMap={mockupTexture}
-            emissive={new THREE.Color(DS.ice300)}
-            emissiveIntensity={(isActive ? 0.32 : 0.18) * dimFactor}
-            metalness={0.1}
-            roughness={0.3}
-            clearcoat={0.6}
-            clearcoatRoughness={0.1}
-            transmission={0.4}
-            thickness={0.5}
-            ior={1.6}
-            transparent
-            opacity={0.85 * dimFactor}
+      {galaxy ? (
+        // NODE-EDITOR-V2 D1 — photoreal hub PLANET (brass/bone/ice, lit by the
+        // scene's night IBL + directionals, glowing via Bloom). Replaces the
+        // editor-scaffolding hull + page-mockup sphere in galaxy (FP-NE-3: no
+        // built artifact in galaxy; the planet is the dormant hub body).
+        <>
+          <HubPlanet radius={innerRadius} hubId={hub.id} isActive={isActive} dimFactor={dimFactor} />
+          {/* Faint constellation envelope — the node cloud boundary. */}
+          <mesh>
+            <sphereGeometry args={[radius, 24, 24]} />
+            <meshBasicMaterial
+              color={DS.ice500}
+              transparent
+              opacity={(isActive ? 0.05 : 0.02) * dimFactor}
+              side={THREE.BackSide}
+              toneMapped={false}
+            />
+          </mesh>
+        </>
+      ) : (
+        <>
+          {/* Inner mockup sphere — textures the hub's hull with `hub.mockupUrl`
+              via MeshPhysicalMaterial (transmission/clearcoat/ior layered
+              vocabulary). Skipped entirely when the hub has no mockupUrl. */}
+          {mockupTexture && (
+            <mesh>
+              <sphereGeometry args={[innerRadius, 64, 64]} />
+              <meshPhysicalMaterial
+                map={mockupTexture}
+                emissiveMap={mockupTexture}
+                emissive={new THREE.Color(DS.ice300)}
+                emissiveIntensity={(isActive ? 0.32 : 0.18) * dimFactor}
+                metalness={0.1}
+                roughness={0.3}
+                clearcoat={0.6}
+                clearcoatRoughness={0.1}
+                transmission={0.4}
+                thickness={0.5}
+                ior={1.6}
+                transparent
+                opacity={0.85 * dimFactor}
+              />
+            </mesh>
+          )}
+          {/* Hull chrome — Observatory Brass retint (Wave-3 advocate MUST-FIX):
+              the hull volume/wireframe/ring/light are editor scaffolding, so they
+              read in the system's ice family rather than raw hub.color
+              (#5d8bff-family registered as forbidden dashboard blue). Roles,
+              opacities and intensities unchanged — color-only. */}
+          <mesh>
+            <sphereGeometry args={[radius, 32, 32]} />
+            <meshBasicMaterial
+              color={DS.ice500}
+              transparent
+              opacity={(isActive ? 0.085 : 0.035) * dimFactor}
+              side={THREE.BackSide}
+              toneMapped={false}
+            />
+          </mesh>
+          <mesh>
+            <sphereGeometry args={[radius, 24, 24]} />
+            <meshBasicMaterial
+              color={DS.ice400}
+              transparent
+              opacity={(isActive ? 0.05 : 0.022) * dimFactor}
+              wireframe
+              toneMapped={false}
+            />
+          </mesh>
+          {/* Subtle equator glow ring */}
+          <mesh rotation={[Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
+            <meshBasicMaterial
+              color={DS.ice300}
+              transparent
+              opacity={(isActive ? 0.32 : 0.18) * dimFactor}
+              side={THREE.DoubleSide}
+              toneMapped={false}
+            />
+          </mesh>
+          {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
+              give the mockup sphere a noticeable glow. */}
+          <pointLight
+            color={DS.ice200}
+            intensity={(isActive ? 2.4 : 1.0) * dimFactor}
+            distance={radius * 3}
+            decay={1.6}
           />
-        </mesh>
+        </>
       )}
-      {/* Hull chrome — Observatory Brass retint (Wave-3 advocate MUST-FIX):
-          the hull volume/wireframe/ring/light are editor scaffolding, so they
-          read in the system's ice family rather than raw hub.color
-          (#5d8bff-family registered as forbidden dashboard blue). Roles,
-          opacities and intensities unchanged — color-only. */}
-      <mesh>
-        <sphereGeometry args={[radius, 32, 32]} />
-        <meshBasicMaterial
-          color={DS.ice500}
-          transparent
-          opacity={(isActive ? 0.085 : 0.035) * dimFactor}
-          side={THREE.BackSide}
-          toneMapped={false}
-        />
-      </mesh>
-      <mesh>
-        <sphereGeometry args={[radius, 24, 24]} />
-        <meshBasicMaterial
-          color={DS.ice400}
-          transparent
-          opacity={(isActive ? 0.05 : 0.022) * dimFactor}
-          wireframe
-          toneMapped={false}
-        />
-      </mesh>
-      {/* Subtle equator glow ring */}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[innerRadius * 1.02, innerRadius * 1.05, 96]} />
-        <meshBasicMaterial
-          color={DS.ice300}
-          transparent
-          opacity={(isActive ? 0.32 : 0.18) * dimFactor}
-          side={THREE.DoubleSide}
-          toneMapped={false}
-        />
-      </mesh>
-      {/* Hub-center soft light — modestly brighter than pre-Phase-4 to
-          give the mockup sphere a noticeable glow. */}
-      <pointLight
-        color={DS.ice200}
-        intensity={(isActive ? 2.4 : 1.0) * dimFactor}
-        distance={radius * 3}
-        decay={1.6}
-      />
     </group>
   );
 }
@@ -1111,6 +1146,7 @@ function HubHulls({
             innerRadius={innerRadius}
             isActive={isActive}
             revealOpacity={revealOpacity}
+            galaxy={viewMode === 'galaxy'}
             onSelect={(shiftKey) => {
               // EB-03-06 / SC-017 — shift-click on a hub in galaxy mode adds
               // the hub to the multi-selection set instead of replacing the
