@@ -149,16 +149,24 @@ export function HubBackgroundStack({
   hub,
   forceTier,
   flatPlate,
+  envOnly,
 }: {
   hub: PrismHub | undefined | null;
   forceTier?: DeviceTier | null;
   /** Verification only: force parallax-plane layers to render FLAT (the C6
    *  control — proves the depth displacement is what creates the parallax). */
   flatPlate?: boolean;
+  /** Galaxy mode: render ONLY the far volumetric-nebula env layer (as the
+   *  universe backdrop the planets sit in front of) — the near-field particle /
+   *  plate / splat layers are hub-interior and omitted (C8 galaxy). */
+  envOnly?: boolean;
 }) {
   const layers = useMemo(
-    () => (hub?.background ?? []).filter((l) => l.kind && PROCEDURAL_KINDS.has(l.kind)),
-    [hub?.background],
+    () =>
+      (hub?.background ?? []).filter(
+        (l) => l.kind && PROCEDURAL_KINDS.has(l.kind) && (!envOnly || l.kind === 'volumetric-nebula'),
+      ),
+    [hub?.background, envOnly],
   );
   const overBackdrop = useMemo(() => hubHasBackdropPlate(hub), [hub]);
   if (layers.length === 0) return null;

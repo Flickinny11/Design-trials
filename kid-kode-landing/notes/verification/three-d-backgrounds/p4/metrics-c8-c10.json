@@ -1,0 +1,65 @@
+{
+  "preset": "Ice Field",
+  "c8": {
+    "beforeLen": 0,
+    "afterLen": 2,
+    "kinds": [
+      "volumetric-nebula",
+      "particle-field"
+    ],
+    "applied": true,
+    "pass": true
+  },
+  "c9": {
+    "paramBefore": 0.38,
+    "paramAfter": 1,
+    "paramChanged": true,
+    "renderDelta": 33.402,
+    "reloadedLen": 2,
+    "reloadedPreset": "ice-field",
+    "reloadedDensity": 1,
+    "roundTrips": true,
+    "pass": true
+  },
+  "c10": {
+    "legacyFrame": "c10-legacy-no-bg.png",
+    "backgroundIsAdditive": true,
+    "persistedJson": [
+      {
+        "id": "ice-field-env",
+        "attachment": "infinite-environment",
+        "kind": "volumetric-nebula",
+        "z": -420,
+        "opacity": 1,
+        "parallaxDepth": 0.96,
+        "presetId": "ice-field",
+        "params": {
+          "palette": "ice",
+          "density": 0.38,
+          "drift": 0.32,
+          "depthSpread": 0.7,
+          "intensity": 0.6
+        }
+      },
+      {
+        "id": "ice-field-scatter",
+        "attachment": "world",
+        "kind": "particle-field",
+        "z": -160,
+        "opacity": 1,
+        "parallaxDepth": 0.62,
+        "presetId": "ice-field",
+        "params": {
+          "palette": "ice",
+          "density": 0.63,
+          "drift": 0.32,
+          "depthSpread": 0.7,
+          "intensity": 0.6,
+          "variant": "crystals"
+        }
+      }
+    ],
+    "pass": true
+  },
+  "errors": 0
+}

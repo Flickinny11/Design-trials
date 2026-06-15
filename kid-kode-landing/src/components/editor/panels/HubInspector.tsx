@@ -14,6 +14,7 @@ import { DS } from '@/components/editor/design-system';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
+import { HubBackgroundPicker } from './HubBackgroundPicker';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -145,6 +146,9 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
   const breakpoints = hub.responsiveBreakpoints ?? {};
   return (
     <div className="p-5 space-y-4">
+      {/* THREE-D-BACKGROUNDS — droppable, customizable 3D background asset picker. */}
+      <HubBackgroundPicker hub={hub} />
+
       {hub.caption && (
         <>
           <div className="ds-kicker">CAPTION</div>

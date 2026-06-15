@@ -1,0 +1,61 @@
+{
+  "preset": "cosmic-drift",
+  "frames": [
+    {
+      "t": 0.4,
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p4/c11-journey-0-t0.4.png",
+      "minCorner": 39,
+      "cornerMeans": [
+        53.9,
+        43.2,
+        39,
+        40.9
+      ]
+    },
+    {
+      "t": 1.8,
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p4/c11-journey-1-t1.8.png",
+      "minCorner": 34.7,
+      "cornerMeans": [
+        38.8,
+        42.5,
+        34.7,
+        38.7
+      ]
+    },
+    {
+      "t": 3.2,
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p4/c11-journey-2-t3.2.png",
+      "minCorner": 35.3,
+      "cornerMeans": [
+        35.3,
+        41.6,
+        39.6,
+        35.4
+      ]
+    },
+    {
+      "t": 4.8,
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p4/c11-journey-3-t4.8.png",
+      "minCorner": 34.6,
+      "cornerMeans": [
+        34.6,
+        41.1,
+        35.2,
+        35.2
+      ]
+    }
+  ],
+  "c11": {
+    "journeyFrameDeltas": [
+      14.63,
+      18.55,
+      11.34
+    ],
+    "parallaxMoves": true,
+    "minCornerAcrossJourney": 34.6,
+    "noBlankCorner": true,
+    "errors": 0,
+    "pass": true
+  }
+}

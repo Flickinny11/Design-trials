@@ -9,7 +9,7 @@ Run start: 2026-06-15. Branch: prism-editor-build. Model: claude-opus-4-8 (env-c
 | P1 — procedural core (volumetric nebula + GPU-compute particles, tiered) | DONE | C1–C4 ALL PASS on real WebGPU; 3 presets distinct+content-legible; raymarch optimized 90→23ms |
 | P2 — hybrid image layer (fal plate + parallax-plane depth) | DONE | C5–C6 PASS; fal flux-2 plate + depth-anything/v2; Cosmic Drift hybrid preset; translucent nebula veil over plate |
 | P3 — splat preset (captured-env gaussian splat, desktop/T2) | DONE | C7 PASS; WebGPU-native RGBD gaussian splat (58k splats T2), nebula fallback T0, 0 errs; Spark WebGL2-only → INV-1 swap seam documented |
-| P4 — library UX + camera-journey readiness | TODO | C8–C11 |
+| P4 — library UX + camera-journey readiness | DONE | C8–C11 PASS; HubBackgroundPicker in Hub Inspector (5 preset cards + live param sliders); galaxy backdrop = active hub nebula; save→reload round-trip; journey parallax + no blank corner |
 | P5 — verification + capstone | TODO | C12–C14 |
 
 ## Tooling re-verify (P0) — 2026-06-15, npm registry

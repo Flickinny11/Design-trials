@@ -23,7 +23,7 @@ import {
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
 import { WebGPURenderer } from 'three/webgpu';
-import { GalaxyStarfield, GalaxyNebula, GalaxyOrbitRings, SunCorona } from '@/components/editor/graph/GalaxyAtmosphere';
+import { GalaxyStarfield, GalaxyNebula, GalaxyOrbitRings, SunCorona, type GalaxyQuality } from '@/components/editor/graph/GalaxyAtmosphere';
 import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
@@ -3200,13 +3200,7 @@ function TopologySceneContent({
           glowing orrery rings. Standard-material additive geometry (self-blooms
           by accumulation) so it works under WebGPU where the legacy bloom
           composer + drei <Stars> are off. Galaxy-only; tier-scaled. */}
-      {viewMode === 'galaxy' && (
-        <>
-          <GalaxyStarfield quality={galaxyQuality} />
-          <GalaxyNebula quality={galaxyQuality} />
-          <GalaxyOrbitRings quality={galaxyQuality} />
-        </>
-      )}
+      {viewMode === 'galaxy' && <GalaxyHubBackdrop quality={galaxyQuality} />}
 
       {/* Lighting — photoreal with environment IBL + fills */}
       <ambientLight intensity={0.06} />
@@ -4056,6 +4050,25 @@ function useIsWebGPU(): boolean {
     backend?: { isWebGPUBackend?: boolean };
   };
   return !!(gl?.isWebGPURenderer || gl?.backend?.isWebGPUBackend);
+}
+
+// THREE-D-BACKGROUNDS (C8 galaxy) — galaxy atmosphere, but when the ACTIVE hub
+// carries a volumetric-nebula background the galaxy backdrop becomes that hub's
+// nebula (env-only, planets render in front) so a chosen background renders in
+// galaxy too; otherwise the default procedural GalaxyNebula. Starfield + orbit
+// rings are unchanged either way.
+function GalaxyHubBackdrop({ quality }: { quality: GalaxyQuality }) {
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const hubs = useGraphSourceStore((s) => s.hubs);
+  const active = hubs.find((h) => h.hubId === activeHubId) ?? null;
+  const hubHasNebula = !!active?.background?.some((l) => l.kind === 'volumetric-nebula');
+  return (
+    <>
+      <GalaxyStarfield quality={quality} />
+      {hubHasNebula ? <HubBackgroundStack hub={active} envOnly /> : <GalaxyNebula quality={quality} />}
+      <GalaxyOrbitRings quality={quality} />
+    </>
+  );
 }
 
 export default function GraphScene() {
