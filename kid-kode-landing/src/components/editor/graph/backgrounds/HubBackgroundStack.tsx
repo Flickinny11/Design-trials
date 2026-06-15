@@ -17,8 +17,9 @@ import { useBackgroundTier } from './useBackgroundTier';
 import { VolumetricNebulaLayer } from './VolumetricNebulaLayer';
 import { ParticleFieldLayer, type ParticleVariant } from './ParticleFieldLayer';
 import { ParallaxPlaneLayer } from './ParallaxPlaneLayer';
+import { SplatLayer } from './SplatLayer';
 
-const PROCEDURAL_KINDS = new Set(['volumetric-nebula', 'particle-field', 'parallax-plane', 'image']);
+const PROCEDURAL_KINDS = new Set(['volumetric-nebula', 'particle-field', 'parallax-plane', 'image', 'splat']);
 
 /** Does this hub carry any procedural (non-legacy) background layer? */
 export function hubHasProceduralBackground(hub: PrismHub | undefined | null): boolean {
@@ -104,7 +105,19 @@ function ProceduralLayer({
         />
       );
     }
-    // 'splat' → P3.
+    case 'splat': {
+      if (!layer.sourceUrl || !layer.depthMapUrl) return null;
+      return (
+        <SplatLayer
+          sourceUrl={layer.sourceUrl}
+          depthMapUrl={layer.depthMapUrl}
+          params={params}
+          budget={budget}
+          z={typeof layer.z === 'number' ? layer.z : -26}
+          renderOrder={renderOrder}
+        />
+      );
+    }
     default:
       return null;
   }

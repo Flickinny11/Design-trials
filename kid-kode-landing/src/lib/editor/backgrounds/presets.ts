@@ -222,11 +222,59 @@ const cosmicDrift: BackgroundPreset = {
   },
 };
 
+// ── Captured Observatory (SPLAT: desktop/T2 captured environment) ────────────
+// A photoreal CAPTURED environment (fal plate + depth) rendered as 3D gaussian
+// sprites the camera flies through (A5). The splat layer is `minTier: 'T2'` — on
+// mobile/T0 it drops and the procedural deep nebula renders as the documented
+// fallback (C7). Spark 2.0 is the documented .spz/.sog decode seam (see
+// SplatLayer). The graph holds only public asset URLs (INV-7).
+const CAPTURE_PLATE = '/three-d-bg/capture-observatory.png';
+const CAPTURE_DEPTH = '/three-d-bg/capture-observatory-depth.png';
+const capturedObservatory: BackgroundPreset = {
+  id: 'captured-observatory',
+  name: 'Captured Observatory',
+  description:
+    'A photoreal captured brass-observatory hall rendered as 3D gaussian splats you fly through (desktop/T2). On lighter devices it falls back to a deep procedural nebula — no hard error.',
+  tagline: 'captured 3D gaussian scene',
+  controls: sharedControls(ALL_PALETTE_OPTIONS, 'deep'),
+  defaultParams: { palette: 'deep', density: 0.4, drift: 0.3, depthSpread: 0.85, intensity: 0.5 },
+  build(params) {
+    const p = { ...this.defaultParams, ...params };
+    return [
+      {
+        id: 'captured-observatory-nebula',
+        attachment: 'infinite-environment',
+        kind: 'volumetric-nebula',
+        z: -460,
+        opacity: 1,
+        parallaxDepth: 0.97,
+        presetId: this.id,
+        // Deep atmosphere — surrounds the splat on T2, and IS the fallback on T0.
+        params: { ...p, density: 0.42 },
+      },
+      {
+        id: 'captured-observatory-splat',
+        attachment: 'world',
+        kind: 'splat',
+        sourceUrl: CAPTURE_PLATE,
+        depthMapUrl: CAPTURE_DEPTH,
+        z: -26,
+        opacity: 1,
+        parallaxDepth: 0.5,
+        minTier: 'T2', // desktop/T2 only; drops to the nebula fallback below
+        presetId: this.id,
+        params: p,
+      },
+    ];
+  },
+};
+
 export const BACKGROUND_PRESETS: readonly BackgroundPreset[] = Object.freeze([
   brassNebula,
   iceField,
   observatoryDeep,
   cosmicDrift,
+  capturedObservatory,
 ]);
 
 export function getBackgroundPreset(id: string | undefined): BackgroundPreset | undefined {
