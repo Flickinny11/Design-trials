@@ -178,11 +178,11 @@
   .ds-reveal, .ds-reveal-r { animation: none; }
 }
 
-/* ── TYPE (W3 overhaul — UI-WOW P1) ────────────────────────────────────────
-   Three voices: Clash Display = signature (display/headline/title), Geist =
-   workhorse (label/body/btn/input), JetBrains Mono = spice (kicker/chip/num).
-   The mono-caps that used to dominate are demoted to the kicker/chip accent;
-   labels + the bulk of readable chrome are now Geist. */
+/* ── TYPE (CHROME OVERHAUL 2026-06-15 — Switzer) ───────────────────────────
+   ONE precision grotesque, two weights: Switzer = signature (display/headline/
+   title, heavy + tight) AND workhorse (label/body/btn/input, regular). JetBrains
+   Mono = spice only (kicker/chip/num). One cohesive face reads as a precision
+   instrument rather than the prior Clash+Geist pairing. */
 
 /* SPICE — small mono instrument tag. Use sparingly (telemetry, micro-tags). */
 .ds-kicker {
@@ -203,7 +203,7 @@
   text-transform: uppercase;
   color: var(--ds-text-mid);
 }
-/* SIGNATURE — panel / section title. Clash Display, confident. */
+/* SIGNATURE — panel / section title. Switzer, confident + tight. */
 .ds-title {
   font-family: var(--ds-font-display);
   font-size: var(--ds-fs-title);

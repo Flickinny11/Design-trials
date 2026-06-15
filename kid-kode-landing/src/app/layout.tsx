@@ -6,21 +6,28 @@ import '@/components/editor/design-system/materials.css';
 import '@/components/editor/walkthrough/walkthrough.css';
 import { DS_TIER_BOOT_SCRIPT } from '@/components/editor/design-system/tier';
 
-// ── W2 type system — self-hosted variable fonts (public/fonts/ui/) ──────────
-// Display: Clash Display (Fontshare FFL) — nameplates / flyout titles.
-// UI:      Geist (OFL 1.1) — body + controls; real `tnum` tabular numerals.
-// Mono:    JetBrains Mono (OFL 1.1) — kickers, micro-labels, numeric readouts.
-// These feed --ds-font-display / --ds-font-ui / --ds-font-mono in tokens.css.
+// ── CHROME-OVERHAUL type system — self-hosted variable fonts (public/fonts/ui/) ─
+// ONE premium mechanical-precision grotesque carries BOTH display and UI:
+//   Switzer (Indian Type Foundry, Fontshare FFL) — a refined contemporary
+//   grotesque with a full 100→900 optical weight axis. Display = the signature
+//   voice (heavy, tight-tracked titles/numerals); UI = the workhorse (regular,
+//   labels/body/controls). One cohesive face reads as a precision instrument
+//   (Linear/Vercel/Arc lineage) rather than the prior Clash+Geist pairing that
+//   read templated. (Logan's veto target — surfaced in CHROME-REPORT.md.)
+//   Mono: JetBrains Mono (OFL 1.1) — the SPICE only: tabular numeric readouts,
+//   micro-kickers, shortcuts. Never the primary UI voice.
+// Two next/font calls back the SAME Switzer file so display + ui each get their
+// own generated family (cascade-race-safe — see tokens.css note).
 // (public/fonts/Inter-Variable.ttf is the MSDF build input — unrelated.)
 const display = localFont({
-  src: '../../public/fonts/ui/ClashDisplay-Variable.woff2',
-  weight: '200 700',
+  src: '../../public/fonts/ui/Switzer-Variable.woff2',
+  weight: '100 900',
   style: 'normal',
   variable: '--font-display',
   display: 'swap',
 });
 const ui = localFont({
-  src: '../../public/fonts/ui/Geist-Variable.woff2',
+  src: '../../public/fonts/ui/Switzer-Variable.woff2',
   weight: '100 900',
   style: 'normal',
   variable: '--font-ui',

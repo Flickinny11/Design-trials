@@ -13,77 +13,101 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Neutrals — graphite/ink machined housing ─────────────────────────── */
-  --ds-void: #04050a;        /* deep space; page + scene backdrop (unchanged) */
-  --ds-ink: #0b0d13;         /* darkest housing */
-  --ds-charcoal: #12151d;    /* recessed panel interiors */
-  --ds-graphite: #1a1e28;    /* primary panel body */
-  --ds-slate: #242936;       /* raised body / hover body */
-  --ds-steel: #323848;       /* highest neutral body */
+  /* ═══ OKLCH SOURCE OF TRUTH (CHROME OVERHAUL 2026-06-15) ══════════════════
+     The Observatory-Brass palette is authored in OKLCH so the graphite ramp
+     steps read as perceptually-even elevation and the brass ramp holds its hue
+     while only luminance/chroma move. Every color token is an oklch() value;
+     the JS mirror (tokens.ts) carries the EXACT sRGB hex each resolves to
+     (THREE.Color needs hex — change both or neither, the lockstep rule). The
+     graphite ramp sits a touch lifted + warmer than the prior near-black set so
+     a panel reads as LIT machined graphite over the black scene, not a hole cut
+     in the void. Brass is richer (more chroma) so accents actually catch light.
+     NO purple anywhere. ════════════════════════════════════════════════════ */
+
+  /* ── Neutrals — machined graphite housing (cool, very low chroma) ──────── */
+  --ds-void: oklch(0.11 0.012 264);       /* deep space; page + scene backdrop */
+  --ds-ink: oklch(0.175 0.014 264);       /* darkest housing */
+  --ds-charcoal: oklch(0.225 0.015 262);  /* recessed panel interiors */
+  --ds-graphite: oklch(0.275 0.017 260);  /* primary panel body */
+  --ds-slate: oklch(0.335 0.020 261);     /* raised body / hover body */
+  --ds-steel: oklch(0.40 0.022 261);      /* highest neutral body */
 
   /* ── Text — bone engraving on graphite ────────────────────────────────── */
-  --ds-text-hi: #f3f1ea;     /* headings / primary values */
-  --ds-text: #dfdcd2;        /* body */
-  --ds-text-mid: #a8a79e;    /* secondary */
-  --ds-text-low: #6e7077;    /* tertiary / disabled */
+  --ds-text-hi: oklch(0.955 0.012 92);    /* headings / primary values */
+  --ds-text: oklch(0.905 0.012 92);       /* body */
+  --ds-text-mid: oklch(0.73 0.010 90);    /* secondary */
+  --ds-text-low: oklch(0.555 0.010 256);  /* tertiary / disabled */
 
   /* ── Brass accent ramp (the ONE accent family) ────────────────────────── */
-  --ds-brass-100: #f7e9c6;   /* specular hot point */
-  --ds-brass-200: #ecd49d;
-  --ds-brass-300: #ddba77;
-  --ds-brass-400: #cd9f55;   /* primary accent */
-  --ds-brass-500: #b3853f;
-  --ds-brass-600: #8f6930;
-  --ds-brass-700: #654a22;
-  /* rgb triplets for alpha composition */
-  --ds-brass-400-rgb: 205, 159, 85;
-  --ds-brass-300-rgb: 221, 186, 119;
-  --ds-brass-200-rgb: 236, 212, 157;
+  --ds-brass-100: oklch(0.935 0.052 90);  /* specular hot point */
+  --ds-brass-200: oklch(0.875 0.088 83);
+  --ds-brass-300: oklch(0.805 0.110 77);
+  --ds-brass-400: oklch(0.735 0.124 72);  /* primary accent */
+  --ds-brass-500: oklch(0.655 0.118 67);
+  --ds-brass-600: oklch(0.545 0.100 64);
+  --ds-brass-700: oklch(0.425 0.078 62);
+  /* rgb triplets for rgba() alpha composition (sRGB of the oklch above) */
+  --ds-brass-400-rgb: 217, 155, 71;
+  --ds-brass-300-rgb: 231, 182, 106;
+  --ds-brass-200-rgb: 242, 209, 147;
+  --ds-brass-100-rgb: 247, 233, 195;
 
   /* ── Ice secondary (informational / frozen ONLY — never the hero) ─────── */
-  --ds-ice-200: #cfdde6;
-  --ds-ice-300: #a9c2d1;
-  --ds-ice-400: #7d9fb4;
-  --ds-ice-500: #54788d;
-  --ds-ice-400-rgb: 125, 159, 180;
+  --ds-ice-200: oklch(0.875 0.028 232);
+  --ds-ice-300: oklch(0.775 0.040 230);
+  --ds-ice-400: oklch(0.660 0.052 234);
+  --ds-ice-500: oklch(0.535 0.055 236);
+  --ds-ice-400-rgb: 115, 152, 174;
+  --ds-ice-300-rgb: 157, 187, 203;
 
   /* ── Status (semantic, palette-tuned) ─────────────────────────────────── */
-  --ds-ok: #63c389;
-  --ds-warn: #dfa14e;        /* sits inside the brass family */
-  --ds-danger: #d96a5e;
-  --ds-neutral: #76808f;
-  --ds-ok-rgb: 99, 195, 137;
-  --ds-danger-rgb: 217, 106, 94;
+  --ds-ok: oklch(0.755 0.135 155);
+  --ds-warn: oklch(0.775 0.115 75);       /* sits inside the brass family */
+  --ds-danger: oklch(0.655 0.150 28);
+  --ds-neutral: oklch(0.575 0.020 258);
+  --ds-ok-rgb: 95, 200, 137;
+  --ds-danger-rgb: 221, 103, 91;
 
-  /* ── Gradient ramps (never flat-fill a surface) ───────────────────────── */
+  /* ── Gradient ramps (never flat-fill a surface) ───────────────────────────
+     Panel/metal/ceramic bodies sit LIFTED + warmer than before so a surface
+     reads as lit machined graphite over the black scene (the prior near-black
+     fills disappeared into the void on Logan's display). The top of each ramp
+     carries a soft key-light catch; the body stays dense enough to footing DOM
+     text. Tier t2 slab-hosts most chrome (these go transparent + the GPU slab
+     renders), so these fills carry sub-t2 + every non-slab surface. */
   --ds-grad-brass: linear-gradient(165deg, var(--ds-brass-200) 0%, var(--ds-brass-400) 48%, var(--ds-brass-600) 100%);
-  --ds-grad-brass-soft: linear-gradient(165deg, rgba(var(--ds-brass-300-rgb), 0.22), rgba(var(--ds-brass-400-rgb), 0.1) 55%, rgba(var(--ds-brass-400-rgb), 0.04));
-  --ds-grad-panel: linear-gradient(168deg, rgba(52, 59, 78, 0.62) 0%, rgba(24, 27, 37, 0.76) 50%, rgba(12, 14, 20, 0.84) 100%);
-  --ds-grad-panel-opaque: linear-gradient(168deg, #232836 0%, #161922 55%, #0e1017 100%);
-  --ds-grad-smoked: linear-gradient(172deg, rgba(16, 18, 26, 0.78), rgba(7, 8, 13, 0.9));
-  --ds-grad-metal: linear-gradient(178deg, #2c3140 0%, #20242f 38%, #161924 72%, #1d212c 100%);
-  --ds-grad-ceramic: linear-gradient(176deg, #20242f 0%, #171a23 60%, #13161e 100%);
-  --ds-grad-well: linear-gradient(180deg, rgba(5, 6, 10, 0.85), rgba(16, 18, 26, 0.6));
+  --ds-grad-brass-soft: linear-gradient(165deg, rgba(var(--ds-brass-300-rgb), 0.24), rgba(var(--ds-brass-400-rgb), 0.11) 55%, rgba(var(--ds-brass-400-rgb), 0.045));
+  --ds-grad-panel: linear-gradient(168deg, rgba(74, 82, 99, 0.74) 0%, rgba(43, 49, 61, 0.83) 46%, rgba(25, 29, 38, 0.9) 100%);
+  --ds-grad-panel-opaque: linear-gradient(168deg, #2c323e 0%, #1d212b 55%, #12151d 100%);
+  --ds-grad-smoked: linear-gradient(172deg, rgba(24, 28, 37, 0.82), rgba(10, 12, 18, 0.92));
+  --ds-grad-metal: linear-gradient(178deg, #3a4153 0%, #2a3040 38%, #1d212c 72%, #262b37 100%);
+  --ds-grad-ceramic: linear-gradient(176deg, #2a2f3c 0%, #1f232e 60%, #181b24 100%);
+  --ds-grad-well: linear-gradient(180deg, rgba(5, 6, 10, 0.88), rgba(18, 21, 29, 0.62));
   --ds-grad-text-brass: linear-gradient(170deg, var(--ds-brass-100), var(--ds-brass-300) 55%, var(--ds-brass-500));
 
-  /* ── Edges — every surface catches light (specular TL → shade BR) ─────── */
-  --ds-edge-specular: rgba(255, 252, 242, 0.21);   /* top edge catch */
-  --ds-edge-side: rgba(255, 252, 242, 0.07);
-  --ds-edge-shade: rgba(0, 0, 0, 0.46);            /* bottom chamfer */
-  --ds-edge-grad: linear-gradient(165deg, rgba(255, 252, 242, 0.22) 0%, rgba(255, 252, 242, 0.05) 32%, rgba(120, 126, 140, 0.07) 60%, rgba(0, 0, 0, 0.32) 100%);
-  --ds-edge-grad-brass: linear-gradient(165deg, rgba(var(--ds-brass-200-rgb), 0.75) 0%, rgba(var(--ds-brass-400-rgb), 0.32) 38%, rgba(var(--ds-brass-400-rgb), 0.1) 62%, rgba(0, 0, 0, 0.3) 100%);
+  /* ── Edges — every surface catches light (specular TL → shade BR) ─────────
+     Brighter, crisper top-left catch so panels read as raised instruments with
+     a real light edge — the single biggest "this is a crafted surface, not a
+     dark rectangle" cue over the black scene. */
+  --ds-edge-specular: rgba(255, 252, 242, 0.30);   /* top edge catch */
+  --ds-edge-side: rgba(255, 252, 242, 0.10);
+  --ds-edge-shade: rgba(0, 0, 0, 0.5);             /* bottom chamfer */
+  --ds-edge-grad: linear-gradient(165deg, rgba(255, 253, 246, 0.34) 0%, rgba(255, 252, 242, 0.08) 30%, rgba(132, 140, 156, 0.09) 58%, rgba(0, 0, 0, 0.34) 100%);
+  --ds-edge-grad-brass: linear-gradient(165deg, rgba(var(--ds-brass-200-rgb), 0.85) 0%, rgba(var(--ds-brass-400-rgb), 0.38) 36%, rgba(var(--ds-brass-400-rgb), 0.12) 62%, rgba(0, 0, 0, 0.3) 100%);
 
-  /* ── Elevation — contact shadow + ambient pair per level ──────────────── */
-  --ds-elev-0: inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.32);
-  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.34);
-  --ds-elev-2: 0 2px 4px rgba(0, 0, 0, 0.52), 0 12px 30px rgba(0, 0, 0, 0.44);
-  --ds-elev-3: 0 4px 9px rgba(0, 0, 0, 0.56), 0 22px 52px rgba(0, 0, 0, 0.54);
-  --ds-elev-4: 0 8px 18px rgba(0, 0, 0, 0.6), 0 36px 90px rgba(0, 0, 0, 0.66);
+  /* ── Elevation — contact shadow + ambient pair per level ──────────────────
+     Deeper, wider ambient so surfaces lift cleanly off the void; the contact
+     shadow stays tight so edges read crisp. */
+  --ds-elev-0: inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.34);
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.52), 0 5px 16px rgba(0, 0, 0, 0.38);
+  --ds-elev-2: 0 2px 5px rgba(0, 0, 0, 0.55), 0 14px 34px rgba(0, 0, 0, 0.48);
+  --ds-elev-3: 0 5px 11px rgba(0, 0, 0, 0.58), 0 26px 60px rgba(0, 0, 0, 0.58);
+  --ds-elev-4: 0 9px 20px rgba(0, 0, 0, 0.62), 0 42px 104px rgba(0, 0, 0, 0.7);
   /* inner chamfer pack — composes with any elevation */
-  --ds-chamfer: inset 0 1px 0 var(--ds-edge-specular), inset 1px 0 0 var(--ds-edge-side), inset -1px 0 0 rgba(0, 0, 0, 0.18), inset 0 -1px 0 var(--ds-edge-shade);
-  --ds-chamfer-soft: inset 0 1px 0 rgba(255, 252, 242, 0.09), inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-  --ds-glow-brass: 0 0 22px rgba(var(--ds-brass-400-rgb), 0.28);
-  --ds-glow-brass-strong: 0 0 34px rgba(var(--ds-brass-400-rgb), 0.42);
+  --ds-chamfer: inset 0 1px 0 var(--ds-edge-specular), inset 1px 0 0 var(--ds-edge-side), inset -1px 0 0 rgba(0, 0, 0, 0.2), inset 0 -1px 0 var(--ds-edge-shade);
+  --ds-chamfer-soft: inset 0 1px 0 rgba(255, 252, 242, 0.13), inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+  --ds-glow-brass: 0 0 24px rgba(var(--ds-brass-400-rgb), 0.3);
+  --ds-glow-brass-strong: 0 0 38px rgba(var(--ds-brass-400-rgb), 0.46);
 
   /* ── Radii — machined corner scale ────────────────────────────────────── */
   --ds-r-xs: 6px;
@@ -92,6 +116,29 @@
   --ds-r-lg: 18px;
   --ds-r-xl: 24px;
   --ds-r-pill: 999px;
+
+  /* ── Spacing — 8pt base grid (CHROME OVERHAUL 2026-06-15) ──────────────────
+     The single rhythm for padding, gap and inset on every chrome surface so
+     alignment is consistent + optical, never the amateur ad-hoc px Logan
+     flagged. 4px is the half-step, reserved for dense control internals. */
+  --ds-space-0: 0px;
+  --ds-space-px: 1px;
+  --ds-space-1: 4px;     /* half-step — dense control internals only */
+  --ds-space-2: 8px;     /* base unit */
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+  /* Canonical surface insets (built on the 8pt grid). */
+  --ds-pad-panel: 16px;    /* inspector / flyout body padding */
+  --ds-pad-bar: 8px;       /* toolbar / dock rail padding */
+  --ds-pad-control: 12px;  /* button / input horizontal padding */
+  --ds-gap-stack: 12px;    /* vertical rhythm inside panels */
+  --ds-gap-inline: 8px;    /* inline control gaps */
 
   /* ── Z-index scale (UI-WOW-2) — pure-DOM chrome stacking over the ONE canvas.
      Names, not magic numbers, so the bottom-sheet host + compact dock layer
@@ -123,31 +170,31 @@
   --ds-ease-inout: cubic-bezier(0.6, 0, 0.18, 1);
   --ds-ease-spring: cubic-bezier(0.34, 1.36, 0.44, 1);
 
-  /* ── Type & rhythm (W3 type overhaul — UI-WOW P1) ─────────────────────────
-     Roles (the three voices of the editor):
-       display — Clash Display  → the SIGNATURE voice: titles, headlines, hero
-                 numbers. Confident + expressive. Used generously now.
-       ui      — Geist          → the WORKHORSE: labels, buttons, body, inputs,
-                 descriptions, captions. Premium neutral; carries the bulk.
-       mono    — JetBrains Mono → the SPICE only: numeric readouts (tabular),
-                 small instrument kickers/tags, shortcuts. NOT the dominant voice.
+  /* ── Type & rhythm (CHROME OVERHAUL 2026-06-15 — Switzer) ──────────────────
+     ONE precision grotesque — Switzer (ITF, Fontshare) — carries two voices via
+     its variable weight axis; mono is the spice:
+       display — Switzer @600–760, tight tracking → the SIGNATURE voice: titles,
+                 headlines, hero numerals. Confident, mechanical-precise.
+       ui      — Switzer @400–600 → the WORKHORSE: labels, buttons, body, inputs,
+                 descriptions. The bulk of readable chrome — cohesive with display.
+       mono    — JetBrains Mono → the SPICE only: tabular numeric readouts, small
+                 instrument kickers/tags, shortcuts. NEVER the primary UI voice.
      The --font-* vars are stamped on <html> by next/font/local (src/app/layout.tsx;
-     self-hosted variable fonts in public/fonts/ui/) and resolve to next/font's
-     generated families `display`/`ui`/`mono`.
-     CASCADE-RACE FIX (UI-WOW P1): the per-var() fallbacks below are clean SANS /
-     MONO system stacks — NOT the literal face names 'Clash Display'/'Geist'/
-     'JetBrains Mono', which are NOT registered under those names and render as
-     the browser SERIF default. So if next/font's var ever fails to define on a
-     subtree, type degrades to a clean sans/mono, never an ugly serif. */
+     display + ui both back the SAME Switzer file under distinct generated
+     families). CASCADE-RACE FIX: the per-var() fallbacks are clean SANS / MONO
+     system stacks — NOT a literal face name (which would be unregistered →
+     browser SERIF). So if next/font's var ever fails on a subtree, type degrades
+     to a clean grotesque/mono, never an ugly serif. */
   --ds-font-display: var(--font-display, ui-sans-serif), var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
   --ds-font-ui: var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
   --ds-font-mono: var(--font-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  /* Tracking: Geist labels sit refined (tight), mono kickers keep the wide
-     instrument track, Clash titles sit tight with a hair of negative tracking. */
-  --ds-track-label: 0.06em;   /* Geist uppercase labels — refined, not the wide mono track */
-  --ds-track-kicker: 0.2em;   /* mono kicker keeps the wide instrument track (the accent) */
-  --ds-track-title: -0.012em; /* Clash Display sits tight at title/display sizes */
-  --ds-track-body: 0.005em;
+  /* Tracking tuned for Switzer: titles sit tighter (a grotesque holds tight
+     tracking cleanly at display sizes); uppercase labels keep an engraved track;
+     mono kickers keep the wide instrument track (the accent). */
+  --ds-track-label: 0.07em;   /* Switzer uppercase labels — engraved, refined */
+  --ds-track-kicker: 0.2em;   /* mono kicker keeps the wide instrument track */
+  --ds-track-title: -0.02em;  /* Switzer titles sit tight at display sizes */
+  --ds-track-body: 0.004em;
   --ds-fs-kicker: 9.5px;
   --ds-fs-label: 11px;
   --ds-fs-body: 12.5px;

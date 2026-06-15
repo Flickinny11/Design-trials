@@ -5,41 +5,45 @@
 // These MUST stay in lockstep with tokens.css — change both or neither.
 // Component-local hex values are forbidden; import from here instead.
 
+// CHROME OVERHAUL 2026-06-15: these hex are the EXACT sRGB render of the OKLCH
+// source tokens in tokens.css (Observatory-Brass, enriched/lifted). They feed
+// THREE.Color in the chrome-layer slab shaders + inline styles. Keep in lockstep
+// with tokens.css — change both or neither.
 export const DS = {
-  // Neutrals — machined graphite housing
-  void: '#04050a',
-  ink: '#0b0d13',
-  charcoal: '#12151d',
-  graphite: '#1a1e28',
-  slate: '#242936',
-  steel: '#323848',
+  // Neutrals — machined graphite housing (lifted/warmer so panels read as lit)
+  void: '#030408',
+  ink: '#0d1117',
+  charcoal: '#181c23',
+  graphite: '#232830',
+  slate: '#313741',
+  steel: '#414854',
 
   // Text — bone engraving
-  textHi: '#f3f1ea',
-  text: '#dfdcd2',
-  textMid: '#a8a79e',
-  textLow: '#6e7077',
+  textHi: '#f3f0e7',
+  text: '#e2e0d7',
+  textMid: '#aaa7a1',
+  textLow: '#6f7379',
 
-  // Brass accent ramp
-  brass100: '#f7e9c6',
-  brass200: '#ecd49d',
-  brass300: '#ddba77',
-  brass400: '#cd9f55', // primary accent
-  brass500: '#b3853f',
-  brass600: '#8f6930',
-  brass700: '#654a22',
+  // Brass accent ramp (richer — more chroma so accents catch light)
+  brass100: '#f7e9c3',
+  brass200: '#f2d193',
+  brass300: '#e7b66a',
+  brass400: '#d99b47', // primary accent
+  brass500: '#c08137',
+  brass600: '#98622a',
+  brass700: '#6d441c',
 
   // Ice secondary (informational / frozen only)
-  ice200: '#cfdde6',
-  ice300: '#a9c2d1',
-  ice400: '#7d9fb4',
-  ice500: '#54788d',
+  ice200: '#c4dae5',
+  ice300: '#9dbbcb',
+  ice400: '#7398ae',
+  ice500: '#4d7389',
 
   // Status
-  ok: '#63c389',
-  warn: '#dfa14e',
-  danger: '#d96a5e',
-  neutral: '#76808f',
+  ok: '#5fc889',
+  warn: '#e1ab5c',
+  danger: '#dd675b',
+  neutral: '#727985',
 } as const;
 
 /** Primary accent — use for active states, selection, primary actions. */
