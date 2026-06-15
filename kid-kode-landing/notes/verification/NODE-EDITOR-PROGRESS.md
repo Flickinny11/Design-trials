@@ -85,11 +85,17 @@
   - D3: dormant node spheres (existing GlassNode) + new `NodeContentIcons` — brand-tinted badge per integrationRef + unique function platform (orr-arrival-headline → runpod+stripe), galaxy-gated.
   - Frames `notes/verification/node-editor/p4/` (galaxy overview, planet close-up = photoreal brass/bone gas-giant, content-icon crop, mobile). Harness `scripts/node-editor-p4-capture.mjs`. tsc 9/9 (0-new).
   - NOTE: content-icon badges are sub-pixel at galaxy OVERVIEW zoom (they're §3.3 node-detail markers); deep-zoom-to-node is the known-shallow NE-SC-03 path. Headline (photoreal planets) is WOW. Advocate to assess content-icon legibility in P5.
-- [ ] **P5** Interactive verification + sign-off (criteria E) — advocate drives desktop+mobile+constrained → 0 MUST-FIX.
+- [x] **P5** Interactive verification + sign-off (criteria E) — **DONE. RUN COMPLETE.**
+  - Constrained 860×620 capstone drive (`p5-capstone/`): prompt-edit collide→applied 2, functions Slack valid/fixed, supabase connect→no-token+asset, galaxy nav — **0 console errors**.
+  - **Capstone user-advocate: net PLEASED → gate PASS, 0 MUST-FIX** on criteria A–E (validated `computedGate:PASS`). "premium Observatory-Brass and production-ready; provider logos real and crisp; planets photoreal; capability refs no token."
+  - E1 no-regression: **tsc 9/9 baseline (0-new)** · **production `next build` ✓ (18/18 pages, 3 new routes)** · **vitest 3349 passed / 0 failed** · verify:prism 12/14 (2 pre-existing artifact fails). E3 secret-leak clean, no "fal" surfaced.
+  - Report: `notes/NODE-EDITOR-REPORT.md` (per-criterion evidence + architecture + swap targets + honest flags + completion marker).
+  - Advocate caveat (accurate, out-of-scope): 9 renderer-architecture criteria (RT-SC-02/03/06/10/11, NE-SC-01/03/13/14) are pre-existing STEP-4 items; V2 is an additive HARNESS with topology FROZEN — not touched.
 
 ## LEDGER
 - fal budget: $50 shared account, cumulative. This run expects $0 fal (no media gen needed; brand marks are vector).
 - Model usage: confirm `claude-opus-4-8` at start + after each resume.
 
 ## STATUS
-- [in progress] Orientation complete; specs + codebase mapped; strategy locked. Starting P0 BASE.
+- **RUN COMPLETE (2026-06-14).** All criteria A–E PASS; capstone advocate PASS / 0 MUST-FIX; WOW + production-ready.
+  tsc 9/9 baseline, prod build ✓, vitest 3349/0, secret-leak clean. Live model/aggregator/Supabase = documented swap.
