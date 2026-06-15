@@ -7,7 +7,7 @@ Run start: 2026-06-15. Branch: prism-editor-build. Model: claude-opus-4-8 (env-c
 |---|---|---|
 | P0 — contract + re-verify tooling | DONE | schema extended (BackgroundLayerKind/Params + 6 layer fields); presets/tier/palettes lib; 3 presets as DATA; tsc 9 (baseline, 0-new) |
 | P1 — procedural core (volumetric nebula + GPU-compute particles, tiered) | DONE | C1–C4 ALL PASS on real WebGPU; 3 presets distinct+content-legible; raymarch optimized 90→23ms |
-| P2 — hybrid image layer (fal plate + parallax-plane depth) | TODO | C5–C6 |
+| P2 — hybrid image layer (fal plate + parallax-plane depth) | DONE | C5–C6 PASS; fal flux-2 plate + depth-anything/v2; Cosmic Drift hybrid preset; translucent nebula veil over plate |
 | P3 — splat preset (Spark 2.0, desktop/T2) | TODO | C7 |
 | P4 — library UX + camera-journey readiness | TODO | C8–C11 |
 | P5 — verification + capstone | TODO | C12–C14 |

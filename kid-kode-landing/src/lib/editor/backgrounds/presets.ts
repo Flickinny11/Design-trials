@@ -164,10 +164,69 @@ const observatoryDeep: BackgroundPreset = {
   },
 };
 
+// ── Cosmic Drift (HYBRID: fal plate + depth parallax + procedural veil) ──────
+// The image+real-3D hybrid (A6): a photoreal deep-space PLATE (fal flux-2),
+// depth-displaced (fal depth-anything/v2) so it parallaxes with the camera, with
+// a thin translucent procedural nebula veil + a starfield layered IN FRONT in
+// real Z. The plate URLs are PUBLIC asset paths (INV-7: generated server-side,
+// no secret in the graph). Generated once + reusable (D8).
+const COSMIC_PLATE = '/three-d-bg/cosmic-plate.png';
+const COSMIC_DEPTH = '/three-d-bg/cosmic-plate-depth.png';
+const cosmicDrift: BackgroundPreset = {
+  id: 'cosmic-drift',
+  name: 'Cosmic Drift',
+  description:
+    'The hybrid: a photoreal deep-space plate depth-displaced for real parallax, a thin brass nebula veil drifting in front, and a scattered starfield — image + procedural + real-3D.',
+  tagline: 'photoreal depth parallax',
+  controls: sharedControls(ALL_PALETTE_OPTIONS, 'brass'),
+  defaultParams: { palette: 'brass', density: 0.32, drift: 0.4, depthSpread: 0.8, intensity: 0.55 },
+  build(params) {
+    const p = { ...this.defaultParams, ...params };
+    return [
+      {
+        id: 'cosmic-drift-plate',
+        attachment: 'world',
+        kind: 'parallax-plane',
+        sourceUrl: COSMIC_PLATE,
+        depthMapUrl: COSMIC_DEPTH,
+        renderMode: 'parallax-plane',
+        z: -46,
+        opacity: 1,
+        parallaxDepth: 0.8,
+        presetId: this.id,
+        params: p,
+      },
+      {
+        id: 'cosmic-drift-veil',
+        attachment: 'infinite-environment',
+        kind: 'volumetric-nebula',
+        z: -420,
+        opacity: 0.4, // veil strength — the plate leads, the veil is a subtle accent
+        parallaxDepth: 0.95,
+        presetId: this.id,
+        // THIN veil over the plate (the plate leads; the veil is a subtle drifting
+        // accent), translucent so the photoreal plate shows through.
+        params: { ...p, density: 0.16, intensity: Math.min(0.45, p.intensity ?? 0.45) },
+      },
+      {
+        id: 'cosmic-drift-scatter',
+        attachment: 'world',
+        kind: 'particle-field',
+        z: -120,
+        opacity: 1,
+        parallaxDepth: 0.6,
+        presetId: this.id,
+        params: { ...p, variant: 'starfield' },
+      },
+    ];
+  },
+};
+
 export const BACKGROUND_PRESETS: readonly BackgroundPreset[] = Object.freeze([
   brassNebula,
   iceField,
   observatoryDeep,
+  cosmicDrift,
 ]);
 
 export function getBackgroundPreset(id: string | undefined): BackgroundPreset | undefined {

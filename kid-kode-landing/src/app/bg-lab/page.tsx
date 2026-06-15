@@ -125,6 +125,7 @@ export default function BgLabPage() {
     let bg = applyBackgroundPreset(preset, params);
     if (only === 'nebula') bg = bg.filter((l) => l.kind === 'volumetric-nebula');
     if (only === 'particles') bg = bg.filter((l) => l.kind === 'particle-field');
+    if (only === 'plate') bg = bg.filter((l) => l.kind === 'parallax-plane' || l.kind === 'image');
     return {
       hubId: 'lab',
       title: 'lab',
@@ -140,7 +141,7 @@ export default function BgLabPage() {
           <CameraRig orbit={orbit} pose={pose} parallel={sp.get('look') === 'parallel'} />
           <FrameTimeProbe />
           <ProjectProbe />
-          <HubBackgroundStack hub={hub} forceTier={tierParam} />
+          <HubBackgroundStack hub={hub} forceTier={tierParam} flatPlate={sp.get('flatplate') === '1'} />
           {/* reference frame at origin for scale (small wire box) */}
           <mesh>
             <boxGeometry args={[2, 2, 2]} />

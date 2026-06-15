@@ -1,1 +1,21 @@
-{"run":"three-d-backgrounds","entries":[]}
+{
+  "run": "three-d-backgrounds",
+  "entries": [
+    {
+      "ts": "2026-06-15T06:27:38.527Z",
+      "model": "fal-ai/flux-2",
+      "purpose": "P2 hybrid base plate (deep cosmic, no text)",
+      "estCost": 0.04,
+      "bytes": 989419,
+      "out": "public/three-d-bg/cosmic-plate.png"
+    },
+    {
+      "ts": "2026-06-15T06:27:41.042Z",
+      "model": "fal-ai/image-preprocessors/depth-anything/v2",
+      "purpose": "P2 parallax depth map for cosmic plate",
+      "estCost": 0.01,
+      "bytes": 125161,
+      "out": "public/three-d-bg/cosmic-plate-depth.png"
+    }
+  ]
+}

@@ -21,7 +21,16 @@ Live R3F components in `src/components/editor/graph/backgrounds/`, mounted by `G
 **C4 tiering — PASS.** Same preset renders on T2 AND T0 (both non-black); T0 drops particle counts ~5× (e.g. embers 3584→627) and raymarch steps; frame-time T2 **~23ms** (optimized from 90ms via octave/step/light-march cuts), all tiers ≥40fps headless (≥60 expected interactive). Evidence: `p1/*-tierT{0,2}.png` + metrics.
 
 3 presets verified on the REAL preview-app with content reading cleanly on top: `p1-presets/desktop-preview-app-{brass-nebula,ice-field,observatory-deep}.png`. Isolation lab at `/bg-lab` (verification route). tsc 9 (baseline, 0-new).
-## P2 — hybrid image layer (fal plate + parallax-plane depth) — TODO
+## P2 — hybrid image layer (fal plate + parallax-plane depth) — DONE
+The image+real-3D hybrid: a photoreal deep-space PLATE (fal flux-2) depth-displaced (fal depth-anything/v2) so it parallaxes, with a thin translucent procedural nebula veil + starfield in front. Generated once, server-side, reusable (D8).
+
+- **fal generation** (`scripts/three-d-backgrounds/gen-hybrid-plate.mjs`, run with `node --env-file=.env.local`): `fal-ai/flux-2` base plate (deep cosmic, negative prompt "no text, no letters, no labels" per INV-6) → `public/three-d-bg/cosmic-plate.png` (966 KB); `fal-ai/image-preprocessors/depth-anything/v2` → `cosmic-plate-depth.png` (122 KB). FAL_KEY read from server env only; the graph holds ONLY the public asset URLs (INV-7). Ledger: `fal-ledger.json` (2 calls, ~$0.05).
+- **Parallax plate** (`ParallaxPlaneLayer.tsx`): a 160×96-subdivided plane, image as `map`, DISPLACED in Z by the depth texture in `positionNode` (`(depth−0.5)·amp`), world-anchored so the camera flies past it → real depth parallax. Radial edge feather → no hard seam / pasted-card edge; corners fade to atmosphere (C5).
+- **Translucent veil** (`VolumetricNebulaLayer` `overBackdrop` mode): when a plate is present the nebula renders as a translucent veil (alpha = gas coverage × veil strength) so the photoreal plate shows through the dust voids; skybox suppression is lifted so feathered plate corners blend (`hubSuppressesSkybox`).
+- **Cosmic Drift** preset (4th launch preset): plate (parallax-plane) + thin brass veil (opacity 0.4) + starfield.
+
+**C5 hybrid composite — PASS.** Frame luma std **36.9** (rich photoreal detail composited in, not flat); corner luma **[39.7,3.9,20.8,30]**, maxCorner **39.7 < 70** → corners feathered to DARK atmosphere, no bright pasted-oval halo. (cornerSpread/ovalEdge are high but REPORTED-only — they reflect the plate's legitimate nebula-band structure, not a seam.) Evidence: `p2/cosmic-drift-hybrid-full.png`, real-app `p2/desktop-preview-app-cosmic-drift.png`.
+**C6 parallax-plane depth — PASS.** Depth map deforms the plate vs a flat control by warp **33.2** (real 3D geometry, not flat); under a matched camera pan the displaced plate's image-shift (**15.1**) differs from the flat control's (**25.2**) by **40%** (`panShiftDiffFrac 0.40`) — a flat plane and a depth-displaced surface can only move differently under the same translation if the surface has real depth → that difference IS parallax. Evidence: `p2/*-plate-{disp,flat}-camx{0,5}.png`, `p2/metrics-c5-c6.json`. tsc 9 (baseline, 0-new).
 ## P3 — splat preset (Spark 2.0, desktop/T2) — TODO
 ## P4 — library UX + camera-journey readiness — TODO
 ## P5 — verification + capstone — TODO

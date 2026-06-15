@@ -56,7 +56,7 @@ import {
 } from '@/lib/prism-graph/hub-geometry';
 import { computeCloneDragTether } from '@/lib/editor/clone-drag-tether';
 import ElementPlacementLayer from '@/components/editor/elements/ElementPlacementLayer';
-import { HubBackgroundStack, hubHasVolumetricNebula } from '@/components/editor/graph/backgrounds/HubBackgroundStack';
+import { HubBackgroundStack, hubSuppressesSkybox } from '@/components/editor/graph/backgrounds/HubBackgroundStack';
 import {
   computeGalaxyFilterMatches,
   GALAXY_FILTER_DIM_OPACITY,
@@ -3883,7 +3883,7 @@ function AssembledSceneContent({
           its own dark base + always fills the frustum), so the flat gradient
           skybox is suppressed to avoid a doubled/flattened sky. Legacy hubs (no
           nebula) keep the gradient skybox unchanged. */}
-      {!hubHasVolumetricNebula(hub) && <HubSceneBackground hub={hub} />}
+      {!hubSuppressesSkybox(hub) && <HubSceneBackground hub={hub} />}
       <HubBackgroundStack hub={hub} />
       <SceneBackdrop hub={hub} />
       <AssembledShadowCatcher />

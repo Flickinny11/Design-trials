@@ -63,6 +63,14 @@ export interface VolumetricNebulaLayerProps {
   params: BackgroundLayerParams;
   budget: TierBudget;
   renderOrder?: number;
+  /** When true the nebula is a TRANSLUCENT veil (alpha = gas coverage) so an
+   *  image/parallax-plate behind it shows through the dark dust voids (hybrid,
+   *  C5). When false (default) it is the OPAQUE backdrop (its own dark base
+   *  fills the voids; the flat skybox is suppressed). */
+  overBackdrop?: boolean;
+  /** Veil strength in overBackdrop mode: scales the gas alpha so the plate leads
+   *  and the veil is a subtle accent (1 = full coverage). Ignored when opaque. */
+  veilOpacity?: number;
 }
 
 export function VolumetricNebulaLayer({
@@ -70,6 +78,8 @@ export function VolumetricNebulaLayer({
   params,
   budget,
   renderOrder = -2,
+  overBackdrop = false,
+  veilOpacity = 1,
 }: VolumetricNebulaLayerProps) {
   const camera = useThree((s) => s.camera);
   const meshRef = useRef<THREE.Mesh>(null);
@@ -81,6 +91,7 @@ export function VolumetricNebulaLayer({
       uDensity: uniform(0.6),
       uDrift: uniform(0.5),
       uIntensity: uniform(0.7),
+      uVeil: uniform(1),
     }),
     [],
   );
@@ -189,26 +200,33 @@ export function VolumetricNebulaLayer({
         });
       });
 
-      // Composite over a deep palette-tinted sky so thin regions read as a
-      // coloured nebula haze (never flat black void); dense gas glows on top.
-      // Fully opaque backdrop (the flat gradient skybox is suppressed when a
-      // nebula is present).
+      // gas coverage (0 = clear void, 1 = thick gas).
+      const coverage: TNode = float(1).sub(transmittance);
+      if (overBackdrop) {
+        // Translucent veil: emission only, alpha = gas coverage scaled by the
+        // veil strength so the plate leads. Plate shows through the voids.
+        const veilA: TNode = tslClamp(coverage.mul(uniforms.uVeil as TNode), float(0), float(1));
+        return vec4(scattered.mul((uniforms.uVeil as TNode).mul(0.5).add(0.5)).add(gasDeep.mul(coverage).mul(0.1)), veilA);
+      }
+      // Opaque backdrop: deep palette-tinted sky fills voids (no flat-black void,
+      // the flat skybox is suppressed when a nebula is present).
       const skyTint: TNode = base.mul(1.25).add(gasDeep.mul(0.22));
-      const rgb: TNode = skyTint.mul(transmittance).add(scattered);
-      return vec4(rgb, float(1));
+      return vec4(skyTint.mul(transmittance).add(scattered), float(1));
     });
 
     const rendered = render();
     const mat = new MeshBasicNodeMaterial({
       side: THREE.BackSide,
+      transparent: overBackdrop,
       depthWrite: false,
       toneMapped: false,
       fog: false,
     });
     (mat as unknown as { colorNode: unknown }).colorNode = (rendered as TNode).rgb;
+    if (overBackdrop) (mat as unknown as { opacityNode: unknown }).opacityNode = (rendered as TNode).a;
     return mat;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [palette.id, budget.raymarchSteps, budget.lightMarchSteps]);
+  }, [palette.id, budget.raymarchSteps, budget.lightMarchSteps, overBackdrop]);
 
   useEffect(() => () => material.dispose(), [material]);
 
@@ -217,7 +235,8 @@ export function VolumetricNebulaLayer({
     uniforms.uDensity.value = typeof params.density === 'number' ? params.density : 0.6;
     uniforms.uDrift.value = typeof params.drift === 'number' ? params.drift : 0.5;
     uniforms.uIntensity.value = typeof params.intensity === 'number' ? params.intensity : 0.7;
-  }, [params.density, params.drift, params.intensity, uniforms]);
+    uniforms.uVeil.value = veilOpacity;
+  }, [params.density, params.drift, params.intensity, veilOpacity, uniforms]);
 
   // Keep the shell centred on the camera (infinite-environment feel) + advance
   // the drift clock.

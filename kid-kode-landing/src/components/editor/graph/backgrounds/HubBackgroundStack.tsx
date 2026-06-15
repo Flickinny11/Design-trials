@@ -16,27 +16,43 @@ import { tierMeets, type DeviceTier } from '@/lib/editor/backgrounds/tier';
 import { useBackgroundTier } from './useBackgroundTier';
 import { VolumetricNebulaLayer } from './VolumetricNebulaLayer';
 import { ParticleFieldLayer, type ParticleVariant } from './ParticleFieldLayer';
+import { ParallaxPlaneLayer } from './ParallaxPlaneLayer';
 
-/** Does this hub carry any procedural (non-image) background layer? Used by the
- *  scene to suppress the flat gradient skybox when a nebula owns the backdrop. */
+const PROCEDURAL_KINDS = new Set(['volumetric-nebula', 'particle-field', 'parallax-plane', 'image']);
+
+/** Does this hub carry any procedural (non-legacy) background layer? */
 export function hubHasProceduralBackground(hub: PrismHub | undefined | null): boolean {
-  return !!hub?.background?.some(
-    (l) => l.kind && l.kind !== 'image' && l.kind !== 'parallax-plane',
-  );
+  return !!hub?.background?.some((l) => l.kind && PROCEDURAL_KINDS.has(l.kind));
 }
 
 export function hubHasVolumetricNebula(hub: PrismHub | undefined | null): boolean {
   return !!hub?.background?.some((l) => l.kind === 'volumetric-nebula');
 }
 
+/** A hybrid image/parallax plate behind the procedural layers (the "image half"). */
+function hubHasBackdropPlate(hub: PrismHub | undefined | null): boolean {
+  return !!hub?.background?.some((l) => l.kind === 'image' || l.kind === 'parallax-plane');
+}
+
+/** Suppress the flat gradient skybox only when an OPAQUE nebula owns the whole
+ *  backdrop (a nebula with NO plate behind it). With a plate present the nebula
+ *  is a translucent veil and the feathered plate corners blend into the skybox. */
+export function hubSuppressesSkybox(hub: PrismHub | undefined | null): boolean {
+  return hubHasVolumetricNebula(hub) && !hubHasBackdropPlate(hub);
+}
+
 function ProceduralLayer({
   layer,
   index,
   forceTier,
+  overBackdrop,
+  flatPlate,
 }: {
   layer: PrismHubBackgroundLayer;
   index: number;
   forceTier?: DeviceTier | null;
+  overBackdrop: boolean;
+  flatPlate?: boolean;
 }) {
   const { tier, budget } = useBackgroundTier(forceTier);
 
@@ -56,6 +72,8 @@ function ProceduralLayer({
           params={params}
           budget={budget}
           renderOrder={renderOrder}
+          overBackdrop={overBackdrop}
+          veilOpacity={typeof layer.opacity === 'number' ? layer.opacity : 1}
         />
       );
     case 'particle-field': {
@@ -71,8 +89,22 @@ function ProceduralLayer({
         />
       );
     }
-    // 'image' / 'parallax-plane' / 'splat' are handled elsewhere (SceneBackdrop
-    // flat plate; P2 parallax-plane; P3 splat). No-op here.
+    case 'parallax-plane':
+    case 'image': {
+      if (!layer.sourceUrl) return null;
+      return (
+        <ParallaxPlaneLayer
+          sourceUrl={layer.sourceUrl}
+          depthMapUrl={layer.depthMapUrl}
+          params={params}
+          z={typeof layer.z === 'number' ? layer.z : -40}
+          opacity={typeof layer.opacity === 'number' ? layer.opacity : 1}
+          flat={layer.kind === 'image' || !!flatPlate}
+          renderOrder={renderOrder}
+        />
+      );
+    }
+    // 'splat' → P3.
     default:
       return null;
   }
@@ -103,23 +135,32 @@ function BackgroundCameraProbe() {
 export function HubBackgroundStack({
   hub,
   forceTier,
+  flatPlate,
 }: {
   hub: PrismHub | undefined | null;
   forceTier?: DeviceTier | null;
+  /** Verification only: force parallax-plane layers to render FLAT (the C6
+   *  control — proves the depth displacement is what creates the parallax). */
+  flatPlate?: boolean;
 }) {
   const layers = useMemo(
-    () =>
-      (hub?.background ?? []).filter(
-        (l) => l.kind === 'volumetric-nebula' || l.kind === 'particle-field',
-      ),
+    () => (hub?.background ?? []).filter((l) => l.kind && PROCEDURAL_KINDS.has(l.kind)),
     [hub?.background],
   );
+  const overBackdrop = useMemo(() => hubHasBackdropPlate(hub), [hub]);
   if (layers.length === 0) return null;
   return (
     <group name="hub:procedural-background">
       <BackgroundCameraProbe />
       {layers.map((layer, i) => (
-        <ProceduralLayer key={layer.id} layer={layer} index={i} forceTier={forceTier} />
+        <ProceduralLayer
+          key={layer.id}
+          layer={layer}
+          index={i}
+          forceTier={forceTier}
+          overBackdrop={overBackdrop}
+          flatPlate={flatPlate}
+        />
       ))}
     </group>
   );
