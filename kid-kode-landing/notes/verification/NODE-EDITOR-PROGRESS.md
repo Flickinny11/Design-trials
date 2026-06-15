@@ -75,7 +75,10 @@
   - Evidence: search "stripe"→4 branded tiles (real Stripe mark), "runpod"→2 (mobile); attach 2; **validate-on-select → "fixed" (auto-fix) + "valid"**; save snippet + reload; **5 tiles survived a full PAGE RELOAD (round-trip)**.
   - Frames `notes/verification/node-editor/p2/`; harness `scripts/node-editor-p2-capture.mjs`. tsc 9/9 (0-new).
   - NOTE: brand logos use each provider's REAL accent (Stripe #635bff etc.) — provider's real asset, NOT Prism chrome; NO-PURPLE governs chrome/tokens only. Reorder logic verified (order reassign + round-trip preserved); visible swap demo lands in P5.
-- [ ] **P3** Integrations tab (criteria C) — search → one-click auth (mock) → capability-ref → assets → drag → content icon.
+- [x] **P3** Integrations tab (criteria C) — **DONE + verified** (real Chrome desktop+mobile, 0 console errors).
+  - `IntegrationsTab` (in `integrations/`, hook-form updateNode) reusing `BrandLogo`. Inspector tab `integrations` (compass icon).
+  - Evidence: search "runpod"→card; **OAuth 2.1 connect → capabilityRef keys [refId,scope,label,provider,authMethod], hasTokenLike=FALSE** (INV-R13); self-populated assets → added "A100 80GB"; **integration+ref+asset survived PAGE RELOAD (no token)**; contentIcon=runpod set for galaxy (P4/C5). Mobile: supabase search OK.
+  - Frames `notes/verification/node-editor/p3/`; harness `scripts/node-editor-p3-capture.mjs`. tsc 9/9 (0-new).
 - [ ] **P4** Galaxy planet/<app>_world (criteria D) — photoreal planets, size-by-artifact, node spheres + content icons.
 - [ ] **P5** Interactive verification + sign-off (criteria E) — advocate drives desktop+mobile+constrained → 0 MUST-FIX.
 

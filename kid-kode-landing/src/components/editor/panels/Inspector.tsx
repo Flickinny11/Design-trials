@@ -42,6 +42,7 @@ import {
 } from '@/lib/prism-graph/animation-library';
 import NodeEditorPromptEdit from '@/components/editor/prompt-edit/NodeEditorPromptEdit';
 import FunctionsTab from '@/components/editor/functions/FunctionsTab';
+import IntegrationsTab from '@/components/editor/integrations/IntegrationsTab';
 import type { PromptEditScope } from '@/lib/prompt-edit/contract';
 
 // NODE-EDITOR-V2 (A5) — map the active purpose tab to a prompt-edit scope.
@@ -63,6 +64,7 @@ const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'material', label: 'Material', icon: 'sparkle' },
   { id: 'behavior', label: 'Behavior', icon: 'flow' },
   { id: 'functions', label: 'Functions', icon: 'sliders' },
+  { id: 'integrations', label: 'Integrations', icon: 'compass' },
   { id: 'code', label: 'Code', icon: 'code' },
   { id: 'animation', label: 'Animation', icon: 'play' },
   { id: 'connections', label: 'Links', icon: 'link' },
@@ -571,6 +573,7 @@ export default function Inspector() {
         {tab === 'material' && <MaterialTab node={sourceNodeById} frozen={frozen} />}
         {tab === 'behavior' && <BehaviorTab node={node} />}
         {tab === 'functions' && sourceNodeById && <FunctionsTab node={sourceNodeById} />}
+        {tab === 'integrations' && sourceNodeById && <IntegrationsTab node={sourceNodeById} />}
         {tab === 'code' && <CodeTab node={node} frozen={frozen} />}
         {tab === 'animation' && <AnimationTab node={node} frozen={frozen} />}
         {tab === 'connections' && <ConnectionsTab node={node} graph={editorGraph} flyToNode={flyToNode} />}
