@@ -40,6 +40,19 @@ import {
   getLibraryByMethodology,
   type AnimationMethodology,
 } from '@/lib/prism-graph/animation-library';
+import NodeEditorPromptEdit from '@/components/editor/prompt-edit/NodeEditorPromptEdit';
+import type { PromptEditScope } from '@/lib/prompt-edit/contract';
+
+// NODE-EDITOR-V2 (A5) — map the active purpose tab to a prompt-edit scope.
+// Only PURPOSE tabs get the node editor's own prompt-edit; visual/canvas tabs
+// (visual/material/animation/code) are served by the canvas Prompt Edit action.
+const TAB_PROMPT_SCOPE: Partial<Record<InspectorTab, PromptEditScope>> = {
+  behavior: 'node-behavior',
+  backend: 'node-backend',
+  connections: 'node-schema',
+  functions: 'node-function',
+  integrations: 'node-integration',
+};
 
 // SC-020: the canonical 7-tab set for a node selection. The 'history' tab
 // surfaces the per-node edit/regeneration log; SC-020 explicitly names it as
@@ -549,6 +562,9 @@ export default function Inspector() {
       )}
 
       <div className="flex-1 overflow-y-auto overscroll-contain">
+        {!frozen && TAB_PROMPT_SCOPE[tab] && (
+          <NodeEditorPromptEdit scope={TAB_PROMPT_SCOPE[tab]!} />
+        )}
         {tab === 'visual' && <VisualTab node={node} frozen={frozen} sourceNode={sourceNodeById} />}
         {tab === 'material' && <MaterialTab node={sourceNodeById} frozen={frozen} />}
         {tab === 'behavior' && <BehaviorTab node={node} />}

@@ -83,6 +83,7 @@ import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
 import ObjectFlyout from '@/components/editor/object-tools/ObjectFlyout';
 import ChangeArtifactFlyout from '@/components/editor/change-artifact/ChangeArtifactFlyout';
+import PromptEditFlyout from '@/components/editor/prompt-edit/PromptEditFlyout';
 import LibraryFlyout from '@/components/editor/elements/LibraryFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
@@ -134,6 +135,7 @@ type ToolGroupId =
   | 'image'
   | 'object3d'
   | 'changeArtifact'
+  | 'promptEdit'
   | 'text'
   | 'animation'
   | 'function'
@@ -156,6 +158,7 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'image', icon: 'image', label: 'Image', wired: true },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: true },
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
+  { id: 'promptEdit', icon: 'zap', label: 'Prompt Edit', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
   { id: 'function', icon: 'link', label: 'Function', wired: true },
@@ -914,6 +917,13 @@ export default function CanvasToolbar() {
               // the Upload (§12.1) / Generate (§12.2) wizards on the selected
               // element (or mints a fresh element tethered to the active hub).
               <ChangeArtifactFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
+            )}
+            {activeGroup === 'promptEdit' && (
+              // NODE-EDITOR-V2 (criteria A) — natural-language Prompt Edit:
+              // multi-select aware; orchestration endpoint returns a structured
+              // plan (premium library considered first) → applied to the node's
+              // additive schema (design+anim → canvas, function → node tabs).
+              <PromptEditFlyout onToast={setToast} />
             )}
             {activeGroup === 'text' && (
               // P1 TEXT SYSTEM (Task B) — wired flyout. `lightingHub` is the

@@ -65,7 +65,11 @@
   - Capabilities: `src/lib/capabilities/{provider,brand-assets}.ts` + `src/server/capabilities/{mcp-adapter,aggregator-stubs,capability-provider}.ts` + route `api/prism/capabilities`.
   - Snippets: `src/server/snippets/store.ts` + route `api/prism/snippets`. Build-safe optional imports via `src/server/optional-import.ts`.
   - Real brand glyphs: github/stripe/slack/notion/openai/vercel/anthropic/figma/discord/supabase/google/x + monogram tail (runpod/twilio/…).
-- [ ] **P1** Prompt-to-Edit harness (criteria A) — canvas toolbar action + node-editor prompt-edit + endpoint + stub plan.
+- [x] **P1** Prompt-to-Edit harness (criteria A) — **DONE + verified** (real Chrome, desktop+mobile, 0 console errors).
+  - Canvas toolbar "Prompt Edit" action (`zap` icon, multi-select aware) → `PromptEditFlyout`; node editor's own scoped bar (`NodeEditorPromptEdit`, A5) on purpose tabs; shared `usePromptEdit` hook.
+  - Endpoint `/api/prism/prompt-edit` → orchestrator (stub default, live=swap). Evidence: "make these two collide"→collision `jelly-collide-sim` (applied to 2 nodes); "holographic glass"→`materialSpec`; "stripe payment"→`functionTiles`; premiumFirst=true every time.
+  - Frames: `notes/verification/node-editor/p1/` (desktop collide/glass/fn + node-editor-prompt + mobile). Harness `scripts/node-editor-p1-capture.mjs`.
+  - REAL tsc 9/9 baseline (0-new). Toolchain fix: node via `/Users/loganbaird/.nvm/versions/node/v22.22.1/bin`, `./node_modules/.bin/tsc` (npx NOT on PATH). Extensionless value imports (bundler resolution).
 - [ ] **P2** Functions tab (criteria B) — autocomplete → branded tiles → drag/reorder → validate-on-select → snippets.
 - [ ] **P3** Integrations tab (criteria C) — search → one-click auth (mock) → capability-ref → assets → drag → content icon.
 - [ ] **P4** Galaxy planet/<app>_world (criteria D) — photoreal planets, size-by-artifact, node spheres + content icons.

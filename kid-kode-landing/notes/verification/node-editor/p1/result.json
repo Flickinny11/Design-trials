@@ -1,0 +1,150 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "name": "setup",
+      "selectedIds": [
+        "orr-arrival-headline",
+        "orr-arrival-sub"
+      ]
+    },
+    {
+      "name": "desktop-collide",
+      "planMeta": {
+        "steps": "1",
+        "origin": "stub",
+        "premiumFirst": "true"
+      },
+      "applied": "2",
+      "before": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      },
+      "after": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      }
+    },
+    {
+      "name": "desktop-glass",
+      "planMeta": {
+        "steps": "1",
+        "origin": "stub",
+        "premiumFirst": "true"
+      },
+      "applied": "1",
+      "before": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      },
+      "after": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      }
+    },
+    {
+      "name": "desktop-fn",
+      "planMeta": {
+        "steps": "1",
+        "origin": "stub",
+        "premiumFirst": "true"
+      },
+      "applied": "1",
+      "before": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      },
+      "after": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      }
+    },
+    {
+      "name": "node-editor-prompt",
+      "present": true,
+      "origin": "stub"
+    },
+    {
+      "name": "mobile-glass",
+      "planMeta": {
+        "steps": "1",
+        "origin": "stub",
+        "premiumFirst": "true"
+      },
+      "applied": "1",
+      "before": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      },
+      "after": {
+        "hasMaterial": true,
+        "hasAnim": true,
+        "hasFnTiles": true,
+        "hasLog": true,
+        "animPrims": [
+          "float",
+          "jelly-collide-sim",
+          "jelly-collide-sim",
+          "jelly-collide-sim"
+        ]
+      }
+    }
+  ],
+  "consoleErrors": [],
+  "notes": []
+}

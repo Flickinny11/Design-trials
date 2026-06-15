@@ -6,7 +6,7 @@ import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type { DeviceMode } from '@/lib/prism-graph/types';
 
 export type ZoomLevel = 'L0' | 'L1' | 'L2' | 'L3' | 'L4';
-export type InspectorTab = 'visual' | 'material' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world';
+export type InspectorTab = 'visual' | 'material' | 'behavior' | 'code' | 'animation' | 'connections' | 'backend' | 'history' | 'world' | 'functions' | 'integrations';
 /**
  * EBR2-A-02 / §R2-A SC-065 / INV-24 / RA-06b — canonical 3-mode set.
  * Round-1's `hub-world` folds into `canvas`; `preview-hub` folds into
