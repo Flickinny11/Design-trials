@@ -1,0 +1,119 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "name": "desktop-open",
+      "nodeId": "orr-arrival-headline"
+    },
+    {
+      "name": "desktop-search",
+      "resultCount": 4
+    },
+    {
+      "name": "desktop-attached",
+      "a1": true,
+      "a2": true,
+      "tiles": [
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 0,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 1,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 2,
+          "status": "fixed"
+        },
+        {
+          "label": "List invoices",
+          "brand": "stripe",
+          "order": 3,
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "name": "desktop-reorder",
+      "tilesAfterReorder": [
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 0,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 1,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 2,
+          "status": "fixed"
+        },
+        {
+          "label": "List invoices",
+          "brand": "stripe",
+          "order": 3,
+          "status": "valid"
+        }
+      ]
+    },
+    {
+      "name": "desktop-snippet",
+      "snipCount": 1,
+      "tilesAfterSnippet": 5
+    },
+    {
+      "name": "desktop-roundtrip",
+      "tilesAfterReload": [
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 0,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 1,
+          "status": "unvalidated"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 2,
+          "status": "fixed"
+        },
+        {
+          "label": "List invoices",
+          "brand": "stripe",
+          "order": 3,
+          "status": "valid"
+        },
+        {
+          "label": "Create payment intent",
+          "brand": "stripe",
+          "order": 4,
+          "status": "fixed"
+        }
+      ]
+    },
+    {
+      "name": "mobile",
+      "resultCount": 2
+    }
+  ],
+  "consoleErrors": [],
+  "notes": []
+}

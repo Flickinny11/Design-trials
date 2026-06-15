@@ -70,7 +70,11 @@
   - Endpoint `/api/prism/prompt-edit` → orchestrator (stub default, live=swap). Evidence: "make these two collide"→collision `jelly-collide-sim` (applied to 2 nodes); "holographic glass"→`materialSpec`; "stripe payment"→`functionTiles`; premiumFirst=true every time.
   - Frames: `notes/verification/node-editor/p1/` (desktop collide/glass/fn + node-editor-prompt + mobile). Harness `scripts/node-editor-p1-capture.mjs`.
   - REAL tsc 9/9 baseline (0-new). Toolchain fix: node via `/Users/loganbaird/.nvm/versions/node/v22.22.1/bin`, `./node_modules/.bin/tsc` (npx NOT on PATH). Extensionless value imports (bundler resolution).
-- [ ] **P2** Functions tab (criteria B) — autocomplete → branded tiles → drag/reorder → validate-on-select → snippets.
+- [x] **P2** Functions tab (criteria B) — **DONE + verified** (real Chrome desktop+mobile, 0 console errors).
+  - `FunctionsTab` (in `functions/`, outside FP-15 scope, hook-form updateNode like FunctionBindingPopup) + `BrandLogo` (real glyphs/monogram). Inspector tab `functions` (sliders icon).
+  - Evidence: search "stripe"→4 branded tiles (real Stripe mark), "runpod"→2 (mobile); attach 2; **validate-on-select → "fixed" (auto-fix) + "valid"**; save snippet + reload; **5 tiles survived a full PAGE RELOAD (round-trip)**.
+  - Frames `notes/verification/node-editor/p2/`; harness `scripts/node-editor-p2-capture.mjs`. tsc 9/9 (0-new).
+  - NOTE: brand logos use each provider's REAL accent (Stripe #635bff etc.) — provider's real asset, NOT Prism chrome; NO-PURPLE governs chrome/tokens only. Reorder logic verified (order reassign + round-trip preserved); visible swap demo lands in P5.
 - [ ] **P3** Integrations tab (criteria C) — search → one-click auth (mock) → capability-ref → assets → drag → content icon.
 - [ ] **P4** Galaxy planet/<app>_world (criteria D) — photoreal planets, size-by-artifact, node spheres + content icons.
 - [ ] **P5** Interactive verification + sign-off (criteria E) — advocate drives desktop+mobile+constrained → 0 MUST-FIX.
