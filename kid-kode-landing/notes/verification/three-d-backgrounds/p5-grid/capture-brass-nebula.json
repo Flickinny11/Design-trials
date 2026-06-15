@@ -1,0 +1,60 @@
+{
+  "url": "http://localhost:4810",
+  "preset": "brass-nebula",
+  "params": "",
+  "modes": [
+    "preview-app"
+  ],
+  "frames": [
+    {
+      "viewport": "desktop",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/desktop-preview-app-brass-nebula.png",
+      "counts": {
+        "embers": 3584,
+        "motes": 1165
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "tablet",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/tablet-preview-app-brass-nebula.png",
+      "counts": {
+        "embers": 3584,
+        "motes": 1165
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "constrained",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/constrained-preview-app-brass-nebula.png",
+      "counts": {
+        "embers": 1792,
+        "motes": 582
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "mobile",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/mobile-preview-app-brass-nebula.png",
+      "counts": {
+        "embers": 627,
+        "motes": 400
+      },
+      "bgLen": 3
+    }
+  ],
+  "errors": [],
+  "backend": "webgpu",
+  "particleCounts": {
+    "embers": 627,
+    "motes": 400
+  }
+}

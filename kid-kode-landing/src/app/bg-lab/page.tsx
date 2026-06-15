@@ -102,6 +102,15 @@ function CameraRig({
 }
 
 export default function BgLabPage() {
+  // useSearchParams must sit under a Suspense boundary or `next build` errors.
+  return (
+    <Suspense fallback={<div style={{ position: 'fixed', inset: 0, background: '#04050a' }} />}>
+      <BgLabInner />
+    </Suspense>
+  );
+}
+
+function BgLabInner() {
   const sp = useSearchParams();
   const preset = sp.get('preset') || 'brass-nebula';
   const only = sp.get('only'); // 'nebula' | 'particles' | null

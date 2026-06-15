@@ -1,0 +1,55 @@
+{
+  "url": "http://localhost:4810",
+  "preset": "cosmic-drift",
+  "params": "",
+  "modes": [
+    "preview-app"
+  ],
+  "frames": [
+    {
+      "viewport": "desktop",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/desktop-preview-app-cosmic-drift.png",
+      "counts": {
+        "starfield": 4736
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "tablet",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/tablet-preview-app-cosmic-drift.png",
+      "counts": {
+        "starfield": 9472
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "constrained",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/constrained-preview-app-cosmic-drift.png",
+      "counts": {
+        "starfield": 4736
+      },
+      "bgLen": 3
+    },
+    {
+      "viewport": "mobile",
+      "mode": "preview-app",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p5-grid/mobile-preview-app-cosmic-drift.png",
+      "counts": {
+        "starfield": 1658
+      },
+      "bgLen": 3
+    }
+  ],
+  "errors": [],
+  "backend": "webgpu",
+  "particleCounts": {
+    "starfield": 1658
+  }
+}
