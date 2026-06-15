@@ -377,7 +377,7 @@
       ],
       "scenePosition": {
         "x": 0,
-        "y": -1.951383570944617,
+        "y": 0.55,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -421,12 +421,12 @@
       "receivesLighting": false,
       "responsiveScenePos": {
         "mobile": {
-          "y": -1.75,
-          "scale": 0.42
+          "y": 1.2,
+          "scale": 0.5
         },
         "tablet": {
-          "y": -2,
-          "scale": 0.7
+          "y": 0.7,
+          "scale": 0.8
         }
       },
       "functionBinding": {
@@ -477,7 +477,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 0.82,
+        "y": 1.7,
         "z": 0.25,
         "rotationX": 0,
         "rotationY": 0,
@@ -517,12 +517,12 @@
       "receivesLighting": false,
       "responsiveScenePos": {
         "mobile": {
-          "y": 2,
-          "scale": 0.4
+          "y": 2.4,
+          "scale": 0.5
         },
         "tablet": {
-          "y": 1.4,
-          "scale": 0.78
+          "y": 2,
+          "scale": 0.8
         }
       }
     },
@@ -569,14 +569,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": -1.45,
+        "y": -2.4,
         "z": 0.6,
         "rotationX": 0.25,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 2.2,
-        "scaleY": 2.2,
-        "scaleZ": 2.2
+        "scaleX": 1.45,
+        "scaleY": 1.45,
+        "scaleZ": 1.45
       },
       "animationBindings": [
         {
@@ -613,12 +613,12 @@
       "receivesLighting": true,
       "responsiveScenePos": {
         "mobile": {
-          "y": 0.2,
-          "scale": 0.6
+          "y": -2.2,
+          "scale": 0.7
         },
         "tablet": {
-          "y": -0.55,
-          "scale": 0.85
+          "y": -2.3,
+          "scale": 1.05
         }
       },
       "functionBinding": {
@@ -1137,7 +1137,8 @@
           "height": 1.9
         },
         "alpha": 1,
-        "sourceAsset": "/prism-mock/orrery/materia/brass-macro.png"
+        "sourceAsset": "/prism-mock/orrery/materia/brass-macro.png",
+        "opaque": true
       },
       "intent": {
         "caption": "Guilloché brass macro — magnetic swatch, shines under the pointer.",
@@ -1217,7 +1218,8 @@
           "height": 1.9
         },
         "alpha": 1,
-        "sourceAsset": "/prism-mock/orrery/materia/sapphire-macro.png"
+        "sourceAsset": "/prism-mock/orrery/materia/sapphire-macro.png",
+        "opaque": true
       },
       "intent": {
         "caption": "Sapphire macro — the crystal that domes the orrery.",
@@ -1297,7 +1299,8 @@
           "height": 1.9
         },
         "alpha": 1,
-        "sourceAsset": "/prism-mock/orrery/materia/meteorite-macro.png"
+        "sourceAsset": "/prism-mock/orrery/materia/meteorite-macro.png",
+        "opaque": true
       },
       "intent": {
         "caption": "Meteorite macro — Widmanstätten lattice, four billion years old.",
@@ -1377,7 +1380,8 @@
           "height": 2.36
         },
         "alpha": 1,
-        "sourceAsset": "/prism-mock/orrery/refs/molten-pour-frame.png"
+        "sourceAsset": "/prism-mock/orrery/refs/molten-pour-frame.png",
+        "opaque": true
       },
       "intent": {
         "caption": "THE VIDEO MOMENT — molten brass pours forever (seamless generated loop as a real video texture).",

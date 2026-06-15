@@ -45,8 +45,9 @@ import {
 import { generateNodeTexture } from '@/lib/nodeTexture';
 import HubLabels from '@/components/editor/graph/HubLabels';
 import HubPlanet, { NodeContentIcons } from '@/components/editor/graph/HubPlanet';
+import { NodeContentBadge } from '@/components/editor/graph/content-glyphs';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
-import { computeGalaxyLabelVisibility } from '@/lib/galaxy-label-lod';
+import { computeGalaxyLabelVisibility, computePerLabelLod } from '@/lib/galaxy-label-lod';
 import { computeHubWorldLabelVisibility } from '@/lib/hub-world-label-lod';
 import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
 import {
@@ -100,6 +101,7 @@ import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
   IMAGE_SPEC_DEFAULT,
   TEXT_SPEC_DEFAULT,
+  deriveContentType,
   type ImageSpec,
   type PrismHub,
   type PrismNode,
@@ -228,23 +230,75 @@ function useHubRevealProgress(): number {
 // ═══════════════════════════════════════════════════════════════════
 // Edge line (updates positions per-frame from sim)
 // ═══════════════════════════════════════════════════════════════════
+// POLISH PC — bipartite-DAG connection lines: gently CURVED brass-tinted
+// polylines instead of harsh straight bright-white 1px lines. A small
+// perpendicular bow + N-sample bezier reads as a soft arc; the color is blended
+// toward brass so no edge type (the old `navigates-to` ice / `DS.textHi`
+// fallback) renders as a harsh white seam; opacity is dropped for a softer,
+// recessive look that lets the nodes stay the heroes.
+const EDGE_SAMPLES = 14; // polyline segments along each curved edge
+const _edgeUp = new THREE.Vector3(0, 1, 0);
+const _edgeAltUp = new THREE.Vector3(1, 0, 0);
+
 function Edge({ link, revealOpacity = 1 }: { link: SimLink; revealOpacity?: number }) {
   const lineRef = useRef<any>(null);
+  // Reusable scratch so the per-frame curve resample allocates nothing.
+  const scratch = useRef({
+    a: new THREE.Vector3(),
+    b: new THREE.Vector3(),
+    mid: new THREE.Vector3(),
+    dir: new THREE.Vector3(),
+    perp: new THREE.Vector3(),
+    curve: new THREE.QuadraticBezierCurve3(),
+    pt: new THREE.Vector3(),
+    pos: new Float32Array((EDGE_SAMPLES + 1) * 3),
+  });
 
   useFrame(() => {
     if (!lineRef.current) return;
     const s = link.source as SimNode;
     const t = link.target as SimNode;
     if (!s || typeof s === 'string' || !t || typeof t === 'string') return;
+    const sc = scratch.current;
+    sc.a.set(s.x, s.y, s.z);
+    sc.b.set(t.x, t.y, t.z);
+    sc.mid.copy(sc.a).add(sc.b).multiplyScalar(0.5);
+    sc.dir.copy(sc.b).sub(sc.a);
+    const dist = sc.dir.length();
+    // Perpendicular bow — pick an up vector not parallel to the edge so the arc
+    // is stable even for near-vertical links.
+    const up = Math.abs(sc.dir.y) > dist * 0.92 ? _edgeAltUp : _edgeUp;
+    sc.perp.copy(sc.dir).cross(up);
+    if (sc.perp.lengthSq() > 1e-6) sc.perp.normalize();
+    sc.mid.addScaledVector(sc.perp, dist * 0.08); // subtle outward bow
+    sc.curve.v0.copy(sc.a);
+    sc.curve.v1.copy(sc.mid);
+    sc.curve.v2.copy(sc.b);
+    const pos = sc.pos;
+    for (let i = 0; i <= EDGE_SAMPLES; i++) {
+      const p = sc.curve.getPoint(i / EDGE_SAMPLES, sc.pt); // reuse target → no per-sample alloc
+      pos[i * 3] = p.x; pos[i * 3 + 1] = p.y; pos[i * 3 + 2] = p.z;
+    }
     const geom = lineRef.current.geometry as THREE.BufferGeometry;
-    const positions = new Float32Array([s.x, s.y, s.z, t.x, t.y, t.z]);
-    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geom.attributes.position.needsUpdate = true;
+    const attr = geom.getAttribute('position') as THREE.BufferAttribute | undefined;
+    if (!attr || attr.count !== EDGE_SAMPLES + 1) {
+      geom.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    } else {
+      (attr.array as Float32Array).set(pos);
+      attr.needsUpdate = true;
+    }
     geom.computeBoundingSphere();
   });
 
-  const color = EDGE_COLORS[link.type] || DS.textHi;
-  const baseOpacity = link.type === 'contains' ? 0.28 : 0.62;
+  // Brass-tint: blend the reason color toward brass so the harsh ice/bone-white
+  // look is gone while the type still reads. `contains` keeps more of its dim
+  // brass; peer edges blend harder off their bright hues.
+  const color = useMemo(() => {
+    const base = new THREE.Color(EDGE_COLORS[link.type] || DS.brass400);
+    return base.lerp(new THREE.Color(DS.brass300), link.type === 'contains' ? 0.18 : 0.5);
+  }, [link.type]);
+  // Softer, recessive opacity (was 0.28 / 0.62 → harsh). Nodes stay the heroes.
+  const baseOpacity = link.type === 'contains' ? 0.2 : 0.32;
   // EB-04-01 / SC-019 — intra-hub tethers in the active hub fade in with the
   // drill-in reveal. Callers pass revealOpacity in [0,1]; default 1 = no effect.
   const opacity = baseOpacity * revealOpacity;
@@ -326,7 +380,7 @@ function GalaxyHubTethers({
     .join(';');
 
   const tubes = useMemo(() => {
-    const out: { id: string; geo: THREE.TubeGeometry; halo: THREE.TubeGeometry; color: string }[] = [];
+    const out: { id: string; geo: THREE.TubeGeometry; halo: THREE.TubeGeometry; color: THREE.Color }[] = [];
     for (const tether of tethers) {
       const a = hubCenters[tether.hubA];
       const b = hubCenters[tether.hubB];
@@ -338,11 +392,17 @@ function GalaxyHubTethers({
       // bow the arc outward from the central sun → reads as an orbit-connection
       mid.add(mid.clone().normalize().multiplyScalar(dist * 0.14 + 8));
       const curve = new THREE.QuadraticBezierCurve3(va, mid, vb);
+      // POLISH PC — brass-tint + thin the inter-hub tethers so no reason colour
+      // (esp. the bright `navigates-to` ice / `DS.textHi` fallback) reads as a
+      // harsh bright-white seam across the galaxy. Blend each reason hue toward
+      // brass and slim the core/halo tubes.
+      const tetherColor = new THREE.Color(EDGE_COLORS[tether.type] || DS.brass400)
+        .lerp(new THREE.Color(DS.brass300), 0.45);
       out.push({
         id: tether.id,
-        geo: new THREE.TubeGeometry(curve, 28, 0.45, 6, false),
-        halo: new THREE.TubeGeometry(curve, 28, 1.7, 6, false),
-        color: EDGE_COLORS[tether.type] || DS.textHi,
+        geo: new THREE.TubeGeometry(curve, 28, 0.3, 6, false),
+        halo: new THREE.TubeGeometry(curve, 28, 1.2, 6, false),
+        color: tetherColor,
       });
     }
     return out;
@@ -358,8 +418,9 @@ function GalaxyHubTethers({
     const t = state.clock.getElapsedTime();
     for (let i = 0; i < coreMats.current.length; i++) {
       const mat = coreMats.current[i];
-      // energy pulse travelling along the hub trail (phase per index)
-      if (mat) mat.opacity = 0.4 + 0.24 * Math.sin(t * 1.4 + i * 0.6);
+      // energy pulse travelling along the hub trail (phase per index). POLISH PC
+      // — softer band (was 0.4±0.24, harsh) so the tether glows recessively.
+      if (mat) mat.opacity = 0.24 + 0.12 * Math.sin(t * 1.4 + i * 0.6);
     }
   });
 
@@ -372,7 +433,7 @@ function GalaxyHubTethers({
               ref={(m) => { if (m) coreMats.current[i] = m as THREE.MeshBasicMaterial; }}
               color={tube.color}
               transparent
-              opacity={0.5}
+              opacity={0.3}
               depthWrite={false}
               blending={THREE.AdditiveBlending}
               toneMapped={false}
@@ -382,7 +443,7 @@ function GalaxyHubTethers({
             <meshBasicMaterial
               color={tube.color}
               transparent
-              opacity={0.08}
+              opacity={0.05}
               depthWrite={false}
               blending={THREE.AdditiveBlending}
               toneMapped={false}
@@ -669,7 +730,12 @@ function GlassNode({
     }
   });
 
-  const radius = 4.5;
+  // POLISH PA — galaxy hero-world hierarchy: dormant node spheres are
+  // SUBORDINATE to the hub PLANETS (HubPlanet). In galaxy overview a node
+  // sphere shrinks to ~2.6u so the planet (innerRadius floored well above this,
+  // see HubHulls) reads ≥2.5× larger and the scene parses as 5 worlds with
+  // orbiting moons. Non-galaxy modes keep the established 4.5u node-state size.
+  const radius = viewMode === 'galaxy' ? 2.6 : 4.5;
 
   return (
     <group
@@ -706,7 +772,16 @@ function GlassNode({
       {renderArtifact && sourceNode ? (
         <ArtifactNode node={sourceNode} />
       ) : (
-        <mesh ref={innerRef} castShadow receiveShadow>
+        <mesh
+          ref={innerRef}
+          castShadow
+          receiveShadow
+          // POLISH PA — tag the dormant node SPHERE so the dev-only
+          // __PRISM_GALAXY_PROBE__ can measure its projected radius vs the hub
+          // planets (hero-world size-hierarchy gate). Diagnostic only; inert at
+          // runtime (NODE_ENV-gated reader).
+          userData={{ galaxyNodeSphere: true }}
+        >
           <sphereGeometry args={[radius, 72, 72]} />
           <meshPhysicalMaterial
             map={texture}
@@ -823,6 +898,21 @@ function GlassNode({
           platform, showing what the node HOLDS. */}
       {viewMode === 'galaxy' && (
         <NodeContentIcons sourceNode={sourceNode} radius={radius} dimFactor={dimFactor} />
+      )}
+
+      {/* POLISH PC — content-type glance glyph: every dormant node carries a
+          small premium custom 3D badge (image / text / 3d-object / integration)
+          BELOW the sphere so the node's content type reads at a glance, clear
+          of the name label (above) and the integration icons (above). */}
+      {viewMode === 'galaxy' && (
+        <group userData={{ contentBadge: true }}>
+          <NodeContentBadge
+            contentType={sourceNode ? deriveContentType(sourceNode) : 'image'}
+            position={[0, -radius - 2.2, 0]}
+            scale={1.5}
+            dimFactor={dimFactor}
+          />
+        </group>
       )}
     </group>
   );
@@ -1129,7 +1219,15 @@ function HubHulls({
         // outer reach so element-spheres orbit *outside* the opaque hub
         // surface and stay visible. The outer translucent hull (`radius`)
         // still wraps the full constellation.
-        const innerRadius = Math.min(radius * 0.45, 32);
+        // POLISH PA — in galaxy the hub PLANET must read as the HERO world:
+        // floor its radius well above the subordinate node spheres (2.6u in
+        // galaxy) so the projected-radius ratio clears ≥2.5× even for the
+        // smallest hub, while staying < the node-cloud hull radius so the
+        // element-spheres still orbit OUTSIDE the opaque planet surface.
+        const innerRadius =
+          viewMode === 'galaxy'
+            ? Math.min(Math.max(radius * 0.5, 9), 40)
+            : Math.min(radius * 0.45, 32);
         const isActive = activeHubId === hub.id || selectedHubId === hub.id;
 
         const dim =
@@ -1202,6 +1300,34 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
   const showSubNodeDetail = hubWorldLod.showSubNodeDetail;
   const subNodeDetailOpacity = hubWorldLod.subNodeDetailOpacity;
 
+  // POLISH PC — per-label declutter at element-detail zoom (galaxy). A pre-pass
+  // ranks the on-screen labels by camera distance so computePerLabelLod keeps the
+  // nearest few crisp and recedes the rest, instead of painting every node name
+  // at full opacity into an unreadable mass. Focused (hover/selected) labels are
+  // exempt. No-op outside galaxy (hub-world keeps its own intra-hub LOD).
+  const GALAXY_LABEL_CULL = 380;
+  const perLabel = new Map<string, { rank: number; visibleCount: number; distance: number }>();
+  if (viewMode === 'galaxy') {
+    const vis: { id: string; distance: number; focused: boolean }[] = [];
+    const probe = new THREE.Vector3();
+    for (const n of simNodes) {
+      probe.set(n.x, n.y, n.z);
+      const d = camera.position.distanceTo(probe);
+      probe.project(camera);
+      if (probe.z > 1 || probe.x < -1.05 || probe.x > 1.05 || probe.y < -1.05 || probe.y > 1.05) continue;
+      const focused = hoveredId === n.id || livePreviewHoverId === n.id || selectedId === n.id;
+      vis.push({ id: n.id, distance: d, focused });
+    }
+    const visibleCount = vis.length;
+    vis
+      .filter((x) => !x.focused)
+      .sort((a, b) => a.distance - b.distance)
+      .forEach((x, i) => perLabel.set(x.id, { rank: i, visibleCount, distance: x.distance }));
+    vis
+      .filter((x) => x.focused)
+      .forEach((x) => perLabel.set(x.id, { rank: 0, visibleCount, distance: x.distance }));
+  }
+
   return (
     <>
       {simNodes.map((node) => {
@@ -1216,6 +1342,18 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
         const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
         const isSelected = selectedId === node.id;
         const frozen = frozenIds.has(node.id);
+
+        // POLISH PC — per-label declutter multiplier (galaxy element-detail zoom).
+        const pll = viewMode === 'galaxy' ? perLabel.get(node.id) : undefined;
+        const perLabelLod = pll
+          ? computePerLabelLod({
+              distance: pll.distance,
+              maxDistance: GALAXY_LABEL_CULL,
+              isFocused: isHovered || isSelected,
+              densityRank: pll.rank,
+              visibleCount: pll.visibleCount,
+            })
+          : { opacity: 1, scale: 1 };
 
         let tier = 0;
         if (apparent > 18) tier = 1;
@@ -1238,9 +1376,12 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
             position={[node.x, node.y + 5.8, node.z]}
             center
             zIndexRange={[25, 0]}
-            style={{ pointerEvents: 'none', opacity: lodOpacity }}
+            style={{ pointerEvents: 'none', opacity: lodOpacity * perLabelLod.opacity }}
           >
-            <div className="select-none">
+            <div
+              className="select-none"
+              style={{ transform: `scale(${perLabelLod.scale})`, transformOrigin: 'center top' }}
+            >
               {tier >= 1 && (
                 <div
                   className="font-mono font-semibold tracking-wide whitespace-nowrap"
@@ -1298,7 +1439,92 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
 }
 
 function EditorDiagnostics({ simNodes }: { simNodes: SimNode[] }) {
-  const { camera, gl } = useThree();
+  const { camera, gl, scene, size } = useThree();
+
+  // POLISH PA — dev-only galaxy probe. Measures each hub PLANET's projected
+  // screen radius (px) and each dormant NODE sphere's projected radius so the
+  // verifier can prove the hero-world size hierarchy (ratio ≥ 2.5×). Reads the
+  // userData tags set on the HubPlanet surface (userData.hubPlanet) and the
+  // GlassNode inner sphere (userData.galaxyNodeSphere). Editor-shell dev scope
+  // (NODE_ENV gate + window), inert in production (FP-05 safe).
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as { __PRISM_GALAXY_PROBE__?: () => unknown };
+    const tmpRight = new THREE.Vector3();
+    const tmpUp = new THREE.Vector3();
+    const tmpFwd = new THREE.Vector3();
+    const tmpScale = new THREE.Vector3();
+    const tmpPos = new THREE.Vector3();
+    const tmpQuat = new THREE.Quaternion();
+    const projRadiusPx = (center: THREE.Vector3, worldRadius: number) => {
+      camera.updateMatrixWorld();
+      camera.matrixWorld.extractBasis(tmpRight, tmpUp, tmpFwd); // tmpRight = camera +X
+      const c = center.clone().project(camera);
+      const edge = center.clone().addScaledVector(tmpRight, worldRadius).project(camera);
+      const dx = (edge.x - c.x) * 0.5 * size.width;
+      const dy = (edge.y - c.y) * 0.5 * size.height;
+      return {
+        px: Math.hypot(dx, dy),
+        cx: c.x * 0.5 + 0.5,
+        cy: 1 - (c.y * 0.5 + 0.5),
+        inFront: c.z < 1,
+      };
+    };
+    const meshWorldSphere = (mesh: THREE.Mesh) => {
+      mesh.updateWorldMatrix(true, false);
+      const geom = mesh.geometry;
+      if (!geom.boundingSphere) geom.computeBoundingSphere();
+      const bs = geom.boundingSphere;
+      if (!bs) return null;
+      const center = bs.center.clone().applyMatrix4(mesh.matrixWorld);
+      mesh.matrixWorld.decompose(tmpPos, tmpQuat, tmpScale);
+      const worldRadius = bs.radius * Math.max(tmpScale.x, tmpScale.y, tmpScale.z);
+      return { center, worldRadius };
+    };
+    const groupWorldSphere = (group: THREE.Object3D) => {
+      const box = new THREE.Box3();
+      let any = false;
+      group.traverse((child) => {
+        const m = child as THREE.Mesh;
+        if (m.isMesh && m.geometry) { m.updateWorldMatrix(true, false); box.expandByObject(m); any = true; }
+      });
+      if (!any || box.isEmpty()) return null;
+      const center = box.getCenter(new THREE.Vector3());
+      const worldRadius = box.getSize(new THREE.Vector3()).length() / 2;
+      return { center, worldRadius };
+    };
+    w.__PRISM_GALAXY_PROBE__ = () => {
+      const hubs: { screenRadiusPx: number; cx: number; cy: number }[] = [];
+      const nodes: { screenRadiusPx: number; cx: number; cy: number }[] = [];
+      const badges: { screenRadiusPx: number; cx: number; cy: number }[] = [];
+      scene.traverse((obj) => {
+        if (obj.userData?.contentBadge === true) {
+          const s = groupWorldSphere(obj);
+          if (s) { const p = projRadiusPx(s.center, s.worldRadius); if (p.inFront) badges.push({ screenRadiusPx: p.px, cx: p.cx, cy: p.cy }); }
+          return;
+        }
+        if (obj.userData?.hubPlanet === true) {
+          // surface = first child Mesh with a SphereGeometry (added before the
+          // halo sprite + rim shell in HubPlanet).
+          let surface: THREE.Mesh | null = null;
+          obj.traverse((child) => {
+            if (surface) return;
+            const m = child as THREE.Mesh;
+            if (m.isMesh && (m.geometry as THREE.BufferGeometry)?.type === 'SphereGeometry') surface = m;
+          });
+          if (surface) {
+            const s = meshWorldSphere(surface);
+            if (s) { const p = projRadiusPx(s.center, s.worldRadius); if (p.inFront) hubs.push({ screenRadiusPx: p.px, cx: p.cx, cy: p.cy }); }
+          }
+        } else if ((obj as THREE.Mesh).isMesh && obj.userData?.galaxyNodeSphere === true) {
+          const s = meshWorldSphere(obj as THREE.Mesh);
+          if (s) { const p = projRadiusPx(s.center, s.worldRadius); if (p.inFront) nodes.push({ screenRadiusPx: p.px, cx: p.cx, cy: p.cy }); }
+        }
+      });
+      return { hubs, nodes, badges, viewport: { w: size.width, h: size.height } };
+    };
+    return () => { delete w.__PRISM_GALAXY_PROBE__; };
+  }, [camera, scene, size]);
 
   useFrame(() => {
     if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
@@ -2796,7 +3022,13 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
 }
 
 function AssembledSceneDiagnostics({ nodes }: { nodes: PrismNode[] }) {
-  const { camera, size } = useThree();
+  const { camera, size, scene } = useThree();
+  // POLISH (dev-only) — expose the live scene graph for verification introspection.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    (window as unknown as { __PRISM_SCENE__?: THREE.Object3D }).__PRISM_SCENE__ = scene;
+    return () => { delete (window as unknown as { __PRISM_SCENE__?: THREE.Object3D }).__PRISM_SCENE__; };
+  }, [scene]);
   // PROD-FINISH — reliable hero on-screen measurement hook. Projects a node's
   // mounted artifact bounding box to NORMALIZED screen space (0..1, y-down to
   // match a screenshot) so the heroes verifier can confirm the product renders

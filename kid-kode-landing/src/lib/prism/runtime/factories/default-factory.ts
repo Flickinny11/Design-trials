@@ -170,11 +170,17 @@ export function defaultRenderModeFactory(
     // Non-node-material (WebGL editor) path keeps the legacy MeshBasicMaterial
     // verbatim — byte-identical to before for default nodes.
     const lit = resolveReceivesLighting(node);
+    // POLISH PC (matte) — an OPAQUE photo plane (visual.opaque=true; alpha=1, no
+    // alpha channel) renders with transparent:false so its antialiased quad edge
+    // does not composite a faint straight-alpha rectangular seam against the dark
+    // backdrop. Absent/false keeps the legacy transparent:true path verbatim, so
+    // alpha-bearing fx planes (dust, starfields, cutouts) are unaffected.
+    const planeTransparent = !node.visual?.opaque;
     let mat: DisposableMaterial & { map?: Texture | null; needsUpdate?: boolean };
     if (useNodeMaterials) {
       mat = (lit
         ? buildLitTextureMaterial({ spec: node.materialSpec })
-        : buildUnlitMaterial({ transparent: true })) as unknown as DisposableMaterial & {
+        : buildUnlitMaterial({ transparent: planeTransparent })) as unknown as DisposableMaterial & {
         map?: Texture | null;
         needsUpdate?: boolean;
       };
@@ -184,8 +190,8 @@ export function defaultRenderModeFactory(
       // IN (receivesLighting=true) becomes MeshStandardMaterial so the editor's
       // HubLighting actually lights it (criterion 17 opt-in on the editor surface).
       mat = (lit
-        ? new MeshStandardMaterial({ transparent: true })
-        : new MeshBasicMaterial({ transparent: true })) as unknown as DisposableMaterial & {
+        ? new MeshStandardMaterial({ transparent: planeTransparent })
+        : new MeshBasicMaterial({ transparent: planeTransparent })) as unknown as DisposableMaterial & {
         map?: Texture | null;
         needsUpdate?: boolean;
       };

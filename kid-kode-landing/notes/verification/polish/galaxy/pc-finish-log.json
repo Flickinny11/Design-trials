@@ -1,0 +1,42 @@
+{
+  "gate": "PC-galaxy-finish",
+  "thresholds": {
+    "harshWhiteFracMax": 0.004,
+    "minBadgeRadiusPx": 3.5,
+    "minBadgeFrac": 0.6,
+    "maxLabelOverlapFrac": 0.25
+  },
+  "desktop": {
+    "pass": true,
+    "edgeOk": true,
+    "badgeOk": true,
+    "labelOk": true,
+    "harshWhiteFrac": 0.00079,
+    "brightWarmBias": 29.6,
+    "badges": 12,
+    "nodes": 12,
+    "badgeFrac": 1,
+    "meanBadgePx": 24,
+    "labelCount": 3,
+    "maxOverlapFrac": 0,
+    "overlappingPairs": 0,
+    "errors": 0
+  },
+  "mobile": {
+    "pass": true,
+    "edgeOk": true,
+    "badgeOk": true,
+    "labelOk": true,
+    "harshWhiteFrac": 0.00093,
+    "brightWarmBias": 34.7,
+    "badges": 12,
+    "nodes": 12,
+    "badgeFrac": 1,
+    "meanBadgePx": 27.1,
+    "labelCount": 1,
+    "maxOverlapFrac": 0,
+    "overlappingPairs": 0,
+    "errors": 0
+  },
+  "pass": true
+}

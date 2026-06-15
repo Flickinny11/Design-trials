@@ -1,0 +1,190 @@
+{
+  "gate": "PB-hero-occlusion",
+  "total": 4,
+  "pass": 4,
+  "thresholds": {
+    "maxOverlapFrac": 0.01,
+    "minVerticalGap": 0,
+    "minCoverage": 0.008,
+    "minDiff": 6,
+    "minPeak": 90
+  },
+  "results": [
+    {
+      "viewport": "desktop",
+      "pass": true,
+      "occlusionOk": true,
+      "heroLit": true,
+      "maxOverlapFrac": 0,
+      "overlaps": {
+        "orr-arrival-headline": 0,
+        "orr-arrival-sub": 0
+      },
+      "verticalGap": 0.1172,
+      "textRegionDiffReported": {
+        "orr-arrival-headline": 32.8,
+        "orr-arrival-sub": 7.3
+      },
+      "maxTextRegionDiffReported": 32.8,
+      "watch": {
+        "inFrustum": true,
+        "coverage": 0.0126,
+        "meanAbsDiff": 42.8,
+        "peak": 255
+      },
+      "rects": {
+        "orr-arrival-watch": {
+          "cx": 0.501,
+          "cy": 0.719,
+          "w": 0.062,
+          "h": 0.204
+        },
+        "orr-arrival-headline": {
+          "cx": 0.5,
+          "cy": 0.431,
+          "w": 0.468,
+          "h": 0.137
+        },
+        "orr-arrival-sub": {
+          "cx": 0.5,
+          "cy": 0.353,
+          "w": 0.433,
+          "h": 0.022
+        }
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "tablet",
+      "pass": true,
+      "occlusionOk": true,
+      "heroLit": true,
+      "maxOverlapFrac": 0,
+      "overlaps": {
+        "orr-arrival-headline": 0,
+        "orr-arrival-sub": 0
+      },
+      "verticalGap": 0.1577,
+      "textRegionDiffReported": {
+        "orr-arrival-headline": 45.8,
+        "orr-arrival-sub": 6.5
+      },
+      "maxTextRegionDiffReported": 45.8,
+      "watch": {
+        "inFrustum": true,
+        "coverage": 0.016,
+        "meanAbsDiff": 39.6,
+        "peak": 255
+      },
+      "rects": {
+        "orr-arrival-watch": {
+          "cx": 0.501,
+          "cy": 0.723,
+          "w": 0.077,
+          "h": 0.209
+        },
+        "orr-arrival-headline": {
+          "cx": 0.499,
+          "cy": 0.41,
+          "w": 0.438,
+          "h": 0.103
+        },
+        "orr-arrival-sub": {
+          "cx": 0.5,
+          "cy": 0.283,
+          "w": 0.408,
+          "h": 0.018
+        }
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "constrained",
+      "pass": true,
+      "occlusionOk": true,
+      "heroLit": true,
+      "maxOverlapFrac": 0,
+      "overlaps": {
+        "orr-arrival-headline": 0,
+        "orr-arrival-sub": 0
+      },
+      "verticalGap": 0.1487,
+      "textRegionDiffReported": {
+        "orr-arrival-headline": 47.1,
+        "orr-arrival-sub": 38.6
+      },
+      "maxTextRegionDiffReported": 47.1,
+      "watch": {
+        "inFrustum": true,
+        "coverage": 0.0132,
+        "meanAbsDiff": 38.2,
+        "peak": 255
+      },
+      "rects": {
+        "orr-arrival-watch": {
+          "cx": 0.501,
+          "cy": 0.736,
+          "w": 0.066,
+          "h": 0.2
+        },
+        "orr-arrival-headline": {
+          "cx": 0.5,
+          "cy": 0.434,
+          "w": 0.499,
+          "h": 0.108
+        },
+        "orr-arrival-sub": {
+          "cx": 0.5,
+          "cy": 0.3,
+          "w": 0.463,
+          "h": 0.022
+        }
+      },
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "pass": true,
+      "occlusionOk": true,
+      "heroLit": true,
+      "maxOverlapFrac": 0,
+      "overlaps": {
+        "orr-arrival-headline": 0,
+        "orr-arrival-sub": 0
+      },
+      "verticalGap": 0.2626,
+      "textRegionDiffReported": {
+        "orr-arrival-headline": 34,
+        "orr-arrival-sub": 37.6
+      },
+      "maxTextRegionDiffReported": 37.6,
+      "watch": {
+        "inFrustum": true,
+        "coverage": 0.0181,
+        "meanAbsDiff": 45.2,
+        "peak": 255
+      },
+      "rects": {
+        "orr-arrival-watch": {
+          "cx": 0.503,
+          "cy": 0.718,
+          "w": 0.137,
+          "h": 0.132
+        },
+        "orr-arrival-headline": {
+          "cx": 0.499,
+          "cy": 0.363,
+          "w": 0.753,
+          "h": 0.053
+        },
+        "orr-arrival-sub": {
+          "cx": 0.5,
+          "cy": 0.231,
+          "w": 0.701,
+          "h": 0.01
+        }
+      },
+      "errors": 0
+    }
+  ]
+}

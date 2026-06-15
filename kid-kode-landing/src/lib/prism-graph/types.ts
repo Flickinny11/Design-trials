@@ -27,6 +27,13 @@ export type { UiAnchor } from './compile-anchors.ts';
 // node's `textSpec`. Letterforms are never synthesized (INV-11).
 export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh' | 'text';
 
+// POLISH pass / galaxy glance-icon (INV-18 additive). The coarse content KIND a
+// node carries, used to pick the small per-node badge shown at galaxy glance.
+// Distinct from RenderMode (which is the runtime render path) — a 'mesh' render
+// mode and a primitive both map to the '3d-object' content kind, etc. When a
+// node's `contentType` is unset, callers derive it via `deriveContentType`.
+export type NodeContentType = 'image' | 'text' | '3d-object' | 'integration';
+
 export interface ScenePosition {
   x: number;
   y: number;
@@ -476,10 +483,25 @@ export interface PrismHubBackgroundLayer {
   parallaxDepth?: number;
 }
 
+// POLISH pass / galaxy hub-planet (INV-18 additive). The visual identity preset
+// the galaxy renders this hub's planet with, drawn from the Observatory Brass
+// palette (brass / bone / ice) plus two deeper environment looks. Absent => a
+// deterministic per-hub default is chosen by the galaxy renderer (e.g. hashed
+// from `hubId`), so legacy graphs stay stable.
+export type HubPlanetIdentity =
+  | 'brass-gas-giant'
+  | 'bone-rock'
+  | 'ice-crystal'
+  | 'deep-ocean'
+  | 'ember-forge';
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
+  // POLISH pass / galaxy hub-planet visual identity (INV-18 additive). Absent
+  // => deterministic per-hub default chosen by the galaxy renderer.
+  identity?: HubPlanetIdentity;
   layout: PrismHubLayout;
   responsiveBreakpoints?: PrismHubResponsiveBreakpoints;
   // §7 SC-037 — optional multi-layer background stack. Legacy
@@ -518,6 +540,13 @@ export interface PrismVisual {
   shape?: 'rect' | 'rounded' | 'circle' | 'pill' | string;
   shapeRadius?: number;
   alpha?: number;
+  // POLISH PC (matte) — when true the image-plane material renders OPAQUE
+  // (transparent:false), so an opaque photo texture (e.g. a macro product
+  // shot, alpha=1, no alpha channel) does not composite a faint straight-alpha
+  // rectangular seam against the dark backdrop. Absent/false → the default
+  // transparent:true path is unchanged (alpha-bearing fx planes keep blending).
+  // INV-18 additive.
+  opaque?: boolean;
   overlayRegions?: string[];
   frameCount?: number;
   transformByBreakpoint?: Record<string, Partial<PrismVisualTransform>>;
@@ -684,6 +713,10 @@ export interface PrismNode {
   // Renderer-migration additions (spec §4). Optional for backward compat with
   // legacy graphs; defaults: 'sprite' / null / null / [] / identity pose.
   renderMode?: RenderMode;
+  // POLISH pass / galaxy glance-icon badge override (INV-18 additive). When
+  // set, this is the galaxy glance-icon badge for the node; absent => derive
+  // via `deriveContentType`.
+  contentType?: NodeContentType;
   depthMapUrl?: string | null;
   meshUrl?: string | null;
   // FIDELITY-2 W3 / audit item 3 (INV-18 additive). Optional video texture
@@ -855,6 +888,37 @@ export interface PrismNode {
   // functionTiles, integrationRefs, functionBinding, …); this is an audit record
   // only (prompt + planId + summary + applied step kinds). Absent on legacy nodes.
   promptEditLog?: PromptEditLogEntry[];
+}
+
+// POLISH pass / galaxy glance-icon (INV-18 additive). Pure derivation of a
+// node's coarse content KIND for the galaxy glance-icon badge. First match
+// wins; no side effects. An explicit `node.contentType` short-circuits the
+// rules. `serviceTag` 'ui-text' / 'ui-3d' act as SOFT hints just before the
+// image fallback so legacy graphs that pre-date the richer artifact fields
+// still badge sensibly.
+export function deriveContentType(node: PrismNode): NodeContentType {
+  if (node.contentType) return node.contentType;
+  // integration — connected platform hookups / branded action tiles.
+  if (node.integrationRefs?.length || node.functionTiles?.length) return 'integration';
+  // 3d-object — a GLB mesh, an in-canvas primitive, or mesh render mode.
+  if (node.meshUrl || node.meshPrimitive || node.renderMode === 'mesh') return '3d-object';
+  // text — MSDF text render mode or a per-node text contract.
+  if (node.renderMode === 'text' || node.textSpec) return 'text';
+  // image — a per-node image presentation, a source texture, or an image plane.
+  if (
+    node.imageSpec ||
+    node.visual?.sourceAsset ||
+    node.renderMode === 'sprite' ||
+    node.renderMode === 'plane' ||
+    node.renderMode === 'parallax-plane'
+  ) {
+    return 'image';
+  }
+  // serviceTag soft hints (legacy graphs predating the richer artifact fields).
+  if (node.serviceTag === 'ui-text') return 'text';
+  if (node.serviceTag === 'ui-3d') return '3d-object';
+  // default fallback.
+  return 'image';
 }
 
 // P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
