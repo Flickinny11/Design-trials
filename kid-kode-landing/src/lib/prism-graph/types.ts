@@ -471,9 +471,56 @@ export type PrismHubBackgroundAttachment =
   | 'world'
   | 'infinite-environment';
 
+// THREE-D-BACKGROUNDS (3DBG) — the KIND of a background layer. `'image'` (the
+// implicit default when a layer carries only a `sourceUrl`) renders the legacy
+// flat textured plate (`SceneBackdropLayer`). The procedural kinds are rendered
+// by the 3D background library's R3F layer components: a TSL volumetric raymarch
+// nebula, a GPU/CPU depth-scattered particle field, a depth-displaced parallax
+// plate, and a Gaussian splat. Additive (INV-18 / INV-2): legacy layers with no
+// `kind` behave exactly as before. Appearance/behaviour come from the schema
+// only (INV-4) — there is no per-hub hard-coded background in component code.
+export type BackgroundLayerKind =
+  | 'image'
+  | 'volumetric-nebula'
+  | 'particle-field'
+  | 'parallax-plane'
+  | 'splat';
+
+export const BACKGROUND_LAYER_KIND_VALUES: readonly BackgroundLayerKind[] =
+  Object.freeze(['image', 'volumetric-nebula', 'particle-field', 'parallax-plane', 'splat'] as const);
+
+// 3DBG — customizable, round-trippable params for a procedural background layer.
+// All optional and numeric/string so a layer is a pure DATA description the
+// editor writes and the runtime reads (one source of truth). `palette` selects a
+// variant WITHIN the Observatory-Brass family (never purple, INV-9). Open record
+// so a preset can carry extra named knobs without a schema change.
+export interface BackgroundLayerParams {
+  /** Palette variant id within the Observatory-Brass family (brass/bone/ice/deep). */
+  palette?: string;
+  /** 0..1 — fill density (nebula opacity / particle count fraction). */
+  density?: number;
+  /** 0..1 — animation drift speed (time multiplier). */
+  drift?: number;
+  /** 0..1 — how far layers spread in scene Z (parallax depth strength). */
+  depthSpread?: number;
+  /** 0..1 — brightness / in-scatter intensity. */
+  intensity?: number;
+  [key: string]: number | string | undefined;
+}
+
 // §7 SC-036 — source-graph background layer. `id` and `attachment` are
 // required; `sourceUrl`, `z`, `opacity`, and `parallaxDepth` are optional and
 // default at compile time. Additive only (INV-18).
+//
+// 3DBG additive fields (all optional; legacy layers omit them and render as a
+// flat image plate unchanged):
+//   - `kind`        — selects the procedural renderer (default 'image').
+//   - `depthMapUrl` — depth source for `kind: 'parallax-plane'`.
+//   - `renderMode`  — mirrors the node render-mode vocabulary for the plate.
+//   - `presetId`    — which library preset emitted this layer (for re-skin).
+//   - `params`      — customizable, round-trippable preset params.
+//   - `minTier`     — device-tier floor; the layer is dropped below it (e.g. a
+//                     splat layer with `minTier: 'T2'` does not mount on mobile).
 export interface PrismHubBackgroundLayer {
   id: string;
   attachment: PrismHubBackgroundAttachment;
@@ -481,6 +528,12 @@ export interface PrismHubBackgroundLayer {
   z?: number;
   opacity?: number;
   parallaxDepth?: number;
+  kind?: BackgroundLayerKind;
+  depthMapUrl?: string | null;
+  renderMode?: RenderMode;
+  presetId?: string;
+  params?: BackgroundLayerParams;
+  minTier?: LightingTier;
 }
 
 // POLISH pass / galaxy hub-planet (INV-18 additive). The visual identity preset

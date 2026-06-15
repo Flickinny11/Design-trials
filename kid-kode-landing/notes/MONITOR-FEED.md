@@ -46,3 +46,7 @@ Will self-report phase events below.
 [23:15] POLISH no-regression: tsc 9 / vitest 3349-0 / heroes 20-20 / atmosphere 20-20 / 60Hz desktop+mobile / secret-clean / fal $0 ✓ | 3 advocates running (PA/PB/PC) | build+reviewer next
 [23:55] POLISH PB MUST-FIX: root cause = autosave-injected jelly-collide-sim ×4 on headline (broke MSDF fill→white boxes), NOT positions. Rebased live-graph on clean HEAD + reapplied edits; v4 hero recompose (text upper band, watch centre-lower). PB 4/4 + heroes 20/20 ✓ | re-judging PB advocate
 [00:09] POLISH RUN COMPLETE: PA/PB/PC advocate PLEASED + reviewer CLEAN + numeric all-pass + no-regression (tsc9/vitest3349/build/heroes20/atmos20/60Hz/secret/fal0). committing.
+[00:12] CHAIN: polish COMPLETE (marker + quiet)
+[00:12] CHAIN: launching threedbg
+[00:13] 3DBG P0 START: progress+report skeleton created; schema confirmed (PrismHub.background layer stack exists); node v24/three 0.184; mapping runtime/editor/harness next.
+[00:27] 3DBG P0 DONE: schema+lib shipped (kind/params/minTier; 3 presets as DATA; tier map); tsc 9 baseline 0-new; tooling re-verified (three 0.184 latest, spark 2.1.0, fal 1.10.1). Next: P1 procedural core.
