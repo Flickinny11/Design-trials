@@ -1,0 +1,82 @@
+{
+  "[data-component=\"view-mode-toggle\"] button": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif, ui-sans-serif, system-ui",
+    "firstFamily": "ui",
+    "fontWeight": "600",
+    "fontSize": "12px",
+    "letterSpacing": "normal"
+  },
+  "[data-component=\"top-bar\"] .ds-title-brass": {
+    "found": true,
+    "fontFamily": "display, \"display Fallback\", ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif, ui-sans-serif, system-ui",
+    "firstFamily": "display",
+    "fontWeight": "700",
+    "fontSize": "13px",
+    "letterSpacing": "-0.325px"
+  },
+  ".ds-title": {
+    "found": true,
+    "fontFamily": "display, \"display Fallback\", ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "firstFamily": "display",
+    "fontWeight": "600",
+    "fontSize": "16px",
+    "letterSpacing": "-0.32px"
+  },
+  ".ds-display": {
+    "found": false
+  },
+  ".ds-label": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "firstFamily": "ui",
+    "fontWeight": "600",
+    "fontSize": "11px",
+    "letterSpacing": "0.77px"
+  },
+  ".ds-body": {
+    "found": false
+  },
+  ".ds-btn": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "firstFamily": "ui",
+    "fontWeight": "600",
+    "fontSize": "11px",
+    "letterSpacing": "0.22px"
+  },
+  ".ds-kicker": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    "firstFamily": "mono",
+    "fontWeight": "500",
+    "fontSize": "9.5px",
+    "letterSpacing": "1.9px"
+  },
+  "body": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "firstFamily": "ui",
+    "fontWeight": "400",
+    "fontSize": "16px",
+    "letterSpacing": "normal"
+  },
+  "__widths": {
+    "ds_display": 703.41,
+    "ds_ui": 703.41,
+    "ds_mono": 806.41,
+    "fb_serif": 639.09,
+    "fb_sans": 679.27,
+    "switzer": 703.41
+  },
+  "__fontsLoaded": {
+    "display": true,
+    "ui": true,
+    "mono": true,
+    "Switzer": true,
+    "JetBrains Mono": true,
+    "Clash Display": true,
+    "Geist": true
+  },
+  "__tier": "t2"
+}

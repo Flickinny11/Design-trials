@@ -44,6 +44,24 @@ export default function TopBar() {
   // unified canvas (full-width rail, brushed along x; CSS keeps the layout).
   const slab = useChromeSlab({ material: 'metal', radius: 0, brushAxis: 'x' });
 
+  // CHROME W3 — the primary "Add Node" action is a TRUE-3D hero brass key:
+  // real beveled geometry in the unified canvas (thickness + cursor-tracked
+  // perspective tilt + pointer-light specular + physics press), the marquee
+  // primary action of the masthead. The DOM keeps its label/icon + layout;
+  // its CSS fill is suppressed (ds-slab-hosted) so the 3D key reads through.
+  // Reset-camera + Search are TRUE-glass keys: lighter scene-sampling
+  // refraction (frosted), crisp DOM text, real hover/press depth.
+  const addNodeSlab = useChromeSlab({
+    material: 'metal',
+    hero: true,
+    heroStyle: 'brass',
+    accent: 1,
+    radius: 999,
+    heroDepthPx: 10,
+  });
+  const resetSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });
+  const searchSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });
+
   const zoomDesc: Record<string, string> = {
     L0: 'Galaxy · All hubs visible',
     L1: 'Cluster · Single hub',
@@ -205,17 +223,26 @@ export default function TopBar() {
         </div>
 
         <button
+          ref={addNodeSlab.ref}
           data-component="add-node-button"
           onClick={openAddNodeDialog}
-          className="ds-btn ds-btn--ghost ds-press h-8 rounded-full"
-          style={{ borderRadius: 'var(--ds-r-pill)' }}
+          className="ds-press inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-ds-brass-100"
+          style={{
+            borderRadius: 'var(--ds-r-pill)',
+            // Light brass label riding the true-3D brass key (same legibility
+            // pattern as the hub-switcher active slot + mode-toggle labels — a
+            // crisp DOM glyph over the lit cap, never dark ink which vanishes
+            // on the cap's graphite shade at rest).
+            textShadow: `0 1px 2px rgba(0,0,0,0.55), 0 0 10px ${dsAlpha(DS.brass400, 0.4)}`,
+          }}
           title="Add node"
         >
-          <span className="text-[13px] font-mono leading-none">+</span>
+          <span className="text-[13px] font-mono font-semibold leading-none">+</span>
           <span className="hidden md:inline text-[12px] font-ui font-semibold">Add Node</span>
         </button>
 
         <button
+          ref={resetSlab.ref}
           onClick={resetCamera}
           className="ds-btn ds-press w-8 h-8 px-0 rounded-full"
           style={{ borderRadius: 'var(--ds-r-pill)' }}
@@ -225,6 +252,7 @@ export default function TopBar() {
         </button>
 
         <button
+          ref={searchSlab.ref}
           onClick={toggleSearch}
           className="ds-btn ds-press h-8 rounded-full"
           style={{ borderRadius: 'var(--ds-r-pill)' }}

@@ -146,3 +146,9 @@ Will self-report phase events below.
 [10:02:29] LOOP[chrome]: START (breaker: stop after 3 no-progress resumes or 20 total)
 [10:21:49] CHROME W1: DONE | Switzer (display+UI, one grotesque) + OKLCH Observatory-Brass palette + 8pt spacing scale + brighter edges | fonts verified rendering (width fingerprint), tier t2, tsc 0-new, 0 console err | NEXT W2 lit refraction glass (slab shader makes panels read as material not void)
 [10:28:07] CHROME W2: DONE | slab shader lit resting state — top-lit glass body floor + baked key-light sheen on opaque + stronger rim/keyline + wider chromatic split; real scene refraction retained | panels (toolbar/rail/flyout/inspector) now read as lit premium material over black scene (was near-invisible voids); tsc 0-new, 0 console err, tier t2 | NEXT W3 true-3D hero controls
+[10:41:17] LOOP[chrome]: resume #1 (no-progress streak 0/3; progress=857_      13)
+[10:43:03] LOOP[chrome]: resume #2 (no-progress streak 1/3; progress=857_      13)
+[10:44:49] LOOP[chrome]: resume #3 (no-progress streak 2/3; progress=857_      13)
+[10:46:36] LOOP[chrome]: CIRCUIT-BREAKER TRIPPED: 3 no-progress resumes (commits+ledger stuck at 857_      13). STOPPED to save compute -- needs investigation.
+
+[04:45:58] CHROME W3: DONE | primary Add Node = TRUE-3D brass hero key + Reset/Search = scene-sampling glass | matches shipped mode-toggle/hub-active hero pattern; light-brass label fix (dark-ink failed legibility); hover bloom proves real bevel specular | tsc 0-new, 0 console err | next: W4 micro-interactions
