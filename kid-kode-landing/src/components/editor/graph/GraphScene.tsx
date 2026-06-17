@@ -2634,7 +2634,33 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   const previewPatch = usePreviewStateStore((s) => s.patches[node.nodeId] ?? null);
   // APP-REALITY P5 — active Preview device mode (drives the responsive override).
   const deviceMode = useGraphEditorStore((s) => s.deviceMode);
-  const composedNode = composeNodeWithPreview(node, previewPatch);
+  // EDITOR-EXP P1 (built-freeze) — rebuild identity, hoisted here so the BUILT
+  // snapshot below can key off it (the once-per-build pop effect reuses it).
+  const rebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion[node.nodeId] ?? 0);
+  const buildKey = node.nodeId + ':' + rebuildVersion;
+  // EDITOR-EXP P1 (built-freeze, C5/C8 + INV-R6 + canvas-spec §6) — capture the
+  // committed node AS OF the last (re)build. Refreshed synchronously (derive-
+  // during-render, never stale-by-one) only when buildKey changes (an explicit
+  // Build). A bare Save (overlay→source) or a live overlay edit does NOT bump
+  // buildKey, so the snapshot — and therefore preview-app — stays frozen until
+  // Build re-realizes the node.
+  const builtNodeRef = useRef<PrismNode>(node);
+  const builtKeyRef = useRef(buildKey);
+  if (builtKeyRef.current !== buildKey) {
+    builtKeyRef.current = buildKey;
+    builtNodeRef.current = node;
+  }
+  // `composedNode` is the node the renderer actually reads. Canvas authoring
+  // reads source ⊕ preview-overlay so edits show up LIVE before Save (the
+  // ghost). preview-app (the running app) reads the BUILT snapshot only, so a
+  // staged or Saved-but-unbuilt edit never changes the played app until an
+  // explicit per-node Build (C5 proof: edit position → unchanged in preview →
+  // Save → still unchanged → Build → moves). In canvas this is byte-identical
+  // to the prior composeNodeWithPreview(node, previewPatch), so canvas
+  // authoring (gizmo ghost, in-place setSpec, SC-069 ct writes) is unchanged.
+  const composedNode = previewMode
+    ? builtNodeRef.current
+    : composeNodeWithPreview(node, previewPatch);
   // STEP8 canvas-spec SC-9 — scenePosition is the authored transform the
   // Transform tools write (gizmo + toolbar). Read it with full defaults
   // (legacy nodes carry only x/y/z, or nothing) so rotation/scale compose
@@ -2716,8 +2742,7 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   const ringSize = measuredRing ?? Math.max(w, h, 0.25) * 0.62;
 
   // STEP6 scope item 3 — once-per-build realization pop (see poppedBuilds note).
-  const rebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion[node.nodeId] ?? 0);
-  const buildKey = node.nodeId + ':' + rebuildVersion;
+  // (rebuildVersion + buildKey are hoisted above for the P1 built-freeze snapshot.)
   const popRef = useRef<THREE.Group | null>(null);
   const alreadyPopped = poppedBuilds.has(buildKey);
   useEffect(() => {

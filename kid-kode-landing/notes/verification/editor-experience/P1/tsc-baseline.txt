@@ -1,0 +1,1 @@
+TSC BASELINE 2026-06-17: 10 total (8 tests NodeContext.THREE, 2 src) — '0-new' means total stays <=10
