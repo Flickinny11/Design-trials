@@ -143,6 +143,13 @@ export default function Inspector() {
   const previewDirtyForSelected = selectedId
     ? previewPatches[selectedId] !== undefined && Object.keys(previewPatches[selectedId]).length > 0
     : false;
+  // EDITOR-EXP P1 (C2) — number of staged (un-Saved) fields on the selected
+  // node's preview overlay, surfaced as a count on the Save button so the
+  // pending-edit state is always visible.
+  const previewPendingCount =
+    selectedId && previewPatches[selectedId]
+      ? Object.keys(previewPatches[selectedId]).length
+      : 0;
   const isDirty = sourceDirty || previewDirtyForSelected;
 
   // UI-FIDELITY-2 — GPU-side brass accent follows each rail key's armed/
@@ -209,6 +216,16 @@ export default function Inspector() {
     if (r.ok) rebuildNode(selectedId);
     setSaving(false);
     if (!r.ok) setSaveError(r.error ?? 'save failed');
+  };
+
+  // EDITOR-EXP P1 (C6 Discard) — revert the selected node's STAGED edits (its
+  // preview-state overlay) to the last committed/built state. Clears only the
+  // per-node overlay buffer (usePreviewStateStore.discard); it does not touch
+  // committed source and does not trigger a rebuild. Completes the staging
+  // contract: a staged edit can be Saved, Built, or Discarded.
+  const handleDiscard = () => {
+    if (!selectedId) return;
+    usePreviewStateStore.getState().discard(selectedId);
   };
 
   // EBR2-F-03 / §R2-F SC-075 — Clone button handler. Sequence:
@@ -467,7 +484,13 @@ export default function Inspector() {
               isDirty ? 'ds-btn--primary' : ''
             }`}
           >
-            {saving ? 'Saving…' : isDirty ? 'Save' : 'Saved'}
+            {saving
+              ? 'Saving…'
+              : isDirty
+                ? previewPendingCount > 0
+                  ? `Save (${previewPendingCount})`
+                  : 'Save'
+                : 'Saved'}
           </button>
           {/* EBR2-E-04 / §R2-E SC-074 + INV-26 + RA-16 — Save and Rebuild:
               persists the preview overlay then re-invokes createNode for
@@ -484,6 +507,21 @@ export default function Inspector() {
             className="ds-btn ds-btn--ghost !px-2.5 h-7 text-[10px]"
           >
             {saving ? 'Saving…' : 'Save & Rebuild'}
+          </button>
+          {/* EDITOR-EXP P1 (C6) — Discard: revert the selected node's staged
+              edits (preview overlay) to the last committed/built state. Enabled
+              only while pending staged edits exist; mirrors the slab-less action
+              buttons (Change Artifact / Preview in App UI) for the t0/t1 look. */}
+          <button
+            type="button"
+            data-role="discard"
+            data-testid="inspector-discard"
+            disabled={!previewDirtyForSelected}
+            onClick={handleDiscard}
+            title="Discard this node's unsaved (staged) edits"
+            className="ds-btn ds-btn--ghost !px-2.5 h-7 text-[10px]"
+          >
+            Discard
           </button>
           {/* EBR2-F-03 / §R2-F SC-075 — Clone: deep-clones the selected node
               via useGraphSourceStore.cloneNode, switches viewMode to galaxy,
