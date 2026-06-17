@@ -190,7 +190,15 @@ function slabCommon(bufs: ChromeInstanceBuffers, u: ChromeUniforms): SlabCommon 
 
   // Bevel profile: 0 on the flat face → 1 at the rim, circular fillet.
   const borderPx = state.x;
-  const bevelPx = borderPx.mul(2.0).add(4.0);
+  // EDITOR-EXP P2 (C12 hero) — a hero key (misc.w > 0) grows a chamfered side so
+  // the SDF bevel reads as the extruded WALL of a raised brass button, not a 1px
+  // rim. The chamfer is SIZE-RELATIVE (a fraction of the short side) so a flat
+  // brass top cap always survives — a fixed-px chamfer on a small pill would
+  // consume the whole face and roll the normal everywhere (no lit cap). misc.w
+  // is 0 for every non-hero slab → bevel unchanged there.
+  const heroAmt = misc.w;
+  const heroBevel = min(size.x, size.y).mul(0.2).mul(heroAmt);
+  const bevelPx = borderPx.mul(2.0).add(4.0).add(heroBevel);
   const bevelT = smoothstep(bevelPx.negate(), 0.0, dBox);
   const fillet = bevelT.mul(bevelT).mul(float(3.0).sub(bevelT.mul(2.0)));
 
@@ -241,6 +249,10 @@ export function createOpaqueSlabMaterial(
   const hover = c.state.z;
   const press = c.state.w;
   const accent = c.state.y;
+  // EDITOR-EXP P2 (C12) — raised hero-key amount (0 = flat slab; >0 = extruded
+  // brass key). Read from the reserved aMisc.w; drives the steep wall normal,
+  // the top-lit/bottom-shaded body, and the brighter lit chamfer below.
+  const hero = c.misc.w;
 
   // Vertical plate gradient per style (the tokens.css ramps, now lit).
   const vT = uv().y.oneMinus(); // 0 at top of slab → 1 at bottom
@@ -269,10 +281,20 @@ export function createOpaqueSlabMaterial(
     brassGradient(vT).mul(0.82),
     accent.mul(0.8).add(hover.mul(0.08)),
   ) as TSLNode;
-  n.colorNode = vec4(accented.mul(press.mul(-0.18).add(1.0)), 1.0);
+  // EDITOR-EXP P2 (C12) — vertical extrusion shade: a hero key's top cap lifts
+  // and its base sinks into shadow so it reads as a raised 3D brass form.
+  // Identity (×1) for every non-hero slab (hero === 0).
+  const heroShade = mix(float(1.0), mix(float(0.74), float(1.18), vT.oneMinus()), hero) as TSLNode;
+  n.colorNode = vec4(accented.mul(press.mul(-0.18).add(1.0)).mul(heroShade), 1.0);
 
   // Wells sink inward (inverted bevel); plates rise. Brushing/grain on top.
   const plateNormal = bevelNormal(c.gradDir, c.fillet, 1.35, 1);
+  // EDITOR-EXP P2 (C12) — a steeper extruded-wall normal for hero keys, mixed in
+  // by `hero` so non-hero plates keep the gentle 1.35 rim. Kept moderate (2.1)
+  // so the chamfer catches light without rolling so hard it mirrors the dark
+  // scene and darkens the brass cap.
+  const heroNormal = bevelNormal(c.gradDir, c.fillet, 2.1, 1);
+  const raisedNormal = mix(plateNormal, heroNormal, hero) as TSLNode;
   const wellNormal = bevelNormal(c.gradDir, c.fillet, 1.1, -1);
   let microXY = vec2(
     brush.mul(0.1).mul(isMetal),
@@ -293,7 +315,7 @@ export function createOpaqueSlabMaterial(
     const cR = texture(tex.ceramicRough, tileUV).r.sub(0.5);
     roughDetail = bR.mul(0.16).mul(isMetal).add(cR.mul(0.1).mul(isCeramic)).mul(tex.ready) as TSLNode;
   }
-  const baseNormal = mix(plateNormal, wellNormal, isWell);
+  const baseNormal = mix(raisedNormal, wellNormal, isWell);
   n.normalNode = normalize(vec3(baseNormal.x.add(microXY.x), baseNormal.y.add(microXY.y), baseNormal.z));
 
   n.metalnessNode = isMetal.mul(0.92).add(isCeramic.mul(0.08)).add(isWell.mul(0.25));
@@ -323,8 +345,17 @@ export function createOpaqueSlabMaterial(
   // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
   // guarantees instrument-key luminance under any hub lighting.
   const accentFace = brassGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
+  // EDITOR-EXP P2 (C12) — hero key luminance. A 0.92-metal brass face reflects
+  // the (dark) scene env and reads near-black, so a hero gets a FORM-FOLLOWING
+  // self-lit brass body: bright at the top cap, dim at the shaded base, so it
+  // reads as a RAISED, lit 3D brass key — while the metallic chamfer still
+  // catches the moving pointer-light specular. Plus a brighter lit edge on the
+  // thick chamfer. All gated by `hero` (0 for every non-hero slab).
+  const heroFaceLum = smoothstep(float(1.0), float(-0.1), vT).mul(0.55).add(0.32); // 0.87 cap → 0.32 base
+  const heroFace = brassGradient(vT).mul(heroFaceLum).mul(hero);
+  const heroEdge = brassGradient(vT).mul(c.keyline).mul(hero.mul(1.9));
   n.emissiveNode = mix(
-    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace),
+    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace).add(heroFace).add(heroEdge),
     vec3(0.0, 0.0, 0.0),
     isWell.mul(0.78),
   );

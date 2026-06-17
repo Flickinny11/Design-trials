@@ -58,6 +58,11 @@ export default function TopBar() {
     accent: 1,
     radius: 999,
     heroDepthPx: 10,
+    // EDITOR-EXP P2 (C12) — draw the hero key AFTER (on top of) the full-width
+    // masthead rail. Both are opaque slabs with depthTest off in one instanced
+    // mesh, so without a high order the rail (which registers later) paints over
+    // the hero key and the brass never shows. The key only overlaps the rail.
+    order: 100,
   });
   const resetSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });
   const searchSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });

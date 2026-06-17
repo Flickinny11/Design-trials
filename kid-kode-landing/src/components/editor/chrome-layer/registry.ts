@@ -34,6 +34,17 @@ export interface ChromeSlabOptions {
   brushAxis?: 'x' | 'y';
   /** Extra z-bias inside the layer: higher sorts later (over) — default by registration order. */
   order?: number;
+  /**
+   * EDITOR-EXP P2 (C12) — render this surface as a TRUE-3D raised, extruded
+   * brass key (thick chamfered sides from a grown SDF bevel, a lit top cap, a
+   * shaded base) instead of a flat slab. For the primary CTA (Add Node). The
+   * brass face derives from `accent`; pair `hero` with `accent: 1`.
+   */
+  hero?: boolean;
+  /** Apparent extrusion depth in CSS px for a hero key (default 10). */
+  heroDepthPx?: number;
+  /** Reserved cosmetic hint (e.g. 'brass'); the brass face comes from `accent`. */
+  heroStyle?: string;
 }
 
 export interface ChromeSlabHandle {

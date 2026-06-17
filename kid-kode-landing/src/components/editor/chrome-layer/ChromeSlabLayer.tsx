@@ -241,12 +241,17 @@ export function ChromeSlabLayer() {
       e.hoverK += (e.hover - e.hoverK) * damp;
       e.pressK += (e.press - e.pressK) * damp;
       bufs.aState.setXYZW(i, e.opts.borderPx ?? 1, e.opts.accent ?? 0, e.hoverK, e.pressK);
+      // aMisc.w (the reserved slot) carries the EDITOR-EXP P2 hero amount: 0 for
+      // a normal flat slab, ~1 for a raised/extruded brass key (heroDepthPx
+      // normalized). The opaque shader reads it to grow the bevel into a thick
+      // chamfered side + lit top cap + shaded base.
+      const heroAmt = e.opts.hero ? Math.min(1, (e.opts.heroDepthPx ?? 10) / 12) : 0;
       bufs.aMisc.setXYZW(
         i,
         e.opts.frost ?? 0.5,
         e.opts.brushAxis === 'y' ? 1 : 0,
         STYLE_ID[e.opts.material] ?? 1,
-        0,
+        heroAmt,
       );
       // Ancestor-overflow clip window (huge default = unclipped).
       let minX = -1e6;
