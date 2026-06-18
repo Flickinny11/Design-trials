@@ -179,23 +179,30 @@ describe('EBR2-C-04 — onObjectChange writes additive ct = start + proxy delta'
     expect(block).toMatch(/dragStartSP\.current\s*=\s*null/);
   });
 
-  it("writes the node's OWN scenePosition — never a canvasTransform patch (canvas-spec criterion 9; supersedes SC-042)", () => {
+  it("STAGES the node's OWN scenePosition through the preview overlay — never a direct source write or canvasTransform patch (canvas-spec criterion 9 + EDITOR-EXP P4 C22 D-DRAG)", () => {
     const src = read(GRAPH_SCENE_PATH);
     const block = extractFunctionBlock(src, 'CanvasTransformGizmo');
     // PRISM-CANVAS-EDITOR-SPEC criterion 9: "Drag/resize-corner/rotate
     // mutate the node's `scenePosition`; values persist and round-trip
     // through save/reload." Transform tools are AUTHORING — writing the
-    // node's own schema field is the legitimate path. (INV-17 / FP-04 are
-    // untouched: they bind compile*/organize* functions, not authoring
-    // tools.) The archived editor-build SC-042 routed gizmo writes to
-    // `canvasTransform`; that routing is superseded (SPEC-INDEX S6) and
-    // must not return.
+    // node's own schema field is the legitimate path.
+    //
+    // EDITOR-EXP P4 (C22 / D-DRAG, LOCKED) SUPERSEDES the prior direct
+    // `updateNode({ scenePosition })` write: a drag must show a LIVE GHOST and
+    // must NOT write the canonical position or autosave until Save+Build. The
+    // gizmo now STAGES scenePosition through `usePreviewStateStore` (the same
+    // staging overlay C9 color/material uses); AssembledSceneNode composes
+    // source ⊕ overlay live so the ghost moves, and Save (commitPreviewToSource)
+    // commits the canonical position — preserving the criterion-9 round-trip.
     expect(block).toMatch(
-      /updateNode\s*\(\s*node\.nodeId\s*,\s*\{\s*scenePosition\s*:\s*next\s*\}\s*\)/,
+      /stagePreview\s*\(\s*node\.nodeId\s*,\s*\{\s*scenePosition\s*:\s*next\s*\}\s*\)/,
     );
-    // Negative: no updateNode call in the gizmo may carry a canvasTransform
-    // patch (the superseded SC-042 shape).
-    expect(block).not.toMatch(/updateNode\s*\([^)]*\{[^}]*canvasTransform\s*:/m);
+    // Negative: the gizmo onObjectChange must NOT write source directly
+    // (no updateNode / setScenePosition on drag — that would autosave the
+    // canonical position, violating D-DRAG).
+    expect(block).not.toMatch(/updateNode\s*\(\s*node\.nodeId\s*,\s*\{\s*scenePosition\s*:\s*next\s*\}\s*\)/);
+    // Negative: no canvasTransform patch (the superseded SC-042 shape).
+    expect(block).not.toMatch(/\{[^}]*canvasTransform\s*:/m);
   });
 });
 

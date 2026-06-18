@@ -72,10 +72,16 @@ describe('EBR2-C-01 — store: editorMode field (SC-068, haltCheck)', () => {
     expect(useGraphEditorStore.getState().editorMode).toBe('idle');
   });
 
-  it("resets editorMode to 'idle' when selectNode is called (selection change)", () => {
-    useGraphEditorStore.setState({ selectedNodeId: 'n-prior', editorMode: 'edit' });
+  // EDITOR-EXP P4 (C17) — ARM-ON-SELECT supersedes the original two-step Edit
+  // ritual: selecting a NODE now immediately arms the gizmo (editorMode :=
+  // 'edit') so the user never has to click "Edit Handles" first. The Inspector
+  // Edit/Done toggle (tested below) still flips edit↔idle for a pure-view
+  // selection. Hub selection, deselection, and drill-in stay 'idle' (they do
+  // not surface a single-node transform gizmo).
+  it("ARMS editorMode to 'edit' when selectNode targets a node (C17 arm-on-select)", () => {
+    useGraphEditorStore.setState({ selectedNodeId: 'n-prior', editorMode: 'idle' });
     useGraphEditorStore.getState().selectNode('n-next');
-    expect(useGraphEditorStore.getState().editorMode).toBe('idle');
+    expect(useGraphEditorStore.getState().editorMode).toBe('edit');
   });
 
   it("resets editorMode to 'idle' when selectNode(null) clears selection", () => {
@@ -90,10 +96,10 @@ describe('EBR2-C-01 — store: editorMode field (SC-068, haltCheck)', () => {
     expect(useGraphEditorStore.getState().editorMode).toBe('idle');
   });
 
-  it("resets editorMode to 'idle' when flyToNode changes selection", () => {
-    useGraphEditorStore.setState({ selectedNodeId: 'n-prior', editorMode: 'edit' });
+  it("ARMS editorMode to 'edit' when flyToNode targets a node (C17 arm-on-select)", () => {
+    useGraphEditorStore.setState({ selectedNodeId: 'n-prior', editorMode: 'idle' });
     useGraphEditorStore.getState().flyToNode('n-next');
-    expect(useGraphEditorStore.getState().editorMode).toBe('idle');
+    expect(useGraphEditorStore.getState().editorMode).toBe('edit');
   });
 
   it("resets editorMode to 'idle' on drillIntoHub", () => {

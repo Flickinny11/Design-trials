@@ -70,6 +70,7 @@ import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { KeyframeEditorPanel } from '@/components/editor/overlays/KeyframeEditor';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { useBuiltSnapshotStore } from '@/stores/useBuiltSnapshotStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
 import { rebuildNode } from '@/lib/editor/rebuild-node';
@@ -465,6 +466,12 @@ export default function CanvasToolbar() {
   const setEditorMode = useGraphEditorStore((s) => s.setEditorMode);
   const gizmoMode = useGraphEditorStore((s) => s.canvasGizmoMode);
   const setGizmoMode = useGraphEditorStore((s) => s.setCanvasGizmoMode);
+  // EDITOR-EXP P4 (C18/C19) — gizmo space + snapping lifted to the store so the
+  // toolbar controls drive the same values the gizmo reads.
+  const gizmoSpace = useGraphEditorStore((s) => s.gizmoSpace);
+  const setGizmoSpace = useGraphEditorStore((s) => s.setGizmoSpace);
+  const snap = useGraphEditorStore((s) => s.snapEnabled);
+  const setSnapEnabled = useGraphEditorStore((s) => s.setSnapEnabled);
   const setMultiSelection = useGraphEditorStore((s) => s.setMultiSelection);
   const clearMultiSelection = useGraphEditorStore((s) => s.clearMultiSelection);
   const toggleFreeze = useGraphEditorStore((s) => s.toggleFreeze);
@@ -474,7 +481,10 @@ export default function CanvasToolbar() {
   // Source graph
   const nodes = useGraphSourceStore((s) => s.nodes);
   const hubs = useGraphSourceStore((s) => s.hubs);
-  const setScenePosition = useGraphSourceStore((s) => s.setScenePosition);
+  // EDITOR-EXP P4 (C22) — toolbar transforms no longer call setScenePosition
+  // (a direct source write that autosaved on drag). They now stage through
+  // usePreviewStateStore (see applyToSelection / alignAxis). updateNode is kept
+  // for the non-transform lighting toggle below.
   const updateNode = useGraphSourceStore((s) => s.updateNode);
   const groupNodes = useGraphSourceStore((s) => s.groupNodes);
   const ungroupNodes = useGraphSourceStore((s) => s.ungroupNodes);
@@ -483,6 +493,13 @@ export default function CanvasToolbar() {
   const markSourceDirty = useGraphSourceStore((s) => s.markDirty);
 
   const builtSnap = useBuiltSnapshotStore((s) => (selectedNodeId ? s.snapshots[selectedNodeId] : undefined));
+  // EDITOR-EXP P4 (C22) — reactive subscription to the selected node's STAGED
+  // preview patch so the Transform flyout's numeric readout follows the live
+  // ghost (gizmo drags + nudges write here). The selector returns this node's
+  // patch only, so the toolbar re-renders when its staged transform changes.
+  const selectedPreviewPatch = usePreviewStateStore((s) =>
+    selectedNodeId ? s.patches[selectedNodeId] ?? null : null,
+  );
 
   // Toolbar-local UI state
   const [activeGroup, setActiveGroup] = useState<ToolGroupId | null>('transform');
@@ -490,7 +507,9 @@ export default function CanvasToolbar() {
   const [marqueeArmed, setMarqueeArmed] = useState(false);
   const [coming, setComing] = useState<{ tool: string; subsystem: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const [snap, setSnap] = useState(true);
+  // EDITOR-EXP P4 (C19) — `snap` was decorative local state that never reached
+  // the gizmo. It now comes from useGraphEditorStore (snapEnabled / toggleSnap,
+  // read above), so the Snap On/Off button actually wires the gizmo + steppers.
   const [selectedLightId, setSelectedLightId] = useState<string | null>(null);
   const [lightPickerOpen, setLightPickerOpen] = useState(false);
   // C10 — FLOATING + MOVABLE + ANIMATED dock (desktop/regular only; compact
@@ -587,15 +606,34 @@ export default function CanvasToolbar() {
     [editorMode, setEditorMode, setGizmoMode],
   );
 
+  // EDITOR-EXP P4 (C22 / D-DRAG) — toolbar transform nudges STAGE through the
+  // preview overlay (the same staging buffer C9 styling uses), NOT a direct
+  // source write. The overlay does whole-field replacement, so we read the
+  // node's EFFECTIVE scenePosition (source ⊕ any existing staged patch), apply
+  // the delta, and stage the FULL scenePosition object. The canvas composes
+  // source ⊕ overlay live → the element visibly moves (the ghost); Save
+  // (commitPreviewToSource) commits the canonical position. Drag never persists.
+  const readStagedSP = useCallback(
+    (n: PrismNode): ScenePosition => {
+      const patch = usePreviewStateStore.getState().peek(n.nodeId);
+      const staged = patch?.scenePosition;
+      // staged is a whole scenePosition (we always stage the full object), so
+      // prefer it over source; fall back to source via readSP.
+      return staged ? readSP({ ...n, scenePosition: staged }) : readSP(n);
+    },
+    [],
+  );
   const applyToSelection = useCallback(
     (patchFor: (sp: ScenePosition) => Partial<ScenePosition>) => {
       for (const id of effectiveIds) {
         const n = nodes.find((x) => x.nodeId === id);
         if (!n || n.locked) continue;
-        setScenePosition(id, patchFor(readSP(n)));
+        const cur = readStagedSP(n);
+        const full: ScenePosition = { ...cur, ...patchFor(cur) };
+        usePreviewStateStore.getState().set(id, { scenePosition: full });
       }
     },
-    [effectiveIds, nodes, setScenePosition],
+    [effectiveIds, nodes, readStagedSP],
   );
 
   const nudge = (axis: 'x' | 'y' | 'z', dir: 1 | -1) =>
@@ -612,12 +650,19 @@ export default function CanvasToolbar() {
     }));
   const alignAxis = (axis: 'x' | 'y') => {
     if (effectiveIds.length < 2) return;
-    const sps = effectiveIds.map((id) => readSP(nodes.find((n) => n.nodeId === id)));
+    // EDITOR-EXP P4 (C22) — align reads the effective (staged) positions and
+    // stages the aligned full scenePosition through the preview overlay too.
+    const sps = effectiveIds.map((id) => {
+      const n = nodes.find((x) => x.nodeId === id);
+      return n ? readStagedSP(n) : readSP(undefined);
+    });
     const avg = sps.reduce((acc, sp) => acc + sp[axis], 0) / sps.length;
     for (const id of effectiveIds) {
       const n = nodes.find((x) => x.nodeId === id);
-      if (n?.locked) continue;
-      setScenePosition(id, { [axis]: avg } as Partial<ScenePosition>);
+      if (!n || n.locked) continue;
+      const cur = readStagedSP(n);
+      const full: ScenePosition = { ...cur, [axis]: avg };
+      usePreviewStateStore.getState().set(id, { scenePosition: full });
     }
   };
 
@@ -1035,9 +1080,17 @@ export default function CanvasToolbar() {
                 editorMode={editorMode}
                 gizmoMode={gizmoMode}
                 selectionLabel={selectionLabel}
-                sp={readSP(selectedNode)}
+                sp={
+                  selectedNode
+                    ? (selectedPreviewPatch?.scenePosition
+                        ? readSP({ ...selectedNode, scenePosition: selectedPreviewPatch.scenePosition })
+                        : readSP(selectedNode))
+                    : readSP(selectedNode)
+                }
                 snap={snap}
-                setSnap={setSnap}
+                setSnap={setSnapEnabled}
+                gizmoSpace={gizmoSpace}
+                setGizmoSpace={setGizmoSpace}
                 onEditToggle={() => setEditorMode(editorMode === 'edit' ? 'idle' : 'edit')}
                 onMode={ensureEdit}
                 onNudge={nudge}
@@ -1333,11 +1386,14 @@ function FlyoutShell({
 // ── Transform flyout (WIRED) ─────────────────────────────────────────────────
 function TransformFlyout({
   hasSelection, isGroup, isLocked, editorMode, gizmoMode, selectionLabel, sp, snap, setSnap,
+  gizmoSpace, setGizmoSpace,
   onEditToggle, onMode, onNudge, onScale, onRotate, onReset, onAlign,
 }: {
   hasSelection: boolean; isGroup: boolean; isLocked: boolean;
   editorMode: 'idle' | 'edit'; gizmoMode: GizmoMode; selectionLabel: string; sp: ScenePosition;
   snap: boolean; setSnap: (v: boolean) => void;
+  // EDITOR-EXP P4 (C18) — world/local transform space.
+  gizmoSpace: 'world' | 'local'; setGizmoSpace: (s: 'world' | 'local') => void;
   onEditToggle: () => void; onMode: (m: GizmoMode) => void;
   onNudge: (axis: 'x' | 'y' | 'z', dir: 1 | -1) => void;
   onScale: (dir: 1 | -1) => void; onRotate: (dir: 1 | -1) => void;
@@ -1389,7 +1445,34 @@ function TransformFlyout({
         <ToolButton icon="scale" label="Scale" testId="tt-scale" active={gizmoMode === 'scale' && editorMode === 'edit'} onClick={() => onMode('scale')} />
       </div>
 
-      <SectionLabel>Position · writes scenePosition</SectionLabel>
+      {/* EDITOR-EXP P4 (C18) — gizmo transform space (also toggled by the 'x' key). */}
+      <SectionLabel>Space · world / local</SectionLabel>
+      <div className="grid grid-cols-2 gap-1.5">
+        <button
+          type="button"
+          data-action="space-world"
+          data-testid="tt-space-world"
+          onClick={() => setGizmoSpace('world')}
+          className="h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+          style={gizmoSpace === 'world' ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
+        >
+          <Icon name="grid" size={11} color={gizmoSpace === 'world' ? DS_ACCENT : DS.textMid} />
+          <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>World</span>
+        </button>
+        <button
+          type="button"
+          data-action="space-local"
+          data-testid="tt-space-local"
+          onClick={() => setGizmoSpace('local')}
+          className="h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
+          style={gizmoSpace === 'local' ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
+        >
+          <Icon name="move" size={11} color={gizmoSpace === 'local' ? DS_ACCENT : DS.textMid} />
+          <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>Local</span>
+        </button>
+      </div>
+
+      <SectionLabel>Position · stages scenePosition</SectionLabel>
       <div className="flex flex-col gap-1.5">
         <StepperRow label="X" testId="tt-pos-x" value={fmt(sp.x)} onDec={() => onNudge('x', -1)} onInc={() => onNudge('x', 1)} />
         <StepperRow label="Y" testId="tt-pos-y" value={fmt(sp.y)} onDec={() => onNudge('y', -1)} onInc={() => onNudge('y', 1)} />

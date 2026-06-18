@@ -25,6 +25,24 @@ export type EditorRenderMode = 'scene' | 'topology';
  */
 export type EditorMode = 'idle' | 'edit';
 
+/**
+ * EDITOR-EXP P4 (C18) — gizmo transform space. `'world'` axes stay aligned to
+ * the world grid (the default, matching how the scene is composed); `'local'`
+ * axes follow the node's own orientation. Forwarded straight to the drei
+ * <TransformControls space={…}/> prop in GraphScene's CanvasTransformGizmo.
+ */
+export type GizmoSpace = 'world' | 'local';
+
+/**
+ * EDITOR-EXP P4 (C19) — world-grid snap steps. Translation snaps to a 0.125u
+ * grid (the 8pt-equivalent in this scene's unit scale); rotation snaps to 15°;
+ * scale snaps to 0.1× increments. Used only while `snapEnabled` is true; the
+ * gizmo passes these to translationSnap / rotationSnap / scaleSnap.
+ */
+export const GIZMO_TRANSLATE_SNAP = 0.125;
+export const GIZMO_ROTATE_SNAP = Math.PI / 12; // 15°
+export const GIZMO_SCALE_SNAP = 0.1;
+
 // CANVAS-FINAL — Change Artifact wizard (canvas-spec §12) sub-flow. 'launch' is
 // the Upload-or-Prompt chooser; 'upload' is §12.1; 'prompt' is §12.2.
 export type ChangeArtifactFlow = 'launch' | 'upload' | 'prompt';
@@ -101,6 +119,20 @@ interface GraphEditorState {
    * g/r/s keyboard shortcuts drive the same value. Defaults to 'translate'.
    */
   canvasGizmoMode: GizmoMode;
+  /**
+   * EDITOR-EXP P4 (C18) — active transform space for the CanvasTransformGizmo.
+   * Toolbar World/Local control + the 'x' keyboard shortcut toggle this; the
+   * gizmo forwards it to <TransformControls space={…}/>. Defaults to 'world'.
+   */
+  gizmoSpace: GizmoSpace;
+  /**
+   * EDITOR-EXP P4 (C19) — whether gizmo + toolbar transforms snap to the
+   * world grid (translate 0.125u, rotate 15°, scale 0.1×). Lifted out of the
+   * toolbar's old decorative local state so it actually reaches the gizmo and
+   * the toolbar steppers. Defaults to true; a visible grid hint renders while
+   * on.
+   */
+  snapEnabled: boolean;
 
   // Selection — node and hub selection are mutually exclusive
   selectedNodeId: string | null;
@@ -231,6 +263,18 @@ interface GraphEditorState {
    * Called by the toolbar Transform buttons and the g/r/s shortcuts.
    */
   setCanvasGizmoMode: (m: GizmoMode) => void;
+  /**
+   * EDITOR-EXP P4 (C18) — set / toggle the gizmo transform space. The toolbar
+   * World/Local control calls setGizmoSpace; the 'x' key calls toggleGizmoSpace.
+   */
+  setGizmoSpace: (s: GizmoSpace) => void;
+  toggleGizmoSpace: () => void;
+  /**
+   * EDITOR-EXP P4 (C19) — set / toggle world-grid snapping. The toolbar
+   * Snap On/Off button drives this (was previously dead local React state).
+   */
+  setSnapEnabled: (v: boolean) => void;
+  toggleSnap: () => void;
   selectNode: (id: string | null) => void;
   selectHub: (id: string | null) => void;
   hoverNode: (id: string | null) => void;
@@ -365,6 +409,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     openOverlay: null,
     // STEP8 — default transform gizmo axis set.
     canvasGizmoMode: 'translate',
+    // EDITOR-EXP P4 (C18) — gizmo space defaults to world (grid-aligned).
+    gizmoSpace: 'world',
+    // EDITOR-EXP P4 (C19) — snapping on by default (world-grid feel).
+    snapEnabled: true,
     selectedNodeId: null,
     selectedHubId: null,
     hoveredNodeId: null,
@@ -429,20 +477,31 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     setEditorMode: (m) => set({ editorMode: m }),
     // STEP8 — toolbar Transform buttons + g/r/s shortcuts converge here.
     setCanvasGizmoMode: (m) => set({ canvasGizmoMode: m }),
+    // EDITOR-EXP P4 (C18) — gizmo transform space (world/local).
+    setGizmoSpace: (s) => set({ gizmoSpace: s }),
+    toggleGizmoSpace: () =>
+      set((st) => ({ gizmoSpace: st.gizmoSpace === 'world' ? 'local' : 'world' })),
+    // EDITOR-EXP P4 (C19) — world-grid snapping (now actually wired to the gizmo).
+    setSnapEnabled: (v) => set({ snapEnabled: v }),
+    toggleSnap: () => set((st) => ({ snapEnabled: !st.snapEnabled })),
     setCameraDistance: (d) => {
       const level: ZoomLevel =
         d > 260 ? 'L0' : d > 140 ? 'L1' : d > 60 ? 'L2' : d > 22 ? 'L3' : 'L4';
       set({ cameraDistance: d, zoomLevel: level });
     },
     selectNode: (id) =>
-      // EBR2-C-01 / §R2-C SC-068 — selection change resets editorMode so the
-      // gizmo never persists onto a fresh selection.
+      // EDITOR-EXP P4 (C17) — ARM-ON-SELECT supersedes EBR2-C-01/SC-068's
+      // two-step ritual: selecting a node immediately surfaces the transform
+      // gizmo (editorMode := 'edit' when a node is selected) so the user never
+      // has to click "Edit Handles" first. Deselecting (id === null) returns to
+      // 'idle'. The toolbar Edit Handles button still flips edit↔idle for users
+      // who want a pure-view selection. Singular/multi selection sets reset.
       set({
         selectedNodeId: id,
         selectedHubId: null,
         selectedNodeIds: new Set<string>(),
         selectedHubIds: new Set<string>(),
-        editorMode: 'idle',
+        editorMode: id ? 'edit' : 'idle',
       }),
     selectHub: (id) =>
       // EBR2-C-01 — selection change resets editorMode (see selectNode).
@@ -549,14 +608,15 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       }),
     setLivePreviewHover: (id) => set({ livePreviewHoverId: id }),
     flyToNode: (id) =>
-      // EBR2-C-01 — selection change resets editorMode.
+      // EDITOR-EXP P4 (C17) — fly-to is a node selection; arm the gizmo so the
+      // node is immediately editable on arrival (see selectNode).
       set({
         flyToNodeId: id,
         selectedNodeId: id,
         selectedHubId: null,
         selectedNodeIds: new Set<string>(),
         selectedHubIds: new Set<string>(),
-        editorMode: 'idle',
+        editorMode: id ? 'edit' : 'idle',
       }),
     flyToHub: (hubId) => set({ flyToHubId: hubId, activeHubId: hubId }),
     clearFlyTarget: () => set({ flyToNodeId: null, flyToHubId: null }),

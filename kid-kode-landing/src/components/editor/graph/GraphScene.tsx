@@ -30,7 +30,14 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { ChromeSlabLayer } from '@/components/editor/chrome-layer';
 import HubLighting from './HubLighting';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
-import { useGraphEditorStore, type ViewMode, type EditorRenderMode } from '@/stores/useGraphEditorStore';
+import {
+  useGraphEditorStore,
+  type ViewMode,
+  type EditorRenderMode,
+  GIZMO_TRANSLATE_SNAP,
+  GIZMO_ROTATE_SNAP,
+  GIZMO_SCALE_SNAP,
+} from '@/stores/useGraphEditorStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import {
   usePreviewStateStore,
@@ -1965,6 +1972,15 @@ function SceneControlsBridge({
   useFrame((state) => {
     const c = controlsRef.current;
     if (!c) return;
+    // EDITOR-EXP P4 (C21) — drei <TransformControls> toggles controls.enabled
+    // directly on `dragging-changed` (to auto-suspend the camera during a gizmo
+    // drag). That is exactly what we want while the canvas camera is free, but
+    // in preview-app and Edit-in-Preview the camera is LOCKED. A gizmo drag in
+    // Edit-in-Preview would otherwise leave controls.enabled=true on release and
+    // strand the lock. Re-assert the lock every frame (idempotent) so the
+    // auto-suspend never unlocks a locked camera.
+    const shouldLock = viewMode === 'preview-app' || (viewMode === 'canvas' && editInPreview);
+    if (shouldLock && c.enabled) c.enabled = false;
     setCameraDistance(c.distance);
     // APP-REALITY P2 — drive the deterministic camera journey in preview-app.
     if (viewMode === 'preview-app' && journeyActiveRef.current && hasJourney(hub)) {
@@ -2068,8 +2084,16 @@ function SceneControlsBridge({
   // APP-REALITY P3 — Edit-in-Preview also locks the camera (shipped framing).
   const framed = viewMode === 'canvas' && editInPreview;
   return (
+    // EDITOR-EXP P4 (C21) — `makeDefault` registers this as r3f's default
+    // controls (useThree().controls). drei's <TransformControls> reads that and,
+    // on its `dragging-changed` event, sets controls.enabled = !dragging — so the
+    // camera AUTO-SUSPENDS for the duration of a gizmo drag (no camera/gizmo
+    // fight) and resumes on release. This is the canvas/preview-app camera only;
+    // the galaxy/topology ControlsBridge is left non-default so galaxy nav and
+    // the preview camera-lock behavior are unchanged.
     <CameraControls
       ref={controlsRef}
+      makeDefault
       enabled={!isPreview && !framed}
       minDistance={1.5}
       maxDistance={220}
@@ -2428,15 +2452,26 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const editorMode = useGraphEditorStore((s) => s.editorMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
-  // STEP8 canvas-spec SC-9 — Transform tools author the node's OWN schema
-  // (scenePosition), the legitimate way a node's position/scale is set. (The
-  // archived editor-build SC-042 routed this to `canvasTransform`; that is
-  // superseded by the canonical canvas spec — SPEC-INDEX S6.)
-  const updateNode = useGraphSourceStore((s) => s.updateNode);
+  // EDITOR-EXP P4 (C22 / D-DRAG) — Transform tools author the node's OWN schema
+  // field (scenePosition), but now via the STAGING overlay (usePreviewStateStore),
+  // not a direct source write. (STEP8 canvas-spec SC-9 named scenePosition the
+  // legitimate target; P4's D-DRAG decision adds: stage it, don't persist on
+  // drag.) `stagePreview` is read above.
   // STEP8 — gizmo axis set is lifted to the store so the toolbar Move/Rotate/
   // Scale buttons and the g/r/s shortcuts drive the same value.
   const mode = useGraphEditorStore((s) => s.canvasGizmoMode);
   const setMode = useGraphEditorStore((s) => s.setCanvasGizmoMode);
+  // EDITOR-EXP P4 (C18) — transform space (world/local) + (C19) snapping. Both
+  // lifted to the store so the toolbar controls and keyboard shortcuts converge.
+  const gizmoSpace = useGraphEditorStore((s) => s.gizmoSpace);
+  const toggleGizmoSpace = useGraphEditorStore((s) => s.toggleGizmoSpace);
+  const snapEnabled = useGraphEditorStore((s) => s.snapEnabled);
+  // EDITOR-EXP P4 (C22 / D-DRAG) — transforms STAGE through the preview overlay
+  // (the same staging buffer C9 color/material uses), NOT the source store. The
+  // canvas composes source ⊕ overlay live (AssembledSceneNode.composedNode), so
+  // the staged scenePosition renders as a live ghost; Save (commitPreviewToSource)
+  // commits the canonical position. We never write source / autosave on drag.
+  const stagePreview = usePreviewStateStore((s) => s.set);
   // State-backed ref so the drei gizmo attaches deterministically on the
   // first render (a plain useRef holds null on the initial render and would
   // skip the gizmo mount until some unrelated state change re-rendered).
@@ -2462,9 +2497,21 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   // node alone (editorMode === 'idle') keeps the canvas in pure-view state.
   const isEditMode = editorMode === 'edit';
 
-  const node = useMemo(
+  // EDITOR-EXP P4 (C22) — read this node's staged preview patch so the gizmo
+  // anchor follows the GHOST (the composed source ⊕ overlay pose), keeping the
+  // handles attached to the visibly-moved artifact across drags before Save.
+  const previewPatch = usePreviewStateStore((s) =>
+    selectedNodeId ? s.patches[selectedNodeId] ?? null : null,
+  );
+  const sourceNode = useMemo(
     () => nodes.find((n) => n.nodeId === selectedNodeId) ?? null,
     [nodes, selectedNodeId],
+  );
+  // The composed node is what the renderer draws (the ghost); the gizmo must
+  // anchor on it so handles track the staged pose. Identity-stable when no patch.
+  const node = useMemo(
+    () => (sourceNode ? composeNodeWithPreview(sourceNode, previewPatch) : null),
+    [sourceNode, previewPatch],
   );
   const nodeId = node?.nodeId ?? null;
   const persistedSP = node?.scenePosition;
@@ -2517,18 +2564,27 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
         if (!isDraggingRef.current) return;
         const prior = priorSceneTransform.current;
         if (prior) {
+          // EDITOR-EXP P4 (C22) — Escape rewinds the STAGED ghost to the
+          // drag-start pose by re-staging the prior scenePosition through the
+          // preview overlay (never writing source).
           const restored = restorePriorCanvasTransform(prior);
-          updateNode(captured.nodeId, { scenePosition: restored });
+          stagePreview(captured.nodeId, { scenePosition: restored });
         }
         return;
       }
       if (isEditableTarget(e.target)) return;
+      // EDITOR-EXP P4 (C18) — 'x' toggles world ⇄ local transform space
+      // (Blender-style; complements g/r/s mode keys).
+      if (e.key === 'x' || e.key === 'X') {
+        toggleGizmoSpace();
+        return;
+      }
       const next = gizmoModeForKey(e.key);
       if (next) setMode(next);
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [isCanvasMode, isEditMode, nodeId, updateNode, setMode, node]);
+  }, [isCanvasMode, isEditMode, nodeId, stagePreview, setMode, toggleGizmoSpace, node]);
 
   // STEP8 — never mount handles on a locked node (canvas-spec §5 lock/unlock).
   if (!isCanvasMode || !isEditMode || !node || isLocked) return null;
@@ -2557,14 +2613,43 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
           name={`canvas:gizmo-proxy:${node.nodeId}`}
         />
       </group>
+      {/* EDITOR-EXP P4 (C19) — visible world-grid hint while snapping is on.
+          Renders a faint grid + axis lines centered on the gizmo anchor so the
+          user can read the snap cadence. Authoring-only (canvas), never built. */}
+      {snapEnabled ? (
+        <group position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]} renderOrder={8}>
+          <gridHelper
+            args={[GIZMO_TRANSLATE_SNAP * 16, 16, DS.brass400, DS.brass400]}
+            rotation={[Math.PI / 2, 0, 0]}
+          >
+            <lineBasicMaterial attach="material" transparent opacity={0.16} depthWrite={false} toneMapped={false} />
+          </gridHelper>
+        </group>
+      ) : null}
       {proxy ? (
         <TransformControls
           object={proxy}
           mode={mode}
+          // EDITOR-EXP P4 (C18) — world/local transform space from the store.
+          space={gizmoSpace}
+          // EDITOR-EXP P4 (C21) — larger handles so touch / coarse-pointer drags
+          // land reliably (default size 1 is fiddly on touch).
+          size={1.35}
+          showX
+          showY
+          showZ
+          // EDITOR-EXP P4 (C19) — snap to the world grid only while enabled.
+          // null disables the per-axis snap (drei forwards these straight to the
+          // three-stdlib TransformControls translation/rotation/scale snaps).
+          translationSnap={snapEnabled ? GIZMO_TRANSLATE_SNAP : null}
+          rotationSnap={snapEnabled ? GIZMO_ROTATE_SNAP : null}
+          scaleSnap={snapEnabled ? GIZMO_SCALE_SNAP : null}
           onMouseDown={() => {
             isDraggingRef.current = true;
             // EBR2-C-03 — capture scenePosition at drag start so
             // onObjectChange can write back start + delta. Cleared on mouseUp.
+            // Read from the COMPOSED node (ghost) so successive drags accumulate
+            // off the staged pose, not the stale source pose.
             dragStartSP.current = readSceneTransform(node);
           }}
           onMouseUp={() => {
@@ -2572,13 +2657,12 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
             dragStartSP.current = null;
           }}
           onObjectChange={() => {
-            // STEP8 canvas-spec SC-9 — proxy local pose is the drag delta from
-            // its anchor origin (identity at drag start). The new scenePosition
-            // is the captured drag-start sp composed with the proxy delta:
-            // translate is additive, rotation is Euler-additive (incremental
-            // from identity), scale is multiplicative (proxy.scale = 1 * factor).
-            // We write the node's OWN schema field — authoring, the legitimate
-            // way a node's position/scale is set (CORRECTED CONCEPT / SC-9).
+            // EDITOR-EXP P4 (C22 / D-DRAG) — proxy local pose is the drag delta
+            // from its anchor origin (identity at drag start). The new
+            // scenePosition is the captured drag-start sp composed with the
+            // proxy delta: translate additive, rotation Euler-additive, scale
+            // multiplicative. We STAGE it through the preview overlay (NOT
+            // source / autosave) so the canvas shows a live ghost; Save commits.
             const start = dragStartSP.current ?? readSceneTransform(node);
             const next: CanvasTransform = {
               x: start.x + proxy.position.x,
@@ -2591,7 +2675,7 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
               scaleY: start.scaleY * proxy.scale.y,
               scaleZ: start.scaleZ * proxy.scale.z,
             };
-            updateNode(node.nodeId, { scenePosition: next });
+            stagePreview(node.nodeId, { scenePosition: next });
           }}
         />
       ) : null}
