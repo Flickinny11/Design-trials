@@ -25,6 +25,7 @@
 // with its own scroll region).
 
 import { useEffect, useMemo, useState } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { buildClusterNodeInputs } from '@/lib/editor/elements/instantiate';
@@ -62,6 +63,23 @@ export default function ElementLibraryBrowser() {
 
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState<ElementCategory | 'all'>('all');
+
+  // C11/glass-kill — the ONE opaque chrome block of this browser is the
+  // header+controls sub-block (the outer frame is intentionally transparent so
+  // the ClusterCanvas rig shows through the tile windows; the dim backdrop is a
+  // modal scrim and is left as CSS). That header block was a flat ds-glass CSS
+  // fill; it now becomes a real chrome-layer glass slab. Top corners follow the
+  // outer rounded-ds-lg clip (18); the bottom is square against the transparent
+  // tile grid below, so radius is [tl,tr,br,bl] = [18,18,0,0]. Brass edge →
+  // accent 1. Hook BEFORE the early return below (hooks rule). At t2 the slab
+  // draws the surface and materials.css suppresses the ds-glass fill; below t2
+  // the v1 CSS look stands (INV-9).
+  const headerSlab = useChromeSlab({
+    material: 'glass',
+    radius: [18, 18, 0, 0],
+    frost: 0.6,
+    accent: 1,
+  });
 
   // Esc closes; reset filters whenever the browser opens.
   useEffect(() => {
@@ -183,8 +201,9 @@ export default function ElementLibraryBrowser() {
         onMouseDown={(e) => e.stopPropagation()}
       >
         {/* Header + controls — the ONE opaque ds-glass chrome block (it frosts
-            nothing behind it; the rig lives below the tiles, not here). */}
-        <div className="ds-glass shrink-0 flex flex-col rounded-none">
+            nothing behind it; the rig lives below the tiles, not here). C11:
+            this surface is now a real chrome-layer glass slab (headerSlab). */}
+        <div ref={headerSlab.ref} className="ds-glass shrink-0 flex flex-col rounded-none">
           {/* Header */}
           <div
             className="flex items-center justify-between px-5 pt-4 pb-3"

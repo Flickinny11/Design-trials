@@ -64,6 +64,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import gsap from 'gsap';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
@@ -423,6 +424,26 @@ function DockGroupKey({
   );
 }
 
+// C10 — dock key-stack wrapper. Desktop: a real flex column the GSAP collapse
+// timeline animates (height/opacity/clip) — the spine above stays put. Compact:
+// passes the keys straight through (`contents`) so the horizontal scroll dock
+// layout is byte-for-byte unchanged. Keeping the GROUPS map in one place avoids
+// duplicating the 35-line key list.
+function DockKeyStack({
+  compact, stackRef, children,
+}: {
+  compact: boolean;
+  stackRef: React.RefObject<HTMLDivElement | null>;
+  children: React.ReactNode;
+}) {
+  if (compact) return <>{children}</>;
+  return (
+    <div ref={stackRef} className="flex flex-col gap-1">
+      {children}
+    </div>
+  );
+}
+
 // ── Main component ───────────────────────────────────────────────────────────
 export default function CanvasToolbar() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
@@ -472,6 +493,21 @@ export default function CanvasToolbar() {
   const [snap, setSnap] = useState(true);
   const [selectedLightId, setSelectedLightId] = useState<string | null>(null);
   const [lightPickerOpen, setLightPickerOpen] = useState(false);
+  // C10 — FLOATING + MOVABLE + ANIMATED dock (desktop/regular only; compact
+  // stays the pinned bottom dock). `dockPos === null` means "use the default
+  // docked-left CSS" so nothing regresses until the operator drags the spine.
+  // Once dragged, it holds viewport-px coords and the wrapper switches to
+  // explicit left/top. `collapsed` slides the key stack into a compact rail
+  // (GSAP timeline below). The grip spine is the only drag region — the tool
+  // keys never start a drag.
+  const [dockPos, setDockPos] = useState<{ x: number; y: number } | null>(null);
+  const [collapsed, setCollapsed] = useState(false);
+  const dockWrapRef = useRef<HTMLDivElement | null>(null);
+  const dockKeysRef = useRef<HTMLDivElement | null>(null);
+  const dragRef = useRef<{ pointerId: number; dx: number; dy: number } | null>(null);
+  // Skip the collapse tween on first mount (the stack starts open) — only
+  // animate on an actual user toggle.
+  const collapseMountedRef = useRef(false);
   // UI-WOW-2 P0 — container density: on compact (phone / narrow embedded pane)
   // the left tool rail becomes a horizontal-scroll bottom dock and the flyout
   // re-houses as a draggable bottom sheet, so the 11 tools stay reachable and
@@ -695,6 +731,104 @@ export default function CanvasToolbar() {
     setToast(!cur ? 'Node receives lighting' : 'Node unlit (texture-only)');
   }, [selectedNode, updateNode]);
 
+  // ── C10 dock drag (FLOATING + MOVABLE) ─────────────────────────────────────
+  // The grip spine starts a drag; pointermove repositions the whole wrapper
+  // (dock + flyout move together — they are flex siblings), pointerup commits.
+  // Position is clamped so a margin of the dock always stays on-screen. The
+  // hosted slab follows automatically (the GPU layer re-reads the rect/frame).
+  const onDragStart = useCallback((e: React.PointerEvent) => {
+    // Left button / primary pointer only; ignore if the gesture began on a
+    // control inside the spine (the collapse key stops propagation itself).
+    if (e.button !== 0) return;
+    const wrap = dockWrapRef.current;
+    if (!wrap) return;
+    const r = wrap.getBoundingClientRect();
+    // Seed dockPos from the currently-rendered rect the first time, so the
+    // jump from CSS-docked to absolute is seamless.
+    dragRef.current = { pointerId: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top };
+    setDockPos({ x: r.left, y: r.top });
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  }, []);
+
+  const onDragMove = useCallback((e: React.PointerEvent) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== e.pointerId) return;
+    const wrap = dockWrapRef.current;
+    const w = wrap?.offsetWidth ?? 0;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    // Keep at least a 44px grab margin of the dock on-screen on every edge so
+    // it can never be dragged fully off the viewport: left edge may go as
+    // negative as (M - w) (M px of width still showing on the right), and may
+    // push right to (vw - M) (M px showing on the left); top clamps 8..(vh-M).
+    const M = 44;
+    const x = Math.min(Math.max(e.clientX - drag.dx, M - w), vw - M);
+    const y = Math.min(Math.max(e.clientY - drag.dy, 8), vh - M);
+    setDockPos({ x, y });
+  }, []);
+
+  const onDragEnd = useCallback((e: React.PointerEvent) => {
+    if (dragRef.current?.pointerId !== e.pointerId) return;
+    (e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId);
+    dragRef.current = null;
+  }, []);
+
+  // ── C10 collapse/expand (ANIMATED) ─────────────────────────────────────────
+  // A real GSAP timeline slides the tool-key stack closed/open (height +
+  // opacity + clip with premium easing). Honors prefers-reduced-motion (snap).
+  useEffect(() => {
+    const el = dockKeysRef.current;
+    if (!el) return;
+    // First mount: the stack is already open in the DOM — don't play an
+    // open-tween, just record that we're mounted and bail.
+    if (!collapseMountedRef.current) {
+      collapseMountedRef.current = true;
+      if (!collapsed) return;
+    }
+    const reduce =
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    gsap.killTweensOf(el);
+    if (reduce) {
+      gsap.set(el, {
+        height: collapsed ? 0 : 'auto',
+        opacity: collapsed ? 0 : 1,
+        clipPath: collapsed ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
+        overflow: collapsed ? 'hidden' : 'visible',
+      });
+      return;
+    }
+    if (collapsed) {
+      gsap.to(el, {
+        height: 0,
+        opacity: 0,
+        clipPath: 'inset(0 0 100% 0)',
+        duration: 0.3,
+        ease: 'power3.inOut',
+        overwrite: 'auto',
+        onStart: () => gsap.set(el, { overflow: 'hidden' }),
+      });
+    } else {
+      // expand: measure natural height, tween from 0 → it, then release to auto.
+      gsap.set(el, { height: 'auto', clipPath: 'inset(0 0 0% 0)' });
+      const target = el.offsetHeight;
+      gsap.fromTo(
+        el,
+        { height: 0, opacity: 0, clipPath: 'inset(0 0 100% 0)', overflow: 'hidden' },
+        {
+          height: target,
+          opacity: 1,
+          clipPath: 'inset(0 0 0% 0)',
+          duration: 0.34,
+          ease: 'expo.out',
+          overwrite: 'auto',
+          onComplete: () => gsap.set(el, { height: 'auto', overflow: 'visible' }),
+        },
+      );
+    }
+  }, [collapsed]);
+
   // ── Marquee select ─────────────────────────────────────────────────────────
   const onMarqueeCommit = useCallback(
     (rectClient: { left: number; top: number; width: number; height: number }) => {
@@ -751,14 +885,25 @@ export default function CanvasToolbar() {
           centered HORIZONTAL scroll dock pinned just above the mobile mode
           toggle, with the flyout re-housed as a bottom sheet (see below). */}
       <div
+        ref={dockWrapRef}
         data-component="canvas-toolbar"
         data-density={compact ? 'compact' : 'regular'}
+        data-floating={!compact && dockPos ? 'true' : undefined}
         className={
           compact
             ? 'absolute left-1/2 -translate-x-1/2 bottom-[calc(64px+var(--ds-safe-bottom))] pointer-events-auto flex items-stretch max-w-[calc(100%-16px)]'
-            : 'absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
+            : dockPos
+              // C10 floating: explicit left/top, no CSS translate (set in style).
+              ? 'absolute z-50 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
+              : 'absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
         }
-        style={compact ? ({ zIndex: 'var(--ds-z-dock)' } as React.CSSProperties) : undefined}
+        style={
+          compact
+            ? ({ zIndex: 'var(--ds-z-dock)' } as React.CSSProperties)
+            : dockPos
+              ? { left: dockPos.x, top: dockPos.y }
+              : undefined
+        }
       >
         {/* Machined brushed-metal dock — the instrument fitting the tool keys
             are cut into (ds-metal + grain tooth + specular edge). Scrolls
@@ -773,7 +918,45 @@ export default function CanvasToolbar() {
           }
         >
           {!compact && (<>
-          <div className="px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5">
+          {/* C10 — DRAG SPINE. The nameplate is now the grip: pointer-drag it
+              to float/reposition the whole dock (tool keys never start a drag).
+              A collapse key on the right slides the key stack into a compact
+              rail (GSAP). The grip cursor + dotted grip glyph advertise it. */}
+          <div
+            data-dock-handle
+            onPointerDown={onDragStart}
+            onPointerMove={onDragMove}
+            onPointerUp={onDragEnd}
+            onPointerCancel={onDragEnd}
+            className="relative px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5 select-none touch-none"
+            style={{ cursor: dragRef.current ? 'grabbing' : 'grab' }}
+            title="Drag to move the toolbar"
+          >
+            {/* Collapse / expand key — pinned top-right of the spine. Stops the
+                pointer-down from arming a drag so a click only toggles. */}
+            <button
+              type="button"
+              data-action="dock-collapse"
+              aria-label={collapsed ? 'Expand toolbar' : 'Collapse toolbar'}
+              title={collapsed ? 'Expand toolbar' : 'Collapse toolbar'}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={() => setCollapsed((v) => !v)}
+              className="absolute -top-0.5 right-0 w-5 h-5 rounded-ds-xs ds-press hover:bg-white/[0.08] flex items-center justify-center transition-colors"
+            >
+              <Icon
+                name="chevron"
+                size={11}
+                color={DS.textMid}
+                style={{ transform: `rotate(${collapsed ? 90 : -90}deg)`, transition: 'transform 200ms ease' }}
+              />
+            </button>
+            {/* Grip ridges — three machined catch-light bars reading as a knurled
+                handle (the affordance that this header is draggable). */}
+            <span aria-hidden className="flex flex-col items-center gap-[2px] mb-0.5 mt-0.5 opacity-70">
+              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
+              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
+              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
+            </span>
             <Icon name="grid" size={13} color={DS_ACCENT} glow />
             <span className="text-[9px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
               CANVAS
@@ -791,6 +974,11 @@ export default function CanvasToolbar() {
             }}
           />
           </>)}
+          {/* C10 — tool-key stack. On desktop it is wrapped so the GSAP collapse
+              timeline can slide it closed/open (height + opacity + clip); the
+              spine/grip above stays visible so the dock can be re-expanded.
+              Compact mode keeps the flat horizontal scroll dock (no wrapper). */}
+          <DockKeyStack compact={compact} stackRef={dockKeysRef}>
           {GROUPS.map((g) => {
             const beforeBuild = g.id === 'build';
             return (
@@ -827,6 +1015,7 @@ export default function CanvasToolbar() {
               </div>
             );
           })}
+          </DockKeyStack>
         </div>
 
         {/* Flyout — desktop/regular: side glass plate beside the rail; compact:

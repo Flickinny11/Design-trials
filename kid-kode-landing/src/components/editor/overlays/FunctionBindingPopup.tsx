@@ -15,6 +15,7 @@
  */
 
 import { useEffect, useState } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import type { FunctionBinding } from '@/lib/prism-graph/types';
@@ -49,6 +50,15 @@ export default function FunctionBindingPopup() {
   const [overlayTarget, setOverlayTarget] = useState<string | null>(null);
   const [sizeId, setSizeId] = useState('M');
   const [anchor, setAnchor] = useState({ x: 0.5, y: 0.5 });
+
+  // C11/glass-kill — the popup PANEL body is a real chrome-layer glass slab
+  // (live scene-sampling refraction + brass-edged lit glass body) rather than
+  // the flat ds-glass CSS fill. Radius matches rounded-ds-lg (18); brass edge →
+  // accent 1. Hook BEFORE the early return below (hooks rule). The dim SCRIM
+  // (the absolute inset-0 layer) is intentionally left as CSS — it is a modal
+  // dimmer, not a chrome surface. At t2 the slab draws the panel surface and
+  // materials.css suppresses the ds-glass fill/keyline; below t2 the CSS stands.
+  const panelSlab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.6, accent: 1 });
 
   useEffect(() => {
     // re-seed the overlay editor from the node's current binding when opened
@@ -104,7 +114,7 @@ export default function FunctionBindingPopup() {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center" role="dialog" aria-modal="true" aria-label="Function binding">
       <div className="absolute inset-0" style={{ background: 'rgba(4,5,10,0.66)', backdropFilter: 'blur(3px)' }} onClick={close} />
-      <div className="ds-glass ds-glass--refract ds-edge--brass ds-reveal relative w-[min(680px,94vw)] max-h-[86vh] overflow-y-auto scrollbar-hide rounded-ds-lg p-5">
+      <div ref={panelSlab.ref} className="ds-glass ds-glass--refract ds-edge--brass ds-reveal relative w-[min(680px,94vw)] max-h-[86vh] overflow-y-auto scrollbar-hide rounded-ds-lg p-5">
         {/* header */}
         <div className="flex items-start justify-between mb-1">
           <div>

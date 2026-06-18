@@ -20,6 +20,7 @@
 // Heavy motion is disabled under prefers-reduced-motion.
 
 import { useId } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import type { OverlaySpec } from '@/lib/prism-graph/types';
 
 export default function HolographicDetailCard(props: {
@@ -28,6 +29,14 @@ export default function HolographicDetailCard(props: {
   style?: React.CSSProperties;
 }): React.ReactElement {
   const { spec, onClose, style } = props;
+
+  // C11/glass-kill — the panel body is a real chrome-layer glass slab (live
+  // scene-sampling refraction + lit glass body) instead of CSS backdrop-filter
+  // glassmorphism. Radius matches the card's --ds-r-lg (18). The card carries a
+  // brass keyline edge → accent 1. At t2 the slab draws the surface and
+  // materials.css suppresses the CSS background/keyline; below t2 the v1 CSS
+  // (gradient + ::before keyline + box-shadow) stands untouched (INV-9).
+  const slab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.55, accent: 1 });
 
   // Default accent = the brass-200 specular. spec.accent may be any hex.
   const accent = spec.accent || 'var(--ds-brass-200)';
@@ -45,6 +54,7 @@ export default function HolographicDetailCard(props: {
 
   return (
     <div
+      ref={slab.ref}
       role="dialog"
       aria-modal="true"
       aria-label={title}
@@ -155,8 +165,9 @@ export default function HolographicDetailCard(props: {
               rgba(7, 8, 13, 0.93) 100%
             );
           color: var(--ds-text, #dfdcd2);
-          -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(1.04);
-          backdrop-filter: blur(20px) saturate(150%) brightness(1.04);
+          /* C11/glass-kill: panel-surface backdrop-filter removed — the chrome-
+             layer glass slab provides real live-scene refraction at t2; the
+             gradient + box-shadow below remain the t0/t1 fallback (INV-9). */
           box-shadow:
             inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.22),
             inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.16),

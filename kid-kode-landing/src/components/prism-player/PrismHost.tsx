@@ -414,9 +414,10 @@ export default function PrismHost({
           <div
             className="flex items-center gap-0.5 p-1 rounded-full border border-white/10"
             style={{
-              background: 'rgba(8,10,26,0.78)',
-              backdropFilter: 'blur(20px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+              // C11/glass-kill: backdrop-filter glassmorphism removed (this
+              // PrismHost path is dead/unmounted — page.tsx mounts only
+              // GraphScene; kept opaque so the v1 look needs no GPU surface).
+              background: 'rgba(8,10,26,0.92)',
               boxShadow: '0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)',
             }}
           >
