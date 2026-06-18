@@ -43,6 +43,9 @@ import {
 import NodeEditorPromptEdit from '@/components/editor/prompt-edit/NodeEditorPromptEdit';
 import FunctionsTab from '@/components/editor/functions/FunctionsTab';
 import IntegrationsTab from '@/components/editor/integrations/IntegrationsTab';
+// EDITOR-EXP P7 (C33) — the real temporal edit-history timeline (undo/redo +
+// jump-to-state) supersedes the old per-node read-only log.
+import EditHistoryPanel from '@/components/editor/panels/EditHistoryPanel';
 import type { PromptEditScope } from '@/lib/prompt-edit/contract';
 
 // NODE-EDITOR-V2 (A5) — map the active purpose tab to a prompt-edit scope.
@@ -2027,11 +2030,15 @@ function CapabilitiesPanel({
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// HISTORY TAB — SC-020 7th tab. Surfaces the per-node edit log so users
-// can review color edits, animation-frame changes, and (later) AI
-// regeneration events. Reads from the existing useAnimationEditsStore;
-// when nothing has been edited yet, renders an empty-state placeholder
-// so the tab is still reachable from every view mode (haltCheck).
+// HISTORY TAB — SC-020 7th tab + EDITOR-EXP P7 (C33).
+// Previously a read-only per-node log fed by the orphan useAnimationEditsStore.
+// Now it surfaces the REAL graph-wide edit-history timeline (the zundo temporal
+// store on useGraphSourceStore): an ordered list of past/future states with
+// descriptions + timestamps, undo/redo controls, and click-to-jump — all
+// routed through the coherent wrappers so a jump reverts schema AND re-realizes
+// the BUILT scene + re-fires autosave (C32) + reconciles the preview overlay
+// (C34). The per-node animation-edit summary is retained below as a contextual
+// "this node" readout. Tab stays reachable in every view mode (haltCheck).
 // ═══════════════════════════════════════════════════════════════════
 function HistoryTab({ node }: { node: EditorNode }) {
   const edits = useAnimationEditsStore((s) => s.edits[node.id]);
@@ -2043,28 +2050,28 @@ function HistoryTab({ node }: { node: EditorNode }) {
   }
 
   return (
-    <div className="p-5 space-y-4">
-      <div className="ds-kicker">EDIT HISTORY</div>
-      {events.length === 0 ? (
-        <div className="ds-body px-3 py-2.5 ds-well rounded-ds-md text-[12px] text-ds-text-mid italic">
-          No edits recorded for this node yet.
+    <div>
+      {/* C33 — the real graph-wide temporal timeline (undo/redo + jump). */}
+      <EditHistoryPanel />
+
+      {/* Contextual per-node readout (orphan animation-edit store). Kept so the
+          tab still answers "what's been tweaked on THIS node". */}
+      {events.length > 0 && (
+        <div className="px-5 pb-5 space-y-2">
+          <div className="ds-kicker">THIS NODE</div>
+          <ul data-role="history-events" className="space-y-1.5">
+            {events.map((e, i) => (
+              <li
+                key={i}
+                className="px-3 py-2 ds-well rounded-ds-md flex items-center gap-2 text-[11px]"
+              >
+                <span className="ds-chip ds-chip--brass">{e.kind}</span>
+                <span className="text-ds-text font-mono truncate">{e.detail}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      ) : (
-        <ul data-role="history-events" className="space-y-1.5">
-          {events.map((e, i) => (
-            <li
-              key={i}
-              className="px-3 py-2 ds-well rounded-ds-md flex items-center gap-2 text-[11px]"
-            >
-              <span className="ds-chip ds-chip--brass">{e.kind}</span>
-              <span className="text-ds-text font-mono truncate">{e.detail}</span>
-            </li>
-          ))}
-        </ul>
       )}
-      <div className="ds-body text-[12px] text-ds-text-low pt-1">
-        AI regeneration events will appear here once the codegen pipeline lands.
-      </div>
     </div>
   );
 }

@@ -66,6 +66,10 @@ RUNTIME_ALLOW = {
     # call. Rationale logged in notes/mockup-pipeline.md §10 (2026-06-14).
     "three/examples/jsm/utils/BufferGeometryUtils.js",
     "zustand", "zustand/middleware",
+    # EDITOR-EXP P7 (C32-34) — undo/redo. zundo is a pure zustand temporal
+    # middleware (no renderer, fits zustand ^5); immer for patch-based history.
+    # Approved per RE-VERIFY-DECISIONS.md (zundo 2.3, immer 11.1.8).
+    "zundo", "immer",
 }
 BUILD_ALLOW = {
     "@fal-ai/client", "dotenv", "ffmpeg-static", "globby", "maxrects-packer",

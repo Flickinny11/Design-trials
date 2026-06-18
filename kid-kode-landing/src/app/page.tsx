@@ -46,6 +46,8 @@ import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverla
 import MagneticCursor from '@/components/editor/overlays/MagneticCursor';
 import GuidedTipsLightbulb from '@/components/editor/walkthrough/GuidedTipsLightbulb';
 import WalkthroughHost from '@/components/editor/walkthrough/WalkthroughHost';
+// EDITOR-EXP P7 (C32) — global Cmd+Z / Cmd+Shift+Z undo/redo keybinds.
+import HistoryKeybinds from '@/components/editor/history/HistoryKeybinds';
 import { Icon } from '@/components/editor/icons/Icon';
 import { populateElementImages } from '@/lib/editor/populate-element-images';
 import { DS, dsAlpha, RefractionDefs } from '@/components/editor/design-system';
@@ -907,6 +909,8 @@ export default function Page() {
           rides above every mode and the scrim/cursor/popup overlay the whole app. */}
       <GuidedTipsLightbulb />
       <WalkthroughHost />
+      {/* EDITOR-EXP P7 (C32) — global undo/redo keybinds (renders nothing). */}
+      <HistoryKeybinds />
     </main>
   );
 }

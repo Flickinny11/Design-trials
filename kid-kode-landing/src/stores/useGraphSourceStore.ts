@@ -14,6 +14,11 @@
 
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+// EDITOR-EXP P7 (C32) — zundo temporal middleware gives useGraphSourceStore an
+// undo/redo timeline. It is a pure zustand middleware (no renderer, fits the
+// repo's zustand ^5), allowlisted in dependency-allowlist-check.py.
+import { temporal } from 'zundo';
+import type { TemporalState, ZundoOptions } from 'zundo';
 import type {
   GraphSource,
   HomeHubJson,
@@ -155,7 +160,163 @@ function generateNodeId(): string {
   return `${rnd()}${rnd()}-${rnd()}-${rnd()}-${rnd()}-${rnd()}${rnd()}${rnd()}`;
 }
 
-export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelector((set, get) => ({
+// ── EDITOR-EXP P7 (C32/C33) — temporal-history scaffolding ──────────────────
+//
+// `TrackedGraph` is the slice zundo records per undo step. Only durable schema
+// data is tracked; editor-transient fields (the graph-level `isDirty`/`error`/
+// `ready`/`savedAt` flags, and the per-node build-freshness `dirty` flag) are
+// excluded via `partialize` so (a) toggling them never creates a phantom undo
+// step and (b) an undo never resurrects a stale `dirty` marker. `locked` and
+// `groupId` ARE durable graph data and stay tracked.
+export interface TrackedGraph {
+  hubs: PrismHub[];
+  nodes: PrismNode[];
+  edges: PrismEdge[];
+  rootNodes: PrismRootNode[];
+}
+
+// C33 — a parallel metadata log kept in lockstep with `temporal.pastStates`.
+// zundo's `pastStates` are bare partialized snapshots (no labels), so the
+// human-readable description + timestamp for each step lives here. `onSave`
+// pushes one entry per recorded past-state; the coherence wrappers
+// (lib/editor/history-coherence.ts) splice it on undo/redo/jump/clear so
+// index `i` of `historyMeta` always describes `pastStates[i]`.
+export interface HistoryEntryMeta {
+  description: string;
+  timestamp: number;
+}
+
+const HISTORY_LIMIT = 100;
+const HISTORY_DEBOUNCE_MS = 400;
+
+const historyMeta: HistoryEntryMeta[] = [];
+
+// The label the NEXT recorded past-state should carry. Mutators set this right
+// before the state change they cause; `onSave` reads + clears it. When unset,
+// a generic "Edit" label is used (still timestamped).
+let pendingHistoryLabel: string | null = null;
+
+/** Mutators call this to label the undo step their change is about to create. */
+function labelNextHistoryStep(label: string): void {
+  pendingHistoryLabel = label;
+}
+
+/**
+ * Read-only accessor for the UI (the EditHistoryPanel). Self-heals against the
+ * authoritative `pastStates.length`: the meta log is appended/spliced in
+ * lockstep with zundo's pastStates, but a stray `temporal.clear()` (or a
+ * boundary edge) could leave it longer. Returning the trailing N entries
+ * (N = pastStates.length) keeps the panel's row count exactly aligned with the
+ * number of undoable states, so the jump math never indexes a phantom row.
+ */
+export function getHistoryMeta(): readonly HistoryEntryMeta[] {
+  let pastLen = historyMeta.length;
+  try {
+    pastLen = (useGraphSourceStore.temporal as unknown as {
+      getState: () => { pastStates: unknown[] };
+    }).getState().pastStates.length;
+  } catch {
+    /* temporal not ready — fall back to the raw log */
+  }
+  if (historyMeta.length > pastLen) {
+    return historyMeta.slice(historyMeta.length - pastLen);
+  }
+  return historyMeta;
+}
+
+/**
+ * Typed accessor for zundo's temporal store. zundo attaches `.temporal` to the
+ * zustand store via the `temporal` mutator; this helper hands the UI a strongly
+ * typed `TemporalState<TrackedGraph>` (pastStates/futureStates/undo/redo/clear)
+ * without each consumer re-deriving the cast.
+ */
+export function getTemporalStore() {
+  return useGraphSourceStore.temporal as unknown as {
+    getState: () => TemporalState<TrackedGraph>;
+    subscribe: (listener: () => void) => () => void;
+  };
+}
+
+// A bulk graph load (initial fetch / load / loadFromUrl / reset) must NOT be an
+// undoable step — pressing Cmd+Z right after boot should never wipe the app back
+// to an empty graph. `runBulkLoad` runs the load with zundo tracking PAUSED so
+// no past-state is recorded (zundo's handleSet early-returns while paused, even
+// for our debounced wrapper), then clears any residual history + the metadata
+// log so the freshly-loaded graph is the clean baseline. Safe only after store
+// creation (runtime) — all call sites are action bodies / the eager init.
+function runBulkLoad(apply: () => void): void {
+  const temporal = useGraphSourceStore.temporal as unknown as {
+    getState: () => { pause: () => void; resume: () => void; clear: () => void };
+  };
+  let paused = false;
+  try {
+    temporal.getState().pause();
+    paused = true;
+  } catch {
+    /* temporal not ready (should not happen post-creation) — proceed unpaused */
+  }
+  try {
+    apply();
+  } finally {
+    if (paused) {
+      try {
+        temporal.getState().clear();
+        temporal.getState().resume();
+      } catch {
+        /* ignore */
+      }
+    }
+    historyMeta.length = 0;
+    pendingHistoryLabel = null;
+    onNewEditRecorded?.(); // also clears the coherence module's futureMeta mirror
+  }
+}
+
+/** Internal: history-coherence wrappers reconcile the meta log after a jump. */
+export function _spliceHistoryMeta(
+  mutate: (log: HistoryEntryMeta[]) => void,
+): void {
+  mutate(historyMeta);
+}
+
+// The coherence module owns a `futureMeta` mirror of zundo's `futureStates`.
+// zundo wipes `futureStates` whenever a NEW edit is recorded (a fresh past-
+// state truncates the redo branch), so the store must wipe the mirror too. To
+// avoid a circular import (coherence → store), the coherence module REGISTERS a
+// callback here that `onSave` invokes on every recorded edit.
+let onNewEditRecorded: (() => void) | null = null;
+export function _setOnNewEditRecorded(cb: (() => void) | null): void {
+  onNewEditRecorded = cb;
+}
+
+// Human-readable caption for a node id (best-effort; falls back to a short id).
+function describeNode(nodeId: string, nodes: PrismNode[]): string {
+  const n = nodes.find((x) => x.nodeId === nodeId);
+  const cap = n?.intent?.caption?.trim();
+  if (cap) return cap;
+  return `node ${nodeId.slice(0, 6)}`;
+}
+
+// Pick a verb for an updateNode patch from its top-level keys, so the timeline
+// reads like "Recolor headline" / "Move Orr Arrival Watch" rather than a raw
+// field dump. Falls back to a generic "Edit".
+function describeNodePatch(patch: Partial<PrismNode>): string {
+  const keys = Object.keys(patch);
+  if (keys.includes('scenePosition') || keys.includes('canvasTransform') || keys.includes('editorTransform')) {
+    return 'Move';
+  }
+  if (keys.includes('visual')) return 'Restyle';
+  if (keys.includes('intent')) {
+    const intent = patch.intent as { caption?: unknown; visualSpec?: unknown } | undefined;
+    if (intent && typeof intent.caption === 'string') return 'Rename';
+    if (intent && intent.visualSpec) return 'Recolor';
+    return 'Edit';
+  }
+  if (keys.includes('cinematicPrimitives') || keys.includes('renderMode')) return 'Reanimate';
+  return 'Edit';
+}
+
+export const useGraphSourceStore = create<GraphSourceState>()(temporal(subscribeWithSelector((set, get) => ({
   hubs: EMPTY.hubs,
   nodes: EMPTY.nodes,
   edges: EMPTY.edges,
@@ -168,15 +329,18 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   load: (json) => {
     try {
       const graph = loadFromHomeHub(json);
-      set({
-        hubs: graph.hubs,
-        nodes: graph.nodes,
-        edges: graph.edges,
-        rootNodes: graph.rootNodes ?? [],
-        ready: true,
-        error: null,
-        isDirty: false,
-      });
+      // Bulk load — not undoable (resetHistoryBaseline via runBulkLoad).
+      runBulkLoad(() =>
+        set({
+          hubs: graph.hubs,
+          nodes: graph.nodes,
+          edges: graph.edges,
+          rootNodes: graph.rootNodes ?? [],
+          ready: true,
+          error: null,
+          isDirty: false,
+        }),
+      );
       clearAutosaveTimer();
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
@@ -187,15 +351,18 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   loadFromUrl: async (url) => {
     try {
       const graph = await loadFromHomeHubFile(url);
-      set({
-        hubs: graph.hubs,
-        nodes: graph.nodes,
-        edges: graph.edges,
-        rootNodes: graph.rootNodes ?? [],
-        ready: true,
-        error: null,
-        isDirty: false,
-      });
+      // Bulk load — not undoable.
+      runBulkLoad(() =>
+        set({
+          hubs: graph.hubs,
+          nodes: graph.nodes,
+          edges: graph.edges,
+          rootNodes: graph.rootNodes ?? [],
+          ready: true,
+          error: null,
+          isDirty: false,
+        }),
+      );
       clearAutosaveTimer();
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
@@ -204,16 +371,19 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   reset: () => {
-    set({
-      hubs: [],
-      nodes: [],
-      edges: [],
-      rootNodes: [],
-      ready: false,
-      error: null,
-      isDirty: false,
-      savedAt: null,
-    });
+    // Bulk reset — not undoable (you can't Cmd+Z back into a discarded graph).
+    runBulkLoad(() =>
+      set({
+        hubs: [],
+        nodes: [],
+        edges: [],
+        rootNodes: [],
+        ready: false,
+        error: null,
+        isDirty: false,
+        savedAt: null,
+      }),
+    );
     clearAutosaveTimer();
   },
 
@@ -221,6 +391,8 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     const nodeId = input.nodeId ?? generateNodeId();
     const seeded = applyPlanRendererDefaults({ ...input, nodeId });
     const created = seeded as PrismNode;
+    const cap = created.intent?.caption?.trim();
+    labelNextHistoryStep(`Add ${cap || created.subtype || 'node'}`);
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, created], isDirty: true }));
     return nodeId;
@@ -235,6 +407,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
       ids.push(nodeId);
       return applyPlanRendererDefaults({ ...input, nodeId }) as PrismNode;
     });
+    labelNextHistoryStep(`Add ${created.length} elements`);
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, ...created], isDirty: true }));
     return ids;
@@ -251,6 +424,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     const cloned = JSON.parse(JSON.stringify(source)) as PrismNode;
     cloned.nodeId = generateNodeId();
     cloned.intent = { ...cloned.intent, caption: `${source.intent.caption} (clone)` };
+    labelNextHistoryStep(`Clone ${source.intent?.caption?.trim() || source.subtype || 'node'}`);
     markGraphDirty(get);
     set((s) => ({ nodes: [...s.nodes, cloned], isDirty: true }));
     return cloned.nodeId;
@@ -273,6 +447,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     if (!clone || !hub) return false;
     const title = hubTitleFor(hub);
     const newCaption = composeCloneCommitCaption(clone.intent.caption, title);
+    labelNextHistoryStep(`Place ${clone.intent?.caption?.trim() || 'clone'} in ${title}`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) =>
@@ -290,6 +465,8 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   updateNode: (nodeId, patch) => {
+    const name = describeNode(nodeId, get().nodes);
+    labelNextHistoryStep(`${describeNodePatch(patch)} ${name}`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, ...patch } : n)),
@@ -311,6 +488,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   updateRootNode: (appNameWorldId: string, patch: Partial<PrismRootNode>) => {
+    labelNextHistoryStep('Edit App World');
     markGraphDirty(get);
     set((s) => ({
       rootNodes: s.rootNodes.map((r) =>
@@ -322,6 +500,8 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
 
   // APP-REALITY P2 (INV-8 additive) — patch a hub's own fields.
   updateHub: (hubId, patch) => {
+    const hub = get().hubs.find((h) => h.hubId === hubId);
+    labelNextHistoryStep(`Edit hub ${hub ? hubTitleFor(hub) : hubId.slice(0, 6)}`);
     markGraphDirty(get);
     set((s) => ({
       hubs: s.hubs.map((h) => (h.hubId === hubId ? { ...h, ...patch } : h)),
@@ -330,6 +510,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   removeNode: (nodeId) => {
+    labelNextHistoryStep(`Delete ${describeNode(nodeId, get().nodes)}`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.filter((n) => n.nodeId !== nodeId),
@@ -339,21 +520,25 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   },
 
   addEdge: (edge) => {
+    labelNextHistoryStep('Connect nodes');
     markGraphDirty(get);
     set((s) => ({ edges: [...s.edges, edge], isDirty: true }));
   },
 
   removeEdge: (predicate) => {
+    labelNextHistoryStep('Remove connection');
     markGraphDirty(get);
     set((s) => ({ edges: s.edges.filter((e) => !predicate(e)), isDirty: true }));
   },
 
   addHub: (hub) => {
+    labelNextHistoryStep(`Add hub ${hubTitleFor(hub)}`);
     markGraphDirty(get);
     set((s) => ({ hubs: [...s.hubs, hub], isDirty: true }));
   },
 
   setScenePosition: (nodeId, patch) => {
+    labelNextHistoryStep(`Move ${describeNode(nodeId, get().nodes)}`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => {
@@ -380,6 +565,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     if (resolvable.length < 2) return '';
     const groupId = `grp-${generateNodeId()}`;
     const idSet = new Set(resolvable);
+    labelNextHistoryStep(`Group ${resolvable.length} nodes`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => (idSet.has(n.nodeId) ? { ...n, groupId } : n)),
@@ -394,6 +580,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     if (!groupId) return;
     const hasMembers = get().nodes.some((n) => n.groupId === groupId);
     if (!hasMembers) return;
+    labelNextHistoryStep('Ungroup nodes');
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) =>
@@ -407,6 +594,7 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
   setNodeLocked: (nodeId, locked) => {
     const node = get().nodes.find((n) => n.nodeId === nodeId);
     if (!node || (node.locked ?? false) === locked) return;
+    labelNextHistoryStep(`${locked ? 'Lock' : 'Unlock'} ${describeNode(nodeId, get().nodes)}`);
     markGraphDirty(get);
     set((s) => ({
       nodes: s.nodes.map((n) => (n.nodeId === nodeId ? { ...n, locked } : n)),
@@ -489,7 +677,76 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
     set({ isDirty: dirtyVersion !== saveVersion, savedAt });
     return { ok: true, regeneratedAt: savedAt };
   },
-})));
+})),
+  // ── EDITOR-EXP P7 (C32) — zundo temporal options ──────────────────────────
+  {
+    // C32 — keep ≥100 undo steps.
+    limit: 100,
+    // Track only durable schema graph. Strip the transient flags and the
+    // per-node build-freshness `dirty` so undo never resurrects a stale marker
+    // and a flag flip never costs an undo step.
+    partialize: (state): TrackedGraph => ({
+      hubs: state.hubs,
+      nodes: state.nodes.map(({ dirty: _dirty, ...n }) => n as PrismNode),
+      edges: state.edges,
+      rootNodes: state.rootNodes,
+    }),
+    // Coalesce a burst of edits (e.g. a slider drag firing updateNode on every
+    // frame, or rapid typing) into ONE undo step: debounce the snapshot by
+    // 400ms. The recorded undo target must be the state from BEFORE the burst
+    // began (the FIRST call's pastState), so an undo reverts the whole drag —
+    // not just its last frame. We therefore latch the first pastState of a
+    // burst and only release it (with the burst's final current/delta) once the
+    // edits go quiet for HISTORY_DEBOUNCE_MS.
+    handleSet: ((handleSet: (
+      pastState: TrackedGraph,
+      replace: unknown,
+      currentState: TrackedGraph,
+      deltaState?: Partial<TrackedGraph> | null,
+    ) => void) => {
+      // zundo TYPES the received `handleSet` as zustand's 2-arg `setState`, but
+      // at RUNTIME it passes the temporal store's 4-arg `_handleSet`
+      // (pastState, replace, currentState, deltaState). The cast on the option
+      // itself (below) bridges the known quirk so we can forward the burst's
+      // final args.
+      let t: ReturnType<typeof setTimeout> | null = null;
+      let latchedPast: TrackedGraph | null = null;
+      return (
+        pastState: TrackedGraph,
+        replace: unknown,
+        currentState: TrackedGraph,
+        deltaState?: Partial<TrackedGraph> | null,
+      ) => {
+        if (latchedPast === null) latchedPast = pastState;
+        if (t !== null) clearTimeout(t);
+        t = setTimeout(() => {
+          t = null;
+          const past = latchedPast as TrackedGraph;
+          latchedPast = null;
+          handleSet(past, replace, currentState, deltaState);
+        }, HISTORY_DEBOUNCE_MS);
+      };
+    }) as ZundoOptions<GraphSourceState, TrackedGraph>['handleSet'],
+    // Drop no-op steps: if the tracked schema is byte-identical, don't record.
+    // (Guards against transient-only sets slipping past partialize.)
+    equality: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+    // C33 — stamp the parallel metadata log each time a past-state is pushed.
+    // `onSave(pastState, currentState)` runs once per recorded step; we read +
+    // clear the pending label set by the mutator that caused the change.
+    onSave: () => {
+      const description = pendingHistoryLabel ?? 'Edit';
+      pendingHistoryLabel = null;
+      historyMeta.push({ description, timestamp: Date.now() });
+      // Keep the meta log bounded in lockstep with the 100-step limit. zundo
+      // shifts the oldest pastState off the front when it overflows, so we
+      // mirror that here (drop oldest meta entries beyond the limit).
+      while (historyMeta.length > HISTORY_LIMIT) historyMeta.shift();
+      // A new edit truncates zundo's redo branch (futureStates := []); wipe the
+      // coherence module's futureMeta mirror in lockstep.
+      onNewEditRecorded?.();
+    },
+  },
+));
 
 // Eager init: fetch the canonical live graph (the file /api/prism/regen
 // writes back to). The `'use client'` directive at the top of the file
@@ -499,18 +756,23 @@ export const useGraphSourceStore = create<GraphSourceState>()(subscribeWithSelec
 if (typeof window !== 'undefined') {
   void loadFromHomeHubFile('/prism-mock/home/live-graph.json').then(
     (graph) => {
-      useGraphSourceStore.setState({
-        hubs: graph.hubs,
-        nodes: graph.nodes,
-        edges: graph.edges,
-        // EBR2-E-04 fix — without threading rootNodes here, the eager init
-        // left the store at `rootNodes: []` even when the loaded graph
-        // carries App_Name_World. saveToServer then echoed `[]` back to
-        // disk and quietly violated SC-006 on every Save round-trip.
-        rootNodes: graph.rootNodes ?? [],
-        ready: true,
-        error: null,
-      });
+      // EDITOR-EXP P7 — the eager boot load is the history baseline, not an
+      // undoable step. Run it through runBulkLoad so Cmd+Z right after boot
+      // can't revert into the empty pre-fetch graph.
+      runBulkLoad(() =>
+        useGraphSourceStore.setState({
+          hubs: graph.hubs,
+          nodes: graph.nodes,
+          edges: graph.edges,
+          // EBR2-E-04 fix — without threading rootNodes here, the eager init
+          // left the store at `rootNodes: []` even when the loaded graph
+          // carries App_Name_World. saveToServer then echoed `[]` back to
+          // disk and quietly violated SC-006 on every Save round-trip.
+          rootNodes: graph.rootNodes ?? [],
+          ready: true,
+          error: null,
+        }),
+      );
     },
     (e: unknown) => {
       const message = e instanceof Error ? e.message : String(e);
