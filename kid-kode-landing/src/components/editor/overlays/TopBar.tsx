@@ -11,6 +11,7 @@ import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
+import { PrismLogo } from '@/components/editor/icons/PrismLogo';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function TopBar() {
@@ -86,16 +87,19 @@ export default function TopBar() {
     >
       <div className="flex items-center gap-3 pointer-events-auto">
         <div className="flex items-center gap-2">
-          {/* Brass nameplate — milled fitting, lit from top-left. */}
+          {/* P3/C15 — bespoke PRISM mark in an ink housing (matches the favicon
+              identity): a glassy brass-bevelled prism refracting an ice beam into
+              a warm dispersion fan, alive (idle shimmer + hover sweep). */}
           <div
             className="w-7 h-7 rounded-ds-sm flex items-center justify-center"
             style={{
-              background: 'var(--ds-grad-brass)',
+              background: 'radial-gradient(120% 120% at 30% 20%, rgba(20,24,38,0.95), #0b0d13 72%)',
               boxShadow:
-                'inset 0 1px 0 rgba(255,252,242,0.45), inset 0 -1px 0 rgba(0,0,0,0.3), var(--ds-elev-1), var(--ds-glow-brass)',
+                'inset 0 1px 0 rgba(255,252,242,0.18), inset 0 -1px 0 rgba(0,0,0,0.5), var(--ds-elev-1), var(--ds-glow-brass)',
+              border: '0.5px solid rgba(247,233,198,0.18)',
             }}
           >
-            <Icon name="sparkle" size={14} color={DS.ink} />
+            <PrismLogo size={18} />
           </div>
           <div>
             <div className="ds-title-brass text-[13px] font-display font-bold tracking-tight leading-none">Prism</div>

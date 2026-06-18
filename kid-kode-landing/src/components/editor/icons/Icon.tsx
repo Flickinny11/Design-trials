@@ -23,7 +23,10 @@ const PATHS: Record<string, string> = {
   link: 'M8 7 L14 7 L14 9 L8 9 A3 3 0 1 0 8 15 L14 15 L14 17 L8 17 A5 5 0 1 1 8 7 Z M16 7 L16 17 A5 5 0 1 0 16 7 Z',
   server: 'M3 4 L21 4 L21 10 L3 10 Z M3 12 L21 12 L21 18 L3 18 Z M6 6 L8 6 L8 8 L6 8 Z M6 14 L8 14 L8 16 L6 16 Z',
   layers: 'M12 2 L22 8 L12 14 L2 8 Z M2 13 L12 19 L22 13 L22 15 L12 21 L2 15 Z',
-  zap: 'M13 2 L4 14 L11 14 L10 22 L20 10 L13 10 Z',
+  // P3/C14 — re-authored from the generic (Lucide-grade) lightning bolt to a
+  // distinctive "energized generation" mark: a bold faceted bolt paired with a
+  // small spark top-right (the AI prompt-energize motif), not a stock bolt.
+  zap: 'M14.5 1.5 L5 13 L10.5 13 L9 22.5 L19 10 L13 10 Z M18 1.5 L18.9 4 L21.4 4.9 L18.9 5.8 L18 8.3 L17.1 5.8 L14.6 4.9 L17.1 4 Z',
   grid: 'M3 3 L10 3 L10 10 L3 10 Z M14 3 L21 3 L21 10 L14 10 Z M3 14 L10 14 L10 21 L3 21 Z M14 14 L21 14 L21 21 L14 21 Z',
   flow: 'M4 6 L14 6 L14 4 L20 8 L14 12 L14 10 L4 10 Z M20 14 L10 14 L10 12 L4 16 L10 20 L10 18 L20 18 Z',
   check: 'M4 12 L10 18 L20 6 L18 4 L10 14 L6 10 Z',
@@ -57,6 +60,20 @@ const PATHS: Record<string, string> = {
 };
 
 export type IconName = keyof typeof PATHS;
+
+// P3/C14 — curated ambient/signature motions (see icons.css). Every icon gets
+// the base hover micro-interaction; these named ones get extra life.
+const ANIM: Record<string, string> = {
+  refresh: 'spin',
+  sparkle: 'twinkle',
+  wand: 'twinkle',
+  diamond: 'twinkle',
+  snow: 'twinkle',
+  bulb: 'glowpulse',
+  zap: 'glowpulse',
+  play: 'nudge',
+  arrowRight: 'nudge',
+};
 
 interface IconProps {
   name: string;
@@ -159,12 +176,16 @@ export function Icon({
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      className={className}
+      className={['prism-icon', className].filter(Boolean).join(' ')}
+      data-anim={ANIM[name]}
       style={{
-        filter: glow ? `drop-shadow(0 0 6px ${primary}) ${seat}` : seat,
+        // Base contact-shadow (and optional glow) is exposed as a CSS var so the
+        // hover/idle rules in icons.css COMPOSE with it instead of being
+        // overridden by an inline `filter` (inline > stylesheet specificity).
+        ['--icon-filter' as string]: glow ? `drop-shadow(0 0 6px ${primary}) ${seat}` : seat,
         overflow: 'visible',
         ...style,
-      }}
+      } as React.CSSProperties}
       aria-hidden
     >
       <defs>
