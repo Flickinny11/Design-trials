@@ -11,28 +11,32 @@
 // §3 L65: editor uses `@react-three/fiber` v9 + the async `gl` factory
 // pattern for WebGPU init, with WebGL2 as the documented fallback.
 //
-// The pure-logic surface (slider definitions + Save & Verify payload) lives
-// in:
+// The pure-logic surface (slider definitions) lives in:
 //   - `@/lib/prism-graph/visual-spec-sliders`  (buildVisualSpecSliders)
-//   - `./regen-api`                            (saveAndVerify)
 // This component composes them with R3F + a synchronous createNode mount
 // path. Slider changes update local state synchronously; the Three.js scene
 // re-applies position/scale/alpha via refs (no full createNode re-execution
 // on every slider tick) so feedback stays under the §17 L538 100ms budget.
 // `createNode` is re-invoked when the underlying node identity changes
-// (selection switch) — never per-slider tick. Save & Verify POSTs the
-// edited node to the regen API which re-runs codegen + verifier; the
-// returned regenerated node module flows back via the editor's source
-// store on the next render. (Spec §13 L477's "createNode re-execution on
-// debounced slider input" is reframed here as direct transform mutation
-// to honour the §17 L538 latency budget — see docs/spec-deviations-prism.md.)
+// (selection switch) — never per-slider tick.
+//
+// EDITOR-EXP NE-SC-14 / FP-NE-5 (retired 2nd save/build path): VisualPreview
+// used to own its OWN edit/save/build path — a "Save & Verify" button that
+// POSTed the slider-edited node to `./regen-api` (a SECOND, independent
+// save/build path alongside the canonical overlay → Save → Build). That path
+// is RETIRED. VisualPreview is now DISPLAY-ONLY: a live R3F sub-canvas that
+// mounts the node's ACTUAL artifact, with the sliders scrubbing a local,
+// non-persisting preview of transform/alpha. All real editing routes through
+// the single canonical path — the Visual-tab color pickers + Material editor
+// stage on usePreviewStateStore (overlay), the canvas gizmo owns transform,
+// "Save" = commitPreviewToSource, "Build" = rebuildNode. `regen-api.ts` no
+// longer has a live caller from here.
 
 import { Canvas, type RootState, useFrame, useThree } from '@react-three/fiber';
 import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { Box3, Group, MathUtils, Object3D, Vector3, type PerspectiveCamera } from 'three';
 import type { PrismNode } from '@/lib/prism-graph/types';
 import {
-  applyVisualSpecSlider,
   buildVisualSpecSliders,
   type VisualSpecSlider,
 } from '@/lib/prism-graph/visual-spec-sliders';
@@ -43,7 +47,6 @@ import {
 import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
 import { defaultRenderModeFactory } from '@/lib/prism/runtime/factories/default-factory';
 import { buildPerNodeFactory } from '@/lib/prism/runtime/factories/coderef-factory';
-import { saveAndVerify, type RegenApiResult } from './regen-api';
 import { DS } from '@/components/editor/design-system';
 
 // Default createNode pipeline — the SAME factory chain the editor's
@@ -75,11 +78,9 @@ export interface VisualPreviewProps {
   /** Optional context override for tests. Production builds compose this
    *  via the runtime mount.ts. */
   ctx?: NodeContext;
-  /** Optional fetch override for the Save & Verify call. */
-  fetch?: typeof fetch;
-  /** Notified after a successful Save & Verify. */
-  onSaved?: (r: RegenApiResult) => void;
-  /** Disables editing (used when the node is frozen by the editor). */
+  /** Disables the preview-scrub sliders (used when the node is frozen by the
+   *  editor). NE-SC-14: there is no longer a Save/build path here, so this
+   *  only gates the local preview scrub. */
   frozen?: boolean;
 }
 
@@ -254,8 +255,6 @@ export default function VisualPreview({
   node,
   createNode,
   ctx,
-  fetch: fetchOverride,
-  onSaved,
   frozen,
 }: VisualPreviewProps) {
   const sliders = useMemo<VisualSpecSlider[]>(() => buildVisualSpecSliders(node), [node]);
@@ -273,8 +272,6 @@ export default function VisualPreview({
   }, [sliders]);
 
   const [renderer, setRenderer] = useState<'webgpu' | 'webgl2' | 'pending'>('pending');
-  const [saving, setSaving] = useState(false);
-  const [saveStatus, setSaveStatus] = useState<RegenApiResult | null>(null);
 
   const factory = createNode ?? getPreviewFactory();
   const fallbackCtx = useMemo(
@@ -288,29 +285,10 @@ export default function VisualPreview({
     setValues((v) => ({ ...v, [key]: value }));
   };
 
-  const onSave = async () => {
-    setSaving(true);
-    const next: PrismNode = JSON.parse(JSON.stringify(node));
-    for (const s of sliders) {
-      const v = values[s.key];
-      if (typeof v === 'number') applyVisualSpecSlider(next, s.key, v);
-    }
-    // HL12 / Plan §P12 — Save & Verify body widened to carry codeModule when
-    // the node has a codeRef. Server-side route runs the §10 verifier against
-    // the fetched module text in addition to the plan-level checks.
-    let codeModule: string | undefined;
-    if (typeof next.codeRef === 'string' && next.codeRef.length > 0 && typeof fetch !== 'undefined') {
-      const fetchFn = fetchOverride ?? fetch;
-      try {
-        const resp = await fetchFn(next.codeRef);
-        if (resp.ok) codeModule = await resp.text();
-      } catch { /* network error → omit codeModule, server runs plan-only checks */ }
-    }
-    const r = await saveAndVerify(next, { fetch: fetchOverride, codeModule });
-    setSaveStatus(r);
-    setSaving(false);
-    if (r.ok) onSaved?.(r);
-  };
+  // NE-SC-14: the regen-api "Save & Verify" handler is RETIRED. The sliders
+  // now scrub a local, non-persisting preview only; real edits route through
+  // the canonical overlay → Save (commitPreviewToSource) → Build (rebuildNode)
+  // path owned by the Inspector header / canvas object flyout.
 
   const grouped: Record<VisualSpecSlider['group'], VisualSpecSlider[]> = {
     transform: [],
@@ -392,25 +370,13 @@ export default function VisualPreview({
         );
       })}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16 }}>
-        <button
-          type="button"
-          data-role="save-and-verify"
-          disabled={frozen || saving}
-          onClick={onSave}
-          style={{
-            background: frozen ? DS.slate : DS.brass400, color: frozen ? DS.textMid : DS.ink, border: 0,
-            padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600,
-            cursor: (frozen || saving) ? 'not-allowed' : 'pointer',
-          }}
-        >
-          {saving ? 'Saving…' : 'Save & Verify'}
-        </button>
-        {saveStatus && (
-          <div data-role="save-status" style={{ fontSize: 11, color: saveStatus.ok ? DS.ok : DS.danger }}>
-            {saveStatus.ok ? `verified: ${saveStatus.verifierStatus ?? 'clean'}` : `failed: ${saveStatus.error ?? 'unknown'}`}
-          </div>
-        )}
+      {/* NE-SC-14: the regen-api "Save & Verify" button is RETIRED — this was
+          a second, independent save/build path. Editing is unified on the
+          single overlay → Save → Build path (Inspector header / canvas object
+          flyout). The sliders above scrub a local live preview only. */}
+      <div data-role="visual-preview-note" style={{ fontSize: 10, color: DS.textLow, marginTop: 14, lineHeight: 1.5 }}>
+        Sliders scrub a live preview. Use the canvas gizmo and the color &amp;
+        material editors to make changes, then Save to keep them.
       </div>
     </div>
   );

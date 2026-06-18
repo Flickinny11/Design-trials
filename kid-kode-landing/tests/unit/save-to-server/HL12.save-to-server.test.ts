@@ -185,16 +185,18 @@ describe('HL12 — useGraphEditorStore.setViewMode (Preview in App UI button)', 
   });
 });
 
-describe('HL12 — saveAndVerify wire shape (Save & Verify on VisualPreview)', () => {
-  it('forwards codeModule into the verify-node body when supplied', async () => {
-    const captured: { url?: string; init?: RequestInit } = {};
-    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-      captured.url = url;
-      captured.init = init;
-      return new Response(
-        JSON.stringify({ ok: true, verifierStatus: 'clean' }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
+// EDITOR-EXP NE-SC-14 — the "Save & Verify on VisualPreview" wire-shape test
+// is RETIRED with the 2nd save/build path. saveAndVerify no longer POSTs to
+// the regen endpoint; VisualPreview is display-only and editing routes through
+// the overlay → Save → Build path. We keep one assertion that the path is
+// dead so it can't silently come back. (The save-to-server `persist` path
+// above is the real, untouched durable save.)
+describe('HL12 — saveAndVerify RETIRED (NE-SC-14, was Save & Verify on VisualPreview)', () => {
+  it('does NOT hit the regen endpoint — the 2nd save/build path is retired', async () => {
+    let fetched = false;
+    const fetchMock = vi.fn(async () => {
+      fetched = true;
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
     });
 
     const node = minimalNode('home-cta');
@@ -203,12 +205,8 @@ describe('HL12 — saveAndVerify wire shape (Save & Verify on VisualPreview)', (
       codeModule: "export default function createNode() { return new THREE.Group(); }",
     });
 
-    expect(result.ok).toBe(true);
-    expect(captured.url).toBe('/api/prism/regen');
-    const body = JSON.parse(String(captured.init?.body ?? '{}'));
-    expect(body.action).toBe('verify-node');
-    expect(body.node?.nodeId).toBe('home-cta');
-    expect(typeof body.codeModule).toBe('string');
-    expect(body.codeModule.length).toBeGreaterThan(0);
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain('RETIRED');
+    expect(fetched).toBe(false);
   });
 });

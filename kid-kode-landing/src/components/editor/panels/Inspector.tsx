@@ -29,7 +29,7 @@ import {
   KEYFRAME_COORDINATE_SPACES,
   KEYFRAME_TRIGGERS,
 } from '@/lib/prism-graph/types';
-import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
+import { captureCanvasTransformAsKeyframe, framesToKeyframes } from '@/lib/prism-graph/keyframe-capture';
 import { readCanvasTransform } from '@/lib/editor/canvas-transform-gizmo';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { commitPreviewToSource } from '@/lib/editor/preview-commit';
@@ -664,12 +664,50 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
   const total = node.animationFrames || 1;
   const capturedImage = useElementImageStore((s) => s.images[node.id]);
 
-  const edits = useAnimationEditsStore((s) => s.edits[node.id]);
-  const setPrimary = useAnimationEditsStore((s) => s.setPrimary);
-  const setSecondary = useAnimationEditsStore((s) => s.setSecondary);
+  // EDITOR-EXP C8-A (orphan reroute) — the Visual-tab "Primary/Accent color"
+  // pickers used to write `useAnimationEditsStore` (setPrimary/setSecondary),
+  // an ORPHAN store that no persistence / overlay / rebuild path reads. Worse,
+  // `node.visualSpec.primaryColor/secondaryColor` are hardcoded neutral
+  // constants in the editor view-model — the renderer reads NEITHER. So the
+  // edits never reached the schema or the rendered artifact.
+  //
+  // The real, renderer-read surface color is `materialSpec.baseColor` (primary)
+  // and `materialSpec.emissive` (accent/glow): the §11 factory reads both at
+  // build time and the material-system applies them live. Route the pickers
+  // through usePreviewStateStore against materialSpec (FP-15) so they (a)
+  // render live as source ⊕ overlay, (b) commit on the Inspector's Save
+  // (commitPreviewToSource), and (c) invalidate the content hash (materialSpec
+  // is now in node-content-hash.ts) so Build re-realizes. Display seeds from
+  // source ⊕ overlay materialSpec with the neutral view-model fallback.
+  const previewPatch = usePreviewStateStore((s) =>
+    sourceNode ? (s.patches[sourceNode.nodeId] ?? null) : null,
+  );
+  const effectiveSpec = previewPatch?.materialSpec ?? sourceNode?.materialSpec ?? null;
+  const primaryColor =
+    (effectiveSpec?.baseColor as string | undefined) || node.visualSpec.primaryColor;
+  const secondaryColor =
+    (effectiveSpec?.emissive as string | undefined) || node.visualSpec.secondaryColor;
 
-  const primaryColor = edits?.primaryColor || node.visualSpec.primaryColor;
-  const secondaryColor = edits?.secondaryColor || node.visualSpec.secondaryColor;
+  const setPrimary = (color: string) => {
+    if (frozen || !sourceNode) return;
+    const nextSpec = { ...(effectiveSpec ?? {}), baseColor: color };
+    usePreviewStateStore.getState().set(sourceNode.nodeId, { materialSpec: nextSpec });
+  };
+  const setSecondary = (color: string) => {
+    if (frozen || !sourceNode) return;
+    // Accent = emissive glow. emissiveIntensity defaults to 0, so picking an
+    // accent with no glow set would be invisible — give it a sensible nonzero
+    // glow on first set so the renderer actually shows the accent (the §11
+    // Material tab can fine-tune emissiveIntensity afterward).
+    const prevIntensity =
+      typeof effectiveSpec?.emissiveIntensity === 'number' ? effectiveSpec.emissiveIntensity : 0;
+    const nextSpec = {
+      ...(effectiveSpec ?? {}),
+      emissive: color,
+      emissiveIntensity: prevIntensity > 0 ? prevIntensity : 0.6,
+    };
+    usePreviewStateStore.getState().set(sourceNode.nodeId, { materialSpec: nextSpec });
+  };
 
   return (
     <div className="p-5 space-y-4">
@@ -748,7 +786,7 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
         <SpecRow icon="sparkle" label="Primary color">
           <ColorPicker
             value={primaryColor}
-            onChange={(c) => setPrimary(node.id, c)}
+            onChange={(c) => setPrimary(c)}
             label="Primary color"
             disabled={frozen}
           />
@@ -757,7 +795,7 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
           <SpecRow icon="sparkle" label="Accent color">
             <ColorPicker
               value={secondaryColor}
-              onChange={(c) => setSecondary(node.id, c)}
+              onChange={(c) => setSecondary(c)}
               label="Accent color"
               disabled={frozen}
             />
@@ -1021,9 +1059,31 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
   // Interpolate for live preview during playback
   const previewProps = playing ? interpolateFrames(frames, playT) : currentFrame;
 
+  // EDITOR-EXP C8-A (orphan reroute) — the per-frame faders (scale / opacity /
+  // rotation / x / y) and the GLOW COLOR picker used to write ONLY the orphan
+  // `useAnimationEditsStore.frames[]` that no persistence / overlay / rebuild
+  // path reads. They now ALSO stage the full frame timeline onto the
+  // usePreviewStateStore overlay as `node.keyframes` (projected via
+  // framesToKeyframes). `keyframes` is renderer-relevant and hash-projected
+  // (node-content-hash.ts), so the edits (a) become source ⊕ overlay-visible,
+  // (b) commit on the Inspector Save (commitPreviewToSource), and (c)
+  // invalidate the content hash so Build re-realizes. The orphan-store write is
+  // kept ONLY as the DOM-preview + Code-tab scratch (no behavior regresses);
+  // the overlay is now the authoritative persisted home. "Save as keyframe"
+  // still appends a captured pose to this same overlay timeline. FP-15 is
+  // honored: the write goes through usePreviewStateStore, never updateNode.
   const handleFrameEdit = (patch: Partial<FrameProps>) => {
-    if (frozen) return;
+    if (frozen || !sourceNode) return;
     setFrame(node.id, activeFrame, patch);
+    const nextFrames = frames.map((f, i) =>
+      i === activeFrame ? { ...f, ...patch } : f,
+    );
+    usePreviewStateStore.getState().set(sourceNode.nodeId, {
+      keyframes: framesToKeyframes(nextFrames, {
+        coordinateSpace: edits.coordinateSpace ?? 'hub-scene',
+        trigger: edits.trigger,
+      }),
+    });
   };
 
   const handleSave = () => {

@@ -15,11 +15,15 @@
 //     rule Transform/Lighting/Image use). The renderer's live primitive
 //     handle rebuilds the geometry from the new params instantly — no
 //     Save-and-Rebuild needed.
-//   - MATERIAL stays owned by the Inspector's Material tab (the §11 editor).
+//   - MATERIAL is edited INLINE here (EDITOR-EXP C9 architecture-inversion
+//     fix). The §11 editor is now the SHARED `shared-editors/MaterialEditor`
+//     component, mounted by BOTH this flyout and the node-editor Inspector.
 //     The flyout shows a read-only summary chip row (color swatch +
-//     metalness % + roughness %) and a jump key that opens the real thing
-//     via useGraphEditorStore.getState().openInspector('material'). Nothing
-//     is duplicated.
+//     metalness % + roughness %) plus an expander that reveals the real
+//     editor in place — no Inspector pop, no `openInspector('material')`
+//     delegation. The editor routes writes through usePreviewStateStore
+//     (FP-15), so canvas edits stage on the overlay (live ghost), commit on
+//     Save, and re-realize on Build — exactly like the Inspector.
 //   - LIGHTING: primitive meshes are lit by the hub's light rig out of the
 //     box (receivesLighting defaults true for renderMode 'mesh'). The
 //     per-node lit/unlit switch already lives in the Lighting group — this
@@ -33,12 +37,13 @@
 // stock icon libraries. Plain-language copy throughout (no machine ids, no
 // spec citations).
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT, dsAlpha } from '@/components/editor/design-system';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import MaterialEditor from '@/components/editor/shared-editors/MaterialEditor';
 import { attachMagnetic } from '@/components/editor/animation-tools/magnetic';
 import {
   KEY_BG,
@@ -68,7 +73,7 @@ const NO_HUB_HINT = 'Open a hub on the canvas first — new shapes attach to it.
 const NO_SHAPE_SELECTED = 'Select a shape on the canvas (or add one above) to change its size.';
 const NOT_A_SHAPE = "The selected element isn't a basic shape — its size lives in Transform.";
 const MATERIAL_HINT =
-  'Color, shine, glass and glow all live in the Material tab — this opens it.';
+  'Color, shine, glass and glow — edit them right here. Changes preview live; Save keeps them.';
 const LIGHTING_NOTE =
   'Shapes catch the hub’s lights out of the box. To make one ignore them, use the Receives Light switch in the Lighting tools.';
 const RESHAPE_HINT = 'Changes show on the canvas instantly.';
@@ -251,6 +256,14 @@ export default function ObjectFlyout({
 }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const materialRef = useMagnetic<HTMLButtonElement>(5, 1.03);
+  // EDITOR-EXP C9 — the §11 Material editor is mounted INLINE here (shared with
+  // the Inspector). This toggles the in-flyout expander; no Inspector pop.
+  const [materialOpen, setMaterialOpen] = useState(false);
+  // EDITOR-EXP C9 — frozen mirrors the Inspector's per-node freeze so the
+  // canvas editor honours the same AI-cannot-edit gate.
+  const frozen = useGraphEditorStore((s) =>
+    node ? s.frozenNodeIds.has(node.nodeId) : false,
+  );
 
   const hubName = hub?.title ?? 'this hub';
   const isPrimitive = isMeshPrimitiveNode(node);
@@ -295,10 +308,12 @@ export default function ObjectFlyout({
     });
   };
 
-  // ── Material jump (the §11 Inspector tab stays the editor) ─────────────────
-  const openMaterialTab = () => {
+  // ── Material editing is INLINE (EDITOR-EXP C9) — the shared §11 editor is
+  //    mounted in the expander below; this just toggles its visibility. The
+  //    `openInspector('material')` delegation seam is cut.
+  const toggleMaterial = () => {
     if (!node) return;
-    useGraphEditorStore.getState().openInspector('material');
+    setMaterialOpen((v) => !v);
   };
 
   const summary = materialSummary(node?.materialSpec);
@@ -405,7 +420,8 @@ export default function ObjectFlyout({
               ref={materialRef}
               type="button"
               data-action="object-open-material"
-              onClick={openMaterialTab}
+              aria-expanded={materialOpen}
+              onClick={toggleMaterial}
               className="w-full h-9 rounded-ds-sm flex items-center justify-center gap-2 ds-press hover:brightness-[1.12] transition-all"
               style={{
                 background: `linear-gradient(178deg, ${dsAlpha(DS_ACCENT, 0.2)}, ${dsAlpha(DS_ACCENT, 0.06)}), ${KEY_BG}`,
@@ -414,12 +430,23 @@ export default function ObjectFlyout({
             >
               <Icon name="palette" size={13} color={DS.brass200} glow />
               <span className="text-[10.5px] font-mono font-semibold" style={{ color: 'var(--ds-brass-200)' }}>
-                Edit Material
+                {materialOpen ? 'Hide Material' : 'Edit Material'}
               </span>
+              <Icon name="chevron" size={11} color={DS.brass200} className={materialOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
             </button>
             <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
               {MATERIAL_HINT}
             </div>
+            {/* EDITOR-EXP C9 — the SHARED §11 material editor, mounted inline.
+                Writes route through usePreviewStateStore (FP-15), so canvas
+                edits stage on the overlay (live ghost), commit on Save, and
+                re-realize on Build — identical to the Inspector's Material
+                tab. The editor brings its own slab-hosted ceramic chrome. */}
+            {materialOpen && (
+              <div data-component="object-material-editor" className="pt-1">
+                <MaterialEditor node={node} frozen={frozen} compact />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-[8.5px] font-mono leading-relaxed px-1" style={{ color: 'var(--ds-text-low)' }}>

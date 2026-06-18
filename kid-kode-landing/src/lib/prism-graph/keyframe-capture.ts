@@ -39,6 +39,55 @@ export interface CaptureKeyframeOptions {
 // override this for non-canvas authoring (timeline / scroll / viewport).
 const DEFAULT_CANVAS_COORDINATE_SPACE: PrismKeyframeCoordinateSpace = 'hub-scene';
 
+// EDITOR-EXP C8-A (orphan reroute) — the Inspector Animation tab's per-frame
+// faders (scale / opacity / rotation / x / y / glow color) used to write the
+// ORPHAN `useAnimationEditsStore.frames[]` that no persistence/overlay/rebuild
+// path reads. This pure helper projects that authoring frame shape into the
+// canonical `PrismKeyframe[]` so the edits can be staged on the preview overlay
+// (hash-projected `node.keyframes`), committed on Save, and re-realized on
+// Build. The shape mirrors `captureCanvasTransformAsKeyframe`'s `params` keys
+// (translateX/Y, rotateZ, scale) plus the authoring-only `opacity` + `glow`
+// so the Code tab / future driver can read them back losslessly.
+export interface AnimationFrameProps {
+  scale: number;
+  opacity: number;
+  rotation: number; // degrees
+  x: number; // px offset
+  y: number;
+  color: string; // glow color, #rrggbbaa
+}
+
+export function frameToKeyframe(
+  frame: AnimationFrameProps,
+  index: number,
+  total: number,
+  opts: CaptureKeyframeOptions = {},
+): PrismKeyframe {
+  const params: Record<string, number | string> = {
+    translateX: frame.x,
+    translateY: frame.y,
+    rotateZ: frame.rotation,
+    scale: frame.scale,
+    opacity: frame.opacity,
+    glow: frame.color,
+  };
+  const kf: PrismKeyframe = {
+    coordinateSpace: opts.coordinateSpace ?? DEFAULT_CANVAS_COORDINATE_SPACE,
+    t: typeof opts.t === 'number' ? opts.t : total > 1 ? index / (total - 1) : 0,
+    params,
+  };
+  if (opts.trigger !== undefined) kf.trigger = opts.trigger;
+  if (opts.ease !== undefined) kf.ease = opts.ease;
+  return kf;
+}
+
+export function framesToKeyframes(
+  frames: AnimationFrameProps[],
+  opts: CaptureKeyframeOptions = {},
+): PrismKeyframe[] {
+  return frames.map((f, i) => frameToKeyframe(f, i, frames.length, opts));
+}
+
 export function captureCanvasTransformAsKeyframe(
   transform: CanvasTransform,
   opts: CaptureKeyframeOptions = {},

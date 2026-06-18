@@ -1,10 +1,17 @@
-// T07 unit — saveAndVerify contract.
+// T07 unit — RETIRED (EDITOR-EXP NE-SC-14 / FP-NE-5).
 //
-// Spec ref: PRISM-RENDERER-MIGRATION-SPEC.md §13 L477 (Visual tab Save &
-// Verify integrates with regen API). halt-check (ralph-state.json T07):
-// "Save & Verify integrates with regen API".
+// This file USED to verify VisualPreview's "Save & Verify" → regen-api
+// contract (POST /api/prism/regen, action=verify-node). That was a SECOND,
+// independent edit/save/build path. NE-SC-14 retires it: VisualPreview is now
+// display-only and all editing routes through the single canonical
+//   overlay (usePreviewStateStore) → Save (commitPreviewToSource)
+//   → Build (rebuildNode)
+// path. The original contract assertions were removed with the path; this file
+// now just asserts the retirement so the dead path can't silently come back.
+//
+// (Original assertions preserved at T07.regen-api.test.ts.bak-* for history.)
 
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { saveAndVerify } from '@/components/editor/panels/visual-preview/regen-api';
 import type { PrismNode } from '@/lib/prism-graph/types';
 
@@ -25,83 +32,20 @@ function makeNode(): PrismNode {
     codeRef: 'x.js',
     backendRef: null,
     renderMode: 'sprite',
-  };
+  } as unknown as PrismNode;
 }
 
-function jsonResponse(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
-}
-
-type FetchFn = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
-
-describe('T07 saveAndVerify', () => {
-  it('POSTs to /api/prism/regen by default', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
-    await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const call = fetchSpy.mock.calls[0]!;
-    const url = call[0] as string;
-    const init = call[1] as RequestInit;
-    expect(url).toContain('/api/prism/regen');
-    expect(init.method).toBe('POST');
-    expect(init.headers).toMatchObject({ 'Content-Type': 'application/json' });
-  });
-
-  it('wraps the node under action=verify-node per plan §P6', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
-    await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
-    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
-    const body = JSON.parse(init.body as string);
-    expect(body.action).toBe('verify-node');
-    expect(body.node.nodeId).toBe('n1');
-    expect(body.node.renderMode).toBe('sprite');
-  });
-
-  it('forwards opts.codeModule when provided', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
-    await saveAndVerify(makeNode(), {
-      fetch: fetchSpy as unknown as typeof fetch,
-      codeModule: 'export default function createNode() {}',
-    });
-    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
-    const body = JSON.parse(init.body as string);
-    expect(typeof body.codeModule).toBe('string');
-    expect(body.codeModule).toContain('createNode');
-  });
-
-  it('omits codeModule when not provided', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
-    await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
-    const init = fetchSpy.mock.calls[0]![1] as RequestInit;
-    const body = JSON.parse(init.body as string);
-    expect('codeModule' in body).toBe(false);
-  });
-
-  it('returns ok: true and verifierStatus on success', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean', regeneratedAt: '2026-05-05T00:00:00Z' }));
-    const r = await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
-    expect(r.ok).toBe(true);
-    expect(r.verifierStatus).toBe('clean');
-    expect(r.regeneratedAt).toBe('2026-05-05T00:00:00Z');
-  });
-
-  it('returns ok: false with error on non-200 response', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => new Response('boom', { status: 500 }));
-    const r = await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
+describe('T07 saveAndVerify — RETIRED (NE-SC-14)', () => {
+  it('performs NO network save/build and resolves to a retired result', async () => {
+    let fetched = false;
+    const fetchSpy = (async () => {
+      fetched = true;
+      return new Response('{}', { status: 200 });
+    }) as unknown as typeof fetch;
+    const r = await saveAndVerify(makeNode(), { fetch: fetchSpy });
     expect(r.ok).toBe(false);
-    expect(r.error).toBeTruthy();
-  });
-
-  it('honours a custom endpoint', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => jsonResponse({ ok: true, verifierStatus: 'clean' }));
-    await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch, endpoint: '/custom/regen' });
-    expect(fetchSpy.mock.calls[0]![0] as string).toContain('/custom/regen');
-  });
-
-  it('handles network errors', async () => {
-    const fetchSpy = vi.fn<FetchFn>(async () => { throw new Error('offline'); });
-    const r = await saveAndVerify(makeNode(), { fetch: fetchSpy as unknown as typeof fetch });
-    expect(r.ok).toBe(false);
-    expect(r.error).toContain('offline');
+    expect(r.error).toContain('RETIRED');
+    // Crucially: the retired stub does NOT hit the regen endpoint.
+    expect(fetched).toBe(false);
   });
 });

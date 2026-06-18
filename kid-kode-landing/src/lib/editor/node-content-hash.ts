@@ -87,6 +87,17 @@ function buildRelevantProjection(node: PrismNode): Record<string, unknown> {
     // build time (per-face material array), so a committed face-mapping change
     // must invalidate the snapshot so the surgical rebuild re-textures the faces.
     faceTextures: node.faceTextures ?? null,
+    // EDITOR-EXP C8-A / C9 — §11 MeshPhysical material spec + the §10
+    // lit/unlit opt-in are BOTH read by `defaultRenderModeFactory` at build
+    // time (buildLitTextureMaterial / resolveMaterialSpec; receivesLighting
+    // selects the lit vs unlit material branch). The Material tab + the
+    // canvas object flyout + the Visual-tab color pickers all stage these on
+    // the preview overlay → on Save they must invalidate the snapshot so the
+    // surgical Save-and-Rebuild re-realizes the material. Previously omitted,
+    // which let a committed material/lighting edit slip past the rebuild
+    // hash-gate (rebuild-node.ts step 2) as a no-op.
+    materialSpec: node.materialSpec ?? null,
+    receivesLighting: node.receivesLighting ?? null,
   };
 }
 
