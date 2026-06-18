@@ -85,6 +85,7 @@ import AddElementFlyout from '@/components/editor/add-tools/AddElementFlyout';
 import ImageFlyout from '@/components/editor/image-tools/ImageFlyout';
 import ObjectFlyout from '@/components/editor/object-tools/ObjectFlyout';
 import ChangeArtifactFlyout from '@/components/editor/change-artifact/ChangeArtifactFlyout';
+import { HubBackgroundPicker } from '@/components/editor/panels/HubBackgroundPicker';
 import PromptEditFlyout from '@/components/editor/prompt-edit/PromptEditFlyout';
 import LibraryFlyout from '@/components/editor/elements/LibraryFlyout';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
@@ -136,6 +137,7 @@ type ToolGroupId =
   | 'library'
   | 'image'
   | 'object3d'
+  | 'background'
   | 'changeArtifact'
   | 'promptEdit'
   | 'text'
@@ -159,6 +161,10 @@ const GROUPS: ToolGroupMeta[] = [
   { id: 'library', icon: 'layers', label: 'Elements', wired: true },
   { id: 'image', icon: 'image', label: 'Image', wired: true },
   { id: 'object3d', icon: 'cube', label: '3D Object', wired: true },
+  // EDITOR-EXP P6 (C30) — discoverable Canvas entry into the 3D background
+  // picker (was buried in the Hub Inspector's Visual tab). Opens the same
+  // HubBackgroundPicker for the active hub; applies live via updateHub (C31).
+  { id: 'background', icon: 'palette', label: 'Background', wired: true },
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
   { id: 'promptEdit', icon: 'zap', label: 'Prompt Edit', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
@@ -1153,6 +1159,19 @@ export default function CanvasToolbar() {
               // resolution the Text / Add / Image / Lighting groups share
               // (active hub → selected node's parent → first hub).
               <ObjectFlyout node={selectedNode} hub={lightingHub} onToast={setToast} />
+            )}
+            {activeGroup === 'background' && (
+              // EDITOR-EXP P6 (C30/C31) — 3D background picker for the active
+              // hub, surfaced on the CANVAS (no longer Inspector-only). Same
+              // hub resolution the Text / Add / Image / Lighting groups share
+              // (active hub → selected node's parent → first hub). The picker
+              // applies live via updateHub({background}) — additive schema, no
+              // separate Build (HubBackgroundStack reads hub.background live).
+              lightingHub ? (
+                <HubBackgroundPicker hub={lightingHub} />
+              ) : (
+                <EmptyHint icon="palette" text="No hub in view. Enter a hub on the canvas to set its 3D background." />
+              )
             )}
             {activeGroup === 'changeArtifact' && (
               // CANVAS-FINAL (canvas-spec §12) — Change Artifact entry: opens
