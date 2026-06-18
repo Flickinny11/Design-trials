@@ -21,7 +21,7 @@
 // canvas mode; Add Text needs a current hub; the styling controls need the
 // selection to be a renderMode:'text' node (otherwise a contextual hint).
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, DS_ACCENT } from '@/components/editor/design-system';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
@@ -92,6 +92,24 @@ export default function TextToolsFlyout({
     node ? s.patches[node.nodeId]?.textSpec : undefined,
   );
   const eff = effectiveTextSpec(node?.textSpec, previewTextSpec);
+
+  // EDITOR-EXP P5 (C23) — the Content field used to be a fixed rows={2} box, so
+  // a multi-line headline was clipped to two half-visible lines in the ~252px
+  // flyout. Auto-grow it to the full content height (capped at MAX_TA_PX so a
+  // pasted paragraph stays mobile-safe by scrolling within the well rather than
+  // shoving every effect control off-screen). Re-measures whenever the
+  // effective content changes (typing, preset, selection swap).
+  const MAX_TA_PX = 132;
+  const contentRef = useRef<HTMLTextAreaElement>(null);
+  const autoGrow = (el: HTMLTextAreaElement | null) => {
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, MAX_TA_PX)}px`;
+    el.style.overflowY = el.scrollHeight > MAX_TA_PX ? 'auto' : 'hidden';
+  };
+  useLayoutEffect(() => {
+    autoGrow(contentRef.current);
+  }, [eff.content, isTextNode]);
 
   // FP-15 routing: every styling write lands on the preview buffer (whole
   // textSpec sub-object replacement) — NEVER source-store updateNode.
@@ -203,15 +221,25 @@ export default function TextToolsFlyout({
         data-action="add-text"
         disabled={!hub}
         onClick={doAddText}
-        className={`w-full h-9 rounded-ds-sm flex items-center justify-center gap-2 ds-press transition-all ${
+        className={`w-full h-9 px-2.5 rounded-ds-sm flex items-center justify-center gap-2 ds-press transition-all ${
           hub ? 'hover:brightness-[1.12]' : 'opacity-40 cursor-not-allowed'
         }`}
         style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
         <Icon name="plus" size={12} color={DS_ACCENT} />
-        <span className="text-[11px] font-mono" style={{ color: 'var(--ds-text)' }}>
-          Add Text{hub ? ` · ${hub.title ?? hub.hubId}` : ''}
+        {/* C26 — keep "Add Text" pinned; the hub name (any length) truncates so
+            a long hub title can never push the label out of the key. */}
+        <span className="text-[11px] font-mono whitespace-nowrap" style={{ color: 'var(--ds-text)' }}>
+          Add Text
         </span>
+        {hub && (
+          <span
+            className="text-[11px] font-mono truncate min-w-0"
+            style={{ color: 'var(--ds-text-mid)' }}
+          >
+            · {hub.title ?? hub.hubId}
+          </span>
+        )}
       </button>
       <div className="text-[8px] font-mono leading-tight -mt-1 px-1" style={{ color: 'var(--ds-text-low)' }}>
         Creates an MSDF text node tethered to the current hub. Real glyphs,
@@ -240,15 +268,22 @@ export default function TextToolsFlyout({
             <span className="ds-chip ds-chip--brass">TEXT</span>
           </div>
 
-          {/* Content */}
+          {/* Content — auto-grows to show the whole headline (C23); scrolls
+              within the well past MAX_TA_PX so long copy never clips the
+              controls below. */}
           <SectionLabel>Content · live preview</SectionLabel>
           <textarea
+            ref={contentRef}
             data-control="text-content"
             value={eff.content ?? ''}
-            onChange={(e) => write({ content: e.target.value })}
-            rows={2}
-            className="w-full px-2.5 py-1.5 rounded-ds-xs text-[10px] font-mono outline-none resize-y"
+            onChange={(e) => {
+              write({ content: e.target.value });
+              autoGrow(e.currentTarget);
+            }}
+            rows={1}
+            className="w-full px-2.5 py-1.5 rounded-ds-xs text-[10px] font-mono outline-none resize-none leading-relaxed"
             style={{
+              minHeight: '2.4rem',
               background: 'var(--ds-grad-well)',
               boxShadow:
                 'inset 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(255, 252, 242, 0.05)',

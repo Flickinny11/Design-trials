@@ -18,14 +18,14 @@ import type { TextFill, TextSpec } from '@/lib/prism-graph/types';
 import type { TextFillSuggestion } from '@/lib/prism/text/contract';
 import { generateProceduralFills } from '@/components/editor/text-fills/procedural-fills';
 import { coerceFill } from './text-tool-helpers';
-import { ChipKey, ColorRow, FaderRow, KEY_BG, KEY_SHADOW, WellInput } from './ui';
+import { ChipKey, ColorRow, FaderRow, KEY_BG, KEY_SHADOW, SectionLabel, WellInput } from './ui';
 import TextFillPreviewStrip from './TextFillPreviewStrip';
 
 const FILL_KINDS: Array<{ kind: TextFill['kind']; label: string }> = [
   { kind: 'solid', label: 'Solid' },
   { kind: 'gradient', label: 'Gradient' },
   { kind: 'texture', label: 'Texture' },
-  { kind: 'ai-texture', label: 'AI' },
+  { kind: 'ai-texture', label: 'AI Fill' },
 ];
 
 // Logan directive 2026-06-10 (LOGAN-INBOX): 10 candidates per batch, each
@@ -199,6 +199,18 @@ export default function FillEditor({
 
       {fill.kind === 'ai-texture' && (
         <>
+          {/* C24 — the prompt-to-edit field was buried behind a 1-letter chip
+              with no label. Promote it: an explicit engraved section header +
+              wand glyph so it reads as "type a look, get a fill". Editing still
+              STAGES through the parent's onChange → usePreviewStateStore
+              (FP-15); this only surfaces/labels the control. */}
+          <SectionLabel>Generate fill from a prompt</SectionLabel>
+          <div className="flex items-center gap-1.5 px-1 -mt-0.5">
+            <Icon name="wand" size={10} color={DS.brass300} />
+            <span className="text-[8.5px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
+              Describe a surface — it pours into the glyph mask (never letterforms, INV-11).
+            </span>
+          </div>
           <WellInput
             value={fill.prompt}
             testId="fill-ai-prompt"

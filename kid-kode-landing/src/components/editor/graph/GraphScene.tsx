@@ -121,16 +121,6 @@ import type { TextObjectHandle } from '@/lib/prism/text/contract';
 // factory's mesh branch (userData.meshPrimitiveHandle).
 import type { MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
 import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
-// EB-08-04 / §6 SC-046 — three baseline keyframe primitives (load fade-in,
-// in-view slide, hover lift). The canvas-mode KeyframeDemo block below
-// consumes the registry directly so any future addition to the baselines
-// appears in the demo without source edits here.
-import {
-  LOAD_FADE_IN,
-  IN_VIEW_SLIDE,
-  HOVER_LIFT,
-  interpolateKeyframePrimitive,
-} from '@/lib/prism-graph/keyframe-primitives';
 // Wave-2E Observatory Brass retint — all chrome accent colors (selection rings,
 // hover glows, edge tints, lighting fills, backdrop washes) come from the frozen
 // design-system tokens. No component-local hex; purple / electric-blue retired.
@@ -2351,93 +2341,6 @@ function CanvasViewportFrame({
   ) : null;
 }
 
-// EB-08-04 / §6 SC-046 — Canvas-mode keyframe demo node.
-//
-// Mounts only in `canvas` viewMode (FP-12 canonical literal). Drives a small
-// quad through all three baseline keyframe primitives (LOAD_FADE_IN, IN_VIEW_SLIDE,
-// HOVER_LIFT) so the two-runtime snapshot captures the post-load + post-in-view
-// state (haltCheck: "snapshot captures the in-view-slide state").
-//
-// Each primitive is consumed via `interpolateKeyframePrimitive`; no per-frame
-// values are inlined — they all come from the keyframe-primitives module.
-// Hover lift runs on pointer events. Opacity / Z come from the same pure
-// interpolator the Phase 8 runtime will consume in EB-08-05.
-function KeyframeDemo() {
-  const viewMode = useGraphEditorStore((s) => s.viewMode);
-  const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
-  // Refs (not state) — useFrame mutates them every tick without re-rendering
-  // the subtree. Matches the existing pattern in this file (hoverTargetRef,
-  // camera pose refs).
-  const mountedMsRef = useRef(0);
-  const hoverProgressRef = useRef(0);
-  const hoverTargetRef = useRef(0);
-
-  // load + in-view animation window so the snapshot — captured ~2.5s after the
-  // mode switch — sees both fully settled and the hover primitive at its rest
-  // pose (progress = 0).
-  const LOAD_DURATION_MS = 800;
-  const IN_VIEW_DELAY_MS = 600;
-  const IN_VIEW_DURATION_MS = 900;
-
-  useFrame((_, delta) => {
-    if (viewMode !== 'canvas') return;
-    mountedMsRef.current += delta * 1000;
-    const mounted = mountedMsRef.current;
-    // Critically-damped hover progress toward target.
-    hoverProgressRef.current +=
-      (hoverTargetRef.current - hoverProgressRef.current) * Math.min(1, delta * 8);
-
-    // Compose the three primitives into a single transform / opacity.
-    const tLoad = Math.min(1, mounted / LOAD_DURATION_MS);
-    const tInView = Math.min(
-      1,
-      Math.max(0, (mounted - LOAD_DURATION_MS - IN_VIEW_DELAY_MS) / IN_VIEW_DURATION_MS),
-    );
-    const loadVals = interpolateKeyframePrimitive(LOAD_FADE_IN, tLoad);
-    const slideVals = interpolateKeyframePrimitive(IN_VIEW_SLIDE, tInView);
-    const liftVals = interpolateKeyframePrimitive(HOVER_LIFT, hoverProgressRef.current);
-
-    const mesh = meshRef.current;
-    const mat = materialRef.current;
-    if (mesh) {
-      mesh.position.y = (slideVals.translateY ?? 0) * 0.6; // scaled into scene units
-      mesh.position.z = (liftVals.translateZ ?? 0);
-      const s = liftVals.scale ?? 1;
-      mesh.scale.set(s, s, s);
-    }
-    if (mat) {
-      // Multiply: load opacity * in-view opacity for a clean compose.
-      mat.opacity = (loadVals.opacity ?? 1) * (slideVals.opacity ?? 1);
-    }
-  });
-
-  if (viewMode !== 'canvas') return null;
-
-  // Anchor on the right side of the viewport frame so it doesn't collide
-  // with the CanvasTransformGizmo proxy at origin.
-  return (
-    <group name="canvas:keyframe-demo" position={[1.6, 0, -0.6]} renderOrder={9}>
-      <mesh
-        ref={meshRef}
-        onPointerOver={() => { hoverTargetRef.current = 1; }}
-        onPointerOut={() => { hoverTargetRef.current = 0; }}
-      >
-        <planeGeometry args={[0.6, 0.6]} />
-        <meshBasicMaterial
-          ref={materialRef}
-          color={DS.brass400}
-          transparent
-          opacity={0}
-          toneMapped={false}
-          depthWrite={false}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-
 // EB-05-03 / §6 Phase 5 SC-025 + Phase 8 SC-042 — Per-node transform gizmo.
 //
 // When viewMode === 'canvas' AND a node is selected, mounts a drei
@@ -2698,6 +2601,82 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
 const poppedBuilds = new Set<string>();
 const BUILD_POP_START = 0.6;
 
+// EDITOR-EXP P5 (C28) — a TIGHT rectangular selection frame + corner handles.
+//
+// A single circular ring (boundingSphere-sized) is ambiguous on wide artifacts
+// — a one-line headline is far wider than tall, so the ring balloons to the
+// diagonal and no longer reads as "this is selected". This draws a snug
+// rectangle hugging the measured silhouette (hw/hh half-extents in the node's
+// outer space) plus four L-shaped corner handles, so selection is unmistakable
+// at any aspect ratio. Pure line geometry (no fill, no glyphs — INV-11 is about
+// content text, this is editor chrome), built once per (hw,hh) and disposed on
+// unmount, so there is no per-frame allocation.
+function SelectionFrame({
+  hw,
+  hh,
+  color,
+  z,
+}: {
+  hw: number;
+  hh: number;
+  color: string;
+  z: number;
+}) {
+  const geom = useMemo(() => {
+    // Outline rectangle (closed loop) + four corner brackets, all in one
+    // LineSegments buffer (pairs of vertices). The corner length scales with
+    // the box so it stays proportional on tiny and huge artifacts alike.
+    const cl = Math.min(hw, hh) * 0.4;
+    const seg: number[] = [];
+    const line = (x1: number, y1: number, x2: number, y2: number) => {
+      seg.push(x1, y1, 0, x2, y2, 0);
+    };
+    // Box edges.
+    line(-hw, -hh, hw, -hh);
+    line(hw, -hh, hw, hh);
+    line(hw, hh, -hw, hh);
+    line(-hw, hh, -hw, -hh);
+    // Corner brackets (drawn slightly inset so they sit on the frame).
+    // bottom-left
+    line(-hw, -hh, -hw + cl, -hh);
+    line(-hw, -hh, -hw, -hh + cl);
+    // bottom-right
+    line(hw, -hh, hw - cl, -hh);
+    line(hw, -hh, hw, -hh + cl);
+    // top-right
+    line(hw, hh, hw - cl, hh);
+    line(hw, hh, hw, hh - cl);
+    // top-left
+    line(-hw, hh, -hw + cl, hh);
+    line(-hw, hh, -hw, hh - cl);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(seg, 3));
+    return g;
+  }, [hw, hh]);
+  useEffect(() => () => geom.dispose(), [geom]);
+  return (
+    <group position={[0, 0, z]} renderOrder={12}>
+      {/* The thin frame line. */}
+      <lineSegments geometry={geom} renderOrder={12}>
+        <lineBasicMaterial color={color} transparent opacity={0.92} depthTest={false} toneMapped={false} />
+      </lineSegments>
+      {/* Corner-handle dots so the frame reads as a grabbable selection even
+          on a thin rule of text. Cheap small quads, no per-frame work. */}
+      {[
+        [-hw, -hh],
+        [hw, -hh],
+        [hw, hh],
+        [-hw, hh],
+      ].map(([cx, cy], i) => (
+        <mesh key={i} position={[cx, cy, 0]}>
+          <planeGeometry args={[0.045, 0.045]} />
+          <meshBasicMaterial color={color} transparent opacity={0.95} depthTest={false} toneMapped={false} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; previewMode?: boolean }) {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
@@ -2795,6 +2774,14 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
   // fallback. State-gated behind an epsilon so it updates only on real
   // reshapes — never per frame.
   const [measuredRing, setMeasuredRing] = useState<number | null>(null);
+  // EDITOR-EXP P5 (C28) — a circular boundingSphere ring is a poor selection
+  // cue for WIDE artifacts (a one-line headline is ~8× wider than tall): the
+  // ring balloons to the diagonal and reads as "nothing near my text". Measure
+  // the artifact's tight half-width / half-height (boundingBox, centered on the
+  // node origin like every MSDF block) so selection draws a snug RECTANGLE +
+  // corner handles around the real silhouette. Same epsilon-gated state as the
+  // ring — recomputed only on real reshapes, never per frame, no allocation.
+  const [measuredBox, setMeasuredBox] = useState<{ hw: number; hh: number } | null>(null);
   const measureArtifactRing = () => {
     const g = popRef.current;
     if (!g) return;
@@ -2822,8 +2809,30 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
     // plane (max(w,h)·0.62), so unreshaped nodes keep their familiar ring.
     const next = Math.max(radius * s * 0.9, 0.155);
     setMeasuredRing((cur) => (cur !== null && Math.abs(cur - next) < 0.01 ? cur : next));
+    // Tight planar half-extents for the rectangular outline (C28). geom-local
+    // box scaled by the same accumulated factor; a small pad keeps the outline
+    // off the glyph edges. Z is ignored — selection is a screen-facing frame.
+    if (!geom.boundingBox) geom.computeBoundingBox();
+    const bb = geom.boundingBox;
+    if (bb) {
+      const hwGeom = Math.max(Math.abs(bb.min.x), Math.abs(bb.max.x));
+      const hhGeom = Math.max(Math.abs(bb.min.y), Math.abs(bb.max.y));
+      const hw = Math.max(hwGeom * s + 0.05, 0.12);
+      const hh = Math.max(hhGeom * s + 0.05, 0.12);
+      setMeasuredBox((cur) =>
+        cur && Math.abs(cur.hw - hw) < 0.01 && Math.abs(cur.hh - hh) < 0.01
+          ? cur
+          : { hw, hh },
+      );
+    }
   };
   const ringSize = measuredRing ?? Math.max(w, h, 0.25) * 0.62;
+  // Tight selection-box half-extents: measured silhouette, else the schema
+  // envelope (visual.transform w/h), else the ring as a square fallback.
+  const selBox = measuredBox ?? {
+    hw: Math.max(w * 0.5, ringSize * 0.72),
+    hh: Math.max(h * 0.5, ringSize * 0.72),
+  };
 
   // STEP6 scope item 3 — once-per-build realization pop (see poppedBuilds note).
   // (rebuildVersion + buildKey are hoisted above for the P1 built-freeze snapshot.)
@@ -3107,25 +3116,21 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       <group ref={popRef} scale={alreadyPopped ? 1 : BUILD_POP_START}>
         <ArtifactNode node={node} layout="scene" />
       </group>
+      {/* EDITOR-EXP P5 (C28) — tight rectangular selection frame + corner
+          handles, sized to the measured silhouette so it hugs wide text as
+          snugly as a square icon. Replaces the ambiguous boundingSphere ring. */}
       {!previewMode && (isSelected || isMultiSelected || isHovered) && (
-        <mesh position={[0, 0, 0.08]}>
-          <ringGeometry args={[ringSize, ringSize + 0.035, 64]} />
-          <meshBasicMaterial
-            color={
-              isSelected ? DS.brass200 : isMultiSelected ? DS.brass400 : DS.ok
-            }
-            transparent
-            opacity={0.85}
-            toneMapped={false}
-          />
-        </mesh>
+        <SelectionFrame
+          hw={selBox.hw}
+          hh={selBox.hh}
+          color={isSelected ? DS.brass200 : isMultiSelected ? DS.brass400 : DS.ok}
+          z={0.08}
+        />
       )}
-      {/* STEP8 — a thin amber ring marks a locked node (canvas-spec §5). */}
+      {/* STEP8 — a thin amber frame marks a locked node (canvas-spec §5). A
+          hair outside the selection frame so both read at once when selected. */}
       {!previewMode && isLocked && (
-        <mesh position={[0, 0, 0.07]}>
-          <ringGeometry args={[ringSize + 0.04, ringSize + 0.06, 64]} />
-          <meshBasicMaterial color={DS.warn} transparent opacity={0.7} toneMapped={false} />
-        </mesh>
+        <SelectionFrame hw={selBox.hw + 0.04} hh={selBox.hh + 0.04} color={DS.warn} z={0.07} />
       )}
     </group>
   );
@@ -3991,13 +3996,12 @@ function AssembledSceneContent({
       <SceneBackdrop hub={hub} />
       <AssembledShadowCatcher />
       {/* RT-SC-10 / INV-R4 — authoring chrome only in canvas; preview-app is
-          the running app (no frame, no gizmo, no demo). */}
+          the running app (no frame, no gizmo). */}
       {!previewMode && (
         <>
           <CanvasViewportFrame breakpoint={hub?.responsiveBreakpoints?.desktop ?? null} />
           <CanvasTransformGizmo nodes={nodes} />
           <MarqueeSelectBridge />
-          <KeyframeDemo />
         </>
       )}
 
