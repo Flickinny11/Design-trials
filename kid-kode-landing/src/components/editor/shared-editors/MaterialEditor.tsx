@@ -20,7 +20,7 @@
 // → source store; Save-and-Rebuild (rebuildNode) re-realizes the artifact.
 // This file never calls useGraphSourceStore.updateNode directly.
 //
-// Chrome: Observatory Brass — the instrument plates render as real fired
+// Chrome: Chrome-Arc — the instrument plates render as real fired
 // ceramic slabs at t2 (useChromeSlab), with the ds-ceramic CSS as the
 // t0/t1 fallback (INV-9). No flat fills, no backdrop-filter.
 // ═══════════════════════════════════════════════════════════════════
@@ -98,7 +98,7 @@ export default function MaterialEditor({
 
   return (
     <div className={compact ? 'space-y-3' : 'p-5 space-y-4'}>
-      <div className="ds-label text-ds-brass-300">
+      <div className="ds-label text-ds-metal-300">
         PHYSICAL MATERIAL
       </div>
 
@@ -114,7 +114,7 @@ export default function MaterialEditor({
             >
               <span className="flex items-center justify-between">
                 <span>{c.label}</span>
-                <span className="font-mono tabular-nums text-ds-brass-300">
+                <span className="font-mono tabular-nums text-ds-metal-300">
                   {typeof val === 'number' ? val.toFixed(2) : String(val)}
                   {('unit' in c && c.unit) || ''}
                 </span>
@@ -152,7 +152,7 @@ export default function MaterialEditor({
       {/* §10 Lighting — receivesLighting opt-in. Image planes default UNLIT
           (preserve the diffusion-baked look); mesh defaults LIT. The toggle
           writes to the same preview buffer as the material controls. */}
-      <div className="ds-label text-ds-brass-300 pt-1">
+      <div className="ds-label text-ds-metal-300 pt-1">
         LIGHTING
       </div>
       <label ref={lightingSlab.ref} className="px-3 py-2.5 ds-ceramic ds-edge rounded-ds-md flex items-center justify-between cursor-pointer">

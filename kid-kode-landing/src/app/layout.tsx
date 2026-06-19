@@ -7,29 +7,27 @@ import '@/components/editor/walkthrough/walkthrough.css';
 import '@/components/editor/icons/icons.css';
 import { DS_TIER_BOOT_SCRIPT } from '@/components/editor/design-system/tier';
 
-// ── EDITOR-EXPERIENCE P3 (C16) type system — self-hosted variable fonts ─────────
-// A DISPLAY-WITH-CHARACTER + NEUTRAL-WORKHORSE split (the 2026 premium pattern:
-// Linear/Vercel = display-with-character + neutral UI). Switzer is RETIRED — it
-// read as a generic grotesque (Logan's veto). Replaced by:
-//   DISPLAY = Bricolage Grotesque (Atelier Triay, OFL-1.1) — the SIGNATURE voice:
-//   titles, the Prism wordmark, numerals, kickers. Real character (ink traps,
-//   organic single-story a/g, opsz 12→96 + wght 200→800 axes) so the brand reads
-//   distinctive, not templated. Display headings request high optical size.
-//   UI/BODY = Inter (the repo's Inter-Variable) — the neutral workhorse for
-//   labels/controls/body. Character lives in the DISPLAY face; the body stays
-//   clean and legible (Bricolage is too distracting for long runs).
-//   MONO = JetBrains Mono (OFL 1.1) — SPICE only: numeric readouts, kickers.
+// ── PRISM PORT F0 (de-brass 2026-06-19) type system — self-hosted variable fonts
+// The LOCKED type system: Sora (geometric, non-grotesque) for display/wordmark/
+// buttons/UI + JetBrains Mono for labels/kickers/readouts. ALL grotesque faces
+// (Switzer, Bricolage, generic-grotesque) are CONDEMNED and removed from the UI
+// wiring. Sora backs BOTH --font-display and --font-ui (one geometric family
+// carries the chrome); JetBrains Mono is the instrument/label voice.
+//   DISPLAY = Sora @600-760 → the SIGNATURE voice: titles, Prism wordmark,
+//             buttons, hero numerals. Geometric, precise, non-grotesque.
+//   UI/BODY = Sora @400-600 → labels/controls/body, cohesive with display.
+//   MONO    = JetBrains Mono → labels, all-caps kickers, tabular readouts.
 // Separate next/font calls → each gets its own generated family (cascade-safe).
 const display = localFont({
-  src: '../../public/fonts/ui/Bricolage-Variable.woff2',
-  weight: '200 800',
+  src: '../../public/fonts/ui/Sora-Variable.ttf',
+  weight: '100 800',
   style: 'normal',
   variable: '--font-display',
   display: 'swap',
 });
 const ui = localFont({
-  src: '../../public/fonts/Inter-Variable.ttf',
-  weight: '100 900',
+  src: '../../public/fonts/ui/Sora-Variable.ttf',
+  weight: '100 800',
   style: 'normal',
   variable: '--font-ui',
   display: 'swap',

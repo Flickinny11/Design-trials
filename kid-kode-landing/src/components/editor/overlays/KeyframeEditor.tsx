@@ -35,8 +35,8 @@ function activeKeyStyle(a: string): React.CSSProperties {
 // ── data projection: flat PrismKeyframe[] → lanes grouped by animated param ──
 interface KfLaneVM { key: string; name: string; color: string; keys: { t: number; idx: number }[] }
 const KF_LANE_DEFS: { key: string; name: string; color: string; match: (p: string) => boolean }[] = [
-  { key: 'opacity', name: 'Opacity', color: DS.brass400, match: (p) => p === 'opacity' },
-  { key: 'translate', name: 'Translate', color: DS.brass200, match: (p) => /^translate/i.test(p) },
+  { key: 'opacity', name: 'Opacity', color: DS.metal400, match: (p) => p === 'opacity' },
+  { key: 'translate', name: 'Translate', color: DS.metal200, match: (p) => /^translate/i.test(p) },
   { key: 'scale', name: 'Scale', color: DS.ice300, match: (p) => /^scale/i.test(p) },
   { key: 'rotate', name: 'Rotate', color: DS.ice400, match: (p) => /^rotate/i.test(p) },
 ];
@@ -257,7 +257,7 @@ function KeyframeBody(props: {
         {/* Brass smoke layer — dissipates on reveal (pointer-safe). */}
         <div aria-hidden className="absolute inset-0 overflow-hidden pointer-events-none" style={{ borderRadius: 'var(--ds-r-lg)' }}>
           {[
-            { l: '8%', c: DS.brass400 }, { l: '34%', c: DS.brass200 }, { l: '60%', c: DS.ice300 }, { l: '86%', c: DS.brass300 },
+            { l: '8%', c: DS.metal400 }, { l: '34%', c: DS.metal200 }, { l: '60%', c: DS.ice300 }, { l: '86%', c: DS.metal300 },
           ].map((s, i) => (
             <span
               key={i}
@@ -278,7 +278,7 @@ function KeyframeBody(props: {
           className="absolute left-0 right-0 h-10 pointer-events-none"
           style={{
             top: 0, opacity: 0,
-            background: `linear-gradient(180deg, transparent, ${dsAlpha(DS_ACCENT, 0.22)} 55%, ${dsAlpha(DS.brass200, 0.4)} 80%, transparent)`,
+            background: `linear-gradient(180deg, transparent, ${dsAlpha(DS_ACCENT, 0.22)} 55%, ${dsAlpha(DS.metal200, 0.4)} 80%, transparent)`,
             mixBlendMode: 'screen',
           }}
         />
@@ -288,7 +288,7 @@ function KeyframeBody(props: {
           ref={compact ? undefined : headerSlab.ref}
           className="relative ds-grain flex items-center justify-between px-3.5 h-11"
           style={{
-            background: 'var(--ds-grad-metal)',
+            background: 'var(--ds-grad-metal-body)',
             borderBottom: '1px solid rgba(255, 252, 242, 0.07)',
             boxShadow: 'inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.5)',
           }}
@@ -296,7 +296,7 @@ function KeyframeBody(props: {
           <div className="flex items-center gap-2.5 min-w-0">
             <Icon name="timeline" size={14} color={DS_ACCENT} glow />
             <span className="text-[11px] font-display font-semibold whitespace-nowrap" style={{ color: 'var(--ds-text-hi)' }}>Keyframe Editor</span>
-            <span className="ds-chip" style={{ color: 'var(--ds-brass-200)', borderColor: dsAlpha(DS_ACCENT, 0.3) }}>
+            <span className="ds-chip" style={{ color: 'var(--ds-metal-200)', borderColor: dsAlpha(DS_ACCENT, 0.3) }}>
               {count} {count === 1 ? 'KEY' : 'KEYS'}
             </span>
             <span className="text-[9px] font-mono truncate hidden lg:inline" style={{ color: 'var(--ds-text-mid)' }}>· {selectionLabel}</span>
@@ -305,7 +305,7 @@ function KeyframeBody(props: {
             <button type="button" onClick={() => setPlaying((p) => !p)}
               className="w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
               style={playing ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}>
-              <Icon name={playing ? 'pause' : 'play'} size={11} color={playing ? DS_ACCENT : DS.brass200} />
+              <Icon name={playing ? 'pause' : 'play'} size={11} color={playing ? DS_ACCENT : DS.metal200} />
             </button>
             <button type="button" onClick={() => setLoop((l) => !l)} title="Loop"
               className="w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center"
@@ -316,7 +316,7 @@ function KeyframeBody(props: {
               {(['1/60', '1/100', '1/120'] as const).map((g) => (
                 <button key={g} type="button" onClick={() => setSnapGrid(g)}
                   className={`px-1.5 h-7 text-[9px] font-mono transition-colors ${snapGrid === g ? '' : 'text-ds-text-mid hover:text-ds-text'}`}
-                  style={snapGrid === g ? { background: dsAlpha(DS_ACCENT, 0.18), color: 'var(--ds-brass-200)', boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.35)}` } : undefined}>
+                  style={snapGrid === g ? { background: dsAlpha(DS_ACCENT, 0.18), color: 'var(--ds-metal-200)', boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.35)}` } : undefined}>
                   {g}
                 </button>
               ))}
@@ -337,7 +337,7 @@ function KeyframeBody(props: {
                 onChange={(e) => setPlayhead(parseFloat(e.target.value))}
                 className="absolute inset-0 w-full opacity-0 cursor-pointer z-10" aria-label="Playhead" />
               <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-1 rounded-full" style={{ background: WELL_BG, boxShadow: 'inset 0 1px 2px rgba(0, 0, 0, 0.6)' }}>
-                <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${playhead * 100}%`, background: 'var(--ds-grad-brass)', boxShadow: `0 0 8px ${dsAlpha(DS_ACCENT, 0.35)}` }} />
+                <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${playhead * 100}%`, background: 'var(--ds-grad-metal)', boxShadow: `0 0 8px ${dsAlpha(DS_ACCENT, 0.35)}` }} />
               </div>
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
                 {Array.from({ length: 31 }).map((_, i) => (
@@ -345,7 +345,7 @@ function KeyframeBody(props: {
                 ))}
               </div>
               <div className="absolute top-0 bottom-0 w-3 -translate-x-1/2 flex justify-center pointer-events-none" style={{ left: `${playhead * 100}%` }}>
-                <span className="w-3 h-3 mt-0.5 rotate-45 rounded-[3px]" style={{ background: 'var(--ds-grad-brass)', boxShadow: `0 1px 3px rgba(0, 0, 0, 0.6), var(--ds-glow-brass)` }} />
+                <span className="w-3 h-3 mt-0.5 rotate-45 rounded-[3px]" style={{ background: 'var(--ds-grad-metal)', boxShadow: `0 1px 3px rgba(0, 0, 0, 0.6), var(--ds-glow-arc)` }} />
               </div>
             </div>
             <span className="text-[9px] font-mono tabular-nums w-8" style={{ color: 'var(--ds-text-mid)' }}>3.00s</span>
@@ -403,7 +403,7 @@ function KeyframeLane({ lane, playhead, empty, onSeek, onAddKey, canAdd }: {
             }}
           />
         ))}
-        <span className="absolute top-0 bottom-0 w-px pointer-events-none" style={{ left: `${6 + playhead * 88}%`, background: dsAlpha(DS.brass300, 0.65), boxShadow: `0 0 5px ${dsAlpha(DS_ACCENT, 0.45)}` }} />
+        <span className="absolute top-0 bottom-0 w-px pointer-events-none" style={{ left: `${6 + playhead * 88}%`, background: dsAlpha(DS.metal300, 0.65), boxShadow: `0 0 5px ${dsAlpha(DS_ACCENT, 0.45)}` }} />
       </div>
       <button type="button" onClick={onAddKey} disabled={!canAdd} title="Capture keyframe at playhead"
         className="w-6 h-6 rounded-ds-xs ds-press hover:brightness-[1.2] transition-all flex items-center justify-center disabled:opacity-40"

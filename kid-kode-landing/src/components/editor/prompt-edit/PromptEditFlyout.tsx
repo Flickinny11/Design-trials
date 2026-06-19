@@ -8,7 +8,7 @@
 // otherwise — A6) returns a structured PLAN with the PREMIUM library visibly
 // considered first (A3). "Apply to canvas" routes design+animation → the canvas
 // additive fields and function/integration → the node-editor tabs (A4), then
-// persists (round-trip). Design system: Observatory-Brass, no purple, Icon only.
+// persists (round-trip). Design system: Chrome-Arc, no purple, Icon only.
 
 import { Icon } from '@/components/editor/icons/Icon';
 import { usePromptEdit } from './usePromptEdit';
@@ -41,7 +41,7 @@ export default function PromptEditFlyout({ onToast }: { onToast?: (m: string) =>
     <div data-component="prompt-edit-flyout" className="flex flex-col gap-2.5 w-[270px]" style={{ color: 'var(--ds-text)' }}>
       {/* Header */}
       <div className="flex items-center gap-2">
-        <Icon name="zap" size={13} color="var(--ds-brass-300)" glow />
+        <Icon name="zap" size={13} color="var(--ds-metal-300)" glow />
         <div className="flex flex-col">
           <span className="text-[11px] font-mono tracking-[0.04em]" style={{ color: 'var(--ds-text-hi)' }}>Prompt Edit</span>
           <span className="text-[8px] font-mono tracking-[0.14em] uppercase" style={{ color: 'var(--ds-text-low)' }}>{selLabel}</span>
@@ -82,7 +82,7 @@ export default function PromptEditFlyout({ onToast }: { onToast?: (m: string) =>
         disabled={busy || !prompt.trim()}
         onClick={generate}
         className="flex items-center justify-center gap-1.5 rounded-[5px] px-2 py-1.5 text-[10px] font-mono tracking-[0.04em] disabled:opacity-40 transition-opacity"
-        style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg, #b9914f, #8c6a32))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,250,235,0.25)' }}
+        style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg, #dfe2e6, #898c92))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,248,252,0.25)' }}
       >
         <Icon name={busy ? 'refresh' : 'sparkle'} size={11} color="var(--ds-text-hi)" />
         {busy ? 'Planning…' : 'Generate plan'}
@@ -105,10 +105,10 @@ export default function PromptEditFlyout({ onToast }: { onToast?: (m: string) =>
 
           {/* Library considered (A3 proof) */}
           <div className="ds-well rounded-[5px] px-2 py-1.5 flex flex-col gap-1" style={{ background: 'var(--ds-grad-well)', boxShadow: 'var(--ds-chamfer-soft, inset 0 1px 2px rgba(0,0,0,0.4))' }} data-role="library-considered" data-premium-first={String(plan.libraryConsidered.premiumFirst)}>
-            <span className="text-[7.5px] font-mono tracking-[0.14em] uppercase" style={{ color: 'var(--ds-brass-300)' }}>Premium library considered</span>
+            <span className="text-[7.5px] font-mono tracking-[0.14em] uppercase" style={{ color: 'var(--ds-metal-300)' }}>Premium library considered</span>
             <div className="flex flex-wrap gap-1">
               {plan.libraryConsidered.designReferences && (
-                <span className="text-[8px] font-mono px-1 py-0.5 rounded" style={{ color: 'var(--ds-text-low)', background: 'rgba(255,255,255,0.05)' }}>Observatory-Brass</span>
+                <span className="text-[8px] font-mono px-1 py-0.5 rounded" style={{ color: 'var(--ds-text-low)', background: 'rgba(255,255,255,0.05)' }}>Chrome-Arc</span>
               )}
               {[...plan.libraryConsidered.primitiveIds, ...plan.libraryConsidered.elementIds].slice(0, 6).map((id) => (
                 <span key={id} className="text-[8px] font-mono px-1 py-0.5 rounded" style={{ color: 'var(--ds-text-low)', background: 'rgba(255,255,255,0.05)' }}>{id}</span>
@@ -137,7 +137,7 @@ export default function PromptEditFlyout({ onToast }: { onToast?: (m: string) =>
             disabled={busy}
             onClick={apply}
             className="flex items-center justify-center gap-1.5 rounded-[5px] px-2 py-1.5 text-[10px] font-mono tracking-[0.04em] disabled:opacity-40"
-            style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg, #b9914f, #8c6a32))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,250,235,0.25)' }}
+            style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg, #dfe2e6, #898c92))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,248,252,0.25)' }}
           >
             <Icon name="check" size={11} color="var(--ds-text-hi)" />
             Apply to canvas
@@ -148,7 +148,7 @@ export default function PromptEditFlyout({ onToast }: { onToast?: (m: string) =>
               <span className="text-[8.5px] font-mono" style={{ color: 'var(--ds-text)' }}>✓ {report.applied} applied · {report.advisory} suggestion{report.advisory === 1 ? '' : 's'}</span>
               {report.followUps.map((f, i) => (
                 <div key={i} className="text-[8px] font-mono px-1.5 py-0.5 rounded flex items-center gap-1" style={{ color: 'var(--ds-text-low)', background: 'rgba(255,255,255,0.04)' }}>
-                  <Icon name="arrowRight" size={8} color="var(--ds-brass-300)" />{f.message}
+                  <Icon name="arrowRight" size={8} color="var(--ds-metal-300)" />{f.message}
                 </div>
               ))}
             </div>

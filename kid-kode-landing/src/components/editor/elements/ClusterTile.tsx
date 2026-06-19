@@ -7,7 +7,7 @@
 // grid never exhausts GL contexts. A tile freezes at a representative mid-frame
 // until hovered/focused, then plays its INTEGRATED animation.
 //
-// Chrome: Observatory Brass design system. The preview region stays visually
+// Chrome: Chrome-Arc design system. The preview region stays visually
 // TRANSPARENT (the GPU canvas sits behind the page); the material treatment
 // lives on the bezel ring + caption plate around the window — a machined
 // instrument bezel, not a solid card. Hover = lift only (ds-lift); no tilt
@@ -71,7 +71,7 @@ export default function ClusterTile({
     if (el) clusterRig.setPlaying(el, next);
   };
 
-  const tint = DS_CATEGORY_TINTS[def.category] ?? DS.brass300;
+  const tint = DS_CATEGORY_TINTS[def.category] ?? DS.metal300;
 
   return (
     <button
@@ -128,7 +128,7 @@ export default function ClusterTile({
           <span
             aria-hidden
             className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full"
-            style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
+            style={{ background: 'var(--ds-grad-metal)', boxShadow: 'var(--ds-glow-arc)' }}
           />
         )}
         {/* Drag affordance hint — appears on hover. Plain language. */}

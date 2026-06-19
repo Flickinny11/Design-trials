@@ -432,7 +432,7 @@ export default function Inspector() {
             const cfg = {
               failed: { label: 'Build failed', cls: 'text-ds-danger', title: builtSnap?.reason ? `Build failed: ${builtSnap.reason}` : 'Artifact failed to build' },
               dirty: { label: 'Dirty — rebuild', cls: 'text-ds-warn', title: 'Edited since last build — Save & Rebuild to refresh the artifact' },
-              repaired: { label: 'Repaired', cls: 'ds-chip--brass', title: builtSnap?.repairStrategy ? `Caption-driven repair: ${builtSnap.repairStrategy}` : 'Recovered by caption-driven repair' },
+              repaired: { label: 'Repaired', cls: 'ds-chip--metal', title: builtSnap?.repairStrategy ? `Caption-driven repair: ${builtSnap.repairStrategy}` : 'Recovered by caption-driven repair' },
               built: { label: 'Built', cls: 'ds-chip--ok', title: builtSnap?.hash ? `Built · snapshot ${builtSnap.hash}` : 'Artifact built and verified' },
             }[status];
             return (
@@ -589,10 +589,10 @@ export default function Inspector() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`ds-chip ds-press cursor-pointer whitespace-nowrap min-h-[40px] px-3 gap-1.5 ${
-                active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                active ? 'ds-chip--metal' : 'hover:text-ds-text'
               }`}
             >
-              <Icon name={t.icon} size={11} color={active ? DS.brass400 : DS.textMid} glow={active} />
+              <Icon name={t.icon} size={11} color={active ? DS.metal400 : DS.textMid} glow={active} />
               {t.label}
             </button>
           );
@@ -651,7 +651,7 @@ export default function Inspector() {
       // and slid UNDER the 56px top bar, so its header collided with the bar's
       // Add Node / Search cluster. Drop it to clear the bar (top-[64px]) with a
       // touch more width so the header tabs breathe (cramped flag).
-      className="absolute z-40 right-0 top-14 bottom-0 left-16 md:left-auto md:w-[484px] md:right-3 md:top-[64px] md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      className="absolute z-40 right-0 top-14 bottom-0 left-16 md:left-auto md:w-[484px] md:right-3 md:top-[64px] md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--metal ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {inner}
     </div>
@@ -819,7 +819,7 @@ function VisualTab({ node, frozen, sourceNode }: { node: any; frozen: boolean; s
             <span className="text-[12px] text-ds-text truncate max-w-[60%]">"{t.text}"</span>
             <div className="flex gap-1.5 text-[9px] font-mono">
               <span className="text-ds-text-low">{t.role}</span>
-              <span className="text-ds-brass-300">{t.renderMethod}</span>
+              <span className="text-ds-metal-300">{t.renderMethod}</span>
             </div>
           </div>
         ))}
@@ -854,7 +854,7 @@ function BehaviorTab({ node }: { node: any }) {
           node.interactions.map((i: any, idx: number) => (
             <div key={idx} className="px-3 py-2.5 ds-well rounded-ds-md">
               <div className="flex items-center gap-1.5 text-[11px]">
-                <span className="ds-chip ds-chip--brass">{i.event}</span>
+                <span className="ds-chip ds-chip--metal">{i.event}</span>
                 <Icon name="chevron" size={9} color={DS.textLow} />
                 <span className="text-ds-text-mid font-mono text-[11px]">{i.action}</span>
                 <Icon name="chevron" size={9} color={DS.textLow} />
@@ -868,7 +868,7 @@ function BehaviorTab({ node }: { node: any }) {
       <div className="ds-kicker pt-3">STATE MANAGEMENT</div>
       <div className="px-3 py-2.5 ds-well rounded-ds-md">
         <div className="text-[11px] text-ds-text-mid">
-          Store: <span className="font-mono text-ds-brass-300">{node.id.replace(/-/g, '')}Store</span>
+          Store: <span className="font-mono text-ds-metal-300">{node.id.replace(/-/g, '')}Store</span>
         </div>
         <div className="text-[10px] text-ds-text-low mt-1">{node.stateCount} state key{node.stateCount !== 1 ? 's' : ''} tracked</div>
       </div>
@@ -1146,7 +1146,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
             className="ds-btn ds-btn--ghost !px-0 w-9 h-9 !rounded-full"
             title={playing ? 'Pause' : 'Play animation'}
           >
-            <Icon name={playing ? 'pause' : 'play'} size={14} color={DS.brass300} glow />
+            <Icon name={playing ? 'pause' : 'play'} size={14} color={DS.metal300} glow />
           </button>
         </div>
       </div>
@@ -1220,7 +1220,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
               onClick={() => setActiveFrame(i)}
               className={`flex-shrink-0 w-12 h-12 rounded-ds-sm border-2 transition-all flex items-center justify-center text-[10px] font-mono ${
                 i === activeFrame
-                  ? 'border-ds-brass-400 shadow-[var(--ds-glow-brass-strong)]'
+                  ? 'border-ds-metal-400 shadow-[var(--ds-glow-arc-strong)]'
                   : 'border-white/10 hover:border-white/30'
               }`}
               style={{
@@ -1287,7 +1287,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
                   disabled={frozen}
                   onClick={() => setCoordinateSpace(node.id, space)}
                   className={`ds-chip ds-press cursor-pointer min-h-[40px] px-2.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                    active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                    active ? 'ds-chip--metal' : 'hover:text-ds-text'
                   }`}
                 >
                   {space}
@@ -1316,7 +1316,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
                   disabled={frozen}
                   onClick={() => setTrigger(node.id, trigger)}
                   className={`ds-chip ds-press cursor-pointer min-h-[40px] px-2.5 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
-                    active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                    active ? 'ds-chip--metal' : 'hover:text-ds-text'
                   }`}
                 >
                   {trigger}
@@ -1349,10 +1349,10 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
             {persistedKeyframes.map((kf, i) => (
               <div
                 key={i}
-                className="ds-chip ds-chip--brass gap-1.5"
+                className="ds-chip ds-chip--metal gap-1.5"
                 title={`coordinateSpace=${kf.coordinateSpace}${kf.trigger ? `, trigger=${kf.trigger}` : ''}`}
               >
-                <span className="text-ds-brass-200">#{i + 1}</span>
+                <span className="text-ds-metal-200">#{i + 1}</span>
                 <span>{kf.coordinateSpace}</span>
                 {kf.trigger && (
                   <span className="text-ds-ice-300">· {kf.trigger}</span>
@@ -1386,7 +1386,7 @@ function AnimationTab({ node, frozen }: { node: any; frozen: boolean }) {
           disabled={frozen || !sourceNode}
           className="ds-btn ds-btn--ghost flex-1 h-9 text-[11px] whitespace-nowrap"
         >
-          <Icon name="save" size={11} color={DS.brass300} />
+          <Icon name="save" size={11} color={DS.metal300} />
           Save as keyframe
         </button>
         <button
@@ -1462,7 +1462,7 @@ function AnimationLibrarySection() {
               data-methodology={m}
               onClick={() => setMethodology(m)}
               className={`ds-chip ds-press cursor-pointer flex-1 justify-center min-h-[40px] transition-colors ${
-                active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                active ? 'ds-chip--metal' : 'hover:text-ds-text'
               }`}
             >
               {m}
@@ -1510,7 +1510,7 @@ function PropSlider({
     <div>
       <div className="flex items-baseline justify-between mb-1">
         <span className="ds-label">{label}</span>
-        <span className="text-[10px] font-mono tabular-nums text-ds-brass-300">{fmt ? fmt(value) : value}</span>
+        <span className="text-[10px] font-mono tabular-nums text-ds-metal-300">{fmt ? fmt(value) : value}</span>
       </div>
       <input
         type="range"
@@ -1555,7 +1555,7 @@ function ConnectionsTab({ node, graph, flyToNode }: { node: any; graph: EditorGr
   // Edge-type tints from the DS palette — brass family + ice/status only,
   // mirroring DS_CATEGORY_TINTS. Retired hues are gone.
   const edgeColor = (t: string) =>
-    ({ contains: DS.textMid, 'navigates-to': DS.ice300, triggers: DS.warn, 'data-flow': DS.ok, 'shares-state': DS.brass300, 'depends-on': DS.textLow }[t] || DS.textMid);
+    ({ contains: DS.textMid, 'navigates-to': DS.ice300, triggers: DS.warn, 'data-flow': DS.ok, 'shares-state': DS.metal300, 'depends-on': DS.textLow }[t] || DS.textMid);
 
   return (
     <div className="p-5 space-y-4">
@@ -1613,7 +1613,7 @@ function ConnectionsTab({ node, graph, flyToNode }: { node: any; graph: EditorGr
 
       <div className="pt-3 border-t border-white/5">
         <div className="ds-kicker mb-2 flex items-center gap-1">
-          <Icon name="flow" size={10} color={DS.brass400} />
+          <Icon name="flow" size={10} color={DS.metal400} />
           FLOW NAVIGATOR
         </div>
         <div className="ds-body text-[12px] text-ds-text-mid italic">
@@ -1638,9 +1638,9 @@ function BackendTab({ node }: { node: any }) {
     <div className="p-5 space-y-3">
       <div className="ds-kicker">ASSOCIATED BACKEND</div>
       {/* Backend contract plate — ceramic card with a brass-fitted edge. */}
-      <div className="p-3 ds-ceramic ds-edge--brass rounded-ds-lg">
+      <div className="p-3 ds-ceramic ds-edge--metal rounded-ds-lg">
         <div className="flex items-center gap-2 mb-2">
-          <Icon name="server" size={13} color={DS.brass400} glow />
+          <Icon name="server" size={13} color={DS.metal400} glow />
           <div className="text-[12px] font-semibold text-ds-text-hi">{bc.service}</div>
         </div>
         <div className="space-y-2">
@@ -1728,7 +1728,7 @@ function WorldInspectorPanel({
           <div className="ds-kicker flex items-center gap-1.5">
             <span>INSPECTOR</span>
             <Icon name="chevron" size={9} color={DS.textLow} />
-            <span className="text-ds-brass-300">App_Name_World</span>
+            <span className="text-ds-metal-300">App_Name_World</span>
           </div>
           <div className="font-display font-bold text-ds-text-hi text-lg leading-tight flex items-center gap-2">
             {(root.spec?.name as string) || root.appNameWorldId}
@@ -1751,10 +1751,10 @@ function WorldInspectorPanel({
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`ds-chip ds-press cursor-pointer whitespace-nowrap min-h-[40px] px-3 gap-1.5 ${
-                active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                active ? 'ds-chip--metal' : 'hover:text-ds-text'
               }`}
             >
-              <Icon name={t.icon} size={11} color={active ? DS.brass400 : DS.textMid} glow={active} />
+              <Icon name={t.icon} size={11} color={active ? DS.metal400 : DS.textMid} glow={active} />
               {t.label}
             </button>
           );
@@ -1766,7 +1766,7 @@ function WorldInspectorPanel({
           <WorldTab root={root} updateRootNode={updateRootNode} />
         ) : (
           <div className="ds-body p-5 text-center text-ds-text-low text-[12px] italic">
-            The <span className="text-ds-text-mid font-mono">{tab}</span> tab surfaces component-node data. App_Name_World holds app-level state — switch to <span className="text-ds-brass-300 font-mono">World</span> for the D1 fields.
+            The <span className="text-ds-text-mid font-mono">{tab}</span> tab surfaces component-node data. App_Name_World holds app-level state — switch to <span className="text-ds-metal-300 font-mono">World</span> for the D1 fields.
           </div>
         )}
       </div>
@@ -1786,7 +1786,7 @@ function WorldInspectorPanel({
     // mounts at a time, so the refract/backdrop budget is unchanged).
     <div
       ref={worldSlab.ref}
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--metal ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
       data-role="world-inspector"
     >
       {inner}
@@ -1860,7 +1860,7 @@ function WorldTab({
     <div className="p-5 space-y-4">
       <div className="ds-kicker">APP_NAME_WORLD · D1</div>
       <div className="ds-body text-[12px] text-ds-text-mid">
-        The root-node fields below are real graph data per RA-01/D1. Edits write back through <span className="font-mono text-ds-brass-300">useGraphSourceStore.updateRootNode</span>.
+        The root-node fields below are real graph data per RA-01/D1. Edits write back through <span className="font-mono text-ds-metal-300">useGraphSourceStore.updateRootNode</span>.
       </div>
 
       {D1_FIELD_KEYS.map((field) => {
@@ -2065,7 +2065,7 @@ function HistoryTab({ node }: { node: EditorNode }) {
                 key={i}
                 className="px-3 py-2 ds-well rounded-ds-md flex items-center gap-2 text-[11px]"
               >
-                <span className="ds-chip ds-chip--brass">{e.kind}</span>
+                <span className="ds-chip ds-chip--metal">{e.kind}</span>
                 <span className="text-ds-text font-mono truncate">{e.detail}</span>
               </li>
             ))}
@@ -2193,7 +2193,7 @@ function GroupInspector({
     <div
       ref={groupSlab.ref}
       data-role="group-inspector"
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-edge--metal ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {inner}
     </div>

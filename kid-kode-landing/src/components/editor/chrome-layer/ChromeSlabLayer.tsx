@@ -65,7 +65,7 @@ const STYLE_ID: Record<string, number> = { glass: 0, metal: 1, ceramic: 2, well:
 function nebulaBackgroundNode() {
   const { vec2, vec3, vec4, smoothstep, length, screenUV } = tsl;
   const uvn = vec2(screenUV.x, screenUV.y.oneMinus()); // CSS top-left coords
-  const brass = new THREE.Color(DS.brass500);
+  const metal = new THREE.Color(DS.metal500);
   const ice = new THREE.Color(DS.ice500);
   const voidC = new THREE.Color(DS.void);
   const d1 = length(uvn.sub(vec2(0.2, 0.2)).div(vec2(0.7, 0.6)));
@@ -73,7 +73,7 @@ function nebulaBackgroundNode() {
   const g1 = smoothstep(0.55, 0.0, d1).mul(0.12);
   const g2 = smoothstep(0.55, 0.0, d2).mul(0.1);
   const col = vec3(voidC.r, voidC.g, voidC.b)
-    .add(vec3(brass.r, brass.g, brass.b).mul(g1))
+    .add(vec3(metal.r, metal.g, metal.b).mul(g1))
     .add(vec3(ice.r, ice.g, ice.b).mul(g2));
   return vec4(col, 1.0);
 }
@@ -120,7 +120,7 @@ export function ChromeSlabLayer() {
     // (a bright key washed ceramic cards to white at canvas zoom) — slabs
     // are lit ONLY by the pointer light + the scene environment (IBL stays
     // reactive to the active hub, which is the desired behavior).
-    const light = new THREE.PointLight(dsHexNumber(DS.brass100), 0, 1.6, 2);
+    const light = new THREE.PointLight(dsHexNumber(DS.metal100), 0, 1.6, 2);
     light.name = 'chrome-pointer-light';
     const chromeLights = tsl.lights([light]);
 
@@ -242,7 +242,7 @@ export function ChromeSlabLayer() {
       e.pressK += (e.press - e.pressK) * damp;
       bufs.aState.setXYZW(i, e.opts.borderPx ?? 1, e.opts.accent ?? 0, e.hoverK, e.pressK);
       // aMisc.w (the reserved slot) carries the EDITOR-EXP P2 hero amount: 0 for
-      // a normal flat slab, ~1 for a raised/extruded brass key (heroDepthPx
+      // a normal flat slab, ~1 for a raised/extruded metal key (heroDepthPx
       // normalized). The opaque shader reads it to grow the bevel into a thick
       // chamfered side + lit top cap + shaded base.
       const heroAmt = e.opts.hero ? Math.min(1, (e.opts.heroDepthPx ?? 10) / 12) : 0;

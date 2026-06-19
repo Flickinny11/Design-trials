@@ -1,6 +1,6 @@
 'use client';
 
-// HubNav — bottom-center hub rail. Chrome: Observatory Brass — a machined
+// HubNav — bottom-center hub rail. Chrome: Chrome-Arc — a machined
 // brushed-metal rail (ds-metal ds-grain ds-edge) whose active slot is a soft
 // brass wash with an inset brass keyline and a glowing brass pip. Hub glyph
 // tints stay data-driven (hub.color); the chrome accent is brass only.
@@ -16,9 +16,9 @@ import { DS, dsAlpha } from '@/components/editor/design-system';
 
 // Active slot — recessed brass-washed seat in the machined rail.
 const ACTIVE_SLOT: React.CSSProperties = {
-  background: 'var(--ds-grad-brass-soft)',
+  background: 'var(--ds-grad-metal-soft)',
   boxShadow:
-    'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.2), var(--ds-glow-brass)',
+    'inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.2), var(--ds-glow-arc)',
 };
 
 // Rail pill — one machined key seated in the rail. Extracted so each pill can
@@ -39,7 +39,7 @@ function RailPill({
       ref={slab.ref}
       onClick={onClick}
       className={`ds-press px-3.5 h-9 rounded-full text-[12px] font-ui font-semibold tracking-tight transition-colors flex items-center gap-1.5 ${
-        active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
+        active ? 'text-ds-metal-200' : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
       }`}
       style={active ? ACTIVE_SLOT : undefined}
     >
@@ -57,8 +57,8 @@ function Pip({ active }: { active: boolean }) {
       style={
         active
           ? {
-              background: 'var(--ds-grad-brass)',
-              boxShadow: `0 0 6px ${dsAlpha(DS.brass400, 0.7)}, inset 0 -1px 1px rgba(0,0,0,0.4)`,
+              background: 'var(--ds-grad-metal)',
+              boxShadow: `0 0 6px ${dsAlpha(DS.metal400, 0.7)}, inset 0 -1px 1px rgba(0,0,0,0.4)`,
             }
           : {
               background: dsAlpha(DS.textLow, 0.3),
@@ -108,7 +108,7 @@ export default function HubNav() {
       >
         <RailPill active={activeHubId === null} onClick={resetCamera}>
           <Pip active={activeHubId === null} />
-          <Icon name="compass" size={12} color={activeHubId === null ? DS.brass300 : DS.textMid} />
+          <Icon name="compass" size={12} color={activeHubId === null ? DS.metal300 : DS.textMid} />
           Galaxy
         </RailPill>
 
@@ -123,7 +123,7 @@ export default function HubNav() {
               {/* On-system glyph tint (brass active / bone idle) — raw
                   hub.color (#5d8bff-family) read as forbidden dashboard
                   blue in chrome (Wave-3 advocate MUST-FIX). */}
-              <Icon name={hub.glyph} size={12} color={active ? DS.brass300 : DS.textMid} glow={active} />
+              <Icon name={hub.glyph} size={12} color={active ? DS.metal300 : DS.textMid} glow={active} />
               {hub.name}
               <span className="text-[10px] font-mono tabular-nums opacity-50">{nodeCount}</span>
             </RailPill>

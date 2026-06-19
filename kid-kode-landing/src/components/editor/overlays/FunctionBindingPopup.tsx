@@ -114,19 +114,19 @@ export default function FunctionBindingPopup() {
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center" role="dialog" aria-modal="true" aria-label="Function binding">
       <div className="absolute inset-0" style={{ background: 'rgba(4,5,10,0.66)', backdropFilter: 'blur(3px)' }} onClick={close} />
-      <div ref={panelSlab.ref} className="ds-glass ds-glass--refract ds-edge--brass ds-reveal relative w-[min(680px,94vw)] max-h-[86vh] overflow-y-auto scrollbar-hide rounded-ds-lg p-5">
+      <div ref={panelSlab.ref} className="ds-glass ds-glass--refract ds-edge--metal ds-reveal relative w-[min(680px,94vw)] max-h-[86vh] overflow-y-auto scrollbar-hide rounded-ds-lg p-5">
         {/* header */}
         <div className="flex items-start justify-between mb-1">
           <div>
             <div className="text-[9px] font-mono tracking-[0.18em]" style={{ color: 'var(--ds-text-mid)' }}>FUNCTION · ON CLICK</div>
             <div className="text-[15px] font-ui font-semibold mt-0.5" style={{ color: 'var(--ds-text)' }}>{nodeCaption(node)}</div>
           </div>
-          <button type="button" onClick={close} aria-label="Close" className="ds-press grid place-items-center w-8 h-8 rounded-full" style={{ border: '1px solid rgba(var(--ds-brass-200-rgb),0.22)' }}>
+          <button type="button" onClick={close} aria-label="Close" className="ds-press grid place-items-center w-8 h-8 rounded-full" style={{ border: '1px solid rgba(var(--ds-metal-200-rgb),0.22)' }}>
             <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden><line x1="2.5" y1="2.5" x2="9.5" y2="9.5" stroke="var(--ds-text-mid)" strokeWidth="1.4" strokeLinecap="round" /><line x1="9.5" y1="2.5" x2="2.5" y2="9.5" stroke="var(--ds-text-mid)" strokeWidth="1.4" strokeLinecap="round" /></svg>
           </button>
         </div>
         {current && (
-          <div className="text-[10px] font-mono mb-3" style={{ color: 'var(--ds-brass-200)' }}>
+          <div className="text-[10px] font-mono mb-3" style={{ color: 'var(--ds-metal-200)' }}>
             Bound: {current.kind === 'navigate' ? `navigate → ${hubs.find((h) => h.hubId === current.hubId)?.title ?? current.hubId}` : `overlay → ${nodes.find((n) => n.nodeId === current.elementId)?.overlaySpec?.title ?? current.elementId}`}
             <button type="button" onClick={clearBinding} className="ds-press ml-2 underline" style={{ color: 'var(--ds-text-mid)' }}>clear</button>
           </div>
@@ -140,14 +140,14 @@ export default function FunctionBindingPopup() {
             return (
               <button key={hub.hubId} type="button" onClick={() => bindNavigate(hub.hubId)} title={hub.title}
                 className="ds-press relative h-16 rounded-ds-sm overflow-hidden flex flex-col justify-end p-2 text-left"
-                style={{ background: hub.layout?.backgroundColor || '#0b0d13', border: active ? '1.5px solid var(--ds-brass-200)' : '1px solid rgba(var(--ds-brass-200-rgb),0.18)' }}>
-                <span className="absolute top-1.5 left-2 text-[8px] font-mono opacity-60" style={{ color: 'var(--ds-brass-200)' }}>{String(i + 1).padStart(2, '0')}</span>
+                style={{ background: hub.layout?.backgroundColor || '#0b0d13', border: active ? '1.5px solid var(--ds-metal-200)' : '1px solid rgba(var(--ds-metal-200-rgb),0.18)' }}>
+                <span className="absolute top-1.5 left-2 text-[8px] font-mono opacity-60" style={{ color: 'var(--ds-metal-200)' }}>{String(i + 1).padStart(2, '0')}</span>
                 <span className="text-[10px] font-ui font-medium leading-tight" style={{ color: 'var(--ds-text)' }}>{hub.title || hub.hubId}</span>
               </button>
             );
           })}
-          <button type="button" onClick={newHub} className="ds-press h-16 rounded-ds-sm flex flex-col items-center justify-center gap-1" style={{ border: '1px dashed rgba(var(--ds-brass-200-rgb),0.3)' }}>
-            <span className="text-[16px] leading-none" style={{ color: 'var(--ds-brass-200)' }}>+</span>
+          <button type="button" onClick={newHub} className="ds-press h-16 rounded-ds-sm flex flex-col items-center justify-center gap-1" style={{ border: '1px dashed rgba(var(--ds-metal-200-rgb),0.3)' }}>
+            <span className="text-[16px] leading-none" style={{ color: 'var(--ds-metal-200)' }}>+</span>
             <span className="text-[8.5px] font-ui" style={{ color: 'var(--ds-text-mid)' }}>New hub</span>
           </button>
         </div>
@@ -160,14 +160,14 @@ export default function FunctionBindingPopup() {
             return (
               <button key={g.nodeId} type="button" onClick={() => setOverlayTarget(g.nodeId)} title={g.overlaySpec?.title || g.nodeId}
                 className="ds-press relative h-16 rounded-ds-sm overflow-hidden flex flex-col justify-end p-2 text-left ds-glass"
-                style={{ border: active ? '1.5px solid var(--ds-brass-200)' : '1px solid rgba(var(--ds-brass-200-rgb),0.18)' }}>
-                <span className="absolute top-1.5 left-2 text-[8px] font-mono" style={{ color: 'var(--ds-brass-200)' }}>◈</span>
+                style={{ border: active ? '1.5px solid var(--ds-metal-200)' : '1px solid rgba(var(--ds-metal-200-rgb),0.18)' }}>
+                <span className="absolute top-1.5 left-2 text-[8px] font-mono" style={{ color: 'var(--ds-metal-200)' }}>◈</span>
                 <span className="text-[10px] font-ui font-medium leading-tight" style={{ color: 'var(--ds-text)' }}>{g.overlaySpec?.title || 'Element'}</span>
               </button>
             );
           })}
-          <button type="button" onClick={newGlobalElement} className="ds-press h-16 rounded-ds-sm flex flex-col items-center justify-center gap-1" style={{ border: '1px dashed rgba(var(--ds-brass-200-rgb),0.3)' }}>
-            <span className="text-[16px] leading-none" style={{ color: 'var(--ds-brass-200)' }}>+</span>
+          <button type="button" onClick={newGlobalElement} className="ds-press h-16 rounded-ds-sm flex flex-col items-center justify-center gap-1" style={{ border: '1px dashed rgba(var(--ds-metal-200-rgb),0.3)' }}>
+            <span className="text-[16px] leading-none" style={{ color: 'var(--ds-metal-200)' }}>+</span>
             <span className="text-[8.5px] font-ui text-center" style={{ color: 'var(--ds-text-mid)' }}>New global<br />element</span>
           </button>
         </div>
@@ -180,7 +180,7 @@ export default function FunctionBindingPopup() {
               <div className="flex gap-1.5">
                 {SIZE_PRESETS.map((s) => (
                   <button key={s.id} type="button" onClick={() => setSizeId(s.id)} className="ds-press px-2.5 h-7 rounded-ds-xs text-[10px] font-ui"
-                    style={{ background: sizeId === s.id ? 'var(--ds-grad-brass)' : 'transparent', color: sizeId === s.id ? '#2a1f12' : 'var(--ds-text-mid)', border: '1px solid rgba(var(--ds-brass-200-rgb),0.22)' }}>{s.label}</button>
+                    style={{ background: sizeId === s.id ? 'var(--ds-grad-metal)' : 'transparent', color: sizeId === s.id ? '#0d1117' : 'var(--ds-text-mid)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.22)' }}>{s.label}</button>
                 ))}
               </div>
             </div>
@@ -190,12 +190,12 @@ export default function FunctionBindingPopup() {
                 {ANCHORS.flat().map((a, i) => {
                   const active = Math.abs(a.x - anchor.x) < 0.01 && Math.abs(a.y - anchor.y) < 0.01;
                   return <button key={i} type="button" onClick={() => setAnchor(a)} aria-label={`Position ${i + 1}`} className="ds-press w-6 h-6 rounded-ds-xs grid place-items-center"
-                    style={{ border: '1px solid rgba(var(--ds-brass-200-rgb),0.22)', background: active ? 'rgba(var(--ds-brass-200-rgb),0.18)' : 'transparent' }}>
-                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: active ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }} /></button>;
+                    style={{ border: '1px solid rgba(var(--ds-metal-200-rgb),0.22)', background: active ? 'rgba(var(--ds-metal-200-rgb),0.18)' : 'transparent' }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: active ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }} /></button>;
                 })}
               </div>
             </div>
-            <button type="button" onClick={commitOverlay} className="ds-press h-8 rounded-ds-sm text-[11px] font-ui font-semibold mt-0.5" style={{ background: 'var(--ds-grad-brass)', color: '#2a1f12' }}>
+            <button type="button" onClick={commitOverlay} className="ds-press h-8 rounded-ds-sm text-[11px] font-ui font-semibold mt-0.5" style={{ background: 'var(--ds-grad-metal)', color: '#0d1117' }}>
               Bind overlay on click
             </button>
           </div>

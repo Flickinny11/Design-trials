@@ -265,7 +265,7 @@ export default function TextToolsFlyout({
             <span className="flex-1 text-[10px] font-mono truncate" style={{ color: 'var(--ds-text)' }}>
               {node?.intent?.caption?.split(' · ')[0] || node?.subtype || node?.nodeId}
             </span>
-            <span className="ds-chip ds-chip--brass">TEXT</span>
+            <span className="ds-chip ds-chip--metal">TEXT</span>
           </div>
 
           {/* Content — auto-grows to show the whole headline (C23); scrolls
@@ -341,7 +341,7 @@ export default function TextToolsFlyout({
                   label={lbl}
                   testId={`text-style-${k}`}
                   active={!!eff[k]}
-                  accent={DS.brass300}
+                  accent={DS.metal300}
                   onClick={() => toggleStyle(k)}
                 />
               ))}
@@ -366,7 +366,7 @@ export default function TextToolsFlyout({
             min={-0.1}
             max={0.5}
             step={0.005}
-            accent={DS.brass300}
+            accent={DS.metal300}
             onChange={(letterSpacing) => write({ letterSpacing })}
           />
           <FaderRow
@@ -376,7 +376,7 @@ export default function TextToolsFlyout({
             min={0.5}
             max={2.5}
             step={0.05}
-            accent={DS.brass300}
+            accent={DS.metal300}
             onChange={(lineHeight) => write({ lineHeight })}
           />
           <FaderRow
@@ -449,7 +449,7 @@ export default function TextToolsFlyout({
               <ChipKey
                 label="3D"
                 testId="text-3d-on"
-                accent={DS.brass300}
+                accent={DS.metal300}
                 active={is3D}
                 onClick={() => patchExtrude({ enabled: true })}
               />
@@ -464,7 +464,7 @@ export default function TextToolsFlyout({
                 min={0.04}
                 max={0.8}
                 step={0.01}
-                accent={DS.brass300}
+                accent={DS.metal300}
                 onChange={(depth) => patchExtrude({ depth })}
               />
               <div className="flex items-center gap-1.5">

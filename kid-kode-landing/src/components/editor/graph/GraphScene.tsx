@@ -121,7 +121,7 @@ import type { TextObjectHandle } from '@/lib/prism/text/contract';
 // factory's mesh branch (userData.meshPrimitiveHandle).
 import type { MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
 import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
-// Wave-2E Observatory Brass retint — all chrome accent colors (selection rings,
+// Wave-2E Chrome-Arc retint — all chrome accent colors (selection rings,
 // hover glows, edge tints, lighting fills, backdrop washes) come from the frozen
 // design-system tokens. No component-local hex; purple / electric-blue retired.
 import { DS, dsAlpha } from '@/components/editor/design-system';
@@ -176,11 +176,11 @@ export function __resetHubMockupTextureCache(): void {
 // Edge colors by type
 // ═══════════════════════════════════════════════════════════════════
 const EDGE_COLORS: Record<string, string> = {
-  contains: dsAlpha(DS.brass400, 0.45),
+  contains: dsAlpha(DS.metal400, 0.45),
   'navigates-to': DS.ice300,
   triggers: dsAlpha(DS.ok, 0.45),
   'data-flow': dsAlpha(DS.ok, 0.45),
-  'shares-state': DS.brass300,
+  'shares-state': DS.metal300,
   'depends-on': DS.neutral,
 };
 
@@ -292,8 +292,8 @@ function Edge({ link, revealOpacity = 1 }: { link: SimLink; revealOpacity?: numb
   // look is gone while the type still reads. `contains` keeps more of its dim
   // brass; peer edges blend harder off their bright hues.
   const color = useMemo(() => {
-    const base = new THREE.Color(EDGE_COLORS[link.type] || DS.brass400);
-    return base.lerp(new THREE.Color(DS.brass300), link.type === 'contains' ? 0.18 : 0.5);
+    const base = new THREE.Color(EDGE_COLORS[link.type] || DS.metal400);
+    return base.lerp(new THREE.Color(DS.metal300), link.type === 'contains' ? 0.18 : 0.5);
   }, [link.type]);
   // Softer, recessive opacity (was 0.28 / 0.62 → harsh). Nodes stay the heroes.
   const baseOpacity = link.type === 'contains' ? 0.2 : 0.32;
@@ -394,8 +394,8 @@ function GalaxyHubTethers({
       // (esp. the bright `navigates-to` ice / `DS.textHi` fallback) reads as a
       // harsh bright-white seam across the galaxy. Blend each reason hue toward
       // brass and slim the core/halo tubes.
-      const tetherColor = new THREE.Color(EDGE_COLORS[tether.type] || DS.brass400)
-        .lerp(new THREE.Color(DS.brass300), 0.45);
+      const tetherColor = new THREE.Color(EDGE_COLORS[tether.type] || DS.metal400)
+        .lerp(new THREE.Color(DS.metal300), 0.45);
       out.push({
         id: tether.id,
         geo: new THREE.TubeGeometry(curve, 28, 0.3, 6, false),
@@ -692,7 +692,7 @@ function GlassNode({
   // Hub color
   const hubColor = useMemo(() => {
     const h = hubs.find((hub) => hub.id === node.hubIds[0]);
-    return h?.color || DS.brass400;
+    return h?.color || DS.metal400;
   }, [hubs, node.hubIds]);
 
   const statusColor =
@@ -846,7 +846,7 @@ function GlassNode({
       <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radius * 1.3, radius * 1.38, 80]} />
         <meshBasicMaterial
-          color={isSelected ? DS.brass200 : DS.ice300}
+          color={isSelected ? DS.metal200 : DS.ice300}
           transparent
           opacity={0}
           side={THREE.DoubleSide}
@@ -872,7 +872,7 @@ function GlassNode({
       {node.hasAnimation && (
         <mesh position={[-radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
-          <meshBasicMaterial color={DS.brass300} toneMapped={false} />
+          <meshBasicMaterial color={DS.metal300} toneMapped={false} />
         </mesh>
       )}
 
@@ -1029,7 +1029,7 @@ function HubHull({
               />
             </mesh>
           )}
-          {/* Hull chrome — Observatory Brass retint (Wave-3 advocate MUST-FIX):
+          {/* Hull chrome — Chrome-Arc retint (Wave-3 advocate MUST-FIX):
               the hull volume/wireframe/ring/light are editor scaffolding, so they
               read in the system's ice family rather than raw hub.color
               (#5d8bff-family registered as forbidden dashboard blue). Roles,
@@ -1132,8 +1132,8 @@ function WorldSun() {
       <mesh ref={coreRef}>
         <sphereGeometry args={[radius, 96, 96]} />
         <meshStandardMaterial
-          color={DS.brass200}
-          emissive={new THREE.Color(DS.brass300)}
+          color={DS.metal200}
+          emissive={new THREE.Color(DS.metal300)}
           emissiveIntensity={1.6}
           roughness={0.32}
           metalness={0.0}
@@ -1143,14 +1143,14 @@ function WorldSun() {
       <mesh ref={haloRef} rotation={[Math.PI / 2, 0, 0]}>
         <ringGeometry args={[radius * 1.18, radius * 1.32, 96]} />
         <meshBasicMaterial
-          color={isSelected ? DS.brass100 : DS.brass200}
+          color={isSelected ? DS.metal100 : DS.metal200}
           transparent
           opacity={isSelected ? 0.85 : 0.55}
           side={THREE.DoubleSide}
           toneMapped={false}
         />
       </mesh>
-      <pointLight color={DS.brass200} intensity={3.2} distance={260} decay={1.8} />
+      <pointLight color={DS.metal200} intensity={3.2} distance={260} decay={1.8} />
       {/* UI-WOW-2 P2 — layered additive corona so the sun reads as a star. */}
       <SunCorona radius={radius} />
     </group>
@@ -1384,7 +1384,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                 <div
                   className="font-mono font-semibold tracking-wide whitespace-nowrap"
                   style={{
-                    color: isSelected ? DS.brass200 : DS.textHi,
+                    color: isSelected ? DS.metal200 : DS.textHi,
                     fontSize: tier === 1 ? 10 : tier === 2 ? 11 : 13,
                     textShadow: '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
                     lineHeight: 1.2,
@@ -1408,7 +1408,7 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
                     }}
                   />
                   {node.hasBackend && <span style={{ color: DS.ice400 }}>BE</span>}
-                  {node.hasAnimation && <span style={{ color: DS.brass300 }}>○</span>}
+                  {node.hasAnimation && <span style={{ color: DS.metal300 }}>○</span>}
                   {frozen && <span style={{ color: DS.ice300 }}>❄</span>}
                 </div>
               )}
@@ -2522,7 +2522,7 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
       {snapEnabled ? (
         <group position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]} renderOrder={8}>
           <gridHelper
-            args={[GIZMO_TRANSLATE_SNAP * 16, 16, DS.brass400, DS.brass400]}
+            args={[GIZMO_TRANSLATE_SNAP * 16, 16, DS.metal400, DS.metal400]}
             rotation={[Math.PI / 2, 0, 0]}
           >
             <lineBasicMaterial attach="material" transparent opacity={0.16} depthWrite={false} toneMapped={false} />
@@ -3123,7 +3123,7 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
         <SelectionFrame
           hw={selBox.hw}
           hh={selBox.hh}
-          color={isSelected ? DS.brass200 : isMultiSelected ? DS.brass400 : DS.ok}
+          color={isSelected ? DS.metal200 : isMultiSelected ? DS.metal400 : DS.ok}
           z={0.08}
         />
       )}
@@ -3319,7 +3319,7 @@ function TopologySceneContent({
       {/* Lighting — photoreal with environment IBL + fills */}
       <ambientLight intensity={0.06} />
       <directionalLight position={[120, 120, 100]} intensity={0.5} color={DS.ice200} castShadow={false} />
-      <directionalLight position={[-100, -60, -100]} intensity={0.25} color={DS.brass100} />
+      <directionalLight position={[-100, -60, -100]} intensity={0.25} color={DS.metal100} />
       <Environment preset="night" environmentIntensity={0.55} />
 
       {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
@@ -3681,7 +3681,7 @@ function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
   //    off-equator bands that map to screen corners) so corners are textured,
   //    not flat. Screen-blended at low alpha; no purple (D2).
   ctx.globalCompositeOperation = 'screen';
-  const tints = [DS.brass400, DS.brass600, DS.ice400, DS.ice500, DS.brass300];
+  const tints = [DS.metal400, DS.metal600, DS.ice400, DS.ice500, DS.metal300];
   for (let i = 0; i < 78; i++) {
     const px = rnd() * w;
     const py = (0.08 + rnd() * 0.84) * h;
@@ -3697,8 +3697,8 @@ function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
   // 3. MODERATE brass key glow behind content (equator center) — depth without a
   //    blown-out white core, so a content backdrop never needs a hard dark pool.
   const key = ctx.createRadialGradient(w * 0.5, h * 0.52, 0, w * 0.5, h * 0.52, w * 0.4);
-  key.addColorStop(0, dsAlpha(DS.brass300, 0.30));
-  key.addColorStop(0.4, dsAlpha(DS.brass500, 0.11));
+  key.addColorStop(0, dsAlpha(DS.metal300, 0.30));
+  key.addColorStop(0.4, dsAlpha(DS.metal500, 0.11));
   key.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = key;
   ctx.fillRect(0, 0, w, h);
@@ -3722,7 +3722,7 @@ function buildHubSkyGradient(baseHex: string): THREE.CanvasTexture {
   //    magnification on screen (fine sub-texel speckle alone gets filtered away).
   //    Brass/bone/ice, no purple. Each bright star gets a soft halo for depth.
   ctx.globalCompositeOperation = 'lighter';
-  const starTints = [DS.textHi, DS.brass200, DS.ice200, DS.ice300, DS.brass100];
+  const starTints = [DS.textHi, DS.metal200, DS.ice200, DS.ice300, DS.metal100];
   for (let i = 0; i < 4200; i++) {
     const px = rnd() * w;
     const py = rnd() * h;
@@ -4226,7 +4226,7 @@ export default function GraphScene() {
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            `radial-gradient(ellipse 70% 60% at 20% 20%, ${dsAlpha(DS.brass500, 0.12)} 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 80% 80%, ${dsAlpha(DS.ice500, 0.1)} 0%, transparent 55%), ${DS.void}`,
+            `radial-gradient(ellipse 70% 60% at 20% 20%, ${dsAlpha(DS.metal500, 0.12)} 0%, transparent 55%), radial-gradient(ellipse 60% 50% at 80% 80%, ${dsAlpha(DS.ice500, 0.1)} 0%, transparent 55%), ${DS.void}`,
         }}
       />
       <Canvas

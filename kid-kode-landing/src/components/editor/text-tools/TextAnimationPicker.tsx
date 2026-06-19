@@ -49,7 +49,7 @@ export default function TextAnimationPicker() {
               className={`flex items-center gap-2 px-2.5 py-1.5 text-left transition-colors ${
                 isActive ? '' : 'hover:bg-white/[0.05]'
               }`}
-              style={isActive ? { background: dsAlpha(DS.brass400, 0.14) } : undefined}
+              style={isActive ? { background: dsAlpha(DS.metal400, 0.14) } : undefined}
             >
               <span
                 className="w-1.5 h-1.5 rounded-full shrink-0"
@@ -60,7 +60,7 @@ export default function TextAnimationPicker() {
               />
               <span
                 className="flex-1 text-[10px] font-mono truncate"
-                style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
+                style={{ color: isActive ? 'var(--ds-metal-200)' : 'var(--ds-text)' }}
               >
                 {p.label}
               </span>

@@ -1,6 +1,6 @@
 'use client';
 
-// Minimap — corner radar of the whole graph. Chrome: Observatory Brass — a
+// Minimap — corner radar of the whole graph. Chrome: Chrome-Arc — a
 // machined metal bezel plate (ds-metal ds-grain ds-edge) framing a recessed
 // instrument well (ds-well) that holds the 2D radar canvas. Canvas tints come
 // from the DS token mirror: status colors for nodes, brass for the selection
@@ -70,8 +70,8 @@ export default function Minimap() {
       const p = hubPositions[hub.id];
       if (!p) return;
       const isActiveHub = activeHubId === hub.id;
-      const fill = isActiveHub ? DS.brass400 : DS.ice400;
-      const rim = isActiveHub ? DS.brass300 : DS.ice400;
+      const fill = isActiveHub ? DS.metal400 : DS.ice400;
+      const rim = isActiveHub ? DS.metal300 : DS.ice400;
       ctx.beginPath();
       ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
       ctx.fillStyle = dsAlpha(fill, isActiveHub ? 0.25 : 0.09);
@@ -104,13 +104,13 @@ export default function Minimap() {
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, isSelected ? 3.5 : isHovered ? 3 : 2, 0, Math.PI * 2);
-      ctx.fillStyle = isSelected ? DS.brass200 : c;
+      ctx.fillStyle = isSelected ? DS.metal200 : c;
       ctx.fill();
 
       if (isSelected) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-        ctx.strokeStyle = DS.brass300;
+        ctx.strokeStyle = DS.metal300;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
@@ -124,7 +124,7 @@ export default function Minimap() {
         {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
         <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between" style={{ color: 'var(--ds-text-mid)' }}>
           <span>MINIMAP</span>
-          <span className="text-ds-brass-300">{graph.nodes.length} nodes</span>
+          <span className="text-ds-metal-300">{graph.nodes.length} nodes</span>
         </div>
         <div ref={windowSlab.ref} className="ds-well ds-edge rounded-ds-sm overflow-hidden">
           <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />

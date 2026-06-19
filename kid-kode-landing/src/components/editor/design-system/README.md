@@ -1,11 +1,11 @@
-# Prism Editor Design System — "Observatory Brass" (Wave 0, FROZEN 2026-06-09)
+# Prism Editor Design System — "Chrome-Arc" (Wave 0, FROZEN 2026-06-09)
 
 The single source of truth for every visual decision in the editor chrome.
 Rendered token sheet: `/design-system` (screenshots:
 `notes/verification/ui-design/wave0-token-sheet.png`, `wave0-clip-*.png`).
 
-**Language.** Deep-space observatory: machined graphite instrument housings,
-brass fittings, bone-white engraving, cold ice telemetry. The chrome must look
+**Language.** Deep-space observatory: machined chrome / titanium / mercury instruments over a near-black
+substrate, anodized-blue tint, arc-cyan as the single emissive accent. The chrome must look
 like it was built by the same hands as the photoreal engine — every surface is
 a material, every edge catches light, nothing sits flat.
 
@@ -15,10 +15,12 @@ a material, every edge catches light, nothing sits flat.
    `prism.violet`, indigo/violet Tailwind classes are all dead.
 2. **No flat fills** — surfaces use the gradient ramps (`--ds-grad-*`).
 3. **No component-local hex values** — consume `tokens.css` vars, the
-   Tailwind `ds` namespace (`bg-ds-graphite`, `text-ds-brass-300`,
+   Tailwind `ds` namespace (`bg-ds-graphite`, `text-ds-metal-300`,
    `shadow-ds-2`, `rounded-ds-md`), or `DS`/`dsAlpha()` from
    `@/components/editor/design-system`.
-4. **One accent family** — brass. Ice is for informational/frozen states
+4. **One accent family** — the cool metal ramp (chrome/titanium) with
+   ARC-CYAN as the single emissive/active accent (selection, focus, primary
+   action). ZERO brass/gold/amber. Ice is for informational/frozen states
    only; status colors (`ok/warn/danger`) for status only. Blue (`#5d8bff`,
    `electric`) is retired from chrome.
 5. **Motion is transform/opacity only**, time-based, with the system
@@ -37,7 +39,7 @@ a material, every edge catches light, nothing sits flat.
 | File | What |
 |---|---|
 | `tokens.css` | Every custom property: palette, gradients, edges, elevation, radii, motion, type. |
-| `materials.css` | `ds-*` classes: surfaces (`ds-glass`, `ds-smoked`, `ds-metal`, `ds-ceramic`, `ds-well`), edges (`ds-edge`, `ds-edge--brass`), elevation (`ds-elev-0..4`), motion (`ds-lift`, `ds-press`, `ds-sweep`, `ds-reveal`, `ds-reveal-r`), type (`ds-kicker`, `ds-label`, `ds-title`, `ds-title-brass`), controls (`ds-btn` + variants, `ds-chip` + variants, `ds-input`, `ds-select`, `ds-slider`, `ds-toggle`), `ds-grain`, tier gates, touch ergonomics. |
+| `materials.css` | `ds-*` classes: surfaces (`ds-glass`, `ds-smoked`, `ds-metal`, `ds-ceramic`, `ds-well`), edges (`ds-edge`, `ds-edge--metal`), elevation (`ds-elev-0..4`), motion (`ds-lift`, `ds-press`, `ds-sweep`, `ds-reveal`, `ds-reveal-r`), type (`ds-kicker`, `ds-label`, `ds-title`, `ds-title-metal`), controls (`ds-btn` + variants, `ds-chip` + variants, `ds-input`, `ds-select`, `ds-slider`, `ds-toggle`), `ds-grain`, tier gates, touch ergonomics. |
 | `tokens.ts` | JS mirror (`DS`, `DS_ACCENT`, `DS_DIFFICULTY`, `DS_CATEGORY_TINTS`, `dsAlpha`, `dsHexNumber`, `DS_MOTION`) for icon tints, three.js colors, inline styles. |
 | `tier.ts` | Chrome capability tier (mirrors runtime ceiling logic at the DOM edge) + pre-paint boot script. |
 | `RefractionDefs.tsx` | The `#ds-refract` SVG displacement filter (mount once per page using `.ds-glass--refract`). |
@@ -49,12 +51,12 @@ a material, every edge catches light, nothing sits flat.
 **Recipes.**
 
 - Floating panel over the scene: `ds-glass ds-edge rounded-ds-lg` (+
-  `ds-glass--refract ds-edge--brass` if it's the hero surface).
+  `ds-glass--refract ds-edge--metal` if it's the hero surface).
 - Toolbar dock / machined fitting: `ds-metal ds-grain ds-edge rounded-ds-md`.
 - Card / inspector section: `ds-ceramic ds-edge`.
 - Input trough / preview frame: `ds-well`.
-- Selected/active state: swap `ds-edge` → `ds-edge--brass`, text →
-  `text-ds-brass-300`, optional `shadow-ds-2` → add `--ds-glow-brass`.
+- Selected/active state: swap `ds-edge` → `ds-edge--metal`, text →
+  `text-ds-arc` / `text-ds-metal-300`, optional `shadow-ds-2` → add `--ds-glow-arc`.
 - Hover: `ds-lift` (cards/tiles), `ds-sweep` (metal), `ds-press` (buttons).
 
 **Performance budget.** ≤4 `backdrop-filter` surfaces visible per viewport;

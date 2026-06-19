@@ -94,9 +94,9 @@ function BigKey({
         boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.32)}, ${KEY_SHADOW}`,
       }}
     >
-      <Icon name={icon} size={16} color={DS.brass200} glow />
+      <Icon name={icon} size={16} color={DS.metal200} glow />
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-[12px] font-mono font-semibold" style={{ color: 'var(--ds-brass-200)' }}>
+        <span className="text-[12px] font-mono font-semibold" style={{ color: 'var(--ds-metal-200)' }}>
           {title}
         </span>
         <span className="text-[9px] font-mono leading-snug" style={{ color: 'var(--ds-text-mid)' }}>

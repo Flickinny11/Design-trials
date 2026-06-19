@@ -125,7 +125,7 @@ export default function IntegrationsTab({ node, onToast }: { node: PrismNode; on
                 {/* C2 — one-click auth methods */}
                 <div className="flex flex-wrap gap-1 pl-6">
                   {p.authMethods.map((m) => (
-                    <button key={m} type="button" data-role="int-connect" data-method={m} disabled={connecting === p.platformId} onClick={() => connect(p, m)} className="text-[8px] font-mono px-1.5 py-0.5 rounded disabled:opacity-40" style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg,#b9914f,#8c6a32))' }}>
+                    <button key={m} type="button" data-role="int-connect" data-method={m} disabled={connecting === p.platformId} onClick={() => connect(p, m)} className="text-[8px] font-mono px-1.5 py-0.5 rounded disabled:opacity-40" style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg,#dfe2e6,#898c92))' }}>
                       {connecting === p.platformId ? '…' : METHOD_LABEL[m]}
                     </button>
                   ))}
@@ -138,7 +138,7 @@ export default function IntegrationsTab({ node, onToast }: { node: PrismNode; on
 
       {/* Connected integrations (C2/C3) */}
       <div className="flex flex-col gap-1.5 rounded-[6px] p-1.5" style={{ border: '1px solid var(--ds-edge-shade, rgba(0,0,0,0.4))' }}>
-        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em]" style={{ color: 'var(--ds-brass-300)' }}>Connected ({refs.length})</span>
+        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em]" style={{ color: 'var(--ds-metal-300)' }}>Connected ({refs.length})</span>
         {refs.length === 0 && <span className="text-[8.5px] font-mono px-1 py-1.5 text-center" style={{ color: 'var(--ds-text-low)' }}>Search a platform and connect</span>}
         {refs.map((r) => {
           const avail = assetsByPlatform[r.platformId] ?? [];
@@ -172,7 +172,7 @@ export default function IntegrationsTab({ node, onToast }: { node: PrismNode; on
                   <span className="text-[6.5px] font-mono uppercase tracking-[0.12em]" style={{ color: 'var(--ds-text-low)' }}>your {r.platform} assets — click to add</span>
                   {avail.map((a) => (
                     <button key={a.id} type="button" data-role="int-asset-available" data-asset-id={a.id} draggable onDragStart={(e) => e.dataTransfer.setData('application/x-int-asset', JSON.stringify(a))} onClick={() => addAsset(r.id, a)} className="flex items-center gap-1.5 text-[8.5px] font-mono px-1 py-0.5 rounded text-left hover:bg-white/[0.06]" style={{ background: 'rgba(255,255,255,0.02)' }}>
-                      <Icon name="plus" size={8} color="var(--ds-brass-300)" />
+                      <Icon name="plus" size={8} color="var(--ds-metal-300)" />
                       <span className="flex-1 truncate" style={{ color: 'var(--ds-text-hi)' }}>{a.name}</span>
                       <span className="text-[7px]" style={{ color: 'var(--ds-text-low)' }}>{a.kind}{a.detail ? ` · ${a.detail}` : ''}</span>
                     </button>

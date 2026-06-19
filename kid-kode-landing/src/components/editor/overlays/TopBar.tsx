@@ -1,6 +1,6 @@
 'use client';
 
-// TopBar — the editor's masthead. Chrome: Observatory Brass — a thin machined
+// TopBar — the editor's masthead. Chrome: Chrome-Arc — a thin machined
 // instrument bar (ds-metal ds-grain ds-edge) spanning the viewport: brass
 // nameplate, carved mode trough with brass-lit active slot, engraved
 // breadcrumb, recessed zoom/health readouts, and machined ds-btn fittings.
@@ -95,14 +95,14 @@ export default function TopBar() {
             style={{
               background: 'radial-gradient(120% 120% at 30% 20%, rgba(20,24,38,0.95), #0b0d13 72%)',
               boxShadow:
-                'inset 0 1px 0 rgba(255,252,242,0.18), inset 0 -1px 0 rgba(0,0,0,0.5), var(--ds-elev-1), var(--ds-glow-brass)',
+                'inset 0 1px 0 rgba(255,252,242,0.18), inset 0 -1px 0 rgba(0,0,0,0.5), var(--ds-elev-1), var(--ds-glow-arc)',
               border: '0.5px solid rgba(247,233,198,0.18)',
             }}
           >
             <PrismLogo size={18} />
           </div>
           <div>
-            <div className="ds-title-brass text-[13px] font-display font-bold tracking-tight leading-none">Prism</div>
+            <div className="ds-title-metal text-[13px] font-display font-bold tracking-tight leading-none">Prism</div>
             {/* 9px floor + mid contrast (ergonomics backlog 2026-06-11): the
                 8px low-grey kicker measured below AA on the metal bar. */}
             <div className="ds-kicker leading-none mt-0.5" style={{ color: 'var(--ds-text-mid)' }}>KRIPTIK EDITOR</div>
@@ -125,20 +125,20 @@ export default function TopBar() {
                   type="button"
                   onClick={() => setEditorRenderMode(mode.id)}
                   className={`ds-press h-7 px-2 rounded-full text-[11px] font-ui font-medium tracking-normal transition-colors flex items-center gap-1 ${
-                    active ? 'text-ds-brass-200' : 'text-ds-text-mid hover:text-ds-text'
+                    active ? 'text-ds-metal-200' : 'text-ds-text-mid hover:text-ds-text'
                   }`}
                   style={
                     active
                       ? {
-                          background: 'var(--ds-grad-brass-soft)',
+                          background: 'var(--ds-grad-metal-soft)',
                           boxShadow:
-                            'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.18)',
+                            'inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.34), inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.18)',
                         }
                       : undefined
                   }
                   title={mode.label}
                 >
-                  <Icon name={mode.icon} size={10} color={active ? DS.brass300 : DS.textMid} />
+                  <Icon name={mode.icon} size={10} color={active ? DS.metal300 : DS.textMid} />
                   <span className="hidden xl:inline">{mode.label}</span>
                 </button>
               );
@@ -190,8 +190,8 @@ export default function TopBar() {
                 style={
                   zoomLevel === lvl
                     ? {
-                        background: 'var(--ds-grad-brass)',
-                        boxShadow: `var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.35)`,
+                        background: 'var(--ds-grad-metal)',
+                        boxShadow: `var(--ds-glow-arc), inset 0 -1px 1px rgba(0,0,0,0.35)`,
                       }
                     : {
                         background: dsAlpha(DS.textHi, 0.1),
@@ -235,14 +235,14 @@ export default function TopBar() {
           ref={addNodeSlab.ref}
           data-component="add-node-button"
           onClick={openAddNodeDialog}
-          className="ds-press inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-ds-brass-100"
+          className="ds-press inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-ds-metal-100"
           style={{
             borderRadius: 'var(--ds-r-pill)',
             // Light brass label riding the true-3D brass key (same legibility
             // pattern as the hub-switcher active slot + mode-toggle labels — a
             // crisp DOM glyph over the lit cap, never dark ink which vanishes
             // on the cap's graphite shade at rest).
-            textShadow: `0 1px 2px rgba(0,0,0,0.55), 0 0 10px ${dsAlpha(DS.brass400, 0.4)}`,
+            textShadow: `0 1px 2px rgba(0,0,0,0.55), 0 0 10px ${dsAlpha(DS.metal400, 0.4)}`,
           }}
           title="Add node"
         >

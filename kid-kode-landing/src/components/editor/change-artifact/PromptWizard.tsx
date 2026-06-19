@@ -303,8 +303,8 @@ export default function PromptWizard({ node, onClose, onBack }: { node: PrismNod
               className="px-3 h-9 rounded-ds-sm flex items-center gap-1.5 ds-press transition-all"
               style={tab === t.id ? activeKeyStyle(DS_ACCENT) : { background: WELL_BG, boxShadow: WELL_SHADOW }}
             >
-              <Icon name={t.icon} size={13} color={tab === t.id ? DS.brass200 : DS.textMid} glow={tab === t.id} />
-              <span className="text-[11px] font-mono font-semibold" style={{ color: tab === t.id ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}>
+              <Icon name={t.icon} size={13} color={tab === t.id ? DS.metal200 : DS.textMid} glow={tab === t.id} />
+              <span className="text-[11px] font-mono font-semibold" style={{ color: tab === t.id ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}>
                 {t.label}
               </span>
             </button>
@@ -406,7 +406,7 @@ export default function PromptWizard({ node, onClose, onBack }: { node: PrismNod
 
         {busy && !result && (
           <div className="text-[10px] font-mono flex items-center gap-2" style={{ color: 'var(--ds-text-mid)' }} data-control="prompt-busy">
-            <Icon name="sparkle" size={12} color={DS.brass200} glow />
+            <Icon name="sparkle" size={12} color={DS.metal200} glow />
             Generating — this can take a moment…
           </div>
         )}
@@ -515,7 +515,7 @@ function ResultViewport({ result }: { result: MediaGenResult }) {
   if (result.kind === 'code' && result.compose) {
     return (
       <div className="px-3 py-3 rounded-ds-sm flex items-center gap-2.5" style={{ background: WELL_BG, boxShadow: WELL_SHADOW }} data-control="result-code">
-        <Icon name="cube" size={20} color={DS.brass200} glow />
+        <Icon name="cube" size={20} color={DS.metal200} glow />
         <div className="flex flex-col">
           <span className="text-[11px] font-mono" style={{ color: 'var(--ds-text)' }}>{result.summary ?? 'A composed 3D element.'}</span>
           <span className="text-[8.5px] font-mono" style={{ color: 'var(--ds-text-low)' }}>Use this to place it on the element — then transform, light, and animate it.</span>

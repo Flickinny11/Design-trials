@@ -81,9 +81,9 @@ export default function SearchPalette() {
   // Brass row reveal — selection (keyboard or hover) gets a soft brass wash,
   // an inset brass keyline, and a brass rail on the leading edge.
   const rowSelectedStyle: React.CSSProperties = {
-    background: 'var(--ds-grad-brass-soft)',
+    background: 'var(--ds-grad-metal-soft)',
     boxShadow:
-      'inset 2px 0 0 var(--ds-brass-400), inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.3), inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.18)',
+      'inset 2px 0 0 var(--ds-metal-400), inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.3), inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.18)',
   };
 
   return (
@@ -99,14 +99,14 @@ export default function SearchPalette() {
       <div
         ref={panelSlab.ref}
         onClick={(e) => e.stopPropagation()}
-        className="w-[min(640px,92vw)] ds-glass ds-glass--heavy ds-edge--brass rounded-ds-lg overflow-hidden ds-reveal"
-        style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-4), var(--ds-glow-brass)' }}
+        className="w-[min(640px,92vw)] ds-glass ds-glass--heavy ds-edge--metal rounded-ds-lg overflow-hidden ds-reveal"
+        style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-4), var(--ds-glow-arc)' }}
       >
         <div
           className="flex items-center gap-3 px-4 py-3.5"
           style={{ boxShadow: 'inset 0 -1px 0 var(--ds-edge-shade), inset 0 1px 0 var(--ds-edge-specular)' }}
         >
-          <Icon name="search" size={16} color={DS.brass300} glow />
+          <Icon name="search" size={16} color={DS.metal300} glow />
           <input
             // Merged ref: focus management keeps inputRef; the slab renders
             // the ds-input trough as a real recessed well at t2.
@@ -137,13 +137,13 @@ export default function SearchPalette() {
                   <div className="flex-1 min-w-0">
                     <div
                       className="text-[13px] font-semibold"
-                      style={{ color: selectedIdx === i ? 'var(--ds-brass-200)' : 'var(--ds-text-hi)' }}
+                      style={{ color: selectedIdx === i ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
                     >
                       {h.name}
                     </div>
                     <div className="text-[10px] font-mono text-ds-text-low">{h.route}</div>
                   </div>
-                  <Icon name="arrowRight" size={12} color={selectedIdx === i ? DS.brass300 : DS.textLow} />
+                  <Icon name="arrowRight" size={12} color={selectedIdx === i ? DS.metal300 : DS.textLow} />
                 </button>
               ))}
             </>
@@ -166,13 +166,13 @@ export default function SearchPalette() {
                     style={selectedIdx === idx ? rowSelectedStyle : undefined}
                   >
                     <div className="ds-well w-7 h-7 rounded-ds-xs flex items-center justify-center flex-shrink-0">
-                      <Icon name="grid" size={11} color={selectedIdx === idx ? DS.brass300 : DS.textMid} />
+                      <Icon name="grid" size={11} color={selectedIdx === idx ? DS.metal300 : DS.textMid} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
                         <span
                           className="text-[13px] font-semibold truncate"
-                          style={{ color: selectedIdx === idx ? 'var(--ds-brass-200)' : 'var(--ds-text-hi)' }}
+                          style={{ color: selectedIdx === idx ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
                         >
                           {n.name}
                         </span>
@@ -184,7 +184,7 @@ export default function SearchPalette() {
                       </div>
                       <div className="text-[11px] text-ds-text-mid truncate">{n.caption}</div>
                     </div>
-                    <Icon name="arrowRight" size={12} color={selectedIdx === idx ? DS.brass300 : DS.textLow} />
+                    <Icon name="arrowRight" size={12} color={selectedIdx === idx ? DS.metal300 : DS.textLow} />
                   </button>
                 );
               })}
@@ -206,7 +206,7 @@ export default function SearchPalette() {
             <span>↑↓ navigate</span>
             <span>↵ select</span>
           </div>
-          <span className="text-ds-brass-300">⌘K to toggle</span>
+          <span className="text-ds-metal-300">⌘K to toggle</span>
         </div>
       </div>
     </div>

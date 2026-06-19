@@ -11,7 +11,7 @@
 // is the rig the full 300-primitive catalog renders against — zero per-tile GL
 // contexts, zero device-lost.
 //
-// Chrome: Observatory Brass design system. Because previews are transparent
+// Chrome: Chrome-Arc design system. Because previews are transparent
 // windows onto the canvas BEHIND the page, no panel may lay a fill or a
 // backdrop-filter over a preview rect — the detail rail is therefore a stack
 // of machined plates around a bezel-framed window, and only the sticky header
@@ -77,9 +77,9 @@ export default function CatalogGallery() {
         <header className="ds-glass sticky top-0 z-10 flex items-center justify-between px-6 py-3.5 rounded-none">
           <div className="flex flex-col gap-0.5">
             <span className="ds-kicker">prism editor · animatable contract · shared-context rig</span>
-            <h1 className="ds-title ds-title-brass text-[19px]">Animation Primitive Catalog</h1>
+            <h1 className="ds-title ds-title-metal text-[19px]">Animation Primitive Catalog</h1>
           </div>
-          <span data-component="primitive-count" className="ds-chip ds-chip--brass tabular-nums">
+          <span data-component="primitive-count" className="ds-chip ds-chip--metal tabular-nums">
             {primitiveCount()} primitives
           </span>
         </header>
@@ -91,13 +91,13 @@ export default function CatalogGallery() {
               <section key={cat} data-category-section={cat} className="flex flex-col gap-3">
                 {/* Engraved category rule — label + machined etch line */}
                 <h2 className="flex items-center gap-3">
-                  <span className="ds-label" style={{ color: 'var(--ds-brass-300)' }}>{cat}</span>
+                  <span className="ds-label" style={{ color: 'var(--ds-metal-300)' }}>{cat}</span>
                   <span
                     aria-hidden
                     className="h-px flex-1"
                     style={{
                       background:
-                        'linear-gradient(90deg, rgba(var(--ds-brass-400-rgb),0.4), rgba(255,252,242,0.07) 30%, rgba(255,252,242,0.03) 70%, transparent)',
+                        'linear-gradient(90deg, rgba(var(--ds-metal-400-rgb),0.4), rgba(255,252,242,0.07) 30%, rgba(255,252,242,0.03) 70%, transparent)',
                     }}
                   />
                   <span className="ds-kicker tabular-nums">{items.length}</span>
@@ -134,7 +134,7 @@ export default function CatalogGallery() {
                 {/* Title plate */}
                 <div className="ds-ceramic ds-edge px-3.5 py-3 flex flex-col gap-1">
                   <span className="ds-title text-[15px]">{focused.label}</span>
-                  <span className="ds-kicker" style={{ color: 'var(--ds-brass-300)' }}>
+                  <span className="ds-kicker" style={{ color: 'var(--ds-metal-300)' }}>
                     {focused.category} · {focused.difficulty} · {focused.defaultDriver} driver
                   </span>
                   <p className="text-[11px] leading-relaxed" style={{ color: 'var(--ds-text-mid)' }}>
@@ -149,7 +149,7 @@ export default function CatalogGallery() {
                     GPU frame stays crisp and untinted. */}
                 <div
                   data-component="detail-preview"
-                  className="relative w-full rounded-ds-md overflow-hidden ds-edge--brass"
+                  className="relative w-full rounded-ds-md overflow-hidden ds-edge--metal"
                   style={{ background: 'transparent', aspectRatio: '4 / 3', boxShadow: 'var(--ds-elev-2)' }}
                 >
                   <SharedViewport

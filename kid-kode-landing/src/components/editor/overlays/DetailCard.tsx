@@ -1,7 +1,7 @@
 'use client';
 
 // DetailCard — quick-look card for the selected node (when the Inspector is
-// closed). Chrome: Observatory Brass — matte ceramic card (ds-ceramic ds-edge)
+// closed). Chrome: Chrome-Arc — matte ceramic card (ds-ceramic ds-edge)
 // with engraved kicker/title type, carved chip badges, a recessed verification
 // meter, and machined ds-btn actions. Ice is reserved for the frozen state;
 // status colors carry verification semantics only.
@@ -120,10 +120,10 @@ export default function DetailCard() {
         <Badge
           active={node.hasAnimation}
           label={`Anim ${node.hasAnimation ? `● ${node.animationFrames || 0}` : '○'}`}
-          color={node.hasAnimation ? DS.brass300 : undefined}
+          color={node.hasAnimation ? DS.metal300 : undefined}
         />
         <Badge label={`States ${node.stateCount}`} />
-        {node.hubIds.length > 1 && <Badge label={`×${node.hubIds.length} hubs`} color={DS.brass300} />}
+        {node.hubIds.length > 1 && <Badge label={`×${node.hubIds.length} hubs`} color={DS.metal300} />}
         {frozen && <Badge label="❄ Frozen" color={DS.ice300} />}
       </div>
 
@@ -173,7 +173,7 @@ export default function DetailCard() {
           disabled={frozen}
           className="ds-btn ds-btn--ghost ds-press flex-1 h-9 text-[11px] font-semibold"
         >
-          <Icon name="edit" size={11} color={DS.brass300} />
+          <Icon name="edit" size={11} color={DS.metal300} />
           Edit
         </ActionKey>
         <ActionKey

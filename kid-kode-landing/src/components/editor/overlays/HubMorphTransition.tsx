@@ -46,7 +46,7 @@ export default function HubMorphTransition() {
         className="ds-hub-morph-band absolute inset-y-[-20%] -left-1/2 w-[60%]"
         style={{
           background:
-            'linear-gradient(105deg, rgba(var(--ds-brass-200-rgb),0) 0%, rgba(var(--ds-brass-200-rgb),0.18) 38%, rgba(var(--ds-brass-200-rgb),0.42) 50%, rgba(var(--ds-brass-200-rgb),0.18) 62%, rgba(var(--ds-brass-200-rgb),0) 100%)',
+            'linear-gradient(105deg, rgba(var(--ds-metal-200-rgb),0) 0%, rgba(var(--ds-metal-200-rgb),0.18) 38%, rgba(var(--ds-metal-200-rgb),0.42) 50%, rgba(var(--ds-metal-200-rgb),0.18) 62%, rgba(var(--ds-metal-200-rgb),0) 100%)',
           backdropFilter: 'blur(7px) brightness(1.08)',
           WebkitBackdropFilter: 'blur(7px) brightness(1.08)',
         }}

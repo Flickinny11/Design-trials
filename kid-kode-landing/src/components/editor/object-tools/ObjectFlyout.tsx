@@ -29,7 +29,7 @@
 //     per-node lit/unlit switch already lives in the Lighting group — this
 //     flyout only points at it in copy, never builds a second toggle.
 //
-// Chrome: Observatory Brass (raised-bar directive) — machined KEY faces +
+// Chrome: Chrome-Arc (raised-bar directive) — machined KEY faces +
 // recessed wells + engraved kicker labels reused from animation-tools/ui,
 // GSAP open choreography, native magnetic hover on the shape keys
 // (animation-tools/magnetic). Honors prefers-reduced-motion. The 7 shape
@@ -428,11 +428,11 @@ export default function ObjectFlyout({
                 boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.4)}, ${KEY_SHADOW}, 0 0 14px ${dsAlpha(DS_ACCENT, 0.14)}`,
               }}
             >
-              <Icon name="palette" size={13} color={DS.brass200} glow />
-              <span className="text-[10.5px] font-mono font-semibold" style={{ color: 'var(--ds-brass-200)' }}>
+              <Icon name="palette" size={13} color={DS.metal200} glow />
+              <span className="text-[10.5px] font-mono font-semibold" style={{ color: 'var(--ds-metal-200)' }}>
                 {materialOpen ? 'Hide Material' : 'Edit Material'}
               </span>
-              <Icon name="chevron" size={11} color={DS.brass200} className={materialOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
+              <Icon name="chevron" size={11} color={DS.metal200} className={materialOpen ? 'rotate-180 transition-transform' : 'transition-transform'} />
             </button>
             <div className="text-[8px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
               {MATERIAL_HINT}

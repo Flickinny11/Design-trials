@@ -10,7 +10,7 @@
 // while the wizard is open and tears down cleanly on unmount. It deliberately
 // does NOT touch the unified three/webgpu graph scene.
 //
-// Chrome: Observatory Brass — recessed WELL frame, engraved SectionLabel
+// Chrome: Chrome-Arc — recessed WELL frame, engraved SectionLabel
 // caption, brass/ice tones, the project <Icon>, a GSAP entrance, and native
 // magnetic hover on the caption hint (all honoring prefers-reduced-motion). No
 // purple; design-system tokens only; plain-language copy (no machine ids, no
@@ -216,7 +216,7 @@ export default function Glb3DPreview({
           height: viewportHeight,
           background: WELL_BG,
           boxShadow: WELL_SHADOW,
-          border: `1px solid ${dsAlpha(DS.brass400, 0.16)}`,
+          border: `1px solid ${dsAlpha(DS.metal400, 0.16)}`,
         }}
       >
         {hasUrl ? (
@@ -252,7 +252,7 @@ export default function Glb3DPreview({
                 while the model streams in; cleared once <Model> resolves. */}
             {!ready && (
               <div className="absolute inset-0 pointer-events-none">
-                <FallbackPanel poster={poster} message={LOADING_COPY} tone={DS.brass300} />
+                <FallbackPanel poster={poster} message={LOADING_COPY} tone={DS.metal300} />
               </div>
             )}
           </ModelErrorBoundary>
@@ -272,7 +272,7 @@ export default function Glb3DPreview({
           style={{
             background: WELL_BG,
             boxShadow: WELL_SHADOW,
-            border: `1px solid ${dsAlpha(DS.brass400, 0.14)}`,
+            border: `1px solid ${dsAlpha(DS.metal400, 0.14)}`,
           }}
         >
           <Icon name="rotate" size={11} color={DS_ACCENT} glow />

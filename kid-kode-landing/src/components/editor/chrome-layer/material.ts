@@ -53,8 +53,8 @@ export interface ChromeInstanceBuffers {
   aClip: THREE.InstancedBufferAttribute;
 }
 
-const BRASS = new THREE.Color(DS.brass400);
-const BRASS_HI = new THREE.Color(DS.brass200);
+const METAL = new THREE.Color(DS.metal400);
+const METAL_HI = new THREE.Color(DS.metal200);
 const ICE = new THREE.Color(DS.ice400);
 // CHROME OVERHAUL 2026-06-15: slab body colors lifted + warmed to match the new
 // OKLCH graphite ramp so a slab reads as LIT machined material over the black
@@ -191,9 +191,9 @@ function slabCommon(bufs: ChromeInstanceBuffers, u: ChromeUniforms): SlabCommon 
   // Bevel profile: 0 on the flat face → 1 at the rim, circular fillet.
   const borderPx = state.x;
   // EDITOR-EXP P2 (C12 hero) — a hero key (misc.w > 0) grows a chamfered side so
-  // the SDF bevel reads as the extruded WALL of a raised brass button, not a 1px
+  // the SDF bevel reads as the extruded WALL of a raised metal button, not a 1px
   // rim. The chamfer is SIZE-RELATIVE (a fraction of the short side) so a flat
-  // brass top cap always survives — a fixed-px chamfer on a small pill would
+  // metal top cap always survives — a fixed-px chamfer on a small pill would
   // consume the whole face and roll the normal everywhere (no lit cap). misc.w
   // is 0 for every non-hero slab → bevel unchanged there.
   const heroAmt = misc.w;
@@ -228,7 +228,7 @@ function bevelNormal(gradDir: TSLNode, fillet: TSLNode, strength: number, sink =
   return normalize(vec3(gradDir.x.mul(slope), gradDir.y.mul(slope).negate(), 1.0));
 }
 
-const brassGradient = (t: TSLNode | number) => mix(c3(BRASS_HI), c3(BRASS), t);
+const metalGradient = (t: TSLNode | number) => mix(c3(METAL_HI), c3(METAL), t);
 
 
 /** Opaque family: metal (1) / ceramic (2) / well (3) selected per instance. */
@@ -250,7 +250,7 @@ export function createOpaqueSlabMaterial(
   const press = c.state.w;
   const accent = c.state.y;
   // EDITOR-EXP P2 (C12) — raised hero-key amount (0 = flat slab; >0 = extruded
-  // brass key). Read from the reserved aMisc.w; drives the steep wall normal,
+  // metal key). Read from the reserved aMisc.w; drives the steep wall normal,
   // the top-lit/bottom-shaded body, and the brighter lit chamfer below.
   const hero = c.misc.w;
 
@@ -272,17 +272,17 @@ export function createOpaqueSlabMaterial(
   const grain = mx_noise_float(vec3(c.p.x.mul(0.9), c.p.y.mul(0.9), 3.0));
 
   const baseColor = metalBase.mul(isMetal).add(ceramicBase.mul(isCeramic)).add(wellBase.mul(isWell));
-  // Accent = a REAL brass plate face (not a wash): primary keys keep their
+  // Accent = a REAL metal plate face (not a wash): primary keys keep their
   // dark-ink labels legible because the face under them is actually bright
-  // brass, exactly like the CSS --ds-grad-brass they replace (advocate
+  // metal, exactly like the CSS --ds-grad-metal they replace (advocate
   // MUST-FIX: unreadable primary confirm key).
   const accented = mix(
     baseColor,
-    brassGradient(vT).mul(0.82),
+    metalGradient(vT).mul(0.82),
     accent.mul(0.8).add(hover.mul(0.08)),
   ) as TSLNode;
   // EDITOR-EXP P2 (C12) — vertical extrusion shade: a hero key's top cap lifts
-  // and its base sinks into shadow so it reads as a raised 3D brass form.
+  // and its base sinks into shadow so it reads as a raised 3D metal form.
   // Identity (×1) for every non-hero slab (hero === 0).
   const heroShade = mix(float(1.0), mix(float(0.74), float(1.18), vT.oneMinus()), hero) as TSLNode;
   n.colorNode = vec4(accented.mul(press.mul(-0.18).add(1.0)).mul(heroShade), 1.0);
@@ -292,7 +292,7 @@ export function createOpaqueSlabMaterial(
   // EDITOR-EXP P2 (C12) — a steeper extruded-wall normal for hero keys, mixed in
   // by `hero` so non-hero plates keep the gentle 1.35 rim. Kept moderate (2.1)
   // so the chamfer catches light without rolling so hard it mirrors the dark
-  // scene and darkens the brass cap.
+  // scene and darkens the metal cap.
   const heroNormal = bevelNormal(c.gradDir, c.fillet, 2.1, 1);
   const raisedNormal = mix(plateNormal, heroNormal, hero) as TSLNode;
   const wellNormal = bevelNormal(c.gradDir, c.fillet, 1.1, -1);
@@ -327,10 +327,10 @@ export function createOpaqueSlabMaterial(
   n.clearcoatNode = isCeramic.mul(0.85).add(isMetal.mul(0.15));
   n.clearcoatRoughnessNode = float(0.3);
 
-  // Emissive: brass keyline + magnetic pointer glow + pointer sheen + a
+  // Emissive: metal keyline + magnetic pointer glow + pointer sheen + a
   // static top-edge glint so pointer-less frames still read dimensional.
-  const keylineColor = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.6));
-  const magnetGlow = brassGradient(0.2).mul(c.magneticGlow).mul(0.6);
+  const keylineColor = metalGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.6));
+  const magnetGlow = metalGradient(0.2).mul(c.magneticGlow).mul(0.6);
   const sheenGlow = c3(ICE).mul(c.sheen).mul(0.18);
   const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.03)).mul(isMetal);
   // VOID FIX (Logan): a broad baked key-light sheen graced across the upper
@@ -340,20 +340,20 @@ export function createOpaqueSlabMaterial(
   const keySheen = vec3(0.80, 0.79, 0.74)
     .mul(smoothstep(0.72, 0.0, vT))
     .mul(float(0.055).mul(isMetal.add(isCeramic)));
-  // Accent faces are SELF-LIT like the CSS --ds-grad-brass they replace: an
-  // albedo-only brass plate goes near-black under a dim scene env, which made
+  // Accent faces are SELF-LIT like the CSS --ds-grad-metal they replace: an
+  // albedo-only metal plate goes near-black under a dim scene env, which made
   // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
   // guarantees instrument-key luminance under any hub lighting.
-  const accentFace = brassGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
-  // EDITOR-EXP P2 (C12) — hero key luminance. A 0.92-metal brass face reflects
+  const accentFace = metalGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
+  // EDITOR-EXP P2 (C12) — hero key luminance. A 0.92-metal metal face reflects
   // the (dark) scene env and reads near-black, so a hero gets a FORM-FOLLOWING
-  // self-lit brass body: bright at the top cap, dim at the shaded base, so it
-  // reads as a RAISED, lit 3D brass key — while the metallic chamfer still
+  // self-lit metal body: bright at the top cap, dim at the shaded base, so it
+  // reads as a RAISED, lit 3D metal key — while the metallic chamfer still
   // catches the moving pointer-light specular. Plus a brighter lit edge on the
   // thick chamfer. All gated by `hero` (0 for every non-hero slab).
   const heroFaceLum = smoothstep(float(1.0), float(-0.1), vT).mul(0.55).add(0.32); // 0.87 cap → 0.32 base
-  const heroFace = brassGradient(vT).mul(heroFaceLum).mul(hero);
-  const heroEdge = brassGradient(vT).mul(c.keyline).mul(hero.mul(1.9));
+  const heroFace = metalGradient(vT).mul(heroFaceLum).mul(hero);
+  const heroEdge = metalGradient(vT).mul(c.keyline).mul(hero.mul(1.9));
   n.emissiveNode = mix(
     keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace).add(heroFace).add(heroEdge),
     vec3(0.0, 0.0, 0.0),
@@ -404,7 +404,7 @@ export function createGlassSlabMaterial(
 
   // Beer–Lambert smoked tint, thicker at the rim (the bevel doubles as depth).
   const thicknessG = c.fillet.mul(2.2).add(1.0);
-  const absorb = vec3(0.18, 0.16, 0.1); // smoked brass: pass warm, sink blue
+  const absorb = vec3(0.18, 0.16, 0.1); // smoked metal: pass warm, sink blue
   const tinted = refracted.mul(exp(absorb.mul(thicknessG).negate()));
   // VOID FIX (Logan): a guaranteed LIT smoked-glass floor (top key-light →
   // bottom shade) so the panel reads as a crafted instrument even when the scene
@@ -433,12 +433,12 @@ export function createGlassSlabMaterial(
   m.envMapIntensity = 1.1;
 
   const vT = uv().y.oneMinus();
-  const keyline = brassGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.72));
-  const magnet = brassGradient(0.15).mul(c.magneticGlow).mul(0.7);
+  const keyline = metalGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.72));
+  const magnet = metalGradient(0.15).mul(c.magneticGlow).mul(0.7);
   // Guaranteed Fresnel-read rim: the env may be dim, so the bevel always carries
-  // an edge light (ice → brass with accent). Strengthened so the glass rim reads
+  // an edge light (ice → metal with accent). Strengthened so the glass rim reads
   // as a lit bevel, not a flat dark band, over the black scene.
-  const rim = mix(c3(ICE), brassGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.16);
+  const rim = mix(c3(ICE), metalGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.16);
   // Baked top key-glint: a soft specular catch on the top edge so a static
   // pointer-less panel still reads as a surface a light is grazing.
   const topKey = vec3(0.86, 0.84, 0.78).mul(smoothstep(0.16, 0.0, vT)).mul(0.06);

@@ -10,7 +10,7 @@
 // state). It never builds nodes or writes to any store; the wizard window owns
 // persistence.
 //
-// Chrome: Observatory Brass, reusing the animation-tools kit (machined KEY
+// Chrome: Chrome-Arc, reusing the animation-tools kit (machined KEY
 // faces, recessed WELL troughs, engraved SectionLabel grooves) and the
 // ImageFlyout FaderRow + crop-merge idiom 1:1, so this reads as the same
 // instrument. GSAP entrance + native magnetic hover honor prefers-reduced-
@@ -284,10 +284,10 @@ export default function ShapeFaceMapper({ value, images, onChange }: ShapeFaceMa
                     : { background: KEY_BG, boxShadow: KEY_SHADOW, color: 'var(--ds-text)' }
                 }
               >
-                <Icon name={s.icon} size={13} color={active ? DS.brass200 : DS.textMid} glow={active} />
+                <Icon name={s.icon} size={13} color={active ? DS.metal200 : DS.textMid} glow={active} />
                 <span
                   className="text-[10px] font-mono font-semibold tracking-wide"
-                  style={{ color: active ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
+                  style={{ color: active ? 'var(--ds-metal-200)' : 'var(--ds-text)' }}
                 >
                   {s.label}
                 </span>
@@ -354,7 +354,7 @@ export default function ShapeFaceMapper({ value, images, onChange }: ShapeFaceMa
                     />
                   ) : (
                     <>
-                      <Icon name="plus" size={12} color={isArmed ? DS.brass200 : DS.textLow} glow={isArmed} />
+                      <Icon name="plus" size={12} color={isArmed ? DS.metal200 : DS.textLow} glow={isArmed} />
                       <span className="text-[8px] font-mono leading-none" style={{ color: 'var(--ds-text-low)' }}>
                         {faceName(kind, i)}
                       </span>
@@ -365,7 +365,7 @@ export default function ShapeFaceMapper({ value, images, onChange }: ShapeFaceMa
                     className="absolute top-1 left-1 min-w-[15px] h-[15px] px-1 rounded-ds-xs flex items-center justify-center text-[8px] font-mono font-semibold tabular-nums"
                     style={{
                       background: dsAlpha(DS.void, 0.62),
-                      color: isActive ? DS.brass200 : DS.text,
+                      color: isActive ? DS.metal200 : DS.text,
                       boxShadow: `inset 0 0 0 1px ${dsAlpha(isActive ? DS_ACCENT : DS.steel, 0.6)}`,
                     }}
                   >
@@ -392,7 +392,7 @@ export default function ShapeFaceMapper({ value, images, onChange }: ShapeFaceMa
           })}
         </div>
         {armedSlot !== null && (
-          <div className="mt-1.5 text-[8.5px] font-mono leading-relaxed px-0.5" style={{ color: 'var(--ds-brass-200)' }}>
+          <div className="mt-1.5 text-[8.5px] font-mono leading-relaxed px-0.5" style={{ color: 'var(--ds-metal-200)' }}>
             {faceName(kind, armedSlot)} is ready — tap a picture below to drop it on.
           </div>
         )}

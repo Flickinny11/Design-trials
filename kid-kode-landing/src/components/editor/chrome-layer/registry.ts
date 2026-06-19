@@ -21,9 +21,9 @@ export interface ChromeSlabOptions {
   material: ChromeSlabMaterial;
   /** Corner radii CSS px — single value or [tl, tr, br, bl]. */
   radius?: number | [number, number, number, number];
-  /** Keyline border width CSS px (brass-graded). Default 1. */
+  /** Keyline border width CSS px (metal-graded). Default 1. */
   borderPx?: number;
-  /** 0..1 accent amount (brass emphasis: active keys, hero panels). */
+  /** 0..1 accent amount (accent emphasis: active keys, hero panels). */
   accent?: number;
   /** Frost strength 0..1 for glass (maps to mip LOD). */
   frost?: number;
@@ -36,14 +36,14 @@ export interface ChromeSlabOptions {
   order?: number;
   /**
    * EDITOR-EXP P2 (C12) — render this surface as a TRUE-3D raised, extruded
-   * brass key (thick chamfered sides from a grown SDF bevel, a lit top cap, a
+   * metal key (thick chamfered sides from a grown SDF bevel, a lit top cap, a
    * shaded base) instead of a flat slab. For the primary CTA (Add Node). The
-   * brass face derives from `accent`; pair `hero` with `accent: 1`.
+   * accent face derives from `accent`; pair `hero` with `accent: 1`.
    */
   hero?: boolean;
   /** Apparent extrusion depth in CSS px for a hero key (default 10). */
   heroDepthPx?: number;
-  /** Reserved cosmetic hint (e.g. 'brass'); the brass face comes from `accent`. */
+  /** Reserved cosmetic hint; the accent face comes from `accent`. */
   heroStyle?: string;
 }
 

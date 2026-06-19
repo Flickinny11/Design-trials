@@ -237,7 +237,7 @@ export default function TextFillPreviewStrip({
               style={{
                 background: 'transparent',
                 boxShadow: isActive
-                  ? 'inset 0 0 0 1.5px rgba(var(--ds-brass-300-rgb, 205,159,85), 0.85)'
+                  ? 'inset 0 0 0 1.5px rgba(var(--ds-metal-300-rgb, 205,159,85), 0.85)'
                   : undefined,
               }}
             />

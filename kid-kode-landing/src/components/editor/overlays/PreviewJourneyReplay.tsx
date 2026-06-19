@@ -27,13 +27,13 @@ export default function PreviewJourneyReplay() {
       type="button"
       onClick={replay}
       title="Replay the camera journey"
-      className="ds-glass ds-edge--brass ds-reveal pointer-events-auto absolute bottom-5 right-5 z-50 flex items-center gap-1.5 h-8 pl-2.5 pr-3 rounded-full"
+      className="ds-glass ds-edge--metal ds-reveal pointer-events-auto absolute bottom-5 right-5 z-50 flex items-center gap-1.5 h-8 pl-2.5 pr-3 rounded-full"
     >
       <svg width="13" height="13" viewBox="0 0 13 13" aria-hidden>
-        <path d="M6.5 1.5 a5 5 0 1 0 4.6 3" fill="none" stroke="var(--ds-brass-200)" strokeWidth="1.4" strokeLinecap="round" />
-        <path d="M11.2 1 L11.4 4.2 L8.3 3.6 Z" fill="var(--ds-brass-200)" />
+        <path d="M6.5 1.5 a5 5 0 1 0 4.6 3" fill="none" stroke="var(--ds-metal-200)" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M11.2 1 L11.4 4.2 L8.3 3.6 Z" fill="var(--ds-metal-200)" />
       </svg>
-      <span className="text-[9.5px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-brass-200)' }}>
+      <span className="text-[9.5px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>
         Replay intro
       </span>
     </button>

@@ -7,7 +7,7 @@
 // component only decides between same-kind generators (or, when the rows differ
 // only by quality, between quality tiers).
 //
-// Chrome: Observatory Brass — the same machined treatments the toolbar flyouts
+// Chrome: Chrome-Arc — the same machined treatments the toolbar flyouts
 // use (recessed WELL rows, brass active-key state from animation-tools/ui,
 // engraved SectionLabel groove). GSAP staggers the rows in on open; native
 // magnetic hover lifts the active-ish rows. Both honor prefers-reduced-motion.
@@ -77,7 +77,7 @@ function CreditBadge({ credits }: { credits: number }) {
   return (
     <span
       className="shrink-0 text-[8.5px] font-mono tabular-nums px-1.5 py-0.5 rounded-ds-xs whitespace-nowrap"
-      style={{ color: DS.brass200, background: WELL_BG, boxShadow: WELL_SHADOW }}
+      style={{ color: DS.metal200, background: WELL_BG, boxShadow: WELL_SHADOW }}
     >
       {creditWord(credits)}
     </span>
@@ -124,14 +124,14 @@ function ModelRow({
       <Icon
         name={iconName}
         size={15}
-        color={active ? DS.brass200 : DS.textMid}
+        color={active ? DS.metal200 : DS.textMid}
         glow={active}
       />
       <span className="flex-1 min-w-0 flex flex-col gap-0.5">
         <span className="flex items-center gap-1.5 min-w-0">
           <span
             className="text-[10.5px] font-mono font-semibold truncate"
-            style={{ color: active ? 'var(--ds-brass-200)' : 'var(--ds-text-hi)' }}
+            style={{ color: active ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
           >
             {label}
           </span>
@@ -157,7 +157,7 @@ function ModelRow({
       </span>
       <CreditBadge credits={credits} />
       {active && (
-        <Icon name="check" size={11} color={DS.brass200} glow />
+        <Icon name="check" size={11} color={DS.metal200} glow />
       )}
     </button>
   );
@@ -184,7 +184,7 @@ function SingleInfoRow({
       className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-ds-sm"
       style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}
     >
-      <Icon name={iconName} size={15} color={DS.brass300} />
+      <Icon name={iconName} size={15} color={DS.metal300} />
       <span className="flex-1 min-w-0 flex flex-col gap-0.5">
         <span className="flex items-center gap-1.5 min-w-0">
           <span

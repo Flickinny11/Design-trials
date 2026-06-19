@@ -4,7 +4,7 @@
  * STEP8 — Prism Canvas Toolbar (canvas-spec §5 the editing suite, §6 build
  * lifecycle, §8.4 keyframe editor, §14 selection/grouping, §1.3 boundary).
  *
- * The toolbar is part of the PRISM DESIGN SYSTEM ("Observatory Brass"): a
+ * The toolbar is part of the PRISM DESIGN SYSTEM ("Chrome-Arc"): a
  * machined brushed-metal left dock of grouped tool clusters with a frosted-
  * glass flyout per group, a slide-up ceramic keyframe editor, a marquee-select
  * overlay, and contextual "coming with <subsystem>" states for the groups
@@ -102,7 +102,7 @@ import {
   receivesLightingDefault,
 } from '@/lib/prism-graph/types';
 
-// ── Observatory Brass treatments (derived from design-system tokens ONLY) ───
+// ── Chrome-Arc treatments (derived from design-system tokens ONLY) ───
 // Machined key — a raised button face cut into the dock / flyout plates.
 const KEY_BG = 'linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal))';
 const KEY_SHADOW = 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.45)';
@@ -411,13 +411,13 @@ function DockGroupKey({
       {isActive && (
         <span
           className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
-          style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
+          style={{ background: 'var(--ds-grad-metal)', boxShadow: 'var(--ds-glow-arc)' }}
         />
       )}
-      <Icon name={meta.icon} size={16} color={isActive ? DS.brass200 : DS.text} glow={isActive} />
+      <Icon name={meta.icon} size={16} color={isActive ? DS.metal200 : DS.text} glow={isActive} />
       <span
         className="text-[9px] font-ui font-medium tracking-normal"
-        style={{ color: isActive ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
+        style={{ color: isActive ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}
       >
         {meta.label}
       </span>
@@ -1329,7 +1329,7 @@ function FlyoutShell({
       // windows (460px advocate flag) get a scrolling flyout instead of the
       // Lighting chips clipping below the fold.
       ref={flyoutSlab.ref}
-      className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--brass max-h-[min(78vh,calc(100vh-7rem))] overflow-hidden flex ds-reveal`}
+      className={`${wide ? 'w-[424px]' : 'w-[252px]'} ds-glass ds-glass--refract ds-edge--metal max-h-[min(78vh,calc(100vh-7rem))] overflow-hidden flex ds-reveal`}
     >
       {/* Inner scroll plate — keeps the specular edge ring pinned to the
           glass while long flyouts (Lighting) scroll. UI-WOW P2: revealRef
@@ -1340,11 +1340,11 @@ function FlyoutShell({
             <div
               className="w-7 h-7 rounded-ds-xs flex items-center justify-center"
               style={{
-                background: meta.wired ? 'var(--ds-grad-brass-soft)' : dsAlpha(DS.ice400, 0.12),
+                background: meta.wired ? 'var(--ds-grad-metal-soft)' : dsAlpha(DS.ice400, 0.12),
                 boxShadow: `inset 0 0 0 1px ${dsAlpha(meta.wired ? DS_ACCENT : DS.ice400, 0.34)}, var(--ds-chamfer-soft)`,
               }}
             >
-              <Icon name={meta.icon} size={14} color={meta.wired ? DS.brass300 : DS.ice300} glow />
+              <Icon name={meta.icon} size={14} color={meta.wired ? DS.metal300 : DS.ice300} glow />
             </div>
             <div>
               <div className="ds-title">
@@ -1451,7 +1451,7 @@ function TransformFlyout({
         <Icon name="edit" size={13} color={editorMode === 'edit' ? DS_ACCENT : DS.text} glow={editorMode === 'edit'} />
         <span
           className="text-[11px] font-mono"
-          style={{ color: editorMode === 'edit' ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}
+          style={{ color: editorMode === 'edit' ? 'var(--ds-metal-200)' : 'var(--ds-text)' }}
         >
           {editorMode === 'edit' ? 'Editing — handles on' : 'Edit Handles'}
         </span>
@@ -1500,8 +1500,8 @@ function TransformFlyout({
 
       <SectionLabel>Scale · Rotate</SectionLabel>
       <div className="flex flex-col gap-1.5">
-        <StepperRow label="S" testId="tt-scale-val" value={`${fmt(sp.scaleX)}×`} onDec={() => onScale(-1)} onInc={() => onScale(1)} accent={DS.brass300} />
-        <StepperRow label="R" testId="tt-rot-val" value={deg(sp.rotationZ)} onDec={() => onRotate(-1)} onInc={() => onRotate(1)} accent={DS.brass300} />
+        <StepperRow label="S" testId="tt-scale-val" value={`${fmt(sp.scaleX)}×`} onDec={() => onScale(-1)} onInc={() => onScale(1)} accent={DS.metal300} />
+        <StepperRow label="R" testId="tt-rot-val" value={deg(sp.rotationZ)} onDec={() => onRotate(-1)} onInc={() => onRotate(1)} accent={DS.metal300} />
       </div>
 
       <SectionLabel>Align{isGroup ? '' : ' · needs group'}</SectionLabel>
@@ -1551,7 +1551,7 @@ function SelectionFlyout({
         <span className="text-[10px] font-mono" style={{ color: 'var(--ds-text-mid)' }}>Selected</span>
         <span
           className="text-[12px] font-mono font-semibold"
-          style={{ color: count > 1 ? 'var(--ds-brass-200)' : 'var(--ds-brass-300)' }}
+          style={{ color: count > 1 ? 'var(--ds-metal-200)' : 'var(--ds-metal-300)' }}
         >
           {count}
         </span>
@@ -1568,8 +1568,8 @@ function SelectionFlyout({
 
       <SectionLabel>Group</SectionLabel>
       <div className="grid grid-cols-2 gap-1.5">
-        <ToolButton icon="group" label="Group" testId="tt-group" accent={DS.brass300} disabled={!canGroup} onClick={onGroup} title="Group 2+ selected elements" />
-        <ToolButton icon="ungroup" label="Ungroup" testId="tt-ungroup" accent={DS.brass300} disabled={!canUngroup} onClick={onUngroup} />
+        <ToolButton icon="group" label="Group" testId="tt-group" accent={DS.metal300} disabled={!canGroup} onClick={onGroup} title="Group 2+ selected elements" />
+        <ToolButton icon="ungroup" label="Ungroup" testId="tt-ungroup" accent={DS.metal300} disabled={!canUngroup} onClick={onUngroup} />
       </div>
 
       <SectionLabel>Protect</SectionLabel>
@@ -1746,7 +1746,7 @@ function LightingFlyout({
         style={pickerOpen ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
       >
         <Icon name="plus" size={11} color={pickerOpen ? DS_ACCENT : DS.text} />
-        <span className="text-[9.5px] font-mono" style={{ color: pickerOpen ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}>Add Light</span>
+        <span className="text-[9.5px] font-mono" style={{ color: pickerOpen ? 'var(--ds-metal-200)' : 'var(--ds-text)' }}>Add Light</span>
       </button>
       {pickerOpen && (
         <div className="grid grid-cols-2 gap-1.5">
@@ -1800,7 +1800,7 @@ function LightingFlyout({
               icon="eye"
               label={selectedLight.castShadow ? 'Casts Shadow' : 'No Shadow'}
               active={selectedLight.castShadow === true}
-              accent={DS.brass300}
+              accent={DS.metal300}
               onClick={() => onUpdateLight(selectedLight.id, { castShadow: !(selectedLight.castShadow === true) })}
             />
           )}
@@ -1816,7 +1816,7 @@ function LightingFlyout({
       <FaderRow
         label="Shadow Softness"
         value={shadowSoftness}
-        accent={DS.brass300}
+        accent={DS.metal300}
         testId="shadow-softness"
         onChange={(v) => onPatchSpec({ shadowSoftness: v })}
       />
@@ -1838,7 +1838,7 @@ function LightingFlyout({
             label={nodeReceives ? 'Receives Light' : 'Unlit'}
             testId="receives-lighting"
             active={nodeReceives}
-            accent={DS.brass300}
+            accent={DS.metal300}
             onClick={onToggleReceives}
             title="Toggle whether this node is lit by the scene rig"
           />
@@ -1898,7 +1898,7 @@ function FaderRow({
 function SelectionChip({ label, locked, group }: { label: string; locked: boolean; group: boolean }) {
   return (
     <div className="flex items-center gap-2 px-2.5 py-2 ds-well">
-      <Icon name={group ? 'group' : 'cursor'} size={12} color={group ? DS.brass300 : DS_ACCENT} />
+      <Icon name={group ? 'group' : 'cursor'} size={12} color={group ? DS.metal300 : DS_ACCENT} />
       <span className="flex-1 text-[10px] font-mono truncate" style={{ color: 'var(--ds-text)' }}>{label}</span>
       {locked && <Icon name="lock" size={11} color={DS.warn} />}
     </div>

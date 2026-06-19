@@ -7,7 +7,7 @@
 // product detail-card built in pure DOM/CSS from the premium toolkit catalogued
 // in docs/prism/DESIGN-REFERENCES.md — GLITCH / chromatic-aberration RGB-split,
 // scanlines, holographic sheen, transparency flicker — all rendered in the
-// Observatory-Brass design-system language (brass + ice, NO purple).
+// Chrome-Arc design-system language (brass + ice, NO purple).
 //
 // Contract (frozen — do not deviate):
 //   props.spec   : OverlaySpec (title / tagline / specs[] / imageUrl / accent)
@@ -39,7 +39,7 @@ export default function HolographicDetailCard(props: {
   const slab = useChromeSlab({ material: 'glass', radius: 18, frost: 0.55, accent: 1 });
 
   // Default accent = the brass-200 specular. spec.accent may be any hex.
-  const accent = spec.accent || 'var(--ds-brass-200)';
+  const accent = spec.accent || 'var(--ds-metal-200)';
   // Ice cyan companion for the RGB-split (the cold informational counter-hue).
   const iceRgb = 'var(--ds-ice-300-rgb, 169, 194, 209)';
 
@@ -150,7 +150,7 @@ export default function HolographicDetailCard(props: {
           ───────────────────────────────────────────────────────────────────── */}
       <style jsx>{`
         .holo-card {
-          /* Glassmorphic dark holographic panel (ds-glass ds-edge--brass base). */
+          /* Glassmorphic dark holographic panel (ds-glass ds-edge--metal base). */
           position: absolute;
           inset: 0;
           display: flex;
@@ -160,7 +160,7 @@ export default function HolographicDetailCard(props: {
           background:
             linear-gradient(
               168deg,
-              rgba(var(--ds-brass-200-rgb), 0.06) 0%,
+              rgba(var(--ds-metal-200-rgb), 0.06) 0%,
               rgba(18, 21, 29, 0.86) 26%,
               rgba(7, 8, 13, 0.93) 100%
             );
@@ -169,12 +169,12 @@ export default function HolographicDetailCard(props: {
              layer glass slab provides real live-scene refraction at t2; the
              gradient + box-shadow below remain the t0/t1 fallback (INV-9). */
           box-shadow:
-            inset 0 1px 0 rgba(var(--ds-brass-200-rgb), 0.22),
-            inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.16),
+            inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.22),
+            inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.16),
             inset 0 -1px 0 rgba(0, 0, 0, 0.5),
             0 8px 18px rgba(0, 0, 0, 0.6),
             0 36px 90px rgba(0, 0, 0, 0.66),
-            0 0 50px rgba(var(--ds-brass-400-rgb), 0.16);
+            0 0 50px rgba(var(--ds-metal-400-rgb), 0.16);
           font-family: var(--ds-font-ui, ui-sans-serif, system-ui, sans-serif);
           isolation: isolate;
           will-change: opacity;
@@ -182,7 +182,7 @@ export default function HolographicDetailCard(props: {
             holo-card-in 460ms cubic-bezier(0.22, 1, 0.36, 1) both,
             holo-breathe 4.6s ease-in-out 460ms infinite;
         }
-        /* Brass keyline edge (ds-edge--brass equivalent, scoped). */
+        /* Brass keyline edge (ds-edge--metal equivalent, scoped). */
         .holo-card::before {
           content: '';
           position: absolute;
@@ -191,8 +191,8 @@ export default function HolographicDetailCard(props: {
           padding: 1px;
           background: linear-gradient(
             165deg,
-            rgba(var(--ds-brass-200-rgb), 0.85) 0%,
-            rgba(var(--ds-brass-400-rgb), 0.34) 38%,
+            rgba(var(--ds-metal-200-rgb), 0.85) 0%,
+            rgba(var(--ds-metal-400-rgb), 0.34) 38%,
             rgba(${iceRgb}, 0.18) 62%,
             rgba(0, 0, 0, 0.32) 100%
           );
@@ -230,7 +230,7 @@ export default function HolographicDetailCard(props: {
           opacity: 0.55;
           background:
             radial-gradient(120% 80% at 8% 0%, rgba(${iceRgb}, 0.1), transparent 52%),
-            radial-gradient(120% 80% at 92% 100%, rgba(var(--ds-brass-300-rgb), 0.12), transparent 52%);
+            radial-gradient(120% 80% at 92% 100%, rgba(var(--ds-metal-300-rgb), 0.12), transparent 52%);
           animation: holo-aberration 5.2s ease-in-out infinite;
         }
         .holo-scan {
@@ -246,9 +246,9 @@ export default function HolographicDetailCard(props: {
           background: linear-gradient(
             180deg,
             transparent 0%,
-            rgba(var(--ds-brass-200-rgb), 0.04) 42%,
-            rgba(var(--ds-brass-100, #f7e9c6), 0.16) 50%,
-            rgba(var(--ds-brass-200-rgb), 0.04) 58%,
+            rgba(var(--ds-metal-200-rgb), 0.04) 42%,
+            rgba(var(--ds-metal-100, #eef0f3), 0.16) 50%,
+            rgba(var(--ds-metal-200-rgb), 0.04) 58%,
             transparent 100%
           );
           animation: holo-scan-sweep 3.4s linear infinite;
@@ -288,26 +288,26 @@ export default function HolographicDetailCard(props: {
           background: radial-gradient(circle at 32% 28%, rgba(40, 46, 60, 0.9), rgba(10, 12, 18, 0.9));
           box-shadow:
             inset 0 1px 0 rgba(255, 252, 242, 0.12),
-            inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.22),
+            inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.22),
             0 1px 3px rgba(0, 0, 0, 0.6);
           cursor: pointer;
           transition: transform 120ms cubic-bezier(0.22, 1, 0.36, 1),
             color 160ms ease, box-shadow 200ms ease, filter 160ms ease;
         }
         .holo-close:hover {
-          color: var(--ds-brass-200, #ecd49d);
+          color: var(--ds-metal-200, #ecd49d);
           filter: brightness(1.12);
           box-shadow:
             inset 0 1px 0 rgba(255, 252, 242, 0.16),
-            inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.42),
-            0 0 16px rgba(var(--ds-brass-400-rgb), 0.34);
+            inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.42),
+            0 0 16px rgba(var(--ds-metal-400-rgb), 0.34);
         }
         .holo-close:active { transform: scale(0.92); }
         .holo-close:focus-visible {
           outline: none;
           box-shadow:
-            0 0 0 1px rgba(var(--ds-brass-300-rgb), 0.7),
-            0 0 0 4px rgba(var(--ds-brass-400-rgb), 0.2);
+            0 0 0 1px rgba(var(--ds-metal-300-rgb), 0.7),
+            0 0 0 4px rgba(var(--ds-metal-400-rgb), 0.2);
         }
 
         /* ── Header ──────────────────────────────────────────────────────── */
@@ -329,8 +329,8 @@ export default function HolographicDetailCard(props: {
           width: 6px;
           height: 6px;
           border-radius: 999px;
-          background: var(--ds-brass-200, #ecd49d);
-          box-shadow: 0 0 9px rgba(var(--ds-brass-300-rgb), 0.9);
+          background: var(--ds-metal-200, #ecd49d);
+          box-shadow: 0 0 9px rgba(var(--ds-metal-300-rgb), 0.9);
           animation: holo-pulse-dot 1.8s ease-in-out infinite;
         }
         .holo-title {
@@ -351,7 +351,7 @@ export default function HolographicDetailCard(props: {
         }
         .holo-title-base {
           position: relative;
-          background: linear-gradient(170deg, var(--ds-brass-100, #f7e9c6), var(--ds-brass-300, #ddba77) 55%, var(--ds-brass-500, #b3853f));
+          background: linear-gradient(170deg, var(--ds-metal-100, #eef0f3), var(--ds-metal-300, #c6c9cd) 55%, var(--ds-metal-500, #898c92));
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
@@ -369,7 +369,7 @@ export default function HolographicDetailCard(props: {
           mix-blend-mode: screen;
         }
         .holo-title-r {
-          color: rgba(var(--ds-brass-300-rgb), 0.85);
+          color: rgba(var(--ds-metal-300-rgb), 0.85);
           animation: holo-glitch-r 3.6s steps(1, end) infinite;
         }
         .holo-title-c {
@@ -395,11 +395,11 @@ export default function HolographicDetailCard(props: {
           border-radius: var(--ds-r-md, 13px);
           overflow: hidden;
           background:
-            radial-gradient(120% 120% at 50% 30%, rgba(var(--ds-brass-200-rgb), 0.08), transparent 60%),
+            radial-gradient(120% 120% at 50% 30%, rgba(var(--ds-metal-200-rgb), 0.08), transparent 60%),
             linear-gradient(180deg, rgba(10, 13, 20, 0.92), rgba(5, 6, 10, 0.96));
           box-shadow:
             inset 0 2px 8px rgba(0, 0, 0, 0.6),
-            inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.2),
+            inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.2),
             inset 0 0 40px rgba(${iceRgb}, 0.06);
         }
         .holo-img {
@@ -424,11 +424,11 @@ export default function HolographicDetailCard(props: {
           background: conic-gradient(
             from 0deg,
             transparent 0deg,
-            rgba(var(--ds-brass-200-rgb), 0.18) 36deg,
+            rgba(var(--ds-metal-200-rgb), 0.18) 36deg,
             transparent 96deg,
             rgba(${iceRgb}, 0.14) 180deg,
             transparent 240deg,
-            rgba(var(--ds-brass-300-rgb), 0.16) 312deg,
+            rgba(var(--ds-metal-300-rgb), 0.16) 312deg,
             transparent 360deg
           );
           animation: holo-sheen-spin 11s linear infinite;
@@ -454,7 +454,7 @@ export default function HolographicDetailCard(props: {
           z-index: 4;
           pointer-events: none;
           mix-blend-mode: screen;
-          background: linear-gradient(180deg, rgba(${iceRgb}, 0.05), rgba(var(--ds-brass-200-rgb), 0.03));
+          background: linear-gradient(180deg, rgba(${iceRgb}, 0.05), rgba(var(--ds-metal-200-rgb), 0.03));
           animation: holo-flicker 2.7s steps(1, end) infinite;
         }
         /* Frame corner ticks — instrument bracket. */
@@ -463,7 +463,7 @@ export default function HolographicDetailCard(props: {
           width: 16px;
           height: 16px;
           z-index: 5;
-          border: 1.5px solid rgba(var(--ds-brass-200-rgb), 0.7);
+          border: 1.5px solid rgba(var(--ds-metal-200-rgb), 0.7);
           pointer-events: none;
         }
         .holo-corner--tl { top: 7px; left: 7px; border-right: none; border-bottom: none; }
@@ -484,7 +484,7 @@ export default function HolographicDetailCard(props: {
           align-items: baseline;
           gap: 10px;
           padding: 7px 0;
-          border-bottom: 1px solid rgba(var(--ds-brass-400-rgb), 0.08);
+          border-bottom: 1px solid rgba(var(--ds-metal-400-rgb), 0.08);
           opacity: 0;
           animation: holo-row-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
           animation-delay: calc(360ms + var(--row-i, 0) * 90ms);
@@ -506,7 +506,7 @@ export default function HolographicDetailCard(props: {
           margin-bottom: 3px;
           background: repeating-linear-gradient(
             90deg,
-            rgba(var(--ds-brass-400-rgb), 0.22) 0 2px,
+            rgba(var(--ds-metal-400-rgb), 0.22) 0 2px,
             transparent 2px 6px
           );
         }
@@ -518,10 +518,10 @@ export default function HolographicDetailCard(props: {
           font-size: 12.5px;
           font-weight: 600;
           letter-spacing: 0.01em;
-          color: var(--ds-brass-200, #ecd49d);
+          color: var(--ds-metal-200, #ecd49d);
           text-align: right;
           white-space: nowrap;
-          text-shadow: 0 0 12px rgba(var(--ds-brass-400-rgb), 0.4);
+          text-shadow: 0 0 12px rgba(var(--ds-metal-400-rgb), 0.4);
         }
 
         /* ── Footer telemetry ────────────────────────────────────────────── */
@@ -556,8 +556,8 @@ export default function HolographicDetailCard(props: {
           width: 3px;
           height: 40%;
           border-radius: 1px;
-          background: var(--ds-brass-300, #ddba77);
-          box-shadow: 0 0 6px rgba(var(--ds-brass-400-rgb), 0.5);
+          background: var(--ds-metal-300, #c6c9cd);
+          box-shadow: 0 0 6px rgba(var(--ds-metal-400-rgb), 0.5);
           animation: holo-eq 1.1s ease-in-out infinite;
         }
         .holo-foot-bars :global(i:nth-child(2)) { animation-delay: 0.14s; }
@@ -587,8 +587,8 @@ export default function HolographicDetailCard(props: {
           to { transform: rotate(360deg); }
         }
         @keyframes holo-pulse-dot {
-          0%, 100% { opacity: 1; box-shadow: 0 0 9px rgba(var(--ds-brass-300-rgb), 0.9); }
-          50% { opacity: 0.45; box-shadow: 0 0 4px rgba(var(--ds-brass-300-rgb), 0.45); }
+          0%, 100% { opacity: 1; box-shadow: 0 0 9px rgba(var(--ds-metal-300-rgb), 0.9); }
+          50% { opacity: 0.45; box-shadow: 0 0 4px rgba(var(--ds-metal-300-rgb), 0.45); }
         }
         @keyframes holo-eq {
           0%, 100% { height: 35%; }
@@ -654,7 +654,7 @@ function HolographicEmblem({ accent, iceRgb }: { accent: string; iceRgb: string 
       <svg viewBox="0 0 200 200" className="holo-emblem-svg" preserveAspectRatio="xMidYMid meet">
         <defs>
           <radialGradient id="holo-core" cx="50%" cy="42%" r="62%">
-            <stop offset="0%" stopColor="var(--ds-brass-100, #f7e9c6)" stopOpacity="0.55" />
+            <stop offset="0%" stopColor="var(--ds-metal-100, #eef0f3)" stopOpacity="0.55" />
             <stop offset="55%" stopColor={accent} stopOpacity="0.16" />
             <stop offset="100%" stopColor="var(--ds-void, #04050a)" stopOpacity="0" />
           </radialGradient>
@@ -717,11 +717,11 @@ function HolographicEmblem({ accent, iceRgb }: { accent: string; iceRgb: string 
         }
         .holo-emblem-svg :global(.holo-ring) {
           fill: none;
-          stroke: rgba(var(--ds-brass-300-rgb), 0.42);
+          stroke: rgba(var(--ds-metal-300-rgb), 0.42);
           stroke-width: 1;
         }
         .holo-emblem-svg :global(.holo-ring--1) {
-          stroke: rgba(var(--ds-brass-200-rgb), 0.55);
+          stroke: rgba(var(--ds-metal-200-rgb), 0.55);
           stroke-dasharray: 3 7;
           animation: holo-ring-spin 26s linear infinite;
           transform-origin: 100px 100px;
@@ -733,7 +733,7 @@ function HolographicEmblem({ accent, iceRgb }: { accent: string; iceRgb: string 
           transform-origin: 100px 100px;
         }
         .holo-emblem-svg :global(.holo-ring--3) {
-          stroke: rgba(var(--ds-brass-300-rgb), 0.5);
+          stroke: rgba(var(--ds-metal-300-rgb), 0.5);
         }
         .holo-emblem-svg :global(.holo-reticle) {
           transform-origin: 100px 100px;
@@ -744,11 +744,11 @@ function HolographicEmblem({ accent, iceRgb }: { accent: string; iceRgb: string 
         }
         .holo-emblem-svg :global(.holo-reticle-track) {
           fill: none;
-          stroke: rgba(var(--ds-brass-400-rgb), 0.2);
+          stroke: rgba(var(--ds-metal-400-rgb), 0.2);
           stroke-width: 1;
         }
         .holo-emblem-svg :global(.holo-tick) {
-          stroke: rgba(var(--ds-brass-200-rgb), 0.6);
+          stroke: rgba(var(--ds-metal-200-rgb), 0.6);
           stroke-width: 1;
         }
         .holo-emblem-svg :global(.holo-cross) {
@@ -757,13 +757,13 @@ function HolographicEmblem({ accent, iceRgb }: { accent: string; iceRgb: string 
         }
         .holo-emblem-svg :global(.holo-tri) {
           fill: none;
-          stroke: rgba(var(--ds-brass-200-rgb), 0.7);
+          stroke: rgba(var(--ds-metal-200-rgb), 0.7);
           stroke-width: 1.4;
           stroke-linejoin: round;
         }
         .holo-emblem-svg :global(.holo-pip) {
-          fill: var(--ds-brass-100, #f7e9c6);
-          filter: drop-shadow(0 0 6px rgba(var(--ds-brass-300-rgb), 0.9));
+          fill: var(--ds-metal-100, #eef0f3);
+          filter: drop-shadow(0 0 6px rgba(var(--ds-metal-300-rgb), 0.9));
         }
         @keyframes holo-ring-spin {
           from { transform: rotate(0deg); }

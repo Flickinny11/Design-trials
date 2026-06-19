@@ -174,7 +174,7 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
         data-sheet-id={id}
         role="dialog"
         aria-modal="true"
-        className="ds-glass ds-glass--heavy ds-edge--brass absolute left-0 right-0 bottom-0 flex flex-col pointer-events-auto"
+        className="ds-glass ds-glass--heavy ds-edge--metal absolute left-0 right-0 bottom-0 flex flex-col pointer-events-auto"
         style={{
           height: sheetH,
           transform: `translateY(${sheetH}px)`,
@@ -196,11 +196,11 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
           <div
             aria-hidden
             className="mx-auto rounded-full"
-            style={{ width: 44, height: 'var(--ds-sheet-handle)', background: 'var(--ds-grad-brass-soft, rgba(205,159,85,.5))', boxShadow: '0 0 10px rgba(205,159,85,.25)' }}
+            style={{ width: 44, height: 'var(--ds-sheet-handle)', background: 'var(--ds-grad-metal-soft, rgba(184,188,192,.5))', boxShadow: '0 0 10px rgba(0,0,0,.4)' }}
           />
           <div className="mt-2 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              {kicker && <div className="ds-kicker" style={{ color: 'var(--ds-brass-300)' }}>{kicker}</div>}
+              {kicker && <div className="ds-kicker" style={{ color: 'var(--ds-metal-300)' }}>{kicker}</div>}
               {title && <div className="ds-title truncate">{title}</div>}
             </div>
             <button

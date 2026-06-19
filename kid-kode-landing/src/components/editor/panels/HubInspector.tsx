@@ -84,10 +84,10 @@ export default function HubInspector() {
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`ds-chip ds-press cursor-pointer whitespace-nowrap min-h-[40px] px-3 gap-1.5 ${
-                active ? 'ds-chip--brass' : 'hover:text-ds-text'
+                active ? 'ds-chip--metal' : 'hover:text-ds-text'
               }`}
             >
-              <Icon name={t.icon} size={11} color={active ? DS.brass400 : DS.textMid} glow={active} />
+              <Icon name={t.icon} size={11} color={active ? DS.metal400 : DS.textMid} glow={active} />
               {t.label}
             </button>
           );
@@ -131,7 +131,7 @@ export default function HubInspector() {
     // either this panel OR Inspector (never both), so the refract budget is 1.
     <div
       ref={hubSlab.ref}
-      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--brass ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
+      className="absolute z-40 right-0 top-0 bottom-0 w-full md:w-[460px] md:right-3 md:top-3 md:bottom-3 flex flex-col overflow-hidden ds-glass ds-glass--refract ds-edge--metal ds-elev-4 rounded-none md:rounded-ds-lg ds-reveal-r"
     >
       {inner}
     </div>
@@ -185,7 +185,7 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
                 <span className="text-[11px] text-ds-text font-mono">{name}</span>
                 <div className="flex gap-3 text-[10px] font-mono text-ds-text-mid">
                   <span>≤{bp.maxWidth}px</span>
-                  <span className="text-ds-brass-300">×{bp.scale}</span>
+                  <span className="text-ds-metal-300">×{bp.scale}</span>
                 </div>
               </div>
             ) : null
@@ -225,7 +225,7 @@ function HubBehaviorTab({ nodes }: { nodes: PrismNode[] }) {
           bindings.map((b, i) => (
             <div key={i} className="px-3 py-2.5 ds-well rounded-ds-md">
               <div className="flex items-center gap-1.5 text-[11px]">
-                <span className="ds-chip ds-chip--brass">{b.target}</span>
+                <span className="ds-chip ds-chip--metal">{b.target}</span>
                 <Icon name="chevron" size={9} color={DS.textLow} />
                 <span className="text-ds-text-mid font-mono text-[11px] truncate">{b.source}</span>
               </div>
@@ -302,7 +302,7 @@ function HubAnimationTab({ hubNodes }: { hubNodes: PrismNode[] }) {
                 <span>{n.visual.frameCount} frames</span>
                 {(() => {
                   const fps = (n.intent?.animationSpec as { fps?: number } | undefined)?.fps;
-                  return typeof fps === 'number' ? <span className="text-ds-brass-300">@ {fps}fps</span> : null;
+                  return typeof fps === 'number' ? <span className="text-ds-metal-300">@ {fps}fps</span> : null;
                 })()}
               </div>
             </div>

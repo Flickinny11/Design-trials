@@ -295,7 +295,7 @@ export default function AnimationFlyout({
         // ── Contextual empty state (DS-styled, like the other gated groups) ──
         <div data-anim-section className="flex flex-col items-center text-center gap-2.5 py-5 px-3">
           <div className="w-10 h-10 ds-well flex items-center justify-center">
-            <Icon name="wand" size={17} color={DS.brass300} glow />
+            <Icon name="wand" size={17} color={DS.metal300} glow />
           </div>
           <span className="text-[10px] font-mono leading-relaxed" style={{ color: 'var(--ds-text)' }}>
             {multiCount >= 2
@@ -380,7 +380,7 @@ export default function AnimationFlyout({
               </button>
               <span
                 className="flex-1 text-center text-[9px] font-mono tabular-nums px-1 py-1 rounded-ds-xs"
-                style={{ color: 'var(--ds-brass-300)', background: 'var(--ds-grad-well)', boxShadow: WELL_SHADOW }}
+                style={{ color: 'var(--ds-metal-300)', background: 'var(--ds-grad-well)', boxShadow: WELL_SHADOW }}
               >
                 {filtered.length === 0 ? 'no matches' : `${safePage + 1} / ${pages} · ${filtered.length} match${filtered.length === 1 ? '' : 'es'}`}
               </span>
@@ -555,7 +555,7 @@ export default function AnimationFlyout({
           style={keyframeOpen ? activeKeyStyle(DS_ACCENT) : { background: KEY_BG, boxShadow: KEY_SHADOW }}
         >
           <Icon name="timeline" size={13} color={keyframeOpen ? DS_ACCENT : DS.text} glow={keyframeOpen} />
-          <span className="text-[11px] font-mono" style={{ color: keyframeOpen ? 'var(--ds-brass-200)' : 'var(--ds-text)' }}>
+          <span className="text-[11px] font-mono" style={{ color: keyframeOpen ? 'var(--ds-metal-200)' : 'var(--ds-text)' }}>
             {keyframeOpen ? 'Hide Keyframe Editor' : 'Keyframe Editor'}
           </span>
         </button>
@@ -566,7 +566,7 @@ export default function AnimationFlyout({
           className="w-full h-8 rounded-ds-sm flex items-center justify-center gap-1.5 ds-press hover:brightness-[1.15] transition-all"
           style={{ background: KEY_BG, boxShadow: KEY_SHADOW }}
         >
-          <Icon name="wand" size={11} color={DS.brass300} />
+          <Icon name="wand" size={11} color={DS.metal300} />
           <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>From Scratch — bespoke</span>
         </button>
       </div>
@@ -584,7 +584,7 @@ export default function AnimationFlyout({
           onClick={() => setViewMode('preview-app')}
           className="ds-btn w-full h-8"
         >
-          <Icon name="play" size={11} color={DS.brass200} />
+          <Icon name="play" size={11} color={DS.metal200} />
           <span className="text-[10px] font-mono">Preview App</span>
           <Icon name="arrowRight" size={10} color={DS.textMid} />
         </button>
@@ -594,7 +594,7 @@ export default function AnimationFlyout({
 }
 
 // ── Live picker tile — reuses the catalog's SharedViewport window inside an
-// Observatory Brass instrument bezel. Hover = the tile PLAYS (shared rig) and
+// Chrome-Arc instrument bezel. Hover = the tile PLAYS (shared rig) and
 // leans magnetically toward the cursor (GSAP, axis-aligned only). ───────────
 function PickerTile({
   def,
@@ -658,7 +658,7 @@ function PickerTile({
             <span
               className="shrink-0 w-1.5 h-1.5 rounded-full"
               title={`Bound ×${appliedCount}`}
-              style={{ background: 'var(--ds-grad-brass)', boxShadow: 'var(--ds-glow-brass)' }}
+              style={{ background: 'var(--ds-grad-metal)', boxShadow: 'var(--ds-glow-arc)' }}
             />
           )}
         </span>

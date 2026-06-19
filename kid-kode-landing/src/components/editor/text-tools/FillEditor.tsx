@@ -32,7 +32,7 @@ const FILL_KINDS: Array<{ kind: TextFill['kind']; label: string }> = [
 // rendered as the user's own selected text in 3D (TextFillPreviewStrip).
 const SUGGESTION_COUNT = 10;
 const SUGGEST_DEBOUNCE_MS = 350;
-const DEFAULT_PROMPT = 'brushed gold';
+const DEFAULT_PROMPT = 'brushed titanium';
 
 /** Bake a suggestion batch. Batch n re-runs the deterministic generator with
  *  a longer index range and keeps the tail — so "Generate more" yields
@@ -206,7 +206,7 @@ export default function FillEditor({
               (FP-15); this only surfaces/labels the control. */}
           <SectionLabel>Generate fill from a prompt</SectionLabel>
           <div className="flex items-center gap-1.5 px-1 -mt-0.5">
-            <Icon name="wand" size={10} color={DS.brass300} />
+            <Icon name="wand" size={10} color={DS.metal300} />
             <span className="text-[8.5px] font-mono leading-tight" style={{ color: 'var(--ds-text-low)' }}>
               Describe a surface — it pours into the glyph mask (never letterforms, INV-11).
             </span>
@@ -269,7 +269,7 @@ export default function FillEditor({
                         backgroundImage: `url(${s.url})`,
                         backgroundSize: 'cover',
                         boxShadow: isActive
-                          ? `inset 0 0 0 2px ${dsAlpha(DS.brass300, 0.9)}, var(--ds-chamfer-soft)`
+                          ? `inset 0 0 0 2px ${dsAlpha(DS.metal300, 0.9)}, var(--ds-chamfer-soft)`
                           : 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.45)',
                       }}
                     />

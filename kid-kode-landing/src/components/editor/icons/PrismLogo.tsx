@@ -1,19 +1,26 @@
 'use client';
 
-// EDITOR-EXPERIENCE P3 (C15) — the bespoke PRISM brand mark.
+// PRISM PORT F0 (de-brassed 2026-06-19) — the bespoke dispersive PRISM mark.
 //
 // The brand's first impression must be the BEST-looking element, not the worst.
-// This REPLACES the prior generic 4-point gold star (Icon name="sparkle"). It is
-// a true prism: a glassy, brass-bevelled triangle that refracts an incoming ice
-// beam into a warm dispersion fan (Observatory palette — brass→amber→ice; NO
-// purple, by brand law). Faux-3D in the same single-key-light language as the
-// icon system (lit top-left edge, shadowed flank, glass body, specular glint),
-// and it is ALIVE: a slow GSAP dispersion shimmer at rest, and on hover the beam
-// brightens, the fan spreads, and a specular streak sweeps the prism face.
+// This REPLACES the CONDEMNED gold-star / brass-prism mark. It is a true
+// DISPERSIVE prism: a machined-chrome refractive triangle that splits an
+// incoming cool collimated beam into an ARC-CYAN -> cool spectrum fan on a
+// near-black substrate. Dimensional in the single-key-light material language
+// (top highlight + bottom shadow = real Z-thickness, chrome bevel, translucent
+// glass body, arc-cyan emissive core, specular glint), and it is ALIVE: a slow
+// GSAP dispersion shimmer at rest, and on hover the beam brightens, the fan
+// spreads, and a specular streak sweeps the prism face.
 //
-// Palette is the frozen DS brass/ice ramp (tokens.ts): f7e9c6 / cd9f55 / 8f6930
-// / ddba77 brass, a9c2d1 ice, on 0b0d13 ink — identical to the favicon (icon.svg)
-// so the masthead mark and the OS favicon are one identity.
+// Palette is the locked DS identity (tokens.ts): chrome #dfe2e6 / titanium
+// #b8bcc0 / mercury #eef0f3 metal, arc-cyan #1ec8ff (the single emissive
+// accent) + anodized #2d5fa3 tint, on substrate #0d1117 — identical to the
+// favicon (icon.svg) so the masthead mark and the OS favicon are one identity.
+// ZERO brass/gold/amber. NO purple. NOT a star.
+//
+// NOTE: this is the dimensional 2D port of the slice's hero dispersive prism.
+// A full WebGL/R3F refractive-solid upgrade (transmission + real dispersion +
+// mirror-chrome yoke ring) is flagged for the F1/F2 increment.
 
 import * as React from 'react';
 import gsap from 'gsap';
@@ -29,7 +36,7 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
   const rootRef = React.useRef<SVGSVGElement | null>(null);
   const fanRef = React.useRef<SVGGElement | null>(null);
   const sweepRef = React.useRef<SVGGElement | null>(null);
-  const glintRef = React.useRef<SVGEllipseElement | null>(null);
+  const coreRef = React.useRef<SVGCircleElement | null>(null);
   const idleTl = React.useRef<gsap.core.Timeline | null>(null);
 
   // Idle dispersion shimmer (respects prefers-reduced-motion).
@@ -46,15 +53,15 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
     // the refracted fan breathes — opacity + a faint outward spread from the exit pivot
     tl.fromTo(
       fanRef.current,
-      { opacity: 0.5, transformOrigin: '15px 13.5px', scaleX: 0.96, scaleY: 0.98 },
+      { opacity: 0.55, transformOrigin: '15px 13.5px', scaleX: 0.96, scaleY: 0.98 },
       { opacity: 1, scaleX: 1.04, scaleY: 1.06, duration: 2.4 },
       0,
     );
-    // the entry glint twinkles a half-beat off
+    // the arc-cyan core pulses a half-beat off
     tl.fromTo(
-      glintRef.current,
-      { opacity: 0.35, scale: 0.8, transformOrigin: '8px 13px' },
-      { opacity: 0.95, scale: 1.15, duration: 1.6 },
+      coreRef.current,
+      { opacity: 0.55, scale: 0.82, transformOrigin: '12px 14px' },
+      { opacity: 1, scale: 1.12, duration: 1.6 },
       0.4,
     );
     idleTl.current = tl;
@@ -72,7 +79,7 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
     if (reduce) return;
     // fan spreads + brightens
     gsap.to(fanRef.current, { opacity: 1, scaleX: 1.12, scaleY: 1.14, duration: 0.4, ease: 'expo.out', transformOrigin: '15px 13.5px' });
-    // specular streak sweeps across the prism face left→right, once
+    // specular streak sweeps across the prism face left->right, once
     gsap.fromTo(
       sweepRef.current,
       { attr: { transform: 'translate(-9 0)' }, opacity: 0 },
@@ -86,7 +93,7 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
     gsap.to(fanRef.current, { scaleX: 1, scaleY: 1, duration: 0.5, ease: 'power3.out', transformOrigin: '15px 13.5px' });
   }, []);
 
-  // prism triangle (apex up), in 24×24 viewBox
+  // prism triangle (apex up), in 24x24 viewBox
   const TRI = 'M12 3.2 L20.4 19 L3.6 19 Z';
 
   return (
@@ -99,39 +106,41 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
       className={className}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      style={{ overflow: 'visible', filter: 'drop-shadow(0 1px 1.5px rgba(0,1,8,0.55))', ...style }}
+      style={{ overflow: 'visible', filter: 'drop-shadow(0 1px 1.5px rgba(0,1,8,0.6))', ...style }}
       aria-label="Prism"
       role="img"
     >
       <defs>
-        {/* brass bevel ramp for the prism edge — lit top → deep base */}
+        {/* chrome bevel ramp for the prism edge — lit mercury top -> titanium ->
+            graphite shadow base (real Z: highlight TL, shadow BR) */}
         <linearGradient id={`pl-edge-${uid}`} gradientUnits="userSpaceOnUse" x1="6" y1="4" x2="18" y2="20">
-          <stop offset="0" stopColor="#fbf0d4" />
-          <stop offset="0.42" stopColor="#ddba77" />
-          <stop offset="0.74" stopColor="#cd9f55" />
-          <stop offset="1" stopColor="#8f6930" />
+          <stop offset="0" stopColor="#eef0f3" />
+          <stop offset="0.42" stopColor="#dfe2e6" />
+          <stop offset="0.74" stopColor="#b8bcc0" />
+          <stop offset="1" stopColor="#32363c" />
         </linearGradient>
-        {/* refractive glass body — cool ice top-left → warm amber base, low alpha */}
+        {/* refractive glass body — cool steel top-left -> arc-cyan -> anodized
+            base, low alpha (translucent solid, not a flat fill) */}
         <linearGradient id={`pl-body-${uid}`} gradientUnits="userSpaceOnUse" x1="6" y1="5" x2="17" y2="19">
-          <stop offset="0" stopColor="#a9c2d1" stopOpacity="0.30" />
-          <stop offset="0.5" stopColor="#cd9f55" stopOpacity="0.14" />
-          <stop offset="1" stopColor="#8f6930" stopOpacity="0.22" />
+          <stop offset="0" stopColor="#aebccb" stopOpacity="0.28" />
+          <stop offset="0.5" stopColor="#1ec8ff" stopOpacity="0.13" />
+          <stop offset="1" stopColor="#2d5fa3" stopOpacity="0.22" />
         </linearGradient>
         {/* top-left specular wash on the face */}
         <linearGradient id={`pl-spec-${uid}`} gradientUnits="userSpaceOnUse" x1="7" y1="5" x2="15" y2="16">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.55" />
+          <stop offset="0" stopColor="#ffffff" stopOpacity="0.5" />
           <stop offset="0.4" stopColor="#ffffff" stopOpacity="0.06" />
           <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
-        {/* fan beam gradients (warm→cool, NO violet) */}
+        {/* fan beam gradients — arc-cyan -> cool spectrum (NO warm, NO violet) */}
         <linearGradient id={`pl-b1-${uid}`} gradientUnits="userSpaceOnUse" x1="15" y1="13.5" x2="24" y2="10">
-          <stop offset="0" stopColor="#fbf0d4" /><stop offset="1" stopColor="#f7e9c6" stopOpacity="0" />
+          <stop offset="0" stopColor="#96e0ff" /><stop offset="1" stopColor="#96e0ff" stopOpacity="0" />
         </linearGradient>
         <linearGradient id={`pl-b2-${uid}`} gradientUnits="userSpaceOnUse" x1="15" y1="13.5" x2="24" y2="13">
-          <stop offset="0" stopColor="#ddba77" /><stop offset="1" stopColor="#cd9f55" stopOpacity="0" />
+          <stop offset="0" stopColor="#1ec8ff" /><stop offset="1" stopColor="#1ec8ff" stopOpacity="0" />
         </linearGradient>
         <linearGradient id={`pl-b3-${uid}`} gradientUnits="userSpaceOnUse" x1="15" y1="13.5" x2="24" y2="16.5">
-          <stop offset="0" stopColor="#a9c2d1" /><stop offset="1" stopColor="#a9c2d1" stopOpacity="0" />
+          <stop offset="0" stopColor="#2d5fa3" /><stop offset="1" stopColor="#2d5fa3" stopOpacity="0" />
         </linearGradient>
         <filter id={`pl-glow-${uid}`} x="-40%" y="-40%" width="180%" height="180%">
           <feGaussianBlur stdDeviation="0.7" />
@@ -139,13 +148,12 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
         <clipPath id={`pl-clip-${uid}`}><path d={TRI} /></clipPath>
       </defs>
 
-      {/* incoming ice beam → entering the left face */}
+      {/* incoming cool collimated beam -> entering the left face */}
       <g filter={`url(#pl-glow-${uid})`} opacity="0.9">
-        <line x1="0.5" y1="12.4" x2="8.6" y2="13.1" stroke="#a9c2d1" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1="0.5" y1="12.4" x2="8.6" y2="13.1" stroke="#cdd6de" strokeWidth="1.5" strokeLinecap="round" />
       </g>
-      <ellipse ref={glintRef} cx="8" cy="13" rx="1.5" ry="1.1" fill="#dbe8f0" filter={`url(#pl-glow-${uid})`} />
 
-      {/* refracted dispersion fan → exiting the right face (warm→cool) */}
+      {/* refracted dispersion fan -> exiting the right face (arc-cyan -> cool) */}
       <g ref={fanRef} filter={`url(#pl-glow-${uid})`}>
         <line x1="15" y1="13.5" x2="24.5" y2="9.6" stroke={`url(#pl-b1-${uid})`} strokeWidth="1.5" strokeLinecap="round" />
         <line x1="15" y1="13.7" x2="25" y2="13" stroke={`url(#pl-b2-${uid})`} strokeWidth="1.7" strokeLinecap="round" />
@@ -162,10 +170,12 @@ export function PrismLogo({ size = 22, className, style }: PrismLogoProps) {
           <rect x="9" y="2" width="2.4" height="20" fill="#ffffff" opacity="0.5" transform="skewX(-18)" />
         </g>
       </g>
-      {/* brass bevelled edge — lit, ~1.9 wide */}
+      {/* arc-cyan emissive core — the single emission, at the refraction pivot */}
+      <circle ref={coreRef} cx="12" cy="14" r="1.5" fill="#1ec8ff" filter={`url(#pl-glow-${uid})`} />
+      {/* chrome bevelled edge — lit, ~1.9 wide */}
       <path d={TRI} fill="none" stroke={`url(#pl-edge-${uid})`} strokeWidth="1.9" strokeLinejoin="round" />
       {/* hairline rim keeps it crisp at masthead size */}
-      <path d={TRI} fill="none" stroke="#ffffff" strokeOpacity="0.22" strokeWidth="0.4" strokeLinejoin="round" />
+      <path d={TRI} fill="none" stroke="#eef0f3" strokeOpacity="0.22" strokeWidth="0.4" strokeLinejoin="round" />
     </svg>
   );
 }

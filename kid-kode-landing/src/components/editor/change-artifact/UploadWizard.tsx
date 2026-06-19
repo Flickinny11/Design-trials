@@ -120,7 +120,7 @@ export default function UploadWizard({ node, onClose, onBack }: { node: PrismNod
             border: `1px dashed ${dragOver ? dsAlpha(DS_ACCENT, 0.7) : dsAlpha(DS_ACCENT, 0.2)}`,
           }}
         >
-          <Icon name="image" size={20} color={dragOver ? DS.brass200 : DS.textMid} glow={dragOver} />
+          <Icon name="image" size={20} color={dragOver ? DS.metal200 : DS.textMid} glow={dragOver} />
           <span className="text-[10px] font-mono text-center" style={{ color: 'var(--ds-text-mid)' }}>
             {busy ? 'Uploading…' : 'Drop a picture, 3D model, video, or Rive file here'}
           </span>

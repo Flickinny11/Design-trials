@@ -143,13 +143,13 @@ export interface TextPreset {
 export const TEXT_PRESETS: TextPreset[] = [
   {
     id: 'display-brass',
-    label: 'Display / Brass',
+    label: 'Display / Chrome',
     spec: {
       fontFamily: 'Bebas Neue',
       fontWeight: 400,
       fontSize: 0.6,
       letterSpacing: 0.04,
-      fill: { kind: 'gradient', from: '#f4d58a', to: '#9a6b1f', angleDeg: 90 },
+      fill: { kind: 'gradient', from: '#eef0f3', to: '#898c92', angleDeg: 90 },
       decompose: 'glyph',
     },
   },

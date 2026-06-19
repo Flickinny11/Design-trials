@@ -6,7 +6,7 @@ import { DS } from '@/components/editor/design-system';
 import { useChromeSlab } from '@/components/editor/chrome-layer';
 
 // Simple HSV-like picker. Click to open; live-updates.
-// Chrome: Observatory Brass — swatches sit in carved ds-well frames, the
+// Chrome: Chrome-Arc — swatches sit in carved ds-well frames, the
 // popover is a heavy-frost glass palette, the hex field is a ds-input.
 // The hue/sat/lum/alpha track gradients and the checkerboard alpha map are
 // functional color-science data, not chrome accents — they stay literal.
@@ -22,7 +22,7 @@ function parseHex(hex: string): { r: number; g: number; b: number; a: number } {
   let h = hex.replace('#', '').trim();
   if (h.length === 3) h = h.split('').map((c) => c + c).join('');
   if (h.length === 6) h += 'ff';
-  if (h.length !== 8) return { r: 205, g: 159, b: 85, a: 255 }; // DS.brass400 fallback
+  if (h.length !== 8) return { r: 205, g: 159, b: 85, a: 255 }; // DS.metal400 fallback
   return {
     r: parseInt(h.slice(0, 2), 16),
     g: parseInt(h.slice(2, 4), 16),
@@ -113,7 +113,7 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
         >
           {/* Swatch carved into a ds-well frame; the brass ring lights up
               while the picker popover is open (Radix data-state on trigger). */}
-          <span className="ds-well inline-flex rounded-[6px] p-[2px] transition-shadow group-data-[state=open]:shadow-[inset_0_2px_6px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(var(--ds-brass-400-rgb),0.85),var(--ds-glow-brass)]">
+          <span className="ds-well inline-flex rounded-[6px] p-[2px] transition-shadow group-data-[state=open]:shadow-[inset_0_2px_6px_rgba(0,0,0,0.55),inset_0_0_0_1px_rgba(var(--ds-metal-400-rgb),0.85),var(--ds-glow-arc)]">
             <span
               className="block w-4 h-4 rounded-[4px] group-hover:scale-110 transition-transform"
               style={{
@@ -131,7 +131,7 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
               }}
             />
           </span>
-          <span className="text-[11px] font-mono tabular-nums text-ds-brass-300">{local}</span>
+          <span className="text-[11px] font-mono tabular-nums text-ds-metal-300">{local}</span>
         </button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -198,7 +198,7 @@ function Slider({
     <div className="mb-2.5">
       <div className="flex justify-between text-[9px] font-mono mb-1">
         <span className="text-ds-text-mid">{label}</span>
-        <span className="text-ds-brass-300 tabular-nums">{Math.round(value)}</span>
+        <span className="text-ds-metal-300 tabular-nums">{Math.round(value)}</span>
       </div>
       {/* The track gradient is functional color data; the groove framing and
           thumb are machined chrome. */}
@@ -222,9 +222,9 @@ function Slider({
           className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-4 h-4 rounded-full pointer-events-none"
           style={{
             left: `${((value - min) / (max - min)) * 100}%`,
-            background: `radial-gradient(circle at 32% 28%, ${DS.brass100} 0%, ${DS.brass300} 38%, ${DS.brass500} 74%, ${DS.brass700} 100%)`,
+            background: `radial-gradient(circle at 32% 28%, ${DS.metal100} 0%, ${DS.metal300} 38%, ${DS.metal500} 74%, ${DS.metal700} 100%)`,
             boxShadow:
-              '0 1px 3px rgba(0,0,0,0.65), 0 0 10px rgba(var(--ds-brass-400-rgb), 0.3), inset 0 -1px 1px rgba(0,0,0,0.4)',
+              '0 1px 3px rgba(0,0,0,0.65), 0 0 10px rgba(var(--ds-metal-400-rgb), 0.3), inset 0 -1px 1px rgba(0,0,0,0.4)',
           }}
         />
       </div>

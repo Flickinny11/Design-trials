@@ -39,7 +39,7 @@ import { buildClusterNodeInputs } from '@/lib/editor/elements/instantiate';
 import { DS } from '@/components/editor/design-system';
 import type { PrismHub } from '@/lib/prism-graph/types';
 
-const TETHER_COLOR = DS.brass300;
+const TETHER_COLOR = DS.metal300;
 const SAMPLE_DISTANCE = 150;
 
 export default function ElementPlacementLayer({

@@ -26,7 +26,7 @@
 //     artifact present / builtSnapshot fresh). 3D, video, and code artifact
 //     kinds remain "coming soon — needs the build pipeline" — nothing faked.
 //
-// Chrome: Observatory Brass (raised-bar directive, 2026-06-10) — machined KEY
+// Chrome: Chrome-Arc (raised-bar directive, 2026-06-10) — machined KEY
 // faces + recessed wells + engraved grooves from the design-system tokens
 // (the same shading constants CanvasToolbar/text-tools use; kept local to
 // avoid a circular module edge — CanvasToolbar mounts this flyout). GSAP
@@ -54,7 +54,7 @@ import {
   type UploadedImageAsset,
 } from './upload-image';
 
-// ── Observatory Brass treatments (derived from design-system tokens ONLY;
+// ── Chrome-Arc treatments (derived from design-system tokens ONLY;
 //    same machined constants as CanvasToolbar / text-tools/ui.tsx) ──────────
 const KEY_BG = 'linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal))';
 const KEY_SHADOW = 'var(--ds-chamfer-soft), 0 1px 2px rgba(0, 0, 0, 0.45)';
@@ -224,10 +224,10 @@ function AddObjectPanel({
             boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.34)}, ${KEY_SHADOW}`,
           }}
         >
-          <Icon name="image" size={13} color={DS.brass200} glow={busy !== 'upload'} />
+          <Icon name="image" size={13} color={DS.metal200} glow={busy !== 'upload'} />
           <span
             className="text-[10.5px] font-mono font-semibold tracking-wide"
-            style={{ color: 'var(--ds-brass-200)' }}
+            style={{ color: 'var(--ds-metal-200)' }}
           >
             {busy === 'upload' ? 'Uploading…' : 'Upload a picture'}
           </span>
@@ -485,10 +485,10 @@ export default function AddElementFlyout({
               : { background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft)' }
           }
         >
-          <Icon name="plus" size={14} color={hub ? DS.brass200 : DS.textMid} glow={!!hub} />
+          <Icon name="plus" size={14} color={hub ? DS.metal200 : DS.textMid} glow={!!hub} />
           <span
             className="text-[11px] font-mono font-semibold tracking-wide"
-            style={{ color: hub ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
+            style={{ color: hub ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}
           >
             Add Element
           </span>
@@ -514,7 +514,7 @@ export default function AddElementFlyout({
             >
               {selectedNode.intent?.caption?.split(' · ')[0] || selectedNode.subtype}
             </span>
-            <span className="ds-chip ds-chip--brass">
+            <span className="ds-chip ds-chip--metal">
               {STAGES.find((s) => s.n === stage)?.name ?? 'Element'}
             </span>
           </div>
@@ -572,7 +572,7 @@ export default function AddElementFlyout({
                     className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-mono font-semibold shrink-0"
                     style={
                       isCurrent
-                        ? { background: 'var(--ds-grad-brass)', color: 'var(--ds-ink)', boxShadow: 'var(--ds-glow-brass)' }
+                        ? { background: 'var(--ds-grad-metal)', color: 'var(--ds-ink)', boxShadow: 'var(--ds-glow-arc)' }
                         : isDone
                           ? { background: dsAlpha(DS.ok, 0.18), color: DS.ok, boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.ok, 0.4)}` }
                           : { background: 'var(--ds-grad-ceramic)', color: 'var(--ds-text-low)', boxShadow: 'var(--ds-chamfer-soft)' }
@@ -584,7 +584,7 @@ export default function AddElementFlyout({
                     className="text-[10px] font-mono font-semibold"
                     style={{
                       color: isCurrent
-                        ? 'var(--ds-brass-200)'
+                        ? 'var(--ds-metal-200)'
                         : isDone
                           ? DS.ok
                           : 'var(--ds-text-mid)',

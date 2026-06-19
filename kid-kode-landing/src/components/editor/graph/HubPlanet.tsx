@@ -7,7 +7,7 @@
 // materials (already used by HubHull); the scene Bloom enhances the emissive rim
 // + atmosphere halo. Sized by the hub's content metric (D2). Each identity is
 // strongly distinct in base/band/speck/halo + PBR so no two hubs read alike and
-// none read like a dormant node sphere. No purple/magenta; Observatory-Brass
+// none read like a dormant node sphere. No purple/magenta; Chrome-Arc
 // palette only (deep-ocean stays in the cool ice/teal family; ember-forge keeps
 // emissive in the brass/amber/ember warm range).
 
@@ -80,7 +80,7 @@ interface FamilySpec {
 const FAMILIES: Record<HubPlanetIdentity, FamilySpec> = {
   // Warm metallic banded gas giant — brass bands, bright specular, high metalness.
   'brass-gas-giant': {
-    base: '#b98f4e', band: '#7e5c2a', speck: '#f7e9c6', halo: DS.brass200,
+    base: '#b98f4e', band: '#7e5c2a', speck: '#f7e9c6', halo: DS.metal200,
     metalness: 1.0, roughness: 0.34, clearcoat: 0.55, clearcoatRoughness: 0.24,
     transmission: 0, ior: 1.5, emissive: '#3a2a12', emissiveIntensity: 0.24,
     envMapIntensity: 1.6, bumpScale: 0.5,
@@ -111,7 +111,7 @@ const FAMILIES: Record<HubPlanetIdentity, FamilySpec> = {
   // emissive warm cracks routed through the speck/emissive channel. Brass/amber/
   // ember warm range only — NO purple/magenta.
   'ember-forge': {
-    base: '#1c1712', band: '#2c211a', speck: '#ff8a3c', halo: DS.brass300,
+    base: '#1c1712', band: '#2c211a', speck: '#ff8a3c', halo: DS.metal300,
     metalness: 0.18, roughness: 0.66, clearcoat: 0.0, clearcoatRoughness: 0.7,
     transmission: 0, ior: 1.46, emissive: '#ff7a2e', emissiveIntensity: 0.55,
     envMapIntensity: 0.6, bumpScale: 0.62, emissiveMapStrength: 1.0,

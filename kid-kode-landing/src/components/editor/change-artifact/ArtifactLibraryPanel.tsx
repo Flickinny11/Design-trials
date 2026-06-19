@@ -9,7 +9,7 @@
 // via onRestore. The then-current artifact is retained in turn by the caller —
 // this surface never mutates the graph, it only emits the chosen entry.
 //
-// Chrome: Observatory Brass (machined KEY faces + recessed wells + engraved
+// Chrome: Chrome-Arc (machined KEY faces + recessed wells + engraved
 // SectionLabel grooves reused from animation-tools/ui), a tasteful GSAP
 // staggered reveal, and native magnetic hover on the Restore keys — both
 // skipped under prefers-reduced-motion. No purple; project Icon only;
@@ -187,12 +187,12 @@ export default function ArtifactLibraryPanel({
               boxShadow: `${WELL_SHADOW}, inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.45)}`,
             }}
           >
-            <Icon name="check" size={20} color={DS.brass200} glow />
+            <Icon name="check" size={20} color={DS.metal200} glow />
           </div>
           <div className="flex flex-col gap-1 min-w-0 flex-1">
             <span
               className="text-[8px] font-mono uppercase tracking-[0.18em]"
-              style={{ color: DS.brass300 }}
+              style={{ color: DS.metal300 }}
             >
               In use now
             </span>

@@ -39,14 +39,14 @@ export default function PreviewHubNav() {
     navigateToHub(hubs[(curIdx + delta + n) % n].hubId);
   };
   const chevBtn =
-    'ds-press flex items-center justify-center h-7 w-7 rounded-full text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors shrink-0';
+    'ds-press flex items-center justify-center h-7 w-7 rounded-full text-ds-text-mid hover:text-ds-metal-200 hover:bg-white/5 transition-colors shrink-0';
 
   return (
     <nav
       aria-label="App sections"
       className="absolute top-[96px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto max-w-[94vw]"
     >
-      <div className="ds-glass ds-edge--brass ds-reveal flex items-center gap-0.5 rounded-full p-0.5 overflow-x-auto scrollbar-hide">
+      <div className="ds-glass ds-edge--metal ds-reveal flex items-center gap-0.5 rounded-full p-0.5 overflow-x-auto scrollbar-hide">
         <button
           type="button"
           aria-label="Previous hub"
@@ -68,8 +68,8 @@ export default function PreviewHubNav() {
               title={label}
               className="ds-press flex items-center gap-1.5 h-7 px-3 rounded-full whitespace-nowrap transition-colors"
               style={{
-                background: active ? 'var(--ds-grad-brass)' : 'transparent',
-                color: active ? '#2a1f12' : 'var(--ds-text-mid)',
+                background: active ? 'var(--ds-grad-metal)' : 'transparent',
+                color: active ? '#0d1117' : 'var(--ds-text-mid)',
               }}
             >
               <span className="text-[8px] font-mono tabular-nums opacity-70">{String(i + 1).padStart(2, '0')}</span>

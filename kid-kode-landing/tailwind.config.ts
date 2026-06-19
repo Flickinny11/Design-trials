@@ -6,7 +6,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         // --ds-font-* (design-system/tokens.css) wrap the next/font/local
-        // variables with full fallback stacks: Clash Display / Geist / JBM.
+        // variables with clean system fallback stacks: Sora / Sora / JetBrains Mono.
         display: ['var(--ds-font-display)', 'ui-sans-serif', 'system-ui'],
         sans: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
         ui: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
@@ -47,15 +47,19 @@ const config: Config = {
           text: 'var(--ds-text)',
           'text-mid': 'var(--ds-text-mid)',
           'text-low': 'var(--ds-text-low)',
-          brass: {
-            100: 'var(--ds-brass-100)',
-            200: 'var(--ds-brass-200)',
-            300: 'var(--ds-brass-300)',
-            400: 'var(--ds-brass-400)',
-            500: 'var(--ds-brass-500)',
-            600: 'var(--ds-brass-600)',
-            700: 'var(--ds-brass-700)',
+          metal: {
+            100: 'var(--ds-metal-100)',
+            200: 'var(--ds-metal-200)',
+            300: 'var(--ds-metal-300)',
+            400: 'var(--ds-metal-400)',
+            500: 'var(--ds-metal-500)',
+            600: 'var(--ds-metal-600)',
+            700: 'var(--ds-metal-700)',
           },
+          // Arc-cyan — the single emissive / active accent (+ anodized tint).
+          arc: 'var(--ds-arc)',
+          'arc-hot': 'var(--ds-arc-hot)',
+          anodized: 'var(--ds-anodized)',
           ice: {
             200: 'var(--ds-ice-200)',
             300: 'var(--ds-ice-300)',

@@ -1,8 +1,8 @@
 /* ════════════════════════════════════════════════════════════════════════
-   GUIDED-TIPS — walkthrough visual language (Observatory Brass; NO purple).
+   GUIDED-TIPS — walkthrough visual language (Chrome-Arc; NO purple).
    Editor-overlay UI. Imported once from src/app/layout.tsx after materials.css.
    All motion is transform/opacity/filter; every keyframe is killed under
-   prefers-reduced-motion (INV-10 / C9). Brass focus ring (C10).
+   prefers-reduced-motion (INV-10 / C9). Arc-cyan focus ring (C10).
    ════════════════════════════════════════════════════════════════════════ */
 
 /* ── Glowing lightbulb (top-right, bespoke; C1) ─────────────────────────── */
@@ -15,7 +15,7 @@
   width: 42px;
   height: 42px;
   border-radius: var(--ds-r-pill);
-  /* machined graphite housing so the brass glass reads as a fitting, not a sticker */
+  /* machined graphite housing so the arc-lit glass reads as a fitting, not a sticker */
   background:
     radial-gradient(circle at 34% 28%, rgba(255, 252, 242, 0.10), transparent 60%),
     linear-gradient(165deg, var(--ds-slate), var(--ds-ink));
@@ -23,8 +23,8 @@
     inset 0 1px 0 var(--ds-edge-specular),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
     0 6px 18px rgba(0, 0, 0, 0.45),
-    var(--ds-glow-brass);
-  border: 1px solid rgba(var(--ds-brass-400-rgb), 0.28);
+    var(--ds-glow-arc);
+  border: 1px solid rgba(var(--ds-metal-400-rgb), 0.28);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transition:
@@ -34,12 +34,12 @@
 }
 .tip-bulb:hover {
   transform: translateY(-1px) scale(1.06);
-  border-color: rgba(var(--ds-brass-300-rgb), 0.6);
+  border-color: rgba(var(--ds-metal-300-rgb), 0.6);
   box-shadow:
     inset 0 1px 0 var(--ds-edge-specular),
     inset 0 -1px 0 rgba(0, 0, 0, 0.5),
     0 8px 22px rgba(0, 0, 0, 0.5),
-    var(--ds-glow-brass-strong);
+    var(--ds-glow-arc-strong);
 }
 .tip-bulb:active { transform: translateY(0) scale(0.97); }
 .tip-bulb:focus-visible {
@@ -47,7 +47,7 @@
   box-shadow:
     var(--ds-focus-ring),
     0 6px 18px rgba(0, 0, 0, 0.45),
-    var(--ds-glow-brass-strong);
+    var(--ds-glow-arc-strong);
 }
 /* The bespoke filament glass — an SVG sits inside; this halo is the lit glow. */
 .tip-bulb__halo {
@@ -55,7 +55,7 @@
   inset: -6px;
   border-radius: var(--ds-r-pill);
   pointer-events: none;
-  background: radial-gradient(circle, rgba(var(--ds-brass-300-rgb), 0.38) 0%, rgba(var(--ds-brass-400-rgb), 0.12) 42%, transparent 70%);
+  background: radial-gradient(circle, rgba(var(--ds-arc-rgb), 0.4) 0%, rgba(var(--ds-arc-rgb), 0.12) 42%, transparent 70%);
   filter: blur(2px);
   opacity: 0.85;
   animation: tip-bulb-breathe 3.4s var(--ds-ease-inout) infinite;
@@ -66,7 +66,7 @@
   0%, 100% { opacity: 0.5; transform: scale(0.94); }
   50%      { opacity: 1;   transform: scale(1.08); }
 }
-/* The filament line inside the glass pulses warm. */
+/* The filament line inside the glass pulses arc-cyan. */
 .tip-bulb__filament { animation: tip-filament-pulse 3.4s var(--ds-ease-inout) infinite; }
 @keyframes tip-filament-pulse {
   0%, 100% { opacity: 0.55; }
@@ -82,21 +82,21 @@
 }
 .tip-scrim svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .tip-scrim--enter { animation: tip-fade-in var(--ds-t-slow) var(--ds-ease-out) both; }
-/* Brass machined frame stroked around a cutout — the "spotlight" ring. */
+/* Machined chrome frame stroked around a cutout — the "spotlight" ring. */
 .tip-frame-ring {
   fill: none;
-  stroke: rgba(var(--ds-brass-300-rgb), 0.9);
+  stroke: rgba(var(--ds-metal-300-rgb), 0.9);
   stroke-width: 1.5;
-  filter: drop-shadow(0 0 8px rgba(var(--ds-brass-400-rgb), 0.55));
+  filter: drop-shadow(0 0 8px rgba(var(--ds-metal-400-rgb), 0.55));
 }
-.tip-frame-ring--soft { stroke: rgba(var(--ds-brass-400-rgb), 0.5); stroke-width: 1; }
-/* Travelling brass tick that sweeps the spotlight frame (premium, not flat). */
+.tip-frame-ring--soft { stroke: rgba(var(--ds-metal-400-rgb), 0.5); stroke-width: 1; }
+/* Travelling chrome tick that sweeps the spotlight frame (premium, not flat). */
 .tip-frame-sweep {
   fill: none;
-  stroke: rgba(var(--ds-brass-200-rgb), 0.95);
+  stroke: rgba(var(--ds-metal-200-rgb), 0.95);
   stroke-width: 2;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(var(--ds-brass-200-rgb), 0.7));
+  filter: drop-shadow(0 0 6px rgba(var(--ds-metal-200-rgb), 0.7));
   animation: tip-frame-sweep 2.6s linear infinite;
 }
 @keyframes tip-frame-sweep { to { stroke-dashoffset: -1000; } }
@@ -117,11 +117,11 @@
   position: absolute;
   inset: 0;
   border-radius: var(--ds-r-pill);
-  border: 2px solid rgba(var(--ds-brass-200-rgb), 0.95);
+  border: 2px solid rgba(var(--ds-metal-200-rgb), 0.95);
   box-shadow:
-    0 0 18px rgba(var(--ds-brass-400-rgb), 0.55),
-    inset 0 0 10px rgba(var(--ds-brass-300-rgb), 0.3);
-  background: radial-gradient(circle, rgba(var(--ds-brass-400-rgb), 0.12) 0%, transparent 66%);
+    0 0 18px rgba(var(--ds-metal-400-rgb), 0.55),
+    inset 0 0 10px rgba(var(--ds-metal-300-rgb), 0.3);
+  background: radial-gradient(circle, rgba(var(--ds-metal-400-rgb), 0.12) 0%, transparent 66%);
   transition: transform 120ms var(--ds-ease-out);
 }
 .tip-cursor__dot {
@@ -132,15 +132,15 @@
   height: 6px;
   margin: -3px 0 0 -3px;
   border-radius: var(--ds-r-pill);
-  background: var(--ds-brass-100);
-  box-shadow: 0 0 10px rgba(var(--ds-brass-200-rgb), 0.9);
+  background: var(--ds-metal-100);
+  box-shadow: 0 0 10px rgba(var(--ds-metal-200-rgb), 0.9);
 }
-/* Comet trail — a soft brass tail behind the moving cursor. */
+/* Comet trail — a soft chrome tail behind the moving cursor. */
 .tip-cursor__trail {
   position: absolute;
   inset: 4px;
   border-radius: var(--ds-r-pill);
-  background: radial-gradient(circle, rgba(var(--ds-brass-300-rgb), 0.35), transparent 70%);
+  background: radial-gradient(circle, rgba(var(--ds-metal-300-rgb), 0.35), transparent 70%);
   filter: blur(3px);
   opacity: 0.6;
 }
@@ -150,7 +150,7 @@
   position: absolute;
   inset: 0;
   border-radius: var(--ds-r-pill);
-  border: 2px solid rgba(var(--ds-brass-200-rgb), 0.8);
+  border: 2px solid rgba(var(--ds-metal-200-rgb), 0.8);
   opacity: 0;
 }
 .tip-cursor.is-clicking .tip-cursor__ripple { animation: tip-cursor-ripple 520ms var(--ds-ease-out); }
@@ -170,18 +170,18 @@
   z-index: 90;
   width: min(380px, 88vw);
   border-radius: var(--ds-r-lg);
-  /* real frosted-glass card — lit edge, brass rim, depth */
+  /* real frosted-glass card — lit edge, chrome rim, depth */
   background:
     linear-gradient(168deg, rgba(26, 30, 40, 0.78), rgba(11, 13, 19, 0.86));
   backdrop-filter: blur(14px) saturate(1.1);
   -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  border: 1px solid rgba(var(--ds-brass-400-rgb), 0.3);
+  border: 1px solid rgba(var(--ds-metal-400-rgb), 0.3);
   box-shadow:
     inset 0 1px 0 var(--ds-edge-specular),
     inset 0 -1px 0 rgba(0, 0, 0, 0.4),
     0 24px 64px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(0, 0, 0, 0.4),
-    var(--ds-glow-brass);
+    var(--ds-glow-arc);
   overflow: hidden;
   color: var(--ds-text);
 }
@@ -201,7 +201,7 @@
   inset: 0;
   pointer-events: none !important;  /* decorative — never intercept controls */
   z-index: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(var(--ds-brass-200-rgb), 0.16) 48%, rgba(var(--ds-ice-400-rgb), 0.10) 52%, transparent 70%);
+  background: linear-gradient(110deg, transparent 30%, rgba(var(--ds-metal-200-rgb), 0.16) 48%, rgba(var(--ds-ice-400-rgb), 0.10) 52%, transparent 70%);
   background-size: 280% 100%;
   mix-blend-mode: screen;
   animation: tip-sheen 4.2s var(--ds-ease-inout) infinite;
@@ -216,21 +216,21 @@
   width: 100%;
   height: 168px;
   background: transparent;        /* canvas artifact shows through */
-  border-bottom: 1px solid rgba(var(--ds-brass-400-rgb), 0.22);
+  border-bottom: 1px solid rgba(var(--ds-metal-400-rgb), 0.22);
   overflow: hidden;
 }
 .tip-popup__window-frame {
   position: absolute;
   inset: 10px;
   border-radius: var(--ds-r-md);
-  border: 1px solid rgba(var(--ds-brass-300-rgb), 0.45);
-  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5), 0 0 14px rgba(var(--ds-brass-400-rgb), 0.18);
+  border: 1px solid rgba(var(--ds-metal-300-rgb), 0.45);
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.5), 0 0 14px rgba(var(--ds-metal-400-rgb), 0.18);
   pointer-events: none;
 }
 .tip-popup__window-corner {
   position: absolute;
   width: 12px; height: 12px;
-  border: 1.5px solid rgba(var(--ds-brass-200-rgb), 0.85);
+  border: 1.5px solid rgba(var(--ds-metal-200-rgb), 0.85);
   pointer-events: none;
 }
 .tip-popup__body { padding: 14px 16px 12px; position: relative; z-index: 1; }
@@ -239,7 +239,7 @@
   font-size: 9px;
   letter-spacing: 0.22em;
   font-weight: 600;
-  color: var(--ds-brass-300);
+  color: var(--ds-metal-300);
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
 }
 .tip-title {
@@ -288,8 +288,8 @@
   transition: background var(--ds-t-base) var(--ds-ease-out), transform var(--ds-t-base) var(--ds-ease-out);
 }
 .tip-dot.is-active {
-  background: var(--ds-grad-brass);
-  box-shadow: var(--ds-glow-brass);
+  background: var(--ds-grad-metal);
+  box-shadow: var(--ds-glow-arc);
   transform: scale(1.18);
 }
 .tip-dot:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
@@ -309,11 +309,11 @@
 .tip-btn:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
 .tip-btn--primary {
   color: var(--ds-ink);
-  background: var(--ds-grad-brass);
-  border: 1px solid rgba(var(--ds-brass-200-rgb), 0.6);
-  box-shadow: var(--ds-glow-brass), inset 0 1px 0 rgba(255, 252, 242, 0.4);
+  background: var(--ds-grad-metal);
+  border: 1px solid rgba(var(--ds-metal-200-rgb), 0.6);
+  box-shadow: var(--ds-glow-arc), inset 0 1px 0 rgba(255, 252, 242, 0.4);
 }
-.tip-btn--primary:hover { box-shadow: var(--ds-glow-brass-strong), inset 0 1px 0 rgba(255, 252, 242, 0.5); }
+.tip-btn--primary:hover { box-shadow: var(--ds-glow-arc-strong), inset 0 1px 0 rgba(255, 252, 242, 0.5); }
 .tip-btn--ghost {
   color: var(--ds-text-mid);
   background: rgba(255, 255, 255, 0.04);
@@ -339,7 +339,7 @@
   cursor: pointer; backdrop-filter: blur(6px);
   transition: color var(--ds-t-base) var(--ds-ease-out), border-color var(--ds-t-base) var(--ds-ease-out);
 }
-.tip-skip:hover { color: var(--ds-brass-200); border-color: rgba(var(--ds-brass-400-rgb), 0.5); }
+.tip-skip:hover { color: var(--ds-metal-200); border-color: rgba(var(--ds-metal-400-rgb), 0.5); }
 .tip-skip:focus-visible { outline: none; box-shadow: var(--ds-focus-ring); }
 .tip-close {
   width: 26px; height: 26px; border-radius: var(--ds-r-pill);

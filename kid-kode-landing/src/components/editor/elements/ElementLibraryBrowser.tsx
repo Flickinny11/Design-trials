@@ -19,7 +19,7 @@
 // placement is still committed to the active/nearest hub (criterion 21 works via
 // at least the click path).
 //
-// Observatory-Brass chrome, design-tokens only (ds-* + tokens.css). NO purple,
+// Chrome-Arc chrome, design-tokens only (ds-* + tokens.css). NO purple,
 // NO stock icons, never the word "fal". Mobile-aware: responsive grid,
 // touch-friendly hit targets, no bottom-band collisions (the modal is centered
 // with its own scroll region).
@@ -196,7 +196,7 @@ export default function ElementLibraryBrowser() {
       {/* (c) Panel chrome — TOP layer. Outer frame is transparent (brass edge
           only); the tile grid region is transparent so the rig shows through. */}
       <div
-        className="relative ds-edge--brass rounded-ds-lg ds-reveal flex flex-col w-full max-h-[92vh] overflow-hidden"
+        className="relative ds-edge--metal rounded-ds-lg ds-reveal flex flex-col w-full max-h-[92vh] overflow-hidden"
         style={{ zIndex: 20, maxWidth: 1080 }}
         onMouseDown={(e) => e.stopPropagation()}
       >
@@ -207,17 +207,17 @@ export default function ElementLibraryBrowser() {
           {/* Header */}
           <div
             className="flex items-center justify-between px-5 pt-4 pb-3"
-            style={{ borderBottom: `1px solid ${dsAlpha(DS.brass400, 0.16)}` }}
+            style={{ borderBottom: `1px solid ${dsAlpha(DS.metal400, 0.16)}` }}
           >
             <div className="flex items-center gap-3 min-w-0">
               <div
                 className="w-8 h-8 rounded-ds-xs flex items-center justify-center shrink-0"
                 style={{
-                  background: 'var(--ds-grad-brass-soft)',
-                  boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.brass400, 0.34)}, var(--ds-chamfer-soft)`,
+                  background: 'var(--ds-grad-metal-soft)',
+                  boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.metal400, 0.34)}, var(--ds-chamfer-soft)`,
                 }}
               >
-                <Icon name="layers" size={16} color={DS.brass200} glow />
+                <Icon name="layers" size={16} color={DS.metal200} glow />
               </div>
               <div className="min-w-0">
                 <div className="ds-headline tracking-tight truncate">Element Library</div>
@@ -329,9 +329,9 @@ function CategoryChip({
       style={
         active
           ? {
-              background: 'var(--ds-grad-brass-soft)',
-              color: 'var(--ds-brass-200)',
-              boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.brass400, 0.4)}, var(--ds-chamfer-soft)`,
+              background: 'var(--ds-grad-metal-soft)',
+              color: 'var(--ds-metal-200)',
+              boxShadow: `inset 0 0 0 1px ${dsAlpha(DS.metal400, 0.4)}, var(--ds-chamfer-soft)`,
             }
           : {
               background: 'var(--ds-grad-smoked)',

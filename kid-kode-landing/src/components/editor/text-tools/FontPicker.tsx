@@ -123,7 +123,7 @@ export default function FontPicker({
         <span
           className="flex-1 text-left text-[12px] truncate"
           style={{
-            color: open ? 'var(--ds-brass-200)' : 'var(--ds-text)',
+            color: open ? 'var(--ds-metal-200)' : 'var(--ds-text)',
             fontFamily: currentEntry ? fontStackFor(family, currentEntry.category) : undefined,
           }}
         >
@@ -189,7 +189,7 @@ export default function FontPicker({
                 style={{
                   height: VIEWPORT_H,
                   background: WELL_BG,
-                  boxShadow: `${WELL_SHADOW}, inset 0 0 0 1px ${dsAlpha(DS.brass400, 0.12)}`,
+                  boxShadow: `${WELL_SHADOW}, inset 0 0 0 1px ${dsAlpha(DS.metal400, 0.12)}`,
                 }}
                 data-component="font-picker-gallery"
               >
@@ -230,7 +230,7 @@ export default function FontPicker({
                           style={{
                             fontFamily: fontStackFor(f.family, f.category),
                             color: isActive
-                              ? 'var(--ds-brass-100)'
+                              ? 'var(--ds-metal-100)'
                               : 'var(--ds-text-hi)',
                           }}
                         >

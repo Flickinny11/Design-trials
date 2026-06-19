@@ -17,7 +17,7 @@
 // data-* attributes carry the contract surface the Playwright spec
 // (tests/browser/add-node.spec.ts) and KripVerify (HL13 kvAssert) drive.
 //
-// Chrome: Observatory Brass — frosted glass modal (ds-glass ds-edge) over a
+// Chrome: Chrome-Arc — frosted glass modal (ds-glass ds-edge) over a
 // smoked scrim, carved input troughs (ds-input / ds-select), machined
 // ds-btn actions with a brass primary.
 

@@ -157,17 +157,17 @@ export default function EditHistoryPanel() {
               >
                 <span
                   className="h-px flex-1"
-                  style={{ background: dsAlpha(DS.brass400, 0.4) }}
+                  style={{ background: dsAlpha(DS.metal400, 0.4) }}
                 />
                 <span
                   className="ds-kicker"
-                  style={{ color: "var(--ds-brass-300)", fontSize: 9 }}
+                  style={{ color: "var(--ds-metal-300)", fontSize: 9 }}
                 >
                   CURRENT
                 </span>
                 <span
                   className="h-px flex-1"
-                  style={{ background: dsAlpha(DS.brass400, 0.4) }}
+                  style={{ background: dsAlpha(DS.metal400, 0.4) }}
                 />
               </div>
             )}
@@ -231,13 +231,13 @@ function HistoryRow({
         <Icon
           name={iconForDescription(meta.description)}
           size={12}
-          color={current ? DS.brass300 : isFuture ? DS.ice500 : DS.ice300}
+          color={current ? DS.metal300 : isFuture ? DS.ice500 : DS.ice300}
         />
       </span>
       <span className="min-w-0 flex-1">
         <span
           className="block text-[12px] font-ui font-medium truncate"
-          style={{ color: current ? "var(--ds-brass-200)" : "var(--ds-text)" }}
+          style={{ color: current ? "var(--ds-metal-200)" : "var(--ds-text)" }}
         >
           {meta.description}
         </span>

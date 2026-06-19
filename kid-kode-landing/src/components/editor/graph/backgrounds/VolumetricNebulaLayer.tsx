@@ -14,7 +14,7 @@
 //
 // One renderer (INV-1): a `MeshBasicNodeMaterial` from `three/webgpu`, TSL only
 // (INV: no raw GLSL), runs on the WebGPU backend AND the WebGL2 fallback. No
-// text, no DOM in the render path. Observatory-Brass palette only (INV-9).
+// text, no DOM in the render path. Chrome-Arc palette only (INV-9).
 
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';

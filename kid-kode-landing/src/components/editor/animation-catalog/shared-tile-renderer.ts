@@ -49,7 +49,7 @@ const TILE_BG = new THREE.Color('#06070d');
 // (crystal-ball, liquid-glass, liquid-fill-glass, refraction-warp,
 // water-droplet) plus the rest of the glass family, and only the glass family
 // (non-glass tiles are untouched).
-const GLASS_BOKEH_COLORS = ['#8fb0c4', '#ecd49d', '#9fe0c4', '#ffd98a', '#ddba77']; // ice + brass bokeh (Observatory Brass; purple banned)
+const GLASS_BOKEH_COLORS = ['#8fb0c4', '#c6c9cd', '#9fe0c4', '9dbbcb', '#1ec8ff']; // ice + brass bokeh (Chrome-Arc; purple banned)
 
 export interface RegisterOptions {
   element: HTMLElement;
@@ -250,7 +250,7 @@ class SharedTileRenderer {
     key.position.set(3, 4, 5);
     scene.add(key);
     // Cool steel fill against the warm key — classic studio pairing that keeps
-    // previews inside the Observatory Brass palette (design-system DS.ice400;
+    // previews inside the Chrome-Arc palette (design-system DS.ice400;
     // the old 0xa978ff purple fill is banned chrome).
     const fill = new THREE.DirectionalLight(0x7d9fb4, 0.5);
     fill.position.set(-4, -2, 2);

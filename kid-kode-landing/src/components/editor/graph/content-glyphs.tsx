@@ -7,7 +7,7 @@
 // integration brands a node carries); this one shows the content TYPE at a
 // glance. Each glyph is a billboard-facing group of cheap three primitives
 // (box / sphere / torus / cone / icosahedron — NO imported icons or SVGs),
-// Observatory-Brass tinted (graphite/bone/brass/ice — no purple), and
+// Chrome-Arc tinted (graphite/bone/brass/ice — no purple), and
 // bloom-friendly: emissive cores use basic materials with toneMapped={false}
 // so the scene Bloom lifts them into little glowing badges. Opacity follows
 // dimFactor. GraphScene wiring is a separate stage — this file only defines
@@ -20,13 +20,13 @@ import { DS } from '@/components/editor/design-system';
 
 export type NodeContentType = 'image' | 'text' | '3d-object' | 'integration';
 
-// Per-type Observatory-Brass tints. `core` is the bloom-lifted emissive accent;
+// Per-type Chrome-Arc tints. `core` is the bloom-lifted emissive accent;
 // `frame` is the cooler structural tint. Brass primary for objects, bone/ice for
 // content, ice for links — never purple.
 const TYPE_TINT: Record<NodeContentType, { core: string; frame: string }> = {
-  image: { core: DS.ice200, frame: DS.brass300 },
+  image: { core: DS.ice200, frame: DS.metal300 },
   text: { core: DS.textHi, frame: DS.textMid },
-  '3d-object': { core: DS.brass200, frame: DS.brass400 },
+  '3d-object': { core: DS.metal200, frame: DS.metal400 },
   integration: { core: DS.ice400, frame: DS.ice300 },
 };
 

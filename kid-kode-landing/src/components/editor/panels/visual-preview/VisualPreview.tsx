@@ -361,7 +361,7 @@ export default function VisualPreview({
                   style={{ minWidth: 0, width: '100%' }}
                   onChange={(e) => onSliderInput(s.key, Number(e.currentTarget.value))}
                 />
-                <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: DS.brass300, textAlign: 'right' }}>
+                <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 10, color: DS.metal300, textAlign: 'right' }}>
                   {(values[s.key] ?? s.value).toFixed(2)}
                 </span>
               </div>

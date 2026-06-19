@@ -93,7 +93,7 @@ export function GalaxyStarfield({ quality = 'high' }: { quality?: GalaxyQuality 
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const phase = new Float32Array(count);
-    const tints = [DS.brass200, DS.brass100, DS.textHi, DS.ice200, DS.ice300];
+    const tints = [DS.metal200, DS.metal100, DS.textHi, DS.ice200, DS.ice300];
     const col = new THREE.Color();
     for (let i = 0; i < count; i++) {
       // shell distribution between r 280..900 so stars sit behind the hubs
@@ -146,9 +146,9 @@ export function GalaxyNebula({ quality = 'high' }: { quality?: GalaxyQuality }) 
   const { camera } = useThree();
   const clouds = useMemo(() => {
     const defs = [
-      { hex: DS.brass500, pos: [-260, 70, -340] as [number, number, number], scale: 620, rot: 0.2 },
+      { hex: DS.metal500, pos: [-260, 70, -340] as [number, number, number], scale: 620, rot: 0.2 },
       { hex: DS.ice500, pos: [320, -120, -300] as [number, number, number], scale: 560, rot: -0.4 },
-      { hex: DS.brass400, pos: [40, 180, -460] as [number, number, number], scale: 700, rot: 0.7 },
+      { hex: DS.metal400, pos: [40, 180, -460] as [number, number, number], scale: 700, rot: 0.7 },
     ];
     return quality === 'low' ? defs.slice(0, 1) : defs;
   }, [quality]);
@@ -201,7 +201,7 @@ export function GalaxyOrbitRings({ quality = 'high' }: { quality?: GalaxyQuality
     <group ref={groupRef}>
       {GALAXY_RING_RADII.map((radius, i) => {
         const tilt = GALAXY_RING_TILT[i];
-        const color = i === 1 ? DS.ice300 : DS.brass300;
+        const color = i === 1 ? DS.ice300 : DS.metal300;
         return (
           <group key={i} rotation={[Math.PI / 2 + tilt, 0, tilt * 0.6]}>
             {/* bright thin core loop */}
@@ -250,15 +250,15 @@ export function SunCorona({ radius }: { radius: number }) {
       {/* soft volumetric corona shells (BackSide additive) */}
       <mesh>
         <sphereGeometry args={[radius * 1.35, 48, 48]} />
-        <meshBasicMaterial color={DS.brass300} transparent opacity={0.18} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <meshBasicMaterial color={DS.metal300} transparent opacity={0.18} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
       <mesh>
         <sphereGeometry args={[radius * 1.9, 40, 40]} />
-        <meshBasicMaterial color={DS.brass200} transparent opacity={0.08} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <meshBasicMaterial color={DS.metal200} transparent opacity={0.08} side={THREE.BackSide} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </mesh>
       {/* big soft glow sprite — the bloom-stand-in halo */}
       <sprite ref={glowRef} scale={[radius * 6.2, radius * 6.2, 1]}>
-        <spriteMaterial map={softSprite()} color={DS.brass300} transparent opacity={0.5} depthWrite={false} depthTest={false} blending={THREE.AdditiveBlending} toneMapped={false} />
+        <spriteMaterial map={softSprite()} color={DS.metal300} transparent opacity={0.5} depthWrite={false} depthTest={false} blending={THREE.AdditiveBlending} toneMapped={false} />
       </sprite>
     </group>
   );

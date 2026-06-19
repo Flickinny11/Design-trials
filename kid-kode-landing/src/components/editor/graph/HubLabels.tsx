@@ -20,7 +20,7 @@ import type { TextSpec } from '@/lib/prism-graph/types';
 import { createTextObject } from '@/lib/prism/text/text-object';
 import type { LoadedFontAtlas } from '@/lib/prism/text/contract';
 import { peekTextAtlas, resolveTextAtlas } from '@/lib/prism/runtime/shared/text-atlas';
-// Wave-2E Observatory Brass retint — label fill comes from the frozen DS tokens.
+// Wave-2E Chrome-Arc retint — label fill comes from the frozen DS tokens.
 import { DS } from '@/components/editor/design-system';
 
 interface HubCenter {

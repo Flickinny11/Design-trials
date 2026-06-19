@@ -23,14 +23,20 @@ const NEUTRALS: [string, string][] = [
   ['slate', DS.slate],
   ['steel', DS.steel],
 ];
-const BRASS: [string, string][] = [
-  ['100', DS.brass100],
-  ['200', DS.brass200],
-  ['300', DS.brass300],
-  ['400', DS.brass400],
-  ['500', DS.brass500],
-  ['600', DS.brass600],
-  ['700', DS.brass700],
+const METAL: [string, string][] = [
+  ['100', DS.metal100],
+  ['200', DS.metal200],
+  ['300', DS.metal300],
+  ['400', DS.metal400],
+  ['500', DS.metal500],
+  ['600', DS.metal600],
+  ['700', DS.metal700],
+];
+const ARC: [string, string][] = [
+  ['arc', DS.arc],
+  ['arc-hot', DS.arcHot],
+  ['anodized', DS.anodized],
+  ['warning-arc', DS.warningArc],
 ];
 const ICE: [string, string][] = [
   ['200', DS.ice200],
@@ -61,7 +67,7 @@ function Swatch({ name, hex }: { name: string; hex: string }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="ds-label text-ds-brass-300">{title}</h2>
+      <h2 className="ds-label text-ds-metal-300">{title}</h2>
       {children}
     </section>
   );
@@ -100,7 +106,7 @@ export default function DesignSystemSheet() {
       <div className="pointer-events-none fixed inset-0" aria-hidden>
         <div
           className="absolute -top-24 left-1/4 w-[480px] h-[480px] rounded-full opacity-25"
-          style={{ background: 'radial-gradient(circle, rgba(205,159,85,0.5), transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(30,200,255,0.45), transparent 70%)' }}
         />
         <div
           className="absolute bottom-0 right-10 w-[420px] h-[420px] rounded-full opacity-20"
@@ -112,23 +118,24 @@ export default function DesignSystemSheet() {
       <header className="relative flex items-end justify-between">
         <div className="flex flex-col gap-1">
           <span className="ds-kicker">prism editor · wave 0 · frozen contract</span>
-          <h1 className="ds-title ds-title-brass text-[26px]">Observatory Brass — Design Tokens</h1>
+          <h1 className="ds-title ds-title-metal text-[26px]">Chrome-Arc — Design Tokens</h1>
         </div>
-        <span className="ds-chip ds-chip--brass">no purple · no flat fills</span>
+        <span className="ds-chip ds-chip--metal">no purple · no flat fills</span>
       </header>
 
       <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10">
-        <Section title="Palette — graphite housing · brass fittings · ice telemetry">
+        <Section title="Palette — graphite housing · chrome/titanium metal · arc-cyan accent · ice telemetry">
           <div className="flex flex-wrap gap-4">{NEUTRALS.map(([n, h]) => <Swatch key={n} name={n} hex={h} />)}</div>
-          <div className="flex flex-wrap gap-4">{BRASS.map(([n, h]) => <Swatch key={n} name={`brass ${n}`} hex={h} />)}</div>
+          <div className="flex flex-wrap gap-4">{METAL.map(([n, h]) => <Swatch key={n} name={`metal ${n}`} hex={h} />)}</div>
+          <div className="flex flex-wrap gap-4">{ARC.map(([n, h]) => <Swatch key={n} name={n} hex={h} />)}</div>
           <div className="flex flex-wrap gap-4">
             {ICE.map(([n, h]) => <Swatch key={n} name={`ice ${n}`} hex={h} />)}
             {STATUS.map(([n, h]) => <Swatch key={n} name={n} hex={h} />)}
           </div>
           <div
             className="h-10 rounded-ds-sm ds-elev-1"
-            style={{ background: 'var(--ds-grad-brass)' }}
-            data-demo="brass-ramp"
+            style={{ background: 'var(--ds-grad-metal)' }}
+            data-demo="metal-ramp"
           />
         </Section>
 
@@ -138,9 +145,9 @@ export default function DesignSystemSheet() {
               <span className="ds-label">frosted glass</span>
               <span className="text-[10px] font-mono text-ds-text-low">frost · chamfer · elev-2</span>
             </div>
-            <div className="ds-glass ds-glass--refract ds-edge--brass h-36 p-4 flex flex-col justify-between" data-demo="glass-refract">
-              <span className="ds-label text-ds-brass-300">refractive glass (t2)</span>
-              <span className="text-[10px] font-mono text-ds-text-low">rim displacement · brass edge</span>
+            <div className="ds-glass ds-glass--refract ds-edge--metal h-36 p-4 flex flex-col justify-between" data-demo="glass-refract">
+              <span className="ds-label text-ds-metal-300">refractive glass (t2)</span>
+              <span className="text-[10px] font-mono text-ds-text-low">rim displacement · arc edge</span>
             </div>
             <div className="ds-metal ds-grain ds-edge h-36 p-4 flex flex-col justify-between" data-demo="metal">
               <span className="ds-label">brushed metal</span>
@@ -175,8 +182,8 @@ export default function DesignSystemSheet() {
             <div className="ds-smoked ds-edge w-44 h-20 flex items-center justify-center">
               <span className="ds-kicker">neutral edge</span>
             </div>
-            <div className="ds-smoked ds-edge--brass w-44 h-20 flex items-center justify-center">
-              <span className="ds-kicker text-ds-brass-300">brass edge (active)</span>
+            <div className="ds-smoked ds-edge--metal w-44 h-20 flex items-center justify-center">
+              <span className="ds-kicker text-ds-metal-300">arc edge (active)</span>
             </div>
             <TiltCard />
           </div>
@@ -192,7 +199,7 @@ export default function DesignSystemSheet() {
           </div>
           <div className="flex flex-wrap items-center gap-3">
             {Object.entries(DS_DIFFICULTY).map(([k]) => (
-              <span key={k} className={`ds-chip ${k === 'easy' ? 'ds-chip--ok' : k === 'medium' ? 'ds-chip--brass' : ''}`}>
+              <span key={k} className={`ds-chip ${k === 'easy' ? 'ds-chip--ok' : k === 'medium' ? 'ds-chip--metal' : ''}`}>
                 {k}
               </span>
             ))}
@@ -218,8 +225,8 @@ export default function DesignSystemSheet() {
             <span className="ds-kicker">kicker · mono · 9px · 0.24em</span>
             <span className="ds-label">label · mono · 10px · 0.16em</span>
             <span className="text-[12px] text-ds-text">Body — Inter Tight 12px, bone on graphite.</span>
-            <span className="ds-title">Title — Bricolage Grotesque 15px</span>
-            <span className="ds-title ds-title-brass text-[22px]">Display brass gradient</span>
+            <span className="ds-title">Title — Sora 15px</span>
+            <span className="ds-title ds-title-metal text-[22px]">Display metal gradient</span>
           </div>
         </Section>
 

@@ -63,7 +63,7 @@ export default function PreviewDeviceFrame() {
             aspectRatio: isMobile ? '9 / 19.5' : '3 / 4',
             borderRadius: isMobile ? 40 : 24,
             boxShadow:
-              '0 0 0 100vmax rgba(4,5,10,0.9), inset 0 0 0 2px rgba(var(--ds-brass-200-rgb),0.22), inset 0 0 0 7px rgba(4,5,10,0.55), inset 0 8px 40px rgba(0,0,0,0.55)',
+              '0 0 0 100vmax rgba(4,5,10,0.9), inset 0 0 0 2px rgba(var(--ds-metal-200-rgb),0.22), inset 0 0 0 7px rgba(4,5,10,0.55), inset 0 8px 40px rgba(0,0,0,0.55)',
           }}
         >
           {isMobile && (
@@ -74,7 +74,7 @@ export default function PreviewDeviceFrame() {
 
       {/* Device switcher (always in preview-app). */}
       <div className="absolute top-[58px] left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
-        <div className="ds-glass ds-edge--brass ds-reveal flex items-center gap-0.5 rounded-full p-0.5">
+        <div className="ds-glass ds-edge--metal ds-reveal flex items-center gap-0.5 rounded-full p-0.5">
           {DEVICES.map((d) => {
             const active = deviceMode === d.id;
             return (
@@ -86,8 +86,8 @@ export default function PreviewDeviceFrame() {
                 aria-pressed={active}
                 className="ds-press flex items-center gap-1.5 h-7 px-2.5 rounded-full transition-colors"
                 style={{
-                  background: active ? 'var(--ds-grad-brass)' : 'transparent',
-                  color: active ? '#2a1f12' : 'var(--ds-text-mid)',
+                  background: active ? 'var(--ds-grad-metal)' : 'transparent',
+                  color: active ? '#0d1117' : 'var(--ds-text-mid)',
                 }}
               >
                 {d.icon}

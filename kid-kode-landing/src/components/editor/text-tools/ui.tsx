@@ -1,6 +1,6 @@
 'use client';
 
-// P1 TEXT SYSTEM (Task B) — Observatory Brass building blocks for the Text
+// P1 TEXT SYSTEM (Task B) — Chrome-Arc building blocks for the Text
 // tools flyout. These mirror the CanvasToolbar treatments 1:1 (machined KEY
 // faces, recessed WELL troughs, engraved SectionLabel grooves, brass
 // active-key state) so the Text group reads as the same instrument. Kept

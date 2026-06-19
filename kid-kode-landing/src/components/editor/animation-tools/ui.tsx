@@ -1,6 +1,6 @@
 'use client';
 
-// P2 TOOLBAR WIRING (Task B) — Observatory Brass building blocks for the
+// P2 TOOLBAR WIRING (Task B) — Chrome-Arc building blocks for the
 // Animation tools flyout. These mirror the CanvasToolbar treatments 1:1
 // (machined KEY faces, recessed WELL troughs, engraved SectionLabel grooves,
 // brass active-key state) so the Animation group reads as the same

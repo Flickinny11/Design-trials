@@ -9,7 +9,7 @@
 // density / drift / depth / glow) re-apply in real time and round-trip through
 // save→reload because they are persisted on the hub's background layer stack.
 // Each preset card carries a zero-WebGPU CSS PREVIEW SWATCH (C29) so the look is
-// self-explanatory before applying. Observatory-Brass chrome, NO purple (INV-9).
+// self-explanatory before applying. Chrome-Arc chrome, NO purple (INV-9).
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { DS, dsAlpha } from '@/components/editor/design-system';
@@ -80,14 +80,14 @@ export function HubBackgroundPicker({ hub }: { hub: PrismHub }) {
             <button
               key={preset.id}
               onClick={() => applyPreset(preset.id)}
-              className={`p-1.5 ds-well ds-edge rounded-ds-md text-left ds-lift ${active ? 'ds-edge--brass' : ''}`}
-              style={active ? { boxShadow: `inset 0 0 0 1px ${DS.brass400}` } : undefined}
+              className={`p-1.5 ds-well ds-edge rounded-ds-md text-left ds-lift ${active ? 'ds-edge--metal' : ''}`}
+              style={active ? { boxShadow: `inset 0 0 0 1px ${DS.metal400}` } : undefined}
             >
               <BackgroundPreviewSwatch preset={preset} active={active} />
               <div className="px-1.5 pt-1.5 pb-1">
-                <div className={`text-[12px] font-display font-semibold flex items-center gap-1 ${active ? 'text-ds-brass-300' : 'text-ds-text'}`}>
+                <div className={`text-[12px] font-display font-semibold flex items-center gap-1 ${active ? 'text-ds-metal-300' : 'text-ds-text'}`}>
                   {preset.name}
-                  {active && <span className="text-[9px] font-mono text-ds-brass-300">· on</span>}
+                  {active && <span className="text-[9px] font-mono text-ds-metal-300">· on</span>}
                 </div>
                 <div className="text-[10px] text-ds-text-low mt-0.5 leading-snug">{preset.tagline}</div>
               </div>
@@ -282,7 +282,7 @@ function BackgroundPreviewSwatch({ preset, active }: { preset: BackgroundPreset;
       style={{
         ...base,
         boxShadow: active
-          ? `inset 0 0 0 1px ${dsAlpha(DS.brass400, 0.5)}, inset 0 1px 4px rgba(0,0,0,0.5)`
+          ? `inset 0 0 0 1px ${dsAlpha(DS.metal400, 0.5)}, inset 0 1px 4px rgba(0,0,0,0.5)`
           : 'inset 0 0 0 1px rgba(255,252,242,0.06), inset 0 1px 4px rgba(0,0,0,0.5)',
       }}
     >
@@ -311,7 +311,7 @@ function ParamControl({
               <button
                 key={opt.value}
                 onClick={() => onChange(opt.value)}
-                className={`ds-chip ds-press cursor-pointer !min-h-0 !py-1 !px-2.5 text-[10px] ${active ? 'ds-chip--brass' : ''}`}
+                className={`ds-chip ds-press cursor-pointer !min-h-0 !py-1 !px-2.5 text-[10px] ${active ? 'ds-chip--metal' : ''}`}
               >
                 {opt.label}
               </button>
@@ -327,7 +327,7 @@ function ParamControl({
     <div className="space-y-1">
       <div className="flex items-center justify-between">
         <div className="ds-label">{ctrl.label}</div>
-        <div className="text-[10px] font-mono text-ds-brass-300">{num.toFixed(2)}</div>
+        <div className="text-[10px] font-mono text-ds-metal-300">{num.toFixed(2)}</div>
       </div>
       <input
         type="range"
@@ -336,8 +336,8 @@ function ParamControl({
         step={ctrl.step ?? 0.01}
         value={num}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full accent-[var(--ds-brass-400,#cd9f55)] cursor-pointer"
-        style={{ accentColor: DS.brass400 }}
+        className="w-full accent-[var(--ds-metal-400,#b8bcc0)] cursor-pointer"
+        style={{ accentColor: DS.metal400 }}
       />
     </div>
   );

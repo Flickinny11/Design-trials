@@ -39,11 +39,11 @@ html, body, #__next {
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 ::selection {
-  background: rgba(205, 159, 85, 0.32); /* --ds-brass-400 */
-  color: #f3f1ea;
+  background: rgba(30, 200, 255, 0.30); /* arc-cyan — the single active accent */
+  color: #eef0f3;
 }
 
-/* Base range input — machined groove + brass thumb (design-system tokens).
+/* Base range input — machined groove + chrome thumb (design-system tokens).
    The richer .ds-slider class in design-system/materials.css extends this. */
 input[type='range'] {
   -webkit-appearance: none;
@@ -60,18 +60,18 @@ input[type='range']::-webkit-slider-thumb {
   width: 15px;
   height: 15px;
   border-radius: 999px;
-  background: radial-gradient(circle at 32% 28%, var(--ds-brass-100) 0%, var(--ds-brass-300) 34%, var(--ds-brass-500) 72%, var(--ds-brass-700) 100%);
+  background: radial-gradient(circle at 32% 28%, var(--ds-metal-100) 0%, var(--ds-metal-300) 34%, var(--ds-metal-500) 72%, var(--ds-metal-700) 100%);
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65), 0 0 10px rgba(var(--ds-brass-400-rgb), 0.3), inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65), 0 0 10px rgba(var(--ds-metal-400-rgb), 0.3), inset 0 -1px 1px rgba(0, 0, 0, 0.4);
 }
 input[type='range']::-moz-range-thumb {
   width: 15px;
   height: 15px;
   border-radius: 999px;
-  background: radial-gradient(circle at 32% 28%, var(--ds-brass-100) 0%, var(--ds-brass-300) 34%, var(--ds-brass-500) 72%, var(--ds-brass-700) 100%);
+  background: radial-gradient(circle at 32% 28%, var(--ds-metal-100) 0%, var(--ds-metal-300) 34%, var(--ds-metal-500) 72%, var(--ds-metal-700) 100%);
   cursor: pointer;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65), 0 0 10px rgba(var(--ds-brass-400-rgb), 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65), 0 0 10px rgba(var(--ds-metal-400-rgb), 0.3);
 }
 
 canvas {

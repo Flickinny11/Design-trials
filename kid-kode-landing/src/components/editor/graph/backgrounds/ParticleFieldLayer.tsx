@@ -10,7 +10,7 @@
 // attributes; drift runs on the GPU vertex stage from a time uniform + seed.
 // Round soft glows via the quad uv; additive — premium starlight. Deterministic
 // scatter (index hash, no Math.random) so frozen frames reproduce for the
-// numeric harness. Observatory-Brass palette only (INV-9).
+// numeric harness. Chrome-Arc palette only (INV-9).
 //
 // `world` attachment = world-anchored (camera flies through → parallax).
 // `camera-locked` attachment = near-FX motes that follow the camera.

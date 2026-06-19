@@ -4,7 +4,7 @@
 // drives the live Animatable via setControl(). The same renderer handles every
 // primitive's knobs/faders/dropdowns/curves/toggles/colors.
 //
-// Chrome: Observatory Brass machined controls (ds-slider / ds-select /
+// Chrome: Chrome-Arc machined controls (ds-slider / ds-select /
 // ds-toggle), engraved labels, brass value readouts. All data-control wiring
 // is unchanged — the verify harness drives these inputs directly.
 
@@ -33,7 +33,7 @@ export default function ControlPanel({ inst }: { inst: Animatable | null }) {
               <span className="ds-label">{c.label}</span>
               <span
                 className="text-[10px] font-mono tabular-nums"
-                style={{ color: 'var(--ds-brass-300)' }}
+                style={{ color: 'var(--ds-metal-300)' }}
               >
                 {typeof val === 'number' ? val.toFixed(2) : String(val)}
                 {('unit' in c && c.unit) || ''}

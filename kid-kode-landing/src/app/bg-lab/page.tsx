@@ -154,7 +154,7 @@ function BgLabInner() {
           {/* reference frame at origin for scale (small wire box) */}
           <mesh>
             <boxGeometry args={[2, 2, 2]} />
-            <meshBasicMaterial color="#cd9f55" wireframe transparent opacity={0.5} />
+            <meshBasicMaterial color="#1ec8ff" wireframe transparent opacity={0.5} />
           </mesh>
         </Suspense>
       </Canvas>

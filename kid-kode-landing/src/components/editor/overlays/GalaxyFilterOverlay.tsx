@@ -7,7 +7,7 @@
 // `GraphScene` reads that value, calls `computeGalaxyFilterMatches`, and dims
 // non-matching hubs/nodes. Clearing the filter restores full brightness.
 //
-// Chrome: Observatory Brass — machined toggle chip (ds-btn, brass when armed)
+// Chrome: Chrome-Arc — machined toggle chip (ds-btn, brass when armed)
 // over a smoked-glass dock (ds-smoked ds-edge) with a carved ds-input trough.
 
 import { useEffect } from 'react';
@@ -62,12 +62,12 @@ export default function GalaxyFilterOverlay() {
           armed
             ? {
                 borderRadius: 'var(--ds-r-pill)',
-                boxShadow: 'inset 0 0 0 1px rgba(var(--ds-brass-400-rgb), 0.34), var(--ds-elev-1), var(--ds-glow-brass)',
+                boxShadow: 'inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.34), var(--ds-elev-1), var(--ds-glow-arc)',
               }
             : { borderRadius: 'var(--ds-r-pill)' }
         }
       >
-        <Icon name="search" size={11} color={armed ? DS.brass300 : DS.textMid} glow={armed} />
+        <Icon name="search" size={11} color={armed ? DS.metal300 : DS.textMid} glow={armed} />
         <span className="text-[10px] font-mono tracking-widest uppercase">
           Filter{active ? ` · ${filterQuery.trim().slice(0, 18)}` : ''}
         </span>
@@ -79,7 +79,7 @@ export default function GalaxyFilterOverlay() {
             className="flex items-center gap-2 px-2.5 py-2"
             style={{ boxShadow: 'inset 0 -1px 0 var(--ds-edge-shade), inset 0 1px 0 var(--ds-edge-side)' }}
           >
-            <Icon name="search" size={12} color={DS.brass300} />
+            <Icon name="search" size={12} color={DS.metal300} />
             <input
               data-component="galaxy-filter-input"
               type="text"

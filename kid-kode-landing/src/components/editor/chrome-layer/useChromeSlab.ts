@@ -5,13 +5,13 @@
 // Attach to any chrome surface element:
 //
 //   const slab = useChromeSlab({ material: 'glass', radius: 16, accent: 1 });
-//   <div ref={slab.ref} className="ds-glass ds-edge--brass …">
+//   <div ref={slab.ref} className="ds-glass ds-edge--metal …">
 //
 // At tier t2 with the GPU layer live, the element gets `.ds-slab-hosted`
 // (materials.css suppresses its CSS background/frost/keyline — layout, text,
 // shadow, and input all stay DOM) and the registered slab renders the REAL
 // surface in the unified canvas behind it. Below t2 — or before the layer has
-// ever come up — the hook is inert and the v1 Observatory-Brass CSS stands,
+// ever come up — the hook is inert and the v1 Chrome-Arc CSS stands,
 // per INV-9: same geometry, lighter physics, never broken.
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';

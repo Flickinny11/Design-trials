@@ -6,7 +6,7 @@
 // GL contexts. A tile freezes at a representative mid-frame until hovered/selected,
 // then plays.
 //
-// Chrome: Observatory Brass design system. The preview region must stay visually
+// Chrome: Chrome-Arc design system. The preview region must stay visually
 // TRANSPARENT (the GPU canvas sits behind the page), so the material treatment
 // lives on the bezel ring + caption plate around the window — a machined
 // instrument bezel, not a solid card. Hover = lift only (translate/scale); tilt
@@ -41,12 +41,12 @@ export default function PrimitiveTile({
       onBlur={() => setHovered(false)}
       onClick={() => onSelect(def)}
       className={`group relative flex flex-col text-left rounded-ds-md overflow-hidden ds-lift ${
-        selected ? 'ds-edge--brass' : 'ds-edge'
+        selected ? 'ds-edge--metal' : 'ds-edge'
       }`}
       style={{
         background: 'transparent',
         boxShadow: selected
-          ? `var(--ds-elev-2), var(--ds-glow-brass)`
+          ? `var(--ds-elev-2), var(--ds-glow-arc)`
           : 'var(--ds-elev-1)',
       }}
     >
@@ -80,7 +80,7 @@ export default function PrimitiveTile({
         <span className="flex items-center justify-between gap-1.5">
           <span
             className="text-[12px] font-medium truncate"
-            style={{ color: selected ? 'var(--ds-brass-200)' : 'var(--ds-text-hi)' }}
+            style={{ color: selected ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
           >
             {def.label}
           </span>

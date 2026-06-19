@@ -59,7 +59,7 @@ import { useEditorLayoutObserver } from '@/components/editor/layout/useEditorLay
 const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'), {
   ssr: false,
   loading: () => (
-    // Observatory Brass boot sequence — ambient gradient backdrop (never a
+    // Chrome-Arc boot sequence — ambient gradient backdrop (never a
     // flat fill), machined graphite track ring with brass sweep arc, a
     // calibrated brass progress rail riding a graphite well, and an
     // ice-telemetry readout on a smoked strip. DS tokens only;
@@ -81,7 +81,7 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
         className="absolute inset-0 pointer-events-none opacity-75"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-brass-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
+            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-metal-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
         }}
       />
       <div className="ds-reveal relative flex flex-col items-center gap-5">
@@ -96,8 +96,8 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
           />
           {/* Brass sweep arc */}
           <div
-            className="absolute inset-0 rounded-full border-2 border-transparent border-t-ds-brass-400 border-r-ds-brass-600 animate-spin"
-            style={{ animationDuration: '1.1s', filter: `drop-shadow(0 0 6px ${dsAlpha(DS.brass400, 0.45)})` }}
+            className="absolute inset-0 rounded-full border-2 border-transparent border-t-ds-metal-400 border-r-ds-metal-600 animate-spin"
+            style={{ animationDuration: '1.1s', filter: `drop-shadow(0 0 6px ${dsAlpha(DS.metal400, 0.45)})` }}
           />
           {/* Inner ice telemetry arc, counter-rotating */}
           <div
@@ -108,8 +108,8 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
           <div
             className="absolute inset-[26px] rounded-full"
             style={{
-              background: `radial-gradient(circle at 32% 28%, ${DS.brass100} 0%, ${DS.brass300} 38%, ${DS.brass500} 72%, ${DS.brass700} 100%)`,
-              boxShadow: '0 1px 3px rgba(0,0,0,0.6), var(--ds-glow-brass), inset 0 -1px 1px rgba(0,0,0,0.4)',
+              background: `radial-gradient(circle at 32% 28%, ${DS.metal100} 0%, ${DS.metal300} 38%, ${DS.metal500} 72%, ${DS.metal700} 100%)`,
+              boxShadow: '0 1px 3px rgba(0,0,0,0.6), var(--ds-glow-arc), inset 0 -1px 1px rgba(0,0,0,0.4)',
             }}
           />
         </div>
@@ -122,9 +122,9 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
             data-boot-rail
             className="absolute top-0 bottom-0 w-1/4 rounded-full"
             style={{
-              background: 'var(--ds-grad-brass)',
+              background: 'var(--ds-grad-metal)',
               boxShadow:
-                'var(--ds-glow-brass), inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0,0,0,0.35)',
+                'var(--ds-glow-arc), inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0,0,0,0.35)',
               animation: 'ds-boot-rail 1.3s var(--ds-ease-inout) infinite',
             }}
           />
@@ -134,7 +134,7 @@ const GraphScene = dynamic(() => import('@/components/editor/graph/GraphScene'),
           className="ds-smoked ds-edge flex items-center gap-2 px-3.5 py-1.5"
           style={{ borderRadius: 'var(--ds-r-pill)' }}
         >
-          <Icon name="sparkle" size={10} color={DS.brass400} glow />
+          <Icon name="sparkle" size={10} color={DS.metal400} glow />
           <span
             className="ds-kicker"
             style={{
@@ -694,7 +694,7 @@ export default function Page() {
         className="absolute inset-0 pointer-events-none opacity-75"
         style={{
           background:
-            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-brass-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
+            'radial-gradient(ellipse 80% 60% at 18% 20%, rgba(var(--ds-metal-400-rgb), 0.08) 0%, transparent 58%), radial-gradient(ellipse 70% 60% at 82% 82%, rgba(var(--ds-ice-400-rgb), 0.07) 0%, transparent 58%)',
         }}
       />
 
@@ -721,15 +721,15 @@ export default function Page() {
               {/* Sliding brass thumb — translateX only, spring-eased. */}
               <span
                 aria-hidden
-                className="ds-edge--brass absolute top-1 bottom-1 left-1 w-24 rounded-full pointer-events-none"
+                className="ds-edge--metal absolute top-1 bottom-1 left-1 w-24 rounded-full pointer-events-none"
                 style={{
                   transform: `translateX(${Math.max(
                     0,
                     (['galaxy', 'canvas', 'preview-app'] as const).indexOf(viewMode),
                   ) * 96}px)`,
                   transition: 'transform var(--ds-t-slow) var(--ds-ease-spring)',
-                  background: 'var(--ds-grad-brass-soft)',
-                  boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-brass)',
+                  background: 'var(--ds-grad-metal-soft)',
+                  boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-arc)',
                 }}
               />
               {([
@@ -745,12 +745,12 @@ export default function Page() {
                     onClick={() => setViewMode(m.id)}
                     className={`ds-press relative z-10 w-24 h-9 rounded-full text-[12px] font-ui font-semibold tracking-normal transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full ${
                       active
-                        ? 'text-ds-brass-200'
+                        ? 'text-ds-metal-200'
                         : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
                     }`}
                     style={
                       active
-                        ? { textShadow: `0 0 10px ${dsAlpha(DS.brass400, 0.4)}` }
+                        ? { textShadow: `0 0 10px ${dsAlpha(DS.metal400, 0.4)}` }
                         : undefined
                     }
                   >
@@ -793,7 +793,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.prev();
                 }}
-                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
+                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-metal-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 ‹ Prev
               </button>
@@ -825,7 +825,7 @@ export default function Page() {
                   }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
                   nav?.next();
                 }}
-                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-brass-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
+                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-metal-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
               >
                 Next ›
               </button>
@@ -916,7 +916,7 @@ export default function Page() {
 }
 
 // P2 Task C (Logan addendum, 2026-06-10) — compact MOBILE mode switch.
-// A bottom-center floating Observatory Brass pill carrying the same canonical
+// A bottom-center floating Chrome-Arc pill carrying the same canonical
 // 3 view modes as the desktop toggle (RA-06b / SC-065): galaxy | canvas |
 // preview-app — the ONLY legal literals (FP-12/FP-14). Reuses the exact store
 // wiring (useGraphEditorStore.setViewMode). 44px touch targets (h-11),
@@ -977,12 +977,12 @@ function MobileModeToggle() {
         <span
           ref={thumbRef}
           aria-hidden
-          className="ds-edge--brass absolute top-1 bottom-1 left-1 rounded-full pointer-events-none"
+          className="ds-edge--metal absolute top-1 bottom-1 left-1 rounded-full pointer-events-none"
           style={{
             width: MOBILE_MODE_SLOT_W,
             transform: `translateX(${idx * MOBILE_MODE_SLOT_W}px)`,
-            background: 'var(--ds-grad-brass-soft)',
-            boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-brass)',
+            background: 'var(--ds-grad-metal-soft)',
+            boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-arc)',
           }}
         />
         {([
@@ -999,13 +999,13 @@ function MobileModeToggle() {
               onClick={() => setViewMode(m.id)}
               className={`ds-press relative z-10 h-11 rounded-full text-[12px] font-ui font-semibold tracking-normal transition-colors ${
                 active
-                  ? 'text-ds-brass-200'
+                  ? 'text-ds-metal-200'
                   : 'text-ds-text-mid active:text-ds-text'
               }`}
               style={{
                 width: MOBILE_MODE_SLOT_W,
                 ...(active
-                  ? { textShadow: `0 0 10px ${dsAlpha(DS.brass400, 0.4)}` }
+                  ? { textShadow: `0 0 10px ${dsAlpha(DS.metal400, 0.4)}` }
                   : {}),
               }}
             >
@@ -1076,7 +1076,7 @@ function PreviewAppWorldBadge() {
     >
       <span
         className="ds-kicker"
-        style={{ color: 'var(--ds-brass-300)', textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
+        style={{ color: 'var(--ds-metal-300)', textShadow: '0 1px 0 rgba(0,0,0,0.7)' }}
       >
         World
       </span>

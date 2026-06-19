@@ -158,15 +158,15 @@ const paintMolten: PaintFn = (px, size, rng) => {
   }, ramp);
 };
 
-const paintGold: PaintFn = (px, size, rng) => {
+const paintTitanium: PaintFn = (px, size, rng) => {
   const warp = makeFbm(rng);
   const bands = 2 + Math.floor(rng() * 3);
   const ramp = makeRamp([
-    [0, '#3a2407'],
-    [0.45, DS.brass600],
-    [0.75, DS.brass400],
-    [0.92, DS.brass200],
-    [1, DS.brass100],
+    [0, '#1d2128'],
+    [0.45, DS.metal600],
+    [0.75, DS.metal400],
+    [0.92, DS.metal200],
+    [1, DS.metal100],
   ]);
   // Brushed-metal sheen: low-frequency diagonal bands warped by fBm.
   paintRamped(px, size, (u, v) => {
@@ -266,13 +266,13 @@ const paintMarble: PaintFn = (px, size, rng) => {
   }, ramp);
 };
 
-// Fallback: duotone gradient in DS-adjacent hues (Observatory Brass / ice).
+// Fallback: duotone gradient in DS-adjacent hues (Chrome-Arc / ice).
 const DUOTONE_PAIRS: Array<[string, string]> = [
-  [DS.brass600, DS.brass100],
+  [DS.metal600, DS.metal100],
   [DS.ice500, DS.ice200],
-  [DS.brass500, DS.ice300],
-  [DS.ice400, DS.brass200],
-  [DS.graphite, DS.brass300],
+  [DS.metal500, DS.ice300],
+  [DS.ice400, DS.metal200],
+  [DS.graphite, DS.metal300],
 ];
 
 const paintDuotone: PaintFn = (px, size, rng) => {
@@ -317,10 +317,10 @@ const STYLES: FillStyle[] = [
     paint: paintMolten,
   },
   {
-    id: 'gold',
-    label: 'Brushed Gold',
-    keywords: ['gold', 'golden', 'brass', 'bronze', 'copper'],
-    paint: paintGold,
+    id: 'titanium',
+    label: 'Brushed Titanium',
+    keywords: ['titanium', 'brushed', 'anodized', 'aluminum', 'pewter'],
+    paint: paintTitanium,
   },
   {
     id: 'chrome',

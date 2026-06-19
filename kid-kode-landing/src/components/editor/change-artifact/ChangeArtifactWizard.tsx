@@ -41,8 +41,8 @@ function ChoiceCard({
         boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.32)}, ${KEY_SHADOW}`,
       }}
     >
-      <Icon name={icon} size={20} color={DS.brass200} glow />
-      <span className="ds-title text-[15px]" style={{ color: 'var(--ds-brass-200)' }}>{title}</span>
+      <Icon name={icon} size={20} color={DS.metal200} glow />
+      <span className="ds-title text-[15px]" style={{ color: 'var(--ds-metal-200)' }}>{title}</span>
       <span className="text-[10px] font-mono leading-relaxed" style={{ color: 'var(--ds-text-mid)' }}>{desc}</span>
     </button>
   );

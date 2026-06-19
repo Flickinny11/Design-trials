@@ -1,7 +1,7 @@
 'use client';
 
 // CANVAS-FINAL — shared modal shell for the Change Artifact wizards
-// (canvas-spec §12). Same Observatory-Brass vocabulary as AddNodeDialog
+// (canvas-spec §12). Same Chrome-Arc vocabulary as AddNodeDialog
 // (frosted-glass plate over a smoked scrim, ds-title/ds-kicker, machined close
 // key), widened with an internal scroll region and a sticky footer for the
 // generate/apply actions. Mobile-aware: near-full-screen below 640px.
@@ -63,7 +63,7 @@ export default function WizardWindow({
         {/* Header */}
         <div
           className="flex items-center justify-between px-5 pt-4 pb-3 shrink-0"
-          style={{ borderBottom: `1px solid ${dsAlpha(DS.brass400, 0.16)}` }}
+          style={{ borderBottom: `1px solid ${dsAlpha(DS.metal400, 0.16)}` }}
         >
           <div className="flex items-center gap-3 min-w-0">
             {onBack && (
@@ -100,7 +100,7 @@ export default function WizardWindow({
         {footer && (
           <div
             className="px-5 py-3 shrink-0 flex items-center justify-end gap-2 flex-wrap"
-            style={{ borderTop: `1px solid ${dsAlpha(DS.brass400, 0.16)}` }}
+            style={{ borderTop: `1px solid ${dsAlpha(DS.metal400, 0.16)}` }}
           >
             {footer}
           </div>

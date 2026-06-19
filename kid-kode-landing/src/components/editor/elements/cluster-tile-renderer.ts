@@ -227,7 +227,7 @@ class ClusterTileRenderer {
   }
 
   /** A 3-point lit scene + IBL (mirrors shared-tile-renderer.makeScene): warm
-   *  key, cool steel fill, soft ambient — Observatory Brass, NO purple. */
+   *  key, cool steel fill, soft ambient — Chrome-Arc, NO purple. */
   private makeScene(): THREE.Scene {
     const scene = new THREE.Scene();
     scene.background = null;

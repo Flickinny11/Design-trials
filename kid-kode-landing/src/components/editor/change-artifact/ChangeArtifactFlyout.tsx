@@ -3,7 +3,7 @@
 // CANVAS-FINAL — Change Artifact toolbar group flyout (canvas-spec §5 "Change
 // Artifact (§12)"). Opens the wizard on the selected element, or mints a fresh
 // element tethered to the active hub and opens it (so "generate a new element"
-// is one path with replacing an existing one). Observatory-Brass chrome,
+// is one path with replacing an existing one). Chrome-Arc chrome,
 // plain-language copy.
 
 import { Icon } from '@/components/editor/icons/Icon';
@@ -118,9 +118,9 @@ function BigKey({
         boxShadow: `inset 0 0 0 1px ${dsAlpha(DS_ACCENT, 0.32)}, ${KEY_SHADOW}`,
       }}
     >
-      <Icon name={icon} size={16} color={DS.brass200} glow />
+      <Icon name={icon} size={16} color={DS.metal200} glow />
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-[12px] font-mono font-semibold" style={{ color: 'var(--ds-brass-200)' }}>{title}</span>
+        <span className="text-[12px] font-mono font-semibold" style={{ color: 'var(--ds-metal-200)' }}>{title}</span>
         <span className="text-[9px] font-mono leading-snug" style={{ color: 'var(--ds-text-mid)' }}>{desc}</span>
       </div>
     </button>

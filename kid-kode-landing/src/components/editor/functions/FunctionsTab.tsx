@@ -183,7 +183,7 @@ export default function FunctionsTab({ node, onToast }: { node: PrismNode; onToa
                 <span className="text-[10px] font-mono truncate" style={{ color: 'var(--ds-text-hi)' }}>{r.label}</span>
                 <span className="text-[8px] font-mono truncate" style={{ color: 'var(--ds-text-low)' }}>{r.platform}{r.category ? ` · ${r.category}` : ''}</span>
               </div>
-              <Icon name="plus" size={10} color="var(--ds-brass-300)" />
+              <Icon name="plus" size={10} color="var(--ds-metal-300)" />
             </button>
           ))}
         </div>
@@ -201,7 +201,7 @@ export default function FunctionsTab({ node, onToast }: { node: PrismNode; onToa
         className="flex flex-col gap-1 rounded-[6px] p-1.5"
         style={{ border: '1px dashed var(--ds-edge-shade, rgba(0,0,0,0.4))' }}
       >
-        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em] px-0.5" style={{ color: 'var(--ds-brass-300)' }}>Attached functions ({tiles.length})</span>
+        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em] px-0.5" style={{ color: 'var(--ds-metal-300)' }}>Attached functions ({tiles.length})</span>
         {tiles.length === 0 && <span className="text-[8.5px] font-mono px-1 py-1.5 text-center" style={{ color: 'var(--ds-text-low)' }}>Click or drag an action to attach</span>}
         {tiles.map((t, i) => (
           <div key={t.id} data-role="fn-attached" data-tile-id={t.id} data-validation={t.validation?.status ?? 'unvalidated'} className="flex items-center gap-1.5 px-1.5 py-1 rounded-[5px]" style={{ background: 'rgba(255,255,255,0.04)' }}>
@@ -221,17 +221,17 @@ export default function FunctionsTab({ node, onToast }: { node: PrismNode; onToa
 
       {/* Custom snippets (B5) */}
       <div className="flex flex-col gap-1.5 rounded-[6px] p-1.5" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--ds-edge-shade, rgba(0,0,0,0.4))' }}>
-        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em]" style={{ color: 'var(--ds-brass-300)' }}>My snippets</span>
+        <span className="text-[7.5px] font-mono uppercase tracking-[0.14em]" style={{ color: 'var(--ds-metal-300)' }}>My snippets</span>
         <div className="flex items-center gap-1.5">
           <input data-role="fn-snippet-name" value={snipName} onChange={(e) => setSnipName(e.target.value)} placeholder="Name a reusable snippet…" className="flex-1 ds-well rounded-[4px] px-1.5 py-1 bg-transparent outline-none text-[9px] font-mono" style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-well)' }} />
-          <button type="button" data-role="fn-snippet-save" disabled={!snipName.trim()} onClick={saveSnippet} className="flex items-center gap-1 rounded-[4px] px-1.5 py-1 text-[8.5px] font-mono disabled:opacity-40" style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg,#b9914f,#8c6a32))' }}><Icon name="save" size={9} color="var(--ds-text-hi)" />Save</button>
+          <button type="button" data-role="fn-snippet-save" disabled={!snipName.trim()} onClick={saveSnippet} className="flex items-center gap-1 rounded-[4px] px-1.5 py-1 text-[8.5px] font-mono disabled:opacity-40" style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg,#dfe2e6,#898c92))' }}><Icon name="save" size={9} color="var(--ds-text-hi)" />Save</button>
         </div>
         {snippets.map((s) => (
           <button key={s.id} type="button" data-role="fn-snippet" data-snippet-id={s.id} onClick={() => attach({ actionId: s.actionId, brandKey: s.brandKey, label: s.label, platform: s.platform, providerId: s.providerId, source: 'snippet', snippetId: s.id })} className="flex items-center gap-2 px-1.5 py-1 rounded-[5px] text-left hover:bg-white/[0.05]" style={{ background: 'rgba(255,255,255,0.025)' }}>
             <BrandLogo brandKey={s.brandKey} size={15} />
             <span className="text-[9px] font-mono flex-1 truncate" style={{ color: 'var(--ds-text-hi)' }}>{s.name}</span>
             <span className="text-[7px] font-mono uppercase" style={{ color: 'var(--ds-text-low)' }}>snippet</span>
-            <Icon name="plus" size={9} color="var(--ds-brass-300)" />
+            <Icon name="plus" size={9} color="var(--ds-metal-300)" />
           </button>
         ))}
       </div>

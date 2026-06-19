@@ -25,7 +25,7 @@
 //     the endpoint reports it is not wired, shows a plain-language disclosure.
 //     Output is NEVER faked.
 //
-// Chrome: Observatory Brass (raised-bar directive) — machined KEY faces +
+// Chrome: Chrome-Arc (raised-bar directive) — machined KEY faces +
 // recessed wells + engraved kicker labels reused from animation-tools/ui,
 // GSAP open choreography, native magnetic hover on the primary keys
 // (animation-tools/magnetic). Honors prefers-reduced-motion. No purple;
@@ -322,7 +322,7 @@ export default function ImageFlyout({
             opacity: hub ? 1 : 0.5,
           }}
         >
-          <Icon name="image" size={18} color={dragOver ? DS.brass200 : DS.textMid} glow={dragOver} />
+          <Icon name="image" size={18} color={dragOver ? DS.metal200 : DS.textMid} glow={dragOver} />
           <span className="text-[9.5px] font-mono text-center leading-relaxed" style={{ color: 'var(--ds-text-mid)' }}>
             {hub
               ? busy === 'add'
@@ -348,10 +348,10 @@ export default function ImageFlyout({
                 : { background: 'var(--ds-grad-ceramic)', boxShadow: 'var(--ds-chamfer-soft)' }
             }
           >
-            <Icon name="plus" size={11} color={hub && !busy ? DS.brass200 : DS.textMid} glow={!!hub && !busy} />
+            <Icon name="plus" size={11} color={hub && !busy ? DS.metal200 : DS.textMid} glow={!!hub && !busy} />
             <span
               className="text-[10px] font-mono font-semibold tracking-wide"
-              style={{ color: hub && !busy ? 'var(--ds-brass-200)' : 'var(--ds-text-mid)' }}
+              style={{ color: hub && !busy ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}
             >
               {busy === 'add' ? 'Uploading…' : 'Browse files'}
             </span>
@@ -508,12 +508,12 @@ export default function ImageFlyout({
           <Icon
             name="sparkle"
             size={13}
-            color={busy || prompt.trim().length === 0 ? DS.textMid : DS.brass200}
+            color={busy || prompt.trim().length === 0 ? DS.textMid : DS.metal200}
             glow={!busy && prompt.trim().length > 0}
           />
           <span
             className="text-[10.5px] font-mono font-semibold"
-            style={{ color: busy || prompt.trim().length === 0 ? 'var(--ds-text-mid)' : 'var(--ds-brass-200)' }}
+            style={{ color: busy || prompt.trim().length === 0 ? 'var(--ds-text-mid)' : 'var(--ds-metal-200)' }}
           >
             {busy === 'generate' ? 'Checking…' : 'Generate'}
           </span>
@@ -620,7 +620,7 @@ function PresentationControls({
       <FaderRow
         label="Rounded corners"
         value={spec.cornerRadius}
-        accent={DS.brass300}
+        accent={DS.metal300}
         testId="image-corner-radius"
         onChange={(v) => write(withImageSpecPatch(current, { cornerRadius: v }))}
       />

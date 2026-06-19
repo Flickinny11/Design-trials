@@ -34,14 +34,14 @@ export default function GuidedTipsLightbulb() {
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
           <defs>
             <linearGradient id="tipBulbGlass" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#f7e9c6" />
-              <stop offset="0.5" stopColor="#ddba77" />
-              <stop offset="1" stopColor="#b3853f" />
+              <stop offset="0" stopColor="#eef0f3" />
+              <stop offset="0.5" stopColor="#96e0ff" />
+              <stop offset="1" stopColor="#1ec8ff" />
             </linearGradient>
             <radialGradient id="tipBulbCore" cx="0.5" cy="0.42" r="0.6">
-              <stop offset="0" stopColor="#fff7e2" />
-              <stop offset="0.55" stopColor="rgba(247,233,198,0.55)" />
-              <stop offset="1" stopColor="rgba(247,233,198,0)" />
+              <stop offset="0" stopColor="#eafaff" />
+              <stop offset="0.55" stopColor="rgba(30,200,255,0.55)" />
+              <stop offset="1" stopColor="rgba(30,200,255,0)" />
             </radialGradient>
           </defs>
           {/* lit core glow inside the glass */}
@@ -51,14 +51,14 @@ export default function GuidedTipsLightbulb() {
             d="M11 2.2c-3.4 0-6 2.6-6 5.9 0 2.2 1.1 3.6 2.2 4.8.6.7 1 1.3 1.1 2.1h5.4c.1-.8.5-1.4 1.1-2.1 1.1-1.2 2.2-2.6 2.2-4.8 0-3.3-2.6-5.9-6-5.9Z"
             stroke="url(#tipBulbGlass)"
             strokeWidth="1.4"
-            fill="rgba(247,233,198,0.10)"
+            fill="rgba(30,200,255,0.10)"
             strokeLinejoin="round"
           />
-          {/* filament — the part that pulses warm */}
+          {/* filament — the part that pulses arc-cyan */}
           <path
             className="tip-bulb__filament"
             d="M8.7 9.3c0.7-1.4 1.4-1.4 2.3-0.2 0.9 1.2 1.6 1.1 2.3-0.3"
-            stroke="#fff7e2"
+            stroke="#eafaff"
             strokeWidth="1.1"
             strokeLinecap="round"
             fill="none"

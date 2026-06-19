@@ -5,12 +5,14 @@
 // These MUST stay in lockstep with tokens.css — change both or neither.
 // Component-local hex values are forbidden; import from here instead.
 
-// CHROME OVERHAUL 2026-06-15: these hex are the EXACT sRGB render of the OKLCH
-// source tokens in tokens.css (Observatory-Brass, enriched/lifted). They feed
-// THREE.Color in the chrome-layer slab shaders + inline styles. Keep in lockstep
-// with tokens.css — change both or neither.
+// PRISM PORT F0 (de-brass 2026-06-19): these hex are the sRGB render of the OKLCH
+// source tokens in tokens.css. They feed THREE.Color in the chrome-layer slab
+// shaders + inline styles. Keep in lockstep with tokens.css — change both or
+// neither. LOCKED IDENTITY: machined chrome / titanium / mercury metals on a
+// near-black substrate; anodized blue as a TINT; arc-cyan as the SINGLE emissive
+// accent. ZERO brass/gold/amber. No purple. No pure #fff / #000.
 export const DS = {
-  // Neutrals — machined graphite housing (lifted/warmer so panels read as lit)
+  // Neutrals — machined graphite housing
   void: '#030408',
   ink: '#0d1117',
   charcoal: '#181c23',
@@ -18,20 +20,26 @@ export const DS = {
   slate: '#313741',
   steel: '#414854',
 
-  // Text — bone engraving
-  textHi: '#f3f0e7',
-  text: '#e2e0d7',
-  textMid: '#aaa7a1',
+  // Text — bright machined-metal engraving (cool neutral)
+  textHi: '#dfe2e6',
+  text: '#cdd1d6',
+  textMid: '#a5a8ab',
   textLow: '#6f7379',
 
-  // Brass accent ramp (richer — more chroma so accents catch light)
-  brass100: '#f7e9c3',
-  brass200: '#f2d193',
-  brass300: '#e7b66a',
-  brass400: '#d99b47', // primary accent
-  brass500: '#c08137',
-  brass600: '#98622a',
-  brass700: '#6d441c',
+  // Metal ramp — machined chrome -> titanium -> graphite shadow (cool, neutral)
+  metal100: '#eef0f3', // mercury highlight / specular hot point
+  metal200: '#dfe2e6', // chrome
+  metal300: '#c6c9cd',
+  metal400: '#b8bcc0', // titanium — primary metal face
+  metal500: '#898c92',
+  metal600: '#575b61',
+  metal700: '#32363c', // shadowed flank
+
+  // Arc — the SINGLE emissive / active accent + anodized TINT companion
+  arc: '#1ec8ff',        // arc-cyan — active state, selection, emission
+  arcHot: '#96e0ff',     // hot core of the arc
+  anodized: '#2d5fa3',   // anodized blue — surface TINT only (never emission)
+  warningArc: '#ff8c1e', // warning arc — orange, never gold
 
   // Ice secondary (informational / frozen only)
   ice200: '#c4dae5',
@@ -41,17 +49,18 @@ export const DS = {
 
   // Status
   ok: '#5fc889',
-  warn: '#e1ab5c',
+  warn: '#ff8c1e',
   danger: '#dd675b',
   neutral: '#727985',
 } as const;
 
-/** Primary accent — use for active states, selection, primary actions. */
-export const DS_ACCENT = DS.brass400;
-/** Hot specular point of the accent ramp. */
-export const DS_ACCENT_HI = DS.brass200;
-/** Deep shade of the accent ramp. */
-export const DS_ACCENT_LO = DS.brass600;
+/** Primary accent — the single emissive arc-cyan for active states, selection,
+ *  primary actions. (Was the brass primary; now arc-cyan per the locked port.) */
+export const DS_ACCENT = DS.arc;
+/** Hot core of the arc accent. */
+export const DS_ACCENT_HI = DS.arcHot;
+/** Deep tint companion (anodized blue) — surface tint, not emission. */
+export const DS_ACCENT_LO = DS.anodized;
 
 /** Numeric hex (0xRRGGBB) for three.js colors. */
 export function dsHexNumber(hex: string): number {
@@ -68,10 +77,10 @@ export function dsAlpha(hex: string, alpha: number): string {
 
 /** Category tint map for graph/catalog chrome — restrained, no purple. */
 export const DS_CATEGORY_TINTS: Record<string, string> = {
-  default: DS.brass400,
-  motion: DS.brass300,
+  default: DS.metal400,
+  motion: DS.metal300,
   surface: DS.ice300,
-  light: DS.brass200,
+  light: DS.metal200,
   volume: DS.ice400,
   glass: DS.ice200,
   text: DS.textMid,
@@ -79,10 +88,10 @@ export const DS_CATEGORY_TINTS: Record<string, string> = {
   interaction: DS.ok,
 };
 
-/** Difficulty tints (catalog tiles) — brass ramp, never purple. */
+/** Difficulty tints (catalog tiles) — metal ramp, never purple. */
 export const DS_DIFFICULTY: Record<string, string> = {
   easy: DS.ok,
-  medium: DS.brass300,
+  medium: DS.metal300,
   hard: DS.warn,
 };
 

@@ -32,7 +32,7 @@ export default function NodeEditorPromptEdit({ scope, onToast }: { scope: Prompt
         onClick={() => setOpen((v) => !v)}
         className="w-full flex items-center gap-1.5 px-2.5 py-1.5 text-left"
       >
-        <Icon name="zap" size={11} color="var(--ds-brass-300)" glow />
+        <Icon name="zap" size={11} color="var(--ds-metal-300)" glow />
         <span className="text-[10px] font-mono tracking-[0.03em] flex-1" style={{ color: 'var(--ds-text-hi)' }}>Describe {SCOPE_LABEL[scope]}…</span>
         <Icon name="chevron" size={10} color="var(--ds-text-low)" />
       </button>
@@ -55,7 +55,7 @@ export default function NodeEditorPromptEdit({ scope, onToast }: { scope: Prompt
             disabled={busy || !prompt.trim()}
             onClick={generate}
             className="flex items-center justify-center gap-1.5 rounded-[5px] px-2 py-1 text-[9.5px] font-mono disabled:opacity-40"
-            style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg, #b9914f, #8c6a32))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,250,235,0.25)' }}
+            style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg, #dfe2e6, #898c92))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,248,252,0.25)' }}
           >
             <Icon name={busy ? 'refresh' : 'sparkle'} size={10} color="var(--ds-text-hi)" />
             {busy ? 'Planning…' : 'Generate'}
@@ -78,7 +78,7 @@ export default function NodeEditorPromptEdit({ scope, onToast }: { scope: Prompt
                 disabled={busy}
                 onClick={apply}
                 className="flex items-center justify-center gap-1.5 rounded-[5px] px-2 py-1 text-[9.5px] font-mono disabled:opacity-40"
-                style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-brass, linear-gradient(180deg, #b9914f, #8c6a32))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,250,235,0.25)' }}
+                style={{ color: 'var(--ds-text-hi)', background: 'var(--ds-grad-metal, linear-gradient(180deg, #dfe2e6, #898c92))', boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(245,248,252,0.25)' }}
               >
                 <Icon name="check" size={10} color="var(--ds-text-hi)" />Apply
               </button>

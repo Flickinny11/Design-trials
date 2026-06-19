@@ -15,7 +15,7 @@
 
 import { Environment } from '@react-three/drei';
 import type { LightingSpec, PrismHub, PrismLight } from '@/lib/prism-graph/types';
-// Wave-2E Observatory Brass retint — default-light tints come from the frozen
+// Wave-2E Chrome-Arc retint — default-light tints come from the frozen
 // DS tokens (cool key → ice, warm fill → brass); roles + intensities unchanged.
 import { DS } from '@/components/editor/design-system';
 
@@ -24,7 +24,7 @@ import { DS } from '@/components/editor/design-system';
 const LEGACY_AMBIENT = 0.45;
 const LEGACY_LIGHTS: PrismLight[] = [
   { id: 'key', type: 'directional', color: DS.ice200, intensity: 0.8, position: { x: 4, y: 6, z: 8 } },
-  { id: 'fill', type: 'directional', color: DS.brass100, intensity: 0.25, position: { x: -4, y: -2, z: 5 } },
+  { id: 'fill', type: 'directional', color: DS.metal100, intensity: 0.25, position: { x: -4, y: -2, z: 5 } },
 ];
 
 // Shadow-camera frustum + map params for the single key caster. Kept modest
