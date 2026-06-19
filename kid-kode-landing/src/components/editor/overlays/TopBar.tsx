@@ -87,16 +87,18 @@ export default function TopBar() {
     >
       <div className="flex items-center gap-3 pointer-events-auto">
         <div className="flex items-center gap-2">
-          {/* P3/C15 — bespoke PRISM mark in an ink housing (matches the favicon
-              identity): a glassy brass-bevelled prism refracting an ice beam into
-              a warm dispersion fan, alive (idle shimmer + hover sweep). */}
+          {/* F1/C15 — bespoke dispersive PRISM mark in a machined ink housing
+              (matches the favicon identity): a chrome-bevelled prism splitting a
+              cool collimated beam into a visible arc-cyan -> cool spectrum fan
+              with an arc-cyan emissive core, alive (idle shimmer + hover sweep).
+              Chrome / arc-cyan only — ZERO brass/gold/amber. */}
           <div
             className="w-7 h-7 rounded-ds-sm flex items-center justify-center"
             style={{
               background: 'radial-gradient(120% 120% at 30% 20%, rgba(20,24,38,0.95), #0b0d13 72%)',
               boxShadow:
-                'inset 0 1px 0 rgba(255,252,242,0.18), inset 0 -1px 0 rgba(0,0,0,0.5), var(--ds-elev-1), var(--ds-glow-arc)',
-              border: '0.5px solid rgba(247,233,198,0.18)',
+                'inset 0 1px 0 rgba(223,226,230,0.2), inset 0 -1px 0 rgba(0,0,0,0.5), var(--ds-elev-1), var(--ds-glow-arc)',
+              border: '0.5px solid rgba(223,226,230,0.2)',
             }}
           >
             <PrismLogo size={18} />

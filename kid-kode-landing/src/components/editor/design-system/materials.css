@@ -194,11 +194,17 @@
   text-transform: uppercase;
   color: var(--ds-text-low);
 }
-/* WORKHORSE — field / section label. Sora, refined uppercase. */
+/* HUD / LABEL TIER — field / section label. PRISM PORT F1: the all-caps tracked
+   label tier is JetBrains Mono (the instrument-panel voice), per the locked
+   target (OpenDesign prism DESIGN.md §3: "Display + labels: JetBrains Mono ...
+   always uppercase for primary labels"). Sora stays the SIGNATURE display voice;
+   the mono carries the machined-readout label/HUD tier. tabular-nums so mixed
+   alphanumeric labels (e.g. "NODE 04") stay column-aligned. */
 .ds-label {
-  font-family: var(--ds-font-ui);
+  font-family: var(--ds-font-mono);
   font-size: var(--ds-fs-label);
-  font-weight: 600;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   letter-spacing: var(--ds-track-label);
   text-transform: uppercase;
   color: var(--ds-text-mid);

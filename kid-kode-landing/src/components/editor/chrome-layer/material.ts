@@ -53,18 +53,35 @@ export interface ChromeInstanceBuffers {
   aClip: THREE.InstancedBufferAttribute;
 }
 
-const METAL = new THREE.Color(DS.metal400);
-const METAL_HI = new THREE.Color(DS.metal200);
-const ICE = new THREE.Color(DS.ice400);
-// CHROME OVERHAUL 2026-06-15: slab body colors lifted + warmed to match the new
-// OKLCH graphite ramp so a slab reads as LIT machined material over the black
-// scene, never a near-black hole punched in the void (Logan's #1 complaint).
-const METAL_TOP = new THREE.Color('#454d61');
-const METAL_BOT = new THREE.Color('#1c2029');
-const CERAMIC_TOP = new THREE.Color('#2b3142');
-const CERAMIC_BOT = new THREE.Color('#1b1f2b');
-const WELL_TOP = new THREE.Color('#0d1016');
-const WELL_BOT = new THREE.Color('#141823');
+// PRISM PORT F1 (chrome-material replacement 2026-06-19): the slab recipe is
+// REPLACED with the GATE-PASSED slice material language (redesign-slice/index.html
+// + SLICE-REPORT.md). The plumbing (SDF / bevel / clip / instancing) is byte-
+// stable; only the recipe changed. LOCKED IDENTITY (tokens.ts / OpenDesign
+// prism DESIGN.md): polished chrome #dfe2e6 (metalness 1, roughness ~0.035, NO
+// clearcoat — clearcoat-over-metal reads as plastic, a documented HARD FAIL),
+// brushed titanium #b8bcc0, mercury #e0e4ea, anodized #2d5fa3 (dielectric oxide
+// over metal: metalness 0.9, thin clearcoat, iridescence — TINT only), arc-cyan
+// #1ec8ff as the SINGLE emission, only on active. ZERO brass/gold/amber.
+const METAL = new THREE.Color(DS.metal400);   // titanium
+const METAL_HI = new THREE.Color(DS.metal100); // mercury highlight / specular hot point
+// Arc-cyan is the SINGLE emissive accent (active states, selection, focus). Never
+// a paint fill on inactive elements — it only ever rides `accent`/state terms.
+const ARC = new THREE.Color(DS.arc);       // #1ec8ff
+const ARC_HOT = new THREE.Color(DS.arcHot); // #96e0ff hot core
+const ANODIZED = new THREE.Color(DS.anodized); // #2d5fa3 — surface TINT only
+// SLAB BODY RAMPS — machined-metal albedo under the studio env. Metals carry a
+// near-mirror chrome→titanium→graphite ramp (lit by the env, not painted);
+// these are the diffuse floors that keep a slab reading as LIT metal even where
+// the dim hub env contributes little.
+// Polished chrome face (mercury highlight cap → chrome → titanium → graphite flank).
+const METAL_TOP = new THREE.Color('#cfd4da'); // bright machined chrome cap
+const METAL_BOT = new THREE.Color('#2b3038'); // graphite shadowed flank
+// Anodized inlay (ceramic style) — dielectric oxide over metal, anodized-blue TINT.
+const CERAMIC_TOP = new THREE.Color('#33486a'); // lit anodized oxide
+const CERAMIC_BOT = new THREE.Color('#16202f'); // shaded anodized base
+// Recessed dark-anodized pocket (well style).
+const WELL_TOP = new THREE.Color('#0c1118');
+const WELL_BOT = new THREE.Color('#141a24');
 // Lit smoked-glass body floor (top key-lit → bottom shade) — the guaranteed
 // presence a glass panel keeps even when the scene behind it is pure black.
 const GLASS_BODY_TOP = new THREE.Color('#272f3e');
@@ -228,7 +245,12 @@ function bevelNormal(gradDir: TSLNode, fillet: TSLNode, strength: number, sink =
   return normalize(vec3(gradDir.x.mul(slope), gradDir.y.mul(slope).negate(), 1.0));
 }
 
+// Polished-chrome edge ramp: mercury hot-point → titanium. Used for lit keylines
+// and machined edge bevels (the metal speculars themselves come from the env).
 const metalGradient = (t: TSLNode | number) => mix(c3(METAL_HI), c3(METAL), t);
+// Arc-cyan emissive ramp: hot core → arc. The ONLY emissive color for active
+// states (selection, focus, active mode-toggle / hub-pill grooves).
+const arcGradient = (t: TSLNode | number) => mix(c3(ARC_HOT), c3(ARC), t);
 
 
 /** Opaque family: metal (1) / ceramic (2) / well (3) selected per instance. */
@@ -318,33 +340,72 @@ export function createOpaqueSlabMaterial(
   const baseNormal = mix(raisedNormal, wellNormal, isWell);
   n.normalNode = normalize(vec3(baseNormal.x.add(microXY.x), baseNormal.y.add(microXY.y), baseNormal.z));
 
-  n.metalnessNode = isMetal.mul(0.92).add(isCeramic.mul(0.08)).add(isWell.mul(0.25));
+  // SLICE RECIPE — material physics per family:
+  //   metal  = POLISHED CHROME / brushed titanium: pure metal mirror (metalness
+  //            1.0), very low roughness (~0.05) so the studio env resolves as
+  //            crisp specular streaks (the chrome read). The brush term lifts
+  //            roughness slightly along the brush axis → the satin titanium
+  //            anisotropic streak. NO CLEARCOAT (clearcoat-over-metal = the
+  //            documented plastic HARD FAIL → the isMetal clearcoat term is GONE).
+  //   ceramic = ANODIZED aluminium: dielectric oxide over metal (metalness 0.9),
+  //            a thin clearcoat for the oxide gloss + iridescence thin-film sheen
+  //            (set below) — this is exactly what separates real anodized metal
+  //            from painted plastic.
+  //   well   = recessed dark-anodized pocket: dielectric, matte.
+  n.metalnessNode = isMetal.mul(1.0).add(isCeramic.mul(0.9)).add(isWell.mul(0.2));
   n.roughnessNode = isMetal
-    .mul(float(0.34).add(brush.mul(0.1)).sub(hover.mul(0.06)))
-    .add(isCeramic.mul(float(0.46).add(grain.mul(0.06))))
-    .add(isWell.mul(0.7))
+    .mul(float(0.05).add(brush.mul(0.14).abs()).sub(hover.mul(0.012)))
+    .add(isCeramic.mul(float(0.18).add(grain.mul(0.05))))
+    .add(isWell.mul(0.62))
     .add(roughDetail);
-  n.clearcoatNode = isCeramic.mul(0.85).add(isMetal.mul(0.15));
-  n.clearcoatRoughnessNode = float(0.3);
+  // Clearcoat lives ONLY on the dielectric families (anodized oxide gloss / well).
+  // Zero on metal — clearcoat over metal reads as coated plastic (HARD FAIL).
+  n.clearcoatNode = isCeramic.mul(0.28).add(isWell.mul(0.16));
+  n.clearcoatRoughnessNode = isCeramic.mul(0.12).add(isWell.mul(0.42)).add(0.02);
+  // Anodized thin-film iridescence — the oxide-over-aluminium sheen. Gated to
+  // ceramic so chrome/titanium stay pure mirror; setting the node enables the
+  // iridescence lighting path (useIridescence). ior bumped on metal toward the
+  // chrome-mirror read (slice chrome ior 2.9), dielectric elsewhere.
+  n.iridescenceNode = isCeramic.mul(0.32);
+  n.iridescenceIORNode = float(1.32);
+  // thickness range [120,420]nm mapped across the vertical gradient → a shifting
+  // oxide sheen rather than a flat tint.
+  n.iridescenceThicknessNode = mix(float(140.0), float(400.0), vT);
+  n.iorNode = isMetal.mul(1.5).add(1.4); // chrome-leaning ior on metal, dielectric base
 
-  // Emissive: metal keyline + magnetic pointer glow + pointer sheen + a
+  // Emissive: machined-metal keyline + magnetic pointer glow + pointer sheen + a
   // static top-edge glint so pointer-less frames still read dimensional.
-  const keylineColor = metalGradient(vT).mul(c.keyline).mul(accent.mul(1.4).add(0.6));
-  const magnetGlow = metalGradient(0.2).mul(c.magneticGlow).mul(0.6);
-  const sheenGlow = c3(ICE).mul(c.sheen).mul(0.18);
-  const topGlint = vec3(0.9, 0.85, 0.7).mul(smoothstep(0.1, 0.0, vT).mul(0.03)).mul(isMetal);
+  // ARC-CYAN ACTIVE EMISSION (F1): the keyline edge is the .ds-edge bezel light.
+  // At rest it is a neutral machined-metal edge; as `accent` rises (the active
+  // mode-toggle segment, selected hub pill, focus ring) the edge GROOVE shifts to
+  // an arc-cyan emissive rim — emission ONLY on active, never a paint fill on an
+  // inactive slab (accent === 0 → pure metal edge, zero cyan).
+  const edgeColor = mix(metalGradient(vT), arcGradient(vT), accent);
+  const keylineColor = edgeColor.mul(c.keyline).mul(accent.mul(1.6).add(0.55));
+  // Active arc-cyan groove: a tight inner-rim emissive band that lights only on
+  // active slabs (the selection / focus signature). toneMapped-bright via the
+  // hot core so the restrained bloom picks it up as a real arc of light.
+  const arcGroove = c3(ARC).mul(c.keyline).mul(accent.mul(0.9));
+  const magnetGlow = metalGradient(0.2).mul(c.magneticGlow).mul(0.5);
+  // Pointer sheen stays a cool neutral metal catch (NOT cyan — cyan is reserved
+  // for active state only); arc-cyan only enters via `accent`.
+  const sheenGlow = c3(METAL_HI).mul(c.sheen).mul(0.14);
+  const topGlint = vec3(0.92, 0.94, 0.98).mul(smoothstep(0.1, 0.0, vT).mul(0.045)).mul(isMetal);
   // VOID FIX (Logan): a broad baked key-light sheen graced across the upper
   // face of every opaque panel so the tool rail + inspector bodies read as LIT
   // machined graphite at rest, regardless of how dim the hub env is — not the
   // near-black slabs that disappeared into the scene.
-  const keySheen = vec3(0.80, 0.79, 0.74)
+  const keySheen = vec3(0.84, 0.87, 0.92)
     .mul(smoothstep(0.72, 0.0, vT))
-    .mul(float(0.055).mul(isMetal.add(isCeramic)));
+    .mul(float(0.06).mul(isMetal.add(isCeramic)));
   // Accent faces are SELF-LIT like the CSS --ds-grad-metal they replace: an
   // albedo-only metal plate goes near-black under a dim scene env, which made
   // primary-key ink labels unreadable (advocate MUST-FIX). The emissive term
-  // guarantees instrument-key luminance under any hub lighting.
-  const accentFace = metalGradient(vT).mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
+  // guarantees instrument-key luminance under any hub lighting. An active key
+  // carries a faint arc-cyan wash over the lit chrome face (emission only when
+  // active), so the active mode-toggle / hub pill reads as energised metal.
+  const accentFace = mix(metalGradient(vT), arcGradient(vT), accent.mul(0.34))
+    .mul(accent.mul(0.46).add(accent.mul(hover).mul(0.08)));
   // EDITOR-EXP P2 (C12) — hero key luminance. A 0.92-metal metal face reflects
   // the (dark) scene env and reads near-black, so a hero gets a FORM-FOLLOWING
   // self-lit metal body: bright at the top cap, dim at the shaded base, so it
@@ -355,7 +416,7 @@ export function createOpaqueSlabMaterial(
   const heroFace = metalGradient(vT).mul(heroFaceLum).mul(hero);
   const heroEdge = metalGradient(vT).mul(c.keyline).mul(hero.mul(1.9));
   n.emissiveNode = mix(
-    keylineColor.add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace).add(heroFace).add(heroEdge),
+    keylineColor.add(arcGroove).add(magnetGlow).add(sheenGlow).add(topGlint).add(keySheen).add(accentFace).add(heroFace).add(heroEdge),
     vec3(0.0, 0.0, 0.0),
     isWell.mul(0.78),
   );
@@ -366,7 +427,11 @@ export function createOpaqueSlabMaterial(
   m.depthTest = false;
   m.depthWrite = false;
   m.fog = false;
-  m.envMapIntensity = 0.8;
+  // Polished chrome wants a strong env contribution so the controlled studio
+  // reflection resolves as crisp specular streaks (the slice ran chrome at
+  // 1.3–1.9). The pmrem(observatory-env) is the controlled chrome reflection
+  // env regardless of how dim the active hub is.
+  m.envMapIntensity = 1.45;
   return m;
 }
 
@@ -403,8 +468,11 @@ export function createGlassSlabMaterial(
   );
 
   // Beer–Lambert smoked tint, thicker at the rim (the bevel doubles as depth).
+  // F1: COOL-NEUTRAL absorption (slice glass attenuationColor #dfeeff) — pass the
+  // cool end, sink red slightly, so smoked glass reads as cool machined crystal,
+  // never the warm bias that flirts with the condemned brass palette.
   const thicknessG = c.fillet.mul(2.2).add(1.0);
-  const absorb = vec3(0.18, 0.16, 0.1); // smoked metal: pass warm, sink blue
+  const absorb = vec3(0.2, 0.15, 0.11); // cool smoked crystal: sink red, pass cyan-blue
   const tinted = refracted.mul(exp(absorb.mul(thicknessG).negate()));
   // VOID FIX (Logan): a guaranteed LIT smoked-glass floor (top key-light →
   // bottom shade) so the panel reads as a crafted instrument even when the scene
@@ -423,26 +491,38 @@ export function createGlassSlabMaterial(
   n.backdropAlphaNode = c.coverage;
 
   // Lit skin over the transmission: near-black diffuse, real speculars.
+  // Glass is a DIELECTRIC, so clearcoat over its near-zero-metalness skin is
+  // physically correct (NOT the metal HARD FAIL) — it gives the smoked crystal
+  // its wet machined-glass gloss. metalness stays 0.
   n.colorNode = vec4(0.02, 0.022, 0.03, 1.0);
   n.normalNode = bevelNormal(c.gradDir, c.fillet, 1.6, 1);
   n.metalnessNode = float(0.0);
-  // Roughness floor keeps on-panel pointer-light speculars from blowing the
+  // Lower roughness floor than the prior 0.32 → cleaner refractive crystal speculars,
+  // but a floor (frost-scaled) still keeps on-panel pointer-light from blowing the
   // glass to white (W4 catch: cursor parked on a panel washed it out).
-  n.roughnessNode = float(0.32).add(frost.mul(0.1));
-  n.clearcoatNode = float(0.35);
-  m.envMapIntensity = 1.1;
+  n.roughnessNode = float(0.22).add(frost.mul(0.12));
+  n.clearcoatNode = float(0.5);
+  n.clearcoatRoughnessNode = float(0.06);
+  n.iorNode = float(1.5); // crown-glass ior — the slice glass ran ior ~1.5
+  m.envMapIntensity = 1.25;
 
   const vT = uv().y.oneMinus();
-  const keyline = metalGradient(vT).mul(c.keyline).mul(accent.mul(1.5).add(0.72));
-  const magnet = metalGradient(0.15).mul(c.magneticGlow).mul(0.7);
+  // ARC-CYAN ACTIVE EMISSION (F1): the glass bezel edge is a neutral machined-
+  // metal keyline at rest; on active (`accent`) it shifts to an arc-cyan groove —
+  // the selection / focus signature on glass panels (search palette focus, armed
+  // filter pills). Emission only on active.
+  const glassEdge = mix(metalGradient(vT), arcGradient(vT), accent);
+  const keyline = glassEdge.mul(c.keyline).mul(accent.mul(1.7).add(0.66));
+  const arcGroove = c3(ARC).mul(c.keyline).mul(accent.mul(0.85));
+  const magnet = metalGradient(0.15).mul(c.magneticGlow).mul(0.6);
   // Guaranteed Fresnel-read rim: the env may be dim, so the bevel always carries
-  // an edge light (ice → metal with accent). Strengthened so the glass rim reads
-  // as a lit bevel, not a flat dark band, over the black scene.
-  const rim = mix(c3(ICE), metalGradient(0.3), accent.mul(0.6)).mul(c.fillet).mul(0.16);
+  // an edge light (neutral metal at rest → arc-cyan with accent). Reads as a lit
+  // machined bevel, not a flat dark band, over the black scene.
+  const rim = mix(c3(METAL_HI), c3(ARC), accent.mul(0.7)).mul(c.fillet).mul(0.15);
   // Baked top key-glint: a soft specular catch on the top edge so a static
   // pointer-less panel still reads as a surface a light is grazing.
-  const topKey = vec3(0.86, 0.84, 0.78).mul(smoothstep(0.16, 0.0, vT)).mul(0.06);
-  n.emissiveNode = keyline.add(magnet).add(rim).add(topKey).add(c3(ICE).mul(c.sheen).mul(0.12));
+  const topKey = vec3(0.88, 0.91, 0.96).mul(smoothstep(0.16, 0.0, vT)).mul(0.06);
+  n.emissiveNode = keyline.add(arcGroove).add(magnet).add(rim).add(topKey).add(c3(METAL_HI).mul(c.sheen).mul(0.1));
 
   n.opacityNode = c.coverage;
   if (tex) n.envNode = pmremTexture(tex.env);
@@ -450,6 +530,8 @@ export function createGlassSlabMaterial(
   m.depthTest = false;
   m.depthWrite = false;
   m.fog = false;
-  m.envMapIntensity = 0.7;
+  // Cleaner crystal env reflection than the prior 0.7, still well under the
+  // opaque chrome (1.45) so glass panels stay readable behind their DOM labels.
+  m.envMapIntensity = 0.92;
   return m;
 }
