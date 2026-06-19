@@ -678,6 +678,20 @@ export default function Page() {
   // app (it is NOT a separate PrismHost/compiled mount — FP-R5).
   const isPreviewApp = viewMode === 'preview-app';
 
+  // F4a-fix — Escape exits the shipped-app (preview-app) view back to the
+  // canvas editor. Editor chrome is hidden in preview-app, so this (plus the
+  // compact top-left mode toggle) is the guaranteed way out. Off preview-app
+  // it is a no-op so it never steals Escape from dialogs/overlays.
+  useEffect(() => {
+    if (viewMode !== 'preview-app') return;
+    if (typeof window === 'undefined') return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setViewMode('canvas');
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [viewMode, setViewMode]);
+
   return (
     <main
       ref={mainRef}
@@ -709,8 +723,17 @@ export default function Page() {
               slots so the brass thumb slides with a pure translateX (transform-
               only motion per the DS contract). Segments are 36px tall with an
               invisible ::after extension for a ≥44px effective touch target. */}
+          {/* In preview-app the editor's center toggle would stack a second
+              control row on top of the demo's own header — so we tuck it into
+              the top-left corner as a COMPACT exit affordance (the only editor
+              chrome that survives in the shipped-app view; Escape also exits).
+              In galaxy/canvas it stays the prominent centered control. */}
           <div
-            className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto"
+            className={
+              isPreviewApp
+                ? 'absolute top-2 left-2 z-40 pointer-events-auto scale-[0.78] origin-top-left opacity-80 hover:opacity-100 transition-opacity'
+                : 'absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-auto'
+            }
             data-component="view-mode-toggle"
           >
             <div
@@ -767,75 +790,16 @@ export default function Page() {
           </div>
 
 
-          {/* EB-10-02 / §10 SC-054 — minimal hub-to-hub navigation affordance,
-              visible only in `preview-app`. Each click pushes a history entry
-              via the dev hook so browser back/forward walks the hub trail.
-              The hash route (`#hub=<hubId>`) drives the active hub regardless
-              of how the user navigates (button, popstate, direct URL). */}
-          {/* EB-10-05 / §6 SC-057 — App_Name_World context binding rendered
-              in preview-app. Reads CompiledAppView.world via the dev hook
-              installed by the routing effect above so the displayed name
-              tracks the live compile (no stale snapshot). Visible chrome so
-              the verify-editor-runtimes inner.png captures the binding. */}
-          {isPreviewApp && <PreviewAppWorldBadge />}
-
-          {isPreviewApp && (
-            <div
-              ref={previewNavSlab.ref}
-              data-component="preview-app-nav"
-              className="ds-glass ds-edge absolute bottom-4 left-1/2 -translate-x-1/2 z-40 pointer-events-auto flex items-center gap-2 px-2.5 py-1.5"
-              /* position:absolute inline — .ds-glass sets position:relative and
-                 materials.css loads after the Tailwind utilities. */
-              style={{ borderRadius: 'var(--ds-r-pill)', position: 'absolute' }}
-            >
-              <button
-                type="button"
-                data-component="preview-app-prev"
-                aria-label="Previous hub"
-                onClick={() => {
-                  const nav = (window as unknown as {
-                    __PRISM_EDITOR_PREVIEW_APP_NAV__?: { prev(): string | null };
-                  }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
-                  nav?.prev();
-                }}
-                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-metal-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
-              >
-                ‹ Prev
-              </button>
-              {/* HUD hub readout — ice-telemetry type on a smoked strip. */}
-              <span
-                className="ds-smoked ds-edge flex items-center gap-2 h-7 px-3 select-none"
-                style={{ borderRadius: 'var(--ds-r-pill)' }}
-              >
-                <span className="ds-kicker" style={{ color: 'var(--ds-ice-500)' }}>
-                  Hub
-                </span>
-                <span
-                  className="text-[10px] font-mono tracking-widest tabular-nums"
-                  style={{
-                    color: 'var(--ds-ice-300)',
-                    textShadow: `0 1px 0 rgba(0,0,0,0.6), 0 0 9px ${dsAlpha(DS.ice400, 0.35)}`,
-                  }}
-                >
-                  {activeHubId ?? '—'}
-                </span>
-              </span>
-              <button
-                type="button"
-                data-component="preview-app-next"
-                aria-label="Next hub"
-                onClick={() => {
-                  const nav = (window as unknown as {
-                    __PRISM_EDITOR_PREVIEW_APP_NAV__?: { next(): string | null };
-                  }).__PRISM_EDITOR_PREVIEW_APP_NAV__;
-                  nav?.next();
-                }}
-                className="ds-press relative h-9 px-3 rounded-full text-[12px] font-ui font-medium tracking-normal text-ds-text-mid hover:text-ds-metal-200 hover:bg-white/5 transition-colors after:content-[''] after:absolute after:-inset-y-1 after:inset-x-0 after:rounded-full"
-              >
-                Next ›
-              </button>
-            </div>
-          )}
+          {/* F4a-fix — the App_Name_World badge (top-right) and the Prev/Hub/Next
+              pager (bottom-center) are EDITOR chrome. In the shipped-app
+              (preview-app) view they stacked a second control row over the
+              demo's own authored header/footer, so they are no longer rendered
+              here. The demo's authored shell (header nav + footer) provides
+              hub-to-hub navigation via per-node functionBindings; the SC-057
+              world getter (__PRISM_EDITOR_PREVIEW_APP_NAV__.world) is still
+              installed by the routing effect for verification.
+              previewNavSlab is intentionally left mounted (it is a cheap
+              layout-measure hook with no visible surface now). */}
 
           {/* RT-SC-03 / INV-R3 / FP-R5 — ONE unified scene for all three
               modes. preview-app is a STATE of this same scene (built artifacts
@@ -895,25 +859,37 @@ export default function Page() {
       <AddNodeDialog />
       <ChangeArtifactWizard />
       <ElementLibraryBrowser />
-      {/* APP-REALITY P2 — preview-side "replay intro" (self-gates to preview-app
-          + a hub that has an authored camera journey). */}
-      <PreviewJourneyReplay />
-      {/* APP-REALITY P5 — preview device modes + device bezel (self-gates to preview-app). */}
-      <PreviewDeviceFrame />
-      {/* APP-REALITY P6 — preview hub nav rail + premium morph transition. */}
-      <PreviewHubNav />
+      {/* F4a-fix — EDITOR / authoring chrome hidden in the shipped-app
+          (preview-app) view so it reads as the running app, not the editor.
+          The demo's own authored shell (header nav rail + footer + per-node
+          functionBindings) replaces the editor's PreviewHubNav rail, device
+          switcher, replay-intro control, and the help lightbulb. Galaxy and
+          canvas keep every one of these untouched. */}
+      {!isPreviewApp && (
+        <>
+          {/* APP-REALITY P2 — preview-side "replay intro" control. */}
+          <PreviewJourneyReplay />
+          {/* APP-REALITY P5 — preview device-mode switcher + bezel. */}
+          <PreviewDeviceFrame />
+          {/* APP-REALITY P6 — preview hub nav rail (the duplicate section nav). */}
+          <PreviewHubNav />
+          {/* GUIDED-TIPS — glowing help lightbulb + first-visit walkthrough. */}
+          <GuidedTipsLightbulb />
+          <WalkthroughHost />
+        </>
+      )}
+      {/* HubMorphTransition stays in every mode: it is the premium hub→hub
+          morph that fires when the demo's own nav navigates between hubs (not
+          a control surface). */}
       <HubMorphTransition />
-      {/* APP-REALITY P7 — Function binding popup (canvas) + preview overlay host. */}
+      {/* APP-REALITY P7 — Function binding popup (canvas) + preview overlay host.
+          OverlayHost is REQUIRED in preview-app: it renders the holographic
+          detail card opened by the watch's overlay functionBinding. */}
       <FunctionBindingPopup />
       <OverlayHost />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />
-      {/* GUIDED-TIPS — glowing lightbulb (top-right, all 3 modes incl. preview-app)
-          + the first-visit walkthrough orchestrator. Page-level so the lightbulb
-          rides above every mode and the scrim/cursor/popup overlay the whole app. */}
-      <GuidedTipsLightbulb />
-      <WalkthroughHost />
       {/* EDITOR-EXP P7 (C32) — global undo/redo keybinds (renders nothing). */}
       <HistoryKeybinds />
     </main>
