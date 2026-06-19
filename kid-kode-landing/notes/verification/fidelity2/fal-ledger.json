@@ -1,155 +1,161 @@
 {
-  "calls": [
-    {
-      "model": "fal-ai/patina/material",
-      "purpose": "chrome brushed-metal micro-normals (W2 TSL feed)",
-      "estCost": 0.05,
-      "at": "2026-06-11T20:57:20.970Z"
-    },
-    {
-      "model": "fal-ai/patina/material",
-      "purpose": "chrome ceramic micro-grain (W2 TSL feed)",
-      "estCost": 0.05,
-      "at": "2026-06-11T20:57:42.830Z"
-    },
-    {
-      "model": "fal-ai/flux-2",
-      "purpose": "warm observatory equirect env (chrome/boot lighting accent)",
-      "estCost": 0.03,
-      "at": "2026-06-11T20:58:20.046Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image arrival/backdrop.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:53:37.565Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image movement/backdrop.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:53:55.922Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image materia/backdrop.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:54:15.350Z"
-    },
-    {
-      "model": "fal-ai/bytedance/seedream/v4/text-to-image",
-      "purpose": "showcase image celestia/backdrop.png",
-      "estCost": 0.03,
-      "at": "2026-06-11T21:54:28.838Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image acquire/backdrop.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:54:46.153Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image refs/watch-hero.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:55:07.883Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image refs/gear-a.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:55:32.624Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image refs/tourbillon.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:55:53.302Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image refs/pedestal.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:56:16.858Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image materia/brass-macro.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:56:38.532Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image materia/sapphire-macro.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:57:02.341Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image materia/meteorite-macro.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:57:29.120Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image celestia/planet-marble.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:57:43.419Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image celestia/planet-brass.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:57:59.784Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image celestia/planet-obsidian.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:58:22.882Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image refs/molten-pour-frame.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T21:58:51.383Z"
-    },
-    {
-      "model": "fal-ai/flux-2-pro",
-      "purpose": "showcase image celestia/planet-marble.png",
-      "estCost": 0.075,
-      "at": "2026-06-11T22:01:06.022Z"
-    },
-    {
-      "model": "fal-ai/hunyuan3d-v3/image-to-3d",
-      "purpose": "showcase mesh meshes/watch.glb",
-      "estCost": 0.525,
-      "at": "2026-06-11T22:03:32.605Z"
-    },
-    {
-      "model": "fal-ai/hunyuan3d-v3/image-to-3d",
-      "purpose": "showcase mesh meshes/gear-a.glb",
-      "estCost": 0.525,
-      "at": "2026-06-11T22:05:58.758Z"
-    },
-    {
-      "model": "fal-ai/hunyuan3d-v3/image-to-3d",
-      "purpose": "showcase mesh meshes/tourbillon.glb",
-      "estCost": 0.525,
-      "at": "2026-06-11T22:08:58.508Z"
-    },
-    {
-      "model": "fal-ai/hunyuan3d-v3/image-to-3d",
-      "purpose": "showcase mesh meshes/pedestal.glb",
-      "estCost": 0.525,
-      "at": "2026-06-11T22:11:27.276Z"
-    },
-    {
-      "model": "fal-ai/kling-video/v3/pro/image-to-video",
-      "purpose": "showcase loop video/molten-pour.mp4",
-      "estCost": 0.56,
-      "at": "2026-06-11T22:13:17.313Z"
-    }
-  ],
-  "total": 4.02
+ "calls": [
+  {
+   "model": "fal-ai/patina/material",
+   "purpose": "chrome brushed-metal micro-normals (W2 TSL feed)",
+   "estCost": 0.05,
+   "at": "2026-06-11T20:57:20.970Z"
+  },
+  {
+   "model": "fal-ai/patina/material",
+   "purpose": "chrome ceramic micro-grain (W2 TSL feed)",
+   "estCost": 0.05,
+   "at": "2026-06-11T20:57:42.830Z"
+  },
+  {
+   "model": "fal-ai/flux-2",
+   "purpose": "warm observatory equirect env (chrome/boot lighting accent)",
+   "estCost": 0.03,
+   "at": "2026-06-11T20:58:20.046Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image arrival/backdrop.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:53:37.565Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image movement/backdrop.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:53:55.922Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image materia/backdrop.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:54:15.350Z"
+  },
+  {
+   "model": "fal-ai/bytedance/seedream/v4/text-to-image",
+   "purpose": "showcase image celestia/backdrop.png",
+   "estCost": 0.03,
+   "at": "2026-06-11T21:54:28.838Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image acquire/backdrop.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:54:46.153Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image refs/watch-hero.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:55:07.883Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image refs/gear-a.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:55:32.624Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image refs/tourbillon.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:55:53.302Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image refs/pedestal.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:56:16.858Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image materia/brass-macro.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:56:38.532Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image materia/sapphire-macro.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:57:02.341Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image materia/meteorite-macro.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:57:29.120Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image celestia/planet-marble.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:57:43.419Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image celestia/planet-brass.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:57:59.784Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image celestia/planet-obsidian.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:58:22.882Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image refs/molten-pour-frame.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T21:58:51.383Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "showcase image celestia/planet-marble.png",
+   "estCost": 0.075,
+   "at": "2026-06-11T22:01:06.022Z"
+  },
+  {
+   "model": "fal-ai/hunyuan3d-v3/image-to-3d",
+   "purpose": "showcase mesh meshes/watch.glb",
+   "estCost": 0.525,
+   "at": "2026-06-11T22:03:32.605Z"
+  },
+  {
+   "model": "fal-ai/hunyuan3d-v3/image-to-3d",
+   "purpose": "showcase mesh meshes/gear-a.glb",
+   "estCost": 0.525,
+   "at": "2026-06-11T22:05:58.758Z"
+  },
+  {
+   "model": "fal-ai/hunyuan3d-v3/image-to-3d",
+   "purpose": "showcase mesh meshes/tourbillon.glb",
+   "estCost": 0.525,
+   "at": "2026-06-11T22:08:58.508Z"
+  },
+  {
+   "model": "fal-ai/hunyuan3d-v3/image-to-3d",
+   "purpose": "showcase mesh meshes/pedestal.glb",
+   "estCost": 0.525,
+   "at": "2026-06-11T22:11:27.276Z"
+  },
+  {
+   "model": "fal-ai/kling-video/v3/pro/image-to-video",
+   "purpose": "showcase loop video/molten-pour.mp4",
+   "estCost": 0.56,
+   "at": "2026-06-11T22:13:17.313Z"
+  },
+  {
+   "model": "fal-ai/flux-2-pro",
+   "purpose": "F4a arrival imagery arrival/atelier-craft.png",
+   "estCost": 0.075,
+   "at": "2026-06-19T17:36:29.700Z"
+  }
+ ],
+ "total": 4.095
 }
