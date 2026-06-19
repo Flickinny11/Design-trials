@@ -443,3 +443,13 @@ Plan: [/Users/loganbaird/.claude/plans/1-sounds-good-lets-jolly-frog.md](../../.
 - Production: deploys to https://kid-kode-ai-landing-git-prism-main-logans-projects-e51c822e.vercel.app/ via Vercel auto-deploy.
 - 2026-06-11 UI-FIDELITY-2 RUN COMPLETE (W0-W5): rendered-material chrome (advocate PASS r2), ORRERY No.7 5-hub showcase (advocate PASS r4), typography overhaul, gizmo fix, effective 312/312 catalog, vitest 2536, prod perf 10.5ms median, fal $4.02/$50. Report: notes/UI-FIDELITY-2-REPORT.md
 - 2026-06-12 PRIMITIVES-EXPANSION P0: 5 broken catalog primitives root-caused+rewritten (stagger-rise subject-derived bands + async-pour rebuild; pointer-shine additive overlay; embers instanced-sprite TSL falloff + cooling; depth-dolly median-dim travel + legible envelope + lazy snapshots; decode-text live glyph tracking + canonical bases) + advocate-capture pin bugfix; harness 5/5, vitest 2562/0, advocate PLEASED/PASS, ORRERY in-context 0 errors.
+
+## F4b — built The Movement / Materia / Celestia / Acquire hubs + persistent shell (2026-06-19)
+
+- Added the persistent app shell (gunmetal header bar + brass rule, ORRERY No.7 brand, 5 nav links with `navigate-to-hub` functionBinding + active-state brass underline on the current hub, Reserve CTA, footer bar + brand/legal/links/social) to s2-movement, s3-materia, s4-celestia, s5-acquire — cloned from the Arrival exemplar with deduped ids.
+- s2 The Movement: brass headline + subhead, the watch GLB tilted to expose the calibre flanked by a turning tourbillon + going-train gear, orbit-rings ambience, an instrument spec shelf (311 COMPONENTS / 27 JEWELS / 28,800 VPH / 96H RESERVE / 11 MADE) and craft copy.
+- s3 Materia: three macro plates (Brass / Sapphire / Meteorite) each in a beveled 3D frame (brass rim + gunmetal bevel) in an aligned face-on row with brass nameplates, plus the Geneva atelier eyebrow + "Eleven years. One hand." copy.
+- s4 Celestia: the planetarium backdrop carries the system; a central brass armillary gear turns in real 3D over it with starfield-twinkle / galaxy-particles / orbit-rings ambience; headline + subhead + mean-solar copy.
+- s5 Acquire: EDITION OF ELEVEN eyebrow, "Eleven made. One is yours." headline, price/availability line, watch on obsidian pedestal under a light sweep, beveled RESERVE CTA + secondary ENQUIRE button.
+- Reparented all previously-parked nodes into purpose-built per-hub versions; 0 parked nodes remain. s1-arrival, hubs[], and edges[] left byte-identical to baseline.
+- Rebaked: 137 nodes, 5 hubs. tsc 9 (0 new vs baseline). anti-default-scan CLEAN. Verified all 4 hubs render with 0 console errors (scripts/_f4b-verify.mjs).
