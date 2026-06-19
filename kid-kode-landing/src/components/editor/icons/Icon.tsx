@@ -5,7 +5,11 @@ import * as React from 'react';
 // Authored icon paths (SVG, y-down, 24x24 viewBox).
 // Shared with the 3D extrude system conceptually, rendered with inner gradients to suggest depth.
 const PATHS: Record<string, string> = {
-  home: 'M12 2 L22 11 L20 11 L20 22 L14 22 L14 14 L10 14 L10 22 L4 22 L4 11 L2 11 L12 2 Z',
+  // P3/C14 (F2) — re-authored from the stock Heroicons/Feather house silhouette
+  // to a distinctly MACHINED home-plate: a chamfered-roof keystone over a
+  // recessed base plinth with a cut aperture window — reads as a milled
+  // instrument "root" marker, not a line-icon house. Evenodd cuts the aperture.
+  home: 'M12 2 L21.5 10 L19 12 L19 13 L19 22 L5 22 L5 13 L5 12 L2.5 10 Z M12 5 L8 8.4 L8 13 L16 13 L16 8.4 Z M9.6 15 L14.4 15 L14.4 22 L9.6 22 Z',
   chart: 'M3 21 L8 21 L8 10 L3 10 Z M10 21 L15 21 L15 4 L10 4 Z M17 21 L22 21 L22 14 L17 14 Z',
   user: 'M12 4 A4 4 0 1 1 12 12 A4 4 0 1 1 12 4 Z M4 21 C4 15 8 14 12 14 C16 14 20 15 20 21 Z',
   lock: 'M7 10 L7 7 C7 4 9 2 12 2 C15 2 17 4 17 7 L17 10 L15 10 L15 7 C15 5.5 13.5 4 12 4 C10.5 4 9 5.5 9 7 L9 10 Z M5 11 L19 11 L19 21 L5 21 Z',

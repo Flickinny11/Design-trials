@@ -1,35 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- Prism app icon — dispersive PRISM mark (de-brassed 2026-06-19). A
-       machined-chrome refractive prism on a near-black substrate: a cool
-       collimated beam enters the left face and refracts out the right as an
-       arc-cyan -> cool spectrum fan. Chrome/titanium bevel (top highlight +
-       bottom shadow = real Z), arc-cyan #1ec8ff emissive core. NOT a star,
-       NOT gold. Identity matches PrismLogo.tsx + DS tokens (chrome #dfe2e6,
-       titanium #b8bcc0, arc-cyan #1ec8ff, anodized #2d5fa3 on substrate
-       #0d1117). Served by the Next.js app-router icon convention. -->
+  <!-- Prism app icon — dispersive PRISM mark (F2 recompose 2026-06-19). A
+       machined-chrome refractive prism, left-of-center, splitting a cool
+       collimated beam into a BRIGHT arc-cyan -> cool spectrum fan that splays
+       right within the frame. Chrome/titanium bevel (top highlight + bottom
+       shadow = real Z), arc-cyan #1ec8ff emissive core at the right vertex.
+       NOT a star, NOT gold. Identity matches PrismLogo.tsx + DS tokens (chrome
+       #dfe2e6, titanium #b8bcc0, arc-cyan #1ec8ff, anodized #2d5fa3 on
+       substrate #0d1117). Served by the Next.js app-router icon convention. -->
   <defs>
-    <linearGradient id="pi-edge" x1="6" y1="4" x2="20" y2="26" gradientUnits="userSpaceOnUse">
+    <linearGradient id="pi-edge" x1="4" y1="5" x2="20" y2="26" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#eef0f3"/>
       <stop offset="0.45" stop-color="#b8bcc0"/>
       <stop offset="1" stop-color="#32363c"/>
     </linearGradient>
-    <linearGradient id="pi-body" x1="8" y1="6" x2="18" y2="24" gradientUnits="userSpaceOnUse">
+    <linearGradient id="pi-body" x1="4" y1="7" x2="18" y2="24" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#9fb6c4" stop-opacity="0.26"/>
       <stop offset="0.55" stop-color="#1ec8ff" stop-opacity="0.12"/>
       <stop offset="1" stop-color="#2d5fa3" stop-opacity="0.22"/>
     </linearGradient>
+    <radialGradient id="pi-core" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#eafaff"/>
+      <stop offset="0.4" stop-color="#1ec8ff"/>
+      <stop offset="1" stop-color="#1ec8ff" stop-opacity="0"/>
+    </radialGradient>
   </defs>
   <rect width="32" height="32" rx="7" fill="#0d1117"/>
   <rect x="0.5" y="0.5" width="31" height="31" rx="6.5" fill="none" stroke="#dfe2e6" stroke-opacity="0.12"/>
-  <!-- incoming cool collimated beam -->
-  <path d="M2.5 15.6 L11 16.4" stroke="#cdd6de" stroke-width="1.5" stroke-linecap="round"/>
-  <!-- refracted arc-cyan -> cool spectrum fan -->
-  <path d="M20 17 L29.5 12.4" stroke="#96e0ff" stroke-width="1.5" stroke-linecap="round" opacity="0.95"/>
-  <path d="M20 17.2 L30 17" stroke="#1ec8ff" stroke-width="1.7" stroke-linecap="round"/>
-  <path d="M20 17.4 L29.5 21.8" stroke="#2d5fa3" stroke-width="1.5" stroke-linecap="round" opacity="0.9"/>
-  <!-- prism solid: translucent refractive body + chrome bevel + arc core -->
-  <path d="M16 5 L26 25 H6 Z" fill="url(#pi-body)"/>
-  <path d="M16 5 L26 25 H6 Z" fill="none" stroke="url(#pi-edge)" stroke-width="2.1" stroke-linejoin="round"/>
-  <path d="M16 5 L26 25 H6 Z" fill="none" stroke="#eef0f3" stroke-opacity="0.22" stroke-width="0.45" stroke-linejoin="round"/>
-  <circle cx="15" cy="16.5" r="1.5" fill="#1ec8ff"/>
+  <!-- incoming cool collimated beam -> lower-left face -->
+  <path d="M1.5 19 L8.5 18.4" stroke="#cdd6de" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- refracted arc-cyan -> cool spectrum fan (white -> arc-hot -> cyan -> steel -> anodized) -->
+  <g stroke-linecap="round">
+    <path d="M16.5 18 L29 6.5" stroke="#ffffff" stroke-width="1.6"/>
+    <path d="M16.5 18 L30 11.5" stroke="#96e0ff" stroke-width="1.8"/>
+    <path d="M16.5 18 L30.5 18" stroke="#1ec8ff" stroke-width="2.1"/>
+    <path d="M16.5 18 L30 24.5" stroke="#4f8fd4" stroke-width="1.8"/>
+    <path d="M16.5 18 L29 28.5" stroke="#2d5fa3" stroke-width="1.6" opacity="0.92"/>
+  </g>
+  <!-- prism solid: translucent refractive body + chrome bevel -->
+  <path d="M12 4.5 L21 24.5 H3 Z" fill="url(#pi-body)"/>
+  <path d="M12 4.5 L21 24.5 H3 Z" fill="none" stroke="url(#pi-edge)" stroke-width="2.1" stroke-linejoin="round"/>
+  <path d="M12 4.5 L21 24.5 H3 Z" fill="none" stroke="#eef0f3" stroke-opacity="0.22" stroke-width="0.45" stroke-linejoin="round"/>
+  <!-- arc-cyan emissive core at the right vertex (the refraction pivot) -->
+  <circle cx="16.5" cy="18" r="4.4" fill="url(#pi-core)" opacity="0.9"/>
+  <circle cx="16.5" cy="18" r="1.7" fill="#1ec8ff"/>
+  <circle cx="16.5" cy="18" r="0.7" fill="#eafaff"/>
 </svg>

@@ -14,6 +14,13 @@ import { Icon } from '@/components/editor/icons/Icon';
 import { PrismLogo } from '@/components/editor/icons/PrismLogo';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
+// F2/C14 — same curated milled-glyph rotation HubNav uses, so the breadcrumb
+// hub crumb matches the bottom rail (the view-model defaults every hub to
+// 'home'; without this the crumb showed a stock house tinted forbidden
+// dashboard-blue). Distinct, dimensional glyph per hub; active = arc-cyan.
+const HUB_GLYPHS = ['layers', 'cube', 'palette', 'flow', 'diamond', 'grid', 'sparkle', 'image', 'text', 'compass'] as const;
+const hubGlyph = (i: number) => HUB_GLYPHS[((i % HUB_GLYPHS.length) + HUB_GLYPHS.length) % HUB_GLYPHS.length];
+
 export default function TopBar() {
   const zoomLevel = useGraphEditorStore((s) => s.zoomLevel);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
@@ -32,7 +39,8 @@ export default function TopBar() {
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
-  const hub = graph.hubs.find((h) => h.id === activeHubId);
+  const hubIndex = graph.hubs.findIndex((h) => h.id === activeHubId);
+  const hub = hubIndex >= 0 ? graph.hubs[hubIndex] : undefined;
   const selected = graph.nodes.find((n) => n.id === selectedId);
 
   const total = graph.nodes.length || 1;
@@ -163,7 +171,7 @@ export default function TopBar() {
             <>
               <span className="text-ds-text-low">/</span>
               <span className="px-2 py-1 rounded-ds-xs text-ds-text flex items-center gap-1">
-                <Icon name={hub.glyph} size={11} color={hub.color} glow />
+                <Icon name={hubGlyph(hubIndex)} size={11} color={DS.arc} glow />
                 {hub.name}
               </span>
             </>
