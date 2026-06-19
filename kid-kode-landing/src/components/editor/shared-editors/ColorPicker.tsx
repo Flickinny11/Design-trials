@@ -118,7 +118,6 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
               className="block w-4 h-4 rounded-[4px] group-hover:scale-110 transition-transform"
               style={{
                 boxShadow: 'inset 0 1px 1px rgba(255,252,242,0.18), inset 0 -1px 1px rgba(0,0,0,0.35)',
-                background: `linear-gradient(135deg, ${local}, ${local})`,
                 backgroundImage: `
                   linear-gradient(45deg, #333 25%, transparent 25%),
                   linear-gradient(-45deg, #333 25%, transparent 25%),

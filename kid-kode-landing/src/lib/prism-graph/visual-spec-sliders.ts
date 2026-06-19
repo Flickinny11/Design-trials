@@ -80,7 +80,7 @@ export function buildVisualSpecSliders(node: PrismNode): VisualSpecSlider[] {
       case 'pos.z': return pos.z;
       case 'rot.y': return pos.rotationY;
       case 'scale.uniform': return pos.scaleX;
-      case 'visual.alpha': return typeof node.visual.alpha === 'number' ? node.visual.alpha : 1;
+      case 'visual.alpha': return typeof node.visual?.alpha === 'number' ? node.visual.alpha : 1;
       case 'depth.scale': return readVisualSpec('depth.scale', 0.5);
       case 'mesh.rotationSpeed': return readVisualSpec('mesh.rotationSpeed', 0.4);
       default: return 0;
