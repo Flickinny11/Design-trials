@@ -101,10 +101,16 @@ export interface ChromeTextures {
   brushedRough: THREE.Texture;
   ceramicNormal: THREE.Texture;
   ceramicRough: THREE.Texture;
-  /** fal-generated warm observatory equirect — the chrome's OWN reflection
-   *  environment. Hub light rigs vary wildly (a spec'd hub mounts the bright
-   *  drei 'studio' env, which washed ceramic cards to white); chrome must
-   *  read as the same machined instrument in every hub. */
+  /** COOL-NEUTRAL studio equirect — the chrome's OWN reflection environment.
+   *  F2b (2026-06-19): the original fal asset carried a WARM observatory ambient
+   *  (shadow/mid bands R-B +5..+6, ~10% distinctly-amber pixels) which the
+   *  near-mirror metal reflected as an amber/brown highlight running the rail's
+   *  vertical spine at grazing angles (Fresnel peak). The asset is now
+   *  desaturated toward neutral + slightly cool-shifted at source (mid band
+   *  R-B −3.4, warm pixels 2.75%) so the rail reads as cool machined metal with
+   *  ZERO amber/copper. Cool softbox strips on near-black are preserved so the
+   *  chrome still resolves crisp specular streaks. Hub light rigs vary wildly;
+   *  chrome must read as the same machined instrument in every hub. */
   env: THREE.Texture;
   /** 0 until all maps decoded — the graph blends them in over the procedural
    *  noise so slabs never flash a broken black-normal state. */

@@ -65,7 +65,9 @@ export default function TopBar() {
     hero: true,
     heroStyle: 'brass',
     accent: 1,
-    radius: 999,
+    // F2b — machined corner (--ds-r-sm 9px), NOT a capsule. DESIGN.md §5/§9:
+    // command buttons are 4–10px radius, never pill/9999.
+    radius: 9,
     heroDepthPx: 10,
     // EDITOR-EXP P2 (C12) — draw the hero key AFTER (on top of) the full-width
     // masthead rail. Both are opaque slabs with depthTest off in one instanced
@@ -73,8 +75,9 @@ export default function TopBar() {
     // the hero key and the brass never shows. The key only overlaps the rail.
     order: 100,
   });
-  const resetSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });
-  const searchSlab = useChromeSlab({ material: 'glass', radius: 999, frost: 0.45 });
+  // F2b — machined 9px corner (--ds-r-sm), NOT capsules.
+  const resetSlab = useChromeSlab({ material: 'glass', radius: 9, frost: 0.45 });
+  const searchSlab = useChromeSlab({ material: 'glass', radius: 9, frost: 0.45 });
 
   const zoomDesc: Record<string, string> = {
     L0: 'Galaxy · All hubs visible',
@@ -227,13 +230,17 @@ export default function TopBar() {
           style={{ borderRadius: 'var(--ds-r-pill)' }}
           title="Graph health"
         >
-          <Icon name="check" size={11} color={DS.ok} />
+          {/* F2b — complete/healthy = arc-cyan (the single active accent), not
+              off-palette green. */}
+          <Icon name="check" size={11} color={DS.arc} glow />
           <div className="flex items-center gap-1.5">
             <div
               className="flex h-1 w-24 rounded-full overflow-hidden"
               style={{ background: dsAlpha(DS.void, 0.65), boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.6)' }}
             >
-              <div style={{ width: `${(verified / total) * 100}%`, background: 'var(--ds-ok)' }} />
+              {/* F2b — verified/complete fill = arc-cyan emissive (was off-palette
+                  green --ds-ok). Arc-cyan is the single active/complete accent. */}
+              <div style={{ width: `${(verified / total) * 100}%`, background: 'var(--ds-arc)' }} />
               <div style={{ width: `${(pending / total) * 100}%`, background: 'var(--ds-warn)' }} />
               <div style={{ width: `${(failed / total) * 100}%`, background: 'var(--ds-danger)' }} />
             </div>
@@ -245,9 +252,9 @@ export default function TopBar() {
           ref={addNodeSlab.ref}
           data-component="add-node-button"
           onClick={openAddNodeDialog}
-          className="ds-press inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-ds-metal-100"
+          className="ds-press inline-flex items-center gap-1.5 h-8 px-3.5 rounded-ds-sm text-ds-metal-100"
           style={{
-            borderRadius: 'var(--ds-r-pill)',
+            borderRadius: 'var(--ds-r-sm)',
             // Light brass label riding the true-3D brass key (same legibility
             // pattern as the hub-switcher active slot + mode-toggle labels — a
             // crisp DOM glyph over the lit cap, never dark ink which vanishes
@@ -263,8 +270,8 @@ export default function TopBar() {
         <button
           ref={resetSlab.ref}
           onClick={resetCamera}
-          className="ds-btn ds-press w-8 h-8 px-0 rounded-full"
-          style={{ borderRadius: 'var(--ds-r-pill)' }}
+          className="ds-btn ds-press w-8 h-8 px-0 rounded-ds-sm"
+          style={{ borderRadius: 'var(--ds-r-sm)' }}
           title="Reset camera"
         >
           <Icon name="refresh" size={12} color={DS.textMid} />
@@ -273,8 +280,8 @@ export default function TopBar() {
         <button
           ref={searchSlab.ref}
           onClick={toggleSearch}
-          className="ds-btn ds-press h-8 rounded-full"
-          style={{ borderRadius: 'var(--ds-r-pill)' }}
+          className="ds-btn ds-press h-8 rounded-ds-sm"
+          style={{ borderRadius: 'var(--ds-r-sm)' }}
           title="Search (⌘K)"
         >
           <Icon name="search" size={11} color={DS.textMid} />

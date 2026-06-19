@@ -729,7 +729,12 @@ export default function Page() {
                   ) * 96}px)`,
                   transition: 'transform var(--ds-t-slow) var(--ds-ease-spring)',
                   background: 'var(--ds-grad-metal-soft)',
-                  boxShadow: 'var(--ds-chamfer-soft), var(--ds-glow-arc)',
+                  // F2b optional — bring the active mode-toggle segment to parity
+                  // with the hub-pill active state: a prominent arc-cyan edge
+                  // groove (inset ring) + the strong arc glow, instead of the
+                  // fainter plain --ds-glow-arc.
+                  boxShadow:
+                    'var(--ds-chamfer-soft), inset 0 0 0 1px rgba(var(--ds-arc-rgb), 0.55), var(--ds-glow-arc-strong)',
                 }}
               />
               {([
