@@ -24,6 +24,7 @@ interface WithHandle {
 
 export const PRICE_NODE_ID = 'orr-atelier-price';
 export const SUMMARY_NODE_ID = 'orr-atelier-summary';
+export const REASON_NODE_ID = 'orr-atelier-reason';
 
 const LUME_COLOR: Record<string, string> = {
   blue: '#1ec8ff',
@@ -102,4 +103,9 @@ export function applyConfiguratorText(root: Object3D, build: AtelierBuild): void
   const pick = (l: Parameters<typeof variantOf>[0]) => variantOf(l, build[l])?.label ?? '';
   const summary = [pick('movement'), pick('case'), pick('dial')].filter(Boolean).join('   ·   ');
   setLiveText(root, SUMMARY_NODE_ID, summary);
+}
+
+/** Live-update the constraint reason line (empty string clears it). */
+export function applyConfiguratorReason(root: Object3D, reason: string | null): void {
+  setLiveText(root, REASON_NODE_ID, reason ? `⚠  ${reason}` : '');
 }

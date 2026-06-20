@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
-import { applyConfiguratorToScene, applyConfiguratorText } from '@/lib/prism/atelier/applier';
+import { applyConfiguratorToScene, applyConfiguratorText, applyConfiguratorReason } from '@/lib/prism/atelier/applier';
 
 const ATELIER_HUB_ID = 's6-atelier';
 
@@ -18,6 +18,7 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
   const rev = useConfiguratorStore((s) => s.rev);
   const build = useConfiguratorStore((s) => s.build);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const lastReason = useConfiguratorStore((s) => s.lastReason);
 
   useEffect(() => {
     if (!previewMode || activeHubId !== ATELIER_HUB_ID) return;
@@ -35,6 +36,12 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
     // rev is included so each accepted change re-applies; build is the payload.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, rev, activeHubId, previewMode]);
+
+  // Constraint feedback changes independently of an accepted build change.
+  useEffect(() => {
+    if (!previewMode || activeHubId !== ATELIER_HUB_ID) return;
+    applyConfiguratorReason(scene, lastReason);
+  }, [scene, lastReason, activeHubId, previewMode]);
 
   return null;
 }

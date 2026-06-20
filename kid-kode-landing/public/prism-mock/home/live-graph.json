@@ -24542,6 +24542,80 @@
       "animationBindings": [],
       "receivesLighting": false,
       "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-reason",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.35,
+          "y": -0.22,
+          "z": 0.5,
+          "width": 3.2,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "constraint feedback",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.35,
+        "y": -0.22,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "",
+        "fontFamily": "Inter",
+        "fontWeight": 500,
+        "fontSize": 0.085,
+        "letterSpacing": 0.01,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#ffb27a"
+        },
+        "glow": {
+          "color": "#ff7a3a",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
     }
   ],
   "edges": [
