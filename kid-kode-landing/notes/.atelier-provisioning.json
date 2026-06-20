@@ -1,0 +1,47 @@
+{
+  "capUsd": 40,
+  "totalCostUsd": 0.72,
+  "calls": [
+    {
+      "partId": "case-round",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T15:32:45.445Z"
+    },
+    {
+      "partId": "case-round",
+      "step": "mesh",
+      "model": "fal-ai/hunyuan-3d/v3.1/pro/image-to-3d",
+      "estCost": 0.675,
+      "actualCost": null,
+      "chargedUsd": 0.675,
+      "at": "2026-06-20T15:35:20.051Z"
+    }
+  ],
+  "assets": {
+    "case-round": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T15:32:45.445Z"
+      },
+      "mesh": {
+        "model": "fal-ai/hunyuan-3d/v3.1/pro/image-to-3d",
+        "chargedUsd": 0.675,
+        "at": "2026-06-20T15:35:20.051Z"
+      }
+    }
+  },
+  "runs": [
+    {
+      "startedAt": "2026-06-20T15:32:25.471Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    }
+  ]
+}

@@ -18614,9 +18614,9 @@
         "rotationX": 1.5707963267948966,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.0,
+        "scaleY": 1.0,
+        "scaleZ": 1.0
       },
       "animationBindings": [
         {
