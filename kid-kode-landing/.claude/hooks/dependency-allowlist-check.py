@@ -181,6 +181,10 @@ def is_forbidden_pkg(pkg: str) -> bool:
 def is_allowed_import(pkg: str) -> bool:
     if pkg.startswith(("node:", "./", "../", "/")):
         return True
+    # Next.js `@/` path alias — resolves to ./src/ (project-local, not an npm
+    # package). Always allowed (equivalent to a relative import).
+    if pkg.startswith("@/"):
+        return True
     if pkg in ALL_ALLOW:
         return True
     # scoped subpaths of an allowed package, e.g. "@react-three/fiber/foo"

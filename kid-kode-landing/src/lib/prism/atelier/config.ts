@@ -50,6 +50,7 @@ function finish(p: Partial<MaterialSpec> & { baseColor: string }): MaterialSpec 
     opacity: p.opacity ?? 1,
     normalMapUrl: p.normalMapUrl ?? null,
     displacementMapUrl: p.displacementMapUrl ?? null,
+    baseColorMapUrl: p.baseColorMapUrl ?? null,
   };
 }
 
@@ -93,7 +94,10 @@ export const LAYERS: AtelierLayerDef[] = [
       { id: 'black', label: 'Onyx', swatch: '#0c0e12', material: finish({ baseColor: '#0c0e12', metalness: 0.3, roughness: 0.5, clearcoat: 0.7, envMapIntensity: 0.8 }), priceDelta: 0 },
       { id: 'green', label: 'British Racing', swatch: '#123524', material: finish({ baseColor: '#123524', metalness: 0.35, roughness: 0.4, clearcoat: 0.6, envMapIntensity: 0.95 }), priceDelta: 1200 },
       { id: 'salmon', label: 'Salmon', swatch: '#e7a584', material: finish({ baseColor: '#e7a584', metalness: 0.45, roughness: 0.38, clearcoat: 0.55, envMapIntensity: 1.0 }), priceDelta: 2400 },
-      { id: 'meteorite', label: 'Meteorite', swatch: '#6b6f78', material: finish({ baseColor: '#6b6f78', metalness: 0.85, roughness: 0.55, clearcoat: 0.4, envMapIntensity: 1.2 }), priceDelta: 18000 },
+      { id: 'meteorite', label: 'Meteorite', swatch: '#6b6f78', material: finish({ baseColor: '#6b6f78', metalness: 0.85, roughness: 0.55, clearcoat: 0.4, envMapIntensity: 1.2, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/dial-tex-meteorite.png' }), priceDelta: 18000 },
+      { id: 'guilloche', label: 'Guilloché', swatch: '#1a2a5a', material: finish({ baseColor: '#ffffff', metalness: 0.5, roughness: 0.35, clearcoat: 0.7, clearcoatRoughness: 0.1, envMapIntensity: 1.2, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/dial-tex-guilloche.png' }), priceDelta: 22000 },
+      { id: 'aventurine', label: 'Aventurine', swatch: '#0b1a3a', material: finish({ baseColor: '#0b1a3a', metalness: 0.2, roughness: 0.3, clearcoat: 0.8, clearcoatRoughness: 0.05, envMapIntensity: 1.4, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/dial-tex-aventurine.png' }), priceDelta: 35000 },
+      { id: 'enamel', label: 'Grand Feu Enamel', swatch: '#f5f0e8', material: finish({ baseColor: '#f5f0e8', metalness: 0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.3, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/dial-tex-enamel.png' }), priceDelta: 14000 },
     ],
   },
   {
@@ -144,8 +148,8 @@ export const LAYERS: AtelierLayerDef[] = [
     id: 'strap', label: 'Strap', order: 10, nodeIds: ['orr-atelier-watch-strap-top', 'orr-atelier-watch-strap-bot'], defaultVariant: 'black-leather',
     variants: [
       { id: 'black-leather', label: 'Black Leather', swatch: '#2a1d14', material: finish({ baseColor: '#2a1d14', metalness: 0, roughness: 0.72, envMapIntensity: 0.6 }), priceDelta: 0 },
-      { id: 'brown-alligator', label: 'Brown Alligator', swatch: '#5a3a22', material: finish({ baseColor: '#5a3a22', metalness: 0, roughness: 0.6, clearcoat: 0.3, envMapIntensity: 0.7 }), priceDelta: 3200 },
-      { id: 'blue-rubber', label: 'Blue Rubber', swatch: '#1d3a6e', material: finish({ baseColor: '#1d3a6e', metalness: 0, roughness: 0.85, envMapIntensity: 0.5 }), priceDelta: 600 },
+      { id: 'brown-alligator', label: 'Brown Alligator', swatch: '#5a3a22', material: finish({ baseColor: '#5a3a22', metalness: 0, roughness: 0.6, clearcoat: 0.3, envMapIntensity: 0.7, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/strap-tex-alligator.png' }), priceDelta: 3200 },
+      { id: 'blue-rubber', label: 'Blue Rubber', swatch: '#1d3a6e', material: finish({ baseColor: '#1d3a6e', metalness: 0, roughness: 0.85, envMapIntensity: 0.5, baseColorMapUrl: '/prism-mock/orrery/meshes/atelier/textures/strap-tex-rubber.png' }), priceDelta: 600 },
       { id: 'steel-bracelet', label: 'Steel Bracelet', swatch: '#c9ced6', material: finish({ baseColor: '#c9ced6', metalness: 1, roughness: 0.28, envMapIntensity: 1.2 }), priceDelta: 4500 },
     ],
   },

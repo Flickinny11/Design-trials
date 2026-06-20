@@ -8,7 +8,7 @@
 // imperative write, not a re-render.
 import type { Object3D } from 'three';
 import type { MaterialSpec } from '@/lib/prism-graph/types';
-import type { MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
+import type { FaceTextureLoaderLike, MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
 import { LAYERS, variantOf, totalPrice, type AtelierBuild } from '@/lib/prism/atelier/config';
 
 interface TextHandleLike {
@@ -61,7 +61,7 @@ export function resolveBuildMaterials(build: AtelierBuild): Map<string, Material
  * Write the build's materials onto the mounted proxy parts found under `root`.
  * Returns the number of parts updated. Safe to call repeatedly / on any frame.
  */
-export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild): number {
+export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild, loader?: FaceTextureLoaderLike): number {
   const targets = resolveBuildMaterials(build);
   if (targets.size === 0) return 0;
   let applied = 0;
@@ -75,6 +75,11 @@ export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild): n
     });
     if (handle) {
       (handle as MeshPrimitiveHandle).setMaterialSpec(targets.get(nid)!);
+      // Wire texture map if the spec carries a baseColorMapUrl and a loader is available.
+      const colorMap = targets.get(nid)!.baseColorMapUrl;
+      if (loader && colorMap !== undefined) {
+        (handle as MeshPrimitiveHandle).setColorMap(colorMap ?? null, loader);
+      }
       applied += 1;
     }
   });

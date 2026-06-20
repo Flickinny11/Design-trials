@@ -287,6 +287,8 @@ export interface MeshPrimitiveHandle {
   /** Apply a MaterialSpec to the SAME physical material instance (see
    *  applyMaterialSpecLive for the needsUpdate edge rules). */
   setMaterialSpec(spec?: MaterialSpec | null): void;
+  /** Load a base-color texture URL and set .map on the material (async, cached). */
+  setColorMap(url: string | null, loader: FaceTextureLoaderLike): void;
 }
 
 /** Build the handle for a mounted primitive Mesh. `mesh.geometry` must be the
@@ -325,6 +327,23 @@ export function createMeshPrimitiveHandle(
       } else {
         applyMaterialSpecLive(mat as MeshPhysicalNodeMaterial, spec);
       }
+    },
+    setColorMap(url: string | null, loader: FaceTextureLoaderLike): void {
+      const mat = Array.isArray(mesh.material) ? (mesh.material as { map?: Texture | null; needsUpdate: boolean }[])[0] : mesh.material as unknown as { map?: Texture | null; needsUpdate: boolean };
+      if (!mat) return;
+      if (!url) {
+        mat.map = null;
+        (mat as { needsUpdate: boolean }).needsUpdate = true;
+        return;
+      }
+      void loader
+        .loadTexture(url)
+        .then((tex) => {
+          (tex as { colorSpace?: string }).colorSpace = 'srgb';
+          mat.map = tex;
+          (mat as { needsUpdate: boolean }).needsUpdate = true;
+        })
+        .catch(() => { /* missing map → baseColor stands */ });
     },
   };
 }

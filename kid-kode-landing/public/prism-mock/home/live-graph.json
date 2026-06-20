@@ -21668,6 +21668,273 @@
       "receivesLighting": true
     },
     {
+      "nodeId": "orr-atelier-cat-dial-guilloche",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -1.65,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "dial -> guilloche",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#1a2a5a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -1.65,
+        "y": 0.935,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "dial",
+        "variant": "guilloche"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-dial-aventurine",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -1.35,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "dial -> aventurine",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#0b1a3a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -1.35,
+        "y": 0.935,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "dial",
+        "variant": "aventurine"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-dial-enamel",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -1.05,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "dial -> enamel",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#f5f0e8",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -1.05,
+        "y": 0.935,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "dial",
+        "variant": "enamel"
+      },
+      "receivesLighting": true
+    },
+    {
       "nodeId": "orr-atelier-cat-hands-label",
       "subtype": "atelier-text",
       "parentHubId": "s6-atelier",
