@@ -18380,7 +18380,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 1.95,
+          "y": 2.55,
           "z": 0.3,
           "width": 8.4,
           "height": 0.8
@@ -18415,7 +18415,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 1.95,
+        "y": 2.55,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -18463,7 +18463,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 1.35,
+          "y": 2.18,
           "z": 0.3,
           "width": 8.0,
           "height": 0.8
@@ -18498,7 +18498,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 1.35,
+        "y": 2.18,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -18537,6 +18537,1237 @@
       ],
       "receivesLighting": false,
       "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-watch-case",
+      "subtype": "case",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.3,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: case.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cylinder",
+        "params": {
+          "radius": 0.95,
+          "height": 0.3
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 1.0,
+        "roughness": 0.18,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.35,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.3,
+        "rotationX": 1.5707963267948966,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-400",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 400
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-bezel",
+      "subtype": "bezel",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.47,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: bezel.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "torus",
+        "params": {
+          "radius": 0.95,
+          "tube": 0.085
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#aeb4bd",
+        "metalness": 1.0,
+        "roughness": 0.42,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.0,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.47,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-401",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 401
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-dial",
+      "subtype": "dial",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.455,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: dial.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cylinder",
+        "params": {
+          "radius": 0.82,
+          "height": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#16243a",
+        "metalness": 0.35,
+        "roughness": 0.42,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.6,
+        "clearcoatRoughness": 0.18,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.9,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.455,
+        "rotationX": 1.5707963267948966,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-402",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 402
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-marker-12",
+      "subtype": "marker",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.7100000000000001,
+          "z": 0.48,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: marker.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.14,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 1.0,
+        "roughness": 0.2,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.7100000000000001,
+        "z": 0.48,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-403",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 403
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-marker-3",
+      "subtype": "marker",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.66,
+          "y": 0.050000000000000044,
+          "z": 0.48,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: marker.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.14,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 1.0,
+        "roughness": 0.2,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.66,
+        "y": 0.050000000000000044,
+        "z": 0.48,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": -1.5707963267948966,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-404",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 404
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-marker-6",
+      "subtype": "marker",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 8.082668874372532e-17,
+          "y": -0.61,
+          "z": 0.48,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: marker.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.14,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 1.0,
+        "roughness": 0.2,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 8.082668874372532e-17,
+        "y": -0.61,
+        "z": 0.48,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": -3.141592653589793,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-405",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 405
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-marker-9",
+      "subtype": "marker",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": -0.66,
+          "y": 0.049999999999999885,
+          "z": 0.48,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: marker.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.06,
+          "height": 0.14,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 1.0,
+        "roughness": 0.2,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -0.66,
+        "y": 0.049999999999999885,
+        "z": 0.48,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": -4.71238898038469,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-406",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 406
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-hand-hour",
+      "subtype": "hand",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.5,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: hand.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.055,
+          "height": 0.78,
+          "depth": 0.025
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#eef2f8",
+        "metalness": 1.0,
+        "roughness": 0.12,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.95,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-420",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 420
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-hand-min",
+      "subtype": "hand",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.515,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: hand.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.04,
+          "height": 1.18,
+          "depth": 0.025
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#eef2f8",
+        "metalness": 1.0,
+        "roughness": 0.12,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.4,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.515,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": -0.95,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-421",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 421
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-hand-sec",
+      "subtype": "hand",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 0.05,
+          "z": 0.53,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: hand.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.018,
+          "height": 1.3,
+          "depth": 0.02
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#d23b2a",
+        "metalness": 0.4,
+        "roughness": 0.4,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.1,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 0.05,
+        "z": 0.53,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 2.7,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-422",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 422
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-crown",
+      "subtype": "crown",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 1.0,
+          "y": 0.05,
+          "z": 0.3,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: crown.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cylinder",
+        "params": {
+          "radius": 0.075,
+          "height": 0.16
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 1.0,
+        "roughness": 0.2,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.3,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 1.0,
+        "y": 0.05,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 1.5707963267948966,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-423",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 423
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-strap-top",
+      "subtype": "strap",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": 1.4000000000000001,
+          "z": 0.27999999999999997,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: strap.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.62,
+          "height": 1.25,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#2a1d14",
+        "metalness": 0.0,
+        "roughness": 0.72,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.6,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": 1.4000000000000001,
+        "z": 0.27999999999999997,
+        "rotationX": 0.18,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-424",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 424
+        }
+      ],
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch-strap-bot",
+      "subtype": "strap",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-part",
+      "visual": {
+        "transform": {
+          "x": 0.0,
+          "y": -1.3,
+          "z": 0.27999999999999997,
+          "width": 2.0,
+          "height": 2.0
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Atelier proxy part: strap.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.62,
+          "height": 1.25,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#2a1d14",
+        "metalness": 0.0,
+        "roughness": 0.72,
+        "transmission": 0.0,
+        "ior": 1.5,
+        "dispersion": 0.0,
+        "clearcoat": 0.0,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.6,
+        "opacity": 1.0,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.0,
+        "y": -1.3,
+        "z": 0.27999999999999997,
+        "rotationX": -0.18,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [
+        {
+          "id": "f5-watchfloat-425",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.014,
+            "periodSec": 6.5
+          },
+          "order": 425
+        }
+      ],
+      "receivesLighting": true
     }
   ],
   "edges": [
