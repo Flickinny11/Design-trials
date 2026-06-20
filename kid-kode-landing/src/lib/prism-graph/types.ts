@@ -1238,7 +1238,9 @@ export type FunctionBinding =
   // `configure-layer` makes a layer the active catalog tab. Both drive
   // useConfiguratorStore; the visible swap rides AtelierApplier. Additive only.
   | { kind: 'configure'; layer: string; variant: string }
-  | { kind: 'configure-layer'; layer: string };
+  | { kind: 'configure-layer'; layer: string }
+  // F5 Atelier — save / share / reset the watch build (spec §3.5).
+  | { kind: 'atelier-action'; action: 'save' | 'reset' | 'share' };
 
 // APP-REALITY P7 — a GLOBAL ELEMENT's overlay presentation. The element's
 // VISUAL design (a premium holographic detail card with glitch/transparency

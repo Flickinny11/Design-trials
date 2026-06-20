@@ -133,7 +133,9 @@ export default function FunctionBindingPopup() {
               ? `overlay → ${nodes.find((n) => n.nodeId === current.elementId)?.overlaySpec?.title ?? current.elementId}`
               : current.kind === 'configure'
               ? `configure → ${current.layer}:${current.variant}`
-              : `layer → ${current.layer}`}
+              : current.kind === 'configure-layer'
+              ? `layer → ${current.layer}`
+              : `action → ${current.action}`}
             <button type="button" onClick={clearBinding} className="ds-press ml-2 underline" style={{ color: 'var(--ds-text-mid)' }}>clear</button>
           </div>
         )}

@@ -24616,6 +24616,338 @@
       "animationBindings": [],
       "receivesLighting": false,
       "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-btn-save",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": 2.55,
+          "y": -0.72,
+          "z": 0.5,
+          "width": 0.9,
+          "height": 0.28
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "save",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.28,
+          "depth": 0.06
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#1ec8ff",
+        "metalness": 0.5,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.3,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#1ec8ff",
+        "emissiveIntensity": 0.12,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.1,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.55,
+        "y": -0.72,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "save"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-btn-save-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.55,
+          "y": -0.72,
+          "z": 0.57,
+          "width": 1.2,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "SAVE",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.55,
+        "y": -0.72,
+        "z": 0.57,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "SAVE",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.1,
+        "letterSpacing": 0.16,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#0b0e13"
+        },
+        "glow": {
+          "color": "#000000",
+          "intensity": 0
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "save"
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-reset",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": 3.55,
+          "y": -0.72,
+          "z": 0.5,
+          "width": 0.9,
+          "height": 0.28
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "reset",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.9,
+          "height": 0.28,
+          "depth": 0.06
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#2a2e35",
+        "metalness": 0.5,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.3,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.1,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 3.55,
+        "y": -0.72,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "reset"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-btn-reset-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 3.55,
+          "y": -0.72,
+          "z": 0.57,
+          "width": 1.2,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "RESET",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 3.55,
+        "y": -0.72,
+        "z": 0.57,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "RESET",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.1,
+        "letterSpacing": 0.16,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#cfd6e0"
+        },
+        "glow": {
+          "color": "#000000",
+          "intensity": 0
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "reset"
+      }
     }
   ],
   "edges": [

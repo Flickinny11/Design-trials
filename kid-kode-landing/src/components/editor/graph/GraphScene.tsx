@@ -108,6 +108,7 @@ import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
 // F5 ATELIER (ORRERY-NO7-PROTOTYPE-SPEC §3) — in-3D watch configurator wiring.
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import type { AtelierLayerId } from '@/lib/prism/atelier/config';
+import { runAtelierAction } from '@/lib/prism/atelier/actions';
 import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
@@ -3104,6 +3105,9 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
             } else if (fb.kind === 'configure-layer') {
               // F5 Atelier — tap a layer tab → make it the active catalog layer.
               useConfiguratorStore.getState().setActiveLayer(fb.layer as AtelierLayerId);
+            } else if (fb.kind === 'atelier-action') {
+              // F5 Atelier — save / share / reset the watch build.
+              runAtelierAction(fb.action);
             }
           }
           return;

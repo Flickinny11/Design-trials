@@ -10,11 +10,19 @@ import { useThree } from '@react-three/fiber';
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { applyConfiguratorToScene, applyConfiguratorText, applyConfiguratorReason } from '@/lib/prism/atelier/applier';
+import { restoreSavedBuild } from '@/lib/prism/atelier/actions';
 
 const ATELIER_HUB_ID = 's6-atelier';
 
 export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
   const scene = useThree((s) => s.scene);
+
+  // Rehydrate a previously saved build once, before the first apply.
+  useEffect(() => {
+    restoreSavedBuild();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const rev = useConfiguratorStore((s) => s.rev);
   const build = useConfiguratorStore((s) => s.build);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
