@@ -167,8 +167,8 @@ Status legend: `[ ]` = not yet shipped · `[~]` = partial · `[x]` = done+eviden
 
 **SC-O1 — Layer selectability**
 - `[x]` SC-O1.1 Hub `s6-atelier` loads without console error. Signal: `kv_check_console` 0 errors after navigating to the Atelier hub.
-- `[x]` SC-O1.2 All 11 layer nodes render in the swatch rail (movement/case/bezel/dial/hands/indices/crown/complications/lume/strap/engraving). Signal: `evaluate(() => document.querySelectorAll('canvas').length > 0)` + scene-graph assertion `window.__PRISM_GRAPH__.hubs['s6-atelier'].nodes.length >= 60`.
-- `[x]` SC-O1.3 Clicking a layer node sets `useConfiguratorStore.activeLayer` to that layer ID. Signal: `evaluate(() => window.__ATELIER_STORE__?.getState().activeLayer)` equals the clicked layer string within 500ms.
+- `[x]` SC-O1.2 All 11 layer nodes render in the swatch rail (movement/case/bezel/dial/hands/indices/crown/complications/lume/strap/engraving). Signal: `evaluate(() => document.querySelectorAll('canvas').length > 0)` + scene-graph assertion `window.__PRISM_DEBUG_STORES__.graphSource.getState().graph.hubs['s6-atelier'].nodes.length >= 60` (confirmed 79 nodes on 2026-06-20).
+- `[x]` SC-O1.3 Clicking a layer node sets `useConfiguratorStore.activeLayer` to that layer ID. Signal: `evaluate(() => window.__PRISM_DEBUG_STORES__.configurator.getState().activeLayer)` equals the clicked layer string within 500ms. (Store is exposed via the dev-only `__PRISM_DEBUG_STORES__.configurator` handle in `src/app/page.tsx`.)
 - `[x]` SC-O1.4 Selecting a layer dims non-active watch-part nodes. Signal: screenshot diff — non-selected watch parts have visually lower luminance (advocate: ≥25% darker or explicit opacity reduction visible in screenshot).
 - `[ ]` SC-O1.5 Camera eases to frame the selected layer. Signal: `evaluate(() => window.__PRISM_CAM_POS__)` changes within 800ms of layer click (camera position vector changes by ≥0.05 units from pre-click position). *(F6 — world weave required for camera spline)*
 
@@ -182,13 +182,13 @@ Status legend: `[ ]` = not yet shipped · `[~]` = partial · `[x]` = done+eviden
 
 **SC-O3 — Constraint-as-feature**
 - `[x]` SC-O3.1 Selecting "moonphase" complication when movement is "automatic" succeeds: `store.build.complications` includes "moonphase".
-- `[x]` SC-O3.2 Selecting "moonphase" when movement is "quartz" is rejected: `store.build.complications` does NOT include "moonphase".
-- `[x]` SC-O3.3 The reason text node (`orr-atelier-reason`) is non-empty when a constraint rejection fires. Signal: screenshot shows visible reason string; `evaluate(() => window.__ATELIER_STORE__?.getState().lastReason)` is non-null.
-- `[x]` SC-O3.4 Constrained variants are visually dimmed/disabled, never hidden. Signal: all variant nodes present in scene graph (`window.__PRISM_GRAPH__` node count stable); only material/opacity changes.
-- `[x]` SC-O3.5 Constraint cascades: changing movement from "automatic" to "quartz" invalidates moonphase if selected. Signal: `store.build.complications` after the movement change no longer contains "moonphase".
+- `[x]` SC-O3.2 Selecting "moonphase" when movement is "manual" or "skeleton" is rejected: `store.build.complications` is NOT "moonphase" (movement variants are automatic/manual/tourbillon/skeleton — there is no "quartz"; only automatic + tourbillon permit moonphase). Verified 2026-06-20 via `__PRISM_DEBUG_STORES__.configurator`.
+- `[x]` SC-O3.3 The reason text node (`orr-atelier-reason`) is non-empty when a constraint rejection fires. Signal: screenshot shows visible reason string; `evaluate(() => window.__PRISM_DEBUG_STORES__.configurator.getState().lastReason)` equals "Moonphase requires the Automatic or Tourbillon movement." Verified 2026-06-20.
+- `[x]` SC-O3.4 Constrained variants are visually dimmed/disabled, never hidden. Signal: all variant nodes present in scene graph (`window.__PRISM_DEBUG_STORES__.graphSource.getState().graph.hubs['s6-atelier'].nodes.length` stable); only material/opacity changes.
+- `[x]` SC-O3.5 Constraint cascades: with moonphase selected under tourbillon, changing movement to "manual" auto-resets complications to "none". Signal: `store.build.complications === 'none'` after the movement change. Verified 2026-06-20.
 
 **SC-O4 — Color (partial — full picker in F5.3)**
-- `[x]` SC-O4.1 ≥6 dial color variant nodes are present in the swatch rail for the dial layer. Signal: `window.__PRISM_GRAPH__` contains ≥6 nodes with `functionBinding.layer === 'dial'`.
+- `[x]` SC-O4.1 ≥6 dial color variant nodes are present in the swatch rail for the dial layer. Signal: `graphSource.getState().graph.hubs['s6-atelier'].nodes` contains ≥6 nodes with `functionBinding.layer === 'dial'` (confirmed 9 on 2026-06-20: navy/silver/black/green/salmon/meteorite/guilloche/aventurine/enamel).
 - `[x]` SC-O4.2 Tapping a dial variant updates `store.build.dial` to the correct variantId. Signal: JS eval.
 - `[ ]` SC-O4.3 Full HSV picker sets dial color live (no rebuild). *(F5.3 — needs color picker node)*
 - `[ ]` SC-O4.4 Sample-a-color-from-image sets the dial live via canvas pixel pick. *(F5.3)*
@@ -307,7 +307,7 @@ Status legend: `[ ]` = not yet shipped · `[~]` = partial · `[x]` = done+eviden
 
 | INV | Check | Signal |
 |-----|-------|--------|
-| INV-G1 | Graph is the app | `typeof window.__PRISM_GRAPH__ !== 'undefined'` = true |
+| INV-G1 | Graph is the app | `typeof window.__PRISM_DEBUG_STORES__.graphSource !== 'undefined'` = true (the live zustand source graph drives the scene) |
 | INV-G2 | No THREE.TextGeometry | `grep -r "TextGeometry" src/` = 0 results |
 | INV-G3 | No DOM text in nodes | `grep -r "document\." src/lib/prism src/components/atelier` = 0 (except `devicePixelRatio`) |
 | INV-G4 | No PixiJS | `grep -r "pixi" package.json src/` = 0 results |

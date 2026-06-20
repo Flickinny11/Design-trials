@@ -6,6 +6,7 @@ import { gsap } from 'gsap';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
+import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import { resolveTetherFireTargets } from '@/lib/prism-graph/tether-fire';
 import {
   compileAppToPreview,
@@ -350,11 +351,13 @@ export default function Page() {
         graphSource: typeof useGraphSourceStore;
         graphEditor: typeof useGraphEditorStore;
         previewState: typeof usePreviewStateStore;
+        configurator: typeof useConfiguratorStore;
       };
     }).__PRISM_DEBUG_STORES__ = {
       graphSource: useGraphSourceStore,
       graphEditor: useGraphEditorStore,
       previewState: usePreviewStateStore,
+      configurator: useConfiguratorStore,
     };
     // THREE-D-BACKGROUNDS — dev/verification hook: build a preset's layer stack
     // so the capture harness can apply backgrounds via the live source store
