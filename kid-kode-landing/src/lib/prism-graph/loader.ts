@@ -63,7 +63,9 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
  * {@link loadFromHomeHub} on a pre-parsed object instead.
  */
 export async function loadFromHomeHubFile(url: string): Promise<GraphSource> {
-  const res = await fetch(url);
+  // no-store: the editor writes this file (persist/regen) and reloads it; a
+  // cached response would show a stale graph after an edit. Always fetch fresh.
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error(`loadFromHomeHubFile: fetch ${url} failed: ${res.status}`);
   }

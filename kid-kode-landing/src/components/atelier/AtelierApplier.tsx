@@ -1,0 +1,37 @@
+'use client';
+// ORRERY No.7 — Atelier applier mount (F5.1).
+// A headless R3F node mounted once inside the preview-app scene. It watches the
+// configurator store and writes the chosen finishes onto the mounted proxy
+// watch parts via their live material handles. Re-applies on every accepted
+// change and shortly after (re)mount, so the configured look survives the
+// AssembledSceneNode build effect resetting parts to their frozen spec.
+import { useEffect } from 'react';
+import { useThree } from '@react-three/fiber';
+import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
+import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { applyConfiguratorToScene } from '@/lib/prism/atelier/applier';
+
+const ATELIER_HUB_ID = 's6-atelier';
+
+export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
+  const scene = useThree((s) => s.scene);
+  const rev = useConfiguratorStore((s) => s.rev);
+  const build = useConfiguratorStore((s) => s.build);
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+
+  useEffect(() => {
+    if (!previewMode || activeHubId !== ATELIER_HUB_ID) return;
+    const run = () => applyConfiguratorToScene(scene, build);
+    run();
+    const t1 = setTimeout(run, 180);
+    const t2 = setTimeout(run, 600);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+    // rev is included so each accepted change re-applies; build is the payload.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scene, rev, activeHubId, previewMode]);
+
+  return null;
+}

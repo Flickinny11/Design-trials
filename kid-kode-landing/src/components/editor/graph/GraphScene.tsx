@@ -105,6 +105,10 @@ import { detectCapabilityTier } from '@/lib/prism/runtime/shared/capability-tier
 // a node's catalog-primitive animationBindings to the mounted artifact and
 // plays them through the SAME driver dispatch the factory's STEP7 path uses.
 import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
+// F5 ATELIER (ORRERY-NO7-PROTOTYPE-SPEC §3) — in-3D watch configurator wiring.
+import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
+import type { AtelierLayerId } from '@/lib/prism/atelier/config';
+import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
   IMAGE_SPEC_DEFAULT,
@@ -3094,6 +3098,12 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
               useGraphEditorStore.setState({ activeHubId: fb.hubId });
             } else if (fb.kind === 'overlay') {
               st.openOverlayElement({ elementId: fb.elementId, size: fb.size, anchor: fb.anchor });
+            } else if (fb.kind === 'configure') {
+              // F5 Atelier — tap a variant card → swap that layer's finish live.
+              useConfiguratorStore.getState().setLayer(fb.layer as AtelierLayerId, fb.variant);
+            } else if (fb.kind === 'configure-layer') {
+              // F5 Atelier — tap a layer tab → make it the active catalog layer.
+              useConfiguratorStore.getState().setActiveLayer(fb.layer as AtelierLayerId);
             }
           }
           return;
@@ -4022,6 +4032,8 @@ function AssembledSceneContent({
       )}
 
       <AssembledSceneDiagnostics nodes={nodes} />
+      {/* F5 ATELIER — applies configurator finish swaps to the proxy watch parts. */}
+      <AtelierApplier previewMode={previewMode} />
       {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
           built scene. Runs in canvas + preview-app; in preview-app the drivers
           respond to the user's real input (§16). */}

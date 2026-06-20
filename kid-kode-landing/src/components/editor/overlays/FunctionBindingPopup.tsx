@@ -127,7 +127,13 @@ export default function FunctionBindingPopup() {
         </div>
         {current && (
           <div className="text-[10px] font-mono mb-3" style={{ color: 'var(--ds-metal-200)' }}>
-            Bound: {current.kind === 'navigate' ? `navigate → ${hubs.find((h) => h.hubId === current.hubId)?.title ?? current.hubId}` : `overlay → ${nodes.find((n) => n.nodeId === current.elementId)?.overlaySpec?.title ?? current.elementId}`}
+            Bound: {current.kind === 'navigate'
+              ? `navigate → ${hubs.find((h) => h.hubId === current.hubId)?.title ?? current.hubId}`
+              : current.kind === 'overlay'
+              ? `overlay → ${nodes.find((n) => n.nodeId === current.elementId)?.overlaySpec?.title ?? current.elementId}`
+              : current.kind === 'configure'
+              ? `configure → ${current.layer}:${current.variant}`
+              : `layer → ${current.layer}`}
             <button type="button" onClick={clearBinding} className="ds-press ml-2 underline" style={{ color: 'var(--ds-text-mid)' }}>clear</button>
           </div>
         )}

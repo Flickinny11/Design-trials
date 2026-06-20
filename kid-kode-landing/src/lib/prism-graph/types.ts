@@ -1232,7 +1232,13 @@ export type FunctionBinding =
       size?: { w: number; h: number };
       /** Overlay centre as viewport fractions (0..1). Default 0.5, 0.5. */
       anchor?: { x: number; y: number };
-    };
+    }
+  // F5 ATELIER (ORRERY-NO7-PROTOTYPE-SPEC §3.2) — in-3D watch configurator.
+  // `configure` applies a variant to a layer (tap-to-apply finish swap);
+  // `configure-layer` makes a layer the active catalog tab. Both drive
+  // useConfiguratorStore; the visible swap rides AtelierApplier. Additive only.
+  | { kind: 'configure'; layer: string; variant: string }
+  | { kind: 'configure-layer'; layer: string };
 
 // APP-REALITY P7 — a GLOBAL ELEMENT's overlay presentation. The element's
 // VISUAL design (a premium holographic detail card with glitch/transparency
