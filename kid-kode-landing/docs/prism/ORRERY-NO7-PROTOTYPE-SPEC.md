@@ -155,28 +155,267 @@ This is the user's custom harness doctrine — observer + sentinel + monitor + n
 
 ---
 
-## §9 — SUCCESS CRITERIA (prototype, numbered — the rubric)
+## §9 — SUCCESS CRITERIA (hardened — binary, automatable, graded by computer-use agent)
 
-**Configurator (F5):**
-- SC-O1 All 11 layers selectable; selecting a layer eases the camera to frame it and dims others.
-- SC-O2 Tap a variant → finish/material mutates in place instantly (no reload, no rebuild flash).
-- SC-O3 Illegal combos are disabled with a visible inline reason; never a dead-end; never silently hidden.
-- SC-O4 Color: curated palette + full HSV picker + sample-a-color-from-an-image all set the dial live.
-- SC-O5 Desktop drag-drop snaps a part to its socket with spring settle + click; mobile collapses to tap + bottom-sheet.
-- SC-O6 A complete watch can be built end-to-end and serialized/restored from the per-layer JSON.
-- SC-O7 The movement runs (ticks) live while configuring.
-- SC-O8 Instant shareable snapshot render produced on completion.
+Every criterion is binary PASS/FAIL. The test agent observes via Playwright MCP (`mcp__playwright__browser_*`) + JS evaluation + console inspection. Evidence saved to `notes/verification/<SC-id>/`. "I added it" is never done — the signal must appear.
 
-**World (F6/F7/F8):**
-- SC-O9 One continuous scroll Arrival→Acquire with no load seam; Atelier is a region of the same world, not a separate page.
-- SC-O10 ≤2 live transmission re-renders on screen at once (guard enforced); glass reads as lensing, not blur.
-- SC-O11 Progressive WebGPU→WebGL2→static-poster fallback — never a blank page.
-- SC-O12 Responsive desktop/tablet/mobile; mobile usable at reduced budget.
-- SC-O13 Sub-3s LCP; 3D init deferred after LCP; 60fps on the hero interactions.
-- SC-O14 Materials are physically real (TSL PBR); no regression from the r184 patch bumps (risk #5).
-- SC-O15 Side-by-side it smokes the best SliderRevolution 3D/scroll template and sits beside Cartier W&W / Apple product pages.
+Status legend: `[ ]` = not yet shipped · `[~]` = partial · `[x]` = done+evidence
 
-**Invariants preserved (non-negotiable):** graph-is-the-app; one `three/webgpu` scene; `galaxy|canvas|preview-app` only; TSL-only; MSDF text only (no DOM text, no `THREE.TextGeometry`); synchronous `createNode`; capability-refs only (no client secrets); allowlist updated before any new import.
+---
+
+### §9.1 — Configurator Core (F5.1 — delivered)
+
+**SC-O1 — Layer selectability**
+- `[x]` SC-O1.1 Hub `s6-atelier` loads without console error. Signal: `kv_check_console` 0 errors after navigating to the Atelier hub.
+- `[x]` SC-O1.2 All 11 layer nodes render in the swatch rail (movement/case/bezel/dial/hands/indices/crown/complications/lume/strap/engraving). Signal: `evaluate(() => document.querySelectorAll('canvas').length > 0)` + scene-graph assertion `window.__PRISM_GRAPH__.hubs['s6-atelier'].nodes.length >= 60`.
+- `[x]` SC-O1.3 Clicking a layer node sets `useConfiguratorStore.activeLayer` to that layer ID. Signal: `evaluate(() => window.__ATELIER_STORE__?.getState().activeLayer)` equals the clicked layer string within 500ms.
+- `[x]` SC-O1.4 Selecting a layer dims non-active watch-part nodes. Signal: screenshot diff — non-selected watch parts have visually lower luminance (advocate: ≥25% darker or explicit opacity reduction visible in screenshot).
+- `[ ]` SC-O1.5 Camera eases to frame the selected layer. Signal: `evaluate(() => window.__PRISM_CAM_POS__)` changes within 800ms of layer click (camera position vector changes by ≥0.05 units from pre-click position). *(F6 — world weave required for camera spline)*
+
+**SC-O2 — Tap-to-apply material mutation**
+- `[x]` SC-O2.1 Tapping a variant node updates the watch part material with no page reload. Signal: `performance.getEntriesByType('navigation').length === 1` (stable) after 3 variant taps.
+- `[x]` SC-O2.2 Zero `"rebuilt scene"` or `"createNode"` log entries after a variant tap. Signal: console assertion.
+- `[x]` SC-O2.3 Price readout node (`orr-atelier-price`) MSDF text updates within 300ms of variant change. Signal: screenshot of price node before/after — text must differ.
+- `[x]` SC-O2.4 Summary text node (`orr-atelier-summary`) updates within 300ms of variant change. Signal: screenshot diff.
+- `[x]` SC-O2.5 `useConfiguratorStore.getState().rev` increments by 1 for each accepted change. Signal: JS eval before and after tap.
+- `[ ]` SC-O2.6 No dropped frames during 3 rapid sequential variant taps (< 500ms apart). Signal: DevTools `performance.now()` delta between taps never exceeds 50ms rAF stall. *(F7 perf sweep)*
+
+**SC-O3 — Constraint-as-feature**
+- `[x]` SC-O3.1 Selecting "moonphase" complication when movement is "automatic" succeeds: `store.build.complications` includes "moonphase".
+- `[x]` SC-O3.2 Selecting "moonphase" when movement is "quartz" is rejected: `store.build.complications` does NOT include "moonphase".
+- `[x]` SC-O3.3 The reason text node (`orr-atelier-reason`) is non-empty when a constraint rejection fires. Signal: screenshot shows visible reason string; `evaluate(() => window.__ATELIER_STORE__?.getState().lastReason)` is non-null.
+- `[x]` SC-O3.4 Constrained variants are visually dimmed/disabled, never hidden. Signal: all variant nodes present in scene graph (`window.__PRISM_GRAPH__` node count stable); only material/opacity changes.
+- `[x]` SC-O3.5 Constraint cascades: changing movement from "automatic" to "quartz" invalidates moonphase if selected. Signal: `store.build.complications` after the movement change no longer contains "moonphase".
+
+**SC-O4 — Color (partial — full picker in F5.3)**
+- `[x]` SC-O4.1 ≥6 dial color variant nodes are present in the swatch rail for the dial layer. Signal: `window.__PRISM_GRAPH__` contains ≥6 nodes with `functionBinding.layer === 'dial'`.
+- `[x]` SC-O4.2 Tapping a dial variant updates `store.build.dial` to the correct variantId. Signal: JS eval.
+- `[ ]` SC-O4.3 Full HSV picker sets dial color live (no rebuild). *(F5.3 — needs color picker node)*
+- `[ ]` SC-O4.4 Sample-a-color-from-image sets the dial live via canvas pixel pick. *(F5.3)*
+
+---
+
+### §9.2 — Drag-Drop + Physics (F5.2 — delivered)
+
+**SC-O5 — Drag-drop Rapier snap**
+- `[x]` SC-O5.1 `window.__ATELIER_RAPIER_READY__` is `true` within 3s of Atelier hub load. Signal: `waitFor(() => window.__ATELIER_RAPIER_READY__ === true, {timeout: 3000})`.
+- `[x]` SC-O5.2 Pointer-down on a variant chip node (swatch) starts the drag — ghost cube `BoxGeometry` appears. Signal: no error in console; screenshot shows a cube following cursor after pointerdown.
+- `[x]` SC-O5.3 Ghost cube tracks pointer with spring lag (visually trails pointer). Signal: screenshot taken mid-drag shows ghost offset from cursor by 1-5px.
+- `[x]` SC-O5.4 Hovering ghost over any `orr-atelier-watch-*` node activates the valid-drop glow. Signal: screenshot shows green/white highlight on watch-part surface.
+- `[x]` SC-O5.5 Dropping over a valid watch target fires `store.setLayer(layer, variant)`. Signal: JS eval of `store.build[droppedLayer]` equals the dragged variantId within 600ms of pointerup.
+- `[x]` SC-O5.6 Settlement animation (ghost shrinks to zero) completes within 600ms of drop. Signal: screenshot taken at T+700ms shows no ghost cube.
+- `[x]` SC-O5.7 A drop outside valid targets cancels the drag without changing the build. Signal: `store.build` unchanged after drop on background.
+- `[ ]` SC-O5.8 Mobile viewport (375×812): drag-drop replaced by tap-confirm; bottom-sheet catalog visible. *(F7 responsive)*
+
+---
+
+### §9.3 — Save / Share / Reset (F5.1 — delivered)
+
+**SC-O6 — Serialization round-trip**
+- `[x]` SC-O6.1 Clicking SAVE button writes `localStorage['orrery-no7-build']` with a valid JSON string. Signal: `evaluate(() => JSON.parse(localStorage.getItem('orrery-no7-build')))` returns non-null object.
+- `[x]` SC-O6.2 Saved JSON has `v: 1` and `build` key with all 11 layer IDs present. Signal: JS eval checks `Object.keys(parsed.build).length === 11`.
+- `[x]` SC-O6.3 Hard-reload restores the saved build (restore round-trip). Signal: after `navigate(url)` fresh load, `store.build` equals the pre-saved build within 500ms.
+- `[x]` SC-O6.4 RESET button reverts build to DEFAULT_BUILD and clears localStorage key. Signal: `localStorage.getItem('orrery-no7-build')` is null after reset; `store.build` equals DEFAULT_BUILD.
+- `[ ]` SC-O6.5 SHARE button produces a data-URL snapshot copied to clipboard. Signal: `evaluate(() => navigator.clipboard.readText())` returns a string starting with `"data:image/png"`. *(F5.4 — offscreen render)*
+
+---
+
+### §9.4 — Photoreal Assets (F5.3 — next phase)
+
+**SC-O7 — Live movement tick**
+- `[ ]` SC-O7.1 The seconds-hand node rotates exactly 6°/sec when caliber is "automatic" or "manual". Signal: JS eval of `node.rotation.z` at T+0 and T+1000ms differ by ~0.105 rad.
+- `[ ]` SC-O7.2 Movement animation does not pause when the configurator layer is changed. Signal: rotation continues incrementing through a layer-change event.
+- `[ ]` SC-O7.3 "Skeleton" movement caliber shows visible mechanism parts (sub-dial nodes visible through dial). Signal: screenshot shows gear geometry.
+
+**SC-O8 — Dial textures (fal KTX2)**
+- `[ ]` SC-O8.1 Guilloché dial shows a repeating geometric pattern texture (not solid color). Signal: screenshot of dial layer shows pattern, not flat fill.
+- `[ ]` SC-O8.2 Meteorite dial shows a Widmanstätten crystalline texture. Signal: screenshot + advocate grade ≥4/5 on texture realism.
+- `[ ]` SC-O8.3 Aventurine dial shows blue sparkle/mineral texture. Signal: screenshot + advocate grade ≥4/5.
+- `[ ]` SC-O8.4 Enamel dial shows deep opaque color with no visible pixel artifacts. Signal: screenshot — no blocky JPEG artifacts; smooth gradient.
+- `[ ]` SC-O8.5 Textures are KTX2 format (not PNG/JPG). Signal: DevTools network filter `*.ktx2` shows requests.
+- `[ ]` SC-O8.6 Texture fetch uses Draco GLB + KTX2Loader. Signal: zero WASM instantiation errors in console.
+
+---
+
+### §9.5 — Liquid Glass / Crystal (F5.4)
+
+**SC-O10 — Transmission budget**
+- `[ ]` SC-O10.1 `window.__PRISM_TRANSMISSION_COUNT__` never exceeds 2 (hard guard). Signal: JS eval after any scene state + console for "TRANSMISSION LIMIT" guard log.
+- `[ ]` SC-O10.2 Sapphire crystal over the watch renders with visible IOR lensing (objects behind refract). Signal: screenshot shows refracted watch face behind crystal dome, not flat glass.
+- `[ ]` SC-O10.3 Atelier panel glass uses screen-space UV displacement (no second transmission render). Signal: `window.__PRISM_TRANSMISSION_COUNT__` ≤ 1 when panel is visible alone.
+- `[ ]` SC-O10.4 Nav glass uses one shared render target reused across nav items. Signal: `window.__PRISM_TRANSMISSION_COUNT__` does not exceed 2 with crystal + panel both visible.
+
+---
+
+### §9.6 — World & Scroll (F6)
+
+**SC-O9 — Continuous orrery world**
+- `[ ]` SC-O9.1 Scrolling from scroll=0% to scroll=100% has no page navigation event. Signal: `performance.getEntriesByType('navigation').length === 1` after full scroll.
+- `[ ]` SC-O9.2 Camera position changes continuously with scrollY (no position jump > 0.5 units per frame). Signal: sample camera position every 100ms during scroll, max delta ≤ 0.5.
+- `[ ]` SC-O9.3 At scroll ~65%, Atelier hub geometry is visible (not disposed). Signal: screenshot at scroll=65% shows configurator components; scene graph `s6-atelier` nodes still mounted.
+- `[ ]` SC-O9.4 Zero `THREE.Scene.remove` calls during a full scroll traverse. Signal: `console.count` hook on `remove` = 0.
+- `[ ]` SC-O9.5 Web Audio orrery hum plays during scroll (not silence). Signal: `AudioContext.state === 'running'` during scroll.
+
+---
+
+### §9.7 — Responsive & Fallback (F7)
+
+**SC-O11 — Progressive fallback**
+- `[ ]` SC-O11.1 On forced WebGPU failure (`navigator.gpu = undefined`), WebGL2 canvas initializes within 5s. Signal: `evaluate(() => document.querySelector('canvas')?.getContext('webgl2') !== null)` = true.
+- `[ ]` SC-O11.2 No blank white page: even on full WebGPU+WebGL2 failure, a static poster `<img>` renders. Signal: screenshot at T+5s shows non-white pixel content.
+- `[ ]` SC-O11.3 Console shows zero unhandled rejection errors during fallback path.
+
+**SC-O12 — Responsive breakpoints**
+- `[ ]` SC-O12.1 At 375×812 viewport (mobile): bottom-sheet catalog visible, side-rail hidden. Signal: screenshot at that viewport shows bottom panel; no side-rail DOM element.
+- `[ ]` SC-O12.2 At 375×812: tapping a swatch applies material (tap-only, no drag). Signal: JS eval of `store.build` after tap in mobile viewport.
+- `[ ]` SC-O12.3 At 768×1024 (tablet): full side-rail visible; drag enabled. Signal: screenshot.
+
+---
+
+### §9.8 — Performance (F7)
+
+**SC-O13 — Speed targets**
+- `[ ]` SC-O13.1 LCP ≤ 3000ms. Signal: `evaluate(() => new PerformanceObserver(list => list.getEntriesByType('largest-contentful-paint')[0].startTime)` ≤ 3000.
+- `[ ]` SC-O13.2 3D init deferred after LCP. Signal: `window.__THREE_INIT_TIME__` timestamp > `window.__LCP_TIME__`.
+- `[ ]` SC-O13.3 60fps during configurator layer swap. Signal: `requestAnimationFrame` timing — no gaps > 20ms in a 2s window after a layer tap.
+- `[ ]` SC-O13.4 Rapier drag maintains 60fps. Signal: same rAF check during pointer-move event on ghost cube.
+- `[ ]` SC-O13.5 Asset bundle ≤ 250KB gzip for initial JS (deferred heavy chunks). Signal: DevTools Network tab total JS transferred ≤ 250KB before canvas init.
+
+---
+
+### §9.9 — Material Correctness (active invariants)
+
+**SC-O14 — PBR materials, no regressions**
+- `[x]` SC-O14.1 Watch case mesh has `roughness` and `metalness` uniforms (TSL PBR, not default MeshStandardMaterial). Signal: `evaluate(() => scene.getObjectByName('orr-atelier-watch-case')?.material?.roughness !== undefined)`.
+- `[x]` SC-O14.2 Zero `THREE.MeshBasicMaterial` on any watch-part mesh (all lit). Signal: grep source + scene-graph assertion `node.material.type !== 'MeshBasicMaterial'`.
+- `[ ]` SC-O14.3 After r184 npm patch bump: zero console errors from `THREE.WebGPURenderer`. Signal: `kv_check_console` 0 errors after `npm update` run.
+- `[ ]` SC-O14.4 Crystal/glass layer node has `ior > 1.0` on its material. Signal: JS eval of `node.material.ior` ≥ 1.7 (sapphire ≈ 1.76).
+
+---
+
+### §9.10 — Benchmark (F8 — vision-graded)
+
+**SC-O15 — Champion-level craft**
+- `[ ]` SC-O15.1 Side-by-side screenshot vs best SliderRevolution 3D template: advocate agent grades Prism WINS on 3D realism, motion quality, and customization depth.
+- `[ ]` SC-O15.2 Side-by-side vs Cartier W&W interactive: advocate grades Prism WITHIN-RANGE or BETTER on material craft and watch presentation.
+- `[ ]` SC-O15.3 Side-by-side vs Apple product page (iPhone deep personalisation): advocate grades Prism MATCHES on configurator UX and delight.
+- `[ ]` SC-O15.4 A non-technical user can build and save a complete watch in under 90 seconds with no instruction (usability advocate test).
+
+---
+
+### §9.11 — Always-On Invariants (any phase, grep + eval)
+
+| INV | Check | Signal |
+|-----|-------|--------|
+| INV-G1 | Graph is the app | `typeof window.__PRISM_GRAPH__ !== 'undefined'` = true |
+| INV-G2 | No THREE.TextGeometry | `grep -r "TextGeometry" src/` = 0 results |
+| INV-G3 | No DOM text in nodes | `grep -r "document\." src/lib/prism src/components/atelier` = 0 (except `devicePixelRatio`) |
+| INV-G4 | No PixiJS | `grep -r "pixi" package.json src/` = 0 results |
+| INV-G5 | Synchronous createNode | `createNode` return type is `THREE.Object3D` with no `await` at top level |
+| INV-G6 | No raw secrets in graph | `grep -E "FAL_KEY\|sk-\|OPENAI" public/prism-mock/home/live-graph.json` = 0 |
+| INV-G7 | Exactly 3 view modes | `grep -r "galaxy\|canvas\|preview-app" src/` all match; no `hub-world\|preview-hub\|editor\|split` literals |
+| INV-G8 | Allowlist before import | `.claude/hooks/dependency-allowlist-check.py RUNTIME_ALLOW` contains every import in `package.json` that the hook checks |
+| INV-G9 | Capability refs only | `functionBinding` nodes in live-graph.json carry no API keys, only `kind` + semantic params |
+| INV-G10 | Transmission cap | `window.__PRISM_TRANSMISSION_COUNT__` ≤ 2 at all times when glass is visible |
+
+---
+
+## §10 — REAL PLAN FORWARD (F5.3 → close)
+
+### §10.1 — Immediate: F5.3 Photoreal Dial Textures (~$1.50 of remaining $39.28 budget)
+
+The highest-ROI spend is **dial textures only** — 7 KTX2 sets that make the configurator look real without requiring full part GLBs. Proxy geometry is good enough for demo.
+
+**What to provision (in priority order):**
+
+| Asset | Provider | Est. Cost | Why |
+|-------|----------|-----------|-----|
+| Guilloché texture 1500×1500 | fal-ai/flux-2-pro → KTX2 | $0.045 | Hero customization |
+| Solarized gradient texture | flux-2-pro → KTX2 | $0.045 | Easy win, dramatic |
+| Meteorite Widmanstätten texture | flux-2-pro → KTX2 | $0.045 | Unique, premium |
+| Aventurine blue sparkle | flux-2-pro → KTX2 | $0.045 | Luxury signal |
+| Enamel deep cobalt | flux-2-pro → KTX2 | $0.045 | Classic |
+| Enamel cream/white | flux-2-pro → KTX2 | $0.045 | Clean variant |
+| Alligator strap leather | flux-2-pro → KTX2 | $0.045 | Strap layer |
+| Rubber strap texture | flux-2-pro → KTX2 | $0.045 | Sports variant |
+| **Total** | | **~$0.36** | Well under cap |
+
+**What to skip for now:** movement GLB ($0.675), case GLBs (3×$0.675), bezel GLBs (4×$0.675) — proxy geometry works for all configurator logic; photoreal parts are F5.4+ when real GLBs are justified.
+
+**Wiring:** `scripts/provision-watch-parts.mjs --only dial-guilloche` etc. → KTX2 → bound via `materialSpec.map` on dial proxy mesh → `setMaterialSpec` live swap.
+
+### §10.2 — F5.4: Sapphire Crystal + Liquid Glass (~1 session)
+
+1. Add crystal mesh node on top of dial (thin dome, `MeshPhysicalNodeMaterial`, `ior: 1.76`, `thickness: 0.08`, `transmission: 0.95`, `roughness: 0.02`)
+2. Add `__PRISM_TRANSMISSION_COUNT__` guard counter in `GraphScene` — throw/warn if > 2
+3. Atelier panel chrome: screen-space UV displacement (Path C), no extra transmission target
+4. Shared nav glass render target (one `WebGLRenderTarget`, reused)
+5. **Gate:** SC-O10.1..O10.4 all PASS
+
+### §10.3 — F6: World Weave (~2-3 sessions)
+
+1. Add Lenis smooth scroll + GSAP ScrollTrigger to `AppShell`
+2. Define scroll spline (`CatmullRomCurve3`) through all 6 hub positions
+3. `scroll-path-scrub` primitive: animates `cameraAnim.position` + `targetAnim.position` on scroll
+4. `scroll-orbit-scrub` primitive: drives orbital ring rotations
+5. Atelier region at ~65% scroll: `sticky-pin` + component detach animation (parts fly from orbital shells to configurator tray)
+6. Celestia: built watch flies to orbit position at ~85% scroll
+7. Web Audio: orrery hum (synthesized drone, pitch shifts per shell), mechanical ticks during assembly
+8. **Gate:** SC-O9.1..O9.5 all PASS; no seam between Arrival and Acquire
+
+### §10.4 — F7: Responsive + Fallback + Perf (~1-2 sessions)
+
+1. Viewport breakpoints: `useBreakpoint()` hook → `xs(375) | sm(768) | lg(1280)`
+2. Mobile Atelier: bottom-sheet catalog (`position: fixed; bottom: 0`), one-layer-at-a-time, tap-to-apply
+3. WebGPU detection: `navigator.gpu?.requestAdapter()` → if null, `WebGL2Renderer` fallback path
+4. Static poster: `public/orrery-poster.webp` rendered once, displayed as `<img>` if both renderers fail
+5. LOD: `THREE.LOD` on watch part meshes (3 levels: 2k/512/proxy)
+6. `IntersectionObserver` on hub sections → dynamic `import()` of heavy node bundles
+7. `web-vitals` library: hook `onLCP` → set `window.__LCP_TIME__`; defer Three.js init until after
+8. **Gate:** SC-O11..O13 all PASS; SC-O12 responsive breakpoints confirmed via viewport resize
+
+### §10.5 — F8: Polish + Close (~1 session)
+
+1. Desktop-only path-traced hero stills: `THREE.WebGPURenderer` + `PTRenderer` (off-screen, export-only)
+2. Post-processing: `BloomNode + DOFNode + SSAONode + VignetteNode + ChromaticAberrationNode + ACESToneMapping` via TSL `PostProcessing`
+3. Easter eggs: secret double-tap on orrery reveals hidden skeleton movement
+4. Full evidence pass: run ALL SC-O criteria, grade, save screenshots to `notes/verification/`
+5. `prism-criteria-reviewer` final sweep
+6. **Gate:** SC-O15.1..O15.4 all PASS (advocate side-by-sides)
+
+---
+
+### §10.6 — Harness: How Every Phase Runs
+
+**Main agent launch pattern (from `~/Prototype_Prism/Design-trials/`):**
+```bash
+unset NODE_ENV
+nohup /Users/loganbaird/.local/bin/claude -p "$(cat ORRERY-ATELIER-PROMPT.md)" \
+  --model claude-opus-4-8 \
+  --permission-mode bypassPermissions \
+  --output-format text > orrery-atelier-run.log 2>&1 &
+```
+
+**Sentinel:** `./run-sentinel-orrery.sh` — arms auto-resume on session limits (15-min probe), max 6 resumes, macOS notifications, reads `ORRERY-ATELIER-RESUME-COMBINED.md` for resume.
+
+**Check/go pattern:**
+- User says `check` → monitor session reads run log tail + takes Playwright screenshot → reports plain-language + evidence
+- User says `go` → monitor approves, agent continues or next sentinel fires
+- Every phase boundary → agent commits AUTO-CKPT + appends to `notes/ORRERY-ATELIER-PROGRESS.md`
+
+**Verification inside the agent** (Playwright MCP tools, NOT KripVerify):
+- `mcp__playwright__browser_navigate` → `http://localhost:3000`
+- `mcp__playwright__browser_wait_for` → canvas visible
+- `mcp__playwright__browser_take_screenshot` → save evidence
+- `mcp__playwright__browser_evaluate` → JS assertions against SC
+- `mcp__playwright__browser_console_messages` → error check
+- `mcp__playwright__browser_click` → drive the configurator like a user
+
+**Model:** `claude-opus-4-8` (Fable 5 currently unavailable; switch back when available — sentinel probes `claude-fable-5` first; if probe returns "model not available" falls back to `claude-opus-4-8`)
+
+**Ledger:** `kid-kode-landing/notes/ORRERY-ATELIER-PROGRESS.md` (append-only, one line per wave/phase)
+
+**fal budget guard:** `notes/.atelier-provisioning.json` → `totalCostUsd` must stay ≤ $40; `provision-watch-parts.mjs` enforces this.
 
 ---
 
