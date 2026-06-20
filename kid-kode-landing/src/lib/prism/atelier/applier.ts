@@ -9,12 +9,21 @@
 import type { Object3D } from 'three';
 import type { MaterialSpec } from '@/lib/prism-graph/types';
 import type { MeshPrimitiveHandle } from '@/lib/prism/runtime/shared/mesh-primitive';
-import { LAYERS, variantOf, type AtelierBuild } from '@/lib/prism/atelier/config';
+import { LAYERS, variantOf, totalPrice, type AtelierBuild } from '@/lib/prism/atelier/config';
+
+interface TextHandleLike {
+  spec: Record<string, unknown>;
+  setSpec: (spec: Record<string, unknown>) => void;
+}
 
 interface WithHandle {
   meshPrimitiveHandle?: MeshPrimitiveHandle;
+  textHandle?: TextHandleLike;
   nodeId?: string;
 }
+
+export const PRICE_NODE_ID = 'orr-atelier-price';
+export const SUMMARY_NODE_ID = 'orr-atelier-summary';
 
 const LUME_COLOR: Record<string, string> = {
   blue: '#1ec8ff',
@@ -69,4 +78,28 @@ export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild): n
     }
   });
   return applied;
+}
+
+function setLiveText(root: Object3D, nodeId: string, content: string): void {
+  root.traverse((obj) => {
+    if ((obj.userData as WithHandle | undefined)?.nodeId !== nodeId) return;
+    let handle: TextHandleLike | null = null;
+    obj.traverse((child) => {
+      const h = (child.userData as WithHandle | undefined)?.textHandle;
+      if (!handle && h) handle = h;
+    });
+    if (handle && (handle as TextHandleLike).spec) {
+      const th = handle as TextHandleLike;
+      th.setSpec({ ...th.spec, content });
+    }
+  });
+}
+
+/** Live-update the price + summary readouts from the current build. */
+export function applyConfiguratorText(root: Object3D, build: AtelierBuild): void {
+  const price = totalPrice(build);
+  setLiveText(root, PRICE_NODE_ID, `$${price.toLocaleString('en-US')}`);
+  const pick = (l: Parameters<typeof variantOf>[0]) => variantOf(l, build[l])?.label ?? '';
+  const summary = [pick('movement'), pick('case'), pick('dial')].filter(Boolean).join('   ·   ');
+  setLiveText(root, SUMMARY_NODE_ID, summary);
 }

@@ -19770,16 +19770,446 @@
       "receivesLighting": true
     },
     {
-      "nodeId": "orr-atelier-cat-case-label",
-      "subtype": "atelier-cat-label",
+      "nodeId": "orr-atelier-cat-movement-label",
+      "subtype": "atelier-text",
       "parentHubId": "s6-atelier",
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": -3.63,
-          "y": 1.43,
+          "x": -4.55,
+          "y": 2.0,
           "z": 0.45,
-          "width": 1.4,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "MOVEMENT",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": 2.0,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "MOVEMENT",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-movement-automatic",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": 2.0,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "movement -> automatic",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": 2.0,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "movement",
+        "variant": "automatic"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-movement-manual",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": 2.0,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "movement -> manual",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#b6bcc4",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": 2.0,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "movement",
+        "variant": "manual"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-movement-tourbillon",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": 2.0,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "movement -> tourbillon",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": 2.0,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "movement",
+        "variant": "tourbillon"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-movement-skeleton",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.5500000000000003,
+          "y": 2.0,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "movement -> skeleton",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#9aa0a8",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.5500000000000003,
+        "y": 2.0,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "movement",
+        "variant": "skeleton"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-case-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": 1.645,
+          "z": 0.45,
+          "width": 1.6,
           "height": 0.3
         },
         "alpha": 1
@@ -19813,8 +20243,8 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.63,
-        "y": 1.43,
+        "x": -4.55,
+        "y": 1.645,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -19827,12 +20257,12 @@
         "content": "CASE",
         "fontFamily": "Inter",
         "fontWeight": 600,
-        "fontSize": 0.12,
-        "letterSpacing": 0.12,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
         "align": "left",
         "fill": {
           "kind": "solid",
-          "color": "#9fb4c8"
+          "color": "#8aa0b4"
         },
         "glow": {
           "color": "#1ec8ff",
@@ -19850,16 +20280,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.55,
-          "y": 1.15,
+          "x": -3.45,
+          "y": 1.645,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "case → steel",
+        "caption": "case -> steel",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -19886,9 +20316,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -19904,7 +20334,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -19914,8 +20344,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.55,
-        "y": 1.15,
+        "x": -3.45,
+        "y": 1.645,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -19924,18 +20354,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-501",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 501
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "case",
@@ -19950,16 +20369,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.13,
-          "y": 1.15,
+          "x": -3.1500000000000004,
+          "y": 1.645,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "case → rose-gold",
+        "caption": "case -> rose-gold",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -19986,9 +20405,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20004,7 +20423,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20014,8 +20433,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.13,
-        "y": 1.15,
+        "x": -3.1500000000000004,
+        "y": 1.645,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20024,18 +20443,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-502",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 502
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "case",
@@ -20050,16 +20458,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.71,
-          "y": 1.15,
+          "x": -2.85,
+          "y": 1.645,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "case → titanium",
+        "caption": "case -> titanium",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20086,9 +20494,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20104,7 +20512,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20114,8 +20522,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.71,
-        "y": 1.15,
+        "x": -2.85,
+        "y": 1.645,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20124,18 +20532,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-503",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 503
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "case",
@@ -20150,16 +20547,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.29,
-          "y": 1.15,
+          "x": -2.5500000000000003,
+          "y": 1.645,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "case → black-dlc",
+        "caption": "case -> black-dlc",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20186,9 +20583,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20204,7 +20601,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20214,8 +20611,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.29,
-        "y": 1.15,
+        "x": -2.5500000000000003,
+        "y": 1.645,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20224,18 +20621,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-504",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 504
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "case",
@@ -20244,16 +20630,446 @@
       "receivesLighting": true
     },
     {
-      "nodeId": "orr-atelier-cat-dial-label",
-      "subtype": "atelier-cat-label",
+      "nodeId": "orr-atelier-cat-bezel-label",
+      "subtype": "atelier-text",
       "parentHubId": "s6-atelier",
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": -3.63,
-          "y": 0.63,
+          "x": -4.55,
+          "y": 1.29,
           "z": 0.45,
-          "width": 1.4,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "BEZEL",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": 1.29,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "BEZEL",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-bezel-brushed",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": 1.29,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "bezel -> brushed",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#aeb4bd",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": 1.29,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "bezel",
+        "variant": "brushed"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-bezel-polished",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": 1.29,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "bezel -> polished",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#d6dae0",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": 1.29,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "bezel",
+        "variant": "polished"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-bezel-gold",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": 1.29,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "bezel -> gold",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": 1.29,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "bezel",
+        "variant": "gold"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-bezel-gem-set",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.5500000000000003,
+          "y": 1.29,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "bezel -> gem-set",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#eaf2ff",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.5500000000000003,
+        "y": 1.29,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "bezel",
+        "variant": "gem-set"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-dial-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 1.6,
           "height": 0.3
         },
         "alpha": 1
@@ -20287,8 +21103,8 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.63,
-        "y": 0.63,
+        "x": -4.55,
+        "y": 0.935,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20301,12 +21117,12 @@
         "content": "DIAL",
         "fontFamily": "Inter",
         "fontWeight": 600,
-        "fontSize": 0.12,
-        "letterSpacing": 0.12,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
         "align": "left",
         "fill": {
           "kind": "solid",
-          "color": "#9fb4c8"
+          "color": "#8aa0b4"
         },
         "glow": {
           "color": "#1ec8ff",
@@ -20324,16 +21140,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.55,
-          "y": 0.35,
+          "x": -3.45,
+          "y": 0.935,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "dial → navy",
+        "caption": "dial -> navy",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20360,9 +21176,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20378,7 +21194,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20388,8 +21204,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.55,
-        "y": 0.35,
+        "x": -3.45,
+        "y": 0.935,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20398,18 +21214,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-506",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 506
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "dial",
@@ -20424,16 +21229,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.13,
-          "y": 0.35,
+          "x": -3.1500000000000004,
+          "y": 0.935,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "dial → silver",
+        "caption": "dial -> silver",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20460,9 +21265,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20478,7 +21283,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20488,8 +21293,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.13,
-        "y": 0.35,
+        "x": -3.1500000000000004,
+        "y": 0.935,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20498,18 +21303,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-507",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 507
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "dial",
@@ -20524,16 +21318,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.71,
-          "y": 0.35,
+          "x": -2.85,
+          "y": 0.935,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "dial → black",
+        "caption": "dial -> black",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20560,9 +21354,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20578,7 +21372,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20588,8 +21382,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.71,
-        "y": 0.35,
+        "x": -2.85,
+        "y": 0.935,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20598,18 +21392,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-508",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 508
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "dial",
@@ -20624,16 +21407,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.29,
-          "y": 0.35,
+          "x": -2.5500000000000003,
+          "y": 0.935,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "dial → green",
+        "caption": "dial -> green",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20660,9 +21443,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20678,7 +21461,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20688,8 +21471,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.29,
-        "y": 0.35,
+        "x": -2.5500000000000003,
+        "y": 0.935,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20698,18 +21481,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-509",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 509
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "dial",
@@ -20718,16 +21490,2077 @@
       "receivesLighting": true
     },
     {
-      "nodeId": "orr-atelier-cat-strap-label",
-      "subtype": "atelier-cat-label",
+      "nodeId": "orr-atelier-cat-dial-salmon",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.25,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "dial -> salmon",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e7a584",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.25,
+        "y": 0.935,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "dial",
+        "variant": "salmon"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-dial-meteorite",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -1.9500000000000002,
+          "y": 0.935,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "dial -> meteorite",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#6b6f78",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -1.9500000000000002,
+        "y": 0.935,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "dial",
+        "variant": "meteorite"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-hands-label",
+      "subtype": "atelier-text",
       "parentHubId": "s6-atelier",
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": -3.63,
-          "y": -0.16999999999999998,
+          "x": -4.55,
+          "y": 0.5800000000000001,
           "z": 0.45,
-          "width": 1.4,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "HANDS",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": 0.5800000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "HANDS",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-hands-rhodium",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": 0.5800000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "hands -> rhodium",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#eef2f8",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": 0.5800000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "hands",
+        "variant": "rhodium"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-hands-gold",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": 0.5800000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "hands -> gold",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": 0.5800000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "hands",
+        "variant": "gold"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-hands-blued",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": 0.5800000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "hands -> blued",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#2b4f8a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": 0.5800000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "hands",
+        "variant": "blued"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-indices-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": 0.2250000000000001,
+          "z": 0.45,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "INDICES",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": 0.2250000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "INDICES",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-indices-gold",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": 0.2250000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "indices -> gold",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": 0.2250000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "indices",
+        "variant": "gold"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-indices-rhodium",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": 0.2250000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "indices -> rhodium",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#dfe4ea",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": 0.2250000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "indices",
+        "variant": "rhodium"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-indices-diamond",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": 0.2250000000000001,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "indices -> diamond",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#f4f8ff",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": 0.2250000000000001,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "indices",
+        "variant": "diamond"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-crown-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": -0.1299999999999999,
+          "z": 0.45,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "CROWN",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": -0.1299999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "CROWN",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-crown-steel",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": -0.1299999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "crown -> steel",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": -0.1299999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "crown",
+        "variant": "steel"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-crown-gold",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": -0.1299999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "crown -> gold",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": -0.1299999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "crown",
+        "variant": "gold"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "COMPLICATIONS",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "COMPLICATIONS",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-none",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "complications -> none",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#3a3f47",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "complications",
+        "variant": "none"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-date",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "complications -> date",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "complications",
+        "variant": "date"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-gmt",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "complications -> gmt",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#3a6ea5",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "complications",
+        "variant": "gmt"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-moonphase",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.5500000000000003,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "complications -> moonphase",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#cfe2ff",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.5500000000000003,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "complications",
+        "variant": "moonphase"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-complications-chrono",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.25,
+          "y": -0.4849999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "complications -> chrono",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.25,
+        "y": -0.4849999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "complications",
+        "variant": "chrono"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-lume-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": -0.8399999999999999,
+          "z": 0.45,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "LUME",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": -0.8399999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "LUME",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-lume-none",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": -0.8399999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "lume -> none",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#2a2e35",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": -0.8399999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "lume",
+        "variant": "none"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-lume-blue",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": -0.8399999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "lume -> blue",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#1ec8ff",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#1ec8ff",
+        "emissiveIntensity": 0.7,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": -0.8399999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "lume",
+        "variant": "blue"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-lume-green",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": -0.8399999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "lume -> green",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#5ef08a",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#5ef08a",
+        "emissiveIntensity": 0.7,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": -0.8399999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "lume",
+        "variant": "green"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-lume-ice",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.5500000000000003,
+          "y": -0.8399999999999999,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "lume -> ice",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#bfe9ff",
+        "metalness": 0.7,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#bfe9ff",
+        "emissiveIntensity": 0.7,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.5500000000000003,
+        "y": -0.8399999999999999,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "lume",
+        "variant": "ice"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-strap-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": -1.1949999999999998,
+          "z": 0.45,
+          "width": 1.6,
           "height": 0.3
         },
         "alpha": 1
@@ -20761,8 +23594,8 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.63,
-        "y": -0.16999999999999998,
+        "x": -4.55,
+        "y": -1.1949999999999998,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20775,12 +23608,12 @@
         "content": "STRAP",
         "fontFamily": "Inter",
         "fontWeight": 600,
-        "fontSize": 0.12,
-        "letterSpacing": 0.12,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
         "align": "left",
         "fill": {
           "kind": "solid",
-          "color": "#9fb4c8"
+          "color": "#8aa0b4"
         },
         "glow": {
           "color": "#1ec8ff",
@@ -20798,16 +23631,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.55,
-          "y": -0.45,
+          "x": -3.45,
+          "y": -1.1949999999999998,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "strap → black-leather",
+        "caption": "strap -> black-leather",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20834,9 +23667,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20852,7 +23685,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20862,8 +23695,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.55,
-        "y": -0.45,
+        "x": -3.45,
+        "y": -1.1949999999999998,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20872,18 +23705,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-511",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 511
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "strap",
@@ -20898,16 +23720,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -3.13,
-          "y": -0.45,
+          "x": -3.1500000000000004,
+          "y": -1.1949999999999998,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "strap → brown-alligator",
+        "caption": "strap -> brown-alligator",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -20934,9 +23756,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -20952,7 +23774,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -20962,8 +23784,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -3.13,
-        "y": -0.45,
+        "x": -3.1500000000000004,
+        "y": -1.1949999999999998,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -20972,18 +23794,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-512",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 512
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "strap",
@@ -20998,16 +23809,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.71,
-          "y": -0.45,
+          "x": -2.85,
+          "y": -1.1949999999999998,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "strap → blue-rubber",
+        "caption": "strap -> blue-rubber",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -21034,9 +23845,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -21052,7 +23863,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -21062,8 +23873,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.71,
-        "y": -0.45,
+        "x": -2.85,
+        "y": -1.1949999999999998,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -21072,18 +23883,7 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-513",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 513
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "strap",
@@ -21098,16 +23898,16 @@
       "serviceTag": "atelier-catalog",
       "visual": {
         "transform": {
-          "x": -2.29,
-          "y": -0.45,
+          "x": -2.5500000000000003,
+          "y": -1.1949999999999998,
           "z": 0.45,
-          "width": 0.3,
-          "height": 0.3
+          "width": 0.22,
+          "height": 0.22
         },
         "alpha": 1
       },
       "intent": {
-        "caption": "strap → steel-bracelet",
+        "caption": "strap -> steel-bracelet",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -21134,9 +23934,9 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 0.3,
-          "height": 0.3,
-          "depth": 0.05
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
         }
       },
       "materialSpec": {
@@ -21152,7 +23952,7 @@
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
         "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissiveIntensity": 0.0,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.2,
@@ -21162,8 +23962,8 @@
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.29,
-        "y": -0.45,
+        "x": -2.5500000000000003,
+        "y": -1.1949999999999998,
         "z": 0.45,
         "rotationX": 0,
         "rotationY": 0,
@@ -21172,24 +23972,576 @@
         "scaleY": 1,
         "scaleZ": 1
       },
-      "animationBindings": [
-        {
-          "id": "f5-cat-float-514",
-          "primitive": "float",
-          "driver": "time",
-          "params": {
-            "amplitude": 0.01,
-            "periodSec": 5
-          },
-          "order": 514
-        }
-      ],
+      "animationBindings": [],
       "functionBinding": {
         "kind": "configure",
         "layer": "strap",
         "variant": "steel-bracelet"
       },
       "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-engraving-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -4.55,
+          "y": -1.5499999999999998,
+          "z": 0.45,
+          "width": 1.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "ENGRAVING",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -4.55,
+        "y": -1.5499999999999998,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "ENGRAVING",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.082,
+        "letterSpacing": 0.1,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-cat-engraving-none",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.45,
+          "y": -1.5499999999999998,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "engraving -> none",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#3a3f47",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.45,
+        "y": -1.5499999999999998,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "engraving",
+        "variant": "none"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-engraving-initials",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -3.1500000000000004,
+          "y": -1.5499999999999998,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "engraving -> initials",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#c9ced6",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -3.1500000000000004,
+        "y": -1.5499999999999998,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "engraving",
+        "variant": "initials"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-cat-engraving-message",
+      "subtype": "atelier-swatch",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-catalog",
+      "visual": {
+        "transform": {
+          "x": -2.85,
+          "y": -1.5499999999999998,
+          "z": 0.45,
+          "width": 0.22,
+          "height": 0.22
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "engraving -> message",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.22,
+          "height": 0.22,
+          "depth": 0.04
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#e8c98a",
+        "metalness": 0.35,
+        "roughness": 0.3,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.2,
+        "clearcoatRoughness": 0.3,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0.0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.2,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -2.85,
+        "y": -1.5499999999999998,
+        "z": 0.45,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "functionBinding": {
+        "kind": "configure",
+        "layer": "engraving",
+        "variant": "message"
+      },
+      "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-price-eyebrow",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.35,
+          "y": 0.95,
+          "z": 0.5,
+          "width": 2.2,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "YOUR ORRERY",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.35,
+        "y": 0.95,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "YOUR ORRERY",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.085,
+        "letterSpacing": 0.22,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#8aa0b4"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-price",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.35,
+          "y": 0.55,
+          "z": 0.5,
+          "width": 2.6,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "$38,000",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.35,
+        "y": 0.55,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "$38,000",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.3,
+        "letterSpacing": 0.0,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#eef2f8"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.12
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-summary",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.35,
+          "y": 0.16,
+          "z": 0.5,
+          "width": 3.0,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Automatic   ·   Steel   ·   Midnight Navy",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.35,
+        "y": 0.16,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "Automatic   ·   Steel   ·   Midnight Navy",
+        "fontFamily": "Inter",
+        "fontWeight": 400,
+        "fontSize": 0.1,
+        "letterSpacing": 0.02,
+        "align": "left",
+        "fill": {
+          "kind": "solid",
+          "color": "#9fb4c8"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.06
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
     }
   ],
   "edges": [

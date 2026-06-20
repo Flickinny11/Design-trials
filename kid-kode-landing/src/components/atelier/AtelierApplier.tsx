@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
-import { applyConfiguratorToScene } from '@/lib/prism/atelier/applier';
+import { applyConfiguratorToScene, applyConfiguratorText } from '@/lib/prism/atelier/applier';
 
 const ATELIER_HUB_ID = 's6-atelier';
 
@@ -21,7 +21,10 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
 
   useEffect(() => {
     if (!previewMode || activeHubId !== ATELIER_HUB_ID) return;
-    const run = () => applyConfiguratorToScene(scene, build);
+    const run = () => {
+      applyConfiguratorToScene(scene, build);
+      applyConfiguratorText(scene, build);
+    };
     run();
     const t1 = setTimeout(run, 180);
     const t2 = setTimeout(run, 600);
