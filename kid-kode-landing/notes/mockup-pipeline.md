@@ -400,3 +400,7 @@ Camera bounds in `GraphScene.tsx` derive from the largest hub's radius (`minDist
 The 5 editor overlays (`SearchPalette`, `HubNav`, `Minimap`, `TopBar`, `DetailCard`) all read from `useGraphSourceStore` via `toEditorView` — the same source the 3D scene reads from. They each apply the `editorRole === 'element'` filter so search results, hub-nav counts, minimap dots, and detail-card lookups match the 3D scene's nav-able set. The legacy `src/data/mockGraph.ts` fixture has been deleted; nothing in `src/` references it.
 
 The plan that produced this fix-up lives at `/Users/loganbaird/.claude/plans/no-its-ok-lets-synthetic-quasar.md`.
+
+### §10 addendum — F5 allowlist (2026-06-20)
+
+`@dimforge/rapier3d-compat@0.19.3` added to `RUNTIME_ALLOW` in `.claude/hooks/dependency-allowlist-check.py`. Rationale: physics for the F5 Atelier configurator's drag-drop part snapping (magnetic anchor sockets + spring-settle joints). `-compat` ships inlined base64 WASM (no bundler/loader config); runs as a headless physics step alongside `three/webgpu` — NOT a second renderer, NOT DOM. Pinned 0.19.x to start fresh on the post-0.18 API (ShapeCastHit rename). See docs/prism/ORRERY-NO7-PROTOTYPE-SPEC.md §1.

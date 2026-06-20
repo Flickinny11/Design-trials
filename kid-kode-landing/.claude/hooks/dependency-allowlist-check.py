@@ -70,6 +70,12 @@ RUNTIME_ALLOW = {
     # middleware (no renderer, fits zustand ^5); immer for patch-based history.
     # Approved per RE-VERIFY-DECISIONS.md (zundo 2.3, immer 11.1.8).
     "zundo", "immer",
+    # F5 ATELIER CONFIGURATOR (ORRERY-NO7-PROTOTYPE-SPEC §1/§3.2) — physics for
+    # drag-drop part snapping (magnetic sockets, spring-settle joints). Pinned
+    # rapier3d-compat 0.19.3: inlined base64 WASM (no bundler/loader config),
+    # runs alongside three/webgpu as a headless physics step — NOT a renderer,
+    # NOT DOM. Rationale logged in notes/mockup-pipeline.md §10 (2026-06-20).
+    "@dimforge/rapier3d-compat",
 }
 BUILD_ALLOW = {
     "@fal-ai/client", "dotenv", "ffmpeg-static", "globby", "maxrects-packer",

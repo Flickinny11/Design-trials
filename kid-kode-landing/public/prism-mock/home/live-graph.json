@@ -404,6 +404,60 @@
         },
         "shadowSoftness": 0.7
       }
+    },
+    {
+      "hubId": "s6-atelier",
+      "title": "The Atelier",
+      "caption": "The workshop — the cinematic flythrough decelerates and the orrery components detach into your hands. Choose every part, finish and complication; build your ORRERY live in one lit volume.",
+      "layout": {
+        "viewportWidth": 1280,
+        "viewportHeight": 720,
+        "contentHeight": 720,
+        "backgroundColor": "#03040a"
+      },
+      "background": [
+        {
+          "id": "atelier-bg-gallery",
+          "attachment": "parallax",
+          "sourceUrl": "/prism-mock/orrery/acquire/backdrop.png",
+          "z": -3,
+          "parallaxDepth": 0.12,
+          "opacity": 0.9
+        }
+      ],
+      "lightingSpec": {
+        "lights": [
+          {
+            "id": "key",
+            "type": "directional",
+            "color": "#f2d9a0",
+            "intensity": 1.25,
+            "position": {
+              "x": -3,
+              "y": 4,
+              "z": 5
+            },
+            "castShadow": true
+          },
+          {
+            "id": "rim",
+            "type": "directional",
+            "color": "#7fa0c4",
+            "intensity": 0.35,
+            "position": {
+              "x": 4,
+              "y": -2,
+              "z": -3
+            }
+          }
+        ],
+        "env": {
+          "preset": "night",
+          "intensity": 0.5
+        },
+        "shadowSoftness": 0.7
+      },
+      "cameraKeyframes": []
     }
   ],
   "nodes": [
@@ -18317,6 +18371,172 @@
       },
       "receivesLighting": true,
       "depthLayer": "content"
+    },
+    {
+      "nodeId": "orr-atelier-headline",
+      "subtype": "headline-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 1.95,
+          "z": 0.3,
+          "width": 8.4,
+          "height": 0.8
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "THE ATELIER",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 1.95,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "THE ATELIER",
+        "fontFamily": "Inter",
+        "fontWeight": 600,
+        "fontSize": 0.5,
+        "letterSpacing": 0.02,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#eef2f8"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.14
+        }
+      },
+      "animationBindings": [
+        {
+          "id": "f5-float-300",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.018,
+            "periodSec": 7
+          },
+          "order": 300
+        }
+      ],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
+    },
+    {
+      "nodeId": "orr-atelier-sub",
+      "subtype": "subhead-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 1.35,
+          "z": 0.3,
+          "width": 8.0,
+          "height": 0.8
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Design your ORRERY — every part, in your hands.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 1.35,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "Design your ORRERY — every part, in your hands.",
+        "fontFamily": "Inter",
+        "fontWeight": 400,
+        "fontSize": 0.17,
+        "letterSpacing": 0.04,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#cfd4e2"
+        },
+        "glow": {
+          "color": "#1ec8ff",
+          "intensity": 0.14
+        }
+      },
+      "animationBindings": [
+        {
+          "id": "f5-float-301",
+          "primitive": "float",
+          "driver": "time",
+          "params": {
+            "amplitude": 0.018,
+            "periodSec": 7
+          },
+          "order": 301
+        }
+      ],
+      "receivesLighting": false,
+      "depthLayer": "overlay"
     }
   ],
   "edges": [
