@@ -9101,9 +9101,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9185,9 +9185,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9271,9 +9271,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "imageSpec": {
         "cornerRadius": 0.12,
@@ -9313,7 +9313,7 @@
       "visual": {
         "transform": {
           "x": -3.85,
-          "y": -1.42,
+          "y": -1.116,
           "z": -0.39,
           "width": 1.7,
           "height": 0.34
@@ -9348,14 +9348,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": -3.85,
-        "y": -1.42,
+        "y": -1.116,
         "z": -0.39,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9397,7 +9397,7 @@
       "visual": {
         "transform": {
           "x": -3.85,
-          "y": -1.42,
+          "y": -1.116,
           "z": -0.31,
           "width": 1.55,
           "height": 0.2
@@ -9432,14 +9432,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": -3.85,
-        "y": -1.42,
+        "y": -1.116,
         "z": -0.31,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "textSpec": {
         "content": "Brass",
@@ -9508,9 +9508,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9592,9 +9592,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9678,9 +9678,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "imageSpec": {
         "cornerRadius": 0.12,
@@ -9720,7 +9720,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": -1.42,
+          "y": -1.815,
           "z": 0.74,
           "width": 1.7,
           "height": 0.34
@@ -9755,14 +9755,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": -1.42,
+        "y": -1.815,
         "z": 0.74,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9804,7 +9804,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": -1.42,
+          "y": -1.815,
           "z": 0.82,
           "width": 1.55,
           "height": 0.2
@@ -9839,14 +9839,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": -1.42,
+        "y": -1.815,
         "z": 0.82,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "textSpec": {
         "content": "Sapphire",
@@ -9915,9 +9915,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -9999,9 +9999,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -10085,9 +10085,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "imageSpec": {
         "cornerRadius": 0.12,
@@ -10127,7 +10127,7 @@
       "visual": {
         "transform": {
           "x": 3.85,
-          "y": -1.42,
+          "y": -1.116,
           "z": -0.39,
           "width": 1.7,
           "height": 0.34
@@ -10162,14 +10162,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.85,
-        "y": -1.42,
+        "y": -1.116,
         "z": -0.39,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -10211,7 +10211,7 @@
       "visual": {
         "transform": {
           "x": 3.85,
-          "y": -1.42,
+          "y": -1.116,
           "z": -0.31,
           "width": 1.55,
           "height": 0.2
@@ -10246,14 +10246,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.85,
-        "y": -1.42,
+        "y": -1.116,
         "z": -0.31,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "textSpec": {
         "content": "Meteorite",
@@ -11481,8 +11481,8 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": -1.45,
-          "y": -2.5,
+          "x": -1.5,
+          "y": -2.35,
           "z": 0.18,
           "width": 3,
           "height": 0.56
@@ -11516,8 +11516,8 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -1.45,
-        "y": -2.5,
+        "x": -1.5,
+        "y": -2.35,
         "z": 0.18,
         "rotationX": 0,
         "rotationY": 0,
@@ -11529,15 +11529,15 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 2.7,
-          "height": 0.56,
-          "depth": 0.14
+          "width": 2.6,
+          "height": 0.5,
+          "depth": 0.16
         }
       },
       "materialSpec": {
-        "baseColor": "#d2a341",
-        "metalness": 0.95,
-        "roughness": 0.22,
+        "baseColor": "#14110a",
+        "metalness": 0.1,
+        "roughness": 0.6,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
@@ -11546,11 +11546,11 @@
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
-        "emissive": "#7a571c",
-        "emissiveIntensity": 0.1,
+        "emissive": "#2a2010",
+        "emissiveIntensity": 0.22,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 1,
+        "envMapIntensity": 0.25,
         "opacity": 1,
         "normalMapUrl": null,
         "displacementMapUrl": null
@@ -11601,8 +11601,8 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": -1.45,
-          "y": -2.5,
+          "x": -1.5,
+          "y": -2.35,
           "z": 0.3,
           "width": 2.9,
           "height": 0.24
@@ -11636,9 +11636,9 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -1.45,
-        "y": -2.5,
-        "z": 0.3,
+        "x": -1.5,
+        "y": -2.35,
+        "z": 0.34,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -11650,12 +11650,12 @@
         "content": "RESERVE",
         "fontFamily": "Inter",
         "fontWeight": 700,
-        "fontSize": 0.155,
+        "fontSize": 0.145,
         "letterSpacing": 0.05,
         "align": "center",
         "fill": {
           "kind": "solid",
-          "color": "#1a1206"
+          "color": "#eccf86"
         },
         "outline": {
           "color": "#f0d692",
@@ -11688,8 +11688,8 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 1.45,
-          "y": -2.5,
+          "x": 1.5,
+          "y": -2.35,
           "z": 0.16,
           "width": 2.7,
           "height": 0.56
@@ -11723,8 +11723,8 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 1.45,
-        "y": -2.5,
+        "x": 1.5,
+        "y": -2.35,
         "z": 0.16,
         "rotationX": 0,
         "rotationY": 0,
@@ -11736,15 +11736,15 @@
       "meshPrimitive": {
         "kind": "cube",
         "params": {
-          "width": 2.7,
-          "height": 0.56,
-          "depth": 0.14
+          "width": 2.6,
+          "height": 0.5,
+          "depth": 0.16
         }
       },
       "materialSpec": {
-        "baseColor": "#1c2029",
-        "metalness": 0.8,
-        "roughness": 0.34,
+        "baseColor": "#161a22",
+        "metalness": 0.1,
+        "roughness": 0.6,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
@@ -11753,11 +11753,11 @@
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
-        "emissive": "#1a1306",
-        "emissiveIntensity": 0.06,
+        "emissive": "#1c2029",
+        "emissiveIntensity": 0.18,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 1.1,
+        "envMapIntensity": 0.25,
         "opacity": 1,
         "normalMapUrl": null,
         "displacementMapUrl": null
@@ -11794,8 +11794,8 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 1.45,
-          "y": -2.77,
+          "x": 1.5,
+          "y": -2.62,
           "z": 0.2,
           "width": 2.7,
           "height": 0.028
@@ -11829,8 +11829,8 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 1.45,
-        "y": -2.77,
+        "x": 1.5,
+        "y": -2.62,
         "z": 0.2,
         "rotationX": 0,
         "rotationY": 0,
@@ -11878,8 +11878,8 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 1.45,
-          "y": -2.5,
+          "x": 1.5,
+          "y": -2.35,
           "z": 0.28,
           "width": 2.6,
           "height": 0.24
@@ -11913,9 +11913,9 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 1.45,
-        "y": -2.5,
-        "z": 0.28,
+        "x": 1.5,
+        "y": -2.35,
+        "z": 0.34,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -11927,12 +11927,12 @@
         "content": "ENQUIRE",
         "fontFamily": "Inter",
         "fontWeight": 600,
-        "fontSize": 0.125,
+        "fontSize": 0.13,
         "letterSpacing": 0.08,
         "align": "center",
         "fill": {
           "kind": "solid",
-          "color": "#d8cdb0"
+          "color": "#cfd6e2"
         }
       },
       "receivesLighting": false,
@@ -16954,7 +16954,7 @@
       "visual": {
         "transform": {
           "x": -3.85,
-          "y": 1.085,
+          "y": 0.888,
           "z": -0.37,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -16989,14 +16989,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": -3.85,
-        "y": 1.085,
+        "y": 0.888,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17038,7 +17038,7 @@
       "visual": {
         "transform": {
           "x": -3.85,
-          "y": -0.885,
+          "y": -0.688,
           "z": -0.37,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -17073,14 +17073,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": -3.85,
-        "y": -0.885,
+        "y": -0.688,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17121,7 +17121,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": -5.025,
+          "x": -4.79,
           "y": 0.1,
           "z": -0.37,
           "width": 0.3900000000000001,
@@ -17156,15 +17156,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -5.025,
+        "x": -4.79,
         "y": 0.1,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17205,7 +17205,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": -2.675,
+          "x": -2.91,
           "y": 0.1,
           "z": -0.37,
           "width": 0.3900000000000001,
@@ -17240,15 +17240,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -2.675,
+        "x": -2.91,
         "y": 0.1,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17290,7 +17290,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 1.085,
+          "y": 1.341,
           "z": 0.76,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -17325,14 +17325,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 1.085,
+        "y": 1.341,
         "z": 0.76,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17374,7 +17374,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": -0.885,
+          "y": -1.141,
           "z": 0.76,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -17409,14 +17409,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": -0.885,
+        "y": -1.141,
         "z": 0.76,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17457,7 +17457,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": -1.175,
+          "x": -1.481,
           "y": 0.1,
           "z": 0.76,
           "width": 0.3900000000000001,
@@ -17492,15 +17492,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -1.175,
+        "x": -1.481,
         "y": 0.1,
         "z": 0.76,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17541,7 +17541,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 1.175,
+          "x": 1.481,
           "y": 0.1,
           "z": 0.76,
           "width": 0.3900000000000001,
@@ -17576,15 +17576,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 1.175,
+        "x": 1.481,
         "y": 0.1,
         "z": 0.76,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.26,
+        "scaleY": 1.26,
+        "scaleZ": 1.26
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17626,7 +17626,7 @@
       "visual": {
         "transform": {
           "x": 3.85,
-          "y": 1.085,
+          "y": 0.888,
           "z": -0.37,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -17661,14 +17661,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.85,
-        "y": 1.085,
+        "y": 0.888,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17710,7 +17710,7 @@
       "visual": {
         "transform": {
           "x": 3.85,
-          "y": -0.885,
+          "y": -0.688,
           "z": -0.37,
           "width": 2.74,
           "height": 0.3699999999999999
@@ -17745,14 +17745,14 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.85,
-        "y": -0.885,
+        "y": -0.688,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17793,7 +17793,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 2.675,
+          "x": 2.91,
           "y": 0.1,
           "z": -0.37,
           "width": 0.3900000000000001,
@@ -17828,15 +17828,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.675,
+        "x": 2.91,
         "y": 0.1,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -17877,7 +17877,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 5.025,
+          "x": 4.79,
           "y": 0.1,
           "z": -0.37,
           "width": 0.3900000000000001,
@@ -17912,15 +17912,15 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 5.025,
+        "x": 4.79,
         "y": 0.1,
         "z": -0.37,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.8,
+        "scaleY": 0.8,
+        "scaleZ": 0.8
       },
       "meshPrimitive": {
         "kind": "cube",
@@ -18290,7 +18290,7 @@
       "visual": {
         "transform": {
           "x": 3.25,
-          "y": 0.5,
+          "y": 0.55,
           "z": 0.45,
           "width": 6,
           "height": 0.42
@@ -18325,7 +18325,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.25,
-        "y": 0.5,
+        "y": 0.55,
         "z": 0.16,
         "rotationX": 0,
         "rotationY": 0,
@@ -18338,7 +18338,7 @@
         "kind": "cube",
         "params": {
           "width": 3,
-          "height": 1.15,
+          "height": 1.05,
           "depth": 0.03
         }
       },
@@ -18373,8 +18373,8 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": -1.45,
-          "y": -2.2,
+          "x": -1.5,
+          "y": -2.62,
           "z": 0.2,
           "width": 3,
           "height": 0.028
@@ -18408,8 +18408,8 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": -1.45,
-        "y": -2.2,
+        "x": -1.5,
+        "y": -2.62,
         "z": 0.2,
         "rotationX": 0,
         "rotationY": 0,
@@ -18427,7 +18427,7 @@
         }
       },
       "materialSpec": {
-        "baseColor": "#e7c878",
+        "baseColor": "#caa24a",
         "metalness": 0.95,
         "roughness": 0.22,
         "transmission": 0,
@@ -18438,8 +18438,8 @@
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
-        "emissive": "#6a4d18",
-        "emissiveIntensity": 0.4,
+        "emissive": "#caa24a",
+        "emissiveIntensity": 0.5,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.35,
@@ -25870,7 +25870,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": -2.18,
+          "y": -2.95,
           "z": 0.32,
           "width": 6,
           "height": 0.2
@@ -25905,7 +25905,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": -2.18,
+        "y": -2.95,
         "z": 0.32,
         "rotationX": 0,
         "rotationY": 0,
@@ -25918,7 +25918,7 @@
         "content": "Each ORRERY No.7 is individually numbered and accompanied by a certificate of authenticity.",
         "fontFamily": "Inter",
         "fontWeight": 400,
-        "fontSize": 0.078,
+        "fontSize": 0.072,
         "letterSpacing": 0,
         "align": "center",
         "fill": {
