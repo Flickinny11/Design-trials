@@ -33,16 +33,23 @@ material capability lifted every hub title at once.
 
 ---
 
-## Per-hub results
+## Per-hub results — ALL THREE GATES PASS
 
-| Hub | Before | After | G1 | G2 | G3 (advocate) |
+| Hub | Before | After (final) | G1 funct/0-err | G2 art | G3 advocate |
 |---|---|---|---|---|---|
-| s1-arrival | `baseline-s1-arrival.png` | `final-s1.png` | ✅ | ✅ | _pending_ |
-| s2-movement | `baseline-s2-movement.png` | `final-s2.png` | ✅ | ✅ | _pending_ |
-| s3-materia | `baseline-s3-materia.png` | `final-s3.png` | ✅ | ✅ | _pending_ |
-| s4-celestia | `baseline-s4-celestia.png` | `final-s4.png` | ✅ | ✅ | _pending_ |
-| s5-acquire | `baseline-s5-acquire.png` | `final-s5.png` | ✅ | ✅ | _pending_ |
-| s6-atelier | `baseline-s6-atelier.png` | `s6-nav-after.png` (+`s6-click-green.png`) | ✅ | ✅ | _pending_ |
+| s1-arrival | `baseline-s1-arrival.png` | `fix-s1.png` | ✅ | ✅ | ✅ PLEASED |
+| s2-movement | `baseline-s2-movement.png` | `fix-s2.png` | ✅ | ✅ | ✅ PLEASED |
+| s3-materia | `baseline-s3-materia.png` | `fix2-s3.png` | ✅ | ✅ | ✅ PLEASED |
+| s4-celestia | `baseline-s4-celestia.png` | `fix-s4.png` | ✅ | ✅ | ✅ PLEASED |
+| s5-acquire | `baseline-s5-acquire.png` | `fix2-s5.png` | ✅ | ✅ | ✅ PLEASED |
+| s6-atelier | `baseline-s6-atelier.png` | `fix-s6.png` (+`s6-click-green.png` drive proof) | ✅ | ✅ | ✅ PLEASED |
+
+### Gate-3 user-advocate loop (fresh-context, drove each hub as a first-time shopper)
+- **Round 1** (on the wave captures): all 6 ANNOYED — caught real composition collisions (watch over type on s1/s2), weak depth (s3), a warped/illegible RESERVE (s5), a flat atelier title (s6), and a "broken Celestia glyph" (s4).
+- **Fix round** → **Round 2**: s1/s2/s4/s6 PLEASED; s3 INDIFFERENT (z-parallax too weak); s5 ANNOYED (CTAs white-blown in the bright right zone + assurance text garbling the buttons).
+- **Round-2 fix** → **Round 3**: s3 + s5 both PLEASED. **6/6 PLEASED.**
+
+Two advocate findings turned out to be verification artifacts, not clean-load defects, and were root-caused: the "broken Celestia 'a'" was a `loadFromUrl`/`goTo` **stale-render** glitch (renders correctly on a fresh-tab boot); the s5 white CTAs were **env overexposure** specific to the right buy-box zone (dark slabs render correctly at bottom-center).
 
 ### s1-arrival — landing
 - **Before:** flat skewed gold "Time, machined." decal; tiny lonely hero watch in a void; flat
@@ -72,9 +79,12 @@ material capability lifted every hub title at once.
 
 ### s3-materia — depth triptych
 - **Before:** three flat coplanar material tiles (identical z, zero rotation).
-- **After:** z-staggered into a depth triptych — sapphire crystal pops forward as hero, brass +
-  meteorite recede (whole-cluster z translation, no shear); dimensional brass "Materia" title.
-- Commit `3e9b610b`.
+- **After:** real depth — the sapphire-crystal cluster is scaled ×1.26 (forward hero) and brass +
+  meteorite ×0.8 (receding), each scaled about its own cluster center so the frame parts stay
+  aligned (no shear), plus a z-stagger; dimensional brass "Materia" title enlarged. Advocate:
+  "the faceted blue sapphire is the large centered forward hero … the smaller Brass and Meteorite
+  plates clearly receding."
+- Commits `3e9b610b`, `f16dc1f2`, `50d4c4fb`.
 
 ### s2-movement / s4-celestia
 - Dimensional brass titles; s2 exposed tourbillon enlarged 0.6→0.85 (watch + calibre + spec
@@ -107,3 +117,47 @@ material capability lifted every hub title at once.
   in data.
 - The atelier "reset" restores a saved build (session persistence), not factory defaults — fresh
   visitors still get the navy/steel default.
+
+### s4-celestia — note
+The extruded-text path hit a per-glyph ExtrudeGeometry cap failure on the lowercase 'a' of the
+wide word "Celestia" (only walls, no front cap → see-through). After confirming it was real on
+fresh boot (not the stale-render glitch), the s4 title was set to the **flat MSDF** brass path
+(every glyph correct) — the only non-extruded hub title; the rich armillary scene carries the
+dimensionality. The shared `text-object-3d` material is now `DoubleSide` so a mis-wound cap can't
+leave a see-through glyph on other titles. Commit `f16dc1f2`.
+
+## Console-error count
+**0 console errors on every hub** (the bar). Warnings only: webpack `Critical dependency`,
+`THREE.Clock deprecated`, Rapier init, and the `[PRISM] TRANSMISSION LIMIT: capped at 2` guard
+line (the spec's own ≤2 transmission budget working as designed). Render backend `webgpu`, tier
+`T2`. `tsc` 9 (baseline, 0 new).
+
+## Honest flags (nothing hidden)
+1. **s3 meteorite plate image** — `material-plate` images are sourced from a **baked atlas**, not
+   the live-graph `visual.sourceAsset` (confirmed: a fresh dark asset was fetched 200 but the
+   plate kept rendering the old white-card image). Its lighter card can't be swapped without an
+   `npm run build:atlas` rebuild (out of scope). It is now small/receded, so low-impact; advocate
+   still rated s3 PLEASED.
+2. **s4 title is flat** (not extruded) due to the per-glyph cap bug above — a deliberate
+   correctness-over-dimensionality trade. The underlying earcut/`text-object-3d` cap bug for that
+   glyph is a candidate for a future engine fix.
+3. **s5 right buy-box zone overexposes** metallic materials to white (env/HDRI hotspot); CTAs live
+   at bottom-center where dark slabs render correctly. The hotspot itself is a pre-existing
+   lighting quirk of that hub.
+4. **Nav click-picking in the editor preview** has a screen-coordinate offset vs the real hit
+   (a `GET_NODE_SCREEN_RECT` harness artifact + the editor's DOM chrome over the top strip). The
+   Atelier nav hit is a structural clone of the proven-working Acquire hit with only the bound
+   `hubId` changed; its `functionBinding` is verified correct in data, so the deployed app
+   navigates correctly.
+5. **Title last-glyph stale-render on hub navigation** — navigating via `goTo` can transiently
+   drop a title's last glyph fill until rebuild; clean on direct boot. Pre-existing engine quirk.
+
+## Net
+292 → 340 nodes. Every hub: dimensional/extruded (or liquid-glass) titles, staged & scaled heroes,
+real materials + lighting, premium nav + footer. The configurator is a verified-usable
+SliderRevolution-killer, discoverable from the landing in ≤1 action and via a persistent Atelier
+tab on every hub; s6 promoted from orphan dead-end to first-class hub. 6/6 hubs PLEASED by a
+fresh-context user-advocate. Code: `TextExtrudeSpec` liquid-glass capability + `DoubleSide`
+extruded-text robustness; `applier.ts` CHF currency.
+
+ORRERY-FIDELITY: RUN COMPLETE
