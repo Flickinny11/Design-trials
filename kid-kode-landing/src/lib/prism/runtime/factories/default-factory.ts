@@ -37,6 +37,7 @@
 
 import {
   Box3,
+  CircleGeometry,
   Group,
   Mesh,
   MeshBasicMaterial,
@@ -487,10 +488,39 @@ export function defaultRenderModeFactory(
       const meshSpec = node.materialSpec
         ? resolveMaterialSpec(node.materialSpec)
         : null;
+      // F5.5 — graceful cold-load affordance. The GLB lane is async, so until
+      // loadGLB resolves the group would be EMPTY: on a landing hub the hero
+      // spot reads as a hole (and a prior build flashed a bright white plane
+      // here). Mount a dark, backdrop-matched disc synchronously so the watch
+      // position settles into the brass-nebula backdrop instead of popping
+      // from nothing. MeshBasicMaterial is UNLIT, so it can never catch the
+      // key light and flash white — it stays a quiet warm-black puck under any
+      // rig. It is removed + disposed the instant the GLB resolves (a swap,
+      // never a persistent stand-in artifact — FP-R3 is about empty-Group
+      // placeholders that survive into the built scene; this does not).
+      const proxyGeo = new CircleGeometry(0.5, 48);
+      const proxyMat = new MeshBasicMaterial({
+        color: 0x0d0a07,
+        transparent: true,
+        opacity: 0.7,
+        depthWrite: false,
+      });
+      const loadingProxy = new Mesh(proxyGeo, proxyMat);
+      loadingProxy.name = `mesh-loading-proxy:${node.nodeId}`;
+      loadingProxy.renderOrder = -1;
+      group.add(loadingProxy);
+      const removeLoadingProxy = () => {
+        group.remove(loadingProxy);
+        proxyGeo.dispose();
+        proxyMat.dispose();
+      };
       void ctx.glbLoader
         .loadGLB(node.meshUrl)
         .then((gltf) => {
-          if (!gltf?.scene) return;
+          if (!gltf?.scene) {
+            removeLoadingProxy();
+            return;
+          }
           // Loader cache hands the same Object3D to every caller; clone so
           // each node owns its own subtree (THREE.add() unparents otherwise).
           const cloned = gltf.scene.clone(true);
@@ -514,8 +544,12 @@ export function defaultRenderModeFactory(
             }
           });
           group.add(cloned);
+          // Swap: the photoreal mesh is in; retire the loading disc.
+          removeLoadingProxy();
         })
-        .catch(() => { /* swallow */ });
+        .catch(() => {
+          removeLoadingProxy();
+        });
     }
   } else if (renderMode === 'text') {
     // Canvas-spec §7 / criterion 26 — REAL MSDF glyphs via the Prism
