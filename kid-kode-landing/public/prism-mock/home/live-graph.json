@@ -18472,12 +18472,31 @@
         "letterSpacing": 0.02,
         "align": "center",
         "fill": {
-          "kind": "solid",
-          "color": "#eef2f8"
+          "kind": "texture",
+          "url": "/prism-mock/orrery/materia/brass-macro.png"
         },
         "glow": {
-          "color": "#1ec8ff",
-          "intensity": 0.14
+          "color": "#ffe6a8",
+          "intensity": 0.16
+        },
+        "extrude": {
+          "enabled": true,
+          "depth": 0.14,
+          "bevelEnabled": true,
+          "bevelThickness": 0.016,
+          "bevelSize": 0.014,
+          "bevelSegments": 3,
+          "curveSegments": 12,
+          "metalness": 0.85,
+          "roughness": 0.3,
+          "sideFill": {
+            "kind": "solid",
+            "color": "#6b4f1d"
+          },
+          "faceFill": {
+            "kind": "texture",
+            "url": "/prism-mock/orrery/materia/brass-macro.png"
+          }
         }
       },
       "animationBindings": [
@@ -18492,7 +18511,7 @@
           "order": 300
         }
       ],
-      "receivesLighting": false,
+      "receivesLighting": true,
       "depthLayer": "overlay"
     },
     {
@@ -24949,7 +24968,7 @@
         "scaleZ": 1
       },
       "textSpec": {
-        "content": "$38,000",
+        "content": "CHF 38,000",
         "fontFamily": "Inter",
         "fontWeight": 700,
         "fontSize": 0.3,

@@ -104,7 +104,7 @@ function setLiveText(root: Object3D, nodeId: string, content: string): void {
 /** Live-update the price + summary readouts from the current build. */
 export function applyConfiguratorText(root: Object3D, build: AtelierBuild): void {
   const price = totalPrice(build);
-  setLiveText(root, PRICE_NODE_ID, `$${price.toLocaleString('en-US')}`);
+  setLiveText(root, PRICE_NODE_ID, `CHF ${price.toLocaleString('en-US')}`);
   const pick = (l: Parameters<typeof variantOf>[0]) => variantOf(l, build[l])?.label ?? '';
   const summary = [pick('movement'), pick('case'), pick('dial')].filter(Boolean).join('   ·   ');
   setLiveText(root, SUMMARY_NODE_ID, summary);
