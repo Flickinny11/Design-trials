@@ -8169,8 +8169,27 @@
           "width": 0.22
         },
         "glow": {
-          "color": "#d8a73f",
+          "color": "#ffe6a8",
           "intensity": 0.16
+        },
+        "extrude": {
+          "enabled": true,
+          "depth": 0.14,
+          "bevelEnabled": true,
+          "bevelThickness": 0.016,
+          "bevelSize": 0.014,
+          "bevelSegments": 3,
+          "curveSegments": 12,
+          "metalness": 0.85,
+          "roughness": 0.3,
+          "sideFill": {
+            "kind": "solid",
+            "color": "#6b4f1d"
+          },
+          "faceFill": {
+            "kind": "texture",
+            "url": "/prism-mock/orrery/materia/brass-macro.png"
+          }
         }
       },
       "animationBindings": [
@@ -8185,7 +8204,7 @@
           "order": 232
         }
       ],
-      "receivesLighting": false,
+      "receivesLighting": true,
       "depthLayer": "overlay"
     },
     {
@@ -8415,9 +8434,9 @@
         "rotationX": 0.3,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 0.6,
-        "scaleY": 0.6,
-        "scaleZ": 0.6
+        "scaleX": 0.85,
+        "scaleY": 0.85,
+        "scaleZ": 0.85
       },
       "animationBindings": [
         {
@@ -10487,8 +10506,27 @@
           "width": 0.22
         },
         "glow": {
-          "color": "#d8a73f",
+          "color": "#ffe6a8",
           "intensity": 0.16
+        },
+        "extrude": {
+          "enabled": true,
+          "depth": 0.14,
+          "bevelEnabled": true,
+          "bevelThickness": 0.016,
+          "bevelSize": 0.014,
+          "bevelSegments": 3,
+          "curveSegments": 12,
+          "metalness": 0.85,
+          "roughness": 0.3,
+          "sideFill": {
+            "kind": "solid",
+            "color": "#6b4f1d"
+          },
+          "faceFill": {
+            "kind": "texture",
+            "url": "/prism-mock/orrery/materia/brass-macro.png"
+          }
         }
       },
       "animationBindings": [
@@ -10503,7 +10541,7 @@
           "order": 254
         }
       ],
-      "receivesLighting": false,
+      "receivesLighting": true,
       "depthLayer": "overlay"
     },
     {
@@ -10840,9 +10878,9 @@
         "rotationX": 0.4,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 1.35,
+        "scaleY": 1.35,
+        "scaleZ": 1.35
       },
       "animationBindings": [
         {
@@ -18062,7 +18100,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 0.78,
+        "y": -1.5,
         "z": 0.42,
         "rotationX": 0,
         "rotationY": 0,
@@ -18150,7 +18188,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 0.78,
+        "y": -1.5,
         "z": 0.54,
         "rotationX": 0,
         "rotationY": 0,
