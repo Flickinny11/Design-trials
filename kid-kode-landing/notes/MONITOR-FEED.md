@@ -193,3 +193,5 @@ Will self-report phase events below.
 [16:34] FIDELITY-SENTINEL: ARMED: ORRERY-FIDELITY sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch FIDELITY-STOP
 [16:53] FIDELITY-SENTINEL: - FIDELITY s5-acquire (16:48): restructured lonely-pedestal stub into a real product-detail acquire page — dimensional e
 [17:13] FIDELITY-SENTINEL: - FIDELITY s2-movement + s4-celestia (17:08): dimensional extruded-brass titles (kill flat-skew). s2: enlarged exposed-c
+[17:33] FIDELITY-SENTINEL: - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs
+[17:53] FIDELITY-SENTINEL: - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs

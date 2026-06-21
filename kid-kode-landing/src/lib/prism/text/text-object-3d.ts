@@ -438,6 +438,11 @@ function buildUnitMaterial(
   mat.metalness = ex.metalness ?? EXTRUDE_DEFAULT.metalness;
   mat.roughness = ex.roughness ?? EXTRUDE_DEFAULT.roughness;
   mat.envMapIntensity = 1.1;
+  // Render both faces: some glyph outlines (e.g. counters in 'a'/'e') can
+  // triangulate to a mis-wound front cap, which a single-sided material culls —
+  // leaving a see-through glyph. DoubleSide makes the back of that cap render so
+  // the letter stays solid. Head-on extruded type never shows true backfaces.
+  mat.side = DoubleSide;
   mat.color.set(baseHex);
   // Diagnostics (verification reads these to prove the 3D path compiled).
   mat.userData.text3dFaceFill = faceFill?.kind ?? 'solid';

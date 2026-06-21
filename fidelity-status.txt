@@ -1,1 +1,1 @@
-[17:13] - FIDELITY s2-movement + s4-celestia (17:08): dimensional extruded-brass titles (kill flat-skew). s2: enlarged exposed-c
+[17:53] - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs
