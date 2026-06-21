@@ -1,0 +1,962 @@
+[
+  {
+    "viewport": "desktop",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 1380.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.52001953125,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 50.53,
+          "max": 246.18,
+          "std": 44.51
+        },
+        "bgLuma": {
+          "mean": 8.54,
+          "max": 11.88,
+          "std": 1.84
+        },
+        "glowAboveBg": 41.99,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 417,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 720,
+          "y": 450,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 720,
+          "y": 33,
+          "traveling": true,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": {
+            "x": 530,
+            "y": 70,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 65.8,
+          "artifactMax": 235,
+          "purpleFrac": 0,
+          "composition": [
+            "crystal-facet glass",
+            "lit-bokeh refraction",
+            "glass frame",
+            "kinetic-text entrance"
+          ],
+          "artifactPrimitive": "crystal-facet",
+          "c4": {
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 171.1,
+              "range": 166.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 28.93,
+            "outsideLuma": 3.34,
+            "contrast": 25.59,
+            "smooth": true
+          }
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": {
+            "x": 530,
+            "y": 250,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 65.02,
+          "artifactMax": 209.02,
+          "purpleFrac": 0,
+          "composition": [
+            "ice-glass refraction",
+            "lit-bokeh",
+            "scene spotlight dim"
+          ],
+          "artifactPrimitive": "ice-glass",
+          "c6": {
+            "insideLuma": 91.54,
+            "outsideLuma": 5.16,
+            "delta": 86.38,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 18,
+            "y": 82,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 76.23,
+          "artifactMax": 234.87,
+          "purpleFrac": 0,
+          "composition": [
+            "gold-glint shimmer",
+            "glass card",
+            "glitch-in reveal"
+          ],
+          "artifactPrimitive": "gold-glint",
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 16.3,
+              "hi": 91.4,
+              "range": 75.1,
+              "transitionPx": 47
+            },
+            "insideLuma": 30.48,
+            "outsideLuma": 24.54,
+            "contrast": 5.94,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 530,
+            "y": 250,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 101.1,
+          "artifactMax": 245,
+          "purpleFrac": 0,
+          "composition": [
+            "frosted-glass panel",
+            "soft refraction",
+            "kinetic-text entrance"
+          ],
+          "artifactPrimitive": "frosted-glass"
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 1034.78125,
+            "y": 62,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 129.1,
+          "artifactMax": 240.05,
+          "purpleFrac": 0,
+          "composition": [
+            "glitch-displace",
+            "glass frame",
+            "glitch-in reveal"
+          ],
+          "artifactPrimitive": "glitch-displace",
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 9.1,
+              "hi": 172,
+              "range": 162.8,
+              "transitionPx": 71
+            },
+            "insideLuma": 45.48,
+            "outsideLuma": 12.26,
+            "contrast": 33.22,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 530,
+            "y": 250,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "artifactLuma": 149.86,
+          "artifactMax": 205.21,
+          "purpleFrac": 0,
+          "composition": [
+            "split-stagger kinetic-text",
+            "glass frame",
+            "scene spotlight dim"
+          ],
+          "artifactPrimitive": "split-stagger",
+          "c6": {
+            "insideLuma": 159.96,
+            "outsideLuma": 6.82,
+            "delta": 153.14,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 1042,
+            "y": 124,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 89.79,
+          "artifactMax": 231.3,
+          "purpleFrac": 0,
+          "composition": [
+            "crystal-ball glass",
+            "lit-bokeh refraction",
+            "glass frame"
+          ],
+          "artifactPrimitive": "crystal-ball",
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 12.6,
+              "hi": 210,
+              "range": 197.4,
+              "transitionPx": 41
+            },
+            "insideLuma": 88.65,
+            "outsideLuma": 5.21,
+            "contrast": 83.44,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "welcome",
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 171.1,
+              "range": 166.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 28.93,
+            "outsideLuma": 3.34,
+            "contrast": 25.59,
+            "smooth": true
+          },
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 16.3,
+              "hi": 91.4,
+              "range": 75.1,
+              "transitionPx": 47
+            },
+            "insideLuma": 30.48,
+            "outsideLuma": 24.54,
+            "contrast": 5.94,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 9.1,
+              "hi": 172,
+              "range": 162.8,
+              "transitionPx": 71
+            },
+            "insideLuma": 45.48,
+            "outsideLuma": 12.26,
+            "contrast": 33.22,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 12.6,
+              "hi": 210,
+              "range": 197.4,
+              "transitionPx": 41
+            },
+            "insideLuma": 88.65,
+            "outsideLuma": 5.21,
+            "contrast": 83.44,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "galaxy",
+            "insideLuma": 91.54,
+            "outsideLuma": 5.16,
+            "delta": 86.38,
+            "dimsScene": true
+          },
+          {
+            "step": "preview",
+            "insideLuma": 159.96,
+            "outsideLuma": 6.82,
+            "delta": 153.14,
+            "dimsScene": true
+          }
+        ],
+        "pass": true
+      },
+      "C8": {
+        "artifacts": [
+          {
+            "step": "welcome",
+            "primitive": "crystal-facet",
+            "luma": 65.8,
+            "max": 235,
+            "purpleFrac": 0,
+            "composition": [
+              "crystal-facet glass",
+              "lit-bokeh refraction",
+              "glass frame",
+              "kinetic-text entrance"
+            ]
+          },
+          {
+            "step": "galaxy",
+            "primitive": "ice-glass",
+            "luma": 65.02,
+            "max": 209.02,
+            "purpleFrac": 0,
+            "composition": [
+              "ice-glass refraction",
+              "lit-bokeh",
+              "scene spotlight dim"
+            ]
+          },
+          {
+            "step": "canvas",
+            "primitive": "gold-glint",
+            "luma": 76.23,
+            "max": 234.87,
+            "purpleFrac": 0,
+            "composition": [
+              "gold-glint shimmer",
+              "glass card",
+              "glitch-in reveal"
+            ]
+          },
+          {
+            "step": "inspector",
+            "primitive": "frosted-glass",
+            "luma": 101.1,
+            "max": 245,
+            "purpleFrac": 0,
+            "composition": [
+              "frosted-glass panel",
+              "soft refraction",
+              "kinetic-text entrance"
+            ]
+          },
+          {
+            "step": "build",
+            "primitive": "glitch-displace",
+            "luma": 129.1,
+            "max": 240.05,
+            "purpleFrac": 0,
+            "composition": [
+              "glitch-displace",
+              "glass frame",
+              "glitch-in reveal"
+            ]
+          },
+          {
+            "step": "preview",
+            "primitive": "split-stagger",
+            "luma": 149.86,
+            "max": 205.21,
+            "purpleFrac": 0,
+            "composition": [
+              "split-stagger kinetic-text",
+              "glass frame",
+              "scene spotlight dim"
+            ]
+          },
+          {
+            "step": "relaunch",
+            "primitive": "crystal-ball",
+            "luma": 89.79,
+            "max": 231.3,
+            "purpleFrac": 0,
+            "composition": [
+              "crystal-ball glass",
+              "lit-bokeh refraction",
+              "glass frame"
+            ]
+          }
+        ],
+        "allRenderBright": true,
+        "pass": true
+      },
+      "INV8_noPurple": {
+        "maxPurpleFrac": 0,
+        "pass": true
+      },
+      "C7": {
+        "baselineGalaxyIdle": 2,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 2,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  },
+  {
+    "viewport": "tablet",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 964.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.52001953125,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 82.92,
+          "max": 234.45,
+          "std": 56.13
+        },
+        "bgLuma": {
+          "mean": 11.66,
+          "max": 15.24,
+          "std": 2.18
+        },
+        "glowAboveBg": 71.26,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 352,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 512,
+          "y": 384,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 512,
+          "y": 32,
+          "traveling": true,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": {
+            "x": 322,
+            "y": 70,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 56.1,
+          "artifactMax": 197,
+          "purpleFrac": 0,
+          "composition": [
+            "crystal-facet glass",
+            "lit-bokeh refraction",
+            "glass frame",
+            "kinetic-text entrance"
+          ],
+          "artifactPrimitive": "crystal-facet",
+          "c4": {
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 171.1,
+              "range": 166.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 34.51,
+            "outsideLuma": 7.22,
+            "contrast": 27.29,
+            "smooth": true
+          }
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": {
+            "x": 322,
+            "y": 184,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 61.84,
+          "artifactMax": 207.02,
+          "purpleFrac": 0,
+          "composition": [
+            "ice-glass refraction",
+            "lit-bokeh",
+            "scene spotlight dim"
+          ],
+          "artifactPrimitive": "ice-glass",
+          "c6": {
+            "insideLuma": 87,
+            "outsideLuma": 5.95,
+            "delta": 81.05,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 356,
+            "y": 66,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 93.6,
+          "artifactMax": 234.08,
+          "purpleFrac": 0,
+          "composition": [
+            "gold-glint shimmer",
+            "glass card",
+            "glitch-in reveal"
+          ],
+          "artifactPrimitive": "gold-glint",
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 1.2,
+              "hi": 173.1,
+              "range": 171.9,
+              "transitionPx": 65
+            },
+            "insideLuma": 17.53,
+            "outsideLuma": 34.66,
+            "contrast": -17.13,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 322,
+            "y": 184,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 112.52,
+          "artifactMax": 241.07,
+          "purpleFrac": 0,
+          "composition": [
+            "frosted-glass panel",
+            "soft refraction",
+            "kinetic-text entrance"
+          ],
+          "artifactPrimitive": "frosted-glass"
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 618.78125,
+            "y": 62,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 121.76,
+          "artifactMax": 239.05,
+          "purpleFrac": 0,
+          "composition": [
+            "glitch-displace",
+            "glass frame",
+            "glitch-in reveal"
+          ],
+          "artifactPrimitive": "glitch-displace",
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 9.1,
+              "hi": 171.7,
+              "range": 162.6,
+              "transitionPx": 71
+            },
+            "insideLuma": 46.3,
+            "outsideLuma": 12.13,
+            "contrast": 34.17,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 322,
+            "y": 184,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "artifactLuma": 149.43,
+          "artifactMax": 204.35,
+          "purpleFrac": 0,
+          "composition": [
+            "split-stagger kinetic-text",
+            "glass frame",
+            "scene spotlight dim"
+          ],
+          "artifactPrimitive": "split-stagger",
+          "c6": {
+            "insideLuma": 159.89,
+            "outsideLuma": 5.88,
+            "delta": 154.01,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 626,
+            "y": 124,
+            "w": 380,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "artifactLuma": 86.64,
+          "artifactMax": 233.51,
+          "purpleFrac": 0,
+          "composition": [
+            "crystal-ball glass",
+            "lit-bokeh refraction",
+            "glass frame"
+          ],
+          "artifactPrimitive": "crystal-ball",
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 15.9,
+              "hi": 210.2,
+              "range": 194.3,
+              "transitionPx": 41
+            },
+            "insideLuma": 97.82,
+            "outsideLuma": 23.33,
+            "contrast": 74.49,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "welcome",
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 171.1,
+              "range": 166.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 34.51,
+            "outsideLuma": 7.22,
+            "contrast": 27.29,
+            "smooth": true
+          },
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 1.2,
+              "hi": 173.1,
+              "range": 171.9,
+              "transitionPx": 65
+            },
+            "insideLuma": 17.53,
+            "outsideLuma": 34.66,
+            "contrast": -17.13,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 9.1,
+              "hi": 171.7,
+              "range": 162.6,
+              "transitionPx": 71
+            },
+            "insideLuma": 46.3,
+            "outsideLuma": 12.13,
+            "contrast": 34.17,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 15.9,
+              "hi": 210.2,
+              "range": 194.3,
+              "transitionPx": 41
+            },
+            "insideLuma": 97.82,
+            "outsideLuma": 23.33,
+            "contrast": 74.49,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "galaxy",
+            "insideLuma": 87,
+            "outsideLuma": 5.95,
+            "delta": 81.05,
+            "dimsScene": true
+          },
+          {
+            "step": "preview",
+            "insideLuma": 159.89,
+            "outsideLuma": 5.88,
+            "delta": 154.01,
+            "dimsScene": true
+          }
+        ],
+        "pass": true
+      },
+      "C8": {
+        "artifacts": [
+          {
+            "step": "welcome",
+            "primitive": "crystal-facet",
+            "luma": 56.1,
+            "max": 197,
+            "purpleFrac": 0,
+            "composition": [
+              "crystal-facet glass",
+              "lit-bokeh refraction",
+              "glass frame",
+              "kinetic-text entrance"
+            ]
+          },
+          {
+            "step": "galaxy",
+            "primitive": "ice-glass",
+            "luma": 61.84,
+            "max": 207.02,
+            "purpleFrac": 0,
+            "composition": [
+              "ice-glass refraction",
+              "lit-bokeh",
+              "scene spotlight dim"
+            ]
+          },
+          {
+            "step": "canvas",
+            "primitive": "gold-glint",
+            "luma": 93.6,
+            "max": 234.08,
+            "purpleFrac": 0,
+            "composition": [
+              "gold-glint shimmer",
+              "glass card",
+              "glitch-in reveal"
+            ]
+          },
+          {
+            "step": "inspector",
+            "primitive": "frosted-glass",
+            "luma": 112.52,
+            "max": 241.07,
+            "purpleFrac": 0,
+            "composition": [
+              "frosted-glass panel",
+              "soft refraction",
+              "kinetic-text entrance"
+            ]
+          },
+          {
+            "step": "build",
+            "primitive": "glitch-displace",
+            "luma": 121.76,
+            "max": 239.05,
+            "purpleFrac": 0,
+            "composition": [
+              "glitch-displace",
+              "glass frame",
+              "glitch-in reveal"
+            ]
+          },
+          {
+            "step": "preview",
+            "primitive": "split-stagger",
+            "luma": 149.43,
+            "max": 204.35,
+            "purpleFrac": 0,
+            "composition": [
+              "split-stagger kinetic-text",
+              "glass frame",
+              "scene spotlight dim"
+            ]
+          },
+          {
+            "step": "relaunch",
+            "primitive": "crystal-ball",
+            "luma": 86.64,
+            "max": 233.51,
+            "purpleFrac": 0,
+            "composition": [
+              "crystal-ball glass",
+              "lit-bokeh refraction",
+              "glass frame"
+            ]
+          }
+        ],
+        "allRenderBright": true,
+        "pass": true
+      },
+      "INV8_noPurple": {
+        "maxPurpleFrac": 0,
+        "pass": true
+      },
+      "C7": {
+        "baselineGalaxyIdle": 2,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 2,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  },
+  {
+    "viewport": "constrained",
+    "error": "page.evaluate: Target page, context or browser has been closed"
+  },
+  {
+    "viewport": "mobile",
+    "error": "browser.newContext: Target page, context or browser has been closed\nBrowser logs:\n\n[pid=53565][err] ./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] ./src/components/editor/graph/ArtifactNode.tsx\n[pid=53565][err] ./src/components/editor/graph/GraphScene.tsx\n[pid=53565][err] ./src/app/page.tsx\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/082218.211792:INFO:CONSOLE:14] \"[Fast Refresh] done in 4463ms\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/report-hmr-latency.js (14)\n[pid=53565][err] [0615/082226.043644:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082226.044380:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082226.044407:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082231.188137:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082231.205771:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082233.037573:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082409.384474:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082409.385163:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082409.385195:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082445.990677:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082445.991368:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082445.991405:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082446.009205:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082446.022901:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082447.387728:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082447.388729:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082459.071717:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082527.971224:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082527.971685:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082527.971695:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082546.623232:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082546.623675:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082546.623684:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082546.636358:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082546.648803:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082548.074383:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082548.075512:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082558.908140:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082645.032908:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/082645.644685:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/082646.054084:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082646.057639:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082646.060383:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082650.499682:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082650.500123:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082650.500133:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082656.959938:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082657.509476:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082657.883691:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082657.884148:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082657.884156:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082704.658664:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/082705.344898:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/082705.606143:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082705.608105:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082705.610820:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082710.312810:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082710.313269:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082710.313298:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082716.977845:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082717.346185:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082719.172769:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082737.166470:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/082737.818968:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/082738.174878:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082738.176732:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082738.179394:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082759.642145:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082759.642906:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082759.642937:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082804.441164:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082804.563596:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082806.098747:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082806.100153:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082929.369312:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082929.370078:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082929.370093:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082958.867977:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082958.868730:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/082958.868745:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082958.880119:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/082958.892608:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083000.305327:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083000.306440:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083012.112478:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083038.903800:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083038.904254:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083038.904287:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083038.994519:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"lineDistance\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083058.276741:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083058.277862:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083058.277938:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083058.289686:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083058.301970:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083059.691063:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083059.692386:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083111.476608:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083152.813385:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/083153.506800:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/083153.850131:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083153.852889:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083153.855566:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083158.192110:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083158.192543:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083158.192551:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083203.889079:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083204.282840:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083204.658225:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083204.658902:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083204.658914:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083211.020642:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/083211.730661:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/083211.997282:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083211.999426:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083212.002172:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083216.428946:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083216.429418:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083216.429427:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083221.590162:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083221.607345:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083223.397042:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083243.951577:INFO:CONSOLE:25631] \"%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js (25631)\n[pid=53565][err] [0615/083244.592807:INFO:CONSOLE:242] \"./src/lib/prism/runtime/factories/coderef-factory.ts\n[pid=53565][err] Critical dependency: the request of a dependency is an expression\", source: webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/dev/hot-reloader/app/hot-reloader-app.js (242)\n[pid=53565][err] [0615/083244.929161:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083244.930899:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083244.933551:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083302.964552:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083302.964999:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083302.965009:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083308.882658:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083309.147057:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083310.665422:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083310.666567:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083442.137228:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083442.139008:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083442.139024:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083442.225496:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"lineDistance\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083508.735496:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083508.735952:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083508.735963:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083508.749042:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083508.762885:INFO:CONSOLE:1970] \"THREE.Color: Alpha component of rgba(205, 159, 85, 0.45) will be ignored.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083510.232915:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083510.234990:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"position\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083521.752085:INFO:CONSOLE:1970] \"THREE.AttributeNode: Vertex attribute \"uv\" not found on geometry.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083548.552080:INFO:CONSOLE:1970] \"THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565][err] [0615/083548.553164:INFO:CONSOLE:0] \"No available adapters.\", source: http://localhost:3000/#hub=s1-arrival (0)\n[pid=53565][err] [0615/083548.553174:INFO:CONSOLE:1970] \"THREE.WebGPURenderer: WebGPU is not available, running under WebGL2 backend.\", source: webpack-internal:///(app-pages-browser)/./node_modules/three/build/three.core.js (1970)\n[pid=53565] <gracefully close start>"
+  }
+]

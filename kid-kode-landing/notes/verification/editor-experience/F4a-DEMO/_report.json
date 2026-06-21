@@ -1,0 +1,73 @@
+{
+  "frames": [
+    "notes/verification/editor-experience/F4a-DEMO/header.png",
+    "notes/verification/editor-experience/F4a-DEMO/hero.png",
+    "notes/verification/editor-experience/F4a-DEMO/section-1.png",
+    "notes/verification/editor-experience/F4a-DEMO/section-2.png",
+    "notes/verification/editor-experience/F4a-DEMO/section-3.png",
+    "notes/verification/editor-experience/F4a-DEMO/section-4.png",
+    "notes/verification/editor-experience/F4a-DEMO/footer.png",
+    "notes/verification/editor-experience/F4a-DEMO/nav-arrival.png",
+    "notes/verification/editor-experience/F4a-DEMO/nav-movement.png",
+    "notes/verification/editor-experience/F4a-DEMO/nav-celestia.png",
+    "notes/verification/editor-experience/F4a-DEMO/ui-edit-before.png",
+    "notes/verification/editor-experience/F4a-DEMO/ui-edit-after.png"
+  ],
+  "nav": {
+    "s2-movement": "header-click",
+    "s3-materia": "nav-api",
+    "s4-celestia": "nav-api",
+    "s5-acquire": "nav-api"
+  },
+  "uiEdit": {
+    "canvasMode": "canvas",
+    "selected": "orr-arrival-dust",
+    "selVia": "canvas-click",
+    "stepperRows": 0,
+    "nudgeClicks": 6,
+    "sourceScenePosX_beforeSave": 0,
+    "stagedScenePosX_afterNudge": 0.36,
+    "canvasTransformAfter": null,
+    "sourceScenePosX_afterSave": 0.36,
+    "previewBufferAfterSave": 0,
+    "committed": true,
+    "editOn": false,
+    "gizmoArmed": true,
+    "moved": true,
+    "ctMoved": false,
+    "saved": true,
+    "saveLabel": "Save (1)",
+    "posX_before": 0,
+    "posX_after": 0
+  },
+  "notes": [
+    "walkthrough dismissed (tip-scrim=0)",
+    "entered preview-app, activeHub=s1-arrival",
+    "arrival traversal done at hub=s1-arrival",
+    "nav results: {\"s2-movement\":\"header-click\",\"s3-materia\":\"nav-api\",\"s4-celestia\":\"nav-api\",\"s5-acquire\":\"nav-api\"}"
+  ],
+  "hubs": [
+    {
+      "id": "s1-arrival",
+      "name": "Arrival"
+    },
+    {
+      "id": "s2-movement",
+      "name": "The Movement"
+    },
+    {
+      "id": "s3-materia",
+      "name": "Materia"
+    },
+    {
+      "id": "s4-celestia",
+      "name": "Celestia"
+    },
+    {
+      "id": "s5-acquire",
+      "name": "Acquire"
+    }
+  ],
+  "consoleErrors": 0,
+  "errSamples": []
+}

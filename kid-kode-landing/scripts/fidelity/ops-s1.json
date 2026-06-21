@@ -1,0 +1,55 @@
+[
+  {
+    "nodeId": "orr-arrival-headline",
+    "set": {
+      "receivesLighting": true,
+      "textSpec.fill": { "kind": "solid", "color": "#f3ead2" },
+      "textSpec.glow": { "color": "#ffe6a8", "intensity": 0.3 },
+      "textSpec.extrude": {
+        "enabled": true,
+        "depth": 0.2,
+        "bevelEnabled": true,
+        "bevelThickness": 0.022,
+        "bevelSize": 0.02,
+        "bevelSegments": 3,
+        "curveSegments": 14,
+        "transmission": 0.9,
+        "ior": 1.5,
+        "thickness": 0.2,
+        "clearcoat": 1,
+        "clearcoatRoughness": 0.06,
+        "dispersion": 0.32,
+        "roughness": 0.05,
+        "metalness": 0,
+        "sideFill": { "kind": "solid", "color": "#d8c69a" }
+      }
+    }
+  },
+  {
+    "nodeId": "orr-arrival-watch",
+    "set": {
+      "scenePosition.scaleX": 3.2,
+      "scenePosition.scaleY": 3.2,
+      "scenePosition.scaleZ": 3.2,
+      "scenePosition.y": -0.05
+    }
+  },
+  {
+    "nodeId": "hero-cta-slab",
+    "set": {
+      "meshPrimitive.params.width": 3.7,
+      "meshPrimitive.params.height": 0.72,
+      "meshPrimitive.params.depth": 0.34,
+      "materialSpec.clearcoat": 0.85,
+      "materialSpec.roughness": 0.2,
+      "materialSpec.emissiveIntensity": 0.28
+    }
+  },
+  {
+    "nodeId": "hero-cta-label",
+    "set": {
+      "textSpec.fontSize": 0.16,
+      "scenePosition.z": 0.39
+    }
+  }
+]

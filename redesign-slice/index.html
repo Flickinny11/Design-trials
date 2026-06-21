@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<link rel="icon" href="data:," />
+<title>PRISM — UI redesign slice</title>
+<style>
+  /* ---- Premium type system (self-contained, local TTFs) -----------------
+     Display/wordmark: Sora (geometric, premium, NON-grotesque)
+     Instruments/HUD : JetBrains Mono (engineering mono) ---------------- */
+  @font-face{
+    font-family:"Sora"; font-style:normal; font-weight:100 800;
+    font-display:block; src:url("fonts/Sora-VF.ttf") format("truetype");
+  }
+  @font-face{
+    font-family:"JetBrains Mono"; font-style:normal; font-weight:100 800;
+    font-display:block; src:url("fonts/JetBrainsMono-VF.ttf") format("truetype");
+  }
+
+  :root{
+    --arc:#1ec8ff; --arc-dim:#7fb4d6;
+    --ink:#e8eef6; --ink-dim:#9fb0c4; --ink-faint:#5d6f84;
+    --hair: rgba(140,180,220,.16);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ width:100%; height:100%; overflow:hidden; background:#06070b; }
+  body{ font-family:"Sora",system-ui,sans-serif; color:var(--ink);
+        -webkit-font-smoothing:antialiased; }
+  #scene{ position:fixed; inset:0; width:100%; height:100%; display:block; }
+
+  /* DOM overlay layer — premium type registered over the 3D surfaces */
+  #ui{ position:fixed; inset:0; pointer-events:none; z-index:2; }
+  .lbl{ position:absolute; left:0; top:0; will-change:transform; }
+
+  /* Wordmark tagline (under the 3D extruded wordmark) */
+  #tagline{
+    font-family:"JetBrains Mono",monospace; font-weight:500;
+    font-size:11px; letter-spacing:.46em; text-transform:uppercase;
+    color:var(--arc-dim);
+  }
+  #tagline b{ color:var(--ink); font-weight:600; }
+
+  /* Button face labels — premium geometric (Sora), heavy + legible */
+  .btn-lbl{
+    font-family:"Sora",sans-serif; font-weight:700;
+    font-size:14px; letter-spacing:.16em; text-indent:.16em; text-transform:uppercase;
+    color:#f6faff; text-shadow:0 1px 4px rgba(0,0,0,.6);
+    transform-origin:center; white-space:nowrap;
+  }
+  .btn-lbl.secondary{ color:#d6e0ee; font-weight:600; }
+  .btn-lbl.icon{ font-size:0; }
+
+  /* Inspector panel HUD readouts */
+  #panel-head{
+    font-family:"Sora"; font-weight:600; font-size:17px;
+    letter-spacing:.16em; text-transform:uppercase; color:#eef4fb;
+    white-space:nowrap;
+  }
+  #panel-sub{
+    font-family:"JetBrains Mono",monospace; font-weight:400; font-size:10.5px;
+    letter-spacing:.30em; text-transform:uppercase; color:var(--ink-faint);
+    white-space:nowrap;
+  }
+  .row{ font-family:"JetBrains Mono",monospace; white-space:nowrap; }
+  .row .k{ font-size:11px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:#aebfd2; }
+  .row .v{ font-size:14.5px; font-weight:700; letter-spacing:.03em; color:#f4f9ff; }
+  .row .v.arc{ color:#5fd6ff; }
+  .chip{
+    font-family:"JetBrains Mono",monospace; font-size:9px; letter-spacing:.22em;
+    text-transform:uppercase; color:#06222e; background:var(--arc);
+    padding:3px 7px; border-radius:3px; font-weight:700;
+    box-shadow:0 0 14px rgba(30,200,255,.55);
+  }
+
+  /* Status banner (top-right) */
+  #status{
+    position:fixed; top:22px; right:26px; z-index:3;
+    font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.22em;
+    text-transform:uppercase; color:var(--ink-faint); text-align:right; line-height:1.9;
+  }
+  #status .dot{ color:var(--arc); }
+
+  /* Loading veil */
+  #veil{
+    position:fixed; inset:0; z-index:9; background:#06070b; display:flex;
+    align-items:center; justify-content:center; transition:opacity .7s ease;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.4em;
+    text-transform:uppercase; color:var(--ink-faint);
+  }
+  #veil.hidden{ opacity:0; pointer-events:none; }
+</style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+<script src="vendor/opentype.min.js"></script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <div id="ui">
+    <div id="tagline" class="lbl">NODE&nbsp;COMPOSITOR&nbsp;&nbsp;·&nbsp;&nbsp;<b>PRISM&nbsp;ENGINE</b></div>
+
+    <div id="btn-primary" class="lbl"><span class="btn-lbl">Materialize</span></div>
+    <div id="btn-secondary" class="lbl"><span class="btn-lbl secondary">Preview</span></div>
+    <div id="btn-icon" class="lbl"><span class="btn-lbl icon">disperse</span></div>
+
+    <div id="panel-head" class="lbl">Inspector</div>
+    <div id="panel-sub" class="lbl">PRISM&nbsp;·&nbsp;NODE&nbsp;0x1E</div>
+    <div id="row-mat" class="lbl row"><span class="k">Material</span>&nbsp;&nbsp;<span class="v">Dispersive&nbsp;Glass</span></div>
+    <div id="row-ior" class="lbl row"><span class="k">IOR</span>&nbsp;&nbsp;<span class="v">1.52</span></div>
+    <div id="row-disp" class="lbl row"><span class="k">Dispersion</span>&nbsp;&nbsp;<span class="v arc">4.80&nbsp;Abbe</span></div>
+    <div id="row-state" class="lbl row"><span class="k">State</span>&nbsp;&nbsp;<span class="chip">Refracting</span></div>
+  </div>
+
+  <div id="status">
+    <div><span class="dot">●</span>&nbsp; WebGL · Tier&nbsp;A</div>
+    <div id="status-fps">60 fps · transmission rt</div>
+  </div>
+
+  <div id="veil">Compiling materials…</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+/* ============================ palette ============================ */
+const COL = {
+  chrome:   0xdfe2e6,
+  titanium: 0xb8bcc0,
+  mercury:  0xe0e4ea,
+  anodized: 0x2d5fa3,
+  arc:      0x1ec8ff,
+  panel:    0x0e151d,
+  substrate:0x0a0c12,
+};
+
+/* ============================ renderer ============================ */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:false,
+  powerPreference:'high-performance', stencil:false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.08;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(COL.substrate);
+
+const camera = new THREE.PerspectiveCamera(34, window.innerWidth/window.innerHeight, 0.1, 100);
+const CAM_HOME = new THREE.Vector3(0, 0.12, 6.35);
+camera.position.copy(CAM_HOME);
+camera.lookAt(0, 0.02, 0);
+
+/* ============================ studio environment ============================
+   A small dark room lit by bright "softbox" panels, PMREM-baked into the
+   scene env map. This is what gives chrome its elongated streak highlights —
+   the signature premium-product read — and gives the dispersive prism real
+   content to refract. (No external HDRI fetch: fully self-contained.) */
+function buildStudioEnv(){
+  const env = new THREE.Scene();
+  env.background = new THREE.Color(0x05070b);
+  const panel = (w,h,hex,intensity,pos,rot)=>{
+    const m = new THREE.MeshBasicMaterial({ side:THREE.DoubleSide });
+    m.color.setHex(hex).multiplyScalar(intensity);   // HDR (>1) → strong specular
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w,h), m);
+    mesh.position.set(pos[0],pos[1],pos[2]);
+    if(rot) mesh.rotation.set(rot[0],rot[1],rot[2]);
+    env.add(mesh); return mesh;
+  };
+  // KEY — large soft box upper-left (broad chrome wash). Kept moderate so the
+  // narrow strip hotspots (below) dominate — broad uniform light is what makes
+  // metal read as satin plastic; crisp bright streaks on near-black is what reads as chrome.
+  panel(7,14, 0xffffff, 3.4, [-11, 6, 7], [0, Math.PI*0.33, 0]);
+  // SHARP vertical strip lights across the front hemisphere → crisp polished-metal
+  // hotspots (high strip-vs-wall contrast is what reads as machined chrome, not satin plastic).
+  // Narrower + much brighter than before → mirror-sharp specular streaks.
+  // Bright but NOT clipped: intensities tuned so chrome reflects crisp streaks that keep
+  // tonal gradient (mirror reflection) instead of flat-white blowout (which reads as bloom).
+  panel(0.5, 8.5, 0xffffff, 13.0, [-3.6, 2, 9], [0, 0.16, 0]);
+  panel(0.42,7.5, 0xeaf2ff, 11.0, [ 2.6, 1, 9], [0,-0.20, 0]);
+  panel(0.40,6.5, 0xffffff, 12.0, [ 5.6,-1, 8], [0,-0.32, 0]);
+  panel(0.36,5.5, 0xdfe9ff, 10.0, [-7.0, 0, 7], [0, 0.34, 0]);
+  // a tight extra streak dead-center-front → a hot specular on the hero faces
+  panel(0.30,4.5, 0xffffff, 14.0, [ 0.4, 1.2, 9.5], [0, 0.0, 0]);
+  // overhead strip — bright top highlight on the tilted button faces + panel
+  panel(14, 0.8, 0xf2f6ff, 7.0, [0, 8, 8], [Math.PI*0.5, 0, 0]);
+  // cool steel accent — small, lower-left (temperature contrast WITHOUT any warm/amber
+  // tint; a warm light here bled orange bloom and flirted with the condemned brass palette).
+  panel(2.6, 2.6, 0xb9cbe6, 2.0, [-7,-4,6], [0, Math.PI*0.3, 0]);
+  // cool rim — right side (desaturated → machined, not neon)
+  panel(2.6,13, 0x9fb6d4, 2.2, [12, 2, 1], [0,-Math.PI*0.42,0]);
+  // pure-black back + side walls → deep contrast wells between the streaks
+  panel(44,44, 0x000000, 1.0, [0,0,-16], [0,0,0]);
+  panel(30,30, 0x000000, 1.0, [-16,0,2], [0, Math.PI*0.5, 0]);
+  panel(30,30, 0x000000, 1.0, [ 16,0,2], [0,-Math.PI*0.5, 0]);
+  return env;
+}
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileEquirectangularShader();
+const envScene = buildStudioEnv();
+const envRT = pmrem.fromScene(envScene, 0.012, 0.1, 60);   // low sigma → sharp metal reflections
+scene.environment = envRT.texture;
+scene.environmentIntensity = 1.3;
+
+/* ============================ backdrop + floor ============================ */
+// gradient backdrop (gives the prism something luminous to refract + grounds bloom)
+function gradientTexture(){
+  const c = document.createElement('canvas'); c.width=16; c.height=512;
+  const g = c.getContext('2d').createLinearGradient(0,0,0,512);
+  g.addColorStop(0.0,'#0c1320'); g.addColorStop(0.45,'#090d15');
+  g.addColorStop(0.72,'#070a11'); g.addColorStop(1.0,'#05070c');
+  const ctx=c.getContext('2d'); ctx.fillStyle=g; ctx.fillRect(0,0,16,512);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+const backdrop = new THREE.Mesh(
+  new THREE.PlaneGeometry(40, 22),
+  new THREE.MeshBasicMaterial({ map:gradientTexture() })
+);
+backdrop.position.set(0, 0.5, -7.2);
+scene.add(backdrop);
+
+// faint radial bloom-glow behind the hero so transmission reads warm, not dead
+const glowTex = (()=>{
+  const c=document.createElement('canvas'); c.width=c.height=256;
+  const ctx=c.getContext('2d');
+  const g=ctx.createRadialGradient(128,128,0,128,128,128);
+  g.addColorStop(0,'rgba(70,150,210,0.55)'); g.addColorStop(0.4,'rgba(40,90,150,0.20)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=g; ctx.fillRect(0,0,256,256);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+})();
+const glow = new THREE.Mesh(new THREE.PlaneGeometry(4.0,4.0),
+  new THREE.MeshBasicMaterial({ map:glowTex, transparent:true, depthWrite:false,
+    opacity:0.42, blending:THREE.AdditiveBlending }));
+glow.position.set(-0.30, 0.05, -3.4);
+scene.add(glow);
+
+// glossy dark floor — receives contact shadow + reflects the env (product-shot ground)
+const floor = new THREE.Mesh(
+  new THREE.PlaneGeometry(60,60),
+  new THREE.MeshPhysicalMaterial({ color:0x05060a, metalness:0.85, roughness:0.34,
+    envMapIntensity:0.6 })
+);
+floor.rotation.x = -Math.PI/2; floor.position.y = -1.92; floor.receiveShadow = true;
+scene.add(floor);
+
+// soft contact-shadow system — grounds elements + (for buttons) reads physical motion
+const shadowTex = (()=>{
+  const c=document.createElement('canvas'); c.width=c.height=128; const x=c.getContext('2d');
+  const g=x.createRadialGradient(64,64,2,64,64,64);
+  g.addColorStop(0,'rgba(0,0,0,0.85)'); g.addColorStop(0.55,'rgba(0,0,0,0.35)');
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=g; x.fillRect(0,0,128,128);
+  return new THREE.CanvasTexture(c);
+})();
+function contactShadow(w,h,opacity){
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w,h),
+    new THREE.MeshBasicMaterial({ map:shadowTex, transparent:true, opacity,
+      depthWrite:false, color:0x000000 }));
+  m.rotation.x = -Math.PI/2; m.position.y = -1.90;
+  scene.add(m); return m;
+}
+
+/* ============================ lights ============================ */
+scene.add(new THREE.AmbientLight(0x334455, 0.6));
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(4.5, 6.5, 5.0); key.castShadow = true;
+key.shadow.mapSize.set(2048,2048); key.shadow.bias = -0.0004;
+key.shadow.camera.near=1; key.shadow.camera.far=24;
+key.shadow.camera.left=-7; key.shadow.camera.right=7;
+key.shadow.camera.top=7; key.shadow.camera.bottom=-7;
+key.shadow.radius = 6;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x6da8ff, 0.85);
+fill.position.set(-5, 2.5, -3); scene.add(fill);
+const rim = new THREE.PointLight(0x4f9fd6, 6, 14, 2.0);   // cool fill, desaturated (not a cyan wash)
+rim.position.set(-2.2, -0.6, 2.6); scene.add(rim);
+
+/* ============================ material factory ============================ */
+// Polished chrome = PURE metal mirror. NO clearcoat — a clearcoat layer over metal
+// adds a broad dielectric sheen that reads as coated PLASTIC. Very low roughness +
+// strong env so the sharp softbox streaks reflect as crisp machined-chrome hotspots.
+function chromeMat(o={}){ return new THREE.MeshPhysicalMaterial(Object.assign({
+  color:COL.chrome, metalness:1.0, roughness:0.035, clearcoat:0.0,
+  envMapIntensity:1.7, ior:2.9 },o)); }
+// Brushed titanium = pure metal, slightly rougher. Anisotropy needs tangents (RoundedBox
+// has none) so it would no-op → instead we lean on low roughness + strong env for the
+// satin-machined read. No clearcoat.
+function titaniumMat(o={}){ return new THREE.MeshPhysicalMaterial(Object.assign({
+  color:COL.titanium, metalness:1.0, roughness:0.17, clearcoat:0.0,
+  envMapIntensity:1.45 },o)); }
+// Anodized = dielectric oxide over metal (metalness deliberately <1), thin clearcoat for
+// the oxide gloss, and iridescence — the thin-film sheen is exactly what separates real
+// anodized aluminium from flat blue plastic.
+function anodizedMat(o={}){ return new THREE.MeshPhysicalMaterial(Object.assign({
+  color:COL.anodized, metalness:0.9, roughness:0.16, clearcoat:0.28,
+  clearcoatRoughness:0.12, envMapIntensity:1.5,
+  iridescence:0.32, iridescenceIOR:1.32, iridescenceThicknessRange:[120,420] },o)); }
+function darkAnodizedMat(o={}){ return new THREE.MeshPhysicalMaterial(Object.assign({
+  color:0x121a24, metalness:0.92, roughness:0.30, clearcoat:0.2, envMapIntensity:1.0 },o)); }
+function arcMat(intensity=2.0){ const m=new THREE.MeshStandardMaterial({
+  color:COL.arc, emissive:COL.arc, emissiveIntensity:intensity, roughness:0.4,
+  metalness:0.0, toneMapped:false }); return m; }
+function dispersiveGlassMat(){ const m=new THREE.MeshPhysicalMaterial({
+  color:0xffffff, metalness:0.0, roughness:0.02,
+  transmission:1.0, thickness:1.15, ior:1.52, dispersion:10.0,
+  clearcoat:1.0, clearcoatRoughness:0.0, envMapIntensity:2.4,
+  attenuationColor:new THREE.Color(0xdfeeff), attenuationDistance:3.5,
+  specularIntensity:1.0, transparent:true });
+  return m; }
+
+/* ============================ helpers ============================ */
+function beveledBar(w,h,d,color,mat){            // a chamfered bar — never a 1px line
+  const g = new RoundedBoxGeometry(w,h,d, 3, Math.min(h,d)*0.45);
+  return new THREE.Mesh(g, mat);
+}
+// a proud machined window-frame from 4 chamfered chrome rails (dimensional edges)
+function bezelFrame(w,h,t,d,mat){
+  const grp = new THREE.Group();
+  const mk=(bw,bh,x,y)=>{ const m=new THREE.Mesh(
+    new RoundedBoxGeometry(bw,bh,d,3, Math.min(bw,bh,d)*0.4), mat);
+    m.position.set(x,y,0); m.castShadow=true; m.receiveShadow=true; grp.add(m); };
+  mk(w, t, 0,  h/2 - t/2);     // top rail
+  mk(w, t, 0, -h/2 + t/2);     // bottom rail
+  mk(t, h-1.6*t, -w/2 + t/2, 0); // left rail
+  mk(t, h-1.6*t,  w/2 - t/2, 0); // right rail
+  return grp;
+}
+
+/* ---- 3D extruded wordmark from a real premium typeface (opentype → ShapePath → ExtrudeGeometry) */
+function glyphGeometry(font, ch, size, extrude){
+  const path = font.getPath(ch, 0, 0, size);       // y-down
+  const sp = new THREE.ShapePath();
+  for(const c of path.commands){
+    if(c.type==='M') sp.moveTo(c.x, -c.y);
+    else if(c.type==='L') sp.lineTo(c.x, -c.y);
+    else if(c.type==='C') sp.bezierCurveTo(c.x1,-c.y1, c.x2,-c.y2, c.x,-c.y);
+    else if(c.type==='Q') sp.quadraticCurveTo(c.x1,-c.y1, c.x,-c.y);
+  }
+  const shapes = sp.toShapes(false);
+  if(!shapes.length) return null;
+  const geo = new THREE.ExtrudeGeometry(shapes, extrude);
+  return geo;
+}
+
+/* ============================ scene anchors ============================ */
+const heroGroup = new THREE.Group();    scene.add(heroGroup);     // prism icon
+const wordmarkGroup = new THREE.Group(); scene.add(wordmarkGroup);
+const panelGroup = new THREE.Group();    scene.add(panelGroup);
+const buttons = [];                                              // interactive
+
+/* ----------------------------- HERO: dispersive prism icon ----------------------------- */
+let prismMesh=null, prismRing=null, exitFan=null, entryBeam=null;
+
+// opaque luminous backplate — gives the transmission RT bright, colour-graded
+// content to refract (without it, the glass just samples the dark void → dark).
+function spectralBackplate(){
+  const c=document.createElement('canvas'); c.width=c.height=512; const x=c.getContext('2d');
+  // dark studio field — keeps the glass reading as crisp glass (a small bright
+  // source to refract + dispersed temperature), NOT a glowing lightbox.
+  x.fillStyle='#070a11'; x.fillRect(0,0,512,512);
+  const g=x.createRadialGradient(220,270,4, 230,260,150);
+  g.addColorStop(0.0,'#cfe7ff'); g.addColorStop(0.28,'#3f7fc0');
+  g.addColorStop(0.6,'#13284a'); g.addColorStop(1,'#070a11');
+  x.fillStyle=g; x.fillRect(0,0,512,512);
+  // faint warm kicker (lower-right) so refraction carries a temperature split
+  const w=x.createRadialGradient(360,360,2,360,360,90);
+  w.addColorStop(0,'rgba(255,180,110,0.45)'); w.addColorStop(1,'rgba(255,180,110,0)');
+  x.fillStyle=w; x.fillRect(0,0,512,512);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+// soft light-blade alpha texture — white core tapering to transparent along its LENGTH
+// (narrow/bright at the prism, soft outward) and across its WIDTH (feathered edges), so an
+// additive blade reads as a shaft of dispersed light, never a hard painted bar.
+function bladeTex(){
+  const c=document.createElement('canvas'); c.width=256; c.height=32; const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,256,0);
+  g.addColorStop(0.0,'rgba(255,255,255,0)'); g.addColorStop(0.10,'rgba(255,255,255,0.95)');
+  g.addColorStop(0.5,'rgba(255,255,255,0.45)'); g.addColorStop(1.0,'rgba(255,255,255,0)');
+  x.fillStyle=g; x.fillRect(0,0,256,32);
+  const v=x.createLinearGradient(0,0,0,32);
+  v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(0.5,'rgba(0,0,0,1)'); v.addColorStop(1,'rgba(0,0,0,0)');
+  x.globalCompositeOperation='destination-in'; x.fillStyle=v; x.fillRect(0,0,256,32);
+  const t=new THREE.CanvasTexture(c); return t;
+}
+
+function buildHero(){
+  heroGroup.position.set(-0.30, 0.10, 0.30);
+
+  // bright emissive light bars set BEHIND the prism — the glass refracts (and chromatically
+  // splits) these real 3D sources through its thickness, so the body reads as a SOLID that
+  // bends light, not a flat painted card. Small bright objects on near-black (transmission
+  // render target samples them), never a full-frame quad.
+  const barCols=[0xeaf4ff,0xbfe0ff,0xd9ecff];
+  barCols.forEach((c,i)=>{
+    const bar=new THREE.Mesh(new THREE.BoxGeometry(0.055,2.3,0.055),
+      new THREE.MeshBasicMaterial({ color:c }));
+    bar.material.color.multiplyScalar(1.85);                 // HDR but restrained → elegant refraction, not garish neon
+    bar.position.set(-0.55 + i*0.55, 0.0, -1.2 - i*0.12);
+    bar.rotation.z = (i-1)*0.12;
+    heroGroup.add(bar);
+  });
+
+  // equilateral triangular cross-section, extruded → a real optical prism (large + thick so
+  // its Z-depth and refraction-through-the-body are unmistakable)
+  const r = 0.92;
+  const tri = new THREE.Shape();
+  for(let i=0;i<3;i++){
+    const a = Math.PI/2 + i*(Math.PI*2/3);
+    const x = Math.cos(a)*r, y = Math.sin(a)*r;
+    if(i===0) tri.moveTo(x,y); else tri.lineTo(x,y);
+  }
+  tri.closePath();
+  const geo = new THREE.ExtrudeGeometry(tri, {
+    depth:1.18, bevelEnabled:true, bevelThickness:0.06, bevelSize:0.06,
+    bevelSegments:5, curveSegments:8 });
+  geo.center();
+  prismMesh = new THREE.Mesh(geo, dispersiveGlassMat());
+  prismMesh.rotation.set(-0.16, 0.82, 0.10);
+  prismMesh.position.set(0.05, 0.0, 0.0);
+  heroGroup.add(prismMesh);
+
+  // entry beam — a short tapered white shaft striking the left face (the light it splits)
+  const beamTex=(()=>{ const c=document.createElement('canvas'); c.width=128;c.height=32;
+    const ctx=c.getContext('2d'); const g=ctx.createLinearGradient(0,0,128,0);
+    g.addColorStop(0,'rgba(210,238,255,0)'); g.addColorStop(1,'rgba(235,248,255,0.85)');
+    ctx.fillStyle=g; ctx.fillRect(0,0,128,32);
+    const v=ctx.createLinearGradient(0,0,0,32); v.addColorStop(0,'rgba(0,0,0,0)');
+    v.addColorStop(0.5,'rgba(0,0,0,1)'); v.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.globalCompositeOperation='destination-in'; ctx.fillStyle=v; ctx.fillRect(0,0,128,32);
+    const t=new THREE.CanvasTexture(c); return t; })();
+  entryBeam = new THREE.Mesh(new THREE.PlaneGeometry(0.66,0.05),
+    new THREE.MeshBasicMaterial({ map:beamTex, transparent:true, opacity:0.42,
+      blending:THREE.AdditiveBlending, depthWrite:false }));
+  entryBeam.position.set(-1.05, 0.14, 0.06); heroGroup.add(entryBeam);
+
+  // dispersed spectrum — real 3D light blades fanning from the exit face. Each is a thin
+  // emissive slat at its OWN yaw + roll + depth, so perspective/parallax keeps the fan
+  // reading as volumetric split light, never a flat painted gradient card.
+  exitFan = new THREE.Group();
+  const bt = bladeTex();
+  // 11 spectral blades — soft tapered light shafts, each at its own yaw/roll/depth so the
+  // fan reads as volumetric split light leaving the prism (not a flat painted card).
+  const SPEC = [0xff2f2f,0xff5a2f,0xffa030,0xffe24a,0xa8f25a,0x57ff8e,0x3fd6ff,0x46a6ff,0x6f86ff,0x9a6cff,0xc05cff];
+  SPEC.forEach((col,i)=>{
+    const f = (i/(SPEC.length-1)) - 0.5;                 // -0.5 .. 0.5
+    const blade = new THREE.Mesh(new THREE.PlaneGeometry(1.95, 0.11),
+      new THREE.MeshBasicMaterial({ color:col, map:bt, transparent:true, opacity:0.22,
+        blending:THREE.AdditiveBlending, depthWrite:false, side:THREE.DoubleSide }));
+    blade.position.set(1.04, -0.03 + f*0.20, -0.04 - Math.abs(f)*0.16);
+    blade.rotation.z = f*0.27;
+    blade.rotation.y = f*0.66;                           // splay in DEPTH → volumetric, not a card
+    exitFan.add(blade);
+  });
+  heroGroup.add(exitFan);
+
+  // machined CHROME yoke ring behind (lens-mount read; mirror metal reflects the studio
+  // streaks so it never reads as a dark plastic torus)
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.20, 0.045, 22, 100),
+    chromeMat({ roughness:0.07, envMapIntensity:1.7 }));
+  ring.rotation.x = Math.PI*0.46; ring.rotation.z = 0.18; ring.position.z=-0.70;
+  ring.castShadow = true; prismRing = ring; heroGroup.add(ring);
+
+  // arc-cyan pivot pins (restrained accent)
+  for(const s of [-1,1]){
+    const pin = new THREE.Mesh(new THREE.CylinderGeometry(0.04,0.04,0.16,16), arcMat(1.5));
+    pin.rotation.z = Math.PI*0.5; pin.position.set(s*1.04, 0, -0.35);
+    heroGroup.add(pin);
+  }
+
+  prismMesh.castShadow = true;
+}
+
+/* ----------------------------- WORDMARK ----------------------------- */
+function buildWordmark(font){
+  const size = 1.0;                       // em
+  const extrude = { depth:0.40, bevelEnabled:true, bevelThickness:0.07,
+    bevelSize:0.055, bevelSegments:3, curveSegments:5 };
+  const letters = 'PRISM'.split('');
+  const tracking = 0.10;                  // wide premium tracking (em)
+  // measure
+  const widths = letters.map(c=>font.getAdvanceWidth(c, size));
+  const total = widths.reduce((a,b)=>a+b,0) + tracking*size*(letters.length-1);
+  let x = -total/2;
+  const chromeFace = chromeMat({ roughness:0.06, envMapIntensity:1.3 });
+  const tiBevel = titaniumMat({ color:0xc6cbd2, roughness:0.16, envMapIntensity:1.1 });
+  letters.forEach((ch,i)=>{
+    const geo = glyphGeometry(font, ch, size, extrude);
+    if(geo){
+      geo.computeBoundingBox();
+      // front faces = polished chrome (mat 0), bevel/sides = brushed titanium (mat 1)
+      const mesh = new THREE.Mesh(geo, [chromeFace, tiBevel]);
+      mesh.position.x = x; mesh.castShadow = true;
+      wordmarkGroup.add(mesh);
+    }
+    x += widths[i] + tracking*size;
+  });
+  // scale + place top-left; slight tilt so the extruded SIDES show → reads as solid 3D metal
+  const SC = 0.55;
+  wordmarkGroup.scale.setScalar(SC);
+  wordmarkGroup.position.set(-1.62, 1.36, 0.0);
+  wordmarkGroup.rotation.set(0.06, -0.20, 0.0);   // yaw shows extruded sides; even exposure across letters
+
+  // arc-cyan baseline groove (chamfered — no naked line) under the wordmark
+  const groove = beveledBar(total*SC*1.02, 0.02, 0.035, COL.arc, arcMat(1.1));
+  groove.position.set(-1.66, 1.05, 0.02);
+  scene.add(groove);
+}
+
+/* ----------------------------- INSPECTOR PANEL ----------------------------- */
+let glassChip=null;
+function buildPanel(){
+  panelGroup.position.set(1.74, -0.02, -0.05);
+  panelGroup.rotation.y = -0.26;
+
+  const W=1.66, H=2.46, D=0.26;
+  // body — brushed titanium slab with real thickness + chamfer
+  const body = new THREE.Mesh(new RoundedBoxGeometry(W,H,D, 6, 0.07),
+    titaniumMat({ color:0x9aa0a8, roughness:0.24 }));
+  body.castShadow = true; body.receiveShadow = true;
+  panelGroup.add(body);
+
+  // recessed machined pocket (dark satin anodized, set BACK into the body → real depth)
+  const pocket = new THREE.Mesh(new RoundedBoxGeometry(W-0.26, H-0.40, 0.06, 4, 0.04),
+    darkAnodizedMat({ color:0x18222e, roughness:0.52, clearcoat:0.3, envMapIntensity:0.4 }));
+  pocket.position.set(0, -0.06, D*0.5 + 0.01);   // proud of the body face (no coplanar z-fight)
+  panelGroup.add(pocket);
+
+  // proud machined chrome window-frame around the pocket — the dimensional edges
+  // (satin beveled rails carrying highlight + shadow gradient, never a 1px line)
+  const frame = bezelFrame(W-0.10, H-0.24, 0.085, 0.12, chromeMat({ roughness:0.2, envMapIntensity:0.85 }));
+  frame.position.z = D*0.5 + 0.06;
+  panelGroup.add(frame);
+
+  // header divider — chamfered arc groove on the pocket face
+  const div = beveledBar(W-0.40, 0.03, 0.05, COL.arc, arcMat(1.0));
+  div.position.set(0, H*0.5 - 0.52, D*0.5 + 0.07);
+  panelGroup.add(div);
+
+  // left structural edge rail — thick chamfered chrome with an arc-cyan accent groove
+  const edgeRail = beveledBar(0.07, H-0.16, 0.12, 0, chromeMat({ roughness:0.16, envMapIntensity:1.0 }));
+  edgeRail.position.set(-(W*0.5)-0.02, -0.02, 0.0); edgeRail.castShadow=true;
+  panelGroup.add(edgeRail);
+  const edge = beveledBar(0.024, H-0.5, 0.05, COL.arc, arcMat(1.2));
+  edge.position.set(-(W*0.5)-0.05, -0.05, 0.03);
+  panelGroup.add(edge);
+
+  // machined status lens — chrome bezel + cyan core + thick glass dome
+  // (dimensional framed instrument; replaces the naked-rectangle chip)
+  const lz = D*0.5;
+  const lensBezel = new THREE.Mesh(new THREE.CylinderGeometry(0.185,0.20,0.075,40),
+    chromeMat({ roughness:0.1 }));
+  lensBezel.rotation.x = Math.PI*0.5; lensBezel.position.set(0.42,-0.66, lz+0.05);
+  lensBezel.castShadow=true; panelGroup.add(lensBezel);
+  const lensCore = new THREE.Mesh(new THREE.CylinderGeometry(0.135,0.135,0.02,32), arcMat(1.8));
+  lensCore.rotation.x = Math.PI*0.5; lensCore.position.set(0.42,-0.66, lz+0.075);
+  panelGroup.add(lensCore);
+  glassChip = new THREE.Mesh(new THREE.SphereGeometry(0.155, 40, 24, 0, Math.PI*2, 0, Math.PI*0.5),
+    new THREE.MeshPhysicalMaterial({ color:0xffffff, metalness:0, roughness:0.0,
+      transmission:1.0, thickness:0.22, ior:1.5, dispersion:3.0, clearcoat:1.0,
+      envMapIntensity:1.6, transparent:true }));
+  glassChip.position.set(0.42,-0.66, lz+0.08); panelGroup.add(glassChip);
+
+  // machined chrome dial bosses (right column) — a PROUD knurled boss (real Z-thickness
+  // toward the camera) carrying a beveled chrome bezel ring, a recessed dark-anodized dish,
+  // and a cyan index tick. Dimensional instrument, never a flat 2D glowing circle.
+  let di=0;
+  for(const p of [[0.42,0.16],[0.42,-0.18]]){
+    const boss = new THREE.Mesh(new THREE.CylinderGeometry(0.105,0.125,0.17,48),
+      chromeMat({ roughness:0.08 }));
+    boss.rotation.x = Math.PI*0.5; boss.position.set(p[0],p[1], lz+0.09); boss.castShadow=true;
+    panelGroup.add(boss);
+    // proud machined collar — thick, mirror, very low roughness → catches a crisp key hotspot
+    // (this is the detail that makes a knob read as a turned metal dial, not a flat HUD disc)
+    const bezel = new THREE.Mesh(new THREE.TorusGeometry(0.106,0.034,24,52),
+      chromeMat({ roughness:0.04, envMapIntensity:1.9 }));
+    bezel.position.set(p[0],p[1], lz+0.18); bezel.castShadow=true; panelGroup.add(bezel);
+    // SMALL recessed dish so chrome dominates the face → metal knob, not a dark disc
+    const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.055,0.03,32),
+      darkAnodizedMat({ roughness:0.42, envMapIntensity:0.8 }));
+    dish.rotation.x = Math.PI*0.5; dish.position.set(p[0],p[1], lz+0.185); panelGroup.add(dish);
+    const tick = new THREE.Mesh(new THREE.BoxGeometry(0.012,0.05,0.012), arcMat(di===0?1.3:0.8));
+    tick.position.set(p[0], p[1]+0.03, lz+0.205); panelGroup.add(tick);
+    di++;
+  }
+
+  // brushed titanium data-strip + corner screws (machined fill, anti-void)
+  const strip = new THREE.Mesh(new RoundedBoxGeometry(W-0.78, 0.12, 0.05, 3, 0.03),
+    titaniumMat({ color:0x868c95, roughness:0.32 }));
+  strip.position.set(-0.06, -1.0, lz+0.05); strip.castShadow=true; panelGroup.add(strip);
+  for(const c of [[-0.54,0.86],[0.54,0.86],[-0.54,-0.98],[0.54,-0.98]]){
+    const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.032,0.032,0.05,6),  // hex socket head
+      chromeMat({ roughness:0.22 }));
+    screw.rotation.x=Math.PI*0.5; screw.position.set(c[0],c[1], lz+0.05);
+    panelGroup.add(screw);
+  }
+
+  // grounding contact shadow under the panel
+  const psh = contactShadow(1.6, 1.0, 0.5); psh.position.set(1.74, -1.90, -0.05);
+}
+
+/* ----------------------------- BUTTONS ----------------------------- */
+function buildButton(opts){
+  const g = new THREE.Group();
+  g.position.copy(opts.pos);
+  g.rotation.x = -0.30;                 // lean back: top chrome faces catch the softboxes + thickness reads
+  const { w=1.06, h=0.42, d=0.26 } = opts;
+
+  // distinct machined metals: mirror chrome (primary/icon) vs gunmetal-satin titanium (secondary)
+  const bodyMat = opts.kind==='secondary'
+                ? titaniumMat({ color:0x787e87, roughness:0.30, clearcoat:0.35, envMapIntensity:1.3 })
+                : chromeMat({ roughness:0.025, envMapIntensity:1.7 });
+  const body = new THREE.Mesh(new RoundedBoxGeometry(w,h,d, 6, h*0.40), bodyMat);
+  body.castShadow = true; g.add(body);
+
+  // raised top inlay face — anodized accent (primary, lights up on hover) / titanium (secondary)
+  const inlayMat = opts.kind==='primary'
+      ? anodizedMat({ color:0x21498a, roughness:0.13, clearcoat:0.3, clearcoatRoughness:0.1,
+          metalness:0.9, envMapIntensity:1.9 })   // deep reflective anodized METAL w/ thin-film sheen
+      : titaniumMat({ color:0x9298a0, roughness:0.19, envMapIntensity:1.55 });
+  const inlay = new THREE.Mesh(new RoundedBoxGeometry(w*0.86, h*0.6, d*0.42, 4, h*0.24), inlayMat);
+  inlay.position.set(0, h*0.04, d*0.40);
+  g.add(inlay);
+
+  // emissive arc groove ringing the base (restrained accent; flares on hover/press)
+  const grooveMat = arcMat(opts.kind==='secondary' ? 0.3 : 0.45);
+  const groove = beveledBar(w*0.92, 0.022, 0.05, COL.arc, grooveMat);
+  groove.position.set(0, -h*0.40, d*0.34);
+  g.add(groove);
+
+  // icon button: a solid faceted chrome gem glyph (clean machined mark, not a wire shape)
+  let glyph=null;
+  if(opts.kind==='icon'){
+    // a faceted REFRACTIVE gem (colored + dispersive) — reads as a cut crystal, never a
+    // flat black 2D diamond glyph. Lit cyan core glows through the facets.
+    glyph=new THREE.Mesh(new THREE.IcosahedronGeometry(0.145, 0),
+      new THREE.MeshPhysicalMaterial({ color:0x9bdcff, metalness:0.0, roughness:0.04,
+        transmission:0.92, thickness:0.22, ior:1.7, dispersion:5.0,
+        iridescence:0.6, iridescenceIOR:1.4, clearcoat:1.0, clearcoatRoughness:0.04,
+        envMapIntensity:1.7, transparent:true }));
+    glyph.position.set(0, 0.02, d*0.48); glyph.castShadow=true; g.add(glyph);
+    // arc-cyan core just behind it (glows through the facets → colored, alive)
+    const core=new THREE.Mesh(new THREE.SphereGeometry(0.052,18,14), arcMat(1.4));
+    core.position.set(0,0.02,d*0.34); g.add(core);
+  }
+
+  scene.add(g);
+
+  // FIXED base socket — a stationary machined plinth the cap rides in. Because it
+  // never moves, the cap's rise (hover) and depress (press) read unmistakably even
+  // in a still frame (keycap-in-socket). The cap sits proud at rest, lifts on hover,
+  // sinks flush/into the socket on press.
+  const base = new THREE.Mesh(new RoundedBoxGeometry(w+0.18, 0.18, d+0.14, 5, 0.06),
+    titaniumMat({ color:0x5d636b, roughness:0.36, clearcoat:0.3, envMapIntensity:1.1 }));
+  base.rotation.x = -0.30;
+  base.position.copy(opts.pos);
+  base.position.y -= 0.30; base.position.z -= 0.02;
+  base.castShadow = true; base.receiveShadow = true;
+  scene.add(base);
+
+  // grounding contact shadow that tightens/darkens on press, softens on lift
+  const shadow = contactShadow(w*1.5, w*0.7, 0.5);
+  shadow.position.set(opts.pos.x, -1.90, opts.pos.z+0.05);
+  const b = { name:opts.name, kind:opts.kind, group:g, body, inlay, inlayMat, groove, grooveMat,
+    glyph, shadow, baseZ:opts.pos.z, basePos:opts.pos.clone(), baseGroove:grooveMat.emissiveIntensity,
+    baseInlayEmissive:(opts.kind==='primary'?0.22:0),
+    lift:0, press:0, liftTw:null, pressTw:null, hover:false };
+  buttons.push(b);
+  return b;
+}
+
+/* ============================ tween system (power easings only) ============================ */
+const E = {
+  power3Out: p => 1 - Math.pow(1-p, 3),
+  power4InOut: p => p<0.5 ? 8*p*p*p*p : 1 - Math.pow(-2*p+2,4)/2,
+  expoOut: p => p>=1 ? 1 : 1 - Math.pow(2,-10*p),
+};
+const tweens = [];
+function tweenTo(getter,setter,to,dur,ease){
+  // cancel co-located tweens on same setter key handled by caller via refs
+  const from = getter();
+  const tw = { from, to, dur, ease, t0:elapsed, done:false, setter };
+  tweens.push(tw);
+  return tw;
+}
+function stepTweens(){
+  for(const tw of tweens){
+    if(tw.done) continue;
+    let p=(elapsed-tw.t0)/tw.dur; if(p>=1){p=1;tw.done=true;}
+    tw.setter(tw.from + (tw.to-tw.from)*tw.ease(p));
+  }
+  for(let i=tweens.length-1;i>=0;i--) if(tweens[i].done) tweens.splice(i,1);
+}
+
+/* ============================ interaction ============================ */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2(-2,-2);
+const parallax = new THREE.Vector2(0,0);
+let pressedBtn = null;
+
+function setHover(b, on){
+  if(b.hover===on) return; b.hover=on;
+  if(b.liftTw) b.liftTw.done=true;
+  b.liftTw = tweenTo(()=>b.lift, v=>b.lift=v, on?1:0, on?0.42:0.5, E.power3Out);
+}
+function pressDown(b){
+  if(b.pressTw) b.pressTw.done=true;
+  b.pressTw = tweenTo(()=>b.press, v=>b.press=v, 1, 0.11, E.power3Out);
+}
+function pressUp(b){
+  if(b.pressTw) b.pressTw.done=true;
+  // release with momentum settle — power4.inOut, no overshoot (no elastic)
+  b.pressTw = tweenTo(()=>b.press, v=>b.press=v, 0, 0.52, E.power4InOut);
+}
+
+function pickButton(){
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(buttons.map(b=>b.group), true);
+  if(!hits.length) return null;
+  let o=hits[0].object; while(o && !buttons.find(b=>b.group===o)) o=o.parent;
+  return buttons.find(b=>b.group===o) || null;
+}
+canvas.addEventListener('pointermove', e=>{
+  pointer.x = (e.clientX/window.innerWidth)*2-1;
+  pointer.y = -(e.clientY/window.innerHeight)*2+1;
+  parallax.x = (e.clientX/window.innerWidth - 0.5);
+  parallax.y = (e.clientY/window.innerHeight - 0.5);
+  const hit = pickButton();
+  for(const b of buttons) setHover(b, b===hit);
+  canvas.style.cursor = hit ? 'pointer' : 'default';
+});
+canvas.addEventListener('pointerdown', ()=>{ const b=pickButton(); if(b){ pressedBtn=b; pressDown(b);} });
+window.addEventListener('pointerup', ()=>{ if(pressedBtn){ pressUp(pressedBtn); pressedBtn=null; } });
+canvas.addEventListener('pointerleave', ()=>{ for(const b of buttons) setHover(b,false); });
+
+/* ============================ DOM label projection ============================ */
+const v3 = new THREE.Vector3();
+function projectTo(el, world, dx=0, dy=0){
+  v3.copy(world).project(camera);
+  const x = (v3.x*0.5+0.5)*window.innerWidth + dx;
+  const y = (-v3.y*0.5+0.5)*window.innerHeight + dy;
+  el.style.transform = `translate(-50%,-50%) translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`;
+  el.style.opacity = (v3.z<1) ? '1':'0';
+}
+const dom = {};
+['tagline','btn-primary','btn-secondary','btn-icon','panel-head','panel-sub',
+ 'row-mat','row-ior','row-disp','row-state'].forEach(id=> dom[id]=document.getElementById(id));
+
+function updateLabels(){
+  projectTo(dom['tagline'], new THREE.Vector3(-1.30, 0.86, 0));
+  // buttons — project the group origin (face)
+  const bp = buttons.find(b=>b.name==='primary');
+  const bs = buttons.find(b=>b.name==='secondary');
+  const bi = buttons.find(b=>b.name==='icon');
+  if(bp) projectTo(dom['btn-primary'], bp.group.position.clone().add(new THREE.Vector3(0,0.05,0.2)));
+  if(bs) projectTo(dom['btn-secondary'], bs.group.position.clone().add(new THREE.Vector3(0,0.05,0.2)));
+  // panel readouts — anchored to local points on the (rotated) panel face
+  const pl = (lx,ly)=>{ const w=new THREE.Vector3(lx,ly,0.12); panelGroup.localToWorld(w); return w; };
+  projectTo(dom['panel-head'], pl(-0.52, 0.92));
+  projectTo(dom['panel-sub'],  pl(-0.52, 0.74));
+  projectTo(dom['row-mat'],    pl(-0.62, 0.30));
+  projectTo(dom['row-ior'],    pl(-0.62, 0.06));
+  projectTo(dom['row-disp'],   pl(-0.62,-0.18));
+  projectTo(dom['row-state'],  pl(-0.62,-0.62));
+}
+
+/* ============================ postprocessing ============================ */
+const composer = new EffectComposer(renderer);
+composer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+composer.addPass(new RenderPass(scene, camera));
+// restrained: low strength + HIGH threshold so only the truly emissive sources (arc cyan,
+// light bars) bloom — chrome highlights then resolve as REFLECTED environment, not glow.
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(window.innerWidth, window.innerHeight), 0.14, 0.45, 1.7);
+composer.addPass(bloom);
+// subtle radial chromatic aberration — reveals dispersion at the frame edges
+const CAShader = {
+  uniforms:{ tDiffuse:{value:null}, uAmount:{value:0.0008}, uCenter:{value:new THREE.Vector2(0.5,0.52)} },
+  vertexShader:`varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+  fragmentShader:`uniform sampler2D tDiffuse; uniform float uAmount; uniform vec2 uCenter; varying vec2 vUv;
+    void main(){ vec2 dir=vUv-uCenter; float d=dot(dir,dir);
+      vec2 off=dir*uAmount*(0.4+d*2.4);
+      float r=texture2D(tDiffuse,vUv-off).r; float g=texture2D(tDiffuse,vUv).g; float b=texture2D(tDiffuse,vUv+off).b;
+      gl_FragColor=vec4(r,g,b, texture2D(tDiffuse,vUv).a); }`
+};
+const caPass = new ShaderPass(CAShader); composer.addPass(caPass);
+composer.addPass(new SMAAPass(window.innerWidth, window.innerHeight));
+composer.addPass(new OutputPass());
+
+/* ============================ animation ============================ */
+// camera focus presets — deterministic framings for close-up evidence shots
+const FOCUS = {
+  buttons: { pos:new THREE.Vector3(-0.10,-0.95, 3.05), look:new THREE.Vector3(-0.10,-1.50,0.33) },
+  prism:   { pos:new THREE.Vector3(0.18, 0.46, 3.45), look:new THREE.Vector3(-0.20, 0.02, 0.05) },
+  panel:   { pos:new THREE.Vector3(1.55, 0.05, 3.10),  look:new THREE.Vector3(1.74,-0.02,-0.05) },
+  wordmark:{ pos:new THREE.Vector3(-1.58, 1.46, 3.05), look:new THREE.Vector3(-1.62,1.30,0.0) },
+};
+let camFocus = null;
+const clock = new THREE.Clock();
+let elapsed = 0;
+let frozen = null;            // when set, time is pinned (deterministic screenshots)
+let fpsAcc=0, fpsN=0, fpsLast=0;
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  elapsed = frozen!=null ? frozen : (elapsed + dt);
+  const t = elapsed;
+
+  stepTweens();
+
+  // hero prism — slow weighted sway kept in a flattering triangular 3/4 view
+  // (always shows the triangular face + a refracting side; dispersion drifts with env)
+  if(prismMesh){
+    prismMesh.rotation.y = 0.46 + Math.sin(t*0.30)*0.26;
+    prismMesh.rotation.x = 0.16 + Math.sin(t*0.23)*0.10;
+    prismMesh.rotation.z = Math.sin(t*0.17)*0.05;
+    prismRing.rotation.z = 0.18 + Math.sin(t*0.19)*0.06;
+  }
+  // living reflections — slowly rotate the env so chrome streaks drift
+  scene.environmentRotation.y = t*0.05;
+
+  // buttons — large VERTICAL rise/depress + compression + responsive contact shadow
+  for(const b of buttons){
+    const heat = Math.min(1.5, b.lift*0.5 + b.press*1.0);
+    b.group.position.y = b.basePos.y + b.lift*0.18 - b.press*0.32;   // clearer physical rise / deeper depress
+    b.group.position.z = b.baseZ + b.lift*0.07 - b.press*0.06;
+    b.group.rotation.x = -0.30 - b.press*0.12;                       // tips into the surface when pressed
+    b.group.scale.set(1 + b.lift*0.02, 1 + b.lift*0.03 - b.press*0.14, 1 + b.lift*0.02);
+    b.grooveMat.emissiveIntensity = b.baseGroove + heat*1.0;         // restrained flare (motion ≠ brightness)
+    b.body.material.roughness = (b.kind==='secondary'?0.18:0.025) * (1 - Math.min(0.9,heat)*0.5);
+    // reflection depth cue: a LIFTED cap catches more env light (brighter); a PRESSED cap
+    // descends into the socket shadow (dimmer reflection) → the travel reads as real Z-depth,
+    // not just a translate. This is what makes the depress read as "sinking", not "dimming off".
+    const baseEnv = (b.kind==='secondary'?1.3:1.7);
+    b.body.material.envMapIntensity = baseEnv * (1 + b.lift*0.18 - b.press*0.48);
+    if(b.inlay && b.inlay.material){
+      const ie = (b.kind==='primary'?1.9:1.55);
+      b.inlay.material.envMapIntensity = ie * (1 + b.lift*0.14 - b.press*0.48);
+    }
+    if(b.glyph){ b.glyph.rotation.z = -t*0.6 + b.press*1.4; b.glyph.rotation.x = t*0.4; }
+    if(b.shadow){
+      b.shadow.scale.setScalar(1 + b.lift*0.22 - b.press*0.10);      // grows/softens on lift, firms on press
+      b.shadow.material.opacity = THREE.MathUtils.clamp(0.5 - b.lift*0.2 + b.press*0.26, 0.18, 0.74);
+    }
+  }
+
+  if(camFocus){
+    camera.position.set(camFocus.pos.x, camFocus.pos.y, camFocus.pos.z);
+    camera.lookAt(camFocus.look);
+  } else {
+    // magnetic-cursor parallax — subtle, weighted (camera leans toward pointer)
+    const tx = THREE.MathUtils.clamp(parallax.x, -1,1) * 0.22;
+    const ty = THREE.MathUtils.clamp(-parallax.y, -1,1) * 0.14;
+    camera.position.x += (CAM_HOME.x + tx - camera.position.x)*0.06;
+    camera.position.y += (CAM_HOME.y + ty - camera.position.y)*0.06;
+    camera.position.z = CAM_HOME.z;
+    camera.lookAt(0, 0.02, 0);
+  }
+
+  updateLabels();
+  composer.render();
+
+  // fps readout
+  fpsAcc+=dt; fpsN++;
+  if(fpsAcc>=0.5){ const fps=Math.round(fpsN/fpsAcc);
+    document.getElementById('status-fps').textContent = `${fps} fps · transmission rt`;
+    fpsAcc=0; fpsN=0; }
+}
+
+/* ============================ resize ============================ */
+function onResize(){
+  const w=window.innerWidth, h=window.innerHeight;
+  camera.aspect=w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h); composer.setSize(w,h);
+  bloom.setSize(w,h);
+}
+window.addEventListener('resize', onResize);
+
+/* ============================ deterministic debug API ============================ */
+window.__slice = {
+  ready:false,
+  byName:(n)=>buttons.find(b=>b.name===n),
+  hover:(n)=>{ const b=buttons.find(x=>x.name===n); if(b) setHover(b,true); },
+  unhover:()=>{ for(const b of buttons) setHover(b,false); },
+  press:(n)=>{ const b=buttons.find(x=>x.name===n); if(b) pressDown(b); },
+  release:(n)=>{ const b=buttons.find(x=>x.name===n); if(b) pressUp(b); },
+  // pin animation time so screenshots are reproducible
+  freeze:(time)=>{ frozen = (time==null? elapsed : time); },
+  unfreeze:()=>{ frozen=null; clock.getDelta(); },
+  // instantly settle a button's lift/press (skip tween) for crisp state shots
+  forceState:(n, lift, press)=>{ const b=buttons.find(x=>x.name===n); if(b){
+    if(b.liftTw)b.liftTw.done=true; if(b.pressTw)b.pressTw.done=true; b.lift=lift; b.press=press; } },
+  setParallax:(x,y)=>{ parallax.set(x,y); },
+  focus:(name)=>{ camFocus = (name && name!=='home') ? FOCUS[name] : null; },
+};
+
+/* ============================ boot ============================ */
+async function init(){
+  // load the premium typeface for opentype-driven 3D extrusion
+  const buf = await fetch('fonts/Sora-VF.ttf').then(r=>r.arrayBuffer());
+  const font = window.opentype.parse(buf);
+
+  buildHero();
+  buildWordmark(font);
+  buildPanel();
+
+  buildButton({ name:'primary',   kind:'primary',   pos:new THREE.Vector3(-1.12,-1.50,0.38) });
+  buildButton({ name:'secondary', kind:'secondary', pos:new THREE.Vector3(0.10,-1.52,0.32), w:0.92 });
+  buildButton({ name:'icon',      kind:'icon',      pos:new THREE.Vector3(0.92,-1.52,0.32), w:0.46 });
+
+  // ensure DOM fonts are ready so screenshots show the real type
+  try{ await document.fonts.ready; }catch(e){}
+
+  animate();
+  // give the transmission RT + bloom a couple frames to settle, then reveal
+  setTimeout(()=>{
+    document.getElementById('veil').classList.add('hidden');
+    window.__slice.ready = true;
+  }, 350);
+}
+init().catch(err=>{
+  console.error(err);
+  document.getElementById('veil').textContent = 'init error: '+err.message;
+});
+</script>
+</body>
+</html>

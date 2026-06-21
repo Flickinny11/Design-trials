@@ -1,0 +1,86 @@
+{
+  "[data-component=\"view-mode-toggle\"] button": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif, ui-sans-serif, system-ui",
+    "fontWeight": "600",
+    "fontSize": "12px",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "[data-component=\"top-bar\"] .ds-title-brass": {
+    "found": true,
+    "fontFamily": "display, \"display Fallback\", ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif, ui-sans-serif, system-ui",
+    "fontWeight": "700",
+    "fontSize": "13px",
+    "letterSpacing": "-0.325px",
+    "textTransform": "none",
+    "firstFamily": "display"
+  },
+  ".ds-title": {
+    "found": true,
+    "fontFamily": "display, \"display Fallback\", ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "600",
+    "fontSize": "16px",
+    "letterSpacing": "-0.192px",
+    "textTransform": "none",
+    "firstFamily": "display"
+  },
+  ".ds-display": {
+    "found": false
+  },
+  ".ds-headline": {
+    "found": true,
+    "fontFamily": "display, \"display Fallback\", ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "600",
+    "fontSize": "22px",
+    "letterSpacing": "-0.264px",
+    "textTransform": "none",
+    "firstFamily": "display"
+  },
+  ".ds-label": {
+    "found": false
+  },
+  ".ds-body": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "400",
+    "fontSize": "12.5px",
+    "letterSpacing": "0.0625px",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  ".ds-btn": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "600",
+    "fontSize": "11px",
+    "letterSpacing": "0.22px",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  ".ds-kicker": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    "fontWeight": "500",
+    "fontSize": "9.5px",
+    "letterSpacing": "1.9px",
+    "textTransform": "uppercase",
+    "firstFamily": "mono"
+  },
+  "body": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "400",
+    "fontSize": "16px",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "__fontsLoaded": {
+    "Clash Display": true,
+    "Geist": true,
+    "JetBrains Mono": true
+  },
+  "__documentFontsStatus": "loaded"
+}

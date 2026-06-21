@@ -1,0 +1,35 @@
+{
+  "boot": {
+    "viewMode": "galaxy",
+    "activeHubId": "s1-arrival",
+    "selectedNodeId": null,
+    "inspectorOpen": false,
+    "editorMode": "idle",
+    "editorRenderMode": "scene",
+    "canvasGizmoMode": "translate",
+    "searchOpen": false,
+    "addNodeDialogOpen": false
+  },
+  "hubs": [
+    {
+      "id": "s1-arrival",
+      "name": "Arrival"
+    },
+    {
+      "id": "s2-movement",
+      "name": "The Movement"
+    },
+    {
+      "id": "s3-materia",
+      "name": "Materia"
+    },
+    {
+      "id": "s4-celestia",
+      "name": "Celestia"
+    },
+    {
+      "id": "s5-acquire",
+      "name": "Acquire"
+    }
+  ]
+}

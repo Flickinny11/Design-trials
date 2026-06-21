@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
+const page = await ctx.newPage();
+const errs=[]; page.on('pageerror',e=>errs.push(e.message));
+await page.goto('http://localhost:4793/', { waitUntil: 'domcontentloaded' });
+await page.waitForSelector('canvas',{timeout:30000}).catch(()=>{});
+await page.waitForTimeout(4500);
+await page.evaluate(()=>window.__PRISM_TIPS__?.launch?.());
+await page.waitForTimeout(2500);
+console.log('welcome pub:', JSON.stringify(await page.evaluate(()=>window.__TIP_PUB__)));
+console.log('welcome storeRect:', JSON.stringify(await page.evaluate(()=>window.__PRISM_TIPS__?.state?.()?.artifactFrameRect)));
+await page.evaluate(()=>window.__PRISM_TIPS__?.next?.());
+await page.waitForTimeout(2000);
+console.log('galaxy pub:', JSON.stringify(await page.evaluate(()=>window.__TIP_PUB__)));
+console.log('galaxy storeRect:', JSON.stringify(await page.evaluate(()=>window.__PRISM_TIPS__?.state?.()?.artifactFrameRect)));
+console.log('pageerrors', errs.length); errs.slice(0,3).forEach(e=>console.log(' ',e.slice(0,160)));
+await b.close();

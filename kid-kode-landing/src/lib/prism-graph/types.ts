@@ -374,6 +374,25 @@ export interface TextExtrudeSpec {
    *  never flat). Sensible defaults applied when absent. */
   metalness?: number;
   roughness?: number;
+  /** TRUE liquid-glass glyphs (additive, INV-18). When `transmission > 0` the
+   *  whole title builds ONE shared MeshPhysicalNodeMaterial admitted once into
+   *  the ≤2 Path-B transmission budget (§4 / SC-O10) and reused across every
+   *  glyph mesh — so a multi-letter wordmark counts as a single transmission
+   *  surface, never one-per-glyph. Over budget → graceful clearcoat-glass
+   *  (no extra screen pass). Refraction/dispersion turn the extruded letters
+   *  into real refractive crystal, not a flat decal. */
+  transmission?: number;
+  /** Index of refraction (default 1.45 — sapphire-ish). */
+  ior?: number;
+  /** Glass slab thickness for Beer–Lambert absorption (em units; default = depth). */
+  thickness?: number;
+  /** Clearcoat layer (0..1; default 1 when glass). */
+  clearcoat?: number;
+  clearcoatRoughness?: number;
+  /** Chromatic dispersion (rainbow edge refraction). */
+  dispersion?: number;
+  /** Thin-film iridescence (0..1). */
+  iridescence?: number;
 }
 
 export interface TextSpec {

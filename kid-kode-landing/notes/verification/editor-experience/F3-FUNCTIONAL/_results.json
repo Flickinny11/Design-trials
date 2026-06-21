@@ -1,0 +1,115 @@
+{
+  "results": [
+    {
+      "flow": "SETUP: dismiss walkthrough",
+      "status": "PASS",
+      "evidence": "tip-scrim count=0",
+      "frame": "00-boot.png"
+    },
+    {
+      "flow": "1 MODE SWITCH",
+      "status": "PASS",
+      "evidence": "Galaxy->galaxy | Canvas->canvas | Preview App->preview-app | Galaxy->galaxy; new console errs=0",
+      "frame": "01-mode-3-galaxy.png"
+    },
+    {
+      "flow": "2 HUB NAV",
+      "status": "PASS",
+      "evidence": "6/6 pills changed active hub; Galaxy=>active:galaxyOK Arrival=>active:s1-arrivalOK The Movement=>active:s2-movementOK Materia=>active:s3-materiaOK Celestia=>active:s4-celestiaOK Acquire=>active:s5-acquireOK; errs=0",
+      "frame": "02-hub-1-Arrival.png"
+    },
+    {
+      "flow": "3 SELECT + INSPECTOR",
+      "status": "PASS",
+      "evidence": "selected=orr-acquire-watch via=canvas-click; inspector DOM count=1; errs=0",
+      "frame": "03-select-inspector.png"
+    },
+    {
+      "flow": "4 STAGING KEYSTONE",
+      "status": "PARTIAL",
+      "evidence": "edit=true pending=\"Save (1)\"(1) previewBufStillSet=1 save=true->buf0 rebuilt=true buildCt 8->8 srcColor=#ff3300; errs=4",
+      "frame": "04d-after-rebuild.png"
+    },
+    {
+      "flow": "5 DISCARD",
+      "status": "PARTIAL",
+      "evidence": "staged=true(buf1) discard=true bufAfter=0 saveLabel=\"Saved\"; errs=6",
+      "frame": "05b-after-discard.png"
+    },
+    {
+      "flow": "6 GIZMO / DRAG",
+      "status": "FAIL",
+      "evidence": "toolOpen=true editMode=idle gizmo=translate moved=null (x undefined->undefined) stagedBuf=0; errs=0",
+      "frame": "06b-after-nudge.png"
+    },
+    {
+      "flow": "7 UNDO / REDO",
+      "status": "PARTIAL",
+      "evidence": "past 1->edit2->undo1->redo2; color edit=#22ff88 undo=#ff3300 redo=#22ff88; histPanel=true; errs=4",
+      "frame": "07b-after-undo.png"
+    },
+    {
+      "flow": "8 ADD NODE",
+      "status": "PASS",
+      "evidence": "dialogOpen=true addClicked=true nodeCount 23->24; errs=0",
+      "frame": "08a-add-node-dialog.png"
+    },
+    {
+      "flow": "9 TEXT TOOL",
+      "status": "FAIL",
+      "evidence": "flyoutOpen=true inputEditable=false clipped=null; errs=0",
+      "frame": "09b-text-input.png"
+    },
+    {
+      "flow": "10 BACKGROUND PICKER",
+      "status": "PASS",
+      "evidence": "flyoutOpen=true presetButtons=6 appliedChange=true; errs=0",
+      "frame": "10a-bg-picker.png"
+    },
+    {
+      "flow": "11 SEARCH",
+      "status": "PASS",
+      "evidence": "searchOpen=true resultRowsForQuery=null; errs=0",
+      "frame": "11a-search-open.png"
+    }
+  ],
+  "errCount": 14,
+  "errs": [
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan",
+    "%s a style property during rerender (%s) when a conflicting property is set (%s) can lead to styling bugs. To avoid this, don't mix shorthand and non-shorthand properties for the same value; instead, replace the shorthan"
+  ],
+  "hubs": [
+    {
+      "id": "s1-arrival",
+      "name": "Arrival"
+    },
+    {
+      "id": "s2-movement",
+      "name": "The Movement"
+    },
+    {
+      "id": "s3-materia",
+      "name": "Materia"
+    },
+    {
+      "id": "s4-celestia",
+      "name": "Celestia"
+    },
+    {
+      "id": "s5-acquire",
+      "name": "Acquire"
+    }
+  ]
+}

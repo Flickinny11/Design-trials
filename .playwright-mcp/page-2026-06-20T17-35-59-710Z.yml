@@ -1,0 +1,77 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - button "Galaxy" [ref=e5] [cursor=pointer]
+      - button "Canvas" [ref=e6] [cursor=pointer]
+      - button "Preview App" [ref=e7] [cursor=pointer]
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - img "Prism" [ref=e47]
+            - generic [ref=e70]:
+              - generic [ref=e71]: Prism
+              - generic [ref=e72]: KRIPTIK EDITOR
+          - generic [ref=e97]:
+            - button "Graph" [ref=e98] [cursor=pointer]:
+              - img [ref=e99]
+              - text: Graph
+            - generic [ref=e109]: /
+            - generic [ref=e110]:
+              - img [ref=e111]
+              - text: Arrival
+        - generic [ref=e121]:
+          - generic "Graph health" [ref=e129]:
+            - img [ref=e130]
+            - generic [ref=e143]: 100%
+          - button "+ Add Node" [ref=e144] [cursor=pointer]:
+            - generic [ref=e145]: +
+            - generic [ref=e146]: Add Node
+          - button "Reset camera" [ref=e147] [cursor=pointer]:
+            - img [ref=e148]
+          - button "Search ⌘K" [ref=e158] [cursor=pointer]:
+            - img [ref=e159]
+            - generic [ref=e169]: Search
+            - generic [ref=e170]: ⌘K
+      - generic [ref=e172]:
+        - button "Galaxy" [ref=e173] [cursor=pointer]:
+          - img [ref=e175]
+          - text: Galaxy
+        - button "Arrival 33" [ref=e186] [cursor=pointer]:
+          - img [ref=e188]
+          - text: Arrival
+          - generic [ref=e198]: "33"
+        - button "The Movement 38" [ref=e199] [cursor=pointer]:
+          - img [ref=e201]
+          - text: The Movement
+          - generic [ref=e211]: "38"
+        - button "Materia 60" [ref=e212] [cursor=pointer]:
+          - img [ref=e214]
+          - text: Materia
+          - generic [ref=e224]: "60"
+        - button "Celestia 39" [ref=e225] [cursor=pointer]:
+          - img [ref=e227]
+          - text: Celestia
+          - generic [ref=e237]: "39"
+        - button "Acquire 41" [ref=e238] [cursor=pointer]:
+          - img [ref=e240]
+          - text: Acquire
+          - generic [ref=e250]: "41"
+        - button "The Atelier 79" [ref=e251] [cursor=pointer]:
+          - img [ref=e253]
+          - text: The Atelier
+          - generic [ref=e263]: "79"
+      - generic:
+        - generic:
+          - generic:
+            - generic: MINIMAP
+            - generic: 290 nodes
+      - button "Filter" [ref=e573] [cursor=pointer]:
+        - img [ref=e574]
+        - generic [ref=e584]: Filter
+    - button "Open the guided tour" [ref=e568] [cursor=pointer]:
+      - generic:
+        - img
+  - button "Open Next.js Dev Tools" [ref=e40] [cursor=pointer]:
+    - img [ref=e41]
+  - alert [ref=e30]

@@ -45,6 +45,10 @@ import {
 } from 'three/tsl';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { TEXT_SPEC_DEFAULT, type TextFill, type TextSpec } from '../../prism-graph/types';
+import {
+  requestTransmission,
+  releaseTransmission,
+} from '../runtime/shared/transmission-budget';
 import { TEXT_OBJECT_NAME, textUnitName, type TextObjectHandle } from './contract';
 import type {
   CreateTextObject3DFn,
@@ -487,6 +491,43 @@ function buildUnitMaterial(
   return mat;
 }
 
+/**
+ * Promote a freshly-built extruded-text material to TRUE liquid glass when
+ * `extrude.transmission > 0`. Admits ONE shared material into the ≤2 Path-B
+ * budget (§4) so the whole wordmark is a single transmission surface; over
+ * budget falls back to a clearcoat-glass approximation (no extra screen pass).
+ * Returns true when a real Path-B transmission slot was taken (caller releases
+ * it on cleanup).
+ */
+function applyGlass(mat: MeshPhysicalNodeMaterial, spec: TextSpec): boolean {
+  const ex = spec.extrude ?? {};
+  const t = ex.transmission ?? 0;
+  if (t <= 0) return false;
+  mat.metalness = 0;
+  mat.ior = ex.ior ?? 1.45;
+  mat.clearcoat = ex.clearcoat ?? 1;
+  mat.clearcoatRoughness = ex.clearcoatRoughness ?? 0.08;
+  if (ex.iridescence != null) mat.iridescence = ex.iridescence;
+  mat.transparent = true;
+  mat.userData.text3dGlass = true;
+  const admitted = requestTransmission(mat);
+  if (admitted) {
+    mat.transmission = t;
+    mat.thickness = ex.thickness ?? ex.depth ?? EXTRUDE_DEFAULT.depth;
+    if (ex.dispersion != null) mat.dispersion = ex.dispersion;
+    mat.roughness = ex.roughness ?? 0.04;
+    mat.userData.text3dTransmission = t;
+  } else {
+    // Over the ≤2 budget — degrade gracefully to clearcoat glass (Path-C-ish):
+    // still reads as crystal, no extra screen render of the scene behind it.
+    mat.transmission = 0;
+    mat.roughness = ex.roughness ?? 0.06;
+    mat.opacity = Math.min(spec.opacity ?? 1, 0.9);
+    mat.userData.text3dTransmission = 0;
+  }
+  return admitted;
+}
+
 function resolveExtrude(spec: TextSpec, tier: 'T0' | 'T1' | 'T2'): typeof EXTRUDE_DEFAULT {
   const ex = spec.extrude ?? {};
   // T2 desktop affords richer tessellation for DPR-2 sharpness; T1 the default.
@@ -517,6 +558,9 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
   const decorations: Mesh[] = []; // underline / strikethrough rule bars
   let shadowGroup: Group | null = null;
   let shadowGeo: BufferGeometry | null = null;
+  // Shared liquid-glass material (one per wordmark, admitted once into the ≤2
+  // transmission budget) — built lazily in buildUnits, released in clearUnits.
+  let glassMat: MeshPhysicalNodeMaterial | null = null;
 
   const wantFillUrl = (): string | null => {
     const f = resolved.extrude?.faceFill ?? resolved.fill;
@@ -539,11 +583,20 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
     // real italic faces are requested via the italic flag on the outline fetch).
     const shear = resolved.italic ? 0.22 : 0;
 
+    // True liquid-glass wordmark → ONE shared material for every glyph (single
+    // transmission surface). Non-glass titles keep per-glyph materials.
+    const wantGlass = (resolved.extrude?.transmission ?? 0) > 0;
+    if (wantGlass) {
+      glassMat = buildUnitMaterial(resolved, tex);
+      applyGlass(glassMat, resolved);
+    }
+    const unitMaterial = () => glassMat ?? buildUnitMaterial(resolved, tex);
+
     layout.units.forEach((unit, i) => {
       const geo = buildUnitGeometry(unit, currentOutlines, emScale, ex, fontSize, shear);
       if (!geo) return;
       remapFaceUv(geo, unit.center, block);
-      const mesh = new Mesh(geo, buildUnitMaterial(resolved, tex));
+      const mesh = new Mesh(geo, unitMaterial());
       mesh.name = textUnitName(i);
       mesh.position.set(unit.center.x, unit.center.y, 0);
       mesh.castShadow = true;
@@ -571,7 +624,7 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
           const g = buildRuleBar(rule, b.y, uthick, ex, fontSize);
           if (!g) continue;
           remapFaceUv(g, { x: 0, y: 0 }, block);
-          const m = new Mesh(g, buildUnitMaterial(resolved, tex));
+          const m = new Mesh(g, unitMaterial());
           m.name = `text-rule-${b.tag}`;
           m.castShadow = true;
           m.receiveShadow = true;
@@ -592,10 +645,20 @@ export const createTextObject3D: CreateTextObject3DFn = (spec, outlines, opts) =
   };
 
   const clearUnits = () => {
+    // Dispose each unique material once — glyphs may share one glass material.
+    const seenMats = new Set<Material>();
     for (const mesh of [...units, ...decorations]) {
       group.remove(mesh);
       mesh.geometry.dispose();
-      (mesh.material as Material).dispose();
+      const m = mesh.material as Material;
+      if (!seenMats.has(m)) {
+        seenMats.add(m);
+        m.dispose();
+      }
+    }
+    if (glassMat) {
+      releaseTransmission(glassMat);
+      glassMat = null;
     }
     units.length = 0;
     decorations.length = 0;

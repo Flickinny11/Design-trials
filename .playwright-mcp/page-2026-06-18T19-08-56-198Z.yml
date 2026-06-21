@@ -1,0 +1,16 @@
+- generic [active] [ref=e1]:
+  - generic:
+    - generic: NODE COMPOSITOR · PRISM ENGINE
+    - generic: Materialize
+    - generic: Preview
+    - generic: disperse
+    - generic: Inspector
+    - generic: PRISM · NODE 0x1E
+    - generic: Material Dispersive Glass
+    - generic: IOR 1.52
+    - generic: Dispersion 4.80 Abbe
+    - generic: State Refracting
+  - generic [ref=e3]:
+    - generic [ref=e4]: ● WebGL · Tier A
+    - generic [ref=e5]: 1 fps · transmission rt
+  - generic [ref=e6]: Compiling materials…

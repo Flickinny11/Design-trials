@@ -1,0 +1,1 @@
+[16:34] ARMED: ORRERY-FIDELITY sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch FIDELITY-STOP
