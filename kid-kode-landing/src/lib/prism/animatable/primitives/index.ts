@@ -293,6 +293,7 @@ import { fresnelGlowPrimitive } from './fresnel-glow';
 import { frostedGlassPrimitive } from './frosted-glass';
 import { gemstoneCutPrimitive } from './gemstone-cut';
 import { glassRefractionPrimitive } from './glass-refraction';
+import { liquidGlassPanelPrimitive } from './liquid-glass-panel';
 import { holoGlassPrimitive } from './holo-glass';
 import { iceGlassPrimitive } from './ice-glass';
 import { iridescentGlassPrimitive } from './iridescent-glass';
@@ -701,6 +702,7 @@ export const ALL_PRIMITIVES: PrimitiveDefinition[] = [
   frostedGlassPrimitive,
   gemstoneCutPrimitive,
   glassRefractionPrimitive,
+  liquidGlassPanelPrimitive,
   holoGlassPrimitive,
   iceGlassPrimitive,
   iridescentGlassPrimitive,

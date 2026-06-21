@@ -88,6 +88,12 @@ import {
   buildPrimitiveGeometry,
   createMeshPrimitiveHandle,
 } from '../shared/mesh-primitive';
+// Transmission budget (spec §4 / SC-O10, risk #2) — admit ≤2 live Path-B
+// transmission surfaces; over budget, downgrade to a cheaper Path-C glass look.
+import {
+  requestTransmission,
+  releaseTransmission,
+} from '../shared/transmission-budget';
 import type {
   CinematicPrimitiveRef,
   ImageSpec,
@@ -156,6 +162,29 @@ export function defaultRenderModeFactory(
   // because setPrimitive swaps mesh.geometry in place (disposing the old one
   // at swap time); cleanup must dispose whatever geometry is CURRENT.
   const meshPrimitiveMeshes: Mesh[] = [];
+  // Transmission budget (spec §4 / SC-O10) — release fns for admitted Path-B
+  // surfaces. Run on cleanup so navigating away frees the ≤2 slots.
+  const transmissionReleasers: Array<() => void> = [];
+  // Admit a just-built physical material into the transmission budget when its
+  // resolved spec actually refracts (transmission > 0). Over budget → strip the
+  // transmission pass and fall back to a cheaper clearcoat/translucency glass
+  // read (Path C), so the surface still looks like glass without a 3rd render.
+  const admitTransmission = (mat: object, transmission: number): void => {
+    if (!(transmission > 0)) return;
+    if (requestTransmission(mat)) {
+      transmissionReleasers.push(() => releaseTransmission(mat));
+      return;
+    }
+    const m = mat as {
+      transmission: number; roughness: number; clearcoat: number;
+      opacity: number; transparent: boolean;
+    };
+    m.transmission = 0;
+    m.clearcoat = 1;
+    m.roughness = Math.max(0.06, m.roughness);
+    m.opacity = Math.min(0.9, m.opacity || 1);
+    m.transparent = true;
+  };
 
   const renderMode = node.renderMode ?? 'sprite';
   const sourceAsset = node.visual?.sourceAsset;
@@ -408,6 +437,10 @@ export function defaultRenderModeFactory(
         ctx.textureLoader,
       );
       const physical = faceBuild.base;
+      // Transmission budget (spec §4 / SC-O10): a primitive whose spec refracts
+      // (e.g. the sapphire crystal) claims a Path-B slot or downgrades to glassy
+      // clearcoat when the ≤2 budget is full.
+      admitTransmission(physical, resolveMaterialSpec(node.materialSpec).transmission);
       // W3 (INV-18 additive) — pour a base-color map onto the base material
       // when the spec carries one (async; only when faces aren't already
       // mapping their own textures onto every slot).
@@ -473,6 +506,9 @@ export function defaultRenderModeFactory(
               // ones we create get disposed on cleanup.
               const physical = buildPhysicalMaterial(meshSpec);
               applyMaterialSpec(physical, meshSpec);
+              // Transmission budget (spec §4 / SC-O10) — admit/downgrade per
+              // GLB submesh material that refracts.
+              admitTransmission(physical, meshSpec.transmission);
               child.material = physical;
               materialsToDispose.push(physical as unknown as DisposableMaterial);
             }
@@ -704,6 +740,11 @@ export function defaultRenderModeFactory(
     for (const m of materialsToDispose) {
       try { m.dispose?.(); } catch { /* ignore */ }
     }
+    // Transmission budget — free this node's admitted Path-B slot(s).
+    for (const release of transmissionReleasers) {
+      try { release(); } catch { /* ignore */ }
+    }
+    transmissionReleasers.length = 0;
   };
 
   return group;

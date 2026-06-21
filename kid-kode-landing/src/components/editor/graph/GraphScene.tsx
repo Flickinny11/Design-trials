@@ -101,6 +101,7 @@ import {
   setSharedNodeContextTier,
 } from '@/lib/prism/runtime/shared-context';
 import { detectCapabilityTier } from '@/lib/prism/runtime/shared/capability-tier';
+import { getTransmissionCount } from '@/lib/prism/runtime/shared/transmission-budget';
 // P2 ANIMATION BINDINGS (canvas-spec §8.2/§8.3) — the binding player attaches
 // a node's catalog-primitive animationBindings to the mounted artifact and
 // plays them through the SAME driver dispatch the factory's STEP7 path uses.
@@ -2070,6 +2071,21 @@ function SceneControlsBridge({
       delete w.__PRISM_EDITOR_GET_CANVAS_RAIL__;
     };
   }, [rail]);
+
+  // SC-O10 — live transmission budget bridge. The count is owned by the DOM-free
+  // runtime module (transmission-budget.ts); this exposes it as a live getter so
+  // Playwright verification reads the current admitted Path-B surface count at
+  // any scene state. Never exceeds MAX_TRANSMISSION (2) by construction.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    Object.defineProperty(window, '__PRISM_TRANSMISSION_COUNT__', {
+      configurable: true,
+      get: () => getTransmissionCount(),
+    });
+    return () => {
+      delete (window as unknown as Record<string, unknown>).__PRISM_TRANSMISSION_COUNT__;
+    };
+  }, []);
 
   // APP-REALITY P1 — Preview-app LOCKS the camera (it IS the running app: the
   // configured view / camera journey owns the camera, the user cannot orbit it
