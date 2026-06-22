@@ -29,7 +29,7 @@ import { useGLTF } from '@react-three/drei';
 import {
   Group, Object3D, Vector2, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
   CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry,
-  LatheGeometry, Raycaster, TextureLoader, type Texture,
+  Raycaster, TextureLoader, type Texture,
 } from 'three';
 import {
   buildPhysicalMaterial,
@@ -43,6 +43,11 @@ import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 const ATELIER_HUB_ID = 's6-atelier';
 const ASSET = '/prism-mock/orrery/meshes/atelier';
 const MOVEMENT_URL = '/prism-mock/orrery/meshes/tourbillon.glb';
+// PHASE2 (P2-1): real photoreal GENERATED GLB parts (Tripo v3.1 image→3D, PBR +
+// baked normal). The case/bezel/crown are no longer procedural geometry.
+const CASE_GEN_URL = `${ASSET}/case-gen.glb`;
+const BEZEL_GEN_URL = `${ASSET}/bezel-gen.glb`;
+const CROWN_GEN_URL = `${ASSET}/crown-gen.glb`;
 const TEX = `${ASSET}/textures`;
 
 const PIVOT_CENTER = new Vector3(0, 0.15, 0.42);
@@ -99,57 +104,105 @@ function specOf(layer: AtelierLayerId, variantId: string): MaterialSpec | null {
   return variantOf(layer, variantId)?.material ?? null;
 }
 
-// ── watch case (precision-turned, dressed in generated steel PBR) ───────────
-// Single-image image→3D (TRELLIS/Hunyuan) hallucinates depth + edge nubs on a
-// precise mechanical case (see report); Tripo part-segmentation (the generated-
-// swappable path) is unfunded. So the case is a clean LatheGeometry turning — a
-// real watch caseband cross-section revolved — plus tapered lugs + a fluted crown,
-// all wearing the GENERATED brushed/polished steel maps under the studio HDRI. It
-// frames the GENERATED orrery dial art. The generated case GLB stays on disk
-// (case-hero.glb) for a segmented upgrade the moment Tripo is funded.
-const CASE_PROFILE: Vector2[] = [
-  // open exhibition caseback (ring, not closed disc) so the movement shows on flip
-  new Vector2(0.6, -0.17), new Vector2(0.84, -0.135),
-  new Vector2(0.965, -0.05), new Vector2(1.0, 0.05), new Vector2(0.99, 0.135),
-  new Vector2(0.95, 0.185), new Vector2(0.86, 0.2), new Vector2(0.84, 0.13),
-  new Vector2(0.84, 0.04),
-];
+// ── generated GLB parts (P2-1) ──────────────────────────────────────────────
+// Tripo v3.1 image→3D produced clean photoreal PBR GLBs for the hard parts (case
+// body w/ integrated lugs+crown, bezel ring, crown knob): full albedo + metallic-
+// roughness + baked normal, ~4.7k tris each. We normalize (center→scale→orient so
+// the dial face points to camera +Z), then dress each part in its live finish
+// (useConfiguratorStore → specOf) while GRAFTING the GLB's baked normal map so the
+// milled/brushed micro-surface survives every finish swap (SC-V-A2/A3 preserved).
+//
+// Transform constants — tuned against the studio rig so the GLB case frames the
+// procedural dial stack (radius ~0.82) and seats the bezel on its front rim.
+const CASE_SIZE = 2.06;   // target max-dim (world units) — outer case diameter
+const CASE_ROT_X = -Math.PI / 2; // GLB dial faces +Y; bring it to face camera +Z
+const CASE_POS_Z = -0.02;
+
+type AnyMesh = Mesh & { material: { normalMap?: unknown; map?: unknown } };
+
+/** Clone + center + scale-to-target + orient a generated GLB; collect its meshes
+ *  and the first baked normal map for finish grafting. */
+function normalizeGenPart(
+  scene: Object3D,
+  targetSize: number,
+  rotX: number,
+  posZ: number,
+): { holder: Group; meshes: AnyMesh[]; bakedNormal: unknown } {
+  const root = scene.clone(true);
+  const meshes: AnyMesh[] = [];
+  let bakedNormal: unknown = null;
+  root.traverse((o) => {
+    const m = o as AnyMesh;
+    if ((m as { isMesh?: boolean }).isMesh) {
+      meshes.push(m);
+      if (!bakedNormal && m.material?.normalMap) bakedNormal = m.material.normalMap;
+    }
+  });
+  const box = new Box3().setFromObject(root);
+  const size = new Vector3(); box.getSize(size);
+  const center = new Vector3(); box.getCenter(center);
+  root.position.sub(center);
+  const holder = new Group();
+  holder.add(root);
+  holder.scale.setScalar(targetSize / (Math.max(size.x, size.y, size.z) || 1));
+  holder.rotation.x = rotX;
+  holder.position.z = posZ;
+  return { holder, meshes, bakedNormal };
+}
+
+/** Dress a generated part's meshes in the live finish, grafting the baked normal. */
+function dressGenPart(meshes: AnyMesh[], spec: MaterialSpec, bakedNormal: unknown, normScale = 0.85) {
+  const mat = makeMat(spec) as unknown as { normalMap?: unknown; normalScale?: { set: (x: number, y: number) => void }; needsUpdate: boolean };
+  if (bakedNormal && !spec.normalMapUrl) {
+    mat.normalMap = bakedNormal;
+    mat.normalScale?.set(normScale, normScale);
+    mat.needsUpdate = true;
+  }
+  for (const me of meshes) { me.material = mat as never; me.castShadow = true; me.receiveShadow = true; }
+  return mat;
+}
+
+// ── watch case (GENERATED GLB — band + integrated lugs + crown, P2-1) ────────
 function WatchCase({ caseVariant }: { caseVariant: string }) {
-  const caseSpec = useMemo(
+  const gltf = useGLTF(CASE_GEN_URL);
+  const spec = useMemo(
     () => specOf('case', caseVariant) ?? { baseColor: '#c9ced6', metalness: 1, roughness: 0.18, envMapIntensity: 1.4 } as MaterialSpec,
     [caseVariant],
   );
-  const mat = useMemo(() => makeMat(caseSpec), [caseSpec]);
-  const bandGeo = useMemo(() => new LatheGeometry(CASE_PROFILE, 128), []);
-  const lugGeo = useMemo(() => new BoxGeometry(0.12, 0.46, 0.3), []);
-  const crownGeo = useMemo(() => new CylinderGeometry(0.085, 0.085, 0.14, 24), []);
-  const crownCapGeo = useMemo(() => new CylinderGeometry(0.094, 0.094, 0.04, 24), []);
-  // four lugs (two pairs at 12 + 6 o'clock) splayed outward to hold the strap bars
-  const lugs = useMemo(() => {
-    const out: { pos: [number, number, number]; rot: [number, number, number] }[] = [];
-    for (const sy of [1, -1]) for (const sx of [1, -1]) {
-      out.push({ pos: [sx * 0.3, sy * 0.92, -0.05], rot: [sy * -0.28, 0, sx * sy * 0.12] });
-    }
-    return out;
-  }, []);
-  return (
-    <group>
-      {/* lathe caseband: revolve about Y, then orient axis Y → Z (dial → camera) */}
-      <group rotation={[Math.PI / 2, 0, 0]}>
-        <mesh geometry={bandGeo} material={mat as never} castShadow receiveShadow />
-      </group>
-      {/* lugs + crown live in dial space (dial → +Z, 12 o'clock → +Y) */}
-      {lugs.map((l, i) => (
-        <mesh key={i} geometry={lugGeo} material={mat as never} position={l.pos} rotation={l.rot} castShadow receiveShadow />
-      ))}
-      {/* fluted crown at 3 o'clock (+X), axis along X */}
-      <group position={[1.0, 0, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <mesh geometry={crownGeo} material={mat as never} castShadow />
-        <mesh geometry={crownCapGeo} material={mat as never} position={[0, 0.08, 0]} />
-      </group>
-    </group>
-  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, CASE_SIZE, CASE_ROT_X, CASE_POS_Z), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal), [part, spec]);
+  return <primitive object={part.holder} />;
 }
+useGLTF.preload(CASE_GEN_URL);
+
+// ── bezel ring (GENERATED GLB, P2-1) — seats on the case front rim ───────────
+const BEZEL_SIZE = 1.94;
+function GenBezel({ bezelVariant }: { bezelVariant: string }) {
+  const gltf = useGLTF(BEZEL_GEN_URL);
+  const spec = useMemo(
+    () => specOf('bezel', bezelVariant) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec,
+    [bezelVariant],
+  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, BEZEL_SIZE, -Math.PI / 2, 0.0), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal, 0.6), [part, spec]);
+  return <primitive object={part.holder} />;
+}
+useGLTF.preload(BEZEL_GEN_URL);
+
+// ── crown knob (GENERATED GLB, P2-1) — at 3 o'clock (+X) ─────────────────────
+const CROWN_SIZE = 0.42;
+const CROWN_AT_X = 1.02; // crown seat at 3 o'clock (+X), just outside the case rim
+function GenCrown({ crownVariant }: { crownVariant: string }) {
+  const gltf = useGLTF(CROWN_GEN_URL);
+  const spec = useMemo(
+    () => specOf('crown', crownVariant) ?? { baseColor: '#c9ced6', metalness: 1, roughness: 0.2 } as MaterialSpec,
+    [crownVariant],
+  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, CROWN_SIZE, 0, 0), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal, 0.7), [part, spec]);
+  return <primitive object={part.holder} />;
+}
+useGLTF.preload(CROWN_GEN_URL);
 
 // ── caseback movement (GLB) — exhibition back, in motion on flip / explode ──
 function MovementModel({ flipRef, explodeRef }: { flipRef: React.MutableRefObject<boolean>; explodeRef: React.MutableRefObject<number> }) {
@@ -229,7 +282,6 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   const withLume = (spec: MaterialSpec): MaterialSpec => (lumeGlow ? { ...spec, emissive: lumeGlow, emissiveIntensity: 0.95 } : spec);
   const handsMat = useMemo(() => makeMat(withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec)), [build.hands, build.lume]);
   const indexMat = useMemo(() => makeMat(withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec)), [build.indices, build.lume]);
-  const bezelMat = useMemo(() => makeMat(specOf('bezel', build.bezel) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec), [build.bezel]);
   const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
   const crystalMat = useMemo(() => makeMat({
     baseColor: '#eef4ff', metalness: 0, roughness: 0.1, transmission: 1, ior: 1.52,
@@ -240,7 +292,6 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   // geometries (memoised)
   const dialGeo = useMemo(() => new CircleGeometry(WATCH_R * 0.82, 96), []);
   const chapterGeo = useMemo(() => new TorusGeometry(WATCH_R * 0.8, WATCH_R * 0.022, 16, 128), []);
-  const bezelGeo = useMemo(() => new TorusGeometry(WATCH_R * 0.93, WATCH_R * 0.07, 24, 160), []);
   const indexGeo = useMemo(() => { const g = new BoxGeometry(0.03, 0.1, 0.02); g.translate(0, WATCH_R * 0.71, 0); return g; }, []);
   const capGeo = useMemo(() => new CylinderGeometry(0.035, 0.035, 0.05, 24), []);
   // near-flat sapphire (dress-watch style) — avoids the domed-glass spotlight glare
@@ -295,14 +346,24 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
 
   return (
     <group ref={rootRef}>
-      {/* precision-turned case dressed in generated steel PBR */}
+      {/* GENERATED GLB case (band + integrated lugs + crown) + bezel + crown (P2-1) */}
       <group ref={caseGroupRef}>
-        <WatchCase caseVariant={build.case} />
+        <Suspense fallback={null}>
+          <WatchCase caseVariant={build.case} />
+          {/* crown knob at 3 o'clock (+X) — own swappable finish */}
+          <group position={[CROWN_AT_X, 0, 0.0]}>
+            <GenCrown crownVariant={build.crown} />
+          </group>
+        </Suspense>
       </group>
       {/* dial face stack — seated just behind the case front rim (explodes forward) */}
       <group ref={faceGroupRef} position={[0, 0, DIAL_FRONT]}>
-        {/* bezel ring sits on the case rim */}
-        <mesh geometry={bezelGeo} material={bezelMat as never} position={[0, 0, 0.02]} castShadow receiveShadow />
+        {/* GENERATED bezel ring on the case rim */}
+        <Suspense fallback={null}>
+          <group position={[0, 0, 0.02]}>
+            <GenBezel bezelVariant={build.bezel} />
+          </group>
+        </Suspense>
         {/* dial face (generated orrery art / finish) */}
         <mesh geometry={dialGeo} material={dialMat as never} position={[0, 0, -0.01]} receiveShadow />
         {/* chapter ring */}

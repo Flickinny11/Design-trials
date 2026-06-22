@@ -1,1 +1,1 @@
-[06:18:18] PHASE1 RUN COMPLETE — all gates pass
+[06:19] DONE: ORRERY-PHASE1 COMPLETE (marker + quiet). Tell Claude: check

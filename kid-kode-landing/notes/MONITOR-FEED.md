@@ -221,3 +221,9 @@ Will self-report phase events below.
 [06:02] PHASE1-SENTINEL: ## Wave D (v2) — drag-assemble (A1) + dimensional chrome (A8)
 
 [06:18:18] PHASE1 RUN COMPLETE | The Atelier rebuilt to flagship grade (mandate v2). All 8 SC-V-A PASS w/ cited evidence: A1 drag-assemble✓ A2 swaps✓ A3 photoreal-specular✓ A4 loupe✓ A5 caseback-movement-in-motion✓ A6 exploded✓ A7 price+save✓ A8 dimensional-chrome✓ (+O3 orrery motif). GATES: tsc 0-new(9)✓ · art-fidelity 11/11✓ · prism-criteria-reviewer PASS✓ · user-advocate PLEASED/PASS✓ · prod build EXIT=0✓ · 0 console err · tx 2/2 · 5 other hubs render (no regression). Watch = generated FLUX.2 orrery dial + turned-PBR steel case + tourbillon caseback + sapphire crystal (Tripo segmentation unfunded → honest hybrid, documented). Report: notes/ORRERY-PHASE1-REPORT.md.
+[06:19] PHASE1-SENTINEL: DONE: ORRERY-PHASE1 COMPLETE (marker + quiet). Tell Claude: check
+[07:11] PHASE2-SENTINEL: ARMED: ORRERY-PHASE2 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch PHASE2-STOP
+[07:14] PHASE2-SENTINEL: launched PHASE2 build agent on claude-opus-4-8 (resume #1)
+[07:34] PHASE2-SENTINEL: working... (1 build agents live)
+
+## [2026-06-22T07:36] PHASE2 wave1 — P2-1 generated GLB parts wired (case+bezel+crown Tripo v3.1), finish swaps + explode + caseback verified, tsc green
