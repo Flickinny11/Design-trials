@@ -279,3 +279,11 @@ Headline: MOSTLY-SOUND-WITH-FIXES, trending NEEDS-GREENLIGHT-REFACTOR for the ce
 - 3 CRITICAL hardcoded-component violations rendered OUTSIDE the graph: AtelierWatchRig (the hero configurator watch — NOT a node), OrreryComplicationRig (NOT a node), HubSceneTransition (NOT a node). + 7 orphan nodes that render nothing in preview-app.
 - behaviorSpec/contracts EMPTY on all 331; auto-caption mechanism absent — but per Ruler §0/§9 that is deferred future-engine work, not a broken foundation.
 Report: notes/AUDIT-INTEGRITY-REPORT.md
+[15:29] AUDIT-SENTINEL: working... (1 build agents live)
+
+## [2026-06-22] FOUNDATION AUDIT — Wave 2 (spec coherence) DONE
+- The spec corpus is ALREADY hardened + internally coherent (Ruler → Canonical-3 → Supporting → Future-source → Archive, with a full supersession table). NO spec contradicts the runtime model.
+- The Wave-1 drift is the CODE violating PRISM-RUNTIME-SPEC INV-R5/FP-R3 + CANVAS §1.2 — not a spec conflict. Proximate spec cause = OMISSION: ORRERY-NO7-VISION §1 has no "every artifact is a node" law + renderer-agnostic SC-V; PROTOTYPE-SPEC SC-O verify object NAME not node AUTHORSHIP.
+- NODE-EDITOR-SPEC vs -V2 are NOT duplicates (V2 is additive — "read base first"). Nothing archived.
+- DECISION: did NOT blindly archive the canonical-3 / replace with a master spec (that would damage the hardened hierarchy). Wrote PRISM-MASTER-SPEC.md as a CAPSTONE front-door (runtime-model summary + the ONE design law + NEW Law 0 "every artifact is a node"). Updated SPEC-INDEX.md (added 3 post-index specs + DESIGN-REFERENCES + front-door pointer).
+Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md

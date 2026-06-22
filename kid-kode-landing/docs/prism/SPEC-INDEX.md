@@ -1,7 +1,9 @@
 # PRISM SPEC INDEX — precedence, supersession, moves
 
-**Date:** 2026-06-05 (Phase 3B spec-hardening, docs-only)
+**Date:** 2026-06-05 (Phase 3B spec-hardening, docs-only) · **Addendum:** 2026-06-22 (Foundation Audit — see §8)
 **Purpose:** the single map of which Prism spec outranks which, what replaced what (with line cites), what moved where, and what remains as pending non-doc (STEP-3) actions. When two specs collide, resolve by this precedence ladder; the **ruler** breaks all ties.
+
+> **Front-door:** `PRISM-MASTER-SPEC.md` is the human entry point — a capstone that summarizes the runtime model (deferring to the ruler + canonical-3) and codifies the ONE design law. It does **not** change precedence; this index and the ruler remain authoritative. **§8 below records the specs created after this index** (`PRISM-NODE-EDITOR-SPEC-V2.md`, the two `ORRERY-NO7-*` specs, `DESIGN-REFERENCES.md`).
 
 ---
 
@@ -104,6 +106,22 @@ This pass is **docs-only**. The following require editing markers / hooks / code
 ## 7. Dangling references (cited as authoritative but absent from the repo)
 
 Named at `archive/PRISM-RENDERER-MIGRATION-SPEC.md:552`–`554` as "still authoritative for non-renderer concerns" but **not on disk anywhere**: `DIFFUSION-ENGINE-SPEC.md`, `PRISM_ENGINE_BROWSER_BASED_SPEC.md`, `Editor_UI_Rough_Spec`. Also: there is intentionally **no standalone caption spec** (anchor §0/§9 — the caption format is part of the future unified Engine+Harness+Runtime spec). These are FUTURE-SOURCE references that currently dangle; tracked in `notes/SPEC-HARDENING-RESIDUALS.md`.
+
+---
+
+## 8. ADDENDUM — 2026-06-22 Foundation Audit (specs created after this index)
+
+This index was written 2026-06-05. Four docs that exist in `docs/prism/` are not in the ladder above; their placement:
+
+| Doc | Tier placement | Note |
+|---|---|---|
+| `PRISM-MASTER-SPEC.md` | **front-door (capstone)** | NEW. Summarizes runtime model + codifies the ONE design law. Authoritative for the design law + audit findings; defers all runtime-truth to the ruler + canonical-3. Does not change precedence. |
+| `PRISM-NODE-EDITOR-SPEC-V2.md` (2026-06-14) | **1 — Canonical (additive)** | ADDITIVE promotion of `PRISM-NODE-EDITOR-SPEC.md` §1.3 future-source deferrals into buildable criteria (prompt-to-edit, Functions/Integrations tabs, galaxy polish). "Read the base spec first." **NOT a duplicate of the base — do not archive the base.** Carries a §1.3 amendment (navigate-to-hub function-binding allowed in Canvas) that softens the node-editor/canvas boundary; reconcile when convenient. |
+| `ORRERY-NO7-PROTOTYPE-SPEC.md` (2026-06-20) | **prototype-app** (subordinate to canonical-3) | Operational build spec for the watch app (assembly stack, fal pipeline, SC-O). Explicitly subordinate. **Verification gap:** SC-O assert object *name/count*, never node *authorship* — upgrade per `PRISM-MASTER-SPEC.md` Law 0 verification corollary. |
+| `ORRERY-NO7-VISION.md` (2026-06-22) | **prototype-app / design-ref** | Flagship target + DESIGN LAW (§1) + SC-V. **The design-law source.** Its §1 lacks an "every artifact is a node" law and §7 ("watch geometry built procedurally (Three.js)") + renderer-agnostic SC-V are the proximate spec cause of the hardcoded-artifact drift found in `notes/AUDIT-INTEGRITY-REPORT.md`. `PRISM-MASTER-SPEC.md` Law 0 supplies the missing law. |
+| `DESIGN-REFERENCES.md` (Feb 2026) | **design-ref (vocabulary)** | Awwwards technique catalogue. Vocabulary, not build-truth. Its DOM-WebGL libs (curtains.js, VFX-JS, OGL, Locomotive, Barba, raw GLSL) are **runtime-illegal** under INV-R1/R11 — runtime-legal subset (TSL/WebGPU, SDF, noise, fluid, shader cookbook, perf) only. |
+
+The 2026-06-05 precedence ladder (§1), supersession table (§3), and move list (§5) are unchanged.
 
 ---
 
