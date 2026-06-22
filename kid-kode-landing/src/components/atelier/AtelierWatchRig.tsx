@@ -27,7 +27,7 @@ import { useEffect, useMemo, useRef, Suspense } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import {
-  Group, Object3D, Vector2, Vector3, Box3, Mesh,
+  Group, Object3D, Vector2, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
   CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry, SphereGeometry,
   LatheGeometry, Raycaster, TextureLoader, type Texture,
 } from 'three';
@@ -174,6 +174,40 @@ function MovementModel({ visibleRef }: { visibleRef: React.MutableRefObject<bool
 
 useGLTF.preload(MOVEMENT_URL);
 
+// ── strap: articulated band that curves back from the lugs (leather/alligator) ─
+function StrapBand({ mat, sign }: { mat: unknown; sign: number }) {
+  const segs = useMemo(() => {
+    const pts = [
+      new Vector3(0, 0.9 * sign, -0.05),
+      new Vector3(0, 1.25 * sign, -0.22),
+      new Vector3(0, 1.5 * sign, -0.6),
+      new Vector3(0, 1.6 * sign, -1.05),
+      new Vector3(0, 1.55 * sign, -1.5),
+    ];
+    const curve = new CatmullRomCurve3(pts);
+    const up = new Vector3(0, 1, 0);
+    const N = 9;
+    const out: { pos: [number, number, number]; quat: [number, number, number, number]; w: number; len: number }[] = [];
+    for (let i = 0; i < N; i++) {
+      const a = curve.getPoint(i / N), b = curve.getPoint((i + 1) / N);
+      const mid = a.clone().add(b).multiplyScalar(0.5);
+      const dir = b.clone().sub(a); const len = dir.length(); dir.normalize();
+      const q = new Quaternion().setFromUnitVectors(up, dir);
+      out.push({ pos: [mid.x, mid.y, mid.z], quat: [q.x, q.y, q.z, q.w], w: 0.62 - 0.3 * (i / N), len });
+    }
+    return out;
+  }, [sign]);
+  return (
+    <group>
+      {segs.map((s, i) => (
+        <mesh key={i} material={mat as never} position={s.pos} quaternion={s.quat} castShadow receiveShadow>
+          <boxGeometry args={[s.w, s.len * 1.08, 0.07]} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 interface WatchProps { build: Record<AtelierLayerId, string>; flipRef: React.MutableRefObject<boolean>; }
 
 function WatchAssembly({ build, flipRef }: WatchProps) {
@@ -185,6 +219,7 @@ function WatchAssembly({ build, flipRef }: WatchProps) {
   const handsMat = useMemo(() => makeMat(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec), [build.hands]);
   const indexMat = useMemo(() => makeMat(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec), [build.indices]);
   const bezelMat = useMemo(() => makeMat(specOf('bezel', build.bezel) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec), [build.bezel]);
+  const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
   const crystalMat = useMemo(() => makeMat({
     baseColor: '#eef4ff', metalness: 0, roughness: 0.05, transmission: 1, ior: 1.77,
     thickness: 0.18, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 0.8, opacity: 1,
@@ -241,7 +276,9 @@ function WatchAssembly({ build, flipRef }: WatchProps) {
         {/* sapphire crystal dome (transmission) — flattened sphere, front bulge only */}
         <mesh geometry={crystalGeo} material={crystalMat as never} position={[0, 0, 0.035]} scale={[1, 1, 0.1]} />
       </group>
-      {/* strap → Wave B (curved lugs band w/ leather/alligator finish) */}
+      {/* strap — articulated bands curving back from the 12/6 lugs */}
+      <StrapBand mat={strapMat} sign={1} />
+      <StrapBand mat={strapMat} sign={-1} />
       {/* caseback movement (hidden until flip) */}
       <Suspense fallback={null}>
         <MovementModel visibleRef={flipRef} />
