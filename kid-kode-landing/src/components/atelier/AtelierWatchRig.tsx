@@ -28,14 +28,15 @@ import { useThree, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import {
   Group, Object3D, Vector2, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
-  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry,
-  Raycaster, TextureLoader, type Texture,
+  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry, PlaneGeometry,
+  Raycaster, TextureLoader, type Texture, type Scene,
 } from 'three';
 import {
   buildPhysicalMaterial,
   applyMaterialSpec,
 } from '@/lib/prism/runtime/shared/material-system';
 import type { MaterialSpec } from '@/lib/prism-graph/types';
+import { godrayPrimitive } from '@/lib/prism/animatable/primitives/godray';
 import { variantOf, type AtelierLayerId } from '@/lib/prism/atelier/config';
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
@@ -263,6 +264,38 @@ function StrapBand({ mat, sign }: { mat: unknown; sign: number }) {
       ))}
     </group>
   );
+}
+
+// ── volumetric godray shaft (P2-3) — the studio key-light made VOLUMETRIC ─────
+// Reuses the repo's `godray` animatable primitive (in-shader amber shafts on a
+// single billboarded additive quad) behind the watch, so the spotlight reads as
+// real light volume against the cosmos. Mounted outside the turntable pivot so it
+// stays anchored while the watch turns.
+function GodrayShaft() {
+  const { scene, camera } = useThree();
+  const meshRef = useRef<Mesh>(null);
+  const animRef = useRef<{ seek: (t: number) => void; dispose?: () => void } | null>(null);
+  const geo = useMemo(() => new PlaneGeometry(1, 1), []);
+  useEffect(() => {
+    const mesh = meshRef.current; if (!mesh) return;
+    const target = {
+      object: (mesh.parent ?? mesh) as Object3D,
+      subject: mesh as Object3D,
+      scene: scene as Scene,
+      userData: {} as Record<string, unknown>,
+    };
+    const anim = godrayPrimitive.create(target as never, { intensity: 0.85, decay: 0.955, density: 1, angleDeg: 90 });
+    animRef.current = anim as never;
+    return () => { animRef.current?.dispose?.(); animRef.current = null; };
+  }, [scene]);
+  useFrame((state) => {
+    animRef.current?.seek(state.clock.elapsedTime);
+    if (meshRef.current) meshRef.current.quaternion.copy(camera.quaternion); // billboard
+  });
+  // SOURCE up + offset, pushed well behind the watch so the shafts read as a
+  // background light volume (not backlighting the transmission crystal). Additive +
+  // depthWrite:false (set by the primitive) so it never occludes the watch.
+  return <mesh ref={meshRef} geometry={geo} position={[-0.4, 1.7, -2.4]} scale={[6, 6, 1]} renderOrder={-2} />;
 }
 
 interface WatchProps {
@@ -495,8 +528,14 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
 
   if (!active) return null;
   return (
-    <group ref={pivotRef} position={PIVOT_CENTER.toArray()}>
-      <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} />
-    </group>
+    <>
+      {/* volumetric godray light-shaft behind the watch (P2-3), anchored (no spin) */}
+      <group position={PIVOT_CENTER.toArray()}>
+        <GodrayShaft />
+      </group>
+      <group ref={pivotRef} position={PIVOT_CENTER.toArray()}>
+        <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} />
+      </group>
+    </>
   );
 }

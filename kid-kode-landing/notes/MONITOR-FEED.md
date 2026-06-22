@@ -227,3 +227,5 @@ Will self-report phase events below.
 [07:34] PHASE2-SENTINEL: working... (1 build agents live)
 
 ## [2026-06-22T07:36] PHASE2 wave1 — P2-1 generated GLB parts wired (case+bezel+crown Tripo v3.1), finish swaps + explode + caseback verified, tsc green
+
+## [2026-06-22T07:47] PHASE2 wave2 — living volumetric nebula across all 6 hubs (P2-2) + volumetric godray shaft in atelier (P2-3), tsc green, 0 console errors

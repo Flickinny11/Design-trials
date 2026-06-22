@@ -206,6 +206,56 @@
       },
       "background": [
         {
+          "id": "mvmt-brass-env",
+          "attachment": "infinite-environment",
+          "kind": "volumetric-nebula",
+          "z": -400,
+          "opacity": 1,
+          "parallaxDepth": 0.96,
+          "presetId": "brass-nebula",
+          "params": {
+            "palette": "brass",
+            "density": 0.5,
+            "drift": 0.5,
+            "depthSpread": 0.65,
+            "intensity": 0.54
+          }
+        },
+        {
+          "id": "mvmt-brass-scatter",
+          "attachment": "world",
+          "kind": "particle-field",
+          "z": -150,
+          "opacity": 1,
+          "parallaxDepth": 0.64,
+          "presetId": "brass-nebula",
+          "params": {
+            "palette": "brass",
+            "density": 0.5,
+            "drift": 0.5,
+            "depthSpread": 0.65,
+            "intensity": 0.54,
+            "variant": "embers"
+          }
+        },
+        {
+          "id": "mvmt-brass-motes",
+          "attachment": "camera-locked",
+          "kind": "particle-field",
+          "z": -30,
+          "opacity": 0.8,
+          "parallaxDepth": 0.1,
+          "presetId": "brass-nebula",
+          "params": {
+            "palette": "brass",
+            "density": 0.2,
+            "drift": 0.5,
+            "depthSpread": 0.65,
+            "intensity": 0.54,
+            "variant": "motes"
+          }
+        },
+        {
           "id": "bg-macro",
           "attachment": "parallax",
           "sourceUrl": "/prism-mock/orrery/movement/backdrop.png",
@@ -259,12 +309,45 @@
       },
       "background": [
         {
+          "id": "materia-ice-env",
+          "attachment": "infinite-environment",
+          "kind": "volumetric-nebula",
+          "z": -420,
+          "opacity": 1,
+          "parallaxDepth": 0.96,
+          "presetId": "ice-field",
+          "params": {
+            "palette": "ice",
+            "density": 0.38,
+            "drift": 0.3,
+            "depthSpread": 0.7,
+            "intensity": 0.58
+          }
+        },
+        {
+          "id": "materia-ice-scatter",
+          "attachment": "world",
+          "kind": "particle-field",
+          "z": -160,
+          "opacity": 1,
+          "parallaxDepth": 0.64,
+          "presetId": "ice-field",
+          "params": {
+            "palette": "ice",
+            "density": 0.6,
+            "drift": 0.3,
+            "depthSpread": 0.7,
+            "intensity": 0.58,
+            "variant": "crystals"
+          }
+        },
+        {
           "id": "bg-still",
           "attachment": "parallax",
           "sourceUrl": "/prism-mock/orrery/materia/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.15,
-          "opacity": 0.34
+          "opacity": 0.3
         }
       ],
       "lightingSpec": {
@@ -312,12 +395,62 @@
       },
       "background": [
         {
+          "id": "celestia-deep-env",
+          "attachment": "infinite-environment",
+          "kind": "volumetric-nebula",
+          "z": -460,
+          "opacity": 1,
+          "parallaxDepth": 0.96,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.46,
+            "drift": 0.26,
+            "depthSpread": 0.88,
+            "intensity": 0.62
+          }
+        },
+        {
+          "id": "celestia-deep-scatter",
+          "attachment": "world",
+          "kind": "particle-field",
+          "z": -190,
+          "opacity": 1,
+          "parallaxDepth": 0.64,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.85,
+            "drift": 0.26,
+            "depthSpread": 0.88,
+            "intensity": 0.62,
+            "variant": "starfield"
+          }
+        },
+        {
+          "id": "celestia-deep-motes",
+          "attachment": "camera-locked",
+          "kind": "particle-field",
+          "z": -30,
+          "opacity": 0.8,
+          "parallaxDepth": 0.1,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.22,
+            "drift": 0.26,
+            "depthSpread": 0.88,
+            "intensity": 0.62,
+            "variant": "motes"
+          }
+        },
+        {
           "id": "bg-planetarium",
           "attachment": "parallax",
           "sourceUrl": "/prism-mock/orrery/celestia/backdrop.png",
           "z": -3.4,
           "parallaxDepth": 0.3,
-          "opacity": 0.85
+          "opacity": 0.5
         }
       ],
       "lightingSpec": {
@@ -364,12 +497,45 @@
       },
       "background": [
         {
+          "id": "acquire-brass-env",
+          "attachment": "infinite-environment",
+          "kind": "volumetric-nebula",
+          "z": -440,
+          "opacity": 1,
+          "parallaxDepth": 0.96,
+          "presetId": "brass-nebula",
+          "params": {
+            "palette": "brass",
+            "density": 0.2,
+            "drift": 0.3,
+            "depthSpread": 0.8,
+            "intensity": 0.4
+          }
+        },
+        {
+          "id": "acquire-brass-motes",
+          "attachment": "camera-locked",
+          "kind": "particle-field",
+          "z": -30,
+          "opacity": 0.8,
+          "parallaxDepth": 0.1,
+          "presetId": "brass-nebula",
+          "params": {
+            "palette": "brass",
+            "density": 0.16,
+            "drift": 0.3,
+            "depthSpread": 0.8,
+            "intensity": 0.46,
+            "variant": "motes"
+          }
+        },
+        {
           "id": "bg-gallery",
           "attachment": "parallax",
           "sourceUrl": "/prism-mock/orrery/acquire/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.12,
-          "opacity": 0.9
+          "opacity": 0.62
         }
       ],
       "lightingSpec": {
@@ -417,12 +583,62 @@
       },
       "background": [
         {
+          "id": "atelier-deep-env",
+          "attachment": "infinite-environment",
+          "kind": "volumetric-nebula",
+          "z": -460,
+          "opacity": 1,
+          "parallaxDepth": 0.96,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.4,
+            "drift": 0.24,
+            "depthSpread": 0.85,
+            "intensity": 0.5
+          }
+        },
+        {
+          "id": "atelier-deep-scatter",
+          "attachment": "world",
+          "kind": "particle-field",
+          "z": -200,
+          "opacity": 1,
+          "parallaxDepth": 0.64,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.7,
+            "drift": 0.24,
+            "depthSpread": 0.85,
+            "intensity": 0.5,
+            "variant": "starfield"
+          }
+        },
+        {
+          "id": "atelier-deep-motes",
+          "attachment": "camera-locked",
+          "kind": "particle-field",
+          "z": -30,
+          "opacity": 0.8,
+          "parallaxDepth": 0.1,
+          "presetId": "observatory-deep",
+          "params": {
+            "palette": "deep",
+            "density": 0.18,
+            "drift": 0.24,
+            "depthSpread": 0.85,
+            "intensity": 0.5,
+            "variant": "motes"
+          }
+        },
+        {
           "id": "atelier-bg-gallery",
           "attachment": "parallax",
           "sourceUrl": "/prism-mock/orrery/acquire/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.12,
-          "opacity": 0.9
+          "opacity": 0.42
         }
       ],
       "lightingSpec": {
