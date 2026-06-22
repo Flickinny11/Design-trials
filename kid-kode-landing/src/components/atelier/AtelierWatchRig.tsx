@@ -226,7 +226,7 @@ function MovementModel({ flipRef, explodeRef }: { flipRef: React.MutableRefObjec
     exAmt.current += (explodeRef.current - exAmt.current) * Math.min(1, dt * 4);
     const ex = exAmt.current;
     g.visible = flipRef.current || ex > 0.04;
-    g.position.z = -0.12 - 1.05 * ex;            // recedes well behind the case
+    g.position.z = -0.12 - 1.35 * ex;            // recedes well behind the case
     if (g.visible) g.rotation.z += dt * 0.7;     // balance / rotor in motion (SC-V-A5)
   });
   return <group ref={ref} position={[0, 0, -0.12]} visible={false}><primitive object={built} /></group>;
@@ -389,22 +389,23 @@ function WatchAssembly({ build, flipRef, explodeRef, nightAmtRef }: WatchProps) 
     };
     const FB = DIAL_FRONT; // dial-stack base reference
     // case (anchor) recedes slightly; movement handled in MovementModel.
-    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.16 * stg(0, 0.5);
-    // dial-stack internals — each its own tier (base z preserved + big throw).
-    if (bezelGroupRef.current) bezelGroupRef.current.position.z = 0.02 + 0.42 * stg(0.46, 1.0);
-    if (dialMeshRef.current) dialMeshRef.current.position.z = -0.01 + 0.66 * stg(0.38, 0.92);
-    if (chapterRef.current) chapterRef.current.position.z = 0.012 + 0.9 * stg(0.3, 0.86);
+    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.2 * stg(0, 0.5);
+    // dial-stack internals — each its own tier (base z preserved + BIG depth
+    // throw so the layers read as a deep exploded diagram at the 3/4 pose).
+    if (bezelGroupRef.current) bezelGroupRef.current.position.z = 0.02 + 0.5 * stg(0.46, 1.0);
+    if (dialMeshRef.current) dialMeshRef.current.position.z = -0.01 + 0.78 * stg(0.38, 0.92);
+    if (chapterRef.current) chapterRef.current.position.z = 0.012 + 1.05 * stg(0.3, 0.86);
     if (indicesGroupRef.current) {
       const ia = stg(0.22, 0.8);
-      indicesGroupRef.current.position.z = 0.016 + 1.16 * ia;
-      indicesGroupRef.current.scale.setScalar(1 + 0.55 * ia); // radial fan-out
+      indicesGroupRef.current.position.z = 0.016 + 1.35 * ia;
+      indicesGroupRef.current.scale.setScalar(1 + 0.42 * ia); // radial fan (tamed so they don't scatter into the UI)
     }
-    if (hourRef.current) hourRef.current.position.z = 0.03 + 1.42 * stg(0.16, 0.74);
-    if (minRef.current) minRef.current.position.z = 0.042 + 1.62 * stg(0.13, 0.7);
-    if (secRef.current) secRef.current.position.z = 0.052 + 1.82 * stg(0.1, 0.66);
-    if (capRef.current) capRef.current.position.z = 0.056 + 2.04 * stg(0.06, 0.62);
+    if (hourRef.current) hourRef.current.position.z = 0.03 + 1.65 * stg(0.16, 0.74);
+    if (minRef.current) minRef.current.position.z = 0.042 + 1.9 * stg(0.13, 0.7);
+    if (secRef.current) secRef.current.position.z = 0.052 + 2.15 * stg(0.1, 0.66);
+    if (capRef.current) capRef.current.position.z = 0.056 + 2.42 * stg(0.06, 0.62);
     // crystal lifts off first + farthest.
-    if (crystalGroupRef.current) crystalGroupRef.current.position.z = FB + 0.06 + 2.4 * stg(0.0, 0.55);
+    if (crystalGroupRef.current) crystalGroupRef.current.position.z = FB + 0.06 + 2.9 * stg(0.0, 0.55);
     // strap recedes + fades behind the case.
     if (strapGroupRef.current) {
       const sa = stg(0, 0.45);

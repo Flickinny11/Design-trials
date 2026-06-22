@@ -258,3 +258,4 @@ Will self-report phase events below.
 - cover trace 0->1->0 across all 6 hubs; 0 console errors; tsc gate green. Committed + pushed.
 - NEXT: W2 = P3-2 dramatic exploded view + P3-3 day/night lume reveal.
 [10:20] PHASE3-SENTINEL: Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav 
+[10:40] PHASE3-SENTINEL: | W3 | **P3-5** cinematic camera language | **DONE-pending-final-reverify** | preview-app idle camera DRIFT (slow orbit 

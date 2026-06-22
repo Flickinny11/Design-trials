@@ -1,1 +1,1 @@
-[10:20] Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav 
+[10:40] | W3 | **P3-5** cinematic camera language | **DONE-pending-final-reverify** | preview-app idle camera DRIFT (slow orbit 
