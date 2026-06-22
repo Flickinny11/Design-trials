@@ -513,6 +513,15 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
   const lastX = useRef(0);
   const lastY = useRef(0);
   const lastInteract = useRef(0);
+  // PHASE3 (P3-4) — premium micro-response on the watch: cursor-tracked parallax
+  // (the studio specular sweeps as the watch leans toward the pointer) + a
+  // tactile press (scale-in) on pointer-down. pointerNdc is the live cursor in
+  // [-1,1]; parallax* are eased lean offsets; press* drive the press scale.
+  const pointerNdc = useRef(new Vector2(0, 0));
+  const parallaxX = useRef(0);
+  const parallaxY = useRef(0);
+  const pressAmt = useRef(0);
+  const pressTarget = useRef(0);
 
   const active = previewMode && activeHubId === ATELIER_HUB_ID;
 
@@ -576,9 +585,14 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
       const id = nodeIdAt(e);
       if (id && (id.startsWith('orr-atelier-cat-') || id.startsWith('orr-atelier-btn-'))) return;
       dragging.current = true; lastX.current = e.clientX; lastY.current = e.clientY; yawVel.current = 0;
+      pressTarget.current = 1; // P3-4 tactile press-in on the watch
       lastInteract.current = performance.now();
     };
     const onMove = (e: PointerEvent) => {
+      // P3-4 — track the cursor ALWAYS (not just while dragging) so the watch
+      // can lean toward it and its specular sweeps.
+      const ndc = toNdc(e);
+      pointerNdc.current.set(ndc.x, ndc.y);
       if (!dragging.current) return;
       const dx = e.clientX - lastX.current; const dy = e.clientY - lastY.current;
       lastX.current = e.clientX; lastY.current = e.clientY;
@@ -587,7 +601,7 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
       yawVel.current = dx * 0.0095;
       lastInteract.current = performance.now();
     };
-    const onUp = () => { dragging.current = false; lastInteract.current = performance.now(); };
+    const onUp = () => { dragging.current = false; pressTarget.current = 0; lastInteract.current = performance.now(); };
     el.addEventListener('pointerdown', onDown);
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
@@ -621,8 +635,17 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
     const ease = dragging.current ? 0.35 : 0.12;
     yaw.current += (yawTarget.current - yaw.current) * ease;
     pitch.current += (pitchTarget.current - pitch.current) * ease;
-    pivot.rotation.y = yaw.current;
-    pivot.rotation.x = pitch.current;
+    // PHASE3 (P3-4) — cursor parallax (only when not dragging, so direct drag
+    // stays crisp): the watch leans subtly toward the pointer → the studio IBL
+    // specular sweeps as the metals tilt, a live cursor-tracked highlight.
+    const pPara = dragging.current ? 0 : 1;
+    parallaxX.current += (pointerNdc.current.x * 0.07 * pPara - parallaxX.current) * 0.08;
+    parallaxY.current += (pointerNdc.current.y * 0.05 * pPara - parallaxY.current) * 0.08;
+    pivot.rotation.y = yaw.current + parallaxX.current;
+    pivot.rotation.x = pitch.current - parallaxY.current;
+    // P3-4 — tactile press: a small eased scale-in on pointer-down.
+    pressAmt.current += (pressTarget.current - pressAmt.current) * 0.2;
+    pivot.scale.setScalar(1 - 0.035 * pressAmt.current);
   });
 
   if (!active) return null;

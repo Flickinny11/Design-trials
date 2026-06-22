@@ -1758,6 +1758,11 @@ function SceneControlsBridge({
   // begins, kicking a camera dolly-through (pull back behind the closing
   // curtain; the landing effect on commit eases forward into the new hub).
   const hubTransitionToken = useHubTransitionStore((s) => s.token);
+  // PHASE3 (P3-5) — cinematic idle camera drift bookkeeping: the clock time the
+  // active hub last settled, so the drift eases in (and so it never fights the
+  // landing/transition that owns the camera right after a hub change).
+  const driftHubRef = useRef<string | null>(null);
+  const hubSettleClockRef = useRef(0);
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -2060,6 +2065,32 @@ function SceneControlsBridge({
         applyCameraFov(c, s.fov);
       }
       if (progress >= 1) journeyActiveRef.current = false; // hold final pose
+    }
+    // PHASE3 (P3-5) — cinematic IDLE camera language. In preview-app (non-
+    // atelier, non-journey), once the hub has settled and no hub transition is
+    // mid-flight, the locked camera BREATHES: a slow orbit sway + dolly +
+    // target parallax around the hero pose, eased in, so the scene always feels
+    // alive and directed — never a static frozen frame. The amplitude ramps in
+    // over ~1s so it never pops when the curtain finishes opening.
+    if (
+      viewMode === 'preview-app' &&
+      !atelierInspect &&
+      !hasJourney(hub) &&
+      useHubTransitionStore.getState().phase === 'idle'
+    ) {
+      const tt = state.clock.elapsedTime;
+      if (activeHubId !== driftHubRef.current) {
+        driftHubRef.current = activeHubId;
+        hubSettleClockRef.current = tt;
+      }
+      const ramp = Math.min(1, Math.max(0, (tt - hubSettleClockRef.current - 0.6) / 1.0));
+      if (ramp > 0) {
+        const zHero = deviceMode === 'mobile' ? 11 : 10.5;
+        const dx = (Math.sin(tt * 0.16) * 0.42 + Math.sin(tt * 0.41) * 0.12) * ramp;
+        const dy = Math.sin(tt * 0.12 + 1.3) * 0.24 * ramp;
+        const dz = Math.sin(tt * 0.09) * 0.32 * ramp;
+        c.setLookAt(dx, dy, zHero + dz, dx * 0.18, dy * 0.1, 0, false);
+      }
     }
     // APP-REALITY P1 — feed the live canvas angle read-out (CanvasCameraHud).
     // Throttled to real motion so the store isn't thrashed every frame.
