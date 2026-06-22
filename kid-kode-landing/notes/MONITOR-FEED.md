@@ -287,3 +287,9 @@ Report: notes/AUDIT-INTEGRITY-REPORT.md
 - NODE-EDITOR-SPEC vs -V2 are NOT duplicates (V2 is additive — "read base first"). Nothing archived.
 - DECISION: did NOT blindly archive the canonical-3 / replace with a master spec (that would damage the hardened hierarchy). Wrote PRISM-MASTER-SPEC.md as a CAPSTONE front-door (runtime-model summary + the ONE design law + NEW Law 0 "every artifact is a node"). Updated SPEC-INDEX.md (added 3 post-index specs + DESIGN-REFERENCES + front-door pointer).
 Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
+
+## [2026-06-22] FOUNDATION AUDIT — Wave 3 (remediation + verify) DONE — RUN COMPLETE
+- Verdict: MOSTLY-SOUND-WITH-FIXES (centerpiece on NEEDS-GREENLIGHT-REFACTOR). 3 CRITICAL hardcoded-artifact violations + 7 orphan nodes.
+- Safe fixes = docs only (Law 0 "every artifact is a node" in PRISM-MASTER-SPEC + verification corollary; SPEC-INDEX currency). No risky app change — every integrity fix is structural (NEEDS GREENLIGHT). Runtime plumbing for the fix (coderef-factory) already exists but is unused (0/331 codeRef).
+- Verified: clean cold load (1 WebGPU canvas, 0 console errors, 0 _next 404s), tsc 0-new, prism-criteria-reviewer = SOUND-WITH-NITS (no MUST-FIX).
+- Reports: notes/AUDIT-MASTER-REPORT.md (headline + marker), AUDIT-INTEGRITY-REPORT.md, AUDIT-SPEC-REPORT.md, AUDIT-REMEDIATION-PLAN.md, docs/prism/PRISM-MASTER-SPEC.md
