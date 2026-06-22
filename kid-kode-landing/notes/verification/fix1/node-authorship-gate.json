@@ -29,22 +29,15 @@
   "emptyText": [
     "orr-atelier-headline",
     "orr-atelier-price",
-    "orr-atelier-reason",
     "orr-atelier-btn-flip-label",
     "orr-atelier-btn-explode-label",
     "orr-atelier-btn-save-label",
-    "orr-atelier-btn-reset-label"
+    "orr-atelier-btn-reset-label",
+    "orr-atelier-reason"
   ],
   "unexpectedHardcoded": [],
-  "orphanPlanesStillPresent": [
-    "orr-arrival-dust",
-    "orr-movement-rings",
-    "orr-celestia-starfield",
-    "orr-celestia-galaxy",
-    "orr-celestia-orbits",
-    "orr-acquire-sweep"
-  ],
-  "reasonContent": "",
+  "orphanPlanesStillPresent": [],
+  "reasonContent": "Every pairing is bench-checked for mechanical harmony.",
   "results": [
     {
       "id": "probe.installed",
@@ -107,21 +100,21 @@
       "desc": "text nodes warmed (MSDF glyphs mounted)",
       "pass": false,
       "warn": true,
-      "detail": "still warming at capture (async, non-fatal): orr-atelier-headline, orr-atelier-price, orr-atelier-reason, orr-atelier-btn-flip-label, orr-atelier-btn-explode-label, orr-atelier-btn-save-label, orr-atelier-btn-reset-label"
+      "detail": "still warming at capture (async, non-fatal): orr-atelier-headline, orr-atelier-price, orr-atelier-btn-flip-label, orr-atelier-btn-explode-label, orr-atelier-btn-save-label, orr-atelier-btn-reset-label, orr-atelier-reason"
     },
     {
       "id": "orphans.planes-removed",
       "desc": "6 redundant ambience planes removed from the graph",
-      "pass": false,
-      "warn": true,
-      "detail": "still present: orr-arrival-dust, orr-movement-rings, orr-celestia-starfield, orr-celestia-galaxy, orr-celestia-orbits, orr-acquire-sweep"
+      "pass": true,
+      "warn": false,
+      "detail": "all 6 removed (superseded by hub background[])"
     },
     {
       "id": "orphans.reason-filled",
       "desc": "orr-atelier-reason kept + carries real text",
-      "pass": false,
-      "warn": true,
-      "detail": "empty/absent — must carry on-brand resting copy"
+      "pass": true,
+      "warn": false,
+      "detail": "content: \"Every pairing is bench-checked for mechanical harmony.\""
     },
     {
       "id": "runtime.no-pageerrors",

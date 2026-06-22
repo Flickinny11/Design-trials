@@ -303,3 +303,8 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 - VALIDATED on a real dev server: flags all 3 known hardcoded (watch/orrery/transition) as expected-known, 0 fresh drift, 176 node-authored all in-graph, 0 hard-fail, tsc 0-new. The 3 known are WARN (pending greenlight); a NEW hardcoded artifact would FAIL.
 - Updated /prism-verify (+ mandatory gate) and prism-criteria-reviewer (Law-0 MUST-FIX section): a criterion describing an artifact passes only when it is node-authored.
 - Next: Wave 2 — G5 orphan nodes (remove 6 redundant ambience planes; keep+fill orr-atelier-reason).
+
+## [2026-06-22] PRISM FIX 1 — Wave 2 (G5 orphan nodes) AUTO-CKPT
+- 6 ambience PLANES REMOVED (331→325 nodes): they fail hasArtifactData (broken — bubble in canvas, nothing in preview-app), 3/6 bind UNMOUNTABLE primitives, the rest would render off-theme; every hub's background[] already delivers the on-theme ambience. 0 edges/0 refs → safe (G5 option b). Canvas improves (junk bubbles gone), preview-app unchanged.
+- orr-atelier-reason KEPT + filled with on-brand copy ("Every pairing is bench-checked for mechanical harmony.") — it's REASON_NODE_ID (configurator constraint-feedback), removal would break the feature; configurator behavior (applier.ts, G4) untouched.
+- Re-baked .prism build-valid (325 nodes). Gate: orphans.planes-removed PASS + orphans.reason-filled PASS + 3 known hardcoded still flagged + 0 hard-fail. Next: Wave 3 verify + report.
