@@ -172,8 +172,11 @@ export function AtelierDragController({ previewMode }: { previewMode: boolean })
     if (d.sim) {
       const p = stepChipToward(d.sim, eff, dt);
       d.ghost.position.set(p.x, p.y, p.z);
+      d.ghost.quaternion.set(p.qx, p.qy, p.qz, p.qw); // real angular momentum — visible tumble
     } else {
       d.ghost.position.lerp(eff, Math.min(1, dt * 12));
+      d.ghost.rotation.y += dt * 2.4;
+      d.ghost.rotation.x += dt * 1.6;
     }
     if (settling) {
       d.settle -= dt;

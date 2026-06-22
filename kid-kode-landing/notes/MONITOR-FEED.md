@@ -229,3 +229,6 @@ Will self-report phase events below.
 ## [2026-06-22T07:36] PHASE2 wave1 — P2-1 generated GLB parts wired (case+bezel+crown Tripo v3.1), finish swaps + explode + caseback verified, tsc green
 
 ## [2026-06-22T07:47] PHASE2 wave2 — living volumetric nebula across all 6 hubs (P2-2) + volumetric godray shaft in atelier (P2-3), tsc green, 0 console errors
+[07:54] PHASE2-SENTINEL: | 2 | P2-3 godray (partial) | PARTIAL | repo `godray` primitive mounted as billboarded amber light-shaft behind watch; c
+
+## [2026-06-22T07:58] PHASE2 wave3 — Rapier chip tumble (real angular momentum) verified visible + applied; P2-3 dimensional chrome (godray+glass+nav) confirmed; tsc green

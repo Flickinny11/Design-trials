@@ -37,25 +37,33 @@ export interface ChipSim {
   body: RigidBody;
 }
 
-/** A zero-gravity world with one damped dynamic body at `start`. */
+/** A zero-gravity world with one damped dynamic body at `start`, given a small
+ *  initial spin so the dragged chip visibly TUMBLES with real angular momentum. */
 export function makeChipSim(R: Rapier, start: { x: number; y: number; z: number }): ChipSim {
   const world = new R.World({ x: 0, y: 0, z: 0 });
   const bodyDesc = R.RigidBodyDesc.dynamic()
     .setTranslation(start.x, start.y, start.z)
     .setLinearDamping(6.0)
+    .setAngularDamping(1.2)
     .setCanSleep(false);
   const body = world.createRigidBody(bodyDesc);
-  world.createCollider(R.ColliderDesc.ball(0.17), body);
+  world.createCollider(R.ColliderDesc.cuboid(0.18, 0.18, 0.18), body);
+  body.setAngvel({ x: 2.6, y: 3.4, z: 1.8 }, true); // visible tumble
   return { world, body };
 }
 
-/** Spring the body toward `target`, step the world by `dt`, return its position. */
+export interface ChipPose {
+  x: number; y: number; z: number;
+  qx: number; qy: number; qz: number; qw: number;
+}
+
+/** Spring the body toward `target`, step the world by `dt`, return pose (pos+rot). */
 export function stepChipToward(
   sim: ChipSim,
   target: { x: number; y: number; z: number },
   dt: number,
   stiffness = 90,
-): { x: number; y: number; z: number } {
+): ChipPose {
   const p = sim.body.translation();
   // critically-damped-ish spring force toward target (mass≈1, damping via setLinearDamping)
   sim.body.applyImpulse(
@@ -69,7 +77,8 @@ export function stepChipToward(
   sim.world.timestep = Math.min(dt, 1 / 30);
   sim.world.step();
   const n = sim.body.translation();
-  return { x: n.x, y: n.y, z: n.z };
+  const r = sim.body.rotation();
+  return { x: n.x, y: n.y, z: n.z, qx: r.x, qy: r.y, qz: r.z, qw: r.w };
 }
 
 export function disposeChipSim(sim: ChipSim): void {
