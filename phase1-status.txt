@@ -1,1 +1,1 @@
-[03:49] working... (1 build agents live)
+[04:42] ## Wave 1+2 — assets + materials + orbit/loupe (auto-ckpt)

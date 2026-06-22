@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>body{margin:0;background:#15171c;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+model-viewer{width:100%;height:50vh;background:#1d2027}span{position:absolute;color:#fff;font:12px sans-serif;padding:4px;z-index:9}</style></head>
+<body>
+<div style="position:relative"><span id="s0">gen-watch-hero</span><model-viewer id="m0" src="gen-watch-hero.glb" camera-controls auto-rotate exposure="1.1" shadow-intensity="1" environment-image="neutral" camera-orbit="25deg 65deg 2.4m"></model-viewer></div>
+<div style="position:relative"><span>exist-watch</span><model-viewer src="exist-watch.glb" camera-controls auto-rotate exposure="1.1" shadow-intensity="1" environment-image="neutral"></model-viewer></div>
+<div style="position:relative"><span>exist-case</span><model-viewer src="exist-case.glb" camera-controls auto-rotate exposure="1.1" shadow-intensity="1" environment-image="neutral"></model-viewer></div>
+<div style="position:relative"><span>exist-tourbillon</span><model-viewer src="exist-tourbillon.glb" camera-controls auto-rotate exposure="1.1" shadow-intensity="1" environment-image="neutral"></model-viewer></div>
+<script>
+window.__loaded={};
+document.querySelectorAll('model-viewer').forEach((m,i)=>{m.addEventListener('load',()=>{window.__loaded[i]=true;});m.addEventListener('error',e=>{window.__loaded[i]='ERR';});});
+</script>
+</body></html>

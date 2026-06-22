@@ -91,8 +91,12 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'dial', label: 'Dial', order: 4, nodeIds: ['orr-atelier-watch-dial'], defaultVariant: 'silver',
+    id: 'dial', label: 'Dial', order: 4, nodeIds: ['orr-atelier-watch-dial'], defaultVariant: 'orrery',
     variants: [
+      // PHASE1 v2 signature (SC-V-O3): the dial IS a working orrery complication —
+      // generated photoreal art (FLUX.2): midnight guilloché + aventurine starfield,
+      // gold orbital tracks with planet spheres, a moonphase aperture, applied markers.
+      { id: 'orrery', label: 'Orrery Celestial', swatch: '#1b2a52', material: finish({ baseColor: '#aab4d0', metalness: 0.5, roughness: 0.5, clearcoat: 0.7, clearcoatRoughness: 0.08, envMapIntensity: 1.3, baseColorMapUrl: `${TEX}/dial-tex-orrery.png` }), priceDelta: 42000 },
       { id: 'navy', label: 'Midnight Navy', swatch: '#16243a', material: finish({ baseColor: '#16243a', metalness: 0.35, roughness: 0.42, clearcoat: 0.6, clearcoatRoughness: 0.18, envMapIntensity: 0.9 }), priceDelta: 0 },
       { id: 'silver', label: 'Silver Sunburst', swatch: '#c4c9d1', material: finish({ baseColor: '#c4c9d1', metalness: 0.85, roughness: 1, clearcoat: 0.5, clearcoatRoughness: 0.12, envMapIntensity: 1.25, normalMapUrl: `${TEX}/dial-nrm-sunburst.png`, normalScale: 0.7, roughnessMapUrl: `${TEX}/dial-rgh-sunburst.png` }), priceDelta: 800 },
       { id: 'black', label: 'Onyx', swatch: '#0c0e12', material: finish({ baseColor: '#0c0e12', metalness: 0.3, roughness: 0.5, clearcoat: 0.7, envMapIntensity: 0.8 }), priceDelta: 0 },

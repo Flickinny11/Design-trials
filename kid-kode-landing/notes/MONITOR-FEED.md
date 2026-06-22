@@ -202,3 +202,10 @@ Will self-report phase events below.
 [03:29] PHASE1-SENTINEL: working... (1 build agents live)
 [03:49] PHASE1-SENTINEL: working... (1 build agents live)
 [03:55:12] PHASE1 wave1+2: COMMIT | assets: studio-HDRI(2048x1024) + guilloche/sunburst/brushed/leather normal+rough maps (FLUX.2-pro->sharp) | A3: studio scene.environment + PBR maps wired (dial/case/strap), specular sweeps on turntable | A4: head-on camera + WATCH TURNTABLE (drag+idle+tilt, AtelierWatchRig) + loupe dolly | watch geom upgraded: 12 markers+4 lugs+chapter+articulated strap (33 parts) | A7 price live (CHF 38k->60k on guilloche) | tsc 0-new, 0 console err | next: Wave3 caseback/movement/exploded
+[04:00] PHASE1-SENTINEL: ARMED: ORRERY-PHASE1 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch PHASE1-STOP
+[04:03] PHASE1-SENTINEL: launched PHASE1 build agent on claude-opus-4-8 (resume #1)
+[04:20] PHASE1-SENTINEL: ARMED: ORRERY-PHASE1 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch PHASE1-STOP
+[04:23] PHASE1-SENTINEL: launched PHASE1 build agent on claude-opus-4-8 (resume #1)
+[04:42] PHASE1-SENTINEL: ## Wave 1+2 — assets + materials + orbit/loupe (auto-ckpt)
+
+[05:02:26] PHASE1 waveA(v2): COMMIT | watch REBUILT photoreal: 33 procedural slop nodes removed → declarative AtelierWatch (generated FLUX.2 orrery dial art [SC-V-O3 signature] + precision-turned Lathe steel case w/ 12-6 lugs + fluted crown + sapphire transmission crystal + sweeping hands), oriented dial→camera | A3 specular sweep verified (head-on vs orbit), A4 loupe legible (guilloche/orbital-rings/planets/moonphase/markers), 0 console err, tsc 0-new, tx 2/2 | NOTE: single-image TRELLIS case bloated+nubbed (depth-hallucination) + Tripo segmentation unfunded → case is turned-PBR not raw-GLB (generated steel maps+orrery dial art carry the generated-photoreal); re-check Tripo each wave | next: waveB part swaps wired to new watch
