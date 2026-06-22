@@ -3415,10 +3415,11 @@ function TopologySceneContent({
           composer + drei <Stars> are off. Galaxy-only; tier-scaled. */}
       {viewMode === 'galaxy' && <GalaxyHubBackdrop quality={galaxyQuality} />}
 
-      {/* Lighting — photoreal with environment IBL + fills */}
-      <ambientLight intensity={0.06} />
-      <directionalLight position={[120, 120, 100]} intensity={0.5} color={DS.ice200} castShadow={false} />
-      <directionalLight position={[-100, -60, -100]} intensity={0.25} color={DS.metal100} />
+      {/* Lighting — photoreal with environment IBL + fills. PHASE3 (P3-3): named
+          so the Atelier day/night reveal can dim them (restored on rig unmount). */}
+      <ambientLight name="scene-amb" intensity={0.06} />
+      <directionalLight name="scene-key" position={[120, 120, 100]} intensity={0.5} color={DS.ice200} castShadow={false} />
+      <directionalLight name="scene-fill" position={[-100, -60, -100]} intensity={0.25} color={DS.metal100} />
       {/* PHASE1 (SC-V-A3) — the Atelier uses a real luxury-studio HDRI so the
           watch's metals + dial finishes throw crisp, angle-dependent specular
           as it orbits. Other hubs keep the cosmic night IBL. */}

@@ -12,3 +12,6 @@ Phase-2 in-canvas curtain "rendered but never covered the viewport" = frustum-cu
 
 New files: `src/stores/useHubTransitionStore.ts`, `src/components/editor/transition/HubSceneTransition.tsx`.
 Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav route).
+
+| W2 | **P3-2** dramatic exploded view (fix flag #3) | **DONE-pending-final-reverify** | parts fly apart with per-part stagger (crystal first → bezel last) + big Z throws + indices radial fan + explode() auto-orients to 3/4 (yaw 0.6/pitch 0.4); movement/gears exposed at back. Reads UNMISTAKABLY exploded. Frame: w2-exploded-full. Reassembles to whole watch (w2-day). |
+| W2 | **P3-3** day/night + lume reveal | **DONE-pending-final-reverify** | __ATELIER_RIG__.night(on?) eases nightAmt; dims env IBL (1.0→0.07) + named shared key/fill/ambient + ramps lume emissive (hands+indices 0→5.5) + dial glow pointLight; watch goes dark, lume markers ignite. Day (w2-day) vs night (w2-night2). Restores shared lights on rig unmount (w2-s1-after-night-restore bright, no leak). transmission=2 (≤2). 0 console errors. |

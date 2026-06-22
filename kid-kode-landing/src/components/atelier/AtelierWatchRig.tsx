@@ -220,11 +220,13 @@ function MovementModel({ flipRef, explodeRef }: { flipRef: React.MutableRefObjec
     holder.scale.setScalar((1.55 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1));
     return holder;
   }, [gltf]);
+  const exAmt = useRef(0);
   useFrame((_, dt) => {
     const g = ref.current; if (!g) return;
-    const ex = explodeRef.current;
+    exAmt.current += (explodeRef.current - exAmt.current) * Math.min(1, dt * 4);
+    const ex = exAmt.current;
     g.visible = flipRef.current || ex > 0.04;
-    g.position.z = -0.12 - 0.62 * ex;            // recedes when exploded
+    g.position.z = -0.12 - 1.05 * ex;            // recedes well behind the case
     if (g.visible) g.rotation.z += dt * 0.7;     // balance / rotor in motion (SC-V-A5)
   });
   return <group ref={ref} position={[0, 0, -0.12]} visible={false}><primitive object={built} /></group>;
@@ -302,17 +304,24 @@ interface WatchProps {
   build: Record<AtelierLayerId, string>;
   flipRef: React.MutableRefObject<boolean>;
   explodeRef: React.MutableRefObject<number>;
+  nightAmtRef: React.MutableRefObject<number>;
 }
 
-function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
+function WatchAssembly({ build, flipRef, explodeRef, nightAmtRef }: WatchProps) {
   // dial — generated orrery art by default, else the chosen finish texture/color
   const dialMat = useMemo(() => {
     const spec = specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec;
     return makeMat(spec);
   }, [build.dial]);
-  // Lume composes an emissive glow onto hands + indices (SC-V-FX night/UV cue).
+  // PHASE3 (P3-3) — lume is the night reveal. Hands + indices ALWAYS carry an
+  // emissive lume colour; its intensity is near-0 in the bright studio (day) and
+  // is ramped up per-frame as night → 1 (see useFrame), so the markers ignite
+  // and become the dominant light. With no lume selected we still seed a soft
+  // ice glow so the reveal always reads.
   const lumeGlow = LUME_COLOR[build.lume];
-  const withLume = (spec: MaterialSpec): MaterialSpec => (lumeGlow ? { ...spec, emissive: lumeGlow, emissiveIntensity: 0.95 } : spec);
+  const glowColor = lumeGlow ?? '#bfe9ff';
+  const dayLume = lumeGlow ? 0.95 : 0.0;
+  const withLume = (spec: MaterialSpec): MaterialSpec => ({ ...spec, emissive: glowColor, emissiveIntensity: dayLume });
   const handsMat = useMemo(() => makeMat(withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec)), [build.hands, build.lume]);
   const indexMat = useMemo(() => makeMat(withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec)), [build.indices, build.lume]);
   const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
@@ -337,11 +346,19 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   const hourRef = useRef<Group>(null);
   const minRef = useRef<Group>(null);
   const secRef = useRef<Group>(null);
-  // exploded-view part groups (SC-V-A6)
+  // exploded-view part groups (SC-V-A6 + PHASE3 P3-2 — the dial stack is now
+  // decomposed into individually-choreographed tiers so the watch visibly comes
+  // APART into many pieces, not one block).
   const caseGroupRef = useRef<Group>(null);
   const faceGroupRef = useRef<Group>(null);
+  const bezelGroupRef = useRef<Group>(null);
+  const dialMeshRef = useRef<Mesh>(null);
+  const chapterRef = useRef<Mesh>(null);
+  const indicesGroupRef = useRef<Group>(null);
+  const capRef = useRef<Mesh>(null);
   const crystalGroupRef = useRef<Group>(null);
   const strapGroupRef = useRef<Group>(null);
+  const dialLightRef = useRef<import('three').PointLight>(null);
   const rootRef = useRef<Group>(null);
   const explodeAmt = useRef(0);
   // settle pulse: when a part is (drag-)placed, the watch gives a brief eased
@@ -357,13 +374,52 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
     if (secRef.current) secRef.current.rotation.z = -t * 0.9;
     if (minRef.current) minRef.current.rotation.z = -t * 0.15;
     if (hourRef.current) hourRef.current.rotation.z = -t * 0.0125;
-    // exploded view — eased separation of the major components (SC-V-A6)
-    explodeAmt.current += (explodeRef.current - explodeAmt.current) * Math.min(1, dt * 5);
+
+    // ── PHASE3 (P3-2) DRAMATIC exploded view ──────────────────────────────
+    // Eased master amount, then a PER-PART staggered remap so the watch comes
+    // apart SEQUENTIALLY (crystal lifts off first → bezel last) along big Z
+    // throws — seen obliquely (explode() auto-orients to a 3/4 pose) the tiers
+    // read unmistakably as an exploded diagram. The 12 indices also fan out
+    // radially. Reassembly runs the same windows in reverse.
+    explodeAmt.current += (explodeRef.current - explodeAmt.current) * Math.min(1, dt * 4);
     const a = explodeAmt.current;
-    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.06 * a;
-    if (faceGroupRef.current) faceGroupRef.current.position.z = DIAL_FRONT + 0.22 * a;
-    if (crystalGroupRef.current) crystalGroupRef.current.position.z = DIAL_FRONT + 0.04 + 0.66 * a;
-    if (strapGroupRef.current) { strapGroupRef.current.position.z = -0.3 * a; strapGroupRef.current.visible = a < 0.85; }
+    const stg = (s: number, e: number) => {
+      const x = Math.min(1, Math.max(0, (a - s) / (e - s)));
+      return x * x * (3 - 2 * x);
+    };
+    const FB = DIAL_FRONT; // dial-stack base reference
+    // case (anchor) recedes slightly; movement handled in MovementModel.
+    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.16 * stg(0, 0.5);
+    // dial-stack internals — each its own tier (base z preserved + big throw).
+    if (bezelGroupRef.current) bezelGroupRef.current.position.z = 0.02 + 0.42 * stg(0.46, 1.0);
+    if (dialMeshRef.current) dialMeshRef.current.position.z = -0.01 + 0.66 * stg(0.38, 0.92);
+    if (chapterRef.current) chapterRef.current.position.z = 0.012 + 0.9 * stg(0.3, 0.86);
+    if (indicesGroupRef.current) {
+      const ia = stg(0.22, 0.8);
+      indicesGroupRef.current.position.z = 0.016 + 1.16 * ia;
+      indicesGroupRef.current.scale.setScalar(1 + 0.55 * ia); // radial fan-out
+    }
+    if (hourRef.current) hourRef.current.position.z = 0.03 + 1.42 * stg(0.16, 0.74);
+    if (minRef.current) minRef.current.position.z = 0.042 + 1.62 * stg(0.13, 0.7);
+    if (secRef.current) secRef.current.position.z = 0.052 + 1.82 * stg(0.1, 0.66);
+    if (capRef.current) capRef.current.position.z = 0.056 + 2.04 * stg(0.06, 0.62);
+    // crystal lifts off first + farthest.
+    if (crystalGroupRef.current) crystalGroupRef.current.position.z = FB + 0.06 + 2.4 * stg(0.0, 0.55);
+    // strap recedes + fades behind the case.
+    if (strapGroupRef.current) {
+      const sa = stg(0, 0.45);
+      strapGroupRef.current.position.z = -0.55 * sa;
+      strapGroupRef.current.visible = sa < 0.92;
+    }
+
+    // ── PHASE3 (P3-3) lume night reveal: ramp emissive on hands/indices and
+    // the dial glow light as night → 1 so the markers ignite in the dark.
+    const night = nightAmtRef.current;
+    const lumeI = dayLume + (5.5 - dayLume) * night;
+    (handsMat as unknown as { emissiveIntensity: number }).emissiveIntensity = lumeI;
+    (indexMat as unknown as { emissiveIntensity: number }).emissiveIntensity = lumeI;
+    if (dialLightRef.current) dialLightRef.current.intensity = night * 3.0;
+
     // settle bounce on part placement
     if (rootRef.current) {
       if (popT.current > 0) {
@@ -389,28 +445,34 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
           </group>
         </Suspense>
       </group>
-      {/* dial face stack — seated just behind the case front rim (explodes forward) */}
+      {/* dial face stack — each tier its own ref so the explode separates them
+          individually (P3-2). The face group itself stays put; the children fly. */}
       <group ref={faceGroupRef} position={[0, 0, DIAL_FRONT]}>
         {/* GENERATED bezel ring on the case rim */}
         <Suspense fallback={null}>
-          <group position={[0, 0, 0.02]}>
+          <group ref={bezelGroupRef} position={[0, 0, 0.02]}>
             <GenBezel bezelVariant={build.bezel} />
           </group>
         </Suspense>
         {/* dial face (generated orrery art / finish) */}
-        <mesh geometry={dialGeo} material={dialMat as never} position={[0, 0, -0.01]} receiveShadow />
+        <mesh ref={dialMeshRef} geometry={dialGeo} material={dialMat as never} position={[0, 0, -0.01]} receiveShadow />
         {/* chapter ring */}
-        <mesh geometry={chapterGeo} material={indexMat as never} position={[0, 0, 0.012]} />
-        {/* applied indices */}
-        {indices.map((i) => (
-          <mesh key={i} geometry={indexGeo} material={indexMat as never} position={[0, 0, 0.016]} rotation={[0, 0, (-i * Math.PI) / 6]} />
-        ))}
+        <mesh ref={chapterRef} geometry={chapterGeo} material={indexMat as never} position={[0, 0, 0.012]} />
+        {/* applied indices — wrapped so the ring fans out radially on explode */}
+        <group ref={indicesGroupRef} position={[0, 0, 0.016]}>
+          {indices.map((i) => (
+            <mesh key={i} geometry={indexGeo} material={indexMat as never} rotation={[0, 0, (-i * Math.PI) / 6]} />
+          ))}
+        </group>
         {/* hands */}
         <group ref={hourRef} position={[0, 0, 0.03]}><mesh geometry={hourGeo} material={handsMat as never} /></group>
         <group ref={minRef} position={[0, 0, 0.042]}><mesh geometry={minGeo} material={handsMat as never} /></group>
         <group ref={secRef} position={[0, 0, 0.052]}><mesh geometry={secGeo} material={handsMat as never} /></group>
-        <mesh geometry={capGeo} material={capMat as never} position={[0, 0, 0.056]} rotation={[Math.PI / 2, 0, 0]} />
+        <mesh ref={capRef} geometry={capGeo} material={capMat as never} position={[0, 0, 0.056]} rotation={[Math.PI / 2, 0, 0]} />
       </group>
+      {/* PHASE3 (P3-3) — dial glow light: dark in day (intensity 0), brightens
+          with night so the ignited lume spills onto the surrounding metal. */}
+      <pointLight ref={dialLightRef} position={[0, 0, DIAL_FRONT + 0.12]} color={glowColor} intensity={0} distance={2.8} decay={2} />
       {/* sapphire crystal dome — own group so it lifts off first in the explode */}
       <group ref={crystalGroupRef} position={[0, 0, DIAL_FRONT + 0.06]}>
         <mesh geometry={crystalGeo} material={crystalMat as never} />
@@ -435,6 +497,11 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
   const pivotRef = useRef<Group>(null);
   const flipRef = useRef(false);
   const explodeRef = useRef(0);
+  // PHASE3 (P3-3) — day→night reveal. nightRef = target (0 day / 1 night),
+  // nightAmtRef = eased value driving the lume ramp (WatchAssembly) + the scene
+  // dimming (this component's useFrame).
+  const nightRef = useRef(0);
+  const nightAmtRef = useRef(0);
 
   // rotation state
   const yaw = useRef(0);
@@ -458,15 +525,35 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
       get pitch() { return pitch.current; },
       get flipped() { return flipRef.current; },
       get exploded() { return explodeRef.current; },
+      get nightLevel() { return nightAmtRef.current; },
       spinTo: (y: number, p?: number) => { yawTarget.current = y; if (typeof p === 'number') pitchTarget.current = Math.max(TILT_MIN, Math.min(TILT_MAX, p)); lastInteract.current = 1e15; },
       nudge: (dy: number) => { yawTarget.current += dy; lastInteract.current = 1e15; },
       resumeIdle: () => { lastInteract.current = 0; },
       flip: (on?: boolean) => { flipRef.current = typeof on === 'boolean' ? on : !flipRef.current; yawTarget.current = flipRef.current ? Math.PI : 0; lastInteract.current = 1e15; return flipRef.current; },
-      explode: (on?: boolean) => { explodeRef.current = (typeof on === 'boolean' ? on : explodeRef.current < 0.5) ? 1 : 0; lastInteract.current = 1e15; return explodeRef.current; },
+      // PHASE3 (P3-2) — explode AUTO-ORIENTS the watch to a 3/4 pose so the Z-
+      // stacked tiers are seen obliquely (a head-on explode foreshortens to
+      // nothing); collapsing returns to head-on and resumes the idle turntable.
+      explode: (on?: boolean) => {
+        const next = (typeof on === 'boolean' ? on : explodeRef.current < 0.5) ? 1 : 0;
+        explodeRef.current = next;
+        if (next) { yawTarget.current = 0.6; pitchTarget.current = 0.4; lastInteract.current = 1e15; }
+        else { yawTarget.current = 0; pitchTarget.current = 0.05; lastInteract.current = performance.now(); }
+        return explodeRef.current;
+      },
+      // PHASE3 (P3-3) — day↔night reveal.
+      night: (on?: boolean) => { nightRef.current = (typeof on === 'boolean' ? on : nightRef.current < 0.5) ? 1 : 0; return nightRef.current; },
       get pivot() { return pivotRef.current; },
     };
-    return () => { delete (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__; };
-  }, [active]);
+    return () => {
+      delete (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__;
+      // PHASE3 (P3-3) — restore the SHARED scene lights so other hubs are never
+      // left dimmed if the visitor leaves the Atelier mid-night.
+      const key = scene.getObjectByName('scene-key'); if (key) (key as unknown as { intensity: number }).intensity = 0.5;
+      const fill = scene.getObjectByName('scene-fill'); if (fill) (fill as unknown as { intensity: number }).intensity = 0.25;
+      const amb = scene.getObjectByName('scene-amb'); if (amb) (amb as unknown as { intensity: number }).intensity = 0.06;
+      nightRef.current = 0; nightAmtRef.current = 0;
+    };
+  }, [active, scene]);
 
   // pointer-drag to rotate (azimuth + bounded tilt); swatches/buttons keep theirs
   useEffect(() => {
@@ -512,6 +599,18 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
   }, [active, gl, camera, scene]);
 
   useFrame((_, dt) => {
+    // PHASE3 (P3-3) — day→night reveal: ease the night level, then dim the
+    // environment IBL + the shared key/fill/ambient so the watch goes dark and
+    // the ignited lume (ramped in WatchAssembly) becomes the dominant light.
+    // Atelier-only (guarded) so other hubs' lighting is untouched.
+    if (active) {
+      nightAmtRef.current += (nightRef.current - nightAmtRef.current) * Math.min(1, dt * 2.4);
+      const n = nightAmtRef.current;
+      (scene as unknown as { environmentIntensity?: number }).environmentIntensity = 1.0 - 0.93 * n;
+      const key = scene.getObjectByName('scene-key'); if (key) (key as unknown as { intensity: number }).intensity = 0.5 * (1 - 0.96 * n);
+      const fill = scene.getObjectByName('scene-fill'); if (fill) (fill as unknown as { intensity: number }).intensity = 0.25 * (1 - 0.96 * n);
+      const amb = scene.getObjectByName('scene-amb'); if (amb) (amb as unknown as { intensity: number }).intensity = 0.06 * (1 - 0.7 * n);
+    }
     const pivot = pivotRef.current;
     if (!pivot) return;
     const now = typeof performance !== 'undefined' ? performance.now() : 0;
@@ -534,7 +633,7 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
         <GodrayShaft />
       </group>
       <group ref={pivotRef} position={PIVOT_CENTER.toArray()}>
-        <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} />
+        <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} nightAmtRef={nightAmtRef} />
       </group>
     </>
   );

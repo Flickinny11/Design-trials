@@ -1,1 +1,1 @@
-[10:00] working... (1 build agents live)
+[10:20] Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav 

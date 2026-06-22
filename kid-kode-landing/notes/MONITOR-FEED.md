@@ -249,3 +249,12 @@ Will self-report phase events below.
 - Deep code map complete via 3 parallel agents: root-caused flag #4 (camera-followed plane was frustum-culled + not camera-parented; fix=ChromeSlabLayer camera-parent idiom + TSL dissolve quad). Exploded-view subtlety root-caused (Z-only, tiny offsets, no stagger, dial-stack nested as one block). Day/night needs shared night signal (lighting lives in GraphScene, not rig).
 - Wave order: W1 P3-1 in-scene transition; W2 P3-2 exploded + P3-3 day/night lume; W3 P3-4 micro-response + P3-5 camera language; W4 full verify+advocate.
 [10:00] PHASE3-SENTINEL: working... (1 build agents live)
+
+## [PHASE3 W1 DONE] 2026-06-22 — P3-1 in-WebGPU cinematic transition (commit 83a77bb8)
+- TRUE in-canvas brass curtain (camera-parented TSL quad) REPLACES the Phase-2 DOM overlay. inCanvas=true, no .ds-hub-morph-stage.
+- Root-caused flag #4: Phase-2 plane was frustum-culled + scene-rooted. Fix = ChromeSlabLayer camera-parent idiom + frustumCulled=false + renderOrder 9500.
+- Gated swap-at-peak: the atelier 102-node ~6s mount stall held ENTIRELY behind cover=1 (solves the very problem the DOM overlay was a workaround for, now in-WebGPU).
+- Camera dolly-through: z 10.5->14.87 (pull back behind curtain) ->10.5 (fly into new hub), settles at hero pose (no framing regression).
+- cover trace 0->1->0 across all 6 hubs; 0 console errors; tsc gate green. Committed + pushed.
+- NEXT: W2 = P3-2 dramatic exploded view + P3-3 day/night lume reveal.
+[10:20] PHASE3-SENTINEL: Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav 
