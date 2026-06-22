@@ -12,3 +12,7 @@ Branch `prism-editor-build` · model claude-opus-4-8 · started 2026-06-22
 | 3 | P2-5 Rapier visible | PASS | drag-assemble ghost chip is a real Rapier rigid body (spring momentum + angular tumble); cyan-over-watch, settle->finish applied (case->rose-gold rev4). __ATELIER_RAPIER_READY__ true |
 | 3 | P2-3 dimensional chrome | PASS | godray volumetric shaft + frosted-glass YOUR ORRERY plaque + dimensional header/footer/nav (celestia) + 3D extruded title + milled controls (>=3 non-flat) |
 | 3 | magnetic cursor | PRESENT | global MagneticCursor + 52 magnetic animationBindings |
+| 4 | P2-4 morphing transition | PASS | Curtains-style brass curtain morph (CSS 3D rotateY hinge + refraction) plays close->hold->open on every hub nav (opacity 0->1->0 verified) |
+| 4 | SC-V-O1 3D orrery | PASS | OrreryComplicationRig on Celestia: emissive sun + 4 PBR planets orbiting tilted 3D rings (real depth), 0 console errors |
+| 4 | SC-V-O2 time control | PASS | window.__ORRERY__ setTime/setSpeed/scrub + drag-to-scrub; planets reposition (t0 vs t14 frames) |
+| 4 | SC-V-O3 motif recurs | PASS | orrery dial-art on Atelier watch + spinning armillary gear + the Celestia complication |

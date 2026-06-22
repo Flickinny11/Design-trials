@@ -113,6 +113,7 @@ import { runAtelierAction } from '@/lib/prism/atelier/actions';
 import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { AtelierDragController } from '@/components/atelier/AtelierDragController';
 import { AtelierWatchRig } from '@/components/atelier/AtelierWatchRig';
+import { OrreryComplicationRig } from '@/components/atelier/OrreryComplicationRig';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
   IMAGE_SPEC_DEFAULT,
@@ -4098,6 +4099,8 @@ function AssembledSceneContent({
       {/* PHASE1 ATELIER — watch turntable: drag/idle rotation + tilt for full
           any-angle inspect (SC-V-A4); specular sweep on the studio HDRI (A3). */}
       <AtelierWatchRig previewMode={previewMode} />
+      {/* PHASE2 SIGNATURE (SC-V-O) — interactive 3D orrery complication on Celestia. */}
+      <OrreryComplicationRig previewMode={previewMode} />
       {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
           built scene. Runs in canvas + preview-app; in preview-app the drivers
           respond to the user's real input (§16). */}

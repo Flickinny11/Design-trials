@@ -233,3 +233,6 @@ Will self-report phase events below.
 
 ## [2026-06-22T07:58] PHASE2 wave3 — Rapier chip tumble (real angular momentum) verified visible + applied; P2-3 dimensional chrome (godray+glass+nav) confirmed; tsc green
 [08:14] PHASE2-SENTINEL: | 3 | P2-3 dimensional chrome | PASS | godray volumetric shaft + frosted-glass YOUR ORRERY plaque + dimensional header/f
+[08:34] PHASE2-SENTINEL: | 3 | P2-3 dimensional chrome | PASS | godray volumetric shaft + frosted-glass YOUR ORRERY plaque + dimensional header/f
+
+## [2026-06-22T08:35] PHASE2 wave4 — morphing curtain transition (P2-4) + interactive 3D orrery complication (SC-V-O1/O2/O3) on Celestia; tsc green, 0 console errors
