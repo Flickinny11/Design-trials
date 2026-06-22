@@ -58,8 +58,18 @@ export function resolveBuildMaterials(build: AtelierBuild): Map<string, Material
 }
 
 /**
- * Write the build's materials onto the mounted proxy parts found under `root`.
- * Returns the number of parts updated. Safe to call repeatedly / on any frame.
+ * Write the build's materials onto any mounted proxy parts found under `root`
+ * that expose a `userData.meshPrimitiveHandle`. Returns the number of parts
+ * updated. Safe to call repeatedly / on any frame.
+ *
+ * FIX2 / G4: the hero watch is now the composite node `orr-atelier-watch`
+ * (codeRef 'builtin:atelier-watch', watch-node-factory.ts), which SELF-APPLIES
+ * finishes by subscribing to useConfiguratorStore inside its factory and
+ * re-dressing its own sub-parts — node-driven behavior, not an external walk.
+ * Its meshes carry no `meshPrimitiveHandle`, so this walk is a graceful no-op
+ * for the watch (it still addresses the real node id — there are no dead refs).
+ * The function is retained for the text appliers below and for any future
+ * meshPrimitiveHandle-backed proxy parts.
  */
 export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild, loader?: FaceTextureLoaderLike): number {
   const targets = resolveBuildMaterials(build);

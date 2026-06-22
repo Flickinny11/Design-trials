@@ -20,13 +20,17 @@ import { ensureRapier, rapierReady, makeChipSim, stepChipToward, disposeChipSim,
 
 const ATELIER_HUB_ID = 's6-atelier';
 const DRAG_THRESHOLD = 6;
-const WATCH_CENTER = new Vector3(0, 0.15, 0.42); // = AtelierWatchRig PIVOT_CENTER
+const WATCH_CENTER = new Vector3(0, 0.15, 0.42); // = orr-atelier-watch scenePosition
 const VALID = new Color('#1ec8ff');
 const NEUTRAL = new Color('#e8c98a');
 
-// The watch is the declarative AtelierWatchRig subtree under window.__ATELIER_RIG__.pivot
-// (no longer `orr-atelier-watch-*` graph nodes). A drop is "over the build" when the
-// pointer ray hits any watch mesh, OR lands within the watch's screen radius.
+// FIX2 / G4: the watch is now the graph node `orr-atelier-watch` (codeRef
+// 'builtin:atelier-watch', watch-node-factory.ts). Its factory exposes the
+// turntable pivot via window.__ATELIER_RIG__.pivot — the documented transitional
+// inspect bridge this drag controller hit-tests against. A drop is "over the
+// build" when the pointer ray hits any watch mesh, OR lands within its screen
+// radius; the drop commits via useConfiguratorStore.setLayer, which the node's
+// store subscription applies (node-driven finish swap).
 function overWatch(ray: Raycaster, ndc: Vector2, cam: Parameters<Raycaster['setFromCamera']>[1]): boolean {
   const pivot = (window as unknown as { __ATELIER_RIG__?: { pivot?: Object3D | null } }).__ATELIER_RIG__?.pivot;
   if (!pivot) return false;

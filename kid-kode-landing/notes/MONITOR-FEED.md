@@ -322,3 +322,8 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 ## [FIX2 W1]  — watch is a node (G1) ✅
 - watch-node-factory.ts (codeRef builtin:atelier-watch) + coderef-registry; orr-atelier-watch node on s6; AtelierInputController; rig retired.
 - gate: configurator-watch NO LONGER flagged; 42 renderables node-authored; 0 errors; live finish swap works (CHF 80k→75.8k). tsc 0-new.
+[17:58] FIX2-SENTINEL: ## Wave 3 — full no-regression verify + report — PENDING
+
+## [FIX2 W2]  — node-driven behavior + dead refs killed (G4) ✅
+- config.ts dead part-ids → real orr-atelier-watch (30 dead refs → 0); applier self-apply documented; drag-controller comments fixed.
+- verified node-driven: explode/flip-tourbillon/night-lume/swap/save-restore/drag all work, 0 errors. tsc 0-new.

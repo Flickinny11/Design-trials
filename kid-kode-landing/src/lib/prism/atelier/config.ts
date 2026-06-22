@@ -22,7 +22,13 @@ export interface AtelierLayerDef {
   id: AtelierLayerId;
   label: string;
   order: number;
-  nodeIds: string[];         // proxy part nodes this layer's material applies to ([] = state-only)
+  // The graph node(s) this layer's finish applies to. FIX2 / G4: the watch is now
+  // ONE composite graph node (`orr-atelier-watch`, codeRef 'builtin:atelier-watch')
+  // that self-applies finishes from useConfiguratorStore inside its factory — so
+  // material layers reference that real node id. The former per-part ids
+  // (`orr-atelier-watch-case/-bezel/-dial/-crown/-lug-*/-mk-*/-hand-*/-strap-*`)
+  // were DEAD (absent from the live graph) and are gone. `[]` = state-only layer.
+  nodeIds: string[];
   defaultVariant: string;
   variants: AtelierVariant[];
   note?: string;             // shown when the layer has no proxy geometry yet (photoreal in F5.3)
@@ -73,7 +79,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'case', label: 'Case', order: 2, nodeIds: ['orr-atelier-watch-case', 'orr-atelier-watch-lug-tl', 'orr-atelier-watch-lug-tr', 'orr-atelier-watch-lug-bl', 'orr-atelier-watch-lug-br'], defaultVariant: 'steel',
+    id: 'case', label: 'Case', order: 2, nodeIds: ['orr-atelier-watch'], defaultVariant: 'steel',
     variants: [
       { id: 'steel', label: 'Steel', swatch: '#c9ced6', material: finish({ baseColor: '#c9ced6', ...STEEL }), priceDelta: 0 },
       { id: 'rose-gold', label: 'Rose Gold', swatch: '#d8a07a', material: finish({ baseColor: '#d8a07a', metalness: 1, roughness: 0.22, envMapIntensity: 1.35 }), priceDelta: 14000 },
@@ -82,7 +88,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'bezel', label: 'Bezel', order: 3, nodeIds: ['orr-atelier-watch-bezel'], defaultVariant: 'brushed',
+    id: 'bezel', label: 'Bezel', order: 3, nodeIds: ['orr-atelier-watch'], defaultVariant: 'brushed',
     variants: [
       { id: 'brushed', label: 'Brushed', swatch: '#aeb4bd', material: finish({ baseColor: '#aeb4bd', metalness: 1, roughness: 1, envMapIntensity: 1.05, normalMapUrl: `${TEX}/metal-nrm-brushed.png`, normalScale: 0.5, roughnessMapUrl: `${TEX}/metal-rgh-brushed.png` }), priceDelta: 0 },
       { id: 'polished', label: 'Polished', swatch: '#d6dae0', material: finish({ baseColor: '#d6dae0', ...STEEL }), priceDelta: 600 },
@@ -91,7 +97,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'dial', label: 'Dial', order: 4, nodeIds: ['orr-atelier-watch-dial'], defaultVariant: 'orrery',
+    id: 'dial', label: 'Dial', order: 4, nodeIds: ['orr-atelier-watch'], defaultVariant: 'orrery',
     variants: [
       // PHASE1 v2 signature (SC-V-O3): the dial IS a working orrery complication —
       // generated photoreal art (FLUX.2): midnight guilloché + aventurine starfield,
@@ -109,7 +115,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'hands', label: 'Hands', order: 5, nodeIds: ['orr-atelier-watch-hand-hour', 'orr-atelier-watch-hand-min'], defaultVariant: 'rhodium',
+    id: 'hands', label: 'Hands', order: 5, nodeIds: ['orr-atelier-watch'], defaultVariant: 'rhodium',
     variants: [
       { id: 'rhodium', label: 'Rhodium', swatch: '#eef2f8', material: finish({ baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 }), priceDelta: 0 },
       { id: 'gold', label: 'Gold', swatch: '#e8c98a', material: finish({ baseColor: '#e8c98a', metalness: 1, roughness: 0.16, envMapIntensity: 1.4 }), priceDelta: 1800 },
@@ -117,7 +123,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'indices', label: 'Indices', order: 6, nodeIds: ['orr-atelier-watch-mk-00', 'orr-atelier-watch-mk-01', 'orr-atelier-watch-mk-02', 'orr-atelier-watch-mk-03', 'orr-atelier-watch-mk-04', 'orr-atelier-watch-mk-05', 'orr-atelier-watch-mk-06', 'orr-atelier-watch-mk-07', 'orr-atelier-watch-mk-08', 'orr-atelier-watch-mk-09', 'orr-atelier-watch-mk-10', 'orr-atelier-watch-mk-11'], defaultVariant: 'gold',
+    id: 'indices', label: 'Indices', order: 6, nodeIds: ['orr-atelier-watch'], defaultVariant: 'gold',
     variants: [
       { id: 'gold', label: 'Applied Gold', swatch: '#e8c98a', material: finish({ baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 }), priceDelta: 0 },
       { id: 'rhodium', label: 'Rhodium', swatch: '#dfe4ea', material: finish({ baseColor: '#dfe4ea', metalness: 1, roughness: 0.18, envMapIntensity: 1.4 }), priceDelta: 0 },
@@ -125,7 +131,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'crown', label: 'Crown', order: 7, nodeIds: ['orr-atelier-watch-crown'], defaultVariant: 'steel',
+    id: 'crown', label: 'Crown', order: 7, nodeIds: ['orr-atelier-watch'], defaultVariant: 'steel',
     variants: [
       { id: 'steel', label: 'Steel', swatch: '#c9ced6', material: finish({ baseColor: '#c9ced6', metalness: 1, roughness: 0.2, envMapIntensity: 1.3 }), priceDelta: 0 },
       { id: 'gold', label: 'Gold', swatch: '#e8c98a', material: finish({ baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 }), priceDelta: 2600 },
@@ -153,7 +159,7 @@ export const LAYERS: AtelierLayerDef[] = [
     ],
   },
   {
-    id: 'strap', label: 'Strap', order: 10, nodeIds: ['orr-atelier-watch-strap-t0', 'orr-atelier-watch-strap-t1', 'orr-atelier-watch-strap-t2', 'orr-atelier-watch-strap-t3', 'orr-atelier-watch-strap-b0', 'orr-atelier-watch-strap-b1', 'orr-atelier-watch-strap-b2', 'orr-atelier-watch-strap-b3'], defaultVariant: 'black-leather',
+    id: 'strap', label: 'Strap', order: 10, nodeIds: ['orr-atelier-watch'], defaultVariant: 'black-leather',
     variants: [
       { id: 'black-leather', label: 'Black Leather', swatch: '#2a1d14', material: finish({ baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7, normalMapUrl: `${TEX}/strap-nrm-leather.png`, normalScale: 1.0, roughnessMapUrl: `${TEX}/strap-rgh-leather.png` }), priceDelta: 0 },
       { id: 'brown-alligator', label: 'Brown Alligator', swatch: '#5a3a22', material: finish({ baseColor: '#5a3a22', metalness: 0, roughness: 1, clearcoat: 0.3, clearcoatRoughness: 0.4, envMapIntensity: 0.8, baseColorMapUrl: `${TEX}/strap-tex-alligator.png`, normalMapUrl: `${TEX}/strap-nrm-leather.png`, normalScale: 1.2, roughnessMapUrl: `${TEX}/strap-rgh-leather.png` }), priceDelta: 3200 },
