@@ -268,3 +268,14 @@ Will self-report phase events below.
 - P3-5 idle cinematic camera drift — PASS.
 - GATES: final COLD-LOAD PASS (0 errors/404s), 6-hub sweep 0 errors, tsc 0 new, prod build ✓, art-fidelity 13/13, criteria-reviewer MUST-FIX none, user-advocate PLEASED "beats Slider Revolution" MUST-FIX none. transmission ≤2 throughout.
 - Commits: 83a77bb8 (W1) → 2e5ceb45 (W2) → ce423fb3 (W3) → 708f2118 (W4). Report: notes/ORRERY-PHASE3-REPORT.md.
+[11:00] PHASE3-SENTINEL: All P3-1..P3-5 pass all gates. Phase 1+2 criteria intact. See ORRERY-PHASE3-REPORT.md.
+[11:02] PHASE3-SENTINEL: DONE: ORRERY-PHASE3 COMPLETE (marker + quiet). Tell Claude: check
+[15:07] AUDIT-SENTINEL: ARMED: ORRERY-AUDIT sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch AUDIT-STOP
+[15:08] AUDIT-SENTINEL: launched AUDIT build agent on claude-opus-4-8 (resume #1)
+
+## [2026-06-22] FOUNDATION AUDIT — Wave 1 (integrity) DONE
+Headline: MOSTLY-SOUND-WITH-FIXES, trending NEEDS-GREENLIGHT-REFACTOR for the centerpiece.
+- 331 nodes, all tethered + captioned (intent.caption 331/331); text/mesh/plane render graph-driven via ArtifactNode (no codeRef needed). Headers/footers/nav/static-hero-watches ARE nodes. 3D backgrounds are hub-data (correct per Ruler §1).
+- 3 CRITICAL hardcoded-component violations rendered OUTSIDE the graph: AtelierWatchRig (the hero configurator watch — NOT a node), OrreryComplicationRig (NOT a node), HubSceneTransition (NOT a node). + 7 orphan nodes that render nothing in preview-app.
+- behaviorSpec/contracts EMPTY on all 331; auto-caption mechanism absent — but per Ruler §0/§9 that is deferred future-engine work, not a broken foundation.
+Report: notes/AUDIT-INTEGRITY-REPORT.md
