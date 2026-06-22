@@ -23335,7 +23335,7 @@
         "transform": {
           "x": 3,
           "y": 0.12,
-          "z": 0.18,
+          "z": 0.12,
           "width": 3.7,
           "height": 2.5
         },
@@ -23375,22 +23375,22 @@
         }
       },
       "materialSpec": {
-        "baseColor": "#0b0f18",
-        "metalness": 0.3,
-        "roughness": 0.45,
+        "baseColor": "#0a0e16",
+        "metalness": 0,
+        "roughness": 1,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.25,
-        "clearcoatRoughness": 0.12,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.5,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.1,
-        "emissive": "#0a1422",
-        "emissiveIntensity": 0.12,
+        "emissive": "#0a1018",
+        "emissiveIntensity": 0.06,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 0.8,
+        "envMapIntensity": 0,
         "opacity": 1,
         "normalMapUrl": null,
         "displacementMapUrl": null
@@ -23399,7 +23399,7 @@
       "scenePosition": {
         "x": 3,
         "y": 0.12,
-        "z": 0.18,
+        "z": 0.12,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -23422,7 +23422,7 @@
           "order": 420
         }
       ],
-      "receivesLighting": true
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-atelier-price-eyebrow",
@@ -27893,7 +27893,8 @@
       "functionBinding": {
         "kind": "atelier-action",
         "action": "flip"
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-atelier-btn-flip-label",
@@ -28044,7 +28045,8 @@
       "functionBinding": {
         "kind": "atelier-action",
         "action": "explode"
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-atelier-btn-explode-label",
@@ -28122,7 +28124,7 @@
         "transform": {
           "x": 2.72,
           "y": -0.78,
-          "z": 0.5,
+          "z": 0.36,
           "width": 0.92,
           "height": 0.3
         },
@@ -28158,33 +28160,33 @@
         "params": {
           "width": 0.92,
           "height": 0.3,
-          "depth": 0.1
+          "depth": 0.04
         }
       },
       "materialSpec": {
         "baseColor": "#15202b",
-        "metalness": 0.55,
-        "roughness": 0.62,
+        "metalness": 0.35,
+        "roughness": 0.55,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0,
+        "clearcoat": 0.1,
         "clearcoatRoughness": 0.4,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.4,
         "emissive": "#1ec8ff",
-        "emissiveIntensity": 0.04,
+        "emissiveIntensity": 0.05,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 0.7,
+        "envMapIntensity": 0.4,
         "opacity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 2.72,
         "y": -0.78,
-        "z": 0.5,
+        "z": 0.36,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -28195,7 +28197,8 @@
       "functionBinding": {
         "kind": "atelier-action",
         "action": "save"
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-atelier-btn-save-label",
@@ -28206,7 +28209,7 @@
         "transform": {
           "x": 2.72,
           "y": -0.78,
-          "z": 0.58,
+          "z": 0.43,
           "width": 1.1,
           "height": 0.3
         },
@@ -28243,7 +28246,7 @@
       "scenePosition": {
         "x": 2.72,
         "y": -0.78,
-        "z": 0.58,
+        "z": 0.43,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -28273,7 +28276,7 @@
         "transform": {
           "x": 3.74,
           "y": -0.78,
-          "z": 0.5,
+          "z": 0.36,
           "width": 0.92,
           "height": 0.3
         },
@@ -28309,33 +28312,33 @@
         "params": {
           "width": 0.92,
           "height": 0.3,
-          "depth": 0.1
+          "depth": 0.04
         }
       },
       "materialSpec": {
         "baseColor": "#171b22",
-        "metalness": 0.55,
-        "roughness": 0.62,
+        "metalness": 0.35,
+        "roughness": 0.55,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0,
+        "clearcoat": 0.1,
         "clearcoatRoughness": 0.4,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.4,
         "emissive": "#3a4250",
-        "emissiveIntensity": 0.04,
+        "emissiveIntensity": 0.05,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 0.7,
+        "envMapIntensity": 0.4,
         "opacity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 3.74,
         "y": -0.78,
-        "z": 0.5,
+        "z": 0.36,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -28346,7 +28349,8 @@
       "functionBinding": {
         "kind": "atelier-action",
         "action": "reset"
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-atelier-btn-reset-label",
@@ -28357,7 +28361,7 @@
         "transform": {
           "x": 3.74,
           "y": -0.78,
-          "z": 0.58,
+          "z": 0.43,
           "width": 1.1,
           "height": 0.3
         },
@@ -28394,7 +28398,7 @@
       "scenePosition": {
         "x": 3.74,
         "y": -0.78,
-        "z": 0.58,
+        "z": 0.43,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,

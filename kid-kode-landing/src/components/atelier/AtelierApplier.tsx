@@ -47,11 +47,27 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
     // the readout never lingers on its graph-authored placeholder ("CHF 38,000").
     let tries = 0;
     let timer: ReturnType<typeof setTimeout> | null = null;
+    // Chrome controls (buttons + price plaque) sit just in front of the plaque and
+    // were casting a ragged low-res shadow crescent onto it. UI chrome must not cast
+    // or receive shadows — only the watch does. Disable it on every (re)apply.
+    const muteChromeShadows = () => {
+      scene.traverse((obj) => {
+        const nid = (obj.userData as { nodeId?: string } | undefined)?.nodeId;
+        if (!nid || !(nid.startsWith('orr-atelier-btn-') || nid === 'orr-atelier-panel-glass')) return;
+        obj.traverse((c) => {
+          const m = c as unknown as { isMesh?: boolean; castShadow?: boolean; receiveShadow?: boolean };
+          if (m.isMesh) { m.castShadow = false; m.receiveShadow = false; }
+        });
+      });
+    };
     const tick = () => {
       applyConfiguratorToScene(scene, build, configuratorLoader);
       const wrote = applyConfiguratorText(scene, build);
+      muteChromeShadows();
       tries += 1;
-      if (!wrote && tries < 20) timer = setTimeout(tick, 600);
+      // keep ticking until the price lands AND at least ~5s, so a late AssembledScene
+      // rebuild can't re-enable chrome shadows behind us.
+      if (tries < 20 && (!wrote || tries < 9)) timer = setTimeout(tick, 600);
     };
     tick();
     return () => { if (timer) clearTimeout(timer); };
