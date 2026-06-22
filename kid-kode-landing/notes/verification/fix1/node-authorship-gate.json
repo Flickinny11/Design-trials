@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3000",
-  "strictOrphans": true,
+  "strictOrphans": false,
   "hardcoded": [
     {
       "label": "hardcoded:hub-transition",
@@ -10,13 +10,6 @@
       "renderables": 1
     },
     {
-      "label": "hardcoded:configurator-watch",
-      "nodeId": null,
-      "kind": "hardcoded",
-      "name": "",
-      "renderables": 42
-    },
-    {
       "label": "hardcoded:orrery-complication",
       "nodeId": null,
       "kind": "hardcoded",
@@ -24,7 +17,7 @@
       "renderables": 10
     }
   ],
-  "nodeAuthoredCount": 176,
+  "nodeAuthoredCount": 177,
   "emptyNonText": [],
   "emptyText": [
     "orr-atelier-headline",
@@ -51,7 +44,7 @@
       "desc": "gate detects hardcoded (node-less) scene artifacts",
       "pass": true,
       "warn": false,
-      "detail": "flagged: hub-transition, configurator-watch, orrery-complication"
+      "detail": "flagged: hub-transition, orrery-complication"
     },
     {
       "id": "gate.no-fresh-drift",
@@ -59,13 +52,6 @@
       "pass": true,
       "warn": false,
       "detail": "only the known watch/orrery/transition remain"
-    },
-    {
-      "id": "known.configurator-watch",
-      "desc": "known-hardcoded 'configurator-watch' flagged (expected until its greenlight)",
-      "pass": true,
-      "warn": true,
-      "detail": "flagged — pending G1/G2/G3 node migration"
     },
     {
       "id": "known.orrery-complication",
@@ -86,7 +72,7 @@
       "desc": "every node-authored artifact maps to a real graph node",
       "pass": true,
       "warn": false,
-      "detail": "176 node-authored artifacts, all in graph"
+      "detail": "177 node-authored artifacts, all in graph"
     },
     {
       "id": "authored.renders",

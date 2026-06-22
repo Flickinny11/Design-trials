@@ -1,2 +1,1 @@
-[10:40] | W3 | **P3-5** cinematic camera language | **DONE-pending-final-reverify** | preview-app idle camera DRIFT (slow orbit 
-[10:48] PHASE3 RUN COMPLETE — all gates green, committed + pushed
+[11:02] DONE: ORRERY-PHASE3 COMPLETE (marker + quiet). Tell Claude: check

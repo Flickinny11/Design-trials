@@ -65,8 +65,11 @@ export interface AuthorshipReport {
  *  ZERO edits to that component. The two declarative rigs are tagged at their
  *  GraphScene mount host via `userData.prismHardcodedArtifact` (their component
  *  files are NOT touched this session — they are the watch/orrery G1/G2 work). */
+// FIX2 / G1 — 'configurator-watch' has been brought into the graph (node
+// orr-atelier-watch, codeRef 'builtin:atelier-watch'); it is node-authored and
+// MUST NOT be flagged. The orrery + hub-transition remain hardcoded pending
+// their own greenlight sessions (G2/G3).
 export const EXPECTED_HARDCODED_ARTIFACTS: readonly string[] = [
-  'configurator-watch',
   'orrery-complication',
   'hub-transition',
 ] as const;

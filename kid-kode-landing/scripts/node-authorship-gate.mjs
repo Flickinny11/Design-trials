@@ -41,7 +41,9 @@ const STRICT_ORPHANS = argv.includes('--strict-orphans');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
-const EXPECTED_HARDCODED = ['configurator-watch', 'orrery-complication', 'hub-transition'];
+// FIX2 / G1 — 'configurator-watch' is now a graph node (orr-atelier-watch) and
+// MUST NOT be flagged; orrery + hub-transition remain (G2/G3 pending).
+const EXPECTED_HARDCODED = ['orrery-complication', 'hub-transition'];
 // The 7 former orphans (AUDIT C4 / G5). 6 ambience planes → REMOVED; 1 text node kept+filled.
 const ORPHAN_PLANES_REMOVED = [
   'orr-arrival-dust', 'orr-movement-rings', 'orr-celestia-starfield',

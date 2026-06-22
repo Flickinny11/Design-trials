@@ -28310,6 +28310,61 @@
         "variant": "orrery"
       },
       "receivesLighting": true
+    },
+    {
+      "nodeId": "orr-atelier-watch",
+      "subtype": "product-hero",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-3d",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 0.15,
+          "z": 0.42,
+          "width": 3.2,
+          "height": 3.2
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "ORRERY No.7 — the configurable atelier watch. A photoreal generated assembly (GLB case/bezel/crown + tourbillon caseback) on a turntable: drag to inspect any angle, swap finishes live, explode the dial stack, flip to the movement, ignite the lume at night. Driven by the configurator store.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "builtin:atelier-watch",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 0.15,
+        "z": 0.42,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "receivesLighting": true
     }
   ],
   "edges": [

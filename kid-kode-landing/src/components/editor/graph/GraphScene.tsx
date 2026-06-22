@@ -118,7 +118,7 @@ import type { AtelierLayerId } from '@/lib/prism/atelier/config';
 import { runAtelierAction } from '@/lib/prism/atelier/actions';
 import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { AtelierDragController } from '@/components/atelier/AtelierDragController';
-import { AtelierWatchRig } from '@/components/atelier/AtelierWatchRig';
+import { AtelierInputController } from '@/components/atelier/AtelierInputController';
 import { OrreryComplicationRig } from '@/components/atelier/OrreryComplicationRig';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
@@ -4189,13 +4189,14 @@ function AssembledSceneContent({
       <AtelierApplier previewMode={previewMode} />
       {/* F5.2 ATELIER — drag a catalog chip onto the matching part to apply it. */}
       <AtelierDragController previewMode={previewMode} />
-      {/* PHASE1 ATELIER — watch turntable: drag/idle rotation + tilt for full
-          any-angle inspect (SC-V-A4); specular sweep on the studio HDRI (A3).
-          S3d: tagged at the mount HOST (not the rig file) so the node-authorship
-          gate flags it as a known-hardcoded artifact pending its G1 greenlight. */}
-      <group userData={{ prismHardcodedArtifact: 'configurator-watch' }}>
-        <AtelierWatchRig previewMode={previewMode} />
-      </group>
+      {/* FIX2 / G1 — the watch is now a GRAPH NODE (orr-atelier-watch, codeRef
+          'builtin:atelier-watch' → watch-node-factory.ts), mounted through the
+          node map by AssembledSceneNode like any artifact. This editor-shell
+          controller owns only the DOM-coupled pointer-drag and forwards it to
+          the node via window.__ATELIER_RIG__ (mirrors SceneDriverHost). No
+          prismHardcodedArtifact tag — the node-authorship gate no longer flags
+          the watch (it is genuinely node-authored). */}
+      <AtelierInputController previewMode={previewMode} />
       {/* PHASE2 SIGNATURE (SC-V-O) — interactive 3D orrery complication on Celestia.
           S3d: known-hardcoded artifact tagged at the mount host (G2 greenlight). */}
       <group userData={{ prismHardcodedArtifact: 'orrery-complication' }}>

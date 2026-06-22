@@ -314,3 +314,11 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 - DONE: S3d node-authorship gate works (flags 3 known hardcoded, 0 fresh drift). All 7 orphans resolved: 6 ambience planes removed (superseded by on-theme hub background[]), orr-atelier-reason kept + renders real copy (48 glyphs, canvas). 325 nodes.
 - Gates: cold-load clean (1 canvas, 0 console errors, 0 _next 404s), node-authorship-gate --strict-orphans 0 hard-fail, tsc 0-new, prism-criteria-reviewer PASS, user-advocate PASS. All 4 verified hubs read premium+complete.
 - Report: notes/FIX1-REPORT.md (marker: PRISM-FIX1: RUN COMPLETE).
+[16:56] FIX1-SENTINEL: DONE: ORRERY-FIX1 COMPLETE (marker + quiet). Tell Claude: check
+[17:14] FIX2-SENTINEL: ARMED: ORRERY-FIX2 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch FIX2-STOP
+[17:18] FIX2-SENTINEL: launched FIX2 build agent on claude-opus-4-8 (resume #1)
+[17:38] FIX2-SENTINEL: working... (1 build agents live)
+
+## [FIX2 W1]  — watch is a node (G1) ✅
+- watch-node-factory.ts (codeRef builtin:atelier-watch) + coderef-registry; orr-atelier-watch node on s6; AtelierInputController; rig retired.
+- gate: configurator-watch NO LONGER flagged; 42 renderables node-authored; 0 errors; live finish swap works (CHF 80k→75.8k). tsc 0-new.
