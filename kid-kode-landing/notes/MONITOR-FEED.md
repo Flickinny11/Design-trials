@@ -259,3 +259,12 @@ Will self-report phase events below.
 - NEXT: W2 = P3-2 dramatic exploded view + P3-3 day/night lume reveal.
 [10:20] PHASE3-SENTINEL: Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM curtain removed), PreviewHubNav.tsx (nav 
 [10:40] PHASE3-SENTINEL: | W3 | **P3-5** cinematic camera language | **DONE-pending-final-reverify** | preview-app idle camera DRIFT (slow orbit 
+
+## [PHASE3 COMPLETE] 2026-06-22 — ORRERY-PHASE3: RUN COMPLETE
+- P3-1 in-WebGPU cinematic transition (brass curtain, camera dolly-through, gated swap masks the 6s atelier mount stall) — PASS, flag #4 FIXED.
+- P3-2 dramatic exploded view (per-part stagger, deep throws, 3/4 auto-orient, gears exposed) — PASS, flag #3 FIXED.
+- P3-3 day/night lume reveal (env dims, lume ignites, lights restore on leave) — PASS.
+- P3-4 watch cursor parallax+press + controls magnetic cursor — PASS.
+- P3-5 idle cinematic camera drift — PASS.
+- GATES: final COLD-LOAD PASS (0 errors/404s), 6-hub sweep 0 errors, tsc 0 new, prod build ✓, art-fidelity 13/13, criteria-reviewer MUST-FIX none, user-advocate PLEASED "beats Slider Revolution" MUST-FIX none. transmission ≤2 throughout.
+- Commits: 83a77bb8 (W1) → 2e5ceb45 (W2) → ce423fb3 (W3) → 708f2118 (W4). Report: notes/ORRERY-PHASE3-REPORT.md.

@@ -18,3 +18,8 @@ Touched: GraphScene.tsx (mount + dolly + nav route), page.tsx (nav route + DOM c
 
 | W3 | **P3-4** premium micro-response | **DONE-pending-final-reverify** | watch cursor PARALLAX (leans toward pointer → specular sweeps; verified delta 0.096 rad far-left vs far-right) + tactile PRESS (pivot scale 1.0→0.965 on pointerdown→1.0 on up); existing MagneticCursor (snap/grow/press/warm-glow) on all controls still mounted. 0 console errors. |
 | W3 | **P3-5** cinematic camera language | **DONE-pending-final-reverify** | preview-app idle camera DRIFT (slow orbit sway + dolly + target parallax around hero pose, eased in, never fights the landing/transition): verified continuous motion x±0.18/y±0.10/z±0.10 over 3.6s on s1. Entrances handled by the P3-1 transition dolly-through. Scene always feels alive. |
+
+| W4 | full verification sweep + COLD-LOAD GATE + advocate | **COMPLETE** | FINAL cold-load PASS (final code; 0 errors, 0 _next 404s, in-canvas transition, no DOM curtain); 6-hub sweep 0 errors; tsc 0 new; prod build ✓ 11.9s; art-fidelity 13/13 PASS; criteria-reviewer MUST-FIX none; user-advocate PLEASED (beats Slider Revolution) MUST-FIX none. Exploded spread deepened per advocate wish (w4-exploded-deeper); strap rest clean (w4-atelier-rest). |
+
+## RUN COMPLETE — ORRERY-PHASE3
+All P3-1..P3-5 pass all gates. Phase 1+2 criteria intact. See ORRERY-PHASE3-REPORT.md.
