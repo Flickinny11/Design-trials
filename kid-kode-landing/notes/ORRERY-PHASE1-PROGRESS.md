@@ -19,3 +19,9 @@
 - Re-added articulated STRAP: CatmullRom-curved tapered band (9 segs/side) from the 12/6 lugs, leather/alligator/rubber/bracelet finish (strap variant).
 - Price + summary live + correct (CHF 87,200 rose-gold/gold/guilloche/blued; CHF 80,000 titanium/aventurine/alligator/lume — every priceDelta incl strap accounted).
 - Evidence: wB-01 (rose-gold+guilloche), wB-02 (default+strap), wB-04 (aventurine head-on). 0 console err; tsc 0-new(9).
+
+## Wave C (v2) — inspect system (A5 caseback-flip + A6 exploded view)
+- A5: rig.flip() spins watch 180° to the exhibition caseback; tourbillon.glb movement becomes visible (rotation samples confirm IN MOTION). Opened the lathe caseback aperture (ring not closed disc) so the movement shows; movement enlarged to fill the back.
+- A6: rig.explode() eases (dt*5 lerp) the major components apart along the case axis — crystal lifts furthest, dial-face forward, case anchored, movement recedes, strap drops + hides near full-explode; reassembles on explode(false). Evidence: wC-02 (angled explode) shows dial/case/movement clearly separated.
+- Fixed cold-load price placeholder: AtelierApplier re-applies at 180/600/1200/2500/4000ms so "CHF 80,000" (orrery default) lands once the late-mounting text nodes exist (was lingering on graph-authored "CHF 38,000").
+- Evidence: wC-01 explode head-on, wC-02 explode angle, wC-03 caseback movement. tsc 0-new(9); 0 console err; tx 2/2.

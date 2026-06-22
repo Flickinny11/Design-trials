@@ -107,7 +107,8 @@ function specOf(layer: AtelierLayerId, variantId: string): MaterialSpec | null {
 // frames the GENERATED orrery dial art. The generated case GLB stays on disk
 // (case-hero.glb) for a segmented upgrade the moment Tripo is funded.
 const CASE_PROFILE: Vector2[] = [
-  new Vector2(0.0, -0.17), new Vector2(0.62, -0.17), new Vector2(0.84, -0.135),
+  // open exhibition caseback (ring, not closed disc) so the movement shows on flip
+  new Vector2(0.6, -0.17), new Vector2(0.84, -0.135),
   new Vector2(0.965, -0.05), new Vector2(1.0, 0.05), new Vector2(0.99, 0.135),
   new Vector2(0.95, 0.185), new Vector2(0.86, 0.2), new Vector2(0.84, 0.13),
   new Vector2(0.84, 0.04),
@@ -149,8 +150,8 @@ function WatchCase({ caseVariant }: { caseVariant: string }) {
   );
 }
 
-// ── caseback movement (GLB) — hidden until Wave C flip ─────────────────────
-function MovementModel({ visibleRef }: { visibleRef: React.MutableRefObject<boolean> }) {
+// ── caseback movement (GLB) — exhibition back, in motion on flip / explode ──
+function MovementModel({ flipRef, explodeRef }: { flipRef: React.MutableRefObject<boolean>; explodeRef: React.MutableRefObject<number> }) {
   const gltf = useGLTF(MOVEMENT_URL);
   const ref = useRef<Group>(null);
   const built = useMemo(() => {
@@ -161,15 +162,17 @@ function MovementModel({ visibleRef }: { visibleRef: React.MutableRefObject<bool
     root.position.sub(center);
     const holder = new Group();
     holder.add(root);
-    holder.scale.setScalar((1.7 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1));
+    holder.scale.setScalar((1.55 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1));
     return holder;
   }, [gltf]);
   useFrame((_, dt) => {
     const g = ref.current; if (!g) return;
-    g.visible = visibleRef.current;
-    if (g.visible) g.rotation.z += dt * 0.8; // rotor / balance turning
+    const ex = explodeRef.current;
+    g.visible = flipRef.current || ex > 0.04;
+    g.position.z = -0.12 - 0.62 * ex;            // recedes when exploded
+    if (g.visible) g.rotation.z += dt * 0.7;     // balance / rotor in motion (SC-V-A5)
   });
-  return <group ref={ref} position={[0, 0, -0.16]} rotation={[0, Math.PI, 0]} visible={false}><primitive object={built} /></group>;
+  return <group ref={ref} position={[0, 0, -0.12]} visible={false}><primitive object={built} /></group>;
 }
 
 useGLTF.preload(MOVEMENT_URL);
@@ -208,9 +211,13 @@ function StrapBand({ mat, sign }: { mat: unknown; sign: number }) {
   );
 }
 
-interface WatchProps { build: Record<AtelierLayerId, string>; flipRef: React.MutableRefObject<boolean>; }
+interface WatchProps {
+  build: Record<AtelierLayerId, string>;
+  flipRef: React.MutableRefObject<boolean>;
+  explodeRef: React.MutableRefObject<number>;
+}
 
-function WatchAssembly({ build, flipRef }: WatchProps) {
+function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   // dial — generated orrery art by default, else the chosen finish texture/color
   const dialMat = useMemo(() => {
     const spec = specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec;
@@ -241,13 +248,26 @@ function WatchAssembly({ build, flipRef }: WatchProps) {
   const hourRef = useRef<Group>(null);
   const minRef = useRef<Group>(null);
   const secRef = useRef<Group>(null);
+  // exploded-view part groups (SC-V-A6)
+  const caseGroupRef = useRef<Group>(null);
+  const faceGroupRef = useRef<Group>(null);
+  const crystalGroupRef = useRef<Group>(null);
+  const strapGroupRef = useRef<Group>(null);
+  const explodeAmt = useRef(0);
 
-  useFrame((state) => {
+  useFrame((state, dt) => {
     // a living watch: gentle continuous sweep (not real time-of-day)
     const t = state.clock.elapsedTime;
     if (secRef.current) secRef.current.rotation.z = -t * 0.9;
     if (minRef.current) minRef.current.rotation.z = -t * 0.15;
     if (hourRef.current) hourRef.current.rotation.z = -t * 0.0125;
+    // exploded view — eased separation of the major components (SC-V-A6)
+    explodeAmt.current += (explodeRef.current - explodeAmt.current) * Math.min(1, dt * 5);
+    const a = explodeAmt.current;
+    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.06 * a;
+    if (faceGroupRef.current) faceGroupRef.current.position.z = DIAL_FRONT + 0.22 * a;
+    if (crystalGroupRef.current) crystalGroupRef.current.position.z = DIAL_FRONT + 0.04 + 0.66 * a;
+    if (strapGroupRef.current) { strapGroupRef.current.position.z = -0.3 * a; strapGroupRef.current.visible = a < 0.85; }
   });
 
   const indices = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
@@ -255,9 +275,11 @@ function WatchAssembly({ build, flipRef }: WatchProps) {
   return (
     <group>
       {/* precision-turned case dressed in generated steel PBR */}
-      <WatchCase caseVariant={build.case} />
-      {/* dial face stack — seated just behind the case front rim */}
-      <group position={[0, 0, DIAL_FRONT]}>
+      <group ref={caseGroupRef}>
+        <WatchCase caseVariant={build.case} />
+      </group>
+      {/* dial face stack — seated just behind the case front rim (explodes forward) */}
+      <group ref={faceGroupRef} position={[0, 0, DIAL_FRONT]}>
         {/* bezel ring sits on the case rim */}
         <mesh geometry={bezelGeo} material={bezelMat as never} position={[0, 0, 0.02]} castShadow receiveShadow />
         {/* dial face (generated orrery art / finish) */}
@@ -273,15 +295,19 @@ function WatchAssembly({ build, flipRef }: WatchProps) {
         <group ref={minRef} position={[0, 0, 0.042]}><mesh geometry={minGeo} material={handsMat as never} /></group>
         <group ref={secRef} position={[0, 0, 0.052]}><mesh geometry={secGeo} material={handsMat as never} /></group>
         <mesh geometry={capGeo} material={capMat as never} position={[0, 0, 0.056]} rotation={[Math.PI / 2, 0, 0]} />
-        {/* sapphire crystal dome (transmission) — flattened sphere, front bulge only */}
-        <mesh geometry={crystalGeo} material={crystalMat as never} position={[0, 0, 0.035]} scale={[1, 1, 0.1]} />
+      </group>
+      {/* sapphire crystal dome — own group so it lifts off first in the explode */}
+      <group ref={crystalGroupRef} position={[0, 0, DIAL_FRONT + 0.04]}>
+        <mesh geometry={crystalGeo} material={crystalMat as never} scale={[1, 1, 0.1]} />
       </group>
       {/* strap — articulated bands curving back from the 12/6 lugs */}
-      <StrapBand mat={strapMat} sign={1} />
-      <StrapBand mat={strapMat} sign={-1} />
-      {/* caseback movement (hidden until flip) */}
+      <group ref={strapGroupRef}>
+        <StrapBand mat={strapMat} sign={1} />
+        <StrapBand mat={strapMat} sign={-1} />
+      </group>
+      {/* exhibition caseback movement — in motion on flip / explode */}
       <Suspense fallback={null}>
-        <MovementModel visibleRef={flipRef} />
+        <MovementModel flipRef={flipRef} explodeRef={explodeRef} />
       </Suspense>
     </group>
   );
@@ -293,6 +319,7 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
   const build = useConfiguratorStore((s) => s.build);
   const pivotRef = useRef<Group>(null);
   const flipRef = useRef(false);
+  const explodeRef = useRef(0);
 
   // rotation state
   const yaw = useRef(0);
@@ -315,10 +342,12 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
       get yaw() { return yaw.current; },
       get pitch() { return pitch.current; },
       get flipped() { return flipRef.current; },
+      get exploded() { return explodeRef.current; },
       spinTo: (y: number, p?: number) => { yawTarget.current = y; if (typeof p === 'number') pitchTarget.current = Math.max(TILT_MIN, Math.min(TILT_MAX, p)); lastInteract.current = 1e15; },
       nudge: (dy: number) => { yawTarget.current += dy; lastInteract.current = 1e15; },
       resumeIdle: () => { lastInteract.current = 0; },
       flip: (on?: boolean) => { flipRef.current = typeof on === 'boolean' ? on : !flipRef.current; yawTarget.current = flipRef.current ? Math.PI : 0; lastInteract.current = 1e15; return flipRef.current; },
+      explode: (on?: boolean) => { explodeRef.current = (typeof on === 'boolean' ? on : explodeRef.current < 0.5) ? 1 : 0; lastInteract.current = 1e15; return explodeRef.current; },
       get pivot() { return pivotRef.current; },
     };
     return () => { delete (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__; };
@@ -385,7 +414,7 @@ export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
   if (!active) return null;
   return (
     <group ref={pivotRef} position={PIVOT_CENTER.toArray()}>
-      <WatchAssembly build={build} flipRef={flipRef} />
+      <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} />
     </group>
   );
 }

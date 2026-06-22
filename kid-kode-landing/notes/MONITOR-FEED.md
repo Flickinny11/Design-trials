@@ -212,3 +212,5 @@ Will self-report phase events below.
 [05:02] PHASE1-SENTINEL: ## Wave A (v2) — photoreal watch hero (mandate-v2 rebuild)
 
 [05:08:50] PHASE1 waveB(v2): COMMIT | A2/A3/A7 verified on new watch — case-metal (steel→rose-gold→titanium), dial finish (orrery→guilloche→aventurine, texture swaps load), bezel (gold), hands (blued), + NEW articulated curved leather/alligator STRAP all reflect LIVE in 3D; price live + correct (CHF 38k→87.2k→80k, all deltas incl strap counted); 0 console err, tsc 0-new, tx 2/2 | next: waveC caseback-flip(moving tourbillon)+exploded view
+
+[05:15:50] PHASE1 waveC(v2): COMMIT | A5 caseback FLIP → exhibition back reveals tourbillon.glb movement IN MOTION (rotation samples change live); A6 EXPLODED view separates crystal/dial-face/case/movement along axis w/ eased lerp + reassembles (visible at angle); opened lathe caseback aperture; movement enlarged | also FIXED cold-load price (was "CHF 38,000" placeholder until interaction → now "CHF 80,000" orrery-default on load via wider applier re-apply window) | 0 console err, tsc 0-new, tx 2/2 | next: waveD dimensional 3D chrome + drag-assemble + flip/explode buttons + custom icons

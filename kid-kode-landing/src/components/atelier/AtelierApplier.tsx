@@ -46,12 +46,11 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
       applyConfiguratorText(scene, build);
     };
     run();
-    const t1 = setTimeout(run, 180);
-    const t2 = setTimeout(run, 600);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    // Cold-load: the atelier text/part nodes mount ~2.5s after the graph loads, so
+    // re-apply across a wider window so the price/summary readout never lingers on
+    // its graph-authored placeholder (e.g. "CHF 38,000") once the orrery default lands.
+    const ts = [180, 600, 1200, 2500, 4000].map((d) => setTimeout(run, d));
+    return () => { ts.forEach(clearTimeout); };
     // rev is included so each accepted change re-applies; build is the payload.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, rev, activeHubId, previewMode]);
