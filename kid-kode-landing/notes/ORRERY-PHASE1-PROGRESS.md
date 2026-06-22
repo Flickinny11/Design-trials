@@ -31,3 +31,6 @@
 - A8 chrome: (1) 45 swatch chips re-materialed to real per-layer PBR (metals metalness1/rough0.2; dial gloss+clearcoat; strap matte leather; lume emissive) → a premium material tray, not flat squares; (2) price panel plane→box (depth 0.16), premium dark plaque, shifted +0.55 off the watch + softened (no spotlight hot-reflection); (3) milled CASEBACK + EXPLODE control buttons added + wired (runAtelierAction flip/explode → rig); (4) SAVE/RESET rebuilt clean — root-caused the white "brush smear" to polished-metal specular blooming under the spotlight; brushed-matte finish (metalness0.55/rough0.62/no-clearcoat) eliminates it.
 - A7 SAVE verified end-to-end: SAVE button click → runAtelierAction('save') → localStorage 'orrery-no7-build' persisted + clipboard + reason.
 - Evidence: wD-04/wD-05 (clean chrome), drag + save eval traces. tsc 0-new(9); 0 console err; tx 2/2.
+
+## RUN COMPLETE
+All 8 SC-V-A PASS with cited evidence; tsc green; art-fidelity 11/11; prism-criteria-reviewer PASS; user-advocate PLEASED/PASS; prod build EXIT=0; 0 console err; no regression (5 other hubs render). Marker written to notes/ORRERY-PHASE1-REPORT.md.
