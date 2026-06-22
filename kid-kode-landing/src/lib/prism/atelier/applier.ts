@@ -74,11 +74,16 @@ export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild, lo
       if (!handle && h) handle = h;
     });
     if (handle) {
-      (handle as MeshPrimitiveHandle).setMaterialSpec(targets.get(nid)!);
-      // Wire texture map if the spec carries a baseColorMapUrl and a loader is available.
-      const colorMap = targets.get(nid)!.baseColorMapUrl;
-      if (loader && colorMap !== undefined) {
-        (handle as MeshPrimitiveHandle).setColorMap(colorMap ?? null, loader);
+      const spec = targets.get(nid)!;
+      (handle as MeshPrimitiveHandle).setMaterialSpec(spec);
+      // Wire texture maps live (albedo + photoreal normal/roughness — SC-V-A3).
+      if (loader) {
+        const h = handle as MeshPrimitiveHandle;
+        if (spec.baseColorMapUrl !== undefined) h.setColorMap(spec.baseColorMapUrl ?? null, loader);
+        if (spec.normalMapUrl !== undefined) {
+          h.setNormalMap(spec.normalMapUrl ?? null, loader, spec.normalScale ?? 1);
+        }
+        if (spec.roughnessMapUrl !== undefined) h.setRoughnessMap(spec.roughnessMapUrl ?? null, loader);
       }
       applied += 1;
     }

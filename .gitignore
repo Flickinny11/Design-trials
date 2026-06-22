@@ -52,3 +52,4 @@ kid-kode-landing/.kripverify/
 artifacts/
 
 .claude/worktrees/
+.assetgen/

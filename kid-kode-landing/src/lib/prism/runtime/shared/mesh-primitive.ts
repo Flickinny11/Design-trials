@@ -289,6 +289,10 @@ export interface MeshPrimitiveHandle {
   setMaterialSpec(spec?: MaterialSpec | null): void;
   /** Load a base-color texture URL and set .map on the material (async, cached). */
   setColorMap(url: string | null, loader: FaceTextureLoaderLike): void;
+  /** Load a tangent-space normal map (linear) + set normalScale (PHASE1, SC-V-A3). */
+  setNormalMap(url: string | null, loader: FaceTextureLoaderLike, scale?: number): void;
+  /** Load a roughness map (linear, green channel) onto .roughnessMap (PHASE1). */
+  setRoughnessMap(url: string | null, loader: FaceTextureLoaderLike): void;
 }
 
 /** Build the handle for a mounted primitive Mesh. `mesh.geometry` must be the
@@ -344,6 +348,29 @@ export function createMeshPrimitiveHandle(
           (mat as { needsUpdate: boolean }).needsUpdate = true;
         })
         .catch(() => { /* missing map → baseColor stands */ });
+    },
+    setNormalMap(url: string | null, loader: FaceTextureLoaderLike, scale = 1): void {
+      const mat = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) as unknown as {
+        normalMap?: Texture | null; normalScale?: { set: (x: number, y: number) => void }; needsUpdate: boolean;
+      } | undefined;
+      if (!mat) return;
+      if (!url) { mat.normalMap = null; mat.needsUpdate = true; return; }
+      void loader.loadTexture(url).then((tex) => {
+        mat.normalMap = tex;
+        mat.normalScale?.set(scale, scale);
+        mat.needsUpdate = true;
+      }).catch(() => { /* missing → flat normal */ });
+    },
+    setRoughnessMap(url: string | null, loader: FaceTextureLoaderLike): void {
+      const mat = (Array.isArray(mesh.material) ? mesh.material[0] : mesh.material) as unknown as {
+        roughnessMap?: Texture | null; needsUpdate: boolean;
+      } | undefined;
+      if (!mat) return;
+      if (!url) { mat.roughnessMap = null; mat.needsUpdate = true; return; }
+      void loader.loadTexture(url).then((tex) => {
+        mat.roughnessMap = tex;
+        mat.needsUpdate = true;
+      }).catch(() => { /* missing → scalar roughness */ });
     },
   };
 }

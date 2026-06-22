@@ -261,6 +261,11 @@ export interface MaterialSpec {
   /** Optional texture URLs (loaded via ctx loaders, cached). */
   normalMapUrl?: string | null;
   displacementMapUrl?: string | null;
+  /** Roughness map (linear, green channel). Multiplies `roughness` — set
+   *  roughness=1 to let a baked map drive the value range directly. PHASE1
+   *  (additive, INV-18): photoreal dial/metal micro-roughness for real
+   *  specular response as the watch orbits (SC-V-A3). */
+  roughnessMapUrl?: string | null;
   /** Base-color/albedo map (sRGB). Additive (INV-18) — UI-FIDELITY-2 W3:
    *  lets generated surface scans pour onto primitive geometry (e.g. the
    *  showcase planets' lapis/brass/obsidian equirect textures on spheres). */
@@ -287,6 +292,7 @@ export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
   opacity: 1,
   normalMapUrl: null,
   displacementMapUrl: null,
+  roughnessMapUrl: null,
 };
 
 // ── Canvas-spec §7 Text System (INV-8 additive, INV-11) ────────────────────

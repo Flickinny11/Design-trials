@@ -112,6 +112,7 @@ import type { AtelierLayerId } from '@/lib/prism/atelier/config';
 import { runAtelierAction } from '@/lib/prism/atelier/actions';
 import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { AtelierDragController } from '@/components/atelier/AtelierDragController';
+import { AtelierWatchRig } from '@/components/atelier/AtelierWatchRig';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
   IMAGE_SPEC_DEFAULT,
@@ -1966,6 +1967,30 @@ function SceneControlsBridge({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flyToNodeId, nodes]);
 
+  // PHASE1 (SC-V-A4) — Atelier inspect camera. The award-winning configurator
+  // pattern: the CAMERA stays head-on (so the premium flat UI never skews) and
+  // the WATCH turntables (AtelierWatchRig) for full 360° any-angle inspect; the
+  // camera only DOLLIES for the macro loupe. We ease to a head-on hero pose then
+  // clamp polar/azimuth to that pose so only distance (zoom) remains free.
+  useEffect(() => {
+    if (viewMode !== 'preview-app' || activeHubId !== 's6-atelier') return;
+    if (!controlsRef.current) return;
+    let cancelled = false;
+    const id = window.setTimeout(() => {
+      const cc = controlsRef.current;
+      if (!cc) return;
+      cc.enabled = true;
+      void cc.setLookAt(0, 0.55, 8.2, 0, 0.1, 0.42, true).then(() => {
+        if (cancelled) return;
+        const cur = controlsRef.current;
+        if (!cur) return;
+        cur.minPolarAngle = cur.maxPolarAngle = cur.polarAngle;
+        cur.minAzimuthAngle = cur.maxAzimuthAngle = cur.azimuthAngle;
+      });
+    }, 120);
+    return () => { cancelled = true; window.clearTimeout(id); };
+  }, [viewMode, activeHubId]);
+
   useFrame((state) => {
     const c = controlsRef.current;
     if (!c) return;
@@ -1976,7 +2001,11 @@ function SceneControlsBridge({
     // Edit-in-Preview would otherwise leave controls.enabled=true on release and
     // strand the lock. Re-assert the lock every frame (idempotent) so the
     // auto-suspend never unlocks a locked camera.
-    const shouldLock = viewMode === 'preview-app' || (viewMode === 'canvas' && editInPreview);
+    // PHASE1 (SC-V-A4) — the Atelier is the one preview-app surface where the
+    // user MUST orbit + loupe-zoom the watch. Exempt it from the camera lock
+    // (bounded constraints keep it framed; see the CameraControls props below).
+    const atelierInspect = viewMode === 'preview-app' && activeHubId === 's6-atelier';
+    const shouldLock = !atelierInspect && (viewMode === 'preview-app' || (viewMode === 'canvas' && editInPreview));
     if (shouldLock && c.enabled) c.enabled = false;
     setCameraDistance(c.distance);
     // APP-REALITY P2 — drive the deterministic camera journey in preview-app.
@@ -2095,6 +2124,8 @@ function SceneControlsBridge({
   const isPreview = viewMode === 'preview-app';
   // APP-REALITY P3 — Edit-in-Preview also locks the camera (shipped framing).
   const framed = viewMode === 'canvas' && editInPreview;
+  // PHASE1 (SC-V-A4) — the Atelier unlocks bounded orbit + loupe zoom.
+  const atelierInspect = isPreview && activeHubId === 's6-atelier';
   return (
     // EDITOR-EXP P4 (C21) — `makeDefault` registers this as r3f's default
     // controls (useThree().controls). drei's <TransformControls> reads that and,
@@ -2106,17 +2137,17 @@ function SceneControlsBridge({
     <CameraControls
       ref={controlsRef}
       makeDefault
-      enabled={!isPreview && !framed}
-      minDistance={1.5}
-      maxDistance={220}
+      enabled={(!isPreview && !framed) || atelierInspect}
+      minDistance={atelierInspect ? 3 : 1.5}
+      maxDistance={atelierInspect ? 11 : 220}
       minPolarAngle={0}
       maxPolarAngle={Math.PI}
       minAzimuthAngle={-Infinity}
       maxAzimuthAngle={Infinity}
       smoothTime={0.24}
       draggingSmoothTime={0.12}
-      dollyToCursor
-      truckSpeed={1.1}
+      dollyToCursor={!atelierInspect}
+      truckSpeed={atelierInspect ? 0 : 1.1}
       azimuthRotateSpeed={0.7}
       polarRotateSpeed={0.7}
       dollySpeed={0.75}
@@ -3351,7 +3382,14 @@ function TopologySceneContent({
       <ambientLight intensity={0.06} />
       <directionalLight position={[120, 120, 100]} intensity={0.5} color={DS.ice200} castShadow={false} />
       <directionalLight position={[-100, -60, -100]} intensity={0.25} color={DS.metal100} />
-      <Environment preset="night" environmentIntensity={0.55} />
+      {/* PHASE1 (SC-V-A3) — the Atelier uses a real luxury-studio HDRI so the
+          watch's metals + dial finishes throw crisp, angle-dependent specular
+          as it orbits. Other hubs keep the cosmic night IBL. */}
+      {activeHubId === 's6-atelier' ? (
+        <Environment files="/prism-mock/orrery/assets/studio-hdri.png" environmentIntensity={1.0} />
+      ) : (
+        <Environment preset="night" environmentIntensity={0.55} />
+      )}
 
       {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
           EB-03-01 will orbit the existing hub hulls around this sun; for now
@@ -4057,6 +4095,9 @@ function AssembledSceneContent({
       <AtelierApplier previewMode={previewMode} />
       {/* F5.2 ATELIER — drag a catalog chip onto the matching part to apply it. */}
       <AtelierDragController previewMode={previewMode} />
+      {/* PHASE1 ATELIER — watch turntable: drag/idle rotation + tilt for full
+          any-angle inspect (SC-V-A4); specular sweep on the studio HDRI (A3). */}
+      <AtelierWatchRig previewMode={previewMode} />
       {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
           built scene. Runs in canvas + preview-app; in preview-app the drivers
           respond to the user's real input (§16). */}

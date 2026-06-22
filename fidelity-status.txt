@@ -1,1 +1,1 @@
-[17:53] - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs
+[18:12] DONE: ORRERY-FIDELITY COMPLETE (marker + quiet). Tell Claude: check

@@ -195,3 +195,10 @@ Will self-report phase events below.
 [17:13] FIDELITY-SENTINEL: - FIDELITY s2-movement + s4-celestia (17:08): dimensional extruded-brass titles (kill flat-skew). s2: enlarged exposed-c
 [17:33] FIDELITY-SENTINEL: - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs
 [17:53] FIDELITY-SENTINEL: - FIDELITY nav/IA (17:23): configurator made DISCOVERABLE + s6 promoted to first-class hub. Re-spaced nav to 6 even tabs
+[18:12] FIDELITY-SENTINEL: DONE: ORRERY-FIDELITY COMPLETE (marker + quiet). Tell Claude: check
+[03:06] PHASE1-SENTINEL: ARMED: ORRERY-PHASE1 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch PHASE1-STOP
+[03:07] PHASE1-SENTINEL: launched PHASE1 build agent on claude-opus-4-8 (resume #1)
+[03:26:38] PHASE1 wave0-audit: COMPLETE | atelier baseline = swatch-grid (NOT flagship): camera LOCKED, no orbit/loupe/caseback/exploded/assemble, no HDRI/normal/rough maps | dial+strap albedo exist | Replicate flux-2-pro OK | next: Wave1 asset-gen (HDRI+PBR maps) then Wave2 orbit+env
+[03:29] PHASE1-SENTINEL: working... (1 build agents live)
+[03:49] PHASE1-SENTINEL: working... (1 build agents live)
+[03:55:12] PHASE1 wave1+2: COMMIT | assets: studio-HDRI(2048x1024) + guilloche/sunburst/brushed/leather normal+rough maps (FLUX.2-pro->sharp) | A3: studio scene.environment + PBR maps wired (dial/case/strap), specular sweeps on turntable | A4: head-on camera + WATCH TURNTABLE (drag+idle+tilt, AtelierWatchRig) + loupe dolly | watch geom upgraded: 12 markers+4 lugs+chapter+articulated strap (33 parts) | A7 price live (CHF 38k->60k on guilloche) | tsc 0-new, 0 console err | next: Wave3 caseback/movement/exploded

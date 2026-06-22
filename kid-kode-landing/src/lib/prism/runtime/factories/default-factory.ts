@@ -458,6 +458,38 @@ export function defaultRenderModeFactory(
             /* missing map → resolved baseColor stands */
           });
       }
+      // PHASE1 (INV-18 additive) — pour normal + roughness maps (linear color
+      // space) for photoreal micro-surface that catches the studio IBL as the
+      // watch orbits (SC-V-A3). normalScale drives relief depth.
+      {
+        const spec = node.materialSpec;
+        const nrmUrl = spec?.normalMapUrl;
+        const rghUrl = spec?.roughnessMapUrl;
+        const nScale = typeof spec?.normalScale === 'number' ? spec.normalScale : 1;
+        if (nrmUrl) {
+          ctx.textureLoader
+            .loadTexture(nrmUrl)
+            .then((tex) => {
+              const p = physical as unknown as {
+                normalMap: unknown; normalScale?: { set: (x: number, y: number) => void }; needsUpdate: boolean;
+              };
+              p.normalMap = tex;
+              p.normalScale?.set(nScale, nScale);
+              p.needsUpdate = true;
+            })
+            .catch(() => { /* missing → flat normal */ });
+        }
+        if (rghUrl) {
+          ctx.textureLoader
+            .loadTexture(rghUrl)
+            .then((tex) => {
+              const p = physical as unknown as { roughnessMap: unknown; needsUpdate: boolean };
+              p.roughnessMap = tex;
+              p.needsUpdate = true;
+            })
+            .catch(() => { /* missing → scalar roughness */ });
+        }
+      }
       const geo = buildPrimitiveGeometry(node.meshPrimitive);
       const mesh = new Mesh(geo, faceBuild.material);
       mesh.name = `mesh-primitive:${node.nodeId}`;
