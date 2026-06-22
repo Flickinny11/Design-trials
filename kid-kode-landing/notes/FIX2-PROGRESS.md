@@ -56,3 +56,20 @@
   - finish swap → re-material + price/summary update (CHF 80k→75.8k). ✅
   - save → localStorage; reset→restore round-trip restores the saved dial. ✅
   - drag turntable (AtelierInputController → node.dragBy) → yaw 0→2.88. ✅
+
+## Wave 3 — verify (no-regression + editor payoff) + report — COMPLETE
+- Fresh dev restart (rm -rf .next) + COLD-LOAD GATE: canvas present, 0 console errors,
+  all 38 requests 200/301/304 (no _next 404/5xx), no stuck loader. PASS.
+- node-authorship-gate.mjs --strict-orphans: watch NOT flagged (only orrery +
+  hub-transition); 177 node-authored all in graph; 0 page errors; 0 hard-fail. PASS.
+- THE PAYOFF: watch selectable+editable in canvas — selectedNodeId='orr-atelier-watch',
+  Inspector open ("Orr Atelier Watch", 5 tabs, BUILT badge, Clone/Save&Rebuild),
+  transform gizmo, Position 0.00/0.15/0.42 (w3-PAYOFF-watch-selected-editable.png).
+- No-regression matrix: render/swap/explode/flip/night/drag/price/save all node-driven,
+  0 errors (frames w1-*, w2-*).
+- tsc 0-new; prism-criteria-reviewer PASS (no MUST/SHOULD-FIX); user-advocate PLEASED
+  (gate PASS, schema-validated). One non-blocking FLAG (pre-existing SAVE/RESET quad,
+  proven not a port regression).
+- Report: notes/FIX2-REPORT.md (marker: PRISM-FIX2-WATCH: RUN COMPLETE).
+
+## RUN COMPLETE ✅
