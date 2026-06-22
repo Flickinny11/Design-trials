@@ -59,6 +59,7 @@ import HubLabels from '@/components/editor/graph/HubLabels';
 import HubPlanet, { NodeContentIcons } from '@/components/editor/graph/HubPlanet';
 import { NodeContentBadge } from '@/components/editor/graph/content-glyphs';
 import ArtifactNode, { hasArtifactData } from '@/components/editor/graph/ArtifactNode';
+import { computeSceneAuthorship } from '@/lib/prism/runtime/node-authorship';
 import { computeGalaxyLabelVisibility, computePerLabelLod } from '@/lib/galaxy-label-lod';
 import { computeHubWorldLabelVisibility } from '@/lib/hub-world-label-lod';
 import { computeGalaxyHubTethers } from '@/lib/galaxy-tethers';
@@ -3185,8 +3186,13 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
           __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
         };
         const map = (w.__PRISM_EDITOR_NODE_GROUPS__ ??= new Map());
-        if (g) map.set(node.nodeId, g);
-        else map.delete(node.nodeId);
+        if (g) {
+          // S3d (Master Law 0 corollary) — stamp the authoring nodeId onto the
+          // mounted artifact root so the node-authorship gate can prove this
+          // Object3D was produced by a graph node (not a hardcoded sibling).
+          (g.userData as { prismNodeId?: string }).prismNodeId = node.nodeId;
+          map.set(node.nodeId, g);
+        } else map.delete(node.nodeId);
       }}
       position={[sp.x + ct.x, sp.y + ct.y, sp.z + ct.z]}
       rotation={[
@@ -3274,6 +3280,25 @@ function AssembledSceneDiagnostics({ nodes }: { nodes: PrismNode[] }) {
     (window as unknown as { __PRISM_SCENE__?: THREE.Object3D }).__PRISM_SCENE__ = scene;
     return () => { delete (window as unknown as { __PRISM_SCENE__?: THREE.Object3D }).__PRISM_SCENE__; };
   }, [scene]);
+  // S3d (PRISM-MASTER-SPEC Law 0 verification corollary) — node-authorship
+  // probe. Walks the live scene + camera subtree (the hub-transition curtain is
+  // camera-parented) and classifies every content artifact as node-authored
+  // (carries an authoring nodeId / is in the node-group registry) or hardcoded
+  // (mounted outside the node map → nodeId null). `scripts/node-authorship-gate.mjs`
+  // and `/prism-verify` call this to FAIL on unsanctioned hardcoded drift and to
+  // confirm a criterion's artifact was actually authored by a node. Editor-shell
+  // dev scope (NODE_ENV gate + window) — FP-05 keeps the window binding OUT of the
+  // pure runtime module (computeSceneAuthorship is arg-only / DOM-free).
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_NODE_AUTHORSHIP__?: () => ReturnType<typeof computeSceneAuthorship>;
+      __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+    };
+    w.__PRISM_NODE_AUTHORSHIP__ = () =>
+      computeSceneAuthorship(scene, w.__PRISM_EDITOR_NODE_GROUPS__ ?? null, camera);
+    return () => { delete w.__PRISM_NODE_AUTHORSHIP__; };
+  }, [scene, camera]);
   // PROD-FINISH — reliable hero on-screen measurement hook. Projects a node's
   // mounted artifact bounding box to NORMALIZED screen space (0..1, y-down to
   // match a screenshot) so the heroes verifier can confirm the product renders
@@ -4165,10 +4190,17 @@ function AssembledSceneContent({
       {/* F5.2 ATELIER — drag a catalog chip onto the matching part to apply it. */}
       <AtelierDragController previewMode={previewMode} />
       {/* PHASE1 ATELIER — watch turntable: drag/idle rotation + tilt for full
-          any-angle inspect (SC-V-A4); specular sweep on the studio HDRI (A3). */}
-      <AtelierWatchRig previewMode={previewMode} />
-      {/* PHASE2 SIGNATURE (SC-V-O) — interactive 3D orrery complication on Celestia. */}
-      <OrreryComplicationRig previewMode={previewMode} />
+          any-angle inspect (SC-V-A4); specular sweep on the studio HDRI (A3).
+          S3d: tagged at the mount HOST (not the rig file) so the node-authorship
+          gate flags it as a known-hardcoded artifact pending its G1 greenlight. */}
+      <group userData={{ prismHardcodedArtifact: 'configurator-watch' }}>
+        <AtelierWatchRig previewMode={previewMode} />
+      </group>
+      {/* PHASE2 SIGNATURE (SC-V-O) — interactive 3D orrery complication on Celestia.
+          S3d: known-hardcoded artifact tagged at the mount host (G2 greenlight). */}
+      <group userData={{ prismHardcodedArtifact: 'orrery-complication' }}>
+        <OrreryComplicationRig previewMode={previewMode} />
+      </group>
       {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
           built scene. Runs in canvas + preview-app; in preview-app the drivers
           respond to the user's real input (§16). */}

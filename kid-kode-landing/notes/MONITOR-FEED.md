@@ -293,3 +293,13 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 - Safe fixes = docs only (Law 0 "every artifact is a node" in PRISM-MASTER-SPEC + verification corollary; SPEC-INDEX currency). No risky app change — every integrity fix is structural (NEEDS GREENLIGHT). Runtime plumbing for the fix (coderef-factory) already exists but is unused (0/331 codeRef).
 - Verified: clean cold load (1 WebGPU canvas, 0 console errors, 0 _next 404s), tsc 0-new, prism-criteria-reviewer = SOUND-WITH-NITS (no MUST-FIX).
 - Reports: notes/AUDIT-MASTER-REPORT.md (headline + marker), AUDIT-INTEGRITY-REPORT.md, AUDIT-SPEC-REPORT.md, AUDIT-REMEDIATION-PLAN.md, docs/prism/PRISM-MASTER-SPEC.md
+[15:40] AUDIT-SENTINEL: DONE: ORRERY-AUDIT COMPLETE (marker + quiet). Tell Claude: check
+[16:11] FIX1-SENTINEL: ARMED: ORRERY-FIX1 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch FIX1-STOP
+[16:12] FIX1-SENTINEL: launched FIX1 build agent on claude-opus-4-8 (resume #1)
+[16:33] FIX1-SENTINEL: working... (1 build agents live)
+
+## [2026-06-22] PRISM FIX 1 — Wave 1 (S3d node-authorship gate) AUTO-CKPT
+- Built the gate that would have CAUGHT the Wave-1 drift: verification now asserts NODE AUTHORSHIP, not object-name presence. `window.__PRISM_NODE_AUTHORSHIP__()` (live) + `scripts/node-authorship-gate.mjs` (CI). Pure runtime module `node-authorship.ts` (DOM-free, FP-05 safe); window binding + rig mount-tags live in GraphScene (rig FILES untouched — G1/G2/G3 are separate greenlight).
+- VALIDATED on a real dev server: flags all 3 known hardcoded (watch/orrery/transition) as expected-known, 0 fresh drift, 176 node-authored all in-graph, 0 hard-fail, tsc 0-new. The 3 known are WARN (pending greenlight); a NEW hardcoded artifact would FAIL.
+- Updated /prism-verify (+ mandatory gate) and prism-criteria-reviewer (Law-0 MUST-FIX section): a criterion describing an artifact passes only when it is node-authored.
+- Next: Wave 2 — G5 orphan nodes (remove 6 redundant ambience planes; keep+fill orr-atelier-reason).

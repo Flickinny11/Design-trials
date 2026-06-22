@@ -47,6 +47,33 @@ For each criterion in scope:
 - Check the **forbidden patterns** for the touched surface (FP-R*, FP-NE-*,
   canvas §19). A single forbidden pattern is a MUST-FIX.
 
+### Node-authorship (PRISM-MASTER-SPEC Law 0 — MUST-FIX)
+
+`PRISM-MASTER-SPEC.md` §B **Law 0** ("every artifact is a node") + its
+verification corollary are binding: when a criterion describes a rendered
+**artifact** (a watch, a complication, an ambient layer, any hero/photoreal
+object), it passes ONLY when that artifact was **authored by a graph node** —
+the mounted `Object3D` carries an authoring `userData.prismNodeId`/`nodeId` AND
+the live graph contains that node with a real artifact source
+(`sourceAsset`/`meshUrl`/`meshPrimitive`/`codeRef`, or a `text` node with
+non-empty content). **"An object of that name exists in the scene" is NOT
+evidence** — name/count-only checks pass hardcoded React/Three components mounted
+outside the node map (the proximate cause of the Wave-1 drift) and are a gap.
+
+- The objective evidence is the **node-authorship gate**:
+  `window.__PRISM_NODE_AUTHORSHIP__()` (live accessor) and
+  `node scripts/node-authorship-gate.mjs` (CI/verify). An artifact reported with
+  `nodeId: null` is **hardcoded** → the describing criterion does NOT pass.
+- A new **hardcoded scene-content component** (rendered as a JSX/imperative
+  sibling of the node map, with no graph node and no `codeRef`) is a **MUST-FIX
+  Law-0 violation**. The three KNOWN exceptions — configurator watch, orrery
+  complication, hub transition — are expected-hardcoded pending their G1/G2/G3
+  greenlight sessions (`AUDIT-REMEDIATION-PLAN.md`); any OTHER hardcoded artifact
+  is fresh drift.
+- A node that is tethered + captioned but renders **nothing** (an orphan: empty
+  `Group`, `renderMode:'plane'` with no source, empty `text`) is FP-R3 drift —
+  it must gain a real artifact or be removed.
+
 Watch specifically for the load-bearing intent violations (anchor §10):
 preview-as-separate-compiled-screen (F2 / FP-R5), split-pane dual-state
 (F1/FP-R6), copied/stand-in artifacts incl. empty-`Group` (F3/FP-R3),

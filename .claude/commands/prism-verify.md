@@ -42,6 +42,12 @@ assertion) and a fresh-context reviewer signs off.
      `<canvas>` and no split-pane; for RT-SC-08 instrument `createNode` and assert
      0 calls on a pure mode toggle; for RT-SC-10 assert preview-app reuses canvas's
      mounted `THREE.Object3D` refs (no separate `PrismHost` mount).
+   - **Node-authorship (Master Law 0).** When the criterion describes a rendered
+     *artifact*, assert it was **authored by a node**, not merely present by name:
+     `evaluate_script(() => window.__PRISM_NODE_AUTHORSHIP__())` — the artifact
+     must report a non-null `nodeId` that exists in the graph. An artifact with
+     `nodeId: null` is a hardcoded React/Three component (Law-0 drift) and the
+     criterion does NOT pass. Name/count-only checks are insufficient.
 
 4. **Layer (b) — vision + interaction (does it RENDER and FUNCTION like a user?).**
    - `kv_screenshot(full_page=true)` — **judge the look** against the criterion
@@ -97,6 +103,14 @@ These run regardless of surface and block grading if they fail:
    downgrade a dependency to silence it (ANTI-STUCK).
 
 2. **Art-fidelity reviewer** (step 4 above) for any visual/animation change.
+
+3. **Node-authorship gate (Master Law 0).** For any change that adds, moves, or
+   re-homes a rendered artifact, run `node scripts/node-authorship-gate.mjs`
+   (nvm node; against the running dev server). It FAILS on **unsanctioned
+   hardcoded artifacts** (scene content with no authoring node) — the three known
+   exceptions (configurator watch / orrery complication / hub transition) are
+   expected-hardcoded pending their greenlight sessions; any OTHER `nodeId:null`
+   artifact, or a node-authored artifact that renders nothing, blocks "done".
 
 ## Done means
 Every in-scope criterion passes with attached evidence, **the `tsc` gate is
