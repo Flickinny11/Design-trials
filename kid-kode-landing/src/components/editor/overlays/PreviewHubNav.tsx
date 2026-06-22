@@ -13,13 +13,13 @@
 
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
-import { serializePreviewAppHash } from '@/lib/prism-graph/preview-app-routing';
+import { requestHubNavigation } from '@/stores/useHubTransitionStore';
 
 export function navigateToHub(hubId: string) {
-  if (typeof window !== 'undefined') {
-    try { window.history.pushState(null, '', serializePreviewAppHash(hubId)); } catch { /* noop */ }
-  }
-  useGraphEditorStore.setState({ activeHubId: hubId });
+  // PHASE3 (P3-1) — route hub→hub through the gated in-canvas brass curtain
+  // (close → swap at peak cover → open) instead of an instant cut. Pushes the
+  // hash + commits internally; falls back to a direct write outside preview-app.
+  requestHubNavigation(hubId);
 }
 
 export default function PreviewHubNav() {

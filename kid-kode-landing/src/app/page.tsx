@@ -37,7 +37,7 @@ import CanvasCameraHud from '@/components/editor/overlays/CanvasCameraHud';
 import PreviewJourneyReplay from '@/components/editor/overlays/PreviewJourneyReplay';
 import PreviewDeviceFrame from '@/components/editor/overlays/PreviewDeviceFrame';
 import PreviewHubNav from '@/components/editor/overlays/PreviewHubNav';
-import HubMorphTransition from '@/components/editor/overlays/HubMorphTransition';
+import { requestHubNavigation } from '@/stores/useHubTransitionStore';
 import FunctionBindingPopup from '@/components/editor/overlays/FunctionBindingPopup';
 import OverlayHost from '@/components/editor/overlays/OverlayHost';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
@@ -506,8 +506,7 @@ export default function Page() {
         if (!current) return null;
         const target = getNextHubId(compiled, current);
         if (!target) return null;
-        window.history.pushState(null, '', serializePreviewAppHash(target));
-        useGraphEditorStore.setState({ activeHubId: target });
+        requestHubNavigation(target); // PHASE3 (P3-1) — gated in-canvas curtain
         return target;
       },
       prev() {
@@ -517,16 +516,14 @@ export default function Page() {
         if (!current) return null;
         const target = getPrevHubId(compiled, current);
         if (!target) return null;
-        window.history.pushState(null, '', serializePreviewAppHash(target));
-        useGraphEditorStore.setState({ activeHubId: target });
+        requestHubNavigation(target); // PHASE3 (P3-1) — gated in-canvas curtain
         return target;
       },
       goTo(hubId: string) {
         const compiled = compileLiveApp();
         const exists = compiled.hubs.some((h) => h.hubId === hubId);
         if (!exists) return null;
-        window.history.pushState(null, '', serializePreviewAppHash(hubId));
-        useGraphEditorStore.setState({ activeHubId: hubId });
+        requestHubNavigation(hubId); // PHASE3 (P3-1) — gated in-canvas curtain
         return hubId;
       },
       get crossHubTethers() {
@@ -881,10 +878,10 @@ export default function Page() {
           <WalkthroughHost />
         </>
       )}
-      {/* HubMorphTransition stays in every mode: it is the premium hub→hub
-          morph that fires when the demo's own nav navigates between hubs (not
-          a control surface). */}
-      <HubMorphTransition />
+      {/* PHASE3 (P3-1) — the Phase-2 DOM-overlay curtain (HubMorphTransition,
+          z-45 CSS) is RETIRED. The hub→hub morph is now a TRUE in-WebGPU
+          transition (HubSceneTransition, a camera-parented brass curtain
+          mounted INSIDE the GraphScene canvas). No DOM overlay. */}
       {/* APP-REALITY P7 — Function binding popup (canvas) + preview overlay host.
           OverlayHost is REQUIRED in preview-app: it renders the holographic
           detail card opened by the watch's overlay functionBinding. */}

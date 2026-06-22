@@ -28,6 +28,11 @@ import { gsap } from 'gsap';
 
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { ChromeSlabLayer } from '@/components/editor/chrome-layer';
+import { HubSceneTransition } from '@/components/editor/transition/HubSceneTransition';
+import {
+  useHubTransitionStore,
+  requestHubNavigation,
+} from '@/stores/useHubTransitionStore';
 import HubLighting from './HubLighting';
 import { toEditorView, type EditorGraph, type EditorHubView } from '@/lib/prism-graph/view-model';
 import {
@@ -1749,6 +1754,10 @@ function SceneControlsBridge({
   const editInPreview = useGraphEditorStore((s) => s.editInPreview);
   // APP-REALITY P5 — device mode reframes the locked preview camera per device.
   const deviceMode = useGraphEditorStore((s) => s.deviceMode);
+  // PHASE3 (P3-1) — the in-canvas hub-transition token: bumps when a hub change
+  // begins, kicking a camera dolly-through (pull back behind the closing
+  // curtain; the landing effect on commit eases forward into the new hub).
+  const hubTransitionToken = useHubTransitionStore((s) => s.token);
 
   // EBR2-D-02 / §R2-D SC-071 — canvas rail is RETAINED only to feed the dev
   // hook (`__PRISM_EDITOR_GET_CANVAS_RAIL__`). APP-REALITY P1 DELIBERATELY
@@ -1991,6 +2000,32 @@ function SceneControlsBridge({
     }, 120);
     return () => { cancelled = true; window.clearTimeout(id); };
   }, [viewMode, activeHubId]);
+
+  // PHASE3 (P3-1) — camera DOLLY-THROUGH on a hub transition. When the curtain
+  // begins closing (token bump), pull the camera back along its view direction
+  // (and rise a touch) so the OUTGOING hub recedes into depth behind the
+  // curtain; the landing effect (firing on the committed activeHubId change at
+  // peak cover) then eases forward to the incoming hero pose — the camera
+  // visibly travels THROUGH 3D space rather than cutting. Atelier and authored
+  // journeys own their own camera, so they are exempt.
+  useEffect(() => {
+    if (hubTransitionToken === 0) return;
+    const c = controlsRef.current;
+    if (!c || viewMode !== 'preview-app') return;
+    if (activeHubId === 's6-atelier') return;
+    if (hasJourney(hub)) return;
+    const pos = new THREE.Vector3();
+    const tgt = new THREE.Vector3();
+    c.getPosition(pos, false);
+    c.getTarget(tgt, false);
+    const dir = pos.clone().sub(tgt);
+    if (dir.lengthSq() < 1e-4) dir.set(0, 0, 1);
+    dir.normalize();
+    const back = pos.clone().addScaledVector(dir, 5.4);
+    back.y += 0.7;
+    void c.setLookAt(back.x, back.y, back.z, tgt.x, tgt.y, tgt.z, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hubTransitionToken]);
 
   useFrame((state) => {
     const c = controlsRef.current;
@@ -3144,8 +3179,9 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
           if (fb) {
             const st = useGraphEditorStore.getState();
             if (fb.kind === 'navigate') {
-              try { window.history.pushState(null, '', '#hub=' + fb.hubId); } catch { /* noop */ }
-              useGraphEditorStore.setState({ activeHubId: fb.hubId });
+              // PHASE3 (P3-1) — route through the gated in-canvas curtain
+              // (close → swap → open) instead of an instant cut.
+              requestHubNavigation(fb.hubId);
             } else if (fb.kind === 'overlay') {
               st.openOverlayElement({ elementId: fb.elementId, size: fb.size, anchor: fb.anchor });
             } else if (fb.kind === 'configure') {
@@ -4323,6 +4359,10 @@ export default function GraphScene() {
             surface draws as a real SDF slab (Fresnel bevels, live-scene
             refraction, pointer light) in this same unified canvas. */}
         <ChromeSlabLayer />
+        {/* PHASE3 (P3-1) — TRUE in-WebGPU cinematic hub transition: a camera-
+            parented brass curtain (renderOrder 9500, over scene + chrome) that
+            closes → swaps → opens, replacing the Phase-2 DOM overlay. */}
+        <HubSceneTransition />
       </Canvas>
     </div>
   );

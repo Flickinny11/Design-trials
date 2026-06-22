@@ -239,3 +239,13 @@ Will self-report phase events below.
 [08:54] PHASE2-SENTINEL: | 4 | SC-V-O3 motif recurs | PASS | orrery dial-art on Atelier watch + spinning armillary gear + the Celestia complicati
 
 ## [2026-06-22T08:55] PHASE2 RUN COMPLETE — all P2-1..5 + SC-V-O1..3 pass all gates (cold-load clean, criteria-reviewer PASS, art-fidelity 3/3, advocate PLEASED, tsc+prodbuild green, vitest fails pre-existing); Phase-1 SC-V-A not regressed
+[08:57] PHASE2-SENTINEL: DONE: ORRERY-PHASE2 COMPLETE (marker + quiet). Tell Claude: check
+[09:37] PHASE3-SENTINEL: ARMED: ORRERY-PHASE3 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch PHASE3-STOP
+[09:41] PHASE3-SENTINEL: launched PHASE3 build agent on claude-opus-4-8 (resume #1)
+
+## [PHASE3 RESUME] 2026-06-22 — model claude-opus-4-8 (1M ctx) confirmed
+- Phase 3 starting fresh (no AUTO-CKPT PHASE3 commits existed). HEAD = e7ba5136 PHASE2 RUN COMPLETE.
+- COLD-LOAD GATE (run start): PASS — canvas 1440x809, webgpu, not stuck on loader, tx=1, 0 console errors, 0 _next 404s (3 benign warns).
+- Deep code map complete via 3 parallel agents: root-caused flag #4 (camera-followed plane was frustum-culled + not camera-parented; fix=ChromeSlabLayer camera-parent idiom + TSL dissolve quad). Exploded-view subtlety root-caused (Z-only, tiny offsets, no stagger, dial-stack nested as one block). Day/night needs shared night signal (lighting lives in GraphScene, not rig).
+- Wave order: W1 P3-1 in-scene transition; W2 P3-2 exploded + P3-3 day/night lume; W3 P3-4 micro-response + P3-5 camera language; W4 full verify+advocate.
+[10:00] PHASE3-SENTINEL: working... (1 build agents live)
