@@ -308,3 +308,9 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 - 6 ambience PLANES REMOVED (331→325 nodes): they fail hasArtifactData (broken — bubble in canvas, nothing in preview-app), 3/6 bind UNMOUNTABLE primitives, the rest would render off-theme; every hub's background[] already delivers the on-theme ambience. 0 edges/0 refs → safe (G5 option b). Canvas improves (junk bubbles gone), preview-app unchanged.
 - orr-atelier-reason KEPT + filled with on-brand copy ("Every pairing is bench-checked for mechanical harmony.") — it's REASON_NODE_ID (configurator constraint-feedback), removal would break the feature; configurator behavior (applier.ts, G4) untouched.
 - Re-baked .prism build-valid (325 nodes). Gate: orphans.planes-removed PASS + orphans.reason-filled PASS + 3 known hardcoded still flagged + 0 hard-fail. Next: Wave 3 verify + report.
+[16:53] FIX1-SENTINEL: - Graph 331 → 325 nodes; re-baked mock-app.prism build-valid (artifactHash 25e9ab9a…). Gate after edit: orphans.planes-r
+
+## [2026-06-22] PRISM FIX 1 — Wave 3 (verify + report) RUN COMPLETE
+- DONE: S3d node-authorship gate works (flags 3 known hardcoded, 0 fresh drift). All 7 orphans resolved: 6 ambience planes removed (superseded by on-theme hub background[]), orr-atelier-reason kept + renders real copy (48 glyphs, canvas). 325 nodes.
+- Gates: cold-load clean (1 canvas, 0 console errors, 0 _next 404s), node-authorship-gate --strict-orphans 0 hard-fail, tsc 0-new, prism-criteria-reviewer PASS, user-advocate PASS. All 4 verified hubs read premium+complete.
+- Report: notes/FIX1-REPORT.md (marker: PRISM-FIX1: RUN COMPLETE).
