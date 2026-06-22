@@ -25,3 +25,9 @@
 - A6: rig.explode() eases (dt*5 lerp) the major components apart along the case axis — crystal lifts furthest, dial-face forward, case anchored, movement recedes, strap drops + hides near full-explode; reassembles on explode(false). Evidence: wC-02 (angled explode) shows dial/case/movement clearly separated.
 - Fixed cold-load price placeholder: AtelierApplier re-applies at 180/600/1200/2500/4000ms so "CHF 80,000" (orrery default) lands once the late-mounting text nodes exist (was lingering on graph-authored "CHF 38,000").
 - Evidence: wC-01 explode head-on, wC-02 explode angle, wC-03 caseback movement. tsc 0-new(9); 0 console err; tx 2/2.
+
+## Wave D (v2) — drag-assemble (A1) + dimensional chrome (A8)
+- A1: AtelierDragController repointed at the new watch — overWatch() raycasts window.__ATELIER_RIG__.pivot (the watch was no longer orr-atelier-watch-* nodes); WATCH_CENTER = PIVOT_CENTER. Verified: simulated drag of the rose-gold case chip onto the watch applied case=rose-gold.
+- A8 chrome: (1) 45 swatch chips re-materialed to real per-layer PBR (metals metalness1/rough0.2; dial gloss+clearcoat; strap matte leather; lume emissive) → a premium material tray, not flat squares; (2) price panel plane→box (depth 0.16), premium dark plaque, shifted +0.55 off the watch + softened (no spotlight hot-reflection); (3) milled CASEBACK + EXPLODE control buttons added + wired (runAtelierAction flip/explode → rig); (4) SAVE/RESET rebuilt clean — root-caused the white "brush smear" to polished-metal specular blooming under the spotlight; brushed-matte finish (metalness0.55/rough0.62/no-clearcoat) eliminates it.
+- A7 SAVE verified end-to-end: SAVE button click → runAtelierAction('save') → localStorage 'orrery-no7-build' persisted + clipboard + reason.
+- Evidence: wD-04/wD-05 (clean chrome), drag + save eval traces. tsc 0-new(9); 0 console err; tx 2/2.

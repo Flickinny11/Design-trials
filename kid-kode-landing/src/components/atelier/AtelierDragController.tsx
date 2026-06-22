@@ -20,9 +20,24 @@ import { ensureRapier, rapierReady, makeChipSim, stepChipToward, disposeChipSim,
 
 const ATELIER_HUB_ID = 's6-atelier';
 const DRAG_THRESHOLD = 6;
-const WATCH_CENTER = new Vector3(0, 0.05, 0.5);
+const WATCH_CENTER = new Vector3(0, 0.15, 0.42); // = AtelierWatchRig PIVOT_CENTER
 const VALID = new Color('#1ec8ff');
 const NEUTRAL = new Color('#e8c98a');
+
+// The watch is the declarative AtelierWatchRig subtree under window.__ATELIER_RIG__.pivot
+// (no longer `orr-atelier-watch-*` graph nodes). A drop is "over the build" when the
+// pointer ray hits any watch mesh, OR lands within the watch's screen radius.
+function overWatch(ray: Raycaster, ndc: Vector2, cam: Parameters<Raycaster['setFromCamera']>[1]): boolean {
+  const pivot = (window as unknown as { __ATELIER_RIG__?: { pivot?: Object3D | null } }).__ATELIER_RIG__?.pivot;
+  if (!pivot) return false;
+  ray.setFromCamera(ndc, cam);
+  if (ray.intersectObject(pivot, true).length > 0) return true;
+  // fallback: project the pivot centre to NDC and accept a generous radius
+  const c = new Vector3();
+  pivot.getWorldPosition(c);
+  c.project(cam as unknown as Parameters<Vector3['project']>[0]);
+  return Math.hypot(c.x - ndc.x, c.y - ndc.y) < 0.28;
+}
 
 type Phase = 'drag' | 'settle' | 'remove';
 interface DragState {
@@ -120,8 +135,7 @@ export function AtelierDragController({ previewMode }: { previewMode: boolean })
         if (R) d.sim = makeChipSim(R, start);
       }
       d.target.copy(planePoint(ndc));
-      const overId = nodeIdAt(scene, ray.current, ndc, camera);
-      d.overValid = !!overId && overId.startsWith('orr-atelier-watch-');
+      d.overValid = overWatch(ray.current, ndc, camera);
       if (d.ghost) {
         const mat = d.ghost.material as MeshStandardMaterial;
         mat.emissive.copy(d.overValid ? VALID : NEUTRAL);

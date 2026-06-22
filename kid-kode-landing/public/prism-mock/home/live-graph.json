@@ -18756,29 +18756,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -18845,29 +18842,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#b6bcc4",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -18934,29 +18928,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19023,29 +19014,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#9aa0a8",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19186,29 +19174,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19275,29 +19260,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#d8a07a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19364,29 +19346,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#9a9ea4",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19453,29 +19432,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#23262b",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19616,29 +19592,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#aeb4bd",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19705,29 +19678,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#d6dae0",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19794,29 +19764,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -19883,29 +19850,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#eaf2ff",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20046,29 +20010,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#16243a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20135,29 +20097,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c4c9d1",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20224,29 +20184,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#0c0e12",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20313,29 +20271,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#123524",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20402,29 +20358,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e7a584",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20491,29 +20445,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#6b6f78",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20580,29 +20532,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#1a2a5a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20669,29 +20619,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#0b1a3a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20758,29 +20706,27 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#f5f0e8",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.5,
+        "roughness": 0.4,
+        "clearcoat": 0.55,
+        "clearcoatRoughness": 0.12,
+        "envMapIntensity": 1.2
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -20921,29 +20867,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#eef2f8",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21010,29 +20953,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21099,29 +21039,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#2b4f8a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21262,29 +21199,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21351,29 +21285,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#dfe4ea",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21440,29 +21371,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#f4f8ff",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21603,29 +21531,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21692,29 +21617,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 1,
+        "roughness": 0.2,
+        "clearcoat": 0,
+        "envMapIntensity": 1.4
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21855,29 +21777,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#3a3f47",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -21944,29 +21863,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22033,29 +21949,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#3a6ea5",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22122,29 +22035,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#cfe2ff",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22211,29 +22121,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22374,29 +22281,25 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#2a2e35",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#000000",
-        "emissiveIntensity": 0,
-        "normalScale": 1,
+        "thickness": 0.4,
         "displacementScale": 0,
-        "envMapIntensity": 1.2,
         "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "normalScale": 1,
+        "emissive": "#2a2e35",
+        "emissiveIntensity": 0.8,
+        "metalness": 0,
+        "roughness": 0.5,
+        "envMapIntensity": 0.6
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22463,29 +22366,25 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#1ec8ff",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#1ec8ff",
-        "emissiveIntensity": 0.7,
-        "normalScale": 1,
+        "thickness": 0.4,
         "displacementScale": 0,
-        "envMapIntensity": 1.2,
         "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "normalScale": 1,
+        "emissive": "#1ec8ff",
+        "emissiveIntensity": 0.8,
+        "metalness": 0,
+        "roughness": 0.5,
+        "envMapIntensity": 0.6
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22552,29 +22451,25 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#5ef08a",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#5ef08a",
-        "emissiveIntensity": 0.7,
-        "normalScale": 1,
+        "thickness": 0.4,
         "displacementScale": 0,
-        "envMapIntensity": 1.2,
         "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "normalScale": 1,
+        "emissive": "#5ef08a",
+        "emissiveIntensity": 0.8,
+        "metalness": 0,
+        "roughness": 0.5,
+        "envMapIntensity": 0.6
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22641,29 +22536,25 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#bfe9ff",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#bfe9ff",
-        "emissiveIntensity": 0.7,
-        "normalScale": 1,
+        "thickness": 0.4,
         "displacementScale": 0,
-        "envMapIntensity": 1.2,
         "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "normalScale": 1,
+        "emissive": "#bfe9ff",
+        "emissiveIntensity": 0.8,
+        "metalness": 0,
+        "roughness": 0.5,
+        "envMapIntensity": 0.6
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22804,29 +22695,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#2a1d14",
-        "metalness": 0,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0,
+        "roughness": 0.85,
+        "clearcoat": 0.1,
+        "envMapIntensity": 0.7
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22893,29 +22781,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#5a3a22",
-        "metalness": 0,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0,
+        "roughness": 0.85,
+        "clearcoat": 0.1,
+        "envMapIntensity": 0.7
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -22982,29 +22867,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#1d3a6e",
-        "metalness": 0,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0,
+        "roughness": 0.85,
+        "clearcoat": 0.1,
+        "envMapIntensity": 0.7
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -23071,29 +22953,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.7,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0,
+        "roughness": 0.85,
+        "clearcoat": 0.1,
+        "envMapIntensity": 0.7
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -23234,29 +23113,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#3a3f47",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -23323,29 +23199,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#c9ced6",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -23412,29 +23285,26 @@
         "params": {
           "width": 0.22,
           "height": 0.22,
-          "depth": 0.04
+          "depth": 0.07
         }
       },
       "materialSpec": {
         "baseColor": "#e8c98a",
-        "metalness": 0.35,
-        "roughness": 0.3,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.2,
-        "clearcoatRoughness": 0.3,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
-        "thickness": 0.5,
+        "thickness": 0.4,
+        "displacementScale": 0,
+        "opacity": 1,
+        "normalScale": 1,
         "emissive": "#000000",
         "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.2,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
+        "metalness": 0.35,
+        "roughness": 0.35,
+        "clearcoat": 0.3,
+        "envMapIntensity": 1
       },
       "cinematicPrimitives": [],
       "scenePosition": {
@@ -23463,9 +23333,9 @@
       "serviceTag": "atelier-chrome",
       "visual": {
         "transform": {
-          "x": 2.45,
+          "x": 3,
           "y": 0.12,
-          "z": 0.42,
+          "z": 0.18,
           "width": 3.7,
           "height": 2.5
         },
@@ -23497,39 +23367,39 @@
       "depthMapUrl": null,
       "meshUrl": null,
       "meshPrimitive": {
-        "kind": "plane",
+        "kind": "cube",
         "params": {
-          "width": 3.7,
+          "width": 3.35,
           "height": 2.5,
-          "segments": 1
+          "depth": 0.16
         }
       },
       "materialSpec": {
-        "baseColor": "#10151f",
-        "metalness": 0,
-        "roughness": 0.5,
+        "baseColor": "#0b0f18",
+        "metalness": 0.3,
+        "roughness": 0.45,
         "transmission": 0,
         "ior": 1.5,
         "dispersion": 0,
-        "clearcoat": 0.4,
-        "clearcoatRoughness": 0.2,
+        "clearcoat": 0.25,
+        "clearcoatRoughness": 0.12,
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.1,
-        "emissive": "#000000",
-        "emissiveIntensity": 0,
+        "emissive": "#0a1422",
+        "emissiveIntensity": 0.12,
         "normalScale": 1,
         "displacementScale": 0,
-        "envMapIntensity": 0.6,
-        "opacity": 0.9,
+        "envMapIntensity": 0.8,
+        "opacity": 1,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.45,
+        "x": 3,
         "y": 0.12,
-        "z": 0.42,
+        "z": 0.18,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -23561,7 +23431,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.35,
+          "x": 2.9000000000000004,
           "y": 0.95,
           "z": 0.5,
           "width": 2.2,
@@ -23598,7 +23468,7 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.35,
+        "x": 2.9000000000000004,
         "y": 0.95,
         "z": 0.5,
         "rotationX": 0,
@@ -23635,7 +23505,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.35,
+          "x": 2.9000000000000004,
           "y": 0.55,
           "z": 0.5,
           "width": 2.6,
@@ -23672,7 +23542,7 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.35,
+        "x": 2.9000000000000004,
         "y": 0.55,
         "z": 0.5,
         "rotationX": 0,
@@ -23709,7 +23579,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.35,
+          "x": 2.9000000000000004,
           "y": 0.16,
           "z": 0.5,
           "width": 3,
@@ -23746,7 +23616,7 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.35,
+        "x": 2.9000000000000004,
         "y": 0.16,
         "z": 0.5,
         "rotationX": 0,
@@ -23783,7 +23653,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.35,
+          "x": 2.9000000000000004,
           "y": -0.22,
           "z": 0.5,
           "width": 3.2,
@@ -23820,7 +23690,7 @@
       "materialSpec": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.35,
+        "x": 2.9000000000000004,
         "y": -0.22,
         "z": 0.5,
         "rotationX": 0,
@@ -23849,338 +23719,6 @@
       "animationBindings": [],
       "receivesLighting": false,
       "depthLayer": "overlay"
-    },
-    {
-      "nodeId": "orr-atelier-btn-save",
-      "subtype": "atelier-button",
-      "parentHubId": "s6-atelier",
-      "serviceTag": "atelier-action",
-      "visual": {
-        "transform": {
-          "x": 2.55,
-          "y": -0.72,
-          "z": 0.5,
-          "width": 0.9,
-          "height": 0.28
-        },
-        "alpha": 1
-      },
-      "intent": {
-        "caption": "save",
-        "behaviorSpec": {
-          "interactions": [],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [],
-          "listens": [],
-          "triggersDownstream": []
-        },
-        "stateEffects": [],
-        "visualSpec": {
-          "textContent": [],
-          "layers": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
-      },
-      "codeRef": "",
-      "backendRef": null,
-      "renderMode": "mesh",
-      "depthMapUrl": null,
-      "meshUrl": null,
-      "meshPrimitive": {
-        "kind": "cube",
-        "params": {
-          "width": 0.9,
-          "height": 0.28,
-          "depth": 0.06
-        }
-      },
-      "materialSpec": {
-        "baseColor": "#1ec8ff",
-        "metalness": 0.5,
-        "roughness": 0.3,
-        "transmission": 0,
-        "ior": 1.5,
-        "dispersion": 0,
-        "clearcoat": 0.3,
-        "clearcoatRoughness": 0.3,
-        "iridescence": 0,
-        "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#1ec8ff",
-        "emissiveIntensity": 0.12,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.1,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
-      },
-      "cinematicPrimitives": [],
-      "scenePosition": {
-        "x": 2.55,
-        "y": -0.72,
-        "z": 0.5,
-        "rotationX": 0,
-        "rotationY": 0,
-        "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "animationBindings": [],
-      "functionBinding": {
-        "kind": "atelier-action",
-        "action": "save"
-      },
-      "receivesLighting": true
-    },
-    {
-      "nodeId": "orr-atelier-btn-save-label",
-      "subtype": "atelier-text",
-      "parentHubId": "s6-atelier",
-      "serviceTag": "ui-text",
-      "visual": {
-        "transform": {
-          "x": 2.55,
-          "y": -0.72,
-          "z": 0.57,
-          "width": 1.2,
-          "height": 0.3
-        },
-        "alpha": 1
-      },
-      "intent": {
-        "caption": "SAVE",
-        "behaviorSpec": {
-          "interactions": [],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [],
-          "listens": [],
-          "triggersDownstream": []
-        },
-        "stateEffects": [],
-        "visualSpec": {
-          "textContent": [],
-          "layers": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
-      },
-      "codeRef": "",
-      "backendRef": null,
-      "renderMode": "text",
-      "depthMapUrl": null,
-      "meshUrl": null,
-      "meshPrimitive": null,
-      "materialSpec": null,
-      "cinematicPrimitives": [],
-      "scenePosition": {
-        "x": 2.55,
-        "y": -0.72,
-        "z": 0.57,
-        "rotationX": 0,
-        "rotationY": 0,
-        "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "textSpec": {
-        "content": "SAVE",
-        "fontFamily": "Inter",
-        "fontWeight": 700,
-        "fontSize": 0.1,
-        "letterSpacing": 0.16,
-        "align": "center",
-        "fill": {
-          "kind": "solid",
-          "color": "#0b0e13"
-        },
-        "glow": {
-          "color": "#000000",
-          "intensity": 0
-        }
-      },
-      "animationBindings": [],
-      "receivesLighting": false,
-      "depthLayer": "overlay",
-      "functionBinding": {
-        "kind": "atelier-action",
-        "action": "save"
-      }
-    },
-    {
-      "nodeId": "orr-atelier-btn-reset",
-      "subtype": "atelier-button",
-      "parentHubId": "s6-atelier",
-      "serviceTag": "atelier-action",
-      "visual": {
-        "transform": {
-          "x": 3.55,
-          "y": -0.72,
-          "z": 0.5,
-          "width": 0.9,
-          "height": 0.28
-        },
-        "alpha": 1
-      },
-      "intent": {
-        "caption": "reset",
-        "behaviorSpec": {
-          "interactions": [],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [],
-          "listens": [],
-          "triggersDownstream": []
-        },
-        "stateEffects": [],
-        "visualSpec": {
-          "textContent": [],
-          "layers": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
-      },
-      "codeRef": "",
-      "backendRef": null,
-      "renderMode": "mesh",
-      "depthMapUrl": null,
-      "meshUrl": null,
-      "meshPrimitive": {
-        "kind": "cube",
-        "params": {
-          "width": 0.9,
-          "height": 0.28,
-          "depth": 0.06
-        }
-      },
-      "materialSpec": {
-        "baseColor": "#2a2e35",
-        "metalness": 0.5,
-        "roughness": 0.3,
-        "transmission": 0,
-        "ior": 1.5,
-        "dispersion": 0,
-        "clearcoat": 0.3,
-        "clearcoatRoughness": 0.3,
-        "iridescence": 0,
-        "iridescenceIOR": 1.3,
-        "thickness": 0.5,
-        "emissive": "#000000",
-        "emissiveIntensity": 0,
-        "normalScale": 1,
-        "displacementScale": 0,
-        "envMapIntensity": 1.1,
-        "opacity": 1,
-        "normalMapUrl": null,
-        "displacementMapUrl": null
-      },
-      "cinematicPrimitives": [],
-      "scenePosition": {
-        "x": 3.55,
-        "y": -0.72,
-        "z": 0.5,
-        "rotationX": 0,
-        "rotationY": 0,
-        "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "animationBindings": [],
-      "functionBinding": {
-        "kind": "atelier-action",
-        "action": "reset"
-      },
-      "receivesLighting": true
-    },
-    {
-      "nodeId": "orr-atelier-btn-reset-label",
-      "subtype": "atelier-text",
-      "parentHubId": "s6-atelier",
-      "serviceTag": "ui-text",
-      "visual": {
-        "transform": {
-          "x": 3.55,
-          "y": -0.72,
-          "z": 0.57,
-          "width": 1.2,
-          "height": 0.3
-        },
-        "alpha": 1
-      },
-      "intent": {
-        "caption": "RESET",
-        "behaviorSpec": {
-          "interactions": [],
-          "apiCalls": [],
-          "dataBindings": [],
-          "emits": [],
-          "listens": [],
-          "triggersDownstream": []
-        },
-        "stateEffects": [],
-        "visualSpec": {
-          "textContent": [],
-          "layers": []
-        },
-        "contracts": {
-          "inputs": {},
-          "outputs": {}
-        }
-      },
-      "codeRef": "",
-      "backendRef": null,
-      "renderMode": "text",
-      "depthMapUrl": null,
-      "meshUrl": null,
-      "meshPrimitive": null,
-      "materialSpec": null,
-      "cinematicPrimitives": [],
-      "scenePosition": {
-        "x": 3.55,
-        "y": -0.72,
-        "z": 0.57,
-        "rotationX": 0,
-        "rotationY": 0,
-        "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
-      },
-      "textSpec": {
-        "content": "RESET",
-        "fontFamily": "Inter",
-        "fontWeight": 700,
-        "fontSize": 0.1,
-        "letterSpacing": 0.16,
-        "align": "center",
-        "fill": {
-          "kind": "solid",
-          "color": "#cfd6e0"
-        },
-        "glow": {
-          "color": "#000000",
-          "intensity": 0
-        }
-      },
-      "animationBindings": [],
-      "receivesLighting": false,
-      "depthLayer": "overlay",
-      "functionBinding": {
-        "kind": "atelier-action",
-        "action": "reset"
-      }
     },
     {
       "nodeId": "orr-acquire-price",
@@ -25235,7 +24773,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.1,
+          "x": 2.6500000000000004,
           "y": 3.78,
           "z": 0.08,
           "width": 1.4,
@@ -25270,7 +24808,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.1,
+        "x": 2.6500000000000004,
         "y": 3.78,
         "z": 0.08,
         "rotationX": 0,
@@ -25326,7 +24864,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 3.45,
+          "x": 4,
           "y": 3.6,
           "z": 0.07,
           "width": 0.9,
@@ -25361,7 +24899,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 3.45,
+        "x": 4,
         "y": 3.6,
         "z": 0.07,
         "rotationX": 0,
@@ -25410,7 +24948,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 5.55,
+          "x": 6.1,
           "y": 3.78,
           "z": 0.02,
           "width": 1.7,
@@ -25445,7 +24983,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 5.55,
+        "x": 6.1,
         "y": 3.78,
         "z": 0.02,
         "rotationX": 0,
@@ -25520,7 +25058,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 5.55,
+          "x": 6.1,
           "y": 3.78,
           "z": 0.13,
           "width": 1.6,
@@ -25555,7 +25093,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 5.55,
+        "x": 6.1,
         "y": 3.78,
         "z": 0.13,
         "rotationX": 0,
@@ -25901,7 +25439,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.6,
+          "x": 3.1500000000000004,
           "y": -3.7,
           "z": 0.08,
           "width": 6,
@@ -25936,7 +25474,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.6,
+        "x": 3.1500000000000004,
         "y": -3.7,
         "z": 0.08,
         "rotationX": 0,
@@ -25968,7 +25506,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 2.6,
+          "x": 3.1500000000000004,
           "y": -3.99,
           "z": 0.08,
           "width": 6,
@@ -26003,7 +25541,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.6,
+        "x": 3.1500000000000004,
         "y": -3.99,
         "z": 0.08,
         "rotationX": 0,
@@ -26387,7 +25925,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 2.1,
+          "x": 2.6500000000000004,
           "y": 3.78,
           "z": 0.05,
           "width": 1,
@@ -26422,7 +25960,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.1,
+        "x": 2.6500000000000004,
         "y": 3.78,
         "z": 0.05,
         "rotationX": 0,
@@ -26651,7 +26189,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 2.259,
+          "x": 2.809,
           "y": -3.7,
           "z": 0.12,
           "width": 0.82,
@@ -26686,7 +26224,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 2.259,
+        "x": 2.809,
         "y": -3.7,
         "z": 0.12,
         "rotationX": 0,
@@ -26739,7 +26277,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 3.0737812500000006,
+          "x": 3.6237812500000004,
           "y": -3.7,
           "z": 0.12,
           "width": 0.82,
@@ -26774,7 +26312,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 3.0737812500000006,
+        "x": 3.6237812500000004,
         "y": -3.7,
         "z": 0.12,
         "rotationX": 0,
@@ -26827,7 +26365,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 3.88934375,
+          "x": 4.43934375,
           "y": -3.7,
           "z": 0.12,
           "width": 0.82,
@@ -26862,7 +26400,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 3.88934375,
+        "x": 4.43934375,
         "y": -3.7,
         "z": 0.12,
         "rotationX": 0,
@@ -27898,7 +27436,7 @@
       "serviceTag": "ui-text",
       "visual": {
         "transform": {
-          "x": 3.45,
+          "x": 4,
           "y": 3.78,
           "z": 0.08,
           "width": 1.4,
@@ -27933,7 +27471,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 3.45,
+        "x": 4,
         "y": 3.78,
         "z": 0.08,
         "rotationX": 0,
@@ -27989,7 +27527,7 @@
       "serviceTag": "ui-3d",
       "visual": {
         "transform": {
-          "x": 3.45,
+          "x": 4,
           "y": 3.78,
           "z": 0.05,
           "width": 1,
@@ -28024,7 +27562,7 @@
       "meshUrl": null,
       "cinematicPrimitives": [],
       "scenePosition": {
-        "x": 3.45,
+        "x": 4,
         "y": 3.78,
         "z": 0.05,
         "rotationX": 0,
@@ -28272,6 +27810,610 @@
       },
       "receivesLighting": false,
       "depthLayer": "content"
+    },
+    {
+      "nodeId": "orr-atelier-btn-flip",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": -0.62,
+          "y": -1.62,
+          "z": 0.7,
+          "width": 0.86,
+          "height": 0.26
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "flip",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.86,
+          "height": 0.26,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#13202b",
+        "metalness": 0.55,
+        "roughness": 0.62,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.4,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.4,
+        "emissive": "#0a3a4a",
+        "emissiveIntensity": 0.04,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.7,
+        "opacity": 1
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -0.62,
+        "y": -1.62,
+        "z": 0.7,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "flip"
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-flip-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": -0.62,
+          "y": -1.62,
+          "z": 0.78,
+          "width": 1.1,
+          "height": 0.28
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "CASEBACK",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": -0.62,
+        "y": -1.62,
+        "z": 0.78,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "CASEBACK",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.085,
+        "letterSpacing": 0.18,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#dfe8f5"
+        }
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-explode",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": 0.62,
+          "y": -1.62,
+          "z": 0.7,
+          "width": 0.86,
+          "height": 0.26
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "explode",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.86,
+          "height": 0.26,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#241d12",
+        "metalness": 0.55,
+        "roughness": 0.62,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.4,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.4,
+        "emissive": "#3a2a10",
+        "emissiveIntensity": 0.04,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.7,
+        "opacity": 1
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.62,
+        "y": -1.62,
+        "z": 0.7,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "explode"
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-explode-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0.62,
+          "y": -1.62,
+          "z": 0.78,
+          "width": 1.1,
+          "height": 0.28
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "EXPLODE",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0.62,
+        "y": -1.62,
+        "z": 0.78,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "EXPLODE",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.085,
+        "letterSpacing": 0.18,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#dfe8f5"
+        }
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-save",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": 2.72,
+          "y": -0.78,
+          "z": 0.5,
+          "width": 0.92,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "save",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.3,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#15202b",
+        "metalness": 0.55,
+        "roughness": 0.62,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.4,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.4,
+        "emissive": "#1ec8ff",
+        "emissiveIntensity": 0.04,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.7,
+        "opacity": 1
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.72,
+        "y": -0.78,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "save"
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-save-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 2.72,
+          "y": -0.78,
+          "z": 0.58,
+          "width": 1.1,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "SAVE",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 2.72,
+        "y": -0.78,
+        "z": 0.58,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "SAVE",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.092,
+        "letterSpacing": 0.18,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#eaf1fb"
+        }
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-reset",
+      "subtype": "atelier-button",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "atelier-action",
+      "visual": {
+        "transform": {
+          "x": 3.74,
+          "y": -0.78,
+          "z": 0.5,
+          "width": 0.92,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "reset",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 0.92,
+          "height": 0.3,
+          "depth": 0.1
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#171b22",
+        "metalness": 0.55,
+        "roughness": 0.62,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.4,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.4,
+        "emissive": "#3a4250",
+        "emissiveIntensity": 0.04,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 0.7,
+        "opacity": 1
+      },
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 3.74,
+        "y": -0.78,
+        "z": 0.5,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "functionBinding": {
+        "kind": "atelier-action",
+        "action": "reset"
+      }
+    },
+    {
+      "nodeId": "orr-atelier-btn-reset-label",
+      "subtype": "atelier-text",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 3.74,
+          "y": -0.78,
+          "z": 0.58,
+          "width": 1.1,
+          "height": 0.3
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "RESET",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "meshPrimitive": null,
+      "materialSpec": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 3.74,
+        "y": -0.78,
+        "z": 0.58,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "RESET",
+        "fontFamily": "Inter",
+        "fontWeight": 700,
+        "fontSize": 0.092,
+        "letterSpacing": 0.18,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#eaf1fb"
+        }
+      }
     }
   ],
   "edges": [
