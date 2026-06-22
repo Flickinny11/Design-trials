@@ -1,56 +1,67 @@
 'use client';
 
 /**
- * APP-REALITY P6 — premium hub morph transition.
+ * PHASE2 (P2-4) — MORPHING hub transition: a Curtains-style brass curtain morph.
  *
- * In preview-app, when the active hub changes (hub rail, Function-bound element,
- * or Prev/Next pager), a brass refractive band sweeps across while a brief dim
- * crossfades the page swap — so navigating hub→hub reads as a designed page
- * morph, not an instant cut. Self-gates to preview-app; inert under reduced
- * motion. Editor overlay scope.
+ * In preview-app, on a hub change two pleated BRASS curtain panels swing CLOSED
+ * across the viewport (CSS 3D perspective rotateY — a real depth swing, not a flat
+ * wipe), hold for the page swap, then swing OPEN to reveal the new hub. A
+ * refractive backdrop-filter bends the live 3D scene behind the pleats; the swing
+ * is transform/opacity only (compositor-driven → smooth through the heavy hub-swap
+ * main-thread stall).
+ *
+ * Driven ENTIRELY by CSS keyed on `activeHubId`: each change remounts the keyed
+ * subtree, so the one-shot animation replays — no React `playing` flag (which the
+ * hub-swap remount kept resetting) and no imperative body-append (which Next's
+ * React root clobbered on re-render). The animation begins AND ends fully
+ * off-screen (opacity 0), so when idle the curtain is invisible. A module-level
+ * flag suppresses the curtain on the very first hub the visitor lands on.
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+
+let _seenFirst = false;
+
+const PLEATS =
+  'repeating-linear-gradient(90deg,' +
+  ' rgba(8,7,4,0.86) 0px, rgba(120,92,42,0.80) 14px, rgba(214,176,110,0.94) 26px,' +
+  ' rgba(120,92,42,0.80) 38px, rgba(8,7,4,0.86) 52px)';
 
 export default function HubMorphTransition() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
-  const [key, setKey] = useState(0);
-  const prevHub = useRef<string | null>(activeHubId);
-  const firstRun = useRef(true);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [playing, setPlaying] = useState(false);
 
-  useEffect(() => {
-    if (firstRun.current) { firstRun.current = false; prevHub.current = activeHubId; return; }
-    if (viewMode !== 'preview-app') { prevHub.current = activeHubId; return; }
-    if (activeHubId === prevHub.current) return;
-    prevHub.current = activeHubId;
-    setKey((k) => k + 1);
-    setPlaying(true);
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setPlaying(false), 660);
-  }, [activeHubId, viewMode]);
+  useEffect(() => { _seenFirst = true; }, []);
 
-  useEffect(() => () => { if (timer.current) clearTimeout(timer.current); }, []);
-
-  if (viewMode !== 'preview-app' || !playing) return null;
+  if (viewMode !== 'preview-app' || !_seenFirst) return null;
 
   return (
-    <div key={key} aria-hidden className="absolute inset-0 z-[45] pointer-events-none overflow-hidden">
-      {/* dim crossfade over the page swap */}
-      <div className="ds-hub-morph-dim absolute inset-0" style={{ background: 'rgba(4,5,10,0.9)' }} />
-      {/* travelling brass refractive band */}
+    <div
+      key={activeHubId}
+      aria-hidden
+      className="ds-hub-morph-stage absolute inset-0 z-[45] pointer-events-none overflow-hidden"
+    >
+      <div className="ds-hub-morph-dim absolute inset-0" style={{ background: 'rgba(4,5,10,0.72)' }} />
       <div
-        className="ds-hub-morph-band absolute inset-y-[-20%] -left-1/2 w-[60%]"
+        className="ds-hub-curtain ds-hub-curtain-l absolute inset-y-0 left-0 w-[52%]"
         style={{
-          background:
-            'linear-gradient(105deg, rgba(var(--ds-metal-200-rgb),0) 0%, rgba(var(--ds-metal-200-rgb),0.18) 38%, rgba(var(--ds-metal-200-rgb),0.42) 50%, rgba(var(--ds-metal-200-rgb),0.18) 62%, rgba(var(--ds-metal-200-rgb),0) 100%)',
-          backdropFilter: 'blur(7px) brightness(1.08)',
-          WebkitBackdropFilter: 'blur(7px) brightness(1.08)',
+          background: PLEATS,
+          backdropFilter: 'blur(6px) brightness(1.06) saturate(1.1)',
+          WebkitBackdropFilter: 'blur(6px) brightness(1.06) saturate(1.1)',
+          boxShadow: 'inset -28px 0 60px rgba(0,0,0,0.6), inset 0 0 120px rgba(214,176,110,0.18)',
         }}
       />
+      <div
+        className="ds-hub-curtain ds-hub-curtain-r absolute inset-y-0 right-0 w-[52%]"
+        style={{
+          background: PLEATS,
+          backdropFilter: 'blur(6px) brightness(1.06) saturate(1.1)',
+          WebkitBackdropFilter: 'blur(6px) brightness(1.06) saturate(1.1)',
+          boxShadow: 'inset 28px 0 60px rgba(0,0,0,0.6), inset 0 0 120px rgba(214,176,110,0.18)',
+        }}
+      />
+      <div className="ds-hub-morph-seam absolute inset-y-0 left-1/2 w-[3px] -translate-x-1/2" />
     </div>
   );
 }
