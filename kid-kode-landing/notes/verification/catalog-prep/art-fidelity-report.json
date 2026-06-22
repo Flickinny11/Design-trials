@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-13T04:10:51.046Z",
-  "dir": "/tmp/w3-artframes",
+  "generatedAt": "2026-06-22T10:40:37.478Z",
+  "dir": "notes/verification/phase1",
   "bar": {
     "tooDarkLum": 0.06,
     "washedLum": 0.72,
@@ -9,164 +9,140 @@
     "flatStdDev": 0.018
   },
   "summary": {
-    "total": 13,
-    "pass": 13,
+    "total": 11,
+    "pass": 11,
     "needsPolish": 0
   },
   "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
   "results": [
     {
-      "name": "click-shockwave",
-      "frame": "notes/verification/catalog-prep/tiles/click-shockwave.png",
+      "name": "asset-case-concept",
+      "frame": "notes/verification/catalog-prep/tiles/asset-case-concept.png",
       "metrics": {
-        "meanLum": 0.0645119772058666,
-        "lumStdDev": 0.09537005232708601,
-        "meanSat": 0.4772830751409048,
-        "coverage": 0.29546875
+        "meanLum": 0.123090966993464,
+        "lumStdDev": 0.2628831571255298,
+        "meanSat": 0.005889491456011052,
+        "coverage": 0.22109375
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "crt-warp",
-      "frame": "notes/verification/catalog-prep/tiles/crt-warp.png",
+      "name": "asset-dial-orrery",
+      "frame": "notes/verification/catalog-prep/tiles/asset-dial-orrery.png",
       "metrics": {
-        "meanLum": 0.0670765961601135,
-        "lumStdDev": 0.0999070648359871,
-        "meanSat": 0.46883656225997933,
-        "coverage": 0.28588541666666667
+        "meanLum": 0.16336862357026052,
+        "lumStdDev": 0.22136456392837872,
+        "meanSat": 0.1896834900549235,
+        "coverage": 0.5308854166666667
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "drag-elastic-warp",
-      "frame": "notes/verification/catalog-prep/tiles/drag-elastic-warp.png",
+      "name": "audit-glbs",
+      "frame": "notes/verification/catalog-prep/tiles/audit-glbs.png",
       "metrics": {
-        "meanLum": 0.0646792355800499,
-        "lumStdDev": 0.0943061506526934,
-        "meanSat": 0.4759535143889595,
-        "coverage": 0.3021875
+        "meanLum": 0.16782939432184843,
+        "lumStdDev": 0.1254247240963619,
+        "meanSat": 0.2557525109973704,
+        "coverage": 0.9716666666666667
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "flow-warp-idle",
-      "frame": "notes/verification/catalog-prep/tiles/flow-warp-idle.png",
+      "name": "audit-hero-2k",
+      "frame": "notes/verification/catalog-prep/tiles/audit-hero-2k.png",
       "metrics": {
-        "meanLum": 0.06564769395423334,
-        "lumStdDev": 0.0965839011239365,
-        "meanSat": 0.4751262799272531,
-        "coverage": 0.30505208333333333
+        "meanLum": 0.0933234455882376,
+        "lumStdDev": 0.11395883323251822,
+        "meanSat": 0.1900480679031854,
+        "coverage": 0.64375
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "heat-haze-refract",
-      "frame": "notes/verification/catalog-prep/tiles/heat-haze-refract.png",
+      "name": "current-atelier",
+      "frame": "notes/verification/catalog-prep/tiles/current-atelier.png",
       "metrics": {
-        "meanLum": 0.06539887965684651,
-        "lumStdDev": 0.09567059584508583,
-        "meanSat": 0.476781442656566,
-        "coverage": 0.30296875
+        "meanLum": 0.20443747826796635,
+        "lumStdDev": 0.1602411791202594,
+        "meanSat": 0.2355920155023644,
+        "coverage": 0.9935416666666667
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "hover-displacement-map",
-      "frame": "notes/verification/catalog-prep/tiles/hover-displacement-map.png",
+      "name": "w2-angle34",
+      "frame": "notes/verification/catalog-prep/tiles/w2-angle34.png",
       "metrics": {
-        "meanLum": 0.06741126082514733,
-        "lumStdDev": 0.09088075119508832,
-        "meanSat": 0.4673684139718886,
-        "coverage": 0.2975
+        "meanLum": 0.21397020228757407,
+        "lumStdDev": 0.17588574841190874,
+        "meanSat": 0.2373456599500262,
+        "coverage": 0.9940104166666667
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "hover-liquid-distort",
-      "frame": "notes/verification/catalog-prep/tiles/hover-liquid-distort.png",
+      "name": "w2-atelier-initial",
+      "frame": "notes/verification/catalog-prep/tiles/w2-atelier-initial.png",
       "metrics": {
-        "meanLum": 0.06512704599671683,
-        "lumStdDev": 0.0985256150048098,
-        "meanSat": 0.4770860072032635,
-        "coverage": 0.29369791666666667
+        "meanLum": 0.21672163937906552,
+        "lumStdDev": 0.17042924054471975,
+        "meanSat": 0.2306898285760801,
+        "coverage": 0.9713020833333333
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "lens-bulge",
-      "frame": "notes/verification/catalog-prep/tiles/lens-bulge.png",
+      "name": "w2-headon",
+      "frame": "notes/verification/catalog-prep/tiles/w2-headon.png",
       "metrics": {
-        "meanLum": 0.06368234240194638,
-        "lumStdDev": 0.09463172442985052,
-        "meanSat": 0.4775358947535284,
-        "coverage": 0.3028645833333333
+        "meanLum": 0.2057556216911687,
+        "lumStdDev": 0.16355870722455187,
+        "meanSat": 0.2362137611530181,
+        "coverage": 0.9931770833333333
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "pixel-sort-sweep",
-      "frame": "notes/verification/catalog-prep/tiles/pixel-sort-sweep.png",
+      "name": "w2-headon-clean",
+      "frame": "notes/verification/catalog-prep/tiles/w2-headon-clean.png",
       "metrics": {
-        "meanLum": 0.06474878672384067,
-        "lumStdDev": 0.09573451634192048,
-        "meanSat": 0.47712925714552235,
-        "coverage": 0.29609375
+        "meanLum": 0.22876891172384353,
+        "lumStdDev": 0.2060229495874995,
+        "meanSat": 0.23235231505935322,
+        "coverage": 0.9946875
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "pointer-glitch-split",
-      "frame": "notes/verification/catalog-prep/tiles/pointer-glitch-split.png",
+      "name": "w25-guilloche",
+      "frame": "notes/verification/catalog-prep/tiles/w25-guilloche.png",
       "metrics": {
-        "meanLum": 0.06434897205880892,
-        "lumStdDev": 0.09499153512845673,
-        "meanSat": 0.4767944874478268,
-        "coverage": 0.3028645833333333
+        "meanLum": 0.21001728852123389,
+        "lumStdDev": 0.16690818793257664,
+        "meanSat": 0.23890413350384998,
+        "coverage": 0.9947395833333333
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "pointer-loupe",
-      "frame": "notes/verification/catalog-prep/tiles/pointer-loupe.png",
+      "name": "w25-headon",
+      "frame": "notes/verification/catalog-prep/tiles/w25-headon.png",
       "metrics": {
-        "meanLum": 0.0641513251633832,
-        "lumStdDev": 0.09561808951473036,
-        "meanSat": 0.47900595665871826,
-        "coverage": 0.28682291666666665
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "pointer-twist-warp",
-      "frame": "notes/verification/catalog-prep/tiles/pointer-twist-warp.png",
-      "metrics": {
-        "meanLum": 0.06424047961599794,
-        "lumStdDev": 0.09494244358466315,
-        "meanSat": 0.4774379792242332,
-        "coverage": 0.3
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "pointer-wake-wave",
-      "frame": "notes/verification/catalog-prep/tiles/pointer-wake-wave.png",
-      "metrics": {
-        "meanLum": 0.07103968668299157,
-        "lumStdDev": 0.10810851558363159,
-        "meanSat": 0.4727648913682923,
-        "coverage": 0.30942708333333335
+        "meanLum": 0.2249048564542372,
+        "lumStdDev": 0.19913919528354174,
+        "meanSat": 0.23462435470347287,
+        "coverage": 0.994375
       },
       "verdict": "PASS",
       "reasons": []

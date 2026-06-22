@@ -91,7 +91,8 @@ export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild, lo
   return applied;
 }
 
-function setLiveText(root: Object3D, nodeId: string, content: string): void {
+function setLiveText(root: Object3D, nodeId: string, content: string): boolean {
+  let wrote = false;
   root.traverse((obj) => {
     if ((obj.userData as WithHandle | undefined)?.nodeId !== nodeId) return;
     let handle: TextHandleLike | null = null;
@@ -102,20 +103,25 @@ function setLiveText(root: Object3D, nodeId: string, content: string): void {
     if (handle && (handle as TextHandleLike).spec) {
       const th = handle as TextHandleLike;
       th.setSpec({ ...th.spec, content });
+      wrote = true;
     }
   });
+  return wrote;
 }
 
-/** Live-update the price + summary readouts from the current build. */
-export function applyConfiguratorText(root: Object3D, build: AtelierBuild): void {
+/** Live-update the price + summary readouts. Returns true once the price node
+ *  exists + was written (the caller retries on cold-load until this lands). */
+export function applyConfiguratorText(root: Object3D, build: AtelierBuild): boolean {
   const price = totalPrice(build);
-  setLiveText(root, PRICE_NODE_ID, `CHF ${price.toLocaleString('en-US')}`);
+  const wrote = setLiveText(root, PRICE_NODE_ID, `CHF ${price.toLocaleString('en-US')}`);
   const pick = (l: Parameters<typeof variantOf>[0]) => variantOf(l, build[l])?.label ?? '';
   const summary = [pick('movement'), pick('case'), pick('dial')].filter(Boolean).join('   ·   ');
   setLiveText(root, SUMMARY_NODE_ID, summary);
+  return wrote;
 }
 
 /** Live-update the constraint reason line (empty string clears it). */
 export function applyConfiguratorReason(root: Object3D, reason: string | null): void {
-  setLiveText(root, REASON_NODE_ID, reason ? `⚠  ${reason}` : '');
+  // DESIGN LAW §1.3 — no emoji/stock glyphs in the HUD. A typographic em-dash lead-in.
+  setLiveText(root, REASON_NODE_ID, reason ? `—  ${reason}` : '');
 }

@@ -52,6 +52,7 @@ const IDLE_DELAY_MS = 3000;
 const IDLE_SPEED = 0.1; // rad/s — slow luxury turntable
 const WATCH_R = 1.0; // nominal dial radius in local units
 const DIAL_FRONT = 0.05; // dial-stack base z, at the turned-case well floor
+const LUME_COLOR: Record<string, string | undefined> = { blue: '#1ec8ff', green: '#5ef08a', ice: '#bfe9ff' };
 
 // ── shared cached texture loader (live finish swaps) ───────────────────────
 const _texLoader = new TextureLoader();
@@ -223,8 +224,11 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
     const spec = specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec;
     return makeMat(spec);
   }, [build.dial]);
-  const handsMat = useMemo(() => makeMat(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec), [build.hands]);
-  const indexMat = useMemo(() => makeMat(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec), [build.indices]);
+  // Lume composes an emissive glow onto hands + indices (SC-V-FX night/UV cue).
+  const lumeGlow = LUME_COLOR[build.lume];
+  const withLume = (spec: MaterialSpec): MaterialSpec => (lumeGlow ? { ...spec, emissive: lumeGlow, emissiveIntensity: 0.95 } : spec);
+  const handsMat = useMemo(() => makeMat(withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec)), [build.hands, build.lume]);
+  const indexMat = useMemo(() => makeMat(withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec)), [build.indices, build.lume]);
   const bezelMat = useMemo(() => makeMat(specOf('bezel', build.bezel) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec), [build.bezel]);
   const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
   const crystalMat = useMemo(() => makeMat({
@@ -254,7 +258,14 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   const faceGroupRef = useRef<Group>(null);
   const crystalGroupRef = useRef<Group>(null);
   const strapGroupRef = useRef<Group>(null);
+  const rootRef = useRef<Group>(null);
   const explodeAmt = useRef(0);
+  // settle pulse: when a part is (drag-)placed, the watch gives a brief eased
+  // "assembled" bounce — the visible cue that a part just landed (SC-V-A1).
+  const buildKey = JSON.stringify(build);
+  const lastBuildKey = useRef(buildKey);
+  const popT = useRef(0);
+  if (buildKey !== lastBuildKey.current) { lastBuildKey.current = buildKey; popT.current = 0.0001; }
 
   useFrame((state, dt) => {
     // a living watch: gentle continuous sweep (not real time-of-day)
@@ -269,12 +280,21 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
     if (faceGroupRef.current) faceGroupRef.current.position.z = DIAL_FRONT + 0.22 * a;
     if (crystalGroupRef.current) crystalGroupRef.current.position.z = DIAL_FRONT + 0.04 + 0.66 * a;
     if (strapGroupRef.current) { strapGroupRef.current.position.z = -0.3 * a; strapGroupRef.current.visible = a < 0.85; }
+    // settle bounce on part placement
+    if (rootRef.current) {
+      if (popT.current > 0) {
+        popT.current += dt;
+        const k = popT.current / 0.42;
+        if (k >= 1) { popT.current = 0; rootRef.current.scale.setScalar(1); }
+        else rootRef.current.scale.setScalar(1 + 0.05 * Math.sin(k * Math.PI));
+      }
+    }
   });
 
   const indices = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
 
   return (
-    <group>
+    <group ref={rootRef}>
       {/* precision-turned case dressed in generated steel PBR */}
       <group ref={caseGroupRef}>
         <WatchCase caseVariant={build.case} />

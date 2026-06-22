@@ -41,16 +41,20 @@ export function AtelierApplier({ previewMode }: { previewMode: boolean }) {
 
   useEffect(() => {
     if (!previewMode || activeHubId !== ATELIER_HUB_ID) return;
-    const run = () => {
+    applyConfiguratorToScene(scene, build, configuratorLoader);
+    // Cold-load: the atelier text nodes mount asynchronously (variable, ~2-6s after
+    // the graph loads). Retry the price/summary write every 600ms until it lands so
+    // the readout never lingers on its graph-authored placeholder ("CHF 38,000").
+    let tries = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const tick = () => {
       applyConfiguratorToScene(scene, build, configuratorLoader);
-      applyConfiguratorText(scene, build);
+      const wrote = applyConfiguratorText(scene, build);
+      tries += 1;
+      if (!wrote && tries < 20) timer = setTimeout(tick, 600);
     };
-    run();
-    // Cold-load: the atelier text/part nodes mount ~2.5s after the graph loads, so
-    // re-apply across a wider window so the price/summary readout never lingers on
-    // its graph-authored placeholder (e.g. "CHF 38,000") once the orrery default lands.
-    const ts = [180, 600, 1200, 2500, 4000].map((d) => setTimeout(run, d));
-    return () => { ts.forEach(clearTimeout); };
+    tick();
+    return () => { if (timer) clearTimeout(timer); };
     // rev is included so each accepted change re-applies; build is the payload.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scene, rev, activeHubId, previewMode]);

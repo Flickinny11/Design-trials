@@ -217,3 +217,4 @@ Will self-report phase events below.
 [05:22] PHASE1-SENTINEL: ## Wave C (v2) — inspect system (A5 caseback-flip + A6 exploded view)
 
 [05:33:45] PHASE1 waveD(v2): COMMIT | A1 drag-assemble FIXED for new watch (drag chip onto watch → overWatch(pivot) detect → applies; verified steel→rose-gold via simulated drag) + A8 dimensional chrome: swatch grid → premium MATERIAL TRAY (45 chips wear real per-layer PBR — metal/dial/leather), flat panel → dimensional plaque (box+depth, shifted off watch, softened), milled CASEBACK+EXPLODE control buttons wired to rig (flip/explode actions), SAVE/RESET rebuilt clean (killed specular-bloom white-smear). A7 SAVE verified (localStorage persist + clipboard). 0 console err, tsc 0-new, tx 2/2 | ALL 8 SC-V-A functionally verified | next: waveE full sweep + advocate + report+marker
+[05:42] PHASE1-SENTINEL: ## Wave D (v2) — drag-assemble (A1) + dimensional chrome (A8)
