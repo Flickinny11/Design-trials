@@ -28,7 +28,7 @@ import { useThree, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import {
   Group, Object3D, Vector2, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
-  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry, SphereGeometry,
+  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry,
   LatheGeometry, Raycaster, TextureLoader, type Texture,
 } from 'three';
 import {
@@ -228,8 +228,8 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   const bezelMat = useMemo(() => makeMat(specOf('bezel', build.bezel) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec), [build.bezel]);
   const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
   const crystalMat = useMemo(() => makeMat({
-    baseColor: '#eef4ff', metalness: 0, roughness: 0.05, transmission: 1, ior: 1.77,
-    thickness: 0.18, clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 0.8, opacity: 1,
+    baseColor: '#eef4ff', metalness: 0, roughness: 0.1, transmission: 1, ior: 1.52,
+    thickness: 0.06, clearcoat: 0.12, clearcoatRoughness: 0.15, envMapIntensity: 0.28, opacity: 1,
   } as MaterialSpec), []);
   const capMat = useMemo(() => makeMat({ baseColor: '#cfd4dc', metalness: 1, roughness: 0.15, envMapIntensity: 1.3 } as MaterialSpec), []);
 
@@ -239,7 +239,8 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
   const bezelGeo = useMemo(() => new TorusGeometry(WATCH_R * 0.93, WATCH_R * 0.07, 24, 160), []);
   const indexGeo = useMemo(() => { const g = new BoxGeometry(0.03, 0.1, 0.02); g.translate(0, WATCH_R * 0.71, 0); return g; }, []);
   const capGeo = useMemo(() => new CylinderGeometry(0.035, 0.035, 0.05, 24), []);
-  const crystalGeo = useMemo(() => new SphereGeometry(WATCH_R * 0.84, 64, 40), []);
+  // near-flat sapphire (dress-watch style) — avoids the domed-glass spotlight glare
+  const crystalGeo = useMemo(() => new CircleGeometry(WATCH_R * 0.83, 96), []);
   const handGeo = (len: number, w: number) => { const g = new BoxGeometry(w, len, 0.012); g.translate(0, len * 0.34, 0); return g; };
   const hourGeo = useMemo(() => handGeo(WATCH_R * 0.5, 0.045), []);
   const minGeo = useMemo(() => handGeo(WATCH_R * 0.72, 0.032), []);
@@ -297,8 +298,8 @@ function WatchAssembly({ build, flipRef, explodeRef }: WatchProps) {
         <mesh geometry={capGeo} material={capMat as never} position={[0, 0, 0.056]} rotation={[Math.PI / 2, 0, 0]} />
       </group>
       {/* sapphire crystal dome — own group so it lifts off first in the explode */}
-      <group ref={crystalGroupRef} position={[0, 0, DIAL_FRONT + 0.04]}>
-        <mesh geometry={crystalGeo} material={crystalMat as never} scale={[1, 1, 0.1]} />
+      <group ref={crystalGroupRef} position={[0, 0, DIAL_FRONT + 0.06]}>
+        <mesh geometry={crystalGeo} material={crystalMat as never} />
       </group>
       {/* strap — articulated bands curving back from the 12/6 lugs */}
       <group ref={strapGroupRef}>
