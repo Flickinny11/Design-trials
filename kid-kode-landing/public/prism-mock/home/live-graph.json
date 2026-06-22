@@ -210,7 +210,7 @@
           "attachment": "infinite-environment",
           "kind": "volumetric-nebula",
           "z": -400,
-          "opacity": 1,
+          "opacity": 0.7,
           "parallaxDepth": 0.96,
           "presetId": "brass-nebula",
           "params": {
@@ -218,7 +218,7 @@
             "density": 0.5,
             "drift": 0.5,
             "depthSpread": 0.65,
-            "intensity": 0.54
+            "intensity": 0.34
           }
         },
         {
@@ -261,7 +261,7 @@
           "sourceUrl": "/prism-mock/orrery/movement/backdrop.png",
           "z": -3.6,
           "parallaxDepth": 0.12,
-          "opacity": 0.16
+          "opacity": 0.34
         }
       ],
       "lightingSpec": {
@@ -313,7 +313,7 @@
           "attachment": "infinite-environment",
           "kind": "volumetric-nebula",
           "z": -420,
-          "opacity": 1,
+          "opacity": 0.72,
           "parallaxDepth": 0.96,
           "presetId": "ice-field",
           "params": {
@@ -321,7 +321,7 @@
             "density": 0.38,
             "drift": 0.3,
             "depthSpread": 0.7,
-            "intensity": 0.58
+            "intensity": 0.36
           }
         },
         {
@@ -347,7 +347,7 @@
           "sourceUrl": "/prism-mock/orrery/materia/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.15,
-          "opacity": 0.3
+          "opacity": 0.4
         }
       ],
       "lightingSpec": {
@@ -501,7 +501,7 @@
           "attachment": "infinite-environment",
           "kind": "volumetric-nebula",
           "z": -440,
-          "opacity": 1,
+          "opacity": 0.68,
           "parallaxDepth": 0.96,
           "presetId": "brass-nebula",
           "params": {
@@ -509,7 +509,7 @@
             "density": 0.2,
             "drift": 0.3,
             "depthSpread": 0.8,
-            "intensity": 0.4
+            "intensity": 0.3
           }
         },
         {
@@ -535,7 +535,7 @@
           "sourceUrl": "/prism-mock/orrery/acquire/backdrop.png",
           "z": -3,
           "parallaxDepth": 0.12,
-          "opacity": 0.62
+          "opacity": 0.66
         }
       ],
       "lightingSpec": {
@@ -17071,7 +17071,7 @@
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1,
-        "opacity": 0.62,
+        "opacity": 0.84,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },
@@ -17155,7 +17155,7 @@
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1,
-        "opacity": 0.55,
+        "opacity": 0.77,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },
@@ -18247,7 +18247,7 @@
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1,
-        "opacity": 0.6,
+        "opacity": 0.82,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },
@@ -18491,7 +18491,7 @@
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1,
-        "opacity": 0.6,
+        "opacity": 0.82,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },
@@ -18575,7 +18575,7 @@
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1,
-        "opacity": 0.55,
+        "opacity": 0.77,
         "normalMapUrl": null,
         "displacementMapUrl": null
       },

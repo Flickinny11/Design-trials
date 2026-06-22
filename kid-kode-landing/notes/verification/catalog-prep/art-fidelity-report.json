@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-22T10:40:37.478Z",
-  "dir": "notes/verification/phase1",
+  "generatedAt": "2026-06-22T13:41:15.368Z",
+  "dir": "notes/verification/phase2/png",
   "bar": {
     "tooDarkLum": 0.06,
     "washedLum": 0.72,
@@ -9,140 +9,44 @@
     "flatStdDev": 0.018
   },
   "summary": {
-    "total": 11,
-    "pass": 11,
+    "total": 3,
+    "pass": 3,
     "needsPolish": 0
   },
   "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
   "results": [
     {
-      "name": "asset-case-concept",
-      "frame": "notes/verification/catalog-prep/tiles/asset-case-concept.png",
+      "name": "arrival",
+      "frame": "notes/verification/catalog-prep/tiles/arrival.png",
       "metrics": {
-        "meanLum": 0.123090966993464,
-        "lumStdDev": 0.2628831571255298,
-        "meanSat": 0.005889491456011052,
-        "coverage": 0.22109375
+        "meanLum": 0.29066677017972925,
+        "lumStdDev": 0.2011833002631723,
+        "meanSat": 0.30391736755403403,
+        "coverage": 0.9715625
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "asset-dial-orrery",
-      "frame": "notes/verification/catalog-prep/tiles/asset-dial-orrery.png",
+      "name": "atelier",
+      "frame": "notes/verification/catalog-prep/tiles/atelier.png",
       "metrics": {
-        "meanLum": 0.16336862357026052,
-        "lumStdDev": 0.22136456392837872,
-        "meanSat": 0.1896834900549235,
-        "coverage": 0.5308854166666667
+        "meanLum": 0.22617609995914226,
+        "lumStdDev": 0.15630035402621556,
+        "meanSat": 0.31303844464131486,
+        "coverage": 0.9942708333333333
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "audit-glbs",
-      "frame": "notes/verification/catalog-prep/tiles/audit-glbs.png",
+      "name": "celestia-orrery",
+      "frame": "notes/verification/catalog-prep/tiles/celestia-orrery.png",
       "metrics": {
-        "meanLum": 0.16782939432184843,
-        "lumStdDev": 0.1254247240963619,
-        "meanSat": 0.2557525109973704,
-        "coverage": 0.9716666666666667
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "audit-hero-2k",
-      "frame": "notes/verification/catalog-prep/tiles/audit-hero-2k.png",
-      "metrics": {
-        "meanLum": 0.0933234455882376,
-        "lumStdDev": 0.11395883323251822,
-        "meanSat": 0.1900480679031854,
-        "coverage": 0.64375
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "current-atelier",
-      "frame": "notes/verification/catalog-prep/tiles/current-atelier.png",
-      "metrics": {
-        "meanLum": 0.20443747826796635,
-        "lumStdDev": 0.1602411791202594,
-        "meanSat": 0.2355920155023644,
-        "coverage": 0.9935416666666667
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-angle34",
-      "frame": "notes/verification/catalog-prep/tiles/w2-angle34.png",
-      "metrics": {
-        "meanLum": 0.21397020228757407,
-        "lumStdDev": 0.17588574841190874,
-        "meanSat": 0.2373456599500262,
-        "coverage": 0.9940104166666667
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-atelier-initial",
-      "frame": "notes/verification/catalog-prep/tiles/w2-atelier-initial.png",
-      "metrics": {
-        "meanLum": 0.21672163937906552,
-        "lumStdDev": 0.17042924054471975,
-        "meanSat": 0.2306898285760801,
-        "coverage": 0.9713020833333333
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-headon",
-      "frame": "notes/verification/catalog-prep/tiles/w2-headon.png",
-      "metrics": {
-        "meanLum": 0.2057556216911687,
-        "lumStdDev": 0.16355870722455187,
-        "meanSat": 0.2362137611530181,
-        "coverage": 0.9931770833333333
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-headon-clean",
-      "frame": "notes/verification/catalog-prep/tiles/w2-headon-clean.png",
-      "metrics": {
-        "meanLum": 0.22876891172384353,
-        "lumStdDev": 0.2060229495874995,
-        "meanSat": 0.23235231505935322,
-        "coverage": 0.9946875
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w25-guilloche",
-      "frame": "notes/verification/catalog-prep/tiles/w25-guilloche.png",
-      "metrics": {
-        "meanLum": 0.21001728852123389,
-        "lumStdDev": 0.16690818793257664,
-        "meanSat": 0.23890413350384998,
-        "coverage": 0.9947395833333333
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w25-headon",
-      "frame": "notes/verification/catalog-prep/tiles/w25-headon.png",
-      "metrics": {
-        "meanLum": 0.2249048564542372,
-        "lumStdDev": 0.19913919528354174,
-        "meanSat": 0.23462435470347287,
-        "coverage": 0.994375
+        "meanLum": 0.21687075674018436,
+        "lumStdDev": 0.15561452295058276,
+        "meanSat": 0.3713572059433925,
+        "coverage": 0.9646875
       },
       "verdict": "PASS",
       "reasons": []
