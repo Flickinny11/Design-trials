@@ -15,11 +15,36 @@
 //   ?spin=0   freeze the review camera auto-orbit (deterministic capture)
 
 import { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useSearchParams } from 'next/navigation';
 import { ChassisScene } from '@/components/editor/chassis/ChassisScene';
+
+// Dev/verification rig: publishes the review camera + controls so an
+// evaluate_script can frame deterministic capture angles (overview, material
+// close-ups, spin sequence). Editor chrome — window access is fine here.
+function ReviewRig() {
+  const camera = useThree((s) => s.camera);
+  const controls = useThree((s) => s.controls);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __PRISM_CHASSIS_CAM__?: unknown }).__PRISM_CHASSIS_CAM__ = {
+      camera,
+      controls,
+      set(px: number, py: number, pz: number, tx = 0, ty = 0, tz = 0) {
+        camera.position.set(px, py, pz);
+        const c = controls as unknown as { target: THREE.Vector3; update: () => void } | null;
+        if (c?.target) {
+          c.target.set(tx, ty, tz);
+          c.update();
+        } else {
+          camera.lookAt(tx, ty, tz);
+        }
+      },
+    };
+  }
+  return null;
+}
 
 function ChassisStage() {
   const sp = useSearchParams();
@@ -31,10 +56,10 @@ function ChassisStage() {
         shadows
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-        camera={{ position: [0, 1.7, 9.6], fov: 30 }}
+        camera={{ position: [0, 0.4, 15.5], fov: 30 }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.AgXToneMapping;
-          gl.toneMappingExposure = 1.0;
+          gl.toneMappingExposure = 1.12;
           gl.outputColorSpace = THREE.SRGBColorSpace;
           gl.shadowMap.type = THREE.PCFShadowMap;
         }}
@@ -51,10 +76,11 @@ function ChassisStage() {
           enablePan
           enableDamping
           dampingFactor={0.08}
-          minDistance={4}
+          minDistance={2}
           maxDistance={20}
           target={[0, 0, 0]}
         />
+        <ReviewRig />
       </Canvas>
     </div>
   );

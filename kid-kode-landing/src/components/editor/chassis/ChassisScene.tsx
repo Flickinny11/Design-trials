@@ -1,20 +1,60 @@
 'use client';
 
-// ChassisScene — the R3F scene graph for the reviewable Toolbar Chassis:
-// studio environment (for real refraction/reflection), editorial dark backdrop
-// (so the see-through cutouts + glass refraction read), premium studio lighting,
-// the glass pane, and the centered row of seated stone/metal cubes.
+// ChassisScene — the R3F scene graph for the reviewable Toolbar Chassis with the
+// founder's refinements: a thick glass pane milled into GRID SECTIONS, each
+// section's worn-alloy cubes in one curated jewel-tone, the section name ENGRAVED
+// into the glass above it, hover-spin + see-through per cube, and in-canvas hover
+// tooltips. Studio environment (real refraction/reflection), editorial dark
+// backdrop, premium studio lighting.
 //
 // Isolated WebGL — editor-chrome chassis; never the unified three/webgpu scene.
 
-import { Suspense, useMemo } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import { ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { StudioEnv } from './StudioEnv';
 import { GlassPane } from './GlassPane';
-import { StoneButton } from './StoneButton';
-import { CHASSIS_BUTTONS, buttonX, PANE_W } from './chassis-config';
+import { CubeButton } from './CubeButton';
+import { EngravedLabel } from './EngravedLabel';
+import { Tooltip } from './Tooltip';
+import { useWornMaps } from './materials';
+import { LAYOUT, type PlacedButton } from './chassis-config';
+
+// Loads the worn-alloy PBR sets, then renders the seated cubes, engraved section
+// labels, and the hover tooltip. Lives under its own Suspense so the rest of the
+// scene paints while the textures stream in.
+function ChassisButtons() {
+  const wornMaps = useWornMaps();
+  const [hovered, setHovered] = useState<PlacedButton | null>(null);
+  // Verification hook: force a uniform spin progress across all cubes for
+  // deterministic see-through capture. Editor chrome — window access is fine.
+  const [forceSpin, setForceSpin] = useState<number | null>(null);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __PRISM_CHASSIS_SPIN__?: (p: number | null) => void }).__PRISM_CHASSIS_SPIN__ =
+      (p) => setForceSpin(p);
+    (window as unknown as { __PRISM_CHASSIS_HOVER__?: (id: string | null) => void }).__PRISM_CHASSIS_HOVER__ =
+      (id) => setHovered(id ? LAYOUT.buttons.find((b) => b.fn.id === id) ?? null : null);
+  }
+
+  return (
+    <>
+      {LAYOUT.buttons.map((btn) => (
+        <CubeButton
+          key={`${btn.sectionId}:${btn.fn.id}`}
+          btn={btn}
+          maps={wornMaps[btn.textureKey]}
+          onHover={setHovered}
+          forceSpin={forceSpin}
+        />
+      ))}
+      {LAYOUT.labels.map((label) => (
+        <EngravedLabel key={label.sectionId} label={label} />
+      ))}
+      <Tooltip btn={hovered} />
+    </>
+  );
+}
 
 // Dev/verification probe: publishes the live chassis scene so an evaluate_script
 // assertion can traverse it. Editor chrome — window access is allowed here (this
@@ -42,8 +82,8 @@ function Backdrop() {
     grad.addColorStop(1, '#05070c');
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 512);
-    const bloom = g.createRadialGradient(32, 215, 8, 32, 215, 260);
-    bloom.addColorStop(0, 'rgba(120,150,200,0.32)');
+    const bloom = g.createRadialGradient(32, 230, 8, 32, 230, 300);
+    bloom.addColorStop(0, 'rgba(120,150,200,0.30)');
     bloom.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = bloom;
     g.fillRect(0, 0, 64, 512);
@@ -52,16 +92,15 @@ function Backdrop() {
     return t;
   }, []);
   return (
-    <mesh position={[0, 0, -3.4]} raycast={() => null}>
-      <planeGeometry args={[34, 19]} />
+    <mesh position={[0, 0, -3.6]} raycast={() => null}>
+      <planeGeometry args={[42, 22]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
   );
 }
 
 export function ChassisScene() {
-  const n = CHASSIS_BUTTONS.length;
-
+  const halfW = LAYOUT.paneW / 2;
   return (
     <>
       <SceneProbe />
@@ -69,35 +108,45 @@ export function ChassisScene() {
       <Backdrop />
 
       {/* Premium studio lighting — warm key (casts the soft shadow), cool fill,
-          and a bright rim that rakes the glass edge so the volumetric silhouette
-          and refraction read. The environment map supplies the reflections. */}
-      <ambientLight intensity={0.45} />
+          and bright raking rims so the worn brushed grain + micro-scratches catch
+          light and the glass edge reads. The environment map supplies reflections. */}
+      <ambientLight intensity={0.5} />
       <directionalLight
-        position={[5, 7, 6]}
-        intensity={2.6}
+        position={[6, 8, 7]}
+        intensity={2.7}
         color="#fff3e2"
         castShadow
         shadow-mapSize={[2048, 2048]}
-        shadow-camera-left={-PANE_W / 2 - 1}
-        shadow-camera-right={PANE_W / 2 + 1}
+        shadow-camera-left={-halfW - 1}
+        shadow-camera-right={halfW + 1}
         shadow-camera-top={3}
         shadow-camera-bottom={-3}
         shadow-camera-near={0.5}
-        shadow-camera-far={30}
+        shadow-camera-far={36}
         shadow-bias={-0.0005}
       />
-      <directionalLight position={[-6, -1, 4]} intensity={0.9} color="#bcd6ff" />
-      <spotLight position={[7, 3, -2]} angle={0.9} penumbra={1} intensity={60} distance={40} color="#cfe2ff" />
-      <spotLight position={[-7, -2, -2]} angle={0.9} penumbra={1} intensity={34} distance={40} color="#e6c9ff" />
+      <directionalLight position={[-7, -1, 5]} intensity={1.0} color="#bcd6ff" />
+      {/* low raking light to rake the brushed grain across the cube faces */}
+      <directionalLight position={[0, 0.5, 8]} intensity={0.8} color="#fff7ec" />
+      <spotLight position={[9, 4, -2]} angle={0.9} penumbra={1} intensity={70} distance={48} color="#cfe2ff" />
+      <spotLight position={[-9, -2, -2]} angle={0.9} penumbra={1} intensity={40} distance={48} color="#e6c9ff" />
 
       <Suspense fallback={null}>
         <GlassPane />
-        {CHASSIS_BUTTONS.map((btn, i) => (
-          <StoneButton key={btn.id} btn={btn} x={buttonX(i, n)} />
-        ))}
+      </Suspense>
+      <Suspense fallback={null}>
+        <ChassisButtons />
       </Suspense>
 
-      <ContactShadows position={[0, -1.35, 0]} opacity={0.5} scale={14} blur={2.6} far={4} resolution={1024} color="#000308" />
+      <ContactShadows
+        position={[0, -LAYOUT.paneH / 2 - 0.2, 0]}
+        opacity={0.5}
+        scale={LAYOUT.paneW + 4}
+        blur={2.6}
+        far={4}
+        resolution={1024}
+        color="#000308"
+      />
     </>
   );
 }

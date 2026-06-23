@@ -11,15 +11,12 @@
 import { useMemo } from 'react';
 import * as THREE from 'three';
 import {
-  PANE_W,
-  PANE_H,
+  LAYOUT,
   PANE_THICK,
   PANE_CORNER,
   PANE_EDGE_BEVEL,
   HOLE,
   HOLE_CORNER,
-  CHASSIS_BUTTONS,
-  buttonX,
 } from './chassis-config';
 
 // Append a rounded-rect contour (centered at cx,cy) to a Shape or Path.
@@ -40,13 +37,12 @@ function roundedRect(ctx: THREE.Shape | THREE.Path, cx: number, cy: number, w: n
 export function GlassPane() {
   const geometry = useMemo(() => {
     const shape = new THREE.Shape();
-    roundedRect(shape, 0, 0, PANE_W, PANE_H, PANE_CORNER);
+    roundedRect(shape, 0, 0, LAYOUT.paneW, LAYOUT.paneH, PANE_CORNER);
 
-    // One milled cutout per button, in a centered row.
-    const n = CHASSIS_BUTTONS.length;
-    for (let i = 0; i < n; i++) {
+    // One milled cutout per placed button (grid sections).
+    for (const b of LAYOUT.buttons) {
       const hole = new THREE.Path();
-      roundedRect(hole, buttonX(i, n), 0, HOLE, HOLE, HOLE_CORNER);
+      roundedRect(hole, b.x, b.y, HOLE, HOLE, HOLE_CORNER);
       shape.holes.push(hole);
     }
 
