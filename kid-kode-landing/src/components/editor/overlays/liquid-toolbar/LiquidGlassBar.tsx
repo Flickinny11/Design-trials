@@ -99,8 +99,8 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       // Clear glass: the geometric vertex warp (below) carries the "liquid bend";
       // the refraction churn is kept LOW + tightly capped on interaction so it
       // never shatters into shards and the sunk buttons read crisply through it.
-      m.temporalDistortion = 0.03 + s.e * 0.05;
-      m.distortion = 0.04 + s.e * 0.04;
+      m.temporalDistortion = 0.03 + s.e * 0.02;
+      m.distortion = 0.04 + s.e * 0.02;
     }
 
     // ── Real liquid BEND: displace the bar's vertices so the glass body visibly
@@ -119,8 +119,8 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       const b = basePos.current;
       // Gentle, legible undulation (still clearly a warping liquid ribbon, TB-2)
       // — calmer than the first pass so the sunk buttons read through the glass.
-      const bendAmp = 0.035 + s.e * 0.04;
-      const zAmp = 0.016 + s.e * 0.018; // gentler Z so the front face doesn't bulge over the icons
+      const bendAmp = 0.035 + s.e * 0.018;
+      const zAmp = 0.016 + s.e * 0.008; // gentle Z + small hover bump so the rail never churns over the icons
       const lean = s.px * 0.1;
       for (let i = 0; i < arr.length; i += 3) {
         const by = b[i + 1];

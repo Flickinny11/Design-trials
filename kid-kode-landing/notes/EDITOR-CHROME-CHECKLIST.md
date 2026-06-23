@@ -45,4 +45,5 @@ emoji/Lucide/lightning/box/line/cheap symbol — none · grotesque font — none
 non-firing action — none. **CLEAN.**
 
 **Reviewers:** art-fidelity stage-1 **6/6 PASS** (`art-fidelity-report.json`);
-prism-criteria-reviewer — see report; user-advocate — see report.
+prism-criteria-reviewer — **all in-scope rows MEET**, defect gate clean, NE/KF DEFERRED;
+user-advocate — **PLEASED** (both MUST-FIXes resolved; residual lower-rail hover FLAG addressed).

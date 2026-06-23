@@ -55,3 +55,12 @@ editor (§3) + keyframe editor (§4) DEFERRED to later founder-scoped runs.
 - tsc 0-new, 0 console errors.
 
 ## Wave 4 — verification + report — IN PROGRESS
+
+## Wave 4 — verification + report ✅ COMPLETE
+- Cold-load gate clean (0 _next 404, 0 page errors, canvas present, no stuck loader).
+- Scene-graph assertion: 29 GLB-backed meshes mounted, 0 procedural form stand-ins.
+- Multi-frame motion proof: warp (numeric vertex delta), spin (4-phase montage), engraving (rest/hover).
+- Action matrix: 14/14 handlers fire (13 flyouts + function popup special-case).
+- art-fidelity 6/6 PASS · criteria-reviewer all in-scope rows MEET · user-advocate PLEASED.
+- Addressed advocate MUST-FIXes (shattered glass + icon mush) + residual lower-rail hover FLAG.
+- EDITOR-CHROME-CHECKLIST.md + TOOLBAR-V2-REPORT.md written. Marker printed.

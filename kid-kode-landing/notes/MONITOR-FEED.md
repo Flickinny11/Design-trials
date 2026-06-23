@@ -367,3 +367,8 @@ Liquid-glass 3D toolbar shipped: warping transmission-glass bar + sunk 3D milled
 
 ## [2026-06-23] TOOLBAR-V2 W1 — generated GLB forms ✅ (pending-reverify)
 REDO against PRISM-EDITOR-CHROME-SPEC. Found a partial prior V2 gen (29 Tripo v3.1 GLBs but ~44MB/1.46M tris each + shell was a hollow ring). Built /glb-lab QA route, triage-rendered: icons premium+colored+on-concept, buttons a coherent machined-metal family, shell WRONG → regenerated as solid liquid-glass rail. Built .assetgen/optimize-glb.mjs (gltf-transform simplify + sharp tex downsize → PLAIN GLB, no decoder wired). Optimized all 29: ~44MB→~0.8MB each, 1.2GB→22MB total. tsc 0-new. Next: W2 mount + behaviors.
+[05:27] TOOLBAR2-SENTINEL: ## Wave 4 — per-row checklist verification + report — PENDING
+[05:47] TOOLBAR2-SENTINEL: ## Wave 4 — verification + report — IN PROGRESS
+
+## [2026-06-23] TOOLBAR-V2 — RUN COMPLETE ✅
+Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded): shell + 14 buttons + 14 icons, optimized to plain GLBs (22MB). Mounted in the isolated liquid-glass R3F canvas with transmission+warp on the generated shell, hover-spin on the generated coins (reveals depth), colored generated icons, engraving on changeArtifact/text/build, tooltips + ADD/BUILD labels, all 14 actions fire. Scene-graph: 29 GLB-backed meshes, 0 procedural form stand-ins. Cold load clean, tsc 0-new, 0 console errors, art-fidelity 6/6, criteria-reviewer all-MEET, user-advocate PLEASED. NE/KF DEFERRED (founder scope). Marker: PRISM-TOOLBAR-V2: RUN COMPLETE.

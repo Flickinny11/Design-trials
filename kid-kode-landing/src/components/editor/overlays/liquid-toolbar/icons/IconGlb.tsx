@@ -73,11 +73,13 @@ export function IconGlb({
 
     if (engraved) {
       // Engraving animates on hover: rises in the well + sweeps + glows.
-      const targetZ = lit ? 0.02 : -0.05; // sunk at rest, lifts toward face on hover
+      const targetZ = lit ? 0.04 : -0.05; // sunk at rest, lifts proud of the well on hover
       o.position.z += (targetZ - o.position.z) * k;
       const targetRot = lit ? Math.sin(t * 2.2) * 0.3 : 0;
       o.rotation.z += (targetRot - o.rotation.z) * k;
-      const ei = lit ? 0.95 : 0.22;
+      const targetS = lit ? 1.2 : 1.0; // grows when the engraving is revealed
+      o.scale.setScalar(o.scale.x + (targetS - o.scale.x) * k);
+      const ei = lit ? 1.1 : 0.22;
       for (const m of prepared.materials) m.emissiveIntensity += (ei - m.emissiveIntensity) * k;
     } else {
       o.rotation.y = Math.sin(t * 0.7) * (lit ? 0.6 : 0.4);
