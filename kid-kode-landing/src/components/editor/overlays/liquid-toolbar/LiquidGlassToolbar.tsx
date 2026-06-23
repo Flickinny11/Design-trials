@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ToolbarScene } from './ToolbarScene';
 import { ToolbarTooltips } from './ToolbarTooltips';
+import { preloadToolbarGlbs } from './glb';
 import type { LiquidToolGroup } from './config';
 
 export interface LiquidGlassToolbarProps {
@@ -57,6 +58,11 @@ export function LiquidGlassToolbar({
   spineHandlers,
 }: LiquidGlassToolbarProps) {
   const railH = useRailHeight();
+  // Warm the GLTF cache for every generated toolbar form so the shell + 28
+  // button/icon GLBs stream in together (not waterfalled) on first mount.
+  useEffect(() => {
+    preloadToolbarGlbs();
+  }, []);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
   const canvasH = collapsed ? 0 : railH;
   const hostRef = useRef<HTMLDivElement | null>(null);

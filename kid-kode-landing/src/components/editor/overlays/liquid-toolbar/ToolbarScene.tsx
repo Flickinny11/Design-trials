@@ -6,13 +6,12 @@
 // backdrop the glass refracts, the LiquidGlassBar, and the vertical column of
 // ToolButton3D. Isolated WebGL — never touches the unified three/webgpu scene.
 
-import { useRef, useState, useMemo } from 'react';
+import { Suspense, useRef, useState, useMemo } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Environment, Lightformer, OrthographicCamera } from '@react-three/drei';
 import * as THREE from 'three';
 import { LiquidGlassBar } from './LiquidGlassBar';
 import { ToolButton3D } from './ToolButton3D';
-import { iconFor } from './icons';
 import {
   barHeight,
   buttonY,
@@ -161,11 +160,15 @@ export function ToolbarScene({
 
       <Backdrop height={barH} />
 
-      <LiquidGlassBar height={barH} energy={energy} />
+      {/* The generated shell GLB suspends while it loads; keep the rest visible. */}
+      <Suspense fallback={null}>
+        <LiquidGlassBar height={barH} energy={energy} />
+      </Suspense>
 
       {groups.map((g, i) => (
         <ToolButton3D
           key={g.id}
+          id={g.id}
           y={buttonY(i, n)}
           accent={accentFor(g.id)}
           active={activeGroup === g.id}
@@ -175,7 +178,6 @@ export function ToolbarScene({
             setEnergy(h ? 1 : 0);
             onHoverButton?.(h ? i : null);
           }}
-          icon={iconFor(g.id, accentFor(g.id))}
         />
       ))}
     </>

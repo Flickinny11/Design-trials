@@ -13,9 +13,9 @@
 // (`raycast={() => null}`) so the buttons sunk inside it receive all pointer
 // events through the glass.
 
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { RoundedBox, MeshTransmissionMaterial } from '@react-three/drei';
+import { MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import {
   BAR_W,
@@ -23,6 +23,7 @@ import {
   GLASS_TINT,
   GLASS_ATTENUATION,
 } from './config';
+import { useShellGeometry, SHELL_URL } from './glb';
 
 const NOOP_RAYCAST = () => null;
 
@@ -37,6 +38,10 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
   const group = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
   const barMeshRef = useRef<THREE.Mesh>(null);
+  // The GENERATED shell GLB form, scaled-to-fit the rail box. The warp + the
+  // transmission material ride on THIS geometry (spec TB-1/TB-2). The vertex
+  // count varies with the generated mesh, so the warp's basePos cache keys off it.
+  const shellGeo = useShellGeometry(BAR_W, height, BAR_D);
   // Rest positions of the bar's vertices, cached so the per-frame liquid BEND
   // displaces from the original shape (never accumulates).
   const basePos = useRef<Float32Array | null>(null);
@@ -122,17 +127,19 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
     }
   });
 
+  // Re-arm the warp's rest-position cache whenever the shell geometry changes
+  // (e.g. rail height changed → a fresh scaled geometry).
+  useEffect(() => {
+    basePos.current = null;
+    const mesh = barMeshRef.current;
+    if (mesh) mesh.userData.glbSource = SHELL_URL; // verification: the form is the GLB
+  }, [shellGeo]);
+
   return (
     <group ref={group}>
-      <RoundedBox
-        ref={barMeshRef as never}
-        args={[BAR_W, height, BAR_D]}
-        radius={Math.min(BAR_W, BAR_D) * 0.42}
-        smoothness={8}
-        steps={2}
-        raycast={NOOP_RAYCAST}
-      >
-        {/* Real transmission glass: volumetric, refractive, iridescent. */}
+      <mesh ref={barMeshRef} geometry={shellGeo} raycast={NOOP_RAYCAST} castShadow>
+        {/* Real transmission glass: volumetric, refractive, iridescent —
+            layered onto the GENERATED shell form (spec §6). */}
         <MeshTransmissionMaterial
           ref={matRef as never}
           transmission={1}
@@ -159,7 +166,7 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
           samples={8}
           resolution={512}
         />
-      </RoundedBox>
+      </mesh>
 
       {/* Inner luminous core — a thin slab the glass refracts so the body holds
           colored light (reads as real volume, not a hollow shell). */}
