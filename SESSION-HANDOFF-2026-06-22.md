@@ -109,3 +109,27 @@ Claude deploys the ultracode session, monitors a few minutes as the monitor (age
 **Safely fixed (docs-only):** wrote `docs/prism/PRISM-MASTER-SPEC.md` (capstone front-door + **Law 0 "every artifact is a node"** + a verification corollary that closes the name-only SC gap); updated `SPEC-INDEX.md`. Did NOT archive the canonical-3 (capstone, not destructive replacement — see `notes/AUDIT-SPEC-REPORT.md` §4). No risky app change; clean cold load + tsc-0-new confirmed.
 
 **Needs greenlight (structural):** watch/orrery/transition → graph nodes via the existing-but-unused `coderef-factory` path; 7 orphan nodes → real artifact or remove. Full plan + recommended order in `notes/AUDIT-REMEDIATION-PLAN.md`. Summary: `notes/AUDIT-MASTER-REPORT.md`.
+
+---
+
+## FOUNDATION CLEAN — FIX3 RUN COMPLETE (2026-06-22)
+
+The PRISM foundation is now **100% clean** per PRISM-MASTER-SPEC Law 0. The node-
+authorship gate flags **ZERO accidental hardcoded drift**. The three signature
+artifacts the foundation audit found hardcoded are all resolved:
+
+- **Watch** (FIX2 / G1) → graph node `orr-atelier-watch` (`builtin:atelier-watch`).
+- **Orrery** (FIX3 / G2) → graph node `orr-celestia-orrery` (`builtin:orrery-complication`),
+  `src/lib/prism/celestia/orrery-node-factory.ts`. Selectable/editable in canvas.
+- **Hub transition** (FIX3 / G3) → an **intentional tagged runtime host**
+  (`userData.prismRuntimeHost='hub-transition'`), classified `kind:'runtime-host'` —
+  sanctioned cross-hub runtime behaviour, NOT a hub artifact. Documented in
+  `docs/spec-deviations-prism.md`; the classifier self-test
+  (`__PRISM_NODE_AUTHORSHIP_SELFTEST__`) proves real drift is still caught.
+
+Gate: `node scripts/node-authorship-gate.mjs --strict-orphans` → 0 hard-fail,
+`hardcoded: []`, `runtimeHostLabels: ['hub-transition']`, 178 node-authored all in
+graph. tsc 0-new. prism-criteria-reviewer PASS (7/7 MEET, 0 MUST-FIX). user-advocate
+PLEASED. Zero regression (orrery orbits + scrubs, transitions fire cinematically,
+watch + all hubs intact). Commits `bbbfc551` (W1), `9aca8301` (W2), report (W3).
+Full report: `kid-kode-landing/notes/FIX3-REPORT.md`.

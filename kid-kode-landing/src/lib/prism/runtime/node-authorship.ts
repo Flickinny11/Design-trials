@@ -176,7 +176,11 @@ export function computeSceneAuthorship(
   //      • `prismHardcodedArtifact` (or a NAMED_HARDCODED signature name) → an
   //        accidental hardcoded artifact mounted outside the node map. Its
   //        nodeId === null IS the Law-0 violation the gate exists to surface.
-  //    Runtime hosts are checked FIRST so a host is never mis-flagged as drift.
+  //    Runtime hosts are checked FIRST so a sanctioned host is never mis-flagged
+  //    as drift. (Carrying BOTH tags on one object is not a sanctioned pattern
+  //    and never occurs in this codebase; if it ever did, runtime-host wins by
+  //    this precedence — a deliberate `prismRuntimeHost` tag is an explicit,
+  //    reviewed assertion that the object is infrastructure.)
   const reportedHardcoded = new Set<Object3D>();
   const reportedRuntimeHost = new Set<Object3D>();
   const roots: Object3D[] = [];
