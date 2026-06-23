@@ -242,3 +242,32 @@ A dynamic workflow ran three independent read-only auditors and synthesized one 
 - All visible elements (pane, cubes, face glyphs, engraved labels, tooltips, backdrop) are in
   the `<canvas>`. Zero DOM/Tailwind/CSS-module/`<Html>` UI in the chassis chrome (gate-enforced;
   audit-confirmed).
+
+---
+
+## Independent re-verification (2026-06-23, fresh session)
+
+This run was already executed and committed by the prior session (`ec7ae751` → `21d5a195`,
+"RUN COMPLETE"). A fresh-context session independently re-ran every DONE gate **live** rather
+than trusting the prior report — all green, zero regressions, no source change:
+
+- **no-dom-ui-gate:** PASS, EXIT=0 (`node scripts/no-dom-ui-gate.mjs` — 12 files scanned, pure
+  in-engine).
+- **tsc `--noEmit`:** 9 errors total, **all pre-existing baseline** (GraphScene GLProps + 8 test
+  files missing `THREE` on `NodeContext`); **0 in chassis scope → 0 new.**
+- **Live render** (existing dev server, `/toolbar-chassis?spin=0`, chrome-devtools MCP):
+  `<canvas>` 1600×809, scene probe live (**94 meshes, 1 transmission-glass pane**), DOM
+  `<body>` text length **0** (all in-canvas, no stuck loader), `__PRISM_CHASSIS_SPIN__` /
+  `__PRISM_CHASSIS_HOVER__` dev hooks present.
+- **Console:** **0 errors** (1 benign warning: `THREE.Clock` deprecation).
+- **Git:** chassis source (`src/components/editor/chassis/**`, `src/app/toolbar-chassis/**`)
+  unmodified since the verified commit — the committed state IS the verified state.
+- **Fresh evidence frame:** `notes/verification/toolbar-final/live-recheck-overview.jpeg`
+  (this session's independent capture — confirms the 5 labeled grid sections, jewel-tone color
+  grouping, engraved glass labels, worn cubes, and thick glass all render as documented).
+
+Verdict: the founder's four refinements (worn metal/stone material, a-few-colors-grouped-by-
+function, labeled grid sections, engraved-in-glass labels) are all met and the locked chassis
+invariants are intact. **No further build work was warranted** — redoing complete, founder-
+approved work would only risk regressing the locked chassis. Open items remain the two flagged
+founder-review decisions above (14-vs-~20 buttons; softbox dimming), not defects.
