@@ -355,3 +355,15 @@ Liquid-glass 3D toolbar object renders (isolated R3F WebGL canvas, MeshTransmiss
 
 ## [2026-06-22] PRISM TOOLBAR redesign — RUN COMPLETE
 Liquid-glass 3D toolbar shipped: warping transmission-glass bar + sunk 3D milled-coin buttons with hover-spin physics + 14 bespoke animated 3D icons (engraved subset, tooltips, ADD/BUILD labels). All actions fire. Cold load clean, 0 console errors, tsc 0 new, art-fidelity 16/16, criteria PASS, user-advocate PLEASED, 0 MUST-FIX.
+[20:49] TOOLBAR-SENTINEL: DONE: ORRERY-TOOLBAR COMPLETE (marker + quiet). Tell Claude: check
+[04:31] TOOLBAR2-SENTINEL: ARMED: ORRERY-TOOLBAR2 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch TOOLBAR2-STOP
+[04:31] TOOLBAR2-SENTINEL: launched TOOLBAR2 build agent on claude-opus-4-8 (resume #1)
+[04:34] TOOLBAR2-SENTINEL: launched TOOLBAR2 build agent on claude-opus-4-8 (resume #2)
+[04:36] TOOLBAR2-SENTINEL: launched TOOLBAR2 build agent on claude-opus-4-8 (resume #3)
+[04:38] TOOLBAR2-SENTINEL: TOOLBAR2-STOP seen - exiting (agents left as-is).
+[04:45] TOOLBAR2-SENTINEL: ARMED: ORRERY-TOOLBAR2 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch TOOLBAR2-STOP
+[04:46] TOOLBAR2-SENTINEL: launched TOOLBAR2 build agent on claude-opus-4-8 (resume #1)
+[05:07] TOOLBAR2-SENTINEL: working... (1 build agents live)
+
+## [2026-06-23] TOOLBAR-V2 W1 — generated GLB forms ✅ (pending-reverify)
+REDO against PRISM-EDITOR-CHROME-SPEC. Found a partial prior V2 gen (29 Tripo v3.1 GLBs but ~44MB/1.46M tris each + shell was a hollow ring). Built /glb-lab QA route, triage-rendered: icons premium+colored+on-concept, buttons a coherent machined-metal family, shell WRONG → regenerated as solid liquid-glass rail. Built .assetgen/optimize-glb.mjs (gltf-transform simplify + sharp tex downsize → PLAIN GLB, no decoder wired). Optimized all 29: ~44MB→~0.8MB each, 1.2GB→22MB total. tsc 0-new. Next: W2 mount + behaviors.

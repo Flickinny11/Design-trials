@@ -53,3 +53,4 @@ artifacts/
 
 .claude/worktrees/
 .assetgen/
+.assetgen/node_modules/
