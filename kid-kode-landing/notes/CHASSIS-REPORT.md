@@ -338,3 +338,36 @@ re-laying-out would have regressed the locked, approved chassis, so this run was
   `review-2026-06-23-seethrough.png`, `review-2026-06-23-detail.png`. All 4 refinements visually
   confirmed (worn satin/brushed cubes, 5 jewel-tone sections, labeled grids, in-glass V-groove
   engraving catching light, edge-on see-through).
+
+---
+
+## Re-verify 2026-06-23 (ULTRACODE re-issue — independent fresh-session check, no source change)
+
+Founder re-issued the chassis build prompt (the version written when only `2917a191 CHASSIS w1`
+existed). Audit of git + memory + on-disk source confirmed the run was **already complete and
+founder-approved** (`ec7ae751` w-mat → `21d5a195` w-polish, plus `a9028ccd`/`dcabcae8`/`559054c2`
+re-verifies, all "RUN COMPLETE"). A rebuild was therefore **deliberately not performed** —
+regenerating worn PBR / re-laying-out would regress the locked approved chassis. This run is an
+independent non-destructive re-verification.
+
+- **no-dom-ui-gate:** PASS (exit 0) — 12 files scanned, scope `src/components/editor/chassis` +
+  `src/app/toolbar-chassis`. Pure in-engine (no Tailwind / CSS-module / className / inline-style /
+  drei `<Html>`).
+- **tsc:** 9 total errors = documented baseline exactly, **0** referencing chassis/toolbar-chassis
+  (0-new). The 9 are pre-existing (GraphScene GLProps + 8 test-file NodeContext.THREE).
+- **Cold load** (`lsof -ti tcp:3000 | xargs kill -9`, `rm -rf .next`, fresh `npm run dev`, ready
+  924ms): route `/toolbar-chassis?spin=0` HTTP 200; Chrome-DevTools cold-load probe → 1 canvas
+  (1600×809), `__PRISM_CHASSIS_SCENE__` present, **94 meshes / 1 transmission pane**, verify hooks
+  live (`__PRISM_CHASSIS_SPIN__/HOVER__/CAM__`).
+- **Console:** 0 errors (one benign upstream `THREE.Clock deprecated` warning).
+- **Network:** all 35 requests 200/304, 0 `_next` 404s; all 5 jewel-tone worn PBR sets
+  (emerald/sapphire/bronze/oxblood/gunmetal × albedo/normal/rough/metal/ao) + studio env map +
+  Inter font loaded.
+- **Fresh frames** (`notes/verification/toolbar-final/`): `verify-session-front.png`,
+  `verify-session-seethrough.png` (spin 0.25 edge-on), `verify-session-worn-closeup.png`
+  (CREATE/TRANSFORM brushed-satin grain + engraved labels), `verify-session-engraved.png` (raking
+  oblique, all section labels catching light). All 4 founder refinements + locked chassis visually
+  confirmed intact.
+
+**Verdict:** founder-approved chassis intact, renders cleanly, all gates green. No build work
+warranted.
