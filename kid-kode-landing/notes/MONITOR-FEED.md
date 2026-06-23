@@ -337,3 +337,7 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 
 ## [2026-06-22 19:05] FIX3 W1 — orrery is a node ✅
 The Celestia orrery complication is now a genuine graph node (orr-celestia-orrery → builtin:orrery-complication → celestia/orrery-node-factory.ts), the 2nd live codeRef. JSX sibling removed, gate no longer flags it (only hub-transition remains, → W2). Renders+animates premium in preview-app, editable in canvas (gizmo+Inspector+pos 0/0.35/0.40). tsc 0-new, 0 console errors. Commit pending.
+[19:11] FIX3-SENTINEL: [19:05] W1 DONE — orrery is a node. Created src/lib/prism/celestia/orrery-node-factory.ts (headless createNode port of O
+
+## [2026-06-22 19:14] FIX3 W2 — transition is a tagged runtime host ✅
+The hub transition is now an INTENTIONAL tagged runtime host (userData.prismRuntimeHost='hub-transition'), classified kind 'runtime-host' — sanctioned cross-hub runtime behavior, NOT a hub artifact (documented deviation). The gate flags ZERO accidental drift now (foundation clean — Law 0); a self-test proves real drift WOULD still be caught. Transition fires cinematically on nav (closing→holding→opening→idle, cover→1.0), curtain unchanged. 0 hard-fail, tsc 0-new, 0 console errors. → W3 final verify.

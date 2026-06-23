@@ -1,15 +1,25 @@
 {
   "url": "http://localhost:3000",
-  "strictOrphans": false,
-  "hardcoded": [
+  "strictOrphans": true,
+  "hardcoded": [],
+  "runtimeHosts": [
     {
-      "label": "hardcoded:hub-transition",
+      "label": "runtime-host:hub-transition",
       "nodeId": null,
-      "kind": "hardcoded",
+      "kind": "runtime-host",
       "name": "hub-scene-transition",
       "renderables": 1
     }
   ],
+  "runtimeHostLabels": [
+    "hub-transition"
+  ],
+  "classifierSelfTest": {
+    "live": true,
+    "hardcoded": true,
+    "runtimeHost": true,
+    "node": true
+  },
   "nodeAuthoredCount": 178,
   "emptyNonText": [],
   "emptyText": [
@@ -33,25 +43,25 @@
       "detail": ""
     },
     {
-      "id": "gate.flags-hardcoded",
-      "desc": "gate detects hardcoded (node-less) scene artifacts",
+      "id": "gate.classifier-live",
+      "desc": "classifier discriminates hardcoded vs runtime-host vs node (self-test)",
       "pass": true,
       "warn": false,
-      "detail": "flagged: hub-transition"
+      "detail": "synthetic hardcoded→flagged, runtime-host→sanctioned, node→authored — a real drift WOULD be caught"
     },
     {
-      "id": "gate.no-fresh-drift",
-      "desc": "no UNSANCTIONED hardcoded artifact (fresh Law-0 drift)",
+      "id": "gate.no-accidental-drift",
+      "desc": "ZERO accidental hardcoded artifacts (foundation clean — Law 0)",
       "pass": true,
       "warn": false,
-      "detail": "only the known watch/orrery/transition remain"
+      "detail": "foundation clean — no hardcoded artifact mounted outside the node map"
     },
     {
-      "id": "known.hub-transition",
-      "desc": "known-hardcoded 'hub-transition' flagged (expected until its greenlight)",
+      "id": "runtime-host.hub-transition",
+      "desc": "hub transition classified as an intentional runtime host (not drift)",
       "pass": true,
-      "warn": true,
-      "detail": "flagged — pending G1/G2/G3 node migration"
+      "warn": false,
+      "detail": "runtime hosts: hub-transition — sanctioned cross-hub runtime behaviour, see docs/spec-deviations-prism.md"
     },
     {
       "id": "authored.in-graph",

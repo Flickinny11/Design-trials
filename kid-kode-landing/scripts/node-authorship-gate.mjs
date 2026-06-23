@@ -41,11 +41,13 @@ const STRICT_ORPHANS = argv.includes('--strict-orphans');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
-// FIX2 / G1 — 'configurator-watch' is now a graph node (orr-atelier-watch).
-// FIX3 / G2 — 'orrery-complication' is now a graph node (orr-celestia-orrery).
-// Only the hub-transition remains pending G3 (W2 reclassifies it as a tagged
-// runtime host, not hardcoded drift).
-const EXPECTED_HARDCODED = ['hub-transition'];
+// THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
+//   FIX2 / G1 — 'configurator-watch' → graph node orr-atelier-watch.
+//   FIX3 / G2 — 'orrery-complication' → graph node orr-celestia-orrery.
+//   FIX3 / G3 — 'hub-transition' → an intentional tagged RUNTIME HOST (not a
+//               hub artifact; classified kind 'runtime-host', not drift).
+// ANY hardcoded artifact the gate now flags is unsanctioned Law-0 drift → FAIL.
+const EXPECTED_HARDCODED = [];
 // The 7 former orphans (AUDIT C4 / G5). 6 ambience planes → REMOVED; 1 text node kept+filled.
 const ORPHAN_PLANES_REMOVED = [
   'orr-arrival-dust', 'orr-movement-rings', 'orr-celestia-starfield',
@@ -111,6 +113,7 @@ async function main() {
   page.on('pageerror', (e) => pageErrors.push(e.message));
 
   const unionByLabel = new Map(); // label → entry (hardcoded union)
+  const runtimeHostsByLabel = new Map(); // label → entry (runtime-host union)
   const nodeAuthored = new Map(); // nodeId → max renderables seen
   try {
     await page.goto(URL, { waitUntil: 'domcontentloaded' });
@@ -132,6 +135,9 @@ async function main() {
         if (a.kind === 'hardcoded') {
           const prev = unionByLabel.get(a.label);
           if (!prev || a.renderables > prev.renderables) unionByLabel.set(a.label, a);
+        } else if (a.kind === 'runtime-host') {
+          const prev = runtimeHostsByLabel.get(a.label);
+          if (!prev || a.renderables > prev.renderables) runtimeHostsByLabel.set(a.label, a);
         } else if (a.nodeId) {
           nodeAuthored.set(a.nodeId, Math.max(nodeAuthored.get(a.nodeId) ?? 0, a.renderables));
         }
@@ -166,22 +172,39 @@ async function main() {
 
     const hardcoded = [...unionByLabel.values()];
     const hardLabels = hardcoded.map((h) => h.label.replace(/^hardcoded:/, ''));
+    const runtimeHosts = [...runtimeHostsByLabel.values()];
+    const hostLabels = runtimeHosts.map((h) => h.label.replace(/^runtime-host:/, ''));
 
-    // ── CORE: the gate flags hardcoded artifacts, and FAILS only on UNSANCTIONED
-    //    drift. The 3 known are EXPECTED-known (warn).
-    check('gate.flags-hardcoded', 'gate detects hardcoded (node-less) scene artifacts', hardcoded.length > 0,
-      hardcoded.length ? `flagged: ${hardLabels.join(', ')}` : 'none flagged (cannot prove the gate works)');
+    // ── PROOF-OF-LIFE (self-test): the foundation is now CLEAN, so the real scene
+    //    has ZERO accidental hardcoded artifacts — which means we can no longer
+    //    prove the classifier works by "did it flag any drift?". Instead run the
+    //    classifier over a SYNTHETIC scene carrying one of each tag and assert it
+    //    still discriminates hardcoded (drift) vs runtime-host (sanctioned) vs
+    //    node-authored. If this passes, a real hardcoded artifact WOULD be caught.
+    const self = await page.evaluate(() => window.__PRISM_NODE_AUTHORSHIP_SELFTEST__?.() ?? null);
+    const selfHard = self?.artifacts?.find((a) => a.kind === 'hardcoded' && a.label.includes('__selftest-hardcoded__'));
+    const selfHost = self?.artifacts?.find((a) => a.kind === 'runtime-host' && a.label.includes('__selftest-host__'));
+    const selfNode = self?.artifacts?.find((a) => a.kind === 'node' && a.nodeId === '__selftest-node__');
+    const classifierLive = !!selfHard && !!selfHost && !!selfNode;
+    check('gate.classifier-live', 'classifier discriminates hardcoded vs runtime-host vs node (self-test)', classifierLive,
+      classifierLive
+        ? 'synthetic hardcoded→flagged, runtime-host→sanctioned, node→authored — a real drift WOULD be caught'
+        : `self-test failed: hardcoded=${!!selfHard} runtimeHost=${!!selfHost} node=${!!selfNode}`);
 
+    // ── THE HEADLINE: zero ACCIDENTAL hardcoded drift. EXPECTED_HARDCODED is now
+    //    EMPTY — the watch + orrery are nodes, the transition is a tagged runtime
+    //    host. ANY hardcoded artifact here is unsanctioned Law-0 drift → FAIL.
     const unexpected = hardLabels.filter((l) => !EXPECTED_HARDCODED.includes(l));
-    check('gate.no-fresh-drift', 'no UNSANCTIONED hardcoded artifact (fresh Law-0 drift)', unexpected.length === 0,
-      unexpected.length ? `UNSANCTIONED: ${unexpected.join(', ')}` : 'only the known watch/orrery/transition remain');
+    check('gate.no-accidental-drift', 'ZERO accidental hardcoded artifacts (foundation clean — Law 0)', unexpected.length === 0,
+      unexpected.length ? `UNSANCTIONED hardcoded drift: ${unexpected.join(', ')}` : 'foundation clean — no hardcoded artifact mounted outside the node map');
 
-    for (const l of EXPECTED_HARDCODED) {
-      const seen = hardLabels.includes(l);
-      check(`known.${l}`, `known-hardcoded '${l}' flagged (expected until its greenlight)`, seen,
-        seen ? 'flagged — pending G1/G2/G3 node migration' : 'NOT flagged this run (rig may not have mounted)',
-        /* warn */ seen);
-    }
+    // ── The hub-transition is recognised as an INTENTIONAL tagged runtime host
+    //    (G3), NOT accidental drift. Prove the scan reaches + classifies it.
+    const transitionRecognised = hostLabels.includes('hub-transition');
+    check('runtime-host.hub-transition', 'hub transition classified as an intentional runtime host (not drift)', transitionRecognised,
+      transitionRecognised
+        ? `runtime hosts: ${hostLabels.join(', ')} — sanctioned cross-hub runtime behaviour, see docs/spec-deviations-prism.md`
+        : 'hub-transition NOT seen as a runtime host this run (curtain may not have mounted — it mounts in preview-app)');
 
     // ── Node-authored sanity: every reported authoring nodeId exists in the graph.
     const phantom = [...nodeAuthored.keys()].filter((id) => !byId.has(id));
@@ -220,7 +243,9 @@ async function main() {
 
     writeFileSync(join(outDir, 'node-authorship-gate.json'), JSON.stringify({
       url: URL, strictOrphans: STRICT_ORPHANS,
-      hardcoded, nodeAuthoredCount: nodeAuthored.size,
+      hardcoded, runtimeHosts, runtimeHostLabels: hostLabels,
+      classifierSelfTest: { live: classifierLive, hardcoded: !!selfHard, runtimeHost: !!selfHost, node: !!selfNode },
+      nodeAuthoredCount: nodeAuthored.size,
       emptyNonText, emptyText, unexpectedHardcoded: unexpected,
       orphanPlanesStillPresent: stillPresent, reasonContent: reason?.textSpec?.content ?? null,
       results,

@@ -27,12 +27,17 @@ import type { Object3D } from 'three';
 
 /** One classified top-level scene artifact. */
 export interface AuthorshipEntry {
-  /** Display label: `node:<id>` or `hardcoded:<name>`. */
+  /** Display label: `node:<id>`, `hardcoded:<name>`, or `runtime-host:<name>`. */
   label: string;
-  /** Authoring graph node id, or `null` when the artifact is hardcoded. */
+  /** Authoring graph node id, or `null` when the artifact is not a graph node
+   *  (both `hardcoded` accidental drift AND intentional `runtime-host` infra). */
   nodeId: string | null;
-  /** `'node'` = authored by a graph node; `'hardcoded'` = mounted outside it. */
-  kind: 'node' | 'hardcoded';
+  /** `'node'` = authored by a graph node; `'hardcoded'` = an artifact mounted
+   *  outside the node map (accidental Law-0 drift → the violation the gate
+   *  exists to catch); `'runtime-host'` = an INTENTIONAL, explicitly-tagged
+   *  runtime-behaviour host (e.g. the cross-hub transition) that is sanctioned
+   *  infrastructure, NOT a hub artifact and NOT drift (see prismRuntimeHost). */
+  kind: 'node' | 'hardcoded' | 'runtime-host';
   /** The Object3D's own `.name` (diagnostic). */
   name: string;
   /** Count of renderable descendants (Mesh/Points/Sprite/Line/InstancedMesh).
@@ -46,41 +51,43 @@ export interface AuthorshipReport {
   summary: {
     /** Artifacts produced by a graph node. */
     nodeAuthored: number;
-    /** Artifacts mounted outside the node map (hardcoded). */
+    /** Artifacts mounted outside the node map with NO sanction (accidental
+     *  hardcoded drift). This is the count the gate fails on. */
     hardcoded: number;
+    /** Intentional, explicitly-tagged runtime-behaviour hosts (sanctioned
+     *  infrastructure — e.g. the cross-hub transition). NOT counted as drift. */
+    runtimeHost: number;
     /** Node-authored artifacts that mounted but render nothing (orphan smell). */
     emptyNodeAuthored: number;
     total: number;
   };
 }
 
-/** The three KNOWN hardcoded signature artifacts from the Wave-1 audit, keyed
- *  by the value the gate reports. Until their dedicated greenlight sessions
- *  (G1/G2/G3 in AUDIT-REMEDIATION-PLAN.md) bring them into the graph, the gate
- *  surfaces them as EXPECTED-known drift (warn, not a fresh-drift failure). A
- *  hardcoded artifact NOT in this set is unsanctioned drift → the gate fails.
+/** KNOWN-but-unmigrated hardcoded signature artifacts (EXPECTED-known drift:
+ *  warn, not a fresh-drift failure). A hardcoded artifact NOT in this set is
+ *  unsanctioned drift → the gate fails.
  *
- *  `name` matches: the hub-transition curtain group is named
- *  `'hub-scene-transition'` (HubSceneTransition.tsx) so it is recognised with
- *  ZERO edits to that component. The two declarative rigs are tagged at their
- *  GraphScene mount host via `userData.prismHardcodedArtifact` (their component
- *  files are NOT touched this session — they are the watch/orrery G1/G2 work). */
-// FIX2 / G1 — 'configurator-watch' brought into the graph (node orr-atelier-watch,
-// codeRef 'builtin:atelier-watch'); node-authored, MUST NOT be flagged.
-// FIX3 / G2 — 'orrery-complication' brought into the graph (node orr-celestia-orrery,
-// codeRef 'builtin:orrery-complication'); node-authored, MUST NOT be flagged.
-// Only the hub-transition remains here pending its own greenlight (G3) — and that
-// one is a cross-hub RUNTIME effect, not a hub artifact; W2 reclassifies it as an
-// intentional tagged runtime host (see prismRuntimeHost below), not drift.
-export const EXPECTED_HARDCODED_ARTIFACTS: readonly string[] = [
-  'hub-transition',
-] as const;
+ *  THE FOUNDATION IS NOW CLEAN — this set is EMPTY. The three Wave-1 audit
+ *  artifacts have all been resolved:
+ *    • FIX2 / G1 — configurator watch → graph node `orr-atelier-watch`
+ *      (codeRef 'builtin:atelier-watch'). Node-authored.
+ *    • FIX3 / G2 — orrery complication → graph node `orr-celestia-orrery`
+ *      (codeRef 'builtin:orrery-complication'). Node-authored.
+ *    • FIX3 / G3 — hub transition → an INTENTIONAL tagged RUNTIME HOST. The
+ *      cross-hub curtain is runtime behaviour (a camera-parented, screen-space
+ *      transition orchestrating hub navigation), NOT an artifact pinned to any
+ *      hub's node graph — so node-authorship does not apply. It carries
+ *      `userData.prismRuntimeHost = 'hub-transition'` and is classified
+ *      `kind: 'runtime-host'` (sanctioned infra, not drift). See
+ *      docs/spec-deviations-prism.md. */
+export const EXPECTED_HARDCODED_ARTIFACTS: readonly string[] = [] as const;
 
-/** Object `.name` → canonical hardcoded-artifact label, for signature artifacts
- *  that already carry a stable name (no mount-host tag needed). */
-const NAMED_HARDCODED: Readonly<Record<string, string>> = {
-  'hub-scene-transition': 'hub-transition',
-};
+/** Object `.name` → canonical hardcoded-artifact label. EMPTY — no signature
+ *  artifact is recognised by name anymore (the hub-transition is now an
+ *  explicitly tagged runtime host, recognised by `prismRuntimeHost`, not by a
+ *  brittle name match). Retained as the extension point for any future
+ *  name-only hardcoded detection. */
+const NAMED_HARDCODED: Readonly<Record<string, string>> = {};
 
 interface RenderableLike {
   isMesh?: boolean;
@@ -162,24 +169,50 @@ export function computeSceneAuthorship(
     return false;
   };
 
-  // 2) Hardcoded artifacts — walk the scene (and the camera subtree) for
-  //    objects tagged at their mount host OR carrying a known signature name,
-  //    that are NOT inside a node-authored root. Each is reported with
-  //    nodeId === null: that null IS the violation the gate exists to surface.
+  // 2) Non-node artifacts — walk the scene (and the camera subtree) for objects
+  //    that are NOT inside a node-authored root and carry one of two tags:
+  //      • `prismRuntimeHost` → an INTENTIONAL runtime-behaviour host (sanctioned
+  //        infra; e.g. the camera-parented cross-hub transition). NOT drift.
+  //      • `prismHardcodedArtifact` (or a NAMED_HARDCODED signature name) → an
+  //        accidental hardcoded artifact mounted outside the node map. Its
+  //        nodeId === null IS the Law-0 violation the gate exists to surface.
+  //    Runtime hosts are checked FIRST so a host is never mis-flagged as drift.
   const reportedHardcoded = new Set<Object3D>();
+  const reportedRuntimeHost = new Set<Object3D>();
   const roots: Object3D[] = [];
   if (scene) roots.push(scene);
   if (camera) roots.push(camera);
 
   for (const r of roots) {
     r.traverse((o) => {
-      const ud = o.userData as { prismHardcodedArtifact?: unknown } | undefined;
+      const ud = o.userData as
+        | { prismHardcodedArtifact?: unknown; prismRuntimeHost?: unknown }
+        | undefined;
+      const host = typeof ud?.prismRuntimeHost === 'string' ? ud.prismRuntimeHost : null;
       const tag =
         typeof ud?.prismHardcodedArtifact === 'string' ? ud.prismHardcodedArtifact : null;
       const named = NAMED_HARDCODED[o.name] ?? null;
+      // Cheap early bail: most scene objects carry none of these tags.
+      if (!host && !tag && !named) return;
+      if (insideAuthored(o)) return; // a node legitimately authored it
+
+      // Intentional tagged runtime host — sanctioned, distinct from drift.
+      if (host) {
+        if (reportedRuntimeHost.has(o)) return;
+        reportedRuntimeHost.add(o);
+        artifacts.push({
+          label: `runtime-host:${host}`,
+          nodeId: null,
+          kind: 'runtime-host',
+          name: o.name ?? '',
+          renderables: countRenderables(o),
+        });
+        return;
+      }
+
+      // Accidental hardcoded artifact — the violation.
       const label = tag ?? named;
       if (!label) return;
-      if (insideAuthored(o)) return; // a node legitimately authored it
       if (reportedHardcoded.has(o)) return;
       reportedHardcoded.add(o);
       artifacts.push({
@@ -194,11 +227,13 @@ export function computeSceneAuthorship(
 
   const nodeAuthored = artifacts.filter((a) => a.kind === 'node');
   const hardcoded = artifacts.filter((a) => a.kind === 'hardcoded');
+  const runtimeHost = artifacts.filter((a) => a.kind === 'runtime-host');
   return {
     artifacts,
     summary: {
       nodeAuthored: nodeAuthored.length,
       hardcoded: hardcoded.length,
+      runtimeHost: runtimeHost.length,
       emptyNodeAuthored: nodeAuthored.filter((a) => a.renderables === 0).length,
       total: artifacts.length,
     },

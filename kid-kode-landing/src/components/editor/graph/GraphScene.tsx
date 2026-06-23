@@ -3298,6 +3298,36 @@ function AssembledSceneDiagnostics({ nodes }: { nodes: PrismNode[] }) {
       computeSceneAuthorship(scene, w.__PRISM_EDITOR_NODE_GROUPS__ ?? null, camera);
     return () => { delete w.__PRISM_NODE_AUTHORSHIP__; };
   }, [scene, camera]);
+  // FIX3 / G3 — classifier self-test. Once the foundation is CLEAN (watch +
+  // orrery are nodes, transition is a tagged runtime host), there are zero
+  // accidental hardcoded artifacts left in the real scene — which is the GOAL,
+  // but it means "did the gate flag any hardcoded?" can no longer prove the
+  // classifier still works. This pure, scene-independent probe runs
+  // computeSceneAuthorship over a SYNTHETIC scene carrying one of each tag, so
+  // the gate can assert the classifier still discriminates hardcoded (drift) vs
+  // runtime-host (sanctioned) vs node-authored — regardless of the real scene.
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as {
+      __PRISM_NODE_AUTHORSHIP_SELFTEST__?: () => ReturnType<typeof computeSceneAuthorship>;
+    };
+    w.__PRISM_NODE_AUTHORSHIP_SELFTEST__ = () => {
+      const synthScene = new THREE.Group();
+      const mkContent = () => { const g = new THREE.Group(); g.add(new THREE.Mesh()); return g; };
+      const hard = mkContent();
+      hard.name = 'synthetic-hardcoded';
+      hard.userData.prismHardcodedArtifact = '__selftest-hardcoded__';
+      const host = mkContent();
+      host.name = 'synthetic-host';
+      host.userData.prismRuntimeHost = '__selftest-host__';
+      const authored = mkContent();
+      authored.name = 'synthetic-node';
+      synthScene.add(hard, host, authored);
+      const map = new Map<string, THREE.Object3D>([['__selftest-node__', authored]]);
+      return computeSceneAuthorship(synthScene, map, null);
+    };
+    return () => { delete w.__PRISM_NODE_AUTHORSHIP_SELFTEST__; };
+  }, []);
   // PROD-FINISH — reliable hero on-screen measurement hook. Projects a node's
   // mounted artifact bounding box to NORMALIZED screen space (0..1, y-down to
   // match a screenshot) so the heroes verifier can confirm the product renders

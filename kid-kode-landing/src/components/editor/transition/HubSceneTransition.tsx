@@ -166,6 +166,15 @@ export function HubSceneTransition() {
     if (camera.parent == null) scene.add(camera);
     const group = new THREE.Group();
     group.name = 'hub-scene-transition';
+    // FIX3 / G3 — mark this as an INTENTIONAL runtime host, not a hub artifact.
+    // The cross-hub transition is runtime behaviour (a camera-parented, screen-
+    // space curtain that orchestrates hub navigation), not an artifact pinned to
+    // any hub's node graph — so PRISM-MASTER-SPEC Law 0 ("every artifact is a
+    // node") does not apply. The node-authorship gate classifies this tag as
+    // `kind: 'runtime-host'` (sanctioned infra), NOT accidental hardcoded drift.
+    // See docs/spec-deviations-prism.md. (Replaces the old name-match the gate
+    // used to flag it as known-hardcoded.)
+    group.userData.prismRuntimeHost = 'hub-transition';
     const geo = new THREE.PlaneGeometry(1, 1);
     const mesh = new THREE.Mesh(geo, built.material);
     mesh.frustumCulled = false;
