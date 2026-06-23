@@ -22,9 +22,18 @@ export function StudioEnv() {
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.needsUpdate = true;
     const prev = scene.environment;
+    const prevIntensity = scene.environmentIntensity;
+    const prevRotation = scene.environmentRotation?.clone?.();
     scene.environment = tex;
+    // Calm the studio softbox so its reflection does not blow out the glass over
+    // the engraved labels, and swing/tilt the bright lobe off the label band into a
+    // broad soft satin sheen (premium glass) instead of a hot blob.
+    scene.environmentIntensity = 0.5;
+    if (scene.environmentRotation) scene.environmentRotation.set(0.35, -Math.PI * 0.35, 0);
     return () => {
       scene.environment = prev;
+      scene.environmentIntensity = prevIntensity;
+      if (prevRotation && scene.environmentRotation) scene.environmentRotation.copy(prevRotation);
     };
   }, [scene, tex]);
 

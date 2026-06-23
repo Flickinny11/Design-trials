@@ -82,8 +82,8 @@ function Backdrop() {
     grad.addColorStop(1, '#05070c');
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 512);
-    const bloom = g.createRadialGradient(32, 230, 8, 32, 230, 300);
-    bloom.addColorStop(0, 'rgba(120,150,200,0.30)');
+    const bloom = g.createRadialGradient(32, 300, 8, 32, 300, 300);
+    bloom.addColorStop(0, 'rgba(120,150,200,0.16)');
     bloom.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = bloom;
     g.fillRect(0, 0, 64, 512);
@@ -110,10 +110,10 @@ export function ChassisScene() {
       {/* Premium studio lighting — warm key (casts the soft shadow), cool fill,
           and bright raking rims so the worn brushed grain + micro-scratches catch
           light and the glass edge reads. The environment map supplies reflections. */}
-      <ambientLight intensity={0.5} />
+      <ambientLight intensity={0.55} />
       <directionalLight
-        position={[6, 8, 7]}
-        intensity={2.7}
+        position={[5.5, 12.5, 6]}
+        intensity={2.05}
         color="#fff3e2"
         castShadow
         shadow-mapSize={[2048, 2048]}
@@ -125,11 +125,13 @@ export function ChassisScene() {
         shadow-camera-far={36}
         shadow-bias={-0.0005}
       />
-      <directionalLight position={[-7, -1, 5]} intensity={1.0} color="#bcd6ff" />
+      <directionalLight position={[-7, -1, 5]} intensity={1.05} color="#bcd6ff" />
       {/* low raking light to rake the brushed grain across the cube faces */}
-      <directionalLight position={[0, 0.5, 8]} intensity={0.8} color="#fff7ec" />
-      <spotLight position={[9, 4, -2]} angle={0.9} penumbra={1} intensity={70} distance={48} color="#cfe2ff" />
-      <spotLight position={[-9, -2, -2]} angle={0.9} penumbra={1} intensity={40} distance={48} color="#e6c9ff" />
+      <directionalLight position={[-2, 0.5, 8]} intensity={1.15} color="#fff7ec" />
+      {/* rim spots placed off-center so the glass specular highlight does NOT blow
+          out the middle label band */}
+      <spotLight position={[10, 5, -1]} angle={0.85} penumbra={1} intensity={48} distance={48} color="#cfe2ff" />
+      <spotLight position={[-10, -3, -1]} angle={0.85} penumbra={1} intensity={30} distance={48} color="#e6c9ff" />
 
       <Suspense fallback={null}>
         <GlassPane />

@@ -71,16 +71,16 @@ export function applyWornMaterial(mat: THREE.MeshPhysicalMaterial, maps: WornMap
   mat.map = maps.map;
   mat.color = new THREE.Color('#ffffff');
   mat.normalMap = maps.normalMap;
-  mat.normalScale = new THREE.Vector2(1.15, 1.15); // pronounced brushed grain + scratch relief
+  mat.normalScale = new THREE.Vector2(1.35, 1.35); // pronounced brushed grain + scratch relief (reads head-on)
   mat.roughnessMap = maps.roughnessMap;
   mat.roughness = 1; // map carries the satin [0.26..0.62] range
   mat.metalnessMap = maps.metalnessMap;
   mat.metalness = 1; // map carries the high-alloy range
   mat.aoMap = maps.aoMap; // needs uv1 — set on the geometry in the button
-  mat.aoMapIntensity = 0.9;
-  mat.clearcoat = 0.12; // a whisper of satin clear, not a wet/candy gloss
-  mat.clearcoatRoughness = 0.6;
-  mat.envMapIntensity = 1.1;
+  mat.aoMapIntensity = 1.0;
+  mat.clearcoat = 0.08; // a whisper of satin clear, not a wet/candy gloss
+  mat.clearcoatRoughness = 0.65;
+  mat.envMapIntensity = 0.95;
   // Brushed-metal directional highlight along the grain.
   mat.anisotropy = 0.4;
   mat.anisotropyRotation = Math.PI / 2;

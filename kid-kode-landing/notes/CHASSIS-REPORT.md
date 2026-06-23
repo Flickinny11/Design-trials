@@ -1,47 +1,59 @@
-# PRISM TOOLBAR CHASSIS — founder-refinement run report
+# PRISM TOOLBAR CHASSIS — founder-refinement run report (final)
 
 **Route:** `/toolbar-chassis` (isolated R3F WebGL `<Canvas>`, the proven Glb3DPreview
 idiom — never touches the unified `three/webgpu` graph scene). The production toolbar
 was NOT modified. Branch `prism-editor-build`.
 
-Built on the committed foundation (`AUTO-CKPT: CHASSIS w1`) — the locked chassis is
-kept exactly: thick extruded-rounded-rect glass pane with real thickness, a milled
-rounded-rect cutout per button, rounded-cornered cubes seated in the cutouts, hover
-spin (end-over-end on local X, easeInOutCubic) with see-through, `MeshPhysicalMaterial`
-transmission glass + real studio environment map, AgX tone mapping, sRGB, soft shadows,
-editorial dark backdrop.
+Built on the committed foundation (`AUTO-CKPT: CHASSIS w1` → `w-mat` → `w-layout` →
+`w-engrave` → `w-verify`). The locked chassis is kept exactly: thick extruded-rounded-rect
+glass pane with real thickness, a milled rounded-rect cutout per button, rounded-cornered
+cubes seated in the cutouts, hover spin (end-over-end on local X, easeInOutCubic) with
+see-through, `MeshPhysicalMaterial` transmission glass + real studio environment map, AgX
+tone mapping, sRGB, soft shadows, editorial dark backdrop.
 
-This run applied the founder's four refinements on top.
+This run **resumed an in-flight polish pass** that the previous run left uncommitted, then
+re-verified the whole chassis against the founder's four refinements with fresh evidence
+and a fresh-context multi-agent audit. The polish pass directly answers this report's own
+earlier "honest flags": it de-blows-out the studio softbox over the label band, recesses
+the engraving *into* the glass body (frozen-in-glass instead of a white sticker), reduces
+gloss on the cubes (further from plastic), and de-figuratives the face glyphs.
 
 ---
 
 ## 1. Worn material (Iron-Man-armor finish) — refinement #1
 
-The cubes are now **real worn metal** via a full generated PBR set, applied in the
-metallic workflow — NOT a glossy plastic shader.
+The cubes are **real worn metal** via a full generated PBR set, applied in the metallic
+workflow — NOT a glossy plastic shader.
 
-- **Source plates:** FLUX.2 [pro] (Replicate), prompted for *seamless allover worn
-  brushed metal* — dense criss-cross micro-scratches, fine brushed grain, satin sheen,
-  subtle patina, edge wear — explicitly **no bolts / no rivets / no panel seams** (the
-  first pass produced gorgeous but non-tileable "hero panels" whose clean centres mapped
-  onto the small cube faces; regenerated as a uniform allover finish).
+- **Source plates:** FLUX.2 [pro] (Replicate), prompted for *seamless allover worn brushed
+  metal* — dense criss-cross micro-scratches, fine brushed grain, satin sheen, subtle
+  patina, edge wear — explicitly **no bolts / no rivets / no panel seams** (a first pass
+  produced non-tileable "hero panels" whose clean centres mapped onto the small cube faces;
+  regenerated as a uniform allover finish).
 - **Derivation:** `.assetgen/derive-chassis-worn.mjs` (sharp). Bakes the exact section
   jewel-tone into the albedo (`tint · (0.5 + 0.7·luminance)` so the worn structure
-  modulates brightness), then derives a tangent-space **normal** (brushed-grain +
-  scratch relief), a satin **roughness** (`[0.26..0.62]`, bright→glossier), a high
-  **metalness** (`[0.80..1.0]` refined alloy), and a faint **AO**.
-- **Material** (`materials.ts` → `applyWornMaterial`): metallic workflow, `metalnessMap`
-  + `roughnessMap` (so the satin range reads), `normalScale 1.15`, `aoMap` (uv1 mirrored
-  onto the RoundedBox geometry), thin worn clearcoat (`0.12 / 0.6` — a whisper of satin,
-  not wet candy), faint anisotropy `0.4` along the grain, `envMapIntensity 1.1`. Maps use
-  `RepeatWrapping ×1.5` so each small face shows dense grain.
-- **Lit so the texture shows:** added a low front-raking light to rake the brushed grain
-  across the cube faces, alongside the warm key / cool fill / spot rims.
+  modulates brightness), then derives a tangent-space **normal** (brushed-grain + scratch
+  relief), a satin **roughness** (`[0.26..0.62]`, bright→glossier), a high **metalness**
+  (`[0.80..1.0]` refined alloy), and a faint **AO**. The polish pass re-baked the 5 albedos
+  (smaller, cleaner; `.bak-20260623` copies retained).
+- **Material** (`materials.ts → applyWornMaterial`, metallic workflow): `map`=albedo (sRGB),
+  `normalMap` `normalScale 1.35` (pronounced brushed grain + scratch relief, reads head-on),
+  `roughnessMap` (`roughness=1`, the map carries the satin range), `metalnessMap`
+  (`metalness=1`, the map carries the alloy range), `aoMap` `aoMapIntensity 1.0` (uv1
+  mirrored onto the RoundedBox geometry), thin worn clearcoat `0.08 / 0.65` (a whisper of
+  satin, not wet candy), faint `anisotropy 0.4` @ `π/2` along the grain, `envMapIntensity
+  0.95`. Maps use `RepeatWrapping ×1.5` so each small face shows dense grain.
+  *Polish delta vs the prior pass: clearcoat 0.12→0.08, clearcoatRoughness 0.6→0.65,
+  envMapIntensity 1.1→0.95, normalScale 1.15→1.35, aoMapIntensity 0.9→1.0 — every change
+  moves further from glossy plastic toward worn alloy.*
+- **Lit so the texture shows:** warm key + cool fill + a low front-raking light rake the
+  brushed grain across the cube faces; the studio env supplies the reflections.
 
-Evidence: `final-02-worn-closeup.jpg` (aged-bronze cube — brushed grain + patina +
-engraved glyph), `final-04-engraved-labels.jpg` (bronze cubes catching light).
+Evidence: `final-02-worn-closeup.jpg` (aged-bronze SCENE cubes — brushed grain + scratches
++ patina + engraved glyphs + glass-cutout refraction), `final-03b-spin-edgeon.jpg`,
+`final-05-tooltip.jpg` (oxblood worn grain).
 
-### Generated worn-PBR maps (5 sets × 5 maps = 25; 512² PNG, 7.1 MB total)
+### Generated worn-PBR maps (5 sets × 5 maps = 25; 512² PNG)
 Path: `kid-kode-landing/public/prism-mock/editor/textures/chassis-worn/`
 
 | Section key | albedo | normal | rough | metal | ao |
@@ -54,20 +66,23 @@ Path: `kid-kode-landing/public/prism-mock/editor/textures/chassis-worn/`
 
 Generators (in the gitignored `.assetgen/` workspace, where the keys live):
 `gen-chassis-worn.sh` (parallel FLUX.2) → `derive-chassis-worn.mjs` (tint-bake + derive).
+A stone family (carrara / malachite / onyx, albedo+normal+rough) was also generated and is
+staged under `…/textures/chassis/` for a future variant; the shipped chassis uses the worn
+metals.
 
 ---
 
 ## 2 + 3. A few rich colors, grouped by function, in labeled grid sections — refinements #2, #3
 
 The **real canvas-editor toolbar** (`src/components/editor/overlays/CanvasToolbar.tsx`)
-exposes **14 top-level functions**. All 14 are grouped into **5 logical categories**, each
-with **ONE** curated jewel-tone-metallic color that tints its worn-alloy plate. (The real
-toolbar has 14 top-level functions, not ~20 — every one is represented faithfully rather
-than padded with invented buttons.)
+exposes **exactly 14 top-level functions** — its canonical `ToolGroupId` union + `GROUPS`
+array (verified by a fresh-context audit; see Audit below). All 14 are grouped into **5
+logical categories**, each with **ONE** curated jewel-tone-metallic color that tints its
+worn-alloy plate.
 
-| Section (engraved label) | Color | Functions (grid) |
+| Section (engraved label) | Color | Functions (grid layout) |
 |---|---|---|
-| **CREATE**    | deep emerald `#2f9e74`        | Add · Elements · Image · 3D Object · Text (3×2, 5) |
+| **CREATE**    | deep emerald `#2f9e74`        | Add · Elements · Image · 3D Object · Text (3×2, last row centered) |
 | **TRANSFORM** | deep sapphire `#3f6fd6`       | Transform · Selection (1×2) |
 | **SCENE**     | aged bronze/amber `#b07a36`   | Background · Lighting (1×2) |
 | **LOGIC**     | deep maroon/oxblood `#9c3447` | Prompt Edit · Change Artifact · Animation · Function (2×2) |
@@ -76,9 +91,13 @@ than padded with invented buttons.)
 The pane is laid out left→right as five labeled grid sections (rows × columns per section,
 short sections vertically centered in a common grid band), sized to fit cleanly
 (`chassis-config.ts → buildLayout()` computes every cutout + label position and the pane
-dimensions; pane ≈ 13.5 × 3.55 world units). Each cube also carries a small **abstract
-engraved face glyph** (built from primitive bars/rings/dots — no emoji / Lucide / icon
-font) so each function has its own identity.
+dimensions; pane ≈ 13.5 × 3.55 world units). Each cube carries a small **abstract engraved
+face glyph** (built from primitive bars/rings/dots — no emoji / Lucide / icon font) so each
+function has its own identity. The polish pass made the marks bolder (`GS 0.13`, `TH
+0.018`), gave them a polished-dark metallic inlay (`metalness 0.45`) so they read on the
+dark oxblood/gunmetal cubes too, fixed a latent dot-orientation bug (round caps now face the
+camera), and replaced two potentially face-reading marks (Background → landscape, Function →
+node-graph, Lighting → sun-with-rays) so no glyph reads as a face.
 
 Evidence: `final-01-overview.jpg`.
 
@@ -87,44 +106,54 @@ Evidence: `final-01-overview.jpg`.
 ## 4. Section labels engraved into the glass — refinement #4
 
 Each section name is **engraved into the glass panel itself**, entirely in-engine
-(`EngravedLabel.tsx`, Troika SDF text via drei `<Text>` — **NOT DOM, NOT drei `<Html>`,
-NOT an overlay**). Technique:
+(`EngravedLabel.tsx`, Troika SDF text via drei `<Text>` — **NOT DOM, NOT drei `<Html>`, NOT
+an overlay**). Two things make it read as engraved glass rather than a white sticker:
 
-- The glyphs render **opaque + alpha-tested** (the key fix: *transparent* text behind the
-  transmission pane is not captured by the glass's transmission pass and renders invisibly;
-  opaque alpha-tested glyphs are captured and read).
-- Recessed-engraving look: a **dark groove-shadow** copy offset up-and-deeper (the shadowed
-  top wall of a groove lit from above) behind a **bright frosted etch** copy offset down and
-  just proud of the front face (the lit bottom wall) — so the type reads as cut into the
-  glass and **catches light**. Local font `/fonts/Inter-Variable.ttf`, letterspaced caps.
+1. **Recessed into the glass body.** The label group sits behind the front glass face
+   (`BASE_Z = FRONT_Z − 0.07`), so the thin front layer of the transmission pane
+   refracts/frosts over it — the type looks frozen *inside* the glass, with real depth. (The
+   prior pass sat the type proud of the front face; the polish recessed it.)
+2. **A directional V-groove** from three stacked copies: a dark **shadow** wall offset up &
+   deepest (`#04060b`), a cool **frosted-glass** fill (steel `#88a0b8`, NOT white — etched
+   glass catching ambient), and a bright **highlight** rim offset down & proud (`#eef5fd`).
+   Together they catch light like a real intaglio engraving.
 
-Evidence: `final-01-overview.jpg`, `final-04-engraved-labels.jpg`.
+All copies render **opaque + alpha-tested** (`alphaTest 0.3`): *transparent* text behind the
+transmission pane is not captured by the glass's transmission pass and renders invisibly;
+opaque alpha-tested glyphs are captured and read. The labels sit in the solid `LABEL_BAND`
+above each grid (no cutout there), so the pane genuinely refracts them. Local font
+`/fonts/Inter-Variable.ttf`, letterspaced caps.
+
+Evidence: `final-04-engraved-labels.jpg` (TRANSFORM / SCENE / LOGIC / OUTPUT reading as
+intaglio cut into the glass), `final-04b-engraved-detail.jpg` (raking close detail),
+`final-01-overview.jpg`.
 
 ### Mechanic + tooltips (kept/added)
-- **Hover spin + see-through** preserved across all 14 cubes (`CubeButton.tsx`): on hover the
-  cube eases through whole turns (easeInOutCubic, ~3.5→4 turns, landing front-forward so the
-  face glyph stays upright) and the gap between the small cube and its larger cutout reveals
-  the backdrop. Dev hooks `__PRISM_CHASSIS_SPIN__(0..1|null)` / `__PRISM_CHASSIS_HOVER__(id)`
-  drive deterministic capture. Evidence: `final-03-spin-seethrough.jpg`.
+- **Hover spin + see-through** preserved across all 14 cubes (`CubeButton.tsx`, untouched by
+  the polish): on hover the cube eases through whole turns (easeInOutCubic, lands
+  front-forward so the face glyph stays upright) and the gap between the small cube and its
+  larger cutout reveals the backdrop. Dev hooks `__PRISM_CHASSIS_SPIN__(0..1|null)` /
+  `__PRISM_CHASSIS_HOVER__(id)` drive deterministic capture. Evidence:
+  `final-03-spin-seethrough.jpg`, `final-03b-spin-edgeon.jpg`.
 - **In-canvas hover tooltip** (`Tooltip.tsx`): Troika text on a dark rounded plate,
-  billboarded to face the camera, floating in front of the glass above the cube — fully
-  in-engine. Evidence: `final-05-tooltip.jpg`.
+  billboarded to face the camera, floating in front of the glass — fully in-engine.
+  Evidence: `final-05-tooltip.jpg` ("Animation").
 
 ---
 
 ## The gate — `scripts/no-dom-ui-gate.mjs` (npm: `gate:no-dom-ui`)
 
-Scans the editor-chrome chassis surface and FAILS (non-zero) on any Tailwind class /
-styling `className` / inline `style={` / `*.module.css` import / `tailwindcss` import /
-drei `<Html>` import-or-usage, plus `@tailwind`/`@apply` directives or class selectors in
-any CSS in scope. Prose comments are stripped before scanning so mentions like "NOT drei
-`<Html>`" don't false-trip.
+Scans the editor-chrome chassis surface and FAILS (non-zero) on any Tailwind class / styling
+`className` / inline `style={` / `*.module.css` import / `tailwindcss` import / drei `<Html>`
+import-or-usage, plus `@tailwind`/`@apply` directives or class selectors in any CSS in scope.
+Prose comments are stripped before scanning so mentions like "NOT drei `<Html>`" don't
+false-trip.
 
-**Coverage:** the toolbar-chassis editor chrome —
-`src/components/editor/chassis/**` + `src/app/toolbar-chassis/**`. Landing/marketing pages
-and the legacy compact/mobile DOM dock are deliberately out of scope. The single permitted
-stylesheet is the route's global stage-sizer (`chassis.css`), which sizes the WebGL mount
-via element/attribute selectors only (no class selectors, no Tailwind, no UI).
+**Coverage:** the toolbar-chassis editor chrome — `src/components/editor/chassis/**` +
+`src/app/toolbar-chassis/**`. Landing/marketing pages and the legacy compact/mobile DOM dock
+are deliberately out of scope. The single permitted stylesheet is the route's global
+stage-sizer (`chassis.css`), which sizes the WebGL mount via element/attribute selectors only
+(no class selectors, no Tailwind, no UI).
 
 ```
 [no-dom-ui-gate] scope: src/components/editor/chassis, src/app/toolbar-chassis
@@ -134,41 +163,82 @@ via element/attribute selectors only (no class selectors, no Tailwind, no UI).
 
 ---
 
+## Fresh-context audit (3 parallel agents, read-only)
+
+A dynamic workflow ran three independent read-only auditors and synthesized one verdict.
+**Zero MUST-FIX findings.**
+
+- **Function grouping — PASS.** The real toolbar has **exactly 14** top-level functions
+  (`ToolGroupId` union L134–148 + `GROUPS` array L158–178, rendered identically by the
+  desktop `LiquidGlassToolbar` and the compact dock). The chassis represents **all 14** with
+  **0 missing** and **0 fabricated** (ids/labels/glyphs line up 1:1). The founder's "~20"
+  conflates top-level groups (14) with second-level **flyout sub-actions** (Move/Rotate/Scale,
+  World/Local, Marquee/Group/Lock, add/remove-light, Rebuild/Version-history, …) that live
+  *inside* the 14 groups — correctly omitted from a top-level enumeration.
+- **Gate coverage — PASS.** The chassis chrome is genuinely pure in-engine; the gate's PASS
+  is correct. The one `document.createElement('canvas')` (ChassisScene backdrop) bakes a
+  `CanvasTexture` — texture-baking, not DOM UI. `chassis.css` is stage-sizing only. Noted
+  (NOTE, not fix): the regex has latent blind spots (`appendChild`/`innerHTML`/`createPortal`/
+  imperative `.style.*`) that **no in-scope code exploits today** — candidates to harden the
+  gate later.
+- **Polish-pass regression — PASS.** All 4 refinements met & **strengthened**; all 4 locked
+  invariants intact (the files carrying invariant logic — `chassis-config.ts`,
+  `CubeButton.tsx`, `page.tsx` — were untouched by the polish). The polish fixed a latent
+  glyph-dot orientation bug and reduced gloss; no regression to see-through, transmission, or
+  label-capture.
+
+---
+
 ## Verification (founder review = the judge)
 
-- **Cold-load gate** (fresh `next dev`, `.next` cleared) via chrome-devtools MCP at
-  `/toolbar-chassis?spin=0`: all 38 requests **200/304 — zero `_next` 404s** (font + 25
-  worn textures + studio env all loaded); **0 console errors**; `<canvas>` present
-  (1512×809); scene probe: 78 meshes, 1 transmission-glass mesh, 14 worn cubes, 10
-  engraved-label meshes; **0 DOM text in `<body>`** (no stuck loader, everything in-canvas).
+- **Cold-load gate** (fresh `next dev`, `.next` cleared, `unset NODE_ENV`) via chrome-devtools
+  MCP at `/toolbar-chassis?spin=0`: **51 requests, all 200/304 — zero `_next` 404s** (font +
+  studio env + all 25 worn textures + Inter font + 14 Troika SDF glyph-atlas blobs all
+  loaded); **0 console errors** (2 benign warnings only: `THREE.Clock` deprecation;
+  `PCFSoftShadowMap` auto-fallback to `PCFShadowMap`); `<canvas>` present (1600×809); scene
+  probe live (94 meshes, 1 transmission-glass pane); **DOM `<body>` text length = 0** → no
+  stuck loader, everything in-canvas.
 - **no-dom-ui-gate:** PASS (output above).
-- **tsc:** `tsc --noEmit` → 9 total errors, **all pre-existing baseline** (GraphScene GLProps
-  + 8 test files missing `THREE` on `NodeContext`); **0 in chassis scope → 0 new**.
-- **Frames** (`notes/verification/toolbar-final/`, JPEG ≤1300px):
-  - `final-01-overview.jpg` — full toolbar: 5 labeled grid sections, grouped colors,
-    engraved labels, worn cubes, thick glass.
-  - `final-02-worn-closeup.jpg` — worn aged-bronze cube hero close-up (brushed grain +
-    patina + engraved glyph + glass-cutout refraction).
-  - `final-03-spin-seethrough.jpg` — emerald cubes mid-spin, tilted, see-through gaps.
-  - `final-04-engraved-labels.jpg` — engraved labels catching light (angled).
-  - `final-05-tooltip.jpg` — in-canvas hover tooltip ("Animation").
+- **tsc:** `tsc --noEmit` → **9 total errors, all pre-existing baseline** (GraphScene GLProps
+  + 8 test files missing `THREE` on `NodeContext`); **0 in chassis scope → 0 new.**
+- **Frames** (`notes/verification/toolbar-final/`, JPEG ≤1300px, recaptured against the
+  polished state):
+  - `final-01-overview.jpg` — full toolbar: 5 labeled grid sections, grouped jewel-tone
+    colors, engraved labels, worn cubes, thick glass.
+  - `final-02-worn-closeup.jpg` — worn aged-bronze cubes (brushed grain + scratches + patina +
+    engraved glyphs + glass-cutout refraction).
+  - `final-03-spin-seethrough.jpg` — the emerald CREATE section mid-spin, see-through gaps to
+    the backdrop below each tilted cube.
+  - `final-03b-spin-edgeon.jpg` — near edge-on detail: worn grain + maximal see-through.
+  - `final-04-engraved-labels.jpg` — TRANSFORM/SCENE/LOGIC/OUTPUT engraved into the glass,
+    catching light (clean oblique).
+  - `final-04b-engraved-detail.jpg` — raking intaglio detail (TRANSFORM/SCENE).
+  - `final-05-tooltip.jpg` — in-canvas hover tooltip ("Animation") over the oxblood LOGIC cubes.
 
 ---
 
 ## Honest flags
 
-- **Function count:** the real toolbar has **14** top-level functions, not ~20. All 14 are
-  represented faithfully; no fabricated buttons were added to hit a round number. CREATE is a
-  5-cube section laid out as a 3×2 grid (last row centered).
-- **See-through is inherently the cutout margin**, not a full-hole reveal: the locked form is a
-  *cube* (always ≥ its side in both screen axes), so as it spins you see the backdrop through
-  the gap between the cube and its larger cutout, most at face-on and least near the diagonal.
-  The drama is the motion; the still frame at ~45° shows the tilt + the gaps.
-- **Studio softbox hotspot:** the real environment map reflects a bright softbox that can wash
-  the centre labels slightly head-on (`final-01`); it reads cleanly from any off-axis angle
-  (`final-04`). Kept because it's the approved photoreal studio look; easy to dim later.
+- **Function count:** the real toolbar has **14** top-level functions, not ~20 (audit-verified
+  against `ToolGroupId`/`GROUPS`). All 14 are represented faithfully; no fabricated buttons.
+  The extra ~6 the founder may picture are flyout sub-actions nested inside the 14 groups. If
+  the founder wants those surfaced as their own cubes (toward ~20), that is a deliberate
+  content decision — say the word and the sections expand.
+- **Studio softbox hotspot:** the real environment map reflects a bright softbox. The polish
+  dimmed it (`environmentIntensity 0.5`), tilted the lobe off-band (`environmentRotation`),
+  and moved the rim spots off-center — the label band reads cleanly head-on
+  (`final-01`) and from the left oblique (`final-04`). At one specific right-oblique angle the
+  bloom still sits over the CREATE label (`final-04b`); kept because it's the approved photoreal
+  studio look and reads cleanly from every other angle. Trivially dimmable further on request.
+- **See-through is the cutout margin**, not a full-hole reveal: the locked form is a *cube*
+  (always ≥ its side in screen-space), so as it spins you see the backdrop through the gap
+  between the cube and its larger cutout — most near edge-on (`final-03b`), least near the
+  diagonal. The drama is the motion; the stills show the tilt + the gaps.
 - **Material reads worn at close/medium range;** at full-overview distance the small cubes read
-  as solid jewel-tone alloy (the grain is sub-pixel) — expected, and why the worn-material
-  close-up is part of the review set.
-- All visible elements (pane, cubes, face glyphs, engraved labels, tooltips) are in the
-  `<canvas>`. Zero DOM/Tailwind/CSS-module/`<Html>` UI in the chassis chrome (gate-enforced).
+  as solid jewel-tone alloy (the grain is sub-pixel) — expected, and why the worn close-up is
+  part of the review set.
+- **Spin lands on 4 whole turns** (`round(3.5)`) so the cube rests front-face-forward with the
+  glyph upright — within the spec's "~3.5 turns" tolerance; intentional.
+- All visible elements (pane, cubes, face glyphs, engraved labels, tooltips, backdrop) are in
+  the `<canvas>`. Zero DOM/Tailwind/CSS-module/`<Html>` UI in the chassis chrome (gate-enforced;
+  audit-confirmed).

@@ -68,11 +68,11 @@ export function GlassPane() {
         roughness={0.05}
         metalness={0}
         clearcoat={1}
-        clearcoatRoughness={0.05}
+        clearcoatRoughness={0.17}
         attenuationColor={'#dbe8f2'}
         attenuationDistance={1.8}
-        envMapIntensity={1.5}
-        specularIntensity={1}
+        envMapIntensity={1.05}
+        specularIntensity={0.7}
         transparent
       />
     </mesh>
