@@ -57,9 +57,11 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
     c.height = 256;
     const g = c.getContext('2d')!;
     const grad = g.createLinearGradient(0, 0, 0, 256);
-    grad.addColorStop(0.0, '#2b4a78');
-    grad.addColorStop(0.5, '#16243d');
-    grad.addColorStop(1.0, '#3a2c66');
+    // DE-MURK (TBITER F1): brighter internal core so the body holds LIGHT, not a
+    // dark navy gradient that the transmission compounds into murk.
+    grad.addColorStop(0.0, '#5d8cc6');
+    grad.addColorStop(0.5, '#37527e');
+    grad.addColorStop(1.0, '#6a5aa8');
     g.fillStyle = grad;
     g.fillRect(0, 0, 8, 256);
     const t = new THREE.CanvasTexture(c);
@@ -148,26 +150,30 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
         <MeshTransmissionMaterial
           ref={matRef as never}
           transmission={1}
-          thickness={1.1}
-          roughness={0.08}
-          ior={1.42}
-          chromaticAberration={0.015}
-          anisotropy={0.18}
+          // DE-MURK (TBITER F1): thinner body + far longer attenuationDistance so
+          // light is barely absorbed crossing the glass → CLEAR, not dark.
+          thickness={0.8}
+          roughness={0.06}
+          ior={1.4}
+          chromaticAberration={0.014}
+          anisotropy={0.16}
           distortion={0.04}
           distortionScale={0.3}
           temporalDistortion={0.03}
           attenuationColor={GLASS_ATTENUATION}
-          attenuationDistance={2.8}
+          attenuationDistance={6.5}
           color={GLASS_TINT}
-          envMapIntensity={2.2}
+          envMapIntensity={3.0}
           clearcoat={1}
-          clearcoatRoughness={0.08}
+          clearcoatRoughness={0.06}
           // soap-film iridescence on the glass (MeshPhysicalMaterial passthrough)
-          iridescence={0.5}
+          // — kept as real liquid-glass character but dialled back from the
+          // oil-slick level so it no longer tints the whole rail navy.
+          iridescence={0.3}
           iridescenceIOR={1.3}
-          iridescenceThicknessRange={[140, 680]}
+          iridescenceThicknessRange={[110, 460]}
           backside
-          backsideThickness={0.8}
+          backsideThickness={0.6}
           samples={10}
           resolution={1024}
         />

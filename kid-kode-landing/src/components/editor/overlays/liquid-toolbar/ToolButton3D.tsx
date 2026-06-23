@@ -57,7 +57,9 @@ function CoinGlb({ id, accent, lit }: { id: string; accent: string; lit: boolean
   }, [prepared.materials, accent]);
   useFrame((_, dt) => {
     const k = 1 - Math.pow(0.0009, Math.min(dt, 0.05));
-    const target = lit ? 0.28 : 0.04; // subtle accent glow when lit (keeps metal)
+    // DE-MURK (TBITER F1): a small accent-glow floor so the coins are never pure
+    // black behind the glass; brighter when lit. Still reads as metal.
+    const target = lit ? 0.34 : 0.12;
     for (const m of prepared.materials) m.emissiveIntensity += (target - m.emissiveIntensity) * k;
   });
   return <primitive object={prepared.object} />;

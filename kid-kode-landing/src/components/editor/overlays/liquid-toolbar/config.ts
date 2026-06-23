@@ -64,7 +64,14 @@ export function accentFor(id: string): string {
 }
 
 // Glass body tints (cool, soap-film leaning — DESIGN-REFERENCES soap-scum look).
-export const GLASS_TINT = '#cfe6ff';
-export const GLASS_ATTENUATION = '#2a5b7a';
-export const BACKDROP_TOP = '#141d2e';
-export const BACKDROP_BOT = '#0a0e18';
+// DE-MURK (TBITER F1): the glass was reading as a dark navy oil-slick that
+// swallowed the coins+icons. The attenuation colour is what light *loses* as it
+// passes through the body — a dark teal there darkens everything behind/inside
+// the glass. Lifted to a bright clear cyan (with a longer attenuationDistance in
+// the material) so the rail reads as CLEAR liquid glass, still volumetric and
+// refractive, but no longer murky. The backdrop is lifted off near-black so the
+// refracted body glows with light instead of reading as a black strip.
+export const GLASS_TINT = '#dcf1ff';
+export const GLASS_ATTENUATION = '#9fd0ee';
+export const BACKDROP_TOP = '#33476b';
+export const BACKDROP_BOT = '#161f33';

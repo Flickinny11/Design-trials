@@ -31,7 +31,8 @@ export function IconGlb({
   accent?: string;
   engraved?: boolean;
 }) {
-  const target = engraved ? ICON_S * 1.15 : ICON_S * 1.6;
+  // DE-MURK (TBITER F1): bigger on-face icon so it reads at rail scale (~100px).
+  const target = engraved ? ICON_S * 1.25 : ICON_S * 1.78;
   const prepared = useToolGlb(iconUrl(id), target, 'none');
   const { hovered, active } = useIconState();
   const grp = useRef<THREE.Group>(null);
@@ -55,9 +56,11 @@ export function IconGlb({
         m.emissiveIntensity = 0.22; // faint glow so the engraving always reads
       } else {
         // Self-illuminate with the icon's own baked colors → vivid + premium.
+        // DE-MURK (TBITER F1): higher emissive floor so the colours pop through
+        // the glass and read clearly at rail scale, even at rest.
         m.emissive = new THREE.Color(0xffffff);
         if ((m as THREE.MeshStandardMaterial).map) m.emissiveMap = (m as THREE.MeshStandardMaterial).map;
-        m.emissiveIntensity = 0.16;
+        m.emissiveIntensity = 0.42;
         m.toneMapped = true;
       }
       m.needsUpdate = true;
@@ -86,7 +89,8 @@ export function IconGlb({
       o.rotation.x = Math.sin(t * 0.45 + 0.6) * 0.12;
       const targetS = lit ? 1.12 : 1.0;
       o.scale.setScalar(o.scale.x + (targetS - o.scale.x) * k);
-      const ei = lit ? (hovered ? 0.55 : 0.32) : 0.16;
+      // DE-MURK (TBITER F1): brighter rest + hover emissive so icons stay legible.
+      const ei = lit ? (hovered ? 0.85 : 0.6) : 0.42;
       for (const m of prepared.materials) m.emissiveIntensity += (ei - m.emissiveIntensity) * k;
     }
   });

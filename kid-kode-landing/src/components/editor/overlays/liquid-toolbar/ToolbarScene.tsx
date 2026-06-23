@@ -124,11 +124,14 @@ export function ToolbarScene({
       <CameraFit barH={barH} />
 
       {/* Studio lighting — a warm key, cool fill, and a bright rim that rakes
-          the glass edge so the silhouette and refraction read crisply. */}
-      <ambientLight intensity={0.6} />
+          the glass edge so the silhouette and refraction read crisply. DE-MURK
+          (TBITER F1): brightened across the board + a dedicated front coin-light
+          so the sunk medallions + their icons catch real highlights and read at
+          rail scale instead of sitting in shadow behind dark glass. */}
+      <ambientLight intensity={0.95} />
       <directionalLight
         position={[4, 6, 8]}
-        intensity={2.4}
+        intensity={3.0}
         color="#fff3e0"
         castShadow
         shadow-mapSize={[1024, 1024]}
@@ -140,8 +143,11 @@ export function ToolbarScene({
         shadow-camera-far={40}
         shadow-bias={-0.0006}
       />
-      <directionalLight position={[-5, -2, 4]} intensity={1.1} color="#9fc0ff" />
-      <pointLight position={[0, 0, 6]} intensity={22} distance={26} color="#cfe4ff" />
+      <directionalLight position={[-5, -2, 4]} intensity={1.5} color="#bcd6ff" />
+      <pointLight position={[0, 0, 6]} intensity={30} distance={26} color="#e2eeff" />
+      {/* front coin-light — a soft fill close to the glass front face that lifts
+          the medallions + icons out of the glass body (kills the murk read). */}
+      <pointLight position={[0, 0, 3.2]} intensity={16} distance={14} color="#ffffff" />
       {/* raking rim — grazes the glass edge from behind-right so the volumetric
           silhouette and refraction read as a real 3D object */}
       <spotLight
