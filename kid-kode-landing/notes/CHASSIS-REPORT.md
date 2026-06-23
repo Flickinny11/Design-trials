@@ -271,3 +271,50 @@ function, labeled grid sections, engraved-in-glass labels) are all met and the l
 invariants are intact. **No further build work was warranted** — redoing complete, founder-
 approved work would only risk regressing the locked chassis. Open items remain the two flagged
 founder-review decisions above (14-vs-~20 buttons; softbox dimming), not defects.
+
+
+---
+
+## Independent re-verify — 2026-06-23 (fresh session, clean dev server)
+
+A new session independently re-verified the committed, founder-approved chassis from a
+**cold** dev server (`lsof -ti tcp:3000 | xargs kill -9`; `rm -rf .next`; fresh `npm run dev`,
+Ready in 903ms, 327 nodes baked, MSDF regenerated, no build errors). No source was changed —
+this is a confirmation pass, not a build.
+
+**Results — all green:**
+- **no-dom-ui-gate:** PASS, EXIT 0 — `node scripts/no-dom-ui-gate.mjs`, 12 files scanned,
+  "chassis chrome is pure in-engine (no Tailwind/CSS-module/className/inline-style/drei-Html)."
+- **tsc `--noEmit`:** 0 chassis-scope errors; 9 total = the pre-existing baseline (GraphScene
+  GLProps + 8 test files). 0 new.
+- **Cold-load render** (chrome-devtools MCP, `/toolbar-chassis?spin=0`): `<canvas>` 1600×809,
+  scene probe `__PRISM_CHASSIS_SCENE__` = **94 meshes / 1 transmission-glass pane** (matches the
+  documented state), camera at canonical front pose `[0, 0.40, 15.50]`, autoRotate frozen.
+- **Console:** 0 errors, 0 pageerror; 1 benign `THREE.Clock` deprecation warning.
+- **PBR maps on disk + git-tracked:** all 25 worn maps present
+  (`public/prism-mock/editor/textures/chassis-worn/{emerald,sapphire,bronze,oxblood,gunmetal}-{albedo,normal,rough,metal,ao}.png`),
+  loaded by `materials.ts` via `useTexture` in the metallic worn-alloy workflow.
+- **Spin / see-through mechanic:** drives live — `__PRISM_CHASSIS_SPIN__(0.25)` rotates the cubes
+  edge-on (face glyphs rotate away, brushed worn-metal grain reads strongly); `(0.5)` lands
+  front-forward (2 whole turns), confirming `rotation.x = easeInOutCubic(p) × 4 turns × 2π`.
+
+**Fresh evidence frames** (`notes/verification/toolbar-final/`):
+- `recheck-2026-06-23-front.png` — canonical front pose (`?spin=0`). Matches the approved
+  `final-01-overview.jpg`: legible engraved CREATE/TRANSFORM/SCENE/LOGIC/OUTPUT labels catching
+  light, bright refractive glass, 5 jewel-tone worn-metal sections with face glyphs.
+- `recheck-2026-06-23-seethrough.png` — forced edge-on spin; brushed grain prominent.
+- `recheck-2026-06-23-spin.png` — forced 0.5 (front-forward landing).
+- `recheck-2026-06-23-overview.png` — **no-`?spin=0`** capture mid auto-orbit (see note below).
+
+**Operator note for the founder (intentional, not a defect):** the review route auto-orbits by
+default (`OrbitControls autoRotate`, `autoRotateSpeed 0.5`). A casual visit to `/toolbar-chassis`
+can therefore land at any azimuth — including the **back** of the pane, where the engraved labels
+read mirror-reversed and the pane is dark (the key + raking lights are all front-side at +Z). That
+is just the orbit position, not a regression. For the canonical, legible front view (and for any
+deterministic capture), open **`/toolbar-chassis?spin=0`**, or drag to orbit back to front. If the
+founder prefers the route to *open* facing front and only orbit on interaction, that's a one-line
+change (default `autoRotate` to off, or add a brief settle-to-front) — flagging it as a UX choice,
+not fixing it unprompted.
+
+**Verdict:** the committed founder-approved chassis is intact and renders cleanly right now. No
+build work was performed or warranted.
