@@ -62,6 +62,7 @@ export function useToolGlb(url: string, target: number, face: AxisFace = 'auto')
       if (!(m as { isMesh?: boolean }).isMesh) return;
       m.castShadow = true;
       m.receiveShadow = false;
+      m.userData.glbSource = url; // verification: this mesh's FORM is the GLB
       const src = m.material;
       const clone = (mm: THREE.Material) => {
         const c = mm.clone() as THREE.MeshStandardMaterial;
@@ -94,6 +95,7 @@ export function useToolGlb(url: string, target: number, face: AxisFace = 'auto')
     const holder = new THREE.Group();
     holder.add(inner);
     holder.scale.setScalar(k);
+    holder.userData.glbSource = url;
 
     // post-scale Z half-extent (for sink/seat math). After auto-orient the thin
     // axis is Z, so its half-extent = min(size)/2 * k.
@@ -122,6 +124,11 @@ export function useShellGeometry(w: number, h: number, d: number): THREE.BufferG
       const n = (m.geometry.getAttribute('position')?.count ?? 0);
       if (n > bestN) { bestN = n; best = m.geometry; }
     });
+    if (!best && typeof console !== 'undefined') {
+      // The shell FORM must be the generated GLB (spec TB-1). If it ever fails to
+      // resolve a mesh, make it LOUD rather than silently substituting a box.
+      console.warn('[liquid-toolbar] shell.glb resolved no mesh — generated shell missing?');
+    }
     const src = (best ?? new THREE.BoxGeometry(1, 1, 1)) as THREE.BufferGeometry;
     const geo = src.clone();
     geo.computeBoundingBox();

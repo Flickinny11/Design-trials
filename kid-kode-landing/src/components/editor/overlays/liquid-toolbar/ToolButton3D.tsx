@@ -77,10 +77,11 @@ export function ToolButton3D({
   const [hovered, setHovered] = useState(false);
   const spin = useRef({ vel: 0, settling: false });
 
-  // Seat the coin: at rest sunk just below the glass front (icon stays legible
-  // through the calmed glass); on hover risen well out front for the spin.
-  const REST_Z = FRONT_Z - TOKEN_R * 0.32;
-  const HOVER_Z = FRONT_Z + TOKEN_R * 0.6;
+  // Seat the coin in its socket at the glass front (body set INTO the glass,
+  // face proud) so the icon sits IN FRONT of the front face and reads crisply
+  // (not refracted to mush); on hover it rises well out for the spin.
+  const REST_Z = FRONT_Z - TOKEN_R * 0.1;
+  const HOVER_Z = FRONT_Z + TOKEN_R * 0.7;
 
   const impulse = (turns: number) => {
     spin.current.vel += turns * TWO_PI * FRICTION;
@@ -184,7 +185,7 @@ export function ToolButton3D({
 
         {/* GENERATED bespoke icon GLB, on the coin face; tumbles with it. A few
             tools render the icon ENGRAVED (intaglio) instead of raised (TB-8). */}
-        <group position={[0, 0, TOKEN_R * 0.4]}>
+        <group position={[0, 0, TOKEN_R * 0.55]}>
           <IconStateContext.Provider value={{ hovered, active }}>
             <Suspense fallback={null}>
               <IconGlb id={id} accent={accent} engraved={ENGRAVED.has(id)} />

@@ -30,6 +30,18 @@ export interface ToolbarSceneProps {
   onHoverButton?: (index: number | null) => void;
 }
 
+// Dev/verification probe: publishes the live toolbar scene so an evaluate_script
+// assertion can traverse it and confirm every FORM is a GENERATED GLB (meshes
+// tagged userData.glbSource) with NO procedural form standing in (spec §7).
+// Editor chrome — window access is allowed here.
+function SceneProbe() {
+  const scene = useThree((s) => s.scene);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __PRISM_TOOLBAR_SCENE__?: THREE.Scene }).__PRISM_TOOLBAR_SCENE__ = scene;
+  }
+  return null;
+}
+
 // Fits the orthographic camera so the bar fills ~92% of the canvas height,
 // re-reading the live canvas size each frame (cheap; handles resize/collapse).
 function CameraFit({ barH }: { barH: number }) {
@@ -108,6 +120,7 @@ export function ToolbarScene({
 
   return (
     <>
+      <SceneProbe />
       <CameraFit barH={barH} />
 
       {/* Studio lighting — a warm key, cool fill, and a bright rim that rakes

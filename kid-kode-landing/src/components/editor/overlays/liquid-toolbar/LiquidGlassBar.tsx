@@ -96,9 +96,11 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       distortion?: number;
     } | null;
     if (m) {
-      // Calmer baseline so the sunk icons stay legible; ramps with interaction.
-      m.temporalDistortion = 0.06 + s.e * 0.3;
-      m.distortion = 0.12 + s.e * 0.22;
+      // Clear glass: the geometric vertex warp (below) carries the "liquid bend";
+      // the refraction churn is kept LOW + tightly capped on interaction so it
+      // never shatters into shards and the sunk buttons read crisply through it.
+      m.temporalDistortion = 0.03 + s.e * 0.05;
+      m.distortion = 0.04 + s.e * 0.04;
     }
 
     // ── Real liquid BEND: displace the bar's vertices so the glass body visibly
@@ -117,8 +119,8 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       const b = basePos.current;
       // Gentle, legible undulation (still clearly a warping liquid ribbon, TB-2)
       // — calmer than the first pass so the sunk buttons read through the glass.
-      const bendAmp = 0.035 + s.e * 0.05;
-      const zAmp = 0.024 + s.e * 0.035;
+      const bendAmp = 0.035 + s.e * 0.04;
+      const zAmp = 0.016 + s.e * 0.018; // gentler Z so the front face doesn't bulge over the icons
       const lean = s.px * 0.1;
       for (let i = 0; i < arr.length; i += 3) {
         const by = b[i + 1];
@@ -149,11 +151,11 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
           thickness={1.1}
           roughness={0.08}
           ior={1.42}
-          chromaticAberration={0.03}
-          anisotropy={0.24}
-          distortion={0.12}
-          distortionScale={0.4}
-          temporalDistortion={0.06}
+          chromaticAberration={0.015}
+          anisotropy={0.18}
+          distortion={0.04}
+          distortionScale={0.3}
+          temporalDistortion={0.03}
           attenuationColor={GLASS_ATTENUATION}
           attenuationDistance={2.8}
           color={GLASS_TINT}
@@ -166,8 +168,8 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
           iridescenceThicknessRange={[140, 680]}
           backside
           backsideThickness={0.8}
-          samples={8}
-          resolution={512}
+          samples={10}
+          resolution={1024}
         />
       </mesh>
 

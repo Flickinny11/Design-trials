@@ -52,7 +52,7 @@ export function IconGlb({
         m.metalness = 0.92;
         m.roughness = 0.42;
         m.emissive = ac.clone();
-        m.emissiveIntensity = 0.0;
+        m.emissiveIntensity = 0.22; // faint glow so the engraving always reads
       } else {
         // Self-illuminate with the icon's own baked colors → vivid + premium.
         m.emissive = new THREE.Color(0xffffff);
@@ -77,7 +77,7 @@ export function IconGlb({
       o.position.z += (targetZ - o.position.z) * k;
       const targetRot = lit ? Math.sin(t * 2.2) * 0.3 : 0;
       o.rotation.z += (targetRot - o.rotation.z) * k;
-      const ei = lit ? 0.95 : 0.0;
+      const ei = lit ? 0.95 : 0.22;
       for (const m of prepared.materials) m.emissiveIntensity += (ei - m.emissiveIntensity) * k;
     } else {
       o.rotation.y = Math.sin(t * 0.7) * (lit ? 0.6 : 0.4);
