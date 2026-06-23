@@ -19,7 +19,8 @@
     "typecheck": "tsc --noEmit",
     "typecheck:gate": "node scripts/typecheck-gate.mjs",
     "verify:catalog": "node scripts/verify-catalog.mjs",
-    "art-review": "node scripts/art-fidelity-review.mjs"
+    "art-review": "node scripts/art-fidelity-review.mjs",
+    "gate:no-dom-ui": "node scripts/no-dom-ui-gate.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.19.3",
