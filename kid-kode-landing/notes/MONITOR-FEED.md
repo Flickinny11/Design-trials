@@ -331,3 +331,9 @@ Reports: notes/AUDIT-SPEC-REPORT.md + docs/prism/PRISM-MASTER-SPEC.md
 ## [FIX2 W3]  — RUN COMPLETE ✅
 - cold-load PASS; authorship --strict-orphans PASS (watch not flagged); EDITOR PAYOFF proven (watch selectable+editable, Inspector + gizmo); no-regression matrix green; tsc 0-new; criteria-reviewer PASS; advocate PLEASED.
 - The hero watch is a genuine node-authored, editable graph node. PRISM-FIX2-WATCH: RUN COMPLETE.
+[18:11] FIX2-SENTINEL: DONE: ORRERY-FIX2 COMPLETE (marker + quiet). Tell Claude: check
+[18:49] FIX3-SENTINEL: ARMED: ORRERY-FIX3 sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch FIX3-STOP
+[18:52] FIX3-SENTINEL: launched FIX3 build agent on claude-opus-4-8 (resume #1)
+
+## [2026-06-22 19:05] FIX3 W1 — orrery is a node ✅
+The Celestia orrery complication is now a genuine graph node (orr-celestia-orrery → builtin:orrery-complication → celestia/orrery-node-factory.ts), the 2nd live codeRef. JSX sibling removed, gate no longer flags it (only hub-transition remains, → W2). Renders+animates premium in preview-app, editable in canvas (gizmo+Inspector+pos 0/0.35/0.40). tsc 0-new, 0 console errors. Commit pending.

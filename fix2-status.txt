@@ -1,1 +1,1 @@
-[17:58] ## Wave 3 — full no-regression verify + report — PENDING
+[18:11] DONE: ORRERY-FIX2 COMPLETE (marker + quiet). Tell Claude: check

@@ -13,10 +13,13 @@
 
 import type { CreateNodeFn } from '../shared/adapter';
 import createWatchNode from '@/lib/prism/atelier/watch-node-factory';
+import createOrreryNode from '@/lib/prism/celestia/orrery-node-factory';
 
 const REGISTRY = new Map<string, CreateNodeFn>([
-  // ORRERY No.7 atelier watch — the hero artifact, now a graph node.
+  // ORRERY No.7 atelier watch — the hero artifact, now a graph node (FIX2 / G1).
   ['builtin:atelier-watch', createWatchNode as unknown as CreateNodeFn],
+  // ORRERY No.7 Celestia orrery complication — now a graph node (FIX3 / G2).
+  ['builtin:orrery-complication', createOrreryNode as unknown as CreateNodeFn],
 ]);
 
 /** Resolve a bundled codeRef factory by its registry key, or undefined when the

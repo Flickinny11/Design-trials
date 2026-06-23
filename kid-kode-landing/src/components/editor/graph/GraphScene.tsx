@@ -119,7 +119,6 @@ import { runAtelierAction } from '@/lib/prism/atelier/actions';
 import { AtelierApplier } from '@/components/atelier/AtelierApplier';
 import { AtelierDragController } from '@/components/atelier/AtelierDragController';
 import { AtelierInputController } from '@/components/atelier/AtelierInputController';
-import { OrreryComplicationRig } from '@/components/atelier/OrreryComplicationRig';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import {
   IMAGE_SPEC_DEFAULT,
@@ -4197,11 +4196,12 @@ function AssembledSceneContent({
           prismHardcodedArtifact tag — the node-authorship gate no longer flags
           the watch (it is genuinely node-authored). */}
       <AtelierInputController previewMode={previewMode} />
-      {/* PHASE2 SIGNATURE (SC-V-O) — interactive 3D orrery complication on Celestia.
-          S3d: known-hardcoded artifact tagged at the mount host (G2 greenlight). */}
-      <group userData={{ prismHardcodedArtifact: 'orrery-complication' }}>
-        <OrreryComplicationRig previewMode={previewMode} />
-      </group>
+      {/* FIX3 / G2 — the orrery complication is now a GRAPH NODE (orr-celestia-orrery,
+          codeRef 'builtin:orrery-complication' → celestia/orrery-node-factory.ts),
+          mounted through the node map by AssembledSceneNode on s4-celestia like any
+          artifact. No prismHardcodedArtifact tag — the node-authorship gate no longer
+          flags the orrery (it is genuinely node-authored, and now selectable/editable
+          in canvas). SC-V-O1..O3 preserved. */}
       {/* STEP7 — live driver inputs (pointer/scroll) + per-frame onTick for the
           built scene. Runs in canvas + preview-app; in preview-app the drivers
           respond to the user's real input (§16). */}

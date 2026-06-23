@@ -10759,6 +10759,61 @@
       "receivesLighting": true
     },
     {
+      "nodeId": "orr-celestia-orrery",
+      "subtype": "stage-3d",
+      "parentHubId": "s4-celestia",
+      "serviceTag": "ui-3d",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 0.35,
+          "z": 0.4,
+          "width": 6.5,
+          "height": 6.5
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "ORRERY No.7 — the Celestia orrery complication. A miniature solar system rendered in real 3D: an emissive sun with an additive glow shell at centre, four photoreal PBR planets (brass, marble, ice-world, obsidian) orbiting on tilted brass rings with true depth (planets pass behind the sun). Spin time and the planets orbit; drag, or window.__ORRERY__ (setTime/setSpeed/scrub), drives the clockwork of the heavens. The same motif as the Atelier watch dial-art (SC-V-O3).",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "builtin:orrery-complication",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 0.35,
+        "z": 0.4,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "animationBindings": [],
+      "receivesLighting": true
+    },
+    {
       "nodeId": "orr-celestia-copy",
       "subtype": "feature-body",
       "parentHubId": "s4-celestia",
