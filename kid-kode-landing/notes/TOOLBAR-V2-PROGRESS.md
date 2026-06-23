@@ -32,3 +32,26 @@ editor (§3) + keyframe editor (§4) DEFERRED to later founder-scoped runs.
 ## Wave 2 — mount generated forms + behaviors — PENDING
 ## Wave 3 — tooltips + engraving + polish — PENDING
 ## Wave 4 — per-row checklist verification + report — PENDING
+
+## Wave 2 — mount generated forms + behaviors ✅ pending-reverify
+- New glb.tsx: useShellGeometry (shell GLB → rail-fit geometry for the warp+glass)
+  + useToolGlb (clone + clone materials + auto-orient disc-normal→+Z + scale-to-fit).
+- LiquidGlassBar renders the GENERATED shell geometry under MeshTransmissionMaterial + warp.
+- ToolButton3D mounts btn-<id>.glb (kept baked metal) sunk in glass + hover-spin on X;
+  IconGlb mounts ic-<id>.glb (baseColor→emissive for vivid colored glow).
+- Deleted orphaned procedural glyphs.tsx + icons/index.ts.
+- All 29 GLBs load in-app (perf.resource confirmed), 0 console errors, tsc 0-new.
+- Edge-on spin-hold capture confirms coins reveal real 3D depth.
+
+## Wave 3 — tooltips + engraving + legibility polish ✅ pending-reverify
+- Calmed the glass (warp bendAmp 0.07→0.035, temporalDistortion 0.18→0.06,
+  distortion 0.28→0.12, core opacity 0.5→0.32) + raised idle coins (REST_Z) so the
+  sunk generated icons read clearly through the glass — every icon now legible in its socket.
+- Tooltips verified: hovering a textless button shows its glass tooltip ("Background", opacity 1).
+- Text buttons: ADD + BUILD carry persistent inline labels.
+- Engraving (TB-8): changeArtifact/text/build present their icon GLB as an intaglio
+  (recessed well + cut-metal re-material) that glows + sweeps on hover.
+- Action fires verified: click selection → flyout switched Transform→Selection.
+- tsc 0-new, 0 console errors.
+
+## Wave 4 — verification + report — IN PROGRESS

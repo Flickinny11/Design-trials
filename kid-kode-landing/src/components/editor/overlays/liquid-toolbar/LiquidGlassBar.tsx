@@ -96,8 +96,9 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       distortion?: number;
     } | null;
     if (m) {
-      m.temporalDistortion = 0.18 + s.e * 0.5;
-      m.distortion = 0.28 + s.e * 0.35;
+      // Calmer baseline so the sunk icons stay legible; ramps with interaction.
+      m.temporalDistortion = 0.06 + s.e * 0.3;
+      m.distortion = 0.12 + s.e * 0.22;
     }
 
     // ── Real liquid BEND: displace the bar's vertices so the glass body visibly
@@ -114,9 +115,11 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
         basePos.current = arr.slice();
       }
       const b = basePos.current;
-      const bendAmp = 0.07 + s.e * 0.06;
-      const zAmp = 0.05 + s.e * 0.04;
-      const lean = s.px * 0.12;
+      // Gentle, legible undulation (still clearly a warping liquid ribbon, TB-2)
+      // — calmer than the first pass so the sunk buttons read through the glass.
+      const bendAmp = 0.035 + s.e * 0.05;
+      const zAmp = 0.024 + s.e * 0.035;
+      const lean = s.px * 0.1;
       for (let i = 0; i < arr.length; i += 3) {
         const by = b[i + 1];
         arr[i] = b[i] + Math.sin(by * 1.15 + t * 1.4) * bendAmp + lean;
@@ -143,24 +146,24 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
         <MeshTransmissionMaterial
           ref={matRef as never}
           transmission={1}
-          thickness={1.4}
+          thickness={1.1}
           roughness={0.08}
-          ior={1.45}
-          chromaticAberration={0.05}
-          anisotropy={0.32}
-          distortion={0.28}
-          distortionScale={0.45}
-          temporalDistortion={0.18}
+          ior={1.42}
+          chromaticAberration={0.03}
+          anisotropy={0.24}
+          distortion={0.12}
+          distortionScale={0.4}
+          temporalDistortion={0.06}
           attenuationColor={GLASS_ATTENUATION}
-          attenuationDistance={2.4}
+          attenuationDistance={2.8}
           color={GLASS_TINT}
           envMapIntensity={2.2}
           clearcoat={1}
           clearcoatRoughness={0.08}
           // soap-film iridescence on the glass (MeshPhysicalMaterial passthrough)
-          iridescence={0.65}
-          iridescenceIOR={1.32}
-          iridescenceThicknessRange={[120, 760]}
+          iridescence={0.5}
+          iridescenceIOR={1.3}
+          iridescenceThicknessRange={[140, 680]}
           backside
           backsideThickness={0.8}
           samples={8}
@@ -170,9 +173,9 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
 
       {/* Inner luminous core — a thin slab the glass refracts so the body holds
           colored light (reads as real volume, not a hollow shell). */}
-      <mesh position={[0, 0, -BAR_D * 0.18]} raycast={NOOP_RAYCAST}>
-        <boxGeometry args={[BAR_W * 0.42, height * 0.94, 0.04]} />
-        <meshBasicMaterial map={coreTex} transparent opacity={0.5} />
+      <mesh position={[0, 0, -BAR_D * 0.22]} raycast={NOOP_RAYCAST}>
+        <boxGeometry args={[BAR_W * 0.4, height * 0.94, 0.04]} />
+        <meshBasicMaterial map={coreTex} transparent opacity={0.32} />
       </mesh>
     </group>
   );

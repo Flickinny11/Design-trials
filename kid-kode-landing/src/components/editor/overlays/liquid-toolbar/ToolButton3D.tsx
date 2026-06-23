@@ -38,6 +38,10 @@ const HOVER_TURNS = 3.5; // rotations injected on hover
 const CLICK_TURNS = 2.6; // extra rotations injected on click (acceleration)
 const SETTLE_VEL = 0.85; // below this the coin eases to the nearest full turn
 
+// A FEW buttons present their icon as a photoreal ENGRAVING (intaglio cut into
+// the coin face, animated on hover) instead of a raised icon (spec TB-8).
+const ENGRAVED = new Set<string>(['changeArtifact', 'text', 'build']);
+
 // The generated coin GLB + a per-instance accent-emissive driver, mounted inside
 // the spinning token group. Kept separate so it can Suspend on its own.
 function CoinGlb({ id, accent, lit }: { id: string; accent: string; lit: boolean }) {
@@ -73,9 +77,10 @@ export function ToolButton3D({
   const [hovered, setHovered] = useState(false);
   const spin = useRef({ vel: 0, settling: false });
 
-  // Seat the coin: at rest sunk just below the glass front; on hover risen out.
-  const REST_Z = FRONT_Z - TOKEN_R * 0.5;
-  const HOVER_Z = FRONT_Z + TOKEN_R * 0.55;
+  // Seat the coin: at rest sunk just below the glass front (icon stays legible
+  // through the calmed glass); on hover risen well out front for the spin.
+  const REST_Z = FRONT_Z - TOKEN_R * 0.32;
+  const HOVER_Z = FRONT_Z + TOKEN_R * 0.6;
 
   const impulse = (turns: number) => {
     spin.current.vel += turns * TWO_PI * FRICTION;
@@ -177,11 +182,12 @@ export function ToolButton3D({
           <CoinGlb id={id} accent={accent} lit={lit} />
         </Suspense>
 
-        {/* GENERATED bespoke icon GLB, on the coin face; tumbles with it. */}
-        <group position={[0, 0, TOKEN_R * 0.32]}>
+        {/* GENERATED bespoke icon GLB, on the coin face; tumbles with it. A few
+            tools render the icon ENGRAVED (intaglio) instead of raised (TB-8). */}
+        <group position={[0, 0, TOKEN_R * 0.4]}>
           <IconStateContext.Provider value={{ hovered, active }}>
             <Suspense fallback={null}>
-              <IconGlb id={id} accent={accent} />
+              <IconGlb id={id} accent={accent} engraved={ENGRAVED.has(id)} />
             </Suspense>
           </IconStateContext.Provider>
         </group>
