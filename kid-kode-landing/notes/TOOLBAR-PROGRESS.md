@@ -32,3 +32,22 @@
 - VERIFIED: edge-on(90deg) hold → coins collapse to thin metallic edge slivers (real depth proven);
   three-quarter hold → tilted colored faces + edge band (real tumble); click 'Add' → flyout switched
   to Add tools (function preserved + spin accelerated). 0 console errors. tsc 0 new.
+
+## Wave 3 — bespoke 3D icons + tooltips + engraving  (2026-06-22)
+- icons/kit.tsx — shared 3D icon kit: IconRoot (idle motion grammar: sway/bob/pulse/spin),
+  IconMat (emissive PBR), useExtruded (beveled ExtrudeGeometry from a Shape), shade(), and
+  EngravedPlate (photoreal intaglio: shallow recess + sunk symbol that GLOWS + tilts on hover via
+  IconStateContext). ToolButton3D provides hover/active to icons through IconStateContext.Provider.
+- icons/glyphs.tsx — 14 bespoke icons, each a custom 3D object (NO emoji/Lucide/lightning/box/lines):
+  transform=axis gizmo (3 jewel arrows) · selection=corner brackets + spinning octahedron ·
+  add=beveled plus + luminous core · library=separating layer stack · image=framed mountain+sun ·
+  object3d=faceted crystal · background=gradient planet + orbiting ring · changeArtifact=ENGRAVED
+  4-point sparkle + orbiting motes · promptEdit=command pill + chevron + BLINKING caret (REPLACES
+  the banned lightning 'zap') · text=ENGRAVED slab-serif 'T' · animation=play triangle + motion arc
+  + traveling spark · function=two nodes + link + traveling pulse · lighting=glowing bulb + screw
+  base (breathing brightness) · build=ENGRAVED 8-tooth cog.
+- Tooltips: ToolbarTooltips renders a hover glass tooltip (accent pip + label) for textless buttons
+  and PERSISTENT inline labels for the few text buttons (ADD, BUILD).
+- VERIFIED: all 14 icons render distinct/colored/3D; hover money-shot (crystal) crisp + premium;
+  hover tooltip "Animation" shows; engraved changeArtifact sparkle glows on hover; ADD/BUILD labels
+  persistent. 0 console errors. tsc 0 new.

@@ -31,7 +31,7 @@ export interface LiquidGlassToolbarProps {
   };
 }
 
-const RAIL_W = 96; // px — the liquid-glass rail width
+const RAIL_W = 106; // px — the liquid-glass rail width
 const TOP_GAP = 112; // ≈ 7rem reserved (matches the dock's max-h-[calc(100vh-7rem)])
 const MAX_H = 768; // cap so the bar never grows absurdly tall on huge monitors
 

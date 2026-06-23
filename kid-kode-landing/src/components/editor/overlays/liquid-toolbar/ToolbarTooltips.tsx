@@ -12,8 +12,18 @@
 
 import { barHeight, buttonY, accentFor, type LiquidToolGroup } from './config';
 
-// Buttons that render their label inline (Wave 3) — these get no tooltip.
-export const TEXT_BUTTONS = new Set<string>(['build']);
+// Buttons that carry a PERSISTENT inline text label (a few, per DESIGN LAW B.1
+// "only a few buttons carry text"). These show their label always and get no
+// hover tooltip; every other button is textless with a hover tooltip.
+export const TEXT_BUTTONS = new Set<string>(['add', 'build']);
+
+// Shared screen-Y projection: world +Y is up → screen up (smaller y). The bar
+// fills ~92% of the rail height, centered (matches CameraFit).
+function screenYFor(i: number, n: number, railHeight: number): number {
+  const barH = barHeight(n);
+  const worldY = buttonY(i, n);
+  return railHeight / 2 - (worldY / (barH / 2)) * (0.46 * railHeight);
+}
 
 export interface ToolbarTooltipsProps {
   groups: LiquidToolGroup[];
@@ -33,13 +43,38 @@ export function ToolbarTooltips({
   const g = visible ? groups[hoverIdx as number] : null;
   const showTip = visible && g != null && !TEXT_BUTTONS.has(g.id);
 
-  // Screen Y of the hovered button: world +Y is up → screen up (smaller y).
-  const barH = barHeight(n);
-  const worldY = hoverIdx != null ? buttonY(hoverIdx, n) : 0;
-  const screenY = railHeight / 2 - (worldY / (barH / 2)) * (0.46 * railHeight);
+  // Screen Y of the hovered button.
+  const screenY = hoverIdx != null ? screenYFor(hoverIdx, n, railHeight) : 0;
   const accent = g ? accentFor(g.id) : '#d8b46a';
 
   return (
+    <>
+      {/* Persistent labels for the few text buttons (always visible). */}
+      {groups.map((grp, i) =>
+        TEXT_BUTTONS.has(grp.id) ? (
+          <div
+            key={grp.id}
+            style={{
+              position: 'absolute',
+              left: railWidth - 4,
+              top: Math.round(screenYFor(i, n, railHeight)) - 9,
+              pointerEvents: 'none',
+              zIndex: 58,
+              whiteSpace: 'nowrap',
+              fontFamily: 'var(--font-ui, ui-sans-serif), system-ui, sans-serif',
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              color: 'var(--ds-text-hi, #eef2f8)',
+              textShadow: `0 1px 3px rgba(0,0,0,0.85), 0 0 10px ${accentFor(grp.id)}66`,
+            }}
+          >
+            {grp.label}
+          </div>
+        ) : null,
+      )}
+
     <div
       aria-hidden={!showTip}
       style={{
@@ -87,6 +122,7 @@ export function ToolbarTooltips({
         {g?.label ?? ''}
       </div>
     </div>
+    </>
   );
 }
 

@@ -18,6 +18,7 @@ import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { TOKEN_R, TOKEN_D, FRONT_Z } from './config';
+import { IconStateContext } from './icons/kit';
 
 export interface ToolButton3DProps {
   y: number; // world-Y center of the button slot
@@ -207,18 +208,20 @@ export function ToolButton3D({
         {/* The icon sits on the coin's +Z face and tumbles with it. Default
             placeholder = an accent stud; Wave 3 replaces with the bespoke icon. */}
         <group position={[0, 0, TOKEN_D * 0.5 + 0.015]}>
-          {icon ?? (
-            <mesh>
-              <sphereGeometry args={[TOKEN_R * 0.32, 24, 24]} />
-              <meshStandardMaterial
-                color={accent}
-                emissive={accent}
-                emissiveIntensity={0.65}
-                metalness={0.3}
-                roughness={0.3}
-              />
-            </mesh>
-          )}
+          <IconStateContext.Provider value={{ hovered, active }}>
+            {icon ?? (
+              <mesh>
+                <sphereGeometry args={[TOKEN_R * 0.32, 24, 24]} />
+                <meshStandardMaterial
+                  color={accent}
+                  emissive={accent}
+                  emissiveIntensity={0.65}
+                  metalness={0.3}
+                  roughness={0.3}
+                />
+              </mesh>
+            )}
+          </IconStateContext.Provider>
         </group>
 
         {!wired && (

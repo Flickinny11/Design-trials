@@ -1,14 +1,47 @@
-// Bespoke 3D icon registry for the liquid-glass toolbar.
-//
-// WAVE 3 fills this in: one bespoke, colored, animated 3D icon mesh per tool
-// (extruded shapes with bevels + gradients + shadows + idle motion). ZERO
-// emoji, ZERO Lucide/line-drawings, ZERO lightning/box/generic glyphs
-// (DESIGN LAW B.1 defect gate). Until then this returns undefined so the
-// ToolButton3D placeholder stud renders.
+// Bespoke 3D icon registry for the liquid-glass toolbar — one custom, colored,
+// animated 3D icon per tool (DESIGN LAW B.1). ZERO emoji / Lucide / line-drawings
+// / lightning / box / generic glyphs. A few (text, changeArtifact, build) are
+// photoreal ENGRAVINGS.
 
-import type { ReactNode } from 'react';
+import { createElement, type ReactNode } from 'react';
+import {
+  TransformIcon,
+  SelectionIcon,
+  AddIcon,
+  LibraryIcon,
+  ImageIcon,
+  ObjectIcon,
+  BackgroundIcon,
+  ChangeArtifactIcon,
+  PromptEditIcon,
+  TextIcon,
+  AnimationIcon,
+  FunctionIcon,
+  LightingIcon,
+  BuildIcon,
+} from './glyphs';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function iconFor(_id: string, _accent: string): ReactNode | undefined {
-  return undefined;
+type IconComp = (props: { accent: string }) => ReactNode;
+
+const REGISTRY: Record<string, IconComp> = {
+  transform: TransformIcon,
+  selection: SelectionIcon,
+  add: AddIcon,
+  library: LibraryIcon,
+  image: ImageIcon,
+  object3d: ObjectIcon,
+  background: BackgroundIcon,
+  changeArtifact: ChangeArtifactIcon,
+  promptEdit: PromptEditIcon,
+  text: TextIcon,
+  animation: AnimationIcon,
+  function: FunctionIcon,
+  lighting: LightingIcon,
+  build: BuildIcon,
+};
+
+/** The bespoke 3D icon node for a tool, or undefined (→ placeholder stud). */
+export function iconFor(id: string, accent: string): ReactNode | undefined {
+  const Comp = REGISTRY[id];
+  return Comp ? createElement(Comp, { accent }) : undefined;
 }

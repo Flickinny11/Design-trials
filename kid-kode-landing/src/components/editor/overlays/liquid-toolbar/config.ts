@@ -21,10 +21,10 @@ export interface LiquidToolGroup {
 // ── World layout (units; the orthographic camera fits the bar to the canvas) ──
 export const SLOT = 1.0; // vertical world height per button slot
 export const PAD_Y = 0.62; // top/bottom padding inside the bar
-export const BAR_W = 1.6; // bar width (world units)
+export const BAR_W = 1.7; // bar width (world units)
 export const BAR_D = 1.15; // bar depth (front↔back) — the volumetric body
-export const TOKEN_R = 0.34; // button token radius
-export const TOKEN_D = 0.17; // button token depth
+export const TOKEN_R = 0.37; // button token radius
+export const TOKEN_D = 0.18; // button token depth
 export const FRONT_Z = BAR_D / 2; // z of the glass front face
 
 /** Total bar height in world units for `n` buttons. */
