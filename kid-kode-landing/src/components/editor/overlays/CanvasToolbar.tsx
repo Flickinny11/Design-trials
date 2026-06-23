@@ -88,6 +88,7 @@ import ChangeArtifactFlyout from '@/components/editor/change-artifact/ChangeArti
 import { HubBackgroundPicker } from '@/components/editor/panels/HubBackgroundPicker';
 import PromptEditFlyout from '@/components/editor/prompt-edit/PromptEditFlyout';
 import LibraryFlyout from '@/components/editor/elements/LibraryFlyout';
+import { LiquidGlassToolbar } from '@/components/editor/overlays/liquid-toolbar';
 import type { GizmoMode } from '@/lib/editor/canvas-transform-gizmo';
 import type {
   PrismNode,
@@ -880,6 +881,19 @@ export default function CanvasToolbar() {
     }
   }, [collapsed]);
 
+  // Group-key toggle shared by the liquid-glass 3D toolbar (desktop) and the
+  // compact metal dock (mobile). Function opens the binding popup for the
+  // selected element (AMENDMENT 2026-06-14); every other group toggles its
+  // flyout. This is the single wiring point so both chromes behave identically.
+  const handleToggleGroup = useCallback((id: string) => {
+    if (id === 'function') {
+      const st = useGraphEditorStore.getState();
+      if (st.selectedNodeId) st.openFunctionPopup(st.selectedNodeId);
+      return;
+    }
+    setActiveGroup((cur) => (cur === id ? null : (id as ToolGroupId)));
+  }, []);
+
   // ── Marquee select ─────────────────────────────────────────────────────────
   const onMarqueeCommit = useCallback(
     (rectClient: { left: number; top: number; width: number; height: number }) => {
@@ -956,10 +970,28 @@ export default function CanvasToolbar() {
               : undefined
         }
       >
-        {/* Machined brushed-metal dock — the instrument fitting the tool keys
-            are cut into (ds-metal + grain tooth + specular edge). Scrolls
-            within the bounded rail when the viewport is short. At t2 the
-            surface renders as REAL brushed metal in the unified canvas. */}
+        {/* TOOLBAR REDESIGN (2026-06-22, CHROME 1) — desktop/regular now renders
+            the photoreal 3D LIQUID-GLASS toolbar (isolated R3F WebGL canvas, the
+            Glb3DPreview pattern). It drives the SAME activeGroup + handlers as the
+            old dock, so every action is unchanged. Compact (mobile) keeps the
+            machined brushed-metal horizontal dock below for phone ergonomics. */}
+        {!compact && (
+          <LiquidGlassToolbar
+            groups={GROUPS}
+            activeGroup={activeGroup}
+            onToggleGroup={handleToggleGroup}
+            collapsed={collapsed}
+            onToggleCollapse={() => setCollapsed((v) => !v)}
+            dragging={!!dragRef.current}
+            spineHandlers={{
+              onPointerDown: onDragStart,
+              onPointerMove: onDragMove,
+              onPointerUp: onDragEnd,
+              onPointerCancel: onDragEnd,
+            }}
+          />
+        )}
+        {compact && (
         <div
           ref={dockSlab.ref}
           className={
@@ -1068,6 +1100,7 @@ export default function CanvasToolbar() {
           })}
           </DockKeyStack>
         </div>
+        )}
 
         {/* Flyout — desktop/regular: side glass plate beside the rail; compact:
             a draggable bottom sheet portaled to the pane (UI-WOW-2 P0). */}

@@ -344,3 +344,9 @@ The hub transition is now an INTENTIONAL tagged runtime host (userData.prismRunt
 
 ## [2026-06-22 19:26] FIX3 — RUN COMPLETE · FOUNDATION 100% CLEAN ✅
 The node-authorship gate flags ZERO accidental drift. Watch + orrery are nodes; the hub transition is an intentional tagged runtime host (documented). Cold-load gate PASS, --strict-orphans 0 hard-fail (hardcoded=[], runtime-host=hub-transition, 178 node-authored), tsc 0-new, criteria-reviewer 7/7 MEET, user-advocate PLEASED. Orrery orbits+editable, transitions cinematic, watch + hubs intact. Commits bbbfc551 + 9aca8301 + report. Marker: PRISM-FIX3-CLEAN: RUN COMPLETE.
+[19:28] FIX3-SENTINEL: DONE: ORRERY-FIX3 COMPLETE (marker + quiet). Tell Claude: check
+[19:48] TOOLBAR-SENTINEL: ARMED: ORRERY-TOOLBAR sentinel. v4 rule (marker+quiet), corrected counter, cap=10. Stop: touch TOOLBAR-STOP
+[19:52] TOOLBAR-SENTINEL: launched TOOLBAR build agent on claude-opus-4-8 (resume #1)
+
+## [2026-06-22] PRISM TOOLBAR redesign — Wave 1 DONE
+Liquid-glass 3D toolbar object renders (isolated R3F WebGL canvas, MeshTransmissionMaterial + iridescence + animated warp). Actions wired (click→flyout verified). 0 console errors, tsc green. Next: Wave 2 (3D buttons + hover-spin).
