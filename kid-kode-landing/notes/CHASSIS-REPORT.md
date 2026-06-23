@@ -318,3 +318,23 @@ not fixing it unprompted.
 
 **Verdict:** the committed founder-approved chassis is intact and renders cleanly right now. No
 build work was performed or warranted.
+
+---
+
+## Re-verify 2026-06-23 (review session, no source change)
+
+Re-ran on founder re-issue of the chassis prompt. **No rebuild performed** — the chassis
+was already built, founder-approved, and committed (`ec7ae751`→`dcabcae8`). Regenerating PBR /
+re-laying-out would have regressed the locked, approved chassis, so this run was verification only.
+
+- **no-dom-ui-gate:** PASS (exit 0) — 12 files scanned, scope `src/components/editor/chassis` +
+  `src/app/toolbar-chassis`. Pure in-engine.
+- **tsc:** 9 total errors = baseline exactly, **0** referencing chassis/toolbar-chassis.
+- **Cold load** (killed :3000, `rm -rf .next`, fresh `npm run dev`, ready 923ms): route
+  `/toolbar-chassis?spin=0` HTTP 200; Chrome-DevTools probe → 1 canvas, scene probe present,
+  **94 meshes / 1 transmission pane**, all verify hooks live (`__PRISM_CHASSIS_SPIN__/HOVER__/CAM__`).
+- **Console errors:** 0.
+- **Fresh frames** (`notes/verification/toolbar-final/`): `review-2026-06-23-front.png`,
+  `review-2026-06-23-seethrough.png`, `review-2026-06-23-detail.png`. All 4 refinements visually
+  confirmed (worn satin/brushed cubes, 5 jewel-tone sections, labeled grids, in-glass V-groove
+  engraving catching light, edge-on see-through).
