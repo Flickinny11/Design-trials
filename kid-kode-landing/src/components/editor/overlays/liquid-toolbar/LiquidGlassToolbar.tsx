@@ -127,6 +127,7 @@ export function LiquidGlassToolbar({
       >
         {!collapsed && (
           <Canvas
+            shadows
             gl={{ alpha: true, antialias: true, premultipliedAlpha: false }}
             dpr={[1, 2]}
             frameloop="always"

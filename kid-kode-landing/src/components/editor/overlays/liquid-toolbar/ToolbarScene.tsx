@@ -114,7 +114,20 @@ export function ToolbarScene({
       {/* Studio lighting — a warm key, cool fill, and a bright rim that rakes
           the glass edge so the silhouette and refraction read crisply. */}
       <ambientLight intensity={0.6} />
-      <directionalLight position={[4, 6, 8]} intensity={2.4} color="#fff3e0" />
+      <directionalLight
+        position={[4, 6, 8]}
+        intensity={2.4}
+        color="#fff3e0"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-2}
+        shadow-camera-right={2}
+        shadow-camera-top={barH / 2 + 1}
+        shadow-camera-bottom={-(barH / 2 + 1)}
+        shadow-camera-near={0.1}
+        shadow-camera-far={40}
+        shadow-bias={-0.0006}
+      />
       <directionalLight position={[-5, -2, 4]} intensity={1.1} color="#9fc0ff" />
       <pointLight position={[0, 0, 6]} intensity={22} distance={26} color="#cfe4ff" />
       {/* raking rim — grazes the glass edge from behind-right so the volumetric
