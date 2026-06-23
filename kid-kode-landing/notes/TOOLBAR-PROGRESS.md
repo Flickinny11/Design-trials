@@ -51,3 +51,14 @@
 - VERIFIED: all 14 icons render distinct/colored/3D; hover money-shot (crystal) crisp + premium;
   hover tooltip "Animation" shows; engraved changeArtifact sparkle glows on hover; ADD/BUILD labels
   persistent. 0 console errors. tsc 0 new.
+
+## Wave 4 — verify + report  (2026-06-22) — RUN COMPLETE
+- Fresh restart + COLD-LOAD GATE (Chrome DevTools MCP): GET / 200, all _next 200, no 404/pageerror,
+  canvas present, no stuck loader. Console 0 errors. tsc 0 new. No new deps.
+- Added real liquid VERTEX-BEND warp (per-frame position displacement) so the bar visibly undulates.
+- Action-fires matrix 14/14 (synthetic R3F pointer events + state reads).
+- art-fidelity: 16/16 PASS. Parallel review Workflow (ultracode): user-advocate PLEASED,
+  prism-criteria-reviewer PASS (0 defect-gate hits, 0 MUST-FIX), aesthetic vision judge PASS.
+- Polish from nits: chromaticAberration 0.07→0.05; promptEdit compact glyph 'zap'→'code' (no
+  lightning anywhere); removed dead IconMat attach param.
+- TOOLBAR-REPORT.md written with marker. PRISM-TOOLBAR: RUN COMPLETE.

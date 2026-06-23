@@ -350,3 +350,8 @@ The node-authorship gate flags ZERO accidental drift. Watch + orrery are nodes; 
 
 ## [2026-06-22] PRISM TOOLBAR redesign — Wave 1 DONE
 Liquid-glass 3D toolbar object renders (isolated R3F WebGL canvas, MeshTransmissionMaterial + iridescence + animated warp). Actions wired (click→flyout verified). 0 console errors, tsc green. Next: Wave 2 (3D buttons + hover-spin).
+[20:10] TOOLBAR-SENTINEL:   Selection button switched flyout Transform→Selection (functionality preserved). tsc gate: 0 new errors.
+[20:30] TOOLBAR-SENTINEL: - Dev-only __PRISM_TOOLBAR_SPIN_TEST__ holds all coins at a given X angle for deterministic capture.
+
+## [2026-06-22] PRISM TOOLBAR redesign — RUN COMPLETE
+Liquid-glass 3D toolbar shipped: warping transmission-glass bar + sunk 3D milled-coin buttons with hover-spin physics + 14 bespoke animated 3D icons (engraved subset, tooltips, ADD/BUILD labels). All actions fire. Cold load clean, 0 console errors, tsc 0 new, art-fidelity 16/16, criteria PASS, user-advocate PLEASED, 0 MUST-FIX.

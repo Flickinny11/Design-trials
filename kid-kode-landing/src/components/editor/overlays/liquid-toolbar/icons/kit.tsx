@@ -79,17 +79,14 @@ export function IconMat({
   emi = 0.55,
   metalness = 0.55,
   roughness = 0.26,
-  attach,
 }: {
   color: string;
   emi?: number;
   metalness?: number;
   roughness?: number;
-  attach?: string;
 }) {
   return (
     <meshStandardMaterial
-      attach={attach as never}
       color={color}
       emissive={color}
       emissiveIntensity={emi}

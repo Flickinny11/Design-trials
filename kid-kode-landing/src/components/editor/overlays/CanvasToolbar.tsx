@@ -167,7 +167,9 @@ const GROUPS: ToolGroupMeta[] = [
   // HubBackgroundPicker for the active hub; applies live via updateHub (C31).
   { id: 'background', icon: 'palette', label: 'Background', wired: true },
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
-  { id: 'promptEdit', icon: 'zap', label: 'Prompt Edit', wired: true },
+  // icon 'code' (NOT 'zap'/lightning — banned): the desktop path uses the bespoke
+  // 3D command-pill icon; this glyph is the compact/mobile dock fallback.
+  { id: 'promptEdit', icon: 'code', label: 'Prompt Edit', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
   { id: 'function', icon: 'link', label: 'Function', wired: true },
