@@ -36,6 +36,10 @@ export interface LiquidGlassBarProps {
 export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
   const group = useRef<THREE.Group>(null);
   const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const barMeshRef = useRef<THREE.Mesh>(null);
+  // Rest positions of the bar's vertices, cached so the per-frame liquid BEND
+  // displaces from the original shape (never accumulates).
+  const basePos = useRef<Float32Array | null>(null);
   const { pointer } = useThree();
   // Smoothed pointer + energy so the bend/ripple is liquid, never jittery.
   const smooth = useRef({ px: 0, py: 0, e: 0 });
@@ -90,11 +94,38 @@ export function LiquidGlassBar({ height, energy = 0 }: LiquidGlassBarProps) {
       m.temporalDistortion = 0.18 + s.e * 0.5;
       m.distortion = 0.28 + s.e * 0.35;
     }
+
+    // ── Real liquid BEND: displace the bar's vertices so the glass body visibly
+    // undulates like a ribbon of liquid (a traveling sine along its length warps
+    // X, a phase-shifted wave warps Z), leaning toward the cursor. This is a true
+    // geometric deformation — not a rigid tilt — so the toolbar reads as warping
+    // liquid glass (DESIGN LAW B.1). The buttons are separate meshes, so the glass
+    // flexes over its sunk controls. ───────────────────────────────────────────
+    const mesh = barMeshRef.current;
+    if (mesh && mesh.geometry) {
+      const attr = mesh.geometry.getAttribute('position') as THREE.BufferAttribute;
+      const arr = attr.array as Float32Array;
+      if (!basePos.current || basePos.current.length !== arr.length) {
+        basePos.current = arr.slice();
+      }
+      const b = basePos.current;
+      const bendAmp = 0.07 + s.e * 0.06;
+      const zAmp = 0.05 + s.e * 0.04;
+      const lean = s.px * 0.12;
+      for (let i = 0; i < arr.length; i += 3) {
+        const by = b[i + 1];
+        arr[i] = b[i] + Math.sin(by * 1.15 + t * 1.4) * bendAmp + lean;
+        arr[i + 2] = b[i + 2] + Math.cos(by * 0.85 + t * 1.05) * zAmp;
+      }
+      attr.needsUpdate = true;
+      mesh.geometry.computeVertexNormals();
+    }
   });
 
   return (
     <group ref={group}>
       <RoundedBox
+        ref={barMeshRef as never}
         args={[BAR_W, height, BAR_D]}
         radius={Math.min(BAR_W, BAR_D) * 0.42}
         smoothness={8}
