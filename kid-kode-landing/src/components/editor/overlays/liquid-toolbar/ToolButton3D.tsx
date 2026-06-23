@@ -49,8 +49,27 @@ function CoinGlb({ id, accent, lit }: { id: string; accent: string; lit: boolean
   const accentColor = useRef(new THREE.Color(accent));
   useEffect(() => {
     accentColor.current.set(accent);
+    const an = accentColor.current;
+    // F2 — ONE coherent premium coin finish. The Tripo bake ships every coin as
+    // fully-rough (roughness 1) white-over-DARK-metal albedo, so they all read as
+    // identical matte-BLACK domes that swallow the icon. Re-finish the whole
+    // family as a single polished PRECIOUS-METAL (warm platinum / white-gold):
+    // drop the dark baked albedo + uniform-ise the finish so all 14 are one
+    // designed-together set, polished enough to catch the studio key/rim light
+    // (premium, not black). Each coin is then individuated by its COLOURED icon +
+    // its accent socket-ring halo (high contrast against neutral metal = legible),
+    // NOT by tinting the coin its icon's own hue (which blended the two). A faint
+    // accent whisper in the metal keeps them from being literally identical.
+    const metal = new THREE.Color('#c5c2bb').lerp(an, 0.14);
     for (const m of prepared.materials) {
-      m.emissive = accentColor.current.clone();
+      m.map = null;            // drop dark baked albedo → metal reads bright
+      m.metalnessMap = null;   // uniform precious-metal finish across the family
+      m.roughnessMap = null;
+      m.color = metal.clone();
+      m.metalness = 0.96;
+      m.roughness = 0.3;
+      m.envMapIntensity = 1.7;
+      m.emissive = an.clone();
       m.emissiveIntensity = 0.0;
       m.needsUpdate = true;
     }
@@ -138,7 +157,10 @@ export function ToolButton3D({
     }
 
     if (ringMat.current) {
-      const target = active ? 1.2 : hovered ? 0.8 : 0.2;
+      // Brighter rest accent (TBITER F2): the socket ring is the coin's colour
+      // halo — always lit enough to give each coin a distinct identity + lift the
+      // icon's contrast against the dark recess.
+      const target = active ? 1.4 : hovered ? 1.0 : 0.5;
       ringMat.current.emissiveIntensity += (target - ringMat.current.emissiveIntensity) * k;
     }
   });
