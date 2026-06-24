@@ -27,9 +27,10 @@ export function Playhead({ steel }: { steel: WornMaps }) {
     return mat;
   }, [steel]);
 
-  // span: from just above the ruler down to just below the last property track
+  // span: from the TIME ruler (where the handle knob rides) down to just below
+  // the last property track — the bar sweeps across every groove as time advances.
   const lastTrackY = LAYOUT.tracks[LAYOUT.tracks.length - 1].y;
-  const top = LAYOUT.rulerY + 0.52;
+  const top = LAYOUT.rulerY;
   const bottom = lastTrackY - 0.52;
   const barH = top - bottom;
   const barCenterY = (top + bottom) / 2;
@@ -41,20 +42,17 @@ export function Playhead({ steel }: { steel: WornMaps }) {
   });
 
   return (
-    <group ref={groupRef} position={[timeToX(0), 0, FRONT_Z + 0.05]}>
-      {/* the scrubbing bar */}
+    <group ref={groupRef} position={[timeToX(0), 0, FRONT_Z + 0.04]}>
+      {/* the scrubbing bar (the draggable handle knob rides the ruler above, in
+          the knobs layer) */}
       <RoundedBox
-        args={[PLAYHEAD_W, barH, 0.06]}
-        radius={0.025}
+        args={[PLAYHEAD_W, barH, 0.05]}
+        radius={0.022}
         smoothness={3}
         position={[0, barCenterY, 0]}
         material={material}
         castShadow
       />
-      {/* top finial — a small diamond cap so the head reads as a scrubber */}
-      <mesh position={[0, top + 0.04, 0]} rotation={[0, 0, Math.PI / 4]} material={material} castShadow>
-        <boxGeometry args={[0.16, 0.16, 0.06]} />
-      </mesh>
     </group>
   );
 }
