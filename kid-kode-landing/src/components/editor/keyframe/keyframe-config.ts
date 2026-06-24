@@ -75,8 +75,8 @@ export interface TrackDef {
 }
 
 export const TRACKS: TrackDef[] = [
-  { id: 'posY', label: 'RISE', textureKey: 'sapphire', min: -1.5, max: 1.5 },
-  { id: 'scale', label: 'SCALE', textureKey: 'emerald', min: 0.35, max: 1.85 },
+  { id: 'posY', label: 'RISE', textureKey: 'sapphire', min: -1.1, max: 1.1 },
+  { id: 'scale', label: 'SCALE', textureKey: 'emerald', min: 0.5, max: 1.5 },
   { id: 'rotZ', label: 'SPIN', textureKey: 'bronze', min: -Math.PI, max: Math.PI, unit: 'rad' },
   { id: 'opacity', label: 'FADE', textureKey: 'oxblood', min: 0.12, max: 1 },
 ];
@@ -136,7 +136,7 @@ export function buildLayout(): KeyframeLayout {
   }));
 
   const bottomBandY = -halfH + BOTTOM_PAD * 0.5;
-  const subjectY = halfH + 1.85;
+  const subjectY = halfH + 1.4;
 
   return {
     paneW,

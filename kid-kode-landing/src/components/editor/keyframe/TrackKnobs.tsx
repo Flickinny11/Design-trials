@@ -25,6 +25,7 @@ import {
   LAYOUT,
   SPIN_DURATION,
   SPIN_TURNS,
+  TRACKS,
   type TrackDef,
   easeInOutCubic,
   timeToX,
@@ -60,6 +61,7 @@ interface DragState {
 function useGrooveDrag() {
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
+  const controls = useThree((s) => s.controls) as unknown as { enabled: boolean } | null;
   const drag = useRef<DragState | null>(null);
   const ray = useMemo(() => new THREE.Raycaster(), []);
   const plane = useMemo(() => new THREE.Plane(), []);
@@ -88,17 +90,21 @@ function useGrooveDrag() {
 
   const onUp = useCallback(() => {
     drag.current = null;
+    if (controls) controls.enabled = true; // re-enable camera after the drag
     window.removeEventListener('pointermove', onMove);
     window.removeEventListener('pointerup', onUp);
-  }, [onMove]);
+  }, [onMove, controls]);
 
   const start = useCallback(
     (d: DragState) => {
       drag.current = d;
+      // a knob/playhead drag must NOT also orbit the camera (OrbitControls is a
+      // DOM listener, so R3F stopPropagation can't reach it) — disable it for the drag
+      if (controls) controls.enabled = false;
       window.addEventListener('pointermove', onMove);
       window.addEventListener('pointerup', onUp);
     },
-    [onMove, onUp],
+    [onMove, onUp, controls],
   );
 
   const isDragging = useCallback(() => drag.current !== null, []);
@@ -116,12 +122,14 @@ interface KnobProps {
   readX: () => number;
   y: number;
   onGrab: () => void;
+  /** double-click → remove the keyframe at the current playhead (faders only) */
+  onRemove?: () => void;
   /** spin is suppressed while a drag is in flight */
   draggingRef: () => boolean;
   size?: number;
 }
 
-function Knob({ id, maps, tint, envBoost = 0, readX, y, onGrab, draggingRef, size = CUBE_K }: KnobProps) {
+function Knob({ id, maps, tint, envBoost = 0, readX, y, onGrab, onRemove, draggingRef, size = CUBE_K }: KnobProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const groupRef = useRef<THREE.Group>(null);
   const elapsed = useRef(0);
@@ -214,6 +222,10 @@ function Knob({ id, maps, tint, envBoost = 0, readX, y, onGrab, draggingRef, siz
         onPointerOver={onOver}
         onPointerOut={onOut}
         onPointerDown={onDown}
+        onDoubleClick={(e) => {
+          e.stopPropagation();
+          onRemove?.();
+        }}
       >
         {/* engraved grip notch on the front face — reads as a grabbable fader cap */}
         <mesh position={[0, 0, size / 2 + 0.002]}>
@@ -269,6 +281,35 @@ function KeyframeMarkers() {
 export function TrackKnobs({ maps }: { maps: Record<string, WornMaps> }) {
   const { start, isDragging } = useGrooveDrag();
 
+  // Verification hook: deterministically begin a drag (drives the SAME production
+  // pipeline — unproject → writeKeyframe — that a real pointer-down on the knob
+  // begins; the caller then dispatches real window pointermove/up events).
+  useEffect(() => {
+    const w = window as unknown as Record<string, unknown>;
+    w.__PRISM_KEYFRAME_GRAB__ = (target: string) => {
+      if (target === 'playhead') start({ kind: 'playhead', z: KNOB_Z });
+      else {
+        const t = TRACKS.find((x) => x.id === target);
+        if (t) start({ kind: 'fader', track: t, z: KNOB_Z });
+      }
+    };
+    // coordinate map for precise verification scripting (world↔value/time)
+    w.__PRISM_KEYFRAME_MAP__ = {
+      knobZ: KNOB_Z,
+      rulerY: LAYOUT.rulerY,
+      tracks: TRACKS.map((t) => ({ id: t.id, y: LAYOUT.tracks.find((x) => x.id === t.id)!.y })),
+      valueToX: (id: string, v: number) => {
+        const t = TRACKS.find((x) => x.id === id)!;
+        return valueToX(t, v);
+      },
+      timeToX,
+    };
+    return () => {
+      delete w.__PRISM_KEYFRAME_GRAB__;
+      delete w.__PRISM_KEYFRAME_MAP__;
+    };
+  }, [start]);
+
   return (
     <>
       {/* playhead handle on the TIME ruler */}
@@ -293,6 +334,10 @@ export function TrackKnobs({ maps }: { maps: Record<string, WornMaps> }) {
           y={track.y}
           readX={() => valueToX(track, useKeyframeStore.getState().valueAt(track.id))}
           onGrab={() => start({ kind: 'fader', track, z: KNOB_Z })}
+          onRemove={() => {
+            const s = useKeyframeStore.getState();
+            s.removeKeyframe(track.id, s.playhead);
+          }}
           draggingRef={isDragging}
         />
       ))}

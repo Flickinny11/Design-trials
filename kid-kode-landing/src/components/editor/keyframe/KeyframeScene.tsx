@@ -20,6 +20,7 @@ import { TrackBeds } from './TrackBeds';
 import { Playhead } from './Playhead';
 import { SubjectNode } from './SubjectNode';
 import { TrackKnobs } from './TrackKnobs';
+import { TransportControls } from './TransportControls';
 import { EngravedTrackLabels, EngravedTitle } from './EngravedTrackLabels';
 import { LAYOUT } from './keyframe-config';
 import { useKeyframeStore } from './use-keyframe-store';
@@ -102,6 +103,7 @@ function Worn() {
       <TrackBeds gunmetal={maps.gunmetal} />
       <Playhead steel={maps.gunmetal} />
       <TrackKnobs maps={maps} />
+      <TransportControls maps={maps.gunmetal} />
       <SubjectNode maps={maps.sapphire} />
     </>
   );

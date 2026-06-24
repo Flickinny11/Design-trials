@@ -33,7 +33,7 @@ function ReviewRig() {
     (window as unknown as { __PRISM_KEYFRAME_CAM__?: unknown }).__PRISM_KEYFRAME_CAM__ = {
       camera,
       controls,
-      set(px: number, py: number, pz: number, tx = 0, ty = 1, tz = 0) {
+      set(px: number, py: number, pz: number, tx = 0, ty = 1.4, tz = 0) {
         camera.position.set(px, py, pz);
         const c = controls as unknown as { target: THREE.Vector3; update: () => void } | null;
         if (c?.target) {
@@ -58,7 +58,7 @@ function KeyframeStage() {
         shadows
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-        camera={{ position: [0, 1.2, 19], fov: 33 }}
+        camera={{ position: [0, 1.4, 21], fov: 33 }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.AgXToneMapping;
           gl.toneMappingExposure = 1.12;
@@ -79,8 +79,8 @@ function KeyframeStage() {
           enableDamping
           dampingFactor={0.08}
           minDistance={6}
-          maxDistance={30}
-          target={[0, 1, 0]}
+          maxDistance={32}
+          target={[0, 1.4, 0]}
         />
         <ReviewRig />
       </Canvas>

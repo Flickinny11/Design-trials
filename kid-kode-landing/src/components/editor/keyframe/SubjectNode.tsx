@@ -19,7 +19,7 @@ import { FaceGlyph } from '@/components/editor/chassis/FaceGlyph';
 import { FONT_URL, LAYOUT } from './keyframe-config';
 import { useKeyframeStore } from './use-keyframe-store';
 
-const SIZE = 1.25;
+const SIZE = 1.0;
 
 export function SubjectNode({ maps }: { maps: WornMaps }) {
   const groupRef = useRef<THREE.Group>(null);
@@ -46,7 +46,7 @@ export function SubjectNode({ maps }: { maps: WornMaps }) {
   });
 
   return (
-    <group ref={groupRef} position={[0, LAYOUT.subjectY, 0.2]}>
+    <group ref={groupRef} position={[0, LAYOUT.subjectY, 1.2]}>
       <RoundedBox
         ref={meshRef}
         args={[SIZE, SIZE, SIZE]}
