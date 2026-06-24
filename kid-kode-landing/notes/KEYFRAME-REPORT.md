@@ -141,3 +141,40 @@ hooks (same pattern as the chassis), used for capture only.
 **Status: DONE.** Glass keyframe editor renders in the chassis language and actually animates a
 node property (drag sets keyframes, scrub/play animates); behavioral verification + advocate
 both clean; all hard gates green.
+
+---
+
+## 7. Independent re-verify — ULTRACODE re-issue (2026-06-24)
+
+The KEYFRAME prompt was re-issued. Per the "verify-only, don't rebuild" discipline (the run was
+already complete + advocate-PASS at `315199a0`), this pass was an **independent re-verification
+with zero source change** — the same posture as the Toolbar Chassis re-issue (`ca2c7303`).
+
+**Gates (re-run, all green):**
+- `no-dom-ui-gate.mjs src/components/editor/keyframe src/app/keyframe-editor` → **PASS (14 files)**.
+- `tsc --noEmit` → **9 errors = baseline, 0 new** (all 9 in pre-existing `GraphScene.tsx` + 8 test
+  files; **0 in keyframe surfaces**).
+- `node-authorship-gate.mjs http://localhost:3000` → **9/10 ok · 0 hard-fail · exit 0** (the lone
+  non-fatal FAIL is the main app's pre-existing async MSDF text-warm on Atelier nodes — not the
+  isolated keyframe route; foundation clean, no graph drift).
+- Console on `/keyframe-editor` → **0 errors**. All 8 `__PRISM_KEYFRAME_*__` verify hooks live.
+
+**Behavioral (re-driven on the live app, real GPU):** wrote 8 keyframes (2 each on
+posY/scale/rotZ/opacity), all with `coordinateSpace: "hub-scene"` (NODE LAW + INV-21). Scrub
+produced exact linear interpolation — t0 `{posY:-1, scale:0.6, rotZ:0, opacity:1}` →
+t2 `{0, 1, 1.25, 0.675}` (midpoints) → t4 `{1, 1.4, 2.5, 0.35}` (keyed extremes). The bound cube
+visibly rises/grows/spins/fades across the scrub and every fader knob glides to track the
+playhead. `play()` advanced the clock (~1 u/s); `pause()` froze it (two reads identical).
+
+**Fresh-context user-advocate (re-run on fresh frames):** **net PLEASED · gate PASS · 0 MUST-FIX**,
+all four axes (STYLE/FUNCTION/INTUITIVENESS/USABILITY) PASS, schema-validated. Two non-blocking
+flags: (1) engraved labels read as a "doubled strike" — this is the intentional **3-copy V-groove
+intaglio engraving** (§1, identical to the chassis), not a defect; (2) at t4 the cube nears the
+top frame edge — an artifact of the deliberately-extreme test keyframes (posY/scale at max), not
+the default pose.
+
+**Re-verify evidence:** `notes/verification/keyframe/reverify-overview.png`,
+`reverify-scrub-t0.png`, `reverify-scrub-t2.png`, `reverify-scrub-t4.png` (+ advocate JPEGs in
+`notes/verification/keyframe/reverify/`).
+
+**Re-verify verdict: DONE — confirmed intact, no source change required.**
