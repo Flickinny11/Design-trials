@@ -49,10 +49,16 @@ const MAT = argv.includes('--mat');
 // /fluid-lab — every instantiated fluid (surface/volume) must map to a backing node,
 // and editing fluid params or triggering liquid glass must never orphan a render.
 const FLUID = argv.includes('--fluid');
+// PRIM-P4: `--composite` extends Law-0 coverage to the Composite System at
+// /composite-lab — instantiating a composite must create a whole SUBGRAPH (member
+// nodes + edges) in one action; the BOUND nav tabs/dropdown items must auto-populate
+// one-per-hub and obey the auto-add toggle; no render may orphan.
+const COMPOSITE = argv.includes('--composite');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 const LAB_URL = URL.replace(/\/$/, '') + '/primitive-lab';
 const MAT_URL = URL.replace(/\/$/, '') + '/material-lab';
 const FLUID_URL = URL.replace(/\/$/, '') + '/fluid-lab';
+const COMPOSITE_URL = URL.replace(/\/$/, '') + '/composite-lab';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
 // THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
@@ -501,6 +507,119 @@ async function mainFluid() {
   finish();
 }
 
+// ── PRIM-P4 COMPOSITE MODE (spec §0 / §4 / INV-0.4) ─────────────────────────────
+// Drives /composite-lab and proves the Node Law for the Composite System:
+//   1. The authorship probe + self-test are live (classifier discriminates).
+//   2. Instantiating a composite CREATES a whole SUBGRAPH (>1 backing node + edges)
+//      in one action.
+//   3. The BOUND nav tabs AUTO-POPULATE one-per-hub.
+//   4. Adding a hub with auto-add ON adds a tab (binding is live); auto-add OFF +
+//      add hub does NOT (frozen). Every rendered member stays node-backed.
+//   5. In CANVAS, every node is realized and every rendered member maps to a node —
+//      ZERO orphans. In GALAXY, every dormant seed maps to a node — ZERO orphans.
+async function mainComposite() {
+  if (!(await waitForServer(URL))) {
+    check('server.up', `dev server reachable at ${URL}`, false, 'no 200 in 30s — start `npm run dev` first');
+    finish();
+    return;
+  }
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ viewport: { width: 1680, height: 1000 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  try {
+    await page.goto(COMPOSITE_URL, { waitUntil: 'domcontentloaded' });
+    const booted = await page.waitForFunction(() => {
+      const w = window;
+      return typeof w.__PRISM_COMPOSITE_AUTHORSHIP__ === 'function'
+        && typeof w.__PRISM_COMPOSITE_STORE__ === 'function'
+        && w.__PRISM_COMPOSITE_STORE__().composites.length > 0;
+    }, { timeout: 60000 }).then(() => true).catch(() => false);
+    check('composite.probe.installed', 'window.__PRISM_COMPOSITE_AUTHORSHIP__ installed + composites seeded', booted,
+      booted ? '' : 'probe never appeared (route did not boot)');
+    if (!booted) { await browser.close(); finish(); return; }
+    // worn textures + MSDF warm async; give the full subgraph time to mount.
+    await page.waitForTimeout(7500);
+
+    // 1) classifier self-test — a synthetic unbacked render MUST be caught.
+    const self = await page.evaluate(() => window.__PRISM_COMPOSITE_AUTHORSHIP_SELFTEST__?.() ?? null);
+    check('composite.classifier-live', 'authorship classifier discriminates backed vs orphan (self-test)', !!self?.live,
+      self?.live ? 'synthetic orphan + untagged render both flagged — a real orphan WOULD be caught'
+                 : `self-test failed: ${JSON.stringify(self)}`);
+
+    // 2) instantiating a composite CREATES a SUBGRAPH (>1 node + edges) in one action.
+    const inst = await page.evaluate(() => {
+      const st = window.__PRISM_COMPOSITE_STORE__();
+      const before = st.nodes().length;
+      const beforeEdges = st.edges().length;
+      const id = st.instantiateComposite('nav-header');
+      const after = window.__PRISM_COMPOSITE_STORE__();
+      const sub = window.__PRISM_COMPOSITE_SUBGRAPH__(id);
+      return { before, beforeEdges, after: after.nodes().length, afterEdges: after.edges().length, memberCount: sub.memberCount, edgeCount: sub.edgeCount, bindingEdges: sub.bindingEdges };
+    });
+    check('composite.instantiate-creates-subgraph', 'instantiating a composite auto-creates a whole subgraph (members + edges) in one action',
+      inst.memberCount > 1 && inst.after > inst.before + 1 && inst.afterEdges > inst.beforeEdges,
+      `nodes ${inst.before}→${inst.after} (+${inst.after - inst.before}) · edges ${inst.beforeEdges}→${inst.afterEdges} · members ${inst.memberCount} · bindingEdges ${inst.bindingEdges}`);
+
+    // 3) the bound nav tabs AUTO-POPULATE one-per-hub.
+    const tabs0 = await page.evaluate(() => window.__PRISM_NAV_TABS__());
+    check('composite.auto-populate', 'bound nav tabs auto-populate one tab per hub (zero wiring)',
+      tabs0.tabCount === tabs0.hubCount && tabs0.tabCount > 0,
+      `${tabs0.tabCount} tabs / ${tabs0.hubCount} hubs · ${JSON.stringify(tabs0.labels)}`);
+
+    // 4) auto-add ON → a new hub adds a tab; OFF → frozen.
+    const addOn = await page.evaluate(() => {
+      const st = window.__PRISM_COMPOSITE_STORE__();
+      const id = st.composites.find((c) => c.templateId === 'nav-header').compositeId;
+      const before = window.__PRISM_NAV_TABS__(id).tabCount;
+      st.addHub();
+      return { id, before, after: window.__PRISM_NAV_TABS__(id).tabCount };
+    });
+    check('composite.auto-add-on', 'auto-add ON: a new hub auto-appears as a bound tab', addOn.after === addOn.before + 1,
+      `tabs ${addOn.before} → ${addOn.after}`);
+    const addOff = await page.evaluate(({ id }) => {
+      const st = window.__PRISM_COMPOSITE_STORE__();
+      st.toggleAutoAdd(id);
+      const before = window.__PRISM_NAV_TABS__(id).tabCount;
+      st.addHub();
+      return { before, after: window.__PRISM_NAV_TABS__(id).tabCount };
+    }, { id: addOn.id });
+    check('composite.auto-add-off', 'auto-add OFF: a new hub is frozen out of the nav', addOff.after === addOff.before,
+      `tabs stayed ${addOff.before} (a 6th/Nth hub exists but is not bound)`);
+
+    // 5) CANVAS — zero orphans, every node realized.
+    await page.evaluate(() => window.__PRISM_COMPOSITE_STORE__().setView('canvas'));
+    await page.waitForTimeout(3500);
+    const canvas = await page.evaluate(() => window.__PRISM_COMPOSITE_AUTHORSHIP__());
+    check('composite.canvas.no-orphan', 'CANVAS: every rendered composite member maps to a backing node (Law 0)', canvas.orphans.length === 0,
+      canvas.orphans.length ? `ORPHANS: ${JSON.stringify(canvas.orphans).slice(0, 200)}` : `${canvas.renderedCount} rendered, all node-backed`);
+    check('composite.canvas.all-realized', 'CANVAS: every node is realized (no node left unbuilt)', canvas.unrealized.length === 0,
+      canvas.unrealized.length ? `unrealized: ${canvas.unrealized.slice(0, 8).join(', ')}` : `${canvas.nodeIds.length} nodes all realized`);
+
+    // 6) GALAXY — zero orphans (every dormant seed is node-backed).
+    await page.evaluate(() => window.__PRISM_COMPOSITE_STORE__().setView('galaxy'));
+    await page.waitForTimeout(2500);
+    const galaxy = await page.evaluate(() => window.__PRISM_COMPOSITE_AUTHORSHIP__());
+    check('composite.galaxy.no-orphan', 'GALAXY: every dormant seed maps to a backing node (Law 0)', galaxy.orphans.length === 0,
+      galaxy.orphans.length ? `ORPHANS: ${JSON.stringify(galaxy.orphans).slice(0, 200)}` : `${galaxy.renderedCount} dormant seeds, all node-backed`);
+
+    check('composite.no-pageerrors', 'no uncaught page errors during the composite gate run', pageErrors.length === 0,
+      pageErrors.length ? pageErrors.slice(0, 2).join(' | ') : 'clean');
+
+    writeFileSync(join(outDir, 'composite-authorship-gate.json'), JSON.stringify({
+      url: COMPOSITE_URL, selfTest: self, instantiate: inst, tabs0, addOn, addOff, canvas, galaxy, results,
+    }, null, 2) + '\n');
+    await page.screenshot({ path: join(outDir, 'composite-gate-final-frame.png') }).catch(() => {});
+    await browser.close();
+  } catch (e) {
+    check('composite.fatal', 'composite gate fatal error', false, e?.message ?? String(e));
+    try { await browser.close(); } catch { /* ignore */ }
+  }
+  finish();
+}
+
 function finish() {
   // FAIL conditions: a FAIL result that is not a soft WARN.
   const hardFails = results.filter((r) => !r.pass && !r.warn);
@@ -510,4 +629,4 @@ function finish() {
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
-(FLUID ? mainFluid() : MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
+(COMPOSITE ? mainComposite() : FLUID ? mainFluid() : MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });

@@ -1,0 +1,99 @@
+{
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "seeded": [
+    "nav-header",
+    "footer",
+    "card"
+  ],
+  "subgraph": {
+    "compositeId": "comp-card-1",
+    "templateId": "card",
+    "memberCount": 5,
+    "memberIds": [
+      "comp-card-1-base",
+      "comp-card-1-media",
+      "comp-card-1-title",
+      "comp-card-1-body",
+      "comp-card-1-cta"
+    ],
+    "roles": [
+      "card-base",
+      "card-media",
+      "card-title",
+      "card-body",
+      "card-cta"
+    ],
+    "edgeCount": 4,
+    "bindingEdges": 0,
+    "parentEdges": 4
+  },
+  "autoPopulate": {
+    "compositeId": "comp-nav-header-1",
+    "autoAdd": true,
+    "hubCount": 5,
+    "tabCount": 5,
+    "labels": [
+      "Home",
+      "Work",
+      "Studio",
+      "Journal",
+      "Contact"
+    ],
+    "keys": [
+      "page-home",
+      "page-work",
+      "page-studio",
+      "page-journal",
+      "page-contact"
+    ]
+  },
+  "addOn": {
+    "before": 5,
+    "after": 6
+  },
+  "addOff": {
+    "before": 6,
+    "after": 6
+  },
+  "reOn": {
+    "before": 6,
+    "after": 7,
+    "hubCount": 7
+  },
+  "realClickAutoAdd": {
+    "before": true,
+    "after": false,
+    "toggled": true
+  },
+  "realClickRename": {
+    "before": "Home",
+    "after": "Start",
+    "changed": true
+  },
+  "realClickHide": {
+    "label": "Start",
+    "before": 7,
+    "after": 6,
+    "hid": true
+  },
+  "dropdownPhase": 1,
+  "liquidFlowPixels": 123374,
+  "galaxy": {
+    "ok": true,
+    "rendered": 32,
+    "orphans": 0
+  },
+  "canvas": {
+    "ok": true,
+    "rendered": 32,
+    "nodes": 32,
+    "orphans": 0,
+    "unrealized": 0
+  },
+  "pageErrors": 0,
+  "consoleErrors": 0,
+  "pageErrorSample": []
+}
