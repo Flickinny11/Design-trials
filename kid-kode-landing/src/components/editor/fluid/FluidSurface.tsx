@@ -48,7 +48,7 @@ export function FluidSurface({
   onSelect: (nodeId: string | null) => void;
 }) {
   const gl = useThree((s) => s.gl);
-  const liquidGlassPhase = useFluidStore((s) => s.liquidGlassPhase);
+  const meshRef = useRef<THREE.Mesh>(null);
   const lastUv = useRef<{ x: number; y: number; t: number } | null>(null);
 
   // the GPU sim + the liquid-glass surface material (one per node, disposed on swap).
@@ -70,9 +70,23 @@ export function FluidSurface({
   }, [surf, schema.params.ior, schema.params.thickness, schema.params.tint, schema.params.opacity]);
 
   useFrame((state, dt) => {
-    sim.setParams(paramsFor(schema, liquidGlassPhase));
-    surf.uniforms.liquidPhase.value = liquidGlassPhase;
+    // read the liquid-glass phase LIVE (the timeline driver mutates it each frame;
+    // reading from the store avoids a per-frame React re-render of this node).
+    const phase = useFluidStore.getState().liquidGlassPhase;
+    sim.setParams(paramsFor(schema, phase));
+    surf.uniforms.liquidPhase.value = phase;
     sim.step(gl as unknown as THREE.WebGLRenderer, dt, state.clock.elapsedTime);
+
+    // EXPAND reveal (spec §3.3): as the surface "goes liquid" (phase 0→1) it grows
+    // from a thin sliver to the full panel, anchored at the top edge — the canonical
+    // nav-dropdown expansion. At phase 0 it is a still, solid glass slab.
+    const mesh = meshRef.current;
+    if (mesh) {
+      const e = phase * phase * (3 - 2 * phase); // smoothstep
+      const sy = 0.10 + 0.90 * e;
+      mesh.scale.set(0.78 + 0.22 * e, sy, 1);
+      mesh.position.y = (schema.height / 2) * (1 - sy); // top-anchored grow-down
+    }
   });
 
   const onPointerMove = (e: ThreeEvent<PointerEvent>) => {
@@ -97,6 +111,7 @@ export function FluidSurface({
       scale={t.scale}
     >
       <mesh
+        ref={meshRef}
         material={surf.material}
         userData={{ prismFluid: true, prismNodeId: schema.nodeId, prismKind: schema.kind, prismDormant: false }}
         onPointerDown={(e) => { e.stopPropagation(); onSelect(schema.nodeId); }}

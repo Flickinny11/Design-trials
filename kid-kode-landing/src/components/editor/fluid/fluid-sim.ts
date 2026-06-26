@@ -189,10 +189,11 @@ export class FluidFieldSim {
       hNext.addAssign(ring.mul(0.7));
       vel.addAssign(U.pointerVel.mul(ring).mul(2.0));
 
-      // gentle decay so the field neither saturates nor dies; settle to a flat slab
-      // as the liquid-glass phase → 0 (the expand timeline).
+      // gentle decay so the field neither saturates nor dies; settle to a flat,
+      // still SOLID glass slab as the liquid-glass phase → 0 (the "go liquid"
+      // timeline: phase 0 = solid pane, phase 1 = fully flowing liquid glass).
       hNext.mulAssign(float(0.992));
-      hNext.mulAssign(U.liquidPhase.mul(0.92).add(0.08));
+      hNext.mulAssign(U.liquidPhase);
       hNext.assign(hNext.clamp(-1.2, 1.2));
 
       return vec4(hNext, h, vel);
