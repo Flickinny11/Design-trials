@@ -18,6 +18,8 @@ import { StudioEnv } from '@/components/editor/chassis/StudioEnv';
 import { FluidEngravedText } from './FluidEngravedText';
 import { FluidMesh } from './FluidMesh';
 import { DormantFluid } from './DormantFluid';
+import { FluidInspector } from './FluidInspector';
+import { FluidPalette } from './FluidPalette';
 import { useFluidStore } from './use-fluid-store';
 
 // A rich, high-contrast editorial backdrop — bright light bars + glowing orbs over
@@ -206,7 +208,11 @@ function useSeed() {
     if (st.schemas.length === 0) {
       st.instantiate('surface');
       st.instantiate('volume');
-      st.select(st.schemas[0]?.nodeId ?? null);
+      // re-read fresh state (the snapshot above predates the instantiates) and
+      // select the liquid-glass surface so the Inspector opens on it by default.
+      const fresh = useFluidStore.getState();
+      const surfaceId = fresh.schemas.find((s) => s.kind === 'surface')?.nodeId ?? fresh.schemas[0]?.nodeId ?? null;
+      fresh.select(surfaceId);
     }
   }, []);
 }
@@ -234,6 +240,8 @@ export function FluidLabScene() {
       <SelectedCaption />
       <Suspense fallback={null}>
         <FluidNodes />
+        <FluidPalette />
+        <FluidInspector />
       </Suspense>
     </>
   );
