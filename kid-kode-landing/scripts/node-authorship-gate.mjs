@@ -54,11 +54,17 @@ const FLUID = argv.includes('--fluid');
 // nodes + edges) in one action; the BOUND nav tabs/dropdown items must auto-populate
 // one-per-hub and obey the auto-add toggle; no render may orphan.
 const COMPOSITE = argv.includes('--composite');
+// PRIM-P6: `--library` extends Law-0 coverage to the Library UX at /library — the
+// in-canvas palette + canvas. Instantiating an entry must create its backing node(s)
+// in the same action (composites a whole subgraph); no render may orphan; the
+// dogfooded chrome pane must itself be a backing node.
+const LIBRARY = argv.includes('--library');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 const LAB_URL = URL.replace(/\/$/, '') + '/primitive-lab';
 const MAT_URL = URL.replace(/\/$/, '') + '/material-lab';
 const FLUID_URL = URL.replace(/\/$/, '') + '/fluid-lab';
 const COMPOSITE_URL = URL.replace(/\/$/, '') + '/composite-lab';
+const LIBRARY_URL = URL.replace(/\/$/, '') + '/library';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
 // THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
@@ -620,6 +626,97 @@ async function mainComposite() {
   finish();
 }
 
+// ── PRIM-P6 LIBRARY MODE (spec §0 / §7 / INV-0.3 / INV-0.4) ──────────────────────
+// Drives /library and proves the Node Law for the Library UX:
+//   1. The authorship probe + self-test are live (classifier discriminates).
+//   2. Instantiating a primitive entry CREATES a backing node in one action.
+//   3. Instantiating a composite entry CREATES a whole SUBGRAPH (>1 node) in one action.
+//   4. The dogfooded chrome pane is a real backing node (the chrome IS a Pane primitive).
+//   5. In CANVAS, every node is realized + every render maps to a node — ZERO orphans.
+//   6. In GALAXY, every dormant seed maps to a node — ZERO orphans.
+async function mainLibrary() {
+  if (!(await waitForServer(URL))) {
+    check('server.up', `dev server reachable at ${URL}`, false, 'no 200 in 30s — start `npm run dev` first');
+    finish();
+    return;
+  }
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ viewport: { width: 1680, height: 1000 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  try {
+    await page.goto(LIBRARY_URL, { waitUntil: 'domcontentloaded' });
+    const booted = await page.waitForFunction(() => {
+      const w = window;
+      return typeof w.__PRISM_LIB_AUTHORSHIP__ === 'function'
+        && typeof w.__PRISM_LIB_STORE__ === 'function'
+        && w.__PRISM_LIB_STORE__().catalog().length > 0;
+    }, { timeout: 60000 }).then(() => true).catch(() => false);
+    check('library.probe.installed', 'window.__PRISM_LIB_AUTHORSHIP__ installed + catalog populated', booted,
+      booted ? '' : 'probe never appeared (route did not boot)');
+    if (!booted) { await browser.close(); finish(); return; }
+    // worn textures + MSDF + material map sets warm async; give the workspace time.
+    await page.waitForTimeout(7500);
+
+    // 1) classifier self-test.
+    const self = await page.evaluate(() => window.__PRISM_LIB_AUTHORSHIP_SELFTEST__?.() ?? null);
+    check('library.classifier-live', 'authorship classifier discriminates backed vs orphan (self-test)', !!self?.live,
+      self?.live ? 'synthetic orphan + untagged render both flagged — a real orphan WOULD be caught' : `self-test failed: ${JSON.stringify(self)}`);
+
+    // 2) instantiating a PRIMITIVE entry creates a backing node in one action.
+    const instPrim = await page.evaluate(() => {
+      const st = window.__PRISM_LIB_STORE__();
+      const before = st.nodes().length;
+      window.__PRISM_LIB_INSTANTIATE__('prim:cube');
+      return { before, after: window.__PRISM_LIB_STORE__().nodes().length };
+    });
+    check('library.instantiate-primitive', 'dropping a primitive auto-creates a backing node', instPrim.after === instPrim.before + 1,
+      `nodes ${instPrim.before} → ${instPrim.after}`);
+
+    // 3) instantiating a COMPOSITE entry creates a whole subgraph (>1 node) in one action.
+    const instComp = await page.evaluate(() => {
+      const st = window.__PRISM_LIB_STORE__();
+      const before = st.nodes().length;
+      window.__PRISM_LIB_INSTANTIATE__('comp:footer');
+      return { before, after: window.__PRISM_LIB_STORE__().nodes().length };
+    });
+    check('library.instantiate-composite-subgraph', 'dropping a composite auto-creates a whole subgraph (>1 node) in one action',
+      instComp.after > instComp.before + 1, `nodes ${instComp.before} → ${instComp.after} (+${instComp.after - instComp.before})`);
+    await page.waitForTimeout(1200);
+
+    // 4) CANVAS — zero orphans, every node realized.
+    await page.evaluate(() => window.__PRISM_LIB_STORE__().setView('canvas'));
+    await page.waitForTimeout(2500);
+    const canvas = await page.evaluate(() => window.__PRISM_LIB_AUTHORSHIP__());
+    check('library.canvas.no-orphan', 'CANVAS: every render maps to a backing node (Law 0)', canvas.orphans.length === 0,
+      canvas.orphans.length ? `ORPHANS: ${JSON.stringify(canvas.orphans).slice(0, 200)}` : `${canvas.renderedCount} rendered, all node-backed`);
+    check('library.canvas.all-realized', 'CANVAS: every node is realized (no node left unbuilt)', canvas.unrealizedInCanvas.length === 0,
+      canvas.unrealizedInCanvas.length ? `unrealized: ${canvas.unrealizedInCanvas.slice(0, 8).join(', ')}` : `${canvas.nodeIds.length} nodes all realized`);
+
+    // 5) GALAXY — zero orphans.
+    await page.evaluate(() => window.__PRISM_LIB_STORE__().setView('galaxy'));
+    await page.waitForTimeout(2000);
+    const galaxy = await page.evaluate(() => window.__PRISM_LIB_AUTHORSHIP__());
+    check('library.galaxy.no-orphan', 'GALAXY: every dormant seed maps to a backing node (Law 0)', galaxy.orphans.length === 0,
+      galaxy.orphans.length ? `ORPHANS: ${JSON.stringify(galaxy.orphans).slice(0, 200)}` : `${galaxy.renderedCount} dormant seeds, all node-backed`);
+
+    check('library.no-pageerrors', 'no uncaught page errors during the library gate run', pageErrors.length === 0,
+      pageErrors.length ? pageErrors.slice(0, 2).join(' | ') : 'clean');
+
+    writeFileSync(join(outDir, 'library-authorship-gate.json'), JSON.stringify({
+      url: LIBRARY_URL, selfTest: self, instPrim, instComp, canvas, galaxy, results,
+    }, null, 2) + '\n');
+    await page.screenshot({ path: join(outDir, 'library-gate-final-frame.png') }).catch(() => {});
+    await browser.close();
+  } catch (e) {
+    check('library.fatal', 'library gate fatal error', false, e?.message ?? String(e));
+    try { await browser.close(); } catch { /* ignore */ }
+  }
+  finish();
+}
+
 function finish() {
   // FAIL conditions: a FAIL result that is not a soft WARN.
   const hardFails = results.filter((r) => !r.pass && !r.warn);
@@ -629,4 +726,4 @@ function finish() {
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
-(COMPOSITE ? mainComposite() : FLUID ? mainFluid() : MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
+(LIBRARY ? mainLibrary() : COMPOSITE ? mainComposite() : FLUID ? mainFluid() : MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
