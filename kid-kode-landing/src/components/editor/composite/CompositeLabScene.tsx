@@ -26,6 +26,7 @@ import { useCompositeStore } from './use-composite-store';
 import { resolveNavTabs, compositeMembers, compositeEdges } from './composite-schema';
 import { effectiveRoot } from './composition';
 import { GridFloor, SnapGuides, StackTies, MoveGizmo } from './CompositionOverlay';
+import { ConnectorLayer, ConnectPicker } from './ConnectorLayer';
 import { useWornMaps, type WornMaps } from '@/components/editor/chassis/materials';
 
 // Rich high-contrast editorial backdrop — light bars + glowing orbs over a deep
@@ -33,6 +34,7 @@ import { useWornMaps, type WornMaps } from '@/components/editor/chassis/material
 // refraction invisible; the P-3 lesson). Clicking empty space deselects.
 function Backdrop() {
   const select = useCompositeStore((s) => s.select);
+  const cancelConnect = useCompositeStore((s) => s.cancelConnect);
   const tex = useMemo(() => {
     const W = 1024, H = 640;
     const c = document.createElement('canvas');
@@ -71,7 +73,7 @@ function Backdrop() {
     return t;
   }, []);
   return (
-    <mesh position={[0, 0, -4.2]} onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); select(null); }}>
+    <mesh position={[0, 0, -4.2]} onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); cancelConnect(); select(null); }}>
       <planeGeometry args={[68, 40]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
@@ -278,6 +280,8 @@ export function CompositeLabScene() {
       <GridFloor />
       <SnapGuides />
       <StackTies />
+      <ConnectorLayer />
+      <ConnectPicker />
 
       {/* No shadow maps / ContactShadows on the WebGPU node renderer (P-3 lesson). */}
       <ambientLight intensity={0.55} />

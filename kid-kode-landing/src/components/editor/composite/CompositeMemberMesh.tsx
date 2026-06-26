@@ -17,6 +17,7 @@ import type { WornMaps } from '@/components/editor/chassis/materials';
 import { buildCubeGeometry, buildPaneGeometry } from '@/components/editor/primitive/primitive-geometry';
 import { CompositeText } from './CompositeText';
 import { buildMemberMaterial } from './composite-materials';
+import { useCompositeStore } from './use-composite-store';
 import type { CompositeMember } from './composite-schema';
 
 const LABELLED_ROLES = new Set(['nav-title', 'nav-tab', 'nav-menu-item', 'footer-link', 'card-title', 'card-cta']);
@@ -50,6 +51,9 @@ export function CompositeMemberMesh({
 }: CompositeMemberMeshProps) {
   const groupRef = useRef<THREE.Group>(null);
   const hover = useRef(false);
+  // CONNECT mode: this member is pickable as a graph-edge endpoint; light up when it
+  // is the armed (first-picked) node.
+  const picked = useCompositeStore((s) => s.pendingConnectFrom === member.memberId);
 
   const geometry = useMemo(() => buildGeometry(member), [member.kind, member.width, member.height, member.depth, member.cornerRadius]);
   useEffect(() => () => geometry.dispose(), [geometry]);
@@ -84,10 +88,17 @@ export function CompositeMemberMesh({
       <mesh
         geometry={geometry}
         material={material}
-        onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onSelect(compositeId); }}
-        onPointerOver={(e) => { e.stopPropagation(); hover.current = true; if (interactive) document.body.style.cursor = 'pointer'; }}
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          // CONNECT mode → pick this node as a graph-edge endpoint (spec §6.2);
+          // otherwise select the parent composite (open the Inspector).
+          if (useCompositeStore.getState().editorMode === 'connect') useCompositeStore.getState().pickConnectNode(member.memberId);
+          else onSelect(compositeId);
+        }}
+        onPointerOver={(e) => { e.stopPropagation(); hover.current = true; const connecting = useCompositeStore.getState().editorMode === 'connect'; if (interactive || connecting) document.body.style.cursor = connecting ? 'crosshair' : 'pointer'; }}
         onPointerOut={(e) => { e.stopPropagation(); hover.current = false; document.body.style.cursor = ''; }}
       />
+      {picked && <PickRing width={member.width} height={member.height} />}
       {LABELLED_ROLES.has(member.role) && (
         <CompositeText
           position={[0, 0, member.depth / 2 + 0.03]}
@@ -100,6 +111,19 @@ export function CompositeMemberMesh({
       )}
       {selected && <SelectionEdge width={member.width} height={member.height} depth={member.depth} />}
     </group>
+  );
+}
+
+// CONNECT pick highlight — a bright ring around the armed endpoint node.
+const PICK_MAT = new THREE.MeshBasicMaterial({ color: '#9fe9ff', toneMapped: false, transparent: true, opacity: 0.95 });
+function PickRing({ width, height }: { width: number; height: number }) {
+  const r = Math.max(width, height) * 0.62;
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state) => { if (ref.current) ref.current.scale.setScalar(1 + 0.06 * Math.sin(state.clock.elapsedTime * 5)); });
+  return (
+    <mesh ref={ref} position={[0, 0, 0.22]} material={PICK_MAT}>
+      <torusGeometry args={[r, 0.03, 8, 40]} />
+    </mesh>
   );
 }
 

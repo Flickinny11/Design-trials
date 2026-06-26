@@ -527,3 +527,5 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [16:31:41] CHAIN/PRIM-P5: still building · 11m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
 [16:35:12] CHAIN/PRIM-P5: still building · 14m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
 [16:38:42] CHAIN/PRIM-P5: still building · 18m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:39:13] CHAIN/PRIM-P5: commit c58fb621 — AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
+[16:42:13] CHAIN/PRIM-P5: still building · 21m elapsed · agent up · 989 commits · last: AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
