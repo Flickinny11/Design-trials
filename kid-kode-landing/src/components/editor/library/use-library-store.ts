@@ -25,12 +25,14 @@ import {
   makeSchema as makePrimSchema,
   schemaToNode as primToNode,
   resetMintCounters as resetPrimCounters,
+  type Cutout,
   type PrimitiveKind,
   type PrimitiveMaterial,
   type PrimitiveParams,
   type PrimitiveSchema,
   type PrimitiveTransform,
 } from '@/components/editor/primitive/primitive-schema';
+import { mintCutoutId } from '@/components/editor/primitive/primitive-geometry';
 import {
   makeSchema as makeFluidSchema,
   schemaToNode as fluidToNode,
@@ -127,6 +129,8 @@ export interface LibraryStore {
   updatePrimParam: (id: string, patch: Partial<PrimitiveParams>) => void;
   updatePrimMaterial: (id: string, patch: Partial<PrimitiveMaterial>) => void;
   applyMaterial: (id: string, materialId: string) => void;
+  addCutout: (id: string) => void;
+  removeCutout: (id: string) => void;
   updateFluidParam: (id: string, patch: Partial<FluidParams>) => void;
   moveInstance: (id: string, pos: { x: number; y: number }) => void;
 
@@ -314,6 +318,20 @@ export const useLibraryStore = create<LibraryStore>((set, get) => ({
   applyMaterial: (id, materialId) =>
     set((s) => ({
       instances: patchPrim(s.instances, id, (sc) => ({ ...sc, material: { ...sc.material, materialId } })),
+      rev: s.rev + 1,
+    })),
+  addCutout: (id) =>
+    set((s) => ({
+      instances: patchPrim(s.instances, id, (sc) => {
+        if (sc.kind !== 'pane') return sc;
+        const cut: Cutout = { id: mintCutoutId(), x: 0, y: 0, w: 0.7, h: 0.7, r: 0.14 };
+        return { ...sc, params: { ...sc.params, cutouts: [...sc.params.cutouts, cut] } };
+      }),
+      rev: s.rev + 1,
+    })),
+  removeCutout: (id) =>
+    set((s) => ({
+      instances: patchPrim(s.instances, id, (sc) => ({ ...sc, params: { ...sc.params, cutouts: sc.params.cutouts.slice(0, -1) } })),
       rev: s.rev + 1,
     })),
   updateFluidParam: (id, patch) =>

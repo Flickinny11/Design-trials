@@ -27,7 +27,7 @@ import { DragGhost } from './DragGhost';
 import { useLibraryStore, CHROME_PANE_ID } from './use-library-store';
 
 const PALETTE_POS: [number, number, number] = [-8.4, 0, 0];
-const INSPECTOR_POS: [number, number, number] = [8.6, 0, 0];
+const INSPECTOR_POS: [number, number, number] = [8.0, 0, 0];
 
 // Rich editorial backdrop so the transmission glass has CONTENT to refract.
 function Backdrop() {
