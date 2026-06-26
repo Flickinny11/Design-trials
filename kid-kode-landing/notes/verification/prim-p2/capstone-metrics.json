@@ -1,0 +1,20 @@
+{
+  "steps": [
+    {
+      "fam": "Metals",
+      "id": "metal.gold",
+      "label": "cap-pane-A-gold"
+    },
+    {
+      "fam": "Gems",
+      "id": "gem.ruby",
+      "label": "cap-pane-B-ruby"
+    },
+    {
+      "fam": "Generated",
+      "id": "generated.brushed-copper",
+      "label": "cap-pane-C-copper-p2t"
+    }
+  ],
+  "errors": []
+}

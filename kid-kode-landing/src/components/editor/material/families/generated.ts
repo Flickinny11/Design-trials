@@ -18,7 +18,7 @@ export const GENERATED_SEED: MaterialDef[] = [
     family: 'Generated',
     label: 'Brushed Copper',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.55, normalScale: 1.1, envMapIntensity: 0.98, anisotropy: 0.35, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'generated', dir: `${GEN_DIR}/brushed-copper`, repeat: [1.5, 1.5] },
+    maps: { source: 'generated', dir: `${GEN_DIR}/brushed-copper`, repeat: [1, 1] },
     swatchTint: '#b5734f',
   },
   {
@@ -26,7 +26,7 @@ export const GENERATED_SEED: MaterialDef[] = [
     family: 'Generated',
     label: 'Carrara Marble',
     params: { baseColor: '#ffffff', metalness: 0, roughness: 1, clearcoat: 0.5, clearcoatRoughness: 0.2, normalScale: 0.8, envMapIntensity: 0.95 },
-    maps: { source: 'generated', dir: `${GEN_DIR}/carrara-marble`, repeat: [1.25, 1.25] },
+    maps: { source: 'generated', dir: `${GEN_DIR}/carrara-marble`, repeat: [1, 1] },
     swatchTint: '#e9e6df',
   },
   {
@@ -34,7 +34,7 @@ export const GENERATED_SEED: MaterialDef[] = [
     family: 'Generated',
     label: 'Walnut Grain',
     params: { baseColor: '#ffffff', metalness: 0, roughness: 1, clearcoat: 0.28, clearcoatRoughness: 0.35, normalScale: 1.0, envMapIntensity: 0.82 },
-    maps: { source: 'generated', dir: `${GEN_DIR}/walnut-grain`, repeat: [1.4, 1.4] },
+    maps: { source: 'generated', dir: `${GEN_DIR}/walnut-grain`, repeat: [1, 1] },
     swatchTint: '#6b4a30',
   },
 ];

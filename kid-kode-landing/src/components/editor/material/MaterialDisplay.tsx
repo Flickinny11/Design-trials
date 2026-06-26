@@ -23,8 +23,28 @@ import type { MaterialParams } from './material-types';
 
 const SELECT_MAT = new THREE.LineBasicMaterial({ color: '#9fd8ff', transparent: true, opacity: 0.95, toneMapped: false });
 
+// The pane's ExtrudeGeometry UVs are in shape-space units (not 0..1), so a tiling
+// PBR map repeats + seams across the face. For material review we remap the pane's
+// uv/uv1 to 0..1 over the XY bounding box so a textured material maps cleanly ONCE
+// across the face (no seams). Material-lab only — the shared builder is untouched.
+function normalizePaneUVs(geo: THREE.BufferGeometry): THREE.BufferGeometry {
+  const pos = geo.attributes.position;
+  geo.computeBoundingBox();
+  const bb = geo.boundingBox!;
+  const minX = bb.min.x, minY = bb.min.y;
+  const spanX = Math.max(1e-4, bb.max.x - minX), spanY = Math.max(1e-4, bb.max.y - minY);
+  const uv = new Float32Array(pos.count * 2);
+  for (let i = 0; i < pos.count; i++) {
+    uv[i * 2] = (pos.getX(i) - minX) / spanX;
+    uv[i * 2 + 1] = (pos.getY(i) - minY) / spanY;
+  }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  geo.setAttribute('uv1', new THREE.BufferAttribute(uv.slice(), 2));
+  return geo;
+}
+
 function buildGeometry(schema: PrimitiveSchema): THREE.BufferGeometry {
-  if (schema.kind === 'pane') return buildPaneGeometry(schema.params);
+  if (schema.kind === 'pane') return normalizePaneUVs(buildPaneGeometry(schema.params));
   if (schema.kind === 'cube') return buildCubeGeometry(schema.params);
   return buildSphereGeometry(schema.params);
 }

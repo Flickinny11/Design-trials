@@ -20,7 +20,7 @@ export const METALS: MaterialDef[] = [
     family: 'Metals',
     label: 'Worn Emerald',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.65, envMapIntensity: 0.95, normalScale: 1.35, anisotropy: 0.4, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'worn', wornKey: 'emerald', repeat: [1.5, 1.5] },
+    maps: { source: 'worn', wornKey: 'emerald', repeat: [1, 1] },
     swatchTint: '#2f9e74',
   },
   {
@@ -28,7 +28,7 @@ export const METALS: MaterialDef[] = [
     family: 'Metals',
     label: 'Worn Sapphire',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.65, envMapIntensity: 0.95, normalScale: 1.35, anisotropy: 0.4, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'worn', wornKey: 'sapphire', repeat: [1.5, 1.5] },
+    maps: { source: 'worn', wornKey: 'sapphire', repeat: [1, 1] },
     swatchTint: '#3f6fd6',
   },
   {
@@ -36,7 +36,7 @@ export const METALS: MaterialDef[] = [
     family: 'Metals',
     label: 'Aged Bronze',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.65, envMapIntensity: 0.95, normalScale: 1.35, anisotropy: 0.4, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'worn', wornKey: 'bronze', repeat: [1.5, 1.5] },
+    maps: { source: 'worn', wornKey: 'bronze', repeat: [1, 1] },
     swatchTint: '#b07a36',
   },
   {
@@ -44,7 +44,7 @@ export const METALS: MaterialDef[] = [
     family: 'Metals',
     label: 'Oxblood Alloy',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.65, envMapIntensity: 0.95, normalScale: 1.35, anisotropy: 0.4, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'worn', wornKey: 'oxblood', repeat: [1.5, 1.5] },
+    maps: { source: 'worn', wornKey: 'oxblood', repeat: [1, 1] },
     swatchTint: '#9c3447',
   },
   {
@@ -52,7 +52,7 @@ export const METALS: MaterialDef[] = [
     family: 'Metals',
     label: 'Gunmetal',
     params: { baseColor: '#ffffff', metalness: 1, roughness: 1, clearcoat: 0.08, clearcoatRoughness: 0.65, envMapIntensity: 0.95, normalScale: 1.35, anisotropy: 0.4, anisotropyRotation: Math.PI / 2 },
-    maps: { source: 'worn', wornKey: 'gunmetal', repeat: [1.5, 1.5] },
+    maps: { source: 'worn', wornKey: 'gunmetal', repeat: [1, 1] },
     swatchTint: '#6b727c',
   },
 
