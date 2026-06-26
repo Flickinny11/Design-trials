@@ -68,7 +68,7 @@ function PrimitiveLabStage() {
         shadows
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-        camera={{ position: [0, 0.2, 19.5], fov: 33 }}
+        camera={{ position: [0.6, 0.2, 20.5], fov: 33 }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.AgXToneMapping;
           gl.toneMappingExposure = 1.12;
@@ -91,7 +91,7 @@ function PrimitiveLabStage() {
           dampingFactor={0.08}
           minDistance={5}
           maxDistance={40}
-          target={[0, 0.2, 0]}
+          target={[0.6, 0.2, 0]}
         />
         <ReviewRig />
       </Canvas>

@@ -29,7 +29,7 @@ export type LabViewMode = 'galaxy' | 'canvas';
 
 // Deterministic placement slots so instantiated primitives don't overlap, kept
 // clear of the top mode-toggle tab and the bottom instantiate palette.
-const SLOTS_X = [0, 3.4, -3.4, 6.8, -6.8, 10.2, -10.2];
+const SLOTS_X = [-0.6, 3.0, -3.6, -6.4, 5.6, -9.0, 8.2];
 const ROW_Y = [0.3, -1.7];
 function slotFor(index: number): { x: number; y: number } {
   const col = index % SLOTS_X.length;

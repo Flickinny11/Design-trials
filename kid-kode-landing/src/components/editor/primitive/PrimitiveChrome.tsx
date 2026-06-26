@@ -19,6 +19,7 @@ import { SPIN_DURATION, SPIN_TURNS, easeInOutCubic } from '@/components/editor/c
 import { FaceGlyph } from '@/components/editor/chassis/FaceGlyph';
 import { buildCubeGeometry, buildPaneGeometry } from './primitive-geometry';
 import { EngravedText } from './EngravedText';
+import { ClickCatcher } from './ClickCatcher';
 import { useLabGraphStore, type LabViewMode } from './use-lab-graph-store';
 import type { PrimitiveKind } from './primitive-schema';
 
@@ -51,22 +52,26 @@ function GlassBar({
   );
   useEffect(() => () => geo.dispose(), [geo]);
   return (
-    <mesh geometry={geo} position={position} castShadow receiveShadow raycast={() => null}>
-      <meshPhysicalMaterial
-        transmission={1}
-        thickness={0.6}
-        ior={1.5}
-        roughness={0.06}
-        metalness={0}
-        clearcoat={1}
-        clearcoatRoughness={0.18}
-        attenuationColor={'#dbe8f2'}
-        attenuationDistance={1.8}
-        envMapIntensity={1.05}
-        specularIntensity={0.7}
-        transparent
-      />
-    </mesh>
+    <>
+      <mesh geometry={geo} position={position} castShadow receiveShadow raycast={() => null}>
+        <meshPhysicalMaterial
+          transmission={1}
+          thickness={0.6}
+          ior={1.5}
+          roughness={0.06}
+          metalness={0}
+          clearcoat={1}
+          clearcoatRoughness={0.18}
+          attenuationColor={'#dbe8f2'}
+          attenuationDistance={1.8}
+          envMapIntensity={1.05}
+          specularIntensity={0.7}
+          transparent
+        />
+      </mesh>
+      {/* solid catcher so clicking the bar background never deselects */}
+      <ClickCatcher width={width} height={height} position={position} />
+    </>
   );
 }
 
