@@ -1,1 +1,1 @@
-[16:45:44] PRIM-P5: still building · 25m elapsed · agent up · 990 commits · last: AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 
+[17:03:17] PRIM-P5: still building · 43m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets

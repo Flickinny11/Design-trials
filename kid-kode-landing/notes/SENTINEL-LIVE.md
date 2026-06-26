@@ -164,3 +164,9 @@ complete marker: 'PRISM-PRIM-P5: RUN COMPLETE'
 [16:42:13] PRIM-P5 · 21m · agent=1 · still building · 21m elapsed · agent up · 989 commits · last: AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
 [16:44:13] PRIM-P5 · 23m · agent=1 · commit cc4cc487 — AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 
 [16:45:44] PRIM-P5 · 25m · agent=1 · still building · 25m elapsed · agent up · 990 commits · last: AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 
+[16:49:14] PRIM-P5 · 28m · agent=1 · still building · 28m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[16:49:15] PRIM-P5 · 28m · agent=1 · commit b4661829 — AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[16:52:45] PRIM-P5 · 32m · agent=1 · still building · 32m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[16:56:16] PRIM-P5 · 35m · agent=1 · still building · 35m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[16:59:46] PRIM-P5 · 39m · agent=1 · still building · 39m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[17:03:17] PRIM-P5 · 43m · agent=1 · still building · 43m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
