@@ -127,9 +127,10 @@ export const useCompositeStore = create<CompositeStore>((set, get) => ({
   dropdownPlaying: false,
 
   instantiateComposite: (templateId) => {
-    const composite = makeComposite(templateId, get().hubs, {
-      root: rootSlotFor(get().composites.length, templateId),
-    });
+    // place by per-template ordinal so the nav sits high, the footer low, and cards
+    // stagger along the lower-left band — clear of the right-side nav dropdown.
+    const ordinal = get().composites.filter((c) => c.templateId === templateId).length;
+    const composite = makeComposite(templateId, get().hubs, { root: rootSlotFor(ordinal, templateId) });
     set((st) => ({ composites: [...st.composites, composite], selectedId: composite.compositeId, rev: st.rev + 1 }));
     return composite.compositeId;
   },
@@ -290,11 +291,11 @@ export const useCompositeStore = create<CompositeStore>((set, get) => ({
   },
 }));
 
-// Deterministic placement so multiple composites don't overlap. Nav sits high,
-// footer low, cards in the mid band (left of the docked Inspector at x ≳ 6).
-function rootSlotFor(index: number, templateId: CompositeTemplateId): { x: number; y: number; z: number } {
-  if (templateId === 'nav-header') return { x: -0.4, y: 3.0, z: 0 };
-  if (templateId === 'footer') return { x: -0.4, y: -4.2, z: 0 };
-  const cardIndex = index % 3;
-  return { x: -3.4 + cardIndex * 3.4, y: -0.4, z: 0 };
+// Deterministic placement (by per-template ordinal) so composites don't overlap.
+// Nav high-center, footer low-center, cards stagger along the lower-LEFT band so
+// they never collide with the nav's dropdown (which opens on the right).
+function rootSlotFor(ordinal: number, templateId: CompositeTemplateId): { x: number; y: number; z: number } {
+  if (templateId === 'nav-header') return { x: -0.4, y: 3.2, z: 0 };
+  if (templateId === 'footer') return { x: -0.4, y: -3.8, z: 0 };
+  return { x: -4.9 + (ordinal % 3) * 3.2, y: -1.4, z: 0 };
 }

@@ -203,13 +203,17 @@ function Worn() {
   );
 }
 
-// One-time seed: open with the canonical nav header over the sample hub set.
+// One-time seed: open with the canonical bound nav header over the sample hub set,
+// plus a footer + a card so the review shows composites-as-subgraphs in general
+// (spec §4.3). The nav is selected so its binding Inspector opens by default.
 function useSeed() {
   useEffect(() => {
     const st = useCompositeStore.getState();
     if (st.composites.length === 0) {
-      const id = st.instantiateComposite('nav-header');
-      useCompositeStore.getState().select(id);
+      const navId = st.instantiateComposite('nav-header');
+      st.instantiateComposite('footer');
+      st.instantiateComposite('card');
+      useCompositeStore.getState().select(navId);
     }
   }, []);
 }

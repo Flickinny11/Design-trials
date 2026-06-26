@@ -13,16 +13,63 @@
 // the dropdown + menu items as backing nodes.
 
 import { useEffect, useMemo, useRef } from 'react';
-import { useFrame, type ThreeEvent } from '@react-three/fiber';
+import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import type { WornMaps } from '@/components/editor/chassis/materials';
 import { buildPaneGeometry } from '@/components/editor/primitive/primitive-geometry';
+import { FluidFieldSim } from '@/components/editor/fluid/fluid-sim';
+import { buildFluidSurfaceMaterial } from '@/components/editor/fluid/fluid-material';
 import { CompositeText } from './CompositeText';
 import { buildMemberMaterial } from './composite-materials';
 import { useCompositeStore } from './use-composite-store';
 import { NAV, type CompositeMember } from './composite-schema';
 
 const smoothstep = (e: number) => e * e * (3 - 2 * e);
+
+// DropdownLiquidPanel — the dropdown surface IS the P-3 liquid glass (spec §3.3 /
+// §4): a GPU fluid field (FluidFieldSim) drives the transmission-glass normal +
+// relief so the panel FLOWS + refracts as it opens. The dropdown's expand phase IS
+// the liquid-glass timeline (liquidPhase 0 = settled slab → 1 = fully flowing) — the
+// canonical "any glass element can go liquid" instance. The group scale (in
+// DropdownNode) does the top-anchored size reveal; this drives the flow.
+const LIQUID_PARAMS = {
+  viscosity: 0.72,
+  surfaceTension: 0.6,
+  flowSpeed: 0.7,
+  flowDirection: Math.PI * 0.5,
+  patternWeights: [0, 1, 0, 0] as [number, number, number, number],
+  turbulence: 0.34,
+  damping: 0.985,
+  reactsToInteraction: 0,
+};
+
+function DropdownLiquidPanel({ width, height, compositeId, onSelect }: { width: number; height: number; compositeId: string; onSelect: (id: string) => void }) {
+  const gl = useThree((s) => s.gl);
+  const { sim, surf } = useMemo(() => {
+    const s = new FluidFieldSim(128);
+    const m = buildFluidSurfaceMaterial(s.fieldTexNode, s.size);
+    return { sim: s, surf: m };
+  }, []);
+  useEffect(() => {
+    surf.applyGlass({ ior: 1.45, thickness: 1.4, tint: '#bfe3ea', opacity: 1 });
+    return () => { sim.dispose(); surf.material.dispose(); };
+  }, [sim, surf]);
+
+  useFrame((state, dt) => {
+    const st = useCompositeStore.getState();
+    const phase = st.expandedCompositeId === compositeId ? st.dropdownPhase : 0;
+    if (phase <= 0.005) return; // sim idles while the dropdown is closed (perf)
+    sim.setParams({ ...LIQUID_PARAMS, liquidPhase: phase });
+    surf.uniforms.liquidPhase.value = phase;
+    sim.step(gl as unknown as THREE.WebGLRenderer, Math.min(dt, 1 / 30), state.clock.elapsedTime);
+  });
+
+  return (
+    <mesh material={surf.material} onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onSelect(compositeId); }}>
+      <planeGeometry args={[width, height, 128, 128]} />
+    </mesh>
+  );
+}
 
 function MenuItem({ member, anchor, compositeId, revealRef, index }: { member: CompositeMember; anchor: { x: number; y: number; z: number }; compositeId: string; revealRef: React.MutableRefObject<number[]>; index: number }) {
   const groupRef = useRef<THREE.Group>(null);
@@ -79,18 +126,8 @@ export interface DropdownNodeProps {
 
 export function DropdownNode({ dropdown, menuItems, compositeId, maps, selected, onSelect }: DropdownNodeProps) {
   const panelRef = useRef<THREE.Group>(null);
-  const panelMeshRef = useRef<THREE.Mesh>(null);
   const toggleDropdown = useCompositeStore((s) => s.toggleDropdown);
   const itemRevealRef = useRef<number[]>([]);
-
-  // the dropdown panel surface (Wave-1: approved clear glass; Wave-3 swaps liquid).
-  const panelGeo = useMemo(
-    () => buildPaneGeometry({ width: dropdown.width, height: dropdown.height, depth: dropdown.depth, cornerRadius: dropdown.cornerRadius, bevel: 0.03, radius: 0, segments: 18, cutouts: [] }),
-    [dropdown.width, dropdown.height, dropdown.depth, dropdown.cornerRadius],
-  );
-  useEffect(() => () => panelGeo.dispose(), [panelGeo]);
-  const panelMat = useMemo(() => buildMemberMaterial('liquid-glass', maps), [maps]);
-  useEffect(() => () => panelMat.dispose(), [panelMat]);
 
   // a small worn-alloy trigger chip on the bar (the "Menu ▾" affordance).
   const triggerGeo = useMemo(() => buildPaneGeometry({ width: NAV.menuW, height: NAV.tabH, depth: NAV.tabDepth, cornerRadius: 0.14, bevel: 0.03, radius: 0, segments: 12, cutouts: [] }), []);
@@ -124,7 +161,6 @@ export function DropdownNode({ dropdown, menuItems, compositeId, maps, selected,
       g.position.y = anchor.y + (dropdown.height / 2) * (1 - sy);
       g.visible = phase > 0.01;
     }
-    if (panelMeshRef.current) (panelMeshRef.current.material as THREE.Material).opacity = 0.35 + 0.65 * e;
     // staggered per-item reveal as the panel opens.
     const n = menuItems.length;
     itemRevealRef.current = menuItems.map((_, i) => {
@@ -149,14 +185,9 @@ export function DropdownNode({ dropdown, menuItems, compositeId, maps, selected,
         </CompositeText>
       </group>
 
-      {/* dropdown panel + bound menu items (revealed on expand) */}
+      {/* dropdown panel (P-3 liquid glass) + bound menu items (revealed on expand) */}
       <group ref={panelRef} position={[anchor.x, anchor.y, anchor.z]} visible={false}>
-        <mesh
-          ref={panelMeshRef}
-          geometry={panelGeo}
-          material={panelMat}
-          onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onSelect(compositeId); }}
-        />
+        <DropdownLiquidPanel width={dropdown.width} height={dropdown.height} compositeId={compositeId} onSelect={onSelect} />
         {menuItems.map((m, i) => (
           <MenuItem key={m.memberId} member={m} anchor={anchor} compositeId={compositeId} revealRef={itemRevealRef} index={i} />
         ))}
