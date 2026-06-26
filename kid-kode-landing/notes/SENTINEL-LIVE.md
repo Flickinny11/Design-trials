@@ -162,3 +162,5 @@ complete marker: 'PRISM-PRIM-P5: RUN COMPLETE'
 [16:38:42] PRIM-P5 · 18m · agent=1 · still building · 18m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
 [16:39:13] PRIM-P5 · 18m · agent=1 · commit c58fb621 — AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
 [16:42:13] PRIM-P5 · 21m · agent=1 · still building · 21m elapsed · agent up · 989 commits · last: AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
+[16:44:13] PRIM-P5 · 23m · agent=1 · commit cc4cc487 — AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 
+[16:45:44] PRIM-P5 · 25m · agent=1 · still building · 25m elapsed · agent up · 990 commits · last: AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 

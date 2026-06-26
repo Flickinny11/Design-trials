@@ -25,7 +25,7 @@ import { CompositeInspector } from './CompositeInspector';
 import { useCompositeStore } from './use-composite-store';
 import { resolveNavTabs, compositeMembers, compositeEdges } from './composite-schema';
 import { effectiveRoot } from './composition';
-import { GridFloor, SnapGuides, StackTies, MoveGizmo } from './CompositionOverlay';
+import { GridFloor, SnapGuides, StackTies, GroupFrames, MoveGizmo } from './CompositionOverlay';
 import { ConnectorLayer, ConnectPicker } from './ConnectorLayer';
 import { useWornMaps, type WornMaps } from '@/components/editor/chassis/materials';
 
@@ -282,6 +282,7 @@ export function CompositeLabScene() {
       <StackTies />
       <ConnectorLayer />
       <ConnectPicker />
+      <GroupFrames />
 
       {/* No shadow maps / ContactShadows on the WebGPU node renderer (P-3 lesson). */}
       <ambientLight intensity={0.55} />

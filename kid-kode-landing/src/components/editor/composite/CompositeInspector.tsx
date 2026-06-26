@@ -56,13 +56,20 @@ export function CompositeInspector() {
   const addManualItem = useCompositeStore((s) => s.addManualItem);
   const removeComposite = useCompositeStore((s) => s.removeComposite);
 
-  // P-5 composition ops (spec §6.1).
+  // P-5 composition ops (spec §6.1 / §6.4).
   const stackComposite = useCompositeStore((s) => s.stackComposite);
   const unstack = useCompositeStore((s) => s.unstack);
   const nudgeZLayer = useCompositeStore((s) => s.nudgeZLayer);
+  const multiSelect = useCompositeStore((s) => s.multiSelect);
+  const toggleMultiSelect = useCompositeStore((s) => s.toggleMultiSelect);
+  const clearMultiSelect = useCompositeStore((s) => s.clearMultiSelect);
+  const groupSelection = useCompositeStore((s) => s.groupSelection);
+  const saveAsTemplate = useCompositeStore((s) => s.saveAsTemplate);
 
   const isNav = composite?.templateId === 'nav-header';
   const isStacked = !!composite?.parentCompositeId;
+  const inMulti = composite ? multiSelect.includes(composite.compositeId) : false;
+  const selCount = multiSelect.length;
   // the resolved tabs (visible — for the count readout) and the full editable row
   // list (every hub incl. hidden, so they can be un-hidden, plus pinned manuals).
   const tabs = useMemo(() => (composite?.binding ? resolveNavTabs(hubs, composite.binding) : []), [composite, hubs]);
@@ -123,6 +130,14 @@ export function CompositeInspector() {
           zPlus: [INSPECTOR_X + 1.62, -PH / 2 + 1.96, KNOB_Z],
           stacked: !!c.parentCompositeId,
         },
+        group: {
+          select: [INSPECTOR_X - 1.62, -PH / 2 + 3.62, KNOB_Z],
+          group: [INSPECTOR_X - 0.54, -PH / 2 + 3.62, KNOB_Z],
+          save: [INSPECTOR_X + 0.54, -PH / 2 + 3.62, KNOB_Z],
+          clear: [INSPECTOR_X + 1.62, -PH / 2 + 3.62, KNOB_Z],
+          inSet: st.multiSelect.includes(c.compositeId),
+          selCount: st.multiSelect.length,
+        },
         rows: rowWorld,
       };
     };
@@ -180,6 +195,23 @@ export function CompositeInspector() {
           </group>
         </>
       )}
+
+      {/* ── P-5 GROUP + SAVE-AS-TEMPLATE (spec §6.4) — for any composite ── */}
+      <CompositeText position={[0, -PH / 2 + 4.32, LABEL_Z]} fontSize={0.12} letterSpacing={0.14} variant="engraved">
+        {selCount > 0 ? `GROUP · ${selCount} SELECTED` : 'GROUP + SAVE TEMPLATE'}
+      </CompositeText>
+      <group position={[-1.62, -PH / 2 + 3.62, 0]}>
+        <CompositeChip maps={maps.sapphire} position={[0, 0, KNOB_Z]} onClick={() => toggleMultiSelect(composite.compositeId)} active={inMulti} label={inMulti ? 'IN SET' : '+ SELECT'} tint={inMulti ? '#a9e6c4' : '#bcd9ff'} size={0.5} />
+      </group>
+      <group position={[-0.54, -PH / 2 + 3.62, 0]}>
+        <CompositeChip maps={maps.emerald} position={[0, 0, KNOB_Z]} onClick={() => groupSelection()} label="GROUP" tint="#9fe7c4" size={0.5} />
+      </group>
+      <group position={[0.54, -PH / 2 + 3.62, 0]}>
+        <CompositeChip maps={maps.bronze} position={[0, 0, KNOB_Z]} onClick={() => saveAsTemplate()} label="SAVE" tint="#e6c79a" size={0.5} />
+      </group>
+      <group position={[1.62, -PH / 2 + 3.62, 0]}>
+        <CompositeChip maps={maps.gunmetal} position={[0, 0, KNOB_Z]} onClick={() => clearMultiSelect()} label="CLEAR" tint="#aebfd2" size={0.5} />
+      </group>
 
       {/* ── P-5 composition: stack / z-layer (spec §6.1) — for any composite ── */}
       <CompositeText position={[0, -PH / 2 + 2.66, LABEL_Z]} fontSize={0.12} letterSpacing={0.16} variant="engraved">

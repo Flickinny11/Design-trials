@@ -1,1 +1,1 @@
-[16:42:13] PRIM-P5: still building · 21m elapsed · agent up · 989 commits · last: AUTO-CKPT: PRIM-P5 w-stack — 3D composition stacking (parent-child world
+[16:45:44] PRIM-P5: still building · 25m elapsed · agent up · 990 commits · last: AUTO-CKPT: PRIM-P5 w-connect — CONNECT mode: pick a member node, pick a 

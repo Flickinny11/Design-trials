@@ -20,7 +20,8 @@ import { applyWornMaterial, type WornMaps } from '@/components/editor/chassis/ma
 import { buildCubeGeometry } from '@/components/editor/primitive/primitive-geometry';
 import { CompositeText } from './CompositeText';
 import { useCompositeStore } from './use-composite-store';
-import { effectiveRoot } from './composition';
+import { compositeBounds, effectiveRoot } from './composition';
+import type { CompositeSchema } from './composite-schema';
 
 const GRID_Z = -0.55;
 const GRID_HALF = 9;
@@ -134,6 +135,81 @@ export function StackTies() {
   return (
     <>
       {ties.map((t) => <StackTie key={t.id} a={t.a} b={t.b} />)}
+    </>
+  );
+}
+
+// ── GroupFrames — a frame around the live multi-select + saved groups (§6.4) ─────
+// A bright milled frame brackets the current GROUP selection; finalized groups keep a
+// softer standing frame. Reads as "these N composites are one unit" — never a HUD box.
+function frameBounds(ids: string[], byId: Map<string, CompositeSchema>, hubs: ReturnType<typeof useCompositeStore.getState>['hubs']) {
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, maxZ = 0;
+  for (const id of ids) {
+    const c = byId.get(id);
+    if (!c) continue;
+    const er = effectiveRoot(c, byId);
+    const b = compositeBounds(c, hubs);
+    minX = Math.min(minX, er.x - b.halfW); maxX = Math.max(maxX, er.x + b.halfW);
+    minY = Math.min(minY, er.y - b.halfH); maxY = Math.max(maxY, er.y + b.halfH);
+    maxZ = Math.max(maxZ, er.z);
+  }
+  if (!isFinite(minX)) return null;
+  const pad = 0.35;
+  return { x: (minX + maxX) / 2, y: (minY + maxY) / 2, w: maxX - minX + pad * 2, h: maxY - minY + pad * 2, z: maxZ + 0.5 };
+}
+
+function FrameRing({ x, y, w, h, z, color, opacity }: { x: number; y: number; w: number; h: number; z: number; color: string; opacity: number }) {
+  const obj = useMemo(() => {
+    const hw = w / 2, hh = h / 2;
+    const pts = [
+      new THREE.Vector3(-hw, -hh, 0), new THREE.Vector3(hw, -hh, 0), new THREE.Vector3(hw, hh, 0),
+      new THREE.Vector3(-hw, hh, 0), new THREE.Vector3(-hw, -hh, 0),
+    ];
+    const mat = new THREE.LineBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity, toneMapped: false });
+    return new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat);
+  }, [w, h, color, opacity]);
+  useEffect(() => () => { obj.geometry.dispose(); (obj.material as THREE.Material).dispose(); }, [obj]);
+  // corner brackets for a premium "selection frame" feel.
+  const corners = useMemo(() => [[-w / 2, h / 2], [w / 2, h / 2], [w / 2, -h / 2], [-w / 2, -h / 2]], [w, h]);
+  return (
+    <group position={[x, y, z]} renderOrder={8}>
+      <primitive object={obj} />
+      {corners.map(([cx, cy], i) => (
+        <mesh key={i} position={[cx, cy, 0]}>
+          <sphereGeometry args={[0.06, 8, 8]} />
+          <meshBasicMaterial color={color} toneMapped={false} transparent opacity={Math.min(1, opacity + 0.2)} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+export function GroupFrames() {
+  const composites = useCompositeStore((s) => s.composites);
+  const multiSelect = useCompositeStore((s) => s.multiSelect);
+  const hubs = useCompositeStore((s) => s.hubs);
+  const rev = useCompositeStore((s) => s.rev);
+  const { live, groups } = useMemo(() => {
+    const byId = new Map(composites.map((c) => [c.compositeId, c]));
+    const live = multiSelect.length > 0 ? frameBounds(multiSelect, byId, hubs) : null;
+    const groupIds = Array.from(new Set(composites.map((c) => c.groupId).filter(Boolean))) as string[];
+    const groups = groupIds
+      .map((gid) => ({ gid, b: frameBounds(composites.filter((c) => c.groupId === gid).map((c) => c.compositeId), byId, hubs) }))
+      .filter((g) => g.b);
+    return { live, groups };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [composites, multiSelect, hubs, rev]);
+  return (
+    <>
+      {groups.map((g) => g.b && <FrameRing key={g.gid} x={g.b.x} y={g.b.y} w={g.b.w} h={g.b.h} z={g.b.z} color="#7fd0c0" opacity={0.5} />)}
+      {live && (
+        <group>
+          <FrameRing x={live.x} y={live.y} w={live.w} h={live.h} z={live.z + 0.04} color="#9fe9ff" opacity={0.95} />
+          <CompositeText position={[live.x, live.y + live.h / 2 + 0.3, live.z + 0.04]} fontSize={0.16} letterSpacing={0.08} variant="bright">
+            {`GROUP · ${multiSelect.length}`}
+          </CompositeText>
+        </group>
+      )}
     </>
   );
 }
