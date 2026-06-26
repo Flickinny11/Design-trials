@@ -95,7 +95,7 @@ function MiniMember({ member, wornMaps }: { member: CompositeMember; wornMaps: R
   return <mesh geometry={geo} material={mat} position={[member.local.x, member.local.y, member.local.z]} />;
 }
 
-function PreviewContent({ spec, wornMaps, matSets, hubs }: { spec: EntrySpec; wornMaps: Record<string, WornMaps>; matSets: Record<string, WornMaps>; hubs: LabHub[] }) {
+export function PreviewContent({ spec, wornMaps, matSets, hubs }: { spec: EntrySpec; wornMaps: Record<string, WornMaps>; matSets: Record<string, WornMaps>; hubs: LabHub[] }) {
   if (spec.t === 'primitive') return <PrimitivePreview kind={spec.kind} wornMaps={wornMaps} />;
   if (spec.t === 'material') return <MaterialPreview materialId={spec.materialId} matSets={matSets} wornMaps={wornMaps} />;
   if (spec.t === 'fluid') return <FluidPreview />;
@@ -148,7 +148,7 @@ export function LibraryTile({ entry, position, wornMaps, matSets, hubs, onActiva
   });
 
   return (
-    <group position={position}>
+    <group position={position} userData={{ prismLibTile: entry.id }}>
       {/* lit backing socket: glass/gem previews refract it, metals catch contrast. */}
       <mesh geometry={TILE_BACK_GEO} material={TILE_BACK_MAT} position={[0, 0.16, -0.45]} />
       {/* invisible front catcher so a near-miss click doesn't fall through. */}

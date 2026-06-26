@@ -64,6 +64,7 @@ export function LibraryPalette({ position, matSets, hubs }: { position: [number,
   const setSection = useLibraryStore((s) => s.setSection);
   const setFamily = useLibraryStore((s) => s.setFamily);
   const instantiate = useLibraryStore((s) => s.instantiate);
+  const beginDrag = useLibraryStore((s) => s.beginDrag);
   const catalog = useLibraryStore((s) => s.catalog);
   const rev = useLibraryStore((s) => s.rev);
 
@@ -149,6 +150,7 @@ export function LibraryPalette({ position, matSets, hubs }: { position: [number,
               matSets={matSets}
               hubs={hubs}
               onActivate={(en) => instantiate(en)}
+              onPressStart={(en, e) => beginDrag(en.id, { x: e.point.x, y: e.point.y, z: e.point.z })}
             />
           );
         })}

@@ -134,6 +134,25 @@ function LibraryProbe() {
       const caught = synthetic.filter((r) => !r.nodeId || !nodeIds.includes(r.nodeId));
       return { live: caught.length === 2, caughtCount: caught.length };
     };
+    // visible palette tiles → world centers (for a trusted-pointer drag-to-canvas).
+    w.__PRISM_LIB_TILE_POS__ = () => {
+      const out: { entryId: string; world: [number, number, number] }[] = [];
+      const v = new THREE.Vector3();
+      scene.traverse((o) => {
+        if (o.userData?.prismLibTile) { o.getWorldPosition(v); out.push({ entryId: o.userData.prismLibTile, world: [v.x, v.y, v.z] }); }
+      });
+      return out;
+    };
+    // inspector fader knob world positions (for a trusted-pointer fader drag).
+    w.__PRISM_LIB_INSPECTOR_MAP__ = () => {
+      const faders: { key: string; world: [number, number, number] }[] = [];
+      const v = new THREE.Vector3();
+      scene.traverse((o) => {
+        if (o.userData?.prismLibFader) { o.getWorldPosition(v); faders.push({ key: o.userData.prismLibFader, world: [v.x, v.y, v.z] }); }
+      });
+      const st = useLibraryStore.getState();
+      return { open: !!st.selectedId, selectedId: st.selectedId, channelW: 2.7, faders };
+    };
   }
   return null;
 }

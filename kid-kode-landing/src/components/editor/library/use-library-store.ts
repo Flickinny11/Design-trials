@@ -93,6 +93,8 @@ export interface LibraryStore {
   savedTemplates: SavedTemplate[];
   /** the entry currently being dragged from the palette (null = none). */
   dragEntryId: string | null;
+  /** the world point where the drag began (the tile), for tap-vs-drag distance. */
+  dragStart: { x: number; y: number; z: number } | null;
   /** monotonic — bump on any mutation so non-reactive consumers re-read. */
   rev: number;
 
@@ -106,7 +108,7 @@ export interface LibraryStore {
   typeSearch: (ch: string) => void;
   backspaceSearch: () => void;
   setView: (m: LibraryViewMode) => void;
-  beginDrag: (entryId: string) => void;
+  beginDrag: (entryId: string, start?: { x: number; y: number; z: number }) => void;
   endDrag: () => void;
 
   // ── instantiation (Node Law, §5) ──
@@ -239,6 +241,7 @@ export const useLibraryStore = create<LibraryStore>((set, get) => ({
   selectedId: null,
   savedTemplates: [],
   dragEntryId: null,
+  dragStart: null,
   rev: 0,
   hubs: LIBRARY_HUBS,
 
@@ -249,15 +252,15 @@ export const useLibraryStore = create<LibraryStore>((set, get) => ({
   typeSearch: (ch) => set((st) => ({ query: (st.query + ch).slice(0, 32), rev: st.rev + 1 })),
   backspaceSearch: () => set((st) => ({ query: st.query.slice(0, -1), rev: st.rev + 1 })),
   setView: (m) => set({ viewMode: m }),
-  beginDrag: (entryId) => set({ dragEntryId: entryId }),
-  endDrag: () => set({ dragEntryId: null }),
+  beginDrag: (entryId, start) => set({ dragEntryId: entryId, dragStart: start ?? null }),
+  endDrag: () => set({ dragEntryId: null, dragStart: null }),
 
   instantiate: (entry, pos) => {
     const st = get();
     const at = pos ?? dropSlot(st.instances.filter((i) => i.id !== CHROME_PANE_ID).length);
     const inst = buildInstance(entry.spec, st.hubs, st.savedTemplates, at);
     if (!inst) return '';
-    set((s) => ({ instances: [...s.instances, inst], selectedId: inst.id, dragEntryId: null, rev: s.rev + 1 }));
+    set((s) => ({ instances: [...s.instances, inst], selectedId: inst.id, dragEntryId: null, dragStart: null, rev: s.rev + 1 }));
     return inst.id;
   },
   remove: (id) =>
