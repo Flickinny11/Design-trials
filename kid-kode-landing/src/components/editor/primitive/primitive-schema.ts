@@ -103,8 +103,16 @@ export const WORN_KEY: Record<string, string> = {
   'worn-gunmetal': 'gunmetal',
 };
 
+// P-2: a primitive references a library material by REGISTRY ID (spec §2.5) plus
+// optional per-instance PBR param overrides. `kind` is retained for P-1 back-compat
+// (legacy schemas without a materialId resolve via LEGACY_KIND_TO_ID). `materialId`
+// is the source of truth when present.
 export interface PrimitiveMaterial {
   kind: MaterialKind;
+  /** P-2 registry id (e.g. 'metal.gold', 'gem.ruby'). When set, wins over `kind`. */
+  materialId?: string;
+  /** per-instance PBR param overrides applied over the registry def (P-2 tuning). */
+  overrides?: Record<string, number | string | [number, number]>;
   /** hex tint multiplied over the worn albedo / smoke-glass attenuation. */
   tint: string;
   /** 0.5..1.5 — pushes roughness/clearcoat contrast (the "polish" amount). */
