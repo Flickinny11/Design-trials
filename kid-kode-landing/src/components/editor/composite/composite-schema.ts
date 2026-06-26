@@ -35,7 +35,9 @@ export interface LabHub {
 }
 
 // ── COMPOSITE TEMPLATES (spec §4.3) ──────────────────────────────────────────────
-export type CompositeTemplateId = 'nav-header' | 'footer' | 'card';
+// 'pane' / 'cube' are SINGLE-PRIMITIVE composites (one member) — the atoms a user
+// freely places, stacks, connects, groups + saves in the P-5 composition workspace.
+export type CompositeTemplateId = 'nav-header' | 'footer' | 'card' | 'pane' | 'cube';
 export const COMPOSITE_TEMPLATES: readonly CompositeTemplateId[] = Object.freeze([
   'nav-header',
   'footer',
@@ -46,6 +48,8 @@ const TEMPLATE_LABEL: Record<CompositeTemplateId, string> = {
   'nav-header': 'Nav Header',
   footer: 'Footer',
   card: 'Card',
+  pane: 'Pane',
+  cube: 'Cube',
 };
 
 // ── MEMBER roles (the pieces of a subgraph) ──────────────────────────────────────
@@ -61,7 +65,10 @@ export type MemberRole =
   | 'card-media'
   | 'card-title'
   | 'card-body'
-  | 'card-cta';
+  | 'card-cta'
+  // P-5 free-placed single primitives (the composition atoms).
+  | 'prim-pane'
+  | 'prim-cube';
 
 // The realized geometry kind for a member (reuses the P-1 parametric builders +
 // the P-3 liquid-glass surface for the dropdown).
@@ -197,10 +204,21 @@ export interface CompositeSchema {
   staticMembers: CompositeMember[];
   /** present only on the nav-header template (the bound view config). */
   binding?: NavBinding;
+
+  // ── P-5 composition (spec §6) — all additive / optional ───────────────────────
+  /** STACK (§6.1): the composite this one is stacked onto. When set, `root` is an
+   *  OFFSET relative to the parent's world root, so moving the parent moves this. */
+  parentCompositeId?: string | null;
+  /** z-layering (§6.1): a small forward push per layer (resolved in effectiveRoot). */
+  zLayer?: number;
+  /** GROUP (§6.4): the multi-select group this composite belongs to (transient). */
+  groupId?: string | null;
+  /** provenance: the user template id this was instantiated from (§6.4). */
+  savedFrom?: string;
 }
 
 // ── deterministic id minting (no Math.random — reproducible gate + verification) ──
-const counters: Record<CompositeTemplateId, number> = { 'nav-header': 0, footer: 0, card: 0 };
+const counters: Record<CompositeTemplateId, number> = { 'nav-header': 0, footer: 0, card: 0, pane: 0, cube: 0 };
 export function mintCompositeId(t: CompositeTemplateId): string {
   counters[t] += 1;
   return `comp-${t}-${counters[t]}`;
@@ -209,6 +227,8 @@ export function resetCompositeCounters() {
   counters['nav-header'] = 0;
   counters.footer = 0;
   counters.card = 0;
+  counters.pane = 0;
+  counters.cube = 0;
 }
 
 // ── NAV layout constants (the bar sits across the top; tabs spread along it) ──────
@@ -362,6 +382,24 @@ function cardStaticMembers(id: string): CompositeMember[] {
   ];
 }
 
+// SINGLE-PRIMITIVE composites (P-5 atoms): one member, freely placeable. A Pane is
+// the founder-approved clear-glass slab; a Cube is a worn-alloy block. These are what
+// "stack two panes" / "connect two nodes" operate on.
+function paneStaticMembers(id: string): CompositeMember[] {
+  return [{
+    memberId: `${id}-pane`, role: 'prim-pane', kind: 'pane', caption: 'Pane',
+    local: { x: 0, y: 0, z: 0 }, parentMemberId: null,
+    width: 2.2, height: 1.4, depth: 0.3, cornerRadius: 0.22, material: 'glass-clear',
+  }];
+}
+function cubeStaticMembers(id: string): CompositeMember[] {
+  return [{
+    memberId: `${id}-cube`, role: 'prim-cube', kind: 'cube', caption: 'Cube',
+    local: { x: 0, y: 0, z: 0 }, parentMemberId: null,
+    width: 1.0, height: 1.0, depth: 1.0, cornerRadius: 0.16, material: 'worn-sapphire',
+  }];
+}
+
 export function makeComposite(
   templateId: CompositeTemplateId,
   hubs: LabHub[],
@@ -373,7 +411,11 @@ export function makeComposite(
       ? navStaticMembers()
       : templateId === 'footer'
         ? footerStaticMembers(compositeId)
-        : cardStaticMembers(compositeId);
+        : templateId === 'card'
+          ? cardStaticMembers(compositeId)
+          : templateId === 'pane'
+            ? paneStaticMembers(compositeId)
+            : cubeStaticMembers(compositeId);
   return {
     compositeId,
     templateId,
@@ -381,6 +423,10 @@ export function makeComposite(
     root: overrides?.root ?? { x: 0, y: 0, z: 0 },
     staticMembers: overrides?.staticMembers ?? staticMembers,
     binding: templateId === 'nav-header' ? (overrides?.binding ?? defaultNavBinding(hubs)) : undefined,
+    parentCompositeId: overrides?.parentCompositeId ?? null,
+    zLayer: overrides?.zLayer,
+    groupId: overrides?.groupId ?? null,
+    savedFrom: overrides?.savedFrom,
   };
 }
 
@@ -443,11 +489,49 @@ export function compositeMembers(composite: CompositeSchema, hubs: LabHub[]): Co
 }
 
 // ── EDGES — the subgraph linkage (parent-child stacking + data bindings) ─────────
-export type CompositeEdgeKind = 'parent' | 'binding';
+// P-5 adds 'stack' (cross-composite parent stacking, §6.1) and 'data' / 'logic'
+// (user-drawn CONNECT edges with visible 3D connectors, §6.2).
+export type CompositeEdgeKind = 'parent' | 'binding' | 'stack' | 'data' | 'logic';
 export interface CompositeEdge {
   from: string;
   to: string;
   kind: CompositeEdgeKind;
+}
+
+// ── CONNECT (spec §6.2) — a user-drawn graph edge between two member NODES ────────
+export type ConnectionKind = 'data' | 'logic';
+export interface CompositeConnection {
+  id: string;
+  fromNodeId: string;
+  toNodeId: string;
+  kind: ConnectionKind;
+}
+
+// ── SAVE-AS-TEMPLATE (spec §6.4) — a user-grown composite library entry ───────────
+// A deep snapshot of a selection: each captured composite carries its members + (for
+// the nav) its binding + its stack parent (by index) + its root RELATIVE to the
+// selection centroid, so re-instantiation rebuilds the whole assembly as a fresh
+// subgraph (new ids) anywhere on the canvas (INV-0.4).
+export interface CapturedComposite {
+  templateId: CompositeTemplateId;
+  caption: string;
+  relRoot: CompositeTransform;
+  staticMembers: CompositeMember[];
+  binding?: NavBinding;
+  parentIndex: number; // index of the stack parent within the captured set, or -1
+  zLayer?: number;
+}
+export interface SavedConnection {
+  from: [number, number]; // [compositeIndex, memberIndex] within the captured set
+  to: [number, number];
+  kind: ConnectionKind;
+}
+export interface SavedTemplate {
+  templateId: string; // 'user:<n>'
+  name: string;
+  composites: CapturedComposite[];
+  connections: SavedConnection[];
+  createdAt: number; // a monotonic counter (deterministic — no Date.now)
 }
 
 // All edges for a composite: parent-child stacking edges (member→parent member) +
@@ -495,11 +579,18 @@ export const LAB_HUB_ID = 'composite-lab-hub';
 
 // A composite member → a genuine PrismNode (meshPrimitive ⇒ hasRealArtifact passes).
 // parentHubId = the composite id (the subgraph container). The world scenePosition
-// is the composite root composed with the member's local transform (the stacking).
-export function memberToNode(member: CompositeMember, composite: CompositeSchema): PrismNode {
-  const wx = composite.root.x + member.local.x;
-  const wy = composite.root.y + member.local.y;
-  const wz = composite.root.z + member.local.z;
+// is the composite's WORLD root (its own root composed up the parent-stack chain,
+// P-5 §6.1) composed with the member's local transform (the in-composite stacking).
+// `worldRoot` overrides composite.root when the composite is stacked onto a parent.
+export function memberToNode(
+  member: CompositeMember,
+  composite: CompositeSchema,
+  worldRoot?: { x: number; y: number; z: number },
+): PrismNode {
+  const r = worldRoot ?? composite.root;
+  const wx = r.x + member.local.x;
+  const wy = r.y + member.local.y;
+  const wz = r.z + member.local.z;
   return {
     nodeId: member.memberId,
     subtype: `composite-${member.role}`,

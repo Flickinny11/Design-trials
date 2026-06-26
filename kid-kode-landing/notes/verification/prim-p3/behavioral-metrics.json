@@ -1,0 +1,89 @@
+{
+  "steps": [
+    {
+      "control": "thickness",
+      "faderMovedFrom": 1.4,
+      "toLow": 0.35,
+      "toHigh": 2.4,
+      "paramChanged": true,
+      "visualDiff": {
+        "meanAbsDiff": 7.296,
+        "changedPct": 21.1,
+        "max": 220
+      }
+    },
+    {
+      "control": "flowSpeed",
+      "faderMovedFrom": 0.6,
+      "toLow": 0.08,
+      "toHigh": 1.85,
+      "paramChanged": true,
+      "visualDiff": {
+        "meanAbsDiff": 2.907,
+        "changedPct": 4.32,
+        "max": 173
+      }
+    },
+    {
+      "control": "viscosity",
+      "faderMovedFrom": 0.7,
+      "toLow": 0.05,
+      "toHigh": 0.97,
+      "paramChanged": true,
+      "visualDiff": {
+        "meanAbsDiff": 2.59,
+        "changedPct": 2.75,
+        "max": 198
+      }
+    }
+  ],
+  "errors": [],
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "authorship": {
+    "ok": true,
+    "rendered": 2,
+    "nodes": 2,
+    "orphans": 0
+  },
+  "instantiate": {
+    "before": 2,
+    "after": 3,
+    "created": true
+  },
+  "patterns": [
+    {
+      "clicked": "directional",
+      "got": "directional",
+      "ok": true
+    },
+    {
+      "clicked": "swirl",
+      "got": "swirl",
+      "ok": true
+    },
+    {
+      "clicked": "turbulent",
+      "got": "turbulent",
+      "ok": true
+    },
+    {
+      "clicked": "radial",
+      "got": "radial",
+      "ok": true
+    }
+  ],
+  "goLiquid": {
+    "meanAbsDiff": 20.256,
+    "changedPct": 29.81,
+    "max": 209
+  },
+  "motion": {
+    "error": "Error: page.screenshot: Target page, context or browser has been closed\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b["
+  },
+  "galaxy": {
+    "error": "Error: page.evaluate: Target page, context or browser has been closed"
+  }
+}

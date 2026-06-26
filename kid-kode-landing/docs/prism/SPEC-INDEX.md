@@ -125,4 +125,12 @@ The 2026-06-05 precedence ladder (§1), supersession table (§3), and move list 
 
 ---
 
+## 9. ADDENDUM — 2026-06-23 Primitive & Template System
+
+| Doc | Tier placement | Note |
+|---|---|---|
+| `PRISM-PRIMITIVE-TEMPLATE-SYSTEM-SPEC.md` (2026-06-23) | **1 — Canonical (additive)** | NEW. The customizable 3D primitive/template element library for the canvas editor. Every primitive = a parametric, schema-driven NODE (geometry from numbers, not baked GLB); massive material system + prompt-to-texture (matched-latent + delit); TSL/WebGPU fluid system; BOUND composites (nav header auto-populates from hub nodes, editable, auto-add). Carries the Node Law (INV-0) as gate-enforced, consistent with `PRISM-MASTER-SPEC.md` Law 0. The TOOLBAR/KEYFRAME glass-pane + cube-button are primitive #1/#2; chrome is dogfooded FROM the library. Build phasing P-0..P-6 (§11). Defers runtime-truth to the canonical ruler. |
+
+---
+
 *End of SPEC-INDEX.md*

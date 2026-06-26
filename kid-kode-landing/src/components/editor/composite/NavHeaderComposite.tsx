@@ -21,9 +21,11 @@ export interface NavHeaderCompositeProps {
   maps: Record<string, WornMaps>;
   selected: boolean;
   onSelect: (compositeId: string) => void;
+  /** WORLD root (effectiveRoot) — overrides composite.root when stacked (P-5 §6.1). */
+  worldRoot?: { x: number; y: number; z: number };
 }
 
-export function NavHeaderComposite({ composite, hubs, maps, selected, onSelect }: NavHeaderCompositeProps) {
+export function NavHeaderComposite({ composite, hubs, maps, selected, onSelect, worldRoot }: NavHeaderCompositeProps) {
   const members = useMemo(() => compositeMembers(composite, hubs), [composite, hubs]);
 
   const base = members.find((m) => m.role === 'nav-base');
@@ -32,7 +34,7 @@ export function NavHeaderComposite({ composite, hubs, maps, selected, onSelect }
   const tabs = members.filter((m) => m.role === 'nav-tab');
   const menuItems = members.filter((m) => m.role === 'nav-menu-item');
 
-  const r = composite.root;
+  const r = worldRoot ?? composite.root;
   return (
     <group position={[r.x, r.y, r.z]}>
       {base && <CompositeMemberMesh member={base} compositeId={composite.compositeId} maps={maps} selected={selected} onSelect={onSelect} />}

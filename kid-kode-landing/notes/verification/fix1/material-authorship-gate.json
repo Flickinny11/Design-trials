@@ -1,0 +1,109 @@
+{
+  "url": "http://localhost:3000/material-lab",
+  "selfTest": {
+    "live": true,
+    "caughtCount": 2
+  },
+  "before": {
+    "renderedCount": 3,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-1",
+        "kind": "pane",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-cube-1",
+        "kind": "cube",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-sphere-1",
+        "kind": "sphere",
+        "materialId": "metal.worn-sapphire"
+      }
+    ],
+    "nodeIds": [
+      "prim-pane-1",
+      "prim-cube-1",
+      "prim-sphere-1"
+    ],
+    "orphans": [],
+    "unrealized": [],
+    "selectedMaterialId": "metal.worn-sapphire",
+    "ok": true
+  },
+  "afterApply": {
+    "renderedCount": 3,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-1",
+        "kind": "pane",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-cube-1",
+        "kind": "cube",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-sphere-1",
+        "kind": "sphere",
+        "materialId": "metal.worn-sapphire"
+      }
+    ],
+    "nodeIds": [
+      "prim-pane-1",
+      "prim-cube-1",
+      "prim-sphere-1"
+    ],
+    "orphans": [],
+    "unrealized": [],
+    "selectedMaterialId": "gem.ruby",
+    "ok": true
+  },
+  "results": [
+    {
+      "id": "mat.probe.installed",
+      "desc": "window.__PRISM_MAT_AUTHORSHIP__ installed + display nodes seeded",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "mat.classifier-live",
+      "desc": "authorship classifier discriminates backed vs orphan (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic orphan + untagged render both flagged"
+    },
+    {
+      "id": "mat.displays.no-orphan",
+      "desc": "every display primitive maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "3 rendered, all node-backed"
+    },
+    {
+      "id": "mat.displays.all-realized",
+      "desc": "every display node is realized (no node left unbuilt)",
+      "pass": true,
+      "warn": false,
+      "detail": "3 nodes all realized"
+    },
+    {
+      "id": "mat.apply.no-orphan",
+      "desc": "applying a library material never orphans a render",
+      "pass": true,
+      "warn": false,
+      "detail": "applied gem.ruby, 3 node-backed"
+    },
+    {
+      "id": "mat.no-pageerrors",
+      "desc": "no uncaught page errors during the mat gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

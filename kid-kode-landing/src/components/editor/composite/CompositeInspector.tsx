@@ -56,7 +56,13 @@ export function CompositeInspector() {
   const addManualItem = useCompositeStore((s) => s.addManualItem);
   const removeComposite = useCompositeStore((s) => s.removeComposite);
 
+  // P-5 composition ops (spec §6.1).
+  const stackComposite = useCompositeStore((s) => s.stackComposite);
+  const unstack = useCompositeStore((s) => s.unstack);
+  const nudgeZLayer = useCompositeStore((s) => s.nudgeZLayer);
+
   const isNav = composite?.templateId === 'nav-header';
+  const isStacked = !!composite?.parentCompositeId;
   // the resolved tabs (visible — for the count readout) and the full editable row
   // list (every hub incl. hidden, so they can be un-hidden, plus pinned manuals).
   const tabs = useMemo(() => (composite?.binding ? resolveNavTabs(hubs, composite.binding) : []), [composite, hubs]);
@@ -110,6 +116,13 @@ export function CompositeInspector() {
               remove: [INSPECTOR_X, -PH / 2 + 0.7, KNOB_Z],
             }
           : { remove: [INSPECTOR_X, -PH / 2 + 0.7, KNOB_Z] },
+        composition: {
+          stack: [INSPECTOR_X - 1.62, -PH / 2 + 1.96, KNOB_Z],
+          unstack: [INSPECTOR_X - 0.54, -PH / 2 + 1.96, KNOB_Z],
+          zMinus: [INSPECTOR_X + 0.54, -PH / 2 + 1.96, KNOB_Z],
+          zPlus: [INSPECTOR_X + 1.62, -PH / 2 + 1.96, KNOB_Z],
+          stacked: !!c.parentCompositeId,
+        },
         rows: rowWorld,
       };
     };
@@ -167,6 +180,23 @@ export function CompositeInspector() {
           </group>
         </>
       )}
+
+      {/* ── P-5 composition: stack / z-layer (spec §6.1) — for any composite ── */}
+      <CompositeText position={[0, -PH / 2 + 2.66, LABEL_Z]} fontSize={0.12} letterSpacing={0.16} variant="engraved">
+        {isStacked ? `COMPOSE · STACKED z${composite.zLayer ?? 0}` : 'COMPOSE'}
+      </CompositeText>
+      <group position={[-1.62, -PH / 2 + 1.96, 0]}>
+        <CompositeChip maps={maps.sapphire} position={[0, 0, KNOB_Z]} onClick={() => stackComposite(composite.compositeId)} label="STACK" tint="#a9d6ff" size={0.5} />
+      </group>
+      <group position={[-0.54, -PH / 2 + 1.96, 0]}>
+        <CompositeChip maps={maps.gunmetal} position={[0, 0, KNOB_Z]} onClick={() => unstack(composite.compositeId)} active={isStacked} label="UNSTACK" tint={isStacked ? '#cfe0ee' : '#7d8a99'} size={0.5} />
+      </group>
+      <group position={[0.54, -PH / 2 + 1.96, 0]}>
+        <CompositeChip maps={maps.gunmetal} position={[0, 0, KNOB_Z]} onClick={() => nudgeZLayer(composite.compositeId, -1)} label="Z -" tint="#aebfd2" size={0.5} />
+      </group>
+      <group position={[1.62, -PH / 2 + 1.96, 0]}>
+        <CompositeChip maps={maps.gunmetal} position={[0, 0, KNOB_Z]} onClick={() => nudgeZLayer(composite.compositeId, 1)} label="Z +" tint="#cfd8e2" size={0.5} />
+      </group>
 
       <group position={[0, -PH / 2 + 0.7, 0]}>
         <CompositeChip maps={maps.oxblood} position={[0, 0, KNOB_Z]} onClick={() => removeComposite(composite.compositeId)} label="REMOVE" tint="#e29aa6" size={0.52} />

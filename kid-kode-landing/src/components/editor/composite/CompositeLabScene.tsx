@@ -24,6 +24,8 @@ import { CompositePalette } from './CompositePalette';
 import { CompositeInspector } from './CompositeInspector';
 import { useCompositeStore } from './use-composite-store';
 import { resolveNavTabs, compositeMembers, compositeEdges } from './composite-schema';
+import { effectiveRoot } from './composition';
+import { GridFloor, SnapGuides, StackTies, MoveGizmo } from './CompositionOverlay';
 import { useWornMaps, type WornMaps } from '@/components/editor/chassis/materials';
 
 // Rich high-contrast editorial backdrop — light bars + glowing orbs over a deep
@@ -152,6 +154,41 @@ function CompositeProbe() {
       const edges = compositeEdges(c, st.hubs);
       return { compositeId: c.compositeId, templateId: c.templateId, memberCount: members.length, memberIds: members.map((m) => m.memberId), roles: members.map((m) => m.role), edgeCount: edges.length, bindingEdges: edges.filter((e) => e.kind === 'binding').length, parentEdges: edges.filter((e) => e.kind === 'parent').length };
     };
+
+    // P-5 COMPOSITION probe (spec §6): the live composition state + world geometry, so
+    // a headless pass can drive + verify stack / connect / snap / group / save.
+    w.__PRISM_COMPOSITION__ = () => {
+      const st = useCompositeStore.getState();
+      const allEdges = st.edges();
+      return {
+        editorMode: st.editorMode,
+        selectedId: st.selectedId,
+        selectedMemberId: st.selectedMemberId,
+        multiSelect: [...st.multiSelect],
+        pendingConnectFrom: st.pendingConnectFrom,
+        snapEnabled: st.snapEnabled,
+        showGrid: st.showGrid,
+        guideCount: st.guides.length,
+        guides: st.guides.map((g) => ({ axis: g.axis, value: g.value, kind: g.kind })),
+        connections: st.connections.map((c) => ({ id: c.id, from: c.fromNodeId, to: c.toNodeId, kind: c.kind })),
+        connectionCount: st.connections.length,
+        stacks: st.composites.filter((c) => c.parentCompositeId).map((c) => ({ child: c.compositeId, parent: c.parentCompositeId, zLayer: c.zLayer ?? 0 })),
+        groups: st.composites.filter((c) => c.groupId).map((c) => ({ id: c.compositeId, group: c.groupId })),
+        userTemplates: st.userTemplates.map((t) => ({ id: t.templateId, name: t.name, composites: t.composites.length, connections: t.connections.length })),
+        edgeKinds: {
+          parent: allEdges.filter((e) => e.kind === 'parent').length,
+          binding: allEdges.filter((e) => e.kind === 'binding').length,
+          stack: allEdges.filter((e) => e.kind === 'stack').length,
+          data: allEdges.filter((e) => e.kind === 'data').length,
+          logic: allEdges.filter((e) => e.kind === 'logic').length,
+        },
+        compositeCount: st.composites.length,
+        nodeCount: st.nodes().length,
+      };
+    };
+    // node world position (for projecting a connect-pick or a stack tie to CSS).
+    w.__PRISM_NODE_WORLD__ = (nodeId: string) => useCompositeStore.getState().nodeWorldPos(nodeId);
+    w.__PRISM_COMPOSITE_WORLD__ = (compositeId: string) => useCompositeStore.getState().worldRootOf(compositeId);
   }
   return null;
 }
@@ -162,17 +199,21 @@ function NodeLayer({ maps }: { maps: Record<string, WornMaps> }) {
   const viewMode = useCompositeStore((s) => s.viewMode);
   const selectedId = useCompositeStore((s) => s.selectedId);
   const select = useCompositeStore((s) => s.select);
+  // P-5: resolve each composite's WORLD root up the parent-stack chain so a stacked
+  // child renders relative to its parent (and moves with it).
+  const byId = useMemo(() => new Map(composites.map((c) => [c.compositeId, c])), [composites]);
   return (
     <>
-      {composites.map((c) =>
-        viewMode === 'galaxy' ? (
-          <DormantComposite key={c.compositeId} composite={c} hubs={hubs} selected={c.compositeId === selectedId} onSelect={select} />
+      {composites.map((c) => {
+        const wr = effectiveRoot(c, byId);
+        return viewMode === 'galaxy' ? (
+          <DormantComposite key={c.compositeId} composite={c} hubs={hubs} worldRoot={wr} selected={c.compositeId === selectedId} onSelect={select} />
         ) : c.templateId === 'nav-header' ? (
-          <NavHeaderComposite key={c.compositeId} composite={c} hubs={hubs} maps={maps} selected={c.compositeId === selectedId} onSelect={select} />
+          <NavHeaderComposite key={c.compositeId} composite={c} hubs={hubs} maps={maps} worldRoot={wr} selected={c.compositeId === selectedId} onSelect={select} />
         ) : (
-          <GenericComposite key={c.compositeId} composite={c} maps={maps} selected={c.compositeId === selectedId} onSelect={select} />
-        ),
-      )}
+          <GenericComposite key={c.compositeId} composite={c} maps={maps} worldRoot={wr} selected={c.compositeId === selectedId} onSelect={select} />
+        );
+      })}
     </>
   );
 }
@@ -197,6 +238,7 @@ function Worn() {
   return (
     <>
       <NodeLayer maps={maps} />
+      <MoveGizmo maps={maps} />
       <CompositePalette />
       <CompositeInspector />
     </>
@@ -213,6 +255,10 @@ function useSeed() {
       const navId = st.instantiateComposite('nav-header');
       st.instantiateComposite('footer');
       st.instantiateComposite('card');
+      // P-5: seed two free panes (the composition atoms) so the stack/connect/snap
+      // tools have something to work on the moment the lab loads.
+      st.instantiateComposite('pane');
+      st.instantiateComposite('pane');
       useCompositeStore.getState().select(navId);
     }
   }, []);
@@ -229,6 +275,9 @@ export function CompositeLabScene() {
       <EnvTune />
       <Backdrop />
       <DropdownTimeline />
+      <GridFloor />
+      <SnapGuides />
+      <StackTies />
 
       {/* No shadow maps / ContactShadows on the WebGPU node renderer (P-3 lesson). */}
       <ambientLight intensity={0.55} />

@@ -1,0 +1,120 @@
+{
+  "url": "http://localhost:3000/fluid-lab",
+  "selfTest": {
+    "live": true,
+    "caughtCount": 2
+  },
+  "instantiate": {
+    "before": 2,
+    "after": 3
+  },
+  "canvas": {
+    "view": "canvas",
+    "renderedCount": 3,
+    "rendered": [
+      {
+        "nodeId": "fluid-surface-1",
+        "kind": "surface",
+        "dormant": false
+      },
+      {
+        "nodeId": "fluid-volume-1",
+        "kind": "volume",
+        "dormant": false
+      },
+      {
+        "nodeId": "fluid-surface-2",
+        "kind": "surface",
+        "dormant": false
+      }
+    ],
+    "nodeIds": [
+      "fluid-surface-1",
+      "fluid-volume-1",
+      "fluid-surface-2"
+    ],
+    "orphans": [],
+    "unrealized": [],
+    "ok": true
+  },
+  "afterEdit": {
+    "view": "canvas",
+    "renderedCount": 3,
+    "rendered": [
+      {
+        "nodeId": "fluid-surface-1",
+        "kind": "surface",
+        "dormant": false
+      },
+      {
+        "nodeId": "fluid-volume-1",
+        "kind": "volume",
+        "dormant": false
+      },
+      {
+        "nodeId": "fluid-surface-2",
+        "kind": "surface",
+        "dormant": false
+      }
+    ],
+    "nodeIds": [
+      "fluid-surface-1",
+      "fluid-volume-1",
+      "fluid-surface-2"
+    ],
+    "orphans": [],
+    "unrealized": [],
+    "ok": true
+  },
+  "results": [
+    {
+      "id": "fluid.probe.installed",
+      "desc": "window.__PRISM_FLUID_AUTHORSHIP__ installed + fluid nodes seeded",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "fluid.classifier-live",
+      "desc": "authorship classifier discriminates backed vs orphan (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic orphan + untagged render both flagged — a real orphan WOULD be caught"
+    },
+    {
+      "id": "fluid.instantiate-creates-node",
+      "desc": "instantiating a fluid auto-creates a backing node",
+      "pass": true,
+      "warn": false,
+      "detail": "nodes 2 → 3"
+    },
+    {
+      "id": "fluid.canvas.no-orphan",
+      "desc": "CANVAS: every rendered fluid maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "3 rendered, all node-backed"
+    },
+    {
+      "id": "fluid.canvas.all-realized",
+      "desc": "CANVAS: every fluid node is realized (no node left unbuilt)",
+      "pass": true,
+      "warn": false,
+      "detail": "3 nodes all realized"
+    },
+    {
+      "id": "fluid.edit.no-orphan",
+      "desc": "editing params + triggering liquid glass never orphans a render",
+      "pass": true,
+      "warn": false,
+      "detail": "3 rendered, all node-backed"
+    },
+    {
+      "id": "fluid.no-pageerrors",
+      "desc": "no uncaught page errors during the fluid gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

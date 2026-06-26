@@ -55,15 +55,17 @@ export interface DormantCompositeProps {
   hubs: LabHub[];
   selected: boolean;
   onSelect: (compositeId: string) => void;
+  /** WORLD root (effectiveRoot) — overrides composite.root when stacked (P-5 §6.1). */
+  worldRoot?: { x: number; y: number; z: number };
 }
 
-export function DormantComposite({ composite, hubs, selected, onSelect }: DormantCompositeProps) {
+export function DormantComposite({ composite, hubs, selected, onSelect, worldRoot }: DormantCompositeProps) {
   const members = useMemo(() => compositeMembers(composite, hubs), [composite, hubs]);
   const groupRef = useRef<THREE.Group>(null);
   useFrame((state) => {
     if (groupRef.current) groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.08;
   });
-  const r = composite.root;
+  const r = worldRoot ?? composite.root;
   return (
     <group
       position={[r.x, r.y, r.z]}

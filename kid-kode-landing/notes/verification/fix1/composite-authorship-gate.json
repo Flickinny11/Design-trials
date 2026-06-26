@@ -5,9 +5,9 @@
     "caughtCount": 2
   },
   "instantiate": {
-    "before": 28,
+    "before": 30,
     "beforeEdges": 30,
-    "after": 41,
+    "after": 43,
     "afterEdges": 52,
     "memberCount": 13,
     "edgeCount": 22,
@@ -44,7 +44,7 @@
   },
   "canvas": {
     "view": "canvas",
-    "renderedCount": 49,
+    "renderedCount": 51,
     "rendered": [
       {
         "nodeId": "page-home",
@@ -207,6 +207,16 @@
         "dormant": false
       },
       {
+        "nodeId": "comp-pane-1-pane",
+        "role": "prim-pane",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-pane-2-pane",
+        "role": "prim-pane",
+        "dormant": false
+      },
+      {
         "nodeId": "comp-nav-header-2-base",
         "role": "nav-base",
         "dormant": false
@@ -325,6 +335,8 @@
       "comp-card-1-title",
       "comp-card-1-body",
       "comp-card-1-cta",
+      "comp-pane-1-pane",
+      "comp-pane-2-pane",
       "comp-nav-header-2-base",
       "comp-nav-header-2-title",
       "comp-nav-header-2-dropdown",
@@ -349,7 +361,7 @@
   },
   "galaxy": {
     "view": "galaxy",
-    "renderedCount": 49,
+    "renderedCount": 51,
     "rendered": [
       {
         "nodeId": "page-home",
@@ -512,6 +524,16 @@
         "dormant": true
       },
       {
+        "nodeId": "comp-pane-1-pane",
+        "role": "prim-pane",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-pane-2-pane",
+        "role": "prim-pane",
+        "dormant": true
+      },
+      {
         "nodeId": "comp-nav-header-2-base",
         "role": "nav-base",
         "dormant": true
@@ -630,6 +652,8 @@
       "comp-card-1-title",
       "comp-card-1-body",
       "comp-card-1-cta",
+      "comp-pane-1-pane",
+      "comp-pane-2-pane",
       "comp-nav-header-2-base",
       "comp-nav-header-2-title",
       "comp-nav-header-2-dropdown",
@@ -672,7 +696,7 @@
       "desc": "instantiating a composite auto-creates a whole subgraph (members + edges) in one action",
       "pass": true,
       "warn": false,
-      "detail": "nodes 28→41 (+13) · edges 30→52 · members 13 · bindingEdges 10"
+      "detail": "nodes 30→43 (+13) · edges 30→52 · members 13 · bindingEdges 10"
     },
     {
       "id": "composite.auto-populate",
@@ -700,21 +724,21 @@
       "desc": "CANVAS: every rendered composite member maps to a backing node (Law 0)",
       "pass": true,
       "warn": false,
-      "detail": "49 rendered, all node-backed"
+      "detail": "51 rendered, all node-backed"
     },
     {
       "id": "composite.canvas.all-realized",
       "desc": "CANVAS: every node is realized (no node left unbuilt)",
       "pass": true,
       "warn": false,
-      "detail": "49 nodes all realized"
+      "detail": "51 nodes all realized"
     },
     {
       "id": "composite.galaxy.no-orphan",
       "desc": "GALAXY: every dormant seed maps to a backing node (Law 0)",
       "pass": true,
       "warn": false,
-      "detail": "49 dormant seeds, all node-backed"
+      "detail": "51 dormant seeds, all node-backed"
     },
     {
       "id": "composite.no-pageerrors",

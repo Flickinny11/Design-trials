@@ -13,12 +13,14 @@ export interface GenericCompositeProps {
   maps: Record<string, WornMaps>;
   selected: boolean;
   onSelect: (compositeId: string) => void;
+  /** WORLD root (effectiveRoot) — overrides composite.root when stacked (P-5 §6.1). */
+  worldRoot?: { x: number; y: number; z: number };
 }
 
-const INTERACTIVE_ROLES = new Set(['footer-link', 'card-cta']);
+const INTERACTIVE_ROLES = new Set(['footer-link', 'card-cta', 'prim-pane', 'prim-cube']);
 
-export function GenericComposite({ composite, maps, selected, onSelect }: GenericCompositeProps) {
-  const r = composite.root;
+export function GenericComposite({ composite, maps, selected, onSelect, worldRoot }: GenericCompositeProps) {
+  const r = worldRoot ?? composite.root;
   return (
     <group position={[r.x, r.y, r.z]}>
       {composite.staticMembers.map((m) => (

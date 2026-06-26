@@ -47,6 +47,7 @@ async function webgpuFactory(props: { canvas?: HTMLCanvasElement } & Record<stri
 function ReviewRig() {
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
+  const gl = useThree((s) => s.gl);
   if (typeof window !== 'undefined') {
     (window as unknown as { __PRISM_FLUID_CAM__?: unknown }).__PRISM_FLUID_CAM__ = {
       camera,
@@ -60,6 +61,13 @@ function ReviewRig() {
         } else {
           camera.lookAt(tx, ty, tz);
         }
+      },
+      // world → CSS pixel projection for verification (drive real Inspector faders).
+      project(x: number, y: number, z: number): [number, number] {
+        const v = new THREE.Vector3(x, y, z).project(camera);
+        const el = gl.domElement;
+        const w = el.clientWidth, h = el.clientHeight;
+        return [(v.x * 0.5 + 0.5) * w, (1 - (v.y * 0.5 + 0.5)) * h];
       },
     };
   }

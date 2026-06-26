@@ -53,7 +53,9 @@ export function FluidSurface({
 
   // the GPU sim + the liquid-glass surface material (one per node, disposed on swap).
   const { sim, surf } = useMemo(() => {
-    const s = new FluidFieldSim(176);
+    // 144² field — ample surface detail, far lighter on the headless WebGL2
+    // software backend (the transmission RT readback is the cost; smaller = stable).
+    const s = new FluidFieldSim(144);
     const m = buildFluidSurfaceMaterial(s.fieldTexNode, s.size);
     return { sim: s, surf: m };
   }, []);

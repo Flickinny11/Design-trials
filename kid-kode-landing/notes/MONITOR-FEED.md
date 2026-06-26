@@ -372,3 +372,158 @@ REDO against PRISM-EDITOR-CHROME-SPEC. Found a partial prior V2 gen (29 Tripo v3
 
 ## [2026-06-23] TOOLBAR-V2 — RUN COMPLETE ✅
 Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded): shell + 14 buttons + 14 icons, optimized to plain GLBs (22MB). Mounted in the isolated liquid-glass R3F canvas with transmission+warp on the generated shell, hover-spin on the generated coins (reveals depth), colored generated icons, engraving on changeArtifact/text/build, tooltips + ADD/BUILD labels, all 14 actions fire. Scene-graph: 29 GLB-backed meshes, 0 procedural form stand-ins. Cold load clean, tsc 0-new, 0 console errors, art-fidelity 6/6, criteria-reviewer all-MEET, user-advocate PLEASED. NE/KF DEFERRED (founder scope). Marker: PRISM-TOOLBAR-V2: RUN COMPLETE.
+[05:59] TOOLBAR2-SENTINEL: DONE: ORRERY-TOOLBAR2 COMPLETE (marker + quiet). Tell Claude: check
+[06:33] CHAIN: Editor-chrome chain START: toolbar-iterate -> node-editor -> keyframe.
+[06:33] CHAIN: STARTING surface: TBITER
+[06:33] CHAIN/TBITER: ARMED (TBITER). complete='PRISM-TBITER: RUN COMPLETE'.
+[06:34] CHAIN/TBITER: launched build agent on claude-opus-4-8 (resume #1)
+[07:57] CHAIN/CHASSIS: ARMED (CHASSIS). complete='PRISM-CHASSIS: RUN COMPLETE'.
+[07:58] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #1)
+[08:21] CHAIN/CHASSIS: ARMED (CHASSIS). complete='PRISM-CHASSIS: RUN COMPLETE'.
+[08:23] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #1)
+[09:04] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #2)
+[09:21] CHAIN/CHASSIS: session window closed - waiting 900s
+[09:40] CHAIN/CHASSIS: session window closed - waiting 900s
+[09:56] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #3)
+[10:00] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #4)
+[10:04] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #5)
+[10:21] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #6)
+[10:24] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #7)
+[10:31] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #8)
+[10:41] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #9)
+[10:46] CHAIN/CHASSIS: launched build agent on claude-opus-4-8 (resume #10)
+[10:53] CHAIN/CHASSIS: cap (10) reached without terminal marker - exiting 3.
+[12:44:08] CHAIN/KEYFRAME: ARMED — watching KEYFRAME. Pinging on every commit, heartbeat, stop, and finish.
+[12:45:58] CHAIN/KEYFRAME: launched build agent on claude-opus-4-8 (resume #1)
+[12:48:28] CHAIN/KEYFRAME: still building · 4m elapsed · agent up · 968 commits · last: AUTO-CKPT: TOOLBAR chassis ULTRACODE re-issue verify 2026-06-23 (audit c
+[12:51:59] CHAIN/KEYFRAME: still building · 7m elapsed · agent up · 968 commits · last: AUTO-CKPT: TOOLBAR chassis ULTRACODE re-issue verify 2026-06-23 (audit c
+[12:55:29] CHAIN/KEYFRAME: still building · 11m elapsed · agent up · 968 commits · last: AUTO-CKPT: TOOLBAR chassis ULTRACODE re-issue verify 2026-06-23 (audit c
+[12:59:00] CHAIN/KEYFRAME: still building · 14m elapsed · agent up · 968 commits · last: AUTO-CKPT: TOOLBAR chassis ULTRACODE re-issue verify 2026-06-23 (audit c
+[13:02:30] CHAIN/KEYFRAME: still building · 18m elapsed · agent up · 968 commits · last: AUTO-CKPT: TOOLBAR chassis ULTRACODE re-issue verify 2026-06-23 (audit c
+[13:05:01] CHAIN/KEYFRAME: commit 326aeeaf — AUTO-CKPT: KEYFRAME w-pane — glass timeline pane + milled channel tracks
+[13:06:01] CHAIN/KEYFRAME: still building · 21m elapsed · agent up · 969 commits · last: AUTO-CKPT: KEYFRAME w-pane — glass timeline pane + milled channel tracks
+[13:09:32] CHAIN/KEYFRAME: still building · 25m elapsed · agent up · 969 commits · last: AUTO-CKPT: KEYFRAME w-pane — glass timeline pane + milled channel tracks
+[13:13:02] CHAIN/KEYFRAME: still building · 28m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:13:02] CHAIN/KEYFRAME: commit c5d4e15d — AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:16:33] CHAIN/KEYFRAME: still building · 32m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:20:03] CHAIN/KEYFRAME: still building · 35m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:23:34] CHAIN/KEYFRAME: still building · 39m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:27:04] CHAIN/KEYFRAME: still building · 42m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:30:35] CHAIN/KEYFRAME: still building · 46m elapsed · agent up · 970 commits · last: AUTO-CKPT: KEYFRAME w-knobs — worn-metal CUBE fader knobs riding the mil
+[13:31:35] CHAIN/KEYFRAME: commit fe8b5158 — AUTO-CKPT: KEYFRAME w-wire — native seconds-based keyframe engine wired 
+[13:34:05] CHAIN/KEYFRAME: still building · 49m elapsed · agent up · 971 commits · last: AUTO-CKPT: KEYFRAME w-wire — native seconds-based keyframe engine wired 
+[13:37:36] CHAIN/KEYFRAME: still building · 53m elapsed · agent up · 971 commits · last: AUTO-CKPT: KEYFRAME w-wire — native seconds-based keyframe engine wired 
+[13:41:07] CHAIN/KEYFRAME: still building · 56m elapsed · agent up · 971 commits · last: AUTO-CKPT: KEYFRAME w-wire — native seconds-based keyframe engine wired 
+[13:43:07] CHAIN/KEYFRAME: commit 315199a0 — AUTO-CKPT: KEYFRAME w-verify — full behavioral pass (hover-spin, real-ra
+[13:44:55] CHAIN/KEYFRAME: launched build agent on claude-opus-4-8 (resume #2)
+[13:45:25] CHAIN/KEYFRAME: still building · 61m elapsed · agent up · 972 commits · last: AUTO-CKPT: KEYFRAME w-verify — full behavioral pass (hover-spin, real-ra
+[13:48:56] CHAIN/KEYFRAME: still building · 64m elapsed · agent up · 972 commits · last: AUTO-CKPT: KEYFRAME w-verify — full behavioral pass (hover-spin, real-ra
+[13:52:26] CHAIN/KEYFRAME: still building · 68m elapsed · agent up · 972 commits · last: AUTO-CKPT: KEYFRAME w-verify — full behavioral pass (hover-spin, real-ra
+[13:55:57] CHAIN/KEYFRAME: still building · 71m elapsed · agent up · 972 commits · last: AUTO-CKPT: KEYFRAME w-verify — full behavioral pass (hover-spin, real-ra
+[13:57:57] CHAIN/KEYFRAME: commit 655998e7 — AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[13:58:46] CHAIN/KEYFRAME: launched build agent on claude-opus-4-8 (resume #3)
+[14:00:16] CHAIN/KEYFRAME: still building · 76m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[14:03:46] CHAIN/KEYFRAME: still building · 79m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[14:07:17] CHAIN/KEYFRAME: still building · 83m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[12:14:15] CHAIN/PRIM-P1: ARMED — watching PRIM-P1. Pinging on every commit, heartbeat, stop, and finish.
+[12:15:03] CHAIN/PRIM-P1: launched build agent on claude-opus-4-8 (resume #1)
+[12:18:34] CHAIN/PRIM-P1: still building · 4m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[12:22:05] CHAIN/PRIM-P1: still building · 7m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[12:25:35] CHAIN/PRIM-P1: still building · 11m elapsed · agent up · 973 commits · last: AUTO-CKPT: KEYFRAME re-verify — ULTRACODE re-issue independent verify (N
+[12:28:36] CHAIN/PRIM-P1: commit c108d197 — AUTO-CKPT: PRIM-P1 w-geo — parametric Pane/Cube/Sphere as schema-driven 
+[12:29:06] CHAIN/PRIM-P1: still building · 14m elapsed · agent up · 974 commits · last: AUTO-CKPT: PRIM-P1 w-geo — parametric Pane/Cube/Sphere as schema-driven 
+[12:32:36] CHAIN/PRIM-P1: still building · 18m elapsed · agent up · 974 commits · last: AUTO-CKPT: PRIM-P1 w-geo — parametric Pane/Cube/Sphere as schema-driven 
+[12:36:07] CHAIN/PRIM-P1: still building · 21m elapsed · agent up · 974 commits · last: AUTO-CKPT: PRIM-P1 w-geo — parametric Pane/Cube/Sphere as schema-driven 
+[12:39:38] CHAIN/PRIM-P1: still building · 25m elapsed · agent up · 975 commits · last: AUTO-CKPT: PRIM-P1 w-node — instantiation pipeline + NODE LAW + gate cov
+[12:39:38] CHAIN/PRIM-P1: commit ba0db74c — AUTO-CKPT: PRIM-P1 w-node — instantiation pipeline + NODE LAW + gate cov
+[12:43:08] CHAIN/PRIM-P1: still building · 28m elapsed · agent up · 975 commits · last: AUTO-CKPT: PRIM-P1 w-node — instantiation pipeline + NODE LAW + gate cov
+[12:46:39] CHAIN/PRIM-P1: still building · 32m elapsed · agent up · 975 commits · last: AUTO-CKPT: PRIM-P1 w-node — instantiation pipeline + NODE LAW + gate cov
+[12:50:09] CHAIN/PRIM-P1: still building · 35m elapsed · agent up · 975 commits · last: AUTO-CKPT: PRIM-P1 w-node — instantiation pipeline + NODE LAW + gate cov
+[12:53:10] CHAIN/PRIM-P1: commit a8dee6ec — AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[12:53:40] CHAIN/PRIM-P1: still building · 39m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[12:57:10] CHAIN/PRIM-P1: still building · 42m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:00:41] CHAIN/PRIM-P1: still building · 46m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:04:11] CHAIN/PRIM-P1: still building · 49m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:07:42] CHAIN/PRIM-P1: still building · 53m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:11:13] CHAIN/PRIM-P1: still building · 56m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:14:43] CHAIN/PRIM-P1: still building · 60m elapsed · agent up · 976 commits · last: AUTO-CKPT: PRIM-P1 w-inspector — in-canvas (zero-DOM) schema editor, liv
+[13:16:44] CHAIN/PRIM-P1: commit f937b1a1 — AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:18:14] CHAIN/PRIM-P1: still building · 63m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:18:59] CHAIN/PRIM-P1: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[13:18:59] CHAIN/PRIM-P2: ARMED — watching PRIM-P2. Pinging on every commit, heartbeat, stop, and finish.
+[13:19:47] CHAIN/PRIM-P2: launched build agent on claude-opus-4-8 (resume #1)
+[13:23:18] CHAIN/PRIM-P2: still building · 4m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:26:48] CHAIN/PRIM-P2: still building · 7m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:30:19] CHAIN/PRIM-P2: still building · 11m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:33:50] CHAIN/PRIM-P2: still building · 14m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:37:20] CHAIN/PRIM-P2: still building · 18m elapsed · agent up · 977 commits · last: AUTO-CKPT: PRIM-P1 w-verify — headless behavioral + advocate + aesthetic
+[13:38:50] CHAIN/PRIM-P2: commit 8211f10f — AUTO-CKPT: PRIM-P2 w-lib — curated TSL-param material library (71 mats/8
+[13:40:51] CHAIN/PRIM-P2: still building · 21m elapsed · agent up · 978 commits · last: AUTO-CKPT: PRIM-P2 w-lib — curated TSL-param material library (71 mats/8
+[13:44:21] CHAIN/PRIM-P2: still building · 25m elapsed · agent up · 978 commits · last: AUTO-CKPT: PRIM-P2 w-lib — curated TSL-param material library (71 mats/8
+[13:47:52] CHAIN/PRIM-P2: still building · 28m elapsed · agent up · 978 commits · last: AUTO-CKPT: PRIM-P2 w-lib — curated TSL-param material library (71 mats/8
+[13:48:22] CHAIN/PRIM-P2: commit 94124421 — AUTO-CKPT: PRIM-P2 w-apply — registry source-of-truth + live apply + in-
+[13:51:23] CHAIN/PRIM-P2: still building · 32m elapsed · agent up · 979 commits · last: AUTO-CKPT: PRIM-P2 w-apply — registry source-of-truth + live apply + in-
+[13:54:53] CHAIN/PRIM-P2: still building · 35m elapsed · agent up · 979 commits · last: AUTO-CKPT: PRIM-P2 w-apply — registry source-of-truth + live apply + in-
+[13:57:54] CHAIN/PRIM-P2: commit ea0b3633 — AUTO-CKPT: PRIM-P2 w-prompt — prompt-to-texture (matched-latent + DELIT)
+[13:58:24] CHAIN/PRIM-P2: still building · 39m elapsed · agent up · 980 commits · last: AUTO-CKPT: PRIM-P2 w-prompt — prompt-to-texture (matched-latent + DELIT)
+[14:01:54] CHAIN/PRIM-P2: still building · 42m elapsed · agent up · 980 commits · last: AUTO-CKPT: PRIM-P2 w-prompt — prompt-to-texture (matched-latent + DELIT)
+[14:05:25] CHAIN/PRIM-P2: still building · 46m elapsed · agent up · 980 commits · last: AUTO-CKPT: PRIM-P2 w-prompt — prompt-to-texture (matched-latent + DELIT)
+[14:08:56] CHAIN/PRIM-P2: still building · 49m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:08:56] CHAIN/PRIM-P2: commit bcca7f87 — AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:10:41] CHAIN/PRIM-P2: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[14:10:41] CHAIN/PRIM-P3: ARMED — watching PRIM-P3. Pinging on every commit, heartbeat, stop, and finish.
+[14:11:31] CHAIN/PRIM-P3: launched build agent on claude-opus-4-8 (resume #1)
+[14:15:02] CHAIN/PRIM-P3: still building · 4m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:18:32] CHAIN/PRIM-P3: still building · 7m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:22:03] CHAIN/PRIM-P3: still building · 11m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:25:34] CHAIN/PRIM-P3: still building · 14m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:29:04] CHAIN/PRIM-P3: still building · 18m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:32:35] CHAIN/PRIM-P3: still building · 21m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:36:05] CHAIN/PRIM-P3: still building · 25m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:39:36] CHAIN/PRIM-P3: still building · 28m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:43:07] CHAIN/PRIM-P3: still building · 32m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:46:37] CHAIN/PRIM-P3: still building · 35m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:50:08] CHAIN/PRIM-P3: still building · 39m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:53:38] CHAIN/PRIM-P3: still building · 42m elapsed · agent up · 981 commits · last: AUTO-CKPT: PRIM-P2 w-verify — headless behavioral + 3 fresh-context judg
+[14:55:09] CHAIN/PRIM-P3: commit 5454fa6c — AUTO-CKPT: PRIM-P3 w-fluid — TSL/WebGPU ping-pong wave-equation fluid si
+[14:57:09] CHAIN/PRIM-P3: still building · 46m elapsed · agent up · 982 commits · last: AUTO-CKPT: PRIM-P3 w-fluid — TSL/WebGPU ping-pong wave-equation fluid si
+[14:59:09] CHAIN/PRIM-P3: commit fccf965a — AUTO-CKPT: PRIM-P3 w-liquidglass — liquid-glass go-liquid timeline (phas
+[15:00:40] CHAIN/PRIM-P3: still building · 49m elapsed · agent up · 983 commits · last: AUTO-CKPT: PRIM-P3 w-liquidglass — liquid-glass go-liquid timeline (phas
+[15:04:10] CHAIN/PRIM-P3: still building · 53m elapsed · agent up · 983 commits · last: AUTO-CKPT: PRIM-P3 w-liquidglass — liquid-glass go-liquid timeline (phas
+[15:07:41] CHAIN/PRIM-P3: still building · 57m elapsed · agent up · 983 commits · last: AUTO-CKPT: PRIM-P3 w-liquidglass — liquid-glass go-liquid timeline (phas
+[15:11:11] CHAIN/PRIM-P3: still building · 60m elapsed · agent up · 983 commits · last: AUTO-CKPT: PRIM-P3 w-liquidglass — liquid-glass go-liquid timeline (phas
+[15:13:42] CHAIN/PRIM-P3: commit bde73f17 — AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:14:42] CHAIN/PRIM-P3: still building · 64m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:18:13] CHAIN/PRIM-P3: still building · 67m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:21:43] CHAIN/PRIM-P3: still building · 71m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:25:14] CHAIN/PRIM-P3: still building · 74m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:25:59] CHAIN/PRIM-P3: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[15:26:00] CHAIN/PRIM-P4: ARMED — watching PRIM-P4. Pinging on every commit, heartbeat, stop, and finish.
+[15:26:52] CHAIN/PRIM-P4: launched build agent on claude-opus-4-8 (resume #1)
+[15:30:23] CHAIN/PRIM-P4: still building · 4m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:33:53] CHAIN/PRIM-P4: still building · 7m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:37:24] CHAIN/PRIM-P4: still building · 11m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:40:54] CHAIN/PRIM-P4: still building · 14m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:44:25] CHAIN/PRIM-P4: still building · 18m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:47:55] CHAIN/PRIM-P4: still building · 21m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:51:26] CHAIN/PRIM-P4: still building · 25m elapsed · agent up · 984 commits · last: AUTO-CKPT: PRIM-P3 w-node — fluid primitive as node + dogfooded chassis 
+[15:54:26] CHAIN/PRIM-P4: commit cbcca967 — AUTO-CKPT: PRIM-P4 w-composite — composite = subgraph instantiation (mem
+[15:54:57] CHAIN/PRIM-P4: still building · 28m elapsed · agent up · 985 commits · last: AUTO-CKPT: PRIM-P4 w-composite — composite = subgraph instantiation (mem
+[15:57:57] CHAIN/PRIM-P4: commit 32961373 — AUTO-CKPT: PRIM-P4 w-bind — nav tabs/dropdown BOUND to hub nodes: auto-p
+[15:58:27] CHAIN/PRIM-P4: still building · 32m elapsed · agent up · 986 commits · last: AUTO-CKPT: PRIM-P4 w-bind — nav tabs/dropdown BOUND to hub nodes: auto-p
+[16:01:58] CHAIN/PRIM-P4: still building · 35m elapsed · agent up · 986 commits · last: AUTO-CKPT: PRIM-P4 w-bind — nav tabs/dropdown BOUND to hub nodes: auto-p
+[16:05:28] CHAIN/PRIM-P4: still building · 39m elapsed · agent up · 987 commits · last: AUTO-CKPT: PRIM-P4 w-dropdown — dropdown expands as REAL 3D liquid glass
+[16:05:29] CHAIN/PRIM-P4: commit 26b9b46d — AUTO-CKPT: PRIM-P4 w-dropdown — dropdown expands as REAL 3D liquid glass
+[16:08:59] CHAIN/PRIM-P4: still building · 42m elapsed · agent up · 987 commits · last: AUTO-CKPT: PRIM-P4 w-dropdown — dropdown expands as REAL 3D liquid glass
+[16:12:30] CHAIN/PRIM-P4: still building · 46m elapsed · agent up · 987 commits · last: AUTO-CKPT: PRIM-P4 w-dropdown — dropdown expands as REAL 3D liquid glass
+[16:16:01] CHAIN/PRIM-P4: still building · 50m elapsed · agent up · 987 commits · last: AUTO-CKPT: PRIM-P4 w-dropdown — dropdown expands as REAL 3D liquid glass
+[16:18:01] CHAIN/PRIM-P4: commit d0192349 — AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:19:31] CHAIN/PRIM-P4: still building · 53m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:20:17] CHAIN/PRIM-P4: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[16:20:17] CHAIN/PRIM-P5: ARMED — watching PRIM-P5. Pinging on every commit, heartbeat, stop, and finish.
+[16:21:09] CHAIN/PRIM-P5: launched build agent on claude-opus-4-8 (resume #1)
+[16:24:40] CHAIN/PRIM-P5: still building · 4m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:28:11] CHAIN/PRIM-P5: still building · 7m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:31:41] CHAIN/PRIM-P5: still building · 11m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:35:12] CHAIN/PRIM-P5: still building · 14m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +
+[16:38:42] CHAIN/PRIM-P5: still building · 18m elapsed · agent up · 988 commits · last: AUTO-CKPT: PRIM-P4 w-verify — node-authorship-gate --composite (10/10) +

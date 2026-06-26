@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-22T15:36:54.986Z",
-  "dir": "notes/verification/phase3",
+  "generatedAt": "2026-06-23T10:41:03.428Z",
+  "dir": "notes/verification/toolbar-v2/tiles",
   "bar": {
     "tooDarkLum": 0.06,
     "washedLum": 0.72,
@@ -9,164 +9,80 @@
     "flatStdDev": 0.018
   },
   "summary": {
-    "total": 13,
-    "pass": 13,
+    "total": 6,
+    "pass": 6,
     "needsPolish": 0
   },
   "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
   "results": [
     {
-      "name": "coldload-start-s1",
-      "frame": "notes/verification/catalog-prep/tiles/coldload-start-s1.png",
+      "name": "buttons-grid",
+      "frame": "notes/verification/catalog-prep/tiles/buttons-grid.png",
       "metrics": {
-        "meanLum": 0.2299838167483542,
-        "lumStdDev": 0.15650580711501907,
-        "meanSat": 0.27362061115385683,
-        "coverage": 0.9722395833333334
+        "meanLum": 0.1082127133169982,
+        "lumStdDev": 0.11055670294068229,
+        "meanSat": 0.3497133227069809,
+        "coverage": 0.9390625
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "w1-atelier-after-transition",
-      "frame": "notes/verification/catalog-prep/tiles/w1-atelier-after-transition.png",
+      "name": "hero-rail",
+      "frame": "notes/verification/catalog-prep/tiles/hero-rail.png",
       "metrics": {
-        "meanLum": 0.24689232177286352,
-        "lumStdDev": 0.1645552441085859,
-        "meanSat": 0.3514622686181137,
-        "coverage": 0.9888020833333333
+        "meanLum": 0.24504950379902296,
+        "lumStdDev": 0.15906865789247737,
+        "meanSat": 0.49780144184637454,
+        "coverage": 0.9288020833333334
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "w1-curtain-cover100",
-      "frame": "notes/verification/catalog-prep/tiles/w1-curtain-cover100.png",
+      "name": "ic-image",
+      "frame": "notes/verification/catalog-prep/tiles/ic-image.png",
       "metrics": {
-        "meanLum": 0.530797093178105,
-        "lumStdDev": 0.2400095153165652,
-        "meanSat": 0.3176441157130873,
-        "coverage": 1
+        "meanLum": 0.19745131446080055,
+        "lumStdDev": 0.2539841554918228,
+        "meanSat": 0.4490967735431669,
+        "coverage": 0.4261979166666667
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "w1-curtain-cover100b",
-      "frame": "notes/verification/catalog-prep/tiles/w1-curtain-cover100b.png",
+      "name": "ic-transform",
+      "frame": "notes/verification/catalog-prep/tiles/ic-transform.png",
       "metrics": {
-        "meanLum": 0.6037448986519721,
-        "lumStdDev": 0.2700066924933005,
-        "meanSat": 0.28884273952124684,
-        "coverage": 1
+        "meanLum": 0.06980746307189797,
+        "lumStdDev": 0.10654657629165812,
+        "meanSat": 0.6676275924138094,
+        "coverage": 0.16666666666666666
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "w1-curtain-cover30",
-      "frame": "notes/verification/catalog-prep/tiles/w1-curtain-cover30.png",
+      "name": "icons-grid",
+      "frame": "notes/verification/catalog-prep/tiles/icons-grid.png",
       "metrics": {
-        "meanLum": 0.3169879005718945,
-        "lumStdDev": 0.2384158575296592,
-        "meanSat": 0.29402384308442936,
-        "coverage": 0.9771354166666667
+        "meanLum": 0.07896164080884265,
+        "lumStdDev": 0.16045173204250918,
+        "meanSat": 0.596033167637143,
+        "coverage": 0.12505208333333334
       },
       "verdict": "PASS",
       "reasons": []
     },
     {
-      "name": "w1-curtain-cover60",
-      "frame": "notes/verification/catalog-prep/tiles/w1-curtain-cover60.png",
+      "name": "shell",
+      "frame": "notes/verification/catalog-prep/tiles/shell.png",
       "metrics": {
-        "meanLum": 0.43950348790850163,
-        "lumStdDev": 0.28000994030051296,
-        "meanSat": 0.30041790132011226,
-        "coverage": 0.9916145833333333
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w1-live-transition-A",
-      "frame": "notes/verification/catalog-prep/tiles/w1-live-transition-A.png",
-      "metrics": {
-        "meanLum": 0.21159386491011914,
-        "lumStdDev": 0.15121116443865407,
-        "meanSat": 0.36437282350136224,
-        "coverage": 0.9678125
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-day",
-      "frame": "notes/verification/catalog-prep/tiles/w2-day.png",
-      "metrics": {
-        "meanLum": 0.22134601397058498,
-        "lumStdDev": 0.15352199645525547,
-        "meanSat": 0.3123839851476073,
-        "coverage": 0.9944270833333333
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-exploded-full",
-      "frame": "notes/verification/catalog-prep/tiles/w2-exploded-full.png",
-      "metrics": {
-        "meanLum": 0.23815080269607217,
-        "lumStdDev": 0.17094248470193274,
-        "meanSat": 0.337715466082522,
-        "coverage": 0.9908854166666666
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-exploded-mid",
-      "frame": "notes/verification/catalog-prep/tiles/w2-exploded-mid.png",
-      "metrics": {
-        "meanLum": 0.20712822017972765,
-        "lumStdDev": 0.15447974807547124,
-        "meanSat": 0.28081207632766,
-        "coverage": 0.99140625
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-night",
-      "frame": "notes/verification/catalog-prep/tiles/w2-night.png",
-      "metrics": {
-        "meanLum": 0.14624340637254835,
-        "lumStdDev": 0.16923810765905678,
-        "meanSat": 0.4440715432894238,
-        "coverage": 0.5822916666666667
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-night2",
-      "frame": "notes/verification/catalog-prep/tiles/w2-night2.png",
-      "metrics": {
-        "meanLum": 0.1381026064950923,
-        "lumStdDev": 0.18020927585617402,
-        "meanSat": 0.45525670133995644,
-        "coverage": 0.5007291666666667
-      },
-      "verdict": "PASS",
-      "reasons": []
-    },
-    {
-      "name": "w2-s1-after-night-restore",
-      "frame": "notes/verification/catalog-prep/tiles/w2-s1-after-night-restore.png",
-      "metrics": {
-        "meanLum": 0.29756992169116503,
-        "lumStdDev": 0.20612547684473836,
-        "meanSat": 0.3034895548305114,
-        "coverage": 0.9744791666666667
+        "meanLum": 0.3160684718136799,
+        "lumStdDev": 0.3415415820283484,
+        "meanSat": 0.3658567388691445,
+        "coverage": 0.4209375
       },
       "verdict": "PASS",
       "reasons": []
