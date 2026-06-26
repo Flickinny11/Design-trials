@@ -69,14 +69,49 @@ export function CompositeInspector() {
     ];
   }, [composite, hubs]);
 
-  // verification map (editor chrome — window access allowed).
+  // verification map (editor chrome — window access allowed). Exposes the WORLD
+  // positions of every in-canvas control so a headless real-pointer pass can drive
+  // the dogfooded inspector (project → click), not just call the store API.
   useEffect(() => {
     const w = window as unknown as Record<string, unknown>;
     w.__PRISM_COMPOSITE_INSPECTOR_MAP__ = () => {
       const st = useCompositeStore.getState();
       const c = st.composites.find((x) => x.compositeId === st.selectedId);
       if (!c) return { open: false };
-      return { open: true, compositeId: c.compositeId, templateId: c.templateId, inspectorX: INSPECTOR_X, autoAdd: c.binding?.autoAdd ?? null, tabCount: c.binding ? resolveNavTabs(st.hubs, c.binding).length : 0 };
+      const isNavC = c.templateId === 'nav-header';
+      const rowsC = c.binding
+        ? [
+            ...st.hubs.map((h) => ({ key: h.hubId, hubId: h.hubId as string | null, manual: false, hidden: c.binding!.hidden.includes(h.hubId), label: c.binding!.renames[h.hubId] ?? h.title })),
+            ...c.binding.manualItems.map((m) => ({ key: `manual:${m.id}`, hubId: null as string | null, manual: true, hidden: false, label: m.label })),
+          ]
+        : [];
+      const TOPv = PH / 2 - 0.6;
+      const tabsTopv = TOPv - 1.5;
+      const rowStepv = 0.58;
+      const actionsYv = tabsTopv - (isNavC ? rowsC.length : 0) * rowStepv - 0.7;
+      const halfW = PW / 2;
+      const chipX = [halfW - 1.62, halfW - 1.24, halfW - 0.86, halfW - 0.42];
+      const rowWorld = rowsC.map((r, i) => {
+        const y = tabsTopv - i * rowStepv;
+        return { key: r.key, label: r.label, hubId: r.hubId, manual: r.manual, hidden: r.hidden, up: [INSPECTOR_X + chipX[0], y, KNOB_Z], down: [INSPECTOR_X + chipX[1], y, KNOB_Z], rename: [INSPECTOR_X + chipX[2], y, KNOB_Z], hideShow: [INSPECTOR_X + chipX[3], y, KNOB_Z] };
+      });
+      return {
+        open: true,
+        compositeId: c.compositeId,
+        templateId: c.templateId,
+        inspectorX: INSPECTOR_X,
+        autoAdd: c.binding?.autoAdd ?? null,
+        tabCount: c.binding ? resolveNavTabs(st.hubs, c.binding).length : 0,
+        controls: isNavC
+          ? {
+              autoAdd: [INSPECTOR_X - 1.5, actionsYv, KNOB_Z],
+              pinItem: [INSPECTOR_X - 0.1, actionsYv, KNOB_Z],
+              menu: [INSPECTOR_X + 1.3, actionsYv, KNOB_Z],
+              remove: [INSPECTOR_X, -PH / 2 + 0.7, KNOB_Z],
+            }
+          : { remove: [INSPECTOR_X, -PH / 2 + 0.7, KNOB_Z] },
+        rows: rowWorld,
+      };
     };
     return () => { delete w.__PRISM_COMPOSITE_INSPECTOR_MAP__; };
   }, []);
