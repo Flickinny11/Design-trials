@@ -1,0 +1,12 @@
+{
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "auth": {
+    "ok": true,
+    "rendered": 2,
+    "nodes": 2
+  },
+  "errors": []
+}

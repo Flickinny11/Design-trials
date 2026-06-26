@@ -45,9 +45,14 @@ const LAB = argv.includes('--lab');
 // /material-lab — the 3 display primitives must each map to a backing node, and
 // applying a library material must never orphan a render.
 const MAT = argv.includes('--mat');
+// PRIM-P3: `--fluid` extends Law-0 coverage to the Fluid System review surface at
+// /fluid-lab — every instantiated fluid (surface/volume) must map to a backing node,
+// and editing fluid params or triggering liquid glass must never orphan a render.
+const FLUID = argv.includes('--fluid');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 const LAB_URL = URL.replace(/\/$/, '') + '/primitive-lab';
 const MAT_URL = URL.replace(/\/$/, '') + '/material-lab';
+const FLUID_URL = URL.replace(/\/$/, '') + '/fluid-lab';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
 // THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
@@ -412,6 +417,90 @@ async function mainMat() {
   finish();
 }
 
+// ── PRIM-P3 FLUID MODE (spec §0 / INV-0.5) ──────────────────────────────────────
+// Drives /fluid-lab and proves the Node Law for the Fluid System review surface:
+// the authorship probe + self-test are live; every instantiated fluid (surface or
+// volume) maps to a backing node; editing a fluid param and triggering the
+// liquid-glass timeline never orphans a render and leaves no node unrealized.
+async function mainFluid() {
+  if (!(await waitForServer(URL))) {
+    check('server.up', `dev server reachable at ${URL}`, false, 'no 200 in 30s — start `npm run dev` first');
+    finish();
+    return;
+  }
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  try {
+    await page.goto(FLUID_URL, { waitUntil: 'domcontentloaded' });
+    const booted = await page.waitForFunction(() => {
+      const w = window;
+      return typeof w.__PRISM_FLUID_AUTHORSHIP__ === 'function'
+        && typeof w.__PRISM_FLUID_STORE__ === 'function'
+        && w.__PRISM_FLUID_STORE__().schemas.length > 0;
+    }, { timeout: 60000 }).then(() => true).catch(() => false);
+    check('fluid.probe.installed', 'window.__PRISM_FLUID_AUTHORSHIP__ installed + fluid nodes seeded', booted,
+      booted ? '' : 'probe never appeared (route did not boot)');
+    if (!booted) { await browser.close(); finish(); return; }
+    await page.waitForTimeout(3000);
+
+    // 1) classifier self-test — a synthetic unbacked render MUST be caught.
+    const self = await page.evaluate(() => window.__PRISM_FLUID_AUTHORSHIP_SELFTEST__?.() ?? null);
+    check('fluid.classifier-live', 'authorship classifier discriminates backed vs orphan (self-test)', !!self?.live,
+      self?.live ? 'synthetic orphan + untagged render both flagged — a real orphan WOULD be caught'
+                 : `self-test failed: ${JSON.stringify(self)}`);
+
+    // 2) instantiation CREATES a node in the same action (Node Law).
+    const inst = await page.evaluate(async () => {
+      const st = window.__PRISM_FLUID_STORE__();
+      const before = st.nodes().length;
+      st.instantiate('surface');
+      const after = window.__PRISM_FLUID_STORE__().nodes().length;
+      return { before, after };
+    });
+    check('fluid.instantiate-creates-node', 'instantiating a fluid auto-creates a backing node', inst.after === inst.before + 1,
+      `nodes ${inst.before} → ${inst.after}`);
+    await page.waitForTimeout(1500);
+
+    // 3) CANVAS view — zero orphans, every fluid node realized.
+    await page.evaluate(() => window.__PRISM_FLUID_STORE__().setView('canvas'));
+    await page.waitForTimeout(1500);
+    const canvas = await page.evaluate(() => window.__PRISM_FLUID_AUTHORSHIP__());
+    check('fluid.canvas.no-orphan', 'CANVAS: every rendered fluid maps to a backing node (Law 0)', canvas.orphans.length === 0,
+      canvas.orphans.length ? `ORPHANS: ${JSON.stringify(canvas.orphans)}` : `${canvas.renderedCount} rendered, all node-backed`);
+    check('fluid.canvas.all-realized', 'CANVAS: every fluid node is realized (no node left unbuilt)', canvas.unrealized.length === 0,
+      canvas.unrealized.length ? `unrealized: ${canvas.unrealized.join(', ')}` : `${canvas.nodeIds.length} nodes all realized`);
+
+    // 4) editing a param + triggering liquid glass must not orphan anything.
+    await page.evaluate(() => {
+      const st = window.__PRISM_FLUID_STORE__();
+      const id = st.schemas[0]?.nodeId;
+      if (id) st.updateParam(id, { thickness: 2.2, viscosity: 0.3 });
+      st.triggerLiquidGlass();
+    });
+    await page.waitForTimeout(900);
+    const afterEdit = await page.evaluate(() => window.__PRISM_FLUID_AUTHORSHIP__());
+    check('fluid.edit.no-orphan', 'editing params + triggering liquid glass never orphans a render', afterEdit.ok,
+      afterEdit.ok ? `${afterEdit.renderedCount} rendered, all node-backed` : `FAIL: ${JSON.stringify(afterEdit.orphans)}`);
+
+    check('fluid.no-pageerrors', 'no uncaught page errors during the fluid gate run', pageErrors.length === 0,
+      pageErrors.length ? pageErrors.slice(0, 2).join(' | ') : 'clean');
+
+    writeFileSync(join(outDir, 'fluid-authorship-gate.json'), JSON.stringify({
+      url: FLUID_URL, selfTest: self, instantiate: inst, canvas, afterEdit, results,
+    }, null, 2) + '\n');
+    await page.screenshot({ path: join(outDir, 'fluid-gate-final-frame.png') }).catch(() => {});
+    await browser.close();
+  } catch (e) {
+    check('fluid.fatal', 'fluid gate fatal error', false, e?.message ?? String(e));
+    try { await browser.close(); } catch { /* ignore */ }
+  }
+  finish();
+}
+
 function finish() {
   // FAIL conditions: a FAIL result that is not a soft WARN.
   const hardFails = results.filter((r) => !r.pass && !r.warn);
@@ -421,4 +510,4 @@ function finish() {
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
-(MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
+(FLUID ? mainFluid() : MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });

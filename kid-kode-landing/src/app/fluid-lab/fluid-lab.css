@@ -1,0 +1,24 @@
+/* /fluid-lab stage sizer — the ONLY stylesheet for this route. Element +
+   attribute selectors only (no class selectors, no Tailwind directives):
+   everything visible lives inside the WebGPU canvas (no-dom-ui LAW). */
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #05060a;
+  overflow: hidden;
+}
+
+[data-fluid-stage] {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+[data-fluid-stage] canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
