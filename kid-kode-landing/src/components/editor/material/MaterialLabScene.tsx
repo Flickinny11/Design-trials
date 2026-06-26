@@ -18,6 +18,7 @@ import { StudioEnv } from '@/components/editor/chassis/StudioEnv';
 import { EngravedText } from '@/components/editor/primitive/EngravedText';
 import { MaterialDisplay } from './MaterialDisplay';
 import { MaterialPalette } from './MaterialPalette';
+import { MaterialInspector } from './MaterialInspector';
 import { useMaterialMapSets } from './material-build';
 import { getMaterial } from './material-registry';
 import { useMaterialStore } from './use-material-store';
@@ -151,6 +152,7 @@ function Content() {
       <SelectedCaption />
       <Displays mapSets={mapSets} />
       <MaterialPalette mapSets={mapSets} />
+      <MaterialInspector mapSets={mapSets} />
     </>
   );
 }

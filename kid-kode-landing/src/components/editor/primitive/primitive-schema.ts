@@ -22,6 +22,7 @@ import type {
   MaterialSpec,
   MeshPrimitiveKind,
 } from '@/lib/prism-graph/types';
+import { getMaterial, LEGACY_KIND_TO_ID } from '@/components/editor/material/material-registry';
 
 // ── kinds ────────────────────────────────────────────────────────────────────
 // P-1 ships the three foundational geometric atoms. The taxonomy (spec §8) grows
@@ -240,7 +241,41 @@ const KIND_TO_MESH: Record<PrimitiveKind, MeshPrimitiveKind> = {
   sphere: 'sphere',
 };
 
+// P-2: when a primitive references a registry material by id, its node's
+// materialSpec is derived from that material's params (so the typed graph node
+// carries the applied material — node-authorship + materialSpec reflect the id).
+// Resolved lazily to avoid a hard import cycle at module-eval time.
+function materialSpecFromRegistry(m: PrimitiveMaterial): MaterialSpec | null {
+  const id = m.materialId ?? LEGACY_KIND_TO_ID[m.kind];
+  if (!id) return null;
+  const def = getMaterial(id);
+  if (!def) return null;
+  const p = { ...def.params, ...(m.overrides ?? {}) } as Record<string, unknown>;
+  const num = (k: string): number | undefined => (typeof p[k] === 'number' ? (p[k] as number) : undefined);
+  const str = (k: string): string | undefined => (typeof p[k] === 'string' ? (p[k] as string) : undefined);
+  return {
+    baseColor: str('baseColor') ?? '#ffffff',
+    metalness: num('metalness') ?? 0,
+    roughness: num('roughness') ?? 0.5,
+    transmission: num('transmission') ?? 0,
+    ior: num('ior') ?? 1.5,
+    dispersion: num('dispersion') ?? 0,
+    clearcoat: num('clearcoat') ?? 0,
+    clearcoatRoughness: num('clearcoatRoughness') ?? 0.1,
+    iridescence: num('iridescence') ?? 0,
+    iridescenceIOR: num('iridescenceIOR') ?? 1.3,
+    thickness: num('thickness') ?? 0.5,
+    normalScale: num('normalScale') ?? 1,
+    envMapIntensity: num('envMapIntensity') ?? 1,
+    emissive: str('emissive') ?? '#000000',
+    emissiveIntensity: num('emissiveIntensity') ?? 0,
+    opacity: 1,
+  };
+}
+
 function materialSpecFor(m: PrimitiveMaterial): MaterialSpec {
+  const reg = materialSpecFromRegistry(m);
+  if (reg) return reg;
   if (isGlass(m.kind)) {
     return {
       baseColor: m.tint,

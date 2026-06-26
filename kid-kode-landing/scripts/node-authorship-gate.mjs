@@ -41,8 +41,13 @@ const STRICT_ORPHANS = argv.includes('--strict-orphans');
 // PRIM-P1: `--lab` extends Law-0 coverage to the Primitive System instantiation
 // pipeline at /primitive-lab — a primitive rendered without a backing node FAILS.
 const LAB = argv.includes('--lab');
+// PRIM-P2: `--mat` extends Law-0 coverage to the Material System review surface at
+// /material-lab — the 3 display primitives must each map to a backing node, and
+// applying a library material must never orphan a render.
+const MAT = argv.includes('--mat');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
 const LAB_URL = URL.replace(/\/$/, '') + '/primitive-lab';
+const MAT_URL = URL.replace(/\/$/, '') + '/material-lab';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
 // THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
@@ -345,6 +350,68 @@ async function mainLab() {
   finish();
 }
 
+// ── PRIM-P2 MAT MODE (spec §0 / INV-0.5) ────────────────────────────────────────
+// Drives /material-lab and proves the Node Law for the Material System review
+// surface: the authorship probe + self-test are live; every tagged display
+// primitive maps to a backing node; applying any library material never orphans a
+// render and leaves no node unrealized.
+async function mainMat() {
+  if (!(await waitForServer(URL))) {
+    check('server.up', `dev server reachable at ${URL}`, false, 'no 200 in 30s — start `npm run dev` first');
+    finish();
+    return;
+  }
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ viewport: { width: 1600, height: 1000 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  try {
+    await page.goto(MAT_URL, { waitUntil: 'domcontentloaded' });
+    const booted = await page.waitForFunction(() => {
+      const w = window;
+      return typeof w.__PRISM_MAT_AUTHORSHIP__ === 'function'
+        && typeof w.__PRISM_MAT_STORE__ === 'function'
+        && w.__PRISM_MAT_STORE__().displays.length > 0;
+    }, { timeout: 60000 }).then(() => true).catch(() => false);
+    check('mat.probe.installed', 'window.__PRISM_MAT_AUTHORSHIP__ installed + display nodes seeded', booted,
+      booted ? '' : 'probe never appeared (route did not boot)');
+    if (!booted) { await browser.close(); finish(); return; }
+    await page.waitForTimeout(2500);
+
+    const self = await page.evaluate(() => window.__PRISM_MAT_AUTHORSHIP_SELFTEST__?.() ?? null);
+    check('mat.classifier-live', 'authorship classifier discriminates backed vs orphan (self-test)', !!self?.live,
+      self?.live ? 'synthetic orphan + untagged render both flagged' : `self-test failed: ${JSON.stringify(self)}`);
+
+    const before = await page.evaluate(() => window.__PRISM_MAT_AUTHORSHIP__());
+    check('mat.displays.no-orphan', 'every display primitive maps to a backing node (Law 0)', before.orphans.length === 0,
+      before.orphans.length ? `ORPHANS: ${JSON.stringify(before.orphans)}` : `${before.renderedCount} rendered, all node-backed`);
+    check('mat.displays.all-realized', 'every display node is realized (no node left unbuilt)', before.unrealized.length === 0,
+      before.unrealized.length ? `unrealized: ${before.unrealized.join(', ')}` : `${before.nodeIds.length} nodes all realized`);
+
+    // applying a material must not orphan anything.
+    await page.evaluate(() => window.__PRISM_MAT_APPLY__('gem.ruby'));
+    await page.waitForTimeout(700);
+    const afterApply = await page.evaluate(() => window.__PRISM_MAT_AUTHORSHIP__());
+    check('mat.apply.no-orphan', 'applying a library material never orphans a render', afterApply.ok && afterApply.selectedMaterialId === 'gem.ruby',
+      afterApply.ok ? `applied ${afterApply.selectedMaterialId}, ${afterApply.renderedCount} node-backed` : `FAIL: ${JSON.stringify(afterApply.orphans)}`);
+
+    check('mat.no-pageerrors', 'no uncaught page errors during the mat gate run', pageErrors.length === 0,
+      pageErrors.length ? pageErrors.slice(0, 2).join(' | ') : 'clean');
+
+    writeFileSync(join(outDir, 'material-authorship-gate.json'), JSON.stringify({
+      url: MAT_URL, selfTest: self, before, afterApply, results,
+    }, null, 2) + '\n');
+    await page.screenshot({ path: join(outDir, 'mat-gate-final-frame.png') }).catch(() => {});
+    await browser.close();
+  } catch (e) {
+    check('mat.fatal', 'mat gate fatal error', false, e?.message ?? String(e));
+    try { await browser.close(); } catch { /* ignore */ }
+  }
+  finish();
+}
+
 function finish() {
   // FAIL conditions: a FAIL result that is not a soft WARN.
   const hardFails = results.filter((r) => !r.pass && !r.warn);
@@ -354,4 +421,4 @@ function finish() {
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
-(LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
+(MAT ? mainMat() : LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
