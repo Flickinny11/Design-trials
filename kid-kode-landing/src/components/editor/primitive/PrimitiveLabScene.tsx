@@ -34,13 +34,13 @@ function Backdrop() {
     c.height = 512;
     const g = c.getContext('2d')!;
     const grad = g.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, '#323b4a');
-    grad.addColorStop(0.5, '#1a2030');
-    grad.addColorStop(1, '#06080e');
+    grad.addColorStop(0, '#3c4658');
+    grad.addColorStop(0.5, '#222a3c');
+    grad.addColorStop(1, '#070a11');
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 512);
-    const bloom = g.createRadialGradient(32, 250, 8, 32, 250, 340);
-    bloom.addColorStop(0, 'rgba(150,180,225,0.30)');
+    const bloom = g.createRadialGradient(32, 245, 8, 32, 245, 360);
+    bloom.addColorStop(0, 'rgba(165,195,238,0.40)');
     bloom.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = bloom;
     g.fillRect(0, 0, 64, 512);
@@ -63,7 +63,7 @@ function EnvTune() {
   useEffect(() => {
     const prevI = scene.environmentIntensity;
     const prevR = scene.environmentRotation?.clone?.();
-    scene.environmentIntensity = 0.66;
+    scene.environmentIntensity = 0.74;
     if (scene.environmentRotation) scene.environmentRotation.set(0.3, -Math.PI * 0.32, 0);
     return () => {
       scene.environmentIntensity = prevI;

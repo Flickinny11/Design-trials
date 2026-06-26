@@ -45,15 +45,15 @@ export function EngravedText({
   return (
     <group position={position}>
       {/* shadowed upper wall — dark, offset up + deepest */}
-      <Text {...common} position={[0.008, 0.018, -0.012]} color="#04060b" renderOrder={1}>
+      <Text {...common} position={[0.009, 0.02, -0.012]} color="#03050a" renderOrder={1}>
         {children}
       </Text>
-      {/* frosted-glass etch fill — cool steel tint (NOT white) */}
-      <Text {...common} position={[0, 0, 0]} color="#88a0b8" renderOrder={2}>
+      {/* frosted-glass etch fill — brighter cool steel tint (legible through glass) */}
+      <Text {...common} position={[0, 0, 0]} color="#b8c8dc" renderOrder={2}>
         {children}
       </Text>
       {/* lit lower wall — bright frosted highlight rim, offset down + proud */}
-      <Text {...common} position={[-0.006, -0.016, 0.013]} color="#eef5fd" renderOrder={3}>
+      <Text {...common} position={[-0.007, -0.018, 0.014]} color="#f4f9ff" renderOrder={3}>
         {children}
       </Text>
     </group>

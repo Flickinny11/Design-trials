@@ -194,7 +194,7 @@ function InstantiatePalette({ maps }: { maps: Record<string, WornMaps> }) {
   return (
     <group>
       <GlassBar width={spacing * KINDS.length + 1.2} height={1.7} position={[0, y, 0]} />
-      <EngravedText position={[0, y + 0.62, 0.34 / 2 - 0.06]} fontSize={0.16} letterSpacing={0.16}>
+      <EngravedText position={[0, y + 0.62, 0.34 / 2 - 0.02]} fontSize={0.18} letterSpacing={0.18}>
         ADD PRIMITIVE
       </EngravedText>
       {KINDS.map((k, i) => {
@@ -211,7 +211,7 @@ function InstantiatePalette({ maps }: { maps: Record<string, WornMaps> }) {
                 instantiate(k.kind);
               }}
             />
-            <EngravedText position={[x, y - 0.6, 0.34 / 2 - 0.06]} fontSize={0.13} letterSpacing={0.1}>
+            <EngravedText position={[x, y - 0.6, 0.34 / 2 - 0.02]} fontSize={0.15} letterSpacing={0.12}>
               {k.label}
             </EngravedText>
           </group>
@@ -247,7 +247,7 @@ function ModeToggle({ maps }: { maps: Record<string, WornMaps> }) {
               position={[x, y + 0.12, FRONT]}
               onClick={() => setView(o.mode)}
             />
-            <EngravedText position={[x, y - 0.5, 0.34 / 2 - 0.06]} fontSize={0.12} letterSpacing={0.1}>
+            <EngravedText position={[x, y - 0.5, 0.34 / 2 - 0.02]} fontSize={0.14} letterSpacing={0.12}>
               {o.label}
             </EngravedText>
           </group>
