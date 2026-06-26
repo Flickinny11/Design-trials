@@ -34,7 +34,7 @@ function ReviewRig() {
     (window as unknown as { __PRISM_PRIM_CAM__?: unknown }).__PRISM_PRIM_CAM__ = {
       camera,
       controls,
-      set(px: number, py: number, pz: number, tx = 0, ty = 0, tz = 0) {
+      set(px: number, py: number, pz: number, tx = 0, ty = 0.2, tz = 0) {
         camera.position.set(px, py, pz);
         const c = controls as unknown as { target: THREE.Vector3; update: () => void } | null;
         if (c?.target) {
@@ -68,7 +68,7 @@ function PrimitiveLabStage() {
         shadows
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, preserveDrawingBuffer: true }}
-        camera={{ position: [0, 0.6, 17], fov: 34 }}
+        camera={{ position: [0, 0.2, 19.5], fov: 33 }}
         onCreated={({ gl }) => {
           gl.toneMapping = THREE.AgXToneMapping;
           gl.toneMappingExposure = 1.12;
@@ -91,7 +91,7 @@ function PrimitiveLabStage() {
           dampingFactor={0.08}
           minDistance={5}
           maxDistance={40}
-          target={[0, 0, 0]}
+          target={[0, 0.2, 0]}
         />
         <ReviewRig />
       </Canvas>

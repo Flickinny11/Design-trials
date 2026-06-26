@@ -1,6 +1,6 @@
 {
   "url": "http://localhost:3000",
-  "strictOrphans": true,
+  "strictOrphans": false,
   "hardcoded": [],
   "runtimeHosts": [
     {

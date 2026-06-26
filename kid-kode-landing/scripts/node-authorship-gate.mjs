@@ -38,7 +38,11 @@ mkdirSync(outDir, { recursive: true });
 
 const argv = process.argv.slice(2);
 const STRICT_ORPHANS = argv.includes('--strict-orphans');
+// PRIM-P1: `--lab` extends Law-0 coverage to the Primitive System instantiation
+// pipeline at /primitive-lab — a primitive rendered without a backing node FAILS.
+const LAB = argv.includes('--lab');
 const URL = (argv.find((a) => /^https?:\/\//.test(a)) || process.env.GATE_URL || 'http://localhost:3000') + '';
+const LAB_URL = URL.replace(/\/$/, '') + '/primitive-lab';
 
 // Source of truth: src/lib/prism/runtime/node-authorship.ts EXPECTED_HARDCODED_ARTIFACTS.
 // THE FOUNDATION IS NOW CLEAN — this set is EMPTY:
@@ -260,6 +264,87 @@ async function main() {
   finish();
 }
 
+// ── PRIM-P1 LAB MODE (spec §0 / INV-0.5) ────────────────────────────────────────
+// Drives /primitive-lab and proves the Node Law for the Primitive System:
+//   1. The authorship probe + self-test are live (classifier discriminates).
+//   2. Instantiating a primitive CREATES a backing node in the same action.
+//   3. In CANVAS, every node is REALIZED and every rendered primitive maps to a
+//      node — ZERO orphans (a primitive rendered without a node = FAIL).
+//   4. In GALAXY, every dormant seed maps to a node — ZERO orphans.
+async function mainLab() {
+  if (!(await waitForServer(URL))) {
+    check('server.up', `dev server reachable at ${URL}`, false, 'no 200 in 30s — start `npm run dev` first');
+    finish();
+    return;
+  }
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch();
+  const context = await browser.newContext({ viewport: { width: 1500, height: 950 }, deviceScaleFactor: 1 });
+  const page = await context.newPage();
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  try {
+    await page.goto(LAB_URL, { waitUntil: 'domcontentloaded' });
+    const booted = await page.waitForFunction(() => {
+      const w = window;
+      return typeof w.__PRISM_PRIM_AUTHORSHIP__ === 'function'
+        && typeof w.__PRISM_PRIM_STORE__ === 'function'
+        && w.__PRISM_PRIM_STORE__().schemas.length > 0;
+    }, { timeout: 60000 }).then(() => true).catch(() => false);
+    check('lab.probe.installed', 'window.__PRISM_PRIM_AUTHORSHIP__ installed + lab graph seeded', booted,
+      booted ? '' : 'probe never appeared (route did not boot)');
+    if (!booted) { await browser.close(); finish(); return; }
+    await page.waitForTimeout(2500);
+
+    // 1) classifier self-test — a synthetic unbacked render MUST be caught.
+    const self = await page.evaluate(() => window.__PRISM_PRIM_AUTHORSHIP_SELFTEST__?.() ?? null);
+    check('lab.classifier-live', 'authorship classifier discriminates backed vs orphan (self-test)', !!self?.live,
+      self?.live ? 'synthetic orphan + untagged render both flagged — a real orphan WOULD be caught'
+                 : `self-test failed: ${JSON.stringify(self)}`);
+
+    // 2) instantiation CREATES a node in the same action (Node Law).
+    const inst = await page.evaluate(async () => {
+      const st = window.__PRISM_PRIM_STORE__();
+      const before = st.nodes().length;
+      window.__PRISM_PRIM_INSTANTIATE__?.('cube');
+      const after = window.__PRISM_PRIM_STORE__().nodes().length;
+      return { before, after };
+    });
+    check('lab.instantiate-creates-node', 'instantiating a primitive auto-creates a backing node', inst.after === inst.before + 1,
+      `nodes ${inst.before} → ${inst.after}`);
+    await page.waitForTimeout(900);
+
+    // 3) CANVAS view — zero orphans, every node realized.
+    await page.evaluate(() => window.__PRISM_PRIM_STORE__().setView('canvas'));
+    await page.waitForTimeout(1200);
+    const canvas = await page.evaluate(() => window.__PRISM_PRIM_AUTHORSHIP__());
+    check('lab.canvas.no-orphan', 'CANVAS: every rendered primitive maps to a backing node (Law 0)', canvas.orphans.length === 0,
+      canvas.orphans.length ? `ORPHANS: ${JSON.stringify(canvas.orphans)}` : `${canvas.renderedCount} rendered, all node-backed`);
+    check('lab.canvas.all-realized', 'CANVAS: every node is realized (no node left unbuilt)', canvas.unrealizedInCanvas.length === 0,
+      canvas.unrealizedInCanvas.length ? `unrealized: ${canvas.unrealizedInCanvas.join(', ')}` : `${canvas.nodeIds.length} nodes all realized`);
+
+    // 4) GALAXY view — zero orphans (every dormant seed is node-backed).
+    await page.evaluate(() => window.__PRISM_PRIM_STORE__().setView('galaxy'));
+    await page.waitForTimeout(1200);
+    const galaxy = await page.evaluate(() => window.__PRISM_PRIM_AUTHORSHIP__());
+    check('lab.galaxy.no-orphan', 'GALAXY: every dormant seed maps to a backing node (Law 0)', galaxy.orphans.length === 0,
+      galaxy.orphans.length ? `ORPHANS: ${JSON.stringify(galaxy.orphans)}` : `${galaxy.renderedCount} dormant seeds, all node-backed`);
+
+    check('lab.no-pageerrors', 'no uncaught page errors during the lab gate run', pageErrors.length === 0,
+      pageErrors.length ? pageErrors.slice(0, 2).join(' | ') : 'clean');
+
+    writeFileSync(join(outDir, 'primitive-authorship-gate.json'), JSON.stringify({
+      url: LAB_URL, selfTest: self, instantiate: inst, canvas, galaxy, results,
+    }, null, 2) + '\n');
+    await page.screenshot({ path: join(outDir, 'lab-gate-final-frame.png') }).catch(() => {});
+    await browser.close();
+  } catch (e) {
+    check('lab.fatal', 'lab gate fatal error', false, e?.message ?? String(e));
+    try { await browser.close(); } catch { /* ignore */ }
+  }
+  finish();
+}
+
 function finish() {
   // FAIL conditions: a FAIL result that is not a soft WARN.
   const hardFails = results.filter((r) => !r.pass && !r.warn);
@@ -269,4 +354,4 @@ function finish() {
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+(LAB ? mainLab() : main()).catch((e) => { console.error(e); process.exit(1); });
