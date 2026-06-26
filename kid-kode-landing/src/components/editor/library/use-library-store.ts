@@ -117,6 +117,8 @@ export interface LibraryStore {
   remove: (id: string) => void;
   clear: () => void;
   saveSelectedAsTemplate: () => string | null;
+  /** register the dogfooded chrome pane as a real Pane primitive node (§7.4). */
+  registerChromePane: (pos: { x: number; y: number; z?: number }) => void;
 
   // ── selection ──
   select: (id: string | null) => void;
@@ -287,6 +289,20 @@ export const useLibraryStore = create<LibraryStore>((set, get) => ({
     const snapshot = JSON.parse(JSON.stringify(inst)) as LibraryInstance;
     set((s) => ({ savedTemplates: [...s.savedTemplates, { savedId, label, snapshot }], rev: s.rev + 1 }));
     return savedId;
+  },
+
+  registerChromePane: (pos) => {
+    if (get().instances.some((i) => i.id === CHROME_PANE_ID)) return;
+    // the chrome's glass pane IS the same Pane primitive a customer places (§7.4 /
+    // INV-0.1 — even editor chrome is a node). A wide, thin clear-glass slab.
+    const schema = makePrimSchema('pane', {
+      nodeId: CHROME_PANE_ID,
+      caption: 'Node Editor',
+      params: { width: 7.0, height: 2.4, depth: 0.34, cornerRadius: 0.3, bevel: 0.06, radius: 0.38, segments: 22, cutouts: [] },
+      material: { kind: 'glass-clear', tint: '#dbe8f2', contrast: 1 },
+      transform: { x: pos.x, y: pos.y, z: pos.z ?? 0, rotX: 0, rotY: 0, rotZ: 0, scale: 1 },
+    });
+    set((s) => ({ instances: [...s.instances, { id: CHROME_PANE_ID, kind: 'primitive', schema }], rev: s.rev + 1 }));
   },
 
   select: (id) => set({ selectedId: id }),

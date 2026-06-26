@@ -167,7 +167,7 @@ function NodeLayer() {
   const select = useLibraryStore((s) => s.select);
   return (
     <>
-      {instances.map((inst) => (
+      {instances.filter((inst) => inst.id !== CHROME_PANE_ID).map((inst) => (
         <LibraryCanvasNode
           key={inst.id}
           instance={inst}
@@ -202,12 +202,15 @@ function Worn() {
 function useSeed() {
   useEffect(() => {
     const st = useLibraryStore.getState();
-    if (st.instances.length === 0) {
+    // the dogfooded NODE-EDITOR chrome pane (a real Pane primitive node) is always
+    // present, even before the user drops anything (§7.4).
+    st.registerChromePane({ x: 1.0, y: -4.0 });
+    if (st.instances.filter((i) => i.id !== CHROME_PANE_ID).length === 0) {
       const cat = st.catalog();
       const pane = cat.find((e) => e.id === 'prim:pane');
       const gold = cat.find((e) => e.id === 'mat:metal.gold');
-      if (pane) st.instantiate(pane, { x: -1.6, y: 1.6 });
-      if (gold) st.instantiate(gold, { x: 2.4, y: 1.4 });
+      if (pane) st.instantiate(pane, { x: -1.6, y: 1.8 });
+      if (gold) st.instantiate(gold, { x: 2.6, y: 1.6 });
       useLibraryStore.getState().select(null);
     }
   }, []);
