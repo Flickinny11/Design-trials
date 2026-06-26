@@ -9,6 +9,7 @@
 import { useMemo } from 'react';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import { useMaterialStore } from './use-material-store';
 import type { WornMaps } from '@/components/editor/chassis/materials';
 import type {
   MaterialDef,
@@ -61,6 +62,8 @@ export function useMaterialMapSets(): Record<string, WornMaps> {
     urls.push(u.albedo, u.normal, u.rough, u.metal, u.ao);
   }
   const textures = useTexture(urls) as THREE.Texture[];
+  // re-merge when a live generation lands a new runtime set (store rev bumps).
+  const rev = useMaterialStore((s) => s.rev);
   return useMemo(() => {
     const out: Record<string, WornMaps> = {};
     refs.forEach((ref, i) => {
@@ -83,9 +86,46 @@ export function useMaterialMapSets(): Record<string, WornMaps> {
       }
       out[MAP_SET_KEY(ref)] = { map, normalMap, roughnessMap, metalnessMap, aoMap };
     });
-    return out;
+    // merge any live-generated sets loaded imperatively after boot.
+    return { ...out, ...RUNTIME_MAP_CACHE };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [textures]);
+  }, [textures, rev]);
+}
+
+// ── runtime-loaded generated map sets (live prompt-to-texture) ──────────────────
+// Pre-generated seeds load via the Suspense hook; LIVE generations (W-PROMPT) load
+// imperatively here and merge into the record the hook returns. Keyed by MAP_SET_KEY.
+const RUNTIME_MAP_CACHE: Record<string, WornMaps> = {};
+const _texLoader = new THREE.TextureLoader();
+
+function loadTex(url: string): Promise<THREE.Texture> {
+  return new Promise((resolve, reject) => _texLoader.load(url, resolve, undefined, reject));
+}
+
+// Load a generated PBR set imperatively into the runtime cache (correct colour
+// spaces + tiling). Returns once all 5 maps are ready. Idempotent per key.
+export async function loadGeneratedMapSet(ref: MaterialMapsRef): Promise<string> {
+  const key = MAP_SET_KEY(ref);
+  if (RUNTIME_MAP_CACHE[key]) return key;
+  const u = mapUrlsFor(ref);
+  const [map, normalMap, roughnessMap, metalnessMap, aoMap] = await Promise.all([
+    loadTex(u.albedo), loadTex(u.normal), loadTex(u.rough), loadTex(u.metal), loadTex(u.ao),
+  ]);
+  map.colorSpace = THREE.SRGBColorSpace;
+  for (const t of [normalMap, roughnessMap, metalnessMap, aoMap]) t.colorSpace = THREE.NoColorSpace;
+  const [rx, ry] = ref.repeat ?? [1, 1];
+  for (const t of [map, normalMap, roughnessMap, metalnessMap, aoMap]) {
+    t.anisotropy = 8;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(rx, ry);
+    t.needsUpdate = true;
+  }
+  RUNTIME_MAP_CACHE[key] = { map, normalMap, roughnessMap, metalnessMap, aoMap };
+  return key;
+}
+
+export function runtimeMapCache(): Record<string, WornMaps> {
+  return RUNTIME_MAP_CACHE;
 }
 
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));

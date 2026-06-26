@@ -40,11 +40,22 @@ export interface MaterialStore {
   overrides: OverrideMap;
   rev: number;
 
+  // ── prompt-to-texture UI state (W-PROMPT; orchestration lives in the panel) ──
+  promptBuffer: string;
+  promptFocused: boolean;
+  /** idle | generating | done | error */
+  genStatus: 'idle' | 'generating' | 'done' | 'error';
+  genMessage: string;
+
   setMaterial: (id: string) => void;
   setActiveFamily: (family: MaterialFamily) => void;
   selectDisplay: (id: string | null) => void;
   updateOverride: (patch: OverrideMap) => void;
   resetOverrides: () => void;
+
+  setPromptBuffer: (s: string) => void;
+  setPromptFocused: (f: boolean) => void;
+  setGenStatus: (status: MaterialStore['genStatus'], message?: string) => void;
 
   nodes: () => PrismNode[];
 }
@@ -68,6 +79,15 @@ export const useMaterialStore = create<MaterialStore>((set, get) => ({
   activeFamily: 'Metals',
   overrides: {},
   rev: 0,
+
+  promptBuffer: '',
+  promptFocused: false,
+  genStatus: 'idle',
+  genMessage: '',
+
+  setPromptBuffer: (s) => set({ promptBuffer: s.slice(0, 80) }),
+  setPromptFocused: (f) => set({ promptFocused: f }),
+  setGenStatus: (status, message = '') => set({ genStatus: status, genMessage: message }),
 
   setMaterial: (id) =>
     set((st) => ({

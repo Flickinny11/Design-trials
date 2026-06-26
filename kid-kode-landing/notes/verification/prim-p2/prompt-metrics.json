@@ -1,0 +1,30 @@
+{
+  "steps": [
+    {
+      "seed": "generated.brushed-copper",
+      "ok": true,
+      "selected": "generated.brushed-copper"
+    },
+    {
+      "seed": "generated.carrara-marble",
+      "ok": true,
+      "selected": "generated.carrara-marble"
+    },
+    {
+      "seed": "generated.walnut-grain",
+      "ok": true,
+      "selected": "generated.walnut-grain"
+    }
+  ],
+  "errors": [],
+  "liveGen": {
+    "status": "done",
+    "message": "Hammered Antique Brass With Dimpled Planished Te",
+    "buffer": "hammered antique brass with dimpled planished texture"
+  },
+  "liveApplied": {
+    "ok": true,
+    "selected": "generated.hammered-antique-brass-with-dimpled-planished-te",
+    "rendered": 3
+  }
+}

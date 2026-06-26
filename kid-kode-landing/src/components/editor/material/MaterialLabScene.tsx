@@ -19,6 +19,7 @@ import { EngravedText } from '@/components/editor/primitive/EngravedText';
 import { MaterialDisplay } from './MaterialDisplay';
 import { MaterialPalette } from './MaterialPalette';
 import { MaterialInspector } from './MaterialInspector';
+import { MaterialPromptPanel } from './MaterialPromptPanel';
 import { useMaterialMapSets } from './material-build';
 import { getMaterial } from './material-registry';
 import { useMaterialStore } from './use-material-store';
@@ -153,6 +154,7 @@ function Content() {
       <Displays mapSets={mapSets} />
       <MaterialPalette mapSets={mapSets} />
       <MaterialInspector mapSets={mapSets} />
+      <MaterialPromptPanel mapSets={mapSets} />
     </>
   );
 }
