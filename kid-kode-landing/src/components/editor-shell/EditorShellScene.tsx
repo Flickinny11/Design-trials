@@ -169,6 +169,18 @@ function EditorProbe() {
         ok: orphans.length === 0 && unrealizedActiveHub.length === 0 && galaxyMissing.length === 0,
       };
     };
+    // tri-state switch segment world centers (for a trusted-pointer click).
+    w.__PRISM_EDITOR_SWITCH_POS__ = () => {
+      const out: { view: string; world: [number, number, number] }[] = [];
+      const v = new THREE.Vector3();
+      scene.traverse((o) => {
+        if (o.userData?.prismEditorSwitch) {
+          o.getWorldPosition(v);
+          out.push({ view: o.userData.prismEditorSwitch as string, world: [v.x, v.y, v.z] });
+        }
+      });
+      return out;
+    };
     w.__PRISM_EDITOR_AUTHORSHIP_SELFTEST__ = () => {
       const ids = allGraphNodes().map((n) => n.nodeId);
       const synthetic = [{ nodeId: ids[0] ?? '__none__' }, { nodeId: '__orphan__' }, { nodeId: null }];

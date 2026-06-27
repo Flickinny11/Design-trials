@@ -30,6 +30,39 @@
       "note": "placeholder (running app wired in I-4)"
     },
     {
+      "step": "switch",
+      "results": [
+        {
+          "target": "preview-app",
+          "clickedAt": [
+            983,
+            251
+          ],
+          "viewAfter": "preview-app",
+          "ok": true
+        },
+        {
+          "target": "galaxy",
+          "clickedAt": [
+            697,
+            252
+          ],
+          "viewAfter": "galaxy",
+          "ok": true
+        },
+        {
+          "target": "canvas",
+          "clickedAt": [
+            840,
+            252
+          ],
+          "viewAfter": "canvas",
+          "ok": true
+        }
+      ],
+      "allOk": true
+    },
+    {
       "step": "camera",
       "camBefore": [
         0,

@@ -94,6 +94,26 @@ const main = async () => {
     metrics.steps.push({ step: 'preview', note: 'placeholder (running app wired in I-4)' });
     log('PREVIEW: placeholder captured');
 
+    // ── TRI-STATE SWITCH: trusted-pointer click each segment (in-engine) ──
+    // camera is still at its default here (not yet moved), so projection is accurate.
+    const switchResults = [];
+    for (const target of ['preview-app', 'galaxy', 'canvas']) {
+      const css = await page.evaluate((t) => {
+        const segs = window.__PRISM_EDITOR_SWITCH_POS__();
+        const seg = segs.find((s) => s.view === t);
+        if (!seg) return null;
+        return window.__PRISM_EDITOR_SHELL_CAM__.project(seg.world[0], seg.world[1], seg.world[2]);
+      }, target);
+      if (!css) { switchResults.push({ target, clicked: false }); continue; }
+      await page.mouse.click(css[0], css[1]);
+      await page.waitForTimeout(1500);
+      const after = await page.evaluate(() => window.__PRISM_EDITOR_SHELL_STORE__().view);
+      switchResults.push({ target, clickedAt: [Math.round(css[0]), Math.round(css[1])], viewAfter: after, ok: after === target });
+      log(`SWITCH click ${target}: view→${after} · ok ${after === target}`);
+    }
+    await page.screenshot({ path: join(OUT, '05-switch-clicked-canvas.png') });
+    metrics.steps.push({ step: 'switch', results: switchResults, allOk: switchResults.every((r) => r.ok) });
+
     // ── CAMERA orbit / pan / zoom (back in canvas) ──
     await page.evaluate(() => window.__PRISM_EDITOR_SET_VIEW__('canvas'));
     await page.waitForTimeout(1500);
@@ -117,7 +137,8 @@ const main = async () => {
 
     metrics.consoleErrors = consoleErrors;
     metrics.pageErrors = pageErrors;
-    metrics.pass = booted && canvasAuth.ok && galaxyAuth.ok && pageErrors.length === 0 && consoleErrors.length === 0;
+    const switchOk = switchResults.every((r) => r.ok);
+    metrics.pass = booted && canvasAuth.ok && galaxyAuth.ok && switchOk && camMoved > 1 && pageErrors.length === 0 && consoleErrors.length === 0;
     writeFileSync(join(OUT, 'metrics.json'), JSON.stringify(metrics, null, 2));
     log(`\nconsole errors: ${consoleErrors.length} · page errors: ${pageErrors.length}`);
     log(`OVERALL PASS: ${metrics.pass}`);
