@@ -57,9 +57,29 @@ function useNodeGroupRegistry(nodeId: string, ref: React.RefObject<THREE.Group |
   }, [nodeId, ref]);
 }
 
+/** A content signature for a node's REALIZED artifact: the geometry/material/text
+ *  fields that should reconstruct the THREE object when edited. Excludes
+ *  scenePosition (transform stays live via the wrapper, no rebuild). Used as part
+ *  of the React key so an Inspector schema edit (updateNode) automatically rebuilds
+ *  just that one node — the "save-and-rebuild" made automatic (I-3). */
+export function contentSig(n: PrismNode): string {
+  const mp = n.meshPrimitive;
+  const ms = n.materialSpec;
+  const p = mp?.params as Record<string, number> | undefined;
+  return [
+    n.renderMode,
+    mp?.kind,
+    p ? `${p.width ?? ''},${p.height ?? ''},${p.depth ?? ''},${p.radius ?? ''},${p.segments ?? ''},${p.length ?? ''},${p.tube ?? ''}` : '',
+    ms ? `${ms.baseColor ?? ''},${ms.roughness ?? ''},${ms.metalness ?? ''},${ms.transmission ?? ''},${ms.opacity ?? ''}` : '',
+    n.textSpec?.content ?? '',
+    n.textSpec?.fontSize ?? '',
+  ].join('|');
+}
+
 /** One REALIZED node — the app's node-realization path, placed at the node's
  *  scenePosition (the renderer is the sole consumer of scenePosition, mirroring
- *  AssembledSceneNode; ArtifactNode resets the factory root to identity). */
+ *  AssembledSceneNode; ArtifactNode resets the factory root to identity).
+ *  Clicking it selects the node (I-3). */
 function RealizedNode({ node }: { node: PrismNode }) {
   const ref = useRef<THREE.Group | null>(null);
   const { pos, rot, scale } = useMemo(() => readScenePos(node), [node]);
@@ -73,11 +93,16 @@ function RealizedNode({ node }: { node: PrismNode }) {
           g.userData.prismNodeId = node.nodeId;
           g.userData.prismHubId = node.parentHubId;
           g.userData.prismDormant = false;
+          g.userData.prismSelectable = node.nodeId;
         }
       }}
       position={pos}
       rotation={rot}
       scale={scale}
+      onClick={(e) => {
+        e.stopPropagation();
+        useEditorShellStore.getState().select(node.nodeId);
+      }}
     >
       <ArtifactNode node={node} layout="scene" />
     </group>
@@ -175,7 +200,9 @@ export function EditorGraphViewport() {
     return (
       <FitGroup active>
         {hubNodes.map((n) => (
-          <RealizedNode key={n.nodeId} node={n} />
+          // key on a content signature so an Inspector schema edit rebuilds just
+          // this node (live), while scenePosition edits keep moving it without remount.
+          <RealizedNode key={n.nodeId + ':' + contentSig(n)} node={n} />
         ))}
       </FitGroup>
     );
@@ -183,6 +210,78 @@ export function EditorGraphViewport() {
 
   // preview-app placeholder content is rendered by the scene (PreviewPlaceholder).
   return null;
+}
+
+// ── selection overlay (editor chrome — a world-space glowing box that tracks the
+//    selected node's realized group, decoupled from the FitGroup scaling) ───────
+const SEL_EDGES = new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1));
+
+function nodeGroups(): Map<string, THREE.Object3D> | null {
+  if (typeof window === 'undefined') return null;
+  const w = window as unknown as { __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D> };
+  return w.__PRISM_EDITOR_NODE_GROUPS__ ?? null;
+}
+
+/** A bright wireframe box that snaps to the selected node's world bbox each frame.
+ *  Scene-level so it is immune to the FitGroup scale; NOT tagged prismEditorNode
+ *  (chrome). Also publishes the selection probes for the headless pass. */
+export function SelectionOverlay() {
+  const selectedId = useEditorShellStore((s) => s.selectedId);
+  const view = useEditorShellStore((s) => s.view);
+  const lineRef = useRef<THREE.LineSegments>(null);
+  const box = useMemo(() => new THREE.Box3(), []);
+  const size = useMemo(() => new THREE.Vector3(), []);
+  const center = useMemo(() => new THREE.Vector3(), []);
+  const mat = useMemo(
+    () => new THREE.LineBasicMaterial({ color: '#9fd8ff', toneMapped: false, transparent: true, opacity: 0.95 }),
+    [],
+  );
+  useEffect(() => () => mat.dispose(), [mat]);
+
+  if (typeof window !== 'undefined') {
+    const w = window as unknown as Record<string, unknown>;
+    w.__PRISM_EDITOR_SELECT__ = (id: string | null) => useEditorShellStore.getState().select(id);
+    w.__PRISM_EDITOR_SELECTABLE_POS__ = () => {
+      const map = nodeGroups();
+      if (!map) return [];
+      const out: { nodeId: string; world: [number, number, number] }[] = [];
+      const b = new THREE.Box3();
+      const c = new THREE.Vector3();
+      map.forEach((g, id) => {
+        if (!g.userData?.prismDormant && g.parent) {
+          b.setFromObject(g, true);
+          if (!b.isEmpty()) {
+            b.getCenter(c);
+            out.push({ nodeId: id, world: [c.x, c.y, c.z] });
+          }
+        }
+      });
+      return out;
+    };
+  }
+
+  useFrame(() => {
+    const l = lineRef.current;
+    if (!l) return;
+    const map = nodeGroups();
+    const g = selectedId && view === 'canvas' ? map?.get(selectedId) : null;
+    if (!g || !g.parent) {
+      l.visible = false;
+      return;
+    }
+    box.setFromObject(g, true);
+    if (box.isEmpty()) {
+      l.visible = false;
+      return;
+    }
+    box.getSize(size);
+    box.getCenter(center);
+    l.visible = true;
+    l.position.copy(center);
+    l.scale.set(Math.max(size.x, 0.2) * 1.08, Math.max(size.y, 0.2) * 1.08, Math.max(size.z, 0.2) * 1.08);
+  });
+
+  return <lineSegments ref={lineRef} geometry={SEL_EDGES} material={mat} visible={false} renderOrder={20} />;
 }
 
 /** Galaxy = the unbuilt graph: every node a dormant seed, clustered per hub into

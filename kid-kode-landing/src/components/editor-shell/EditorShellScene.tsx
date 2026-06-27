@@ -19,10 +19,11 @@ import { useThree } from '@react-three/fiber';
 import { StudioEnv } from '@/components/editor/chassis/StudioEnv';
 import { buildPaneGeometry } from '@/components/editor/primitive/primitive-geometry';
 import { CompositeText } from '@/components/editor/composite/CompositeText';
-import { EditorGraphViewport } from './EditorGraphViewport';
+import { EditorGraphViewport, SelectionOverlay } from './EditorGraphViewport';
 import { EditorDocks } from './EditorDock';
 import { EditorToolbarDock } from './EditorToolbarDock';
 import { EditorLibraryDock } from './EditorLibraryDock';
+import { EditorInspectorDock } from './EditorInspectorDock';
 import { EditorModeSwitch } from './EditorModeSwitch';
 import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
 import {
@@ -84,7 +85,14 @@ function Backdrop() {
   const tex = useMemo(() => makeGradientTexture(variant), [variant]);
   useEffect(() => () => tex.dispose(), [tex]);
   return (
-    <mesh position={[0, 0, -7]}>
+    // clicking empty space (nothing in front stops the ray) deselects.
+    <mesh
+      position={[0, 0, -7]}
+      onClick={(e) => {
+        e.stopPropagation();
+        useEditorShellStore.getState().select(null);
+      }}
+    >
       <planeGeometry args={[46, 28]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
@@ -249,10 +257,12 @@ export function EditorShellScene() {
       <Lights />
       <Backdrop />
       <EditorGraphViewport />
+      <SelectionOverlay />
       {view === 'preview-app' && <PreviewPlaceholder />}
       <EditorDocks />
       <EditorToolbarDock />
       <EditorLibraryDock />
+      <EditorInspectorDock />
       <EditorModeSwitch />
       <EditorProbe />
       <EditorReviewRig />

@@ -121,14 +121,11 @@ const Z = 1.0; // docks sit in front of the viewport so they refract it + the ba
 export function EditorDocks() {
   const wornMaps = useWornMaps();
   const gun = wornMaps['gunmetal'];
-  const bronze = wornMaps['bronze'];
 
-  // INSPECTOR (right) — milled fader channels (the keyframe/inspector idiom).
-  const inspectorParams = useMemo(() => {
-    const channels: Cutout[] = [];
-    for (let i = 0; i < 4; i++) channels.push(cut(0, 1.7 - i * 1.15, 2.1, 0.34, 0.15));
-    return pane(3.1, 9.6, channels, 0.3);
-  }, []);
+  // INSPECTOR (right) — a clear glass pane; the real in-canvas Inspector (its own
+  // worn-metal fader rails + worn-cube knobs + swatches) docks in front of it
+  // (EditorInspectorDock, I-3).
+  const inspectorParams = useMemo(() => pane(3.1, 9.6, [], 0.3), []);
 
   // KEYFRAMES (bottom) — one long milled timeline channel.
   const keyframeParams = useMemo(() => pane(22, 1.75, [cut(0.6, -0.18, 18, 0.42, 0.2)], 0.34), []);
@@ -139,12 +136,9 @@ export function EditorDocks() {
           and the LIBRARY zone by EditorLibraryDock (both I-2). The INSPECTOR +
           KEYFRAMES zones remain glass placeholders until I-3. */}
 
-      {/* INSPECTOR dock */}
-      <Dock position={[11.7, -0.1, Z]} params={inspectorParams} label="INSPECTOR" labelPos={[-1.35, 4.35, 0.32]} labelSize={0.3}>
-        <WornNub maps={gun} position={[0.7, 1.7, 0.22]} size={0.34} />
-        <WornNub maps={gun} position={[-0.3, 0.55, 0.22]} size={0.34} />
-        <WornNub maps={bronze} position={[0.5, -0.6, 0.22]} size={0.34} tint="#caa06a" />
-      </Dock>
+      {/* INSPECTOR dock — glass frame only; the real Inspector controls dock in
+          front of it (EditorInspectorDock, I-3). */}
+      <Dock position={[11.7, -0.1, Z]} params={inspectorParams} label="INSPECTOR" labelPos={[-1.35, 4.35, 0.32]} labelSize={0.3} />
 
       {/* KEYFRAMES dock */}
       <Dock position={[0, -5.8, Z]} params={keyframeParams} label="KEYFRAMES" labelPos={[-10.1, 0.42, 0.32]} labelSize={0.3}>
