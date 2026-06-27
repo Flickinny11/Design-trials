@@ -1,0 +1,76 @@
+{
+  "nodesStart": 327,
+  "nodesEnd": 331,
+  "widthEdit": [
+    0.6,
+    3.9999980449314885
+  ],
+  "gizmo": {
+    "dx": 2.1737812500000007,
+    "drz": 1.0985785505683268,
+    "scale": [
+      1,
+      2.11967367852145
+    ]
+  },
+  "stack": true,
+  "connectors": [
+    1,
+    2
+  ],
+  "template": 2,
+  "keyframes": 2,
+  "keyframeGroupYDelta": 2.199999956509508,
+  "canvasOrphans": 0,
+  "canvasRendered": 40,
+  "galaxyOrphans": 0,
+  "galaxyRendered": 331,
+  "consoleErrors": 0,
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "checks": "8/8",
+  "results": [
+    {
+      "name": "inspect-edit-schema-live",
+      "pass": true,
+      "detail": "width 0.60→4.00"
+    },
+    {
+      "name": "gizmo-move-rotate-scale",
+      "pass": true,
+      "detail": "Δx=2.17 Δrz=1.10 scale 1.00→2.12"
+    },
+    {
+      "name": "stack",
+      "pass": true,
+      "detail": "B.parent=true"
+    },
+    {
+      "name": "connect",
+      "pass": true,
+      "detail": "connectors 1→2"
+    },
+    {
+      "name": "group-save-template",
+      "pass": true,
+      "detail": "group=true template +2"
+    },
+    {
+      "name": "keyframe-scrub-animates",
+      "pass": true,
+      "detail": "kfs=2 groupY Δ=2.20"
+    },
+    {
+      "name": "authorship-canvas-galaxy",
+      "pass": true,
+      "detail": "canvas orphans=0 rendered=40; galaxy orphans=0 rendered=331"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}
