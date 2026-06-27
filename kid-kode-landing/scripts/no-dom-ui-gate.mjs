@@ -24,7 +24,13 @@ import { fileURLToPath } from 'node:url';
 const KKL = join(fileURLToPath(new URL('.', import.meta.url)), '..');
 const SCOPE = process.argv.slice(2).length
   ? process.argv.slice(2)
-  : ['src/components/editor/chassis', 'src/app/toolbar-chassis'];
+  : [
+      'src/components/editor/chassis',
+      'src/app/toolbar-chassis',
+      // EDIT-I1 — the editor SHELL is in-engine chrome under the same LAW.
+      'src/components/editor-shell',
+      'src/app/editor',
+    ];
 
 const SKIP = /(^|\/)(node_modules|\.next|dist|build)(\/|$)|\.bak(-|\.|$)/;
 

@@ -114,31 +114,53 @@ const main = async () => {
     await page.screenshot({ path: join(OUT, '05-switch-clicked-canvas.png') });
     metrics.steps.push({ step: 'switch', results: switchResults, allOk: switchResults.every((r) => r.ok) });
 
-    // ── CAMERA orbit / pan / zoom (back in canvas) ──
+    // ── CAMERA orbit / pan / zoom — REAL trusted-pointer interaction (canvas) ──
     await page.evaluate(() => window.__PRISM_EDITOR_SET_VIEW__('canvas'));
     await page.waitForTimeout(1500);
-    const camBefore = await page.evaluate(() => {
+    const readCam = () => page.evaluate(() => {
       const c = window.__PRISM_EDITOR_SHELL_CAM__.camera;
-      return [c.position.x, c.position.y, c.position.z];
+      return { p: [c.position.x, c.position.y, c.position.z], dist: Math.hypot(c.position.x, c.position.y, c.position.z) };
     });
-    // zoom in + orbit by moving the camera through the rig, then drag to orbit.
-    await page.evaluate(() => window.__PRISM_EDITOR_SHELL_CAM__.set(7, 3, 20, 0, 0, 0));
-    await page.waitForTimeout(1200);
+    const cx = Math.round(VP.width / 2);
+    const cy = Math.round(VP.height / 2);
+    const c0 = await readCam();
+    // ORBIT: left-drag across the canvas center.
+    await page.mouse.move(cx - 120, cy + 20);
+    await page.mouse.down();
+    for (let i = 1; i <= 12; i++) { await page.mouse.move(cx - 120 + i * 22, cy + 20 + i * 5); await page.waitForTimeout(16); }
+    await page.mouse.up();
+    await page.waitForTimeout(900);
+    const c1 = await readCam();
+    const orbitDelta = Math.hypot(c1.p[0] - c0.p[0], c1.p[1] - c0.p[1], c1.p[2] - c0.p[2]);
     await page.screenshot({ path: join(OUT, '04-camera-orbit.png') });
-    const camAfter = await page.evaluate(() => {
-      const c = window.__PRISM_EDITOR_SHELL_CAM__.camera;
-      return [c.position.x, c.position.y, c.position.z];
-    });
-    const camMoved = Math.hypot(camAfter[0] - camBefore[0], camAfter[1] - camBefore[1], camAfter[2] - camBefore[2]);
-    metrics.steps.push({ step: 'camera', camBefore, camAfter, camMoved: Number(camMoved.toFixed(2)), works: camMoved > 1 });
-    log(`CAMERA: moved ${camMoved.toFixed(2)} world units · works ${camMoved > 1}`);
+    // ZOOM: mouse wheel toward the content.
+    await page.mouse.move(cx, cy);
+    await page.mouse.wheel(0, -420);
+    await page.waitForTimeout(900);
+    const c2 = await readCam();
+    const zoomDelta = c1.dist - c2.dist; // >0 means zoomed in
+    await page.screenshot({ path: join(OUT, '06-camera-zoom.png') });
+    // PAN: right-drag.
+    await page.mouse.move(cx, cy);
+    await page.mouse.down({ button: 'right' });
+    for (let i = 1; i <= 8; i++) { await page.mouse.move(cx + i * 16, cy - i * 6); await page.waitForTimeout(16); }
+    await page.mouse.up({ button: 'right' });
+    await page.waitForTimeout(700);
+    const c3 = await readCam();
+    const panDelta = Math.hypot(c3.p[0] - c2.p[0], c3.p[1] - c2.p[1]);
+    const camMoved = orbitDelta;
+    const orbitWorks = orbitDelta > 0.5;
+    const zoomWorks = Math.abs(zoomDelta) > 0.5;
+    const panWorks = panDelta > 0.2;
+    metrics.steps.push({ step: 'camera', c0, c1, c2, c3, orbitDelta: +orbitDelta.toFixed(2), zoomDelta: +zoomDelta.toFixed(2), panDelta: +panDelta.toFixed(2), orbitWorks, zoomWorks, panWorks });
+    log(`CAMERA: orbit Δ${orbitDelta.toFixed(2)} (${orbitWorks}) · zoom Δ${zoomDelta.toFixed(2)} (${zoomWorks}) · pan Δ${panDelta.toFixed(2)} (${panWorks})`);
     // restore
     await page.evaluate(() => window.__PRISM_EDITOR_SHELL_CAM__.set(0, 0, 27, 0, 0, 0));
 
     metrics.consoleErrors = consoleErrors;
     metrics.pageErrors = pageErrors;
     const switchOk = switchResults.every((r) => r.ok);
-    metrics.pass = booted && canvasAuth.ok && galaxyAuth.ok && switchOk && camMoved > 1 && pageErrors.length === 0 && consoleErrors.length === 0;
+    metrics.pass = booted && canvasAuth.ok && galaxyAuth.ok && switchOk && orbitWorks && zoomWorks && pageErrors.length === 0 && consoleErrors.length === 0;
     writeFileSync(join(OUT, 'metrics.json'), JSON.stringify(metrics, null, 2));
     log(`\nconsole errors: ${consoleErrors.length} · page errors: ${pageErrors.length}`);
     log(`OVERALL PASS: ${metrics.pass}`);
