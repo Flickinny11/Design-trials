@@ -28,6 +28,7 @@ import { EditorKeyframeDock } from './EditorKeyframeDock';
 import { EditorGizmo } from './EditorGizmo';
 import { EditorConnectors } from './EditorConnectors';
 import { EditorModeSwitch } from './EditorModeSwitch';
+import { EditorSaveControl } from './EditorSaveControl';
 import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
 import {
   useEditorShellStore,
@@ -272,6 +273,7 @@ export function EditorShellScene() {
       <EditorInspectorDock />
       <EditorKeyframeDock />
       <EditorModeSwitch />
+      <EditorSaveControl />
       <EditorProbe />
       <EditorReviewRig />
     </>

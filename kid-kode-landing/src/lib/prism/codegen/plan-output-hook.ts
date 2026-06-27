@@ -111,7 +111,7 @@ export function validatePlanRendererFields(
   node: Pick<
     PrismNode,
     'renderMode' | 'depthMapUrl' | 'meshUrl' | 'cinematicPrimitives' | 'meshPrimitive'
-  >,
+  > & { codeRef?: PrismNode['codeRef'] },
 ): VerifierViolation[] {
   const out: VerifierViolation[] = [];
 
@@ -128,7 +128,16 @@ export function validatePlanRendererFields(
   // `meshPrimitive` renders the primitive geometry regardless of meshUrl
   // (which stays for GLBs) — the primitive IS the mesh artifact, so the
   // mesh-artifact requirement is satisfied without a meshUrl.
-  if (node.renderMode === 'mesh' && !node.meshUrl && !node.meshPrimitive) {
+  //
+  // CODEREF MESH (FIX2/FIX3; Law 0 "every artifact is a node"): a non-empty
+  // `codeRef` (e.g. `builtin:atelier-watch`, `builtin:orrery-complication`)
+  // builds the node's THREE.Object3D via the codeRef factory — a first-class
+  // mesh source exactly like meshUrl / meshPrimitive. Without this exemption the
+  // two real codeRef-backed mesh nodes in the live graph fail this rule and
+  // BLOCK EVERY persist (the editor's save round-trip). Treat a codeRef as a
+  // satisfied mesh artifact.
+  const hasCodeRef = typeof node.codeRef === 'string' && node.codeRef.trim().length > 0;
+  if (node.renderMode === 'mesh' && !node.meshUrl && !node.meshPrimitive && !hasCodeRef) {
     out.push({
       rule: 'MESH_REQUIRES_MESH_URL',
       severity: 'error',

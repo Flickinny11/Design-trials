@@ -1,0 +1,48 @@
+{
+  "nodesStart": 327,
+  "nodesAfterEdit": 328,
+  "addedNode": "9020a66c-473b-4207-83ca-2bf94ed035b2",
+  "dirtyBeforeSave": true,
+  "saveOk": true,
+  "dirtyAfterSave": false,
+  "savedAt": "2026-06-27T18:44:25.563Z",
+  "countBefore": 328,
+  "countAfter": 328,
+  "aLineBefore": "9020a66c-473b-4207-83ca-2bf94ed035b2§cube§s1-arrival§§§sphere§§0§2.400,-0.200,0.200§1.000",
+  "aLineAfter": "9020a66c-473b-4207-83ca-2bf94ed035b2§cube§s1-arrival§§§sphere§§0§2.400,-0.200,0.200§1.000",
+  "nodesEqual": true,
+  "edgesEqual": true,
+  "consoleErrors": 0,
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "checks": "5/5",
+  "results": [
+    {
+      "name": "authored-edit",
+      "pass": true,
+      "detail": "added 9020a66c count 327→328"
+    },
+    {
+      "name": "save-flushes-dirty",
+      "pass": true,
+      "detail": "dirty true→false, save.ok=true, savedAt=set"
+    },
+    {
+      "name": "reload-restores-exact-state",
+      "pass": true,
+      "detail": "count 328→328; A present=true; A identical=true"
+    },
+    {
+      "name": "full-graph-round-trip",
+      "pass": true,
+      "detail": "nodesEqual=true edgesEqual=true"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

@@ -870,6 +870,14 @@ export interface PrismNode {
   // root, never a THREE re-parent). Moving the parent moves the child. Absent on
   // unstacked / legacy nodes.
   parentNodeId?: string;
+  // EDITOR-INTEGRATION I-4 GLOBAL SLOT (PRISM-EDITOR-INTEGRATION-SPEC §3 I-4;
+  // INV-18 additive). Marks a node as a GLOBAL app slot — `'header'` pins it to
+  // the top band of the running-app PREVIEW, `'footer'` to the bottom band, and
+  // (being global) it appears across every hub/page, not just its parent hub.
+  // Absent → the node is ordinary page content composed inside the active hub.
+  // Editable in the Inspector; round-trips through save/reload. Never alters the
+  // node's representation in galaxy/canvas (it is still one backing graph node).
+  globalSlot?: 'header' | 'footer';
   // STEP8 canvas-toolbar Selection group (canvas-spec §5 "lock/unlock"; INV-18
   // additive). `locked === true` removes the node from transform authoring: the
   // CanvasTransformGizmo skips it and the toolbar Transform tools refuse to
