@@ -52,6 +52,32 @@ export function makeDockGlass(tone: 'clear' | 'smoke' = 'clear'): THREE.MeshPhys
   return mat;
 }
 
+/** A soft radial glow texture (white core → transparent edge). Placed behind a
+ *  glass dock so the transmission refracts a bright lobe — the same trick that
+ *  gives the chassis glass its luminous liquid-glass read (a bright studio
+ *  backdrop to refract), localized per dock so the central app stays dark. */
+export function makeGlowTexture(): THREE.DataTexture {
+  const S = 96;
+  const data = new Uint8Array(S * S * 4);
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
+      const nx = (x / (S - 1)) * 2 - 1;
+      const ny = (y / (S - 1)) * 2 - 1;
+      const r = Math.min(1, Math.hypot(nx, ny));
+      const a = Math.pow(Math.max(0, 1 - r), 2.2);
+      const i = (y * S + x) * 4;
+      data[i] = 150;
+      data[i + 1] = 178;
+      data[i + 2] = 214;
+      data[i + 3] = Math.round(a * 255);
+    }
+  }
+  const tex = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
+  tex.needsUpdate = true;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
 /** Dormant "unbuilt graph" seed material — the galaxy-state node sphere (the
  *  same emissive liquid-glass seed look the P-6 library DormantNode uses). */
 export function makeDormantSeed(selected = false): THREE.MeshPhysicalMaterial {

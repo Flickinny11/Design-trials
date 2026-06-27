@@ -32,21 +32,35 @@ import {
   type EditorShellView,
 } from './use-editor-shell-store';
 
-// ── editorial backdrop (DataTexture vertical gradient — zero DOM) ───────────
+// ── editorial backdrop (DataTexture radial gradient — zero DOM) ─────────────
+// A soft steel-blue glow lifting toward the viewport center, falling to deep
+// navy at the edges, with a faint warm lobe — content for the transmission glass
+// docks to refract (the same editorial-backdrop role the chassis/library use).
 function makeGradientTexture(): THREE.DataTexture {
-  const h = 64;
-  const data = new Uint8Array(h * 4);
-  const top = new THREE.Color('#0a1322');
-  const bot = new THREE.Color('#04060b');
+  const S = 128;
+  const data = new Uint8Array(S * S * 4);
+  const core = new THREE.Color('#28405f');
+  const edge = new THREE.Color('#05080f');
+  const warm = new THREE.Color('#3a2a17');
   const c = new THREE.Color();
-  for (let i = 0; i < h; i++) {
-    c.copy(bot).lerp(top, i / (h - 1));
-    data[i * 4 + 0] = Math.round(c.r * 255);
-    data[i * 4 + 1] = Math.round(c.g * 255);
-    data[i * 4 + 2] = Math.round(c.b * 255);
-    data[i * 4 + 3] = 255;
+  for (let y = 0; y < S; y++) {
+    for (let x = 0; x < S; x++) {
+      const nx = (x / (S - 1)) * 2 - 1;
+      const ny = (y / (S - 1)) * 2 - 1;
+      const r = Math.min(1, Math.hypot(nx * 0.82, ny));
+      const t = 1 - r * r; // bright center → dark edge
+      c.copy(edge).lerp(core, Math.max(0, t));
+      // faint warm lobe low-center (echoes the app's bronze accents)
+      const warmAmt = Math.max(0, 1 - Math.hypot(nx * 1.4, (ny + 0.35) * 1.6)) * 0.22;
+      c.lerp(warm, warmAmt);
+      const i = (y * S + x) * 4;
+      data[i] = Math.round(c.r * 255);
+      data[i + 1] = Math.round(c.g * 255);
+      data[i + 2] = Math.round(c.b * 255);
+      data[i + 3] = 255;
+    }
   }
-  const tex = new THREE.DataTexture(data, 1, h, THREE.RGBAFormat);
+  const tex = new THREE.DataTexture(data, S, S, THREE.RGBAFormat);
   tex.needsUpdate = true;
   tex.colorSpace = THREE.SRGBColorSpace;
   return tex;
@@ -57,7 +71,7 @@ function Backdrop() {
   useEffect(() => () => tex.dispose(), [tex]);
   return (
     <mesh position={[0, 0, -7]}>
-      <planeGeometry args={[44, 26]} />
+      <planeGeometry args={[46, 28]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
   );
