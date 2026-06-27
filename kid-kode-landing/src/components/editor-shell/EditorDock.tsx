@@ -127,23 +127,22 @@ export function EditorDocks() {
   // (EditorInspectorDock, I-3).
   const inspectorParams = useMemo(() => pane(3.1, 9.6, [], 0.3), []);
 
-  // KEYFRAMES (bottom) — one long milled timeline channel.
-  const keyframeParams = useMemo(() => pane(22, 1.75, [cut(0.6, -0.18, 18, 0.42, 0.2)], 0.34), []);
+  // KEYFRAMES (bottom) — a clear glass timeline pane; the real keyframe panel (its
+  // worn-metal track rails + playhead + transport) docks in front (EditorKeyframeDock, I-3).
+  const keyframeParams = useMemo(() => pane(16, 3.8, [], 0.34), []);
+  void gun;
 
   return (
     <group>
-      {/* TOOLBAR zone — the REAL chassis toolbar is docked by EditorToolbarDock,
-          and the LIBRARY zone by EditorLibraryDock (both I-2). The INSPECTOR +
-          KEYFRAMES zones remain glass placeholders until I-3. */}
+      {/* The TOOLBAR + LIBRARY zones are docked by EditorToolbarDock / EditorLibraryDock
+          (I-2); the INSPECTOR + KEYFRAMES controls by EditorInspectorDock /
+          EditorKeyframeDock (I-3). These are the glass FRAMES they sit in. */}
 
-      {/* INSPECTOR dock — glass frame only; the real Inspector controls dock in
-          front of it (EditorInspectorDock, I-3). */}
+      {/* INSPECTOR dock — glass frame only; the real Inspector controls dock in front. */}
       <Dock position={[11.7, -0.1, Z]} params={inspectorParams} label="INSPECTOR" labelPos={[-1.35, 4.35, 0.32]} labelSize={0.3} />
 
-      {/* KEYFRAMES dock */}
-      <Dock position={[0, -5.8, Z]} params={keyframeParams} label="KEYFRAMES" labelPos={[-10.1, 0.42, 0.32]} labelSize={0.3}>
-        <WornNub maps={gun} position={[-3.5, -0.18, 0.2]} size={0.46} tint="#cdd6e2" />
-      </Dock>
+      {/* KEYFRAMES dock — glass frame only; the real keyframe panel docks in front. */}
+      <Dock position={[0, -5.4, Z]} params={keyframeParams} label="" labelPos={[-7.4, 1.6, 0.32]} labelSize={0.3} />
     </group>
   );
 }

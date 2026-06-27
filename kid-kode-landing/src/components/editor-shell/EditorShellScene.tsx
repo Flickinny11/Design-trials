@@ -24,6 +24,7 @@ import { EditorDocks } from './EditorDock';
 import { EditorToolbarDock } from './EditorToolbarDock';
 import { EditorLibraryDock } from './EditorLibraryDock';
 import { EditorInspectorDock } from './EditorInspectorDock';
+import { EditorKeyframeDock } from './EditorKeyframeDock';
 import { EditorGizmo } from './EditorGizmo';
 import { EditorConnectors } from './EditorConnectors';
 import { EditorModeSwitch } from './EditorModeSwitch';
@@ -269,6 +270,7 @@ export function EditorShellScene() {
       <EditorToolbarDock />
       <EditorLibraryDock />
       <EditorInspectorDock />
+      <EditorKeyframeDock />
       <EditorModeSwitch />
       <EditorProbe />
       <EditorReviewRig />
