@@ -22,6 +22,7 @@ import { CompositeText } from '@/components/editor/composite/CompositeText';
 import { EditorGraphViewport } from './EditorGraphViewport';
 import { EditorDocks } from './EditorDock';
 import { EditorToolbarDock } from './EditorToolbarDock';
+import { EditorLibraryDock } from './EditorLibraryDock';
 import { EditorModeSwitch } from './EditorModeSwitch';
 import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
 import {
@@ -251,6 +252,7 @@ export function EditorShellScene() {
       {view === 'preview-app' && <PreviewPlaceholder />}
       <EditorDocks />
       <EditorToolbarDock />
+      <EditorLibraryDock />
       <EditorModeSwitch />
       <EditorProbe />
       <EditorReviewRig />

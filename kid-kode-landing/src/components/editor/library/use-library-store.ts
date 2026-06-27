@@ -364,3 +364,16 @@ export const useLibraryStore = create<LibraryStore>((set, get) => ({
 }));
 
 export { instanceRoot, instanceNodes };
+
+/** ADDITIVE (editor-integration I-2): project a catalog entry to its backing
+ *  PrismNode(s) at `pos`, WITHOUT mutating the library store. The editor docks
+ *  this palette and redirects the drop sink into the REAL app graph
+ *  (useGraphSourceStore) — this reuses the exact same pure factories the lab
+ *  uses (buildInstance → instanceNodes), so a dragged tile yields the identical
+ *  primitive / fluid / composite node(s) the lab would. The lab itself is
+ *  unaffected (this is a fresh export, no behavior change). */
+export function entryToGraphNodes(entry: LibraryEntry, pos: { x: number; y: number; z?: number }): PrismNode[] {
+  const inst = buildInstance(entry.spec, LIBRARY_HUBS, useLibraryStore.getState().savedTemplates, pos);
+  if (!inst) return [];
+  return instanceNodes(inst, LIBRARY_HUBS);
+}

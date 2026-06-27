@@ -249,3 +249,7 @@ complete marker: 'PRISM-EDIT-I2: RUN COMPLETE'
 [11:10:44] EDIT-I2 · 18m · agent=1 · still building · 18m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
 [11:14:14] EDIT-I2 · 21m · agent=1 · still building · 21m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
 [11:17:45] EDIT-I2 · 25m · agent=1 · still building · 25m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:20:45] EDIT-I2 · 28m · agent=1 · commit d6c1bba6 — AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:21:15] EDIT-I2 · 28m · agent=1 · still building · 28m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:24:46] EDIT-I2 · 32m · agent=1 · still building · 32m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:28:17] EDIT-I2 · 35m · agent=1 · still building · 35m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK

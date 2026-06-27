@@ -72,25 +72,6 @@ function WornNub({
   return <mesh geometry={geo} material={mat} position={position} />;
 }
 
-/** A thin worn-metal bar (shelf divider / channel rail). */
-function WornBar({ maps, position, width, height = 0.06 }: { maps: WornMaps | undefined; position: [number, number, number]; width: number; height?: number }) {
-  const geo = useMemo(
-    () => buildCubeGeometry({ ...PARAM_BASE, width, height, depth: 0.12, cornerRadius: 0.03, cutouts: [] }),
-    [width, height],
-  );
-  const mat = useMemo(() => {
-    const m = new THREE.MeshPhysicalMaterial();
-    if (maps) applyWornMaterial(m, maps);
-    m.roughness = 1;
-    m.clearcoat = 0.08;
-    m.envMapIntensity = 0.9;
-    m.color = new THREE.Color('#b8c4d2');
-    return m;
-  }, [maps]);
-  useEffect(() => () => { geo.dispose(); mat.dispose(); }, [geo, mat]);
-  return <mesh geometry={geo} material={mat} position={position} />;
-}
-
 /** One dock: a glass pane (optionally milled) + an engraved label + accents. */
 function Dock({
   position,
@@ -152,21 +133,11 @@ export function EditorDocks() {
   // KEYFRAMES (bottom) — one long milled timeline channel.
   const keyframeParams = useMemo(() => pane(22, 1.75, [cut(0.6, -0.18, 18, 0.42, 0.2)], 0.34), []);
 
-  // LIBRARY (left) — clean glass shelf.
-  const libraryParams = useMemo(() => pane(2.8, 9.6, [], 0.3), []);
-
   return (
     <group>
-      {/* TOOLBAR zone — the REAL chassis toolbar is docked here by
-          EditorToolbarDock (I-2). LIBRARY zone is filled by EditorLibraryDock. */}
-
-      {/* LIBRARY dock */}
-      <Dock position={[-11.7, -0.1, Z]} params={libraryParams} label="LIBRARY" labelPos={[-1.15, 4.35, 0.32]} labelSize={0.3}>
-        <WornBar maps={gun} position={[0, 2.6, 0.22]} width={2.2} />
-        <WornBar maps={gun} position={[0, 0.7, 0.22]} width={2.2} />
-        <WornBar maps={gun} position={[0, -1.2, 0.22]} width={2.2} />
-        <WornBar maps={gun} position={[0, -3.1, 0.22]} width={2.2} />
-      </Dock>
+      {/* TOOLBAR zone — the REAL chassis toolbar is docked by EditorToolbarDock,
+          and the LIBRARY zone by EditorLibraryDock (both I-2). The INSPECTOR +
+          KEYFRAMES zones remain glass placeholders until I-3. */}
 
       {/* INSPECTOR dock */}
       <Dock position={[11.7, -0.1, Z]} params={inspectorParams} label="INSPECTOR" labelPos={[-1.35, 4.35, 0.32]} labelSize={0.3}>

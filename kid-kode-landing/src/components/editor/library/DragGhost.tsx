@@ -16,19 +16,35 @@ import type { LabHub } from '@/components/editor/composite/composite-schema';
 import { CompositeText } from '@/components/editor/composite/CompositeText';
 import { PreviewContent } from './LibraryTile';
 import { useLibraryStore } from './use-library-store';
+import type { LibraryEntry } from './library-catalog';
 
 const PLANE = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0); // z = 0 drop plane
 const CANVAS_MIN_X = -5.0; // right of the palette shelf → the canvas zone
 const TAP_EPS = 0.6; // travel under this = a tap (tile quick-add), not a drag
 const RING_MAT = new THREE.MeshBasicMaterial({ color: '#9fe9ff', toneMapped: false, transparent: true, opacity: 0.8 });
 
-export function DragGhost({ matSets, hubs }: { matSets: Record<string, WornMaps>; hubs: LabHub[] }) {
+export function DragGhost({
+  matSets,
+  hubs,
+  onCanvasDrop,
+}: {
+  matSets: Record<string, WornMaps>;
+  hubs: LabHub[];
+  /** ADDITIVE (editor-integration I-2): when provided, a valid drop on the
+   *  canvas routes the entry HERE (the editor adds it to the REAL app graph)
+   *  instead of the library-local store.instantiate. The lab passes nothing, so
+   *  its in-canvas instantiate behavior is unchanged. */
+  onCanvasDrop?: (entry: LibraryEntry, world: { x: number; y: number }) => void;
+}) {
   const wornMaps = useWornMaps();
   const dragEntryId = useLibraryStore((s) => s.dragEntryId);
   const ghostRef = useRef<THREE.Group>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const world = useRef(new THREE.Vector3());
   const { camera, pointer, raycaster, controls } = useThree();
+  // keep the latest drop handler reachable from the once-bound pointerup effect.
+  const dropRef = useRef(onCanvasDrop);
+  dropRef.current = onCanvasDrop;
 
   const entry = useMemo(() => {
     if (!dragEntryId) return null;
@@ -54,7 +70,13 @@ export function DragGhost({ matSets, hubs }: { matSets: Record<string, WornMaps>
       const w = world.current;
       const moved = start ? Math.hypot(w.x - start.x, w.y - start.y) : 999;
       if (ent && moved > TAP_EPS && w.x > CANVAS_MIN_X) {
-        st.instantiate(ent, { x: w.x, y: w.y });
+        if (dropRef.current) {
+          // editor: instantiate into the REAL app graph, then clear the drag.
+          dropRef.current(ent, { x: w.x, y: w.y });
+          st.endDrag();
+        } else {
+          st.instantiate(ent, { x: w.x, y: w.y });
+        }
       } else {
         st.endDrag();
       }

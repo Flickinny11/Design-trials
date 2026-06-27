@@ -599,3 +599,7 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [11:10:44] CHAIN/EDIT-I2: still building · 18m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
 [11:14:14] CHAIN/EDIT-I2: still building · 21m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
 [11:17:45] CHAIN/EDIT-I2: still building · 25m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:20:45] CHAIN/EDIT-I2: commit d6c1bba6 — AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:21:15] CHAIN/EDIT-I2: still building · 28m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:24:46] CHAIN/EDIT-I2: still building · 32m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
+[11:28:17] CHAIN/EDIT-I2: still building · 35m elapsed · agent up · 1002 commits · last: AUTO-CKPT: EDIT-I2 w-toolbar — the REAL /toolbar-chassis toolbar is DOCK
