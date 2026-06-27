@@ -1,0 +1,47 @@
+{
+  "base": "http://localhost:3001",
+  "steps": [
+    {
+      "name": "start",
+      "detail": "live graph = 327 nodes"
+    },
+    {
+      "name": "toolbar-add-element",
+      "detail": "327 → 328 (+1)"
+    },
+    {
+      "name": "toolbar-trusted-click-object",
+      "detail": "328 → 329"
+    },
+    {
+      "name": "library-trusted-drag",
+      "detail": "329 → 330 (+1)"
+    },
+    {
+      "name": "canvas-authorship",
+      "detail": "ok=true orphans=0 rendered=39"
+    },
+    {
+      "name": "galaxy-authorship",
+      "detail": "ok=true seeded=330"
+    },
+    {
+      "name": "final",
+      "detail": "built 3 new nodes; graph now 330"
+    }
+  ],
+  "consoleErrors": [],
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "summary": {
+    "start": 327,
+    "total": 330,
+    "added": 3,
+    "canvasAuthorshipOk": true,
+    "galaxyAuthorshipOk": true
+  },
+  "consoleErrorCount": 0,
+  "pass": true
+}
