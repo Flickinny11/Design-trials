@@ -27,6 +27,9 @@ export type EditorLighting = 'studio' | 'cool' | 'warm';
 // mode (gizmos land in I-3; this is the toggled state they build on).
 export type EditorMode = 'idle' | 'transform';
 
+// I-3 MANIPULATION: the canvas transform-gizmo mode (move/rotate/scale).
+export type GizmoMode = 'move' | 'rotate' | 'scale';
+
 const BACKDROPS: EditorBackdrop[] = ['studio', 'noir', 'warm'];
 const LIGHTINGS: EditorLighting[] = ['studio', 'cool', 'warm'];
 
@@ -37,10 +40,22 @@ interface EditorShellState {
   editorMode: EditorMode;
   backdrop: EditorBackdrop;
   lighting: EditorLighting;
+  // I-3 manipulation state
+  gizmoMode: GizmoMode;
+  multiSelect: string[];
+  connectMode: boolean;
+  pendingConnectFrom: string | null;
+  snapEnabled: boolean;
   setView: (v: EditorShellView) => void;
   setActiveHub: (hubId: string | null) => void;
   select: (id: string | null) => void;
+  toggleMultiSelect: (id: string) => void;
+  clearMultiSelect: () => void;
   setEditorMode: (m: EditorMode) => void;
+  setGizmoMode: (m: GizmoMode) => void;
+  setConnectMode: (on: boolean) => void;
+  setPendingConnectFrom: (id: string | null) => void;
+  toggleSnap: () => void;
   cycleBackdrop: () => void;
   cycleLighting: () => void;
 }
@@ -52,10 +67,24 @@ export const useEditorShellStore = create<EditorShellState>((set) => ({
   editorMode: 'idle',
   backdrop: 'studio',
   lighting: 'studio',
+  gizmoMode: 'move',
+  multiSelect: [],
+  connectMode: false,
+  pendingConnectFrom: null,
+  snapEnabled: true,
   setView: (view) => set({ view }),
   setActiveHub: (activeHubId) => set({ activeHubId }),
   select: (selectedId) => set({ selectedId }),
+  toggleMultiSelect: (id) =>
+    set((s) => ({
+      multiSelect: s.multiSelect.includes(id) ? s.multiSelect.filter((x) => x !== id) : [...s.multiSelect, id],
+    })),
+  clearMultiSelect: () => set({ multiSelect: [] }),
   setEditorMode: (editorMode) => set({ editorMode }),
+  setGizmoMode: (gizmoMode) => set({ gizmoMode }),
+  setConnectMode: (connectMode) => set({ connectMode, pendingConnectFrom: connectMode ? null : null }),
+  setPendingConnectFrom: (pendingConnectFrom) => set({ pendingConnectFrom }),
+  toggleSnap: () => set((s) => ({ snapEnabled: !s.snapEnabled })),
   cycleBackdrop: () =>
     set((s) => ({ backdrop: BACKDROPS[(BACKDROPS.indexOf(s.backdrop) + 1) % BACKDROPS.length] })),
   cycleLighting: () =>
@@ -88,3 +117,12 @@ export function activeHubNodes(): PrismNode[] {
 export function allHubIds(): string[] {
   return useGraphSourceStore.getState().hubs.map((h) => h.hubId);
 }
+
+// ── deselect guard ──────────────────────────────────────────────────────────
+// A gizmo/control drag ends with a pointer-up over the open canvas; without this
+// guard the backdrop's click-to-deselect would fire and drop the selection the
+// user is editing. The drag handlers bump this on release; the backdrop honors it.
+let deselectGuardUntil = 0;
+const nowMs = () => (typeof performance !== 'undefined' ? performance.now() : 0);
+export function guardDeselect(): void { deselectGuardUntil = nowMs() + 350; }
+export function isDeselectGuarded(): boolean { return nowMs() < deselectGuardUntil; }

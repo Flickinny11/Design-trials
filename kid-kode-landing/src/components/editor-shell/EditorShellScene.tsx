@@ -24,6 +24,8 @@ import { EditorDocks } from './EditorDock';
 import { EditorToolbarDock } from './EditorToolbarDock';
 import { EditorLibraryDock } from './EditorLibraryDock';
 import { EditorInspectorDock } from './EditorInspectorDock';
+import { EditorGizmo } from './EditorGizmo';
+import { EditorConnectors } from './EditorConnectors';
 import { EditorModeSwitch } from './EditorModeSwitch';
 import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
 import {
@@ -33,6 +35,7 @@ import {
   allHubIds,
   resolveActiveHubId,
   type EditorShellView,
+  isDeselectGuarded,
   type EditorBackdrop,
   type EditorLighting,
 } from './use-editor-shell-store';
@@ -90,6 +93,7 @@ function Backdrop() {
       position={[0, 0, -7]}
       onClick={(e) => {
         e.stopPropagation();
+        if (isDeselectGuarded()) return; // don't drop selection right after a gizmo drag
         useEditorShellStore.getState().select(null);
       }}
     >
@@ -257,7 +261,9 @@ export function EditorShellScene() {
       <Lights />
       <Backdrop />
       <EditorGraphViewport />
+      <EditorConnectors />
       <SelectionOverlay />
+      <EditorGizmo />
       {view === 'preview-app' && <PreviewPlaceholder />}
       <EditorDocks />
       <EditorToolbarDock />

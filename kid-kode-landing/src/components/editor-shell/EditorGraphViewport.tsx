@@ -25,6 +25,7 @@ import ArtifactNode from '@/components/editor/graph/ArtifactNode';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import type { PrismNode, PrismHub } from '@/lib/prism-graph/types';
 import { makeDormantSeed } from './editor-shell-glass';
+import { effectivePos, connectNodes, type Vec3 } from './editor-manipulation';
 import {
   useEditorShellStore,
   resolveActiveHubId,
@@ -57,6 +58,30 @@ function useNodeGroupRegistry(nodeId: string, ref: React.RefObject<THREE.Group |
   }, [nodeId, ref]);
 }
 
+/** Click routing for a realized node: connect-mode arms/creates an edge;
+ *  shift toggles the multi-select set; a plain click single-selects. */
+function pickNode(nodeId: string, shift: boolean) {
+  const shell = useEditorShellStore.getState();
+  if (shell.connectMode) {
+    if (!shell.pendingConnectFrom) {
+      shell.setPendingConnectFrom(nodeId);
+      shell.select(nodeId);
+    } else if (shell.pendingConnectFrom !== nodeId) {
+      connectNodes(shell.pendingConnectFrom, nodeId);
+      shell.setPendingConnectFrom(null);
+      shell.select(nodeId);
+    }
+    return;
+  }
+  if (shift) {
+    shell.toggleMultiSelect(nodeId);
+    shell.select(nodeId);
+  } else {
+    shell.clearMultiSelect();
+    shell.select(nodeId);
+  }
+}
+
 /** A content signature for a node's REALIZED artifact: the geometry/material/text
  *  fields that should reconstruct the THREE object when edited. Excludes
  *  scenePosition (transform stays live via the wrapper, no rebuild). Used as part
@@ -80,10 +105,12 @@ export function contentSig(n: PrismNode): string {
  *  scenePosition (the renderer is the sole consumer of scenePosition, mirroring
  *  AssembledSceneNode; ArtifactNode resets the factory root to identity).
  *  Clicking it selects the node (I-3). */
-function RealizedNode({ node }: { node: PrismNode }) {
+function RealizedNode({ node, effPos }: { node: PrismNode; effPos?: Vec3 }) {
   const ref = useRef<THREE.Group | null>(null);
   const { pos, rot, scale } = useMemo(() => readScenePos(node), [node]);
   useNodeGroupRegistry(node.nodeId, ref);
+  // effective (stack-composed) translation; rotation/scale stay node-local.
+  const position: [number, number, number] = effPos ? [effPos.x, effPos.y, effPos.z] : pos;
   return (
     <group
       ref={(g) => {
@@ -96,12 +123,12 @@ function RealizedNode({ node }: { node: PrismNode }) {
           g.userData.prismSelectable = node.nodeId;
         }
       }}
-      position={pos}
+      position={position}
       rotation={rot}
       scale={scale}
       onClick={(e) => {
         e.stopPropagation();
-        useEditorShellStore.getState().select(node.nodeId);
+        pickNode(node.nodeId, !!(e.nativeEvent as PointerEvent)?.shiftKey);
       }}
     >
       <ArtifactNode node={node} layout="scene" />
@@ -197,12 +224,13 @@ export function EditorGraphViewport() {
 
   if (view === 'canvas') {
     const hubNodes = nodes.filter((n) => n.parentHubId === activeHubId);
+    const byId = new Map(nodes.map((n) => [n.nodeId, n]));
     return (
       <FitGroup active>
         {hubNodes.map((n) => (
           // key on a content signature so an Inspector schema edit rebuilds just
           // this node (live), while scenePosition edits keep moving it without remount.
-          <RealizedNode key={n.nodeId + ':' + contentSig(n)} node={n} />
+          <RealizedNode key={n.nodeId + ':' + contentSig(n)} node={n} effPos={effectivePos(n, byId)} />
         ))}
       </FitGroup>
     );

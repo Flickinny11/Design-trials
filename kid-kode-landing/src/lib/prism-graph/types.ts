@@ -863,6 +863,13 @@ export interface PrismNode {
   // own `scenePosition` — and therefore its world transform — intact). Absent on
   // ungrouped / legacy nodes.
   groupId?: string;
+  // EDITOR-INTEGRATION I-3 STACK (PRISM-EDITOR-INTEGRATION-SPEC §3 I-3; INV-18
+  // additive). Parent-child stack: when set, this node's scenePosition is a
+  // PARENT-RELATIVE offset and its effective world placement is computed by
+  // summing the parent chain (the P-5 `effectiveRoot` idiom — a COMPUTED world
+  // root, never a THREE re-parent). Moving the parent moves the child. Absent on
+  // unstacked / legacy nodes.
+  parentNodeId?: string;
   // STEP8 canvas-toolbar Selection group (canvas-spec §5 "lock/unlock"; INV-18
   // additive). `locked === true` removes the node from transform authoring: the
   // CanvasTransformGizmo skips it and the toolbar Transform tools refuse to
