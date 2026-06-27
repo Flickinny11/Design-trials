@@ -1,0 +1,206 @@
+'use client';
+
+// PRISM EDITOR INTEGRATION — I-1: the editor SHELL scene.
+//
+// One continuous WebGPU scene composing the proven lab pieces into the editor:
+//   • the live-app-graph viewport (EditorGraphViewport) — galaxy/canvas/preview;
+//   • the docked panel zones (EditorDocks) — glass frames matching the approved
+//     /toolbar-chassis + /keyframe-editor look (W2);
+//   • the galaxy/canvas/preview tri-state switch (EditorModeSwitch) (W3);
+//   • shared studio IBL + an editorial backdrop so the transmission glass reads.
+//
+// ZERO DOM/CSS — everything visible lives in the canvas (no-dom-ui LAW). Window
+// access here is EDITOR CHROME only (the verification probes + camera rig), the
+// same exemption /library + /toolbar-chassis use; the pure runtime stays clean.
+
+import { useEffect, useMemo } from 'react';
+import * as THREE from 'three';
+import { useThree } from '@react-three/fiber';
+import { StudioEnv } from '@/components/editor/chassis/StudioEnv';
+import { buildPaneGeometry } from '@/components/editor/primitive/primitive-geometry';
+import { CompositeText } from '@/components/editor/composite/CompositeText';
+import { EditorGraphViewport } from './EditorGraphViewport';
+import { EditorDocks } from './EditorDock';
+import { EditorModeSwitch } from './EditorModeSwitch';
+import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
+import {
+  useEditorShellStore,
+  allGraphNodes,
+  activeHubNodes,
+  allHubIds,
+  resolveActiveHubId,
+  type EditorShellView,
+} from './use-editor-shell-store';
+
+// ── editorial backdrop (DataTexture vertical gradient — zero DOM) ───────────
+function makeGradientTexture(): THREE.DataTexture {
+  const h = 64;
+  const data = new Uint8Array(h * 4);
+  const top = new THREE.Color('#0a1322');
+  const bot = new THREE.Color('#04060b');
+  const c = new THREE.Color();
+  for (let i = 0; i < h; i++) {
+    c.copy(bot).lerp(top, i / (h - 1));
+    data[i * 4 + 0] = Math.round(c.r * 255);
+    data[i * 4 + 1] = Math.round(c.g * 255);
+    data[i * 4 + 2] = Math.round(c.b * 255);
+    data[i * 4 + 3] = 255;
+  }
+  const tex = new THREE.DataTexture(data, 1, h, THREE.RGBAFormat);
+  tex.needsUpdate = true;
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function Backdrop() {
+  const tex = useMemo(() => makeGradientTexture(), []);
+  useEffect(() => () => tex.dispose(), [tex]);
+  return (
+    <mesh position={[0, 0, -7]}>
+      <planeGeometry args={[44, 26]} />
+      <meshBasicMaterial map={tex} toneMapped={false} />
+    </mesh>
+  );
+}
+
+// ── preview-app placeholder (honest I-1 scope; running app wired in I-4) ─────
+const PREVIEW_GEO = buildPaneGeometry(dockPaneParams(7.2, 4.0, { depth: 0.42, cornerRadius: 0.4 }));
+function PreviewPlaceholder() {
+  const mat = useMemo(() => makeDockGlass('clear'), []);
+  useEffect(() => () => mat.dispose(), [mat]);
+  return (
+    <group>
+      <mesh geometry={PREVIEW_GEO} material={mat} />
+      <CompositeText position={[0, 0.55, 0.3]} fontSize={0.62} variant="engraved">
+        PREVIEW
+      </CompositeText>
+      <CompositeText position={[0, -0.35, 0.3]} fontSize={0.2} variant="engraved">
+        RUNNING APP · WIRED IN I-4
+      </CompositeText>
+    </group>
+  );
+}
+
+// ── lights (key + fill over the shared studio IBL) ──────────────────────────
+function Lights() {
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[6, 8, 10]} intensity={1.1} color={'#eaf2ff'} />
+      <directionalLight position={[-8, -2, 6]} intensity={0.4} color={'#9fb6d6'} />
+      <spotLight position={[0, 10, 8]} angle={0.7} penumbra={0.8} intensity={0.6} color={'#ffe9cf'} />
+    </>
+  );
+}
+
+// ── verification probes (editor chrome — Law 0 authorship + headless drive) ──
+function EditorProbe() {
+  const scene = useThree((s) => s.scene);
+  const gl = useThree((s) => s.gl);
+  if (typeof window !== 'undefined') {
+    const w = window as unknown as Record<string, unknown>;
+    w.__PRISM_EDITOR_SHELL_SCENE__ = scene;
+    w.__PRISM_EDITOR_SHELL_STORE__ = () => {
+      const st = useEditorShellStore.getState();
+      return {
+        view: st.view,
+        activeHubId: resolveActiveHubId(),
+        selectedId: st.selectedId,
+        setView: (v: EditorShellView) => st.setView(v),
+        setActiveHub: (id: string | null) => st.setActiveHub(id),
+        allNodeIds: allGraphNodes().map((n) => n.nodeId),
+        activeHubNodeIds: activeHubNodes().map((n) => n.nodeId),
+        hubIds: allHubIds(),
+      };
+    };
+    w.__PRISM_EDITOR_SET_VIEW__ = (v: EditorShellView) => useEditorShellStore.getState().setView(v);
+    w.__PRISM_EDITOR_SHELL_BACKEND__ = () => {
+      const b = (gl as unknown as { backend?: { isWebGPUBackend?: boolean; isWebGLBackend?: boolean } }).backend;
+      return { isWebGPU: !!b?.isWebGPUBackend, isWebGL: !!b?.isWebGLBackend };
+    };
+    // Law 0 — every render maps to a backing graph node.
+    w.__PRISM_EDITOR_AUTHORSHIP__ = () => {
+      const rendered: { nodeId: string | null; hubId: string | null; dormant: boolean }[] = [];
+      scene.traverse((o) => {
+        if (o.userData?.prismEditorNode) {
+          rendered.push({
+            nodeId: (o.userData.prismNodeId as string) ?? null,
+            hubId: (o.userData.prismHubId as string) ?? null,
+            dormant: !!o.userData.prismDormant,
+          });
+        }
+      });
+      const st = useEditorShellStore.getState();
+      const allNodeIds = allGraphNodes().map((n) => n.nodeId);
+      const activeHubNodeIds = activeHubNodes().map((n) => n.nodeId);
+      const orphans = rendered.filter((r) => !r.nodeId || !allNodeIds.includes(r.nodeId));
+      const unrealizedActiveHub =
+        st.view === 'canvas'
+          ? activeHubNodeIds.filter((id) => !rendered.some((r) => r.nodeId === id && !r.dormant))
+          : [];
+      const galaxyMissing =
+        st.view === 'galaxy'
+          ? allNodeIds.filter((id) => !rendered.some((r) => r.nodeId === id && r.dormant))
+          : [];
+      return {
+        view: st.view,
+        activeHubId: resolveActiveHubId(),
+        renderedCount: rendered.length,
+        rendered,
+        allNodeIds,
+        activeHubNodeIds,
+        orphans,
+        unrealizedActiveHub,
+        galaxyMissing,
+        ok: orphans.length === 0 && unrealizedActiveHub.length === 0 && galaxyMissing.length === 0,
+      };
+    };
+    w.__PRISM_EDITOR_AUTHORSHIP_SELFTEST__ = () => {
+      const ids = allGraphNodes().map((n) => n.nodeId);
+      const synthetic = [{ nodeId: ids[0] ?? '__none__' }, { nodeId: '__orphan__' }, { nodeId: null }];
+      const caught = synthetic.filter((r) => !r.nodeId || !ids.includes(r.nodeId));
+      return { live: caught.length === 2, caughtCount: caught.length };
+    };
+  }
+  return null;
+}
+
+function EditorReviewRig() {
+  const camera = useThree((s) => s.camera);
+  const controls = useThree((s) => s.controls);
+  const gl = useThree((s) => s.gl);
+  if (typeof window !== 'undefined') {
+    (window as unknown as { __PRISM_EDITOR_SHELL_CAM__?: unknown }).__PRISM_EDITOR_SHELL_CAM__ = {
+      camera,
+      controls,
+      set(px: number, py: number, pz: number, tx = 0, ty = 0, tz = 0) {
+        camera.position.set(px, py, pz);
+        const c = controls as unknown as { target: THREE.Vector3; update: () => void } | null;
+        if (c?.target) { c.target.set(tx, ty, tz); c.update(); } else camera.lookAt(tx, ty, tz);
+      },
+      project(x: number, y: number, z: number): [number, number] {
+        const v = new THREE.Vector3(x, y, z).project(camera);
+        const el = gl.domElement;
+        return [(v.x * 0.5 + 0.5) * el.clientWidth, (1 - (v.y * 0.5 + 0.5)) * el.clientHeight];
+      },
+    };
+  }
+  return null;
+}
+
+export function EditorShellScene() {
+  const view = useEditorShellStore((s) => s.view);
+  return (
+    <>
+      <StudioEnv />
+      <Lights />
+      <Backdrop />
+      <EditorGraphViewport />
+      {view === 'preview-app' && <PreviewPlaceholder />}
+      <EditorDocks />
+      <EditorModeSwitch />
+      <EditorProbe />
+      <EditorReviewRig />
+    </>
+  );
+}

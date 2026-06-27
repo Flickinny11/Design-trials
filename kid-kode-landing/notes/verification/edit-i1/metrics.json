@@ -1,0 +1,70 @@
+{
+  "url": "http://localhost:3000/editor",
+  "viewport": {
+    "width": 1680,
+    "height": 1000
+  },
+  "steps": [
+    {
+      "step": "canvas",
+      "auth": {
+        "view": "canvas",
+        "renderedCount": 36,
+        "orphans": 0,
+        "unrealizedActiveHub": 0,
+        "ok": true
+      }
+    },
+    {
+      "step": "galaxy",
+      "auth": {
+        "view": "galaxy",
+        "renderedCount": 327,
+        "orphans": 0,
+        "galaxyMissing": 0,
+        "ok": true
+      }
+    },
+    {
+      "step": "preview",
+      "note": "placeholder (running app wired in I-4)"
+    },
+    {
+      "step": "camera",
+      "camBefore": [
+        0,
+        1.6532731788489269e-15,
+        27
+      ],
+      "camAfter": [
+        6.999999999999999,
+        3.000000000000002,
+        20
+      ],
+      "camMoved": 10.34,
+      "works": true
+    }
+  ],
+  "booted": true,
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "store": {
+    "view": "canvas",
+    "activeHubId": "s1-arrival",
+    "hubIds": [
+      "s1-arrival",
+      "s2-movement",
+      "s3-materia",
+      "s4-celestia",
+      "s5-acquire",
+      "s6-atelier"
+    ],
+    "allNodes": 327,
+    "activeHubNodes": 36
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "pass": true
+}
