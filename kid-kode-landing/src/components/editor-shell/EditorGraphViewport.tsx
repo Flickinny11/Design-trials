@@ -25,6 +25,7 @@ import ArtifactNode from '@/components/editor/graph/ArtifactNode';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import type { PrismNode, PrismHub } from '@/lib/prism-graph/types';
 import { makeDormantSeed } from './editor-shell-glass';
+import { PreviewComposition } from './PreviewComposition';
 import { effectivePos, connectNodes, type Vec3 } from './editor-manipulation';
 import {
   useEditorShellStore,
@@ -236,8 +237,9 @@ export function EditorGraphViewport() {
     );
   }
 
-  // preview-app placeholder content is rendered by the scene (PreviewPlaceholder).
-  return null;
+  // preview-app — the running app composed from the SAME realized nodes (cache
+  // hit, not a rebuild), with header/footer global slots (I-4).
+  return <PreviewComposition />;
 }
 
 // ── selection overlay (editor chrome — a world-space glowing box that tracks the

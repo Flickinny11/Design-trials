@@ -17,8 +17,6 @@ import { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useThree } from '@react-three/fiber';
 import { StudioEnv } from '@/components/editor/chassis/StudioEnv';
-import { buildPaneGeometry } from '@/components/editor/primitive/primitive-geometry';
-import { CompositeText } from '@/components/editor/composite/CompositeText';
 import { EditorGraphViewport, SelectionOverlay } from './EditorGraphViewport';
 import { EditorDocks } from './EditorDock';
 import { EditorToolbarDock } from './EditorToolbarDock';
@@ -29,7 +27,6 @@ import { EditorGizmo } from './EditorGizmo';
 import { EditorConnectors } from './EditorConnectors';
 import { EditorModeSwitch } from './EditorModeSwitch';
 import { EditorSaveControl } from './EditorSaveControl';
-import { makeDockGlass, dockPaneParams } from './editor-shell-glass';
 import {
   useEditorShellStore,
   allGraphNodes,
@@ -102,24 +99,6 @@ function Backdrop() {
       <planeGeometry args={[46, 28]} />
       <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
-  );
-}
-
-// ── preview-app placeholder (honest I-1 scope; running app wired in I-4) ─────
-const PREVIEW_GEO = buildPaneGeometry(dockPaneParams(7.2, 4.0, { depth: 0.42, cornerRadius: 0.4 }));
-function PreviewPlaceholder() {
-  const mat = useMemo(() => makeDockGlass('clear'), []);
-  useEffect(() => () => mat.dispose(), [mat]);
-  return (
-    <group>
-      <mesh geometry={PREVIEW_GEO} material={mat} />
-      <CompositeText position={[0, 0.55, 0.3]} fontSize={0.62} variant="engraved">
-        PREVIEW
-      </CompositeText>
-      <CompositeText position={[0, -0.35, 0.3]} fontSize={0.2} variant="engraved">
-        RUNNING APP · WIRED IN I-4
-      </CompositeText>
-    </group>
   );
 }
 
@@ -256,7 +235,6 @@ function EditorReviewRig() {
 }
 
 export function EditorShellScene() {
-  const view = useEditorShellStore((s) => s.view);
   return (
     <>
       <StudioEnv />
@@ -266,7 +244,6 @@ export function EditorShellScene() {
       <EditorConnectors />
       <SelectionOverlay />
       <EditorGizmo />
-      {view === 'preview-app' && <PreviewPlaceholder />}
       <EditorDocks />
       <EditorToolbarDock />
       <EditorLibraryDock />

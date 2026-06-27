@@ -97,6 +97,11 @@ function writeMat(id: string, patch: Partial<MaterialSpec>) {
 function writeScale(id: string, v: number) {
   useGraphSourceStore.getState().setScenePosition(id, { scaleX: v, scaleY: v, scaleZ: v });
 }
+// I-4 — assign / clear the node's GLOBAL app slot (header / footer / content).
+// Persists via updateNode (round-trips through save/reload); realized in PREVIEW.
+function writeSlot(id: string, slot: 'header' | 'footer' | undefined) {
+  useGraphSourceStore.getState().updateNode(id, { globalSlot: slot });
+}
 
 export function EditorInspector({ position }: { position: [number, number, number] }) {
   const selectedId = useEditorShellStore((s) => s.selectedId);
@@ -120,7 +125,15 @@ export function EditorInspector({ position }: { position: [number, number, numbe
         params: eff,
         materialSpec: n.materialSpec ?? null,
         scenePosition: n.scenePosition ?? null,
+        globalSlot: n.globalSlot ?? null,
       };
+    };
+    // I-4 — assign the GLOBAL slot of any node (header/footer/content) for the
+    // headless pass. slot===null/'content' clears it.
+    (window as unknown as Record<string, unknown>).__PRISM_EDITOR_SET_SLOT__ = (id: string, slot: 'header' | 'footer' | 'content' | null) => {
+      if (!id) return false;
+      writeSlot(id, slot === 'header' || slot === 'footer' ? slot : undefined);
+      return true;
     };
     (window as unknown as Record<string, unknown>).__PRISM_EDITOR_FADER_LIST__ = () => {
       const w = window as unknown as { __PRISM_EDITOR_FADERS__?: Map<string, unknown> };
@@ -240,6 +253,42 @@ export function EditorInspector({ position }: { position: [number, number, numbe
                 useEditorShellStore.getState().select(null);
               }}
             />
+          )}
+
+          {/* I-4 — GLOBAL SLOT selector: pin the node as the app HEADER / FOOTER
+              (realized in PREVIEW, across every page), or CONTENT (clear). */}
+          <CompositeText position={[-1.3, ROW0 - rows.length * PITCH - 1.62, 0.3]} fontSize={0.12} anchorX="left" variant="engraved">
+            SLOT
+          </CompositeText>
+          {gun && (
+            <>
+              <CompositeChip
+                maps={gun}
+                position={[-0.78, ROW0 - rows.length * PITCH - 2.04, 0.2]}
+                size={0.36}
+                tint={node.globalSlot === 'header' ? '#caa06a' : undefined}
+                active={node.globalSlot === 'header'}
+                label="HEADER"
+                onClick={() => selectedId && writeSlot(selectedId, node.globalSlot === 'header' ? undefined : 'header')}
+              />
+              <CompositeChip
+                maps={gun}
+                position={[0, ROW0 - rows.length * PITCH - 2.04, 0.2]}
+                size={0.36}
+                tint={node.globalSlot === 'footer' ? '#caa06a' : undefined}
+                active={node.globalSlot === 'footer'}
+                label="FOOTER"
+                onClick={() => selectedId && writeSlot(selectedId, node.globalSlot === 'footer' ? undefined : 'footer')}
+              />
+              <CompositeChip
+                maps={gun}
+                position={[0.78, ROW0 - rows.length * PITCH - 2.04, 0.2]}
+                size={0.36}
+                active={!node.globalSlot}
+                label="CONTENT"
+                onClick={() => selectedId && writeSlot(selectedId, undefined)}
+              />
+            </>
           )}
         </>
       )}
