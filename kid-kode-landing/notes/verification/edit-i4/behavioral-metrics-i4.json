@@ -1,0 +1,108 @@
+{
+  "nodesStart": 327,
+  "addedToolbar": "6c20cc72-5f20-4272-929d-3c887c120ff0",
+  "addedLibrary": "0b19a227-9625-4938-8657-3644faac9c06",
+  "header": "90a310ab-6339-4c8d-aa4d-38d85e52a92c",
+  "footer": "14bba6b7-89f0-43ee-8610-9e954739a9f1",
+  "widthEdit": [
+    0.6,
+    3.9999980449314885
+  ],
+  "stack": true,
+  "connectors": [
+    1,
+    2
+  ],
+  "keyframes": 2,
+  "keyframeGroupYDelta": 2.199999956509508,
+  "preview": {
+    "header": 1,
+    "footer": 1,
+    "content": 38,
+    "headerY": 3.2500000000000004,
+    "footerY": -2.85
+  },
+  "save": {
+    "ok": true,
+    "nodesEqual": true,
+    "edgesEqual": true,
+    "builtNodesPresent": true
+  },
+  "previewAfterReload": {
+    "header": 1,
+    "footer": 1,
+    "content": 38
+  },
+  "canvasOrphans": 0,
+  "canvasRendered": 40,
+  "galaxyOrphans": 0,
+  "galaxyRendered": 331,
+  "consoleErrors": 0,
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "checks": "12/12",
+  "results": [
+    {
+      "name": "toolbar-add",
+      "pass": true,
+      "detail": "add cube 6c20cc72 327→328"
+    },
+    {
+      "name": "library-drag-instantiate",
+      "pass": true,
+      "detail": "dropped \"prim:cube\" +1 (B=0b19a227)"
+    },
+    {
+      "name": "inspector-edit-live",
+      "pass": true,
+      "detail": "width 0.60→4.00"
+    },
+    {
+      "name": "stack-connect",
+      "pass": true,
+      "detail": "stack B.parent=true; connectors 1→2"
+    },
+    {
+      "name": "keyframe-animates",
+      "pass": true,
+      "detail": "kfs=2 groupYΔ=2.20"
+    },
+    {
+      "name": "header-footer-slots",
+      "pass": true,
+      "detail": "H=header F=footer"
+    },
+    {
+      "name": "preview-runs-app",
+      "pass": true,
+      "detail": "header=1 footer=1 content=38; headerY=3.25 > footerY=-2.85"
+    },
+    {
+      "name": "save-reload-persists",
+      "pass": true,
+      "detail": "save.ok=true nodesEqual=true edgesEqual=true builtNodesPresent=true"
+    },
+    {
+      "name": "slots-survive-reload",
+      "pass": true,
+      "detail": "after reload H=header F=footer"
+    },
+    {
+      "name": "preview-after-reload",
+      "pass": true,
+      "detail": "header=1 footer=1 content=38 orphans=0"
+    },
+    {
+      "name": "authorship-all-views",
+      "pass": true,
+      "detail": "canvas orphans=0/40; galaxy orphans=0/331"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}
