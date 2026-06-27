@@ -1,1 +1,1 @@
-[17:03:17] PRIM-P5: still building · 43m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[11:17:45] EDIT-I2: still building · 25m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh

@@ -537,3 +537,65 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [16:56:16] CHAIN/PRIM-P5: still building · 35m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
 [16:59:46] CHAIN/PRIM-P5: still building · 39m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
 [17:03:17] CHAIN/PRIM-P5: still building · 43m elapsed · agent up · 991 commits · last: AUTO-CKPT: PRIM-P5 w-save — GROUP multi-select (in-engine frame brackets
+[17:04:47] CHAIN/PRIM-P5: commit 5f2775b1 — AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:06:33] CHAIN/PRIM-P5: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[17:06:33] CHAIN/PRIM-P6: ARMED — watching PRIM-P6. Pinging on every commit, heartbeat, stop, and finish.
+[17:07:20] CHAIN/PRIM-P6: launched build agent on claude-opus-4-8 (resume #1)
+[17:10:51] CHAIN/PRIM-P6: still building · 4m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:14:22] CHAIN/PRIM-P6: still building · 7m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:17:52] CHAIN/PRIM-P6: still building · 11m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:21:23] CHAIN/PRIM-P6: still building · 14m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:24:54] CHAIN/PRIM-P6: still building · 18m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:28:24] CHAIN/PRIM-P6: still building · 21m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:31:55] CHAIN/PRIM-P6: still building · 25m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:35:26] CHAIN/PRIM-P6: still building · 28m elapsed · agent up · 992 commits · last: AUTO-CKPT: PRIM-P5 w-verify — node-authorship-gate --composite 10/10 + n
+[17:38:56] CHAIN/PRIM-P6: still building · 32m elapsed · agent up · 993 commits · last: AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:38:56] CHAIN/PRIM-P6: commit c713a719 — AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:42:27] CHAIN/PRIM-P6: still building · 35m elapsed · agent up · 993 commits · last: AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:45:58] CHAIN/PRIM-P6: still building · 39m elapsed · agent up · 993 commits · last: AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:49:28] CHAIN/PRIM-P6: still building · 42m elapsed · agent up · 993 commits · last: AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:52:59] CHAIN/PRIM-P6: still building · 46m elapsed · agent up · 993 commits · last: AUTO-CKPT: PRIM-P6 w-palette — in-canvas 3D LIBRARY/PALETTE at /library 
+[17:55:59] CHAIN/PRIM-P6: commit 334c9619 — AUTO-CKPT: PRIM-P6 w-drag — DRAG-TO-CANVAS instantiation (trusted-pointe
+[17:56:29] CHAIN/PRIM-P6: still building · 49m elapsed · agent up · 994 commits · last: AUTO-CKPT: PRIM-P6 w-drag — DRAG-TO-CANVAS instantiation (trusted-pointe
+[17:59:30] CHAIN/PRIM-P6: commit c5805513 — AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:00:00] CHAIN/PRIM-P6: still building · 53m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:03:30] CHAIN/PRIM-P6: still building · 56m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:07:01] CHAIN/PRIM-P6: still building · 60m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:10:32] CHAIN/PRIM-P6: still building · 63m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:14:02] CHAIN/PRIM-P6: still building · 67m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:17:33] CHAIN/PRIM-P6: still building · 71m elapsed · agent up · 995 commits · last: AUTO-CKPT: PRIM-P6 w-dogfood — the NODE-EDITOR chrome panel is dogfooded
+[18:19:33] CHAIN/PRIM-P6: commit 0a0d057e — PRIM-P6 w-verify fix — Inspector exposes the FULL schema (spec §7.3/§1.3
+[18:20:03] CHAIN/PRIM-P6: commit 287bfab1 — AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[18:21:03] CHAIN/PRIM-P6: still building · 74m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[18:22:19] CHAIN/PRIM-P6: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[09:55:38] CHAIN/EDIT-I1: ARMED — watching EDIT-I1. Pinging on every commit, heartbeat, stop, and finish.
+[09:56:27] CHAIN/EDIT-I1: launched build agent on claude-opus-4-8 (resume #1)
+[09:59:58] CHAIN/EDIT-I1: still building · 4m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:03:28] CHAIN/EDIT-I1: still building · 7m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:06:59] CHAIN/EDIT-I1: still building · 11m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:10:29] CHAIN/EDIT-I1: still building · 14m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:14:00] CHAIN/EDIT-I1: still building · 18m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:17:31] CHAIN/EDIT-I1: still building · 21m elapsed · agent up · 997 commits · last: AUTO-CKPT: PRIM-P6 w-verify — HEADLESS behavioral verification (17/17: b
+[10:18:01] CHAIN/EDIT-I1: commit da930046 — AUTO-CKPT: EDIT-I1 w-canvas — /editor route renders the LIVE APP GRAPH i
+[10:21:01] CHAIN/EDIT-I1: still building · 25m elapsed · agent up · 998 commits · last: AUTO-CKPT: EDIT-I1 w-canvas — /editor route renders the LIVE APP GRAPH i
+[10:24:32] CHAIN/EDIT-I1: still building · 28m elapsed · agent up · 998 commits · last: AUTO-CKPT: EDIT-I1 w-canvas — /editor route renders the LIVE APP GRAPH i
+[10:28:02] CHAIN/EDIT-I1: still building · 32m elapsed · agent up · 999 commits · last: AUTO-CKPT: EDIT-I1 w-layout — docked panel zones (TOOLBAR/LIBRARY/INSPEC
+[10:28:03] CHAIN/EDIT-I1: commit 511c64c5 — AUTO-CKPT: EDIT-I1 w-layout — docked panel zones (TOOLBAR/LIBRARY/INSPEC
+[10:31:33] CHAIN/EDIT-I1: still building · 35m elapsed · agent up · 999 commits · last: AUTO-CKPT: EDIT-I1 w-layout — docked panel zones (TOOLBAR/LIBRARY/INSPEC
+[10:35:04] CHAIN/EDIT-I1: still building · 39m elapsed · agent up · 999 commits · last: AUTO-CKPT: EDIT-I1 w-layout — docked panel zones (TOOLBAR/LIBRARY/INSPEC
+[10:35:34] CHAIN/EDIT-I1: commit 2d7eea67 — AUTO-CKPT: EDIT-I1 w-tristate — the GALAXY/CANVAS/PREVIEW tri-state swit
+[10:38:34] CHAIN/EDIT-I1: still building · 42m elapsed · agent up · 1000 commits · last: AUTO-CKPT: EDIT-I1 w-tristate — the GALAXY/CANVAS/PREVIEW tri-state swit
+[10:42:05] CHAIN/EDIT-I1: still building · 46m elapsed · agent up · 1000 commits · last: AUTO-CKPT: EDIT-I1 w-tristate — the GALAXY/CANVAS/PREVIEW tri-state swit
+[10:45:35] CHAIN/EDIT-I1: still building · 49m elapsed · agent up · 1000 commits · last: AUTO-CKPT: EDIT-I1 w-tristate — the GALAXY/CANVAS/PREVIEW tri-state swit
+[10:49:06] CHAIN/EDIT-I1: still building · 53m elapsed · agent up · 1000 commits · last: AUTO-CKPT: EDIT-I1 w-tristate — the GALAXY/CANVAS/PREVIEW tri-state swit
+[10:49:36] CHAIN/EDIT-I1: commit e124c261 — AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[10:52:22] CHAIN/EDIT-I1: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[10:52:22] CHAIN/EDIT-I2: ARMED — watching EDIT-I2. Pinging on every commit, heartbeat, stop, and finish.
+[10:53:11] CHAIN/EDIT-I2: launched build agent on claude-opus-4-8 (resume #1)
+[10:56:41] CHAIN/EDIT-I2: still building · 4m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:00:12] CHAIN/EDIT-I2: still building · 7m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:03:42] CHAIN/EDIT-I2: still building · 11m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:07:13] CHAIN/EDIT-I2: still building · 14m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:10:44] CHAIN/EDIT-I2: still building · 18m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:14:14] CHAIN/EDIT-I2: still building · 21m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:17:45] CHAIN/EDIT-I2: still building · 25m elapsed · agent up · 1001 commits · last: AUTO-CKPT: EDIT-I1 w-verify — HEADLESS behavioral verification + 3 fresh

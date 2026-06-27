@@ -142,13 +142,6 @@ export function EditorDocks() {
   const gun = wornMaps['gunmetal'];
   const bronze = wornMaps['bronze'];
 
-  // TOOLBAR (top) — milled button sockets across the bar (the chassis idiom).
-  const toolbarParams = useMemo(() => {
-    const sockets: Cutout[] = [];
-    for (let i = 0; i < 7; i++) sockets.push(cut(-6.4 + i * 2.15, -0.02, 0.66, 0.66, 0.13));
-    return pane(22, 1.4, sockets, 0.32);
-  }, []);
-
   // INSPECTOR (right) — milled fader channels (the keyframe/inspector idiom).
   const inspectorParams = useMemo(() => {
     const channels: Cutout[] = [];
@@ -164,12 +157,8 @@ export function EditorDocks() {
 
   return (
     <group>
-      {/* TOOLBAR dock */}
-      <Dock position={[0, 5.75, Z]} params={toolbarParams} label="TOOLBAR" labelPos={[-10.1, 0.0, 0.32]} labelSize={0.3}>
-        <WornNub maps={gun} position={[-6.4, -0.02, 0.18]} size={0.5} />
-        <WornNub maps={gun} position={[-2.1, -0.02, 0.18]} size={0.5} />
-        <WornNub maps={bronze} position={[6.2, -0.02, 0.18]} size={0.5} tint="#caa06a" />
-      </Dock>
+      {/* TOOLBAR zone — the REAL chassis toolbar is docked here by
+          EditorToolbarDock (I-2). LIBRARY zone is filled by EditorLibraryDock. */}
 
       {/* LIBRARY dock */}
       <Dock position={[-11.7, -0.1, Z]} params={libraryParams} label="LIBRARY" labelPos={[-1.15, 4.35, 0.32]} labelSize={0.3}>

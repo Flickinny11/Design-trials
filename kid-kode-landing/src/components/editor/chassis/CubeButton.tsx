@@ -35,9 +35,13 @@ export interface CubeButtonProps {
   onHover: (btn: PlacedButton | null) => void;
   /** dev/verification: force the spin to a fixed progress (0..1), spec-driven */
   forceSpin?: number | null;
+  /** ADDITIVE (editor-integration I-2): fire a click action. The /toolbar-chassis
+   *  lab passes nothing, so the lab's hover-only behavior is unchanged; the docked
+   *  editor toolbar passes this to drive a real operation on the live app graph. */
+  onSelect?: (btn: PlacedButton) => void;
 }
 
-export function CubeButton({ btn, maps, onHover, forceSpin = null }: CubeButtonProps) {
+export function CubeButton({ btn, maps, onHover, forceSpin = null, onSelect }: CubeButtonProps) {
   const meshRef = useRef<THREE.Mesh>(null);
   const elapsed = useRef(0);
   const spin = useRef({ active: false, start: 0 });
@@ -87,6 +91,11 @@ export function CubeButton({ btn, maps, onHover, forceSpin = null }: CubeButtonP
     e.stopPropagation();
     onHover(null); // let the spin finish on its own
   };
+  const onClick = (e: ThreeEvent<MouseEvent>) => {
+    if (!onSelect) return; // lab: no click action
+    e.stopPropagation();
+    onSelect(btn);
+  };
 
   return (
     <group position={[btn.x, btn.y, 0]}>
@@ -100,6 +109,7 @@ export function CubeButton({ btn, maps, onHover, forceSpin = null }: CubeButtonP
         material={material}
         onPointerOver={onOver}
         onPointerOut={onOut}
+        onClick={onClick}
       >
         {/* engraved abstract face glyph, just proud of the front cube face */}
         <FaceGlyph glyph={btn.fn.glyph} z={CUBE / 2 + 0.001} />
