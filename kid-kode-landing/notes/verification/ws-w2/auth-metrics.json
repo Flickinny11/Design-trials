@@ -1,0 +1,77 @@
+{
+  "node": "orr-arrival-headline",
+  "results": [
+    {
+      "name": "platform-search",
+      "pass": true,
+      "detail": "1 platforms, top=Supabase"
+    },
+    {
+      "name": "one-click-connect",
+      "pass": true,
+      "detail": "via=trusted:supabase:oauth2.1 refs=1"
+    },
+    {
+      "name": "capability-reference-stored",
+      "pass": true,
+      "detail": "refId=cap_supabase_oauth2.1_10p6x9"
+    },
+    {
+      "name": "NO-SECRET-LEAK",
+      "pass": true,
+      "detail": "clean (reference handle only)"
+    },
+    {
+      "name": "assets-self-populate",
+      "pass": true,
+      "detail": "3 saved assets: prism-prod, public.users"
+    },
+    {
+      "name": "add-asset",
+      "pass": true,
+      "detail": "assets on node=1"
+    },
+    {
+      "name": "save-ok",
+      "pass": true,
+      "detail": "save.ok=true"
+    },
+    {
+      "name": "round-trip-reference-only",
+      "pass": true,
+      "detail": "refs=1 assets=1 leak=false"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "finalRef": {
+    "id": "ig-g6iadt",
+    "order": 0,
+    "providerId": "mcp",
+    "platformId": "supabase",
+    "platform": "Supabase",
+    "authMethod": "oauth2.1",
+    "capabilityRef": {
+      "refId": "cap_supabase_oauth2.1_10p6x9",
+      "scope": "supabase:connect",
+      "label": "Supabase (oauth2.1)",
+      "provider": "mcp",
+      "authMethod": "oauth2.1"
+    },
+    "assets": [
+      {
+        "id": "proj_prism",
+        "kind": "project",
+        "name": "prism-prod",
+        "detail": "us-east-1"
+      }
+    ],
+    "contentIcon": {
+      "brandKey": "supabase"
+    }
+  },
+  "consoleErrors": []
+}
