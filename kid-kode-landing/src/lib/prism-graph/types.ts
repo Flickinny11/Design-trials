@@ -981,6 +981,14 @@ export interface PrismNode {
   // functionTiles, integrationRefs, functionBinding, …); this is an audit record
   // only (prompt + planId + summary + applied step kinds). Absent on legacy nodes.
   promptEditLog?: PromptEditLogEntry[];
+  // WORKSPACE-COMPLETION W-2 / Data tab (criteria C3; INV-W5 additive,
+  // INV-W7 reference-only). The node's own DATA/BACKEND model: a logical name,
+  // a typed STATE schema (fields the node owns), and an optional PERSISTENCE
+  // binding wired from the capability catalog (a db/storage provider — Supabase
+  // table, Cloudflare R2 bucket, etc.). The binding carries a CAPABILITY
+  // REFERENCE only — never a raw secret (the vault resolves it server-side).
+  // Absent on legacy nodes; round-trips byte-stable through save/reload.
+  dataModel?: PrismDataModel;
 }
 
 // POLISH pass / galaxy glance-icon (INV-18 additive). Pure derivation of a
@@ -991,8 +999,10 @@ export interface PrismNode {
 // still badge sensibly.
 export function deriveContentType(node: PrismNode): NodeContentType {
   if (node.contentType) return node.contentType;
-  // integration — connected platform hookups / branded action tiles.
-  if (node.integrationRefs?.length || node.functionTiles?.length) return 'integration';
+  // integration — connected platform hookups / branded action tiles. (A node
+  // that owns only a data/backend model also reads as 'integration' for the
+  // galaxy glance-badge until W-4 introduces a dedicated data glyph.)
+  if (node.integrationRefs?.length || node.functionTiles?.length || node.dataModel?.persistence) return 'integration';
   // 3d-object — a GLB mesh, an in-canvas primitive, or mesh render mode.
   if (node.meshUrl || node.meshPrimitive || node.renderMode === 'mesh') return '3d-object';
   // text — MSDF text render mode or a per-node text contract.
@@ -1210,6 +1220,48 @@ export interface IntegrationRef {
   assets?: IntegrationAsset[];
   /** Galaxy content-icon descriptor (the small colored icon per integration, §3.3). */
   contentIcon?: { brandKey: string; tint?: string };
+}
+
+// WORKSPACE-COMPLETION W-2 — a single typed field in a node's data model (C3).
+export interface PrismDataField {
+  /** Field name (e.g. "email"). */
+  name: string;
+  /** Logical type ('string' | 'number' | 'boolean' | 'json' | 'timestamp' | …). */
+  type: string;
+}
+
+// WORKSPACE-COMPLETION W-2 — a node's PERSISTENCE binding (C3). Wired from the
+// capability catalog (a db/storage provider). SECURITY: carries a CAPABILITY
+// REFERENCE only (INV-W7 / INV-R13) — never a raw token. The vault resolves it
+// server-side at request time.
+export interface PrismPersistenceBinding {
+  /** The CapabilityProvider that brokered the binding ('mcp' | 'nango' | …). */
+  providerId: string;
+  /** Platform key — also the brand key for the real logo ('supabase', 'cloudflare'). */
+  platformId: string;
+  /** Plain-language platform name ("Supabase"). */
+  platform: string;
+  /** Storage kind ('table' | 'bucket' | 'kv' | 'collection' | 'project'). */
+  kind: string;
+  /** The bound resource id/name ("public.signups"), when an asset was selected. */
+  resource?: string;
+  /** Brand key for the real logo. */
+  brandKey: string;
+  /** The opaque capability reference the vault resolves server-side. NEVER a secret. */
+  capabilityRef?: CapabilityRef;
+}
+
+// WORKSPACE-COMPLETION W-2 — a node's DATA/BACKEND model (criteria C3; INV-W5
+// additive, INV-W7 reference-only). State + persistence the node owns.
+export interface PrismDataModel {
+  /** Logical model name (e.g. "signups"). Optional — derived from caption when absent. */
+  name?: string;
+  /** Typed state fields the node owns. */
+  fields?: PrismDataField[];
+  /** Optional persistence binding wired from the capability catalog (reference-only). */
+  persistence?: PrismPersistenceBinding;
+  /** Last validation result for the binding (validate-on-select, reuses the tile shape). */
+  validation?: FunctionTileValidation;
 }
 
 // One applied prompt-edit plan (criteria A). Provenance/audit only — the real

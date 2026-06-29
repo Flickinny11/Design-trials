@@ -1,0 +1,41 @@
+{
+  "checks": "7/7",
+  "results": [
+    {
+      "name": "probe-live",
+      "pass": true,
+      "detail": "node=orr-arrival-headline"
+    },
+    {
+      "name": "section-switch-purpose",
+      "pass": true,
+      "detail": "section=purpose"
+    },
+    {
+      "name": "section-switch-functions",
+      "pass": true,
+      "detail": "section=functions"
+    },
+    {
+      "name": "section-switch-integrations",
+      "pass": true,
+      "detail": "section=integrations"
+    },
+    {
+      "name": "section-switch-data",
+      "pass": true,
+      "detail": "section=data"
+    },
+    {
+      "name": "purpose-fields-intact",
+      "pass": true,
+      "detail": "7 fields"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "consoleErrors": []
+}

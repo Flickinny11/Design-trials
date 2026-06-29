@@ -20,8 +20,10 @@ import { useWornMaps } from '@/components/editor/chassis/materials';
 import { CompositeChip } from '@/components/editor/composite/CompositeChip';
 import { EditorInspector } from './editor-inspector';
 import { EditorNodeEditor, installNodeEditorProbe } from './editor-node-editor';
+import { EditorNodeTabs } from './editor-node-tabs';
 import { NodeEditorKeyboard } from './editor-text-field';
 import { useEditorShellStore } from './use-editor-shell-store';
+import { installCapabilityProbe } from './use-capability-store';
 
 // Matches the INSPECTOR dock placement in EditorDock.tsx.
 export const INSPECTOR_DOCK_POS: [number, number, number] = [11.7, -0.1, 1.0];
@@ -34,9 +36,13 @@ export function EditorInspectorDock() {
   const gun = maps['gunmetal'];
   const [bx, by, bz] = INSPECTOR_DOCK_POS;
   const contentPos: [number, number, number] = [bx, by - CONTENT_DROP, bz];
+  // the NODE editor gains a section sub-tab row, so its content drops further to
+  // clear it (the VISUAL inspector has no sub-tabs and keeps the higher anchor).
+  const nodeContentPos: [number, number, number] = [bx, by - CONTENT_DROP - 0.42, bz];
 
-  // install the node-editor headless probe once (survives tab switches).
+  // install the headless probes once (survive tab switches — both docks always mount).
   useEffect(() => installNodeEditorProbe(), []);
+  useEffect(() => installCapabilityProbe(), []);
 
   return (
     <>
@@ -67,8 +73,12 @@ export function EditorInspectorDock() {
         </group>
       )}
 
+      {/* NODE section sub-tabs (PURPOSE / FUNCTIONS / INTEGRATIONS / DATA) —
+          only on the NODE tab; sits just under the NODE/VISUAL switch. */}
+      {tab === 'node' && <EditorNodeTabs position={[bx, by + 3.42, bz + 0.2]} />}
+
       {tab === 'node' ? (
-        <EditorNodeEditor position={contentPos} />
+        <EditorNodeEditor position={nodeContentPos} />
       ) : (
         <EditorInspector position={contentPos} />
       )}

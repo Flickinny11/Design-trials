@@ -34,6 +34,10 @@ import { CompositeText } from '@/components/editor/composite/CompositeText';
 import { GlassTextField, focusField, commitFocusedField, listFields } from './editor-text-field';
 import { useNodeEditorStore } from './use-node-editor-store';
 import { useEditorShellStore } from './use-editor-shell-store';
+import { useCapabilityStore } from './use-capability-store';
+import { EditorFunctionsTab } from './editor-functions-tab';
+import { EditorIntegrationsTab } from './editor-integrations-tab';
+import { EditorDataTab } from './editor-data-tab';
 
 // ── string ⇄ model mappings (lossless for the represented subset; the rest of
 //    behaviorSpec/contracts is preserved untouched so round-trips stay exact) ──
@@ -176,6 +180,7 @@ export function installNodeEditorProbe(): () => void {
 
 export function EditorNodeEditor({ position }: { position: [number, number, number] }) {
   const selectedId = useEditorShellStore((s) => s.selectedId);
+  const section = useCapabilityStore((s) => s.section);
   const node = useGraphSourceStore((s) =>
     selectedId ? s.nodes.find((n) => n.nodeId === selectedId) ?? null : null,
   );
@@ -240,7 +245,14 @@ export function EditorNodeEditor({ position }: { position: [number, number, numb
       <CompositeText position={[0, SUBTYPE_Y, 0.32]} fontSize={0.12} variant="engraved">
         {(node.subtype ?? 'NODE').toString().toUpperCase().slice(0, 26)}
       </CompositeText>
-      {els}
+      {/* the active section. PURPOSE = the W-1 schema/behavior/caption surface;
+          FUNCTIONS / INTEGRATIONS / DATA = the W-2 capability layer. Only the
+          active section MOUNTS, so its fields (purpose ne:* or a search field)
+          register exclusively — galaxy/canvas stay untouched. */}
+      {section === 'purpose' && els}
+      {section === 'functions' && <EditorFunctionsTab position={[0, 0, 0]} />}
+      {section === 'integrations' && <EditorIntegrationsTab position={[0, 0, 0]} />}
+      {section === 'data' && <EditorDataTab position={[0, 0, 0]} />}
     </group>
   );
 }
