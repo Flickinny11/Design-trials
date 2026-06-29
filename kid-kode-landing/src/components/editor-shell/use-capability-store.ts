@@ -500,6 +500,7 @@ export function installCapabilityProbe(): () => void {
     setDataName: (name: string) => cap().setDataModelName(name),
     setDataFields: (fields: PrismDataField[]) => cap().setDataFields(fields),
     bindPersistence: (p: PlatformDescriptor, method: IntegrationAuthMethod, kind?: string) => cap().bindPersistence(p, method, kind),
+    unbindPersistence: () => cap().unbindPersistence(),
     bindResource: (resource: string) => cap().bindPersistenceResource(resource),
     validateData: () => cap().validateDataBinding(),
     // snippets
