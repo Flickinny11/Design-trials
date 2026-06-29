@@ -1,0 +1,103 @@
+{
+  "node": "orr-arrival-headline",
+  "results": [
+    {
+      "name": "capability-first-send-email",
+      "pass": true,
+      "detail": "6 results, top=SendGrid:Send email"
+    },
+    {
+      "name": "capability-first-charge",
+      "pass": true,
+      "detail": "top=Stripe:Create payment intent"
+    },
+    {
+      "name": "attach-1",
+      "pass": true,
+      "detail": "1 tiles"
+    },
+    {
+      "name": "validate-on-select",
+      "pass": true,
+      "detail": "status=fixed"
+    },
+    {
+      "name": "attach-2-multiple",
+      "pass": true,
+      "detail": "2 tiles, orders=0,1"
+    },
+    {
+      "name": "reorder",
+      "pass": true,
+      "detail": "order0=ft-1p9ay4p"
+    },
+    {
+      "name": "no-secret-in-tiles",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "trusted-capability-search",
+      "pass": true,
+      "detail": "focus=cap:fn-search top=Supabase:Insert row"
+    },
+    {
+      "name": "save-ok",
+      "pass": true,
+      "detail": "save.ok=true"
+    },
+    {
+      "name": "round-trip-exact",
+      "pass": true,
+      "detail": "reload tiles=slack-post-message,stripe-create-payment-intent"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "consoleErrors": [],
+  "finalTiles": [
+    {
+      "id": "ft-1p9ay4p",
+      "order": 0,
+      "providerId": "mcp",
+      "actionId": "slack-post-message",
+      "brandKey": "slack",
+      "label": "Post message",
+      "platform": "Slack",
+      "source": "catalog",
+      "params": {
+        "channel": "sample",
+        "text": "sample"
+      },
+      "validation": {
+        "status": "fixed",
+        "testedAt": "2026-06-29T10:07:00.956Z",
+        "message": "Sandbox test failed: missing required `channel`, `text`",
+        "autoFixNote": "Filled channel, text with safe sample values"
+      }
+    },
+    {
+      "id": "ft-1f6hke3",
+      "order": 1,
+      "providerId": "mcp",
+      "actionId": "stripe-create-payment-intent",
+      "brandKey": "stripe",
+      "label": "Create payment intent",
+      "platform": "Stripe",
+      "source": "catalog",
+      "params": {
+        "amount": 1000,
+        "currency": "sample"
+      },
+      "validation": {
+        "status": "fixed",
+        "testedAt": "2026-06-29T10:06:57.861Z",
+        "message": "Sandbox test failed: missing required `amount`, `currency`",
+        "autoFixNote": "Filled amount, currency with safe sample values"
+      }
+    }
+  ]
+}

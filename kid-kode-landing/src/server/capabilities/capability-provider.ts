@@ -6,7 +6,8 @@
 import 'server-only';
 import type { CapabilityProvider } from '../../lib/capabilities/provider';
 import { McpReferenceAdapter } from './mcp-adapter';
-import { PipedreamAdapter, ComposioAdapter, NangoAdapter } from './aggregator-stubs';
+import { PipedreamAdapter, ComposioAdapter } from './aggregator-stubs';
+import { NangoAdapter } from './nango-adapter';
 
 let cached: CapabilityProvider | null = null;
 
@@ -16,7 +17,12 @@ export function getCapabilityProvider(): CapabilityProvider {
   switch (choice) {
     case 'pipedream': cached = new PipedreamAdapter(); break;
     case 'composio': cached = new ComposioAdapter(); break;
-    case 'nango': cached = new NangoAdapter(); break;
+    case 'nango':
+      // Nango is REAL but GATED (W-2 / W-5): only select it when keyed. Forcing
+      // `nango` without NANGO_SECRET_KEY still serves the offline MCP reference
+      // catalog, so the build + verification never break.
+      cached = process.env.NANGO_SECRET_KEY ? new NangoAdapter() : new McpReferenceAdapter();
+      break;
     case 'mcp':
     default: cached = new McpReferenceAdapter(); break;
   }

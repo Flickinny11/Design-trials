@@ -54,6 +54,17 @@ export interface SnippetRow {
 const CAP_URL = '/api/prism/capabilities';
 const SNIP_URL = '/api/prism/snippets';
 
+// Per-surface SEQUENTIAL search chain: a live-typing field must never fire
+// concurrent requests (that overloads the dev route + races on which response
+// wins). Every search links onto the surface's chain so requests run one at a
+// time; each run checks it is still the latest-requested query (the surface's
+// *Query field, set synchronously at call time) before fetching AND before
+// applying — so intermediate keystrokes skip entirely and only the latest query
+// fetches + applies. Callers can await their own run for a reliable result.
+let fnChain: Promise<void> = Promise.resolve();
+let platformChain: Promise<void> = Promise.resolve();
+let dataChain: Promise<void> = Promise.resolve();
+
 async function capPost(body: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   try {
     const res = await fetch(CAP_URL, {
@@ -160,14 +171,18 @@ export const useCapabilityStore = create<CapabilityState>((set, get) => ({
   fnLive: false,
   searchActions: async (q) => {
     set({ fnQuery: q });
-    const data = await capPost({ op: 'searchActions', query: q.trim() });
-    if (!data) return;
-    if (get().fnQuery !== q) return; // a newer query superseded this one
-    set({
-      fnResults: (data.tiles as ActionTileDescriptor[]) ?? [],
-      fnLive: !!data.live,
-      fnProviderId: (data.provider as string) ?? 'mcp',
+    const run = fnChain.then(async () => {
+      if (get().fnQuery !== q) return; // a newer query was requested after this one
+      const data = await capPost({ op: 'searchActions', query: q.trim() });
+      if (get().fnQuery !== q || !data) return; // superseded while fetching, or failed
+      set({
+        fnResults: (data.tiles as ActionTileDescriptor[]) ?? [],
+        fnLive: !!data.live,
+        fnProviderId: (data.provider as string) ?? 'mcp',
+      });
     });
+    fnChain = run.catch(() => {});
+    await run;
   },
 
   intQuery: '',
@@ -177,24 +192,29 @@ export const useCapabilityStore = create<CapabilityState>((set, get) => ({
   assetsByPlatform: {},
   searchPlatforms: async (q) => {
     set({ intQuery: q });
-    const data = await capPost({ op: 'searchPlatforms', query: q.trim() });
-    if (!data) return;
-    if (get().intQuery !== q) return;
-    set({
-      intPlatforms: (data.platforms as PlatformDescriptor[]) ?? [],
-      intLive: !!data.live,
+    const run = platformChain.then(async () => {
+      if (get().intQuery !== q) return;
+      const data = await capPost({ op: 'searchPlatforms', query: q.trim() });
+      if (get().intQuery !== q || !data) return;
+      set({ intPlatforms: (data.platforms as PlatformDescriptor[]) ?? [], intLive: !!data.live });
     });
+    platformChain = run.catch(() => {});
+    await run;
   },
 
   dataQuery: '',
   dataPlatforms: [],
   searchDataPlatforms: async (q) => {
     set({ dataQuery: q });
-    const data = await capPost({ op: 'searchPlatforms', query: q.trim() });
-    if (!data) return;
-    if (get().dataQuery !== q) return;
-    const all = (data.platforms as PlatformDescriptor[]) ?? [];
-    set({ dataPlatforms: all.filter((p) => !p.category || DATA_CATEGORIES.has(p.category)) });
+    const run = dataChain.then(async () => {
+      if (get().dataQuery !== q) return;
+      const data = await capPost({ op: 'searchPlatforms', query: q.trim() });
+      if (get().dataQuery !== q || !data) return;
+      const all = (data.platforms as PlatformDescriptor[]) ?? [];
+      set({ dataPlatforms: all.filter((p) => !p.category || DATA_CATEGORIES.has(p.category)) });
+    });
+    dataChain = run.catch(() => {});
+    await run;
   },
 
   snippets: [],

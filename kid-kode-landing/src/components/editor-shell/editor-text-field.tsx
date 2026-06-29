@@ -33,6 +33,9 @@ interface FieldEntry {
   getValue: () => string;
   getWorld: () => [number, number, number];
   label: string;
+  /** Search-style fields seed an EMPTY buffer on focus (fresh entry) instead of
+   *  the current value, so clicking + typing starts a new query/name. */
+  seedEmpty?: boolean;
 }
 const fieldRegistry = new Map<string, FieldEntry>();
 
@@ -54,7 +57,7 @@ export function focusField(id: string): void {
   const entry = fieldRegistry.get(id);
   if (!entry) return;
   commitFocusedField();
-  useNodeEditorStore.getState().beginEdit(id, entry.getValue());
+  useNodeEditorStore.getState().beginEdit(id, entry.seedEmpty ? '' : entry.getValue());
 }
 
 /** Snapshot of all live fields for the headless verification pass. */
@@ -81,6 +84,7 @@ export function GlassTextField({
   height = 0.4,
   placeholder = '—',
   tint = '#9fd0ff',
+  seedEmpty = false,
 }: {
   id: string;
   label: string;
@@ -91,6 +95,7 @@ export function GlassTextField({
   height?: number;
   placeholder?: string;
   tint?: string;
+  seedEmpty?: boolean;
 }) {
   const focused = useNodeEditorStore((s) => s.focusedFieldId === id);
   const buffer = useNodeEditorStore((s) => s.buffer);
@@ -98,11 +103,17 @@ export function GlassTextField({
   const caret = useRef(true);
 
   // keep the registry entry fresh without re-registering each render: refs hold
-  // the latest value/commit so the keyboard listener + probe see current data.
+  // the latest value/commit/position so the keyboard listener + probe see current
+  // data. CRITICAL: the registration effect must NOT depend on `position` (a new
+  // array literal each render) — otherwise a parent re-render mid-typing (e.g. a
+  // live search updating results) tears the field down + re-registers it, which
+  // BLURS the focused field and drops keystrokes. Register once; read via refs.
   const valueRef = useRef(value);
   const commitRef = useRef(onCommit);
+  const positionRef = useRef(position);
   valueRef.current = value;
   commitRef.current = onCommit;
+  positionRef.current = position;
 
   useEffect(() => {
     fieldRegistry.set(id, {
@@ -110,19 +121,20 @@ export function GlassTextField({
       getValue: () => valueRef.current ?? '',
       getWorld: () => {
         const m = slotRef.current;
-        if (!m) return position;
+        if (!m) return positionRef.current;
         const v = new THREE.Vector3();
         m.getWorldPosition(v);
         return [v.x, v.y, v.z];
       },
       label,
+      seedEmpty,
     });
     return () => {
       // if this field is unmounting while focused, drop focus cleanly.
       if (useNodeEditorStore.getState().focusedFieldId === id) useNodeEditorStore.getState().blur();
       fieldRegistry.delete(id);
     };
-  }, [id, label, position]);
+  }, [id, label, seedEmpty]);
 
   // caret blink (only matters while focused).
   useFrame((state) => {

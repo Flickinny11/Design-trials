@@ -1,8 +1,9 @@
 // PRISM NODE-EDITOR V2 — aggregator adapter STUBS (D1). Server-only.
-// Pipedream / Composio / Nango are alternative CapabilityProvider backends to
-// the MCP reference adapter. Shipped as TYPED STUBS: each documents the live SDK
-// + verified June-2026 version, and signals "not configured" until wired.
+// Pipedream / Composio are alternative CapabilityProvider backends to the MCP
+// reference adapter. Shipped as TYPED STUBS: each documents the live SDK +
+// verified June-2026 version, and signals "not configured" until wired.
 // Choosing one later is a config change — NO UI rework (INV-NEV2-4, D1).
+// (Nango is no longer a stub — it has a REAL gated adapter in ./nango-adapter.ts.)
 import 'server-only';
 import type {
   CapabilityProvider,
@@ -44,8 +45,7 @@ export class ComposioAdapter extends AggregatorStub {
   readonly sdk = { pkg: '@composio/core', version: '0.10.0', env: 'COMPOSIO_API_KEY' };
 }
 
-/** Nango — OSS, self-hostable, 400+ providers, full control. */
-export class NangoAdapter extends AggregatorStub {
-  readonly id = 'nango';
-  readonly sdk = { pkg: 'nango', version: '0.70.6', env: 'NANGO_SECRET_KEY' };
-}
+// NOTE: the Nango adapter is no longer a stub — it is a REAL, build-safe, GATED
+// CapabilityProvider implementation living in `./nango-adapter.ts` (W-2). The
+// factory in `capability-provider.ts` selects it only when NANGO_SECRET_KEY is
+// set, otherwise it falls back to the MCP reference adapter.

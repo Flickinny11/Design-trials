@@ -120,6 +120,46 @@ function matchScore(q: string, ...fields: string[]): number {
   return best;
 }
 
+// CAPABILITY-FIRST intent layer (D1): a user types what they want to DO
+// ("store signups", "send email", "charge a card") — not a provider name. We map
+// intent words to the catalog's category taxonomy so a verb surfaces the right
+// real providers even when no literal keyword matches. Offline equivalent of the
+// live aggregator's semantic search; the Nango live path does this server-side.
+const INTENT_CATEGORIES: Record<string, string[]> = {
+  store: ['Data'], save: ['Data'], persist: ['Data'], database: ['Data'], db: ['Data'], data: ['Data'],
+  signup: ['Data'], signups: ['Data'], user: ['Data'], users: ['Data'], record: ['Data'], records: ['Data'],
+  table: ['Data'], row: ['Data'], collection: ['Data'], document: ['Data'], form: ['Data'],
+  email: ['Comms'], mail: ['Comms'], sms: ['Comms'], text: ['Comms'], message: ['Comms'], notify: ['Comms'],
+  notification: ['Comms'], chat: ['Comms'], dm: ['Comms'],
+  charge: ['Payments'], pay: ['Payments'], payment: ['Payments'], card: ['Payments'], checkout: ['Payments'],
+  bill: ['Payments'], billing: ['Payments'], invoice: ['Payments'], subscription: ['Payments'], subscribe: ['Payments'],
+  generate: ['AI'], image: ['AI'], video: ['AI'], model: ['AI'], ai: ['AI'], completion: ['AI'], llm: ['AI'],
+  embed: ['AI'], embedding: ['AI'], prompt: ['AI'], inference: ['AI'],
+  gpu: ['Compute'], compute: ['Compute'], pod: ['Compute'], serverless: ['Compute'], job: ['Compute'],
+  train: ['Compute'], function: ['Compute'],
+  order: ['Commerce'], shop: ['Commerce'], sell: ['Commerce'], product: ['Commerce'], cart: ['Commerce'],
+  issue: ['Dev'], repo: ['Dev'], pr: ['Dev'], deploy: ['Dev'], workflow: ['Dev'], commit: ['Dev'], branch: ['Dev'],
+  bucket: ['Infra'], storage: ['Infra'], cdn: ['Infra'], dns: ['Infra'], worker: ['Infra'], kv: ['Infra'],
+};
+
+function intentCategories(q: string): Set<string> {
+  const out = new Set<string>();
+  for (const tok of q.trim().toLowerCase().split(/\s+/)) {
+    const cats = INTENT_CATEGORIES[tok];
+    if (cats) for (const c of cats) out.add(c);
+  }
+  return out;
+}
+
+// Combined relevance: the literal keyword score OR an intent-category match
+// (so "store signups" surfaces every Data provider/action, not only literal hits).
+function intentScore(q: string, category: string | undefined, ...fields: string[]): number {
+  const literal = matchScore(q, ...fields);
+  const cats = intentCategories(q);
+  const intent = category && cats.has(category) ? 2 : 0;
+  return Math.max(literal, intent);
+}
+
 export class McpReferenceAdapter implements CapabilityProvider {
   readonly id = 'mcp';
   readonly live: boolean;
@@ -138,7 +178,7 @@ export class McpReferenceAdapter implements CapabilityProvider {
   }
 
   async searchActions(query: string, limit = 24): Promise<ActionTileDescriptor[]> {
-    return ACTIONS.map((a) => ({ a, s: matchScore(query, a.label, a.platform, a.category ?? '', a.description ?? '', a.actionId) }))
+    return ACTIONS.map((a) => ({ a, s: intentScore(query, a.category, a.label, a.platform, a.category ?? '', a.description ?? '', a.actionId) }))
       .filter((x) => x.s > 0)
       .sort((x, y) => y.s - x.s)
       .slice(0, limit)
@@ -166,7 +206,7 @@ export class McpReferenceAdapter implements CapabilityProvider {
   }
 
   async searchPlatforms(query: string, limit = 24): Promise<PlatformDescriptor[]> {
-    return PLATFORMS.map((p) => ({ p, s: matchScore(query, p.platform, p.category ?? '', p.description ?? '', p.platformId) }))
+    return PLATFORMS.map((p) => ({ p, s: intentScore(query, p.category, p.platform, p.category ?? '', p.description ?? '', p.platformId) }))
       .filter((x) => x.s > 0)
       .sort((x, y) => y.s - x.s)
       .slice(0, limit)
