@@ -1,0 +1,109 @@
+{
+  "nodeId": "orr-arrival-headline",
+  "pEdit": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "WS-W1 SYNC PROOF",
+    "event": "",
+    "effect": "",
+    "emits": [
+      "click",
+      "submit",
+      "hover"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {}
+  },
+  "lab": {
+    "selectedId": "orr-arrival-headline",
+    "view": "canvas",
+    "caption": "WS-W1 SYNC PROOF",
+    "visible": true
+  },
+  "pExt": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "WS-W1 EXTERNAL EDIT",
+    "event": "",
+    "effect": "",
+    "emits": [
+      "click",
+      "submit",
+      "hover"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {}
+  },
+  "labExt": {
+    "selectedId": "orr-arrival-headline",
+    "view": "canvas",
+    "caption": "WS-W1 EXTERNAL EDIT",
+    "visible": true
+  },
+  "pReload": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "WS-W1 SYNC PROOF",
+    "event": "",
+    "effect": "",
+    "emits": [
+      "click",
+      "submit",
+      "hover"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {}
+  },
+  "consoleErrors": 0,
+  "results": [
+    {
+      "name": "live-caption-edit",
+      "pass": true,
+      "detail": "caption=\"WS-W1 SYNC PROOF\""
+    },
+    {
+      "name": "live-behavior-edit",
+      "pass": true,
+      "detail": "emits=[\"click\",\"submit\",\"hover\"]"
+    },
+    {
+      "name": "live-schema-edit",
+      "pass": true,
+      "detail": "inputs={\"email\":\"string\",\"attempts\":\"number\"}"
+    },
+    {
+      "name": "sync-node-editor-to-canvas",
+      "pass": true,
+      "detail": "label.caption=\"WS-W1 SYNC PROOF\" visible=true"
+    },
+    {
+      "name": "sync-canvas-to-node-editor",
+      "pass": true,
+      "detail": "nodeEditor=\"WS-W1 EXTERNAL EDIT\" label=\"WS-W1 EXTERNAL EDIT\""
+    },
+    {
+      "name": "save-flushes-dirty",
+      "pass": true,
+      "detail": "dirty true->false, save.ok=true"
+    },
+    {
+      "name": "reload-round-trip",
+      "pass": true,
+      "detail": "caption=true emits=true inputs=true"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

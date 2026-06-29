@@ -27,6 +27,7 @@ import { EditorGizmo } from './EditorGizmo';
 import { EditorConnectors } from './EditorConnectors';
 import { EditorModeSwitch } from './EditorModeSwitch';
 import { EditorSaveControl } from './EditorSaveControl';
+import { SelectedCaptionLabel } from './editor-node-editor';
 import {
   useEditorShellStore,
   allGraphNodes,
@@ -243,6 +244,7 @@ export function EditorShellScene() {
       <EditorGraphViewport />
       <EditorConnectors />
       <SelectionOverlay />
+      <SelectedCaptionLabel />
       <EditorGizmo />
       <EditorDocks />
       <EditorToolbarDock />

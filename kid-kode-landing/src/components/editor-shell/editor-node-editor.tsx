@@ -19,6 +19,9 @@
 // Editor CHROME (not a graph node — no prismEditorNode tag), so the
 // node-authorship gate ignores it. Window access is the editor-chrome exemption.
 
+import { useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import type {
   PrismNode,
@@ -161,6 +164,10 @@ export function installNodeEditorProbe(): () => void {
       commitFocusedField();
     },
     purpose: () => purposeOf(useEditorShellStore.getState().selectedId),
+    // VICE-VERSA sync proof: an external surface (canvas/clone/etc.) writes the
+    // caption straight to the shared store; the node editor + the in-canvas label
+    // must both reflect it because they read the same store (INV-W8).
+    extSetCaption: (id: string, text: string) => writeIntent(id, { caption: text }),
   };
   return () => {
     delete w.__PRISM_EDITOR_NODE_EDITOR__;
@@ -234,6 +241,74 @@ export function EditorNodeEditor({ position }: { position: [number, number, numb
         {(node.subtype ?? 'NODE').toString().toUpperCase().slice(0, 26)}
       </CompositeText>
       {els}
+    </group>
+  );
+}
+
+// ── the in-canvas SYNC proof (INV-W8) ────────────────────────────────────────
+// A bright MSDF caption floating above the SELECTED node in canvas, reading the
+// node's LIVE caption from the SAME shared store the node editor writes. Editing
+// the CAPTION field in the node editor updates this label in the canvas (and any
+// external change to the caption updates both) — one store, every surface reads
+// it. Scene-level + immune to the FitGroup scale (tracks the node's world bbox
+// each frame, like SelectionOverlay). Editor CHROME — NOT tagged prismEditorNode.
+function nodeGroupsMap(): Map<string, THREE.Object3D> | null {
+  if (typeof window === 'undefined') return null;
+  const w = window as unknown as { __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D> };
+  return w.__PRISM_EDITOR_NODE_GROUPS__ ?? null;
+}
+
+export function SelectedCaptionLabel() {
+  const selectedId = useEditorShellStore((s) => s.selectedId);
+  const view = useEditorShellStore((s) => s.view);
+  const caption = useGraphSourceStore((s) => {
+    const n = selectedId ? s.nodes.find((x) => x.nodeId === selectedId) : null;
+    return n?.intent?.caption ?? '';
+  });
+  const groupRef = useRef<THREE.Group>(null);
+  const box = useMemo(() => new THREE.Box3(), []);
+  const center = useMemo(() => new THREE.Vector3(), []);
+  const size = useMemo(() => new THREE.Vector3(), []);
+  const text = caption.trim().slice(0, 30) || '(unnamed)';
+
+  // publish the label state for the headless sync proof (editor chrome).
+  if (typeof window !== 'undefined') {
+    (window as unknown as Record<string, unknown>).__PRISM_EDITOR_CAPTION_LABEL__ = () => {
+      const g = groupRef.current;
+      return {
+        selectedId: useEditorShellStore.getState().selectedId,
+        view: useEditorShellStore.getState().view,
+        caption,
+        visible: !!g?.visible,
+      };
+    };
+  }
+
+  useFrame(() => {
+    const g = groupRef.current;
+    if (!g) return;
+    const map = nodeGroupsMap();
+    const target = selectedId && view === 'canvas' ? map?.get(selectedId) : null;
+    if (!target || !target.parent || !caption.trim()) {
+      g.visible = false;
+      return;
+    }
+    box.setFromObject(target, true);
+    if (box.isEmpty()) {
+      g.visible = false;
+      return;
+    }
+    box.getCenter(center);
+    box.getSize(size);
+    g.visible = true;
+    g.position.set(center.x, center.y + Math.max(size.y, 0.3) / 2 + 0.5, center.z);
+  });
+
+  return (
+    <group ref={groupRef} visible={false} renderOrder={22}>
+      <CompositeText fontSize={0.42} variant="bright">
+        {text}
+      </CompositeText>
     </group>
   );
 }
