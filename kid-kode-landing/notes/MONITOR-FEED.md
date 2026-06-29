@@ -607,3 +607,73 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [11:31:47] CHAIN/EDIT-I2: still building · 39m elapsed · agent up · 1003 commits · last: AUTO-CKPT: EDIT-I2 w-library — the REAL /library palette is DOCKED into 
 [11:35:18] CHAIN/EDIT-I2: still building · 42m elapsed · agent up · 1003 commits · last: AUTO-CKPT: EDIT-I2 w-library — the REAL /library palette is DOCKED into 
 [11:38:49] CHAIN/EDIT-I2: still building · 46m elapsed · agent up · 1003 commits · last: AUTO-CKPT: EDIT-I2 w-library — the REAL /library palette is DOCKED into 
+[11:40:19] CHAIN/EDIT-I2: commit 88987446 — AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:42:34] CHAIN/EDIT-I2: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[11:42:35] CHAIN/EDIT-I3: ARMED — watching EDIT-I3. Pinging on every commit, heartbeat, stop, and finish.
+[11:43:24] CHAIN/EDIT-I3: launched build agent on claude-opus-4-8 (resume #1)
+[11:46:55] CHAIN/EDIT-I3: still building · 4m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:50:25] CHAIN/EDIT-I3: still building · 7m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:53:56] CHAIN/EDIT-I3: still building · 11m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[11:57:26] CHAIN/EDIT-I3: still building · 14m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[12:00:57] CHAIN/EDIT-I3: still building · 18m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[12:04:28] CHAIN/EDIT-I3: still building · 21m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[12:07:58] CHAIN/EDIT-I3: still building · 25m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[12:11:29] CHAIN/EDIT-I3: still building · 28m elapsed · agent up · 1004 commits · last: AUTO-CKPT: EDIT-I2 w-verify — HEADLESS behavioral verification + 3 fresh
+[12:14:59] CHAIN/EDIT-I3: still building · 32m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:15:00] CHAIN/EDIT-I3: commit e8b96286 — AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:18:30] CHAIN/EDIT-I3: still building · 35m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:22:01] CHAIN/EDIT-I3: still building · 39m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:25:32] CHAIN/EDIT-I3: still building · 42m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:29:02] CHAIN/EDIT-I3: still building · 46m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:32:33] CHAIN/EDIT-I3: still building · 49m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:36:03] CHAIN/EDIT-I3: still building · 53m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:39:34] CHAIN/EDIT-I3: still building · 56m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:43:05] CHAIN/EDIT-I3: still building · 60m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:46:35] CHAIN/EDIT-I3: still building · 64m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:50:06] CHAIN/EDIT-I3: still building · 67m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:53:36] CHAIN/EDIT-I3: still building · 71m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:57:07] CHAIN/EDIT-I3: still building · 74m elapsed · agent up · 1005 commits · last: AUTO-CKPT: EDIT-I3 w-inspector — the docked INSPECTOR edits the SELECTED
+[12:59:37] CHAIN/EDIT-I3: commit ac82804f — AUTO-CKPT: EDIT-I3 w-manip — canvas MANIPULATION (gizmo + stack/connect/
+[13:00:37] CHAIN/EDIT-I3: still building · 78m elapsed · agent up · 1006 commits · last: AUTO-CKPT: EDIT-I3 w-manip — canvas MANIPULATION (gizmo + stack/connect/
+[13:04:08] CHAIN/EDIT-I3: still building · 81m elapsed · agent up · 1006 commits · last: AUTO-CKPT: EDIT-I3 w-manip — canvas MANIPULATION (gizmo + stack/connect/
+[13:07:39] CHAIN/EDIT-I3: still building · 85m elapsed · agent up · 1006 commits · last: AUTO-CKPT: EDIT-I3 w-manip — canvas MANIPULATION (gizmo + stack/connect/
+[13:10:09] CHAIN/EDIT-I3: commit 6f8546d4 — AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:11:09] CHAIN/EDIT-I3: still building · 88m elapsed · agent up · 1007 commits · last: AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:14:40] CHAIN/EDIT-I3: still building · 92m elapsed · agent up · 1007 commits · last: AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:18:10] CHAIN/EDIT-I3: still building · 95m elapsed · agent up · 1007 commits · last: AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:21:41] CHAIN/EDIT-I3: still building · 99m elapsed · agent up · 1007 commits · last: AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:25:12] CHAIN/EDIT-I3: still building · 102m elapsed · agent up · 1007 commits · last: AUTO-CKPT: EDIT-I3 w-keyframe — the docked KEYFRAME panel animates the S
+[13:26:42] CHAIN/EDIT-I3: commit d041a36c — AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:28:43] CHAIN/EDIT-I3: still building · 106m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:29:28] CHAIN/EDIT-I3: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[13:29:29] CHAIN/EDIT-I4: ARMED — watching EDIT-I4. Pinging on every commit, heartbeat, stop, and finish.
+[13:30:17] CHAIN/EDIT-I4: launched build agent on claude-opus-4-8 (resume #1)
+[13:33:48] CHAIN/EDIT-I4: still building · 4m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:37:19] CHAIN/EDIT-I4: still building · 7m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:40:49] CHAIN/EDIT-I4: still building · 11m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:44:20] CHAIN/EDIT-I4: still building · 14m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:47:50] CHAIN/EDIT-I4: still building · 18m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:51:21] CHAIN/EDIT-I4: still building · 21m elapsed · agent up · 1008 commits · last: AUTO-CKPT: EDIT-I3 w-verify — HEADLESS end-to-end + 3 fresh-context judg
+[13:52:21] CHAIN/EDIT-I4: commit 827c291b — AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[13:54:52] CHAIN/EDIT-I4: still building · 25m elapsed · agent up · 1009 commits · last: AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[13:58:22] CHAIN/EDIT-I4: still building · 28m elapsed · agent up · 1009 commits · last: AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[14:01:53] CHAIN/EDIT-I4: still building · 32m elapsed · agent up · 1009 commits · last: AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[14:05:23] CHAIN/EDIT-I4: still building · 35m elapsed · agent up · 1009 commits · last: AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[14:08:54] CHAIN/EDIT-I4: still building · 39m elapsed · agent up · 1009 commits · last: AUTO-CKPT: EDIT-I4 w-persist — visible SAVE control + dirty/saved status
+[14:11:54] CHAIN/EDIT-I4: commit b329f448 — AUTO-CKPT: EDIT-I4 w-preview — PREVIEW renders the running app + header/
+[14:12:25] CHAIN/EDIT-I4: still building · 42m elapsed · agent up · 1010 commits · last: AUTO-CKPT: EDIT-I4 w-preview — PREVIEW renders the running app + header/
+[14:15:55] CHAIN/EDIT-I4: still building · 46m elapsed · agent up · 1010 commits · last: AUTO-CKPT: EDIT-I4 w-preview — PREVIEW renders the running app + header/
+[14:19:26] CHAIN/EDIT-I4: still building · 49m elapsed · agent up · 1010 commits · last: AUTO-CKPT: EDIT-I4 w-preview — PREVIEW renders the running app + header/
+[14:22:56] CHAIN/EDIT-I4: still building · 53m elapsed · agent up · 1010 commits · last: AUTO-CKPT: EDIT-I4 w-preview — PREVIEW renders the running app + header/
+[14:24:57] CHAIN/EDIT-I4: commit 82989abd — AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[14:26:27] CHAIN/EDIT-I4: still building · 56m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[14:27:12] CHAIN/EDIT-I4: COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[02:03:55] CHAIN/WS-W1: ARMED — watching WS-W1. Pinging on every commit, heartbeat, stop, and finish.
+[02:04:43] CHAIN/WS-W1: launched build agent on claude-opus-4-8 (resume #1)
+[02:08:14] CHAIN/WS-W1: still building · 4m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:11:44] CHAIN/WS-W1: still building · 7m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:15:15] CHAIN/WS-W1: still building · 11m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:18:46] CHAIN/WS-W1: still building · 14m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:22:16] CHAIN/WS-W1: still building · 18m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:25:47] CHAIN/WS-W1: still building · 21m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-
+[02:29:17] CHAIN/WS-W1: still building · 25m elapsed · agent up · 1011 commits · last: AUTO-CKPT: EDIT-I4 w-verify — THE BIG end-to-end pass (12/12) + 3 fresh-

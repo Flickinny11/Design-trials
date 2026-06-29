@@ -134,3 +134,15 @@ The 2026-06-05 precedence ladder (§1), supersession table (§3), and move list 
 ---
 
 *End of SPEC-INDEX.md*
+
+---
+
+## 10. ADDENDUM — 2026-06-27 Workspace Completion
+
+| Doc | Tier placement | Note |
+|---|---|---|
+| `PRISM-WORKSPACE-COMPLETION-SPEC.md` (2026-06-27) | **1 — Canonical (additive); SUPERSEDES PRISM-EDITOR-INTEGRATION-SPEC for the workspace** | The build-truth spec to FINISH the prototype workspace (the right-hand half of the AI app builder: galaxy=directory, canvas=manual file-editing, node-editor=functionality, preview=running app). Carries the completeness MAP (§0), the COLD-NODE foundation (INV-W3), and the unified per-node AGENT (§3: prompt-edit ≡ self-healing — one model-agnostic, vision-verifying, streaming-chat engine, two triggers). Phasing W-1..W-5 (§6). Boundary: excludes the generation engine, the left-side chat/dashboard, and deploy-to-URL. Defers runtime-truth to the canonical ruler + canonical-3. |
+
+---
+
+*End of SPEC-INDEX.md*

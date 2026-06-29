@@ -30,6 +30,14 @@ export type EditorMode = 'idle' | 'transform';
 // I-3 MANIPULATION: the canvas transform-gizmo mode (move/rotate/scale).
 export type GizmoMode = 'move' | 'rotate' | 'scale';
 
+// WS-W1 NODE EDITOR: the right-dock surface tab. 'node' = the per-node PURPOSE
+// surface (caption/behavior/schema — the in-engine node editor); 'visual' = the
+// canvas property inspector (geometry/material/scale faders). The node editor is
+// purpose-only (no visual-editor mode — C2); the two are distinct surfaces that
+// share the right glass dock, switched by a tab. Default 'node' (the workspace
+// node editor is the docked surface a selection opens).
+export type InspectorTab = 'node' | 'visual';
+
 const BACKDROPS: EditorBackdrop[] = ['studio', 'noir', 'warm'];
 const LIGHTINGS: EditorLighting[] = ['studio', 'cool', 'warm'];
 
@@ -46,6 +54,9 @@ interface EditorShellState {
   connectMode: boolean;
   pendingConnectFrom: string | null;
   snapEnabled: boolean;
+  // WS-W1 — which right-dock surface is showing (node editor vs visual inspector).
+  inspectorTab: InspectorTab;
+  setInspectorTab: (t: InspectorTab) => void;
   setView: (v: EditorShellView) => void;
   setActiveHub: (hubId: string | null) => void;
   select: (id: string | null) => void;
@@ -72,6 +83,8 @@ export const useEditorShellStore = create<EditorShellState>((set) => ({
   connectMode: false,
   pendingConnectFrom: null,
   snapEnabled: true,
+  inspectorTab: 'node',
+  setInspectorTab: (inspectorTab) => set({ inspectorTab }),
   setView: (view) => set({ view }),
   setActiveHub: (activeHubId) => set({ activeHubId }),
   select: (selectedId) => set({ selectedId }),

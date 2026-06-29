@@ -1,18 +1,77 @@
 'use client';
 
-// PRISM EDITOR INTEGRATION — I-3: the INSPECTOR, docked.
+// PRISM WORKSPACE COMPLETION — W-1: the right glass dock, now a TABBED surface.
 //
-// Mounts the real in-canvas Inspector (full-schema editing, live) into the right
-// INSPECTOR dock zone whose glass frame + label are drawn by EditorDocks. The
-// controls sit just in front of that pane and edit the SELECTED node's schema on
-// the live app graph. Editor CHROME (not a graph node) — not tagged
-// prismEditorNode, so the node-authorship gate ignores it.
+// Two distinct surfaces share the right INSPECTOR dock, switched by a worn-cube
+// tab pair at the top of the pane:
+//   • NODE   — the in-engine NODE EDITOR (the per-node PURPOSE surface: caption /
+//              behavior / schema). Purpose-only: it shows the node in its
+//              in-built state (data / meaning), NEVER a visual-editor mode (C2 /
+//              anchor F7). This is the W-1 deliverable.
+//   • VISUAL — the existing canvas property inspector (geometry / material /
+//              scale faders + tint + slot). Unchanged; visual editing stays in
+//              canvas (EDIT-I3/I4).
+// Both edit the SELECTED node on the live app graph; both are editor CHROME (not
+// tagged prismEditorNode). NodeEditorKeyboard (the single window-keydown capture
+// for the glass text fields) mounts here once.
 
+import { useEffect } from 'react';
+import { useWornMaps } from '@/components/editor/chassis/materials';
+import { CompositeChip } from '@/components/editor/composite/CompositeChip';
 import { EditorInspector } from './editor-inspector';
+import { EditorNodeEditor, installNodeEditorProbe } from './editor-node-editor';
+import { NodeEditorKeyboard } from './editor-text-field';
+import { useEditorShellStore } from './use-editor-shell-store';
 
 // Matches the INSPECTOR dock placement in EditorDock.tsx.
 export const INSPECTOR_DOCK_POS: [number, number, number] = [11.7, -0.1, 1.0];
+// drop the active surface below the tab switch so the tabs have clear air.
+const CONTENT_DROP = 0.55;
 
 export function EditorInspectorDock() {
-  return <EditorInspector position={INSPECTOR_DOCK_POS} />;
+  const tab = useEditorShellStore((s) => s.inspectorTab);
+  const maps = useWornMaps();
+  const gun = maps['gunmetal'];
+  const [bx, by, bz] = INSPECTOR_DOCK_POS;
+  const contentPos: [number, number, number] = [bx, by - CONTENT_DROP, bz];
+
+  // install the node-editor headless probe once (survives tab switches).
+  useEffect(() => installNodeEditorProbe(), []);
+
+  return (
+    <>
+      {/* the single keyboard capture for the in-engine glass text fields */}
+      <NodeEditorKeyboard />
+
+      {/* NODE / VISUAL tab switch (worn cubes) at the top of the dock */}
+      {gun && (
+        <group position={[bx, by + 3.92, bz + 0.2]}>
+          <CompositeChip
+            maps={gun}
+            position={[-0.62, 0, 0]}
+            size={0.34}
+            label="NODE"
+            active={tab === 'node'}
+            tint={tab === 'node' ? '#9fd0ff' : undefined}
+            onClick={() => useEditorShellStore.getState().setInspectorTab('node')}
+          />
+          <CompositeChip
+            maps={gun}
+            position={[0.62, 0, 0]}
+            size={0.34}
+            label="VISUAL"
+            active={tab === 'visual'}
+            tint={tab === 'visual' ? '#caa06a' : undefined}
+            onClick={() => useEditorShellStore.getState().setInspectorTab('visual')}
+          />
+        </group>
+      )}
+
+      {tab === 'node' ? (
+        <EditorNodeEditor position={contentPos} />
+      ) : (
+        <EditorInspector position={contentPos} />
+      )}
+    </>
+  );
 }
