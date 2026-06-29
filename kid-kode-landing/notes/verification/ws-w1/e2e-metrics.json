@@ -1,0 +1,122 @@
+{
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "nodeId": "orr-arrival-headline",
+  "capBefore": "Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.",
+  "capAfter": "Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement. USEREDIT",
+  "pEdit": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement. USEREDIT",
+    "event": "click",
+    "effect": "open detail overlay",
+    "emits": [
+      "click",
+      "submit"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {
+      "ok": "boolean"
+    }
+  },
+  "pExt": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "WS-W1 RT FINAL",
+    "event": "click",
+    "effect": "open detail overlay",
+    "emits": [
+      "click",
+      "submit"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {
+      "ok": "boolean"
+    }
+  },
+  "pRe": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "WS-W1 RT FINAL",
+    "event": "click",
+    "effect": "open detail overlay",
+    "emits": [
+      "click",
+      "submit"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "attempts": "number"
+    },
+    "outputs": {
+      "ok": "boolean"
+    }
+  },
+  "consoleErrors": 0,
+  "checks": "11/11",
+  "results": [
+    {
+      "name": "select-opens-purpose-surface",
+      "pass": true,
+      "detail": "7 purpose fields"
+    },
+    {
+      "name": "node-editor-is-purpose-only",
+      "pass": true,
+      "detail": "purpose-only=true, visual-faders-on-node-tab=0"
+    },
+    {
+      "name": "trusted-click-focuses-field",
+      "pass": true,
+      "detail": "focusedId=ne:caption @(1462,397)"
+    },
+    {
+      "name": "trusted-keyboard-edits-caption",
+      "pass": true,
+      "detail": "\"Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.\" -> \"Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement. USEREDIT\""
+    },
+    {
+      "name": "edit-behavior-schema",
+      "pass": true,
+      "detail": "behavior=true schema=true"
+    },
+    {
+      "name": "sync-node-editor-to-canvas",
+      "pass": true,
+      "detail": "label=\"Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement. USEREDIT\" vis=true"
+    },
+    {
+      "name": "sync-canvas-to-node-editor",
+      "pass": true,
+      "detail": "nodeEditor=\"WS-W1 RT FINAL\" label=\"WS-W1 RT FINAL\""
+    },
+    {
+      "name": "tab-switch-node-visual",
+      "pass": true,
+      "detail": "visual-inspector=true back=node"
+    },
+    {
+      "name": "save-ok",
+      "pass": true,
+      "detail": "save.ok=true"
+    },
+    {
+      "name": "reload-round-trip-exact",
+      "pass": true,
+      "detail": "caption=\"WS-W1 RT FINAL\" emits=[\"click\",\"submit\"] inputs={\"email\":\"string\",\"attempts\":\"number\"}"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

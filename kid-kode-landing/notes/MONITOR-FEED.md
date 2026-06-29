@@ -680,3 +680,9 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [02:32:48] CHAIN/WS-W1: still building · 28m elapsed · agent up · 1012 commits · last: AUTO-CKPT: WS-W1 w-panel — in-engine glass NODE EDITOR docked in /editor
 [02:32:48] CHAIN/WS-W1: commit 1107f34a — AUTO-CKPT: WS-W1 w-panel — in-engine glass NODE EDITOR docked in /editor
 [02:36:19] CHAIN/WS-W1: still building · 32m elapsed · agent up · 1012 commits · last: AUTO-CKPT: WS-W1 w-panel — in-engine glass NODE EDITOR docked in /editor
+[02:38:49] CHAIN/WS-W1: commit 1ea60f1f — AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
+[02:39:49] CHAIN/WS-W1: still building · 35m elapsed · agent up · 1013 commits · last: AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
+[02:43:20] CHAIN/WS-W1: still building · 39m elapsed · agent up · 1013 commits · last: AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
+[02:46:50] CHAIN/WS-W1: still building · 42m elapsed · agent up · 1013 commits · last: AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
+[02:50:21] CHAIN/WS-W1: still building · 46m elapsed · agent up · 1013 commits · last: AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
+[02:53:51] CHAIN/WS-W1: still building · 49m elapsed · agent up · 1013 commits · last: AUTO-CKPT: WS-W1 w-purpose — purpose edits LIVE + SYNCED (both ways) + R
