@@ -47,6 +47,8 @@ import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverla
 import MagneticCursor from '@/components/editor/overlays/MagneticCursor';
 import GuidedTipsLightbulb from '@/components/editor/walkthrough/GuidedTipsLightbulb';
 import WalkthroughHost from '@/components/editor/walkthrough/WalkthroughHost';
+// WORKSPACE-COMPLETION W-3 — unified per-node agent entry (canvas only; additive).
+import NodeAgentPanel from '@/components/editor/node-agent/NodeAgentPanel';
 // EDITOR-EXP P7 (C32) — global Cmd+Z / Cmd+Shift+Z undo/redo keybinds.
 import HistoryKeybinds from '@/components/editor/history/HistoryKeybinds';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -876,6 +878,11 @@ export default function Page() {
           {/* GUIDED-TIPS — glowing help lightbulb + first-visit walkthrough. */}
           <GuidedTipsLightbulb />
           <WalkthroughHost />
+          {/* WORKSPACE-COMPLETION W-3 — unified per-node agent. Self-gates to
+              canvas + a selected node (editing is in canvas, never preview); it
+              also installs the __PRISM_NODE_AGENT__ verification hook on mount.
+              Additive: no toolbar button, keyframe, or guided-tip behavior changes. */}
+          <NodeAgentPanel />
         </>
       )}
       {/* PHASE3 (P3-1) — the Phase-2 DOM-overlay curtain (HubMorphTransition,
