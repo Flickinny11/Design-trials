@@ -13,7 +13,8 @@ export type GalaxyNodeRole =
   | 'app-shell'
   | 'hit-target'
   | 'global-overlay'
-  | 'ambient-background';
+  | 'ambient-background'
+  | 'embedded-decoration';
 
 export interface GalaxySemanticNode {
   id?: string;
@@ -70,6 +71,21 @@ const HIT_TARGET_SUBTYPES = new Set([
   'nav-hit',
 ]);
 
+// Embedded decoration: pure visual-support fragments (legibility scrims, panel
+// chrome, hairline rail edges) that live *inside* a parent element. They are not
+// navigable UI elements, so — like ambient backgrounds — they are collapsed out
+// of the Galaxy overview entirely rather than surfaced as first-class spheres.
+// The runtime graph keeps them; Canvas/Preview still build them.
+const EMBEDDED_DECORATION_SUBTYPES = new Set([
+  'text-scrim',      // dark/soft legibility scrim behind copy
+  'spec-rail-edge',  // brass hairline along a spec-rail's edge
+  'panel-chrome',    // liquid-glass control-panel frame/chrome
+]);
+// Forward-compatible match for the same decoration families. Deliberately tight:
+// only *-scrim / *-chrome / *-underlay suffixes, so it never catches clustered
+// component fragments such as plate-frame-lip, cta-edge, or material-plate.
+const EMBEDDED_DECORATION_RE = /(?:^|[-_])(scrim|chrome|underlay)$/i;
+
 const AMBIENT_BACKGROUND_RE = /(?:^|[-_])(starfield|nebula|dust|motes|scatter|particle-field|background|backdrop|ambient)(?:$|[-_])/i;
 
 function getNodeId(node: GalaxySemanticNode): string {
@@ -94,6 +110,10 @@ export function getGalaxyNodeRole(node: GalaxySemanticNode): GalaxyNodeRole {
 
   if (AMBIENT_BACKGROUND_RE.test(subtype) || AMBIENT_BACKGROUND_RE.test(id)) {
     return 'ambient-background';
+  }
+
+  if (EMBEDDED_DECORATION_SUBTYPES.has(subtype) || EMBEDDED_DECORATION_RE.test(subtype)) {
+    return 'embedded-decoration';
   }
 
   if (node.globalSlot || id.startsWith('shell-') || APP_SHELL_SUBTYPES.has(subtype)) {
@@ -124,6 +144,37 @@ function ctaBase(id: string): string {
     .replace(/-(edge|slab|label)-f4bcta$/i, '')
     .replace(/-(slab|label|edge|button|button-secondary)$/i, '')
     .replace(/-f4bcta-(slab|label|edge)$/i, '-f4bcta');
+}
+
+// Human label for a CTA cluster. CTA nodes carry no editor textContent (the
+// button copy is baked into the artifact), so the label is derived from the id.
+// After stripping the app+hub prefix and the boilerplate cta/f4bcta/hero tokens,
+// a meaningful remainder (reserve, enquire, atelier) becomes "<Name> CTA";
+// an empty remainder (a section's sole primary button) becomes "Primary CTA".
+function ctaLabel(base: string): string {
+  const core = base
+    .replace(/^orr-[a-z0-9]+-/i, '')
+    .replace(/^hero-/i, '')
+    .replace(/f4bcta/gi, '')
+    .replace(/cta/gi, '')
+    .replace(/[-_]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  const name = titleCaseSlug(core);
+  return name ? `${name} CTA` : 'Primary CTA';
+}
+
+// Clean, per-element display name for a standalone Galaxy overview node. The
+// node id tail (after the "orr-<hub>-" app/hub prefix) is the element's human
+// name; the prefix is boilerplate the founder shouldn't have to read. Applied
+// only to Galaxy projection output — Canvas/Preview keep the original names.
+const TERSE_TAIL_LABELS: Record<string, string> = {
+  sub: 'Subhead',
+};
+function galaxyDisplayName(node: EditorNode): string {
+  const tail = node.id.replace(/^orr-[a-z0-9]+-/i, '');
+  const mapped = TERSE_TAIL_LABELS[tail.toLowerCase()];
+  const label = mapped ?? titleCaseSlug(tail);
+  return label || node.name;
 }
 
 function getClusterSpec(node: EditorNode): ClusterSpec | null {
@@ -160,7 +211,7 @@ function getClusterSpec(node: EditorNode): ClusterSpec | null {
     const base = ctaBase(id);
     return {
       key: `${hubId}:cta:${base}`,
-      label: `${titleCaseSlug(base.replace(/^orr-[a-z0-9]+-/i, '').replace(/^hero-/, ''))} CTA`,
+      label: ctaLabel(base),
       elementType: 'Call-to-action component',
       kind: 'cta',
     };
@@ -193,15 +244,10 @@ function getClusterSpec(node: EditorNode): ClusterSpec | null {
     };
   }
 
-  if (/^(text-scrim|spec-rail-edge|panel-chrome)$/i.test(subtype)) {
-    return {
-      key: `${hubId}:support-layers`,
-      label: 'Support layers',
-      elementType: 'Visual support cluster',
-      kind: 'support-layers',
-      minSize: 1,
-    };
-  }
+  // NOTE: text-scrim / spec-rail-edge / panel-chrome are no longer clustered
+  // here — they are classified as `embedded-decoration` by getGalaxyNodeRole and
+  // collapsed out of the overview before projection, so no "Support layers"
+  // sphere is produced.
 
   return null;
 }
@@ -254,14 +300,19 @@ export function getGalaxyOverviewProjection(nodes: readonly EditorNode[]): Galax
     bucket.children.push(node);
   }
 
+  const renameForGalaxy = (node: EditorNode): EditorNode => ({
+    ...node,
+    name: galaxyDisplayName(node),
+  });
+
   return entries.flatMap((entry) => {
     if ('children' in entry) {
       const minSize = entry.spec.minSize ?? 2;
       return entry.children.length >= minSize
         ? [makeClusterNode(entry.spec, entry.children)]
-        : entry.children;
+        : entry.children.map(renameForGalaxy);
     }
-    return [entry];
+    return [renameForGalaxy(entry)];
   });
 }
 
@@ -302,6 +353,7 @@ export function summarizeGalaxySemantics(nodes: readonly GalaxySemanticNode[]): 
     'hit-target': 0,
     'global-overlay': 0,
     'ambient-background': 0,
+    'embedded-decoration': 0,
   };
 
   for (const node of nodes) {

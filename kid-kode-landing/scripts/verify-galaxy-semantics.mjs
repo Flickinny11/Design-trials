@@ -34,6 +34,11 @@ const APP_SHELL_SUBTYPES = new Set([
   'footer-social',
 ]);
 const AMBIENT_BACKGROUND_RE = /(?:^|[-_])(starfield|nebula|dust|motes|scatter|particle-field|background|backdrop|ambient)(?:$|[-_])/i;
+// Embedded decoration — pure visual-support fragments inside a parent element.
+// Kept in the runtime graph (Canvas/Preview build them) but collapsed out of the
+// Galaxy overview, like ambient backgrounds. Mirrors galaxy-semantics.ts.
+const EMBEDDED_DECORATION_SUBTYPES = new Set(['text-scrim', 'spec-rail-edge', 'panel-chrome']);
+const EMBEDDED_DECORATION_RE = /(?:^|[-_])(scrim|chrome|underlay)$/i;
 
 function roleFor(node) {
   const id = node.nodeId ?? node.id ?? '';
@@ -41,6 +46,7 @@ function roleFor(node) {
   if (node.isGlobalElement || (!node.parentHubId && (!node.hubIds || node.hubIds.length === 0))) return 'global-overlay';
   if (subtype === 'nav-hit' || /(?:^|[-_])hit(?:$|[-_])/.test(subtype)) return 'hit-target';
   if (AMBIENT_BACKGROUND_RE.test(subtype) || AMBIENT_BACKGROUND_RE.test(id)) return 'ambient-background';
+  if (EMBEDDED_DECORATION_SUBTYPES.has(subtype) || EMBEDDED_DECORATION_RE.test(subtype)) return 'embedded-decoration';
   if (node.globalSlot || id.startsWith('shell-') || APP_SHELL_SUBTYPES.has(subtype)) return 'app-shell';
   return 'content';
 }
@@ -103,9 +109,8 @@ function clusterSpecFor(node) {
   if (/^orr-atelier-(price|summary|reason|price-eyebrow)/i.test(id)) {
     return { key: `${hubId}:atelier-summary`, minSize: 2 };
   }
-  if (/^(text-scrim|spec-rail-edge|panel-chrome)$/i.test(subtype)) {
-    return { key: `${hubId}:support-layers`, minSize: 1 };
-  }
+  // text-scrim / spec-rail-edge / panel-chrome are classified as
+  // embedded-decoration and never reach the overview, so no support-layers cluster.
   return null;
 }
 
@@ -177,6 +182,16 @@ assert('galaxy:backgrounds-are-hub-data', 'ambient star/dust/nebula backgrounds 
   const hubsWithBackground = hubs.filter((hub) => Array.isArray(hub.background) && hub.background.length > 0).length;
   if (hubsWithBackground === 0) throw new Error('no hub.background[] data found');
   return `${hubsWithBackground}/${hubs.length} hubs carry background layers`;
+});
+
+assert('galaxy:overview-excludes-decoration', 'embedded decoration (scrims, panel chrome, rail edges) is collapsed out of the overview — no "Support layers" spheres', () => {
+  const decorationNodes = nodes.filter((node) => roleFor(node) === 'embedded-decoration');
+  if (decorationNodes.length === 0) throw new Error('expected embedded-decoration nodes (scrims/chrome/edges) in current mock graph');
+  const leaked = overviewNodes.filter((node) => EMBEDDED_DECORATION_SUBTYPES.has(node.subtype ?? '') || EMBEDDED_DECORATION_RE.test(node.subtype ?? ''));
+  if (leaked.length) throw new Error(`decoration leaked into overview: ${leaked.map((n) => n.nodeId).slice(0, 12).join(', ')}`);
+  const supportClusters = projectedNodes.filter((node) => String(node.nodeId ?? '').includes(':support-layers'));
+  if (supportClusters.length) throw new Error(`support-layers cluster still projected: ${supportClusters.length}`);
+  return `${decorationNodes.length} decoration nodes collapsed (${decorationNodes.map((n) => n.subtype).filter((v, i, a) => a.indexOf(v) === i).join(', ')}); 0 leaked into overview`;
 });
 
 assert('galaxy:each-hub-has-overview-content', 'each page hub has at least one user-meaningful overview node', () => {
