@@ -103,3 +103,123 @@ drives the selected node in the canvas.
 
 > EARLY CHECKPOINT — direction set; before-frames captured. Building now. After frames,
 > gate + judge results follow below as the run proceeds.
+
+## 5. What changed (surgical, additive, behavior-preserving)
+
+**ONE shared design system** — new `src/components/editor/design-system/premium.ts`: the
+founder's RED/BLACK/WHITE photoreal tokens (`SIGNAL_RED #ff2a38` / `RED_DEEP #7d0f18` /
+`RED_HOT #ff5a55`; gunmetal blacks; chrome whites; the smoked-glass recipe + machined-metal
+CSS gradient recipes). `liquid-toolbar/config.ts` now **re-exports its reds from this module**
+(API unchanged), so the toolbar and the keyframe editor reference the same source of truth.
+
+**A — Keyframe panel** (`overlays/KeyframeEditor.tsx`, PRIMARY):
+- Flat charcoal strip → **machined black instrument**: brushed-gunmetal body with a chrome
+  bezel edge (specular top / shadowed bottom / red hairline), a Sora-display header title
+  and lane names (was JetBrains Mono), a recessed machined scrubber well with a **red**
+  progress glow and a chrome+red playhead jewel, and keys rendered as **signal-red jewel
+  diamonds** (radial red core, chrome rim, glow, hover-grow to 1.35×). Transport/snap/loop
+  keycaps go red when active.
+- **NEW live canvas driver**: while the panel is open, a rAF loop applies the interpolated
+  keyframe pose (`lib/prism-graph/keyframe-scrub.evalScrubPose`, pure + unit-tested) to the
+  selected node's rendered group over its base `scenePosition ⊕ canvasTransform`; base pose
+  restored on close. Scrub/play now **visibly animate the node in the canvas** (was UI-only).
+- Capture reads the live preview buffer before appending (fixes a stale-closure add) and
+  still routes through `usePreviewStateStore` (FP-15 — never writes source directly).
+
+**HUD de-collision** — additive `keyframePanelOpen` UI flag on `useGraphEditorStore` (same
+idiom as `editInPreview`; owned by `CanvasToolbar`, reset on mode change). The camera HUD
+(`CanvasCameraHud.tsx`) and the Node-Agent panel (`NodeAgentPanel.tsx`) **lift above the open
+strip** with a 300ms transition (they were overlapping the lanes). The panel itself is inset
+past the toolbar rail (`left-[114px]`). REC dot + record affordance → `SIGNAL_RED`.
+
+**C — /editor dock** (`editor-shell/EditorKeyframeDock.tsx`): playhead bar + property faders
++ PLAY → `SIGNAL_RED`; TIME fader + CLEAR → chrome. Wiring / probes / FaderRow untouched.
+
+**D — /keyframe-editor lab** (`editor/keyframe/*`): pane → **smoked dark glass** (dark
+attenuation, higher env + clearcoat); jewel-tone rainbow knobs → one worn **oxblood alloy**
+red-tinted, playhead knob chrome; pips + PLAY glyph → signal-red jewels; engraved labels →
+**Sora** (`fonts/ui/Sora-Variable.ttf`, was Inter=grotesque) in chrome fills, title in red;
+backdrop → black w/ deep-red bloom; lavender rim light → signal-red rim; subject cube →
+oxblood.
+
+## 6. Verification (NEAR-HUMAN-QA-PROTOCOL — all evidence cited)
+
+**Gates (§5):**
+- `tsc --noEmit` → **9 errors = pre-existing baseline, 0 new** (GraphScene GLProps + 8 test
+  NodeContext.THREE — none in changed files).
+- `no-dom-ui-gate` → **PASS** (44 files; `editor-shell` + `app/editor` in scope; my dock edit
+  swapped only color constants).
+- `verify-galaxy-semantics` → **7/7 PASS** · `verify-global-shell-semantics` → **6/6 PASS**
+  (the `galaxy:global-hub-missing` WARN is the pre-existing intentional deferral, unrelated).
+- `node-authorship-gate --editor` → **7/7, 0 hard-fail** (327 seeded, 36 realized, clean).
+- Unit tests: `finish-f1.keyframe-scrub` **7/7** + T08/EB-08-02/EB-08-05 → **55/55 pass**.
+- Secret scan on all changed files → **clean** (color/geometry only; no capability/secret drift).
+
+**Interaction sweep (§1) — root editor `/`, canvas, real Chrome, node `orr-arrival-watch`:**
+- CLICK: Animation tool → "Keyframe Editor" opens the strip; play/pause, loop, 1/60·1/100·
+  1/120 snap chips (active styling switches), close all fire; every lane **+** capture button
+  reachable (not covered) — `addReachable:[true,true,true,true]`.
+- HOVER: jewel hover-grows to **scale 1.35** (`26-jewel-hover-grow.png`).
+- DRAG/SCRUB: scrubber input drives the playhead; diamond click seeks to its `t` (0.08).
+- EDIT ROUND-TRIP: two poses captured at t=0.08 / 0.92 → **scrub drives the node live** in
+  the canvas (node x −1.6 @ t0 → +1.6 @ t1, rotZ 0→0.5; midpoint eased; side-by-side
+  `22-scrub-motion-sidebyside.png`) → **Save** (commit → source, `2 KEYS`, isDirty=false) →
+  **reload** → keyframes persist (`persistedTs:[0.08,0.92]`) and **still drive from source**
+  (`23-after-reload-persisted.png`, node moves −1.6→+1.6 after reload). Test-pose fixture
+  restored via git afterward (design lives in code, not the mock graph).
+- JOURNEY/REC (§ founder "must keep working"): REC records waypoints (0→1→2 pts), Clear +
+  Play-in-Preview enable at ≥2 pts (`25-after-journey-2pts.png`); HUD sits clear of the open
+  strip (`hudClearOfPanel:true`).
+- Close restores the node's **base pose** (scrubbed −1.6 → restored +1.6) and returns the HUD.
+- **0 page/console errors** across the run.
+
+**Both viewports (§2):** desktop 1600×900 (`10..26`, `30`, `31`) + mobile 390×844 sheet
+(`mobile/10-after-keyframe-sheet.png`, tap sweep: seek 0.92, all + reachable, jewel tap-area
+expanded to ±11px) and lab (`mobile/11-after-keyframe-lab.png`, fills viewport, red knobs).
+
+**/editor dock (C):** retinted red/chrome (`30-after-editor-shell-dock.png`); scrub + play
+verified live through the committed probes (`playAdvanced:true`, 5 faders registered).
+
+**/keyframe-editor lab (D):** smoked glass + red alloy (`31-after-keyframe-lab.png`); scrub
+interpolates (posY −0.8↔0.9), fader drag writes a key (4→5), hover-spin + play fire; mobile
+`11`. Sora font 200 OK.
+
+## 7. Design-language continuity
+
+The keyframe editor now shares `premium.ts` with the toolbar — one accent family, one smoked
+glass recipe, one machined-metal vocabulary, one non-grotesque display face (Sora). The next
+FINISH phase inherits the SAME module (no re-derivation).
+
+## 8. Progress log
+
+- 2026-07-01 — Oriented; harness up (chrome-devtools on :3000); 4 surfaces assessed; before
+  frames (desktop+mobile); plan written; EARLY CHECKPOINT committed.
+- 2026-07-01 — Built `premium.ts` (shared RBW system) + `keyframe-scrub.ts` (pure, 7/7 tests);
+  elevated panel A + live canvas driver + HUD de-collision; retinted dock C + lab D; Sora on
+  labels. Typecheck 0-new, all gates green, 55/55 keyframe tests.
+- 2026-07-01 — Full near-human sweep (click/hover/drag/scrub/edit-round-trip/persistence),
+  desktop+mobile, 0 console errors. Elevation committed.
+
+## 9. Judge results — both Fable-5 vision judges PASS, 0 MUST-FIX
+
+- **user-advocate** (graded the frames as the founder, fresh context): **NET PASS / GATE
+  GREEN / MUST-FIX none.** All 6 founder criteria pass with cited before→after frames
+  ("the BEFORE→AFTER conversion off cyan/brass/rainbow onto the red/black/white photoreal
+  system is complete … Ship it"). The two functional claims a founder cares about are shown
+  not asserted: scrub drives the node live (`22-scrub-motion-sidebyside.png`) and keys
+  persist across reload (`23-after-reload-persisted.png`). Non-blocking taste flag: the
+  `/editor` dock fader-knob BODIES read plainer than the timeline/lab jewels (subjective —
+  the diamonds + lab jewels carry the bar; left as-is).
+- **prism-criteria-reviewer** (graded the diff, fresh context): **VERDICT pass, MUST-FIX
+  none.** All 5 points PASS — full hex census confirms every introduced color is
+  red/black/white (no cyan/brass/ice/emerald/sapphire/bronze/lavender/green survives); Sora
+  token chain verified non-grotesque; `premium.ts` is the single accent source with
+  `config.ts` re-exporting (no fork); additive-only (zero `types.ts` field churn, FP-15
+  honored — panel writes only via `usePreviewStateStore`); no forbidden drift; no-dom-ui-gate
+  PASS. Non-blocking nits: (1) FP-15 not auto-gated by the hook glob (future-proofing); (2)
+  the scrub driver left `transparent:true` on opaque materials after an opacity fade — **FIXED
+  in the judge-polish commit** (records + restores each material's original `transparent`
+  flag; verified live: fade works, both `transparent` and `opacity` fully restore on close);
+  (3) a cosmetic config re-export ordering — **also tidied**.
+
+PRISM-FINISH-F1: RUN COMPLETE
