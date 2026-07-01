@@ -12,7 +12,7 @@ import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
-import { countGalaxyOverviewNodesForHub } from '@/lib/prism-graph/galaxy-semantics';
+import { countGalaxyProjectedNodesForHub } from '@/lib/prism-graph/galaxy-semantics';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
@@ -136,7 +136,7 @@ export default function HubNav() {
         {graph.hubs.map((hub, i) => {
           const active = activeHubId === hub.id;
           const nodeCount = railViewMode === 'galaxy'
-            ? countGalaxyOverviewNodesForHub(graph.nodes, hub.id)
+            ? countGalaxyProjectedNodesForHub(graph.nodes, hub.id)
             : graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
           return (
             <RailPill key={hub.id} active={active} onClick={() => flyToHub(hub.id)}>

@@ -274,6 +274,10 @@ export interface EditorNode {
   backendContract?: EditorBackendContract;
   isGlobalElement?: boolean;
   globalSlot?: 'header' | 'footer';
+  isGalaxyCluster?: boolean;
+  galaxyClusterKind?: string;
+  clusterNodeIds?: string[];
+  clusterChildCount?: number;
 }
 
 export interface EditorHubView {

@@ -16,7 +16,7 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import {
   filterEdgesToGalaxyOverview,
-  getGalaxyOverviewNodes,
+  getGalaxyOverviewProjection,
 } from '@/lib/prism-graph/galaxy-semantics';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
@@ -33,7 +33,7 @@ export default function Minimap() {
   const graph = useMemo(() => {
     const base = toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges });
     if (viewMode !== 'galaxy') return base;
-    const nodes = getGalaxyOverviewNodes(base.nodes);
+    const nodes = getGalaxyOverviewProjection(base.nodes);
     const visibleIds = new Set(nodes.map((node) => node.id));
     return {
       ...base,

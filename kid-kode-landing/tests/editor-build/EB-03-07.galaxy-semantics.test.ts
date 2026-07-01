@@ -10,12 +10,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import {
+  countGalaxyProjectedNodesForHub,
   countGalaxyOverviewNodesForHub,
   filterEdgesToGalaxyOverview,
   getGalaxyNodeRole,
   getGalaxyOverviewNodes,
+  getGalaxyOverviewProjection,
   summarizeGalaxySemantics,
 } from '../../src/lib/prism-graph/galaxy-semantics';
+import { toEditorView } from '../../src/lib/prism-graph/view-model';
 
 const repoRoot = join(__dirname, '..', '..');
 const graphSceneSrc = readFileSync(
@@ -77,11 +80,34 @@ describe('EB-03-07 — Galaxy semantic overview', () => {
     expect(summary.byRole['ambient-background']).toBe(0);
   });
 
+  it('projects dense page atoms into first-level component clusters', () => {
+    const editorGraph = toEditorView(liveGraph);
+    const rawOverview = getGalaxyOverviewNodes(editorGraph.nodes);
+    const projection = getGalaxyOverviewProjection(editorGraph.nodes);
+    const clusters = projection.filter((node) => node.isGalaxyCluster);
+
+    expect(rawOverview).toHaveLength(148);
+    expect(projection.length).toBeLessThan(rawOverview.length);
+    expect(projection.length).toBeLessThanOrEqual(64);
+    expect(countGalaxyOverviewNodesForHub(editorGraph.nodes, 's6-atelier')).toBe(73);
+    expect(countGalaxyProjectedNodesForHub(editorGraph.nodes, 's6-atelier')).toBeLessThanOrEqual(18);
+    expect(countGalaxyProjectedNodesForHub(editorGraph.nodes, 's3-materia')).toBeLessThanOrEqual(12);
+    expect(clusters.map((node) => node.galaxyClusterKind)).toEqual(expect.arrayContaining([
+      'atelier-options',
+      'material-card',
+      'cta',
+      'support-layers',
+    ]));
+    expect(clusters.every((node) => (node.clusterNodeIds?.length ?? 0) > 0)).toBe(true);
+  });
+
   it('wires the policy into GraphScene, HubNav, and Minimap', () => {
-    expect(graphSceneSrc).toMatch(/getGalaxyOverviewNodes/);
+    expect(graphSceneSrc).toMatch(/getGalaxyOverviewProjection/);
     expect(graphSceneSrc).toMatch(/filterEdgesToGalaxyOverview/);
     expect(graphSceneSrc).toMatch(/__PRISM_GALAXY_SEMANTICS__/);
-    expect(hubNavSrc).toMatch(/countGalaxyOverviewNodesForHub/);
-    expect(minimapSrc).toMatch(/getGalaxyOverviewNodes/);
+    expect(graphSceneSrc).toMatch(/showGalaxyBadges/);
+    expect(graphSceneSrc).toMatch(/viewMode === 'galaxy' && showGalaxyBadges/);
+    expect(hubNavSrc).toMatch(/countGalaxyProjectedNodesForHub/);
+    expect(minimapSrc).toMatch(/getGalaxyOverviewProjection/);
   });
 });

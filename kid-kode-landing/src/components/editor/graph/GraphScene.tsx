@@ -78,7 +78,7 @@ import {
 } from '@/lib/galaxy-filter';
 import {
   filterEdgesToGalaxyOverview,
-  getGalaxyOverviewNodes,
+  getGalaxyOverviewProjection,
   summarizeGalaxySemantics,
 } from '@/lib/prism-graph/galaxy-semantics';
 import { resolveAssembledNodesForHub } from '@/lib/prism-graph/assembled-nodes';
@@ -670,6 +670,7 @@ function GlassNode({
   const frozen = useGraphEditorStore((s) => s.frozenNodeIds.has(node.id));
   const selectNode = useGraphEditorStore((s) => s.selectNode);
   const toggleNodeSelection = useGraphEditorStore((s) => s.toggleNodeSelection);
+  const setMultiSelection = useGraphEditorStore((s) => s.setMultiSelection);
   const hoverNode = useGraphEditorStore((s) => s.hoverNode);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
   const viewMode = useGraphEditorStore((s) => s.viewMode);
@@ -680,6 +681,9 @@ function GlassNode({
 
   const isSelected = selectedId === node.id;
   const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
+  const clusterNodeIds = node.isGalaxyCluster ? (node.clusterNodeIds ?? []) : [];
+  const isGalaxyCluster = viewMode === 'galaxy' && clusterNodeIds.length > 0;
+  const showGalaxyBadges = viewMode !== 'galaxy' || isHovered || isSelected;
 
   // RT-SC-04 / INV-R2 (anchor §2, §3a) — in GALAXY mode every node renders in
   // node-state: a dormant glass sphere, NEVER its built artifact. Built
@@ -770,6 +774,11 @@ function GlassNode({
       }}
       onClick={dim ? undefined : (e) => {
         e.stopPropagation();
+        if (isGalaxyCluster) {
+          setMultiSelection(clusterNodeIds);
+          openInspector();
+          return;
+        }
         // EB-03-06 / SC-017 — galaxy-mode shift-click promotes the click into
         // toggleNodeSelection so the group grows; plain clicks fall through
         // to selectNode which also collapses any prior group back to a single.
@@ -781,6 +790,11 @@ function GlassNode({
       }}
       onDoubleClick={dim ? undefined : (e) => {
         e.stopPropagation();
+        if (isGalaxyCluster) {
+          setMultiSelection(clusterNodeIds);
+          openInspector();
+          return;
+        }
         selectNode(node.id);
         openInspector();
       }}
@@ -884,13 +898,13 @@ function GlassNode({
       />
 
       {/* HUB-COLORED GLOW BADGE for backend / animation presence */}
-      {node.hasBackend && (
+      {showGalaxyBadges && node.hasBackend && (
         <mesh position={[radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
           <meshBasicMaterial color={DS.ice400} toneMapped={false} />
         </mesh>
       )}
-      {node.hasAnimation && (
+      {showGalaxyBadges && node.hasAnimation && (
         <mesh position={[-radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
           <meshBasicMaterial color={DS.metal300} toneMapped={false} />
@@ -915,7 +929,7 @@ function GlassNode({
       {/* NODE-EDITOR-V2 D3 — per-integration content icons (galaxy node-state,
           §3.3): one brand-tinted badge per connected integration + function
           platform, showing what the node HOLDS. */}
-      {viewMode === 'galaxy' && (
+      {viewMode === 'galaxy' && showGalaxyBadges && (
         <NodeContentIcons sourceNode={sourceNode} radius={radius} dimFactor={dimFactor} />
       )}
 
@@ -923,7 +937,7 @@ function GlassNode({
           small premium custom 3D badge (image / text / 3d-object / integration)
           BELOW the sphere so the node's content type reads at a glance, clear
           of the name label (above) and the integration icons (above). */}
-      {viewMode === 'galaxy' && (
+      {viewMode === 'galaxy' && showGalaxyBadges && (
         <group userData={{ contentBadge: true }}>
           <NodeContentBadge
             contentType={sourceNode ? deriveContentType(sourceNode) : 'image'}
@@ -3470,7 +3484,7 @@ function TopologySceneContent({
     [editorGraph.nodes]
   );
   const topologyNodes = useMemo(
-    () => (viewMode === 'galaxy' ? getGalaxyOverviewNodes(editorGraph.nodes) : editorGraph.nodes),
+    () => (viewMode === 'galaxy' ? getGalaxyOverviewProjection(editorGraph.nodes) : editorGraph.nodes),
     [viewMode, editorGraph.nodes]
   );
   const topologyEdges = useMemo(() => {

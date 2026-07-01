@@ -69,6 +69,75 @@ for (const node of nodes) {
 }
 const overviewNodes = nodes.filter((node) => roleFor(node) === 'content');
 
+function ctaBase(id) {
+  return String(id)
+    .replace(/-(edge|slab|label)-f4bcta$/i, '')
+    .replace(/-(slab|label|edge|button|button-secondary)$/i, '')
+    .replace(/-f4bcta-(slab|label|edge)$/i, '-f4bcta');
+}
+
+function clusterSpecFor(node) {
+  const id = node.nodeId ?? node.id ?? '';
+  const subtype = node.subtype ?? '';
+  const hubId = node.parentHubId ?? node.hubIds?.[0] ?? 'global';
+  const atelier = id.match(/^orr-atelier-cat-([a-z0-9]+)-/i);
+  if (atelier && (subtype === 'atelier-swatch' || subtype === 'atelier-text')) {
+    return { key: `${hubId}:atelier:${atelier[1]}`, minSize: 2 };
+  }
+  const materia = id.match(/^orr-materia-([a-z0-9]+)-/i);
+  if (
+    materia &&
+    /^(plate-frame-(rim|bevel|lip)|material-plate|nameplate|material-label)$/i.test(subtype)
+  ) {
+    return { key: `${hubId}:material:${materia[1]}`, minSize: 2 };
+  }
+  if (/^(cta-button|cta-button-secondary|cta-label|cta-edge)$/i.test(subtype)) {
+    return { key: `${hubId}:cta:${ctaBase(id)}`, minSize: 2 };
+  }
+  if (/^orr-acquire-incl-/i.test(id)) {
+    return { key: `${hubId}:included`, minSize: 2 };
+  }
+  if (/^orr-atelier-btn-/i.test(id)) {
+    return { key: `${hubId}:atelier-controls`, minSize: 2 };
+  }
+  if (/^orr-atelier-(price|summary|reason|price-eyebrow)/i.test(id)) {
+    return { key: `${hubId}:atelier-summary`, minSize: 2 };
+  }
+  if (/^(text-scrim|spec-rail-edge|panel-chrome)$/i.test(subtype)) {
+    return { key: `${hubId}:support-layers`, minSize: 1 };
+  }
+  return null;
+}
+
+function projectedNodesFor(list) {
+  const entries = [];
+  const buckets = new Map();
+  for (const node of list) {
+    const spec = clusterSpecFor(node);
+    if (!spec) {
+      entries.push(node);
+      continue;
+    }
+    let bucket = buckets.get(spec.key);
+    if (!bucket) {
+      bucket = { spec, nodes: [] };
+      buckets.set(spec.key, bucket);
+      entries.push(bucket);
+    }
+    bucket.nodes.push(node);
+  }
+  return entries.flatMap((entry) => {
+    if (entry.nodes) {
+      return entry.nodes.length >= entry.spec.minSize
+        ? [{ nodeId: `galaxy-cluster:${entry.spec.key}`, parentHubId: entry.nodes[0]?.parentHubId, clusterNodeIds: entry.nodes.map((node) => node.nodeId) }]
+        : entry.nodes;
+    }
+    return [entry];
+  });
+}
+
+const projectedNodes = projectedNodesFor(overviewNodes);
+
 assert('galaxy:graph-present', 'live graph has hubs and nodes', () => {
   if (hubs.length === 0) throw new Error('no hubs found');
   if (nodes.length === 0) throw new Error('no nodes found');
@@ -82,6 +151,22 @@ assert('galaxy:overview-collapses-helpers', 'Galaxy overview collapses app-shell
   if (appShell === 0) throw new Error('expected app-shell nodes in current mock graph');
   if (overviewNodes.length >= nodes.length) throw new Error(`overview still equals raw graph (${overviewNodes.length})`);
   return `${overviewNodes.length} overview nodes, ${nodes.length - overviewNodes.length} collapsed (${appShell} shell, ${hitTargets} hit-target)`;
+});
+
+assert('galaxy:overview-projects-components', 'Galaxy first-level view groups dense component atoms', () => {
+  const atelierCount = projectedNodes.filter((node) => node.parentHubId === 's6-atelier').length;
+  const materiaCount = projectedNodes.filter((node) => node.parentHubId === 's3-materia').length;
+  if (projectedNodes.length >= overviewNodes.length) {
+    throw new Error(`projection did not reduce node count (${projectedNodes.length}/${overviewNodes.length})`);
+  }
+  if (projectedNodes.length > 64) {
+    throw new Error(`projected first-level nodes still too high: ${projectedNodes.length}`);
+  }
+  if (atelierCount > 18) throw new Error(`atelier projected count too high: ${atelierCount}`);
+  if (materiaCount > 12) throw new Error(`materia projected count too high: ${materiaCount}`);
+  const clusterCount = projectedNodes.filter((node) => String(node.nodeId ?? '').startsWith('galaxy-cluster:')).length;
+  if (clusterCount === 0) throw new Error('no component clusters projected');
+  return `${projectedNodes.length} first-level nodes (${clusterCount} clusters) from ${overviewNodes.length} content atoms; atelier:${atelierCount}, materia:${materiaCount}`;
 });
 
 assert('galaxy:backgrounds-are-hub-data', 'ambient star/dust/nebula backgrounds remain hub-owned, not first-class Galaxy nodes', () => {
