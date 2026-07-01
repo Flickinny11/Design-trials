@@ -2189,7 +2189,8 @@
         "displacementMapUrl": null
       },
       "receivesLighting": true,
-      "depthLayer": "overlay"
+      "depthLayer": "overlay",
+      "globalSlot": "footer"
     },
     {
       "nodeId": "shell-footer-rule",
@@ -2348,7 +2349,8 @@
         "hubId": "s1-arrival"
       },
       "receivesLighting": false,
-      "depthLayer": "overlay"
+      "depthLayer": "overlay",
+      "globalSlot": "footer"
     },
     {
       "nodeId": "shell-footer-legal",
@@ -2415,7 +2417,8 @@
         }
       },
       "receivesLighting": false,
-      "depthLayer": "overlay"
+      "depthLayer": "overlay",
+      "globalSlot": "footer"
     },
     {
       "nodeId": "shell-footer-links",
@@ -11883,7 +11886,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s1-arrival"
-      }
+      },
+      "globalSlot": "header"
     },
     {
       "nodeId": "shell-nav-movement-navhit",
@@ -11971,7 +11975,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s2-movement"
-      }
+      },
+      "globalSlot": "header"
     },
     {
       "nodeId": "shell-nav-materia-navhit",
@@ -12059,7 +12064,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s3-materia"
-      }
+      },
+      "globalSlot": "header"
     },
     {
       "nodeId": "shell-nav-celestia-navhit",
@@ -12147,7 +12153,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s4-celestia"
-      }
+      },
+      "globalSlot": "header"
     },
     {
       "nodeId": "shell-nav-acquire-navhit",
@@ -12323,7 +12330,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s1-arrival"
-      }
+      },
+      "globalSlot": "header"
     },
     {
       "nodeId": "shell-footer-movement-fhit",
@@ -12411,7 +12419,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s2-movement"
-      }
+      },
+      "globalSlot": "footer"
     },
     {
       "nodeId": "shell-footer-materia-fhit",
@@ -12763,7 +12772,8 @@
       "functionBinding": {
         "kind": "navigate",
         "hubId": "s1-arrival"
-      }
+      },
+      "globalSlot": "footer"
     },
     {
       "nodeId": "shell-2_movement-nav-arrival-navhit",
