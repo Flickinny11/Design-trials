@@ -65,7 +65,7 @@ export function SubjectNode({ maps }: { maps: WornMaps }) {
         position={[0, -SIZE / 2 - 0.34, 0.2]}
         anchorX="center"
         anchorY="middle"
-        color="#9fb3c8"
+        color="#c6ccd4"
         letterSpacing={0.08}
         material-toneMapped={false}
         material-transparent={false}

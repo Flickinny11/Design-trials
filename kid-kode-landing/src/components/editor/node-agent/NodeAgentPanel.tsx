@@ -25,6 +25,9 @@ const PLACEHOLDER = 'Describe a change to this element…';
 export default function NodeAgentPanel() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  // FINISH F-1 — the open keyframe strip owns the bottom band; lift clear of it
+  // (it was covering the lanes' right-side capture buttons).
+  const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
   const nodes = useGraphSourceStore((s) => s.nodes);
   const state = useSyncExternalStore(
     nodeAgentController.subscribe,
@@ -69,7 +72,7 @@ export default function NodeAgentPanel() {
       // Bottom-right column: clear of the left Canvas toolbar dock, below the
       // right Inspector card, and right of the center minimap. Capped height with
       // its own scroll so a long plan never overlaps the bottom hub pager.
-      className="absolute bottom-3 right-3 z-40 pointer-events-auto flex flex-col gap-2 w-[260px] max-h-[58vh] overflow-y-auto p-3 rounded-[10px]"
+      className={`absolute ${keyframePanelOpen ? 'bottom-[318px]' : 'bottom-3'} right-3 z-40 pointer-events-auto flex flex-col gap-2 w-[260px] max-h-[58vh] overflow-y-auto p-3 rounded-[10px] transition-[bottom] duration-300`}
       style={{
         color: 'var(--ds-text)',
         background: 'var(--ds-grad-smoked, rgba(18,20,24,0.86))',

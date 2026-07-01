@@ -27,6 +27,10 @@ import { FaderRow } from './editor-shell-controls';
 import { effectivePos } from './editor-manipulation';
 import { useEditorShellStore } from './use-editor-shell-store';
 import { useEditorKeyframeStore } from './use-editor-keyframe-store';
+// FINISH F-1 — the dock inherits the toolbar's RED/BLACK/WHITE photoreal
+// system from the ONE shared design-system module (chrome time ruler +
+// signal-red tracks/transport; the worn gunmetal supplies the black).
+import { CHROME, SIGNAL_RED } from '@/components/editor/design-system/premium';
 
 export const KEYFRAME_DOCK_POS: [number, number, number] = [0, -5.4, 1.0];
 const FADER_W = 10.5;
@@ -114,7 +118,7 @@ function ClockDriver() {
 const BAR_GEO = buildCubeGeometry({ width: 0.06, height: 2.0, depth: 0.08, cornerRadius: 0.02, bevel: 0.01, radius: 0, segments: 3, cutouts: [] });
 function PlayheadBar() {
   const ref = useRef<THREE.Mesh>(null);
-  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: '#caa06a', toneMapped: false, transparent: true, opacity: 0.85 }), []);
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({ color: SIGNAL_RED, toneMapped: false, transparent: true, opacity: 0.85 }), []);
   useEffect(() => () => mat.dispose(), [mat]);
   useFrame(() => {
     const r = ref.current;
@@ -186,7 +190,7 @@ export function EditorKeyframeDock() {
             max={DURATION_S}
             label="TIME"
             maps={gun}
-            tint="#caa06a"
+            tint={CHROME}
             probeId="kf:time"
             format={(v) => v.toFixed(2) + 's'}
             onChange={(v) => useEditorKeyframeStore.getState().setPlayhead(v)}
@@ -203,7 +207,7 @@ export function EditorKeyframeDock() {
               max={tr.max}
               label={tr.label}
               maps={maps[tr.textureKey] ?? gun}
-              tint="#9fb6d6"
+              tint={SIGNAL_RED}
               probeId={'kf:' + tr.id}
               onChange={(v) => writeKeyframe(tr.id, v)}
             />
@@ -216,7 +220,7 @@ export function EditorKeyframeDock() {
                 maps={gun}
                 position={[6.6, 0.55, 0.3]}
                 size={0.42}
-                tint="#7fd6a0"
+                tint={SIGNAL_RED}
                 active={playing}
                 label={playing ? 'PAUSE' : 'PLAY'}
                 onClick={() => useEditorKeyframeStore.getState().togglePlay()}
@@ -225,7 +229,7 @@ export function EditorKeyframeDock() {
                 maps={gun}
                 position={[6.6, -0.45, 0.3]}
                 size={0.42}
-                tint="#c98a8a"
+                tint={CHROME}
                 label="CLEAR"
                 onClick={clearKeyframesAtPlayhead}
               />

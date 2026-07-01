@@ -18,6 +18,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { SIGNAL_RED, rbwAlpha } from '@/components/editor/design-system/premium';
 
 const ZERO_TOL = 1.5;
 
@@ -44,6 +45,10 @@ export default function CanvasCameraHud() {
   const journeyCount = useGraphSourceStore(
     (s) => s.hubs.find((h) => h.hubId === activeHubId)?.cameraKeyframes?.length ?? 0,
   );
+  // FINISH F-1 — the open keyframe strip owns the bottom band on desktop; the
+  // HUD lifts above it (was overlapping the lanes) with a smooth transition.
+  const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
+  const hudBottomLift = keyframePanelOpen ? 'md:bottom-[318px]' : 'md:bottom-4';
 
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -82,7 +87,7 @@ export default function CanvasCameraHud() {
   // free-orbit instrument + journey REC don't apply, so show the exit control. ─
   if (editInPreview) {
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto md:bottom-4">
+      <div className={`absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
         <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2.5 rounded-full pl-3 pr-1.5 py-1.5"
           style={{ boxShadow: '0 0 0 1px rgba(var(--ds-metal-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb),0.5)' }}>
           <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-metal-200)', boxShadow: '0 0 7px var(--ds-metal-200)' }} />
@@ -101,9 +106,10 @@ export default function CanvasCameraHud() {
   }
 
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none flex flex-col items-center gap-2 top-[60px] md:top-auto md:bottom-4">
+    <div className={`absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none flex flex-col items-center gap-2 top-[60px] md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
       {/* Mobile anchors to the TOP scene band so the Inspector bottom-sheet
-          can't occlude it; desktop/tablet sit bottom-centre. */}
+          can't occlude it; desktop/tablet sit bottom-centre. When the keyframe
+          strip is open the whole HUD stack lifts above it (FINISH F-1). */}
 
       {/* ── P1: camera instrument ─────────────────────────────────────────── */}
       <div
@@ -156,8 +162,8 @@ export default function CanvasCameraHud() {
         </span>
         <button type="button" onClick={captureCameraKeyframe} title="Record this camera angle as a journey waypoint"
           className="ds-press flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full"
-          style={{ background: 'rgba(var(--ds-metal-200-rgb),0.1)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.3)' }}>
-          <span className="w-2 h-2 rounded-full" style={{ background: '#e0594e', boxShadow: '0 0 6px rgba(224,89,78,0.8)' }} />
+          style={{ background: rbwAlpha(SIGNAL_RED, 0.1), border: `1px solid ${rbwAlpha(SIGNAL_RED, 0.4)}`, boxShadow: `0 0 10px -4px ${rbwAlpha(SIGNAL_RED, 0.5)}` }}>
+          <span className="w-2 h-2 rounded-full" style={{ background: SIGNAL_RED, boxShadow: `0 0 7px ${rbwAlpha(SIGNAL_RED, 0.85)}` }} />
           <span className="text-[9.5px] font-ui font-medium" style={{ color: 'var(--ds-metal-200)' }}>REC</span>
         </button>
         <button type="button" onClick={() => activeHubId && updateHub(activeHubId, { cameraKeyframes: [] })}

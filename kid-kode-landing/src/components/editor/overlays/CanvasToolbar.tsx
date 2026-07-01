@@ -434,7 +434,10 @@ export default function CanvasToolbar() {
 
   // Toolbar-local UI state
   const [activeGroup, setActiveGroup] = useState<ToolGroupId | null>('transform');
-  const [keyframeOpen, setKeyframeOpen] = useState(false);
+  // FINISH F-1 — the keyframe panel's open state is a shared store flag (same
+  // idiom as editInPreview) so the camera HUD can lift clear of the strip.
+  const keyframeOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
+  const setKeyframeOpen = useGraphEditorStore((s) => s.setKeyframePanelOpen);
   const [marqueeArmed, setMarqueeArmed] = useState(false);
   const [coming, setComing] = useState<{ tool: string; subsystem: string } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -981,7 +984,7 @@ export default function CanvasToolbar() {
                 multiCount={selectedNodeIds.size}
                 onToast={setToast}
                 keyframeOpen={keyframeOpen}
-                onToggleKeyframe={() => setKeyframeOpen((v) => !v)}
+                onToggleKeyframe={() => setKeyframeOpen(!keyframeOpen)}
                 onComing={(t) => showComing(t, 'bespoke authoring lane')}
               />
             )}

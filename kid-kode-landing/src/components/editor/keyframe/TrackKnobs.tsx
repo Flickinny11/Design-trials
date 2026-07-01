@@ -238,12 +238,14 @@ function Knob({ id, maps, tint, envBoost = 0, readX, y, onGrab, onRemove, draggi
 }
 
 // ── keyframe pip markers per track ──────────────────────────────────────────────
+// FINISH F-1 — pips are SIGNAL-RED jewels (hot emissive core over oxblood
+// depth) so stored keys read as the brand red against smoked glass + chrome.
 const PIP_MAT = new THREE.MeshStandardMaterial({
-  color: '#e7eef9',
-  roughness: 0.35,
-  metalness: 0.6,
-  emissive: '#2c3a52',
-  emissiveIntensity: 0.5,
+  color: '#ff2a38',
+  roughness: 0.28,
+  metalness: 0.55,
+  emissive: '#7d0f18',
+  emissiveIntensity: 0.9,
 });
 
 function KeyframeMarkers() {
@@ -312,12 +314,12 @@ export function TrackKnobs({ maps }: { maps: Record<string, WornMaps> }) {
 
   return (
     <>
-      {/* playhead handle on the TIME ruler */}
+      {/* playhead handle on the TIME ruler — bright brushed CHROME (the white) */}
       <Knob
         id="playhead"
         maps={maps.gunmetal}
-        tint="#cdd6e2"
-        envBoost={0.4}
+        tint="#e8ecf2"
+        envBoost={0.55}
         size={CUBE_K * 0.92}
         y={LAYOUT.rulerY}
         readX={() => timeToX(useKeyframeStore.getState().playhead)}
@@ -325,12 +327,15 @@ export function TrackKnobs({ maps }: { maps: Record<string, WornMaps> }) {
         draggingRef={isDragging}
       />
 
-      {/* one fader knob per property track */}
+      {/* one fader knob per property track — the same worn SIGNAL-RED alloy
+          (FINISH F-1: identity = engraved label, brand = the one red) */}
       {LAYOUT.tracks.map((track) => (
         <Knob
           key={track.id}
           id={track.id}
           maps={maps[track.textureKey]}
+          tint="#ff6b66"
+          envBoost={0.3}
           y={track.y}
           readX={() => valueToX(track, useKeyframeStore.getState().valueAt(track.id))}
           onGrab={() => start({ kind: 'fader', track, z: KNOB_Z })}

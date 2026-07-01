@@ -48,11 +48,12 @@ export function screenYForButton(i: number, n: number, railHeight: number): numb
 // The custom 3D icon sculptures are a single, disciplined RED + BLACK + WHITE
 // system: identity comes from each tool's distinct FORM, the brand from the
 // unified signal red. Every accent below is the same red — the pane, cubes, and
-// material kit supply the black (anodized) and white (chrome) around it. This is
-// the language the keyframe editor inherits next.
-export const SIGNAL_RED = '#ff2a38'; // hero signal red — the one accent
-export const RED_DEEP = '#7d0f18'; // oxblood — gradient depth / shadow side
-export const RED_HOT = '#ff5a55'; // white-hot red — emissive cores / glints
+// material kit supply the black (anodized) and white (chrome) around it. The
+// accent family now lives in the ONE shared design-system module
+// (design-system/premium.ts) that the keyframe editor inherits (FINISH F-1);
+// re-exported here so the toolbar API is unchanged.
+export { SIGNAL_RED, RED_DEEP, RED_HOT } from '@/components/editor/design-system/premium';
+import { SIGNAL_RED } from '@/components/editor/design-system/premium';
 
 export const TOOL_ACCENT: Record<string, string> = {
   transform: SIGNAL_RED,

@@ -29,7 +29,7 @@ function Engraved({
   text,
   fontSize,
   anchorX = 'center',
-  fill = '#88a0b8',
+  fill = '#9aa1ac',
 }: {
   x: number;
   y: number;
@@ -63,12 +63,15 @@ function Engraved({
   );
 }
 
+// FINISH F-1 — engraved fills move off the blue-greys onto the CHROME whites
+// (Sora face via FONT_URL); the title band carries the one engraved SIGNAL-RED
+// accent. Red / black / white only.
 export function EngravedTrackLabels() {
   const labelX = -PANE_W / 2 + SIDE_PAD + 0.18;
   return (
     <>
       {/* TIME ruler label + second ticks */}
-      <Engraved x={labelX} y={LAYOUT.rulerY} text="TIME" fontSize={0.23} anchorX="left" fill="#9aa7bb" />
+      <Engraved x={labelX} y={LAYOUT.rulerY} text="TIME" fontSize={0.23} anchorX="left" fill="#bcc2ca" />
       {Array.from({ length: DURATION_S + 1 }, (_, s) => (
         <Engraved
           key={s}
@@ -76,12 +79,12 @@ export function EngravedTrackLabels() {
           y={LAYOUT.rulerY - 0.005}
           text={`${s}s`}
           fontSize={0.15}
-          fill="#7e92a8"
+          fill="#878d95"
         />
       ))}
       {/* per-track names */}
       {LAYOUT.tracks.map((t) => (
-        <Engraved key={t.id} x={labelX} y={t.y} text={t.label} fontSize={0.26} anchorX="left" fill="#8ea3ba" />
+        <Engraved key={t.id} x={labelX} y={t.y} text={t.label} fontSize={0.26} anchorX="left" fill="#c6ccd4" />
       ))}
     </>
   );
@@ -94,7 +97,7 @@ export function EngravedTitle() {
       y={LAYOUT.bottomBandY}
       text="KEYFRAME  ·  TIMELINE"
       fontSize={0.2}
-      fill="#7d90a6"
+      fill="#d3222e"
     />
   );
 }

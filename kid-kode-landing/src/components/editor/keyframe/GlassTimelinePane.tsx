@@ -69,20 +69,25 @@ export function GlassTimelinePane() {
     return geo;
   }, []);
 
+  // FINISH F-1 — clear glass → PREMIUM SMOKED dark glass (the toolbar rail's
+  // proven recipe: dark attenuation for visible body + depth, stronger env
+  // response for ambient refraction off the studio light). Red/black/white:
+  // this is the black-glass mass the chrome knobs + red jewels sit in.
   return (
     <mesh geometry={geometry} castShadow receiveShadow>
       <meshPhysicalMaterial
+        color={'#eaeef5'}
         transmission={1}
         thickness={0.7}
         ior={1.5}
-        roughness={0.08}
+        roughness={0.1}
         metalness={0}
-        clearcoat={0.22}
-        clearcoatRoughness={0.6}
-        attenuationColor={'#dbe8f2'}
-        attenuationDistance={1.8}
-        envMapIntensity={0.46}
-        specularIntensity={0.42}
+        clearcoat={0.5}
+        clearcoatRoughness={0.35}
+        attenuationColor={'#141922'}
+        attenuationDistance={1.35}
+        envMapIntensity={1.65}
+        specularIntensity={0.7}
         transparent
       />
     </mesh>
