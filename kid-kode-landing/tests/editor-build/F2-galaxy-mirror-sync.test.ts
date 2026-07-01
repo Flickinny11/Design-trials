@@ -68,5 +68,12 @@ describe('F2 — scripts/lib/galaxy-roles.mjs mirrors galaxy-semantics.ts exactl
     expect([...mirrorMembers].filter((id) => !truthMembers.has(id))).toEqual([]);
     expect([...truthMembers].filter((id) => !mirrorMembers.has(id))).toEqual([]);
     expect(mirrorMembers.size).toBe(truthMembers.size);
+
+    // Same GROUPING, not just the same member union: a pure regrouping
+    // divergence (minSize drift, cluster-key split) must fail too — the
+    // first-level entry count is the number every count surface displays.
+    expect(projectedNodesFor(contentNodes).length).toBe(
+      getGalaxyOverviewProjection(editorGraph.nodes).length,
+    );
   });
 });

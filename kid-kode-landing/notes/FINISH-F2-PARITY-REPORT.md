@@ -231,9 +231,11 @@ live-graph.json untouched and the founder quote byte-identical to source).
    breadcrumb/mode-switch overlap at 1600px; view-mode slider track striking
    inactive labels; capture cursor-ring in two frames.
 
-Post-fix state: sweep re-run **16/16 PASS, 0 console errors, 0 page errors**
-(desktop + mobile frames recaptured); typecheck gate still 0-new; EB-03-07
-6/6 + mirror-sync 2/2.
+Post-fix state: sweep re-run — **15 recorded interaction checks + the
+page-errors check, ALL PASS; 0 console errors, 0 page errors** (desktop +
+mobile frames recaptured; the page-errors check is now persisted into
+sweep.json for future runs — advocate honesty nit); typecheck gate still
+0-new; EB-03-07 6/6 + mirror-sync 2/2.
 
 ## Judges — final verdicts (fresh context, Fable 5)
 

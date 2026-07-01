@@ -305,9 +305,12 @@ const readCounts = (page) => page.evaluate(() => {
 
 await browser.close();
 
-const all = [...results.desktop, ...results.mobile];
+// Record the page-errors check INTO the persisted results (it was previously
+// appended to a transient array after the JSON write — advocate honesty nit).
+results.global = [];
+rec(results.global, '0 page errors across the sweep', results.pageErrors.length === 0, { pageErrors: results.pageErrors.slice(0, 4) });
+const all = [...results.desktop, ...results.mobile, ...results.global];
 const failed = all.filter((r) => !r.pass);
-rec(all, '0 page errors across the sweep', results.pageErrors.length === 0, { pageErrors: results.pageErrors.slice(0, 4) });
 writeFileSync(path.resolve('notes/verification/finish-f2/sweep.json'), JSON.stringify(results, null, 2) + '\n');
 console.log(`\n${all.filter((r) => r.pass).length}/${all.length} sweep checks pass · consoleErrors=${results.consoleErrors.length}`);
 process.exit(failed.length === 0 && results.pageErrors.length === 0 ? 0 : 1);
