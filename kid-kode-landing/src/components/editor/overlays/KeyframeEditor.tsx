@@ -105,15 +105,36 @@ function composedNodeById(id: string): PrismNode | null {
   return patch ? ({ ...src, ...patch } as PrismNode) : src;
 }
 
+// Force a group's materials to `op`, recording each material's ORIGINAL
+// `transparent` flag the first time we touch it so `restoreOpacity` can put it
+// back exactly (setting transparent:true on an opaque material and never
+// clearing it is a subtle render-state leak on shared/cached materials).
+const OPACITY_ORIG = new WeakMap<THREE.Material, boolean>();
 function applyOpacity(g: THREE.Object3D, op: number) {
   g.traverse((o) => {
     const mat = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
     if (!mat) return;
     const apply = (m: THREE.Material) => {
+      if (!OPACITY_ORIG.has(m)) OPACITY_ORIG.set(m, m.transparent);
       m.transparent = true;
       (m as THREE.Material & { opacity: number }).opacity = op;
     };
     Array.isArray(mat) ? mat.forEach(apply) : apply(mat);
+  });
+}
+
+function restoreOpacity(g: THREE.Object3D) {
+  g.traverse((o) => {
+    const mat = (o as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+    if (!mat) return;
+    const restore = (m: THREE.Material) => {
+      (m as THREE.Material & { opacity: number }).opacity = 1;
+      if (OPACITY_ORIG.has(m)) {
+        m.transparent = OPACITY_ORIG.get(m)!;
+        OPACITY_ORIG.delete(m);
+      }
+    };
+    Array.isArray(mat) ? mat.forEach(restore) : restore(mat);
   });
 }
 
@@ -164,7 +185,7 @@ function useCanvasScrubDriver(
         applyOpacity(g, pose.opacity);
         touchedOpacity = true;
       } else if (touchedOpacity) {
-        applyOpacity(g, 1);
+        restoreOpacity(g);
         touchedOpacity = false;
       }
     };
@@ -180,7 +201,7 @@ function useCanvasScrubDriver(
       g.position.set(sp.x + ct.x, sp.y + ct.y, sp.z + ct.z);
       g.rotation.set(sp.rotationX + ct.rotationX, sp.rotationY + ct.rotationY, sp.rotationZ + ct.rotationZ);
       g.scale.set(sp.scaleX * ct.scaleX, sp.scaleY * ct.scaleY, sp.scaleZ * ct.scaleZ);
-      if (touchedOpacity) applyOpacity(g, 1);
+      if (touchedOpacity) restoreOpacity(g);
     };
   }, [open, nodeId, keyframeCount, phRef]);
 }

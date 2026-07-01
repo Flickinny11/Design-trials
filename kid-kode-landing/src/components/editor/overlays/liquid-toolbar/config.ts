@@ -52,8 +52,8 @@ export function screenYForButton(i: number, n: number, railHeight: number): numb
 // accent family now lives in the ONE shared design-system module
 // (design-system/premium.ts) that the keyframe editor inherits (FINISH F-1);
 // re-exported here so the toolbar API is unchanged.
-export { SIGNAL_RED, RED_DEEP, RED_HOT } from '@/components/editor/design-system/premium';
-import { SIGNAL_RED } from '@/components/editor/design-system/premium';
+import { SIGNAL_RED, RED_DEEP, RED_HOT } from '@/components/editor/design-system/premium';
+export { SIGNAL_RED, RED_DEEP, RED_HOT };
 
 export const TOOL_ACCENT: Record<string, string> = {
   transform: SIGNAL_RED,
