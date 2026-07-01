@@ -47,8 +47,12 @@ export default function CanvasCameraHud() {
   );
   // FINISH F-1 — the open keyframe strip owns the bottom band on desktop; the
   // HUD lifts above it (was overlapping the lanes) with a smooth transition.
+  // FINISH F-2 (advocate MUST-FIX) — the resting HUD stack used to sit at
+  // bottom-4, directly ON the hub-count rail (bottom-5): the JOURNEY strip +
+  // Shipped Frame pill occluded a hub pill's element count. Rest the stack one
+  // clear band ABOVE the rail instead.
   const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
-  const hudBottomLift = keyframePanelOpen ? 'md:bottom-[318px]' : 'md:bottom-4';
+  const hudBottomLift = keyframePanelOpen ? 'md:bottom-[318px]' : 'md:bottom-[84px]';
 
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);

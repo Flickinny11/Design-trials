@@ -48,7 +48,8 @@ async function newPage(viewport, mobile = false) {
 
 const readCounts = (page) => page.evaluate(() => {
   const pills = [...document.querySelectorAll('button')].filter((b) => /Atelier/.test(b.textContent ?? ''));
-  const atelier = pills.map((b) => (b.textContent ?? '').match(/(\d+)\s*$/)?.[1]).find(Boolean) ?? null;
+  // Compact's ACTIVE pill spells the unit ("16 elements"); idle pills are bare.
+  const atelier = pills.map((b) => (b.textContent ?? '').match(/(\d+)(?:\s*elements)?\s*$/)?.[1]).find(Boolean) ?? null;
   const minimap = [...document.querySelectorAll('span')].map((s) => s.textContent ?? '')
     .find((t) => /\d+\s+elements/.test(t)) ?? null;
   return { atelierPill: atelier, minimapLabel: minimap };
@@ -278,7 +279,9 @@ const readCounts = (page) => page.evaluate(() => {
 
   // Hub pill tap
   await page.getByRole('button', { name: /Atelier/ }).first().tap();
-  await page.waitForTimeout(3000);
+  // The hub navigation plays the in-canvas transition CURTAIN; a 3s settle
+  // catches it mid-sweep (half-covered frame). Wait it out fully.
+  await page.waitForTimeout(6500);
   const hub = await page.evaluate(() =>
     window.__PRISM_DEBUG_STORES__?.graphEditor?.getState()?.activeHubId ?? null);
   await page.screenshot({ path: path.join(OUTM, '02-hub-nav.png') });

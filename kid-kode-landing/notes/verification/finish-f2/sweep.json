@@ -21,7 +21,7 @@
       "pass": true,
       "ok": true,
       "element": "Headline",
-      "before": 0.934693,
+      "before": 0.934833,
       "after": 1.55
     },
     {
@@ -68,7 +68,7 @@
       "step": "mobile galaxy: hub pill shows element count (Atelier 16)",
       "pass": true,
       "atelierPill": "16",
-      "minimapLabel": null
+      "minimapLabel": "5 elements"
     },
     {
       "step": "mobile: hub pill tap navigates",
@@ -79,7 +79,7 @@
       "step": "mobile canvas: counts still element-level (Atelier 16)",
       "pass": true,
       "atelierPill": "16",
-      "minimapLabel": null
+      "minimapLabel": "16 elements"
     },
     {
       "step": "mobile preview reachable",

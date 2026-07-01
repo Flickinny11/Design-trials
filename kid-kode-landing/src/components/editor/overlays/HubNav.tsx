@@ -159,10 +159,13 @@ export default function HubNav() {
                   hub.color dashboard blue. */}
               <Icon name={hubGlyph(i)} size={12} color={active ? DS.arc : DS.textMid} glow={active} />
               {hub.name}
+              {/* Compact has no minimap to spell out the unit, so the ACTIVE
+                  pill teaches it ("16 elements"); idle pills stay bare numbers
+                  (advocate SHOULD-FIX — labeled counts on mobile too). */}
               <span
                 className="text-[10px] font-mono tabular-nums opacity-50"
                 title={`${elementCount} elements`}
-              >{elementCount}</span>
+              >{elementCount}{compact && active ? ' elements' : ''}</span>
             </RailPill>
           );
         })}

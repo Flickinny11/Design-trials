@@ -189,9 +189,56 @@ raycast pipeline itself is proven physically on hubs and on canvas artifacts.)
 - `public/prism-mock/home/live-graph.json` — **unchanged** (restored after
   the round-trip proof; zero parity fixes required graph edits).
 
-## Judges (fresh context, Fable 5)
+## Judge round 1 → fixes → judge round 2
 
-- user-advocate: PASS — 0 MUST-FIX (see verdict below).
-- prism-criteria-reviewer: PASS — 0 MUST-FIX (see verdict below).
+**prism-criteria-reviewer (round 1): PASS, 0 MUST-FIX** (C1–C8 all MEET;
+independently re-ran the gates; confirmed the EB-03-07 number update traces to
+the earlier galaxy-semantics commit `ac54c1ab`, not this diff; confirmed
+live-graph.json untouched and the founder quote byte-identical to source).
+
+**user-advocate (round 1): 1 MUST-FIX + 3 SHOULD-FIX** — all addressed:
+
+1. **MUST-FIX — bottom-chrome collision:** the resting camera HUD stack
+   (JOURNEY strip + Shipped Frame pill) sat at `bottom-4`, directly on the
+   hub-count rail (`bottom-5`), occluding the "Materia 7" pill in the
+   node-selected canvas state. FIX: the HUD stack now rests one clear band
+   ABOVE the rail (`md:bottom-[84px]`; the F-1 keyframe lift to 318px is
+   unchanged) — `CanvasCameraHud.tsx`. Recaptured `desktop/06` + `07`: the
+   band reads instrument / JOURNEY / Shipped Frame / hub rail as four clean
+   stacked layers, every count legible.
+2. **SHOULD-FIX — mobile counts unlabeled:** on compact density (no minimap
+   to spell the unit) the ACTIVE hub pill now teaches it — "16 elements" —
+   while idle pills stay bare numbers (`HubNav.tsx`). Machine-read on mobile:
+   `minimapLabel:"16 elements"` from the pill.
+3. **SHOULD-FIX (criteria) — static-gate evidence clobbering:** static mode
+   now writes `galaxy-parity-gate.static.json`; the committed LIVE 13-check
+   evidence can no longer be overwritten by `npm run verify`.
+4. **SHOULD-FIX (criteria) — static-mode mirror drift blind spot:** new
+   `tests/editor-build/F2-galaxy-mirror-sync.test.ts` imports BOTH
+   `scripts/lib/galaxy-roles.mjs` and the real `galaxy-semantics.ts` and
+   asserts identical roles + identical projection member sets over the live
+   fixture — mirror drift now fails the plain test run, no browser needed.
+   2/2 pass.
+5. **SHOULD-FIX — mobile/02 half-black frame:** reproduces with a 6.5s settle,
+   so it is NOT capture lag: after a galaxy hub fly-in on the narrow mobile
+   aspect, the right portion of the frame is void (background envelope edge at
+   close zoom). None of F-2's diff touches cameras or backgrounds (chrome,
+   probes, scripts only) — this is a PRE-EXISTING mobile fly-in framing
+   artifact that F-2's sweep is the first to capture. Deferred to F-3
+   (shippable polish) with this note; the navigation itself is proven
+   (machine-check `hub === 's6-atelier'` + hub content visible in frame).
+6. Advocate flags noted for F-3 polish backlog (not F-2 surfaces): top-bar
+   breadcrumb/mode-switch overlap at 1600px; view-mode slider track striking
+   inactive labels; capture cursor-ring in two frames.
+
+Post-fix state: sweep re-run **16/16 PASS, 0 console errors, 0 page errors**
+(desktop + mobile frames recaptured); typecheck gate still 0-new; EB-03-07
+6/6 + mirror-sync 2/2.
+
+## Judges — final verdicts (fresh context, Fable 5)
+
+- prism-criteria-reviewer: **PASS — 0 MUST-FIX** (round 1; delta re-checked
+  round 2).
+- user-advocate: **PASS — 0 MUST-FIX** (round 2, after the de-collision fix).
 
 PRISM-FINISH-F2: RUN COMPLETE

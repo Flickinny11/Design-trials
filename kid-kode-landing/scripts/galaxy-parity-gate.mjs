@@ -304,13 +304,15 @@ function finish() {
   const hardFails = results.filter((r) => !r.pass && !r.warn);
   const passed = results.filter((r) => r.pass).length;
   console.log(`\n${hardFails.length === 0 ? GREEN : RED}${passed}/${results.length} checks ok · ${hardFails.length} hard-fail${RESET}`);
-  console.log(`${DIM}report → notes/verification/finish-f2/galaxy-parity-gate.json${RESET}`);
+  console.log(`${DIM}report → notes/verification/finish-f2/galaxy-parity-gate${STATIC_ONLY ? '.static' : ''}.json${RESET}`);
   process.exit(hardFails.length === 0 ? 0 : 1);
 }
 
 const staticState = runStatic();
 if (STATIC_ONLY) {
-  writeFileSync(join(outDir, 'galaxy-parity-gate.json'), JSON.stringify({ staticOnly: true, results }, null, 2) + '\n');
+  // Distinct filename — `npm run verify` (static) must never clobber the
+  // committed LIVE gate evidence in galaxy-parity-gate.json.
+  writeFileSync(join(outDir, 'galaxy-parity-gate.static.json'), JSON.stringify({ staticOnly: true, results }, null, 2) + '\n');
   finish();
 } else {
   runLive(staticState).then(finish).catch((e) => { console.error(e); process.exit(1); });
