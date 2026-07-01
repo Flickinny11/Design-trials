@@ -34,20 +34,23 @@ export interface GlassCubeToolButtonProps {
 }
 
 function makeCubeGlass(): THREE.MeshPhysicalMaterial {
+  // Premium SMOKED glass keycap (2026-07-01): darker attenuation gives the cube
+  // real body + depth so the red/black/white icon reads against a dark refracting
+  // block instead of floating in clear glass over the busy scene.
   return new THREE.MeshPhysicalMaterial({
-    color: '#ffffff',
+    color: '#e7ecf4',
     transmission: 1,
-    thickness: 0.92,
-    ior: 1.52,
-    roughness: 0.045,
+    thickness: 1.08,
+    ior: 1.5,
+    roughness: 0.05,
     metalness: 0,
     clearcoat: 1,
-    clearcoatRoughness: 0.08,
-    attenuationColor: '#edf7ff',
-    attenuationDistance: 5.8,
-    envMapIntensity: 2.25,
+    clearcoatRoughness: 0.07,
+    attenuationColor: '#111620',
+    attenuationDistance: 2.5,
+    envMapIntensity: 2.6,
     specularIntensity: 1,
-    opacity: 0.74,
+    opacity: 0.84,
     transparent: true,
     depthWrite: false,
   });
@@ -135,10 +138,12 @@ export function GlassCubeToolButton({
         }}
       >
         <RoundedBox args={[CUBE, CUBE, CUBE]} radius={CUBE_R} smoothness={6} material={glass} castShadow receiveShadow>
+          {/* Machined edge glint — signal-red when active (ties to the icon
+              palette), bright chrome-white on hover, cool steel at rest. */}
           <Edges
-            scale={1.008}
+            scale={1.01}
             threshold={9}
-            color={hovered || externallyHovered || active ? '#ffffff' : '#dcecff'}
+            color={active ? '#ff2a38' : hovered || externallyHovered ? '#ffffff' : '#b9c4d2'}
           />
         </RoundedBox>
 

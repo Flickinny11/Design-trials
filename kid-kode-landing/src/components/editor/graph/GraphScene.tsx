@@ -1408,21 +1408,37 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
             key={node.id}
             position={[node.x, node.y + 5.8, node.z]}
             center
-            zIndexRange={[25, 0]}
+            zIndexRange={isHovered ? [200, 0] : [25, 0]}
             style={{ pointerEvents: 'none', opacity: lodOpacity * perLabelLod.opacity }}
           >
+            {/* PREMIUM LABELS (2026-07-01) — fashionable non-grotesque display
+                type (Sora, --ds-font-display; JetBrains Mono was utilitarian) and
+                a smooth enlarge-on-hover so a hovered sphere is instantly readable.
+                Hover is already driven from the sphere → hoveredNodeId → isHovered;
+                the enlarge is a GPU transform (no reflow) with a signal-red focus
+                halo tying labels to the toolbar's red/black/white language. */}
             <div
               className="select-none"
-              style={{ transform: `scale(${perLabelLod.scale})`, transformOrigin: 'center top' }}
+              style={{
+                transform: `scale(${perLabelLod.scale * (isHovered ? 1.55 : 1)})`,
+                transformOrigin: 'center top',
+                transition: 'transform 200ms cubic-bezier(0.34, 1.4, 0.5, 1)',
+                willChange: 'transform',
+              }}
             >
               {tier >= 1 && (
                 <div
-                  className="font-mono font-semibold tracking-wide whitespace-nowrap"
+                  className="font-semibold tracking-wide whitespace-nowrap"
                   style={{
-                    color: isSelected ? DS.metal200 : DS.textHi,
-                    fontSize: tier === 1 ? 10 : tier === 2 ? 11 : 13,
-                    textShadow: '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
+                    fontFamily: 'var(--ds-font-display)',
+                    color: isHovered ? '#ffffff' : isSelected ? DS.metal200 : DS.textHi,
+                    fontSize: tier === 1 ? 11 : tier === 2 ? 12 : 14,
+                    letterSpacing: '0.015em',
+                    textShadow: isHovered
+                      ? '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1), 0 0 18px rgba(255,42,56,0.55)'
+                      : '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
                     lineHeight: 1.2,
+                    transition: 'color 160ms ease, text-shadow 160ms ease',
                   }}
                 >
                   {node.name}

@@ -44,29 +44,36 @@ export function screenYForButton(i: number, n: number, railHeight: number): numb
   return railHeight / 2 - (worldY / (barHeight(n) / 2)) * (0.46 * railHeight);
 }
 
-// ── Per-tool accent palette ───────────────────────────────────────────────────
-// Restrained jewel-metal accents. These tint the proud custom 3D icon sculptures
-// only; the pane and cubes stay clear physical glass.
+// ── RED / BLACK / WHITE icon palette (founder mandate 2026-07-01) ──────────────
+// The custom 3D icon sculptures are a single, disciplined RED + BLACK + WHITE
+// system: identity comes from each tool's distinct FORM, the brand from the
+// unified signal red. Every accent below is the same red — the pane, cubes, and
+// material kit supply the black (anodized) and white (chrome) around it. This is
+// the language the keyframe editor inherits next.
+export const SIGNAL_RED = '#ff2a38'; // hero signal red — the one accent
+export const RED_DEEP = '#7d0f18'; // oxblood — gradient depth / shadow side
+export const RED_HOT = '#ff5a55'; // white-hot red — emissive cores / glints
+
 export const TOOL_ACCENT: Record<string, string> = {
-  transform: '#7db6d9',
-  selection: '#9b91bd',
-  add: '#70af92',
-  library: '#bc9559',
-  image: '#c28398',
-  object3d: '#78bcb5',
-  background: '#9e88b6',
-  changeArtifact: '#c9b15f',
-  promptEdit: '#75b49d',
-  text: '#9bb9cf',
-  animation: '#bf8966',
-  function: '#75aec5',
-  lighting: '#d2c174',
-  build: '#b97869',
+  transform: SIGNAL_RED,
+  selection: SIGNAL_RED,
+  add: SIGNAL_RED,
+  library: SIGNAL_RED,
+  image: SIGNAL_RED,
+  object3d: SIGNAL_RED,
+  background: SIGNAL_RED,
+  changeArtifact: SIGNAL_RED,
+  promptEdit: SIGNAL_RED,
+  text: SIGNAL_RED,
+  animation: SIGNAL_RED,
+  function: SIGNAL_RED,
+  lighting: SIGNAL_RED,
+  build: SIGNAL_RED,
 };
 
-/** Accent for a tool id, with a brass fallback. */
+/** Accent for a tool id — the signal red (single-accent red/black/white system). */
 export function accentFor(id: string): string {
-  return TOOL_ACCENT[id] ?? '#d8b46a';
+  return TOOL_ACCENT[id] ?? SIGNAL_RED;
 }
 
 // Legacy constants are retained for the retired LiquidGlassBar module only. The

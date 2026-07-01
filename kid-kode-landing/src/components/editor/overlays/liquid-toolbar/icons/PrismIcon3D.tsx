@@ -3,10 +3,13 @@
 // PrismIcon3D — the 14 bespoke, premium 3D tool icons for the liquid-glass
 // toolbar. Each `id` renders a MINIATURE 3D SCULPTURE (beveled / extruded /
 // assembled geometry — never a flat glyph), built from a shared PBR material
-// kit (anodized jewel-metal, chrome, transmissive gem, two-tone gradients) plus
-// EMISSIVE accents (toneMapped:false so they bloom THROUGH the surrounding glass
-// cube at ~100px rail scale). Every icon energizes on hover: faster spin,
-// brighter glow, a gentle scale-up. `active` holds the icon lit.
+// kit in a strict RED / BLACK / WHITE palette (founder mandate 2026-07-01):
+// polished CHROME (the white), BLACK anodized metal (the black), RED anodized
+// metal + RED transmissive gem + RED/white two-tone gradients, plus EMISSIVE red
+// accents (toneMapped:false so they bloom THROUGH the surrounding glass cube at
+// ~100px rail scale). Identity is carried by each tool's distinct FORM, the brand
+// by the red/black/white. Every icon energizes on hover: faster spin, brighter
+// glow, a gentle scale-up. `active` holds the icon lit.
 //
 // Overall extent ~0.30 world units, centered at origin, front-facing +Z.
 
@@ -15,8 +18,10 @@ import { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
+import { SIGNAL_RED } from '../config';
 
 const WHITE = new THREE.Color('#ffffff');
+const INK = new THREE.Color('#0a0a0d'); // near-black body base
 
 // ── SHARED MATERIAL KIT ───────────────────────────────────────────────────────
 // Helper builders, memoized per icon instance at the call sites. Emissive glow
@@ -41,6 +46,19 @@ function chrome(): THREE.MeshPhysicalMaterial {
     clearcoat: 1,
     clearcoatRoughness: 0.06,
     envMapIntensity: 1.6,
+  });
+}
+
+/** Black anodized metal — the "black" of the red/black/white system. Dark,
+ *  slightly satin, clearcoated so raking studio light still glints its edges. */
+function black(shade = 1): THREE.MeshPhysicalMaterial {
+  return new THREE.MeshPhysicalMaterial({
+    color: INK.clone().multiplyScalar(shade),
+    metalness: 0.86,
+    roughness: 0.34,
+    clearcoat: 1,
+    clearcoatRoughness: 0.22,
+    envMapIntensity: 1.15,
   });
 }
 
@@ -160,9 +178,9 @@ function TransformIcon({ accent, hovered, active }: IconProps) {
   const g = useRef<THREE.Group>(null);
   const ringsRef = useRef<THREE.Group>(null);
   const chromeMat = useMemo(chrome, []);
-  const anodX = useMemo(() => anodized('#ff6a6a', 0.7), []);
-  const anodY = useMemo(() => anodized(accent, 0.8), [accent]);
-  const anodZ = useMemo(() => anodized('#6aff9e', 0.7), []);
+  const anodX = useMemo(() => anodized(SIGNAL_RED, 0.95), []); // +X shaft — red
+  const anodY = useMemo(() => chrome(), []); // +Y shaft — white chrome
+  const anodZ = useMemo(() => black(1.5), []); // +Z shaft — black anodized
   const glow = useMemo(() => emissive(accent, hovered ? 2.6 : 1.5), [accent, hovered]);
   const ringMat = useMemo(() => emissive(accent, 1.4), [accent]);
   const gemMat = useMemo(() => gem(accent), [accent]);
@@ -235,6 +253,7 @@ function SelectionIcon({ accent, hovered, active }: IconProps) {
   const cornersRef = useRef<THREE.Group>(null);
   const chromeMat = useMemo(chrome, []);
   const anod = useMemo(() => anodized(accent), [accent]);
+  const blackMat = useMemo(() => black(1.3), []);
   const glow = useMemo(() => emissive(accent, hovered ? 2.6 : 1.4), [accent, hovered]);
   const glowWash = useMemo(() => {
     const m = emissive(accent, (hovered ? 2.6 : 1.4) * 0.35);
@@ -276,8 +295,8 @@ function SelectionIcon({ accent, hovered, active }: IconProps) {
 
   return (
     <group ref={groupRef}>
-      {/* base anchor (grounds the floating brackets) */}
-      <RoundedBox args={[0.26, 0.26, 0.02]} radius={0.03} smoothness={4} position={[0, 0, -0.05]} material={anod} />
+      {/* base anchor (grounds the floating brackets) — black anodized plate */}
+      <RoundedBox args={[0.26, 0.26, 0.02]} radius={0.03} smoothness={4} position={[0, 0, -0.05]} material={blackMat} />
       {/* recessed gem capture plane */}
       <RoundedBox args={[0.2, 0.2, 0.012]} radius={0.02} smoothness={4} position={[0, 0, -0.01]} material={gemMat} />
       <mesh position={[0, 0, 0.002]}>
@@ -468,10 +487,11 @@ function ImageIcon({ accent, hovered, active }: IconProps) {
   // sky gradient backplate
   const skyGeo = useMemo(() => {
     const geo = new THREE.PlaneGeometry(0.19, 0.15, 1, 16);
-    paintYGradient(geo, new THREE.Color('#ff7a45'), new THREE.Color('#1b2a6b'));
+    // red horizon → black night sky (red/black/white — no orange/blue)
+    paintYGradient(geo, new THREE.Color('#07070b'), new THREE.Color(SIGNAL_RED));
     return geo;
   }, []);
-  const skyMat = useMemo(() => new THREE.MeshStandardMaterial({ vertexColors: true, emissive: '#3a2f6b', emissiveIntensity: 0.35, roughness: 0.6 }), []);
+  const skyMat = useMemo(() => new THREE.MeshStandardMaterial({ vertexColors: true, emissive: '#2a0509', emissiveIntensity: 0.4, roughness: 0.6 }), []);
 
   // mountain ridge extrude (snow-capped two-tone)
   const ridgeGeo = useMemo(() => {
@@ -493,7 +513,7 @@ function ImageIcon({ accent, hovered, active }: IconProps) {
   const farRidgeMat = useMemo(() => anodized(accent, 0.4), [accent]);
   const sunMatM = useMemo(() => {
     const m = gem(accent);
-    m.emissive = accentC.clone().lerp(new THREE.Color('#ffd27a'), 0.6);
+    m.emissive = accentC.clone().lerp(WHITE, 0.55); // red → white-hot sun (no gold)
     m.emissiveIntensity = 2.2;
     m.roughness = 0.15;
     return m;
@@ -745,13 +765,16 @@ function ChangeArtifactIcon({ accent, hovered, active }: IconProps) {
   }, []);
 
   const gemMat = useMemo(() => new THREE.MeshPhysicalMaterial({
+    // no iridescence (that reads as a banned rainbow) — a deep red faceted gem
+    // with a red emissive core carries the "transform" energy instead.
     color: accent, metalness: 0, roughness: 0.02, transmission: 0.35, thickness: 0.4, ior: 2.4,
-    iridescence: 1, iridescenceIOR: 1.8, iridescenceThicknessRange: [120, 560],
-    clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 1.6,
+    iridescence: 0,
+    emissive: accentC.clone(), emissiveIntensity: 0.35, toneMapped: false,
+    clearcoat: 1, clearcoatRoughness: 0.04, envMapIntensity: 1.7,
     attenuationColor: accentC.clone(), attenuationDistance: 0.5,
   }), [accent, accentC]);
   const ghostMat = useMemo(() => {
-    const cool = accentC.clone().lerp(new THREE.Color('#5fbfff'), 0.5);
+    const cool = accentC.clone().lerp(WHITE, 0.5); // morph ghost = red → white (no blue)
     return new THREE.MeshPhysicalMaterial({ color: accent, metalness: 0, roughness: 0.04, transmission: 0.15, thickness: 0.3, ior: 2.2, emissive: cool, emissiveIntensity: 0.8, toneMapped: false, clearcoat: 1, transparent: true, opacity: 0.55 });
   }, [accent, accentC]);
   const chromeMat = useMemo(() => { const m = chrome(); m.roughness = 0.06; m.envMapIntensity = 2; return m; }, []);
@@ -828,7 +851,8 @@ function PromptEditIcon({ accent, hovered, active }: IconProps) {
   const haloMat = useMemo(() => { const m = emissive(accent, 0.6); m.transparent = true; m.opacity = 0.35; m.blending = THREE.AdditiveBlending; return m; }, [accent]);
   const octoSpark = useMemo(() => new THREE.OctahedronGeometry(0.026, 0), []);
 
-  const spectrum = useMemo(() => ['#ff3b6b', '#ffb13b', '#ffe24a', '#3bff9e', '#4aa8ff'], []);
+  // dispersion fan kept in-palette: white → red → oxblood (NOT a rainbow)
+  const spectrum = useMemo(() => ['#ffffff', '#ff8f95', SIGNAL_RED, '#c01423', '#5c0a12'], []);
   const rodMats = useMemo(() => spectrum.map((c) => emissive(c, 1.8)), [spectrum]);
 
   useFrame((s, dt) => {
@@ -1161,7 +1185,7 @@ function LightingIcon({ accent, hovered, active }: IconProps) {
       {/* nested core */}
       <mesh>
         <sphereGeometry args={[0.072, 48, 48]} />
-        <meshStandardMaterial ref={coreInner} color="#fff2cf" emissive="#fff6e0" emissiveIntensity={3.4} toneMapped={false} roughness={0.25} metalness={0} />
+        <meshStandardMaterial ref={coreInner} color="#ffffff" emissive="#ffffff" emissiveIntensity={3.4} toneMapped={false} roughness={0.25} metalness={0} />
       </mesh>
       <mesh>
         <sphereGeometry args={[0.082, 48, 48]} />
@@ -1203,7 +1227,7 @@ function BuildIcon({ accent, hovered, active }: IconProps) {
   const accentC = useMemo(() => new THREE.Color(accent), [accent]);
 
   const chromeMat = useMemo(() => new THREE.MeshPhysicalMaterial({ metalness: 1, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05, color: '#d7dde6', envMapIntensity: 1.6 }), []);
-  const anod = useMemo(() => new THREE.MeshPhysicalMaterial({ metalness: 0.85, roughness: 0.34, clearcoat: 0.6, color: accentC.clone().multiplyScalar(0.7) }), [accentC]);
+  const anod = useMemo(() => black(1.15), []); // black anodized shaft/neck (chrome head + red grips)
   const gemMat = useMemo(() => new THREE.MeshPhysicalMaterial({ metalness: 0.9, roughness: 0.2, clearcoat: 1, color: accent }), [accent]);
   const clawGeo = useMemo(() => new THREE.TorusGeometry(0.05, 0.012, 10, 24, Math.PI * 0.62), []);
   const tipGeo = useMemo(() => new THREE.ConeGeometry(0.012, 0.024, 12), []);

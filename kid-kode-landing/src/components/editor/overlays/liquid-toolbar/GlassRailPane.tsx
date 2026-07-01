@@ -38,9 +38,15 @@ const BEVEL = 0.065; // front/back rim rounding (milled-glass feel)
 const SOCKET = TOKEN_R * 2.28; // milled cutout side (cube seats inside)
 const OUTER_R = PANE_W * 0.085; // glass pane corner radius: pane, not capsule
 const SOCKET_R = TOKEN_R * 0.12; // small milled radius, still reads square/cube
+const FRAME_W = 0.086; // brushed-chrome bezel width around the glass slab
 
 export function GlassRailPane({ n }: { n: number }) {
-  const { geometry, edges } = useMemo(() => {
+  // PREMIUM ELEVATION (2026-07-01) — the rail reads as a machined instrument:
+  // a SMOKED dark-glass slab (real transmission + attenuation → visible body and
+  // ambient refraction) framed by a brushed-CHROME bezel (real metal edges +
+  // depth). The founder-approved glass idiom, elevated from clear Apple-glass to
+  // premium photoreal smoked glass in a chrome frame.
+  const { geometry, edges, frame } = useMemo(() => {
     const h = barHeight(n);
     const shape = new THREE.Shape();
     roundedRect(shape, 0, 0, PANE_W, h, OUTER_R);
@@ -60,45 +66,88 @@ export function GlassRailPane({ n }: { n: number }) {
     });
     geo.center(); // straddle z=0 → symmetric front↔back glass
     geo.computeVertexNormals();
-    return { geometry: geo, edges: new THREE.EdgesGeometry(geo, 18) };
+
+    // Brushed-chrome bezel: a thin metal frame hugging the outer rim, drawn
+    // proud of the glass so it reads as a machined edge wrapping the slab.
+    const frameShape = new THREE.Shape();
+    roundedRect(frameShape, 0, 0, PANE_W + FRAME_W * 0.9, h + FRAME_W * 0.9, OUTER_R + FRAME_W * 0.4);
+    const frameHole = new THREE.Path();
+    roundedRect(
+      frameHole,
+      0,
+      0,
+      PANE_W - FRAME_W * 1.2,
+      h - FRAME_W * 1.2,
+      Math.max(0.02, OUTER_R - FRAME_W * 0.6),
+    );
+    frameShape.holes.push(frameHole);
+    const frameGeo = new THREE.ExtrudeGeometry(frameShape, {
+      depth: PANE_THICK * 1.02,
+      bevelEnabled: true,
+      bevelThickness: BEVEL * 0.9,
+      bevelSize: BEVEL * 0.9,
+      bevelSegments: 3,
+      curveSegments: 22,
+    });
+    frameGeo.center();
+    frameGeo.computeVertexNormals();
+
+    return { geometry: geo, edges: new THREE.EdgesGeometry(geo, 18), frame: frameGeo };
   }, [n]);
 
   return (
     <group>
+      {/* SMOKED dark-glass slab — real transmission, dark attenuation for body */}
       <mesh geometry={geometry} castShadow receiveShadow>
         <meshPhysicalMaterial
-          color="#ffffff"
+          color="#eaeef5"
           transmission={1}
-          thickness={0.95}
-          ior={1.52}
-          roughness={0.035}
+          thickness={1.15}
+          ior={1.5}
+          roughness={0.05}
           metalness={0}
           clearcoat={1}
-          clearcoatRoughness={0.08}
-          attenuationColor="#eef8ff"
-          attenuationDistance={10}
-          envMapIntensity={2.25}
+          clearcoatRoughness={0.06}
+          attenuationColor="#141922"
+          attenuationDistance={3.1}
+          envMapIntensity={2.7}
           specularIntensity={1}
-          opacity={0.52}
+          opacity={0.74}
           transparent
           depthWrite={false}
         />
       </mesh>
+
+      {/* Brushed-chrome bezel frame (real machined metal edge + depth) */}
+      <mesh geometry={frame} castShadow receiveShadow raycast={() => null}>
+        <meshPhysicalMaterial
+          color="#c8cfd9"
+          metalness={1}
+          roughness={0.26}
+          clearcoat={1}
+          clearcoatRoughness={0.12}
+          envMapIntensity={1.9}
+        />
+      </mesh>
+
+      {/* Polished glass edge catch-light along the sockets + rim */}
       <lineSegments geometry={edges} raycast={() => null}>
         <lineBasicMaterial
-          color="#f7fbff"
+          color="#ffffff"
           transparent
-          opacity={0.32}
+          opacity={0.42}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </lineSegments>
-      <mesh position={[0.08, -0.04, -PANE_THICK * 0.95]} raycast={() => null}>
-        <planeGeometry args={[PANE_W * 0.9, barHeight(n) * 0.97]} />
+
+      {/* Dark instrument backing → the smoked glass reads over depth, not air */}
+      <mesh position={[0.06, -0.03, -PANE_THICK * 0.98]} raycast={() => null}>
+        <planeGeometry args={[PANE_W * 0.92, barHeight(n) * 0.98]} />
         <meshBasicMaterial
-          color="#030507"
+          color="#04060a"
           transparent
-          opacity={0.012}
+          opacity={0.16}
           depthWrite={false}
           toneMapped={false}
         />
