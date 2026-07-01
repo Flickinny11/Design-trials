@@ -14,7 +14,7 @@ RUNLOG="$D/chain-$NAME-run.log"
 WEBHOOK_FILE="$D/.notify-webhook"   # optional: put an ntfy.sh/webhook URL here for phone push
 PREFLIGHT="$D/kid-kode-landing/scripts/prism-autonomy-preflight.mjs"
 WORKSPACE_SPEC="$D/kid-kode-landing/docs/prism/PRISM-WORKSPACE-COMPLETION-SPEC.md"
-MODEL="claude-opus-4-8"; MAXRESUMES=10; RESUMES=0
+MODEL="${HARNESS_MODEL:-claude-fable-5}"; MAXRESUMES=10; RESUMES=0
 SEEN_COMPLETE=0; SEEN_BLOCKED=0; HB=0
 START_EPOCH=$(date +%s)
 ts(){ date +%H:%M:%S; }

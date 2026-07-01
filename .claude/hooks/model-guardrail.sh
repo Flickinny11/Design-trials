@@ -31,7 +31,7 @@ new_content=$(echo "$payload" | jq -r '.tool_input.content // .tool_input.new_st
 reject() {
   echo "model-guardrail REJECTED edit on $file_path:" >&2
   echo "  $1" >&2
-  echo "  Per user policy (zero-ambiguity): chain coding work runs on Opus only." >&2
+  echo "  Per user policy (zero-ambiguity): chain coding work runs on Fable 5 or Opus only (never Sonnet/Haiku)." >&2
   echo "  To override, you must first edit .claude/hooks/model-guardrail.sh." >&2
   exit 1
 }
@@ -52,8 +52,8 @@ case "$file_path" in
 
   */.claude/.harness-model|*/.claude/.ralph-model)
     trimmed=$(tr -d '[:space:]' <<< "$new_content")
-    if [[ -n "$trimmed" && ! "$trimmed" =~ ^claude-opus- ]]; then
-      reject "would set chain model to '$trimmed' (not an Opus variant)."
+    if [[ -n "$trimmed" && ! "$trimmed" =~ ^claude-(opus|fable)- ]]; then
+      reject "would set chain model to '$trimmed' (not an approved Opus/Fable variant)."
     fi
     ;;
 
