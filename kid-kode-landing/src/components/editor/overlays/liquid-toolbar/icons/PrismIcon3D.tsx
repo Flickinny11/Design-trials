@@ -21,7 +21,9 @@ import * as THREE from 'three';
 import { SIGNAL_RED } from '../config';
 
 const WHITE = new THREE.Color('#ffffff');
-const INK = new THREE.Color('#0a0a0d'); // near-black body base
+const INK = new THREE.Color('#16161d'); // black body base — dark gunmetal that
+// still reads black but catches enough studio rim-light to hold a crisp
+// silhouette against the smoked-glass cube (advocate legibility note 2026-07-01).
 
 // ── SHARED MATERIAL KIT ───────────────────────────────────────────────────────
 // Helper builders, memoized per icon instance at the call sites. Emissive glow
