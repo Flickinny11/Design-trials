@@ -1,0 +1,68 @@
+{
+  "steps": [
+    {
+      "step": "asset uploaded",
+      "pass": true,
+      "assetUrl": "/prism-mock/uploads/fed1dd84ba0d069e57d0c3a1642c620f5ac166acafcdc93804c93e3042838e86.png"
+    },
+    {
+      "step": "Add Element created a stage-0 bubble node in canvas",
+      "pass": true,
+      "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d"
+    },
+    {
+      "step": "galaxy semantics: node is CONTENT + UNBUILT + first-class in the projection",
+      "pass": true,
+      "role": "content",
+      "unbuilt": true,
+      "inProjection": true
+    },
+    {
+      "step": "galaxy frame captured with the unbuilt node present as structure",
+      "pass": true
+    },
+    {
+      "step": "preview-app: unbuilt node NOT mounted (built-status law)",
+      "pass": true,
+      "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d"
+    },
+    {
+      "step": "BUILD: bubble populated → rebuilt as a real textured element in canvas",
+      "pass": true,
+      "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d"
+    },
+    {
+      "step": "galaxy semantics now report the node BUILT (still first-class structure)",
+      "pass": true,
+      "unbuilt": false,
+      "inProjection": true
+    },
+    {
+      "step": "preview-app now mounts the BUILT element (textured)",
+      "pass": true,
+      "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d",
+      "mounted": true,
+      "textured": true
+    },
+    {
+      "step": "saved to server (/api/prism/regen → live-graph.json)",
+      "pass": true,
+      "save": {
+        "ok": true,
+        "regeneratedAt": "2026-07-01T21:59:29.176Z"
+      }
+    },
+    {
+      "step": "PERSISTENCE: reload restores the node BUILT from live-graph.json",
+      "pass": true,
+      "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d",
+      "present": true,
+      "sourceAsset": "/prism-mock/uploads/fed1dd84ba0d069e57d0c3a1642c620f5ac166acafcdc93804c93e3042838e86.png",
+      "renderMode": "sprite"
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "bubbleId": "e62e2d61-f50b-40ef-ac56-32e7ca05202d",
+  "assetUrl": "/prism-mock/uploads/fed1dd84ba0d069e57d0c3a1642c620f5ac166acafcdc93804c93e3042838e86.png"
+}

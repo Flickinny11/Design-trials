@@ -1,0 +1,91 @@
+{
+  "desktop": [
+    {
+      "step": "galaxy counts: Atelier pill 16, minimap \"51 elements\"",
+      "pass": true,
+      "atelierPill": "16",
+      "minimapLabel": "51 elements"
+    },
+    {
+      "step": "galaxy hover (physical): hub raycast gives pointer-cursor feedback",
+      "pass": true,
+      "hubCursor": "pointer"
+    },
+    {
+      "step": "hub nav: clicking the Movement pill flies to the hub",
+      "pass": true,
+      "activeHub": "s2-movement"
+    },
+    {
+      "step": "galaxy hover: node label ENLARGES on hover (premium label feature)",
+      "pass": true,
+      "ok": true,
+      "element": "Headline",
+      "before": 0.934693,
+      "after": 1.55
+    },
+    {
+      "step": "node editor: selecting a node opens the Inspector",
+      "pass": true,
+      "selectedId": "shell-2_movement-header-bar",
+      "inspectorOpen": true
+    },
+    {
+      "step": "node editor: real staged edit registered then discarded (no persistence)",
+      "pass": true,
+      "edited": true,
+      "discarded": true,
+      "node": "orr-movement-headline"
+    },
+    {
+      "step": "canvas counts UNIFIED: Atelier pill 16 + minimap \"51 elements\" (same as galaxy)",
+      "pass": true,
+      "atelierPill": "16",
+      "minimapLabel": "51 elements"
+    },
+    {
+      "step": "canvas hover (physical): built artifact raycast sets hoveredNodeId",
+      "pass": true,
+      "artHovered": "orr-celestia-sub-scrim"
+    },
+    {
+      "step": "Shipped Frame control present; \"Edit in Preview\" label GONE",
+      "pass": true,
+      "sfVisible": true,
+      "noOldLabel": true
+    },
+    {
+      "step": "Shipped Frame lock: pill reads \"Canvas · Shipped Frame\" (camera locked, editing live)",
+      "pass": true
+    },
+    {
+      "step": "preview-app: no authoring chrome (no inspector, no Shipped Frame control)",
+      "pass": true
+    }
+  ],
+  "mobile": [
+    {
+      "step": "mobile galaxy: hub pill shows element count (Atelier 16)",
+      "pass": true,
+      "atelierPill": "16",
+      "minimapLabel": null
+    },
+    {
+      "step": "mobile: hub pill tap navigates",
+      "pass": true,
+      "hub": "s6-atelier"
+    },
+    {
+      "step": "mobile canvas: counts still element-level (Atelier 16)",
+      "pass": true,
+      "atelierPill": "16",
+      "minimapLabel": null
+    },
+    {
+      "step": "mobile preview reachable",
+      "pass": true
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": []
+}

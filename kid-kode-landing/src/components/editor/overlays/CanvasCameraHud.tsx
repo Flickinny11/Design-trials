@@ -83,8 +83,12 @@ export default function CanvasCameraHud() {
 
   if (viewMode !== 'canvas') return null;
 
-  // ── P3: Edit-in-Preview — the camera is locked to the shipped framing; the
-  // free-orbit instrument + journey REC don't apply, so show the exit control. ─
+  // ── P3: Shipped-Frame lock — a CANVAS sub-mode (renamed from "Edit in
+  // Preview", FINISH F-2): the canvas camera locks to the shipped framing so
+  // the user designs against the real result, but authoring stays HERE in
+  // canvas — Preview itself remains camera-locked shippable output with no
+  // authoring tools. The free-orbit instrument + journey REC don't apply while
+  // locked, so show the exit control. ─
   if (editInPreview) {
     return (
       <div className={`absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
@@ -92,8 +96,8 @@ export default function CanvasCameraHud() {
           style={{ boxShadow: '0 0 0 1px rgba(var(--ds-metal-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb),0.5)' }}>
           <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-metal-200)', boxShadow: '0 0 7px var(--ds-metal-200)' }} />
           <div className="flex flex-col leading-none">
-            <span className="text-[10px] font-ui font-semibold tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Editing in Preview</span>
-            <span className="text-[8px] font-mono mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>SHIPPED FRAME · TOOLBAR LIVE</span>
+            <span className="text-[10px] font-ui font-semibold tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Canvas · Shipped Frame</span>
+            <span className="text-[8px] font-mono mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>CAMERA LOCKED · EDITING LIVE</span>
           </div>
           <button type="button" onClick={() => setEditInPreview(false)} title="Back to free orbit"
             className="ds-press flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-full"
@@ -186,15 +190,17 @@ export default function CanvasCameraHud() {
         </button>
       </div>
 
-      {/* ── P3: Edit-in-Preview enter ──────────────────────────────────────── */}
+      {/* ── P3: Shipped-Frame lock enter (canvas stays the authoring surface;
+             renamed from "Edit in Preview" so it can never read as authoring
+             FROM Preview — FINISH F-2). ─────────────────────────────────────── */}
       <button type="button" onClick={() => setEditInPreview(true)}
-        title="Lock to the shipped framing and edit against the real result"
+        title="Lock the canvas camera to the shipped framing — edit here in Canvas against the real result (Preview stays read-only)"
         className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-1.5 h-7 pl-2.5 pr-3 rounded-full">
         <svg width="13" height="11" viewBox="0 0 13 11" aria-hidden>
           <rect x="0.7" y="0.7" width="11.6" height="9.6" rx="1.4" fill="none" stroke="var(--ds-metal-200)" strokeWidth="1.1" />
           <path d="M3.4 7.6 L6 4.2 L7.6 6 L9 4.2 L9.6 7.6 Z" fill="var(--ds-metal-200)" opacity="0.85" />
         </svg>
-        <span className="text-[9px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Edit in Preview</span>
+        <span className="text-[9px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Shipped Frame</span>
       </button>
     </div>
   );

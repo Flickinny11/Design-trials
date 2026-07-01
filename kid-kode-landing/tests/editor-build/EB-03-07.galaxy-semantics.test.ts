@@ -86,17 +86,19 @@ describe('EB-03-07 — Galaxy semantic overview', () => {
     const projection = getGalaxyOverviewProjection(editorGraph.nodes);
     const clusters = projection.filter((node) => node.isGalaxyCluster);
 
-    expect(rawOverview).toHaveLength(148);
+    // Galaxy node-semantics run (ac54c1ab): 7 embedded-decoration atoms
+    // (text-scrim / spec-rail-edge / panel-chrome) collapsed out of the
+    // overview (148 → 141) and the "support-layers" cluster was removed.
+    expect(rawOverview).toHaveLength(141);
     expect(projection.length).toBeLessThan(rawOverview.length);
     expect(projection.length).toBeLessThanOrEqual(64);
-    expect(countGalaxyOverviewNodesForHub(editorGraph.nodes, 's6-atelier')).toBe(73);
+    expect(countGalaxyOverviewNodesForHub(editorGraph.nodes, 's6-atelier')).toBe(72);
     expect(countGalaxyProjectedNodesForHub(editorGraph.nodes, 's6-atelier')).toBeLessThanOrEqual(18);
     expect(countGalaxyProjectedNodesForHub(editorGraph.nodes, 's3-materia')).toBeLessThanOrEqual(12);
     expect(clusters.map((node) => node.galaxyClusterKind)).toEqual(expect.arrayContaining([
       'atelier-options',
       'material-card',
       'cta',
-      'support-layers',
     ]));
     expect(clusters.every((node) => (node.clusterNodeIds?.length ?? 0) > 0)).toBe(true);
   });
@@ -109,5 +111,18 @@ describe('EB-03-07 — Galaxy semantic overview', () => {
     expect(graphSceneSrc).toMatch(/viewMode === 'galaxy' && showGalaxyBadges/);
     expect(hubNavSrc).toMatch(/countGalaxyProjectedNodesForHub/);
     expect(minimapSrc).toMatch(/getGalaxyOverviewProjection/);
+  });
+
+  it('FINISH F-2 — counts tell ONE element-level story across galaxy/canvas/preview', () => {
+    // Hub pills always count elements (the projection), never raw graph atoms.
+    expect(hubNavSrc).toMatch(/elementCountByHub/);
+    expect(hubNavSrc).not.toMatch(/railViewMode === 'galaxy'\s*\?\s*countGalaxyProjectedNodesForHub/);
+    // Minimap always projects to elements (no per-view-mode unit switch) and
+    // labels the number for what it counts.
+    expect(minimapSrc).toMatch(/\{graph\.nodes\.length\} elements/);
+    expect(minimapSrc).not.toMatch(/viewMode !== 'galaxy'/);
+    // Canvas atom selections map to their containing element on the radar.
+    expect(minimapSrc).toMatch(/elementIdForAtom/);
+    expect(minimapSrc).toMatch(/clusterNodeIds/);
   });
 });

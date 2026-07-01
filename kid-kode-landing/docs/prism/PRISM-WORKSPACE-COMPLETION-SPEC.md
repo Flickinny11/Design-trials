@@ -1,8 +1,11 @@
 # PRISM — Workspace Completion Recovery Spec — 2026-06-30
 
-Status: guarded recovery draft. This document is a launch input only after it
-passes `scripts/spec-intent-check.mjs` and the Prism autonomy preflight. It does
-not carry founder signoff.
+Status: **founder-directed** (2026-07-01). The founder's direction, recorded
+verbatim in the Amendment at the end of this document, satisfies the signoff
+this draft was waiting on: the workspace vision, the galaxy↔canvas↔preview
+parity law, and the premium bar are spec-level law for every FINISH-chain
+phase. The document remains a launch input only after it passes
+`scripts/spec-intent-check.mjs` and the Prism autonomy preflight.
 
 ## Purpose
 
@@ -136,15 +139,24 @@ The goal is not to hardcode the watch app. The watch app is verification data.
 - No raw secrets in graph data.
 - No launch from unchecked prompts/specs.
 
-## Next Safe Phase: W3 Recovery Prompt
+## Next Safe Phase: the FINISH chain
 
-The next build prompt should target the unified per-node agent in the root editor
-only after these gates pass:
+> Refreshed 2026-07-01 (FINISH F-2). The W1–W5 recovery arc SHIPPED — W3's
+> unified per-node agent included (`notes/WS-W5-REPORT.md`) — so the old
+> "W3 Recovery Prompt" pointer here was stale. The active arc is the
+> **FINISH chain** (`FINISH-F1-KEYFRAME-PROMPT.md` →
+> `FINISH-F2-PARITY-PROMPT.md` → `FINISH-F3-SHIPPABLE-PROMPT.md` →
+> `FINISH-F4-CERTIFICATION-PROMPT.md`, repo root), interpreted against the
+> founder direction in `FINISH-CHAIN-FOUNDER-DIRECTION.md` (quoted verbatim in
+> the Amendment below) and verified under
+> `docs/prism/NEAR-HUMAN-QA-PROTOCOL.md`.
+
+Each FINISH phase launches only after these gates pass:
 
 1. `node kid-kode-landing/scripts/spec-intent-check.mjs <prompt> <this-spec>`
 2. `node kid-kode-landing/scripts/prism-autonomy-preflight.mjs --prompt <prompt> --spec kid-kode-landing/docs/prism/PRISM-WORKSPACE-COMPLETION-SPEC.md`
-3. The user or founder removes the intentional `CHAIN-STOP` after reviewing the
-   prompt/spec state.
+3. The phase's judges (user-advocate + prism-criteria-reviewer, fresh context)
+   return PASS with 0 MUST-FIX under the near-human QA protocol.
 
 ## Verification Standard
 
@@ -162,3 +174,90 @@ Each recovery phase must include evidence, not assertions:
 
 The phase is not complete until the relevant gate output is green or a blocker is
 recorded with exact command output and next action.
+
+## Amendment 2026-07-01 — Founder direction (verbatim)
+
+> Recorded by Fable 5 for the FINISH chain (source:
+> `FINISH-CHAIN-FOUNDER-DIRECTION.md`, repo root). This is the founder signoff
+> the Status line references; every FINISH phase interprets its prompt against
+> this direction. It carries three spec-level laws: (1) the **parity law**
+> (galaxy ↔ canvas ↔ preview are one graph in three views — no UI element
+> without a galaxy node, unbuilt in galaxy until built, built = visible in
+> canvas/preview), (2) the **premium bar** (photoreal materials, no AI-slop,
+> nothing flat), and (3) the **preview-window context** (this prototype is the
+> preview pane of a larger AI app builder; galaxy mode is the file-editor
+> replacement; the runtime must be ready to build ANY app, not just the watch).
+
+The founder's words, quoted verbatim from his 2026-07-01 message:
+
+> setup our optimal harness leveraging the ever verification looping, vision
+> analysis, computer-use, browser use, and near human-level computer use to
+> interact and check on our app build, to make sure it visually meets the design
+> and style requirements of this premium app, since our prototype editor is
+> designing the most premium apps itself, it means that the ui needs to be
+> reflective of those premium capabilities it has in every way. the watch app
+> that the editor is building - it's a mock app intended to show off the
+> capabilities of the editor, and we need it all to truly be premium, using
+> modern premium color patterns, smooth gradients, NO AI-SLOP, nothing can be
+> flat - we need photorealistic textures and materials and ambient light
+> refractions, so we need the editor to function like it's a real premium editor
+> of 3D UI's - it's all gotta be premium, and the mock watch app also needs to
+> be premium and have all the elements that a real app would have and the
+> functionality and navigation and running on the prism runtime. it's time to
+> finish it all up, polish, make sure it all actually works - remembering that
+> this prototype is going to be eventually integrated into a larger ai app
+> builder as the preview window (imagine a typical ai app builder with streaming
+> chat on the left and preview window on the right - this prototype is the
+> preview window on the right but it also has galaxy mode which is the file
+> editor replacement - so there's no file editor but instead the galaxy mode
+> shows all the hubs and nodes in unbuilt status in the cool solar system type
+> of display so [users] can find the elements/pages of what they are building
+> and edit the elements functionality in the node editor in galaxy, but the
+> heavy visual edits are done in the canvas editor, which the canvas editor is
+> the built status of those nodes that are in galaxy mode, and preview is also
+> the built status but preview is the preview of what the user's app will look
+> [like] when the user ships the app that they're building. so, the watch app is
+> a mock app but it should look like a shippable app in preview, naturally. the
+> relationship between galaxy and canvas and preview is critical and it's in the
+> spec... I do want to finish it up, polish it, make sure it all works, make
+> sure it functionally works as well for editing apps, and to test every button
+> and editing capability. it needs to be made shippable, both the prototype
+> editor and the actual mock app. so, that's why the relationship between the
+> prototype editor and the mock app that is being built with the editor is
+> critical. there can't be an element in the ui of the watch app without there
+> being a node for it in galaxy mode - that's the relationship because the
+> galaxy mode shows all those nodes unbuilt status and then when built that's
+> when it's visible in the preview and canvas - it's in the spec. so, I need you
+> to ultrathink and use that big fable 5 brain to finally help me bring this to
+> completion so I can finally move to the next phase which is integrating the
+> larger ai app builder. just for a little more context - think of our prototype
+> editor as the preview window in Claude design - I have yet to integrate the
+> whole prompt to app system and ui - however, we will do that later. so the
+> node system is critical for each node to be able to build individually and for
+> the prism runtime that we've spec'd out to be truly ready for users to build
+> ANY app, not just that watch app, but any app to be built and edited using the
+> canvas and galaxy modes.
+
+(Bracketed words are minimal typo normalizations, per the source file.)
+
+### How the parity law is enforced (FINISH F-2)
+
+- `scripts/galaxy-parity-gate.mjs` enforces BOTH directions permanently:
+  Direction A (every mounted UI element → graph node → galaxy representation)
+  and Direction B (every first-class galaxy element → a real BUILT artifact in
+  canvas, stage-0 unbuilt nodes exempt and asserted absent from preview).
+  `npm run verify:parity` is the live gate (needs the dev server);
+  `npm run verify:parity-static` is the graph-level half, wired into
+  `npm run verify`.
+- The in-page probe `window.__PRISM_GALAXY_PARITY__` (src/app/page.tsx)
+  evaluates the real `galaxy-semantics.ts` module against the live store; the
+  gate cross-checks its script-side mirror (`scripts/lib/galaxy-roles.mjs`)
+  against it every run, so mirror drift is machine-caught.
+- Counts shown to the user tell ONE element-level story across views: the
+  minimap and hub pills always show the galaxy first-level projection count
+  ("elements" — clusters count once; app-shell/hit-target/decoration
+  implementation atoms collapsed), in galaxy, canvas, and preview alike.
+- Preview remains non-authoring: the canvas camera-lock sub-mode formerly
+  labeled "Edit in Preview" is renamed "Shipped Frame" so it can never read as
+  authoring from Preview (it never leaves canvas; the flag resets on any mode
+  change).

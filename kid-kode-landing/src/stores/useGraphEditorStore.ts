@@ -87,12 +87,16 @@ interface GraphEditorState {
    */
   editorMode: EditorMode;
   /**
-   * APP-REALITY P3 — "Edit in Preview" canvas sub-mode. When true (only
-   * meaningful while viewMode === 'canvas'), the camera locks to the configured
-   * shipped view (the preview framing / journey landing) and the canvas-only
-   * viewport-frame scaffolding hides, so the canvas reads as the built app —
-   * yet the toolbar, selection, and transform gizmo stay live so the user
-   * designs against the real result. Reset to false on any mode change.
+   * APP-REALITY P3 — "Shipped Frame" CANVAS sub-mode (UI label renamed from
+   * "Edit in Preview" in FINISH F-2; the field name is retained, additive
+   * schema discipline). When true (only meaningful while viewMode ===
+   * 'canvas'), the canvas camera locks to the configured shipped view (the
+   * preview framing / journey landing) and the canvas-only viewport-frame
+   * scaffolding hides, so the canvas reads as the built app — yet the toolbar,
+   * selection, and transform gizmo stay live so the user designs against the
+   * real result. Authoring never happens FROM preview-app: this flag never
+   * changes viewMode, and setViewMode resets it to false on any mode change
+   * (Preview stays camera-locked shippable output).
    */
   editInPreview: boolean;
   /**
@@ -256,7 +260,7 @@ interface GraphEditorState {
    * the click handler.
    */
   setEditorMode: (m: EditorMode) => void;
-  // APP-REALITY P3 — toggle the "Edit in Preview" canvas sub-mode.
+  // APP-REALITY P3 — toggle the "Shipped Frame" canvas sub-mode (FINISH F-2 rename).
   setEditInPreview: (b: boolean) => void;
   // FINISH F-1 — the canvas Keyframe panel's open state (shared UI flag).
   setKeyframePanelOpen: (b: boolean) => void;

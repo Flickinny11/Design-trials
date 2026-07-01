@@ -26,6 +26,12 @@ import {
 } from '@/lib/prism-graph/preview-app-routing';
 import type { PrismRootNode } from '@/lib/prism-graph/root-node';
 import { applyBackgroundPreset } from '@/lib/editor/backgrounds/presets';
+import {
+  getGalaxyNodeRole,
+  getGalaxyOverviewProjection,
+} from '@/lib/prism-graph/galaxy-semantics';
+import { toEditorView } from '@/lib/prism-graph/view-model';
+import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -338,6 +344,60 @@ export default function Page() {
       };
       delete w.__PRISM_EDITOR_FIRE_TETHER__;
       delete w.__PRISM_EDITOR_TETHER_FIRES__;
+    };
+  }, []);
+
+  // FINISH F-2 — galaxy↔element PARITY probe for scripts/galaxy-parity-gate.mjs.
+  // Evaluates the REAL galaxy-semantics module against the LIVE source store
+  // (never a re-implementation, so the gate cannot drift from the app's own
+  // projection). Returns, per source node: its semantic role and whether it is
+  // a stage-0 (unbuilt) bubble; plus the first-class galaxy projection with
+  // each element's member atom ids. Editor-shell code; not subject to INV-13.
+  useEffect(() => {
+    (window as unknown as {
+      __PRISM_GALAXY_PARITY__?: () => unknown;
+    }).__PRISM_GALAXY_PARITY__ = () => {
+      const src = useGraphSourceStore.getState();
+      const roles: Record<string, string> = {};
+      const unbuilt: string[] = [];
+      for (const node of src.nodes) {
+        roles[node.nodeId] = getGalaxyNodeRole({
+          id: node.nodeId,
+          subtype: node.subtype,
+          parentHubId: node.parentHubId,
+          hubIds: node.parentHubId ? [node.parentHubId] : [],
+          isGlobalElement: node.isGlobalElement,
+          globalSlot: node.globalSlot === 'header' || node.globalSlot === 'footer'
+            ? node.globalSlot
+            : undefined,
+        });
+        if (isStage0Bubble(node)) unbuilt.push(node.nodeId);
+      }
+      // Same node scope the galaxy view renders (global overlay elements are
+      // opened as overlays, never galaxy spheres — GraphScene excludes them).
+      const editorGraph = toEditorView({
+        hubs: src.hubs,
+        nodes: src.nodes.filter((n) => !n.isGlobalElement),
+        edges: src.edges,
+      });
+      const projection = getGalaxyOverviewProjection(editorGraph.nodes).map((n) => ({
+        id: n.id,
+        name: n.name,
+        hubIds: n.hubIds,
+        isCluster: n.isGalaxyCluster === true,
+        memberIds: n.isGalaxyCluster ? (n.clusterNodeIds ?? []) : [n.id],
+      }));
+      return {
+        totalSourceNodes: src.nodes.length,
+        hubIds: src.hubs.map((h) => h.hubId),
+        roles,
+        unbuilt,
+        projectedElementCount: projection.length,
+        projection,
+      };
+    };
+    return () => {
+      delete (window as unknown as { __PRISM_GALAXY_PARITY__?: unknown }).__PRISM_GALAXY_PARITY__;
     };
   }, []);
 

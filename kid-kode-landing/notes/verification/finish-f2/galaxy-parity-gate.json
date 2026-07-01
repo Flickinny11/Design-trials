@@ -1,0 +1,132 @@
+{
+  "url": "http://localhost:3000",
+  "staticOnly": false,
+  "projectedElementCount": 51,
+  "mountedArtifacts": 277,
+  "perHub": {
+    "s1-arrival": {
+      "mounted": 36
+    },
+    "s2-movement": {
+      "mounted": 39
+    },
+    "s3-materia": {
+      "mounted": 62
+    },
+    "s4-celestia": {
+      "mounted": 39
+    },
+    "s5-acquire": {
+      "mounted": 48
+    },
+    "s6-atelier": {
+      "mounted": 103
+    }
+  },
+  "hardcoded": [],
+  "directionA": {
+    "notInGraph": [],
+    "contentNotInGalaxy": []
+  },
+  "directionB": {
+    "missing": [],
+    "emptyNonText": [],
+    "emptyText": []
+  },
+  "unbuilt": [],
+  "previewMountedCount": 36,
+  "unbuiltInPreview": [],
+  "results": [
+    {
+      "id": "parity.graph-readable",
+      "desc": "live graph has hubs and nodes",
+      "pass": true,
+      "warn": false,
+      "detail": "6 hubs, 327 nodes"
+    },
+    {
+      "id": "parity.roles-known",
+      "desc": "every graph node classifies into a known galaxy role",
+      "pass": true,
+      "warn": false,
+      "detail": "327 nodes across 4 roles"
+    },
+    {
+      "id": "parity.galaxy-covers-content",
+      "desc": "DIRECTION A (structure): every content node is represented in the galaxy projection (itself or cluster member)",
+      "pass": true,
+      "warn": false,
+      "detail": "141 content atoms → 51 first-class elements, 0 dropped"
+    },
+    {
+      "id": "parity.projection-members-real",
+      "desc": "DIRECTION B (structure): every galaxy element member maps to a real graph node",
+      "pass": true,
+      "warn": false,
+      "detail": "141 member atoms all real"
+    },
+    {
+      "id": "parity.per-hub-elements",
+      "desc": "every page hub presents at least one first-class galaxy element",
+      "pass": true,
+      "warn": false,
+      "detail": "s1-arrival:5, s2-movement:7, s3-materia:7, s4-celestia:6, s5-acquire:10, s6-atelier:16"
+    },
+    {
+      "id": "parity.content-built-or-unbuilt",
+      "desc": "every content node is BUILT (real artifact source) or stage-0 UNBUILT (no artifact)",
+      "pass": true,
+      "warn": false,
+      "detail": "all 141 content nodes are BUILT"
+    },
+    {
+      "id": "live.probes-installed",
+      "desc": "__PRISM_GALAXY_PARITY__ + __PRISM_NODE_AUTHORSHIP__ installed, scene mounted",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "live.mirror-matches-app",
+      "desc": "script mirror projection == in-page galaxy-semantics projection (no drift)",
+      "pass": true,
+      "warn": false,
+      "detail": "51 first-class elements, member sets identical"
+    },
+    {
+      "id": "live.no-hardcoded-artifacts",
+      "desc": "zero hardcoded artifacts across all hubs (Law 0 floor)",
+      "pass": true,
+      "warn": false,
+      "detail": "all mounted artifacts node-authored (277 node ids)"
+    },
+    {
+      "id": "live.element-has-galaxy-node",
+      "desc": "DIRECTION A: every mounted UI element has a galaxy node (projection member or sanctioned hub-layer role)",
+      "pass": true,
+      "warn": false,
+      "detail": "277 mounted artifacts: all graph-backed, content all galaxy-represented"
+    },
+    {
+      "id": "live.galaxy-node-has-element",
+      "desc": "DIRECTION B: every BUILT first-class galaxy element mounts a real artifact in canvas",
+      "pass": true,
+      "warn": false,
+      "detail": "141 element atoms verified (0 unbuilt exempt)"
+    },
+    {
+      "id": "live.unbuilt-hidden-in-preview",
+      "desc": "UNBUILT nodes do not exist in preview-app (built-status law)",
+      "pass": true,
+      "warn": false,
+      "detail": "0 unbuilt node(s) in graph, 0 mounted in preview"
+    },
+    {
+      "id": "live.no-pageerrors",
+      "desc": "no uncaught page errors during the parity walk",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

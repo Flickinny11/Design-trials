@@ -108,6 +108,19 @@ export default function HubNav() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // FINISH F-2 — ONE count story across views (founder parity law): every hub
+  // pill shows the hub's ELEMENT count (the galaxy first-level projection —
+  // clusters count once, implementation atoms collapsed) in galaxy, canvas,
+  // and preview alike. The old canvas branch counted raw graph atoms (Atelier
+  // 103 vs galaxy's 16 — two unlabeled unit systems for the same hub).
+  const elementCountByHub = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const hub of graph.hubs) {
+      counts.set(hub.id, countGalaxyProjectedNodesForHub(graph.nodes, hub.id));
+    }
+    return counts;
+  }, [graph.hubs, graph.nodes]);
+
   // UI-FIDELITY-2 — the rail housing renders as real brushed metal in the
   // unified canvas (brushed along its long/horizontal axis).
   const railSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
@@ -135,9 +148,7 @@ export default function HubNav() {
 
         {graph.hubs.map((hub, i) => {
           const active = activeHubId === hub.id;
-          const nodeCount = railViewMode === 'galaxy'
-            ? countGalaxyProjectedNodesForHub(graph.nodes, hub.id)
-            : graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
+          const elementCount = elementCountByHub.get(hub.id) ?? 0;
           return (
             <RailPill key={hub.id} active={active} onClick={() => flyToHub(hub.id)}>
               <Pip active={active} />
@@ -148,7 +159,10 @@ export default function HubNav() {
                   hub.color dashboard blue. */}
               <Icon name={hubGlyph(i)} size={12} color={active ? DS.arc : DS.textMid} glow={active} />
               {hub.name}
-              <span className="text-[10px] font-mono tabular-nums opacity-50">{nodeCount}</span>
+              <span
+                className="text-[10px] font-mono tabular-nums opacity-50"
+                title={`${elementCount} elements`}
+              >{elementCount}</span>
             </RailPill>
           );
         })}
