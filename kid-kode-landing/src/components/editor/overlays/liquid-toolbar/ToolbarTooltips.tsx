@@ -1,29 +1,14 @@
 'use client';
 
-// ToolbarTooltips — DOM label layer for the liquid-glass toolbar. Most buttons
-// are textless 3D objects; on hover a tasteful glass tooltip slides in beside
-// the rail showing the tool's label (DESIGN LAW B.1: "MOST buttons have NO text
-// — a tooltip appears on hover"). A few buttons carry inline text instead (see
-// TEXT_BUTTONS) so they need no tooltip.
+// ToolbarTooltips — DOM label layer for the liquid-glass toolbar. The rail
+// itself is textless 3D glass; on hover/focus a glass tooltip slides in beside
+// the rail showing the tool's label.
 //
 // The tooltip is positioned from the hovered button's index using the same
 // orthographic fit the scene uses (bar fills ~92% of the rail height, centered),
 // so the label always sits dead-level with its button regardless of float.
 
-import { barHeight, buttonY, accentFor, type LiquidToolGroup } from './config';
-
-// Buttons that carry a PERSISTENT inline text label (a few, per DESIGN LAW B.1
-// "only a few buttons carry text"). These show their label always and get no
-// hover tooltip; every other button is textless with a hover tooltip.
-export const TEXT_BUTTONS = new Set<string>(['add', 'build']);
-
-// Shared screen-Y projection: world +Y is up → screen up (smaller y). The bar
-// fills ~92% of the rail height, centered (matches CameraFit).
-function screenYFor(i: number, n: number, railHeight: number): number {
-  const barH = barHeight(n);
-  const worldY = buttonY(i, n);
-  return railHeight / 2 - (worldY / (barH / 2)) * (0.46 * railHeight);
-}
+import { accentFor, screenYForButton, type LiquidToolGroup } from './config';
 
 export interface ToolbarTooltipsProps {
   groups: LiquidToolGroup[];
@@ -41,40 +26,13 @@ export function ToolbarTooltips({
   const n = groups.length;
   const visible = hoverIdx != null && groups[hoverIdx] != null;
   const g = visible ? groups[hoverIdx as number] : null;
-  const showTip = visible && g != null && !TEXT_BUTTONS.has(g.id);
+  const showTip = visible && g != null;
 
   // Screen Y of the hovered button.
-  const screenY = hoverIdx != null ? screenYFor(hoverIdx, n, railHeight) : 0;
+  const screenY = hoverIdx != null ? screenYForButton(hoverIdx, n, railHeight) : 0;
   const accent = g ? accentFor(g.id) : '#d8b46a';
 
   return (
-    <>
-      {/* Persistent labels for the few text buttons (always visible). */}
-      {groups.map((grp, i) =>
-        TEXT_BUTTONS.has(grp.id) ? (
-          <div
-            key={grp.id}
-            style={{
-              position: 'absolute',
-              left: railWidth - 4,
-              top: Math.round(screenYFor(i, n, railHeight)) - 9,
-              pointerEvents: 'none',
-              zIndex: 58,
-              whiteSpace: 'nowrap',
-              fontFamily: 'var(--font-ui, ui-sans-serif), system-ui, sans-serif',
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-              color: 'var(--ds-text-hi, #eef2f8)',
-              textShadow: `0 1px 3px rgba(0,0,0,0.85), 0 0 10px ${accentFor(grp.id)}66`,
-            }}
-          >
-            {grp.label}
-          </div>
-        ) : null,
-      )}
-
     <div
       aria-hidden={!showTip}
       style={{
@@ -122,7 +80,6 @@ export function ToolbarTooltips({
         {g?.label ?? ''}
       </div>
     </div>
-    </>
   );
 }
 

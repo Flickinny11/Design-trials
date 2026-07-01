@@ -4,13 +4,13 @@
  * STEP8 — Prism Canvas Toolbar (canvas-spec §5 the editing suite, §6 build
  * lifecycle, §8.4 keyframe editor, §14 selection/grouping, §1.3 boundary).
  *
- * The toolbar is part of the PRISM DESIGN SYSTEM ("Chrome-Arc"): a
- * machined brushed-metal left dock of grouped tool clusters with a frosted-
- * glass flyout per group, a slide-up ceramic keyframe editor, a marquee-select
- * overlay, and contextual "coming with <subsystem>" states for the groups
- * whose engines are not yet wired. It is the canvas authoring chrome — it only
- * renders while viewMode === 'canvas' (page.tsx gates it) and never appears in
- * galaxy or preview-app.
+ * The toolbar is part of the PRISM DESIGN SYSTEM ("Chrome-Arc"): a vertical
+ * Three.js glass pane with refractive glass-cube tool buttons, custom 3D
+ * geometric icons, a glass flyout per group, a slide-up ceramic keyframe editor,
+ * a marquee-select overlay, and contextual "coming with <subsystem>" states for
+ * groups whose engines are not yet wired. It is the canvas authoring chrome — it
+ * only renders while viewMode === 'canvas' (page.tsx gates it) and never appears
+ * in galaxy or preview-app.
  *
  * WIRED NOW (their engines already exist):
  *   - Transform — select / Edit handles / move / rotate / scale / nudge / align
@@ -64,7 +64,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import gsap from 'gsap';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
@@ -167,8 +166,8 @@ const GROUPS: ToolGroupMeta[] = [
   // HubBackgroundPicker for the active hub; applies live via updateHub (C31).
   { id: 'background', icon: 'palette', label: 'Background', wired: true },
   { id: 'changeArtifact', icon: 'sparkle', label: 'Change Artifact', wired: true },
-  // icon 'code' (NOT 'zap'/lightning — banned): the desktop path uses the bespoke
-  // 3D command-pill icon; this glyph is the compact/mobile dock fallback.
+  // icon 'code' (NOT 'zap'/lightning — banned): the live rail uses the bespoke
+  // 3D command-pill sculpture; this name only identifies the flyout header icon.
   { id: 'promptEdit', icon: 'code', label: 'Prompt Edit', wired: true },
   { id: 'text', icon: 'text', label: 'Text', wired: true },
   { id: 'animation', icon: 'wand', label: 'Animation', wired: true },
@@ -383,86 +382,9 @@ function StepperRow({
 // bespoke-authoring lane inside Animation, which renders its own coming
 // state via `showComing`.)
 
-// Dock group key — one machined key per tool group, extracted from the GROUPS
-// map so the slab hook can run per item (hooks cannot live in a map callback).
-// At t2 the key face renders as real ceramic in the unified canvas with the
-// brass accent following the open group; the layer clips it to the dock's
-// scroll window. `order: 51` draws it above the dock housing (order 50).
-function DockGroupKey({
-  meta, isActive, onToggle,
-}: {
-  meta: ToolGroupMeta; isActive: boolean; onToggle: () => void;
-}) {
-  const slab = useChromeSlab({ material: 'ceramic', radius: 9, order: 51 });
-  useEffect(() => {
-    slab.update({ accent: isActive ? 1 : 0 });
-  }, [isActive, slab]);
-  return (
-    <button
-      ref={slab.ref}
-      type="button"
-      data-tool-group={meta.id}
-      onClick={onToggle}
-      title={meta.label}
-      // Ergonomics 2026-06-11: keys widened 48→54px so the group
-      // labels can hold 9px legible type (7px failed readability).
-      className={`relative w-[54px] h-12 rounded-ds-sm flex flex-col items-center justify-center gap-0.5 ds-press transition-all ${
-        isActive ? '' : 'hover:brightness-[1.2] hover:bg-white/[0.04]'
-      }`}
-      style={isActive ? activeKeyStyle(DS_ACCENT) : undefined}
-    >
-      {isActive && (
-        <span
-          className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-1 h-6 rounded-full"
-          style={{ background: 'var(--ds-grad-metal)', boxShadow: 'var(--ds-glow-arc)' }}
-        />
-      )}
-      <Icon name={meta.icon} size={16} color={isActive ? DS.metal200 : DS.text} glow={isActive} />
-      <span
-        className="text-[9px] font-ui font-medium tracking-normal"
-        style={{ color: isActive ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)' }}
-      >
-        {meta.label}
-      </span>
-      {!meta.wired && (
-        <span
-          className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full"
-          style={{ background: 'var(--ds-ice-400)', boxShadow: `0 0 6px ${dsAlpha(DS.ice400, 0.8)}` }}
-        />
-      )}
-    </button>
-  );
-}
-
-// C10 — dock key-stack wrapper. Desktop: a real flex column the GSAP collapse
-// timeline animates (height/opacity/clip) — the spine above stays put. Compact:
-// passes the keys straight through (`contents`) so the horizontal scroll dock
-// layout is byte-for-byte unchanged. Keeping the GROUPS map in one place avoids
-// duplicating the 35-line key list.
-function DockKeyStack({
-  compact, stackRef, children,
-}: {
-  compact: boolean;
-  stackRef: React.RefObject<HTMLDivElement | null>;
-  children: React.ReactNode;
-}) {
-  if (compact) return <>{children}</>;
-  return (
-    <div ref={stackRef} className="flex flex-col gap-1">
-      {children}
-    </div>
-  );
-}
-
 // ── Main component ───────────────────────────────────────────────────────────
 export default function CanvasToolbar() {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
-  // UI-FIDELITY-2 — the dock surface renders as real brushed metal in the
-  // unified canvas (brushed along its long/vertical axis). Explicit `order`
-  // keeps the housing under its own ceramic keys (React attaches child refs
-  // before the parent's, so the keys would otherwise register first and the
-  // dock would paint over them).
-  const dockSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'y', order: 50 });
   // UI-FIDELITY-2 — the transient toast renders as real smoked glass. The
   // hook lives up here (hooks before the viewMode early return); the ref
   // attaches whenever the pill mounts.
@@ -521,29 +443,21 @@ export default function CanvasToolbar() {
   // read above), so the Snap On/Off button actually wires the gizmo + steppers.
   const [selectedLightId, setSelectedLightId] = useState<string | null>(null);
   const [lightPickerOpen, setLightPickerOpen] = useState(false);
-  // C10 — FLOATING + MOVABLE + ANIMATED dock (desktop/regular only; compact
-  // stays the pinned bottom dock). `dockPos === null` means "use the default
-  // docked-left CSS" so nothing regresses until the operator drags the spine.
-  // Once dragged, it holds viewport-px coords and the wrapper switches to
-  // explicit left/top. `collapsed` slides the key stack into a compact rail
-  // (GSAP timeline below). The grip spine is the only drag region — the tool
-  // keys never start a drag.
+  // C10 — FLOATING + MOVABLE vertical glass rail. `dockPos === null` means "use
+  // the default docked-left CSS"; once dragged, it holds viewport-px coords and
+  // the wrapper switches to explicit left/top. `collapsed` folds the Three.js
+  // rail inside LiquidGlassToolbar. The grip spine is the only drag region.
   const [dockPos, setDockPos] = useState<{ x: number; y: number } | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const dockWrapRef = useRef<HTMLDivElement | null>(null);
-  const dockKeysRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{ pointerId: number; dx: number; dy: number } | null>(null);
-  // Skip the collapse tween on first mount (the stack starts open) — only
-  // animate on an actual user toggle.
-  const collapseMountedRef = useRef(false);
-  // UI-WOW-2 P0 — container density: on compact (phone / narrow embedded pane)
-  // the left tool rail becomes a horizontal-scroll bottom dock and the flyout
-  // re-houses as a draggable bottom sheet, so the 11 tools stay reachable and
-  // the 424px Animation picker stops overflowing the pane.
+  // UI-WOW-2 P0 — container density: compact/narrow panes keep the same vertical
+  // glass rail, but flyouts re-house as a draggable bottom sheet so long tool
+  // groups stay reachable inside an embedded preview pane.
   const compact = useEditorDensity() === 'compact';
-  // Compact: land on the horizontal dock (all 11 tools visible/reachable), not
-  // an auto-opened flyout that would cover the dock. A tool sheet opens on tap.
-  // Desktop keeps its shipped default 'transform' flyout (unchanged).
+  // Compact: land on the vertical rail without an auto-opened bottom sheet that
+  // would cover the app canvas. Desktop keeps its shipped default Transform
+  // flyout.
   useEffect(() => {
     if (compact) setActiveGroup(null);
   }, [compact]);
@@ -828,65 +742,9 @@ export default function CanvasToolbar() {
     dragRef.current = null;
   }, []);
 
-  // ── C10 collapse/expand (ANIMATED) ─────────────────────────────────────────
-  // A real GSAP timeline slides the tool-key stack closed/open (height +
-  // opacity + clip with premium easing). Honors prefers-reduced-motion (snap).
-  useEffect(() => {
-    const el = dockKeysRef.current;
-    if (!el) return;
-    // First mount: the stack is already open in the DOM — don't play an
-    // open-tween, just record that we're mounted and bail.
-    if (!collapseMountedRef.current) {
-      collapseMountedRef.current = true;
-      if (!collapsed) return;
-    }
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    gsap.killTweensOf(el);
-    if (reduce) {
-      gsap.set(el, {
-        height: collapsed ? 0 : 'auto',
-        opacity: collapsed ? 0 : 1,
-        clipPath: collapsed ? 'inset(0 0 100% 0)' : 'inset(0 0 0% 0)',
-        overflow: collapsed ? 'hidden' : 'visible',
-      });
-      return;
-    }
-    if (collapsed) {
-      gsap.to(el, {
-        height: 0,
-        opacity: 0,
-        clipPath: 'inset(0 0 100% 0)',
-        duration: 0.3,
-        ease: 'power3.inOut',
-        overwrite: 'auto',
-        onStart: () => gsap.set(el, { overflow: 'hidden' }),
-      });
-    } else {
-      // expand: measure natural height, tween from 0 → it, then release to auto.
-      gsap.set(el, { height: 'auto', clipPath: 'inset(0 0 0% 0)' });
-      const target = el.offsetHeight;
-      gsap.fromTo(
-        el,
-        { height: 0, opacity: 0, clipPath: 'inset(0 0 100% 0)', overflow: 'hidden' },
-        {
-          height: target,
-          opacity: 1,
-          clipPath: 'inset(0 0 0% 0)',
-          duration: 0.34,
-          ease: 'expo.out',
-          overwrite: 'auto',
-          onComplete: () => gsap.set(el, { height: 'auto', overflow: 'visible' }),
-        },
-      );
-    }
-  }, [collapsed]);
-
-  // Group-key toggle shared by the liquid-glass 3D toolbar (desktop) and the
-  // compact metal dock (mobile). Function opens the binding popup for the
-  // selected element (AMENDMENT 2026-06-14); every other group toggles its
-  // flyout. This is the single wiring point so both chromes behave identically.
+  // Group-key toggle shared by the vertical liquid-glass toolbar across every
+  // density. Function opens the binding popup for the selected element
+  // (AMENDMENT 2026-06-14); every other group toggles its flyout.
   const handleToggleGroup = useCallback((id: string) => {
     if (id === 'function') {
       const st = useGraphEditorStore.getState();
@@ -947,162 +805,45 @@ export default function CanvasToolbar() {
         />
       )}
 
-      {/* Tool rail. Desktop/regular: a height-bounded LEFT vertical rail (dock +
-          side flyout). Compact (phone / narrow embedded pane, UI-WOW-2 P0): a
-          centered HORIZONTAL scroll dock pinned just above the mobile mode
-          toggle, with the flyout re-housed as a bottom sheet (see below). */}
+      {/* Tool rail. Every density uses the same vertical Three.js glass rail.
+          Compact/narrow panes only change the flyout housing into a bottom
+          sheet; they do not fall back to a horizontal DOM dock. */}
       <div
         ref={dockWrapRef}
         data-component="canvas-toolbar"
         data-density={compact ? 'compact' : 'regular'}
-        data-floating={!compact && dockPos ? 'true' : undefined}
+        data-orientation="vertical"
+        data-floating={dockPos ? 'true' : undefined}
         className={
-          compact
-            ? 'absolute left-1/2 -translate-x-1/2 bottom-[calc(64px+var(--ds-safe-bottom))] pointer-events-auto flex items-stretch max-w-[calc(100%-16px)]'
-            : dockPos
-              // C10 floating: explicit left/top, no CSS translate (set in style).
-              ? 'absolute z-50 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
+          dockPos
+            // C10 floating: explicit left/top, no CSS translate (set in style).
+            ? 'absolute z-50 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
+            : compact
+              ? 'absolute z-50 left-2 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-6rem)]'
               : 'absolute z-50 left-3 top-1/2 -translate-y-1/2 pointer-events-auto flex items-stretch gap-2 max-h-[calc(100vh-7rem)]'
         }
-        style={
-          compact
-            ? ({ zIndex: 'var(--ds-z-dock)' } as React.CSSProperties)
-            : dockPos
-              ? { left: dockPos.x, top: dockPos.y }
-              : undefined
-        }
+        style={dockPos ? { left: dockPos.x, top: dockPos.y } : undefined}
       >
-        {/* TOOLBAR REDESIGN (2026-06-22, CHROME 1) — desktop/regular now renders
-            the photoreal 3D LIQUID-GLASS toolbar (isolated R3F WebGL canvas, the
-            Glb3DPreview pattern). It drives the SAME activeGroup + handlers as the
-            old dock, so every action is unchanged. Compact (mobile) keeps the
-            machined brushed-metal horizontal dock below for phone ergonomics. */}
-        {!compact && (
-          <LiquidGlassToolbar
-            groups={GROUPS}
-            activeGroup={activeGroup}
-            onToggleGroup={handleToggleGroup}
-            collapsed={collapsed}
-            onToggleCollapse={() => setCollapsed((v) => !v)}
-            dragging={!!dragRef.current}
-            spineHandlers={{
-              onPointerDown: onDragStart,
-              onPointerMove: onDragMove,
-              onPointerUp: onDragEnd,
-              onPointerCancel: onDragEnd,
-            }}
-          />
-        )}
-        {compact && (
-        <div
-          ref={dockSlab.ref}
-          className={
-            compact
-              ? 'flex flex-row items-center gap-1 p-1.5 ds-metal ds-grain ds-edge min-w-0 overflow-x-auto overscroll-contain scrollbar-hide'
-              : 'flex flex-col gap-1 p-1.5 ds-metal ds-grain ds-edge min-h-0 overflow-y-auto overscroll-contain'
-          }
-        >
-          {!compact && (<>
-          {/* C10 — DRAG SPINE. The nameplate is now the grip: pointer-drag it
-              to float/reposition the whole dock (tool keys never start a drag).
-              A collapse key on the right slides the key stack into a compact
-              rail (GSAP). The grip cursor + dotted grip glyph advertise it. */}
-          <div
-            data-dock-handle
-            onPointerDown={onDragStart}
-            onPointerMove={onDragMove}
-            onPointerUp={onDragEnd}
-            onPointerCancel={onDragEnd}
-            className="relative px-1 pt-0.5 pb-1.5 flex flex-col items-center gap-0.5 select-none touch-none"
-            style={{ cursor: dragRef.current ? 'grabbing' : 'grab' }}
-            title="Drag to move the toolbar"
-          >
-            {/* Collapse / expand key — pinned top-right of the spine. Stops the
-                pointer-down from arming a drag so a click only toggles. */}
-            <button
-              type="button"
-              data-action="dock-collapse"
-              aria-label={collapsed ? 'Expand toolbar' : 'Collapse toolbar'}
-              title={collapsed ? 'Expand toolbar' : 'Collapse toolbar'}
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={() => setCollapsed((v) => !v)}
-              className="absolute -top-0.5 right-0 w-5 h-5 rounded-ds-xs ds-press hover:bg-white/[0.08] flex items-center justify-center transition-colors"
-            >
-              <Icon
-                name="chevron"
-                size={11}
-                color={DS.textMid}
-                style={{ transform: `rotate(${collapsed ? 90 : -90}deg)`, transition: 'transform 200ms ease' }}
-              />
-            </button>
-            {/* Grip ridges — three machined catch-light bars reading as a knurled
-                handle (the affordance that this header is draggable). */}
-            <span aria-hidden className="flex flex-col items-center gap-[2px] mb-0.5 mt-0.5 opacity-70">
-              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
-              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
-              <span className="w-4 h-[2px] rounded-full" style={{ background: 'var(--ds-edge-side)', boxShadow: '0 1px 0 rgba(0,0,0,0.5)' }} />
-            </span>
-            <Icon name="grid" size={13} color={DS_ACCENT} glow />
-            <span className="text-[9px] font-mono tracking-[0.2em]" style={{ color: 'var(--ds-text-mid)', textShadow: '0 1px 0 rgba(0, 0, 0, 0.6)' }}>
-              CANVAS
-            </span>
-          </div>
-          {/* Scribed part line under the nameplate — same machined groove as
-              the pre-Build divider, so the label reads as a fitted plate. */}
-          <div
-            aria-hidden
-            className="mx-1.5 mb-0.5 h-[2px]"
-            style={{
-              background:
-                'linear-gradient(90deg, rgba(0, 0, 0, 0), var(--ds-edge-shade) 22%, var(--ds-edge-shade) 78%, rgba(0, 0, 0, 0)) top / 100% 1px no-repeat, ' +
-                'linear-gradient(90deg, rgba(255, 252, 242, 0), var(--ds-edge-side) 26%, var(--ds-edge-side) 74%, rgba(255, 252, 242, 0)) bottom / 100% 1px no-repeat',
-            }}
-          />
-          </>)}
-          {/* C10 — tool-key stack. On desktop it is wrapped so the GSAP collapse
-              timeline can slide it closed/open (height + opacity + clip); the
-              spine/grip above stays visible so the dock can be re-expanded.
-              Compact mode keeps the flat horizontal scroll dock (no wrapper). */}
-          <DockKeyStack compact={compact} stackRef={dockKeysRef}>
-          {GROUPS.map((g) => {
-            const beforeBuild = g.id === 'build';
-            return (
-              <div key={g.id} className="contents">
-                {beforeBuild && !compact && (
-                  // Machined V-groove cut across the dock plate — shade line
-                  // over bone catch-light, feathering into the metal at both
-                  // ends like a lathe-scribed part line.
-                  <div
-                    aria-hidden
-                    className="mx-1.5 my-1 h-[2px]"
-                    style={{
-                      background:
-                        'linear-gradient(90deg, rgba(0, 0, 0, 0), var(--ds-edge-shade) 22%, var(--ds-edge-shade) 78%, rgba(0, 0, 0, 0)) top / 100% 1px no-repeat, ' +
-                        'linear-gradient(90deg, rgba(255, 252, 242, 0), var(--ds-edge-side) 26%, var(--ds-edge-side) 74%, rgba(255, 252, 242, 0)) bottom / 100% 1px no-repeat',
-                    }}
-                  />
-                )}
-                <DockGroupKey
-                  meta={g}
-                  isActive={activeGroup === g.id}
-                  onToggle={() => {
-                    // APP-REALITY P7 — the Function action opens the binding
-                    // popup for the selected element (AMENDMENT 2026-06-14),
-                    // not a left-dock flyout.
-                    if (g.id === 'function') {
-                      const st = useGraphEditorStore.getState();
-                      if (st.selectedNodeId) st.openFunctionPopup(st.selectedNodeId);
-                      return;
-                    }
-                    setActiveGroup((cur) => (cur === g.id ? null : g.id));
-                  }}
-                />
-              </div>
-            );
-          })}
-          </DockKeyStack>
-        </div>
-        )}
+        {/* TOOLBAR REDESIGN (2026-06-22, CHROME 1) — the live editor now renders
+            the photoreal vertical 3D glass toolbar in every density (isolated
+            R3F WebGL canvas, the Glb3DPreview pattern). It drives the SAME
+            activeGroup + handlers as the retired DOM dock, so editor behavior
+            remains unchanged. */}
+        <LiquidGlassToolbar
+          groups={GROUPS}
+          activeGroup={activeGroup}
+          onToggleGroup={handleToggleGroup}
+          collapsed={collapsed}
+          onToggleCollapse={() => setCollapsed((v) => !v)}
+          dragging={!!dragRef.current}
+          density={compact ? 'compact' : 'regular'}
+          spineHandlers={{
+            onPointerDown: onDragStart,
+            onPointerMove: onDragMove,
+            onPointerUp: onDragEnd,
+            onPointerCancel: onDragEnd,
+          }}
+        />
 
         {/* Flyout — desktop/regular: side glass plate beside the rail; compact:
             a draggable bottom sheet portaled to the pane (UI-WOW-2 P0). */}

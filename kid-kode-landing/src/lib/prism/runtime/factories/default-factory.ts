@@ -139,6 +139,9 @@ export function defaultRenderModeFactory(
   const group = new Group();
   group.name = `node:${node.nodeId}`;
   group.userData.nodeId = node.nodeId;
+  if (typeof node.textSpec?.content === 'string') {
+    group.userData.authoredTextContent = node.textSpec.content;
+  }
   group.userData.handlers = {};
 
   const disposables: BufferGeometry[] = [];

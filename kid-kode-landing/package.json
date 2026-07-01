@@ -15,12 +15,16 @@
     "lint": "next lint",
     "verify:prism": "node scripts/verify-prism.mjs",
     "verify:repair-loop": "node scripts/verify-repair-loop.mjs",
-    "verify": "npm run verify:prism && npm run verify:repair-loop",
+    "verify:galaxy": "node scripts/verify-galaxy-semantics.mjs",
+    "verify:global-shell": "node scripts/verify-global-shell-semantics.mjs",
+    "verify": "npm run verify:prism && npm run verify:repair-loop && npm run verify:galaxy && npm run verify:global-shell",
     "typecheck": "tsc --noEmit",
     "typecheck:gate": "node scripts/typecheck-gate.mjs",
     "verify:catalog": "node scripts/verify-catalog.mjs",
     "art-review": "node scripts/art-fidelity-review.mjs",
-    "gate:no-dom-ui": "node scripts/no-dom-ui-gate.mjs"
+    "gate:no-dom-ui": "node scripts/no-dom-ui-gate.mjs",
+    "prism:preflight": "node scripts/prism-autonomy-preflight.mjs",
+    "prism:recovery-gate": "node scripts/prism-recovery-gate.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.19.3",

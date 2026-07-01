@@ -4,6 +4,7 @@ import { useRef, useMemo, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import {
   Environment,
+  Lightformer,
   Html,
   Stars,
   MeshTransmissionMaterial,
@@ -75,6 +76,12 @@ import {
   GALAXY_FILTER_DIM_OPACITY,
   type GalaxyFilterMatches,
 } from '@/lib/galaxy-filter';
+import {
+  filterEdgesToGalaxyOverview,
+  getGalaxyOverviewNodes,
+  summarizeGalaxySemantics,
+} from '@/lib/prism-graph/galaxy-semantics';
+import { resolveAssembledNodesForHub } from '@/lib/prism-graph/assembled-nodes';
 import {
   computeCanvasCameraPose,
   resolveCanvasCameraPose,
@@ -1206,7 +1213,7 @@ function HubHulls({
         if (!center) return null;
 
         const hubNodes = simNodes.filter((n) => n.hubIds.includes(hub.id));
-        if (!hubNodes.length) return null;
+        if (!hubNodes.length && viewMode !== 'galaxy') return null;
 
         // EB-03-02: galaxy mode swaps the topology-only `maxDist + 10`
         // heuristic for a deterministic per-hub diameter computed from
@@ -1559,6 +1566,23 @@ function EditorDiagnostics({ simNodes }: { simNodes: SimNode[] }) {
       totalHomeNodeCount: simNodes.filter((node) => node.hubIds.includes('home')).length,
     };
   });
+
+  return null;
+}
+
+function GalaxySemanticDiagnostics({
+  summary,
+}: {
+  summary: ReturnType<typeof summarizeGalaxySemantics>;
+}) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as { __PRISM_GALAXY_SEMANTICS__?: typeof summary };
+    w.__PRISM_GALAXY_SEMANTICS__ = summary;
+    return () => {
+      delete w.__PRISM_GALAXY_SEMANTICS__;
+    };
+  }, [summary]);
 
   return null;
 }
@@ -3441,10 +3465,23 @@ function TopologySceneContent({
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes.filter((n) => !n.isGlobalElement), edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
+  const galaxySemanticSummary = useMemo(
+    () => summarizeGalaxySemantics(editorGraph.nodes),
+    [editorGraph.nodes]
+  );
+  const topologyNodes = useMemo(
+    () => (viewMode === 'galaxy' ? getGalaxyOverviewNodes(editorGraph.nodes) : editorGraph.nodes),
+    [viewMode, editorGraph.nodes]
+  );
+  const topologyEdges = useMemo(() => {
+    if (viewMode !== 'galaxy') return editorGraph.edges;
+    const visibleIds = new Set(topologyNodes.map((node) => node.id));
+    return filterEdgesToGalaxyOverview(editorGraph.edges, visibleIds);
+  }, [viewMode, editorGraph.edges, topologyNodes]);
 
   const { simNodes, simLinks, hubCenters, hubDiameters } = useForceGraph(
-    editorGraph.nodes,
-    editorGraph.edges,
+    topologyNodes,
+    topologyEdges,
     editorGraph.hubs,
     pinnedPositions,
     resetSignal,
@@ -3457,9 +3494,9 @@ function TopologySceneContent({
   // every other mode.
   const filterMatches = useMemo<GalaxyFilterMatches>(() => {
     return viewMode === 'galaxy'
-      ? computeGalaxyFilterMatches(filterQuery, editorGraph.hubs, editorGraph.nodes)
+      ? computeGalaxyFilterMatches(filterQuery, editorGraph.hubs, topologyNodes)
       : { active: false, matchedHubIds: new Set<string>(), matchedNodeIds: new Set<string>() };
-  }, [viewMode, filterQuery, editorGraph.hubs, editorGraph.nodes]);
+  }, [viewMode, filterQuery, editorGraph.hubs, topologyNodes]);
 
   // Heroes: the selected node + at most 1 other get the expensive transmission material
   const heroIds = useMemo(() => {
@@ -3508,11 +3545,17 @@ function TopologySceneContent({
       {/* PHASE1 (SC-V-A3) — the Atelier uses a real luxury-studio HDRI so the
           watch's metals + dial finishes throw crisp, angle-dependent specular
           as it orbits. Other hubs keep the cosmic night IBL. */}
-      {activeHubId === 's6-atelier' ? (
-        <Environment files="/prism-mock/orrery/assets/studio-hdri.png" environmentIntensity={1.0} />
-      ) : (
-        <Environment preset="night" environmentIntensity={0.55} />
-      )}
+      {/* Local procedural IBL (Lightformer rig) — NO network/CDN dependency.
+          Replaces the remote drei `preset="night"` path that crashed canvas mode
+          when the CDN HDRI fetch failed, and the .png drei cannot load.
+          To restore a photoreal studio HDRI later, bundle a real .hdr/.exr locally
+          and use <Environment files="/path.hdr" />. */}
+      <Environment resolution={256} environmentIntensity={activeHubId === 's6-atelier' ? 1.0 : 0.55}>
+        <Lightformer intensity={3} position={[2, 3, 4]} scale={[3, 6, 1]} color="#ffffff" />
+        <Lightformer intensity={2} position={[-3, -1, 3]} scale={[2, 5, 1]} color="#88b6ff" />
+        <Lightformer intensity={1.4} position={[0, -4, 2]} scale={[5, 2, 1]} color="#c79bff" />
+        <Lightformer intensity={1.2} form="ring" position={[0, 2, -3]} scale={2} color="#ffd9a0" />
+      </Environment>
 
       {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
           EB-03-01 will orbit the existing hub hulls around this sun; for now
@@ -3521,8 +3564,8 @@ function TopologySceneContent({
       {viewMode === 'galaxy' && <WorldSun />}
       {viewMode === 'galaxy' && (
         <GalaxyHubTethers
-          nodes={editorGraph.nodes}
-          edges={editorGraph.edges}
+          nodes={topologyNodes}
+          edges={topologyEdges}
           hubCenters={hubCenters}
         />
       )}
@@ -3589,6 +3632,9 @@ function TopologySceneContent({
       <NodeLabels simNodes={simNodes} />
       <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
       <EditorDiagnostics simNodes={simNodes} />
+      {viewMode === 'galaxy' && (
+        <GalaxySemanticDiagnostics summary={galaxySemanticSummary} />
+      )}
       <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} />
 
       {usePost && (
@@ -4085,7 +4131,11 @@ function AssembledSceneContent({
   // changes; siblings stay stable per RA-16).
   const nodeRebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion);
   const hub = sourceHubs.find((h) => h.hubId === activeHubId) ?? sourceHubs[0];
-  const nodes = sourceNodes.filter((node) => !hub || node.parentHubId === hub.hubId);
+  const assembledNodeScope = useMemo(
+    () => resolveAssembledNodesForHub(sourceNodes, hub?.hubId ?? null),
+    [sourceNodes, hub?.hubId],
+  );
+  const nodes = assembledNodeScope.nodes;
   // INV-R14 — postprocessing (legacy @react-three/postprocessing EffectComposer)
   // is WebGL-only and cannot run under WebGPU. Capability-tier it: on the WebGL2
   // fallback it runs; on WebGPU it is skipped (TSL PostProcessing is the
@@ -4156,6 +4206,13 @@ function AssembledSceneContent({
     const w = window as unknown as {
       __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
       __PRISM_EDITOR_GET_NODE_WORLD_POS__?: (nodeId: string) => { x: number; y: number; z: number } | null;
+      __PRISM_ASSEMBLED_NODE_SCOPE__?: () => {
+        activeHubId: string | null;
+        nodeIds: string[];
+        hubNodeIds: string[];
+        globalSlotNodeIds: string[];
+        hiddenDuplicateChromeIds: string[];
+      };
     };
     const vec = new THREE.Vector3();
     w.__PRISM_EDITOR_GET_NODE_WORLD_POS__ = (nodeId: string) => {
@@ -4165,10 +4222,18 @@ function AssembledSceneContent({
       group.getWorldPosition(vec);
       return { x: vec.x, y: vec.y, z: vec.z };
     };
+    w.__PRISM_ASSEMBLED_NODE_SCOPE__ = () => ({
+      activeHubId: assembledNodeScope.activeHubId,
+      nodeIds: assembledNodeScope.nodes.map((node) => node.nodeId),
+      hubNodeIds: assembledNodeScope.hubNodes.map((node) => node.nodeId),
+      globalSlotNodeIds: assembledNodeScope.globalSlotNodes.map((node) => node.nodeId),
+      hiddenDuplicateChromeIds: assembledNodeScope.hiddenDuplicateChromeIds,
+    });
     return () => {
       delete w.__PRISM_EDITOR_GET_NODE_WORLD_POS__;
+      delete w.__PRISM_ASSEMBLED_NODE_SCOPE__;
     };
-  }, []);
+  }, [assembledNodeScope]);
 
   return (
     <>

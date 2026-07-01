@@ -256,6 +256,7 @@ export interface EditorTextItem {
 
 export interface EditorNode {
   id: string;
+  subtype?: string;
   name: string;
   elementType: string;
   hubIds: string[];
@@ -271,6 +272,8 @@ export interface EditorNode {
   textContent: EditorTextItem[];
   interactions: EditorInteraction[];
   backendContract?: EditorBackendContract;
+  isGlobalElement?: boolean;
+  globalSlot?: 'header' | 'footer';
 }
 
 export interface EditorHubView {
@@ -319,6 +322,7 @@ export function toEditorNode(node: PrismNode): EditorNode {
     : '// (no code module bound)';
   return {
     id: node.nodeId,
+    subtype: node.subtype,
     name: getNodeName(node),
     elementType: getElementType(node),
     hubIds: getHubIds(node),
@@ -340,6 +344,8 @@ export function toEditorNode(node: PrismNode): EditorNode {
     textContent: deriveTextContent(node),
     interactions: getInteractions(node),
     backendContract: backendContract ?? undefined,
+    isGlobalElement: node.isGlobalElement,
+    globalSlot: node.globalSlot,
   };
 }
 

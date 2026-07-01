@@ -14,6 +14,10 @@ import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import {
+  filterEdgesToGalaxyOverview,
+  getGalaxyOverviewNodes,
+} from '@/lib/prism-graph/galaxy-semantics';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function Minimap() {
@@ -21,14 +25,22 @@ export default function Minimap() {
   const selectedId = useGraphEditorStore((s) => s.selectedNodeId);
   const hoveredId = useGraphEditorStore((s) => s.hoveredNodeId);
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const viewMode = useGraphEditorStore((s) => s.viewMode);
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
-  const graph = useMemo(
-    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
-    [sourceHubs, sourceNodes, sourceEdges]
-  );
+  const graph = useMemo(() => {
+    const base = toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges });
+    if (viewMode !== 'galaxy') return base;
+    const nodes = getGalaxyOverviewNodes(base.nodes);
+    const visibleIds = new Set(nodes.map((node) => node.id));
+    return {
+      ...base,
+      nodes,
+      edges: filterEdgesToGalaxyOverview(base.edges, visibleIds),
+    };
+  }, [sourceHubs, sourceNodes, sourceEdges, viewMode]);
 
   // UI-FIDELITY-2 — the bezel plate renders as real brushed metal (brushed
   // along its wide axis) and the radar window as a recessed well in the

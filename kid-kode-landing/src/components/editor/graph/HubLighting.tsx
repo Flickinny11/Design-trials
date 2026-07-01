@@ -13,7 +13,7 @@
 // This is the editor (R3F) counterpart to the runtime `lighting-rig.ts`; it maps
 // the same `PrismLight[]` schema to declarative lights instead of imperative ones.
 
-import { Environment } from '@react-three/drei';
+import { Environment, Lightformer } from '@react-three/drei';
 import type { LightingSpec, PrismHub, PrismLight } from '@/lib/prism-graph/types';
 // Wave-2E Chrome-Arc retint — default-light tints come from the frozen
 // DS tokens (cool key → ice, warm fill → brass); roles + intensities unchanged.
@@ -117,7 +117,12 @@ export default function HubLighting({ hub }: { hub: PrismHub | undefined }) {
         <LightObject key={l.id} light={l} isKeyCaster={l.id === keyCasterId} />
       ))}
       {hasSpec && spec?.envMapUrl == null && (
-        <Environment preset="studio" environmentIntensity={envIntensity} />
+        <Environment resolution={256} environmentIntensity={envIntensity}>
+          <Lightformer intensity={3} position={[2, 3, 4]} scale={[3, 6, 1]} color="#ffffff" />
+          <Lightformer intensity={2} position={[-3, -1, 3]} scale={[2, 5, 1]} color="#88b6ff" />
+          <Lightformer intensity={1.4} position={[0, -4, 2]} scale={[5, 2, 1]} color="#c79bff" />
+          <Lightformer intensity={1.2} form="ring" position={[0, 2, -3]} scale={2} color="#ffd9a0" />
+        </Environment>
       )}
     </>
   );

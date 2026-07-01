@@ -191,10 +191,15 @@ async function main() {
     await page.waitForTimeout(4000);
     await capture();
 
-    // Visit each rig hub so the watch + orrery mount, then re-capture.
+    // Visit each rig hub so the watch + orrery mount, then re-capture. Take a
+    // second bounded capture while the same hub is still active so cold MSDF
+    // text on that hub can contribute a non-zero renderable count before we
+    // leave it. A later capture on another hub cannot update those node ids.
     for (const hub of RIG_HUBS) {
       await goHub(hub);
       await page.waitForTimeout(2800);
+      await capture();
+      await page.waitForTimeout(3500);
       await capture();
     }
     // Return to the boot hub + settle, then a FINAL union capture so any text
