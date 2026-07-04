@@ -1,0 +1,94 @@
+{
+  "url": "http://localhost:3001",
+  "strictOrphans": false,
+  "hardcoded": [],
+  "runtimeHosts": [
+    {
+      "label": "runtime-host:hub-transition",
+      "nodeId": null,
+      "kind": "runtime-host",
+      "name": "hub-scene-transition",
+      "renderables": 1
+    }
+  ],
+  "runtimeHostLabels": [
+    "hub-transition"
+  ],
+  "classifierSelfTest": {
+    "live": true,
+    "hardcoded": true,
+    "runtimeHost": true,
+    "node": true
+  },
+  "nodeAuthoredCount": 159,
+  "emptyNonText": [],
+  "emptyText": [],
+  "unexpectedHardcoded": [],
+  "orphanPlanesStillPresent": [],
+  "reasonContent": "Every pairing is bench-checked for mechanical harmony.",
+  "results": [
+    {
+      "id": "probe.installed",
+      "desc": "window.__PRISM_NODE_AUTHORSHIP__ installed + node groups mounted",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "gate.classifier-live",
+      "desc": "classifier discriminates hardcoded vs runtime-host vs node (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic hardcoded→flagged, runtime-host→sanctioned, node→authored — a real drift WOULD be caught"
+    },
+    {
+      "id": "gate.no-accidental-drift",
+      "desc": "ZERO accidental hardcoded artifacts (foundation clean — Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "foundation clean — no hardcoded artifact mounted outside the node map"
+    },
+    {
+      "id": "runtime-host.hub-transition",
+      "desc": "hub transition classified as an intentional runtime host (not drift)",
+      "pass": true,
+      "warn": false,
+      "detail": "runtime hosts: hub-transition — sanctioned cross-hub runtime behaviour, see docs/spec-deviations-prism.md"
+    },
+    {
+      "id": "authored.in-graph",
+      "desc": "every node-authored artifact maps to a real graph node",
+      "pass": true,
+      "warn": false,
+      "detail": "159 node-authored artifacts, all in graph"
+    },
+    {
+      "id": "authored.renders",
+      "desc": "no non-text node-authored artifact mounted empty (FP-R3 orphan)",
+      "pass": true,
+      "warn": false,
+      "detail": "all non-text node-authored artifacts render content"
+    },
+    {
+      "id": "orphans.planes-removed",
+      "desc": "6 redundant ambience planes removed from the graph",
+      "pass": true,
+      "warn": false,
+      "detail": "all 6 removed (superseded by hub background[])"
+    },
+    {
+      "id": "orphans.reason-filled",
+      "desc": "orr-atelier-reason kept + carries real text",
+      "pass": true,
+      "warn": false,
+      "detail": "content: \"Every pairing is bench-checked for mechanical harmony.\""
+    },
+    {
+      "id": "runtime.no-pageerrors",
+      "desc": "no uncaught page errors during the gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}
