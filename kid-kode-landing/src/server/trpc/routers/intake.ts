@@ -30,6 +30,28 @@ import { protectedProcedure, router } from '../init';
 const URL_SEED_TIMEOUT_MS = 5000;
 const URL_SEED_MAX_BYTES = 512 * 1024; // read at most 512 KB of <head>
 
+/** SSRF guard (criteria-review should-fix): refuse hosts that resolve to the
+ *  local machine, link-local metadata endpoints, or RFC-1918 private ranges by
+ *  literal. Full DNS-rebind defense is deferred to W3's server-fetch hardening;
+ *  this blocks the obvious internal-probe vectors for the one W2 fetch. */
+function isBlockedHost(hostname: string): boolean {
+  const h = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.local') || h.endsWith('.internal')) {
+    return true;
+  }
+  if (h === '::1' || h.startsWith('fe80:') || h.startsWith('fc') || h.startsWith('fd')) return true;
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(h);
+  if (m) {
+    const [a, b] = [Number(m[1]), Number(m[2])];
+    if (a === 127 || a === 0 || a === 10) return true;
+    if (a === 169 && b === 254) return true; // link-local + cloud metadata
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 192 && b === 168) return true;
+    if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT
+  }
+  return false;
+}
+
 /** Normalize a CSS colour string the page declared as theme-color to #rrggbb,
  *  or null if it isn't a plain hex (we don't seed from rgb()/named colours). */
 function normalizeHex(input: string | null): string | null {
@@ -94,6 +116,7 @@ async function fetchUrlSeed(rawUrl: string): Promise<IntakeUrlSeed> {
   // Only http(s); the Zod .url() already guarantees a URL shape.
   const target = new URL(rawUrl);
   if (target.protocol !== 'http:' && target.protocol !== 'https:') return empty;
+  if (isBlockedHost(target.hostname)) return empty; // SSRF guard
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), URL_SEED_TIMEOUT_MS);

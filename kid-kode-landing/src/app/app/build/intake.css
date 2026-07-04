@@ -530,8 +530,13 @@
   .iv-attach-row { grid-template-columns: 1fr 1fr; }
   .iv-attach-url { grid-column: 1 / -1; }
   .iv-phase0-actions, .iv-brief-actions { flex-direction: column; align-items: stretch; }
-  .iv-cta { width: 100%; }
+  /* Advocate should-fix: on phone the CTA glyph must not sit on the label —
+     give the button its own height and drop the crowded sublabel. */
+  .iv-cta { width: 100%; height: 108px; }
+  .iv-cta-sub { display: none; }
   .iv-ghostbtn { text-align: center; }
+  /* Advocate should-fix: smaller title so it doesn't clamp mid-word. */
+  .iv-brief-title { font-size: 26px; }
   .iv-brief-line { grid-template-columns: 1fr; gap: 6px; }
   .iv-brief-line-label { padding-top: 0; }
   .iv-deck-top { flex-wrap: wrap; }
@@ -539,6 +544,7 @@
   .iv-deck-nav { flex-wrap: wrap; }
   .iv-deck-nav-right { margin-left: 0; width: 100%; }
   .iv-deck-nav-right .iv-navbtn { flex: 1; }
-  .iv-options-hits { grid-auto-rows: minmax(92px, 1fr); }
-  .iv-boards-hits { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(158px, 1fr); }
+  .iv-options-hits { grid-auto-rows: minmax(104px, 1fr); }
+  /* Advocate should-fix: more board-cell height so the object clears the title. */
+  .iv-boards-hits { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(190px, 1fr); }
 }
