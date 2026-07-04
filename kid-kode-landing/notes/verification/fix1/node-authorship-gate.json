@@ -20,7 +20,7 @@
     "runtimeHost": true,
     "node": true
   },
-  "nodeAuthoredCount": 159,
+  "nodeAuthoredCount": 162,
   "emptyNonText": [],
   "emptyText": [],
   "unexpectedHardcoded": [],
@@ -60,7 +60,7 @@
       "desc": "every node-authored artifact maps to a real graph node",
       "pass": true,
       "warn": false,
-      "detail": "159 node-authored artifacts, all in graph"
+      "detail": "162 node-authored artifacts, all in graph"
     },
     {
       "id": "authored.renders",
