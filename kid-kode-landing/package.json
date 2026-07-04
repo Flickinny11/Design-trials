@@ -19,14 +19,15 @@
     "verify:global-shell": "node scripts/verify-global-shell-semantics.mjs",
     "verify:parity": "node scripts/galaxy-parity-gate.mjs",
     "verify:parity-static": "node scripts/galaxy-parity-gate.mjs --static",
-    "verify": "npm run verify:prism && npm run verify:repair-loop && npm run verify:galaxy && npm run verify:global-shell && npm run verify:parity-static",
+    "verify": "npm run verify:prism && npm run verify:repair-loop && npm run verify:galaxy && npm run verify:global-shell && npm run verify:parity-static && npm run verify:schema",
     "typecheck": "tsc --noEmit",
     "typecheck:gate": "node scripts/typecheck-gate.mjs",
     "verify:catalog": "node scripts/verify-catalog.mjs",
     "art-review": "node scripts/art-fidelity-review.mjs",
     "gate:no-dom-ui": "node scripts/no-dom-ui-gate.mjs",
     "prism:preflight": "node scripts/prism-autonomy-preflight.mjs",
-    "prism:recovery-gate": "node scripts/prism-recovery-gate.mjs"
+    "prism:recovery-gate": "node scripts/prism-recovery-gate.mjs",
+    "verify:schema": "node scripts/schema-completeness-gate.mjs"
   },
   "dependencies": {
     "@dimforge/rapier3d-compat": "^0.19.3",
