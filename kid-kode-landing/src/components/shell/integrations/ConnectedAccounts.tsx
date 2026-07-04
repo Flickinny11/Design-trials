@@ -42,7 +42,7 @@ export default function ConnectedAccounts() {
           {connections.map((c) => (
             <li key={c.id} className="ig-conn" data-status={c.status}>
               <span className="ig-conn-mark">
-                <BrandMark2D brandKey={c.brandMark} size={26} />
+                <BrandMark2D brandKey={c.brandMark} size={26} decorative />
               </span>
               <div className="ig-conn-body">
                 <div className="ig-conn-top">

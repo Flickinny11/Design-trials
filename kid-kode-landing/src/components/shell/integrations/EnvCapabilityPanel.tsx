@@ -32,7 +32,7 @@ export default function EnvCapabilityPanel() {
       {githubImport ? (
         <div className="ig-env-github">
           <span className="ig-env-github-mark">
-            <BrandMark2D brandKey="github" size={20} />
+            <BrandMark2D brandKey="github" size={20} decorative />
           </span>
           Imported repo: <code>{githubImport.repoFullName}</code>
         </div>
@@ -48,7 +48,7 @@ export default function EnvCapabilityPanel() {
             <li key={b.id} className="ig-env-row">
               <div className="ig-env-row-head">
                 <span className="ig-env-mark">
-                  <BrandMark2D brandKey={b.providerId} size={22} />
+                  <BrandMark2D brandKey={b.providerId} size={22} decorative />
                 </span>
                 <span className="ig-env-name">{b.label}</span>
                 <button

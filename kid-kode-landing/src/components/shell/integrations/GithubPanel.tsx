@@ -43,7 +43,7 @@ export default function GithubPanel() {
       <div className="ig-section-head">
         <h2 className="ig-section-title">
           <span className="ig-section-mark">
-            <BrandMark2D brandKey="github" size={22} />
+            <BrandMark2D brandKey="github" size={22} decorative />
           </span>
           GitHub
         </h2>

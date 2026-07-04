@@ -25,7 +25,7 @@ export function TileButton({ tile }: { tile: CatalogTile }) {
       aria-label={`Connect ${tile.label}`}
     >
       <span className="ig-tile-mark">
-        <BrandMark2D brandKey={tile.brandMark} size={30} />
+        <BrandMark2D brandKey={tile.brandMark} size={30} decorative />
       </span>
       <span className="ig-tile-body">
         <span className="ig-tile-label">{tile.label}</span>

@@ -15,19 +15,25 @@ import { getBrandAsset } from '@/lib/capabilities/brand-assets';
 export default function BrandMark2D({
   brandKey,
   size = 28,
+  /** When the mark sits beside a text label that already names the brand, mark
+   *  it decorative so screen readers don't announce the brand twice. */
+  decorative = false,
 }: {
   brandKey: string;
   size?: number;
+  decorative?: boolean;
 }) {
   const asset = getBrandAsset(brandKey);
+  const a11y = decorative
+    ? { 'aria-hidden': true as const }
+    : { role: 'img', 'aria-label': asset.name };
   if (asset.svgPath) {
     return (
       <svg
         width={size}
         height={size}
         viewBox="0 0 24 24"
-        role="img"
-        aria-label={asset.name}
+        {...a11y}
         className="ig-mark ig-mark--glyph"
       >
         <path d={asset.svgPath} fill={asset.accent} />
@@ -37,8 +43,7 @@ export default function BrandMark2D({
   return (
     <span
       className="ig-mark ig-mark--mono"
-      role="img"
-      aria-label={asset.name}
+      {...a11y}
       style={{
         width: size,
         height: size,
