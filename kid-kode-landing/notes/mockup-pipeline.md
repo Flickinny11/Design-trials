@@ -416,3 +416,17 @@ Profile schema (`prism-brand.ts`), and the CollabRoom TYPES-only contract
 (`prism-collab.ts`, decision E). zod is pure runtime schema validation — no renderer,
 no DOM, no transport, no second state library (I3 intact). Version matches the already
 vendored 3.25.76 (no downgrade).
+
+### §10 addendum — SHELL W1 allowlist (2026-07-04)
+
+`@trpc/server@^11` + `@trpc/client@^11` added to `RUNTIME_ALLOW` in
+`.claude/hooks/dependency-allowlist-check.py` and installed as direct dependencies.
+Rationale: the frontend-shell spec (PRISM-FRONTEND-SHELL-SPEC.md v1.1, invariant I4
+"contract-first tRPC + Zod") mandates tRPC as the shell's RPC layer, and the W1 wave
+prompt requires the chat agentic loop to "wire to a local echo/stub agent endpoint
+(tRPC, contract-first)". The agent endpoint is a tRPC v11 router
+(`src/server/trpc/`) whose streaming procedure yields Zod-validated events from
+`packages/shared-interfaces/src/prism-agent.ts` over `httpBatchStreamLink` — a plain
+fetch response stream, NOT a WebSocket (I1 intact) and NOT polling. tRPC carries no
+renderer, no DOM, no state library (I3 intact — Zustand remains the only store).
+The stub agent is replaced by the real orchestrator in W5 behind the same contract.

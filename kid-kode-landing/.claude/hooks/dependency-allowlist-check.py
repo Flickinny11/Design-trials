@@ -74,6 +74,16 @@ RUNTIME_ALLOW = {
     # 3.25.76, promoted to a direct dep. Rationale logged in
     # notes/mockup-pipeline.md §10 (2026-07-04).
     "zod",
+    # SHELL W1 (PRISM-FRONTEND-SHELL-SPEC v1.1 I4 "contract-first tRPC + Zod",
+    # §12 W1 chat agentic loop "local echo/stub agent endpoint (tRPC,
+    # contract-first)") — the builder shell's agent endpoint is a tRPC v11
+    # router whose procedures stream Zod-validated contract events
+    # (packages/shared-interfaces/src/prism-agent.ts) over httpBatchStreamLink.
+    # tRPC is typed RPC plumbing only: no renderer, no DOM, no WebSocket (I1
+    # intact — streaming rides a plain fetch response), no second state
+    # library (I3 intact). Rationale logged in notes/mockup-pipeline.md §10
+    # (2026-07-04, W1 addendum).
+    "@trpc/server", "@trpc/client",
     # EDITOR-EXP P7 (C32-34) — undo/redo. zundo is a pure zustand temporal
     # middleware (no renderer, fits zustand ^5); immer for patch-based history.
     # Approved per RE-VERIFY-DECISIONS.md (zundo 2.3, immer 11.1.8).
