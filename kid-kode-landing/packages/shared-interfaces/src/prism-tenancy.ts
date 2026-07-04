@@ -45,6 +45,23 @@ export type PrismPlanTier = z.infer<typeof prismPlanTierSchema>;
 
 export const PRISM_DEFAULT_PLAN_TIER: PrismPlanTier = 'free';
 
+// ── Build lifecycle (W2-D4 — additive project-row field) ─────────────────────
+
+/** Where a project sits on the build ladder. Guided-Build intake hands a
+ *  project off to the builder in `plan-pending` (an approved Build Brief exists
+ *  but the Conductor has not authored a plan yet); the real Plan → Build →
+ *  Verify phases (spec §3 Phases 3–5) land in W5 behind this same field.
+ *  `intake` = created but no approved brief yet; `built` = a verified app
+ *  exists. Additive-only: never remove or repurpose a variant. */
+export const prismBuildStateSchema = z.enum([
+  'intake',
+  'plan-pending',
+  'planning',
+  'building',
+  'built',
+]);
+export type PrismBuildState = z.infer<typeof prismBuildStateSchema>;
+
 // ── User (shell-facing projection of the Better Auth user) ──────────────────
 
 export const prismUserSchema = z.object({
@@ -94,6 +111,8 @@ export const prismProjectSchema = z.object({
   /** Per-project model override (spec 7.2) — a model-config id, resolved
    *  against the single config source (7.4). Null = account default. */
   modelOverrideId: z.string().max(120).nullish(),
+  /** Build ladder position (W2-D4). Absent on legacy rows == pre-intake. */
+  buildState: prismBuildStateSchema.nullish(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 });

@@ -37,12 +37,15 @@ export default function PreviewRegion({
   containerId,
   graphRef,
   projectName,
+  planPending = false,
   sendCommand,
   onSelectMode,
 }: {
   containerId: string;
   graphRef: string;
   projectName: string;
+  /** W2: an approved Build Brief was handed off — the plan is pending (W5). */
+  planPending?: boolean;
   sendCommand: (command: PrismShellCommand) => void;
   onSelectMode: (mode: PrismViewMode) => void;
 }) {
@@ -144,6 +147,17 @@ export default function PreviewRegion({
           />
         </div>
       </header>
+
+      {planPending ? (
+        <div className="bw2-plan-pending" role="status">
+          <span className="bw2-plan-pending-bead" aria-hidden />
+          <span className="bw2-plan-pending-text">
+            <strong>Brief approved · plan pending.</strong> Your guided-build brief is
+            saved to this project. The Conductor authors the plan and materializes the
+            build in a coming release — for now the certified prototype is your preview.
+          </span>
+        </div>
+      ) : null}
 
       {lastError ? (
         <div className="bw1-frame-error" role="alert">

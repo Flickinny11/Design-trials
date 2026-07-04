@@ -102,6 +102,16 @@ export default function DashboardShell({
         <p className="dw1-error" role="alert" aria-live="polite">
           {error ?? ''}
         </p>
+        <p className="dw1-guided-hint">
+          Not sure where to start?{' '}
+          <a
+            className="dw1-guided-link"
+            href={name.trim() ? `/app/build?prompt=${encodeURIComponent(name.trim())}` : '/app/build'}
+          >
+            Start a guided build →
+          </a>{' '}
+          Prism asks a few questions, shows design directions, and writes a brief you approve.
+        </p>
       </section>
 
       <section className="dw1-projects" aria-label="Your projects">

@@ -19,6 +19,7 @@ import 'server-only';
 import { agentChatRequestSchema } from '../../../packages/shared-interfaces/src/prism-agent';
 import { runStubAgent } from '../agent/stub-agent';
 import { protectedProcedure, router } from './init';
+import { intakeRouter } from './routers/intake';
 import { tenancyRouter } from './routers/tenancy';
 
 export const appRouter = router({
@@ -32,6 +33,7 @@ export const appRouter = router({
       }),
   }),
   tenancy: tenancyRouter,
+  intake: intakeRouter,
 });
 
 export type AppRouter = typeof appRouter;

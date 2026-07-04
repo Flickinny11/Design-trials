@@ -35,11 +35,15 @@ const PANES = [
 export default function BuilderShell({
   projectId,
   projectName,
+  buildState,
 }: {
   projectId: string;
   /** Real tenant project name (W1A) — falls back to the W1 humanized slug
    *  for ids that are not owned projects (stub/demo routes). */
   projectName?: string;
+  /** Build ladder position (W2). `plan-pending` = an approved Build Brief was
+   *  handed off from Guided Build intake; the Conductor authors the plan in W5. */
+  buildState?: string | null;
 }) {
   const stub = getStubProject(projectId);
   const project = projectName ? { ...stub, name: projectName } : stub;
@@ -115,6 +119,7 @@ export default function BuilderShell({
               containerId={ENGINE_CONTAINER_ID}
               graphRef={project.graphRef}
               projectName={project.name}
+              planPending={buildState === 'plan-pending'}
               sendCommand={sendCommand}
               onSelectMode={onSelectMode}
             />

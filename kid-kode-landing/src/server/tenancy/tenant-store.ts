@@ -35,10 +35,15 @@ import {
   prismProjectVersionSchema,
   prismTenancyIdSchema,
   prismTenantAssetSchema,
+  type PrismBuildState,
   type PrismProject,
   type PrismProjectVersion,
   type PrismTenantAsset,
 } from '../../../packages/shared-interfaces/src/prism-tenancy';
+import {
+  buildBriefSchema,
+  type BuildBrief,
+} from '../../../packages/shared-interfaces/src/prism-intake';
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
 const MAX_ASSET_BYTES = 64 * 1024 * 1024; // matches assets/store.ts ceiling
@@ -191,6 +196,61 @@ export async function setProjectModelOverride(
   modelOverrideId: string | null,
 ): Promise<PrismProject | null> {
   return updateProject(tenantId, projectId, (p) => ({ ...p, modelOverrideId }));
+}
+
+export async function setBuildState(
+  tenantId: string,
+  projectId: string,
+  buildState: PrismBuildState,
+): Promise<PrismProject | null> {
+  return updateProject(tenantId, projectId, (p) => ({ ...p, buildState }));
+}
+
+// ── Build Brief (W2 — Guided Build intake output, tenant-keyed) ──────────────
+
+function briefPath(tenantId: string, projectId: string): string {
+  return insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'brief.json',
+  );
+}
+
+const MAX_BRIEF_BYTES = 512 * 1024; // 512 KB brief JSON ceiling
+
+/** Persist an approved Build Brief and move the project to `plan-pending`.
+ *  Fails closed (not owned == not found) exactly like every other write. */
+export async function saveBrief(
+  tenantId: string,
+  projectId: string,
+  brief: BuildBrief,
+): Promise<{ project: PrismProject } | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const bytes = Buffer.byteLength(JSON.stringify(brief), 'utf8');
+  if (bytes > MAX_BRIEF_BYTES) {
+    throw new Error('tenant-store: brief exceeds size ceiling');
+  }
+  await writeJson(briefPath(tenantId, projectId), brief);
+  const project = await updateProject(tenantId, projectId, (p) => ({
+    ...p,
+    name: brief.title.slice(0, 200),
+    buildState: 'plan-pending' as const,
+  }));
+  return project ? { project } : null;
+}
+
+export async function getBrief(
+  tenantId: string,
+  projectId: string,
+): Promise<BuildBrief | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const raw = await readJson<unknown>(briefPath(tenantId, projectId));
+  if (raw == null) return null;
+  const parsed = buildBriefSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
 }
 
 // ── Graphs ───────────────────────────────────────────────────────────────────

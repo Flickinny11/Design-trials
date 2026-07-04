@@ -1543,3 +1543,27 @@
     padding: var(--pp-space-2);
   }
 }
+
+/* W2 — plan-pending ribbon (Guided Build handoff; W2-D5 states it on-screen) */
+.bw2-plan-pending {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 12px 8px;
+  padding: 10px 14px;
+  border: 1px solid rgba(201, 161, 90, 0.34);
+  border-left: 2px solid var(--pp-red, #ff2a38);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(28, 22, 14, 0.7), rgba(13, 13, 18, 0.7));
+}
+.bw2-plan-pending-bead {
+  flex-shrink: 0;
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: #ff2a38;
+  box-shadow: 0 0 10px rgba(255, 42, 56, 0.8);
+}
+.bw2-plan-pending-text { font-size: 12px; line-height: 1.5; color: #c9ccd3; }
+.bw2-plan-pending-text strong { color: #e7d3ab; font-weight: 600; }
