@@ -1,0 +1,25 @@
+{
+  "wave": "SHELL-W4",
+  "surface": "S3 Dashboard (gallery, launchpad, E13 3D slide-out nav, E1 versions, E6 usage)",
+  "date": "2026-07-04",
+  "runtime": "next dev (dev:fast), real Metal GPU via Chrome DevTools MCP",
+  "viewports": { "desktop": "1600x900x1", "mobile": "390x844x3 (mobile+touch)" },
+  "gates": {
+    "tsc_new_errors": 0,
+    "tsc_baseline": 9,
+    "tenant_isolation": "30/30 GREEN (was 26/26 + 4 new cross-tenant cases: duplicate, delete, version.restore, usage)",
+    "console_errors": 0
+  },
+  "behavioral_proofs": {
+    "launchpad_to_intake": "Build → /app/build?prompt=A+booking+app+for+a+barbershop+with+payments+and+SMS+reminders (prompt seeded)",
+    "nav_hover_reveal_desktop": "hover far-left edge opens drawer",
+    "nav_focus_trap": "focus moves into drawer (first item), Tab cycles, Escape closes",
+    "nav_reopen_after_leave": "leave region + re-hover reopens",
+    "nav_mobile_tap": "56x56 upper-left tap opens drawer (touch, no hover)",
+    "version_restore_roundtrip": "edited(v2-EDITED) -> restore 'First cut' -> live graph == snapshot(checkpoint-1/v1); re-verify hook badge 'Restored · verified' (data-ok=true)",
+    "restore_latency_after_deadlock_fix": "17ms (was 60s+ hang before the re-entrant-lock fix)",
+    "card_actions": "kebab menu Rename/Duplicate/History/Delete; delete confirm dialog",
+    "gallery_thumbnails": "3 distinct real 3D minis on ONE shared canvas (obelisk/lattice/monolith/facet/orbital signatures) + signature jewel per card",
+    "mobile_gallery_columns": "1 (366px card width at 390px viewport)"
+  }
+}
