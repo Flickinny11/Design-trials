@@ -48,7 +48,7 @@ export default function GalaxyFilterOverlay() {
   return (
     <div
       data-component="galaxy-filter-overlay"
-      className={`absolute top-16 z-40 pointer-events-auto flex flex-col items-end gap-2 right-3 ${
+      className={`absolute top-16 z-40 pointer-events-auto flex flex-col items-end gap-2 right-16 ${
         inspectorVisible ? 'md:right-[484px]' : ''
       }`}
     >

@@ -15,6 +15,23 @@ import { useKeyframeStore } from './use-keyframe-store';
 
 const Z = FRONT_Z - 0.06;
 const GLYPH_MAT = new THREE.MeshStandardMaterial({ color: '#0a0d12', roughness: 0.3, metalness: 0.5 });
+// FINISH F-1 — the PLAY/PAUSE glyph is the SIGNAL-RED accent on the chrome
+// keycap (hot emissive red when playing, signal red at rest); CLEAR keeps the
+// engraved black glyph (the black/white side of the system).
+const PLAY_MAT = new THREE.MeshStandardMaterial({
+  color: '#ff2a38',
+  roughness: 0.3,
+  metalness: 0.4,
+  emissive: '#7d0f18',
+  emissiveIntensity: 0.6,
+});
+const PAUSE_MAT = new THREE.MeshStandardMaterial({
+  color: '#ff5a55',
+  roughness: 0.3,
+  metalness: 0.4,
+  emissive: '#ff2a38',
+  emissiveIntensity: 0.8,
+});
 
 function PlayPauseGlyph({ playing }: { playing: boolean }) {
   const z = CUBE_K / 2 + 0.002;
@@ -22,10 +39,10 @@ function PlayPauseGlyph({ playing }: { playing: boolean }) {
     // two pause bars
     return (
       <group position={[0, 0, z]}>
-        <mesh position={[-0.07, 0, 0]} material={GLYPH_MAT}>
+        <mesh position={[-0.07, 0, 0]} material={PAUSE_MAT}>
           <boxGeometry args={[0.06, 0.24, 0.02]} />
         </mesh>
-        <mesh position={[0.07, 0, 0]} material={GLYPH_MAT}>
+        <mesh position={[0.07, 0, 0]} material={PAUSE_MAT}>
           <boxGeometry args={[0.06, 0.24, 0.02]} />
         </mesh>
       </group>
@@ -38,7 +55,7 @@ function PlayPauseGlyph({ playing }: { playing: boolean }) {
   tri.lineTo(-0.1, -0.13);
   tri.closePath();
   const geo = new THREE.ExtrudeGeometry(tri, { depth: 0.02, bevelEnabled: false });
-  return <mesh position={[-0.02, 0, z]} geometry={geo} material={GLYPH_MAT} />;
+  return <mesh position={[-0.02, 0, z]} geometry={geo} material={PLAY_MAT} />;
 }
 
 function ClearGlyph() {

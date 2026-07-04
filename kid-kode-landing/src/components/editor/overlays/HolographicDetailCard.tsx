@@ -511,7 +511,13 @@ export default function HolographicDetailCard(props: {
           );
         }
         .holo-row-value {
-          flex: 0 0 auto;
+          /* FINISH-F3 (advocate residual MUST-FIX) — long values used to
+             hard-clip at the card edge on the clamped 340px phone card
+             ("…Rue du Rhône," lost "Geneva"). Let the value take up to ~62%
+             of the row and WRAP; the dotted leader flexes to fill whatever
+             remains. Desktop rows are short enough to stay single-line. */
+          flex: 0 1 auto;
+          max-width: 62%;
           margin: 0;
           font-family: var(--ds-font-mono, ui-monospace, monospace);
           font-variant-numeric: tabular-nums;
@@ -520,7 +526,8 @@ export default function HolographicDetailCard(props: {
           letter-spacing: 0.01em;
           color: var(--ds-metal-200, #ecd49d);
           text-align: right;
-          white-space: nowrap;
+          white-space: normal;
+          overflow-wrap: anywhere;
           text-shadow: 0 0 12px rgba(var(--ds-metal-400-rgb), 0.4);
         }
 

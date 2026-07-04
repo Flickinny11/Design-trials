@@ -1,33 +1,41 @@
 'use client';
 
-// ToolbarScene — the R3F scene graph for the liquid-glass toolbar: an
-// orthographic camera fit to the canvas, premium studio lighting + an
-// Environment (so the transmission glass has crisp reflections), an iridescent
-// backdrop the glass refracts, the LiquidGlassBar, and the vertical column of
-// ToolButton3D. Isolated WebGL — never touches the unified three/webgpu scene.
+// ToolbarScene — the R3F scene graph for the canvas toolbar: an orthographic
+// camera fit to the rail, neutral studio lighting + local IBL reflection cards,
+// one physical glass pane, and a vertical stack of clear glass cube buttons.
+// Isolated WebGL — never touches the unified three/webgpu scene.
 
-import { Suspense, useRef, useState, useMemo } from 'react';
+import { useRef } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Environment, Lightformer, OrthographicCamera } from '@react-three/drei';
 import * as THREE from 'three';
-import { LiquidGlassBar } from './LiquidGlassBar';
-import { ToolButton3D } from './ToolButton3D';
+import { GlassRailPane } from './GlassRailPane';
+import { GlassCubeToolButton } from './GlassCubeToolButton';
 import {
   barHeight,
   buttonY,
   accentFor,
-  BAR_W,
-  BACKDROP_TOP,
-  BACKDROP_BOT,
   type LiquidToolGroup,
 } from './config';
+
+/** Normalized pointer over the rail host (−1..1 each axis; over eases 0→1). */
+export interface RailPointer {
+  x: number;
+  y: number;
+  over: number;
+}
 
 export interface ToolbarSceneProps {
   groups: LiquidToolGroup[];
   activeGroup: string | null;
   onToggleGroup: (id: string) => void;
+  externalHoverIndex?: number | null;
+  /** pressed button (via the DOM hit-target overlay) — drives press weight */
+  externalPressIndex?: number | null;
   /** report which button (if any) is hovered, for the DOM tooltip layer */
   onHoverButton?: (index: number | null) => void;
+  /** live pointer position over the rail — drives the living-light parallax */
+  pointerRef?: React.RefObject<RailPointer>;
 }
 
 // Dev/verification probe: publishes the live toolbar scene so an evaluate_script
@@ -67,44 +75,100 @@ function CameraFit({ barH }: { barH: number }) {
   );
 }
 
-// Iridescent backdrop plane the glass refracts — a vertical gradient in cool
-// soap-film tones with a soft accent bloom toward the center.
-function Backdrop({ height }: { height: number }) {
-  const tex = useMemo(() => {
-    const c = document.createElement('canvas');
-    c.width = 128;
-    c.height = 512;
-    const g = c.getContext('2d')!;
-    const grad = g.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, BACKDROP_TOP);
-    grad.addColorStop(1, BACKDROP_BOT);
-    g.fillStyle = grad;
-    g.fillRect(0, 0, 128, 512);
-    // Iridescent soap-film bands the glass refracts — vivid, so the body glows
-    // with colored light rather than reading as a black strip.
-    const bands: [number, string][] = [
-      [0.12, 'rgba(90,184,255,0.55)'],
-      [0.3, 'rgba(169,139,255,0.5)'],
-      [0.5, 'rgba(92,224,176,0.5)'],
-      [0.7, 'rgba(255,182,92,0.46)'],
-      [0.88, 'rgba(255,126,182,0.5)'],
-    ];
-    for (const [yy, col] of bands) {
-      const rad = g.createRadialGradient(64, 512 * yy, 6, 64, 512 * yy, 150);
-      rad.addColorStop(0, col);
-      rad.addColorStop(1, 'rgba(0,0,0,0)');
-      g.fillStyle = rad;
-      g.fillRect(0, 0, 128, 512);
-    }
-    const t = new THREE.CanvasTexture(c);
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  }, []);
+// Reflection cards live in the local environment only. They give the clear glass
+// long softbox streaks and dark-room contrast without painting a visible colored
+// backplate behind the toolbar.
+//
+// MASTERPIECE M-1 living light: the environment re-renders every frame
+// (frames={Infinity}), so the hero softbox streak DRIFTS on a slow Lissajous —
+// specular catch-lights crawl along the glass and bezel even at idle, and the
+// refraction visibly answers the moving light (design-law DL4: if light doesn't
+// move, it doesn't ship). The drift is centimeters-slow: alive, never busy.
+function DriftingStreak() {
+  const rig = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    const g = rig.current;
+    if (!g) return;
+    const t = clock.elapsedTime;
+    g.position.x = 2.2 + Math.sin(t * 0.11) * 1.7;
+    g.position.y = 4.5 + Math.cos(t * 0.07) * 2.6;
+    g.rotation.z = Math.sin(t * 0.05) * 0.22;
+  });
   return (
-    <mesh position={[0, 0, -2.0]} raycast={() => null}>
-      <planeGeometry args={[BAR_W * 2.4, height * 1.08]} />
-      <meshBasicMaterial map={tex} transparent opacity={0.95} toneMapped={false} />
-    </mesh>
+    <group ref={rig} position={[2.2, 4.5, 0]}>
+      <Lightformer intensity={5.2} position={[0, 0, 5]} scale={[0.35, 8, 1]} color="#ffffff" />
+    </group>
+  );
+}
+
+function StudioEnvironment() {
+  return (
+    <Environment resolution={384} frames={Infinity}>
+      <color attach="background" args={['#040507']} />
+      <DriftingStreak />
+      <Lightformer intensity={2.8} position={[-3.2, -1.5, 4]} scale={[0.45, 6, 1]} color="#d8e6ff" />
+      <Lightformer intensity={1.8} position={[0, -5, 2]} scale={[4.5, 0.55, 1]} color="#fff2df" />
+      <Lightformer intensity={1.1} form="ring" position={[0, 2, -4]} scale={2.1} color="#ffffff" />
+    </Environment>
+  );
+}
+
+// MASTERPIECE M-1 — the rail answers the hand. The pointer's position over the
+// rail host tilts the whole glass assembly a few degrees (critically damped, so
+// it has weight and settle, never a linear track) and nudges the key light, so
+// refraction and specular streaks sweep across the pane and cubes as the hand
+// moves. Pointer-off eases back to the resting pose.
+const RIG_BASE = { x: 0.035, y: -0.18, z: -0.012 };
+function RailRig({
+  pointerRef,
+  children,
+}: {
+  pointerRef?: React.RefObject<RailPointer>;
+  children: React.ReactNode;
+}) {
+  const rig = useRef<THREE.Group>(null);
+  const keyLight = useRef<THREE.DirectionalLight>(null);
+  useFrame(({ clock }, dtRaw) => {
+    const g = rig.current;
+    if (!g) return;
+    const dt = Math.min(dtRaw, 0.05);
+    const t = clock.elapsedTime;
+    const p = pointerRef?.current ?? { x: 0, y: 0, over: 0 };
+    // breathing — barely-there idle drift so the glass is never a still image
+    const breatheY = Math.sin(t * 0.4) * 0.006;
+    const breatheX = Math.sin(t * 0.31) * 0.004;
+    const targetX = RIG_BASE.x + breatheX + -p.y * 0.045 * p.over;
+    const targetY = RIG_BASE.y + breatheY + p.x * 0.07 * p.over;
+    const k = 1 - Math.pow(0.004, dt); // damped settle (~90% in ~0.4s)
+    g.rotation.x += (targetX - g.rotation.x) * k;
+    g.rotation.y += (targetY - g.rotation.y) * k;
+    const l = keyLight.current;
+    if (l) {
+      const lx = 4 + p.x * 1.7 * p.over;
+      const ly = 6 - p.y * 2.3 * p.over;
+      l.position.x += (lx - l.position.x) * k;
+      l.position.y += (ly - l.position.y) * k;
+    }
+  });
+  return (
+    <>
+      <directionalLight
+        ref={keyLight}
+        position={[4, 6, 8]}
+        intensity={2.15}
+        color="#fff4e6"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-2}
+        shadow-camera-right={2}
+        shadow-camera-top={20}
+        shadow-camera-bottom={-20}
+        shadow-camera-near={0.1}
+        shadow-camera-far={40}
+        shadow-bias={-0.0006}
+      />
+      <group ref={rig} rotation={[RIG_BASE.x, RIG_BASE.y, RIG_BASE.z]}>{children}</group>
+    </>
   );
 }
 
@@ -112,93 +176,69 @@ export function ToolbarScene({
   groups,
   activeGroup,
   onToggleGroup,
+  externalHoverIndex,
+  externalPressIndex,
   onHoverButton,
+  pointerRef,
 }: ToolbarSceneProps) {
   const n = groups.length;
   const barH = barHeight(n);
-  const [energy, setEnergy] = useState(0);
 
   return (
     <>
       <SceneProbe />
       <CameraFit barH={barH} />
 
-      {/* Studio lighting — a warm key, cool fill, and a bright rim that rakes
-          the glass edge so the silhouette and refraction read crisply. DE-MURK
-          (TBITER F1): brightened across the board + a dedicated front coin-light
-          so the sunk medallions + their icons catch real highlights and read at
-          rail scale instead of sitting in shadow behind dark glass. */}
-      <ambientLight intensity={0.95} />
-      <directionalLight
-        position={[4, 6, 8]}
-        intensity={3.0}
-        color="#fff3e0"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-left={-2}
-        shadow-camera-right={2}
-        shadow-camera-top={barH / 2 + 1}
-        shadow-camera-bottom={-(barH / 2 + 1)}
-        shadow-camera-near={0.1}
-        shadow-camera-far={40}
-        shadow-bias={-0.0006}
-      />
-      <directionalLight position={[-5, -2, 4]} intensity={1.5} color="#bcd6ff" />
-      <pointLight position={[0, 0, 6]} intensity={30} distance={26} color="#e2eeff" />
-      {/* front coin-light — a soft fill close to the glass front face that lifts
-          the medallions + icons out of the glass body (kills the murk read). */}
-      <pointLight position={[0, 0, 3.2]} intensity={16} distance={14} color="#ffffff" />
-      {/* raking rim — grazes the glass edge from behind-right so the volumetric
-          silhouette and refraction read as a real 3D object */}
+      {/* Studio lighting: restrained ambient, warm key (living, inside RailRig),
+          cool fill, and hard rims. The pane/cubes are clear; their visibility
+          comes from reflected light, bevels, cast shadows, and edge glints, not
+          colored UI fill. */}
+      <ambientLight intensity={0.34} />
+      <directionalLight position={[-5, -2, 5]} intensity={1.15} color="#c9ddff" />
+      <pointLight position={[0, 0, 4.2]} intensity={10} distance={16} color="#ffffff" />
       <spotLight
-        position={[6, 2, -3]}
-        angle={0.9}
+        position={[6, 2, -2.5]}
+        angle={0.72}
         penumbra={1}
-        intensity={42}
+        intensity={36}
         distance={30}
-        color="#bcd8ff"
+        color="#dbeaff"
       />
       <spotLight
-        position={[-6, -3, -2]}
-        angle={0.9}
+        position={[-6, -3, -2.5]}
+        angle={0.72}
         penumbra={1}
-        intensity={26}
+        intensity={20}
         distance={30}
-        color="#d8b6ff"
+        color="#fff0dc"
       />
+      <StudioEnvironment />
 
-      {/* Environment for transmission reflections — custom Lightformers give the
-          glass premium, controllable highlights (the Glb3DPreview idiom). */}
-      <Environment resolution={256} frames={Infinity}>
-        <color attach="background" args={['#05070d']} />
-        <Lightformer intensity={3} position={[2, 3, 4]} scale={[3, 6, 1]} color="#ffffff" />
-        <Lightformer intensity={2} position={[-3, -1, 3]} scale={[2, 5, 1]} color="#88b6ff" />
-        <Lightformer intensity={1.4} position={[0, -4, 2]} scale={[5, 2, 1]} color="#c79bff" />
-        <Lightformer intensity={1.2} form="ring" position={[0, 2, -3]} scale={2} color="#ffd9a0" />
-      </Environment>
+      {/* The real transmission GLASS PANE: flat, beveled edges, milled sockets,
+          and clear cubes seated into the cutouts. The resting yaw makes the
+          sidewalls visible so the rail reads as a physical object; RailRig
+          tilts the assembly toward the pointer and sweeps the key light so the
+          material answers the hand (living light, M-1). */}
+      <RailRig pointerRef={pointerRef}>
+        <GlassRailPane n={n} />
 
-      <Backdrop height={barH} />
-
-      {/* The generated shell GLB suspends while it loads; keep the rest visible. */}
-      <Suspense fallback={null}>
-        <LiquidGlassBar height={barH} energy={energy} />
-      </Suspense>
-
-      {groups.map((g, i) => (
-        <ToolButton3D
-          key={g.id}
-          id={g.id}
-          y={buttonY(i, n)}
-          accent={accentFor(g.id)}
-          active={activeGroup === g.id}
-          wired={g.wired}
-          onActivate={() => onToggleGroup(g.id)}
-          onHoverChange={(h) => {
-            setEnergy(h ? 1 : 0);
-            onHoverButton?.(h ? i : null);
-          }}
-        />
-      ))}
+        {groups.map((g, i) => (
+          <GlassCubeToolButton
+            key={g.id}
+            id={g.id}
+            y={buttonY(i, n)}
+            accent={accentFor(g.id)}
+            active={activeGroup === g.id}
+            externallyHovered={externalHoverIndex === i}
+            externallyPressed={externalPressIndex === i}
+            wired={g.wired}
+            onActivate={() => onToggleGroup(g.id)}
+            onHoverChange={(h) => {
+              onHoverButton?.(h ? i : null);
+            }}
+          />
+        ))}
+      </RailRig>
     </>
   );
 }

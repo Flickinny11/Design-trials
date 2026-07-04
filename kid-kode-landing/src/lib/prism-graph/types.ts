@@ -981,6 +981,14 @@ export interface PrismNode {
   // functionTiles, integrationRefs, functionBinding, …); this is an audit record
   // only (prompt + planId + summary + applied step kinds). Absent on legacy nodes.
   promptEditLog?: PromptEditLogEntry[];
+  // WORKSPACE-COMPLETION W-3 / Unified per-node agent (spec §4; INV-18 additive).
+  // Audit + TRUST trail for the unified validated-plan engine that prompt-edit AND
+  // self-heal share (lib/prompt-edit/node-agent.ts). Each entry records which
+  // TRIGGER ran ('prompt-edit' | 'self-heal'), the validated plan id/summary, the
+  // applied step kinds, and — for self-heal — a trust signal (suspect reason +
+  // repair outcome). The actual changes land in the existing additive fields via
+  // applyPlan; this is provenance only, never executable code. Round-trips.
+  nodeAgentLog?: NodeAgentLogEntry[];
   // WORKSPACE-COMPLETION W-2 / Data tab (criteria C3; INV-W5 additive,
   // INV-W7 reference-only). The node's own DATA/BACKEND model: a logical name,
   // a typed STATE schema (fields the node owns), and an optional PERSISTENCE
@@ -1283,6 +1291,35 @@ export interface PromptEditLogEntry {
   origin: 'stub' | 'live';
 }
 
+// WORKSPACE-COMPLETION W-3 — provenance + trust record for the unified per-node
+// agent (spec §4). prompt-edit and self-heal route through ONE validated-plan
+// engine (lib/prompt-edit/node-agent.ts); every commit appends one of these so a
+// node carries an honest history of what the agent did and why. `trust` is
+// populated only for the self-heal trigger (a suspect node that was re-validated).
+export interface NodeAgentLogEntry {
+  /** Stable id (`na-<base36>`). */
+  id: string;
+  /** ISO timestamp the plan was committed. */
+  at: string;
+  /** Which trigger ran the shared engine. */
+  trigger: 'prompt-edit' | 'self-heal';
+  /** The validated plan id the orchestrator returned. */
+  planId: string;
+  /** The orchestrator's one-line summary of the plan. */
+  summary: string;
+  /** The step kinds actually applied to this node (e.g. ['design']). */
+  appliedStepKinds: string[];
+  /** Which orchestrator produced the plan, for honest provenance. */
+  origin: 'stub' | 'live';
+  /** Self-heal only: the telemetry trust signal recorded after re-validation. */
+  trust?: {
+    /** Why the node was marked suspect by runtime telemetry. */
+    suspectReason: string;
+    /** Whether the validated-plan loop changed the node or left it as-is. */
+    outcome: 'repaired' | 'unchanged';
+  };
+}
+
 // APP-REALITY P5 — per-DEVICE responsive layout override (INV-8 additive).
 // The Preview device modes (Desktop / Tablet / Mobile) show the REAL responsive
 // version: each node may carry an absolute pose override + a scale multiplier +
@@ -1298,6 +1335,11 @@ export interface ResponsiveDevicePose {
   z?: number;
   /** Multiplier on the authored scaleXYZ for this device (omit = 1×). */
   scale?: number;
+  /** FINISH-F3 (INV-8 additive) — per-axis multipliers composed ON TOP of
+   *  `scale`, so wide shell rows (header/footer bars, rules) can compress
+   *  horizontally for a device without collapsing their height. Omit = 1×. */
+  scaleX?: number;
+  scaleY?: number;
   /** Hide this node entirely on this device (responsive declutter). */
   hidden?: boolean;
 }

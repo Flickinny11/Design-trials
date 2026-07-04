@@ -21,12 +21,14 @@ import {
   ExtrudeGeometry,
   Group,
   Mesh,
+  Path,
   Shape,
   ShapeGeometry,
   ShapePath,
   type BufferGeometry,
   type Material,
   type Texture,
+  type Vector2,
 } from 'three';
 import { MeshBasicNodeMaterial, MeshPhysicalNodeMaterial, type Node } from 'three/webgpu';
 import {
@@ -112,12 +114,91 @@ function glyphToShapes(commands: GlyphOutlineCommand[], emScale: number, italicS
         break;
     }
   }
-  // TrueType (glyf) outlines + the y-negation above triangulate correctly with
-  // isCCW=true (the same value three's Font.generateShapes uses). Holes
-  // (counters of o/a/e/g/B/8) are auto-detected per glyph because we only ever
-  // feed ONE glyph's self-contained contours here (never a whole word — avoids
-  // three #16950/#13653 nested-contour mis-assignment).
-  return sp.toShapes(true);
+  // Assemble shapes by CONTAINMENT, not winding. `ShapePath.toShapes(isCCW)`
+  // classifies solid-vs-hole purely by contour direction, which breaks on
+  // real-font conversions where hole winding is inconsistent PER GLYPH (the
+  // three #16950/#13653 family): Playfair 600's 'a' lost ~75% of its front
+  // cap and 'O' triangulated ACROSS its counter — the glyphs read as dark
+  // hollow bronze in every extruded headline (masterpiece-m2 forensics,
+  // 2026-07-04; proofs/testfill/testoutline/testshadow isolate it to the cap
+  // geometry). Containment depth is winding-agnostic: even depth = solid,
+  // odd = hole of its innermost containing solid; winding is then normalized
+  // (solids CCW, holes CW) so the cap triangulator always sees a consistent
+  // orientation.
+  const contours = sp.subPaths.map((p) => {
+    const pts = p.getPoints();
+    // drop the duplicated closing point so signed-area/containment are exact
+    if (pts.length > 2 && pts[0].distanceToSquared(pts[pts.length - 1]) < 1e-12) pts.pop();
+    return pts;
+  });
+  return contoursToShapes(contours);
+}
+
+// ── containment-based contour → Shape assembly (exported for tests) ─────────
+function contourSignedArea(pts: Vector2[]): number {
+  let s = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i];
+    const b = pts[(i + 1) % pts.length];
+    s += a.x * b.y - b.x * a.y;
+  }
+  return s / 2;
+}
+
+function pointInContour(pt: Vector2, poly: Vector2[]): boolean {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i].x;
+    const yi = poly[i].y;
+    const xj = poly[j].x;
+    const yj = poly[j].y;
+    const crosses =
+      yi > pt.y !== yj > pt.y && pt.x < ((xj - xi) * (pt.y - yi)) / (yj - yi) + xi;
+    if (crosses) inside = !inside;
+  }
+  return inside;
+}
+
+/** Winding-agnostic Shape assembly: containment depth decides solid (even)
+ *  vs hole (odd); each hole attaches to its smallest containing solid; output
+ *  winding is normalized (solids CCW, holes CW). */
+export function contoursToShapes(contours: Vector2[][]): Shape[] {
+  const kept = contours.filter((c) => c.length >= 3 && Math.abs(contourSignedArea(c)) > 1e-10);
+  const depth = kept.map((c, i) => {
+    let d = 0;
+    for (let j = 0; j < kept.length; j++) {
+      if (i !== j && pointInContour(c[0], kept[j])) d++;
+    }
+    return d;
+  });
+  const shapes: Shape[] = [];
+  const solidContourIdx: number[] = [];
+  for (let i = 0; i < kept.length; i++) {
+    if (depth[i] % 2 !== 0) continue;
+    const pts = kept[i].slice();
+    if (contourSignedArea(pts) < 0) pts.reverse();
+    shapes.push(new Shape(pts));
+    solidContourIdx.push(i);
+  }
+  for (let i = 0; i < kept.length; i++) {
+    if (depth[i] % 2 === 0) continue;
+    let best = -1;
+    let bestArea = Infinity;
+    for (let k = 0; k < solidContourIdx.length; k++) {
+      const j = solidContourIdx[k];
+      if (!pointInContour(kept[i][0], kept[j])) continue;
+      const area = Math.abs(contourSignedArea(kept[j]));
+      if (area < bestArea) {
+        bestArea = area;
+        best = k;
+      }
+    }
+    if (best < 0) continue; // orphan hole (degenerate contour) — drop
+    const pts = kept[i].slice();
+    if (contourSignedArea(pts) > 0) pts.reverse();
+    shapes[best].holes.push(new Path(pts));
+  }
+  return shapes;
 }
 
 // ── layout (pen-based; mirrors msdf-layout.ts with opentype metrics) ────────

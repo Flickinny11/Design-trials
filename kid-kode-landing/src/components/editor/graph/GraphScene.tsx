@@ -4,6 +4,7 @@ import { useRef, useMemo, useEffect, useState, Suspense } from 'react';
 import { Canvas, useFrame, useThree, extend } from '@react-three/fiber';
 import {
   Environment,
+  Lightformer,
   Html,
   Stars,
   MeshTransmissionMaterial,
@@ -43,6 +44,7 @@ import {
   GIZMO_ROTATE_SNAP,
   GIZMO_SCALE_SNAP,
 } from '@/stores/useGraphEditorStore';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import {
   usePreviewStateStore,
@@ -75,6 +77,12 @@ import {
   GALAXY_FILTER_DIM_OPACITY,
   type GalaxyFilterMatches,
 } from '@/lib/galaxy-filter';
+import {
+  filterEdgesToGalaxyOverview,
+  getGalaxyOverviewProjection,
+  summarizeGalaxySemantics,
+} from '@/lib/prism-graph/galaxy-semantics';
+import { resolveAssembledNodesForHub } from '@/lib/prism-graph/assembled-nodes';
 import {
   computeCanvasCameraPose,
   resolveCanvasCameraPose,
@@ -663,6 +671,7 @@ function GlassNode({
   const frozen = useGraphEditorStore((s) => s.frozenNodeIds.has(node.id));
   const selectNode = useGraphEditorStore((s) => s.selectNode);
   const toggleNodeSelection = useGraphEditorStore((s) => s.toggleNodeSelection);
+  const setMultiSelection = useGraphEditorStore((s) => s.setMultiSelection);
   const hoverNode = useGraphEditorStore((s) => s.hoverNode);
   const openInspector = useGraphEditorStore((s) => s.openInspector);
   const viewMode = useGraphEditorStore((s) => s.viewMode);
@@ -673,6 +682,9 @@ function GlassNode({
 
   const isSelected = selectedId === node.id;
   const isHovered = hoveredId === node.id || livePreviewHoverId === node.id;
+  const clusterNodeIds = node.isGalaxyCluster ? (node.clusterNodeIds ?? []) : [];
+  const isGalaxyCluster = viewMode === 'galaxy' && clusterNodeIds.length > 0;
+  const showGalaxyBadges = viewMode !== 'galaxy' || isHovered || isSelected;
 
   // RT-SC-04 / INV-R2 (anchor §2, §3a) — in GALAXY mode every node renders in
   // node-state: a dormant glass sphere, NEVER its built artifact. Built
@@ -763,6 +775,11 @@ function GlassNode({
       }}
       onClick={dim ? undefined : (e) => {
         e.stopPropagation();
+        if (isGalaxyCluster) {
+          setMultiSelection(clusterNodeIds);
+          openInspector();
+          return;
+        }
         // EB-03-06 / SC-017 — galaxy-mode shift-click promotes the click into
         // toggleNodeSelection so the group grows; plain clicks fall through
         // to selectNode which also collapses any prior group back to a single.
@@ -774,6 +791,11 @@ function GlassNode({
       }}
       onDoubleClick={dim ? undefined : (e) => {
         e.stopPropagation();
+        if (isGalaxyCluster) {
+          setMultiSelection(clusterNodeIds);
+          openInspector();
+          return;
+        }
         selectNode(node.id);
         openInspector();
       }}
@@ -877,13 +899,13 @@ function GlassNode({
       />
 
       {/* HUB-COLORED GLOW BADGE for backend / animation presence */}
-      {node.hasBackend && (
+      {showGalaxyBadges && node.hasBackend && (
         <mesh position={[radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
           <meshBasicMaterial color={DS.ice400} toneMapped={false} />
         </mesh>
       )}
-      {node.hasAnimation && (
+      {showGalaxyBadges && node.hasAnimation && (
         <mesh position={[-radius * 0.85, radius * 0.85, 0]}>
           <sphereGeometry args={[0.58, 12, 12]} />
           <meshBasicMaterial color={DS.metal300} toneMapped={false} />
@@ -908,7 +930,7 @@ function GlassNode({
       {/* NODE-EDITOR-V2 D3 — per-integration content icons (galaxy node-state,
           §3.3): one brand-tinted badge per connected integration + function
           platform, showing what the node HOLDS. */}
-      {viewMode === 'galaxy' && (
+      {viewMode === 'galaxy' && showGalaxyBadges && (
         <NodeContentIcons sourceNode={sourceNode} radius={radius} dimFactor={dimFactor} />
       )}
 
@@ -916,7 +938,7 @@ function GlassNode({
           small premium custom 3D badge (image / text / 3d-object / integration)
           BELOW the sphere so the node's content type reads at a glance, clear
           of the name label (above) and the integration icons (above). */}
-      {viewMode === 'galaxy' && (
+      {viewMode === 'galaxy' && showGalaxyBadges && (
         <group userData={{ contentBadge: true }}>
           <NodeContentBadge
             contentType={sourceNode ? deriveContentType(sourceNode) : 'image'}
@@ -1206,7 +1228,7 @@ function HubHulls({
         if (!center) return null;
 
         const hubNodes = simNodes.filter((n) => n.hubIds.includes(hub.id));
-        if (!hubNodes.length) return null;
+        if (!hubNodes.length && viewMode !== 'galaxy') return null;
 
         // EB-03-02: galaxy mode swaps the topology-only `maxDist + 10`
         // heuristic for a deterministic per-hub diameter computed from
@@ -1387,21 +1409,37 @@ function NodeLabels({ simNodes }: { simNodes: SimNode[] }) {
             key={node.id}
             position={[node.x, node.y + 5.8, node.z]}
             center
-            zIndexRange={[25, 0]}
+            zIndexRange={isHovered ? [200, 0] : [25, 0]}
             style={{ pointerEvents: 'none', opacity: lodOpacity * perLabelLod.opacity }}
           >
+            {/* PREMIUM LABELS (2026-07-01) — fashionable non-grotesque display
+                type (Sora, --ds-font-display; JetBrains Mono was utilitarian) and
+                a smooth enlarge-on-hover so a hovered sphere is instantly readable.
+                Hover is already driven from the sphere → hoveredNodeId → isHovered;
+                the enlarge is a GPU transform (no reflow) with a signal-red focus
+                halo tying labels to the toolbar's red/black/white language. */}
             <div
               className="select-none"
-              style={{ transform: `scale(${perLabelLod.scale})`, transformOrigin: 'center top' }}
+              style={{
+                transform: `scale(${perLabelLod.scale * (isHovered ? 1.55 : 1)})`,
+                transformOrigin: 'center top',
+                transition: 'transform 200ms cubic-bezier(0.34, 1.4, 0.5, 1)',
+                willChange: 'transform',
+              }}
             >
               {tier >= 1 && (
                 <div
-                  className="font-mono font-semibold tracking-wide whitespace-nowrap"
+                  className="font-semibold tracking-wide whitespace-nowrap"
                   style={{
-                    color: isSelected ? DS.metal200 : DS.textHi,
-                    fontSize: tier === 1 ? 10 : tier === 2 ? 11 : 13,
-                    textShadow: '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
+                    fontFamily: 'var(--ds-font-display)',
+                    color: isHovered ? '#ffffff' : isSelected ? DS.metal200 : DS.textHi,
+                    fontSize: tier === 1 ? 11 : tier === 2 ? 12 : 14,
+                    letterSpacing: '0.015em',
+                    textShadow: isHovered
+                      ? '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1), 0 0 18px rgba(255,42,56,0.55)'
+                      : '0 0 10px rgba(0,0,0,0.95), 0 1px 3px rgba(0,0,0,1)',
                     lineHeight: 1.2,
+                    transition: 'color 160ms ease, text-shadow 160ms ease',
                   }}
                 >
                   {node.name}
@@ -1563,6 +1601,23 @@ function EditorDiagnostics({ simNodes }: { simNodes: SimNode[] }) {
   return null;
 }
 
+function GalaxySemanticDiagnostics({
+  summary,
+}: {
+  summary: ReturnType<typeof summarizeGalaxySemantics>;
+}) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production' || typeof window === 'undefined') return;
+    const w = window as unknown as { __PRISM_GALAXY_SEMANTICS__?: typeof summary };
+    w.__PRISM_GALAXY_SEMANTICS__ = summary;
+    return () => {
+      delete w.__PRISM_GALAXY_SEMANTICS__;
+    };
+  }, [summary]);
+
+  return null;
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // Camera controller — uses drei's CameraControls (yomotsu/camera-controls)
 // Smooth damped flights, fitToSphere, setLookAt with promises
@@ -1625,9 +1680,16 @@ function ControlsBridge({
     const c = controlsRef.current;
     if (!center || !c) return;
     const singleHub = Object.keys(hubCenters).length === 1;
-    const camX = singleHub ? center.x : center.x + 50;
-    const camY = singleHub ? center.y : center.y + 30;
-    const camZ = singleHub ? center.z + 320 : center.z + 90;
+    // FINISH-F3 (F-2 advocate flag: mobile fly-in half-void) — on a narrow
+    // portrait aspect the shipped (+50,+30,+90) landing put the nebula
+    // envelope's edge inside the frame (right half void). Land straighter and
+    // further back so the backdrop always covers the tall frame.
+    const narrow =
+      typeof window !== 'undefined' && window.innerWidth / window.innerHeight < 0.8;
+    const off = narrow ? { x: 24, y: 14, z: 150 } : { x: 50, y: 30, z: 90 };
+    const camX = singleHub ? center.x : center.x + off.x;
+    const camY = singleHub ? center.y : center.y + off.y;
+    const camZ = singleHub ? center.z + 320 : center.z + off.z;
     c.setLookAt(camX, camY, camZ, center.x, center.y, center.z, true).then(() => {
       clearFlyTarget();
     });
@@ -1890,7 +1952,7 @@ function SceneControlsBridge({
     // height — heroes read small in a large empty surface). z chosen so the
     // tallest composition (acquire: reserve text y≈2.05 → pedestal y≈-2.3) still
     // clears the frame at fov 45 (half-height = z·0.414): z=10.5 → ±4.35.
-    const z = deviceMode === 'mobile' ? 11 : 10.5; // mobile portrait keeps its proven framing
+    const z = deviceMode === 'mobile' ? 9.2 : 10.5; // FINISH-F3: mobile rides closer (shell rows pull inward via authored mobile poses) so type reads at phone size
     c.setLookAt(0, 0, z, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMode, viewMode, hub?.hubId]);
@@ -1995,7 +2057,12 @@ function SceneControlsBridge({
       const cc = controlsRef.current;
       if (!cc) return;
       cc.enabled = true;
-      void cc.setLookAt(0, 0.55, 8.2, 0, 0.1, 0.42, true).then(() => {
+      // FINISH-F3 — the Atelier is a PAGE of the shippable app, not a detached
+      // configurator: rest at the same per-device framing every other hub
+      // ships (P5 z), so the app header/footer stay in frame. The head-on
+      // clamp below still applies; the macro loupe remains a user dolly.
+      const atelierZ = deviceMode === 'mobile' ? 9.2 : 10.5;
+      void cc.setLookAt(0, 0, atelierZ, 0, 0, 0.42, true).then(() => {
         if (cancelled) return;
         const cur = controlsRef.current;
         if (!cur) return;
@@ -2004,7 +2071,7 @@ function SceneControlsBridge({
       });
     }, 120);
     return () => { cancelled = true; window.clearTimeout(id); };
-  }, [viewMode, activeHubId]);
+  }, [viewMode, activeHubId, deviceMode]);
 
   // PHASE3 (P3-1) — camera DOLLY-THROUGH on a hub transition. When the curtain
   // begins closing (token bump), pull the camera back along its view direction
@@ -2085,7 +2152,7 @@ function SceneControlsBridge({
       }
       const ramp = Math.min(1, Math.max(0, (tt - hubSettleClockRef.current - 0.6) / 1.0));
       if (ramp > 0) {
-        const zHero = deviceMode === 'mobile' ? 11 : 10.5;
+        const zHero = deviceMode === 'mobile' ? 9.2 : 10.5;
         const dx = (Math.sin(tt * 0.16) * 0.42 + Math.sin(tt * 0.41) * 0.12) * ramp;
         const dy = Math.sin(tt * 0.12 + 1.3) * 0.24 * ramp;
         const dz = Math.sin(tt * 0.09) * 0.32 * ramp;
@@ -2475,6 +2542,15 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const editorMode = useGraphEditorStore((s) => s.editorMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  // MASTERPIECE M-1 (advocate MUST-FIX, one-layer-per-band on compact): on a
+  // compact pane the selection DetailCard shares the band the gizmo's axis
+  // arrows sweep through, and the saturated arrows read straight through the
+  // translucent card. While the card is up, the gizmo yields — the same yield
+  // idiom the camera HUD uses; it remounts the moment the card closes (open
+  // the Inspector or deselect).
+  const density = useEditorDensity();
+  const inspectorOpenForYield = useGraphEditorStore((s) => s.inspectorOpen);
+  const compactCardUp = density === 'compact' && !inspectorOpenForYield;
   // EDITOR-EXP P4 (C22 / D-DRAG) — Transform tools author the node's OWN schema
   // field (scenePosition), but now via the STAGING overlay (usePreviewStateStore),
   // not a direct source write. (STEP8 canvas-spec SC-9 named scenePosition the
@@ -2610,7 +2686,8 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   }, [isCanvasMode, isEditMode, nodeId, stagePreview, setMode, toggleGizmoSpace, node]);
 
   // STEP8 — never mount handles on a locked node (canvas-spec §5 lock/unlock).
-  if (!isCanvasMode || !isEditMode || !node || isLocked) return null;
+  // M-1: on compact the gizmo also yields while the DetailCard is up (above).
+  if (!isCanvasMode || !isEditMode || !node || isLocked || compactCardUp) return null;
 
   const sp = readSceneTransform(node);
   const ct = readCanvasTransform(node);
@@ -2873,6 +2950,10 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       sp.scaleY *= rdp.scale;
       sp.scaleZ *= rdp.scale;
     }
+    // FINISH-F3 — per-axis device multipliers (compose on top of `scale`) so
+    // full-width shell bars can compress horizontally without going hairline.
+    if (rdp.scaleX !== undefined) sp.scaleX *= rdp.scaleX;
+    if (rdp.scaleY !== undefined) sp.scaleY *= rdp.scaleY;
   }
   // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
   // consumer of scenePosition + canvasTransform for visible node placement.
@@ -3441,10 +3522,23 @@ function TopologySceneContent({
     () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes.filter((n) => !n.isGlobalElement), edges: sourceEdges }),
     [sourceHubs, sourceNodes, sourceEdges]
   );
+  const galaxySemanticSummary = useMemo(
+    () => summarizeGalaxySemantics(editorGraph.nodes),
+    [editorGraph.nodes]
+  );
+  const topologyNodes = useMemo(
+    () => (viewMode === 'galaxy' ? getGalaxyOverviewProjection(editorGraph.nodes) : editorGraph.nodes),
+    [viewMode, editorGraph.nodes]
+  );
+  const topologyEdges = useMemo(() => {
+    if (viewMode !== 'galaxy') return editorGraph.edges;
+    const visibleIds = new Set(topologyNodes.map((node) => node.id));
+    return filterEdgesToGalaxyOverview(editorGraph.edges, visibleIds);
+  }, [viewMode, editorGraph.edges, topologyNodes]);
 
   const { simNodes, simLinks, hubCenters, hubDiameters } = useForceGraph(
-    editorGraph.nodes,
-    editorGraph.edges,
+    topologyNodes,
+    topologyEdges,
     editorGraph.hubs,
     pinnedPositions,
     resetSignal,
@@ -3457,9 +3551,9 @@ function TopologySceneContent({
   // every other mode.
   const filterMatches = useMemo<GalaxyFilterMatches>(() => {
     return viewMode === 'galaxy'
-      ? computeGalaxyFilterMatches(filterQuery, editorGraph.hubs, editorGraph.nodes)
+      ? computeGalaxyFilterMatches(filterQuery, editorGraph.hubs, topologyNodes)
       : { active: false, matchedHubIds: new Set<string>(), matchedNodeIds: new Set<string>() };
-  }, [viewMode, filterQuery, editorGraph.hubs, editorGraph.nodes]);
+  }, [viewMode, filterQuery, editorGraph.hubs, topologyNodes]);
 
   // Heroes: the selected node + at most 1 other get the expensive transmission material
   const heroIds = useMemo(() => {
@@ -3508,11 +3602,17 @@ function TopologySceneContent({
       {/* PHASE1 (SC-V-A3) — the Atelier uses a real luxury-studio HDRI so the
           watch's metals + dial finishes throw crisp, angle-dependent specular
           as it orbits. Other hubs keep the cosmic night IBL. */}
-      {activeHubId === 's6-atelier' ? (
-        <Environment files="/prism-mock/orrery/assets/studio-hdri.png" environmentIntensity={1.0} />
-      ) : (
-        <Environment preset="night" environmentIntensity={0.55} />
-      )}
+      {/* Local procedural IBL (Lightformer rig) — NO network/CDN dependency.
+          Replaces the remote drei `preset="night"` path that crashed canvas mode
+          when the CDN HDRI fetch failed, and the .png drei cannot load.
+          To restore a photoreal studio HDRI later, bundle a real .hdr/.exr locally
+          and use <Environment files="/path.hdr" />. */}
+      <Environment resolution={256} environmentIntensity={activeHubId === 's6-atelier' ? 1.0 : 0.55}>
+        <Lightformer intensity={3} position={[2, 3, 4]} scale={[3, 6, 1]} color="#ffffff" />
+        <Lightformer intensity={2} position={[-3, -1, 3]} scale={[2, 5, 1]} color="#88b6ff" />
+        <Lightformer intensity={1.4} position={[0, -4, 2]} scale={[5, 2, 1]} color="#c79bff" />
+        <Lightformer intensity={1.2} form="ring" position={[0, 2, -3]} scale={2} color="#ffd9a0" />
+      </Environment>
 
       {/* App_Name_World central sun — only mounts in galaxy mode (SC-012).
           EB-03-01 will orbit the existing hub hulls around this sun; for now
@@ -3521,8 +3621,8 @@ function TopologySceneContent({
       {viewMode === 'galaxy' && <WorldSun />}
       {viewMode === 'galaxy' && (
         <GalaxyHubTethers
-          nodes={editorGraph.nodes}
-          edges={editorGraph.edges}
+          nodes={topologyNodes}
+          edges={topologyEdges}
           hubCenters={hubCenters}
         />
       )}
@@ -3589,6 +3689,9 @@ function TopologySceneContent({
       <NodeLabels simNodes={simNodes} />
       <HubLabels hubs={editorGraph.hubs} hubCenters={hubCenters} />
       <EditorDiagnostics simNodes={simNodes} />
+      {viewMode === 'galaxy' && (
+        <GalaxySemanticDiagnostics summary={galaxySemanticSummary} />
+      )}
       <ControlsBridge simNodes={simNodes} hubCenters={hubCenters} />
 
       {usePost && (
@@ -4085,7 +4188,11 @@ function AssembledSceneContent({
   // changes; siblings stay stable per RA-16).
   const nodeRebuildVersion = useGraphEditorStore((s) => s.nodeRebuildVersion);
   const hub = sourceHubs.find((h) => h.hubId === activeHubId) ?? sourceHubs[0];
-  const nodes = sourceNodes.filter((node) => !hub || node.parentHubId === hub.hubId);
+  const assembledNodeScope = useMemo(
+    () => resolveAssembledNodesForHub(sourceNodes, hub?.hubId ?? null),
+    [sourceNodes, hub?.hubId],
+  );
+  const nodes = assembledNodeScope.nodes;
   // INV-R14 — postprocessing (legacy @react-three/postprocessing EffectComposer)
   // is WebGL-only and cannot run under WebGPU. Capability-tier it: on the WebGL2
   // fallback it runs; on WebGPU it is skipped (TSL PostProcessing is the
@@ -4156,6 +4263,13 @@ function AssembledSceneContent({
     const w = window as unknown as {
       __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
       __PRISM_EDITOR_GET_NODE_WORLD_POS__?: (nodeId: string) => { x: number; y: number; z: number } | null;
+      __PRISM_ASSEMBLED_NODE_SCOPE__?: () => {
+        activeHubId: string | null;
+        nodeIds: string[];
+        hubNodeIds: string[];
+        globalSlotNodeIds: string[];
+        hiddenDuplicateChromeIds: string[];
+      };
     };
     const vec = new THREE.Vector3();
     w.__PRISM_EDITOR_GET_NODE_WORLD_POS__ = (nodeId: string) => {
@@ -4165,10 +4279,18 @@ function AssembledSceneContent({
       group.getWorldPosition(vec);
       return { x: vec.x, y: vec.y, z: vec.z };
     };
+    w.__PRISM_ASSEMBLED_NODE_SCOPE__ = () => ({
+      activeHubId: assembledNodeScope.activeHubId,
+      nodeIds: assembledNodeScope.nodes.map((node) => node.nodeId),
+      hubNodeIds: assembledNodeScope.hubNodes.map((node) => node.nodeId),
+      globalSlotNodeIds: assembledNodeScope.globalSlotNodes.map((node) => node.nodeId),
+      hiddenDuplicateChromeIds: assembledNodeScope.hiddenDuplicateChromeIds,
+    });
     return () => {
       delete w.__PRISM_EDITOR_GET_NODE_WORLD_POS__;
+      delete w.__PRISM_ASSEMBLED_NODE_SCOPE__;
     };
-  }, []);
+  }, [assembledNodeScope]);
 
   return (
     <>

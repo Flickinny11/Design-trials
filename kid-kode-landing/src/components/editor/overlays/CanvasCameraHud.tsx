@@ -18,6 +18,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { SIGNAL_RED, rbwAlpha } from '@/components/editor/design-system/premium';
 
 const ZERO_TOL = 1.5;
 
@@ -44,6 +45,23 @@ export default function CanvasCameraHud() {
   const journeyCount = useGraphSourceStore(
     (s) => s.hubs.find((h) => h.hubId === activeHubId)?.cameraKeyframes?.length ?? 0,
   );
+  // FINISH F-1 — the open keyframe strip owns the bottom band on desktop; the
+  // HUD lifts above it (was overlapping the lanes) with a smooth transition.
+  // FINISH F-2 (advocate MUST-FIX) — the resting HUD stack used to sit at
+  // bottom-4, directly ON the hub-count rail (bottom-5): the JOURNEY strip +
+  // Shipped Frame pill occluded a hub pill's element count. Rest the stack one
+  // clear band ABOVE the rail instead.
+  const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
+  const hudBottomLift = keyframePanelOpen ? 'md:bottom-[318px]' : 'md:bottom-[84px]';
+  // MASTERPIECE M-1 (advocate MUST-FIX, one-layer-per-band): on compact the
+  // HUD stack shares the top-right band with the selection DetailCard — the
+  // pills used to float OVER the card's content. While the card is up, the
+  // HUD yields (fades out, non-interactive); it returns the moment the card
+  // closes. Desktop keeps both (different bands there).
+  const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  const inspectorOpen = useGraphEditorStore((s) => s.inspectorOpen);
+  const detailCardOpen = selectedNodeId !== null && !inspectorOpen;
+  const hudYield = detailCardOpen ? ' max-md:opacity-0 max-md:pointer-events-none' : '';
 
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,17 +96,21 @@ export default function CanvasCameraHud() {
 
   if (viewMode !== 'canvas') return null;
 
-  // ── P3: Edit-in-Preview — the camera is locked to the shipped framing; the
-  // free-orbit instrument + journey REC don't apply, so show the exit control. ─
+  // ── P3: Shipped-Frame lock — a CANVAS sub-mode (renamed from "Edit in
+  // Preview", FINISH F-2): the canvas camera locks to the shipped framing so
+  // the user designs against the real result, but authoring stays HERE in
+  // canvas — Preview itself remains camera-locked shippable output with no
+  // authoring tools. The free-orbit instrument + journey REC don't apply while
+  // locked, so show the exit control. ─
   if (editInPreview) {
     return (
-      <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto md:bottom-4">
+      <div className={`absolute z-50 pointer-events-none select-none max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] md:left-1/2 md:-translate-x-1/2 md:top-auto ${hudBottomLift} transition-[bottom,opacity] duration-300${hudYield}`}>
         <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2.5 rounded-full pl-3 pr-1.5 py-1.5"
           style={{ boxShadow: '0 0 0 1px rgba(var(--ds-metal-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb),0.5)' }}>
           <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-metal-200)', boxShadow: '0 0 7px var(--ds-metal-200)' }} />
           <div className="flex flex-col leading-none">
-            <span className="text-[10px] font-ui font-semibold tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Editing in Preview</span>
-            <span className="text-[8px] font-mono mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>SHIPPED FRAME · TOOLBAR LIVE</span>
+            <span className="text-[10px] font-ui font-semibold tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Canvas · Shipped Frame</span>
+            <span className="text-[8px] font-mono mt-0.5 tracking-wide" style={{ color: 'var(--ds-text-mid)' }}>CAMERA LOCKED · EDITING LIVE</span>
           </div>
           <button type="button" onClick={() => setEditInPreview(false)} title="Back to free orbit"
             className="ds-press flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-full"
@@ -101,9 +123,13 @@ export default function CanvasCameraHud() {
   }
 
   return (
-    <div className="absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none flex flex-col items-center gap-2 top-[60px] md:top-auto md:bottom-4">
+    <div className={`absolute z-50 pointer-events-none select-none flex flex-col gap-2 max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] max-md:items-end md:left-1/2 md:-translate-x-1/2 md:top-auto md:items-center ${hudBottomLift} transition-[bottom,opacity] duration-300${hudYield}`}>
       {/* Mobile anchors to the TOP scene band so the Inspector bottom-sheet
-          can't occlude it; desktop/tablet sit bottom-centre. */}
+          can't occlude it; desktop/tablet sit bottom-centre. FINISH F-4
+          de-collision: on compact the centred stack overlapped the toolbar
+          rail's first cubes (the HUD glass ate taps on the Transform cube) —
+          right-anchor it below the tips bulb instead. When the keyframe
+          strip is open the whole HUD stack lifts above it (FINISH F-1). */}
 
       {/* ── P1: camera instrument ─────────────────────────────────────────── */}
       <div
@@ -149,15 +175,18 @@ export default function CanvasCameraHud() {
 
       {/* ── P2: camera-journey strip ──────────────────────────────────────── */}
       <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2 rounded-full pl-2.5 pr-1.5 py-1">
-        <span className="text-[8.5px] font-mono tracking-[0.12em]" style={{ color: 'var(--ds-text-mid)' }}>JOURNEY</span>
+        {/* M-1 compact narrowing (advocate MUST-FIX): the strip's left edge ran
+            under the toolbar rail at 390px — drop the word labels on compact so
+            the whole strip fits the space right of the rail. */}
+        <span className="text-[8.5px] font-mono tracking-[0.12em] max-md:hidden" style={{ color: 'var(--ds-text-mid)' }}>JOURNEY</span>
         <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-full"
           style={{ color: journeyCount >= 2 ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)', background: 'rgba(var(--ds-metal-200-rgb),0.08)' }}>
-          {journeyCount} pt{journeyCount === 1 ? '' : 's'}
+          {journeyCount}<span className="max-md:hidden"> pt{journeyCount === 1 ? '' : 's'}</span>
         </span>
         <button type="button" onClick={captureCameraKeyframe} title="Record this camera angle as a journey waypoint"
           className="ds-press flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full"
-          style={{ background: 'rgba(var(--ds-metal-200-rgb),0.1)', border: '1px solid rgba(var(--ds-metal-200-rgb),0.3)' }}>
-          <span className="w-2 h-2 rounded-full" style={{ background: '#e0594e', boxShadow: '0 0 6px rgba(224,89,78,0.8)' }} />
+          style={{ background: rbwAlpha(SIGNAL_RED, 0.1), border: `1px solid ${rbwAlpha(SIGNAL_RED, 0.4)}`, boxShadow: `0 0 10px -4px ${rbwAlpha(SIGNAL_RED, 0.5)}` }}>
+          <span className="w-2 h-2 rounded-full" style={{ background: SIGNAL_RED, boxShadow: `0 0 7px ${rbwAlpha(SIGNAL_RED, 0.85)}` }} />
           <span className="text-[9.5px] font-ui font-medium" style={{ color: 'var(--ds-metal-200)' }}>REC</span>
         </button>
         <button type="button" onClick={() => activeHubId && updateHub(activeHubId, { cameraKeyframes: [] })}
@@ -180,15 +209,17 @@ export default function CanvasCameraHud() {
         </button>
       </div>
 
-      {/* ── P3: Edit-in-Preview enter ──────────────────────────────────────── */}
+      {/* ── P3: Shipped-Frame lock enter (canvas stays the authoring surface;
+             renamed from "Edit in Preview" so it can never read as authoring
+             FROM Preview — FINISH F-2). ─────────────────────────────────────── */}
       <button type="button" onClick={() => setEditInPreview(true)}
-        title="Lock to the shipped framing and edit against the real result"
+        title="Lock the canvas camera to the shipped framing — edit here in Canvas against the real result (Preview stays read-only)"
         className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-1.5 h-7 pl-2.5 pr-3 rounded-full">
         <svg width="13" height="11" viewBox="0 0 13 11" aria-hidden>
           <rect x="0.7" y="0.7" width="11.6" height="9.6" rx="1.4" fill="none" stroke="var(--ds-metal-200)" strokeWidth="1.1" />
           <path d="M3.4 7.6 L6 4.2 L7.6 6 L9 4.2 L9.6 7.6 Z" fill="var(--ds-metal-200)" opacity="0.85" />
         </svg>
-        <span className="text-[9px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Edit in Preview</span>
+        <span className="text-[9px] font-ui font-medium tracking-wide" style={{ color: 'var(--ds-metal-200)' }}>Shipped Frame</span>
       </button>
     </div>
   );

@@ -221,26 +221,33 @@ if (!existsSync(prismPath)) {
   // mechanism which is superseded by §8 renderMode + depthMapUrl + primitives.
   // Both are now validated structurally by `prism:renderer-graph` below.
 
-  assert('prism:text.methods', '§10.8 — build-time (sharp-svg) and runtime (msdf) renderMethods both represented; diffusion supported by pipeline', () => {
-    const methodsSeen = new Set();
+  assert('prism:text.methods', 'runtime MSDF text nodes are represented and the font atlas ships in the .prism artifact', () => {
+    const legacyMethodsSeen = new Set();
+    const textSpecNodes = [];
     for (const n of graph.nodes) {
-      for (const tc of (n.intent?.visualSpec?.textContent ?? [])) methodsSeen.add(tc.renderMethod);
+      for (const tc of (n.intent?.visualSpec?.textContent ?? [])) legacyMethodsSeen.add(tc.renderMethod);
+      if (n.renderMode === 'text' || n.textSpec) textSpecNodes.push(n);
     }
-    // Pipeline supports three renderMethods (msdf/sharp-svg/diffusion) but
-    // this home-hub instance uses only msdf — the Recraft V4 pro mockup
-    // bakes all static text directly into the substrate pixels. Build-time
-    // sharp-svg composite + Ideogram diffusion remain as pipeline capabilities
-    // (build-atlas.mjs + provision-assets.mjs) for future hubs that need them.
-    // At-minimum requirement: msdf must be present for dynamic runtime text.
-    for (const m of ['msdf']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
-    return [...methodsSeen].join(', ') || 'pipeline-only';
+    const missingAssets = ['assets/font-inter.msdf.png', 'assets/font-inter.msdf.json']
+      .filter((path) => !zip.file(path));
+    if (missingAssets.length) throw new Error(`missing MSDF assets: ${missingAssets.join(', ')}`);
+    if (!textSpecNodes.length && !legacyMethodsSeen.has('msdf')) {
+      throw new Error('no runtime MSDF text nodes or legacy msdf textContent entries found');
+    }
+    const missingTextSpec = textSpecNodes
+      .filter((node) => node.renderMode === 'text' && typeof node.textSpec?.content !== 'string')
+      .map((node) => node.nodeId);
+    if (missingTextSpec.length) {
+      throw new Error(`renderMode:text nodes missing textSpec.content: ${missingTextSpec.slice(0, 8).join(', ')}`);
+    }
+    return `${textSpecNodes.length} textSpec MSDF nodes; atlas packaged`;
   });
 
   // ADDED from codex renderer-era: validates the migration-spec's additive
   // PrismNode fields. Strengthened beyond codex's version to also assert
   // cinematicPrimitives is an array (§7) — the post-migration replacement for
   // the dropped prism-main `three.methods` and `layer.swap` checks.
-  const VALID_RENDER_MODES = new Set(['sprite', 'plane', 'parallax-plane', 'mesh']);
+  const VALID_RENDER_MODES = new Set(['sprite', 'plane', 'parallax-plane', 'mesh', 'text']);
   assert('prism:renderer-graph', 'every graph.nodes[] has renderMode + scenePosition + cinematicPrimitives[] (migration §7/§8/§schema)', () => {
     for (const node of graph.nodes ?? []) {
       if (!node.renderMode) throw new Error(`${node.nodeId}: missing renderMode`);

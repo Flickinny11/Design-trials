@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-07T21:52:01.124Z",
+  "updatedAt": "2026-07-04T03:25:23.781Z",
   "note": "Pre-existing tsc errors the baseline-diff gate ignores. Regenerate intentionally only.",
   "signatures": [
     "src/components/editor/graph/GraphScene.tsx | error TS2322 | Type '(props: { canvas?: HTMLCanvasElement; } & Record<string, unknown>) => Promise<WebGLRenderer>' is not assignable to type 'GLProps'.",
@@ -9,7 +9,6 @@
     "tests/editor-build/EB-07-04.scroll-runtime.test.ts | error TS2741 | Property 'THREE' is missing in type '{ textureLoader: NodeContext[\"textureLoader\"]; glbLoader: NodeContext[\"glbLoader\"]; fontAtlas: NodeContext[\"fontAtlas\"]; primitives: NodeContext[\"primitives\"]; emit: () => void; }' but required in type 'NodeContext'.",
     "tests/integration/T02.adapter.test.ts | error TS2741 | Property 'THREE' is missing in type '{ textureLoader: NodeContext[\"textureLoader\"]; glbLoader: NodeContext[\"glbLoader\"]; fontAtlas: { ready: false; load: () => Promise<void>; createText: () => THREE.Group<THREE.Object3DEventMap>; dispose: () => void; }; primitives: NodeContext[\"primitives\"]; emit: () => void; }' but required in type 'NodeContext'.",
     "tests/integration/coderef-dispatch/HL09.coderef-dispatch.test.ts | error TS2741 | Property 'THREE' is missing in type '{ textureLoader: NodeContext[\"textureLoader\"]; glbLoader: NodeContext[\"glbLoader\"]; fontAtlas: NodeContext[\"fontAtlas\"]; primitives: NodeContext[\"primitives\"]; emit: () => void; }' but required in type 'NodeContext'.",
-    "tests/integration/default-factory/HL08.default-factory.test.ts | error TS2322 | Type '{ THREE?: typeof import(\"/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/node_modules/@types/three/build/three.module\"); textureLoader: NodeTextureLoader; ... 4 more ...; drivers?: NodeDrivers; }' is not assignable to type 'NodeContext'.",
     "tests/integration/default-factory/HL08.default-factory.test.ts | error TS2741 | Property 'THREE' is missing in type '{ textureLoader: NodeContext[\"textureLoader\"]; glbLoader: NodeContext[\"glbLoader\"]; fontAtlas: NodeContext[\"fontAtlas\"]; primitives: NodeContext[\"primitives\"]; emit: () => void; }' but required in type 'NodeContext'.",
     "tests/integration/live-bind/HL07.live-bind.test.ts | error TS2741 | Property 'THREE' is missing in type '{ textureLoader: NodeContext[\"textureLoader\"]; glbLoader: NodeContext[\"glbLoader\"]; fontAtlas: NodeContext[\"fontAtlas\"]; primitives: NodeContext[\"primitives\"]; emit: () => void; }' but required in type 'NodeContext'."
   ]

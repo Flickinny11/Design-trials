@@ -78,7 +78,11 @@ export default function DetailCard() {
   return (
     <div
       ref={cardSlab.ref}
-      className="absolute z-30 right-5 top-20 w-[340px] ds-ceramic ds-edge rounded-ds-lg overflow-hidden animate-slide-in-r pointer-events-auto"
+      // MASTERPIECE M-1 de-collision (advocate MUST-FIX): on compact the fixed
+      // 340px card ran UNDER the toolbar rail (title + body sliced by the glass).
+      // Inset it to the space right of the rail instead — same class of fix as
+      // the F-4 mobile HUD right-anchor.
+      className="absolute z-30 right-5 top-20 w-[340px] max-md:left-[142px] max-md:right-2 max-md:top-16 max-md:w-auto ds-ceramic ds-edge rounded-ds-lg overflow-hidden animate-slide-in-r pointer-events-auto"
       style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-3)' }}
     >
       {/* Hub identity rail — ice telemetry engraving (informational role).

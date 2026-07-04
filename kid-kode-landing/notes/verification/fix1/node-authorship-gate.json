@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:3000",
+  "url": "http://localhost:3001",
   "strictOrphans": false,
   "hardcoded": [],
   "runtimeHosts": [
@@ -20,17 +20,9 @@
     "runtimeHost": true,
     "node": true
   },
-  "nodeAuthoredCount": 178,
+  "nodeAuthoredCount": 162,
   "emptyNonText": [],
-  "emptyText": [
-    "orr-atelier-headline",
-    "orr-atelier-price",
-    "orr-atelier-btn-flip-label",
-    "orr-atelier-btn-explode-label",
-    "orr-atelier-btn-save-label",
-    "orr-atelier-btn-reset-label",
-    "orr-atelier-reason"
-  ],
+  "emptyText": [],
   "unexpectedHardcoded": [],
   "orphanPlanesStillPresent": [],
   "reasonContent": "Every pairing is bench-checked for mechanical harmony.",
@@ -68,7 +60,7 @@
       "desc": "every node-authored artifact maps to a real graph node",
       "pass": true,
       "warn": false,
-      "detail": "178 node-authored artifacts, all in graph"
+      "detail": "162 node-authored artifacts, all in graph"
     },
     {
       "id": "authored.renders",
@@ -76,13 +68,6 @@
       "pass": true,
       "warn": false,
       "detail": "all non-text node-authored artifacts render content"
-    },
-    {
-      "id": "authored.text-warm",
-      "desc": "text nodes warmed (MSDF glyphs mounted)",
-      "pass": false,
-      "warn": true,
-      "detail": "still warming at capture (async, non-fatal): orr-atelier-headline, orr-atelier-price, orr-atelier-btn-flip-label, orr-atelier-btn-explode-label, orr-atelier-btn-save-label, orr-atelier-btn-reset-label, orr-atelier-reason"
     },
     {
       "id": "orphans.planes-removed",

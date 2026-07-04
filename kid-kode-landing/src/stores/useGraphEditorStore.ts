@@ -87,14 +87,25 @@ interface GraphEditorState {
    */
   editorMode: EditorMode;
   /**
-   * APP-REALITY P3 — "Edit in Preview" canvas sub-mode. When true (only
-   * meaningful while viewMode === 'canvas'), the camera locks to the configured
-   * shipped view (the preview framing / journey landing) and the canvas-only
-   * viewport-frame scaffolding hides, so the canvas reads as the built app —
-   * yet the toolbar, selection, and transform gizmo stay live so the user
-   * designs against the real result. Reset to false on any mode change.
+   * APP-REALITY P3 — "Shipped Frame" CANVAS sub-mode (UI label renamed from
+   * "Edit in Preview" in FINISH F-2; the field name is retained, additive
+   * schema discipline). When true (only meaningful while viewMode ===
+   * 'canvas'), the canvas camera locks to the configured shipped view (the
+   * preview framing / journey landing) and the canvas-only viewport-frame
+   * scaffolding hides, so the canvas reads as the built app — yet the toolbar,
+   * selection, and transform gizmo stay live so the user designs against the
+   * real result. Authoring never happens FROM preview-app: this flag never
+   * changes viewMode, and setViewMode resets it to false on any mode change
+   * (Preview stays camera-locked shippable output).
    */
   editInPreview: boolean;
+  /**
+   * FINISH F-1 — the canvas Keyframe panel (overlays/KeyframeEditor) is open.
+   * Additive UI flag (same idiom as editInPreview) so sibling canvas overlays
+   * — the camera HUD in particular — can lift clear of the bottom strip
+   * instead of overlapping it. Owned by CanvasToolbar; reset on mode change.
+   */
+  keyframePanelOpen: boolean;
   /**
    * APP-REALITY P5 — Preview device mode. The assembled scene applies each
    * node's per-device `responsiveScenePos` override so the built app RE-LAYS-OUT
@@ -249,8 +260,10 @@ interface GraphEditorState {
    * the click handler.
    */
   setEditorMode: (m: EditorMode) => void;
-  // APP-REALITY P3 — toggle the "Edit in Preview" canvas sub-mode.
+  // APP-REALITY P3 — toggle the "Shipped Frame" canvas sub-mode (FINISH F-2 rename).
   setEditInPreview: (b: boolean) => void;
+  // FINISH F-1 — the canvas Keyframe panel's open state (shared UI flag).
+  setKeyframePanelOpen: (b: boolean) => void;
   // APP-REALITY P5 — set the preview device mode (desktop/tablet/mobile).
   setDeviceMode: (m: DeviceMode) => void;
   // APP-REALITY P7 — Function binding popup (Canvas) + preview overlay execution.
@@ -402,6 +415,8 @@ export const useGraphEditorStore = create<GraphEditorState>()(
     editorMode: 'idle',
     // APP-REALITY P3 — Edit-in-Preview canvas sub-mode (off by default).
     editInPreview: false,
+    // FINISH F-1 — canvas Keyframe panel closed by default.
+    keyframePanelOpen: false,
     // APP-REALITY P5 — preview device mode (desktop until the switcher changes it).
     deviceMode: 'desktop',
     // APP-REALITY P7 — Function popup + preview overlay (closed by default).
@@ -463,9 +478,10 @@ export const useGraphEditorStore = create<GraphEditorState>()(
       // clears it so it never leaks into galaxy/preview-app.
       // APP-REALITY P5 — device mode is a preview-app concern; reset to desktop
       // when leaving preview-app so canvas authoring always sees the desktop layout.
-      set((s) => ({ viewMode: m, hubRevealAt: null, editInPreview: false, deviceMode: m === 'preview-app' ? s.deviceMode : 'desktop' })),
+      set((s) => ({ viewMode: m, hubRevealAt: null, editInPreview: false, keyframePanelOpen: false, deviceMode: m === 'preview-app' ? s.deviceMode : 'desktop' })),
     setEditorRenderMode: (m) => set({ editorRenderMode: m }),
     setEditInPreview: (b) => set({ editInPreview: b }),
+    setKeyframePanelOpen: (b) => set({ keyframePanelOpen: b }),
     setDeviceMode: (m) => set({ deviceMode: m }),
     openFunctionPopup: (nodeId) => set({ functionPopupNodeId: nodeId }),
     closeFunctionPopup: () => set({ functionPopupNodeId: null }),

@@ -153,12 +153,18 @@ export function ColorPicker({ value, onChange, label, disabled }: ColorPickerPro
               className="h-12 rounded-ds-sm"
               style={{
                 boxShadow: 'inset 0 1px 1px rgba(255,252,242,0.14), inset 0 -1px 2px rgba(0,0,0,0.4)',
-                background: `
+                // Longhand layers only (no `background` shorthand): mixing the
+                // shorthand with backgroundSize/Position fired React's dev-mode
+                // conflicting-style console error on every rerender while the
+                // picker was open (FINISH F-2 sweep). The color swatch layer
+                // rides as a degenerate gradient so it can live in
+                // backgroundImage with the checkerboard layers.
+                backgroundImage: `
                   linear-gradient(45deg, #333 25%, transparent 25%),
                   linear-gradient(-45deg, #333 25%, transparent 25%),
                   linear-gradient(45deg, transparent 75%, #333 75%),
                   linear-gradient(-45deg, transparent 75%, #333 75%),
-                  ${local}
+                  linear-gradient(${local}, ${local})
                 `,
                 backgroundSize: '10px 10px, 10px 10px, 10px 10px, 10px 10px, cover',
                 backgroundPosition: '0 0, 0 5px, 5px -5px, -5px 0px, 0 0',

@@ -26,6 +26,12 @@ import {
 } from '@/lib/prism-graph/preview-app-routing';
 import type { PrismRootNode } from '@/lib/prism-graph/root-node';
 import { applyBackgroundPreset } from '@/lib/editor/backgrounds/presets';
+import {
+  getGalaxyNodeRole,
+  getGalaxyOverviewProjection,
+} from '@/lib/prism-graph/galaxy-semantics';
+import { toEditorView } from '@/lib/prism-graph/view-model';
+import { isStage0Bubble } from '@/components/editor/add-tools/create-element-node';
 import TopBar from '@/components/editor/overlays/TopBar';
 import HubNav from '@/components/editor/overlays/HubNav';
 import DetailCard from '@/components/editor/overlays/DetailCard';
@@ -40,6 +46,7 @@ import PreviewHubNav from '@/components/editor/overlays/PreviewHubNav';
 import { requestHubNavigation } from '@/stores/useHubTransitionStore';
 import FunctionBindingPopup from '@/components/editor/overlays/FunctionBindingPopup';
 import OverlayHost from '@/components/editor/overlays/OverlayHost';
+import TransitionVeil from '@/components/editor/overlays/TransitionVeil';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -47,6 +54,8 @@ import GalaxyFilterOverlay from '@/components/editor/overlays/GalaxyFilterOverla
 import MagneticCursor from '@/components/editor/overlays/MagneticCursor';
 import GuidedTipsLightbulb from '@/components/editor/walkthrough/GuidedTipsLightbulb';
 import WalkthroughHost from '@/components/editor/walkthrough/WalkthroughHost';
+// WORKSPACE-COMPLETION W-3 — unified per-node agent entry (canvas only; additive).
+import NodeAgentPanel from '@/components/editor/node-agent/NodeAgentPanel';
 // EDITOR-EXP P7 (C32) — global Cmd+Z / Cmd+Shift+Z undo/redo keybinds.
 import HistoryKeybinds from '@/components/editor/history/HistoryKeybinds';
 import { Icon } from '@/components/editor/icons/Icon';
@@ -336,6 +345,60 @@ export default function Page() {
       };
       delete w.__PRISM_EDITOR_FIRE_TETHER__;
       delete w.__PRISM_EDITOR_TETHER_FIRES__;
+    };
+  }, []);
+
+  // FINISH F-2 — galaxy↔element PARITY probe for scripts/galaxy-parity-gate.mjs.
+  // Evaluates the REAL galaxy-semantics module against the LIVE source store
+  // (never a re-implementation, so the gate cannot drift from the app's own
+  // projection). Returns, per source node: its semantic role and whether it is
+  // a stage-0 (unbuilt) bubble; plus the first-class galaxy projection with
+  // each element's member atom ids. Editor-shell code; not subject to INV-13.
+  useEffect(() => {
+    (window as unknown as {
+      __PRISM_GALAXY_PARITY__?: () => unknown;
+    }).__PRISM_GALAXY_PARITY__ = () => {
+      const src = useGraphSourceStore.getState();
+      const roles: Record<string, string> = {};
+      const unbuilt: string[] = [];
+      for (const node of src.nodes) {
+        roles[node.nodeId] = getGalaxyNodeRole({
+          id: node.nodeId,
+          subtype: node.subtype,
+          parentHubId: node.parentHubId,
+          hubIds: node.parentHubId ? [node.parentHubId] : [],
+          isGlobalElement: node.isGlobalElement,
+          globalSlot: node.globalSlot === 'header' || node.globalSlot === 'footer'
+            ? node.globalSlot
+            : undefined,
+        });
+        if (isStage0Bubble(node)) unbuilt.push(node.nodeId);
+      }
+      // Same node scope the galaxy view renders (global overlay elements are
+      // opened as overlays, never galaxy spheres — GraphScene excludes them).
+      const editorGraph = toEditorView({
+        hubs: src.hubs,
+        nodes: src.nodes.filter((n) => !n.isGlobalElement),
+        edges: src.edges,
+      });
+      const projection = getGalaxyOverviewProjection(editorGraph.nodes).map((n) => ({
+        id: n.id,
+        name: n.name,
+        hubIds: n.hubIds,
+        isCluster: n.isGalaxyCluster === true,
+        memberIds: n.isGalaxyCluster ? (n.clusterNodeIds ?? []) : [n.id],
+      }));
+      return {
+        totalSourceNodes: src.nodes.length,
+        hubIds: src.hubs.map((h) => h.hubId),
+        roles,
+        unbuilt,
+        projectedElementCount: projection.length,
+        projection,
+      };
+    };
+    return () => {
+      delete (window as unknown as { __PRISM_GALAXY_PARITY__?: unknown }).__PRISM_GALAXY_PARITY__;
     };
   }, []);
 
@@ -741,6 +804,16 @@ export default function Page() {
               className="ds-metal ds-grain ds-edge relative flex items-center p-1"
               style={{ borderRadius: 'var(--ds-r-pill)' }}
             >
+              {/* FINISH-F3 (F-2 advocate flag) — smoked inlay under the label
+                  row: the slab's brushed-x highlight band read as a "track"
+                  line striking straight through the inactive mode labels. The
+                  veil keeps the machined rim while the labels sit on smoked
+                  glass. */}
+              <span
+                aria-hidden
+                className="absolute inset-1 rounded-full pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, rgba(8,10,15,0.4), rgba(8,10,15,0.22))' }}
+              />
               {/* Sliding brass thumb — translateX only, spring-eased. */}
               <span
                 aria-hidden
@@ -876,6 +949,11 @@ export default function Page() {
           {/* GUIDED-TIPS — glowing help lightbulb + first-visit walkthrough. */}
           <GuidedTipsLightbulb />
           <WalkthroughHost />
+          {/* WORKSPACE-COMPLETION W-3 — unified per-node agent. Self-gates to
+              canvas + a selected node (editing is in canvas, never preview); it
+              also installs the __PRISM_NODE_AGENT__ verification hook on mount.
+              Additive: no toolbar button, keyframe, or guided-tip behavior changes. */}
+          <NodeAgentPanel />
         </>
       )}
       {/* PHASE3 (P3-1) — the Phase-2 DOM-overlay curtain (HubMorphTransition,
@@ -887,6 +965,10 @@ export default function Page() {
           detail card opened by the watch's overlay functionBinding. */}
       <FunctionBindingPopup />
       <OverlayHost />
+      {/* FINISH-F3 — branded interstitial over the covered hub-transition
+          curtain (a first visit to a heavy hub holds the curtain during the
+          mount stall; the maison wordmark makes the dwell read intentional). */}
+      <TransitionVeil />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />

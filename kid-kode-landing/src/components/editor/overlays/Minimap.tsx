@@ -14,6 +14,10 @@ import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import {
+  filterEdgesToGalaxyOverview,
+  getGalaxyOverviewProjection,
+} from '@/lib/prism-graph/galaxy-semantics';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function Minimap() {
@@ -25,10 +29,38 @@ export default function Minimap() {
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
-  const graph = useMemo(
-    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
-    [sourceHubs, sourceNodes, sourceEdges]
-  );
+  // FINISH F-2 — ONE count story across views (founder parity law). The radar
+  // always shows the ELEMENT-level projection (galaxy first-class spheres:
+  // clusters count once; app-shell/hit-target/decoration implementation atoms
+  // collapsed), in canvas and preview exactly as in galaxy. The raw graph-atom
+  // count (327-grade) is implementation detail and is no longer a headline
+  // number anywhere in the chrome.
+  const graph = useMemo(() => {
+    const base = toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges });
+    const nodes = getGalaxyOverviewProjection(base.nodes);
+    const visibleIds = new Set(nodes.map((node) => node.id));
+    return {
+      ...base,
+      nodes,
+      edges: filterEdgesToGalaxyOverview(base.edges, visibleIds),
+    };
+  }, [sourceHubs, sourceNodes, sourceEdges]);
+
+  // Canvas selects graph atoms; the radar shows elements. Map an atom id to the
+  // element that represents it (itself, or its containing galaxy cluster) so
+  // the selection reticle stays coherent in every view.
+  const elementIdForAtom = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const node of graph.nodes) {
+      map.set(node.id, node.id);
+      if (node.isGalaxyCluster && node.clusterNodeIds) {
+        for (const atomId of node.clusterNodeIds) map.set(atomId, node.id);
+      }
+    }
+    return map;
+  }, [graph.nodes]);
+  const selectedElementId = selectedId ? elementIdForAtom.get(selectedId) ?? null : null;
+  const hoveredElementId = hoveredId ? elementIdForAtom.get(hoveredId) ?? null : null;
 
   // UI-FIDELITY-2 — the bezel plate renders as real brushed metal (brushed
   // along its wide axis) and the radar window as a recessed well in the
@@ -95,8 +127,8 @@ export default function Minimap() {
     graph.nodes.forEach((n) => {
       const p = nodePositions[n.id];
       if (!p) return;
-      const isSelected = selectedId === n.id;
-      const isHovered = hoveredId === n.id;
+      const isSelected = selectedElementId === n.id;
+      const isHovered = hoveredElementId === n.id;
       const c =
         n.status === 'verified' ? DS.ok :
         n.status === 'failed' ? DS.danger :
@@ -115,16 +147,28 @@ export default function Minimap() {
         ctx.stroke();
       }
     });
-  }, [selectedId, hoveredId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
+  }, [selectedElementId, hoveredElementId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
+
+  // FINISH-F3 — the full-height Inspector dock (glass, z-40) mounts over this
+  // corner; the radar ghosting through the translucent pane made the dock's
+  // lower controls illegible. Fade the radar while the dock is open.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
 
   return (
-    <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
+    <div
+      className={`absolute z-20 bottom-5 right-5 pointer-events-none transition-opacity duration-300 ${
+        inspectorDockOpen ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       {/* Machined bezel plate around a recessed instrument well. */}
       <div ref={bezelSlab.ref} className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
         {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
         <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between" style={{ color: 'var(--ds-text-mid)' }}>
           <span>MINIMAP</span>
-          <span className="text-ds-metal-300">{graph.nodes.length} nodes</span>
+          {/* Element-level truth: the same number galaxy shows (one story). */}
+          <span className="text-ds-metal-300">{graph.nodes.length} elements</span>
         </div>
         <div ref={windowSlab.ref} className="ds-well ds-edge rounded-ds-sm overflow-hidden">
           <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />

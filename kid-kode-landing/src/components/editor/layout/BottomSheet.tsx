@@ -26,7 +26,7 @@
  * runtime modules). Additive; no schema or store rename.
  */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useBottomSheetStore, type SheetSnap } from '@/stores/useBottomSheetStore';
 import { useEditorLayoutStore } from '@/stores/useEditorLayoutStore';
@@ -45,6 +45,10 @@ export interface BottomSheetProps {
   kicker?: string;
   /** Snap to open at. Default 'half'. */
   initialSnap?: SheetSnap;
+  /** MASTERPIECE M-1: cap the FULL snap at the content's real height, so a
+   *  short instrument never rises as a two-thirds-empty takeover. Sheets with
+   *  tall scrollable bodies (inspector, tool groups) leave this off. */
+  contentFit?: boolean;
   children: React.ReactNode;
 }
 
@@ -54,18 +58,35 @@ function prefersReducedMotion(): boolean {
   return typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 }
 
-export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'half', children }: BottomSheetProps) {
+export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'half', contentFit = false, children }: BottomSheetProps) {
   const activeId = useBottomSheetStore((s) => s.activeId);
   const snap = useBottomSheetStore((s) => s.snap);
   const containerH = useEditorLayoutStore((s) => s.height);
 
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const scrimRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [contentPx, setContentPx] = useState(0);
   const prevOpenRef = useRef(false);
   const dragRef = useRef<{ startY: number; baseTy: number; ty: number; moved: boolean } | null>(null);
   const { ref: bodyRef } = useLenis<HTMLDivElement>({ lerp: 0.14 });
 
   const isFront = activeId === id;
+
+  // contentFit — measure the real content + header so the FULL snap can cap at
+  // what the sheet actually holds (no empty-void takeovers).
+  useEffect(() => {
+    if (!contentFit) return;
+    const el = contentRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => {
+      const header = headerRef.current?.getBoundingClientRect().height ?? 76;
+      setContentPx(Math.ceil(el.getBoundingClientRect().height + header + 18));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [contentFit, open]);
 
   // Geometry — heights are fractions of the CONTAINER (pane) box, not viewport,
   // so an embedded narrow pane gets a correctly-sized sheet.
@@ -73,10 +94,14 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
   const revealPx = useCallback(
     (s: SheetSnap): number => {
       if (s === 'peek') return Math.min(150, Math.round(containerH * 0.3));
-      if (s === 'half') return Math.round(containerH * 0.6);
-      return sheetH; // full
+      const halfPx = Math.round(containerH * 0.6);
+      if (s === 'half') {
+        return contentFit && contentPx > 0 ? Math.min(halfPx, Math.max(220, contentPx)) : halfPx;
+      }
+      // full — capped at content height when the owner opted into contentFit
+      return contentFit && contentPx > 0 ? Math.min(sheetH, Math.max(220, contentPx)) : sheetH;
     },
-    [containerH, sheetH],
+    [containerH, sheetH, contentFit, contentPx],
   );
   // translateY that reveals `revealPx` from the bottom (0 = fully shown, sheetH = hidden).
   const tyFor = useCallback((s: SheetSnap) => sheetH - revealPx(s), [sheetH, revealPx]);
@@ -153,6 +178,15 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
       if (dist < bestDist) { bestDist = dist; best = s; }
     }
     useBottomSheetStore.getState().setSnap(best);
+    // Settle to the snap even when `best` equals the current snap — the store
+    // effect only re-animates on snap CHANGE, which used to leave the sheet
+    // floating wherever the finger released it (visible once contentFit made
+    // half and full coincide).
+    const el = sheetRef.current;
+    if (el) {
+      if (prefersReducedMotion()) gsap.set(el, { y: tyFor(best) });
+      else gsap.to(el, { y: tyFor(best), duration: 0.42, ease: 'back.out(1.05)', overwrite: true });
+    }
   }, [sheetH, revealPx, tyFor, dismiss]);
 
   if (!open && !isFront) return null;
@@ -187,6 +221,7 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
       >
         {/* Grab handle + header */}
         <div
+          ref={headerRef}
           onPointerDown={onHandleDown}
           onPointerMove={onHandleMove}
           onPointerUp={onHandleUp}
@@ -215,7 +250,7 @@ export function BottomSheet({ id, open, onClose, title, kicker, initialSnap = 'h
         </div>
         {/* Body — Lenis momentum (fine pointer) / native momentum (touch) */}
         <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-          <div>{children}</div>
+          <div ref={contentRef}>{children}</div>
         </div>
       </section>
     </>

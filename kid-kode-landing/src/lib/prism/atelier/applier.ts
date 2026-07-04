@@ -20,6 +20,7 @@ interface WithHandle {
   meshPrimitiveHandle?: MeshPrimitiveHandle;
   textHandle?: TextHandleLike;
   nodeId?: string;
+  authoredTextContent?: string;
 }
 
 export const PRICE_NODE_ID = 'orr-atelier-price';
@@ -101,10 +102,11 @@ export function applyConfiguratorToScene(root: Object3D, build: AtelierBuild, lo
   return applied;
 }
 
-function setLiveText(root: Object3D, nodeId: string, content: string): boolean {
+function setLiveText(root: Object3D, nodeId: string, content: string | null): boolean {
   let wrote = false;
   root.traverse((obj) => {
-    if ((obj.userData as WithHandle | undefined)?.nodeId !== nodeId) return;
+    const data = obj.userData as WithHandle | undefined;
+    if (data?.nodeId !== nodeId) return;
     let handle: TextHandleLike | null = null;
     obj.traverse((child) => {
       const h = (child.userData as WithHandle | undefined)?.textHandle;
@@ -112,7 +114,7 @@ function setLiveText(root: Object3D, nodeId: string, content: string): boolean {
     });
     if (handle && (handle as TextHandleLike).spec) {
       const th = handle as TextHandleLike;
-      th.setSpec({ ...th.spec, content });
+      th.setSpec({ ...th.spec, content: content ?? data.authoredTextContent ?? '' });
       wrote = true;
     }
   });
@@ -130,8 +132,8 @@ export function applyConfiguratorText(root: Object3D, build: AtelierBuild): bool
   return wrote;
 }
 
-/** Live-update the constraint reason line (empty string clears it). */
+/** Live-update the constraint reason line; null restores the authored resting copy. */
 export function applyConfiguratorReason(root: Object3D, reason: string | null): void {
   // DESIGN LAW §1.3 — no emoji/stock glyphs in the HUD. A typographic em-dash lead-in.
-  setLiveText(root, REASON_NODE_ID, reason ? `—  ${reason}` : '');
+  setLiveText(root, REASON_NODE_ID, reason ? `—  ${reason}` : null);
 }

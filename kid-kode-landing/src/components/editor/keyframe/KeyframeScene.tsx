@@ -26,6 +26,8 @@ import { LAYOUT } from './keyframe-config';
 import { useKeyframeStore } from './use-keyframe-store';
 
 // Editorial dark backdrop the glass refracts and the milled channels reveal.
+// FINISH F-1 — the blue-grey studio wall goes BLACK with a deep signal-red
+// bloom (the toolbar's red/black/white language; the smoked pane refracts it).
 function Backdrop() {
   const tex = useMemo(() => {
     const c = document.createElement('canvas');
@@ -33,13 +35,13 @@ function Backdrop() {
     c.height = 512;
     const g = c.getContext('2d')!;
     const grad = g.createLinearGradient(0, 0, 0, 512);
-    grad.addColorStop(0, '#262d3a');
-    grad.addColorStop(0.5, '#141926');
-    grad.addColorStop(1, '#05070c');
+    grad.addColorStop(0, '#1b1b21');
+    grad.addColorStop(0.5, '#0c0c11');
+    grad.addColorStop(1, '#030307');
     g.fillStyle = grad;
     g.fillRect(0, 0, 64, 512);
     const bloom = g.createRadialGradient(32, 300, 8, 32, 300, 300);
-    bloom.addColorStop(0, 'rgba(120,150,200,0.16)');
+    bloom.addColorStop(0, 'rgba(255,42,56,0.13)');
     bloom.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = bloom;
     g.fillRect(0, 0, 64, 512);
@@ -104,7 +106,8 @@ function Worn() {
       <Playhead steel={maps.gunmetal} />
       <TrackKnobs maps={maps} />
       <TransportControls maps={maps.gunmetal} />
-      <SubjectNode maps={maps.sapphire} />
+      {/* FINISH F-1 — the bound artifact wears the worn signal-red alloy. */}
+      <SubjectNode maps={maps.oxblood} />
     </>
   );
 }
@@ -141,11 +144,14 @@ export function KeyframeScene() {
           land on the label-free right side (3s–4s), never on the left-gutter
           engraved labels. A dim cool fill from the left lifts the labels without
           a hot spec. */}
-      <directionalLight position={[6.5, -1, 6]} intensity={1.0} color="#bcd6ff" />
+      {/* FINISH F-1 — fills go neutral chrome-white; the lavender rim becomes a
+          restrained SIGNAL-RED rim so the red/black/white system carries into
+          the lighting itself (red edge-light on smoked glass + chrome). */}
+      <directionalLight position={[6.5, -1, 6]} intensity={1.0} color="#dfe5ec" />
       <directionalLight position={[4.5, 1.2, 8.5]} intensity={1.05} color="#fff7ec" />
-      <directionalLight position={[-8.5, 1.5, 4]} intensity={0.42} color="#aebfe0" />
-      <spotLight position={[11, 6, -1]} angle={0.85} penumbra={1} intensity={48} distance={52} color="#cfe2ff" />
-      <spotLight position={[-11, -3, -1]} angle={0.85} penumbra={1} intensity={28} distance={52} color="#e6c9ff" />
+      <directionalLight position={[-8.5, 1.5, 4]} intensity={0.42} color="#c3c9d2" />
+      <spotLight position={[11, 6, -1]} angle={0.85} penumbra={1} intensity={48} distance={52} color="#e8edf4" />
+      <spotLight position={[-11, -3, -1]} angle={0.85} penumbra={1} intensity={22} distance={52} color="#ff3a44" />
 
       <Suspense fallback={null}>
         <GlassTimelinePane />

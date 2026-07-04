@@ -12,6 +12,7 @@ import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import { countGalaxyProjectedNodesForHub } from '@/lib/prism-graph/galaxy-semantics';
 import { Icon } from '@/components/editor/icons/Icon';
 import { DS, dsAlpha } from '@/components/editor/design-system';
 
@@ -98,6 +99,13 @@ export default function HubNav() {
   // max-md:bottom-[84px] collided in a wide-viewport embedded pane).
   const compact = useEditorDensity() === 'compact';
   const railViewMode = useGraphEditorStore((s) => s.viewMode);
+  // FINISH-F3 (F-2 advocate flag) — the full-height Inspector dock (z-40,
+  // md:w-[484px] right-3) overlapped the centered rail's right end (the
+  // Atelier pill, z-30). While the dock is open, shift the rail's center left
+  // by half the dock width and cap its width so it always clears.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -107,6 +115,19 @@ export default function HubNav() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // FINISH F-2 — ONE count story across views (founder parity law): every hub
+  // pill shows the hub's ELEMENT count (the galaxy first-level projection —
+  // clusters count once, implementation atoms collapsed) in galaxy, canvas,
+  // and preview alike. The old canvas branch counted raw graph atoms (Atelier
+  // 103 vs galaxy's 16 — two unlabeled unit systems for the same hub).
+  const elementCountByHub = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const hub of graph.hubs) {
+      counts.set(hub.id, countGalaxyProjectedNodesForHub(graph.nodes, hub.id));
+    }
+    return counts;
+  }, [graph.hubs, graph.nodes]);
+
   // UI-FIDELITY-2 — the rail housing renders as real brushed metal in the
   // unified canvas (brushed along its long/horizontal axis).
   const railSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
@@ -115,13 +136,17 @@ export default function HubNav() {
     // Compact: clear the mobile mode toggle (and, in canvas mode, the tool
     // dock) above it. Regular/wide: the shipped desktop position (bottom-5).
     <div
-      className={`absolute z-30 left-1/2 -translate-x-1/2 pointer-events-auto ${
+      className={`absolute z-30 -translate-x-1/2 pointer-events-auto ${
         compact ? (railViewMode === 'canvas' ? 'bottom-[140px]' : 'bottom-[68px]') : 'bottom-5'
+      } ${
+        !compact && inspectorDockOpen
+          ? 'left-[calc(50%-244px)] max-w-[calc(100vw-540px)]'
+          : 'left-1/2 max-w-[96vw]'
       }`}
     >
       <div
         ref={railSlab.ref}
-        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
+        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge overflow-x-auto scrollbar-hide"
         style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
         <RailPill active={activeHubId === null} onClick={resetCamera}>
@@ -134,7 +159,7 @@ export default function HubNav() {
 
         {graph.hubs.map((hub, i) => {
           const active = activeHubId === hub.id;
-          const nodeCount = graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
+          const elementCount = elementCountByHub.get(hub.id) ?? 0;
           return (
             <RailPill key={hub.id} active={active} onClick={() => flyToHub(hub.id)}>
               <Pip active={active} />
@@ -145,7 +170,13 @@ export default function HubNav() {
                   hub.color dashboard blue. */}
               <Icon name={hubGlyph(i)} size={12} color={active ? DS.arc : DS.textMid} glow={active} />
               {hub.name}
-              <span className="text-[10px] font-mono tabular-nums opacity-50">{nodeCount}</span>
+              {/* Compact has no minimap to spell out the unit, so the ACTIVE
+                  pill teaches it ("16 elements"); idle pills stay bare numbers
+                  (advocate SHOULD-FIX — labeled counts on mobile too). */}
+              <span
+                className="text-[10px] font-mono tabular-nums opacity-50"
+                title={`${elementCount} elements`}
+              >{elementCount}{compact && active ? ' elements' : ''}</span>
             </RailPill>
           );
         })}

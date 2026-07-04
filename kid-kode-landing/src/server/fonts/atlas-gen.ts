@@ -34,7 +34,10 @@ import type { FontManifestEntry, MsdfFontData } from '@/lib/prism/text/contract'
 // build-msdf.mjs — keep in lockstep so on-demand atlases are metric-compatible
 // with the shipped core atlases.
 const CHARSET =
-  Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©';
+  // FINISH-F3: + '·№…' — the middle dot is load-bearing app copy ("INSTAGRAM ·
+  // X · THE JOURNAL", "GENEVA · …"); it silently dropped from every atlas
+  // before this. Keep scripts/bake-core-fonts.mjs in lockstep.
+  Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©·№…';
 
 const BASE_OPTIONS = {
   fieldType: 'msdf',

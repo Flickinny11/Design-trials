@@ -1,129 +1,263 @@
-# PRISM — WORKSPACE COMPLETION — CANONICAL SPEC (v1) — 2026-06-27
-Status: ACTIVE build-truth. Owner: Logan. SUPERSEDES PRISM-EDITOR-INTEGRATION-SPEC for the workspace; EXTENDS the canonical-3 (RUNTIME / NODE-EDITOR + V2 / CANVAS) with the FUNCTIONAL half. Most-recent-supersedes applies.
+# PRISM — Workspace Completion Recovery Spec — 2026-06-30
 
-ONE LINE: Finish the Prism prototype WORKSPACE — the right-hand half of an AI app builder (GALAXY = directory, CANVAS = manual drag-and-drop file-editing, NODE EDITOR = per-node functionality, PREVIEW = running app) — so a user can build a beautiful 3D scene AND configure it into a fully-functional app running on the Prism runtime, BOTH manually AND by prompt, with every node independently editable, buildable, and self-healing.
+Status: **founder-directed** (2026-07-01). The founder's direction, recorded
+verbatim in the Amendment at the end of this document, satisfies the signoff
+this draft was waiting on: the workspace vision, the galaxy↔canvas↔preview
+parity law, and the premium bar are spec-level law for every FINISH-chain
+phase. The document remains a launch input only after it passes
+`scripts/spec-intent-check.mjs` and the Prism autonomy preflight.
 
-## 0. THE COMPLETENESS MAP  (read first — the whole workspace on one page)
-Legend: [DONE] works · [PART] partial · [GAP] missing.  "Close" = the build that finishes it.
+## Purpose
 
-### A. VISUAL HALF — build beautiful 3D scenes AS app UI
-- [DONE] Canvas 3D editing · ~406-primitive library · materials · fluids · text · lighting.
-- [DONE] Keyframe animation (per-node properties).
-- [DONE] Per-node SURGICAL build (rebuild exactly one node; the rest stay cached).
-- [DONE] In-engine glass /editor shell: galaxy/canvas/preview tri-state · docked toolbar/library/inspector/keyframe · save · preview.
-- [DONE] RUNTIME-GENERIC at engine level: a data-driven loader renders ANY Prism graph — nothing app-specific hardcoded.
-- [PART] Galaxy-as-directory: new editor shows simple seeds. CLOSE -> photoreal planets sized-by-artifact + an <app>_world center + per-node capability glyphs (A1-A4, W-4).
-- [PART] "Open a different app": loader is generic but pinned to one file. CLOSE -> a graph-source switch so any Prism app drops in (F1, W-5).
+Finish the Prism prototype workspace as the right-side preview/editor pane of a
+larger AI app builder. The larger builder shell is future work: imagine chat and
+orchestration on the left, with this Prism workspace on the right.
 
-### B. FUNCTIONAL HALF — configure into a fully-capable app  (THE REAL GAP)
-- [PART] Node editor (purpose: schema/behavior/caption/data): LEGACY DOM editor only. CLOSE -> rebuild in-engine glass, docked in /editor, synced to the shared graph store (C1-C4, W-1).
-- [GAP] Functions catalog: today ~30 curated reference providers. CLOSE -> a LIVE capability catalog spanning virtually ANY platform via a real aggregator, CAPABILITY-FIRST search ("what do you want to DO"), branded tiles, multi-per-node, validate-on-select + auto-heal, custom snippets (D1-D5, W-2).
-- [GAP] Integrations one-click auth: today stubbed. CLOSE -> LIVE one-click OAuth2.1/MCP/token auth via the aggregator; capability-REFERENCE-only, never raw secrets (D3, W-2).
-- [GAP] Backend/DATA per node (state, persistence — db/storage): CLOSE -> a data/backend purpose surface; a node owns a data model + persistence wired from the catalog (C3, W-2).
-- [GAP] PROMPT-TO-EDIT (the magic): today a one-shot, single-model (Opus, on a STUB) plan generator in the legacy editor. CLOSE -> the UNIFIED PER-NODE AGENT (Section 3 + W-3): model-agnostic, streaming-chat-that-expands, full-context, full-toolset, asks questions, live preview + accept/reject + per-node undo, vision self-verify, media-gen in-flow.
-- [GAP] SELF-HEALING model: scaffold/hooks only. CLOSE -> wire the small repair model to telemetry — the SAME engine as prompt-edit, auto-triggered (Section 3 + W-3).
+The prototype is the editor/runtime workspace itself, not the watch demo. The
+watch demo remains a mock app inside the Prism runtime so the editor can prove it
+can inspect, build, edit, and preview a real graph-backed app.
 
-### C. TRUST & VERIFICATION
-- [????] "Every button works" / sync / drop-in-another-app: UNVERIFIED. CLOSE -> a button-by-button + sync + genericity behavioral pass (F1, W-5).
-- [PART] Supporting surfaces (change-artifact · element browser · search · history/undo · guided-tips lightbulb): in legacy. CLOSE -> parity-port to in-engine /editor (F2, W-5).
-- LEGACY DOM editor (`/`): retire once /editor reaches parity (F3, W-5).
+## Protected Ground Truth
 
-### BOUNDARY — NOT in this spec
-The GENERATION ENGINE (prompt -> whole app), the LEFT-SIDE shell (streaming chat + dashboard), and DEPLOY/PUBLISH to a public URL are SEPARATE later arcs. This spec finishes the WORKSPACE: build + configure + RUN fully-functional apps in the runtime (preview). "Ship to a live URL" is the later deploy pipeline.
+- The root route and `kid-kode-landing/src/components/editor/**` are the real
+  working editor surface. Continue there. Do not substitute a smaller shell.
+- Galaxy, Canvas, and Preview are three views of the same Prism graph/runtime.
+- Galaxy is already the app directory: hubs are pages and nodes are app
+  elements or app capabilities represented in the graph.
+- Canvas is the authoring surface for visual/spatial edits in 3D.
+- The node editor is the purpose surface for schema, behavior, caption,
+  functions, integrations, data, and repair details.
+- Preview is the camera-locked running mock app. It shows built app output; it
+  is not an authoring mode.
+- Repeated app chrome and background ambience should be modeled as graph/runtime
+  data, not as noisy first-class Galaxy clutter.
+- All changes must preserve the Prism runtime and `.prism` artifact path.
 
-## 1. WHAT THE WORKSPACE IS
-The right-hand workspace of an AI app builder (left side = streaming chat + dashboard, future). It REPLACES BOTH the preview pane AND the file-editor/directory:
-- GALAXY = the DIRECTORY. Every node is an unbuilt artifact (a "file") holding its schema + instructions + functions + animations + data — everything that becomes the element when built and visible.
-- CANVAS = editing files, manually, by drag-and-drop in 3D (visual / spatial / animation).
-- NODE EDITOR = a file's internals: per-node functionality (schema, behavior, caption, functions, integrations, data/backend).
-- PREVIEW = the running app on the Prism runtime.
-Every app built here RUNS on the Prism runtime. Users build BOTH manually (toolbar / library / inspector / keyframe / tabs) AND by prompt (the unified agent, Section 3).
+## Current Verified Baseline
 
-## 2. INVARIANTS  (laws — most-recent-supersedes)
-- INV-W1  IN-ENGINE: all workspace chrome is WebGPU/Three.js glass; NO DOM/CSS/Tailwind/<Html> (no-dom-ui-gate). PixiJS is dead.
-- INV-W2  NODE LAW: every element/artifact/function/integration/animation is a NODE or additive schema on a node; galaxy=unbuilt, canvas=built, preview=running (node-authorship-gate).
-- INV-W3  COLD-NODE (the foundation): each node's embedded schema + caption + behaviorSpec is a COMPLETE standalone brief — any cold model can fully understand, edit, and repair that ONE node from it alone. This is what makes prompt-edit, self-healing, and surgical build fast and correct.
-- INV-W4  RUNTIME-GENERIC: the workspace is driven by the graph; nothing app-specific is hardcoded; ANY Prism graph loads, renders, and is editable.
-- INV-W5  ADDITIVE + ROUND-TRIP: additions are additive schema; topology changes only via explicit node ops; save -> reload restores exact state.
-- INV-W6  VALIDATED-PLAN-NOT-CODE: AI edits emit a VALIDATED PLAN of the SAME operations a human performs — never raw model code into the runtime.
-- INV-W7  CAPABILITY-REFERENCES-ONLY: secrets/auth live in the provider/vault; nodes store a reference handle — never raw tokens anywhere (logs included).
-- INV-W8  SYNC: ONE graph store is the single source; galaxy / canvas / node-editor / preview all read+write it; an edit in one shows everywhere.
-- INV-W9  SURGICAL: edits/repairs rebuild exactly the affected node(s); never a full rebuild.
-- INV-W10 AESTHETIC: matches the approved glass look (toolbar-chassis + keyframe-editor ground truth); no stock icons, no flat surfaces, no purple.
+- Root editor stays on `CanvasToolbar` and `LiquidGlassToolbar`.
+- Rejected `src/components/editor/glass-toolbar/**` work is quarantined outside
+  live source.
+- Galaxy overview collapses implementation helpers and hit targets.
+- Hub background layers are hub-owned data, not separate Galaxy nodes.
+- Global shell slots exist for repeated header/footer app chrome.
+- The live recovery gate passed on 2026-06-30:
+  - static Prism verification
+  - no-new TypeScript errors
+  - focused recovery tests
+  - live node-authorship
+  - no uncaught page errors
 
-## 3. THE UNIFIED PER-NODE AGENT  (prompt-edit ≡ self-healing) — the magic + the bridge to shippable
-Prompt-to-edit and self-healing are ONE engine: a per-node, MODEL-AGNOSTIC, tool-wielding, SELF-VERIFYING agent. Build it once; trigger it two ways. INV-W3 is why a cold model can do this fast and correctly.
+## Completion Goals
 
-THE ENGINE (shared):
-- INPUT — the harness hands the chosen model EVERYTHING about the one node + its world: full schema + caption + behaviorSpec + current artifact (3D/image/video/function) + its edges (what it connects to / fires) + a summary of the whole app graph + the toolset CATALOGS (primitives, materials, animations, functions, integrations, media providers) + the toolbar/keyframe COMMAND API. A complete cold-start brief.
-- ACTION — the model EXECUTES via a VALIDATED PLAN of the SAME operations a human performs (swap artifact · set material · add keyframe/animation · attach function · connect integration · generate media) — never raw code (INV-W6). It may use the FULL toolbar + keyframe, INCLUDING operations the user didn't know to ask for (an idle animation, a hover response, a material sheen): the AI is a POWER-USER of the editor.
-- MEDIA — when an artifact is needed, the model invokes the configured provider (fal/replicate/etc.) as a tool, IN-FLOW; when style is ambiguous it GENERATES OPTIONS and lets the user pick.
-- SELF-VERIFY (loop closer) — after applying, it RENDERS the node headless + LOOKS at it (vision/computer-use) + checks the edit did what was asked (the football appears, spins on hover, the click handler wired). If wrong, it repairs — which IS the self-healing loop.
+### 1. Preserve And Verify The Existing Editor
 
-TRIGGER 1 — PROMPT-EDIT (user-initiated):
-- Entry: click any element -> a prompt button in the CANVAS toolbar AND inside the NODE EDITOR; AND from PREVIEW (click a running element to jump straight to it and edit). Multi-select aware ("make these three consistent").
-- The box EXPANDS IN PLACE into a streaming chat — SAME window, thinking tokens visible, intuitively collapsible when done. The user PICKS THE MODEL (Opus 4.x default; a large list via the router).
-- The model ASKS CLARIFYING QUESTIONS Claude-Design-style ("what style of football? spin speed? what should the click call do?"); applies LIVE (preview); the user ACCEPTS / REJECTS / iterates (per-node undo). The chat REMEMBERS prior edits to that node across the session (continuous iteration — "make it bigger" knows what "it" is).
-- Example handled end-to-end: "change to a 3D football, animate it to spin on hover, and on click make an API call to do XYZ" -> swap artifact (gen or library) + add hover-spin animation + attach a click-handler function/integration — each a real, safe operation, verified by vision.
+Before building new capability, prove the current root editor path still works:
 
-TRIGGER 2 — SELF-HEAL (auto):
-- Runtime telemetry watches each node's declared event chains; a node whose declared downstream event does not fire within tolerance is marked SUSPECT; the SAME engine (small/fast model) reads the node's spec and repairs it IN PLACE, contamination-aware (broken code deleted before the model sees it), SURGICALLY, and surfaces a "was auto-repaired" trust signal.
+- Galaxy shows page hubs and meaningful app nodes at human-readable counts.
+- Canvas shows built/editable app elements and keeps the toolbar, keyframe
+  editor, guided tips, inspector, library, and node selection behavior.
+- Preview shows the running built mock app without editor authoring chrome.
+- Save and reload preserve graph state.
+- The watch mock app continues to run from Prism runtime data and `.prism`.
 
-## 4. NUMBERED CRITERIA  (verifiable; evidence = interaction + frames, never assertion)
-### A — Galaxy as the directory
-- A1 Galaxy loads from the live graph; every node = a dormant artifact sphere; hubs render as photoreal planets (brass/bone/ice, lit, glow) orbiting an <app>_world center.
-- A2 Each hub sized by total artifact size; orbit/zoom/filter/search reads as a usable directory.
-- A3 Each node shows CAPABILITY GLYPHS at a glance: built-vs-unbuilt · has-visual · has-function · has-integration · has-animation · has-data. The directory communicates state.
-- A4 Select a node in galaxy -> opens it (canvas focus + node editor). Galaxy IS the entry to editing any artifact.
-### B — Canvas (manual visual editing)  [mostly DONE — verify parity]
-- B1 Full transform/resize/rotate in 3D; stack/connect/snap/group/save-as-template; ~406 primitives + materials + fluids + text + lighting; keyframe animation — in-engine on the live graph.
-- B2 Save-as-template carries the node's FULL config (geometry + material + animation + functions + integrations + data) — a configured element is reusable as a COMPLETE component.
-- B3 Every edit reflects INSTANTLY (shared store + surgical rebuild); no save-and-wait.
-### C — Node editor in-engine (per-node functionality)
-- C1 Select a node -> an in-engine glass node-editor panel (docked) shows its PURPOSE: schema · behavior · caption · functions · integrations · data/backend — each editable, live, synced to the shared store.
-- C2 NO visual-editor mode in the node editor (visual = canvas; anchor F7); it shows the node in its in-built state.
-- C3 A node can own a DATA/BACKEND model: state + persistence wired from the capability catalog (db/storage), additive schema, capability-reference-only.
-- C4 Round-trips: every node-editor change saves -> reloads exactly.
-### D — Functions + Integrations (live capability)
-- D1 CAPABILITY-FIRST search: the user types what they want to DO ("store signups", "send email", "charge a card", "generate a video") and the catalog maps it to real providers/functions across virtually ANY platform (LIVE aggregator; re-verify current-best at build).
-- D2 Results = branded action TILES (provider's REAL assets), draggable onto a node; multiple-per-node, REORDERABLE; attach/detach additive + round-trip.
-- D3 Integrations: one-click LIVE auth (OAuth2.1/MCP/token) via the aggregator's managed auth; Prism stores a capability REFERENCE only. Once authed -> the user's saved assets self-populate, drag-drop into nodes.
-- D4 Validate-on-select against the provider; if an external change breaks it, the agent auto-fixes in place; validation/auto-repair status surfaced as a trust signal.
-- D5 Custom snippets: paste/save/name reusable functions per-user, reusable across builds.
-### E — The unified agent (prompt-edit ≡ self-heal)  [Section 3 is the design]
-- E1 Prompt-edit entry in the canvas toolbar AND the node editor AND from PREVIEW (click a running element -> jump + edit). Multi-select aware.
-- E2 On submit -> the box EXPANDS IN PLACE into a streaming chat (same window, thinking tokens, collapsible); model picker (Opus 4.x default + a large list via the router).
-- E3 Full-context harness (Section 3 INPUT) + full-toolset execution via VALIDATED PLAN (artifact/material/animation/function/integration/media) — the AI as a power-user of the editor.
-- E4 Asks clarifying questions; generates media OPTIONS when style is ambiguous (fal/replicate in-flow); applies LIVE -> user ACCEPTS/REJECTS/iterates; per-node undo; per-node chat memory across the session.
-- E5 Vision self-verify: renders the node headless + checks the edit did what was asked; on failure, repairs (= self-heal).
-- E6 Self-heal (auto): telemetry marks a node suspect when its declared event doesn't fire -> the SAME engine repairs it surgically (contamination-aware) -> surfaces "auto-repaired".
-- E7 Model-agnostic: re-verify current-best models + the router at build; user-selectable.
-### F — Verification + parity + retire
-- F1 Behavioral pass: every control works; node editor SYNCED with canvas (edit one, see both); DROP IN A SECOND Prism graph -> galaxy + canvas understand and edit it.
-- F2 Parity-port supporting surfaces to in-engine: change-artifact · element browser · search · history/undo · guided-tips lightbulb.
-- F3 Flip live config (model/aggregator/media keys); RETIRE the legacy DOM `/` once /editor is at full parity.
+### 2. Finish Galaxy Semantics
 
-## 5. FORBIDDEN  (halt + flag)
-DOM / flat / purple / stock-icons in chrome · raw secret values anywhere · executing model-generated code unvalidated · hardcoding app-specific artifacts · breaking sync · full-rebuild on a single edit · faking or asserting a pass · downgrading a dependency · coupling the UI to a single aggregator's SDK · a visual-editor mode inside the node editor.
+The remaining Galaxy work is cleanup and verification, not a directory
+replacement:
 
-## 6. PHASING  (completion chain W-1..W-5; ADDITIVE; each verified by 3 fresh-context judges, HEADLESS; labs + legacy stay intact until F3)
-- W-1  NODE EDITOR IN-ENGINE: the purpose surface (schema/behavior/caption + the panel) rebuilt in glass, docked in /editor, synced to the shared store. Select a node -> full schema editable, live. (C1, C2, C4, INV-W8.)
-- W-2  FUNCTIONS + INTEGRATIONS + DATA (live capability): capability-first search across a LIVE aggregator catalog (virtually any platform); branded tiles; multi-per-node reorderable; one-click LIVE auth (reference-only); validate-on-select + auto-heal; custom snippets; a node DATA/BACKEND surface (state + persistence from the catalog). (C3, D1-D5.)
-- W-3  THE UNIFIED AGENT (prompt-edit ≡ self-heal): the per-node model-agnostic streaming-chat agent (Section 3) — full-context, full-toolset, model picker, asks questions, live preview + accept/reject + per-node undo, vision self-verify, media-gen in-flow; AND the telemetry-triggered self-healing path on the SAME engine. (E1-E7.)
-- W-4  GALAXY DIRECTORY + PREVIEW->NODE: photoreal planets sized-by-artifact + <app>_world center + per-node capability glyphs; click an element in PREVIEW -> jump to its node. (A1-A4, E1 preview-entry.)
-- W-5  VERIFY + PARITY + RETIRE: button-by-button + sync + drop-in-another-app behavioral verification; parity-port supporting surfaces; flip live model/aggregator/media config; retire the legacy DOM `/`. (F1-F3.)
+- Keep hubs as pages.
+- Keep nodes as user-meaningful app elements or capabilities.
+- Collapse app-shell internals, hit targets, and repeated implementation
+  details from overview counts.
+- Promote remaining repeated every-page app chrome into global graph slots when
+  it is safe and verified.
+- Keep background stars, dust, nebula, lighting, and ambience as hub/runtime
+  background layers unless the user explicitly selects a background element for
+  editing.
 
-## 7. VERIFICATION  (apply docs/prism/VERIFICATION-STANDARD.md — HEADLESS, behavioral, aesthetic-match, 3 fresh-context judges, 0 must-fix)
-Per phase + a FINAL WHOLE-WORKSPACE pass: build a small app end-to-end — galaxy-navigate -> canvas-build a 3D element -> node-editor wire a function + an integration + data -> prompt-edit it by chat with a chosen model (it asks a question, generates media, applies, self-verifies) -> preview the running app -> click an element in preview to jump back -> save/reload. Then DROP IN A SECOND graph and confirm galaxy + canvas understand and edit it.
+### 3. Finish Root Editor Capability Surfaces
 
-## 8. DONE = EVIDENCE
-Per phase: gates PASS (no-dom-ui, node-authorship, tsc 0-new, 0 console errors) + HEADLESS behavioral proof + 3 fresh-context judges + the Section 4 criteria for that phase + the Section 0 map item flips to [DONE]. The WORKSPACE is DONE when every Section 0 item is [DONE] and the whole-workspace pass + the drop-in-another-app pass are clean.
+W1 and W2 work created useful node-editor/function/integration/data concepts.
+Future work must route those concepts into the root editor without dropping root
+editor behavior:
 
-## 9. RE-VERIFY AT BUILD  (training is ~1yr stale — do NOT default to known picks)
-Probe the NEWEST Opus id (Fable/Mythos when available). Re-research + pick CURRENT-BEST for: the LIVE capability aggregator (Nango / Composio / Pipedream / MCP-registry / successors — best for "any platform" + one-click auth), the MODEL ROUTER + the user-facing model list, the small SELF-HEAL/EDIT model + its in-browser runtime (Transformers.js / WebLLM / successors), and the MEDIA providers (fal / replicate / + newer). Re-pull current SDK versions before wiring.
+- Node purpose editing belongs in Canvas/node-editor surfaces.
+- Function, integration, and data attachments are additive schema on nodes.
+- Capability credentials are references only; raw secrets never enter graph
+  nodes, logs, screenshots, or generated artifacts.
+- A node can own frontend behavior, backend/data intent, integration references,
+  event bindings, and validation/repair metadata as graph-backed state.
 
-## 10. CURRENT-BEST PICKS — 2026-06-27 research  (supersedes the §9 April-era defaults; agents still re-verify at build)
-- INTEGRATION AGGREGATOR (W-2): **Nango** — open-source + SELF-HOSTABLE (customer credentials stay on Prism infra; satisfies INV-W7), white-label ONE-CLICK auth across 800+ APIs (OAuth2.1 / API-key / JWT / MCP-Auth) with token refresh, an MCP server, durable data syncs + webhooks + OpenTelemetry observability. DECISIVE FIT: its June-2026 "remote function builder" lets a CODING AGENT build + deploy a NEW integration AGAINST ANY API FROM A SINGLE PROMPT, no local project — this IS Prism's "integrate with virtually anything." Works with 18+ coding agents. The harness already ships a Nango stub (the planned swap). AVOID Composio (May-2026 breach: sandbox RCE, ~5,200 connections compromised, forced key rotation — unacceptable for a credential-holding consumer product). Keep the CapabilityProvider seam (the MCP reference adapter remains the offline default; Nango is the LIVE aggregator).
-- MODEL ROUTER + PICKER (W-3): **OpenRouter** (already wired in the CONSTELLATION rig) as the model-agnostic router; user-facing list = Opus 4.x (DEFAULT) + Fable 5 + current top frontier + open models (GPT / Gemini / Qwen / DeepSeek). Re-pull current model ids at build.
-- SELF-HEAL / EDIT MODEL + RUNTIME (W-3): on-device = **DeepSeek Coder V2 Lite** (2.4B active MoE, ~82% HumanEval — current-best small code model; SUPERSEDES the §9 Qwen3-Coder-3B pick), quantized int4/int8, via **Transformers.js v3 (`@huggingface/transformers` — NOT the v2 `@xenova/transformers`) + ONNX Runtime Web + WebGPU** (WebGPU is already guaranteed in the Prism runtime). ESCALATION: complex repairs/edits escalate to a cloud frontier model via the router (Opus 4.x) — the SAME unified agent, model-agnostic across local-small AND cloud-frontier. WebLLM is the alternative LLM runtime if pure-LLM perf wins at build.
-- MEDIA PROVIDERS (W-3): **fal** (DEFAULT, already integrated — FLUX-heavy, streaming, sub-second) + **Replicate** (breadth) + consider **WaveSpeedAI** (600+ models, day-one ByteDance/Alibaba access, video-forward) for newest/video coverage. Provider list configurable per node; re-verify at build.
+### 4. Build The Unified Per-Node Agent
+
+Prompt-edit and self-heal should use one validated-plan engine:
+
+- Entry points: Canvas toolbar and node editor.
+- Scope: selected node or explicit multi-select set.
+- Input context: node schema, caption, behavior spec, artifact metadata,
+  bindings, nearby graph context, available editor operations, capability
+  catalog, media options, and verification criteria.
+- Output: a validated plan using the same operations a human can perform:
+  artifact swap, material edit, keyframe/animation edit, function attachment,
+  integration attachment, data schema edit, media generation request, and graph
+  save.
+- No raw model-generated runtime code executes without validation.
+- The agent may ask clarifying questions when intent is under-specified.
+- The agent must support accept/reject, per-node undo, and repeat iteration.
+- Self-heal uses runtime telemetry to mark a node suspect, applies the same
+  validated-plan loop surgically, and records a trust signal.
+
+All provider/model/router choices are implementation-time decisions. Re-check
+current official docs and installed package versions immediately before wiring
+live services.
+
+### 5. Generic App Loading
+
+The workspace should accept another Prism graph as input and still understand:
+
+- hubs/pages
+- graph nodes/elements
+- built Canvas output
+- Preview runtime output
+- node purpose data
+- global shell slots
+- background layers
+
+The goal is not to hardcode the watch app. The watch app is verification data.
+
+## Forbidden Drift
+
+- No smaller editor shell replaces the root editor.
+- No authoring action originates in Preview.
+- No full Galaxy directory rewrite.
+- No unapproved per-node status badge system.
+- No stock icon-pack toolbar.
+- No remote runtime assets for editor chrome or scene lighting.
+- No hardcoded watch-app artifacts outside graph/runtime data.
+- No full app rebuild for a surgical node edit.
+- No raw secrets in graph data.
+- No launch from unchecked prompts/specs.
+
+## Next Safe Phase: the FINISH chain
+
+> Refreshed 2026-07-01 (FINISH F-2). The W1–W5 recovery arc SHIPPED — W3's
+> unified per-node agent included (`notes/WS-W5-REPORT.md`) — so the old
+> "W3 Recovery Prompt" pointer here was stale. The active arc is the
+> **FINISH chain** (`FINISH-F1-KEYFRAME-PROMPT.md` →
+> `FINISH-F2-PARITY-PROMPT.md` → `FINISH-F3-SHIPPABLE-PROMPT.md` →
+> `FINISH-F4-CERTIFICATION-PROMPT.md`, repo root), interpreted against the
+> founder direction in `FINISH-CHAIN-FOUNDER-DIRECTION.md` (quoted verbatim in
+> the Amendment below) and verified under
+> `docs/prism/NEAR-HUMAN-QA-PROTOCOL.md`.
+
+Each FINISH phase launches only after these gates pass:
+
+1. `node kid-kode-landing/scripts/spec-intent-check.mjs <prompt> <this-spec>`
+2. `node kid-kode-landing/scripts/prism-autonomy-preflight.mjs --prompt <prompt> --spec kid-kode-landing/docs/prism/PRISM-WORKSPACE-COMPLETION-SPEC.md`
+3. The phase's judges (user-advocate + prism-criteria-reviewer, fresh context)
+   return PASS with 0 MUST-FIX under the near-human QA protocol.
+
+## Verification Standard
+
+Each recovery phase must include evidence, not assertions:
+
+- static Prism verification
+- no-new TypeScript errors
+- focused tests for the touched behavior
+- live browser verification on `localhost:3001`
+- no fresh console/page errors
+- node-authorship gate when runtime output changes
+- screenshot/video evidence for visual claims
+- explicit confirmation that root editor behavior, Prism runtime, and the watch
+  mock app still work
+
+The phase is not complete until the relevant gate output is green or a blocker is
+recorded with exact command output and next action.
+
+## Amendment 2026-07-01 — Founder direction (verbatim)
+
+> Recorded by Fable 5 for the FINISH chain (source:
+> `FINISH-CHAIN-FOUNDER-DIRECTION.md`, repo root). This is the founder signoff
+> the Status line references; every FINISH phase interprets its prompt against
+> this direction. It carries three spec-level laws: (1) the **parity law**
+> (galaxy ↔ canvas ↔ preview are one graph in three views — no UI element
+> without a galaxy node, unbuilt in galaxy until built, built = visible in
+> canvas/preview), (2) the **premium bar** (photoreal materials, no AI-slop,
+> nothing flat), and (3) the **preview-window context** (this prototype is the
+> preview pane of a larger AI app builder; galaxy mode is the file-editor
+> replacement; the runtime must be ready to build ANY app, not just the watch).
+
+The founder's words, quoted verbatim from his 2026-07-01 message:
+
+> setup our optimal harness leveraging the ever verification looping, vision
+> analysis, computer-use, browser use, and near human-level computer use to
+> interact and check on our app build, to make sure it visually meets the design
+> and style requirements of this premium app, since our prototype editor is
+> designing the most premium apps itself, it means that the ui needs to be
+> reflective of those premium capabilities it has in every way. the watch app
+> that the editor is building - it's a mock app intended to show off the
+> capabilities of the editor, and we need it all to truly be premium, using
+> modern premium color patterns, smooth gradients, NO AI-SLOP, nothing can be
+> flat - we need photorealistic textures and materials and ambient light
+> refractions, so we need the editor to function like it's a real premium editor
+> of 3D UI's - it's all gotta be premium, and the mock watch app also needs to
+> be premium and have all the elements that a real app would have and the
+> functionality and navigation and running on the prism runtime. it's time to
+> finish it all up, polish, make sure it all actually works - remembering that
+> this prototype is going to be eventually integrated into a larger ai app
+> builder as the preview window (imagine a typical ai app builder with streaming
+> chat on the left and preview window on the right - this prototype is the
+> preview window on the right but it also has galaxy mode which is the file
+> editor replacement - so there's no file editor but instead the galaxy mode
+> shows all the hubs and nodes in unbuilt status in the cool solar system type
+> of display so [users] can find the elements/pages of what they are building
+> and edit the elements functionality in the node editor in galaxy, but the
+> heavy visual edits are done in the canvas editor, which the canvas editor is
+> the built status of those nodes that are in galaxy mode, and preview is also
+> the built status but preview is the preview of what the user's app will look
+> [like] when the user ships the app that they're building. so, the watch app is
+> a mock app but it should look like a shippable app in preview, naturally. the
+> relationship between galaxy and canvas and preview is critical and it's in the
+> spec... I do want to finish it up, polish it, make sure it all works, make
+> sure it functionally works as well for editing apps, and to test every button
+> and editing capability. it needs to be made shippable, both the prototype
+> editor and the actual mock app. so, that's why the relationship between the
+> prototype editor and the mock app that is being built with the editor is
+> critical. there can't be an element in the ui of the watch app without there
+> being a node for it in galaxy mode - that's the relationship because the
+> galaxy mode shows all those nodes unbuilt status and then when built that's
+> when it's visible in the preview and canvas - it's in the spec. so, I need you
+> to ultrathink and use that big fable 5 brain to finally help me bring this to
+> completion so I can finally move to the next phase which is integrating the
+> larger ai app builder. just for a little more context - think of our prototype
+> editor as the preview window in Claude design - I have yet to integrate the
+> whole prompt to app system and ui - however, we will do that later. so the
+> node system is critical for each node to be able to build individually and for
+> the prism runtime that we've spec'd out to be truly ready for users to build
+> ANY app, not just that watch app, but any app to be built and edited using the
+> canvas and galaxy modes.
+
+(Bracketed words are minimal typo normalizations, per the source file.)
+
+### How the parity law is enforced (FINISH F-2)
+
+- `scripts/galaxy-parity-gate.mjs` enforces BOTH directions permanently:
+  Direction A (every mounted UI element → graph node → galaxy representation)
+  and Direction B (every first-class galaxy element → a real BUILT artifact in
+  canvas, stage-0 unbuilt nodes exempt and asserted absent from preview).
+  `npm run verify:parity` is the live gate (needs the dev server);
+  `npm run verify:parity-static` is the graph-level half, wired into
+  `npm run verify`.
+- The in-page probe `window.__PRISM_GALAXY_PARITY__` (src/app/page.tsx)
+  evaluates the real `galaxy-semantics.ts` module against the live store; the
+  gate cross-checks its script-side mirror (`scripts/lib/galaxy-roles.mjs`)
+  against it every run, so mirror drift is machine-caught.
+- Counts shown to the user tell ONE element-level story across views: the
+  minimap and hub pills always show the galaxy first-level projection count
+  ("elements" — clusters count once; app-shell/hit-target/decoration
+  implementation atoms collapsed), in galaxy, canvas, and preview alike.
+- Preview remains non-authoring: the canvas camera-lock sub-mode formerly
+  labeled "Edit in Preview" is renamed "Shipped Frame" so it can never read as
+  authoring from Preview (it never leaves canvas; the flag resets on any mode
+  change).

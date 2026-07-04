@@ -59,12 +59,17 @@ export function easeInOutCubic(t: number): number {
 // Worn-alloy PBR sets live under this dir (shared with the chassis).
 export const TEXTURE_DIR = '/prism-mock/editor/textures/chassis-worn';
 export const ENV_MAP_URL = '/prism-mock/editor/env/studio.png';
-export const FONT_URL = '/fonts/Inter-Variable.ttf';
+// FINISH F-1 — engraved labels move to Sora (the sanctioned non-grotesque
+// geometric display face; Inter is a grotesque and is banned from labels).
+export const FONT_URL = '/fonts/ui/Sora-Variable.ttf';
 
 // ── Animatable property tracks ──────────────────────────────────────────────────
 // Each track binds to one numeric property of the selected node. The worn-alloy
-// `textureKey` (a chassis jewel-tone set) tints its fader knob; `min`/`max` map a
-// value to a horizontal position along the groove.
+// `textureKey` picks its fader knob's PBR set; `min`/`max` map a value to a
+// horizontal position along the groove. FINISH F-1: the jewel-tone rainbow is
+// retired — every fader knob is the same worn signal-red alloy (oxblood set,
+// red-tinted in TrackKnobs); track identity lives in the engraved label, the
+// brand in the one red (the toolbar's RED/BLACK/WHITE system).
 export interface TrackDef {
   id: string; // property key on the node (e.g. 'posY')
   label: string; // ENGRAVED into the glass at the groove's left
@@ -75,9 +80,9 @@ export interface TrackDef {
 }
 
 export const TRACKS: TrackDef[] = [
-  { id: 'posY', label: 'RISE', textureKey: 'sapphire', min: -1.1, max: 1.1 },
-  { id: 'scale', label: 'SCALE', textureKey: 'emerald', min: 0.5, max: 1.5 },
-  { id: 'rotZ', label: 'SPIN', textureKey: 'bronze', min: -Math.PI, max: Math.PI, unit: 'rad' },
+  { id: 'posY', label: 'RISE', textureKey: 'oxblood', min: -1.1, max: 1.1 },
+  { id: 'scale', label: 'SCALE', textureKey: 'oxblood', min: 0.5, max: 1.5 },
+  { id: 'rotZ', label: 'SPIN', textureKey: 'oxblood', min: -Math.PI, max: Math.PI, unit: 'rad' },
   { id: 'opacity', label: 'FADE', textureKey: 'oxblood', min: 0.12, max: 1 },
 ];
 

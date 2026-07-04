@@ -1,5 +1,5 @@
 {
-  "url": "http://localhost:3001/editor",
+  "url": "http://localhost:3000/editor",
   "selfTest": {
     "live": true,
     "caughtCount": 2

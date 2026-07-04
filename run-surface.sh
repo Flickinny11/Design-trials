@@ -12,7 +12,9 @@ LIVE="$D/kid-kode-landing/notes/SENTINEL-LIVE.md"
 STATUS="$D/chain-status.txt"
 RUNLOG="$D/chain-$NAME-run.log"
 WEBHOOK_FILE="$D/.notify-webhook"   # optional: put an ntfy.sh/webhook URL here for phone push
-MODEL="claude-opus-4-8"; MAXRESUMES=10; RESUMES=0
+PREFLIGHT="$D/kid-kode-landing/scripts/prism-autonomy-preflight.mjs"
+WORKSPACE_SPEC="$D/kid-kode-landing/docs/prism/PRISM-WORKSPACE-COMPLETION-SPEC.md"
+MODEL="${HARNESS_MODEL:-claude-fable-5}"; MAXRESUMES=10; RESUMES=0
 SEEN_COMPLETE=0; SEEN_BLOCKED=0; HB=0
 START_EPOCH=$(date +%s)
 ts(){ date +%H:%M:%S; }
@@ -27,7 +29,7 @@ notify(){
   echo "[$(ts)] CHAIN/$NAME: $msg" >> "$FEED"
   echo "[$(ts)] $NAME · $(elapsed) · agent=$(agents) · $msg" >> "$LIVE"
   echo "[$(ts)] $NAME: $msg" > "$STATUS"
-  osascript -e "display notification \"$msg\" with title \"Prism · $NAME\" sound name \"$sound\"" >/dev/null 2>&1
+  ( osascript -e "display notification \"$msg\" with title \"Prism · $NAME\" sound name \"$sound\"" >/dev/null 2>&1 < /dev/null || true ) &
   [ -f "$WEBHOOK_FILE" ] && curl -s -m 5 -d "[$NAME] $msg" "$(cat "$WEBHOOK_FILE")" >/dev/null 2>&1
   return 0
 }
@@ -35,7 +37,25 @@ cmark(){ { [ -f "$REPORT" ] && grep -qF "$CMARK" "$REPORT" 2>/dev/null; } || { [
 bmark(){ { [ -f "$REPORT" ] && grep -qF "$BMARK" "$REPORT" 2>/dev/null; } || { [ -f "$RUNLOG" ] && grep -qF "$BMARK" "$RUNLOG" 2>/dev/null; }; }
 terminal(){ cmark || bmark; }
 session_open(){ local p; p=$(unset NODE_ENV; cd /tmp && "$CLAUDE" -p "Say OK" --model "$MODEL" --output-format text < /dev/null 2>&1 | tail -1); echo "$p" | grep -q "OK"; }
-launch(){ unset NODE_ENV; ( nohup "$CLAUDE" -p "$(cat "$PROMPT")" --model "$MODEL" --permission-mode bypassPermissions --output-format text < /dev/null > "$RUNLOG" 2>&1 & ); notify "launched build agent on $MODEL (resume #$RESUMES)"; }
+preflight(){
+  [ -f "$PREFLIGHT" ] || return 0
+  local args=(--prompt "$PROMPT")
+  case "$(basename "$PROMPT")" in
+    PRISM-WS-W3-PROMPT.md|PRISM-WS-W4-PROMPT.md|PRISM-WS-W5-PROMPT.md)
+      [ -f "$WORKSPACE_SPEC" ] && args+=(--spec "$WORKSPACE_SPEC")
+      ;;
+  esac
+  node "$PREFLIGHT" "${args[@]}" > "$RUNLOG.preflight" 2>&1
+}
+launch(){
+  if ! preflight; then
+    notify "PREFLIGHT BLOCKED launch. See $RUNLOG.preflight" "Basso"
+    return 99
+  fi
+  unset NODE_ENV
+  ( nohup "$CLAUDE" -p "$(cat "$PROMPT")" --model "$MODEL" --permission-mode bypassPermissions --output-format text < /dev/null > "$RUNLOG" 2>&1 & )
+  notify "launched build agent on $MODEL (resume #$RESUMES)"
+}
 { echo ""; echo "## $NAME run — started $(date '+%Y-%m-%d %H:%M:%S')"; echo "complete marker: '$CMARK'"; } >> "$LIVE"
 notify "ARMED — watching $NAME. Pinging on every commit, heartbeat, stop, and finish." "Submarine"
 LAST_HEAD="$(head_hash)"
@@ -54,5 +74,10 @@ while true; do
   sleep 15; [ "$(agents)" -ne 0 ] && continue
   { [ "$SEEN_COMPLETE" -eq 1 ] || [ "$SEEN_BLOCKED" -eq 1 ] || terminal; } && continue
   if [ "$RESUMES" -ge "$MAXRESUMES" ]; then notify "cap ($MAXRESUMES) reached without terminal marker — exiting." "Sosumi"; exit 3; fi
-  if session_open; then RESUMES=$((RESUMES+1)); launch; else notify "session window closed — waiting 900s" "Tink"; sleep 900; fi
+  if session_open; then
+    RESUMES=$((RESUMES+1))
+    launch || exit 1
+  else
+    notify "session window closed — waiting 900s" "Tink"; sleep 900
+  fi
 done
