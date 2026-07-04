@@ -35,6 +35,7 @@ import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { usePreviewStateStore } from '@/stores/usePreviewStateStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
 import { evalScrubPose } from '@/lib/prism-graph/keyframe-scrub';
 import type { PrismKeyframe, PrismNode } from '@/lib/prism-graph/types';
@@ -264,7 +265,11 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
   // intent — this overlay never writes source directly).
   const addKeyframe = useCallback(() => {
     if (!node || !nodeId) return;
-    const ct = node.canvasTransform ?? {
+    // FINISH F-4 fix: snapshot the COMPOSED pose (source ⊕ preview patch), not
+    // the raw source node — a gizmo drag stages canvasTransform into the
+    // preview buffer, and "capture" must record the pose the user is LOOKING
+    // at, not the last-saved one. (Same composed read the scrub driver uses.)
+    const ct = composedNodeById(nodeId)?.canvasTransform ?? node.canvasTransform ?? {
       x: 0, y: 0, z: 0, rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1, scaleZ: 1,
     };
     const kf = captureCanvasTransformAsKeyframe(ct, { trigger: 'load', t: phRef.current });
@@ -341,6 +346,13 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
 // Desktop bottom strip — the clip-EXPAND envelope (transform/clip only).
 function DesktopStrip({ open, children }: { open: boolean; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement | null>(null);
+  // FINISH F-4 de-collision (same class as the F-1 toolbar-rail inset and the
+  // F-3 HubNav shift): while the Inspector dock is up it covers the strip's
+  // right edge — the per-lane capture keys sat unreachable under the glass.
+  // Inset the strip clear of the dock (md:w-[484px] + right-3 + gutter).
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -364,8 +376,11 @@ function DesktopStrip({ open, children }: { open: boolean; children: React.React
       ref={ref}
       data-component="keyframe-editor"
       // left inset clears the vertical toolbar rail (the rail was covering the
-      // instrument's header + title — FINISH F-1 de-collision).
-      className="absolute z-40 bottom-0 left-[114px] right-0 pointer-events-none"
+      // instrument's header + title — FINISH F-1 de-collision). Right inset
+      // clears the Inspector dock while it is open (FINISH F-4 de-collision).
+      className={`absolute z-40 bottom-0 left-[114px] pointer-events-none ${
+        inspectorDockOpen ? 'right-0 md:right-[508px]' : 'right-0'
+      }`}
       style={{ visibility: 'hidden' }}
     >
       {children}

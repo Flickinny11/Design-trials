@@ -95,7 +95,7 @@ export default function CanvasCameraHud() {
   // locked, so show the exit control. ─
   if (editInPreview) {
     return (
-      <div className={`absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none top-[60px] md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
+      <div className={`absolute z-50 pointer-events-none select-none max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] md:left-1/2 md:-translate-x-1/2 md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
         <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2.5 rounded-full pl-3 pr-1.5 py-1.5"
           style={{ boxShadow: '0 0 0 1px rgba(var(--ds-metal-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb),0.5)' }}>
           <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-metal-200)', boxShadow: '0 0 7px var(--ds-metal-200)' }} />
@@ -114,9 +114,12 @@ export default function CanvasCameraHud() {
   }
 
   return (
-    <div className={`absolute left-1/2 -translate-x-1/2 z-50 pointer-events-none select-none flex flex-col items-center gap-2 top-[60px] md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
+    <div className={`absolute z-50 pointer-events-none select-none flex flex-col gap-2 max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] max-md:items-end md:left-1/2 md:-translate-x-1/2 md:top-auto md:items-center ${hudBottomLift} transition-[bottom] duration-300`}>
       {/* Mobile anchors to the TOP scene band so the Inspector bottom-sheet
-          can't occlude it; desktop/tablet sit bottom-centre. When the keyframe
+          can't occlude it; desktop/tablet sit bottom-centre. FINISH F-4
+          de-collision: on compact the centred stack overlapped the toolbar
+          rail's first cubes (the HUD glass ate taps on the Transform cube) —
+          right-anchor it below the tips bulb instead. When the keyframe
           strip is open the whole HUD stack lifts above it (FINISH F-1). */}
 
       {/* ── P1: camera instrument ─────────────────────────────────────────── */}
