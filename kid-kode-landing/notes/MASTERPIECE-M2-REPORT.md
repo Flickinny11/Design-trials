@@ -150,21 +150,21 @@ thin stubs ("Footer legal line.").
   caption richness ≥ 40 chars, behaviorSpec shape, behavior coherence
   [functionBinding ⇒ mirrored interaction], motion coherence, artifact
   coherence per renderMode, contracts), wired into `npm run verify` as
-  `verify:schema`. **336/336 nodes PASS.** A regression (stub intent, an
+  `verify:schema`. **338/338 nodes PASS** (incl. the folio + scrim nodes added by the pass). A regression (stub intent, an
   unmirrored binding, a contentless text node) now fails the build.
 
 ## 5 · Task 5 — full board (all fresh this run)
 
 | Gate | Result |
 |---|---|
-| `npm run verify` (prism 15 + repair-loop + galaxy + global-shell + parity-static + **schema NEW**) | ALL GREEN |
+| `npm run verify` (prism 15 + repair-loop + galaxy + global-shell + parity-static + **schema NEW**) | ALL GREEN (re-run after every judge-fix round) |
 | `verify:parity` LIVE bidirectional (GATE_URL=:3001) | **13/13** (146 content nodes, all BUILT) |
 | node-authorship LIVE (`--` :3001) | **9/9** (162 node-authored artifacts, zero hardcoded, no page errors) |
 | typecheck:gate | 0 new (baseline 9) |
 | gate:no-dom-ui | PASS (44 files) |
 | secret scan (graph + src/lib + src/components) | clean |
-| focused tests (`glyph-shapes.test.ts`) | 5/5 |
-| runtime proof harness | 11/11, 0 page/console errors |
+| focused tests (`tests/text/glyph-shapes.test.ts`, in the DEFAULT suite) | 5/5 |
+| runtime proof harness | 11/11, 0 page/console errors (re-run with preview-nav assertions after judge R1) |
 | Both viewports | 6 hubs × desktop 1600×900 + mobile 390×844, before AND after |
 
 ## 6 · Judge verdicts (fresh-context Fable 5, masterpiece bar)
@@ -236,7 +236,21 @@ queued for the next data pass. Board re-run after the fixes: static chain
 ALL GREEN, parity live 13/13, tsc 0-new, glyph suite 5/5 (now in the default
 suite), schema gate 338/338 (the two scrim nodes are complete schemas).
 
-### Round 3 — _appended below after re-judging._
+### Round 3 — **user-advocate: MASTERPIECE: YES (unhedged), 0 MUST-FIX**
+
+Fresh context, anti-rubber-stamp verified (every frame byte-matched to its
+commit blob via git hash-object): all three round-2 regions PASS on zoom
+crops — the desktop Celestia copy reads in full in BOTH orbit phases (and
+the judge extracted the round-1 frame from history to confirm the fix is
+"real, not a lucky phase"); the s1/s2 folio numerals read on their scrim
+bands, which "at zoom read as chrome that was always there"; mobile s4
+framing proven compositionally unchanged (matched crops across rounds).
+Regression sweep of all 12 frames: nothing newly broken. Remaining
+should-fixes (scrim left-edge feather on s4 phase-1, +2px mobile-s3 footer
+air, the carried s5 seam) are logged in §7.
+
+**Final verdict pair: prism-criteria-reviewer PASS 0 MUST-FIX ·
+user-advocate MASTERPIECE: YES.**
 
 ## 7 · Founder follow-ups
 
@@ -249,6 +263,10 @@ suite), schema gate 338/338 (the two scrim nodes are complete schemas).
    at the root (engine fix `415aeeb6`).
 4. Chapter-folio copy (`I · ARRIVAL` … `VI · YOUR COMMISSION`) is authored
    data — one command re-words all six if you want different chapter names.
+5. Advocate round-3 should-fixes queued for the next data pass: feather/extend
+   the s4 subhead scrim's left edge (phase-1 bloom bleed), +2px air between
+   the s3 mobile closing line and the footer rule, the s5 receive-panel
+   horizontal seam + dim receive copy at 390px.
 
 ## 8 · Evidence index
 
@@ -259,3 +277,7 @@ suite), schema gate 338/338 (the two scrim nodes are complete schemas).
 - Scripts: `scripts/m2-masterpiece-polish.mjs`, `scripts/_m2-runtime-proof.mjs`, `scripts/m2-schema-sync.mjs`, `scripts/schema-completeness-gate.mjs`
 - Engine fix: `src/lib/prism/text/text-object-3d.ts` (`contoursToShapes`) + `src/lib/prism/text/glyph-shapes.test.ts`
 - Gate side-outputs: `notes/verification/finish-f2/galaxy-parity-gate.json`, `notes/verification/fix1/node-authorship-gate.json` (refreshed, per precedent)
+
+---
+
+PRISM-MASTERPIECE-M2: RUN COMPLETE

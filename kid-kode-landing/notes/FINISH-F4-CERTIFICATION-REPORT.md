@@ -568,4 +568,34 @@ in the report. Prior-phase evidence: `notes/verification/finish-f{1,2,3}/`.
 **The founder performs the merge decision.** Nothing in this run merged
 anything; the branch is pushed and certified.
 
+---
+
+## ADDENDUM 2026-07-04 — MASTERPIECE M-1 + M-2 land on this same branch
+
+Two further certified runs sit on top of the F-4 certification, same branch:
+
+- **MASTERPIECE M-1** (`b299a268`) — toolbar + keyframe-editor masterpiece
+  pass. Eval A "MASTERPIECE: YES" (unhedged, 5 judge rounds), eval B
+  first-time-user journey 6/6. Report: `notes/MASTERPIECE-M1-REPORT.md`.
+- **MASTERPIECE M-2** (HEAD) — watch-app masterpiece pass (ONE machined-brass
+  headline system; the four-run-old "gold glyph" fixed at the engine root
+  with a regression suite; chapter folios I–VI; mobile recompositions),
+  true-runtime proof 11/11, node-editor shippable certification (capability
+  matrix vs both NODE-EDITOR specs), and the NEW schema-completeness gate
+  (`verify:schema`, 338/338) wired into `npm run verify`. Judges:
+  criteria-reviewer PASS 0 MUST-FIX (round 2), user-advocate
+  "MASTERPIECE: YES" unhedged (round 3). Report:
+  `notes/MASTERPIECE-M2-REPORT.md`.
+
+The **merge commands above remain current verbatim** — M-1/M-2 only added
+commits to `codex/prism-recovery-harness-20260630`, so both ancestry facts
+still hold (targets fast-forward; `--no-ff` optional). Suggested updated
+merge message for step 1:
+`merge: FINISH chain + MASTERPIECE M-1/M-2 certified — recovery harness → editor build`.
+Two closures since the F-4 signoff list: item 6 (amber CTA contrast) is
+CLOSED — M-2 lifted the RESERVE + complication slabs as data; the F-3
+"gold-glyph" thread is CLOSED at the root (`contoursToShapes`,
+`tests/text/glyph-shapes.test.ts`). The merge itself remains the founder's
+call.
+
 PRISM-FINISH-F4: RUN COMPLETE
