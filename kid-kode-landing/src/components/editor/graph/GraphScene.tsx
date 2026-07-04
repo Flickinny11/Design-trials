@@ -44,6 +44,7 @@ import {
   GIZMO_ROTATE_SNAP,
   GIZMO_SCALE_SNAP,
 } from '@/stores/useGraphEditorStore';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useElementImageStore } from '@/stores/useElementImageStore';
 import {
   usePreviewStateStore,
@@ -2541,6 +2542,15 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   const viewMode = useGraphEditorStore((s) => s.viewMode);
   const editorMode = useGraphEditorStore((s) => s.editorMode);
   const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  // MASTERPIECE M-1 (advocate MUST-FIX, one-layer-per-band on compact): on a
+  // compact pane the selection DetailCard shares the band the gizmo's axis
+  // arrows sweep through, and the saturated arrows read straight through the
+  // translucent card. While the card is up, the gizmo yields — the same yield
+  // idiom the camera HUD uses; it remounts the moment the card closes (open
+  // the Inspector or deselect).
+  const density = useEditorDensity();
+  const inspectorOpenForYield = useGraphEditorStore((s) => s.inspectorOpen);
+  const compactCardUp = density === 'compact' && !inspectorOpenForYield;
   // EDITOR-EXP P4 (C22 / D-DRAG) — Transform tools author the node's OWN schema
   // field (scenePosition), but now via the STAGING overlay (usePreviewStateStore),
   // not a direct source write. (STEP8 canvas-spec SC-9 named scenePosition the
@@ -2676,7 +2686,8 @@ function CanvasTransformGizmo({ nodes }: { nodes: PrismNode[] }) {
   }, [isCanvasMode, isEditMode, nodeId, stagePreview, setMode, toggleGizmoSpace, node]);
 
   // STEP8 — never mount handles on a locked node (canvas-spec §5 lock/unlock).
-  if (!isCanvasMode || !isEditMode || !node || isLocked) return null;
+  // M-1: on compact the gizmo also yields while the DetailCard is up (above).
+  if (!isCanvasMode || !isEditMode || !node || isLocked || compactCardUp) return null;
 
   const sp = readSceneTransform(node);
   const ct = readCanvasTransform(node);
