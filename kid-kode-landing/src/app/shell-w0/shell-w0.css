@@ -214,6 +214,17 @@
   letter-spacing: 0.12em;
   color: var(--pp-text-mid);
 }
+.sw0-specimen {
+  font-family: var(--tb-display);
+  font-size: 42px;
+  font-weight: 480;
+  line-height: 1.05;
+  color: var(--pp-text-hi);
+  margin: 0;
+  border-bottom: var(--pp-hairline-w) solid var(--pp-hairline);
+  padding-bottom: var(--pp-space-3);
+}
+
 .sw0-comps {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -534,6 +545,9 @@
   }
   .sw0-launch-headline {
     font-size: 23px;
+  }
+  .sw0-specimen {
+    font-size: 28px;
   }
 }
 

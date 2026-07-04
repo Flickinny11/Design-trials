@@ -120,8 +120,11 @@ function IconRig({
   useFrame(({ clock }) => {
     if (!group.current) return;
     const t = clock.getElapsedTime();
-    group.current.rotation.y = phase + t * 0.35;
-    group.current.rotation.x = Math.sin(t * 0.5 + phase) * 0.07;
+    // Turntable sway around a 3/4 hero pose — every icon holds a readable
+    // angle at every instant (a full spin leaves some form edge-on in any
+    // given frame) while speculars keep traveling across the metal (DL4).
+    group.current.rotation.y = -0.38 + Math.sin(t * 0.55 + phase) * 0.32;
+    group.current.rotation.x = 0.14 + Math.sin(t * 0.5 + phase) * 0.06;
   });
   return (
     <group position={position}>
@@ -254,30 +257,52 @@ function IconChat({ m }: { m: Materials }) {
 }
 
 // ── The set — 3 × 2 grid inside one canvas ──────────────────────────────────
+//
+// The camera is ORTHOGRAPHIC and each icon's position derives from the live
+// viewport, so world x/y map linearly onto the DOM label grid (3 columns × 2
+// rows) — every icon sits exactly over its engraved label at any aspect. A
+// perspective camera would project the edge cells inward off their labels
+// (advocate round-1 MUST-FIX). Depth still reads through material shading,
+// IBL speculars, and per-icon idle rotation.
 
 const GRID: {
   key: string;
-  position: [number, number, number];
+  col: number; // 0..2 — matches .sw0-icon-labels columns
+  row: number; // 0 top, 1 bottom
   Icon: (props: { m: Materials }) => React.ReactElement;
 }[] = [
-  { key: 'build', position: [-2.4, 1.15, 0], Icon: IconBuild },
-  { key: 'deploy', position: [0, 1.15, 0], Icon: IconDeploy },
-  { key: 'integrate', position: [2.4, 1.15, 0], Icon: IconIntegrate },
-  { key: 'project', position: [-2.4, -1.25, 0], Icon: IconProject },
-  { key: 'settings', position: [0, -1.25, 0], Icon: IconSettings },
-  { key: 'chat', position: [2.4, -1.25, 0], Icon: IconChat },
+  { key: 'build', col: 0, row: 0, Icon: IconBuild },
+  { key: 'deploy', col: 1, row: 0, Icon: IconDeploy },
+  { key: 'integrate', col: 2, row: 0, Icon: IconIntegrate },
+  { key: 'project', col: 0, row: 1, Icon: IconProject },
+  { key: 'settings', col: 1, row: 1, Icon: IconSettings },
+  { key: 'chat', col: 2, row: 1, Icon: IconChat },
 ];
 
 function IconField() {
   const m = useMaterials();
+  const { width: vw, height: vh } = useThree((s) => s.viewport);
   useEffect(() => () => {
     for (const mat of Object.values(m)) mat.dispose();
   }, [m]);
+  // Cell centers in world units (ortho ⇒ linear map to the DOM overlay grid).
+  const cellW = vw / 3;
+  const cellH = vh / 2;
+  // Icons are authored ~±0.95 world units around the origin; 0.46 keeps the
+  // tallest form (build's keystone) inside the stage with margin while the
+  // labels keep the bottom band of each cell.
+  const scale = Math.min(cellW, cellH) * 0.46;
   return (
     <>
-      {GRID.map(({ key, position, Icon }, i) => (
-        <IconRig key={key} position={position} phase={i * 0.9}>
-          <Icon m={m} />
+      {GRID.map(({ key, col, row, Icon }, i) => (
+        <IconRig
+          key={key}
+          position={[(col - 1) * cellW, (row === 0 ? 1 : -1) * (cellH / 2), 0]}
+          phase={i * 0.9}
+        >
+          <group scale={scale}>
+            <Icon m={m} />
+          </group>
         </IconRig>
       ))}
     </>
@@ -289,7 +314,8 @@ export default function PremiumIconSet() {
   return (
     <Canvas
       dpr={[1, 2]}
-      camera={{ position: [0, 0, 7.4], fov: 35 }}
+      orthographic
+      camera={{ position: [0, 0, 10], zoom: 100, near: 0.1, far: 100 }}
       gl={{ antialias: true, alpha: true }}
       style={{ width: '100%', height: '100%' }}
     >

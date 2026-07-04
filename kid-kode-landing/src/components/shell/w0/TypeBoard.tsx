@@ -34,6 +34,11 @@ export default function TypeBoard({ name, axes, displayFamily, monoFamily, winne
         <h3 className="sw0-pairing-name">{name}</h3>
         <span className="sw0-pairing-axes">{axes}</span>
       </div>
+      {/* Specimen line — distinctive glyphs (Q g & ff figures) at display size
+          so the three serifs' differences read at founder-sign-off distance. */}
+      <p className="sw0-specimen" aria-hidden="true">
+        Quixotic glyphs &amp; figures — Qg ff 0139
+      </p>
       <div className="sw0-comps">
         <div className="sw0-panel sw0-comp-card">
           <span className="sw0-status-chip">Building · wave 3</span>

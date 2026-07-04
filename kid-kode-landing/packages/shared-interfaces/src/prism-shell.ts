@@ -26,9 +26,12 @@ import { z } from 'zod';
 
 // ── Version ──────────────────────────────────────────────────────────────────
 
-/** Wire version of the shell↔engine contract. Bump on any additive change to
- *  the message shapes; parsers reject envelopes from a NEWER major than they
- *  understand rather than guessing. */
+/** Wire version of the shell↔engine contract. At v1 the policy is EXACT-MATCH:
+ *  `z.literal(1)` in the envelopes means parsers reject ANY other version —
+ *  older or newer — rather than guessing at unknown shapes. When W1 wires the
+ *  transport, an explicit compatibility policy (e.g. accept same-major) must
+ *  be encoded IN THE SCHEMA at the same time the version first bumps; until
+ *  then, both sides ship from this one module so versions cannot skew. */
 export const PRISM_SHELL_CONTRACT_VERSION = 1 as const;
 
 // ── Shared primitives ────────────────────────────────────────────────────────

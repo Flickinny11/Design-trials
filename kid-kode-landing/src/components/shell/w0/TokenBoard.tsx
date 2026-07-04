@@ -11,14 +11,36 @@ import {
   CHROME_LO,
 } from '@/components/shell/design/prism-premium-tokens';
 
+/** Relative luminance of a #rrggbb hex (sRGB, WCAG formula) — picks the label
+ *  ink per swatch so every token name is legible on its own chip (advocate
+ *  round-1 MUST-FIX: light-on-light and red-on-red labels were unreadable). */
+function hexLuminance(hex: string): number {
+  const c = (i: number) => {
+    const v = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  };
+  return 0.2126 * c(1) + 0.7152 * c(3) + 0.0722 * c(5);
+}
+
 function SwatchRow({ items }: { items: { label: string; color: string }[] }) {
   return (
     <div className="sw0-swatch-row">
-      {items.map((s) => (
-        <div key={s.label} className="sw0-swatch" style={{ background: s.color }}>
-          <span className="sw0-swatch-label">{s.label}</span>
-        </div>
-      ))}
+      {items.map((s) => {
+        const light = hexLuminance(s.color) > 0.25;
+        return (
+          <div key={s.label} className="sw0-swatch" style={{ background: s.color }}>
+            <span
+              className="sw0-swatch-label"
+              style={{
+                color: light ? '#0b0b10' : '#f6f8fb',
+                textShadow: light ? '0 1px 0 rgba(246,248,251,0.35)' : '0 1px 1px rgba(0,0,0,0.75)',
+              }}
+            >
+              {s.label}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
