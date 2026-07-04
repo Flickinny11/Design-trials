@@ -112,8 +112,22 @@ honest stub for W5/W5B (host adapters, domains, "make profitable").
 - The launchpad Build object's label sits close to the small 3D form; acceptable and
   consistent with the certified intake button, could get a dedicated larger host. *W6.*
 
-## Dual judges
-See the two verdicts appended below after the review pass.
+## Dual judges — both PASS
+- **prism-criteria-reviewer — PASS (0 MUST-FIX).** All criteria MET with file:line
+  (S3-1..5, E1, E6, E13, I11, DL, BOUNDARY). Confirmed Law-0 node-authorship is out of
+  scope (shell app-frame, renders null inside the engine iframe — no graph-scene
+  collision), tsc 0-new, canvas `/` untouched, isolation sweep 30/30. Nits non-blocking.
+- **user-advocate — round 1: 1 MUST-FIX** (primary "Build" CTA label/sublabel
+  overlaid on the bright red 3D gem → letters collided with facets at low contrast,
+  sublabel bisected). Fixed same round (commit `03a05064`): fixed 236×112 host, label +
+  sublabel composited BELOW the jewel on the dark pedestal with contrast plates.
+  **Re-verify — PLEASED, gate CLEAR** (desktop/08 closeup + desktop/01 + mobile/01;
+  "no facet collision, no bisected sublabel", both viewports). One non-blocking taste
+  flag (Next.js dev `N` overlay grazes a link on the mobile full-page capture — a
+  dev-only indicator, absent in production).
+
+## Marker
+`PRISM-SHELL-W4: RUN COMPLETE`
 
 ## W5 readiness
 `buildState` + the E1 timeline are the Conductor's checkpoint substrate (Founder lock
