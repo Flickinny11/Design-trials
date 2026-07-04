@@ -44,6 +44,11 @@ export {
   rbwAlpha,
 };
 
+/** Machined steel — mid-luminance metal between gunmetal and chrome. A 3D
+ *  MATERIAL value (not a UI palette token) for showpiece forms that must hold
+ *  their own against a chrome sibling (e.g. the integrate link). */
+export const STEEL = '#6a707a';
+
 /** DL1 — true-black OLED base + machined grey elevation steps.
  *  Steps 1/2/4 are the premium.ts GUNMETAL family; 3/5 are its interpolated
  *  neighbors (5 = the RBW keycap top stop). */

@@ -28,6 +28,7 @@ import {
   RED_HOT,
   SIGNAL_RED,
   SMOKED_GLASS,
+  STEEL,
 } from '@/components/shell/design/prism-premium-tokens';
 
 // ── Local procedural IBL (no remote HDRI — the 2026-06-29 crash class) ──────
@@ -64,7 +65,7 @@ function useMaterials() {
     // Steel — a mid-luminance machined metal between gunmetal and chrome, for
     // forms that must hold their own against a chrome sibling (integrate).
     const steel = new THREE.MeshStandardMaterial({
-      color: '#6a707a',
+      color: STEEL,
       metalness: 0.92,
       roughness: 0.3,
     });
