@@ -395,8 +395,9 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
     return (
       // M-1: open at HALF so the canvas — and the node the scrub is driving —
       // stays visible above the sheet; the instrument's whole point is watching
-      // the element answer the playhead. Drag up for full when needed.
-      <BottomSheet id="keyframe" open={open} onClose={onClose} kicker="TIMELINE" title="Keyframe Editor" initialSnap="half">
+      // the element answer the playhead. contentFit caps every snap at the
+      // instrument's real height, so the sheet never rises as an empty takeover.
+      <BottomSheet id="keyframe" open={open} onClose={onClose} kicker="TIMELINE" title="Keyframe Editor" initialSnap="half" contentFit>
         {body}
       </BottomSheet>
     );
@@ -550,7 +551,9 @@ function KeyframeBody(props: {
             >
               {count} {count === 1 ? 'KEY' : 'KEYS'}
             </span>
-            <span className="text-[9px] font-mono truncate hidden lg:inline" style={{ color: 'var(--ds-text-mid)' }}>· {selectionLabel}</span>
+            {/* advocate SHOULD-FIX: 9px grey mono read as noise at 1:1 — one
+                step up + chrome-low so the strapline is legible, still quiet. */}
+            <span className="text-[10px] font-mono truncate hidden lg:inline" style={{ color: CHROME_LO }}>· {selectionLabel}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <button type="button" onClick={() => setPlaying((p) => !p)} title={playing ? 'Pause' : 'Play'}

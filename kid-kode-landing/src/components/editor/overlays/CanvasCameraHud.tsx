@@ -53,6 +53,15 @@ export default function CanvasCameraHud() {
   // clear band ABOVE the rail instead.
   const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
   const hudBottomLift = keyframePanelOpen ? 'md:bottom-[318px]' : 'md:bottom-[84px]';
+  // MASTERPIECE M-1 (advocate MUST-FIX, one-layer-per-band): on compact the
+  // HUD stack shares the top-right band with the selection DetailCard — the
+  // pills used to float OVER the card's content. While the card is up, the
+  // HUD yields (fades out, non-interactive); it returns the moment the card
+  // closes. Desktop keeps both (different bands there).
+  const selectedNodeId = useGraphEditorStore((s) => s.selectedNodeId);
+  const inspectorOpen = useGraphEditorStore((s) => s.inspectorOpen);
+  const detailCardOpen = selectedNodeId !== null && !inspectorOpen;
+  const hudYield = detailCardOpen ? ' max-md:opacity-0 max-md:pointer-events-none' : '';
 
   const [pulse, setPulse] = useState(false);
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -95,7 +104,7 @@ export default function CanvasCameraHud() {
   // locked, so show the exit control. ─
   if (editInPreview) {
     return (
-      <div className={`absolute z-50 pointer-events-none select-none max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] md:left-1/2 md:-translate-x-1/2 md:top-auto ${hudBottomLift} transition-[bottom] duration-300`}>
+      <div className={`absolute z-50 pointer-events-none select-none max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] md:left-1/2 md:-translate-x-1/2 md:top-auto ${hudBottomLift} transition-[bottom,opacity] duration-300${hudYield}`}>
         <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2.5 rounded-full pl-3 pr-1.5 py-1.5"
           style={{ boxShadow: '0 0 0 1px rgba(var(--ds-metal-200-rgb),0.45), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb),0.5)' }}>
           <span className="w-2 h-2 rounded-full" style={{ background: 'var(--ds-metal-200)', boxShadow: '0 0 7px var(--ds-metal-200)' }} />
@@ -114,7 +123,7 @@ export default function CanvasCameraHud() {
   }
 
   return (
-    <div className={`absolute z-50 pointer-events-none select-none flex flex-col gap-2 max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] max-md:items-end md:left-1/2 md:-translate-x-1/2 md:top-auto md:items-center ${hudBottomLift} transition-[bottom] duration-300`}>
+    <div className={`absolute z-50 pointer-events-none select-none flex flex-col gap-2 max-md:left-auto max-md:right-2 max-md:translate-x-0 max-md:top-[112px] max-md:items-end md:left-1/2 md:-translate-x-1/2 md:top-auto md:items-center ${hudBottomLift} transition-[bottom,opacity] duration-300${hudYield}`}>
       {/* Mobile anchors to the TOP scene band so the Inspector bottom-sheet
           can't occlude it; desktop/tablet sit bottom-centre. FINISH F-4
           de-collision: on compact the centred stack overlapped the toolbar
@@ -166,10 +175,13 @@ export default function CanvasCameraHud() {
 
       {/* ── P2: camera-journey strip ──────────────────────────────────────── */}
       <div className="ds-glass ds-edge--metal ds-reveal pointer-events-auto flex items-center gap-2 rounded-full pl-2.5 pr-1.5 py-1">
-        <span className="text-[8.5px] font-mono tracking-[0.12em]" style={{ color: 'var(--ds-text-mid)' }}>JOURNEY</span>
+        {/* M-1 compact narrowing (advocate MUST-FIX): the strip's left edge ran
+            under the toolbar rail at 390px — drop the word labels on compact so
+            the whole strip fits the space right of the rail. */}
+        <span className="text-[8.5px] font-mono tracking-[0.12em] max-md:hidden" style={{ color: 'var(--ds-text-mid)' }}>JOURNEY</span>
         <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-full"
           style={{ color: journeyCount >= 2 ? 'var(--ds-metal-200)' : 'var(--ds-text-mid)', background: 'rgba(var(--ds-metal-200-rgb),0.08)' }}>
-          {journeyCount} pt{journeyCount === 1 ? '' : 's'}
+          {journeyCount}<span className="max-md:hidden"> pt{journeyCount === 1 ? '' : 's'}</span>
         </span>
         <button type="button" onClick={captureCameraKeyframe} title="Record this camera angle as a journey waypoint"
           className="ds-press flex items-center gap-1.5 h-7 pl-1.5 pr-2.5 rounded-full"

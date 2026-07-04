@@ -148,6 +148,28 @@ export function LiquidGlassToolbar({
           railPointer.current.over = 0;
         }}
       >
+        {/* M-1 compact z-discipline (advocate MUST-FIX): on phones the rail
+            floats over whatever chrome shares the band, and DOM text used to
+            bleed through the transmission glass between the cubes. A machined
+            gunmetal backing sits UNDER the glass canvas on compact only, so the
+            rail reads as one deliberate instrument layer over a quiet ground.
+            Desktop keeps the pure open-glass look. */}
+        {!collapsed && (
+          <div
+            aria-hidden
+            className="md:hidden absolute rounded-[16px] pointer-events-none"
+            style={{
+              left: 7,
+              right: 7,
+              top: 4,
+              bottom: 4,
+              background:
+                'linear-gradient(180deg, rgba(11,11,16,0.78) 0%, rgba(4,6,10,0.82) 50%, rgba(11,11,16,0.78) 100%)',
+              boxShadow:
+                'inset 0 1px 0 rgba(246,248,251,0.07), inset 0 -1px 0 rgba(0,0,0,0.6), 0 10px 30px -12px rgba(0,0,0,0.8)',
+            }}
+          />
+        )}
         {!collapsed && (
           <Canvas
             shadows
