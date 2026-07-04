@@ -8,6 +8,13 @@ const d = JSON.parse(readFileSync('notes/verification/finish-f4/sweep.json', 'ut
 // step-name → primary evidence frame(s). Sections map to the numbered shots
 // the sweep takes around each check.
 const FRAMES = [
+  // mobile rows first (their step text contains the desktop nav phrasing)
+  [/^M: mobile arrival/, 'mobile/M01-arrival.png'],
+  [/^M: app nav .*s2-movement/, 'mobile/M02-s2-movement.png'],
+  [/^M: app nav .*s3-materia/, 'mobile/M03-s3-materia.png'],
+  [/^M: app nav .*s4-celestia/, 'mobile/M04-s4-celestia.png'],
+  [/^M: app nav .*s5-acquire/, 'mobile/M05-s5-acquire.png'],
+  [/^M: app nav .*s6-atelier/, 'mobile/M06-s6-atelier.png'],
   [/boot lands in preview-app/, 'desktop/A01-boot-arrival.png'],
   [/app nav s1-arrival → s2/, 'desktop/A02-s2-movement.png'],
   [/app nav s2-movement → s3/, 'desktop/A03-s3-materia.png'],

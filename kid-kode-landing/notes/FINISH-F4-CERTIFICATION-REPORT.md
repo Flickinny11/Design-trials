@@ -13,9 +13,10 @@ Governing design law for touched chrome: `docs/prism/PRISM-SHELL-DESIGN-LAW-2026
 > app." — certification pass before the prototype becomes the preview window of
 > the larger AI app builder.
 
-VERIFY + FIX-SMALL only. No new features. All fixes below are de-collisions or
-capture-semantics corrections in editor overlay chrome — zero runtime-module,
-zero schema, zero gate-script changes.
+VERIFY + FIX-SMALL only. No new features. All five fixes below are
+de-collisions / staging-fidelity / label-LOD corrections in editor overlay +
+galaxy-label chrome — zero runtime-module, zero schema, zero gate-script
+changes.
 
 ## Fixes made on the spot (Task 1 "fix small failures")
 
@@ -52,6 +53,14 @@ Every fix was found by DRIVING the app (near-human sweep), not by reading code (
    (source ⊕ preview patch) via the same `composedNodeById` the scrub driver
    already uses — capture records what the user is LOOKING at. Write path
    unchanged (still previewState only; FP-15 intact).
+5. **Galaxy fly-in "ghost" (advocate round-1 MUST-FIX)** — the DESTINATION
+   hub's own galaxy title (billboarded MSDF, depthTest OFF, hung 60u above
+   the hub) sat screen-pinned and clipped under the top bar for the entire
+   fly-in, because the fly camera keeps its destination centred and the
+   mobile fly parks ~190u out. FIX: `HubLabels.tsx` — "you are here"
+   suppression (the ACTIVE hub's in-scene title eases out; its name lives in
+   the breadcrumb + lit rail pill) composed with a distance LOD (full ≥160u,
+   gone ≤60u) and an eased dissolve. Full detail in the judge-round section.
 
 ## Gold-glyph root-cause (F-3 queue item — CLOSED, no defect)
 
@@ -100,9 +109,10 @@ outline path". Root-caused this run — the hypothesis is REFUTED:
   graded the CTAs legible and the dim stage zone is the ORRERY design law's
   moody register. A fill change would re-open judged frames for a metric no
   criterion mandates. Founder option, non-blocking.
-- **Mobile galaxy fly-in ghost (advocate watch item)** — timed frame sequence
-  captured this run (mobile/M13a-d at 1s/2.5s/4s/6s after fly-in) for
-  advocate grading; landing asserted machine-side.
+- **Mobile galaxy fly-in ghost (advocate watch item)** — graded by the round-1
+  advocate as a MUST-FIX, then ROOT-CAUSED (it was never a previous-page
+  dissolve — it was the destination hub's own galaxy title) and FIXED
+  (fix #5); the final M13a–d timed sequence shows a clean approach.
 
 ## Task 1+2 — Total interaction sweep + editing certification
 
@@ -209,9 +219,9 @@ check re-verifies 331 nodes / 141 content atoms.
 Measured on the final evidence run (rAF deltas, 150 frames per surface, real
 GPU; input latency = pointerdown → store viewMode flip):
 
-- **Desktop:** galaxy 31fps avg (p95 66.6ms) · canvas 60fps (p95 18.3ms) · preview-app 51fps (p95 33.4ms)
-- **Mobile:** 59fps avg (p95 16.8ms) on the 390×844 touch context
-- **Interaction latency:** mode-switch input→store 0.4ms (~instant);
+- **Desktop:** galaxy 31fps avg (p95 66.6ms) · canvas 60fps (p95 18.6ms) · preview-app 51fps (p95 33.4ms)
+- **Mobile:** 60fps avg (p95 16.7ms) on the 390×844 touch context
+- **Interaction latency:** mode-switch input→store 0.5ms (~instant);
   every control in the sweep responds within its animation envelope.
 - **Feel notes:** canvas is locked at 60fps; preview-app holds ~51fps under
   the full nebula + PBR load; the galaxy overview is the heaviest surface
@@ -278,7 +288,7 @@ under `notes/verification/finish-f4/`.
 | 18 | B: galaxy filter — toggle, type a query, store filter applies, Clear resets | `{"typed":true,"q":"watch","q2":"","cleared":true}` | desktop/B04-galaxy-filter.png | PASS |
 | 19 | B: physical hub hover gives pointer-cursor feedback | `{"cursor":"pointer"}` | (state-assert) | PASS |
 | 20 | B: hub rail — Movement pill flies to the hub | `{"afterPill":"s2-movement"}` | desktop/B02-hub-nav.png | PASS |
-| 21 | B: node hover → DOM label ENLARGES (premium label feature) | `{"ok":true,"element":"Headline","before":0.937454,"after":1.55}` | desktop/B03-hover-label.png | PASS |
+| 21 | B: node hover → DOM label ENLARGES (premium label feature) | `{"ok":true,"element":"Headline","before":0.938028,"after":1.55}` | desktop/B03-hover-label.png | PASS |
 | 22 | B: galaxy node click selects; double-click opens the Inspector (in-hub) | `{"sel":"shell-2_movement-header-bar","insp":true,"physical":false}` | desktop/B07-node-select-inspector.png | PASS |
 | 23 | B: hub rail — Galaxy pill returns to overview | `{"afterGalaxy":null}` | desktop/B02b-overview-return.png | PASS |
 | 24 | B: wheel zoom over the galaxy changes camera distance / zoom level | `{"before":{"d":18,"z":"L4"},"after":{"d":4.682924370261664,"z":"L4"}}` | (state-assert) | PASS |
@@ -309,39 +319,39 @@ under `notes/verification/finish-f4/`.
 | 49 | C: undo/redo hotkeys (⌘Z / ⌘⇧Z) revert and re-apply a source change | `{"p0":4,"p1":5,"after":true,"undone":false,"redone":true}` | (state-assert) | PASS |
 | 50 | C: keyframe dock — open via Animation flyout, capture ×2, scrub DRIVES the node, play, close | `{"dock":true,"bound":{"sel":"orr-arrival-sub","caps":4},"flagTrail":[[true,"orr-arrival-sub"]],"gdrag":{"physical":false,"ct0":0,"ctFinal":0.6,"moved":true,"reselected":true},"capDiag":{"…` | desktop/C14-keyframe-dock.png | PASS |
 | 51 | C: build flyout — Rebuild re-realizes the artifact (remount polled); Add to System re-captions + clears dirty | `{"stillMounted":true,"capBefore":"Hero headline — molten brass poured into","capAfter":"Headline text (text) at [0, 2.62, 0.3]","dirty":null}` | desktop/C11-build-flyout.png | PASS |
-| 52 | C: lighting flyout — Add Light (picker → type), intensity stepper, remove the added light; receives-lighting round-trips | `{"before":2,"addedId":"light-mr5w8fqt-1","intensityBumped":true,"after":2,"rBefore":true,"rMid":false}` | desktop/C12-lighting.png | PASS |
+| 52 | C: lighting flyout — Add Light (picker → type), intensity stepper, remove the added light; receives-lighting round-trips | `{"before":2,"addedId":"light-mr5y1t2u-1","intensityBumped":true,"after":2,"rBefore":true,"rMid":false}` | desktop/C12-lighting.png | PASS |
 | 53 | C: function key opens the binding popup for the selected node; close works | `{"open":true,"closed":true,"gone":true}` | desktop/C13-function-popup.png | PASS |
 | 54 | C: camera HUD — readout, reset-straight-on, JOURNEY REC ×2 → Preview → Clear; Shipped Frame enter/exit | `{"hud":true,"sig0":0,"sig1":2,"jBefore":0,"jMid":2,"jAfter":0,"vm":"preview-app","lockPill":true,"hubAtRec":"s1-arrival","hubAtClear":"s2-movement"}` | desktop/C15-journey-rec.png · C16-shipped-frame.png | PASS |
 | 55 | C: dock de-collisions — hub rail clears the Inspector; agent panel yields and returns | `{"railRight":1005.1015625,"dockLeft":1104,"agentHidden":true,"agentBack":true}` | (state-assert) | PASS |
 | 56 | C: node agent — prompt → Plan produces a typed plan; Reject clears; Self-heal runs the same engine | `{"vis":true,"planned":true,"rejected":true,"healed":true,"statusTrail":["applied","undo:true"]}` | desktop/C17-node-agent-plan.png | PASS |
-| 57 | C: Inspector — Change Artifact opens its wizard; Preview in App UI responds; Clone parks a drag-clone (undone) | `{"wizard":true,"wizardGone":true,"vmAfter":"preview-app","vm":"galaxy","dragging":"c0df8bec-5a1b-4cb6-afc3-938c40a0b277","n":332,"nBefore":331,"nAfter":331}` | desktop/C18-change-artifact.png · C19-clone-galaxy.png | PASS |
+| 57 | C: Inspector — Change Artifact opens its wizard; Preview in App UI responds; Clone parks a drag-clone (undone) | `{"wizard":true,"wizardGone":true,"vmAfter":"preview-app","vm":"galaxy","dragging":"123f7435-0d7a-4b95-b03a-fc4c264c36df","n":332,"nBefore":331,"nAfter":331}` | desktop/C18-change-artifact.png · C19-clone-galaxy.png | PASS |
 | 58 | C: toolbar drag-spine floats the dock; collapse chevron folds the rail | `{"floated":true}` | desktop/C20-toolbar-floating-collapsed.png | PASS |
 | 59 | D: persistence — saveToServer → reload restores the FULL app (nodes/hubs/edges/fields/parity) | `{"beforeSave":{"nodes":331,"hubs":6,"edges":17},"after":{"nodes":331,"hubs":6,"edges":17,"cardPersisted":true,"reserveOverlayBinding":true,"mobilePosePersisted":true,"contentCount":141}}` | desktop/D01-after-save-reload.png | PASS |
 | 60 | D: generic load() — a derived non-watch app adopts through the SAME runtime path; reload restores | `{"ready":true,"error":null,"titles":"Home,Catalog,Pricing,Docs,Blog,Contact","restored":"Arrival"}` | desktop/D02-generic-graph-loaded.png | PASS |
-| 61 | P: desktop frame statistics per surface (galaxy/canvas/preview) ≥ 30fps avg; input→store latency < 100ms | `{"galaxy":{"avgFps":31,"p95ms":66.6,"maxMs":67},"canvas":{"avgFps":60,"p95ms":18.3,"maxMs":19},"preview-app":{"avgFps":51,"p95ms":33.4,"maxMs":33},"modeSwitchLatencyMs":0.4}` | (state-assert) | PASS |
+| 61 | P: desktop frame statistics per surface (galaxy/canvas/preview) ≥ 30fps avg; input→store latency < 100ms | `{"galaxy":{"avgFps":31,"p95ms":66.6,"maxMs":83},"canvas":{"avgFps":60,"p95ms":18.6,"maxMs":19},"preview-app":{"avgFps":51,"p95ms":33.4,"maxMs":35},"modeSwitchLatencyMs":0.5}` | (state-assert) | PASS |
 | 62 | E1: transform an element in canvas → Save & Rebuild → reload → persists (visible move) | `{"x0":0,"stagedX":0.24,"x1":0.24,"g0":0,"g1":0.24}` | desktop/E01a-transform-staged.png · E01b-transform-persisted.png | PASS |
 | 63 | E2: edit a node function (rebind the hero CTA pair via popup) → save → reload → persists → WORKS in preview | `{"pick":{"was":"s5-acquire"},"bound":["s3-materia","s3-materia"],"persisted":["s3-materia","s3-materia"],"landed":"s3-materia","note":"CTA = slab+label stacked pair; each carries a bindin…` | desktop/E02a-binding-edited.png · E02b-binding-works-in-preview.png | PASS |
-| 64 | E3: author a keyframe animation → save → reload → keyframes persist and scrub drives the node | `{"kfs":2,"gdragE":{"physical":false,"ct0":0,"ctFinal":0.6,"moved":true,"reselected":true},"diag2":{"strip":{"op":"1","clip":"inset(0% 0px 0px round 1"},"sel":"orr-arrival-sub","vm":"canva…` | desktop/E03a-keyframes-authored.png · E03b-keyframes-persisted-scrub.png | PASS |
-| 65 | E4: Add Node (Stage-0 bubble) + Add Text (built element) → canvas+galaxy+preview + parity holds → persists | `{"base":{"n":331,"content":141},"bubble":"4e357347-bd73-4300-a960-fb64566d8410","textNode":{"id":"b9fb219d-9ee7-4ce6-8e74-3314dd073819","hub":"s1-arrival"},"inCanvas":true,"parityNow":{"t…` | desktop/E04a-added-in-canvas.png · E04b-added-in-galaxy.png · E04c-added-in-preview.png | PASS |
+| 64 | E3: author a keyframe animation → save → reload → keyframes persist and scrub drives the node | `{"kfs":2,"gdragE":{"physical":false,"ct0":0,"ctFinal":0.6,"moved":true,"reselected":false},"diag2":{"strip":{"op":"1","clip":"inset(0% 0px 0px round 1"},"sel":"orr-arrival-sub","vm":"canv…` | desktop/E03a-keyframes-authored.png · E03b-keyframes-persisted-scrub.png | PASS |
+| 65 | E4: Add Node (Stage-0 bubble) + Add Text (built element) → canvas+galaxy+preview + parity holds → persists | `{"base":{"n":331,"content":141},"bubble":"646abb84-a740-4323-bbaa-670825693588","textNode":{"id":"71341208-18a6-4663-8716-371cf91ee6c9","hub":"s1-arrival"},"inCanvas":true,"parityNow":{"t…` | desktop/E04a-added-in-canvas.png · E04b-added-in-galaxy.png · E04c-added-in-preview.png | PASS |
 | 66 | E5: delete the added nodes (engine removeNode) → ⌘Z undo restores → redo → save → reload → gone; parity back to baseline | `{"n0":333,"n1":332,"n2":333,"n3":332,"after":{"text":false,"bubble":false,"n":331,"content":141},"note":"delete is engine-level (removeNode) — no dedicated UI delete control; undo/redo ar…` | desktop/E05a-deleted.png · E05b-delete-persisted.png | PASS |
 | 67 | E: canonical fixture restored — app boots back to 331 nodes / 141 content atoms | `{"n":331,"content":141}` | desktop/E06-fixture-restored.png | PASS |
 | 68 | M: mobile arrival — brand + full 6-link nav INSIDE the frame | `{"hub":"s1-arrival","brandIn":true,"navRowIn":true}` | mobile/M01-arrival.png | PASS |
-| 69 | M: app nav s1-arrival → s2-movement (tap) + shell inside frame | `{"now":"s2-movement","hub":"s2-movement","brandIn":true,"navRowIn":true}` | desktop/A02-s2-movement.png | PASS |
-| 70 | M: app nav s2-movement → s3-materia (tap) + shell inside frame | `{"now":"s3-materia","hub":"s3-materia","brandIn":true,"navRowIn":true}` | desktop/A03-s3-materia.png | PASS |
-| 71 | M: app nav s3-materia → s4-celestia (tap) + shell inside frame | `{"now":"s4-celestia","hub":"s4-celestia","brandIn":true,"navRowIn":true}` | desktop/A04-s4-celestia.png | PASS |
-| 72 | M: app nav s4-celestia → s5-acquire (tap) + shell inside frame | `{"now":"s5-acquire","hub":"s5-acquire","brandIn":true,"navRowIn":true}` | desktop/A05-s5-acquire.png | PASS |
-| 73 | M: app nav s5-acquire → s6-atelier (tap) + shell inside frame | `{"now":"s6-atelier","hub":"s6-atelier","brandIn":true,"navRowIn":true}` | desktop/A06-s6-atelier.png | PASS |
+| 69 | M: app nav s1-arrival → s2-movement (tap) + shell inside frame | `{"now":"s2-movement","hub":"s2-movement","brandIn":true,"navRowIn":true}` | mobile/M02-s2-movement.png | PASS |
+| 70 | M: app nav s2-movement → s3-materia (tap) + shell inside frame | `{"now":"s3-materia","hub":"s3-materia","brandIn":true,"navRowIn":true}` | mobile/M02-s2-movement.png | PASS |
+| 71 | M: app nav s3-materia → s4-celestia (tap) + shell inside frame | `{"now":"s4-celestia","hub":"s4-celestia","brandIn":true,"navRowIn":true}` | mobile/M03-s3-materia.png | PASS |
+| 72 | M: app nav s4-celestia → s5-acquire (tap) + shell inside frame | `{"now":"s5-acquire","hub":"s5-acquire","brandIn":true,"navRowIn":true}` | mobile/M04-s4-celestia.png | PASS |
+| 73 | M: app nav s5-acquire → s6-atelier (tap) + shell inside frame | `{"now":"s6-atelier","hub":"s6-atelier","brandIn":true,"navRowIn":true}` | mobile/M05-s5-acquire.png | PASS |
 | 74 | M: all 5 nav taps landed with shell inside frame | `{}` | (state-assert) | PASS |
 | 75 | M: configurator swatch tap changes the build | `{"before":"orrery","after":"green"}` | mobile/M07-atelier-tap-configured.png | PASS |
 | 76 | M: RESERVE tap opens the reservation card (dialog ≥ 300px wide) | `{"o":{"elementId":"orr-acquire-reserve-card","size":{"w":0.34,"h":0.84},"anchor":{"x":0.5,"y":0.5}},"d":{"mounted":true,"w":340}}` | mobile/M08-reserve-overlay.png | PASS |
 | 77 | M: mobile mode toggle — galaxy / canvas / preview taps all switch modes | `{"g":"galaxy","c":"canvas"}` | mobile/M09-mobile-galaxy.png · M10-mobile-canvas.png | PASS |
 | 78 | M: compact chrome — toolbar flyout + Inspector re-house as bottom sheets; active hub pill spells "N elements" | `{"flyout":{"y":319,"h":776,"vh":844},"insp":true,"pill":true}` | mobile/M11-toolbar-bottom-sheet.png · M12-inspector-bottom-sheet.png | PASS |
 | 79 | M: galaxy fly-in — timed ghost check (previous page must dissolve, frames at 1s/2.5s/4s/6s) | `{"landed":"s6-atelier","note":"ghost linger graded from the timed frames by the advocate"}` | mobile/M13a-flyin-1s.png … M13d-flyin-6s.png | PASS |
-| 80 | M: mobile frame statistics ≥ 25fps avg | `{"avgFps":59,"p95ms":16.8}` | (state-assert) | PASS |
+| 80 | M: mobile frame statistics ≥ 25fps avg | `{"avgFps":60,"p95ms":16.7}` | (state-assert) | PASS |
 | 81 | 0 page errors across the sweep | `{"pageErrors":[]}` | (state-assert) | PASS |
 | 82 | 0 console errors across the sweep | `{"consoleErrors":[]}` | (state-assert) | PASS |
 
-perf: {"desktop":{"galaxy":{"avgFps":31,"p95ms":66.6,"maxMs":67},"canvas":{"avgFps":60,"p95ms":18.3,"maxMs":19},"preview-app":{"avgFps":51,"p95ms":33.4,"maxMs":33},"modeSwitchLatencyMs":0.4},"mobile":{"avgFps":59,"p95ms":16.8}}
+perf: {"desktop":{"galaxy":{"avgFps":31,"p95ms":66.6,"maxMs":83},"canvas":{"avgFps":60,"p95ms":18.6,"maxMs":19},"preview-app":{"avgFps":51,"p95ms":33.4,"maxMs":35},"modeSwitchLatencyMs":0.5},"mobile":{"avgFps":60,"p95ms":16.7}}
 pageErrors=0 consoleErrors=0
 
 ## Evidence index
@@ -351,6 +361,65 @@ pageErrors=0 consoleErrors=0
 - `notes/verification/finish-f4/mobile/` — M01–M08 (app), M09–M12 (editor chrome + bottom sheets), M13a–M13d (timed fly-in ghost sequence).
 - `notes/verification/finish-f4/galaxy-parity-gate.json` · `node-authorship-gate.json` — live gate records.
 - Harness: `scripts/_f4-sweep.mjs` (sweep + certification), `scripts/_f4-report-table.mjs` (this table).
+
+## Judge round 1 → fix → final evidence run
+
+**prism-criteria-reviewer (round 1): PASS — 0 MUST-FIX.** It re-ran the static
+gates itself (tsc 0-new, prism 14/14, galaxy 7/7 + known WARN, global-shell
+6/6, parity-static 6/6, no-dom-ui 44 files), proved the gate scripts
+byte-identical to `3c9b48eb` (C7), confirmed the product diff was exactly the
+documented fixes with FP-15 intact and no deps/runtime/schema changes, parsed
+sweep.json machine-side (all-pass, 0/0 errors, the two disclosed fallbacks the
+only non-physical claims), spot-checked 12 frames, validated the gold-glyph
+refutation in code + graph data, and confirmed both merge ancestries.
+SHOULD-FIX (all addressed): (1) worktree telemetry churn from the still-running
+chain sentinels — dispositioned below and a "stop the sentinels first" step
+added to the merge commands; (2) checklist rows for the mobile nav taps cited
+desktop frames — the table generator's frame map was fixed (mobile patterns
+anchored first) and the table regenerated; (3) `E02b` had captured the branded
+veil mid-transition — the sweep now waits for the veil to clear and the frame
+was recaptured on the landed Materia page.
+
+**user-advocate (round 1): BLOCKED — 1 MUST-FIX**, everything else passing on
+its frames (all four F-4 fixes verified visually; the 5-edit story "visually
+coherent end-to-end"; editor chrome "premium — nothing flat, no icon-pack
+look"; the app "customer-believable luxury").
+
+1. **MUST-FIX — mobile galaxy fly-in ghost: FIXED.** The advocate measured a
+   page-styled "THE ATELIER" headline legible for the whole 6s window
+   (glyph-band luma decay stalled after 2.5s). Root-caused this run — with a
+   correction to the F-3 framing: it was never a *previous-page dissolve*. It
+   is the DESTINATION hub's own galaxy title: `HubLabels` renders each hub
+   title as billboarded MSDF with `depthTest` OFF, hung 60u above the hub —
+   and a galaxy fly-in keeps its destination centred, so the title sat
+   screen-pinned, clipped under the top bar, at full opacity for the entire
+   approach (the mobile fly parks ~190u out, so no perspective shrink ever
+   rescued it). FIX (`HubLabels.tsx`): "you are here" suppression — the
+   ACTIVE hub's in-scene title eases out (~0.5s dissolve; its name already
+   lives in the TopBar breadcrumb + the lit rail pill) — composed with a
+   distance LOD (full ≥160u, gone ≤60u) so a close pass over a NON-active
+   hub can never blow its title over the scene either. Verified live
+   (2s + 6s probes clean), then the ENTIRE evidence run was re-executed on
+   the fixed build — the M13a–d sequence in the final bundle shows the
+   approach with no ghost. Side effect (intentional): the active hub's title
+   no longer renders in the galaxy overview — wayfinding for "where you are"
+   is the breadcrumb + lit pill; the other five titles remain.
+2. SHOULD-FIX dispositions: `E02b` recaptured settled (also a reviewer item);
+   the opaque-headline bowl-glyph read (mobile 'O' of "One") is the
+   documented one-mechanism gold-glyph family — the one-line graph-data tune
+   (`sideFill` toward the face color) stays a FOUNDER CALL, listed in the
+   signoff; amber CTA contrast remains the carried F-3 founder question.
+3. Flags noted for the record: the gold-'a' disposition is *partially*
+   accepted by the advocate (the 'd'/'e' counters show no tint — their
+   counters are far smaller than the 'a' bowl's aperture, but the founder
+   question stays attached); the ORRERY caption's moving two-tone split is
+   the authored shimmer (any freeze-frame splits mid-word); `C04` caught a
+   transient black canvas mid-flyout-reveal (C12 shows the same flyout lit);
+   `B02b` was recaptured clean (selection cleared first).
+
+All five product fixes and both hygiene patches landed BEFORE the final
+evidence run below — the bundle judges graded in round 2 is one coherent run
+of the final build.
 
 ## Task 5 — MERGE PREP (prepared, NOT executed — founder decision)
 
@@ -372,6 +441,11 @@ pageErrors=0 consoleErrors=0
 
 ```bash
 cd /Users/loganbaird/Prototype_Prism/Design-trials
+# stop the chain sentinels first — they append to chain-status.txt /
+# MONITOR-FEED.md / SENTINEL-LIVE.md and would dirty the tree mid-merge
+for f in .finish-chain.pid .masterpiece-chain.pid .sentinel-galaxy.pid .sentinel-toolbar.pid; do
+  [ -f "$f" ] && kill "$(cat "$f")" 2>/dev/null; done
+git status --short   # commit/restore any last sentinel log lines before proceeding
 git fetch origin
 
 # 1) codex/prism-recovery-harness-20260630 → prism-editor-build

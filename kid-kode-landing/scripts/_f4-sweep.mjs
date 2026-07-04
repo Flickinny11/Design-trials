@@ -498,6 +498,12 @@ if (SECTIONS.has('galaxy')) {
   });
 
   await chk(R, 'B: hub rail — Galaxy pill returns to overview', async () => {
+    await page.evaluate(() => {
+      const e = window.__PRISM_DEBUG_STORES__.graphEditor.getState();
+      e.selectNode(null);
+      window.__PRISM_DEBUG_STORES__.graphEditor.setState({ inspectorOpen: false });
+    });
+    await page.waitForTimeout(600);
     const railBtn = page.locator('button', { hasText: /^Galaxy$/ }).filter({ hasNot: page.locator('xpath=ancestor::*[@data-component="view-mode-toggle"]') });
     await railBtn.last().click({ timeout: 4000 });
     await page.waitForTimeout(3200);
@@ -1424,6 +1430,14 @@ if (SECTIONS.has('edits')) {
     const clicked = await clickNode(page, PAIR[0]);
     let landed = await hubOf(page);
     for (let t = 0; t < 14 && landed !== newHubId; t++) { await page.waitForTimeout(1000); landed = await hubOf(page); }
+    // let the branded veil clear so the frame shows the LANDED page
+    for (let t = 0; t < 16; t++) {
+      const veilUp = await page.evaluate(() =>
+        [...document.querySelectorAll('div')].some((d) => /ORRERY\s№\s7/.test(d.textContent ?? '') && getComputedStyle(d).opacity !== '0'));
+      if (!veilUp) break;
+      await page.waitForTimeout(500);
+    }
+    await page.waitForTimeout(3000);
     await shot('E02b-binding-works-in-preview');
     return {
       pass: kHub && bound.every((h) => h === newHubId) && persisted.every((h) => h === newHubId) && clicked && landed === newHubId,

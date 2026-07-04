@@ -147,7 +147,7 @@
       "pass": true,
       "ok": true,
       "element": "Headline",
-      "before": 0.937454,
+      "before": 0.938028,
       "after": 1.55
     },
     {
@@ -403,7 +403,7 @@
       "step": "C: lighting flyout — Add Light (picker → type), intensity stepper, remove the added light; receives-lighting round-trips",
       "pass": true,
       "before": 2,
-      "addedId": "light-mr5w8fqt-1",
+      "addedId": "light-mr5y1t2u-1",
       "intensityBumped": true,
       "after": 2,
       "rBefore": true,
@@ -457,7 +457,7 @@
       "wizardGone": true,
       "vmAfter": "preview-app",
       "vm": "galaxy",
-      "dragging": "c0df8bec-5a1b-4cb6-afc3-938c40a0b277",
+      "dragging": "123f7435-0d7a-4b95-b03a-fc4c264c36df",
       "n": 332,
       "nBefore": 331,
       "nAfter": 331
@@ -499,19 +499,19 @@
       "galaxy": {
         "avgFps": 31,
         "p95ms": 66.6,
-        "maxMs": 67
+        "maxMs": 83
       },
       "canvas": {
         "avgFps": 60,
-        "p95ms": 18.3,
+        "p95ms": 18.6,
         "maxMs": 19
       },
       "preview-app": {
         "avgFps": 51,
         "p95ms": 33.4,
-        "maxMs": 33
+        "maxMs": 35
       },
-      "modeSwitchLatencyMs": 0.4
+      "modeSwitchLatencyMs": 0.5
     },
     {
       "step": "E1: transform an element in canvas → Save & Rebuild → reload → persists (visible move)",
@@ -548,7 +548,7 @@
         "ct0": 0,
         "ctFinal": 0.6,
         "moved": true,
-        "reselected": true
+        "reselected": false
       },
       "diag2": {
         "strip": {
@@ -560,8 +560,8 @@
         "hub": "s1-arrival",
         "group": true
       },
-      "pA": "2.05",
-      "pB": "2.65"
+      "pA": "3.3",
+      "pB": "3.9"
     },
     {
       "step": "E4: Add Node (Stage-0 bubble) + Add Text (built element) → canvas+galaxy+preview + parity holds → persists",
@@ -570,9 +570,9 @@
         "n": 331,
         "content": 141
       },
-      "bubble": "4e357347-bd73-4300-a960-fb64566d8410",
+      "bubble": "646abb84-a740-4323-bbaa-670825693588",
       "textNode": {
-        "id": "b9fb219d-9ee7-4ce6-8e74-3314dd073819",
+        "id": "71341208-18a6-4663-8716-371cf91ee6c9",
         "hub": "s1-arrival"
       },
       "inCanvas": true,
@@ -714,8 +714,8 @@
     {
       "step": "M: mobile frame statistics ≥ 25fps avg",
       "pass": true,
-      "avgFps": 59,
-      "p95ms": 16.8
+      "avgFps": 60,
+      "p95ms": 16.7
     }
   ],
   "perf": {
@@ -723,23 +723,23 @@
       "galaxy": {
         "avgFps": 31,
         "p95ms": 66.6,
-        "maxMs": 67
+        "maxMs": 83
       },
       "canvas": {
         "avgFps": 60,
-        "p95ms": 18.3,
+        "p95ms": 18.6,
         "maxMs": 19
       },
       "preview-app": {
         "avgFps": 51,
         "p95ms": 33.4,
-        "maxMs": 33
+        "maxMs": 35
       },
-      "modeSwitchLatencyMs": 0.4
+      "modeSwitchLatencyMs": 0.5
     },
     "mobile": {
-      "avgFps": 59,
-      "p95ms": 16.8
+      "avgFps": 60,
+      "p95ms": 16.7
     }
   },
   "pageErrors": [],
