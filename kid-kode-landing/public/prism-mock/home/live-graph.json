@@ -12418,7 +12418,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": -2.52,
+          "y": -2.42,
           "scale": 0.55
         }
       }
@@ -12562,7 +12562,7 @@
         "transform": {
           "x": 0,
           "y": 2.56,
-          "z": 0.25,
+          "z": 0.55,
           "width": 6.6,
           "height": 0.3
         },
@@ -12599,7 +12599,7 @@
       "scenePosition": {
         "x": 0,
         "y": 2.56,
-        "z": 0.25,
+        "z": 0.55,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -12782,9 +12782,9 @@
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
-        "scaleX": 1,
-        "scaleY": 1,
-        "scaleZ": 1
+        "scaleX": 0.88,
+        "scaleY": 0.88,
+        "scaleZ": 0.88
       },
       "animationBindings": [],
       "receivesLighting": true,
@@ -12792,7 +12792,7 @@
         "mobile": {
           "x": 0,
           "y": 0.15,
-          "scale": 0.48
+          "scale": 0.545
         }
       }
     },
@@ -21258,7 +21258,7 @@
         "transform": {
           "x": 0,
           "y": 2.56,
-          "z": 0.2,
+          "z": 0.49,
           "width": 6.84,
           "height": 0.4
         },
@@ -21293,7 +21293,7 @@
       "scenePosition": {
         "x": 0,
         "y": 2.56,
-        "z": 0.19,
+        "z": 0.49,
         "rotationX": 0,
         "rotationY": 0,
         "rotationZ": 0,
@@ -35043,6 +35043,192 @@
         "mobile": {
           "x": 0,
           "y": 2.62,
+          "scale": 0.5
+        }
+      }
+    },
+    {
+      "nodeId": "orr-arrival-folio-scrim",
+      "subtype": "text-scrim",
+      "parentHubId": "s1-arrival",
+      "serviceTag": "ui-3d",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.26,
+          "z": 0.24,
+          "width": 2.1,
+          "height": 0.24
+        },
+        "alpha": 0.42
+      },
+      "intent": {
+        "caption": "Dark scrim band behind the \"I · ARRIVAL\" chapter folio so the numeral reads over the brightest sky bloom (same contrast idiom as the subhead scrims).",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.26,
+        "z": 0.24,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 2.1,
+          "height": 0.24,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#0a0d14",
+        "metalness": 0,
+        "roughness": 1,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.5,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1,
+        "opacity": 0.84,
+        "normalMapUrl": null,
+        "displacementMapUrl": null,
+        "roughnessMapUrl": null
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "content",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.34,
+          "scale": 0.55
+        }
+      }
+    },
+    {
+      "nodeId": "orr-movement-folio-scrim",
+      "subtype": "text-scrim",
+      "parentHubId": "s2-movement",
+      "serviceTag": "ui-3d",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.12,
+          "z": 0.24,
+          "width": 2.7,
+          "height": 0.24
+        },
+        "alpha": 0.42
+      },
+      "intent": {
+        "caption": "Dark scrim band behind the \"II · THE CALIBRE\" chapter folio so the numeral reads over the brightest sky bloom (same contrast idiom as the subhead scrims).",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "mesh",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.12,
+        "z": 0.24,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "meshPrimitive": {
+        "kind": "cube",
+        "params": {
+          "width": 2.7,
+          "height": 0.24,
+          "depth": 0.03
+        }
+      },
+      "materialSpec": {
+        "baseColor": "#0a0d14",
+        "metalness": 0,
+        "roughness": 1,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0,
+        "clearcoatRoughness": 0.5,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#000000",
+        "emissiveIntensity": 0,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1,
+        "opacity": 0.84,
+        "normalMapUrl": null,
+        "displacementMapUrl": null,
+        "roughnessMapUrl": null
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "content",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.44,
           "scale": 0.5
         }
       }

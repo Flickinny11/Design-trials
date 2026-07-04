@@ -315,6 +315,84 @@ folio('orr-atelier-folio', 's6-atelier', 'VI · YOUR COMMISSION', 3.02, { x: 0, 
   touch('G s6 mobile: headline 2.52→2.28, sub 2.20→2.02, folio 2.62; swatch grid re-derived 0.12 lower (11 rows, from desktop pose — idempotent)');
 }
 
+// ── H: judge round-2 fixes ──────────────────────────────────────────────────
+{
+  // R2 MUST-FIX 1 — the orrery's tilted orbit rings (bounding radius ~3, ring
+  // plane z 0.4, tilted apogee to z≈1.5) carried a planet ACROSS the desktop
+  // subhead copy. Scale the hero rig 1→0.88 so the ring apogee clears the
+  // copy band; mobile compensates (0.545×0.88≈0.48) so the approved mobile
+  // framing is unchanged. Sub also steps forward of the ring plane.
+  const orrery = need('orr-celestia-orrery');
+  orrery.scenePosition.scaleX = 0.88;
+  orrery.scenePosition.scaleY = 0.88;
+  orrery.scenePosition.scaleZ = 0.88;
+  if (orrery.responsiveScenePos?.mobile) orrery.responsiveScenePos.mobile.scale = 0.545;
+  for (const id of ['orr-celestia-sub', 'orr-celestia-sub-scrim']) {
+    const n = need(id);
+    n.scenePosition.z = id.endsWith('scrim') ? 0.49 : 0.55;
+    if (n.visual?.transform) n.visual.transform.z = n.scenePosition.z;
+  }
+  touch('H s4: orrery 1→0.88 (ring apogee clears the copy; mobile compensated ×0.545) + sub/scrim z 0.25→0.55/0.49 (ahead of the ring plane)');
+}
+{
+  // R2 MUST-FIX 2+3 — the s1/s2 folio numerals washed out on the brightest
+  // sky bloom (measured ~1.2:1). Give each a quiet text-scrim band — the
+  // authored idiom every subhead already uses (clone of orr-arrival-sub-scrim).
+  const scrim = (nodeId, hubId, y, w, mobile, folioLabel) => {
+    if (byId.has(nodeId)) {
+      const n = byId.get(nodeId);
+      n.scenePosition.y = y;
+      if (n.visual?.transform) n.visual.transform.y = y;
+      n.responsiveScenePos = { mobile };
+      touch(`H ${nodeId}: refreshed`);
+      return;
+    }
+    const n = {
+      nodeId,
+      subtype: 'text-scrim',
+      parentHubId: hubId,
+      serviceTag: 'ui-3d',
+      visual: { transform: { x: 0, y, z: 0.24, width: w, height: 0.24 }, alpha: 0.42 },
+      intent: {
+        caption: `Dark scrim band behind the "${folioLabel}" chapter folio so the numeral reads over the brightest sky bloom (same contrast idiom as the subhead scrims).`,
+        behaviorSpec: { interactions: [], apiCalls: [], dataBindings: [], emits: [], listens: [], triggersDownstream: [] },
+        stateEffects: [],
+        visualSpec: { textContent: [], layers: [] },
+        contracts: { inputs: {}, outputs: {} },
+      },
+      codeRef: '',
+      backendRef: null,
+      renderMode: 'mesh',
+      depthMapUrl: null,
+      meshUrl: null,
+      cinematicPrimitives: [],
+      scenePosition: { x: 0, y, z: 0.24, rotationX: 0, rotationY: 0, rotationZ: 0, scaleX: 1, scaleY: 1, scaleZ: 1 },
+      meshPrimitive: { kind: 'cube', params: { width: w, height: 0.24, depth: 0.03 } },
+      materialSpec: {
+        baseColor: '#0a0d14', metalness: 0, roughness: 1, transmission: 0, ior: 1.5,
+        dispersion: 0, clearcoat: 0, clearcoatRoughness: 0.5, iridescence: 0,
+        iridescenceIOR: 1.3, thickness: 0.5, emissive: '#000000', emissiveIntensity: 0,
+        normalScale: 1, displacementScale: 0, envMapIntensity: 1, opacity: 0.84,
+        normalMapUrl: null, displacementMapUrl: null, roughnessMapUrl: null,
+      },
+      animationBindings: [],
+      receivesLighting: false,
+      depthLayer: 'content',
+      responsiveScenePos: { mobile },
+    };
+    g.nodes.push(n);
+    byId.set(nodeId, n);
+    touch(`H +${nodeId}: folio scrim band (${folioLabel})`);
+  };
+  scrim('orr-arrival-folio-scrim', 's1-arrival', 3.26, 2.1, { x: 0, y: 2.34, scale: 0.55 }, 'I · ARRIVAL');
+  scrim('orr-movement-folio-scrim', 's2-movement', 3.12, 2.7, { x: 0, y: 2.44, scale: 0.5 }, 'II · THE CALIBRE');
+  // R2 should-fix — the s3 closing line's descenders crossed the footer rule
+  // on mobile (pre-existing); lift it clear.
+  const craft = need('orr-materia-craft-title');
+  if (craft.responsiveScenePos?.mobile) craft.responsiveScenePos.mobile.y = -2.42;
+  touch('H folio scrims s1/s2 (numerals now read over the bloom) + s3 closing line lifted off the footer rule on mobile (-2.52→-2.42)');
+}
+
 writeFileSync(graphPath, JSON.stringify(g, null, 2) + '\n');
 console.log(`m2-masterpiece-polish: ${log.length} changes`);
 for (const l of log) console.log('  · ' + l);

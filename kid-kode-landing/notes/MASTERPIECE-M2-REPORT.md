@@ -203,7 +203,40 @@ s3 brass/meteorite labels bumped to 0.7/0.68. Deferred should-fix: the s6
 amber fine-print line (summary panel micro-copy) — logged for the next data
 pass.
 
-### Round 2 — _appended below after re-judging._
+### Round 2
+
+**prism-criteria-reviewer: PASS, 0 MUST-FIX.** Verified the round-1 fix is
+"closed for real, not cosmetically" (assertions + frames + timestamps), the
+polish script is a byte-exact fixed point of the committed graph, gates
+re-pass fresh, report honest. One should-fix — the glyph-winding regression
+test wasn't collected by the default vitest glob — **taken**: the suite now
+lives at `tests/text/glyph-shapes.test.ts` (5/5 under the default include);
+the co-located src path re-imports it as a pointer.
+
+**user-advocate: NOT YET — 3 of 4 round-1 regions confirmed fixed, 3 new
+MUST-FIX** (evidence hygiene called "exemplary"): (1) a desktop-s4 orbit-ring
+planet occluded the subhead copy; (2)+(3) the s1/s2 mobile folio numerals
+washed out on the brightest sky bloom (luma-measured ~1.2:1). **All fixed as
+graph data:**
+1. The orrery hero rig scaled 1→0.88 (ring apogee now clears the copy band;
+   mobile compensated ×0.545 so the approved 390px framing is unchanged) and
+   the subhead + scrim stepped ahead of the ring plane (z 0.25→0.55/0.49).
+   Verified across TWO orbit phases (`after/desktop/04` +
+   `proofs/r2-s4-desktop-phase2.png`) — the copy reads in full in both.
+2. `orr-arrival-folio-scrim` + `orr-movement-folio-scrim` — quiet dark scrim
+   bands behind the two folios (a clone of the authored subhead-scrim idiom,
+   complete self-describing nodes). The numerals now read over the bloom on
+   both viewports (`after/mobile/01`, `after/mobile/02`).
+Advocate should-fix taken: the s3 closing line ("Eleven years. One hand.")
+lifted off the footer rule on mobile (−2.52→−2.42, `after/mobile/03`).
+Logged, not taken: the s2 subhead's "one." tail fade is the authored F-3
+emphasis device (consistent across viewports); the capture chrome pill over
+the footer is harness framing, not product; the s5 receive-panel seam is
+queued for the next data pass. Board re-run after the fixes: static chain
+ALL GREEN, parity live 13/13, tsc 0-new, glyph suite 5/5 (now in the default
+suite), schema gate 338/338 (the two scrim nodes are complete schemas).
+
+### Round 3 — _appended below after re-judging._
 
 ## 7 · Founder follow-ups
 

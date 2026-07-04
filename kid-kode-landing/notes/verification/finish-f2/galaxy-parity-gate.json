@@ -2,13 +2,13 @@
   "url": "http://localhost:3001",
   "staticOnly": false,
   "projectedElementCount": 56,
-  "mountedArtifacts": 283,
+  "mountedArtifacts": 285,
   "perHub": {
     "s1-arrival": {
-      "mounted": 38
+      "mounted": 39
     },
     "s2-movement": {
-      "mounted": 40
+      "mounted": 41
     },
     "s3-materia": {
       "mounted": 63
@@ -38,7 +38,7 @@
     "orr-acquire-reserve-card",
     "orr-acquire-enquire-card"
   ],
-  "previewMountedCount": 38,
+  "previewMountedCount": 39,
   "unbuiltInPreview": [],
   "results": [
     {
@@ -46,14 +46,14 @@
       "desc": "live graph has hubs and nodes",
       "pass": true,
       "warn": false,
-      "detail": "6 hubs, 336 nodes"
+      "detail": "6 hubs, 338 nodes"
     },
     {
       "id": "parity.roles-known",
       "desc": "every graph node classifies into a known galaxy role",
       "pass": true,
       "warn": false,
-      "detail": "336 nodes across 5 roles"
+      "detail": "338 nodes across 5 roles"
     },
     {
       "id": "parity.galaxy-covers-content",
@@ -102,14 +102,14 @@
       "desc": "zero hardcoded artifacts across all hubs (Law 0 floor)",
       "pass": true,
       "warn": false,
-      "detail": "all mounted artifacts node-authored (283 node ids)"
+      "detail": "all mounted artifacts node-authored (285 node ids)"
     },
     {
       "id": "live.element-has-galaxy-node",
       "desc": "DIRECTION A: every mounted UI element has a galaxy node (projection member or sanctioned hub-layer role)",
       "pass": true,
       "warn": false,
-      "detail": "283 mounted artifacts: all graph-backed, content all galaxy-represented"
+      "detail": "285 mounted artifacts: all graph-backed, content all galaxy-represented"
     },
     {
       "id": "live.galaxy-node-has-element",
