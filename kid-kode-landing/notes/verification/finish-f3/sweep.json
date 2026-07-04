@@ -1,0 +1,263 @@
+{
+  "desktop": [
+    {
+      "step": "desktop boot: preview-app on Arrival",
+      "pass": true
+    },
+    {
+      "step": "app nav: s1-arrival → s2-movement via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s2-movement"
+    },
+    {
+      "step": "app nav: s2-movement → s3-materia via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s3-materia"
+    },
+    {
+      "step": "app nav: s3-materia → s4-celestia via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s4-celestia"
+    },
+    {
+      "step": "app nav: s4-celestia → s5-acquire via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s5-acquire"
+    },
+    {
+      "step": "app nav: s5-acquire → s6-atelier via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s6-atelier"
+    },
+    {
+      "step": "app nav: all 5 header-nav hops landed",
+      "pass": true
+    },
+    {
+      "step": "branded interstitial (ORRERY № 7) shows over the covered transition",
+      "pass": true,
+      "veilSeen": true
+    },
+    {
+      "step": "atelier: app header AND footer in the preview frame",
+      "pass": true,
+      "headerIn": true,
+      "footerIn": true
+    },
+    {
+      "step": "configurator: real swatch click changes the build (dial → salmon)",
+      "pass": true,
+      "dialBefore": "orrery",
+      "dialAfter": "salmon"
+    },
+    {
+      "step": "nav back to Acquire",
+      "pass": true
+    },
+    {
+      "step": "RESERVE opens the reservation card overlay (dialog MOUNTED)",
+      "pass": true,
+      "reserveOverlay": {
+        "elementId": "orr-acquire-reserve-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.84
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "reserveDialog": true
+    },
+    {
+      "step": "reservation card closes on backdrop click",
+      "pass": true
+    },
+    {
+      "step": "ENQUIRE opens the concierge card overlay (dialog MOUNTED)",
+      "pass": true,
+      "enquireOverlay": {
+        "elementId": "orr-acquire-enquire-card",
+        "size": {
+          "w": 0.32,
+          "h": 0.78
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "enquireDialog": true
+    },
+    {
+      "step": "Escape closes the overlay and preview-app mode is preserved",
+      "pass": true,
+      "overlay": null,
+      "viewMode": "preview-app"
+    },
+    {
+      "step": "clicking the watch opens the ORRERY No.7 spec sheet overlay (dialog MOUNTED)",
+      "pass": true,
+      "detailOverlay": {
+        "elementId": "orr-watch-detail-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.8
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "detailDialog": true
+    },
+    {
+      "step": "footer nav: MOVEMENT footer link navigates",
+      "pass": true
+    },
+    {
+      "step": "canvas chrome: hub rail clears the Inspector dock; agent panel yields; no L4 readout at 1600",
+      "pass": true,
+      "railRight": 1005.1015625,
+      "dockLeft": 1104,
+      "agentHidden": true,
+      "l4Text": false
+    },
+    {
+      "step": "closing the dock brings the node-agent panel back",
+      "pass": true
+    },
+    {
+      "step": "persistence: saveToServer → reload restores the FULL app (331 nodes incl. global elements + new fields)",
+      "pass": true,
+      "beforeSave": {
+        "nodes": 331,
+        "hubs": 6,
+        "edges": 17
+      },
+      "afterReload": {
+        "nodes": 331,
+        "hubs": 6,
+        "edges": 17,
+        "cardPersisted": true,
+        "reserveOverlayBinding": true,
+        "mobilePosePersisted": true,
+        "contentCount": 141
+      }
+    },
+    {
+      "step": "generic load(): a derived non-watch app adopts through the SAME runtime path",
+      "pass": true,
+      "ready": true,
+      "error": null,
+      "titles": "Home,Catalog,Pricing,Docs,Blog,Contact"
+    },
+    {
+      "step": "reload restores the watch app after the generic-load proof",
+      "pass": true,
+      "restored": "Arrival"
+    }
+  ],
+  "mobile": [
+    {
+      "step": "mobile arrival: brand + full 6-link nav INSIDE the frame",
+      "pass": true,
+      "hub": "s1-arrival",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile app nav: s1-arrival → s2-movement (tap) + shell inside frame",
+      "pass": true,
+      "now": "s2-movement",
+      "hub": "s2-movement",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile app nav: s2-movement → s3-materia (tap) + shell inside frame",
+      "pass": true,
+      "now": "s3-materia",
+      "hub": "s3-materia",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile app nav: s3-materia → s4-celestia (tap) + shell inside frame",
+      "pass": true,
+      "now": "s4-celestia",
+      "hub": "s4-celestia",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile app nav: s4-celestia → s5-acquire (tap) + shell inside frame",
+      "pass": true,
+      "now": "s5-acquire",
+      "hub": "s5-acquire",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile app nav: s5-acquire → s6-atelier (tap) + shell inside frame",
+      "pass": true,
+      "now": "s6-atelier",
+      "hub": "s6-atelier",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "mobile: all 5 nav taps landed with the shell inside the frame",
+      "pass": true
+    },
+    {
+      "step": "mobile configurator: swatch tap changes the build",
+      "pass": true,
+      "dialBefore": "orrery",
+      "dialAfter": "green"
+    },
+    {
+      "step": "mobile: RESERVE tap opens the reservation card (dialog MOUNTED + readable width ≥ 300px)",
+      "pass": true,
+      "mOverlay": {
+        "elementId": "orr-acquire-reserve-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.84
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "mDialog": {
+        "mounted": true,
+        "w": 340
+      }
+    },
+    {
+      "step": "mobile galaxy fly-in captured (framing graded from the frame)",
+      "pass": true
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "global": [
+    {
+      "step": "0 page errors across the sweep",
+      "pass": true,
+      "pageErrors": []
+    },
+    {
+      "step": "0 console errors across the sweep",
+      "pass": true,
+      "consoleErrors": []
+    }
+  ]
+}

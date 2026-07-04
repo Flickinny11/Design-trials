@@ -6,14 +6,14 @@
       "desc": "live graph has hubs and nodes",
       "pass": true,
       "warn": false,
-      "detail": "6 hubs, 327 nodes"
+      "detail": "6 hubs, 331 nodes"
     },
     {
       "id": "parity.roles-known",
       "desc": "every graph node classifies into a known galaxy role",
       "pass": true,
       "warn": false,
-      "detail": "327 nodes across 4 roles"
+      "detail": "331 nodes across 5 roles"
     },
     {
       "id": "parity.galaxy-covers-content",
