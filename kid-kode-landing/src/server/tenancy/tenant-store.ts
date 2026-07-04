@@ -216,6 +216,72 @@ export async function setBuildState(
   return updateProject(tenantId, projectId, (p) => ({ ...p, buildState }));
 }
 
+function projectDir(tenantId: string, projectId: string): string {
+  return insideTenant(tenantId, 'projects', safeId(projectId, 'project'));
+}
+
+/** Delete a project and all its tenant-keyed bytes (graph, brief, versions,
+ *  assets, integrations). Fails closed — not owned == not found (returns
+ *  false, never touching another tenant's tree). */
+export async function deleteProject(
+  tenantId: string,
+  projectId: string,
+): Promise<boolean> {
+  const pid = safeId(projectId, 'project');
+  return serialized(tenantId, async () => {
+    const all = await readProjects(tenantId);
+    const idx = all.findIndex((p) => p.id === pid);
+    if (idx < 0) return false; // not owned == not found
+    const next = all.filter((p) => p.id !== pid);
+    await writeJson(projectsIndexPath(tenantId), next);
+    // Remove the project's directory tree (graph/brief/versions/assets). The
+    // path is re-checked to sit inside the tenant root by projectDir/insideTenant.
+    await fs.rm(projectDir(tenantId, pid), { recursive: true, force: true });
+    return true;
+  });
+}
+
+/** Duplicate a project into a fresh row in the SAME tenant. Copies the live
+ *  graph, the approved brief, and capability bindings (the meaningful build
+ *  state); version HISTORY and per-project assets start fresh on the copy.
+ *  Fails closed — a foreign projectId simply is not found (null). */
+export async function duplicateProject(
+  tenantId: string,
+  projectId: string,
+): Promise<PrismProject | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  return serialized(tenantId, async () => {
+    const cloneId = `proj-${randomUUID()}`;
+    const graph = await readJson<Record<string, unknown>>(
+      graphPath(tenantId, owned.id),
+    );
+    const graphRef = graph ? `tenancy:${cloneId}/graph.json` : null;
+    const clone: PrismProject = prismProjectSchema.parse({
+      id: cloneId,
+      ownerUserId: safeId(tenantId, 'tenant'),
+      orgId: owned.orgId ?? null,
+      name: `${owned.name} copy`.slice(0, 200),
+      graphRef,
+      modelOverrideId: owned.modelOverrideId ?? null,
+      buildState: owned.buildState ?? null,
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+    });
+    const all = await readProjects(tenantId);
+    await writeJson(projectsIndexPath(tenantId), [...all, clone]);
+    if (graph) await writeJson(graphPath(tenantId, cloneId), graph);
+    const brief = await readJson<unknown>(briefPath(tenantId, owned.id));
+    if (brief) await writeJson(briefPath(tenantId, cloneId), brief);
+    const integrations = await readJson<unknown>(
+      projectIntegrationsPath(tenantId, owned.id),
+    );
+    if (integrations)
+      await writeJson(projectIntegrationsPath(tenantId, cloneId), integrations);
+    return clone;
+  });
+}
+
 // ── Build Brief (W2 — Guided Build intake output, tenant-keyed) ──────────────
 
 function briefPath(tenantId: string, projectId: string): string {
@@ -358,6 +424,62 @@ export async function createVersion(
     await writeJson(versionsIndexPath(tenantId, projectId), [...raw, version]);
     return version;
   });
+}
+
+/** E1 one-click restore: copy an immutable checkpoint snapshot back onto the
+ *  live graph. BOTH the project and the version must belong to the tenant —
+ *  the version lives inside the project's own tenant-keyed dir, so a foreign
+ *  or mismatched id simply is not found (null). Returns the restored version
+ *  and the restored graph so the caller can re-verify the round-trip. */
+export async function restoreVersion(
+  tenantId: string,
+  projectId: string,
+  versionId: string,
+): Promise<{ version: PrismProjectVersion; graph: Record<string, unknown> } | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const versions = await listVersions(tenantId, projectId);
+  const version = versions?.find((v) => v.id === versionId) ?? null;
+  if (!version) return null; // not this project's checkpoint == not found
+  return serialized(tenantId, async () => {
+    const snapshotFile = insideTenant(
+      tenantId,
+      'projects',
+      safeId(projectId, 'project'),
+      'versions',
+      `${safeId(versionId, 'version')}.json`,
+    );
+    const snapshot = await readJson<Record<string, unknown>>(snapshotFile);
+    if (snapshot == null) return null;
+    await writeJson(graphPath(tenantId, projectId), snapshot);
+    await updateProject(tenantId, projectId, (p) => ({
+      ...p,
+      graphRef: `tenancy:${owned.id}/graph.json`,
+    }));
+    return { version, graph: snapshot };
+  });
+}
+
+// ── Usage counts (E6 — real per-tenant numbers behind the config quotas) ─────
+
+/** Real per-tenant usage figures the E6 meter renders against tier quotas.
+ *  `builds` = projects that reached a built state; `checkpoints` = named E1
+ *  versions across all projects (the credit proxy until real build metering,
+ *  W5). Owner-scoped by construction — only THIS tenant's tree is read. */
+export async function countUsage(
+  tenantId: string,
+): Promise<{ projects: number; builds: number; checkpoints: number }> {
+  const projects = await readProjects(tenantId);
+  let builds = 0;
+  let checkpoints = 0;
+  for (const p of projects) {
+    if (p.buildState === 'built') builds += 1;
+    const versions = await readJson<unknown[]>(
+      versionsIndexPath(tenantId, p.id),
+    );
+    if (Array.isArray(versions)) checkpoints += versions.length;
+  }
+  return { projects: projects.length, builds, checkpoints };
 }
 
 // ── Assets (content-addressed binaries, tenant-keyed) ───────────────────────

@@ -16,14 +16,19 @@ import {
   graphGetInputSchema,
   graphSaveInputSchema,
   projectCreateInputSchema,
+  projectDeleteInputSchema,
+  projectDuplicateInputSchema,
   projectGetInputSchema,
   projectRenameInputSchema,
   projectSetModelOverrideInputSchema,
   tenancyMeOutputSchema,
   versionCreateInputSchema,
   versionListInputSchema,
+  versionRestoreInputSchema,
+  versionRestoreOutputSchema,
   type TenancyMeOutput,
 } from '../../../../packages/shared-interfaces/src/prism-tenancy';
+import { buildUsageSummary } from '../../../lib/shell/usage-config';
 import * as store from '../../tenancy/tenant-store';
 import { protectedProcedure, router } from '../init';
 
@@ -86,6 +91,29 @@ export const tenancyRouter = router({
         );
         return project ?? notFound();
       }),
+
+    /** Gallery card action — duplicate into a fresh row in this tenant. */
+    duplicate: protectedProcedure
+      .input(projectDuplicateInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const clone = await store.duplicateProject(
+          ctx.session.user.id,
+          input.projectId,
+        );
+        return clone ?? notFound();
+      }),
+
+    /** Gallery card action — delete (the shell confirms before calling). */
+    delete: protectedProcedure
+      .input(projectDeleteInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const ok = await store.deleteProject(
+          ctx.session.user.id,
+          input.projectId,
+        );
+        if (!ok) notFound();
+        return { deleted: true, projectId: input.projectId };
+      }),
   }),
 
   graph: router({
@@ -132,5 +160,38 @@ export const tenancyRouter = router({
         );
         return versions ?? notFound();
       }),
+
+    /** E1 one-click restore — copies a checkpoint snapshot back onto the live
+     *  graph and returns it so the client can re-verify the round-trip. */
+    restore: protectedProcedure
+      .input(versionRestoreInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const restored = await store.restoreVersion(
+          ctx.session.user.id,
+          input.projectId,
+          input.versionId,
+        );
+        if (!restored) notFound();
+        return versionRestoreOutputSchema.parse(restored);
+      }),
+  }),
+
+  /** E6 usage meter — REAL per-tenant counts against the tier's configured
+   *  quotas (usage-config.ts). Honestly labeled `stub` until billing lands. */
+  usage: router({
+    get: protectedProcedure.query(async ({ ctx }) => {
+      const counts = await store.countUsage(ctx.session.user.id);
+      const tier =
+        (ctx.session.user as { planTier?: string }).planTier ?? 'free';
+      return buildUsageSummary(
+        tier,
+        {
+          projects: counts.projects,
+          builds: counts.builds,
+          credits: counts.checkpoints,
+        },
+        new Date().toISOString(),
+      );
+    }),
   }),
 });

@@ -220,3 +220,62 @@ export const versionListInputSchema = z
   .object({ projectId: prismTenancyIdSchema })
   .strict();
 export type VersionListInput = z.infer<typeof versionListInputSchema>;
+
+/** `tenancy.version.restore` (E1 one-click restore, W4). Restores a named
+ *  checkpoint's immutable snapshot back onto the live graph. Owner-free
+ *  (I11): the tenant is the session, and BOTH the project and the version
+ *  must belong to it or the store fails closed. */
+export const versionRestoreInputSchema = z
+  .object({
+    projectId: prismTenancyIdSchema,
+    versionId: prismTenancyIdSchema,
+  })
+  .strict();
+export type VersionRestoreInput = z.infer<typeof versionRestoreInputSchema>;
+
+/** `tenancy.version.restore` output — the restored graph, so the client can
+ *  re-verify the round-trip (E1 re-verify hook) without a second fetch. */
+export const versionRestoreOutputSchema = z.object({
+  version: prismProjectVersionSchema,
+  graph: z.record(z.string(), z.unknown()),
+});
+export type VersionRestoreOutput = z.infer<typeof versionRestoreOutputSchema>;
+
+// ── Project delete / duplicate (W4 gallery card actions) ─────────────────────
+
+export const projectDeleteInputSchema = z
+  .object({ projectId: prismTenancyIdSchema })
+  .strict();
+export type ProjectDeleteInput = z.infer<typeof projectDeleteInputSchema>;
+
+export const projectDuplicateInputSchema = z
+  .object({ projectId: prismTenancyIdSchema })
+  .strict();
+export type ProjectDuplicateInput = z.infer<typeof projectDuplicateInputSchema>;
+
+// ── Usage meter + plan tiers (E6 — schema now, billing provider later) ───────
+
+/** One row of the usage meter. `limit === null` means the tier has no cap on
+ *  this metric. `used`/`limit` are whole counts in `unit`; the shell renders a
+ *  gauge from the ratio and a tier badge from the plan. */
+export const prismUsageMetricSchema = z.object({
+  key: z.enum(['projects', 'builds', 'credits', 'collaborators']),
+  label: z.string().min(1).max(80),
+  used: z.number().int().nonnegative(),
+  limit: z.number().int().nonnegative().nullable(),
+  unit: z.string().min(1).max(24),
+});
+export type PrismUsageMetric = z.infer<typeof prismUsageMetricSchema>;
+
+/** `tenancy.usage.get` output. `source` names where the numbers came from —
+ *  `stub` in v1 (real per-tenant counts + configured quotas; NO billing
+ *  provider yet, E6) so the shell can honestly label the meter until Stripe
+ *  lands in the testing phase. */
+export const prismUsageOutputSchema = z.object({
+  v: z.literal(PRISM_TENANCY_CONTRACT_VERSION),
+  tier: prismPlanTierSchema,
+  source: z.enum(['stub', 'billing']),
+  metrics: z.array(prismUsageMetricSchema),
+  asOf: z.string().datetime(),
+});
+export type PrismUsageOutput = z.infer<typeof prismUsageOutputSchema>;

@@ -206,10 +206,13 @@ async function main() {
       ['tenancy.project.get', 'query', { projectId }],
       ['tenancy.project.rename', 'mutate', { projectId, name: 'stolen' }],
       ['tenancy.project.setModelOverride', 'mutate', { projectId, modelOverrideId: null }],
+      ['tenancy.project.duplicate', 'mutate', { projectId }],
+      ['tenancy.project.delete', 'mutate', { projectId }],
       ['tenancy.graph.get', 'query', { projectId }],
       ['tenancy.graph.save', 'mutate', { projectId, graph: { stolen: true } }],
       ['tenancy.version.list', 'query', { projectId }],
       ['tenancy.version.create', 'mutate', { projectId, label: 'steal' }],
+      ['tenancy.version.restore', 'mutate', { projectId, versionId: 'ver-steal' }],
     ];
     for (const [proc, kind, input] of cases) {
       const r = kind === 'query'
@@ -222,6 +225,12 @@ async function main() {
     const list = await trpcQuery('tenancy.project.list', null, B);
     check('cross.project.list', "B's list contains ONLY B's data (empty)",
       Array.isArray(trpcData(list)) && trpcData(list).length === 0);
+
+    // E6 usage meter is tenant-scoped: B's meter counts ONLY B's projects.
+    const usage = await trpcQuery('tenancy.usage.get', null, B);
+    const bProjects = trpcData(usage)?.metrics?.find((m) => m.key === 'projects');
+    check('cross.usage.get', "B's usage meter counts only B's projects (0)",
+      bProjects?.used === 0, `used=${bProjects?.used}`);
 
     const down = await req('GET', `/api/tenant/assets/${projectId}/${assetId}`, { jar: B });
     check('cross.asset.get', "B on A's asset is 404", down.status === 404,
