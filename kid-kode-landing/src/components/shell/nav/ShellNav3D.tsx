@@ -61,6 +61,11 @@ export default function ShellNav3D({
   const drawerRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // After an explicit close (Escape / scrim / trigger), the drawer slides off
+  // the edge that sits under the cursor — the browser re-fires mouseenter on
+  // the exposed edge and would instantly reopen. Suppress hover-reopen until
+  // the pointer actually leaves the nav region.
+  const suppressReopen = useRef(false);
 
   // Mount gate: avoids SSR/hydration mismatch for the canvas and lets us detect
   // the engine-iframe case client-side (lazy showpiece behind first paint, DL8).
@@ -82,6 +87,7 @@ export default function ShellNav3D({
 
   const doClose = useCallback(() => {
     cancelClose();
+    suppressReopen.current = true;
     setOpen(false);
     setHoverPeek(false);
   }, [cancelClose]);
@@ -164,13 +170,18 @@ export default function ShellNav3D({
       className="nav3-root"
       data-open={open ? 'true' : 'false'}
       onMouseEnter={cancelClose}
-      onMouseLeave={scheduleClose}
+      onMouseLeave={() => {
+        // Pointer left the whole nav region — re-arm hover-reveal + close.
+        suppressReopen.current = false;
+        scheduleClose();
+      }}
     >
       {/* Far-left edge: hover peeks the pull, hover-into opens (desktop);
           the trigger button is the tap target (mobile) + keyboard entry. */}
       <div
         className="nav3-edge"
         onMouseEnter={() => {
+          if (suppressReopen.current) return; // don't reopen right after close
           setHoverPeek(true);
           setOpen(true);
         }}
@@ -185,7 +196,14 @@ export default function ShellNav3D({
           aria-controls="nav3-drawer"
           onFocus={() => setHoverPeek(true)}
           onBlur={() => !open && setHoverPeek(false)}
-          onClick={() => (open ? doClose() : setOpen(true))}
+          onClick={() => {
+            if (open) {
+              doClose();
+            } else {
+              suppressReopen.current = false; // explicit open overrides suppress
+              setOpen(true);
+            }
+          }}
         />
       </div>
 
