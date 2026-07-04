@@ -8,10 +8,10 @@
 import '@/components/shell/design/prism-premium.css';
 import '@/components/shell/auth/auth.css';
 import '@/components/shell/dashboard/dashboard.css';
+import { Suspense } from 'react';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import DashboardShell from '@/components/shell/dashboard/DashboardShell';
-import { shellDisplay, shellMono } from '@/components/shell/design/shell-fonts';
 import { auth, ensureAuthSchema } from '@/server/auth/auth';
 import { listProjects } from '@/server/tenancy/tenant-store';
 
@@ -24,13 +24,15 @@ export default async function DashboardPage() {
   const user = session.user as typeof session.user & { planTier?: string };
   const projects = await listProjects(user.id);
   return (
-    <div className={`${shellDisplay.variable} ${shellMono.variable}`}>
+    // DashboardShell reads ?panel= via useSearchParams — Suspense-wrapped so
+    // the client boundary is explicit (the /app layout supplies the fonts).
+    <Suspense fallback={null}>
       <DashboardShell
         userName={user.name}
         userEmail={user.email}
         planTier={typeof user.planTier === 'string' ? user.planTier : 'free'}
         initialProjects={projects}
       />
-    </div>
+    </Suspense>
   );
 }

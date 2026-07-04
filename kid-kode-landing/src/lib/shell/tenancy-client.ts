@@ -83,6 +83,15 @@ export async function restoreVersion(
   );
 }
 
+/** The live graph, for the E1 restore re-verify hook (confirm the round-trip
+ *  landed). Returns null for a project with no graph yet. */
+export async function getGraph(
+  projectId: string,
+): Promise<Record<string, unknown> | null> {
+  const res = await trpc.tenancy.graph.get.query({ projectId });
+  return (res.graph as Record<string, unknown> | null) ?? null;
+}
+
 // ── E6 usage meter ───────────────────────────────────────────────────────────
 
 export async function getUsage(): Promise<PrismUsageOutput> {
