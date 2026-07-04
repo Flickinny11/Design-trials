@@ -1022,3 +1022,6 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [00:54:45] CHAIN/FINISH-F4: still building · 277m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
 [00:58:15] CHAIN/FINISH-F4: still building · 281m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
 [01:01:46] CHAIN/FINISH-F4: still building · 284m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
+[01:04:16] CHAIN/FINISH-F4: commit fa1682e2 — finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 
+[01:05:16] CHAIN/FINISH-F4: still building · 288m elapsed · agent up · 1046 commits · last: finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 
+[01:08:47] CHAIN/FINISH-F4: still building · 291m elapsed · agent up · 1046 commits · last: finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 

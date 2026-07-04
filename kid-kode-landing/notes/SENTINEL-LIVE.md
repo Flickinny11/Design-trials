@@ -756,3 +756,6 @@ complete marker: 'PRISM-FINISH-F4: RUN COMPLETE'
 [00:54:45] FINISH-F4 · 277m · agent=1 · still building · 277m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
 [00:58:15] FINISH-F4 · 281m · agent=1 · still building · 281m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
 [01:01:46] FINISH-F4 · 284m · agent=1 · still building · 284m elapsed · agent up · 1045 commits · last: finish-f4: merge prep — chain briefs/prompts + shell design law + swarm 
+[01:04:16] FINISH-F4 · 287m · agent=1 · commit fa1682e2 — finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 
+[01:05:16] FINISH-F4 · 288m · agent=1 · still building · 288m elapsed · agent up · 1046 commits · last: finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 
+[01:08:47] FINISH-F4 · 291m · agent=1 · still building · 291m elapsed · agent up · 1046 commits · last: finish-f4: judge round — advocate MUST-FIX fixed (galaxy fly-in ghost = 

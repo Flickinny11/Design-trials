@@ -172,7 +172,9 @@ Surfaces covered (details in the checklist table):
   re-housed as bottom sheets; hub pill "N elements" label; galaxy fly-in
   timed ghost frames (1s/2.5s/4s/6s) for advocate grading.
 
-Two store-fallbacks remain in the sweep (recorded honestly in sweep.json):
+Two store-fallback CLASSES remain in the sweep (three row occurrences —
+the gizmo-drag class appears in both the §C dock check and §E3; all recorded
+honestly in sweep.json):
 galaxy in-hub node click (orbiting moons + idle camera drift defeat blind
 pointer automation — F-2 precedent; the physical canvas click IS proven in
 §C05) and the keyframe pose-change gizmo drag (arrow-grab automation misses;
@@ -337,10 +339,10 @@ under `notes/verification/finish-f4/`.
 | 67 | E: canonical fixture restored — app boots back to 331 nodes / 141 content atoms | `{"n":331,"content":141}` | desktop/E06-fixture-restored.png | PASS |
 | 68 | M: mobile arrival — brand + full 6-link nav INSIDE the frame | `{"hub":"s1-arrival","brandIn":true,"navRowIn":true}` | mobile/M01-arrival.png | PASS |
 | 69 | M: app nav s1-arrival → s2-movement (tap) + shell inside frame | `{"now":"s2-movement","hub":"s2-movement","brandIn":true,"navRowIn":true}` | mobile/M02-s2-movement.png | PASS |
-| 70 | M: app nav s2-movement → s3-materia (tap) + shell inside frame | `{"now":"s3-materia","hub":"s3-materia","brandIn":true,"navRowIn":true}` | mobile/M02-s2-movement.png | PASS |
-| 71 | M: app nav s3-materia → s4-celestia (tap) + shell inside frame | `{"now":"s4-celestia","hub":"s4-celestia","brandIn":true,"navRowIn":true}` | mobile/M03-s3-materia.png | PASS |
-| 72 | M: app nav s4-celestia → s5-acquire (tap) + shell inside frame | `{"now":"s5-acquire","hub":"s5-acquire","brandIn":true,"navRowIn":true}` | mobile/M04-s4-celestia.png | PASS |
-| 73 | M: app nav s5-acquire → s6-atelier (tap) + shell inside frame | `{"now":"s6-atelier","hub":"s6-atelier","brandIn":true,"navRowIn":true}` | mobile/M05-s5-acquire.png | PASS |
+| 70 | M: app nav s2-movement → s3-materia (tap) + shell inside frame | `{"now":"s3-materia","hub":"s3-materia","brandIn":true,"navRowIn":true}` | mobile/M03-s3-materia.png | PASS |
+| 71 | M: app nav s3-materia → s4-celestia (tap) + shell inside frame | `{"now":"s4-celestia","hub":"s4-celestia","brandIn":true,"navRowIn":true}` | mobile/M04-s4-celestia.png | PASS |
+| 72 | M: app nav s4-celestia → s5-acquire (tap) + shell inside frame | `{"now":"s5-acquire","hub":"s5-acquire","brandIn":true,"navRowIn":true}` | mobile/M05-s5-acquire.png | PASS |
+| 73 | M: app nav s5-acquire → s6-atelier (tap) + shell inside frame | `{"now":"s6-atelier","hub":"s6-atelier","brandIn":true,"navRowIn":true}` | mobile/M06-s6-atelier.png | PASS |
 | 74 | M: all 5 nav taps landed with shell inside frame | `{}` | (state-assert) | PASS |
 | 75 | M: configurator swatch tap changes the build | `{"before":"orrery","after":"green"}` | mobile/M07-atelier-tap-configured.png | PASS |
 | 76 | M: RESERVE tap opens the reservation card (dialog ≥ 300px wide) | `{"o":{"elementId":"orr-acquire-reserve-card","size":{"w":0.34,"h":0.84},"anchor":{"x":0.5,"y":0.5}},"d":{"mounted":true,"w":340}}` | mobile/M08-reserve-overlay.png | PASS |
@@ -418,8 +420,38 @@ look"; the app "customer-believable luxury").
    `B02b` was recaptured clean (selection cleared first).
 
 All five product fixes and both hygiene patches landed BEFORE the final
-evidence run below — the bundle judges graded in round 2 is one coherent run
-of the final build.
+evidence run — the bundle graded in round 2 is one coherent run of the final
+build.
+
+### Judges — final verdicts (round 2, fresh context, Fable 5)
+
+- **prism-criteria-reviewer: PASS — 0 MUST-FIX.** Re-ran the static gates
+  itself (all matching this report's quoted outputs), proved C7 gate
+  immutability (0-line diff), confirmed the src diff is exactly the four
+  files / five fixes with FP-15 intact and the canonical fixture diff at 0
+  lines, parsed sweep.json machine-side (82 pass, 0/0 errors, fallbacks as
+  disclosed), spot-checked 8 frames (M13a–d ghost-free; E02b settled; C14 /
+  B04 / M11 de-collisions hold), validated the HubLabels fix semantics + its
+  disclosed side effect, and confirmed both merge ancestries. Its three
+  SHOULD-FIXes are addressed in this finalize commit: the checklist's mobile
+  nav rows now cite the DESTINATION frames; the fallback ledger sentence was
+  reworded ("two classes, three occurrences"); the live-gate side-output
+  overwrite (gates also write to their historical fixed dirs — finish-f2/,
+  fix1/) is dispositioned as a follow-up, since re-pointing them is a
+  gate-script change barred in-run by C7.
+- **user-advocate: PASS — 0 MUST-FIX** (round-1 MUST-FIX verified RESOLVED:
+  "the 6s approach is clean... nothing here is pinned"; the moving ACQUIRE
+  billboard between frames proves in-scene motion, not a stuck overlay; the
+  active-hub title suppression graded "SANE WAYFINDING, not a defect",
+  consistent even on the generic graph in D02). All four other fixes hold on
+  fresh frames; the E01a→E06 editing story graded coherent with the E06
+  fixture-restore matching A01 exactly; "no new regressions" beyond the
+  priority set. Its SHOULD-FIX (freshly-added default text is low-contrast
+  in preview — a user should SEE their new words) is a default-style design
+  choice: queued as founder follow-up #9 rather than changed in a
+  verify-only pass. Flags noted for the record: optional dim-instead-of-hide
+  for the active-hub title; mobile Inspector title truncation; desktop
+  galaxy 31fps as the "filmic" low end of the perf claim.
 
 ## Task 5 — MERGE PREP (prepared, NOT executed — founder decision)
 
@@ -519,7 +551,17 @@ in the report. Prior-phase evidence: `notes/verification/finish-f{1,2,3}/`.
    candidate: Clear targets the journey's own hub, or playback restores the
    pre-preview hub — left un-fixed here because it changes navigation
    behavior (a design call, not a de-collision).
-8. Chain-runner artifacts at repo root (pids/outs/preflight logs) are
+8. Freshly-added default text ("Add Text" → content 'Text') renders
+   low-contrast in preview — the round-2 advocate asks for a
+   higher-contrast default style so a new user SEES their words
+   immediately. Default-textSpec design choice; one-line change in
+   `create-text-node.ts` when the founder picks the default.
+9. Live gates also write side-outputs to their historical fixed dirs
+   (`finish-f2/galaxy-parity-gate.json`, `fix1/node-authorship-gate.json`,
+   `fix1/gate-final-frame.png`) — re-runs overwrite old evidence there.
+   Re-pointing them is a gate-script change (barred in-run by C7); queue a
+   `--out-dir` flag for the next non-verify run.
+10. Chain-runner artifacts at repo root (pids/outs/preflight logs) are
    gitignored, not committed; the FINISH prompts + founder-direction docs ARE
    committed for traceability.
 
