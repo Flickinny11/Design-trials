@@ -99,6 +99,13 @@ export default function HubNav() {
   // max-md:bottom-[84px] collided in a wide-viewport embedded pane).
   const compact = useEditorDensity() === 'compact';
   const railViewMode = useGraphEditorStore((s) => s.viewMode);
+  // FINISH-F3 (F-2 advocate flag) — the full-height Inspector dock (z-40,
+  // md:w-[484px] right-3) overlapped the centered rail's right end (the
+  // Atelier pill, z-30). While the dock is open, shift the rail's center left
+  // by half the dock width and cap its width so it always clears.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -129,13 +136,17 @@ export default function HubNav() {
     // Compact: clear the mobile mode toggle (and, in canvas mode, the tool
     // dock) above it. Regular/wide: the shipped desktop position (bottom-5).
     <div
-      className={`absolute z-30 left-1/2 -translate-x-1/2 pointer-events-auto ${
+      className={`absolute z-30 -translate-x-1/2 pointer-events-auto ${
         compact ? (railViewMode === 'canvas' ? 'bottom-[140px]' : 'bottom-[68px]') : 'bottom-5'
+      } ${
+        !compact && inspectorDockOpen
+          ? 'left-[calc(50%-244px)] max-w-[calc(100vw-540px)]'
+          : 'left-1/2 max-w-[96vw]'
       }`}
     >
       <div
         ref={railSlab.ref}
-        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge"
+        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge overflow-x-auto scrollbar-hide"
         style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
         <RailPill active={activeHubId === null} onClick={resetCamera}>

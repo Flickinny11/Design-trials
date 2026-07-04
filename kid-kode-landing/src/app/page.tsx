@@ -46,6 +46,7 @@ import PreviewHubNav from '@/components/editor/overlays/PreviewHubNav';
 import { requestHubNavigation } from '@/stores/useHubTransitionStore';
 import FunctionBindingPopup from '@/components/editor/overlays/FunctionBindingPopup';
 import OverlayHost from '@/components/editor/overlays/OverlayHost';
+import TransitionVeil from '@/components/editor/overlays/TransitionVeil';
 import AddNodeDialog from '@/components/editor/overlays/AddNodeDialog';
 import ChangeArtifactWizard from '@/components/editor/change-artifact/ChangeArtifactWizard';
 import ElementLibraryBrowser from '@/components/editor/elements/ElementLibraryBrowser';
@@ -803,6 +804,16 @@ export default function Page() {
               className="ds-metal ds-grain ds-edge relative flex items-center p-1"
               style={{ borderRadius: 'var(--ds-r-pill)' }}
             >
+              {/* FINISH-F3 (F-2 advocate flag) — smoked inlay under the label
+                  row: the slab's brushed-x highlight band read as a "track"
+                  line striking straight through the inactive mode labels. The
+                  veil keeps the machined rim while the labels sit on smoked
+                  glass. */}
+              <span
+                aria-hidden
+                className="absolute inset-1 rounded-full pointer-events-none"
+                style={{ background: 'linear-gradient(180deg, rgba(8,10,15,0.4), rgba(8,10,15,0.22))' }}
+              />
               {/* Sliding brass thumb — translateX only, spring-eased. */}
               <span
                 aria-hidden
@@ -954,6 +965,10 @@ export default function Page() {
           detail card opened by the watch's overlay functionBinding. */}
       <FunctionBindingPopup />
       <OverlayHost />
+      {/* FINISH-F3 — branded interstitial over the covered hub-transition
+          curtain (a first visit to a heavy hub holds the curtain during the
+          mount stall; the maison wordmark makes the dwell read intentional). */}
+      <TransitionVeil />
       {/* UI-WOW P2 — signature magnetic pointer (augments the OS cursor; inert on
           touch / reduced-motion). DESIGN-REFERENCES §7. */}
       <MagneticCursor />

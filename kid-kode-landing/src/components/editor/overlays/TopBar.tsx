@@ -159,10 +159,13 @@ export default function TopBar() {
           </div>
         )}
 
-        {/* UI-WOW — bound the breadcrumb (min-w-0 + max-w + truncate on the
-            node name) so a long selected-node name can't grow rightward into
-            the absolutely-centered mode pill (advocate label-overlap flag). */}
-        <div className="flex items-center gap-1.5 text-[12px] font-ui font-medium min-w-0 max-w-[32vw]">
+        {/* UI-WOW / FINISH-F3 — bound the breadcrumb (min-w-0 + max-w + truncate
+            on the node name) so a long selected-node name can't grow rightward
+            into the absolutely-centered mode pill. 32vw was NOT enough at
+            1600px (the node-name chip struck the pill's "Galaxy" segment —
+            F-3 advocate MUST-FIX): the pill's left edge sits at 50vw−156px and
+            this cluster starts ≈360px in, so the real budget is 50vw−520px. */}
+        <div className="flex items-center gap-1.5 text-[12px] font-ui font-medium min-w-0 max-w-[max(140px,calc(50vw_-_520px))]">
           <button
             onClick={resetCamera}
             className="ds-press px-2 py-1 rounded-ds-xs text-ds-text-mid hover:text-ds-text hover:bg-white/5 transition-colors flex items-center gap-1"
@@ -214,13 +217,16 @@ export default function TopBar() {
               />
             ))}
           </div>
-          {/* UI-WOW P2 — the wide level text only appears at 2xl, where the
-              right cluster clears the absolutely-centered mode pill. The compact
-              L0–L4 bars stay visible at lg+ as the zoom indicator. */}
-          <div className="hidden 2xl:block text-[10px] font-mono text-ds-text-mid tracking-widest whitespace-nowrap">
+          {/* UI-WOW P2 / FINISH-F3 — the wide level text needs the right
+              cluster to clear the absolutely-centered mode pill. 2xl (1536)
+              was NOT enough: in the 1536–1620px band the readout struck the
+              pill's "Preview App" segment (F-2 advocate flag, reproduced at
+              1600×900). 1680px is the measured clearance. The compact L0–L4
+              bars stay visible at lg+ as the zoom indicator. */}
+          <div className="hidden min-[1680px]:block text-[10px] font-mono text-ds-text-mid tracking-widest whitespace-nowrap">
             {zoomLevel} · {zoomDesc[zoomLevel]}
           </div>
-          <div className="hidden 2xl:block w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
+          <div className="hidden min-[1680px]:block w-px h-6" style={{ background: 'var(--ds-edge-side)' }} />
         </div>
         {/* Graph health — recessed instrument readout. Hidden on phone widths
             (advocate MUST-FIX 2026-06-10: it overflowed the right edge at

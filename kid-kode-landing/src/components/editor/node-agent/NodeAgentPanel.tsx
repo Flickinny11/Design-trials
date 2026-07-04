@@ -28,6 +28,15 @@ export default function NodeAgentPanel() {
   // FINISH F-1 — the open keyframe strip owns the bottom band; lift clear of it
   // (it was covering the lanes' right-side capture buttons).
   const keyframePanelOpen = useGraphEditorStore((s) => s.keyframePanelOpen);
+  // FINISH-F3 — the full-height Inspector dock (md:w-[484px], right-3, z-40)
+  // owns the same bottom-right corner and its glass pane also hosts the edit
+  // affordances. While the dock is open the agent panel YIELDS (display:none —
+  // every relocation attempt collided with the camera HUD / hub rail band);
+  // closing the dock brings it straight back. Engine behaviour (W-3 tests)
+  // is untouched — this is presentation only.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
   const nodes = useGraphSourceStore((s) => s.nodes);
   const state = useSyncExternalStore(
     nodeAgentController.subscribe,
@@ -72,7 +81,7 @@ export default function NodeAgentPanel() {
       // Bottom-right column: clear of the left Canvas toolbar dock, below the
       // right Inspector card, and right of the center minimap. Capped height with
       // its own scroll so a long plan never overlaps the bottom hub pager.
-      className={`absolute ${keyframePanelOpen ? 'bottom-[318px]' : 'bottom-3'} right-3 z-40 pointer-events-auto flex flex-col gap-2 w-[260px] max-h-[58vh] overflow-y-auto p-3 rounded-[10px] transition-[bottom] duration-300`}
+      className={`absolute ${inspectorDockOpen ? 'hidden' : ''} ${keyframePanelOpen ? 'bottom-[318px]' : 'bottom-3'} right-3 z-40 pointer-events-auto flex flex-col gap-2 w-[260px] max-h-[58vh] overflow-y-auto p-3 rounded-[10px] transition-[bottom] duration-300`}
       style={{
         color: 'var(--ds-text)',
         background: 'var(--ds-grad-smoked, rgba(18,20,24,0.86))',

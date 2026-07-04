@@ -149,8 +149,19 @@ export default function Minimap() {
     });
   }, [selectedElementId, hoveredElementId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
 
+  // FINISH-F3 — the full-height Inspector dock (glass, z-40) mounts over this
+  // corner; the radar ghosting through the translucent pane made the dock's
+  // lower controls illegible. Fade the radar while the dock is open.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
+
   return (
-    <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
+    <div
+      className={`absolute z-20 bottom-5 right-5 pointer-events-none transition-opacity duration-300 ${
+        inspectorDockOpen ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
       {/* Machined bezel plate around a recessed instrument well. */}
       <div ref={bezelSlab.ref} className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
         {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
