@@ -20,6 +20,20 @@ import type {
   IntakeIntegrationRef,
 } from '../../../../packages/shared-interfaces/src/prism-intake';
 import type { BrandProfile } from '../../../../packages/shared-interfaces/src/prism-brand';
+import { intakeHeadTiles } from '../integrations/catalog';
+
+// W3 (task 6): the intake connect-card one-click tiles bind to the SHARED
+// curated head catalog (src/lib/shell/integrations/catalog.ts) — one source of
+// truth for both the intake card and the /app/integrations surface, never a
+// parallel hardcoded list. Long-tail asks still flow through the card's
+// "connect anything" request path (decision C rider).
+const CONNECT_CARD_OPTIONS: readonly CardOption[] = intakeHeadTiles().map((t) => ({
+  id: t.providerId,
+  label: t.label,
+  hint: t.hint,
+  brandMark: t.brandMark,
+  providerId: t.providerId,
+}));
 
 // ── Direction Boards (real 3D mini-scenes; each distinct) ────────────────────
 
@@ -197,14 +211,10 @@ export const DECK: readonly CardDef[] = [
       'One-click integrations cover the head; describe anything else and Prism authors the connector. Import an existing repo if you have one.',
     kind: 'capability-tiles',
     multi: true,
-    options: [
-      { id: 'stripe', label: 'Stripe', hint: 'Payments', brandMark: 'stripe', providerId: 'stripe' },
-      { id: 'supabase', label: 'Supabase', hint: 'Postgres + auth', brandMark: 'supabase', providerId: 'supabase' },
-      { id: 'github', label: 'GitHub', hint: 'Repos, CI', brandMark: 'github', providerId: 'github' },
-      { id: 'slack', label: 'Slack', hint: 'Notifications', brandMark: 'slack', providerId: 'slack' },
-      { id: 'openai', label: 'OpenAI', hint: 'Models', brandMark: 'openai', providerId: 'openai' },
-      { id: 'resend', label: 'Resend', hint: 'Email', brandMark: 'resend', providerId: 'resend' },
-    ],
+    // Bound to the shared curated head catalog (W3 task 6). GitHub has its own
+    // App install path (rendered by the card's GitHub toggle), so it is not a
+    // one-click catalog tile here.
+    options: CONNECT_CARD_OPTIONS,
   },
   {
     id: 'sections',
