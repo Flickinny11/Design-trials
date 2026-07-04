@@ -66,6 +66,14 @@ RUNTIME_ALLOW = {
     # call. Rationale logged in notes/mockup-pipeline.md §10 (2026-06-14).
     "three/examples/jsm/utils/BufferGeometryUtils.js",
     "zustand", "zustand/middleware",
+    # SHELL W0 (PRISM-FRONTEND-SHELL-SPEC v1.1 I4 "contract-first tRPC + Zod")
+    # — the shell↔engine command/event contract, Brand Profile schema, and
+    # CollabRoom types (decision E) are Zod-validated in
+    # packages/shared-interfaces/src/prism-*.ts. zod is pure schema validation
+    # (no renderer, no DOM, no transport); already vendored transitively at
+    # 3.25.76, promoted to a direct dep. Rationale logged in
+    # notes/mockup-pipeline.md §10 (2026-07-04).
+    "zod",
     # EDITOR-EXP P7 (C32-34) — undo/redo. zundo is a pure zustand temporal
     # middleware (no renderer, fits zustand ^5); immer for patch-based history.
     # Approved per RE-VERIFY-DECISIONS.md (zundo 2.3, immer 11.1.8).

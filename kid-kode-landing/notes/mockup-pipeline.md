@@ -404,3 +404,15 @@ The plan that produced this fix-up lives at `/Users/loganbaird/.claude/plans/no-
 ### §10 addendum — F5 allowlist (2026-06-20)
 
 `@dimforge/rapier3d-compat@0.19.3` added to `RUNTIME_ALLOW` in `.claude/hooks/dependency-allowlist-check.py`. Rationale: physics for the F5 Atelier configurator's drag-drop part snapping (magnetic anchor sockets + spring-settle joints). `-compat` ships inlined base64 WASM (no bundler/loader config); runs as a headless physics step alongside `three/webgpu` — NOT a second renderer, NOT DOM. Pinned 0.19.x to start fresh on the post-0.18 API (ShapeCastHit rename). See docs/prism/ORRERY-NO7-PROTOTYPE-SPEC.md §1.
+
+### §10 addendum — SHELL W0 allowlist (2026-07-04)
+
+`zod@^3.25.76` added to `RUNTIME_ALLOW` in `.claude/hooks/dependency-allowlist-check.py`
+and promoted from a transitive vendored dep to a direct dependency. Rationale: the
+frontend-shell spec (PRISM-FRONTEND-SHELL-SPEC.md v1.1, invariant I4 "contract-first
+tRPC + Zod") mandates Zod-validated contracts. SHELL W0 authors the shell↔engine
+command/event contract (`packages/shared-interfaces/src/prism-shell.ts`), the Brand
+Profile schema (`prism-brand.ts`), and the CollabRoom TYPES-only contract
+(`prism-collab.ts`, decision E). zod is pure runtime schema validation — no renderer,
+no DOM, no transport, no second state library (I3 intact). Version matches the already
+vendored 3.25.76 (no downgrade).
