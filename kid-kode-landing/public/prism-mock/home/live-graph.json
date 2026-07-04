@@ -748,36 +748,39 @@
         "letterSpacing": -0.01,
         "align": "center",
         "fill": {
-          "kind": "solid",
-          "color": "#f3ead2"
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "outline": {
           "color": "#1a1406",
-          "width": 0.22
+          "width": 0.2
         },
         "glow": {
-          "color": "#ffe6a8",
-          "intensity": 0.2
+          "color": "#ffdf9e",
+          "intensity": 0.18
         },
         "extrude": {
           "enabled": true,
-          "depth": 0.2,
+          "depth": 0.133,
           "bevelEnabled": true,
-          "bevelThickness": 0.022,
-          "bevelSize": 0.02,
+          "bevelThickness": 0.0203,
+          "bevelSize": 0.0179,
           "bevelSegments": 3,
           "curveSegments": 14,
-          "transmission": 0.9,
-          "ior": 1.5,
-          "thickness": 0.2,
-          "clearcoat": 1,
-          "clearcoatRoughness": 0.06,
-          "dispersion": 0.32,
-          "roughness": 0.05,
-          "metalness": 0,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
           "sideFill": {
             "kind": "solid",
-            "color": "#d8c69a"
+            "color": "#7d5c26"
           }
         }
       },
@@ -798,7 +801,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.34,
+          "y": 2.06,
           "scale": 0.49
         },
         "tablet": {
@@ -888,7 +891,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.88,
+          "y": 1.64,
           "scale": 0.45
         },
         "tablet": {
@@ -2044,8 +2047,8 @@
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
-        "emissive": "#6a4a15",
-        "emissiveIntensity": 0.5,
+        "emissive": "#8a6420",
+        "emissiveIntensity": 0.62,
         "normalScale": 1,
         "displacementScale": 0,
         "envMapIntensity": 1.7,
@@ -8928,34 +8931,39 @@
         "letterSpacing": -0.01,
         "align": "center",
         "fill": {
-          "kind": "texture",
-          "url": "/prism-mock/orrery/materia/brass-macro.png"
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "outline": {
           "color": "#1a1406",
-          "width": 0.22
+          "width": 0.174
         },
         "glow": {
-          "color": "#ffe6a8",
-          "intensity": 0.16
+          "color": "#ffdf9e",
+          "intensity": 0.18
         },
         "extrude": {
           "enabled": true,
-          "depth": 0.14,
+          "depth": 0.105,
           "bevelEnabled": true,
           "bevelThickness": 0.016,
           "bevelSize": 0.014,
           "bevelSegments": 3,
           "curveSegments": 12,
-          "metalness": 0.85,
-          "roughness": 0.3,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
           "sideFill": {
             "kind": "solid",
-            "color": "#6b4f1d"
-          },
-          "faceFill": {
-            "kind": "texture",
-            "url": "/prism-mock/orrery/materia/brass-macro.png"
+            "color": "#7d5c26"
           }
         }
       },
@@ -8977,7 +8985,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.36,
+          "y": 2.22,
           "scale": 0.55
         }
       }
@@ -9589,7 +9597,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.62,
+          "y": 2.8,
           "z": 0.3,
           "width": 7.2,
           "height": 0.8
@@ -9624,7 +9632,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.62,
+        "y": 2.8,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -9641,34 +9649,39 @@
         "letterSpacing": -0.005,
         "align": "center",
         "fill": {
-          "kind": "texture",
-          "url": "/prism-mock/orrery/materia/brass-macro.png"
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "outline": {
           "color": "#1a1406",
-          "width": 0.22
+          "width": 0.2
         },
         "glow": {
-          "color": "#ffe6a8",
-          "intensity": 0.16
+          "color": "#ffdf9e",
+          "intensity": 0.18
         },
         "extrude": {
           "enabled": true,
-          "depth": 0.14,
+          "depth": 0.126,
           "bevelEnabled": true,
           "bevelThickness": 0.016,
           "bevelSize": 0.014,
           "bevelSegments": 3,
           "curveSegments": 12,
-          "metalness": 0.85,
-          "roughness": 0.3,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
           "sideFill": {
             "kind": "solid",
-            "color": "#6b4f1d"
-          },
-          "faceFill": {
-            "kind": "texture",
-            "url": "/prism-mock/orrery/materia/brass-macro.png"
+            "color": "#7d5c26"
           }
         }
       },
@@ -9690,8 +9703,8 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.4,
-          "scale": 0.55
+          "y": 2.2,
+          "scale": 0.48
         }
       }
     },
@@ -9703,7 +9716,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.15,
+          "y": 2.04,
           "z": 0.5,
           "width": 6.8,
           "height": 0.3
@@ -9738,7 +9751,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.15,
+        "y": 2.04,
         "z": 0.5,
         "rotationX": 0,
         "rotationY": 0,
@@ -9773,8 +9786,8 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.04,
-          "scale": 0.48
+          "y": 1.88,
+          "scale": 0.44
         }
       }
     },
@@ -10220,7 +10233,7 @@
         "mobile": {
           "x": 0,
           "y": -1.223,
-          "scale": 0.5
+          "scale": 0.62
         }
       }
     },
@@ -10311,7 +10324,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.052,
+          "y": 0.702,
           "scale": 0.52
         }
       }
@@ -10403,7 +10416,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.052,
+          "y": 0.702,
           "scale": 0.52
         }
       }
@@ -10495,7 +10508,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.052,
+          "y": 0.702,
           "scale": 0.52
         }
       }
@@ -10587,7 +10600,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 0.056,
+          "y": -0.294,
           "scale": 0.52
         }
       }
@@ -10665,8 +10678,8 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 0.056,
-          "scale": 0.52
+          "y": -0.294,
+          "scale": 0.64
         }
       }
     },
@@ -11112,7 +11125,7 @@
         "mobile": {
           "x": 0,
           "y": -2.373,
-          "scale": 0.45
+          "scale": 0.6
         }
       }
     },
@@ -11281,7 +11294,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.78,
+          "y": 2.98,
           "z": 0.3,
           "width": 7.2,
           "height": 0.8
@@ -11316,7 +11329,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.78,
+        "y": 2.98,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -11333,16 +11346,40 @@
         "letterSpacing": -0.005,
         "align": "center",
         "fill": {
-          "kind": "solid",
-          "color": "#e6c878"
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "outline": {
           "color": "#1a1406",
-          "width": 0.18
+          "width": 0.2
         },
         "glow": {
-          "color": "#ffe6a8",
-          "intensity": 0.22
+          "color": "#ffdf9e",
+          "intensity": 0.18
+        },
+        "extrude": {
+          "enabled": true,
+          "depth": 0.126,
+          "bevelEnabled": true,
+          "bevelThickness": 0.016,
+          "bevelSize": 0.014,
+          "bevelSegments": 3,
+          "curveSegments": 14,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
+          "sideFill": {
+            "kind": "solid",
+            "color": "#7d5c26"
+          }
         }
       },
       "animationBindings": [
@@ -11363,7 +11400,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.38,
+          "y": 2.42,
           "scale": 0.55
         }
       }
@@ -11376,7 +11413,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.35,
+          "y": 2.5,
           "z": 0.25,
           "width": 6.6,
           "height": 0.3
@@ -11411,7 +11448,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.35,
+        "y": 2.5,
         "z": 0.25,
         "rotationX": 0,
         "rotationY": 0,
@@ -11686,7 +11723,7 @@
         "alpha": 1
       },
       "intent": {
-        "caption": "Scarcity eyebrow.",
+        "caption": "Chapter folio \"V · EDITION OF ELEVEN\" — the scarcity eyebrow of the Acquire chapter, part of the numeral wayfinding system (Arrival→Atelier). Tracked-out Sora capitals in champagne with a faint warm glow; purely editorial, no interaction.",
         "behaviorSpec": {
           "interactions": [],
           "apiCalls": [],
@@ -11723,15 +11760,19 @@
         "scaleZ": 1
       },
       "textSpec": {
-        "content": "EDITION OF ELEVEN",
+        "content": "V · EDITION OF ELEVEN",
         "fontFamily": "Sora",
         "fontWeight": 500,
         "fontSize": 0.1,
-        "letterSpacing": 0.32,
+        "letterSpacing": 0.4,
         "align": "center",
         "fill": {
           "kind": "solid",
-          "color": "#8b93a6"
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
         }
       },
       "animationBindings": [],
@@ -11805,35 +11846,40 @@
         "letterSpacing": -0.01,
         "align": "center",
         "fill": {
-          "kind": "texture",
-          "url": "/prism-mock/orrery/materia/brass-macro.png"
-        },
-        "outline": {
-          "color": "#1a1406",
-          "width": 0.22
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "glow": {
-          "color": "#d8a73f",
-          "intensity": 0.16
+          "color": "#ffdf9e",
+          "intensity": 0.18
         },
         "extrude": {
           "enabled": true,
-          "depth": 0.14,
+          "depth": 0.078,
           "bevelEnabled": true,
-          "bevelThickness": 0.016,
-          "bevelSize": 0.014,
+          "bevelThickness": 0.012,
+          "bevelSize": 0.0106,
           "bevelSegments": 3,
           "curveSegments": 12,
-          "metalness": 0.85,
-          "roughness": 0.3,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
           "sideFill": {
             "kind": "solid",
-            "color": "#6b4f1d"
-          },
-          "faceFill": {
-            "kind": "texture",
-            "url": "/prism-mock/orrery/materia/brass-macro.png"
+            "color": "#7d5c26"
           }
+        },
+        "outline": {
+          "color": "#1a1406",
+          "width": 0.129
         }
       },
       "animationBindings": [
@@ -18088,7 +18134,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.15,
+          "y": 2.04,
           "z": 0.2,
           "width": 4.27,
           "height": 0.39
@@ -18123,7 +18169,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.15,
+        "y": 2.04,
         "z": 0.44,
         "rotationX": 0,
         "rotationY": 0,
@@ -18167,7 +18213,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.04,
+          "y": 1.88,
           "scale": 0.48
         }
       }
@@ -18627,7 +18673,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.697,
+          "y": 1.347,
           "scale": 0.52
         }
       }
@@ -18719,7 +18765,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 0.406,
+          "y": 0.056,
           "scale": 0.52
         }
       }
@@ -18811,7 +18857,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.77,
-          "y": 1.052,
+          "y": 0.702,
           "scale": 0.52
         }
       }
@@ -18903,7 +18949,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.77,
-          "y": 1.052,
+          "y": 0.702,
           "scale": 0.52
         }
       }
@@ -19284,7 +19330,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.35,
+          "y": 2.5,
           "z": 0.2,
           "width": 6.84,
           "height": 0.4
@@ -19319,7 +19365,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.35,
+        "y": 2.5,
         "z": 0.19,
         "rotationX": 0,
         "rotationY": 0,
@@ -19891,33 +19937,40 @@
         "letterSpacing": 0.02,
         "align": "center",
         "fill": {
-          "kind": "solid",
-          "color": "#f3ead2"
+          "kind": "gradient",
+          "from": "#f7eed6",
+          "to": "#d2ae66",
+          "angleDeg": 90
         },
         "glow": {
-          "color": "#ffe6a8",
-          "intensity": 0.26
+          "color": "#ffdf9e",
+          "intensity": 0.18
         },
         "extrude": {
           "enabled": true,
-          "depth": 0.2,
+          "depth": 0.085,
           "bevelEnabled": true,
-          "bevelThickness": 0.022,
-          "bevelSize": 0.02,
+          "bevelThickness": 0.013,
+          "bevelSize": 0.0115,
           "bevelSegments": 3,
           "curveSegments": 14,
-          "transmission": 0.9,
-          "ior": 1.5,
-          "thickness": 0.2,
-          "clearcoat": 1,
-          "clearcoatRoughness": 0.06,
-          "dispersion": 0.3,
-          "roughness": 0.05,
-          "metalness": 0,
+          "metalness": 0.68,
+          "roughness": 0.26,
+          "transmission": 0,
+          "faceFill": {
+            "kind": "gradient",
+            "from": "#f7eed6",
+            "to": "#d2ae66",
+            "angleDeg": 90
+          },
           "sideFill": {
             "kind": "solid",
-            "color": "#d8c69a"
+            "color": "#7d5c26"
           }
+        },
+        "outline": {
+          "color": "#1a1406",
+          "width": 0.14
         }
       },
       "animationBindings": [
@@ -30988,9 +31041,9 @@
       "receivesLighting": true,
       "responsiveScenePos": {
         "mobile": {
-          "x": 0.32,
-          "y": -1.3,
-          "scale": 0.55
+          "x": 0,
+          "y": -0.95,
+          "scale": 0.42
         }
       }
     },
@@ -31081,7 +31134,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 1.88,
+          "y": 1.64,
           "scale": 0.45
         }
       }
@@ -31166,7 +31219,8 @@
             "value": "Eleven made — one is yours"
           }
         ]
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-acquire-reserve-card",
@@ -31252,7 +31306,8 @@
             "value": "A curator replies within 24 hours"
           }
         ]
-      }
+      },
+      "receivesLighting": false
     },
     {
       "nodeId": "orr-acquire-enquire-card",
@@ -31330,6 +31385,412 @@
             "value": "Mon–Fri · 9–18 CET"
           }
         ]
+      },
+      "receivesLighting": false
+    },
+    {
+      "nodeId": "orr-arrival-folio",
+      "subtype": "section-eyebrow",
+      "parentHubId": "s1-arrival",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.24,
+          "z": 0.3,
+          "width": 5.2,
+          "height": 0.18
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Chapter folio \"I · ARRIVAL\" — the numeral wayfinding eyebrow of the six-chapter ORRERY No.7 story (Arrival→Atelier). Tracked-out Sora capitals in champagne (#d8c69a) with a faint warm glow, seated above the hub headline; purely editorial, no interaction.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            "I · ARRIVAL"
+          ],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.24,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "I · ARRIVAL",
+        "fontFamily": "Sora",
+        "fontWeight": 500,
+        "fontSize": 0.1,
+        "letterSpacing": 0.4,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.32,
+          "scale": 0.55
+        }
+      }
+    },
+    {
+      "nodeId": "orr-movement-folio",
+      "subtype": "section-eyebrow",
+      "parentHubId": "s2-movement",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.1,
+          "z": 0.3,
+          "width": 5.2,
+          "height": 0.18
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Chapter folio \"II · THE CALIBRE\" — the numeral wayfinding eyebrow of the six-chapter ORRERY No.7 story (Arrival→Atelier). Tracked-out Sora capitals in champagne (#d8c69a) with a faint warm glow, seated above the hub headline; purely editorial, no interaction.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            "II · THE CALIBRE"
+          ],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.1,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "II · THE CALIBRE",
+        "fontFamily": "Sora",
+        "fontWeight": 500,
+        "fontSize": 0.1,
+        "letterSpacing": 0.4,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.42,
+          "scale": 0.5
+        }
+      }
+    },
+    {
+      "nodeId": "orr-materia-folio",
+      "subtype": "section-eyebrow",
+      "parentHubId": "s3-materia",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.3,
+          "z": 0.3,
+          "width": 5.2,
+          "height": 0.18
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Chapter folio \"III · THE SUBSTANCES\" — the numeral wayfinding eyebrow of the six-chapter ORRERY No.7 story (Arrival→Atelier). Tracked-out Sora capitals in champagne (#d8c69a) with a faint warm glow, seated above the hub headline; purely editorial, no interaction.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            "III · THE SUBSTANCES"
+          ],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.3,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "III · THE SUBSTANCES",
+        "fontFamily": "Sora",
+        "fontWeight": 500,
+        "fontSize": 0.1,
+        "letterSpacing": 0.4,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.44,
+          "scale": 0.5
+        }
+      }
+    },
+    {
+      "nodeId": "orr-celestia-folio",
+      "subtype": "section-eyebrow",
+      "parentHubId": "s4-celestia",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.35,
+          "z": 0.3,
+          "width": 5.2,
+          "height": 0.18
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Chapter folio \"IV · THE COMPLICATION\" — the numeral wayfinding eyebrow of the six-chapter ORRERY No.7 story (Arrival→Atelier). Tracked-out Sora capitals in champagne (#d8c69a) with a faint warm glow, seated above the hub headline; purely editorial, no interaction.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            "IV · THE COMPLICATION"
+          ],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.45,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "IV · THE COMPLICATION",
+        "fontFamily": "Sora",
+        "fontWeight": 500,
+        "fontSize": 0.1,
+        "letterSpacing": 0.4,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.64,
+          "scale": 0.5
+        }
+      }
+    },
+    {
+      "nodeId": "orr-atelier-folio",
+      "subtype": "section-eyebrow",
+      "parentHubId": "s6-atelier",
+      "serviceTag": "ui-text",
+      "visual": {
+        "transform": {
+          "x": 0,
+          "y": 3.02,
+          "z": 0.3,
+          "width": 5.2,
+          "height": 0.18
+        },
+        "alpha": 1
+      },
+      "intent": {
+        "caption": "Chapter folio \"VI · YOUR COMMISSION\" — the numeral wayfinding eyebrow of the six-chapter ORRERY No.7 story (Arrival→Atelier). Tracked-out Sora capitals in champagne (#d8c69a) with a faint warm glow, seated above the hub headline; purely editorial, no interaction.",
+        "behaviorSpec": {
+          "interactions": [],
+          "apiCalls": [],
+          "dataBindings": [],
+          "emits": [],
+          "listens": [],
+          "triggersDownstream": []
+        },
+        "stateEffects": [],
+        "visualSpec": {
+          "textContent": [
+            "VI · YOUR COMMISSION"
+          ],
+          "layers": []
+        },
+        "contracts": {
+          "inputs": {},
+          "outputs": {}
+        }
+      },
+      "codeRef": "",
+      "backendRef": null,
+      "renderMode": "text",
+      "depthMapUrl": null,
+      "meshUrl": null,
+      "cinematicPrimitives": [],
+      "scenePosition": {
+        "x": 0,
+        "y": 3.02,
+        "z": 0.3,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "textSpec": {
+        "content": "VI · YOUR COMMISSION",
+        "fontFamily": "Sora",
+        "fontWeight": 500,
+        "fontSize": 0.1,
+        "letterSpacing": 0.4,
+        "align": "center",
+        "fill": {
+          "kind": "solid",
+          "color": "#d8c69a"
+        },
+        "glow": {
+          "color": "#ffe6a8",
+          "intensity": 0.1
+        }
+      },
+      "animationBindings": [],
+      "receivesLighting": false,
+      "depthLayer": "overlay",
+      "responsiveScenePos": {
+        "mobile": {
+          "x": 0,
+          "y": 2.82,
+          "scale": 0.55
+        }
       }
     }
   ],
