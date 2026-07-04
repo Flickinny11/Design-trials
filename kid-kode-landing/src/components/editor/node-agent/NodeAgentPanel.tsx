@@ -162,7 +162,9 @@ export default function NodeAgentPanel() {
         <div data-role="node-agent-plan-result" data-plan-steps={plan.steps.length} data-plan-origin={plan.origin} data-trigger={state.trigger ?? ''} className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5">
             <span className="text-[7px] font-mono tracking-[0.14em] uppercase px-1 py-0.5 rounded" style={{ color: 'var(--ds-text-hi)', background: plan.origin === 'live' ? 'rgba(80,170,120,0.18)' : 'rgba(185,145,79,0.18)' }}>
-              {plan.origin === 'live' ? 'Live' : 'Stub'} · {state.trigger === 'self-heal' ? 'self-heal' : 'prompt'}
+              {/* M-1 journey fix: 'Stub' is engineer-speak — a designer reads
+                  "Offline draft" (the honest meaning: no provider, local plan). */}
+              {plan.origin === 'live' ? 'Live' : 'Offline draft'} · {state.trigger === 'self-heal' ? 'self-heal' : 'prompt'}
             </span>
             <span className="text-[8.5px] font-mono flex-1 truncate" style={{ color: 'var(--ds-text)' }}>{plan.steps.length} step{plan.steps.length === 1 ? '' : 's'}</span>
           </div>

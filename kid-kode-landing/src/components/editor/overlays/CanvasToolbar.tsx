@@ -984,7 +984,15 @@ export default function CanvasToolbar() {
                 multiCount={selectedNodeIds.size}
                 onToast={setToast}
                 keyframeOpen={keyframeOpen}
-                onToggleKeyframe={() => setKeyframeOpen(!keyframeOpen)}
+                onToggleKeyframe={() => {
+                  // MASTERPIECE M-1 (journey MAJOR): opening the keyframe strip
+                  // is a mode hand-off — the Animation flyout used to stay up,
+                  // floating exactly over the strip's ruler, and a ruler click
+                  // could land on the flyout's Preview App key instead (yanking
+                  // the user out of Canvas). Close the flyout as the strip opens.
+                  if (!keyframeOpen) setActiveGroup(null);
+                  setKeyframeOpen(!keyframeOpen);
+                }}
                 onComing={(t) => showComing(t, 'bespoke authoring lane')}
               />
             )}
