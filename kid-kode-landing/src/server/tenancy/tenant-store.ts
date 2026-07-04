@@ -441,7 +441,11 @@ export async function restoreVersion(
   const versions = await listVersions(tenantId, projectId);
   const version = versions?.find((v) => v.id === versionId) ?? null;
   if (!version) return null; // not this project's checkpoint == not found
-  return serialized(tenantId, async () => {
+  // Write the graph under the per-tenant lock. NOTE: do NOT call updateProject
+  // (which itself takes the lock) from inside this block — re-entering
+  // serialized() on the same tenant deadlocks the chain. The graphRef patch
+  // runs as its OWN serialized op after this one resolves.
+  const snapshot = await serialized(tenantId, async () => {
     const snapshotFile = insideTenant(
       tenantId,
       'projects',
@@ -449,15 +453,17 @@ export async function restoreVersion(
       'versions',
       `${safeId(versionId, 'version')}.json`,
     );
-    const snapshot = await readJson<Record<string, unknown>>(snapshotFile);
-    if (snapshot == null) return null;
-    await writeJson(graphPath(tenantId, projectId), snapshot);
-    await updateProject(tenantId, projectId, (p) => ({
-      ...p,
-      graphRef: `tenancy:${owned.id}/graph.json`,
-    }));
-    return { version, graph: snapshot };
+    const snap = await readJson<Record<string, unknown>>(snapshotFile);
+    if (snap == null) return null;
+    await writeJson(graphPath(tenantId, projectId), snap);
+    return snap;
   });
+  if (snapshot == null) return null;
+  await updateProject(tenantId, projectId, (p) => ({
+    ...p,
+    graphRef: `tenancy:${owned.id}/graph.json`,
+  }));
+  return { version, graph: snapshot };
 }
 
 // ── Usage counts (E6 — real per-tenant numbers behind the config quotas) ─────
