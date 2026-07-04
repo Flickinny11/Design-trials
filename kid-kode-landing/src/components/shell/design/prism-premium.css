@@ -1,0 +1,106 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM PREMIUM — SHELL TOKEN LAYER (SHELL W0, 2026-07-04)
+   ─────────────────────────────────────────────────────────────────────────────
+   The shell-surface token layer mandated by PRISM-SHELL-DESIGN-LAW-2026-07-03
+   (DL1/DL2/DL6/DL7) and PRISM-FRONTEND-SHELL-SPEC.md §2. It EXTENDS the
+   canonical premium.ts RED/BLACK/WHITE system (toolbar-premium run) — every
+   identity hex below is lifted verbatim from
+   src/components/editor/design-system/premium.ts; this file never invents a
+   parallel palette. The engine-chrome token stack (tokens.css, --ds-*) stays
+   untouched and canonical for the editor; the shell namespace is --pp-*.
+
+   DL1 — dark-first: the dark theme IS the design; true-black OLED base;
+         hierarchy by elevation + subtle grey steps, never color noise.
+   DL2 — RED / BLACK / WHITE identity from premium.ts (SIGNAL_RED family,
+         GUNMETAL family, CHROME family).
+   DL6 — motion carries physical weight; NOTHING LINEAR on hero interactions.
+   DL7 — engineered precision: crisp 1px hairlines, exact geometry, deliberate
+         spacing. No blurred drop-shadow stacks, no soft-UI padding.
+
+   The JS mirror is prism-premium-tokens.ts (imports premium.ts directly —
+   change both or neither for any value that appears in both).
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── DL1 · Elevation — true-black OLED base, machined grey steps ─────────
+     0 is the page. Steps are the GUNMETAL family from premium.ts plus two
+     interpolated stops, so shell panels and the engine's instrument housing
+     read as one machined material. */
+  --pp-elev-0: #000000; /* OLED base — the page itself */
+  --pp-elev-1: #0b0b10; /* recessed well (premium.ts GUNMETAL_DEEP) */
+  --pp-elev-2: #16161d; /* panel body (premium.ts GUNMETAL) */
+  --pp-elev-3: #1d1d25; /* raised card */
+  --pp-elev-4: #23232c; /* lit flank / hover body (premium.ts GUNMETAL_LIT) */
+  --pp-elev-5: #2b2b35; /* highest keycap face (premium.ts RBW keycap top) */
+
+  /* ── DL2 · The red (SIGNAL_RED family — the one accent) ─────────────────── */
+  --pp-red: #ff2a38;      /* SIGNAL_RED — active, primary action, record */
+  --pp-red-deep: #7d0f18; /* RED_DEEP — oxblood gradient depth / shadow side */
+  --pp-red-hot: #ff5a55;  /* RED_HOT — emissive cores / glints */
+  --pp-red-rgb: 255, 42, 56;
+
+  /* ── DL2 · The white (brushed chrome / mercury) ─────────────────────────── */
+  --pp-chrome: #e8ecf2;    /* CHROME — brushed face */
+  --pp-chrome-hi: #f6f8fb; /* CHROME_HI — mercury specular hot point */
+  --pp-chrome-lo: #9aa1ac; /* CHROME_LO — chrome turned from the light */
+  --pp-chrome-rgb: 232, 236, 242;
+
+  /* ── Text — chrome engraving on black (dark-first ramp) ─────────────────── */
+  --pp-text-hi: #f6f8fb;  /* display headings — mercury */
+  --pp-text: #e8ecf2;     /* body — chrome */
+  --pp-text-mid: #9aa1ac; /* secondary — low chrome */
+  --pp-text-low: #5f636c; /* tertiary / disabled */
+
+  /* ── DL7 · Hairlines — crisp 1px, specular top / shadow bottom ──────────── */
+  --pp-hairline-w: 1px;
+  --pp-hairline: rgba(232, 236, 242, 0.14);        /* chrome hairline on black */
+  --pp-hairline-strong: rgba(232, 236, 242, 0.26); /* specular top edge */
+  --pp-hairline-shadow: rgba(0, 0, 0, 0.70);       /* machined bottom edge */
+  --pp-hairline-red: rgba(255, 42, 56, 0.55);      /* active/selected edge */
+  /* The machined-edge idiom (premium.ts RBW.bezelEdge, kept in lockstep). */
+  --pp-edge-machined:
+    inset 0 1px 0 rgba(246, 248, 251, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.7),
+    inset 1px 0 0 rgba(246, 248, 251, 0.08),
+    inset -1px 0 0 rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(200, 207, 217, 0.12);
+
+  /* ── DL7 · Spacing — 4px machining grid, deliberate steps ───────────────── */
+  --pp-space-1: 4px;
+  --pp-space-2: 8px;
+  --pp-space-3: 12px;
+  --pp-space-4: 16px;
+  --pp-space-5: 24px;
+  --pp-space-6: 32px;
+  --pp-space-7: 48px;
+  --pp-space-8: 64px;
+
+  /* ── DL7 · Radius — exact geometry, never soft-UI ───────────────────────── */
+  --pp-radius-1: 2px;  /* hairline chamfer */
+  --pp-radius-2: 4px;  /* controls */
+  --pp-radius-3: 6px;  /* cards */
+  --pp-radius-4: 10px; /* panels */
+  --pp-radius-5: 16px; /* showpiece frames */
+  --pp-radius-pill: 999px;
+
+  /* ── DL6 · Motion — durations + WEIGHT curves ────────────────────────────
+     Every curve carries mass: things settle, gravitate, land. `linear` is
+     FORBIDDEN on hero interactions (DL6) — no --pp-ease-* is, or may ever
+     be, linear. Micro state flips may use --pp-motion-fast + settle. */
+  --pp-motion-fast: 140ms;   /* control state flip */
+  --pp-motion-base: 220ms;   /* standard transition */
+  --pp-motion-settle: 420ms; /* panels landing, saves settling */
+  --pp-motion-hero: 700ms;   /* hero / showpiece choreography */
+  --pp-ease-settle: cubic-bezier(0.22, 1, 0.36, 1);    /* decisive land, long settle */
+  --pp-ease-gravity: cubic-bezier(0.55, 0, 0.1, 1);    /* mass accelerates, firm stop */
+  --pp-ease-weight: cubic-bezier(0.34, 1.28, 0.44, 1); /* sprung mass, one overshoot */
+  --pp-ease-hero: cubic-bezier(0.83, 0, 0.17, 1);      /* inertial hero in-out */
+
+  /* ── DL3 · Type slots — populated by the shell's next/font wiring ────────
+     (--pp-font-display / --pp-font-mono are set by the shell layout via
+     next/font variables; these fallbacks keep tokens meaningful standalone.
+     Grotesque faces are FORBIDDEN on shell surfaces — the fallback chain is
+     serif/mono only, never a sans.) */
+  --pp-font-display-fallback: 'Georgia', 'Times New Roman', serif;
+  --pp-font-mono-fallback: ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
+}
