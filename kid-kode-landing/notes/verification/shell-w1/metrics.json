@@ -18,6 +18,9 @@
   },
   "mobile": {
     "viewport": "390x844@2 (mobile+touch emulation)",
+    "fpsIdleOver2s": 61,
+    "fpsWhileStreamingOver2s": 61,
+    "usedJSHeapMB": 100,
     "consoleErrors": 0,
     "paneSwipe": "scroll-snap x mandatory verified (scrollLeft 0 ↔ 390, snap type 'x mandatory' computed)"
   },

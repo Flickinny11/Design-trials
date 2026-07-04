@@ -10,9 +10,20 @@
 import { realEngineHostFactory } from './real-engine-adapter';
 import { StubEngineHost } from './stub-engine';
 
+/** Engine host implementations the shell can frame.
+ *  - 'stub'          — the W1 stand-in (this file's default).
+ *  - 'real'          — the Prism engine adapter (engine session merges it).
+ *  - 'cortex-iframe' — the Cortex path: iframe preview + agent feed in the
+ *    SAME chrome (spec §10 S4 item 5 / I8). No Cortex projects exist in this
+ *    prototype repo; the kind is declared now so the seam is explicit and
+ *    W5 never discovers it late (criteria judge W1 should-fix). Unknown
+ *    engine types must default to the safe path (I8) — the resolver falls
+ *    back to 'stub'. */
+export type PrismEngineHostKind = 'stub' | 'real' | 'cortex-iframe';
+
 export interface PrismEngineHost {
   /** Which implementation answered the resolver (surfaced in dev chrome). */
-  readonly kind: 'stub' | 'real';
+  readonly kind: PrismEngineHostKind;
   /** Deliver one serialized PrismShellCommandEnvelope. */
   send(wire: string): void;
   /** Subscribe to serialized PrismEngineEventEnvelopes. Returns unsubscribe. */

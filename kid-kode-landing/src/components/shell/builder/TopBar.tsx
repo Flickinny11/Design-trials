@@ -70,7 +70,7 @@ export default function TopBar({
           title={`Engine host: ${engineKind ?? '—'} · ${engineStatus}`}
         >
           <span className="bw1-engine-led" aria-hidden />
-          {engineKind === 'real' ? 'Engine' : 'Engine · stub'}
+          {engineKind === 'real' ? 'Engine' : engineKind === 'cortex-iframe' ? 'Cortex' : 'Engine · stub'}
         </span>
         <ModelSelector />
         <Popover.Root>

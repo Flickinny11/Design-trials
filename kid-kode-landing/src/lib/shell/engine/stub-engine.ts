@@ -57,6 +57,9 @@ export class StubEngineHost implements PrismEngineHost {
   private nodes: NodeVis[] = [];
   private hoverId: string | null = null;
   private focus: { x: number; y: number; start: number } | null = null;
+  /** nodeId → mount time — drives the wave-hydration glow (advocate W1
+   *  should-fix: a cold load should visibly materialize, never read empty). */
+  private mountGlow = new Map<string, number>();
   private reducedMotion = false;
 
   constructor() {
@@ -69,6 +72,7 @@ export class StubEngineHost implements PrismEngineHost {
         onUnmountRequest: () => this.teardownVisual(),
         onModeTarget: (mode) => this.retarget(mode),
         onFocusPulse: (targetId) => this.pulseToward(targetId),
+        onNodeMounted: (nodeId) => this.mountGlow.set(nodeId, performance.now()),
       },
     );
     const layout = getStubLayout(this.core.mode);
@@ -384,6 +388,30 @@ export class StubEngineHost implements PrismEngineHost {
         ctx.beginPath();
         ctx.arc(x, y, r * (1.9 + pulse * 0.35), 0, Math.PI * 2);
         ctx.stroke();
+      }
+
+      // wave-hydration mount glow — a bright chrome bloom that settles over
+      // ~3.2s as the node materializes (DL6: state change carries weight).
+      const mountedAt = this.mountGlow.get(n.id);
+      if (mountedAt !== undefined) {
+        const p = (t - mountedAt) / 3200;
+        if (p >= 1) {
+          this.mountGlow.delete(n.id);
+        } else if (!this.reducedMotion) {
+          const fade = 1 - p;
+          const ring = ctx.createRadialGradient(x, y, 0, x, y, r * (2 + p * 4));
+          ring.addColorStop(0, `rgba(246, 248, 251, ${0.35 * fade})`);
+          ring.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = ring;
+          ctx.beginPath();
+          ctx.arc(x, y, r * (2 + p * 4), 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = `rgba(246, 248, 251, ${0.5 * fade})`;
+          ctx.lineWidth = Math.max(1, W / 1600);
+          ctx.beginPath();
+          ctx.arc(x, y, r * (1.4 + p * 3), 0, Math.PI * 2);
+          ctx.stroke();
+        }
       }
     }
   }

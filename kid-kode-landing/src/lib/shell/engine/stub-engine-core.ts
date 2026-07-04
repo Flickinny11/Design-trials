@@ -32,6 +32,9 @@ export interface StubEngineHooks {
   onModeTarget?: (mode: PrismViewMode) => void;
   /** Presentation nudge: camera focus pulse toward a node/hub. */
   onFocusPulse?: (targetId: string) => void;
+  /** Presentation nudge: a node just materialized (wave hydration) — the
+   *  renderer gives it a mount glow so hydration reads on screen. */
+  onNodeMounted?: (nodeId: string) => void;
 }
 
 /** Matches the engine's boot default (RA-17: preview-app on app boot). */
@@ -176,6 +179,7 @@ export class StubEngineCore {
       this.later(WAVE_STAGGER_MS * (i + 2), () => {
         this.emit({ type: 'node-verified', nodeId, wave: 0 });
         this.emit({ type: 'node-mounted', nodeId, wave: 0 });
+        this.hooks.onNodeMounted?.(nodeId);
       });
     });
     this.later(WAVE_STAGGER_MS * (waveNodes.length + 2), () =>

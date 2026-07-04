@@ -194,6 +194,18 @@ describe('builder store — echo discipline + wire log', () => {
     expect(log.at(-1)?.id).toBe('cmd-299');
   });
 
+  it('clears an in-flight mode request when an error settles it', () => {
+    const store = useBuilderStore.getState();
+    store.noteModeRequested('galaxy');
+    expect(useBuilderStore.getState().pendingMode).toBe('galaxy');
+    store.applyEngineEvent({
+      type: 'error',
+      error: { code: 'X', message: 'transition failed', source: 'engine', recoverable: true },
+    });
+    // the pending bead must never pulse forever on a failed transition
+    expect(useBuilderStore.getState().pendingMode).toBeNull();
+  });
+
   it('marks the engine errored only on unrecoverable errors', () => {
     const store = useBuilderStore.getState();
     store.applyEngineEvent({
