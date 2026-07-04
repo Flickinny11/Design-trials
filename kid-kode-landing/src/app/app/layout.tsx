@@ -9,6 +9,10 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import '@/components/shell/design/prism-premium.css';
+import '@/components/shell/nav/shell-nav.css';
+import ShellNav3D from '@/components/shell/nav/ShellNav3D';
+import { shellDisplay, shellMono } from '@/components/shell/design/shell-fonts';
 import { auth, ensureAuthSchema } from '../../server/auth/auth';
 
 export default async function AppLayout({
@@ -21,5 +25,17 @@ export default async function AppLayout({
   if (!session) {
     redirect('/sign-in');
   }
-  return <>{children}</>;
+  const user = session.user as typeof session.user & { planTier?: string };
+  return (
+    <div className={`${shellDisplay.variable} ${shellMono.variable}`}>
+      {children}
+      {/* E13 global slide-out nav — present on dashboard AND builder; renders
+          null when this layout is inside the engine iframe (client-side). */}
+      <ShellNav3D
+        userName={user.name}
+        userEmail={user.email}
+        planTier={typeof user.planTier === 'string' ? user.planTier : 'free'}
+      />
+    </div>
+  );
 }
