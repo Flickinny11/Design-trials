@@ -10672,7 +10672,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.8,
+          "y": 2.72,
           "z": 0.3,
           "width": 7.2,
           "height": 0.8
@@ -10718,7 +10718,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.8,
+        "y": 2.72,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -11336,7 +11336,7 @@
         "mobile": {
           "x": 0,
           "y": -1.223,
-          "scale": 0.62
+          "scale": 0.7
         }
       }
     },
@@ -12258,7 +12258,7 @@
         "mobile": {
           "x": 0,
           "y": -2.373,
-          "scale": 0.6
+          "scale": 0.68
         }
       }
     },
@@ -12548,7 +12548,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.42,
+          "y": 2.24,
           "scale": 0.55
         }
       }
@@ -12561,7 +12561,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.5,
+          "y": 2.56,
           "z": 0.25,
           "width": 6.6,
           "height": 0.3
@@ -12598,7 +12598,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.5,
+        "y": 2.56,
         "z": 0.25,
         "rotationX": 0,
         "rotationY": 0,
@@ -12633,7 +12633,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2,
+          "y": 1.9,
           "scale": 0.42
         }
       }
@@ -12949,7 +12949,7 @@
       "textSpec": {
         "content": "V · EDITION OF ELEVEN",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -12959,7 +12959,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -21253,7 +21257,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 2.5,
+          "y": 2.56,
           "z": 0.2,
           "width": 6.84,
           "height": 0.4
@@ -21288,7 +21292,7 @@
       "cinematicPrimitives": [],
       "scenePosition": {
         "x": 0,
-        "y": 2.5,
+        "y": 2.56,
         "z": 0.19,
         "rotationX": 0,
         "rotationY": 0,
@@ -21332,7 +21336,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2,
+          "y": 1.9,
           "scale": 0.42
         }
       }
@@ -21419,7 +21423,7 @@
         "iridescence": 0,
         "iridescenceIOR": 1.3,
         "thickness": 0.5,
-        "emissive": "#6a4a15",
+        "emissive": "#8a6420",
         "emissiveIntensity": 0.62,
         "normalScale": 1,
         "displacementScale": 0,
@@ -21838,7 +21842,8 @@
         "mobile": {
           "x": 0.85,
           "y": -2.17,
-          "scale": 0.6
+          "scale": 0.6,
+          "hidden": true
         }
       }
     },
@@ -21967,7 +21972,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.52,
+          "y": 2.28,
           "scale": 0.5
         }
       }
@@ -22073,7 +22078,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.2,
+          "y": 2.02,
           "scale": 0.42
         }
       }
@@ -22155,7 +22160,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 1.926,
+          "y": 1.806,
           "scale": 0.55
         }
       }
@@ -22262,7 +22267,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 1.926,
+          "y": 1.806,
           "scale": 0.55
         }
       }
@@ -22369,7 +22374,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 1.926,
+          "y": 1.806,
           "scale": 0.55
         }
       }
@@ -22476,7 +22481,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 1.926,
+          "y": 1.806,
           "scale": 0.55
         }
       }
@@ -22583,7 +22588,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 1.926,
+          "y": 1.806,
           "scale": 0.55
         }
       }
@@ -22665,7 +22670,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 1.731,
+          "y": 1.611,
           "scale": 0.55
         }
       }
@@ -22772,7 +22777,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 1.731,
+          "y": 1.611,
           "scale": 0.55
         }
       }
@@ -22879,7 +22884,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 1.731,
+          "y": 1.611,
           "scale": 0.55
         }
       }
@@ -22986,7 +22991,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 1.731,
+          "y": 1.611,
           "scale": 0.55
         }
       }
@@ -23093,7 +23098,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 1.731,
+          "y": 1.611,
           "scale": 0.55
         }
       }
@@ -23175,7 +23180,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 1.536,
+          "y": 1.417,
           "scale": 0.55
         }
       }
@@ -23282,7 +23287,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 1.536,
+          "y": 1.417,
           "scale": 0.55
         }
       }
@@ -23389,7 +23394,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 1.536,
+          "y": 1.417,
           "scale": 0.55
         }
       }
@@ -23496,7 +23501,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 1.536,
+          "y": 1.417,
           "scale": 0.55
         }
       }
@@ -23603,7 +23608,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 1.536,
+          "y": 1.417,
           "scale": 0.55
         }
       }
@@ -23685,7 +23690,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -23792,7 +23797,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -23899,7 +23904,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24006,7 +24011,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24113,7 +24118,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.064,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24220,7 +24225,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.101,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24327,7 +24332,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.266,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24434,7 +24439,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.431,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24541,7 +24546,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.596,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24648,7 +24653,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0.761,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -24730,7 +24735,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 1.145,
+          "y": 1.028,
           "scale": 0.55
         }
       }
@@ -24837,7 +24842,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 1.145,
+          "y": 1.028,
           "scale": 0.55
         }
       }
@@ -24944,7 +24949,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 1.145,
+          "y": 1.028,
           "scale": 0.55
         }
       }
@@ -25051,7 +25056,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 1.145,
+          "y": 1.028,
           "scale": 0.55
         }
       }
@@ -25133,7 +25138,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 0.95,
+          "y": 0.833,
           "scale": 0.55
         }
       }
@@ -25240,7 +25245,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 0.95,
+          "y": 0.833,
           "scale": 0.55
         }
       }
@@ -25347,7 +25352,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 0.95,
+          "y": 0.833,
           "scale": 0.55
         }
       }
@@ -25454,7 +25459,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 0.95,
+          "y": 0.833,
           "scale": 0.55
         }
       }
@@ -25536,7 +25541,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 0.755,
+          "y": 0.639,
           "scale": 0.55
         }
       }
@@ -25643,7 +25648,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 0.755,
+          "y": 0.639,
           "scale": 0.55
         }
       }
@@ -25750,7 +25755,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 0.755,
+          "y": 0.639,
           "scale": 0.55
         }
       }
@@ -25832,7 +25837,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -25939,7 +25944,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -26046,7 +26051,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -26153,7 +26158,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -26260,7 +26265,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -26367,7 +26372,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.064,
-          "y": 0.559,
+          "y": 0.444,
           "scale": 0.55
         }
       }
@@ -26449,7 +26454,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 0.364,
+          "y": 0.25,
           "scale": 0.55
         }
       }
@@ -26556,7 +26561,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 0.364,
+          "y": 0.25,
           "scale": 0.55
         }
       }
@@ -26663,7 +26668,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 0.364,
+          "y": 0.25,
           "scale": 0.55
         }
       }
@@ -26770,7 +26775,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 0.364,
+          "y": 0.25,
           "scale": 0.55
         }
       }
@@ -26877,7 +26882,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 0.364,
+          "y": 0.25,
           "scale": 0.55
         }
       }
@@ -26959,7 +26964,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": 0.169,
+          "y": 0.055,
           "scale": 0.55
         }
       }
@@ -27066,7 +27071,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 0.169,
+          "y": 0.055,
           "scale": 0.55
         }
       }
@@ -27173,7 +27178,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": 0.169,
+          "y": 0.055,
           "scale": 0.55
         }
       }
@@ -27280,7 +27285,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": 0.169,
+          "y": 0.055,
           "scale": 0.55
         }
       }
@@ -27387,7 +27392,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.229,
-          "y": 0.169,
+          "y": 0.055,
           "scale": 0.55
         }
       }
@@ -27469,7 +27474,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -1.329,
-          "y": -0.026,
+          "y": -0.139,
           "scale": 0.55
         }
       }
@@ -27576,7 +27581,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": -0.026,
+          "y": -0.139,
           "scale": 0.55
         }
       }
@@ -27683,7 +27688,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.559,
-          "y": -0.026,
+          "y": -0.139,
           "scale": 0.55
         }
       }
@@ -27790,7 +27795,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.394,
-          "y": -0.026,
+          "y": -0.139,
           "scale": 0.55
         }
       }
@@ -34109,7 +34114,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": -0.724,
-          "y": 1.341,
+          "y": 1.222,
           "scale": 0.55
         }
       }
@@ -34594,7 +34599,7 @@
       "textSpec": {
         "content": "I · ARRIVAL",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -34604,7 +34609,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -34695,7 +34704,7 @@
       "textSpec": {
         "content": "II · THE CALIBRE",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -34705,7 +34714,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -34727,7 +34740,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 3.3,
+          "y": 3.16,
           "z": 0.3,
           "width": 5.2,
           "height": 0.18
@@ -34784,7 +34797,7 @@
       ],
       "scenePosition": {
         "x": 0,
-        "y": 3.3,
+        "y": 3.16,
         "z": 0.3,
         "rotationX": 0,
         "rotationY": 0,
@@ -34796,7 +34809,7 @@
       "textSpec": {
         "content": "III · THE SUBSTANCES",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -34806,7 +34819,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -34828,7 +34845,7 @@
       "visual": {
         "transform": {
           "x": 0,
-          "y": 3.35,
+          "y": 3.45,
           "z": 0.3,
           "width": 5.2,
           "height": 0.18
@@ -34897,7 +34914,7 @@
       "textSpec": {
         "content": "IV · THE COMPLICATION",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -34907,7 +34924,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -34916,7 +34937,7 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.64,
+          "y": 2.44,
           "scale": 0.5
         }
       }
@@ -34998,7 +35019,7 @@
       "textSpec": {
         "content": "VI · YOUR COMMISSION",
         "fontFamily": "Sora",
-        "fontWeight": 500,
+        "fontWeight": 600,
         "fontSize": 0.1,
         "letterSpacing": 0.4,
         "align": "center",
@@ -35008,7 +35029,11 @@
         },
         "glow": {
           "color": "#ffe6a8",
-          "intensity": 0.1
+          "intensity": 0.16
+        },
+        "outline": {
+          "color": "#221a08",
+          "width": 0.14
         }
       },
       "animationBindings": [],
@@ -35017,8 +35042,8 @@
       "responsiveScenePos": {
         "mobile": {
           "x": 0,
-          "y": 2.82,
-          "scale": 0.55
+          "y": 2.62,
+          "scale": 0.5
         }
       }
     }

@@ -36,14 +36,19 @@ editor's schema surfaces; **the graph/schema is the runtime**:
 
 | Proof | Element | Schema field | Chain proven |
 |---|---|---|---|
-| P1 TEXT | `orr-acquire-incl-3` | `textSpec.content` (Text tool) | staged → Save → canvas + preview → reload → **persists** → parity intact → reverted through the same tool |
-| P2 MATERIAL | `orr-celestia-cta-f4bcta-slab` | `materialSpec.emissive` (Inspector Visual, FP-15 staged path) | same chain — signal-red accent visible in preview frame `P2b` |
+| P1 TEXT | `orr-acquire-incl-3` | `textSpec.content` (Text tool) | staged → Save → canvas + **preview navigated to Acquire, node mounted+visible, edited copy in frame `P1b`** → reload → **persists** → parity intact → reverted through the same tool |
+| P2 MATERIAL | `orr-celestia-cta-f4bcta-slab` | `materialSpec.emissive` (Inspector Visual, FP-15 staged path) | same chain — **preview navigated to Celestia; the LIVE mesh emissive read off the mounted material equals the edit (`liveEmissive: #8c1f2a`)**; the slab glows signal-red in frame `P2b` |
 | P3 BEHAVIOR | celestia CTA **pair** (slab + label) | `functionBinding` retarget s5→s6 (Function popup — the 2026-06-14 shared-schema surface) | persists AND **executes**: preview click navigates to Atelier (`P3b`, landed `s6-atelier`) → reverted |
 | P4 CANVAS→SCHEMA | `orr-arrival-headline` | `scenePosition.x` via Transform steppers | canvas visual edit round-trips INTO the node schema (0 → 0.24 → reload persists → stepped back → 0), Save & Rebuild both ways |
 
-Epilogue: the end graph state is **semantically equal to the start** (every
-edit reverted through the UI — which is itself the continued-editability
-proof); the fixture bytes were then restored (F-4 idiom).
+Reverts: P1 and P3 were reverted through the SAME UI surfaces (Text tool /
+Function popup); **P2's revert used the store-consistent staged path** (the
+same `previewState.set` write the Inspector pickers issue, then Save) — the
+forward edit was fully UI-driven. Selection audit (physical click vs store
+fallback) is persisted per selection in `runtime-proof.json`.
+
+Epilogue: the end graph state is **semantically equal to the start**; the
+fixture bytes were then restored (F-4 idiom).
 
 ## 3 · Task 3 — NODE-EDITOR SHIPPABLE CERTIFICATION (capability matrix)
 
@@ -164,7 +169,41 @@ thin stubs ("Footer legal line.").
 
 ## 6 · Judge verdicts (fresh-context Fable 5, masterpiece bar)
 
-_To be appended by the judge rounds below._
+### Round 1 — both judges found real things (the M-1 pattern)
+
+**prism-criteria-reviewer: FAIL, 1 MUST-FIX.** The P1b/P2b "visible in
+preview" frames showed the boot hub (Arrival), not the edited element's hub,
+and the pass assertions didn't cover preview visibility. **Fixed:** the
+harness now navigates preview to the element's hub (the P3b idiom), asserts
+`mode/hub/mounted/visible` — and for P2 reads the **live emissive off the
+mounted mesh** (`#8c1f2a`, the render itself) — then frames. Re-run: 11/11,
+new frames show the Acquire copy and the red-glowing Celestia slab.
+Should-fixes taken: P2d revert wording made honest (§2), selection audit
+persisted, 8→9-node comment corrected.
+
+**user-advocate: NOT YET, 4 MUST-FIX (all on the new folio system) + 6
+should-fixes.** All four fixed as graph data and every affected frame
+recaptured fresh:
+1. s4-mobile folio sliced by the gilt rule → headline 2.42→2.24, folio
+   2.64→2.44 (`after/mobile/04`: folio clean below the rule).
+2. s6-mobile folio inside the nav band → whole stack re-laid (folio 2.62,
+   headline 2.28, sub 2.02) **and the 11-row swatch grid re-derived 0.12
+   lower from desktop poses** so the subhead clears the top swatch row
+   (`after/mobile/06`).
+3. s3-desktop folio top-clipped → title 2.80→2.72, folio 3.30→3.16
+   (`after/desktop/03`).
+4. s3-mobile numeral washed out → ALL folios gained a dark outline
+   (`#221a08` @ 0.14), weight 500→600, glow 0.10→0.16 (`after/mobile/03`;
+   also cures the faint s1-desktop numeral).
+Should-fixes taken: s4 "Own the complication" slab got the same amber lift
+as s1 (`#6a4a15→#8a6420`); the s5 reserve CTA's bottom edge-lip (read as a
+duplicate slab at 390px) hidden on mobile (the slab keeps the binding — tap
+target unchanged); s4 subhead lifted 2.50→2.56 off the planet tangency;
+s3 brass/meteorite labels bumped to 0.7/0.68. Deferred should-fix: the s6
+amber fine-print line (summary panel micro-copy) — logged for the next data
+pass.
+
+### Round 2 — _appended below after re-judging._
 
 ## 7 · Founder follow-ups
 

@@ -86,14 +86,15 @@ for (const id of HEADLINES) {
   const n = need('orr-celestia-headline');
   n.scenePosition.y = 2.98;
   if (n.visual?.transform) n.visual.transform.y = 2.98;
-  if (n.responsiveScenePos?.mobile) n.responsiveScenePos.mobile.y = 2.42;
+  if (n.responsiveScenePos?.mobile) n.responsiveScenePos.mobile.y = 2.24;
   // The planetary orbit apogee crosses the authored subhead line, slicing the
   // copy (proofs/iter3-s4-desktop crop). Lift the subhead + scrim above the
   // orbit band so planets always pass beneath the copy.
   for (const id of ['orr-celestia-sub', 'orr-celestia-sub-scrim']) {
     const s = need(id);
-    s.scenePosition.y = 2.5;
-    if (s.visual?.transform) s.visual.transform.y = 2.5;
+    s.scenePosition.y = 2.56;
+    if (s.visual?.transform) s.visual.transform.y = 2.56;
+    if (s.responsiveScenePos?.mobile) s.responsiveScenePos.mobile.y = 1.9;
   }
   touch('A-fix s4: headline 2.78→2.98 (extrude anchor shift), sub+scrim 2.35→2.50 (clear the orbit apogee), mobile headline 2.38→2.62');
 }
@@ -106,7 +107,7 @@ for (const id of HEADLINES) {
     if (n.visual?.transform) n.visual.transform.y = y;
   };
   const title = need('orr-materia-headline');
-  moveY(title, 2.8);
+  moveY(title, 2.72);
   title.responsiveScenePos.mobile = { x: 0, y: 2.2, scale: 0.48 };
   const sub = need('orr-materia-sub');
   moveY(sub, 2.04);
@@ -116,7 +117,7 @@ for (const id of HEADLINES) {
     moveY(scrim, 2.04);
     if (scrim.responsiveScenePos?.mobile) scrim.responsiveScenePos.mobile.y = 1.88;
   }
-  // The sapphire "card" is an 8-node CLUSTER (frame rim + bevel + plate + 4
+  // The sapphire "card" is a 9-node CLUSTER (frame rim + bevel + plate + 4
   // lips + nameplate + label); moving only the plate slides the gem out of its
   // own frame. Drop the WHOLE cluster by one delta from its F-3-authored
   // mobile pose so the framed card clears the subhead on 390px.
@@ -138,8 +139,8 @@ for (const id of HEADLINES) {
     n.responsiveScenePos.mobile.scale = base.scale;
   }
   for (const [id, scale] of [
-    ['orr-materia-brass-label', 0.62],
-    ['orr-materia-meteorite-label', 0.6],
+    ['orr-materia-brass-label', 0.7],
+    ['orr-materia-meteorite-label', 0.68],
   ]) {
     const n = need(id);
     n.responsiveScenePos.mobile.scale = scale;
@@ -186,7 +187,11 @@ const folio = (nodeId, hubId, content, y, mobile) => {
     // idempotent: update in place
     const n = byId.get(nodeId);
     n.textSpec.content = content;
+    n.textSpec.fontWeight = 600;
+    n.textSpec.outline = { color: '#221a08', width: 0.14 };
+    n.textSpec.glow = { color: '#ffe6a8', intensity: 0.16 };
     n.scenePosition.y = y;
+    if (n.visual?.transform) n.visual.transform.y = y;
     n.responsiveScenePos = { mobile };
     touch(`E ${nodeId}: refreshed (${content})`);
     return;
@@ -221,12 +226,13 @@ const folio = (nodeId, hubId, content, y, mobile) => {
     textSpec: {
       content,
       fontFamily: 'Sora',
-      fontWeight: 500,
+      fontWeight: 600,
       fontSize: 0.1,
       letterSpacing: 0.4,
       align: 'center',
       fill: { ...FOLIO_FILL },
-      glow: { color: '#ffe6a8', intensity: 0.1 },
+      outline: { color: '#221a08', width: 0.14 },
+      glow: { color: '#ffe6a8', intensity: 0.16 },
     },
     animationBindings: [],
     receivesLighting: false,
@@ -239,16 +245,18 @@ const folio = (nodeId, hubId, content, y, mobile) => {
 };
 folio('orr-arrival-folio', 's1-arrival', 'I · ARRIVAL', 3.24, { x: 0, y: 2.32, scale: 0.55 });
 folio('orr-movement-folio', 's2-movement', 'II · THE CALIBRE', 3.1, { x: 0, y: 2.42, scale: 0.5 });
-folio('orr-materia-folio', 's3-materia', 'III · THE SUBSTANCES', 3.3, { x: 0, y: 2.44, scale: 0.5 });
-folio('orr-celestia-folio', 's4-celestia', 'IV · THE COMPLICATION', 3.45, { x: 0, y: 2.64, scale: 0.5 });
-folio('orr-atelier-folio', 's6-atelier', 'VI · YOUR COMMISSION', 3.02, { x: 0, y: 2.82, scale: 0.55 });
+folio('orr-materia-folio', 's3-materia', 'III · THE SUBSTANCES', 3.16, { x: 0, y: 2.44, scale: 0.5 });
+folio('orr-celestia-folio', 's4-celestia', 'IV · THE COMPLICATION', 3.45, { x: 0, y: 2.44, scale: 0.5 });
+folio('orr-atelier-folio', 's6-atelier', 'VI · YOUR COMMISSION', 3.02, { x: 0, y: 2.62, scale: 0.5 });
 {
   // s5 keeps its authored eyebrow node; it joins the folio system in place.
   const n = need('orr-acquire-eyebrow');
   n.textSpec.content = 'V · EDITION OF ELEVEN';
   n.textSpec.fill = { ...FOLIO_FILL };
   n.textSpec.letterSpacing = 0.4;
-  n.textSpec.glow = { color: '#ffe6a8', intensity: 0.1 };
+  n.textSpec.fontWeight = 600;
+  n.textSpec.outline = { color: '#221a08', width: 0.14 };
+  n.textSpec.glow = { color: '#ffe6a8', intensity: 0.16 };
   n.intent.caption =
     'Chapter folio "V · EDITION OF ELEVEN" — the scarcity eyebrow of the Acquire chapter, part of the numeral wayfinding system (Arrival→Atelier). Tracked-out Sora capitals in champagne with a faint warm glow; purely editorial, no interaction.';
   touch('E orr-acquire-eyebrow: joined the folio system (numeral prefix + champagne restyle)');
@@ -272,6 +280,39 @@ folio('orr-atelier-folio', 's6-atelier', 'VI · YOUR COMMISSION', 3.02, { x: 0, 
     need(id).cinematicPrimitives = inview('slide-up', 0.02, 0.5);
   }
   touch('F motion: folios fade-track in (stagger 0.05); s2 spec strip + s5 receive rows slide-up on inview — weighted, no confetti');
+}
+
+// ── G: judge round-1 CTA polish ─────────────────────────────────────────────
+{
+  // s4 'Own the complication' slab gets the same amber lift as the s1 RESERVE
+  // CTA (judge R1 should-fix: read dark-brown-on-muted-amber).
+  const slab = need('orr-celestia-cta-f4bcta-slab');
+  slab.materialSpec = { ...slab.materialSpec, emissive: '#8a6420', emissiveIntensity: 0.62 };
+  // s5 mobile: the reserve CTA's authored bottom-edge lip read as a misaligned
+  // duplicate slab at 390px (R1 should-fix) — hide the lip on mobile; the slab
+  // itself carries the overlay binding, so the tap target is unchanged.
+  const edge = need('orr-acquire-reserve-edge-f4bcta');
+  edge.responsiveScenePos = { ...(edge.responsiveScenePos ?? {}), mobile: { ...((edge.responsiveScenePos ?? {}).mobile ?? {}), hidden: true } };
+  touch('G CTAs: s4 complication slab amber lift #6a4a15→#8a6420; s5 reserve edge-lip hidden on mobile (read as a duplicate slab)');
+}
+{
+  // s6 mobile stack: clear the nav band AND keep folio/headline/sub separated.
+  const h = need('orr-atelier-headline');
+  if (h.responsiveScenePos?.mobile) h.responsiveScenePos.mobile.y = 2.28;
+  const sub = need('orr-atelier-sub');
+  if (sub.responsiveScenePos?.mobile) sub.responsiveScenePos.mobile.y = 2.02;
+  // The swatch grid's F-3 mobile map is mobile.y = 0.548·sp.y + 0.83; with the
+  // headline stack lowered out of the nav band, the top swatch row collided
+  // with the subhead. Re-derive the WHOLE 11-row grid with a −0.12 offset
+  // (computed from each node's desktop pose — idempotent by construction).
+  for (const n of g.nodes) {
+    if (n.parentHubId === 's6-atelier' && n.nodeId.startsWith('orr-atelier-cat-')) {
+      if (n.responsiveScenePos?.mobile) {
+        n.responsiveScenePos.mobile.y = +(0.548 * n.scenePosition.y + 0.71).toFixed(3);
+      }
+    }
+  }
+  touch('G s6 mobile: headline 2.52→2.28, sub 2.20→2.02, folio 2.62; swatch grid re-derived 0.12 lower (11 rows, from desktop pose — idempotent)');
 }
 
 writeFileSync(graphPath, JSON.stringify(g, null, 2) + '\n');

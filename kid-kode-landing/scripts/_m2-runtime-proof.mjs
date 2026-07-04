@@ -113,6 +113,7 @@ async function gotoHubCanvas(hubId, pillText) {
   await page.waitForTimeout(4200);
   return (await hubOf()) === hubId;
 }
+const selectionAudit = [];
 async function selectInCanvas(nodeId) {
   const phys = await clickNode(nodeId);
   await page.waitForTimeout(900);
@@ -125,7 +126,9 @@ async function selectInCanvas(nodeId) {
     await page.waitForTimeout(900);
     sel = await selOf();
   }
-  return { selected: sel === nodeId, physical: phys && sel === nodeId };
+  const out = { selected: sel === nodeId, physical: phys && sel === nodeId };
+  selectionAudit.push({ nodeId, ...out });
+  return out;
 }
 const clickToolGroup = (id) => clickSel(`[data-tool-group="${id}"]`);
 const flyoutOpen = (id) => page.evaluate((g) => !!document.querySelector(`[data-component="canvas-toolbar-flyout"][data-group="${g}"]`), id);
@@ -185,15 +188,27 @@ await chk('P1a TEXT: edit textSpec.content via the Text tool → staged → Save
   const inSource = await nodeField(T1, 'textSpec.content');
   return { pass: staged === NEW_COPY && saved && inSource === NEW_COPY, detail: { originalCopy, staged, inSource } };
 });
-await chk('P1b TEXT: change visible in preview + persists across reload + parity intact', async () => {
+await chk('P1b TEXT: change visible in preview (preview navigated to Acquire, node mounted+visible) + persists across reload + parity intact', async () => {
   await setMode('preview-app', 4000);
-  await page.waitForTimeout(2500);
+  // Judge R1 MUST-FIX: frame the EDITED element's hub in preview, not the boot
+  // hub — the P3b preview-nav idiom.
+  await page.evaluate(() => window.__PRISM_EDITOR_PREVIEW_APP_NAV__?.goTo?.('s5-acquire'));
+  await page.waitForTimeout(8000);
+  await waitForGroup(T1);
+  const previewShows = await page.evaluate((id) => {
+    const e = window.__PRISM_DEBUG_STORES__.graphEditor.getState();
+    const gp = window.__PRISM_EDITOR_NODE_GROUPS__?.get(id);
+    return { mode: e.viewMode, hub: e.activeHubId, mounted: !!gp, visible: !!gp?.visible };
+  }, T1);
   await shot('P1b-text-in-preview');
   await bootWait(true);
   const persisted = await nodeField(T1, 'textSpec.content');
   const parity = await parityOK();
   await shot('P1c-text-after-reload');
-  return { pass: persisted === NEW_COPY && parity.pass, detail: { persisted, parity: parity.pass } };
+  return {
+    pass: previewShows.mode === 'preview-app' && previewShows.hub === 's5-acquire' && previewShows.mounted && previewShows.visible && persisted === NEW_COPY && parity.pass,
+    detail: { previewShows, persisted, parity: parity.pass },
+  };
 });
 await chk('P1d TEXT: continued editability — revert through the SAME tool → save → source restored', async () => {
   await page.keyboard.press('Escape');
@@ -240,15 +255,30 @@ await chk('P2a MATERIAL: edit materialSpec.emissive via Inspector → staged →
   const inSource = await nodeField(T2, 'materialSpec.emissive');
   return { pass: !!staged && saved && inSource === NEW_EMISSIVE, detail: { originalMat, staged, inSource } };
 });
-await chk('P2b MATERIAL: change visible in preview + persists across reload + parity intact', async () => {
+await chk('P2b MATERIAL: change visible in preview (preview navigated to Celestia, node mounted+visible) + persists across reload + parity intact', async () => {
   await setMode('preview-app', 4000);
-  await page.waitForTimeout(2500);
+  await page.evaluate(() => window.__PRISM_EDITOR_PREVIEW_APP_NAV__?.goTo?.('s4-celestia'));
+  await page.waitForTimeout(8000);
+  await waitForGroup(T2);
+  const previewShows = await page.evaluate((id) => {
+    const e = window.__PRISM_DEBUG_STORES__.graphEditor.getState();
+    const gp = window.__PRISM_EDITOR_NODE_GROUPS__?.get(id);
+    // read the LIVE material emissive off the mounted mesh — the render, not the store
+    let liveEmissive = null;
+    gp?.traverse((o) => {
+      if (!liveEmissive && o.isMesh && o.material?.emissive) liveEmissive = '#' + o.material.emissive.getHexString();
+    });
+    return { mode: e.viewMode, hub: e.activeHubId, mounted: !!gp, visible: !!gp?.visible, liveEmissive };
+  }, T2);
   await shot('P2b-material-in-preview');
   await bootWait(true);
   const persisted = await nodeField(T2, 'materialSpec.emissive');
   const parity = await parityOK();
   await shot('P2c-material-after-reload');
-  return { pass: persisted === NEW_EMISSIVE && parity.pass, detail: { persisted, parity: parity.pass } };
+  return {
+    pass: previewShows.mode === 'preview-app' && previewShows.hub === 's4-celestia' && previewShows.mounted && previewShows.visible && previewShows.liveEmissive === NEW_EMISSIVE && persisted === NEW_EMISSIVE && parity.pass,
+    detail: { previewShows, persisted, parity: parity.pass },
+  };
 });
 await chk('P2d MATERIAL: continued editability — revert via store-consistent Inspector path → save', async () => {
   await page.keyboard.press('Escape');
@@ -367,6 +397,7 @@ const semanticallyEqual = canon(endBytes) === canon(graphBytesAtStart);
 rec('epilogue: end graph state semantically equals start (all edits reverted through the UI)', semanticallyEqual, { bytesEqual: endBytes === graphBytesAtStart });
 writeFileSync(GRAPH_FILE, graphBytesAtStart);
 
+results.selectionAudit = selectionAudit;
 writeFileSync('notes/verification/masterpiece-m2/runtime-proof.json', JSON.stringify(results, null, 2));
 const passCount = results.proofs.filter((p) => p.pass).length;
 console.log(`\n[m2-runtime-proof] ${passCount}/${results.proofs.length} PASS · pageErrors=${results.pageErrors.length} consoleErrors=${results.consoleErrors.length}`);
