@@ -1,0 +1,27 @@
+{
+  "wave": "SHELL-W2 — Guided Build / Intake",
+  "capturedBy": "chrome-devtools MCP (real Chrome, Metal GPU), localhost:3001",
+  "date": "2026-07-04",
+  "consoleErrors": 0,
+  "note": "0 console errors across the full flow prompt->cards->boards->connect->brief->approve->builder handoff (preserved across navigation).",
+  "networkRemoteFromBrowser": 0,
+  "networkNote": "Browser fetched localhost only (11 resources on Phase 0, 0 non-local). The E3 URL seed's external read runs server-side (W2-D3); the browser never leaves localhost.",
+  "surfaces": {
+    "phase0": { "fps": null, "canvases": 1, "heapMB": 65 },
+    "directionBoards": { "fps": 60, "canvases": 1, "heapMB": 96, "note": "FIVE material scenes on ONE shared GL context (DL8 rider) — machined metal, Carrara marble PBR, brushed-copper PBR, glass+sapphire, walnut PBR." }
+  },
+  "viewports": ["desktop 1600x900", "mobile 390x844"],
+  "tsc": { "baseline": 9, "afterW2": 9, "newErrors": 0 },
+  "verifySuite": "npm run verify -> exit 0 (verify:prism 6/6, verify:schema 338/338, verify:tenancy 26/26 I11 GREEN, + repair-loop/galaxy/global-shell/parity-static)",
+  "unitTests": { "passed": 3504, "failed": 9, "skipped": 8, "failuresNote": "all 9 failures are pre-existing editor-build tests asserting GraphScene.tsx internals; W2 touches zero editor-build/GraphScene files. 0 new failures in intake/shell/tenancy scope." },
+  "persistenceProof": {
+    "project": "proj-eaf0e91a (Booking app for a boutique watch)",
+    "buildState": "plan-pending",
+    "chosenDirectionId": "carrara",
+    "seededPalette": { "primary": "#efe9df", "secondary": "#b08d4c", "accent": "#7d0f18" },
+    "seededTone": ["editorial", "refined", "timeless"],
+    "seededType": { "display": "serif", "text": "humanist" },
+    "integrations": ["stripe", "supabase"],
+    "note": "Chosen board tokens seeded the Brand Profile at the persistence layer (S5 'selection demonstrably seeds the build'); integrations are capability references only (I5)."
+  }
+}
