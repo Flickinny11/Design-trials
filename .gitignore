@@ -54,3 +54,8 @@ artifacts/
 .claude/worktrees/
 .assetgen/
 .assetgen/node_modules/
+
+# FINISH-chain runner artifacts (session-local; briefs/prompts ARE committed)
+/*.pid
+/*.out
+/chain-*.log.preflight
