@@ -6,42 +6,42 @@
       "desc": "live graph has hubs and nodes",
       "pass": true,
       "warn": false,
-      "detail": "6 hubs, 331 nodes"
+      "detail": "6 hubs, 338 nodes"
     },
     {
       "id": "parity.roles-known",
       "desc": "every graph node classifies into a known galaxy role",
       "pass": true,
       "warn": false,
-      "detail": "331 nodes across 5 roles"
+      "detail": "338 nodes across 5 roles"
     },
     {
       "id": "parity.galaxy-covers-content",
       "desc": "DIRECTION A (structure): every content node is represented in the galaxy projection (itself or cluster member)",
       "pass": true,
       "warn": false,
-      "detail": "141 content atoms → 51 first-class elements, 0 dropped"
+      "detail": "146 content atoms → 56 first-class elements, 0 dropped"
     },
     {
       "id": "parity.projection-members-real",
       "desc": "DIRECTION B (structure): every galaxy element member maps to a real graph node",
       "pass": true,
       "warn": false,
-      "detail": "141 member atoms all real"
+      "detail": "146 member atoms all real"
     },
     {
       "id": "parity.per-hub-elements",
       "desc": "every page hub presents at least one first-class galaxy element",
       "pass": true,
       "warn": false,
-      "detail": "s1-arrival:5, s2-movement:7, s3-materia:7, s4-celestia:6, s5-acquire:10, s6-atelier:16"
+      "detail": "s1-arrival:6, s2-movement:8, s3-materia:8, s4-celestia:7, s5-acquire:10, s6-atelier:17"
     },
     {
       "id": "parity.content-built-or-unbuilt",
       "desc": "every content node is BUILT (real artifact source) or stage-0 UNBUILT (no artifact)",
       "pass": true,
       "warn": false,
-      "detail": "all 141 content nodes are BUILT"
+      "detail": "all 146 content nodes are BUILT"
     }
   ]
 }
