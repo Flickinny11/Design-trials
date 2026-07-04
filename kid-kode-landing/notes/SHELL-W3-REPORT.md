@@ -41,7 +41,9 @@ DL2/DL3/DL7/DL8/DL10/DL15 · V-STANDARD · NEAR-HUMAN-QA.
    `prism/edit-7c10de66` off main, CONFIRM/IRREVERSIBLE tags, "Force-push: never (I7)".
 5. **E5 per-app env/capability panel.** `EnvCapabilityPanel` — bound capability refs,
    scope review, and env var **NAMES** (`STRIPE_SECRET_KEY`…) — never values. Values
-   resolve server-side via the vault (references only). Evidence: `04` + network scan.
+   resolve server-side via the vault (references only). Evidence: `08-e5-env-capability-panel.png`
+   (clean frame: ref `cap_stripe_oauth2.1_1s2pg3`, SCOPES, ENV KEYS names only) +
+   `07-full-surface-connected-e5.png` + network scan.
 6. **Intake tiles bind to catalog.** `intake-model.ts` connect-card options are derived
    from `intakeHeadTiles()` (no parallel list). `/app/build` verified rendering with 0
    console errors after the binding.
@@ -129,6 +131,25 @@ Without any of the above the surface runs a deterministic sandbox end-to-end (ve
   the resolve-and-check defense (which closes the W2 rebind gap) is unconditional. Production
   should confirm the pinned dispatcher is active.
 - Grammar nit: "Request a **Acme CRM** connector" (a/an) — dynamic string; cosmetic.
+
+## Dual judges — both PASS 0 MUST-FIX (round 1)
+
+- **prism-criteria-reviewer** (fresh-context, diff + criteria): `VERDICT: PASS 0 MUST-FIX`.
+  Graded all 10 W3 requirements MET with file:line evidence (contract `.strict()` + owner-free;
+  `toWireRef` hand-picks non-secret fields so a rogue adapter token is dropped before parse;
+  search LEADS above catalog; PR path `forcePush:false`; E5 names-only; intake bound to catalog;
+  safe-fetch refuse-if-any + hop re-validation; I11 walls; zero canvas/engine touches; zero new
+  WebSocket/polling). Should-fixes (non-blocking): modal focus trap, safe-fetch TOCTOU (documented),
+  scope-map client/server duplication.
+- **user-advocate** (fresh-context, evidence-only): `PLEASED — 0 MUST-FIX blockers`. Confirmed the
+  connect-anything search LEADS, the white-label Connect modal authorizes "with Prism" with up-front
+  scopes, catalog-miss queues, and the GitHub PR path conveys branch+PR safety. Flagged that the E5
+  panel was occluded by the modal in `04` (an evidence-capture gap, not a defect) + the a/an nit.
+
+**Round-1 follow-ups taken (all three cheap should-fixes):** (1) modal now has a full Tab focus
+trap (`NangoConnectModal`); (2) a/an article fixed ("Request an Acme CRM connector"); (3) recaptured
+clean, modal-dismissed frames `07`/`08` that show Connected accounts + the E5 env-key-names panel in
+pixels — closing the advocate's evidence flag. Commit `2d42c036` (a11y) + the follow-up polish commit.
 
 ## W4 readiness
 

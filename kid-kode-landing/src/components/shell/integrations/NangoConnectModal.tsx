@@ -48,12 +48,37 @@ export default function NangoConnectModal() {
   const projectId = useIntegrationsStore((s) => s.projectId);
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Focus-trap-lite: focus the dialog on open; Escape closes.
+  // Focus the dialog on open; Escape closes; Tab is trapped inside (WCAG 2.2).
   useEffect(() => {
     if (!tile) return;
     dialogRef.current?.focus();
+    function focusables(): HTMLElement[] {
+      const root = dialogRef.current;
+      if (!root) return [];
+      return Array.from(
+        root.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], input, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    }
     function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') close();
+      if (e.key === 'Escape') {
+        close();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey && (active === first || active === dialogRef.current)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);

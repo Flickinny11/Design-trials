@@ -36,6 +36,7 @@ export default function ConnectAnythingSearch() {
 
   const miss = Boolean(search && search.miss);
   const hits = search?.hits ?? [];
+  const article = /^[aeiou]/i.test(query.trim()) ? 'an' : 'a';
   const alreadyRequested = requests.some(
     (r) => r.platform.toLowerCase() === query.trim().toLowerCase(),
   );
@@ -113,7 +114,7 @@ export default function ConnectAnythingSearch() {
               >
                 {alreadyRequested || justRequested === query.trim()
                   ? 'Requested — queued'
-                  : `Request a ${query.trim()} connector`}
+                  : `Request ${article} ${query.trim()} connector`}
               </button>
             </div>
           ) : null}
