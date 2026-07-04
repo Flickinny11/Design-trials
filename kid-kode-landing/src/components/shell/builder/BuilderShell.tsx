@@ -1,13 +1,16 @@
 'use client';
 
-// PRISM SHELL — BUILDER SHELL ROOT (SHELL W1)
+// PRISM SHELL — BUILDER SHELL ROOT (SHELL W1 → W2 TASK 0)
 //
 // The three-region builder (spec §1 S4): streaming chat LEFT, engine preview
-// RIGHT, right-side tabs — under a top bar with project identity, the 3D
-// mode switch/indicator, model selector, and share stub. Owns the engine
-// bridge (ONE host per session, contract envelopes only) and the E12 mobile
-// layout: at phone widths the chat and the stage become swipeable
-// scroll-snap panes with an indicator rail.
+// RIGHT, right-side tabs — under a top bar with project identity, model
+// selector, and share stub. Mode controls live EXCLUSIVELY in the preview
+// frame's own header (founder addendum 2026-07-04: the Lovable/Claude-Design
+// anatomy — nothing mode-related above or inside the chat column). Owns the
+// engine bridge (ONE host per session, contract envelopes only) and the E12
+// mobile layout: at phone widths the chat and the stage become swipeable
+// scroll-snap panes with an indicator rail; the frame header travels with
+// the preview pane.
 //
 // Scroll ownership: the root layout locks body scroll (W0 gotcha), so this
 // route owns its viewport — 100dvh, internal regions scroll themselves.
@@ -83,7 +86,7 @@ export default function BuilderShell({
 
   return (
     <div className="bw1-root">
-      <TopBar projectName={project.name} projectId={project.id} onSelectMode={onSelectMode} />
+      <TopBar projectName={project.name} projectId={project.id} />
 
       <nav className="bw1-pane-nav" aria-label="Builder panes">
         {PANES.map((p, i) => (
@@ -111,7 +114,9 @@ export default function BuilderShell({
             <PreviewRegion
               containerId={ENGINE_CONTAINER_ID}
               graphRef={project.graphRef}
+              projectName={project.name}
               sendCommand={sendCommand}
+              onSelectMode={onSelectMode}
             />
           </section>
           <aside className="bw1-tabs" aria-label="Builder panels">

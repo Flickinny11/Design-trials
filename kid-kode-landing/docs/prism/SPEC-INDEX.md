@@ -146,3 +146,24 @@ The 2026-06-05 precedence ladder (§1), supersession table (§3), and move list 
 ---
 
 *End of SPEC-INDEX.md*
+
+
+---
+
+## 9. 2026-07-04 Addendum — Shell-era specs registered (founder written direction, same date)
+
+Registered by explicit founder instruction ("the new rulebook - yes",
+2026-07-04), the one authorized index edit of that session. These govern the
+AI app-builder SHELL surfaces (everything around the engine preview). The
+canonical-3 remain untouched build-truth for the engine interior; the Prime
+Boundary in the shell spec (§0/I0) defines the line.
+
+| Document | Role | Authority |
+|---|---|---|
+| `PRISM-FRONTEND-SHELL-SPEC.md` (v1.1) | Build-truth for shell surfaces S1–S9, waves W0–W7, invariants I0–I10, behavioral verification §11. Non-overlapping with canonical-3 by the Prime Boundary. | Canonical for shell |
+| `PRISM-SHELL-DESIGN-LAW-2026-07-03.md` (+2026-07-04 amendments DL11–DL14) | Founder design law for all shell/app-builder UI. On shell surfaces, where it conflicts with glass-era treatments, THIS WINS (per its own header). Engine-interior assets remain governed by canonical-3 until founder directs migration. | Founder law (shell) |
+| `PRISM-SHELL-DECISIONS-2026-07-04.md` | Record of founder ratifications: decisions A–E LOCKED, multi-tenant vs enterprise-multiplayer scoping, runtime law reaffirmation. Binding interpretation source for the shell spec. | Founder record |
+
+Ruler precedence unchanged: `PRISM-INTENT-ANCHOR.md` still wins every
+conflict. Non-ratified drafts (swarm dispatch spec + amendment, research
+memos, post-run agenda) remain deliberately OFF this index.

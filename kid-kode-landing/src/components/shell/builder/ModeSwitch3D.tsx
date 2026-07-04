@@ -34,7 +34,7 @@ export const MODE_ORDER: readonly { mode: PrismViewMode; label: string }[] = [
 
 // ── Forms ────────────────────────────────────────────────────────────────────
 
-function GalaxyForm({ m }: { m: PremiumMaterials }) {
+export function GalaxyForm({ m }: { m: PremiumMaterials }) {
   return (
     <group>
       <mesh material={m.gunmetal}>
@@ -50,7 +50,7 @@ function GalaxyForm({ m }: { m: PremiumMaterials }) {
   );
 }
 
-function CanvasForm({ m }: { m: PremiumMaterials }) {
+export function CanvasForm({ m }: { m: PremiumMaterials }) {
   const tiles: { x: number; z: number; mat: keyof PremiumMaterials }[] = [
     { x: -0.3, z: -0.3, mat: 'gunmetal' },
     { x: 0.3, z: -0.3, mat: 'chrome' },
@@ -72,7 +72,7 @@ function CanvasForm({ m }: { m: PremiumMaterials }) {
 }
 
 const PRISM_EDGES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
-function PreviewForm({ m }: { m: PremiumMaterials }) {
+export function PreviewForm({ m }: { m: PremiumMaterials }) {
   return (
     <group position={[0, 0.02, 0]}>
       <mesh material={m.chrome} position={[0, -0.5, 0]}>

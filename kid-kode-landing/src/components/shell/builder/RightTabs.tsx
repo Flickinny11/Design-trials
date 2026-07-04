@@ -36,28 +36,41 @@ function InspectorPanel({
   const lastSelectionOrigin = useBuilderStore((s) => s.lastSelectionOrigin);
   const promptEditScope = useBuilderStore((s) => s.promptEditScope);
   const clearPromptEdit = useBuilderStore((s) => s.clearPromptEdit);
-  const node = selectedNodeId ? getStubNode(selectedNodeId) : undefined;
-  const demoNodes = getStubProject(projectId).nodes.slice(0, 2);
+  const engineKind = useBuilderStore((s) => s.engineKind);
+  // Stub metadata resolves only against the stub host's directory; the real
+  // engine's node captions live in ITS graph — the contract carries ids, so
+  // the Inspector titles a real selection by its id (W2 Task 0).
+  const stubNode = selectedNodeId ? getStubNode(selectedNodeId) : undefined;
+  const demoNodes = engineKind === 'stub' ? getStubProject(projectId).nodes.slice(0, 2) : [];
 
   return (
     <div className="bw1-panel">
-      {node ? (
+      {selectedNodeId ? (
         <>
           <p className="bw1-panel-kicker">Node</p>
-          <h3 className="bw1-inspect-caption">{node.caption}</h3>
+          <h3 className="bw1-inspect-caption">{stubNode?.caption ?? selectedNodeId}</h3>
           <dl className="bw1-inspect-meta">
             <div>
               <dt>id</dt>
-              <dd>{node.id}</dd>
+              <dd>{selectedNodeId}</dd>
             </div>
-            <div>
-              <dt>hub</dt>
-              <dd>{node.hubId}</dd>
-            </div>
-            <div>
-              <dt>kind</dt>
-              <dd>{node.kind}</dd>
-            </div>
+            {stubNode ? (
+              <>
+                <div>
+                  <dt>hub</dt>
+                  <dd>{stubNode.hubId}</dd>
+                </div>
+                <div>
+                  <dt>kind</dt>
+                  <dd>{stubNode.kind}</dd>
+                </div>
+              </>
+            ) : (
+              <div>
+                <dt>source</dt>
+                <dd>engine graph</dd>
+              </div>
+            )}
             <div>
               <dt>selected via</dt>
               <dd>{lastSelectionOrigin === 'user' ? 'engine click' : 'shell command'}</dd>
@@ -68,7 +81,7 @@ function InspectorPanel({
             onActivate={() =>
               sendCommand({
                 type: 'open-prompt-edit',
-                scope: { kind: 'node', nodeId: node.id },
+                scope: { kind: 'node', nodeId: selectedNodeId },
               })
             }
           />
@@ -79,7 +92,7 @@ function InspectorPanel({
               onClick={() =>
                 sendCommand({
                   type: 'focus-camera',
-                  target: { kind: 'node', nodeId: node.id },
+                  target: { kind: 'node', nodeId: selectedNodeId },
                   animate: true,
                 })
               }
@@ -102,19 +115,23 @@ function InspectorPanel({
             Nothing selected. Click a node in the preview — the engine reports the
             selection over the contract and it lands here.
           </p>
-          <p className="bw1-panel-sub">Or select from the shell side:</p>
-          <div className="bw1-inspect-actions">
-            {demoNodes.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className="bw1-minibtn"
-                onClick={() => sendCommand({ type: 'set-selection', nodeId: n.id })}
-              >
-                {n.caption}
-              </button>
-            ))}
-          </div>
+          {demoNodes.length > 0 ? (
+            <>
+              <p className="bw1-panel-sub">Or select from the shell side:</p>
+              <div className="bw1-inspect-actions">
+                {demoNodes.map((n) => (
+                  <button
+                    key={n.id}
+                    type="button"
+                    className="bw1-minibtn"
+                    onClick={() => sendCommand({ type: 'set-selection', nodeId: n.id })}
+                  >
+                    {n.caption}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : null}
         </>
       )}
 

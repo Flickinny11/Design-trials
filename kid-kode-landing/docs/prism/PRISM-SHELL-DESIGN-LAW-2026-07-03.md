@@ -79,3 +79,76 @@ reality check), haddingtoncreative/envato (calm premium, restraint).
 *Addendum authored 2026-07-03 under direct founder instruction (this date's
 session). Applies to shell surfaces immediately; referenced by tonight's
 FINISH-F3/F4 + MASTERPIECE prompts for any shell-adjacent chrome they touch.*
+
+
+---
+
+## 2026-07-04 FOUNDER AMENDMENTS — DL11–DL14 (verbatim-anchored, binding)
+
+Founder anchors (verbatim): "primary buttons should be 3D with visible depth
+and edges and use photorealistic texture with ambient light refractions (use
+textures like marble and stone and various metals) - NOT css and tailwind -
+NOT CSS & TAILWIND FOR STYLE ... we use three.js, theatre, Babylon, and we
+have an integration with replicate already available for generating 3D
+objects, ALWAYS with texture and color ... WE ALREADY HAVE A PROMPT TO
+TEXTURE feature ... you can reach for it pretty easily to use in styling our
+actual UI as well ... all icons are custom, 3D geometric shapes using black &
+white with red accents/shading."
+
+- **DL11 — Rendered materiality, never CSS-styled.** The premium appearance
+  of shell style elements — primary buttons, icons, headline treatments, key
+  controls, showpiece surfaces — is produced by REAL 3D rendering (three.js/
+  WebGPU, Theatre.js motion, Babylon where present, the premium.ts system).
+  CSS/Tailwind are permitted ONLY as layout plumbing (flow, positioning,
+  breakpoints, a11y states) — NEVER as the source of the premium look. No
+  CSS gradients-as-materials, no box-shadow depth fakes, no backdrop
+  filters, no border tricks impersonating 3D. If the material didn't come
+  out of a renderer, it doesn't ship.
+- **DL12 — Primary buttons are objects.** Primary buttons render as 3D
+  objects with visible depth and edges, photorealistic textures (marble,
+  stone, various metals), and ambient light refraction responding to
+  hover/press/camera. Press carries physical weight (DL6).
+- **DL13 — Use the product's own texture pipeline on the product.** The
+  existing prompt-to-texture capability (`src/app/api/material-gen/route.ts`
+  + the Replicate capability adapters, e.g. `src/lib/capabilities/
+  brand-assets.ts`, `src/server/capabilities/mcp-adapter.ts`) and the
+  Replicate 3D-object integration (always textured + colored) are APPROVED
+  and PREFERRED tools for texturing our own UI's buttons, text treatments,
+  and objects. Generated textures are baked to assets at build time
+  (versioned, committed with evidence) — never fetched per-pageview.
+- **DL14 — Icon palette, refined.** Custom 3D geometric icons in BLACK &
+  WHITE with RED accents/shading (refines DL2/DL5 wording; premium.ts
+  remains canonical). No icon packs, ever. No emoji, ever.
+
+**Performance rider (DL8 binds DL11–DL13):** rendered materiality must still
+be instant-feeling on 4G mobile. Approved techniques: shared canvas/renderer
+for repeated elements, instancing, render-to-texture bakes FROM our 3D
+pipeline for small repeated controls (a bake from the renderer satisfies
+DL11; a CSS imitation never does), lazy showpieces behind meaningful first
+paint, LOD on mobile. Live per-element GL contexts for every small control
+is forbidden as a DL8 violation. Fast is part of premium.
+
+## 2026-07-04 FOUNDER AMENDMENTS — DL15–DL16 (verbatim-anchored, binding)
+
+Founder anchors: "it didn't use the Google logo or GitHub logo... it does
+need to use REAL branding everywhere, but the real branding needs to be
+elegant, premium, colored, 3D" · "the icons are supposed to be black and
+white and red, yes, but not the whole UI, and it most certainly can't have
+an all black flat background and all black buttons."
+
+- **DL15 — Real brand marks, rendered premium.** Wherever a third-party
+  brand is represented (Google/GitHub auth buttons, integration tiles,
+  deploy-target tiles), use the REAL official brand mark — elegant, premium,
+  COLORED, rendered as a 3D object (extruded/beveled with true shading and
+  material response) within brand-guideline colors. This is the sole
+  exception to DL5's icon ban: brand marks are branding, not icons. All
+  non-brand iconography remains custom premium.ts black/white/red.
+- **DL16 — Rich, never void.** DL2's black/white/red governs the ICON and
+  identity system — NOT the entire UI. Flat all-black backgrounds with
+  all-black buttons are FORBIDDEN as a DESIGN LAW violation. Surfaces carry
+  photoreal MATERIAL richness: stone, marble, metals (DL12/DL13 textures),
+  ambient light, environmental reflection, depth-graded elevation, and a
+  premium supporting palette (material tones, champagne/brass moments per
+  the certified app language, red identity accents) over the dark base.
+  Dark-first (DL1) means designed-for-dark — it never means monochrome
+  void. A judge frame reading as "flat black slab" is an automatic MUST-FIX.

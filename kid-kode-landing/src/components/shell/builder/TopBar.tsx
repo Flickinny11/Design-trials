@@ -1,41 +1,24 @@
 'use client';
 
-// PRISM SHELL — BUILDER TOP BAR (SHELL W1)
+// PRISM SHELL — BUILDER TOP BAR (SHELL W1 → W2 TASK 0)
 //
-// Project identity (left) · the 3D mode switch/indicator island (center,
-// DL12 — reflects engine `mode-changed` events, issues `set-mode` commands)
-// · model selector + share stub (right). Working-surface chrome per decision
-// A: machined hairlines and mono voice; the materiality lives in the mode
-// island.
+// Project identity (left) · model selector + share stub (right). The 3D mode
+// switch/indicator island RELOCATED to the preview frame's own header per
+// the founder addendum (2026-07-04): the top bar keeps project name, model
+// selector, share — nothing mode-related lives here anymore. Working-surface
+// chrome per decision A: machined hairlines and mono voice.
 
 import * as Popover from '@radix-ui/react-popover';
-import dynamic from 'next/dynamic';
-import type { PrismViewMode } from '../../../../packages/shared-interfaces/src/prism-shell';
 import { useBuilderStore } from '@/lib/shell/builder-store';
 import ModelSelector from './ModelSelector';
-
-const ModeSwitch3D = dynamic(() => import('./ModeSwitch3D'), {
-  ssr: false,
-  loading: () => <div className="bw1-modeswitch" aria-hidden data-loading="true" />,
-});
-
-const MODE_READOUT: Record<PrismViewMode, string> = {
-  galaxy: 'Galaxy',
-  canvas: 'Canvas',
-  'preview-app': 'Preview',
-};
 
 export default function TopBar({
   projectName,
   projectId,
-  onSelectMode,
 }: {
   projectName: string;
   projectId: string;
-  onSelectMode: (mode: PrismViewMode) => void;
 }) {
-  const mode = useBuilderStore((s) => s.mode);
-  const pendingMode = useBuilderStore((s) => s.pendingMode);
   const engineKind = useBuilderStore((s) => s.engineKind);
   const engineStatus = useBuilderStore((s) => s.engineStatus);
 
@@ -52,15 +35,6 @@ export default function TopBar({
             {projectId} · builder
           </span>
         </div>
-      </div>
-
-      <div className="bw1-topbar-mode">
-        <ModeSwitch3D activeMode={mode} pendingMode={pendingMode} onSelectMode={onSelectMode} />
-        {/* screen-reader mode announcements for the round-trip indicator */}
-        <span className="bw1-visually-hidden" aria-live="polite">
-          Engine mode: {MODE_READOUT[mode]}
-          {pendingMode ? ` — switching to ${MODE_READOUT[pendingMode]}` : ''}
-        </span>
       </div>
 
       <div className="bw1-topbar-actions">
@@ -84,7 +58,7 @@ export default function TopBar({
             <Popover.Content className="bw1-pop" sideOffset={8} align="end">
               <p className="bw1-pop-kicker">Sharing</p>
               <p className="bw1-pop-body">
-                This project is private to you in W1. Org-scoped sharing — private · view ·
+                This project is private to you. Org-scoped sharing — private · view ·
                 comment · edit — and live multiplayer land in W7 (spec §6.9, decision E).
               </p>
             </Popover.Content>

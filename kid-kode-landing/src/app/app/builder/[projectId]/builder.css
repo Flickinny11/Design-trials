@@ -1348,3 +1348,198 @@
     scroll-behavior: auto;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHELL W2 TASK 0 — PREVIEW FRAME ANATOMY (founder addendum 2026-07-04)
+   The bordered preview frame with its own header: app label left, the
+   relocated 3D mode switch + frame controls right (ONE shared canvas —
+   FrameControls3D). Layout plumbing only (DL11); materials come from the
+   rendered rail and the baked shell surfaces.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.bw1-preview {
+  padding: var(--pp-space-3);
+}
+.bw2-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  border: var(--pp-hairline-w) solid var(--pp-hairline-strong);
+  border-radius: var(--pp-radius-4);
+  background: var(--pp-elev-1);
+  overflow: hidden;
+}
+.bw2-frame[data-fullscreen='true'] {
+  border: 0;
+  border-radius: 0;
+}
+
+/* frame header — the ONLY home of mode UI */
+.bw2-frame-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--pp-space-4);
+  padding: var(--pp-space-2) var(--pp-space-4);
+  border-bottom: var(--pp-hairline-w) solid var(--pp-hairline);
+  background: var(--pp-elev-2);
+  flex: 0 0 auto;
+  min-height: 64px;
+}
+.bw2-frame-head-left {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  min-width: 0;
+}
+.bw2-frame-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.bw2-frame-name {
+  font-family: var(--pp-font-display, var(--pp-font-display-fallback));
+  font-size: 14px;
+  font-weight: 580;
+  color: var(--pp-text-hi);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bw2-frame-sub {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-2);
+  min-width: 0;
+  font-family: var(--pp-font-mono, var(--pp-font-mono-fallback));
+}
+.bw2-frame-mode-readout {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--pp-text-hi);
+  white-space: nowrap;
+}
+.bw2-frame-head-right {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  min-width: 0;
+}
+
+/* the one-canvas control rail (mode triptych + 4 frame controls) */
+.bw2-framerail {
+  position: relative;
+  width: 462px;
+  max-width: 100%;
+  height: 62px;
+  flex: 0 0 auto;
+}
+.bw2-framerail[data-loading='true'] {
+  opacity: 0.4;
+}
+.bw2-framerail-canvas {
+  position: absolute !important;
+  inset: 0;
+}
+.bw2-framerail-hits {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.bw2-framerail-hit {
+  position: relative;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+/* machined divider between the mode group and the frame controls */
+.bw2-framerail-hit[data-cell='refresh'] {
+  border-left: var(--pp-hairline-w) solid var(--pp-hairline-strong);
+}
+.bw2-framerail-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  font-family: var(--pp-font-mono, var(--pp-font-mono-fallback));
+  font-size: 7.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-text-mid);
+  text-align: center;
+  transition: color var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.bw2-framerail-hit:hover .bw2-framerail-label {
+  color: var(--pp-text-hi);
+}
+.bw2-framerail-hit[data-active='true'] .bw2-framerail-label {
+  color: var(--pp-red-hot);
+}
+.bw2-framerail-hit[data-pending='true'] .bw2-framerail-label {
+  color: var(--pp-text-hi);
+}
+
+/* stage well — the shell-owned box the engine mounts into */
+.bw2-stage-well {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  background: var(--pp-elev-0);
+}
+.bw2-stage-well .bw1-engine-stage {
+  flex: 1;
+  min-width: 0;
+}
+.bw2-stage-well[data-device='mobile'] {
+  justify-content: center;
+  padding: var(--pp-space-4);
+}
+.bw2-stage-well[data-device='mobile'] .bw1-engine-stage {
+  flex: 0 0 auto;
+  width: 390px;
+  max-width: 100%;
+  border: var(--pp-hairline-w) solid var(--pp-hairline-strong);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* the engine iframe itself (RealEngineHost attaches this class) */
+.bw1-engine-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .bw1-preview {
+    padding: var(--pp-space-2);
+  }
+  /* the frame header travels with the preview pane; it wraps to two rows —
+     identity, then the full-width control rail (thumb-reachable) */
+  .bw2-frame-head {
+    flex-wrap: wrap;
+    gap: var(--pp-space-2);
+    padding: var(--pp-space-2) var(--pp-space-3);
+  }
+  .bw2-frame-head-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .bw2-framerail {
+    width: 100%;
+    height: 56px;
+  }
+  .bw2-stage-well[data-device='mobile'] {
+    padding: var(--pp-space-2);
+  }
+}

@@ -34,19 +34,25 @@ export interface PrismEngineHost {
 
 /** Resolve the engine implementation for this session.
  *
- *  `NEXT_PUBLIC_PRISM_ENGINE=real` selects the real engine adapter once the
- *  engine session merges one (W0 report §6.7: the embed stays against the
- *  stub until then). Until that adapter exists the flag falls back to the
- *  stub — loudly, via a console.warn, never silently. */
+ *  W2 TASK 0 (founder addendum 2026-07-04): the REAL prototype is the
+ *  default host — the builder's preview pane mounts the certified ORRERY
+ *  runtime through the contract. StubEngineCore is demoted to a dev/test
+ *  fixture behind `NEXT_PUBLIC_PRISM_ENGINE=stub` (default OFF), and
+ *  selecting it announces itself loudly so a stub pane can never pass
+ *  silently for the product. */
 export function resolveEngineHost(): PrismEngineHost {
-  const wantReal = process.env.NEXT_PUBLIC_PRISM_ENGINE === 'real';
-  if (wantReal) {
-    if (realEngineHostFactory) return realEngineHostFactory();
+  if (process.env.NEXT_PUBLIC_PRISM_ENGINE === 'stub') {
     // eslint-disable-next-line no-console
     console.warn(
-      '[prism-shell] NEXT_PUBLIC_PRISM_ENGINE=real but no real engine adapter ' +
-        'is registered yet (engine session not merged) — falling back to the stub.',
+      '[prism-shell] NEXT_PUBLIC_PRISM_ENGINE=stub — mounting the dev stub ' +
+        'engine fixture instead of the real prototype (dev/test only).',
     );
+    return new StubEngineHost();
   }
+  if (realEngineHostFactory) return realEngineHostFactory();
+  // Unreachable while the W2 adapter is registered; kept as the I8-style
+  // safe fallback rather than a throw across the boundary.
+  // eslint-disable-next-line no-console
+  console.warn('[prism-shell] real engine adapter missing — falling back to the stub.');
   return new StubEngineHost();
 }

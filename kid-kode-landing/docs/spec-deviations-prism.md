@@ -672,3 +672,60 @@ instruction: Better Auth is wired fully for both one-click providers reading
 proven headless flow (signup→dashboard, frames) rides the email/password
 dev-provider path. Exact env var list for the founder is in
 `notes/SHELL-W1A-REPORT.md`. Not a blocker by instruction.
+
+---
+
+## SHELL W2 — Guided Build / Intake + Task 0 real-engine mount (2026-07-04, logged BEFORE code per process law)
+
+**W2-D1 — Real-engine adapter authored SHELL-SIDE under founder addendum.**
+`real-engine-adapter.ts`'s W1 header said the ENGINE session would merge the
+adapter and that shell waves must not write it. The founder addendum
+(SHELL-W1-BUILDER-SHELL-PROMPT.md, 2026-07-04 13:40, re-issued as W2 Task 0
+at 13:56) supersedes that note: the real prototype MUST mount inside
+PreviewRegion this wave, via "additive adapter code only, zero engine-file
+modifications". Mechanism chosen: a new shell route `/app/engine-frame`
+composes the UNMODIFIED `/` page component plus a shell-owned bridge; the
+builder's preview pane hosts it in an iframe. The bridge speaks ONLY
+serialized `prism-shell.ts` envelopes over postMessage and drives the engine
+exclusively through the page's own published hooks
+(`__PRISM_EDITOR_SET_VIEW_MODE__`, the `__PRISM_DEBUG_STORES__` store
+handles) — no engine-interior file is modified or forked. The iframe (rather
+than same-tree mount) is deliberate: the `/` page installs global window
+keybinds (undo/redo, Cmd+K, Escape→canvas), a body scroll lock, and a
+WebGPU context, all of which must not leak into the chat column; the frame
+document isolates them, and fullscreen / open-in-new-tab / device-size
+controls fall out naturally (the Lovable/Claude-Design preview anatomy the
+founder named). StubEngineCore is demoted to a dev fixture behind
+`NEXT_PUBLIC_PRISM_ENGINE=stub` (default OFF).
+
+**W2-D2 — `camera-focused` is settle-timed, not arrival-called.** The engine
+store exposes fly-to signal fields but no camera-arrival callback the shell
+could subscribe to without modifying engine files. The bridge emits
+`camera-focused` after issuing the fly plus a fixed settle window. Honest
+limitation recorded here; a real arrival event is engine-session work.
+
+**W2-D3 — Intake URL seed is a server-side FEATURE fetch, not a runtime
+asset fetch.** E3 ("paste a URL seeds the Brand Profile") is implemented as
+a user-initiated, server-side metadata read (timeout- and size-capped;
+title/theme-color/site-name only; nothing persisted but the extracted seed).
+The no-remote-asset law (VERIFICATION-STANDARD §8) governs the app's RUNTIME
+asset loading in the browser — the browser still fetches localhost only, and
+the hermetic verify probe seeds from a local URL so CI never leaves the
+machine.
+
+**W2-D4 — `buildState` added to the project row (additive).**
+`prismProjectSchema` gains optional `buildState?: 'plan-pending' | ...` so an
+approved Build Brief can hand off to the builder in the plan-pending state
+the W2 prompt requires. Additive-only discipline holds (field is optional;
+nothing removed/renamed). Real Plan/Build phases land in W5 (Conductor, per
+decision H) behind this same field.
+
+**W2-D5 — The embedded real engine operates the certified demo scene.** The
+`/` prototype loads its own certified graph (`live-graph.json`); `graphRef`
+crosses the contract as an opaque label. Binding per-tenant graphs into the
+embedded engine is W5 scope (the Conductor authors tenant graphs); W2's
+brief-approval handoff therefore lands the builder in plan-pending with the
+certified scene as the preview interior, stated on-screen. Editing inside
+the embedded prototype writes through the engine's own existing autosave
+path exactly as at `/` (shared demo graph) — a known, stated W2 limitation,
+resolved when W5 binds tenant graphs.
