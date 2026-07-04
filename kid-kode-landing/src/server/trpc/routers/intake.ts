@@ -24,33 +24,18 @@ import {
 } from '../../../../packages/shared-interfaces/src/prism-intake';
 import { PRISM_TENANCY_CONTRACT_VERSION } from '../../../../packages/shared-interfaces/src/prism-tenancy';
 import * as store from '../../tenancy/tenant-store';
+import { safeFetch } from '../../net/safe-fetch';
 import { protectedProcedure, router } from '../init';
 
 /** Read caps for the URL seed fetch (W2-D3). */
 const URL_SEED_TIMEOUT_MS = 5000;
 const URL_SEED_MAX_BYTES = 512 * 1024; // read at most 512 KB of <head>
 
-/** SSRF guard (criteria-review should-fix): refuse hosts that resolve to the
- *  local machine, link-local metadata endpoints, or RFC-1918 private ranges by
- *  literal. Full DNS-rebind defense is deferred to W3's server-fetch hardening;
- *  this blocks the obvious internal-probe vectors for the one W2 fetch. */
-function isBlockedHost(hostname: string): boolean {
-  const h = hostname.toLowerCase().replace(/^\[|\]$/g, '');
-  if (h === 'localhost' || h.endsWith('.localhost') || h.endsWith('.local') || h.endsWith('.internal')) {
-    return true;
-  }
-  if (h === '::1' || h.startsWith('fe80:') || h.startsWith('fc') || h.startsWith('fd')) return true;
-  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(h);
-  if (m) {
-    const [a, b] = [Number(m[1]), Number(m[2])];
-    if (a === 127 || a === 0 || a === 10) return true;
-    if (a === 169 && b === 254) return true; // link-local + cloud metadata
-    if (a === 172 && b >= 16 && b <= 31) return true;
-    if (a === 192 && b === 168) return true;
-    if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT
-  }
-  return false;
-}
+// SSRF defense: the W2 literal-hostname denylist is SUPERSEDED by
+// src/server/net/safe-fetch.ts, which RESOLVES the host and rejects any host
+// that resolves to a loopback / RFC-1918 / link-local / metadata address, and
+// re-validates every redirect hop (W3 server-fetch hardening — the DNS-rebind
+// defense the W2 comment deferred to this wave).
 
 /** Normalize a CSS colour string the page declared as theme-color to #rrggbb,
  *  or null if it isn't a plain hex (we don't seed from rgb()/named colours). */
@@ -116,17 +101,17 @@ async function fetchUrlSeed(rawUrl: string): Promise<IntakeUrlSeed> {
   // Only http(s); the Zod .url() already guarantees a URL shape.
   const target = new URL(rawUrl);
   if (target.protocol !== 'http:' && target.protocol !== 'https:') return empty;
-  if (isBlockedHost(target.hostname)) return empty; // SSRF guard
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), URL_SEED_TIMEOUT_MS);
   try {
-    const res = await fetch(target, {
-      signal: controller.signal,
-      redirect: 'follow',
+    // SSRF-hardened: resolves + validates the host (and every redirect hop)
+    // before connecting; pins DNS to the vetted addresses when undici is
+    // available (W3 server-fetch hardening).
+    const result = await safeFetch(rawUrl, {
+      timeoutMs: URL_SEED_TIMEOUT_MS,
       headers: { 'user-agent': 'PrismIntakeBot/1.0 (+brand-seed)' },
     });
-    if (!res.ok) return empty;
+    const res = result.response;
+    if (!res || !result.ok) return empty;
     const ctype = res.headers.get('content-type') ?? '';
     if (!ctype.includes('html')) return empty;
     const html = await readCapped(res);
@@ -160,8 +145,6 @@ async function fetchUrlSeed(rawUrl: string): Promise<IntakeUrlSeed> {
     });
   } catch {
     return empty; // unreachable host / timeout / parse — seed nothing
-  } finally {
-    clearTimeout(timer);
   }
 }
 

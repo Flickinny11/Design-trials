@@ -44,6 +44,16 @@ import {
   buildBriefSchema,
   type BuildBrief,
 } from '../../../packages/shared-interfaces/src/prism-intake';
+import {
+  connectorRequestSchema,
+  githubImportSchema,
+  integrationConnectionSchema,
+  projectCapabilityBindingSchema,
+  type ConnectorRequest,
+  type GithubImport,
+  type IntegrationConnection,
+  type ProjectCapabilityBinding,
+} from '../../../packages/shared-interfaces/src/prism-integrations';
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
 const MAX_ASSET_BYTES = 64 * 1024 * 1024; // matches assets/store.ts ceiling
@@ -427,4 +437,216 @@ export async function getAsset(
   } catch {
     return null;
   }
+}
+
+// ── Integrations (SHELL W3) ─────────────────────────────────────────────────
+// Connected accounts + connector requests live at the TENANT root; per-project
+// capability bindings + the GitHub import live under the project dir. Same
+// four isolation walls as everything above: tenant-key-first paths, id-grammar
+// validation, path re-check inside the tenant root, and not-owned == not-found.
+// I5 posture is enforced by the schemas — a connection carries a capability
+// REFERENCE only; the store never sees a token to persist.
+
+function connectionsIndexPath(tenantId: string): string {
+  return insideTenant(tenantId, 'integrations', 'connections.json');
+}
+
+export async function listConnections(
+  tenantId: string,
+): Promise<IntegrationConnection[]> {
+  const raw = await readJson<unknown[]>(connectionsIndexPath(tenantId));
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((c) => {
+    const parsed = integrationConnectionSchema.safeParse(c);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+export async function getConnection(
+  tenantId: string,
+  connectionId: string,
+): Promise<IntegrationConnection | null> {
+  const cid = safeId(connectionId, 'connection');
+  const all = await listConnections(tenantId);
+  return all.find((c) => c.id === cid) ?? null;
+}
+
+export async function addConnection(
+  tenantId: string,
+  connection: IntegrationConnection,
+): Promise<IntegrationConnection> {
+  const parsed = integrationConnectionSchema.parse(connection);
+  return serialized(tenantId, async () => {
+    const all = await listConnections(tenantId);
+    // De-dupe by (providerId) — re-connecting a platform replaces its record.
+    const withoutDupe = all.filter((c) => c.providerId !== parsed.providerId);
+    await writeJson(connectionsIndexPath(tenantId), [...withoutDupe, parsed]);
+    return parsed;
+  });
+}
+
+export async function updateConnection(
+  tenantId: string,
+  connectionId: string,
+  patch: (c: IntegrationConnection) => IntegrationConnection,
+): Promise<IntegrationConnection | null> {
+  return serialized(tenantId, async () => {
+    const cid = safeId(connectionId, 'connection');
+    const all = await listConnections(tenantId);
+    const idx = all.findIndex((c) => c.id === cid);
+    if (idx < 0) return null;
+    const updated = integrationConnectionSchema.parse({
+      ...patch(all[idx]),
+      id: all[idx].id, // id immutable
+      updatedAt: nowIso(),
+    });
+    const next = [...all];
+    next[idx] = updated;
+    await writeJson(connectionsIndexPath(tenantId), next);
+    return updated;
+  });
+}
+
+export async function removeConnection(
+  tenantId: string,
+  connectionId: string,
+): Promise<boolean> {
+  return serialized(tenantId, async () => {
+    const cid = safeId(connectionId, 'connection');
+    const all = await listConnections(tenantId);
+    const next = all.filter((c) => c.id !== cid);
+    if (next.length === all.length) return false;
+    await writeJson(connectionsIndexPath(tenantId), next);
+    return true;
+  });
+}
+
+function connectorRequestsIndexPath(tenantId: string): string {
+  return insideTenant(tenantId, 'integrations', 'connector-requests.json');
+}
+
+export async function listConnectorRequests(
+  tenantId: string,
+): Promise<ConnectorRequest[]> {
+  const raw = await readJson<unknown[]>(connectorRequestsIndexPath(tenantId));
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((r) => {
+    const parsed = connectorRequestSchema.safeParse(r);
+    return parsed.success ? [parsed.data] : [];
+  });
+}
+
+export async function addConnectorRequest(
+  tenantId: string,
+  request: ConnectorRequest,
+): Promise<ConnectorRequest> {
+  const parsed = connectorRequestSchema.parse(request);
+  return serialized(tenantId, async () => {
+    const all = await listConnectorRequests(tenantId);
+    await writeJson(connectorRequestsIndexPath(tenantId), [...all, parsed]);
+    return parsed;
+  });
+}
+
+// ── Per-project capability bindings + GitHub import (E5) ─────────────────────
+
+function projectIntegrationsPath(tenantId: string, projectId: string): string {
+  return insideTenant(
+    tenantId,
+    'projects',
+    safeId(projectId, 'project'),
+    'integrations.json',
+  );
+}
+
+interface ProjectIntegrations {
+  bindings: ProjectCapabilityBinding[];
+  githubImport: GithubImport | null;
+}
+
+async function readProjectIntegrations(
+  tenantId: string,
+  projectId: string,
+): Promise<ProjectIntegrations> {
+  const raw = await readJson<{ bindings?: unknown[]; githubImport?: unknown }>(
+    projectIntegrationsPath(tenantId, projectId),
+  );
+  const bindings = Array.isArray(raw?.bindings)
+    ? raw!.bindings.flatMap((b) => {
+        const parsed = projectCapabilityBindingSchema.safeParse(b);
+        return parsed.success ? [parsed.data] : [];
+      })
+    : [];
+  const gi = githubImportSchema.safeParse(raw?.githubImport);
+  return { bindings, githubImport: gi.success ? gi.data : null };
+}
+
+export async function getProjectIntegrations(
+  tenantId: string,
+  projectId: string,
+): Promise<ProjectIntegrations | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null; // fail closed — not owned == not found
+  return readProjectIntegrations(tenantId, projectId);
+}
+
+export async function addProjectBinding(
+  tenantId: string,
+  projectId: string,
+  binding: ProjectCapabilityBinding,
+): Promise<ProjectCapabilityBinding | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const parsed = projectCapabilityBindingSchema.parse(binding);
+  return serialized(tenantId, async () => {
+    const cur = await readProjectIntegrations(tenantId, projectId);
+    // De-dupe by connectionId — one binding per connection per project.
+    const bindings = [
+      ...cur.bindings.filter((b) => b.connectionId !== parsed.connectionId),
+      parsed,
+    ];
+    await writeJson(projectIntegrationsPath(tenantId, projectId), {
+      bindings,
+      githubImport: cur.githubImport,
+    });
+    return parsed;
+  });
+}
+
+export async function removeProjectBinding(
+  tenantId: string,
+  projectId: string,
+  bindingId: string,
+): Promise<boolean> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return false;
+  const bid = safeId(bindingId, 'binding');
+  return serialized(tenantId, async () => {
+    const cur = await readProjectIntegrations(tenantId, projectId);
+    const bindings = cur.bindings.filter((b) => b.id !== bid);
+    if (bindings.length === cur.bindings.length) return false;
+    await writeJson(projectIntegrationsPath(tenantId, projectId), {
+      bindings,
+      githubImport: cur.githubImport,
+    });
+    return true;
+  });
+}
+
+export async function setGithubImport(
+  tenantId: string,
+  projectId: string,
+  githubImport: GithubImport,
+): Promise<GithubImport | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const parsed = githubImportSchema.parse(githubImport);
+  return serialized(tenantId, async () => {
+    const cur = await readProjectIntegrations(tenantId, projectId);
+    await writeJson(projectIntegrationsPath(tenantId, projectId), {
+      bindings: cur.bindings,
+      githubImport: parsed,
+    });
+    return parsed;
+  });
 }
