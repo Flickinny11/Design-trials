@@ -29,8 +29,17 @@ const PANES = [
   { key: 'stage', label: 'Preview' },
 ] as const;
 
-export default function BuilderShell({ projectId }: { projectId: string }) {
-  const project = getStubProject(projectId);
+export default function BuilderShell({
+  projectId,
+  projectName,
+}: {
+  projectId: string;
+  /** Real tenant project name (W1A) — falls back to the W1 humanized slug
+   *  for ids that are not owned projects (stub/demo routes). */
+  projectName?: string;
+}) {
+  const stub = getStubProject(projectId);
+  const project = projectName ? { ...stub, name: projectName } : stub;
   const { sendCommand } = useEngineBridge({
     containerId: ENGINE_CONTAINER_ID,
     graphRef: project.graphRef,

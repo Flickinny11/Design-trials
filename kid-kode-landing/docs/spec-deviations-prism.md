@@ -637,3 +637,38 @@ deliberate, auditable act, not a silent escape hatch.
 **Behaviour preserved.** The cinematic transition is byte-for-byte unchanged
 (same TSL curtain, same close → gated-swap → open timing, same camera-parented
 mount). Only the authorship classification changed.
+
+---
+
+## SHELL W1A — Accounts & Tenancy (2026-07-04, logged BEFORE code per process law)
+
+**W1A-D1 — Auth database = `node:sqlite` file under `.data/`, not a hosted DB.**
+The wave prompt says "wire the established stack (Supabase/R2 per existing
+patterns in repo)". The repo's actual established pattern (see
+`src/server/snippets/store.ts`) is: a LOCAL server-side store under `.data/`
+by DEFAULT, with a Supabase backend lazily activated only when `SUPABASE_URL`
++ key env vars exist — "swap = config". This repo's env has NO Supabase/R2
+credentials, so W1A follows the same precedent: Better Auth persists to
+`.data/auth.sqlite` via Node 22's built-in `node:sqlite` (zero new native
+deps; Better Auth's documented adapter). Production swap is config-only:
+Better Auth accepts a Postgres/Supabase connection through the same
+`database:` option without touching any call site. `.data/` is already
+gitignored — no user data or session secret can be committed.
+
+**W1A-D2 — Per-tenant project/asset storage = tenant-keyed server-only file
+store under `.data/tenancy/`,** same rationale as W1A-D1 and same shape as
+`src/server/assets/store.ts` (content-addressed, server-only) and
+`src/server/secrets/vault.ts` (surface stable, backing store swappable).
+Every read/write takes the OWNER tenant id from the server session — never
+from client input — so the I11 isolation invariant is enforced at the data
+layer regardless of backing store; moving to Supabase/R2 later changes the
+backing store only, not the isolation surface.
+
+**W1A-D3 — OAuth providers built against placeholder env names.** Env lacks
+Google/GitHub OAuth app credentials. Per the wave prompt's explicit
+instruction: Better Auth is wired fully for both one-click providers reading
+`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`/`GITHUB_CLIENT_ID`/
+`GITHUB_CLIENT_SECRET`; provider buttons detect availability via config; the
+proven headless flow (signup→dashboard, frames) rides the email/password
+dev-provider path. Exact env var list for the founder is in
+`notes/SHELL-W1A-REPORT.md`. Not a blocker by instruction.

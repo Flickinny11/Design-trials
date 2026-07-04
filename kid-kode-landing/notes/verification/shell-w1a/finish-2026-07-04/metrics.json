@@ -1,0 +1,32 @@
+{
+  "capturedBy": "SHELL W1A finish pass (fresh headless drive against the committed working tree, Chrome DevTools MCP)",
+  "date": "2026-07-04",
+  "server": "next dev :4790, hermetic PRISM_AUTH_DB + PRISM_TENANCY_DIR under /tmp scratch",
+  "flowProvenLive": [
+    "sign-in cold (desktop + mobile) — 3 rendered provider objects, OAuth = AWAITING KEYS (honest availability), email live",
+    "sign-up: open email form -> fill -> CREATE ACCOUNT -> lands on /app dashboard (planTier FREE, server-set)",
+    "dashboard first-run (empty projects state)",
+    "create project 'Founder Atelier' -> lands in builder /app/builder/proj-0497cd1f... with the REAL tenant project name in the title",
+    "back to /app -> project persisted in PROJECTS list with real id + timestamp",
+    "SIGN OUT -> /sign-in; direct nav to /app while signed out -> 307 redirect to /sign-in?next=%2Fapp (route guard)",
+    "mobile sign-in (email) -> dashboard; 'Founder Atelier' still present (tenant data survives sign-out/in)",
+    "canvas / renders ORRERY 'Time, machined.' scene UNBROKEN (W1A does not touch /)"
+  ],
+  "perf_DL8": {
+    "mobile_signin_3objects": { "viewport": "390x844@2", "fps": 60, "heapMB": 78, "canvases": 1 },
+    "desktop_dashboard_1object": { "viewport": "1600x900@1", "fps": 60, "heapMB": 83, "canvases": 1 },
+    "desktop_signin_3objects": { "viewport": "1600x900@1", "fps": 60, "heapMB": 85, "canvases": 1 },
+    "note": "One shared GL context per surface (DL8 rider: no per-button contexts). 60fps desktop + mobile."
+  },
+  "consoleErrors": {
+    "sign-up": 0,
+    "dashboard": 0,
+    "builder": 0,
+    "canvas-root": 0,
+    "note": "list_console_messages(types=[error]) returned no messages on every surface driven"
+  },
+  "frames": {
+    "desktop": ["desktop-01-signin.png","desktop-02-signup-filled.png","desktop-03-dashboard-firstrun.png","desktop-04-create-lands-in-builder.png","desktop-05-dashboard-with-project.png","desktop-06-signout-guard.png","desktop-07-canvas-unbroken.png"],
+    "mobile": ["mobile-01-signin.png","mobile-02-dashboard.png"]
+  }
+}

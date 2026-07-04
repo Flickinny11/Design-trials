@@ -84,6 +84,18 @@ RUNTIME_ALLOW = {
     # library (I3 intact). Rationale logged in notes/mockup-pipeline.md §10
     # (2026-07-04, W1 addendum).
     "@trpc/server", "@trpc/client",
+    # SHELL W1A (PRISM-FRONTEND-SHELL-SPEC v1.1 §14 W1A, invariant I2 "Better
+    # Auth only") — accounts & tenancy. better-auth is the SPEC-MANDATED auth
+    # system (Google/GitHub one-click OAuth + email/password + sessions,
+    # sameSite:'lax'). Server-side only instance (src/server/auth/**) backed
+    # by Node 22's built-in node:sqlite under .data/ (gitignored; zero new
+    # native deps — established local-store precedent, see snippets/store.ts);
+    # client side is better-auth/react session hooks only. No renderer, no
+    # DOM chrome, no WebSocket (I1 intact), no second state library (I3
+    # intact), no second auth system (I2 intact — this IS the one).
+    # Deviations W1A-D1..D3 logged in docs/spec-deviations-prism.md
+    # (2026-07-04, before code).
+    "better-auth",
     # EDITOR-EXP P7 (C32-34) — undo/redo. zundo is a pure zustand temporal
     # middleware (no renderer, fits zustand ^5); immer for patch-based history.
     # Approved per RE-VERIFY-DECISIONS.md (zundo 2.3, immer 11.1.8).

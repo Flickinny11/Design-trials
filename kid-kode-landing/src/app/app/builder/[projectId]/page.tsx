@@ -8,9 +8,29 @@
 
 import '@/components/shell/design/prism-premium.css';
 import './builder.css';
+import { headers } from 'next/headers';
 import { shellDisplay, shellMono } from '@/components/shell/design/shell-fonts';
 import BuilderShell from '@/components/shell/builder/BuilderShell';
 import { projectNameFromId } from '@/lib/shell/project-stub';
+import { auth, ensureAuthSchema } from '@/server/auth/auth';
+import { getProject } from '@/server/tenancy/tenant-store';
+
+/** W1A: resolve the REAL tenant project (session-keyed, fail-closed) so the
+ *  builder titles what the user actually named. Unowned/unknown ids keep the
+ *  W1 humanized-slug behavior (the stub engine drives any id). */
+async function resolveProjectName(projectId: string): Promise<string> {
+  try {
+    await ensureAuthSchema();
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session) {
+      const owned = await getProject(session.user.id, projectId);
+      if (owned) return owned.name;
+    }
+  } catch {
+    // Invalid id shapes fall through to the humanized slug.
+  }
+  return projectNameFromId(projectId);
+}
 
 export async function generateMetadata({
   params,
@@ -18,7 +38,7 @@ export async function generateMetadata({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  return { title: `${projectNameFromId(projectId)} — Prism Builder` };
+  return { title: `${await resolveProjectName(projectId)} — Prism Builder` };
 }
 
 export default async function BuilderPage({
@@ -27,9 +47,10 @@ export default async function BuilderPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
+  const projectName = await resolveProjectName(projectId);
   return (
     <div className={`bw1-viewport ${shellDisplay.variable} ${shellMono.variable}`}>
-      <BuilderShell projectId={projectId} />
+      <BuilderShell projectId={projectId} projectName={projectName} />
     </div>
   );
 }

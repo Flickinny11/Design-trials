@@ -1,0 +1,192 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM SHELL — DASHBOARD PLACEHOLDER (SHELL W1A) — dw1- namespace
+   ─────────────────────────────────────────────────────────────────────────────
+   Working surface (Decision A): clean-but-premium from the --pp-* token
+   layer; the one primary action (CREATE) is the rendered object. Layout
+   plumbing only (DL11) — no CSS materials, no backdrop-filter. Superseded
+   by the real S3 dashboard in W4.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.dw1-screen {
+  height: 100dvh;
+  overflow-y: auto;
+  background: var(--pp-elev-0);
+  color: var(--pp-text);
+  font-family: var(--pp-font-mono, var(--pp-font-mono-fallback));
+  padding: var(--pp-space-5) max(var(--pp-space-5), calc((100vw - 960px) / 2))
+    var(--pp-space-8);
+}
+
+.dw1-topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  flex-wrap: wrap;
+  padding-bottom: var(--pp-space-4);
+  border-bottom: var(--pp-hairline-w) solid var(--pp-hairline);
+}
+.dw1-kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  color: var(--pp-text-mid);
+}
+.dw1-account {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+}
+.dw1-account-id {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--pp-text-mid);
+}
+.dw1-signout {
+  background: transparent;
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  border-radius: var(--pp-radius-2);
+  color: var(--pp-text-mid);
+  font-family: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition:
+    border-color var(--pp-motion-fast) var(--pp-ease-settle),
+    color var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.dw1-signout:hover {
+  border-color: var(--pp-hairline-red);
+  color: var(--pp-text);
+}
+.dw1-signout:focus-visible {
+  outline: 2px solid var(--pp-red);
+  outline-offset: 2px;
+}
+
+.dw1-launch {
+  padding: var(--pp-space-7) 0 var(--pp-space-5);
+}
+.dw1-headline {
+  margin: 0 0 var(--pp-space-2);
+  font-family: var(--pp-font-display, var(--pp-font-display-fallback));
+  font-weight: 560;
+  font-size: clamp(30px, 5vw, 44px);
+  line-height: 1.05;
+  color: var(--pp-text-hi);
+  font-variation-settings: 'opsz' 72, 'SOFT' 40, 'WONK' 0;
+}
+.dw1-sub {
+  margin: 0 0 var(--pp-space-5);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--pp-text-mid);
+  max-width: 52ch;
+}
+.dw1-launchrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 148px;
+  gap: var(--pp-space-3);
+  align-items: stretch;
+  max-width: 560px;
+}
+.dw1-input {
+  background: var(--pp-elev-1);
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  border-radius: var(--pp-radius-3);
+  color: var(--pp-text-hi);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 12px var(--pp-space-3);
+  transition: border-color var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.dw1-input:hover:not(:disabled) {
+  border-color: var(--pp-hairline-strong);
+}
+.dw1-input:focus-visible {
+  outline: none;
+  border-color: var(--pp-hairline-red);
+}
+.dw1-createbtn .aw1-objectrow {
+  height: 132px;
+}
+.dw1-error {
+  min-height: 18px;
+  margin: var(--pp-space-2) 0 0;
+  font-size: 11.5px;
+  color: var(--pp-red-hot);
+}
+
+.dw1-sectionlabel {
+  margin: 0 0 var(--pp-space-3);
+  font-size: 10px;
+  font-weight: 640;
+  letter-spacing: 0.3em;
+  color: var(--pp-text-low);
+}
+.dw1-empty {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--pp-text-mid);
+  border: var(--pp-hairline-w) dashed var(--pp-hairline);
+  border-radius: var(--pp-radius-3);
+  padding: var(--pp-space-5);
+  max-width: 560px;
+}
+.dw1-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--pp-space-2);
+  max-width: 720px;
+}
+.dw1-project {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--pp-space-3);
+  text-decoration: none;
+  background: var(--pp-elev-2);
+  border-radius: var(--pp-radius-3);
+  box-shadow: var(--pp-edge-machined);
+  padding: var(--pp-space-3) var(--pp-space-4);
+  transition: background var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.dw1-project:hover {
+  background: var(--pp-elev-3);
+}
+.dw1-project:focus-visible {
+  outline: 2px solid var(--pp-red);
+  outline-offset: 2px;
+}
+.dw1-project-name {
+  color: var(--pp-text-hi);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+.dw1-project-meta {
+  color: var(--pp-text-low);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .dw1-screen {
+    padding: var(--pp-space-4) var(--pp-space-3) var(--pp-space-7);
+  }
+  .dw1-launchrow {
+    grid-template-columns: 1fr;
+  }
+  .dw1-createbtn .aw1-objectrow {
+    height: 124px;
+  }
+  .dw1-project {
+    flex-direction: column;
+    gap: var(--pp-space-1);
+  }
+}
