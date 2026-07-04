@@ -636,8 +636,14 @@ export const useGraphSourceStore = create<GraphSourceState>()(temporal(subscribe
       // pending edit. `dirty` is live build state, not durable graph data.
       // Multi-hub: include every node whose parentHubId belongs to a persisted
       // hub (same orphan-stripping semantics, widened to all hubs).
+      // FINISH-F3 — GLOBAL ELEMENTS (isGlobalElement, parentHubId '') are not
+      // hub orphans: they are the app's overlay elements (APP-REALITY P7).
+      // The old filter silently dropped them from every save, so the first
+      // autosave after boot deleted the overlay cards from the persisted app.
       nodes: s.nodes
-        .filter((n) => (multiHub ? hubIds.has(n.parentHubId) : n.parentHubId === hub.hubId))
+        .filter((n) =>
+          n.isGlobalElement || (multiHub ? hubIds.has(n.parentHubId) : n.parentHubId === hub.hubId),
+        )
         .map(({ dirty: _dirty, ...n }) => n as PrismNode),
       edges: s.edges,
       // EBR2-E-04 fix — SC-006: the GraphSource invariant ("exactly one

@@ -1679,9 +1679,16 @@ function ControlsBridge({
     const c = controlsRef.current;
     if (!center || !c) return;
     const singleHub = Object.keys(hubCenters).length === 1;
-    const camX = singleHub ? center.x : center.x + 50;
-    const camY = singleHub ? center.y : center.y + 30;
-    const camZ = singleHub ? center.z + 320 : center.z + 90;
+    // FINISH-F3 (F-2 advocate flag: mobile fly-in half-void) — on a narrow
+    // portrait aspect the shipped (+50,+30,+90) landing put the nebula
+    // envelope's edge inside the frame (right half void). Land straighter and
+    // further back so the backdrop always covers the tall frame.
+    const narrow =
+      typeof window !== 'undefined' && window.innerWidth / window.innerHeight < 0.8;
+    const off = narrow ? { x: 24, y: 14, z: 150 } : { x: 50, y: 30, z: 90 };
+    const camX = singleHub ? center.x : center.x + off.x;
+    const camY = singleHub ? center.y : center.y + off.y;
+    const camZ = singleHub ? center.z + 320 : center.z + off.z;
     c.setLookAt(camX, camY, camZ, center.x, center.y, center.z, true).then(() => {
       clearFlyTarget();
     });
@@ -1944,7 +1951,7 @@ function SceneControlsBridge({
     // height — heroes read small in a large empty surface). z chosen so the
     // tallest composition (acquire: reserve text y≈2.05 → pedestal y≈-2.3) still
     // clears the frame at fov 45 (half-height = z·0.414): z=10.5 → ±4.35.
-    const z = deviceMode === 'mobile' ? 11 : 10.5; // mobile portrait keeps its proven framing
+    const z = deviceMode === 'mobile' ? 9.2 : 10.5; // FINISH-F3: mobile rides closer (shell rows pull inward via authored mobile poses) so type reads at phone size
     c.setLookAt(0, 0, z, 0, 0, 0, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceMode, viewMode, hub?.hubId]);
@@ -2049,7 +2056,12 @@ function SceneControlsBridge({
       const cc = controlsRef.current;
       if (!cc) return;
       cc.enabled = true;
-      void cc.setLookAt(0, 0.55, 8.2, 0, 0.1, 0.42, true).then(() => {
+      // FINISH-F3 — the Atelier is a PAGE of the shippable app, not a detached
+      // configurator: rest at the same per-device framing every other hub
+      // ships (P5 z), so the app header/footer stay in frame. The head-on
+      // clamp below still applies; the macro loupe remains a user dolly.
+      const atelierZ = deviceMode === 'mobile' ? 9.2 : 10.5;
+      void cc.setLookAt(0, 0, atelierZ, 0, 0, 0.42, true).then(() => {
         if (cancelled) return;
         const cur = controlsRef.current;
         if (!cur) return;
@@ -2058,7 +2070,7 @@ function SceneControlsBridge({
       });
     }, 120);
     return () => { cancelled = true; window.clearTimeout(id); };
-  }, [viewMode, activeHubId]);
+  }, [viewMode, activeHubId, deviceMode]);
 
   // PHASE3 (P3-1) — camera DOLLY-THROUGH on a hub transition. When the curtain
   // begins closing (token bump), pull the camera back along its view direction
@@ -2139,7 +2151,7 @@ function SceneControlsBridge({
       }
       const ramp = Math.min(1, Math.max(0, (tt - hubSettleClockRef.current - 0.6) / 1.0));
       if (ramp > 0) {
-        const zHero = deviceMode === 'mobile' ? 11 : 10.5;
+        const zHero = deviceMode === 'mobile' ? 9.2 : 10.5;
         const dx = (Math.sin(tt * 0.16) * 0.42 + Math.sin(tt * 0.41) * 0.12) * ramp;
         const dy = Math.sin(tt * 0.12 + 1.3) * 0.24 * ramp;
         const dz = Math.sin(tt * 0.09) * 0.32 * ramp;
@@ -2927,6 +2939,10 @@ function AssembledSceneNode({ node, previewMode = false }: { node: PrismNode; pr
       sp.scaleY *= rdp.scale;
       sp.scaleZ *= rdp.scale;
     }
+    // FINISH-F3 — per-axis device multipliers (compose on top of `scale`) so
+    // full-width shell bars can compress horizontally without going hairline.
+    if (rdp.scaleX !== undefined) sp.scaleX *= rdp.scaleX;
+    if (rdp.scaleY !== undefined) sp.scaleY *= rdp.scaleY;
   }
   // EBR2-C-03 / §R2-C SC-069/SC-070 + INV-25 — the renderer is the only
   // consumer of scenePosition + canvasTransform for visible node placement.

@@ -24,9 +24,18 @@ export default function OverlayHost() {
 
   useEffect(() => {
     if (!openOverlay) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeOverlay(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    // FINISH-F3 — capture + stop: while the app overlay is open, Escape must
+    // ONLY close the overlay. Without this the editor-level Escape hotkey also
+    // fired and kicked the running app out of preview-app into canvas.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        e.preventDefault();
+        closeOverlay();
+      }
+    };
+    window.addEventListener('keydown', onKey, true);
+    return () => window.removeEventListener('keydown', onKey, true);
   }, [openOverlay, closeOverlay]);
 
   if (viewMode !== 'preview-app' || !openOverlay) return null;
@@ -40,12 +49,16 @@ export default function OverlayHost() {
   const anchor = openOverlay.anchor ?? { x: 0.5, y: 0.5 };
   // The card owns its own entrance transform, so positioning/centring lives on a
   // WRAPPER (the binding's size + location) and the card fills it (inset:0).
+  // FINISH-F3 (advocate MUST-FIX) — the binding's viewport FRACTIONS are
+  // authored against desktop; on a 390px phone 0.34vw was a 132px card and
+  // every spec row truncated mid-word. Clamp to a readable floor (and keep
+  // the 92vw/88vh ceiling for small windows).
   const wrapperStyle: React.CSSProperties = {
     position: 'absolute',
     left: `${anchor.x * 100}vw`,
     top: `${anchor.y * 100}vh`,
-    width: `min(${size.w * 100}vw, 92vw)`,
-    height: `min(${size.h * 100}vh, 88vh)`,
+    width: `clamp(min(340px, 92vw), ${size.w * 100}vw, 92vw)`,
+    height: `clamp(min(480px, 88vh), ${size.h * 100}vh, 88vh)`,
     transform: 'translate(-50%, -50%)',
   };
 

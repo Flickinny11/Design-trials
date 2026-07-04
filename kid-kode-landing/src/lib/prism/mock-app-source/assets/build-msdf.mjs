@@ -22,7 +22,7 @@ const outPng = join(outDir, 'font-inter.msdf.png');
 const outFnt = join(outDir, 'font-inter.msdf.fnt');
 const outJson = join(outDir, 'font-inter.msdf.json');
 
-const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©';
+const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©·№…';
 
 const BASE_OPTIONS = {
   fieldType: 'msdf',

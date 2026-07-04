@@ -29,7 +29,7 @@ const FORCE = process.argv.includes('--force');
 
 // Same charset + options as build-msdf.mjs (the legacy Inter atlas) — keep in
 // lockstep or per-family metrics will diverge from the runtime's expectations.
-const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©';
+const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©·№…';
 
 const BASE_OPTIONS = {
   fieldType: 'msdf',

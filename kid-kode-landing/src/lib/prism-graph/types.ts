@@ -1335,6 +1335,11 @@ export interface ResponsiveDevicePose {
   z?: number;
   /** Multiplier on the authored scaleXYZ for this device (omit = 1×). */
   scale?: number;
+  /** FINISH-F3 (INV-8 additive) — per-axis multipliers composed ON TOP of
+   *  `scale`, so wide shell rows (header/footer bars, rules) can compress
+   *  horizontally for a device without collapsing their height. Omit = 1×. */
+  scaleX?: number;
+  scaleY?: number;
   /** Hide this node entirely on this device (responsive declutter). */
   hidden?: boolean;
 }
