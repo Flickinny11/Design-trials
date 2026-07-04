@@ -1061,6 +1061,20 @@
   padding-top: var(--pp-space-3);
   margin: var(--pp-space-2) 0 0;
 }
+.bw1-minbtn-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--pp-font-mono, var(--pp-font-mono-fallback));
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--pp-red);
+  text-decoration: none;
+  padding: var(--pp-space-2) 0;
+  margin: var(--pp-space-2) 0 0;
+  border-bottom: var(--pp-hairline-w) solid transparent;
+  transition: border-color var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.bw1-minbtn-link:hover { border-bottom-color: var(--pp-hairline-red); }
 .bw1-badge-preview {
   display: inline-flex;
   align-items: center;

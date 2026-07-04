@@ -161,16 +161,19 @@ function InspectorPanel({
 
 // ── Placeholders (W3 / W5) ───────────────────────────────────────────────────
 
-function IntegrationsPanel() {
+function IntegrationsPanel({ projectId }: { projectId: string }) {
   return (
     <div className="bw1-panel">
-      <p className="bw1-panel-kicker">Integrations · lands in W3</p>
+      <p className="bw1-panel-kicker">Integrations</p>
       <h3 className="bw1-panel-headline">Connect anything.</h3>
       <p className="bw1-panel-body">
         A curated one-click catalog covers the head; agent-authored connectors cover the
         long tail — search any platform and a catalog miss flows straight into the
         connector request path (decision C).
       </p>
+      <a className="bw1-minbtn-link" href={`/app/integrations?project=${encodeURIComponent(projectId)}`}>
+        Manage integrations for this app →
+      </a>
       <p className="bw1-panel-foot">
         Capability references only — no secret ever touches the shell (I5).
       </p>
@@ -269,7 +272,7 @@ export default function RightTabs({
         <InspectorPanel projectId={projectId} sendCommand={sendCommand} />
       </Tabs.Content>
       <Tabs.Content value="integrations" className="bw1-tabs-content">
-        <IntegrationsPanel />
+        <IntegrationsPanel projectId={projectId} />
       </Tabs.Content>
       <Tabs.Content value="deploy" className="bw1-tabs-content">
         <DeployPanel />

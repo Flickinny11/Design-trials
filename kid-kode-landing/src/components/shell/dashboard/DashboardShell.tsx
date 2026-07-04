@@ -58,6 +58,9 @@ export default function DashboardShell({
           <span className="dw1-account-id">
             {userName} · {userEmail} · {planTier.toUpperCase()}
           </span>
+          <a className="dw1-navlink" href="/app/integrations">
+            Integrations
+          </a>
           <button type="button" className="dw1-signout" onClick={() => void leave()}>
             Sign out
           </button>

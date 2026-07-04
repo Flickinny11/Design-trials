@@ -1,0 +1,592 @@
+/* PRISM SHELL — INTEGRATIONS SURFACE (SHELL W3)
+ *
+ * Dark-first premium (DL1/DL2/DL6/DL7). The hero is the one 3D showpiece
+ * (DL10); the catalog, connected accounts, GitHub, and env panels are working
+ * surfaces — clean-but-premium, layered elevation, brass/champagne hairlines,
+ * red identity accents. Faces: Fraunces (display) × JetBrains Mono (utility),
+ * DL3. Real brand marks are the sole icon exception (DL15). */
+
+.ig-viewport {
+  --ig-brass: #c9a15a;
+  --ig-brass-deep: #8a6d38;
+  --ig-champagne: #e7d3ab;
+  --ig-red: var(--pp-red, #ff2a38);
+  --ig-red-deep: #7d0f18;
+  --ig-ink: var(--pp-text-hi, #f6f8fb);
+  --ig-ink-mid: #b8bcc6;
+  --ig-ink-low: #7a7f8a;
+  --ig-e0: #050507;
+  --ig-e1: #0d0d12;
+  --ig-e2: #14141b;
+  --ig-e3: #1c1c25;
+  --ig-hair: rgba(232, 236, 242, 0.1);
+  --ig-hair-warm: rgba(201, 161, 90, 0.28);
+  --ig-hair-red: rgba(255, 42, 56, 0.4);
+  --ig-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  min-height: 100dvh;
+  color: var(--ig-ink);
+  background:
+    radial-gradient(120% 80% at 50% -10%, #161018 0%, var(--ig-e0) 60%),
+    var(--ig-e0);
+  font-family: var(--pp-font-mono), ui-monospace, monospace;
+}
+
+.ig-root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────────────── */
+.ig-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--ig-hair);
+  background: linear-gradient(180deg, rgba(20, 20, 27, 0.6), transparent);
+}
+.ig-wordmark {
+  font-family: var(--pp-font-display), Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ig-ink);
+  text-decoration: none;
+}
+.ig-wordmark-dot { color: var(--ig-red); }
+.ig-topbar-kicker {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ig-brass);
+}
+.ig-topbar-project {
+  font-size: 12px;
+  color: var(--ig-ink-mid);
+  padding: 4px 10px;
+  border: 1px solid var(--ig-hair);
+  border-radius: 999px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ig-topbar-exit {
+  margin-left: auto;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ig-ink-mid);
+  text-decoration: none;
+  padding: 6px 14px;
+  border: 1px solid var(--ig-hair);
+  border-radius: 999px;
+  transition: border-color 0.22s var(--ig-ease), color 0.22s var(--ig-ease);
+}
+.ig-topbar-exit:hover { color: var(--ig-ink); border-color: var(--ig-hair-warm); }
+
+/* ── Main ─────────────────────────────────────────────────────────────────── */
+.ig-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.ig-hero {
+  position: relative;
+  border: 1px solid var(--ig-hair);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 320px;
+  background:
+    radial-gradient(90% 120% at 78% 30%, rgba(201, 161, 90, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--ig-e2), var(--ig-e1));
+  display: flex;
+  align-items: center;
+}
+.ig-hero-canvas {
+  position: absolute;
+  inset: 0;
+  left: 42%;
+  pointer-events: none;
+}
+.ig-hero-canvas--loading {
+  background: radial-gradient(60% 60% at 50% 45%, rgba(255, 42, 56, 0.08), transparent 70%);
+}
+.ig-hero-copy {
+  position: relative;
+  padding: 40px 40px 44px;
+  max-width: 62%;
+}
+.ig-kicker {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ig-brass);
+  margin: 0 0 12px;
+}
+.ig-h1 {
+  font-family: var(--pp-font-display), Georgia, serif;
+  font-size: clamp(30px, 4.4vw, 48px);
+  font-weight: 600;
+  line-height: 1.03;
+  margin: 0 0 14px;
+  color: var(--ig-ink);
+}
+.ig-lede {
+  font-size: 14px;
+  line-height: 1.62;
+  color: var(--ig-ink-mid);
+  max-width: 52ch;
+  margin: 0;
+}
+
+/* ── Connect-anything search (LEADS) ──────────────────────────────────────── */
+.ig-search { display: flex; flex-direction: column; gap: 18px; }
+.ig-search-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 6px 4px 18px;
+  border: 1px solid var(--ig-hair-warm);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--ig-e3), var(--ig-e2));
+  box-shadow: var(--pp-edge-machined, inset 0 1px 0 rgba(246, 248, 251, 0.16));
+  transition: border-color 0.22s var(--ig-ease), box-shadow 0.22s var(--ig-ease);
+}
+.ig-search-field:focus-within {
+  border-color: var(--ig-hair-red);
+  box-shadow: 0 0 0 1px var(--ig-hair-red), 0 8px 30px rgba(255, 42, 56, 0.06);
+}
+.ig-search-icon { color: var(--ig-brass); font-size: 20px; width: 22px; text-align: center; }
+.ig-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--ig-ink);
+  font-family: var(--pp-font-mono), ui-monospace, monospace;
+  font-size: 16px;
+  padding: 16px 0;
+}
+.ig-search-input::placeholder { color: var(--ig-ink-low); }
+.ig-search-clear {
+  background: transparent;
+  border: none;
+  color: var(--ig-ink-low);
+  cursor: pointer;
+  font-size: 15px;
+  padding: 10px 14px;
+  border-radius: 10px;
+}
+.ig-search-clear:hover { color: var(--ig-ink); }
+.ig-search-results { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Miss → connector request path ────────────────────────────────────────── */
+.ig-miss {
+  border: 1px solid var(--ig-hair-warm);
+  border-radius: 14px;
+  padding: 22px 24px;
+  background: linear-gradient(180deg, rgba(201, 161, 90, 0.06), transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: ig-rise 0.4s var(--ig-ease) both;
+}
+.ig-miss-lead { margin: 0; font-size: 15px; color: var(--ig-ink); }
+.ig-miss-lead strong { color: var(--ig-champagne); }
+.ig-miss-sub { margin: 0; font-size: 13px; color: var(--ig-ink-mid); }
+.ig-miss-note {
+  width: 100%;
+  resize: vertical;
+  min-height: 52px;
+  background: var(--ig-e1);
+  border: 1px solid var(--ig-hair);
+  border-radius: 10px;
+  color: var(--ig-ink);
+  font-family: var(--pp-font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  padding: 12px 14px;
+  outline: none;
+}
+.ig-miss-note:focus { border-color: var(--ig-hair-warm); }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.ig-btn {
+  font-family: var(--pp-font-mono), ui-monospace, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--ig-ink);
+  background: linear-gradient(180deg, var(--ig-e3), var(--ig-e2));
+  border: 1px solid var(--ig-hair);
+  border-radius: 10px;
+  padding: 11px 18px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: border-color 0.18s var(--ig-ease), transform 0.18s var(--ig-ease),
+    background 0.18s var(--ig-ease), color 0.18s var(--ig-ease);
+}
+.ig-btn:hover:not(:disabled) { border-color: var(--ig-hair-warm); transform: translateY(-1px); }
+.ig-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.ig-btn--primary {
+  color: #fff;
+  background: linear-gradient(180deg, var(--ig-red), var(--ig-red-deep));
+  border-color: rgba(255, 90, 85, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 6px 20px rgba(255, 42, 56, 0.14);
+}
+.ig-btn--primary:hover:not(:disabled) { border-color: rgba(255, 120, 115, 0.7); }
+.ig-btn--primary[data-sandbox='true'] {
+  background: linear-gradient(180deg, var(--ig-e4, #23232c), var(--ig-e3));
+  color: var(--ig-ink-mid);
+  border-color: var(--ig-hair);
+  box-shadow: none;
+}
+.ig-btn--sm { padding: 7px 12px; font-size: 12px; border-radius: 8px; }
+.ig-btn--danger { color: #ffb3b3; border-color: rgba(255, 42, 56, 0.28); }
+.ig-btn--danger:hover:not(:disabled) { border-color: var(--ig-hair-red); color: #fff; }
+
+/* ── Catalog + tiles ──────────────────────────────────────────────────────── */
+.ig-catalog { display: flex; flex-direction: column; gap: 28px; }
+.ig-catalog-group { display: flex; flex-direction: column; gap: 14px; }
+.ig-catalog-cat {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ig-brass);
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--ig-hair);
+}
+.ig-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.ig-tile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--ig-hair);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--ig-e3), var(--ig-e2));
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s var(--ig-ease), transform 0.2s var(--ig-ease),
+    box-shadow 0.2s var(--ig-ease);
+}
+.ig-tile:hover {
+  border-color: var(--ig-hair-warm);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+.ig-tile[data-connected='true'] { border-color: rgba(62, 207, 142, 0.32); }
+.ig-tile-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--ig-e1);
+  border: 1px solid var(--ig-hair);
+  flex-shrink: 0;
+}
+.ig-tile-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ig-tile-label {
+  font-family: var(--pp-font-display), Georgia, serif;
+  font-size: 15px;
+  color: var(--ig-ink);
+}
+.ig-tile-hint { font-size: 12px; color: var(--ig-ink-low); }
+.ig-tile-cta {
+  margin-left: auto;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ig-brass);
+  padding: 5px 10px;
+  border: 1px solid var(--ig-hair-warm);
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.ig-tile-cta[data-connected='true'] { color: #7fe0b0; border-color: rgba(62, 207, 142, 0.4); }
+
+/* ── Brand marks (2D) ─────────────────────────────────────────────────────── */
+.ig-mark { display: inline-flex; }
+.ig-mark--mono {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 8px;
+  font-family: var(--pp-font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ig-mono-accent, var(--ig-ink));
+  background: color-mix(in srgb, var(--ig-mono-accent, #888) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--ig-mono-accent, #888) 40%, transparent);
+}
+
+/* ── Sections (working surfaces) ──────────────────────────────────────────── */
+.ig-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--ig-hair);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(20, 20, 27, 0.5), var(--ig-e1));
+}
+.ig-section--env { border-color: var(--ig-hair-warm); }
+.ig-section-head { display: flex; flex-direction: column; gap: 4px; }
+.ig-section-title {
+  font-family: var(--pp-font-display), Georgia, serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--ig-ink);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ig-section-mark { display: inline-flex; }
+.ig-section-sub { font-size: 13px; color: var(--ig-ink-mid); margin: 0; }
+.ig-empty { font-size: 13px; color: var(--ig-ink-low); margin: 0; padding: 8px 0; }
+.ig-note { font-size: 12px; color: var(--ig-ink-low); margin: 0; }
+.ig-error {
+  font-size: 13px;
+  color: #ffb3b3;
+  border: 1px solid var(--ig-hair-red);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin: 0;
+  background: rgba(255, 42, 56, 0.06);
+}
+
+/* ── Connected accounts ───────────────────────────────────────────────────── */
+.ig-conn-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.ig-conn {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ig-hair);
+  border-radius: 12px;
+  background: var(--ig-e2);
+}
+.ig-conn[data-status='needs-reauth'] { border-color: var(--ig-hair-red); }
+.ig-conn-mark {
+  width: 40px; height: 40px; flex-shrink: 0;
+  display: grid; place-items: center;
+  border-radius: 9px; background: var(--ig-e1); border: 1px solid var(--ig-hair);
+}
+.ig-conn-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.ig-conn-top { display: flex; align-items: center; gap: 12px; }
+.ig-conn-name { font-family: var(--pp-font-display), Georgia, serif; font-size: 15px; color: var(--ig-ink); }
+.ig-conn-status {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 999px; color: var(--ig-ink-mid);
+  border: 1px solid var(--ig-hair);
+}
+.ig-conn-status[data-status='connected'] { color: #7fe0b0; border-color: rgba(62, 207, 142, 0.4); }
+.ig-conn-status[data-status='needs-reauth'] { color: #ffb3b3; border-color: var(--ig-hair-red); }
+.ig-conn-ref { font-size: 11px; color: var(--ig-ink-low); margin: 0; }
+.ig-conn-ref code, .ig-env-ref code { color: var(--ig-ink-mid); }
+.ig-conn-scopes { display: flex; flex-wrap: wrap; gap: 6px; }
+.ig-scope-chip {
+  font-size: 11px;
+  color: var(--ig-ink-mid);
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: var(--ig-e1);
+  border: 1px solid var(--ig-hair);
+}
+.ig-scope-chip--env { color: var(--ig-champagne); border-color: var(--ig-hair-warm); }
+.ig-conn-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── White-label Connect modal ────────────────────────────────────────────── */
+.ig-modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 3, 5, 0.72);
+  backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  z-index: 40;
+  animation: ig-fade 0.2s var(--ig-ease) both;
+}
+.ig-modal {
+  width: 100%;
+  max-width: 460px;
+  border: 1px solid var(--ig-hair-warm);
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--ig-e3), var(--ig-e1));
+  padding: 26px 26px 24px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  animation: ig-rise 0.32s var(--ig-ease) both;
+  outline: none;
+}
+.ig-modal-brandrow { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.ig-modal-mark {
+  width: 52px; height: 52px; display: grid; place-items: center;
+  border-radius: 12px; background: var(--ig-e1); border: 1px solid var(--ig-hair);
+}
+.ig-modal-x { color: var(--ig-brass); font-size: 18px; }
+.ig-modal-prism {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--pp-font-display), Georgia, serif; font-size: 16px; color: var(--ig-ink);
+}
+.ig-modal-prism-dot {
+  width: 12px; height: 12px; border-radius: 3px;
+  background: linear-gradient(180deg, var(--ig-red), var(--ig-red-deep));
+  box-shadow: 0 0 10px rgba(255, 42, 56, 0.5);
+}
+.ig-modal-title {
+  font-family: var(--pp-font-display), Georgia, serif;
+  font-size: 22px; font-weight: 600; margin: 0 0 8px; color: var(--ig-ink);
+}
+.ig-modal-lead { font-size: 13px; line-height: 1.55; color: var(--ig-ink-mid); margin: 0 0 16px; }
+.ig-modal-lead strong { color: var(--ig-champagne); }
+.ig-modal-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin: 0 0 16px;
+}
+.ig-modal-meta div { display: flex; flex-direction: column; gap: 2px; }
+.ig-modal-meta dt { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ig-ink-low); }
+.ig-modal-meta dd { margin: 0; font-size: 13px; color: var(--ig-ink); }
+.ig-modal-scopes {
+  border: 1px solid var(--ig-hair); border-radius: 10px; padding: 14px 16px;
+  background: var(--ig-e1); margin-bottom: 18px;
+}
+.ig-modal-scopes-label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ig-brass); margin: 0 0 8px; }
+.ig-modal-scopes ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ig-modal-scopes code {
+  font-size: 12px; color: var(--ig-ink-mid);
+  padding: 3px 9px; border-radius: 6px; background: var(--ig-e2); border: 1px solid var(--ig-hair);
+}
+.ig-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.ig-modal-done-badge {
+  display: inline-block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: #7fe0b0; border: 1px solid rgba(62, 207, 142, 0.4); border-radius: 999px;
+  padding: 4px 12px; margin: 0 0 12px;
+}
+.ig-modal-hosted { font-size: 12px; color: var(--ig-ink-low); margin: 0 0 16px; word-break: break-all; }
+.ig-modal-hosted code { color: var(--ig-ink-mid); }
+
+/* ── GitHub panel ─────────────────────────────────────────────────────────── */
+.ig-gh-install { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.ig-gh-sandbox-note { font-size: 12px; color: var(--ig-ink-low); }
+.ig-gh-installs { display: flex; gap: 8px; flex-wrap: wrap; }
+.ig-gh-inst {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 10px 14px; border: 1px solid var(--ig-hair); border-radius: 10px;
+  background: var(--ig-e2); color: var(--ig-ink); cursor: pointer; font-size: 13px;
+}
+.ig-gh-inst[data-selected='true'] { border-color: var(--ig-hair-warm); }
+.ig-gh-inst-type { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ig-ink-low); }
+.ig-gh-repos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ig-gh-repo {
+  display: flex; align-items: center; gap: 14px; justify-content: space-between;
+  padding: 12px 16px; border: 1px solid var(--ig-hair); border-radius: 10px; background: var(--ig-e2);
+}
+.ig-gh-repo-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ig-gh-repo-name { font-size: 14px; color: var(--ig-ink); display: flex; align-items: center; gap: 8px; }
+.ig-gh-badge {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ig-ink-low);
+  border: 1px solid var(--ig-hair); border-radius: 999px; padding: 2px 8px;
+}
+.ig-gh-repo-desc { font-size: 12px; color: var(--ig-ink-mid); }
+.ig-gh-repo-branch { font-size: 11px; color: var(--ig-ink-low); }
+.ig-gh-repo-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── PR-based edit plan ───────────────────────────────────────────────────── */
+.ig-pr-plan {
+  border: 1px solid var(--ig-hair-warm); border-radius: 12px; padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(201, 161, 90, 0.05), transparent);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ig-pr-plan-head { margin: 0; font-size: 14px; color: var(--ig-ink); }
+.ig-pr-plan-head code { color: var(--ig-champagne); }
+.ig-pr-plan-summary { margin: 0; font-size: 13px; color: var(--ig-ink-mid); line-height: 1.55; }
+.ig-pr-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; counter-reset: step; }
+.ig-pr-step {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--ig-ink); padding: 8px 12px;
+  border: 1px solid var(--ig-hair); border-radius: 8px; background: var(--ig-e2);
+}
+.ig-pr-step::before {
+  counter-increment: step; content: counter(step);
+  width: 20px; height: 20px; flex-shrink: 0; display: grid; place-items: center;
+  border-radius: 999px; font-size: 11px; color: var(--ig-brass);
+  border: 1px solid var(--ig-hair-warm);
+}
+.ig-pr-step-label { flex: 1; }
+.ig-pr-tag {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 999px; color: var(--ig-ink-mid); border: 1px solid var(--ig-hair);
+}
+.ig-pr-tag--irrev { color: #ffb3b3; border-color: var(--ig-hair-red); }
+.ig-pr-plan-foot { margin: 0; font-size: 12px; color: var(--ig-ink-low); }
+
+/* ── E5 env panel ─────────────────────────────────────────────────────────── */
+.ig-env-github { font-size: 13px; color: var(--ig-ink-mid); display: flex; align-items: center; gap: 8px; }
+.ig-env-github code { color: var(--ig-champagne); }
+.ig-env-github-mark { display: inline-flex; }
+.ig-env-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.ig-env-row { border: 1px solid var(--ig-hair); border-radius: 12px; padding: 14px 16px; background: var(--ig-e2); display: flex; flex-direction: column; gap: 10px; }
+.ig-env-row-head { display: flex; align-items: center; gap: 10px; }
+.ig-env-mark { display: inline-flex; }
+.ig-env-name { font-family: var(--pp-font-display), Georgia, serif; font-size: 15px; color: var(--ig-ink); flex: 1; }
+.ig-env-ref { font-size: 11px; color: var(--ig-ink-low); margin: 0; }
+.ig-env-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ig-env-collabel { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ig-brass); margin: 0 0 6px; }
+
+/* ── Connector queue ──────────────────────────────────────────────────────── */
+.ig-queue { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.ig-queue-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border: 1px solid var(--ig-hair); border-radius: 10px; background: var(--ig-e2);
+}
+.ig-queue-name { font-size: 14px; color: var(--ig-ink); }
+.ig-queue-note { font-size: 12px; color: var(--ig-ink-low); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ig-queue-status {
+  margin-left: auto; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ig-brass); border: 1px solid var(--ig-hair-warm); border-radius: 999px; padding: 3px 10px;
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────────── */
+@keyframes ig-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ig-fade { from { opacity: 0; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-miss, .ig-modal, .ig-modal-scrim { animation: none; }
+  .ig-btn, .ig-tile { transition: none; }
+}
+
+/* ── Responsive (≤ 720px) ─────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .ig-hero { min-height: 260px; }
+  .ig-hero-canvas { left: 0; opacity: 0.35; }
+  .ig-hero-copy { max-width: 100%; padding: 28px 24px; }
+  .ig-tile-grid { grid-template-columns: 1fr; }
+  .ig-env-cols { grid-template-columns: 1fr; }
+  .ig-conn { flex-wrap: wrap; }
+  .ig-conn-actions { width: 100%; }
+}
+@media (max-width: 380px) {
+  .ig-main { padding: 20px 14px 60px; }
+  .ig-modal-meta { grid-template-columns: 1fr; }
+}

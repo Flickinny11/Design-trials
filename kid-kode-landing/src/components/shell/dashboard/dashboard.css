@@ -42,7 +42,8 @@
   letter-spacing: 0.06em;
   color: var(--pp-text-mid);
 }
-.dw1-signout {
+.dw1-signout,
+.dw1-navlink {
   background: transparent;
   border: var(--pp-hairline-w) solid var(--pp-hairline);
   border-radius: var(--pp-radius-2);
@@ -56,6 +57,15 @@
   transition:
     border-color var(--pp-motion-fast) var(--pp-ease-settle),
     color var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.dw1-navlink {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.dw1-navlink:hover {
+  border-color: var(--pp-hairline-red);
+  color: var(--pp-text);
 }
 .dw1-signout:hover {
   border-color: var(--pp-hairline-red);
