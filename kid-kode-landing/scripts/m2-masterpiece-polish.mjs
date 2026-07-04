@@ -254,6 +254,26 @@ folio('orr-atelier-folio', 's6-atelier', 'VI · YOUR COMMISSION', 3.02, { x: 0, 
   touch('E orr-acquire-eyebrow: joined the folio system (numeral prefix + champagne restyle)');
 }
 
+// ── F: motion with weight (restrained, state-communicating — DL6) ───────────
+{
+  const inview = (effect, stagger, duration) => [
+    { name: 'kinetic-text', params: { effect, stagger, duration, easing: 'power3.out' }, trigger: 'inview' },
+  ];
+  // Chapter folios track in gently — the wayfinding system announces itself.
+  for (const id of [
+    'orr-arrival-folio', 'orr-movement-folio', 'orr-materia-folio',
+    'orr-celestia-folio', 'orr-atelier-folio', 'orr-acquire-eyebrow',
+  ]) {
+    need(id).cinematicPrimitives = inview('fade', 0.05, 0.9);
+  }
+  // s2 stat strip + s5 receive-list rise with the page, nothing linear.
+  need('orr-movement-spec-strip').cinematicPrimitives = inview('slide-up', 0.018, 0.55);
+  for (const id of ['orr-acquire-incl-1', 'orr-acquire-incl-2', 'orr-acquire-incl-3']) {
+    need(id).cinematicPrimitives = inview('slide-up', 0.02, 0.5);
+  }
+  touch('F motion: folios fade-track in (stagger 0.05); s2 spec strip + s5 receive rows slide-up on inview — weighted, no confetti');
+}
+
 writeFileSync(graphPath, JSON.stringify(g, null, 2) + '\n');
 console.log(`m2-masterpiece-polish: ${log.length} changes`);
 for (const l of log) console.log('  · ' + l);

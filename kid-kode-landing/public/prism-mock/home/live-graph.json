@@ -9475,7 +9475,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "slide-up",
+            "stagger": 0.018,
+            "duration": 0.55,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": -1.9,
@@ -11747,7 +11758,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 2.82,
@@ -25956,7 +25978,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "slide-up",
+            "stagger": 0.02,
+            "duration": 0.5,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": -3.55,
         "y": 0.42,
@@ -26031,7 +26064,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "slide-up",
+            "stagger": 0.02,
+            "duration": 0.5,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": -3.55,
         "y": 0.14999999999999997,
@@ -26106,7 +26150,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "slide-up",
+            "stagger": 0.02,
+            "duration": 0.5,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": -3.55,
         "y": -0.12000000000000005,
@@ -31430,7 +31485,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 3.24,
@@ -31511,7 +31577,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 3.1,
@@ -31592,7 +31669,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 3.3,
@@ -31673,7 +31761,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 3.45,
@@ -31754,7 +31853,18 @@
       "renderMode": "text",
       "depthMapUrl": null,
       "meshUrl": null,
-      "cinematicPrimitives": [],
+      "cinematicPrimitives": [
+        {
+          "name": "kinetic-text",
+          "params": {
+            "effect": "fade",
+            "stagger": 0.05,
+            "duration": 0.9,
+            "easing": "power3.out"
+          },
+          "trigger": "inview"
+        }
+      ],
       "scenePosition": {
         "x": 0,
         "y": 3.02,
