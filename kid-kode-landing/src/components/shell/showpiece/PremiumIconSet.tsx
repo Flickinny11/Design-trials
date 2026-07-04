@@ -61,6 +61,13 @@ function useMaterials() {
       metalness: 0.9,
       roughness: 0.42,
     });
+    // Steel — a mid-luminance machined metal between gunmetal and chrome, for
+    // forms that must hold their own against a chrome sibling (integrate).
+    const steel = new THREE.MeshStandardMaterial({
+      color: '#6a707a',
+      metalness: 0.92,
+      roughness: 0.3,
+    });
     const chrome = new THREE.MeshPhysicalMaterial({
       color: CHROME,
       metalness: 1,
@@ -100,7 +107,7 @@ function useMaterials() {
       ior: 1.5,
       thickness: 0.7,
     });
-    return { gunmetal, gunmetalLit, chrome, brushed, redJewel, redHot, smokedGlass };
+    return { gunmetal, gunmetalLit, steel, chrome, brushed, redJewel, redHot, smokedGlass };
   }, []);
 }
 type Materials = ReturnType<typeof useMaterials>;
@@ -171,14 +178,18 @@ function IconDeploy({ m }: { m: Materials }) {
   );
 }
 
-/** INTEGRATE — interlocked gunmetal + chrome links with a red junction bead. */
+/** INTEGRATE — interlocked steel + chrome links with a red junction bead.
+ *  The dark link is lifted to steel (not gunmetal) and the pair sits tighter
+ *  so the LUMINANCE center coincides with the geometric center — the bright
+ *  chrome ring no longer drags the perceived center off the label
+ *  (advocate round-2 should-fix). */
 function IconIntegrate({ m }: { m: Materials }) {
   return (
     <group>
-      <mesh material={m.gunmetalLit} position={[-0.27, 0, 0]} rotation={[0, Math.PI / 3.2, 0]}>
+      <mesh material={m.steel} position={[-0.24, 0, 0]} rotation={[0, Math.PI / 3.2, 0]}>
         <torusGeometry args={[0.4, 0.115, 24, 72]} />
       </mesh>
-      <mesh material={m.chrome} position={[0.27, 0, 0]} rotation={[0, -Math.PI / 3.2, 0]}>
+      <mesh material={m.chrome} position={[0.24, 0, 0]} rotation={[0, -Math.PI / 3.2, 0]}>
         <torusGeometry args={[0.4, 0.115, 24, 72]} />
       </mesh>
       <mesh material={m.redHot} position={[0, 0, 0.12]}>
@@ -189,7 +200,10 @@ function IconIntegrate({ m }: { m: Materials }) {
 }
 
 /** PROJECT — the prism itself: a smoked-glass triangular prism over a chrome
- *  base with a hot red core refracting inside. */
+ *  base with a hot red core refracting inside. Three machined chrome edge
+ *  rails keep the silhouette CRISP at icon size — pure transmission glass
+ *  read as defocus next to its metal siblings (advocate round-2 should-fix). */
+const PRISM_EDGE_ANGLES = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
 function IconProject({ m }: { m: Materials }) {
   return (
     <group>
@@ -197,11 +211,20 @@ function IconProject({ m }: { m: Materials }) {
         <cylinderGeometry args={[0.56, 0.6, 0.1, 48]} />
       </mesh>
       <mesh material={m.redHot} position={[0, 0.02, 0]}>
-        <tetrahedronGeometry args={[0.2, 0]} />
+        <tetrahedronGeometry args={[0.24, 0]} />
       </mesh>
       <mesh material={m.smokedGlass} position={[0, 0, 0]}>
         <cylinderGeometry args={[0.62, 0.62, 0.98, 3, 1]} />
       </mesh>
+      {PRISM_EDGE_ANGLES.map((a) => (
+        <mesh
+          key={a}
+          material={m.chrome}
+          position={[0.62 * Math.sin(a), 0, 0.62 * Math.cos(a)]}
+        >
+          <cylinderGeometry args={[0.022, 0.022, 0.99, 12]} />
+        </mesh>
+      ))}
     </group>
   );
 }

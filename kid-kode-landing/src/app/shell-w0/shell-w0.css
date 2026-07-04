@@ -549,6 +549,18 @@
   .sw0-specimen {
     font-size: 28px;
   }
+  /* Token chips: 6-across is too narrow for full `name #hex` labels at 390px
+     (advocate round-2 MUST-FIX: glyphs straddled chip edges). Wrap to 3-up so
+     every label sits fully inside its chip. */
+  .sw0-swatch-row {
+    flex-wrap: wrap;
+  }
+  .sw0-swatch {
+    flex: 1 0 30%;
+  }
+  .sw0-swatch-label {
+    white-space: nowrap;
+  }
 }
 
 /* Reduced motion: state changes remain, travel collapses (DL8/a11y). */
