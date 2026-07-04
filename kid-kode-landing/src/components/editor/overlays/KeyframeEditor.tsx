@@ -584,15 +584,22 @@ function KeyframeBody(props: {
           </div>
         </div>
 
-        {/* Scrubber / fader — recessed machined well, red progress, chrome+red jewel */}
+        {/* Scrubber / fader — recessed machined well, red progress, chrome+red
+            jewel. M-1 ONE TIME AXIS (advocate MUST-FIX): the ruler row shares
+            the lanes' exact column skeleton (label w-24/md:w-28 · flex-1 track ·
+            w-6 trailing slot) and the same 6%..94% time band, so the scrub
+            jewel, the lane cursor line, and every key diamond form ONE unbroken
+            vertical axis — never two different time→x mappings. */}
         <div className="px-3.5 pt-3 pb-1 relative">
-          <div className="flex items-center gap-2">
-            <span className="text-[9px] font-mono tabular-nums w-10" style={{ color: CHROME_LO }}>{(playhead * 3).toFixed(2)}s</span>
+          <div className="flex items-center gap-2.5">
+            <span className="w-24 md:w-28 text-[9px] font-mono tabular-nums" style={{ color: CHROME_LO }}>
+              {(playhead * 3).toFixed(2)}<span style={{ color: rbwAlpha(CHROME_LO, 0.55) }}> / 3.00s</span>
+            </span>
             <div className="relative flex-1 h-7">
               <input type="range" min={0} max={1} step={0.001} value={playhead}
                 onChange={(e) => setPlayhead(parseFloat(e.target.value))}
-                className="absolute inset-0 w-full opacity-0 cursor-pointer z-10" aria-label="Playhead" />
-              <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[5px] rounded-full" style={{ background: WELL_BG, boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.85), inset 0 -1px 0 rgba(246, 248, 251, 0.06)' }}>
+                className="absolute inset-y-0 opacity-0 cursor-pointer z-10" style={{ left: '6%', right: '6%', width: '88%' }} aria-label="Playhead" />
+              <div className="absolute top-1/2 -translate-y-1/2 h-[5px] rounded-full" style={{ left: '6%', right: '6%', background: WELL_BG, boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.85), inset 0 -1px 0 rgba(246, 248, 251, 0.06)' }}>
                 <div
                   className="absolute inset-y-0 left-0 rounded-full"
                   style={{
@@ -602,12 +609,12 @@ function KeyframeBody(props: {
                   }}
                 />
               </div>
-              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between pointer-events-none">
+              <div className="absolute top-1/2 -translate-y-1/2 flex justify-between pointer-events-none" style={{ left: '6%', right: '6%' }}>
                 {Array.from({ length: 31 }).map((_, i) => (
                   <span key={i} className={i % 5 === 0 ? 'w-px h-3' : 'w-px h-1.5'} style={{ background: i % 5 === 0 ? rbwAlpha(CHROME, 0.28) : rbwAlpha(CHROME, 0.1) }} />
                 ))}
               </div>
-              <div className="absolute top-0 bottom-0 w-3 -translate-x-1/2 flex justify-center pointer-events-none" style={{ left: `${playhead * 100}%` }}>
+              <div className="absolute top-0 bottom-0 w-3 -translate-x-1/2 flex justify-center pointer-events-none" style={{ left: `${6 + playhead * 88}%` }}>
                 <span
                   className="w-3 h-3 mt-0.5 rotate-45 rounded-[3px]"
                   style={{
@@ -618,7 +625,7 @@ function KeyframeBody(props: {
                 />
               </div>
             </div>
-            <span className="text-[9px] font-mono tabular-nums w-8" style={{ color: CHROME_LO }}>3.00s</span>
+            <span aria-hidden className="w-6 shrink-0" />
           </div>
         </div>
 
