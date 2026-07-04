@@ -238,8 +238,18 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
   // Play transport — sweep the playhead so the instrument reads as alive.
   const phRef = useRef(playhead);
   phRef.current = playhead;
+  // M-1 seek-with-weight: jewel clicks glide the playhead (and the live node
+  // pose with it) instead of teleporting — cause and effect stay visible.
+  const seekTween = useRef<gsap.core.Tween | null>(null);
+  useEffect(() => {
+    if (!open) seekTween.current?.kill();
+    return () => {
+      seekTween.current?.kill();
+    };
+  }, [open]);
   useEffect(() => {
     if (!playing || !open) return;
+    seekTween.current?.kill(); // the transport owns the playhead while playing
     let raf = 0;
     let last = performance.now();
     const tick = (now: number) => {
@@ -260,6 +270,9 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
   // FINISH F-1 — scrub/play drives the selected node live in the canvas.
   useCanvasScrubDriver(open, nodeId, count, phRef);
 
+  // ── the smoky / high-tech reveal + capture confirmation both target the body
+  const bodyRef = useRef<HTMLDivElement | null>(null);
+
   // Capture a keyframe at the playhead from the node's current transform; route
   // through the preview store so Save / Save-and-Rebuild semantics hold (FP-15
   // intent — this overlay never writes source directly).
@@ -277,12 +290,57 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
       ?? useGraphSourceStore.getState().nodes.find((n) => n.nodeId === nodeId)?.keyframes
       ?? [];
     usePreviewStateStore.getState().set(nodeId, { keyframes: [...live, kf] });
+    // M-1 capture confirmation: the just-written jewels pop into their lanes
+    // with weight + a red flash — the write is a visible event, not a silent
+    // state change. (New jewels sit exactly at the playhead position.)
+    const capturedAt = phRef.current;
+    if (!prefersReducedMotion()) {
+      requestAnimationFrame(() => {
+        const root = bodyRef.current;
+        if (!root) return;
+        const leftPct = 6 + capturedAt * 88;
+        const fresh = Array.from(root.querySelectorAll<HTMLElement>('[data-kf-diamond]')).filter(
+          (el) => Math.abs(parseFloat(el.style.left) - leftPct) < 0.05,
+        );
+        if (fresh.length === 0) return;
+        gsap.fromTo(
+          fresh,
+          { scale: 0, boxShadow: `0 0 22px ${rbwAlpha(SIGNAL_RED, 0.95)}, 0 0 4px ${rbwAlpha(CHROME_HI, 0.9)}` },
+          {
+            scale: 1,
+            boxShadow: RBW.keyJewelGlow,
+            duration: 0.5,
+            ease: 'back.out(2.6)',
+            clearProps: 'transform,boxShadow',
+          },
+        );
+      });
+    }
   }, [node, nodeId]);
 
-  const seekTo = useCallback((t: number) => setPlayhead(Math.max(0, Math.min(1, t))), []);
+  const seekTo = useCallback((t: number) => {
+    const target = Math.max(0, Math.min(1, t));
+    seekTween.current?.kill();
+    if (prefersReducedMotion()) {
+      setPlayhead(target);
+      return;
+    }
+    const proxy = { v: phRef.current };
+    seekTween.current = gsap.to(proxy, {
+      v: target,
+      duration: 0.55,
+      ease: 'expo.out',
+      onUpdate: () => setPlayhead(proxy.v),
+    });
+  }, []);
+
+  // Manual scrubbing takes the playhead back from any in-flight seek glide.
+  const scrubTo = useCallback((t: number) => {
+    seekTween.current?.kill();
+    setPlayhead(Math.max(0, Math.min(1, t)));
+  }, []);
 
   // ── the smoky / high-tech reveal (runs when shown) ──────────────────────────
-  const bodyRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     if (!open) return;
     const root = bodyRef.current;
@@ -319,7 +377,7 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
       selectionLabel={selectionLabel}
       hasNode={!!node}
       playhead={playhead}
-      setPlayhead={setPlayhead}
+      setPlayhead={scrubTo}
       playing={playing}
       setPlaying={setPlaying}
       loop={loop}
@@ -335,7 +393,10 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
 
   if (compact) {
     return (
-      <BottomSheet id="keyframe" open={open} onClose={onClose} kicker="TIMELINE" title="Keyframe Editor" initialSnap="full">
+      // M-1: open at HALF so the canvas — and the node the scrub is driving —
+      // stays visible above the sheet; the instrument's whole point is watching
+      // the element answer the playhead. Drag up for full when needed.
+      <BottomSheet id="keyframe" open={open} onClose={onClose} kicker="TIMELINE" title="Keyframe Editor" initialSnap="half">
         {body}
       </BottomSheet>
     );
@@ -464,16 +525,22 @@ function KeyframeBody(props: {
             boxShadow: `inset 0 1px 0 ${rbwAlpha(CHROME_HI, 0.22)}, inset 0 -1px 0 rgba(0, 0, 0, 0.55)`,
           }}
         >
+          {/* M-1 compact composition: inside the BottomSheet housing the sheet
+              header already carries "TIMELINE / Keyframe Editor" + close — the
+              instrument shows only its live data (chip + transport), never a
+              duplicate title row. */}
           <div className="flex items-center gap-2.5 min-w-0">
-            <Icon name="timeline" size={14} color={SIGNAL_RED} glow />
+            {!compact && <Icon name="timeline" size={14} color={SIGNAL_RED} glow />}
+            {!compact && (
+              <span
+                className="text-[11.5px] font-display font-semibold whitespace-nowrap"
+                style={{ color: CHROME, letterSpacing: '0.02em' }}
+              >
+                Keyframe Editor
+              </span>
+            )}
             <span
-              className="text-[11.5px] font-display font-semibold whitespace-nowrap"
-              style={{ color: CHROME, letterSpacing: '0.02em' }}
-            >
-              Keyframe Editor
-            </span>
-            <span
-              className="ds-chip"
+              className="ds-chip whitespace-nowrap"
               style={{
                 color: count > 0 ? CHROME : 'var(--ds-text-mid)',
                 borderColor: rbwAlpha(SIGNAL_RED, count > 0 ? 0.55 : 0.3),
@@ -505,10 +572,12 @@ function KeyframeBody(props: {
                 </button>
               ))}
             </div>
-            <button type="button" onClick={onClose} title="Close"
-              className="w-7 h-7 rounded-ds-xs ds-press hover:bg-white/[0.06] flex items-center justify-center transition-colors">
-              <Icon name="close" size={10} color={DS.textMid} />
-            </button>
+            {!compact && (
+              <button type="button" onClick={onClose} title="Close"
+                className="w-7 h-7 rounded-ds-xs ds-press hover:bg-white/[0.06] flex items-center justify-center transition-colors">
+                <Icon name="close" size={10} color={DS.textMid} />
+              </button>
+            )}
           </div>
         </div>
 
@@ -588,6 +657,14 @@ function KeyframeLane({ lane, playhead, empty, onSeek, onAddKey, canAdd }: {
       </span>
       <div ref={laneSlab.ref} className="relative flex-1 h-7 rounded-ds-xs" style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}>
         <div className="absolute left-2 right-2 top-1/2 -translate-y-1/2 h-px" style={{ background: rbwAlpha(CHROME, 0.09) }} />
+        {/* machined measure — the lane inherits the scrubber's tick rules,
+            aligned to the 6%..94% key band, so an empty track still reads as a
+            measured instrument channel, never a void (M-1). */}
+        <div aria-hidden className="absolute top-1/2 -translate-y-1/2 flex justify-between pointer-events-none" style={{ left: '6%', right: '6%' }}>
+          {Array.from({ length: 31 }).map((_, i) => (
+            <span key={i} className={i % 5 === 0 ? 'w-px h-2' : 'w-px h-1'} style={{ background: rbwAlpha(CHROME, i % 5 === 0 ? 0.13 : 0.05) }} />
+          ))}
+        </div>
         {lane.keys.map((k, i) => (
           <button
             key={i}

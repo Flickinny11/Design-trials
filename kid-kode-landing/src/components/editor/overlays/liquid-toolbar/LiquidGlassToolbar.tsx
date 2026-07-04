@@ -13,7 +13,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
-import { ToolbarScene } from './ToolbarScene';
+import { ToolbarScene, type RailPointer } from './ToolbarScene';
 import { ToolbarTooltips } from './ToolbarTooltips';
 import { preloadToolbarGlbs } from './glb';
 import { screenYForButton, type LiquidToolGroup } from './config';
@@ -68,8 +68,15 @@ export function LiquidGlassToolbar({
     preloadToolbarGlbs();
   }, []);
   const [hoverIdx, setHoverIdx] = useState<number | null>(null);
+  // M-1 press weight — the DOM hit targets own the pointer, so press (like
+  // hover) is plumbed into the scene from here.
+  const [pressIdx, setPressIdx] = useState<number | null>(null);
   const canvasH = collapsed ? 0 : railH;
   const hostRef = useRef<HTMLDivElement | null>(null);
+  // MASTERPIECE M-1 living light — normalized pointer over the rail, read every
+  // frame by the scene's RailRig (tilt + key-light sweep). Mutated in place; no
+  // React state so pointer tracking costs nothing.
+  const railPointer = useRef<RailPointer>({ x: 0, y: 0, over: 0 });
 
   return (
     <div
@@ -130,6 +137,16 @@ export function LiquidGlassToolbar({
           overflow: 'visible',
           pointerEvents: collapsed ? 'none' : 'auto',
         }}
+        onPointerMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          if (rect.width < 1 || rect.height < 1) return;
+          railPointer.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+          railPointer.current.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+          railPointer.current.over = 1;
+        }}
+        onPointerLeave={() => {
+          railPointer.current.over = 0;
+        }}
       >
         {!collapsed && (
           <Canvas
@@ -151,7 +168,9 @@ export function LiquidGlassToolbar({
               activeGroup={activeGroup}
               onToggleGroup={onToggleGroup}
               externalHoverIndex={hoverIdx}
+              externalPressIndex={pressIdx}
               onHoverButton={setHoverIdx}
+              pointerRef={railPointer}
             />
           </Canvas>
         )}
@@ -166,9 +185,14 @@ export function LiquidGlassToolbar({
               aria-label={group.label}
               title={group.label}
               onPointerEnter={() => setHoverIdx(i)}
-              onPointerLeave={() => setHoverIdx((cur) => (cur === i ? null : cur))}
+              onPointerLeave={() => {
+                setHoverIdx((cur) => (cur === i ? null : cur));
+                setPressIdx((cur) => (cur === i ? null : cur));
+              }}
               onFocus={() => setHoverIdx(i)}
               onBlur={() => setHoverIdx((cur) => (cur === i ? null : cur))}
+              onPointerDown={() => setPressIdx(i)}
+              onPointerUp={() => setPressIdx((cur) => (cur === i ? null : cur))}
               onClick={() => onToggleGroup(group.id)}
               style={{
                 position: 'absolute',
