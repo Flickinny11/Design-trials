@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-07-04",
+  "route": "/app/builder/demo-atelier",
+  "browser": "real Chrome via chrome-devtools MCP, hardware GPU (Apple M4 Max), no SwiftShader",
+  "desktop": {
+    "viewport": "1600x900@1",
+    "fpsIdleOver2s": 61,
+    "fpsWhileStreamingOver2s": 61,
+    "consoleErrors": 0,
+    "consoleWarnings": "2 pre-existing dev-compile warnings on first compile only (coderef-factory critical-dependency, THREE.Clock deprecation via R3F) — both app-wide, absent on subsequent loads; 0 on the final capture loads",
+    "usedJSHeapMB": 99,
+    "network": {
+      "resourceCount": 13,
+      "uniqueHosts": ["localhost:3001"],
+      "remoteHosts": [],
+      "remoteAssetFetches": 0
+    }
+  },
+  "mobile": {
+    "viewport": "390x844@2 (mobile+touch emulation)",
+    "consoleErrors": 0,
+    "paneSwipe": "scroll-snap x mandatory verified (scrollLeft 0 ↔ 390, snap type 'x mandatory' computed)"
+  },
+  "interruptibility": {
+    "stopWhileStreaming": true,
+    "turnStatusAfterStop": "interrupted",
+    "runningStepAfterStop": "stopped",
+    "mechanisms": ["stop object-button (send morphs to stop cube)", "Escape key"]
+  },
+  "contractRoundTrip": {
+    "wireLogBothDirections": true,
+    "commandsObserved": ["mount", "set-mode", "set-selection", "focus-camera", "open-prompt-edit", "unmount"],
+    "eventsObserved": ["mounted", "mode-changed", "selection-changed(origin:user)", "selection-changed(origin:command)", "camera-focused", "node-verified", "node-mounted", "build-wave", "prompt-edit-opened", "unmounted"],
+    "echoDiscipline": "selection-changed{origin:'command'} applied to state, never re-issued as a command (structural; unit-tested)"
+  }
+}

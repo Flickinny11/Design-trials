@@ -21,7 +21,7 @@ import { PRISM_AGENT_CONTRACT_VERSION } from '../../../packages/shared-interface
 import { getDefaultModel, getModelById } from '../../lib/shell/model-config';
 import { getStubProject } from '../../lib/shell/project-stub';
 
-const DELTA_MS = 72; // per-chunk cadence — a full turn runs ~5-6s so a user stop lands mid-stream
+const DELTA_MS = 100; // per-chunk cadence — a full turn runs ~8s so a user stop lands mid-stream
 
 function sleep(ms: number, signal?: AbortSignal): Promise<void> {
   return new Promise((resolve) => {
