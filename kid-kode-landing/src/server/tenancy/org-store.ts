@@ -264,6 +264,14 @@ export async function isOrgMember(
   return members.some((m) => m.userId === userId);
 }
 
+/** Plan tier of an org (the multiplayer enterprise gate reads this). */
+export async function orgPlanTier(
+  orgId: string,
+): Promise<PrismPlanTier | null> {
+  const meta = await readOrgMeta(orgId);
+  return meta?.planTier ?? null;
+}
+
 export async function orgRoleOf(
   orgId: string,
   userId: string,

@@ -150,6 +150,29 @@ export const roomEventSchema = z.discriminatedUnion('type', [
 ]);
 export type RoomEvent = z.infer<typeof roomEventSchema>;
 
+// ── Client → room messages (W7 additive; W0 shaped only room→client) ─────────
+
+/** What a client sends up the CollabRoom channel. `hello` is the first frame
+ *  after connect (identity + optional initial presence); the room replies with
+ *  a `room-snapshot`. Ops omit `seq` (the room assigns it). */
+export const collabClientMessageSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('hello'),
+    actor: collabActorSchema,
+    presence: presenceStateSchema.optional(),
+  }),
+  z.object({ kind: z.literal('presence'), presence: presenceStateSchema }),
+  z.object({ kind: z.literal('op'), op: collabOpSchema }),
+  z.object({
+    kind: z.literal('lock'),
+    nodeId: z.string().min(1),
+    acquire: z.boolean(),
+  }),
+  /** Per-user undo — revert this actor's most recent own op (E.3). */
+  z.object({ kind: z.literal('undo') }),
+]);
+export type CollabClientMessage = z.infer<typeof collabClientMessageSchema>;
+
 // ── Versioned envelope ───────────────────────────────────────────────────────
 
 export const roomEventEnvelopeSchema = z.object({

@@ -1409,3 +1409,6 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [22:01:11] CHAIN/SHELL-W7: still building · 14m elapsed · agent up · 1108 commits · last: shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi
 [22:01:11] CHAIN/SHELL-W7: commit a75ab1d1 — shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi
 [22:04:42] CHAIN/SHELL-W7: still building · 18m elapsed · agent up · 1108 commits · last: shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi
+[22:05:12] CHAIN/SHELL-W7: commit 9e9ffb29 — shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
+[22:08:12] CHAIN/SHELL-W7: still building · 21m elapsed · agent up · 1109 commits · last: shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
+[22:11:43] CHAIN/SHELL-W7: still building · 25m elapsed · agent up · 1109 commits · last: shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
