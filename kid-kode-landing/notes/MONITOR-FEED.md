@@ -1421,3 +1421,5 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [22:25:45] CHAIN/SHELL-W7: commit 64f6803b — shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:29:15] CHAIN/SHELL-W7: still building · 42m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:32:46] CHAIN/SHELL-W7: still building · 46m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
+[22:33:46] CHAIN/SHELL-W7: commit b9b20a6a — shell-w7: collab client store (useCollabStore, native WS, one store per 
+[22:36:16] CHAIN/SHELL-W7: still building · 49m elapsed · agent up · 1113 commits · last: shell-w7: collab client store (useCollabStore, native WS, one store per 

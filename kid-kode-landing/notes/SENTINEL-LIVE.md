@@ -1213,3 +1213,5 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [22:25:45] SHELL-W7 · 39m · agent=1 · commit 64f6803b — shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:29:15] SHELL-W7 · 42m · agent=1 · still building · 42m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
 [22:32:46] SHELL-W7 · 46m · agent=1 · still building · 46m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
+[22:33:46] SHELL-W7 · 47m · agent=1 · commit b9b20a6a — shell-w7: collab client store (useCollabStore, native WS, one store per 
+[22:36:16] SHELL-W7 · 49m · agent=1 · still building · 49m elapsed · agent up · 1113 commits · last: shell-w7: collab client store (useCollabStore, native WS, one store per 

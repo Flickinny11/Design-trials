@@ -18,6 +18,7 @@ import { listProjects } from '@/lib/shell/tenancy-client';
 import { getModelRegistry, getDefaultModel } from '@/lib/shell/model-config';
 import LaunchpadHero3D from './LaunchpadHero3D';
 import PrimaryButton3D from '../intake/PrimaryButton3D';
+import OrgPanel from './OrgPanel';
 import ProjectGallery from './ProjectGallery';
 import SettingsPanel from './SettingsPanel';
 import ShipPanel from './ShipPanel';
@@ -25,14 +26,18 @@ import TemplatesPanel from './TemplatesPanel';
 import UsagePanel from './UsagePanel';
 import VersionTimelineModal from './VersionTimelineModal';
 
-type Panel = 'projects' | 'templates' | 'usage' | 'settings' | 'ship';
-const PANELS: { key: Panel; label: string }[] = [
+type Panel = 'projects' | 'templates' | 'usage' | 'settings' | 'ship' | 'org';
+const BASE_PANELS: { key: Panel; label: string }[] = [
   { key: 'projects', label: 'Projects' },
   { key: 'templates', label: 'Templates' },
   { key: 'usage', label: 'Usage' },
   { key: 'settings', label: 'Settings' },
   { key: 'ship', label: 'Ship' },
 ];
+/** The enterprise team dashboard is only offered to enterprise accounts
+ *  (Decision E scope) — non-enterprise users never see the multiplayer/org
+ *  surface at all. */
+const ORG_PANEL: { key: Panel; label: string } = { key: 'org', label: 'Team' };
 
 export default function DashboardShell({
   userName,
@@ -48,7 +53,11 @@ export default function DashboardShell({
   const router = useRouter();
   const searchParams = useSearchParams();
   const panelParam = searchParams.get('panel');
-  const panel: Panel = PANELS.some((p) => p.key === panelParam)
+  const panels = useMemo(
+    () => (planTier === 'enterprise' ? [...BASE_PANELS, ORG_PANEL] : BASE_PANELS),
+    [planTier],
+  );
+  const panel: Panel = panels.some((p) => p.key === panelParam)
     ? (panelParam as Panel)
     : 'projects';
 
@@ -91,7 +100,7 @@ export default function DashboardShell({
       <header className="dw-top">
         <p className="dw-kicker">PRISM · STUDIO</p>
         <nav className="dw-switch" aria-label="Dashboard sections">
-          {PANELS.map((p) => (
+          {panels.map((p) => (
             <button
               key={p.key}
               type="button"
@@ -219,6 +228,7 @@ export default function DashboardShell({
       {panel === 'settings' ? (
         <SettingsPanel userName={userName} userEmail={userEmail} planTier={planTier} />
       ) : null}
+      {panel === 'org' ? <OrgPanel planTier={planTier} /> : null}
       {panel === 'ship' ? <ShipPanel hasProjects={!empty} /> : null}
 
       {historyProject ? (

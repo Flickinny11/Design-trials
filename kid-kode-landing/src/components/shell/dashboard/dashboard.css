@@ -1035,3 +1035,116 @@
     transition-duration: 1ms;
   }
 }
+
+/* ── W7 settings depth + org/team dashboard ─────────────────────────────── */
+.dw-org-subhead {
+  margin: var(--pp-space-5) 0 var(--pp-space-3);
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-text-low);
+}
+/* .dw-input is defined once above (shared) — no re-definition here (W7). */
+.dw-org-row {
+  display: flex;
+  gap: var(--pp-space-3);
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--pp-space-3);
+}
+.dw-org-pick { display: flex; flex-direction: column; gap: 5px; }
+.dw-org-pick > span {
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-text-low);
+}
+.dw-inline-link { color: var(--pp-red); text-decoration: none; font-weight: 600; }
+.dw-inline-link:hover { text-decoration: underline; }
+.dw-settings-saved { margin-left: 10px; font-size: 11px; color: var(--pp-text-mid); }
+.dw-settings-org { margin: 0 0 var(--pp-space-3); font-size: 13px; line-height: 1.6; color: var(--pp-text-mid); max-width: 60ch; }
+
+/* member roster */
+.dw-org-members, .dw-org-invites, .dw-org-builds {
+  list-style: none;
+  margin: 0 0 var(--pp-space-3);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.dw-org-member {
+  display: flex;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: 10px 12px;
+  background: var(--pp-elev-1);
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  border-radius: var(--pp-radius-2);
+}
+.dw-org-member-id { display: flex; flex-direction: column; gap: 1px; flex: 1 1 auto; min-width: 0; }
+.dw-org-member-name { font-size: 13px; color: var(--pp-text-hi); }
+.dw-org-member-email { font-size: 11px; color: var(--pp-text-low); }
+.dw-org-role, .dw-org-owner-tag {
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: var(--pp-radius-pill);
+  color: var(--pp-text-mid);
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+}
+.dw-org-role[data-role='owner'], .dw-org-owner-tag {
+  color: #fff;
+  background: linear-gradient(135deg, var(--pp-red-hot), var(--pp-red-deep));
+  border-color: transparent;
+}
+.dw-org-invite {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  color: var(--pp-text-mid);
+  border: 1px dashed var(--pp-hairline);
+  border-radius: var(--pp-radius-2);
+}
+.dw-org-invite-tag { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pp-text-low); }
+.dw-org-note { margin: 0 0 var(--pp-space-3); font-size: 12px; color: var(--pp-text-mid); }
+.dw-org-build {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto auto;
+  align-items: center;
+  gap: var(--pp-space-3);
+  padding: 10px 12px;
+  background: var(--pp-elev-1);
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  border-radius: var(--pp-radius-2);
+}
+.dw-org-build-name { color: var(--pp-text-hi); text-decoration: none; font-size: 13px; font-weight: 500; }
+.dw-org-build-name:hover { color: var(--pp-red); }
+.dw-org-build-owner { font-size: 11.5px; color: var(--pp-text-low); }
+.dw-org-build-state { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--pp-text-mid); }
+.dw-org-build-vis {
+  font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: var(--pp-radius-pill);
+  border: var(--pp-hairline-w) solid var(--pp-hairline); color: var(--pp-text-low);
+}
+.dw-org-build-vis[data-vis='org'] { color: var(--pp-red); border-color: var(--pp-hairline-red); }
+
+/* notifications */
+.dw-notif-list { list-style: none; margin: 0 0 var(--pp-space-3); padding: 0; display: flex; flex-direction: column; gap: 4px; max-width: 520px; }
+.dw-notif-row {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--pp-space-3);
+  padding: 9px 12px; border-bottom: var(--pp-hairline-w) solid var(--pp-hairline);
+}
+.dw-notif-label { font-size: 13px; color: var(--pp-text); }
+.dw-toggle { width: 17px; height: 17px; accent-color: var(--pp-red); cursor: pointer; }
+
+/* danger zone */
+.dw-danger-head { color: var(--pp-red); }
+.dw-danger { display: flex; flex-direction: column; gap: var(--pp-space-3); max-width: 620px; }
+.dw-danger-lead { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--pp-text-mid); }
