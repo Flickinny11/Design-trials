@@ -118,6 +118,37 @@ export function authorCapabilityNodes(
   };
 }
 
+/** Author a BACKEND/GPU model node into the graph through the certified path
+ *  (E19). The node carries a `backendRef` (a server workload reference — set at
+ *  CREATION like the factory sets identity, not an additive edit) and a
+ *  `backend-<class>` subtype so the node→target mapper detects it. Idempotent
+ *  per class. */
+export function addBackendNodeToGraph(
+  graph: GraphSource,
+  nodeClass: string,
+  direction: ResolvedDirection,
+): { graph: GraphSource; addedNodeId: string | null } {
+  const homeHub = graph.hubs.find((h) => h.hubId === 'hub-home') ?? graph.hubs[0];
+  if (!homeHub) return { graph, addedNodeId: null };
+
+  const subtype = `backend-${nodeClass}`;
+  const kept = graph.nodes.filter((n) => n.subtype !== subtype);
+  const blueprint: BlueprintNode = {
+    id: `backend-${nodeClass}`,
+    subtype,
+    caption: `${nodeClass} model node`,
+    scenePosition: { x: 3, y: 2, z: -0.4 },
+    envelope: { width: 1.2, height: 1.2 },
+    render: { kind: 'mesh', primitive: 'cube', params: { width: 1, height: 1, depth: 1 }, colorRole: 'primary' },
+  };
+  const authored = authorNode(blueprint, homeHub.hubId, direction);
+  // backendRef is a CREATION field (the factory sets it to null on every node);
+  // a backend node sets it to a workload reference (no secret — I5).
+  const node = { ...authored.node, backendRef: `workload:${nodeClass}` };
+  const nodes = [...kept, node];
+  return { graph: { ...graph, nodes }, addedNodeId: node.nodeId };
+}
+
 /** Merge authored capability nodes into a graph (home hub target). Returns the
  *  updated graph + the ids added. Idempotent per category (re-adding replaces
  *  the prior capability nodes for that category). */

@@ -278,3 +278,48 @@ describe('W5B / E17 — Ship & Make Profitable completeness scan', () => {
     expect(ended).toBe(true);
   });
 });
+
+describe('W5B / E19 — backend nodes → adapters mapping', () => {
+  it('authors a backend node, maps it to GPU targets, deploys + verifies inference', async () => {
+    const store = await import('@/server/tenancy/tenant-store');
+    const { addBackendNodeToGraph } = await import('@/server/conductor/capability-authoring');
+    const { mapBackendNodes, hasBackendNodes, backendClassOf } = await import('@/server/deploy/backend-nodes');
+    const { resolveDirection } = await import('@/server/conductor/directions');
+    const { runDeploy } = await import('@/server/deploy/deploy-service');
+    const { validatePlanRendererFields } = await import('@/lib/prism/codegen/plan-output-hook');
+    const { tenantId, projectId } = await buildFixtureApp();
+
+    const brief = await store.getBrief(tenantId, projectId);
+    const direction = resolveDirection(brief!);
+    const graph = (await store.getGraph(tenantId, projectId)) as never;
+
+    // A frontend-only app has no backend nodes.
+    expect(hasBackendNodes(graph)).toBe(false);
+
+    // 1. Author a real backend model node through the certified path.
+    const { graph: next, addedNodeId } = addBackendNodeToGraph(graph, 'text-classifier', direction);
+    expect(addedNodeId).toBeTruthy();
+    const node = next.nodes.find((n) => n.nodeId === addedNodeId)!;
+    expect(validatePlanRendererFields(node).some((v) => v.severity === 'error')).toBe(false);
+    expect(backendClassOf(node)).toBe('text-classifier');
+    await store.saveGraph(tenantId, projectId, next as unknown as Record<string, unknown>);
+
+    // 2. The mapper maps it to eligible GPU targets + a generated config.
+    const mappings = mapBackendNodes(next, 'Nova Ship');
+    expect(mappings.length).toBe(1);
+    expect(mappings[0].nodeClass).toBe('text-classifier');
+    expect(mappings[0].eligibleTargets).toContain('modal');
+    expect(mappings[0].eligibleTargets).toContain('runpod');
+    expect(mappings[0].inferenceContract?.model).toContain('distilbert');
+    expect(mappings[0].requirements?.postShipCheck).toBe('inference-roundtrip');
+
+    // 3. Deploy the backend node to its default target — the latch verifies a
+    //    real inference round-trip against the deployed endpoint.
+    const dep = await runDeploy({
+      tenantId, projectId, kind: mappings[0].defaultTarget, nodeClass: mappings[0].nodeClass,
+      appName: 'Nova Ship', appOrigin: 'http://localhost:3000', nowIso: new Date().toISOString(),
+    });
+    expect(dep!.record.category).toBe('backend');
+    expect(dep!.record.postShip?.status).toBe('pass');
+  });
+});

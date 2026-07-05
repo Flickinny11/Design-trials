@@ -1496,3 +1496,4 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [01:23:37] CHAIN/SHELL-W5B: still building · 25m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
 [01:27:08] CHAIN/SHELL-W5B: still building · 28m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
 [01:30:38] CHAIN/SHELL-W5B: still building · 32m elapsed · agent up · 1132 commits · last: shell-w5b: E16 in-platform domains (Entri Sell/Connect/Monitor + registr
+[01:31:39] CHAIN/SHELL-W5B: commit 560fae87 — shell-w5b: E17 Ship & Make Profitable completeness scan + one-click capa
