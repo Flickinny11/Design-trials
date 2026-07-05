@@ -1204,3 +1204,5 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [22:05:12] SHELL-W7 · 18m · agent=1 · commit 9e9ffb29 — shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
 [22:08:12] SHELL-W7 · 21m · agent=1 · still building · 21m elapsed · agent up · 1109 commits · last: shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
 [22:11:43] SHELL-W7 · 25m · agent=1 · still building · 25m elapsed · agent up · 1109 commits · last: shell-w7: org-store (audited cross-tenant sharing, W7-D2) — orgs/members
+[22:14:13] SHELL-W7 · 27m · agent=1 · commit dfe86b39 — shell-w7: CollabRoom core + dep-free RFC6455 WS host (W7-D1) — room-issu
+[22:15:13] SHELL-W7 · 28m · agent=1 · still building · 28m elapsed · agent up · 1110 commits · last: shell-w7: CollabRoom core + dep-free RFC6455 WS host (W7-D1) — room-issu

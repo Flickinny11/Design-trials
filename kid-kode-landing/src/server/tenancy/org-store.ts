@@ -482,19 +482,24 @@ export async function setProjectShare(
   ownerUserId: string,
   projectId: string,
   projectName: string,
-  grantsIn: Array<{
-    subjectType: 'org' | 'user';
+  // NB: tsconfig runs strict:false, so zod-inferred object keys arrive
+  // optional; the edge schema already validated presence — coerce defensively.
+  grantsIn: ReadonlyArray<{
+    subjectType?: 'org' | 'user';
     subjectUserId?: string | null;
-    role: PrismGrantRole;
+    role?: PrismGrantRole;
   }>,
 ): Promise<PrismProjectShare> {
-  const grants: PrismShareGrant[] = grantsIn.map((g) => ({
-    subjectType: g.subjectType,
-    subjectUserId: g.subjectType === 'user' ? (g.subjectUserId ?? null) : null,
-    role: g.role,
-    grantedByUserId: ownerUserId,
-    grantedAt: nowIso(),
-  }));
+  const grants: PrismShareGrant[] = grantsIn.map((g) => {
+    const subjectType = g.subjectType ?? 'org';
+    return {
+      subjectType,
+      subjectUserId: subjectType === 'user' ? (g.subjectUserId ?? null) : null,
+      role: g.role ?? 'view',
+      grantedByUserId: ownerUserId,
+      grantedAt: nowIso(),
+    };
+  });
   const share: PrismProjectShare = prismProjectShareSchema.parse({
     projectId,
     ownerUserId,

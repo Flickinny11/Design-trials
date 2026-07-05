@@ -13,6 +13,8 @@ import 'server-only';
 import { TRPCError } from '@trpc/server';
 import {
   PRISM_TENANCY_CONTRACT_VERSION,
+  accountDeleteInputSchema,
+  accountSettingsSetInputSchema,
   graphGetInputSchema,
   graphSaveInputSchema,
   projectCreateInputSchema,
@@ -29,6 +31,7 @@ import {
   type TenancyMeOutput,
 } from '../../../../packages/shared-interfaces/src/prism-tenancy';
 import { buildUsageSummary } from '../../../lib/shell/usage-config';
+import { listUserOrgs, reconcileInvites } from '../../tenancy/org-store';
 import * as store from '../../tenancy/tenant-store';
 import { protectedProcedure, router } from '../init';
 
@@ -37,13 +40,20 @@ function notFound(): never {
 }
 
 export const tenancyRouter = router({
-  /** The signed-in account, shell projection (+ org stubs, empty in v1 —
-   *  orgs are the enterprise-tier capability, schema-ready for W7). */
-  me: protectedProcedure.query(({ ctx }): TenancyMeOutput => {
+  /** The signed-in account, shell projection + the REAL orgs the user belongs
+   *  to (W7 — enterprise-tier capability). Reconciles any email invites the
+   *  user has since satisfied by signing up. */
+  me: protectedProcedure.query(async ({ ctx }): Promise<TenancyMeOutput> => {
+    await reconcileInvites({
+      userId: ctx.session.user.id,
+      displayName: ctx.session.user.name,
+      email: ctx.session.user.email,
+    });
+    const orgs = await listUserOrgs(ctx.session.user.id);
     return tenancyMeOutputSchema.parse({
       v: PRISM_TENANCY_CONTRACT_VERSION,
       user: ctx.session.user,
-      orgs: [],
+      orgs,
     });
   }),
 
@@ -193,5 +203,37 @@ export const tenancyRouter = router({
         new Date().toISOString(),
       );
     }),
+  }),
+
+  /** W7 — account settings depth: persisted default build model (7.2/7.4) +
+   *  notification prefs. Tenant-keyed like everything (I11). */
+  settings: router({
+    get: protectedProcedure.query(({ ctx }) =>
+      store.getAccountSettings(ctx.session.user.id),
+    ),
+    set: protectedProcedure
+      .input(accountSettingsSetInputSchema)
+      .mutation(({ ctx, input }) =>
+        store.setAccountSettings(ctx.session.user.id, input),
+      ),
+  }),
+
+  /** W7 danger zone (W7-D3) — irreversibly wipe all of the tenant's Prism
+   *  data. Server re-checks the typed-back account name as a friction gate;
+   *  the client then signs out. Better Auth's user row is left to the auth
+   *  admin surface (deviation W7-D3). */
+  account: router({
+    delete: protectedProcedure
+      .input(accountDeleteInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        if (input.confirmName.trim() !== ctx.session.user.name.trim()) {
+          throw new TRPCError({
+            code: 'BAD_REQUEST',
+            message: 'Confirmation name does not match.',
+          });
+        }
+        const ok = await store.deleteAllTenantData(ctx.session.user.id);
+        return { deleted: ok };
+      }),
   }),
 });

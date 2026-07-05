@@ -22,6 +22,7 @@ import { protectedProcedure, router } from './init';
 import { conductorRouter } from './routers/conductor';
 import { intakeRouter } from './routers/intake';
 import { integrationsRouter } from './routers/integrations';
+import { sharingRouter } from './routers/sharing';
 import { tenancyRouter } from './routers/tenancy';
 
 export const appRouter = router({
@@ -40,6 +41,8 @@ export const appRouter = router({
   integrations: integrationsRouter,
   /** W5 — the Conductor build/deploy/verify surface. */
   conductor: conductorRouter,
+  /** W7 — org sharing + enterprise surface (spec §6.9 S9, decision E). */
+  sharing: sharingRouter,
 });
 
 export type AppRouter = typeof appRouter;
