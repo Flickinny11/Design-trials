@@ -65,6 +65,10 @@ import {
   type ConductorStatus,
   type DeployRecord,
 } from '../../../packages/shared-interfaces/src/prism-conductor';
+import {
+  careConfigSchema,
+  type CareConfig,
+} from '../../../packages/shared-interfaces/src/prism-care';
 import { getTemplate, templateGraph } from '@/lib/templates/registry';
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
@@ -932,6 +936,36 @@ export async function getConductorStatus(
   const raw = await readJson<unknown>(conductorStatusPath(tenantId, projectId));
   if (raw == null) return null;
   const parsed = conductorStatusSchema.safeParse(raw);
+  return parsed.success ? parsed.data : null;
+}
+
+// ── E20 managed-care config (per project) ─────────────────────────────────────
+
+function careConfigPath(tenantId: string, projectId: string): string {
+  return insideTenant(tenantId, 'projects', safeId(projectId, 'project'), 'care-config.json');
+}
+
+export async function saveCareConfig(
+  tenantId: string,
+  projectId: string,
+  config: CareConfig,
+): Promise<CareConfig | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const parsed = careConfigSchema.parse(config);
+  await writeJson(careConfigPath(tenantId, projectId), parsed);
+  return parsed;
+}
+
+export async function getCareConfig(
+  tenantId: string,
+  projectId: string,
+): Promise<CareConfig | null> {
+  const owned = await getProject(tenantId, projectId);
+  if (!owned) return null;
+  const raw = await readJson<unknown>(careConfigPath(tenantId, projectId));
+  if (raw == null) return null;
+  const parsed = careConfigSchema.safeParse(raw);
   return parsed.success ? parsed.data : null;
 }
 

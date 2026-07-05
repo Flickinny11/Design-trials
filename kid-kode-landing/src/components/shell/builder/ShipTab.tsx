@@ -23,6 +23,8 @@ import {
   getRecommendations,
 } from '@/lib/shell/conductor-client';
 import { listVersions } from '@/lib/shell/tenancy-client';
+import type { CareStatus } from '../../../../packages/shared-interfaces/src/prism-care';
+import { getCareStatus, setCareEnabled as setCareEnabledClient } from '@/lib/shell/care-client';
 import DomainPurchaseModal from './DomainPurchaseModal';
 
 function CheckRow({ check }: { check: VerifyCheck | undefined }) {
@@ -47,6 +49,7 @@ export default function ShipTab({ projectId }: { projectId: string }) {
   const [domain, setDomain] = useState('');
   const [domainModalOpen, setDomainModalOpen] = useState(false);
   const [recs, setRecs] = useState<RecommendationsOutput | null>(null);
+  const [care, setCare] = useState<CareStatus | null>(null);
 
   const built = status?.phase === 'built';
   const latch = status?.latch ?? null;
@@ -60,7 +63,16 @@ export default function ShipTab({ projectId }: { projectId: string }) {
       /* ignore */
     }
     setRecs(await getRecommendations(projectId));
+    setCare(await getCareStatus(projectId));
   }, [projectId]);
+
+  const onToggleCare = useCallback(async () => {
+    if (!care) return;
+    setBusy(true);
+    const next = await setCareEnabledClient(projectId, !care.enabled);
+    if (next) setCare(next);
+    setBusy(false);
+  }, [care, projectId]);
 
   useEffect(() => {
     void reload();
@@ -253,6 +265,35 @@ export default function ShipTab({ projectId }: { projectId: string }) {
           Export runtime bundle (E7)
         </button>
       </div>
+
+      {/* Managed Care tier (E20) */}
+      {care ? (
+        <div className="sw-care" data-entitled={care.entitled ? 'true' : 'false'}>
+          <div className="sw-care-head">
+            <span className="sw-section-label">Managed Care (E20)</span>
+            {care.entitled ? (
+              <button type="button" className="bw1-minibtn" onClick={onToggleCare} disabled={busy}>
+                {care.enabled ? 'Turn off' : 'Turn on'}
+              </button>
+            ) : (
+              <span className="sw-care-lock">Pro / Enterprise</span>
+            )}
+          </div>
+          <p className="sw-care-price">{care.priceStub}</p>
+          {care.enabled && care.checks.length > 0 ? (
+            <ul className="sw-care-checks">
+              {care.checks.map((c) => (
+                <li key={c.id} className="sw-care-check" data-status={c.status}>
+                  <span className="sw-care-kind">{c.kind}</span>
+                  <span className="sw-care-cadence">{c.cadence}</span>
+                  <span className="sw-care-cstatus">{c.status === 'flagged' ? 'awaiting monitoring keys' : 'scheduled'}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <p className="sw-care-free">{care.freePathNote}</p>
+        </div>
+      ) : null}
 
       <p className="bw1-panel-foot">
         Deploys gate on the §11 latch; env-gated hosts run in dry-run with a

@@ -1302,3 +1302,6 @@ complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
 [01:31:39] SHELL-W5B · 33m · agent=1 · commit 560fae87 — shell-w5b: E17 Ship & Make Profitable completeness scan + one-click capa
 [01:34:09] SHELL-W5B · 35m · agent=1 · still building · 35m elapsed · agent up · 1134 commits · last: shell-w5b: E19 backend/GPU nodes → adapters mapping contract
 [01:34:09] SHELL-W5B · 35m · agent=1 · commit 7a3c5931 — shell-w5b: E19 backend/GPU nodes → adapters mapping contract
+[01:37:39] SHELL-W5B · 39m · agent=1 · still building · 39m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
+[01:37:40] SHELL-W5B · 39m · agent=1 · commit cf77eff0 — shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c
+[01:41:10] SHELL-W5B · 42m · agent=1 · still building · 42m elapsed · agent up · 1135 commits · last: shell-w5b: E18 host recommendations + live pricing (source-cited, ≤24h c

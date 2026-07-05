@@ -1810,6 +1810,27 @@
 .sw-ship[data-status='pass'] .sw-ship-verdict { color: #8fe0a4; }
 .sw-ship[data-status='fail'] .sw-ship-verdict { color: #e08a8a; }
 
+/* ── W5B managed care (E20) ─────────────────────────────────────────────── */
+.sw-care {
+  margin-top: 6px;
+  padding: 10px 11px;
+  border-radius: 9px;
+  border: 1px solid rgba(232, 236, 242, 0.1);
+  background: rgba(12, 12, 18, 0.44);
+}
+.sw-care[data-entitled='true'] { border-color: rgba(201, 168, 106, 0.3); }
+.sw-care-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sw-care-lock { font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: #c9a86a; }
+.sw-care-price { font-size: 11px; color: #c9ccd3; line-height: 1.4; margin: 6px 0; }
+.sw-care-checks { list-style: none; margin: 6px 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.sw-care-check { display: flex; align-items: center; gap: 8px; font-size: 10px; color: #9a958a; }
+.sw-care-kind { color: var(--pp-text-hi, #f4f1ea); font-weight: 600; text-transform: capitalize; }
+.sw-care-cadence { color: #7fb2e6; }
+.sw-care-cstatus { margin-left: auto; }
+.sw-care-check[data-status='flagged'] .sw-care-cstatus { color: #e7b45a; }
+.sw-care-check[data-status='scheduled'] .sw-care-cstatus { color: #8fe0a4; }
+.sw-care-free { font-size: 10px; color: #7a766d; line-height: 1.4; margin: 6px 0 0; }
+
 .sw-versions { list-style: none; margin: 0 0 8px; padding: 0; display: flex; flex-direction: column; gap: 5px; }
 .sw-version { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 11px; color: #c9ccd3; }
 .sw-version-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

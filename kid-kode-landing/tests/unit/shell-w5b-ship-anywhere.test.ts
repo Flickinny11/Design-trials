@@ -362,3 +362,42 @@ describe('W5B / E18 — host recommendations + live pricing', () => {
     expect(p2['vercel'].asOf).toBe(p1['vercel'].asOf);
   });
 });
+
+describe('W5B / E20 — managed-care tier stub', () => {
+  it('gates on tier, scaffolds flagged checks, keeps the free path', async () => {
+    const { careStatus, setCareEnabled, scheduleCareCheck, SELF_HEAL_SEAM } = await import('@/server/care/managed-care');
+    const { tenantId, projectId } = await buildFixtureApp();
+    delete process.env.PRISM_CARE_MONITOR_KEY; // no monitoring keys → flagged
+
+    // Free tier: not entitled, but the free prompt-fix path is always noted.
+    const free = await careStatus(tenantId, projectId, 'free');
+    expect(free.entitled).toBe(false);
+    expect(free.enabled).toBe(false);
+    expect(free.freePathNote).toMatch(/prompt Prism/i);
+    // Enabling on free is refused (must upgrade).
+    const refused = await setCareEnabled(tenantId, projectId, 'free', true, new Date().toISOString());
+    expect(refused).toBeNull();
+
+    // Pro tier: entitled → enabling arms the default scheduled-check scaffold,
+    // and checks are `flagged` until monitoring keys exist (honest stub).
+    const pro = await setCareEnabled(tenantId, projectId, 'pro', true, new Date().toISOString());
+    expect(pro).not.toBeNull();
+    expect(pro!.entitled).toBe(true);
+    expect(pro!.enabled).toBe(true);
+    expect(pro!.checks.length).toBe(3);
+    expect(pro!.checks.every((c) => c.status === 'flagged')).toBe(true);
+    expect(pro!.checks.every((c) => c.selfHealSeam === SELF_HEAL_SEAM)).toBe(true);
+    expect(pro!.liveAgentsAvailable).toBe(false);
+    expect(pro!.priceStub).toMatch(/\$/);
+
+    // Scheduling a specific check persists it (tier-gated).
+    const sched = await scheduleCareCheck(tenantId, projectId, 'enterprise', 'self-heal', new Date().toISOString());
+    expect(sched!.checks.some((c) => c.kind === 'self-heal')).toBe(true);
+
+    // With a monitoring key, checks arm as `scheduled`.
+    process.env.PRISM_CARE_MONITOR_KEY = 'test-monitor-key';
+    const armed = await setCareEnabled(tenantId, projectId, 'enterprise', true, new Date().toISOString());
+    expect(armed!.liveAgentsAvailable).toBe(true);
+    delete process.env.PRISM_CARE_MONITOR_KEY;
+  });
+});

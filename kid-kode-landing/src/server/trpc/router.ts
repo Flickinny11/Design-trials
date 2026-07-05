@@ -19,6 +19,7 @@ import 'server-only';
 import { agentChatRequestSchema } from '../../../packages/shared-interfaces/src/prism-agent';
 import { runStubAgent } from '../agent/stub-agent';
 import { protectedProcedure, router } from './init';
+import { careRouter } from './routers/care';
 import { conductorRouter } from './routers/conductor';
 import { domainsRouter } from './routers/domains';
 import { intakeRouter } from './routers/intake';
@@ -44,6 +45,8 @@ export const appRouter = router({
   conductor: conductorRouter,
   /** W5B — in-platform domains (E16: search · buy · auto-DNS · Monitor). */
   domains: domainsRouter,
+  /** W5B — managed-care tier stub (E20: tier gate + scheduled checks). */
+  care: careRouter,
   /** W7 — org sharing + enterprise surface (spec §6.9 S9, decision E). */
   sharing: sharingRouter,
 });
