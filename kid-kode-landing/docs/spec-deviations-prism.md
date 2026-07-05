@@ -794,3 +794,60 @@ is the browser-driven verification harness (§11.1-11.4) + the fresh-context
 user-advocate — exactly the two-layer evidence protocol the project mandates.
 The runtime "Verified shippable" badge (I9) is gated on the server latch;
 "done" additionally requires the advocate pass.
+
+---
+
+## SHELL W7 — Collaboration + Settings (recorded 2026-07-04, BEFORE code)
+
+**W7-D1 — The CollabRoom is a portable, transport-agnostic room CORE hosted
+locally by a dependency-free RFC6455 WebSocket server; the Cloudflare Durable
+Object is the documented production ADAPTER SEAM, not stood up in this
+Next-only harness.** Decision E (LOCKED) specifies "one `CollabRoom` Durable
+Object per project via Cloudflare's hibernatable WebSocket API." This repo is
+Next.js-only (no wrangler / Worker / DO runtime; grep proves it) and is verified
+locally under `next dev`, so a real Cloudflare DO cannot run or be proven here.
+Faithful implementation: the room *semantics* Decision E mandates — presence
+fan-out (cursors, selections, camera ghosts, editing badges; ephemeral,
+throttled, never persisted), room-issued op sequencing → per-property LWW,
+per-user undo, per-node soft locks, idle hibernation/eviction — live in a pure
+`CollabRoom` core class (`src/server/collab/collab-room.ts`) that a Cloudflare
+DO wraps 1:1 in production (`state.acceptWebSocket()` for hibernation; the
+core's `hibernate()`/`rehydrate()` seam is already shaped for it). For local
+dev + verification the SAME core is hosted by a hand-rolled RFC6455 server
+(`src/server/collab/collab-host.ts`, no `ws` dependency — kept off the
+supply-chain surface) run as a standalone Node process
+(`scripts/collab-dev-server.mjs`), connected by the browser's native
+`WebSocket`. This is the SAME adapter-seam pattern W5 used for DeployTargets
+(live default + documented gated adapters). SSE (tRPC `httpBatchStreamLink`)
+remains the SOLE transport for engine/build/server-push (grep-proven
+untouched); the collab WebSocket is the single Decision-E-sanctioned exception
+to I1 (FP2). No new dependency is added.
+
+**W7-D2 — Org sharing is the founder-sanctioned, explicit, AUDITED exception
+to strict per-tenant isolation (I11), implemented via an org-scoped store +
+an access resolver; the default owner-only path and `verify:tenancy` are
+unchanged.** I11 forbids any cross-user read by default. Decision E's scope
+clarification makes org membership "the ONLY cross-user visibility, explicit
+and audited." Implemented additively: an org-scoped store
+(`src/server/tenancy/org-store.ts`, `.data/tenancy/orgs/<orgId>/…`) holds org
+metadata, membership, and per-project share grants (subject = `org` | a member
+userId; role ∈ view · comment · edit), plus a global
+`.data/tenancy/shared-index.json` (projectId → {ownerUserId, orgId}) written
+ONLY when a project is shared. The audited resolver
+`resolveProjectAccess(viewerUserId, projectId)` returns an effective role only
+when (1) a shared-index entry exists, (2) the viewer is a current member of the
+owning org, and (3) a grant (org-wide or per-user) covers the viewer; every
+membership/grant change appends an audit record. Unshared projects have NO
+index entry, so cross-tenant access stays impossible and the existing
+two-user isolation probe stays green — the probe is EXTENDED with the new org
+procedures to prove a non-member still gets NOT_FOUND. The owner path
+(`ctx.session.user.id`-keyed) is untouched.
+
+**W7-D3 — Account-level danger-zone "delete" wipes the tenant's Prism data and
+signs the user out; full Better-Auth user-row deletion is the documented
+seam.** The danger-zone delete removes all tenant-owned projects/graphs/
+versions/assets/org-shares (real, irreversible, confirm-gated) and clears the
+session. Deleting the underlying Better Auth identity row is left to the auth
+admin surface (Stripe/billing testing phase) so this wave does not fork auth
+storage (I2). The UI labels this precisely ("deletes all your Prism projects
+and data").
