@@ -38,6 +38,7 @@ import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { captureCanvasTransformAsKeyframe } from '@/lib/prism-graph/keyframe-capture';
 import { evalScrubPose } from '@/lib/prism-graph/keyframe-scrub';
+import { getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
 import type { PrismKeyframe, PrismNode } from '@/lib/prism-graph/types';
 
 // ── machined red/black/white treatments (premium.ts recipes) ─────────────────
@@ -234,6 +235,10 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
   const [playing, setPlaying] = useState(false);
   const [loop, setLoop] = useState(true);
   const [snapGrid, setSnapGrid] = useState<'1/60' | '1/100' | '1/120'>('1/60');
+  // W8 E8 — drive the playhead from the LIVE driver (the same shared DriverHub
+  // the built scene reads) so the keyframe editor proves a scroll- or
+  // inview-driven timeline, not just manual scrubbing.
+  const [driverPreview, setDriverPreview] = useState<'off' | 'scroll' | 'inview'>('off');
 
   // Play transport — sweep the playhead so the instrument reads as alive.
   const phRef = useRef(playhead);
@@ -269,6 +274,30 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
 
   // FINISH F-1 — scrub/play drives the selected node live in the canvas.
   useCanvasScrubDriver(open, nodeId, count, phRef);
+
+  // W8 E8 — when a driver preview is armed, the LIVE driver signal owns the
+  // playhead (scroll progress, or this node's section-relative in-view
+  // progress). Proves in the keyframe editor that a scroll/inview-driven
+  // timeline scrubs from real input — the same DriverHub the built scene reads.
+  // Never runs while `playing` (the transport owns the playhead then).
+  useEffect(() => {
+    if (!open || driverPreview === 'off' || playing) return;
+    const hub = getSharedDriverHub();
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const p =
+        driverPreview === 'scroll'
+          ? hub.scroll.progress
+          : nodeId
+            ? hub.inview.get(nodeId).progress
+            : 0;
+      phRef.current = p;
+      setPlayhead(p);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [open, driverPreview, playing, nodeId]);
 
   // ── the smoky / high-tech reveal + capture confirmation both target the body
   const bodyRef = useRef<HTMLDivElement | null>(null);
@@ -384,6 +413,10 @@ export function KeyframeEditorPanel({ open, onClose, selectionLabel, node, compa
       setLoop={setLoop}
       snapGrid={snapGrid}
       setSnapGrid={setSnapGrid}
+      driverPreview={driverPreview}
+      cycleDriverPreview={() =>
+        setDriverPreview((d) => (d === 'off' ? 'scroll' : d === 'scroll' ? 'inview' : 'off'))
+      }
       onClose={onClose}
       onAddKey={addKeyframe}
       onSeek={seekTo}
@@ -465,6 +498,8 @@ function KeyframeBody(props: {
   setLoop: (f: (p: boolean) => boolean) => void;
   snapGrid: '1/60' | '1/100' | '1/120';
   setSnapGrid: (g: '1/60' | '1/100' | '1/120') => void;
+  driverPreview: 'off' | 'scroll' | 'inview';
+  cycleDriverPreview: () => void;
   onClose: () => void;
   onAddKey: () => void;
   onSeek: (t: number) => void;
@@ -472,7 +507,7 @@ function KeyframeBody(props: {
 }) {
   const {
     bodyRef, lanes, count, selectionLabel, hasNode, playhead, setPlayhead, playing, setPlaying,
-    loop, setLoop, snapGrid, setSnapGrid, onClose, onAddKey, onSeek, compact,
+    loop, setLoop, snapGrid, setSnapGrid, driverPreview, cycleDriverPreview, onClose, onAddKey, onSeek, compact,
   } = props;
   const bodySlab = useChromeSlab({ material: 'ceramic', radius: 18, order: 40 });
   const headerSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x', order: 41 });
@@ -565,6 +600,29 @@ function KeyframeBody(props: {
               className="w-7 h-7 rounded-ds-xs ds-press hover:brightness-[1.25] transition-all flex items-center justify-center"
               style={loop ? ACTIVE_KEY : { background: KEY_BG, boxShadow: KEY_SHADOW }}>
               <Icon name="refresh" size={11} color={loop ? RED_HOT : 'var(--ds-text-mid)'} />
+            </button>
+            {/* W8 E8 — drive the playhead from the live scroll / in-view driver.
+                Cycles Manual → Scroll → In View. Proves a driver-bound timeline
+                scrubs from real input, right here in the keyframe editor. */}
+            <button type="button" data-action="kf-driver-preview" onClick={cycleDriverPreview}
+              title={
+                driverPreview === 'off'
+                  ? 'Drive playhead: Manual (click to arm Scroll)'
+                  : driverPreview === 'scroll'
+                    ? 'Driving playhead from live Scroll (click for In View)'
+                    : 'Driving playhead from live In View (click for Manual)'
+              }
+              className="px-2 h-7 rounded-ds-xs ds-press hover:brightness-[1.25] transition-all flex items-center gap-1"
+              style={driverPreview !== 'off' ? ACTIVE_KEY : { background: KEY_BG, boxShadow: KEY_SHADOW }}>
+              <Icon
+                name={driverPreview === 'inview' ? 'eye' : 'move'}
+                size={11}
+                color={driverPreview !== 'off' ? RED_HOT : 'var(--ds-text-mid)'}
+                glow={driverPreview !== 'off'}
+              />
+              <span className="text-[8.5px] font-mono" style={{ color: driverPreview !== 'off' ? CHROME : 'var(--ds-text-mid)' }}>
+                {driverPreview === 'off' ? 'Manual' : driverPreview === 'scroll' ? 'Scroll' : 'In View'}
+              </span>
             </button>
             <div className="flex items-center rounded-ds-xs overflow-hidden" style={{ background: WELL_BG, boxShadow: WELL_SHADOW }}>
               {(['1/60', '1/100', '1/120'] as const).map((g) => (

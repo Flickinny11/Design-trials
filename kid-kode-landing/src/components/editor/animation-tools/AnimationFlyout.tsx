@@ -66,6 +66,7 @@ import {
   pageSlice,
   removeBinding,
   setBindingDriver,
+  setBindingDriverOptions,
   setBindingParams,
   sortBindings,
 } from './binding-helpers';
@@ -501,6 +502,42 @@ export default function AnimationFlyout({
                         />
                       ))}
                     </div>
+
+                    {/* W8 E8 — driver-level options: section-relative scrub
+                        (scroll) / replay-on-exit (inview). Only shown for the
+                        driver they apply to; never touch keyframes (INV-6). */}
+                    {(b.driver === 'scroll' || b.driver === 'inview') && (
+                      <div className="flex gap-1 flex-wrap pl-0.5" data-anim-driver-opts>
+                        {b.driver === 'scroll' && (
+                          <ChipKey
+                            label="Per-section"
+                            active={b.driverOptions?.section === true}
+                            testId={`driveropt-section-${b.id}`}
+                            onClick={() =>
+                              mutateBindings((cur) =>
+                                setBindingDriverOptions(cur, b.id, {
+                                  section: !b.driverOptions?.section,
+                                }),
+                              )
+                            }
+                          />
+                        )}
+                        {b.driver === 'inview' && (
+                          <ChipKey
+                            label="Replay"
+                            active={b.driverOptions?.replay === true}
+                            testId={`driveropt-replay-${b.id}`}
+                            onClick={() =>
+                              mutateBindings((cur) =>
+                                setBindingDriverOptions(cur, b.id, {
+                                  replay: !b.driverOptions?.replay,
+                                }),
+                              )
+                            }
+                          />
+                        )}
+                      </div>
+                    )}
 
                     {/* Expanded: LIVE preview window + the reused ControlPanel */}
                     {editing && (
