@@ -51,7 +51,7 @@ export const scrollHeroGraph: GraphSource = {
         z: 0.4,
         w: 3.4,
         h: 3.4,
-        scale: 3.2,
+        scale: 2.5,
         bindings: [
           bind('float', 'time', { params: { amplitude: 0.05, periodSec: 6 } }),
           bind('pointer-tilt-3d', 'pointer', { params: { strength: 0.5 } }),
@@ -106,7 +106,7 @@ export const scrollHeroGraph: GraphSource = {
         scale: 0.9,
         bindings: [
           bind('parallax', 'pointer', { params: { strength: 0.25 } }),
-          bind('scroll-rotate-3d', 'scroll', { params: { degrees: 22 }, section: true }),
+          bind('scroll-rotate-3d', 'scroll', { params: { degrees: 40 } }),
         ],
       },
       '/prism-mock/orrery/materia/brass-macro.png',
@@ -125,43 +125,27 @@ export const scrollHeroGraph: GraphSource = {
         scale: 0.9,
         bindings: [
           bind('parallax', 'pointer', { params: { strength: 0.25 } }),
-          bind('scroll-rotate-3d', 'scroll', { params: { degrees: -22 }, section: true }),
+          bind('scroll-rotate-3d', 'scroll', { params: { degrees: -40 } }),
         ],
       },
       '/prism-mock/orrery/materia/sapphire-macro.png',
     ),
-    // Lower reveal section — starts below the fold; slides in on in-view (replay
-    // so it re-fires each time you scroll it back). This is the real E8 inview.
-    textNode(
-      {
-        id: 'hero-reveal-line',
-        hub: HUB,
-        caption: 'Lower reveal — slides in on in-view, replays on re-entry.',
-        x: 0,
-        y: -4.2,
-        z: 0.3,
-        w: 9,
-        h: 0.7,
-        bindings: [bind('text-elastic-in', 'inview', { replay: true })],
-      },
-      'Engineered in the browser. Shipped as a running app.',
-      { weight: 600, size: 0.34, color: '#e8dcc0' },
-    ),
-    // Scroll progress indicator that fills as you scroll (global scroll scrub).
+    // In-frame tagline (bottom of the hero) that rises + brightens as you scroll
+    // — a visible global-scroll scrub, always on-screen so it reads cleanly.
     textNode(
       {
         id: 'hero-cta',
         hub: HUB,
-        caption: 'CTA — rises on scroll.',
+        caption: 'Tagline — rises on scroll (global scroll scrub).',
         x: 0,
-        y: -2.6,
-        z: 0.3,
-        w: 5,
+        y: -2.75,
+        z: 0.5,
+        w: 7,
         h: 0.5,
-        bindings: [bind('scroll-stagger-rise', 'scroll', { params: { distance: 1.2 } })],
+        bindings: [bind('scroll-stagger-rise', 'scroll', { params: { distance: 0.8 } })],
       },
-      'Remix this hero →',
-      { weight: 500, size: 0.28, color: '#d8a24a' },
+      'Engineered in the browser · shipped as a running app',
+      { size: 0.26, color: '#e7c98a', reveal: false },
     ),
   ],
   edges: [],

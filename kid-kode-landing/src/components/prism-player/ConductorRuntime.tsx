@@ -78,12 +78,31 @@ function startDriverFeed(
   el.addEventListener('pointerleave', onPointerLeave);
   el.addEventListener('wheel', onWheel, { passive: true });
 
+  // Verification handle for the shipped preview (mirrors the editor's
+  // __prismDrivers): lets a verifier prove reactivity — scroll, pointer,
+  // in-view, and frame-tick count — without reaching into the scene graph.
+  (window as unknown as { __prismPreviewDrivers?: unknown }).__prismPreviewDrivers = {
+    hub,
+    ticks: 0,
+    setScroll: (p: number) => {
+      hub.scroll.set(p);
+      result.setScrollProgress(p);
+    },
+    setPointer: (x: number, y: number) => hub.pointer.set({ x, y }, true),
+    scroll: () => hub.scroll.progress,
+    frameSize: () => hub.frame.size(),
+    inview: (id: string) => ({ ...hub.inview.get(id) }),
+  };
+
   let raf = 0;
   let last = performance.now();
   const loop = (now: number) => {
     raf = requestAnimationFrame(loop);
     const dt = now - last;
     last = now;
+    const dh = (window as unknown as { __prismPreviewDrivers?: { ticks: number } })
+      .__prismPreviewDrivers;
+    if (dh) dh.ticks += 1;
     hub.frame.tick(dt);
     nodes.forEach((obj, nodeId) => {
       obj.updateWorldMatrix(true, false);
