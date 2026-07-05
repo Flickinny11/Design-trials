@@ -22,15 +22,18 @@ import type { BuildBrief } from '@/../packages/shared-interfaces/src/prism-intak
 
 let tenancyDir: string;
 let tokensDir: string;
+let domainIndexDir: string;
 
 beforeAll(() => {
   tenancyDir = mkdtempSync(join(tmpdir(), 'prism-w5b-tenancy-'));
   tokensDir = mkdtempSync(join(tmpdir(), 'prism-w5b-tokens-'));
+  domainIndexDir = mkdtempSync(join(tmpdir(), 'prism-w5b-domains-'));
   process.env.PRISM_TENANCY_DIR = tenancyDir;
   process.env.PRISM_PREVIEW_TOKENS_DIR = tokensDir;
+  process.env.PRISM_DOMAIN_INDEX_DIR = domainIndexDir;
   delete process.env.ANTHROPIC_API_KEY;
-  // Force dry-run for every host (no vendor tokens present).
-  for (const k of ['VERCEL_TOKEN', 'NETLIFY_AUTH_TOKEN', 'CLOUDFLARE_API_TOKEN', 'MODAL_TOKEN_ID', 'MODAL_TOKEN_SECRET', 'RUNPOD_API_KEY', 'VAST_API_KEY']) {
+  // Force dry-run/sandbox for every host + domain provider (no vendor tokens).
+  for (const k of ['VERCEL_TOKEN', 'NETLIFY_AUTH_TOKEN', 'CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID', 'MODAL_TOKEN_ID', 'MODAL_TOKEN_SECRET', 'RUNPOD_API_KEY', 'VAST_API_KEY', 'ENTRI_APPLICATION_ID', 'ENTRI_SECRET', 'ENTRI_WEBHOOK_SECRET']) {
     delete process.env[k];
   }
 });
@@ -38,6 +41,7 @@ beforeAll(() => {
 afterAll(() => {
   rmSync(tenancyDir, { recursive: true, force: true });
   rmSync(tokensDir, { recursive: true, force: true });
+  rmSync(domainIndexDir, { recursive: true, force: true });
 });
 
 function fixtureBrief(): BuildBrief {
@@ -149,5 +153,69 @@ describe('W5B / E15 — host adapters + post-ship verification', () => {
     const e = runReferenceInference(emb, 'ship anywhere');
     expect(e.outputKind).toBe('embedding');
     expect(validateInferenceResult(emb, e).ok).toBe(true);
+  });
+});
+
+describe('W5B / E16 — in-platform domains (Entri Sell/Connect/Monitor)', () => {
+  it('searches → purchases → auto-DNS → Monitor webhook records to the project', async () => {
+    const { runDeploy } = await import('@/server/deploy/deploy-service');
+    const {
+      checkAvailability, purchaseDomain, recordMonitorWebhook, signMonitorPayload,
+    } = await import('@/server/domains/domain-service');
+    const store = await import('@/server/tenancy/tenant-store');
+    const { tenantId, projectId } = await buildFixtureApp();
+
+    // Ship first (a domain attaches to a deploy).
+    const dep = await runDeploy({
+      tenantId, projectId, kind: 'prism-cloud',
+      appName: 'Nova Ship', appOrigin: 'http://localhost:3000', nowIso: new Date().toISOString(),
+    });
+    const deployId = dep!.record.id;
+
+    // 1. Availability search (sandbox — deterministic, source-cited).
+    const results = checkAvailability('novaship', 'entri');
+    expect(results.length).toBeGreaterThan(2);
+    expect(results.every((r) => r.mode === 'sandbox')).toBe(true);
+    expect(results.some((r) => /sandbox/.test(r.source))).toBe(true);
+    const pick = results.find((r) => r.available)!;
+    expect(pick.price?.registerUsd).toBeGreaterThan(0);
+
+    // 2. Purchase + Connect auto-DNS (no charge, real order + DNS records).
+    const order = await purchaseDomain({
+      tenantId, projectId, deployId, domain: pick.domain, provider: 'entri', nowIso: new Date().toISOString(),
+    });
+    expect(order?.status).toBe('sandbox');
+    expect(order?.dnsRecords.length).toBeGreaterThan(0);
+    expect(order?.dnsRecords.some((r) => r.type === 'TXT')).toBe(true);
+    // Recorded to the deploy: customDomain pending.
+    let deploy = await store.getDeploy(tenantId, projectId, deployId);
+    expect(deploy?.customDomain).toBe(pick.domain);
+    expect(deploy?.domainStatus).toBe('pending');
+
+    // 3. A SIGNED Monitor webhook (domain.active) flips the status to verified.
+    const evt = {
+      event: 'domain.active' as const,
+      domain: pick.domain,
+      provider: 'entri' as const,
+      deployId,
+      at: new Date().toISOString(),
+    };
+    const rec = await recordMonitorWebhook(evt, signMonitorPayload(evt));
+    expect(rec?.ok).toBe(true);
+    expect(rec?.domainStatus).toBe('verified');
+    deploy = await store.getDeploy(tenantId, projectId, deployId);
+    expect(deploy?.domainStatus).toBe('verified');
+
+    // 4. A BAD signature is rejected (webhook auth).
+    const bad = await recordMonitorWebhook(evt, 'deadbeef');
+    expect(bad).toBeNull();
+  });
+
+  it('exposes provider descriptors with sandbox mode + required env names', async () => {
+    const { getDomainProviders } = await import('@/server/domains/domain-registry');
+    const providers = getDomainProviders();
+    expect(providers.map((p) => p.provider)).toEqual(['entri', 'vercel-registrar', 'cloudflare-registrar']);
+    expect(providers.every((p) => p.mode === 'sandbox')).toBe(true);
+    expect(providers[0].requiredEnv).toContain('ENTRI_APPLICATION_ID');
   });
 });

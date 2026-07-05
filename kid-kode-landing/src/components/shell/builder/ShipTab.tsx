@@ -22,6 +22,7 @@ import {
   refreshStatus,
 } from '@/lib/shell/conductor-client';
 import { listVersions } from '@/lib/shell/tenancy-client';
+import DomainPurchaseModal from './DomainPurchaseModal';
 
 function CheckRow({ check }: { check: VerifyCheck | undefined }) {
   if (!check) return null;
@@ -43,6 +44,7 @@ export default function ShipTab({ projectId }: { projectId: string }) {
   const [versions, setVersions] = useState<PrismProjectVersion[]>([]);
   const [busy, setBusy] = useState(false);
   const [domain, setDomain] = useState('');
+  const [domainModalOpen, setDomainModalOpen] = useState(false);
 
   const built = status?.phase === 'built';
   const latch = status?.latch ?? null;
@@ -150,10 +152,23 @@ export default function ShipTab({ projectId }: { projectId: string }) {
               aria-label="Custom domain"
             />
             <button type="button" className="bw1-minibtn" onClick={onSaveDomain} disabled={busy}>
-              {latest.domainStatus === 'pending' ? 'Pending DNS' : 'Attach'}
+              {latest.domainStatus === 'pending' ? 'Pending DNS' : latest.domainStatus === 'verified' ? 'Verified' : 'Attach'}
             </button>
           </div>
+          <button type="button" className="sw-buy-domain" onClick={() => setDomainModalOpen(true)}>
+            Buy a domain in-platform (E16) →
+          </button>
         </div>
+      ) : null}
+
+      {domainModalOpen && latest ? (
+        <DomainPurchaseModal
+          projectId={projectId}
+          deployId={latest.id}
+          initialQuery={domain || 'my-app'}
+          onClose={() => setDomainModalOpen(false)}
+          onPurchased={(d) => { setDomain(d); void reload(); }}
+        />
       ) : null}
 
       {/* Recent ships + post-ship verification (E15 · §11.2) */}

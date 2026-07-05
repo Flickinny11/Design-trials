@@ -1,1 +1,1 @@
-[01:13:06] SHELL-W5B: still building · 14m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:20:07] SHELL-W5B: still building · 21m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)

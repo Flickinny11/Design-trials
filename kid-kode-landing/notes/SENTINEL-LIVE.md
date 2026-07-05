@@ -1292,3 +1292,6 @@ complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
 [01:06:05] SHELL-W5B · 7m · agent=1 · commit 6219bae4 — shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
 [01:09:35] SHELL-W5B · 11m · agent=1 · still building · 11m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
 [01:13:06] SHELL-W5B · 14m · agent=1 · still building · 14m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:15:06] SHELL-W5B · 16m · agent=1 · commit 42a1f3ee — shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:16:36] SHELL-W5B · 18m · agent=1 · still building · 18m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:20:07] SHELL-W5B · 21m · agent=1 · still building · 21m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)

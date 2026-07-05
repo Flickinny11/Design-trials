@@ -1489,3 +1489,6 @@ Toolbar fully REBUILT from GENERATED Tripo v3.1 GLBs (procedural forms discarded
 [01:06:05] CHAIN/SHELL-W5B: commit 6219bae4 — shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
 [01:09:35] CHAIN/SHELL-W5B: still building · 11m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
 [01:13:06] CHAIN/SHELL-W5B: still building · 14m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:15:06] CHAIN/SHELL-W5B: commit 42a1f3ee — shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:16:36] CHAIN/SHELL-W5B: still building · 18m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)
+[01:20:07] CHAIN/SHELL-W5B: still building · 21m elapsed · agent up · 1131 commits · last: shell-w5b: E15 host adapters + post-ship verification (§11.2)

@@ -20,6 +20,7 @@ import { agentChatRequestSchema } from '../../../packages/shared-interfaces/src/
 import { runStubAgent } from '../agent/stub-agent';
 import { protectedProcedure, router } from './init';
 import { conductorRouter } from './routers/conductor';
+import { domainsRouter } from './routers/domains';
 import { intakeRouter } from './routers/intake';
 import { integrationsRouter } from './routers/integrations';
 import { sharingRouter } from './routers/sharing';
@@ -41,6 +42,8 @@ export const appRouter = router({
   integrations: integrationsRouter,
   /** W5 — the Conductor build/deploy/verify surface. */
   conductor: conductorRouter,
+  /** W5B — in-platform domains (E16: search · buy · auto-DNS · Monitor). */
+  domains: domainsRouter,
   /** W7 — org sharing + enterprise surface (spec §6.9 S9, decision E). */
   sharing: sharingRouter,
 });
