@@ -148,9 +148,10 @@ export function textNode(spec: NodeSpec, text: string, opts: TextOpts = {}): Pri
     letterSpacing: -0.01,
     fill,
     // ConductorRuntime never applies the hub lightingSpec (default dim rig), so
-    // lit extruded text stays dark — a strong glow drives the emissive channel
-    // so template headlines read bright/legible regardless of the rig.
-    glow: { color, intensity: opts.glow ?? 1.15 },
+    // lit extruded text stays dark on dark backdrops — a strong glow drives the
+    // emissive channel and a LOW metalness keeps the faces from mirroring black,
+    // so headlines read bright/legible on any template background.
+    glow: { color, intensity: opts.glow ?? 1.75 },
     extrude: {
       enabled: true,
       depth: 0.12,
@@ -159,8 +160,8 @@ export function textNode(spec: NodeSpec, text: string, opts: TextOpts = {}): Pri
       bevelSize: 0.016,
       bevelSegments: 3,
       curveSegments: 12,
-      metalness: 0.35,
-      roughness: 0.34,
+      metalness: 0.12,
+      roughness: 0.4,
       transmission: 0,
       faceFill: fill,
       sideFill: { kind: 'solid', color: darken(color) },

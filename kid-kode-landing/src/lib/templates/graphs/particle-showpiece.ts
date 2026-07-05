@@ -6,7 +6,7 @@
 // asset-free — every particle field is a node the runtime factory realizes.
 
 import type { GraphSource } from '@/lib/prism-graph/types';
-import { bind, fxNode, textNode, templateHub } from '../node-helpers';
+import { bind, fxNode, imageNode, textNode, templateHub } from '../node-helpers';
 
 const HUB = 'showpiece';
 
@@ -22,6 +22,21 @@ export const particleShowpieceGraph: GraphSource = {
     }),
   ],
   nodes: [
+    // Deep atmospheric backdrop far behind the particle layers — gives the
+    // scene a base tone and lets the extruded (metallic) headline catch light.
+    imageNode(
+      {
+        id: 'nova-backdrop',
+        hub: HUB,
+        caption: 'Deep atmospheric backdrop behind the particle layers.',
+        x: 0,
+        y: 0,
+        z: -6,
+        w: 20,
+        h: 12,
+      },
+      '/prism-mock/orrery/materia/backdrop.png',
+    ),
     // Deep galaxy field — slow rotation, the backdrop.
     fxNode({
       id: 'nova-galaxy',

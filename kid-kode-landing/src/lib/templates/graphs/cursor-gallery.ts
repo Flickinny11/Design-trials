@@ -53,6 +53,22 @@ export const cursorGalleryGraph: GraphSource = {
     }),
   ],
   nodes: [
+    // Atmospheric backdrop — gives the grid depth AND lets the extruded
+    // (metallic) title/footer catch light so they read on the dark page.
+    imageNode(
+      {
+        id: 'gallery-backdrop',
+        hub: HUB,
+        caption: 'Atmospheric backdrop behind the grid.',
+        x: 0,
+        y: 0,
+        z: -5,
+        w: 17,
+        h: 10,
+        bindings: [bind('parallax', 'pointer', { params: { strength: 0.08 } })],
+      },
+      '/prism-mock/orrery/materia/backdrop.png',
+    ),
     textNode(
       {
         id: 'gallery-title',
