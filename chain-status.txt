@@ -1,1 +1,1 @@
-[21:58:41] SHELL-W7: commit 28981cc4 — shell-w7: record deviations (W7-D1 CollabRoom adapter seam · W7-D2 audit
+[22:04:42] SHELL-W7: still building · 18m elapsed · agent up · 1108 commits · last: shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi

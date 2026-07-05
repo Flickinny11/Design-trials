@@ -1198,3 +1198,6 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [21:54:10] SHELL-W7 · 7m · agent=1 · still building · 7m elapsed · agent up · 1106 commits · last: shell-w6: run report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advoc
 [21:57:40] SHELL-W7 · 11m · agent=1 · still building · 11m elapsed · agent up · 1106 commits · last: shell-w6: run report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advoc
 [21:58:41] SHELL-W7 · 12m · agent=1 · commit 28981cc4 — shell-w7: record deviations (W7-D1 CollabRoom adapter seam · W7-D2 audit
+[22:01:11] SHELL-W7 · 14m · agent=1 · still building · 14m elapsed · agent up · 1108 commits · last: shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi
+[22:01:11] SHELL-W7 · 14m · agent=1 · commit a75ab1d1 — shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi
+[22:04:42] SHELL-W7 · 18m · agent=1 · still building · 18m elapsed · agent up · 1108 commits · last: shell-w7: contracts (I4) — prism-sharing.ts (org/roles/grants + permissi

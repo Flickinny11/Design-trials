@@ -31,11 +31,16 @@ import { createHash, randomUUID } from 'node:crypto';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import {
+  PRISM_DEFAULT_NOTIFICATION_PREFS,
+  PRISM_TENANCY_CONTRACT_VERSION,
+  prismAccountSettingsSchema,
   prismProjectSchema,
   prismProjectVersionSchema,
   prismTenancyIdSchema,
   prismTenantAssetSchema,
+  type PrismAccountSettings,
   type PrismBuildState,
+  type PrismNotificationPrefs,
   type PrismProject,
   type PrismProjectVersion,
   type PrismTenantAsset,
@@ -212,6 +217,16 @@ export async function setProjectModelOverride(
   modelOverrideId: string | null,
 ): Promise<PrismProject | null> {
   return updateProject(tenantId, projectId, (p) => ({ ...p, modelOverrideId }));
+}
+
+/** W7 — link a project to an enterprise org (set when the owner shares it).
+ *  Owner-keyed like every mutation here; cross-tenant callers never reach it. */
+export async function setProjectOrg(
+  tenantId: string,
+  projectId: string,
+  orgId: string | null,
+): Promise<PrismProject | null> {
+  return updateProject(tenantId, projectId, (p) => ({ ...p, orgId }));
 }
 
 export async function setBuildState(
@@ -492,6 +507,65 @@ export async function countUsage(
     if (Array.isArray(versions)) checkpoints += versions.length;
   }
   return { projects: projects.length, builds, checkpoints };
+}
+
+// ── Account settings (W7 — settings depth; tenant-keyed like everything) ─────
+
+function accountSettingsPath(tenantId: string): string {
+  return insideTenant(tenantId, 'account-settings.json');
+}
+
+const DEFAULT_ACCOUNT_SETTINGS: PrismAccountSettings = {
+  v: PRISM_TENANCY_CONTRACT_VERSION,
+  defaultModelId: null,
+  notifications: PRISM_DEFAULT_NOTIFICATION_PREFS,
+};
+
+export async function getAccountSettings(
+  tenantId: string,
+): Promise<PrismAccountSettings> {
+  const raw = await readJson<unknown>(accountSettingsPath(tenantId));
+  const parsed = prismAccountSettingsSchema.safeParse(raw);
+  return parsed.success ? parsed.data : DEFAULT_ACCOUNT_SETTINGS;
+}
+
+export async function setAccountSettings(
+  tenantId: string,
+  patch: {
+    defaultModelId?: string | null;
+    notifications?: Partial<PrismNotificationPrefs>;
+  },
+): Promise<PrismAccountSettings> {
+  return serialized(tenantId, async () => {
+    const current = await getAccountSettings(tenantId);
+    const next = prismAccountSettingsSchema.parse({
+      v: PRISM_TENANCY_CONTRACT_VERSION,
+      defaultModelId:
+        patch.defaultModelId !== undefined
+          ? patch.defaultModelId
+          : current.defaultModelId,
+      notifications: {
+        ...current.notifications,
+        ...(patch.notifications ?? {}),
+      },
+    });
+    await writeJson(accountSettingsPath(tenantId), next);
+    return next;
+  });
+}
+
+/** W7-D3 danger zone — irreversibly wipe ALL of this tenant's Prism data.
+ *  Better Auth's own user row is left to the auth admin surface (deviation
+ *  W7-D3); the caller signs the session out. */
+export async function deleteAllTenantData(tenantId: string): Promise<boolean> {
+  return serialized(tenantId, async () => {
+    try {
+      await fs.rm(tenantRoot(tenantId), { recursive: true, force: true });
+      return true;
+    } catch {
+      return false;
+    }
+  });
 }
 
 // ── Assets (content-addressed binaries, tenant-keyed) ───────────────────────
