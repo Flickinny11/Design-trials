@@ -12,6 +12,7 @@ import LandingHero from '@/components/marketing/LandingHero';
 import { FeatureIcon, TemplateThumb } from '@/components/marketing/islands';
 import IntegrationsWall from '@/components/marketing/forge/IntegrationsWall';
 import CapabilityShowcase from '@/components/marketing/forge/CapabilityShowcase';
+import PipelineFlow from '@/components/marketing/forge/PipelineFlow';
 import { FEATURES, HOW_STEPS, STATS, TEMPLATES, PRICING_TIERS, FAQ, MANAGED_CARE } from '@/lib/marketing/content';
 
 export const metadata: Metadata = {
@@ -61,6 +62,7 @@ export default function LandingPage() {
         <p className="mk-lead">
           The guided path does the heavy lifting — you stay in control at every gate.
         </p>
+        <PipelineFlow />
         <div className="mk-steps">
           {HOW_STEPS.map((step) => (
             <article className="mk-step" key={step.n}>

@@ -699,6 +699,50 @@
   margin: 0;
 }
 
+/* ── How-it-works pipeline (W9, req #3): a signal travels the 5-stage rail ─── */
+.mk-flow {
+  position: relative;
+  width: 100%;
+  height: clamp(240px, 30vw, 340px);
+  margin-top: clamp(24px, 3.5vw, 40px);
+  margin-bottom: clamp(12px, 2vw, 24px);
+}
+.mk-flow-canvas { position: absolute; inset: 0; }
+.mk-flow-poster {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 40% at 50% 42%, rgba(var(--pp-red-rgb), 0.10) 0%, transparent 60%);
+}
+.mk-flow-labels { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.mk-flow-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity var(--pp-motion-med) var(--pp-ease-settle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  white-space: nowrap;
+}
+.mk-flow-label-n {
+  font-family: var(--mk-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--pp-red);
+}
+.mk-flow-label-name {
+  font-family: var(--mk-font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.05em;
+  color: var(--pp-text-hi);
+}
+@media (max-width: 640px) {
+  .mk-flow-label-name { font-size: 10.5px; }
+}
+
 /* ── Capability showcase (W9, req #2): one live scene, three states ────────── */
 .mk-show {
   position: relative;
