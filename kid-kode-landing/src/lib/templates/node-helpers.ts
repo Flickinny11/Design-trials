@@ -9,6 +9,7 @@ import type {
   CursorLayerConfig,
   HubTransitionPreset,
   MaterialSpec,
+  LightingSpec,
   MeshPrimitive,
   PrismBehaviorSpec,
   PrismHub,
@@ -16,6 +17,21 @@ import type {
   ScenePosition,
   TextSpec,
 } from '@/lib/prism-graph/types';
+
+// A bright, generous default rig so lit materials (MSDF glyph MeshStandard, GLB
+// MeshPhysical) read on a dark backdrop — templates author no per-node lighting.
+const DEFAULT_TEMPLATE_LIGHTING: LightingSpec = {
+  tier: 'auto',
+  ambientIntensity: 0.55,
+  envIntensity: 0.85,
+  shadowSoftness: 0.7,
+  lights: [
+    { id: 'key', type: 'directional', color: '#fff2d8', intensity: 2.6, position: { x: -3, y: 4, z: 6 }, castShadow: true },
+    { id: 'fill', type: 'directional', color: '#cfe0ff', intensity: 1.1, position: { x: 4, y: 1, z: 4 } },
+    { id: 'rim', type: 'directional', color: '#8fb0ff', intensity: 0.9, position: { x: 2, y: -2, z: -4 } },
+    { id: 'amb', type: 'hemisphere', color: '#e4ecff', groundColor: '#1c2029', intensity: 0.8 },
+  ],
+};
 
 function emptyBehavior(): PrismBehaviorSpec {
   return {
@@ -98,18 +114,68 @@ export interface TextOpts {
   size?: number;
   color?: string;
   align?: 'left' | 'center' | 'right';
+  family?: string;
+  /** Emissive glow intensity (default 0.25). */
+  glow?: number;
+  /** Reveal on in-view via the kinetic-text cinematic primitive (default true). */
+  reveal?: boolean;
 }
 
-/** A real MSDF text node — no asset, renders anywhere. */
+/** Darken a hex colour by `f` (0..1) for the extruded side fill. */
+function darken(hex: string, f = 0.55): string {
+  const h = hex.replace('#', '');
+  const n = parseInt(h.length === 3 ? h.split('').map((c) => c + c).join('') : h, 16);
+  const r = Math.round(((n >> 16) & 255) * (1 - f));
+  const g = Math.round(((n >> 8) & 255) * (1 - f));
+  const b = Math.round((n & 255) * (1 - f));
+  return '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
+}
+
+/** A real TRUE-3D EXTRUDED text node (canvas-spec §7). Renders via font vector
+ *  outlines — the proven path the mock app uses in ConductorRuntime (flat MSDF
+ *  glyph atlases don't bind reliably in that host). Lit + bevelled + premium,
+ *  which also reads better than flat text against SR's slide type. Reveals on
+ *  in-view via the kinetic-text cinematic primitive (E8 inview driver). */
 export function textNode(spec: NodeSpec, text: string, opts: TextOpts = {}): PrismNode {
-  const textSpec: TextSpec = { content: text, align: opts.align ?? 'center' };
-  if (opts.weight) textSpec.fontWeight = opts.weight;
-  if (opts.size) textSpec.fontSize = opts.size;
-  if (opts.color) textSpec.fill = { kind: 'solid', color: opts.color };
-  return baseNode(
+  const color = opts.color ?? '#f2ecdd';
+  const fill = { kind: 'solid' as const, color };
+  const textSpec: TextSpec = {
+    content: text,
+    fontFamily: opts.family ?? 'Playfair Display',
+    fontWeight: opts.weight ?? 600,
+    fontSize: opts.size ?? 0.5,
+    align: opts.align ?? 'center',
+    letterSpacing: -0.01,
+    fill,
+    // ConductorRuntime never applies the hub lightingSpec (default dim rig), so
+    // lit extruded text stays dark — a strong glow drives the emissive channel
+    // so template headlines read bright/legible regardless of the rig.
+    glow: { color, intensity: opts.glow ?? 1.15 },
+    extrude: {
+      enabled: true,
+      depth: 0.12,
+      bevelEnabled: true,
+      bevelThickness: 0.02,
+      bevelSize: 0.016,
+      bevelSegments: 3,
+      curveSegments: 12,
+      metalness: 0.35,
+      roughness: 0.34,
+      transmission: 0,
+      faceFill: fill,
+      sideFill: { kind: 'solid', color: darken(color) },
+    },
+  };
+  const node = baseNode(
     { serviceTag: 'ui-text', subtype: 'headline-text', ...spec },
-    { renderMode: 'text', textSpec },
+    { renderMode: 'text', textSpec, receivesLighting: true },
   );
+  if (opts.reveal !== false) {
+    node.cinematicPrimitives = [
+      { name: 'kinetic-text', params: { stagger: 0.045, duration: 0.7, effect: 'wave', easing: 'power3.out' }, trigger: 'inview' },
+    ];
+  }
+  return node;
 }
 
 /** A parametric mesh (cube/plane/sphere/…) with a PBR material — no asset. Use
@@ -193,6 +259,7 @@ export interface HubSpec {
   cursor?: CursorLayerConfig;
   transitionPreset?: HubTransitionPreset;
   contentHeight?: number;
+  lightingSpec?: LightingSpec;
 }
 
 export function templateHub(spec: HubSpec): PrismHub {
@@ -206,6 +273,7 @@ export function templateHub(spec: HubSpec): PrismHub {
       contentHeight: spec.contentHeight ?? 720,
       backgroundColor: spec.backgroundColor,
     },
+    lightingSpec: spec.lightingSpec ?? DEFAULT_TEMPLATE_LIGHTING,
     ...(spec.cursor ? { cursor: spec.cursor } : {}),
     ...(spec.transitionPreset ? { transitionPreset: spec.transitionPreset } : {}),
   };

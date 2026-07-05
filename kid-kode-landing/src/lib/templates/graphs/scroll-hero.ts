@@ -7,7 +7,7 @@
 // transition (E10). Everything is a node; everything is editable in canvas.
 
 import type { GraphSource } from '@/lib/prism-graph/types';
-import { bind, glbNode, imageNode, textNode, fxNode, templateHub } from '../node-helpers';
+import { bind, glbNode, imageNode, textNode, templateHub } from '../node-helpers';
 
 const HUB = 'hero';
 
@@ -24,18 +24,21 @@ export const scrollHeroGraph: GraphSource = {
     }),
   ],
   nodes: [
-    // Ambient star/dust field behind everything (time-driven, self-generating).
-    fxNode({
-      id: 'hero-field',
-      hub: HUB,
-      caption: 'Ambient cosmic dust field behind the hero.',
-      x: 0,
-      y: 0,
-      z: -3,
-      w: 16,
-      h: 10,
-      bindings: [bind('cosmic-dust', 'time', { params: { count: 900 } })],
-    }),
+    // Rich atmospheric backdrop plane (parallaxes gently to the cursor for depth).
+    imageNode(
+      {
+        id: 'hero-backdrop',
+        hub: HUB,
+        caption: 'Atmospheric backdrop — subtle cursor parallax for depth.',
+        x: 0,
+        y: 0,
+        z: -4,
+        w: 15,
+        h: 9,
+        bindings: [bind('parallax', 'pointer', { params: { strength: 0.12 } })],
+      },
+      '/prism-mock/orrery/materia/backdrop.png',
+    ),
     // The product hero — floats on idle, tilts toward the cursor, and scales
     // through the scroll scrub as you descend.
     glbNode(
@@ -48,6 +51,7 @@ export const scrollHeroGraph: GraphSource = {
         z: 0.4,
         w: 3.4,
         h: 3.4,
+        scale: 3.2,
         bindings: [
           bind('float', 'time', { params: { amplitude: 0.05, periodSec: 6 } }),
           bind('pointer-tilt-3d', 'pointer', { params: { strength: 0.5 } }),
