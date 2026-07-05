@@ -363,6 +363,53 @@ describe('W5B / E18 — host recommendations + live pricing', () => {
   });
 });
 
+describe('W5B / §14.1 GATE — the whole ship-anywhere flow, end to end', () => {
+  it('ships to ≥2 targets (≥1 backend) post-ship green + domain sandbox + capability e2e', async () => {
+    const store = await import('@/server/tenancy/tenant-store');
+    const { runDeploy } = await import('@/server/deploy/deploy-service');
+    const { checkAvailability, purchaseDomain } = await import('@/server/domains/domain-service');
+    const { computeCompleteness, addCapability } = await import('@/server/conductor/ship-flow');
+    const { tenantId, projectId } = await buildFixtureApp();
+
+    // ── ships to ≥2 targets, ≥1 backend, each post-ship verified ──────────────
+    const frontendDep = await runDeploy({
+      tenantId, projectId, kind: 'vercel',
+      appName: 'Nova Ship', appOrigin: 'http://localhost:3000', nowIso: new Date().toISOString(),
+    });
+    const backendDep = await runDeploy({
+      tenantId, projectId, kind: 'runpod', nodeClass: 'text-embedder',
+      appName: 'Nova Ship', appOrigin: 'http://localhost:3000', nowIso: new Date().toISOString(),
+    });
+    const shipped = [frontendDep!.record, backendDep!.record];
+    expect(shipped.filter((r) => r.postShip?.status === 'pass').length).toBe(2);
+    expect(shipped.some((r) => r.category === 'backend')).toBe(true);
+    expect(shipped.some((r) => r.category === 'frontend')).toBe(true);
+
+    // ── domain flow proven sandbox ────────────────────────────────────────────
+    const avail = checkAvailability('novaship', 'entri');
+    const pick = avail.find((r) => r.available)!;
+    const order = await purchaseDomain({
+      tenantId, projectId, deployId: frontendDep!.record.id, domain: pick.domain, provider: 'entri', nowIso: new Date().toISOString(),
+    });
+    expect(order?.dnsRecords.length).toBeGreaterThan(0);
+
+    // ── completeness scan adds a missing capability end-to-end ────────────────
+    const before = await computeCompleteness(tenantId, projectId, new Date().toISOString());
+    expect(before!.cards.some((c) => c.category === 'email')).toBe(true);
+    const added = await addCapability(tenantId, projectId, 'email', 'http://localhost:3000', 'Nova Ship', new Date().toISOString());
+    expect(added!.latch.behavioral.status).toBe('pass');
+    expect(added!.scan.items.find((i) => i.category === 'email')?.present).toBe(true);
+
+    // Every graph mutation kept the app schema-complete + rooted (certified).
+    const { validatePlanRendererFields } = await import('@/lib/prism/codegen/plan-output-hook');
+    const { validateRootNode } = await import('@/lib/prism-graph/root-node');
+    const graph = (await store.getGraph(tenantId, projectId)) as never;
+    expect((graph as { nodes: Array<Parameters<typeof validatePlanRendererFields>[0]> }).nodes
+      .every((n) => !validatePlanRendererFields(n).some((v) => v.severity === 'error'))).toBe(true);
+    expect(validateRootNode(graph).ok).toBe(true);
+  });
+});
+
 describe('W5B / E20 — managed-care tier stub', () => {
   it('gates on tier, scaffolds flagged checks, keeps the free path', async () => {
     const { careStatus, setCareEnabled, scheduleCareCheck, SELF_HEAL_SEAM } = await import('@/server/care/managed-care');

@@ -255,7 +255,7 @@ export default function ChatRegion({ projectId }: { projectId: string }) {
           disabled={isStreaming}
           title="Scan your app for missing capabilities, then ship"
         >
-          ⚡ Ship &amp; make profitable
+          Ship &amp; make profitable
         </button>
       </div>
 
