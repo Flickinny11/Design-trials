@@ -17,7 +17,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Vector3 } from 'three';
 import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
 import { mountFromGraphSource, type MountGraphResult } from '@/lib/prism/runtime/mount-graph';
+import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
 import { viewportFromNdc } from '@/lib/prism/runtime/shared/inview';
+import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import CustomCursorLayer from '@/components/shell/fx/CustomCursorLayer';
 import type { CursorLayerConfig, GraphSource } from '@/lib/prism-graph/types';
 
@@ -30,12 +32,33 @@ import type { CursorLayerConfig, GraphSource } from '@/lib/prism-graph/types';
 // rail's slot). DOM-host scope (prism-player), same as useScrollTimeline.
 const SCROLL_WHEEL_RANGE = 1400;
 
-function startDriverFeed(el: HTMLElement, result: MountGraphResult): () => void {
+function startDriverFeed(
+  el: HTMLElement,
+  result: MountGraphResult,
+  graph: GraphSource,
+): () => void {
   const hub = getSharedDriverHub();
   const camera = result.sceneRoot.camera;
   const nodes = result.adapterResult.nodes;
   let scrollProgress = 0;
   const probe = new Vector3();
+
+  // W8 — play each node's animationBindings (E8/E9 drivers) in the shipped app,
+  // exactly the way the canvas does (attachAnimationBindings). Without this the
+  // shared preview would render but sit static. Mounted-artifact target = the
+  // Object3D the adapter registered for that node.
+  const bindingDetachers: Array<() => void> = [];
+  const drivers = makeNodeDrivers(hub);
+  for (const node of graph.nodes) {
+    if (!node.animationBindings || node.animationBindings.length === 0) continue;
+    const root = nodes.get(node.nodeId);
+    if (!root) continue;
+    try {
+      bindingDetachers.push(attachAnimationBindings({ node, root, drivers }));
+    } catch {
+      /* one bad binding set must not break the mount */
+    }
+  }
 
   const onPointerMove = (e: PointerEvent) => {
     const rect = el.getBoundingClientRect();
@@ -76,6 +99,13 @@ function startDriverFeed(el: HTMLElement, result: MountGraphResult): () => void 
     el.removeEventListener('pointermove', onPointerMove);
     el.removeEventListener('pointerleave', onPointerLeave);
     el.removeEventListener('wheel', onWheel);
+    for (const d of bindingDetachers) {
+      try {
+        d();
+      } catch {
+        /* ignore */
+      }
+    }
   };
 }
 
@@ -132,7 +162,7 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
         }
         // W8 — wire real driver input now that the scene + node map exist.
         try {
-          feedTeardown = startDriverFeed(container, result);
+          feedTeardown = startDriverFeed(container, result, graph);
         } catch {
           /* input feed is best-effort; a static preview still renders */
         }
