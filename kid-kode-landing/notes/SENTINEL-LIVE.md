@@ -1223,3 +1223,4 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [22:48:18] SHELL-W7 · 62m · agent=1 · commit ca344d45 — shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
 [22:50:18] SHELL-W7 · 64m · agent=1 · still building · 64m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
 [22:53:49] SHELL-W7 · 67m · agent=1 · still building · 67m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
+[22:55:19] SHELL-W7 · 69m · agent=1 · commit 936190b4 — shell-w7: advocate polish — Share control shows red 'Org · edit' accent 

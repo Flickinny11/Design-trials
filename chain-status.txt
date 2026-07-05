@@ -1,1 +1,1 @@
-[22:53:49] SHELL-W7: still building · 67m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
+[22:55:19] SHELL-W7: commit 936190b4 — shell-w7: advocate polish — Share control shows red 'Org · edit' accent 
