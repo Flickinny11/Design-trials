@@ -45,6 +45,28 @@ export function ClearedRender() {
   return null;
 }
 
+/**
+ * Keeps a horizontal content span of ±`halfWidth` world-units in frame by
+ * dollying a perspective camera back on narrow / portrait viewports (the fixed
+ * marketing layouts — the integrations wall, the pipeline rail — are wide, so
+ * they clip on phones without this). Never dollies closer than the authored
+ * distance. Labels that project world positions through the camera follow it.
+ */
+export function FitWidth({ halfWidth, margin = 0.7 }: { halfWidth: number; margin?: number }) {
+  const camera = useThree((s) => s.camera) as unknown as THREE.PerspectiveCamera;
+  const size = useThree((s) => s.size);
+  const base = useState(() => camera.position.z)[0];
+  useFrame(() => {
+    if (!camera.isPerspectiveCamera) return;
+    const aspect = size.width / Math.max(1, size.height);
+    const need = (halfWidth + margin) / (Math.tan((camera.fov * Math.PI) / 180 / 2) * Math.max(0.5, aspect));
+    const target = Math.max(base, need);
+    camera.position.z += (target - camera.position.z) * 0.25;
+    camera.updateProjectionMatrix();
+  });
+  return null;
+}
+
 async function webgpuFactory(
   props: { canvas?: HTMLCanvasElement } & Record<string, unknown>,
 ): Promise<THREE.WebGLRenderer> {

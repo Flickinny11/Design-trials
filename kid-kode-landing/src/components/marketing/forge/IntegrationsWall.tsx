@@ -20,7 +20,7 @@ import Lazy3D from '../Lazy3D';
 import { MarkPoster } from '../posters';
 import { BrandMark } from '@/components/shell/intake/BrandMark3D';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
-import { ClearedRender } from './MarketingCanvas';
+import { ClearedRender, FitWidth } from './MarketingCanvas';
 import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 
 const MarketingCanvas = dynamic(() => import('./MarketingCanvas'), { ssr: false });
@@ -120,6 +120,7 @@ function WallScene({
   return (
     <>
       <ClearedRender />
+      <FitWidth halfWidth={4.6} />
       <ForgeEnvironment intensity={0.9} />
       <ForgeLights intensity={0.85} />
       {BRANDS.map((_, i) => (

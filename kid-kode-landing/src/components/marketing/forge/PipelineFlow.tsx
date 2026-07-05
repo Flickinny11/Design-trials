@@ -14,7 +14,7 @@ import { useMemo, useRef, type RefObject } from 'react';
 import * as THREE from 'three';
 import dynamic from 'next/dynamic';
 import Lazy3D from '../Lazy3D';
-import { ClearedRender } from './MarketingCanvas';
+import { ClearedRender, FitWidth } from './MarketingCanvas';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
 import { usePrefersReducedMotion } from '../../shell/builder/use-reduced-motion';
 import { CHROME, GUNMETAL, SIGNAL_RED, RED_HOT, RED_DEEP } from '@/components/shell/design/prism-premium-tokens';
@@ -130,6 +130,7 @@ function FlowScene({ progressRef, labelRefs, reduced }: { progressRef: RefObject
   return (
     <>
       <ClearedRender />
+      <FitWidth halfWidth={5.4} />
       <ForgeEnvironment intensity={0.9} />
       <ForgeLights intensity={0.85} />
       <group position={[0, 0.2, 0]}>
