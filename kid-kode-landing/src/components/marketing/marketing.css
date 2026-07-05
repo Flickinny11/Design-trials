@@ -699,6 +699,61 @@
   margin: 0;
 }
 
+/* ── Integrations wall (W9, DL15): one shared canvas of real brand marks with
+   DOM labels projected onto each mark ─────────────────────────────────────── */
+.mk-int-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 42vw, 500px);
+  margin-top: clamp(28px, 4vw, 44px);
+  border-radius: var(--pp-radius-5);
+  overflow: hidden;
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 30%, rgba(var(--pp-red-rgb), 0.06) 0%, transparent 60%),
+    var(--pp-elev-0);
+}
+.mk-int-canvas { position: absolute; inset: 0; }
+.mk-int-labels { position: absolute; inset: 0; pointer-events: none; }
+.mk-int-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity var(--pp-motion-med) var(--pp-ease-settle);
+  font-family: var(--mk-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--pp-text-mid);
+  white-space: nowrap;
+  padding: 6px 10px;
+  pointer-events: auto;
+  cursor: default;
+}
+.mk-int-label:hover { color: var(--pp-text-hi); }
+/* Static poster grid (pre-mount / low-GPU / reduced) */
+.mk-int-poster {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-content: center;
+  gap: 10px 16px;
+  padding: clamp(20px, 4vw, 44px);
+}
+.mk-int-poster-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.mk-int-poster-mark { width: clamp(40px, 6vw, 66px); height: clamp(40px, 6vw, 66px); opacity: 0.7; }
+.mk-int-poster-name {
+  font-family: var(--mk-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--pp-text-low);
+}
+@media (max-width: 720px) {
+  .mk-int-poster { grid-template-columns: repeat(3, 1fr); }
+}
+
 /* ── Gallery ───────────────────────────────────────────────────────────────── */
 .mk-gallery {
   display: grid;

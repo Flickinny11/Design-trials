@@ -10,6 +10,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import LandingHero from '@/components/marketing/LandingHero';
 import { FeatureIcon, TemplateThumb } from '@/components/marketing/islands';
+import IntegrationsWall from '@/components/marketing/forge/IntegrationsWall';
 import { FEATURES, HOW_STEPS, STATS, TEMPLATES, PRICING_TIERS, FAQ, MANAGED_CARE } from '@/lib/marketing/content';
 
 export const metadata: Metadata = {
@@ -79,6 +80,21 @@ export default function LandingPage() {
             </article>
           ))}
         </div>
+      </section>
+
+      {/* Integrations wall — DL15 real, colored, 3D brand marks */}
+      <section className="mk-section mk-wrap" aria-labelledby="mk-integrations">
+        <p className="mk-kicker">Connect anything</p>
+        <h2 className="mk-h2" id="mk-integrations">
+          Wire in the tools you already use.
+        </h2>
+        <p className="mk-lead">
+          A curated one-click catalog covers the popular integrations — and when
+          something is not on the list, an agent authors a connector for it. If it has
+          an API, you can wire it. Secrets stay server-side; nothing sensitive touches
+          the browser.
+        </p>
+        <IntegrationsWall />
       </section>
 
       {/* Gallery teaser */}
