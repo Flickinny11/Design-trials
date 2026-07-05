@@ -69,7 +69,9 @@ export async function fetchHostPricing(nowMs: number): Promise<Record<DeployTarg
         for (const kind of Object.keys(merged) as DeployTargetKind[]) {
           const live = raw[kind];
           if (live?.headline) {
-            merged[kind] = { kind, headline: live.headline, freshness: 'live', asOf: new Date(nowMs).toISOString().slice(0, 10), source: live.source ?? `${feed} (live)` };
+            // Never echo the (possibly private) feed URL into client-facing
+            // `source` — cite the feed by a fixed label unless it names a source.
+            merged[kind] = { kind, headline: live.headline, freshness: 'live', asOf: new Date(nowMs).toISOString().slice(0, 10), source: live.source ?? 'live pricing feed' };
           }
         }
         cache = { at: nowMs, pricing: merged };
