@@ -364,7 +364,7 @@ function buildAssembly(ctx: NodeContext, initialBuild: Build): Assembly {
   const casePart = makeGenPart(ctx, CASE_GEN_URL, 'case', CASE_SIZE, CASE_ROT_X, CASE_POS_Z,
     { baseColor: '#c9ced6', metalness: 1, roughness: 0.18, envMapIntensity: 1.4 } as MaterialSpec, 0.85, build.case);
   const bezelPart = makeGenPart(ctx, BEZEL_GEN_URL, 'bezel', BEZEL_SIZE, -Math.PI / 2, 0.0,
-    { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec, 0.6, build.bezel);
+    { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec, 0.4, build.bezel);
   const crownPart = makeGenPart(ctx, CROWN_GEN_URL, 'crown', CROWN_SIZE, 0, 0,
     { baseColor: '#c9ced6', metalness: 1, roughness: 0.2 } as MaterialSpec, 0.7, build.crown);
   const movement = makeMovement(ctx);
@@ -552,7 +552,7 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
   const REDUCED_POSE = 2.0; // frozen sweep phase → a pleasing spread of the hands
   // W9A: cinematic intro — a gentle eased reveal turn + scale-in on first mount.
   let introT = reduce ? 1 : 0;
-  if (!reduce) { yaw = -0.62; pitchTarget = 0.16; } // reveal from a slight angle → settle to a flattering downward tilt
+  if (!reduce) { yaw = -0.62; pitchTarget = 0.1; } // reveal from a slight angle → settle nearly face-on so the celestial dial sells itself
 
   // lazy scene resolution for the night dim of the SHARED hub lights (by name).
   let sceneRef: Object3D | null = null;

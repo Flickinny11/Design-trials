@@ -110,9 +110,23 @@ force-added exactly the 3 the factory fetches (case/bezel/crown) so the hero is 
 **Totals:** Tripo 180 credits (→ 460 left). Replicate ≈ $0.45 (well under the ~$5 cap). No keys in
 git/logs/report (I-SECRETS).
 
-## Judges
-- prism-criteria-reviewer: _pending_
-- user-advocate ("is this watch app a jaw-dropping showpiece?"): _pending_
+## Judges (both fresh-context, 0 MUST-FIX)
+- **prism-criteria-reviewer: PASS, 0 MUST-FIX.** All governing criteria met with cited diff
+  evidence — I-CANVAS/I-ENGINE (diff touches only the atelier factory + assets + notes; forbidden-
+  scope grep 0 hits), FP-05 window-scope sanctioned (atelier is outside the runtime forbid),
+  reduced-motion real (every claimed gate present at named lines), I-SECRETS (no keys tracked),
+  I-PROVENANCE (report/metrics reconcile exactly), I-SPEC (deviations committed before code), DL13
+  (all 4 GLBs tracked), DL16 (full tonal range). 3 non-blocking nits — all resolved: the stray
+  progress-log "bezel free?" musing (fixed), uncited `check-state*.png` debug frames (removed),
+  crown-geometry disclosure (already documented in W9A-D1).
+- **user-advocate ("jaw-dropping showpiece?"): PLEASED / PASS, 0 MUST-FIX** (validator
+  `valid:true`, `computedGate:PASS`). "The arrival dial is a genuinely beautiful rose-gold
+  celestial-orrery watch… a clear, dramatic upgrade" vs the near-black baseline; EXPLODE and the
+  night/lume glow both land; holds up on mobile. 2 taste FLAGS (non-blocking) — **both addressed
+  in a polish pass**: (1) the desktop default hero was too three-quarter/dark → resting pose moved
+  nearly face-on (`pitchTarget 0.16→0.10`) so the celestial dial sells itself on load; (2) the
+  bezel rim read a touch hot/sparkly → bezel grafted `normalScale 0.6→0.42` for a calmer,
+  haute-horlogerie specular. Re-captured `w9a-desktop-01-hero.png` reflects the polish.
 
 ## Marker
-`PRISM-SHELL-W9A: RUN COMPLETE` — on judges 0 MUST-FIX.
+`PRISM-SHELL-W9A: RUN COMPLETE`
