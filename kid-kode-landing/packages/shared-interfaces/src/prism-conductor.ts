@@ -320,6 +320,53 @@ export const deployListOutputSchema = z.object({
 });
 export type DeployListOutput = z.infer<typeof deployListOutputSchema>;
 
+// ── E18 host recommendations + live pricing ──────────────────────────────────
+
+/** Current pricing for one host, fetched at run time (E18). `asOf` + `source`
+ *  are cited in the UI so a cached/sandbox price is never mistaken for live. */
+export const hostPricingSchema = z.object({
+  kind: deployTargetKindSchema,
+  /** Short headline price string, e.g. "Free hobby · $20/mo pro" or
+   *  "~$0.60/hr A10G". */
+  headline: z.string().min(1).max(120),
+  /** `live` = fetched from a pricing feed this run; `cached` = within the ≤24h
+   *  cache; `static` = the dated fallback table (no live feed configured). */
+  freshness: z.enum(['live', 'cached', 'static']),
+  /** ISO date the price reflects. */
+  asOf: z.string().min(4).max(40),
+  /** The public source the price was compiled from (cited in UI). */
+  source: z.string().min(1).max(200),
+});
+export type HostPricing = z.infer<typeof hostPricingSchema>;
+
+/** A ranked host recommendation for the built graph (E18). */
+export const hostRecommendationSchema = z.object({
+  kind: deployTargetKindSchema,
+  label: z.string().min(1).max(80),
+  category: deployCategorySchema,
+  available: z.boolean(),
+  /** Why this host is recommended for THIS app (graph-derived). */
+  reason: z.string().min(1).max(200),
+  /** Rank within its category (0 = top pick). */
+  rank: z.number().int().nonnegative(),
+  pricing: hostPricingSchema,
+});
+export type HostRecommendation = z.infer<typeof hostRecommendationSchema>;
+
+export const recommendationsInputSchema = z
+  .object({ projectId: prismTenancyIdSchema })
+  .strict();
+export type RecommendationsInput = z.infer<typeof recommendationsInputSchema>;
+
+export const recommendationsOutputSchema = z.object({
+  v: z.literal(PRISM_CONDUCTOR_CONTRACT_VERSION),
+  /** Does the graph have backend/GPU nodes (E19)? Gates the backend recs. */
+  hasBackend: z.boolean(),
+  frontend: z.array(hostRecommendationSchema).max(8),
+  backend: z.array(hostRecommendationSchema).max(8),
+});
+export type RecommendationsOutput = z.infer<typeof recommendationsOutputSchema>;
+
 // ── E15 host requirements (what the Conductor reads + generates config from) ──
 
 /** The requirements a host declares — what the Conductor must generate to ship

@@ -11,7 +11,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import type { PrismProjectVersion } from '../../../../packages/shared-interfaces/src/prism-tenancy';
-import type { DeployTargetKind, VerifyCheck } from '../../../../packages/shared-interfaces/src/prism-conductor';
+import type { DeployTargetKind, RecommendationsOutput, VerifyCheck } from '../../../../packages/shared-interfaces/src/prism-conductor';
 import { useConductorStore } from '@/lib/shell/conductor-store';
 import {
   deployPreview,
@@ -20,6 +20,7 @@ import {
   exportBundle,
   refreshDeploys,
   refreshStatus,
+  getRecommendations,
 } from '@/lib/shell/conductor-client';
 import { listVersions } from '@/lib/shell/tenancy-client';
 import DomainPurchaseModal from './DomainPurchaseModal';
@@ -45,6 +46,7 @@ export default function ShipTab({ projectId }: { projectId: string }) {
   const [busy, setBusy] = useState(false);
   const [domain, setDomain] = useState('');
   const [domainModalOpen, setDomainModalOpen] = useState(false);
+  const [recs, setRecs] = useState<RecommendationsOutput | null>(null);
 
   const built = status?.phase === 'built';
   const latch = status?.latch ?? null;
@@ -57,6 +59,7 @@ export default function ShipTab({ projectId }: { projectId: string }) {
     } catch {
       /* ignore */
     }
+    setRecs(await getRecommendations(projectId));
   }, [projectId]);
 
   useEffect(() => {
@@ -187,6 +190,28 @@ export default function ShipTab({ projectId }: { projectId: string }) {
               </li>
             ))}
           </ul>
+        </div>
+      ) : null}
+
+      {/* Recommended hosts + live pricing (E18) */}
+      {recs ? (
+        <div className="sw-recs">
+          <span className="sw-section-label">Recommended for your app — current pricing (E18)</span>
+          {[...recs.frontend.slice(0, 2), ...recs.backend.slice(0, recs.hasBackend ? 2 : 0)].map((r) => (
+            <div key={r.kind} className="sw-rec" data-cat={r.category}>
+              <div className="sw-rec-body">
+                <span className="sw-rec-name">{r.label}{r.rank === 0 ? <span className="sw-rec-pick"> top pick</span> : null}</span>
+                <span className="sw-rec-reason">{r.reason}</span>
+                <span className="sw-rec-price">
+                  {r.pricing.headline}
+                  <span className="sw-rec-source"> · {r.pricing.freshness === 'static' ? 'as of' : r.pricing.freshness} {r.pricing.asOf} · {r.pricing.source}</span>
+                </span>
+              </div>
+              <button type="button" className="bw1-minibtn" onClick={() => onDeploy(r.kind)} disabled={busy}>
+                {r.category === 'backend' ? 'Ship node' : 'Deploy'}
+              </button>
+            </div>
+          ))}
         </div>
       ) : null}
 

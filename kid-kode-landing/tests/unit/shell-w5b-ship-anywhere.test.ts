@@ -323,3 +323,42 @@ describe('W5B / E19 — backend nodes → adapters mapping', () => {
     expect(dep!.record.postShip?.status).toBe('pass');
   });
 });
+
+describe('W5B / E18 — host recommendations + live pricing', () => {
+  it('recommends frontend hosts with cited pricing; backend only when GPU nodes exist', async () => {
+    const store = await import('@/server/tenancy/tenant-store');
+    const { recommendHosts, fetchHostPricing } = await import('@/server/deploy/pricing');
+    const { addBackendNodeToGraph } = await import('@/server/conductor/capability-authoring');
+    const { resolveDirection } = await import('@/server/conductor/directions');
+    const { tenantId, projectId } = await buildFixtureApp();
+
+    const graph = (await store.getGraph(tenantId, projectId)) as never;
+
+    // Frontend-only app: frontend recs present, backend recs empty.
+    const now = 1_800_000_000_000;
+    const recs = await recommendHosts(graph, 'Nova Ship', now);
+    expect(recs.hasBackend).toBe(false);
+    expect(recs.frontend.length).toBeGreaterThanOrEqual(3);
+    expect(recs.frontend[0].kind).toBe('prism-cloud'); // instant, top pick
+    expect(recs.frontend.some((r) => r.kind === 'vercel')).toBe(true);
+    expect(recs.backend).toHaveLength(0);
+    // Pricing is cited (source + asOf), never faked live.
+    const vercel = recs.frontend.find((r) => r.kind === 'vercel')!;
+    expect(vercel.pricing.source).toMatch(/vercel/);
+    expect(['static', 'cached', 'live']).toContain(vercel.pricing.freshness);
+    expect(vercel.pricing.asOf).toBeTruthy();
+
+    // Add a backend node → backend recs appear, ranked.
+    const brief = await store.getBrief(tenantId, projectId);
+    const { graph: next } = addBackendNodeToGraph(graph, 'text-generator', resolveDirection(brief!));
+    const recs2 = await recommendHosts(next, 'Nova Ship', now);
+    expect(recs2.hasBackend).toBe(true);
+    expect(recs2.backend.length).toBeGreaterThan(0);
+    expect(recs2.backend[0].category).toBe('backend');
+
+    // The ≤24h cache serves without a live feed (freshness stays static).
+    const p1 = await fetchHostPricing(now);
+    const p2 = await fetchHostPricing(now + 1000);
+    expect(p2['vercel'].asOf).toBe(p1['vercel'].asOf);
+  });
+});

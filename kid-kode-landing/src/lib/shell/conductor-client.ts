@@ -17,7 +17,9 @@ import {
   deployListOutputSchema,
   deployOutputSchema,
   exportOutputSchema,
+  recommendationsOutputSchema,
   type DeployTargetKind,
+  type RecommendationsOutput,
 } from '../../../packages/shared-interfaces/src/prism-conductor';
 import { useChatStore } from './chat-store';
 import { useConductorStore } from './conductor-store';
@@ -166,6 +168,14 @@ export async function setDeployDomain(opts: {
     return true;
   } catch {
     return false;
+  }
+}
+
+export async function getRecommendations(projectId: string): Promise<RecommendationsOutput | null> {
+  try {
+    return recommendationsOutputSchema.parse(await trpc.conductor.recommendations.query({ projectId }));
+  } catch {
+    return null;
   }
 }
 

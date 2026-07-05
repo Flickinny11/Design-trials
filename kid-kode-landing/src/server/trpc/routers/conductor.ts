@@ -29,6 +29,9 @@ import {
   completenessScanSchema,
   addCapabilityInputSchema,
   addCapabilityOutputSchema,
+  recommendationsInputSchema,
+  recommendationsOutputSchema,
+  type RecommendationsOutput,
   type ConductorStatus,
   type DeployOutput,
   type DeployRequirementsOutput,
@@ -42,6 +45,7 @@ import { runShipScan, computeCompleteness, addCapability } from '../../conductor
 import { runDeploy, rollbackDeploy } from '../../deploy/deploy-service';
 import { buildHostRequirements, getDeployTargets } from '../../deploy/deploy-targets';
 import { mapBackendNodes, hasBackendNodes } from '../../deploy/backend-nodes';
+import { recommendHosts } from '../../deploy/pricing';
 import type { GraphSource } from '../../../lib/prism-graph/types';
 import { buildExport } from '../../conductor/export-bundle';
 import { protectedProcedure, router } from '../init';
@@ -205,6 +209,22 @@ export const conductorRouter = router({
         hasBackend: hasBackendNodes(graph),
         mappings: mapBackendNodes(graph, owned.name),
       };
+    }),
+
+  /** E18 — ranked host recommendations (frontend + backend when the graph has
+   *  GPU nodes) with current pricing (≤24h cache, source cited). */
+  recommendations: protectedProcedure
+    .input(recommendationsInputSchema)
+    .query(async ({ ctx, input }): Promise<RecommendationsOutput> => {
+      const owned = await store.getProject(ctx.session.user.id, input.projectId);
+      if (!owned) notFound();
+      const graph = (await store.getGraph(ctx.session.user.id, input.projectId)) as unknown as GraphSource | null;
+      const nodes = (graph as { nodes?: unknown[] } | null)?.nodes;
+      if (!graph || !Array.isArray(nodes)) {
+        throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Build the app first.' });
+      }
+      const recs = await recommendHosts(graph, owned.name, Date.now());
+      return recommendationsOutputSchema.parse({ v: PRISM_CONDUCTOR_CONTRACT_VERSION, ...recs });
     }),
 
   /** E17 — the structured completeness scan (cards the chat renders). */

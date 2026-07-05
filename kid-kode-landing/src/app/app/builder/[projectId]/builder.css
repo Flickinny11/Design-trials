@@ -1768,6 +1768,25 @@
 .sw-target-env { font-size: 9px; color: #e7b45a; font-family: var(--pp-font-mono, var(--pp-font-mono-fallback)); }
 .sw-target-live { font-size: 9px; color: #8fe0a4; text-transform: uppercase; letter-spacing: 0.05em; }
 
+/* ── W5B recommended hosts + live pricing (E18) ─────────────────────────── */
+.sw-recs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+.sw-rec {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(232, 236, 242, 0.1);
+  background: rgba(12, 12, 18, 0.5);
+}
+.sw-rec[data-cat='backend'] { border-color: rgba(127, 178, 230, 0.24); }
+.sw-rec-body { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sw-rec-name { font-size: 12px; color: var(--pp-text-hi, #f4f1ea); font-weight: 600; }
+.sw-rec-pick { font-size: 9px; color: #8fe0a4; text-transform: uppercase; letter-spacing: 0.05em; }
+.sw-rec-reason { font-size: 10px; color: #9a958a; line-height: 1.3; }
+.sw-rec-price { font-size: 10px; color: #c9a86a; }
+.sw-rec-source { color: #7a766d; }
+
 /* ── W5B recent ships + post-ship verification (§11.2) ──────────────────── */
 .sw-ships { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
 .sw-ship-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
