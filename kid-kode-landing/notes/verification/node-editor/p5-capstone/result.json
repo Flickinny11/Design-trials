@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "name": "constrained-prompt-edit",
+      "applied": "2"
+    },
+    {
+      "name": "constrained-functions",
+      "attached": 6,
+      "statuses": [
+        "valid",
+        "fixed",
+        "fixed"
+      ]
+    },
+    {
+      "name": "constrained-integrations",
+      "intRefs": {
+        "hasRef": true,
+        "tokenLike": false,
+        "assets": 1
+      }
+    },
+    {
+      "name": "constrained-galaxy",
+      "ok": true
+    }
+  ],
+  "consoleErrors": [],
+  "notes": []
+}

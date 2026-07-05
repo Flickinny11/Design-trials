@@ -1,0 +1,17 @@
+{
+  "feature": "scroll-wave-ride",
+  "claim": "subject rides a travelling wave displacement as you scroll",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "No defects. Card rocks and bobs cleanly; chrome sharp at DPR-2; full card look intact at every phase. bandingScore 0.33-0.44 is the standard panel material.", "evidence": ["scroll-wave-ride/after/idle.png", "scroll-wave-ride/after/play-3.png", "metrics: play-1 bandingScore 0.329"] },
+    "q2_reads_as": { "answer": "Reads as riding a travelling wave: idle=card tilted up-right on a crest, play-1=rolled the other way and lower in a trough, play-3=tilted up-right again on the next crest with a different vertical position. The card rocks/banks as the wave passes. Full card chrome preserved, matches ground truth.", "evidence": ["scroll-wave-ride/after/idle.png", "scroll-wave-ride/after/play-1.png", "scroll-wave-ride/after/play-3.png"] },
+    "q3_discoverable": { "answer": "Yes, all 4 controls read. swellAmp scales the roll amplitude (low near-level, high big tilt); wavelength changes wave phase/shape at the pinned point; rollCoupling is the clearest (low flat, high strongly banked); chop changes the pose to a sharper angle. All visibly distinct.", "evidence": ["scroll-wave-ride/after/control-rollCoupling-low.png", "scroll-wave-ride/after/control-rollCoupling-high.png", "scroll-wave-ride/after/control-swellAmp-high.png", "control: wavelength changedFrac 0.2495"] },
+    "q4_responsive": { "answer": "Responsive: card rocks across play frames, frameDeltaMag 9.55 / 8.73 / 10.35; controls apply ~570-587ms, all changed:true.", "evidence": ["metrics: play-1 frameDeltaMag 9.55, play-3 frameDeltaMag 10.35", "control: swellAmp changedFrac 0.2466"] },
+    "q5_net": { "answer": "PLEASED — the card convincingly rides a swell, rocking on crests and troughs, the card look is never lost, and all four knobs do sensible things.", "evidence": ["scroll-wave-ride/after/control-rollCoupling-high.png", "scroll-wave-ride/after/play-1.png"] }
+  },
+  "mustFix": [],
+  "flags": [],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

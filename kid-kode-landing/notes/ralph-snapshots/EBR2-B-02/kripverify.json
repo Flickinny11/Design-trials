@@ -1,0 +1,24 @@
+{
+  "taskId": "EBR2-B-02",
+  "capturedAt": "2026-05-18T20:13:55.528Z",
+  "url": "http://localhost:4791/",
+  "verificationSurface": "playwright-fallback (verify-editor-runtimes.mjs)",
+  "fallbackReason": "kv_navigate MCP IPC repeatedly timed out at 10s (same pattern observed in EBR2-A-02/A-03); verify-editor-runtimes.mjs already drives Playwright + reports console/network errors, so its snapshot serves as the equivalent KripVerify pass.",
+  "console": [],
+  "network": [],
+  "interactions": [
+    "Navigated to http://localhost:4791/",
+    "Waited for canvas (preview-app inner runtime mount)",
+    "Captured outer.png (editor shell, view-mode toggle visible)",
+    "Captured inner.png (Prism player mounted with CompiledHubView prop)"
+  ],
+  "summary": {
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "criticalErrors": 0,
+    "networkErrors": 0,
+    "innerMounted": true,
+    "outerViewMode": "preview-app"
+  },
+  "notes": "EBR2-B-02 — Plumb CompiledHubView (active hub) into PrismHost props. The inner.png shows the preview-app rendering with the prop-supplied CompiledHubView driving cameraRail, background, and environmentFog (no in-host compile)."
+}

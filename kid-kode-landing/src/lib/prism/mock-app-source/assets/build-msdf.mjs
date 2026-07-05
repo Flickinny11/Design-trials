@@ -22,15 +22,15 @@ const outPng = join(outDir, 'font-inter.msdf.png');
 const outFnt = join(outDir, 'font-inter.msdf.fnt');
 const outJson = join(outDir, 'font-inter.msdf.json');
 
-const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©';
+const CHARSET = Array.from({ length: 127 - 32 }, (_, i) => String.fromCharCode(32 + i)).join('') + '—©·№…';
 
 const BASE_OPTIONS = {
   fieldType: 'msdf',
-  fontSize: 48,
+  fontSize: 64,
   charset: CHARSET,
   textureSize: [2048, 2048],
   texturePadding: 2,
-  distanceRange: 4,
+  distanceRange: 8,
   smartSize: true,
   pot: false,
   square: false,

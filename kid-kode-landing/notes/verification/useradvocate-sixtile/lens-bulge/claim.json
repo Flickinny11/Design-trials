@@ -1,0 +1,7 @@
+{
+  "name": "lens-bulge",
+  "label": "Bulge Strength",
+  "description": "A magnifying bulge swells under the cursor — the surface domes out optically, content magnified and stretching at the rim like glass over paper.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

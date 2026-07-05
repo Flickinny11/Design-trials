@@ -1,0 +1,48 @@
+{
+  "c01": {
+    "webgpu": {
+      "backend": "webgpu",
+      "canvasCount": 1
+    },
+    "canvasNodeCount": 6,
+    "fallback": {
+      "backend": "webgl2",
+      "gpuHidden": true,
+      "canvasNodeCount": 6
+    }
+  },
+  "c02": {
+    "galaxy": {
+      "assembledGroups": 0,
+      "canvasCount": 2
+    },
+    "canvasKeysStable": true,
+    "previewApp": {
+      "keys": 6,
+      "movers": 0
+    },
+    "previewKeysMatchCanvas": true,
+    "graphFile": {
+      "hashBefore": "21f7ad65c1e233ee7fca7bfc29410441",
+      "hashAfter": "21f7ad65c1e233ee7fca7bfc29410441",
+      "byteStable": true
+    }
+  },
+  "c10": {
+    "panel": {
+      "present": true,
+      "open": true,
+      "hasScrubber": true,
+      "secondsReadout": true,
+      "snapButtons": true,
+      "loopButton": true,
+      "headerButtons": 9,
+      "noFpsText": false
+    },
+    "scrubbed": {
+      "secondsAfterScrub": "1202.25"
+    }
+  },
+  "consoleErrors": [],
+  "pass": true
+}

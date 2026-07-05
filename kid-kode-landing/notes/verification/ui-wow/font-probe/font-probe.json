@@ -1,0 +1,85 @@
+{
+  "vars": {
+    "--font-display": "'display', 'display Fallback'",
+    "--font-ui": "'ui', 'ui Fallback'",
+    "--font-mono": "'mono', 'mono Fallback'",
+    "--ds-font-display": "'display', 'display Fallback', 'ui', 'ui Fallback', ui-sans-serif, system-ui, sans-serif",
+    "--ds-font-ui": "'ui', 'ui Fallback', ui-sans-serif, system-ui, sans-serif",
+    "--ds-font-mono": "'mono', 'mono Fallback', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+  },
+  "faces": [
+    {
+      "family": "display",
+      "weight": "200 700",
+      "status": "loaded"
+    },
+    {
+      "family": "display Fallback",
+      "weight": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "ui",
+      "weight": "100 900",
+      "status": "loaded"
+    },
+    {
+      "family": "ui Fallback",
+      "weight": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "mono",
+      "weight": "100 800",
+      "status": "loaded"
+    },
+    {
+      "family": "mono Fallback",
+      "weight": "normal",
+      "status": "unloaded"
+    },
+    {
+      "family": "__nextjs-Geist",
+      "weight": "400 600",
+      "status": "unloaded"
+    },
+    {
+      "family": "__nextjs-Geist Mono",
+      "weight": "400 600",
+      "status": "unloaded"
+    },
+    {
+      "family": "__nextjs-Geist",
+      "weight": "400 600",
+      "status": "unloaded"
+    },
+    {
+      "family": "__nextjs-Geist Mono",
+      "weight": "400 600",
+      "status": "unloaded"
+    }
+  ],
+  "check": {
+    "display": true,
+    "ui": true,
+    "mono": true,
+    "Clash Display": true,
+    "Geist": true,
+    "JetBrains Mono": true
+  },
+  "widths": {
+    "ds_display": 727.67,
+    "ds_ui": 705.52,
+    "ds_mono": 806.41,
+    "raw_display": 727.67,
+    "raw_ui": 705.52,
+    "raw_mono": 806.41,
+    "fb_serif": 639.09,
+    "fb_sans": 679.27,
+    "fb_mono": 809.16,
+    "clash": 639.09,
+    "geist": 639.09,
+    "jbmono": 639.09
+  },
+  "fontsStatus": "loaded"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "sand-pile",
+  "label": "Grain rate",
+  "description": "Brass grains rain down and build a growing dune grain by grain, then a gust sweeps it clean and it begins again.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

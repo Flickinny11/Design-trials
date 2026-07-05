@@ -1,0 +1,7 @@
+{
+  "name": "raindrop-ripple-sim",
+  "label": "Rain Rate",
+  "description": "Rain drops fall and impact a water surface; each impact splats a real propagating ripple into a wave-equation height field, so the surface is a living mesh of expanding, overlapping, interfering rings — fluid simulation, not a sine texture.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

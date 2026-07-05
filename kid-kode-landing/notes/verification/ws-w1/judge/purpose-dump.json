@@ -1,0 +1,41 @@
+{
+  "nodeId": "orr-arrival-headline",
+  "afterEdit": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "Sign Up Button",
+    "event": "click",
+    "effect": "submit the signup form",
+    "emits": [
+      "click",
+      "submit"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "name": "string"
+    },
+    "outputs": {
+      "accountId": "string"
+    }
+  },
+  "saveOk": true,
+  "afterReload": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "Sign Up Button",
+    "event": "click",
+    "effect": "submit the signup form",
+    "emits": [
+      "click",
+      "submit"
+    ],
+    "listens": [],
+    "inputs": {
+      "email": "string",
+      "name": "string"
+    },
+    "outputs": {
+      "accountId": "string"
+    }
+  },
+  "consoleErrors": []
+}

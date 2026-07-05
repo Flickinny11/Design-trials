@@ -1,0 +1,23 @@
+import { chromium } from 'playwright';
+import { mkdirSync } from 'node:fs';
+import { resolve } from 'node:path';
+const arg=(k,d)=>{const h=process.argv.find(a=>a.startsWith(`--${k}=`));return h?h.split('=').slice(1).join('='):d;};
+const BASE = arg('url','http://localhost:4810');
+const OUT = resolve(process.cwd(), arg('out','notes/verification/three-d-backgrounds/lab'));
+const Q = arg('q','preset=brass-nebula');  // query string
+const NAME = arg('name','lab');
+mkdirSync(OUT,{recursive:true});
+const b = await chromium.launch({ channel:'chrome', args:['--enable-unsafe-webgpu','--enable-features=Vulkan,WebGPU','--ignore-gpu-blocklist','--use-angle=metal'] }).catch(()=>chromium.launch());
+const ctx = await b.newContext({ viewport:{width:1440,height:900}, deviceScaleFactor:2 });
+const p = await ctx.newPage();
+const errs=[]; p.on('console',m=>{if(m.type()==='error')errs.push(m.text().slice(0,200))}); p.on('pageerror',e=>errs.push('PE:'+String(e).slice(0,200)));
+const INIT = arg('init','');
+if (INIT) await p.addInitScript(INIT);
+await p.goto(`${BASE}/bg-lab?${Q}`,{waitUntil:'domcontentloaded'});
+await new Promise(r=>setTimeout(r,4500));
+const file=`${OUT}/${NAME}.png`;
+await p.screenshot({path:file});
+const backend = await p.evaluate(()=>window.__PRISM_RENDERER_BACKEND__||'?');
+console.log(`${NAME} -> ${file} backend=${backend} errs=${errs.length}`);
+if(errs.length) console.log(errs.slice(0,6).join('\n'));
+await b.close();

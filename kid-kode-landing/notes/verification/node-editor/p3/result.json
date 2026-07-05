@@ -1,0 +1,83 @@
+{
+  "ok": true,
+  "steps": [
+    {
+      "name": "desktop-open",
+      "nodeId": "orr-arrival-headline"
+    },
+    {
+      "name": "desktop-search",
+      "hasRunpod": true
+    },
+    {
+      "name": "desktop-connected",
+      "refs": [
+        {
+          "platform": "RunPod",
+          "method": "oauth2.1",
+          "refId": "cap_runpod_oauth2.1_vulabz",
+          "refKeys": [
+            "refId",
+            "scope",
+            "label",
+            "provider",
+            "authMethod"
+          ],
+          "hasTokenLike": false,
+          "assets": [],
+          "contentIcon": "runpod"
+        }
+      ]
+    },
+    {
+      "name": "desktop-asset",
+      "refs": [
+        {
+          "platform": "RunPod",
+          "method": "oauth2.1",
+          "refId": "cap_runpod_oauth2.1_vulabz",
+          "refKeys": [
+            "refId",
+            "scope",
+            "label",
+            "provider",
+            "authMethod"
+          ],
+          "hasTokenLike": false,
+          "assets": [
+            "A100 80GB · us-east"
+          ],
+          "contentIcon": "runpod"
+        }
+      ]
+    },
+    {
+      "name": "desktop-roundtrip",
+      "refsAfterReload": [
+        {
+          "platform": "RunPod",
+          "method": "oauth2.1",
+          "refId": "cap_runpod_oauth2.1_vulabz",
+          "refKeys": [
+            "refId",
+            "scope",
+            "label",
+            "provider",
+            "authMethod"
+          ],
+          "hasTokenLike": false,
+          "assets": [
+            "A100 80GB · us-east"
+          ],
+          "contentIcon": "runpod"
+        }
+      ]
+    },
+    {
+      "name": "mobile",
+      "platformCount": 1
+    }
+  ],
+  "consoleErrors": [],
+  "notes": []
+}

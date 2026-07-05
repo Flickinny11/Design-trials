@@ -1,9 +1,11 @@
 # Cinematic Primitives Library Specification
 
-**Status:** Companion to `PRISM-RENDERER-MIGRATION-SPEC.md`
+**Status:** SUPPORTING doc (retained). Companion to the archived `PRISM-RENDERER-MIGRATION-SPEC.md`; now read under the canonical-3.
 **Date:** 2026-05-01
 
-> This document specifies the curated library of scene-level animation patterns that all generated nodes compose from. The codegen model SELECTS primitives by name in captions; it does NOT author bespoke scene animation. This is the lever that protects against the "Three.js looks like a school project at the median" problem.
+> **⚠️ Reconciliation note (2026-06-05, Phase 3B hardening).** The original framing below — "the codegen model SELECTS primitives by name … it does NOT author bespoke scene animation" — is **RESCINDED** by `PRISM-CANVAS-EDITOR-SPEC.md` §2 decision 6: animation is a **300+ primitive catalog AND from-scratch authoring**; both users and AI may author bespoke animations. These **9 primitives are the shipped seed set**, not a cage — they are a subset/extension-base of the canvas catalog, each expressible as an `Animatable` with a `ControlSchema` (canvas §8.3). **Do not re-encode any "no bespoke animation" rule.** This file is retained (per `SPEC-INDEX.md`, supporting tier) for the 9 seed primitives' parameter specs and the 6 TSL shaders; ignore the original "no scene-level animation from scratch" prohibition wherever it appears below (lines 6, 293). *(STEP-3 note: the prohibition is still enforced in code at `src/lib/prism/codegen/verifier.ts` `MISSING_PRIMITIVES_LOOP` and `src/lib/prism/codegen/prompts.ts` — recorded in `SPEC-INDEX.md` as a pending code change; no code edited by this pass.)*
+
+> *(Original status line, retained for provenance:)* This document specifies the curated library of scene-level animation patterns that all generated nodes compose from. ~~The codegen model SELECTS primitives by name in captions; it does NOT author bespoke scene animation.~~ *(rescinded — see note above.)* This is the lever that protects against the "Three.js looks like a school project at the median" problem.
 
 ---
 

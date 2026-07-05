@@ -1,0 +1,17 @@
+{
+  "feature": "scroll-path-scrub",
+  "claim": "subject follows a path/spline driven by scroll position",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "No defects. Card travels across the frame and banks cleanly; chrome sharp at DPR-2. The metrics effHue 280-318 on control frames is hue-noise on a near-neutral panel (effSat 0.02-0.03), NOT a purple tint — the rendered card reads as the standard graphite/brass palette.", "evidence": ["scroll-path-scrub/after/control-bank-high.png", "metrics: control-bank-low effSat 0.03 effHue 280 is noise on near-black, panel is neutral graphite"] },
+    "q2_reads_as": { "answer": "Reads as a card following a curved spline with banking: idle=card lower-left banked left with glowing brass header, play-1=moved up-left at a new angle, play-3=upper-right banked the other way. It travels along a path and rolls into the curves. Full card chrome preserved, matches ground truth.", "evidence": ["scroll-path-scrub/after/idle.png", "scroll-path-scrub/after/play-1.png", "scroll-path-scrub/after/play-3.png"] },
+    "q3_discoverable": { "answer": "Yes. bank control clearly increases the roll/tilt as the card moves through the curve (low near-level, high ~20 deg bank); travel control shifts how far along the path the card sits at the pinned point. Both produce visible changes.", "evidence": ["scroll-path-scrub/after/control-bank-low.png", "scroll-path-scrub/after/control-bank-high.png", "control: travel changedFrac 0.1679"] },
+    "q4_responsive": { "answer": "Responsive: large position/orientation deltas across play frames, frameDeltaMag 21.5 then 21.9 then 13.9; controls apply ~571-587ms.", "evidence": ["metrics: play-1 frameDeltaMag 21.54, play-2 frameDeltaMag 21.9", "control: bank changedFrac 0.1578"] },
+    "q5_net": { "answer": "PLEASED — the card clearly flies along a curved path and banks like a plane through a turn; the full card look is kept throughout and both knobs read.", "evidence": ["scroll-path-scrub/after/play-3.png", "scroll-path-scrub/after/control-bank-high.png"] }
+  },
+  "mustFix": [],
+  "flags": [{ "note": "travel control is subtler than bank (changedFrac 0.1679 but the two poses are close); reads as a smaller path-offset shift than a user might expect from a 'travel' label.", "evidence": "control: travel low vs high effRGB ~44 both, changedFrac 0.1679" }],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

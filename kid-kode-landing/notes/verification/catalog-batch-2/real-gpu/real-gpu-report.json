@@ -1,0 +1,33 @@
+{
+  "url": "http://localhost:4813/animation-catalog",
+  "startedAt": "2026-06-09T07:15:13.900Z",
+  "mode": "real-gpu headed Chrome",
+  "rig": {
+    "ready": true,
+    "backend": "webgpu",
+    "tileCount": 313,
+    "deviceLostCount": 0,
+    "adapter": null
+  },
+  "primitives": [
+    {
+      "name": "fireball-burst",
+      "captured": true,
+      "notes": []
+    }
+  ],
+  "notes": [],
+  "rigAtEnd": {
+    "backend": "webgpu",
+    "deviceLostCount": 0
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "summary": {
+    "targets": 1,
+    "captured": 1,
+    "backend": "webgpu",
+    "deviceLost": 0
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "feature": "scroll-snap-sections",
+  "claim": "The card clicks through magnetic section stops as you scroll — easing into each detent with a soft landing.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No broken/blank states. Idle, play-3, and all control frames keep the full ship-quality card (brass header, blue dot, 3 grey rows, rounded panel) crisp and well-framed. No clipping, no slab.",
+      "evidence": ["scroll-snap-sections/after/idle.png", "scroll-snap-sections/after/play-3.png", "scroll-snap-sections/after/control-sections-high.png", "metrics: 0 consoleErrors, 0 networkErrors, backend webgpu"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads as discrete section snapping: the card lands at distinct detent positions across idle->play-3 (steps up the frame) and the bounce-high frame shows a springy overshoot with a slight rotational squash + ovalized accent dot (the 'soft landing'). The detent behavior matches the claim.",
+      "evidence": ["scroll-snap-sections/after/play-3.png", "scroll-snap-sections/after/control-bounce-high.png", "scroll-snap-sections/after/control-sections-low.png"]
+    },
+    "q3_discoverable": {
+      "answer": "All four labeled controls change the frame sensibly: 'Sections' changes which detent the card lands on at the pinned scroll position (low lands lower, high lands higher), 'bounce' adds the springy overshoot, 'sharpness' and 'span' adjust the landing. A user dragging any slider sees a response.",
+      "evidence": ["scroll-snap-sections/after/control-sections-low.png", "scroll-snap-sections/after/control-sections-high.png", "scroll-snap-sections/after/control-bounce-high.png", "control: sections/sharpness/span/bounce all changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive: play deltas 10.28/10.27/10.33 show steady motion and all 4 controls are live (changed=true) with monotonic luma/banding shifts. No dead controls.",
+      "evidence": ["metrics: play-1 delta=10.28 play-2 delta=10.27 play-3 delta=10.33", "control: all 4 changed=true (bounce luma 16.4->15.2 band 0.536->0.594)"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'it clicks into place at each section and gives a satisfying little bounce' — the snap reads, the card stays pristine, and every slider does something.",
+      "evidence": ["scroll-snap-sections/after/control-bounce-high.png", "scroll-snap-sections/after/control-sections-high.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "The difference between sections-low and sections-high is modest (a small change in landing position); a touch more separation between detents would make the 'magnetic stops' effect more obviously dramatic.", "evidence": "control: sections changed=true but small (low.luma=16.3 -> high.luma=16.1)" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

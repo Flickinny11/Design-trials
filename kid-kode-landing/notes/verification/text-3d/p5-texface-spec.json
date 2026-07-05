@@ -1,0 +1,8 @@
+{
+  "textSpec": {
+    "content": "GOLD", "fontFamily": "Inter", "fontSize": 0.62, "fontWeight": 700,
+    "fill": { "kind": "texture", "url": "/prism-mock/library-content/abstract-gold.png" },
+    "extrude": { "enabled": true, "depth": 0.3, "bevelEnabled": true, "bevelThickness": 0.03, "bevelSize": 0.025, "curveSegments": 12, "metalness": 0.45, "roughness": 0.3 }
+  },
+  "rotations": [ { "label": "front", "x": 0, "y": 0 }, { "label": "hero-3q", "x": -0.12, "y": 0.55 } ]
+}

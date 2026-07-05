@@ -1,0 +1,7 @@
+{
+  "name": "turbulence-drift",
+  "label": "Turbulence",
+  "description": "Steel-and-ice dust drifts through an integrated curl-noise turbulence field with inertia — motes carry momentum across eddies, forming slow rolling swirls and filaments. Real advection, not a closed-form path.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

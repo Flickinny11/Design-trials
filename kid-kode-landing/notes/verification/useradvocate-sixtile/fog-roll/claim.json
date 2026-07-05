@@ -1,0 +1,7 @@
+{
+  "name": "fog-roll",
+  "label": "Roll",
+  "description": "A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

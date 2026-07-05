@@ -1,0 +1,7 @@
+{
+  "name": "soft-body-bounce",
+  "label": "Stiffness",
+  "description": "A soft luminous gel blob — an XPBD particle lattice — drops, hits the floor and squashes with real jiggle, then springs back to round via its distance constraints. Genuine soft-body deformation, not a scale tween.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

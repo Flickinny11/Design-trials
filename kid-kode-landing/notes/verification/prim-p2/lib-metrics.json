@@ -1,0 +1,98 @@
+{
+  "steps": [
+    {
+      "fam": "Metals",
+      "id": "metal.gold",
+      "selected": "metal.gold",
+      "ok": true
+    },
+    {
+      "fam": "Glass",
+      "id": "glass.smoke",
+      "selected": "glass.smoke",
+      "ok": true
+    },
+    {
+      "fam": "Gems",
+      "id": "gem.ruby",
+      "selected": "gem.ruby",
+      "ok": true
+    },
+    {
+      "fam": "Gems",
+      "id": "gem.diamond",
+      "selected": "gem.diamond",
+      "ok": true
+    },
+    {
+      "fam": "Stones",
+      "id": "stone.jade",
+      "selected": "stone.jade",
+      "ok": true
+    },
+    {
+      "fam": "Exotic",
+      "id": "exotic.oil-slick",
+      "selected": "exotic.oil-slick",
+      "ok": true
+    },
+    {
+      "fam": "Exotic",
+      "id": "exotic.soap-film",
+      "selected": "exotic.soap-film",
+      "ok": true
+    },
+    {
+      "fam": "Fabrics",
+      "id": "fabric.velvet-red",
+      "selected": "fabric.velvet-red",
+      "ok": true
+    },
+    {
+      "fam": "Woods",
+      "id": "wood.walnut",
+      "selected": "wood.walnut",
+      "ok": true
+    },
+    {
+      "fam": "Ceramics",
+      "id": "ceramic.cobalt-glaze",
+      "selected": "ceramic.cobalt-glaze",
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "authorship": {
+    "renderedCount": 3,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-1",
+        "kind": "pane",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-cube-1",
+        "kind": "cube",
+        "materialId": "metal.worn-sapphire"
+      },
+      {
+        "nodeId": "prim-sphere-1",
+        "kind": "sphere",
+        "materialId": "metal.worn-sapphire"
+      }
+    ],
+    "nodeIds": [
+      "prim-pane-1",
+      "prim-cube-1",
+      "prim-sphere-1"
+    ],
+    "orphans": [],
+    "unrealized": [],
+    "selectedMaterialId": "metal.worn-sapphire",
+    "ok": true
+  },
+  "selftest": {
+    "live": true,
+    "caughtCount": 2
+  }
+}

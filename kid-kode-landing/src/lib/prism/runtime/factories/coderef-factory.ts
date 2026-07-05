@@ -26,6 +26,7 @@ import type {
   NodeContext,
 } from '../shared/adapter';
 import { applyScenePosition } from '../shared/adapter';
+import { getRegisteredCodeRef } from './coderef-registry';
 import type { PrismNode } from '@/lib/prism-graph/types';
 
 const cache = new Map<string, Promise<CreateNodeFn>>();
@@ -37,6 +38,15 @@ const cache = new Map<string, Promise<CreateNodeFn>>();
 export function resolveCodeRef(url: string): Promise<CreateNodeFn> {
   const existing = cache.get(url);
   if (existing) return existing;
+  // FIX2 — bundled factories (e.g. 'builtin:atelier-watch') resolve from the
+  // registry; a native import() of a literal key would otherwise fail in the
+  // Next bundle. Only real URLs fall through to the dynamic-import path.
+  const registered = getRegisteredCodeRef(url);
+  if (registered) {
+    const rp = Promise.resolve(registered);
+    cache.set(url, rp);
+    return rp;
+  }
   const p = import(/* @vite-ignore */ url).then((mod: unknown) => {
     const fn = (mod as { default?: unknown })?.default;
     if (typeof fn !== 'function') {

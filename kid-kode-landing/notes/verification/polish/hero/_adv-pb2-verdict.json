@@ -1,0 +1,63 @@
+{
+  "feature": "PB-arrival-hero",
+  "claim": "All three text elements read cleanly — the big headline 'Time, machined.', the eyebrow line 'ORRERY No.7 — a celestial movement, eleven years in the making.' — and they are NOT occluded by anything; the hero artifact (the ORRERY watch) sits clear BELOW the text, present and lit.",
+  "groundTruthSibling": null,
+  "state": "polish/hero",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Settled state on all four viewports is clean — no white/green placeholder boxes, no grey vertical bar, no occlusion. The baseline defect is gone: in the BASELINE the watch sat ON TOP of the headline and behind the eyebrow; in v4 the watch is clearly below the text. One real wrinkle I hit while DRIVING it: on the largest desktop (1440x900) viewport the brass headline had NOT painted at the 8s settle (only eyebrow + watch were visible); it appeared and stayed by ~15-20s. That is a slow first-paint on desktop, not a persistent defect (three independent later desktop captures all show it present). Minor left-edge clip of the eyebrow on one desktop frame, still fully readable.",
+      "evidence": [
+        "_adv-pb2-desktop.png",
+        "_adv-pb2-desktop-20s.png",
+        "_adv-pb2-desktop-fresh15s.png",
+        "metrics: pb-occlusion-log maxOverlapFrac=0 on desktop/tablet/constrained/mobile (watch-vs-headline AABB overlap = 0)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads exactly as claimed in the settled state. Headline 'Time, machined.' renders in brass and is fully readable; eyebrow 'ORRERY No.7 — a celestial movement, eleven years in the making.' is readable and sits clear ABOVE the headline and clear of the top tab-bar; the ORRERY watch is present, lit (silver case, blue dial visible), and sits in the centre-lower band clearly BELOW the text. Verified on desktop, tablet, constrained, and mobile.",
+      "evidence": [
+        "_v4-arrival-desktop.png",
+        "_adv-pb2-tablet.png",
+        "_adv-pb2-constrained.png",
+        "_adv-pb2-mobile.png",
+        "metrics: watch peak=255 + heroLit=true all four viewports; verticalGap desktop=0.117, mobile=0.263 (text above, watch below)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "This is a landing-page hero, not an interactive control — a first-time user simply reads it. The reading order is unambiguous: eyebrow on top, big headline, hero watch below. Nothing to operate; the tab-bar (Arrival/The Movement/Materia/...) sits above and does not overlap the hero text.",
+      "evidence": [
+        "_adv-pb2-tablet.png",
+        "metrics: orr-arrival-sub cy above orr-arrival-headline cy above orr-arrival-watch cy on every viewport (rects in pb-occlusion-log)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "No jank in the settled state and zero console errors on all four viewports while driving it. The only responsiveness concern is the desktop first-paint latency of the brass headline (missing at 8s, present by ~15-20s) — slow, but it does resolve and hold; the watch and eyebrow paint promptly.",
+      "evidence": [
+        "console: 0 console errors on desktop/tablet/constrained/mobile while driving",
+        "_adv-pb2-desktop.png",
+        "_adv-pb2-desktop-fresh15s.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. As a user, the settled hero looks premium and reads cleanly on every screen size — the headline, eyebrow, and lit watch are all present and the watch is no longer covering the words. I would flag (not block) that on a big desktop the headline takes a beat to appear, so a user glancing away in the first few seconds could briefly see a hero without its headline.",
+      "evidence": [
+        "_v4-arrival-desktop.png",
+        "_adv-pb2-mobile.png",
+        "metrics: pb-occlusion-log pass=4/4, maxOverlapFrac=0"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Desktop (1440x900) first-paint latency: the brass headline 'Time, machined.' was still missing at the 8s settle (only eyebrow + watch visible) and only appeared by ~15-20s. The settled state is correct, but a user landing on a large screen could briefly see a headline-less hero. Tablet/constrained/mobile painted the headline within 8s. Recommend warming/preloading the headline MSDF+brass fill so it paints in the first second on desktop too.",
+      "evidence": "_adv-pb2-desktop.png : at 8s headline absent (eyebrow+watch only) vs _adv-pb2-desktop-fresh15s.png : headline present and held"
+    },
+    {
+      "note": "Minor eyebrow left-edge clip on one desktop frame ('RY No.7 — ...' slightly past the left margin) and a small overlap of the eyebrow's right end against the headline top; still fully readable. Viewport-jitter dependent — the v4 reference frame shows the eyebrow fully unclipped.",
+      "evidence": "_adv-pb2-desktop-fresh15s.png : eyebrow left edge slightly clipped, still legible"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,38 @@
+{
+  "feature": "scroll-orbit-scrub",
+  "claim": "Scrolling flies the camera around the card — it swings through a shallow orbital arc, showing its sides as the page moves.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "MAJOR DEFECT: as the orbit deepens the card rotates past edge-on and shows its COMPLETELY BLANK BACK FACE — a featureless dark rounded rectangle with ZERO chrome (no brass header, no accent dot, no grey rows). This happens at play-2 (steep edge-on, luma=8.9), play-3 (blank back, luma=11.1), the orbitDeg-high frame (orbited fully around to the blank back), and the counterTiltDeg frames. The bar explicitly forbids a blank/featureless slab at ANY phase; this tile produces one across multiple engaged phases.",
+      "evidence": ["scroll-orbit-scrub/after/play-2.png", "scroll-orbit-scrub/after/play-3.png", "scroll-orbit-scrub/after/control-orbitDeg-high.png", "metrics: play-2 luma=8.9 hue=230 sat=0.45 (cool blank slab), play-3 luma=11.1"]
+    },
+    "q2_reads_as": {
+      "answer": "Does NOT read as the claim. The claim is 'showing its sides as the page moves' — but the card subject is a single-sided billboard with no back content, so orbiting past ~edge-on reveals a featureless blank back rather than 'its sides'. Idle and play-1 are fine (front chrome visible), but the orbit's payoff phases are a dark empty slab. It reads as 'the card turned around and disappeared', not 'a premium orbital reveal'.",
+      "evidence": ["scroll-orbit-scrub/after/play-1.png", "scroll-orbit-scrub/after/play-2.png", "scroll-orbit-scrub/after/control-orbitDeg-high.png", "metrics: play-2 warmFrac=0.02 (chrome gone, cool blank)"]
+    },
+    "q3_discoverable": {
+      "answer": "Of three controls, 'orbitDeg' and 'arcDepth' change the frame, but 'counterTiltDeg' is pixel-identical low/mid/high (dead). Worse, driving the headline 'Orbit Degrees' slider to high orbits the card to a blank back face, so the user's reward for using the main control is a featureless slab — the opposite of discoverable/satisfying.",
+      "evidence": ["scroll-orbit-scrub/after/control-counterTiltDeg-low.png", "scroll-orbit-scrub/after/control-orbitDeg-high.png", "control: counterTiltDeg changed=false (low=mid=high luma=10.2 band=0.357)", "control: orbitDeg changed=true but ends on blank back"]
+    },
+    "q4_responsive": {
+      "answer": "Play deltas are low (3.78/5.68/2.38 — much lower motion than the other scroll tiles) and one of three controls (counterTiltDeg) is dead. Combined with the blank-back payoff, the orbit feels sluggish and broken rather than responsive.",
+      "evidence": ["metrics: play-1 delta=3.78 play-2 delta=5.68 play-3 delta=2.38 (lowest of the 6 tiles)", "control: counterTiltDeg changed=false (1 of 3 dead)"]
+    },
+    "q5_net": {
+      "answer": "A user would be ANNOYED: 'I scrolled and the card just turned around and went blank — there's nothing on the back, and one of the sliders does nothing.' The orbit shows a featureless dark slab at its main phases instead of a legible card.",
+      "evidence": ["scroll-orbit-scrub/after/play-2.png", "scroll-orbit-scrub/after/play-3.png", "control: counterTiltDeg changed=false"]
+    }
+  },
+  "mustFix": [
+    { "issue": "Featureless blank-back slab at engaged/play phases. As the orbit passes edge-on the card shows a completely blank dark back face (no header, no dot, no rows) at play-2, play-3, and orbitDeg-high. The bar forbids a blank slab at any phase — either give the card a designed back face, constrain the orbit to a shallow arc that keeps the front legible, or double-side the chrome.", "evidence": "scroll-orbit-scrub/after/play-2.png : featureless dark slab, luma=8.9 hue=230 warmFrac=0.02 (all chrome gone); also scroll-orbit-scrub/after/control-orbitDeg-high.png" },
+    { "issue": "Headline 'Orbit Degrees' control's high end lands on the blank back face — the main labeled control's payoff is a featureless slab instead of 'showing its sides'.", "evidence": "scroll-orbit-scrub/after/control-orbitDeg-high.png : blank back rectangle, no chrome" },
+    { "issue": "'counterTiltDeg' control is dead — low/mid/high pixel-identical, no frame change.", "evidence": "control: counterTiltDeg changed=false (scroll-orbit-scrub/after/control-counterTiltDeg-low.png, low=mid=high luma=10.2 band=0.357)" }
+  ],
+  "flags": [
+    { "note": "Even the front-facing phases (play-1, orbitDeg-low) are dimmer than the other scroll tiles; with the orbit fixed, give the front pose a bit more key light.", "evidence": "metrics: play-1 luma=14.3 sat=0.04 (front but underlit relative to siblings)" }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

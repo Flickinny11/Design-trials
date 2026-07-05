@@ -1,0 +1,1566 @@
+{
+  "url": "http://localhost:4791/animation-catalog",
+  "startedAt": "2026-06-08T15:57:40.525Z",
+  "rig": {
+    "atStart": {
+      "ready": true,
+      "backend": "webgl",
+      "tileCount": 154,
+      "deviceLostCount": 0
+    },
+    "atEnd": {
+      "ready": true,
+      "backend": "webgl",
+      "tileCount": 154,
+      "deviceLostCount": 0
+    }
+  },
+  "primitives": [
+    {
+      "name": "bounce",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "card-fold",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "cube-rotate",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "depth-pop",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "door-open",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "elastic",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "flip",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "flip-3d",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "float",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "jelly",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "overshoot",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "rotate-in",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scale-pop",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "slide",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "spin",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "swing",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "tumble",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "unfold",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "zoom-rotate-in",
+      "category": "transform",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "blink",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "cross-dissolve",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dissolve-noise",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fade",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fade-scale",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fade-through-black",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fade-up",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "flash",
+      "category": "fade",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "horizontal-scroll",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "parallax",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pin-reveal",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "reveal-mask-scroll",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scroll-color-shift",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scroll-fade-stack",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scroll-rotate-3d",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scroll-skew",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scroll-zoom",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scrub-morph",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "sticky-pin",
+      "category": "scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "cursor-trail",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "hover-lift",
+      "category": "pointer",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "magnetic",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "parallax-layers",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pointer-tilt-3d",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "repel",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "spotlight-follow",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "tilt",
+      "category": "pointer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "decode-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dissolve-to-dust",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "glitch-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "liquid-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "neon-flicker-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "scramble",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "split-3d",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "split-stagger",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "stretch-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "text-blur-in",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "text-cascade",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "text-extrude",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "text-pop-each",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "text-spotlight",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "typewriter",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "wave-text",
+      "category": "text",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "banner-flutter",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "cloth-sway",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "flag-wave",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "foam",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "hair-sway",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ink-spread",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "jelly-surface",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ocean-fft",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ripple",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ripple-pool",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "water-surface",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "wave",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "wind-ripple",
+      "category": "wave",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "crumble",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "displacement-transition",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dissolve-burn",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "glitch-displace",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "melt",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "paint-spread",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pixel-dissolve",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "shatter",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "splat-reveal",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "voxelize",
+      "category": "displacement",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "blinds-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "clock-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "diamond-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "iris-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "mask-wipe",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "wipe-linear",
+      "category": "mask",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "blur-in",
+      "category": "blur",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "defocus-pulse",
+      "category": "blur",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "motion-blur-streak",
+      "category": "blur",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "zoom-blur",
+      "category": "blur",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "caustic-shimmer",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "glint-streak",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "holographic",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "iridescence",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "light-sweep",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "metallic-sheen",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pearlescent",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "prism-spectrum",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "shimmer",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "sparkle-glints",
+      "category": "shimmer",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "bevel-glass",
+      "category": "glass",
+      "renders": true,
+      "plays": false,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "chromatic-aberration",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "crystal-facet",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dispersion",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fresnel-glow",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "frosted-glass",
+      "category": "glass",
+      "renders": true,
+      "plays": false,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "glass-refraction",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ice-glass",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "iridescent-glass",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "liquid-glass",
+      "category": "glass",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "refraction-warp",
+      "category": "glass",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "water-droplet",
+      "category": "glass",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "caustic-net",
+      "category": "caustics",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "caustics",
+      "category": "caustics",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "caustics-ripple",
+      "category": "caustics",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "pool-caustics",
+      "category": "caustics",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "underwater-caustics",
+      "category": "caustics",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "aurora",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "campfire",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "clouds",
+      "category": "volumetric",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fire-flame",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fog",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "godray",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "light-shafts",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "nebula",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "plasma",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dust-cloud",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "ink-bloom",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "smoke",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "smoke-plume",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "steam",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "wispy-smoke",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "attractor",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "bubbles",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "confetti",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "dust-particles",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "embers",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "explosion",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fireflies",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "flocking",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "fountain",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "gravity-drop",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "morph-cloud",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "rain",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "snow",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "sparks",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "swarm",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    },
+    {
+      "name": "vortex",
+      "category": "particles",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "consoleErrors": []
+    }
+  ],
+  "globalConsoleErrors": [],
+  "summary": {
+    "total": 153,
+    "renders": 153,
+    "plays": 147,
+    "controls": 146,
+    "fullyVerified": 144,
+    "realConsoleErrorCount": 0,
+    "deviceLostTotal": 0,
+    "contextLostConsoleCount": 0,
+    "hoverPlaysProof": true,
+    "backend": "webgl"
+  },
+  "hoverPlaysProof": true,
+  "deviceLostTotal": 0,
+  "contextLostConsoleCount": 0
+}

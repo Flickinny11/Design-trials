@@ -1,0 +1,85 @@
+{
+  "header": "19c62615-5958-48a1-b7e4-4765164d073a",
+  "footer": "482958b9-b675-4b9e-a750-80ffac20ce26",
+  "headerSlot": "header",
+  "footerSlot": "footer",
+  "headerCount": 1,
+  "footerCount": 1,
+  "contentCount": 36,
+  "headerPos": [
+    0,
+    3.2500000000000004,
+    0
+  ],
+  "footerPos": [
+    0,
+    -2.85,
+    0
+  ],
+  "headerAboveFooter": true,
+  "hoverLift": {
+    "z0": 0,
+    "z1": 0.14
+  },
+  "clickRouting": {
+    "hadHandler": false,
+    "invoked": false
+  },
+  "previewOrphans": 0,
+  "previewRendered": 38,
+  "frame": {
+    "width": 12,
+    "height": 7.4,
+    "top": 3.9000000000000004,
+    "bottom": -3.5,
+    "centerY": 0.2
+  },
+  "consoleErrors": 0,
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "checks": "8/8",
+  "results": [
+    {
+      "name": "assign-global-slots",
+      "pass": true,
+      "detail": "H.slot=header F.slot=footer"
+    },
+    {
+      "name": "preview-running-app",
+      "pass": true,
+      "detail": "header=1 footer=1 content=36"
+    },
+    {
+      "name": "header-above-footer",
+      "pass": true,
+      "detail": "headerY=3.25 footerY=-2.85 bandΔ=6.1000000000000005"
+    },
+    {
+      "name": "content-between-bands",
+      "pass": true,
+      "detail": "sampled 10, inFrame=true, centroidY=2.68 ∈ (-2.85, 3.25)"
+    },
+    {
+      "name": "interactive-hover-lift",
+      "pass": true,
+      "detail": "z rest=0.000 → hover=0.140 (lift 0.140)"
+    },
+    {
+      "name": "click-routing-exists",
+      "pass": true,
+      "detail": "click route returns hadHandler=false"
+    },
+    {
+      "name": "preview-authorship-no-orphans",
+      "pass": true,
+      "detail": "orphans=0 rendered=38"
+    },
+    {
+      "name": "zero-console-errors",
+      "pass": true,
+      "detail": ""
+    }
+  ]
+}

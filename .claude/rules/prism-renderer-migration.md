@@ -1,5 +1,20 @@
 # Prism Renderer Migration — additive override rules
 
+> ## ⛔ RETIRED / INERT (2026-06-05, STEP 3)
+> The PixiJS → Three.js/WebGPU renderer migration is **DONE**. The
+> `.ralph-migration-active` marker has been removed, so per the activation
+> clause below these override rules are **inert** and `migration-forbidden-patterns.sh`
+> no longer fires. This file is retained for **traceability only**.
+>
+> The migration's still-binding invariants were **carried forward** into the
+> canonical-3 specs (renderer foundations → `PRISM-RUNTIME-SPEC.md` §9 INV-R9/R11/R12;
+> see `docs/prism/SPEC-INDEX.md` S8) and remain enforced live by
+> `anti-drift-check.sh` (editor-build block FP-05/FP-09, active via
+> `.prism-editor-build-active`). The migration spec itself now lives at
+> `docs/prism/archive/PRISM-RENDERER-MIGRATION-SPEC.md`. **Do not re-create the
+> marker or re-run the Ralph loop** (drivers archived under
+> `kid-kode-landing/scripts/archive/`).
+
 Active while `.ralph-migration-active` markers exist at repo root or
 `kid-kode-landing/`. These rules **add to** (do not replace) the existing
 project rules in `kid-kode-landing/CLAUDE.md` and the inner-spec invariants
@@ -8,6 +23,7 @@ encoded in `kid-kode-landing/.claude/hooks/anti-drift-check.sh`.
 When the migration completes (all 10 tasks `done` in
 `kid-kode-landing/notes/ralph-state.json`), the override clauses below become
 inert (the file is retained for traceability; the markers are removed).
+**↑ This has now happened — see the RETIRED banner above.**
 
 ## Renderer
 

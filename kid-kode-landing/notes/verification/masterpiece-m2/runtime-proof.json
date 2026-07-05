@@ -1,0 +1,190 @@
+{
+  "proofs": [
+    {
+      "step": "P1a TEXT: edit textSpec.content via the Text tool → staged → Save → source updated",
+      "pass": true,
+      "originalCopy": "Lifetime atelier service, Geneva",
+      "staged": "Lifetime atelier service — Geneva, for generations.",
+      "inSource": "Lifetime atelier service — Geneva, for generations."
+    },
+    {
+      "step": "P1b TEXT: change visible in preview (preview navigated to Acquire, node mounted+visible) + persists across reload + parity intact",
+      "pass": true,
+      "previewShows": {
+        "mode": "preview-app",
+        "hub": "s5-acquire",
+        "mounted": true,
+        "visible": true
+      },
+      "persisted": "Lifetime atelier service — Geneva, for generations.",
+      "parity": true
+    },
+    {
+      "step": "P1d TEXT: continued editability — revert through the SAME tool → save → source restored",
+      "pass": true,
+      "restored": "Lifetime atelier service, Geneva"
+    },
+    {
+      "step": "P2a MATERIAL: edit materialSpec.emissive via Inspector → staged → Save → source updated",
+      "pass": true,
+      "originalMat": {
+        "baseColor": "#d8b25a",
+        "metalness": 0.95,
+        "roughness": 0.16,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.6,
+        "clearcoatRoughness": 0.2,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#8a6420",
+        "emissiveIntensity": 0.62,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.85,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null,
+        "roughnessMapUrl": null
+      },
+      "staged": {
+        "baseColor": "#d8b25a",
+        "metalness": 0.95,
+        "roughness": 0.16,
+        "transmission": 0,
+        "ior": 1.5,
+        "dispersion": 0,
+        "clearcoat": 0.6,
+        "clearcoatRoughness": 0.2,
+        "iridescence": 0,
+        "iridescenceIOR": 1.3,
+        "thickness": 0.5,
+        "emissive": "#8c1f2a",
+        "emissiveIntensity": 0.62,
+        "normalScale": 1,
+        "displacementScale": 0,
+        "envMapIntensity": 1.85,
+        "opacity": 1,
+        "normalMapUrl": null,
+        "displacementMapUrl": null,
+        "roughnessMapUrl": null
+      },
+      "inSource": "#8c1f2a"
+    },
+    {
+      "step": "P2b MATERIAL: change visible in preview (preview navigated to Celestia, node mounted+visible) + persists across reload + parity intact",
+      "pass": true,
+      "previewShows": {
+        "mode": "preview-app",
+        "hub": "s4-celestia",
+        "mounted": true,
+        "visible": true,
+        "liveEmissive": "#8c1f2a"
+      },
+      "persisted": "#8c1f2a",
+      "parity": true
+    },
+    {
+      "step": "P2d MATERIAL: continued editability — revert via store-consistent Inspector path → save",
+      "pass": true,
+      "restored": "#8a6420"
+    },
+    {
+      "step": "P3a BEHAVIOR: retarget the celestia CTA pair navigate binding (s5→s6) via the Function popup",
+      "pass": true,
+      "originalHub": "s5-acquire",
+      "bound": [
+        "s6-atelier",
+        "s6-atelier"
+      ]
+    },
+    {
+      "step": "P3b BEHAVIOR: persists across reload + EXECUTES in preview (click navigates to Atelier) + parity intact",
+      "pass": true,
+      "persisted": [
+        "s6-atelier",
+        "s6-atelier"
+      ],
+      "landed": "s6-atelier",
+      "parity": true
+    },
+    {
+      "step": "P3c BEHAVIOR: continued editability — revert the pair to the original target → save",
+      "pass": true,
+      "restored": [
+        "s5-acquire",
+        "s5-acquire"
+      ]
+    },
+    {
+      "step": "P4 CANVAS: transform steppers → schema (scenePosition.x) → Save & Rebuild → reload persists → reverted",
+      "pass": true,
+      "x0": 0,
+      "stagedX": 0.24,
+      "x1": 0.24,
+      "xr": 0,
+      "parity": true
+    },
+    {
+      "step": "epilogue: end graph state semantically equals start (all edits reverted through the UI)",
+      "pass": true,
+      "bytesEqual": false
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "selectionAudit": [
+    {
+      "nodeId": "orr-acquire-incl-3",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-acquire-incl-3",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-slab",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-slab",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-slab",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-label",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-slab",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-celestia-cta-f4bcta-label",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-arrival-headline",
+      "selected": true,
+      "physical": true
+    },
+    {
+      "nodeId": "orr-arrival-headline",
+      "selected": true,
+      "physical": true
+    }
+  ]
+}

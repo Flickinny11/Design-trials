@@ -1,0 +1,7 @@
+{
+  "name": "n-body-orbit",
+  "label": "Gravity",
+  "description": "A real gravitational N-body system: two or three bright suns and a swarm of satellites pull on each other under softened inverse-square gravity, producing genuine orbits and slingshots — integrated physics, not a drawn curve.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

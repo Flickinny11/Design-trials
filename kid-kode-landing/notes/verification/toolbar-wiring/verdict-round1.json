@@ -1,0 +1,102 @@
+{
+  "feature": "P2 toolbar wiring — animation picker group, Add Element bubble, Group/Ungroup, mobile mode toggle",
+  "claim": "First-time user can browse/search 312 animation tiles, bind one (five driver chips), see it PLAY in Preview App and freeze in Canvas; Add Element yields a translucent glass bubble absent from Preview App; Group/Ungroup preserves world transforms; phone gets a thumb-reachable bottom Galaxy/Canvas/Preview pill.",
+  "groundTruthSibling": "text-system",
+  "state": "live",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Four real defects. (1) Mobile bottom-center chrome collision: in galaxy and canvas modes the legacy 'Galaxy | Home' hub pill renders OCCLUDED behind the new mode pill — a second machined pill visibly peeks out top-right behind the toggle, reading as a glitchy double-pill, and the buried control is unreachable; preview mode shows the clean single pill, proving the shape is a real stacked control, not a design plate. (2) Mobile header overflow: in canvas mode the build-progress pill runs off the right screen edge (its '100%' terminus is clipped offscreen); in galaxy mode the brass '+' header button is half cut off by the right edge. (3) The freshly added bubble element is named with a raw UUID in user-facing chrome: inspector header, top breadcrumb pill, and the multi-select list all display '41c17c02 Cd39 4bc1 Ab4f 93358a19c934'. (4) Spec-citation jargon in user copy: '(INV-7)', 'LIFECYCLE · §6', 'needs artifact pipeline (P3)', 'node editor (§1.3)'. Desktop layout, contrast, and alignment are otherwise clean; consoleErrors [] though one stray 404 appears in rawConsoleMessages.",
+      "evidence": [
+        "10-mobile-galaxy.png",
+        "09-mobile-canvas.png",
+        "08-mobile-previewapp.png",
+        "07-galaxy-parity.png",
+        "05-bubble-canvas.png",
+        "06-group-ungroup.png",
+        "console: results.json rawConsoleMessages contains one 404 while consoleErrors=[] and badResponses=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes on every claimed capability, with frame proof. Picker: search well ('Search 312 primitives…'), 8 category chips, 3×3 live-preview tile grid with named tiles in distinct mid-animation poses, '1 / 35 · 312 matches', 'CATALOG · 312 PRIMITIVES · HOVER PLAYS'. Binding: 'Float — TRANSFORM · LOAD/TIME' row with exactly the five claimed driver chips (Load/Time active, Scroll, Pointer, State, Event) plus params and trash icons, and toast 'Bound “Float” · plays on Load/Time'. Play-in-preview is visually real: the headline bar is perfectly horizontal in canvas but visibly tilted mid-float in preview-app, corroborated by results.json movers=1 playerId=home-headline and the freeze/restore step ok. Driver swap shows the Scroll chip active with subtitle 'TRANSFORM · SCROLL', persisted as driver=scroll in the live graph. The bubble reads as claimed: a translucent specular glass sphere with brass selection ring (transmission 0.92, MeshPhysicalMaterial), and the 'bubble NOT rendered in preview-app' step passes. Group/Ungroup: '7 items selected' panel, toast 'Ungrouped — world transforms preserved', cascaded=7, transforms preserved <1e-3. Mobile pill present and working across all three modes. Chrome matches the text-system ground-truth sibling's Observatory Brass language (machined graphite, brass-rimmed active states) and outclasses a generic flat animation-picker. No purple in chrome — the purple block is the node's own ELEMENT IMAGE content.",
+      "evidence": [
+        "01-animation-flyout.png",
+        "02-binding-applied.png",
+        "03-preview-playing.png",
+        "04-driver-scroll.png",
+        "05-bubble-canvas.png",
+        "06-group-ungroup.png",
+        "metrics: results.json 'binding PLAYS in preview-app' movers=1 playerId=home-headline; transmission=0.92 MeshPhysicalMaterial; cascaded=7; backend=webgpu",
+        "02-text-flyout.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes for the core loop: the search placeholder, labeled category chips, named tiles, 'HOVER PLAYS' hint, the five plainly-labeled driver chips, a 'Preview App ›' jump button right under the binding, and staged Add-Element lifecycle cards with disabled buttons are all self-explanatory. Two things would genuinely confuse a non-technical first-timer: the Add flyout and binding footer speak in spec citations ('Blank bubble node tethered to Home (INV-7)', 'LIFECYCLE · §6', 'needs artifact pipeline (P3)', 'behavior wiring lives in the node editor (§1.3)') — honest disclosure, wrong language; and the new element they just created is presented as a 36-character UUID everywhere its name appears.",
+      "evidence": [
+        "01-animation-flyout.png",
+        "05-bubble-canvas.png",
+        "02-binding-applied.png",
+        "07-galaxy-parity.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The bound animation provably mutates pose in preview (headline horizontal in 02 vs tilted mid-play in 03; movers=1 on the master clock), the canvas freeze-and-restore step passes, the driver swap renders immediately (Scroll chip active in 04), and the mobile toggle switched canvas→galaxy→preview-app in the drive (steps all ok). consoleErrors is empty and the renderer backend is attested webgpu. No per-frame latency metrics in this bundle — responsiveness is judged from the structural drive results plus the visible pose delta between frames.",
+      "evidence": [
+        "02-binding-applied.png",
+        "03-preview-playing.png",
+        "04-driver-scroll.png",
+        "metrics: results.json all 12 steps ok, consoleErrors=[], rendererBackend=webgpu, mobile toggle switched all three modes"
+      ]
+    },
+    "q5_net": {
+      "answer": "On desktop I'd be pleased — picking 'Float' and watching my element actually move in Preview feels like magic, and the picker looks like real machined hardware. But on my phone the bottom toggle has a second broken-looking pill sticking out from behind it, the top bar runs off the edge of the screen, and the element I just added is named '41c17c02 Cd39 4bc1 Ab4f…' — so the whole thing feels half-finished the moment I leave the happy path. Net: INDIFFERENT until those are fixed.",
+      "evidence": [
+        "03-preview-playing.png",
+        "10-mobile-galaxy.png",
+        "09-mobile-canvas.png",
+        "05-bubble-canvas.png"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Mobile chrome collision: in galaxy and canvas modes the legacy hub-jump pill ('Galaxy | Home', a real control on desktop per 07-galaxy-parity.png bottom-center) renders stacked BEHIND the new mode toggle — visible as a glitchy second pill peeking out top-right, and the occluded control is unusable. Preview mode (08) shows the clean single pill, proving this is an unintended overlap, not a design plate. Hide or relocate the hub pill on mobile.",
+      "evidence": "10-mobile-galaxy.png (second pill behind toggle), 09-mobile-canvas.png (same), 08-mobile-previewapp.png (clean single pill), 07-galaxy-parity.png (the underlying control on desktop)"
+    },
+    {
+      "issue": "Mobile header chrome cut off at 390px: in canvas mode the build-progress pill overflows the right screen edge (the '100%' terminus is clipped offscreen); in galaxy mode the brass '+' button is roughly half cut off by the right edge. Header must compress or collapse on phone width.",
+      "evidence": "09-mobile-canvas.png (progress bar runs offscreen right, no terminus), 10-mobile-galaxy.png (clipped '+' button at top-right edge)"
+    },
+    {
+      "issue": "Raw UUID as the user-visible name of a freshly added element: '41c17c02 Cd39 4bc1 Ab4f 93358a19c934' appears as the title in the inspector header and its element-image block, in the top breadcrumb pill, and in the multi-select list. A first-time user who clicks 'Add Element' is rewarded with machine gibberish. Fallback caption should be friendly ('New Bubble', 'Untitled Element 1') until the real caption is written at the In-System stage.",
+      "evidence": "05-bubble-canvas.png (inspector header + element image block), 07-galaxy-parity.png (breadcrumb pill + selection list), 06-group-ungroup.png (selection list row)"
+    },
+    {
+      "issue": "Spec-citation jargon shipped in user-facing copy: 'Blank bubble node tethered to Home (INV-7)', 'LIFECYCLE · §6', three stage hints reading 'needs artifact pipeline (P3)', and the binding footer 'behavior wiring lives in the node editor (§1.3)'. The staged-disclosure STRUCTURE is honest and good (disabled buttons + hints), but the language is engineer-speak a non-technical user cannot decode. Rewrite in plain words ('Coming soon — needs the build pipeline').",
+      "evidence": "05-bubble-canvas.png (Add flyout copy with INV-7/§6/P3), 02-binding-applied.png (footer note with §1.3)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The demo payoff is muted because the animated subject is a featureless blank white slab — the home-headline renders with no visible text in both canvas and preview, so 'see it play' reads as 'a white rectangle tilted'. This matches the ground-truth sibling (same blank bar in text-system), so it is pre-existing mock-app content, not a regression of this feature — but binding the demo to a richer element would make the magic moment land.",
+      "evidence": "03-preview-playing.png, 02-binding-applied.png, text-system sharp-04-AFTER-previewapp-labels.png shows the same blank headline bar"
+    },
+    {
+      "note": "Mobile Transform flyout hint text loses contrast where the translucent glass panel passes over the bright canvas plane ('then click Edit to reveal transform handles.' goes gray-on-light-gray).",
+      "evidence": "09-mobile-canvas.png (flyout hint lower lines over light background)"
+    },
+    {
+      "note": "One 404 ('Failed to load resource') in rawConsoleMessages while badResponses=[] — some asset request failed and the harness's network check did not catch it; worth identifying.",
+      "evidence": "console: results.json rawConsoleMessages[0] = 'Failed to load resource: the server responded with a status of 404 (Not Found)'"
+    },
+    {
+      "note": "Idle tile previews are visually samey — nine near-identical dark cards with an amber bar at slightly different poses; fine once you know HOVER PLAYS, but the resting grid could differentiate poses more strongly.",
+      "evidence": "01-animation-flyout.png (tile grid rows 1-3)"
+    },
+    {
+      "note": "The Next.js dev-tools 'N' badge overlaps the mode pill's left rim on mobile — dev-environment artifact, not product chrome, but it photobombs every mobile capture.",
+      "evidence": "10-mobile-galaxy.png (N badge overlapping pill)"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

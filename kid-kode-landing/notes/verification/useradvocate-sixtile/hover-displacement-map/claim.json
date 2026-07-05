@@ -1,0 +1,7 @@
+{
+  "name": "hover-displacement-map",
+  "label": "Relief Depth",
+  "description": "Hover pours a hidden relief into the surface — a procedural displacement map embossing the content, deepening as the cursor nears.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

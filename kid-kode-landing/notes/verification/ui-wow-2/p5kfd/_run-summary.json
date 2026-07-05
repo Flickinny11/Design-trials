@@ -1,0 +1,28 @@
+{
+  "at": "2026-06-14T08:22:25.098Z",
+  "label": "p5kfd",
+  "base": "http://localhost:3000",
+  "steps": [
+    "kfdata"
+  ],
+  "results": [
+    {
+      "profile": "desktop",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 1440,
+      "density": "wide",
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "mobile",
+      "backend": "webgpu",
+      "tier": "t1",
+      "mainW": 390,
+      "density": "compact",
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ]
+}

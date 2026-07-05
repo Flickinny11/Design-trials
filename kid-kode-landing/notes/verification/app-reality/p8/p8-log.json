@@ -1,0 +1,13 @@
+{
+  "errors": [],
+  "libraryOpen": true,
+  "tilesPresent": {
+    "Header bar": true,
+    "Footer": true,
+    "Dropdown menu": true,
+    "Menu list": true
+  },
+  "placingClusterId": null,
+  "allFourPresent": true,
+  "placementArmed": false
+}

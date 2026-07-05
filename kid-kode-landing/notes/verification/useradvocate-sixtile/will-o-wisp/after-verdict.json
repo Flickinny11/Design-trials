@@ -1,0 +1,41 @@
+{
+  "feature": "will-o-wisp",
+  "claim": "A glowing ghost-light — a soft luminous core wreathed in wispy tendrils that drift and bob, its halo melting into a soft volume like a marsh spirit.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No hard tile-grid or shelf banding. All frames show organic flowing haze with no horizontal grid seams or repeated square cloud cells — the round-1 tiled-grid artifact is gone. bandingScore stays low (0.138-0.167 on play frames; the caveat notes it over-reports on organic haze, and by eye there are no hard seams). No cut-off, no misalignment, backend=webgpu, zero console/network errors.",
+      "evidence": ["will-o-wisp/after/play-1.png", "will-o-wisp/after/play-3.png", "metrics: play-2 bandingScore=0.167 (<0.25), idle bandingScore=0.141; consoleErrors=[] networkErrors=[]"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads clearly as a luminous coloured ghost-light, NOT a colorless white blob. Idle and play frames show a bright magenta/pink core wreathed in soft drifting tendrils and haze melting into a soft volume — matching the marsh-spirit claim. effHue holds ~344-347 (magenta/pink), an explicitly acceptable eerie-wisp colour per the caveats, at effSat ~0.27-0.34. Colour survives now; the only near-white region is the very center of the glowSize-HIGH extreme, which is still wreathed in saturated magenta and reads as a bloom, not the round-1 blown-out white blob.",
+      "evidence": ["will-o-wisp/after/idle.png", "will-o-wisp/after/play-3.png", "metrics: idle effHue=347 effSat=0.27 magentaFrac=0.46; play-3 effHue=347 effSat=0.29"]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The labeled 'wisps' control produces an obvious, sensible change: low (=2) shows two faint dim wisp lights; high (=6) shows many bright distinct wisp lights spread across the frame. The glowSize control also reads correctly: low = small tight pinprick cores, high = a large blooming halo. driftSpeed is a motion-rate control (paused-sweep changed=false is expected per the caveats).",
+      "evidence": ["will-o-wisp/after/control-wisps-low.png", "will-o-wisp/after/control-wisps-high.png", "control: wisps low->high satPixels 1578->3941, magentaFrac 0.38->0.53, changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Visible motion across all three play frames — the core morphs shape, tendrils break off and drift, satellite wisps appear and move. Control apply latency is low and consistent (~580-597ms).",
+      "evidence": ["metrics: play-1 frameDeltaMag=5.78, play-2=3.65, play-3=13.98 (non-zero, visibly different frames)", "will-o-wisp/after/play-1.png", "will-o-wisp/after/play-2.png"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED — it now looks like a real glowing marsh-spirit with a coloured luminous core and soft drifting tendrils, the ugly tile-grid is gone, and the wisps slider visibly adds more ghost-lights. All three round-1 blockers are resolved.",
+      "evidence": ["will-o-wisp/after/play-3.png", "will-o-wisp/after/control-wisps-high.png", "metrics: play frames bandingScore<=0.167, effHue~347 (coloured, not white)"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "At the glowSize-HIGH extreme the core center blooms to near-white; it is still wreathed in saturated magenta so it reads as a luminous bloom rather than a colorless blob, but the brightest extreme of that slider loses some core colour. Taste-level, not a blocker.",
+      "evidence": "will-o-wisp/after/control-glowSize-high.png : meanLuma 44.3, magentaFrac 1.0"
+    },
+    {
+      "note": "driftSpeed sweep frames are near-identical (changed=false) — expected for a motion-rate control captured paused, but the sweep does not self-demonstrate the effect.",
+      "evidence": "control: driftSpeed low/mid/high effHue=344 effSat~0.33 essentially identical, changed=false"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

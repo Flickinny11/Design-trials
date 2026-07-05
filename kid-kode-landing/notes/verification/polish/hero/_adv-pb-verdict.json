@@ -1,0 +1,69 @@
+{
+  "feature": "PB",
+  "claim": "All three text elements read cleanly — the big headline 'Time, machined.', the intro line 'ORRERY No.7 — … movement, eleven years in the making.', and they are NOT occluded by the hero artifact (the ORRERY watch). The watch sits clear BELOW the text, still present and lit.",
+  "groundTruthSibling": null,
+  "state": "hero",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Yes — a persistent, viewport-wide occlusion of the headline. On desktop, even at a 45s settle with 0 failed network requests and 0 console errors, a light/grey untextured PLACEHOLDER square sits directly ON TOP of the headline, punching a blank box between 'Time,' and 'machined.', and a tall grey/white vertical bar slashes down through the right of 'machined' into the body. A second placeholder square sits over the start of the intro-line region. These artifacts are byte-for-byte identical at 7s, 14s, 20s, 30s, and 45s, so they are NOT a mid-load async placeholder — they are a settled-state defect. They appear on every viewport (desktop/tablet/constrained/mobile). Separately, on tablet, constrained, and mobile the headline is further clipped/occluded by the top segmented stage-nav (tab) row: on constrained the headline 'Time, machined.' is almost entirely hidden behind that bar and unreadable.",
+      "evidence": [
+        "polish/hero/_adv-pb-desktop-45s.png",
+        "polish/hero/_adv-pb-desktop-30s.png",
+        "polish/hero/_adv-pb-desktop-20s.png",
+        "polish/hero/_adv-pb-constrained-14s.png",
+        "polish/hero/_adv-pb-mobile-14s.png",
+        "network: 0 failed requests at 45s settle (rules out async-load artifact)",
+        "console: 0 console errors on all 4 viewports"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Partially. The watch sub-claim DOES read true: the ORRERY watch is positioned LOW and clear below both text blocks (scene-graph product-hero at y=-2.95 vs headline y=2.7 / subhead y=1.35), present and lit — the blue/gold dial is clearly rendered at bottom-center on desktop (_adv-pb-desktop-45s.png) and the occlusion log reports AABB overlap = 0 vs both text nodes, heroLit=true, watch peak=255 on all 4 viewports. BUT the overall claim 'all three text elements read cleanly … NOT occluded by the hero artifact' is FALSE: the headline 'Time, machined.' is occluded by an untextured placeholder box + grey bar on every viewport. A real user reading the hero sees 'Time, [blank box]machined.' with a grey bar through it, not a clean headline. So it does not read as the claim states.",
+      "evidence": [
+        "polish/hero/_adv-pb-desktop-45s.png",
+        "metrics: pb-occlusion-log.json desktop watch.peak=255 heroLit=true overlap=0; product-hero scenePos y=-2.95 below headline y=2.7",
+        "polish/hero/_adv-pb-tablet-14s.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "N/A as an interactive control — this is a static landing-hero, not a control-driven feature. As a reading experience, an unprompted first-time user would be confused: the blank placeholder box and grey bar punched through the headline read as a broken/half-loaded page, undermining trust before any interaction. The stage-nav tabs are visible, but the hero's primary message is degraded.",
+      "evidence": [
+        "polish/hero/_adv-pb-desktop-45s.png",
+        "polish/hero/_adv-pb-mobile-14s.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "No jank or lag in the sense of motion/latency — the scene renders smoothly, the watch is lit, and there are 0 console errors and 0 failed requests. The problem is not responsiveness but a persistent static occlusion: the placeholder box and grey bar are stable (identical across 7s→45s captures), so this is a steady-state composition defect rather than a stutter.",
+      "evidence": [
+        "console: 0 errors all 4 viewports",
+        "network: 0 failed requests at 45s",
+        "polish/hero/_adv-pb-desktop-20s.png",
+        "polish/hero/_adv-pb-desktop-30s.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The watch was successfully moved clear below the text (good), but the hero headline 'Time, machined.' is still occluded by an untextured placeholder box and a grey bar on every viewport even after 45 seconds, and is further clipped by the tab bar on tablet/constrained/mobile — so the core claim 'all three text elements read cleanly' is not met. A real user would say: 'why is there a blank box and a grey stripe smashed through the headline — is the page broken?'",
+      "evidence": [
+        "polish/hero/_adv-pb-desktop-45s.png",
+        "polish/hero/_adv-pb-constrained-14s.png"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "The headline 'Time, machined.' is occluded by a persistent untextured PLACEHOLDER square + a tall grey/white vertical bar on EVERY viewport, even at 45s settle with 0 failed requests / 0 console errors (so not a mid-load artifact). A blank box sits between 'Time,' and 'machined.' and a grey bar slashes through 'machined'. This directly violates the claim 'text reads cleanly … NOT occluded'.",
+      "evidence": "polish/hero/_adv-pb-desktop-45s.png : blank placeholder box at ~x0.43,y0.18 over headline + grey vertical bar at ~x0.59 through 'machined'; identical in _adv-pb-desktop-20s.png and _adv-pb-desktop-30s.png; network: 0 failed requests"
+    },
+    {
+      "issue": "On tablet, constrained, and mobile the headline is additionally clipped/hidden behind the top segmented stage-nav (tab) row. On constrained, 'Time, machined.' is almost entirely behind the bar and unreadable; on mobile the headline is not visible at all and the intro line is overlapped by a placeholder square.",
+      "evidence": "polish/hero/_adv-pb-constrained-14s.png : headline hidden behind tab row; polish/hero/_adv-pb-mobile-14s.png : headline absent, intro line overlapped by placeholder square"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The watch-occlusion portion of the fix genuinely succeeded: the ORRERY watch now sits clear and low below the text, present and lit (blue/gold dial visible), with AABB overlap=0 vs both text nodes. Credit where due — the regression vs the on-top baseline is fixed for the WATCH specifically; the remaining occlusion is from a different (placeholder/grey-bar) artifact.",
+      "evidence": "polish/hero/_adv-pb-desktop-45s.png : watch lit at bottom-center clear of text; metrics: pb-occlusion-log.json watch overlap=0 heroLit=true peak=255 all viewports"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

@@ -1,0 +1,39 @@
+{
+  "boot": {
+    "viewMode": "preview-app",
+    "activeHubId": "s1-arrival",
+    "editorMode": "idle"
+  },
+  "before1": {
+    "viewMode": "preview-app",
+    "activeHubId": "s1-arrival",
+    "editorMode": "idle"
+  },
+  "after1": {
+    "viewMode": "canvas",
+    "activeHubId": "s1-arrival",
+    "editorMode": "idle"
+  },
+  "canvasClick": {
+    "x": 720,
+    "y": 30,
+    "text": "Canvas"
+  },
+  "before2": {
+    "viewMode": "canvas",
+    "activeHubId": "s1-arrival",
+    "editorMode": "idle"
+  },
+  "after2": {
+    "viewMode": "canvas",
+    "activeHubId": "s3-materia",
+    "editorMode": "idle"
+  },
+  "hubClick": {
+    "x": 777,
+    "y": 856,
+    "text": "Materia5"
+  },
+  "toggleChanged": true,
+  "hubChanged": true
+}

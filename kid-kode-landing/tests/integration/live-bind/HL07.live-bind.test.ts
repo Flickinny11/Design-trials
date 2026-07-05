@@ -293,7 +293,7 @@ describe('SceneRoot renderAsync deprecation fix (HL07)', () => {
     let renderAsyncCalls = 0;
     let initCalled = false;
 
-    const stubRenderer: SceneRootRenderer = {
+    const stubRenderer: SceneRootRenderer & { compile(): Promise<void> } = {
       backend: 'stub',
       async init() { initCalled = true; },
       render() { renderCalls++; },
@@ -302,6 +302,14 @@ describe('SceneRoot renderAsync deprecation fix (HL07)', () => {
       setPixelRatio() {},
       setAnimationLoop(_cb) { /* not invoked here */ },
       dispose() {},
+      // The lighting rig's IBL warm-up (environment-ibl.ts) constructs a
+      // PMREMGenerator over the injected renderer; on the three/webgpu
+      // build compileEquirectangularShader() AWAITS renderer.compile(...).
+      // The real WebGPURenderer provides compile(); a stub without it makes
+      // that warm-up promise reject OUTSIDE buildEnvironmentIBL's try/catch
+      // — an unhandled rejection that fails the vitest run even with every
+      // assertion green. Mirror the real renderer surface.
+      async compile() {},
     };
 
     const sceneRoot = await createSceneRoot({

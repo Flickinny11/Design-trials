@@ -1,0 +1,60 @@
+{
+  "feature": "fire-flame",
+  "claim": "Licking flames rise with a hot gradient from white core to orange to red tips.",
+  "groundTruthSibling": null,
+  "state": "ground-truth",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing visibly broken, misaligned, cut off, or laggy. The flame is centered on the floor of a black canvas with soft feathered edges and no hard slab seams. The bottom of the flame is clipped flat at the viewport floor, but that reads as the flame's base/emitter sitting at the bottom of the frame rather than a defect. Banding metrics are moderate (idle bandingScore=0.427) but no shelf-stepping is visible in the frames — the gradient is smooth white->orange->amber.",
+      "evidence": [
+        "fire-flame/ground-truth/idle.png",
+        "fire-flame/ground-truth/play-3.png",
+        "metrics: idle bandingScore=0.427, no visible shelves in frames; consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — reads unambiguously as fire and matches the claim's hot gradient. White-hot core at the base, orange body, and amber/red-tipped licking tongues at the upper edges (a couple of small red embers visible above the crown in play-1). Per the metric caveat, the mean effHue reads washed (37-43 deg) because the hottest core is near-white, but that IS correct for fire; warmFrac among saturated pixels is high (play-2 warmFrac=0.78, play-1=0.66) and the warm tongues sit squarely in fire's band. Backend=webgpu so colour is trustworthy. No pink ring, no cream/olive body.",
+      "evidence": [
+        "fire-flame/ground-truth/play-1.png",
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: play-2 effHue=37 warmFrac=0.78 satPixels=2347; play-1 warmFrac=0.66"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. Both labeled controls do something sensible and obvious across their range. Speed low->high makes the flame taller and more active (control-speed-low is a squatter, calmer flame; control-speed-high is taller with more tongue movement). Height low->high is dramatic and self-explanatory: height-low is a short squat fire hugging the floor; height-high is a tall flame with rising licking tongues and a detached ember. A first-time user dragging either slider would immediately understand what it does.",
+      "evidence": [
+        "fire-flame/ground-truth/control-height-low.png",
+        "fire-flame/ground-truth/control-height-high.png",
+        "control: speed low->high changed=true; height low->high changed=true"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The flame shape, tongue positions, and crown profile visibly change across the three play frames (the licking edges move and the silhouette shifts frame to frame). frameDeltaMag is non-trivial and rising/active across the sequence (play-1=2.69, play-2=5.53, play-3=3.97), confirming live motion rather than a frozen frame. Control apply latency is consistent (~560-585ms) with no jank.",
+      "evidence": [
+        "fire-flame/ground-truth/play-1.png",
+        "fire-flame/ground-truth/play-3.png",
+        "metrics: frameDeltaMag play-1=2.69 play-2=5.53 play-3=3.97; control latencyMs ~566-584"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A non-technical user would say: 'That's a believable fire — hot white middle, orange flames, and the tips lick and move; and the sliders actually make it taller and livelier.' It reads as fire, it animates, and both controls do something obvious.",
+      "evidence": [
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: play-2 warmFrac=0.78 effHue=37; height/speed controls changed=true"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "metrics effHue for height-low reads 240 deg (blue) because at minimum height the flame is small/dark and the dark background dominates the effective-pixel sampling; the frame itself still shows warm fire at the base. A metric artifact, not a visual defect.",
+      "evidence": "metrics: control-height-low effHue=240 coolFrac=0.98, but fire-flame/ground-truth/control-height-low.png shows warm fire at floor"
+    },
+    {
+      "note": "The flame base is clipped flat at the viewport floor in every frame; in a wider composition a bit more breathing room below the emitter could read more natural. Pure taste.",
+      "evidence": "fire-flame/ground-truth/idle.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

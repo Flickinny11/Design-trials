@@ -5,9 +5,12 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['var(--font-display)', 'ui-serif', 'serif'],
-        sans: ['var(--font-sans)', 'ui-sans-serif', 'system-ui'],
-        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+        // --ds-font-* (design-system/tokens.css) wrap the next/font/local
+        // variables with clean system fallback stacks: Sora / Sora / JetBrains Mono.
+        display: ['var(--ds-font-display)', 'ui-sans-serif', 'system-ui'],
+        sans: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
+        ui: ['var(--ds-font-ui)', 'ui-sans-serif', 'system-ui'],
+        mono: ['var(--ds-font-mono)', 'ui-monospace', 'monospace'],
       },
       colors: {
         void: '#04050a',
@@ -32,10 +35,58 @@ const config: Config = {
         failed: '#ef4466',
         pending: '#6b7694',
         frozen: '#8bb4ff',
+        // ── Design-system namespace (Wave 0 contract; mirrors tokens.css) ──
+        ds: {
+          void: 'var(--ds-void)',
+          ink: 'var(--ds-ink)',
+          charcoal: 'var(--ds-charcoal)',
+          graphite: 'var(--ds-graphite)',
+          slate: 'var(--ds-slate)',
+          steel: 'var(--ds-steel)',
+          'text-hi': 'var(--ds-text-hi)',
+          text: 'var(--ds-text)',
+          'text-mid': 'var(--ds-text-mid)',
+          'text-low': 'var(--ds-text-low)',
+          metal: {
+            100: 'var(--ds-metal-100)',
+            200: 'var(--ds-metal-200)',
+            300: 'var(--ds-metal-300)',
+            400: 'var(--ds-metal-400)',
+            500: 'var(--ds-metal-500)',
+            600: 'var(--ds-metal-600)',
+            700: 'var(--ds-metal-700)',
+          },
+          // Arc-cyan — the single emissive / active accent (+ anodized tint).
+          arc: 'var(--ds-arc)',
+          'arc-hot': 'var(--ds-arc-hot)',
+          anodized: 'var(--ds-anodized)',
+          ice: {
+            200: 'var(--ds-ice-200)',
+            300: 'var(--ds-ice-300)',
+            400: 'var(--ds-ice-400)',
+            500: 'var(--ds-ice-500)',
+          },
+          ok: 'var(--ds-ok)',
+          warn: 'var(--ds-warn)',
+          danger: 'var(--ds-danger)',
+          neutral: 'var(--ds-neutral)',
+        },
       },
       boxShadow: {
         glow: '0 0 40px rgba(93, 139, 255, 0.25)',
         rim: 'inset 0 0 0 1px rgba(255,255,255,0.06)',
+        'ds-0': 'var(--ds-elev-0)',
+        'ds-1': 'var(--ds-elev-1)',
+        'ds-2': 'var(--ds-elev-2)',
+        'ds-3': 'var(--ds-elev-3)',
+        'ds-4': 'var(--ds-elev-4)',
+      },
+      borderRadius: {
+        'ds-xs': 'var(--ds-r-xs)',
+        'ds-sm': 'var(--ds-r-sm)',
+        'ds-md': 'var(--ds-r-md)',
+        'ds-lg': 'var(--ds-r-lg)',
+        'ds-xl': 'var(--ds-r-xl)',
       },
       animation: {
         'float-slow': 'float 18s ease-in-out infinite',

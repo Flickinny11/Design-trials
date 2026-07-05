@@ -1,0 +1,1205 @@
+[
+  {
+    "viewport": "desktop",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 1380.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.52001953125,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 48,
+          "max": 243.11,
+          "std": 44.05
+        },
+        "bgLuma": {
+          "mean": 8.54,
+          "max": 11.88,
+          "std": 1.84
+        },
+        "glowAboveBg": 39.46,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 417,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 720,
+          "y": 450,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 720,
+          "y": 33,
+          "traveling": true,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": null,
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.2,
+              "hi": 171.1,
+              "range": 166.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 26.07,
+            "outsideLuma": 3.29,
+            "contrast": 22.78,
+            "smooth": true
+          }
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": {
+            "x": 531,
+            "y": 251,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c6": {
+            "insideLuma": 24.74,
+            "outsideLuma": 5.14,
+            "delta": 19.6,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 83,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 16.3,
+              "hi": 91.4,
+              "range": 75.1,
+              "transitionPx": 47
+            },
+            "insideLuma": 29.58,
+            "outsideLuma": 27.85,
+            "contrast": 1.73,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 531,
+            "y": 251,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 1035.78125,
+            "y": 63,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 4.1,
+              "hi": 171.1,
+              "range": 167,
+              "transitionPx": 71
+            },
+            "insideLuma": 40.15,
+            "outsideLuma": 11.71,
+            "contrast": 28.44,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 531,
+            "y": 251,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c6": {
+            "insideLuma": 29.11,
+            "outsideLuma": 13.06,
+            "delta": 16.05,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 1043,
+            "y": 125,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 11.4,
+              "hi": 210.2,
+              "range": 198.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 88.55,
+            "outsideLuma": 9.25,
+            "contrast": 79.3,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "welcome",
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.2,
+              "hi": 171.1,
+              "range": 166.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 26.07,
+            "outsideLuma": 3.29,
+            "contrast": 22.78,
+            "smooth": true
+          },
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 16.3,
+              "hi": 91.4,
+              "range": 75.1,
+              "transitionPx": 47
+            },
+            "insideLuma": 29.58,
+            "outsideLuma": 27.85,
+            "contrast": 1.73,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 4.1,
+              "hi": 171.1,
+              "range": 167,
+              "transitionPx": 71
+            },
+            "insideLuma": 40.15,
+            "outsideLuma": 11.71,
+            "contrast": 28.44,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 11.4,
+              "hi": 210.2,
+              "range": 198.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 88.55,
+            "outsideLuma": 9.25,
+            "contrast": 79.3,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "galaxy",
+            "insideLuma": 24.74,
+            "outsideLuma": 5.14,
+            "delta": 19.6,
+            "dimsScene": true
+          },
+          {
+            "step": "preview",
+            "insideLuma": 29.11,
+            "outsideLuma": 13.06,
+            "delta": 16.05,
+            "dimsScene": true
+          }
+        ],
+        "pass": true
+      },
+      "C7": {
+        "baselineGalaxyIdle": 2,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 2,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  },
+  {
+    "viewport": "tablet",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 964.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.52001953125,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 78.21,
+          "max": 233.45,
+          "std": 56.63
+        },
+        "bgLuma": {
+          "mean": 11.66,
+          "max": 15.24,
+          "std": 2.18
+        },
+        "glowAboveBg": 66.55,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 349,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 512,
+          "y": 384,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 512,
+          "y": 35,
+          "traveling": true,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": null,
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.2,
+              "hi": 171.1,
+              "range": 166.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 31.04,
+            "outsideLuma": 7.14,
+            "contrast": 23.9,
+            "smooth": true
+          }
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": {
+            "x": 323,
+            "y": 185,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c6": {
+            "insideLuma": 23.29,
+            "outsideLuma": 5.93,
+            "delta": 17.36,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 357,
+            "y": 67,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 1.2,
+              "hi": 173.1,
+              "range": 171.9,
+              "transitionPx": 65
+            },
+            "insideLuma": 20.37,
+            "outsideLuma": 34.83,
+            "contrast": -14.46,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 323,
+            "y": 185,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 619.78125,
+            "y": 63,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 4.4,
+              "hi": 171.1,
+              "range": 166.7,
+              "transitionPx": 71
+            },
+            "insideLuma": 40.2,
+            "outsideLuma": 11.71,
+            "contrast": 28.49,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 323,
+            "y": 185,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c6": {
+            "insideLuma": 31.1,
+            "outsideLuma": 12.32,
+            "delta": 18.78,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 627,
+            "y": 125,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 12.2,
+              "hi": 210,
+              "range": 197.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 89.14,
+            "outsideLuma": 20.87,
+            "contrast": 68.27,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "welcome",
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 4.2,
+              "hi": 171.1,
+              "range": 166.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 31.04,
+            "outsideLuma": 7.14,
+            "contrast": 23.9,
+            "smooth": true
+          },
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 1.2,
+              "hi": 173.1,
+              "range": 171.9,
+              "transitionPx": 65
+            },
+            "insideLuma": 20.37,
+            "outsideLuma": 34.83,
+            "contrast": -14.46,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 4.4,
+              "hi": 171.1,
+              "range": 166.7,
+              "transitionPx": 71
+            },
+            "insideLuma": 40.2,
+            "outsideLuma": 11.71,
+            "contrast": 28.49,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 12.2,
+              "hi": 210,
+              "range": 197.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 89.14,
+            "outsideLuma": 20.87,
+            "contrast": 68.27,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "galaxy",
+            "insideLuma": 23.29,
+            "outsideLuma": 5.93,
+            "delta": 17.36,
+            "dimsScene": true
+          },
+          {
+            "step": "preview",
+            "insideLuma": 31.1,
+            "outsideLuma": 12.32,
+            "delta": 18.78,
+            "dimsScene": true
+          }
+        ],
+        "pass": true
+      },
+      "C7": {
+        "baselineGalaxyIdle": 2,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 2,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  },
+  {
+    "viewport": "constrained",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 820.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.52001953125,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 83.48,
+          "max": 234.45,
+          "std": 56.28
+        },
+        "bgLuma": {
+          "mean": 14.39,
+          "max": 18.03,
+          "std": 2.28
+        },
+        "glowAboveBg": 69.09,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 268,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 440,
+          "y": 300,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 440,
+          "y": 32,
+          "traveling": true,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": null,
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 6.1,
+              "hi": 200.5,
+              "range": 194.3,
+              "transitionPx": 56
+            },
+            "insideLuma": 35.06,
+            "outsideLuma": 5.48,
+            "contrast": 29.58,
+            "smooth": true
+          }
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": {
+            "x": 251,
+            "y": 101,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c6": {
+            "insideLuma": 22.31,
+            "outsideLuma": 11.06,
+            "delta": 11.25,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 357,
+            "y": 67,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 0.1,
+              "hi": 173.1,
+              "range": 173,
+              "transitionPx": 65
+            },
+            "insideLuma": 21.3,
+            "outsideLuma": 36.27,
+            "contrast": -14.97,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 251,
+            "y": 101,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 475.78125,
+            "y": 63,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 8.2,
+              "hi": 171,
+              "range": 162.8,
+              "transitionPx": 71
+            },
+            "insideLuma": 49.79,
+            "outsideLuma": 14.39,
+            "contrast": 35.4,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 251,
+            "y": 101,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c6": {
+            "insideLuma": 31.04,
+            "outsideLuma": 16.43,
+            "delta": 14.61,
+            "dimsScene": true
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 483,
+            "y": 125,
+            "w": 378,
+            "h": 168
+          },
+          "domCanvasCount": 2,
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 17.1,
+              "hi": 210,
+              "range": 192.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 90.32,
+            "outsideLuma": 37.56,
+            "contrast": 52.76,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "welcome",
+            "targetSel": "[data-component=\"view-mode-toggle\"]",
+            "edge": {
+              "lo": 6.1,
+              "hi": 200.5,
+              "range": 194.3,
+              "transitionPx": 56
+            },
+            "insideLuma": 35.06,
+            "outsideLuma": 5.48,
+            "contrast": 29.58,
+            "smooth": true
+          },
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 0.1,
+              "hi": 173.1,
+              "range": 173,
+              "transitionPx": 65
+            },
+            "insideLuma": 21.3,
+            "outsideLuma": 36.27,
+            "contrast": -14.97,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 8.2,
+              "hi": 171,
+              "range": 162.8,
+              "transitionPx": 71
+            },
+            "insideLuma": 49.79,
+            "outsideLuma": 14.39,
+            "contrast": 35.4,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 17.1,
+              "hi": 210,
+              "range": 192.9,
+              "transitionPx": 41
+            },
+            "insideLuma": 90.32,
+            "outsideLuma": 37.56,
+            "contrast": 52.76,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "galaxy",
+            "insideLuma": 22.31,
+            "outsideLuma": 11.06,
+            "delta": 11.25,
+            "dimsScene": true
+          },
+          {
+            "step": "preview",
+            "insideLuma": 31.04,
+            "outsideLuma": 16.43,
+            "delta": 14.61,
+            "dimsScene": true
+          }
+        ],
+        "pass": true
+      },
+      "C7": {
+        "baselineGalaxyIdle": 2,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 2,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  },
+  {
+    "viewport": "mobile",
+    "dpr": 2,
+    "checks": {
+      "C2": {
+        "autoLaunchStatus": "running",
+        "autoLaunchStep": "welcome",
+        "seenAfterSkip": true,
+        "gateStatusAfterReload": "idle",
+        "relaunchStatus": "running",
+        "pass": true
+      },
+      "C1": {
+        "present": true,
+        "box": {
+          "x": 330.739990234375,
+          "y": 61.7400016784668,
+          "width": 44.519989013671875,
+          "height": 44.51999282836914
+        },
+        "haloLuma": {
+          "mean": 83.22,
+          "max": 234.45,
+          "std": 56.09
+        },
+        "bgLuma": {
+          "mean": 1.51,
+          "max": 6.3,
+          "std": 1.55
+        },
+        "glowAboveBg": 81.71,
+        "nonFlat": true,
+        "pass": true
+      },
+      "C3": {
+        "samples": 16,
+        "pathLengthPx": 114,
+        "travelDurationMs": 1120,
+        "sawTraveling": true,
+        "start": {
+          "x": 195,
+          "y": 422,
+          "traveling": false,
+          "t": 0
+        },
+        "end": {
+          "x": 190,
+          "y": 308,
+          "traveling": false,
+          "t": 1050
+        },
+        "pass": true
+      },
+      "steps": [
+        {
+          "index": 0,
+          "stepId": "welcome",
+          "artifactFrameRect": null,
+          "domCanvasCount": 1
+        },
+        {
+          "index": 1,
+          "stepId": "galaxy",
+          "artifactFrameRect": null,
+          "domCanvasCount": 1
+        },
+        {
+          "index": 2,
+          "stepId": "canvas",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 353,
+            "w": 341.1875,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c4": {
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 172.2,
+              "range": 167.9,
+              "transitionPx": 71
+            },
+            "insideLuma": 26.84,
+            "outsideLuma": 30.53,
+            "contrast": -3.69,
+            "smooth": true
+          }
+        },
+        {
+          "index": 3,
+          "stepId": "inspector",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 223,
+            "w": 341.1875,
+            "h": 168
+          },
+          "domCanvasCount": 1
+        },
+        {
+          "index": 4,
+          "stepId": "build",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 63,
+            "w": 341.1875,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c4": {
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 7.1,
+              "hi": 188.5,
+              "range": 181.4,
+              "transitionPx": 57
+            },
+            "insideLuma": 66.23,
+            "outsideLuma": 6.12,
+            "contrast": 60.11,
+            "smooth": true
+          }
+        },
+        {
+          "index": 5,
+          "stepId": "preview",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 223,
+            "w": 341.1875,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c6": {
+            "insideLuma": 35.34,
+            "outsideLuma": 32.47,
+            "delta": 2.87,
+            "dimsScene": false
+          }
+        },
+        {
+          "index": 6,
+          "stepId": "relaunch",
+          "artifactFrameRect": {
+            "x": 19,
+            "y": 125,
+            "w": 341.1875,
+            "h": 168
+          },
+          "domCanvasCount": 1,
+          "c4": {
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 11.4,
+              "hi": 210.2,
+              "range": 198.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 98.39,
+            "outsideLuma": 7.74,
+            "contrast": 90.65,
+            "smooth": true
+          }
+        }
+      ],
+      "C4": {
+        "measured": [
+          {
+            "step": "canvas",
+            "targetSel": "[data-component=\"canvas-toolbar\"]",
+            "edge": {
+              "lo": 4.3,
+              "hi": 172.2,
+              "range": 167.9,
+              "transitionPx": 71
+            },
+            "insideLuma": 26.84,
+            "outsideLuma": 30.53,
+            "contrast": -3.69,
+            "smooth": true
+          },
+          {
+            "step": "build",
+            "targetSel": "[data-component=\"add-node-button\"]",
+            "edge": {
+              "lo": 7.1,
+              "hi": 188.5,
+              "range": 181.4,
+              "transitionPx": 57
+            },
+            "insideLuma": 66.23,
+            "outsideLuma": 6.12,
+            "contrast": 60.11,
+            "smooth": true
+          },
+          {
+            "step": "relaunch",
+            "targetSel": "[data-component=\"guided-tips-lightbulb\"]",
+            "edge": {
+              "lo": 11.4,
+              "hi": 210.2,
+              "range": 198.8,
+              "transitionPx": 41
+            },
+            "insideLuma": 98.39,
+            "outsideLuma": 7.74,
+            "contrast": 90.65,
+            "smooth": true
+          }
+        ],
+        "pass": true
+      },
+      "C6": {
+        "measured": [
+          {
+            "step": "preview",
+            "insideLuma": 35.34,
+            "outsideLuma": 32.47,
+            "delta": 2.87,
+            "dimsScene": false
+          }
+        ],
+        "pass": false
+      },
+      "C7": {
+        "baselineGalaxyIdle": 1,
+        "baselinePreviewIdle": 1,
+        "galaxyRunning": 1,
+        "previewRunning": 1,
+        "galaxyDelta": 0,
+        "previewDelta": 0,
+        "note": "walkthrough must add 0 canvases; idle galaxy/canvas already owns GraphScene + pre-existing Minimap; preview-app hides the Minimap",
+        "pass": true
+      },
+      "C5": {
+        "next": {
+          "before": 2,
+          "after": 3
+        },
+        "back": {
+          "after": 2
+        },
+        "dot": {
+          "clicked": 6,
+          "after": 6
+        },
+        "skip": {
+          "status": "skipped"
+        },
+        "esc": {
+          "status": "idle"
+        },
+        "scrim": {
+          "status": "idle"
+        },
+        "pass": true
+      },
+      "C12_consoleClean": {
+        "errors": 0,
+        "pass": true
+      }
+    },
+    "consoleErrors": 0,
+    "consoleErrorSamples": []
+  }
+]

@@ -1,0 +1,35 @@
+{
+  "taskId": "EBR2-C-02",
+  "capturedAt": "2026-05-19T04:38:00.000Z",
+  "surface": "playwright-fallback",
+  "fallbackReason": "kv MCP IPC schema rejects every progressive config shape (version → dev_server → port_strategy → ready_pattern → verification chain of required fields) without surfaced documentation; documented timeout/IPC pattern continues from EBR2-A-02 / EBR2-A-03 / EBR2-B-02 / EBR2-B-03 / EBR2-B-04 / EBR2-C-01 task notes. kv_dev_server_status returned status=crashed for the managed sandbox. Falling back to verify-editor-runtimes.mjs Playwright surface which exercises the same primitives (navigate + screenshot + console scan + network scan) against the same code at HEAD.",
+  "devServer": {
+    "status": "crashed",
+    "url": "http://127.0.0.1:49656",
+    "port": 49656,
+    "pid": null
+  },
+  "fallbackSurface": "kid-kode-landing/scripts/verify-editor-runtimes.mjs --task-id=EBR2-C-02",
+  "url": "http://localhost:4791/",
+  "console": [],
+  "network": [],
+  "interactions": [
+    {
+      "step": "boot",
+      "viewMode": "preview-app",
+      "activeHubId": "home",
+      "result": "preview-app rendered; runtime mounted; 0 console errors; 0 4xx/5xx network responses"
+    },
+    {
+      "step": "EBR2-C-02 surface",
+      "note": "CanvasTransformGizmo now gates on editorMode === 'edit' as a third clause alongside isCanvasMode and !!node. Source-grep tests in tests/editor-build/EBR2-C-02.gizmo-edit-gate.test.ts (7/7 passing) assert: (1) editorMode subscription via useGraphEditorStore, (2) isEditMode derived from editorMode === 'edit', (3) three-clause early-return guard with edit clause, (4) viewMode === 'canvas' clause still present, (5) !node clause still present, (6) keyboard-handler effect gated on isEditMode (g/r/s/Escape no longer fire in idle), (7) prior-snapshot effect resets when editorMode flips to 'idle'. Invariant test: exactly one <TransformControls> mount site, post-guard. Default editorMode is 'idle' so handles do NOT render until the user explicitly clicks Inspector's Edit button from EBR2-C-01."
+    }
+  ],
+  "verifyEditorRuntimes": {
+    "checksTotal": 7,
+    "checksPassed": 7,
+    "consoleLogCount": 0,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "feature": "dust-cloud",
+  "claim": "A thin warm dust haze billows sideways with in-shader volume: layered domain-warped fbm drifts at parallax speeds with soft lit contrast and faint glinting motes — smooth and hazy, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No slab/shelf banding, no tile/lattice grid, no mirror seams, no jagged edges, no blow-out at default controls. Play-frame bandingScore stays under the 0.25 visibility threshold (idle 0.223, play-1 0.221, play-2 0.220, play-3 0.209) and the frames show continuous domain-warped billows, not stacked cards. Two borderline items, neither a clear objective failure: (a) control-scale-mid.png measures bandingScore 0.262 (slightly over 0.25) but visual inspection shows organic puffs and one straight-edged bright patch on the right, NOT discrete parallel shelves; (b) the volume's overall footprint reads slightly rectangular at the left/bottom edges (most visible in control-scale-low.png) — the edges have soft alpha falloff and noise modulation, not hard clips or aliasing, so this is a composition flag rather than a blocky-artifact MUST-FIX.",
+      "evidence": [
+        "metrics: idle bandingScore=0.223, play-3 bandingScore=0.209 (both < 0.25 visible threshold)",
+        "dust-cloud/after/play-2.png",
+        "metrics: control-scale-mid bandingScore=0.262 (marginally > 0.25; frame shows organic billows, no parallel shelves)",
+        "dust-cloud/after/control-scale-low.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads as a thin warm dust haze. The dominant color is a warm tan/amber: effHue 34° at effSat 0.45 with warmFrac 1.0 and coolFrac 0 across idle and all three play frames — exactly the dusty-amber band, not pink, not olive-grey. idle.png and play-1..3.png show layered, domain-warped, billowy puffs with soft lit contrast (bright cores, darker recesses) and tiny bright specks matching the claimed 'faint glinting motes' (visible as white points in play-1.png and play-2.png). No slab seams, as the claim promises. Backend was webgpu so the color measurement is trustworthy.",
+      "evidence": [
+        "metrics: play-2 effHue=34deg effSat=0.45 warmFrac=1.0 coolFrac=0 (warm dust tan)",
+        "dust-cloud/after/idle.png",
+        "dust-cloud/after/play-1.png",
+        "backend: webgpu"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. The two visually-driven labeled controls do exactly what a first-time user would expect: 'density' sweeps from an essentially empty frame (low, meanLuma 7.5, only faint motes remain) through the default haze (mid, meanLuma 18.9) to a denser brighter cloud (high, meanLuma 21.8) — see control-density-low/mid/high.png. 'scale' visibly changes the noise frequency from large soft blobs (control-scale-low.png) to fine billowy detail (control-scale-high.png). The third control, 'drift', produced no detectable change across its sweep (changed=false; low/mid/high meanLuma 18.7/18.6/18.5, frames near-identical) — but drift is plausibly an animation-speed parameter that static captures cannot measure, and the play frames prove the cloud does animate; flagged for recapture with frame-delta measurement rather than blocked.",
+      "evidence": [
+        "control: density low->high meanLuma 7.5 -> 18.9 -> 21.8, changed=true",
+        "dust-cloud/after/control-scale-low.png",
+        "dust-cloud/after/control-scale-high.png",
+        "control: drift low/mid/high meanLuma 18.7/18.6/18.5, changed=false (speed param not measurable in stills)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play frames are genuinely different from each other — frameDeltaMag 2.48 (play-1), 2.86 (play-2), 7.27 (play-3) — and visually the billow structure evolves between idle.png and play-3.png, so the haze visibly drifts rather than sitting frozen. Control apply latency measured 585–616 ms across all nine sweep captures (e.g. density-high 601 ms, scale-high 585 ms) — not instant, but well under anything a user would call laggy for a parameter slider. 2 of 3 controls report changed=true; no console or network errors were recorded.",
+      "evidence": [
+        "metrics: play-1..3 frameDeltaMag = 2.48 / 2.86 / 7.27 (visible motion)",
+        "metrics: control latencyMs 585-616 across all sweeps",
+        "console: consoleErrors=[] networkErrors=[]",
+        "dust-cloud/after/play-3.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That looks like real drifting dust — soft, warm, smoky, and the sliders actually do things.' The interior of the volume is smooth premium fbm with no Minecraft-style blocks, shelves, or grids; color sits squarely in warm dust territory; density and scale sweeps are satisfying and obvious. The only nitpicks (slightly rectangular footprint at the volume bounds, a drift slider whose speed effect can't be confirmed from stills, one borderline banding number at scale-mid) are taste/measurement flags, not things that would make a first-time user annoyed.",
+      "evidence": [
+        "dust-cloud/after/idle.png",
+        "metrics: play frames effHue=34deg effSat=0.45 bandingScore<=0.223, frameDeltaMag up to 7.27"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The volume's silhouette reads slightly rectangular — straight-ish left/bottom edges where the noise meets the volume bounds, most visible at the scale-low extreme where the cloud becomes a soft tan rounded rectangle. Edges have soft alpha falloff (not hard clips or jagged aliasing), so this is composition taste, but feathering the bounds further would make the haze read fully free-floating.",
+      "evidence": "dust-cloud/after/control-scale-low.png (rounded-rectangle footprint); dust-cloud/after/play-3.png (straight-ish bottom edge with soft falloff)"
+    },
+    {
+      "note": "The 'drift' control sweep produced no detectable change in static captures (changed=false). Plausibly a speed-only parameter invisible to stills — recommend recapturing drift with per-value frameDeltaMag so the control can be positively verified.",
+      "evidence": "control: drift low/mid/high meanLuma 18.7/18.6/18.5, changed=false; play frames frameDeltaMag 2.48-7.27 prove animation exists"
+    },
+    {
+      "note": "control-scale-mid bandingScore=0.262 marginally exceeds the 0.25 threshold, though visual inspection shows organic billows with one straight-edged bright patch rather than parallel slab shelves; defaults stay under threshold (0.209-0.226).",
+      "evidence": "metrics: control-scale-mid bandingScore=0.262 vs idle 0.223 / play-3 0.209; dust-cloud/after/control-scale-mid.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,33 @@
+
+ RUN  v2.1.9 /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing
+
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > a binding naming a NONEXISTENT primitive is skipped without throwing
+[animation-bindings] unknown primitive 'does-not-exist-xyz' (ab-ghost) on bind-card — skipped
+
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > unmountable categories (rig-dependent material swappers) are skipped
+[animation-bindings] 'acrylic-edge' (category 'glass') cannot run on a mounted artifact — skipped on bind-card
+
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > an allowed-category primitive missing its subject is skipped (cold mount)
+[animation-bindings] no mountable subject for 'fade-up' on bind-card — skipped
+
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > attaches fade-up, returns a detach fn, and seeking the timeline mutates the subject
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > Infinity-duration primitives (float) ride the FrameDriver tick path
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > binding.params land through the ControlSchema surface (setControl)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > the scroll driver scrubs the timeline by LIVE hub input (dispatch wiring)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > INV-6: changing driver never mutates keyframes — identical timeline + params per driver
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — registry primitive on a mounted node > stacking: multiple bindings attach in `order`, not array order
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — detach() > restores the subject, removes the added group, kills the timeline, idempotent
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — detach() > preserves OTHER (factory) results in the hub diagnostics registry
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > a binding naming a NONEXISTENT primitive is skipped without throwing
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > unmountable categories (rig-dependent material swappers) are skipped
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > an allowed-category primitive missing its subject is skipped (cold mount)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > animationBindings round-trip through the persist payload > survives persist→loadFromHomeHub with deep equality (dirty stripped, only dirty)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > animationBindings round-trip through the persist payload > absent animationBindings stays absent (legacy nodes untouched)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > animationBindings round-trip through the persist payload > round-tripped bindings still attach and play (data → playback, end to end)
+ ✓ tests/editor-build/P2-animation-bindings.test.ts > animationBindings round-trip through the persist payload > sanity: the primitives the fixtures name exist in the registry
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:52:26
+   Duration  944ms (transform 522ms, setup 0ms, collect 792ms, tests 7ms, environment 0ms, prepare 30ms)
+

@@ -1,0 +1,71 @@
+{
+  "steps": [
+    {
+      "step": "app loaded, canvas present",
+      "ok": true,
+      "backend": "webgpu"
+    },
+    {
+      "step": "canvas mode",
+      "ok": true
+    },
+    {
+      "step": "text flyout open",
+      "ok": true
+    },
+    {
+      "step": "Add Text → real MSDF glyph meshes in scene",
+      "ok": true,
+      "nodeId": "1f4a5566-4896-4e0f-b287-bd06dfb9901e",
+      "glyphs": 4,
+      "font": "Inter"
+    },
+    {
+      "step": "re-font to non-core font, in-place (same Group uuid)",
+      "ok": true,
+      "refontMs": 385,
+      "glyphs": 4,
+      "atlasRequests": 2
+    },
+    {
+      "step": "resize instant, in place",
+      "ok": true,
+      "fontSize": 1.35
+    },
+    {
+      "step": "NO image-artifact re-render; other nodes identity stable",
+      "ok": true,
+      "imgReqDelta": 0,
+      "others": 6
+    },
+    {
+      "step": "text node movable via Transform tools",
+      "ok": true,
+      "xBefore": 0,
+      "xAfter": 0.18
+    },
+    {
+      "step": "console+network sweep",
+      "ok": true,
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ],
+  "consoleErrors": [],
+  "badResponses": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "atlasRequests": [
+    {
+      "url": "http://localhost:3000/api/prism/fonts/atlas?family=Abril%20Fatface&weight=400&asset=json",
+      "cache": "hit"
+    },
+    {
+      "url": "http://localhost:3000/api/prism/fonts/atlas?family=Abril%20Fatface&weight=400&asset=png",
+      "cache": "hit"
+    }
+  ],
+  "rawConsoleMessages": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "wave": "W2-SCROLL-STORY",
+  "date": "2026-06-12",
+  "overall": "SHIP — 12/12 ship-quality",
+  "rounds": {
+    "r1": "9/12 ship-quality, 3 BLOCKED (scroll-inertia-glide, scroll-orbit-scrub, scroll-fold-scrub)",
+    "r2_fixround": "scroll-inertia-glide SHIP, scroll-orbit-scrub SHIP, scroll-fold-scrub: slab RESOLVED but 'shade' control still dead",
+    "r3_shade_fix": "scroll-fold-scrub SHIP (shade now a book-gutter contact shadow, meanAbsDiff 3.156)"
+  },
+  "blockedTileResolutions": {
+    "scroll-inertia-glide": {
+      "shipQuality": true,
+      "r1MustFix": ["'Smoothness' control dead (transient-only, settled identically at pinned engaged scroll)", "'Tilt Degrees' control dead", "brass header clipped off top at full travel"],
+      "fix": "Made the engaged pose a function of scroll POSITION not frame history: momentumOf(scroll)=sin(pi*scroll)*VREF peaks at the scroll=0.5 pin, 0 at ends (clean idle/end snaps). Steady-state lag=momentum/k*spanUnits persists at the pin and scales inversely with smoothness -> Smoothness reshapes pinned offset+lean; trail lean off momentum/VREF -> Tilt reaches full pitch at engaged frame. onParamChange re-applies at lastScroll. boundOffset() clamps card center so header stays in frame.",
+      "evidence": "control-smoothness-low vs -high (laggy/pitched vs tight/flat, meanAbsDiff 8.439); control-tiltDeg-low vs -high (flat vs pitched, 4.853); control-span-high header on-screen; live-play glide/overshoot preserved. 0 console/net, webgpu."
+    },
+    "scroll-orbit-scrub": {
+      "shipQuality": true,
+      "r1MustFix": ["blank dark BACK FACE at play-2/3 + orbitDeg-high (single-sided billboard, forbidden featureless slab)", "'Orbit Degrees' payoff landed on the blank face", "'counterTiltDeg' control dead (sin(theta)=0 at the pinned orbitDeg=360 => theta=180)"],
+      "fix": "Scroll-scrubbed camera fly-around: card POSITION traces the orbital arc (x sweep + bounded z-bow) while it stays turned toward the lens. yaw=YAW_CAP*tanh(theta/YAW_CAP), YAW_CAP=52deg -> hard-capped short of the 90deg edge-on blank-out at ANY orbit angle. counterTilt bank changed to a steady saturating lean roll=-tilt*tanh(theta/ROLL_REF) (ROLL_REF=90), monotonic with no interior zero.",
+      "evidence": "idle/play-1/2/3 + orbitDeg-high all three-quarter views with chrome legible, no blank face; control-counterTiltDeg low(level) vs high(banked), meanAbsDiff 2.109 (was 0); orbitDeg 4.759, arcDepth 4.048 changed=true. Regression tests assert |yaw|<70deg across scroll + bank>5deg at theta=180. 0 console/net, webgpu.",
+      "tasteFlag": "card recedes/dims under deep arcDepth (bounded by BOW_CAP), still legible"
+    },
+    "scroll-fold-scrub": {
+      "shipQuality": true,
+      "r1MustFix": ["folded a featureless tan SLAB (placeholder-plane defect, card chrome never visible)", "'shade' control dead"],
+      "r2": "slab RESOLVED via chrome co-treatment (real card folds along center book-crease, header/dot/rows legible) but 'shade' still dead (meanAbsDiff 0.877 below noise — multiplicative darkening near-invisible on the dark card except the bright brass header)",
+      "r3_shadeFix": "Book-gutter CONTACT SHADOW: cast the shadow into the center-anchor (stationary) leaf too (was excluded), scaled by max adjacent fold drive * shade, deepening toward the crease on BOTH leaves and reaching the bright chrome (header/rows/dot) near the gutter. Multiplicative over snapshotted base, clears to base when flat. Card stays legible at shade-high (gutter shadow, not a global dimmer).",
+      "evidence": "control-shade-low (even gutter) vs -high (distinct dark book-gutter shadow, card legible); meanLuma 13.1->9.9, meanAbsDiff 3.156 changedFrac 0.097 changed=true (was 0.877). stagger still changed=true (3.176). idle/play-1/2/3 chrome legible folding. 0 console/net, webgpu.",
+      "advocateR3": "SHIP — slab + shade both resolved, stagger working, no regressions, 0 errors (agentId ab3db1e84fe4cba77)"
+    }
+  },
+  "gates": {
+    "tsc": "0 new",
+    "vitest_3_fixed": "31/31",
+    "harness_3_fixed": "3/3 r/p/c, deviceLost 0",
+    "harness_full_12": "12/12 r/p/c (pre-fix run, deviceLost 0)"
+  }
+}

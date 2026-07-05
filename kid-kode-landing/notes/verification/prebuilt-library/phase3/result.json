@@ -1,0 +1,165 @@
+{
+  "ok": true,
+  "backend": "webgpu",
+  "startedAt": "2026-06-13T22:24:09.660Z",
+  "consoleErrors": [],
+  "pageErrors": [],
+  "steps": [
+    {
+      "id": "1",
+      "title": "Canvas mode + active hub",
+      "ok": true,
+      "mode": "ui",
+      "frame": "00-canvas-boot.png",
+      "viewMode": "canvas",
+      "activeHubId": "s1-arrival",
+      "nodeCountBefore": 34,
+      "hubCount": 5
+    },
+    {
+      "id": "2",
+      "title": "Place pricing-pillars-3d cluster",
+      "ok": true,
+      "mode": "ui",
+      "frame": "01-placed.png",
+      "nodeCountBefore": 34,
+      "nodeCountAfter": 40,
+      "added": 6,
+      "groupId": "grp-50253c9c-242e-4907-9aff-9b9813af7372",
+      "members": 6,
+      "memberCaptions": [
+        "Starter tier pillar",
+        "Featured tier pillar",
+        "Scale tier pillar",
+        "Starter price",
+        "Featured price",
+        "Scale price"
+      ],
+      "parentHubId": "s1-arrival",
+      "bindingsPerMember": [
+        0,
+        2,
+        0,
+        1,
+        1,
+        1
+      ],
+      "libraryFrame": "01a-library-open.png"
+    },
+    {
+      "id": "3",
+      "title": "Swap/stack animation via picker (add + reorder)",
+      "ok": true,
+      "mode": "ui+store",
+      "frame": "02-anim-swap.png",
+      "targetNodeId": "cedbfd17-1646-4287-8e8d-e7ceaa04c224",
+      "targetCaption": "element",
+      "bindingsBefore": [],
+      "bindingsAfter": [
+        {
+          "primitive": "float",
+          "order": 0
+        },
+        {
+          "primitive": "scroll-orbit-scrub",
+          "order": 1
+        }
+      ],
+      "pickerMounted": true,
+      "appliedViaUi": true,
+      "reorderedViaUi": true,
+      "orderChanged": true
+    },
+    {
+      "id": "4",
+      "title": "Keyframe editor panel mounts",
+      "ok": true,
+      "mode": "ui",
+      "frame": "03-keyframe.png",
+      "panelComponent": "keyframe-editor",
+      "mounted": true
+    },
+    {
+      "id": "5",
+      "title": "Material metalness/roughness change",
+      "ok": true,
+      "mode": "ui",
+      "frame": "04-material.png",
+      "targetNodeId": "cedbfd17-1646-4287-8e8d-e7ceaa04c224",
+      "sourceMaterialBefore": {
+        "metalness": 0.7,
+        "roughness": 0.18
+      },
+      "previewMaterialAfter": {
+        "metalness": 0.2,
+        "roughness": 0.85
+      }
+    },
+    {
+      "id": "6",
+      "title": "Lighting — per-node receivesLighting + scene light",
+      "ok": true,
+      "mode": "ui",
+      "frame": "05-lighting.png",
+      "targetNodeId": "cedbfd17-1646-4287-8e8d-e7ceaa04c224",
+      "receivesLightingBefore": true,
+      "receivesLightingAfter": false,
+      "receivesToggled": true,
+      "hubLightsBefore": 2,
+      "hubLightsAfter": 2,
+      "lightAdded": true
+    },
+    {
+      "id": "7",
+      "title": "Compose — Add Text + Group cluster+text + scene lighting",
+      "ok": true,
+      "mode": "ui+store",
+      "frame": "06-composed.png",
+      "textAdded": true,
+      "newTextId": "663833be-9d9c-4ae3-b45c-7eeb2eeb4623",
+      "nodeCountBefore": 40,
+      "nodeCountAfter": 41,
+      "groupedViaUi": true,
+      "composedGroupId": "grp-48151026-6e7e-4063-89b1-8ed2ee82d47b",
+      "composedGroupSpansText": true,
+      "sceneEnvBefore": null,
+      "sceneEnvAfter": 1.8,
+      "sceneLightChanged": true,
+      "noCrash": true
+    },
+    {
+      "id": "8",
+      "title": "Place 2nd element + manual animation stack on its member",
+      "ok": true,
+      "mode": "ui+store",
+      "frame": "07-take-object.png",
+      "secondElementId": "banner-ticker-3d",
+      "nodeCountBefore": 41,
+      "nodeCountAfter": 46,
+      "added": 5,
+      "secondGroupId": "grp-de5be24b-cd7b-4888-b849-7265f8b5d440",
+      "secondMembers": 5,
+      "stackTargetBindingsBefore": [],
+      "stackTargetBindingsAfter": [
+        {
+          "primitive": "block-topple",
+          "order": 0
+        }
+      ],
+      "stackedViaUi": true
+    },
+    {
+      "id": "9",
+      "title": "Preview App — composed scene plays",
+      "ok": true,
+      "mode": "ui",
+      "frame": "08-preview.png",
+      "viewMode": "preview-app",
+      "nodeCount": 46
+    }
+  ],
+  "sceneStable": true,
+  "notes": [],
+  "hardConsoleErrors": [],
+  "finishedAt": "2026-06-13T22:25:08.654Z"
+}

@@ -1,0 +1,21 @@
+
+ RUN  v2.1.9 /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing
+
+ ✓ tests/editor-build/EB-08-02.keyframe-coordinate-space.test.ts (14 tests) 3ms
+ ✓ tests/editor-build/EB-07-04.scroll-timeline.test.ts (20 tests) 3ms
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > a binding naming a NONEXISTENT primitive is skipped without throwing
+[animation-bindings] unknown primitive 'does-not-exist-xyz' (ab-ghost) on bind-card — skipped
+
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > unmountable categories (rig-dependent material swappers) are skipped
+[animation-bindings] 'acrylic-edge' (category 'glass') cannot run on a mounted artifact — skipped on bind-card
+
+stdout | tests/editor-build/P2-animation-bindings.test.ts > attachAnimationBindings — skips, never crashes > an allowed-category primitive missing its subject is skipped (cold mount)
+[animation-bindings] no mountable subject for 'fade-up' on bind-card — skipped
+
+ ✓ tests/editor-build/P2-animation-bindings.test.ts (15 tests) 7ms
+
+ Test Files  3 passed (3)
+      Tests  49 passed (49)
+   Start at  00:29:04
+   Duration  861ms (transform 522ms, setup 0ms, collect 792ms, tests 13ms, environment 0ms, prepare 84ms)
+

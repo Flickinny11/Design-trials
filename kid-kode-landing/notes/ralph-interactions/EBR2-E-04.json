@@ -1,0 +1,30 @@
+{
+  "task_id": "EBR2-E-04",
+  "url_path": "/",
+  "_comment": "RA-16 / INV-26 — Save and Rebuild. Implementer adds data-testid='inspector-save-and-rebuild' + the rebuild handler that calls cleanup() + createNode() and re-mounts at same scenePosition. Asserts target Object3D ref changes while siblings stay stable (Object.is identity). Reads via window.__PRISM_EDITOR_NODE_GROUPS__ (already exists).",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const src = stores.graphSource.getState(); const ed = stores.graphEditor.getState(); if (!groups || groups.size < 2) return null; const targetId = Array.from(groups.keys())[0]; ed.selectNode(targetId); ed.openInspector(); ed.setEditorMode('edit'); stores.previewState.getState().set(targetId, { caption: 'REBUILD-TEST' }); const siblingId = Array.from(groups.keys())[1]; window.__EBR2_E_04_TARGET__ = { targetId, siblingId, targetRefBefore: groups.get(targetId), siblingRefBefore: groups.get(siblingId) }; return { targetId, siblingId }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    { "action": "wait_for", "selector": "[data-testid='inspector-save-and-rebuild']", "timeout_ms": 5000 },
+    { "action": "screenshot", "name": "before.png" },
+    { "action": "click", "selector": "[data-testid='inspector-save-and-rebuild']" },
+    { "action": "wait_ms", "duration_ms": 2500 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const captured = window.__EBR2_E_04_TARGET__; if (!groups || !captured) return false; const targetRefAfter = groups.get(captured.targetId); const siblingRefAfter = groups.get(captured.siblingId); return targetRefAfter && siblingRefAfter && targetRefAfter !== captured.targetRefBefore && siblingRefAfter === captured.siblingRefBefore; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

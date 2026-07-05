@@ -1,0 +1,36 @@
+{
+  "steps": [
+    {
+      "mat": "metal.gold",
+      "fader": "roughness",
+      "ok": true,
+      "value": 0.92,
+      "targetVal": 0.92
+    },
+    {
+      "mat": "gem.diamond",
+      "fader": "dispersion",
+      "ok": true,
+      "value": 5.7,
+      "targetVal": 5.699999999999999
+    },
+    {
+      "mat": "exotic.oil-slick",
+      "fader": "iridescence-down",
+      "ok": true,
+      "value": 0.1,
+      "targetVal": 0.1
+    },
+    {
+      "mat": "exotic.oil-slick",
+      "fader": "iridescence-up",
+      "ok": true,
+      "value": 1,
+      "targetVal": 1
+    }
+  ],
+  "errors": [],
+  "reset": {
+    "overridesAfter": 0
+  }
+}

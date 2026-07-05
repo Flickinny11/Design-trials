@@ -1,0 +1,7 @@
+{
+  "name": "scroll-depth-dolly",
+  "label": "Depth Travel",
+  "description": "Scroll dollies the card through depth — rushing toward then past the viewer as the page moves.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

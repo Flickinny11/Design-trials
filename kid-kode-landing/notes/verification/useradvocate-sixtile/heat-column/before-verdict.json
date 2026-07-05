@@ -1,0 +1,81 @@
+{
+  "feature": "heat-column",
+  "claim": "A shimmering volumetric column of rising heat-haze and embers glows faintly over an unseen ember bed, the air distorting and wobbling upward through depth.",
+  "groundTruthSibling": "fire-flame",
+  "state": "before",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Yes, multiple defects. The 'volume' reads as a flat blocky stack of shelves, not a soft volumetric column — coarse rectangular banding/quilting is visible across the whole body. The haze also carries an unwanted green/olive cast rather than a warm glow. Compared to the soft organic edges of the ground-truth fire-flame, this looks like a low-res tiled texture.",
+      "evidence": [
+        "heat-column/before/play-2.png",
+        "heat-column/before/idle.png",
+        "metrics: idle bandingScore=0.251 and play-3 bandingScore=0.256 (>0.25 = visible shelf banding)",
+        "metrics: play-2 effHue=58 (yellow-green/olive) with green channel ~equal to red (effRGB 106.9,105.2,57.7)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "No — it does not read as rising heat-haze/embers. The body is a static olive/yellow-green blocky haze, not a glowing warm column. Against the fire-flame ground truth (a clean warm orange-to-white glow), the heat-column's dominant hue sits at ~57-58 degrees (yellow-green/olive), well outside fire's warm band (~10-45), and the green channel nearly equals red. It looks like a murky green-yellow cloud, not heat.",
+      "evidence": [
+        "heat-column/before/play-2.png",
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: play-2 effHue=58 effSat=0.46 warmFrac=0.23 (vs fire band 10-45 deg high-sat)",
+        "metrics: play-1 effRGB=[109.5,106.5,58.1] (red~=green -> olive, not orange)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "No. The two controls a user would reach for to drive the claimed effect — 'rise' and 'wobble' — are dead. Sweeping either from low to high produces no visible change, so a first-time user dragging the labeled 'Rise' slider sees nothing happen and would conclude the tile is broken. Only the unlabeled-by-claim 'intensity' control actually does anything.",
+      "evidence": [
+        "heat-column/before/control-rise-low.png",
+        "heat-column/before/control-rise-high.png",
+        "heat-column/before/control-wobble-low.png",
+        "heat-column/before/control-wobble-high.png",
+        "metrics: controls rise.changed=false -> dead",
+        "metrics: controls wobble.changed=false -> dead",
+        "metrics: control wobble low/mid/high effRGB all identical [108.4,106.4,58.1]"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Janky/near-dead. Across play frames the motion is minimal (frameDeltaMag ~2.8-5.6) and the frames look essentially the same olive haze, so there is no convincing sense of upward rising heat. Two of three labeled controls register no change at all, which a user reads as unresponsive.",
+      "evidence": [
+        "metrics: play-1 frameDeltaMag=2.79, play-2 frameDeltaMag=2.82 (very low motion)",
+        "metrics: controls rise.changed=false and wobble.changed=false (2 of 3 controls dead)",
+        "heat-column/before/play-1.png",
+        "heat-column/before/play-3.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "A user would be ANNOYED: it is a static murky green-yellow blocky cloud, nothing like rising heat or embers, and dragging the Rise and Wobble sliders does nothing.",
+      "evidence": [
+        "heat-column/before/play-2.png",
+        "metrics: play-2 effHue=58 olive, warmFrac=0.23",
+        "metrics: controls rise.changed=false, wobble.changed=false"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Does not read as rising heat-haze/embers — static olive/green-yellow blocky haze, dominant hue outside fire's warm band.",
+      "evidence": "heat-column/before/play-2.png : metrics play-2 effHue=58 (olive), effSat=0.46, warmFrac=0.23; green channel ~= red (effRGB 106.9,105.2,57.7)"
+    },
+    {
+      "issue": "'Rise' control is dead — sweeping low to high produces no visible change.",
+      "evidence": "heat-column/before/control-rise-high.png vs control-rise-low.png : metrics controls rise.changed=false"
+    },
+    {
+      "issue": "'Wobble' control is dead — low/mid/high frames are pixel-identical.",
+      "evidence": "heat-column/before/control-wobble-high.png : metrics controls wobble.changed=false, effRGB identical across sweep [108.4,106.4,58.1]"
+    },
+    {
+      "issue": "Coarse rectangular shelf banding — the 'volume' is a flat blocky tiled stack, not a soft volumetric column.",
+      "evidence": "heat-column/before/play-3.png : metrics play-3 bandingScore=0.256 (>0.25 visible)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "The 'intensity' control does work and at high values pushes toward a warmer orange (effHue 42, warmFrac 0.82) — the warm look is achievable, so the olive default is a fixable choice rather than a hard limitation.",
+      "evidence": "metrics: control intensity high effHue=42 warmFrac=0.82; control-intensity-high.png"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

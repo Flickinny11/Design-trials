@@ -1,0 +1,7 @@
+{
+  "name": "pointer-cast-shadow",
+  "label": "Shadow length",
+  "description": "The cursor becomes the room lamp — the card throws a soft true shadow away from it, raking long when the light is low and snapping tight underfoot when it hovers above.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

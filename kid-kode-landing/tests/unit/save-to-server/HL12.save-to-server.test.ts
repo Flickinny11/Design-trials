@@ -2,9 +2,18 @@
 //
 // Spec ref: Plan §P12 — Inspector gains:
 //   - "Save"            (data-role="save")            → saveToServer()
-//   - "Preview in App UI" (data-role="preview-in-app-ui") → setViewMode('preview') + flyToHub
+//   - "Preview in App UI" (data-role="preview-in-app-ui") → setViewMode('preview-hub')
+//     + flyToHub
 // useGraphEditorStore gains a setViewMode action; viewMode lives on the store
 // so the Inspector button can drive a top-level pane swap.
+//
+// EB-01 (Phase 1 of the editor build) migrated the viewMode union from the
+// pre-EB legacy `'preview' | 'editor' | 'split'` to the canonical 5-mode
+// `'galaxy' | 'hub-world' | 'canvas' | 'preview-hub' | 'preview-app'` per
+// RA-06. EB-01-02 remapped initial state from 'split' → 'canvas' and
+// Inspector's Preview-in-App-UI button now drives 'preview-hub'. EB-01-03
+// narrowed the store's setter and state field to ViewMode, which forced this
+// suite's local EditorStore mirror to track the canonical union.
 //
 // Save & Verify (existing on VisualPreview) is widened to include `codeModule`
 // in the regen body — already implemented in regen-api.ts; this suite pins
@@ -30,12 +39,16 @@ type SourceStore = {
   saveToServer: () => Promise<{ ok: boolean; error?: string; regeneratedAt?: string }>;
 };
 
-// Mirror of the editor-store surface this task adds.
+// Mirror of the editor-store surface this task uses. Round 2 (RA-06b /
+// INV-24) reduced the canonical set to exactly 3 modes — 'hub-world' and
+// 'preview-hub' are superseded and FP-14 forbids those literals returning.
+// This mirror tracks the same shape so the casts below stay well-typed.
+type EditorViewMode = 'galaxy' | 'canvas' | 'preview-app';
 type EditorStore = {
-  viewMode: 'preview' | 'editor' | 'split';
+  viewMode: EditorViewMode;
   flyToHubId: string | null;
   activeHubId: string | null;
-  setViewMode: (m: 'preview' | 'editor' | 'split') => void;
+  setViewMode: (m: EditorViewMode) => void;
   flyToHub: (hubId: string) => void;
 };
 
@@ -140,41 +153,50 @@ describe('HL12 — useGraphSourceStore.saveToServer (Inspector Save button)', ()
 });
 
 describe('HL12 — useGraphEditorStore.setViewMode (Preview in App UI button)', () => {
-  it('exposes viewMode + setViewMode (default split)', async () => {
+  it('exposes viewMode + setViewMode (boot default preview-app — RA-17; canonical 3 only per RA-06b)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
-    expect(useGraphEditorStore.getState().viewMode).toBe('split');
-    useGraphEditorStore.getState().setViewMode('preview');
-    expect(useGraphEditorStore.getState().viewMode).toBe('preview');
-    useGraphEditorStore.getState().setViewMode('editor');
-    expect(useGraphEditorStore.getState().viewMode).toBe('editor');
+    // RA-17: the app boots into preview-app (the running app), not an editor
+    // mode. A revert to the Round-1 'canvas' (or any superseded) default
+    // fails here.
+    expect(useGraphEditorStore.getState().viewMode).toBe('preview-app');
+    // The full canonical-3 round-trips through the setter; superseded
+    // literals ('hub-world'/'preview-hub') no longer typecheck (FP-14).
+    useGraphEditorStore.getState().setViewMode('canvas');
+    expect(useGraphEditorStore.getState().viewMode).toBe('canvas');
+    useGraphEditorStore.getState().setViewMode('galaxy');
+    expect(useGraphEditorStore.getState().viewMode).toBe('galaxy');
+    useGraphEditorStore.getState().setViewMode('preview-app');
+    expect(useGraphEditorStore.getState().viewMode).toBe('preview-app');
   });
 
-  it('Preview-in-App-UI driver: setViewMode("preview") + flyToHub(hubId)', async () => {
+  it('Preview-in-App-UI driver: setViewMode("preview-app") + flyToHub(hubId) — preview-hub folded into preview-app (RA-06b)', async () => {
     const { useGraphEditorStore } = (await import('@/stores/useGraphEditorStore')) as {
       useGraphEditorStore: { getState: () => EditorStore };
     };
     const s = useGraphEditorStore.getState();
-    s.setViewMode('preview');
+    s.setViewMode('preview-app');
     s.flyToHub('home');
     const after = useGraphEditorStore.getState();
-    expect(after.viewMode).toBe('preview');
+    expect(after.viewMode).toBe('preview-app');
     expect(after.flyToHubId).toBe('home');
     expect(after.activeHubId).toBe('home');
   });
 });
 
-describe('HL12 — saveAndVerify wire shape (Save & Verify on VisualPreview)', () => {
-  it('forwards codeModule into the verify-node body when supplied', async () => {
-    const captured: { url?: string; init?: RequestInit } = {};
-    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-      captured.url = url;
-      captured.init = init;
-      return new Response(
-        JSON.stringify({ ok: true, verifierStatus: 'clean' }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } },
-      );
+// EDITOR-EXP NE-SC-14 — the "Save & Verify on VisualPreview" wire-shape test
+// is RETIRED with the 2nd save/build path. saveAndVerify no longer POSTs to
+// the regen endpoint; VisualPreview is display-only and editing routes through
+// the overlay → Save → Build path. We keep one assertion that the path is
+// dead so it can't silently come back. (The save-to-server `persist` path
+// above is the real, untouched durable save.)
+describe('HL12 — saveAndVerify RETIRED (NE-SC-14, was Save & Verify on VisualPreview)', () => {
+  it('does NOT hit the regen endpoint — the 2nd save/build path is retired', async () => {
+    let fetched = false;
+    const fetchMock = vi.fn(async () => {
+      fetched = true;
+      return new Response(JSON.stringify({ ok: true }), { status: 200 });
     });
 
     const node = minimalNode('home-cta');
@@ -183,12 +205,8 @@ describe('HL12 — saveAndVerify wire shape (Save & Verify on VisualPreview)', (
       codeModule: "export default function createNode() { return new THREE.Group(); }",
     });
 
-    expect(result.ok).toBe(true);
-    expect(captured.url).toBe('/api/prism/regen');
-    const body = JSON.parse(String(captured.init?.body ?? '{}'));
-    expect(body.action).toBe('verify-node');
-    expect(body.node?.nodeId).toBe('home-cta');
-    expect(typeof body.codeModule).toBe('string');
-    expect(body.codeModule.length).toBeGreaterThan(0);
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain('RETIRED');
+    expect(fetched).toBe(false);
   });
 });

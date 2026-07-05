@@ -1,0 +1,65 @@
+{
+  "feature": "cosmic-dust",
+  "claim": "A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing visibly broken in this fresh capture. The round-3 blocker — hard-edged axis-aligned sprite quads at the low end of the scale sweep — is RESOLVED: control-scale-low.png now shows only soft, feathered, wispy dust structure with round glowy star sprites; no quad edge, square patch, tile lattice, mirror seam, or shelf banding anywhere in the 10 frames. bandingScore is sub-threshold across the entire bundle (idle/play 0.237-0.24, all control frames 0.228-0.238, vs the 0.25 visibility line), the volume edge fades organically into the near-black surround, and the run is error-free.",
+      "evidence": [
+        "cosmic-dust/after/control-scale-low.png",
+        "metrics: control-scale-low bandingScore=0.233 and frame shows zero hard-edged quads (prior blocker frame, re-checked)",
+        "metrics: idle bandingScore=0.239, play-1..3 bandingScore=0.24/0.24/0.237 (<0.25, no slab banding)",
+        "console: consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes. idle.png and play-1..3.png show a smooth mauve-violet nebular haze with darker brown dust lanes and bright pinprick stars scattered through it — it reads instantly as a deep-space dust cloud in starlight. Measured colour sits squarely in the nebula palette: effHue 292-293deg at effSat 0.26-0.27 with magentaFrac 0.45-0.46, and zero warm/cool contamination (warmFrac=0, coolFrac=0). The starDensity sweep confirms the 'twinkling pinprick stars' half of the claim: control-starDensity-low.png is nearly starless haze, control-starDensity-high.png is densely star-speckled.",
+      "evidence": [
+        "cosmic-dust/after/idle.png",
+        "cosmic-dust/after/play-2.png",
+        "metrics: idle effHue=292 effSat=0.27 magentaFrac=0.46 warmFrac=0 (violet nebula palette)",
+        "cosmic-dust/after/control-starDensity-high.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Two of three labeled controls produce obvious, sensible visible change a first-time user would understand unprompted: scale (low = large soft coarse cloud masses, high = fine busy granulation; changed=true, meanLuma 54 -> 58.8) and starDensity (low frame nearly starless, high frame densely speckled; changed=true, meanLuma 58.2 -> 60, magentaFrac 0.45 -> 0.51). The drift control measured changed=false across its 0.01->0.6 sweep, but drift is a temporal velocity that a single paused frame cannot show — and the play frames prove the cloud animates — so per the control-judgement nuance this is a FLAG, not a block.",
+      "evidence": [
+        "cosmic-dust/after/control-scale-low.png",
+        "cosmic-dust/after/control-scale-high.png",
+        "cosmic-dust/after/control-starDensity-low.png",
+        "cosmic-dust/after/control-starDensity-high.png",
+        "control: scale low->high changed=true meanLuma 54->58.8; starDensity low->high changed=true meanLuma 58.2->60; drift low/mid/high changed=false meanLuma 55.9/55.9/55.9"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Controls apply in 578-602ms, and the play phase shows real motion: frameDeltaMag 0.81/0.9/4.32 across play-1..3, with the star twinkle pattern visibly different between play-1.png and play-3.png. The base cloud drift at default is gentle — slow is in-character for a 'vast' dust cloud, though an impatient user might call the haze itself near-static between adjacent frames (deltas under 1 for two of three); flagged as taste, not blocked.",
+      "evidence": [
+        "metrics: play-1 frameDeltaMag=0.81, play-2=0.9, play-3=4.32",
+        "control: drift/scale/starDensity apply latency 578-602ms",
+        "cosmic-dust/after/play-3.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That's genuinely pretty — a soft purple space cloud with little stars twinkling through it, and the sliders make sense: one makes the cloud chunkier or finer, one adds more stars. The squares I saw last time are gone; I'd happily drop this into my scene.'",
+      "evidence": [
+        "cosmic-dust/after/idle.png",
+        "cosmic-dust/after/control-scale-low.png",
+        "metrics: all 10 frames bandingScore 0.228-0.24 (<0.25), consoleErrors=[], prior quad artifact absent from the re-captured scale-low frame"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "drift control measured changed=false across its full 0.01->0.6 sweep (static captures cannot show a velocity; frameDeltaMag is null for control frames). Play frames prove the effect animates, and the other two controls show clear visible change, so not blocking — but the capture rig should measure frameDeltaMag at drift-low vs drift-high to positively verify the control does something.",
+      "evidence": "control: drift low/mid/high changed=false, meanLuma 55.9/55.9/55.9, frameDeltaMag=null; metrics: play-1..3 frameDeltaMag 0.81/0.9/4.32 at default drift"
+    },
+    {
+      "note": "Default-speed cloud drift is very subtle — two of three play deltas are under 1.0 and most visible inter-frame change is star twinkle; could read as nearly static to an impatient user. Slow drift suits a 'vast' cloud, so taste only.",
+      "evidence": "metrics: play-1 frameDeltaMag=0.81, play-2=0.9; cosmic-dust/after/play-1.png vs cosmic-dust/after/play-3.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

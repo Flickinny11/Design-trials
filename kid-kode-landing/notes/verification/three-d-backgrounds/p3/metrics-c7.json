@@ -1,0 +1,26 @@
+{
+  "t2": {
+    "tier": "T2",
+    "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p3/captured-observatory-T2.png",
+    "splatCount": 58560,
+    "mean": 66.48,
+    "errors": 0,
+    "errSample": []
+  },
+  "t0": {
+    "tier": "T0",
+    "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p3/captured-observatory-T0.png",
+    "splatCount": 0,
+    "mean": 70.23,
+    "errors": 0,
+    "errSample": []
+  },
+  "c7": {
+    "t2SplatCount": 58560,
+    "t2Mean": 66.48,
+    "t0SplatCount": 0,
+    "t0Mean": 70.23,
+    "errors": 0,
+    "pass": true
+  }
+}

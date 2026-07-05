@@ -1,0 +1,231 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM EDITOR DESIGN SYSTEM — tokens.css (Wave 0, FROZEN CONTRACT 2026-06-09)
+   ─────────────────────────────────────────────────────────────────────────────
+   The single source of truth for every color, surface, edge, elevation, motion
+   and type value in the editor chrome. Components consume these custom
+   properties (directly or via the `ds-*` classes in materials.css / the
+   Tailwind `ds` namespace). Component-local hex values are forbidden.
+
+   Language: industrial instrumentation — machined chrome / titanium / mercury
+   instruments over a near-black substrate, anodized-blue tint, arc-cyan as the
+   single emissive accent. ZERO brass/gold/amber. NO purple. NO flat fills.
+   Every surface is a material; every edge catches light.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ═══ OKLCH SOURCE OF TRUTH (PRISM PORT F0 — de-brass 2026-06-19) ══════════
+     The Chrome-Arc identity is authored in OKLCH so the graphite ramp steps
+     read as perceptually-even elevation and the metal ramp holds its cool hue
+     while only luminance/chroma move. Every color token is an oklch() value;
+     the JS mirror (tokens.ts) carries the EXACT sRGB hex each resolves to
+     (THREE.Color needs hex — change both or neither, the lockstep rule).
+
+     LOCKED IDENTITY (replaces the CONDEMNED brass ramp): machined
+     CHROME / TITANIUM / MERCURY metals over a near-black substrate; ANODIZED
+     blue (#2d5fa3) as a TINT only; ARC-CYAN (#1ec8ff) as the single emissive /
+     active accent. ZERO brass/gold/amber. NO purple. No pure #fff / #000.
+     Maps from OpenDesign/design-systems/prism/tokens.css + DESIGN.md. ════════ */
+
+  /* ── Neutrals — machined graphite housing (cool, very low chroma) ──────── */
+  --ds-void: oklch(0.11 0.012 264);       /* deep space; page + scene backdrop (#0d1117 family) */
+  --ds-ink: oklch(0.175 0.014 264);       /* darkest housing (#161b22 family) */
+  --ds-charcoal: oklch(0.225 0.015 262);  /* recessed panel interiors */
+  --ds-graphite: oklch(0.275 0.017 260);  /* primary panel body (#1f2530 family) */
+  --ds-slate: oklch(0.335 0.020 261);     /* raised body / hover body */
+  --ds-steel: oklch(0.40 0.022 261);      /* highest neutral body */
+
+  /* ── Text — bright machined-metal engraving (cool neutral, no warm cast) ── */
+  --ds-text-hi: oklch(0.955 0.004 250);   /* headings / primary values (chrome #dfe2e6) */
+  --ds-text: oklch(0.905 0.004 250);      /* body */
+  --ds-text-mid: oklch(0.73 0.006 252);   /* secondary */
+  --ds-text-low: oklch(0.555 0.010 256);  /* tertiary / disabled */
+
+  /* ── Metal accent ramp (machined chrome → titanium → graphite shadow) ─────
+     The ONE neutral metal family. 100 = brightest chrome highlight; 700 = deep
+     shadowed flank. Cool, near-zero chroma so it reads as polished metal, never
+     gold. The ACTIVE/emissive accent is --ds-arc (arc-cyan), NOT this ramp. */
+  --ds-metal-100: oklch(0.955 0.004 250);  /* specular hot point — chrome highlight */
+  --ds-metal-200: oklch(0.905 0.005 250);  /* chrome #dfe2e6 */
+  --ds-metal-300: oklch(0.835 0.006 252);
+  --ds-metal-400: oklch(0.775 0.007 254);  /* titanium #b8bcc0 — primary metal face */
+  --ds-metal-500: oklch(0.640 0.009 256);
+  --ds-metal-600: oklch(0.470 0.011 258);
+  --ds-metal-700: oklch(0.330 0.013 260);  /* shadowed flank */
+  /* rgb triplets for rgba() alpha composition (sRGB of the oklch above) */
+  --ds-metal-400-rgb: 184, 188, 192;      /* titanium */
+  --ds-metal-300-rgb: 203, 207, 211;
+  --ds-metal-200-rgb: 223, 226, 230;      /* chrome */
+  --ds-metal-100-rgb: 238, 240, 243;      /* mercury highlight */
+
+  /* ── Arc-cyan — the SINGLE emissive / active accent (never a fill body) ───
+     Reserved for active state, selection, focus, primary-action emission and
+     3D glow. This is the only colour permitted to "emit". Anodized blue is a
+     surface TINT companion (--ds-anodized), not emission. */
+  --ds-arc: oklch(0.795 0.135 224);       /* arc-cyan #1ec8ff */
+  --ds-arc-rgb: 30, 200, 255;
+  --ds-arc-hot: oklch(0.890 0.105 220);   /* hot core of the arc */
+  --ds-arc-hot-rgb: 150, 224, 255;
+  --ds-anodized: oklch(0.495 0.105 256);  /* anodized blue #2d5fa3 — TINT only */
+  --ds-anodized-rgb: 45, 95, 163;
+  --ds-warning-arc: oklch(0.745 0.165 58); /* warning arc #ff8c1e */
+  --ds-warning-arc-rgb: 255, 140, 30;
+
+  /* ── Ice secondary (informational / frozen ONLY — never the hero) ─────── */
+  --ds-ice-200: oklch(0.875 0.028 232);
+  --ds-ice-300: oklch(0.775 0.040 230);
+  --ds-ice-400: oklch(0.660 0.052 234);
+  --ds-ice-500: oklch(0.535 0.055 236);
+  --ds-ice-400-rgb: 115, 152, 174;
+  --ds-ice-300-rgb: 157, 187, 203;
+
+  /* ── Status (semantic, palette-tuned) ─────────────────────────────────── */
+  --ds-ok: oklch(0.755 0.135 155);
+  --ds-warn: oklch(0.745 0.165 58);       /* warning arc — orange, never gold */
+  --ds-danger: oklch(0.655 0.150 28);
+  --ds-neutral: oklch(0.575 0.020 258);
+  --ds-ok-rgb: 95, 200, 137;
+  --ds-danger-rgb: 221, 103, 91;
+
+  /* ── Gradient ramps (never flat-fill a surface) ───────────────────────────
+     Panel/metal/ceramic bodies sit lifted over the black scene; the top of each
+     ramp carries a soft key-light catch and the body stays dense enough to foot
+     DOM text. The ACCENT fill (--ds-grad-metal) is the polished chrome→titanium
+     face used on primary actions / active state; --ds-grad-metal-body is the
+     neutral graphite housing fill. */
+  --ds-grad-metal: linear-gradient(165deg, var(--ds-metal-200) 0%, var(--ds-metal-400) 48%, var(--ds-metal-600) 100%);
+  --ds-grad-metal-soft: linear-gradient(165deg, rgba(var(--ds-metal-300-rgb), 0.24), rgba(var(--ds-metal-400-rgb), 0.11) 55%, rgba(var(--ds-metal-400-rgb), 0.045));
+  --ds-grad-accent: linear-gradient(165deg, rgba(var(--ds-arc-hot-rgb), 0.95) 0%, rgba(var(--ds-arc-rgb), 0.85) 46%, rgba(var(--ds-anodized-rgb), 0.95) 100%);
+  --ds-grad-panel: linear-gradient(168deg, rgba(74, 82, 99, 0.74) 0%, rgba(43, 49, 61, 0.83) 46%, rgba(25, 29, 38, 0.9) 100%);
+  --ds-grad-panel-opaque: linear-gradient(168deg, #2c323e 0%, #1d212b 55%, #12151d 100%);
+  --ds-grad-smoked: linear-gradient(172deg, rgba(24, 28, 37, 0.82), rgba(10, 12, 18, 0.92));
+  --ds-grad-metal-body: linear-gradient(178deg, #3a4153 0%, #2a3040 38%, #1d212c 72%, #262b37 100%);
+  --ds-grad-ceramic: linear-gradient(176deg, #2a2f3c 0%, #1f232e 60%, #181b24 100%);
+  --ds-grad-well: linear-gradient(180deg, rgba(5, 6, 10, 0.88), rgba(18, 21, 29, 0.62));
+  --ds-grad-text-metal: linear-gradient(170deg, var(--ds-metal-100), var(--ds-metal-300) 55%, var(--ds-metal-500));
+
+  /* ── Edges — every surface catches light (specular TL → shade BR) ─────────
+     Brighter, crisper top-left catch so panels read as raised instruments with
+     a real light edge — the single biggest "this is a crafted surface, not a
+     dark rectangle" cue over the black scene. */
+  --ds-edge-specular: rgba(245, 248, 252, 0.30);   /* top edge catch — cool chrome, no warm cast */
+  --ds-edge-side: rgba(245, 248, 252, 0.10);
+  --ds-edge-shade: rgba(0, 0, 0, 0.5);             /* bottom chamfer */
+  --ds-edge-grad: linear-gradient(165deg, rgba(246, 249, 253, 0.34) 0%, rgba(245, 248, 252, 0.08) 30%, rgba(132, 140, 156, 0.09) 58%, rgba(0, 0, 0, 0.34) 100%);
+  --ds-edge-grad-metal: linear-gradient(165deg, rgba(var(--ds-metal-200-rgb), 0.85) 0%, rgba(var(--ds-metal-400-rgb), 0.38) 36%, rgba(var(--ds-metal-400-rgb), 0.12) 62%, rgba(0, 0, 0, 0.3) 100%);
+
+  /* ── Elevation — contact shadow + ambient pair per level ──────────────────
+     Deeper, wider ambient so surfaces lift cleanly off the void; the contact
+     shadow stays tight so edges read crisp. */
+  --ds-elev-0: inset 0 1px 0 var(--ds-edge-specular), inset 0 -1px 0 rgba(0, 0, 0, 0.34);
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.52), 0 5px 16px rgba(0, 0, 0, 0.38);
+  --ds-elev-2: 0 2px 5px rgba(0, 0, 0, 0.55), 0 14px 34px rgba(0, 0, 0, 0.48);
+  --ds-elev-3: 0 5px 11px rgba(0, 0, 0, 0.58), 0 26px 60px rgba(0, 0, 0, 0.58);
+  --ds-elev-4: 0 9px 20px rgba(0, 0, 0, 0.62), 0 42px 104px rgba(0, 0, 0, 0.7);
+  /* inner chamfer pack — composes with any elevation */
+  --ds-chamfer: inset 0 1px 0 var(--ds-edge-specular), inset 1px 0 0 var(--ds-edge-side), inset -1px 0 0 rgba(0, 0, 0, 0.2), inset 0 -1px 0 var(--ds-edge-shade);
+  --ds-chamfer-soft: inset 0 1px 0 rgba(255, 252, 242, 0.13), inset 0 -1px 0 rgba(0, 0, 0, 0.32);
+  --ds-glow-arc: 0 0 24px rgba(var(--ds-arc-rgb), 0.32);
+  --ds-glow-arc-strong: 0 0 38px rgba(var(--ds-arc-rgb), 0.5);
+
+  /* ── Radii — machined corner scale ────────────────────────────────────── */
+  --ds-r-xs: 6px;
+  --ds-r-sm: 9px;
+  --ds-r-md: 13px;
+  --ds-r-lg: 18px;
+  --ds-r-xl: 24px;
+  --ds-r-pill: 999px;
+
+  /* ── Spacing — 8pt base grid (CHROME OVERHAUL 2026-06-15) ──────────────────
+     The single rhythm for padding, gap and inset on every chrome surface so
+     alignment is consistent + optical, never the amateur ad-hoc px Logan
+     flagged. 4px is the half-step, reserved for dense control internals. */
+  --ds-space-0: 0px;
+  --ds-space-px: 1px;
+  --ds-space-1: 4px;     /* half-step — dense control internals only */
+  --ds-space-2: 8px;     /* base unit */
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 20px;
+  --ds-space-6: 24px;
+  --ds-space-8: 32px;
+  --ds-space-10: 40px;
+  --ds-space-12: 48px;
+  --ds-space-16: 64px;
+  /* Canonical surface insets (built on the 8pt grid). */
+  --ds-pad-panel: 16px;    /* inspector / flyout body padding */
+  --ds-pad-bar: 8px;       /* toolbar / dock rail padding */
+  --ds-pad-control: 12px;  /* button / input horizontal padding */
+  --ds-gap-stack: 12px;    /* vertical rhythm inside panels */
+  --ds-gap-inline: 8px;    /* inline control gaps */
+
+  /* ── Z-index scale (UI-WOW-2) — pure-DOM chrome stacking over the ONE canvas.
+     Names, not magic numbers, so the bottom-sheet host + compact dock layer
+     deterministically above the existing z-30/40/50 overlays and below the
+     global magnetic cursor (z-100). ────────────────────────────────────── */
+  --ds-z-overlay: 30;      /* detail cards, galaxy filter */
+  --ds-z-chrome: 40;       /* floating panels, top toggle */
+  --ds-z-toolbar: 50;      /* canvas tool rail */
+  --ds-z-dock: 60;         /* compact bottom tool dock */
+  --ds-z-sheet-scrim: 78;  /* bottom-sheet dim layer */
+  --ds-z-sheet: 82;        /* bottom-sheet surface */
+  --ds-z-modal: 95;        /* dialogs / palettes */
+  --ds-z-cursor: 100;      /* magnetic cursor — above all */
+
+  /* ── Responsive / safe-area (UI-WOW-2 container-density + sheets) ──────── */
+  --ds-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ds-safe-top: env(safe-area-inset-top, 0px);
+  --ds-sheet-peek: 140px;   /* compact bottom-sheet peek-snap height */
+  --ds-sheet-handle: 5px;   /* grab-handle bar thickness */
+  --ds-dock-h: 62px;        /* compact horizontal tool-dock height */
+
+  /* ── Motion — time-based, transform/opacity only ──────────────────────── */
+  --ds-t-fast: 120ms;
+  --ds-t-base: 200ms;
+  --ds-t-slow: 320ms;
+  --ds-t-glide: 480ms;
+  --ds-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-ease-in: cubic-bezier(0.5, 0, 0.74, 0.24);
+  --ds-ease-inout: cubic-bezier(0.6, 0, 0.18, 1);
+  --ds-ease-spring: cubic-bezier(0.34, 1.36, 0.44, 1);
+
+  /* ── Type & rhythm (PRISM PORT F0 — Sora + JetBrains Mono) ─────────────────
+     The LOCKED type system: a geometric display face + a mono instrument face.
+     NO grotesque (Switzer / Bricolage / generic-grotesque are CONDEMNED).
+       display — Sora (geometric, non-grotesque) → the SIGNATURE voice: titles,
+                 the Prism wordmark, buttons, hero numerals.
+       ui      — Sora → the workhorse for labels/buttons/body, cohesive with the
+                 display face (one geometric family carries the chrome).
+       mono    — JetBrains Mono → labels, all-caps kickers, tabular readouts,
+                 shortcuts; tracking +0.2em on uppercase instrument labels.
+     The --font-* vars are stamped on <html> by next/font/local (src/app/layout.tsx).
+     CASCADE-RACE FIX: the per-var() fallbacks are clean SANS / MONO system
+     stacks — NOT a literal face name (which would be unregistered → browser
+     SERIF). So if next/font's var ever fails on a subtree, type degrades to a
+     clean sans/mono, never an ugly serif. */
+  --ds-font-display: var(--font-display, ui-sans-serif), var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-ui: var(--font-ui, ui-sans-serif), ui-sans-serif, system-ui, sans-serif;
+  --ds-font-mono: var(--font-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Tracking tuned for Sora: titles sit tight at display sizes; uppercase mono
+     labels keep the wide engraved instrument track. */
+  --ds-track-label: 0.12em;   /* uppercase labels — engraved instrument track */
+  --ds-track-kicker: 0.2em;   /* mono kicker keeps the wide instrument track */
+  --ds-track-title: -0.01em;  /* Sora titles sit tight at display sizes */
+  --ds-track-body: 0.004em;
+  --ds-fs-kicker: 9.5px;
+  --ds-fs-label: 11px;
+  --ds-fs-body: 12.5px;
+  --ds-fs-md: 13.5px;
+  --ds-fs-title: 16px;
+  --ds-fs-display: 22px;
+  --ds-fs-display-lg: 30px; /* modal / library headers, hero numerals */
+  --ds-lh-body: 1.5;
+  --ds-lh-tight: 1.12;
+
+  /* ── Backdrop (frost) strengths — tier-gated in materials.css ─────────── */
+  --ds-frost: blur(18px) saturate(160%) brightness(1.07);
+  --ds-frost-heavy: blur(26px) saturate(170%) brightness(1.09);
+  --ds-frost-light: blur(10px) saturate(130%);
+
+  /* ── Focus ring — arc-cyan emission (the single active accent) ──────────── */
+  --ds-focus-ring: 0 0 0 2px rgba(var(--ds-arc-rgb), 0.9), 0 0 8px rgba(var(--ds-arc-rgb), 0.4);
+}

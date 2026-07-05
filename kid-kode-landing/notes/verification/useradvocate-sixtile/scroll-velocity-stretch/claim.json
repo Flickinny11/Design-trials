@@ -1,0 +1,7 @@
+{
+  "name": "scroll-velocity-stretch",
+  "label": "Stretch Gain",
+  "description": "Scroll speed pulls the card like taffy along its travel — stretching long mid-fling, relaxing square as the page settles.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

@@ -1,15 +1,111 @@
 'use client';
 
-import { useMemo } from 'react';
+// HubNav — bottom-center hub rail. Chrome: a machined brushed-metal rail
+// (ds-metal ds-grain ds-edge) whose ACTIVE slot is a chrome seat lit with an
+// arc-cyan emissive keyline + bloom (the single emission, F1/F2), and a glowing
+// arc-cyan pip. Each hub carries a DISTINCT milled glyph (F2/C14) — bone chrome
+// when idle, arc-cyan when active. No brass/gold; arc-cyan is the only accent.
+
+import { useEffect, useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import { countGalaxyProjectedNodesForHub } from '@/lib/prism-graph/galaxy-semantics';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS, dsAlpha } from '@/components/editor/design-system';
+
+// Active slot — recessed chrome seat in the machined rail with a PROMINENT
+// arc-cyan emissive keyline + bloom (F2/C-arc-prominence). The selected hub
+// must clearly EMIT arc-cyan, not read as a faint metal wash: a tight inner
+// arc-cyan rim (the lit groove edge) + a chrome top-highlight bezel + an outer
+// arc bloom. Emission ONLY on the active slot (inactive pills carry none).
+const ACTIVE_SLOT: React.CSSProperties = {
+  background: 'var(--ds-grad-metal-soft)',
+  boxShadow:
+    'inset 0 0 0 1px rgba(var(--ds-arc-rgb), 0.6), ' +
+    'inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.24), ' +
+    'inset 0 -2px 5px rgba(var(--ds-arc-rgb), 0.32), ' +
+    'var(--ds-glow-arc-strong)',
+};
+
+// Curated, on-system glyph rotation so the hub rail is NOT five identical
+// houses (the source view-model defaults every hub to glyph:'home'). Each hub
+// gets a distinct MILLED glyph from the custom Icon set, assigned
+// deterministically by position so the mapping is stable across renders. All
+// are dimensional (Icon.tsx extrudes + lights every one) — no stock line icon.
+const HUB_GLYPHS = ['layers', 'cube', 'palette', 'flow', 'diamond', 'grid', 'sparkle', 'image', 'text', 'compass'] as const;
+const hubGlyph = (i: number) => HUB_GLYPHS[i % HUB_GLYPHS.length];
+
+// Rail pill — one machined key seated in the rail. Extracted so each pill can
+// own its slab hook (hooks cannot run inside the map); at t2 the pill face
+// renders as real ceramic in the unified canvas, arc-cyan-accented on the
+// active slot. Below t2 the v1 CSS look stands untouched.
+function RailPill({
+  active, onClick, children,
+}: {
+  active: boolean; onClick: () => void; children: React.ReactNode;
+}) {
+  const slab = useChromeSlab({ material: 'ceramic', radius: 999, accent: active ? 1 : 0 });
+  useEffect(() => {
+    slab.update({ accent: active ? 1 : 0 });
+  }, [active, slab]);
+  return (
+    <button
+      ref={slab.ref}
+      onClick={onClick}
+      className={`ds-press px-3.5 h-9 rounded-full text-[12px] font-ui font-semibold tracking-tight transition-colors flex items-center gap-1.5 ${
+        active ? 'text-ds-metal-200' : 'text-ds-text-mid hover:text-ds-text hover:bg-white/5'
+      }`}
+      style={active ? ACTIVE_SLOT : undefined}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Indicator pip — an ARC-CYAN emissive lamp on the active slot (the single
+// emission, with bloom), a dim recessed machined dimple otherwise. Active = lit
+// arc lamp so the selected hub is unmistakable; inactive carries zero emission.
+function Pip({ active }: { active: boolean }) {
+  return (
+    <span
+      aria-hidden
+      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+      style={
+        active
+          ? {
+              background: `radial-gradient(circle at 38% 32%, ${DS.arcHot}, ${DS.arc} 62%)`,
+              boxShadow: `0 0 7px ${dsAlpha(DS.arc, 0.95)}, 0 0 2px ${dsAlpha(DS.arcHot, 0.9)}, inset 0 -1px 1px rgba(0,0,0,0.35)`,
+            }
+          : {
+              background: dsAlpha(DS.textLow, 0.3),
+              boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.5)',
+            }
+      }
+    />
+  );
+}
 
 export default function HubNav() {
   const activeHubId = useGraphEditorStore((s) => s.activeHubId);
   const flyToHub = useGraphEditorStore((s) => s.flyToHub);
   const resetCamera = useGraphEditorStore((s) => s.resetCamera);
+  // UI-WOW-2 P0 — on compact density the bottom band is shared with the mobile
+  // mode toggle (bottom 10px) and, in canvas mode, the horizontal tool dock
+  // (bottom 64px). Lift the hub trail clear of whatever is below it. Keyed off
+  // CONTAINER density + viewMode, not a viewport media query (the old
+  // max-md:bottom-[84px] collided in a wide-viewport embedded pane).
+  const compact = useEditorDensity() === 'compact';
+  const railViewMode = useGraphEditorStore((s) => s.viewMode);
+  // FINISH-F3 (F-2 advocate flag) — the full-height Inspector dock (z-40,
+  // md:w-[484px] right-3) overlapped the centered rail's right end (the
+  // Atelier pill, z-30). While the dock is open, shift the rail's center left
+  // by half the dock width and cap its width so it always clears.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
 
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
@@ -19,52 +115,69 @@ export default function HubNav() {
     [sourceHubs, sourceNodes, sourceEdges]
   );
 
+  // FINISH F-2 — ONE count story across views (founder parity law): every hub
+  // pill shows the hub's ELEMENT count (the galaxy first-level projection —
+  // clusters count once, implementation atoms collapsed) in galaxy, canvas,
+  // and preview alike. The old canvas branch counted raw graph atoms (Atelier
+  // 103 vs galaxy's 16 — two unlabeled unit systems for the same hub).
+  const elementCountByHub = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const hub of graph.hubs) {
+      counts.set(hub.id, countGalaxyProjectedNodesForHub(graph.nodes, hub.id));
+    }
+    return counts;
+  }, [graph.hubs, graph.nodes]);
+
+  // UI-FIDELITY-2 — the rail housing renders as real brushed metal in the
+  // unified canvas (brushed along its long/horizontal axis).
+  const railSlab = useChromeSlab({ material: 'metal', radius: 999, brushAxis: 'x' });
+
   return (
-    <div className="absolute z-30 bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
+    // Compact: clear the mobile mode toggle (and, in canvas mode, the tool
+    // dock) above it. Regular/wide: the shipped desktop position (bottom-5).
+    <div
+      className={`absolute z-30 -translate-x-1/2 pointer-events-auto ${
+        compact ? (railViewMode === 'canvas' ? 'bottom-[140px]' : 'bottom-[68px]') : 'bottom-5'
+      } ${
+        !compact && inspectorDockOpen
+          ? 'left-[calc(50%-244px)] max-w-[calc(100vw-540px)]'
+          : 'left-1/2 max-w-[96vw]'
+      }`}
+    >
       <div
-        className="flex items-center gap-1 p-1.5 rounded-full border border-white/10"
-        style={{
-          background: 'rgba(8,10,26,0.78)',
-          backdropFilter: 'blur(28px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(28px) saturate(180%)',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04)',
-        }}
+        ref={railSlab.ref}
+        className="flex items-center gap-1 p-1.5 ds-metal ds-grain ds-edge overflow-x-auto scrollbar-hide"
+        style={{ borderRadius: 'var(--ds-r-pill)' }}
       >
-        <button
-          onClick={resetCamera}
-          className={`px-3.5 h-8 rounded-full text-[11px] font-mono transition-all flex items-center gap-1.5 ${
-            activeHubId === null ? 'bg-white/10 text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
-          }`}
-        >
-          <Icon name="compass" size={12} color={activeHubId === null ? '#fff' : '#8896b8'} />
+        <RailPill active={activeHubId === null} onClick={resetCamera}>
+          <Pip active={activeHubId === null} />
+          <Icon name="compass" size={12} color={activeHubId === null ? DS.arc : DS.textMid} glow={activeHubId === null} />
           Galaxy
-        </button>
+        </RailPill>
 
-        <div className="w-px h-5 bg-white/10" />
+        <div className="w-px h-5" style={{ background: 'var(--ds-edge-side)' }} />
 
-        {graph.hubs.map((hub) => {
+        {graph.hubs.map((hub, i) => {
           const active = activeHubId === hub.id;
-          const nodeCount = graph.nodes.filter((n) => n.hubIds.includes(hub.id)).length;
+          const elementCount = elementCountByHub.get(hub.id) ?? 0;
           return (
-            <button
-              key={hub.id}
-              onClick={() => flyToHub(hub.id)}
-              className={`px-3.5 h-8 rounded-full text-[11px] font-mono transition-all flex items-center gap-1.5 ${
-                active ? 'text-white' : 'text-white/55 hover:text-white/85 hover:bg-white/5'
-              }`}
-              style={
-                active
-                  ? {
-                      background: hub.color + '22',
-                      boxShadow: `inset 0 0 0 1px ${hub.color}55, 0 0 16px ${hub.color}33`,
-                    }
-                  : undefined
-              }
-            >
-              <Icon name={hub.glyph} size={12} color={hub.color} glow={active} />
+            <RailPill key={hub.id} active={active} onClick={() => flyToHub(hub.id)}>
+              <Pip active={active} />
+              {/* F2/C14 — each hub gets a DISTINCT milled glyph (the view-model
+                  defaults every hub to 'home'; that made the rail five identical
+                  stock houses). Active glyph lights ARC-CYAN (the single
+                  emission); idle is bone chrome — never the forbidden raw
+                  hub.color dashboard blue. */}
+              <Icon name={hubGlyph(i)} size={12} color={active ? DS.arc : DS.textMid} glow={active} />
               {hub.name}
-              <span className="text-[9px] opacity-50">{nodeCount}</span>
-            </button>
+              {/* Compact has no minimap to spell out the unit, so the ACTIVE
+                  pill teaches it ("16 elements"); idle pills stay bare numbers
+                  (advocate SHOULD-FIX — labeled counts on mobile too). */}
+              <span
+                className="text-[10px] font-mono tabular-nums opacity-50"
+                title={`${elementCount} elements`}
+              >{elementCount}{compact && active ? ' elements' : ''}</span>
+            </RailPill>
           );
         })}
       </div>

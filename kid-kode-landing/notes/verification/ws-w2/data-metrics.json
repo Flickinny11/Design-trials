@@ -1,0 +1,85 @@
+{
+  "node": "orr-arrival-headline",
+  "results": [
+    {
+      "name": "data-model-state",
+      "pass": true,
+      "detail": "name=signups fields=2"
+    },
+    {
+      "name": "data-platform-search",
+      "pass": true,
+      "detail": "1 db/storage platforms"
+    },
+    {
+      "name": "persistence-bound",
+      "pass": true,
+      "detail": "platform=Supabase kind=table ref=cap_supabase_oauth2.1_10p6x9"
+    },
+    {
+      "name": "data-NO-SECRET-LEAK",
+      "pass": true,
+      "detail": "clean (reference handle only)"
+    },
+    {
+      "name": "resource-and-validate",
+      "pass": true,
+      "detail": "resource=public.users validation=fixed"
+    },
+    {
+      "name": "save-ok",
+      "pass": true,
+      "detail": "save.ok=true"
+    },
+    {
+      "name": "data-round-trip",
+      "pass": true,
+      "detail": "name=signups fields=2 persist=Supabase/public.users leak=false"
+    },
+    {
+      "name": "snippet-persists",
+      "pass": true,
+      "detail": "3 snippets incl. My Stripe flow,charge-pro-plan,charge-pro-plan"
+    },
+    {
+      "name": "zero-app-console-errors",
+      "pass": true,
+      "detail": "appErrors=0 bad404=0 (font-atlas bakes ignored)"
+    }
+  ],
+  "finalDataModel": {
+    "fields": [
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "name": "createdAt",
+        "type": "timestamp"
+      }
+    ],
+    "name": "signups",
+    "persistence": {
+      "providerId": "mcp",
+      "platformId": "supabase",
+      "platform": "Supabase",
+      "kind": "table",
+      "brandKey": "supabase",
+      "capabilityRef": {
+        "refId": "cap_supabase_oauth2.1_10p6x9",
+        "scope": "supabase:connect",
+        "label": "Supabase (oauth2.1)",
+        "provider": "mcp",
+        "authMethod": "oauth2.1"
+      },
+      "resource": "public.users"
+    },
+    "validation": {
+      "status": "fixed",
+      "testedAt": "2026-06-29T10:25:20.621Z",
+      "message": "Sandbox test failed: missing required `values`"
+    }
+  },
+  "appConsoleErrors": [],
+  "bad404": []
+}

@@ -277,7 +277,15 @@ describe('verifier — render-mode structural rules (§10.C L380-L385)', () => {
     ).toBeTruthy();
   });
 
-  it('all modes: missing config.cinematicPrimitives iteration → flagged (L384)', () => {
+  it('all modes: a module WITHOUT a cinematicPrimitives loop verifies CLEAN — the L384 rule is RESCINDED (canvas §2 decision 6 / SPEC-INDEX S4)', () => {
+    // The migration-era MISSING_PRIMITIVES_LOOP rule ("every node MUST iterate
+    // config.cinematicPrimitives and call ctx.primitives[name]" — i.e. no
+    // scene-level animation outside the fixed primitives library) is RESCINDED
+    // by PRISM-CANVAS-EDITOR-SPEC §2 decision 6: animation may be authored
+    // from scratch as an `Animatable`; the catalog is an accelerant, not a
+    // cage. SPEC-INDEX recorded the verifier change as a pending code edit
+    // (now done). Re-introducing the rule is drift — this otherwise-compliant
+    // primitive-free module must verify ok with zero violations.
     const src = `
       import { Group } from 'three/webgpu';
       export default function createNode(config, ctx) {
@@ -290,10 +298,11 @@ describe('verifier — render-mode structural rules (§10.C L380-L385)', () => {
       }
     `;
     const r = verifyNodeModule(src, { renderMode: 'sprite' });
-    expect(r.ok).toBe(false);
     expect(
       r.violations.find((v) => v.rule === 'MISSING_PRIMITIVES_LOOP'),
-    ).toBeTruthy();
+    ).toBeUndefined();
+    expect(r.violations).toEqual([]);
+    expect(r.ok).toBe(true);
   });
 
   it('all modes: missing config.textContent + ctx.fontAtlas → flagged when hasTextContent (L385)', () => {

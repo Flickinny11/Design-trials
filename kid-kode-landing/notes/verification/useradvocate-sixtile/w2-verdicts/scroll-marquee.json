@@ -1,0 +1,17 @@
+{
+  "feature": "scroll-marquee",
+  "claim": "subject travels horizontally like a marquee ticker, scroll-scrubbed",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "No broken/cut-off/low-contrast defects. Multiple card copies sit cleanly in a horizontal ticker; chrome is crisp at DPR-2. Slight banding score on the dark panel is the normal graphite material, not a slab artifact.", "evidence": ["scroll-marquee/after/idle.png", "scroll-marquee/after/play-3.png", "metrics: idle bandingScore 0.541 is the standard card panel, not volumetric shelving"] },
+    "q2_reads_as": { "answer": "Reads exactly as a marquee ticker: a row of identical cards (each with brass header bar, blue accent dot, 3 grey content rows, dark rounded panel — matching the ground-truth card) travels horizontally; idle shows lead+ghost copies centre-right, play-3 shows them shifted left.", "evidence": ["scroll-marquee/after/idle.png", "scroll-marquee/after/play-3.png", "swap-flip-morph/after/idle.png"] },
+    "q3_discoverable": { "answer": "Yes. gap control visibly widens spacing between copies (low=tight cluster, high=single card with empty space); ghosts control adds/removes trailing card copies; dim control brightens/dims the ghost/header. All three produce obvious, labelled-sensible changes.", "evidence": ["scroll-marquee/after/control-gap-low.png", "scroll-marquee/after/control-gap-high.png", "scroll-marquee/after/control-ghosts-high.png", "control: dim low effRGB 30.8 vs high 63.3 luma rises"] },
+    "q4_responsive": { "answer": "Responsive: cards visibly translate across play frames, frameDeltaMag ~9.8-10.5 each play frame; control apply latency ~570-587ms, all changed:true.", "evidence": ["metrics: play-1 frameDeltaMag 10.55, play-3 frameDeltaMag 9.81", "control: gap changedFrac 0.2435 changed true"] },
+    "q5_net": { "answer": "PLEASED — it looks like a premium card ticker scrolling sideways, every copy keeps the full card look, and all three knobs do something obvious.", "evidence": ["scroll-marquee/after/play-3.png", "scroll-marquee/after/control-gap-high.png"] }
+  },
+  "mustFix": [],
+  "flags": [],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

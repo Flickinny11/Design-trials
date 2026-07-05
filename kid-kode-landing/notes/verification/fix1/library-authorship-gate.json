@@ -1,0 +1,203 @@
+{
+  "url": "http://localhost:3000/library",
+  "selfTest": {
+    "live": true,
+    "caughtCount": 2
+  },
+  "instPrim": {
+    "before": 3,
+    "after": 4
+  },
+  "instComp": {
+    "before": 4,
+    "after": 9
+  },
+  "canvas": {
+    "view": "canvas",
+    "renderedCount": 9,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-2",
+        "kind": "pane",
+        "dormant": false
+      },
+      {
+        "nodeId": "prim-sphere-2",
+        "kind": "sphere",
+        "dormant": false
+      },
+      {
+        "nodeId": "prim-cube-2",
+        "kind": "cube",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-footer-1-base",
+        "kind": "footer-base",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-footer-1-link-0",
+        "kind": "footer-link",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-footer-1-link-1",
+        "kind": "footer-link",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-footer-1-link-2",
+        "kind": "footer-link",
+        "dormant": false
+      },
+      {
+        "nodeId": "comp-footer-1-link-3",
+        "kind": "footer-link",
+        "dormant": false
+      },
+      {
+        "nodeId": "lib-chrome-pane",
+        "kind": "pane",
+        "dormant": false
+      }
+    ],
+    "nodeIds": [
+      "lib-chrome-pane",
+      "prim-pane-2",
+      "prim-sphere-2",
+      "prim-cube-2",
+      "comp-footer-1-base",
+      "comp-footer-1-link-0",
+      "comp-footer-1-link-1",
+      "comp-footer-1-link-2",
+      "comp-footer-1-link-3"
+    ],
+    "orphans": [],
+    "unrealizedInCanvas": [],
+    "ok": true
+  },
+  "galaxy": {
+    "view": "galaxy",
+    "renderedCount": 9,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-2",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "prim-sphere-2",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "prim-cube-2",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-footer-1-base",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-footer-1-link-0",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-footer-1-link-1",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-footer-1-link-2",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "comp-footer-1-link-3",
+        "kind": "unknown",
+        "dormant": true
+      },
+      {
+        "nodeId": "lib-chrome-pane",
+        "kind": "pane",
+        "dormant": true
+      }
+    ],
+    "nodeIds": [
+      "lib-chrome-pane",
+      "prim-pane-2",
+      "prim-sphere-2",
+      "prim-cube-2",
+      "comp-footer-1-base",
+      "comp-footer-1-link-0",
+      "comp-footer-1-link-1",
+      "comp-footer-1-link-2",
+      "comp-footer-1-link-3"
+    ],
+    "orphans": [],
+    "unrealizedInCanvas": [],
+    "ok": true
+  },
+  "results": [
+    {
+      "id": "library.probe.installed",
+      "desc": "window.__PRISM_LIB_AUTHORSHIP__ installed + catalog populated",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "library.classifier-live",
+      "desc": "authorship classifier discriminates backed vs orphan (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic orphan + untagged render both flagged — a real orphan WOULD be caught"
+    },
+    {
+      "id": "library.instantiate-primitive",
+      "desc": "dropping a primitive auto-creates a backing node",
+      "pass": true,
+      "warn": false,
+      "detail": "nodes 3 → 4"
+    },
+    {
+      "id": "library.instantiate-composite-subgraph",
+      "desc": "dropping a composite auto-creates a whole subgraph (>1 node) in one action",
+      "pass": true,
+      "warn": false,
+      "detail": "nodes 4 → 9 (+5)"
+    },
+    {
+      "id": "library.canvas.no-orphan",
+      "desc": "CANVAS: every render maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "9 rendered, all node-backed"
+    },
+    {
+      "id": "library.canvas.all-realized",
+      "desc": "CANVAS: every node is realized (no node left unbuilt)",
+      "pass": true,
+      "warn": false,
+      "detail": "9 nodes all realized"
+    },
+    {
+      "id": "library.galaxy.no-orphan",
+      "desc": "GALAXY: every dormant seed maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "9 dormant seeds, all node-backed"
+    },
+    {
+      "id": "library.no-pageerrors",
+      "desc": "no uncaught page errors during the library gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

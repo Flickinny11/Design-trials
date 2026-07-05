@@ -1,0 +1,75 @@
+{
+  "feature": "P1 TEXT SYSTEM — canvas text editing (canvas-spec §7; §18 crit 26/27/28-masking) — RE-GRADE",
+  "claim": "First-time user can Add Text (real crisp MSDF in 3D scene), pick from ~1,900 fonts with on-demand atlas bake + visible loading state, restyle instantly (size/weight/fills/presets), pour AI-described textures INTO letterforms (candidates render as the user's own text), and move text like any element; catalog text animations animate real per-glyph letterforms.",
+  "groundTruthSibling": "before-after (wave-text/scramble proxy-slab tiles)",
+  "state": "current (recapture 2026-06-10 15:52-15:53)",
+  "rubric": {
+    "q1_defects": {
+      "answer": "The prior MUST-FIX is verifiably resolved in the fresh captures. Add Text now spawns dark-ink text in the clear lower-center band: fresh 03-text-node-added.png shows 'Text' fully legible below the watch with every glyph visible, and the close-up default fill measures 9.85:1 contrast (stroke p3 luma=12.4 vs bg p75 luma=184.1) versus the failed 1.48:1 before. No occlusion anywhere in the fresh drive: 04 (serif re-font), 05 (resized large), 06 (moved) all show all four glyphs readable; in 07 'Molten Brass' is fully legible with nothing hidden behind the watch or the yellow square. Nothing broken, misaligned, or cut off in any fresh frame; chrome remains graphite/brass/ice with no purple (10-styled-fullframe.png). The canonical console list is now empty (consoleErrors:[], badResponses:[]), with the known favicon 404 moved to rawConsoleMessages as a tracked P5 item. The only legibility soft spot left is the Neon/glow PRESET (not the default): its ice fill measures 1.80:1 over the light viewport — flagged, not blocking, since it is an intentional one-click style that would pop on dark scenes and visibly differs from the prior state (18.4% of text-region pixels changed).",
+      "evidence": [
+        "03-text-node-added.png",
+        "07-closeup-default-fill.png",
+        "metrics: fresh 07 stroke p3 luma=12.4 vs bg p75 luma=184.1 → contrast 9.85:1 (was 1.48:1)",
+        "console: results.json consoleErrors=[] badResponses=[] (favicon 404 relocated to rawConsoleMessages, tracked P5)",
+        "09-closeup-glow-preset.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — every beat of the claim is now visible in the bundle, including the two previously unevidenced sub-claims. Real MSDF text: 4 glyph meshes on Add Text (results.json, font=Inter), crisp dark letterforms in 03/05. Fonts: the picker header itself reads 'FONT · 1935 FAMILIES' and 16-font-bake-loading-state.png captures the live on-demand bake banner — spinner plus 'Baking MSDF atlas for Caveat… (cached after first bake)' — closing the loading-state gap; server-side proof retained (miss 1.13s → hit 6ms, real 301x297 RGBA atlas, crit27-cache-proof.txt). Restyle: re-font to serif Abril Fatface visibly changes letterforms (04 vs 03), resize is in-place (05), gradient preset pours a real amber gradient (08, warm strokes hue 29°, 24.7% of text-region pixels changed vs default). AI fill: the new picker renders candidates as the USER'S OWN 'Molten Brass' text in real letterforms, each row a distinct molten-gold texture (11-ai-fill-swatches.png crop shows 6 full rows + 1 clipped at the scroll edge), with the honest in-UI disclosure 'Cloud generation isn't wired yet… local procedural bakes — deterministic, no AI'; the applied fill is provably a texture poured into intact glyphs, not a tint (12-ai-fill-applied.png: hue 26°, sat 0.61, intra-letter luma stdev 49.2 vs 15.6 for the flat gradient). Movable: x 0→0.18 (06-moved.png). Catalog animations on real per-glyph letterforms: retained before/after evidence (wave-text-BEFORE-proxy.png slabs → wave-text-AFTER-realglyphs.png 'PRISM' mid-wave; same for scramble). Backend attestation now present: rendererBackend=webgpu.",
+      "evidence": [
+        "metrics: results.json step 'Add Text → real MSDF glyph meshes' glyphs=4 font=Inter; rendererBackend=webgpu",
+        "16-font-bake-loading-state.png",
+        "metrics: crit27-cache-proof.txt miss 1.133s → hit 0.006s, atlas 301x297 RGBA msdf; picker header 'FONT · 1935 FAMILIES' visible in 16",
+        "08-closeup-gradient-preset.png",
+        "metrics: 12 AI-fill meanRGB=[188,124,73] hue=26° sat=0.61, intra-letter luma stdev=49.2 vs 15.6 (08 flat) → real texture in intact letterforms",
+        "11-ai-fill-swatches.png",
+        "wave-text-AFTER-realglyphs.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes, unprompted. The Text flyout's single labeled '+ Add Text · Home' button (02-text-flyout.png) now produces text the user can immediately SEE (03-text-node-added.png, 9.85:1) — the prior find-your-text failure is gone. The styling panel reads top-to-bottom like a familiar type tool: font row with family name, weight, size/spacing sliders, alignment, then Solid/Gradient/Texture/AI fill tabs (10-styled-fullframe.png). The bake banner tells the user exactly what is happening and that it is one-time ('cached after first bake', 16-font-bake-loading-state.png). The AI fill section is the standout for a non-technical user: type 'molten gold', and the candidates preview as YOUR OWN text — no abstraction to decode (11-ai-fill-swatches.png).",
+      "evidence": [
+        "02-text-flyout.png",
+        "03-text-node-added.png",
+        "16-font-bake-loading-state.png",
+        "11-ai-fill-swatches.png",
+        "10-styled-fullframe.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, same strong numbers as the first grade, re-measured fresh: non-core re-font in 385ms in place (same Group uuid — no flicker-out), resize in-place (fontSize 1.35, visibly larger 05 vs 04), atlas cache hit 6ms, zero image-artifact re-renders during restyle (imgReqDelta=0) with all sibling nodes identity-stable, move x 0→0.18 (06-moved.png). Presets apply with visible authority: gradient changed 24.7% of text-region pixels, glow 18.4% — both clearly alive; the glow's weak READ on light scenes is a contrast issue (flagged), not a responsiveness one.",
+      "evidence": [
+        "metrics: results.json refontMs=385 same-uuid, fontSize 1.35 in-place, imgReqDelta=0, xBefore=0 xAfter=0.18",
+        "05-resized.png",
+        "control: gradient 07vs08 24.7% px >10 delta; glow 07vs09 18.4% px >10 delta — both presets visibly apply",
+        "06-moved.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. As a first-time user: 'I clicked Add Text and my text was right there, dark and crisp. Two thousand fonts, and when I picked a weird one it told me it was baking and then it was instant. I typed molten gold and it showed me my own words in ten molten styles — I picked one and my letters filled with gold. That is genuinely great to design with.' The first-touch failure that blocked the last grade is fixed with a 6.6x contrast improvement and a clear spawn position; everything downstream was already excellent and still is.",
+      "evidence": [
+        "03-text-node-added.png",
+        "metrics: default-fill contrast 9.85:1 (was 1.48:1); AI-fill texture stdev 49.2 vs 15.6 flat → the magic moment is real",
+        "12-ai-fill-applied.png",
+        "16-font-bake-loading-state.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Neon/glow preset reads washed-out on the light hub viewport: ice strokes measure 1.80:1 against the light background. The preset is alive (18.4% px changed) and would pop on dark scenes, but a one-click 'Neon' on a light scene yields low-contrast text. Consider a background-aware preset variant or an outline/backplate component in the preset stack.",
+      "evidence": "09-closeup-glow-preset.png; metrics: 09 stroke p97 luma=243.6 vs bg 184.1 → 1.80:1; control: 07vs09 18.4% px >10"
+    },
+    {
+      "note": "AI-fill cloud endpoint remains unwired — disclosed honestly in-UI ('Cloud generation isn't wired yet (POST /api/prism/text-fill — wired:false)… local procedural bakes — deterministic, no AI'). Works beautifully as captured; keep the disclosure until the cloud path lands so 'describe ANY look' expectations stay honest.",
+      "evidence": "11-ai-fill-swatches.png"
+    },
+    {
+      "note": "Ten AI-fill candidates are claimed; the still frame proves at least 7 (6 full rows + 1 clipped at the panel's scroll edge), each rendered as the user's own text in a distinct molten texture. Not blocking — the load-bearing directive (candidates render as the USER'S OWN text in real 3D) is fully evidenced; a future capture could scroll the strip to show all ten.",
+      "evidence": "11-ai-fill-swatches.png (crop shows 6 full 'Molten Brass' rows + 1 clipped row at scroll edge)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "scroll-marquee",
+  "label": "Gap",
+  "description": "The card becomes an endless belt — ghost copies trailing it in a lateral marquee whose drift is steered by the scroll.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

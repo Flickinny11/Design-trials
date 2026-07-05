@@ -1,0 +1,13 @@
+=== c22 — multi-select Group cascades; Ungroup preserves children + world transforms (sign-off supplement, 2026-06-11) ===
+
+Live drive proof (committed notes/verification/toolbar-wiring/results.json, 12/12 PASS, backend webgpu):
+- step "criterion 22: group cascades, ungroup preserves world transforms" → ok:true, cascaded:7
+  (moving the group parent cascaded the transform to all 7 members; ungroup left children in place).
+- Drift figure (committed notes/verification/TOOLBAR-WIRING-PROGRESS.md L18):
+  "criterion 22 (group move cascaded ×7, ungroup world-transform drift <1e-3)".
+
+Visual proof (committed): notes/verification/toolbar-wiring/06-group-ungroup.png —
+"7 items selected" Selection panel (7 nodes listed: Home Headline, Home Feature Card,
+Home Parallax Stack, Home Orbit Decor, Home Floating Accent, Home CTA Hero, New Element)
+with Group/Ungroup controls, and the in-app toast "Ungrouped — world transforms preserved"
+visible at the top of the frame.

@@ -1,0 +1,137 @@
+{
+  "task_id": "EBR2-E-04",
+  "scriptPath": "notes/ralph-interactions/EBR2-E-04.json",
+  "steps": [
+    {
+      "index": 0,
+      "step": {
+        "action": "wait_for",
+        "selector": "canvas",
+        "timeout_ms": 30000
+      },
+      "status": "pass",
+      "durationMs": 160
+    },
+    {
+      "index": 1,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+      },
+      "status": "pass",
+      "durationMs": 49,
+      "value": "canvas"
+    },
+    {
+      "index": 2,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1500
+      },
+      "status": "pass",
+      "durationMs": 1501
+    },
+    {
+      "index": 3,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const src = stores.graphSource.getState(); const ed = stores.graphEditor.getState(); if (!groups || groups.size < 2) return null; const targetId = Array.from(groups.keys())[0]; ed.selectNode(targetId); ed.openInspector(); ed.setEditorMode('edit'); stores.previewState.getState().set(targetId, { caption: 'REBUILD-TEST' }); const siblingId = Array.from(groups.keys())[1]; window.__EBR2_E_04_TARGET__ = { targetId, siblingId, targetRefBefore: groups.get(targetId), siblingRefBefore: groups.get(siblingId) }; return { targetId, siblingId }; })()"
+      },
+      "status": "pass",
+      "durationMs": 53,
+      "value": {
+        "targetId": "home-headline",
+        "siblingId": "home-feature-card"
+      }
+    },
+    {
+      "index": 4,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 600
+      },
+      "status": "pass",
+      "durationMs": 601
+    },
+    {
+      "index": 5,
+      "step": {
+        "action": "wait_for",
+        "selector": "[data-testid='inspector-save-and-rebuild']",
+        "timeout_ms": 5000
+      },
+      "status": "pass",
+      "durationMs": 235
+    },
+    {
+      "index": 6,
+      "step": {
+        "action": "screenshot",
+        "name": "before.png"
+      },
+      "status": "pass",
+      "durationMs": 192,
+      "file": "before.png"
+    },
+    {
+      "index": 7,
+      "step": {
+        "action": "click",
+        "selector": "[data-testid='inspector-save-and-rebuild']"
+      },
+      "status": "pass",
+      "durationMs": 613
+    },
+    {
+      "index": 8,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 2500
+      },
+      "status": "pass",
+      "durationMs": 2501
+    },
+    {
+      "index": 9,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "(() => { const groups = window.__PRISM_EDITOR_NODE_GROUPS__; const captured = window.__EBR2_E_04_TARGET__; if (!groups || !captured) return false; const targetRefAfter = groups.get(captured.targetId); const siblingRefAfter = groups.get(captured.siblingId); return targetRefAfter && siblingRefAfter && targetRefAfter !== captured.targetRefBefore && siblingRefAfter === captured.siblingRefBefore; })()"
+      },
+      "status": "pass",
+      "durationMs": 53,
+      "value": true
+    },
+    {
+      "index": 10,
+      "step": {
+        "action": "screenshot",
+        "name": "after.png"
+      },
+      "status": "pass",
+      "durationMs": 190,
+      "file": "after.png"
+    },
+    {
+      "index": 11,
+      "step": {
+        "action": "assert",
+        "type": "no_console_errors"
+      },
+      "status": "pass",
+      "durationMs": 0
+    },
+    {
+      "index": 12,
+      "step": {
+        "action": "assert",
+        "type": "no_network_4xx_5xx"
+      },
+      "status": "pass",
+      "durationMs": 0
+    }
+  ],
+  "consoleErrorCount": 0,
+  "networkFailureCount": 0,
+  "aborted": false
+}

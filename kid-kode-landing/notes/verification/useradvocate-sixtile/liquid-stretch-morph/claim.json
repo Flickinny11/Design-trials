@@ -1,0 +1,7 @@
+{
+  "name": "liquid-stretch-morph",
+  "label": "Stretch",
+  "description": "Card is pulled like taffy between two anchors — stretching long and thin mid-flight — then snaps into place with a gel wobble.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

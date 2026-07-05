@@ -1,0 +1,24 @@
+{
+  "startedAt": "2026-06-13T06:23:26.734Z",
+  "state": "diag",
+  "port": 4811,
+  "backend": "webgpu",
+  "gpu": true,
+  "tiles": [
+    {
+      "tile": "pointer-loupe",
+      "state": "diag",
+      "dir": "pointer-loupe/diag",
+      "claim": {
+        "name": "pointer-loupe",
+        "label": "Zoom Factor",
+        "description": "A jeweler",
+        "category": "displacement"
+      },
+      "controls": 4,
+      "notes": []
+    }
+  ],
+  "groundTruth": null,
+  "deviceLostAtEnd": 0
+}

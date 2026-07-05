@@ -1,0 +1,64 @@
+{
+  "feature": "wispy-smoke",
+  "claim": "Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken at the photoreal bar: every frame shows a soft, organic, smoothly-shaded plume with no slab/shelf banding, no tile/lattice grid, no mirror/wrap seams, and no jagged edges. bandingScore is 0.112 (play-2) to 0.123 (control-rise-low) across all 13 frames, all well under the 0.25 visible-banding threshold. Backend is webgpu; consoleErrors and networkErrors are both empty. The dark surround is the correct alpha-0 transparent scene over the near-black page, not a defect.",
+      "evidence": [
+        "wispy-smoke/after/play-2.png",
+        "wispy-smoke/after/control-curl-high.png",
+        "metrics: bandingScore range 0.112–0.123 across all frames, all < 0.25; backend=webgpu; consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads exactly as 'thin curling wisps of smoke that rise and dissipate'. play-1..3 show sparse neutral-grey tendrils (effSat 0.16–0.21, warmFrac 0 — desaturated grey with zero hue contamination, correct for smoke) rising from a base and thinning toward the top, with a dimmer depth-faded back strand behind the bright front one as claimed. control-curl-high.png shows the claimed fine rotational curl-warp as long sinuous swirled strands with no slab seams anywhere.",
+      "evidence": [
+        "wispy-smoke/after/play-1.png",
+        "wispy-smoke/after/control-curl-high.png",
+        "metrics: play-2 effRGB=[41,42.5,48.8] effSat=0.16 warmFrac=0 → neutral grey smoke, not tinted"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes, all three labeled controls produce visible, sensible changes a first-time user would understand unprompted. 'rise' — the prior round's blocker — is now demonstrably wired: at rise=0 the smoke collapses to a small puff hugging the base that never ascends (control-rise-low.png, meanLuma 7.9, stdev 4.6), while mid/high restore the full rising plume (meanLuma 10.3/10.7, stdev 13/13.9, changed=true). 'density' reads instantly: low turns the smoke fully off (black frame, stdev 2.3), high gives a dense bright plume (meanLuma 16, stdev 28.7, changed=true). 'curl' shows a clear structural change in the frames: blotchy patchy puffs at low → long sinuous swirled tendrils at high, exactly what a 'curl' slider should do.",
+      "evidence": [
+        "wispy-smoke/after/control-rise-low.png",
+        "wispy-smoke/after/control-rise-high.png",
+        "wispy-smoke/after/control-density-low.png",
+        "wispy-smoke/after/control-density-high.png",
+        "wispy-smoke/after/control-curl-low.png",
+        "wispy-smoke/after/control-curl-high.png",
+        "control: rise low→high changed=true, meanLuma 7.9→10.3→10.7, stdev 4.6→13→13.9; density changed=true, meanLuma 7.5→12.4→16"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play frames show real evolving motion — frameDeltaMag 1.54 → 1.78 → 3.61, and play-1 vs play-3 are visibly different plume shapes. Control application is snappy and consistent (latencyMs 571–584 across all nine sweep captures). Two of three controls measure changed=true; the one harness-flagged changed=false ('curl': meanLuma 10.8/10.6/10.8) nonetheless shows a clear visible shape change between its low and high frames, so no control is actually dead — the aggregate-stat detector is shape-blind (flagged, not blocking).",
+      "evidence": [
+        "wispy-smoke/after/play-3.png",
+        "metrics: frameDeltaMag play-1=1.54 play-2=1.78 play-3=3.61 → visible motion; control latencyMs 571–584",
+        "control: curl changed=false by aggregate stats (meanLuma 10.8/10.6/10.8) but control-curl-low.png vs control-curl-high.png show a clear structural change"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That genuinely looks like real smoke — soft and wispy like a professional motion-graphics clip, and every slider does something I can see: density turns it up and down, curl makes it swirl, and rise makes it climb or sit at the base.' The round-4 fix resolved the dead Rise slider that blocked the prior verdict, and nothing objective remains broken.",
+      "evidence": [
+        "wispy-smoke/after/play-2.png",
+        "control: rise low→high changed=true with visibly distinct frames (control-rise-low.png small base puff vs control-rise-high.png full plume)"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "'curl' is still measured changed=false by the harness even though the frames show a clear, sensible structural change (patchy puffs at low → long swirled strands at high) — the aggregate-stat detector remains shape-blind; tighten it (e.g. add a structural/SSIM or edge-orientation delta) so working controls measure as working.",
+      "evidence": "wispy-smoke/after/control-curl-low.png vs wispy-smoke/after/control-curl-high.png : metrics curl changed=false, meanLuma 10.8/10.6/10.8"
+    },
+    {
+      "note": "At default controls the effect is quite dim/subtle (idle meanLuma 10.8, play-2 meanLuma 11.6) — tasteful for wispy smoke, but a touch more presence at defaults would land better on first viewing. Pure taste.",
+      "evidence": "wispy-smoke/after/idle.png : metrics idle meanLuma=10.8"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

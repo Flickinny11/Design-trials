@@ -1,0 +1,7 @@
+{
+  "name": "scroll-flip-book",
+  "label": "Frames",
+  "description": "Scroll riffles a stop-motion flip-book — the card jumps through hand-posed frames in hard cuts, like a printed animation thumbed by the page.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

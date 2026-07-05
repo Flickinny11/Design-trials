@@ -1,9 +1,24 @@
 'use client';
 
+// Minimap — corner radar of the whole graph. Chrome: Chrome-Arc — a
+// machined metal bezel plate (ds-metal ds-grain ds-edge) framing a recessed
+// instrument well (ds-well) that holds the 2D radar canvas. Canvas tints come
+// from the DS token mirror: status colors for nodes, brass for the selection
+// reticle, and the chrome ice/brass pair for hub discs (active hub brass,
+// idle hubs ice). Raw hub.color is data paint, not chrome — the same Wave-3
+// advocate MUST-FIX that retinted HubNav (it read as forbidden dashboard
+// blue), adopted here 2026-06-11.
+
 import { useRef, useEffect, useMemo } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
+import {
+  filterEdgesToGalaxyOverview,
+  getGalaxyOverviewProjection,
+} from '@/lib/prism-graph/galaxy-semantics';
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function Minimap() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -14,10 +29,44 @@ export default function Minimap() {
   const sourceHubs = useGraphSourceStore((s) => s.hubs);
   const sourceNodes = useGraphSourceStore((s) => s.nodes);
   const sourceEdges = useGraphSourceStore((s) => s.edges);
-  const graph = useMemo(
-    () => toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges }),
-    [sourceHubs, sourceNodes, sourceEdges]
-  );
+  // FINISH F-2 — ONE count story across views (founder parity law). The radar
+  // always shows the ELEMENT-level projection (galaxy first-class spheres:
+  // clusters count once; app-shell/hit-target/decoration implementation atoms
+  // collapsed), in canvas and preview exactly as in galaxy. The raw graph-atom
+  // count (327-grade) is implementation detail and is no longer a headline
+  // number anywhere in the chrome.
+  const graph = useMemo(() => {
+    const base = toEditorView({ hubs: sourceHubs, nodes: sourceNodes, edges: sourceEdges });
+    const nodes = getGalaxyOverviewProjection(base.nodes);
+    const visibleIds = new Set(nodes.map((node) => node.id));
+    return {
+      ...base,
+      nodes,
+      edges: filterEdgesToGalaxyOverview(base.edges, visibleIds),
+    };
+  }, [sourceHubs, sourceNodes, sourceEdges]);
+
+  // Canvas selects graph atoms; the radar shows elements. Map an atom id to the
+  // element that represents it (itself, or its containing galaxy cluster) so
+  // the selection reticle stays coherent in every view.
+  const elementIdForAtom = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const node of graph.nodes) {
+      map.set(node.id, node.id);
+      if (node.isGalaxyCluster && node.clusterNodeIds) {
+        for (const atomId of node.clusterNodeIds) map.set(atomId, node.id);
+      }
+    }
+    return map;
+  }, [graph.nodes]);
+  const selectedElementId = selectedId ? elementIdForAtom.get(selectedId) ?? null : null;
+  const hoveredElementId = hoveredId ? elementIdForAtom.get(hoveredId) ?? null : null;
+
+  // UI-FIDELITY-2 — the bezel plate renders as real brushed metal (brushed
+  // along its wide axis) and the radar window as a recessed well in the
+  // unified canvas. The canvas2D radar inside stays untouched.
+  const bezelSlab = useChromeSlab({ material: 'metal', radius: 13, brushAxis: 'x' });
+  const windowSlab = useChromeSlab({ material: 'well', radius: 9 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -46,22 +95,25 @@ export default function Minimap() {
       nodePositions[n.id] = { x: hub.x + Math.cos(angle) * dist, y: hub.y + Math.sin(angle) * dist };
     });
 
-    ctx.fillStyle = 'rgba(5,6,16,0.75)';
+    ctx.fillStyle = dsAlpha(DS.void, 0.78);
     ctx.fillRect(0, 0, W, H);
 
     graph.hubs.forEach((hub) => {
       const p = hubPositions[hub.id];
       if (!p) return;
+      const isActiveHub = activeHubId === hub.id;
+      const fill = isActiveHub ? DS.metal400 : DS.ice400;
+      const rim = isActiveHub ? DS.metal300 : DS.ice400;
       ctx.beginPath();
       ctx.arc(p.x, p.y, 22, 0, Math.PI * 2);
-      ctx.fillStyle = hub.color + (activeHubId === hub.id ? '40' : '18');
+      ctx.fillStyle = dsAlpha(fill, isActiveHub ? 0.25 : 0.09);
       ctx.fill();
-      ctx.strokeStyle = hub.color + (activeHubId === hub.id ? 'aa' : '50');
+      ctx.strokeStyle = dsAlpha(rim, isActiveHub ? 0.67 : 0.31);
       ctx.lineWidth = 1;
       ctx.stroke();
     });
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.strokeStyle = dsAlpha(DS.textHi, 0.07);
     ctx.lineWidth = 0.5;
     graph.edges.forEach((e) => {
       const s = nodePositions[e.source], t = nodePositions[e.target];
@@ -75,44 +127,52 @@ export default function Minimap() {
     graph.nodes.forEach((n) => {
       const p = nodePositions[n.id];
       if (!p) return;
-      const isSelected = selectedId === n.id;
-      const isHovered = hoveredId === n.id;
+      const isSelected = selectedElementId === n.id;
+      const isHovered = hoveredElementId === n.id;
       const c =
-        n.status === 'verified' ? '#22c55e' :
-        n.status === 'failed' ? '#ef4466' :
-        n.status === 'code_generated' ? '#5d8bff' : '#f5a524';
+        n.status === 'verified' ? DS.ok :
+        n.status === 'failed' ? DS.danger :
+        n.status === 'code_generated' ? DS.ice400 : DS.warn;
 
       ctx.beginPath();
       ctx.arc(p.x, p.y, isSelected ? 3.5 : isHovered ? 3 : 2, 0, Math.PI * 2);
-      ctx.fillStyle = isSelected ? '#ffd966' : c;
+      ctx.fillStyle = isSelected ? DS.metal200 : c;
       ctx.fill();
 
       if (isSelected) {
         ctx.beginPath();
         ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
-        ctx.strokeStyle = '#ffd966';
+        ctx.strokeStyle = DS.metal300;
         ctx.lineWidth = 1;
         ctx.stroke();
       }
     });
-  }, [selectedId, hoveredId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
+  }, [selectedElementId, hoveredElementId, activeHubId, graph.hubs, graph.nodes, graph.edges]);
+
+  // FINISH-F3 — the full-height Inspector dock (glass, z-40) mounts over this
+  // corner; the radar ghosting through the translucent pane made the dock's
+  // lower controls illegible. Fade the radar while the dock is open.
+  const inspectorDockOpen = useGraphEditorStore(
+    (s) => s.inspectorOpen && (s.selectedNodeId !== null || s.selectedHubId !== null),
+  );
 
   return (
-    <div className="absolute z-20 bottom-5 right-5 pointer-events-none">
-      <div
-        className="rounded-xl border border-white/10 overflow-hidden"
-        style={{
-          background: 'rgba(5,6,16,0.65)',
-          backdropFilter: 'blur(18px)',
-          WebkitBackdropFilter: 'blur(18px)',
-          boxShadow: '0 12px 36px rgba(0,0,0,0.5)',
-        }}
-      >
-        <div className="px-2.5 py-1 border-b border-white/5 text-[9px] font-mono tracking-widest text-white/40 flex items-center justify-between">
+    <div
+      className={`absolute z-20 bottom-5 right-5 pointer-events-none transition-opacity duration-300 ${
+        inspectorDockOpen ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      {/* Machined bezel plate around a recessed instrument well. */}
+      <div ref={bezelSlab.ref} className="ds-metal ds-grain ds-edge rounded-ds-md p-1.5">
+        {/* Kicker held to the mid-contrast floor (ergonomics 2026-06-11). */}
+        <div className="px-1.5 pt-0.5 pb-1.5 ds-kicker flex items-center justify-between" style={{ color: 'var(--ds-text-mid)' }}>
           <span>MINIMAP</span>
-          <span>{graph.nodes.length} nodes</span>
+          {/* Element-level truth: the same number galaxy shows (one story). */}
+          <span className="text-ds-metal-300">{graph.nodes.length} elements</span>
         </div>
-        <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
+        <div ref={windowSlab.ref} className="ds-well ds-edge rounded-ds-sm overflow-hidden">
+          <canvas ref={canvasRef} className="block" style={{ width: 180, height: 140 }} />
+        </div>
       </div>
     </div>
   );

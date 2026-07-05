@@ -1,0 +1,85 @@
+{
+  "sel": "orr-arrival-headline",
+  "fields": [
+    {
+      "id": "ne:caption",
+      "label": "NAME",
+      "value": "Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.",
+      "world": [
+        11.7,
+        1.9300000000000002,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:event",
+      "label": "ON (EVENT)",
+      "value": "",
+      "world": [
+        11.7,
+        0.6699999999999998,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:effect",
+      "label": "DO (EFFECT)",
+      "value": "",
+      "world": [
+        11.7,
+        -0.2300000000000002,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:emits",
+      "label": "EMITS",
+      "value": "",
+      "world": [
+        11.7,
+        -1.1300000000000003,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:listens",
+      "label": "LISTENS",
+      "value": "",
+      "world": [
+        11.7,
+        -2.0300000000000002,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:inputs",
+      "label": "INPUTS (k:type)",
+      "value": "",
+      "world": [
+        11.7,
+        -3.2900000000000005,
+        1.18
+      ]
+    },
+    {
+      "id": "ne:outputs",
+      "label": "OUTPUTS (k:type)",
+      "value": "",
+      "world": [
+        11.7,
+        -4.19,
+        1.18
+      ]
+    }
+  ],
+  "purpose": {
+    "nodeId": "orr-arrival-headline",
+    "caption": "Hero headline — molten brass poured into real MSDF letterforms; light sweeps it on entry, it drifts with scroll and recedes as you descend into the movement.",
+    "event": "",
+    "effect": "",
+    "emits": [],
+    "listens": [],
+    "inputs": {},
+    "outputs": {}
+  }
+}

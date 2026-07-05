@@ -1,0 +1,258 @@
+{
+  "url": "http://localhost:4793",
+  "at": "2026-06-14T16:36:37.054Z",
+  "configs": {
+    "desktop": {
+      "errors": [],
+      "hubId": "s1-arrival",
+      "canvasBox": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 900
+      },
+      "canvasOrbit": {
+        "position": {
+          "x": -13.303328406604244,
+          "y": 12.044350914459452,
+          "z": 1.3982361586642922
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 0.8377580409572778,
+        "azimuthAngle": -1.4660765716752366
+      },
+      "canvasViewAfterOrbit": {
+        "azimuthDeg": -83.81422761468991,
+        "polarDeg": 48.092886192655016,
+        "distance": 18
+      },
+      "canvasReset": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "canvasViewAtZero": {
+        "azimuthDeg": -0.10152612093128204,
+        "polarDeg": 89.94923693953436,
+        "distance": 18
+      },
+      "previewPoseA": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "previewPoseB": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "canvasOrbitAzDeg": -84,
+      "canvasOrbitPolarDeg": 48,
+      "canvasFreeProven": true,
+      "canvasResetAzDeg": 0,
+      "canvasResetPolarDeg": 90,
+      "resetToZeroProven": true,
+      "previewPosDelta": 0,
+      "previewLockedProven": true
+    },
+    "mobile": {
+      "errors": [],
+      "hubId": "s1-arrival",
+      "canvasBox": {
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 844
+      },
+      "canvasOrbit": {
+        "position": {
+          "x": -12.774856485251513,
+          "y": 12.680457282697208,
+          "z": 0.09510458936720821
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 0.7891204295746874,
+        "azimuthAngle": -1.5633517944404185
+      },
+      "canvasViewAfterOrbit": {
+        "azimuthDeg": -89.37543970457209,
+        "polarDeg": 45.31228014771397,
+        "distance": 18
+      },
+      "canvasReset": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707638949378209,
+        "azimuthAngle": -0.00006486371415141471
+      },
+      "canvasViewAtZero": {
+        "azimuthDeg": -0.14718379712100738,
+        "polarDeg": 89.92640810143949,
+        "distance": 18
+      },
+      "previewPoseA": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "previewPoseB": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "canvasOrbitAzDeg": -89.6,
+      "canvasOrbitPolarDeg": 45.2,
+      "canvasFreeProven": true,
+      "canvasResetAzDeg": 0,
+      "canvasResetPolarDeg": 90,
+      "resetToZeroProven": true,
+      "previewPosDelta": 0,
+      "previewLockedProven": true
+    },
+    "constrained": {
+      "errors": [],
+      "hubId": "s1-arrival",
+      "canvasBox": {
+        "x": 0,
+        "y": 0,
+        "w": 900,
+        "h": 620
+      },
+      "canvasOrbit": {
+        "position": {
+          "x": -7.413277025752816,
+          "y": 15.738239090602484,
+          "z": -4.620730901759745
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 0.5067084925144822,
+        "azimuthAngle": -2.128175668560828
+      },
+      "canvasViewAfterOrbit": {
+        "azimuthDeg": -121.86557042388964,
+        "polarDeg": 29.06721478805517,
+        "distance": 18
+      },
+      "canvasReset": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": -0.00000671082631966637
+      },
+      "canvasViewAtZero": {
+        "azimuthDeg": -0.18943972975081455,
+        "polarDeg": 89.9052801351246,
+        "distance": 18
+      },
+      "previewPoseA": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "previewPoseB": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      },
+      "canvasOrbitAzDeg": -121.9,
+      "canvasOrbitPolarDeg": 29,
+      "canvasFreeProven": true,
+      "canvasResetAzDeg": 0,
+      "canvasResetPolarDeg": 90,
+      "resetToZeroProven": true,
+      "previewPosDelta": 0,
+      "previewLockedProven": true
+    }
+  }
+}

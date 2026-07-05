@@ -15,10 +15,24 @@
 // render in 'sprite' mode at the identity pose with no primitives applied.
 
 import type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+import type { CapabilityRef, PrismRootNode } from './root-node.ts';
+import type { UiAnchor } from './compile-anchors.ts';
 
 export type { CinematicPrimitiveRef } from './cinematic-primitives.ts';
+export type { CapabilityRef, PrismRootNode } from './root-node.ts';
+export type { UiAnchor } from './compile-anchors.ts';
 
-export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh';
+// Canvas-spec §7 / criterion 26 (INV-18 additive): 'text' renders REAL MSDF
+// font glyphs via the Prism TextObject (src/lib/prism/text/), styled by the
+// node's `textSpec`. Letterforms are never synthesized (INV-11).
+export type RenderMode = 'sprite' | 'plane' | 'parallax-plane' | 'mesh' | 'text';
+
+// POLISH pass / galaxy glance-icon (INV-18 additive). The coarse content KIND a
+// node carries, used to pick the small per-node badge shown at galaxy glance.
+// Distinct from RenderMode (which is the runtime render path) — a 'mesh' render
+// mode and a primitive both map to the '3d-object' content kind, etc. When a
+// node's `contentType` is unset, callers derive it via `deriveContentType`.
+export type NodeContentType = 'image' | 'text' | '3d-object' | 'integration';
 
 export interface ScenePosition {
   x: number;
@@ -46,6 +60,404 @@ export const SCENE_POSITION_DEFAULT: ScenePosition = {
   scaleZ: 1,
 };
 
+// EB-05-03 / §6 Phase 5 SC-025, Phase 8 SC-041, SC-042 (INV-18 additive).
+// Shape mirrors ScenePosition so the canvas-mode gizmo can drive every axis
+// (translate/rotate/scale) without colliding with the renderer-migration
+// `scenePosition` runtime field. The canvas-transform-gizmo helper owns the
+// math + cancel-restore semantics; this type is the persisted record.
+export interface CanvasTransform {
+  x: number;
+  y: number;
+  z: number;
+  rotationX: number;
+  rotationY: number;
+  rotationZ: number;
+  scaleX: number;
+  scaleY: number;
+  scaleZ: number;
+}
+
+// EB-08-01 / §8 SC-041 (INV-18 additive). The hub-world-mode per-node pose
+// the Inspector + selection-driven gizmos write to. Shape mirrors
+// ScenePosition so the Phase 8 transform editor can drive every axis without
+// disturbing the renderer-migration `scenePosition` runtime field (SC-042).
+export type EditorTransform = ScenePosition;
+
+export const EDITOR_TRANSFORM_DEFAULT: EditorTransform = {
+  x: 0,
+  y: 0,
+  z: 0,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1,
+};
+
+// EB-08-01 / §8 (INV-18 additive). The resolved final pose written by
+// non-destructive compile passes (compile-anchors / compile-hub / preview*).
+// Cached, non-canonical: source-of-truth remains `editorTransform` +
+// `canvasTransform` + the anchor rule table. Consumers MAY re-derive at any
+// time; compile functions read source fields and write only here (INV-17 /
+// FP-04 still forbid writes to scenePosition/editorTransform/canvasTransform).
+export type CompiledTransform = ScenePosition;
+
+export const COMPILED_TRANSFORM_DEFAULT: CompiledTransform = {
+  x: 0,
+  y: 0,
+  z: 0,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  scaleX: 1,
+  scaleY: 1,
+  scaleZ: 1,
+};
+
+// EB-08-01 / §8 (INV-18 additive). The layered scene-graph layer assignment
+// for a node. Mirrors the editor-build gap-analysis §3 schema delta. The
+// runtime layer compositor (Phase 7) groups nodes into these six z-buckets;
+// `content` is the default for legacy graphs that pre-date this field.
+export type DepthLayer =
+  | 'environment'
+  | 'background'
+  | 'midground'
+  | 'content'
+  | 'foreground-FX'
+  | 'overlay';
+
+export const DEPTH_LAYER_VALUES: readonly DepthLayer[] = Object.freeze([
+  'environment',
+  'background',
+  'midground',
+  'content',
+  'foreground-FX',
+  'overlay',
+] as const);
+
+export const DEPTH_LAYER_DEFAULT: DepthLayer = 'content';
+
+// ===========================================================================
+// Material + Lighting subsystem (PRISM-CANVAS-EDITOR-SPEC §10/§11, INV-8/INV-9).
+// All fields below are ADDITIVE-ONLY with safe defaults (INV-18). They round-trip
+// through save/reload exactly like scenePosition/canvasTransform. No existing
+// shared-interface field is renamed or removed.
+// ===========================================================================
+
+// §10 capability tiers (INV-9). `T0` = IBL + ambient (all devices incl. mobile);
+// `T1` = dynamic key/fill/rim + point/spot + soft shadows (workhorse); `T2` =
+// T1 + screen-space GI/AO (+ optional SSR/TRAA), WebGPU desktop only. `'auto'`
+// asks the runtime capability detector to pick the highest tier the device can
+// hold. Heavy effects are NEVER the default path — `'auto'` degrades to T0/T1.
+export type LightingTier = 'T0' | 'T1' | 'T2';
+export type LightingTierPreference = LightingTier | 'auto';
+
+export const LIGHTING_TIER_VALUES: readonly LightingTier[] = Object.freeze([
+  'T0',
+  'T1',
+  'T2',
+] as const);
+
+// §10 light types. `rim` is a back-positioned directional preset (edge light).
+export type PrismLightType =
+  | 'ambient'
+  | 'hemisphere'
+  | 'directional'
+  | 'point'
+  | 'spot'
+  | 'rim';
+
+export interface PrismVec3 {
+  x: number;
+  y: number;
+  z: number;
+}
+
+// §10 / §5 Lighting group — one configurable scene light. `id` + `type` required;
+// everything else optional with runtime defaults so the editor can add a light
+// with a single click and tune it incrementally. Additive only (INV-18).
+export interface PrismLight {
+  id: string;
+  type: PrismLightType;
+  /** Hex color, e.g. '#ffffff'. */
+  color?: string;
+  /** Secondary/ground color for `hemisphere` lights. */
+  groundColor?: string;
+  intensity?: number;
+  position?: PrismVec3;
+  /** Aim point for directional/spot/rim lights. */
+  target?: PrismVec3;
+  /** point/spot falloff distance (0 = infinite). */
+  distance?: number;
+  /** point/spot physical decay. */
+  decay?: number;
+  /** spot cone half-angle in radians. */
+  angle?: number;
+  /** spot edge softness 0..1. */
+  penumbra?: number;
+  /** Whether this light casts shadows (honored at T1+). */
+  castShadow?: boolean;
+}
+
+// §10 per-hub AND per-element lighting configuration (decision 5). Additive with
+// safe defaults; an empty/absent spec falls back to the runtime default rig.
+export interface LightingSpec {
+  /** Tier preference; `'auto'` lets capability detection choose (INV-9). */
+  tier?: LightingTierPreference;
+  /** Configurable light list. Absent/empty → runtime default 3-point rig. */
+  lights?: PrismLight[];
+  /** IBL/env-map URL override. `null`/absent → procedural studio IBL (PMREM). */
+  envMapUrl?: string | null;
+  /** Environment (IBL) reflection intensity. */
+  envIntensity?: number;
+  /** Global ambient floor intensity. */
+  ambientIntensity?: number;
+  /** Soft-shadow radius 0..1 (0 = crisp, 1 = very soft). Maps to PCFSoft/VSM. */
+  shadowSoftness?: number;
+}
+
+export const LIGHTING_SPEC_DEFAULT: LightingSpec = {
+  tier: 'auto',
+  lights: [],
+  envMapUrl: null,
+  envIntensity: 1,
+  ambientIntensity: 0.25,
+  shadowSoftness: 0.5,
+};
+
+// §11 per-node material (decision 4) — `MeshPhysicalNodeMaterial` params. All
+// optional; the material system fills unset fields from MATERIAL_SPEC_DEFAULT.
+// Only meshes/splats consume this for visible PBR; image-planes ignore it unless
+// `receivesLighting` opts them in. Additive only (INV-18).
+export interface MaterialSpec {
+  /** Base/albedo color, hex. */
+  baseColor?: string;
+  metalness?: number;
+  roughness?: number;
+  /** 0 = opaque, 1 = fully transmissive (glass). */
+  transmission?: number;
+  /** Index of refraction (1.0 air … ~2.4 diamond). */
+  ior?: number;
+  /** Chromatic dispersion strength (Abbe-style), 0 = none. */
+  dispersion?: number;
+  clearcoat?: number;
+  clearcoatRoughness?: number;
+  /** Thin-film iridescence 0..1 (soap-bubble / oil-slick look). */
+  iridescence?: number;
+  iridescenceIOR?: number;
+  /** Refraction slab thickness (transmission depth). */
+  thickness?: number;
+  emissive?: string;
+  emissiveIntensity?: number;
+  /** Normal-map influence. */
+  normalScale?: number;
+  /** Displacement-map influence. */
+  displacementScale?: number;
+  /** IBL/env reflection strength on this material. */
+  envMapIntensity?: number;
+  /** 0..1 surface opacity (independent of transmission). */
+  opacity?: number;
+  /** Optional texture URLs (loaded via ctx loaders, cached). */
+  normalMapUrl?: string | null;
+  displacementMapUrl?: string | null;
+  /** Roughness map (linear, green channel). Multiplies `roughness` — set
+   *  roughness=1 to let a baked map drive the value range directly. PHASE1
+   *  (additive, INV-18): photoreal dial/metal micro-roughness for real
+   *  specular response as the watch orbits (SC-V-A3). */
+  roughnessMapUrl?: string | null;
+  /** Base-color/albedo map (sRGB). Additive (INV-18) — UI-FIDELITY-2 W3:
+   *  lets generated surface scans pour onto primitive geometry (e.g. the
+   *  showcase planets' lapis/brass/obsidian equirect textures on spheres). */
+  baseColorMapUrl?: string | null;
+}
+
+export const MATERIAL_SPEC_DEFAULT: MaterialSpec = {
+  baseColor: '#c8ccd8',
+  metalness: 0,
+  roughness: 0.5,
+  transmission: 0,
+  ior: 1.5,
+  dispersion: 0,
+  clearcoat: 0,
+  clearcoatRoughness: 0.1,
+  iridescence: 0,
+  iridescenceIOR: 1.3,
+  thickness: 0.5,
+  emissive: '#000000',
+  emissiveIntensity: 0,
+  normalScale: 1,
+  displacementScale: 0,
+  envMapIntensity: 1,
+  opacity: 1,
+  normalMapUrl: null,
+  displacementMapUrl: null,
+  roughnessMapUrl: null,
+};
+
+// ── Canvas-spec §7 Text System (INV-8 additive, INV-11) ────────────────────
+// `TextSpec` is the per-node text contract: real-font MSDF letterforms only —
+// the fill may be AI-generated TEXTURE, the letter SHAPES never are (INV-11).
+// All fields optional; the text system fills unset fields from
+// TEXT_SPEC_DEFAULT. Round-trips through save/reload (criterion 26).
+
+/** How a text fill paints the glyph coverage. The MSDF coverage is ALWAYS the
+ *  mask — every fill kind pours pigment into real letterforms (INV-11). */
+export type TextFill =
+  | { kind: 'solid'; color: string }
+  | {
+      kind: 'gradient';
+      from: string;
+      to: string;
+      /** Gradient angle in degrees over the text block (0 = left→right). */
+      angleDeg?: number;
+    }
+  | { kind: 'texture'; url: string }
+  | {
+      kind: 'ai-texture';
+      /** Natural-language look description ("molten gold", "hairy moss"). */
+      prompt: string;
+      /** Resolved texture URL once generated; absent while pending. */
+      url?: string;
+    };
+
+export interface TextOutlineSpec {
+  color?: string;
+  /** Outline width as a fraction of the MSDF distance range, 0..1. */
+  width?: number;
+}
+
+export interface TextGlowSpec {
+  color?: string;
+  /** 0 = off. Drives emissiveIntensity on the glyph material. */
+  intensity?: number;
+}
+
+export interface TextShadowSpec {
+  color?: string;
+  /** Offset in em units (fraction of fontSize). */
+  offsetX?: number;
+  offsetY?: number;
+  /** Depth offset in em units, pushing the shadow behind the text along -Z.
+   *  True-3D extruded mode only; ignored by the flat MSDF path. Additive
+   *  (INV-18). */
+  offsetZ?: number;
+  opacity?: number;
+  /** Soft-shadow blur radius in em units (0 / absent = hard edge). Additive
+   *  (INV-18). */
+  blur?: number;
+}
+
+// §7 — TRUE 3D EXTRUDED TEXT (additive, INV-18 / INV-11). When `enabled` and the
+// device tier permits (INV-9, T1+), the text node builds REAL extruded geometry
+// from the font's vector outlines (opentype.js → THREE.Shape → ExtrudeGeometry),
+// lit + shadow-casting. Absent / `enabled:false` → the flat MSDF path runs
+// (default, byte-identical). Letterforms are ALWAYS real font outlines, never
+// diffusion-drawn (INV-11). Depth / bevel are in em units (fractions of
+// fontSize). `faceFill`/`sideFill` reuse the standard TextFill union so the
+// existing solid/gradient/texture/ai-texture pipeline (and the prompt→texture
+// picker) pour onto the 3D faces vs the bevel/sides independently.
+export interface TextExtrudeSpec {
+  enabled?: boolean;
+  /** Extrusion depth (slab thickness) in em units. */
+  depth?: number;
+  bevelEnabled?: boolean;
+  /** Bevel rise along +Z in em units. */
+  bevelThickness?: number;
+  /** Bevel inset (how far the bevel cuts in) in em units. */
+  bevelSize?: number;
+  /** Bevel curve resolution (cost driver; 2–4 typical). */
+  bevelSegments?: number;
+  /** Glyph-curve tessellation (bezier flatness; higher = sharper at DPR-2). */
+  curveSegments?: number;
+  /** Fill for the front/back FACES (ExtrudeGeometry material group 0). Falls
+   *  back to `TextSpec.fill` when absent. */
+  faceFill?: TextFill;
+  /** Fill for the extruded SIDE walls + bevel (material group 1). Falls back to
+   *  a tinted edge derived from the face fill. */
+  sideFill?: TextFill;
+  /** PBR surface so the extruded faces/sides catch real scene light (photoreal,
+   *  never flat). Sensible defaults applied when absent. */
+  metalness?: number;
+  roughness?: number;
+  /** TRUE liquid-glass glyphs (additive, INV-18). When `transmission > 0` the
+   *  whole title builds ONE shared MeshPhysicalNodeMaterial admitted once into
+   *  the ≤2 Path-B transmission budget (§4 / SC-O10) and reused across every
+   *  glyph mesh — so a multi-letter wordmark counts as a single transmission
+   *  surface, never one-per-glyph. Over budget → graceful clearcoat-glass
+   *  (no extra screen pass). Refraction/dispersion turn the extruded letters
+   *  into real refractive crystal, not a flat decal. */
+  transmission?: number;
+  /** Index of refraction (default 1.45 — sapphire-ish). */
+  ior?: number;
+  /** Glass slab thickness for Beer–Lambert absorption (em units; default = depth). */
+  thickness?: number;
+  /** Clearcoat layer (0..1; default 1 when glass). */
+  clearcoat?: number;
+  clearcoatRoughness?: number;
+  /** Chromatic dispersion (rainbow edge refraction). */
+  dispersion?: number;
+  /** Thin-film iridescence (0..1). */
+  iridescence?: number;
+}
+
+export interface TextSpec {
+  /** The literal string (line breaks via '\n'). */
+  content?: string;
+  /** Font family name as listed by the font manifest (e.g. 'Inter'). */
+  fontFamily?: string;
+  /** Em height in scene units. */
+  fontSize?: number;
+  /** Numeric weight (400, 700, …) — must exist in the family's atlas set. */
+  fontWeight?: number;
+  /** Extra inter-glyph advance in em units (fraction of fontSize). */
+  letterSpacing?: number;
+  /** Line height multiplier (1 = font default). */
+  lineHeight?: number;
+  align?: 'left' | 'center' | 'right';
+  fill?: TextFill;
+  outline?: TextOutlineSpec;
+  glow?: TextGlowSpec;
+  shadow?: TextShadowSpec;
+  /** 0..1 whole-object opacity. */
+  opacity?: number;
+  /** Animation unit granularity for text-animation primitives (§7.5). */
+  decompose?: 'glyph' | 'word' | 'line';
+  /** Real-or-synthesized style flags (§7 extended styling, additive INV-18).
+   *  `bold` prefers a real heavier weight face, else faux-bold; `italic`
+   *  prefers a real italic face, else a synthesized shear. `strikethrough` /
+   *  `underline` are metrics-derived rules. */
+  bold?: boolean;
+  italic?: boolean;
+  strikethrough?: boolean;
+  underline?: boolean;
+  /** True-3D extruded geometry (opt-in; tier-gated INV-9). Absent / disabled →
+   *  the flat MSDF path renders (default). Additive (INV-18). */
+  extrude?: TextExtrudeSpec;
+}
+
+export const TEXT_SPEC_DEFAULT: TextSpec = {
+  content: 'Text',
+  fontFamily: 'Inter',
+  fontSize: 0.4,
+  fontWeight: 400,
+  letterSpacing: 0,
+  lineHeight: 1,
+  align: 'center',
+  fill: { kind: 'solid', color: '#e8e4da' },
+  opacity: 1,
+  decompose: 'glyph',
+};
+
+// §10 decision 7 / §10 `receivesLighting` SAFE DEFAULT. Image-bearing render
+// modes default UNLIT so the diffusion-baked look is preserved pixel-identical;
+// generated geometry (mesh) defaults LIT. `'sprite'` and `'parallax-plane'`
+// are image planes → unlit. Text opts in elsewhere (textSpec), default unlit.
+// Splats are lit by default but have no `RenderMode` literal yet (mesh-routed).
+export function receivesLightingDefault(renderMode?: RenderMode): boolean {
+  return renderMode === 'mesh';
+}
+
 export interface PrismHubLayout {
   viewportWidth: number;
   viewportHeight: number;
@@ -69,12 +481,127 @@ export interface PrismHubResponsiveBreakpoints {
   [key: string]: PrismHubResponsiveBreakpoint | undefined;
 }
 
+// Phase 7 / §7 SC-036 — attachment vocabulary for a hub's background layer
+// stack. The five members are the canonical set; mirrored by
+// `CompiledHubAttachment` in `compiled-view.ts` so the compile path consumes
+// source layers without rename. `'viewport-fixed'` pins the layer to the
+// viewport during scroll (SC-033). `'camera-locked'` welds it to the camera
+// (HUD-style backdrops). `'parallax'` scrolls at a depth-derived rate.
+// `'world'` anchors in hub-scene world space. `'infinite-environment'`
+// reserves for skybox-style infinite-distance environments.
+export type PrismHubBackgroundAttachment =
+  | 'viewport-fixed'
+  | 'camera-locked'
+  | 'parallax'
+  | 'world'
+  | 'infinite-environment';
+
+// THREE-D-BACKGROUNDS (3DBG) — the KIND of a background layer. `'image'` (the
+// implicit default when a layer carries only a `sourceUrl`) renders the legacy
+// flat textured plate (`SceneBackdropLayer`). The procedural kinds are rendered
+// by the 3D background library's R3F layer components: a TSL volumetric raymarch
+// nebula, a GPU/CPU depth-scattered particle field, a depth-displaced parallax
+// plate, and a Gaussian splat. Additive (INV-18 / INV-2): legacy layers with no
+// `kind` behave exactly as before. Appearance/behaviour come from the schema
+// only (INV-4) — there is no per-hub hard-coded background in component code.
+export type BackgroundLayerKind =
+  | 'image'
+  | 'volumetric-nebula'
+  | 'particle-field'
+  | 'parallax-plane'
+  | 'splat';
+
+export const BACKGROUND_LAYER_KIND_VALUES: readonly BackgroundLayerKind[] =
+  Object.freeze(['image', 'volumetric-nebula', 'particle-field', 'parallax-plane', 'splat'] as const);
+
+// 3DBG — customizable, round-trippable params for a procedural background layer.
+// All optional and numeric/string so a layer is a pure DATA description the
+// editor writes and the runtime reads (one source of truth). `palette` selects a
+// variant WITHIN the Observatory-Brass family (never purple, INV-9). Open record
+// so a preset can carry extra named knobs without a schema change.
+export interface BackgroundLayerParams {
+  /** Palette variant id within the Observatory-Brass family (brass/bone/ice/deep). */
+  palette?: string;
+  /** 0..1 — fill density (nebula opacity / particle count fraction). */
+  density?: number;
+  /** 0..1 — animation drift speed (time multiplier). */
+  drift?: number;
+  /** 0..1 — how far layers spread in scene Z (parallax depth strength). */
+  depthSpread?: number;
+  /** 0..1 — brightness / in-scatter intensity. */
+  intensity?: number;
+  [key: string]: number | string | undefined;
+}
+
+// §7 SC-036 — source-graph background layer. `id` and `attachment` are
+// required; `sourceUrl`, `z`, `opacity`, and `parallaxDepth` are optional and
+// default at compile time. Additive only (INV-18).
+//
+// 3DBG additive fields (all optional; legacy layers omit them and render as a
+// flat image plate unchanged):
+//   - `kind`        — selects the procedural renderer (default 'image').
+//   - `depthMapUrl` — depth source for `kind: 'parallax-plane'`.
+//   - `renderMode`  — mirrors the node render-mode vocabulary for the plate.
+//   - `presetId`    — which library preset emitted this layer (for re-skin).
+//   - `params`      — customizable, round-trippable preset params.
+//   - `minTier`     — device-tier floor; the layer is dropped below it (e.g. a
+//                     splat layer with `minTier: 'T2'` does not mount on mobile).
+export interface PrismHubBackgroundLayer {
+  id: string;
+  attachment: PrismHubBackgroundAttachment;
+  sourceUrl?: string | null;
+  z?: number;
+  opacity?: number;
+  parallaxDepth?: number;
+  kind?: BackgroundLayerKind;
+  depthMapUrl?: string | null;
+  renderMode?: RenderMode;
+  presetId?: string;
+  params?: BackgroundLayerParams;
+  minTier?: LightingTier;
+}
+
+// POLISH pass / galaxy hub-planet (INV-18 additive). The visual identity preset
+// the galaxy renders this hub's planet with, drawn from the Observatory Brass
+// palette (brass / bone / ice) plus two deeper environment looks. Absent => a
+// deterministic per-hub default is chosen by the galaxy renderer (e.g. hashed
+// from `hubId`), so legacy graphs stay stable.
+export type HubPlanetIdentity =
+  | 'brass-gas-giant'
+  | 'bone-rock'
+  | 'ice-crystal'
+  | 'deep-ocean'
+  | 'ember-forge';
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
+  // POLISH pass / galaxy hub-planet visual identity (INV-18 additive). Absent
+  // => deterministic per-hub default chosen by the galaxy renderer.
+  identity?: HubPlanetIdentity;
   layout: PrismHubLayout;
   responsiveBreakpoints?: PrismHubResponsiveBreakpoints;
+  // §7 SC-037 — optional multi-layer background stack. Legacy
+  // `layout.mockupUrl` is retained as the single-layer reader; when
+  // `background` is present the compile path may prefer it. Optional per
+  // INV-18 (additive schema growth).
+  background?: PrismHubBackgroundLayer[];
+  // §10 decision 5 (INV-8 additive). Per-HUB lighting configuration: the light
+  // list, env/IBL, shadow softness, and tier preference for this page. Absent →
+  // the runtime default 3-point rig + procedural studio IBL. A node's own
+  // `lightingSpec` (per-element) overrides this for that node.
+  lightingSpec?: LightingSpec;
+  // APP-REALITY P2 — hub-level CAMERA JOURNEY (INV-8 additive, INV-21). An
+  // ordered list of camera waypoints (position/target/fov over time) the
+  // Canvas user authors with the free edit camera; Preview plays exactly this
+  // journey, deterministically, as the landing fly-in. Each entry is a
+  // `PrismKeyframe` with `coordinateSpace: 'camera'` (the canonical 5, §4),
+  // `t` ∈ [0..1] normalized journey time, and `params`:
+  //   { px, py, pz, tx, ty, tz, fov } in hub-scene world units / degrees.
+  // Absent / fewer than 2 waypoints → no journey (Preview holds the configured
+  // landing pose). Never mutated by compile/preview functions (read-only there).
+  cameraKeyframes?: PrismKeyframe[];
 }
 
 export interface PrismVisualTransform {
@@ -91,6 +618,13 @@ export interface PrismVisual {
   shape?: 'rect' | 'rounded' | 'circle' | 'pill' | string;
   shapeRadius?: number;
   alpha?: number;
+  // POLISH PC (matte) — when true the image-plane material renders OPAQUE
+  // (transparent:false), so an opaque photo texture (e.g. a macro product
+  // shot, alpha=1, no alpha channel) does not composite a faint straight-alpha
+  // rectangular seam against the dark backdrop. Absent/false → the default
+  // transparent:true path is unchanged (alpha-bearing fx planes keep blending).
+  // INV-18 additive.
+  opaque?: boolean;
   overlayRegions?: string[];
   frameCount?: number;
   transformByBreakpoint?: Record<string, Partial<PrismVisualTransform>>;
@@ -126,6 +660,10 @@ export interface PrismLayer {
   blendMode?: string;
   defaultAlpha?: number;
   mask?: { shape?: string; radius?: number; [k: string]: unknown };
+  // §10 decision 5 (INV-8 additive). Optional per-layer (sub-element) lighting
+  // override. Absent → inherits the node's then the hub's lightingSpec. The
+  // index signature already permitted this untyped; declared for type-safety.
+  lightingSpec?: LightingSpec;
   [k: string]: unknown;
 }
 
@@ -253,10 +791,735 @@ export interface PrismNode {
   // Renderer-migration additions (spec §4). Optional for backward compat with
   // legacy graphs; defaults: 'sprite' / null / null / [] / identity pose.
   renderMode?: RenderMode;
+  // POLISH pass / galaxy glance-icon badge override (INV-18 additive). When
+  // set, this is the galaxy glance-icon badge for the node; absent => derive
+  // via `deriveContentType`.
+  contentType?: NodeContentType;
   depthMapUrl?: string | null;
   meshUrl?: string | null;
+  // FIDELITY-2 W3 / audit item 3 (INV-18 additive). Optional video texture
+  // source for image-bearing render modes (sprite / plane). When set, the
+  // runtime's LoaderCache `loadVideo` lane wraps the URL in a
+  // THREE.VideoTexture (muted, looping, autoplaying, SRGB) and it replaces
+  // the still-image texture once the first frame is decodable; the still
+  // image (visual.sourceAsset) acts as the placeholder until then. Absent /
+  // null → image-only, bit-for-bit legacy behavior.
+  videoUrl?: string | null;
   cinematicPrimitives?: CinematicPrimitiveRef[];
   scenePosition?: ScenePosition;
+  // EB-05-03 / §6 Phase 5 SC-025, Phase 8 SC-041, SC-042 (INV-18 additive).
+  // Per-node transform written by the canvas-mode gizmo. Never mutated by
+  // compile/organize/preview functions (INV-17 / FP-04). When absent, the
+  // canvas gizmo treats the node as identity (CANVAS_TRANSFORM_IDENTITY).
+  // scenePosition is the renderer-migration runtime field and stays
+  // untouched by canvas-mode edits (SC-042).
+  canvasTransform?: CanvasTransform;
+  // EB-08-01 / §8 SC-041 (INV-18 additive). The hub-world-mode per-node pose
+  // written by the Inspector + selection gizmos. Default: identity
+  // (EDITOR_TRANSFORM_DEFAULT). See `EditorTransform` for shape semantics.
+  editorTransform?: EditorTransform;
+  // EB-08-01 / §8 (INV-18 additive). Cached resolved pose produced by the
+  // non-destructive compile path. Not canonical: compile functions may
+  // overwrite this freely; the source-of-truth is editorTransform +
+  // canvasTransform + the anchor rule table.
+  compiledTransform?: CompiledTransform;
+  // EB-08-01 / §6 SC-031 (INV-18 additive). Source-side anchor abstraction.
+  // When absent, callers pick via `pickUiAnchor(subtype, intent, serviceTag)`
+  // in `compile-anchors.ts`; explicit value here overrides the rule table.
+  uiAnchor?: UiAnchor;
+  // EB-08-01 / §8 (INV-18 additive). Layered scene-graph layer assignment.
+  // When absent, the Phase 7 layer compositor treats the node as `content`
+  // (DEPTH_LAYER_DEFAULT).
+  depthLayer?: DepthLayer;
+  // EB-02-06 / SC-009: optional capability references on the node. The vault
+  // resolves these server-side; raw secret values never appear here (INV-19).
+  capabilityRefs?: CapabilityRef[];
+  // EB-07-04 / §7 SC-039: optional per-node scroll bindings. Each entry maps
+  // `scrollProgress: 0→1` (the `scroll-timeline` coordinate space from §4)
+  // onto a single transform/material property via `from→to`. The runtime
+  // `applyScrollBindings(obj, bindings, progress)` consumer drives the node
+  // per-element so scrolling reads as app UI, not whole-scene movement
+  // (SC-040). Additive only (INV-18); legacy graphs without the field
+  // continue to render at their authored pose.
+  scrollBinding?: ScrollBinding[];
+  // EB-08-02 / §8 SC-043 (INV-18 additive, INV-21). Per-node keyframe list.
+  // Each `PrismKeyframe` carries a required `coordinateSpace` discriminator
+  // from the canonical 5 (§4). Absent on legacy graphs; non-empty arrays
+  // drive the Phase 8 animation primitives (`load` fade, `in-view` slide,
+  // `hover` lift; SC-046).
+  keyframes?: PrismKeyframe[];
+  // STEP5 edit-path (NE-SC-11; canvas-spec §6 lifecycle Built→Dirty; INV-18
+  // additive). `dirty === true` means a purpose/visual edit has been committed
+  // to the source graph but the built-state artifact has NOT been rebuilt yet,
+  // so the cached artifact + builtSnapshot are stale. Set by the edit→save
+  // commit (`preview-commit.ts`); cleared by the surgical Save-and-Rebuild
+  // (`rebuild-node.ts`). Absent / false on legacy graphs (no built-state drift).
+  dirty?: boolean;
+  // STEP8 canvas-toolbar Selection group (canvas-spec §14, SC-22; INV-18
+  // additive, INV-1 frozen-graph: this is a contains-subtree marker, NOT a new
+  // edge type or topology change). Nodes sharing a `groupId` form a Group whose
+  // transform cascades (the Selection group's Group button mints a fresh id and
+  // stamps it onto every selected node; Ungroup clears it, leaving each node's
+  // own `scenePosition` — and therefore its world transform — intact). Absent on
+  // ungrouped / legacy nodes.
+  groupId?: string;
+  // EDITOR-INTEGRATION I-3 STACK (PRISM-EDITOR-INTEGRATION-SPEC §3 I-3; INV-18
+  // additive). Parent-child stack: when set, this node's scenePosition is a
+  // PARENT-RELATIVE offset and its effective world placement is computed by
+  // summing the parent chain (the P-5 `effectiveRoot` idiom — a COMPUTED world
+  // root, never a THREE re-parent). Moving the parent moves the child. Absent on
+  // unstacked / legacy nodes.
+  parentNodeId?: string;
+  // EDITOR-INTEGRATION I-4 GLOBAL SLOT (PRISM-EDITOR-INTEGRATION-SPEC §3 I-4;
+  // INV-18 additive). Marks a node as a GLOBAL app slot — `'header'` pins it to
+  // the top band of the running-app PREVIEW, `'footer'` to the bottom band, and
+  // (being global) it appears across every hub/page, not just its parent hub.
+  // Absent → the node is ordinary page content composed inside the active hub.
+  // Editable in the Inspector; round-trips through save/reload. Never alters the
+  // node's representation in galaxy/canvas (it is still one backing graph node).
+  globalSlot?: 'header' | 'footer';
+  // STEP8 canvas-toolbar Selection group (canvas-spec §5 "lock/unlock"; INV-18
+  // additive). `locked === true` removes the node from transform authoring: the
+  // CanvasTransformGizmo skips it and the toolbar Transform tools refuse to
+  // write its `scenePosition`. Distinct from `frozenNodeIds` (AI-off-limits) —
+  // lock is a manual-edit guard. Absent / false on legacy nodes.
+  locked?: boolean;
+  // §10 decision 7 / §10 (INV-8 additive, SAFE DEFAULT). Whether this node's
+  // built artifact participates in scene lighting. Absent → derived per render
+  // mode via `receivesLightingDefault(renderMode)`: image planes UNLIT (preserve
+  // the diffusion-baked look exactly, criterion 17), meshes LIT. Round-trips
+  // through save/reload. Toggled by the Lighting toolbar group's per-node switch.
+  receivesLighting?: boolean;
+  // §11 decision 4 (INV-8 additive). Per-node MeshPhysicalNodeMaterial params,
+  // editable in Canvas for meshes. Absent → MATERIAL_SPEC_DEFAULT. Only consumed
+  // for visible PBR when the node is a mesh or an opted-in lit plane; image
+  // planes ignore it (their texture IS their look) unless receivesLighting=true.
+  materialSpec?: MaterialSpec;
+  // §10 decision 5 (INV-8 additive). Per-ELEMENT lighting override (a single
+  // node can carry its own local lights / env / tier). Absent → the node inherits
+  // its hub's `lightingSpec` (and the global default rig). Per-hub spec lives on
+  // PrismHub.lightingSpec.
+  lightingSpec?: LightingSpec;
+  // Canvas-spec §7 (INV-8 additive, INV-11). Per-node text contract for
+  // `renderMode: 'text'` nodes: content, font, size/weight/spacing, fills
+  // (solid/gradient/texture/AI-texture), outline/glow/shadow, alignment,
+  // animation decomposition. Absent → TEXT_SPEC_DEFAULT. Letterforms are real
+  // MSDF font glyphs ALWAYS; AI may fill only the texture poured into the
+  // glyph coverage, never the letter shapes (INV-11).
+  textSpec?: TextSpec;
+  // P2 TOOLBAR WIRING (canvas-spec §5 Animation group, §8.2/§8.3; INV-8
+  // additive). Catalog-primitive bindings applied to this node: each entry =
+  // one Animatable-registry primitive + the Driver that plays it + param
+  // overrides for its ControlSchema. Multiple bindings stack (criterion 13);
+  // `order` is the stacking order. Changing `driver` never edits the
+  // primitive's keyframes (INV-6). Drivers play ANIMATION only, never app
+  // behavior (§1.3). Absent on legacy nodes. Round-trips through save/reload.
+  animationBindings?: AnimationBinding[];
+  // P3 IMAGE/MEDIA (canvas-spec §5 Image tools; INV-8 additive). Per-node
+  // image presentation for image-bearing render modes (sprite / plane /
+  // parallax-plane): how the source texture sits in its plane. The artifact
+  // itself stays `visual.sourceAsset` (upload/URL both resolve to a URL).
+  // Absent → IMAGE_SPEC_DEFAULT (cover, no crop, square corners, opaque).
+  // Round-trips through save/reload. §5's color-adjust / blend / filter set
+  // is a later slice — these are the core four the P3 scope names.
+  imageSpec?: ImageSpec;
+  // APP-REALITY P5 (INV-8 additive). Per-device responsive layout override
+  // applied by the Preview device modes. Absent → the authored desktop layout
+  // on every device. The assembled scene composes scenePosition with the
+  // active device's override (absolute pose + scale multiplier + hidden).
+  responsiveScenePos?: ResponsiveScenePos;
+  // APP-REALITY P7 (AMENDMENT 2026-06-14; INV-8 additive). Click behaviour bound
+  // in Canvas (Function action) — navigate-to-hub OR open-overlay. The shared
+  // source of truth (node editor reads/writes the same field). Preview executes.
+  functionBinding?: FunctionBinding;
+  // APP-REALITY P7 (INV-8 additive). When true, this node is a GLOBAL ELEMENT:
+  // not placed in a hub (not rendered in the scene), opened as an overlay by a
+  // functionBinding. Absent / false → an ordinary placed node.
+  isGlobalElement?: boolean;
+  // APP-REALITY P7 (INV-8 additive). The overlay presentation for a global
+  // element (title/tagline/specs/image/accent). Consumed by the holographic
+  // detail-card overlay. Absent → derived from the node's caption.
+  overlaySpec?: OverlaySpec;
+  // P4 3D-OBJECT (canvas-spec §5 3D object tools; INV-8 additive). A
+  // primitive mesh created in-canvas: the factory builds the geometry from
+  // `kind` + `params` and routes the surface through the EXISTING material
+  // system (`materialSpec`, LIT by default like renderMode 'mesh') and the
+  // lighting rig. Coexists with renderMode: a node carrying `meshPrimitive`
+  // renders the primitive regardless of meshUrl (which stays for GLBs).
+  // Round-trips through save/reload.
+  meshPrimitive?: MeshPrimitive;
+  // CANVAS-FINAL / Change Artifact Upload wizard (canvas-spec §12.1, criterion
+  // 19; INV-8 additive). Per-face image mapping onto a `meshPrimitive` shape.
+  // Each entry binds an image to one geometry group (face slot); slot counts
+  // match the spec exactly (cube=6, cone=2, sphere=1 — see FACE_SLOT_COUNT).
+  // Absent → the primitive renders with its single `materialSpec` surface.
+  // Round-trips through save/reload.
+  faceTextures?: FaceTexture[];
+  // CANVAS-FINAL / Change Artifact wizard (canvas-spec §12.2 + §11, criterion
+  // 20; INV-8 additive). Append-only retention of this node's PRIOR artifacts.
+  // "Use This" snapshots the outgoing artifact-bearing fields into a library
+  // entry BEFORE swapping the replacement in ("outgoing artifact retained in
+  // the artifact library"). Restoring an entry snapshots the then-current
+  // artifact in turn — never lossy. Absent on legacy nodes. Round-trips.
+  artifactLibrary?: ArtifactLibraryEntry[];
+  // NODE-EDITOR-V2 Functions tab (criteria B; INV-NEV2-6 additive, INV-NE-8
+  // additive). Ordered list of branded action tiles attached to this node:
+  // multiple-per-node, REORDERABLE (`order`), attach/detach round-trips. Each
+  // tile is a provider/action reference + its validation status; the executable
+  // capability lives in the provider/adapter (Prism stores the reference, never
+  // raw code or secrets). Absent on legacy nodes. Round-trips through save/reload.
+  functionTiles?: FunctionTile[];
+  // NODE-EDITOR-V2 Integrations tab (criteria C; INV-NEV2-2 / INV-R13 additive).
+  // Third-party platform hookups connected on this node. Each entry carries a
+  // CAPABILITY REFERENCE only (never a raw token — vault resolves server-side),
+  // the user's selected saved assets, an `order`, and a content-icon descriptor
+  // surfaced in galaxy (§3.3 / D3). Absent on legacy nodes. Round-trips.
+  integrationRefs?: IntegrationRef[];
+  // NODE-EDITOR-V2 Prompt-to-Edit (criteria A; INV-NEV2-3 additive). Light
+  // provenance trail of prompt-edit plans applied to this node. The ACTUAL
+  // changes land in the existing additive fields (animationBindings, materialSpec,
+  // functionTiles, integrationRefs, functionBinding, …); this is an audit record
+  // only (prompt + planId + summary + applied step kinds). Absent on legacy nodes.
+  promptEditLog?: PromptEditLogEntry[];
+  // WORKSPACE-COMPLETION W-3 / Unified per-node agent (spec §4; INV-18 additive).
+  // Audit + TRUST trail for the unified validated-plan engine that prompt-edit AND
+  // self-heal share (lib/prompt-edit/node-agent.ts). Each entry records which
+  // TRIGGER ran ('prompt-edit' | 'self-heal'), the validated plan id/summary, the
+  // applied step kinds, and — for self-heal — a trust signal (suspect reason +
+  // repair outcome). The actual changes land in the existing additive fields via
+  // applyPlan; this is provenance only, never executable code. Round-trips.
+  nodeAgentLog?: NodeAgentLogEntry[];
+  // WORKSPACE-COMPLETION W-2 / Data tab (criteria C3; INV-W5 additive,
+  // INV-W7 reference-only). The node's own DATA/BACKEND model: a logical name,
+  // a typed STATE schema (fields the node owns), and an optional PERSISTENCE
+  // binding wired from the capability catalog (a db/storage provider — Supabase
+  // table, Cloudflare R2 bucket, etc.). The binding carries a CAPABILITY
+  // REFERENCE only — never a raw secret (the vault resolves it server-side).
+  // Absent on legacy nodes; round-trips byte-stable through save/reload.
+  dataModel?: PrismDataModel;
+}
+
+// POLISH pass / galaxy glance-icon (INV-18 additive). Pure derivation of a
+// node's coarse content KIND for the galaxy glance-icon badge. First match
+// wins; no side effects. An explicit `node.contentType` short-circuits the
+// rules. `serviceTag` 'ui-text' / 'ui-3d' act as SOFT hints just before the
+// image fallback so legacy graphs that pre-date the richer artifact fields
+// still badge sensibly.
+export function deriveContentType(node: PrismNode): NodeContentType {
+  if (node.contentType) return node.contentType;
+  // integration — connected platform hookups / branded action tiles. (A node
+  // that owns only a data/backend model also reads as 'integration' for the
+  // galaxy glance-badge until W-4 introduces a dedicated data glyph.)
+  if (node.integrationRefs?.length || node.functionTiles?.length || node.dataModel?.persistence) return 'integration';
+  // 3d-object — a GLB mesh, an in-canvas primitive, or mesh render mode.
+  if (node.meshUrl || node.meshPrimitive || node.renderMode === 'mesh') return '3d-object';
+  // text — MSDF text render mode or a per-node text contract.
+  if (node.renderMode === 'text' || node.textSpec) return 'text';
+  // image — a per-node image presentation, a source texture, or an image plane.
+  if (
+    node.imageSpec ||
+    node.visual?.sourceAsset ||
+    node.renderMode === 'sprite' ||
+    node.renderMode === 'plane' ||
+    node.renderMode === 'parallax-plane'
+  ) {
+    return 'image';
+  }
+  // serviceTag soft hints (legacy graphs predating the richer artifact fields).
+  if (node.serviceTag === 'ui-text') return 'text';
+  if (node.serviceTag === 'ui-3d') return '3d-object';
+  // default fallback.
+  return 'image';
+}
+
+// P4 3D-OBJECT — the frozen primitive-mesh contract (additive only).
+export type MeshPrimitiveKind =
+  | 'cube'
+  | 'sphere'
+  | 'plane'
+  | 'cylinder'
+  | 'cone'
+  | 'torus'
+  | 'capsule';
+
+export interface MeshPrimitive {
+  kind: MeshPrimitiveKind;
+  /** Per-kind dimensions in scene units + tessellation. All optional —
+   *  MESH_PRIMITIVE_DEFAULTS supplies per-kind values. Unknown keys are
+   *  ignored (forward-compat). */
+  params?: {
+    width?: number;
+    height?: number;
+    depth?: number;
+    radius?: number;
+    /** torus tube radius / capsule mid-section length, per kind. */
+    tube?: number;
+    length?: number;
+    segments?: number;
+  };
+}
+
+export const MESH_PRIMITIVE_DEFAULTS: Record<MeshPrimitiveKind, Required<NonNullable<MeshPrimitive['params']>>> = {
+  cube: { width: 0.6, height: 0.6, depth: 0.6, radius: 0, tube: 0, length: 0, segments: 1 },
+  sphere: { width: 0, height: 0, depth: 0, radius: 0.38, tube: 0, length: 0, segments: 48 },
+  plane: { width: 0.9, height: 0.9, depth: 0, radius: 0, tube: 0, length: 0, segments: 1 },
+  cylinder: { width: 0, height: 0.7, depth: 0, radius: 0.3, tube: 0, length: 0, segments: 48 },
+  cone: { width: 0, height: 0.7, depth: 0, radius: 0.34, tube: 0, length: 0, segments: 48 },
+  torus: { width: 0, height: 0, depth: 0, radius: 0.34, tube: 0.12, length: 0, segments: 48 },
+  capsule: { width: 0, height: 0, depth: 0, radius: 0.22, tube: 0, length: 0.45, segments: 24 },
+};
+
+// CANVAS-FINAL / Change Artifact Upload wizard — per-face image mapping
+// (canvas-spec §12.1, criterion 19; additive only). A node carrying a
+// `meshPrimitive` may map an image onto each FACE SLOT of its shape. Slots are
+// the geometry's material groups (three r184), which line up with the spec's
+// counts exactly: cube/box = 6, cone = 2 (curved lateral = slot 0, base = slot
+// 1), cylinder = 3 (lateral, top, bottom), sphere = 1 (single curved face),
+// plane = 1. A slot with no entry keeps the primitive's base `materialSpec`.
+export interface FaceTexture {
+  /** Geometry group index this image binds to (0-based). */
+  faceIndex: number;
+  /** Image URL (upload / URL / generated all resolve to a URL). */
+  url: string;
+  /** Normalized 0..1 crop window over the source; absent → full frame. */
+  crop?: ImageCrop;
+  /** 0..1 face opacity (multiplies any material opacity). Absent → 1. */
+  opacity?: number;
+}
+
+// Face-slot counts per primitive kind — the material-group count three's
+// geometry constructors emit. The Upload wizard renders exactly this many
+// numbered slots (§12.1: cube=6, cone=2, sphere=1). `torus`/`capsule` are
+// single-group surfaces (one wrap). Kept in sync with buildPrimitiveGeometry.
+export const FACE_SLOT_COUNT: Record<MeshPrimitiveKind, number> = {
+  cube: 6,
+  cone: 2,
+  cylinder: 3,
+  sphere: 1,
+  plane: 1,
+  torus: 1,
+  capsule: 1,
+};
+
+// CANVAS-FINAL / Change Artifact wizard — how an artifact originated. Plain
+// vocabulary; surfaced in the artifact-library tile label (no machine ids).
+export type ArtifactSource = 'upload' | 'url' | 'generated' | 'prebuilt' | 'initial';
+
+// CANVAS-FINAL / Change Artifact wizard (canvas-spec §12.2 + §11, criterion
+// 20; additive only). One retired artifact in a node's append-only library.
+// Snapshots only the artifact-bearing fields that applied to its renderMode,
+// so a restore reinstates the node's prior look verbatim.
+export interface ArtifactLibraryEntry {
+  /** Stable id (`al-<base36>`). */
+  id: string;
+  /** ISO timestamp this artifact was retired from active use. */
+  at: string;
+  /** The render mode this artifact drove. */
+  renderMode: RenderMode;
+  /** How the artifact originated. */
+  source: ArtifactSource;
+  /** Plain-language label ("Brass sphere · generated"). No machine ids. */
+  label?: string;
+  /** The natural-language prompt that produced it, when generated. */
+  prompt?: string;
+  /** Artifact-bearing snapshot (only the fields for this renderMode are set). */
+  sourceAsset?: string;
+  meshUrl?: string | null;
+  videoUrl?: string | null;
+  depthMapUrl?: string | null;
+  meshPrimitive?: MeshPrimitive;
+  faceTextures?: FaceTexture[];
+  textSpec?: TextSpec;
+  /** Optional still image for the library tile preview. */
+  thumbnailUrl?: string;
+}
+
+// ── NODE-EDITOR-V2 (2026-06-14) — Functions / Integrations / Prompt-edit ──────
+// All three are ADDITIVE optional fields on PrismNode (INV-NEV2-1 / INV-NE-8):
+// legacy graphs omit them and round-trip byte-stable; no serializer change.
+
+// Validation status of a function tile (criteria B4). `unvalidated` until the
+// adapter sandbox-tests it; `broken` when an external change broke it (Opus
+// auto-fix dispatched); `fixed` after an in-place repair; `valid` when the live
+// test passed. The status is surfaced as a badge in the Functions tab.
+export type FunctionTileValidationStatus =
+  | 'unvalidated'
+  | 'validating'
+  | 'valid'
+  | 'broken'
+  | 'fixed';
+
+export interface FunctionTileValidation {
+  status: FunctionTileValidationStatus;
+  /** ISO timestamp of the last validation attempt. */
+  testedAt?: string;
+  /** Human-readable result/diagnostic ("200 OK from sandbox", "param `amount` missing"). */
+  message?: string;
+  /** When auto-fixed, a short note of what Opus changed (provenance, never raw code). */
+  autoFixNote?: string;
+}
+
+// A branded action TILE attached to a node (criteria B). The TILE is a
+// REFERENCE to a provider action; the maintained, executable implementation
+// lives in the capability provider/adapter (Pipedream/Composio/Nango/MCP).
+export interface FunctionTile {
+  /** Stable id (`ft-<base36>`). */
+  id: string;
+  /** Stacking/exec order within the node (criteria B3 — reorderable). */
+  order: number;
+  /** The CapabilityProvider that owns this action (e.g. 'mcp', 'pipedream'). */
+  providerId: string;
+  /** Provider-scoped action id (e.g. 'stripe-create-payment-intent'). */
+  actionId: string;
+  /** Brand/platform key for the real logo (resolved via brand-assets, NOT stock). */
+  brandKey: string;
+  /** Plain-language label shown on the tile ("Create payment intent"). */
+  label: string;
+  /** Plain-language platform name ("Stripe"). */
+  platform: string;
+  /** Where this tile came from: the provider catalog, or a saved user snippet. */
+  source: 'catalog' | 'snippet';
+  /** When `source === 'snippet'`, the SnippetStore id it was instantiated from. */
+  snippetId?: string;
+  /** Free-form, NON-SECRET params the action takes (amounts, ids, modes — never tokens). */
+  params?: Record<string, unknown>;
+  /** Last validation result (criteria B4). */
+  validation?: FunctionTileValidation;
+}
+
+// A saved asset the user owns on a connected platform (criteria C3) — e.g. a
+// RunPod pod/template, a Supabase table, a GitHub repo. Selectable + draggable
+// into a node. Carries NO secret material; access is gated by the integration's
+// CapabilityRef at request time.
+export interface IntegrationAsset {
+  /** Provider-scoped asset id. */
+  id: string;
+  /** Asset kind ('pod' | 'template' | 'repo' | 'table' | 'channel' | …). */
+  kind: string;
+  /** Plain-language name ("A100 80GB · us-east"). */
+  name: string;
+  /** Optional sub-label / status line ("running", "private"). */
+  detail?: string;
+}
+
+// The auth method used to connect a platform (criteria C2). All resolve to a
+// CapabilityRef in the vault/provider — Prism never holds the raw credential.
+export type IntegrationAuthMethod = 'oauth2.1' | 'mcp' | 'api-token' | 'cli';
+
+// A connected third-party integration on a node (criteria C). SECURITY: carries
+// a CAPABILITY REFERENCE only (INV-NEV2-2 / INV-R13 / FP-NE-7) — never a raw
+// token. Surfaces as a content icon in galaxy (§3.3 / D3).
+export interface IntegrationRef {
+  /** Stable id (`ig-<base36>`). */
+  id: string;
+  /** Ordering within the node. */
+  order: number;
+  /** The CapabilityProvider that brokered the connection. */
+  providerId: string;
+  /** Platform key (e.g. 'runpod') — also the brand key for the real logo. */
+  platformId: string;
+  /** Plain-language platform name ("RunPod"). */
+  platform: string;
+  /** Auth method used to connect. */
+  authMethod: IntegrationAuthMethod;
+  /** The opaque capability reference the vault resolves server-side. NEVER a secret. */
+  capabilityRef: CapabilityRef;
+  /** The user's saved assets dragged onto this node from the platform. */
+  assets?: IntegrationAsset[];
+  /** Galaxy content-icon descriptor (the small colored icon per integration, §3.3). */
+  contentIcon?: { brandKey: string; tint?: string };
+}
+
+// WORKSPACE-COMPLETION W-2 — a single typed field in a node's data model (C3).
+export interface PrismDataField {
+  /** Field name (e.g. "email"). */
+  name: string;
+  /** Logical type ('string' | 'number' | 'boolean' | 'json' | 'timestamp' | …). */
+  type: string;
+}
+
+// WORKSPACE-COMPLETION W-2 — a node's PERSISTENCE binding (C3). Wired from the
+// capability catalog (a db/storage provider). SECURITY: carries a CAPABILITY
+// REFERENCE only (INV-W7 / INV-R13) — never a raw token. The vault resolves it
+// server-side at request time.
+export interface PrismPersistenceBinding {
+  /** The CapabilityProvider that brokered the binding ('mcp' | 'nango' | …). */
+  providerId: string;
+  /** Platform key — also the brand key for the real logo ('supabase', 'cloudflare'). */
+  platformId: string;
+  /** Plain-language platform name ("Supabase"). */
+  platform: string;
+  /** Storage kind ('table' | 'bucket' | 'kv' | 'collection' | 'project'). */
+  kind: string;
+  /** The bound resource id/name ("public.signups"), when an asset was selected. */
+  resource?: string;
+  /** Brand key for the real logo. */
+  brandKey: string;
+  /** The opaque capability reference the vault resolves server-side. NEVER a secret. */
+  capabilityRef?: CapabilityRef;
+}
+
+// WORKSPACE-COMPLETION W-2 — a node's DATA/BACKEND model (criteria C3; INV-W5
+// additive, INV-W7 reference-only). State + persistence the node owns.
+export interface PrismDataModel {
+  /** Logical model name (e.g. "signups"). Optional — derived from caption when absent. */
+  name?: string;
+  /** Typed state fields the node owns. */
+  fields?: PrismDataField[];
+  /** Optional persistence binding wired from the capability catalog (reference-only). */
+  persistence?: PrismPersistenceBinding;
+  /** Last validation result for the binding (validate-on-select, reuses the tile shape). */
+  validation?: FunctionTileValidation;
+}
+
+// One applied prompt-edit plan (criteria A). Provenance/audit only — the real
+// mutations are written into the existing additive fields by `applyPlan`.
+export interface PromptEditLogEntry {
+  /** Stable id (`pe-<base36>`). */
+  id: string;
+  /** ISO timestamp the plan was applied. */
+  at: string;
+  /** The natural-language prompt the user typed. */
+  prompt: string;
+  /** The plan id returned by the orchestrator. */
+  planId: string;
+  /** The orchestrator's one-line summary of what it did. */
+  summary: string;
+  /** The kinds of steps applied (e.g. ['design','animation','function']). */
+  stepKinds: string[];
+  /** Which orchestrator produced it ('stub' | 'live'), for honest provenance. */
+  origin: 'stub' | 'live';
+}
+
+// WORKSPACE-COMPLETION W-3 — provenance + trust record for the unified per-node
+// agent (spec §4). prompt-edit and self-heal route through ONE validated-plan
+// engine (lib/prompt-edit/node-agent.ts); every commit appends one of these so a
+// node carries an honest history of what the agent did and why. `trust` is
+// populated only for the self-heal trigger (a suspect node that was re-validated).
+export interface NodeAgentLogEntry {
+  /** Stable id (`na-<base36>`). */
+  id: string;
+  /** ISO timestamp the plan was committed. */
+  at: string;
+  /** Which trigger ran the shared engine. */
+  trigger: 'prompt-edit' | 'self-heal';
+  /** The validated plan id the orchestrator returned. */
+  planId: string;
+  /** The orchestrator's one-line summary of the plan. */
+  summary: string;
+  /** The step kinds actually applied to this node (e.g. ['design']). */
+  appliedStepKinds: string[];
+  /** Which orchestrator produced the plan, for honest provenance. */
+  origin: 'stub' | 'live';
+  /** Self-heal only: the telemetry trust signal recorded after re-validation. */
+  trust?: {
+    /** Why the node was marked suspect by runtime telemetry. */
+    suspectReason: string;
+    /** Whether the validated-plan loop changed the node or left it as-is. */
+    outcome: 'repaired' | 'unchanged';
+  };
+}
+
+// APP-REALITY P5 — per-DEVICE responsive layout override (INV-8 additive).
+// The Preview device modes (Desktop / Tablet / Mobile) show the REAL responsive
+// version: each node may carry an absolute pose override + a scale multiplier +
+// a hidden flag per device, so the built composition genuinely RE-LAYS-OUT for
+// the device (not merely a resized viewport). Absent device / absent field →
+// the authored desktop layout (no change). Never mutated by compile/preview.
+export type DeviceMode = 'desktop' | 'tablet' | 'mobile';
+
+export interface ResponsiveDevicePose {
+  /** Absolute scene-position overrides for this device (omit = keep authored). */
+  x?: number;
+  y?: number;
+  z?: number;
+  /** Multiplier on the authored scaleXYZ for this device (omit = 1×). */
+  scale?: number;
+  /** FINISH-F3 (INV-8 additive) — per-axis multipliers composed ON TOP of
+   *  `scale`, so wide shell rows (header/footer bars, rules) can compress
+   *  horizontally for a device without collapsing their height. Omit = 1×. */
+  scaleX?: number;
+  scaleY?: number;
+  /** Hide this node entirely on this device (responsive declutter). */
+  hidden?: boolean;
+}
+
+export interface ResponsiveScenePos {
+  mobile?: ResponsiveDevicePose;
+  tablet?: ResponsiveDevicePose;
+  desktop?: ResponsiveDevicePose;
+}
+
+// APP-REALITY P7 — Function / navigation binding (AMENDMENT 2026-06-14; INV-8
+// additive). The SHARED source of truth: Canvas writes these via the Function
+// action; the future node editor reads/writes the SAME schema; Preview executes
+// them. A node click either NAVIGATES to a hub or OPENS a global element as an
+// OVERLAY on the current hub (customizable size + location). Deeper behaviour
+// (live data/API/submit) remains node-editor scope.
+export type FunctionBinding =
+  | { kind: 'navigate'; hubId: string }
+  | {
+      kind: 'overlay';
+      /** The global element (nodeId, isGlobalElement) to open as an overlay. */
+      elementId: string;
+      /** Overlay size as viewport fractions (0..1). Default ~0.34 × 0.62. */
+      size?: { w: number; h: number };
+      /** Overlay centre as viewport fractions (0..1). Default 0.5, 0.5. */
+      anchor?: { x: number; y: number };
+    }
+  // F5 ATELIER (ORRERY-NO7-PROTOTYPE-SPEC §3.2) — in-3D watch configurator.
+  // `configure` applies a variant to a layer (tap-to-apply finish swap);
+  // `configure-layer` makes a layer the active catalog tab. Both drive
+  // useConfiguratorStore; the visible swap rides AtelierApplier. Additive only.
+  | { kind: 'configure'; layer: string; variant: string }
+  | { kind: 'configure-layer'; layer: string }
+  // F5 Atelier — save / share / reset the watch build (spec §3.5).
+  | { kind: 'atelier-action'; action: 'save' | 'reset' | 'share' };
+
+// APP-REALITY P7 — a GLOBAL ELEMENT's overlay presentation. The element's
+// VISUAL design (a premium holographic detail card with glitch/transparency
+// animation from the primitives + DESIGN-REFERENCES) is Canvas scope; the rich
+// DATA content (pricing, manufacturer copy) is node-editor scope. Additive.
+export interface OverlaySpec {
+  /** Overlay component kind. 'holographic-detail' = the premium glitch/holo card. */
+  kind?: 'holographic-detail';
+  title?: string;
+  tagline?: string;
+  specs?: { label: string; value: string }[];
+  /** Optional hero image (photoreal product shot). */
+  imageUrl?: string;
+  /** Accent hex (defaults to the brass accent). */
+  accent?: string;
+}
+
+// P3 IMAGE/MEDIA — the frozen image-presentation contract (additive only).
+export interface ImageCrop {
+  /** Normalized 0..1 crop window over the source texture (x,y = top-left). */
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+}
+
+export interface ImageSpec {
+  /** How the (cropped) texture fills the node's plane. 'cover' crops to
+   *  fill; 'contain' letterboxes (transparent margins); 'fill' stretches. */
+  fit?: 'cover' | 'contain' | 'fill';
+  crop?: ImageCrop;
+  /** Rounded-corner radius as a fraction of the plane's half-min-dimension,
+   *  0 (square) .. 1 (fully pill/circular). Cut in the shader (TSL mask) —
+   *  the texture is never re-rendered. */
+  cornerRadius?: number;
+  /** 0..1 whole-plane opacity (multiplies any material opacity). */
+  opacity?: number;
+}
+
+export const IMAGE_SPEC_DEFAULT: ImageSpec = {
+  fit: 'cover',
+  cornerRadius: 0,
+  opacity: 1,
+};
+
+// P2 TOOLBAR WIRING — the frozen binding contract (canvas-spec §8.2 Driver
+// model + §8.3 catalog). Additive only.
+export type AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event';
+
+export interface AnimationBinding {
+  /** Stable id for edit/remove (`ab-<base36>` convention). */
+  id: string;
+  /** Animatable-registry primitive name (the 312-tile catalog). */
+  primitive: string;
+  /** Which Driver plays this binding (canvas-spec §8.2). */
+  driver: AnimationDriverKind;
+  /** ControlSchema param overrides; unset params use the primitive's defaults. */
+  params?: Record<string, number | string | boolean>;
+  /** Stacking order among this node's bindings (criterion 13). */
+  order?: number;
+}
+
+// EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the
+// `scroll-timeline` coordinate space (§4). The full ease taxonomy is the
+// small set the runtime consumer supports; `from`/`to` are interpreted in
+// scene units (translate*, scale) or radians (rotate*) or 0..1 (opacity).
+// `coordinateSpace` is implicit (`scroll-timeline`); ScrollBindings are not
+// keyframes, so FP-08 doesn't apply.
+export type ScrollBindingProperty =
+  | 'translateX'
+  | 'translateY'
+  | 'translateZ'
+  | 'rotateX'
+  | 'rotateY'
+  | 'rotateZ'
+  | 'scale'
+  | 'opacity';
+
+export type ScrollBindingEase =
+  | 'linear'
+  | 'easeIn'
+  | 'easeOut'
+  | 'easeInOut';
+
+export interface ScrollBinding {
+  property: ScrollBindingProperty;
+  from: number;
+  to: number;
+  ease?: ScrollBindingEase;
+}
+
+// EB-08-02 / §8 SC-043, INV-21 — canonical 5 coordinate spaces (§4). The set
+// is fixed by the camera + composition systems (RA-03, D3). Every
+// `PrismKeyframe` MUST declare which space its parameters live in; collapsing
+// the five into a single matrix is forbidden (INV-22). Tuple order mirrors
+// the spec table at §4.
+export const KEYFRAME_COORDINATE_SPACES = [
+  'universe',
+  'hub-scene',
+  'viewport-composition',
+  'scroll-timeline',
+  'camera',
+] as const;
+
+export type PrismKeyframeCoordinateSpace =
+  (typeof KEYFRAME_COORDINATE_SPACES)[number];
+
+// EB-08-02 / §8 SC-044 — the canonical keyframe trigger enum. Used by the
+// Phase 8 Animation Inspector tab (SC-045) and the three baseline primitives
+// (`load` fade-in, `in-view` slide, `hover` lift; SC-046).
+export const KEYFRAME_TRIGGERS = [
+  'load',
+  'scroll',
+  'hover',
+  'click',
+  'in-view',
+] as const;
+
+export type PrismKeyframeTrigger = (typeof KEYFRAME_TRIGGERS)[number];
+
+// EB-08-02 / §8 SC-043, INV-21 — `coordinateSpace` is REQUIRED on every
+// keyframe (no `?`). tsc fails on any keyframe literal missing the
+// discriminator; the FP-08 hook fires for runtime-authored cases that slip
+// past the type system.
+//
+// FP-08 inspects literals shaped `{ t: <num>, (params|values): {...} }` for a
+// missing `coordinateSpace:` key, so the field names here align with that
+// regex. `trigger?` is optional because not every keyframe is event-driven
+// (timeline / scroll-bound waypoints don't need one).
+export interface PrismKeyframe {
+  // Required discriminator — INV-21. The canonical 5 spaces from §4.
+  coordinateSpace: PrismKeyframeCoordinateSpace;
+  // Time / scroll-progress / event-progress for this waypoint. `t ∈ [0..1]`
+  // when normalized; absolute seconds when timeline-driven. The FP-08 regex
+  // probes for `t:` to detect keyframe literals.
+  t?: number;
+  // Animated values at this waypoint. Either `params` or `values` is
+  // conventionally populated; the FP-08 regex accepts either.
+  params?: Record<string, unknown>;
+  values?: Record<string, unknown>;
+  // Easing label between this waypoint and the next.
+  ease?: ScrollBindingEase | string;
+  // Optional trigger from the SC-044 enum. Absent for time/scroll-driven
+  // keyframes; present for event-driven ones (`hover`, `click`, …).
+  trigger?: PrismKeyframeTrigger;
 }
 
 export type PrismEdgeType = 'triggers' | 'state-update' | 'data-flow' | 'event-bubble' | string;
@@ -273,11 +1536,25 @@ export interface GraphSource {
   hubs: PrismHub[];
   nodes: PrismNode[];
   edges: PrismEdge[];
+  // Editor-build §2 / RA-07: dedicated PrismRootNode co-exists with PrismNode
+  // inside the GraphSource. Optional for legacy graphs (INV-18); validated to
+  // contain exactly one entry by validateRootNode (SC-006).
+  rootNodes?: PrismRootNode[];
 }
 
 export interface HomeHubJson {
   schemaVersion: string;
   hub: PrismHub;
+  // FIDELITY-2 W3 / audit "What Must Change" item 1 (INV-18 additive): the
+  // optional multi-hub wire carrier. When present (non-empty), loaders use it
+  // verbatim and `hub` remains the legacy single-hub mirror (=== hubs[0]) for
+  // backward compat. Nodes stay one flat array — every PrismNode already
+  // names its hub via `parentHubId`, so no per-hub node grouping is needed.
+  // Legacy single-hub payloads omit this field and parse bit-for-bit.
+  hubs?: PrismHub[];
   nodes: PrismNode[];
   edges: PrismEdge[];
+  // Editor-build §5 / SC-006: optional carrier for the App_Name_World root.
+  // Additive (INV-18); fixtures pre-EB-02-02 omit the field and still parse.
+  rootNodes?: PrismRootNode[];
 }

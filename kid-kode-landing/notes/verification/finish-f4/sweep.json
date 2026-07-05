@@ -1,0 +1,759 @@
+{
+  "desktop": [
+    {
+      "step": "A: boot lands in preview-app on Arrival",
+      "pass": true
+    },
+    {
+      "step": "A: app nav s1-arrival → s2-movement via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s2-movement"
+    },
+    {
+      "step": "A: app nav s2-movement → s3-materia via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s3-materia"
+    },
+    {
+      "step": "A: app nav s3-materia → s4-celestia via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s4-celestia"
+    },
+    {
+      "step": "A: app nav s4-celestia → s5-acquire via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s5-acquire"
+    },
+    {
+      "step": "A: app nav s5-acquire → s6-atelier via header navhit",
+      "pass": true,
+      "clicked": true,
+      "now": "s6-atelier"
+    },
+    {
+      "step": "A: all 5 header-nav hops landed",
+      "pass": true
+    },
+    {
+      "step": "A: branded interstitial (ORRERY № 7) during covered transitions",
+      "pass": true,
+      "veilSeen": true
+    },
+    {
+      "step": "A: atelier — app header AND footer in the preview frame",
+      "pass": true,
+      "headerIn": true,
+      "footerIn": true
+    },
+    {
+      "step": "A: configurator — real swatch click changes the build (dial → salmon)",
+      "pass": true,
+      "before": "orrery",
+      "after": "salmon"
+    },
+    {
+      "step": "A: RESERVE opens the reservation card (dialog MOUNTED)",
+      "pass": true,
+      "o": {
+        "elementId": "orr-acquire-reserve-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.84
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "dlg": true
+    },
+    {
+      "step": "A: reservation card closes on backdrop click",
+      "pass": true
+    },
+    {
+      "step": "A: ENQUIRE opens the concierge card; Escape closes it and STAYS in preview",
+      "pass": true,
+      "o": {
+        "elementId": "orr-acquire-enquire-card",
+        "size": {
+          "w": 0.32,
+          "h": 0.78
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "after": {
+        "overlay": null,
+        "viewMode": "preview-app"
+      }
+    },
+    {
+      "step": "A: clicking the hero watch opens the ORRERY No.7 spec sheet",
+      "pass": true,
+      "o": {
+        "elementId": "orr-watch-detail-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.8
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "dlg": true
+    },
+    {
+      "step": "A: footer nav — MOVEMENT footer link navigates",
+      "pass": true
+    },
+    {
+      "step": "A: Escape (no overlay) exits preview-app → canvas; mode pill was the shrunk exit affordance",
+      "pass": true,
+      "pillVisible": true,
+      "vm": "canvas"
+    },
+    {
+      "step": "B: mode pill → Galaxy (real click)",
+      "pass": true
+    },
+    {
+      "step": "B: galaxy filter — toggle, type a query, store filter applies, Clear resets",
+      "pass": true,
+      "typed": true,
+      "q": "watch",
+      "q2": "",
+      "cleared": true
+    },
+    {
+      "step": "B: physical hub hover gives pointer-cursor feedback",
+      "pass": true,
+      "cursor": "pointer"
+    },
+    {
+      "step": "B: hub rail — Movement pill flies to the hub",
+      "pass": true,
+      "afterPill": "s2-movement"
+    },
+    {
+      "step": "B: node hover → DOM label ENLARGES (premium label feature)",
+      "pass": true,
+      "ok": true,
+      "element": "Headline",
+      "before": 0.938028,
+      "after": 1.55
+    },
+    {
+      "step": "B: galaxy node click selects; double-click opens the Inspector (in-hub)",
+      "pass": true,
+      "sel": "shell-2_movement-header-bar",
+      "insp": true,
+      "physical": false
+    },
+    {
+      "step": "B: hub rail — Galaxy pill returns to overview",
+      "pass": true,
+      "afterGalaxy": null
+    },
+    {
+      "step": "B: wheel zoom over the galaxy changes camera distance / zoom level",
+      "pass": true,
+      "before": {
+        "d": 18,
+        "z": "L4"
+      },
+      "after": {
+        "d": 4.682924370261664,
+        "z": "L4"
+      }
+    },
+    {
+      "step": "B: ⌘K search palette — type, Enter flies to node + opens Inspector, Escape closes",
+      "pass": true,
+      "openA": true,
+      "sel": "orr-arrival-watch",
+      "insp": true,
+      "openB": false
+    },
+    {
+      "step": "B: TopBar — Add Node opens the dialog; Cancel closes it",
+      "pass": true,
+      "opened": true,
+      "dlg": true,
+      "closed": true
+    },
+    {
+      "step": "B: TopBar — Reset camera + breadcrumb \"Graph\" return to overview",
+      "pass": true,
+      "a": "s2-movement",
+      "b": null,
+      "c": null
+    },
+    {
+      "step": "C: enter Canvas on Arrival; Scene/Topology sub-pill toggles",
+      "pass": true,
+      "hubOk": true,
+      "m1": "topology",
+      "m2": "scene"
+    },
+    {
+      "step": "C: toolbar cube \"transform\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"selection\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"add\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"library\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"image\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"object3d\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"background\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"changeArtifact\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"promptEdit\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"text\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"animation\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"lighting\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube \"build\" opens + closes its flyout",
+      "pass": true,
+      "open": true,
+      "closed": true
+    },
+    {
+      "step": "C: toolbar cube hover shows its tooltip",
+      "pass": true,
+      "tip": true
+    },
+    {
+      "step": "C: canvas node select (physical click → Inspector opens)",
+      "pass": true,
+      "selected": true,
+      "physical": true
+    },
+    {
+      "step": "C: Inspector — all 10 tabs mount content",
+      "pass": true,
+      "Visual": true,
+      "Material": true,
+      "Behavior": true,
+      "Functions": true,
+      "Integrations": true,
+      "Code": true,
+      "Animation": true,
+      "Links": true,
+      "Backend": true,
+      "History": true
+    },
+    {
+      "step": "C: Inspector — staged Visual edit (ColorPicker popover hex) lands in previewState; Discard clears it",
+      "pass": true,
+      "edited": true,
+      "cleared": true
+    },
+    {
+      "step": "C: Inspector — Edit toggle flips editorMode both ways; gizmo mounts in edit; g/r/s + x hotkeys work",
+      "pass": true,
+      "m0": "idle",
+      "m1": "edit",
+      "m2": "idle",
+      "gizmo": true,
+      "gm1": "rotate",
+      "gm2": "scale",
+      "gm3": "translate",
+      "sp": "local"
+    },
+    {
+      "step": "C: transform flyout — mode keys, space keys, steppers stage a patch, snap, reset",
+      "pass": true,
+      "gm": "rotate",
+      "spc": "local",
+      "staged": 0.18
+    },
+    {
+      "step": "C: selection flyout — marquee drag selects, select-all, group/ungroup round-trip, lock, freeze",
+      "pass": true,
+      "base": 331,
+      "marqueeN": 16,
+      "allN": 37,
+      "g0": 0,
+      "grouped": 37,
+      "ungrouped": 0,
+      "locked": true,
+      "unlocked": true
+    },
+    {
+      "step": "C: undo/redo hotkeys (⌘Z / ⌘⇧Z) revert and re-apply a source change",
+      "pass": true,
+      "p0": 4,
+      "p1": 5,
+      "after": true,
+      "undone": false,
+      "redone": true
+    },
+    {
+      "step": "C: keyframe dock — open via Animation flyout, capture ×2, scrub DRIVES the node, play, close",
+      "pass": true,
+      "dock": true,
+      "bound": {
+        "sel": "orr-arrival-sub",
+        "caps": 4
+      },
+      "flagTrail": [
+        [
+          true,
+          "orr-arrival-sub"
+        ]
+      ],
+      "gdrag": {
+        "physical": false,
+        "ct0": 0,
+        "ctFinal": 0.6,
+        "moved": true,
+        "reselected": true
+      },
+      "capDiag": {
+        "hitWaited": 0
+      },
+      "kCap1": true,
+      "kCap2": true,
+      "kfCount": 2,
+      "phStart": "0",
+      "phEnd": "1",
+      "poseStart": {
+        "x": 0,
+        "y": 2.05
+      },
+      "poseEnd": {
+        "x": 0,
+        "y": 2.65
+      },
+      "drives": true
+    },
+    {
+      "step": "C: build flyout — Rebuild re-realizes the artifact (remount polled); Add to System re-captions + clears dirty",
+      "pass": true,
+      "stillMounted": true,
+      "capBefore": "Hero headline — molten brass poured into",
+      "capAfter": "Headline text (text) at [0, 2.62, 0.3]",
+      "dirty": null
+    },
+    {
+      "step": "C: lighting flyout — Add Light (picker → type), intensity stepper, remove the added light; receives-lighting round-trips",
+      "pass": true,
+      "before": 2,
+      "addedId": "light-mr5y1t2u-1",
+      "intensityBumped": true,
+      "after": 2,
+      "rBefore": true,
+      "rMid": false
+    },
+    {
+      "step": "C: function key opens the binding popup for the selected node; close works",
+      "pass": true,
+      "open": true,
+      "closed": true,
+      "gone": true
+    },
+    {
+      "step": "C: camera HUD — readout, reset-straight-on, JOURNEY REC ×2 → Preview → Clear; Shipped Frame enter/exit",
+      "pass": true,
+      "hud": true,
+      "sig0": 0,
+      "sig1": 2,
+      "jBefore": 0,
+      "jMid": 2,
+      "jAfter": 0,
+      "vm": "preview-app",
+      "lockPill": true,
+      "hubAtRec": "s1-arrival",
+      "hubAtClear": "s2-movement"
+    },
+    {
+      "step": "C: dock de-collisions — hub rail clears the Inspector; agent panel yields and returns",
+      "pass": true,
+      "railRight": 1005.1015625,
+      "dockLeft": 1104,
+      "agentHidden": true,
+      "agentBack": true
+    },
+    {
+      "step": "C: node agent — prompt → Plan produces a typed plan; Reject clears; Self-heal runs the same engine",
+      "pass": true,
+      "vis": true,
+      "planned": true,
+      "rejected": true,
+      "healed": true,
+      "statusTrail": [
+        "applied",
+        "undo:true"
+      ]
+    },
+    {
+      "step": "C: Inspector — Change Artifact opens its wizard; Preview in App UI responds; Clone parks a drag-clone (undone)",
+      "pass": true,
+      "wizard": true,
+      "wizardGone": true,
+      "vmAfter": "preview-app",
+      "vm": "galaxy",
+      "dragging": "123f7435-0d7a-4b95-b03a-fc4c264c36df",
+      "n": 332,
+      "nBefore": 331,
+      "nAfter": 331
+    },
+    {
+      "step": "C: toolbar drag-spine floats the dock; collapse chevron folds the rail",
+      "pass": true,
+      "floated": true
+    },
+    {
+      "step": "D: persistence — saveToServer → reload restores the FULL app (nodes/hubs/edges/fields/parity)",
+      "pass": true,
+      "beforeSave": {
+        "nodes": 331,
+        "hubs": 6,
+        "edges": 17
+      },
+      "after": {
+        "nodes": 331,
+        "hubs": 6,
+        "edges": 17,
+        "cardPersisted": true,
+        "reserveOverlayBinding": true,
+        "mobilePosePersisted": true,
+        "contentCount": 141
+      }
+    },
+    {
+      "step": "D: generic load() — a derived non-watch app adopts through the SAME runtime path; reload restores",
+      "pass": true,
+      "ready": true,
+      "error": null,
+      "titles": "Home,Catalog,Pricing,Docs,Blog,Contact",
+      "restored": "Arrival"
+    },
+    {
+      "step": "P: desktop frame statistics per surface (galaxy/canvas/preview) ≥ 30fps avg; input→store latency < 100ms",
+      "pass": true,
+      "galaxy": {
+        "avgFps": 31,
+        "p95ms": 66.6,
+        "maxMs": 83
+      },
+      "canvas": {
+        "avgFps": 60,
+        "p95ms": 18.6,
+        "maxMs": 19
+      },
+      "preview-app": {
+        "avgFps": 51,
+        "p95ms": 33.4,
+        "maxMs": 35
+      },
+      "modeSwitchLatencyMs": 0.5
+    },
+    {
+      "step": "E1: transform an element in canvas → Save & Rebuild → reload → persists (visible move)",
+      "pass": true,
+      "x0": 0,
+      "stagedX": 0.24,
+      "x1": 0.24,
+      "g0": 0,
+      "g1": 0.24
+    },
+    {
+      "step": "E2: edit a node function (rebind the hero CTA pair via popup) → save → reload → persists → WORKS in preview",
+      "pass": true,
+      "pick": {
+        "was": "s5-acquire"
+      },
+      "bound": [
+        "s3-materia",
+        "s3-materia"
+      ],
+      "persisted": [
+        "s3-materia",
+        "s3-materia"
+      ],
+      "landed": "s3-materia",
+      "note": "CTA = slab+label stacked pair; each carries a binding; raycast hits the front mesh — retarget edits the pair"
+    },
+    {
+      "step": "E3: author a keyframe animation → save → reload → keyframes persist and scrub drives the node",
+      "pass": true,
+      "kfs": 2,
+      "gdragE": {
+        "physical": false,
+        "ct0": 0,
+        "ctFinal": 0.6,
+        "moved": true,
+        "reselected": false
+      },
+      "diag2": {
+        "strip": {
+          "op": "1",
+          "clip": "inset(0% 0px 0px round 1"
+        },
+        "sel": "orr-arrival-sub",
+        "vm": "canvas",
+        "hub": "s1-arrival",
+        "group": true
+      },
+      "pA": "3.3",
+      "pB": "3.9"
+    },
+    {
+      "step": "E4: Add Node (Stage-0 bubble) + Add Text (built element) → canvas+galaxy+preview + parity holds → persists",
+      "pass": true,
+      "base": {
+        "n": 331,
+        "content": 141
+      },
+      "bubble": "646abb84-a740-4323-bbaa-670825693588",
+      "textNode": {
+        "id": "71341208-18a6-4663-8716-371cf91ee6c9",
+        "hub": "s1-arrival"
+      },
+      "inCanvas": true,
+      "parityNow": {
+        "textRole": "content",
+        "bubbleRole": "content",
+        "content": 143,
+        "unbuiltHasBubble": true
+      },
+      "inPreview": true,
+      "persisted": {
+        "text": true,
+        "bubble": true,
+        "n": 333
+      }
+    },
+    {
+      "step": "E5: delete the added nodes (engine removeNode) → ⌘Z undo restores → redo → save → reload → gone; parity back to baseline",
+      "pass": true,
+      "n0": 333,
+      "n1": 332,
+      "n2": 333,
+      "n3": 332,
+      "after": {
+        "text": false,
+        "bubble": false,
+        "n": 331,
+        "content": 141
+      },
+      "note": "delete is engine-level (removeNode) — no dedicated UI delete control; undo/redo are the user-facing ⌘Z/⌘⇧Z hotkeys"
+    },
+    {
+      "step": "E: canonical fixture restored — app boots back to 331 nodes / 141 content atoms",
+      "pass": true,
+      "n": 331,
+      "content": 141
+    }
+  ],
+  "mobile": [
+    {
+      "step": "M: mobile arrival — brand + full 6-link nav INSIDE the frame",
+      "pass": true,
+      "hub": "s1-arrival",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: app nav s1-arrival → s2-movement (tap) + shell inside frame",
+      "pass": true,
+      "now": "s2-movement",
+      "hub": "s2-movement",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: app nav s2-movement → s3-materia (tap) + shell inside frame",
+      "pass": true,
+      "now": "s3-materia",
+      "hub": "s3-materia",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: app nav s3-materia → s4-celestia (tap) + shell inside frame",
+      "pass": true,
+      "now": "s4-celestia",
+      "hub": "s4-celestia",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: app nav s4-celestia → s5-acquire (tap) + shell inside frame",
+      "pass": true,
+      "now": "s5-acquire",
+      "hub": "s5-acquire",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: app nav s5-acquire → s6-atelier (tap) + shell inside frame",
+      "pass": true,
+      "now": "s6-atelier",
+      "hub": "s6-atelier",
+      "brandIn": true,
+      "navRowIn": true
+    },
+    {
+      "step": "M: all 5 nav taps landed with shell inside frame",
+      "pass": true
+    },
+    {
+      "step": "M: configurator swatch tap changes the build",
+      "pass": true,
+      "before": "orrery",
+      "after": "green"
+    },
+    {
+      "step": "M: RESERVE tap opens the reservation card (dialog ≥ 300px wide)",
+      "pass": true,
+      "o": {
+        "elementId": "orr-acquire-reserve-card",
+        "size": {
+          "w": 0.34,
+          "h": 0.84
+        },
+        "anchor": {
+          "x": 0.5,
+          "y": 0.5
+        }
+      },
+      "d": {
+        "mounted": true,
+        "w": 340
+      }
+    },
+    {
+      "step": "M: mobile mode toggle — galaxy / canvas / preview taps all switch modes",
+      "pass": true,
+      "g": "galaxy",
+      "c": "canvas"
+    },
+    {
+      "step": "M: compact chrome — toolbar flyout + Inspector re-house as bottom sheets; active hub pill spells \"N elements\"",
+      "pass": true,
+      "flyout": {
+        "y": 319,
+        "h": 776,
+        "vh": 844
+      },
+      "insp": true,
+      "pill": true
+    },
+    {
+      "step": "M: galaxy fly-in — timed ghost check (previous page must dissolve, frames at 1s/2.5s/4s/6s)",
+      "pass": true,
+      "landed": "s6-atelier",
+      "note": "ghost linger graded from the timed frames by the advocate"
+    },
+    {
+      "step": "M: mobile frame statistics ≥ 25fps avg",
+      "pass": true,
+      "avgFps": 60,
+      "p95ms": 16.7
+    }
+  ],
+  "perf": {
+    "desktop": {
+      "galaxy": {
+        "avgFps": 31,
+        "p95ms": 66.6,
+        "maxMs": 83
+      },
+      "canvas": {
+        "avgFps": 60,
+        "p95ms": 18.6,
+        "maxMs": 19
+      },
+      "preview-app": {
+        "avgFps": 51,
+        "p95ms": 33.4,
+        "maxMs": 35
+      },
+      "modeSwitchLatencyMs": 0.5
+    },
+    "mobile": {
+      "avgFps": 60,
+      "p95ms": 16.7
+    }
+  },
+  "pageErrors": [],
+  "consoleErrors": [],
+  "global": [
+    {
+      "step": "0 page errors across the sweep",
+      "pass": true,
+      "pageErrors": []
+    },
+    {
+      "step": "0 console errors across the sweep",
+      "pass": true,
+      "consoleErrors": []
+    }
+  ]
+}

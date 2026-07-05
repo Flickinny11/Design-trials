@@ -1,0 +1,37 @@
+{
+  "at": "2026-06-14T08:20:51.731Z",
+  "label": "p5kf",
+  "base": "http://localhost:3000",
+  "steps": [
+    "keyframe"
+  ],
+  "results": [
+    {
+      "profile": "desktop",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 1440,
+      "density": "wide",
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "mobile",
+      "backend": "webgpu",
+      "tier": "t1",
+      "mainW": 390,
+      "density": "compact",
+      "consoleErrors": 0,
+      "badResponses": 0
+    },
+    {
+      "profile": "constrained",
+      "backend": "webgpu",
+      "tier": "t2",
+      "mainW": 560,
+      "density": "compact",
+      "consoleErrors": 0,
+      "badResponses": 0
+    }
+  ]
+}

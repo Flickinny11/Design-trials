@@ -1,0 +1,7 @@
+{
+  "name": "hover-liquid-distort",
+  "label": "Ripple Amplitude",
+  "description": "The surface goes liquid under the cursor — slow viscous ripples well out from the touch point and settle like honey when the pointer leaves.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

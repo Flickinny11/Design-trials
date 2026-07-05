@@ -1,0 +1,7 @@
+{
+  "name": "domino-cascade",
+  "label": "Count",
+  "description": "A row of thin domino tiles topples in sequence — each falls as an inverted pendulum under gravity-torque and knocks the next into its own fall, a real contact-triggered chain reaction.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

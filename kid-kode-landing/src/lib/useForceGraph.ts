@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as d3 from 'd3-force-3d';
 import type { EditorEdgeView, EditorHubView, EditorNode } from '@/lib/prism-graph/view-model';
+import type { ViewMode } from '@/stores/useGraphEditorStore';
 
 // Phase 2 (plan §Phase 2) reroutes the editor's force-graph types to the
 // editor-view shape produced from home-hub.json by `toEditorView`. The
@@ -26,9 +27,175 @@ export interface SimLink {
   id: string;
 }
 
+// Deterministic FNV-1a 32-bit hash. Pure, branch-light, no RNG/clock. Same
+// `hubId` → same hash on every call across every runtime. The 32-bit unsigned
+// space is comfortably wider than the number of hubs we'll ever orbit, so
+// collisions in the bucketing step below are vanishingly unlikely; even if
+// they occur, the angle modulation step (different hash bits feed angle vs
+// ring) keeps them visually distinguishable.
+function fnv1a32(s: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    // 32-bit FNV prime multiplication, kept inside the 32-bit range with the
+    // standard >>> 0 trick.
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h >>> 0;
+}
+
+// Galaxy-mode orbital layout (SC-012). Position is a deterministic function
+// of `hubId hash + ring index`:
+//   - ring index = high-byte of the hash modulo GALAXY_RING_RADII.length
+//   - angle      = low-24-bits of the hash mapped uniformly to [0, 2π)
+//   - tilt       = small per-ring Y offset so rings don't co-plane onto a
+//                  single disc — the App_Name_World sun reads as the
+//                  center of a 3D shell, not a 2D dartboard.
+//
+// The sun (WorldSun in GraphScene) sits at universe origin [0, 0, 0] per
+// EB-02-03; every orbit radius below clears the sun's core (radius 14) with
+// breathing room. INV-22: positions are expressed entirely in universe space.
+// INV-20: this fn is render-only — it doesn't touch selection state.
+const GALAXY_RING_RADII = [90, 150, 210] as const;
+const GALAXY_RING_TILT = [0.04, -0.18, 0.22] as const;
+
+export function computeGalaxyHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
+  const out: Record<string, { x: number; y: number; z: number }> = {};
+  hubs.forEach((h) => {
+    const hash = fnv1a32(h.id);
+    const ringIdx = (hash >>> 24) % GALAXY_RING_RADII.length;
+    const angle = ((hash & 0x00ffffff) / 0x01000000) * Math.PI * 2;
+    const radius = GALAXY_RING_RADII[ringIdx];
+    const tilt = GALAXY_RING_TILT[ringIdx];
+    // Y carries the tilt component so the rings stratify vertically; the
+    // hash also lightly modulates Y inside the ring (top-byte XOR low-byte)
+    // so two hubs on the same ring aren't co-planar.
+    const yJitter = (((hash >>> 16) & 0xff) / 0xff - 0.5) * radius * 0.18;
+    out[h.id] = {
+      x: Math.cos(angle) * radius,
+      y: Math.sin(tilt) * radius + yJitter,
+      z: Math.sin(angle) * radius * Math.cos(tilt),
+    };
+  });
+  return out;
+}
+
+// EB-03-02 — Galaxy hub size-by-complexity (SC-013).
+//
+// SC-013 ("Hub diameter scales with content complexity (f(node count, depth));
+// deterministic") is implemented as a pure formula of two scalar inputs:
+//   - `nodeCount`: the number of editor nodes whose `hubIds` include this hub.
+//   - `depth`:     the length of the longest `contains`-edge chain among the
+//                  hub's nodes (a hub with no `contains` edges has depth = 1;
+//                  a chain n1→n2→n3 of `contains` edges has depth = 3).
+//
+// Formula:
+//   diameter = GALAXY_HUB_BASE_DIAMETER
+//            + GALAXY_HUB_COUNT_COEF * sqrt(max(0, nodeCount))
+//            + GALAXY_HUB_DEPTH_COEF * max(0, depth - 1)
+//
+// Choice notes:
+//   - The base constant guarantees a positive finite diameter for empty hubs
+//     so the test "returns a positive finite diameter even for nodeCount=0" is
+//     satisfied without a special case.
+//   - sqrt() growth in nodeCount keeps very large hubs from ballooning past
+//     the galaxy ring radii (GALAXY_RING_RADII = [90, 150, 210]); even at 200
+//     nodes the diameter contribution stays ≈ 14 * COUNT_COEF.
+//   - Depth is linear because in practice contains-chain depth rarely exceeds
+//     5–6 in real apps; a linear term gives observable, monotone variation.
+//   - Both coefficients are positive, so the formula is strictly monotone
+//     non-decreasing in both inputs (and strictly increasing when either
+//     input grows past the sqrt floor).
+//   - No RNG, no clock, no global state — same args → same output every call.
+export const GALAXY_HUB_BASE_DIAMETER = 24;
+export const GALAXY_HUB_COUNT_COEF = 3.2;
+export const GALAXY_HUB_DEPTH_COEF = 6;
+
+export function computeGalaxyHubDiameter(nodeCount: number, depth: number): number {
+  const n = Math.max(0, nodeCount);
+  const d = Math.max(0, depth - 1);
+  return GALAXY_HUB_BASE_DIAMETER
+    + GALAXY_HUB_COUNT_COEF * Math.sqrt(n)
+    + GALAXY_HUB_DEPTH_COEF * d;
+}
+
+// Per-hub depth from `contains` edges scoped to the hub's own nodes. Edges
+// whose `type !== 'contains'` are peer relationships (triggers, data-flow,
+// navigates-to, shares-state, depends-on) and do not contribute to depth.
+// Cross-hub edges are ignored — depth is a containment metric local to each
+// hub. Cycle-safe: an iteration cap of (in-hub node count + 1) bounds the
+// longest-simple-path search regardless of graph shape.
+function computeHubContainsDepth(
+  hubNodeIds: Set<string>,
+  containsAdj: Map<string, Set<string>>,
+): number {
+  if (hubNodeIds.size === 0) return 0;
+  // Restrict the adjacency to in-hub edges only and compute longest path
+  // length (in hops). Memoize on the visited set to terminate on cycles.
+  const memo = new Map<string, number>();
+  const inProgress = new Set<string>();
+  function longest(id: string): number {
+    if (memo.has(id)) return memo.get(id)!;
+    if (inProgress.has(id)) return 0; // cycle break
+    inProgress.add(id);
+    let best = 0;
+    const outs = containsAdj.get(id);
+    if (outs) {
+      for (const next of outs) {
+        if (!hubNodeIds.has(next)) continue;
+        const subPath = 1 + longest(next);
+        if (subPath > best) best = subPath;
+      }
+    }
+    inProgress.delete(id);
+    memo.set(id, best);
+    return best;
+  }
+  let maxHops = 0;
+  for (const id of hubNodeIds) {
+    const hops = longest(id);
+    if (hops > maxHops) maxHops = hops;
+  }
+  // depth = node count along the longest chain = hops + 1.
+  return maxHops + 1;
+}
+
+export function computeGalaxyHubDiameters(
+  hubs: PrismHub[],
+  nodes: PrismNode[],
+  edges: PrismEdge[],
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  // Index hub membership and contains-edge adjacency once, then derive each
+  // hub's (nodeCount, depth) and run the formula. O(N + E) overall.
+  const containsAdj = new Map<string, Set<string>>();
+  for (const e of edges) {
+    if (e.type !== 'contains') continue;
+    let set = containsAdj.get(e.source);
+    if (!set) { set = new Set(); containsAdj.set(e.source, set); }
+    set.add(e.target);
+  }
+  for (const hub of hubs) {
+    const hubNodeIds = new Set<string>();
+    for (const n of nodes) {
+      if (n.hubIds.includes(hub.id)) hubNodeIds.add(n.id);
+    }
+    const nodeCount = hubNodeIds.size;
+    const depth = nodeCount === 0 ? 0 : computeHubContainsDepth(hubNodeIds, containsAdj);
+    out[hub.id] = computeGalaxyHubDiameter(nodeCount, depth);
+  }
+  return out;
+}
+
 // Hubs arranged on a loose 3D petal pattern so they read as distinct constellations.
-function computeHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
+// A single-hub artifact stays at the origin so the default editor camera
+// frames it on first load without requiring a Home/Galaxy click.
+export function computeHubCenters(hubs: PrismHub[]): Record<string, { x: number; y: number; z: number }> {
   const centers: Record<string, { x: number; y: number; z: number }> = {};
+  if (hubs.length === 1) {
+    centers[hubs[0].id] = { x: 0, y: 0, z: 0 };
+    return centers;
+  }
   const R = 180;
   hubs.forEach((hub, i) => {
     const a = (i / hubs.length) * Math.PI * 2;
@@ -47,9 +214,29 @@ export function useForceGraph(
   edges: PrismEdge[],
   hubs: PrismHub[],
   pinnedPositions: Map<string, { x: number; y: number; z: number }>,
-  resetSignal: number
+  resetSignal: number,
+  // EB-03-01: optional viewMode selector. When viewMode === 'galaxy' the
+  // hub centers are positioned via computeGalaxyHubCenters (deterministic
+  // orbit around App_Name_World, SC-012). Any other value (or omission)
+  // keeps the legacy index-based petal layout so non-galaxy modes are
+  // unchanged. Typed to the canonical 5-mode union so FP-12 (no new
+  // viewMode strings outside the canonical set) is enforced at the call
+  // boundary.
+  viewMode?: ViewMode
 ) {
-  const hubCenters = useMemo(() => computeHubCenters(hubs), [hubs]);
+  const hubCenters = useMemo(
+    () => (viewMode === 'galaxy' ? computeGalaxyHubCenters(hubs) : computeHubCenters(hubs)),
+    [hubs, viewMode]
+  );
+
+  // EB-03-02: in galaxy mode, hub size derives from content complexity
+  // (SC-013) instead of the topology-mode `maxDist + 10` heuristic. Other
+  // modes get an empty map so the renderer falls through to its existing
+  // sim-based radius. Recomputes only when galaxy inputs change.
+  const hubDiameters = useMemo<Record<string, number>>(
+    () => (viewMode === 'galaxy' ? computeGalaxyHubDiameters(hubs, nodes, edges) : {}),
+    [hubs, nodes, edges, viewMode]
+  );
   const [, tick] = useState(0);
 
   const simNodes = useMemo<SimNode[]>(() => {
@@ -135,7 +322,7 @@ export function useForceGraph(
     simRef.current.alpha(0.3).restart();
   }, [pinnedPositions, simNodes]);
 
-  return { simNodes, simLinks, hubCenters, simulation: simRef };
+  return { simNodes, simLinks, hubCenters, hubDiameters, simulation: simRef };
 }
 
 function forceHubGravity(nodes: SimNode[], strength: number) {

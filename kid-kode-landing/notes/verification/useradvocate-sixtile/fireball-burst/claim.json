@@ -1,0 +1,7 @@
+{
+  "name": "fireball-burst",
+  "label": "Burst Rate",
+  "description": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward from a white-hot core to red flame tongues at the rim — looping.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

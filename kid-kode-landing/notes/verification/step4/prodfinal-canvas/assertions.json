@@ -1,0 +1,21 @@
+{
+  "mode": "canvas",
+  "stubWebgpu": false,
+  "assertions": {
+    "canvasCount": 2,
+    "sceneCanvasCount": 1,
+    "hudCanvasCount": 1,
+    "panes": {
+      "preview": 0,
+      "graph": 1
+    },
+    "cdnThreeResources": [],
+    "hasImportMap": false,
+    "importMapText": null,
+    "rendererBackend": "webgpu",
+    "webgpuAvailable": true,
+    "viewMode": "canvas",
+    "editorDebug": null
+  },
+  "toggleReport": []
+}

@@ -1,0 +1,25 @@
+{
+  "taskId": "EBR2-D-01",
+  "phase": "§R2-D",
+  "iteration": 13,
+  "commit": "abe90c2",
+  "stateCommit": "eaea0ee",
+  "snapshotType": "pure-helper",
+  "interactionScript": null,
+  "interactiveSnapshot": false,
+  "rationale": "EBR2-D-01 is a pure-math helper (computeCanvasCameraRail). It has no UI surface, no DOM, and task.interactionScript === null. Per /ralph-step-editor Step 8b 'when interactionScript is null, this is a non-UI task — skip to spec-reviewer'. The integration witness (drag → camera clamp visibly snaps) belongs to EBR2-D-02.",
+  "haltCheck": "canvas-camera-rail.ts exports computeCanvasCameraRail(hub, breakpoint, viewportFrame) → {minDistance, maxDistance, minPolarAngle, maxPolarAngle, minAzimuthAngle, maxAzimuthAngle, target, panLimits}. Unit-tested with at least 3 hub envelopes.",
+  "envelopesCovered": ["small 720x600", "frame-sized 1440x900", "tall 1440x900-viewport 2400-content", "wide 2880x900"],
+  "verificationGates": {
+    "tsc": "PASS",
+    "fileExists": "PASS",
+    "vitest": "PASS 13/13",
+    "vercelPreview": "POST_PUSH_NON_BLOCKING"
+  },
+  "specReviewer": {
+    "MUST_FIX": 0,
+    "SHOULD_FIX_resolved": 1,
+    "SHOULD_FIX_deferred": 2,
+    "OPTIONAL": 3
+  }
+}

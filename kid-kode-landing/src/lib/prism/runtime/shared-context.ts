@@ -27,6 +27,7 @@
 // returned handles directly — call `__resetSharedContext()` (tests only)
 // or rely on process exit.
 
+import * as THREE from 'three';
 import { PerspectiveCamera, Scene } from 'three';
 import {
   createLoaderCache,
@@ -47,6 +48,8 @@ import type {
 } from './shared/primitives/types';
 import type { CinematicPrimitiveName } from '@/lib/prism-graph/cinematic-primitives';
 import type { NodeContext } from './shared/adapter';
+import { createDriverHub, type DriverHub } from './shared/drivers';
+import { makeNodeDrivers, type NodeDrivers } from './shared/driver-dispatch';
 
 interface SharedRegistry {
   loaders: LoaderCacheHandle | null;
@@ -55,6 +58,10 @@ interface SharedRegistry {
   sceneRootPromise: Promise<SceneRootHandle> | null;
   primitivesNoop: CinematicPrimitivesAPI | null;
   primitivesReal: CinematicPrimitivesAPI | null;
+  // STEP7 — the singleton DriverHub (scroll / pointer / state / event sources +
+  // frame ticker) and the bound NodeDrivers surface the factory consumes.
+  driverHub: DriverHub | null;
+  nodeDrivers: NodeDrivers | null;
 }
 
 const registry: SharedRegistry = {
@@ -64,6 +71,8 @@ const registry: SharedRegistry = {
   sceneRootPromise: null,
   primitivesNoop: null,
   primitivesReal: null,
+  driverHub: null,
+  nodeDrivers: null,
 };
 
 const PRIMITIVE_NAMES: readonly CinematicPrimitiveName[] = [
@@ -102,6 +111,25 @@ export function getSharedLoaders(): LoaderCacheHandle {
   return registry.loaders;
 }
 
+/** Singleton DriverHub. Shared by the curried primitives (which read
+ *  `pointer` / `scroll` from it) and the host (GraphScene's SceneDriverHost,
+ *  which pushes real pointer / scroll / state / event input and ticks the
+ *  frame driver). One instance ⇒ the same scroll/pointer a primitive
+ *  subscribes to is the one the host drives. */
+export function getSharedDriverHub(): DriverHub {
+  if (!registry.driverHub) {
+    registry.driverHub = createDriverHub();
+  }
+  return registry.driverHub;
+}
+
+function getSharedNodeDrivers(): NodeDrivers {
+  if (!registry.nodeDrivers) {
+    registry.nodeDrivers = makeNodeDrivers(getSharedDriverHub());
+  }
+  return registry.nodeDrivers;
+}
+
 export function getSharedFontAtlas(): FontAtlasHandle {
   if (!registry.fontAtlas) {
     registry.fontAtlas = createFontAtlas();
@@ -125,6 +153,17 @@ export function getSharedSceneRoot(): Promise<SceneRootHandle> {
   return registry.sceneRootPromise;
 }
 
+// Device capability tier (INV-9), set by the host once it owns the renderer
+// (the shared context is renderer-agnostic). Gates opt-in expensive paths such
+// as true-3D extruded text (T1+) vs a flat fallback (T0). Additive (INV-18).
+let sharedTier: 'T0' | 'T1' | 'T2' | undefined;
+
+/** Host hook: record the detected device tier so every NodeContext built after
+ *  this carries it. Idempotent; safe to call on each renderer (re)init. */
+export function setSharedNodeContextTier(tier: 'T0' | 'T1' | 'T2'): void {
+  sharedTier = tier;
+}
+
 /** Build the shared NodeContext. Synchronous — when `runPrimitives: true`
  *  and no scene root exists yet, primitives are wired to a fallback
  *  scene/camera Group/PerspectiveCamera proxy that PrismHost replaces on
@@ -139,16 +178,24 @@ export function getSharedNodeContext(opts: {
   let primitives: CinematicPrimitivesAPI;
   if (opts.runPrimitives) {
     if (!registry.primitivesReal) {
-      // Real primitives need scene/camera. If the scene root has been
-      // resolved (host called `getSharedSceneRoot()` already), bind to it.
-      // Otherwise bind to a placeholder context — primitives invoked before
-      // scene-root resolution will operate on the placeholder, which is
-      // fine for unit tests and is replaced by the host's mount.
+      // STEP7 — bind the curried primitives to the singleton DriverHub's
+      // pointer / scroll sources + event emitter so node-declared interactive
+      // animations (parallax-scroll, magnetic-cursor, …) receive real input
+      // in the built view. Scene/camera come from the resolved scene root when
+      // present, else a placeholder; the driver sources are the hub's either
+      // way (the same instances the host drives).
+      const hub = getSharedDriverHub();
+      const driverCtx = {
+        pointer: hub.pointer,
+        scroll: hub.scroll,
+        emit: (event: string, payload: unknown) => hub.events.fire(event, payload),
+      };
       if (registry.sceneRoot) {
         registry.primitivesReal = makePrimitivesAPI({
           scene: registry.sceneRoot.scene,
           camera: registry.sceneRoot.camera,
           renderer: registry.sceneRoot.renderer,
+          ...driverCtx,
         });
       } else {
         // Lazy placeholder: bare Scene + default camera so the primitives'
@@ -158,6 +205,7 @@ export function getSharedNodeContext(opts: {
           scene: new Scene(),
           camera: new PerspectiveCamera(),
           renderer: null,
+          ...driverCtx,
         });
       }
     }
@@ -170,11 +218,27 @@ export function getSharedNodeContext(opts: {
   }
 
   return {
+    // RT-SC-02 / INV-R1 — the single bundled `three`. codeRef modules read
+    // their THREE classes from here so a native import() of a codeRef module
+    // can never pull a second `three` from a CDN import-map.
+    THREE,
     textureLoader: { loadTexture: loaders.loadTexture },
     glbLoader: { loadGLB: loaders.loadGLB },
+    // FIDELITY-2 W3 — the video lane rides the SAME shared loader cache, so
+    // the same URL yields the same VideoTexture across every surface.
+    videoLoader: { loadVideo: loaders.loadVideo },
     fontAtlas,
     primitives,
-    emit: () => {},
+    // STEP7 — when running primitives (the built-state surface), route `emit`
+    // through the hub's event bus and expose the `drivers` surface so the
+    // factory can wire each node-declared animation to its declared driver.
+    // The no-op editor context (runPrimitives:false) keeps the inert defaults.
+    emit: opts.runPrimitives
+      ? (event, payload) => getSharedDriverHub().events.fire(event, payload)
+      : () => {},
+    drivers: opts.runPrimitives ? getSharedNodeDrivers() : undefined,
+    // INV-9 — gates true-3D extruded text (T1+) vs flat fallback (T0).
+    tier: sharedTier,
   };
 }
 
@@ -190,10 +254,15 @@ export function __resetSharedContext(): void {
   if (registry.sceneRoot) {
     try { registry.sceneRoot.dispose(); } catch { /* ignore */ }
   }
+  if (registry.driverHub) {
+    try { registry.driverHub.reset(); } catch { /* ignore */ }
+  }
   registry.loaders = null;
   registry.fontAtlas = null;
   registry.sceneRoot = null;
   registry.sceneRootPromise = null;
   registry.primitivesNoop = null;
   registry.primitivesReal = null;
+  registry.driverHub = null;
+  registry.nodeDrivers = null;
 }

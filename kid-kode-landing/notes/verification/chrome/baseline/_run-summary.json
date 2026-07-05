@@ -1,0 +1,22 @@
+{
+  "at": "2026-06-15T15:10:21.025Z",
+  "base": "http://localhost:3000",
+  "scenes": [
+    {
+      "name": "typography",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    },
+    {
+      "name": "baseline-desktop",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    }
+  ]
+}

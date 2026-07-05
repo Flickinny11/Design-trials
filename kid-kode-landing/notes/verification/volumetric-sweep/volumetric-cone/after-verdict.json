@@ -1,0 +1,67 @@
+{
+  "feature": "volumetric-cone",
+  "claim": "A cone of volumetric light beams down from a crisp apex, dust motes drifting through the shaft as it slowly sweeps — soft angular edges and dusty in-shaft haze built entirely in-shader, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing objectively broken. The volume is smooth and organic with soft edges on a correct alpha-0 near-black surround: no slab/shelf banding (bandingScore peaks at 0.129 on play-3, well under the 0.25 visibility threshold), no tile/lattice grid, no mirror seam, no jagged edges in any frame. control-intensity-low.png is fully black, which is sensible (intensity slider min = 0 = light off). No console or network errors.",
+      "evidence": [
+        "volumetric-cone/after/play-3.png",
+        "metrics: play-3 bandingScore=0.129 (max across all frames; <0.25 = no visible banding), backend=webgpu, consoleErrors=[], networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads as a volumetric light cone sweeping with dust. idle.png and play-1..3.png show a bright apex source with a soft conical shaft beaming down and dust motes scattered through and around it; the beam visibly sweeps from angled-right (play-1/play-2) to centered (play-3). control-spread-low.png collapses it to a crisp narrow pencil beam, confirming the cone-of-light identity. Neutral white light (effSat 0-0.03) is appropriate for the claim. The 'crisp apex' is rendered as a soft glowing orb, which still reads as the light source.",
+      "evidence": [
+        "volumetric-cone/after/play-1.png",
+        "volumetric-cone/after/play-3.png",
+        "volumetric-cone/after/control-spread-low.png",
+        "metrics: play-3 effHue=48 effSat=0.01 (neutral white light, as claimed); play frames show beam angle change play-1->play-3"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. Three of the four labeled sliders produce obvious, sensible changes a first-timer would understand immediately: spread goes narrow pencil beam -> wide flood (meanLuma 13.5 -> 30.3); intensity goes off -> bright (meanLuma 7.5 -> 36.2, low frame is fully dark); dust goes zero motes -> dense speckle (compare control-dust-low.png, no motes, vs control-dust-high.png, dense motes — the metrics changed=false on dust is a false negative of the coarse luma threshold; the frames prove the change). The 'sweep' slider shows no visible difference across low/mid/high static captures (changed=false) — as a sweep-speed/rate control it is structurally invisible to same-instant screenshots, and the sweeping motion itself is proven in the play frames, but a user dragging it would not get instant visual confirmation.",
+      "evidence": [
+        "volumetric-cone/after/control-spread-low.png",
+        "volumetric-cone/after/control-spread-high.png",
+        "volumetric-cone/after/control-dust-low.png",
+        "volumetric-cone/after/control-dust-high.png",
+        "volumetric-cone/after/control-intensity-low.png",
+        "control: spread low->high meanLuma 13.5->30.3 changed=true; intensity low->high meanLuma 7.5->36.2 changed=true; dust low->high meanLuma 30.1->30.7 changed=false in metrics BUT frames show zero->dense motes; sweep low->high changed=false, frames near-identical"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play phase shows real, accelerating motion: frameDeltaMag 0.45 (play-1) -> 1.46 (play-2) -> 7.67 (play-3), and the beam visibly swings from angled to centered across those frames. Control application latency is consistent at ~571-585 ms across all 12 sweep captures — not instant but uniform and acceptable. Only the sweep slider produced no frame change (rate parameter, see Q3); every other control changed the frame.",
+      "evidence": [
+        "volumetric-cone/after/play-2.png",
+        "metrics: frameDeltaMag play-1=0.45, play-2=1.46, play-3=7.67; control latencyMs 571-585 across all sweeps"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That's a genuinely pretty light beam — it looks like a real spotlight in dusty air, it moves on its own, and when I drag the sliders the beam gets wider, brighter, and dustier right away. One slider (sweep) didn't seem to do anything when I looked at the still pictures, and at max spread it turns into a blob more than a cone, but I'd happily drop this in my scene.'",
+      "evidence": [
+        "volumetric-cone/after/idle.png",
+        "volumetric-cone/after/control-spread-high.png",
+        "metrics: bandingScore<=0.129 everywhere (photoreal-smooth), 3 of 4 controls visibly live, play frameDeltaMag up to 7.67"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The 'sweep' slider produced no visible difference in static low/mid/high captures (metrics changed=false; control-sweep-low/mid/high.png near-identical). The sweeping motion itself is proven live in the play frames (beam angle changes play-1->play-3, frameDeltaMag 7.67), so this is most likely a rate parameter that static frames cannot show — but it cannot be confirmed live from this bundle. Recommend a temporal re-capture (two frames N seconds apart at low vs high sweep) to prove the slider is wired.",
+      "evidence": "volumetric-cone/after/control-sweep-low.png vs control-sweep-high.png: meanLuma 21.3 vs 21.1, changed=false"
+    },
+    {
+      "note": "At maximum spread the silhouette loses its cone identity and becomes an irregular lumpy blob with a small orb perched on top (taste call — still smooth and organic, no banding, bandingScore 0.105, but it reads more 'glowing cloud' than 'light cone').",
+      "evidence": "volumetric-cone/after/control-spread-high.png"
+    },
+    {
+      "note": "The claimed 'crisp apex' renders as a large soft glowing ball rather than a crisp point; fine as a visible light source, but slightly snowman-like when the beam is centered.",
+      "evidence": "volumetric-cone/after/play-3.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

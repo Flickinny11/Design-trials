@@ -1,0 +1,19 @@
+{
+  "hubId": "s1-arrival",
+  "nodeId": "orr-arrival-headline",
+  "errors": [],
+  "orbitedAz": -84,
+  "framedAz": -0.4,
+  "framedPol": 89.8,
+  "lockDelta": 0,
+  "selection": {
+    "selectedNodeId": "orr-arrival-headline",
+    "editorMode": "edit",
+    "editInPreview": true
+  },
+  "reorbitedAz": -84,
+  "snappedToShipped": true,
+  "cameraLocked": true,
+  "stillEditable": true,
+  "exitRestoresOrbit": true
+}

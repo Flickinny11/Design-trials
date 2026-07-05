@@ -1,0 +1,7 @@
+{
+  "name": "newton-cradle",
+  "label": "Balls",
+  "description": "A real Newton",
+  "category": "transform",
+  "groundTruthSibling": null
+}

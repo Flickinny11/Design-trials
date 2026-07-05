@@ -1,0 +1,63 @@
+{
+  "feature": "fireball-burst",
+  "claim": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward from a white-hot core to red flame tongues at the rim — looping.",
+  "groundTruthSibling": "fire-flame",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken, misaligned, cut off, or blocky. The fireball is centered, fully in frame, high-contrast against the dark surround in every frame, with soft organic edges — no slab shelves, no tile/lattice grid, no mirror seams, no jagged edges. Photoreal-bar check passes: bandingScore stays under the 0.25 visibility threshold on every frame (max 0.246 on play-2, 0.151 on play-1), and visually the volume is a smooth rolling ball, not stacked cards. No console or network errors.",
+      "evidence": [
+        "fireball-burst/after/play-1.png",
+        "fireball-burst/after/play-2.png",
+        "metrics: bandingScore play-1=0.151, play-2=0.246, play-3=0.238 — all < 0.25 visible-banding threshold",
+        "metrics: consoleErrors=[], networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads as a fireball. play-1.png shows a large turbulent ball of flame with a white-hot core and orange-to-deep-red tongues at the rim, exactly as claimed; play-2/play-3 show the loop's compressed glowing-ball phase in the same fire palette. Measured dominant warm hue on the burst frame is 37 deg at sat 0.46 with warmFrac 0.87 — inside fire's 10-45 deg band and matching the fire-flame ground truth (play frames hue 37-43 deg). No pink ring, no cream/olive body, no warm-to-cool ACES drift. The cool effHue readings on play-2/3 (~261-267 deg) are background-dominated measurements of the alpha-0 surround; the frames themselves show an unmistakably warm orange/white fireball.",
+      "evidence": [
+        "fireball-burst/after/play-1.png",
+        "metrics: play-1 effHue=37, effSat=0.46, warmFrac=0.87 — fire band, matches ground truth",
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: ground-truth fire-flame play-2 effHue=37, play-1 effHue=43 — same band as fireball-burst play-1"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. All three labeled controls do something visible and sensible across their range with no instruction needed: turbulence low gives a smooth glowing ball while turbulence high breaks the surface into licking flame detail; scale high reveals fine turbulent tongues vs the diffuse ball at scale low; burstRate registers a change (luma 13.3 -> 14.6 low-to-high, changed=true) though as a rate control its effect is subtler in a still frame.",
+      "evidence": [
+        "fireball-burst/after/control-turbulence-low.png",
+        "fireball-burst/after/control-turbulence-high.png",
+        "fireball-burst/after/control-scale-high.png",
+        "control: burstRate low->high changed=true, meanLuma 13.3->14.6; turbulence changed=true; scale changed=true"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play frames show real motion — the ball erupts into a large turbulent burst then rolls back down (frameDeltaMag 13.28 and 17.34 across play-1/play-2), and every control applied with a visible result in ~570ms. The only soft spot is play-2->play-3 (frameDeltaMag 0.58), a slow phase of the loop where two consecutive captures look nearly identical.",
+      "evidence": [
+        "metrics: frameDeltaMag play-1=13.28, play-2=17.34, play-3=0.58",
+        "metrics: control latencyMs 565-582 across all 9 sweep captures",
+        "fireball-burst/after/play-1.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That's a proper fireball — white-hot middle, orange flames curling around the edge, and the sliders actually change how wild it looks.' It looks like a movie explosion frame, not a game sprite, and nothing is broken or confusing.",
+      "evidence": [
+        "fireball-burst/after/play-1.png",
+        "metrics: play-1 effHue=37 warmFrac=0.87, bandingScore max 0.246 < 0.25"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "During the loop's recovery phase the ball reads as a smooth featureless glowing orb rather than turbulent flame, and motion nearly stalls there — a user watching closely might find that beat of the loop a little static. Taste call, not a defect.",
+      "evidence": "fireball-burst/after/play-3.png : metrics play-3 frameDeltaMag=0.58 vs 13-17 on the burst frames"
+    },
+    {
+      "note": "burstRate's visible effect in a still capture is subtle (luma 13.3->14.6 low-to-high); it measurably changes the render but a user may need to watch the motion to feel it. The other two controls carry discoverability.",
+      "evidence": "control: burstRate low->high changed=true, meanLuma 13.3->14.6, frames control-burstRate-low.png vs control-burstRate-high.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

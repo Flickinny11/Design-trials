@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+const page = await ctx.newPage();
+const errs=[]; page.on('console',m=>{if(m.type()==='error')errs.push(m.text());}); page.on('pageerror',e=>errs.push('PE:'+e.message));
+await page.goto('http://localhost:4793/', { waitUntil: 'domcontentloaded' });
+await page.waitForSelector('canvas',{timeout:30000}).catch(()=>{});
+await page.waitForTimeout(4500);
+await page.evaluate(()=>window.__PRISM_TIPS__?.launch?.());
+await page.waitForTimeout(2200);
+console.log('welcome dbg:', JSON.stringify(await page.evaluate(()=>window.__TIP_ART_DBG__)));
+await page.evaluate(()=>window.__PRISM_TIPS__?.goTo?.(1));
+await page.waitForTimeout(2200);
+console.log('galaxy dbg:', JSON.stringify(await page.evaluate(()=>window.__TIP_ART_DBG__)));
+console.log('errs', errs.length); errs.slice(0,4).forEach(e=>console.log(' ',e.slice(0,130)));
+await b.close();

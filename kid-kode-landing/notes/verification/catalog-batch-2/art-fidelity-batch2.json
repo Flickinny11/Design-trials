@@ -1,0 +1,815 @@
+{
+  "generatedAt": "2026-06-08T18:22:10.941Z",
+  "dir": "notes/verification/catalog-batch-2/tiles",
+  "bar": {
+    "tooDarkLum": 0.06,
+    "washedLum": 0.72,
+    "washedSat": 0.1,
+    "minCoverage": 0.035,
+    "flatStdDev": 0.018
+  },
+  "summary": {
+    "total": 63,
+    "pass": 44,
+    "needsPolish": 19
+  },
+  "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
+  "results": [
+    {
+      "name": "attractor",
+      "frame": "notes/verification/catalog-prep/tiles/attractor.png",
+      "metrics": {
+        "meanLum": 0.05283698754083994,
+        "lumStdDev": 0.06711358924285582,
+        "meanSat": 0.5325444768946302,
+        "coverage": 0.1875
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.053) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "aurora",
+      "frame": "notes/verification/catalog-prep/tiles/aurora.png",
+      "metrics": {
+        "meanLum": 0.1839417543709602,
+        "lumStdDev": 0.27516034590014704,
+        "meanSat": 0.46034123888904654,
+        "coverage": 0.3463541666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "banner-flutter",
+      "frame": "notes/verification/catalog-prep/tiles/banner-flutter.png",
+      "metrics": {
+        "meanLum": 0.16791460273695577,
+        "lumStdDev": 0.15019906060154564,
+        "meanSat": 0.5674949293032259,
+        "coverage": 0.49041666666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "bevel-glass",
+      "frame": "notes/verification/catalog-prep/tiles/bevel-glass.png",
+      "metrics": {
+        "meanLum": 0.045314374101284305,
+        "lumStdDev": 0.07670250549523071,
+        "meanSat": 0.5299968957531807,
+        "coverage": 0.09130208333333334
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.045) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "blinds-wipe",
+      "frame": "notes/verification/catalog-prep/tiles/blinds-wipe.png",
+      "metrics": {
+        "meanLum": 0.06806014203429513,
+        "lumStdDev": 0.08473566102147419,
+        "meanSat": 0.5452725328421048,
+        "coverage": 0.29229166666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "campfire",
+      "frame": "notes/verification/catalog-prep/tiles/campfire.png",
+      "metrics": {
+        "meanLum": 0.06551918586600305,
+        "lumStdDev": 0.17627763895995308,
+        "meanSat": 0.5183745884572121,
+        "coverage": 0.07515625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "card-fold",
+      "frame": "notes/verification/catalog-prep/tiles/card-fold.png",
+      "metrics": {
+        "meanLum": 0.06402602152775949,
+        "lumStdDev": 0.08180234398810812,
+        "meanSat": 0.5509688946837844,
+        "coverage": 0.299375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "caustic-net",
+      "frame": "notes/verification/catalog-prep/tiles/caustic-net.png",
+      "metrics": {
+        "meanLum": 0.3929906646241511,
+        "lumStdDev": 0.4082504485206578,
+        "meanSat": 0.31239660366639455,
+        "coverage": 0.47489583333333335
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "caustic-shimmer",
+      "frame": "notes/verification/catalog-prep/tiles/caustic-shimmer.png",
+      "metrics": {
+        "meanLum": 0.24223153884797247,
+        "lumStdDev": 0.37035614579462356,
+        "meanSat": 0.4165632320580529,
+        "coverage": 0.304375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "chromatic-aberration",
+      "frame": "notes/verification/catalog-prep/tiles/chromatic-aberration.png",
+      "metrics": {
+        "meanLum": 0.048750858169916,
+        "lumStdDev": 0.07986854326380204,
+        "meanSat": 0.5201131238430045,
+        "coverage": 0.12302083333333333
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.049) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "clock-wipe",
+      "frame": "notes/verification/catalog-prep/tiles/clock-wipe.png",
+      "metrics": {
+        "meanLum": 0.06296558811272593,
+        "lumStdDev": 0.08156307091509876,
+        "meanSat": 0.5497630007708911,
+        "coverage": 0.2816666666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "cloth-sway",
+      "frame": "notes/verification/catalog-prep/tiles/cloth-sway.png",
+      "metrics": {
+        "meanLum": 0.1678956194036233,
+        "lumStdDev": 0.1520767686818777,
+        "meanSat": 0.5655133350443825,
+        "coverage": 0.48354166666666665
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "cross-dissolve",
+      "frame": "notes/verification/catalog-prep/tiles/cross-dissolve.png",
+      "metrics": {
+        "meanLum": 0.06396047414213801,
+        "lumStdDev": 0.08149257772417254,
+        "meanSat": 0.5513658473835769,
+        "coverage": 0.2950520833333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "crumble",
+      "frame": "notes/verification/catalog-prep/tiles/crumble.png",
+      "metrics": {
+        "meanLum": 0.060928712336584284,
+        "lumStdDev": 0.07662395903147705,
+        "meanSat": 0.5443799373565876,
+        "coverage": 0.18578125
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "cube-rotate",
+      "frame": "notes/verification/catalog-prep/tiles/cube-rotate.png",
+      "metrics": {
+        "meanLum": 0.06407852602122356,
+        "lumStdDev": 0.0818337686187813,
+        "meanSat": 0.5509130444978986,
+        "coverage": 0.29942708333333334
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "decode-text",
+      "frame": "notes/verification/catalog-prep/tiles/decode-text.png",
+      "metrics": {
+        "meanLum": 0.05991727736925897,
+        "lumStdDev": 0.09579285358393677,
+        "meanSat": 0.5392639602259899,
+        "coverage": 0.129375
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.060) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "defocus-pulse",
+      "frame": "notes/verification/catalog-prep/tiles/defocus-pulse.png",
+      "metrics": {
+        "meanLum": 0.06019249379083335,
+        "lumStdDev": 0.06771302594880742,
+        "meanSat": 0.5605355457650966,
+        "coverage": 0.35703125
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "depth-pop",
+      "frame": "notes/verification/catalog-prep/tiles/depth-pop.png",
+      "metrics": {
+        "meanLum": 0.06384373966501412,
+        "lumStdDev": 0.08155275429633578,
+        "meanSat": 0.550894183250828,
+        "coverage": 0.28958333333333336
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "diamond-wipe",
+      "frame": "notes/verification/catalog-prep/tiles/diamond-wipe.png",
+      "metrics": {
+        "meanLum": 0.06405649648690905,
+        "lumStdDev": 0.08167028839281162,
+        "meanSat": 0.5512710712516712,
+        "coverage": 0.29494791666666664
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "dissolve-burn",
+      "frame": "notes/verification/catalog-prep/tiles/dissolve-burn.png",
+      "metrics": {
+        "meanLum": 0.05045799575161056,
+        "lumStdDev": 0.0875909663760933,
+        "meanSat": 0.5371291756864132,
+        "coverage": 0.10364583333333334
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.050) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "door-open",
+      "frame": "notes/verification/catalog-prep/tiles/door-open.png",
+      "metrics": {
+        "meanLum": 0.06402750723037326,
+        "lumStdDev": 0.0816386113481078,
+        "meanSat": 0.5514246828654007,
+        "coverage": 0.2950520833333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "dust-cloud",
+      "frame": "notes/verification/catalog-prep/tiles/dust-cloud.png",
+      "metrics": {
+        "meanLum": 0.0574706841911598,
+        "lumStdDev": 0.06144942090380161,
+        "meanSat": 0.47995882600425366,
+        "coverage": 0.2378125
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.057) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "explosion",
+      "frame": "notes/verification/catalog-prep/tiles/explosion.png",
+      "metrics": {
+        "meanLum": 0.0314244215277724,
+        "lumStdDev": 0.018835287580396196,
+        "meanSat": 0.5360512890961844,
+        "coverage": 0.04796875
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.031) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "fade-scale",
+      "frame": "notes/verification/catalog-prep/tiles/fade-scale.png",
+      "metrics": {
+        "meanLum": 0.06405522863560183,
+        "lumStdDev": 0.08166324729010878,
+        "meanSat": 0.5512694296503384,
+        "coverage": 0.2950520833333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "fade-up",
+      "frame": "notes/verification/catalog-prep/tiles/fade-up.png",
+      "metrics": {
+        "meanLum": 0.03445868169933943,
+        "lumStdDev": 0.020537363258154015,
+        "meanSat": 0.5504748501481884,
+        "coverage": 0.07036458333333333
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.034) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "flip-3d",
+      "frame": "notes/verification/catalog-prep/tiles/flip-3d.png",
+      "metrics": {
+        "meanLum": 0.051356576307172365,
+        "lumStdDev": 0.03843761219925844,
+        "meanSat": 0.5549340476094085,
+        "coverage": 0.28171875
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.051) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "flocking",
+      "frame": "notes/verification/catalog-prep/tiles/flocking.png",
+      "metrics": {
+        "meanLum": 0.034673704370903495,
+        "lumStdDev": 0.03490850437866763,
+        "meanSat": 0.5290538582856905,
+        "coverage": 0.06505208333333333
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.035) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "glint-streak",
+      "frame": "notes/verification/catalog-prep/tiles/glint-streak.png",
+      "metrics": {
+        "meanLum": 0.2162206950980548,
+        "lumStdDev": 0.32393930849395275,
+        "meanSat": 0.42296305559152725,
+        "coverage": 0.304375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "gravity-drop",
+      "frame": "notes/verification/catalog-prep/tiles/gravity-drop.png",
+      "metrics": {
+        "meanLum": 0.032441023529411014,
+        "lumStdDev": 0.026303696551372727,
+        "meanSat": 0.5345700314260783,
+        "coverage": 0.05
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.032) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "hair-sway",
+      "frame": "notes/verification/catalog-prep/tiles/hair-sway.png",
+      "metrics": {
+        "meanLum": 0.16365915367649855,
+        "lumStdDev": 0.14969476312332394,
+        "meanSat": 0.567223735796515,
+        "coverage": 0.47317708333333336
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "ice-glass",
+      "frame": "notes/verification/catalog-prep/tiles/ice-glass.png",
+      "metrics": {
+        "meanLum": 0.1102409919117642,
+        "lumStdDev": 0.14523120266084136,
+        "meanSat": 0.47683605874980467,
+        "coverage": 0.2997916666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "ink-bloom",
+      "frame": "notes/verification/catalog-prep/tiles/ink-bloom.png",
+      "metrics": {
+        "meanLum": 0.04649072406044403,
+        "lumStdDev": 0.01991793808498596,
+        "meanSat": 0.6001714723910677,
+        "coverage": 0.45244791666666667
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.046) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "light-sweep",
+      "frame": "notes/verification/catalog-prep/tiles/light-sweep.png",
+      "metrics": {
+        "meanLum": 0.1713179955065869,
+        "lumStdDev": 0.24326862203250532,
+        "meanSat": 0.4235872630101063,
+        "coverage": 0.3042708333333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "liquid-text",
+      "frame": "notes/verification/catalog-prep/tiles/liquid-text.png",
+      "metrics": {
+        "meanLum": 0.06196006041664445,
+        "lumStdDev": 0.09980983273437372,
+        "meanSat": 0.5389736267715876,
+        "coverage": 0.13291666666666666
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "morph-cloud",
+      "frame": "notes/verification/catalog-prep/tiles/morph-cloud.png",
+      "metrics": {
+        "meanLum": 0.040522114133972845,
+        "lumStdDev": 0.047805638281759266,
+        "meanSat": 0.531654857854209,
+        "coverage": 0.11234375
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.041) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "motion-blur-streak",
+      "frame": "notes/verification/catalog-prep/tiles/motion-blur-streak.png",
+      "metrics": {
+        "meanLum": 0.06427440968135385,
+        "lumStdDev": 0.08175750961587049,
+        "meanSat": 0.5512689987689782,
+        "coverage": 0.2952604166666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "paint-spread",
+      "frame": "notes/verification/catalog-prep/tiles/paint-spread.png",
+      "metrics": {
+        "meanLum": 0.06392671376632096,
+        "lumStdDev": 0.0816253918673778,
+        "meanSat": 0.551231362800413,
+        "coverage": 0.293125
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "pearlescent",
+      "frame": "notes/verification/catalog-prep/tiles/pearlescent.png",
+      "metrics": {
+        "meanLum": 0.14571292066997713,
+        "lumStdDev": 0.1981264188101111,
+        "meanSat": 0.4620872272763783,
+        "coverage": 0.2997916666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "pointer-tilt-3d",
+      "frame": "notes/verification/catalog-prep/tiles/pointer-tilt-3d.png",
+      "metrics": {
+        "meanLum": 0.06487367928919424,
+        "lumStdDev": 0.08362151368577825,
+        "meanSat": 0.549823933795315,
+        "coverage": 0.27067708333333335
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "pool-caustics",
+      "frame": "notes/verification/catalog-prep/tiles/pool-caustics.png",
+      "metrics": {
+        "meanLum": 0.4215377815767254,
+        "lumStdDev": 0.4430882393793785,
+        "meanSat": 0.3177299033384007,
+        "coverage": 0.4795833333333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "prism-spectrum",
+      "frame": "notes/verification/catalog-prep/tiles/prism-spectrum.png",
+      "metrics": {
+        "meanLum": 0.24443332675646948,
+        "lumStdDev": 0.37381746985306974,
+        "meanSat": 0.44209015411713315,
+        "coverage": 0.3044791666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-color-shift",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-color-shift.png",
+      "metrics": {
+        "meanLum": 0.07267974914213554,
+        "lumStdDev": 0.08858935044935977,
+        "meanSat": 0.5469163200450509,
+        "coverage": 0.29942708333333334
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-fade-stack",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-fade-stack.png",
+      "metrics": {
+        "meanLum": 0.06097450747546331,
+        "lumStdDev": 0.07524768539052942,
+        "meanSat": 0.5497914912347877,
+        "coverage": 0.29671875
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-skew",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-skew.png",
+      "metrics": {
+        "meanLum": 0.06429415334965484,
+        "lumStdDev": 0.08189502423575966,
+        "meanSat": 0.5510557499128667,
+        "coverage": 0.29614583333333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "scroll-zoom",
+      "frame": "notes/verification/catalog-prep/tiles/scroll-zoom.png",
+      "metrics": {
+        "meanLum": 0.08986034301468819,
+        "lumStdDev": 0.10108766856970801,
+        "meanSat": 0.5652085759513997,
+        "coverage": 0.4886979166666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "smoke-plume",
+      "frame": "notes/verification/catalog-prep/tiles/smoke-plume.png",
+      "metrics": {
+        "meanLum": 0.09502151850487546,
+        "lumStdDev": 0.1322403502013752,
+        "meanSat": 0.4327211415220949,
+        "coverage": 0.2838541666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "splat-reveal",
+      "frame": "notes/verification/catalog-prep/tiles/splat-reveal.png",
+      "metrics": {
+        "meanLum": 0.09687172418298576,
+        "lumStdDev": 0.16341539545253922,
+        "meanSat": 0.5435362357757663,
+        "coverage": 0.1940625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "split-3d",
+      "frame": "notes/verification/catalog-prep/tiles/split-3d.png",
+      "metrics": {
+        "meanLum": 0.060406506413376526,
+        "lumStdDev": 0.09770028999580332,
+        "meanSat": 0.538213052492324,
+        "coverage": 0.12484375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "spotlight-follow",
+      "frame": "notes/verification/catalog-prep/tiles/spotlight-follow.png",
+      "metrics": {
+        "meanLum": 0.18181872201802526,
+        "lumStdDev": 0.2637943069590057,
+        "meanSat": 0.42165238071543304,
+        "coverage": 0.30359375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "stretch-text",
+      "frame": "notes/verification/catalog-prep/tiles/stretch-text.png",
+      "metrics": {
+        "meanLum": 0.06017183876631767,
+        "lumStdDev": 0.09670815601506481,
+        "meanSat": 0.5386215309683717,
+        "coverage": 0.12864583333333332
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "swarm",
+      "frame": "notes/verification/catalog-prep/tiles/swarm.png",
+      "metrics": {
+        "meanLum": 0.037948618382342834,
+        "lumStdDev": 0.042720484083782484,
+        "meanSat": 0.5359411792342353,
+        "coverage": 0.09494791666666667
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.038) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "text-blur-in",
+      "frame": "notes/verification/catalog-prep/tiles/text-blur-in.png",
+      "metrics": {
+        "meanLum": 0.06044670714867105,
+        "lumStdDev": 0.09755760615648149,
+        "meanSat": 0.5377055114228011,
+        "coverage": 0.12604166666666666
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "text-pop-each",
+      "frame": "notes/verification/catalog-prep/tiles/text-pop-each.png",
+      "metrics": {
+        "meanLum": 0.06067679579246178,
+        "lumStdDev": 0.09796134091964866,
+        "meanSat": 0.5389545344785149,
+        "coverage": 0.12869791666666666
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "text-spotlight",
+      "frame": "notes/verification/catalog-prep/tiles/text-spotlight.png",
+      "metrics": {
+        "meanLum": 0.06051786985291811,
+        "lumStdDev": 0.09777624315819473,
+        "meanSat": 0.5386602667026199,
+        "coverage": 0.12864583333333332
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "tumble",
+      "frame": "notes/verification/catalog-prep/tiles/tumble.png",
+      "metrics": {
+        "meanLum": 0.06404467316174593,
+        "lumStdDev": 0.08179072653622456,
+        "meanSat": 0.5512020293790515,
+        "coverage": 0.29229166666666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "unfold",
+      "frame": "notes/verification/catalog-prep/tiles/unfold.png",
+      "metrics": {
+        "meanLum": 0.06400798129083077,
+        "lumStdDev": 0.0815791691010196,
+        "meanSat": 0.5513944618094997,
+        "coverage": 0.2950520833333333
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "vortex",
+      "frame": "notes/verification/catalog-prep/tiles/vortex.png",
+      "metrics": {
+        "meanLum": 0.03579263390521276,
+        "lumStdDev": 0.040329045817694836,
+        "meanSat": 0.533415273371978,
+        "coverage": 0.06651041666666667
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.036) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "voxelize",
+      "frame": "notes/verification/catalog-prep/tiles/voxelize.png",
+      "metrics": {
+        "meanLum": 0.058079697303901674,
+        "lumStdDev": 0.07658179655131994,
+        "meanSat": 0.5394601769024907,
+        "coverage": 0.18354166666666666
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.058) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "water-droplet",
+      "frame": "notes/verification/catalog-prep/tiles/water-droplet.png",
+      "metrics": {
+        "meanLum": 0.02957397810457141,
+        "lumStdDev": 0.00871297310045118,
+        "meanSat": 0.5314957706706235,
+        "coverage": 0.028541666666666667
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "low subject coverage (2.9%) — material may be missing/broken",
+        "too dark (mean luminance 0.030) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "water-surface",
+      "frame": "notes/verification/catalog-prep/tiles/water-surface.png",
+      "metrics": {
+        "meanLum": 0.1658907869689873,
+        "lumStdDev": 0.15143494085263254,
+        "meanSat": 0.5654249626813717,
+        "coverage": 0.48125
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "wind-ripple",
+      "frame": "notes/verification/catalog-prep/tiles/wind-ripple.png",
+      "metrics": {
+        "meanLum": 0.1617384196078717,
+        "lumStdDev": 0.14690865162281308,
+        "meanSat": 0.5709928111783534,
+        "coverage": 0.47890625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "wipe-linear",
+      "frame": "notes/verification/catalog-prep/tiles/wipe-linear.png",
+      "metrics": {
+        "meanLum": 0.04531517879899674,
+        "lumStdDev": 0.07670196659411103,
+        "meanSat": 0.530004143015916,
+        "coverage": 0.09130208333333334
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "too dark (mean luminance 0.045) — underlit / needs env light"
+      ]
+    },
+    {
+      "name": "zoom-rotate-in",
+      "frame": "notes/verification/catalog-prep/tiles/zoom-rotate-in.png",
+      "metrics": {
+        "meanLum": 0.0297314133578401,
+        "lumStdDev": 0.0090199480075753,
+        "meanSat": 0.5320594720805667,
+        "coverage": 0.029427083333333333
+      },
+      "verdict": "NEEDS-POLISH",
+      "reasons": [
+        "low subject coverage (2.9%) — material may be missing/broken",
+        "too dark (mean luminance 0.030) — underlit / needs env light"
+      ]
+    }
+  ]
+}

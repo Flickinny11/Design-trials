@@ -1,0 +1,7 @@
+{
+  "name": "wave-tank-slosh",
+  "label": "Slosh",
+  "description": "Water sloshing in a tank: a shallow-water height field driven by a tilt body force so the bulk of the water piles against the walls and surges back — low-frequency bulk motion, not a ripple.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

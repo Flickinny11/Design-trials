@@ -1,0 +1,8 @@
+{
+  "error": "timeout waiting for deployment",
+  "commit": "861597b",
+  "lastSeenState": null,
+  "timeoutMs": 600000,
+  "durationMs": 600961,
+  "context": "Step 8c (SECONDARY / non-blocking per /ralph-step-editor). KripVerify-local primary gate already passed 13/13 with the wheel-zoom rail clamp witness; this Vercel deployment did not appear inside the 10-minute polling window. Logged here for the operator monitor session per RA-18; does NOT block the task per the spec."
+}

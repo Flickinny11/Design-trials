@@ -1,0 +1,76 @@
+{
+  "feature": "UI-FIDELITY-2 W2 — rendered-material editor chrome + typography overhaul (re-grade r2)",
+  "net": "PLEASED",
+  "gate": "PASS",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No broken, misaligned, or cut-off chrome in the new frames. All three r1 mustFix defects are visibly resolved: detail-card body copy is crisp white-on-dark glass instead of melted into the specular bloom; the Add Node dialog now has a labeled brass confirm key; no scene label pierces the inspector panel — the ringed sphere slides cleanly under the panel edge.",
+      "evidence": [
+        "fix1-detail-card-hover.png",
+        "fix2-add-node-zoom.png",
+        "fix3-inspector-over-galaxy.png",
+        "metrics: native crop of fix3 panel-left-edge (x2250-2850) shows scene sphere occluded by panel, zero label bleed-through vs 3 full-contrast pierces in before-inspector.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Reads as a lit, physical brass-and-glass instrument, not flat CSS. Dock tiles are dark plates with brass keylines and fully legible labels (Transform/Selection/Add/Image/3D Object/Text/Animation/Lighting/Build) vs the washed metal glint in w1-dock-hover-zoom.png. The canvas-to-galaxy sweep shows a real refractive pane with a brass keyline edge at mid-screen covering half the viewport. The keyframe shell is materialized in the same language: brass diamond keys, rate pills (1/60 active), mono captions.",
+      "evidence": [
+        "w1-dock-hover-zoom.png",
+        "w2-sweep-mid2.png",
+        "fix-keyframe-shell.png",
+        "fix1-detail-card-hover.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Primary actions are findable: the Add Node dialog's confirm key is now the brightest element in the dialog and labeled 'Add Node' (it was a blank dark area in before-add-node.png); Inspect/Edit on the detail card, Save & Verify in the inspector, and the keyframe transport (play/loop/rate) all read at a glance in the new frames.",
+      "evidence": [
+        "fix2-add-node.png",
+        "before-add-node.png",
+        "fix3-inspector-over-galaxy.png",
+        "fix-keyframe-shell.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Hover/pointer-reactive lighting is still alive but no longer destroys legibility: fix1 frames were captured with the pointer hovering near the surfaces and every text run survives (filter hint text fully readable end-to-end vs the blown-out hot spot in before-galaxy-filter.png). Mode transition is evidenced mid-flight in two frames plus a settled frame, so the sweep is a real animated state, not a claim.",
+      "evidence": [
+        "fix1-galaxy-filter.png",
+        "before-galaxy-filter.png",
+        "w2-sweep-mid.png",
+        "w2-sweep-settled.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. Every r1 mustFix has frame-cited resolution, both previously unevidenced claims now have frames, and the chrome under deliberate worst-case capture (pointer hovering, panels overlapping) stays legible while keeping the lit-material look. Remaining items are taste/polish, recorded as flags.",
+      "evidence": [
+        "fix1-detail-card-hover.png",
+        "fix2-add-node-zoom.png",
+        "fix3-inspector-over-galaxy.png",
+        "w2-sweep-mid2.png",
+        "fix-keyframe-shell.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "item": "Add Node confirm key text contrast measures ~2.7:1 (glyph-core lum 0.024 vs same-row plate p90 lum 0.149) — below the 3:1 large-text line. Legible at a glance because it is the only bright plate in the dialog, but darkening the label one step would close it.",
+      "evidence": "metrics: fix2-add-node-zoom.png glyph-rows y50-90 x80-200, p05 lum 0.0244 vs p90 lum 0.1488 -> 2.67:1"
+    },
+    {
+      "item": "Inspector header bloom is still strong — the cream hot-spot behind 'Preview in App UI' and the tab row is near the legibility limit; LIVE PREVIEW caption is the lowest-contrast text in that region. Survives now, but no headroom if the pointer light is ever raised.",
+      "evidence": "fix3-inspector-over-galaxy.png"
+    },
+    {
+      "item": "Filter palette glass over the open detail card lets the card body copy bleed through and interleave with the hint text — both legible, but visually busy when both surfaces are open.",
+      "evidence": "fix1-galaxy-filter.png"
+    },
+    {
+      "item": "Keyframe shell lanes and diamond keys render across the inspector's element-image preview (panel-over-panel z-order is deliberate, but the rightmost diamonds are harder to parse against the purple sphere).",
+      "evidence": "fix-keyframe-shell.png"
+    },
+    {
+      "item": "No new dedicated dock-hover-with-pointer zoom was recaptured for the w1-dock-hover-zoom.png citation; resolution is inferred from the dock strip in fix1-detail-card-hover.png (all 9 labels legible, active Transform tile included) plus the global light reduction corroborated on three other surfaces.",
+      "evidence": "fix1-detail-card-hover.png"
+    }
+  ]
+}

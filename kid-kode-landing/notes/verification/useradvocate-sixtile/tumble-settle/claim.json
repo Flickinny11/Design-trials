@@ -1,0 +1,7 @@
+{
+  "name": "tumble-settle",
+  "label": "Spin",
+  "description": "A card is launched with linear and angular velocity, falls under gravity, and tumbles end-over-end across the floor — bouncing with restitution while floor friction bleeds off its spin — until it settles flat. Real rigid-body physics, not an easing curve.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

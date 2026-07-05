@@ -12,7 +12,7 @@
 //   - useGraphSourceStore.saveToServer()        (persist)
 //   - regen-api.saveAndVerify(node, codeModule) (verify-node)
 
-import { writeFile, rename } from 'node:fs/promises';
+import { readFile, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 
 import {
@@ -68,9 +68,21 @@ function isPlainObject(v: unknown): v is Record<string, unknown> {
 }
 
 async function handlePersist(body: PersistBody): Promise<Response> {
-  if (!isPlainObject(body.graph) || !isPlainObject(body.graph.hub) || !Array.isArray(body.graph.nodes)) {
+  // FIDELITY-2 W3 (INV-18 additive): accept EITHER the legacy `hub` singular
+  // OR the multi-hub `hubs` array (non-empty). The atomic write below spreads
+  // `body.graph` over the existing file, so whichever form the payload
+  // carried (`hub`, `hubs`, or both) is persisted verbatim.
+  if (!isPlainObject(body.graph) || !Array.isArray(body.graph.nodes)) {
     return jsonResponse(
-      { ok: false, error: 'persist: body.graph must include hub and nodes[]' },
+      { ok: false, error: 'persist: body.graph must include hub (or non-empty hubs[]) and nodes[]' },
+      400,
+    );
+  }
+  const hasHub = isPlainObject(body.graph.hub);
+  const hasHubs = Array.isArray(body.graph.hubs) && body.graph.hubs.length > 0;
+  if (!hasHub && !hasHubs) {
+    return jsonResponse(
+      { ok: false, error: 'persist: body.graph must include hub (or non-empty hubs[]) and nodes[]' },
       400,
     );
   }
@@ -94,12 +106,26 @@ async function handlePersist(body: PersistBody): Promise<Response> {
     });
   }
 
+  // EBR2-E-04 fix — preserve top-level fields the wire payload doesn't carry
+  // (e.g. `_comment`, future canonical-seed metadata). The persist contract
+  // is "graph merge over existing on-disk file", not "wire payload replaces
+  // the file". Without this, every save dropped the hand-authored seed
+  // documentation and any field added server-side after the client loaded.
+  const target = join(process.cwd(), ...LIVE_GRAPH_REL);
+  let existing: Record<string, unknown> = {};
+  try {
+    const raw = await readFile(target, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (isPlainObject(parsed)) existing = parsed;
+  } catch {
+    // Missing/unreadable existing file — fall back to wire-only payload.
+  }
   const finalGraph = {
+    ...existing,
     ...(body.graph as Record<string, unknown>),
     nodes: normalizedNodes,
   };
   const json = JSON.stringify(finalGraph, null, 2);
-  const target = join(process.cwd(), ...LIVE_GRAPH_REL);
   const tmp = `${target}.tmp`;
 
   try {

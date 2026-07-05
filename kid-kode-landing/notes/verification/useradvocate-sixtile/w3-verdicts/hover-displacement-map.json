@@ -1,0 +1,76 @@
+{
+  "feature": "hover-displacement-map",
+  "claim": "Hover pours a hidden relief into the surface — a procedural displacement map embossing the content, deepening as the cursor nears. Content preserved, just embossed.",
+  "groundTruthSibling": "ripple-displace",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Multiple real defects. (a) The idle frame is NOT clean: the card is already drowning in heavy grain/speckle that degrades the header and all three rows, so there is no legible rest state — the genuinely clean card only appears in the reliefDepth=low control frame. (b) proximityRange is a fully DEAD control: low and high frames are byte-identical. (c) The displacement reads as stippled sensor-noise over the whole card body rather than crisp tactile relief, so content is degraded rather than 'preserved, just embossed'. Card content (brass header, grey rows, blue dot) IS preserved — it is not a featureless placeholder slab, so the #1 defect class is avoided.",
+      "evidence": [
+        "hover-displacement-map/after/idle.png",
+        "hover-displacement-map/after/control-reliefDepth-low.png",
+        "metrics: proximityRange pixelDiff meanAbsDiff=0 changedFrac=0 changed=false (low/high byte-identical)",
+        "hover-displacement-map/after/play-2.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Partially. It reads as a roughening/embossing displacement over the real card (edges fragment as relief deepens), so the broad family is recognizable. But at native DPR-2 resolution the texture reads as heavy noise/stipple rather than a premium tactile emboss, and the claim's 'deepening as the cursor nears' is not demonstrable because the proximity knob is inert. Not at the premium 4K-motion-graphics, outclasses-DOM bar.",
+      "evidence": [
+        "hover-displacement-map/after/control-reliefDepth-high.png",
+        "hover-displacement-map/after/play-1.png",
+        "metrics: idle effSat=0.07 stdev=23.3 bandingScore=0.474 (low-sat grainy field)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "No. The discoverability premise is broken: idle.png (pointer disengaged, t=0) should show the clean card that invites the hover, but it is already covered in grain, so there is no clean-to-embossed reveal. The clean rest state exists only inside a control sweep, not in the idle frame the user would first see.",
+      "evidence": [
+        "hover-displacement-map/after/idle.png",
+        "hover-displacement-map/after/control-reliefDepth-low.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Mixed. reliefDepth is live and meaningful (low=clean sharp card, mid=grain appears and edges roughen, high=heavy grain fragments the rows; metrics changedFrac=0.077). patternScale is live (coarse ragged chunks at low vs finer dense stipple at high; changedFrac=0.114). BUT proximityRange — the knob that drives the claim's 'deepening as cursor nears' — is completely dead, low and high frames identical.",
+      "evidence": [
+        "hover-displacement-map/after/control-reliefDepth-low.png",
+        "hover-displacement-map/after/control-reliefDepth-high.png",
+        "hover-displacement-map/after/control-patternScale-low.png",
+        "hover-displacement-map/after/control-patternScale-high.png",
+        "metrics: proximityRange meanAbsDiff=0 changedFrac=0 changed=false"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The card content is preserved (good, no placeholder slab), but the idle state I am shown is already messy rather than clean, there is no clean-to-embossed reveal, the texture reads as noise rather than crisp relief, and the very control that sells the claim ('deepens as the cursor nears' = proximityRange) does nothing. That falls short of the premium bar.",
+      "evidence": [
+        "hover-displacement-map/after/idle.png",
+        "metrics: proximityRange changed=false",
+        "hover-displacement-map/after/play-2.png"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Idle state is not clean: idle.png (pointer disengaged, t=0) already shows the card drowned in heavy grain with degraded/illegible header and rows. The claim ('Content preserved, just embossed') and the hover-reveal premise require a clean, fully legible rest state. The genuinely clean card only appears in control-reliefDepth-low.png — that look must be the idle baseline.",
+      "evidence": "hover-displacement-map/after/idle.png vs hover-displacement-map/after/control-reliefDepth-low.png"
+    },
+    {
+      "issue": "proximityRange is a DEAD control. The claim's load-bearing promise is 'deepening as the cursor nears' — proximity-driven depth is the core of this named effect — yet the proximityRange knob produces byte-identical low/mid/high frames.",
+      "evidence": "metrics: proximityRange pixelDiff meanAbsDiff=0 changedFrac=0 changed=false; control-proximityRange-low.png identical to control-proximityRange-high.png"
+    },
+    {
+      "issue": "The displacement reads as stippled sensor-noise/AI-grain over the entire card body rather than a crisp tactile emboss, degrading legibility of the header and rows instead of preserving content. Below the premium outclasses-DOM bar at native DPR-2.",
+      "evidence": "hover-displacement-map/after/play-2.png; hover-displacement-map/after/control-reliefDepth-high.png"
+    }
+  ],
+  "flags": [
+    {
+      "note": "reliefDepth and patternScale controls are genuinely live and well-tuned (clean-to-fragmented and coarse-to-fine respectively) — when proximity and idle-baseline are fixed, the depth/scale knobs are already premium-feeling.",
+      "evidence": "hover-displacement-map/after/control-reliefDepth-low.png vs control-reliefDepth-high.png; control-patternScale-low.png vs control-patternScale-high.png"
+    },
+    {
+      "note": "Real card look is preserved (brass header bar, three grey rows, blue accent dot) — this is NOT a featureless placeholder slab, so the W3 texture-preserving invariant and the #1 defect class are satisfied.",
+      "evidence": "hover-displacement-map/after/control-reliefDepth-low.png"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

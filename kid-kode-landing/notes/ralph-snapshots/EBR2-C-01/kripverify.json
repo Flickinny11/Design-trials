@@ -1,0 +1,35 @@
+{
+  "taskId": "EBR2-C-01",
+  "capturedAt": "2026-05-18T23:55:56.090Z",
+  "surface": "playwright-fallback",
+  "fallbackReason": "kv MCP IPC timed out (kv_navigate / kv_screenshot — 10s cap). Same pattern documented in EBR2-A-02 / EBR2-A-03 / EBR2-B-02 / EBR2-B-03 / EBR2-B-04 task notes; the local sandbox dev server is reachable per kv_dev_server_status (status=ready, url=http://127.0.0.1:49888) but the navigate/screenshot IPC bridge hangs past the 10s cap. Falling back to verify-editor-runtimes.mjs Playwright surface which exercises the same primitives (navigate + screenshot + console scan + network scan) against the same code at HEAD.",
+  "devServer": {
+    "status": "ready",
+    "url": "http://127.0.0.1:49888",
+    "port": 49888,
+    "pid": 38448
+  },
+  "fallbackSurface": "kid-kode-landing/scripts/verify-editor-runtimes.mjs --task-id=EBR2-C-01",
+  "url": "http://localhost:4791/",
+  "console": [],
+  "network": [],
+  "interactions": [
+    {
+      "step": "boot",
+      "viewMode": "preview-app",
+      "activeHubId": "home",
+      "result": "preview-app rendered; runtime mounted; 0 console errors; 0 4xx/5xx network responses"
+    },
+    {
+      "step": "EBR2-C-01 surface",
+      "note": "editorMode field + Inspector Edit/Done button + Escape exit + selection-reset are all wired. The runtime behavior under test (gizmo gating on editorMode === 'edit') lands in EBR2-C-02; EBR2-C-01's surface is store + Inspector toolbar, which the test suite covers via 16 runtime/static assertions (tests/editor-build/EBR2-C-01.editor-mode.test.ts, 16/16 passing)."
+    }
+  ],
+  "verifyEditorRuntimes": {
+    "checksTotal": 7,
+    "checksPassed": 7,
+    "consoleLogCount": 6,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0
+  }
+}

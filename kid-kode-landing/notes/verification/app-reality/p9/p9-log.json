@@ -1,0 +1,14 @@
+{
+  "configs": {
+    "mobile": {
+      "frameRate": 6,
+      "errors": [],
+      "overlayOpen": true
+    },
+    "constrained": {
+      "frameRate": 3,
+      "errors": [],
+      "overlayOpen": true
+    }
+  }
+}

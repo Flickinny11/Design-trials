@@ -1,0 +1,7 @@
+{
+  "name": "mist-drift",
+  "label": "Drift",
+  "description": "A low, thin mist drifts slowly sideways across the scene — soft layered domain-warped fbm bands glide horizontally at different speeds for an in-shader veil of near-transparent, ground-hugging haze, no slab seams.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,346 @@
+# Existing catalog inventory (pre-expansion) — 312 primitives
+
+Counts: {"blur":10,"caustics":12,"displacement":21,"fade":15,"glass":21,"mask":15,"particles":35,"pointer":15,"scroll":18,"shimmer":21,"smoke":15,"text":36,"transform":32,"volumetric":22,"wave":24}
+
+
+## blur
+- **blur-dissolve-out** [card/time] — Card softens and swells out of focus as it fades away — a defocus-to-nothing exit/transition (approximation, no true gaussian).
+- **blur-in** [card/time] — Focus-in: subject scales 1.15 to 1, opacity 0 to 1, with a deterministic decaying micro-jitter reading as motion blur settling (approximation, no true gaussian).
+- **blur-slide-in** [card/time] — Card slides in trailing motion-blur ghosts that converge into a single crisp image as it stops.
+- **blur-spin** [card/time] — Card spins into place behind a rotational motion-blur of ghosted copies that catch up and merge sharp.
+- **chromatic-blur** [card/time] — Card resolves from an RGB-split blur — red, green, blue ghost copies offset apart then snapping into registration.
+- **defocus-pulse** [card/time] — Card breathes in and out of focus on a loop — a soft defocus proxy via subtle scale jitter and opacity pulse, like a lens hunting focus.
+- **focus-rack** [card/time] — A cinematic rack-focus pulls the card from a soft bokeh blur into razor sharpness, with a brief over-bloom at the snap.
+- **motion-blur-streak** [card/time] — Card slides in with a directional motion-streak — a stretched, ghosted smear that compresses to a crisp solid as it stops.
+- **tilt-shift-pulse** [card/time] — A miniature-faking tilt-shift band keeps the center sharp while the top and bottom breathe in and out of focus — looping.
+- **zoom-blur** [card/time] — Card rushes in from an out-of-focus oversized blur, snapping to crisp focus.
+
+## caustics
+- **caustic-net** [plane/time] — A flowing web of caustic filaments — thin bright threads of light weaving and drifting like reflections off rippled water.
+- **caustic-rings** [plane/time] — Concentric caustic rings ripple outward from a center, bright bands of focused light expanding like raindrop rings.
+- **caustic-spots** [plane/time] — Bright wandering caustic spots crawl across the floor like focused sunlight dancing through rippled water.
+- **caustics** [plane/time] — A bright animated caustic web: layered sines of the scaled uv drift over time, sharpen into bright filaments, and tint the surface.
+- **caustics-ripple** [plane/time] — A caustic web pulsing in radial ripple rings, like light through disturbed water.
+- **dappled-light** [plane/time] — Warm sunlight filters through leaves, bright caustic blotches of dappled sun drifting over cool leaf-shadow like a forest canopy.
+- **edge-caustics** [plane/time] — Caustic light concentrates into bright crawling lines along contours, like the rim-light at the edge of a ripple.
+- **flowing-caustics** [plane/time] — A directional river of caustic light streams across the surface, the bright net sliding steadily downstream.
+- **gem-caustics** [plane/time] — Sharp colored caustic sparkles scatter across the surface like sunlight split through a cut diamond.
+- **lava-caustics** [plane/time] — Glowing molten caustic cells pulse in hot orange and red, like light through churning lava.
+- **pool-caustics** [plane/time] — Bright caustic light-net dances on a pool floor — sharp interfering light cells crawling across the plane.
+- **underwater-caustics** [plane/time] — Slow, deep-blue caustics with a depth fade — the dappled light of a pool floor.
+
+## displacement
+- **crumble** [card/time] — The card crumbles into a shower of falling shards — fragments break off, tumble, and fall away under gravity.
+- **crumble-to-particles** [card/time] — The card disintegrates into a cloud of particles that scatter and drift away — a dissolve into dust.
+- **datamosh** [card/time] — The card glitches in through datamosh block-smearing — rectangular regions shift and bleed before snapping clean.
+- **displacement-transition** [plane/time] — A displacement-mapped wipe sweeps across the plane, mixing two tints; a progress uniform drives the reveal and amount roughens the edge.
+- **dissolve-burn** [card/time] — The card burns away (or in) along a glowing ember edge — a noise threshold eats the alpha with a hot emissive rim at the burn front.
+- **glitch-displace** [plane/time] — Horizontal slices of the surface tear and offset in a digital glitch, snapping back to whole.
+- **liquefy-reveal** [card/time] — The card forms out of a gooey liquefied blob — surface coalescing from melted droplets into the solid shape.
+- **melt** [plane/time] — The surface melts downward in dripping tongues, like wax running off.
+- **origami-fold** [plane/time] — The surface unfolds from a tight origami pleat — accordion creases opening flat in sequence.
+- **paint-spread** [card/time] — Paint blooms across the card from the center, an organic ink-edged blot growing to fill the surface and reveal it.
+- **pixel-dissolve** [plane/time] — The surface dissolves block by block in a quantized pixel-grid wipe.
+- **ripple-displace** [card/time] — 
+- **shatter** [plane/time] — The surface shatters into shards that fly apart and fade — a glass-break transition.
+- **shatter-assemble** [card/time] — Glass shards fly in from all directions and lock together into the solid card — shatter played in reverse.
+- **slice-strips** [card/time] — The card splits into horizontal strips that slide in from alternating sides and snap into alignment.
+- **splat-reveal** [card/time] — Several paint splats burst and merge to reveal the card — multiple deterministic blobs growing and unioning into full coverage.
+- **swirl-warp** [card/time] — The card spins out of a whirlpool twist — its surface swirled around the center, unwinding to flat as it resolves.
+- **tear-reveal** [card/time] — The card is revealed as if torn open along a ragged paper rip that sweeps across and peels away.
+- **tiles-assemble** [card/time] — A grid of flat tiles flips and flies in from depth, assembling into the flat card face like a mosaic snapping together.
+- **voxelize** [card/time] — The card breaks into a grid of small cubes that scatter outward then reassemble into the flat surface.
+- **wave-distort-in** [plane/time] — The plane ripples in from a strong sine warp that calms to a flat resting surface as it settles.
+
+## fade
+- **blink** [card/time] — Card blinks its opacity in a steady loop, like a status indicator.
+- **cross-dissolve** [card/time] — Card cross-dissolves through a brief desaturated tint dip, like a film cross-fade between two shots.
+- **dissolve-noise** [card/time] — Card materializes by a per-fragment noise threshold sweeping its alpha from 0 to full.
+- **fade** [card/time] — Opacity tween (start to end) with an optional upward rise and easing curve.
+- **fade-checker** [card/time] — Card fades in as a soft checkerboard, alternating cells resolving in two interleaved passes.
+- **fade-down** [card/time] — Card fades in while drifting gently downward into place — a top-anchored content reveal.
+- **fade-flicker-in** [card/time] — Card flickers to life like an old projector — a few stutters of opacity that settle into a steady image.
+- **fade-in-out** [card/time] — Card fades fully in then back out across the timeline — a complete appear-and-vanish cycle for transitions.
+- **fade-pulse** [card/time] — Card breathes its opacity in a slow loop — a calm idle attention pulse.
+- **fade-rotate** [card/time] — Card fades in while gently un-rotating from a small tilt to square — a soft cinematic settle.
+- **fade-scale** [card/time] — Card fades in while easing up from a slightly shrunken 0.9 scale to full — a soft, premium reveal.
+- **fade-through-black** [card/time] — Card fades out to nothing then fades back in — a classic transition dip.
+- **fade-up** [card/time] — Card fades in while drifting gently upward into place — the classic content-reveal.
+- **fade-vignette** [card/time] — Card resolves from the center outward through a soft radial vignette, the edges arriving last.
+- **flash** [card/time] — Card flashes in with a bright emissive spike that settles to its base look: opacity races 0→1 while emissive intensity overshoots through a peak and relaxes.
+
+## glass
+- **acrylic-edge** [card/time] — A thick acrylic block with bright edge-lit glow — light piped to the chamfered borders like an illuminated sign.
+- **aerogel-haze** [card/time] — Frozen-smoke aerogel — an ultra-light transmissive slab with a blue Rayleigh haze and a warm backlit glow.
+- **bevel-glass** [card/time] — A thick beveled-edge glass panel — chunky refraction concentrated at chamfered borders with a clear center.
+- **chromatic-aberration** [card/time] — Transmissive glass with strong chromatic aberration — RGB channels split at the refracted edges into colored fringes.
+- **crystal-ball** [sphere/time] — 
+- **crystal-facet** [sphere/time] — A faceted crystal catches light, sparkle glints racing across sharp facets as it turns.
+- **dispersion** [sphere/time] — Chromatic dispersion splits the fresnel rim of a glass sphere into shifting RGB fringes.
+- **fluted-glass** [card/time] — Ribbed fluted glass like a shower door — vertical flutes that refract and smear highlights into stripes.
+- **fresnel-glow** [sphere/time] — A view-angle rim glow pulses on the sphere edge while the sphere slowly rotates; color, power, pulse speed, and intensity tunable.
+- **frosted-glass** [sphere/time] — Frost creeps across the glass, a roughness sweep clouding it from clear to frosted and back.
+- **gemstone-cut** [card/time] — A faceted colored gemstone — transmissive with deep colored absorption and bright facet sparkles that rotate.
+- **glass-refraction** [sphere/time] — A slowly rotating transmissive glass sphere with a fresnel rim that reads without an env map.
+- **holo-glass** [card/time] — A holographic transmissive panel — clear glass overlaid with a shifting iridescent HUD sheen that drifts with time.
+- **ice-glass** [card/time] — Frosted crystalline ice — semi-transmissive with a cracked/faceted frozen normal and a cold blue tint, frost creeping over time.
+- **iridescent-glass** [sphere/time] — Soap-bubble thin-film iridescence shimmers over a transmissive sphere, hues shifting with view.
+- **liquid-fill-glass** [card/time] — A glass panel filling with tinted liquid — a refractive fill line rises with a wobbling meniscus.
+- **liquid-glass** [sphere/time] — Molten glass blobs flow over the sphere — animated normal distortion on a transmissive surface.
+- **refraction-warp** [sphere/time] — 
+- **smoked-glass** [card/time] — Dark tinted smoked glass — semi-transmissive with a smoky grey absorption and soft moving internal cloudiness.
+- **soap-bubble** [sphere/time] — A thin-film soap bubble — transmissive sphere swirled with shifting iridescent interference colors and a wobbling skin.
+- **water-droplet** [sphere/time] — 
+
+## mask
+- **bars-wipe** [card/time] — 
+- **blinds-wipe** [card/time] — Venetian-blind slats open in unison to reveal the card — alpha stripes that widen until the whole image shows.
+- **checker-wipe** [card/time] — The card reveals in a checkerboard, alternating cells popping in across two interleaved diagonal passes.
+- **clock-wipe** [card/time] — A radial clock-hand sweep reveals the card, the alpha front rotating around the center like a clock wiping the image in.
+- **cross-wipe** [card/time] — A plus/cross shape expands from the center, the horizontal and vertical arms growing to reveal the whole card.
+- **diamond-wipe** [card/time] — An expanding diamond opens from the center, revealing the card outward behind a rotated-square mask front.
+- **iris-wipe** [card/time] — A circular iris opens from the center, revealing the card outward — a camera iris.
+- **mask-wipe** [card/time] — A directional wipe-in: the card reveals from one edge to the opposite along a tunable angle with a soft mask edge.
+- **noise-wipe** [card/time] — An organic, ragged dissolve front sweeps across the card following a soft noise contour — a natural erosion reveal.
+- **ring-wipe** [card/time] — An expanding bright ring sweeps outward from the center, revealing the card as the band passes each point.
+- **spiral-wipe** [card/time] — A spiral arm sweeps out from the center, the reveal winding around and outward like a coiling shutter.
+- **wave-wipe** [card/time] — A sinusoidal wavy front sweeps across the card, the reveal edge undulating like a tide line.
+- **wedge-wipe** [card/time] — Several pie wedges open at once from the center, like multiple clock hands fanning the image into view.
+- **wipe-linear** [card/time] — A hard directional wipe sweeps across the card, revealing it edge-to-edge with a crisp soft-edged front.
+- **zigzag-wipe** [card/time] — A sawtooth zigzag front sweeps across the card, the jagged edge revealing the image in a sharp chevron march.
+
+## particles
+- **attractor** [empty/time] — Particles trace a strange attractor — points distributed along a Lorenz/Aizawa orbit, the whole structure slowly rotating in space.
+- **bubbles** [empty/time] — Bubbles rise and wobble upward, growing slightly before they pop at the top.
+- **collision-balls** [empty/time] — A handful of balls bounce around a box, colliding off the walls and each other in deterministic billiard physics.
+- **confetti** [empty/time] — A burst of colorful confetti flutters up and rains down with gravity and spin.
+- **debris-tornado** [empty/time] — A tornado funnel of debris spins upward, particles spiraling around a narrow base that widens toward the top.
+- **dna-helix** [empty/time] — Particles trace a rotating double helix with rungs, a twisting DNA ladder spinning about its vertical axis.
+- **dust-particles** [empty/time] — A field of slow-rising dust motes with an index-based horizontal sway; wraps within the box.
+- **embers** [empty/time] — Glowing embers rise and flicker upward from a fire, fading as they cool.
+- **explosion** [empty/time] — A particle explosion bursts outward from the center in all directions, decelerating and fading like a firework shell.
+- **fireflies** [empty/time] — Fireflies wander in lazy paths, their warm glow pulsing on and off.
+- **fireworks** [empty/time] — Firework shells burst into expanding sparks that arc out, twinkle, and fall — multiple bursts at staggered times.
+- **flocking** [empty/time] — Particles flock in a coherent flowing band, aligning direction and sweeping across the field like starlings at dusk.
+- **fluid-sph** [empty/time] — A blob of fluid particles sloshes and settles in an invisible basin, pooling at the bottom like poured water — physics.
+- **fountain** [empty/time] — A fountain jets particles upward in an arc that falls back under gravity.
+- **galaxy-particles** [empty/time] — A rotating disk of stars forms spiral arms, the whole galaxy slowly turning with a bright dense core.
+- **gravity-drop** [empty/time] — A burst of particles drops under gravity and bounces off an invisible floor, energy damping with each hit — deterministic physics.
+- **magnetic-field** [empty/time] — Particles trace the looping field lines of a dipole magnet, flowing from one pole around to the other.
+- **meteor-shower** [empty/time] — Meteors streak across a starfield on parallel diagonals, each a bright head trailing a fading tail — looping.
+- **morph-cloud** [empty/time] — A point cloud morphs between two shapes — sphere to cube to torus and back — particles smoothly interpolating between target sets.
+- **murmuration** [empty/time] — A dense cloud of starlings wheels and folds as one organism, the flock contracting and billowing through the sky.
+- **orbit-rings** [empty/time] — 
+- **particle-assemble** [empty/time] — Scattered particles converge from chaos into a crisp target shape, snapping into formation once.
+- **pendulum-wave** [empty/time] — A row of pendulums of increasing length swing at different rates, weaving the famous travelling-wave kinetic-art pattern.
+- **petal-fall** [empty/time] — Cherry-blossom petals drift down, swaying and spinning as they tumble on a gentle breeze — looping.
+- **rain** [empty/time] — Streaking rain falls fast and straight, slight wind shear across the field.
+- **rain-splash** [empty/time] — Rain falls and bursts into tiny splash crowns when each drop hits the floor — looping with floor impacts.
+- **snow** [empty/time] — Snowflakes drift gently down, swaying side to side in a continuous fall.
+- **snow-globe** [empty/time] — Snow swirls inside an invisible glass dome, settling and re-lofting in a slow gentle vortex.
+- **spark-shower** [empty/time] — A welding-style shower of hot sparks sprays out, bouncing off an unseen floor and cooling from white to red as they die.
+- **sparks** [empty/time] — A looping spark burst: ~200 particles fly outward along deterministic directions, pulled down by gravity, fading 1 to 0.
+- **spring-lattice** [empty/time] — A lattice of masses linked by springs jiggles and ripples, a wobble propagating through the connected mesh — physics.
+- **swarm** [empty/time] — A swarm of particles flows along a curling field toward a drifting attractor, like a school of fish or a flock reorganizing.
+- **ticker-tape** [empty/time] — Ribbons of ticker tape and confetti flutter down from above, twisting and tumbling as they fall — looping.
+- **vortex** [empty/time] — Particles spiral inward into a glowing vortex, accelerating as they near the eye then recycling outward — a continuous whirlpool.
+- **wave-grid** [empty/time] — A grid of glowing points undulates in a rolling wave, ripples crossing the lattice like a sheet of light.
+
+## pointer
+- **cursor-trail** [card/pointer] — Card lags toward the pointer with a smooth springy follow, trailing behind fast moves.
+- **hover-lift** [card/pointer] — As the pointer nears, the card lifts toward the viewer, scales up, and brightens.
+- **magnetic** [card/pointer] — The tile is magnetically pulled toward the pointer by a spring; reach and stiffness tunable.
+- **parallax-layers** [card/pointer] — 
+- **pointer-attract-scale** [card/pointer] — The card swells as the pointer nears its center and relaxes as the cursor drifts away — a responsive bloom.
+- **pointer-displace** [plane/pointer] — The surface dimples away from the pointer, vertices pushing down around the cursor like cloth under a finger.
+- **pointer-hue-shift** [card/pointer] — Moving the pointer across the card sweeps its color through the spectrum — cursor position re-lights the surface.
+- **pointer-orbit** [card/pointer] — 
+- **pointer-press** [card/pointer] — The card presses back into the screen under the pointer and a soft contact highlight blooms where pressed.
+- **pointer-ripple** [card/pointer] — Ripples radiate from wherever the pointer touches the card surface, like a finger on water.
+- **pointer-shine** [card/pointer] — A sharp anamorphic glint flares at the pointer location, twinkling as it tracks the cursor across glossy glass.
+- **pointer-tilt-3d** [card/pointer] — Card tilts in 3D toward the pointer like a parallax trading-card, rotating on X and Y to face the cursor.
+- **repel** [card/pointer] — The card shies away from the pointer, pushed along the vector from cursor to center.
+- **spotlight-follow** [card/pointer] — A bright specular hotspot tracks the pointer across the card surface, like a light gliding over glass.
+- **tilt** [card/pointer] — Tilts the card toward the pointer, lerped by a smoothing factor scaled by max tilt.
+
+## scroll
+- **horizontal-scroll** [card/scroll] — Vertical scroll drives the card horizontally — the horizontal-gallery effect.
+- **parallax** [card/scroll] — Scroll-driven translation along an axis, depth-weighted so closer layers travel farther.
+- **pin-reveal** [card/scroll] — A pinned scroll reveal: the card scales up and fades in together as scroll progresses 0 to 1.
+- **reveal-mask-scroll** [card/scroll] — Scroll wipes the card into view, scaling up from a clipped sliver to full with a fade.
+- **scroll-blur** [card/scroll] — The card sharpens into focus across a scroll band — a defocus proxy (overscale + low opacity) resolving as you scroll into view.
+- **scroll-color-shift** [card/scroll] — Scroll drives a hue/emissive shift across the card — scrolling re-lights it through a color sweep.
+- **scroll-depth-dolly** [card/scroll] — Scroll dollies the card through depth — rushing toward then past the viewer as the page moves.
+- **scroll-fade-stack** [card/scroll] — Card fades and lifts through a scroll band — appears as it enters, recedes as it leaves, like a stacking scroll list.
+- **scroll-flip** [card/scroll] — Scroll scrubs a 3D flip — the card turns through depth as you scroll, locking flat at the band end.
+- **scroll-progress-fill** [card/scroll] — A fill front sweeps across the card in proportion to scroll, like a progress bar driven by the page position.
+- **scroll-rotate-3d** [card/scroll] — Scroll tilts the card in 3D, rotating it through depth as it passes.
+- **scroll-shrink-away** [card/scroll] — As scroll passes, the card shrinks and fades up and away, receding like a dismissed card on a stack.
+- **scroll-skew** [card/scroll] — Scroll velocity shears the card — fast scrolling skews it, settling back to square when scroll rests.
+- **scroll-stagger-rise** [card/scroll] — Bands of the card rise and fade in staggered as scroll advances, like list rows arriving one by one.
+- **scroll-tilt** [card/scroll] — Scroll tips the card on its X axis — leaning back as you scroll past, like a page laying down.
+- **scroll-zoom** [card/scroll] — Scroll position zooms the card in and out — scrubbing scroll scales it smoothly through a focal pass.
+- **scrub-morph** [card/scroll] — Scroll scrubs a combined rotate-and-scale morph back and forth — fully scrubbable.
+- **sticky-pin** [card/scroll] — Card pins in place across a scroll band, then releases and continues — a scroll-pinned section.
+
+## shimmer
+- **brushed-metal** [card/time] — An anisotropic brushed-metal sheen sweeps across the surface, the highlight stretched along the grain like turned aluminum.
+- **caustic-shimmer** [card/time] — Soft refracted light caustics shimmer over the card surface, like sunlight through water dancing on a wall.
+- **diamond-sparkle** [card/time] — Sharp four-point diamond sparkles ignite at scattered bright spots across the surface, twinkling on and off.
+- **glimmer-dust** [card/time] — A fine dusting of glimmer sparkles drifts and flickers across the surface like glitter catching the light.
+- **glint-streak** [card/time] — Sharp anamorphic glints flare across bright points of the card — crisp lens-flare streaks that twinkle and travel.
+- **gold-glint** [card/time] — A warm gold specular glint travels across the surface and twinkles at its peak, like light raking polished gold.
+- **holographic** [card/time] — A holographic foil sheen sweeps across the card — rainbow bands shifting with a moving light.
+- **iridescence** [plane/time] — An oil-on-water slick of cycling iridescent colors swirls across the plane.
+- **light-sweep** [card/time] — A bright specular band sweeps diagonally across the card surface, like light glancing off glossy plastic.
+- **liquid-metal-flow** [card/time] — A flowing chrome reflection ripples across the surface like molten mercury, bright highlights smearing and merging.
+- **metallic-sheen** [card/time] — A bright specular band sweeps across a brushed-metal card, like light raking across it.
+- **moonstone-sheen** [card/time] — A soft blue adularescence floats over the surface like moonstone — a milky glow that shifts as if lit from within.
+- **neon-edge-pulse** [card/time] — 
+- **pearlescent** [card/time] — A soft pearlescent sheen shifts hue across the surface with view angle, like mother-of-pearl — pastel, low-contrast, premium.
+- **prism-spectrum** [card/time] — A rolling spectral rainbow refraction sweeps across the surface — white light split into a moving prism spectrum.
+- **rainbow-fresnel-edge** [card/time] — A rainbow fresnel glow rims the edges of the surface, the spectral colors drifting slowly along the border.
+- **satin-band** [card/time] — A soft, wide satin highlight glides across the surface — gentler and broader than a hard specular sweep.
+- **shimmer** [card/time] — A moving diagonal light sheen sweeps across the surface; speed and sharpness tunable.
+- **sparkle-glints** [plane/time] — Tiny star-like glints twinkle on and off across the surface, like sun on water.
+- **starfield-twinkle** [card/time] — A field of tiny stars twinkles across the surface, points fading up and down out of phase like a night sky.
+- **velvet-sheen** [card/time] — A soft retroreflective velvet sheen brightens the surface’s grazing edges, with a gentle drifting bloom.
+
+## smoke
+- **dust-cloud** [plane/time] — A thin warm dust haze billows sideways with in-shader volume: layered domain-warped fbm drifts at parallax speeds with soft lit contrast and faint glinting motes — smooth and hazy, no slab seams.
+- **dust-poof** [plane/time] — A quick puff of dust kicks up and settles — a sharp impact poof that blooms and falls back, looping.
+- **fog-roll** [plane/time] — A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.
+- **genie-column** [plane/time] — A twisting column of smoke rises and coils like a genie emerging from a lamp, braiding as it ascends.
+- **ink-bloom** [plane/time] — A drop of dark ink blooms into clear water — a radial bloom front eaten into organic cauliflower tendrils by domain-warped fbm, near-opaque interior with slow internal swirls and soft wispy translucent edges, on a fully transparent background.
+- **ink-drip** [plane/time] — Ink bleeds downward in dripping tendrils, fingers of dark fluid creeping down and spreading.
+- **ink-swirl** [plane/time] — Ink caught in a vortex swirls into spiraling arms, curling around a center as it diffuses.
+- **mist-drift** [plane/time] — A low, thin mist drifts slowly sideways across the scene — soft layered domain-warped fbm bands glide horizontally at different speeds for an in-shader veil of near-transparent, ground-hugging haze, no slab seams.
+- **smoke** [plane/time] — A column of soft grey-blue smoke with in-shader volume: layered domain-warped fbm rises and curls with depth-faded internal contrast — a smooth rising plume, no slab seams.
+- **smoke-burst** [plane/time] — A poof of smoke bursts outward from the center, billowing turbulently then thinning away — looping.
+- **smoke-plume** [plane/time] — A turbulent smoke plume rises and curls upward, billowing wider as it ascends and dissipates at the top.
+- **smoke-ring** [plane/time] — A vortex smoke ring puffs out and drifts upward, expanding and thinning as it rises — a toroidal puff.
+- **smoke-trail** [plane/time] — A thin wisp of smoke trails along a curving path, like the ribbon left by a sparkler drawn through the air.
+- **steam** [plane/time] — Hot steam billows upward in soft translucent plumes that thin as they rise.
+- **wispy-smoke** [plane/time] — Thin curling wisps of smoke rise and dissipate, with in-shader volume: a rotational curl-warp swirls fine alpha-gated fbm tendrils that scroll upward across two depth-faded layers — sparse smooth strands, no slab seams.
+
+## text
+- **decode-text** [text/time] — Glyphs resolve out of a rapid scramble of jitter and flicker, locking into place left-to-right like a decryption reveal.
+- **dissolve-to-dust** [text/time] — Each glyph scatters along a deterministic radial direction, shrinks toward zero, and fades to nothing.
+- **glitch-text** [text/time] — Glyphs judder with digital glitch jumps and brief color flickers before locking in.
+- **liquid-text** [text/time] — 
+- **neon-flicker-text** [text/time] — Glyphs buzz on like a neon sign — emissive flickers then holds steady-bright.
+- **scramble** [text/time] — Each glyph jitters by a deterministic index hash, decaying to its base transform as the phase settles.
+- **split-3d** [text/time] — The line splits at center and the two halves rotate in from opposite depths, swinging together like double doors closing into the headline.
+- **split-stagger** [text/time] — Each glyph rises and fades in on its own staggered, eased clock for a cascading text reveal.
+- **stretch-text** [text/time] — Glyphs stretch tall on entrance then snap back to natural proportions with an elastic settle, one after another.
+- **text-blur-in** [text/time] — Glyphs resolve from a soft out-of-focus shimmer — a per-glyph blur proxy (jitter + low opacity + slight overscale) snapping to crisp, in sequence.
+- **text-cascade** [text/time] — Glyphs drop in from above one by one, each landing with a little bounce.
+- **text-counter-roll** [text/time] — Glyphs roll vertically into place like an odometer or slot reel, each settling from a blur of motion.
+- **text-draw-on** [text/time] — Each glyph draws itself on with a left-to-right alpha wipe, like ink flowing into the letterforms.
+- **text-elastic-in** [text/time] — Glyphs spring in with an elastic overshoot, wobbling past full size before settling, in left-to-right succession.
+- **text-extrude** [text/time] — Glyphs punch forward out of the surface in sequence, gaining depth as they pop in.
+- **text-extrude-rotate** [text/time] — Glyphs rise out of depth with a rotation, extruding forward from far in Z while turning to face the viewer.
+- **text-fade-up-each** [text/time] — Glyphs fade up into place one after another, each drifting a little upward as it appears.
+- **text-flip-each** [text/time] — Glyphs flip into view one by one on the X axis like a row of tiny cards turning face-up.
+- **text-glow-pulse** [text/time] — The headline glows with a soft emissive pulse, brightening and dimming in a calm idle loop.
+- **text-gradient-sweep** [text/time] — A colored gradient sweeps along the line, recoloring each glyph as the band passes, then settling to a base tint.
+- **text-jump** [text/time] — Glyphs hop up one after another in a looping bouncing wave, like letters skipping across the line.
+- **text-magnetic-in** [text/time] — Glyphs fly in from scattered positions and snap into their slots as if pulled by a magnet.
+- **text-mask-reveal** [text/time] — A moving alpha front sweeps across the whole line, revealing the headline edge-to-edge through a soft mask.
+- **text-perspective-in** [text/time] — The whole line tilts in from a dramatic floor perspective and rotates up to face the viewer, glyphs staggering.
+- **text-pop-each** [text/time] — Each glyph pops in with a bouncy backOut overshoot, scaling from zero in quick left-to-right succession.
+- **text-rotate-each** [text/time] — Each glyph spins in on its own axis, scaling up from a blur of rotation and locking upright in sequence.
+- **text-scale-wave** [text/time] — A pulse of scale travels along the word in a loop, each glyph swelling and shrinking as the wave passes.
+- **text-shake** [text/time] — The whole word vibrates with a nervous shake — deterministic high-frequency jitter, energetic and looping.
+- **text-spotlight** [text/time] — A bright spotlight band sweeps across the line, lighting each glyph emissive as it passes, then settling to an even glow.
+- **text-squash-each** [text/time] — Glyphs squash flat then spring tall and settle, popping in with cartoon volume one after another.
+- **text-swing-in** [text/time] — Each glyph swings down into place from a hinge above it, dangling to rest like letters on strings.
+- **text-typewriter-cursor** [text/time] — Letters appear one at a time with a blinking block cursor trailing the last typed glyph.
+- **text-wave-3d** [text/time] — Glyphs ride a travelling 3D wave, bobbing in Y and pitching in depth as the wave rolls through the word — looping.
+- **text-wave-color** [text/time] — A rainbow of hue travels along the word in a loop, each glyph cycling through colors as the wave passes.
+- **typewriter** [text/time] — Glyphs appear one at a time in sequence, like text being typed.
+- **wave-text** [text/time] — Glyphs ride a travelling sine wave, bobbing up and down in sequence — a continuous loop.
+
+## transform
+- **accordion-y** [card/time] — Card expands vertically accordion-style from a thin center band to full height with a springy settle.
+- **bounce** [card/time] — Card drops in from above and settles with a physical bounce.
+- **card-fold** [card/time] — Card unfolds open from a folded-shut crease, scaling its height open from a thin horizontal strip while a slight rotation simulates the fold lifting.
+- **corner-peel** [card/time] — Card peels into view from a pinned corner, unrolling open with a rotation about that corner.
+- **cube-rotate** [card/time] — Card swings in as if it were one face of a rotating cube, pivoting around a hinge offset behind it so it arcs through depth.
+- **depth-pop** [card/time] — Card rushes forward from deep in Z to its resting plane, scaling up with perspective as it nears.
+- **door-open** [card/time] — Card swings open like a door hinged on its left edge, rotating around that edge from shut to flat-facing the viewer.
+- **drop-bounce** [card/time] — Card drops from above and lands with a squash-and-settle bounce.
+- **elastic** [card/time] — Card springs to full scale with an elastic overshoot wobble.
+- **flip** [card/time] — Card flips in on its Y axis, easing from a 3/4 turn edge-on to face the viewer while fading in.
+- **flip-3d** [card/time] — Card performs a full 3D flip, rotating a complete half-turn through depth with a perspective foreshorten at the edge-on midpoint.
+- **flip-board** [card/time] — Card flips in like a split-flap departure board — a series of quick incremental rotations that snap to flat.
+- **float** [card/time] — Card gently bobs and drifts in a continuous idle float loop.
+- **hinge-fall** [card/time] — Card hangs from a top corner hinge, tips over past its balance, and falls away as it fades — a classic exit transition.
+- **jelly** [card/time] — Card squashes and stretches with a wobbling jelly settle on entrance.
+- **overshoot** [card/time] — Card slides in past its target then eases back with a backOut overshoot.
+- **pendulum-settle** [card/time] — Card swings in like a pendulum from one side, oscillating with damped amplitude until it hangs square.
+- **perspective-tilt-in** [card/time] — Card enters tilted away in perspective and rotates flat toward the viewer as it nears its plane.
+- **pivot-drop** [card/time] — Card pivots down from a top hinge like a falling sign, settling with a small bounce.
+- **roll-in** [card/time] — Card rolls in from the side like a wheel, rotation locked to its travel distance.
+- **rotate-in** [card/time] — Card spins in from a tilted angle to upright while fading and scaling up.
+- **scale-pop** [card/time] — Scales up from a small start size to full size with an overshoot curve, fading in and optionally spinning.
+- **skew-in** [card/time] — Card shears in from a slanted parallelogram, straightening to square as it settles.
+- **slide** [card/time] — Subject slides in from an offset along an angle, easing to the origin while fading in.
+- **spin** [card/time] — Continuous rotation about the chosen axis; a set number of full turns per cycle, looping.
+- **spiral-in** [card/time] — Card spirals inward to its resting place along a shrinking helical path while scaling up and spinning.
+- **squash-stretch-in** [card/time] — Card anticipates with a squash, then stretches up into place with cartoon volume preservation.
+- **swing** [card/time] — Card swings like a pendulum from a pivot, oscillation damping to rest.
+- **tumble** [card/time] — Card tumbles into place, rotating on both X and Y axes at once before settling upright.
+- **unfold** [card/time] — Card unfolds accordion-style from a narrow vertical strip to full width with a springy backOut settle.
+- **zoom-out-in** [card/time] — Card starts oversized and rushes back to rest, overshooting slightly smaller before settling — a punchy reverse zoom.
+- **zoom-rotate-in** [card/time] — Card scales up from nothing while spinning a full turn, a punchy combined zoom-and-spin entrance.
+
+## volumetric
+- **aurora** [plane/time] — Aurora borealis curtains — vertical ribbons of green-to-violet light waving and shimmering across a night sky.
+- **campfire** [plane/time] — A small flickering campfire — licking orange-to-yellow flame tongues with a hot core and rising sparks, warmer and tighter than the big fire.
+- **candle-flame** [plane/time] — A small candle flame flickers gently — a tight teardrop of light with a faint blue base, wavering in still air.
+- **clouds** [plane/time] — Bright billowing cumulus clouds drift slowly across a clean blue sky gradient.
+- **cosmic-dust** [plane/time] — A vast deep-space dust cloud drifts through starlight: smooth nebular haze layered with twinkling pinprick stars.
+- **fire-flame** [plane/time] — Licking flames rise with a hot gradient from white core to orange to red tips.
+- **fireball-burst** [plane/time] — A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward from a white-hot core to red flame tongues at the rim — looping.
+- **fog** [plane/time] — Drifting fog banks roll sideways with real front-to-back depth — clean, soft-edged cool grey-white fog, not a flat wash.
+- **galaxy-spiral** [plane/time] — A spiral galaxy slowly rotates — luminous arms of stars winding around a bright glowing core in deep space.
+- **gas-flame** [plane/time] — A blue gas-burner flame — sharp cones of blue with hot inner cores, hissing and steady like a stovetop.
+- **godray** [plane/time] — Warm amber light shafts radiate from a slowly rotating source: a small number of soft, wide beams decay away from the source with domain-warped shimmer and a drifting dust sparkle — in-shader volume, no slab seams.
+- **heat-column** [plane/time] — A shimmering column of rising heat-haze and embers glows over an unseen ember bed, the warm air distorting and wobbling upward from a glowing base.
+- **light-shafts** [plane/time] — Radial god-ray shafts fan out from a bright point, shimmering as dust drifts through them.
+- **lightning-bolt** [plane/time] — Forked lightning cracks across the scene in sudden bright flashes, branching jagged bolts that flicker and vanish.
+- **magma-cracks** [plane/time] — Cooled rock veined with glowing magma — a dark crust split by molten cracks that pulse hot orange and shift.
+- **nebula** [plane/time] — A colorful cosmic nebula churns slowly, clouds of violet and rose lit from within with dark dust lanes and a scatter of soft stars.
+- **plasma** [plane/time] — A classic plasma field of interfering sine waves cycling through electric colors.
+- **smoky-fire** [plane/time] — A fire with heavy smoke — orange flames at the base feeding a churning grey smoke column rising above.
+- **supernova** [plane/time] — A star detonates — a blinding white-hot core flash blows out into a turbulent filamentary shock shell with radial debris streaks, fading to a glowing ember remnant. The volume is built in-shader from domain-warped fbm — a smooth premium burst, no slab seams. Looping.
+- **torch-flame** [plane/time] — A tall torch flame licks upward with a bright hot core and a smoky tapering tip, swaying as it burns.
+- **volumetric-cone** [plane/time] — A cone of volumetric light beams down from a crisp apex, dust motes drifting through the shaft as it slowly sweeps — soft angular edges and dusty in-shaft haze built entirely in-shader, no slab seams.
+- **will-o-wisp** [plane/time] — A glowing ghost-light — a soft luminous core wreathed in wispy tendrils that drift and bob, its halo melting into a soft volume like a marsh spirit.
+
+## wave
+- **banner-flutter** [plane/time] — A hanging banner flutters — a travelling vertical ripple runs down its length with gusty amplitude.
+- **cloth-sway** [plane/time] — The plane hangs and sways like draped cloth in a breeze — pinned along its top edge, billowing more toward the free bottom.
+- **curtain-wave** [plane/time] — A pleated curtain sways side to side, its vertical pleats swinging together with a gentle hanging motion.
+- **drape-fold** [plane/time] — The cloth settles into soft vertical folds that breathe and shift, like fabric draped over a rail.
+- **flag-wave** [plane/time] — The plane ripples like a flag in wind, a travelling wave rolling across it: pinned at the left edge, amplitude growing toward the right.
+- **foam** [plane/time] — Whitewater foam crests drift and dissolve across a water surface.
+- **gel-wobble** [plane/time] — The surface wobbles like a slab of gelatin — soft low-frequency jiggling that decays from an initial poke, then re-pokes on a loop.
+- **hair-sway** [plane/time] — Fine vertical strands sway side to side like hair or grass in wind — high-frequency horizontal displacement increasing toward the free tips.
+- **heat-haze-warp** [plane/time] — The surface shimmers like air over hot asphalt — fine high-frequency warping that wobbles and rises.
+- **ink-spread** [plane/time] — A drop of ink blooms across the surface, an organic stain growing from the center with a ragged, defined front.
+- **jelly-surface** [plane/time] — The plane wobbles like a soft gel: a radial jiggle decaying from a poke at center via a gel falloff envelope.
+- **ocean-fft** [plane/time] — A rolling ocean surface — several summed Gerstner-style swells of different directions and scales.
+- **ripple** [plane/time] — Concentric sine ripple driven across a subdivided plane via CPU vertex displacement; amplitude, wavelength, and speed are tunable.
+- **ripple-concentric** [plane/time] — Concentric rings expand outward from the center of the surface in a steady continuous pulse.
+- **ripple-interference** [plane/time] — Two ripple sources interfere across the surface, their wavefronts crossing into a shifting moiré of crests and troughs.
+- **ripple-pool** [plane/time] — Multiple raindrop ripples spread across a still pool, overlapping in concentric rings with staggered, damped wavefronts.
+- **sail-bulge** [plane/time] — The plane bulges and luffs like a sail catching wind — a deep center billow that breathes with gusts.
+- **seaweed-sway** [plane/time] — Tall underwater fronds sway slowly with the current, rooted at the base and drifting lazily at the tips.
+- **trampoline** [plane/time] — The surface bounces from a central impulse, dipping deep then rebounding in damped radial waves.
+- **water-surface** [plane/time] — A calm water surface with gentle interfering ripples — softer and slower than the choppy ocean.
+- **wave** [plane/time] — A traveling sine ripple displaces the plane vertices along z; amplitude, frequency, and speed are tunable.
+- **wave-cross** [plane/time] — Two wave trains travel across the surface in different directions, crossing into a rolling cross-hatched swell.
+- **wheat-field** [plane/time] — Wind waves roll across a field of blades, bending them in travelling gusts like wheat under a breeze.
+- **wind-ripple** [plane/time] — Gusts of wind chase ripples across the surface — bands of displacement sweep through with a moving gust front.

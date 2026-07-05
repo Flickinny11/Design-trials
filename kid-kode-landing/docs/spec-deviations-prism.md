@@ -576,3 +576,64 @@ The editor's Visual tab uses the async `gl` factory pattern from R3F v9
 Vercel ever serves a different React tree (e.g. server components),
 revisit the `gl: async () => createWebGPURenderer(...)` form.
 
+
+---
+
+## FIX3 / G3 — the hub transition is an intentional tagged RUNTIME HOST, not a node
+
+**PRISM-MASTER-SPEC Law 0 ("every artifact is a node") + the verification
+corollary (node-authorship) — sanctioned exception.**
+
+The Wave-1 foundation audit found three hardcoded signature artifacts. Two —
+the configurator watch (FIX2 / G1 → node `orr-atelier-watch`) and the orrery
+complication (FIX3 / G2 → node `orr-celestia-orrery`) — were genuine *hub
+artifacts*: visible objects that belong in a hub's node graph, so they were
+brought into the graph as `codeRef` nodes mounted by `AssembledSceneNode`.
+
+The third — the **hub transition** (`HubSceneTransition.tsx`) — is **not a hub
+artifact**. It is a cross-hub **runtime behaviour**: a camera-parented,
+screen-space brass curtain that closes, gates the (heavy) `activeHubId` swap to
+peak coverage, then opens — orchestrating *navigation between hubs*. It has:
+
+- no `scenePosition` (it tracks the camera in screen space, sized from live
+  fov/aspect — it is not placed in world space);
+- no `parentHubId` (it spans *all* hubs; it is mounted once in preview-app,
+  not per-hub);
+- no authored content to inspect/select/transform (it is a transient effect,
+  not a product surface);
+- a hard dependency on the navigation state machine (`useHubTransitionStore`)
+  and the render camera, which a graph node does not and should not carry.
+
+Forcing it into a "global-hub node" would be architecturally dishonest — it
+would invent a fake `scenePosition`/`parentHubId` for an object that is pure
+runtime behaviour, and it would put navigation-orchestration logic behind the
+node/codeRef contract, which is for *artifacts*. This is the same category as
+`SceneDriverHost`, `ChromeSlabLayer`, lighting rigs, and the post-processing
+composer: sanctioned runtime infrastructure that lives in the editor shell, not
+in the graph.
+
+**Resolution.** The transition's mounted group is tagged
+`userData.prismRuntimeHost = 'hub-transition'` (HubSceneTransition.tsx). The
+node-authorship classifier (`src/lib/prism/runtime/node-authorship.ts`) gained a
+third artifact kind, `'runtime-host'`, which it assigns to any object carrying
+`prismRuntimeHost`. A runtime host is **explicitly distinct from accidental
+hardcoded drift**: the gate (`scripts/node-authorship-gate.mjs`) recognises it
+as sanctioned infrastructure (`runtime-host.hub-transition` check) and never
+counts it toward hardcoded drift. The brittle name-match the gate previously
+used (`NAMED_HARDCODED['hub-scene-transition']`) is removed — recognition is now
+by the explicit tag, not by a coincidental object name.
+
+**Why this is not a loophole.** The classifier still catches *real* drift: any
+object mounted outside the node map that carries `prismHardcodedArtifact` (or is
+not tagged at all but is content) is flagged as `hardcoded`. The gate proves
+this every run via a synthetic self-test
+(`__PRISM_NODE_AUTHORSHIP_SELFTEST__`) that asserts a tagged-hardcoded object is
+still flagged, a runtime-host is sanctioned, and a node is authored — so a
+future accidental hardcoded artifact WOULD fail the gate even though the real
+scene is clean. Adding a new runtime host requires an explicit, reviewable
+`prismRuntimeHost` tag and (per this section) a documented rationale; it is a
+deliberate, auditable act, not a silent escape hatch.
+
+**Behaviour preserved.** The cinematic transition is byte-for-byte unchanged
+(same TSL curtain, same close → gated-swap → open timing, same camera-parented
+mount). Only the authorship classification changed.

@@ -1,0 +1,7 @@
+{
+  "name": "chain-dangle",
+  "label": "Links",
+  "description": "A hanging chain of discrete brass beads linked by real distance constraints, the top pinned to the cursor and the strand swinging under gravity with genuine bead-to-bead coupling — physics, not an easing curve.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,7 @@
+{
+  "name": "shockwave-scatter",
+  "label": "Shock Power",
+  "description": "A radial shockwave expands from the centre across a regular grid; each element is pushed outward as the ring sweeps past, then springs back to its slot — a propagating displacement wave, then it recharges and re-fires. Real impulse + spring integration.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,7 @@
+{
+  "name": "proximity-rim-glow",
+  "label": "Glow Intensity",
+  "description": "The card",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

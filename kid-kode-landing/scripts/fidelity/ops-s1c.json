@@ -1,0 +1,10 @@
+[
+  {
+    "nodeId": "orr-arrival-sub",
+    "set": { "scenePosition.y": 1.5 }
+  },
+  {
+    "nodeId": "orr-arrival-headline",
+    "set": { "textSpec.glow": { "color": "#ffe6a8", "intensity": 0.2 } }
+  }
+]

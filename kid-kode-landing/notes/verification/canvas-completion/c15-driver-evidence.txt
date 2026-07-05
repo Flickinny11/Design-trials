@@ -1,0 +1,23 @@
+=== c15 — trigger buttons assign drivers; driver-swap keyframe-invariant; animation-only (sign-off supplement, 2026-06-11) ===
+
+All five driver kinds exist + are assignable from the binding-row chips:
+- Type: src/lib/prism-graph/types.ts — AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event'
+- UI: 5 chips (Load/Time, Scroll, Pointer, State, Event) visible per binding row in
+  notes/verification/canvas-completion/c13-stack-two.png
+- Live swap: committed notes/verification/toolbar-wiring/results.json step
+  "driver chip swapped to Scroll" ok:true + frame notes/verification/toolbar-wiring/04-driver-scroll.png
+- Persistence: same results.json step "persistence: binding (driver=scroll) ... in live graph (INV-7 store parity)" ok:true
+
+Driver swap does NOT alter keyframes (INV-6):
+- tests/editor-build/P2-animation-bindings.test.ts —
+  "INV-6: changing driver never mutates keyframes — identical timeline + params per driver" PASSED
+  (re-run at HEAD b9ff738, 15/15 pass: notes/verification/canvas-completion/c15-c13-p2-bindings-test-run.txt)
+
+Drivers affect ANIMATION only, never app behavior (structural):
+- src/lib/prism/animatable/bindings.ts — every driver path resolves to timeline seeks only:
+  L333 scroll → hub.scroll.progress; L366/L418 anim.seek(...); L435-436
+  DRIVER_TO_TRIGGER[binding.driver] → drivers.attach(result, trigger, ...).
+  No store writes / app-state mutation on any driver path (no useGraphSourceStore /
+  app-behavior calls in the module).
+- Contract doc: src/lib/prism-graph/types.ts AnimationBinding — "Drivers play ANIMATION only,
+  never app behavior (§1.3)" (also shown in c25-topology-diff.txt additive-field diff).

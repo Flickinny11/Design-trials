@@ -1,0 +1,7 @@
+{
+  "name": "magnet-snap",
+  "label": "Pull",
+  "description": "The card is yanked toward the pointer by a strong magnetic spring with real mass and momentum — it accelerates in, overshoots the magnet, and rings down before sticking.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

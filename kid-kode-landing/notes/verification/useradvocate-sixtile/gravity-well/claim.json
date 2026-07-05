@@ -1,0 +1,7 @@
+{
+  "name": "gravity-well",
+  "label": "Gravity",
+  "description": "The cursor bends space — the card slides down the well’s curve toward it, stretching tidally as it nears, orbital dust streaming past into the drain.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

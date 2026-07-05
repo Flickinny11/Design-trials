@@ -1,0 +1,61 @@
+{
+  "feature": "supernova",
+  "claim": "A star detonates — a blinding white-hot core flash blows out into a turbulent filamentary shock shell with radial debris streaks, fading to a glowing ember remnant. The volume is built in-shader from domain-warped fbm — a smooth premium burst, no slab seams. Looping.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing broken, misaligned, cut off, or glitchy. The volume is a smooth, organic, shaped burst over the correct alpha-0 dark surround — no slab/shelf banding, no tile/lattice grid, no mirror seams, no jagged edges, no blow-out. Banding stays far under the 0.25 visibility threshold on every frame, and the runtime is clean.",
+      "evidence": [
+        "supernova/after/play-2.png",
+        "metrics: bandingScore max 0.117 (maxR-low) across all 10 frames, all < 0.25 threshold; play-2 bandingScore=0.11",
+        "console: consoleErrors=[] networkErrors=[], backend=webgpu"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — it reads exactly as the claimed supernova cycle. play-1.png shows the blinding white-hot core flash; play-2.png shows a turbulent FILAMENTARY shock shell ringing the bright core with radial debris streaks below; idle.png shows the warm glowing ember remnant. Color stays in a believable white-hot-to-warm-ember band with zero magenta drift. Meets the photoreal amendment: the shell is wispy and organic, nothing blocky, stacked, tiled, or game-engine-cheap.",
+      "evidence": [
+        "supernova/after/play-1.png",
+        "supernova/after/play-2.png",
+        "supernova/after/idle.png",
+        "metrics: idle effHue=28 effSat=0.45 (warm ember), play-2 effHue=47 warmFrac=1.0 magentaFrac=0 (white-hot shell), bandingScore play-2=0.11"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. Two of three labeled sliders produce obvious, sensible changes a first-time user would understand unprompted: maxR low gives a tight ember core in a small red-brown haze while maxR high gives a wide filamentary shock shell (meanLuma 21.5 -> 37.9, effHue 24 -> 47); novaRate high visibly advances/intensifies the burst (meanLuma 26.4 -> 29.3, satPixels 3390 -> 4838). The 'rays' slider is the weak one: measured changed=false across its full 0..1 range (meanLuma 37.6 -> 38.3), with only faint extra radial streaks visible at high — a user might not notice it doing anything at this loop phase.",
+      "evidence": [
+        "supernova/after/control-maxR-low.png",
+        "supernova/after/control-maxR-high.png",
+        "control: maxR low->high meanLuma 21.5->37.9, stdev 34.4->58.7 (changed=true); novaRate low->high meanLuma 26.4->29.3 (changed=true); rays low->high meanLuma 37.6->38.3 (changed=false)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The three play frames are visibly distinct phases of the loop (flash, shell, flash-with-streaks) with strong measured motion, and all control applies landed in under ~600ms with the new value visible in the very next capture.",
+      "evidence": [
+        "supernova/after/play-3.png",
+        "metrics: frameDeltaMag play-1=1.67, play-2=7.44, play-3=7.76 (visible motion every phase); control latencyMs 577-594 across all 9 sweep captures"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'Whoa — the star actually explodes into that smoky glowing ring and then settles back to an ember; it looks like a movie effect, and the size slider really blows it out.' The only quibble is the rays slider feeling like it barely does anything.",
+      "evidence": [
+        "supernova/after/play-2.png",
+        "supernova/after/control-maxR-high.png",
+        "metrics: play-2 stdev=50.9 with bandingScore=0.11 — high-detail structure with no visible banding"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The 'rays' control is too subtle: across its full 0..1 range the measured change is changed=false (meanLuma 37.6 -> 38.3, stdev 58.6 -> 59.0), with only faint extra radial streaks visible at high. The effect direction is sensible and faintly visible (not dead), but a first-time user sweeping the slider at this loop phase could think it does nothing. Strengthen the rays contribution or capture/expose it at the flash phase where streaks dominate.",
+      "evidence": "supernova/after/control-rays-low.png vs supernova/after/control-rays-high.png; control: rays low->high meanLuma 37.6->38.3 (changed=false)"
+    },
+    {
+      "note": "Taste: the volume's soft circular bounding halo (the spherical volume edge) is faintly perceptible as a round disc in the dim flash phases — soft and inoffensive, but a slightly tighter falloff would hide the bounds entirely.",
+      "evidence": "supernova/after/play-1.png (faint circular haze boundary around the flash)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,593 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   PRISM EDITOR DESIGN SYSTEM — materials.css (Wave 0, FROZEN CONTRACT)
+   ─────────────────────────────────────────────────────────────────────────────
+   Reusable surface materials, edges, elevation, motion and machined controls.
+   Consumes tokens.css exclusively — no raw hex below this line except inside
+   data-URI textures (grain/brush maps, which are achromatic).
+
+   Pseudo-element budget: `.ds-edge*` owns ::before, `.ds-grain` owns ::after.
+   A component needing its own pseudos must not combine them on one element.
+
+   Tier gating (INV-9): html[data-ds-tier] is set by tier.ts at boot.
+     t2 → full frost + refraction permitted (hero surfaces only)
+     t1 → standard frost, no refraction filter
+     t0 → opaque gradient panels, minimal blur — same geometry + palette
+   Motion is transform/opacity only; backdrop-filter is never animated.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── SURFACE MATERIALS ────────────────────────────────────────────────────── */
+
+/* Positioning context for the pseudo-element edges/grain/sweep. Declared at
+   ZERO specificity (:where) so a layout utility (absolute/fixed/sticky) on
+   the same element always wins — a surface must never hijack its own
+   anchoring (bug found Wave 2: absolutely-positioned Inspector fell into
+   document flow because .ds-glass's position:relative out-cascaded
+   Tailwind's .absolute). */
+:where(.ds-glass, .ds-smoked, .ds-metal, .ds-ceramic, .ds-well,
+       .ds-edge, .ds-edge--metal, .ds-btn, .ds-toggle) {
+  position: relative;
+}
+
+/* Frosted observatory glass — the default chrome surface. */
+.ds-glass {
+  background: var(--ds-grad-panel);
+  -webkit-backdrop-filter: var(--ds-frost);
+  backdrop-filter: var(--ds-frost);
+  box-shadow: var(--ds-chamfer), var(--ds-elev-2);
+  border-radius: var(--ds-r-lg);
+}
+.ds-glass--heavy {
+  -webkit-backdrop-filter: var(--ds-frost-heavy);
+  backdrop-filter: var(--ds-frost-heavy);
+  box-shadow: var(--ds-chamfer), var(--ds-elev-3);
+}
+
+/* Smoked glass — scrims, backdrops, secondary wells. */
+.ds-smoked {
+  background: var(--ds-grad-smoked);
+  -webkit-backdrop-filter: var(--ds-frost-light);
+  backdrop-filter: var(--ds-frost-light);
+  box-shadow: var(--ds-chamfer-soft), var(--ds-elev-1);
+  border-radius: var(--ds-r-md);
+}
+
+/* Brushed / anodized metal — toolbars, docks, machined fittings. */
+.ds-metal {
+  background:
+    repeating-linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0.027) 0 1px,
+      rgba(0, 0, 0, 0.02) 1px 2px,
+      transparent 2px 4px
+    ),
+    var(--ds-grad-metal-body);
+  box-shadow: var(--ds-chamfer), var(--ds-elev-2);
+  border-radius: var(--ds-r-md);
+}
+
+/* Soft matte ceramic — cards, inspector bodies, quiet surfaces. */
+.ds-ceramic {
+  background: var(--ds-grad-ceramic);
+  box-shadow: var(--ds-chamfer-soft), var(--ds-elev-1);
+  border-radius: var(--ds-r-lg);
+}
+
+/* Recessed well — input troughs, viewport frames, anything carved in. */
+.ds-well {
+  background: var(--ds-grad-well);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.55),
+    inset 0 1px 1px rgba(0, 0, 0, 0.6),
+    inset 0 -1px 0 rgba(255, 252, 242, 0.05);
+  border-radius: var(--ds-r-md);
+}
+
+/* Fine photographic grain — lay over .ds-metal for material tooth. */
+.ds-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* ── EDGES — gradient border, light from top-left ─────────────────────────── */
+
+.ds-edge::before,
+.ds-edge--metal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--ds-edge-grad);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.ds-edge--metal::before {
+  background: var(--ds-edge-grad-metal);
+}
+
+/* ── ELEVATION utilities (compose with chamfer where needed) ──────────────── */
+
+.ds-elev-0 { box-shadow: var(--ds-elev-0); }
+.ds-elev-1 { box-shadow: var(--ds-chamfer-soft), var(--ds-elev-1); }
+.ds-elev-2 { box-shadow: var(--ds-chamfer), var(--ds-elev-2); }
+.ds-elev-3 { box-shadow: var(--ds-chamfer), var(--ds-elev-3); }
+.ds-elev-4 { box-shadow: var(--ds-chamfer), var(--ds-elev-4); }
+
+/* ── MOTION — hover lift, press, eased reveals ────────────────────────────── */
+
+.ds-lift {
+  transition:
+    transform var(--ds-t-base) var(--ds-ease-out),
+    box-shadow var(--ds-t-base) var(--ds-ease-out);
+  will-change: transform;
+}
+.ds-lift:hover { transform: translateY(-2px); }
+.ds-lift:active { transform: translateY(0) scale(0.99); transition-duration: var(--ds-t-fast); }
+
+.ds-press {
+  transition: transform var(--ds-t-fast) var(--ds-ease-out);
+}
+.ds-press:active { transform: scale(0.97); }
+
+.ds-reveal {
+  animation: ds-reveal var(--ds-t-slow) var(--ds-ease-out) both;
+}
+@keyframes ds-reveal {
+  from { opacity: 0; transform: translateY(8px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.ds-reveal-r {
+  animation: ds-reveal-r var(--ds-t-slow) var(--ds-ease-out) both;
+}
+@keyframes ds-reveal-r {
+  from { opacity: 0; transform: translateX(22px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Specular sweep — a light pass across metal/glass on hover. Transform-only. */
+.ds-sweep { overflow: hidden; }
+.ds-sweep::after {
+  content: '';
+  position: absolute;
+  inset: -40% -60%;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 252, 242, 0.055) 50%,
+    transparent 58%
+  );
+  transform: translateX(-70%);
+  transition: transform var(--ds-t-glide) var(--ds-ease-inout);
+  pointer-events: none;
+}
+.ds-sweep:hover::after { transform: translateX(70%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-lift, .ds-press, .ds-sweep::after { transition: none; }
+  .ds-lift:hover, .ds-press:active { transform: none; }
+  .ds-reveal, .ds-reveal-r { animation: none; }
+}
+
+/* ── TYPE (PRISM PORT F0 2026-06-19 — Sora + JetBrains Mono) ────────────────
+   Sora (geometric, non-grotesque) = signature (display/headline/title, tight)
+   AND workhorse (label/body/btn/input). JetBrains Mono = the instrument voice
+   (kicker/chip/num + all-caps labels). NO grotesque (Switzer/Bricolage are
+   CONDEMNED). One cohesive geometric family carries the chrome. */
+
+/* SPICE — small mono instrument tag. Use sparingly (telemetry, micro-tags). */
+.ds-kicker {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-fs-kicker);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-track-kicker);
+  text-transform: uppercase;
+  color: var(--ds-text-low);
+}
+/* HUD / LABEL TIER — field / section label. PRISM PORT F1: the all-caps tracked
+   label tier is JetBrains Mono (the instrument-panel voice), per the locked
+   target (OpenDesign prism DESIGN.md §3: "Display + labels: JetBrains Mono ...
+   always uppercase for primary labels"). Sora stays the SIGNATURE display voice;
+   the mono carries the machined-readout label/HUD tier. tabular-nums so mixed
+   alphanumeric labels (e.g. "NODE 04") stay column-aligned. */
+.ds-label {
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-fs-label);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-track-label);
+  text-transform: uppercase;
+  color: var(--ds-text-mid);
+}
+/* SIGNATURE — panel / section title. Sora, confident + tight. */
+.ds-title {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-title);
+  font-weight: 600;
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
+  color: var(--ds-text-hi);
+}
+/* SIGNATURE — large display (modal / library headers, hero numerals). */
+.ds-display {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-display-lg);
+  font-weight: 600;
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
+  color: var(--ds-text-hi);
+}
+/* SIGNATURE — section headline (between title and display). */
+.ds-headline {
+  font-family: var(--ds-font-display);
+  font-size: var(--ds-fs-display);
+  font-weight: 600;
+  letter-spacing: var(--ds-track-title);
+  line-height: var(--ds-lh-tight);
+  color: var(--ds-text-hi);
+}
+/* WORKHORSE — readable body / description copy. Sora, generous line-height. */
+.ds-body {
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-fs-body);
+  font-weight: 400;
+  letter-spacing: var(--ds-track-body);
+  line-height: var(--ds-lh-body);
+  color: var(--ds-text);
+}
+/* SPICE — numeric readout (tabular mono). For values, counts, coordinates. */
+.ds-num {
+  font-family: var(--ds-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  color: var(--ds-text-hi);
+}
+.ds-title-metal,
+.ds-display-metal {
+  background: var(--ds-grad-text-metal);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── CONTROLS — machined, never flat ──────────────────────────────────────── */
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 0 13px;
+  border: none;
+  border-radius: var(--ds-r-sm);
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-fs-label);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ds-text);
+  background: linear-gradient(178deg, var(--ds-slate), var(--ds-charcoal));
+  box-shadow: var(--ds-chamfer-soft), var(--ds-elev-1);
+  cursor: pointer;
+  transition:
+    transform var(--ds-t-fast) var(--ds-ease-out),
+    box-shadow var(--ds-t-base) var(--ds-ease-out),
+    filter var(--ds-t-base) var(--ds-ease-out);
+}
+.ds-btn:hover { filter: brightness(1.14); transform: translateY(-1px); }
+.ds-btn:active { transform: translateY(0) scale(0.98); }
+.ds-btn:focus-visible { outline: none; box-shadow: var(--ds-chamfer-soft), var(--ds-focus-ring); }
+.ds-btn:disabled { opacity: 0.42; cursor: not-allowed; transform: none; filter: none; }
+
+.ds-btn--primary {
+  color: #221703;
+  background: var(--ds-grad-metal);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 252, 242, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    var(--ds-elev-1), var(--ds-glow-arc);
+  font-weight: 600;
+}
+.ds-btn--primary:hover { box-shadow: inset 0 1px 0 rgba(255, 252, 242, 0.45), inset 0 -1px 0 rgba(0, 0, 0, 0.3), var(--ds-elev-2), var(--ds-glow-arc-strong); }
+
+.ds-btn--ghost {
+  background: var(--ds-grad-metal-soft);
+  color: var(--ds-metal-200);
+  box-shadow: inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.34), var(--ds-elev-0);
+}
+.ds-btn--quiet {
+  background: transparent;
+  box-shadow: none;
+  color: var(--ds-text-mid);
+}
+.ds-btn--quiet:hover { background: rgba(255, 252, 242, 0.05); box-shadow: var(--ds-chamfer-soft); color: var(--ds-text); }
+.ds-btn--danger {
+  background: linear-gradient(178deg, rgba(var(--ds-danger-rgb), 0.26), rgba(var(--ds-danger-rgb), 0.12));
+  color: var(--ds-danger);
+  box-shadow: inset 0 0 0 1px rgba(var(--ds-danger-rgb), 0.36), var(--ds-elev-0);
+}
+
+/* Chip / badge — engraved tag. */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: var(--ds-r-pill);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-fs-kicker);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-track-label);
+  text-transform: uppercase;
+  color: var(--ds-text-mid);
+  background: var(--ds-grad-well);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5), inset 0 -1px 0 rgba(255, 252, 242, 0.06);
+}
+.ds-chip--metal { color: var(--ds-metal-300); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.28); }
+.ds-chip--ice { color: var(--ds-ice-300); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(var(--ds-ice-400-rgb), 0.3); }
+.ds-chip--ok { color: var(--ds-ok); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(var(--ds-ok-rgb), 0.3); }
+
+/* Text input / select — carved trough with brass focus. */
+.ds-input,
+.ds-select {
+  min-height: 28px;
+  padding: 0 11px;
+  border: none;
+  border-radius: var(--ds-r-sm);
+  font-family: var(--ds-font-ui);
+  font-size: var(--ds-fs-body);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-track-body);
+  color: var(--ds-text-hi);
+  background: var(--ds-grad-well);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.5),
+    inset 0 -1px 0 rgba(255, 252, 242, 0.05);
+  transition: box-shadow var(--ds-t-base) var(--ds-ease-out);
+}
+.ds-input::placeholder { color: var(--ds-text-low); }
+.ds-input:focus-visible,
+.ds-select:focus-visible {
+  outline: none;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5), var(--ds-focus-ring);
+}
+.ds-select option { background: var(--ds-charcoal); color: var(--ds-text-hi); }
+
+/* Range slider — machined groove, brass-capped thumb. */
+.ds-slider,
+input[type='range'].ds-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-grad-well);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 252, 242, 0.06);
+  outline: none;
+  cursor: pointer;
+}
+.ds-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: var(--ds-r-pill);
+  background:
+    radial-gradient(circle at 32% 28%, var(--ds-metal-100) 0%, var(--ds-metal-300) 34%, var(--ds-metal-500) 72%, var(--ds-metal-700) 100%);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.65),
+    0 0 10px rgba(var(--ds-metal-400-rgb), 0.3),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+  transition: transform var(--ds-t-fast) var(--ds-ease-out);
+}
+.ds-slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.ds-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: var(--ds-r-pill);
+  background: radial-gradient(circle at 32% 28%, var(--ds-metal-100) 0%, var(--ds-metal-300) 34%, var(--ds-metal-500) 72%, var(--ds-metal-700) 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.65), 0 0 10px rgba(var(--ds-metal-400-rgb), 0.3);
+}
+.ds-slider:focus-visible { box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), var(--ds-focus-ring); }
+
+/* Toggle — machined switch from a bare checkbox. */
+.ds-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 34px;
+  height: 18px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-grad-well);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 252, 242, 0.06);
+  cursor: pointer;
+  transition: box-shadow var(--ds-t-base) var(--ds-ease-out);
+  vertical-align: middle;
+}
+.ds-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: var(--ds-r-pill);
+  background: radial-gradient(circle at 32% 28%, #f0eee6 0%, #b9b6ac 60%, #7e7c74 100%);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  transition: transform var(--ds-t-base) var(--ds-ease-spring), background var(--ds-t-base) var(--ds-ease-out);
+}
+.ds-toggle:checked { box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.4), 0 0 12px rgba(var(--ds-metal-400-rgb), 0.18); }
+.ds-toggle:checked::after {
+  transform: translateX(16px);
+  background: radial-gradient(circle at 32% 28%, var(--ds-metal-100) 0%, var(--ds-metal-300) 45%, var(--ds-metal-600) 100%);
+}
+.ds-toggle:focus-visible { outline: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6), var(--ds-focus-ring); }
+
+/* ── TIER GATING (INV-9) — same language, lighter physics on low tiers ────── */
+
+html[data-ds-tier='t0'] .ds-glass,
+html[data-ds-tier='t0'] .ds-glass--heavy {
+  background: var(--ds-grad-panel-opaque);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-ds-tier='t0'] .ds-smoked {
+  background: linear-gradient(172deg, #101219, #07080d);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+html[data-ds-tier='t0'] .ds-grain::after { display: none; }
+html[data-ds-tier='t1'] .ds-glass--heavy {
+  -webkit-backdrop-filter: var(--ds-frost);
+  backdrop-filter: var(--ds-frost);
+}
+
+/* Refraction (hero surfaces only; set BOTH ds-glass and ds-glass--refract).
+   Chromium-only SVG backdrop displacement — see RefractionDefs.tsx. */
+@supports (backdrop-filter: url('#ds-refract')) {
+  html[data-ds-tier='t2'] .ds-glass--refract {
+    -webkit-backdrop-filter: url('#ds-refract') saturate(155%) brightness(1.07);
+    backdrop-filter: url('#ds-refract') saturate(155%) brightness(1.07);
+  }
+}
+
+/* ── SIGNATURE CURSOR (UI-WOW P2 — MagneticCursor) ─────────────────────────────
+   A soft ring + hot dot that lerp toward the pointer and warm to brass + grow +
+   magnetically snap over interactive controls. The component sets ONLY transform
+   + opacity imperatively (allowed); the warm/press visual is class-driven here so
+   color/glow transitions live in CSS. Inert on touch / reduced-motion (the
+   component never mounts the loop there). */
+.ds-cursor-ring {
+  position: fixed; top: 0; left: 0; width: 32px; height: 32px;
+  border-radius: var(--ds-r-pill);
+  border: 1.5px solid rgba(var(--ds-ice-300-rgb, 169, 194, 209), 0.75);
+  /* a faint resting glow so the ring reads even before it warms (advocate: the
+     cursor must register as a wow moment, not be near-invisible). */
+  box-shadow: 0 0 12px rgba(var(--ds-ice-400-rgb), 0.28), inset 0 0 6px rgba(var(--ds-ice-300-rgb, 169, 194, 209), 0.12);
+  opacity: 0;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  transition: opacity 200ms var(--ds-ease-out), border-color 160ms var(--ds-ease-out),
+              box-shadow 200ms var(--ds-ease-out), border-width 160ms var(--ds-ease-out),
+              background 200ms var(--ds-ease-out);
+}
+.ds-cursor-ring.is-warm {
+  border-color: rgba(var(--ds-metal-200-rgb), 0.98);
+  border-width: 2px;
+  background: radial-gradient(circle, rgba(var(--ds-metal-400-rgb), 0.12) 0%, transparent 68%);
+  box-shadow: 0 0 34px rgba(var(--ds-metal-400-rgb), 0.55), 0 0 12px rgba(var(--ds-metal-200-rgb), 0.4), inset 0 0 10px rgba(var(--ds-metal-300-rgb), 0.22);
+}
+.ds-cursor-dot {
+  position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+  border-radius: var(--ds-r-pill);
+  background: var(--ds-metal-100);
+  box-shadow: 0 0 10px rgba(var(--ds-metal-300-rgb), 0.7);
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 200ms var(--ds-ease-out);
+}
+@media (pointer: coarse) { .ds-cursor-ring, .ds-cursor-dot { display: none; } }
+
+/* ── TOUCH ergonomics ─────────────────────────────────────────────────────── */
+
+@media (pointer: coarse) {
+  .ds-btn { min-height: 38px; padding: 0 14px; }
+  .ds-input, .ds-select { min-height: 36px; }
+  .ds-slider::-webkit-slider-thumb { width: 20px; height: 20px; }
+  .ds-toggle { width: 44px; height: 24px; }
+  .ds-toggle::after { width: 18px; height: 18px; }
+  .ds-toggle:checked::after { transform: translateX(20px); }
+}
+
+/* ── UI-FIDELITY-2: GPU-rendered chrome (slab-hosted surfaces) ─────────────────
+   At t2 the chrome-layer renders a surface's REAL material (SDF bevels with
+   physical Fresnel, live-scene refraction, brushed metal, pointer light) as an
+   instanced quad in the unified canvas BEHIND the DOM element. The DOM twin
+   keeps layout, text, shadow and input; its painted surface goes transparent.
+   `.ds-slab-hosted` is added at runtime by useChromeSlab ONLY when the GPU
+   layer is live, so below t2 (or pre-boot) the v1 CSS look stands untouched. */
+html[data-ds-tier='t2'] .ds-slab-hosted {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+html[data-ds-tier='t2'] .ds-slab-hosted::before {
+  /* the .ds-edge keyline — replaced by the lit SDF keyline */
+  opacity: 0 !important;
+}
+html[data-ds-tier='t2'] .ds-slab-hosted::after {
+  /* the .ds-grain tooth — replaced by in-shader micro-normal noise */
+  opacity: 0 !important;
+}
+
+/* ── APP-REALITY P1 — return-to-zero pulse (CanvasCameraHud) ───────────────────
+   Fired when the free canvas camera returns to straight-on (reset button OR a
+   manual orbit back to centre). A single brass ring/glow throb so "centred" is
+   felt. Paired with navigator.vibrate() in the HUD. Inert under reduced-motion. */
+.ds-zero-pulse {
+  animation: ds-zero-pulse 600ms var(--ds-ease-out) both;
+}
+@keyframes ds-zero-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--ds-metal-200-rgb), 0.55), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb), 0.55); }
+  55%  { box-shadow: 0 0 0 7px rgba(var(--ds-metal-200-rgb), 0.0), 0 8px 26px -6px rgba(var(--ds-metal-400-rgb), 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--ds-metal-200-rgb), 0.0), 0 6px 22px -8px rgba(var(--ds-metal-400-rgb), 0.45); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-zero-pulse { animation: none; }
+}
+
+/* ── PHASE2 P2-4 — morphing CURTAIN hub transition ────────────────────────────
+   On hub→hub navigation in preview, two pleated brass curtain panels swing CLOSED
+   across the viewport with a 3D perspective hinge (rotateY — real depth, not a
+   flat wipe), hold for the page swap, then swing OPEN to reveal the new hub. The
+   panels' backdrop-filter refracts the live 3D scene behind the pleats. */
+.ds-hub-morph-stage { perspective: 1700px; perspective-origin: 50% 50%; }
+.ds-hub-morph-dim {
+  animation: ds-hub-morph-dim 1100ms var(--ds-ease-out) both;
+}
+@keyframes ds-hub-morph-dim {
+  0%   { opacity: 0; }
+  40%  { opacity: 0.78; }
+  56%  { opacity: 0.78; }
+  100% { opacity: 0; }
+}
+.ds-hub-curtain { transform-style: preserve-3d; will-change: transform; }
+/* left panel hinged at its left edge; right panel at its right edge */
+.ds-hub-curtain-l { transform-origin: left center; animation: ds-hub-curtain-l 1100ms cubic-bezier(0.5, 0, 0.18, 1) both; }
+.ds-hub-curtain-r { transform-origin: right center; animation: ds-hub-curtain-r 1100ms cubic-bezier(0.5, 0, 0.18, 1) both; }
+@keyframes ds-hub-curtain-l {
+  0%   { transform: translateX(-110%) rotateY(52deg); opacity: 0; }   /* open (off-screen) */
+  38%  { transform: translateX(0%)    rotateY(0deg);  opacity: 1; }   /* closed */
+  56%  { transform: translateX(0%)    rotateY(0deg);  opacity: 1; }   /* hold (swap) */
+  100% { transform: translateX(-110%) rotateY(52deg); opacity: 0; }   /* open (off-screen) */
+}
+@keyframes ds-hub-curtain-r {
+  0%   { transform: translateX(110%) rotateY(-52deg); opacity: 0; }
+  38%  { transform: translateX(0%)   rotateY(0deg);   opacity: 1; }
+  56%  { transform: translateX(0%)   rotateY(0deg);   opacity: 1; }
+  100% { transform: translateX(110%) rotateY(-52deg); opacity: 0; }
+}
+.ds-hub-morph-seam {
+  background: linear-gradient(180deg, rgba(255,236,190,0) 0%, rgba(255,236,190,0.95) 50%, rgba(255,236,190,0) 100%);
+  filter: blur(1px);
+  animation: ds-hub-morph-seam 1100ms ease-in-out both;
+}
+@keyframes ds-hub-morph-seam {
+  0%, 100% { opacity: 0; }
+  40%, 56% { opacity: 0.9; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-hub-morph-dim, .ds-hub-curtain-l, .ds-hub-curtain-r, .ds-hub-morph-seam { animation-duration: 1ms; }
+}

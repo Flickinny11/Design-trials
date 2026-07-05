@@ -29,9 +29,19 @@ export const parallaxScrollPrimitive: PrimitiveFn = (
   // Empty timeline — parallax is pure scroll-driven, not time-driven.
   const tl = gsap.timeline({ paused: true });
 
+  // Parallax is an OFFSET from wherever the node is authored to live, not an
+  // absolute teleport: writing `p * intensity` straight into `target.position`
+  // would clobber the node's scenePosition the moment scrolling starts. Capture
+  // the base lazily on the first scroll callback (the built-state surface resets
+  // the factory object to local identity AFTER primitives run, so reading the
+  // base at creation time would capture the pre-reset value). The node then
+  // moves `base ± intensity` as scroll sweeps the trigger window.
+  let base: number | null = null;
+
   let unsubscribe: (() => void) | null = null;
   if (ctx.scroll) {
     unsubscribe = ctx.scroll.subscribe((progress) => {
+      if (base === null) base = target.position[axis];
       // Clamp to trigger window then re-normalize.
       let p = progress;
       const span = triggerEnd - triggerStart;
@@ -40,7 +50,7 @@ export const parallaxScrollPrimitive: PrimitiveFn = (
       } else {
         p = 0;
       }
-      target.position[axis] = p * intensity;
+      target.position[axis] = base + p * intensity;
     });
   }
 

@@ -1,0 +1,97 @@
+{
+  "interactions": [
+    {
+      "name": "connect",
+      "pass": true,
+      "method": "store-fallback",
+      "detail": "armed=true connections=1 dataEdges=1"
+    },
+    {
+      "name": "stack",
+      "pass": true,
+      "method": "trusted-pointer(chip)",
+      "detail": "child=comp-pane-1 parent=comp-nav-header-1 movedTogether=true"
+    },
+    {
+      "name": "snap",
+      "pass": true,
+      "method": "trusted-pointer(gizmo)+precise-align",
+      "detail": "gizmoMoved=true guides=1 snappedToCard=true (x=-4.90 card=-4.90)"
+    },
+    {
+      "name": "group+save",
+      "pass": true,
+      "method": "trusted-pointer(chip)",
+      "detail": "selected=2 groups=2 templates=1"
+    },
+    {
+      "name": "re-instantiate",
+      "pass": true,
+      "method": "store-fallback",
+      "detail": "composites 5→7 authorshipOk=true orphans=0 unrealized=0"
+    }
+  ],
+  "consoleErrors": 0,
+  "errors": [],
+  "finalState": {
+    "editorMode": "select",
+    "selectedId": "comp-card-2",
+    "selectedMemberId": null,
+    "multiSelect": [],
+    "pendingConnectFrom": null,
+    "snapEnabled": true,
+    "showGrid": true,
+    "guideCount": 0,
+    "guides": [],
+    "connections": [
+      {
+        "id": "conn-1",
+        "from": "comp-pane-1-pane",
+        "to": "comp-pane-2-pane",
+        "kind": "data"
+      }
+    ],
+    "connectionCount": 1,
+    "stacks": [
+      {
+        "child": "comp-pane-1",
+        "parent": "comp-nav-header-1",
+        "zLayer": 1
+      }
+    ],
+    "groups": [
+      {
+        "id": "comp-card-1",
+        "group": "grp-1"
+      },
+      {
+        "id": "comp-pane-2",
+        "group": "grp-1"
+      }
+    ],
+    "userTemplates": [
+      {
+        "id": "user:1",
+        "name": "Saved 1",
+        "composites": 2,
+        "connections": 0
+      }
+    ],
+    "edgeKinds": {
+      "parent": 24,
+      "binding": 10,
+      "stack": 1,
+      "data": 1,
+      "logic": 0
+    },
+    "compositeCount": 7,
+    "nodeCount": 36
+  },
+  "authorship": {
+    "ok": true,
+    "orphans": 0,
+    "unrealized": 0,
+    "rendered": 36
+  },
+  "allPass": true
+}

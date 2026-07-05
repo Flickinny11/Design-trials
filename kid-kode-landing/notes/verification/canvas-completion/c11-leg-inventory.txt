@@ -1,0 +1,57 @@
+c11 — leg inventory for criterion 11 (GSAP + AnimationMixer + TSL sweep + i2v on ONE timeline, sampled by time)
+Captured 2026-06-11 final sign-off pass, HEAD b9ff738
+
+== LEG 1: GSAP tween — PRESENT, on the shared timeline ==
+-- bindings.ts builds a paused gsap.timeline whose linear proxy tween samples anim.seek(t):
+20://      factory dispatch consumes (a gsap timeline whose linear proxy tween
+21://      drives `anim.seek(t)`; `needsTick`/`onTick` for Infinity-duration
+352:  // onUpdate drives anim.seek(t): identical keyframes for every driver
+359:  const timeline = gsap.timeline({ paused: true });
+365:      onUpdate: () => {
+366:        if (!dead) anim.seek(proxy.t);
+-- legacy cinematic primitives are gsap timelines attached to the same STEP7 driver dispatch:
+src/lib/prism/runtime/shared/primitives/depth-rotate.ts
+src/lib/prism/runtime/shared/primitives/displacement-transition.ts
+src/lib/prism/runtime/shared/primitives/fly-through.ts
+src/lib/prism/runtime/shared/primitives/dissolve-morph.ts
+src/lib/prism/runtime/shared/primitives/kinetic-text.ts
+src/lib/prism/runtime/shared/primitives/orbit.ts
+src/lib/prism/runtime/shared/primitives/magnetic-cursor.ts
+src/lib/prism/runtime/shared/primitives/parallax-scroll.ts
+src/lib/prism/runtime/shared/primitives/particle-emerge.ts
+
+== LEG 2: TSL-uniform sweep — PRESENT, sampled by seek(t) ==
+-- catalog Animatables drive TSL uniforms inside seek(); examples:
+src/lib/prism/animatable/primitives/clouds.ts
+src/lib/prism/animatable/primitives/ink-swirl.ts
+src/lib/prism/animatable/primitives/nebula.ts
+src/lib/prism/animatable/primitives/smoke.ts
+src/lib/prism/animatable/primitives/blinds-wipe.ts
+   (312-tile catalog verified: c12-catalog-312-summary.json; live binding plays in preview-app: notes/verification/toolbar-wiring/results.json step 'binding PLAYS in preview-app (master clock)')
+
+== LEG 3: AnimationMixer clip — ABSENT ==
+-- grep THREE.AnimationMixer / AnimationMixer across src/ and tests/:
+       0
+   (0 occurrences: no skeletal/clip animation path exists in the prototype)
+
+== LEG 4: i2v frame clip — ABSENT as playable media ==
+-- i2v appears only as methodology METADATA labels + an Inspector tab mode name:
+src/lib/prism-graph/animation-keyframes.ts:13:export type AnimationTabMode = 'i2v-frame-scrub' | 'timeline-keyframe';
+src/lib/prism-graph/animation-keyframes.ts:16:  'i2v-frame-scrub',
+src/lib/prism-graph/animation-library.ts:22:  'i2v Frame-based',
+src/lib/prism-graph/animation-library.ts:49:    id: 'dissolve-morph-i2v',
+src/lib/prism-graph/animation-library.ts:51:    methodology: 'i2v Frame-based',
+src/lib/prism-graph/animation-library.ts:56:    id: 'displacement-transition-i2v',
+-- no video/frame-sequence playback exists (VideoTexture / video element / frame scrub clip):
+       0
+
+== SHARED-TIMELINE PROOF (legs 1+2) ==
+-- one master clock: drivers attach PrimitiveResult.timeline (gsap) and FrameDriver ticks; both sample by time.
+28://                 primitives advance on the shared FrameDriver tick, which
+409:    // FrameDriver — the master clock SceneDriverHost ticks per rendered frame.
+438:  // TimeDriver: finite timelines self-run looped on the gsap master clock —
+-- tests: c11-timeline-test-run.txt (49/49 pass: P2-animation-bindings, EB-08-02 keyframe coordinate spaces, EB-07-04 scroll-timeline)
+
+VERDICT: PARTIAL — GSAP + TSL legs proven on the same time-sampled timeline (live + tests);
+AnimationMixer leg NOT IMPLEMENTED (no mixer anywhere); i2v frame-clip leg NOT IMPLEMENTED
+(metadata labels only — no actual frame clip can be loaded or played in this prototype).

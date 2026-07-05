@@ -1,0 +1,74 @@
+{
+  "feature": "click-shockwave",
+  "claim": "Engage and a shockwave detonates from the center — one crisp pressure ring racing outward, kicking the surface and its chrome as it passes.",
+  "groundTruthSibling": "ripple-displace",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Two real defects, both in the captured evidence rather than the idle look. (1) DEAD/UNVERIFIABLE CONTROLS: 3 of 4 controls (width, kick, wobble) report changed:false with meanAbsDiff 0, and their low/mid/high frames are byte-identical clean idle cards with no effect visible. The 4th (speed) only 'changed' because its low value happened to leave the ring on-screen at capture; speed-mid and speed-high are also idle clones. (2) THIN/HOLLOW PLAY SEQUENCE: play-2 and play-3 are byte-identical to idle (same effRGB/satPixels=5242/stdev, same 12664-byte filesize, frameDeltaMag 0). Only play-1 and control-speed-low actually contain the shockwave. No placeholder-slab defect: the real card content (brass header, blue accent dot, 4 grey rows) is preserved in every effect frame. No blur/clipping/broken-frame. Root cause: captures pinned at controlsPinT=1, a phase AFTER the wave has passed and the surface settled to rest, so most frames froze the resting card.",
+      "evidence": [
+        "metrics: width/kick/wobble all changed:false, pixelDiff.meanAbsDiff=0, changedFrac=0",
+        "metrics: play-2 and play-3 effRGB=[63.8,60.3,56.3] satPixels=5242 stdev=24.8 identical to idle; play-3 frameDeltaMag=0",
+        "click-shockwave/after/control-kick-high.png (clean idle card, no ring)",
+        "click-shockwave/after/control-wobble-high.png (clean idle card, no ring)",
+        "click-shockwave/after/control-width-high.png (clean idle card, no ring)",
+        "click-shockwave/after/control-speed-high.png (clean idle card, no ring)",
+        "click-shockwave/after/play-2.png and play-3.png (clean idle cards, no ring)"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "YES, where the effect is actually visible it reads unambiguously as a shockwave at premium quality. control-speed-low.png shows a textbook concentric pressure ring detonating from card center, lensing the grey content rows and warping the brass header as it passes — exactly a 'crisp pressure ring racing outward, kicking the surface.' play-1.png shows the refractive displacement sweep crossing the card. Critically, texture-preserving discipline is satisfied: the card's own look (brass header bar, blue accent dot, 4 grey rows) is present and is what gets distorted — no featureless slab. Card content stays tack-sharp away from the ring; the displaced band is intentionally glassy/refractive, not low-fi blur.",
+      "evidence": [
+        "click-shockwave/after/control-speed-low.png (concentric pressure ring from center, lensing rows + brass header — clear shockwave)",
+        "click-shockwave/after/play-1.png (refractive displacement sweep across card, content preserved)",
+        "click-shockwave/after/idle.png (clean sharp reference: brass header, blue dot, 4 grey rows)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Idle state is clean and legible and invites engagement, and where the effect fires it is obvious and dramatic (the ring in control-speed-low is impossible to miss). However discoverability of the FULL effect is undercut by the capture: in the default play sequence only play-1 shows it, and play-2/play-3 fall back to a static card, so a user scrubbing the evidence would mostly see the resting state. The effect is genuinely discoverable on engage, but the bundle under-sells it.",
+      "evidence": [
+        "click-shockwave/after/idle.png (clean inviting card)",
+        "click-shockwave/after/control-speed-low.png (obvious dramatic ring on engage)",
+        "click-shockwave/after/play-2.png (falls back to idle — under-sells discoverability)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "NOT DEMONSTRATED by this evidence. 3 of 4 controls (width, kick, wobble) are byte-identical across low/mid/high (meanAbsDiff 0, changed:false) — I cannot see them do anything. The only control flagged changed (speed) differs solely because control-speed-low caught the ring on-screen while control-speed-mid and control-speed-high are clean idle clones — so even 'speed' does not show a clean low-vs-high contrast of the same wave, only on-vs-off-at-capture-time. Per evidence-or-it-didnt-happen, I cannot certify the controls are live.",
+      "evidence": [
+        "metrics: width changed:false meanAbsDiff=0; kick changed:false meanAbsDiff=0; wobble changed:false meanAbsDiff=0",
+        "click-shockwave/after/control-width-high.png vs control-speed-low.png (high=idle, only speed-low shows ring)",
+        "metrics: speed changed:true but speed-mid/high effRGB identical to idle, only speed-low (30634 bytes) differs from the 12664-byte clones"
+      ]
+    },
+    "q5_net": {
+      "answer": "INDIFFERENT. The primitive itself is clearly premium and correct — control-speed-low proves a real, gorgeous, name-true shockwave ring that preserves the card's own texture. But the evidence bundle is mostly idle cards (3 of 5 effect frames byte-identical to idle) and 3 of 4 controls cannot be verified as live because they were captured at a settled phase. I will not rubber-stamp controls I cannot see working. Recapture at a phase where the wave is mid-card (and per-control low/mid/high all show the wave) is required before this can PASS.",
+      "evidence": [
+        "click-shockwave/after/control-speed-low.png (premium correct shockwave proves the primitive works)",
+        "metrics: 3/4 controls changed:false meanAbsDiff=0; play-2/play-3 identical to idle",
+        "click-shockwave/after/control-kick-high.png (settled card, control unverifiable)"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Controls width, kick, and wobble are unverifiable / read as DEAD: low/mid/high frames are byte-identical clean idle cards (changed:false, meanAbsDiff 0). The shockwave has already passed and the surface settled at the captured phase (controlsPinT=1), so the knobs cannot be shown to alter the look. Recapture control sweeps at a timeline phase where the ring is still crossing the card so each control's low-vs-high visibly differs.",
+      "evidence": "metrics: width/kick/wobble changed:false, pixelDiff.meanAbsDiff=0, changedFrac=0; control-kick-high.png / control-wobble-high.png / control-width-high.png all identical to idle.png (same 12664-byte clean card)"
+    },
+    {
+      "issue": "Play sequence is hollow: play-2.png and play-3.png are byte-identical to idle (effRGB/satPixels/stdev identical, frameDeltaMag 0), so the wave's lifecycle is not shown — only play-1 contains the effect. Recapture play-1/2/3 across the wave's actual travel (ring near center → mid-card → exiting) so the sequence demonstrates the shockwave racing outward as claimed.",
+      "evidence": "metrics: play-2 and play-3 effRGB=[63.8,60.3,56.3] satPixels=5242 stdev=24.8 identical to idle; play-3 frameDeltaMag=0; play-2.png/play-3.png render as clean idle cards"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Where the effect IS visible it is genuinely premium and name-true — control-speed-low shows a crisp concentric pressure ring detonating from center and lensing the real card rows/header. The primitive itself appears to outclass DOM effects; the blockers here are capture-timing, not the art. Once recaptured at the wave's peak phase this is a strong PASS candidate.",
+      "evidence": "click-shockwave/after/control-speed-low.png (concentric ring distorting preserved card content)"
+    },
+    {
+      "note": "Texture-preserving discipline is satisfied (no placeholder-slab defect): brass header, blue accent dot, and 4 grey rows are present and distorted in every effect frame, and the resting card is tack-sharp. backend=webgpu, zero console/network errors.",
+      "evidence": "click-shockwave/after/play-1.png (card content preserved under displacement); metrics: backend=webgpu, consoleErrors=[], networkErrors=[]"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

@@ -1,0 +1,132 @@
+{
+  "url": "http://localhost:3000/primitive-lab",
+  "selfTest": {
+    "live": true,
+    "caughtCount": 2
+  },
+  "instantiate": {
+    "before": 3,
+    "after": 4
+  },
+  "canvas": {
+    "view": "canvas",
+    "renderedCount": 4,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-1",
+        "kind": "pane",
+        "dormant": false
+      },
+      {
+        "nodeId": "prim-cube-1",
+        "kind": "cube",
+        "dormant": false
+      },
+      {
+        "nodeId": "prim-sphere-1",
+        "kind": "sphere",
+        "dormant": false
+      },
+      {
+        "nodeId": "prim-cube-2",
+        "kind": "cube",
+        "dormant": false
+      }
+    ],
+    "nodeIds": [
+      "prim-pane-1",
+      "prim-cube-1",
+      "prim-sphere-1",
+      "prim-cube-2"
+    ],
+    "orphans": [],
+    "unrealizedInCanvas": [],
+    "ok": true
+  },
+  "galaxy": {
+    "view": "galaxy",
+    "renderedCount": 4,
+    "rendered": [
+      {
+        "nodeId": "prim-pane-1",
+        "kind": "pane",
+        "dormant": true
+      },
+      {
+        "nodeId": "prim-cube-1",
+        "kind": "cube",
+        "dormant": true
+      },
+      {
+        "nodeId": "prim-sphere-1",
+        "kind": "sphere",
+        "dormant": true
+      },
+      {
+        "nodeId": "prim-cube-2",
+        "kind": "cube",
+        "dormant": true
+      }
+    ],
+    "nodeIds": [
+      "prim-pane-1",
+      "prim-cube-1",
+      "prim-sphere-1",
+      "prim-cube-2"
+    ],
+    "orphans": [],
+    "unrealizedInCanvas": [],
+    "ok": true
+  },
+  "results": [
+    {
+      "id": "lab.probe.installed",
+      "desc": "window.__PRISM_PRIM_AUTHORSHIP__ installed + lab graph seeded",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "lab.classifier-live",
+      "desc": "authorship classifier discriminates backed vs orphan (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic orphan + untagged render both flagged — a real orphan WOULD be caught"
+    },
+    {
+      "id": "lab.instantiate-creates-node",
+      "desc": "instantiating a primitive auto-creates a backing node",
+      "pass": true,
+      "warn": false,
+      "detail": "nodes 3 → 4"
+    },
+    {
+      "id": "lab.canvas.no-orphan",
+      "desc": "CANVAS: every rendered primitive maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "4 rendered, all node-backed"
+    },
+    {
+      "id": "lab.canvas.all-realized",
+      "desc": "CANVAS: every node is realized (no node left unbuilt)",
+      "pass": true,
+      "warn": false,
+      "detail": "4 nodes all realized"
+    },
+    {
+      "id": "lab.galaxy.no-orphan",
+      "desc": "GALAXY: every dormant seed maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "4 dormant seeds, all node-backed"
+    },
+    {
+      "id": "lab.no-pageerrors",
+      "desc": "no uncaught page errors during the lab gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

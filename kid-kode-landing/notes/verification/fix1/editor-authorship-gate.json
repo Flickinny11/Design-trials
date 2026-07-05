@@ -1,0 +1,2629 @@
+{
+  "url": "http://localhost:3000/editor",
+  "selfTest": {
+    "live": true,
+    "caughtCount": 2
+  },
+  "canvas": {
+    "view": "canvas",
+    "activeHubId": "s1-arrival",
+    "renderedCount": 36,
+    "rendered": [
+      {
+        "nodeId": "orr-arrival-headline",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "orr-arrival-sub",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "orr-arrival-watch",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-header-bar",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-header-rule",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-brand-mark",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-arrival",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-movement",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-materia",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-celestia",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-acquire",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-header-cta-slab",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-header-cta-label",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "hero-cta-slab",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "hero-cta-label",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-bar",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-rule",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-brand",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-legal",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-links",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-social",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-arrival-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-movement-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-materia-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-celestia-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-acquire-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-brand-mark-brandhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-movement-fhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-materia-fhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-celestia-fhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-acquire-fhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-footer-brand-brandhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-atelier",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "shell-nav-atelier-navhit",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "hero-atelier-slab",
+        "hubId": "s1-arrival",
+        "dormant": false
+      },
+      {
+        "nodeId": "hero-atelier-label",
+        "hubId": "s1-arrival",
+        "dormant": false
+      }
+    ],
+    "allNodeIds": [
+      "orr-arrival-headline",
+      "orr-arrival-sub",
+      "orr-arrival-watch",
+      "shell-header-bar",
+      "shell-header-rule",
+      "shell-brand-mark",
+      "shell-nav-arrival",
+      "shell-nav-movement",
+      "shell-nav-materia",
+      "shell-nav-celestia",
+      "shell-nav-acquire",
+      "shell-header-cta-slab",
+      "shell-header-cta-label",
+      "hero-cta-slab",
+      "hero-cta-label",
+      "shell-footer-bar",
+      "shell-footer-rule",
+      "shell-footer-brand",
+      "shell-footer-legal",
+      "shell-footer-links",
+      "shell-footer-social",
+      "shell-2_movement-header-bar",
+      "shell-2_movement-header-rule",
+      "shell-2_movement-brand-mark",
+      "shell-2_movement-nav-arrival",
+      "shell-2_movement-nav-movement",
+      "shell-2_movement-nav-materia",
+      "shell-2_movement-nav-celestia",
+      "shell-2_movement-nav-acquire",
+      "shell-2_movement-nav-active-arc",
+      "shell-2_movement-header-cta-slab",
+      "shell-2_movement-header-cta-label",
+      "shell-2_movement-footer-bar",
+      "shell-2_movement-footer-rule",
+      "shell-2_movement-footer-brand",
+      "shell-2_movement-footer-legal",
+      "shell-2_movement-footer-links",
+      "shell-2_movement-footer-social",
+      "shell-3_materia-header-bar",
+      "shell-3_materia-header-rule",
+      "shell-3_materia-brand-mark",
+      "shell-3_materia-nav-arrival",
+      "shell-3_materia-nav-movement",
+      "shell-3_materia-nav-materia",
+      "shell-3_materia-nav-celestia",
+      "shell-3_materia-nav-acquire",
+      "shell-3_materia-nav-active-arc",
+      "shell-3_materia-header-cta-slab",
+      "shell-3_materia-header-cta-label",
+      "shell-3_materia-footer-bar",
+      "shell-3_materia-footer-rule",
+      "shell-3_materia-footer-brand",
+      "shell-3_materia-footer-legal",
+      "shell-3_materia-footer-links",
+      "shell-3_materia-footer-social",
+      "shell-4_celestia-header-bar",
+      "shell-4_celestia-header-rule",
+      "shell-4_celestia-brand-mark",
+      "shell-4_celestia-nav-arrival",
+      "shell-4_celestia-nav-movement",
+      "shell-4_celestia-nav-materia",
+      "shell-4_celestia-nav-celestia",
+      "shell-4_celestia-nav-acquire",
+      "shell-4_celestia-nav-active-arc",
+      "shell-4_celestia-header-cta-slab",
+      "shell-4_celestia-header-cta-label",
+      "shell-4_celestia-footer-bar",
+      "shell-4_celestia-footer-rule",
+      "shell-4_celestia-footer-brand",
+      "shell-4_celestia-footer-legal",
+      "shell-4_celestia-footer-links",
+      "shell-4_celestia-footer-social",
+      "shell-5_acquire-header-bar",
+      "shell-5_acquire-header-rule",
+      "shell-5_acquire-brand-mark",
+      "shell-5_acquire-nav-arrival",
+      "shell-5_acquire-nav-movement",
+      "shell-5_acquire-nav-materia",
+      "shell-5_acquire-nav-celestia",
+      "shell-5_acquire-nav-acquire",
+      "shell-5_acquire-nav-active-arc",
+      "shell-5_acquire-header-cta-slab",
+      "shell-5_acquire-header-cta-label",
+      "shell-5_acquire-footer-bar",
+      "shell-5_acquire-footer-rule",
+      "shell-5_acquire-footer-brand",
+      "shell-5_acquire-footer-legal",
+      "shell-5_acquire-footer-links",
+      "shell-5_acquire-footer-social",
+      "orr-movement-headline",
+      "orr-movement-sub",
+      "orr-movement-watch",
+      "orr-movement-tourbillon",
+      "orr-movement-spec-rail",
+      "orr-movement-spec-rail-edge",
+      "orr-movement-spec-strip",
+      "orr-movement-craft",
+      "orr-materia-headline",
+      "orr-materia-sub",
+      "orr-materia-brass-frame-rim",
+      "orr-materia-brass-frame-bevel",
+      "orr-materia-brass-plate",
+      "orr-materia-brass-nameplate",
+      "orr-materia-brass-label",
+      "orr-materia-sapphire-frame-rim",
+      "orr-materia-sapphire-frame-bevel",
+      "orr-materia-sapphire-plate",
+      "orr-materia-sapphire-nameplate",
+      "orr-materia-sapphire-label",
+      "orr-materia-meteorite-frame-rim",
+      "orr-materia-meteorite-frame-bevel",
+      "orr-materia-meteorite-plate",
+      "orr-materia-meteorite-nameplate",
+      "orr-materia-meteorite-label",
+      "orr-materia-eyebrow",
+      "orr-materia-craft-title",
+      "orr-celestia-headline",
+      "orr-celestia-sub",
+      "orr-celestia-armillary",
+      "orr-celestia-orrery",
+      "orr-celestia-copy",
+      "orr-acquire-eyebrow",
+      "orr-acquire-headline",
+      "orr-acquire-pedestal",
+      "orr-acquire-watch",
+      "orr-acquire-availability",
+      "orr-acquire-reserve-slab",
+      "orr-acquire-reserve-label",
+      "orr-acquire-enquire-slab",
+      "orr-acquire-enquire-edge",
+      "orr-acquire-enquire-label",
+      "shell-nav-arrival-navhit",
+      "shell-nav-movement-navhit",
+      "shell-nav-materia-navhit",
+      "shell-nav-celestia-navhit",
+      "shell-nav-acquire-navhit",
+      "shell-brand-mark-brandhit",
+      "shell-footer-movement-fhit",
+      "shell-footer-materia-fhit",
+      "shell-footer-celestia-fhit",
+      "shell-footer-acquire-fhit",
+      "shell-footer-brand-brandhit",
+      "shell-2_movement-nav-arrival-navhit",
+      "shell-2_movement-nav-movement-navhit",
+      "shell-2_movement-nav-materia-navhit",
+      "shell-2_movement-nav-celestia-navhit",
+      "shell-2_movement-nav-acquire-navhit",
+      "shell-2_movement-brand-mark-brandhit",
+      "shell-2_movement-footer-movement-fhit",
+      "shell-2_movement-footer-materia-fhit",
+      "shell-2_movement-footer-celestia-fhit",
+      "shell-2_movement-footer-acquire-fhit",
+      "shell-2_movement-footer-brand-brandhit",
+      "shell-3_materia-nav-arrival-navhit",
+      "shell-3_materia-nav-movement-navhit",
+      "shell-3_materia-nav-materia-navhit",
+      "shell-3_materia-nav-celestia-navhit",
+      "shell-3_materia-nav-acquire-navhit",
+      "shell-3_materia-brand-mark-brandhit",
+      "shell-3_materia-footer-movement-fhit",
+      "shell-3_materia-footer-materia-fhit",
+      "shell-3_materia-footer-celestia-fhit",
+      "shell-3_materia-footer-acquire-fhit",
+      "shell-3_materia-footer-brand-brandhit",
+      "shell-4_celestia-nav-arrival-navhit",
+      "shell-4_celestia-nav-movement-navhit",
+      "shell-4_celestia-nav-materia-navhit",
+      "shell-4_celestia-nav-celestia-navhit",
+      "shell-4_celestia-nav-acquire-navhit",
+      "shell-4_celestia-brand-mark-brandhit",
+      "shell-4_celestia-footer-movement-fhit",
+      "shell-4_celestia-footer-materia-fhit",
+      "shell-4_celestia-footer-celestia-fhit",
+      "shell-4_celestia-footer-acquire-fhit",
+      "shell-4_celestia-footer-brand-brandhit",
+      "shell-5_acquire-nav-arrival-navhit",
+      "shell-5_acquire-nav-movement-navhit",
+      "shell-5_acquire-nav-materia-navhit",
+      "shell-5_acquire-nav-celestia-navhit",
+      "shell-5_acquire-nav-acquire-navhit",
+      "shell-5_acquire-brand-mark-brandhit",
+      "shell-5_acquire-footer-movement-fhit",
+      "shell-5_acquire-footer-materia-fhit",
+      "shell-5_acquire-footer-celestia-fhit",
+      "shell-5_acquire-footer-acquire-fhit",
+      "shell-5_acquire-footer-brand-brandhit",
+      "orr-movement-sub-scrim",
+      "orr-materia-sub-scrim",
+      "orr-materia-brass-lip-top-mat",
+      "orr-materia-brass-lip-bottom-mat",
+      "orr-materia-brass-lip-left-mat",
+      "orr-materia-brass-lip-right-mat",
+      "orr-materia-sapphire-lip-top-mat",
+      "orr-materia-sapphire-lip-bottom-mat",
+      "orr-materia-sapphire-lip-left-mat",
+      "orr-materia-sapphire-lip-right-mat",
+      "orr-materia-meteorite-lip-top-mat",
+      "orr-materia-meteorite-lip-bottom-mat",
+      "orr-materia-meteorite-lip-left-mat",
+      "orr-materia-meteorite-lip-right-mat",
+      "orr-celestia-sub-scrim",
+      "orr-celestia-cta-f4bcta-slab",
+      "orr-celestia-cta-f4bcta-label",
+      "orr-celestia-copy-scrim",
+      "orr-acquire-availability-scrim",
+      "orr-acquire-reserve-edge-f4bcta",
+      "orr-atelier-headline",
+      "orr-atelier-sub",
+      "orr-atelier-cat-movement-label",
+      "orr-atelier-cat-movement-automatic",
+      "orr-atelier-cat-movement-manual",
+      "orr-atelier-cat-movement-tourbillon",
+      "orr-atelier-cat-movement-skeleton",
+      "orr-atelier-cat-case-label",
+      "orr-atelier-cat-case-steel",
+      "orr-atelier-cat-case-rose-gold",
+      "orr-atelier-cat-case-titanium",
+      "orr-atelier-cat-case-black-dlc",
+      "orr-atelier-cat-bezel-label",
+      "orr-atelier-cat-bezel-brushed",
+      "orr-atelier-cat-bezel-polished",
+      "orr-atelier-cat-bezel-gold",
+      "orr-atelier-cat-bezel-gem-set",
+      "orr-atelier-cat-dial-label",
+      "orr-atelier-cat-dial-navy",
+      "orr-atelier-cat-dial-silver",
+      "orr-atelier-cat-dial-black",
+      "orr-atelier-cat-dial-green",
+      "orr-atelier-cat-dial-salmon",
+      "orr-atelier-cat-dial-meteorite",
+      "orr-atelier-cat-dial-guilloche",
+      "orr-atelier-cat-dial-aventurine",
+      "orr-atelier-cat-dial-enamel",
+      "orr-atelier-cat-hands-label",
+      "orr-atelier-cat-hands-rhodium",
+      "orr-atelier-cat-hands-gold",
+      "orr-atelier-cat-hands-blued",
+      "orr-atelier-cat-indices-label",
+      "orr-atelier-cat-indices-gold",
+      "orr-atelier-cat-indices-rhodium",
+      "orr-atelier-cat-indices-diamond",
+      "orr-atelier-cat-crown-label",
+      "orr-atelier-cat-crown-steel",
+      "orr-atelier-cat-crown-gold",
+      "orr-atelier-cat-complications-label",
+      "orr-atelier-cat-complications-none",
+      "orr-atelier-cat-complications-date",
+      "orr-atelier-cat-complications-gmt",
+      "orr-atelier-cat-complications-moonphase",
+      "orr-atelier-cat-complications-chrono",
+      "orr-atelier-cat-lume-label",
+      "orr-atelier-cat-lume-none",
+      "orr-atelier-cat-lume-blue",
+      "orr-atelier-cat-lume-green",
+      "orr-atelier-cat-lume-ice",
+      "orr-atelier-cat-strap-label",
+      "orr-atelier-cat-strap-black-leather",
+      "orr-atelier-cat-strap-brown-alligator",
+      "orr-atelier-cat-strap-blue-rubber",
+      "orr-atelier-cat-strap-steel-bracelet",
+      "orr-atelier-cat-engraving-label",
+      "orr-atelier-cat-engraving-none",
+      "orr-atelier-cat-engraving-initials",
+      "orr-atelier-cat-engraving-message",
+      "orr-atelier-panel-glass",
+      "orr-atelier-price-eyebrow",
+      "orr-atelier-price",
+      "orr-atelier-summary",
+      "orr-atelier-reason",
+      "orr-acquire-price",
+      "orr-acquire-incl-eyebrow",
+      "orr-acquire-incl-1",
+      "orr-acquire-incl-2",
+      "orr-acquire-incl-3",
+      "orr-acquire-assurance",
+      "shell-6_atelier-header-bar",
+      "shell-6_atelier-header-rule",
+      "shell-6_atelier-brand-mark",
+      "shell-6_atelier-nav-arrival",
+      "shell-6_atelier-nav-movement",
+      "shell-6_atelier-nav-materia",
+      "shell-6_atelier-nav-celestia",
+      "shell-6_atelier-nav-acquire",
+      "shell-6_atelier-nav-active-arc",
+      "shell-6_atelier-header-cta-slab",
+      "shell-6_atelier-header-cta-label",
+      "shell-6_atelier-footer-bar",
+      "shell-6_atelier-footer-rule",
+      "shell-6_atelier-footer-brand",
+      "shell-6_atelier-footer-legal",
+      "shell-6_atelier-footer-links",
+      "shell-6_atelier-footer-social",
+      "shell-6_atelier-nav-arrival-navhit",
+      "shell-6_atelier-nav-movement-navhit",
+      "shell-6_atelier-nav-materia-navhit",
+      "shell-6_atelier-nav-celestia-navhit",
+      "shell-6_atelier-nav-acquire-navhit",
+      "shell-6_atelier-brand-mark-brandhit",
+      "shell-6_atelier-footer-movement-fhit",
+      "shell-6_atelier-footer-materia-fhit",
+      "shell-6_atelier-footer-celestia-fhit",
+      "shell-6_atelier-footer-acquire-fhit",
+      "shell-6_atelier-footer-brand-brandhit",
+      "shell-nav-atelier",
+      "shell-nav-atelier-navhit",
+      "shell-2_movement-nav-atelier",
+      "shell-2_movement-nav-atelier-navhit",
+      "shell-3_materia-nav-atelier",
+      "shell-3_materia-nav-atelier-navhit",
+      "shell-4_celestia-nav-atelier",
+      "shell-4_celestia-nav-atelier-navhit",
+      "shell-5_acquire-nav-atelier",
+      "shell-5_acquire-nav-atelier-navhit",
+      "shell-6_atelier-nav-atelier",
+      "shell-6_atelier-nav-atelier-navhit",
+      "hero-atelier-slab",
+      "hero-atelier-label",
+      "orr-atelier-btn-flip",
+      "orr-atelier-btn-flip-label",
+      "orr-atelier-btn-explode",
+      "orr-atelier-btn-explode-label",
+      "orr-atelier-btn-save",
+      "orr-atelier-btn-save-label",
+      "orr-atelier-btn-reset",
+      "orr-atelier-btn-reset-label",
+      "orr-atelier-cat-dial-orrery",
+      "orr-atelier-watch"
+    ],
+    "activeHubNodeIds": [
+      "orr-arrival-headline",
+      "orr-arrival-sub",
+      "orr-arrival-watch",
+      "shell-header-bar",
+      "shell-header-rule",
+      "shell-brand-mark",
+      "shell-nav-arrival",
+      "shell-nav-movement",
+      "shell-nav-materia",
+      "shell-nav-celestia",
+      "shell-nav-acquire",
+      "shell-header-cta-slab",
+      "shell-header-cta-label",
+      "hero-cta-slab",
+      "hero-cta-label",
+      "shell-footer-bar",
+      "shell-footer-rule",
+      "shell-footer-brand",
+      "shell-footer-legal",
+      "shell-footer-links",
+      "shell-footer-social",
+      "shell-nav-arrival-navhit",
+      "shell-nav-movement-navhit",
+      "shell-nav-materia-navhit",
+      "shell-nav-celestia-navhit",
+      "shell-nav-acquire-navhit",
+      "shell-brand-mark-brandhit",
+      "shell-footer-movement-fhit",
+      "shell-footer-materia-fhit",
+      "shell-footer-celestia-fhit",
+      "shell-footer-acquire-fhit",
+      "shell-footer-brand-brandhit",
+      "shell-nav-atelier",
+      "shell-nav-atelier-navhit",
+      "hero-atelier-slab",
+      "hero-atelier-label"
+    ],
+    "orphans": [],
+    "unrealizedActiveHub": [],
+    "galaxyMissing": [],
+    "ok": true
+  },
+  "galaxy": {
+    "view": "galaxy",
+    "activeHubId": "s1-arrival",
+    "renderedCount": 327,
+    "rendered": [
+      {
+        "nodeId": "orr-arrival-headline",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-arrival-sub",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-arrival-watch",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-header-bar",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-header-rule",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-brand-mark",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-arrival",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-movement",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-materia",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-celestia",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-acquire",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-header-cta-slab",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-header-cta-label",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "hero-cta-slab",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "hero-cta-label",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-bar",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-rule",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-brand",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-legal",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-links",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-social",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-header-bar",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-header-rule",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-brand-mark",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-arrival",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-movement",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-materia",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-celestia",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-acquire",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-active-arc",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-header-cta-slab",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-header-cta-label",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-bar",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-rule",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-brand",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-legal",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-links",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-social",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-header-bar",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-header-rule",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-brand-mark",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-arrival",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-movement",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-materia",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-celestia",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-acquire",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-active-arc",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-header-cta-slab",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-header-cta-label",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-bar",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-rule",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-brand",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-legal",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-links",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-social",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-header-bar",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-header-rule",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-brand-mark",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-arrival",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-movement",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-materia",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-celestia",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-acquire",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-active-arc",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-header-cta-slab",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-header-cta-label",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-bar",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-rule",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-brand",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-legal",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-links",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-social",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-header-bar",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-header-rule",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-brand-mark",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-arrival",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-movement",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-materia",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-celestia",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-acquire",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-active-arc",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-header-cta-slab",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-header-cta-label",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-bar",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-rule",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-brand",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-legal",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-links",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-social",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-headline",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-sub",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-watch",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-tourbillon",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-spec-rail",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-spec-rail-edge",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-spec-strip",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-craft",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-headline",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sub",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-frame-rim",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-frame-bevel",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-plate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-nameplate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-label",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-frame-rim",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-frame-bevel",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-plate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-nameplate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-label",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-frame-rim",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-frame-bevel",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-plate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-nameplate",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-label",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-eyebrow",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-craft-title",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-headline",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-sub",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-armillary",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-orrery",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-copy",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-eyebrow",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-headline",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-pedestal",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-watch",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-availability",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-reserve-slab",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-reserve-label",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-enquire-slab",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-enquire-edge",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-enquire-label",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-arrival-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-movement-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-materia-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-celestia-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-acquire-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-brand-mark-brandhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-movement-fhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-materia-fhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-celestia-fhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-acquire-fhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-footer-brand-brandhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-arrival-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-movement-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-materia-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-celestia-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-acquire-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-brand-mark-brandhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-movement-fhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-materia-fhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-celestia-fhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-acquire-fhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-footer-brand-brandhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-arrival-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-movement-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-materia-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-celestia-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-acquire-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-brand-mark-brandhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-movement-fhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-materia-fhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-celestia-fhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-acquire-fhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-footer-brand-brandhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-arrival-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-movement-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-materia-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-celestia-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-acquire-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-brand-mark-brandhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-movement-fhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-materia-fhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-celestia-fhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-acquire-fhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-footer-brand-brandhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-arrival-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-movement-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-materia-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-celestia-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-acquire-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-brand-mark-brandhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-movement-fhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-materia-fhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-celestia-fhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-acquire-fhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-footer-brand-brandhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-movement-sub-scrim",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sub-scrim",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-lip-top-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-lip-bottom-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-lip-left-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-brass-lip-right-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-lip-top-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-lip-bottom-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-lip-left-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-sapphire-lip-right-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-lip-top-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-lip-bottom-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-lip-left-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-materia-meteorite-lip-right-mat",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-sub-scrim",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-cta-f4bcta-slab",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-cta-f4bcta-label",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-celestia-copy-scrim",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-availability-scrim",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-reserve-edge-f4bcta",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-headline",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-sub",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-movement-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-movement-automatic",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-movement-manual",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-movement-tourbillon",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-movement-skeleton",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-case-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-case-steel",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-case-rose-gold",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-case-titanium",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-case-black-dlc",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-bezel-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-bezel-brushed",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-bezel-polished",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-bezel-gold",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-bezel-gem-set",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-navy",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-silver",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-black",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-green",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-salmon",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-meteorite",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-guilloche",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-aventurine",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-enamel",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-hands-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-hands-rhodium",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-hands-gold",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-hands-blued",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-indices-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-indices-gold",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-indices-rhodium",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-indices-diamond",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-crown-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-crown-steel",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-crown-gold",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-none",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-date",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-gmt",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-moonphase",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-complications-chrono",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-lume-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-lume-none",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-lume-blue",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-lume-green",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-lume-ice",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-strap-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-strap-black-leather",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-strap-brown-alligator",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-strap-blue-rubber",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-strap-steel-bracelet",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-engraving-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-engraving-none",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-engraving-initials",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-engraving-message",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-panel-glass",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-price-eyebrow",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-price",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-summary",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-reason",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-price",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-incl-eyebrow",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-incl-1",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-incl-2",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-incl-3",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-acquire-assurance",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-header-bar",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-header-rule",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-brand-mark",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-arrival",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-movement",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-materia",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-celestia",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-acquire",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-active-arc",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-header-cta-slab",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-header-cta-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-bar",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-rule",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-brand",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-legal",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-links",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-social",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-arrival-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-movement-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-materia-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-celestia-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-acquire-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-brand-mark-brandhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-movement-fhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-materia-fhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-celestia-fhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-acquire-fhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-footer-brand-brandhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-atelier",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-nav-atelier-navhit",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-atelier",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-2_movement-nav-atelier-navhit",
+        "hubId": "s2-movement",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-atelier",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-3_materia-nav-atelier-navhit",
+        "hubId": "s3-materia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-atelier",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-4_celestia-nav-atelier-navhit",
+        "hubId": "s4-celestia",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-atelier",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-5_acquire-nav-atelier-navhit",
+        "hubId": "s5-acquire",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-atelier",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "shell-6_atelier-nav-atelier-navhit",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "hero-atelier-slab",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "hero-atelier-label",
+        "hubId": "s1-arrival",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-flip",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-flip-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-explode",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-explode-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-save",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-save-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-reset",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-btn-reset-label",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-cat-dial-orrery",
+        "hubId": "s6-atelier",
+        "dormant": true
+      },
+      {
+        "nodeId": "orr-atelier-watch",
+        "hubId": "s6-atelier",
+        "dormant": true
+      }
+    ],
+    "allNodeIds": [
+      "orr-arrival-headline",
+      "orr-arrival-sub",
+      "orr-arrival-watch",
+      "shell-header-bar",
+      "shell-header-rule",
+      "shell-brand-mark",
+      "shell-nav-arrival",
+      "shell-nav-movement",
+      "shell-nav-materia",
+      "shell-nav-celestia",
+      "shell-nav-acquire",
+      "shell-header-cta-slab",
+      "shell-header-cta-label",
+      "hero-cta-slab",
+      "hero-cta-label",
+      "shell-footer-bar",
+      "shell-footer-rule",
+      "shell-footer-brand",
+      "shell-footer-legal",
+      "shell-footer-links",
+      "shell-footer-social",
+      "shell-2_movement-header-bar",
+      "shell-2_movement-header-rule",
+      "shell-2_movement-brand-mark",
+      "shell-2_movement-nav-arrival",
+      "shell-2_movement-nav-movement",
+      "shell-2_movement-nav-materia",
+      "shell-2_movement-nav-celestia",
+      "shell-2_movement-nav-acquire",
+      "shell-2_movement-nav-active-arc",
+      "shell-2_movement-header-cta-slab",
+      "shell-2_movement-header-cta-label",
+      "shell-2_movement-footer-bar",
+      "shell-2_movement-footer-rule",
+      "shell-2_movement-footer-brand",
+      "shell-2_movement-footer-legal",
+      "shell-2_movement-footer-links",
+      "shell-2_movement-footer-social",
+      "shell-3_materia-header-bar",
+      "shell-3_materia-header-rule",
+      "shell-3_materia-brand-mark",
+      "shell-3_materia-nav-arrival",
+      "shell-3_materia-nav-movement",
+      "shell-3_materia-nav-materia",
+      "shell-3_materia-nav-celestia",
+      "shell-3_materia-nav-acquire",
+      "shell-3_materia-nav-active-arc",
+      "shell-3_materia-header-cta-slab",
+      "shell-3_materia-header-cta-label",
+      "shell-3_materia-footer-bar",
+      "shell-3_materia-footer-rule",
+      "shell-3_materia-footer-brand",
+      "shell-3_materia-footer-legal",
+      "shell-3_materia-footer-links",
+      "shell-3_materia-footer-social",
+      "shell-4_celestia-header-bar",
+      "shell-4_celestia-header-rule",
+      "shell-4_celestia-brand-mark",
+      "shell-4_celestia-nav-arrival",
+      "shell-4_celestia-nav-movement",
+      "shell-4_celestia-nav-materia",
+      "shell-4_celestia-nav-celestia",
+      "shell-4_celestia-nav-acquire",
+      "shell-4_celestia-nav-active-arc",
+      "shell-4_celestia-header-cta-slab",
+      "shell-4_celestia-header-cta-label",
+      "shell-4_celestia-footer-bar",
+      "shell-4_celestia-footer-rule",
+      "shell-4_celestia-footer-brand",
+      "shell-4_celestia-footer-legal",
+      "shell-4_celestia-footer-links",
+      "shell-4_celestia-footer-social",
+      "shell-5_acquire-header-bar",
+      "shell-5_acquire-header-rule",
+      "shell-5_acquire-brand-mark",
+      "shell-5_acquire-nav-arrival",
+      "shell-5_acquire-nav-movement",
+      "shell-5_acquire-nav-materia",
+      "shell-5_acquire-nav-celestia",
+      "shell-5_acquire-nav-acquire",
+      "shell-5_acquire-nav-active-arc",
+      "shell-5_acquire-header-cta-slab",
+      "shell-5_acquire-header-cta-label",
+      "shell-5_acquire-footer-bar",
+      "shell-5_acquire-footer-rule",
+      "shell-5_acquire-footer-brand",
+      "shell-5_acquire-footer-legal",
+      "shell-5_acquire-footer-links",
+      "shell-5_acquire-footer-social",
+      "orr-movement-headline",
+      "orr-movement-sub",
+      "orr-movement-watch",
+      "orr-movement-tourbillon",
+      "orr-movement-spec-rail",
+      "orr-movement-spec-rail-edge",
+      "orr-movement-spec-strip",
+      "orr-movement-craft",
+      "orr-materia-headline",
+      "orr-materia-sub",
+      "orr-materia-brass-frame-rim",
+      "orr-materia-brass-frame-bevel",
+      "orr-materia-brass-plate",
+      "orr-materia-brass-nameplate",
+      "orr-materia-brass-label",
+      "orr-materia-sapphire-frame-rim",
+      "orr-materia-sapphire-frame-bevel",
+      "orr-materia-sapphire-plate",
+      "orr-materia-sapphire-nameplate",
+      "orr-materia-sapphire-label",
+      "orr-materia-meteorite-frame-rim",
+      "orr-materia-meteorite-frame-bevel",
+      "orr-materia-meteorite-plate",
+      "orr-materia-meteorite-nameplate",
+      "orr-materia-meteorite-label",
+      "orr-materia-eyebrow",
+      "orr-materia-craft-title",
+      "orr-celestia-headline",
+      "orr-celestia-sub",
+      "orr-celestia-armillary",
+      "orr-celestia-orrery",
+      "orr-celestia-copy",
+      "orr-acquire-eyebrow",
+      "orr-acquire-headline",
+      "orr-acquire-pedestal",
+      "orr-acquire-watch",
+      "orr-acquire-availability",
+      "orr-acquire-reserve-slab",
+      "orr-acquire-reserve-label",
+      "orr-acquire-enquire-slab",
+      "orr-acquire-enquire-edge",
+      "orr-acquire-enquire-label",
+      "shell-nav-arrival-navhit",
+      "shell-nav-movement-navhit",
+      "shell-nav-materia-navhit",
+      "shell-nav-celestia-navhit",
+      "shell-nav-acquire-navhit",
+      "shell-brand-mark-brandhit",
+      "shell-footer-movement-fhit",
+      "shell-footer-materia-fhit",
+      "shell-footer-celestia-fhit",
+      "shell-footer-acquire-fhit",
+      "shell-footer-brand-brandhit",
+      "shell-2_movement-nav-arrival-navhit",
+      "shell-2_movement-nav-movement-navhit",
+      "shell-2_movement-nav-materia-navhit",
+      "shell-2_movement-nav-celestia-navhit",
+      "shell-2_movement-nav-acquire-navhit",
+      "shell-2_movement-brand-mark-brandhit",
+      "shell-2_movement-footer-movement-fhit",
+      "shell-2_movement-footer-materia-fhit",
+      "shell-2_movement-footer-celestia-fhit",
+      "shell-2_movement-footer-acquire-fhit",
+      "shell-2_movement-footer-brand-brandhit",
+      "shell-3_materia-nav-arrival-navhit",
+      "shell-3_materia-nav-movement-navhit",
+      "shell-3_materia-nav-materia-navhit",
+      "shell-3_materia-nav-celestia-navhit",
+      "shell-3_materia-nav-acquire-navhit",
+      "shell-3_materia-brand-mark-brandhit",
+      "shell-3_materia-footer-movement-fhit",
+      "shell-3_materia-footer-materia-fhit",
+      "shell-3_materia-footer-celestia-fhit",
+      "shell-3_materia-footer-acquire-fhit",
+      "shell-3_materia-footer-brand-brandhit",
+      "shell-4_celestia-nav-arrival-navhit",
+      "shell-4_celestia-nav-movement-navhit",
+      "shell-4_celestia-nav-materia-navhit",
+      "shell-4_celestia-nav-celestia-navhit",
+      "shell-4_celestia-nav-acquire-navhit",
+      "shell-4_celestia-brand-mark-brandhit",
+      "shell-4_celestia-footer-movement-fhit",
+      "shell-4_celestia-footer-materia-fhit",
+      "shell-4_celestia-footer-celestia-fhit",
+      "shell-4_celestia-footer-acquire-fhit",
+      "shell-4_celestia-footer-brand-brandhit",
+      "shell-5_acquire-nav-arrival-navhit",
+      "shell-5_acquire-nav-movement-navhit",
+      "shell-5_acquire-nav-materia-navhit",
+      "shell-5_acquire-nav-celestia-navhit",
+      "shell-5_acquire-nav-acquire-navhit",
+      "shell-5_acquire-brand-mark-brandhit",
+      "shell-5_acquire-footer-movement-fhit",
+      "shell-5_acquire-footer-materia-fhit",
+      "shell-5_acquire-footer-celestia-fhit",
+      "shell-5_acquire-footer-acquire-fhit",
+      "shell-5_acquire-footer-brand-brandhit",
+      "orr-movement-sub-scrim",
+      "orr-materia-sub-scrim",
+      "orr-materia-brass-lip-top-mat",
+      "orr-materia-brass-lip-bottom-mat",
+      "orr-materia-brass-lip-left-mat",
+      "orr-materia-brass-lip-right-mat",
+      "orr-materia-sapphire-lip-top-mat",
+      "orr-materia-sapphire-lip-bottom-mat",
+      "orr-materia-sapphire-lip-left-mat",
+      "orr-materia-sapphire-lip-right-mat",
+      "orr-materia-meteorite-lip-top-mat",
+      "orr-materia-meteorite-lip-bottom-mat",
+      "orr-materia-meteorite-lip-left-mat",
+      "orr-materia-meteorite-lip-right-mat",
+      "orr-celestia-sub-scrim",
+      "orr-celestia-cta-f4bcta-slab",
+      "orr-celestia-cta-f4bcta-label",
+      "orr-celestia-copy-scrim",
+      "orr-acquire-availability-scrim",
+      "orr-acquire-reserve-edge-f4bcta",
+      "orr-atelier-headline",
+      "orr-atelier-sub",
+      "orr-atelier-cat-movement-label",
+      "orr-atelier-cat-movement-automatic",
+      "orr-atelier-cat-movement-manual",
+      "orr-atelier-cat-movement-tourbillon",
+      "orr-atelier-cat-movement-skeleton",
+      "orr-atelier-cat-case-label",
+      "orr-atelier-cat-case-steel",
+      "orr-atelier-cat-case-rose-gold",
+      "orr-atelier-cat-case-titanium",
+      "orr-atelier-cat-case-black-dlc",
+      "orr-atelier-cat-bezel-label",
+      "orr-atelier-cat-bezel-brushed",
+      "orr-atelier-cat-bezel-polished",
+      "orr-atelier-cat-bezel-gold",
+      "orr-atelier-cat-bezel-gem-set",
+      "orr-atelier-cat-dial-label",
+      "orr-atelier-cat-dial-navy",
+      "orr-atelier-cat-dial-silver",
+      "orr-atelier-cat-dial-black",
+      "orr-atelier-cat-dial-green",
+      "orr-atelier-cat-dial-salmon",
+      "orr-atelier-cat-dial-meteorite",
+      "orr-atelier-cat-dial-guilloche",
+      "orr-atelier-cat-dial-aventurine",
+      "orr-atelier-cat-dial-enamel",
+      "orr-atelier-cat-hands-label",
+      "orr-atelier-cat-hands-rhodium",
+      "orr-atelier-cat-hands-gold",
+      "orr-atelier-cat-hands-blued",
+      "orr-atelier-cat-indices-label",
+      "orr-atelier-cat-indices-gold",
+      "orr-atelier-cat-indices-rhodium",
+      "orr-atelier-cat-indices-diamond",
+      "orr-atelier-cat-crown-label",
+      "orr-atelier-cat-crown-steel",
+      "orr-atelier-cat-crown-gold",
+      "orr-atelier-cat-complications-label",
+      "orr-atelier-cat-complications-none",
+      "orr-atelier-cat-complications-date",
+      "orr-atelier-cat-complications-gmt",
+      "orr-atelier-cat-complications-moonphase",
+      "orr-atelier-cat-complications-chrono",
+      "orr-atelier-cat-lume-label",
+      "orr-atelier-cat-lume-none",
+      "orr-atelier-cat-lume-blue",
+      "orr-atelier-cat-lume-green",
+      "orr-atelier-cat-lume-ice",
+      "orr-atelier-cat-strap-label",
+      "orr-atelier-cat-strap-black-leather",
+      "orr-atelier-cat-strap-brown-alligator",
+      "orr-atelier-cat-strap-blue-rubber",
+      "orr-atelier-cat-strap-steel-bracelet",
+      "orr-atelier-cat-engraving-label",
+      "orr-atelier-cat-engraving-none",
+      "orr-atelier-cat-engraving-initials",
+      "orr-atelier-cat-engraving-message",
+      "orr-atelier-panel-glass",
+      "orr-atelier-price-eyebrow",
+      "orr-atelier-price",
+      "orr-atelier-summary",
+      "orr-atelier-reason",
+      "orr-acquire-price",
+      "orr-acquire-incl-eyebrow",
+      "orr-acquire-incl-1",
+      "orr-acquire-incl-2",
+      "orr-acquire-incl-3",
+      "orr-acquire-assurance",
+      "shell-6_atelier-header-bar",
+      "shell-6_atelier-header-rule",
+      "shell-6_atelier-brand-mark",
+      "shell-6_atelier-nav-arrival",
+      "shell-6_atelier-nav-movement",
+      "shell-6_atelier-nav-materia",
+      "shell-6_atelier-nav-celestia",
+      "shell-6_atelier-nav-acquire",
+      "shell-6_atelier-nav-active-arc",
+      "shell-6_atelier-header-cta-slab",
+      "shell-6_atelier-header-cta-label",
+      "shell-6_atelier-footer-bar",
+      "shell-6_atelier-footer-rule",
+      "shell-6_atelier-footer-brand",
+      "shell-6_atelier-footer-legal",
+      "shell-6_atelier-footer-links",
+      "shell-6_atelier-footer-social",
+      "shell-6_atelier-nav-arrival-navhit",
+      "shell-6_atelier-nav-movement-navhit",
+      "shell-6_atelier-nav-materia-navhit",
+      "shell-6_atelier-nav-celestia-navhit",
+      "shell-6_atelier-nav-acquire-navhit",
+      "shell-6_atelier-brand-mark-brandhit",
+      "shell-6_atelier-footer-movement-fhit",
+      "shell-6_atelier-footer-materia-fhit",
+      "shell-6_atelier-footer-celestia-fhit",
+      "shell-6_atelier-footer-acquire-fhit",
+      "shell-6_atelier-footer-brand-brandhit",
+      "shell-nav-atelier",
+      "shell-nav-atelier-navhit",
+      "shell-2_movement-nav-atelier",
+      "shell-2_movement-nav-atelier-navhit",
+      "shell-3_materia-nav-atelier",
+      "shell-3_materia-nav-atelier-navhit",
+      "shell-4_celestia-nav-atelier",
+      "shell-4_celestia-nav-atelier-navhit",
+      "shell-5_acquire-nav-atelier",
+      "shell-5_acquire-nav-atelier-navhit",
+      "shell-6_atelier-nav-atelier",
+      "shell-6_atelier-nav-atelier-navhit",
+      "hero-atelier-slab",
+      "hero-atelier-label",
+      "orr-atelier-btn-flip",
+      "orr-atelier-btn-flip-label",
+      "orr-atelier-btn-explode",
+      "orr-atelier-btn-explode-label",
+      "orr-atelier-btn-save",
+      "orr-atelier-btn-save-label",
+      "orr-atelier-btn-reset",
+      "orr-atelier-btn-reset-label",
+      "orr-atelier-cat-dial-orrery",
+      "orr-atelier-watch"
+    ],
+    "activeHubNodeIds": [
+      "orr-arrival-headline",
+      "orr-arrival-sub",
+      "orr-arrival-watch",
+      "shell-header-bar",
+      "shell-header-rule",
+      "shell-brand-mark",
+      "shell-nav-arrival",
+      "shell-nav-movement",
+      "shell-nav-materia",
+      "shell-nav-celestia",
+      "shell-nav-acquire",
+      "shell-header-cta-slab",
+      "shell-header-cta-label",
+      "hero-cta-slab",
+      "hero-cta-label",
+      "shell-footer-bar",
+      "shell-footer-rule",
+      "shell-footer-brand",
+      "shell-footer-legal",
+      "shell-footer-links",
+      "shell-footer-social",
+      "shell-nav-arrival-navhit",
+      "shell-nav-movement-navhit",
+      "shell-nav-materia-navhit",
+      "shell-nav-celestia-navhit",
+      "shell-nav-acquire-navhit",
+      "shell-brand-mark-brandhit",
+      "shell-footer-movement-fhit",
+      "shell-footer-materia-fhit",
+      "shell-footer-celestia-fhit",
+      "shell-footer-acquire-fhit",
+      "shell-footer-brand-brandhit",
+      "shell-nav-atelier",
+      "shell-nav-atelier-navhit",
+      "hero-atelier-slab",
+      "hero-atelier-label"
+    ],
+    "orphans": [],
+    "unrealizedActiveHub": [],
+    "galaxyMissing": [],
+    "ok": true
+  },
+  "results": [
+    {
+      "id": "editor.probe.installed",
+      "desc": "window.__PRISM_EDITOR_AUTHORSHIP__ installed + live graph loaded",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "editor.classifier-live",
+      "desc": "authorship classifier discriminates backed vs orphan (self-test)",
+      "pass": true,
+      "warn": false,
+      "detail": "synthetic orphan + null both flagged — a real orphan WOULD be caught"
+    },
+    {
+      "id": "editor.canvas.no-orphan",
+      "desc": "CANVAS: every render maps to a backing graph node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "36 rendered, all node-backed (hub s1-arrival)"
+    },
+    {
+      "id": "editor.canvas.all-realized",
+      "desc": "CANVAS: every active-hub node is realized (no node left unbuilt)",
+      "pass": true,
+      "warn": false,
+      "detail": "36 active-hub nodes all realized"
+    },
+    {
+      "id": "editor.galaxy.no-orphan",
+      "desc": "GALAXY: every dormant seed maps to a backing node (Law 0)",
+      "pass": true,
+      "warn": false,
+      "detail": "327 dormant seeds, all node-backed"
+    },
+    {
+      "id": "editor.galaxy.all-seeded",
+      "desc": "GALAXY: every graph node has a dormant seed",
+      "pass": true,
+      "warn": false,
+      "detail": "all 327 nodes seeded"
+    },
+    {
+      "id": "editor.no-pageerrors",
+      "desc": "no uncaught page errors during the editor gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

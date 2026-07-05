@@ -1,0 +1,73 @@
+{
+  "feature": "mist-drift",
+  "claim": "A low, thin mist drifts slowly sideways across the scene — soft layered domain-warped fbm bands glide horizontally at different speeds for an in-shader veil of near-transparent, ground-hugging haze, no slab seams.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Nothing objectively broken. The mist renders as a soft, organic, ground-hugging volume with feathered edges over the correct alpha-0 near-black surround — no slab/shelf banding, no tile lattice, no mirror seams, no jagged edges, no cut-off, and no console or network errors (metrics: consoleErrors=[] networkErrors=[]). Default-state bandingScore stays under the 0.25 visibility threshold (metrics: idle bandingScore=0.236, play-2=0.240). The only metric excursion is control-scale-high bandingScore=0.263, but that frame shows fine organic billow detail, not parallel shelves, so it is a texture-frequency artifact of the metric, not visible banding.",
+      "evidence": [
+        "mist-drift/after/idle.png",
+        "mist-drift/after/play-2.png",
+        "metrics: play-2 bandingScore=0.240 (<0.25 threshold), consoleErrors=0, networkErrors=0",
+        "mist-drift/after/control-scale-high.png",
+        "metrics: control-scale-high bandingScore=0.263 but frame shows organic billows, no shelf structure"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes, it reads as low drifting mist. The volume hugs the lower third of the frame as a thin horizontal band of wispy, horizontally-streaked haze (idle.png), and the streak pattern visibly glides/morphs across the play frames (play-1 vs play-3) — exactly 'low, thin, ground-hugging, drifting sideways'. It is near-transparent as claimed (metrics: meanLuma 14.0 over a 7.5 bare-background baseline from control-density-low). The claim's explicit 'no slab seams' holds: no discrete sheets anywhere (bandingScore 0.23-0.24 at default). Color is a warm grey-taupe (metrics: effHue=28-29, effSat=0.15-0.16) — low saturation so it still reads as hazy vapor, though slightly browner/dustier than a classic neutral mist (flagged, not blocking). Photoreal bar: edges are smooth and feathered, structure is domain-warped organic fbm — nothing blocky, stacked, tiled, or game-engine-cheap.",
+      "evidence": [
+        "mist-drift/after/idle.png",
+        "mist-drift/after/play-1.png",
+        "mist-drift/after/play-3.png",
+        "metrics: idle effHue=28 effSat=0.15 meanLuma=14.1 bandingScore=0.236 — desaturated warm-grey haze, no slab banding"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. 'density' is immediately legible: at low (0) the mist vanishes entirely (control-density-low.png is bare background, meanLuma 7.5), at mid it is a thin veil (13.4), at high a clearly denser brighter body (18.3) — changed=true. 'scale' is also legible: low (1) gives long smooth stretched streaks, high (8) gives fine billowy cloud detail — changed=true, visibly different frames. 'drift' is a speed parameter, so its low/mid/high static captures look identical (changed=false); a live user dragging it would judge it by motion speed over time, which single frames cannot show — flagged as unverifiable from this evidence rather than dead, because the play frames prove the mist moves at the default drift value.",
+      "evidence": [
+        "mist-drift/after/control-density-low.png",
+        "mist-drift/after/control-density-high.png",
+        "control: density low→high meanLuma 7.5→18.3, changed=true",
+        "mist-drift/after/control-scale-low.png",
+        "mist-drift/after/control-scale-high.png",
+        "control: scale low→high stdev 26.6→31.5, visibly different texture frequency, changed=true",
+        "control: drift low/mid/high changed=false — speed parameter, instantaneous frames expectedly identical"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. The play frames show real motion — the wisp pattern measurably shifts (metrics: frameDeltaMag 0.40, 0.43, 1.72 across play-1..3) and the streaks visibly glide between play-1 and play-3, consistent with the claimed slow sideways drift. Control application latency is consistent at ~572-587ms across all nine sweep captures (metrics: drift 580-587ms, density 572-583ms, scale 578-585ms) — uniform settle-and-capture timing, no hangs and no dead frames. Two of three controls produce visible change; the third (drift) is a speed control whose static-frame invariance is expected.",
+      "evidence": [
+        "metrics: play-3 frameDeltaMag=1.72 (visible motion), play-1=0.40, play-2=0.43",
+        "mist-drift/after/play-1.png",
+        "mist-drift/after/play-3.png",
+        "control: latencyMs 572-587 across all sweeps, consistent, no outliers"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. 'That's a genuinely soft, realistic patch of low mist creeping along the ground — it looks like something from a real movie scene, the fog slider actually empties and fills it, and there's none of that stacked-cardboard look.' Minor quibbles only: the mist is a touch brown/dusty rather than neutral grey, and I can't confirm from still images that the drift-speed slider changes the speed.",
+      "evidence": [
+        "mist-drift/after/idle.png",
+        "mist-drift/after/control-density-high.png",
+        "metrics: default bandingScore 0.236-0.240 (<0.25), frameDeltaMag up to 1.72, consoleErrors=0"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "drift (speed) control sweep shows no per-frame change (changed=false) — expected for a time-rate parameter captured as stills, and play frames prove motion at default drift, but speed scaling itself is unverified; recommend a temporal (two-frames-per-setting) capture for speed controls.",
+      "evidence": "control: drift low/mid/high meanLuma 14.3/14.3/14.2, changed=false; metrics: play-3 frameDeltaMag=1.72 proves motion at default drift"
+    },
+    {
+      "note": "Mist tint is warm taupe/brown (effHue 28-31) rather than the neutral/cool grey most people picture for mist — reads slightly like dust at dusk; palette taste call.",
+      "evidence": "metrics: idle effHue=28 effSat=0.15; mist-drift/after/control-density-high.png"
+    },
+    {
+      "note": "At the scale slider's max, bandingScore creeps to 0.263 (just over the 0.25 corroboration line) though the frame shows organic billows with no visible shelf/slab structure.",
+      "evidence": "metrics: control-scale-high bandingScore=0.263; mist-drift/after/control-scale-high.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,67 @@
+{
+  "steps": [
+    {
+      "step": "canvas mode",
+      "ok": true,
+      "backend": "webgpu"
+    },
+    {
+      "step": "animation flyout open with picker (node selected)",
+      "ok": true
+    },
+    {
+      "step": "tile applied → binding row (driver time default)",
+      "ok": true
+    },
+    {
+      "step": "binding PLAYS in preview-app (master clock)",
+      "ok": true,
+      "movers": 1,
+      "playerId": "home-headline"
+    },
+    {
+      "step": "canvas freezes + restores pose (editing surface)",
+      "ok": true
+    },
+    {
+      "step": "driver chip swapped to Scroll",
+      "ok": true
+    },
+    {
+      "step": "Add Element → transmission bubble in canvas",
+      "ok": true,
+      "bubbleId": "b938b97f-4519-4d46-a8f1-a6022363642f",
+      "transmission": 0.92,
+      "type": "MeshPhysicalMaterial"
+    },
+    {
+      "step": "bubble NOT rendered in preview-app (§6)",
+      "ok": true
+    },
+    {
+      "step": "criterion 22: group cascades, ungroup preserves world transforms",
+      "ok": true,
+      "cascaded": 7
+    },
+    {
+      "step": "persistence: binding (driver=scroll) + bubble in live graph (INV-7 store parity)",
+      "ok": true,
+      "binding": "float"
+    },
+    {
+      "step": "galaxy view frame captured",
+      "ok": true
+    },
+    {
+      "step": "mobile: toggle present; switched canvas → galaxy → preview-app",
+      "ok": true
+    }
+  ],
+  "consoleErrors": [],
+  "badResponses": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "rawConsoleMessages": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}

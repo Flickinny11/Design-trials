@@ -1,0 +1,7 @@
+{
+  "name": "pointer-twist-warp",
+  "label": "Twist Strength",
+  "description": "The cursor wrings the surface — a local twist vortex rotating the content around the pointer, untwisting smoothly as it leaves.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

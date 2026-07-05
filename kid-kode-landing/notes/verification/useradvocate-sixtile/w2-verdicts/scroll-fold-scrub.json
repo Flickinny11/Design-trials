@@ -1,0 +1,20 @@
+{
+  "feature": "scroll-fold-scrub",
+  "claim": "subject folds/unfolds scrubbed by scroll",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": { "answer": "BROKEN: the subject is a featureless solid brown/tan slab at EVERY phase — no brass header, no grey content rows, no accent dot, no dark rounded card panel. idle is a flat uniform tan square (effRGB 121.8,98.5,69.8, warmFrac 1.0). This is the blank-slab/placeholder-plane defect, nothing like the ground-truth card.", "evidence": ["scroll-fold-scrub/after/idle.png", "scroll-fold-scrub/after/play-2.png", "metrics: idle effRGB 121.8,98.5,69.8 warmFrac 1.0 uniform slab"] },
+    "q2_reads_as": { "answer": "Does NOT read as the claimed card folding. The FOLD gesture is present (play-1 folds down the middle, play-2 into a V/booklet, play-3 into a thin near-edge-on strip) but the thing folding is a blank brown sheet, not the card. A user would say 'where did my card go? this is just a brown sheet folding'. Compare ground-truth swap-flip-morph which keeps the full card.", "evidence": ["scroll-fold-scrub/after/play-1.png", "scroll-fold-scrub/after/play-3.png", "swap-flip-morph/after/idle.png"] },
+    "q3_discoverable": { "answer": "Partly. stagger control changes the fold geometry (low=tight bevelled accordion strip, high=open two-panel fold) and reads. But shade control is DEAD — shade-low and shade-high are byte-near-identical (meanAbsDiff 0.482, changedFrac 0).", "evidence": ["scroll-fold-scrub/after/control-stagger-low.png", "scroll-fold-scrub/after/control-shade-high.png", "control: shade changedFrac 0 meanAbsDiff 0.482"] },
+    "q4_responsive": { "answer": "Fold motion is responsive (frameDeltaMag 24.5 then 14.9 across play-2/play-3), but responsiveness of a blank slab is moot when the subject itself is wrong.", "evidence": ["metrics: play-2 frameDeltaMag 24.5, play-3 frameDeltaMag 14.88", "control: shade changedFrac 0 (dead control)"] },
+    "q5_net": { "answer": "ANNOYED — I scrolled and my card turned into a plain brown sheet that folds up; the whole card look (brass header, rows, dot, panel) is gone, and the shade slider does nothing.", "evidence": ["scroll-fold-scrub/after/idle.png", "scroll-fold-scrub/after/play-3.png"] }
+  },
+  "mustFix": [
+    { "issue": "Subject is a featureless solid brown/tan slab at every phase and control state — the full card look (brass header bar, blue accent dot, 3 grey content rows, dark rounded panel) is never visible. This is the blank/placeholder-plane defect; the fold geometry must fold the actual CARD, not a blank plane.", "evidence": "scroll-fold-scrub/after/idle.png : flat uniform tan square, effRGB 121.8,98.5,69.8 warmFrac 1.0, no chrome — vs ground-truth swap-flip-morph/after/idle.png" },
+    { "issue": "shade control is dead — produces no visible change across its range.", "evidence": "control: shade changedFrac 0, meanAbsDiff 0.482, shade-low effRGB 121.4,97.9,68.9 vs shade-high 121.2,97.7,68.6" }
+  ],
+  "flags": [],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

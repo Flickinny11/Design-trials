@@ -1,0 +1,73 @@
+{
+  "feature": "fireball-burst",
+  "claim": "A fireball erupts from a point, a turbulent ball of flame expanding and rolling outward through depth before fading to smoke — looping.",
+  "groundTruthSibling": "fire-flame",
+  "state": "before",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Yes, multiple. The effect is almost entirely dark: after the first frame it collapses to a near-black smudge. play-2 and play-3 are essentially empty (meanLuma ~8 of 255), so for most of the loop there is nothing to see. The 'scale' control sweep produces no visible change between its low and high positions. Slab/seam stepping is also visible as blocky shelves in the smoke body.",
+      "evidence": [
+        "fireball-burst/before/play-2.png",
+        "fireball-burst/before/play-3.png",
+        "metrics: play-2 meanLuma=8.1, play-3 meanLuma=7.9 (near-black; play-1 was 25)",
+        "metrics: control scale changed=false; control-scale-low vs control-scale-high visually identical",
+        "fireball-burst/before/control-scale-high.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "No — it does not read as fire. The brightest frames (idle, play-1) show a desaturated pink/lavender smoke ball with a pale cream-blue core, like a dusty nebula or a moon lit from inside, not flame. The dominant hue is blue/violet, not fire's warm band. The ground-truth fire-flame/play-2.png is unmistakable orange/amber flame; this tile shares none of that warmth.",
+      "evidence": [
+        "fireball-burst/before/play-1.png",
+        "fireball-burst/before/idle.png",
+        "metrics: play-2 effHue=231 (blue), coolFrac=1.0, warmFrac=0 -> 100% cool, not fire",
+        "metrics: play-1 effHue=358 effSat=0.18 (washed pink-red, low sat) vs fire band 10-45 deg high sat",
+        "fire-flame/ground-truth/play-2.png : bright orange/amber flame for comparison"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Partly. The labeled Burst Rate control does change the frame (burstRate changed=true), so a user sweeping it sees something move. But the 'scale' control is dead, so a user who tries it would be confused when nothing happens.",
+      "evidence": [
+        "metrics: control burstRate changed=true, latencyMs ~586",
+        "metrics: control scale changed=false",
+        "fireball-burst/before/control-scale-low.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Janky/dead for most of the loop. play-1 to play-2 changes (frameDeltaMag=19.37) but play-2 to play-3 is frozen (frameDeltaMag=0.18) AND both are near-black, so the loop spends most of its time showing essentially nothing rather than a rolling, expanding fireball.",
+      "evidence": [
+        "metrics: play-3 frameDeltaMag=0.18 (frozen) at meanLuma=7.9 (near-black)",
+        "fireball-burst/before/play-3.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "A user would be annoyed: it is supposed to be an erupting ball of flame, and instead they get a dim pinkish-blue smoke puff that goes black for most of the loop and never looks like fire.",
+      "evidence": [
+        "fireball-burst/before/play-1.png",
+        "fire-flame/ground-truth/play-2.png",
+        "metrics: play-2/play-3 coolFrac=1.0 hue=231 meanLuma~8"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Does not read as fire — dominant hue is blue/violet (cool), not fire's warm band; brightest frame is a washed pink-cream smoke ball, not flame.",
+      "evidence": "fireball-burst/before/play-2.png : metrics effHue=231 (blue), coolFrac=1.0, warmFrac=0"
+    },
+    {
+      "issue": "Effect collapses to near-black for most of the loop — no visible fireball during play-2/play-3.",
+      "evidence": "fireball-burst/before/play-3.png : metrics meanLuma=7.9, frameDeltaMag=0.18 (frozen, near-black)"
+    },
+    {
+      "issue": "The 'scale' control does nothing across its full range.",
+      "evidence": "fireball-burst/before/control-scale-high.png : metrics control scale changed=false (low and high identical)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Blocky slab/seam stepping visible in the smoke body of the brighter frames.",
+      "evidence": "fireball-burst/before/control-scale-high.png : bandingScore up to 0.18"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

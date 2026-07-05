@@ -1,0 +1,17 @@
+### tsc baseline-diff gate demonstration (Sun Jun  7 17:56:34 CDT 2026)
+
+1) Clean repo — gate PASSES:
+[tsc-gate] tsc errors: 10 total · baseline 10 · new 0
+[tsc-gate] PASS — no new type errors. tsc gate green.
+
+2) Inject a deliberate type error in a new catalog file (via shell, bypassing edit hooks):
+[tsc-gate] tsc errors: 11 total · baseline 10 · new 1
+[tsc-gate] BLOCK — 1 NEW type error(s):
+  ✗ src/lib/prism/animatable/__gate_probe.ts | error TS2322 | Type 'string' is not assignable to type 'number'.
+Fix the type error (do NOT downgrade a dependency — ANTI-STUCK). tsc is required green before any criterion is "done".
+   gate exit=1  (1 = BLOCK, as required)
+
+3) Remove the probe — gate PASSES again:
+[tsc-gate] tsc errors: 10 total · baseline 10 · new 0
+[tsc-gate] PASS — no new type errors. tsc gate green.
+   gate exit=0

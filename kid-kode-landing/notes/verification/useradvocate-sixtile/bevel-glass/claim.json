@@ -1,0 +1,7 @@
+{
+  "name": "bevel-glass",
+  "label": "Bevel",
+  "description": "A thick beveled-edge glass panel — chunky refraction concentrated at chamfered borders with a clear center.",
+  "category": "glass",
+  "groundTruthSibling": null
+}

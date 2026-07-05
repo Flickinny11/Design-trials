@@ -1,0 +1,208 @@
+{
+  "capUsd": 40,
+  "totalCostUsd": 1.035,
+  "calls": [
+    {
+      "partId": "case-round",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T15:32:45.445Z"
+    },
+    {
+      "partId": "case-round",
+      "step": "mesh",
+      "model": "fal-ai/hunyuan-3d/v3.1/pro/image-to-3d",
+      "estCost": 0.675,
+      "actualCost": null,
+      "chargedUsd": 0.675,
+      "at": "2026-06-20T15:35:20.051Z"
+    },
+    {
+      "partId": "dial-tex-guilloche",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:22:03.700Z"
+    },
+    {
+      "partId": "dial-tex-solarized",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:22:32.297Z"
+    },
+    {
+      "partId": "dial-tex-meteorite",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:22:55.220Z"
+    },
+    {
+      "partId": "dial-tex-aventurine",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:23:18.723Z"
+    },
+    {
+      "partId": "dial-tex-enamel",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:23:41.230Z"
+    },
+    {
+      "partId": "strap-tex-alligator",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:24:04.827Z"
+    },
+    {
+      "partId": "strap-tex-rubber",
+      "step": "image",
+      "model": "fal-ai/flux-2-pro",
+      "estCost": 0.045,
+      "actualCost": null,
+      "chargedUsd": 0.045,
+      "at": "2026-06-20T17:24:26.142Z"
+    }
+  ],
+  "assets": {
+    "case-round": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T15:32:45.445Z"
+      },
+      "mesh": {
+        "model": "fal-ai/hunyuan-3d/v3.1/pro/image-to-3d",
+        "chargedUsd": 0.675,
+        "at": "2026-06-20T15:35:20.051Z"
+      }
+    },
+    "dial-tex-guilloche": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:22:03.700Z"
+      }
+    },
+    "dial-tex-solarized": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:22:32.297Z"
+      }
+    },
+    "dial-tex-meteorite": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:22:55.220Z"
+      }
+    },
+    "dial-tex-aventurine": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:23:18.723Z"
+      }
+    },
+    "dial-tex-enamel": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:23:41.230Z"
+      }
+    },
+    "strap-tex-alligator": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:24:04.827Z"
+      }
+    },
+    "strap-tex-rubber": {
+      "image": {
+        "model": "fal-ai/flux-2-pro",
+        "chargedUsd": 0.045,
+        "at": "2026-06-20T17:24:26.142Z"
+      }
+    }
+  },
+  "runs": [
+    {
+      "startedAt": "2026-06-20T15:32:25.471Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:21:41.836Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:22:06.816Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:22:34.905Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:22:58.521Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:23:21.885Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:23:44.468Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    },
+    {
+      "startedAt": "2026-06-20T17:24:07.585Z",
+      "gen": 1,
+      "cached": 0,
+      "errored": 0,
+      "stoppedAtCap": false
+    }
+  ]
+}

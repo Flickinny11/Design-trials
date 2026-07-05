@@ -1,0 +1,30 @@
+{
+  "taskId": "EBR2-E-01",
+  "phase": "§R2-E",
+  "specRefs": ["§R2-E SC-072"],
+  "iteration": 15,
+  "commit": "acc578c857bc66b8b5f606595625e6f53ca0bcd9",
+  "verifiedAt": "2026-05-19T18:02:58Z",
+  "kind": "non-ui",
+  "interactionScript": null,
+  "kvVerify": false,
+  "haltCheckSatisfied": true,
+  "verificationResults": {
+    "tsc": "clean",
+    "fileExists": "src/stores/usePreviewStateStore.ts",
+    "vitest": {
+      "file": "tests/editor-build/EBR2-E-01.preview-state-store.test.ts",
+      "passed": 14,
+      "failed": 0
+    },
+    "waitForVercelPreviewCheckOnly": "ok"
+  },
+  "specReviewer": {
+    "mustFix": 0,
+    "shouldFix": 2,
+    "shouldFixResolution": "all-in-impl-commit",
+    "optional": 3,
+    "optionalResolution": "deferred"
+  },
+  "snapshotKind": "non-ui-state-only"
+}

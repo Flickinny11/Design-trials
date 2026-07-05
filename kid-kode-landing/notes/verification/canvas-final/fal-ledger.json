@@ -1,0 +1,127 @@
+{
+  "budget": 50,
+  "warnAt": [
+    25,
+    40
+  ],
+  "hardStop": 48,
+  "total": 0.263,
+  "calls": [
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/flux-2",
+      "purpose": "KEY SMOKE — 512x512 brass sphere (confirm FAL_KEY + SDK + result shape)",
+      "estCost": 0.003,
+      "ok": true,
+      "ms": 1521,
+      "requestId": "019ec243-3052-7141-ab5a-ee8689ddb28e"
+    },
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/flux-2",
+      "purpose": "lanes-smoke base image",
+      "estCost": 0.004,
+      "ok": true,
+      "ms": 72813,
+      "requestId": "019ec24f-5510-75b0-8db2-ca77dcfe5690"
+    },
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/trellis",
+      "purpose": "lanes-smoke 3D",
+      "estCost": 0.02,
+      "ok": true,
+      "ms": 24827,
+      "requestId": "019ec250-70ef-72e2-b573-1ff248bae732"
+    },
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/flux-2/dev/image-to-image",
+      "purpose": "lanes-smoke edit FAIL",
+      "estCost": 0,
+      "ok": false
+    },
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/any-llm",
+      "purpose": "lanes-smoke compose",
+      "estCost": 0.006,
+      "ok": true,
+      "ms": 2284,
+      "requestId": "019ec250-d48a-7780-ba2f-99db4ccd0387"
+    },
+    {
+      "at": "2026-06-13",
+      "model": "fal-ai/flux/dev/image-to-image",
+      "purpose": "edit endpoint verify",
+      "estCost": 0.02,
+      "ok": true,
+      "ms": 3561,
+      "requestId": "019ec251-c8ea-7931-99eb-ee4cf3ad7e5b"
+    },
+    {
+      "at": "2026-06-13T19:10:56.825Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:27:07.561Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:33:39.360Z",
+      "model": "prism-3d",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 8,
+      "estCost": 0.075,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:35:27.015Z",
+      "model": "prism-3d",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 8,
+      "estCost": 0.075,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:38:43.597Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:38:52.110Z",
+      "model": "prism-image-standard",
+      "purpose": "change-artifact prompt wizard",
+      "credits": 2,
+      "estCost": 0.015,
+      "ok": true
+    },
+    {
+      "at": "2026-06-13T19:46:16.724Z",
+      "model": "prism-image-standard",
+      "purpose": "image flyout generate",
+      "credits": 2,
+      "estCost": 0,
+      "ok": false
+    },
+    {
+      "at": "2026-06-13T19:46:16.728Z",
+      "model": "prism-image-standard",
+      "purpose": "image flyout generate",
+      "credits": 2,
+      "estCost": 0,
+      "ok": false
+    }
+  ]
+}

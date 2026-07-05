@@ -1,0 +1,7 @@
+{
+  "name": "scroll-scene-scrub",
+  "label": "Rise",
+  "description": "Scroll scrubs a three-act mini-film — the card rises into frame, pivots to present itself, then settles forward.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

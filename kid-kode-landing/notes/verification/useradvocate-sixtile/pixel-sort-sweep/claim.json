@@ -1,0 +1,7 @@
+{
+  "name": "pixel-sort-sweep",
+  "label": "Sweep Speed",
+  "description": "A sorting wave sweeps the surface — content smearing into directional streaks along the wavefront, resolving crisp behind it — the glitch-art pixel-sort look, tamed.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

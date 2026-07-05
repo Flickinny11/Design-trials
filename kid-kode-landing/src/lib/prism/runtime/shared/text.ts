@@ -6,7 +6,7 @@
 // Text rendering). Forbidden alternatives: THREE.TextGeometry, DOM text
 // overlays, troika-three-text.
 
-import { Group, TextureLoader, type Object3D, type Texture, type ColorRepresentation } from 'three';
+import { Group, LinearFilter, TextureLoader, type Object3D, type Texture, type ColorRepresentation } from 'three';
 import type { BMFontJSON } from 'three-msdf-text-webgpu';
 
 export interface TextOpts {
@@ -66,12 +66,17 @@ async function defaultMSDFTextFactoryAsync(): Promise<
     const obj = new mod.MSDFText(
       {
         text: content,
+        // P6 capstone fix (2026-06-11): never pass `undefined` style fields —
+        // the package adds letterSpacingPx/widthPx into glyph advances without
+        // defaulting, so `x + undefined = NaN` and every glyph after the first
+        // collapses (the "only the first letter renders" + computeBoundingSphere
+        // NaN symptom).
         textStyles: {
           fontSize: opts?.fontSize ?? 32,
-          color: opts?.color,
+          ...(opts?.color !== undefined ? { color: opts.color } : {}),
           textAlign: opts?.align ?? 'left',
-          widthPx: opts?.maxWidthPx,
-          letterSpacingPx: opts?.letterSpacingPx,
+          ...(opts?.maxWidthPx !== undefined ? { widthPx: opts.maxWidthPx } : {}),
+          letterSpacingPx: opts?.letterSpacingPx ?? 0,
         },
       },
       { atlas, data },
@@ -119,6 +124,13 @@ export function createFontAtlas(
         }),
         fetchJSON(fontJsonUrl),
       ]);
+      // SHARPNESS (Logan directive 2026-06-10): MSDF atlases must never be
+      // mipmapped — channel-averaged mips corrupt the median distance field
+      // and render small runtime labels soft. Linear/Linear, no mips.
+      tex.generateMipmaps = false;
+      tex.minFilter = LinearFilter;
+      tex.magFilter = LinearFilter;
+      tex.needsUpdate = true;
       atlas = tex;
       data = json;
     })();
@@ -130,14 +142,10 @@ export function createFontAtlas(
       throw new Error('createText: font atlas not loaded — call load() first or supply preloaded option');
     }
     if (textFactory) return textFactory(content, opts, atlas, data);
-    // The default MSDF factory is async-loaded. Production bootstrap MUST
-    // call warmupDefaultFactory() before any node createNode() runs;
-    // otherwise the first frame returns a placeholder Group while the
-    // dynamic import resolves. Subsequent frames pick up the real factory
-    // automatically.
-    void defaultMSDFTextFactoryAsync().then((fac) => {
-      textFactory = fac;
-    });
+    // WebGL fallback canvases cannot compile the package's WebGPU
+    // NodeMaterial. Call warmupDefaultFactory() only from a WebGPU-capable
+    // bootstrap path; otherwise return a stable placeholder instead of
+    // asynchronously switching future calls onto an incompatible material.
     const placeholder = new Group();
     placeholder.name = `text:${content}`;
     return placeholder;

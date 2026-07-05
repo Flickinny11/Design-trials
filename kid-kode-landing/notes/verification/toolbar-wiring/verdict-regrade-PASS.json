@@ -1,0 +1,72 @@
+{
+  "feature": "P2 toolbar wiring — animation picker group, Add Element bubble, Group/Ungroup, mobile mode toggle (RE-GRADE)",
+  "claim": "First-time user can browse/search 312 animation tiles, bind one (five driver chips), see it PLAY in Preview App and freeze in Canvas; Add Element yields a translucent glass bubble absent from Preview App; Group/Ungroup preserves world transforms; phone gets a thumb-reachable bottom Galaxy/Canvas/Preview pill.",
+  "groundTruthSibling": "text-system",
+  "state": "live-regrade",
+  "rubric": {
+    "q1_defects": {
+      "answer": "All four prior MUST-FIXes are resolved in the fresh captures (mtime 17:29 today vs 17:10 originals). (1) Mobile pill collision FIXED: the hub trail ('Galaxy | Home 7') now sits in its own row clearly ABOVE the mode toggle in both galaxy and canvas — two distinct, fully visible pills, no occlusion. (2) Mobile header clipping FIXED: the progress pill is gone on phone width and at 4x zoom the rightmost header button (magnifier) is fully inside the right edge with visible margin in both galaxy and canvas; the '+' is complete with a brass rim. (3) UUID naming FIXED: breadcrumb reads 'Graph / New Element' and the inspector card reads 'New Element / element / New element — blank bubble awaiting an artifact' — no machine id anywhere in the fresh frame. (4) Jargon FIXED in the Add flyout: 'Adds a blank bubble to Home — give it an artifact to bring it to life', section 'ELEMENT LIFECYCLE', stage hints 'coming soon — needs the build pipeline'; no INV-7/§6/(P3) visible. Remaining items are non-blocking and carried: the dev-only Next.js 'N' badge still grazes the mode pill's left rim, and five frames (01,02,04,06,07) plus results.json were not recaptured, so the animation-flyout footer fix and the selection-list name surfaces are corroborated rather than re-photographed (see flags).",
+      "evidence": [
+        "10-mobile-galaxy.png",
+        "09-mobile-canvas.png",
+        "08-mobile-previewapp.png",
+        "05-bubble-canvas.png"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Unchanged where evidence carries over, improved where recaptured. The picker/binding/play-in-preview chain still reads exactly as claimed on the original verified frames (search well + chips + 312-tile grid; five driver chips Load/Time–Scroll–Pointer–State–Event; headline horizontal in canvas vs tilted mid-float in preview; results.json movers=1 playerId=home-headline, backend=webgpu, cascaded=7, transmission=0.92). The mobile deliverable now reads BETTER than claimed: a two-row machined-brass nav stack (hub trail above, mode toggle below) that looks native-quality at 390px, and preview mode correctly shows the single toggle with the bubble absent from the played app. The fresh Add flyout reads as a clear staged lifecycle a first-timer can parse.",
+      "evidence": [
+        "01-animation-flyout.png",
+        "02-binding-applied.png",
+        "03-preview-playing.png",
+        "metrics: results.json 'binding PLAYS in preview-app' movers=1 playerId=home-headline; transmission=0.92; cascaded=7; backend=webgpu",
+        "10-mobile-galaxy.png",
+        "08-mobile-previewapp.png",
+        "05-bubble-canvas.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Now genuinely yes. The two things that would have confused a non-technical first-timer are gone from the recaptured surfaces: the element they create is called 'New Element' with the plain-language subtitle 'blank bubble awaiting an artifact' (breadcrumb + inspector card), and the staged affordances explain themselves in human words — 'give it an artifact to bring it to life', disabled stages marked 'coming soon — needs the build pipeline'. The honest-disclosure structure (live stage 1, visibly disabled stages 2-4 with hints) was already good; the language now matches it. Search placeholder, category chips, named tiles, 'HOVER PLAYS', the five labeled driver chips, and the 'Preview App' jump button all remain self-explanatory on the original frames.",
+      "evidence": [
+        "05-bubble-canvas.png",
+        "01-animation-flyout.png",
+        "02-binding-applied.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Unchanged from the prior grade and still corroborated: the bound animation provably mutates pose on the master clock (movers=1; headline horizontal in 02 vs tilted in 03), freeze-and-restore passes, the driver swap renders, and the drive switched all three mobile modes; consoleErrors empty, backend webgpu. The chrome fixes are CSS/copy/naming changes that do not touch the play path, and the fresh frames show the same scene rendering normally (bubble translucent in canvas, absent in preview).",
+      "evidence": [
+        "metrics: results.json all 12 steps ok, consoleErrors=[], rendererBackend=webgpu",
+        "02-binding-applied.png",
+        "03-preview-playing.png",
+        "08-mobile-previewapp.png"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. The desktop loop was already the good part — pick 'Float', watch your element actually move in Preview — and now the phone experience matches it: two clean machined pills I can reach with my thumb, nothing sticking out from behind anything, nothing running off the screen edge, and the thing I just added is called 'New Element' instead of a serial number. It reads like one finished product now.",
+      "evidence": [
+        "10-mobile-galaxy.png",
+        "09-mobile-canvas.png",
+        "05-bubble-canvas.png",
+        "03-preview-playing.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Partial recapture: only 05/08/09/10 are fresh (17:29); 01, 02, 04, 06, 07 and results.json are the original 17:10 captures. Two fix surfaces therefore rest on corroboration rather than fresh frames: the animation-flyout footer copy (verified as the literal rendered JSX string — 'Animations play in Preview — the canvas stays still while you edit…' at AnimationFlyout.tsx:577, with zero rendered '§' remaining in the toolbar component trees) and the multi-select list names in 06/07 (same single name-derivation root proven fixed in 05's breadcrumb + inspector). Recapture these frames at the next routine sweep to close the loop photographically.",
+      "evidence": "05-bubble-canvas.png (fresh, name fix at the shared root), console: grep shows no rendered '§' strings in animation-tools/add-tools/overlays; old frames 06-group-ungroup.png / 07-galaxy-parity.png / 02-binding-applied.png are stale (mtime 17:10)"
+    },
+    {
+      "note": "Carried (acknowledged to punch-list): blank white headline demo subject mutes the play-in-preview payoff (pre-existing mock asset, P3); mobile Transform-flyout hint contrast through the glass panel (P5); stray favicon 404 in rawConsoleMessages (P5); samey idle tile poses (taste).",
+      "evidence": "03-preview-playing.png (blank bar), 09-mobile-canvas.png (hint contrast), console: results.json rawConsoleMessages 404, 01-animation-flyout.png (tile grid)"
+    },
+    {
+      "note": "The dev-only Next.js 'N' badge still overlaps the mode pill's left rim on mobile — environment artifact, not product chrome, but it will photobomb every mobile screenshot until captures hide it.",
+      "evidence": "10-mobile-galaxy.png (N badge on pill rim), 08-mobile-previewapp.png (same)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

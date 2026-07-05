@@ -1,0 +1,7 @@
+{
+  "name": "charged-particles-sim",
+  "label": "Field (B)",
+  "description": "Charged motes drift through a crossed magnetic + electric field and follow real Lorentz-force curved/helical paths (F = q(E + v×B)); positive (brass) and negative (ice) charges curl opposite ways and drift apart — integrated velocity, not field-line drawing.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

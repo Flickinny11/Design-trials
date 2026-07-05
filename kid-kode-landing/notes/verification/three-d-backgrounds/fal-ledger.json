@@ -1,0 +1,40 @@
+{
+  "run": "three-d-backgrounds",
+  "entries": [
+    {
+      "ts": "2026-06-15T06:27:38.527Z",
+      "model": "fal-ai/flux-2",
+      "purpose": "P2 hybrid base plate (deep cosmic, no text)",
+      "estCost": 0.04,
+      "bytes": 989419,
+      "out": "public/three-d-bg/cosmic-plate.png"
+    },
+    {
+      "ts": "2026-06-15T06:27:41.042Z",
+      "model": "fal-ai/image-preprocessors/depth-anything/v2",
+      "purpose": "P2 parallax depth map for cosmic plate",
+      "estCost": 0.01,
+      "bytes": 125161,
+      "out": "public/three-d-bg/cosmic-plate-depth.png"
+    },
+    {
+      "ts": "2026-06-15T06:49:01.973Z",
+      "model": "fal-ai/flux-2",
+      "purpose": "P3 captured-environment plate (brass observatory, strong depth)",
+      "estCost": 0.04,
+      "bytes": 1067394,
+      "out": "public/three-d-bg/capture-observatory.png"
+    },
+    {
+      "ts": "2026-06-15T06:49:04.530Z",
+      "model": "fal-ai/image-preprocessors/depth-anything/v2",
+      "purpose": "P3 depth for captured-environment splat",
+      "estCost": 0.01,
+      "bytes": 174049,
+      "out": "public/three-d-bg/capture-observatory-depth.png"
+    }
+  ],
+  "notes": [
+    "P3: @sparkjsdev/spark 2.1.0 evaluated for .spz/.sog 3DGS — confirmed WebGL2-only render (World Labs deliberate design), incompatible with the single WebGPURenderer (INV-1, no 2nd renderer). NOT added as a dependency (no dead/placeholder dep). Shipped a WebGPU-native captured-environment gaussian-splat (RGBD unprojection) instead; Spark loader array shape is the documented swap-in seam."
+  ]
+}

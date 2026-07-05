@@ -1,0 +1,7 @@
+{
+  "name": "dust-cloud",
+  "label": "Drift",
+  "description": "A thin warm dust haze billows sideways with in-shader volume: layered domain-warped fbm drifts at parallax speeds with soft lit contrast and faint glinting motes — smooth and hazy, no slab seams.",
+  "category": "smoke",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,79 @@
+{
+  "feature": "CANVAS COMPLETION RUN — capstone re-grade (round 3, final state) after headline re-ink + single-line layout fix + fresh attestation",
+  "claim": "Round-2 MUST-FIX addressed: demo labels re-inked (#1d212b over the light bar), §13 labels no longer wrap (layout box bounded by worst-case single-line width), fresh headline-fix-results.json attestation (webgpu, zero console errors desktop+mobile), all three frames recaptured. Disclosed residuals: mobile hub bar extends past the 390px viewport (desktop-authored mock hero layout; text rides the bar) and the CTA's authored anchor places it partially behind the watch silhouette — both routed to the asset re-provision pass.",
+  "groundTruthSibling": "punch-list",
+  "state": "after-remediation-r3",
+  "rubric": {
+    "q1_defects": {
+      "answer": "The round-2 MUST-FIX is fixed in full, verified fresh and measured. (1) CONTRAST: the headline now renders 'Build worlds in seconds.' in dark ink — measured ink mean luma 26.7 vs bar 226.8 = 13.44:1 on desktop, 29.9 vs 226.7 = 12.96:1 on mobile, and the CTA 'Try it now' measures 10.41:1 against the stage — all 3-4x above the 3:1 large-text floor that round 2 failed at 1.1-1.55:1. (2) OVERPRINT: gone — native-res crops show a single clean line fitted inside the bar with comfortable padding; no text-on-text collision anywhere. (3) ATTESTATION: headline-fix-results.json (timestamped 2026-06-11T06:20:26Z, seconds after the frame mtimes 01:19:52-01:20:03) records backend webgpu, desktopConsoleErrors [], mobileConsoleErrors [], pass true — closing round 2's frames-only bookkeeping flag. Remaining observations are flag-grade content-authoring residuals, all disclosed in-band: the mobile hub bar (and so the first ~3 glyphs) extends past the 390px viewport per the desktop-authored mock hero layout — the visible 'ld worlds in seconds.' is fully legible at 12.96:1 and the bar clip pre-exists in every prior passed bundle's mobile captures; the CTA's authored anchor hides its tail behind the watch silhouette ('Try it no...' readable); the hub backdrop remains nondeterministic between captures (fresh desktop frames show the gray stage, fresh mobile shows the neon backdrop). No broken, misaligned, cut-off-by-rendering, low-contrast, or glitchy state remains on any editor surface.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png (mtime 2026-06-11 01:19:52) — 'Build worlds in seconds.' dark ink, single line, fitted in the bar",
+        "metrics: headline ink mean luma 26.7 vs bar bg 226.8 → contrast 13.44:1 desktop; 29.9 vs 226.7 → 12.96:1 mobile; CTA ink vs stage 184.2 → 10.41:1 (round-2 values were 1.55:1 / 1.26:1)",
+        "mobile-1-boot-previewapp.png (mtime 01:20:03) — visible text 'ld worlds in seconds.' crisp and legible; clip follows the bar's authored width, not the text rendering",
+        "c02-mode-canvas.png (mtime 01:19:54) — same dark legible headline in canvas mode",
+        "console: headline-fix-results.json — backend webgpu, desktopConsoleErrors [], mobileConsoleErrors [], pass true, capturedAt 2026-06-11T06:20:26Z"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "The boot screen finally reads as what the graph authored: a hero app whose headline says 'Build worlds in seconds.' in real, legible MSDF type — matching the node's declared textContent exactly — with a single-line CTA beneath. The full claim set now holds end-to-end with the round-1 evidence unchanged: real MSDF text with 1,935 fonts and measured on-demand bake; 312/312 catalog tiles rendering/playing/controlling; glass bubble lifecycle with honest gating; the shared physical material editor; real gizmo design-in-3D with byte-identical round-trips; five trigger drivers with proven concurrent time+scroll playback; group/ungroup at <1e-3 drift; the phone mode pill; Observatory Brass chrome with no purple and no slop on any surface I examined.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png — headline matches graph textContent 'Build worlds in seconds.' verbatim",
+        "metrics: c27 — 1,935 families, on-demand bake 0.579s miss → 0.004s hit; c29-decompose 11/3/2 units exact",
+        "c12-picker-hoverplay-controls.png + metrics: 312/312 renders/plays/controls, deviceLost 0/0",
+        "metrics: c09 — real-mouse-drag dx=0.9988/drz=0.9647/sx=0.4486, disk == reloaded byte-identical",
+        "c13-stack-two.png — five driver chips per binding row; drive-results c16 concurrent time+scroll"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes — unchanged strengths (stage-ladder gating with explanatory disabled titles, toasts on every action, labeled rail, hover-play catalog tiles, named sliders, mobile flyouts), and the round-1/round-2 stumble is gone: the first screen now greets the user with a legible headline instead of a blank slab or a ghost double-exposure. Nothing on the boot path invites 'is this broken?' anymore.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png — boot screen reads as an intentional hero, not a defect",
+        "metrics: c03-08 lifecycle — gating states + 'Build Node — coming soon — needs the build pipeline' explanatory title",
+        "c12-picker-hoverplay-controls.png — hover-play tiles + Duration/Wobble/Rib-band sliders",
+        "mobile-2-canvas-text-flyout.png — phone flyout with 'Add Text · Home' primary action"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Unchanged measured strengths plus the fresh attestation: webgpu backend and zero console errors on BOTH form factors in the new headline-fix-results.json; concurrent drivers (cubeDrift 0.204 with scrollDelta 0.225, idle drift 0); real-drag round-trips byte-identical; 312-tile real-GPU run in 1104s with deviceLost 0; mobile t1 77-82fps, hover p95 29ms.",
+      "evidence": [
+        "console: headline-fix-results.json — desktopConsoleErrors [], mobileConsoleErrors [], backend webgpu, pass true",
+        "metrics: drive-results c16 — cubeDrift=0.204, scrollDelta=0.225, scrollIdleDrift=0",
+        "metrics: c18 — mobile t1 77-82 FPS, hover p95 29ms; catalog 312/312 in 1104s, deviceLost 0",
+        "metrics: c09 — scenePosition persisted and re-read identical on fresh boot"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. As a first-time user: 'Now the first thing I see actually says Build worlds in seconds — and everything I touch after that is genuinely impressive: the animation tiles play themselves, the sliders all do something real, I can grab things and move them in 3D and it sticks, the material editor feels professional, and it works on my phone. This looks crafted.' Three rounds in, every blocking defect was named, measured, fixed, and re-measured — what remains is disclosed demo-content polish (mobile-safe hero width, CTA anchor, backdrop load affordance) honestly routed to the asset re-provision pass.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png — legible hero boot screen (ink contrast 13.44:1, was stdev-0.000 blank in round 1)",
+        "metrics: round-over-round headline trace — r1 blank (stdev 0.000/22,400 px) → r2 rendering but 1.1-1.55:1 + overprint + clip → r3 13.44:1 single-line fitted",
+        "c12-picker-hoverplay-controls.png + c08-readded-in-system.png — the editor's depth and material character"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "Mobile: the hub hero bar extends past the 390px viewport, so the headline's first ~3 glyphs ride off-screen ('ld worlds in seconds.' visible, fully legible at 12.96:1). Desktop-authored mock hero layout + close mobile camera framing; pre-existing in every prior passed bundle's mobile captures; disclosed and routed to the asset re-provision pass. Author the hero mobile-safe (or frame the mobile boot camera wider) in that pass.",
+      "evidence": "mobile-1-boot-previewapp.png (mtime 01:20:03) — bar and leading glyphs clipped at left viewport edge; metrics: visible-portion ink contrast 12.96:1"
+    },
+    {
+      "note": "CTA 'Try it now' tail hides behind the watch silhouette ('Try it no...' readable, 10.41:1) — authored anchor placement in mock content, disclosed, same re-provision pass. Nudge the anchor or the watch.",
+      "evidence": "c01-webgpu-boot-previewapp.png — CTA partially occluded; metrics: CTA ink contrast 10.41:1"
+    },
+    {
+      "note": "Hub backdrop presence remains nondeterministic between captures: fresh desktop c01/c02 show the gray stage while fresh mobile-1 shows the full neon backdrop at boot (round 2 observed the inverse). Likely async backdrop load with no affordance — carried flag.",
+      "evidence": "c01-webgpu-boot-previewapp.png + c02-mode-canvas.png (gray stage, 01:19) vs mobile-1-boot-previewapp.png (neon backdrop, 01:20)"
+    },
+    {
+      "note": "Stale keyframe-panel footer copy ('once the Primitive Catalog lands' — it landed) — carried from round 1, surface untouched by this remediation.",
+      "evidence": "c10-keyframe-editor-open.png — panel footer copy"
+    },
+    {
+      "note": "Decor particle cluster renders outside the app rectangle in preview-app — carried from round 1, surface untouched.",
+      "evidence": "c02-mode-previewapp.png (dust below app frame); c29-preview-perglyph.png (cluster bottom-left)"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

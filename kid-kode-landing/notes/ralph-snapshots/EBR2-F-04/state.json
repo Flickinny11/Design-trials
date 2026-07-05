@@ -1,0 +1,235 @@
+{
+  "taskId": "EBR2-F-04",
+  "capturedAt": "2026-05-20T19:13:22.832Z",
+  "url": "http://localhost:3000/",
+  "fixture": "mock-app",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "viewMode": "preview-app",
+  "outerState": {
+    "url": "http://localhost:3000/",
+    "title": "Prism Editor — Kriptik",
+    "editorStore": {
+      "viewMode": "preview-app",
+      "editorRenderMode": "scene",
+      "selectedNodeId": null,
+      "selectedHubId": null,
+      "activeHubId": null
+    },
+    "viewMode": "preview-app",
+    "canvasCount": 1
+  },
+  "interactionTrace": {
+    "task_id": "EBR2-F-04",
+    "scriptPath": "notes/ralph-interactions/EBR2-F-04.json",
+    "steps": [
+      {
+        "index": 0,
+        "step": {
+          "action": "wait_for",
+          "selector": "canvas",
+          "timeout_ms": 30000
+        },
+        "status": "pass",
+        "durationMs": 158
+      },
+      {
+        "index": 1,
+        "step": {
+          "action": "evaluate",
+          "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+        },
+        "status": "pass",
+        "durationMs": 50,
+        "value": "canvas"
+      },
+      {
+        "index": 2,
+        "step": {
+          "action": "wait_ms",
+          "duration_ms": 1500
+        },
+        "status": "pass",
+        "durationMs": 1501
+      },
+      {
+        "index": 3,
+        "step": {
+          "action": "evaluate",
+          "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); const newId = src.cloneNode(node.nodeId); ed.setViewMode('galaxy'); ed.setEditorRenderMode('topology'); ed.setDraggingNode(newId); return { newId, viewMode: stores.graphEditor.getState().viewMode, editorRenderMode: stores.graphEditor.getState().editorRenderMode, draggingNodeId: stores.graphEditor.getState().draggingNodeId }; })()"
+        },
+        "status": "pass",
+        "durationMs": 34,
+        "value": {
+          "newId": "0913311b-d83d-4663-9e25-0cabf9b5f603",
+          "viewMode": "galaxy",
+          "editorRenderMode": "topology",
+          "draggingNodeId": "0913311b-d83d-4663-9e25-0cabf9b5f603"
+        }
+      },
+      {
+        "index": 4,
+        "step": {
+          "action": "wait_ms",
+          "duration_ms": 1000
+        },
+        "status": "pass",
+        "durationMs": 1000
+      },
+      {
+        "index": 5,
+        "step": {
+          "action": "assert",
+          "type": "evaluate_truthy",
+          "js": "window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.()?.viewMode === 'galaxy'"
+        },
+        "status": "pass",
+        "durationMs": 6315,
+        "value": true
+      },
+      {
+        "index": 6,
+        "step": {
+          "action": "evaluate",
+          "js": "(() => { const canvas = document.querySelector('canvas'); if (!canvas) return null; const rect = canvas.getBoundingClientRect(); const cx = rect.left + rect.width / 2; const cy = rect.top + rect.height / 2; for (let i = 0; i < 10; i += 1) { canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: cx + i * 8, clientY: cy + i * 4, bubbles: true, pointerId: 1 })); } return { cx, cy }; })()"
+        },
+        "status": "pass",
+        "durationMs": 21,
+        "value": {
+          "cx": 720,
+          "cy": 450
+        }
+      },
+      {
+        "index": 7,
+        "step": {
+          "action": "wait_ms",
+          "duration_ms": 800
+        },
+        "status": "pass",
+        "durationMs": 802
+      },
+      {
+        "index": 8,
+        "step": {
+          "action": "screenshot",
+          "name": "mid-drag.png"
+        },
+        "status": "pass",
+        "durationMs": 396,
+        "file": "mid-drag.png"
+      },
+      {
+        "index": 9,
+        "step": {
+          "action": "assert",
+          "type": "evaluate_truthy",
+          "js": "(() => { const ed = window.__PRISM_DEBUG_STORES__.graphEditor.getState(); const tetherEl = document.querySelector('[data-component=\"galaxy-drag-tether\"]'); return typeof ed.draggingNodeId === 'string' && !!tetherEl && typeof ed.draggingNearestHubId === 'string'; })()"
+        },
+        "status": "pass",
+        "durationMs": 161,
+        "value": true
+      },
+      {
+        "index": 10,
+        "step": {
+          "action": "assert",
+          "type": "no_console_errors"
+        },
+        "status": "pass",
+        "durationMs": 0
+      },
+      {
+        "index": 11,
+        "step": {
+          "action": "assert",
+          "type": "no_network_4xx_5xx"
+        },
+        "status": "pass",
+        "durationMs": 0
+      }
+    ],
+    "consoleErrorCount": 0,
+    "networkFailureCount": 0,
+    "aborted": false
+  },
+  "summary": {
+    "outerScreenshot": "outer.png",
+    "innerScreenshot": "inner.png",
+    "checks": [
+      {
+        "id": "preflight.prism-artifact",
+        "desc": ".prism artifact present",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "preflight.server-up",
+        "desc": "next start reachable",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "outer.screenshot",
+        "desc": "outer.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.mounted",
+        "desc": "inner Prism runtime mounted in preview-app",
+        "pass": true,
+        "detail": "mounted"
+      },
+      {
+        "id": "inner.screenshot",
+        "desc": "inner.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.no-errors",
+        "desc": "no runtime errors in console / page",
+        "pass": true,
+        "detail": "clean"
+      },
+      {
+        "id": "interaction.assert.evaluate_truthy[5]",
+        "desc": "evaluate returned truthy",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "interaction.assert.evaluate_truthy[9]",
+        "desc": "evaluate returned truthy",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "interaction.assert.no_console_errors[10]",
+        "desc": "no console errors",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "interaction.assert.no_network_4xx_5xx[11]",
+        "desc": "no 4xx/5xx network responses",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "interaction.trace-persisted",
+        "desc": "interaction-trace.json written",
+        "pass": true,
+        "detail": ""
+      }
+    ],
+    "consoleLogCount": 15,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0,
+    "networkResponseCount": 27,
+    "networkFailureCount": 0
+  }
+}

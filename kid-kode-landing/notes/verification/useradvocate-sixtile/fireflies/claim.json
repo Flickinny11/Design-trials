@@ -1,0 +1,7 @@
+{
+  "name": "fireflies",
+  "label": "Count",
+  "description": "Fireflies wander in lazy paths, their warm glow pulsing on and off.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

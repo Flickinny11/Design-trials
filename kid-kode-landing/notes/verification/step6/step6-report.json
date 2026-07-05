@@ -1,0 +1,386 @@
+{
+  "startedAt": "2026-06-07T13:55:53.690Z",
+  "url": "http://localhost:4796/",
+  "nodeAssertions": [
+    {
+      "nodeId": "home-headline",
+      "mode": "canvas",
+      "schema": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0.1
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-feature-card",
+      "mode": "canvas",
+      "schema": {
+        "x": 2.6,
+        "y": 0.2,
+        "z": 0,
+        "rotationX": 0,
+        "rotationY": -0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 2.6,
+        "y": 0.2,
+        "z": 0
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-parallax-stack",
+      "mode": "canvas",
+      "schema": {
+        "x": -2.8,
+        "y": -0.5,
+        "z": -1,
+        "rotationX": 0,
+        "rotationY": 0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": -2.8,
+        "y": -0.5,
+        "z": -1
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-orbit-decor",
+      "mode": "canvas",
+      "schema": {
+        "x": -1.4,
+        "y": -1.6,
+        "z": 0.2,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": -1.4,
+        "y": -1.6,
+        "z": 0.2
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-floating-accent",
+      "mode": "canvas",
+      "schema": {
+        "x": 1.8,
+        "y": -1.4,
+        "z": 0.15,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.4,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 1.8,
+        "y": -1.4,
+        "z": 0.15
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-cta-hero",
+      "mode": "canvas",
+      "schema": {
+        "x": 0,
+        "y": -0.2,
+        "z": 1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 0,
+        "y": -0.2,
+        "z": 1
+      },
+      "delta": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-headline",
+      "mode": "preview-app",
+      "schema": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 0,
+        "y": 1.5,
+        "z": 0.1
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-feature-card",
+      "mode": "preview-app",
+      "schema": {
+        "x": 2.6,
+        "y": 0.2,
+        "z": 0,
+        "rotationX": 0,
+        "rotationY": -0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 2.6,
+        "y": 0.2,
+        "z": 0
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-parallax-stack",
+      "mode": "preview-app",
+      "schema": {
+        "x": -2.8,
+        "y": -0.5,
+        "z": -1,
+        "rotationX": 0,
+        "rotationY": 0.08,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": -2.8,
+        "y": -0.5,
+        "z": -1
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-orbit-decor",
+      "mode": "preview-app",
+      "schema": {
+        "x": -1.4,
+        "y": -1.6,
+        "z": 0.2,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": -1.4,
+        "y": -1.6,
+        "z": 0.2
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-floating-accent",
+      "mode": "preview-app",
+      "schema": {
+        "x": 1.8,
+        "y": -1.4,
+        "z": 0.15,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.4,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 1.8,
+        "y": -1.4,
+        "z": 0.15
+      },
+      "match": true
+    },
+    {
+      "nodeId": "home-cta-hero",
+      "mode": "preview-app",
+      "schema": {
+        "x": 0,
+        "y": -0.2,
+        "z": 1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "world": {
+        "x": 0,
+        "y": -0.2,
+        "z": 1
+      },
+      "match": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "canvas.ready",
+      "desc": "all nodes mounted with a readable world position in canvas",
+      "pass": true,
+      "detail": "6 nodes"
+    },
+    {
+      "id": "canvas.position-eq-schema",
+      "desc": "every artifact world position EQUALS its node schema scenePosition (no layout/grid)",
+      "pass": true,
+      "detail": "6/6 match ≤0.01"
+    },
+    {
+      "id": "canvas.positions-distinct",
+      "desc": "schema positions are distinct designed coords, not a generated grid",
+      "pass": true,
+      "detail": "6 distinct positions across 6 nodes"
+    },
+    {
+      "id": "canvas.screenshot",
+      "desc": "canvas.png captured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "motion.inner-moves",
+      "desc": "at least one node artifact MOVES — its coded primitive is running",
+      "pass": true,
+      "detail": "home-orbit-decor:0.839"
+    },
+    {
+      "id": "motion.anchor-stable",
+      "desc": "node wrappers stay at schema position while their motion plays around them",
+      "pass": true,
+      "detail": "anchors fixed at scenePosition"
+    },
+    {
+      "id": "motion.frames-differ",
+      "desc": "canvas frames differ between captures (animation visibly running)",
+      "pass": true,
+      "detail": "PNG bytes 266656 vs 266625"
+    },
+    {
+      "id": "toggle.no-rebuild",
+      "desc": "toggling canvas↔preview-app issues ZERO new artifact builds (serves cache)",
+      "pass": true,
+      "detail": "build count 6 → 6"
+    },
+    {
+      "id": "preview.position-eq-schema",
+      "desc": "preview-app places every artifact at its schema position too (faithful both modes)",
+      "pass": true,
+      "detail": "all match"
+    },
+    {
+      "id": "preview.screenshot",
+      "desc": "preview-app.png captured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "galaxy.screenshot",
+      "desc": "galaxy.png captured",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "console.no-errors",
+      "desc": "zero new console/page errors during the run",
+      "pass": true,
+      "detail": "clean"
+    }
+  ],
+  "motion": {
+    "movers": [
+      {
+        "id": "home-orbit-decor",
+        "delta": 0.8390633410647526
+      }
+    ],
+    "frameABytes": 266656,
+    "frameBBytes": 266625,
+    "framesDiffer": true
+  },
+  "rebuild": {
+    "buildBefore": 6,
+    "buildAfter": 6,
+    "delta": 0
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "finishedAt": "2026-06-07T13:56:08.852Z",
+  "summary": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0
+  }
+}

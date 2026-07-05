@@ -1,0 +1,7 @@
+{
+  "name": "spring-arrive",
+  "label": "Stiffness",
+  "description": "A card flies in from off-screen and arrives via a real damped spring (mass + stiffness + damping): it accelerates in, overshoots past rest, and rings down — integrated physics, not an elasticOut easing curve.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

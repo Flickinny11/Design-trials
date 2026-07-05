@@ -1,0 +1,37 @@
+{
+  "feature": "scroll-inertia-glide",
+  "claim": "The card glides on buttery inertia — trailing the scroll like Lenis smooth-scroll made physical, easing into place when the page rests.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Idle is a clean, ship-quality card (brass header, blue accent dot, 3 grey rows, rounded panel) matching the ground truth. play-3 shows the card glided up with momentum, chrome intact. BUT in the tiltDeg and span-high poses the card glides so far up that the brass header and accent dot are clipped OFF the top of the frame — only the lower ~2/3 (3 grey rows) remains. Borderline framing defect at the high end of travel.",
+      "evidence": ["scroll-inertia-glide/after/idle.png", "scroll-inertia-glide/after/play-3.png", "scroll-inertia-glide/after/control-tiltDeg-high.png", "metrics: play-3 luma=17.0 band=0.515 hue=33"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads as inertial glide: the card trails the scroll and is displaced up-frame across play frames with the chrome fully preserved, vs the centered idle. Matches the ground-truth card subject (same brass header/dot/3-rows). The momentum/overshoot displacement is legible.",
+      "evidence": ["scroll-inertia-glide/after/play-3.png", "scroll-inertia-glide/after/control-span-low.png", "metrics: play-1 delta=6.95 play-2 delta=10.26 play-3 delta=10.03 (motion present)"]
+    },
+    "q3_discoverable": {
+      "answer": "The HEADLINE labeled control 'Smoothness' (the entire premise of the tile) is pixel-identical low/mid/high — the byte-identical 14955-byte files and metrics changed=false confirm it does nothing at the pinned engaged state. 'Tilt Degrees' is also pixel-identical (dead). Only 'span' visibly changes the frame. A user dragging the named 'Smoothness' slider sees no response — they cannot discover what the control does.",
+      "evidence": ["scroll-inertia-glide/after/control-smoothness-low.png", "scroll-inertia-glide/after/control-smoothness-high.png", "control: smoothness changed=false (low.luma=16.6==high.luma=16.6, band=0.534 both)", "control: tiltDeg changed=false (low=mid=high luma=13.5)"]
+    },
+    "q4_responsive": {
+      "answer": "Play-phase motion is present and smooth (frameDeltaMag 6.95→10.26→10.03), and the span control responds. But 2 of 3 labeled controls are dead, including the headline one — by the rubric's '>1 control with no change = janky/dead' test this is janky at the control surface.",
+      "evidence": ["metrics: play frame deltas 6.95/10.26/10.03", "control: smoothness changed=false AND tiltDeg changed=false (2 of 3 dead)"]
+    },
+    "q5_net": {
+      "answer": "A user would be ANNOYED: the card and glide look good, but the slider literally labeled 'Smoothness' — the one thing the tile advertises — does nothing, and at full travel the card's brass header scrolls off the top of the frame. The headline control must visibly change the smooth-scroll feel.",
+      "evidence": ["scroll-inertia-glide/after/control-smoothness-high.png", "control: smoothness changed=false", "scroll-inertia-glide/after/control-tiltDeg-high.png"]
+    }
+  },
+  "mustFix": [
+    { "issue": "Headline 'Smoothness' control is dead — low/mid/high are byte-identical, no visible change at the pinned engaged state. This is the tile's namesake control and must visibly alter the inertia/easing feel.", "evidence": "control: smoothness changed=false (scroll-inertia-glide/after/control-smoothness-low.png == control-smoothness-high.png, both 14955 bytes, luma=16.6 band=0.534)" },
+    { "issue": "Second labeled control 'Tilt Degrees' is also dead — low/mid/high pixel-identical, no frame change.", "evidence": "control: tiltDeg changed=false (scroll-inertia-glide/after/control-tiltDeg-low.png == control-tiltDeg-high.png, luma=13.5 band=0.433)" }
+  ],
+  "flags": [
+    { "note": "At max travel (tiltDeg/span-high poses) the card glides far enough that the brass header + accent dot clip off the top of the frame, leaving only the grey rows; the glide should keep the card body framed.", "evidence": "scroll-inertia-glide/after/control-tiltDeg-high.png" }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

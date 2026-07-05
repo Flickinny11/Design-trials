@@ -1,0 +1,21 @@
+{
+  "url": "http://localhost:4810",
+  "preset": "brass-nebula",
+  "params": "",
+  "modes": [
+    "galaxy"
+  ],
+  "frames": [
+    {
+      "viewport": "desktop",
+      "mode": "galaxy",
+      "hub": "s1-arrival",
+      "file": "/Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/notes/verification/three-d-backgrounds/p4/desktop-galaxy-brass-nebula.png",
+      "counts": null,
+      "bgLen": 3
+    }
+  ],
+  "errors": [],
+  "backend": "webgpu",
+  "particleCounts": null
+}

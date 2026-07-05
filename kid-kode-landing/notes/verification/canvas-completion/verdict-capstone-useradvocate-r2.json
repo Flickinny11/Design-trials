@@ -1,0 +1,83 @@
+{
+  "feature": "CANVAS COMPLETION RUN — capstone re-grade (round 2) after home-headline MSDF warmup/NaN/scale fixes",
+  "claim": "Re-grade request: prior MUST-FIX (demo hero headline rendering as a blank uniform slab) root-caused (factory never warmed; letterSpacingPx undefined → NaN advance; px-scale labels in unit scene) and fixed (warmupDefaultFactory, undefined-guards, scale-to-fit + centering). Fresh frames at same paths: c01-webgpu-boot-previewapp.png, c02-mode-canvas.png, mobile-1-boot-previewapp.png. Operator pre-disclosed as flag: second line wraps slightly below the bar (white over light-gray) and CTA wraps awkwardly — px-world label authoring in mock content, routed to asset re-provision pass.",
+  "groundTruthSibling": "punch-list",
+  "state": "after-remediation-r2",
+  "rubric": {
+    "q1_defects": {
+      "answer": "The ORIGINAL must-fix is genuinely FIXED: all three recaptured frames (verified fresh mtimes 01:07:54-01:08:05) show real MSDF glyphs — 'Build worlds in' / 'seconds.' — where the blank slab was; the previously stdev-0.000 band now carries glyph strokes spanning luma 184-227 (high variance from letterforms, exactly as claimed). The 'Try now' CTA label also renders. HOWEVER, the successor state of the same boot-screen surface fails three of the rubric's named objective categories, measured: (1) LOW-CONTRAST — headline line 1 renders near-white-on-white over the bar: darkest common stroke luma 184 vs bar 227 = 1.55:1, with the bulk of strokes at 215-222 vs 225-227 (≈1.05-1.1:1); the CTA measures mean RGB(180,207,222), luma 203 vs stage 181 = 1.26:1. WCAG large-text floor is 3:1; these are not borderline. (2) MISALIGNED — the two headline lines OVERPRINT EACH OTHER: at native resolution 'seconds.' collides with the lower half of 'Build worlds in' (text printed on text), beyond the disclosed 'wraps slightly below the bar'; the CTA likewise wraps 'Try'/'now' onto itself and is partially occluded by the black watch silhouette. (3) CUT OFF — on the fresh mobile boot frame the headline is clipped by the left viewport edge: it reads 'uild worlds in' / 'econds.', leading glyphs off-screen. All of this is the first screen of the DEFAULT boot mode on both form factors. Also observed: backdrop inconsistency persists and flipped — fresh c02-mode-canvas now shows the bare gray stage where the 23:52 capture of the same view showed the neon backdrop, while fresh mobile-1 now shows the neon backdrop at boot. No fresh console/results JSON accompanied the recapture; the zero-console-errors claim is asserted, not bundled — my own measurements are frame-based.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png (mtime 2026-06-11 01:07:54) — glyphs render; native-res crop shows line 2 'seconds.' overprinting line 1 and crossing the bar's bottom edge",
+        "metrics: headline text zone luma histogram now spans 184-227 (was stdev 0.000); darkest common stroke 184 vs bar 227 → contrast 1.55:1; bulk strokes 215-222 vs 225-227 ≈ 1.05-1.1:1 (WCAG large-text floor 3:1)",
+        "metrics: CTA glyph pixels n=4099, mean RGB(180,207,222) luma 203.0 vs stage 181.0 → contrast 1.26:1; wrapped 'Try'/'now' overlapping, occluded by watch silhouette",
+        "mobile-1-boot-previewapp.png (mtime 01:08:05) — headline clipped at left viewport edge: reads 'uild worlds in' / 'econds.'",
+        "c02-mode-canvas.png (mtime 01:07:57) — same defect in canvas mode; gray stage where the 23:52 capture showed the neon backdrop"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "The fix reads as claimed mechanically: 'Build worlds in seconds.' is now real, rendered MSDF text and the warmup/NaN root-cause narrative is consistent with what the frames show (full multi-glyph lines, not the 'B-only' NaN state). But the surface does not yet read as a HERO HEADLINE: a first-time user gets a washed-out double-exposure on desktop and an edge-clipped fragment on mobile. The rest of the bundle is unchanged from round 1 and still reads TRUE (312/312 catalog, real gizmo round-trips, five drivers, 1,935 fonts, material editor, mobile pill) — my round-1 q2 evidence stands.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png — full 'Build worlds in' + 'seconds.' + 'Try now' glyph sets render (no single-glyph NaN truncation)",
+        "metrics: prior blank-slab measurement (stdev 0.000 / 22,400 px) vs fresh 184-227 luma spread — the rendering defect is fixed",
+        "c12-picker-hoverplay-controls.png + metrics: c12 summary 312/312 renders/plays/controls — round-1 strengths unchanged",
+        "mobile-1-boot-previewapp.png — hero text clipped at viewport edge: does not read as a finished hero"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Unchanged from round 1 — the editor's flows remain self-narrating (stage ladder gating, toasts, labeled rail, hover-play tiles, mobile flyouts). The boot-screen stumble changed character: instead of a blank bar, the first-timer now sees overlapping ghost text, which still invites 'is this broken?' rather than 'damn'.",
+      "evidence": [
+        "c04-bubble-canvas.png — toast + labeled stage ladder (round-1 evidence, unchanged surfaces)",
+        "c12-picker-hoverplay-controls.png — hover-play tiles + named sliders",
+        "mobile-2-canvas-text-flyout.png — phone Text flyout primary action",
+        "metrics: c03-08 lifecycle gating states + explanatory disabled-button titles (unchanged)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Unchanged from round 1: webgpu in every drive JSON, zero console errors in all bundled drives, concurrent time+scroll drivers measured, real-drag round-trips byte-identical, 312-tile run deviceLost 0, mobile t1 77-82fps. Note: the recapture added no fresh drive JSON, so the fresh boot's claimed zero-console-errors is not independently bundled — flag-grade bookkeeping, not a blocker.",
+      "evidence": [
+        "metrics: drive-results c16 — cubeDrift=0.204 with scrollDelta=0.225, scrollIdleDrift=0",
+        "metrics: c09 — real-mouse-drag scenePosition persisted, disk == reloaded",
+        "metrics: c18 — mobile t1 77-82 FPS, hover p95 29ms; catalog 312/312, deviceLost 0",
+        "backend: webgpu + consoleErrors=[] in all five bundled drive JSONs (round-1 evidence)"
+      ]
+    },
+    "q5_net": {
+      "answer": "INDIFFERENT — real progress, same verdict shape. As a first-time user: 'Okay, the headline says words now — but they're printed on top of each other, I can barely make them out against the white bar, and on my phone the first letters are chopped off the screen edge. Everything I actually click in this editor is excellent; the first thing I see still isn't.' The remaining work is narrow and named: line spacing/wrap width, label color vs backdrop, and mobile-safe placement for two demo labels. Fix those, recapture, and this is PLEASED.",
+      "evidence": [
+        "metrics: contrast 1.55:1 best-stroke headline / 1.26:1 CTA vs 3:1 floor; line-2-on-line-1 overprint at native res",
+        "mobile-1-boot-previewapp.png — 'uild worlds in' edge clipping",
+        "c08-readded-in-system.png + c12-picker-hoverplay-controls.png — the editor itself remains pass-grade"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Boot-screen hero text legibility/layout (successor to the round-1 blank-slab fix, same surface): headline line 1 near-white-on-white at 1.55:1 best-stroke (bulk ≈1.05-1.1:1) against the bar; line 2 'seconds.' overprints line 1 (text-on-text collision, beyond the disclosed 'slight wrap below the bar'); on mobile the headline is CLIPPED at the left viewport edge ('uild worlds in'/'econds.'); CTA 'Try now' at 1.26:1, wrapped onto itself, partially occluded by the watch silhouette. Three named objective rubric categories (low-contrast, misaligned, cut-off) on the first screen of the default boot mode, both form factors. Root cause may be mock-content label authoring (wrap width/color/placement), but the user-facing grade is on what the boot screen shows.",
+      "evidence": "c01-webgpu-boot-previewapp.png + mobile-1-boot-previewapp.png + c02-mode-canvas.png (fresh mtimes 01:07-01:08) — measured: headline darkest-stroke 184 vs bar 227 = 1.55:1 contrast (bulk strokes 215-222 ≈ 1.1:1); CTA mean RGB(180,207,222) luma 203 vs stage 181 = 1.26:1; native-res crop shows 'seconds.' overprinting 'Build worlds in'; mobile frame reads 'uild worlds in'/'econds.' (left-edge clip)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Backdrop inconsistency persists and now flips both ways: fresh desktop c02-mode-canvas shows the bare gray stage where the 23:52 capture of the same view showed the neon backdrop, while fresh mobile-1 NOW shows the neon backdrop at boot (it was gray at 23:44). Same hub, same modes, different sessions — backdrop presence is nondeterministic at capture time, likely async load with no affordance.",
+      "evidence": "c02-mode-canvas.png (01:07:57, gray stage) vs c04-bubble-canvas.png (00:18, neon, same canvas view); mobile-1-boot-previewapp.png (01:08, neon) vs its 23:44 predecessor (gray)"
+    },
+    {
+      "note": "Recapture shipped frames only — no fresh drive/results JSON, so the 'ZERO console errors' claim for the fixed boot path is asserted rather than bundled. My measurements are frame-based; bundle a fresh console capture with the next recapture.",
+      "evidence": "metrics: only 3 files in bundle newer than 01:00 (c01/c02/mobile-1 PNGs); newest results JSON remains c01-c02-c10-results.json at 23:53"
+    },
+    {
+      "note": "Stale keyframe-panel copy ('once the Primitive Catalog lands') — carried from round 1, unchanged.",
+      "evidence": "c10-keyframe-editor-open.png — panel footer copy"
+    },
+    {
+      "note": "Decor particle cluster outside the app rectangle in preview-app — carried from round 1, unchanged.",
+      "evidence": "c02-mode-previewapp.png (dust below app frame); c29-preview-perglyph.png (cluster bottom-left)"
+    },
+    {
+      "note": "Taste, carried: demo watch artifact reads as a flat solid-black silhouette; it now additionally occludes the CTA text on both form factors.",
+      "evidence": "c01-webgpu-boot-previewapp.png and mobile-1-boot-previewapp.png — watch silhouette over 'Try now'"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

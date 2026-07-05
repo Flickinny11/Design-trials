@@ -3,6 +3,15 @@
   "env": {
     "ANTHROPIC_SMALL_FAST_MODEL": "claude-haiku-4-5-20251001"
   },
+  "permissions": {
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /Users/loganbaird/Prototype_Prism/Design-trials/kid-kode-landing/src/components/editor)",
+      "Bash(rm -rf kid-kode-landing/src/components/editor)",
+      "Bash(rm -rf src/components/editor)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {
@@ -37,9 +46,35 @@
           {
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/model-guardrail.sh",
             "type": "command"
+          },
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/intent-lock-gate.sh",
+            "type": "command"
+          },
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/no-remote-asset-gate.sh",
+            "type": "command"
           }
         ],
         "matcher": "Write|Edit"
+      },
+      {
+        "hooks": [
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/destructive-action-guard.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit|Bash"
+      },
+      {
+        "hooks": [
+          {
+            "command": "$CLAUDE_PROJECT_DIR/kid-kode-landing/.claude/hooks/dependency-allowlist-check.sh",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit"
       }
     ],
     "SessionStart": [
@@ -58,23 +93,27 @@
           {
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/progress-reminder.sh",
             "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
+          },
           {
-            "command": "$HOME/.claude/hooks/kripverify-stop.sh",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spec-criteria-stop.sh",
+            "type": "command"
+          },
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/completion-gate.sh",
             "type": "command"
           }
         ]
       }
     ],
-    "UserPromptSubmit": [
+    "SubagentStop": [
       {
         "hooks": [
           {
-            "command": "$HOME/.claude/hooks/kripverify-userprompt.sh",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/spec-criteria-stop.sh",
+            "type": "command"
+          },
+          {
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/completion-gate.sh",
             "type": "command"
           }
         ]

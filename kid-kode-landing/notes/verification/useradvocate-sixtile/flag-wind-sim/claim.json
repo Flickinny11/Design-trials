@@ -1,0 +1,7 @@
+{
+  "name": "flag-wind-sim",
+  "label": "Wind",
+  "description": "A real XPBD cloth flag pinned at the pole: a steady wind, swelling gusts, and turbulence push genuine flapping ripples down the fabric — emergent physics, not a scripted sine.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

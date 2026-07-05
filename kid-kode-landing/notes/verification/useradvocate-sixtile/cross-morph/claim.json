@@ -1,0 +1,7 @@
+{
+  "name": "cross-morph",
+  "label": "Axis",
+  "description": "Card recedes and dips through a soft opacity trough, then re-emerges advanced along its shared axis — the Material shared-axis transition in real 3D.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

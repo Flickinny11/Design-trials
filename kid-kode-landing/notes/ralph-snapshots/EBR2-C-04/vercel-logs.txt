@@ -1,0 +1,59 @@
+commit: bf2ae14be15189a6a66f042dc7782cd77f45ed5a
+deploymentId: dpl_7dfGpvbWqG3GNP814EVZJ8PN4Q8E
+deployState: READY
+deploymentUrl: https://kid-kode-ai-landing-l2h4w3c6x-logans-projects-e51c822e.vercel.app
+
+--- build logs (tail 50) ---
+[1779192354351] stderr ./src/components/prism-player/PrismHost.tsx
+[1779192354351] stderr ./src/app/page.tsx
+[1779192354351] stderr
+[1779192358766] stderr  ⚠ Compiled with warnings in 2.8s
+[1779192358766] stderr
+[1779192358766] stderr ./src/lib/prism/runtime/factories/coderef-factory.ts
+[1779192358767] stderr Critical dependency: the request of a dependency is an expression
+[1779192358767] stderr
+[1779192358767] stderr Import trace for requested module:
+[1779192358767] stderr ./src/lib/prism/runtime/factories/coderef-factory.ts
+[1779192358767] stderr ./src/lib/prism/runtime/mount-graph.ts
+[1779192358767] stderr ./src/components/prism-player/PrismHost.tsx
+[1779192358767] stderr ./src/app/page.tsx
+[1779192358767] stderr
+[1779192358793] stdout  ✓ Compiled successfully in 9.5s
+[1779192358796] stdout    Skipping validation of types
+[1779192358796] stdout    Skipping linting
+[1779192359032] stdout    Collecting page data ...
+[1779192361528] stdout    Generating static pages (0/6) ...
+[1779192362050] stdout    Generating static pages (1/6)
+[1779192362050] stdout    Generating static pages (2/6)
+[1779192362364] stdout    Generating static pages (4/6)
+[1779192362364] stdout  ✓ Generating static pages (6/6)
+[1779192363350] stdout    Finalizing page optimization ...
+[1779192363350] stdout    Collecting build traces ...
+[1779192369720] stdout
+[1779192369723] stdout Route (app)                                 Size  First Load JS
+[1779192369723] stdout ┌ ○ /                                     558 kB         661 kB
+[1779192369724] stdout ├ ○ /_not-found                            995 B         103 kB
+[1779192369724] stdout ├ ƒ /api/prism/regen                       127 B         103 kB
+[1779192369724] stdout └ ƒ /api/prism/vault/resolve               127 B         103 kB
+[1779192369724] stdout + First Load JS shared by all             102 kB
+[1779192369724] stdout   ├ chunks/255-0ead884c57510367.js       46.1 kB
+[1779192369724] stdout   ├ chunks/4bd1b696-c023c6e3521b1417.js  54.2 kB
+[1779192369724] stdout   └ other shared chunks (total)           2.1 kB
+[1779192369724] stdout
+[1779192369724] stdout
+[1779192369724] stdout ○  (Static)   prerendered as static content
+[1779192369724] stdout ƒ  (Dynamic)  server-rendered on demand
+[1779192369724] stdout
+[1779192369828] stdout Traced Next.js server files in: 38.145ms
+[1779192369942] stdout Created all serverless functions in: 113.709ms
+[1779192369957] stdout Collected static files (public/, static/, .next/static): 10.464ms
+[1779192370064] stderr Build Completed in /vercel/output [28s]
+[1779192370187] stdout Deploying outputs...
+[1779192375195] stdout Deployment completed
+[1779192375303] stdout Creating build cache...
+[1779192394334] stdout Created build cache: 19s
+[1779192394334] stdout Uploading build cache [376.85 MB]
+[1779192405242] stdout Build cache uploaded: 10.907s
+
+--- runtime logs (tail 50) ---
+runtime-logs endpoint not available for this token/project tier; non-blocking.

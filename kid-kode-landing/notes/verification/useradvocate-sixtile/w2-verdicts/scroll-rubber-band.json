@@ -1,0 +1,34 @@
+{
+  "feature": "scroll-rubber-band",
+  "claim": "The card scrolls on a rubber band — linear through the middle, straining with resistance near the ends, twanging back when released.",
+  "groundTruthSibling": "swap-flip-morph",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No broken/blank states. Idle, play-3, and all control frames keep the full ship-quality card (brass header, blue dot, 3 grey rows, rounded panel) crisp and well-framed. No clipping, no slab, no console/network errors.",
+      "evidence": ["scroll-rubber-band/after/idle.png", "scroll-rubber-band/after/play-3.png", "scroll-rubber-band/after/control-resistance-high.png", "metrics: 0 consoleErrors, 0 networkErrors, backend webgpu"]
+    },
+    "q2_reads_as": {
+      "answer": "Reads as elastic rubber-band resistance: near the extreme the card strains and elongates (resistance-high and elasticity-high pull it taller, ovalizing the accent dot), and play-3 shows it twanged up to a higher position vs the strained idle. The 'strain near the ends, twang back when released' claim is legible.",
+      "evidence": ["scroll-rubber-band/after/control-resistance-high.png", "scroll-rubber-band/after/control-elasticity-high.png", "scroll-rubber-band/after/play-3.png"]
+    },
+    "q3_discoverable": {
+      "answer": "All three labeled controls change the frame sensibly: 'Resistance' increases the strain/stretch near the extreme (low = squarer/lower, high = taller/higher), 'elasticity' increases the elastic elongation/twang, and 'span' adjusts the travel range. A user dragging any slider feels the band respond.",
+      "evidence": ["scroll-rubber-band/after/control-resistance-low.png", "scroll-rubber-band/after/control-resistance-high.png", "scroll-rubber-band/after/control-elasticity-high.png", "control: resistance/elasticity/span all changed=true"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive: play deltas 5.35/11.96/8.32 show motion and all 3 controls are live with monotonic luma/banding progressions (resistance luma 16.4->17.9, elasticity luma 16.4->18.6). No dead controls.",
+      "evidence": ["metrics: play-1 delta=5.35 play-2 delta=11.96 play-3 delta=8.32", "control: all 3 changed=true (elasticity luma 16.4->18.6 band 0.536->0.443)"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: 'it pulls tight and strains when I push it to the edge, then twangs back like a rubber band' — the elastic resistance reads, the card stays pristine, and every slider does something.",
+      "evidence": ["scroll-rubber-band/after/control-resistance-high.png", "scroll-rubber-band/after/control-resistance-low.png"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "The strain/elongation read is a vertical stretch similar to the velocity-stretch tile; a touch of audible-feeling overshoot wobble at release would differentiate the 'twang' more from a plain stretch. Pure taste.", "evidence": "scroll-rubber-band/after/control-elasticity-high.png" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

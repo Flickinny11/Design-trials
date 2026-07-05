@@ -1,0 +1,178 @@
+{
+  "steps": [
+    {
+      "step": "c04: Add Element -> translucent transmission bubble",
+      "ok": true,
+      "bubbleId": "04ddd47d-416b-4e45-aee6-638321ec5d91",
+      "transmission": 0.92,
+      "type": "MeshPhysicalMaterial"
+    },
+    {
+      "step": "c04: stage ladder gates — only Add Object enabled",
+      "ok": true,
+      "states": {
+        "1": "current",
+        "2": "future",
+        "3": "future",
+        "4": "future"
+      },
+      "addObject": {
+        "present": true,
+        "disabled": false
+      },
+      "buildNode": {
+        "present": true,
+        "disabled": true
+      },
+      "addToSystem": {
+        "present": true,
+        "disabled": true
+      }
+    },
+    {
+      "step": "c03: node persisted, tethered to current hub",
+      "ok": true,
+      "parentHubId": "home",
+      "hub": "home"
+    },
+    {
+      "step": "c03: galaxy frame after add captured (new node visible)",
+      "ok": true
+    },
+    {
+      "step": "c05: artifact added -> Populated (done) + built; Build Node revealed",
+      "ok": true,
+      "btn": {
+        "present": true,
+        "disabled": true,
+        "title": "Build Node — coming soon — needs the build pipeline"
+      },
+      "states": {
+        "1": "done",
+        "2": "done",
+        "3": "done",
+        "4": "current"
+      }
+    },
+    {
+      "step": "c06: build -> builtSnapshot cached (hash-keyed) + rendered; Add to System appears",
+      "ok": true,
+      "hash": "d36921b1",
+      "status": "built",
+      "buildCount": 1
+    },
+    {
+      "step": "c07: Add to System wrote fresh self-caption + cleared dirty",
+      "ok": true,
+      "captionBefore": "Image element",
+      "captionAfter": "Element at [0.9, -0.8, 0.2]"
+    },
+    {
+      "step": "c08: manual edit set dirty; In-System regressed; c05b: Build Node ENABLED on stale build",
+      "ok": true,
+      "states": {
+        "1": "done",
+        "2": "current",
+        "3": "future",
+        "4": "future"
+      },
+      "buildNode": {
+        "disabled": false,
+        "title": "Rebuild this element from its image"
+      }
+    },
+    {
+      "step": "c06b: Build Node re-assembles on changed hash (buildCount bump, new hash)",
+      "ok": true,
+      "from": "d36921b1",
+      "to": "e1e84ad5",
+      "buildCount": 2
+    },
+    {
+      "step": "c08: rebuild + re-Add-to-System -> caption current again (In System)",
+      "ok": true,
+      "states": {
+        "1": "done",
+        "2": "done",
+        "3": "done",
+        "4": "current"
+      },
+      "dirtyLabelGone": true
+    }
+  ],
+  "consoleErrors": [],
+  "pass": true,
+  "c04gating": {
+    "states": {
+      "1": "current",
+      "2": "future",
+      "3": "future",
+      "4": "future"
+    },
+    "addObject": {
+      "present": true,
+      "disabled": false
+    },
+    "buildNode": {
+      "present": true,
+      "disabled": true
+    },
+    "addToSystem": {
+      "present": true,
+      "disabled": true
+    }
+  },
+  "c05buildBtn": {
+    "btn": {
+      "present": true,
+      "disabled": true,
+      "title": "Build Node — coming soon — needs the build pipeline"
+    },
+    "states": {
+      "1": "done",
+      "2": "done",
+      "3": "done",
+      "4": "current"
+    }
+  },
+  "c06snapshots": {
+    "afterPopulate": {
+      "nodeId": "04ddd47d-416b-4e45-aee6-638321ec5d91",
+      "hash": "d36921b1",
+      "layout": "scene",
+      "status": "built",
+      "builtAt": 7,
+      "buildCount": 1
+    },
+    "afterEditRebuild": {
+      "nodeId": "04ddd47d-416b-4e45-aee6-638321ec5d91",
+      "hash": "e1e84ad5",
+      "layout": "scene",
+      "status": "built",
+      "builtAt": 8,
+      "buildCount": 2
+    }
+  },
+  "c08ladderAfterEdit": {
+    "states": {
+      "1": "done",
+      "2": "current",
+      "3": "future",
+      "4": "future"
+    },
+    "buildNode": {
+      "disabled": false,
+      "title": "Rebuild this element from its image"
+    }
+  },
+  "c08ladderAfterReadd": {
+    "states": {
+      "1": "done",
+      "2": "done",
+      "3": "done",
+      "4": "current"
+    },
+    "dirtyLabelGone": true
+  },
+  "rawConsoleMessages": []
+}

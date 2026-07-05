@@ -1,0 +1,15 @@
+{
+  "profile": "constrained",
+  "at": "2026-06-14T08:20:40.097Z",
+  "base": "http://localhost:3000",
+  "backend": {
+    "backend": "webgpu",
+    "gpu": true,
+    "tier": "t2",
+    "innerW": 1440,
+    "mainW": 560,
+    "density": "compact"
+  },
+  "consoleErrors": [],
+  "badResponses": []
+}

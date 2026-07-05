@@ -191,18 +191,12 @@ function checkStructural(
     }
   }
 
-  // §10.C L384 — All modes must iterate config.cinematicPrimitives and
-  //   call ctx.primitives[name].
-  const iteratesPrimitives = /config\.cinematicPrimitives/.test(source);
-  const callsPrimitives = /ctx\.primitives\[/.test(source);
-  if (!iteratesPrimitives || !callsPrimitives) {
-    out.push({
-      rule: 'MISSING_PRIMITIVES_LOOP',
-      severity: 'error',
-      message:
-        'all modes must iterate config.cinematicPrimitives and call ctx.primitives[name] (§10.C L384)',
-    });
-  }
+  // §10.C L384 (MISSING_PRIMITIVES_LOOP) — REMOVED. The migration-era rule that
+  // every node MUST iterate config.cinematicPrimitives and call ctx.primitives[name]
+  // (i.e. no scene-level animation outside the fixed primitives library) is RESCINDED
+  // by PRISM-CANVAS-EDITOR-SPEC.md §2 decision 6 (see SPEC-INDEX.md S4). Animation may
+  // be authored from scratch as an `Animatable`; the catalog is an accelerant, not a
+  // cage. Selecting/iterating the primitive list is no longer required.
 
   // §10.C L385 — All modes must iterate config.textContent and produce MSDF
   //   text via ctx.fontAtlas. The spec qualifies "for non-empty entries"; a

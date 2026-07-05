@@ -1,0 +1,90 @@
+{
+  "feature": "CANVAS COMPLETION RUN — capstone judgment of the whole Prism canvas editor (P1 text, P2 animation/toolbar/mobile, P3 image/media, P4 3D objects, P5 punch-list)",
+  "claim": "Logan's finish-line test, verbatim: would a first-time user say 'damn, this is really good looking, intuitive, easy to use, and these primitives are great to design with in 3D space'? The editor now offers: real MSDF text with 1,935 fonts and AI-fill masking; a 312-primitive animation catalog applied via live hover-play tiles with five trigger drivers playing in Preview; glass bubble elements that populate via image upload/URL; full image presentation controls; seven 3D primitive shapes with live reshape and the shared physical material editor; group/ungroup; a phone-usable mode switch; and Observatory Brass chrome throughout.",
+  "groundTruthSibling": "punch-list",
+  "state": "sign-off",
+  "rubric": {
+    "q1_defects": {
+      "answer": "One clear, objective, shipped-surface defect: the demo app's hero headline (node home-headline, graph-declared textContent 'Build worlds in seconds.', renderMethod=msdf, fontSize 72, color #e8eaf3) renders as a completely BLANK uniform slab in every frame of the bundle — desktop and mobile, all three modes, at pristine boot and 40+ minutes into the session (captures 23:44 through 00:28). I cropped the bar at native 3200x2000 resolution and measured its strict interior: mean luma 227.0, stdev 0.000 across 22,400 sampled pixels — a mathematically flat fill, so this is not white-on-white glyphs or a mid-animation kinetic-text state; the text plane is filling with the declared text color (#e8eaf3 ≈ luma 234) with no glyph mask applied. The node's own user-facing Inspector copy promises 'Primary headline rendered as MSDF text — the hero copy users read first' (visible in c09-gizmo-mounted.png), and this slab is the centerpiece of the DEFAULT boot mode (preview-app). New text elements meanwhile render perfect MSDF glyphs in the same frames ('Text' in c26, 'ONE TWO THREE' in c29-decompose-glyph.png), so this is a defect specific to the demo graph's baked headline path, missed by every per-phase gate because each judged only its new feature. Everything else I checked is clean: zero console errors in every drive JSON, no chrome misalignment, no clipped panels, no purple chrome, no contrast failures on any editor surface.",
+      "evidence": [
+        "c01-webgpu-boot-previewapp.png — pristine boot, default preview-app mode: headline is a blank white slab",
+        "c02-mode-previewapp.png — same mode with neon backdrop loaded: slab still blank; native-res crop of bar interior",
+        "metrics: headline bar strict interior mean luma 227.0, stdev 0.000 over 22,400 sampled px (perfectly uniform — no glyphs, not white-on-white; declared text color #e8eaf3 ≈ luma 234 matches the fill)",
+        "mobile-1-boot-previewapp.png — same blank slab on the phone boot frame",
+        "c10-keyframe-editor-open.png and c09-after-scale.png — slab persists selected, rotated and scaled; it IS home-headline (c09 drive marquee-selected nodeId home-headline)",
+        "console: consoleErrors=[] in drive-results.json, c01-c02-c10-results.json, c03-08-lifecycle-results.json, c09-roundtrip-results.json, c29-results.json, c29-decompose-results.json"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Claim-by-claim against what I can see and measure, almost everything reads TRUE. Real MSDF text: c26-spotcheck-text-added.png shows crisp dark glyphs ('Text', Inter, 4 selectable glyph meshes per c29-results), 1,935 font families served with measured on-demand bake (Yellowtail first bake 0.58s, second request cache hit 0.004s), and decompose glyph/word/line yields the exactly-expected 11/3/2 unit meshes (c29-decompose-glyph.png). 312-primitive catalog: c12-picker-hoverplay-controls.png shows a premium brass-on-graphite grid with live tile previews, '312 primitives' badge, and a working ControlSchema detail panel (Duration/Wobble/Rib-band sliders); the committed 312-run measures renders=312, plays=312, controls=312, deviceLost 0. Glass bubble + lifecycle: c04-bubble-canvas.png (transmission 0.92 MeshPhysicalMaterial, honest stage-ladder gating) through c08-readded-in-system.png (full physical material editor: metalness/roughness/transmission/IOR/dispersion/clearcoat/iridescence faders). Design-in-3D: c09 drives are REAL mouse drags on gizmo handles — dx 0.999 translate, drz 0.965 rotate, sx 0.449 scale — persisted to disk and byte-identical after fresh reload. Five trigger drivers: c13-stack-two.png shows two stacked bindings each with 5 driver chips, and drive-results c16 proves time and scroll drivers running CONCURRENTLY. Group/ungroup: cascade x7 with <1e-3 world-transform drift. Mobile mode switch: mobile-1-boot-previewapp.png shows the 3-mode pill, flyouts open (mobile-2/3). The ONE claim the demo itself contradicts is its marquee: 'real MSDF text' headlining a demo whose own hero text never renders (q1).",
+      "evidence": [
+        "c26-spotcheck-text-added.png — new MSDF text with full type panel (size/spacing/weight/align/fill)",
+        "metrics: c27 live spot-check — families=1935; Yellowtail on-demand bake 0.579s miss → 0.004s hit; Abel hit 0.008s",
+        "c12-picker-hoverplay-controls.png + metrics: c12-catalog-312-summary — renders 312/312, plays 312/312, controls 312/312, deviceLost 0/0",
+        "c09-after-scale.png + metrics: c09 roundtrip — real-mouse-drag dx=0.9988, drz=0.9647, sx=0.4486; disk == reloaded (byte-equal scenePosition)",
+        "c13-stack-two.png — two stacked bindings, 5 driver chips each, reorder arrows (drive: orderBefore [float,fade-up] → orderAfter [fade-up,float])",
+        "c04-bubble-canvas.png + metrics: bubble transmission=0.92 MeshPhysicalMaterial; c08-readded-in-system.png — shared physical material editor",
+        "metrics: c22 group cascade x7, ungroup world-transform drift <1e-3",
+        "mobile-1-boot-previewapp.png — Galaxy/Canvas/Preview pill, legible at 390px"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes, unusually so for a 3D tool. The add-element flow narrates itself: a stage ladder (Bubble → Populated → Built → In System) where only the legal next action is enabled and disabled buttons carry explanatory titles ('Build Node — coming soon — needs the build pipeline'), measured in the c03-08 drive (Add Object enabled, Build Node/Add to System disabled until populated, then revealed in order). Every action answers with a toast ('Bubble added — tethered to Home' in c04, 'Text added to Home' in c26, 'Bound \"Fade Up\" — plays on Load/Time' in c13). The left rail is labeled in words, not just icons (Transform/Selection/Add/Image/3D Object/Text/Animation/Lighting/Build). Catalog tiles preview their own animation on hover and the detail panel exposes plainly-named sliders. The empty-canvas hint tells you literally what to do ('Select a built element on the canvas, then click Edit to reveal transform handles' — c01-webgpu-canvas-built.png). Honest disclosure where features are unwired is in-UI, not buried. The one stumble a first-timer hits is q1's blank headline: the very first screen offers a broken-looking element with no affordance explaining it.",
+      "evidence": [
+        "metrics: c03-08 lifecycle — stage gating states {1:current,2:future,3:future,4:future} with addObject.disabled=false, buildNode.disabled=true + title 'Build Node — coming soon — needs the build pipeline'",
+        "c04-bubble-canvas.png — toast 'Bubble added — tethered to Home' + labeled ladder",
+        "c26-spotcheck-text-added.png — toast 'Text added to Home', labeled rail, full type controls",
+        "c12-picker-hoverplay-controls.png — hover-play tiles + named sliders (Duration / Wobble / Rib band)",
+        "mobile-2-canvas-text-flyout.png — phone Text flyout with 'Add Text · Home' primary action"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, with measured numbers rather than vibes. Backend is webgpu in every drive (rendererBackend:'webgpu' recorded in drive-results.json, c29-results.json, c09-roundtrip-results.json, c29-decompose-results.json). Real gizmo drags mutate scenePosition live and survive reload byte-identically (c09). Two animation drivers run simultaneously without interference: cube on TimeDriver drifted 0.204 while a real wheel scroll moved the scroll-bound element 0.225 with zero idle drift (drive-results c16) — and the c16 frames show the scene actually responding to the wheel. The 312-tile catalog completed a full real-GPU run in 1104s with deviceLost 0 on both rigs. Carried perf measurements at HEAD: hover p50 10-12ms / p95 29ms, desktop 71-80fps under churn, mobile t1 77-82fps (c18 supplement). Zero console errors anywhere in the bundle.",
+      "evidence": [
+        "metrics: drive-results c16 — cubeDrift=0.204 (TimeDriver) while scrollDelta=0.225 from real wheel input, scrollIdleDrift=0, cubeStillPlaying=true",
+        "c16-preview-scroll-responded.png vs c16-preview-timedriver-playing.png — visible scene change from the wheel input",
+        "metrics: c09 — scenePosition delta from real drag dx=0.9988; autosaved to live-graph.json and re-read identical on fresh boot",
+        "metrics: c18 supplement — mobile t1 77-82 FPS, desktop hover p95 29ms latency, 71-72 FPS under churn; catalog 312/312 in 1104s wallclock, deviceLost 0",
+        "backend: webgpu in all five drive JSONs; consoleErrors=[] in all"
+      ]
+    },
+    "q5_net": {
+      "answer": "INDIFFERENT — torn, and that is the honest capstone reading. As a first-time user: 'The tools are genuinely great — the animation catalog is fun, the sliders all do things, dragging stuff around in 3D actually works, the whole thing looks like a crafted brass instrument, even on my phone. But the very first screen your demo shows me is a big empty white bar where the headline is supposed to say something — it looks unfinished before I have clicked anything.' The editor earns the 'damn, this is really good looking' reaction in canvas mode and the catalog; the default boot view forfeits it. One must-fix stands between this and PLEASED.",
+      "evidence": [
+        "c12-picker-hoverplay-controls.png + c08-readded-in-system.png — the 'damn' side: premium, deep, working",
+        "c01-webgpu-boot-previewapp.png + mobile-1-boot-previewapp.png — the forfeit: blank hero slab as first impression",
+        "metrics: headline bar stdev 0.000 over 22,400 px — objectively blank, in every mode, both form factors"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Demo hero headline never renders its text: node home-headline (graph textContent 'Build worlds in seconds.', renderMethod=msdf, color #e8eaf3) draws as a blank uniform slab in all three modes, on desktop AND mobile, from pristine boot through minute-44 captures. The MSDF/atlas glyph mask is not being applied — the quad fills with the bare text color. It is the centerpiece of the DEFAULT boot mode and its own Inspector copy tells the user it is 'the hero copy users read first'. Not in the documented out-of-scope gap list; new-text MSDF works (c26/c29), so this is a demo-graph baked-headline rendering defect every per-phase gate skipped.",
+      "evidence": "c01-webgpu-boot-previewapp.png, c02-mode-previewapp.png, mobile-1-boot-previewapp.png, c10-keyframe-editor-open.png — bar interior measured at native res: mean luma 227.0, stdev 0.000 across 22,400 px (declared text color #e8eaf3 ≈ luma 234 → color without glyph mask); contrast with working glyphs in c26-spotcheck-text-added.png and c29-decompose-glyph.png in the same scene"
+    }
+  ],
+  "flags": [
+    {
+      "note": "First-boot backdrop inconsistency: at boot the hub renders as a bare flat-gray stage (desktop and mobile), while the same hub in the same session shows the full neon backdrop minutes later after mode round-trips. If the backdrop is an async load, the first impression ships without it and with no loading affordance. Cannot measure the latency from stills, so flag not must-fix.",
+      "evidence": "c01-webgpu-boot-previewapp.png and mobile-1-boot-previewapp.png (gray stage) vs c02-mode-previewapp.png and c04-bubble-canvas.png (neon backdrop, same hub readout)"
+    },
+    {
+      "note": "Decor particle cluster renders OUTSIDE the app rectangle in preview-app — the mode that claims to be 'the app as users see it'. Reads as stray specks detached from the app body.",
+      "evidence": "c02-mode-previewapp.png (dust below the app frame, bottom-center) and c29-preview-perglyph.png (cluster at bottom-left outside the gray stage)"
+    },
+    {
+      "note": "Stale in-UI copy in the toolbar Keyframe Editor: footer still says tracks bind 'once the Primitive Catalog lands' — the catalog landed (312 tiles). The panel transport gap itself is documented out-of-scope; the stale sentence is a 2-minute copy fix that currently undercuts trust.",
+      "evidence": "c10-keyframe-editor-open.png — keyframe panel footer copy; corroborated by the bundle's own honesty note in c10-no-global-fps-supplement.txt item 6"
+    },
+    {
+      "note": "Taste: the demo watch artifact reads as a flat solid-black silhouette at the center of the stage — on the gray boot stage it looks like a hole rather than a product shot. Content, not editor chrome.",
+      "evidence": "c26-spotcheck-text-added.png and c01-webgpu-boot-previewapp.png — uniformly black cutout, no internal detail"
+    },
+    {
+      "note": "Taste: a real wheel scroll in preview-app recedes the entire app to a small distant rectangle. The scroll driver demonstrably works (control: scrollDelta 0.225) but the framing afterwards feels extreme for an end-user scroll gesture.",
+      "evidence": "c16-preview-scroll-responded.png vs c16-preview-timedriver-playing.png"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

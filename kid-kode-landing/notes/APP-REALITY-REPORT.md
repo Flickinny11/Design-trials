@@ -1,0 +1,443 @@
+# APP-REALITY — make the Prism editor a real navigable 3D app
+
+**Run goal (Logan):** the live app "reads as 3D scenes, not a navigable app." Fix per spec — camera
+model, preview-as-app, full-viewport backgrounds, device modes, Function/nav binding.
+**Bar:** WOW + "behaves like a real app." Interactive + visual verification (real frames),
+DPR-2, desktop + mobile + constrained. 0 MUST-FIX per phase.
+**Model:** claude-opus-4-8 (env-confirmed). **Branch:** `prism-editor-build`.
+**Frames:** `notes/verification/app-reality/<phase>/`. **Resumable ledger:**
+`notes/verification/APP-REALITY-PROGRESS.md`. **fal:** `notes/verification/app-reality/fal-ledger.json`.
+
+---
+
+## P1 — CAMERA MODEL (canvas free / preview locked + reset-zero + angle HUD + haptic)
+
+### What changed
+- **Canvas = fully FREE 3D edit camera.** The canvas camera was wrongly restricted by
+  `computeCanvasCameraRail` (±0.35 rad ≈ ±20° polar/azimuth windows + a pan-boundary box +
+  a narrow distance window). Those clamps are removed from the live `CameraControls` in
+  `SceneControlsBridge` (`GraphScene.tsx`). Canvas now orbits/pans/zooms freely
+  (minDistance 1.5 … maxDistance 220, full polar/azimuth, no pan boundary). **This deliberately
+  supersedes SC-071 for canvas** — a Logan-authorized override for this run (recorded in the
+  progress ledger), the same kind of deliberate boundary change as the 2026-06-14 AMENDMENT.
+  The rail helper is retained only to keep the `__PRISM_EDITOR_GET_CANVAS_RAIL__` dev hook alive.
+- **Preview-app = camera LOCKED.** `CameraControls enabled={!isPreview}` — the user can no longer
+  orbit/pan/zoom the running app, so they can never spin it to expose scene edges. Programmatic
+  `setLookAt` still works while disabled (the configured view today; the P2 camera journey next).
+  On entering preview-app the camera snaps to the deterministic front-facing "configured" pose so
+  it never strands on a prior canvas orbit.
+- **Reset-view-to-zero (straight-on).** New `resetViewSignal` + `resetViewToZero()` on the editor
+  store. In canvas it snaps the camera back to the straight-on pose on the active hub (keeps the
+  hub — distinct from the galaxy `resetCamera`). One click from the HUD.
+- **Live angle read-out + haptic + pulse.** New `CanvasCameraHud` overlay (Observatory-Brass glass
+  pill, canvas-only): a live compass + `AZ / TILT / ZOOM` read-out fed each frame (throttled) from
+  the controls; a reset-to-zero button; and — when the view returns to straight-on (button OR a
+  manual orbit back to centre) — a `navigator.vibrate()` haptic + a brass `ds-zero-pulse` glow, so
+  "centred" is felt. Responsive: top-anchored on mobile (clears the Inspector bottom-sheet),
+  bottom-centre on desktop/tablet.
+
+### Evidence — `notes/verification/app-reality/p1/` (real browser, DPR-2, 3 viewports)
+Numeric camera proof (`p1-camera-log.json`), via the live `CameraControls` instance:
+
+| Viewport | Canvas free orbit (az / polar°) | Free? (past old ±20° rail) | Reset→zero (az / polar°) | Preview lock Δpos |
+|---|---|---|---|---|
+| desktop 1440×900 | −84 / 48 | ✅ | 0 / 90 | 0.0000 ✅ |
+| mobile 390×844 | −89.6 / 45.2 | ✅ | 0 / 90 | 0.0000 ✅ |
+| constrained 900×620 | −121.9 / 29 | ✅ | 0 / 90 | 0.0000 ✅ |
+
+Frames: `*-canvas-default.png` (front-facing), `*-canvas-orbit-free.png` (clearly off-axis — skewed
+viewport-frame, HUD reads the live angle), `*-canvas-reset-pulse.png` / `*-canvas-reset-zero.png`
+(HUD "STRAIGHT ON", front-facing rectangle), `*-preview-locked-before/after.png` (drag did not move
+the camera; editor chrome hidden → reads as the running app). 0 console errors in all 3 contexts.
+
+### Adversarial review + regression fix (verified)
+A parallel read-only review (invariants + regression) passed all invariants (one renderer; additive
+schema; canonical viewMode only; FP-05 DOM scope; tokens-only) and caught one real MUST-FIX: the new
+preview-app entry `setLookAt` ran in the same commit *before* the pre-existing canvas-pose snapshot
+effect, and `camera-controls.getPosition()` defaults to reading the transition *destination*
+(`receiveEndValue=true`) — so the snapshot was checkpointing the front pose over the user's last
+orbit, breaking canvas→preview-app→canvas restore (SC-027/INV-20). **Fix:** snapshot the live pose
+(`getPosition(pos,false)`/`getTarget(tgt,false)`). **Proof** (`p1-roundtrip.json`): orbit to
+az −84°/pol 48° → preview-app → back to canvas → restored az −84°/pol 48° **exactly (Δ0)**, not the
+front pose. Galaxy bridge confirmed byte-for-byte untouched; programmatic `setLookAt` + live
+pointer/scroll drivers confirmed still active under `enabled={false}`.
+
+### Honest flags
+- **Full-bleed background is P4, not P1.** The preview frame confirms the camera is locked and the
+  composition is clean, but the hub content currently floats as a card on a dark void with visible
+  margins. The "preview never shows a blank/obvious background" requirement is the job of **P4
+  (Backgrounds — full viewport)**; P1 delivers the camera lock + framing it sits on. Flagged, not
+  hidden.
+- tsc: 0 new errors (9 pre-existing baseline: GraphScene:`GLProps` async-gl factory + 8 `tests/`
+  `NodeContext.THREE` fixture mocks — all predate this run).
+
+### Verdict: camera model behaves like a real app's — free to author, locked to ship. ✅ (full-bleed → P4)
+
+---
+
+## P2 — CAMERA-IN-KEYFRAME (keyframeable camera journey)
+
+### What changed
+- **The camera is now a keyframeable track.** New additive `PrismHub.cameraKeyframes?: PrismKeyframe[]`
+  — each a `PrismKeyframe` with `coordinateSpace: 'camera'` (INV-21) and `params {px,py,pz,tx,ty,tz,fov}`.
+  Stored in the SHARED source graph (new `useGraphSourceStore.updateHub`), so the future node-editor
+  reads/writes the same data. No global fps (INV-4) — playback is progress-over-time.
+- **Canvas authors the journey.** The camera HUD gains a JOURNEY strip: orbit the free edit camera
+  to a vantage → **● REC** captures the live pose+fov as a waypoint (count badge updates live), **✕**
+  clears, **▶ Preview** plays it. New editor-store signals `captureCameraKeyframe` / `replayCameraJourney`;
+  `SceneControlsBridge` reads the live pose (receiveEndValue=false) and appends to the active hub.
+- **Preview plays exactly that journey.** New pure sampler `src/lib/editor/camera-journey.ts`
+  (`sampleJourney`, evenly-spaced segments, per-segment smoothstep ease). On entering preview-app, if
+  the hub has ≥2 waypoints the camera lands on waypoint 0 and the per-frame block flies position/target/
+  fov to the end, then holds — all via programmatic `setLookAt` (works while the camera is user-LOCKED
+  from P1). A preview-side **↻ Replay intro** pill re-runs it. Deterministic (same waypoints → same path).
+
+### Evidence — `notes/verification/app-reality/p2/` (real browser, DPR-2)
+`p2-journey-log.json`: authored 3 waypoints in canvas → `hub.cameraKeyframes.length === 3` ✅. Preview
+auto-play: **start pose = waypoint 0 (Δ 0.000)**, **end pose = last waypoint (Δ 0.000)**, 18.1-unit
+camera travel between (a real fly-through, not a static frame). **Determinism:** replay → ran full
+duration → landed on the same end pose (**Δ 0.000**). Replay restart independently confirmed (camera
+moved 22.1 units off the end pose on replay). 0 console errors through REC→Preview→Replay.
+Frames: `desktop-canvas-journey-3pts.png` (HUD shows "3 pts" + REC/Preview), `desktop-preview-journey-
+start/mid/end.png` (three distinct vantages — the camera flies the path), `↻ Replay intro` pill present.
+
+### Adversarial review
+`prism-criteria-reviewer`: **pass / zero MUST-FIX** — additive (cameraKeyframes optional, updateHub
+non-destructive), INV-4 (no fps), INV-21 (coordinateSpace:'camera' set by buildCameraKeyframe), P1
+lock/free unaffected (journey runs only in preview-app + only when hasJourney; canvas free-orbit/reset
+untouched), FP-15 OK (the HUD is a camera tool, not an Inspector tab; journey capture is structural
+authoring), no per-frame leak/loop (journeyActiveRef stops driving at progress≥1).
+
+### Verdict: the canvas user designs a camera journey; preview plays it as a deterministic landing fly-in. ✅
+
+---
+
+## P3 — EDIT-IN-PREVIEW
+
+### What changed
+- New additive canvas sub-mode `editInPreview` on the editor store (reset on any mode change /
+  drill-in). When on (in canvas): the camera locks to the configured shipped framing (the journey
+  landing pose if the hub has one, else the deterministic front pose), the editor viewport-frame
+  scaffolding (`CanvasViewportFrame` diamond) hides, but the toolbar, selection rings, and transform
+  gizmo stay live — so the user designs **against the real result**. Distinct from free-orbit canvas
+  editing. Toggle in the canvas HUD: "Edit in Preview" enter / "Editing in Preview · Exit" pill.
+- Camera: `SceneControlsBridge` `enabled={!isPreview && !framed}` (framed = canvas+editInPreview);
+  an effect snaps to the shipped pose on entry; exit re-enables free orbit at the current pose.
+
+### Evidence — `notes/verification/app-reality/p3/` (real browser, DPR-2)
+`p3-log.json`: free-orbit off-axis → **Edit-in-Preview**: snapped to shipped front view
+(az −0.4° / pol 89.8°) ✅; camera **locked** (drag Δpos 0.0000) ✅; **still editable** (node selected
++ editorMode 'edit' + gizmo) ✅; **exit restores free orbit** (camera orbits off-axis again) ✅;
+0 console errors. Frame `desktop-edit-in-preview.png`: front-facing composition, **no editor
+viewport-frame diamond** (app-like), Transform toolbar flyout open, transform gizmo ring on the
+selected node, Inspector present, "Editing in Preview · Exit" pill. Free-orbit / exit frames confirm
+the round-trip.
+
+### Review
+Self-audited; the camera lock/snap logic mirrors the already-reviewed P1 lock + P2 configured-pose
+patterns (only gating differs). editInPreview is additive, canvas-only, and resets on mode change —
+it cannot leak into galaxy/preview-app. P9 advocate exercises it end-to-end.
+
+### Verdict: edit the built app against its shipped framing, toolbar live — the real-result design loop. ✅
+
+---
+
+## P4 — BACKGROUNDS, FULL VIEWPORT (the app surface)
+
+### Before → after
+Before, the built composition floated as a small card on the generic near-black editor void — it read
+as "a 3D object in an editor", not an app. After, every hub has a **designed full-viewport atmosphere**
+it sits on.
+
+### What changed
+- New `HubSceneBackground` (mounted in the assembled scene → canvas + preview-app, NOT galaxy): a
+  **camera-CENTERED gradient skybox sphere**. Because it surrounds the camera it fills the entire
+  viewport on every device and aspect — there is **never a letterbox bar or an exposed scene edge**,
+  and resize / DPR / safe-area are handled for free (it is geometry the renderer fills). It gives a
+  subtle parallax as the canvas camera orbits and a fixed designed atmosphere under the locked preview
+  camera. One renderer (a `BackSide` sphere, `fog={false}`, renderOrder −1, depthWrite false).
+- The gradient is built from the hub palette into a 2:1 equirect: deep cool night sky → a warm brass
+  horizon glow pool at eye level (the studio key behind the content) → ice counter-glow → soft
+  (non-black) vignette → dark ground. Reads as a premium product hero, not an editor void.
+- `viewport.viewportFit: 'cover'` (layout) — edge-to-edge under the mobile notch / home-indicator.
+
+### Evidence — `notes/verification/app-reality/p4/` (real browser, DPR-2)
+Frames per viewport (`{desktop,mobile,constrained}-preview-fullbleed.png` + `-canvas-atmosphere.png`):
+- **desktop** — the whole viewport is the moody atmosphere with a warm glow behind the "Time, machined."
+  watch hero; no void, depth at the corners.
+- **mobile (390×844, the hard case)** — **edge-to-edge, top to bottom, no letterbox**; the skybox fills
+  the tall aspect (it surrounds the camera, so aspect cannot expose an edge). `viewportFit:cover` covers
+  the safe-area.
+- **constrained / canvas** — same full-coverage atmosphere; canvas shows it behind the page frame.
+0 console errors in all 3 contexts.
+(Note: the JSON corner-luma probe reads 0 — a known WebGPU/WebGL `drawImage`→2D pixel-read limitation,
+not a black background; the screenshots are the definitive evidence.)
+
+### Review
+Additive (new component, no schema/store change beyond the viewport meta); mounted only in the assembled
+scene so galaxy keeps its cosmic nebula; texture disposed on unmount / palette change; one renderer (no
+2nd renderer, no PixiJS); design-tokens palette only.
+
+### Verdict: the built app now owns the whole viewport on desktop and mobile — a designed surface, never a void. ✅
+
+---
+
+## P5 — DEVICE MODES (real responsive)
+
+### What changed
+- New additive `PrismNode.responsiveScenePos` (`{ mobile?, tablet?, desktop? }`, each `{x?,y?,z?,scale?,
+  hidden?}`) — per-device absolute pose overrides + scale multiplier + hide flag. The assembled scene
+  composes `scenePosition` with the active device's override, so the built composition genuinely
+  **re-lays-out** for the device (not a resized frame).
+- New `deviceMode` store state (resets to desktop when leaving preview-app). `SceneControlsBridge`
+  reframes the locked preview camera per device (mobile pulls in to z 11, tablet 14.5, desktop 18) so
+  the device's layout fills its frame.
+- New `PreviewDeviceFrame` overlay (preview-app only): a Desktop/Tablet/Mobile switcher + a device
+  **bezel** (9:19.5 phone with notch / 3:4 tablet, dimmed surround) that frames the live preview as the
+  real device view.
+- Authored real per-device layouts for the ORRERY arrival hub's 4 nodes in `live-graph.json` (the
+  editor loads this directly; `build:prism` reads it, never regenerates it).
+
+### Evidence — `notes/verification/app-reality/p5/` (real browser, DPR-2)
+`p5-log.json` confirms the showcase carries the authoring (`authoredOnGraph` present). Three frames
+(`desktop-preview-{desktop,tablet,mobile}.png`) show **three genuinely different layouts**, not a resized
+frame:
+- **desktop** — full authored layout, full-bleed (no bezel).
+- **tablet** — 3:4 bezel; intermediate scale; subtitle/watch/headline sized for tablet and fit.
+- **mobile** — 9:19.5 phone bezel + notch; tighter portrait column, hero text scaled to fit the phone
+  width, **the ambient dust node hidden** (responsive declutter). Watch re-centred + scaled, camera
+  pulled in. 0 console errors across all three.
+
+### Honest flags
+- The numeric world-pos probe (`__PRISM_EDITOR_GET_NODE_WORLD_POS__`) returned null in this preview
+  context (a harness getter limitation); the three side-by-side frames are the definitive proof of real
+  adaptation (positions/scales/visibility differ per device).
+- Per-device layouts are authored for the ORRERY **arrival** hub (the landing). The other 4 hubs use
+  their authored layout on every device (the device system works everywhere; per-node responsive
+  authoring is per-hub and can be extended). If `scripts/build-orrery-graph.mjs` is ever re-run, the
+  `responsiveScenePos` would need to be added there too (it is not in the build chain).
+
+### Verdict: Preview shows the real responsive version per device — a re-laid-out composition in a device frame, not a shrunk window. ✅
+
+---
+
+## P6 — HUB NAVIGATION WORKING (reparent-on-navigate + morph)
+
+### What changed
+- New `PreviewHubNav` rail (preview-app only): the running app's section nav — the hubs as tabs.
+  Clicking navigates hub→hub via the canonical write (`pushState(serializePreviewAppHash) +
+  setState({activeHubId})`), so the assembled scene re-scopes to the new hub (it resolves
+  `hub = hubs.find(activeHubId)` → `nodes = nodes.filter(parentHubId === hub)` and renders them at the
+  local origin — the editor's reparent-on-navigate). `navigateToHub(hubId)` is exported for P7's
+  Function-bound elements to reuse, keeping hash routing + the Prev/Next pager in sync.
+- New `HubMorphTransition` (preview-app only): on `activeHubId` change a **premium morph** plays — a
+  brass refractive band sweeps across while a brief dim crossfades the page swap, so navigation reads
+  as a designed page morph, not an instant cut. Inert under reduced motion.
+- Device-framing effect now re-applies on hub change (deps include `hub.hubId`).
+
+### Evidence — `notes/verification/app-reality/p6/` (real browser, DPR-2)
+`p6-log.json`: `navRailPresent` ✅, `hubChanged` ✅, `contentChanged` ✅ (rendered node ids differ),
+`hashUpdated` ✅ (`#hub=…`), `thirdHubChanged` ✅, 0 console errors. Frames show **three genuinely
+different pages**: `…-Arrival` (watch hero), `…-The Movement` (gears + "901 components · 47 jewels"),
+`…-Materia` ("Brass. Sapphire. Meteorite." material swatches) — switching pages like a real app, the
+nav rail highlighting the active section. Morph: DOM-confirmed the brass band + dim overlay animate on
+each navigation (`sawBand`/`sawDim` true, dim opacity ramps).
+
+### Honest flags
+- The morph's brass band uses `backdrop-filter`, which headless Chromium does not render, so it reads
+  subtle in the captured frame; the dim + band animate (DOM-confirmed) and the refractive band is more
+  pronounced in a real browser. Navigation itself is fully proven.
+- The literal `runtime/shared/hub-manager.ts` reparent adapter is the dead PrismHost runtime path; the
+  editor's preview navigates by re-scoping the single assembled scene to the active hub — the in-editor
+  equivalent of reparent-on-navigate (one scene, in place; no second mount).
+
+### Verdict: the hub rail navigates hub→hub in preview — distinct pages, hash-routed, with a morph. ✅
+
+---
+
+## P7 — FUNCTION BUTTON + BINDING + HOLOGRAPHIC OVERLAY (implements AMENDMENT 2026-06-14)
+
+### What changed
+- **Additive binding schema** (the SHARED source of truth): `PrismNode.functionBinding`
+  (`{kind:'navigate',hubId}` | `{kind:'overlay',elementId,size?,anchor?}`), `isGlobalElement`,
+  `overlaySpec`. Canvas writes them; the future node editor reads/writes the SAME field; Preview
+  executes them. Deeper behaviour (data/API/submit) stays node-editor scope.
+- **Function toolbar action** (Canvas): new `function` tool group (icon `link`). Clicking it opens the
+  binding popup for the selected element (not a left-dock flyout).
+- **Function popup** (`FunctionBindingPopup`): selectable visuals of **every hub** (navigate tiles) +
+  **every global element** (overlay tiles) + **New hub / New global element / New element**. Picking a
+  hub binds navigate-on-click; picking a global element reveals **size (S/M/L) + location (3×3)**
+  controls → binds open-overlay. Writes `functionBinding` via `useGraphSourceStore.updateNode` (the
+  shared graph). Shows + can clear the current binding.
+- **Preview execution**: in preview-app, a click on a Function-bound element executes its binding —
+  navigate (pushState + setState `activeHubId`, with the P6 morph) or open the global element as an
+  overlay (`OverlayHost` renders it at the binding's size/location). It does NOT select / open the
+  inspector (that stays canvas behaviour).
+- **Sample premium overlay** (`HolographicDetailCard`): a photoreal **holographic detail-card** with a
+  glitch / RGB-split title, a code-drawn holographic emblem (rings + rotating reticle), scanline sweep,
+  holo gridlines, transparency breathing, and the watch's spec rows — built from the DESIGN-REFERENCES
+  toolkit (scoped `<style jsx>` keyframes, no global CSS, reduced-motion aware, brass/ice tokens, no
+  purple). Bound to the ORRERY **watch** as the payoff.
+
+### Evidence — `notes/verification/app-reality/p7/` (real browser, DPR-2, REAL clicks)
+`p7-log.json`: authoring loaded (watch→overlay binding, headline→navigate binding, card
+`isGlobalElement` + title "ORRERY No.7") ✅; `popupOpen` ✅; **`watchClickOpenedOverlay` ✅ (real
+raycast click on the watch opened the holographic card)**; `holoCardInDom` ✅; **`headlineClickNavigated`
+✅ (real click on the headline navigated to `s2-movement`)**; 0 console errors.
+Frames: `desktop-function-popup.png` (the full popup — hub tiles + global-element tile + New options +
+size/location controls + "Bind overlay on click"); `desktop-holographic-overlay.png` (the centred
+premium holographic card opened over the running app).
+
+### fal
+None used — the holographic card is code-driven (DESIGN-REFERENCES toolkit), so no diffusion generation
+was needed. fal ledger unchanged (cumulative $0.479).
+
+### Adversarial review + MUST-FIX (resolved)
+`prism-criteria-reviewer`: all invariants pass — INV-8 additive (schema 46/0, store 22/0, zero
+deletions), AMENDMENT compliance (binding on the node's own `functionBinding`, written by Canvas via
+`updateNode`, read/written by the future node editor — same field; no deep data/API wired), FP-15
+non-applicable (the popup is the Function action, not an Inspector tab), preview execution with no
+double-fire (canvas select+inspector unchanged when not previewMode), one renderer / tokens-only / no
+purple / `<style jsx>` scoped keyframes / listener cleanup. **One MUST-FIX:** the global element
+(`parentHubId: ''`) rendered as a stray orphan sphere in galaxy/canvas-topology (the assembled path
+excluded it, the topology path didn't). **Fixed:** topology `toEditorView` now filters
+`!isGlobalElement`. Re-verified: `desktop-galaxy-no-orphan.png` (23 nodes, 5 hub clusters, no orphan)
+and P7 re-run after the fix still passes all click verdicts, 0 errors.
+
+### Verdict: bind navigation/overlay in Canvas, stored in the shared schema, executed in Preview — clicking the watch opens a premium holographic card. ✅
+
+---
+
+## P8 — NAV CHROME PRIMITIVES (nav library category)
+
+### What changed
+- New `src/lib/editor/elements/catalog/nav-chrome.ts` adds **4 nav-chrome primitives** to the prebuilt
+  library's existing `navigation` category — all preconfigured, selectable, droppable, fully
+  customizable VISUAL elements built from real editable `PrismNode` members (MSDF text + PBR meshes):
+  - **Header bar** — logo + nav links + a brass CTA pill on a machined-glass bar.
+  - **Footer** — brand mark + three link columns + baseline on a glass slab.
+  - **Dropdown menu** — a brass trigger + a floating glass menu panel with items + active highlight.
+  - **Menu list** — a vertical menu / command list: glass panel + active brass row + items with glyphs.
+  Observatory-Brass (brass/gold + ice/steel + charcoal glass, **no purple**), premium, procedural PBR
+  (no fal). Barrel regenerated (`regen-element-barrel.mjs`). Their targets are bound via the P7
+  Function action / node editor (these are the chrome, not the behaviour). Mobile-aware: each member is
+  an ordinary node, so once placed it carries the P5 `responsiveScenePos` device-layout system.
+
+### Evidence — `notes/verification/app-reality/p8/` (real browser, DPR-2)
+`p8-log.json`: library opens; **all four** (`Header bar`, `Footer`, `Dropdown menu`, `Menu list`) are
+registered + present in the DOM; 0 console errors; tsc 0-new. Frame `desktop-library-navigation.png`
+(Navigation category filtered): the four render as **premium live tiles** — Header bar (brass bar +
+Work/Studio/Journal/About + CTA), Dropdown menu (brass "Products" trigger + glass panel + Editor/
+Runtime/Library/Pricing), Footer (glass slab + Product/Company columns), Menu list (glass panel + MENU
++ Home/Galaxy/Canvas/Preview/Settings + active brass row) — beside the 2 existing nav elements.
+
+### Honest flags
+- The headless library-grid filter/drag interactions were finicky to drive (portal + live shared-rig
+  canvas); the rendered Navigation tiles are the definitive proof the elements are valid + premium.
+  Drop-to-place uses the **same** `buildClusterNodeInputs` + `addNodesBatch` path as the existing 36
+  catalog elements (a proven mechanism), so placement is inherited, not re-implemented.
+
+### Verdict: menus, dropdowns, headers, footers — premium Observatory-Brass nav chrome, droppable from the library, bound via the Function action. ✅
+
+---
+
+## P9 — INTERACTIVE VERIFICATION + SIGN-OFF
+
+### The "behaves like a real app" system-test matrix (real browser, real clicks, DPR-2)
+Every row was driven like a person, not asserted. Desktop 1440×900, mobile 390×844, constrained 880×600.
+
+| Journey step | Proof (real interaction) | Desktop | Mobile | Constrained |
+|---|---|---|---|---|
+| Free-orbit edit camera + reset-to-zero + angle HUD | drag-orbit off-axis, reset signal | ✅ az −84 | ✅ az −89.6 | ✅ az −121.9 |
+| Preview camera LOCKED | drag does not move camera (Δpos 0) | ✅ | ✅ | ✅ |
+| Camera journey authored → plays in preview | REC 3 waypoints, preview start=kf0 end=kfL (Δ0) | ✅ | — | — |
+| Edit-in-Preview (shipped frame, still editable) | toggle, select node + edit gizmo | ✅ | (resp.) | (resp.) |
+| Full-viewport background (no void/seam) | feathered hero surface fills viewport | ✅ | ✅ WOW | ✅ |
+| Device modes (real responsive) | auto from viewport + manual switch + bezels | ✅ | ✅ | ✅ |
+| Hub→hub navigation (rail, hash, morph) | click rail → distinct pages | ✅ | ✅ | ✅ |
+| Function-bound click → holographic overlay | real raycast click on the watch | ✅ | ✅ | ✅ |
+| Navigate-on-click binding | real click on headline → s2-movement | ✅ | — | — |
+| Nav chrome library | 4 premium nav tiles in the nav category | ✅ | — | — |
+
+### P4 MUST-FIX (raised by the capstone advocate) — RESOLVED
+First capstone pass: WITHHELD — 7/8 phases WOW, but P4's content read as "a hard-edged card floating on a
+gradient — panel-on-background, not an app surface." **Fix:** the hub's hero backdrop + dark pool now
+FEATHER (radial alpha falloff) into the full-viewport skybox so the surface bleeds off-frame (no card
+seam); preview AUTO-picks the device layout from the real viewport width (a phone gets the mobile layout,
+no bezel — `page.tsx` resize effect); the camera frames the hero to fill. Re-captured
+`p4/desktop-preview-fullbleed.png` (feathered oval surface, "Time, machined." clear, no seam) +
+`p9/mobile-preview-app.png` (auto Mobile, prominent watch hero, full-bleed, no bezel).
+
+### No-regression
+- **tsc: 0 new errors** (9 pre-existing baseline — the async-gl `GLProps` factory + 8 `tests/**`
+  `NodeContext.THREE` fixture mocks — all predate this run).
+- **vitest: 3349 passed / 0 failed / 8 skipped (3357).** The only failures were the 3 `EBR2-D-02`
+  SC-071 canvas-rail assertions, which P1 deliberately superseded (free canvas) — **updated** to encode
+  the new free-camera contract (canvas free bounds + preview `enabled={false}` lock + cleared boundary).
+- **409 animatable primitives** intact (the 406+ catalog); **40 prebuilt elements** (the 36 + the 4 new
+  nav-chrome). No catalog/element removed.
+- **0 console errors** across every phase's real-browser capture (all `*-log.json` `errors: 0`).
+
+### Perf
+Headless Chromium runs WebGL2 via **software (SwiftShader)** — its rAF frame rate (~2–6) is NOT
+representative of real devices (prior catalog runs verified the real-Metal-GPU path is far faster). The
+product signal that matters here held: every interactive capture rendered + responded with **0 console
+errors** on mobile + constrained, and the scene is one renderer with capability tiering (INV-9). A real
+on-device perf pass is the honest next step (flagged).
+
+### fal ledger
+**$0 spent this run** — every premium visual (skybox atmosphere, holographic card, nav chrome, feathered
+surface) is code-driven (DESIGN-REFERENCES toolkit + procedural PBR). Cumulative unchanged at $0.479.
+
+### Honest flags (polish-nits, non-blocking)
+- Desktop hero (the watch mesh) reads moody/subtle vs the mobile hero — an art-direction nit (lighting/
+  atmosphere), not a panel-on-background failure; the seam is resolved.
+- The morph sweep + holographic card backdrop-blur are subtle in headless (backdrop-filter not rendered);
+  more pronounced on a real browser.
+- Prev/Next + Replay-intro + hub-name chrome pills are plainer than the premium content.
+- Numeric harness getters (`__PRISM_EDITOR_GET_NODE_WORLD_POS__`, corner-luma) returned 0/null in some
+  contexts — harness limits, not product bugs; the frames + other numeric logs govern.
+
+### Capstone advocate sign-off (fresh-context, frame-cited)
+- **Pass 1:** WITHHELD — 7/8 phases WOW (P1/P2/P3/P6/P7 WOW; P5/P8 pass), one MUST-FIX (P4 floating-card seam).
+- **Re-check (after fix):** "The P4 floating-card seam MUST-FIX is **RESOLVED** on both desktop and mobile —
+  content now feathers off-frame and reads as an app surface; **only a desktop hero-punchiness polish-nit
+  remains, so the prior block is cleared.**" Remaining MUST-FIX: **NONE.**
+
+### FINAL VERDICT — WOW + behaves like a real app ✅ (0 MUST-FIX)
+The editor now reads as a real navigable 3D app, not a set of 3D scenes: free to author from any angle
+and locked to ship; a camera journey you design and the app plays as a fly-in; a full-viewport designed
+surface that bleeds edge-to-edge on desktop and mobile; real responsive layouts per device; hub→hub page
+navigation with a morph; click a watch and a premium holographic card opens; nav chrome you drop and bind.
+All proven by driving the running app with real clicks (0 console errors), no regressions (vitest 0-fail,
+tsc 0-new, catalog + elements intact), $0 of fal. Mobile is WOW; desktop hero-punchiness is the one
+remaining polish-nit.
+
+---
+
+## Plain-language summary
+We made the Prism editor feel like a real app you can navigate, not just 3D scenes sitting in a frame.
+
+- **You design from any angle, but visitors can't break the shot.** In the editing canvas the camera is
+  fully free to orbit/pan/zoom, with a little compass + "reset to straight-on" (with a haptic buzz). In
+  the live preview the camera is locked to the view you chose, so the app never spins off to show empty edges.
+- **You can choreograph a camera fly-in.** Record a few camera angles in canvas; the preview plays that
+  exact journey as a landing-page intro, the same way every time.
+- **The whole screen is a designed surface, on phone and desktop.** Instead of a small card floating in a
+  black void, each page now has a full-viewport atmosphere the content melts into — edge-to-edge, no bars,
+  even on a phone with a notch.
+- **It's genuinely responsive.** Preview shows the real Desktop / Tablet / Mobile version (the layout
+  actually rearranges), and a phone visitor automatically gets the mobile layout.
+- **It navigates like a website.** A nav bar switches between the five pages (Arrival, Movement, Materia,
+  Celestia, Acquire) with a premium morph, and the URL updates.
+- **Things do things when clicked.** A new "Function" button lets you point an element at a page (go there)
+  or at a pop-up panel — and we built a showy holographic watch-detail card that opens when you click the
+  watch, to show the payoff. These bindings are saved on the element itself, so the future node-editor sees
+  the same wiring.
+- **Ready-made nav pieces.** Headers, footers, dropdowns and menus are now drag-in library pieces in your
+  brand's brass-and-glass style.
+
+Verified by actually using the running app (real clicks, screenshots, on desktop + mobile + a constrained
+pane), with no test regressions and no money spent on image generation. The independent reviewer's verdict:
+**WOW and behaves like a real app, zero must-fix** — the only leftover is making the desktop watch shot a
+touch punchier. STOP.

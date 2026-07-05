@@ -1,0 +1,7 @@
+{
+  "name": "image-to-particles",
+  "label": "Grain Density",
+  "description": "The card disintegrates into a storm of grains that carry its actual colors, swirl away, then fly home to reassemble it perfectly.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

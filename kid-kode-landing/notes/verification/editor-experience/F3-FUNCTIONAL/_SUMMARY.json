@@ -1,0 +1,32 @@
+{
+  "suite": "F3 FUNCTIONAL-VERIFY",
+  "date": "2026-06-19",
+  "app": "http://localhost:3000",
+  "harness": "headed real-GPU Chrome, 1440x900 dsf2, WebGPU",
+  "hubs": ["Arrival(s1-arrival)","The Movement(s2-movement)","Materia(s3-materia)","Celestia(s4-celestia)","Acquire(s5-acquire)"],
+  "console_errors_total_main_run": 14,
+  "console_errors_classification": "ALL 14 identical benign React dev warning (CSS shorthand+longhand mix) from ColorPicker.tsx swatch (background + backgroundImage). Not thrown errors; cosmetic dev-only.",
+  "flows": [
+    {"flow":"1 MODE SWITCH","status":"PASS","evidence":"galaxy->canvas->preview-app->galaxy all applied; 0 new errs","frame":"01-mode-*.png"},
+    {"flow":"2 HUB NAV","status":"PASS","evidence":"6/6 pills (Galaxy + 5 hubs) changed activeHubId + scene flew to each hub","frame":"02-hub-*.png"},
+    {"flow":"3 SELECT + INSPECTOR","status":"PASS","evidence":"canvas-click selected orr-acquire-watch; inspector opened","frame":"03-select-inspector.png"},
+    {"flow":"4 STAGING KEYSTONE","status":"PASS","evidence":"Save(1) shown; preview buffer held thru preview-app (built state unchanged visually); Save cleared buffer; Rebuild ran; srcColor committed #ff3300","frame":"04a..04e.png"},
+    {"flow":"5 DISCARD","status":"PASS","evidence":"staged color edit; Discard cleared buffer (1->0); Save label reverted to Saved","frame":"05a/05b.png"},
+    {"flow":"6 GIZMO / DRAG","status":"PASS","evidence":"Edit engaged editorMode=edit; Move armed gizmo=translate; gizmo handles visibly rendered on canvas","frame":"06f-armed.png/06f-after-nudge.png"},
+    {"flow":"7 UNDO / REDO","status":"PASS","evidence":"committed edit; Undo reverted color #22ff88->#ff3300, Redo reapplied; History panel present; Cmd+Z/Cmd+Shift+Z documented","frame":"07a..07c.png"},
+    {"flow":"8 ADD NODE","status":"PASS","evidence":"dialog opened; node added 23->24","frame":"08a/08b.png"},
+    {"flow":"9 TEXT TOOL","status":"PASS","evidence":"Add Text revealed text-content textarea visible+editable, NOT clipped (bbox 104,234 222x38)","frame":"09f-content.png"},
+    {"flow":"10 BACKGROUND PICKER","status":"PASS","evidence":"flyout opened; 5 presets w/ thumbnails (Brass Nebula, Ice Field, Observatory Deep, Cosmic Drift, Captured Observatory); applying changed hub.background","frame":"10a/10b.png"},
+    {"flow":"11 SEARCH","status":"PASS","evidence":"Cmd+K opened palette; HUBS + NODES sections filter by query","frame":"11a/11b.png"}
+  ],
+  "regression": {
+    "id":"F3-REG-1",
+    "severity":"HIGH",
+    "title":"Inspector Visual tab crashes app for a node with undefined `visual` (e.g. nodes created via Add Node)",
+    "root_cause":"src/lib/prism-graph/visual-spec-sliders.ts:83 dereferences node.visual.alpha without guarding node.visual (the rest of the file uses optional chaining e.g. node.visual?.sourceAsset).",
+    "precondition":"useGraphSourceStore.addNode + applyPlanRendererDefaults (plan-output-hook.ts) seed renderMode/cinematicPrimitives/materialSpec but NOT `visual`; AddNodeDialog passes no visual. Confirmed newNodeHasVisual=false.",
+    "repro":"Canvas mode -> + Add Node (dialog) -> create node -> select it -> Inspector full Visual tab renders VisualPreview -> buildVisualSpecSliders -> TypeError: Cannot read properties of undefined (reading 'alpha') -> Next.js error overlay covers app.",
+    "evidence_frame":"09r-text-content.png (captured the runtime error overlay + call stack: initialFor -> buildVisualSpecSliders -> VisualPreview.useMemo[sliders] -> VisualTab -> Inspector)",
+    "note":"Intermittent in capture: full Inspector Visual tab triggers it; the compact Inspector card path is guarded and does not crash."
+  }
+}

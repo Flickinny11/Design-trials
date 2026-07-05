@@ -1,0 +1,86 @@
+{
+  "feature": "P1 TEXT SYSTEM — canvas text editing (canvas-spec §7; §18 crit 26/27/28-masking)",
+  "claim": "First-time user can Add Text (real crisp MSDF in 3D scene), pick from ~1,900 fonts with on-demand atlas bake, restyle instantly (size/weight/fills/presets), pour AI-described textures INTO letterforms, and move text like any element; catalog text animations animate real per-glyph letterforms.",
+  "groundTruthSibling": "before-after (wave-text/scramble proxy-slab tiles)",
+  "state": "current",
+  "rubric": {
+    "q1_defects": {
+      "answer": "One objective defect, seen in EVERY frame of the drive: the default Add Text result is nearly invisible. The new text spawns warm-white over the light-gray hub viewport at a measured ~1.48:1 contrast (stroke luma 222 vs background 184 — far below even the 3:1 large-text floor), AND it spawns dead-center directly behind the existing watch element, so the middle letters are occluded in frames 03 through 09 and 12 ('Molten Brass' reads as 'Molte Br s'; the yellow square also swallows the 'a'). In 03-text-node-added.png the freshly added word 'Text' is genuinely hard to find. Nothing else is broken: chrome is clean graphite/brass with no purple (01-canvas-mode.png, 10-styled-fullframe.png), glyph edges are crisp at large size (05-resized.png), and the sweep recorded 0 bad network responses. Minor evidence inconsistency: the sweep step claims consoleErrors:0 while the top-level consoleErrors array carries one 404 resource failure.",
+      "evidence": [
+        "03-text-node-added.png",
+        "07-closeup-default-fill.png",
+        "metrics: 07 text-region stroke p97 luma=222 vs bg median luma=184 → approx contrast 1.48:1",
+        "12-ai-fill-applied.png",
+        "console: results.json consoleErrors[] contains one 404 'Failed to load resource' while the sweep step reports consoleErrors:0"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — every load-bearing part of the claim is visible and real. Add Text produces 4 real MSDF glyph meshes (results.json, font=Inter), not an image or slab. The font claim is real: 1,935 families listed (crit27-fonts-list.txt), and on-demand bake is proven live — first atlas request miss at 1.13s, second hit at 6ms, real 301x297 RGBA PNG + msdf JSON with 97 chars (crit27-cache-proof.txt); the in-app re-font to non-core Abril Fatface visibly changes the letterforms to a fat serif (04-refont-noncore.png vs 03). The gradient preset pours a real amber gradient into the letters (08-closeup-gradient-preset.png, stroke hue 38°, 18.1% of text-region pixels changed vs default). The AI fill is a genuine texture poured INTO letterforms, not a tint: 12-ai-fill-applied.png shows mottled molten-gold inside intact glyph shapes, intra-letter luma stdev 45.2 vs 4.4 for the flat gradient — that variance can only be a texture. Bisect frames 13/14/15 show three distinct texture sources each tinting the glyphs differently. The catalog before/after is dramatic and exactly as claimed: wave-text-BEFORE-proxy.png shows 7 rounded slabs; wave-text-AFTER-realglyphs.png shows real 'PRISM' letterforms mid-wave at per-glyph offsets; same for scramble. One sub-claim is NOT evidenced: the 'visible loading state' during a non-core bake — no frame in the bundle captures it.",
+      "evidence": [
+        "metrics: results.json step 'Add Text → real MSDF glyph meshes in scene' glyphs=4 font=Inter",
+        "04-refont-noncore.png",
+        "metrics: crit27-cache-proof.txt — miss 1.133s → hit 0.006s, atlas PNG 301x297 RGBA, msdf distanceRange 4, 97 chars; crit27-fonts-list.txt total families 1935",
+        "08-closeup-gradient-preset.png",
+        "metrics: 12 AI-fill stroke meanRGB=[194,141,83] hue=31° sat=0.57, intra-letter luma stdev 45.2 vs 4.4 (flat gradient 08) → real texture, letterforms untouched",
+        "wave-text-AFTER-realglyphs.png",
+        "scramble-BEFORE-proxy.png"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Mostly yes. The Text toolbar group opens a flyout with a single, plainly labeled '+ Add Text · Home' button (02-text-flyout.png) — a first-timer would find it unprompted. The styling panel exposes named one-click presets (Glacial/Brass, Serif/Editorial, Outline/Wire, Shadow/Poster) and a plain-English AI prompt box whose 'molten gold' prompt yields five clickable lava swatches plus a 'Generate more' button (10-styled-fullframe.png, 11-ai-fill-swatches.png) — discoverable and self-explanatory. The one discoverability failure is the first-touch moment itself: after clicking Add Text, the user must FIND their near-invisible, occluded text (03-text-node-added.png) before any of the styling delight can happen.",
+      "evidence": [
+        "02-text-flyout.png",
+        "11-ai-fill-swatches.png",
+        "10-styled-fullframe.png",
+        "03-text-node-added.png"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, with numbers to back it: in-app re-font to a non-core font completed in 387ms in place (same Group uuid — the text did not flicker out and back), resize applied instantly in place (fontSize 1.35, visibly larger in 05-resized.png vs 04), the second atlas fetch is a 6ms cache hit, restyling triggered ZERO image-artifact re-renders (imgReqDelta=0) and all 7 sibling nodes kept identity. Move is real: x 0→0.18 between 05 and 06-moved.png. The glow preset is the weakest control — it does change the frame measurably (13.4% of text-region pixels shifted >10) but reads as barely different from the default white on this light background (07 vs 09).",
+      "evidence": [
+        "metrics: results.json refontMs=387 same-uuid, fontSize 1.35 in-place, imgReqDelta=0, others=7 stable, xBefore=0 xAfter=0.18",
+        "05-resized.png",
+        "06-moved.png",
+        "control: glow preset 07 vs 09 text-region mean delta=3.94, 13.4% pixels >10 — changed but visually subtle"
+      ]
+    },
+    "q5_net": {
+      "answer": "INDIFFERENT, one must-fix. As a first-time user: 'There is a LOT here and it all actually works — two thousand fonts that load instantly, one-click styles, and pouring molten gold into my letters felt like magic. But the very first thing I did was click Add Text and I honestly could not find my text — it was white on a light-gray page, hiding behind the watch. Fix that first moment and I would rave about this.' The first beat of the claim ('see real, crisp MSDF text appear') visibly fails at default spawn; everything after it earns the finish-line reaction.",
+      "evidence": [
+        "03-text-node-added.png",
+        "metrics: default fill contrast 1.48:1 (stroke luma 222 vs bg 184); AI-fill 12 hue=31° sat=0.57 texture stdev 45.2 proves the delight is real once styled",
+        "12-ai-fill-applied.png"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "Default Add Text spawn is nearly invisible: warm-white default fill measures ~1.48:1 contrast against the light hub viewport, AND the node spawns at hub center directly behind the existing watch element, occluding the middle letters in every captured frame (the demo text is never fully legible anywhere in the bundle). The claim's first user moment — 'click Add Text and SEE real, crisp text appear' — fails as captured. Fix shape is implementer's choice: contrast-aware default fill (or dark default over light hubs) plus spawn placement that avoids occluding/being occluded by existing elements (offset or front-most depth).",
+      "evidence": "03-text-node-added.png + 07-closeup-default-fill.png; metrics: stroke p97 luma=222 vs bg median luma=184 → ~1.48:1; occlusion also visible in 04/05/06/08/09/12"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Neon/glow preset reads as nearly plain white on the light hub — measurably alive (13.4% of text-region pixels changed >10) but a user clicking 'Neon' expects an unmistakable glow. Likely fine on dark scenes; consider a stronger halo or background-aware emissive boost.",
+      "evidence": "09-closeup-glow-preset.png; control: 07 vs 09 mean delta=3.94, 13.4% px >10 (vs gradient preset 15.36 / 18.1%)"
+    },
+    {
+      "note": "Evidence self-contradiction: sweep step reports consoleErrors:0 but the bundle's consoleErrors array contains one 404 'Failed to load resource'. Untriaged; badResponses=[] suggests it predates the listener. Triage and stamp the source.",
+      "evidence": "console: results.json consoleErrors[0]='Failed to load resource: ... 404' vs step 'console+network sweep' consoleErrors:0"
+    },
+    {
+      "note": "The claimed 'visible loading state' during a non-core font bake is not evidenced — no frame captures the loading UI. The bake is fast (miss 1.13s server, 387ms in-app re-font), so impact is low, but the sub-claim is currently assertion-only.",
+      "evidence": "metrics: crit27-cache-proof.txt miss time_total=1.133s; results.json refontMs=387; no loading-state frame present in bundle"
+    },
+    {
+      "note": "AI fill cloud endpoint is unwired (disclosed honestly in-UI; swatches are local procedural bakes). Works as captured, but 'describe ANY look' expectations should stay tempered until the cloud path lands.",
+      "evidence": "11-ai-fill-swatches.png"
+    },
+    {
+      "note": "Bundle carries no explicit renderer-backend attestation (no metrics.json/backend=webgpu stamp; results.json is structural). Provenance is asserted as real-GPU Chrome and the structural steps interrogate the live scene graph, so not blocking — but future text-system bundles should stamp the backend.",
+      "evidence": "metrics: results.json contains steps[] + atlasRequests[] but no backend field"
+    }
+  ],
+  "net": "INDIFFERENT",
+  "gate": "BLOCKED"
+}

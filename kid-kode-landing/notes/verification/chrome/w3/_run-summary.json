@@ -1,0 +1,14 @@
+{
+  "at": "n/a",
+  "base": "http://localhost:3000",
+  "scenes": [
+    {
+      "name": "desktop",
+      "consoleErrors": 2
+    },
+    {
+      "name": "constrained",
+      "consoleErrors": 0
+    }
+  ]
+}

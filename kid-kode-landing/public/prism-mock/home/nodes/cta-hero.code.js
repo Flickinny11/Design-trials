@@ -1,20 +1,23 @@
 // Hand-authored codeRef module for the home-cta-hero node.
-// Spec contract: PRISM-RENDERER-MIGRATION-SPEC.md §8 — createNode(config, ctx)
+// Spec contract: PRISM-RUNTIME-SPEC.md §9 (INV-R9) — createNode(config, ctx)
 // returns THREE.Object3D synchronously, with userData.cleanup + userData.handlers.
 // All async loading happens via cached ctx loaders (textureLoader, glbLoader,
-// fontAtlas). THREE classes imported from 'three/webgpu' per §9.A
-// ALLOWED_IMPORT_SOURCES (resolved at runtime via the §11 importmap in
-// layout.tsx). Cinematic primitives are applied via
+// fontAtlas). Cinematic primitives are applied via
 // ctx.primitives[name](target, params).
+//
+// THREE classes come from `ctx.THREE` — the single bundled `three` instance
+// (RT-SC-02 / INV-R1). This module is loaded via a native `import(url)`, so a
+// bare `import … from 'three'`/`'three/webgpu'` here would resolve through the
+// browser import-map to a SECOND `three` from a CDN — the multiple-instances
+// crash. Reading from ctx.THREE keeps everything on the one bundled instance.
 //
 // Behavior: loads the smartwatch GLB at meshUrl, applies scenePosition,
 // adds an MSDF text label below the mesh, runs depth-rotate (idle slow Y
 // rotation), runs kinetic-text wave on label entrance. Click anywhere on
 // the mesh emits 'cta-clicked' via ctx.emit.
 
-import { Box3, Group, Vector3 } from 'three/webgpu';
-
 export default function createNode(config, ctx) {
+  const { Box3, Group, Vector3 } = ctx.THREE;
   const root = new Group();
   root.name = `node:${config.nodeId}`;
 

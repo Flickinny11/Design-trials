@@ -1,0 +1,56 @@
+{
+  "feature": "fog-roll",
+  "claim": "A bank of fog rolls in from one side, billowing across the surface in slow churning layers, with in-shader front-to-back depth.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "The round-2 blocker is FIXED. The hard vertical mid-quad seam — a near-black vertical canyon splitting the quad into a darker-left and brighter-right fog sheet — is GONE. idle.png and play-1/2/3.png all show one smooth continuous organic density field: soft cool-grey fog filling the quad evenly with billowing wisps, no vertical channel down the centre, no axis-aligned tile grid, no pasted-side-by-side edge. Nothing is cut off, misaligned, or low-contrast. bandingScore ~0.19 reflects organic fog detail, not a hard seam (judged by eye per caveat-a — no canyon/shelves visible). No console or network errors.",
+      "evidence": [
+        "fog-roll/after/idle.png",
+        "fog-roll/after/play-2.png",
+        "metrics: play-2 bandingScore=0.192 (organic, no hard seam by eye); consoleErrors=[] networkErrors=[]"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "Yes — reads as a continuous rolling fog bank. effHue=220 effSat=0.08 is a soft cool desaturated grey, exactly fog/mist colour; the body is a churning continuous density field of soft-edged billowing wisps with no hard leading edge (a fairly even soft fill is acceptable for fog per the caveat). The headline round-2 failure (front edge reading as a dark canyon dividing two sheets) is resolved — the field is now seamless across the centre.",
+      "evidence": [
+        "fog-roll/after/play-3.png",
+        "fog-roll/after/idle.png",
+        "metrics: idle effHue=220 effSat=0.08 (neutral cool fog)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Yes for the control a user would reach for. The labeled 'density' control sweeps obviously: low = nearly clear/dissipated (control-density-low.png near-black, meanLuma 7.6), mid = moderate fog (meanLuma 41), high = thick filled fog (meanLuma 55). Dragging 'density' gives immediate cause-and-effect. 'roll' and 'scale' show changed=false on the paused sweep (expected per caveat-b — roll is motion, scale is frequency; judged from play deltas, not paused stats) and do not mislead.",
+      "evidence": [
+        "fog-roll/after/control-density-low.png",
+        "fog-roll/after/control-density-high.png",
+        "control: density low->high changed=true meanLuma 7.6 -> 55"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Responsive. Play frames differ — wisps drift and reform between play-1, play-2, play-3 (frameDeltaMag 1.23, 1.28, 3.37, all non-zero), the slow churning drift the claim describes. No identical/dead frames. Control apply latency ~573-612ms is acceptable.",
+      "evidence": [
+        "fog-roll/after/play-1.png",
+        "fog-roll/after/play-3.png",
+        "metrics: play-1 frameDeltaMag=1.23, play-2=1.28, play-3=3.37"
+      ]
+    },
+    "q5_net": {
+      "answer": "PLEASED. A user would say: 'The fog looks soft and real and the weird dark seam down the middle is gone now — it's one smooth bank of grey fog that drifts and gets thicker or thinner when I drag the density slider.' The round-2 vertical-seam blocker is resolved and the organic body from round-1 is preserved.",
+      "evidence": [
+        "fog-roll/after/play-2.png",
+        "fog-roll/after/control-density-high.png"
+      ]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    {
+      "note": "The fog fills the quad fairly evenly with no strong directional 'rolls in from one side' read — it looks more like ambient drifting fog than a bank entering from one edge. Acceptable for fog per the caveat, but a subtle directional gradient would match the claim's wording more literally. Subjective taste, not a blocker.",
+      "evidence": "fog-roll/after/idle.png"
+    }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

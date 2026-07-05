@@ -1,0 +1,84 @@
+{
+  "feature": "lens-bulge",
+  "claim": "A magnifying bulge swells under the cursor — the surface domes out optically, content stretching at the rim like glass over paper. Texture preserved through the bulge.",
+  "groundTruthSibling": "liquefy-reveal",
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "Multiple defects. (1) TWO dead controls: control-magnify-{low,mid,high}.png and control-rim-{low,mid,high}.png are byte-identical — all six share one MD5 (2134d4b105f66ba015adc3a277cf7ae3), and metrics report meanAbsDiff=0 / changed=false for both. The 'magnify' control is the literal heart of the claim (a lens that does not magnify on demand). (2) The bulge renders as a dark, OPAQUE glossy sphere/dome that OCCLUDES the card content rather than a transparent lens; in play-2/play-3 and control-radius-high it covers/eats the brass header and rows instead of magnifying them. No card texture is visible THROUGH the lens body. The card itself (brass header, grey rows, blue dot) is real and preserved at the card level (not a blank slab), so it is not the placeholder-slab defect class — but the lens body shows none of that content. (3) Weak motion across play frames (metrics frameDeltaMag 0.6 / 1.76 / 1.33).",
+      "evidence": [
+        "metrics: control magnify changed=false meanAbsDiff=0 changedFrac=0",
+        "metrics: control rim changed=false meanAbsDiff=0 changedFrac=0",
+        "md5: control-magnify-low/mid/high + control-rim-low/mid/high all = 2134d4b105f66ba015adc3a277cf7ae3 (6 frames, one hash)",
+        "lens-bulge/after/play-2.png (dark opaque sphere occludes header/rows)",
+        "lens-bulge/after/play-3.png (content hidden under solid ball, not magnified)",
+        "lens-bulge/after/control-radius-high.png (large dark dome eats brass header)",
+        "metrics: play frameDeltaMag 0.6/1.76/1.33"
+      ]
+    },
+    "q2_reads_as": {
+      "answer": "No, it does not read as the claim at premium quality. The claim is a magnifying glass-over-paper bulge with texture preserved and stretched at the rim. What renders is a dark, near-black, glossy 3D orb/dome sitting ON TOP of the card, hiding the content beneath it. There is no visible optical magnification of the card's own texture through the lens. The sibling magnifier pointer-loupe shows the correct read — a transparent ring that keeps the brass header and rows visible (and enlarged) THROUGH the lens. lens-bulge instead occludes, which reads as a dark blob, not glass.",
+      "evidence": [
+        "lens-bulge/after/play-1.png (dark opaque orb, no see-through magnification)",
+        "lens-bulge/after/control-strength-high.png (bulge is a solid dark dome, content hidden)",
+        "pointer-loupe/after/control-zoom-mid.png (sibling: transparent rim, card content visible THROUGH lens — the correct lens read)",
+        "metrics: backend=webgpu, idle effHue=33 (card preserved at card level)"
+      ]
+    },
+    "q3_discoverable": {
+      "answer": "Partially. The idle card is clean and legible (brass header, grey rows, blue accent dot), and the bulge is large/obvious where the cursor sits, so the user notices SOMETHING is happening. But because the effect occludes rather than magnifies, what is discoverable reads as a dark ball on the card, not an inviting magnifier, so discoverability of the INTENDED effect is poor.",
+      "evidence": [
+        "lens-bulge/after/idle.png (clean legible card)",
+        "lens-bulge/after/play-2.png (effect is obvious but reads as occluding orb)"
+      ]
+    },
+    "q4_responsive": {
+      "answer": "Half the controls are dead. 'radius' is live and clearly visible (control-radius-low shows a small orb, control-radius-high a large dome; metrics meanAbsDiff=2.76). 'strength' is live but subtle (metrics meanAbsDiff=0.736) and increasing it increases OCCLUSION, not magnification. 'magnify' and 'rim' are completely DEAD — low/mid/high frames are byte-identical (one shared MD5; metrics meanAbsDiff=0, changed=false). The control named for the core claimed behavior (magnify) does nothing.",
+      "evidence": [
+        "lens-bulge/after/control-radius-low.png vs lens-bulge/after/control-radius-high.png (small orb vs large dome — live)",
+        "lens-bulge/after/control-strength-low.png vs lens-bulge/after/control-strength-high.png (live but adds occlusion)",
+        "md5: control-magnify-low.png == control-magnify-high.png == control-rim-low.png == control-rim-high.png (2134d4b1... — dead)",
+        "metrics: magnify meanAbsDiff=0 / rim meanAbsDiff=0"
+      ]
+    },
+    "q5_net": {
+      "answer": "ANNOYED. The card content is real (not a placeholder), but the effect fails to read as a magnifying lens — it is a dark opaque orb that hides content instead of preserving and stretching texture through glass. On top of that, two of four controls (including 'magnify', the literal core of the claim) are provably dead at the byte level. This is below the premium bar and would frustrate a user who expects glass-over-paper magnification.",
+      "evidence": [
+        "lens-bulge/after/play-3.png (dark ball occludes content)",
+        "pointer-loupe/after/control-zoom-mid.png (sibling shows the correct see-through lens this fails to deliver)",
+        "md5: 6 magnify+rim frames collapse to one hash (dead controls)",
+        "metrics: magnify changed=false, rim changed=false"
+      ]
+    }
+  },
+  "mustFix": [
+    {
+      "issue": "The 'magnify' control is completely dead — control-magnify-low/mid/high are byte-identical (MD5 2134d4b105f66ba015adc3a277cf7ae3; metrics meanAbsDiff=0, changed=false). Magnification is the literal core of a lens-bulge, so a non-functional magnify knob is a blocking failure.",
+      "evidence": "md5 control-magnify-low.png==control-magnify-mid.png==control-magnify-high.png = 2134d4b105f66ba015adc3a277cf7ae3; metrics: magnify changed=false meanAbsDiff=0 changedFrac=0"
+    },
+    {
+      "issue": "The 'rim' control is completely dead — control-rim-low/mid/high are byte-identical to each other (and to the magnify frames), MD5 2134d4b105f66ba015adc3a277cf7ae3; metrics meanAbsDiff=0, changed=false. The claim explicitly calls for content stretching at the rim, so a dead rim control is a blocking failure.",
+      "evidence": "md5 control-rim-low.png==control-rim-mid.png==control-rim-high.png = 2134d4b105f66ba015adc3a277cf7ae3; metrics: rim changed=false meanAbsDiff=0"
+    },
+    {
+      "issue": "Does-not-read-as-claimed: the bulge renders as a dark, opaque, glossy sphere/dome that OCCLUDES the card content instead of a transparent lens that magnifies and preserves the card's own texture through it. No card texture is visible through the lens body, and at high radius/strength it eats the brass header. The sibling magnifier (pointer-loupe) shows the correct see-through-and-enlarge read this primitive fails to deliver.",
+      "evidence": "lens-bulge/after/play-2.png, lens-bulge/after/play-3.png, lens-bulge/after/control-radius-high.png (dark dome occludes content) vs pointer-loupe/after/control-zoom-mid.png (transparent lens, content visible through it)"
+    }
+  ],
+  "flags": [
+    {
+      "note": "Increasing 'strength' increases occlusion (a darker, more solid dome) rather than increasing optical magnification — even the live controls push away from the claimed glass-over-paper behavior. Worth revisiting once the lens is made transparent/refractive.",
+      "evidence": "lens-bulge/after/control-strength-low.png (faint rim refraction of header) vs lens-bulge/after/control-strength-high.png (large solid dark dome)"
+    },
+    {
+      "note": "Play-frame motion is weak (metrics frameDeltaMag 0.6 / 1.76 / 1.33); the bulge feels static rather than swelling dynamically under the cursor.",
+      "evidence": "metrics: play-1=0.6, play-2=1.76, play-3=1.33 frameDeltaMag"
+    },
+    {
+      "note": "Ground-truth sibling 'liquefy-reveal' bundle was not present in the evidence set; calibration was done against the available related magnifier sibling pointer-loupe instead. Verdict does not depend on the missing bundle.",
+      "evidence": "ls useradvocate-sixtile/ shows no liquefy-reveal dir; pointer-loupe/after/ used for lens-read calibration"
+    }
+  ],
+  "net": "ANNOYED",
+  "gate": "BLOCKED"
+}

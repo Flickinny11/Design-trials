@@ -79,12 +79,18 @@ function buildCompiledGraph(source, regionsWrapper) {
     return compiled;
   });
 
-  return {
+  // Editor-build §5 / SC-006: thread the App_Name_World root through the
+  // .prism artifact so the runtime path sees rootNodes regardless of which
+  // loader was used (live-graph.json fetch vs .prism artifact unpack).
+  // Additive (INV-18); pre-EB-02-02 fixtures without rootNodes still build.
+  const compiled = {
     version: PRISM_VERSION,
     hubs: [source.hub],
     nodes,
     edges: source.edges,
   };
+  if (Array.isArray(source.rootNodes)) compiled.rootNodes = source.rootNodes;
+  return compiled;
 }
 
 function pickRegion(r) {

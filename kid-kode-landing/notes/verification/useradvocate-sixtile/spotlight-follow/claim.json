@@ -1,0 +1,7 @@
+{
+  "name": "spotlight-follow",
+  "label": "Radius",
+  "description": "A bright specular hotspot tracks the pointer across the card surface, like a light gliding over glass.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,7 @@
+{
+  "name": "scroll-path-scrub",
+  "label": "Path",
+  "description": "Scroll steers the card along a sculpted 3D path — banking into the curves like a camera dolly on a bent track.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

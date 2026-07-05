@@ -1,0 +1,145 @@
+{
+  "at": "2026-06-08T23:05:52.495Z",
+  "results": [
+    {
+      "name": "clouds",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "dust-poof",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "hover-lift",
+      "renders": true,
+      "plays": false,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "iris-wipe",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "lightning-bolt",
+      "renders": true,
+      "plays": false,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "liquefy-reveal",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "pointer-attract-scale",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "pointer-press",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "reveal-mask-scroll",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "roll-in",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "scroll-skew",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "fail"
+    },
+    {
+      "name": "spiral-in",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "split-3d",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "notes": [],
+      "backend": "webgl",
+      "tier": "std",
+      "verdict": "pass"
+    },
+    {
+      "name": "dappled-light",
+      "renders": true,
+      "plays": false,
+      "controls": false,
+      "notes": [],
+      "backend": "webgpu",
+      "tier": "glass",
+      "verdict": "fail"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "wind-gust-sim",
+  "label": "Count",
+  "description": "A field of leaf-amber motes is blown by a real wind force field — a steady breeze plus traveling gusts and curl turbulence, integrated with drag so they accelerate in the gust front, swirl, and coast between gusts. Physics, not an easing curve.",
+  "category": "particles",
+  "groundTruthSibling": null
+}

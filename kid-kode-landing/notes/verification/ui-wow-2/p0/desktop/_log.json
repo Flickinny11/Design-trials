@@ -1,0 +1,15 @@
+{
+  "profile": "desktop",
+  "at": "2026-06-14T07:23:48.132Z",
+  "base": "http://localhost:3000",
+  "backend": {
+    "backend": "webgpu",
+    "gpu": true,
+    "tier": "t2",
+    "innerW": 1440,
+    "mainW": 1440,
+    "density": "wide"
+  },
+  "consoleErrors": [],
+  "badResponses": []
+}

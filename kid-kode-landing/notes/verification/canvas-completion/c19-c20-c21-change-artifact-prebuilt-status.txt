@@ -1,0 +1,33 @@
+=== c19/c20/c21 — Change-Artifact wizard (upload face-mapping / prompt-generation 4-modal + Use This) and prebuilt library: STATUS PROOF (2026-06-10 23:53) ===
+
+--- c19: NO face-mapping (cube=6/cone=2/sphere=1) or drag-to-assign anywhere ---
+$ grep -rn "faceMap\|face-map\|facesPerShape\|dragToAssign\|assignFace" src/ (excluding .bak)
+(no matches — face mapping does not exist)
+
+What exists instead (P3/P4): image UPLOAD + URL + REPLACE artifact paths onto image-plane nodes
+414:                data-action="image-replace-file"
+429:                data-action="image-replace-url"
++ editable dimensions per mesh-primitive kind (P4 ObjectFlyout per-kind faders) and imageSpec fit/crop/radius/opacity (P3).
+Live-proven in notes/verification/image-media/results.json (upload content-hashed+idempotent; URL->plane; replace+rebuild) and notes/verification/3d-object/results.json (reshape faders).
+
+--- c20: prompt generation is a FLAGGED HOOK by design; no 3D/video/code generation; no 'Use This' swap UI ---
+$ head src/server/image-gen/generate.ts (FLAGGED: returns { wired:false } — no FAL key in this environment)
+import 'server-only';
+
+// P3 ASSETS (C) — FLAGGED AI image generation hook.
+//
+// Mirror of src/server/text-fill/generate.ts in spirit: the Add Object
+// pipeline's cloud-generation half, shipped as a FLAGGED HOOK. There is no
+// FAL key in this environment, so `generateImages` returns
+// `{ wired: false, images: [] }` today. The full request/response types are
+// declared below so wiring the real endpoint later is a drop-in (replace the
+// body of `generateImages`; no caller changes).
+$ grep -rn "Use This" src/ (excluding .bak)
+(no matches — Use This swap does not exist)
+$ grep -rln "video-gen\|model-gen\|3d-gen\|code-gen" src/server/ 
+(no matches — only image-gen + text-fill hooks exist)
+Honest-disclosure UI proven: notes/verification/image-media/04-generate-honest.png + results.json step 'generation honestly disclosed as unwired; no fake output'.
+
+--- c21: NO prebuilt-library drag-to-place cluster feature ---
+$ grep -rn "prebuilt\|Prebuilt\|cluster" src/components/editor src/lib/editor (excluding .bak, excluding tool-cluster chrome wording)
+(no matches — prebuilt library does not exist in current source; only in CanvasToolbar .bak history)

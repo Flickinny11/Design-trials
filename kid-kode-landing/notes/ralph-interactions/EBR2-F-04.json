@@ -1,0 +1,36 @@
+{
+  "task_id": "EBR2-F-04",
+  "url_path": "/",
+  "_comment": "Galaxy-mode drag listener — pointermove updates draggingPointerWorld + draggingNearestHubId via hub-geometry.findNearestHub; a transient tether overlay renders. Implementer adds data-component='galaxy-drag-tether' on the SVG/Canvas tether overlay element so a snapshot reviewer can eyeball it. Sets up clone-drag state via Inspector clone (depends on EBR2-F-03 having shipped).",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.setEditorMode('edit'); const newId = src.cloneNode(node.nodeId); ed.setViewMode('galaxy'); ed.setEditorRenderMode('topology'); ed.setDraggingNode(newId); return { newId, viewMode: stores.graphEditor.getState().viewMode, editorRenderMode: stores.graphEditor.getState().editorRenderMode, draggingNodeId: stores.graphEditor.getState().draggingNodeId }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1000 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "window.__PRISM_DEBUG_STORES__?.graphEditor?.getState?.()?.viewMode === 'galaxy'"
+    },
+    {
+      "action": "evaluate",
+      "js": "(() => { const canvas = document.querySelector('canvas'); if (!canvas) return null; const rect = canvas.getBoundingClientRect(); const cx = rect.left + rect.width / 2; const cy = rect.top + rect.height / 2; for (let i = 0; i < 10; i += 1) { canvas.dispatchEvent(new PointerEvent('pointermove', { clientX: cx + i * 8, clientY: cy + i * 4, bubbles: true, pointerId: 1 })); } return { cx, cy }; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 800 },
+    { "action": "screenshot", "name": "mid-drag.png" },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const ed = window.__PRISM_DEBUG_STORES__.graphEditor.getState(); const tetherEl = document.querySelector('[data-component=\"galaxy-drag-tether\"]'); return typeof ed.draggingNodeId === 'string' && !!tetherEl && typeof ed.draggingNearestHubId === 'string'; })()"
+    },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "water-balloon-wobble",
+  "label": "Skin Stiffness",
+  "description": "A pressurized soft balloon: an XPBD particle shell held round by surface springs plus a volume/pressure restoring force. Poke it and the skin dents, the trapped water sloshes, and it wobbles back to round — physics, not an easing curve.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
 import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
 import { toEditorView } from '@/lib/prism-graph/view-model';
 import { Icon } from '@/components/editor/icons/Icon';
+import { DS, dsAlpha } from '@/components/editor/design-system';
 
 export default function SearchPalette() {
   const open = useGraphEditorStore((s) => s.searchOpen);
@@ -28,6 +30,12 @@ export default function SearchPalette() {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedIdx, setSelectedIdx] = useState(0);
+
+  // UI-FIDELITY-2 — hero glass: the palette plate refracts the live scene
+  // (the smoked scrim stays CSS); the search field renders as a carved well.
+  // Hooks run before the early return (hooks rule).
+  const panelSlab = useChromeSlab({ material: 'glass', radius: 18, accent: 1, frost: 0.65 });
+  const inputSlab = useChromeSlab({ material: 'well', radius: 13 });
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -70,53 +78,72 @@ export default function SearchPalette() {
     else if (e.key === 'Enter' && total > 0) { e.preventDefault(); selectResult(selectedIdx); }
   };
 
+  // Brass row reveal — selection (keyboard or hover) gets a soft brass wash,
+  // an inset brass keyline, and a brass rail on the leading edge.
+  const rowSelectedStyle: React.CSSProperties = {
+    background: 'var(--ds-grad-metal-soft)',
+    boxShadow:
+      'inset 2px 0 0 var(--ds-metal-400), inset 0 0 0 1px rgba(var(--ds-metal-400-rgb), 0.3), inset 0 1px 0 rgba(var(--ds-metal-200-rgb), 0.18)',
+  };
+
   return (
     <div
       className="absolute inset-0 z-50 flex items-start justify-center pt-[14vh] pointer-events-auto"
-      style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(10px)' }}
+      style={{
+        background: dsAlpha(DS.void, 0.62),
+        backdropFilter: 'var(--ds-frost-light)',
+        WebkitBackdropFilter: 'var(--ds-frost-light)',
+      }}
       onClick={toggleSearch}
     >
       <div
+        ref={panelSlab.ref}
         onClick={(e) => e.stopPropagation()}
-        className="w-[min(640px,92vw)] rounded-2xl border border-white/10 overflow-hidden"
-        style={{
-          background: 'linear-gradient(180deg, rgba(20,22,44,0.98), rgba(12,13,34,0.98))',
-          backdropFilter: 'blur(36px) saturate(180%)',
-          boxShadow: '0 36px 96px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.05)',
-        }}
+        className="w-[min(640px,92vw)] ds-glass ds-glass--heavy ds-edge--metal rounded-ds-lg overflow-hidden ds-reveal"
+        style={{ boxShadow: 'var(--ds-chamfer), var(--ds-elev-4), var(--ds-glow-arc)' }}
       >
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/5">
-          <Icon name="search" size={16} color="#b5bddf" />
+        <div
+          className="flex items-center gap-3 px-4 py-3.5"
+          style={{ boxShadow: 'inset 0 -1px 0 var(--ds-edge-shade), inset 0 1px 0 var(--ds-edge-specular)' }}
+        >
+          <Icon name="search" size={16} color={DS.metal300} glow />
           <input
-            ref={inputRef}
+            // Merged ref: focus management keeps inputRef; the slab renders
+            // the ds-input trough as a real recessed well at t2.
+            ref={(el) => { inputRef.current = el; inputSlab.ref(el); }}
             value={query}
             onChange={(e) => { setQuery(e.target.value); setSelectedIdx(0); }}
             onKeyDown={onKey}
             placeholder="Search nodes, hubs, elements…"
-            className="flex-1 bg-transparent outline-none text-white text-[15px] placeholder:text-white/30 font-sans"
+            className="ds-input flex-1 font-sans"
+            style={{ minHeight: 40, fontSize: 14 }}
           />
-          <div className="text-[10px] font-mono text-white/30 px-1.5 py-0.5 rounded border border-white/10">ESC</div>
+          <div className="ds-chip">ESC</div>
         </div>
 
         <div className="max-h-[56vh] overflow-y-auto p-2">
           {hubMatches.length > 0 && (
             <>
-              <div className="px-3 py-2 text-[9px] font-mono tracking-widest text-white/35">HUBS</div>
+              <div className="px-3 py-2 ds-kicker">HUBS</div>
               {hubMatches.map((h, i) => (
                 <button
                   key={h.id}
                   onClick={() => selectResult(i)}
                   onMouseEnter={() => setSelectedIdx(i)}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
-                    selectedIdx === i ? 'bg-white/8' : 'hover:bg-white/5'
-                  }`}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-ds-sm transition-colors text-left"
+                  style={selectedIdx === i ? rowSelectedStyle : undefined}
                 >
                   <Icon name={h.glyph} size={14} color={h.color} glow />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[13px] font-semibold text-white/90">{h.name}</div>
-                    <div className="text-[10px] font-mono text-white/40">{h.route}</div>
+                    <div
+                      className="text-[13px] font-semibold"
+                      style={{ color: selectedIdx === i ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
+                    >
+                      {h.name}
+                    </div>
+                    <div className="text-[10px] font-mono text-ds-text-low">{h.route}</div>
                   </div>
-                  <Icon name="arrowRight" size={12} color="#6b7694" />
+                  <Icon name="arrowRight" size={12} color={selectedIdx === i ? DS.metal300 : DS.textLow} />
                 </button>
               ))}
             </>
@@ -124,36 +151,40 @@ export default function SearchPalette() {
 
           {nodeMatches.length > 0 && (
             <>
-              <div className="px-3 py-2 mt-1 text-[9px] font-mono tracking-widest text-white/35">NODES</div>
+              <div className="px-3 py-2 mt-1 ds-kicker">NODES</div>
               {nodeMatches.map((n, i) => {
                 const idx = i + hubMatches.length;
                 const sc =
-                  n.status === 'verified' ? '#22c55e' :
-                  n.status === 'failed' ? '#ef4466' : '#f5a524';
+                  n.status === 'verified' ? DS.ok :
+                  n.status === 'failed' ? DS.danger : DS.warn;
                 return (
                   <button
                     key={n.id}
                     onClick={() => selectResult(idx)}
                     onMouseEnter={() => setSelectedIdx(idx)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-left ${
-                      selectedIdx === idx ? 'bg-white/8' : 'hover:bg-white/5'
-                    }`}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-ds-sm transition-colors text-left"
+                    style={selectedIdx === idx ? rowSelectedStyle : undefined}
                   >
-                    <div className="w-6 h-6 rounded-md bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-                      <Icon name="grid" size={11} color="#8896b8" />
+                    <div className="ds-well w-7 h-7 rounded-ds-xs flex items-center justify-center flex-shrink-0">
+                      <Icon name="grid" size={11} color={selectedIdx === idx ? DS.metal300 : DS.textMid} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[13px] font-semibold text-white/90 truncate">{n.name}</span>
-                        <span className="text-[9px] font-mono text-white/40">{n.elementType}</span>
+                        <span
+                          className="text-[13px] font-semibold truncate"
+                          style={{ color: selectedIdx === idx ? 'var(--ds-metal-200)' : 'var(--ds-text-hi)' }}
+                        >
+                          {n.name}
+                        </span>
+                        <span className="text-[9px] font-mono text-ds-text-low">{n.elementType}</span>
                         <span
                           className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                           style={{ background: sc, boxShadow: `0 0 4px ${sc}` }}
                         />
                       </div>
-                      <div className="text-[11px] text-white/50 truncate">{n.caption}</div>
+                      <div className="text-[11px] text-ds-text-mid truncate">{n.caption}</div>
                     </div>
-                    <Icon name="arrowRight" size={12} color="#6b7694" />
+                    <Icon name="arrowRight" size={12} color={selectedIdx === idx ? DS.metal300 : DS.textLow} />
                   </button>
                 );
               })}
@@ -161,18 +192,21 @@ export default function SearchPalette() {
           )}
 
           {total === 0 && (
-            <div className="p-8 text-center text-[12px] text-white/40">
-              No matches for "<span className="text-white/70">{query}</span>"
+            <div className="p-8 text-center text-[12px] text-ds-text-mid">
+              No matches for "<span className="text-ds-text-hi">{query}</span>"
             </div>
           )}
         </div>
 
-        <div className="flex items-center justify-between px-5 py-2.5 border-t border-white/5 text-[10px] font-mono text-white/35">
+        <div
+          className="flex items-center justify-between px-5 py-2.5 ds-kicker"
+          style={{ boxShadow: 'inset 0 1px 0 var(--ds-edge-side)' }}
+        >
           <div className="flex items-center gap-3">
             <span>↑↓ navigate</span>
             <span>↵ select</span>
           </div>
-          <span>⌘K to toggle</span>
+          <span className="text-ds-metal-300">⌘K to toggle</span>
         </div>
       </div>
     </div>

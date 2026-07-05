@@ -1,0 +1,14 @@
+{
+  "run": "text-3d-styling",
+  "account": "shared $50 fal account",
+  "warnAt": 25,
+  "hardWarnAt": 40,
+  "stopAt": 48,
+  "entries": [
+    { "model": "fal-ai/flux-2", "purpose": "P5 verify: prompt->texture 'molten copper relief, hammered metal' (count=4 to limit spend; product default is 10)", "estCost": 0.048, "count": 4, "at": "2026-06-14T15:22:00Z" }
+  ],
+  "total": 0.048,
+  "priorCumulative": 0.431,
+  "cumulative": 0.479,
+  "note": "Well under $25 warn. fal fires only on explicit 'Generate with AI' click (cost-gated, not per keystroke)."
+}

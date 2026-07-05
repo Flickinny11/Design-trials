@@ -1,0 +1,230 @@
+{
+  "steps": [
+    {
+      "step": "headline selected via marquee",
+      "ok": true,
+      "nodeId": "home-headline"
+    },
+    {
+      "step": "edit mode entered via Inspector Edit toggle; gizmo mounted",
+      "ok": true
+    },
+    {
+      "step": "REAL drag on gizmo X-arrow mutated scenePosition",
+      "ok": true,
+      "dx": 0.9987777964326745,
+      "dy": 0
+    },
+    {
+      "step": "REAL drag on Z ring mutated scenePosition.rotation*",
+      "ok": true,
+      "drz": 0.9647298125016123,
+      "drx": 0,
+      "dry": 0
+    },
+    {
+      "step": "REAL drag on X scale handle mutated scenePosition.scale*",
+      "ok": true,
+      "sx": 0.44864819256006794,
+      "sy": 1
+    },
+    {
+      "step": "scenePosition persisted to live-graph.json (autosave)",
+      "ok": true,
+      "diskSP": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.9647298125016123,
+        "scaleX": 0.44864819256006794,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    },
+    {
+      "step": "values round-trip through save/reload (fresh boot reads them back)",
+      "ok": true,
+      "spReloaded": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.9647298125016123,
+        "scaleX": 0.44864819256006794,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    }
+  ],
+  "legs": {
+    "start": {
+      "x": 0.18,
+      "y": 1.5,
+      "z": 0.1,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0,
+      "scaleX": 1,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "translate": {
+      "method": "real-mouse-drag on TransformControls X arrow",
+      "handle": {
+        "start": {
+          "x": 680.7084198231869,
+          "y": 296.5079762251234
+        },
+        "dir": {
+          "x": 0.9999911308457878,
+          "y": 0.00421167778473601
+        },
+        "span": 28.117327711603668,
+        "count": 51,
+        "mesh": "X",
+        "verts": 51
+      },
+      "before": {
+        "x": 0.18,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "after": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    },
+    "rotate": {
+      "method": "real-mouse-drag on TransformControls rotate ring",
+      "ring": "Z",
+      "handle": {
+        "start": {
+          "x": 827.3939656554921,
+          "y": 327.7894043474328
+        },
+        "dir": {
+          "x": 0.20332791434932176,
+          "y": 0.9791106981574427
+        },
+        "span": 33.60138932262434,
+        "count": 24,
+        "mesh": "Z",
+        "verts": 24
+      },
+      "before": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "after": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.9647298125016123,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    },
+    "scale": {
+      "method": "real-mouse-drag on TransformControls scale handle",
+      "handle": "X",
+      "h": {
+        "start": {
+          "x": 852.7430628898005,
+          "y": 296.1612188978378
+        },
+        "dir": {
+          "x": 0.25027714486245073,
+          "y": -0.9681742357445274
+        },
+        "span": 22.368690416335568,
+        "count": 24,
+        "mesh": "X",
+        "verts": 24
+      },
+      "before": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.9647298125016123,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1
+      },
+      "after": {
+        "x": 1.1787777964326744,
+        "y": 1.5,
+        "z": 0.1,
+        "rotationX": 0,
+        "rotationY": 0,
+        "rotationZ": 0.9647298125016123,
+        "scaleX": 0.44864819256006794,
+        "scaleY": 1,
+        "scaleZ": 1
+      }
+    },
+    "final": {
+      "x": 1.1787777964326744,
+      "y": 1.5,
+      "z": 0.1,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0.9647298125016123,
+      "scaleX": 0.44864819256006794,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "disk": {
+      "x": 1.1787777964326744,
+      "y": 1.5,
+      "z": 0.1,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0.9647298125016123,
+      "scaleX": 0.44864819256006794,
+      "scaleY": 1,
+      "scaleZ": 1
+    },
+    "reloaded": {
+      "x": 1.1787777964326744,
+      "y": 1.5,
+      "z": 0.1,
+      "rotationX": 0,
+      "rotationY": 0,
+      "rotationZ": 0.9647298125016123,
+      "scaleX": 0.44864819256006794,
+      "scaleY": 1,
+      "scaleZ": 1
+    }
+  },
+  "consoleErrors": [],
+  "pass": true,
+  "rawConsoleMessages": []
+}

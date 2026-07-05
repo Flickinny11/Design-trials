@@ -1,0 +1,539 @@
+{
+  "summary": "Fresh-context user-advocate review of 9 new W4 cursor-physics primitives",
+  "agentCount": 9,
+  "logs": [
+    "SHIP 7/9: velocity-skew-follow, proximity-rim-glow, spring-chain-follow, pendant-dangle, throw-physics, charge-release, pointer-cast-shadow",
+    "BLOCKED: magnetic-stick, gravity-well"
+  ],
+  "result": {
+    "ship": [
+      "velocity-skew-follow",
+      "proximity-rim-glow",
+      "spring-chain-follow",
+      "pendant-dangle",
+      "throw-physics",
+      "charge-release",
+      "pointer-cast-shadow"
+    ],
+    "blocked": [
+      "magnetic-stick",
+      "gravity-well"
+    ],
+    "verdicts": [
+      {
+        "tile": "velocity-skew-follow",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "speed",
+            "live": true,
+            "evidence": "control-speed-low.png shows a steep diagonal lean/shear; control-speed-high.png shows a noticeably flatter, more level pose — visibly differ to the eye. metrics: speed changed=true meanAbsDiff=4.843 changedFrac=0.1188 (above noise). Smallest of the four sweeps but clearly present."
+          },
+          {
+            "control": "skewAmount",
+            "live": true,
+            "evidence": "control-skewAmount-low.png shows the card nearly level with minimal shear; control-skewAmount-high.png shows a pronounced diagonal shear/lean — reads exactly as more skew. metrics: skewAmount changed=true meanAbsDiff=7.032 changedFrac=0.1674."
+          },
+          {
+            "control": "skewClamp",
+            "live": true,
+            "evidence": "control-skewClamp-low.png shows a flatter/more level pose (lean limited); control-skewClamp-high.png shows a steeper diagonal lean (clamp permits more). Visibly differ. metrics: skewClamp changed=true meanAbsDiff=6.903 changedFrac=0.1657."
+          },
+          {
+            "control": "span",
+            "live": true,
+            "evidence": "control-span-low.png shows a steeper diagonal lean; control-span-high.png shows a flatter, more level pose with shifted shadow footprint — largest visible change. metrics: span changed=true meanAbsDiff=10.719 changedFrac=0.2664."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1.png → play-2.png → play-3.png the card visibly chases up/into the cursor and leans/skews into a progressively steeper diagonal (rotation.z lean + anisotropic shear). metrics frameDeltaMag decays 11.93→9.22→7.4, matching 'easing out long'. A layperson plainly sees the card chasing the cursor and leaning into its velocity. Card material (amber header, grey rows, blue dot, dark body) preserved identically to ground-truth magnetic/after/idle.png."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "velocity-skew-follow/after/idle.png",
+          "velocity-skew-follow/after/play-1.png",
+          "velocity-skew-follow/after/play-2.png",
+          "velocity-skew-follow/after/play-3.png",
+          "velocity-skew-follow/after/control-speed-low.png",
+          "velocity-skew-follow/after/control-speed-mid.png",
+          "velocity-skew-follow/after/control-speed-high.png",
+          "velocity-skew-follow/after/control-skewAmount-low.png",
+          "velocity-skew-follow/after/control-skewAmount-mid.png",
+          "velocity-skew-follow/after/control-skewAmount-high.png",
+          "velocity-skew-follow/after/control-skewClamp-low.png",
+          "velocity-skew-follow/after/control-skewClamp-mid.png",
+          "velocity-skew-follow/after/control-skewClamp-high.png",
+          "velocity-skew-follow/after/control-span-low.png",
+          "velocity-skew-follow/after/control-span-high.png",
+          "magnetic/after/idle.png",
+          "magnetic/after/play-2.png"
+        ],
+        "flags": [
+          "speed control is the most subtle sweep (meanAbsDiff=4.843, smallest of the four) — clearly visible and above noise, so a FLAG not a blocker.",
+          "Engaged poses recur across different sweeps (e.g. control-speed-low resembles control-skewAmount-high) because all four controls manipulate the same lean/shear axis — expected for a velocity-coupled shear, not a defect."
+        ],
+        "summary": "WebGPU, true-color, DPR2, zero console/network errors. The effect reads plainly: across play-1..3 the card chases the cursor and leans/skews into a progressively steeper diagonal with rotation.z lean + anisotropic shear, and frameDeltaMag decays 11.93→9.22→7.4 (easing out long, as claimed). All four named controls (speed, skewAmount, skewClamp, span) are LIVE — each visibly reshapes the engaged pinned pose and shows changed=true with meanAbsDiff above sensor noise (4.84/7.03/6.90/10.72). Card material is fully preserved against the ground-truth magnetic sibling (amber header bar, grey rows, blue accent dot, dark body); idle is legible at a near-neutral home pose. No material destruction, placeholder slab, clipping, jitter/explosion, purple accents, AI-grain, or blur. SHIP. Two FLAGs (subjective): speed is the most subtle sweep, and engaged poses recur across sweeps since all controls drive the same lean/shear axis."
+      },
+      {
+        "tile": "magnetic-stick",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "controlsLive": [
+          {
+            "control": "captureRadius",
+            "live": true,
+            "evidence": "control-captureRadius-low.png shows the card near-flat/centered (cursor out of range) while control-captureRadius-high.png shows it pulled up-right and tilted/captured — visibly different to the eye; metrics meanAbsDiff=7.88, changedFrac=0.2183, changed=true, meanLuma 16.2->19.7"
+          },
+          {
+            "control": "escapeFactor",
+            "live": true,
+            "evidence": "control-escapeFactor-low.png is visibly a touch brighter/looser than control-escapeFactor-mid.png/high; metrics meanAbsDiff=6.33, changedFrac=0.1457, changed=true. Subtle and mid==high byte-identical (effRGB 78.5/72.6/64.2 both) so it only shifts at the low end — present but weak (FLAG)"
+          },
+          {
+            "control": "stickStiffness",
+            "live": false,
+            "evidence": "control-stickStiffness-low.png, -mid.png and -high.png are pixel-for-pixel identical (same captured pose); metrics meanAbsDiff=0, changedFrac=0, changed=false, identical effRGB 78.5/72.6/64.2 across all three — fully DEAD"
+          },
+          {
+            "control": "releaseWobble",
+            "live": true,
+            "evidence": "control-releaseWobble-low.png shows the card near-home/flat-centered while control-releaseWobble-high.png shows it pulled up-right and tilted; clearly different; metrics meanAbsDiff=10.393, changedFrac=0.2633, changed=true"
+          },
+          {
+            "control": "grabPulse",
+            "live": true,
+            "evidence": "control-grabPulse-low.png small/dim card -> -mid larger/brighter -> -high.png dramatically enlarged and brightened (swell/charge toward viewer); metrics meanAbsDiff=16.896, changedFrac=0.4205, meanLuma climbs 16.6->21.4->26.8 and effSat 0.13->0.20->0.26, changed=true"
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across after/play-1.png -> play-2.png -> play-3.png the card visibly chases and snaps toward the cursor (starts lower-right at idle.png, slides up-left through the play frames); metrics frameDeltaMag 10.74/5.38/11.37 confirm motion, warm amber accent preserved (effHue 33-34). grabPulse-high.png shows the magnet 'grab' swell. Magnetic capture reads plainly to a layperson and matches the ground-truth sibling magnetic/after/play-1.png behavior"
+        },
+        "newMustFixes": [
+          {
+            "issue": "Named control 'stickStiffness' is fully DEAD — sweeping it low->mid->high produces no visible or measurable change to the engaged pose, so a user moving that slider sees nothing happen.",
+            "evidence": "magnetic-stick/after/control-stickStiffness-{low,mid,high}.png are byte-identical; metrics.json stickStiffness pixelDiff meanAbsDiff=0, changedFrac=0, changed=false, identical effRGB 78.5/72.6/64.2 across all three frames"
+          }
+        ],
+        "citedFrames": [
+          "magnetic-stick/after/idle.png",
+          "magnetic-stick/after/play-1.png",
+          "magnetic-stick/after/play-2.png",
+          "magnetic-stick/after/play-3.png",
+          "magnetic-stick/after/control-captureRadius-low.png",
+          "magnetic-stick/after/control-captureRadius-high.png",
+          "magnetic-stick/after/control-escapeFactor-low.png",
+          "magnetic-stick/after/control-escapeFactor-mid.png",
+          "magnetic-stick/after/control-escapeFactor-high.png",
+          "magnetic-stick/after/control-stickStiffness-low.png",
+          "magnetic-stick/after/control-stickStiffness-high.png",
+          "magnetic-stick/after/control-releaseWobble-low.png",
+          "magnetic-stick/after/control-releaseWobble-high.png",
+          "magnetic-stick/after/control-grabPulse-low.png",
+          "magnetic-stick/after/control-grabPulse-mid.png",
+          "magnetic-stick/after/control-grabPulse-high.png",
+          "magnetic/after/play-1.png",
+          "magnetic/after/play-2.png",
+          "magnetic-stick/after/metrics.json"
+        ],
+        "flags": [
+          "escapeFactor is live but weak: only the low end shifts (mid==high are byte-identical, effRGB 78.5/72.6/64.2); meanAbsDiff=6.33, changedFrac=0.1457. Subtle-but-present, so a FLAG not a blocker — would be more satisfying if escape produced a clearer pose change across the full range.",
+          "No defects in material/legibility: card (amber header, grey rows, blue dot, dark rounded body, soft shadow) is preserved at ground-truth-sibling fidelity in every frame; idle.png fully legible at home pose; no purple, no AI-grain, no DPR2 blur, no clipping; consoleErrors=[] networkErrors=[] backend=webgpu."
+        ],
+        "summary": "magnetic-stick reads convincingly as a magnetic cursor-capture effect (the card chases and snaps toward the cursor across play-1->2->3, frameDeltaMag 10.7/5.4/11.4) and preserves the card material at ground-truth-sibling fidelity — no anti-slop defects, idle legible, backend webgpu, zero console/network errors. Four of five named controls are live (captureRadius, releaseWobble, grabPulse strongly; escapeFactor weakly/FLAG). However, stickStiffness is a fully DEAD control: its low/mid/high sweep frames are byte-identical (metrics meanAbsDiff=0, changedFrac=0, changed=false), so moving that slider does nothing. Per the rule that a fully dead named control = BLOCKED, this cannot ship until stickStiffness produces a visible change at the engaged pose."
+      },
+      {
+        "tile": "proximity-rim-glow",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "intensity",
+            "live": true,
+            "evidence": "control-intensity-low.png shows essentially no rim (card edge dark/neutral, like idle) vs control-intensity-high.png with a strong warm brass rim hugging every edge. metrics: intensity meanAbsDiff=2.277 changedFrac=0.0364 changed=true; meanLuma 16.4(low)->18.5(high), warmFrac 0.26(low)->0.55(high)."
+          },
+          {
+            "control": "rimTightness",
+            "live": true,
+            "evidence": "control-rimTightness-low.png is a broad warm wash flooding the whole card interior (loosest rim) vs control-rimTightness-high.png a thin crisp edge-hugging rim. Strongest sweep: metrics meanAbsDiff=8.755 changedFrac=0.2126 changed=true; warmFrac 0.96(low)->0.42(high), meanLuma 26.0->17.3."
+          },
+          {
+            "control": "proximityRange",
+            "live": true,
+            "evidence": "control-proximityRange-low.png shows near-zero rim (edge nearly neutral) vs control-proximityRange-high.png a clear bright brass rim around all edges. metrics meanAbsDiff=1.928 changedFrac=0.0261 changed=true; warmFrac 0.26(low)->0.47(high), meanLuma 16.4->18.2. Subtle but visibly present."
+          },
+          {
+            "control": "directionalBias",
+            "live": true,
+            "evidence": "control-directionalBias-low.png shows a bright, evenly-distributed rim (bottom edge lit) vs control-directionalBias-mid.png then control-directionalBias-high.png where the rim recedes/concentrates directionally and dims. metrics meanAbsDiff=1.787 changedFrac=0.0209 changed=true; warmFrac monotonic 0.51->0.48->0.35 low->mid->high. The subtlest of the four (FLAG-worthy subtlety) but a real directional reshape, not noise."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1.png, play-2.png, play-3.png a warm brass fresnel rim kindles along the card edges and breathes with the cursor; the card's edge plainly 'wakes up'. metrics: effHue 33-34 deg (brass band), warmFrac swings 0.45(play-1)->0.53(play-2)->0.54(play-3), frameDeltaMag 0.73/1.14/0.79 confirming motion/breathing. Reads distinctly from the pointer-shine sibling (a sweeping specular streak, pointer-shine/after/play-2.png). Card material preserved (amber header, blue dot, grey rows all intact), magentaFrac=0 (no purple)."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "proximity-rim-glow/after/idle.png",
+          "proximity-rim-glow/after/play-1.png",
+          "proximity-rim-glow/after/play-2.png",
+          "proximity-rim-glow/after/play-3.png",
+          "proximity-rim-glow/after/control-intensity-low.png",
+          "proximity-rim-glow/after/control-intensity-high.png",
+          "proximity-rim-glow/after/control-rimTightness-low.png",
+          "proximity-rim-glow/after/control-rimTightness-high.png",
+          "proximity-rim-glow/after/control-proximityRange-low.png",
+          "proximity-rim-glow/after/control-proximityRange-mid.png",
+          "proximity-rim-glow/after/control-proximityRange-high.png",
+          "proximity-rim-glow/after/control-directionalBias-low.png",
+          "proximity-rim-glow/after/control-directionalBias-mid.png",
+          "proximity-rim-glow/after/control-directionalBias-high.png",
+          "pointer-shine/after/idle.png",
+          "pointer-shine/after/play-2.png"
+        ],
+        "flags": [
+          "directionalBias is the subtlest of the four controls (meanAbsDiff=1.787, changedFrac=0.0209) — its directional reshape is real and confirmed by the monotonic warmFrac drop 0.51->0.48->0.35 across low/mid/high, but a non-technical user might not immediately notice it next to intensity/rimTightness. Subtle-but-present, not dead.",
+          "metrics report effVal=0 on every frame (likely a sensor field quirk, not a render defect) — effHue/effSat and the rendered frames all show a real brass rim, so this does not affect the verdict."
+        ],
+        "summary": "SHIP. Backend is webgpu, zero console/network errors. The card is fully legible at idle (near-neutral rim, correct for a disengaged pointer effect) and the subject material is preserved across every frame — amber header bar, blue accent dot, and grey rows are all intact, with no placeholder slab, no clipping, no purple (magentaFrac=0), no blur, and no jitter/explosion at any control extreme. The claimed physics reads plainly: a warm brass fresnel rim (effHue 33-34 deg) kindles along the card edges and breathes with the cursor across play-1..3 (warmFrac 0.45->0.54, frameDeltaMag varies 0.73/1.14/0.79). All four named controls are live: intensity (no-rim->strong-rim, meanAbsDiff 2.277), rimTightness (broad wash->thin crisp rim, meanAbsDiff 8.755, the strongest sweep), proximityRange (near-zero->bright rim, meanAbsDiff 1.928), and directionalBias (directional reshape, meanAbsDiff 1.787, monotonic warmFrac 0.51->0.35). directionalBias is the subtlest but present and confirmed — a FLAG, not a blocker. No anti-slop defects found."
+      },
+      {
+        "tile": "spring-chain-follow",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "stiffness",
+            "live": true,
+            "evidence": "control-stiffness-low.png shows the chain whipped far out — echoes fan wide down-right with the second echo's own blue accent dot fully exposed at right; control-stiffness-high.png pulls the chain tight, echoes nearly hidden directly behind the lead card. metrics: meanAbsDiff=1.197, changedFrac=0.0508, changed=true — above noise and clearly visible."
+          },
+          {
+            "control": "spacing",
+            "live": true,
+            "evidence": "control-spacing-low.png keeps echoes tucked tight under the lead; control-spacing-high.png fans them downward with a clear gap and a visible second echo trailing below. metrics: meanAbsDiff=0.999, changedFrac=0.05, changed=true. Subtlest of the four but visibly present — a FLAG, not a blocker."
+          },
+          {
+            "control": "dimming",
+            "live": true,
+            "evidence": "control-dimming-low.png renders the trailing echo barely visible (faint dark rectangle below); control-dimming-high.png shows two distinct, brighter echoes stacked below with their own rows visible. metrics: meanAbsDiff=1.359, changedFrac=0.0872, changed=true."
+          },
+          {
+            "control": "chaseSpeed",
+            "live": true,
+            "evidence": "control-chaseSpeed-low.png shows echoes lagging compact just below the lead; control-chaseSpeed-high.png spreads them further out and lower with a visible second echo. metrics: meanAbsDiff=6.433, changedFrac=0.1464, changed=true — strongest signal of all four controls."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1.png/play-2.png/play-3.png the lead card visibly moves and dimmed ghost echoes carrying the card's own look (dark body, grey rows, blue accent dot — the second echo's blue dot is clearly visible in play-3.png) trail behind it at down-right offsets, reading as whip/overshoot. idle.png is near-neutral at home (correct for a disengaged pointer effect) with only a faint ghost peeking. This plainly reads as a spring-linked chain to a layperson."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "spring-chain-follow/after/idle.png",
+          "spring-chain-follow/after/play-1.png",
+          "spring-chain-follow/after/play-2.png",
+          "spring-chain-follow/after/play-3.png",
+          "spring-chain-follow/after/control-stiffness-low.png",
+          "spring-chain-follow/after/control-stiffness-high.png",
+          "spring-chain-follow/after/control-spacing-low.png",
+          "spring-chain-follow/after/control-spacing-high.png",
+          "spring-chain-follow/after/control-dimming-low.png",
+          "spring-chain-follow/after/control-dimming-high.png",
+          "spring-chain-follow/after/control-chaseSpeed-low.png",
+          "spring-chain-follow/after/control-chaseSpeed-high.png",
+          "magnetic/after/play-2.png"
+        ],
+        "flags": [
+          "spacing is the subtlest control (meanAbsDiff=0.999, changedFrac=0.05) — present and live but the low→high echo-spread delta is modest; subtle-but-present taste flag, not a blocker."
+        ],
+        "summary": "SHIP. Backend=webgpu, true-color DPR2, zero console/network errors. The spring-chain effect reads plainly across play-1/2/3: the amber-header card leads and two dimmed ghost echoes carrying the card's own look (dark body, grey rows, blue accent dot) whip and overshoot behind it. All four named controls are live and reshape the engaged pose — chaseSpeed strongest (meanAbsDiff=6.433), dimming (1.359) and stiffness (1.197) clearly visible, spacing subtlest (0.999) but still above noise with a visible echo-spread difference (FLAG, not blocker). No anti-slop defects: card material preserved in every frame, lead card never clipped out of frame, no jitter/explosion at extremes, idle fully legible, warm low-sat palette (hue ~32-33, magentaFrac=0, no purple), crisp edges with no AI-grain or blur. Card premium-ness is on par with the magnetic ground-truth sibling."
+      },
+      {
+        "tile": "gravity-well",
+        "shipQuality": false,
+        "verdict": "BLOCKED",
+        "controlsLive": [
+          {
+            "control": "gravity",
+            "live": true,
+            "evidence": "control-gravity-low.png (card sits lower/larger) vs control-gravity-high.png (card pulled tight up to the engaged pin, more vertical stretch) visibly differ; metrics: meanAbsDiff=5.01, changedFrac=0.132 — well above noise."
+          },
+          {
+            "control": "falloff",
+            "live": true,
+            "evidence": "control-falloff-low.png vs control-falloff-high.png: card tilt/position visibly shifts and motes reposition; metrics: meanAbsDiff=2.312, changedFrac=0.0612. Borderline/subtle and note low==mid are byte-identical (SHA 1a1fe05d... shared by falloff-low, falloff-mid, gravity-high), so it only moves on mid->high — present but weak (FLAG)."
+          },
+          {
+            "control": "tidalStretch",
+            "live": true,
+            "evidence": "control-tidalStretch-low.png (compact rows) vs control-tidalStretch-high.png (rows/card elongated, stronger anisotropic stretch) visibly differ; metrics: meanAbsDiff=3.861, changedFrac=0.1098."
+          },
+          {
+            "control": "moteCount",
+            "live": false,
+            "evidence": "DEAD. control-moteCount-low.png (~5 motes), control-moteCount-mid.png (~5 motes, byte-identical to tidalStretch-high SHA 8b841f86...), control-moteCount-high.png (~5-6 motes) show no perceptible change in the brass dust population across a claimed 3->12 sweep; metrics: meanAbsDiff=0.594, changedFrac=0.0083 (0.8%) — sub-noise vs the 3.4-5.0 meanAbsDiff of the live controls. A layperson cannot see the orbital dust count change."
+          },
+          {
+            "control": "pullSpeed",
+            "live": true,
+            "evidence": "control-pullSpeed-low.png vs control-pullSpeed-high.png: card position/extension toward the pin visibly differs; metrics: meanAbsDiff=3.398, changedFrac=0.0778."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1.png/play-2.png/play-3.png the card unmistakably slides and rotates toward the cursor and stretches anisotropically — in play-2.png the grey rows elongate into long vertical streaks (clear tidal stretch) while the card tumbles toward the pull point, with brass dust motes scattered around the drain. The card material is fully preserved (amber header bar, blue accent dot, grey rows, dark body intact in every frame). idle.png is fully legible and near-neutral, correct for a disengaged pointer effect. Reads to a layperson as 'the card is being sucked into a gravity well, stretching as it falls.'"
+        },
+        "newMustFixes": [
+          {
+            "issue": "moteCount control is DEAD — the named 'orbital dust motes' count does not visibly change across its full low->high sweep, contradicting the claim that moteCount controls the number of motes spiralling into the drain.",
+            "evidence": "control-moteCount-low.png / control-moteCount-mid.png / control-moteCount-high.png all show ~5 motes; metrics meanAbsDiff=0.594, changedFrac=0.0083 (0.8%, sub-noise); moteCount-mid is byte-identical to tidalStretch-high (SHA-256 8b841f86...). Recapture only after the control actually scales the visible mote population."
+          }
+        ],
+        "citedFrames": [
+          "gravity-well/after/idle.png",
+          "gravity-well/after/play-1.png",
+          "gravity-well/after/play-2.png",
+          "gravity-well/after/play-3.png",
+          "gravity-well/after/control-gravity-low.png",
+          "gravity-well/after/control-gravity-high.png",
+          "gravity-well/after/control-falloff-low.png",
+          "gravity-well/after/control-falloff-mid.png",
+          "gravity-well/after/control-falloff-high.png",
+          "gravity-well/after/control-tidalStretch-low.png",
+          "gravity-well/after/control-tidalStretch-high.png",
+          "gravity-well/after/control-moteCount-low.png",
+          "gravity-well/after/control-moteCount-mid.png",
+          "gravity-well/after/control-moteCount-high.png",
+          "gravity-well/after/control-pullSpeed-low.png",
+          "gravity-well/after/control-pullSpeed-high.png",
+          "magnetic/after/idle.png",
+          "magnetic/after/play-2.png"
+        ],
+        "flags": [
+          "falloff is live but subtle/borderline: low and mid frames are byte-identical (it only responds on mid->high), meanAbsDiff=2.312. Present, so a FLAG not a blocker, but it is the least responsive of the live controls.",
+          "Capture harness produced byte-identical frames across DIFFERENT control sweeps (falloff-low==falloff-mid==gravity-high; tidalStretch-high==moteCount-mid). This points to the engaged-pose sampling reusing the same rendered state — worth tightening the capture so each control is sampled independently.",
+          "Premium-ness is comparable to the passing magnetic sibling (magnetic/after/play-2.png): clean glass card, soft shadow, brass dust — fidelity is ship-grade; the block is purely the dead control, not the look."
+        ],
+        "summary": "gravity-well reads plainly as the claimed inverse-square pull: across play-1/2/3 the card slides and rotates toward the cursor with clear anisotropic tidal stretch (rows elongate into vertical streaks in play-2), brass dust motes orbit the drain, the card's material is fully preserved, and idle.png is legible/near-neutral as expected for a disengaged pointer effect. Four of five controls are live (gravity meanAbsDiff=5.01, tidalStretch=3.86, pullSpeed=3.40 all clearly visible; falloff=2.31 subtle/borderline FLAG). However moteCount is DEAD: a claimed 3->12 mote sweep produces no perceptible change in the dust population (meanAbsDiff=0.594, changedFrac=0.0083, sub-noise; moteCount-mid byte-identical to tidalStretch-high). Per the rubric a fully dead named control blocks ship. No anti-slop defects, no purple, no clipping, no placeholder, DPR2-sharp. Verdict BLOCKED pending a moteCount fix + recapture."
+      },
+      {
+        "tile": "pendant-dangle",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "chainLength",
+            "live": true,
+            "evidence": "control-chainLength-low.png: pin sits just above card top edge (very short cord, card high near pivot). -mid.png: cord lengthens, card drops & shifts right. -high.png: long brass cord stretches from top of frame, card hangs lower-right. Visible cord-length growth low→high. metrics: meanAbsDiff=10.324, changedFrac=0.2623, changed=true (above noise)."
+          },
+          {
+            "control": "gravity",
+            "live": true,
+            "evidence": "control-gravity-low.png: weak restoring force, card swung out hard top-right, steeply tilted. -mid.png: moderate swing angle. -high.png: strong restoring force pulls card near-vertical, least tilt. Swing amplitude visibly shrinks as gravity rises — physically correct. metrics: meanAbsDiff=10.4, changedFrac=0.2427, changed=true."
+          },
+          {
+            "control": "damping",
+            "live": true,
+            "evidence": "control-damping-low.png: under-damped, card still swung steeply right at pinned t. -mid.png: settled moderate tilt, centered-left. -high.png: heavily damped, near rest pose, least tilt. Settle angle visibly tightens low→high. metrics: meanAbsDiff=8.177, changedFrac=0.2105, changed=true (above noise)."
+          },
+          {
+            "control": "ambientSway",
+            "live": true,
+            "evidence": "control-ambientSway-low.png(0): card hangs dead-level/centered, no sway. -mid.png: moderate tilt, shifts right. -high.png: wide swing-out right with steep tilt. Idle ambient drift amplitude grows visibly with parameter. metrics: meanAbsDiff=12.059, changedFrac=0.3103 (largest of all controls), changed=true."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "idle.png: card at near-vertical home pose hanging from a visible brass pin (pivot ABOVE top edge) on a thin cord. play-1.png: bottom swings wide to the right, steeply tilted, while pin/pivot stays anchored at top (chasing cursor). play-2.png: swung back near-vertical. play-3.png: swung to the left, opposite tilt. Top barely moves, bottom swings wide, gravity restores to vertical with damped settle — unmistakable pendant-dangle physics to a layperson, plus the named brass pin+cord rig is plainly visible."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "pendant-dangle/after/idle.png",
+          "pendant-dangle/after/play-1.png",
+          "pendant-dangle/after/play-2.png",
+          "pendant-dangle/after/play-3.png",
+          "pendant-dangle/after/control-chainLength-low.png",
+          "pendant-dangle/after/control-chainLength-mid.png",
+          "pendant-dangle/after/control-chainLength-high.png",
+          "pendant-dangle/after/control-gravity-low.png",
+          "pendant-dangle/after/control-gravity-mid.png",
+          "pendant-dangle/after/control-gravity-high.png",
+          "pendant-dangle/after/control-damping-low.png",
+          "pendant-dangle/after/control-damping-mid.png",
+          "pendant-dangle/after/control-damping-high.png",
+          "pendant-dangle/after/control-ambientSway-low.png",
+          "pendant-dangle/after/control-ambientSway-mid.png",
+          "pendant-dangle/after/control-ambientSway-high.png",
+          "magnetic/after/play-2.png"
+        ],
+        "flags": [
+          "ambientSway-high swings the card quite far to the right at the engaged pin — physically plausible for a heavy ambient drift but borderline showy; pure taste, not a blocker."
+        ],
+        "summary": "SHIP. Real WebGPU, true-color, DPR2; zero console/network errors. The pendant-dangle effect reads plainly to a non-technical user: the card hangs from a visible brass pin+cord rig with the pivot above its top edge — across play-1/2/3 the top stays anchored while the bottom swings wide (right, near-vertical, left) and dampens toward home, exactly the claimed gravity-restored pendant physics. All four named controls are LIVE both to the eye and by metric: chainLength visibly lengthens the cord (10.324/0.26), gravity shrinks swing amplitude toward vertical (10.4/0.24), damping tightens the settle angle (8.177/0.21), ambientSway grows idle drift from dead-level to wide tilt (12.059/0.31). No anti-slop defects: the premium card material (amber header, grey rows, blue accent dot, dark rounded body) is preserved and matches the shipped magnetic sibling; idle is fully legible; no clipping out of frame, no jitter/explosion at any extreme, no purple, no AI-grain, crisp at DPR2.\""
+      },
+      {
+        "tile": "throw-physics",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "power",
+            "live": true,
+            "evidence": "control-power-low/mid/high.png: card sits flatter & higher at low, drops & tilts steeper through mid/high — visible pose change. metrics: power meanAbsDiff=8.067 changedFrac=0.1753 changed=true (above noise). Subtle but present."
+          },
+          {
+            "control": "gravity",
+            "live": true,
+            "evidence": "control-gravity-low/mid/high.png: card's settle height & tilt visibly change low(higher,flatter)→mid(lower,steeper)→high(lower-left) — reads as gravity pulling the thrown card. metrics: gravity meanAbsDiff=8.906 changedFrac=0.1981 changed=true."
+          },
+          {
+            "control": "bounciness",
+            "live": true,
+            "evidence": "control-bounciness-low.png shows the card flat/level & resting (no bounce), control-bounciness-high.png shows it steeply tilted & displaced up-left — dramatic, obvious-to-the-eye reshape of the engaged pose. metrics: bounciness meanAbsDiff=7.614 changedFrac=0.2012 changed=true; bandingScore 0.549(low)->0.282(high)."
+          },
+          {
+            "control": "drag",
+            "live": true,
+            "evidence": "control-drag-low.png card is higher-right/flatter; control-drag-high.png card is lower-left, larger, steeper — low->high visibly differs. metrics: drag meanAbsDiff=10.362 changedFrac=0.2575 changed=true (strongest of the four). NOTE: control-drag-mid.png and control-drag-high.png are byte-identical (effRGB 62.8/59.3/55.1, satPixels 5271, bandingScore 0.284 all equal) — drag saturates at midpoint; low->high still differs so the control is live, the mid==high plateau is a FLAG not a blocker."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "idle.png: card at home pose lower-left, fully legible (amber header bar, blue accent dot, grey rows, dark body). play-1.png: card translated up-right toward the engaged pointer with a new tilt; play-2.png & play-3.png show it at further distinct positions/rotations — reads plainly as grab-and-throw ballistic motion of the card. Card material is preserved (matches ground-truth sibling magnetic/after/play-2.png fidelity) and never clips out of frame. frameDeltaMag play-1=10.57 play-2=11.27 play-3=4.02 confirms real per-frame motion."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "throw-physics/after/idle.png",
+          "throw-physics/after/play-1.png",
+          "throw-physics/after/play-2.png",
+          "throw-physics/after/play-3.png",
+          "throw-physics/after/control-power-low.png",
+          "throw-physics/after/control-power-mid.png",
+          "throw-physics/after/control-power-high.png",
+          "throw-physics/after/control-gravity-low.png",
+          "throw-physics/after/control-gravity-mid.png",
+          "throw-physics/after/control-gravity-high.png",
+          "throw-physics/after/control-bounciness-low.png",
+          "throw-physics/after/control-bounciness-mid.png",
+          "throw-physics/after/control-bounciness-high.png",
+          "throw-physics/after/control-drag-low.png",
+          "throw-physics/after/control-drag-mid.png",
+          "throw-physics/after/control-drag-high.png",
+          "magnetic/after/idle.png",
+          "magnetic/after/play-2.png"
+        ],
+        "flags": [
+          "drag control saturates at its midpoint — control-drag-mid.png and control-drag-high.png are byte-identical (effRGB/satPixels/bandingScore all equal), so the top half of the drag range is a visual no-op. low->high still visibly differs so it is live, but the upper range adds no further effect.",
+          "power and gravity are live but their low->high pose shifts are on the subtle side compared to bounciness; a layperson would notice them when sweeping but they are not as punchy as the bounciness control."
+        ],
+        "summary": "WebGPU true-color DPR2, zero console/network errors. The throw effect reads clearly: idle is a fully legible card at home pose; across play-1/2/3 the card grabs toward the engaged pointer, tilts, and repositions like a thrown object (frameDeltaMag 10.57/11.27/4.02). Card material is preserved at ground-truth-sibling fidelity (amber header, blue dot, grey rows, dark body) and never clips out of frame — no anti-slop defects (no destruction, no slab, no purple, no grain, sharp at DPR2). All four named controls are live and reshape the engaged pose: bounciness is dramatic (flat/resting at low vs steep/displaced at high), gravity and power are visible-but-subtle, drag is the strongest by metric (meanAbsDiff=10.362) though mid==high are byte-identical (saturates at midpoint — FLAG, not a blocker since low->high differs). Effect reads + all controls live + no anti-slop defect => SHIP."
+      },
+      {
+        "tile": "charge-release",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "chargeRate",
+            "live": true,
+            "evidence": "control-chargeRate-low.png shows dim brass edges + small dim center ring; control-chargeRate-high.png shows much brighter heated-brass frame + larger bright ring. metrics: meanAbsDiff=18.31, changedFrac=0.213, changed=true; effRGB 126.5/105.6/69.6(low)→198.2/165.4/104.6(high), meanLuma 24.1→31.2. Clearly live."
+          },
+          {
+            "control": "compressionDepth",
+            "live": true,
+            "evidence": "control-compressionDepth-low.png shows the card tall/barely squashed; control-compressionDepth-high.png shows the card dramatically flattened (heavy y-squash, wide x-bulge). metrics: meanAbsDiff=29.68, changedFrac=0.273, changed=true. Strongest, most obvious physical reshape of the engaged pose."
+          },
+          {
+            "control": "tremble",
+            "live": true,
+            "evidence": "control-tremble-high.png shows more horizontal motion-smear on the body rows and a more elongated/blurred light ring than control-tremble-mid.png; difference is subtle in a frozen frame (this is per-frame jitter, under-captured). metrics: meanAbsDiff=14.74, changedFrac=0.162, changed=true (above sensor noise) though effRGB/meanLuma near-identical across low/mid/high (172.2/172.3/172.8, meanLuma 26.3). Subtle-but-present -> FLAG, not dead."
+          },
+          {
+            "control": "overshoot",
+            "live": true,
+            "evidence": "control-overshoot-low.png shows the card barely released (still compressed, dim closed ring); control-overshoot-high.png shows the card sprung tall/wide with a large bright OPEN light ring (the release 'crack of light'). metrics: meanAbsDiff=12.19, changedFrac=0.155, changed=true; meanLuma 24.5→27.8. Clearly live to the eye."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play frames the charge/release physics reads plainly: idle.png + play-2.png + play-3.png show the card heavily COMPRESSED (squashed shorter, edges visibly HEATED brass as an additive amber glow on the frame) with a bright light ring/well at center (charged state); play-1.png shows the card RELEASED — springing taller with a clear glowing light ring. The amber header bar, grey rows, blue accent dot, and dark card body are all preserved (subject material untouched), matching the ground-truth sibling pointer-shine/after/play-2.png in premium-ness. metrics: warmFrac 0.99 + effHue 39 confirms brass (not red/purple) heating."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "charge-release/after/idle.png",
+          "charge-release/after/play-1.png",
+          "charge-release/after/play-2.png",
+          "charge-release/after/play-3.png",
+          "charge-release/after/control-chargeRate-low.png",
+          "charge-release/after/control-chargeRate-high.png",
+          "charge-release/after/control-compressionDepth-low.png",
+          "charge-release/after/control-compressionDepth-high.png",
+          "charge-release/after/control-tremble-low.png",
+          "charge-release/after/control-tremble-mid.png",
+          "charge-release/after/control-tremble-high.png",
+          "charge-release/after/control-overshoot-low.png",
+          "charge-release/after/control-overshoot-high.png",
+          "pointer-shine/after/play-2.png"
+        ],
+        "flags": [
+          "tremble control is subtle in frozen frames: low/mid/high effRGB and meanLuma are near-identical (172.2/172.3/172.8, meanLuma 26.3) because tremble is a per-frame jitter that a single captured frame under-represents; the visible high-vs-mid motion-smear difference plus changed=true (meanAbsDiff 14.74, changedFrac 0.162) keep it live, but it is the weakest of the four controls — a taste FLAG, not a blocker."
+        ],
+        "summary": "SHIP. Real WebGPU, true-color, DPR2, zero console/network errors. The charge-release pointer physics reads plainly to a layperson: the card charges (y-squash + x-bulge, brass-heated edges via additive amber overlay, central light ring) in idle/play-2/play-3 and releases tall with a bright light ring in play-1, while the card's material (amber header, grey rows, blue dot, dark body) is preserved untouched — on par with the passing sibling pointer-shine. Three of four controls (chargeRate, compressionDepth, overshoot) are dramatically and obviously live to the eye with strong metrics (meanAbsDiff 12-30, changedFrac 0.155-0.273, all changed=true). The fourth, tremble, is subtle-but-present in frozen frames (per-frame jitter under-captured; near-identical effRGB/meanLuma but visible motion-smear difference high-vs-mid and changed=true at meanAbsDiff 14.74) — a FLAG, not a blocker per the rubric. No anti-slop defects: no material replacement, no placeholder slab, card stays in frame, no explosion at extremes, idle fully legible, no purple accents, sharp at DPR2."
+      },
+      {
+        "tile": "pointer-cast-shadow",
+        "shipQuality": true,
+        "verdict": "SHIP",
+        "controlsLive": [
+          {
+            "control": "shadowLength",
+            "live": true,
+            "evidence": "control-shadowLength-low.png vs control-shadowLength-high.png: the dark cast-shadow puddle below the card visibly extends/rakes longer at high vs the tighter compact glow at low. metrics: changed=true, meanAbsDiff=1.874, changedFrac=0.0807 — above sensor noise."
+          },
+          {
+            "control": "softness",
+            "live": true,
+            "evidence": "control-softness-low.png vs control-softness-high.png: low shows a more defined/concentrated lower shadow edge, high is more diffuse and spread. Subtlest of the four but visible. metrics: changed=true, meanAbsDiff=1.18, changedFrac=0.0586 — above sub-noise."
+          },
+          {
+            "control": "opacity",
+            "live": true,
+            "evidence": "control-opacity-low.png (faint pale lower shadow, meanLuma 27.7) vs control-opacity-high.png (distinctly darker/denser shadow, meanLuma 31.9). metrics: changed=true, meanAbsDiff=4.25, changedFrac=0.1715 — clearly live."
+          },
+          {
+            "control": "rimIntensity",
+            "live": true,
+            "evidence": "control-rimIntensity-low.png (card dark/dim, almost no rim brightening, meanLuma 21.5) vs control-rimIntensity-high.png (strong directional silvery rim brightening on the pointer side, meanLuma 40.1, stdev 51.7). metrics: changed=true, meanAbsDiff=18.839, changedFrac=0.2003 — dramatically live."
+          }
+        ],
+        "effectReadsAsClaim": {
+          "reads": true,
+          "evidence": "Across play-1.png (shadow pools lower-left), play-2.png (shadow underfoot/tight beneath the card) and play-3.png (shadow rakes to the lower-right), the card plainly throws a soft DARK cast shadow displaced opposite the pointer and rotated along a rake axis, exactly as claimed. The pointer side of the card also shows directional rim brightening. idle.png is near-neutral with the card fully legible (correct for a disengaged pointer). A layperson reads 'the cursor is a lamp and the card casts a shadow'."
+        },
+        "newMustFixes": [],
+        "citedFrames": [
+          "pointer-cast-shadow/after/idle.png",
+          "pointer-cast-shadow/after/play-1.png",
+          "pointer-cast-shadow/after/play-2.png",
+          "pointer-cast-shadow/after/play-3.png",
+          "pointer-cast-shadow/after/control-shadowLength-low.png",
+          "pointer-cast-shadow/after/control-shadowLength-high.png",
+          "pointer-cast-shadow/after/control-softness-low.png",
+          "pointer-cast-shadow/after/control-softness-high.png",
+          "pointer-cast-shadow/after/control-opacity-low.png",
+          "pointer-cast-shadow/after/control-opacity-high.png",
+          "pointer-cast-shadow/after/control-rimIntensity-low.png",
+          "pointer-cast-shadow/after/control-rimIntensity-high.png",
+          "spotlight-follow/after/play-2.png"
+        ],
+        "flags": [
+          "softness control is the subtlest of the four (meanAbsDiff 1.18, changedFrac 0.059) — present and above sub-noise but a discerning user might want a more pronounced edge-blur range. FLAG, not a blocker.",
+          "shadowLength sweep is also on the subtle side (meanAbsDiff 1.87); the raking length change reads but could be pushed harder at the high end for more drama. Taste, not a defect."
+        ],
+        "summary": "SHIP. Real WebGPU, true-color, DPR2, no console/network errors. The named physics reads plainly: across play-1/2/3 the card throws a soft dark cast shadow displaced opposite the cursor and rotated along a rake axis, with directional rim brightening on the pointer side; idle is near-neutral and fully legible (correct for a disengaged pointer effect). All four named controls are live and visibly reshape the engaged pose: rimIntensity is dramatic (meanLuma 21.5→40.1, dark dim card to bright silvery rim), opacity is clearly live (faint→dense shadow, meanAbsDiff 4.25), shadowLength rakes the shadow longer (meanAbsDiff 1.87), and softness diffuses the shadow edge (meanAbsDiff 1.18, subtlest but visible and above noise). No anti-slop: card material fully preserved (amber header, grey rows, blue accent dot, glass body), no clipping out of frame, no jitter/explosion at extremes, no purple, no AI-grain, no DPR2 blur. Fidelity matches the passing ground-truth sibling spotlight-follow. Two FLAGs on the subtlety of softness/shadowLength range — taste, not blockers."
+      }
+    ]
+  }
+}

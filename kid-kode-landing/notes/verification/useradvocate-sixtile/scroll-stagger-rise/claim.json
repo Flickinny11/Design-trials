@@ -1,0 +1,7 @@
+{
+  "name": "scroll-stagger-rise",
+  "label": "Bands",
+  "description": "Bands of the card rise and fade in staggered as scroll advances, like list rows arriving one by one.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

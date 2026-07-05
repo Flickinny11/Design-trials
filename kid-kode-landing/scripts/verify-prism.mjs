@@ -1,10 +1,48 @@
 #!/usr/bin/env node
 // Prism Mock App — deterministic verification harness.
-// Runs the 25 success criteria from mock spec §10 that can be checked statically,
-// plus structural assertions on the .prism artifact. Exit 0 if all pass; exit 1
-// with a red summary otherwise.
+// Reconciled from prism-main (strict static-source + artifact checks) and
+// codex/prism-runtime-reconcile (renderer-era artifact assertions). Exit 0 if
+// all pass; exit 1 with a red summary otherwise.
 //
 // Run: node scripts/verify-prism.mjs
+//
+// Check inventory (full kept/added/dropped rationale lives in
+// kid-kode-landing/notes/reconcile-codex-to-claude.md):
+//
+//   STATIC-SOURCE (5 — KEPT from prism-main, applies pre- and post-migration):
+//     forbidden:PIXI.Text          forbidden:PIXI.Text.ref
+//     forbidden:PIXI.Graphics      forbidden:html-to-image
+//     forbidden:innerHTML+fillText
+//
+//   .PRISM ARTIFACT (6 — KEPT from prism-main, still apply post-migration):
+//     prism:manifest               prism:artifactHash
+//     prism:asset.sha256           prism:backends.loadable
+//     prism:text.methods           (prism:entryHub — relaxed; see below)
+//
+//   .PRISM ARTIFACT (3 — ADDED from codex renderer-era, see reconcile report):
+//     prism:renderer-graph         — validates migration-spec additive PrismNode fields
+//     prism:nodeCount.consistency  — manifest.nodeCount === graph.nodes.length
+//     prism:no-pixi.artifact       — scans BUILT artifact for Pixi leakage
+//
+//   .PRISM ARTIFACT (1 — RELAXED from prism-main strict to codex flexible):
+//     prism:entryHub               — now: manifest.entryHub === graph.hubs[0].hubId
+//                                    (prism-main strict =='home-hub' no longer applies:
+//                                     new build-live-prism.mjs uses hubId='home')
+//
+//   .PRISM ARTIFACT (4 — DROPPED from prism-main, encoded pre-migration invariants):
+//     prism:nodeCount  (≥30 realism)        — stale: new live-graph starts smaller;
+//                                              replaced by prism:nodeCount.consistency
+//     prism:node.module.presence (codeRef→nodes/) — stale: renderer-era nodes render
+//                                              via renderMode+cinematicPrimitives, not
+//                                              per-node JS modules; codeRef is empty.
+//                                              Replaced by prism:renderer-graph.
+//     prism:three.methods (animationSpec.method 1/2/3) — stale: PixiJS-era animation
+//                                              method codes superseded by §7
+//                                              cinematicPrimitives. Replaced by
+//                                              prism:renderer-graph (cinematicPrimitives).
+//     prism:layer.swap (regionKeys/regions) — stale: PixiJS-era layer-swap mechanism
+//                                              superseded by §8 renderMode + depthMapUrl
+//                                              + cinematicPrimitives.
 
 import JSZip from 'jszip';
 import { createHash } from 'node:crypto';
@@ -42,7 +80,7 @@ function allSrcFiles() {
   return [...walk(srcRoot)].filter((p) => /\.(ts|tsx|mjs|cjs|js|jsx)$/.test(p));
 }
 
-// ─── §1.4 forbidden patterns ────────────────────────────────────────────────
+// ─── §1.4 forbidden patterns (static-source) ────────────────────────────────
 assert('forbidden:PIXI.Text', 'No `new PIXI.Text(` anywhere in src/ (§1.4 / §10.5)', () => {
   const hits = [];
   for (const f of allSrcFiles()) {
@@ -110,20 +148,37 @@ if (!existsSync(prismPath)) {
   const manifest = JSON.parse(await zip.file('manifest.json').async('string'));
   const graph = JSON.parse(await zip.file('graph.json').async('string'));
 
+  // Pre-load text entries once for the renderer-era no-pixi.artifact scan.
+  const textEntries = [];
+  for (const [path, entry] of Object.entries(zip.files)) {
+    if (!entry.dir && /\.(?:js|mjs|cjs|json|txt|fnt|css|html|map)$/.test(path)) {
+      textEntries.push([path, await entry.async('string')]);
+    }
+  }
+
   assert('prism:manifest', 'manifest.json present + valid JSON', () => {
     if (!manifest.prismVersion) throw new Error('missing prismVersion');
     if (!Array.isArray(manifest.entries)) throw new Error('missing entries[]');
     return `prismVersion=${manifest.prismVersion}, ${manifest.entries.length} entries`;
   });
 
-  assert('prism:entryHub', 'entryHub=home-hub', () => {
-    if (manifest.entryHub !== 'home-hub') throw new Error(`got ${manifest.entryHub}`);
-    return 'home-hub';
+  // RELAXED from prism-main strict =='home-hub' to codex flexible matching:
+  // new build-live-prism.mjs uses hubId='home'. The invariant we actually need
+  // is "manifest.entryHub identifies a real hub in graph.hubs[]".
+  assert('prism:entryHub', 'manifest.entryHub matches graph.hubs[0].hubId', () => {
+    const entry = graph.hubs?.[0]?.hubId;
+    if (!entry) throw new Error('graph has no hubs');
+    if (manifest.entryHub !== entry) throw new Error(`manifest=${manifest.entryHub}, graph=${entry}`);
+    return entry;
   });
 
-  assert('prism:nodeCount', 'nodeCount ≥ 30 (§10.18 "realistic home hub")', () => {
-    if (manifest.nodeCount < 30) throw new Error(`only ${manifest.nodeCount}`);
-    return `${manifest.nodeCount}`;
+  // ADDED from codex renderer-era: catches manifest/graph drift. Replaces
+  // prism-main's `nodeCount ≥ 30` realism check (dropped — see header).
+  assert('prism:nodeCount.consistency', 'manifest.nodeCount === graph.nodes.length', () => {
+    if (manifest.nodeCount !== graph.nodes.length) {
+      throw new Error(`manifest=${manifest.nodeCount} != graph=${graph.nodes.length}`);
+    }
+    return `${graph.nodes.length}`;
   });
 
   assert('prism:artifactHash', 'artifactHash present + reproducible', () => {
@@ -143,15 +198,11 @@ if (!existsSync(prismPath)) {
     return `${Object.keys(manifest.assets).length} assets verified`;
   });
 
-  assert('prism:node.module.presence', 'Every node in graph has a module in nodes/', () => {
-    const missing = [];
-    for (const n of graph.nodes) {
-      const file = n.codeRef.replace(/^nodes\//, '');
-      if (!zip.file(`nodes/${file}`)) missing.push(n.nodeId);
-    }
-    if (missing.length) throw new Error(`${missing.length} missing: ${missing.slice(0, 3).join(', ')}`);
-    return `${graph.nodes.length} nodes ↔ modules`;
-  });
+  // DROPPED from prism-main: `prism:node.module.presence` was tied to the
+  // PixiJS-era pipeline where every node had a backing `nodes/<codeRef>.js`
+  // module. Renderer-era nodes render via renderMode + cinematicPrimitives
+  // (codeRef is intentionally empty). The migration-spec contract is now
+  // validated by `prism:renderer-graph` below.
 
   assert('prism:backends.loadable', 'Backend modules present for every node with backendRef', () => {
     const missing = [];
@@ -164,35 +215,59 @@ if (!existsSync(prismPath)) {
     return 'complete';
   });
 
-  assert('prism:three.methods', '§10.9 — at least one node per animation method', () => {
-    const methodsSeen = new Set();
+  // DROPPED from prism-main: `prism:three.methods` validated PixiJS-era
+  // animationSpec.method (1/2/3) which is superseded by §7 cinematicPrimitives.
+  // DROPPED from prism-main: `prism:layer.swap` validated the regionKeys/regions
+  // mechanism which is superseded by §8 renderMode + depthMapUrl + primitives.
+  // Both are now validated structurally by `prism:renderer-graph` below.
+
+  assert('prism:text.methods', 'runtime MSDF text nodes are represented and the font atlas ships in the .prism artifact', () => {
+    const legacyMethodsSeen = new Set();
+    const textSpecNodes = [];
     for (const n of graph.nodes) {
-      const m = n.intent?.visualSpec?.animationSpec?.method;
-      if (m) methodsSeen.add(m);
+      for (const tc of (n.intent?.visualSpec?.textContent ?? [])) legacyMethodsSeen.add(tc.renderMethod);
+      if (n.renderMode === 'text' || n.textSpec) textSpecNodes.push(n);
     }
-    for (const m of [1, 2, 3]) if (!methodsSeen.has(m)) throw new Error(`method ${m} not used`);
-    return 'methods 1, 2, 3 all present';
+    const missingAssets = ['assets/font-inter.msdf.png', 'assets/font-inter.msdf.json']
+      .filter((path) => !zip.file(path));
+    if (missingAssets.length) throw new Error(`missing MSDF assets: ${missingAssets.join(', ')}`);
+    if (!textSpecNodes.length && !legacyMethodsSeen.has('msdf')) {
+      throw new Error('no runtime MSDF text nodes or legacy msdf textContent entries found');
+    }
+    const missingTextSpec = textSpecNodes
+      .filter((node) => node.renderMode === 'text' && typeof node.textSpec?.content !== 'string')
+      .map((node) => node.nodeId);
+    if (missingTextSpec.length) {
+      throw new Error(`renderMode:text nodes missing textSpec.content: ${missingTextSpec.slice(0, 8).join(', ')}`);
+    }
+    return `${textSpecNodes.length} textSpec MSDF nodes; atlas packaged`;
   });
 
-  assert('prism:layer.swap', '§10.10 — at least one node uses regionKeys (layer-swap)', () => {
-    const swaps = graph.nodes.filter((n) => n.visual.regionKeys || (n.visual.regions && Object.keys(n.visual.regions).length > 1));
-    if (swaps.length === 0) throw new Error('no layer-swap nodes');
-    return `${swaps.length} nodes use layer-swap`;
+  // ADDED from codex renderer-era: validates the migration-spec's additive
+  // PrismNode fields. Strengthened beyond codex's version to also assert
+  // cinematicPrimitives is an array (§7) — the post-migration replacement for
+  // the dropped prism-main `three.methods` and `layer.swap` checks.
+  const VALID_RENDER_MODES = new Set(['sprite', 'plane', 'parallax-plane', 'mesh', 'text']);
+  assert('prism:renderer-graph', 'every graph.nodes[] has renderMode + scenePosition + cinematicPrimitives[] (migration §7/§8/§schema)', () => {
+    for (const node of graph.nodes ?? []) {
+      if (!node.renderMode) throw new Error(`${node.nodeId}: missing renderMode`);
+      if (!VALID_RENDER_MODES.has(node.renderMode)) throw new Error(`${node.nodeId}: invalid renderMode '${node.renderMode}'`);
+      if (!node.scenePosition) throw new Error(`${node.nodeId}: missing scenePosition`);
+      if (!Array.isArray(node.cinematicPrimitives)) throw new Error(`${node.nodeId}: cinematicPrimitives must be an array`);
+    }
+    return `${graph.nodes.length} nodes carry renderer fields`;
   });
 
-  assert('prism:text.methods', '§10.8 — build-time (sharp-svg) and runtime (msdf) renderMethods both represented; diffusion supported by pipeline', () => {
-    const methodsSeen = new Set();
-    for (const n of graph.nodes) {
-      for (const tc of (n.intent?.visualSpec?.textContent ?? [])) methodsSeen.add(tc.renderMethod);
+  // ADDED from codex renderer-era: complementary to the static-source
+  // forbidden:PIXI.* checks. Scans the BUILT artifact text entries to catch
+  // Pixi references sneaking in via a build path that bypasses src/.
+  assert('prism:no-pixi.artifact', '.prism artifact text entries contain zero Pixi references', () => {
+    const hits = [];
+    for (const [path, text] of textEntries) {
+      if (/\bpixi\.js\b|\bpixi-filters\b|@pixi\/|\bPIXI\./i.test(text)) hits.push(path);
     }
-    // Pipeline supports three renderMethods (msdf/sharp-svg/diffusion) but
-    // this home-hub instance uses only msdf — the Recraft V4 pro mockup
-    // bakes all static text directly into the substrate pixels. Build-time
-    // sharp-svg composite + Ideogram diffusion remain as pipeline capabilities
-    // (build-atlas.mjs + provision-assets.mjs) for future hubs that need them.
-    // At-minimum requirement: msdf must be present for dynamic runtime text.
-    for (const m of ['msdf']) if (!methodsSeen.has(m)) throw new Error(`${m} not used`);
-    return [...methodsSeen].join(', ') || 'pipeline-only';
+    if (hits.length) throw new Error(hits.slice(0, 8).join(', '));
+    return 'clean';
   });
 }
 
@@ -201,7 +276,7 @@ const passed = results.filter((r) => r.pass).length;
 const failed = results.length - passed;
 for (const r of results) {
   const tag = r.pass ? `${GREEN}PASS${RESET}` : `${RED}FAIL${RESET}`;
-  console.log(`[${tag}] ${r.id.padEnd(26)} ${r.description}`);
+  console.log(`[${tag}] ${r.id.padEnd(30)} ${r.description}`);
   if (r.details) console.log(`        ${DIM}${r.details}${RESET}`);
 }
 console.log('');

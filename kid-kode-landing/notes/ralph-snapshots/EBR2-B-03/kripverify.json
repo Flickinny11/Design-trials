@@ -1,0 +1,25 @@
+{
+  "taskId": "EBR2-B-03",
+  "capturedAt": "2026-05-18T21:10:34.007Z",
+  "surface": "verify-editor-runtimes (Playwright fallback for kv_navigate MCP IPC timeout — same pattern documented in EBR2-A-02/A-03/B-02 notes)",
+  "url": "http://localhost:4791/",
+  "kvDevServerStatus": {
+    "status": "ready",
+    "url": "http://127.0.0.1:49816",
+    "port": 49816,
+    "pid": 6222,
+    "note": "kv_dev_server_status returned ready; kv_navigate timed out at 10000ms (IPC ceiling); fell back to verify-editor-runtimes.mjs's headless-Chromium snapshot which exercises the same surface."
+  },
+  "viewMode": "preview-app",
+  "viewportWidth": 1440,
+  "viewportHeight": 900,
+  "checks": [
+    { "id": "inner.mounted", "pass": true, "detail": "preview-app runtime mounted" },
+    { "id": "inner.screenshot", "pass": true, "detail": "inner.png captured" },
+    { "id": "inner.no-errors", "pass": true, "detail": "0 console errors, 0 4xx/5xx" }
+  ],
+  "console": [],
+  "network": [],
+  "interactions": [],
+  "screenshot": "kripverify.png"
+}

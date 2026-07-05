@@ -1,0 +1,16 @@
+=== c24 — parallel-DOM accessibility tree: ABSENCE PROOF (2026-06-10 23:53) ===
+
+$ grep -rln "role=" src/components/prism-player src/components/editor/graph src/app/page.tsx
+(no matches)
+
+$ grep -rn "aria" src/components/editor/graph/GraphScene.tsx src/app/page.tsx
+src/app/page.tsx:658:                aria-hidden
+src/app/page.tsx:723:                aria-label="Previous hub"
+src/app/page.tsx:755:                aria-label="Next hub"
+src/app/page.tsx:877:          aria-hidden
+src/components/editor/graph/GraphScene.tsx:3060:          aria-hidden="true"
+
+$ grep -rln "A11y\|a11y\|accessibilit\|sr-only\|visually-hidden\|screen.reader" src/ (excluding .bak)
+src/components/editor/text-tools/TextFillPreviewStrip.tsx
+
+Conclusion: only chrome-level aria-label/aria-hidden on nav buttons exists. There is NO hidden parallel-DOM tree exposing semantic roles for the BUILT scene elements.

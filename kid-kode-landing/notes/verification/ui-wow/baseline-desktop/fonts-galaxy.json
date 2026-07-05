@@ -1,0 +1,53 @@
+{
+  "[data-component=\"view-mode-toggle\"] button": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace, ui-monospace, monospace",
+    "fontWeight": "400",
+    "fontSize": "11px",
+    "letterSpacing": "0.275px",
+    "textTransform": "none",
+    "firstFamily": "mono"
+  },
+  "[data-component=\"preview-app-world-badge\"] .ds-kicker": {
+    "found": false
+  },
+  ".ds-title": {
+    "found": false
+  },
+  ".ds-label": {
+    "found": false
+  },
+  ".ds-kicker": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    "fontWeight": "500",
+    "fontSize": "9px",
+    "letterSpacing": "2.16px",
+    "textTransform": "uppercase",
+    "firstFamily": "mono"
+  },
+  ".ds-btn": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    "fontWeight": "500",
+    "fontSize": "10px",
+    "letterSpacing": "0.8px",
+    "textTransform": "none",
+    "firstFamily": "mono"
+  },
+  "body": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "400",
+    "fontSize": "16px",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "__fontsLoaded": {
+    "Clash Display": true,
+    "Geist": true,
+    "JetBrains Mono": true
+  },
+  "__documentFontsStatus": "loaded"
+}

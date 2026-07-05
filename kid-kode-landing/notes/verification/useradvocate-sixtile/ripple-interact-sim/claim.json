@@ -1,0 +1,7 @@
+{
+  "name": "ripple-interact-sim",
+  "label": "Tension",
+  "description": "A real interactive water surface: the pointer pokes a wave-equation height field and the ripples propagate, reflect off the edges, and interfere — true simulated water, not a closed-form sine.",
+  "category": "wave",
+  "groundTruthSibling": null
+}

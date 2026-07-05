@@ -1,0 +1,113 @@
+{
+  "url": "http://localhost:3000",
+  "strictOrphans": true,
+  "hardcoded": [
+    {
+      "label": "hardcoded:hub-transition",
+      "nodeId": null,
+      "kind": "hardcoded",
+      "name": "hub-scene-transition",
+      "renderables": 1
+    },
+    {
+      "label": "hardcoded:orrery-complication",
+      "nodeId": null,
+      "kind": "hardcoded",
+      "name": "",
+      "renderables": 10
+    }
+  ],
+  "nodeAuthoredCount": 177,
+  "emptyNonText": [],
+  "emptyText": [
+    "orr-atelier-headline",
+    "orr-atelier-price",
+    "orr-atelier-btn-flip-label",
+    "orr-atelier-btn-explode-label",
+    "orr-atelier-btn-save-label",
+    "orr-atelier-btn-reset-label",
+    "orr-atelier-reason"
+  ],
+  "unexpectedHardcoded": [],
+  "orphanPlanesStillPresent": [],
+  "reasonContent": "Every pairing is bench-checked for mechanical harmony.",
+  "results": [
+    {
+      "id": "probe.installed",
+      "desc": "window.__PRISM_NODE_AUTHORSHIP__ installed + node groups mounted",
+      "pass": true,
+      "warn": false,
+      "detail": ""
+    },
+    {
+      "id": "gate.flags-hardcoded",
+      "desc": "gate detects hardcoded (node-less) scene artifacts",
+      "pass": true,
+      "warn": false,
+      "detail": "flagged: hub-transition, orrery-complication"
+    },
+    {
+      "id": "gate.no-fresh-drift",
+      "desc": "no UNSANCTIONED hardcoded artifact (fresh Law-0 drift)",
+      "pass": true,
+      "warn": false,
+      "detail": "only the known watch/orrery/transition remain"
+    },
+    {
+      "id": "known.orrery-complication",
+      "desc": "known-hardcoded 'orrery-complication' flagged (expected until its greenlight)",
+      "pass": true,
+      "warn": true,
+      "detail": "flagged — pending G1/G2/G3 node migration"
+    },
+    {
+      "id": "known.hub-transition",
+      "desc": "known-hardcoded 'hub-transition' flagged (expected until its greenlight)",
+      "pass": true,
+      "warn": true,
+      "detail": "flagged — pending G1/G2/G3 node migration"
+    },
+    {
+      "id": "authored.in-graph",
+      "desc": "every node-authored artifact maps to a real graph node",
+      "pass": true,
+      "warn": false,
+      "detail": "177 node-authored artifacts, all in graph"
+    },
+    {
+      "id": "authored.renders",
+      "desc": "no non-text node-authored artifact mounted empty (FP-R3 orphan)",
+      "pass": true,
+      "warn": false,
+      "detail": "all non-text node-authored artifacts render content"
+    },
+    {
+      "id": "authored.text-warm",
+      "desc": "text nodes warmed (MSDF glyphs mounted)",
+      "pass": false,
+      "warn": true,
+      "detail": "still warming at capture (async, non-fatal): orr-atelier-headline, orr-atelier-price, orr-atelier-btn-flip-label, orr-atelier-btn-explode-label, orr-atelier-btn-save-label, orr-atelier-btn-reset-label, orr-atelier-reason"
+    },
+    {
+      "id": "orphans.planes-removed",
+      "desc": "6 redundant ambience planes removed from the graph",
+      "pass": true,
+      "warn": false,
+      "detail": "all 6 removed (superseded by hub background[])"
+    },
+    {
+      "id": "orphans.reason-filled",
+      "desc": "orr-atelier-reason kept + carries real text",
+      "pass": true,
+      "warn": false,
+      "detail": "content: \"Every pairing is bench-checked for mechanical harmony.\""
+    },
+    {
+      "id": "runtime.no-pageerrors",
+      "desc": "no uncaught page errors during the gate run",
+      "pass": true,
+      "warn": false,
+      "detail": "clean"
+    }
+  ]
+}

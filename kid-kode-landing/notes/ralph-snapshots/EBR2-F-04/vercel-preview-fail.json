@@ -1,0 +1,7 @@
+{
+  "task": "EBR2-F-04",
+  "commit": "af15e54",
+  "reason": "wait-for-vercel-preview.mjs ran for ~6 minutes with no stdout output and was killed; deploy state never reached READY within the iteration window. Non-blocking per RA-18 / Step 8c — KripVerify-local already passed 12/12, spec-reviewer cleared. Vercel logs not captured this iteration.",
+  "outcome": "timeout",
+  "kvLocalStatus": "PASS"
+}

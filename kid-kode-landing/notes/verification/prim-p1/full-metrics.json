@@ -1,0 +1,62 @@
+{
+  "steps": [
+    {
+      "step": "cold-load",
+      "nodes": 3,
+      "seeded": [
+        "pane",
+        "cube",
+        "sphere"
+      ]
+    },
+    {
+      "step": "pane-reshape",
+      "selected": "prim-pane-1",
+      "vtxBefore": 11748,
+      "vtxAfter": 32928,
+      "rebuilt": true,
+      "material": "glass-smoke",
+      "cutouts": 2,
+      "height": 4.340000885536683
+    },
+    {
+      "step": "cube-instantiate-reshape",
+      "nodesBefore": 3,
+      "nodesAfter": 4,
+      "created": true,
+      "cubeId": "prim-cube-2",
+      "vtxBefore": 6084,
+      "vtxAfter": 6084,
+      "rebuilt": false,
+      "material": "worn-oxblood"
+    },
+    {
+      "step": "sphere-instantiate-reshape",
+      "nodesBefore": 4,
+      "nodesAfter": 5,
+      "created": true,
+      "sphId": "prim-sphere-2",
+      "vtxBefore": 1225,
+      "vtxAfter": 220,
+      "rebuilt": true,
+      "material": "worn-gunmetal"
+    },
+    {
+      "step": "galaxy",
+      "view": "galaxy",
+      "dormant": 5,
+      "orphans": 0
+    },
+    {
+      "step": "final-canvas",
+      "view": "canvas",
+      "rendered": 5,
+      "nodes": 5,
+      "orphans": 0,
+      "allRealized": true,
+      "ok": true
+    }
+  ],
+  "errors": [],
+  "consoleErrorCount": 0
+}

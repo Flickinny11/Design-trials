@@ -24,6 +24,7 @@ import {
   Texture,
   type Object3D,
 } from 'three';
+import * as THREE_NS from 'three';
 import {
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
@@ -72,6 +73,7 @@ function makeCtx(overrides: Partial<NodeContext> = {}): {
   };
 
   const ctx: NodeContext = {
+    THREE: THREE_NS,
     textureLoader: {
       loadTexture: async (url: string) => {
         textureLoadCalls.push(url);
@@ -211,7 +213,12 @@ describe('defaultRenderModeFactory (HL08)', () => {
   });
 
   describe('renderMode: parallax-plane', () => {
-    it('uses MeshStandardNodeMaterial and loads both base + depth textures', () => {
+    it('defaults UNLIT — MeshBasicNodeMaterial (§10 decision 7 / criterion 17) — and loads both base + depth textures', () => {
+      // §10 of PRISM-CANVAS-EDITOR-SPEC (decision 7, criterion 17): an image
+      // plane is UNLIT by default so the diffusion-baked texture renders
+      // verbatim (pixel-identical at T0/T1). The migration-era
+      // MeshStandardNodeMaterial default is superseded; a revert to a LIT
+      // default for image planes fails here.
       const { ctx, textureLoadCalls } = makeCtx();
       const node = makeNode({
         renderMode: 'parallax-plane',
@@ -222,9 +229,29 @@ describe('defaultRenderModeFactory (HL08)', () => {
       const mesh = obj.children.find((c) => c instanceof Mesh) as Mesh | undefined;
       expect(mesh).toBeDefined();
       expect(mesh!.geometry).toBeInstanceOf(PlaneGeometry);
-      expect(mesh!.material).toBeInstanceOf(MeshStandardNodeMaterial);
+      expect(mesh!.material).toBeInstanceOf(MeshBasicNodeMaterial);
+      expect(mesh!.material).not.toBeInstanceOf(MeshStandardNodeMaterial);
+      // Unlit materials keep their color exact — never tone-mapped.
+      expect((mesh!.material as { toneMapped?: boolean }).toneMapped).toBe(false);
       expect(textureLoadCalls).toContain('/img/base.avif');
       expect(textureLoadCalls).toContain('/img/depth.avif');
+    });
+
+    it('opts INTO lighting with receivesLighting: true → MeshStandardNodeMaterial (§10 lit lane)', () => {
+      // The lit lane survives as an explicit opt-in: a node that sets
+      // receivesLighting=true catches scene light via the standard node
+      // material. This pins both halves of criterion 17.
+      const { ctx } = makeCtx();
+      const node = makeNode({
+        renderMode: 'parallax-plane',
+        receivesLighting: true,
+        visual: { transform: { x: 0, y: 0, z: 0, width: 100, height: 100 }, sourceAsset: '/img/base.avif' },
+        depthMapUrl: '/img/depth.avif',
+      });
+      const obj = defaultRenderModeFactory(node, ctx);
+      const mesh = obj.children.find((c) => c instanceof Mesh) as Mesh | undefined;
+      expect(mesh).toBeDefined();
+      expect(mesh!.material).toBeInstanceOf(MeshStandardNodeMaterial);
     });
   });
 

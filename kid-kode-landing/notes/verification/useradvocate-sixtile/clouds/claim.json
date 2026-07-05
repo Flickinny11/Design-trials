@@ -1,0 +1,7 @@
+{
+  "name": "clouds",
+  "label": "Speed",
+  "description": "Bright billowing cumulus clouds drift slowly across a clean blue sky gradient.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

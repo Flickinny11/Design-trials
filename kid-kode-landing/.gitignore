@@ -1,1 +1,10 @@
 test-results/
+.vercel
+.env*.local
+
+# P1 text system — on-demand font bake cache (TTFs + generated atlases)
+.prism-font-cache/
+.data/
+
+# F5.3 raw fal GLBs (large, regenerate via scripts/provision-watch-parts.mjs)
+public/prism-mock/orrery/meshes/atelier/*.glb

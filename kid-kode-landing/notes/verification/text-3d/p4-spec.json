@@ -1,0 +1,9 @@
+{
+  "textSpec": {
+    "content": "PRISM", "fontFamily": "Inter", "fontSize": 0.6, "fontWeight": 700,
+    "fill": { "kind": "solid", "color": "#7fd4ff" },
+    "extrude": { "enabled": true, "depth": 0.3, "bevelEnabled": true, "bevelThickness": 0.03, "bevelSize": 0.025, "curveSegments": 12, "metalness": 0.3, "roughness": 0.35 },
+    "shadow": { "color": "#04060a", "offsetX": 0.08, "offsetY": -0.08, "offsetZ": -0.05, "opacity": 0.85, "blur": 0.05 }
+  },
+  "rotations": [ { "label": "front", "x": 0, "y": 0 }, { "label": "hero-3q", "x": -0.12, "y": 0.5 } ]
+}

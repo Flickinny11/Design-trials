@@ -1,0 +1,7 @@
+{
+  "name": "flip-morph",
+  "label": "Duration",
+  "description": "FLIP-grade container morph: the card leaps from a small corner thumbnail to its full layout, position and per-axis scale counter-animated on independent eases so the aspect squares up exactly on arrival.",
+  "category": "transform",
+  "groundTruthSibling": null
+}

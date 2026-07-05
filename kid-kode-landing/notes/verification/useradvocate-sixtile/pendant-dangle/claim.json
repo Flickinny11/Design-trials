@@ -1,0 +1,7 @@
+{
+  "name": "pendant-dangle",
+  "label": "Chain Length",
+  "description": "The card hangs from an unseen chain and dangles toward the cursor, swinging on its pivot and settling with the lazy physics of a pendant in a jeweler’s hand.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

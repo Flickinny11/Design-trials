@@ -1,0 +1,47 @@
+{
+  "gate": "PA-galaxy-ratio",
+  "total": 2,
+  "pass": 2,
+  "thresholds": {
+    "minRatio": 2.5,
+    "minHubs": 5
+  },
+  "results": [
+    {
+      "viewport": "desktop",
+      "pass": true,
+      "hubsDetected": 5,
+      "nodesDetected": 22,
+      "meanHubPx": 29.5,
+      "meanNodePx": 8.6,
+      "ratio": 3.43,
+      "minHubRatio": 2.56,
+      "hubRadii": [
+        40.5,
+        31.4,
+        22.1,
+        23.6,
+        30.2
+      ],
+      "errors": 0
+    },
+    {
+      "viewport": "mobile",
+      "pass": true,
+      "hubsDetected": 5,
+      "nodesDetected": 22,
+      "meanHubPx": 27.7,
+      "meanNodePx": 8.1,
+      "ratio": 3.43,
+      "minHubRatio": 2.56,
+      "hubRadii": [
+        38,
+        29.4,
+        20.7,
+        22.1,
+        28.3
+      ],
+      "errors": 0
+    }
+  ]
+}

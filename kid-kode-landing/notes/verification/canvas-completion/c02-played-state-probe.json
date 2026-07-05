@@ -1,0 +1,15 @@
+{
+  "pass": false,
+  "previewApp": {
+    "movers": [
+      "home-orbit-decor"
+    ],
+    "total": 6
+  },
+  "canvas": {
+    "movers": [
+      "home-orbit-decor"
+    ],
+    "total": 6
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "node": "orr-arrival-headline",
+  "backend": {
+    "isWebGPU": false,
+    "isWebGL": true
+  },
+  "results": [
+    {
+      "name": "section-tab-functions",
+      "pass": true,
+      "detail": "trusted=functions"
+    },
+    {
+      "name": "cap-first-send-email",
+      "pass": true,
+      "detail": "top=SendGrid:Send email"
+    },
+    {
+      "name": "attach-two",
+      "pass": true,
+      "detail": "tiles=SendGrid,Stripe"
+    },
+    {
+      "name": "validate-on-select",
+      "pass": true,
+      "detail": "statuses=fixed,fixed"
+    },
+    {
+      "name": "reorder",
+      "pass": true,
+      "detail": "order0=Stripe"
+    },
+    {
+      "name": "section-tab-integrations",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "one-click-auth",
+      "pass": true,
+      "detail": "via=supabase:oauth2.1 refs=1"
+    },
+    {
+      "name": "reference-only",
+      "pass": true,
+      "detail": "refId=cap_supabase_oauth2.1_10p6x9"
+    },
+    {
+      "name": "assets-self-populate-add",
+      "pass": true,
+      "detail": "assets=3 added=1"
+    },
+    {
+      "name": "section-tab-data",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "data-model-bound",
+      "pass": true,
+      "detail": "name=signups fields=2 persist=Supabase valid=fixed"
+    },
+    {
+      "name": "save-ok",
+      "pass": true,
+      "detail": "save.ok=true"
+    },
+    {
+      "name": "reload-round-trip-exact",
+      "pass": true,
+      "detail": "fn=2 int=1 data=signups/public.users"
+    },
+    {
+      "name": "NO-SECRET-IN-PERSISTED-GRAPH",
+      "pass": true,
+      "detail": "capability references only — no raw secret anywhere"
+    },
+    {
+      "name": "zero-app-console-errors",
+      "pass": true,
+      "detail": "appErrors=0 bad404=0"
+    }
+  ],
+  "finalSummary": {
+    "nodeId": "orr-arrival-headline",
+    "functionTiles": [
+      {
+        "id": "ft-1ewhyp4",
+        "order": 0,
+        "providerId": "mcp",
+        "actionId": "stripe-create-payment-intent",
+        "brandKey": "stripe",
+        "label": "Create payment intent",
+        "platform": "Stripe",
+        "source": "catalog",
+        "params": {
+          "amount": 1000,
+          "currency": "sample"
+        },
+        "validation": {
+          "status": "fixed",
+          "testedAt": "2026-06-29T10:29:25.709Z",
+          "message": "Sandbox test failed: missing required `amount`, `currency`",
+          "autoFixNote": "Filled amount, currency with safe sample values"
+        }
+      },
+      {
+        "id": "ft-t4680j",
+        "order": 1,
+        "providerId": "mcp",
+        "actionId": "sendgrid-send-email",
+        "brandKey": "sendgrid",
+        "label": "Send email",
+        "platform": "SendGrid",
+        "source": "catalog",
+        "params": {
+          "to": "sample",
+          "subject": "sample"
+        },
+        "validation": {
+          "status": "fixed",
+          "testedAt": "2026-06-29T10:29:23.137Z",
+          "message": "Sandbox test failed: missing required `to`, `subject`",
+          "autoFixNote": "Filled to, subject with safe sample values"
+        }
+      }
+    ],
+    "integrationRefs": [
+      {
+        "id": "ig-g6iadt",
+        "order": 0,
+        "providerId": "mcp",
+        "platformId": "supabase",
+        "platform": "Supabase",
+        "authMethod": "oauth2.1",
+        "capabilityRef": {
+          "refId": "cap_supabase_oauth2.1_10p6x9",
+          "scope": "supabase:connect",
+          "label": "Supabase (oauth2.1)",
+          "provider": "mcp",
+          "authMethod": "oauth2.1"
+        },
+        "assets": [
+          {
+            "id": "proj_prism",
+            "kind": "project",
+            "name": "prism-prod",
+            "detail": "us-east-1"
+          }
+        ],
+        "contentIcon": {
+          "brandKey": "supabase"
+        }
+      }
+    ],
+    "dataModel": {
+      "fields": [
+        {
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "type": "timestamp"
+        }
+      ],
+      "name": "signups",
+      "persistence": {
+        "providerId": "mcp",
+        "platformId": "supabase",
+        "platform": "Supabase",
+        "kind": "table",
+        "brandKey": "supabase",
+        "capabilityRef": {
+          "refId": "cap_supabase_oauth2.1_10p6x9",
+          "scope": "supabase:connect",
+          "label": "Supabase (oauth2.1)",
+          "provider": "mcp",
+          "authMethod": "oauth2.1"
+        },
+        "resource": "public.users"
+      },
+      "validation": {
+        "status": "fixed",
+        "testedAt": "2026-06-29T10:29:47.920Z",
+        "message": "Sandbox test failed: missing required `values`"
+      }
+    }
+  },
+  "leakHits": [],
+  "appConsoleErrors": [],
+  "bad404": []
+}

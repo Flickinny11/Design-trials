@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-06-23T10:41:03.428Z",
+  "dir": "notes/verification/toolbar-v2/tiles",
+  "bar": {
+    "tooDarkLum": 0.06,
+    "washedLum": 0.72,
+    "washedSat": 0.1,
+    "minCoverage": 0.035,
+    "flatStdDev": 0.018
+  },
+  "summary": {
+    "total": 6,
+    "pass": 6,
+    "needsPolish": 0
+  },
+  "stage2": "Vision reviewer (run in /prism-verify) judges every NEEDS-POLISH frame + a sample of PASS frames for \"looks like its name + premium\".",
+  "results": [
+    {
+      "name": "buttons-grid",
+      "frame": "notes/verification/catalog-prep/tiles/buttons-grid.png",
+      "metrics": {
+        "meanLum": 0.1082127133169982,
+        "lumStdDev": 0.11055670294068229,
+        "meanSat": 0.3497133227069809,
+        "coverage": 0.9390625
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "hero-rail",
+      "frame": "notes/verification/catalog-prep/tiles/hero-rail.png",
+      "metrics": {
+        "meanLum": 0.24504950379902296,
+        "lumStdDev": 0.15906865789247737,
+        "meanSat": 0.49780144184637454,
+        "coverage": 0.9288020833333334
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "ic-image",
+      "frame": "notes/verification/catalog-prep/tiles/ic-image.png",
+      "metrics": {
+        "meanLum": 0.19745131446080055,
+        "lumStdDev": 0.2539841554918228,
+        "meanSat": 0.4490967735431669,
+        "coverage": 0.4261979166666667
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "ic-transform",
+      "frame": "notes/verification/catalog-prep/tiles/ic-transform.png",
+      "metrics": {
+        "meanLum": 0.06980746307189797,
+        "lumStdDev": 0.10654657629165812,
+        "meanSat": 0.6676275924138094,
+        "coverage": 0.16666666666666666
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "icons-grid",
+      "frame": "notes/verification/catalog-prep/tiles/icons-grid.png",
+      "metrics": {
+        "meanLum": 0.07896164080884265,
+        "lumStdDev": 0.16045173204250918,
+        "meanSat": 0.596033167637143,
+        "coverage": 0.12505208333333334
+      },
+      "verdict": "PASS",
+      "reasons": []
+    },
+    {
+      "name": "shell",
+      "frame": "notes/verification/catalog-prep/tiles/shell.png",
+      "metrics": {
+        "meanLum": 0.3160684718136799,
+        "lumStdDev": 0.3415415820283484,
+        "meanSat": 0.3658567388691445,
+        "coverage": 0.4209375
+      },
+      "verdict": "PASS",
+      "reasons": []
+    }
+  ]
+}

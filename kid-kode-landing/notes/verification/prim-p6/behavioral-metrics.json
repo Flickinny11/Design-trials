@@ -1,0 +1,109 @@
+{
+  "interactions": [
+    {
+      "name": "classifier-self-test",
+      "pass": true,
+      "method": "probe",
+      "detail": "live=true caught=2 · catalog=81 entries"
+    },
+    {
+      "name": "browse-primitives",
+      "pass": true,
+      "method": "trusted/probe",
+      "detail": "3 live preview tiles"
+    },
+    {
+      "name": "browse-composites",
+      "pass": true,
+      "method": "trusted/probe",
+      "detail": "3 live preview tiles"
+    },
+    {
+      "name": "browse-materials",
+      "pass": true,
+      "method": "trusted/probe",
+      "detail": "13 live preview tiles"
+    },
+    {
+      "name": "browse-saved",
+      "pass": true,
+      "method": "trusted/probe",
+      "detail": "0 live preview tiles"
+    },
+    {
+      "name": "browse-materials-family",
+      "pass": true,
+      "method": "probe",
+      "detail": "Gems family → 7 live gem previews"
+    },
+    {
+      "name": "search-filter",
+      "pass": true,
+      "method": "trusted-keystroke",
+      "detail": "focused=true query=\"gold\" → 2 matches: mat:metal.gold,mat:metal.rose-gold"
+    },
+    {
+      "name": "drag-primitive",
+      "pass": true,
+      "method": "trusted-pointer-drag",
+      "detail": "nodes 3→4 · authored ok=true orphans=0"
+    },
+    {
+      "name": "drag-material",
+      "pass": true,
+      "method": "trusted-pointer-drag",
+      "detail": "nodes 4→5 · ok=true"
+    },
+    {
+      "name": "drag-composite-subgraph",
+      "pass": true,
+      "method": "trusted-pointer-drag",
+      "detail": "nodes 5→10 (+5) · ok=true"
+    },
+    {
+      "name": "inspector-opens",
+      "pass": true,
+      "method": "probe",
+      "detail": "faders: width,height,depth,cornerRadius,bevel,segments,contrast"
+    },
+    {
+      "name": "inspector-fader-edits-schema",
+      "pass": true,
+      "method": "trusted-pointer-drag",
+      "detail": "width 3.20 → 5.00"
+    },
+    {
+      "name": "inspector-material-reskin",
+      "pass": true,
+      "method": "store",
+      "detail": "material null → gem.sapphire"
+    },
+    {
+      "name": "dogfood-chrome-is-node",
+      "pass": true,
+      "method": "probe",
+      "detail": "chrome pane backing node present=true inNodes=true"
+    },
+    {
+      "name": "dogfood-chrome-selectable",
+      "pass": true,
+      "method": "trusted-pointer",
+      "detail": "clicking the chrome panel selected node lib-chrome-pane"
+    },
+    {
+      "name": "galaxy-no-orphan",
+      "pass": true,
+      "method": "probe",
+      "detail": "10 dormant seeds, orphans=0"
+    },
+    {
+      "name": "canvas-realized-no-orphan",
+      "pass": true,
+      "method": "probe",
+      "detail": "10 rendered · 10 nodes · orphans=0 unrealized=0"
+    }
+  ],
+  "consoleErrors": 0,
+  "errors": [],
+  "allPass": true
+}

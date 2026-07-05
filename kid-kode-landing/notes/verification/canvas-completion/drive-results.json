@@ -1,0 +1,47 @@
+{
+  "steps": [
+    {
+      "step": "c12: picker >=300 tiles, hover-play, ControlSchema panel",
+      "ok": true,
+      "tileCount": 312,
+      "countBadge": "312 primitives",
+      "playingBefore": "true",
+      "playingAfter": "true",
+      "controlsInDetail": 3
+    },
+    {
+      "step": "c13: two primitives stacked on one element + reordered via stack arrows",
+      "ok": true,
+      "orderBefore": [
+        "float",
+        "fade-up"
+      ],
+      "orderAfter": [
+        "fade-up",
+        "float"
+      ]
+    },
+    {
+      "step": "c16 setup: headline bindings removed (isolation via fresh primitives)",
+      "ok": true
+    },
+    {
+      "step": "c16 setup: cube1 float@time, cube2 fade-up@scroll (finite, scroll-scrubbed)",
+      "ok": true,
+      "cubeId": "470c6ba0-7c34-45c4-b1ff-80d8a81e95ab",
+      "cube2Id": "0838dfb8-eb50-4b19-a391-c551a5827b2a"
+    },
+    {
+      "step": "c16: TimeDriver plays (master clock) WHILE scroll binding responds to real wheel input",
+      "ok": true,
+      "cubeDrift": 0.20417,
+      "scrollIdleDrift": 0,
+      "scrollDelta": 0.225,
+      "cubeStillPlaying": true
+    }
+  ],
+  "consoleErrors": [],
+  "pass": true,
+  "rendererBackend": "webgpu",
+  "rawConsoleMessages": []
+}

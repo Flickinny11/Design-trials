@@ -1,0 +1,93 @@
+{
+  "bindings": {
+    "arrivalAttach": {
+      "orr-arrival-headline": 3,
+      "orr-arrival-sub": 2,
+      "orr-materia-brass": 0,
+      "orr-materia-sapphire": 0,
+      "orr-materia-pour": 0
+    },
+    "materiaAttach": {
+      "orr-arrival-headline": 1,
+      "orr-arrival-sub": 0,
+      "orr-materia-brass": 3,
+      "orr-materia-sapphire": 3,
+      "orr-materia-pour": 2
+    }
+  },
+  "samples": {
+    "headlineScroll0": {
+      "found": true,
+      "z": -1.682,
+      "scale": 0.62,
+      "opacity": 1,
+      "visible": true
+    },
+    "headlineScroll05": {
+      "found": true,
+      "z": -0.589,
+      "scale": 1.035,
+      "opacity": 1,
+      "visible": true
+    },
+    "headlineScroll09": {
+      "found": true,
+      "z": 0.443,
+      "scale": 1.427,
+      "opacity": 1,
+      "visible": true
+    },
+    "subTimeline1": [
+      {
+        "duration": 1.6,
+        "progress": 0.8218749999999999,
+        "totalTime": 6.115,
+        "paused": false
+      },
+      {
+        "duration": 1.1,
+        "progress": 0.5590909090909091,
+        "totalTime": 6.115,
+        "paused": false
+      }
+    ],
+    "subTimeline2": [
+      {
+        "duration": 1.6,
+        "progress": 0.489375,
+        "totalTime": 7.183,
+        "paused": false
+      },
+      {
+        "duration": 1.1,
+        "progress": 0.5299999999999999,
+        "totalTime": 7.183,
+        "paused": false
+      }
+    ],
+    "brassScroll0": {
+      "found": true,
+      "z": 0,
+      "scale": 1,
+      "opacity": 1,
+      "visible": false
+    },
+    "brassScroll1": {
+      "found": true,
+      "z": 0,
+      "scale": 1,
+      "opacity": 1,
+      "visible": false
+    },
+    "sapphire": {
+      "found": true,
+      "z": 0,
+      "scale": 1,
+      "opacity": 1,
+      "visible": true
+    }
+  },
+  "consoleErrors": 0,
+  "skips": [],
+  "errorSamples": []
+}

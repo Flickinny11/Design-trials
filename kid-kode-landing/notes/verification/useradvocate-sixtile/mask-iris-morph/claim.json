@@ -1,0 +1,7 @@
+{
+  "name": "mask-iris-morph",
+  "label": "Duration",
+  "description": "A camera iris opens to reveal the card, its aperture morphing from circle through star to hexagon as it widens, a warm brass rim burning at the blade edge.",
+  "category": "mask",
+  "groundTruthSibling": null
+}

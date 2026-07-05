@@ -6,28 +6,54 @@
 // Phase 1 contract: pure data path. No DOM, no React. The Inspector and
 // GraphScene wiring lives in Phase 2.
 
-import type { GraphSource, HomeHubJson, PrismEdge, PrismHub, PrismNode } from './types.ts';
+import type {
+  GraphSource,
+  HomeHubJson,
+  PrismEdge,
+  PrismHub,
+  PrismNode,
+  PrismRootNode,
+} from './types.ts';
 
 /**
  * Map a parsed `home-hub.json` document to the canonical GraphSource shape the
- * editor reads through. The JSON is single-hub today; the result is a
- * one-entry `hubs` array so the multi-hub future is naturally extensible.
+ * editor reads through. Legacy payloads carry `hub` singular and the result
+ * is a one-entry `hubs` array; FIDELITY-2 W3 payloads may carry an optional
+ * `hubs` array (multi-hub wire format), consumed verbatim when present.
+ *
+ * Editor-build §5 / SC-006: rootNodes is threaded through when present so the
+ * editor sees the App_Name_World instance after the initial fetch. Legacy
+ * fixtures that omit the field still parse (INV-18 — additive).
  */
 export function loadFromHomeHub(json: HomeHubJson): GraphSource {
   if (!json || typeof json !== 'object') {
     throw new Error('loadFromHomeHub: expected a parsed home-hub.json object');
   }
-  const hub = json.hub as PrismHub | undefined;
-  if (!hub || typeof hub !== 'object' || !hub.hubId) {
-    throw new Error('loadFromHomeHub: json.hub is missing or malformed');
+  // FIDELITY-2 W3 (INV-18 additive): when the optional multi-hub carrier is
+  // present and non-empty, use it verbatim. Legacy single-hub payloads (no
+  // `hubs` key) fall through to the original `hub`-singular path unchanged.
+  let hubs: PrismHub[];
+  if (Array.isArray(json.hubs) && json.hubs.length > 0) {
+    hubs = json.hubs as PrismHub[];
+  } else {
+    const hub = json.hub as PrismHub | undefined;
+    if (!hub || typeof hub !== 'object' || !hub.hubId) {
+      throw new Error('loadFromHomeHub: json.hub is missing or malformed');
+    }
+    hubs = [hub];
   }
   const nodes = Array.isArray(json.nodes) ? (json.nodes as PrismNode[]) : [];
   const edges = Array.isArray(json.edges) ? (json.edges as PrismEdge[]) : [];
-  return {
-    hubs: [hub],
+  const rootNodes = Array.isArray(json.rootNodes)
+    ? (json.rootNodes as PrismRootNode[])
+    : undefined;
+  const out: GraphSource = {
+    hubs,
     nodes,
     edges,
   };
+  if (rootNodes !== undefined) out.rootNodes = rootNodes;
+  return out;
 }
 
 /**
@@ -37,7 +63,9 @@ export function loadFromHomeHub(json: HomeHubJson): GraphSource {
  * {@link loadFromHomeHub} on a pre-parsed object instead.
  */
 export async function loadFromHomeHubFile(url: string): Promise<GraphSource> {
-  const res = await fetch(url);
+  // no-store: the editor writes this file (persist/regen) and reloads it; a
+  // cached response would show a stale graph after an edit. Always fetch fresh.
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error(`loadFromHomeHubFile: fetch ${url} failed: ${res.status}`);
   }
@@ -67,10 +95,13 @@ export async function loadFromPrismArtifact(prismUrl: string): Promise<GraphSour
     hubs?: PrismHub[];
     nodes?: PrismNode[];
     edges?: PrismEdge[];
+    rootNodes?: PrismRootNode[];
   };
-  return {
+  const out: GraphSource = {
     hubs: Array.isArray(graphJson.hubs) ? graphJson.hubs : [],
     nodes: Array.isArray(graphJson.nodes) ? graphJson.nodes : [],
     edges: Array.isArray(graphJson.edges) ? graphJson.edges : [],
   };
+  if (Array.isArray(graphJson.rootNodes)) out.rootNodes = graphJson.rootNodes;
+  return out;
 }

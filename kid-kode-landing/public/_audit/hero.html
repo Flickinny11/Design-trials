@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8">
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>body{margin:0;background:#0d0f13;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+model-viewer{width:100%;height:100vh;background:radial-gradient(circle at 50% 40%,#23262e,#0b0d11)}
+span{position:absolute;color:#d8c08a;font:13px sans-serif;padding:6px;z-index:9}</style></head>
+<body>
+<div style="position:relative"><span id="s0">gen-hero-2k · dial view</span>
+<model-viewer id="m0" src="gen-hero-2k.glb" camera-controls exposure="1.25" tone-mapping="aces"
+ environment-image="studio.png" camera-orbit="0deg 18deg 2.0m" shadow-intensity="0.9"></model-viewer></div>
+<div style="position:relative"><span>gen-hero-2k · 3/4 view</span>
+<model-viewer src="gen-hero-2k.glb" camera-controls exposure="1.25" tone-mapping="aces"
+ environment-image="studio.png" camera-orbit="35deg 62deg 2.2m" shadow-intensity="0.9"></model-viewer></div>
+<script>
+window.__loaded={};
+document.querySelectorAll('model-viewer').forEach((m,i)=>{m.addEventListener('load',()=>window.__loaded[i]=true);m.addEventListener('error',()=>window.__loaded[i]='ERR');});
+</script>
+</body></html>

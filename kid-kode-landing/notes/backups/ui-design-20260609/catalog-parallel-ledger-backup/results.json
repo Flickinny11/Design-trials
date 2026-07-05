@@ -1,0 +1,204 @@
+{
+  "startedAt": "2026-06-09T23:49:06.959Z",
+  "updatedAt": "2026-06-09T23:51:07.314Z",
+  "tiers": {
+    "std": {
+      "tier": "std",
+      "total": 13,
+      "backend": "webgl",
+      "startedAt": "2026-06-09T23:49:10.323Z",
+      "finishedAt": "2026-06-09T23:51:07.314Z",
+      "peakConcurrency": 8,
+      "deviceLostTotal": 0
+    }
+  },
+  "results": {
+    "cosmic-dust": {
+      "name": "cosmic-dust",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:14.849Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "dust-cloud": {
+      "name": "dust-cloud",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:21.935Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "fireball-burst": {
+      "name": "fireball-burst",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:24.683Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "gas-flame": {
+      "name": "gas-flame",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:32.361Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "godray": {
+      "name": "godray",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:36.419Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "ink-bloom": {
+      "name": "ink-bloom",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:37.658Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "light-shafts": {
+      "name": "light-shafts",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:39.144Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "mist-drift": {
+      "name": "mist-drift",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:48.220Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "smoky-fire": {
+      "name": "smoky-fire",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:52.311Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "supernova": {
+      "name": "supernova",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:53.189Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "nebula": {
+      "name": "nebula",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:51.199Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "volumetric-cone": {
+      "name": "volumetric-cone",
+      "category": "volumetric",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:49:58.466Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    },
+    "wispy-smoke": {
+      "name": "wispy-smoke",
+      "category": "smoke",
+      "renders": true,
+      "plays": true,
+      "controls": true,
+      "picker": true,
+      "notes": [],
+      "verdict": "pass",
+      "at": "2026-06-09T23:50:03.442Z",
+      "backend": "webgl",
+      "consoleErrors": []
+    }
+  },
+  "summary": {
+    "total": 13,
+    "pass": 13,
+    "fail": 0,
+    "missing": 0,
+    "failNames": [],
+    "missingNames": [],
+    "wallClockSec": 120,
+    "peak": {
+      "std": 8
+    },
+    "backend": {
+      "std": "webgl"
+    },
+    "deviceLost": {
+      "std": 0
+    }
+  }
+}

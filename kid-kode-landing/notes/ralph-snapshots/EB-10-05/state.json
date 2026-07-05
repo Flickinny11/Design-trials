@@ -1,0 +1,104 @@
+{
+  "taskId": "EB-10-05",
+  "capturedAt": "2026-05-17T00:38:59.233Z",
+  "url": "http://localhost:4791/",
+  "fixture": "mock-app",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "outerState": {
+    "url": "http://localhost:4791/",
+    "title": "Prism Editor — Kriptik",
+    "editorStore": null,
+    "canvasCount": 3
+  },
+  "previewAppWorld": {
+    "beforeHash": "216723107bdaf7cf06b3e3abbec0f4ff6dc4fe2360f55d759758500d5da754be",
+    "afterHash": "216723107bdaf7cf06b3e3abbec0f4ff6dc4fe2360f55d759758500d5da754be",
+    "byteIdentical": true,
+    "world": {
+      "appNameWorldId": "app-name-world-default",
+      "spec": {},
+      "designSpec": {},
+      "buildPlan": {},
+      "memoryLog": [],
+      "hubRegistry": [
+        {
+          "hubId": "home"
+        }
+      ],
+      "nodeRegistry": [],
+      "globalDependencies": [],
+      "validationRules": [],
+      "aiRoutingRules": [],
+      "capabilityRefs": []
+    },
+    "worldEchoMatches": true,
+    "badgeRendered": true,
+    "badgeAppNameWorldId": "app-name-world-default"
+  },
+  "summary": {
+    "outerScreenshot": "outer.png",
+    "innerScreenshot": "inner.png",
+    "checks": [
+      {
+        "id": "preflight.prism-artifact",
+        "desc": ".prism artifact present",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "preflight.server-up",
+        "desc": "next start reachable",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "outer.screenshot",
+        "desc": "outer.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.mounted",
+        "desc": "inner Prism runtime mounted in preview-hub",
+        "pass": true,
+        "detail": "mounted"
+      },
+      {
+        "id": "inner.screenshot",
+        "desc": "inner.png captured",
+        "pass": true,
+        "detail": ""
+      },
+      {
+        "id": "inner.no-errors",
+        "desc": "no runtime errors in console / page",
+        "pass": true,
+        "detail": "clean"
+      },
+      {
+        "id": "preview-app.world-context-surface",
+        "desc": "SC-057 — CompiledAppView.world surfaces App_Name_World context (stable across re-reads)",
+        "pass": true,
+        "detail": "app-name-world-default"
+      },
+      {
+        "id": "preview-app.full-compile-immutability",
+        "desc": "SC-058 — sha256(GraphSource) is byte-identical before and after compileAppToPreview",
+        "pass": true,
+        "detail": "216723107bda…"
+      },
+      {
+        "id": "preview-app.world-badge-rendered",
+        "desc": "world-context binding is rendered (preview-app overlay shows appNameWorldId)",
+        "pass": true,
+        "detail": "app-name-world-default"
+      }
+    ],
+    "consoleLogCount": 8,
+    "pageErrorCount": 0,
+    "criticalErrorCount": 0
+  }
+}

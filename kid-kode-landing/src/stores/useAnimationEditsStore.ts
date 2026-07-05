@@ -2,6 +2,11 @@
 
 import { create } from 'zustand';
 
+import type {
+  PrismKeyframeCoordinateSpace,
+  PrismKeyframeTrigger,
+} from '@/lib/prism-graph/types';
+
 export interface FrameProps {
   scale: number;
   opacity: number;
@@ -32,6 +37,11 @@ export interface NodeEdits {
   primaryColor?: string;
   secondaryColor?: string;
   radius?: number;
+  // EB-08-03 — Animation tab picker state. Both optional (INV-18 additive).
+  // `coordinateSpace` is the canonical-5 space the active keyframe lives in
+  // (RA-03); `trigger` is the SC-044 enum entry that fires this animation.
+  coordinateSpace?: PrismKeyframeCoordinateSpace;
+  trigger?: PrismKeyframeTrigger;
   // unsaved flag
   dirty: boolean;
 }
@@ -42,6 +52,8 @@ interface EditState {
   setFrame: (nodeId: string, frameIdx: number, patch: Partial<FrameProps>) => void;
   setPrimary: (nodeId: string, color: string) => void;
   setSecondary: (nodeId: string, color: string) => void;
+  setCoordinateSpace: (nodeId: string, space: PrismKeyframeCoordinateSpace) => void;
+  setTrigger: (nodeId: string, trigger: PrismKeyframeTrigger) => void;
   reorderFrames: (nodeId: string, fromIdx: number, toIdx: number) => void;
   reset: (nodeId: string) => void;
   markSaved: (nodeId: string) => void;
@@ -81,6 +93,16 @@ export const useAnimationEditsStore = create<EditState>((set, get) => ({
     set((s) => {
       const existing = s.edits[nodeId] || { nodeId, frames: [], dirty: false };
       return { edits: { ...s.edits, [nodeId]: { ...existing, secondaryColor: color, dirty: true } } };
+    }),
+  setCoordinateSpace: (nodeId, space) =>
+    set((s) => {
+      const existing = s.edits[nodeId] || { nodeId, frames: [], dirty: false };
+      return { edits: { ...s.edits, [nodeId]: { ...existing, coordinateSpace: space, dirty: true } } };
+    }),
+  setTrigger: (nodeId, trigger) =>
+    set((s) => {
+      const existing = s.edits[nodeId] || { nodeId, frames: [], dirty: false };
+      return { edits: { ...s.edits, [nodeId]: { ...existing, trigger, dirty: true } } };
     }),
   reorderFrames: (nodeId, fromIdx, toIdx) =>
     set((s) => {

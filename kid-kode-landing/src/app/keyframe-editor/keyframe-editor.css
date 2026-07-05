@@ -1,0 +1,27 @@
+/* Keyframe Editor route — full-bleed WebGL stage ONLY.
+ *
+ * This global stylesheet does the one thing the no-dom-ui gate permits at the
+ * WebGL mount point: size the stage and set the page background. It builds NO
+ * UI — every visible element (glass pane, milled channels, worn knobs, engraved
+ * labels, playhead, bound node) lives inside the <canvas>. No Tailwind, no
+ * utility classes, no CSS module, no styled chrome. */
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #05060a;
+}
+
+[data-keyframe-stage] {
+  position: fixed;
+  inset: 0;
+  background: #05060a;
+}
+
+[data-keyframe-stage] > div,
+[data-keyframe-stage] canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

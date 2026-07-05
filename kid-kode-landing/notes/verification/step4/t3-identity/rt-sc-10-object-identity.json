@@ -1,0 +1,7 @@
+{
+  "criterion": "RT-SC-10",
+  "claim": "preview-app reuses canvas's mounted THREE.Object3D objects (no separate PrismHost compiled mount); object identity preserved across canvas<->preview-app toggle",
+  "method": "read window.__PRISM_EDITOR_NODE_GROUPS__ wrapper-group uuid + first descendant uuid for every node in canvas, toggle to preview-app, re-read, compare",
+  "result": { "total": 12, "sameWrapper": 12, "sameChild": 12 },
+  "verdict": "PASS — all 12 nodes identical wrapper+child uuid across the toggle"
+}

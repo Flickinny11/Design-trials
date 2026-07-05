@@ -23,6 +23,10 @@ export const SHARED_SYSTEM_PROMPT: string = [
   'CONSTRAINTS:',
   "- Import only from: 'three/webgpu', 'three/tsl', 'gsap', '@/primitives' (alias for the",
   "  cinematic primitives library), '@/text' (alias for MSDF text utilities).",
+  // P5 follow-up (runtime-spec §9 "Shaders: TSL only") — cage-free restatement
+  // after the 876d603 rescission removed the whole shader line. Authoring
+  // bespoke shaders is allowed; raw GLSL/WGSL strings are not how.
+  '- Shaders are written with three/tsl nodes only — never raw GLSL/WGSL strings and never ShaderMaterial/RawShaderMaterial.',
   '- Export default a single function: createNode(config: NodeConfig, ctx: NodeContext): THREE.Object3D',
   '- The function MUST be synchronous. All async loading uses ctx.textureLoader / ctx.glbLoader',
   '  which return cached resources.',
@@ -35,7 +39,6 @@ export const SHARED_SYSTEM_PROMPT: string = [
   '- The returned object MUST have userData.cleanup() that disposes resources and kills',
   '  GSAP timelines.',
   '- DO NOT use HTML, CSS, the DOM, document.*, or window.* — except window.devicePixelRatio.',
-  '- DO NOT author bespoke shader code — use TSL through ctx.primitives or three/tsl built-ins.',
   '',
   'OUTPUT: Only the JavaScript code. No explanation. No markdown fences.',
 ].join('\n');
@@ -230,6 +233,15 @@ const SUB_PROMPT_MESH = [
   'do NOT apply it as a texture override; the mesh has correct textures from generation.',
 ].join('\n');
 
+// Canvas-spec §7 / INV-11 — text nodes need NO generated code: the default
+// render-mode factory builds real MSDF glyphs from node.textSpec via the
+// Prism TextObject. Letterforms must never be hand-rendered or baked.
+const SUB_PROMPT_TEXT = [
+  "Do not generate a code module for renderMode 'text'. The runtime's default factory renders",
+  'real MSDF font glyphs from node.textSpec (Prism TextObject). Never synthesize letterforms,',
+  'never use THREE.TextGeometry, never bake text into images (INV-11).',
+].join('\n');
+
 export function buildRenderModeSubPrompt(mode: RenderMode): string {
   switch (mode) {
     case 'sprite':
@@ -240,6 +252,8 @@ export function buildRenderModeSubPrompt(mode: RenderMode): string {
       return SUB_PROMPT_PARALLAX;
     case 'mesh':
       return SUB_PROMPT_MESH;
+    case 'text':
+      return SUB_PROMPT_TEXT;
     default: {
       const exhaustive: never = mode;
       throw new Error(`Unknown render mode: ${exhaustive as string}`);

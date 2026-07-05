@@ -1,0 +1,53 @@
+{
+  "[data-component=\"view-mode-toggle\"] button": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif, ui-sans-serif, system-ui",
+    "fontWeight": "600",
+    "fontSize": "12px",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "[data-component=\"preview-app-world-badge\"] .ds-kicker": {
+    "found": false
+  },
+  ".ds-title": {
+    "found": false
+  },
+  ".ds-label": {
+    "found": false
+  },
+  ".ds-kicker": {
+    "found": true,
+    "fontFamily": "mono, \"mono Fallback\", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+    "fontWeight": "500",
+    "fontSize": "9.5px",
+    "letterSpacing": "1.9px",
+    "textTransform": "uppercase",
+    "firstFamily": "mono"
+  },
+  ".ds-btn": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "600",
+    "fontSize": "11px",
+    "letterSpacing": "0.22px",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "body": {
+    "found": true,
+    "fontFamily": "ui, \"ui Fallback\", ui-sans-serif, system-ui, sans-serif",
+    "fontWeight": "400",
+    "fontSize": "16px",
+    "letterSpacing": "normal",
+    "textTransform": "none",
+    "firstFamily": "ui"
+  },
+  "__fontsLoaded": {
+    "Clash Display": true,
+    "Geist": true,
+    "JetBrains Mono": true
+  },
+  "__documentFontsStatus": "loaded"
+}

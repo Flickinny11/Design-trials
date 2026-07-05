@@ -1,0 +1,37 @@
+{
+  "mode": "canvas",
+  "stubWebgpu": false,
+  "assertions": {
+    "canvasCount": 2,
+    "panes": {
+      "preview": 0,
+      "graph": 1
+    },
+    "cdnThreeResources": [],
+    "hasImportMap": true,
+    "importMapText": "{\"imports\":{\"three\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.module.js\",\"three/webgpu\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.webgpu.js\",\"three/tsl\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/build/three.tsl.js\",\"three/addons/\":\"https://cdn.jsdelivr.net/npm/three@0.184.0/examples/jsm/\",\"gsap\":\"https://cdn.jsdelivr.net/npm/gsap@3.13.0/index.js\"}}",
+    "rendererBackend": null,
+    "webgpuAvailable": true,
+    "viewMode": "canvas",
+    "editorDebug": {
+      "mode": "scene",
+      "visibleHomeNodeCount": 12,
+      "visibleHomeNodeIds": [
+        "home-headline",
+        "home-feature-card",
+        "home-parallax-stack",
+        "home-orbit-decor",
+        "home-floating-accent",
+        "home-cta-hero",
+        "9fd75433-c7e1-42a3-8f16-6a4d39c34b5f",
+        "e3634d7e-2a96-4725-95df-1c9a68b60f1b",
+        "5f2dd2a9-08d1-4cb8-b41a-104fbe752fee",
+        "0913311b-d83d-4663-9e25-0cabf9b5f603",
+        "daf9ec09-f82a-4fac-a2e2-5ba364661182",
+        "744a0f31-0951-4746-a4e8-8e262ce78183"
+      ],
+      "totalHomeNodeCount": 12
+    }
+  },
+  "toggleReport": []
+}

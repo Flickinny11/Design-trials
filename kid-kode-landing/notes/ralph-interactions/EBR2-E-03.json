@@ -1,0 +1,30 @@
+{
+  "task_id": "EBR2-E-03",
+  "url_path": "/",
+  "_comment": "RA-16 — Inspector Save button. Implementer adds data-testid='inspector-save' to the button + ensures previewState.commit(nodeId) copies to source store and clears the buffer. Depends on EBR2-E-01 / E-02 having shipped (usePreviewStateStore + Inspector overlay path).",
+  "steps": [
+    { "action": "wait_for", "selector": "canvas", "timeout_ms": 30000 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'canvas'; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 1500 },
+    {
+      "action": "evaluate",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const node = src.nodes[0]; ed.selectNode(node.nodeId); ed.openInspector(); ed.setEditorMode('edit'); stores.previewState.getState().set(node.nodeId, { caption: 'SAVE-COMMIT-TEST' }); return node.nodeId; })()"
+    },
+    { "action": "wait_ms", "duration_ms": 600 },
+    { "action": "wait_for", "selector": "[data-testid='inspector-save']", "timeout_ms": 5000 },
+    { "action": "screenshot", "name": "before.png" },
+    { "action": "click", "selector": "[data-testid='inspector-save']" },
+    { "action": "wait_ms", "duration_ms": 1200 },
+    {
+      "action": "assert",
+      "type": "evaluate_truthy",
+      "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; const ed = stores.graphEditor.getState(); const src = stores.graphSource.getState(); const previewApi = stores.previewState.getState(); const nodeId = ed.selectedNodeId; const node = src.nodes.find((n) => n.nodeId === nodeId); return node && node.caption === 'SAVE-COMMIT-TEST' && previewApi.isDirty(nodeId) === false; })()"
+    },
+    { "action": "screenshot", "name": "after.png" },
+    { "action": "assert", "type": "no_console_errors" },
+    { "action": "assert", "type": "no_network_4xx_5xx" }
+  ]
+}

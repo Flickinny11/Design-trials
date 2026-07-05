@@ -1,0 +1,7 @@
+{
+  "name": "scroll-snap-sections",
+  "label": "Sections",
+  "description": "The card clicks through magnetic section stops as you scroll — easing into each detent with a soft landing.",
+  "category": "scroll",
+  "groundTruthSibling": null
+}

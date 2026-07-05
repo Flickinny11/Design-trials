@@ -1,0 +1,35 @@
+{
+  "feature": "clouds",
+  "claim": "Bright billowing cumulus clouds drift slowly across a clean blue sky gradient.",
+  "groundTruthSibling": null,
+  "state": "after",
+  "rubric": {
+    "q1_defects": {
+      "answer": "No hard tile/grid seams, no broken/cut-off/glitchy rendering. The Round-1 orange/brown sky and the tile banding are both gone. The bare-sky coverage-low frame shows a smooth top-to-bottom gradient with no quilted shelves or grid seams. bandingScore 0.215 sits below the 0.25 visible threshold (and over-reports on organic cloud detail per the caveat). The only residual cosmetic issue is the lower third of the sky reading greenish-olive rather than continuing blue. No console or network errors.",
+      "evidence": ["clouds/after/control-coverage-low.png", "clouds/after/play-2.png", "metrics: idle bandingScore=0.215 (<0.25); consoleErrors=[] networkErrors=[]"]
+    },
+    "q2_reads_as": {
+      "answer": "Yes. Reads as white billowing clouds drifting on a blue sky. The sky is BLUE now: idle meanRGB=[79.7,88.7,94] so B(94) exceeds R(79.7), effHue=202 (sky-blue band), warmFrac=0 and magentaFrac=0 (zero orange/brown) on every frame. The Round-1 brown sky (effHue ~22-32, coolFrac=0) is fixed. Clouds are pure white and wispy/billowy across the play frames, and pure white when coverage is maxed to full overcast.",
+      "evidence": ["clouds/after/idle.png", "clouds/after/control-coverage-high.png", "metrics: idle meanRGB=[79.7,88.7,94] B>R, effHue=202, warmFrac=0 magentaFrac=0"]
+    },
+    "q3_discoverable": {
+      "answer": "Yes. The Coverage control produces an obvious, sensible sweep a first-time user would understand: low = clear blue sky with almost no clouds, mid = scattered clouds, high = fully overcast white. The change is visible and intuitive.",
+      "evidence": ["clouds/after/control-coverage-low.png", "clouds/after/control-coverage-high.png", "control: coverage low->high changed=true, meanLuma 84.5->108.6"]
+    },
+    "q4_responsive": {
+      "answer": "Responsive, not janky. Cloud forms visibly drift/evolve across the three play frames (frameDeltaMag rising 2.68 -> 2.90 -> 5.73), so motion is real. Coverage applies promptly (latency ~583-599ms). Speed and scale show changed=false, which is expected: they are paused-sweep motion/frequency controls (and scale was swept at full overcast where a frequency change is barely visible) per the caveat.",
+      "evidence": ["clouds/after/play-3.png", "metrics: frameDeltaMag play-1=2.68 play-2=2.90 play-3=5.73; coverage latencyMs ~583-599; speed/scale changed=false (paused-sweep expected)"]
+    },
+    "q5_net": {
+      "answer": "A user would be PLEASED: it's a blue sky with white fluffy clouds drifting by, and the slider takes it from clear to overcast. The brown-sky bug and the tile banding are both gone; the only nitpick is the horizon goes a little muddy-green near the bottom, which does not break the blue-sky read.",
+      "evidence": ["clouds/after/play-2.png", "clouds/after/control-coverage-low.png", "metrics: idle effHue=202 (blue), warmFrac=0"]
+    }
+  },
+  "mustFix": [],
+  "flags": [
+    { "note": "Muted/green-olive horizon: the bottom third of the sky gradient reads greenish-olive rather than continuing blue. The sky clearly reads blue overall (B>R, effHue=202), so this is a polish/taste flag per the caveat, not a blocker.", "evidence": "clouds/after/control-coverage-low.png : lower-third reads olive-green while top is light blue; idle meanRGB still B>R" },
+    { "note": "Speed and scale paused-sweeps show changed=false; expected for motion/frequency controls (scale swept at overcast). A play-delta capture would confirm they act during motion.", "evidence": "metrics: control speed changed=false, scale changed=false" }
+  ],
+  "net": "PLEASED",
+  "gate": "PASS"
+}

@@ -1,0 +1,14 @@
+{
+  "at": "2026-06-14T05:23:38.471Z",
+  "base": "http://localhost:4924",
+  "scenes": [
+    {
+      "name": "typography",
+      "consoleErrors": 0,
+      "backend": {
+        "gpu": true,
+        "status": "loaded"
+      }
+    }
+  ]
+}

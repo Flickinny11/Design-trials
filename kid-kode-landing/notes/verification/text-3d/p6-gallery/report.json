@@ -1,0 +1,46 @@
+{
+  "label": "p6-gallery",
+  "startedAt": "2026-06-14T15:41:24.490Z",
+  "backend": "webgpu",
+  "frames": [
+    {
+      "rot": "hero-3q",
+      "file": "hero-3q.png",
+      "crop": "hero-3q-crop.png"
+    },
+    {
+      "rot": "front",
+      "file": "front.png",
+      "crop": "front-crop.png"
+    },
+    {
+      "rot": "profile",
+      "file": "profile.png",
+      "crop": "profile-crop.png"
+    },
+    {
+      "rot": "ui-font-gallery",
+      "file": "ui-font-gallery.png"
+    },
+    {
+      "rot": "ui-flyout-top",
+      "file": "ui-flyout-top.png"
+    },
+    {
+      "rot": "ui-3d-controls",
+      "file": "ui-3d-controls.png"
+    }
+  ],
+  "probe": {
+    "glyphs": 5,
+    "depthZ": 0.2356,
+    "is3d": true,
+    "faceFill": "solid",
+    "castShadow": true
+  },
+  "consoleErrors": [],
+  "networkErrors": [],
+  "ok": true,
+  "nodeId": "f4dd9538-9109-4bd9-a38c-df30feb755ab",
+  "mounted3d": true
+}

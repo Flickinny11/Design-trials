@@ -1,0 +1,664 @@
+'use client';
+// ORRERY No.7 — Atelier photoreal watch (PHASE1 v2, SC-V-A1..A6).
+//
+// MID-RUN MANDATE v2: the watch is no longer 33 hand-built procedural primitives
+// (the rejected "edge-on disc" slop). It is a composed PHOTOREAL ASSEMBLY:
+//   • case body  → a GENERATED GLB (Replicate FLUX.2 concept → TRELLIS image→3D),
+//     polished/brushed steel with curved lugs + fluted crown + recessed dial well;
+//   • dial face  → a GENERATED orrery complication art (FLUX.2): midnight guilloché
+//     + aventurine, gold orbital rings with planet spheres, moonphase aperture
+//     (this is also the SC-V-O3 orrery motif), or any catalog finish (config.ts);
+//   • crystal    → true transmission/refraction sapphire dome (the premium glass);
+//   • movement   → tourbillon.glb on the caseback (Wave C flip), balance in motion;
+//   • applied indices + sweeping hands  → razor-thin polished metal that catches the
+//     studio IBL (this precise micro-geometry is intentionally parametric: image→3D
+//     produces fused single-material blobs and garbles thin parts — see report).
+//
+// Tripo part-SEGMENTATION (the only path to a fully-generated *swappable* watch) is
+// gated on a funded Tripo balance (currently 0); re-checked each wave. Until then the
+// swap/explode/caseback mechanics ride on this part-decomposed assembly, with every
+// per-part FINISH swap driven live from useConfiguratorStore (SC-V-A2/A3).
+//
+// The component owns the turntable pivot (head-on camera, the WATCH rotates), pointer
+// drag (azimuth + bounded tilt), idle auto-turn, release momentum, and the
+// window.__ATELIER_RIG__ inspect handle (flip/explode reserved for Wave C). Renders
+// only in preview-app on s6-atelier; tears down cleanly elsewhere.
+import { useEffect, useMemo, useRef, Suspense } from 'react';
+import { useThree, useFrame } from '@react-three/fiber';
+import { useGLTF } from '@react-three/drei';
+import {
+  Group, Object3D, Vector2, Vector3, Box3, Mesh, CatmullRomCurve3, Quaternion,
+  CircleGeometry, BoxGeometry, TorusGeometry, CylinderGeometry, PlaneGeometry,
+  Raycaster, TextureLoader, type Texture, type Scene,
+} from 'three';
+import {
+  buildPhysicalMaterial,
+  applyMaterialSpec,
+} from '@/lib/prism/runtime/shared/material-system';
+import type { MaterialSpec } from '@/lib/prism-graph/types';
+import { godrayPrimitive } from '@/lib/prism/animatable/primitives/godray';
+import { variantOf, type AtelierLayerId } from '@/lib/prism/atelier/config';
+import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
+import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+
+const ATELIER_HUB_ID = 's6-atelier';
+const ASSET = '/prism-mock/orrery/meshes/atelier';
+const MOVEMENT_URL = '/prism-mock/orrery/meshes/tourbillon.glb';
+// PHASE2 (P2-1): real photoreal GENERATED GLB parts (Tripo v3.1 image→3D, PBR +
+// baked normal). The case/bezel/crown are no longer procedural geometry.
+const CASE_GEN_URL = `${ASSET}/case-gen.glb`;
+const BEZEL_GEN_URL = `${ASSET}/bezel-gen.glb`;
+const CROWN_GEN_URL = `${ASSET}/crown-gen.glb`;
+const TEX = `${ASSET}/textures`;
+
+const PIVOT_CENTER = new Vector3(0, 0.15, 0.42);
+const TILT_MIN = -0.62;
+const TILT_MAX = 0.7;
+const IDLE_DELAY_MS = 3000;
+const IDLE_SPEED = 0.1; // rad/s — slow luxury turntable
+const WATCH_R = 1.0; // nominal dial radius in local units
+const DIAL_FRONT = 0.05; // dial-stack base z, at the turned-case well floor
+const LUME_COLOR: Record<string, string | undefined> = { blue: '#1ec8ff', green: '#5ef08a', ice: '#bfe9ff' };
+
+// ── shared cached texture loader (live finish swaps) ───────────────────────
+const _texLoader = new TextureLoader();
+const _texCache = new Map<string, Promise<Texture>>();
+function loadTex(url: string): Promise<Texture> {
+  let p = _texCache.get(url);
+  if (!p) {
+    p = _texLoader.loadAsync(url);
+    _texCache.set(url, p);
+  }
+  return p;
+}
+
+// Build a node-owned MeshPhysicalNodeMaterial from a MaterialSpec, then pour any
+// albedo / normal / roughness maps the spec carries (mirrors default-factory).
+function makeMat(spec: MaterialSpec): InstanceType<typeof import('three/webgpu').MeshPhysicalNodeMaterial> {
+  const m = buildPhysicalMaterial(spec);
+  applyMaterialSpec(m, spec);
+  const mm = m as unknown as {
+    map: unknown; normalMap: unknown; roughnessMap: unknown;
+    normalScale?: { set: (x: number, y: number) => void };
+    needsUpdate: boolean;
+  };
+  if (spec.baseColorMapUrl) {
+    loadTex(spec.baseColorMapUrl).then((t) => {
+      (t as { colorSpace?: string }).colorSpace = 'srgb';
+      mm.map = t; mm.needsUpdate = true;
+    }).catch(() => {});
+  }
+  if (spec.normalMapUrl) {
+    loadTex(spec.normalMapUrl).then((t) => {
+      mm.normalMap = t;
+      mm.normalScale?.set(spec.normalScale ?? 1, spec.normalScale ?? 1);
+      mm.needsUpdate = true;
+    }).catch(() => {});
+  }
+  if (spec.roughnessMapUrl) {
+    loadTex(spec.roughnessMapUrl).then((t) => { mm.roughnessMap = t; mm.needsUpdate = true; }).catch(() => {});
+  }
+  return m as never;
+}
+
+function specOf(layer: AtelierLayerId, variantId: string): MaterialSpec | null {
+  return variantOf(layer, variantId)?.material ?? null;
+}
+
+// ── generated GLB parts (P2-1) ──────────────────────────────────────────────
+// Tripo v3.1 image→3D produced clean photoreal PBR GLBs for the hard parts (case
+// body w/ integrated lugs+crown, bezel ring, crown knob): full albedo + metallic-
+// roughness + baked normal, ~4.7k tris each. We normalize (center→scale→orient so
+// the dial face points to camera +Z), then dress each part in its live finish
+// (useConfiguratorStore → specOf) while GRAFTING the GLB's baked normal map so the
+// milled/brushed micro-surface survives every finish swap (SC-V-A2/A3 preserved).
+//
+// Transform constants — tuned against the studio rig so the GLB case frames the
+// procedural dial stack (radius ~0.82) and seats the bezel on its front rim.
+const CASE_SIZE = 2.06;   // target max-dim (world units) — outer case diameter
+const CASE_ROT_X = -Math.PI / 2; // GLB dial faces +Y; bring it to face camera +Z
+const CASE_POS_Z = -0.02;
+
+type AnyMesh = Mesh & { material: { normalMap?: unknown; map?: unknown } };
+
+/** Clone + center + scale-to-target + orient a generated GLB; collect its meshes
+ *  and the first baked normal map for finish grafting. */
+function normalizeGenPart(
+  scene: Object3D,
+  targetSize: number,
+  rotX: number,
+  posZ: number,
+): { holder: Group; meshes: AnyMesh[]; bakedNormal: unknown } {
+  const root = scene.clone(true);
+  const meshes: AnyMesh[] = [];
+  let bakedNormal: unknown = null;
+  root.traverse((o) => {
+    const m = o as AnyMesh;
+    if ((m as { isMesh?: boolean }).isMesh) {
+      meshes.push(m);
+      if (!bakedNormal && m.material?.normalMap) bakedNormal = m.material.normalMap;
+    }
+  });
+  const box = new Box3().setFromObject(root);
+  const size = new Vector3(); box.getSize(size);
+  const center = new Vector3(); box.getCenter(center);
+  root.position.sub(center);
+  const holder = new Group();
+  holder.add(root);
+  holder.scale.setScalar(targetSize / (Math.max(size.x, size.y, size.z) || 1));
+  holder.rotation.x = rotX;
+  holder.position.z = posZ;
+  return { holder, meshes, bakedNormal };
+}
+
+/** Dress a generated part's meshes in the live finish, grafting the baked normal. */
+function dressGenPart(meshes: AnyMesh[], spec: MaterialSpec, bakedNormal: unknown, normScale = 0.85) {
+  const mat = makeMat(spec) as unknown as { normalMap?: unknown; normalScale?: { set: (x: number, y: number) => void }; needsUpdate: boolean };
+  if (bakedNormal && !spec.normalMapUrl) {
+    mat.normalMap = bakedNormal;
+    mat.normalScale?.set(normScale, normScale);
+    mat.needsUpdate = true;
+  }
+  for (const me of meshes) { me.material = mat as never; me.castShadow = true; me.receiveShadow = true; }
+  return mat;
+}
+
+// ── watch case (GENERATED GLB — band + integrated lugs + crown, P2-1) ────────
+function WatchCase({ caseVariant }: { caseVariant: string }) {
+  const gltf = useGLTF(CASE_GEN_URL);
+  const spec = useMemo(
+    () => specOf('case', caseVariant) ?? { baseColor: '#c9ced6', metalness: 1, roughness: 0.18, envMapIntensity: 1.4 } as MaterialSpec,
+    [caseVariant],
+  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, CASE_SIZE, CASE_ROT_X, CASE_POS_Z), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal), [part, spec]);
+  return <primitive object={part.holder} />;
+}
+useGLTF.preload(CASE_GEN_URL);
+
+// ── bezel ring (GENERATED GLB, P2-1) — seats on the case front rim ───────────
+const BEZEL_SIZE = 1.94;
+function GenBezel({ bezelVariant }: { bezelVariant: string }) {
+  const gltf = useGLTF(BEZEL_GEN_URL);
+  const spec = useMemo(
+    () => specOf('bezel', bezelVariant) ?? { baseColor: '#aeb4bd', metalness: 1, roughness: 0.4 } as MaterialSpec,
+    [bezelVariant],
+  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, BEZEL_SIZE, -Math.PI / 2, 0.0), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal, 0.6), [part, spec]);
+  return <primitive object={part.holder} />;
+}
+useGLTF.preload(BEZEL_GEN_URL);
+
+// ── crown knob (GENERATED GLB, P2-1) — at 3 o'clock (+X) ─────────────────────
+const CROWN_SIZE = 0.42;
+const CROWN_AT_X = 1.02; // crown seat at 3 o'clock (+X), just outside the case rim
+function GenCrown({ crownVariant }: { crownVariant: string }) {
+  const gltf = useGLTF(CROWN_GEN_URL);
+  const spec = useMemo(
+    () => specOf('crown', crownVariant) ?? { baseColor: '#c9ced6', metalness: 1, roughness: 0.2 } as MaterialSpec,
+    [crownVariant],
+  );
+  const part = useMemo(() => normalizeGenPart(gltf.scene, CROWN_SIZE, 0, 0), [gltf]);
+  useMemo(() => dressGenPart(part.meshes, spec, part.bakedNormal, 0.7), [part, spec]);
+  return <primitive object={part.holder} />;
+}
+useGLTF.preload(CROWN_GEN_URL);
+
+// ── caseback movement (GLB) — exhibition back, in motion on flip / explode ──
+function MovementModel({ flipRef, explodeRef }: { flipRef: React.MutableRefObject<boolean>; explodeRef: React.MutableRefObject<number> }) {
+  const gltf = useGLTF(MOVEMENT_URL);
+  const ref = useRef<Group>(null);
+  const built = useMemo(() => {
+    const root = gltf.scene.clone(true);
+    const box = new Box3().setFromObject(root);
+    const size = new Vector3(); box.getSize(size);
+    const center = new Vector3(); box.getCenter(center);
+    root.position.sub(center);
+    const holder = new Group();
+    holder.add(root);
+    holder.scale.setScalar((1.55 * WATCH_R) / (Math.max(size.x, size.y, size.z) || 1));
+    return holder;
+  }, [gltf]);
+  const exAmt = useRef(0);
+  useFrame((_, dt) => {
+    const g = ref.current; if (!g) return;
+    exAmt.current += (explodeRef.current - exAmt.current) * Math.min(1, dt * 4);
+    const ex = exAmt.current;
+    g.visible = flipRef.current || ex > 0.04;
+    g.position.z = -0.12 - 1.35 * ex;            // recedes well behind the case
+    if (g.visible) g.rotation.z += dt * 0.7;     // balance / rotor in motion (SC-V-A5)
+  });
+  return <group ref={ref} position={[0, 0, -0.12]} visible={false}><primitive object={built} /></group>;
+}
+
+useGLTF.preload(MOVEMENT_URL);
+
+// ── strap: articulated band that curves back from the lugs (leather/alligator) ─
+function StrapBand({ mat, sign }: { mat: unknown; sign: number }) {
+  const segs = useMemo(() => {
+    const pts = [
+      new Vector3(0, 0.9 * sign, -0.05),
+      new Vector3(0, 1.25 * sign, -0.22),
+      new Vector3(0, 1.5 * sign, -0.6),
+      new Vector3(0, 1.6 * sign, -1.05),
+      new Vector3(0, 1.55 * sign, -1.5),
+    ];
+    const curve = new CatmullRomCurve3(pts);
+    const up = new Vector3(0, 1, 0);
+    const N = 9;
+    const out: { pos: [number, number, number]; quat: [number, number, number, number]; w: number; len: number }[] = [];
+    for (let i = 0; i < N; i++) {
+      const a = curve.getPoint(i / N), b = curve.getPoint((i + 1) / N);
+      const mid = a.clone().add(b).multiplyScalar(0.5);
+      const dir = b.clone().sub(a); const len = dir.length(); dir.normalize();
+      const q = new Quaternion().setFromUnitVectors(up, dir);
+      out.push({ pos: [mid.x, mid.y, mid.z], quat: [q.x, q.y, q.z, q.w], w: 0.62 - 0.3 * (i / N), len });
+    }
+    return out;
+  }, [sign]);
+  return (
+    <group>
+      {segs.map((s, i) => (
+        <mesh key={i} material={mat as never} position={s.pos} quaternion={s.quat} castShadow receiveShadow>
+          <boxGeometry args={[s.w, s.len * 1.08, 0.07]} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+// ── volumetric godray shaft (P2-3) — the studio key-light made VOLUMETRIC ─────
+// Reuses the repo's `godray` animatable primitive (in-shader amber shafts on a
+// single billboarded additive quad) behind the watch, so the spotlight reads as
+// real light volume against the cosmos. Mounted outside the turntable pivot so it
+// stays anchored while the watch turns.
+function GodrayShaft() {
+  const { scene, camera } = useThree();
+  const meshRef = useRef<Mesh>(null);
+  const animRef = useRef<{ seek: (t: number) => void; dispose?: () => void } | null>(null);
+  const geo = useMemo(() => new PlaneGeometry(1, 1), []);
+  useEffect(() => {
+    const mesh = meshRef.current; if (!mesh) return;
+    const target = {
+      object: (mesh.parent ?? mesh) as Object3D,
+      subject: mesh as Object3D,
+      scene: scene as Scene,
+      userData: {} as Record<string, unknown>,
+    };
+    const anim = godrayPrimitive.create(target as never, { intensity: 0.85, decay: 0.955, density: 1, angleDeg: 90 });
+    animRef.current = anim as never;
+    return () => { animRef.current?.dispose?.(); animRef.current = null; };
+  }, [scene]);
+  useFrame((state) => {
+    animRef.current?.seek(state.clock.elapsedTime);
+    if (meshRef.current) meshRef.current.quaternion.copy(camera.quaternion); // billboard
+  });
+  // SOURCE up + offset, pushed well behind the watch so the shafts read as a
+  // background light volume (not backlighting the transmission crystal). Additive +
+  // depthWrite:false (set by the primitive) so it never occludes the watch.
+  return <mesh ref={meshRef} geometry={geo} position={[-0.4, 1.7, -2.4]} scale={[6, 6, 1]} renderOrder={-2} />;
+}
+
+interface WatchProps {
+  build: Record<AtelierLayerId, string>;
+  flipRef: React.MutableRefObject<boolean>;
+  explodeRef: React.MutableRefObject<number>;
+  nightAmtRef: React.MutableRefObject<number>;
+}
+
+function WatchAssembly({ build, flipRef, explodeRef, nightAmtRef }: WatchProps) {
+  // dial — generated orrery art by default, else the chosen finish texture/color
+  const dialMat = useMemo(() => {
+    const spec = specOf('dial', build.dial) ?? { baseColor: '#16243a', metalness: 0.4, roughness: 0.4 } as MaterialSpec;
+    return makeMat(spec);
+  }, [build.dial]);
+  // PHASE3 (P3-3) — lume is the night reveal. Hands + indices ALWAYS carry an
+  // emissive lume colour; its intensity is near-0 in the bright studio (day) and
+  // is ramped up per-frame as night → 1 (see useFrame), so the markers ignite
+  // and become the dominant light. With no lume selected we still seed a soft
+  // ice glow so the reveal always reads.
+  const lumeGlow = LUME_COLOR[build.lume];
+  const glowColor = lumeGlow ?? '#bfe9ff';
+  const dayLume = lumeGlow ? 0.95 : 0.0;
+  const withLume = (spec: MaterialSpec): MaterialSpec => ({ ...spec, emissive: glowColor, emissiveIntensity: dayLume });
+  const handsMat = useMemo(() => makeMat(withLume(specOf('hands', build.hands) ?? { baseColor: '#eef2f8', metalness: 1, roughness: 0.12, envMapIntensity: 1.4 } as MaterialSpec)), [build.hands, build.lume]);
+  const indexMat = useMemo(() => makeMat(withLume(specOf('indices', build.indices) ?? { baseColor: '#e8c98a', metalness: 1, roughness: 0.2, envMapIntensity: 1.4 } as MaterialSpec)), [build.indices, build.lume]);
+  const strapMat = useMemo(() => makeMat(specOf('strap', build.strap) ?? { baseColor: '#2a1d14', metalness: 0, roughness: 1, envMapIntensity: 0.7 } as MaterialSpec), [build.strap]);
+  const crystalMat = useMemo(() => makeMat({
+    baseColor: '#eef4ff', metalness: 0, roughness: 0.1, transmission: 1, ior: 1.52,
+    thickness: 0.06, clearcoat: 0.12, clearcoatRoughness: 0.15, envMapIntensity: 0.28, opacity: 1,
+  } as MaterialSpec), []);
+  const capMat = useMemo(() => makeMat({ baseColor: '#cfd4dc', metalness: 1, roughness: 0.15, envMapIntensity: 1.3 } as MaterialSpec), []);
+
+  // geometries (memoised)
+  const dialGeo = useMemo(() => new CircleGeometry(WATCH_R * 0.82, 96), []);
+  const chapterGeo = useMemo(() => new TorusGeometry(WATCH_R * 0.8, WATCH_R * 0.022, 16, 128), []);
+  const indexGeo = useMemo(() => { const g = new BoxGeometry(0.03, 0.1, 0.02); g.translate(0, WATCH_R * 0.71, 0); return g; }, []);
+  const capGeo = useMemo(() => new CylinderGeometry(0.035, 0.035, 0.05, 24), []);
+  // near-flat sapphire (dress-watch style) — avoids the domed-glass spotlight glare
+  const crystalGeo = useMemo(() => new CircleGeometry(WATCH_R * 0.83, 96), []);
+  const handGeo = (len: number, w: number) => { const g = new BoxGeometry(w, len, 0.012); g.translate(0, len * 0.34, 0); return g; };
+  const hourGeo = useMemo(() => handGeo(WATCH_R * 0.5, 0.045), []);
+  const minGeo = useMemo(() => handGeo(WATCH_R * 0.72, 0.032), []);
+  const secGeo = useMemo(() => handGeo(WATCH_R * 0.8, 0.012), []);
+
+  const hourRef = useRef<Group>(null);
+  const minRef = useRef<Group>(null);
+  const secRef = useRef<Group>(null);
+  // exploded-view part groups (SC-V-A6 + PHASE3 P3-2 — the dial stack is now
+  // decomposed into individually-choreographed tiers so the watch visibly comes
+  // APART into many pieces, not one block).
+  const caseGroupRef = useRef<Group>(null);
+  const faceGroupRef = useRef<Group>(null);
+  const bezelGroupRef = useRef<Group>(null);
+  const dialMeshRef = useRef<Mesh>(null);
+  const chapterRef = useRef<Mesh>(null);
+  const indicesGroupRef = useRef<Group>(null);
+  const capRef = useRef<Mesh>(null);
+  const crystalGroupRef = useRef<Group>(null);
+  const strapGroupRef = useRef<Group>(null);
+  const dialLightRef = useRef<import('three').PointLight>(null);
+  const rootRef = useRef<Group>(null);
+  const explodeAmt = useRef(0);
+  // settle pulse: when a part is (drag-)placed, the watch gives a brief eased
+  // "assembled" bounce — the visible cue that a part just landed (SC-V-A1).
+  const buildKey = JSON.stringify(build);
+  const lastBuildKey = useRef(buildKey);
+  const popT = useRef(0);
+  if (buildKey !== lastBuildKey.current) { lastBuildKey.current = buildKey; popT.current = 0.0001; }
+
+  useFrame((state, dt) => {
+    // a living watch: gentle continuous sweep (not real time-of-day)
+    const t = state.clock.elapsedTime;
+    if (secRef.current) secRef.current.rotation.z = -t * 0.9;
+    if (minRef.current) minRef.current.rotation.z = -t * 0.15;
+    if (hourRef.current) hourRef.current.rotation.z = -t * 0.0125;
+
+    // ── PHASE3 (P3-2) DRAMATIC exploded view ──────────────────────────────
+    // Eased master amount, then a PER-PART staggered remap so the watch comes
+    // apart SEQUENTIALLY (crystal lifts off first → bezel last) along big Z
+    // throws — seen obliquely (explode() auto-orients to a 3/4 pose) the tiers
+    // read unmistakably as an exploded diagram. The 12 indices also fan out
+    // radially. Reassembly runs the same windows in reverse.
+    explodeAmt.current += (explodeRef.current - explodeAmt.current) * Math.min(1, dt * 4);
+    const a = explodeAmt.current;
+    const stg = (s: number, e: number) => {
+      const x = Math.min(1, Math.max(0, (a - s) / (e - s)));
+      return x * x * (3 - 2 * x);
+    };
+    const FB = DIAL_FRONT; // dial-stack base reference
+    // case (anchor) recedes slightly; movement handled in MovementModel.
+    if (caseGroupRef.current) caseGroupRef.current.position.z = -0.2 * stg(0, 0.5);
+    // dial-stack internals — each its own tier (base z preserved + BIG depth
+    // throw so the layers read as a deep exploded diagram at the 3/4 pose).
+    if (bezelGroupRef.current) bezelGroupRef.current.position.z = 0.02 + 0.5 * stg(0.46, 1.0);
+    if (dialMeshRef.current) dialMeshRef.current.position.z = -0.01 + 0.78 * stg(0.38, 0.92);
+    if (chapterRef.current) chapterRef.current.position.z = 0.012 + 1.05 * stg(0.3, 0.86);
+    if (indicesGroupRef.current) {
+      const ia = stg(0.22, 0.8);
+      indicesGroupRef.current.position.z = 0.016 + 1.35 * ia;
+      indicesGroupRef.current.scale.setScalar(1 + 0.42 * ia); // radial fan (tamed so they don't scatter into the UI)
+    }
+    if (hourRef.current) hourRef.current.position.z = 0.03 + 1.65 * stg(0.16, 0.74);
+    if (minRef.current) minRef.current.position.z = 0.042 + 1.9 * stg(0.13, 0.7);
+    if (secRef.current) secRef.current.position.z = 0.052 + 2.15 * stg(0.1, 0.66);
+    if (capRef.current) capRef.current.position.z = 0.056 + 2.42 * stg(0.06, 0.62);
+    // crystal lifts off first + farthest.
+    if (crystalGroupRef.current) crystalGroupRef.current.position.z = FB + 0.06 + 2.9 * stg(0.0, 0.55);
+    // strap recedes + fades behind the case.
+    if (strapGroupRef.current) {
+      const sa = stg(0, 0.45);
+      strapGroupRef.current.position.z = -0.55 * sa;
+      strapGroupRef.current.visible = sa < 0.92;
+    }
+
+    // ── PHASE3 (P3-3) lume night reveal: ramp emissive on hands/indices and
+    // the dial glow light as night → 1 so the markers ignite in the dark.
+    const night = nightAmtRef.current;
+    const lumeI = dayLume + (5.5 - dayLume) * night;
+    (handsMat as unknown as { emissiveIntensity: number }).emissiveIntensity = lumeI;
+    (indexMat as unknown as { emissiveIntensity: number }).emissiveIntensity = lumeI;
+    if (dialLightRef.current) dialLightRef.current.intensity = night * 3.0;
+
+    // settle bounce on part placement
+    if (rootRef.current) {
+      if (popT.current > 0) {
+        popT.current += dt;
+        const k = popT.current / 0.42;
+        if (k >= 1) { popT.current = 0; rootRef.current.scale.setScalar(1); }
+        else rootRef.current.scale.setScalar(1 + 0.05 * Math.sin(k * Math.PI));
+      }
+    }
+  });
+
+  const indices = useMemo(() => Array.from({ length: 12 }, (_, i) => i), []);
+
+  return (
+    <group ref={rootRef}>
+      {/* GENERATED GLB case (band + integrated lugs + crown) + bezel + crown (P2-1) */}
+      <group ref={caseGroupRef}>
+        <Suspense fallback={null}>
+          <WatchCase caseVariant={build.case} />
+          {/* crown knob at 3 o'clock (+X) — own swappable finish */}
+          <group position={[CROWN_AT_X, 0, 0.0]}>
+            <GenCrown crownVariant={build.crown} />
+          </group>
+        </Suspense>
+      </group>
+      {/* dial face stack — each tier its own ref so the explode separates them
+          individually (P3-2). The face group itself stays put; the children fly. */}
+      <group ref={faceGroupRef} position={[0, 0, DIAL_FRONT]}>
+        {/* GENERATED bezel ring on the case rim */}
+        <Suspense fallback={null}>
+          <group ref={bezelGroupRef} position={[0, 0, 0.02]}>
+            <GenBezel bezelVariant={build.bezel} />
+          </group>
+        </Suspense>
+        {/* dial face (generated orrery art / finish) */}
+        <mesh ref={dialMeshRef} geometry={dialGeo} material={dialMat as never} position={[0, 0, -0.01]} receiveShadow />
+        {/* chapter ring */}
+        <mesh ref={chapterRef} geometry={chapterGeo} material={indexMat as never} position={[0, 0, 0.012]} />
+        {/* applied indices — wrapped so the ring fans out radially on explode */}
+        <group ref={indicesGroupRef} position={[0, 0, 0.016]}>
+          {indices.map((i) => (
+            <mesh key={i} geometry={indexGeo} material={indexMat as never} rotation={[0, 0, (-i * Math.PI) / 6]} />
+          ))}
+        </group>
+        {/* hands */}
+        <group ref={hourRef} position={[0, 0, 0.03]}><mesh geometry={hourGeo} material={handsMat as never} /></group>
+        <group ref={minRef} position={[0, 0, 0.042]}><mesh geometry={minGeo} material={handsMat as never} /></group>
+        <group ref={secRef} position={[0, 0, 0.052]}><mesh geometry={secGeo} material={handsMat as never} /></group>
+        <mesh ref={capRef} geometry={capGeo} material={capMat as never} position={[0, 0, 0.056]} rotation={[Math.PI / 2, 0, 0]} />
+      </group>
+      {/* PHASE3 (P3-3) — dial glow light: dark in day (intensity 0), brightens
+          with night so the ignited lume spills onto the surrounding metal. */}
+      <pointLight ref={dialLightRef} position={[0, 0, DIAL_FRONT + 0.12]} color={glowColor} intensity={0} distance={2.8} decay={2} />
+      {/* sapphire crystal dome — own group so it lifts off first in the explode */}
+      <group ref={crystalGroupRef} position={[0, 0, DIAL_FRONT + 0.06]}>
+        <mesh geometry={crystalGeo} material={crystalMat as never} />
+      </group>
+      {/* strap — articulated bands curving back from the 12/6 lugs */}
+      <group ref={strapGroupRef}>
+        <StrapBand mat={strapMat} sign={1} />
+        <StrapBand mat={strapMat} sign={-1} />
+      </group>
+      {/* exhibition caseback movement — in motion on flip / explode */}
+      <Suspense fallback={null}>
+        <MovementModel flipRef={flipRef} explodeRef={explodeRef} />
+      </Suspense>
+    </group>
+  );
+}
+
+export function AtelierWatchRig({ previewMode }: { previewMode: boolean }) {
+  const { gl, camera, scene } = useThree();
+  const activeHubId = useGraphEditorStore((s) => s.activeHubId);
+  const build = useConfiguratorStore((s) => s.build);
+  const pivotRef = useRef<Group>(null);
+  const flipRef = useRef(false);
+  const explodeRef = useRef(0);
+  // PHASE3 (P3-3) — day→night reveal. nightRef = target (0 day / 1 night),
+  // nightAmtRef = eased value driving the lume ramp (WatchAssembly) + the scene
+  // dimming (this component's useFrame).
+  const nightRef = useRef(0);
+  const nightAmtRef = useRef(0);
+
+  // rotation state
+  const yaw = useRef(0);
+  const pitch = useRef(0.05);
+  const yawTarget = useRef(0);
+  const pitchTarget = useRef(0.05);
+  const yawVel = useRef(0);
+  const dragging = useRef(false);
+  const lastX = useRef(0);
+  const lastY = useRef(0);
+  const lastInteract = useRef(0);
+  // PHASE3 (P3-4) — premium micro-response on the watch: cursor-tracked parallax
+  // (the studio specular sweeps as the watch leans toward the pointer) + a
+  // tactile press (scale-in) on pointer-down. pointerNdc is the live cursor in
+  // [-1,1]; parallax* are eased lean offsets; press* drive the press scale.
+  const pointerNdc = useRef(new Vector2(0, 0));
+  const parallaxX = useRef(0);
+  const parallaxY = useRef(0);
+  const pressAmt = useRef(0);
+  const pressTarget = useRef(0);
+
+  const active = previewMode && activeHubId === ATELIER_HUB_ID;
+
+  // expose inspect handle
+  useEffect(() => {
+    if (!active) return;
+    lastInteract.current = typeof performance !== 'undefined' ? performance.now() : 0;
+    (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__ = {
+      get yaw() { return yaw.current; },
+      get pitch() { return pitch.current; },
+      get flipped() { return flipRef.current; },
+      get exploded() { return explodeRef.current; },
+      get nightLevel() { return nightAmtRef.current; },
+      spinTo: (y: number, p?: number) => { yawTarget.current = y; if (typeof p === 'number') pitchTarget.current = Math.max(TILT_MIN, Math.min(TILT_MAX, p)); lastInteract.current = 1e15; },
+      nudge: (dy: number) => { yawTarget.current += dy; lastInteract.current = 1e15; },
+      resumeIdle: () => { lastInteract.current = 0; },
+      flip: (on?: boolean) => { flipRef.current = typeof on === 'boolean' ? on : !flipRef.current; yawTarget.current = flipRef.current ? Math.PI : 0; lastInteract.current = 1e15; return flipRef.current; },
+      // PHASE3 (P3-2) — explode AUTO-ORIENTS the watch to a 3/4 pose so the Z-
+      // stacked tiers are seen obliquely (a head-on explode foreshortens to
+      // nothing); collapsing returns to head-on and resumes the idle turntable.
+      explode: (on?: boolean) => {
+        const next = (typeof on === 'boolean' ? on : explodeRef.current < 0.5) ? 1 : 0;
+        explodeRef.current = next;
+        if (next) { yawTarget.current = 0.6; pitchTarget.current = 0.4; lastInteract.current = 1e15; }
+        else { yawTarget.current = 0; pitchTarget.current = 0.05; lastInteract.current = performance.now(); }
+        return explodeRef.current;
+      },
+      // PHASE3 (P3-3) — day↔night reveal.
+      night: (on?: boolean) => { nightRef.current = (typeof on === 'boolean' ? on : nightRef.current < 0.5) ? 1 : 0; return nightRef.current; },
+      get pivot() { return pivotRef.current; },
+    };
+    return () => {
+      delete (window as unknown as { __ATELIER_RIG__?: unknown }).__ATELIER_RIG__;
+      // PHASE3 (P3-3) — restore the SHARED scene lights so other hubs are never
+      // left dimmed if the visitor leaves the Atelier mid-night.
+      const key = scene.getObjectByName('scene-key'); if (key) (key as unknown as { intensity: number }).intensity = 0.5;
+      const fill = scene.getObjectByName('scene-fill'); if (fill) (fill as unknown as { intensity: number }).intensity = 0.25;
+      const amb = scene.getObjectByName('scene-amb'); if (amb) (amb as unknown as { intensity: number }).intensity = 0.06;
+      nightRef.current = 0; nightAmtRef.current = 0;
+    };
+  }, [active, scene]);
+
+  // pointer-drag to rotate (azimuth + bounded tilt); swatches/buttons keep theirs
+  useEffect(() => {
+    if (!active) return;
+    const el = gl.domElement;
+    const ray = new Raycaster();
+    const toNdc = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      return new Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    };
+    const nodeIdAt = (e: PointerEvent): string | null => {
+      ray.setFromCamera(toNdc(e), camera);
+      for (const h of ray.intersectObjects(scene.children, true)) {
+        let o: Object3D | null = h.object;
+        while (o) { const nid = (o.userData as { nodeId?: string } | undefined)?.nodeId; if (nid) return nid; o = o.parent; }
+      }
+      return null;
+    };
+    const onDown = (e: PointerEvent) => {
+      const id = nodeIdAt(e);
+      if (id && (id.startsWith('orr-atelier-cat-') || id.startsWith('orr-atelier-btn-'))) return;
+      dragging.current = true; lastX.current = e.clientX; lastY.current = e.clientY; yawVel.current = 0;
+      pressTarget.current = 1; // P3-4 tactile press-in on the watch
+      lastInteract.current = performance.now();
+    };
+    const onMove = (e: PointerEvent) => {
+      // P3-4 — track the cursor ALWAYS (not just while dragging) so the watch
+      // can lean toward it and its specular sweeps.
+      const ndc = toNdc(e);
+      pointerNdc.current.set(ndc.x, ndc.y);
+      if (!dragging.current) return;
+      const dx = e.clientX - lastX.current; const dy = e.clientY - lastY.current;
+      lastX.current = e.clientX; lastY.current = e.clientY;
+      yawTarget.current += dx * 0.0095;
+      pitchTarget.current = Math.max(TILT_MIN, Math.min(TILT_MAX, pitchTarget.current + dy * 0.007));
+      yawVel.current = dx * 0.0095;
+      lastInteract.current = performance.now();
+    };
+    const onUp = () => { dragging.current = false; pressTarget.current = 0; lastInteract.current = performance.now(); };
+    el.addEventListener('pointerdown', onDown);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+    return () => {
+      el.removeEventListener('pointerdown', onDown);
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+  }, [active, gl, camera, scene]);
+
+  useFrame((_, dt) => {
+    // PHASE3 (P3-3) — day→night reveal: ease the night level, then dim the
+    // environment IBL + the shared key/fill/ambient so the watch goes dark and
+    // the ignited lume (ramped in WatchAssembly) becomes the dominant light.
+    // Atelier-only (guarded) so other hubs' lighting is untouched.
+    if (active) {
+      nightAmtRef.current += (nightRef.current - nightAmtRef.current) * Math.min(1, dt * 2.4);
+      const n = nightAmtRef.current;
+      (scene as unknown as { environmentIntensity?: number }).environmentIntensity = 1.0 - 0.93 * n;
+      const key = scene.getObjectByName('scene-key'); if (key) (key as unknown as { intensity: number }).intensity = 0.5 * (1 - 0.96 * n);
+      const fill = scene.getObjectByName('scene-fill'); if (fill) (fill as unknown as { intensity: number }).intensity = 0.25 * (1 - 0.96 * n);
+      const amb = scene.getObjectByName('scene-amb'); if (amb) (amb as unknown as { intensity: number }).intensity = 0.06 * (1 - 0.7 * n);
+    }
+    const pivot = pivotRef.current;
+    if (!pivot) return;
+    const now = typeof performance !== 'undefined' ? performance.now() : 0;
+    if (!dragging.current && lastInteract.current < 1e14 && now - lastInteract.current > IDLE_DELAY_MS) {
+      yawTarget.current += IDLE_SPEED * Math.min(dt, 0.05);
+    }
+    if (!dragging.current && Math.abs(yawVel.current) > 0.0001) { yawTarget.current += yawVel.current; yawVel.current *= 0.92; }
+    const ease = dragging.current ? 0.35 : 0.12;
+    yaw.current += (yawTarget.current - yaw.current) * ease;
+    pitch.current += (pitchTarget.current - pitch.current) * ease;
+    // PHASE3 (P3-4) — cursor parallax (only when not dragging, so direct drag
+    // stays crisp): the watch leans subtly toward the pointer → the studio IBL
+    // specular sweeps as the metals tilt, a live cursor-tracked highlight.
+    const pPara = dragging.current ? 0 : 1;
+    parallaxX.current += (pointerNdc.current.x * 0.07 * pPara - parallaxX.current) * 0.08;
+    parallaxY.current += (pointerNdc.current.y * 0.05 * pPara - parallaxY.current) * 0.08;
+    pivot.rotation.y = yaw.current + parallaxX.current;
+    pivot.rotation.x = pitch.current - parallaxY.current;
+    // P3-4 — tactile press: a small eased scale-in on pointer-down.
+    pressAmt.current += (pressTarget.current - pressAmt.current) * 0.2;
+    pivot.scale.setScalar(1 - 0.035 * pressAmt.current);
+  });
+
+  if (!active) return null;
+  return (
+    <>
+      {/* volumetric godray light-shaft behind the watch (P2-3), anchored (no spin) */}
+      <group position={PIVOT_CENTER.toArray()}>
+        <GodrayShaft />
+      </group>
+      <group ref={pivotRef} position={PIVOT_CENTER.toArray()}>
+        <WatchAssembly build={build} flipRef={flipRef} explodeRef={explodeRef} nightAmtRef={nightAmtRef} />
+      </group>
+    </>
+  );
+}

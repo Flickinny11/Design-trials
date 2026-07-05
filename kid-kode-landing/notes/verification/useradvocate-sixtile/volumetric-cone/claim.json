@@ -1,0 +1,7 @@
+{
+  "name": "volumetric-cone",
+  "label": "Sweep",
+  "description": "A cone of volumetric light beams down from a crisp apex, dust motes drifting through the shaft as it slowly sweeps — soft angular edges and dusty in-shaft haze built entirely in-shader, no slab seams.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

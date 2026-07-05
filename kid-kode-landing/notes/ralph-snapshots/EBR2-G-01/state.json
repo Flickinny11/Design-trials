@@ -1,0 +1,50 @@
+{
+  "taskId": "EBR2-G-01",
+  "phase": "§R2-G",
+  "iteration": 24,
+  "shortCircuited": true,
+  "reason": "haltCheck already satisfied at audit; no implementation needed",
+  "audit": {
+    "targetFile": "kid-kode-landing/scripts/wait-for-vercel-preview.mjs",
+    "exists": true,
+    "executable": true,
+    "size": 5912,
+    "authoredAt": "2026-05-18T11:08 (pre-existing alongside fetch-vercel-logs.mjs)",
+    "supportedFlags": [
+      "--commit=<sha>",
+      "--commit=HEAD",
+      "--check-only",
+      "--timeout-ms=<ms>",
+      "--poll-ms=<ms>",
+      "--token-env=<env-var-name>"
+    ],
+    "defaults": {
+      "timeoutMs": 600000,
+      "pollMs": 8000,
+      "tokenEnv": "VERCEL_TOKEN"
+    },
+    "successContract": {
+      "stateMatch": "READY",
+      "exitCode": 0,
+      "stdoutSchema": {
+        "url": "https://<host>",
+        "deployState": "READY",
+        "durationMs": "number",
+        "deploymentId": "string",
+        "commit": "string"
+      }
+    },
+    "failureExitCodes": {
+      "1": "deployment ERROR/CANCELED or timeout",
+      "2": "usage error (missing --commit)",
+      "3": "auth/config (no VERCEL_TOKEN or no project linkage)"
+    }
+  },
+  "verificationCommands": [
+    { "cmd": "test -f kid-kode-landing/scripts/wait-for-vercel-preview.mjs", "exitCode": 0 },
+    { "cmd": "test -x kid-kode-landing/scripts/wait-for-vercel-preview.mjs", "exitCode": 0 },
+    { "cmd": "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --commit=HEAD --check-only", "exitCode": 0 }
+  ],
+  "interactionScript": null,
+  "notes": "Non-UI script task. No outer.png/inner.png because there is no runtime UI to snapshot. Spec-reviewer skipped per short-circuit rule (no code change at HEAD touches the task's spec slice)."
+}

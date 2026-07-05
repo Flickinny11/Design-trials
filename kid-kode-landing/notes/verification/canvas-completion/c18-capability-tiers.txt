@@ -1,0 +1,21 @@
+=== c18 — capability detection degrades gracefully; GI offered only where supported; mobile target framerate (sign-off supplement, 2026-06-11) ===
+
+Tier degradation, measured live (committed notes/verification/material-lighting/results.json → criterion18, pass:true):
+- desktop webgpu → T2 { shadows:true, screenSpaceGI:true, maxDynamicLights:10 }
+- mobile (webgpu, isMobile) → T1 { shadows:true, screenSpaceGI:false, maxDynamicLights:6 }  → mobileDegrades:true
+- webgl2 fallback → T1 (degradesToT1OrBelow:true)
+- deviceLost: 0
+Probe frames (committed): notes/verification/material-lighting/probe/c18-{desktop-webgpu,mobile,webgl2-fallback}.png
+
+GI/path-tracing offered only where supported (structural):
+- src/lib/prism/runtime/shared/capability-tier.ts:105 — `screenSpaceGI: tier === 'T2'`
+  (GI is gated to the desktop-webgpu ceiling tier; never offered on mobile/webgl2).
+- Path-tracing: `grep -rn "pathTracing|path-tracing" src/` (excluding .bak) → NO MATCHES.
+  No path-tracing preview exists at any tier, so it is never offered on an unsupported
+  context (vacuous for that sub-feature — honest caveat, see notes).
+
+Mobile runs at target framerate (committed notes/UI-DESIGN-REPORT.md L70-74):
+- Mobile 390px (auto t1 — tier gating confirmed live): 77-82 FPS.
+- Desktop (t2): 80 FPS idle, 71-72 under palette/mode churn; hover p50 10-12 ms, p95 29 ms.
+Also: 312-tile catalog full run on real GPU with deviceLost 0 on both std + glass rigs
+(committed notes/verification/catalog-parallel/results.json harness summary).

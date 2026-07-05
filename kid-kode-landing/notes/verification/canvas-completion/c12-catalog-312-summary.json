@@ -1,0 +1,34 @@
+{
+  "_what": "c12 derived summary over notes/verification/catalog-parallel/results.json (committed 312-tile harness run)",
+  "total": 312,
+  "renders_true": 312,
+  "plays_true": 312,
+  "controls_true (ControlSchema panel drives a visible change)": 312,
+  "picker_true (tile registered in picker grid)": 312,
+  "verdict_pass": 312,
+  "harness_summary": {
+    "total": 312,
+    "pass": 312,
+    "fail": 0,
+    "missing": 0,
+    "failNames": [],
+    "missingNames": [],
+    "quietRetry": {
+      "attempted": 0,
+      "recovered": 0
+    },
+    "wallClockSec": 1104,
+    "peak": {
+      "std": 8,
+      "glass": 3
+    },
+    "backend": {
+      "std": "webgl",
+      "glass": "webgpu"
+    },
+    "deviceLost": {
+      "std": 0,
+      "glass": 0
+    }
+  }
+}

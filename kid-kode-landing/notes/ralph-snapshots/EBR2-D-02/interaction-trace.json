@@ -1,0 +1,141 @@
+{
+  "task_id": "EBR2-D-02",
+  "scriptPath": "notes/ralph-interactions/EBR2-D-02.json",
+  "steps": [
+    {
+      "index": 0,
+      "step": {
+        "action": "wait_for",
+        "selector": "canvas",
+        "timeout_ms": 30000
+      },
+      "status": "pass",
+      "durationMs": 157
+    },
+    {
+      "index": 1,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const set = window.__PRISM_EDITOR_SET_VIEW_MODE__; if (typeof set === 'function') set('canvas'); return 'requested-canvas'; })()"
+      },
+      "status": "pass",
+      "durationMs": 52,
+      "value": "requested-canvas"
+    },
+    {
+      "index": 2,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 1500
+      },
+      "status": "pass",
+      "durationMs": 1500
+    },
+    {
+      "index": 3,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "(() => { const stores = window.__PRISM_DEBUG_STORES__; return stores?.graphEditor?.getState?.()?.viewMode === 'canvas'; })()"
+      },
+      "status": "pass",
+      "durationMs": 18,
+      "value": true
+    },
+    {
+      "index": 4,
+      "step": {
+        "action": "screenshot",
+        "name": "before.png"
+      },
+      "status": "pass",
+      "durationMs": 138,
+      "file": "before.png"
+    },
+    {
+      "index": 5,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "typeof window.__PRISM_EDITOR_GET_CANVAS_CAMERA__ === 'function'"
+      },
+      "status": "pass",
+      "durationMs": 27,
+      "value": true
+    },
+    {
+      "index": 6,
+      "step": {
+        "action": "evaluate",
+        "js": "(() => { const get = window.__PRISM_EDITOR_GET_CANVAS_CAMERA__; const before = get(); for (let i = 0; i < 30; i += 1) { window.dispatchEvent(new WheelEvent('wheel', { deltaY: 1000, bubbles: true })); } return before; })()"
+      },
+      "status": "pass",
+      "durationMs": 52,
+      "value": {
+        "position": {
+          "x": 0,
+          "y": 1.102182119232618e-15,
+          "z": 18
+        },
+        "target": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "polarAngle": 1.5707963267948966,
+        "azimuthAngle": 0
+      }
+    },
+    {
+      "index": 7,
+      "step": {
+        "action": "wait_ms",
+        "duration_ms": 800
+      },
+      "status": "pass",
+      "durationMs": 802
+    },
+    {
+      "index": 8,
+      "step": {
+        "action": "assert",
+        "type": "evaluate_truthy",
+        "js": "(() => { const get = window.__PRISM_EDITOR_GET_CANVAS_CAMERA__; const rail = window.__PRISM_EDITOR_GET_CANVAS_RAIL__?.(); const cam = get(); if (!rail || !cam) return false; const distance = Math.hypot(cam.position.x - cam.target.x, cam.position.y - cam.target.y, cam.position.z - cam.target.z); return distance >= rail.minDistance - 0.01 && distance <= rail.maxDistance + 0.01 && cam.polarAngle >= rail.minPolarAngle - 0.01 && cam.polarAngle <= rail.maxPolarAngle + 0.01 && cam.azimuthAngle >= rail.minAzimuthAngle - 0.01 && cam.azimuthAngle <= rail.maxAzimuthAngle + 0.01; })()"
+      },
+      "status": "pass",
+      "durationMs": 20,
+      "value": true
+    },
+    {
+      "index": 9,
+      "step": {
+        "action": "screenshot",
+        "name": "after.png"
+      },
+      "status": "pass",
+      "durationMs": 186,
+      "file": "after.png"
+    },
+    {
+      "index": 10,
+      "step": {
+        "action": "assert",
+        "type": "no_console_errors"
+      },
+      "status": "pass",
+      "durationMs": 0
+    },
+    {
+      "index": 11,
+      "step": {
+        "action": "assert",
+        "type": "no_network_4xx_5xx"
+      },
+      "status": "pass",
+      "durationMs": 0
+    }
+  ],
+  "consoleErrorCount": 0,
+  "networkFailureCount": 0,
+  "aborted": false
+}

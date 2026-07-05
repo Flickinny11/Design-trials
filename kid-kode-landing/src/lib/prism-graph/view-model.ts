@@ -208,6 +208,16 @@ export function getVisibility(node: PrismNode): PrismVisibility | null {
 
 export function getNodeName(node: PrismNode): string {
   if (!node?.nodeId) return '';
+  // Machine-generated ids (uuid-like) are not names — title-casing them shows
+  // the user gibberish like "41c17c02 Cd39 4bc1 …" (advocate MUST-FIX,
+  // 2026-06-10). Fall back to a friendly subtype-derived label; the real
+  // caption is written at the In-System stage (§15.2).
+  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(node.nodeId)) {
+    const st = node.subtype && node.subtype.length > 0
+      ? node.subtype[0].toUpperCase() + node.subtype.slice(1)
+      : 'Element';
+    return `New ${st}`;
+  }
   return node.nodeId
     .split('-')
     .map((part) => (part.length === 0 ? part : part[0].toUpperCase() + part.slice(1)))
@@ -246,6 +256,7 @@ export interface EditorTextItem {
 
 export interface EditorNode {
   id: string;
+  subtype?: string;
   name: string;
   elementType: string;
   hubIds: string[];
@@ -261,6 +272,12 @@ export interface EditorNode {
   textContent: EditorTextItem[];
   interactions: EditorInteraction[];
   backendContract?: EditorBackendContract;
+  isGlobalElement?: boolean;
+  globalSlot?: 'header' | 'footer';
+  isGalaxyCluster?: boolean;
+  galaxyClusterKind?: string;
+  clusterNodeIds?: string[];
+  clusterChildCount?: number;
 }
 
 export interface EditorHubView {
@@ -309,6 +326,7 @@ export function toEditorNode(node: PrismNode): EditorNode {
     : '// (no code module bound)';
   return {
     id: node.nodeId,
+    subtype: node.subtype,
     name: getNodeName(node),
     elementType: getElementType(node),
     hubIds: getHubIds(node),
@@ -330,6 +348,8 @@ export function toEditorNode(node: PrismNode): EditorNode {
     textContent: deriveTextContent(node),
     interactions: getInteractions(node),
     backendContract: backendContract ?? undefined,
+    isGlobalElement: node.isGlobalElement,
+    globalSlot: node.globalSlot,
   };
 }
 

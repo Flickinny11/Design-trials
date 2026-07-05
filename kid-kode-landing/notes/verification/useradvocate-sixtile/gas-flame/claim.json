@@ -1,0 +1,7 @@
+{
+  "name": "gas-flame",
+  "label": "Jets",
+  "description": "A blue gas-burner flame — sharp cones of blue with hot inner cores, hissing and steady like a stovetop.",
+  "category": "volumetric",
+  "groundTruthSibling": null
+}

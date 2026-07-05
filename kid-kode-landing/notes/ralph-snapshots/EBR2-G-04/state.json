@@ -1,0 +1,61 @@
+{
+  "taskId": "EBR2-G-04",
+  "phase": "§R2-G",
+  "iteration": 25,
+  "shortCircuited": true,
+  "reason": "haltCheck already satisfied at audit; no implementation needed",
+  "audit": {
+    "scope": "Step 8c — Vercel observability wiring (SC-079, RA-18)",
+    "scripts": [
+      {
+        "path": "kid-kode-landing/scripts/wait-for-vercel-preview.mjs",
+        "size": 5912,
+        "executable": true,
+        "introducedBy": "EBR2-G-01 (iter 24, commit cb67e9a)",
+        "supportedFlags": [
+          "--commit=<sha>",
+          "--commit=HEAD",
+          "--check-only",
+          "--timeout-ms=<ms>",
+          "--poll-ms=<ms>",
+          "--token-env=<env-var-name>"
+        ]
+      },
+      {
+        "path": "kid-kode-landing/scripts/fetch-vercel-logs.mjs",
+        "size": 5839,
+        "executable": true,
+        "introducedBy": "EBR2-G-02 (iter 22, pre-existing alongside G-01)",
+        "supportedFlags": [
+          "--commit=<sha>",
+          "--task-id=<id>"
+        ],
+        "envRequired": ["VERCEL_TOKEN"],
+        "envAutoDetected": ["VERCEL_PROJECT_ID", "VERCEL_TEAM_ID (from .vercel/project.json)"]
+      }
+    ],
+    "vercelLinkage": {
+      "configPath": "kid-kode-landing/.vercel/project.json",
+      "projectId": "prj_dvKuox7bb9ZAFmXZRqrwdlgXNHSb",
+      "orgId": "team_Dc3dRfYzsIxYPiaqu2kgVcJJ",
+      "projectName": "kid-kode-ai-landing"
+    },
+    "ralphStepEditorDocsRefs": {
+      "containsFetchVercelLogs": true,
+      "containsNonBlocking": true,
+      "containsSECONDARY": true,
+      "section": "Step 8c — Vercel observability — SECONDARY diagnostic (Round 2.5, SC-079)"
+    }
+  },
+  "verificationCommands": [
+    { "cmd": "test -x kid-kode-landing/scripts/wait-for-vercel-preview.mjs", "exitCode": 0 },
+    { "cmd": "test -x kid-kode-landing/scripts/fetch-vercel-logs.mjs", "exitCode": 0 },
+    { "cmd": "grep -q 'fetch-vercel-logs' .claude/commands/ralph-step-editor.md", "exitCode": 0 },
+    { "cmd": "grep -q 'non-blocking' .claude/commands/ralph-step-editor.md", "exitCode": 0 },
+    { "cmd": "grep -q 'SECONDARY' .claude/commands/ralph-step-editor.md", "exitCode": 0 },
+    { "cmd": "cd kid-kode-landing && node scripts/wait-for-vercel-preview.mjs --check-only", "exitCode": 0 },
+    { "cmd": "test -f kid-kode-landing/.vercel/project.json && jq -e '.projectId' kid-kode-landing/.vercel/project.json", "exitCode": 0 }
+  ],
+  "interactionScript": null,
+  "notes": "Non-UI verification-only task. No outer.png/inner.png because there is no runtime UI to snapshot. Spec-reviewer skipped per short-circuit rule (no code change at HEAD touches the task's spec slice). EBR2-G-04 closes group §R2-G and the final pending task of Round 2 — the next iteration's Step 2 will discover zero pending tasks and flip top-level status to complete."
+}

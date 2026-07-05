@@ -1,0 +1,44 @@
+{
+  "criterion": "RT-SC-03",
+  "survived": true,
+  "oneSceneCanvasEachMode": true,
+  "noSplitPane": true,
+  "seq": [
+    {
+      "viewMode": "galaxy",
+      "selectedNodeId": "home-feature-card",
+      "sceneCanvas": 1,
+      "panes": {
+        "preview": 0,
+        "graph": 1
+      }
+    },
+    {
+      "viewMode": "canvas",
+      "selectedNodeId": "home-feature-card",
+      "sceneCanvas": 1,
+      "panes": {
+        "preview": 0,
+        "graph": 1
+      }
+    },
+    {
+      "viewMode": "preview-app",
+      "selectedNodeId": "home-feature-card",
+      "sceneCanvas": 1,
+      "panes": {
+        "preview": 0,
+        "graph": 1
+      }
+    },
+    {
+      "viewMode": "galaxy",
+      "selectedNodeId": "home-feature-card",
+      "sceneCanvas": 1,
+      "panes": {
+        "preview": 0,
+        "graph": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "skeleton-resolve",
+  "label": "Resolve Duration",
+  "description": "Bone-grey loading-skeleton bars shimmer over a ghost plate, then a soft front wipes the real content back in.",
+  "category": "mask",
+  "groundTruthSibling": null
+}

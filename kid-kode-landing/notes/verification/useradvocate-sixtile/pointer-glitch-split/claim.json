@@ -1,0 +1,7 @@
+{
+  "name": "pointer-glitch-split",
+  "label": "Bands",
+  "description": "The cursor slices the surface into glitch bands — RGB-split slivers shearing out of alignment around the pointer, snapping clean when it leaves.",
+  "category": "displacement",
+  "groundTruthSibling": null
+}

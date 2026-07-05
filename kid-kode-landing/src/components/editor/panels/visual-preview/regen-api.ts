@@ -1,15 +1,30 @@
-// T07 / HL06 — Save & Verify integration with the regen API.
+// ═══════════════════════════════════════════════════════════════════
+// RETIRED — EDITOR-EXP NE-SC-14 / FP-NE-5 (VisualPreview's 2nd save/build
+// path removed).
 //
-// Spec ref: PRISM-RENDERER-MIGRATION-SPEC.md §13 L477 (Visual tab Save &
-// Verify) + §17 L538. Plan §P6 widens the wire format to a discriminated
-// action body so a single endpoint can serve both `verify-node` (this
-// caller) and `persist` (useGraphSourceStore.saveToServer).
+// This module USED to be VisualPreview's own "Save & Verify" path: it POSTed
+// the slider-edited node to `/api/prism/regen` (action: 'verify-node') to
+// re-run codegen + the §10 verifier. That made VisualPreview a SECOND,
+// independent edit/save/build path alongside the canonical
+//   overlay (usePreviewStateStore) → Save (commitPreviewToSource) → Build
+//   (rebuildNode)
+// path. NE-SC-14 requires exactly ONE such path, so this one is RETIRED:
+//   - VisualPreview no longer imports `saveAndVerify` — it is DISPLAY-ONLY.
+//   - There is NO live (src/) caller of this module any more (grep proof:
+//     `grep -rn "saveAndVerify" src/ --include=*.tsx --include=*.ts` shows
+//     only this definition + comments; `tests/` still exercise the old
+//     contract but tests are not a live editor path).
 //
-// Pure TypeScript — no React, no fetch polyfill. Accepts an injected fetch
-// implementation so the same code paths can run in:
-//   - the editor (browser fetch)
-//   - vitest unit tests (mocked fetch)
-//   - the Playwright harness (browser fetch hitting the harness server)
+// The `/api/prism/regen` route itself is NOT removed: its `persist` action is
+// still the durable save target for `useGraphSourceStore.saveToServer()`. Only
+// the client-side `verify-node` save/build path that originated HERE is dead.
+//
+// The signature is kept stable so the historical unit/harness callers still
+// type-check, but the body is a hard-disabled stub: it performs NO network
+// save/build and resolves to a retired result. Any attempt to re-wire this
+// into the editor surfaces a clear, greppable retirement marker instead of
+// silently re-introducing the second path.
+// ═══════════════════════════════════════════════════════════════════
 
 import type { PrismNode } from '@/lib/prism-graph/types';
 import type { VerifierViolation } from '@/lib/prism/codegen/verifier';
@@ -26,60 +41,24 @@ export interface RegenApiResult {
 export interface SaveAndVerifyOptions {
   fetch?: typeof fetch;
   endpoint?: string;
-  /** Optional generated module source. When provided, the route runs the
-   *  static verifier (§10) against it in addition to the plan-level checks. */
   codeModule?: string;
 }
 
-const DEFAULT_ENDPOINT = '/api/prism/regen';
+const RETIRED_ERROR =
+  'regen-api.saveAndVerify is RETIRED (NE-SC-14): VisualPreview no longer has its own ' +
+  'save/build path. Route edits through the overlay (usePreviewStateStore) → Save ' +
+  '(commitPreviewToSource) → Build (rebuildNode).';
 
+/**
+ * @deprecated RETIRED (NE-SC-14). Performs NO save/build. Resolves to a
+ * `{ ok: false }` result carrying the retirement marker. The parameters are
+ * intentionally ignored so this can never re-introduce the second path.
+ */
 export async function saveAndVerify(
-  node: PrismNode,
-  opts: SaveAndVerifyOptions = {},
+  _node: PrismNode,
+  _opts: SaveAndVerifyOptions = {},
 ): Promise<RegenApiResult> {
-  const fetchFn = opts.fetch ?? (typeof fetch !== 'undefined' ? fetch : undefined);
-  if (!fetchFn) {
-    return { ok: false, error: 'no fetch implementation available' };
-  }
-  const endpoint = opts.endpoint ?? DEFAULT_ENDPOINT;
-
-  const requestBody: { action: 'verify-node'; node: PrismNode; codeModule?: string } = {
-    action: 'verify-node',
-    node,
-  };
-  if (typeof opts.codeModule === 'string' && opts.codeModule.length > 0) {
-    requestBody.codeModule = opts.codeModule;
-  }
-
-  let res: Response;
-  try {
-    res = await fetchFn(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody),
-    });
-  } catch (err) {
-    return { ok: false, error: (err as Error).message };
-  }
-
-  if (!res.ok) {
-    let body = '';
-    try { body = await res.text(); } catch { /* ignore */ }
-    return { ok: false, error: `HTTP ${res.status}${body ? `: ${body.slice(0, 200)}` : ''}` };
-  }
-
-  let json: unknown;
-  try { json = await res.json(); } catch (err) {
-    return { ok: false, error: `invalid JSON: ${(err as Error).message}` };
-  }
-
-  const j = json as Partial<RegenApiResult>;
-  return {
-    ok: j.ok === true,
-    verifierStatus: j.verifierStatus,
-    regeneratedAt: j.regeneratedAt,
-    violations: j.violations,
-    callCount: j.callCount,
-    error: j.ok === true ? undefined : (j.error ?? 'regen returned ok=false'),
-  };
+  void _node;
+  void _opts;
+  return { ok: false, error: RETIRED_ERROR };
 }

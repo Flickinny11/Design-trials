@@ -1,0 +1,44 @@
+c10 — no-stored-global-fps supplement (final sign-off pass, HEAD b9ff738)
+
+1) The c01-c02-c10 drive's panel probe records noFpsText:false. That is a probe
+   FALSE NEGATIVE: the regex /fps/i matched the keyframe panel's own explainer
+   copy, which AFFIRMS the criterion —
+1646:            Timeline is continuous seconds (no global fps). Tracks bind to the selection&apos;s Animatable controls once the Primitive Catalog lands.
+
+2) Data-model proof — timeline is seconds, keyframes carry t in seconds/normalized
+   progress, never frames:
+889:  // when normalized; absolute seconds when timeline-driven. The FP-08 regex
+
+3) Stored-global-fps sweep: see fp-sweep-greps.txt FP-04 (CLEAR):
+127:FP-04 stored global fps ........................ CLEAR* (timeline/binding model has NO fps; capability-tier.ts documents per-frame delta ring; *types.ts L501 PrismVisualSpec.animationSpec.fps is PRE-EXISTING per-asset clip metadata (present at 37b3d1d), not the timeline model)
+   - 0 fps fields in the animatable contract/bindings/keyframe model.
+   - The single 'fps' hit (types.ts:501 intent.animationSpec.fps) is PRE-EXISTING
+     per-asset clip METADATA from the mock-app intent pipeline (present at 37b3d1d
+     baseline), not a timeline sample rate; nothing in the keyframe editor or
+     drivers reads it.
+
+4) Snap grid is cosmetic + switchable: snap buttons 1/60·1/100·1/120 change tick
+   GRID granularity only (c10-keyframe-scrubbed-snap100.png shows 1/100 active;
+   seconds readout 1202.25s confirms continuous seconds, screenshots in this dir).
+
+5) HONESTY NOTE on the recorded scrub readout "1202.25": the probe regex
+   /(\d+\.\d{2})s/ ran over the panel's concatenated textContent, where the
+   "1/120" snap-button label abuts the seconds readout — "1/120" + "2.25s"
+   → "1202.25s". The real readout after scrubbing to 0.75 of the 3.00s
+   timeline is 2.25s (0.75 × 3.00 — correct), visible as the left-side
+   readout in c10-keyframe-scrubbed-snap100.png.
+
+6) HONESTY FINDING (final sign-off audit, grading c10 PARTIAL): the toolbar
+   Keyframe Editor panel (CanvasToolbar.tsx KeyframeEditorPanel) opens with
+   scrubber (functional: drives playhead + seconds readout), play/pause and
+   loop buttons, seconds ruler, and the switchable snap chips — but `playing`
+   is local state read ONLY by the button icon (no rAF/interval advances the
+   playhead; no scene sampling from this panel), and the three track lanes
+   are hardcoded demo data (`const TRACKS = [...]`, CanvasToolbar.tsx:1450).
+   The panel discloses this in-UI ("CATALOG FORTHCOMING" chip; footer
+   "Tracks bind to the selection's Animatable controls once the Primitive
+   Catalog lands" — copy now stale: the catalog landed but binding did not).
+   Real keyframe capture/playback paths live elsewhere and are proven:
+   Inspector Animation tab (PrismKeyframe capture w/ coordinate spaces,
+   play/pause/stop, EB-08-* suites) and the animation-bindings driver path
+   (toolbar-wiring results).

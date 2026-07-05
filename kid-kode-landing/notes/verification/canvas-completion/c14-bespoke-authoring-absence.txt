@@ -1,0 +1,20 @@
+=== c14 — bespoke (manual + AI-prompt) Animatable authoring: ABSENCE PROOF (2026-06-10 23:53) ===
+
+--- The manual 'From Scratch' lane is an HONEST coming state (AnimationFlyout.tsx) ---
+117:  onComing,
+128:  onComing: (tool: string) => void;
+565:          onClick={() => onComing('Create From Scratch')}
+570:          <span className="text-[9.5px] font-mono" style={{ color: 'var(--ds-text)' }}>From Scratch — bespoke</span>
+822:                onComing={(t) => showComing(t, 'bespoke authoring lane')}
+
+--- No AI-prompt animation authoring path anywhere (grep for an animation-generation server hook) ---
+$ ls src/server/
+fonts
+image-gen
+secrets
+text-fill
+$ grep -rln "generateAnimation\|animation-gen\|animationPrompt\|authorAnimatable" src/ (excluding .bak)
+src/components/editor/panels/Inspector.tsx
+
+--- What DOES exist: the Animatable contract + registry the criterion needs as its registration target ---
+src/lib/prism/animatable/{contract,registry,base,bindings}.ts + 338 built-in primitive modules (all register via the same registry; ControlSchema per primitive verified 312/312 in notes/verification/catalog-parallel/results.json)

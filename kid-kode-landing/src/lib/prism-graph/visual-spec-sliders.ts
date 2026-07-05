@@ -80,7 +80,7 @@ export function buildVisualSpecSliders(node: PrismNode): VisualSpecSlider[] {
       case 'pos.z': return pos.z;
       case 'rot.y': return pos.rotationY;
       case 'scale.uniform': return pos.scaleX;
-      case 'visual.alpha': return typeof node.visual.alpha === 'number' ? node.visual.alpha : 1;
+      case 'visual.alpha': return typeof node.visual?.alpha === 'number' ? node.visual.alpha : 1;
       case 'depth.scale': return readVisualSpec('depth.scale', 0.5);
       case 'mesh.rotationSpeed': return readVisualSpec('mesh.rotationSpeed', 0.4);
       default: return 0;
@@ -125,9 +125,11 @@ export function buildVisualSpecSliders(node: PrismNode): VisualSpecSlider[] {
 /**
  * Apply a slider value back onto a PrismNode (mutating).
  *
- * Used by the editor's Visual tab when the user drags a slider — the
- * resulting node is then either staged in the editor's edits store or
- * sent through `saveAndVerify` to the regen API.
+ * Pure transform helper. (Historically the editor's Visual tab fed the
+ * resulting node to the regen `saveAndVerify` path; that 2nd save/build path
+ * is RETIRED — NE-SC-14. The Visual-tab sub-canvas is now display-only and
+ * editing routes through the overlay → Save → Build path; this helper remains
+ * for the test harness's slider-application checks.)
  *
  * Unknown keys are silently ignored; the caller is the source of truth
  * for slider definitions, so the only path to call this with an unknown

@@ -19,6 +19,7 @@ import type {
 import type { LoaderCacheHandle } from './loaders';
 import type { FontAtlasHandle } from './text';
 import type { CinematicPrimitivesAPI } from './primitives/types';
+import type { NodeDrivers } from './driver-dispatch';
 
 /** Per-node creation context passed to user-supplied `createNode` functions.
  *  Mirrors the spec §8 NodeContext interface; concrete instances are built
@@ -30,12 +31,28 @@ import type { CinematicPrimitivesAPI } from './primitives/types';
  *  both fields without leaking the cache surface into nodes. */
 export type NodeTextureLoader = Pick<LoaderCacheHandle, 'loadTexture'>;
 export type NodeGLBLoader = Pick<LoaderCacheHandle, 'loadGLB'>;
+// FIDELITY-2 W3 (audit item 3) — narrowed video lane. The same single
+// LoaderCacheHandle backs this field; nodes only see `loadVideo`.
+export type NodeVideoLoader = Pick<LoaderCacheHandle, 'loadVideo'>;
 
 export interface NodeContext {
+  /** The single, bundled `three` module namespace (RT-SC-02 / INV-R1).
+   *  codeRef modules MUST read THREE classes from here (e.g.
+   *  `const { Group, Vector3 } = ctx.THREE`) instead of `import … from 'three'`
+   *  / `'three/webgpu'`. A native `import(url)` of a codeRef module would
+   *  otherwise resolve its bare `three` specifier through the browser
+   *  import-map → a SECOND `three` instance from a CDN, which is the
+   *  multiple-instances crash this field exists to prevent. */
+  THREE: typeof import('three');
   /** Texture loader keyed by URL. Same URL yields the same `Promise<Texture>`. */
   textureLoader: NodeTextureLoader;
   /** GLB loader keyed by URL. Same URL yields the same `Promise<GLTF>`. */
   glbLoader: NodeGLBLoader;
+  /** FIDELITY-2 W3 (INV-18 additive) — video-texture loader keyed by URL.
+   *  Same URL yields the same `Promise<VideoTexture>`. OPTIONAL: legacy /
+   *  test contexts omit it and `videoUrl` nodes simply keep their still-image
+   *  texture (graceful degradation, no behavior change for existing graphs). */
+  videoLoader?: NodeVideoLoader;
   /** MSDF font atlas. Throws on createText() until ready. */
   fontAtlas: FontAtlasHandle;
   /** Cinematic primitives library, curried with the runtime
@@ -46,6 +63,18 @@ export interface NodeContext {
   primitives: CinematicPrimitivesAPI;
   /** Event bus for navigation / state transitions. */
   emit: (event: string, payload: unknown) => void;
+  /** STEP7 — driver wiring surface. Present only when the context runs
+   *  primitives (the built-state surface). The factory calls
+   *  `drivers.attach(result, ref.trigger, { nodeId })` per cinematic primitive
+   *  so each node-declared animation plays under its declared driver
+   *  (ScrollDriver / PointerDriver / StateDriver / EventDriver). Absent on the
+   *  no-op editor context (runPrimitives:false) and the legacy bundle path. */
+  drivers?: NodeDrivers;
+  /** Device capability tier (INV-9), injected by the host that owns the
+   *  renderer (the factory is DOM-free and cannot detect it). Gates expensive
+   *  opt-in paths such as true-3D extruded text (T1+) vs a flat fallback (T0).
+   *  Absent → callers treat it as 'T1'. Additive (INV-18). */
+  tier?: 'T0' | 'T1' | 'T2';
 }
 
 /** A `createNode` factory satisfying the spec §8 contract. The adapter

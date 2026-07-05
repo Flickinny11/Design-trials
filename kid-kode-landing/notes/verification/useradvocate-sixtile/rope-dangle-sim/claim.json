@@ -1,0 +1,7 @@
+{
+  "name": "rope-dangle-sim",
+  "label": "Segments",
+  "description": "A real XPBD rope — a chain of particles pinned to a moving anchor, hanging under gravity and swinging with genuine momentum as the cursor whips the anchor around.",
+  "category": "pointer",
+  "groundTruthSibling": null
+}

@@ -1,0 +1,24 @@
+{
+  "startedAt": "2026-06-13T13:53:28.119Z",
+  "state": "after",
+  "port": 4852,
+  "backend": "webgpu",
+  "gpu": true,
+  "tiles": [
+    {
+      "tile": "drop-squash",
+      "state": "after",
+      "dir": "drop-squash/after",
+      "claim": {
+        "name": "drop-squash",
+        "label": "Drop Height",
+        "description": "A card falls under real gravity, bounces with restitution, and squashes on each impact in proportion to its landing speed before settling — physics, not an easing curve.",
+        "category": "transform"
+      },
+      "controls": 4,
+      "notes": []
+    }
+  ],
+  "groundTruth": null,
+  "deviceLostAtEnd": 0
+}
