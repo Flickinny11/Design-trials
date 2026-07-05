@@ -1,0 +1,26 @@
+{
+  "alpha": [
+    {
+      "seq": 1,
+      "actor": "0Fn5bsJboXEbF07AfJmZhp9oHsYp3Qgi",
+      "value": "ALPHA-EDIT"
+    },
+    {
+      "seq": 2,
+      "actor": "miiUdogSflXoeVmLovl9B2Gx0NMRNevn",
+      "value": "BETA-EDIT"
+    }
+  ],
+  "beta": [
+    {
+      "seq": 1,
+      "actor": "0Fn5bsJboXEbF07AfJmZhp9oHsYp3Qgi",
+      "value": "ALPHA-EDIT"
+    },
+    {
+      "seq": 2,
+      "actor": "miiUdogSflXoeVmLovl9B2Gx0NMRNevn",
+      "value": "BETA-EDIT"
+    }
+  ]
+}

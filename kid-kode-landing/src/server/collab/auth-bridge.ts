@@ -38,6 +38,13 @@ function open(): DatabaseSync {
       typeof DatabaseSync
     >[1];
     db = new DatabaseSync(authDbPath(), options);
+    // The Next process holds a writer on the same file; wait out transient
+    // locks instead of failing a connection.
+    try {
+      db.exec('PRAGMA busy_timeout = 3000');
+    } catch {
+      /* older sqlite / read-only pragma quirk — non-fatal */
+    }
   }
   return db;
 }

@@ -213,6 +213,12 @@ async function main() {
       ['tenancy.version.list', 'query', { projectId }],
       ['tenancy.version.create', 'mutate', { projectId, label: 'steal' }],
       ['tenancy.version.restore', 'mutate', { projectId, versionId: 'ver-steal' }],
+      // W7 org-sharing surface must ALSO fail closed for a non-member: an
+      // unshared project has no shared-index entry, so cross-tenant access
+      // resolves to none → NOT_FOUND (no existence leak).
+      ['sharing.project.access', 'query', { projectId }],
+      ['sharing.project.getShare', 'query', { projectId }],
+      ['sharing.project.setShare', 'mutate', { projectId, orgId: 'org-nope', grants: [] }],
     ];
     for (const [proc, kind, input] of cases) {
       const r = kind === 'query'
@@ -225,6 +231,15 @@ async function main() {
     const list = await trpcQuery('tenancy.project.list', null, B);
     check('cross.project.list', "B's list contains ONLY B's data (empty)",
       Array.isArray(trpcData(list)) && trpcData(list).length === 0);
+
+    // W7: a fabricated org's dashboard is NOT_FOUND for a non-member (org
+    // membership is the ONLY cross-user visibility, and B is in no org).
+    const dash = await trpcQuery('sharing.org.dashboard', { orgId: 'org-fabricated' }, B);
+    check('cross.org.dashboard', 'B on a fabricated org dashboard is NOT_FOUND',
+      trpcCode(dash) === 'NOT_FOUND', `code=${trpcCode(dash)}`);
+    const orgs = await trpcQuery('sharing.org.list', null, B);
+    check('cross.org.list', "B's org list is empty (member of none)",
+      Array.isArray(trpcData(orgs)) && trpcData(orgs).length === 0);
 
     // E6 usage meter is tenant-scoped: B's meter counts ONLY B's projects.
     const usage = await trpcQuery('tenancy.usage.get', null, B);

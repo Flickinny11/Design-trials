@@ -20,6 +20,8 @@
     "verify:parity": "node scripts/galaxy-parity-gate.mjs",
     "verify:parity-static": "node scripts/galaxy-parity-gate.mjs --static",
     "verify:tenancy": "node scripts/verify-tenant-isolation.mjs",
+    "verify:share-matrix": "node scripts/verify-share-matrix.mjs",
+    "verify:collab": "node scripts/verify-collab-convergence.mjs",
     "verify": "npm run verify:prism && npm run verify:repair-loop && npm run verify:galaxy && npm run verify:global-shell && npm run verify:parity-static && npm run verify:schema && npm run verify:tenancy",
     "typecheck": "tsc --noEmit",
     "typecheck:gate": "node scripts/typecheck-gate.mjs",

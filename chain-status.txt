@@ -1,1 +1,1 @@
-[22:15:13] SHELL-W7: still building · 28m elapsed · agent up · 1110 commits · last: shell-w7: CollabRoom core + dep-free RFC6455 WS host (W7-D1) — room-issu
+[22:22:14] SHELL-W7: still building · 35m elapsed · agent up · 1111 commits · last: shell-w7: sharing tRPC router (server-side permission matrix) — org.crea

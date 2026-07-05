@@ -30,13 +30,34 @@ import {
   versionRestoreOutputSchema,
   type TenancyMeOutput,
 } from '../../../../packages/shared-interfaces/src/prism-tenancy';
+import { can } from '../../../../packages/shared-interfaces/src/prism-sharing';
 import { buildUsageSummary } from '../../../lib/shell/usage-config';
-import { listUserOrgs, reconcileInvites } from '../../tenancy/org-store';
+import {
+  listUserOrgs,
+  reconcileInvites,
+  resolveProjectAccess,
+} from '../../tenancy/org-store';
 import * as store from '../../tenancy/tenant-store';
 import { protectedProcedure, router } from '../init';
 
 function notFound(): never {
   throw new TRPCError({ code: 'NOT_FOUND', message: 'Project not found.' });
+}
+
+/** The effective actor on a project: owner (owns the row) OR a shared org
+ *  member with a granted role (deviation W7-D2). Returns null when neither —
+ *  the caller maps that to NOT_FOUND so unshared cross-tenant probes learn
+ *  nothing (I11 for unshared data is untouched). Reads/writes then key off the
+ *  OWNER's tenant space, on behalf of the granted member. */
+async function effectiveAccess(
+  viewerId: string,
+  projectId: string,
+): Promise<{ role: 'owner' | 'edit' | 'comment' | 'view'; ownerUserId: string } | null> {
+  const owned = await store.getProject(viewerId, projectId);
+  if (owned) return { role: 'owner', ownerUserId: viewerId };
+  const a = await resolveProjectAccess(viewerId, projectId);
+  if (a.role === 'none' || !a.ownerUserId) return null;
+  return { role: a.role, ownerUserId: a.ownerUserId };
 }
 
 export const tenancyRouter = router({
@@ -74,7 +95,10 @@ export const tenancyRouter = router({
     get: protectedProcedure
       .input(projectGetInputSchema)
       .query(async ({ ctx, input }) => {
-        const project = await store.getProject(ctx.session.user.id, input.projectId);
+        // Owner OR a shared org member (view+) may read project metadata.
+        const acc = await effectiveAccess(ctx.session.user.id, input.projectId);
+        if (!acc) notFound();
+        const project = await store.getProject(acc.ownerUserId, input.projectId);
         return project ?? notFound();
       }),
 
@@ -127,25 +151,35 @@ export const tenancyRouter = router({
   }),
 
   graph: router({
+    /** Owner OR a shared EDITOR may save (spec §6.9.1: edit grants modify).
+     *  A viewer/commenter is FORBIDDEN; a non-member is NOT_FOUND (no leak).
+     *  Shared writes land in the OWNER's tenant space on the editor's behalf. */
     save: protectedProcedure
       .input(graphSaveInputSchema)
       .mutation(async ({ ctx, input }) => {
+        const acc = await effectiveAccess(ctx.session.user.id, input.projectId);
+        if (!acc) notFound();
+        if (!can(acc.role, 'edit')) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Your role cannot edit this project.',
+          });
+        }
         const saved = await store.saveGraph(
-          ctx.session.user.id,
+          acc.ownerUserId,
           input.projectId,
           input.graph,
         );
         return saved ?? notFound();
       }),
 
+    /** Owner OR any shared member (view+) may read the graph. */
     get: protectedProcedure
       .input(graphGetInputSchema)
       .query(async ({ ctx, input }) => {
-        const owned = await store.getProject(ctx.session.user.id, input.projectId);
-        if (!owned) notFound();
-        return {
-          graph: await store.getGraph(ctx.session.user.id, input.projectId),
-        };
+        const acc = await effectiveAccess(ctx.session.user.id, input.projectId);
+        if (!acc) notFound();
+        return { graph: await store.getGraph(acc.ownerUserId, input.projectId) };
       }),
   }),
 
