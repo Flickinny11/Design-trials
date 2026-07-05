@@ -64,7 +64,8 @@ const HOT_C = new THREE.Color(RED_HOT);
 // Shared sprite look for both backends: a soft luminous mote, chrome-white at
 // the rim grading to signal red as it nears the core (the brand heat).
 // `radiusNode` must be the particle's current orbital radius (drives color).
-function applyGalaxyLook(material: SpriteNodeMaterial, radiusNode: ReturnType<typeof float>) {
+type TSLFloat = ReturnType<typeof float>;
+function applyGalaxyLook(material: SpriteNodeMaterial, radiusNode: TSLFloat) {
   const closeness = float(1).sub(radiusNode.div(RIM).clamp(0, 1));
   const radial = uv().distance(vec2(0.5, 0.5)).oneMinus().clamp(0, 1);
   const cool = vec3(CHROME_C.r, CHROME_C.g, CHROME_C.b).mul(0.5);
@@ -131,7 +132,7 @@ function buildGalaxyGpu(): GalaxyGpu {
   const material = new SpriteNodeMaterial();
   const attr = params.toAttribute();
   material.positionNode = vec3(attr.x.mul(cos(attr.y)), attr.z, attr.x.mul(sin(attr.y)));
-  applyGalaxyLook(material, attr.x);
+  applyGalaxyLook(material, attr.x as unknown as TSLFloat);
 
   const { geo, mesh } = makeInstancedSprites(material, GPU_COUNT);
   const dispose = () => {
@@ -206,7 +207,7 @@ function GalaxyStateless({ reduced }: { reduced: boolean }) {
     const ang = h2.mul(Math.PI * 2).add(sweepRate.mul(t));
     const y = h3.sub(0.5).mul(0.34).mul(r.div(RIM));
     material.positionNode = vec3(r.mul(cos(ang)), y, r.mul(sin(ang)));
-    applyGalaxyLook(material, r);
+    applyGalaxyLook(material, r as unknown as TSLFloat);
     const { geo, mesh } = makeInstancedSprites(material, GL2_COUNT);
     return { mesh, geo, material };
   }, [reduced]);
