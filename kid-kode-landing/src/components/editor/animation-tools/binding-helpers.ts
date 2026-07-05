@@ -15,18 +15,21 @@
 
 import type {
   AnimationBinding,
+  AnimationBindingDriverOptions,
   AnimationDriverKind,
 } from '@/lib/prism-graph/types';
 
 // ── Driver selector vocabulary (canvas-spec §5 trigger buttons → §8.2) ──────
-// The 5 chips the bound-list renders. 'time' is surfaced as "Load/Time": a
+// The chips the bound-list renders. 'time' is surfaced as "Load/Time": a
 // load-triggered animation IS the master-clock TimeDriver playing from t=0.
+// 'inview' (W8 E8) is the real section-aware reveal driver.
 export const DRIVER_OPTIONS: ReadonlyArray<{
   driver: AnimationDriverKind;
   label: string;
 }> = [
   { driver: 'time', label: 'Load/Time' },
   { driver: 'scroll', label: 'Scroll' },
+  { driver: 'inview', label: 'In View' },
   { driver: 'pointer', label: 'Pointer' },
   { driver: 'state', label: 'State' },
   { driver: 'event', label: 'Event' },
@@ -118,6 +121,28 @@ export function setBindingDriver(
   driver: AnimationDriverKind,
 ): AnimationBinding[] {
   return bindings.map((b) => (b.id === id ? { ...b, driver } : { ...b }));
+}
+
+/** Merge driver-level options (section-scrub / inview-replay) onto a binding
+ *  (W8 E8). Never touches keyframes/params — INV-6. A merge that resolves to an
+ *  empty object drops the field entirely so legacy bindings stay byte-stable. */
+export function setBindingDriverOptions(
+  bindings: ReadonlyArray<AnimationBinding>,
+  id: string,
+  patch: Partial<AnimationBindingDriverOptions>,
+): AnimationBinding[] {
+  return bindings.map((b) => {
+    if (b.id !== id) return { ...b };
+    const merged: AnimationBindingDriverOptions = { ...b.driverOptions, ...patch };
+    // Drop keys whose value is falsy/undefined so `{}` never lingers.
+    const cleaned: AnimationBindingDriverOptions = {};
+    if (merged.section) cleaned.section = true;
+    if (merged.replay) cleaned.replay = true;
+    const next = { ...b };
+    if (cleaned.section || cleaned.replay) next.driverOptions = cleaned;
+    else delete next.driverOptions;
+    return next;
+  });
 }
 
 /** Replace a binding's ControlSchema param overrides (copied, never aliased). */

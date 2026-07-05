@@ -120,6 +120,7 @@ import { getTransmissionCount } from '@/lib/prism/runtime/shared/transmission-bu
 // a node's catalog-primitive animationBindings to the mounted artifact and
 // plays them through the SAME driver dispatch the factory's STEP7 path uses.
 import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
+import { viewportFromNdc } from '@/lib/prism/runtime/shared/inview';
 // F5 ATELIER (ORRERY-NO7-PROTOTYPE-SPEC §3) — in-3D watch configurator wiring.
 import { useConfiguratorStore } from '@/stores/useConfiguratorStore';
 import type { AtelierLayerId } from '@/lib/prism/atelier/config';
@@ -3739,13 +3740,34 @@ function TopologySceneContent({
 const SCROLL_WHEEL_RANGE = 1400; // px of wheel travel = a full 0→1 scroll sweep.
 
 function SceneDriverHost() {
-  const { gl } = useThree();
+  const { gl, camera } = useThree();
   const scrollProgressRef = useRef(0);
+  const inviewProbe = useRef(new THREE.Vector3());
 
   // 1. Per-frame tick — drive onTick for every primitive that needs it. R3F's
   // delta is in seconds; the frame driver normalizes to ms for onTick.
+  //
+  // W8 E8 — also feed the InviewDriver: project every built node's world centre
+  // through the live camera to NDC and push the section-aware viewport state.
+  // This is the REAL intersection test the `inview` reveal driver + the
+  // section-relative scroll scrub read (drivers.ts InviewSource). Reuses the
+  // MarqueeSelectBridge projection idiom; the hub stays DOM-free (the host owns
+  // the camera math, the hub owns the pub/sub).
   useFrame((_, delta) => {
-    getSharedDriverHub().frame.tick(delta * 1000);
+    const hub = getSharedDriverHub();
+    hub.frame.tick(delta * 1000);
+    if (typeof window === 'undefined') return;
+    const groups = (window as unknown as {
+      __PRISM_EDITOR_NODE_GROUPS__?: Map<string, THREE.Object3D>;
+    }).__PRISM_EDITOR_NODE_GROUPS__;
+    if (!groups || groups.size === 0) return;
+    const v = inviewProbe.current;
+    groups.forEach((group, nodeId) => {
+      group.updateWorldMatrix(true, false);
+      group.getWorldPosition(v);
+      v.project(camera);
+      hub.inview.set(nodeId, viewportFromNdc({ x: v.x, y: v.y, z: v.z }));
+    });
   });
 
   // 2 + 3. Real pointer + scroll input from the WebGL canvas.
@@ -3803,6 +3825,11 @@ function SceneDriverHost() {
         hub.events.fire(eventName, { nodeId }),
       frameSize: () => hub.frame.size(),
       nodeResultCount: (nodeId: string) => hub.getNodeResults(nodeId).length,
+      // W8 E8 verification probe: the live section-aware viewport state the host
+      // feeds the InviewDriver for a node ({ visible, progress }). Lets the
+      // verifier prove the intersection test is real (a node off-screen reads
+      // visible:false; scrolling it in flips it true and advances progress).
+      inview: (nodeId: string) => ({ ...hub.inview.get(nodeId) }),
       // Verification probe: gsap timeline playback state per attached primitive.
       // Lets the verifier prove an inview/load/event-triggered animation
       // actually PLAYED (progress advanced past 0) vs. sat paused.

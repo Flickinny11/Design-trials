@@ -1422,7 +1422,29 @@ export const IMAGE_SPEC_DEFAULT: ImageSpec = {
 
 // P2 TOOLBAR WIRING — the frozen binding contract (canvas-spec §8.2 Driver
 // model + §8.3 catalog). Additive only.
-export type AnimationDriverKind = 'time' | 'scroll' | 'pointer' | 'state' | 'event';
+// W8 E8 — `inview` joins the canvas driver vocabulary: a REAL section-aware
+// viewport-intersection reveal (the host projects the node through the live
+// camera; the timeline fires on the rising edge). Additive; legacy graphs that
+// only used the original 5 kinds parse unchanged.
+export type AnimationDriverKind =
+  | 'time'
+  | 'scroll'
+  | 'pointer'
+  | 'state'
+  | 'event'
+  | 'inview';
+
+// W8 E8 — optional per-binding driver configuration (INV-18 additive). Absent →
+// the driver's default behavior (byte-stable for legacy bindings).
+export interface AnimationBindingDriverOptions {
+  /** For a `scroll` driver: scrub by the node's SECTION-relative progress (0 as
+   *  it enters from the bottom, 1 as it exits past the top) instead of global
+   *  scroll — SR-style per-section scrub. */
+  section?: boolean;
+  /** For an `inview` driver: reset on exit so the reveal replays on re-entry.
+   *  Default = play once and hold. */
+  replay?: boolean;
+}
 
 export interface AnimationBinding {
   /** Stable id for edit/remove (`ab-<base36>` convention). */
@@ -1435,6 +1457,9 @@ export interface AnimationBinding {
   params?: Record<string, number | string | boolean>;
   /** Stacking order among this node's bindings (criterion 13). */
   order?: number;
+  /** W8 E8 — optional driver-level config (section-scrub / inview-replay).
+   *  Additive; never edits keyframes (INV-6). */
+  driverOptions?: AnimationBindingDriverOptions;
 }
 
 // EB-07-04 / §7 SC-039 — scroll-binding spec consumed by the

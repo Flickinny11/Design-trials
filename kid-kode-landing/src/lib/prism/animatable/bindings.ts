@@ -101,6 +101,8 @@ const DRIVER_TO_TRIGGER: Record<AnimationDriverKind, CinematicPrimitiveTrigger> 
   pointer: 'hover',
   state: 'hover',
   event: 'click',
+  // W8 E8 — the real section-aware reveal driver.
+  inview: 'inview',
 };
 
 // ── Diagnostics surface (root.userData) ────────────────────────────────────
@@ -462,10 +464,15 @@ function attachOneBinding(
     }),
   );
 
-  // Attach exactly the way the factory does (STEP7).
+  // Attach exactly the way the factory does (STEP7). W8 E8 — pass the binding's
+  // driver-level options (section-scrub / inview-replay) through to dispatch.
   hub.registerNodeResult(node.nodeId, result);
   const trigger = DRIVER_TO_TRIGGER[binding.driver] ?? 'time';
-  detachDriver = drivers.attach(result, trigger, { nodeId: node.nodeId });
+  detachDriver = drivers.attach(result, trigger, {
+    nodeId: node.nodeId,
+    section: binding.driverOptions?.section === true,
+    replay: binding.driverOptions?.replay === true,
+  });
 
   // TimeDriver: finite timelines self-run looped on the gsap master clock —
   // playback-only calls (repeat/play), keyframes untouched (INV-6).

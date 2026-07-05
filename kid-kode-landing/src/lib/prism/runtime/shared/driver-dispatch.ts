@@ -17,11 +17,17 @@
 //   - 'time'   → TimeDriver: continuous timelines self-run via gsap; nothing
 //                to wire here (the keyframe editor scrubs them).
 //   - 'load'   → TimeDriver: play a paused timeline once when the node mounts.
-//   - 'inview' → ScrollDriver (appearance): in the built preview the hub is
-//                framed by the camera, so the node IS in view — play once on
-//                build. (A future intersection test can gate this on scroll
-//                position without touching keyframes.)
-//   - 'scroll' → ScrollDriver: scrub the timeline by scroll progress 0..1.
+//   - 'inview' → InviewDriver (W8 E8): a REAL per-node viewport-intersection
+//                test (the host projects the node's world centre through the
+//                live camera every frame and feeds `hub.inview`). The timeline
+//                plays once on the rising edge (section scrolls on-screen);
+//                with `info.replay` it resets on exit so it re-fires on the
+//                next entry. This generalizes M2's authored inview idiom into a
+//                driver — keyframes untouched (INV-6).
+//   - 'scroll' → ScrollDriver: scrub the timeline by scroll progress 0..1. With
+//                `info.section` it scrubs by this node's SECTION-relative
+//                progress (from `hub.inview`) instead — SR-style per-section
+//                scrub. Default = global scroll (unchanged).
 //   - 'hover'  → StateDriver: play forward on hover-in, reverse on hover-out.
 //   - 'click'  → EventDriver: (re)play on a fired click event for this node.
 //
@@ -62,6 +68,16 @@ export interface AttachDriverInfo {
   /** Id of the node whose animation this is — used to address hover state and
    *  click events to the right node. */
   nodeId: string;
+  /** W8 E8 — when true, a `scroll`-triggered timeline scrubs by this node's
+   *  SECTION-relative progress (0 as the node enters from the bottom, 1 as it
+   *  exits past the top) read from `hub.inview`, instead of the global scroll
+   *  source. This is what makes "each section plays through its own animation
+   *  as you pass it" (SR-style). Absent/false → global scroll (unchanged). */
+  section?: boolean;
+  /** W8 E8 — when true, an `inview` reveal resets to t=0 as the section leaves
+   *  the viewport so it replays on the next entry. Absent/false → play once and
+   *  hold (the reveal stays revealed). */
+  replay?: boolean;
 }
 
 /** The driver surface the factory sees on `NodeContext.drivers`. Carries the
@@ -110,12 +126,39 @@ export function attachPrimitiveDriver(
   }
 
   switch (trigger) {
-    case 'load':
-    case 'inview': {
-      // Play a paused, keyframed timeline once on appearance. Empty timelines
-      // (duration 0) no-op — their motion comes from their driver input.
+    case 'load': {
+      // Play a paused, keyframed timeline once when the node mounts. Empty
+      // timelines (duration 0) no-op — their motion comes from their driver
+      // input.
       if (hasTimeline && duration > 0 && typeof tl.play === 'function') {
         tl.play(0);
+      }
+      break;
+    }
+    case 'inview': {
+      // W8 E8 — REAL section-aware reveal. Gate playback on the host's per-node
+      // viewport-intersection feed instead of playing unconditionally on mount.
+      if (hasTimeline && duration > 0 && typeof tl.play === 'function') {
+        // If the node is already on-screen when it mounts (e.g. the landing
+        // hub), reveal immediately; otherwise wait for the rising edge.
+        if (hub.inview.get(info.nodeId).visible) {
+          tl.play(0);
+        }
+        let wasVisible = hub.inview.get(info.nodeId).visible;
+        detachers.push(
+          hub.inview.subscribe(info.nodeId, (vp) => {
+            if (vp.visible && !wasVisible) {
+              // Rising edge — the section just scrolled on-screen.
+              if (typeof tl.restart === 'function') tl.restart();
+              else tl.play?.(0);
+            } else if (!vp.visible && wasVisible && info.replay) {
+              // Falling edge with replay — rewind so the next entry re-fires.
+              tl.pause?.();
+              tl.progress?.(0);
+            }
+            wasVisible = vp.visible;
+          }),
+        );
       }
       break;
     }
@@ -126,10 +169,19 @@ export function attachPrimitiveDriver(
         const apply = (p: number): void => {
           tl.progress!(clamp01(p));
         };
-        // Seed with the current progress so a node that mounts mid-scroll is
-        // already at the right phase.
-        apply(hub.scroll.progress);
-        detachers.push(hub.scroll.subscribe(apply));
+        if (info.section) {
+          // W8 E8 — SECTION-relative scrub: this node scrubs through its own
+          // animation as it passes through the viewport (SR signature).
+          apply(hub.inview.get(info.nodeId).progress);
+          detachers.push(
+            hub.inview.subscribe(info.nodeId, (vp) => apply(vp.progress)),
+          );
+        } else {
+          // Global scroll (unchanged). Seed with the current progress so a node
+          // that mounts mid-scroll is already at the right phase.
+          apply(hub.scroll.progress);
+          detachers.push(hub.scroll.subscribe(apply));
+        }
       }
       break;
     }

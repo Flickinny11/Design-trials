@@ -18,6 +18,7 @@ import {
   pageSlice,
   removeBinding,
   setBindingDriver,
+  setBindingDriverOptions,
   setBindingParams,
   sortBindings,
 } from '@/components/editor/animation-tools/binding-helpers';
@@ -165,16 +166,44 @@ describe('P2 animation UI helpers — setBindingDriver (driver chips, §8.2)', (
     expect(cur[1].driver).toBe('scroll'); // input not mutated
   });
 
-  it('covers the full 5-driver vocabulary', () => {
+  it('covers the full driver vocabulary incl. W8 E8 inview', () => {
     expect(DRIVER_OPTIONS.map((d) => d.driver)).toEqual([
       'time',
       'scroll',
+      'inview',
       'pointer',
       'state',
       'event',
     ]);
     expect(driverLabel('time')).toBe('Load/Time');
     expect(driverLabel('event')).toBe('Event');
+    expect(driverLabel('inview')).toBe('In View');
+  });
+});
+
+describe('P2 animation UI helpers — setBindingDriverOptions (W8 E8)', () => {
+  it('merges section/replay flags without touching keyframes/params', () => {
+    const cur = fixture();
+    const next = setBindingDriverOptions(cur, 'ab-a-1', { section: true });
+    expect(next[0].driverOptions).toEqual({ section: true });
+    expect(next[0].params).toEqual({}); // params untouched (INV-6)
+    expect(cur[0].driverOptions).toBeUndefined(); // input not mutated
+  });
+
+  it('accumulates flags across calls and drops the field when all clear', () => {
+    const cur = fixture();
+    const withBoth = setBindingDriverOptions(
+      setBindingDriverOptions(cur, 'ab-a-1', { section: true }),
+      'ab-a-1',
+      { replay: true },
+    );
+    expect(withBoth[0].driverOptions).toEqual({ section: true, replay: true });
+    const cleared = setBindingDriverOptions(
+      setBindingDriverOptions(withBoth, 'ab-a-1', { section: false }),
+      'ab-a-1',
+      { replay: false },
+    );
+    expect(cleared[0].driverOptions).toBeUndefined();
   });
 });
 

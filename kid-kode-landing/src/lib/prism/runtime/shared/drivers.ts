@@ -47,6 +47,32 @@ export interface EventSource {
   subscribe(name: string, cb: (payload: unknown) => void): () => void;
 }
 
+/** Per-node viewport state — the real section-aware intersection signal (W8
+ *  E8). The host projects each built node's world centre through the live
+ *  camera every frame and pushes the result; the InviewDriver reads it to gate
+ *  reveal ('inview') animations and to scrub section-relative scroll timelines
+ *  (SR-style "each section plays through its own animation as it passes"). */
+export interface NodeViewport {
+  /** True while the node's projected centre is inside the viewport frustum
+   *  (with a small margin), i.e. the section is on-screen. */
+  readonly visible: boolean;
+  /** 0..1 section-local progress: 0 as the node enters from the bottom edge,
+   *  1 as it exits past the top edge. Clamped. Meaningful only while (or near
+   *  when) `visible`; a section that has fully exited holds at its last edge. */
+  readonly progress: number;
+}
+
+/** Reactive per-node in-view source. Backs the InviewDriver (E8). Mirrors the
+ *  named EventSource pattern — subscribe per nodeId so a driven node ignores
+ *  every other node's per-frame update. */
+export interface InviewSource {
+  /** Current viewport state for a node; a never-reported node reads
+   *  `{ visible: false, progress: 0 }`. */
+  get(nodeId: string): NodeViewport;
+  /** Subscribe to one node's viewport updates. Returns an unsubscribe fn. */
+  subscribe(nodeId: string, cb: (vp: NodeViewport) => void): () => void;
+}
+
 /** Per-frame ticker. Primitives that declare `needsTick` register their
  *  `onTick` here via dispatch; the host calls `tick(deltaMs)` once per rendered
  *  frame. Kept separate from gsap's global ticker so a built scene that is not
@@ -86,12 +112,20 @@ export interface MutableEventSource extends EventSource {
   fire(name: string, payload?: unknown): void;
 }
 
+/** Host-writable in-view source. */
+export interface MutableInviewSource extends InviewSource {
+  /** Push the latest projected viewport state for a node. */
+  set(nodeId: string, vp: NodeViewport): void;
+}
+
 /** The bundle of driver sources + ticker shared by primitives and the host. */
 export interface DriverHub {
   pointer: MutablePointerSource;
   scroll: MutableScrollSource;
   state: MutableStateSource;
   events: MutableEventSource;
+  /** Per-node viewport intersection (E8). Host-fed each frame. */
+  inview: MutableInviewSource;
   frame: FrameDriver;
   /** Diagnostic registry: per-node PrimitiveResults attached via dispatch.
    *  Lets the debug handle inspect/replay a node's declared animations without
@@ -199,6 +233,54 @@ function createEventSource(): MutableEventSource {
   };
 }
 
+const DEFAULT_VIEWPORT: NodeViewport = { visible: false, progress: 0 };
+
+function createInviewSource(): MutableInviewSource {
+  const states = new Map<string, NodeViewport>();
+  const subs = new Map<string, Set<(vp: NodeViewport) => void>>();
+  return {
+    get(nodeId) {
+      return states.get(nodeId) ?? DEFAULT_VIEWPORT;
+    },
+    subscribe(nodeId, cb) {
+      let set = subs.get(nodeId);
+      if (!set) {
+        set = new Set();
+        subs.set(nodeId, set);
+      }
+      set.add(cb);
+      return () => {
+        const s = subs.get(nodeId);
+        if (s) s.delete(cb);
+      };
+    },
+    set(nodeId, vp) {
+      const prev = states.get(nodeId);
+      // Skip the notify when nothing meaningful moved: same visibility AND a
+      // sub-epsilon progress delta. Keeps the per-frame host feed from spamming
+      // subscribers while a section sits still, but still streams smooth
+      // progress while it scrolls.
+      if (
+        prev &&
+        prev.visible === vp.visible &&
+        Math.abs(prev.progress - vp.progress) < 1e-4
+      ) {
+        return;
+      }
+      states.set(nodeId, vp);
+      const set = subs.get(nodeId);
+      if (!set) return;
+      for (const cb of [...set]) {
+        try {
+          cb(vp);
+        } catch {
+          /* one bad in-view handler must not stall the frame feed */
+        }
+      }
+    },
+  };
+}
+
 function createFrameDriver(): FrameDriver {
   const cbs = new Set<(deltaMs: number) => void>();
   return {
@@ -228,6 +310,7 @@ export function createDriverHub(): DriverHub {
   let scroll = createScrollSource();
   let state = createStateSource();
   let events = createEventSource();
+  let inview = createInviewSource();
   let frame = createFrameDriver();
   const nodeResults = new Map<string, PrimitiveResult[]>();
 
@@ -243,6 +326,9 @@ export function createDriverHub(): DriverHub {
     },
     get events() {
       return events;
+    },
+    get inview() {
+      return inview;
     },
     get frame() {
       return frame;
@@ -266,6 +352,7 @@ export function createDriverHub(): DriverHub {
       scroll = createScrollSource();
       state = createStateSource();
       events = createEventSource();
+      inview = createInviewSource();
       frame = createFrameDriver();
       nodeResults.clear();
     },

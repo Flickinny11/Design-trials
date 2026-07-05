@@ -65,11 +65,45 @@ describe('STEP7 dispatch — TimeDriver (load / inview / time)', () => {
     expect(tl.play).toHaveBeenCalledWith(0);
   });
 
-  it("'inview' plays a keyframed timeline once (preview frames the hub)", () => {
+  it("'inview' plays immediately when the node is already on-screen at mount", () => {
     const hub = createDriverHub();
+    hub.inview.set('n1', { visible: true, progress: 0.3 }); // landing hub, on-screen
     const { result, tl } = spyResult({ duration: 1.4 });
     attachPrimitiveDriver(hub, result, 'inview', { nodeId: 'n1' });
     expect(tl.play).toHaveBeenCalledWith(0);
+  });
+
+  it("'inview' does NOT play while the node is off-screen (real intersection)", () => {
+    const hub = createDriverHub();
+    // Default viewport is { visible: false } — the node is below the fold.
+    const { result, tl } = spyResult({ duration: 1.4 });
+    attachPrimitiveDriver(hub, result, 'inview', { nodeId: 'n1' });
+    expect(tl.play).not.toHaveBeenCalled();
+    expect(tl.restart).not.toHaveBeenCalled();
+  });
+
+  it("'inview' fires on the rising edge when the section scrolls on-screen", () => {
+    const hub = createDriverHub();
+    const { result, tl } = spyResult({ duration: 1.4 });
+    attachPrimitiveDriver(hub, result, 'inview', { nodeId: 'n1' });
+    expect(tl.restart).not.toHaveBeenCalled();
+    hub.inview.set('n1', { visible: true, progress: 0.1 }); // enters view
+    expect(tl.restart).toHaveBeenCalledTimes(1);
+    // Re-asserting visibility does not re-fire (only the rising edge does).
+    hub.inview.set('n1', { visible: true, progress: 0.6 });
+    expect(tl.restart).toHaveBeenCalledTimes(1);
+  });
+
+  it("'inview' with replay rewinds on exit so it re-fires on the next entry", () => {
+    const hub = createDriverHub();
+    const { result, tl } = spyResult({ duration: 1.4 });
+    attachPrimitiveDriver(hub, result, 'inview', { nodeId: 'n1', replay: true });
+    hub.inview.set('n1', { visible: true, progress: 0.1 });
+    expect(tl.restart).toHaveBeenCalledTimes(1);
+    hub.inview.set('n1', { visible: false, progress: 1 }); // exits → rewind
+    expect(tl.progress).toHaveBeenLastCalledWith(0);
+    hub.inview.set('n1', { visible: true, progress: 0.1 }); // re-enters → re-fire
+    expect(tl.restart).toHaveBeenCalledTimes(2);
   });
 
   it("'time' does not force-play (continuous timelines self-run)", () => {
@@ -101,6 +135,25 @@ describe('STEP7 dispatch — ScrollDriver (scroll)', () => {
     hub.scroll.set(0.9);
     // No further scrub after detach.
     expect(tl.progress).toHaveBeenLastCalledWith(0.75);
+  });
+
+  it('with section:true scrubs by the node section progress, not global scroll (E8)', () => {
+    const hub = createDriverHub();
+    hub.scroll.set(0.9); // global scroll — must be IGNORED in section mode
+    hub.inview.set('n1', { visible: true, progress: 0.25 });
+    const { result, tl } = spyResult({ duration: 1 });
+    const detach = attachPrimitiveDriver(hub, result, 'scroll', {
+      nodeId: 'n1',
+      section: true,
+    });
+    // Seeded with the node's section progress, not the global 0.9.
+    expect(tl.progress).toHaveBeenLastCalledWith(0.25);
+    hub.inview.set('n1', { visible: true, progress: 0.8 });
+    expect(tl.progress).toHaveBeenLastCalledWith(0.8);
+    // Global scroll changes do not move a section-scrubbed timeline.
+    hub.scroll.set(0.1);
+    expect(tl.progress).toHaveBeenLastCalledWith(0.8);
+    detach();
   });
 });
 
