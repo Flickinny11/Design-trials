@@ -284,6 +284,37 @@ function makeGodray(): Godray {
   return { mesh, seek: (t) => anim.seek(t), dispose: () => { anim.dispose?.(); geo.dispose(); } };
 }
 
+// ── W9A: node-local product-light rig — a three-point studio setup that stays
+//    WORLD-FIXED (added to root, not the spinning pivot) so the milled metal
+//    throws moving specular highlights as the watch turns and the aventurine dial
+//    sparkles. Bounded distance/decay keeps the pool local to the watch (it does
+//    not wash the galaxy neighbours). Ramps down with the day→night reveal so the
+//    lume glow still owns the dark, then restores. ───────────────────────────────
+interface ProductLights { group: Group; setNight: (n: number) => void; dispose: () => void; }
+function makeProductLights(): ProductLights {
+  const group = new Group();
+  // key (warm, upper-front-left), rim (cool, upper-back-right), fill (soft front-below),
+  // face (soft near-axial lift so the aventurine dial art always reads, even face-on).
+  const key = new PointLight('#fff3df', 33, 16, 2); key.position.set(-2.9, 3.2, 4.0);
+  const rim = new PointLight('#bcd4ff', 22, 13, 2); rim.position.set(2.9, 1.3, -3.0);
+  const fill = new PointLight('#dfe8ff', 12, 14, 2); fill.position.set(1.6, -2.2, 3.4);
+  const face = new PointLight('#fff6ec', 13, 17, 2); face.position.set(0, 0.35, 5.4);
+  const base = [33, 22, 12, 13];
+  const lights = [key, rim, fill, face];
+  for (const l of lights) group.add(l);
+  return {
+    group,
+    setNight: (n: number) => {
+      // key/fill/face fade hard into night; rim keeps a faint cold edge on the silhouette.
+      key.intensity = base[0] * (1 - 0.95 * n);
+      rim.intensity = base[1] * (1 - 0.7 * n);
+      fill.intensity = base[2] * (1 - 0.95 * n);
+      face.intensity = base[3] * (1 - 0.92 * n);
+    },
+    dispose: () => { for (const l of lights) { l.dispose?.(); } },
+  };
+}
+
 // ── the watch assembly (dial stack + hands + crystal + strap + GLB parts) ─────
 interface Assembly {
   /** The spinning watch (goes UNDER the turntable pivot). */
@@ -494,13 +525,16 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
   pivot.add(assembly.watchGroup);
   root.add(assembly.godrayMesh);          // anchored (no spin)
   root.add(pivot);
+  // W9A: world-fixed three-point studio rig so the metal + aventurine dial catch light.
+  const productLights = makeProductLights();
+  root.add(productLights.group);
 
   const interactive = ctx.drivers != null;
   if (!interactive) {
     // Static galaxy/topology instance: seed one godray frame so it isn't black,
     // and stop — no frame loop, no window handle, no store subscription.
     assembly.update(0, 0, 0, 0, false);
-    root.userData.cleanup = () => assembly.dispose();
+    root.userData.cleanup = () => { assembly.dispose(); productLights.dispose(); };
     return root;
   }
 
@@ -510,6 +544,15 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
   let parallaxX = 0, parallaxY = 0, pressAmt = 0, pressTarget = 0;
   let flipped = false, explodeTarget = 0, nightTarget = 0, nightAmt = 0;
   let elapsedMs = 0, elapsedSec = 0, nightTouched = false;
+
+  // W9A: honor prefers-reduced-motion — a calm, well-lit, STILL watch (no idle
+  // turntable drift, no cursor parallax, no reveal spin, hands frozen at a poised
+  // pose); the user can still drag / flip / explode / toggle night on demand.
+  const reduce = (() => { try { return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false; } catch { return false; } })();
+  const REDUCED_POSE = 2.0; // frozen sweep phase → a pleasing spread of the hands
+  // W9A: cinematic intro — a gentle eased reveal turn + scale-in on first mount.
+  let introT = reduce ? 1 : 0;
+  if (!reduce) { yaw = -0.62; pitchTarget = 0.16; } // reveal from a slight angle → settle to a flattering downward tilt
 
   // lazy scene resolution for the night dim of the SHARED hub lights (by name).
   let sceneRef: Object3D | null = null;
@@ -546,27 +589,34 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
         dim('scene-key', 0.5, 0.96); dim('scene-fill', 0.25, 0.96); dim('scene-amb', 0.06, 0.7);
       }
     } else if (nightTouched) { restoreSharedLights(); nightTouched = false; }
+    // W9A: fade the node-local studio rig into night so the lume owns the dark.
+    productLights.setNight(nightAmt);
 
     // ── turntable: idle drift + release momentum + eased follow (rig parity) ───
-    if (!dragging && lastInteract < 1e14 && now - lastInteract > IDLE_DELAY_MS) {
+    // (idle drift + release momentum are motion → suppressed under reduced-motion)
+    if (!reduce && !dragging && lastInteract < 1e14 && now - lastInteract > IDLE_DELAY_MS) {
       yawTarget += IDLE_SPEED * Math.min(dt, 0.05);
     }
-    if (!dragging && Math.abs(yawVel) > 0.0001) { yawTarget += yawVel; yawVel *= 0.92; }
+    if (!reduce && !dragging && Math.abs(yawVel) > 0.0001) { yawTarget += yawVel; yawVel *= 0.92; }
     const ease = dragging ? 0.35 : 0.12;
     yaw += (yawTarget - yaw) * ease;
     pitch += (pitchTarget - pitch) * ease;
-    // cursor parallax (DriverHub pointer NDC; suppressed while dragging).
+    // cursor parallax (DriverHub pointer NDC; suppressed while dragging / reduced-motion).
     const p = getSharedDriverHub().pointer.ndc;
-    const pPara = dragging ? 0 : 1;
+    const pPara = (dragging || reduce) ? 0 : 1;
     parallaxX += (p.x * 0.07 * pPara - parallaxX) * 0.08;
     parallaxY += (p.y * 0.05 * pPara - parallaxY) * 0.08;
     pivot.rotation.y = yaw + parallaxX;
     pivot.rotation.x = pitch - parallaxY;
+    // W9A cinematic intro: eased scale-in on first mount (skipped under reduced-motion).
+    introT = Math.min(1, introT + dt / 0.9);
+    const introS = reduce ? 1 : 0.9 + 0.1 * (introT * introT * (3 - 2 * introT));
     // tactile press
     pressAmt += (pressTarget - pressAmt) * 0.2;
-    pivot.scale.setScalar(1 - 0.035 * pressAmt);
+    pivot.scale.setScalar((1 - 0.035 * pressAmt) * introS);
 
-    assembly.update(dt, elapsedSec, explodeTarget, nightAmt, flipped);
+    // hands sweep is continuous motion → frozen at a poised pose under reduced-motion.
+    assembly.update(dt, reduce ? REDUCED_POSE : elapsedSec, explodeTarget, nightAmt, flipped);
   });
 
   // ── window.__ATELIER_RIG__ — the documented transitional inspect/input bridge
@@ -612,6 +662,7 @@ export default function createWatchNode(config: PrismNode, ctx: NodeContext): Ob
     if (w.__ATELIER_RIG__ === handle) delete w.__ATELIER_RIG__;
     if (nightTouched) restoreSharedLights();
     assembly.dispose();
+    productLights.dispose();
   };
 
   return root;
