@@ -10,7 +10,7 @@
 // backend is stamped on window.__PRISM_MK_BACKEND__ for verification, and
 // children can gate WebGPU-only work (compute particles) via useForgeBackend.
 
-import { Canvas, useThree, type CanvasProps } from '@react-three/fiber';
+import { Canvas, useFrame, useThree, type CanvasProps } from '@react-three/fiber';
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import type * as THREE from 'three';
 
@@ -19,6 +19,30 @@ type ForgeBackend = 'webgpu' | 'webgl2' | 'unknown';
 const BackendContext = createContext<ForgeBackend>('unknown');
 export function useForgeBackend(): ForgeBackend {
   return useContext(BackendContext);
+}
+
+/**
+ * Explicit clear-then-render each frame. R3F's default WebGPU render loop leaves
+ * this transparent canvas's framebuffer uncleared, so any object that TRANSLATES
+ * (orbits, bobs, transitions out) leaves a ghost/trail and past frames pile up.
+ * Drop this into a scene with NO post-processing pipeline of its own; it takes
+ * over rendering at priority 1 and clears first. (Scenes that run their own
+ * PostProcessing pass — e.g. the hero — already clear and must NOT add this.)
+ */
+export function ClearedRender() {
+  const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
+  const camera = useThree((s) => s.camera);
+  useFrame(() => {
+    const r = gl as unknown as { clear?: () => void };
+    try {
+      r.clear?.();
+      gl.render(scene, camera);
+    } catch {
+      /* never break the frame loop */
+    }
+  }, 1);
+  return null;
 }
 
 async function webgpuFactory(

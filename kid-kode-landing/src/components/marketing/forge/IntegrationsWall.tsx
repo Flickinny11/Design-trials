@@ -20,6 +20,7 @@ import Lazy3D from '../Lazy3D';
 import { MarkPoster } from '../posters';
 import { BrandMark } from '@/components/shell/intake/BrandMark3D';
 import { ForgeEnvironment, ForgeLights } from './ForgeEnvironment';
+import { ClearedRender } from './MarketingCanvas';
 
 const MarketingCanvas = dynamic(() => import('./MarketingCanvas'), { ssr: false });
 
@@ -117,6 +118,7 @@ function WallScene({
 }) {
   return (
     <>
+      <ClearedRender />
       <ForgeEnvironment intensity={0.9} />
       <ForgeLights intensity={0.85} />
       {BRANDS.map((_, i) => (

@@ -699,6 +699,77 @@
   margin: 0;
 }
 
+/* ── Capability showcase (W9, req #2): one live scene, three states ────────── */
+.mk-show {
+  position: relative;
+  margin-top: clamp(28px, 4vw, 44px);
+  border-radius: var(--pp-radius-5);
+  overflow: hidden;
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 34%, rgba(var(--pp-red-rgb), 0.08) 0%, transparent 62%),
+    var(--pp-elev-0);
+}
+.mk-show-stage { position: relative; width: 100%; height: clamp(340px, 46vw, 540px); }
+.mk-show-canvas { position: absolute; inset: 0; }
+.mk-show-poster {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(var(--pp-red-rgb), 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 50% 42%, rgba(var(--pp-chrome-rgb), 0.05) 0%, transparent 60%);
+}
+.mk-show-ui {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 20px 26px;
+  background: linear-gradient(0deg, rgba(6, 6, 9, 0.86) 0%, rgba(6, 6, 9, 0) 100%);
+}
+.mk-show-seg {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--pp-radius-pill);
+  border: var(--pp-hairline-w) solid var(--pp-hairline-strong);
+  background: color-mix(in srgb, var(--pp-elev-1) 80%, transparent);
+  backdrop-filter: blur(8px);
+}
+.mk-show-tab {
+  font-family: var(--mk-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--pp-text-mid);
+  padding: 8px 18px;
+  border: 0;
+  border-radius: var(--pp-radius-pill);
+  background: transparent;
+  cursor: pointer;
+  transition: color var(--pp-motion-fast) var(--pp-ease-settle),
+    background var(--pp-motion-fast) var(--pp-ease-settle);
+}
+.mk-show-tab:hover { color: var(--pp-text-hi); }
+.mk-show-tab[data-active='true'] {
+  color: #fff;
+  background: linear-gradient(180deg, var(--pp-red) 0%, var(--pp-red-deep) 160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28), 0 6px 18px rgba(var(--pp-red-rgb), 0.34);
+}
+.mk-show-tab:focus-visible { outline: 2px solid var(--pp-chrome-hi); outline-offset: 2px; }
+.mk-show-blurb {
+  margin: 0;
+  max-width: 52ch;
+  text-align: center;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--pp-text-mid);
+}
+
 /* ── Integrations wall (W9, DL15): one shared canvas of real brand marks with
    DOM labels projected onto each mark ─────────────────────────────────────── */
 .mk-int-stage {

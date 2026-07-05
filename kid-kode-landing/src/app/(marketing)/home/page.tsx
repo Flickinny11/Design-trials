@@ -11,6 +11,7 @@ import Link from 'next/link';
 import LandingHero from '@/components/marketing/LandingHero';
 import { FeatureIcon, TemplateThumb } from '@/components/marketing/islands';
 import IntegrationsWall from '@/components/marketing/forge/IntegrationsWall';
+import CapabilityShowcase from '@/components/marketing/forge/CapabilityShowcase';
 import { FEATURES, HOW_STEPS, STATS, TEMPLATES, PRICING_TIERS, FAQ, MANAGED_CARE } from '@/lib/marketing/content';
 
 export const metadata: Metadata = {
@@ -36,6 +37,19 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* Capability showcase — one live scene, three states (req #2) */}
+      <section className="mk-section mk-wrap" aria-labelledby="mk-showcase">
+        <p className="mk-kicker">See the engine</p>
+        <h2 className="mk-h2" id="mk-showcase">
+          One scene. Three ways to work.
+        </h2>
+        <p className="mk-lead">
+          Galaxy, canvas, and live preview are states of one continuous 3D scene — not
+          separate screens. Switch between them right here; the engine never remounts.
+        </p>
+        <CapabilityShowcase />
       </section>
 
       {/* How it works */}
