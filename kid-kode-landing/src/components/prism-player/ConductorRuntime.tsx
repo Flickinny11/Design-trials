@@ -19,6 +19,7 @@ import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/sh
 import { mountFromGraphSource, type MountGraphResult } from '@/lib/prism/runtime/mount-graph';
 import { makeNodeDrivers } from '@/lib/prism/runtime/shared/driver-dispatch';
 import { viewportFromNdc } from '@/lib/prism/runtime/shared/inview';
+import { resolveTextOutlines } from '@/lib/prism/runtime/shared/text-atlas';
 import { attachAnimationBindings } from '@/lib/prism/animatable/bindings';
 import CustomCursorLayer from '@/components/shell/fx/CustomCursorLayer';
 import type { CursorLayerConfig, GraphSource } from '@/lib/prism-graph/types';
@@ -128,6 +129,32 @@ function startDriverFeed(
   };
 }
 
+/** Warm the extruded-text outline cache for every renderMode:'text' node so the
+ *  factory's 3D-text path resolves synchronously (no flat-MSDF fallback). Groups
+ *  the requested chars per (family, weight) and awaits all resolves. */
+async function warmTemplateOutlines(graph: GraphSource): Promise<void> {
+  const byKey = new Map<string, { family: string; weight: number; chars: Set<string> }>();
+  for (const node of graph.nodes) {
+    if (node.renderMode !== 'text') continue;
+    const content = node.textSpec?.content;
+    if (typeof content !== 'string' || content.length === 0) continue;
+    const family = node.textSpec?.fontFamily ?? 'Playfair Display';
+    const weight = node.textSpec?.fontWeight ?? 600;
+    const key = `${family}|${weight}`;
+    let e = byKey.get(key);
+    if (!e) {
+      e = { family, weight, chars: new Set() };
+      byKey.set(key, e);
+    }
+    for (const ch of content) e.chars.add(ch);
+  }
+  await Promise.all(
+    [...byKey.values()].map((e) =>
+      resolveTextOutlines(e.family, e.weight, [...e.chars].join('')),
+    ),
+  );
+}
+
 /** The cursor layer for the shipped app = the FIRST hub that declares one
  *  (landing hub). Templates are effectively single-hub; multi-hub apps get the
  *  landing hub's cursor. */
@@ -169,6 +196,16 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
           );
         } catch {
           // Atlas warm is best-effort; text nodes soft-fail like a missing asset.
+        }
+        // W8 — PRE-WARM extruded-text OUTLINES for every text node before mount.
+        // The factory's 3D-text path resolves outlines async and, on a cold
+        // cache, falls back to the flat MSDF atlas which does not bind reliably
+        // in this host (garbled glyphs). Warming the (family,weight) outline set
+        // here makes the extrude path resolve synchronously → clean 3D text.
+        try {
+          await warmTemplateOutlines(graph);
+        } catch {
+          /* best-effort */
         }
         if (cancelled) return;
         result = await mountFromGraphSource(canvas, graph, ctx, {
