@@ -851,3 +851,75 @@ session. Deleting the underlying Better Auth identity row is left to the auth
 admin surface (Stripe/billing testing phase) so this wave does not fork auth
 storage (I2). The UI labels this precisely ("deletes all your Prism projects
 and data").
+
+---
+
+## SHELL W5B — Ship Anywhere (E15–E20) (recorded 2026-07-05, BEFORE code per process law)
+
+**W5B-D1 — Post-ship verification (§11.2) runs against the shipped artifact
+through an injectable fetch seam; in dry-run it targets this app's own
+token-guarded routes.** E15 requires the Conductor to "VERIFY the live
+deployment on that host (§11.2 against the shipped URL/endpoint)". For a `live`
+external host, `postShipVerify` issues a real HTTP request to the host's
+returned URL/endpoint. For the always-available `prism-cloud` target and every
+env-gated host in `dry-run`, the "shipped artifact" is this app's own
+token-guarded route (`/preview/[projectId]` for frontend, `/api/prism/model/
+[deployId]` for backend) — a genuinely reachable URL, so the §11.2 probe is a
+real round-trip, labeled dry-run. The fetcher is injectable so the headless
+suite drives the same code path in-process (no live server needed).
+
+**W5B-D2 — A backend/GPU deploy's "model endpoint" is served by a deterministic
+open-source reference model in dry-run; the latch validates a REAL inference
+round-trip against it.** E15/E19 require "one backend adapter deploys a small
+open-source model endpoint (dry-run acceptable) and the latch validates a real
+inference round-trip." The deployed endpoint is `/api/prism/model/[deployId]`,
+which — absent a host token — runs `runReferenceInference` (a deterministic,
+offline sentiment/echo reference model standing in for a small OSS model, e.g.
+DistilBERT-SST2 class) and returns a structured inference result the post-ship
+latch validates against the endpoint's `inferenceContract`. When a host token
+IS present, the same route proxies to the live host endpoint. Either way the
+round-trip is real (HTTP + contract validation); no external GPU is required to
+prove the seam. Raw host secrets never ride the record or the endpoint response
+(I5); the endpoint is token-guarded exactly like the preview route.
+
+**W5B-D3 — In-platform domains (E16) run through a typed `DomainProvider`
+registry with `entri` as the default; availability, pricing, purchase, and
+auto-DNS are deterministic + sandboxed until vendor keys are present.** Entri
+Sell/Connect/Monitor is the universal spine; Vercel Domains Registrar and
+Cloudflare Registrar are config-selected alternates. Absent
+`ENTRI_APPLICATION_ID`/`ENTRI_SECRET` (and the registrar tokens), availability
++ pricing are deterministic (seeded off the SLD/TLD, clearly labeled
+`sandbox`), "purchase" mints a sandbox order id, and "connect" returns the DNS
+records auto-DNS would set — no real registration, no charge. The Monitor
+webhook route verifies a signature (dry-run: a fixture HMAC) and records the
+resulting domain status onto the project's deploy record. Live registration is
+env-gated and never blocks the flow.
+
+**W5B-D4 — E17 completeness cards ride a new additive `'cards'` ChatSegment;
+the scan + capability authoring are server functions reusing the Conductor's
+certified node path.** "One-click cards IN the streaming chat" is met by an
+additive `ChatSegment` kind (`text | step | cards`) — the scan streams as
+tool-steps (E4) and the recommended one-click capability cards are injected
+into the same chat turn. Accepting a card calls `conductor.addCapability`,
+which authors the capability's nodes through the SAME `authorNode` certified
+path (allowlist + `applyPlanRendererDefaults` + `validatePlanRendererFields`)
+and re-runs the §11 latch — never raw code, never a bypass of the node gate.
+Ship is also NL-invocable: a ship/make-profitable intent detector in the chat
+client routes to the same scan.
+
+**W5B-D5 — E18 live host pricing is fetched at run time with a ≤24h cache and a
+cited source; absent a live pricing feed it falls back to a dated, source-cited
+static table.** The recommendations surface fetches current per-host pricing
+(env/URL-gated live feed) cached for ≤24h; when no live feed is configured it
+uses a static table stamped with its `asOf` date and the public source URL it
+was compiled from (developer pricing pages, 2026-07). The UI always cites the
+source and the freshness so a stale/sandbox price is never presented as live.
+
+**W5B-D6 — E20 managed-care is a tier-gated stub: scheduled post-deploy checks
+reuse the node-agent self-heal seam as scaffolding; live monitoring agents are
+flagged for post-testing-keys.** The care tier gates on the existing
+`planTier`. v1 records a scheduled-check schedule and the self-heal seam it
+would invoke (the same `node-agent` engine prompt-edit + self-heal share), plus
+the pricing stub copy — it does not run live agents against a user's shipped
+app until monitoring keys exist. The free path is always available: any user
+can prompt their own fixes through the normal node-agent.
