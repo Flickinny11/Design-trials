@@ -310,6 +310,55 @@
   margin: 0 0 30px;
 }
 
+/* ── Forge hero (W9): full-bleed live WebGPU stage behind a left-weighted copy
+   column. The prism/pedestal composition reads on the right; a legibility scrim
+   keeps the copy crisp over it. ──────────────────────────────────────────── */
+.mk-hero-forge {
+  position: relative;
+  min-height: min(94vh, 940px);
+  display: flex;
+  align-items: center;
+  overflow: clip;
+  isolation: isolate;
+}
+.mk-hero-forge-stage { position: absolute; inset: 0; z-index: 0; }
+.mk-hero-forge-canvas { position: absolute; inset: 0; }
+.mk-hero-forge-stage .mk-hero-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Dark behind the copy (left), clearing to the right where the prism lives;
+   plus a floor vignette so the stage seats into the page. */
+.mk-hero-forge-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg,
+      rgba(6, 6, 9, 0.94) 0%,
+      rgba(6, 6, 9, 0.78) 28%,
+      rgba(6, 6, 9, 0.30) 55%,
+      rgba(6, 6, 9, 0) 76%),
+    linear-gradient(0deg, rgba(6, 6, 9, 0.9) 0%, rgba(6, 6, 9, 0) 42%),
+    linear-gradient(180deg, rgba(6, 6, 9, 0.55) 0%, rgba(6, 6, 9, 0) 22%);
+}
+.mk-hero-forge-inner { position: relative; z-index: 2; width: 100%; }
+.mk-hero-forge .mk-hero-copy { max-width: 600px; }
+.mk-hero-forge .mk-hero-sub { max-width: 40ch; }
+
+/* Prompt shell (W9) — the intake bar + starter chips as a self-contained unit */
+.mk-prompt-shell { max-width: 560px; }
+.mk-prompt-key {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+}
+
 /* Hero prompt bar */
 .mk-prompt {
   position: relative;
@@ -471,6 +520,73 @@
   border-radius: 50%;
   background: #6ad1a8;
   box-shadow: 0 0 8px 1px rgba(106, 209, 168, 0.7);
+}
+
+/* Forge hero badge + scroll cue (W9) — the badge floats bottom-right of the
+   full-bleed stage; the cue centers on the fold. */
+.mk-hero-badge--forge {
+  left: auto;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3;
+  background: color-mix(in srgb, var(--pp-elev-0) 60%, transparent);
+  backdrop-filter: blur(7px);
+}
+.mk-hero-badge--forge .mk-live-dot { background: var(--pp-red); box-shadow: 0 0 9px 1px rgba(var(--pp-red-rgb), 0.75); }
+.mk-hero-scrollcue {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mk-font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--pp-text-low);
+  pointer-events: none;
+}
+.mk-hero-scrollcue svg { color: var(--pp-text-mid); animation: mk-scrollcue 1.9s var(--pp-ease-settle) infinite; }
+@keyframes mk-scrollcue {
+  0%, 100% { transform: translateY(0); opacity: 0.45; }
+  50% { transform: translateY(4px); opacity: 1; }
+}
+
+/* ── The Build Key — DL12 primary CTA as a real 3D object in the prompt bar ── */
+.mk-key { position: relative; width: 132px; height: 100%; min-height: 62px; }
+.mk-key-canvas { position: absolute; inset: 0; }
+.mk-key-poster { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mk-key-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: var(--pp-radius-3);
+  cursor: pointer;
+}
+.mk-key-hit:focus-visible { outline: 2px solid var(--pp-chrome-hi); outline-offset: 3px; }
+.mk-key-hit:disabled { cursor: default; }
+.mk-key-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mk-font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
 }
 
 /* ── Stat strip ────────────────────────────────────────────────────────────── */

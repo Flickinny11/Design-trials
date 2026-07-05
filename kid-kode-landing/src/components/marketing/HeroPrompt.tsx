@@ -1,6 +1,6 @@
 'use client';
 
-// PRISM MARKETING — LANDING PROMPT BAR (SHELL W6, S2 / spec §3 Phase 0)
+// PRISM MARKETING — LANDING PROMPT BAR (SHELL W9, S2 / spec §3 Phase 0 / DL12)
 //
 // The single most important control on the marketing surface: one prompt that
 // hands off INTO the app's guided intake (Phase 0) with the text preserved.
@@ -8,12 +8,37 @@
 // component knowing the session: it navigates to /app/build?prompt=…, and the
 // /app/* edge guard redirects a signed-out visitor to /sign-in?next=… then back
 // to the same intake URL after auth (middleware.ts + safeNextPath) — the prompt
-// rides through sign-in untouched. The Build control is a crisp machined red
-// button (decision A — the prompt bar is a working surface; the hero's
-// materiality lives in the big 3D showpiece beside it, not in this inline slot).
+// rides through sign-in untouched. The Build control is the DL12 3D Build Key
+// (a real machined object; the LABEL stays a crisp DOM overlay — the W6
+// advocate lesson) with the machined red DOM button as its SSR/low-GPU
+// fallback, so the CTA is never less than crisp.
 
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
+
+/** While the 3D key chunk streams in (and in SSR HTML), the slot is filled by
+ *  a real LINK styled as the machined red button — it works with JS disabled
+ *  (prompt text is lost in that case, but Phase 0 still opens: no dead-end). */
+function BuildLinkFallback() {
+  return (
+    <a
+      className="mk-prompt-go"
+      href="/app/build"
+      aria-label="Start building — open the guided builder"
+    >
+      <span className="mk-prompt-go-label">Build</span>
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </a>
+  );
+}
+
+const BuildKey3D = dynamic(() => import('./forge/BuildKey3D'), {
+  ssr: false,
+  loading: () => <BuildLinkFallback />,
+});
 
 const STARTERS = [
   'A booking site for my barbershop',
@@ -86,20 +111,18 @@ export default function HeroPrompt() {
               spellCheck={false}
             />
           </div>
-          <button
-            type="button"
-            className="mk-prompt-go"
-            onClick={go}
-            disabled={going}
-            aria-label="Start building — open the guided builder with your prompt"
-          >
-            <span className="mk-prompt-go-label">{going ? 'Working…' : 'Build'}</span>
-            {!going ? (
-              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <div className="mk-prompt-key">
+            <BuildKey3D
+              label="Build"
+              pending={going}
+              onClick={go}
+              ariaLabel="Start building — open the guided builder with your prompt"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
                 <path d="M3 8h9M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.7" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            ) : null}
-          </button>
+            </BuildKey3D>
+          </div>
         </div>
       </div>
       <div className="mk-prompt-hint">
