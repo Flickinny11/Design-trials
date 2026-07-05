@@ -17,8 +17,12 @@ export const metadata: Metadata = {
   alternates: { canonical: '/gallery' },
 };
 
-function remixHref(slug: string): string {
-  return `/sign-up?next=${encodeURIComponent(`/app/build?template=${slug}`)}`;
+function remixHref(slug: string, live?: boolean): string {
+  // W8 E2: live templates fork the real .prism graph into the account
+  // (/app?remix=<slug> resolves post-auth). Aspirational cards route to a fresh
+  // build seeded by the template idea.
+  const next = live ? `/app?remix=${slug}` : `/app/build?template=${slug}`;
+  return `/sign-up?next=${encodeURIComponent(next)}`;
 }
 
 export default function GalleryPage() {
@@ -41,7 +45,14 @@ export default function GalleryPage() {
                 <TemplateThumb accent={t.accent} />
               </div>
               <div className="mk-card-body">
-                <h2 className="mk-card-name">{t.name}</h2>
+                <h2 className="mk-card-name">
+                  {t.name}
+                  {t.live ? (
+                    <span className="mk-tag" style={{ marginLeft: 8, verticalAlign: 'middle', color: '#d8a24a', borderColor: 'rgba(216,162,74,0.4)' }}>
+                      Live
+                    </span>
+                  ) : null}
+                </h2>
                 <p className="mk-card-tag">{t.tagline}</p>
                 <div className="mk-tags">
                   {t.tags.map((tag) => (
@@ -51,12 +62,19 @@ export default function GalleryPage() {
                   ))}
                 </div>
                 <div className="mk-card-foot">
-                  <Link href={remixHref(t.slug)} className="mk-btn mk-btn-red">
+                  {t.live ? (
+                    <Link href={`/templates/${t.slug}`} className="mk-btn mk-btn-red">
+                      Preview
+                    </Link>
+                  ) : null}
+                  <Link href={remixHref(t.slug, t.live)} className={t.live ? 'mk-btn mk-btn-ghost' : 'mk-btn mk-btn-red'}>
                     Remix
                   </Link>
-                  <Link href="/app/build" className="mk-btn mk-btn-ghost">
-                    Start fresh
-                  </Link>
+                  {!t.live ? (
+                    <Link href="/app/build" className="mk-btn mk-btn-ghost">
+                      Start fresh
+                    </Link>
+                  ) : null}
                 </div>
               </div>
             </article>

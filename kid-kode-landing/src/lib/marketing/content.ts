@@ -90,11 +90,40 @@ export interface Template {
   /** Signature accent for the card's 3D thumbnail jewel (a hex the island
    *  reads via THREE.Color). */
   readonly accent: string;
+  /** W8 E2 — a live, previewable + remixable .prism template (in the template
+   *  registry). Non-live entries are aspirational cards that route to sign-up. */
+  readonly live?: boolean;
 }
 
 /** E2 — starter gallery of .prism template graphs. "Remix" forks one into the
- *  visitor's account (handoff = sign-in → build, same as the prompt bar). */
+ *  visitor's account (handoff = sign-in → build, same as the prompt bar). The
+ *  first three are W8 SR-flagship recreations — LIVE (previewable + remixable);
+ *  their graphs live in src/lib/templates/registry.ts. */
 export const TEMPLATES: readonly Template[] = [
+  {
+    slug: 'kinetic-scroll-hero',
+    name: 'Aperture',
+    tagline: 'A scroll-driven one-page hero that sets a photoreal product in motion.',
+    tags: ['Hero', 'Scroll scrub', 'Cursor'],
+    accent: '#d8a24a',
+    live: true,
+  },
+  {
+    slug: 'cursor-gallery',
+    name: 'Atlas',
+    tagline: 'A cursor-reactive editorial gallery — every tile answers the pointer.',
+    tags: ['Gallery', 'Cursor field', 'Editorial'],
+    accent: '#e7c98a',
+    live: true,
+  },
+  {
+    slug: 'particle-showpiece',
+    name: 'Nova',
+    tagline: 'A WebGL particle showpiece you bend with your cursor. Fully asset-free.',
+    tags: ['Particles', 'WebGL', 'Interactive'],
+    accent: '#7fb2ff',
+    live: true,
+  },
   {
     slug: 'atelier-commerce',
     name: 'Atelier',

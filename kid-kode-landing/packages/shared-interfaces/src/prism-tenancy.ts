@@ -253,6 +253,14 @@ export const projectDuplicateInputSchema = z
   .strict();
 export type ProjectDuplicateInput = z.infer<typeof projectDuplicateInputSchema>;
 
+// W8 E2 — fork a public template graph (by registry slug) into the tenant.
+export const projectRemixTemplateInputSchema = z
+  .object({ slug: z.string().min(1).max(120).regex(/^[a-z0-9-]+$/) })
+  .strict();
+export type ProjectRemixTemplateInput = z.infer<
+  typeof projectRemixTemplateInputSchema
+>;
+
 // ── Usage meter + plan tiers (E6 — schema now, billing provider later) ───────
 
 /** One row of the usage meter. `limit === null` means the tier has no cap on

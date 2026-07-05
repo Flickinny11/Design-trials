@@ -56,6 +56,13 @@ export async function duplicateProject(projectId: string): Promise<PrismProject>
   );
 }
 
+/** W8 E2 — fork a public .prism template (by registry slug) into this account. */
+export async function remixTemplate(slug: string): Promise<PrismProject> {
+  return prismProjectSchema.parse(
+    await trpc.tenancy.project.remixTemplate.mutate({ slug }),
+  );
+}
+
 export async function deleteProject(projectId: string): Promise<void> {
   await trpc.tenancy.project.delete.mutate({ projectId });
 }

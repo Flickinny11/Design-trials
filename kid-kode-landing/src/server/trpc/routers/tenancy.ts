@@ -20,6 +20,7 @@ import {
   projectCreateInputSchema,
   projectDeleteInputSchema,
   projectDuplicateInputSchema,
+  projectRemixTemplateInputSchema,
   projectGetInputSchema,
   projectRenameInputSchema,
   projectSetModelOverrideInputSchema,
@@ -135,6 +136,17 @@ export const tenancyRouter = router({
           input.projectId,
         );
         return clone ?? notFound();
+      }),
+
+    /** W8 E2 — fork a public .prism template graph into this tenant. */
+    remixTemplate: protectedProcedure
+      .input(projectRemixTemplateInputSchema)
+      .mutation(async ({ ctx, input }) => {
+        const project = await store.remixTemplate(
+          ctx.session.user.id,
+          input.slug,
+        );
+        return project ?? notFound();
       }),
 
     /** Gallery card action — delete (the shell confirms before calling). */

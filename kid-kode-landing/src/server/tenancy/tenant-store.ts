@@ -65,6 +65,7 @@ import {
   type ConductorStatus,
   type DeployRecord,
 } from '../../../packages/shared-interfaces/src/prism-conductor';
+import { getTemplate, templateGraph } from '@/lib/templates/registry';
 
 const MAX_GRAPH_BYTES = 16 * 1024 * 1024; // 16 MB graph JSON ceiling
 const MAX_ASSET_BYTES = 64 * 1024 * 1024; // matches assets/store.ts ceiling
@@ -300,6 +301,41 @@ export async function duplicateProject(
     if (integrations)
       await writeJson(projectIntegrationsPath(tenantId, cloneId), integrations);
     return clone;
+  });
+}
+
+/** W8 E2 — fork a REAL .prism template graph (from the template registry) into
+ *  a fresh project in this tenant. The graph is sourced from the registry, not
+ *  another owned project (so it works for a brand-new account remixing from the
+ *  public gallery). Returns null for an unknown slug. */
+export async function remixTemplate(
+  tenantId: string,
+  slug: string,
+): Promise<PrismProject | null> {
+  const tpl = getTemplate(slug);
+  const graph = templateGraph(slug);
+  if (!tpl || !graph) return null;
+  return serialized(tenantId, async () => {
+    const cloneId = `proj-${randomUUID()}`;
+    const graphRef = `tenancy:${cloneId}/graph.json`;
+    const project: PrismProject = prismProjectSchema.parse({
+      id: cloneId,
+      ownerUserId: safeId(tenantId, 'tenant'),
+      orgId: null,
+      name: `${tpl.name} (remix)`.slice(0, 200),
+      graphRef,
+      modelOverrideId: null,
+      buildState: null,
+      createdAt: nowIso(),
+      updatedAt: nowIso(),
+    });
+    const all = await readProjects(tenantId);
+    await writeJson(projectsIndexPath(tenantId), [...all, project]);
+    await writeJson(
+      graphPath(tenantId, cloneId),
+      graph as unknown as Record<string, unknown>,
+    );
+    return project;
   });
 }
 

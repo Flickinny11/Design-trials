@@ -11,10 +11,10 @@
 // slide-out nav means the same thing here. First-run shows a guided invitation,
 // never a void. The route owns its scroll (root body is locked, W0 gotcha).
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type { PrismProject } from '../../../../packages/shared-interfaces/src/prism-tenancy';
-import { listProjects } from '@/lib/shell/tenancy-client';
+import { listProjects, remixTemplate } from '@/lib/shell/tenancy-client';
 import { getModelRegistry, getDefaultModel } from '@/lib/shell/model-config';
 import LaunchpadHero3D from './LaunchpadHero3D';
 import PrimaryButton3D from '../intake/PrimaryButton3D';
@@ -80,6 +80,24 @@ export default function DashboardShell({
   useEffect(() => {
     if (panel === 'projects') void refresh();
   }, [panel, refresh]);
+
+  // W8 E2 — Remix handoff: a `?remix=<slug>` arrival (from the public gallery,
+  // post-auth) forks that template's real .prism graph into this account and
+  // opens the new project in the builder. Runs once.
+  const remixParam = searchParams.get('remix');
+  const remixHandled = useRef(false);
+  useEffect(() => {
+    if (!remixParam || remixHandled.current) return;
+    remixHandled.current = true;
+    void (async () => {
+      try {
+        const project = await remixTemplate(remixParam);
+        router.replace(`/app/builder/${project.id}`);
+      } catch {
+        router.replace('/app'); // unknown slug / fork failed → land on dashboard
+      }
+    })();
+  }, [remixParam, router]);
 
   function setPanel(next: Panel) {
     router.push(next === 'projects' ? '/app' : `/app?panel=${next}`);
