@@ -1,0 +1,51 @@
+{
+  "run": "PRISM-SHELL-W9",
+  "capturedAt": "2026-07-05",
+  "build": "production (npm run build; next build), served via npm run start on :3001",
+  "renderer": {
+    "hero_backend": "webgpu",
+    "navigator_gpu": true,
+    "webgl2_fallback": "automatic (three/webgpu WebGPURenderer); hero ships an explicit stateless WebGL2 galaxy path"
+  },
+  "fps": {
+    "hero_desktop": 60,
+    "method": "requestAnimationFrame sample over 2005ms on the production hero, real Metal GPU (WebGPU)",
+    "samples": 121
+  },
+  "lighthouse_home_desktop": {
+    "performance": 81,
+    "accessibility": 100,
+    "best_practices": 100,
+    "seo": 100,
+    "agentic_browsing": 100,
+    "LCP_s": 1.4,
+    "CLS": 0.021,
+    "TBT_ms": 310,
+    "FCP_s": 0.3,
+    "note": "perf >= 80 target met; a11y = 100 target met. LCP element is the SSR hero poster; heavy 3D lazy-loads behind it (DL8)."
+  },
+  "lighthouse_pricing_desktop": {
+    "accessibility": 100,
+    "best_practices": 100,
+    "seo": 100,
+    "note": "Initial audit flagged one color-contrast failure (.mk-tier-price-cadence, 3.26:1 on the solid tier card); fixed by moving cadence/eligibility text from --pp-text-low to --pp-text-mid (~7:1). Commit 93d19042."
+  },
+  "bundles_first_load_js": {
+    "/home_kB": 359,
+    "/pricing_kB": 107,
+    "/how-it-works_kB": 109,
+    "/gallery_kB": 109,
+    "shared_kB": 103,
+    "note": "The three/webgpu + scene chunks are code-split and lazy-loaded per Lazy3D (not in First Load); /home carries only the marketing shell + lazy orchestration."
+  },
+  "verify": {
+    "npm_run_verify": "EXIT 0",
+    "breakdown": "verify:prism + repair-loop + galaxy + global-shell 6/6 + parity-static + schema 338/338 + tenancy 35/35 GREEN",
+    "tsc_noEmit": "9 errors (baseline, pre-existing); 0 new in the marketing subtree"
+  },
+  "invariants": {
+    "I-CANVAS": "PASS — no src change outside the marketing subtree (git diff fe325d0a..HEAD -- src/ is empty outside (marketing)/marketing/lib-marketing)",
+    "I-SHELL": "PASS — shell components (BrandMark3D, use-reduced-motion, prism-premium-tokens) imported for reuse, never modified",
+    "I-SECRETS": "PASS — Replicate/Tripo keys gitignored; provenance note carries prediction IDs only, no key material"
+  }
+}
