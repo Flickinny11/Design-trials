@@ -10,7 +10,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import LandingHero from '@/components/marketing/LandingHero';
 import { FeatureIcon, TemplateThumb } from '@/components/marketing/islands';
-import { FEATURES, HOW_STEPS, STATS, TEMPLATES, PRICING_TIERS, FAQ } from '@/lib/marketing/content';
+import { FEATURES, HOW_STEPS, STATS, TEMPLATES, PRICING_TIERS, FAQ, MANAGED_CARE } from '@/lib/marketing/content';
 
 export const metadata: Metadata = {
   title: 'Describe it. Watch it build. Ship it.',
@@ -150,6 +150,11 @@ export default function LandingPage() {
             </article>
           ))}
         </div>
+        <p className="mk-care-line">
+          <span className="mk-care-line-price">{MANAGED_CARE.name} — {MANAGED_CARE.price}{' '}{MANAGED_CARE.cadence}</span>
+          {' '}keeps a shipped app healthy on Pro and Enterprise. The free fix-anytime
+          path is always on for everyone.
+        </p>
         <div style={{ marginTop: 28 }}>
           <Link href="/pricing" className="mk-btn mk-btn-ghost">
             Compare tiers in full

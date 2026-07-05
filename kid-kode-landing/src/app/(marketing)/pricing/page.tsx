@@ -7,7 +7,7 @@
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { PRICING_TIERS, FAQ } from '@/lib/marketing/content';
+import { PRICING_TIERS, FAQ, MANAGED_CARE, SHIP_FACTS } from '@/lib/marketing/content';
 import { getModelRegistry } from '@/lib/shell/model-config';
 
 export const metadata: Metadata = {
@@ -36,8 +36,9 @@ export default function PricingPage() {
           Start free. Scale when you ship.
         </h1>
         <p className="mk-lead">
-          Prices below are indicative while billing is being wired — the usage limits
-          are the real per-tenant quotas already enforced in the app.
+          Every tier is free while Prism is in preview — the usage limits below are
+          the real per-tenant quotas already enforced in the app. The only price set
+          today is Managed Care; plan pricing finalizes when checkout goes live.
         </p>
 
         <div className="mk-pricing" style={{ marginTop: 40 }}>
@@ -75,6 +76,33 @@ export default function PricingPage() {
           ))}
         </div>
 
+        {/* Managed Care — the one committed price (managed-care.ts). */}
+        <div className="mk-care" role="group" aria-labelledby="mk-care-title">
+          <div className="mk-care-head">
+            <div>
+              <p className="mk-kicker mk-care-kicker">Keep it running</p>
+              <h2 className="mk-care-name" id="mk-care-title">{MANAGED_CARE.name}</h2>
+            </div>
+            <div className="mk-care-price">
+              <span className="mk-care-price-value">{MANAGED_CARE.price}</span>
+              <span className="mk-care-price-cadence">{MANAGED_CARE.cadence}</span>
+            </div>
+          </div>
+          <p className="mk-care-summary">{MANAGED_CARE.summary}</p>
+          <p className="mk-care-elig">{MANAGED_CARE.eligibility} · {MANAGED_CARE.note}</p>
+          <p className="mk-care-free">{MANAGED_CARE.freePath}</p>
+        </div>
+
+        {/* Ship & own — the deployment truth (W5/W5B). */}
+        <div className="mk-shipfacts" aria-label="Ship and own">
+          {SHIP_FACTS.map((f) => (
+            <div className="mk-shipfact" key={f.title}>
+              <h3 className="mk-shipfact-title">{f.title}</h3>
+              <p className="mk-shipfact-body">{f.body}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Model availability — from the single config source, not literals. */}
         <div className="mk-model-note">
           <strong>Every tier builds with the latest models.</strong>{' '}
@@ -97,11 +125,13 @@ export default function PricingPage() {
         </h2>
         <div className="mk-faq">
           <div className="mk-faq-item">
-            <h3 className="mk-faq-q">Why are the prices marked as stubs?</h3>
+            <h3 className="mk-faq-q">What does it cost right now?</h3>
             <p className="mk-faq-a">
-              Billing is being wired now. The tiers and their limits are real and already
-              enforced per account; the dollar figures will finalize when checkout goes live.
-              The usage meter in the app shows your real counts against these quotas today.
+              Nothing. Prism is in preview, so every plan is free to use today — the
+              tiers and their limits are real and enforced per account, but checkout
+              isn&rsquo;t wired yet. The only set price is Managed Care at $39/mo per app,
+              and even that is opt-in: you can always prompt Prism to fix or optimize a
+              shipped app for free. The usage meter shows your real counts today.
             </p>
           </div>
           {FAQ.slice(1).map((item) => (

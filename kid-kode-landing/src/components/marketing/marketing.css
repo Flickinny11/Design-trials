@@ -754,6 +754,106 @@
 }
 .mk-model-note strong { color: var(--pp-text-hi); font-weight: 600; }
 
+/* ── Managed Care — the one committed price ─────────────────────────────────── */
+.mk-care {
+  margin-top: clamp(28px, 4vw, 44px);
+  padding: clamp(24px, 3.4vw, 34px);
+  border-radius: var(--pp-radius-4);
+  border: var(--pp-hairline-w) solid var(--pp-hairline-red);
+  background:
+    radial-gradient(ellipse 90% 120% at 100% 0%, rgba(var(--pp-red-rgb), 0.14) 0%, transparent 62%),
+    var(--pp-elev-2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.mk-care-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.mk-care-kicker { margin-bottom: 8px; }
+.mk-care-name {
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--pp-text-hi);
+  margin: 0;
+  font-variation-settings: 'opsz' 40, 'wght' 600;
+}
+.mk-care-price { display: flex; align-items: baseline; gap: 8px; }
+.mk-care-price-value {
+  font-family: var(--mk-font-mono);
+  font-size: clamp(30px, 4vw, 42px);
+  color: var(--pp-red);
+  letter-spacing: -0.01em;
+}
+.mk-care-price-cadence {
+  font-family: var(--mk-font-mono);
+  font-size: 13px;
+  color: var(--pp-text-low);
+  letter-spacing: 0.04em;
+}
+.mk-care-summary {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--pp-text-mid);
+  max-width: 66ch;
+  margin: 16px 0 0;
+}
+.mk-care-elig {
+  font-family: var(--mk-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--pp-text-low);
+  margin: 12px 0 0;
+}
+.mk-care-free {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--pp-text);
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: var(--pp-hairline-w) solid var(--pp-hairline);
+}
+
+/* Ship & own facts strip */
+.mk-shipfacts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+.mk-shipfact {
+  padding: 20px 22px;
+  border-radius: var(--pp-radius-3);
+  border: var(--pp-hairline-w) solid var(--pp-hairline);
+  background: var(--pp-elev-1);
+}
+.mk-shipfact-title {
+  font-size: 15px;
+  color: var(--pp-text-hi);
+  margin: 0 0 6px;
+  font-variation-settings: 'opsz' 24, 'wght' 580;
+}
+.mk-shipfact-body { font-size: 13.5px; line-height: 1.5; color: var(--pp-text-mid); margin: 0; }
+
+/* Home teaser one-liner */
+.mk-care-line {
+  margin: 22px 0 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--pp-text-mid);
+  max-width: 74ch;
+}
+.mk-care-line-price {
+  font-family: var(--mk-font-mono);
+  color: var(--pp-red);
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 720px) {
+  .mk-shipfacts { grid-template-columns: 1fr; }
+}
+
 /* ── FAQ / accordion-free list ─────────────────────────────────────────────── */
 .mk-faq { display: grid; gap: 1px; background: var(--pp-hairline); border-radius: var(--pp-radius-3); overflow: hidden; border: var(--pp-hairline-w) solid var(--pp-hairline); margin-top: clamp(24px, 4vw, 40px); }
 .mk-faq-item { background: var(--pp-elev-1); padding: 24px 26px; }

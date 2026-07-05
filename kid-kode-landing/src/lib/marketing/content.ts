@@ -209,11 +209,11 @@ export const PRICING_TIERS: readonly PricingTier[] = [
   {
     id: 'pro',
     name: 'Pro',
-    price: '$29',
-    cadence: '/ mo · stub',
+    price: 'Free in preview',
+    cadence: 'paid plans finalize at billing launch',
     summary: 'For builders shipping real products, with room to scale.',
     featured: true,
-    cta: 'Go Pro',
+    cta: 'Start on Pro',
     ctaHref: '/sign-up?next=%2Fapp%3Fpanel%3Dtemplates',
     limits: [
       { label: 'Projects', value: 'Up to 50' },
@@ -226,6 +226,7 @@ export const PRICING_TIERS: readonly PricingTier[] = [
       'Agent-authored connectors for the long tail',
       'Custom domains + priority build lane',
       'Full version timeline with one-click restore',
+      'Eligible for Managed Care — $39/mo per app',
     ],
   },
   {
@@ -249,6 +250,47 @@ export const PRICING_TIERS: readonly PricingTier[] = [
       'A shared org dashboard and collective builds',
       'SSO, audit, and dedicated support',
     ],
+  },
+] as const;
+
+/** Managed Care — the one committed monetary figure on the surface, anchored to
+ *  `src/server/care/managed-care.ts` (PRICE_STUB / FREE_PATH). It is an add-on
+ *  for Pro/Enterprise apps; the free fix-anytime path is always on for everyone.
+ *  Never present a plan-tier dollar figure that isn't in code (no invented
+ *  numbers) — only $0 (free) and this $39/mo per app are real today. */
+export const MANAGED_CARE = {
+  name: 'Managed Care',
+  price: '$39',
+  cadence: '/ mo per app',
+  eligibility: 'Add-on for Pro and Enterprise apps',
+  summary:
+    'Prism watches your shipped app — automatic fixes, self-heal, and scheduled post-deploy checks — so it keeps running without you babysitting it.',
+  // Anchored to managed-care.ts FREE_PATH.
+  freePath:
+    'The free path is always on: prompt Prism to fix or optimize any shipped app, any time — no care tier needed.',
+  note: 'Billing lands with the billing phase.',
+} as const;
+
+export interface ShipFact {
+  readonly title: string;
+  readonly body: string;
+}
+
+/** Ship & own — the deployment truth from W5/W5B: Prism Cloud is included and
+ *  always live, host adapters let you bring your own, and every project exports
+ *  as a portable bundle. No lock-in on any tier. */
+export const SHIP_FACTS: readonly ShipFact[] = [
+  {
+    title: 'Prism Cloud, included',
+    body: 'One click ships your app to Prism Cloud — always live, on every tier, no extra keys or cost.',
+  },
+  {
+    title: 'Or bring your own host',
+    body: 'Typed adapters deploy to Vercel, Netlify or Cloudflare — and Modal, RunPod or Vast for backend and GPU work.',
+  },
+  {
+    title: 'Portable, always',
+    body: 'Export any project as a portable bundle — the graph, the assets, the manifest. You are never locked in.',
   },
 ] as const;
 
