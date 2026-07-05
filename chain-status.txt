@@ -1,2 +1,1 @@
-[02:05:14] SHELL-W5B: commit e49117a2 — shell-w5b: report — BOTH judges PASS 0 MUST-FIX (criteria PASS; advocate
-[02:05:20] SHELL-W5B: RUN COMPLETE — E15-E20 shipped, BOTH judges PASS 0 MUST-FIX, verify EXIT 0 + tenancy 35/35 + share 30/30 + collab 15/15, tsc 9=9, 12 tests. Marker: PRISM-SHELL-W5B: RUN COMPLETE
+[15:28:35] SHELL-W9: commit 53ef2c8d — shell-w9: RUN COMPLETE — finalized report + production evidence (frames,
