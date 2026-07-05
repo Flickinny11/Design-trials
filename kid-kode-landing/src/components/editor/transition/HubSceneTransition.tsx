@@ -35,6 +35,8 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three/webgpu';
 import * as TSLNS from 'three/tsl';
 import { useGraphEditorStore } from '@/stores/useGraphEditorStore';
+import { useGraphSourceStore } from '@/stores/useGraphSourceStore';
+import { resolveTransition } from '@/lib/prism-graph/transition-presets';
 import {
   useHubTransitionStore,
   requestHubNavigation,
@@ -65,19 +67,28 @@ function smooth01(x: number): number {
   return t * t * (3 - 2 * t);
 }
 
-/** Brass curtain TSL — closes from both edges, pleated + draped, lit seam. */
+/** Brass curtain TSL — closes from both edges, pleated + draped, lit seam. W8
+ *  E10: `uKind` selects the reveal (0 curtain / 1 wipe / 2 dissolve) and
+ *  `uAccent` tints the seam for wipe/dissolve. Kind 0 with brass accent is
+ *  byte-identical to the pre-E10 curtain. */
 function makeCurtainMaterial(): {
   material: THREE.Material;
   uCover: { value: number };
   uTime: { value: number };
+  uKind: { value: number };
+  uAccent: { value: THREE.Color };
 } {
   const {
-    uniform, vec3, vec4, float, smoothstep, mix, clamp, abs, max, sin, pow,
+    uniform, vec3, vec4, float, smoothstep, mix, clamp, abs, max, sin, pow, fract, step,
   } = TSL as unknown as Record<string, (...a: unknown[]) => any>;
   const screenUV = (TSL as any).screenUV;
 
   const uCover = uniform(0) as unknown as { value: number } & any;
   const uTime = uniform(0) as unknown as { value: number } & any;
+  const uKind = uniform(0) as unknown as { value: number } & any;
+  const uAccent = uniform(new THREE.Color('#d8a24a')) as unknown as {
+    value: THREE.Color;
+  } & any;
 
   const x = screenUV.x;
   const y = screenUV.y;
@@ -93,7 +104,19 @@ function makeCurtainMaterial(): {
   // Coverage alpha (feathered leading edges).
   const leftA = float(1).sub(smoothstep(leftEdge.sub(feather), leftEdge, x));
   const rightA = smoothstep(rightStart, rightStart.add(feather), x);
-  const coverageA = max(leftA, rightA);
+  const curtainA = max(leftA, rightA);
+
+  // W8 E10 — wipe: a single soft vertical edge sweeping left→right as cover grows.
+  const wipeA = float(1).sub(smoothstep(uCover.sub(feather), uCover.add(feather), x));
+  // W8 E10 — dissolve: per-pixel noise threshold crossed as cover grows.
+  const hn = fract(sin(x.mul(127.1).add(y.mul(311.7))).mul(43758.5453));
+  const dissolveA = smoothstep(hn.sub(float(0.05)), hn.add(float(0.05)), uCover);
+
+  // Select the reveal by kind (0/1/2) with hard step masks (branch-free).
+  const w0 = step(uKind, float(0.5));
+  const w1 = step(float(0.5), uKind).mul(step(uKind, float(1.5)));
+  const w2 = step(float(1.5), uKind);
+  const coverageA = curtainA.mul(w0).add(wipeA.mul(w1)).add(dissolveA.mul(w2));
 
   // Distance from each panel's own leading (inner) edge → drape shading.
   const dLeadL = leftEdge.sub(x); // >0 inside left panel
@@ -132,7 +155,10 @@ function makeCurtainMaterial(): {
   const centerFlash = smoothstep(float(0.04), float(0), abs(x.sub(0.5)))
     .mul(smoothstep(float(0.82), float(1.0), uCover));
   const glow = max(seam, centerFlash);
-  col = col.add(seamGold.mul(glow).mul(0.9));
+  // W8 E10 — wipe/dissolve tint the seam toward the preset accent; curtain
+  // (w1=w2=0) keeps the exact seamGold so the default is byte-stable.
+  const seamCol = mix(seamGold, uAccent, w1.add(w2).mul(0.6));
+  col = col.add(seamCol.mul(glow).mul(0.9));
 
   const material = new THREE.MeshBasicNodeMaterial();
   (material as any).colorNode = col;
@@ -143,7 +169,7 @@ function makeCurtainMaterial(): {
   material.toneMapped = false;
   material.side = THREE.DoubleSide;
 
-  return { material, uCover, uTime };
+  return { material, uCover, uTime, uKind, uAccent };
 }
 
 export function HubSceneTransition() {
@@ -159,6 +185,8 @@ export function HubSceneTransition() {
   const lastTokenRef = useRef(0);
   const coverRef = useRef(0);
   const pendingCommitRef = useRef(false);
+  // W8 E10 — the resolved preset speed for the in-flight transition (1 = base).
+  const speedRef = useRef(1);
 
   // Mount the camera-parented quad (the ChromeSlabLayer idiom) + the verify hook.
   useEffect(() => {
@@ -247,14 +275,28 @@ export function HubSceneTransition() {
     if (st.token !== lastTokenRef.current) {
       lastTokenRef.current = st.token;
       timerRef.current = 0; // a fresh request resets the close timer
+      // W8 E10 — resolve the TARGET hub's transition preset for this navigation.
+      const targetHub = useGraphSourceStore
+        .getState()
+        .hubs.find((h) => h.hubId === st.toHub);
+      const resolved = resolveTransition(targetHub?.transitionPreset);
+      built.uKind.value = resolved.webglKind;
+      built.uAccent.value.set(resolved.accent);
+      // speed>1 = slower; divide the base durations so higher speed → snappier.
+      speedRef.current = resolved.speed;
     }
+
+    // Preset-scaled phase durations (speed 1 = base timing).
+    const closeS = CLOSE_S * speedRef.current;
+    const holdS = HOLD_S * speedRef.current;
+    const openS = OPEN_S * speedRef.current;
 
     let cover = coverRef.current;
     const phase = st.phase;
     if (phase === 'closing') {
       timerRef.current += dt;
-      cover = smooth01(timerRef.current / CLOSE_S);
-      if (timerRef.current >= CLOSE_S) {
+      cover = smooth01(timerRef.current / closeS);
+      if (timerRef.current >= closeS) {
         cover = 1;
         // Defer the swap one frame so a FULLY-covered frame paints before the
         // heavy mount stalls the main thread (otherwise the stall freezes the
@@ -271,15 +313,15 @@ export function HubSceneTransition() {
         st._commit();
       } else {
         timerRef.current += dt;
-        if (timerRef.current >= HOLD_S) {
+        if (timerRef.current >= holdS) {
           st._setPhase('opening');
           timerRef.current = 0;
         }
       }
     } else if (phase === 'opening') {
       timerRef.current += dt;
-      cover = 1 - smooth01(timerRef.current / OPEN_S);
-      if (timerRef.current >= OPEN_S) {
+      cover = 1 - smooth01(timerRef.current / openS);
+      if (timerRef.current >= openS) {
         cover = 0;
         st._setPhase('idle');
         timerRef.current = 0;

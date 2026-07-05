@@ -15,6 +15,7 @@ import { useChromeSlab } from '@/components/editor/chrome-layer';
 import { useEditorDensity } from '@/stores/useEditorLayoutStore';
 import { BottomSheet } from '@/components/editor/layout/BottomSheet';
 import { HubBackgroundPicker } from './HubBackgroundPicker';
+import { SceneFxPicker } from './SceneFxPicker';
 
 const TABS: { id: InspectorTab; label: string; icon: string }[] = [
   { id: 'visual', label: 'Visual', icon: 'eye' },
@@ -148,6 +149,9 @@ function HubVisualTab({ hub }: { hub: PrismHub }) {
     <div className="p-5 space-y-4">
       {/* THREE-D-BACKGROUNDS — droppable, customizable 3D background asset picker. */}
       <HubBackgroundPicker hub={hub} />
+
+      {/* W8 E9/E10 — custom-cursor layer + scene-transition preset for this hub. */}
+      <SceneFxPicker hub={hub} />
 
       {hub.caption && (
         <>

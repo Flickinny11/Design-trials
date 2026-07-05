@@ -590,12 +590,33 @@ export interface CursorLayerConfig {
   hideNative?: boolean;
 }
 
+// W8 E10 — curated one-click hub/scene transition presets. The transition
+// machinery (HubSceneTransition WebGL curtain + TransitionVeil) reads the
+// TARGET hub's preset to pick the reveal look, veil, speed, and accent. Additive
+// (INV-18): absent → the default brass curtain, unchanged.
+export type HubTransitionKind =
+  | 'curtain' // pleated brass curtain closing from both edges (default)
+  | 'veil' // soft branded veil fade
+  | 'dissolve' // noise-threshold dissolve
+  | 'wipe' // directional linear WebGL wipe
+  | 'glass-sweep'; // refractive chrome slab sweep
+
+export interface HubTransitionPreset {
+  kind: HubTransitionKind;
+  /** Timing multiplier (0.5 fast … 2 slow). Default 1. */
+  speed?: number;
+  /** Accent hex for the transition tint / seam. */
+  accent?: string;
+}
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
   // W8 E9 — optional custom-cursor layer for this hub's built view (additive).
   cursor?: CursorLayerConfig;
+  // W8 E10 — optional one-click transition preset for navigating INTO this hub.
+  transitionPreset?: HubTransitionPreset;
   // POLISH pass / galaxy hub-planet visual identity (INV-18 additive). Absent
   // => deterministic per-hub default chosen by the galaxy renderer.
   identity?: HubPlanetIdentity;
