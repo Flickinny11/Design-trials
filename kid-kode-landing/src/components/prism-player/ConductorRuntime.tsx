@@ -13,10 +13,79 @@
 // (W5-D3). It renders EITHER here OR the certified engine-frame, never both at
 // once, so there is one visible scene (FP-R1/FP-R6).
 
-import { useEffect, useRef, useState } from 'react';
-import { getSharedNodeContext } from '@/lib/prism/runtime/shared-context';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Vector3 } from 'three';
+import { getSharedNodeContext, getSharedDriverHub } from '@/lib/prism/runtime/shared-context';
 import { mountFromGraphSource, type MountGraphResult } from '@/lib/prism/runtime/mount-graph';
-import type { GraphSource } from '@/lib/prism-graph/types';
+import { viewportFromNdc } from '@/lib/prism/runtime/shared/inview';
+import CustomCursorLayer from '@/components/shell/fx/CustomCursorLayer';
+import type { CursorLayerConfig, GraphSource } from '@/lib/prism-graph/types';
+
+// W8 E8/E9 — the shipped preview route is NOT the editor's GraphScene, so nothing
+// feeds the shared DriverHub here. Without this feed, scroll/pointer/inview-driven
+// animations sit static in the shared preview. This wires real input (pointer,
+// wheel→scroll, per-frame tick, per-node in-view projection) into the same hub the
+// built scene reads — so the shipped app is as reactive as the canvas preview.
+// Uses its own rAF (never touches sceneRoot.setBeforeRender — that's the camera
+// rail's slot). DOM-host scope (prism-player), same as useScrollTimeline.
+const SCROLL_WHEEL_RANGE = 1400;
+
+function startDriverFeed(el: HTMLElement, result: MountGraphResult): () => void {
+  const hub = getSharedDriverHub();
+  const camera = result.sceneRoot.camera;
+  const nodes = result.adapterResult.nodes;
+  let scrollProgress = 0;
+  const probe = new Vector3();
+
+  const onPointerMove = (e: PointerEvent) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+    hub.pointer.set({ x, y }, true);
+  };
+  const onPointerLeave = () => hub.pointer.set(hub.pointer.ndc, false);
+  const onWheel = (e: WheelEvent) => {
+    const next = scrollProgress + e.deltaY / SCROLL_WHEEL_RANGE;
+    scrollProgress = next < 0 ? 0 : next > 1 ? 1 : next;
+    hub.scroll.set(scrollProgress);
+    result.setScrollProgress(scrollProgress);
+  };
+  el.addEventListener('pointermove', onPointerMove, { passive: true });
+  el.addEventListener('pointerleave', onPointerLeave);
+  el.addEventListener('wheel', onWheel, { passive: true });
+
+  let raf = 0;
+  let last = performance.now();
+  const loop = (now: number) => {
+    raf = requestAnimationFrame(loop);
+    const dt = now - last;
+    last = now;
+    hub.frame.tick(dt);
+    nodes.forEach((obj, nodeId) => {
+      obj.updateWorldMatrix(true, false);
+      obj.getWorldPosition(probe);
+      probe.project(camera);
+      hub.inview.set(nodeId, viewportFromNdc({ x: probe.x, y: probe.y, z: probe.z }));
+    });
+  };
+  raf = requestAnimationFrame(loop);
+
+  return () => {
+    cancelAnimationFrame(raf);
+    el.removeEventListener('pointermove', onPointerMove);
+    el.removeEventListener('pointerleave', onPointerLeave);
+    el.removeEventListener('wheel', onWheel);
+  };
+}
+
+/** The cursor layer for the shipped app = the FIRST hub that declares one
+ *  (landing hub). Templates are effectively single-hub; multi-hub apps get the
+ *  landing hub's cursor. */
+function resolveCursor(graph: GraphSource): CursorLayerConfig | null {
+  for (const hub of graph.hubs) if (hub.cursor) return hub.cursor;
+  return null;
+}
 
 export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -30,6 +99,7 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
     if (!canvas || !container) return;
     let result: MountGraphResult | null = null;
     let cancelled = false;
+    let feedTeardown: (() => void) | null = null;
 
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
@@ -60,6 +130,12 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
           result.unmount();
           return;
         }
+        // W8 — wire real driver input now that the scene + node map exist.
+        try {
+          feedTeardown = startDriverFeed(container, result);
+        } catch {
+          /* input feed is best-effort; a static preview still renders */
+        }
         setStatus('ready');
       } catch (e) {
         if (!cancelled) {
@@ -73,6 +149,11 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
       cancelled = true;
       observer.disconnect();
       try {
+        feedTeardown?.();
+      } catch {
+        /* ignore */
+      }
+      try {
         result?.unmount();
       } catch {
         /* ignore */
@@ -80,9 +161,12 @@ export default function ConductorRuntime({ graph }: { graph: GraphSource }) {
     };
   }, [graph]);
 
+  const cursor = useMemo(() => resolveCursor(graph), [graph]);
+
   return (
     <div ref={containerRef} className="cr-runtime" data-status={status}>
       <canvas ref={canvasRef} className="cr-canvas" />
+      {status === 'ready' && cursor ? <CustomCursorLayer config={cursor} /> : null}
       {status === 'loading' ? (
         <div className="cr-overlay" role="status">
           <span className="cr-bead" aria-hidden />

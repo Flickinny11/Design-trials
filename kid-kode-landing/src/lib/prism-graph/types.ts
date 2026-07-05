@@ -573,10 +573,29 @@ export type HubPlanetIdentity =
   | 'deep-ocean'
   | 'ember-forge';
 
+// W8 E9 — optional custom-cursor layer for the BUILT app (generalizes the
+// editor's MagneticCursor into a config-driven, per-app cursor). Additive
+// (INV-18): absent → the OS cursor, unchanged. Rendered by the runtime hosts
+// (preview route + canvas preview-app), reduced-motion + coarse-pointer aware.
+export type CursorLayerStyle = 'ring' | 'halo' | 'dot' | 'beam';
+
+export interface CursorLayerConfig {
+  /** Visual style of the cursor layer. */
+  style: CursorLayerStyle;
+  /** Accent hex for the warm/active tint (defaults to a brass tone). */
+  accent?: string;
+  /** Magnetically snap toward interactive targets (M1 idiom). Default true. */
+  magnetic?: boolean;
+  /** Hide the OS cursor while active. Default false (augment, a11y-safe). */
+  hideNative?: boolean;
+}
+
 export interface PrismHub {
   hubId: string;
   title: string;
   caption?: string;
+  // W8 E9 — optional custom-cursor layer for this hub's built view (additive).
+  cursor?: CursorLayerConfig;
   // POLISH pass / galaxy hub-planet visual identity (INV-18 additive). Absent
   // => deterministic per-hub default chosen by the galaxy renderer.
   identity?: HubPlanetIdentity;

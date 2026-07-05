@@ -1,0 +1,69 @@
+/* CustomCursorLayer presets (W8 E9). Visual look lives here (CSS) so the
+ * component only ever sets transform / opacity / classList imperatively — the
+ * same chrome discipline MagneticCursor follows (no imperative
+ * background/border/boxShadow). Accent is driven by the `--pcx-accent` custom
+ * property set on the layer root. */
+
+.pcx-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  --pcx-accent: #d8a24a;
+}
+
+.pcx-node {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  will-change: transform;
+  transition: opacity 200ms ease;
+}
+
+.pcx-ring {
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+}
+.pcx-ring.is-warm {
+  border-color: var(--pcx-accent);
+  box-shadow: 0 0 22px -6px var(--pcx-accent);
+}
+
+.pcx-halo {
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--pcx-accent) 27%, transparent) 0%,
+    transparent 68%
+  );
+  mix-blend-mode: screen;
+}
+
+.pcx-beam {
+  width: 26px;
+  height: 3px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent, var(--pcx-accent));
+}
+
+.pcx-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--pcx-accent);
+  box-shadow: 0 0 10px -2px var(--pcx-accent);
+}
+.pcx-dot--lg {
+  width: 10px;
+  height: 10px;
+}
+
+body.pcx-hide-native,
+body.pcx-hide-native * {
+  cursor: none !important;
+}
