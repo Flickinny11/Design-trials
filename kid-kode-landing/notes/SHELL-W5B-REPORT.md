@@ -106,7 +106,7 @@ project (`care-config.json`); `care` tRPC router.
 | tsc 0-new | **9 = 9** baseline (pre-existing errors only). |
 | full verify + tenancy | **EXIT 0** — verify:prism 14/14 · galaxy 7/7 · global-shell 6/6 · parity 6/6 · schema 338/338 · **tenancy 35/35** · share-matrix 30/30 · collab 15/15. |
 | Headless W5B suite | **11/11 pass** (`tests/unit/shell-w5b-ship-anywhere.test.ts`): E15×3, E16×2, E17×2, E18, E19, E20, §14.1 gate. |
-| Dual fresh-context judges 0 MUST-FIX | **PASS** — `prism-criteria-reviewer`: PASS, 0 MUST-FIX (all E15–E20 met, I5/I10/I11 hold, deviations-before-code confirmed). `user-advocate`: claims 1–4 PASS on cited frames; the one MUST-FIX was an evidence gap (E20 care card scrolled past), closed with `01c-managed-care.png` + the Stripe-chip material treatment. |
+| Dual fresh-context judges 0 MUST-FIX | **PASS** — `prism-criteria-reviewer`: **PASS, 0 MUST-FIX** (all E15–E20 met by real/typed/used code, I5/I10/I11 hold, deviations-before-code confirmed; 3 non-blocking nits). `user-advocate` (after re-review of the new evidence): **PLEASED / PASS, 0 MUST-FIX** — all 5 claims pass on cited frames (it read `01c-managed-care.png` + re-measured the material chip directly); the earlier evidence-gap MUST-FIX is resolved. |
 
 ## Deviations (recorded BEFORE code — `docs/spec-deviations-prism.md` §W5B)
 - **W5B-D1** Post-ship verification runs through an injectable fetch seam; in
