@@ -134,23 +134,96 @@ export async function* runConductor(
 
   const writeStatus = async (
     phase: ConductorStatus['phase'],
-    assembled: AssembledGraph | null,
+    counts: { hubCount: number; nodeCount: number },
+    origin: 'stub' | 'live' | null,
     latch: VerifyLatch | null,
   ): Promise<void> => {
     const status: ConductorStatus = {
       v: PRISM_CONDUCTOR_CONTRACT_VERSION,
       projectId: input.projectId,
       phase,
-      hubCount: assembled ? assembled.graph.hubs.length : (existing?.hubCount ?? 0),
-      nodeCount: assembled ? assembled.graph.nodes.length : (existing?.nodeCount ?? 0),
+      hubCount: counts.hubCount,
+      nodeCount: counts.nodeCount,
       directionId: direction.id,
       latch,
       modelId,
-      origin: assembled ? blueprint.origin : (existing?.origin ?? null),
+      origin,
       updatedAt: nowIso(),
     };
     await store.saveConductorStatus(ctx.tenantId, input.projectId, status);
   };
+
+  // ── VERIFY → DEPLOY → LATCH → finalize (shared by fresh build + resume) ──────
+  async function* finalize(
+    fullGraph: GraphSource,
+    counts: { hubCount: number; nodeCount: number },
+    planOrigin: 'stub' | 'live' | null,
+  ): AsyncGenerator<AgentStreamEvent> {
+    if (aborted()) return;
+    yield step('verify', 'Verifying the build', 'behavioral + visual (§11)');
+    const behavioral = runBehavioralVerify(fullGraph);
+    const visual = runVisualVerify(fullGraph, direction);
+    for (const l of behavioral.evidence) yield line('verify', `● ${l}\n`);
+    for (const l of visual.evidence) yield line('verify', `◆ ${l}\n`);
+    yield done('verify', behavioral.status === 'pass' && visual.status === 'pass' ? 'ok' : 'error');
+
+    if (aborted()) return;
+    yield step('deploy', 'Deploying shareable preview', 'prism-cloud · E14');
+    const deployRes = await runDeploy({
+      tenantId: ctx.tenantId,
+      projectId: input.projectId,
+      kind: 'prism-cloud',
+      appName,
+      appOrigin: ctx.appOrigin,
+      nowIso: nowIso(),
+    });
+    let deployCheck: VerifyCheck;
+    if (deployRes) {
+      deployCheck = buildDeployCheck(deployRes.record);
+      yield line('deploy', `preview: ${deployRes.record.previewUrl}\n`);
+      yield line('deploy', `mode: ${deployRes.record.mode} · snapshot pinned\n`);
+      if (deployRes.manifest) {
+        yield line('deploy', `host-config (${deployRes.manifest.kind}): ${JSON.stringify(deployRes.manifest.config)}\n`);
+      }
+      yield done('deploy', 'ok');
+    } else {
+      deployCheck = { status: 'fail', label: 'Deploy — shareable preview', evidence: ['deploy failed'] };
+      yield done('deploy', 'error');
+    }
+
+    const latch = composeLatch(behavioral, visual, deployCheck, pendingAdvocate(), nowIso());
+    await store.setBuildState(ctx.tenantId, input.projectId, 'built');
+    await writeStatus('built', counts, planOrigin, latch);
+    await store.createVersion(ctx.tenantId, input.projectId, 'conductor: verified');
+
+    const badge = latch.verifiedShippable
+      ? '✓ Verified shippable — behavioral, visual, and deploy checks pass (fresh-context advocate pass still gates final "done").'
+      : '⚠ Build complete, but verification gaps remain — see the checks above.';
+    for (const chunk of chunkText(` ${badge}${deployRes ? ` Open your preview: ${deployRes.record.previewUrl}` : ''}`)) {
+      if (aborted()) return;
+      yield { type: 'text-delta', delta: chunk };
+      await sleep(24, signal);
+    }
+    yield { type: 'message-end', reason: 'complete' };
+  }
+
+  // ── RESUME (idempotent) — a built project without an explicit rebuild
+  //    re-verifies + re-deploys its existing graph rather than re-authoring
+  //    (lock H: interruptible + resumable). ──────────────────────────────────
+  if (alreadyBuilt) {
+    const existingGraph = await store.getGraph(ctx.tenantId, input.projectId);
+    const nodes = (existingGraph as { nodes?: unknown[] } | null)?.nodes;
+    if (existingGraph && Array.isArray(nodes) && nodes.length > 0) {
+      const g = existingGraph as unknown as GraphSource;
+      yield* finalize(
+        g,
+        { hubCount: g.hubs?.length ?? existing?.hubCount ?? 0, nodeCount: g.nodes?.length ?? existing?.nodeCount ?? 0 },
+        existing?.origin ?? null,
+      );
+      return;
+    }
+    // No usable graph on disk — fall through to a fresh build.
+  }
 
   // ── PLAN ──────────────────────────────────────────────────────────────────
   if (aborted()) return;
@@ -163,17 +236,24 @@ export async function* runConductor(
   yield line('plan', `nodes planned: ${assembled.graph.nodes.length}\n`);
   yield done('plan', 'ok');
 
+  const counts = { hubCount: assembled.graph.hubs.length, nodeCount: assembled.graph.nodes.length };
   // Persist the STRUCTURE (hubs + root, no content) — the plan boundary
-  // checkpoint (streamed hydration begins here).
-  const structureGraph: GraphSource = {
-    hubs: assembled.graph.hubs,
-    nodes: [],
-    edges: assembled.graph.edges,
-    rootNodes: assembled.graph.rootNodes,
-  };
-  await store.saveGraph(ctx.tenantId, input.projectId, graphRecord(structureGraph));
-  await store.createVersion(ctx.tenantId, input.projectId, 'conductor: plan');
-  await writeStatus('planning', assembled, null);
+  // checkpoint (streamed hydration begins here). Guarded: only blank the live
+  // graph on a FRESH build; on an explicit rebuild of a built project we keep
+  // the prior graph live until the new nodes land, so an abort mid-plan never
+  // strands a previously-built project with a nodeless graph.
+  const isFreshBuild = existing?.phase !== 'built';
+  if (isFreshBuild) {
+    const structureGraph: GraphSource = {
+      hubs: assembled.graph.hubs,
+      nodes: [],
+      edges: assembled.graph.edges,
+      rootNodes: assembled.graph.rootNodes,
+    };
+    await store.saveGraph(ctx.tenantId, input.projectId, graphRecord(structureGraph));
+    await store.createVersion(ctx.tenantId, input.projectId, 'conductor: plan');
+  }
+  await writeStatus('planning', counts, blueprint.origin, null);
 
   // ── BUILD (config-bounded batches, streamed hydration) ──────────────────────
   if (aborted()) return;
@@ -222,57 +302,8 @@ export async function* runConductor(
     await sleep(24, signal);
   }
 
-  // ── VERIFY (§11 behavioral + visual) ────────────────────────────────────────
-  if (aborted()) return;
-  yield step('verify', 'Verifying the build', 'behavioral + visual (§11)');
-  const behavioral = runBehavioralVerify(fullGraph);
-  const visual = runVisualVerify(fullGraph, direction);
-  for (const l of behavioral.evidence) yield line('verify', `● ${l}\n`);
-  for (const l of visual.evidence) yield line('verify', `◆ ${l}\n`);
-  const verifyOk = behavioral.status === 'pass' && visual.status === 'pass';
-  yield done('verify', verifyOk ? 'ok' : 'error');
-
-  // ── DEPLOY shareable preview (E14) ──────────────────────────────────────────
-  if (aborted()) return;
-  yield step('deploy', 'Deploying shareable preview', 'prism-cloud · E14');
-  const deployRes = await runDeploy({
-    tenantId: ctx.tenantId,
-    projectId: input.projectId,
-    kind: 'prism-cloud',
-    appName,
-    appOrigin: ctx.appOrigin,
-    nowIso: nowIso(),
-  });
-  let deployCheck: VerifyCheck;
-  if (deployRes) {
-    deployCheck = buildDeployCheck(deployRes.record);
-    yield line('deploy', `preview: ${deployRes.record.previewUrl}\n`);
-    yield line('deploy', `mode: ${deployRes.record.mode} · snapshot pinned\n`);
-    if (deployRes.manifest) {
-      yield line('deploy', `host-config (${deployRes.manifest.kind}): ${JSON.stringify(deployRes.manifest.config)}\n`);
-    }
-    yield done('deploy', 'ok');
-  } else {
-    deployCheck = { status: 'fail', label: 'Deploy — shareable preview', evidence: ['deploy failed'] };
-    yield done('deploy', 'error');
-  }
-
-  // ── LATCH + finalize (I9) ───────────────────────────────────────────────────
-  const latch = composeLatch(behavioral, visual, deployCheck, pendingAdvocate(), nowIso());
-  await store.setBuildState(ctx.tenantId, input.projectId, 'built');
-  await writeStatus('built', assembled, latch);
-  await store.createVersion(ctx.tenantId, input.projectId, 'conductor: verified');
-
-  const badge = latch.verifiedShippable
-    ? '✓ Verified shippable — behavioral, visual, and deploy checks pass (fresh-context advocate pass still gates final "done").'
-    : '⚠ Build complete, but verification gaps remain — see the checks above.';
-  for (const chunk of chunkText(` ${badge}${deployRes ? ` Open your preview: ${deployRes.record.previewUrl}` : ''}`)) {
-    if (aborted()) return;
-    yield { type: 'text-delta', delta: chunk };
-    await sleep(24, signal);
-  }
-
-  yield { type: 'message-end', reason: 'complete' };
+  // ── VERIFY → DEPLOY → LATCH → finalize (I9) ─────────────────────────────────
+  yield* finalize(fullGraph, counts, blueprint.origin);
 }
 
 /** Split prose into ~word-pair chunks so streaming reads as generation. */

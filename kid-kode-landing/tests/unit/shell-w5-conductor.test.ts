@@ -143,5 +143,27 @@ describe('W5 Conductor pipeline (dry-run, headless)', () => {
     const preview = await readPreviewGraph(deploy.token);
     expect(preview).not.toBeNull();
     expect((preview!.graph as { nodes: unknown[] }).nodes.length).toBe(graph!.nodes.length);
+
+    // 7. RESUME (idempotent) — a second run with no rebuild re-verifies +
+    //    re-deploys the EXISTING graph rather than re-authoring: no new
+    //    'conductor: plan' checkpoint, a fresh deploy, still built + shippable.
+    const plansBefore = versions!.filter((v) => v.label === 'conductor: plan').length;
+    const deploysBefore = deploys!.length;
+    for await (const _ of runConductor(
+      { projectId: project.id },
+      { tenantId, appOrigin: 'http://localhost:3000' },
+    )) {
+      void _;
+    }
+    const versionsAfter = await store.listVersions(tenantId, project.id);
+    const plansAfter = versionsAfter!.filter((v) => v.label === 'conductor: plan').length;
+    expect(plansAfter).toBe(plansBefore); // re-verify, not re-author
+    const deploysAfter = await store.listDeploys(tenantId, project.id);
+    expect(deploysAfter!.length).toBeGreaterThan(deploysBefore); // fresh preview
+    const graphAfter = (await store.getGraph(tenantId, project.id)) as { nodes: unknown[] } | null;
+    expect(graphAfter!.nodes.length).toBe(graph!.nodes.length); // graph untouched
+    const statusAfter = await store.getConductorStatus(tenantId, project.id);
+    expect(statusAfter?.phase).toBe('built');
+    expect(statusAfter?.latch?.verifiedShippable).toBe(true);
   });
 });
