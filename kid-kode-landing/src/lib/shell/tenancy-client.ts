@@ -10,14 +10,19 @@ import { createTRPCClient, httpBatchStreamLink } from '@trpc/client';
 import { z } from 'zod';
 import type { AppRouter } from '../../server/trpc/router';
 import {
+  prismAccountSettingsSchema,
   prismProjectSchema,
   prismProjectVersionSchema,
   prismUsageOutputSchema,
+  tenancyMeOutputSchema,
   versionRestoreOutputSchema,
+  type AccountSettingsSetInput,
+  type PrismAccountSettings,
   type PrismProject,
   type PrismProjectVersion,
   type PrismUsageOutput,
   type ProjectCreateInput,
+  type TenancyMeOutput,
   type VersionRestoreOutput,
 } from '../../../packages/shared-interfaces/src/prism-tenancy';
 
@@ -96,4 +101,26 @@ export async function getGraph(
 
 export async function getUsage(): Promise<PrismUsageOutput> {
   return prismUsageOutputSchema.parse(await trpc.tenancy.usage.get.query());
+}
+
+// ── W7 account (me + settings + danger zone) ─────────────────────────────────
+
+export async function getMe(): Promise<TenancyMeOutput> {
+  return tenancyMeOutputSchema.parse(await trpc.tenancy.me.query());
+}
+
+export async function getSettings(): Promise<PrismAccountSettings> {
+  return prismAccountSettingsSchema.parse(await trpc.tenancy.settings.get.query());
+}
+
+export async function setSettings(
+  input: AccountSettingsSetInput,
+): Promise<PrismAccountSettings> {
+  return prismAccountSettingsSchema.parse(
+    await trpc.tenancy.settings.set.mutate(input),
+  );
+}
+
+export async function deleteAccount(confirmName: string): Promise<{ deleted: boolean }> {
+  return trpc.tenancy.account.delete.mutate({ confirmName });
 }

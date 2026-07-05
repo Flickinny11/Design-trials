@@ -296,6 +296,7 @@
   flex-direction: column;
 }
 .bw1-preview {
+  position: relative; /* W7: bounds the live-presence overlay */
   min-width: 0;
   min-height: 0;
   display: flex;
@@ -1728,3 +1729,202 @@
 .sw-version-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sw-export { width: 100%; text-align: center; }
 .sw-latch-badge { align-self: center; }
+
+/* ── W7 live presence + org sharing ─────────────────────────────────────── */
+
+/* Presence avatar stack (TopBar) */
+.bw1-avatars {
+  display: inline-flex;
+  align-items: center;
+}
+.bw1-avatar {
+  width: 24px;
+  height: 24px;
+  margin-left: -7px;
+  border-radius: 50%;
+  border: 2px solid var(--pp-elev-1, #14141a);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  color: #0c0c10;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+.bw1-avatar:first-child { margin-left: 0; }
+.bw1-avatar-more {
+  background: var(--pp-elev-4) !important;
+  color: var(--pp-text-hi) !important;
+}
+
+/* Presence overlay above the engine preview (pointer-events: none) */
+.bw1-presence {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 6;
+}
+.bw1-cursor {
+  position: absolute;
+  transform: translate(-2px, -2px);
+  transition:
+    left 90ms linear,
+    top 90ms linear;
+  will-change: left, top;
+}
+.bw1-cursor-label {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--pp-radius-pill, 999px);
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #0c0c10;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+.bw1-cursor-editing {
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.92);
+}
+.bw1-presence-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pp-text-mid);
+}
+.bw1-presence-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pp-red, #e4322b);
+  box-shadow: 0 0 6px rgba(var(--pp-red-rgb, 228, 50, 43), 0.8);
+}
+
+/* Share dialog */
+.bw1-share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 4, 8, 0.62);
+  backdrop-filter: blur(3px);
+  z-index: 60;
+  animation: bw1-share-fade var(--pp-motion-base, 200ms) var(--pp-ease-settle, ease);
+}
+.bw1-share {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  z-index: 61;
+  padding: 22px;
+  background: var(--pp-elev-2, #16161c);
+  border: var(--pp-hairline-w, 1px) solid var(--pp-hairline-strong, rgba(255, 255, 255, 0.14));
+  border-radius: var(--pp-radius-3, 14px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+  color: var(--pp-text, #e9e9ee);
+  animation: bw1-share-rise var(--pp-motion-base, 200ms) var(--pp-ease-weight, ease);
+}
+@keyframes bw1-share-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bw1-share-rise {
+  from { opacity: 0; transform: translate(-50%, -46%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+.bw1-share-title {
+  margin: 0 0 4px;
+  font-family: var(--pp-font-display, serif);
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--pp-text-hi, #fff);
+}
+.bw1-share-body { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+.bw1-share-lead { margin: 0; font-size: 14px; color: var(--pp-text-hi); }
+.bw1-share-muted { margin: 0; font-size: 12.5px; line-height: 1.55; color: var(--pp-text-mid); }
+.bw1-share-cta {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 8px 14px;
+  border-radius: var(--pp-radius-2, 9px);
+  background: var(--pp-red, #e4322b);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.bw1-share-field { display: flex; flex-direction: column; gap: 6px; }
+.bw1-share-field > span {
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-text-low);
+}
+.bw1-share-select,
+.bw1-share-linkinput {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--pp-elev-1, #101015);
+  border: var(--pp-hairline-w, 1px) solid var(--pp-hairline, rgba(255, 255, 255, 0.1));
+  border-radius: var(--pp-radius-2, 9px);
+  color: var(--pp-text, #e9e9ee);
+  font-size: 12.5px;
+}
+.bw1-share-roles { display: flex; flex-direction: column; gap: 6px; border: 0; margin: 0; padding: 0; }
+.bw1-share-roles legend {
+  font-family: var(--pp-font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--pp-text-low);
+  margin-bottom: 4px;
+}
+.bw1-share-role {
+  display: grid;
+  grid-template-columns: 16px auto 1fr;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 10px;
+  border: var(--pp-hairline-w, 1px) solid var(--pp-hairline, rgba(255, 255, 255, 0.1));
+  border-radius: var(--pp-radius-2, 9px);
+  cursor: pointer;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+.bw1-share-role[data-active='true'] {
+  border-color: var(--pp-hairline-red, rgba(228, 50, 43, 0.5));
+  background: rgba(var(--pp-red-rgb, 228, 50, 43), 0.06);
+}
+.bw1-share-role-name { font-size: 13px; font-weight: 600; text-transform: capitalize; color: var(--pp-text-hi); }
+.bw1-share-role-desc { font-size: 11px; color: var(--pp-text-mid); text-align: right; }
+.bw1-share-link { display: flex; gap: 8px; }
+.bw1-share-copy,
+.bw1-share-close {
+  padding: 8px 14px;
+  background: var(--pp-elev-4, #22222a);
+  border: var(--pp-hairline-w, 1px) solid var(--pp-hairline, rgba(255, 255, 255, 0.12));
+  border-radius: var(--pp-radius-2, 9px);
+  color: var(--pp-text-hi);
+  font-size: 12px;
+  cursor: pointer;
+}
+.bw1-share-close { margin-top: 16px; width: 100%; }
+.bw1-share-note { margin: 0; font-size: 12px; color: var(--pp-text-mid); }

@@ -18,14 +18,35 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PrismViewMode } from '../../../../packages/shared-interfaces/src/prism-shell';
 import { useBuilderStore } from '@/lib/shell/builder-store';
+import { useCollabStore } from '@/lib/shell/collab-store';
 import { useEngineBridge } from '@/lib/shell/engine/use-engine-bridge';
 import { getStubProject } from '@/lib/shell/project-stub';
 import ChatRegion from './ChatRegion';
+import PresenceLayer from './PresenceLayer';
 import PreviewRegion from './PreviewRegion';
 import RightTabs, { type BuilderTab } from './RightTabs';
 import TopBar from './TopBar';
 
 const ENGINE_CONTAINER_ID = 'prism-engine-container';
+
+/** The viewer's resolved access to this project (W7). `canCollaborate` gates
+ *  the enterprise-only multiplayer surface; when false, NO collab chrome
+ *  mounts (non-enterprise tenants see no multiplayer surface). */
+export interface BuilderAccess {
+  viewer: { actorId: string; displayName: string } | null;
+  role: 'owner' | 'edit' | 'comment' | 'view' | null;
+  enterprise: boolean;
+  canCollaborate: boolean;
+  canManageSharing: boolean;
+  canEdit: boolean;
+}
+
+/** Client-side presence tint seed (matches colorForSeed's domain). */
+function seedFrom(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return h;
+}
 
 const PANES = [
   { key: 'chat', label: 'Chat' },
@@ -36,6 +57,7 @@ export default function BuilderShell({
   projectId,
   projectName,
   buildState,
+  access,
 }: {
   projectId: string;
   /** Real tenant project name (W1A) — falls back to the W1 humanized slug
@@ -44,6 +66,8 @@ export default function BuilderShell({
   /** Build ladder position (W2). `plan-pending` = an approved Build Brief was
    *  handed off from Guided Build intake; the Conductor authors the plan in W5. */
   buildState?: string | null;
+  /** W7 — the viewer's resolved access (null for anon/stub). */
+  access?: BuilderAccess | null;
 }) {
   const stub = getStubProject(projectId);
   const project = projectName ? { ...stub, name: projectName } : stub;
@@ -53,6 +77,41 @@ export default function BuilderShell({
   });
 
   const [activeTab, setActiveTab] = useState<BuilderTab>('inspector');
+
+  // ── W7 live multiplayer (enterprise-gated) ───────────────────────────────
+  // Connect the CollabRoom channel ONLY when the viewer may collaborate
+  // (enterprise org + edit/owner). Otherwise no socket opens and no presence
+  // chrome renders — non-enterprise tenants see no multiplayer surface.
+  const collabEnabled = Boolean(access?.canCollaborate && access?.viewer);
+  useEffect(() => {
+    if (!collabEnabled || !access?.viewer) return;
+    const { actorId, displayName } = access.viewer;
+    useCollabStore
+      .getState()
+      .connect(projectId, { actorId, displayName, colorSeed: seedFrom(actorId) });
+    return () => useCollabStore.getState().disconnect();
+  }, [collabEnabled, projectId, access?.viewer]);
+
+  const selectedNodeIdForPresence = useBuilderStore((s) => s.selectedNodeId);
+  const onPreviewPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (!collabEnabled) return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / Math.max(1, rect.width);
+      const y = (e.clientY - rect.top) / Math.max(1, rect.height);
+      useCollabStore
+        .getState()
+        .sendCursor(
+          { x, y },
+          selectedNodeIdForPresence ? [selectedNodeIdForPresence] : [],
+          selectedNodeIdForPresence ?? undefined,
+        );
+    },
+    [collabEnabled, selectedNodeIdForPresence],
+  );
+  const onPreviewPointerLeave = useCallback(() => {
+    if (collabEnabled) useCollabStore.getState().sendCursor(undefined, []);
+  }, [collabEnabled]);
 
   // A user click in the engine pulls the Inspector forward (shell highlight
   // half of the Visual-Edit round-trip). Command echoes do NOT (the shell
@@ -90,7 +149,11 @@ export default function BuilderShell({
 
   return (
     <div className="bw1-root">
-      <TopBar projectName={project.name} projectId={project.id} />
+      <TopBar
+        projectName={project.name}
+        projectId={project.id}
+        access={access ?? null}
+      />
 
       <nav className="bw1-pane-nav" aria-label="Builder panes">
         {PANES.map((p, i) => (
@@ -114,7 +177,12 @@ export default function BuilderShell({
           <ChatRegion projectId={project.id} />
         </section>
         <div className="bw1-stage">
-          <section className="bw1-preview" aria-label="Engine preview">
+          <section
+            className="bw1-preview"
+            aria-label="Engine preview"
+            onPointerMove={onPreviewPointerMove}
+            onPointerLeave={onPreviewPointerLeave}
+          >
             <PreviewRegion
               containerId={ENGINE_CONTAINER_ID}
               graphRef={project.graphRef}
@@ -125,6 +193,7 @@ export default function BuilderShell({
               sendCommand={sendCommand}
               onSelectMode={onSelectMode}
             />
+            {collabEnabled ? <PresenceLayer /> : null}
           </section>
           <aside className="bw1-tabs" aria-label="Builder panels">
             <RightTabs

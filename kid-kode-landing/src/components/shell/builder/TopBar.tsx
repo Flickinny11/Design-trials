@@ -1,23 +1,28 @@
 'use client';
 
-// PRISM SHELL — BUILDER TOP BAR (SHELL W1 → W2 TASK 0)
+// PRISM SHELL — BUILDER TOP BAR (SHELL W1 → W7)
 //
-// Project identity (left) · model selector + share stub (right). The 3D mode
-// switch/indicator island RELOCATED to the preview frame's own header per
-// the founder addendum (2026-07-04): the top bar keeps project name, model
-// selector, share — nothing mode-related lives here anymore. Working-surface
-// chrome per decision A: machined hairlines and mono voice.
+// Project identity (left) · presence avatars + model selector + share (right).
+// The 3D mode switch lives in the preview frame's own header (founder addendum
+// 2026-07-04). W7: the Share stub is replaced by the real org-scoped ShareDialog
+// (enterprise-gated), and — when a live multiplayer room is joined — a presence
+// avatar stack shows who's here. Non-enterprise sessions render neither the
+// avatars (the room never connects) nor any org-sharing controls.
 
-import * as Popover from '@radix-ui/react-popover';
 import { useBuilderStore } from '@/lib/shell/builder-store';
+import type { BuilderAccess } from './BuilderShell';
 import ModelSelector from './ModelSelector';
+import PresenceAvatars from './PresenceAvatars';
+import ShareDialog from './ShareDialog';
 
 export default function TopBar({
   projectName,
   projectId,
+  access,
 }: {
   projectName: string;
   projectId: string;
+  access?: BuilderAccess | null;
 }) {
   const engineKind = useBuilderStore((s) => s.engineKind);
   const engineStatus = useBuilderStore((s) => s.engineStatus);
@@ -33,11 +38,15 @@ export default function TopBar({
           <span className="bw1-project-name">{projectName}</span>
           <span className="bw1-project-meta">
             {projectId} · builder
+            {access?.role && access.role !== 'owner' ? ` · shared (${access.role})` : ''}
           </span>
         </div>
       </div>
 
       <div className="bw1-topbar-actions">
+        {access?.canCollaborate && access.viewer ? (
+          <PresenceAvatars selfName={access.viewer.displayName} />
+        ) : null}
         <span
           className="bw1-engine-chip"
           data-status={engineStatus}
@@ -47,23 +56,12 @@ export default function TopBar({
           {engineKind === 'real' ? 'Engine' : engineKind === 'cortex-iframe' ? 'Cortex' : 'Engine · stub'}
         </span>
         <ModelSelector />
-        <Popover.Root>
-          <Popover.Trigger asChild>
-            <button type="button" className="bw1-topbtn" aria-label="Share this project">
-              <span className="bw1-topbtn-kicker">Share</span>
-              <span className="bw1-topbtn-value">Private</span>
-            </button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content className="bw1-pop" sideOffset={8} align="end">
-              <p className="bw1-pop-kicker">Sharing</p>
-              <p className="bw1-pop-body">
-                This project is private to you. Org-scoped sharing — private · view ·
-                comment · edit — and live multiplayer land in W7 (spec §6.9, decision E).
-              </p>
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+        <ShareDialog
+          projectId={projectId}
+          role={access?.role ?? null}
+          canManageSharing={Boolean(access?.canManageSharing)}
+          enterprise={Boolean(access?.enterprise)}
+        />
       </div>
     </header>
   );

@@ -1,1 +1,1 @@
-[22:22:14] SHELL-W7: still building · 35m elapsed · agent up · 1111 commits · last: shell-w7: sharing tRPC router (server-side permission matrix) — org.crea
+[22:32:46] SHELL-W7: still building · 46m elapsed · agent up · 1112 commits · last: shell-w7: access-gated graph.get/save + project.get (edit grants modify;
