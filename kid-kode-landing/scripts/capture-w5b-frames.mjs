@@ -152,6 +152,15 @@ async function main() {
     await page.locator('.sw-panel').screenshot({ path: join(OUT, '01a-ship-panel.png') });
     console.log('[frames] 01a-ship-panel.png');
   } catch (e) { console.log('[frames] ship panel crop failed:', String(e).slice(0, 120)); }
+  // Focused crop of the Managed-Care card (E20) — scroll it into view first.
+  try {
+    const careEl = page.locator('.sw-care');
+    await careEl.scrollIntoViewIfNeeded({ timeout: 4000 });
+    await page.waitForTimeout(400);
+    await careEl.screenshot({ path: join(OUT, '01c-managed-care.png') });
+    summary.careLabel = await careEl.innerText();
+    console.log('[frames] 01c-managed-care.png');
+  } catch (e) { console.log('[frames] care crop failed:', String(e).slice(0, 120)); }
 
   // Deploy a backend host so a backend ship shows post-ship verified.
   try {

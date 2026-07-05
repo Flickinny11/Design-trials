@@ -4,5 +4,6 @@
   "recs": 2,
   "care": true,
   "cards": 7,
-  "domainResults": 5
+  "domainResults": 5,
+  "careLabel": "MANAGED CARE (E20)\nPRO / ENTERPRISE\n\nManaged Care — $39/mo per app (auto fixes, self-heal, post-deploy checks). Billing lands with the billing phase.\n\nFree path always on: prompt Prism to fix or optimize your shipped app any time — no care tier needed."
 }

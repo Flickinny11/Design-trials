@@ -98,7 +98,7 @@ function CapabilityCards({
         const brand = getBrandAsset(card.brandMark);
         return (
           <div key={card.category} className="bw1-cap-card">
-            <span className="bw1-cap-mark" aria-hidden style={{ background: brand.accent }}>
+            <span className="bw1-cap-mark" aria-hidden style={{ backgroundColor: brand.accent }}>
               {brand.monogram}
             </span>
             <div className="bw1-cap-body">
