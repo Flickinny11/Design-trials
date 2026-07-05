@@ -18,6 +18,8 @@ import type {
   DeployCategory,
   DeployTargetDescriptor,
   DeployTargetKind,
+  HostRequirements,
+  InferenceContract,
 } from '../../../packages/shared-interfaces/src/prism-conductor';
 
 /** The generated host-config manifest — what a given host needs to run the
@@ -39,6 +41,8 @@ interface TargetSpec {
    *  always available (prism-cloud). */
   requiredEnv: string[];
   note: string;
+  /** The config artifact(s) this host needs, described (E15 requirements). */
+  configArtifacts: string[];
   /** Host-specific config generator (dry-run evidence + live config source). */
   config(appName: string, previewPath: string): Record<string, string>;
 }
@@ -50,6 +54,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'frontend',
     requiredEnv: [],
     note: 'Instant shareable preview — the runtime IS the product. No config needed.',
+    configArtifacts: ['prism-runtime.json'],
     config: (appName, previewPath) => ({
       framework: 'prism-runtime',
       entry: previewPath,
@@ -62,6 +67,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'frontend',
     requiredEnv: ['VERCEL_TOKEN'],
     note: 'Global edge network + preview deployments. Recommended for frontend.',
+    configArtifacts: ['vercel.json', 'next.config.js'],
     config: (appName) => ({
       framework: 'nextjs',
       buildCommand: 'next build',
@@ -75,6 +81,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'frontend',
     requiredEnv: ['NETLIFY_AUTH_TOKEN'],
     note: 'Frontend hosting with deploy previews and forms.',
+    configArtifacts: ['netlify.toml'],
     config: (appName) => ({
       build: 'next build',
       publish: '.next',
@@ -87,6 +94,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'frontend',
     requiredEnv: ['CLOUDFLARE_API_TOKEN', 'CLOUDFLARE_ACCOUNT_ID'],
     note: 'Workers + Pages at the edge. At-cost domains via the Registrar API.',
+    configArtifacts: ['wrangler.toml'],
     config: (appName) => ({
       compatibility_date: '2026-07-01',
       name: appName.toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 52),
@@ -99,6 +107,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'backend',
     requiredEnv: ['MODAL_TOKEN_ID', 'MODAL_TOKEN_SECRET'],
     note: 'Serverless GPU for backend/model nodes (E19). Per-second billing.',
+    configArtifacts: ['modal_app.py', 'requirements.txt'],
     config: (appName) => ({
       app: appName.toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 52),
       gpu: 'A10G',
@@ -111,6 +120,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'backend',
     requiredEnv: ['RUNPOD_API_KEY'],
     note: 'GPU pods + serverless endpoints for backend/model nodes (E19).',
+    configArtifacts: ['handler.py', 'Dockerfile'],
     config: (appName) => ({
       endpoint: appName.toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 52),
       gpuType: 'NVIDIA A40',
@@ -122,6 +132,7 @@ const TARGETS: readonly TargetSpec[] = [
     category: 'backend',
     requiredEnv: ['VAST_API_KEY'],
     note: 'Low-cost GPU marketplace for backend/model workloads (E19).',
+    configArtifacts: ['onstart.sh', 'Dockerfile'],
     config: (appName) => ({
       image: 'prism/runtime:latest',
       instance: appName.toLowerCase().replace(/[^a-z0-9-]+/g, '-').slice(0, 52),
@@ -182,5 +193,59 @@ export function buildHostManifest(
     entry: previewPath,
     config: t.config(appName, previewPath),
     requiredEnv: t.requiredEnv,
+  };
+}
+
+/** Is this a backend/GPU target (E19)? Backend deploys expose an inference
+ *  endpoint the post-ship latch round-trips against. */
+export function isBackendTarget(kind: DeployTargetKind): boolean {
+  return BY_KIND.get(kind)?.category === 'backend';
+}
+
+/** The E15 requirements the Conductor reads for a target + the config it
+ *  generated. `postShipCheck` tells the latch how to verify the live artifact:
+ *  frontend hosts are `http-reachable`; backend/GPU hosts are
+ *  `inference-roundtrip`. */
+export function buildHostRequirements(
+  kind: DeployTargetKind,
+  appName: string,
+  previewPath: string,
+): HostRequirements | null {
+  const t = BY_KIND.get(kind);
+  if (!t) return null;
+  return {
+    kind: t.kind,
+    category: t.category,
+    configArtifacts: [...t.configArtifacts],
+    generatedConfig: t.config(appName, previewPath),
+    requiredEnv: [...t.requiredEnv],
+    postShipCheck: t.category === 'backend' ? 'inference-roundtrip' : 'http-reachable',
+  };
+}
+
+/** The inference contract a backend/GPU deploy's endpoint honors (E19). The
+ *  model family + I/O shape are derived from the host + the app's backend node
+ *  class; the dry-run reference model implements this contract, and a live host
+ *  endpoint would honor the same shape. Returns null for frontend targets. */
+export function buildInferenceContract(
+  kind: DeployTargetKind,
+  nodeClass = 'text-classifier',
+): InferenceContract | null {
+  const t = BY_KIND.get(kind);
+  if (!t || t.category !== 'backend') return null;
+  // Map the app's backend node class → a small OSS model of that class. These
+  // are the dry-run reference stand-ins; a live deploy runs the real model.
+  const byClass: Record<string, { model: string; inputKind: InferenceContract['inputKind']; outputKind: InferenceContract['outputKind']; sample: string }> = {
+    'text-classifier': { model: 'distilbert-base-uncased-finetuned-sst-2', inputKind: 'text', outputKind: 'label', sample: 'This build is fast and beautiful.' },
+    'text-embedder': { model: 'sentence-transformers/all-MiniLM-L6-v2', inputKind: 'text', outputKind: 'embedding', sample: 'Prism ships anywhere.' },
+    'text-generator': { model: 'google/flan-t5-small', inputKind: 'text', outputKind: 'text', sample: 'Summarize: the Conductor authors, verifies, and ships the graph.' },
+  };
+  const spec = byClass[nodeClass] ?? byClass['text-classifier'];
+  return {
+    nodeClass,
+    model: spec.model,
+    inputKind: spec.inputKind,
+    outputKind: spec.outputKind,
+    sampleInput: spec.sample,
   };
 }

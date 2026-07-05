@@ -156,6 +156,25 @@ export default function ShipTab({ projectId }: { projectId: string }) {
         </div>
       ) : null}
 
+      {/* Recent ships + post-ship verification (E15 · §11.2) */}
+      {deploys.length > 0 ? (
+        <div className="sw-ships">
+          <span className="sw-section-label">Recent ships — post-ship verified (§11.2)</span>
+          <ul className="sw-ship-list">
+            {deploys.slice(-4).reverse().map((d) => (
+              <li key={d.id} className="sw-ship" data-status={d.postShip?.status ?? 'pending'}>
+                <span className="sw-ship-host">{d.kind}</span>
+                <span className="sw-ship-mode" data-mode={d.mode}>{d.mode}</span>
+                {d.endpointUrl ? <span className="sw-ship-endpoint">inference endpoint</span> : null}
+                <span className="sw-ship-verdict">
+                  {d.postShip?.status === 'pass' ? '✓ verified' : d.postShip?.status === 'fail' ? '✕ failed' : '· pending'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       {/* One-click deploy targets (E15) */}
       <div className="sw-targets">
         <span className="sw-section-label">Deploy to a host (E15)</span>

@@ -179,13 +179,16 @@ export async function* runConductor(
     });
     let deployCheck: VerifyCheck;
     if (deployRes) {
-      deployCheck = buildDeployCheck(deployRes.record);
+      // The §11.2 post-ship verification is the deploy check (E15): "verify the
+      // live deployment on that host". Falls back to reachability for legacy.
+      deployCheck = deployRes.record.postShip ?? buildDeployCheck(deployRes.record);
       yield line('deploy', `preview: ${deployRes.record.previewUrl}\n`);
       yield line('deploy', `mode: ${deployRes.record.mode} · snapshot pinned\n`);
+      for (const l of deployCheck.evidence) yield line('deploy', `§11.2 ${l}\n`);
       if (deployRes.manifest) {
         yield line('deploy', `host-config (${deployRes.manifest.kind}): ${JSON.stringify(deployRes.manifest.config)}\n`);
       }
-      yield done('deploy', 'ok');
+      yield done('deploy', deployCheck.status === 'pass' ? 'ok' : 'error');
     } else {
       deployCheck = { status: 'fail', label: 'Deploy — shareable preview', evidence: ['deploy failed'] };
       yield done('deploy', 'error');

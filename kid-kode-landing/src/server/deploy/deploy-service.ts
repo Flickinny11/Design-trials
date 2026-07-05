@@ -19,14 +19,17 @@ import type {
   VerifyCheck,
 } from '../../../packages/shared-interfaces/src/prism-conductor';
 import * as store from '../tenancy/tenant-store';
-import { mintPreviewToken, registerPreviewToken } from '../conductor/preview-tokens';
+import { mintPreviewToken, registerPreviewToken, resolvePreviewToken } from '../conductor/preview-tokens';
 import {
   buildHostManifest,
+  buildInferenceContract,
   getDeployTargets,
   getTargetDescriptor,
+  isBackendTarget,
   isTargetAvailable,
   type HostConfigManifest,
 } from './deploy-targets';
+import { postShipVerify, type PostShipOptions } from './post-ship-verify';
 
 export interface DeployContext {
   tenantId: string;
@@ -40,6 +43,11 @@ export interface DeployContext {
   /** Reuse an existing checkpoint (rollback path); else a fresh one is pinned. */
   versionId?: string;
   versionLabel?: string;
+  /** Backend/GPU node class this deploy serves (E19). Absent → the default
+   *  text-classifier reference model. Only meaningful for backend targets. */
+  nodeClass?: string;
+  /** Injectable post-ship probe (live HTTP / in-process). Defaults per host. */
+  postShip?: PostShipOptions;
 }
 
 export interface DeployResult {
@@ -90,15 +98,26 @@ export async function runDeploy(ctx: DeployContext): Promise<DeployResult | null
   const available = isTargetAvailable(ctx.kind);
   const mode: DeployRecord['mode'] = available ? 'live' : 'dry-run';
   const manifest = buildHostManifest(ctx.kind, ctx.appName, previewPath);
+  const category = descriptor?.category ?? 'frontend';
+
+  // Backend/GPU targets (E19) expose a token-guarded inference endpoint the
+  // post-ship latch round-trips against. The endpoint is a real reachable route
+  // served by this app; dry-run runs the OSS reference model, live proxies out.
+  const deployId = `dep-${randomUUID()}`;
+  const backend = category === 'backend' && isBackendTarget(ctx.kind);
+  const inferenceContract = backend ? buildInferenceContract(ctx.kind, ctx.nodeClass) : null;
+  const endpointUrl = backend
+    ? `${ctx.appOrigin}/api/prism/model/${deployId}?t=${token}`
+    : null;
 
   // 3. Write the deploy record. Live external hosts would carry a productionUrl
   //    from the host adapter (W5B); the always-available prism-cloud target and
   //    all dry-runs surface the shareable preview as the live artifact.
-  const record: DeployRecord = {
-    id: `dep-${randomUUID()}`,
+  const baseRecord: DeployRecord = {
+    id: deployId,
     projectId: ctx.projectId,
     kind: ctx.kind,
-    category: descriptor?.category ?? 'frontend',
+    category,
     mode,
     status: 'live',
     previewUrl,
@@ -108,8 +127,19 @@ export async function runDeploy(ctx: DeployContext): Promise<DeployResult | null
     customDomain: null,
     domainStatus: 'none',
     manifestRef: `host-config:${ctx.kind}`,
+    endpointUrl,
+    inferenceContract,
     createdAt: ctx.nowIso,
   };
+
+  // 4. Post-ship verification (§11.2 against the shipped URL/endpoint — E15).
+  const postShip = await postShipVerify(baseRecord, ctx.postShip ?? {});
+  const record: DeployRecord = {
+    ...baseRecord,
+    postShip,
+    status: postShip.status === 'pass' ? 'verified' : 'live',
+  };
+
   const saved = await store.saveDeploy(ctx.tenantId, ctx.projectId, record);
   if (!saved) return null;
 
@@ -142,6 +172,23 @@ export async function rollbackDeploy(ctx: {
     versionId: ctx.versionId,
     versionLabel: `rollback → ${ctx.versionId}`,
   });
+}
+
+/** Resolve a backend deploy from its endpoint token (the model endpoint route
+ *  is a public capability, like the preview URL — the token IS the capability,
+ *  I5). Returns the deploy record ONLY when it is a backend deploy whose token
+ *  matches; never leaks other tenants' data (the token walls it to one project,
+ *  and we assert the deployId + token both match). */
+export async function resolveBackendEndpoint(
+  deployId: string,
+  token: string,
+): Promise<DeployRecord | null> {
+  const pointer = await resolvePreviewToken(token);
+  if (!pointer) return null;
+  const deploys = await store.listDeploys(pointer.tenantId, pointer.projectId);
+  if (!deploys) return null;
+  const record = deploys.find((d) => d.id === deployId && d.token === token && d.category === 'backend');
+  return record ?? null;
 }
 
 /** The §11 deploy check for the latch — is the shipped preview reachable? The

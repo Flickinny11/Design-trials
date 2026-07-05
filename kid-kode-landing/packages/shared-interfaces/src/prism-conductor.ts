@@ -177,6 +177,41 @@ export const deployStatusSchema = z.enum([
 ]);
 export type DeployStatus = z.infer<typeof deployStatusSchema>;
 
+// ── Backend/GPU node endpoint (E15/E19) ──────────────────────────────────────
+
+/** The typed I/O contract a backend/GPU node's deployed endpoint honors. The
+ *  Conductor generates it from the node class; the post-ship latch (W5B-D2)
+ *  builds a fixture `sampleInput` and asserts the round-trip output matches
+ *  `outputKind`. Names/shapes only — never a secret (I5). */
+export const inferenceContractSchema = z.object({
+  /** The node class this endpoint serves (E19 node→target mapping). */
+  nodeClass: z.string().min(1).max(80),
+  /** The open-source model family the endpoint runs (dry-run: a deterministic
+   *  reference stand-in of this class; live: the real deployed model). */
+  model: z.string().min(1).max(120),
+  inputKind: z.enum(['text', 'image-url', 'json']),
+  outputKind: z.enum(['label', 'embedding', 'text', 'json']),
+  /** A tiny fixture the latch sends to prove a real inference round-trip. */
+  sampleInput: z.string().max(600),
+});
+export type InferenceContract = z.infer<typeof inferenceContractSchema>;
+
+/** One inference round-trip result the endpoint returns + the latch validates.
+ *  `mode` mirrors the deploy: `dry-run` = the reference model answered; `live`
+ *  = the deployed host endpoint answered. */
+export const inferenceResultSchema = z.object({
+  mode: deployModeSchema,
+  model: z.string().min(1).max(120),
+  outputKind: z.enum(['label', 'embedding', 'text', 'json']),
+  /** Human-readable primary output (label text, decoded text, or a summary). */
+  output: z.string().max(600),
+  /** Confidence / score when the output is a classification (0..1). */
+  score: z.number().min(0).max(1).nullable(),
+  /** Latency the endpoint reports (ms) — evidence, not a guarantee. */
+  latencyMs: z.number().int().nonnegative(),
+});
+export type InferenceResult = z.infer<typeof inferenceResultSchema>;
+
 /** A DeployTarget descriptor the ship UI renders (E15/E18). `available` reflects
  *  whether the host's env token is present; unavailable hosts still deploy in
  *  dry-run. `requiredEnv` are the NAMES the founder must set (I5 — names only). */
@@ -219,6 +254,14 @@ export const deployRecordSchema = z.object({
   domainStatus: z.enum(['none', 'pending', 'verified']).default('none'),
   /** Pointer to the generated host-config manifest (dry-run evidence / E7). */
   manifestRef: z.string().max(400).nullable(),
+  /** Post-ship verification (§11.2 against the shipped URL/endpoint — W5B/E15).
+   *  Additive: legacy W5 records omit it. */
+  postShip: verifyCheckSchema.optional(),
+  /** Backend/GPU deploys (E19) expose a token-guarded inference endpoint URL
+   *  the latch round-trips against. Null/absent for frontend deploys. */
+  endpointUrl: z.string().max(600).nullable().optional(),
+  /** The endpoint's I/O contract (E19), present only for backend deploys. */
+  inferenceContract: inferenceContractSchema.nullable().optional(),
   createdAt: z.string().datetime(),
 });
 export type DeployRecord = z.infer<typeof deployRecordSchema>;
@@ -227,6 +270,9 @@ export const deployInputSchema = z
   .object({
     projectId: prismTenancyIdSchema,
     kind: deployTargetKindSchema.default('prism-cloud'),
+    /** Backend/GPU node class this deploy serves (E19). Optional; frontend
+     *  deploys ignore it. */
+    nodeClass: z.string().min(1).max(80).optional(),
   })
   .strict();
 export type DeployInput = z.infer<typeof deployInputSchema>;
@@ -273,6 +319,42 @@ export const deployListOutputSchema = z.object({
   targets: z.array(deployTargetDescriptorSchema),
 });
 export type DeployListOutput = z.infer<typeof deployListOutputSchema>;
+
+// ── E15 host requirements (what the Conductor reads + generates config from) ──
+
+/** The requirements a host declares — what the Conductor must generate to ship
+ *  the Prism runtime bundle there (E15: "reads the selected host's
+ *  requirements and generates that host's config"). Config fields carry the
+ *  GENERATED values (never a secret — I5); `requiredEnv` are the NAMES the
+ *  founder must set for a live deploy. */
+export const hostRequirementsSchema = z.object({
+  kind: deployTargetKindSchema,
+  category: deployCategorySchema,
+  /** e.g. "next.config", "vercel.json", "modal app stub" — the config file(s)
+   *  this host needs, described. */
+  configArtifacts: z.array(z.string().min(1).max(120)).max(12),
+  /** The generated host-config the Conductor produced (key → value; no
+   *  secrets). Mirrors HostConfigManifest.config. */
+  generatedConfig: z.record(z.string(), z.string()),
+  requiredEnv: z.array(z.string().min(1).max(80)).max(24),
+  /** The verification the post-ship latch will run against this host (§11.2). */
+  postShipCheck: z.enum(['http-reachable', 'inference-roundtrip']),
+});
+export type HostRequirements = z.infer<typeof hostRequirementsSchema>;
+
+export const deployRequirementsInputSchema = z
+  .object({
+    projectId: prismTenancyIdSchema,
+    kind: deployTargetKindSchema,
+  })
+  .strict();
+export type DeployRequirementsInput = z.infer<typeof deployRequirementsInputSchema>;
+
+export const deployRequirementsOutputSchema = z.object({
+  v: z.literal(PRISM_CONDUCTOR_CONTRACT_VERSION),
+  requirements: hostRequirementsSchema,
+});
+export type DeployRequirementsOutput = z.infer<typeof deployRequirementsOutputSchema>;
 
 // ── E7 export bundle manifest ────────────────────────────────────────────────
 

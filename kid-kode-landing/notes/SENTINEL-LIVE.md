@@ -1224,3 +1224,71 @@ complete marker: 'PRISM-SHELL-W7: RUN COMPLETE'
 [22:50:18] SHELL-W7 · 64m · agent=1 · still building · 64m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
 [22:53:49] SHELL-W7 · 67m · agent=1 · still building · 67m elapsed · agent up · 1116 commits · last: shell-w7: fix infinite render loop (stable useOthers() selector — s.othe
 [22:55:19] SHELL-W7 · 69m · agent=1 · commit 936190b4 — shell-w7: advocate polish — Share control shows red 'Org · edit' accent 
+[22:56:19] SHELL-W7 · 70m · agent=1 · commit 3d435c66 — shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[22:57:19] SHELL-W7 · 71m · agent=1 · still building · 71m elapsed · agent up · 1118 commits · last: shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[22:58:35] SHELL-W7 · 72m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[22:58:35] SHELL-CHAIN: SHELL-W7 COMPLETE ✓
+[22:58:35] SHELL-CHAIN: launching SHELL-W8
+
+## SHELL-W8 run — started 2026-07-04 22:58:35 (adaptive v2)
+complete marker: 'PRISM-SHELL-W8: RUN COMPLETE'
+[22:58:35] SHELL-W8 · 0m · agent=0 · ARMED v2 — watching SHELL-W8. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[22:59:25] SHELL-W8 · 0m · agent=1 · launched build agent on claude-opus-4-8 (resume #1)
+[23:02:56] SHELL-W8 · 4m · agent=1 · still building · 4m elapsed · agent up · 1118 commits · last: shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[23:06:26] SHELL-W8 · 7m · agent=1 · still building · 7m elapsed · agent up · 1118 commits · last: shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[23:09:57] SHELL-W8 · 11m · agent=1 · still building · 11m elapsed · agent up · 1118 commits · last: shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[23:13:27] SHELL-W8 · 14m · agent=1 · still building · 14m elapsed · agent up · 1118 commits · last: shell-w7: run report — BOTH judges PASS 0 MUST-FIX (criteria 7/7 risks O
+[23:16:58] SHELL-W8 · 18m · agent=1 · still building · 18m elapsed · agent up · 1119 commits · last: shell-w8: E8 core — real section-aware inview driver + section-relative 
+[23:16:58] SHELL-W8 · 18m · agent=1 · commit 349e31a6 — shell-w8: E8 core — real section-aware inview driver + section-relative 
+[23:20:28] SHELL-W8 · 21m · agent=1 · still building · 21m elapsed · agent up · 1120 commits · last: shell-w8: E8 UI — canvas Per-section/Replay driver toggles + keyframe-ed
+[23:20:28] SHELL-W8 · 21m · agent=1 · commit d22fc2ab — shell-w8: E8 UI — canvas Per-section/Replay driver toggles + keyframe-ed
+[23:23:59] SHELL-W8 · 25m · agent=1 · still building · 25m elapsed · agent up · 1120 commits · last: shell-w8: E8 UI — canvas Per-section/Replay driver toggles + keyframe-ed
+[23:27:29] SHELL-W8 · 28m · agent=1 · still building · 28m elapsed · agent up · 1120 commits · last: shell-w8: E8 UI — canvas Per-section/Replay driver toggles + keyframe-ed
+[23:28:29] SHELL-W8 · 29m · agent=1 · commit 9c1f3f25 — shell-w8: E9 core — config-driven custom-cursor layer + live driver feed
+[23:31:00] SHELL-W8 · 32m · agent=1 · still building · 32m elapsed · agent up · 1121 commits · last: shell-w8: E9 core — config-driven custom-cursor layer + live driver feed
+[23:34:00] SHELL-W8 · 35m · agent=1 · commit 4ea69e30 — shell-w8: E10 transition presets + E9/E10 canvas exposure (Scene FX pick
+[23:34:30] SHELL-W8 · 35m · agent=1 · still building · 35m elapsed · agent up · 1122 commits · last: shell-w8: E10 transition presets + E9/E10 canvas exposure (Scene FX pick
+[23:38:01] SHELL-W8 · 39m · agent=1 · still building · 39m elapsed · agent up · 1122 commits · last: shell-w8: E10 transition presets + E9/E10 canvas exposure (Scene FX pick
+[23:41:31] SHELL-W8 · 42m · agent=1 · still building · 42m elapsed · agent up · 1122 commits · last: shell-w8: E10 transition presets + E9/E10 canvas exposure (Scene FX pick
+[23:44:32] SHELL-W8 · 45m · agent=1 · commit 3403405d — shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[23:45:02] SHELL-W8 · 46m · agent=1 · still building · 46m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[23:48:32] SHELL-W8 · 49m · agent=1 · still building · 49m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[23:52:03] SHELL-W8 · 53m · agent=1 · still building · 53m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[23:55:33] SHELL-W8 · 56m · agent=1 · still building · 56m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[23:59:04] SHELL-W8 · 60m · agent=1 · still building · 60m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[00:02:34] SHELL-W8 · 63m · agent=1 · still building · 63m elapsed · agent up · 1123 commits · last: shell-w8: E11 templates (3 .prism graphs) + registry + public preview ro
+[00:05:35] SHELL-W8 · 67m · agent=1 · commit 45dafd1f — shell-w8: E11 template render fix — extruded 3D text (mock's proven path
+[00:06:05] SHELL-W8 · 67m · agent=1 · still building · 67m elapsed · agent up · 1124 commits · last: shell-w8: E11 template render fix — extruded 3D text (mock's proven path
+[00:09:35] SHELL-W8 · 71m · agent=1 · still building · 71m elapsed · agent up · 1124 commits · last: shell-w8: E11 template render fix — extruded 3D text (mock's proven path
+[00:13:06] SHELL-W8 · 74m · agent=1 · still building · 74m elapsed · agent up · 1124 commits · last: shell-w8: E11 template render fix — extruded 3D text (mock's proven path
+[00:15:36] SHELL-W8 · 77m · agent=1 · commit cad080ff — shell-w8: scroll-hero polish + reactivity proof + b/c text cleanup + pre
+[00:16:36] SHELL-W8 · 78m · agent=1 · still building · 78m elapsed · agent up · 1125 commits · last: shell-w8: scroll-hero polish + reactivity proof + b/c text cleanup + pre
+[00:20:07] SHELL-W8 · 81m · agent=1 · still building · 81m elapsed · agent up · 1125 commits · last: shell-w8: scroll-hero polish + reactivity proof + b/c text cleanup + pre
+[00:21:37] SHELL-W8 · 83m · agent=1 · commit f0ffd3bb — shell-w8: template text legibility — atmospheric backdrops (metallic 3D 
+[00:23:37] SHELL-W8 · 85m · agent=1 · still building · 85m elapsed · agent up · 1126 commits · last: shell-w8: template text legibility — atmospheric backdrops (metallic 3D 
+[00:27:08] SHELL-W8 · 88m · agent=1 · still building · 88m elapsed · agent up · 1126 commits · last: shell-w8: template text legibility — atmospheric backdrops (metallic 3D 
+[00:29:08] SHELL-W8 · 90m · agent=1 · commit 4114171c — shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:30:38] SHELL-W8 · 92m · agent=1 · still building · 92m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:34:09] SHELL-W8 · 95m · agent=1 · still building · 95m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:37:39] SHELL-W8 · 99m · agent=1 · still building · 99m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:41:09] SHELL-W8 · 102m · agent=1 · still building · 102m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:44:40] SHELL-W8 · 106m · agent=1 · still building · 106m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:48:10] SHELL-W8 · 109m · agent=1 · still building · 109m elapsed · agent up · 1127 commits · last: shell-w8: E2 — real template-graph fork + unified gallery seeding
+[00:48:40] SHELL-W8 · 110m · agent=1 · commit 0d54ec86 — shell-w8: fix advocate MF-1 — garbled text (flat-MSDF fallback) → clean 
+[00:51:40] SHELL-W8 · 113m · agent=1 · still building · 113m elapsed · agent up · 1128 commits · last: shell-w8: fix advocate MF-1 — garbled text (flat-MSDF fallback) → clean 
+[00:53:11] SHELL-W8 · 114m · agent=1 · commit 127e1b93 — shell-w8: run report — BOTH judges PASS 0 MUST-FIX
+[00:55:11] SHELL-W8 · 116m · agent=1 · still building · 116m elapsed · agent up · 1129 commits · last: shell-w8: run report — BOTH judges PASS 0 MUST-FIX
+[00:56:57] SHELL-W8 · 118m · agent=0 · COMPLETE — marker confirmed, agent quiet. Frames ready to review.
+[00:56:57] SHELL-CHAIN: SHELL-W8 COMPLETE ✓
+[00:56:57] SHELL-CHAIN: SHELL CHAIN COMPLETE — W1..W8 all green. The AI app builder UI is built, verified, and ready for founder review.
+[00:58:13] SHELL-CHAIN-B: Main chain verified complete — arming SHELL-W5B.
+
+## SHELL-W5B run — started 2026-07-05 00:58:13 (adaptive v2)
+complete marker: 'PRISM-SHELL-W5B: RUN COMPLETE'
+[00:58:13] SHELL-W5B · 0m · agent=0 · ARMED v2 — watching SHELL-W5B. Model policy: auto. Pinging on every commit, heartbeat, switch, stop, and finish.
+[00:59:04] SHELL-W5B · 0m · agent=1 · launched build agent on claude-opus-4-8 (resume #1)
+[01:02:34] SHELL-W5B · 4m · agent=1 · still building · 4m elapsed · agent up · 1129 commits · last: shell-w8: run report — BOTH judges PASS 0 MUST-FIX
+[01:06:05] SHELL-W5B · 7m · agent=1 · still building · 7m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:06:05] SHELL-W5B · 7m · agent=1 · commit 6219bae4 — shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:09:35] SHELL-W5B · 11m · agent=1 · still building · 11m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo
+[01:13:06] SHELL-W5B · 14m · agent=1 · still building · 14m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo

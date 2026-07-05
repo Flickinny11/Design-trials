@@ -1,1 +1,1 @@
-[22:55:19] SHELL-W7: commit 936190b4 — shell-w7: advocate polish — Share control shows red 'Org · edit' accent 
+[01:13:06] SHELL-W5B: still building · 14m elapsed · agent up · 1130 commits · last: shell-w5b: record deviations D1-D6 BEFORE code (post-ship verify, ref-mo

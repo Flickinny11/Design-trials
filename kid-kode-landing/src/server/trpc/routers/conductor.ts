@@ -20,17 +20,20 @@ import {
   deployInputSchema,
   deployListInputSchema,
   deployOutputSchema,
+  deployRequirementsInputSchema,
+  deployRequirementsOutputSchema,
   deployRollbackInputSchema,
   deploySetDomainInputSchema,
   exportInputSchema,
   type ConductorStatus,
   type DeployOutput,
+  type DeployRequirementsOutput,
   type ExportOutput,
 } from '../../../../packages/shared-interfaces/src/prism-conductor';
 import * as store from '../../tenancy/tenant-store';
 import { runConductor } from '../../conductor/conductor';
 import { runDeploy, rollbackDeploy } from '../../deploy/deploy-service';
-import { getDeployTargets } from '../../deploy/deploy-targets';
+import { buildHostRequirements, getDeployTargets } from '../../deploy/deploy-targets';
 import { buildExport } from '../../conductor/export-bundle';
 import { protectedProcedure, router } from '../init';
 
@@ -88,6 +91,18 @@ export const conductorRouter = router({
     targets: getDeployTargets(),
   })),
 
+  /** E15 — the host requirements + generated config the Conductor produces for
+   *  a chosen target (what the AI "reads" and generates before deploying). */
+  requirements: protectedProcedure
+    .input(deployRequirementsInputSchema)
+    .query(async ({ ctx, input }): Promise<DeployRequirementsOutput> => {
+      const owned = await store.getProject(ctx.session.user.id, input.projectId);
+      if (!owned) notFound();
+      const req = buildHostRequirements(input.kind, owned.name, `/preview/${input.projectId}`);
+      if (!req) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Unknown host.' });
+      return deployRequirementsOutputSchema.parse({ v: PRISM_CONDUCTOR_CONTRACT_VERSION, requirements: req });
+    }),
+
   /** Deploy a shareable preview (E14) or live ship (S7). */
   deploy: protectedProcedure
     .input(deployInputSchema)
@@ -101,6 +116,7 @@ export const conductorRouter = router({
         appName: owned.name,
         appOrigin: originFromHeaders(ctx.headers),
         nowIso: new Date().toISOString(),
+        nodeClass: input.nodeClass,
       });
       if (!res) throw new TRPCError({ code: 'PRECONDITION_FAILED', message: 'Nothing to deploy — build the app first.' });
       return deployOutputSchema.parse({ v: PRISM_CONDUCTOR_CONTRACT_VERSION, deploy: res.record, targets: res.targets });
